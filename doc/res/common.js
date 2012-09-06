@@ -1,4 +1,8 @@
-function initContentsMenu(relativePath, r, g, b) {
+function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
+    document.write("<div class=\"header\">");
+    document.write("    "+pageName);
+    document.write("</div>");
+    document.write("");
     document.write("<style>");
     document.write("    ul.contentsMenu {");
     document.write("        margin: 0px;");
@@ -45,7 +49,38 @@ function initContentsMenu(relativePath, r, g, b) {
     document.write("        border-radius: 0px 0px 5px 5px;");
     document.write("    }");
     document.write("</style>");
+    document.write("");
+    document.write("<ul class=\"contentsMenu\">");
+    document.write("    <li>");
+    document.write("        <img src=\""+relativePath+"/../res/pics/oxygen/actions/help-about.png\" width=24 height=24 alt=\"Contents\">");
+    document.write("        <ul>");
+
+    for (i = 0; i < data.length; ++i) {
+        var indent = "";
+
+        for (j = 0; j < data[i][2]; ++j)
+            indent += "&nbsp;&nbsp;&nbsp;&nbsp;"
+
+        if (i != data.length-1)
+            document.write("            <li><a href=\""+relativePath+"/"+data[i][0]+"\">"+indent+data[i][1]+"</a></li>");
+        else
+            document.write("            <li class=\"lastContentsMenuItem\"><a href=\""+relativePath+"/"+data[i][0]+"\">"+indent+data[i][1]+"</a></li>");
+    }
+
+    document.write("        </ul>");
+    document.write("    </li>");
+    document.write("</ul>");
 }
+
+$(document).ready(function() {
+    $("ul.contentsMenu > li").mouseenter(function() {
+        $(this).find('ul').css('visibility', 'visible');
+    });
+
+    $("ul.contentsMenu > li").mouseleave(function() {
+        $(this).find('ul').css('visibility', 'hidden');
+    });
+});
 
 function copyright() {
     var date = new Date();
