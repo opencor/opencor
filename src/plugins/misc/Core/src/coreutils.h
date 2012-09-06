@@ -27,7 +27,7 @@ namespace Core {
 //==============================================================================
 
 QByteArray CORE_EXPORT resourceAsByteArray(const QString &pResource);
-void CORE_EXPORT saveResourceAs(const QString &pResource,
+bool CORE_EXPORT saveResourceAs(const QString &pResource,
                                 const QString &pFilename);
 
 void CORE_EXPORT * instance(const QString &pClassName,

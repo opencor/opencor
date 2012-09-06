@@ -51,7 +51,7 @@ QByteArray resourceAsByteArray(const QString &pResource)
 
 //==============================================================================
 
-void saveResourceAs(const QString &pResource, const QString &pFilename)
+bool saveResourceAs(const QString &pResource, const QString &pFilename)
 {
     if (QResource(pResource).isValid()) {
         // The resource exists, so write a file with name pFilename and which
@@ -59,19 +59,32 @@ void saveResourceAs(const QString &pResource, const QString &pFilename)
 
         QFile file(pFilename);
 
-        file.open(QIODevice::ReadWrite);
-        file.write(resourceAsByteArray(pResource));
-        file.close();
+        if (file.open(QIODevice::ReadWrite)) {
+            QByteArray resource = resourceAsByteArray(pResource);
+            bool res;
+
+            res = file.write(resource) == resource.size();
+
+            file.close();
+
+            // Remove the newly created file in case not all the resource was
+            // written to it
+
+            if (!res)
+                file.remove();
+
+            return res;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
     }
 }
 
 //==============================================================================
 
-#ifdef Q_WS_MAC
-void * instance(const QString &, void *pDefaultGlobalInstance)
-#else
 void * instance(const QString &pClassName, void *pDefaultGlobalInstance)
-#endif
 {
     // Retrieve the 'global' instance associated with a given class
     // Note: initially, the plan was to have a static instance of a given class
@@ -91,8 +104,11 @@ void * instance(const QString &pClassName, void *pDefaultGlobalInstance)
     //       original plan...
 
 #ifdef Q_WS_MAC
+    Q_UNUSED(pClassName);
+
     return (void *) pDefaultGlobalInstance;
 #else
+
     QSettings settings(qApp->applicationName());
     qlonglong globalInstance;
 

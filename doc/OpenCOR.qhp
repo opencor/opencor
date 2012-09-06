@@ -14,11 +14,18 @@
             <file>res/common.css</file>
             <file>res/common.js</file>
 
+            <file>user/res/dissemination/2011-04-12-CellmlWorkshop2011-Auckland-NewZealand.png</file>
+            <file>user/res/dissemination/2012-03-12-CellmlWorkshop2012-WaihekeIsland-NewZealand.png</file>
+
+            <file>user/res/pics/oxygen/mimetypes/application-pdf.png</file>
+            <file>user/res/pics/oxygen/mimetypes/application-vnd.ms-powerpoint.png</file>
+
             <file>user/res/menu.js</file>
             <file>user/res/stylesheet.css</file>
 
             <file>user/authors.html</file>
             <file>user/contactUs.html</file>
+            <file>user/dissemination.html</file>
             <file>user/index.html</file>
             <file>user/knownIssuesLimitations.html</file>
             <file>user/licensing.html</file>

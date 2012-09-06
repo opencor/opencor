@@ -36,7 +36,10 @@ div.header {
 }
 
 div.section {
-    color: rgb(103, 103, 103);
+    margin: 1em 0em 1em 0em;
+    /* Note: the margin is so that it is rendered like a <p> which is   */
+    /*        necessary if we want to use a section at the beginning of */
+    /*        a page (because of our fixed header at the top)...        */
     font-size: 13pt;
     font-weight: bold;
 }

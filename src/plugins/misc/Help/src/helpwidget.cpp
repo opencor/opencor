@@ -8,8 +8,11 @@
 //==============================================================================
 
 #include <QAction>
+#include <QApplication>
 #include <QDesktopServices>
+#include <QDir>
 #include <QFile>
+#include <QFileInfo>
 #include <QHelpEngine>
 #include <QPaintEvent>
 #include <QSettings>
@@ -109,17 +112,17 @@ QNetworkReply * HelpNetworkAccessManager::createRequest(Operation,
                                                         const QNetworkRequest &pRequest,
                                                         QIODevice*)
 {
-    // Retrieve, if possible, the requested help page
+    // Retrieve, if possible, the requested document
 
     QUrl url = pRequest.url();
     QByteArray data = mHelpEngine->findFile(url).isValid()?
                           mHelpEngine->fileData(url):
                           QByteArray(mErrorMsgTemplate.arg(tr("Error"),
                                                            tr("The following help file could not be found:")+" <span class=\"Filename\">"+url.toString()+"</span>.",
-                                                           tr("Please <a href=\"http://www.opencor.ws/user/contactUs.html\">contact us</a> about this error."),
-                                                           Core::copyright()).toLatin1());
+                                                           tr("Please <a href=\"%1\">contact us</a> about this error.").arg("contactUs.html"),
+                                                           Core::copyright()).toUtf8());
 
-    // Return the requested help page or an error message
+    // Return the requested document or an error message
 
     return new HelpNetworkReply(pRequest, data, "text/html");
 }
@@ -128,8 +131,19 @@ QNetworkReply * HelpNetworkAccessManager::createRequest(Operation,
 
 HelpPage::HelpPage(QHelpEngine *pHelpEngine, QObject *pParent) :
     QWebPage(pParent),
-    mHelpEngine(pHelpEngine)
+    mHelpEngine(pHelpEngine),
+    mFileNames(QMap<QString, QString>())
 {
+}
+
+//==============================================================================
+
+HelpPage::~HelpPage()
+{
+    // Remove all the documents we created, if any
+
+    foreach (const QString &pFileName, mFileNames)
+        QFile(pFileName).remove();
 }
 
 //==============================================================================
@@ -142,16 +156,48 @@ bool HelpPage::acceptNavigationRequest(QWebFrame*,
 
     QUrl url = pRequest.url();
 
-    // Determine whether the URL refers to an OpenCOR help page or an external
-    // link of sorts
+    // Determine whether the URL refers to an OpenCOR document or an external
+    // resource of sorts
 
     if (url.scheme() == "qthelp") {
-        // This an OpenCOR help page, so we are happy to handle the request
+        // This an OpenCOR document, so check whether it's one which the user's
+        // system should open for us
+
+        QString suffix = QFileInfo(url.toString()).completeSuffix().toUpper();
+
+        if (!suffix.compare("PDF") || !suffix.compare("PPTX")) {
+            // This is a document we want the user's browser to open for us,
+            // so...
+
+            // First check whether we have a local copy of the document
+
+            QString document = url.toString().replace("qthelp://opencor", QString());
+            QString fileName = mFileNames.value(document);
+
+            if (fileName.isEmpty()) {
+                // No local copy of the document exists, so create one and keep
+                // track of it
+
+                fileName = document;
+                fileName =  QDir::tempPath()+QDir::separator()
+                           +QFileInfo(qApp->applicationFilePath()).baseName()
+                           +fileName.replace("/", "_");
+
+                if (Core::saveResourceAs(":"+document, fileName))
+                    mFileNames.insert(document, fileName);
+            }
+
+            QDesktopServices::openUrl(QUrl::fromLocalFile(fileName));
+
+            return false;
+        }
+
+        // We are dealing with a document that we want to open ourselves, so...
 
         return true;
     } else {
-        // This is an external link of sorts, so we leave it to the user's
-        // default web browser to handle the request
+        // This is an external resource of sorts, so we leave it to the user's
+        // default web browser to open it for us
 
         QDesktopServices::openUrl(url);
 
@@ -216,9 +262,9 @@ HelpWidget::HelpWidget(QWidget *pParent, QHelpEngine *pHelpEngine,
             this, SLOT(selectionChanged()));
 
     connect(pageAction(QWebPage::Back), SIGNAL(changed()),
-            this, SLOT(webPageChanged()));
+            this, SLOT(documentChanged()));
     connect(pageAction(QWebPage::Forward), SIGNAL(changed()),
-            this, SLOT(webPageChanged()));
+            this, SLOT(documentChanged()));
 
     // Go to the home page
 
@@ -229,8 +275,8 @@ HelpWidget::HelpWidget(QWidget *pParent, QHelpEngine *pHelpEngine,
 
 void HelpWidget::retranslateUi()
 {
-    // Retranslate the current page, but only if it is an error page since a
-    // valid page is hard-coded and therefore cannot be translated
+    // Retranslate the current document, but only if it is an error document
+    // since a valid document is hard-coded and therefore cannot be translated
     // Note: we use setUrl() rather than reload() since the latter won't work
     //       upon starting OpenCOR with a non-system locale, so...
 
@@ -279,7 +325,7 @@ void HelpWidget::goToHomePage()
     // Go to the home page
     // Note: we use setUrl() rather than load() since the former will ensure
     //       that url() becomes valid straightaway (which is important for
-    //       retranslateUi()) and that the page gets loaded immediately...
+    //       retranslateUi()) and that the document gets loaded immediately...
 
     setUrl(mHomePage);
 }
@@ -297,7 +343,7 @@ void HelpWidget::resetZoom()
 
 void HelpWidget::zoomIn()
 {
-    // Zoom in the help page contents
+    // Zoom in the help document contents
 
     setZoomLevel(mZoomLevel+1);
 }
@@ -306,7 +352,7 @@ void HelpWidget::zoomIn()
 
 void HelpWidget::zoomOut()
 {
-    // Zoom out the help page contents
+    // Zoom out the help document contents
 
     setZoomLevel(qMax(MinimumZoomLevel, mZoomLevel-1));
 }
@@ -329,7 +375,7 @@ void HelpWidget::setZoomLevel(const int &pZoomLevel)
     if (pZoomLevel == mZoomLevel)
         return;
 
-    // Set the zoom level of the help page contents to a particular value
+    // Set the zoom level of the help document contents to a particular value
 
     mZoomLevel = pZoomLevel;
 
@@ -348,7 +394,7 @@ void HelpWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 
     if (pEvent->button() == Qt::XButton1) {
         // Special mouse button #1 which is used to go to the previous help
-        // page
+        // document
 
         triggerPageAction(QWebPage::Back);
 
@@ -356,7 +402,7 @@ void HelpWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 
         pEvent->accept();
     } else if (pEvent->button() == Qt::XButton2) {
-        // Special mouse button #2 which is used to go to the next help page
+        // Special mouse button #2 which is used to go to the next help document
 
         triggerPageAction(QWebPage::Forward);
 
@@ -374,7 +420,8 @@ void HelpWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 
 void HelpWidget::wheelEvent(QWheelEvent *pEvent)
 {
-    // Handle the wheel mouse button for zooming in/out the help page contents
+    // Handle the wheel mouse button for zooming in/out the help document
+    // contents
 
     if (pEvent->modifiers() & Qt::ControlModifier) {
         // The user has pressed the Ctrl key (on Windows and Linux) or the Alt
@@ -461,10 +508,10 @@ void HelpWidget::selectionChanged()
 
 //==============================================================================
 
-void HelpWidget::webPageChanged()
+void HelpWidget::documentChanged()
 {
-    // A new help page has been selected, resulting in the previous or next
-    // help page becoming either available or not
+    // A new help document has been selected, resulting in the previous or next
+    // help document becoming either available or not
 
     QAction *action = qobject_cast<QAction *>(sender());
 
@@ -472,13 +519,14 @@ void HelpWidget::webPageChanged()
         // The QObject casting was successful, so we can carry on
 
         if (action == pageAction(QWebPage::Back)) {
-            // The current action is to tell us whether the previous help page
-            // is available, so send a signal to let the user know about it
+            // The current action is to tell us whether the previous help
+            // document is available, so send a signal to let the user know
+            // about it
 
             emit backEnabled(action->isEnabled());
         } else if (action == pageAction(QWebPage::Forward)) {
-            // The current action is to tell us whether the next help page is
-            // available, so send a signal to let the user know about it
+            // The current action is to tell us whether the next help document
+            // is available, so send a signal to let the user know about it
 
             emit forwardEnabled(action->isEnabled());
         }

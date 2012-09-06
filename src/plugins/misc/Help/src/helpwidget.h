@@ -74,6 +74,7 @@ class HelpPage : public QWebPage
 {
 public:
     explicit HelpPage(QHelpEngine *pHelpEngine, QObject *pParent);
+    ~HelpPage();
 
 protected:
     virtual bool acceptNavigationRequest(QWebFrame*,
@@ -82,6 +83,8 @@ protected:
 
 private:
     QHelpEngine *mHelpEngine;
+
+    QMap<QString, QString> mFileNames;
 };
 
 //==============================================================================
@@ -142,7 +145,7 @@ private Q_SLOTS:
 
     void selectionChanged();
 
-    void webPageChanged();
+    void documentChanged();
 };
 
 //==============================================================================

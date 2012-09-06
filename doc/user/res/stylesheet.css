@@ -3,10 +3,11 @@
 /* Note: the first import used to be sufficient for use within either a web */
 /*       page or a Qt help page, but not anymore. So, instead, we now have  */
 /*       the first import for use within a web page and the second import   */
-/*       for use within a Qt help page. Indeed, with Qt 4.8.0, QtWebKit is  */
+/*       for use within a Qt help page. Indeed, with Qt 4.8.1, QtWebKit is  */
 /*       now stricter (or, most likely, it didn't use to be strict enough   */
-/*       and now does what it should have been doing all along?), hence the */
-/*       above 'dirty trick' to get things to work in both cases...         */
+/*       before and now does what it should have been doing all along?),    */
+/*       hence the above 'dirty trick' to get things to work in both        */
+/*       cases...                                                           */
 
 a {
     color: rgb(54, 96, 146);
@@ -22,12 +23,32 @@ a:hover {
     color: rgb(54, 96, 146);
 }
 
+a.image:hover {
+    /* This is to prevent img elements that have an anchor from looking like */
+    /* a link                                                                */
+
+    margin: 0px;
+    border: none;
+    background-color: rgb(255, 255, 255);
+}
+
 div.header {
     background: rgb(54, 96, 146);
 }
 
 div.section {
     color: rgb(54, 96, 146);
+}
+
+div.dissemination {
+    color: rgb(103, 103, 103);
+    font-size: 11pt;
+    font-style: italic;
+    font-weight: normal;
+}
+
+img.shadow {
+    box-shadow: 0px 0px 10px rgb(103, 103, 103);
 }
 
 pre {
@@ -37,4 +58,12 @@ pre {
 
 code {
     color: rgb(54, 96, 146);
+}
+
+th {
+    padding: 7px 13px;
+}
+
+td {
+    padding: 7px 13px;
 }
