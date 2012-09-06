@@ -1,4 +1,8 @@
-function showContentsMenu(relativePath) {
+function showContentsMenu(pageName, relativePath) {
+    document.write("<div class=\"header\">");
+    document.write("    "+pageName);
+    document.write("</div>");
+
     initContentsMenu(relativePath, 54, 96, 146);
 
     document.write("<ul class=\"contentsMenu\">");

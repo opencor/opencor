@@ -50,5 +50,7 @@ function initContentsMenu(relativePath, r, g, b) {
 function copyright() {
     var date = new Date();
 
-    document.write("Copyright ©2011-"+date.getFullYear());
+    document.write("<div class=\"copyright\">");
+    document.write("    Copyright ©2011-"+date.getFullYear());
+    document.write("</div>");
 }

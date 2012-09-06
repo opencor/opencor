@@ -16,13 +16,9 @@
         <script src="../res/menu.js" type="text/javascript"></script>
     </head>
     <body onload="prettyPrint()">
-        <div class="header">
-            Internationalisation
-
-            <script type="text/javascript">
-                showContentsMenu("..");
-            </script>
-        </div>
+        <script type="text/javascript">
+            showContentsMenu("Internationalisation", "..");
+        </script>
 
         <p>
             OpenCOR is a multi-lingual application currently supporting both English and French. OpenCOR will, by default, try to use the language used by a user's operating system. If it cannot, then it will revert to English. Otherwise, users can switch to any language supported by OpenCOR, independent of the language used by their operating system.
@@ -62,8 +58,8 @@
             A <code>[Plugin]_xx.ts</code> file must be created for each plugin that requires internationalisation and that file must be placed in <code>[Plugin]/i18n</code>. A <code>[Plugin].qrc</code> file must also be created and placed in <code>[Plugin]/res</code>. For example, for the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/edit/Viewer"><code>Viewer plugin</code></a> and the French language, we have <a href="https://github.com/opencor/opencor/blob/master/src/plugins/edit/Viewer/i18n/Viewer_fr.ts"><code>[OpenCOR]/src/plugins/edit/Viewer/i18n/Viewer_fr.ts</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/edit/Viewer/res/Viewer.qrc"><code>[OpenCOR]/src/plugins/edit/Viewer/res/Viewer.qrc</code></a>. Then, for language files to be generated and embedded in the plugin, one must pass the parameter <code>TRUE</code> to the <code>INITIALISE_PLUGIN</code> macro, as is done for the Viewer plugin (see <a href="https://github.com/opencor/opencor/blob/master/src/plugins/edit/Viewer/CMakeLists.txt"><code>[OpenCOR]/src/plugins/edit/Viewer/CMakeLists.txt</code></a>).
         </p>
 
-        <div class="copyright">
-            <script type="text/javascript">copyright();</script>
-        </div>
+        <script type="text/javascript">
+            copyright();
+        </script>
     </body>
 </html>

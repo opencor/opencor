@@ -16,13 +16,9 @@
         <script src="../res/menu.js" type="text/javascript"></script>
     </head>
     <body onload="prettyPrint()">
-        <div class="header">
-            Tests
-
-            <script type="text/javascript">
-                showContentsMenu("..");
-            </script>
-        </div>
+        <script type="text/javascript">
+            showContentsMenu("Tests", "..");
+        </script>
 
         <p>
             As already mentioned, OpenCOR uses a <a href="plugins.html">plugin approach</a>. Tests are therefore created at the plugin level, and every test must respect the following:
@@ -49,8 +45,8 @@ ADD_PLUGIN(MyPlugin
             <li>The test must be referenced in the <a href="https://github.com/opencor/opencor/blob/master/test/main.cpp"><code>main test program</code></a>.</li>
         </ul>
 
-        <div class="copyright">
-            <script type="text/javascript">copyright();</script>
-        </div>
+        <script type="text/javascript">
+            copyright();
+        </script>
     </body>
 </html>
