@@ -58,13 +58,13 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     for (i = 0; i < data.length; ++i) {
         var indent = "";
 
-        for (j = 0; j < data[i][2]; ++j)
+        for (j = 0; j < data[i][0]; ++j)
             indent += "&nbsp;&nbsp;&nbsp;&nbsp;"
 
         if (i != data.length-1)
-            document.write("            <li><a href=\""+relativePath+"/"+data[i][0]+"\">"+indent+data[i][1]+"</a></li>");
+            document.write("            <li><a href=\""+relativePath+"/"+data[i][2]+"\">"+indent+data[i][1]+"</a></li>");
         else
-            document.write("            <li class=\"lastContentsMenuItem\"><a href=\""+relativePath+"/"+data[i][0]+"\">"+indent+data[i][1]+"</a></li>");
+            document.write("            <li class=\"lastContentsMenuItem\"><a href=\""+relativePath+"/"+data[i][2]+"\">"+indent+data[i][1]+"</a></li>");
     }
 
     document.write("        </ul>");

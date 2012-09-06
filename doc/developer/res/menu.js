@@ -1,14 +1,14 @@
 function headerAndContentsMenu(pageName, relativePath) {
     doHeaderAndContentsMenu(pageName, relativePath, 49, 133, 155,
-                            new Array(new Array("index.html", "Home", 0),
-                                      new Array("prerequisites.html", "Prerequisites", 0),
-                                      new Array("fileStructure.html", "File structure", 0),
-                                      new Array("develop/index.html", "Develop", 0),
-                                      new Array("develop/codingStyle.html", "Coding style", 1),
-                                      new Array("develop/plugins.html", "Plugins", 1),
-                                      new Array("develop/internationalisation.html", "Internationalisation", 1),
-                                      new Array("develop/tests.html", "Tests", 1),
-                                      new Array("buildRunAndTest.html", "Build, run and test", 0),
-                                      new Array("package.html", "Package", 0),
-                                      new Array("thirdPartyLibraries.html", "Third-party libraries", 0)));
+                            new Array(new Array(0, "Home", "index.html"),
+                                      new Array(0, "Prerequisites", "prerequisites.html"),
+                                      new Array(0, "File structure", "fileStructure.html"),
+                                      new Array(0, "Develop", "develop/index.html"),
+                                      new Array(1, "Coding style", "develop/codingStyle.html"),
+                                      new Array(1, "Plugins", "develop/plugins.html"),
+                                      new Array(1, "Internationalisation", "develop/internationalisation.html"),
+                                      new Array(1, "Tests", "develop/tests.html"),
+                                      new Array(0, "Build, run and test", "buildRunAndTest.html"),
+                                      new Array(0, "Package", "package.html"),
+                                      new Array(0, "Third-party libraries", "thirdPartyLibraries.html")));
 }
