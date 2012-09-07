@@ -21,16 +21,18 @@
         </script>
 
         <p>
-            The following known issues/limitations have been observed on <a href="http://windows.microsoft.com/">Windows</a> 7, <a href="http://www.ubuntu.com/">Ubuntu</a> 12.04 LTS (Precise Pangolin; both 32-bit and 64-bit) and/or <a href="http://www.apple.com/osx/">OS X</a> 10.8 (Mountain Lion). So, if you use a different operating system, these issues/limitations may or not be relevant to you.
+            The following issues/limitations have been reported/observed while using OpenCOR on our <a href="supportedPlatforms.html">supported platforms</a>. So, they may apply to you or not, depending on the platform you use.
         </p>
         
         <div class="section">
             Windows, Linux and OS X
         </div>
 
-        <p>
-            By default, OpenCOR uses your system's language for menus, dialog boxes, etc., as long as it is either English or French (please <a href="user/contactUs.html">contact us</a> if you would like another language to be added). If your system uses another language, then OpenCOR will default to English. Otherwise, if you specifically specify English or French, then please be aware that system messages, dialog boxes, etc. will still be displayed in your system's language.
-        </p>
+        <ul>
+            <li>
+                By default, OpenCOR uses your system's language for menus, dialog boxes, etc., as long as it is either English or French (please <a href="user/contactUs.html">contact us</a> if you would like OpenCOR to support another language). If your system uses another language, then OpenCOR will default to English. Otherwise, if you specifically specify English or French, then please be aware that system messages, dialog boxes, etc. will still be displayed in your system's language.
+            </li>
+        </ul>
 
         <div class="section">
             Windows
@@ -38,18 +40,7 @@
 
         <ul>
             <li>
-                OpenCOR's embedded file browser may, in some cases, result in OpenCOR being slow to respond at startup. This problem has nothing to do with OpenCOR, but with Windows or a program which you use and which tightly integrates with Windows. It may not be an easy problem to fix, even though there <a href="http://www.brighthub.com/computing/windows-platform/articles/86552.aspx">several known causes and solutions</a> which you might find useful.
-            </li>
-        </ul>
-
-        <div class="section">
-            Linux
-        </div>
-
-        <ul>
-            <li>
-                Menu items that have sub-menus may not, on some versions of <a href="http://www.gnome.org/">Gnome</a>, have their icon displayed (should they normally have one). This has nothing to do with OpenCOR and has been discussed in places such as <a href="http://www.omgubuntu.co.uk/2010/02/missing-menu-icons-what-are-gnome-playing-at/">here</a> and <a href="http://ubuntuforums.org/showthread.php?t=1505270">here</a>. You can, however, change this behaviour by entering the following on the command line:
-                <pre class="prettyprint">$ gconftool-2 --type Boolean --set /desktop/gnome/interface/menus_have_icons True</pre>
+                OpenCOR's File Browser plugin may, on some systems, result in OpenCOR being slow to respond at startup. This has nothing to do with OpenCOR, but with Windows or, more likely, a program which tightly integrates with it. There are <a href="http://www.brighthub.com/computing/windows-platform/articles/86552.aspx">several known causes and solutions</a> to this problem. However, should none of those solutions work for you, you might then have to uninstall the plugin.
             </li>
         </ul>
 
