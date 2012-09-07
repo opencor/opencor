@@ -45,7 +45,12 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("        text-decoration: none;");
     document.write("    }");
     document.write("");
-    document.write("    ul.contentsMenu li ul li.lastContentsMenuItem a {");
+    document.write("    ul.contentsMenu li ul li.menuSeparator {");
+    document.write("        margin: 0px;");
+    document.write("        border-top: 1px solid rgb("+r+", "+g+", "+b+");");
+    document.write("    }");
+    document.write("");
+    document.write("    ul.contentsMenu li ul li.lastMenuItem a {");
     document.write("        border-radius: 0px 0px 5px 5px;");
     document.write("    }");
     document.write("</style>");
@@ -55,17 +60,29 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("        <img src=\""+relativePath+"/../res/pics/oxygen/actions/help-about.png\" width=24 height=24 alt=\"Contents\">");
     document.write("        <ul>");
 
-    for (i = 0; i < data.length; ++i) {
-        var indent = "";
+    for (i = 0; i < data.length; ++i)
+        if (data[i][1]) {
+            // We are dealing with a menu item
 
-        for (j = 0; j < data[i][0]; ++j)
-            indent += "&nbsp;&nbsp;&nbsp;&nbsp;"
+            var path = data[i][3]?data[i][2]:relativePath+"/"+data[i][2];
+            var indent = "";
 
-        if (i != data.length-1)
-            document.write("            <li><a href=\""+relativePath+"/"+data[i][2]+"\">"+indent+data[i][1]+"</a></li>");
-        else
-            document.write("            <li class=\"lastContentsMenuItem\"><a href=\""+relativePath+"/"+data[i][2]+"\">"+indent+data[i][1]+"</a></li>");
-    }
+            for (j = 0; j < data[i][0]; ++j)
+                indent += "&nbsp;&nbsp;&nbsp;&nbsp;"
+
+            if (i != data.length-1)
+                // A 'normal' menu item
+
+                document.write("            <li><a href=\""+path+"\">"+indent+data[i][1]+"</a></li>");
+            else
+                // The last menu item, so we have some special rendering for it
+
+                document.write("            <li class=\"lastMenuItem\"><a href=\""+path+"\">"+indent+data[i][1]+"</a></li>");
+        } else {
+            // We are dealing with a menu separator
+
+            document.write("            <li class=\"menuSeparator\"></li>");
+        }
 
     document.write("        </ul>");
     document.write("    </li>");
