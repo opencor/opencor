@@ -21,55 +21,59 @@
         </script>
 
         <p>
-            OpenCOR (and its corresponding <a href="develop/tests.html">tests</a>) can be built and run in two different ways:
+            OpenCOR (and its corresponding <a href="develop/tests.html">tests</a>) can be built and run either from the command line or using <a href="http://qt.nokia.com/products/developer-tools">Qt Creator</a>.
         </p>
 
+        <div class="section">
+            From the command line
+        </div>
+
+        <p>
+            Various batch and VBScript files (<code>.bat</code> and <code>.vbs</code> files) on Windows and shell scripts on Linux / OS X are available:
+        </p>
         <ul>
+            <li><a href="https://github.com/opencor/opencor/blob/master/clean"><code>[OpenCOR]/clean</code></a>[<a href="https://github.com/opencor/opencor/blob/master/clean.bat"><code>.bat</code></a>]: cleans the OpenCOR environment;</li>
             <li>
-                <strong>From the command line:</strong> various batch and VBScript files (<code>.bat</code> and <code>.vbs</code> files) on Windows and shell scripts on Linux / OS X are available:
-                <ul>
-                    <li><a href="https://github.com/opencor/opencor/blob/master/clean"><code>[OpenCOR]/clean</code></a>[<a href="https://github.com/opencor/opencor/blob/master/clean.bat"><code>.bat</code></a>]: cleans the OpenCOR environment;</li>
-                    <li>
-                        <a href="https://github.com/opencor/opencor/blob/master/make"><code>[OpenCOR]/make</code></a>[<a href="https://github.com/opencor/opencor/blob/master/make.bat"><code>.bat</code></a>]: compiles and links everything that is required to get a release version of OpenCOR; and
-                        <div>
-                            <strong>Note:</strong> <code>make[.bat]</code> does, by default, compile OpenCOR sequentially. You can, however, specify the number of jobs (<code>n</code>) to be run simultaneously, making it possible to compile OpenCOR in parallel on Windows and on Linux / OS X, respectively:
-                            <pre class="prettyprint">C:\OpenCOR>make /m[:n]</pre>
-                            <pre class="prettyprint">$ ./make -j [n]</pre>
-                            If no <code>n</code> value is provided, then as many jobs as possible will be run simultaneously.
-                        </div>
-                    </li>
-                    <li><a href="https://github.com/opencor/opencor/blob/master/maketests"><code>[OpenCOR]/maketests</code></a>[<a href="https://github.com/opencor/opencor/blob/master/maketests.bat"><code>.bat</code></a>]: builds a release version of OpenCOR and its tests;</li>
-                    <li>
-                        <a href="https://github.com/opencor/opencor/blob/master/run"><code>[OpenCOR]/run</code></a>[<a href="https://github.com/opencor/opencor/blob/master/run.bat"><code>.bat</code></a> | <a href="https://github.com/opencor/opencor/blob/master/run.vbs"><code>.vbs</code></a>]: runs OpenCOR.
-                        <div>
-                            <strong>Note:</strong> on Windows, if you were to run OpenCOR from a console window by just entering <code>run</code>, then the <code>run.bat</code> file would be executed (rather than the <code>run.vbs</code> file), offering you the opportunity to use OpenCOR as a console application. However, if you were to run OpenCOR by double clicking on the <code>run.bat</code> file from Windows Explorer, then a console window will quickly appear and disappear. To avoid this, you should double click on the <code>run.vbs</code> file.
-                        </div>
-                    </li>
-                    <li><a href="https://github.com/opencor/opencor/blob/master/runtests"><code>[OpenCOR]/runtests</code></a>[<a href="https://github.com/opencor/opencor/blob/master/runtests.bat"><code>.bat</code></a>]: runs OpenCOR's tests;</li>
-                </ul>
+                <a href="https://github.com/opencor/opencor/blob/master/make"><code>[OpenCOR]/make</code></a>[<a href="https://github.com/opencor/opencor/blob/master/make.bat"><code>.bat</code></a>]: compiles and links everything that is required to get a release version of OpenCOR; and
+                <div>
+                    <strong>Note:</strong> <code>make[.bat]</code> does, by default, compile OpenCOR sequentially. You can, however, specify the number of jobs (<code>n</code>) to be run simultaneously, making it possible to compile OpenCOR in parallel on Windows and on Linux / OS X, respectively:
+                    <pre class="prettyprint">C:\OpenCOR>make /m[:n]</pre>
+                    <pre class="prettyprint">$ ./make -j [n]</pre>
+                    If no <code>n</code> value is provided, then as many jobs as possible will be run simultaneously.
+                </div>
             </li>
+            <li><a href="https://github.com/opencor/opencor/blob/master/maketests"><code>[OpenCOR]/maketests</code></a>[<a href="https://github.com/opencor/opencor/blob/master/maketests.bat"><code>.bat</code></a>]: builds a release version of OpenCOR and its tests;</li>
             <li>
-                <strong>Using Qt Creator:</strong>
-                <ul>
-                    <li>Start Qt Creator;</li>
-                    <li>Open <a href="https://github.com/opencor/opencor/blob/master/CMakeLists.txt"><code>[OpenCOR]/CMakeLists.txt</code></a> (by selecting the <code>File</code> | <code>Open File or Project...</code> menu or by pressing <code>Ctrl+O</code>);</li>
-                    <li>Specify <a href="https://github.com/opencor/opencor/tree/master/build"><code>[OpenCOR]/build</code></a> as the build directory;</li>
-                    <li>Make sure that the right generator is selected (i.e. <code>NMake Generator (Microsoft Visual C++ Compiler 10.0 (x86))</code> for Windows, <code>Unix Generator (GCC (x86 32bit))</code> for Linux 32-bit, <code>Unix Generator (GCC (x86 64bit))</code> for Linux 64-bit and <code>Unix Generator (GCC (x86 64bit))</code> for OS X), if necessary;</li>
-                    <li>Click on the <code>Run CMake</code> button;</li>
-                    <li>Click on the <code>Finish</code> button; and</li>
-                    <li>
-                        Build and run OpenCOR (by selecting the <code>Build</code> | <code>Run</code> menu or by pressing <code>Ctrl+R</code>).
-                        <div>
-                            <strong>Note #1:</strong> because of our use of CMake, debugging with Qt Creator requires an extra build step which can be set up by selecting the <code>Projects</code> view and by clicking on the <code>Add Build Step</code> drop-down button and clicking on the <code>Custom Process Step</code> menu item. From there, tick the <code>Enable custom process step</code> check box, set the <code>Command</code> field to <code>cmake</code>, leave the <code>Working directory</code> field with <code>%{buildDir}</code> and set the <code>Command arguments</code> field to <code>-DCMAKE_BUILD_TYPE=Debug ..</code>. Finally, make sure that this new build step comes before the default <code>Make</code> build step.
-                        </div>
-                        <div>
-                            <strong>Note #2:</strong> to build OpenCOR's tests, you need to add <code>-DENABLE_TESTING=True</code> to the CMake command (see Note #1). Then, if you want the tests to be run every time you build OpenCOR, you need to create (and enable) a new build step (see Note #1) with <code>runtests</code> as the <code>Command</code> and <code>%{buildDir}/tests</code> as the <code>Working directory</code>. Now, unlike in Note #1, this new build step must come after the default <code>Make</code> build step.
-                        </div>
-                        <div>
-                            <strong>Note #3:</strong> by default, Qt Creator will compile OpenCOR sequentially, but this can be changed by selecting the <code>Projects</code> view and by clicking on the <code>Details</code> drop-down button of the default <code>Make</code> build step under the <code>Build Steps</code> header. From there, just set the <code>Additional arguments</code> field to <code>-j [n]</code> where <code>n</code> is the number of jobs to be run simultaneously (the <code>n</code> value is compulsory on Windows, but if none is provided on Linux / OS X, then Qt Creator will try to run as many jobs as possible).
-                        </div>
-                    </li>
-                </ul>
+                <a href="https://github.com/opencor/opencor/blob/master/run"><code>[OpenCOR]/run</code></a>[<a href="https://github.com/opencor/opencor/blob/master/run.bat"><code>.bat</code></a> | <a href="https://github.com/opencor/opencor/blob/master/run.vbs"><code>.vbs</code></a>]: runs OpenCOR.
+                <div>
+                    <strong>Note:</strong> on Windows, if you were to run OpenCOR from a console window by just entering <code>run</code>, then the <code>run.bat</code> file would be executed (rather than the <code>run.vbs</code> file), offering you the opportunity to use OpenCOR as a console application. However, if you were to run OpenCOR by double clicking on the <code>run.bat</code> file from Windows Explorer, then a console window will quickly appear and disappear. To avoid this, you should double click on the <code>run.vbs</code> file.
+                </div>
+            </li>
+            <li><a href="https://github.com/opencor/opencor/blob/master/runtests"><code>[OpenCOR]/runtests</code></a>[<a href="https://github.com/opencor/opencor/blob/master/runtests.bat"><code>.bat</code></a>]: runs OpenCOR's tests;</li>
+        </ul>
+
+        <div class="section">
+            Using Qt Creator
+        </div>
+
+        <ul>
+            <li>Start Qt Creator;</li>
+            <li>Open <a href="https://github.com/opencor/opencor/blob/master/CMakeLists.txt"><code>[OpenCOR]/CMakeLists.txt</code></a> (by selecting the <code>File</code> | <code>Open File or Project...</code> menu or by pressing <code>Ctrl+O</code>);</li>
+            <li>Specify <a href="https://github.com/opencor/opencor/tree/master/build"><code>[OpenCOR]/build</code></a> as the build directory;</li>
+            <li>Make sure that the right generator is selected (i.e. <code>NMake Generator (Microsoft Visual C++ Compiler 10.0 (x86))</code> for Windows, <code>Unix Generator (GCC (x86 32bit))</code> for Linux 32-bit, <code>Unix Generator (GCC (x86 64bit))</code> for Linux 64-bit and <code>Unix Generator (GCC (x86 64bit))</code> for OS X), if necessary;</li>
+            <li>Click on the <code>Run CMake</code> button;</li>
+            <li>Click on the <code>Finish</code> button; and</li>
+            <li>
+                Build and run OpenCOR (by selecting the <code>Build</code> | <code>Run</code> menu or by pressing <code>Ctrl+R</code>).
+                <div>
+                    <strong>Note #1:</strong> because of our use of CMake, debugging with Qt Creator requires an extra build step which can be set up by selecting the <code>Projects</code> view and by clicking on the <code>Add Build Step</code> drop-down button and clicking on the <code>Custom Process Step</code> menu item. From there, tick the <code>Enable custom process step</code> check box, set the <code>Command</code> field to <code>cmake</code>, leave the <code>Working directory</code> field with <code>%{buildDir}</code> and set the <code>Command arguments</code> field to <code>-DCMAKE_BUILD_TYPE=Debug ..</code>. Finally, make sure that this new build step comes before the default <code>Make</code> build step.
+                </div>
+                <div>
+                    <strong>Note #2:</strong> to build OpenCOR's tests, you need to add <code>-DENABLE_TESTING=True</code> to the CMake command (see Note #1). Then, if you want the tests to be run every time you build OpenCOR, you need to create (and enable) a new build step (see Note #1) with <code>runtests</code> as the <code>Command</code> and <code>%{buildDir}/tests</code> as the <code>Working directory</code>. Now, unlike in Note #1, this new build step must come after the default <code>Make</code> build step.
+                </div>
+                <div>
+                    <strong>Note #3:</strong> by default, Qt Creator will compile OpenCOR sequentially, but this can be changed by selecting the <code>Projects</code> view and by clicking on the <code>Details</code> drop-down button of the default <code>Make</code> build step under the <code>Build Steps</code> header. From there, just set the <code>Additional arguments</code> field to <code>-j [n]</code> where <code>n</code> is the number of jobs to be run simultaneously (the <code>n</code> value is compulsory on Windows, but if none is provided on Linux / OS X, then Qt Creator will try to run as many jobs as possible).
+                </div>
             </li>
         </ul>
 

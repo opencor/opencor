@@ -29,6 +29,7 @@
             <file>user/index.html</file>
             <file>user/knownIssuesLimitations.html</file>
             <file>user/licensing.html</file>
+            <file>user/prerequisites.html</file>
         </files>
     </filterSection>
 </QtHelpProject>

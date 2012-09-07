@@ -1,13 +1,15 @@
-@import url("../../res/common.css");
+@import url("../../res/webCommon.css");
 @import url("/doc/res/common.css");
-/* Note: the first import used to be sufficient for use within either a web */
-/*       page or a Qt help page, but not anymore. So, instead, we now have  */
-/*       the first import for use within a web page and the second import   */
-/*       for use within a Qt help page. Indeed, with Qt 4.8.1, QtWebKit is  */
-/*       now stricter (or, most likely, it didn't use to be strict enough   */
-/*       before and now does what it should have been doing all along?),    */
-/*       hence the above 'dirty trick' to get things to work in both        */
-/*       cases...                                                           */
+/* Note #1: the first import used to be sufficient for use within either a   */
+/*          web page or a Qt help page, but not anymore. So, instead, we now */
+/*          have the first import for use within a web page and the second   */
+/*          import for use within a Qt help page. Indeed, with Qt 4.8.1,     */
+/*          QtWebKit is now stricter (or, most likely, it didn't use to be   */
+/*          strict enough before and now does what it should have been doing */
+/*          all along?), hence the above 'dirty trick' to get things to work */
+/*          in both cases...                                                 */
+/* Note #2: because we support our own URL scheme, we now have a Web         */
+/*          specific common CSS file...                                      */
 
 a {
     color: rgb(54, 96, 146);
