@@ -61,7 +61,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("        <ul>");
 
     for (i = 0; i < data.length; ++i)
-        if (data[i][1]) {
+        if (data[i].length) {
             // We are dealing with a menu item
 
             var path = data[i][3]?data[i][2]:relativePath+"/"+data[i][2];
