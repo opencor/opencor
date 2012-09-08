@@ -23,6 +23,12 @@
             <file>user/res/menu.js</file>
             <file>user/res/stylesheet.css</file>
 
+            <file>user/plugins/editing.html</file>
+            <file>user/plugins/index.html</file>
+            <file>user/plugins/miscellaneous.html</file>
+            <file>user/plugins/organisation.html</file>
+            <file>user/plugins/simulation.html</file>
+
             <file>user/authors.html</file>
             <file>user/contactUs.html</file>
             <file>user/dissemination.html</file>
