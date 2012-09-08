@@ -16,6 +16,10 @@
 
 //==============================================================================
 
+#include <QUrl>
+
+//==============================================================================
+
 class QSettings;
 
 //==============================================================================
@@ -44,7 +48,8 @@ public:
 
     virtual void loadingOfSettingsDone(const Plugins &pLoadedPlugins);
 
-    virtual void handleArguments(const QStringList &pArguments) const;
+    virtual bool handleArguments(const QStringList &pArguments);
+    virtual bool handleAction(const QUrl &pUrl);
 
 protected:
     void loadWindowSettings(QSettings *pSettings,

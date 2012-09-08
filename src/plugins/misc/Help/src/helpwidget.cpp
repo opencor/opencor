@@ -15,6 +15,7 @@
 #include <QFileInfo>
 #include <QHelpEngine>
 #include <QPaintEvent>
+#include <QProcess>
 #include <QSettings>
 #include <QTimer>
 #include <QWebHistory>
@@ -155,11 +156,12 @@ bool HelpPage::acceptNavigationRequest(QWebFrame*,
     // Requested URL
 
     QUrl url = pRequest.url();
+    QString urlScheme = url.scheme();
 
     // Determine whether the URL refers to an OpenCOR document or an external
     // resource of sorts
 
-    if (url.scheme() == "qthelp") {
+    if (!urlScheme.compare("qthelp")) {
         // This an OpenCOR document, so check whether it's one which the user's
         // system should open for us
 
@@ -195,6 +197,15 @@ bool HelpPage::acceptNavigationRequest(QWebFrame*,
         // We are dealing with a document that we want to open ourselves, so...
 
         return true;
+    } else if (!urlScheme.compare("opencor")) {
+        // This is an action which we want OpenCOR or one of its plugins to
+        // execute
+
+        QProcess::startDetached(qApp->applicationFilePath(),
+                                QStringList() << url.toString(),
+                                qApp->applicationDirPath());
+
+        return false;
     } else {
         // This is an external resource of sorts, so we leave it to the user's
         // default web browser to open it for us

@@ -14,6 +14,7 @@
 #include <QMainWindow>
 #include <QMap>
 #include <QTranslator>
+#include <QUrl>
 
 //==============================================================================
 
@@ -52,7 +53,7 @@ public:
 
     void restart(const bool &pSaveSettings) const;
 
-    void handleArguments(const QString &pArguments) const;
+    bool handleArguments(const QString &pArguments) const;
 
 protected:
     virtual void changeEvent(QEvent *pEvent);
@@ -92,11 +93,13 @@ private:
     void updateViewMenu(const GuiWindowSettings::GuiWindowSettingsType &pMenuType,
                         QAction *pAction);
 
+    bool handleAction(const QUrl &pUrl);
+
     void showSelf();
 
 private Q_SLOTS:
     void fileOpenRequest(const QString &pFileName);
-    void messageReceived(const QString &pArguments);
+    void messageReceived(const QString &pMessage);
 
     void on_actionFullScreen_triggered();
     void on_actionSystem_triggered();

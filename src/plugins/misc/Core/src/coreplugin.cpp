@@ -232,7 +232,7 @@ void CorePlugin::initializationsDone(const Plugins &pLoadedPlugins)
                 switch (windowSettings->type()) {
                 case GuiWindowSettings::Organisation:
                     // The plugin's window is of organisation type, so we want
-                    // its filesOpened signal to trigger out central widget's
+                    // its filesOpened signal to trigger our central widget's
                     // openFiles slot
 
                     connect((OrganisationWidget *) windowSettings->window(), SIGNAL(filesOpened(const QStringList &)),

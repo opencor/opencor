@@ -950,17 +950,22 @@ void MainWindow::showSelf()
 
 //==============================================================================
 
-void MainWindow::handleArguments(const QString &pArguments) const
+bool MainWindow::handleArguments(const QString &pArguments) const
 {
     // Handle the arguments that were passed to OpenCOR by passing them to the
     // Core plugin, should it be loaded
 
-    foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
-        CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
+    foreach (Plugin *plugin, mPluginManager->loadedPlugins())
+        if (!plugin->name().compare(CorePlugin)) {
+            CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
 
-        if (coreInterface)
-            coreInterface->handleArguments(pArguments.split("|"));
-    }
+            if (coreInterface)
+                return coreInterface->handleArguments(pArguments.split("|"));
+
+            return false;
+        }
+
+    return false;
 }
 
 //==============================================================================
@@ -975,16 +980,75 @@ void MainWindow::fileOpenRequest(const QString &pFileName)
 
 //==============================================================================
 
-void MainWindow::messageReceived(const QString &pArguments)
+bool MainWindow::handleAction(const QUrl &pUrl)
 {
-    // We have just received a message from another instance of OpenCOR, so
-    // bring ourselves to the foreground
+    // Handle the action that was passed to OpenCOR
 
-    showSelf();
+    QString authority = pUrl.authority();
 
-    // Now, we must handle the arguments that were passed to OpenCOR
+    if (!authority.compare("actionplugins")) {
+        // We want to open the Plugins dialog box
 
-    handleArguments(pArguments);
+        on_actionPlugins_triggered();
+
+        return true;
+    } else {
+        // We are dealing with an action which OpenCOR itself can't handle, but
+        // maybe one of its loaded plugins can
+
+        QString host = pUrl.host();
+
+        foreach (Plugin *plugin, mPluginManager->loadedPlugins())
+            if (!plugin->name().toLower().compare(host)) {
+                // This is an action for the current plugin, so forward the
+                // action to it, should it support the Core interface
+
+                CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
+
+                if (coreInterface)
+                    // The plugin supports the Core interface, so ask it to
+                    // handle the action
+
+                    return coreInterface->handleAction(pUrl);
+                else
+                    // The plugin doesn't support the Core interface, so...
+
+                    return false;
+            }
+
+        // No plugin could handle the action, so...
+
+        return false;
+    }
+}
+
+//==============================================================================
+
+void MainWindow::messageReceived(const QString &pMessage)
+{
+    // We have just received a message which can be one of two things:
+    //  1) The user tried to run another instance of OpenCOR which sent a
+    //     message to this instance, asking it to bring itself to the foreground
+    //     and handling all the arguments passed in the message; or
+    //  2) An OpenCOR action was sent to us, so we need to handle it.
+
+    // Check whether the passed message corresponds to an OpenCOR action
+
+    QUrl url = pMessage;
+
+    if (!url.scheme().compare("opencor")) {
+        // We are dealing with an OpenCOR action, so handle it
+
+        handleAction(url);
+    } else {
+        // It's not an OpenCOR action, so bring ourselves to the forground
+
+        showSelf();
+
+        // Now, we must handle the arguments that were passed to us
+
+        handleArguments(pMessage);
+    }
 }
 
 //==============================================================================
