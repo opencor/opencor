@@ -23,7 +23,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("        top: 29px;");
     document.write("        right: 0px;");
     document.write("        background: rgb(249, 249, 249);");
-    document.write("        border: 1px solid rgb("+r+", "+g+", "+b+");");
+    document.write("        border: 2px solid rgb("+r+", "+g+", "+b+");");
     document.write("        border-top-style: none;");
     document.write("        border-radius: 0px 0px 5px 5px;");
     document.write("        box-shadow: 0px 5px 5px -5px rgb(103, 103, 103);");
@@ -51,7 +51,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("    }");
     document.write("");
     document.write("    ul.contentsMenu li ul li.lastMenuItem a {");
-    document.write("        border-radius: 0px 0px 5px 5px;");
+    document.write("        border-radius: 0px 0px 3px 3px;");
     document.write("    }");
     document.write("</style>");
     document.write("");
