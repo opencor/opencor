@@ -8,6 +8,8 @@ function headerAndContentsMenu(pageName, relativePath) {
                                       new Array(1, "Editing", "plugins/editing.html"),
                                       new Array(1, "Simulation", "plugins/simulation.html"),
                                       new Array(1, "Miscellaneous", "plugins/miscellaneous.html"),
+                                      new Array(1, "API", "plugins/api.html"),
+                                      new Array(1, "Third-party", "plugins/thirdParty.html"),
                                       new Array(0, "Known issues/limitations", "knownIssuesLimitations.html"),
                                       new Array(),
                                       new Array(0, "Licensing", "licensing.html"),
