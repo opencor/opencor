@@ -299,7 +299,7 @@ void CorePlugin::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void CorePlugin::handleArguments(const QStringList &pArguments) const
+void CorePlugin::handleArguments(const QStringList &pArguments)
 {
     // Check the arguments and if any of them is an existing file, then open it
 

@@ -66,24 +66,20 @@ void CoreInterface::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-bool CoreInterface::handleArguments(const QStringList &pArguments)
+void CoreInterface::handleArguments(const QStringList &pArguments)
 {
+    // Nothing to do by default...
+
     Q_UNUSED(pArguments);
-
-    // No arguments are handled by default...
-
-    return false;
 }
 
 //==============================================================================
 
-bool CoreInterface::handleAction(const QUrl &pUrl)
+void CoreInterface::handleAction(const QUrl &pUrl)
 {
+    // Nothing to do by default...
+
     Q_UNUSED(pUrl);
-
-    // No action is handled by default...
-
-    return false;
 }
 
 //==============================================================================

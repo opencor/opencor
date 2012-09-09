@@ -53,7 +53,7 @@ public:
 
     void restart(const bool &pSaveSettings) const;
 
-    bool handleArguments(const QString &pArguments) const;
+    void handleArguments(const QString &pArguments);
 
 protected:
     virtual void changeEvent(QEvent *pEvent);
@@ -93,7 +93,7 @@ private:
     void updateViewMenu(const GuiWindowSettings::GuiWindowSettingsType &pMenuType,
                         QAction *pAction);
 
-    bool handleAction(const QUrl &pUrl);
+    void handleAction(const QUrl &pUrl);
 
     void showSelf();
 

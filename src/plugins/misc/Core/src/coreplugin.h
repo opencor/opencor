@@ -49,7 +49,7 @@ public:
 
     virtual void loadingOfSettingsDone(const Plugins &pLoadedPlugins);
 
-    virtual void handleArguments(const QStringList &pArguments) const;
+    virtual void handleArguments(const QStringList &pArguments);
 
     virtual void retranslateUi();
 

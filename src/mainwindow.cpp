@@ -950,7 +950,7 @@ void MainWindow::showSelf()
 
 //==============================================================================
 
-bool MainWindow::handleArguments(const QString &pArguments) const
+void MainWindow::handleArguments(const QString &pArguments)
 {
     // Handle the arguments that were passed to OpenCOR by passing them to the
     // Core plugin, should it be loaded
@@ -960,12 +960,10 @@ bool MainWindow::handleArguments(const QString &pArguments) const
             CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
 
             if (coreInterface)
-                return coreInterface->handleArguments(pArguments.split("|"));
+                coreInterface->handleArguments(pArguments.split("|"));
 
-            return false;
+            break;
         }
-
-    return false;
 }
 
 //==============================================================================
@@ -980,7 +978,7 @@ void MainWindow::fileOpenRequest(const QString &pFileName)
 
 //==============================================================================
 
-bool MainWindow::handleAction(const QUrl &pUrl)
+void MainWindow::handleAction(const QUrl &pUrl)
 {
     // Handle the action that was passed to OpenCOR
 
@@ -990,8 +988,6 @@ bool MainWindow::handleAction(const QUrl &pUrl)
         // We want to open the Plugins dialog box
 
         on_actionPlugins_triggered();
-
-        return true;
     } else {
         // We are dealing with an action which OpenCOR itself can't handle, but
         // maybe one of its loaded plugins can
@@ -1009,16 +1005,10 @@ bool MainWindow::handleAction(const QUrl &pUrl)
                     // The plugin supports the Core interface, so ask it to
                     // handle the action
 
-                    return coreInterface->handleAction(pUrl);
-                else
-                    // The plugin doesn't support the Core interface, so...
+                    coreInterface->handleAction(pUrl);
 
-                    return false;
+                break;
             }
-
-        // No plugin could handle the action, so...
-
-        return false;
     }
 }
 

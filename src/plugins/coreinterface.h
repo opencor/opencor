@@ -48,8 +48,8 @@ public:
 
     virtual void loadingOfSettingsDone(const Plugins &pLoadedPlugins);
 
-    virtual bool handleArguments(const QStringList &pArguments);
-    virtual bool handleAction(const QUrl &pUrl);
+    virtual void handleArguments(const QStringList &pArguments);
+    virtual void handleAction(const QUrl &pUrl);
 
 protected:
     void loadWindowSettings(QSettings *pSettings,

@@ -366,12 +366,9 @@ void PluginsWindow::updatePluginInfo(const QModelIndex &pNewIndex,
     QStringList dependencies = pluginInfo.dependencies();
 
     if (dependencies.isEmpty())
-        dependencies << tr("None");
-
-    if (dependencies.count() > 1)
-        mGui->dependenciesValue->setText("- "+dependencies.join("\n- "));
+        mGui->dependenciesValue->setText("None");
     else
-        mGui->dependenciesValue->setText(dependencies.first());
+        mGui->dependenciesValue->setText("- "+dependencies.join("\n- "));
 
     // The plugin's description
 
