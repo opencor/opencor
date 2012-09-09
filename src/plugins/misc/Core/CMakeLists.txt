@@ -1,6 +1,10 @@
 PROJECT(CorePlugin)
 
 # Add the plugin
+# Note: in order to support OpenCOR actions (e.g. to allow OpenCOR to respond
+#       to an action coming from the Help plugin), we need to know about the
+#       QtSingleApplication class, so like for OpenCOR we have it directly in
+#       the plugin rather than as a dependency (it's easier that way)...
 
 IF(WIN32)
     SET(PLATFORM win)
