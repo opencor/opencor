@@ -31,12 +31,22 @@
 **************************************************************************/
 
 #include <QApplication>
+//---OPENCOR--- BEGIN
+#include <QUrl>
+//---OPENCOR--- END
 
 namespace SharedTools {
 
 class QtLocalPeer;
 
+/*---OPENCOR---
 class QtSingleApplication : public QApplication
+*/
+//---OPENCOR--- BEGIN
+#include "coreglobal.h"
+
+class CORE_EXPORT QtSingleApplication : public QApplication
+//---OPENCOR--- END
 {
     Q_OBJECT
 
@@ -59,6 +69,9 @@ public:
 
     QString applicationId() const;
 
+//---OPENCOR--- BEGIN
+    void handleAction(const QUrl &pUrl) { emit messageReceived(pUrl.toString()); }
+//---OPENCOR--- END
 public Q_SLOTS:
     bool sendMessage(const QString &message, int timeout = 5000, qint64 pid = -1);
     void activateWindow();

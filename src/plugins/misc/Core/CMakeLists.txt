@@ -2,8 +2,19 @@ PROJECT(CorePlugin)
 
 # Add the plugin
 
+IF(WIN32)
+    SET(PLATFORM win)
+ELSE()
+    SET(PLATFORM unix)
+ENDIF()
+
 ADD_PLUGIN(Core
     SOURCES
+        ../../../3rdparty/QtSingleApplication/src/qtlocalpeer.cpp
+        ../../../3rdparty/QtSingleApplication/src/qtlockedfile.cpp
+        ../../../3rdparty/QtSingleApplication/src/qtlockedfile_${PLATFORM}.cpp
+        ../../../3rdparty/QtSingleApplication/src/qtsingleapplication.cpp
+
         ../../coreinterface.cpp
         ../../fileinterface.cpp
         ../../guiinterface.cpp
@@ -27,6 +38,9 @@ ADD_PLUGIN(Core
         src/usermessagewidget.cpp
         src/widget.cpp
     HEADERS_MOC
+        ../../../3rdparty/QtSingleApplication/src/qtlocalpeer.h
+        ../../../3rdparty/QtSingleApplication/src/qtsingleapplication.h
+
         ../../plugin.h
         ../../pluginmanager.h
 

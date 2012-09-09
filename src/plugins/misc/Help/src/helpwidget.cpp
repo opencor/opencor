@@ -15,10 +15,13 @@
 #include <QFileInfo>
 #include <QHelpEngine>
 #include <QPaintEvent>
-#include <QProcess>
 #include <QSettings>
 #include <QTimer>
 #include <QWebHistory>
+
+//==============================================================================
+
+#include <QtSingleApplication>
 
 //==============================================================================
 
@@ -201,9 +204,7 @@ bool HelpPage::acceptNavigationRequest(QWebFrame*,
         // This is an action which we want OpenCOR or one of its plugins to
         // execute
 
-        QProcess::startDetached(qApp->applicationFilePath(),
-                                QStringList() << url.toString(),
-                                qApp->applicationDirPath());
+        static_cast<SharedTools::QtSingleApplication *>(qApp)->handleAction(url);
 
         return false;
     } else {
