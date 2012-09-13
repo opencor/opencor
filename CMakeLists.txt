@@ -468,8 +468,7 @@ IF(WIN32)
     #       a registry key which is not set, so...
 
     FOREACH(MSVC_LIBRARY msvcp100 msvcr100)
-        DEPLOY_WINDOWS_BINARY_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/x86
-                                   ${CMAKE_SHARED_LIBRARY_PREFIX}${MSVC_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX})
+        INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/windows/x86/${CMAKE_SHARED_LIBRARY_PREFIX}${MSVC_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION bin)
     ENDFOREACH()
 
     # Qt files required by OpenCOR

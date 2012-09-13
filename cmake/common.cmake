@@ -884,16 +884,27 @@ MACRO(COPY_FILE_TO_BUILD_DIR DEST_DIRNAME DIRNAME FILENAME)
     ENDIF()
 ENDMACRO()
 
-MACRO(DEPLOY_WINDOWS_BINARY_FILE DIRNAME FILENAME)
-    # Copy the binary file to both the build and build/bin folders, so we can
+MACRO(DEPLOY_WINDOWS_EXTERNAL_DEPENDENCY DIRNAME FILENAME)
+    # Copy the library file to both the build and build/bin folders, so we can
     # test things without first having to deploy OpenCOR
 
     COPY_FILE_TO_BUILD_DIR(. ${DIRNAME} ${FILENAME})
     COPY_FILE_TO_BUILD_DIR(bin ${DIRNAME} ${FILENAME})
 
-    # Install the binary file
+    # Install the library file
 
     INSTALL(FILES ${DIRNAME}/${FILENAME} DESTINATION bin)
+ENDMACRO()
+
+MACRO(DEPLOY_LINUX_EXTERNAL_DEPENDENCY DIRNAME FILENAME)
+    # Copy the library file to the build folder, so we can test things without
+    # first having to deploy OpenCOR
+
+    COPY_FILE_TO_BUILD_DIR(. ${DIRNAME} ${FILENAME})
+
+    # Install the library file
+
+    INSTALL(FILES ${DIRNAME}/${FILENAME} DESTINATION lib)
 ENDMACRO()
 
 MACRO(DEPLOY_LINUX_FILE DEST_DIRNAME DIRNAME FILENAME)
