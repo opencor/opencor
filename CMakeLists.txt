@@ -469,23 +469,23 @@ IF(WIN32)
 
     FOREACH(MSVC_LIBRARY msvcp100 msvcr100)
         DEPLOY_WINDOWS_BINARY_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/x86
-                                   ${MSVC_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX})
+                                   ${CMAKE_SHARED_LIBRARY_PREFIX}${MSVC_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX})
     ENDFOREACH()
 
     # Qt files required by OpenCOR
 
     FOREACH(QT_LIBRARY phonon QtCLucene QtCore QtGui QtHelp QtNetwork QtSql QtSvg QtWebKit QtXml)
-        INSTALL(FILES ${QT_BINARY_DIR}/${QT_LIBRARY}${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION bin)
+        INSTALL(FILES ${QT_BINARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_LIBRARY}${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION bin)
     ENDFOREACH()
 
     # SQLite plugin (required to see the help file)
 
-    INSTALL(FILES ${QT_PLUGINS_DIR}/sqldrivers/qsqlite${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION plugins/sqldrivers)
+    INSTALL(FILES ${QT_PLUGINS_DIR}/sqldrivers/${CMAKE_SHARED_LIBRARY_PREFIX}qsqlite${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION plugins/sqldrivers)
 
     # Some image format plugins (required to see some web pages)
 
-    INSTALL(FILES ${QT_PLUGINS_DIR}/imageformats/qgif${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION plugins/imageformats)
-    INSTALL(FILES ${QT_PLUGINS_DIR}/imageformats/qjpeg${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION plugins/imageformats)
+    INSTALL(FILES ${QT_PLUGINS_DIR}/imageformats/${CMAKE_SHARED_LIBRARY_PREFIX}qgif${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION plugins/imageformats)
+    INSTALL(FILES ${QT_PLUGINS_DIR}/imageformats/${CMAKE_SHARED_LIBRARY_PREFIX}qjpeg${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION plugins/imageformats)
 
     # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
     # version of OpenCOR)
@@ -624,14 +624,14 @@ ELSE()
     # SQLite plugin (required to see the help file)
 
     DEPLOY_LINUX_FILE(plugins/sqldrivers ${QT_PLUGINS_DIR}/sqldrivers
-                      libqsqlite${CMAKE_SHARED_LIBRARY_SUFFIX})
+                      ${CMAKE_SHARED_LIBRARY_PREFIX}qsqlite${CMAKE_SHARED_LIBRARY_SUFFIX})
 
     # Some image format plugins (required to see some web pages)
 
     DEPLOY_LINUX_FILE(plugins/imageformats ${QT_PLUGINS_DIR}/imageformats
-                      libqgif${CMAKE_SHARED_LIBRARY_SUFFIX})
+                      ${CMAKE_SHARED_LIBRARY_PREFIX}qgif${CMAKE_SHARED_LIBRARY_SUFFIX})
     DEPLOY_LINUX_FILE(plugins/imageformats ${QT_PLUGINS_DIR}/imageformats
-                      libqjpeg${CMAKE_SHARED_LIBRARY_SUFFIX})
+                      ${CMAKE_SHARED_LIBRARY_PREFIX}qjpeg${CMAKE_SHARED_LIBRARY_SUFFIX})
 
     # Shell script to run OpenCOR
 
