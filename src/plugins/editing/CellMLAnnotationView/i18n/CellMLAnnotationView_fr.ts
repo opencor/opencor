@@ -37,6 +37,28 @@
     </message>
 </context>
 <context>
+    <name>CellmlAnnotationViewMetadataEditDetailsWidget</name>
+    <message>
+        <source>&amp;Copy</source>
+        <translation>&amp;Copier</translation>
+    </message>
+    <message>
+        <source>Copy the URL to the clipboard</source>
+        <translation>Copier l&apos;URL dans le presse-papier</translation>
+    </message>
+</context>
+<context>
+    <name>CellmlAnnotationViewMetadataNormalViewDetailsWidget</name>
+    <message>
+        <source>&amp;Copy</source>
+        <translation>&amp;Copier</translation>
+    </message>
+    <message>
+        <source>Copy the URL to the clipboard</source>
+        <translation>Copier l&apos;URL dans le presse-papier</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::CellMLAnnotationView::CellMLAnnotationViewPlugin</name>
     <message>
         <source>CellML Annotation</source>

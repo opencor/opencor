@@ -23,6 +23,7 @@ namespace Ui {
 //==============================================================================
 
 class QGridLayout;
+class QLabel;
 class QStackedWidget;
 
 //==============================================================================
@@ -93,6 +94,8 @@ private:
 
     QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *> mRdfTriplesMapping;
 
+    QLabel *mCurrentResourceOrIdLabel;
+
     void genericLookup(const QString &pRdfTripleInformation = QString(),
                        const Type &pType = No,
                        const bool &pRetranslate = false);
@@ -111,6 +114,8 @@ Q_SIGNALS:
     void rdfTripleRemoved(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
 
 private Q_SLOTS:
+    void on_actionCopy_triggered();
+
     void disableLookupInformation();
 
     void lookupQualifier(const QString &pRdfTripleInformation);
@@ -123,6 +128,8 @@ private Q_SLOTS:
     void showLastRdfTriple();
 
     void trackVerticalScrollBarPosition(const int &pPosition);
+
+    void showCustomContextMenu(const QPoint &pPosition);
 };
 
 //==============================================================================

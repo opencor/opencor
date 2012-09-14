@@ -14,10 +14,12 @@
 
 //==============================================================================
 
+#include <QClipboard>
 #include <QComboBox>
 #include <QFormLayout>
 #include <QLabel>
 #include <QLineEdit>
+#include <QMenu>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
@@ -92,7 +94,8 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mLookupInformation(false),
     mItemsMapping(QMap<QObject *, Item>()),
     mItemsVerticalScrollBarPosition(0),
-    mCellmlElement(0)
+    mCellmlElement(0),
+    mCurrentResourceOrIdLabel(0)
 {
     // Set up the GUI
 
@@ -507,8 +510,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
                                                        "<a href=\""+itemInformation+"\">"+item.resource+"</a>",
                                                        1.0, false, false, Qt::AlignCenter);
 
-            resourceLabel->setToolTip("http://identifiers.org/"+item.resource);
+            resourceLabel->setAccessibleDescription("http://identifiers.org/"+item.resource+"/?redirect=true");
+            resourceLabel->setContextMenuPolicy(Qt::CustomContextMenu);
 
+            connect(resourceLabel, SIGNAL(customContextMenuRequested(const QPoint &)),
+                    this, SLOT(showCustomContextMenu(const QPoint &)));
             connect(resourceLabel, SIGNAL(linkActivated(const QString &)),
                     this, SLOT(lookupResource(const QString &)));
 
@@ -520,8 +526,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
                                                  "<a href=\""+itemInformation+"\">"+item.id+"</a>",
                                                  1.0, false, false, Qt::AlignCenter);
 
-            idLabel->setToolTip("http://identifiers.org/"+item.resource+"/"+item.id);
+            idLabel->setAccessibleDescription("http://identifiers.org/"+item.resource+"/"+item.id+"/?profile=most_reliable&redirect=true");
+            idLabel->setContextMenuPolicy(Qt::CustomContextMenu);
 
+            connect(idLabel, SIGNAL(customContextMenuRequested(const QPoint &)),
+                    this, SLOT(showCustomContextMenu(const QPoint &)));
             connect(idLabel, SIGNAL(linkActivated(const QString &)),
                     this, SLOT(lookupId(const QString &)));
 
@@ -1010,6 +1019,35 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::trackItemsVerticalScrollBarP
     // Keep track of the new position of our vertical scroll bar
 
     mItemsVerticalScrollBarPosition = pPosition;
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataEditDetailsWidget::showCustomContextMenu(const QPoint &pPosition)
+{
+    Q_UNUSED(pPosition);
+
+    // Keep track of the resource or id
+
+    mCurrentResourceOrIdLabel = qobject_cast<QLabel *>(qApp->widgetAt(QCursor::pos()));
+
+    // Create a custom context menu to allow the copying of the URL of the
+    // resource or id
+
+    QMenu menu;
+
+    menu.addAction(mGui->actionCopy);
+
+    menu.exec(QCursor::pos());
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataEditDetailsWidget::on_actionCopy_triggered()
+{
+    // Copy the URL of the resource or id to the clipboard
+
+    QApplication::clipboard()->setText(mCurrentResourceOrIdLabel->accessibleDescription());
 }
 
 //==============================================================================

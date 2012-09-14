@@ -25,6 +25,7 @@ namespace Ui {
 class QComboBox;
 class QFormLayout;
 class QGridLayout;
+class QLabel;
 class QLineEdit;
 class QNetworkAccessManager;
 class QNetworkReply;
@@ -124,6 +125,8 @@ private:
 
     CellMLSupport::CellmlFileElement *mCellmlElement;
 
+    QLabel *mCurrentResourceOrIdLabel;
+
     void updateGui(const Items &pItems, const QString &pErrorMsg,
                    const bool &pLookupTerm,
                    const int &pItemsVerticalScrollBarPosition,
@@ -153,6 +156,8 @@ public Q_SLOTS:
     void updateGui(CellMLSupport::CellmlFileElement *pCellmlElement);
 
 private Q_SLOTS:
+    void on_actionCopy_triggered();
+
     void disableLookupInformation();
 
     void qualifierChanged(const int &pQualifierIndex);
@@ -169,6 +174,8 @@ private Q_SLOTS:
     void addRetrievedTerm();
 
     void trackItemsVerticalScrollBarPosition(const int &pPosition);
+
+    void showCustomContextMenu(const QPoint &pPosition);
 };
 
 //==============================================================================

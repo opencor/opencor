@@ -12,8 +12,10 @@
 
 //==============================================================================
 
+#include <QClipboard>
 #include <QGridLayout>
 #include <QLabel>
+#include <QMenu>
 #include <QPushButton>
 #include <QScrollBar>
 #include <QStackedWidget>
@@ -38,7 +40,8 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
     mLookupInformation(First),
     mVerticalScrollBarPosition(0),
     mNeighbourRow(0),
-    mRdfTriplesMapping(QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *>())
+    mRdfTriplesMapping(QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *>()),
+    mCurrentResourceOrIdLabel(0)
 {
     // Set up the GUI
 
@@ -176,8 +179,11 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(CellMLSuppor
                                                        "<a href=\""+rdfTripleInformation+"\">"+rdfTriple->resource()+"</a>",
                                                        1.0, false, false, Qt::AlignCenter);
 
-            resourceLabel->setToolTip("http://identifiers.org/"+rdfTriple->resource());
+            resourceLabel->setAccessibleDescription("http://identifiers.org/"+rdfTriple->resource()+"/?redirect=true");
+            resourceLabel->setContextMenuPolicy(Qt::CustomContextMenu);
 
+            connect(resourceLabel, SIGNAL(customContextMenuRequested(const QPoint &)),
+                    this, SLOT(showCustomContextMenu(const QPoint &)));
             connect(resourceLabel, SIGNAL(linkActivated(const QString &)),
                     this, SLOT(lookupResource(const QString &)));
 
@@ -189,10 +195,13 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(CellMLSuppor
                                                  "<a href=\""+rdfTripleInformation+"\">"+rdfTriple->id()+"</a>",
                                                  1.0, false, false, Qt::AlignCenter);
 
+            connect(idLabel, SIGNAL(customContextMenuRequested(const QPoint &)),
+                    this, SLOT(showCustomContextMenu(const QPoint &)));
             connect(idLabel, SIGNAL(linkActivated(const QString &)),
                     this, SLOT(lookupId(const QString &)));
 
-            idLabel->setToolTip("http://identifiers.org/"+rdfTriple->resource()+"/"+rdfTriple->id());
+            idLabel->setAccessibleDescription("http://identifiers.org/"+rdfTriple->resource()+"/"+rdfTriple->id()+"/?profile=most_reliable&redirect=true");
+            idLabel->setContextMenuPolicy(Qt::CustomContextMenu);
 
             newGridLayout->addWidget(idLabel, row, 2);
 
@@ -622,6 +631,35 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::trackVerticalScrollBar
     // Keep track of the new position of our vertical scroll bar
 
     mVerticalScrollBarPosition = pPosition;
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::showCustomContextMenu(const QPoint &pPosition)
+{
+    Q_UNUSED(pPosition);
+
+    // Keep track of the resource or id
+
+    mCurrentResourceOrIdLabel = qobject_cast<QLabel *>(qApp->widgetAt(QCursor::pos()));
+
+    // Create a custom context menu to allow the copying of the URL of the
+    // resource or id
+
+    QMenu menu;
+
+    menu.addAction(mGui->actionCopy);
+
+    menu.exec(QCursor::pos());
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::on_actionCopy_triggered()
+{
+    // Copy the URL of the resource or id to the clipboard
+
+    QApplication::clipboard()->setText(mCurrentResourceOrIdLabel->accessibleDescription());
 }
 
 //==============================================================================

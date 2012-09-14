@@ -16,7 +16,21 @@
   <property name="widgetResizable">
    <bool>true</bool>
   </property>
+  <action name="actionCopy">
+   <property name="icon">
+    <iconset resource="../../../misc/Core/res/Core.qrc">
+     <normaloff>:/oxygen/actions/edit-copy.png</normaloff>:/oxygen/actions/edit-copy.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Copy</string>
+   </property>
+   <property name="statusTip">
+    <string>Copy the URL to the clipboard</string>
+   </property>
+  </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../../misc/Core/res/Core.qrc"/>
+ </resources>
  <connections/>
 </ui>
