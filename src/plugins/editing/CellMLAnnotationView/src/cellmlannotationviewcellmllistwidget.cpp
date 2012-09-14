@@ -62,7 +62,7 @@ CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(Cellm
     mTreeView->setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(mTreeView, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(treeViewContextMenu(const QPoint &)));
+            this, SLOT(showCustomContextMenu(const QPoint &)));
 
     // Some connections to handle the expansion/collapse of a CellML element
 
