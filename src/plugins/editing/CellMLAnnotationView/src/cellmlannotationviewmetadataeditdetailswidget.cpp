@@ -507,6 +507,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
                                                        "<a href=\""+itemInformation+"\">"+item.resource+"</a>",
                                                        1.0, false, false, Qt::AlignCenter);
 
+            resourceLabel->setToolTip("http://identifiers.org/"+item.resource);
+
             connect(resourceLabel, SIGNAL(linkActivated(const QString &)),
                     this, SLOT(lookupResource(const QString &)));
 
@@ -517,6 +519,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
             QLabel *idLabel = Core::newLabelLink(newGridWidget,
                                                  "<a href=\""+itemInformation+"\">"+item.id+"</a>",
                                                  1.0, false, false, Qt::AlignCenter);
+
+            idLabel->setToolTip("http://identifiers.org/"+item.resource+"/"+item.id);
 
             connect(idLabel, SIGNAL(linkActivated(const QString &)),
                     this, SLOT(lookupId(const QString &)));

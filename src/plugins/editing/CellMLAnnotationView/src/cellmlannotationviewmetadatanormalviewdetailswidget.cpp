@@ -176,6 +176,8 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(CellMLSuppor
                                                        "<a href=\""+rdfTripleInformation+"\">"+rdfTriple->resource()+"</a>",
                                                        1.0, false, false, Qt::AlignCenter);
 
+            resourceLabel->setToolTip("http://identifiers.org/"+rdfTriple->resource());
+
             connect(resourceLabel, SIGNAL(linkActivated(const QString &)),
                     this, SLOT(lookupResource(const QString &)));
 
@@ -189,6 +191,8 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(CellMLSuppor
 
             connect(idLabel, SIGNAL(linkActivated(const QString &)),
                     this, SLOT(lookupId(const QString &)));
+
+            idLabel->setToolTip("http://identifiers.org/"+rdfTriple->resource()+"/"+rdfTriple->id());
 
             newGridLayout->addWidget(idLabel, row, 2);
 
