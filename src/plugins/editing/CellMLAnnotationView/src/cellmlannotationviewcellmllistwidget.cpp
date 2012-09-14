@@ -550,7 +550,7 @@ void CellmlAnnotationViewCellmlListWidget::updateMetadataDetails(const QModelInd
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlListWidget::treeViewContextMenu(const QPoint &pPosition) const
+void CellmlAnnotationViewCellmlListWidget::showCustomContextMenu(const QPoint &pPosition) const
 {
     Q_UNUSED(pPosition);
 

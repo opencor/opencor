@@ -63,7 +63,7 @@ private Q_SLOTS:
     void on_actionZoomOut_triggered();
     void on_actionPrint_triggered();
 
-    void customContextMenu(const QPoint &pPosition) const;
+    void showCustomContextMenu(const QPoint &pPosition) const;
 };
 
 //==============================================================================

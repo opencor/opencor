@@ -59,7 +59,7 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
     // Some connections
 
     connect(mFileBrowserWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(customContextMenu(const QPoint &)));
+            this, SLOT(showCustomContextMenu(const QPoint &)));
     connect(mFileBrowserWidget, SIGNAL(doubleClicked(const QModelIndex &)),
             this, SLOT(itemDoubleClicked(const QModelIndex &)));
     connect(mFileBrowserWidget, SIGNAL(filesOpened(const QStringList &)),
@@ -161,7 +161,7 @@ void FileBrowserWindow::on_actionNext_triggered()
 
 //==============================================================================
 
-void FileBrowserWindow::customContextMenu(const QPoint &) const
+void FileBrowserWindow::showCustomContextMenu(const QPoint &) const
 {
     // Create a custom context menu which items match the contents of our
     // toolbar

@@ -54,7 +54,7 @@ CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
     mCellmlModelRepositoryWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(mCellmlModelRepositoryWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(customContextMenu(const QPoint &)));
+            this, SLOT(showCustomContextMenu(const QPoint &)));
 
     // Create a network access manager so that we can then retrieve a list of
     // CellML models from the CellML Model Repository
@@ -246,7 +246,7 @@ void CellmlModelRepositoryWindow::finished(QNetworkReply *pNetworkReply)
 
 //==============================================================================
 
-void CellmlModelRepositoryWindow::customContextMenu(const QPoint &) const
+void CellmlModelRepositoryWindow::showCustomContextMenu(const QPoint &) const
 {
     // Create a custom context menu for our CellML Models Repository widget
 

@@ -54,7 +54,7 @@ private Q_SLOTS:
     void on_actionPrevious_triggered();
     void on_actionNext_triggered();
 
-    void customContextMenu(const QPoint &) const;
+    void showCustomContextMenu(const QPoint &) const;
     void itemDoubleClicked(const QModelIndex &);
 };
 

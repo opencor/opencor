@@ -90,7 +90,7 @@ HelpWindow::HelpWindow(QWidget *pParent) :
     mHelpWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(mHelpWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(customContextMenu(const QPoint &)));
+            this, SLOT(showCustomContextMenu(const QPoint &)));
 
     // Some connections to update the enabled state of our various actions
 
@@ -244,7 +244,7 @@ void HelpWindow::on_actionPrint_triggered()
 
 //==============================================================================
 
-void HelpWindow::customContextMenu(const QPoint &pPosition) const
+void HelpWindow::showCustomContextMenu(const QPoint &pPosition) const
 {
     Q_UNUSED(pPosition);
 

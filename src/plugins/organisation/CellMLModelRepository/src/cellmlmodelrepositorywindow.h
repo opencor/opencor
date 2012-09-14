@@ -62,7 +62,7 @@ private Q_SLOTS:
     void on_refreshButton_clicked();
 
     void finished(QNetworkReply *pNetworkReply);
-    void customContextMenu(const QPoint &) const;
+    void showCustomContextMenu(const QPoint &) const;
 };
 
 //==============================================================================

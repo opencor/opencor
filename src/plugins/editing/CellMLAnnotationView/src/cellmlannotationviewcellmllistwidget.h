@@ -93,7 +93,7 @@ private Q_SLOTS:
     void updateMetadataDetails(const QModelIndex &pNewIndex,
                                const QModelIndex &pOldIndex);
 
-    void treeViewContextMenu(const QPoint &pPosition) const;
+    void showCustomContextMenu(const QPoint &pPosition) const;
 
     void on_actionExpandAll_triggered();
     void on_actionCollapseAll_triggered();
