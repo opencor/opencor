@@ -29,7 +29,7 @@ void usage(QCoreApplication *pApp)
     std::cout << "Usage: " << qPrintable(pApp->applicationName())
               << " [OPTION]... [FILE]..." << std::endl;
     std::cout << "Start " << qPrintable(pApp->applicationName())
-              << " and open the FILE(s) passed as argument(s)." << std::endl;
+              << " and open the FILE(s) passed as argument(s), if any." << std::endl;
     std::cout << std::endl;
     std::cout << " -a, --about     Display OpenCOR about information"
               << std::endl;
