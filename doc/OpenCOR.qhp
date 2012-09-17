@@ -29,6 +29,10 @@
             <file>user/plugins/organisation.html</file>
             <file>user/plugins/simulation.html</file>
 
+            <file>user/userInterfaces/commandLineInterface.html</file>
+            <file>user/userInterfaces/graphicalUserInterface.html</file>
+            <file>user/userInterfaces/index.html</file>
+
             <file>user/authors.html</file>
             <file>user/contactUs.html</file>
             <file>user/dissemination.html</file>
