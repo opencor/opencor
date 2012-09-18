@@ -36,16 +36,16 @@
         <translation>&amp;Anglais</translation>
     </message>
     <message>
-        <source>Select English as the language used by OpenCOR</source>
-        <translation>Sélectionner l&apos;anglais comme langue utilisée par OpenCOR</translation>
+        <source>Select English as the language to be used by OpenCOR</source>
+        <translation>Sélectionner l&apos;anglais comme langue à être utilisée par OpenCOR</translation>
     </message>
     <message>
         <source>&amp;French</source>
         <translation>&amp;Français</translation>
     </message>
     <message>
-        <source>Select French as the language used by OpenCOR</source>
-        <translation>Sélectionner le français comme langue utilisée par OpenCOR</translation>
+        <source>Select French as the language to be used by OpenCOR</source>
+        <translation>Sélectionner le français comme langue à être utilisée par OpenCOR</translation>
     </message>
     <message>
         <source>Home &amp;Page</source>
@@ -68,16 +68,16 @@
         <translation>Tout &amp;Réinitialiser</translation>
     </message>
     <message>
-        <source>Reset all the user settings</source>
-        <translation>Réinitialiser tous les paramètres utilisateurs</translation>
+        <source>Reset all your settings</source>
+        <translation>Réinitialiser tous vos paramètres</translation>
     </message>
     <message>
         <source>&amp;System</source>
         <translation>&amp;Système</translation>
     </message>
     <message>
-        <source>Select the system&apos;s language as the language used by OpenCOR</source>
-        <translation>Sélectionner la langue du système comme langue utilisée par OpenCOR</translation>
+        <source>Select your system&apos;s language as the language to be used by OpenCOR</source>
+        <translation>Sélectionner la langue de votre système comme langue à être utilisée par OpenCOR</translation>
     </message>
     <message>
         <source>&amp;Full Screen</source>
@@ -98,6 +98,10 @@
     <message>
         <source>Plu&amp;gins...</source>
         <translation>E&amp;xtensions...</translation>
+    </message>
+    <message>
+        <source>Select plugins</source>
+        <translation>Sélectionner des extensions</translation>
     </message>
 </context>
 <context>

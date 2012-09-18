@@ -44,6 +44,12 @@ div.section {
     font-weight: bold;
 }
 
+img.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 li {
     list-style-type: square;
 }

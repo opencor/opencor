@@ -29,6 +29,11 @@
             <file>user/plugins/organisation.html</file>
             <file>user/plugins/simulation.html</file>
 
+            <file>user/userInterfaces/res/pics/screenshot01.png</file>
+            <file>user/userInterfaces/res/pics/screenshot01Small.png</file>
+            <file>user/userInterfaces/res/pics/screenshot02.png</file>
+            <file>user/userInterfaces/res/pics/screenshot02Small.png</file>
+
             <file>user/userInterfaces/commandLineInterface.html</file>
             <file>user/userInterfaces/graphicalUserInterface.html</file>
             <file>user/userInterfaces/index.html</file>

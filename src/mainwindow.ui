@@ -104,7 +104,7 @@
     <string>&amp;English</string>
    </property>
    <property name="statusTip">
-    <string>Select English as the language used by OpenCOR</string>
+    <string>Select English as the language to be used by OpenCOR</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -122,7 +122,7 @@
     <string>&amp;French</string>
    </property>
    <property name="statusTip">
-    <string>Select French as the language used by OpenCOR</string>
+    <string>Select French as the language to be used by OpenCOR</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -167,7 +167,7 @@
     <string>&amp;Reset All</string>
    </property>
    <property name="statusTip">
-    <string>Reset all the user settings</string>
+    <string>Reset all your settings</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -181,7 +181,7 @@
     <string>&amp;System</string>
    </property>
    <property name="statusTip">
-    <string>Select the system's language as the language used by OpenCOR</string>
+    <string>Select your system's language as the language to be used by OpenCOR</string>
    </property>
   </action>
   <action name="actionFullScreen">
@@ -217,6 +217,9 @@
    </property>
    <property name="text">
     <string>Plu&amp;gins...</string>
+   </property>
+   <property name="statusTip">
+    <string>Select plugins</string>
    </property>
   </action>
  </widget>

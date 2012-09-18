@@ -99,6 +99,33 @@ $(document).ready(function() {
     });
 });
 
+function showImage(path, caption) {
+    document.write("<!doctype html>");
+    document.write("<html>");
+    document.write("    <head>");
+    document.write("        <title>");
+    document.write("            "+caption);
+    document.write("        </title>");
+    document.write("");
+    document.write("        <meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"/>");
+    document.write("");
+    document.write("        <style type=\"text/css\">");
+    document.write("            img {");
+    document.write("                position: absolute;");
+    document.write("                top: 0px;");
+    document.write("                left: 0px;");
+    document.write("                bottom: 0px;");
+    document.write("                right: 0px;");
+    document.write("                margin: auto;");
+    document.write("            }");
+    document.write("        </style>");
+    document.write("    </head>");
+    document.write("    <body>");
+    document.write("        <img src=\""+path+"\" alt=\""+caption+"\"");
+    document.write("    </body>");
+    document.write("</html>");
+}
+
 function copyright() {
     var date = new Date();
 
