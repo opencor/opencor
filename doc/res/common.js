@@ -99,40 +99,6 @@ $(document).ready(function() {
     });
 });
 
-function showImage(path, caption) {
-    document.write("<!doctype html>");
-    document.write("<html>");
-    document.write("    <head>");
-    document.write("        <title>");
-    document.write("            "+caption);
-    document.write("        </title>");
-    document.write("");
-    document.write("        <meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"/>");
-    document.write("");
-    document.write("        <style type=\"text/css\">");
-    document.write("            html {");
-    document.write("                display: table;");
-    document.write("                width: 100%;");
-    document.write("                height: 100%;");
-    document.write("            }");
-    document.write("            body {");
-    document.write("                display: table-cell;");
-    document.write("                margin: 0px;");
-    document.write("                padding: 0px;");
-    document.write("                vertical-align: middle;");
-    document.write("            }");
-    document.write("            img {");
-    document.write("                display: block;");
-    document.write("                margin: auto;");
-    document.write("            }");
-    document.write("        </style>");
-    document.write("    </head>");
-    document.write("    <body>");
-    document.write("        <img src=\""+path+"\" alt=\""+caption+"\">");
-    document.write("    </body>");
-    document.write("</html>");
-}
-
 function copyright() {
     var date = new Date();
 
