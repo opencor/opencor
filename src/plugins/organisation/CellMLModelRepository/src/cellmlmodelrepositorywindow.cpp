@@ -39,7 +39,7 @@ CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
 
     // Make the name value our focus proxy
 
-    setFocusProxy(mGui->nameValue);
+    setFocusProxy(mGui->filterValue);
 
     // Create and add the CellML Model Repository widget
 
@@ -147,7 +147,7 @@ void CellmlModelRepositoryWindow::outputModelList(const QStringList &pModelList)
 
 //==============================================================================
 
-void CellmlModelRepositoryWindow::on_nameValue_textChanged(const QString &text)
+void CellmlModelRepositoryWindow::on_filterValue_textChanged(const QString &text)
 {
     // Generate a Web page that contains all the models which match our search
     // criteria
@@ -232,16 +232,16 @@ void CellmlModelRepositoryWindow::finished(QNetworkReply *pNetworkReply)
 
     // Initialise the output using whatever search criteria is present
 
-    on_nameValue_textChanged(mGui->nameValue->text());
+    on_filterValue_textChanged(mGui->filterValue->text());
 
     // Re-enable the GUI side
 
     setEnabled(true);
 
-    // Give, within the current window, the focus to mGui->nameValue, but only
-    // if the current window already has the focus
+    // Give, within the current window, the focus to mGui->filterValue, but
+    // only if the current window already has the focus
 
-    Core::setFocusTo(mGui->nameValue);
+    Core::setFocusTo(mGui->filterValue);
 }
 
 //==============================================================================

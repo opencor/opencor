@@ -8,8 +8,8 @@
         <translation>Répertoire de Modèles CellML</translation>
     </message>
     <message>
-        <source>Name:</source>
-        <translation>Nom :</translation>
+        <source>Filter:</source>
+        <translation>Filtre :</translation>
     </message>
     <message>
         <source>&amp;Copy</source>

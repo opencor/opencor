@@ -24,11 +24,27 @@
             <file>user/res/menu.js</file>
             <file>user/res/stylesheet.css</file>
 
-            <file>user/plugins/editing.html</file>
+            <file>user/plugins/api/index.html</file>
+
+            <file>user/plugins/editing/index.html</file>
+
+            <file>user/plugins/miscellaneous/index.html</file>
+
+            <file>user/plugins/organisation/res/pics/CellMLModelRepositoryScreenshot01.png</file>
+            <file>user/plugins/organisation/res/pics/CellMLModelRepositoryScreenshot01Small.png</file>
+            <file>user/plugins/organisation/res/pics/CellMLModelRepositoryScreenshot02.png</file>
+            <file>user/plugins/organisation/res/pics/CellMLModelRepositoryScreenshot02Small.png</file>
+
+            <file>user/plugins/organisation/CellMLModelRepository.html</file>
+            <file>user/plugins/organisation/FileBrowser.html</file>
+            <file>user/plugins/organisation/FileOrganiser.html</file>
+            <file>user/plugins/organisation/index.html</file>
+
+            <file>user/plugins/simulation/index.html</file>
+
+            <file>user/plugins/thirdParty/index.html</file>
+
             <file>user/plugins/index.html</file>
-            <file>user/plugins/miscellaneous.html</file>
-            <file>user/plugins/organisation.html</file>
-            <file>user/plugins/simulation.html</file>
 
             <file>user/userInterfaces/res/pics/screenshot01.png</file>
             <file>user/userInterfaces/res/pics/screenshot01Small.png</file>

@@ -122,7 +122,7 @@ QNetworkReply * HelpNetworkAccessManager::createRequest(Operation,
     QByteArray data = mHelpEngine->findFile(url).isValid()?
                           mHelpEngine->fileData(url):
                           QByteArray(mErrorMsgTemplate.arg(tr("Error"),
-                                                           tr("The following help file could not be found:")+" <span class=\"Filename\">"+url.toString()+"</span>.",
+                                                           tr("The following help file could not be found:")+" <strong>"+url.toString()+"</strong>.",
                                                            tr("Please <a href=\"%1\">contact us</a> about this error.").arg("contactUs.html"),
                                                            Core::copyright()).toUtf8());
 
