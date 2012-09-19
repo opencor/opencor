@@ -540,7 +540,7 @@ void PluginsWindow::on_buttonBox_rejected()
 void PluginsWindow::apply()
 {
     if( QMessageBox::question(this, qApp->applicationName(),
-                              tr("%1 must be restarted for your changes to be effective. Are you sure that this is what you want?").arg(qApp->applicationName()),
+                              tr("%1 must be restarted for your changes to be effective. Do you wish to proceed?").arg(qApp->applicationName()),
                               QMessageBox::Yes|QMessageBox::No,
                               QMessageBox::Yes) == QMessageBox::Yes ) {
         // Do what is done when clicking on the OK button

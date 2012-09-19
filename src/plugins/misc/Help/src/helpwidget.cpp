@@ -200,7 +200,7 @@ bool HelpPage::acceptNavigationRequest(QWebFrame*,
         // We are dealing with a document that we want to open ourselves, so...
 
         return true;
-    } else if (!urlScheme.compare("opencor")) {
+    } else if (!urlScheme.compare("gui")) {
         // This is an action which we want OpenCOR or one of its plugins to
         // execute
 

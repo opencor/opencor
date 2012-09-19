@@ -1020,18 +1020,18 @@ void MainWindow::messageReceived(const QString &pMessage)
     //  1) The user tried to run another instance of OpenCOR which sent a
     //     message to this instance, asking it to bring itself to the foreground
     //     and handling all the arguments passed in the message; or
-    //  2) An OpenCOR action was sent to us, so we need to handle it.
+    //  2) A GUI action was sent to us, so we need to handle it.
 
-    // Check whether the passed message corresponds to an OpenCOR action
+    // Check whether the passed message corresponds to a GUI action
 
     QUrl url = pMessage;
 
-    if (!url.scheme().compare("opencor")) {
-        // We are dealing with an OpenCOR action, so handle it
+    if (!url.scheme().compare("gui")) {
+        // We are dealing with a GUI COR action, so handle it
 
         handleAction(url);
     } else {
-        // It's not an OpenCOR action, so bring ourselves to the forground
+        // It's not a GUI action, so bring ourselves to the forground
 
         showSelf();
 
@@ -1153,7 +1153,7 @@ void MainWindow::restart(const bool &pSaveSettings) const
 void MainWindow::resetAll()
 {
     if( QMessageBox::question(this, qApp->applicationName(),
-                              tr("You are about to reset <strong>all</strong> of your user settings. Are you sure that this is what you want?"),
+                              tr("You are about to reset <strong>all</strong> of your settings. Do you wish to proceed?"),
                               QMessageBox::Yes|QMessageBox::No,
                               QMessageBox::Yes) == QMessageBox::Yes ) {
         // We want to reset everything, so clear all the user settings and

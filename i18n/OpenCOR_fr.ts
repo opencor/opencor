@@ -131,8 +131,8 @@
         <translation>est un environnement de modélisation &lt;a href=&quot;http://www.cellml.org/&quot;&gt;CellML&lt;/a&gt; multiplate-forme qui peut être utilisé pour organiser, éditer, simuler et analyser des fichiers CellML.</translation>
     </message>
     <message>
-        <source>You are about to reset &lt;strong&gt;all&lt;/strong&gt; of your user settings. Are you sure that this is what you want?</source>
-        <translation>Vous êtes sur le point de réinitialiser &lt;strong&gt;tous&lt;/strong&gt; vos paramètres utilisateurs. Êtes-vous sûr que c&apos;est ce que vous voulez ?</translation>
+        <source>You are about to reset &lt;strong&gt;all&lt;/strong&gt; of your settings. Do you wish to proceed?</source>
+        <translation>Vous êtes sur le point de réinitialiser &lt;strong&gt;tous&lt;/strong&gt; vos paramètres. Voulez-vous continuer ?</translation>
     </message>
 </context>
 <context>
@@ -158,8 +158,8 @@
         <translation>Aucune</translation>
     </message>
     <message>
-        <source>%1 must be restarted for your changes to be effective. Are you sure that this is what you want?</source>
-        <translation>%1 doit etre relancé pour que vos changements deviennent effectifs. Êtes-vous sûr que c&apos;est ce que vous voulez ?</translation>
+        <source>%1 must be restarted for your changes to be effective. Do you wish to proceed?</source>
+        <translation>%1 doit etre relancé pour que vos changements deviennent effectifs. Voulez-vous continuer ?</translation>
     </message>
     <message>
         <source>API</source>
