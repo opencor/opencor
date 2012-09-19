@@ -128,7 +128,7 @@ function showImage(path, caption) {
     document.write("        </style>");
     document.write("    </head>");
     document.write("    <body>");
-    document.write("        <img src=\""+path+"\" alt=\""+caption+"\"");
+    document.write("        <img src=\""+path+"\" alt=\""+caption+"\">");
     document.write("    </body>");
     document.write("</html>");
 }
