@@ -24,32 +24,19 @@
             <file>user/res/menu.js</file>
             <file>user/res/stylesheet.css</file>
 
-            <file>user/plugins/api/index.html</file>
+            <file>user/plugins/res/pics/CellMLModelRepositoryScreenshot01.png</file>
+            <file>user/plugins/res/pics/CellMLModelRepositoryScreenshot01Small.png</file>
+            <file>user/plugins/res/pics/CellMLModelRepositoryScreenshot02.png</file>
+            <file>user/plugins/res/pics/CellMLModelRepositoryScreenshot02Small.png</file>
 
-            <file>user/plugins/editing/CellMLAnnotationView.html</file>
-            <file>user/plugins/editing/index.html</file>
-            <file>user/plugins/editing/RawCellMLView.html</file>
-            <file>user/plugins/editing/RawView.html</file>
-
-            <file>user/plugins/miscellaneous/Help.html</file>
-            <file>user/plugins/miscellaneous/index.html</file>
-
-            <file>user/plugins/organisation/res/pics/CellMLModelRepositoryScreenshot01.png</file>
-            <file>user/plugins/organisation/res/pics/CellMLModelRepositoryScreenshot01Small.png</file>
-            <file>user/plugins/organisation/res/pics/CellMLModelRepositoryScreenshot02.png</file>
-            <file>user/plugins/organisation/res/pics/CellMLModelRepositoryScreenshot02Small.png</file>
-
-            <file>user/plugins/organisation/CellMLModelRepository.html</file>
-            <file>user/plugins/organisation/FileBrowser.html</file>
-            <file>user/plugins/organisation/FileOrganiser.html</file>
-            <file>user/plugins/organisation/index.html</file>
-
-            <file>user/plugins/simulation/index.html</file>
-            <file>user/plugins/simulation/SingleCellSimulationView.html</file>
-
-            <file>user/plugins/thirdParty/index.html</file>
-
-            <file>user/plugins/index.html</file>
+            <file>user/plugins/CellMLAnnotationView.html</file>
+            <file>user/plugins/CellMLModelRepository.html</file>
+            <file>user/plugins/FileBrowser.html</file>
+            <file>user/plugins/FileOrganiser.html</file>
+            <file>user/plugins/Help.html</file>
+            <file>user/plugins/RawCellMLView.html</file>
+            <file>user/plugins/RawView.html</file>
+            <file>user/plugins/SingleCellSimulationView.html</file>
 
             <file>user/userInterfaces/res/pics/screenshot01.png</file>
             <file>user/userInterfaces/res/pics/screenshot01Small.png</file>
@@ -66,6 +53,7 @@
             <file>user/index.html</file>
             <file>user/knownIssuesLimitations.html</file>
             <file>user/licensing.html</file>
+            <file>user/plugins.html</file>
             <file>user/supportedPlatforms.html</file>
         </files>
     </filterSection>
