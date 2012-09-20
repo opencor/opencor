@@ -19,8 +19,36 @@
         </script>
 
         <p>
-            To be done...
+            Simulation plugins are used to edit your files using one of several possible views:
         </p>
+
+        <ul>
+            <li>
+                <strong>CVODESolver:</strong> a plugin which uses <a href="https://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode">CVODE</a> to solve ODEs.
+            </li>
+            <li>
+                <strong>ForwardEulerSolver:</strong> a plugin which implements the <a href="http://en.wikipedia.org/wiki/Euler_method">Forward Euler method</a> to solve ODEs.
+            </li>
+            <li>
+                <strong>IDASolver:</strong> a plugin which uses <a href="https://computation.llnl.gov/casc/sundials/description/description.html#descr_ida">IDA</a> to solve DAEs.
+            </li>
+            <li>
+                <strong><a href="SingleCellSimulationView.html">SingleCellSimulationView</a>:</strong> to run single cell simulations.
+            </li>
+        </ul>
+
+        <p>
+            Non-selectable Simulation plugins are also available:
+        </p>
+
+        <ul>
+            <li>
+                <strong>CoreSolver:</strong> the core solver plugin.
+            </li>
+            <li>
+                <strong>CoreSimulation:</strong> the core simulation plugin.
+            </li>
+        </ul>
           
         <script type="text/javascript">
             copyright();

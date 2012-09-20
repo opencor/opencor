@@ -15,8 +15,8 @@ PLUGININFO_FUNC QtMmlWidgetPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", "A plugin to use <a href=\"ftp://ftp.qt.nokia.com/qt/solutions/lgpl/\">QtMmlWidget</a>");
-    descriptions.insert("fr", "Une extension pour utiliser <a href=\"ftp://ftp.qt.nokia.com/qt/solutions/lgpl/\">QtMmlWidget</a>");
+    descriptions.insert("en", "A plugin to get access to <a href=\"ftp://ftp.qt.nokia.com/qt/solutions/lgpl/\">QtMmlWidget</a>");
+    descriptions.insert("fr", "Une extension pour avoir accès à <a href=\"ftp://ftp.qt.nokia.com/qt/solutions/lgpl/\">QtMmlWidget</a>");
 
     return new PluginInfo(PluginInfo::V001,
                           PluginInfo::Gui,

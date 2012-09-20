@@ -15,8 +15,8 @@ PLUGININFO_FUNC CoreSolverPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", "The core solver plugin for OpenCOR");
-    descriptions.insert("fr", "L'extension de solveur de base pour OpenCOR");
+    descriptions.insert("en", "The core solver plugin");
+    descriptions.insert("fr", "L'extension de solveur de base");
 
     return new PluginInfo(PluginInfo::V001,
                           PluginInfo::General,

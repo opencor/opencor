@@ -26,7 +26,10 @@
 
             <file>user/plugins/api/index.html</file>
 
+            <file>user/plugins/editing/CellMLAnnotationView.html</file>
             <file>user/plugins/editing/index.html</file>
+            <file>user/plugins/editing/RawCellMLView.html</file>
+            <file>user/plugins/editing/RawView.html</file>
 
             <file>user/plugins/miscellaneous/index.html</file>
 
@@ -41,6 +44,7 @@
             <file>user/plugins/organisation/index.html</file>
 
             <file>user/plugins/simulation/index.html</file>
+            <file>user/plugins/simulation/SingleCellSimulationView.html</file>
 
             <file>user/plugins/thirdParty/index.html</file>
 
