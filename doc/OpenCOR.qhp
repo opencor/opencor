@@ -31,6 +31,7 @@
             <file>user/plugins/editing/RawCellMLView.html</file>
             <file>user/plugins/editing/RawView.html</file>
 
+            <file>user/plugins/miscellaneous/Help.html</file>
             <file>user/plugins/miscellaneous/index.html</file>
 
             <file>user/plugins/organisation/res/pics/CellMLModelRepositoryScreenshot01.png</file>
