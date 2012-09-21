@@ -35,6 +35,10 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("        font-weight: normal;");
     document.write("    }");
     document.write("");
+    document.write("    ul.contentsMenu li ul li strong {");
+    document.write("        color: rgb("+r+", "+g+", "+b+");");
+    document.write("    }");
+    document.write("");
     document.write("    ul.contentsMenu li ul li a {");
     document.write("        display: block;");
     document.write("    }");
@@ -57,7 +61,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("");
     document.write("<ul class=\"contentsMenu\">");
     document.write("    <li>");
-    document.write("        <img src=\""+relativePath+"/../res/pics/oxygen/actions/help-about.png\" width=24 height=24 alt=\"Contents\">");
+    document.write("        <img src=\""+relativePath+"/res/pics/oxygen/actions/help-about.png\" width=24 height=24 alt=\"Contents\">");
     document.write("        <ul>");
 
     for (i = 0; i < data.length; ++i)
@@ -70,14 +74,27 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
             for (j = 0; j < data[i][0]; ++j)
                 indent += "&nbsp;&nbsp;&nbsp;&nbsp;"
 
-            if (i != data.length-1)
+            var currentMenuItem = false;
+                
+            if (   (data[i][1].toLowerCase() == pageName.toLowerCase())
+                || ((pageName == "OpenCOR") && (data[i][1] == "Home")))
+                currentMenuItem = true;
+                
+            if (i != data.length-1) {
                 // A 'normal' menu item
 
-                document.write("            <li><a href=\""+path+"\">"+indent+data[i][1]+"</a></li>");
-            else
+                if (currentMenuItem)
+                    document.write("            <li>"+indent+"<strong>"+data[i][1]+"</strong></li>");
+                else
+                    document.write("            <li><a href=\""+path+"\">"+indent+data[i][1]+"</a></li>");
+            } else {
                 // The last menu item, so we have some special rendering for it
 
-                document.write("            <li class=\"lastMenuItem\"><a href=\""+path+"\">"+indent+data[i][1]+"</a></li>");
+                if (currentMenuItem)
+                    document.write("            <li class=\"lastMenuItem\">"+indent+"<strong>"+data[i][1]+"</strong></li>");
+                else
+                    document.write("            <li class=\"lastMenuItem\"><a href=\""+path+"\">"+indent+data[i][1]+"</a></li>");
+            }
         } else {
             // We are dealing with a menu separator
 

@@ -1,0 +1,20 @@
+@import url("common.css");
+
+div.header {
+    background: rgb(103, 103, 103);
+}
+
+div.section {
+    color: rgb(103, 103, 103);
+}
+
+img.downloads {
+    margin: 0px;
+    padding: 3px;
+    position: fixed;
+    top: 3px;
+    right: 3px;
+    border: 2px solid rgba(103, 103, 103, 0.13);
+    border-radius: 13px;
+    background: rgba(103, 103, 103, 0.05);
+}

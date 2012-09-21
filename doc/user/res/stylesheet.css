@@ -25,28 +25,12 @@ a:hover {
     color: rgb(54, 96, 146);
 }
 
-a.image:hover {
-    /* This is to prevent img elements that have an anchor from looking like */
-    /* a link                                                                */
-
-    margin: 0px;
-    border: none;
-    background-color: rgb(255, 255, 255);
-}
-
 div.header {
     background: rgb(54, 96, 146);
 }
 
 div.section {
     color: rgb(54, 96, 146);
-}
-
-div.dissemination {
-    color: rgb(103, 103, 103);
-    font-size: 11pt;
-    font-style: italic;
-    font-weight: normal;
 }
 
 img.shadow {
@@ -60,12 +44,4 @@ pre {
 
 code {
     color: rgb(54, 96, 146);
-}
-
-th {
-    padding: 7px 13px;
-}
-
-td {
-    padding: 7px 13px;
 }

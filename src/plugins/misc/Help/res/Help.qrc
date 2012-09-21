@@ -1,9 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>../../../../../doc/user/res/dissemination/2011-04-12-CellmlWorkshop2011-Auckland-NewZealand.pdf</file>
-        <file>../../../../../doc/user/res/dissemination/2011-04-12-CellmlWorkshop2011-Auckland-NewZealand.pptx</file>
-        <file>../../../../../doc/user/res/dissemination/2012-03-12-CellmlWorkshop2012-WaihekeIsland-NewZealand.pdf</file>
-        <file>../../../../../doc/user/res/dissemination/2012-03-12-CellmlWorkshop2012-WaihekeIsland-NewZealand.pptx</file>
         <file>oxygen/actions/document-print.png</file>
         <file>oxygen/actions/go-home.png</file>
         <file>oxygen/actions/zoom-in.png</file>

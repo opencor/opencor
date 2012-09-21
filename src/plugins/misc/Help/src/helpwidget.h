@@ -74,7 +74,6 @@ class HelpPage : public QWebPage
 {
 public:
     explicit HelpPage(QHelpEngine *pHelpEngine, QObject *pParent);
-    ~HelpPage();
 
 protected:
     virtual bool acceptNavigationRequest(QWebFrame*,

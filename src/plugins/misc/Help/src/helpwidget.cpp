@@ -8,16 +8,11 @@
 //==============================================================================
 
 #include <QAction>
-#include <QApplication>
 #include <QDesktopServices>
-#include <QDir>
-#include <QFile>
-#include <QFileInfo>
 #include <QHelpEngine>
-#include <QPaintEvent>
+#include <QMouseEvent>
 #include <QSettings>
 #include <QTimer>
-#include <QWebHistory>
 
 //==============================================================================
 
@@ -135,19 +130,8 @@ QNetworkReply * HelpNetworkAccessManager::createRequest(Operation,
 
 HelpPage::HelpPage(QHelpEngine *pHelpEngine, QObject *pParent) :
     QWebPage(pParent),
-    mHelpEngine(pHelpEngine),
-    mFileNames(QMap<QString, QString>())
+    mHelpEngine(pHelpEngine)
 {
-}
-
-//==============================================================================
-
-HelpPage::~HelpPage()
-{
-    // Remove all the documents we created, if any
-
-    foreach (const QString &pFileName, mFileNames)
-        QFile(pFileName).remove();
 }
 
 //==============================================================================
@@ -165,39 +149,7 @@ bool HelpPage::acceptNavigationRequest(QWebFrame*,
     // resource of sorts
 
     if (!urlScheme.compare("qthelp")) {
-        // This an OpenCOR document, so check whether it's one which the user's
-        // system should open for us
-
-        QString suffix = QFileInfo(url.toString()).completeSuffix().toUpper();
-
-        if (!suffix.compare("PDF") || !suffix.compare("PPTX")) {
-            // This is a document we want the user's browser to open for us,
-            // so...
-
-            // First check whether we have a local copy of the document
-
-            QString document = url.toString().replace("qthelp://opencor", QString());
-            QString fileName = mFileNames.value(document);
-
-            if (fileName.isEmpty()) {
-                // No local copy of the document exists, so create one and keep
-                // track of it
-
-                fileName = document;
-                fileName =  QDir::tempPath()+QDir::separator()
-                           +QFileInfo(qApp->applicationFilePath()).baseName()
-                           +fileName.replace("/", "_");
-
-                if (Core::saveResourceAs(":"+document, fileName))
-                    mFileNames.insert(document, fileName);
-            }
-
-            QDesktopServices::openUrl(QUrl::fromLocalFile(fileName));
-
-            return false;
-        }
-
-        // We are dealing with a document that we want to open ourselves, so...
+        // This an OpenCOR document, so...
 
         return true;
     } else if (!urlScheme.compare("gui")) {

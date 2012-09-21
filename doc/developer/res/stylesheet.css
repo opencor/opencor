@@ -22,16 +22,6 @@ div.section {
     color: rgb(49, 133, 155);
 }
 
-div.section a:hover {
-    /* Note: this is to prevent div.section elements that have an anchor */
-    /*       from looking like a link...                                 */
-
-    margin: 0px;
-    border: none;
-    background-color: rgb(255, 255, 255);
-    color: rgb(49, 133, 155);
-}
-
 pre {
     border: 1px solid rgba(49, 133, 155, 0.13);
     background: rgba(49, 133, 155, 0.05);
