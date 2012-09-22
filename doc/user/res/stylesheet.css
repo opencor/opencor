@@ -20,9 +20,9 @@ a:visited {
 }
 
 a:hover {
-    border: 1px solid rgba(54, 96, 146, 0.13);
     background-color: rgba(54, 96, 146, 0.05);
     color: rgb(54, 96, 146);
+    border: 1px solid rgba(54, 96, 146, 0.13);
 }
 
 div.header {
@@ -38,8 +38,8 @@ img.shadow {
 }
 
 pre {
-    border: 1px solid rgba(54, 96, 146, 0.13);
     background: rgba(54, 96, 146, 0.05);
+    border: 1px solid rgba(54, 96, 146, 0.13);
 }
 
 code {

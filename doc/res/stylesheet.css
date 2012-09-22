@@ -17,34 +17,17 @@ a.image:hover {
 
 img.downloads {
     margin: 0px;
-    padding: 3px 0px 3px 0px;
+    padding: 3px 7px 3px 7px;
     position: fixed;
     top: 3px;
-    background: rgba(103, 103, 103, 0.05);
-}
-
-img.downloadsLeft {
-    padding-left: 7px;
-    right: 108px;
-    border-top: 2px solid rgba(103, 103, 103, 0.13);
-    border-left: 2px solid rgba(103, 103, 103, 0.13);
-    border-bottom: 2px solid rgba(103, 103, 103, 0.13);
-    border-radius: 13px 0px 0px 13px;
-}
-
-img.downloadsMiddle {
-    right: 60px;
-    border-top: 2px solid rgba(103, 103, 103, 0.13);
-    border-bottom: 2px solid rgba(103, 103, 103, 0.13);
-}
-
-img.downloadsRight {
-    padding-right: 7px;
     right: 3px;
-    border-top: 2px solid rgba(103, 103, 103, 0.13);
-    border-bottom: 2px solid rgba(103, 103, 103, 0.13);
-    border-right: 2px solid rgba(103, 103, 103, 0.13);
-    border-radius: 0px 13px 13px 0px;
+}
+
+img.downloads:hover {
+    margin: -1px;
+    background: rgba(103, 103, 103, 0.05);
+    border: 1px solid rgba(103, 103, 103, 0.13);
+    border-radius: 13px;
 }
 
 table.downloads th {
