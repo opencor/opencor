@@ -100,8 +100,8 @@
         <translation>E&amp;xtensions...</translation>
     </message>
     <message>
-        <source>Select plugins</source>
-        <translation>Sélectionner des extensions</translation>
+        <source>Un/select plugins</source>
+        <translation>Dé/sélectionner des extensions</translation>
     </message>
 </context>
 <context>

@@ -219,7 +219,7 @@
     <string>Plu&amp;gins...</string>
    </property>
    <property name="statusTip">
-    <string>Select plugins</string>
+    <string>Un/select plugins</string>
    </property>
   </action>
  </widget>

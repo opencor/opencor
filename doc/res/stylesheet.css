@@ -8,13 +8,6 @@ div.section {
     color: rgb(103, 103, 103);
 }
 
-a.image:hover {
-    /* This prevents anchors with an image in them from looking like a link */
-
-    margin: 0px;
-    border: none;
-}
-
 img.downloads {
     margin: 0px;
     padding: 3px 7px 3px 7px;
