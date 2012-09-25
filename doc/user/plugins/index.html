@@ -7,19 +7,19 @@
 
         <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 
-        <link href="res/stylesheet.css" rel="stylesheet" type="text/css"/>
+        <link href="../res/stylesheet.css" rel="stylesheet" type="text/css"/>
 
-        <script src="../3rdparty/jQuery/jquery.js" type="text/javascript"></script>
-        <script src="../res/common.js" type="text/javascript"></script>
-        <script src="res/menu.js" type="text/javascript"></script>
+        <script src="../../3rdparty/jQuery/jquery.js" type="text/javascript"></script>
+        <script src="../../res/common.js" type="text/javascript"></script>
+        <script src="../res/menu.js" type="text/javascript"></script>
     </head>
     <body>
         <script type="text/javascript">
-            headerAndContentsMenu("Plugins", "..");
+            headerAndContentsMenu("Plugins", "../..");
         </script>
 
         <p>
-            OpenCOR is a plugin-based application. This means that if no plugins are selected, then OpenCOR can do <a href="userInterfaces/graphicalUserInterface.html">next to nothing</a>.
+            OpenCOR is a plugin-based application. This means that if no plugins are selected, then OpenCOR can do <a href="../userInterfaces/graphicalUserInterface.html">next to nothing</a>.
         </p>
 
         <p>
@@ -27,20 +27,20 @@
         </ul>
 
         <p>
-            <img class="center" src="res/pics/pluginsScreenshot01.png" width=651 height=338 alt="Help plugin: home">
+            <img class="center" src="../res/pics/pluginsScreenshot01.png" width=651 height=338 alt="Help plugin: home">
         </p>
 
         <p>
-            You can select which plugins you want to use. However, there are plugins which are needed by other plugins (e.g. the Core and QJson plugins are needed by the <a href="plugins/CellMLModelRepository.html">CellMLModelRepository</a> plugin) and therefore cannot be directly selected. Instead, they will be automatically selected if and only if they are needed by another plugin.
+            You can select which plugins you want to use. However, there are plugins which are needed by other plugins (e.g. the Core and QJson plugins are needed by the <a href="CellMLModelRepository.html">CellMLModelRepository</a> plugin) and therefore cannot be directly selected. Instead, they will be automatically selected if and only if they are needed by another plugin.
         </p>
         
         <p>
-            Most of the selectable plugins come with some kind of a <a href="userInterfaces/graphicalUserInterface.html">graphical user interface</a> (GUI):
+            Most of the selectable plugins come with some kind of a <a href="../userInterfaces/graphicalUserInterface.html">graphical user interface</a> (GUI):
         </p>
 
         <ul>
-            <li><strong>Dockable window:</strong> such a plugin (e.g. the <a href="plugins/CellMLModelRepository.html">CellMLModelRepository</a> and <a href="plugins/Help.html">Help</a> plugins) can be docked around the central area, undocked or even hidden, as illustrated <a href="userInterfaces/graphicalUserInterface.html">here</a>.</li>
-            <li><strong>View window:</strong> such a plugin (e.g. the <a href="plugins/CellMLAnnotationView.html">CellMLAnnotationView</a> and <a href="plugins/SingleCellSimulationView.html">SingleCellSimulationView</a> plugins) is used to interact with a file, be it to edit it, simulate it or analyse it.</li>
+            <li><strong>Dockable window:</strong> such a plugin (e.g. the <a href="CellMLModelRepository.html">CellMLModelRepository</a> and <a href="Help.html">Help</a> plugins) can be docked around the central area, undocked or even hidden, as illustrated <a href="../userInterfaces/graphicalUserInterface.html">here</a>.</li>
+            <li><strong>View window:</strong> such a plugin (e.g. the <a href="CellMLAnnotationView.html">CellMLAnnotationView</a> and <a href="SingleCellSimulationView.html">SingleCellSimulationView</a> plugins) is used to interact with a file, be it to edit it, simulate it or analyse it.</li>
         </ul>
 
         <div class="section">
@@ -52,9 +52,9 @@
         </p>
 
         <ul>
-            <li><strong><a href="plugins/CellMLModelRepository.html">CellMLModelRepository</a>:</strong> a plugin to access the <a href="http://models.cellml.org/">CellML Model Repository</a>.</li>
-            <li><strong><a href="plugins/FileBrowser.html">FileBrowser</a>:</strong> a plugin to access your local files.</li>
-            <li><strong><a href="plugins/FileOrganiser.html">FileOrganiser</a>:</strong> a plugin to virtually organise your files.</li>
+            <li><strong><a href="CellMLModelRepository.html">CellMLModelRepository</a>:</strong> a plugin to access the <a href="http://models.cellml.org/">CellML Model Repository</a>.</li>
+            <li><strong><a href="FileBrowser.html">FileBrowser</a>:</strong> a plugin to access your local files.</li>
+            <li><strong><a href="FileOrganiser.html">FileOrganiser</a>:</strong> a plugin to virtually organise your files.</li>
         </ul>
 
         <div class="section">
@@ -66,9 +66,9 @@
         </p>
 
         <ul>
-            <li><strong><a href="plugins/CellMLAnnotationView.html">CellMLAnnotationView</a>:</strong> a plugin to annotate <a href="http://www.cellml.org/">CellML</a> files.</li>
-            <li><strong><a href="plugins/RawCellMLView.html">RawCellMLView</a>:</strong> a plugin to edit <a href="http://www.cellml.org/">CellML</a> files using an XML editor.</li>
-            <li><strong><a href="plugins/RawView.html">RawView</a>:</strong> a plugin to edit files using a text editor.</li>
+            <li><strong><a href="CellMLAnnotationView.html">CellMLAnnotationView</a>:</strong> a plugin to annotate <a href="http://www.cellml.org/">CellML</a> files.</li>
+            <li><strong><a href="RawCellMLView.html">RawCellMLView</a>:</strong> a plugin to edit <a href="http://www.cellml.org/">CellML</a> files using an XML editor.</li>
+            <li><strong><a href="RawView.html">RawView</a>:</strong> a plugin to edit files using a text editor.</li>
         </ul>
 
         <p>
@@ -92,7 +92,7 @@
             <li><strong>CVODESolver:</strong> a plugin which uses <a href="https://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode">CVODE</a> to solve ODEs.</li>
             <li><strong>ForwardEulerSolver:</strong> a plugin which implements the <a href="http://en.wikipedia.org/wiki/Euler_method">Forward Euler method</a> to solve ODEs.</li>
             <li><strong>IDASolver:</strong> a plugin which uses <a href="https://computation.llnl.gov/casc/sundials/description/description.html#descr_ida">IDA</a> to solve DAEs.</li>
-            <li><strong><a href="plugins/SingleCellSimulationView.html">SingleCellSimulationView</a>:</strong> a plugin to run single cell simulations.</li>
+            <li><strong><a href="SingleCellSimulationView.html">SingleCellSimulationView</a>:</strong> a plugin to run single cell simulations.</li>
         </ul>
 
         <p>
@@ -113,7 +113,7 @@
         </p>
 
         <ul>
-            <li><strong><a href="plugins/Help.html">Help</a>:</strong> a plugin to provide help.</li>
+            <li><strong><a href="Help.html">Help</a>:</strong> a plugin to provide help.</li>
         </ul>
 
         <p>

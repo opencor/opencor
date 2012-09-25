@@ -45,6 +45,7 @@
             <file>user/plugins/FileBrowser.html</file>
             <file>user/plugins/FileOrganiser.html</file>
             <file>user/plugins/Help.html</file>
+            <file>user/plugins/index.html</file>
             <file>user/plugins/RawCellMLView.html</file>
             <file>user/plugins/RawView.html</file>
             <file>user/plugins/SingleCellSimulationView.html</file>
@@ -68,7 +69,6 @@
             <file>user/index.html</file>
             <file>user/knownIssuesLimitations.html</file>
             <file>user/licensing.html</file>
-            <file>user/plugins.html</file>
             <file>user/supportedPlatforms.html</file>
         </files>
     </filterSection>
