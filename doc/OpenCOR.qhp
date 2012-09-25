@@ -15,13 +15,30 @@
             <file>res/common.js</file>
             <file>res/image.html</file>
 
+            <file>user/res/pics/pluginsScreenshot01.png</file>
+
             <file>user/res/menu.js</file>
             <file>user/res/stylesheet.css</file>
+
+            <file>user/plugins/res/pics/oxygen/actions/document-print.png</file>
+            <file>user/plugins/res/pics/oxygen/actions/edit-copy.png</file>
+            <file>user/plugins/res/pics/oxygen/actions/go-home.png</file>
+            <file>user/plugins/res/pics/oxygen/actions/go-next.png</file>
+            <file>user/plugins/res/pics/oxygen/actions/go-previous.png</file>
+            <file>user/plugins/res/pics/oxygen/actions/zoom-in.png</file>
+            <file>user/plugins/res/pics/oxygen/actions/zoom-original.png</file>
+            <file>user/plugins/res/pics/oxygen/actions/zoom-out.png</file>
 
             <file>user/plugins/res/pics/CellMLModelRepositoryScreenshot01.png</file>
             <file>user/plugins/res/pics/CellMLModelRepositoryScreenshot01Small.png</file>
             <file>user/plugins/res/pics/CellMLModelRepositoryScreenshot02.png</file>
             <file>user/plugins/res/pics/CellMLModelRepositoryScreenshot02Small.png</file>
+            <file>user/plugins/res/pics/HelpScreenshot01.png</file>
+            <file>user/plugins/res/pics/HelpScreenshot01Small.png</file>
+            <file>user/plugins/res/pics/HelpScreenshot02.png</file>
+            <file>user/plugins/res/pics/HelpScreenshot02Small.png</file>
+            <file>user/plugins/res/pics/HelpScreenshot03.png</file>
+            <file>user/plugins/res/pics/HelpScreenshot03Small.png</file>
 
             <file>user/plugins/CellMLAnnotationView.html</file>
             <file>user/plugins/CellMLModelRepository.html</file>
@@ -36,6 +53,11 @@
             <file>user/userInterfaces/res/pics/screenshot01Small.png</file>
             <file>user/userInterfaces/res/pics/screenshot02.png</file>
             <file>user/userInterfaces/res/pics/screenshot02Small.png</file>
+            <file>user/userInterfaces/res/pics/screenshot03.png</file>
+            <file>user/userInterfaces/res/pics/screenshot04.png</file>
+            <file>user/userInterfaces/res/pics/screenshot04Small.png</file>
+            <file>user/userInterfaces/res/pics/screenshot05.png</file>
+            <file>user/userInterfaces/res/pics/screenshot05Small.png</file>
 
             <file>user/userInterfaces/commandLineInterface.html</file>
             <file>user/userInterfaces/graphicalUserInterface.html</file>

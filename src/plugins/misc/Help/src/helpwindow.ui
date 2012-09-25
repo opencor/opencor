@@ -116,7 +116,7 @@
     <string>&amp;Print</string>
    </property>
    <property name="statusTip">
-    <string>Print this help page</string>
+    <string>Print the help page contents</string>
    </property>
   </action>
  </widget>

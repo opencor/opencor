@@ -23,8 +23,25 @@
         </p>
 
         <p>
-            As can be seen by opening the Plugins dialog box (by selecting the <code>Tools</code> | <code>Plugins...</code> menu<span class="opencor"> or by clicking <a href="gui://actionPlugins">here</a></span>) and by unselecting <code>Show only selectable plugins</code> (if necessary), OpenCOR supports different types of plugins.
+            As can be seen by opening the Plugins dialog box (<span class="opencor">either </span>by selecting the <code>Tools</code> | <code>Plugins...</code> menu<span class="opencor"> or by clicking <a href="gui://actionPlugins">here</a></span>) and by unselecting <code>Show only selectable plugins</code> (if necessary), OpenCOR supports different types of plugins (Organisation, Editing, Simulation, Miscellaneous, API and Third-party; see below):
+        </ul>
+
+        <p>
+            <img class="center" src="res/pics/pluginsScreenshot01.png" width=651 height=338 alt="Help plugin: home">
         </p>
+
+        <p>
+            You can select which plugins you want to use. However, there are plugins which are needed by other plugins (e.g. the Core and QJson plugins are needed by the <a href="plugins/CellMLModelRepository.html">CellMLModelRepository</a> plugin) and therefore cannot be directly selected. Instead, they will be automatically selected if and only if they are needed by another plugin.
+        </p>
+        
+        <p>
+            Most of the selectable plugins come with some kind of a <a href="userInterfaces/graphicalUserInterface.html">graphical user interface</a> (GUI):
+        </p>
+
+        <ul>
+            <li><strong>Dockable window:</strong> such a plugin (e.g. the <a href="plugins/CellMLModelRepository.html">CellMLModelRepository</a> and <a href="plugins/Help.html">Help</a> plugins) can be docked around the central area, undocked or even hidden, as illustrated <a href="userInterfaces/graphicalUserInterface.html">here</a>.</li>
+            <li><strong>View window:</strong> such a plugin (e.g. the <a href="plugins/CellMLAnnotationView.html">CellMLAnnotationView</a> and <a href="plugins/SingleCellSimulationView.html">SingleCellSimulationView</a> plugins) is used to interact with a file, be it to edit it, simulate it or analyse it.</li>
+        </ul>
 
         <div class="section">
             Organisation
