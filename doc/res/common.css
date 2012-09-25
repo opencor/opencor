@@ -1,7 +1,7 @@
 body {
     font-family: arial, sans-serif;
     font-size: 10pt;
-    padding: 13px 0px 7px 0px;
+    padding: 13px 0px 13px 0px;
     /* Note: the padding is determined from the height of div.header and */
     /*       div.copyright minus the same number of pixels each...       */
 }
