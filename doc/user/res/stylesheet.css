@@ -33,8 +33,8 @@ div.section {
     color: rgb(54, 96, 146);
 }
 
-img.shadow {
-    box-shadow: 0px 0px 10px rgb(103, 103, 103);
+p.center {
+    text-align: center;
 }
 
 pre {
@@ -44,4 +44,13 @@ pre {
 
 code {
     color: rgb(54, 96, 146);
+}
+
+img.centerLink:hover {
+    background: rgba(54, 96, 146, 0.05);
+    border: 1px solid rgba(54, 96, 146, 0.13);
+}
+
+table.toolbarButtons th {
+    padding: 0px 13px 0px 13px;
 }

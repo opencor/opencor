@@ -68,8 +68,8 @@
         <translation>Im&amp;primer</translation>
     </message>
     <message>
-        <source>Print this help page</source>
-        <translation>Imprimer cette page d&apos;aide</translation>
+        <source>Print the help page contents</source>
+        <translation>Imprimer le contenu de la page d&apos;aide</translation>
     </message>
 </context>
 <context>

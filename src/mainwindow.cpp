@@ -988,6 +988,10 @@ void MainWindow::handleAction(const QUrl &pUrl)
         // We want to open the Plugins dialog box
 
         on_actionPlugins_triggered();
+    } else if (!authority.compare("actionabout")) {
+        // We want to open the About box
+
+        on_actionAbout_triggered();
     } else {
         // We are dealing with an action which OpenCOR itself can't handle, but
         // maybe one of its loaded plugins can
