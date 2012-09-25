@@ -83,7 +83,8 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
             var currentMenuItem = false;
                 
             if (   (data[i][1].toLowerCase() == pageName.toLowerCase())
-                || ((pageName == "OpenCOR") && (data[i][1] == "Home")))
+                || ((pageName == "OpenCOR") && (data[i][1] == "Home"))
+                || (pageName == data[i][1]+" Plugin"))
                 currentMenuItem = true;
                 
             if (i != data.length-1) {
