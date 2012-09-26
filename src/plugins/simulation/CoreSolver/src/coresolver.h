@@ -39,7 +39,7 @@ public:
 protected:
     Properties mProperties;
 
-    virtual bool isValidProperty(const QString &pName) const = 0;
+    virtual bool isValidProperty(const QString &pName) const;
 
 Q_SIGNALS:
     void error(const QString &pErrorMsg);

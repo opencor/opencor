@@ -37,6 +37,18 @@ void CoreSolver::emitError(const QString &pErrorMsg)
 
 //==============================================================================
 
+bool CoreSolver::isValidProperty(const QString &pName) const
+{
+    Q_UNUSED(pName);
+
+    // Check whether the property name is known to us which, by default, isn't
+    // the case
+
+    return false;
+}
+
+//==============================================================================
+
 }   // namespace CoreSolver
 }   // namespace OpenCOR
 

@@ -26,8 +26,9 @@ namespace Solver {
 
 enum Type
 {
-    Ode,
-    Dae
+    Dae,
+    NonLinearAlgebraic,
+    Ode
 };
 
 enum PropertyType {
