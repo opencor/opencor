@@ -34,6 +34,17 @@ ADD_PLUGIN(SUNDIALS
         src/ida/ida_spils.c
         src/ida/ida_sptfqmr.c
 
+        src/kinsol/kinsol.c
+        src/kinsol/kinsol_band.c
+        src/kinsol/kinsol_bbdpre.c
+        src/kinsol/kinsol_dense.c
+        src/kinsol/kinsol_direct.c
+        src/kinsol/kinsol_io.c
+        src/kinsol/kinsol_spbcgs.c
+        src/kinsol/kinsol_spgmr.c
+        src/kinsol/kinsol_spils.c
+        src/kinsol/kinsol_sptfqmr.c
+        
         src/nvec_ser/nvector_serial.c
 
         src/sundials/sundials_band.c
