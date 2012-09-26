@@ -174,7 +174,7 @@ void SingleCellSimulationViewWidget::loadSettings(QSettings *pSettings)
     foreach (SolverInterface *solverInterface, mSolverInterfaces) {
         qDebug("---------------------------------------");
         qDebug("'%s' solver:", qPrintable(solverInterface->name()));
-        qDebug(" - Type: %s", (solverInterface->type() == Solver::Ode)?"ODE":"DAE");
+        qDebug(" - Type: %s", qPrintable(solverInterface->typeAsString()));
 
         Solver::Properties properties = solverInterface->properties();
 

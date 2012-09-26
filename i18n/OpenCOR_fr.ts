@@ -291,5 +291,17 @@
         <source>Copyright</source>
         <translation>Tous droits réservés</translation>
     </message>
+    <message>
+        <source>ODE</source>
+        <translation type="unfinished">EDO</translation>
+    </message>
+    <message>
+        <source>DAE</source>
+        <translation type="unfinished">EAD</translation>
+    </message>
+    <message>
+        <source>Non-linear algebraic</source>
+        <translation type="unfinished">Algébrique non-linéaire</translation>
+    </message>
 </context>
 </TS>

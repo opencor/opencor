@@ -17,9 +17,6 @@
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
 namespace Solver {
 
 //==============================================================================
@@ -50,6 +47,8 @@ public:
     virtual QString name() const = 0;
     virtual Solver::Type type() const = 0;
     virtual Solver::Properties properties() const = 0;
+
+    QString typeAsString() const;
 
     virtual void * instance() const = 0;
 };
