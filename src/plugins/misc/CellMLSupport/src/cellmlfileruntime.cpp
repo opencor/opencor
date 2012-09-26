@@ -425,41 +425,90 @@ CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pCellmlA
     time.restart();
 #endif
 
-    QString initializeConstantsString = QString::fromStdWString(genericCodeInformation->initConstsString());
-
-    // Get rid of any call to rootfind_<ID>
-    // Note: for some DAE models, the CellML API generates code similar to
-    //       rootfind_<ID>(VOI, CONSTANTS, RATES, STATES, ALGEBRAIC, pret);\r\n
-    //       which we are not (currently at least) supporting, so...
-    //       (See https://tracker.physiomeproject.org/show_bug.cgi?id=3237)
-    //---GRY--- THE CALL TO rootfind_<ID> IS TO DO A LevMar CALL, BUT THIS
-    //          SHOULDN'T BE NECESSARY WHEN USING A 'PROPER' DAE SOLVER (E.G.
-    //          IDA). INSTEAD, THE SOLVER SHOULD PROVIDE A WAY TO DO SOMETHING
-    //          SIMILAR TO A LevMar. USING IDA, THE WAY TO DO IT IS PROBABLY BY
-    //          MAKING A CALL TO IDACalcIC()?...
-
-    initializeConstantsString.remove(QRegExp("rootfind_[0-9]+\\(VOI, CONSTANTS, RATES, STATES, ALGEBRAIC, pret\\);\\r\\n"));
-
     addAndCheckFunction("initializeConstants",
-                        QString("void initializeConstants(double *CONSTANTS, double *RATES, double *STATES)\n{\n%1}").arg(initializeConstantsString));
+                        QString("int initializeConstants(double *CONSTANTS, double *RATES, double *STATES)\n"
+                                "{\n"
+                                "    int ret = 0;\n"
+                                "    int *pret = &ret;\n"
+                                "\n"
+                                "#define VOI 0.0\n"
+                                "#define ALGEBRAIC 0\n"
+                                "\n"
+                                "%1"
+                                "\n"
+                                "#undef ALGEBRAIC\n"
+                                "#undef VOI\n"
+                                "\n"
+                                "    return ret;\n"
+                                "}").arg(QString::fromStdWString(genericCodeInformation->initConstsString())));
 
     if (mModelType == Ode)
         addAndCheckFunction("computeRates",
-                            QString("void computeRates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(mCellmlApiOdeCodeInformation->ratesString())));
+                            QString("int computeRates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n"
+                                    "{\n"
+                                    "    int ret = 0;\n"
+                                    "    int *pret = &ret;\n"
+                                    "\n"
+                                    "%1"
+                                    "\n"
+                                    "    return ret;\n"
+                                    "}").arg(QString::fromStdWString(mCellmlApiOdeCodeInformation->ratesString())));
     else
         addAndCheckFunction("computeResiduals",
-                            QString("void computeResiduals(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR, double *resid)\n{\n%1}").arg(QString::fromStdWString(mCellmlApiDaeCodeInformation->ratesString())));
+                            QString("int computeResiduals(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR, double *resid)\n"
+                                    "{\n"
+                                    "    int ret = 0;\n"
+                                    "    int *pret = &ret;\n"
+                                    "\n"
+                                    "%1"
+                                    "\n"
+                                    "    return ret;\n"
+                                    "}").arg(QString::fromStdWString(mCellmlApiDaeCodeInformation->ratesString())));
 
     addAndCheckFunction("computeVariables",
-                        QString("void computeVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n{\n%1}").arg(QString::fromStdWString(genericCodeInformation->variablesString())));
+                        QString("int computeVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)\n"
+                                "{\n"
+                                "    int ret = 0;\n"
+                                "    int *pret = &ret;\n"
+                                "\n"
+                                "%1"
+                                "\n"
+                                "    return ret;\n"
+                                "}").arg(QString::fromStdWString(genericCodeInformation->variablesString())));
 
     if (mModelType == Dae) {
         addAndCheckFunction("computeEssentialVariables",
-                            QString("void computeEssentialVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR)\n{\n%1}").arg(QString::fromStdWString(mCellmlApiDaeCodeInformation->essentialVariablesString())));
+                            QString("int computeEssentialVariables(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR)\n"
+                                    "{\n"
+                                    "    int ret = 0;\n"
+                                    "    int *pret = &ret;\n"
+                                    "\n"
+                                    "%1"
+                                    "\n"
+                                    "    return ret;\n"
+                                    "}").arg(QString::fromStdWString(mCellmlApiDaeCodeInformation->essentialVariablesString())));
+
         addAndCheckFunction("computeRootInformation",
-                            QString("void computeRootInformation(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR)\n{\n%1}").arg(QString::fromStdWString(mCellmlApiDaeCodeInformation->rootInformationString())));
+                            QString("int computeRootInformation(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR)\n"
+                                    "{\n"
+                                    "    int ret = 0;\n"
+                                    "    int *pret = &ret;\n"
+                                    "\n"
+                                    "%1"
+                                    "\n"
+                                    "    return ret;\n"
+                                    "}").arg(QString::fromStdWString(mCellmlApiDaeCodeInformation->rootInformationString())));
+
         addAndCheckFunction("computeStateInformation",
-                            QString("void computeStateInformation(double *SI)\n{\n%1}").arg(QString::fromStdWString(mCellmlApiDaeCodeInformation->stateInformationString())));
+                            QString("int computeStateInformation(double *SI)\n"
+                                    "{\n"
+                                    "    int ret = 0;\n"
+                                    "    int *pret = &ret;\n"
+                                    "\n"
+                                    "%1"
+                                    "\n"
+                                    "    return ret;\n"
+                                    "}").arg(QString::fromStdWString(mCellmlApiDaeCodeInformation->stateInformationString())));
     }
 
 #ifdef QT_DEBUG

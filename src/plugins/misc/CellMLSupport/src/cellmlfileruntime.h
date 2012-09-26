@@ -48,13 +48,13 @@ public:
         Undefined
     };
 
-    typedef void (*InitializeConstantsFunction)(double *, double *, double *);
-    typedef void (*ComputeOdeRatesFunction)(double, double *, double *, double *, double *);
-    typedef void (*ComputeDaeResidualsFunction)(double, double *, double *, double *, double *, double *, double *);
-    typedef void (*ComputeVariablesFunction)(double, double *, double *, double *, double *);
-    typedef void (*ComputeDaeEssentialVariablesFunction)(double, double *, double *, double *, double *, double *);
-    typedef void (*ComputeDaeRootInformationFunction)(double, double *, double *, double *, double *, double *);
-    typedef void (*ComputeDaeStateInformationFunction)(double *);
+    typedef int (*InitializeConstantsFunction)(double *, double *, double *);
+    typedef int (*ComputeOdeRatesFunction)(double, double *, double *, double *, double *);
+    typedef int (*ComputeDaeResidualsFunction)(double, double *, double *, double *, double *, double *, double *);
+    typedef int (*ComputeVariablesFunction)(double, double *, double *, double *, double *);
+    typedef int (*ComputeDaeEssentialVariablesFunction)(double, double *, double *, double *, double *, double *);
+    typedef int (*ComputeDaeRootInformationFunction)(double, double *, double *, double *, double *, double *);
+    typedef int (*ComputeDaeStateInformationFunction)(double *);
 
     struct OdeFunctions
     {

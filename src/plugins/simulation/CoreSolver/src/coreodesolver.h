@@ -19,7 +19,7 @@ namespace CoreSolver {
 class CORESOLVER_EXPORT CoreOdeSolver : public CoreSolver
 {
 public:
-    typedef void (*ComputeRatesFunction)(double, double *, double *, double *, double *);
+    typedef int (*ComputeRatesFunction)(double, double *, double *, double *, double *);
 
     explicit CoreOdeSolver();
 
