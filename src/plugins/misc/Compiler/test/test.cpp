@@ -1,9 +1,9 @@
 //==============================================================================
-// Computer test
+// Compiler test
 //==============================================================================
 
-#include "computerengine.h"
-#include "computermath.h"
+#include "compilerengine.h"
+#include "compilermath.h"
 #include "test.h"
 
 //==============================================================================
@@ -30,13 +30,13 @@ static const double BigC = 5.0*7.0*17.0;
 
 void Test::initTestCase()
 {
-    // Load the Computer plugin
+    // Load the Compiler plugin
 
-    OpenCOR::loadPlugin("Computer");
+    OpenCOR::loadPlugin("Compiler");
 
-    // Create our computer engine
+    // Create our compiler engine
 
-    mComputerEngine = new OpenCOR::Computer::ComputerEngine();
+    mCompilerEngine = new OpenCOR::Compiler::CompilerEngine();
 }
 
 //==============================================================================
@@ -45,7 +45,7 @@ void Test::cleanupTestCase()
 {
     // Delete some internal objects
 
-    delete mComputerEngine;
+    delete mCompilerEngine;
 }
 
 //==============================================================================
@@ -54,103 +54,78 @@ void Test::basicTests()
 {
     // Check what happens when using an empty string to add a function
 
-    QVERIFY(!mComputerEngine->addFunction("voidFunc",
-                                          ""));
+    QVERIFY(mCompilerEngine->compileCode(""));
 
     // Add 'void' to our string
 
-    QVERIFY(!mComputerEngine->addFunction("voidFunc",
-                                          "void"));
+    QVERIFY(!mCompilerEngine->compileCode("void"));
 
     // Add an identifier to our string
 
-    QVERIFY(!mComputerEngine->addFunction("voidFunc",
-                                          "void voidFunc"));
+    QVERIFY(!mCompilerEngine->compileCode("void function"));
 
     // Add a '(' to our string
 
-    QVERIFY(!mComputerEngine->addFunction("voidFunc",
-                                          "void voidFunc("));
+    QVERIFY(!mCompilerEngine->compileCode("void function("));
 
     // Add a ')' to our string
 
-    QVERIFY(!mComputerEngine->addFunction("voidFunc",
-                                          "void voidFunc()"));
+    QVERIFY(!mCompilerEngine->compileCode("void function()"));
 
     // Add a '{' to our string
 
-    QVERIFY(!mComputerEngine->addFunction("voidFunc",
-                                          "void voidFunc() {"));
+    QVERIFY(!mCompilerEngine->compileCode("void function() {"));
 
     // Add a '}' to our string which should make it a valid void function
 
-    QVERIFY(mComputerEngine->addFunction("voidFunc",
-                                         "void voidFunc() {}"));
+    QVERIFY(mCompilerEngine->compileCode("void function() {}"));
 
     // Make the function a double function
 
-    QVERIFY(!mComputerEngine->addFunction("doubleFunc",
-                                          "double doubleFunc() {}"));
+    QVERIFY(!mCompilerEngine->compileCode("double function() {}"));
 
     // Add 'return' to our string
 
-    QVERIFY(!mComputerEngine->addFunction("doubleFunc",
-                                          "double doubleFunc() { return"));
+    QVERIFY(!mCompilerEngine->compileCode("double function() { return"));
 
     // Add '3' (as the RHS of an equation) to our string
 
-    QVERIFY(!mComputerEngine->addFunction("doubleFunc",
-                                          "double doubleFunc() { return 3.0"));
+    QVERIFY(!mCompilerEngine->compileCode("double function() { return 3.0"));
 
     // Add ';' to our string
 
-    QVERIFY(!mComputerEngine->addFunction("doubleFunc",
-                                          "double doubleFunc() { return 3.0;"));
+    QVERIFY(!mCompilerEngine->compileCode("double function() { return 3.0;"));
 
     // Add a '}' to our string which should make it a valid double function
 
-    QVERIFY(mComputerEngine->addFunction("doubleFunc",
-                                         "double doubleFunc() { return 3.0; }"));
-
-    // Check that we cannot redefine a function with the same function name
-
-    QVERIFY(!mComputerEngine->addFunction("doubleFunc",
-                                          "double doubleFunc() { return 3.0; }"));
+    QVERIFY(mCompilerEngine->compileCode("double function() { return 3.0; }"));
 
     // Check what happens when using an invalid function name
 
-    QVERIFY(!mComputerEngine->addFunction("doubleFunc",
-                                          "double .doubleFunc() { return 3.0; }"));
+    QVERIFY(!mCompilerEngine->compileCode("double .function() { return 3.0; }"));
 
     // Check what happens when using an invalid RHS of an equation
 
-    QVERIFY(!mComputerEngine->addFunction("doubleFunc",
-                                          "double doubleFunc() { return 3.0*/a; }"));
+    QVERIFY(!mCompilerEngine->compileCode("double function() { return 3.0*/a; }"));
 }
 
 //==============================================================================
 
 void Test::voidFunctionTests()
 {
-    llvm::Function *function;
-
     double arrayA[3];
     double arrayB[3];
 
     // Initialise arrayA
 
-    function = mComputerEngine->addFunction("aInitFunc",
-                   "void aInitFunc(double *pArrayA)\n"
-                   "{\n"
-                   "    pArrayA[0] = 123.0;\n"
-                   "    pArrayA[1] = 456.0;\n"
-                   "    pArrayA[2] = 789.0;\n"
-                   "}"
-               );
+    QVERIFY(mCompilerEngine->compileCode("void function(double *pArrayA)\n"
+                                         "{\n"
+                                         "    pArrayA[0] = 123.0;\n"
+                                         "    pArrayA[1] = 456.0;\n"
+                                         "    pArrayA[2] = 789.0;\n"
+                                         "}"));
 
-    QVERIFY(function);
-
-    ((void (*)(double *)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(arrayA);
+    ((void (*)(double *)) (intptr_t) mCompilerEngine->getFunction("function"))(arrayA);
 
     QCOMPARE(arrayA[0], 123.0);
     QCOMPARE(arrayA[1], 456.0);
@@ -158,18 +133,14 @@ void Test::voidFunctionTests()
 
     // Initialise arrayB in reverse order of arrayA
 
-    function = mComputerEngine->addFunction("bInitFunc",
-                   "void bInitFunc(double *pArrayA, double *pArrayB)\n"
-                   "{\n"
-                   "    pArrayB[0] = pArrayA[2];\n"
-                   "    pArrayB[1] = pArrayA[1];\n"
-                   "    pArrayB[2] = pArrayA[0];\n"
-                   "}"
-               );
+    QVERIFY(mCompilerEngine->compileCode("void function(double *pArrayA, double *pArrayB)\n"
+                                         "{\n"
+                                         "    pArrayB[0] = pArrayA[2];\n"
+                                         "    pArrayB[1] = pArrayA[1];\n"
+                                         "    pArrayB[2] = pArrayA[0];\n"
+                                         "}"));
 
-    QVERIFY(function);
-
-    ((void (*)(double *, double *)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(arrayA, arrayB);
+    ((void (*)(double *, double *)) (intptr_t) mCompilerEngine->getFunction("function"))(arrayA, arrayB);
 
     QCOMPARE(arrayB[0], 789.0);
     QCOMPARE(arrayB[1], 456.0);
@@ -180,20 +151,14 @@ void Test::voidFunctionTests()
 
 void Test::timesOperatorTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
+                                         "{\n"
+                                         "    return pNb1*pNb2;\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("multFunc",
-                   "double multFunc(double pNb1, double pNb2)\n"
-                   "{\n"
-                    "    return pNb1*pNb2;\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0, 5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 5.7),
              3.0*5.7);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A, B),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(A, B),
              A*B);
 }
 
@@ -201,20 +166,14 @@ void Test::timesOperatorTests()
 
 void Test::divideOperatorTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
+                                         "{\n"
+                                         "    return pNb1/pNb2;\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("divFunc",
-                   "double divFunc(double pNb1, double pNb2)\n"
-                   "{\n"
-                   "    return pNb1/pNb2;\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0, 5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 5.7),
              3.0/5.7);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A, B),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(A, B),
              A/B);
 }
 
@@ -222,20 +181,14 @@ void Test::divideOperatorTests()
 
 void Test::moduloOperatorTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
+                                         "{\n"
+                                         "    return (double) ((int) pNb1 % (int) pNb2);\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("modFunc",
-                   "double modFunc(double pNb1, double pNb2)\n"
-                   "{\n"
-                   "    return (double) ((int) pNb1 % (int) pNb2);\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(11.0*3.0, 5.0),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(11.0*3.0, 5.0),
              (double) ((int) (11.0*3.0) % (int) 5.0));
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(11.0*A, B),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(11.0*A, B),
              (double) ((int) (11.0*A) % (int) B));
 }
 
@@ -243,20 +196,14 @@ void Test::moduloOperatorTests()
 
 void Test::plusOperatorTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
+                                         "{\n"
+                                         "    return pNb1+pNb2;\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("addFunc",
-                   "double addFunc(double pNb1, double pNb2)\n"
-                   "{\n"
-                   "    return pNb1+pNb2;\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0, 5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 5.7),
              3.0+5.7);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A, B),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(A, B),
              A+B);
 }
 
@@ -264,20 +211,14 @@ void Test::plusOperatorTests()
 
 void Test::minusOperatorTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
+                                         "{\n"
+                                         "    return pNb1-pNb2;\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("subFunc",
-                   "double subFunc(double pNb1, double pNb2)\n"
-                   "{\n"
-                   "    return pNb1-pNb2;\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0, 5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 5.7),
              3.0-5.7);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A, B),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(A, B),
              A-B);
 }
 
@@ -285,24 +226,18 @@ void Test::minusOperatorTests()
 
 void Test::notOperatorTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb)\n"
+                                         "{\n"
+                                         "    return !pNb;\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("notFunc",
-                   "double notFunc(double pNb)\n"
-                   "{\n"
-                   "    return !pNb;\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
              0.0);
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(!3.0),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(!3.0),
              1.0);
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(A),
              0.0);
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(!A),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(!A),
              1.0);
 }
 
@@ -310,32 +245,26 @@ void Test::notOperatorTests()
 
 void Test::orOperatorTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
+                                         "{\n"
+                                         "    return pNb1 || pNb2;\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("orFunc",
-                   "double orFunc(double pNb1, double pNb2)\n"
-                   "{\n"
-                   "    return pNb1 || pNb2;\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0, 5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 5.7),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(!3.0, 5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(!3.0, 5.7),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0, !5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, !5.7),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(!3.0, !5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(!3.0, !5.7),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A, B),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(A, B),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(!A, B),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(!A, B),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A, !B),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(A, !B),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(!A, !B),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(!A, !B),
              0.0);
 }
 
@@ -343,32 +272,26 @@ void Test::orOperatorTests()
 
 void Test::xorOperatorTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
+                                         "{\n"
+                                         "    return (pNb1 != 0) ^ (pNb2 != 0);\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("xorFunc",
-                   "double xorFunc(double pNb1, double pNb2)\n"
-                   "{\n"
-                   "    return (pNb1 != 0) ^ (pNb2 != 0);\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0, 5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 5.7),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(!3.0, 5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(!3.0, 5.7),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0, !5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, !5.7),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(!3.0, !5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(!3.0, !5.7),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A, B),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(A, B),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(!A, B),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(!A, B),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A, !B),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(A, !B),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(!A, !B),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(!A, !B),
              0.0);
 }
 
@@ -376,32 +299,26 @@ void Test::xorOperatorTests()
 
 void Test::andOperatorTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
+                                         "{\n"
+                                         "    return pNb1 && pNb2;\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("andFunc",
-                   "double andFunc(double pNb1, double pNb2)\n"
-                   "{\n"
-                   "    return pNb1 && pNb2;\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0, 5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 5.7),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(!3.0, 5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(!3.0, 5.7),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0, !5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, !5.7),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(!3.0, !5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(!3.0, !5.7),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A, B),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(A, B),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(!A, B),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(!A, B),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A, !B),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(A, !B),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(!A, !B),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(!A, !B),
              0.0);
 }
 
@@ -409,24 +326,18 @@ void Test::andOperatorTests()
 
 void Test::equalEqualOperatorTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
+                                         "{\n"
+                                         "    return pNb1 == pNb2;\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("equalEqualFunc",
-                   "double equalEqualFunc(double pNb1, double pNb2)\n"
-                   "{\n"
-                   "    return pNb1 == pNb2;\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0, 5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 5.7),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0+2.7, 5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0+2.7, 5.7),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A, B),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(A, B),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A+2.9, B),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(A+2.9, B),
              1.0);
 }
 
@@ -434,24 +345,18 @@ void Test::equalEqualOperatorTests()
 
 void Test::notEqualOperatorTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
+                                         "{\n"
+                                         "    return pNb1 != pNb2;\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("notEqualFunc",
-                   "double notEqualFunc(double pNb1, double pNb2)\n"
-                   "{\n"
-                   "    return pNb1 != pNb2;\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0, 5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 5.7),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0+2.7, 5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0+2.7, 5.7),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A, B),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(A, B),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A+2.9, B),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(A+2.9, B),
              0.0);
 }
 
@@ -459,28 +364,22 @@ void Test::notEqualOperatorTests()
 
 void Test::lowerThanOperatorTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
+                                         "{\n"
+                                         "    return pNb1 < pNb2;\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("lowerThanFunc",
-                   "double lowerThanFunc(double pNb1, double pNb2)\n"
-                   "{\n"
-                   "    return pNb1 < pNb2;\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0, 5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 5.7),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0+2.7, 5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0+2.7, 5.7),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(5.7, 3.0),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(5.7, 3.0),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A, B),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(A, B),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A+2.9, B),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(A+2.9, B),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(B, A),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(B, A),
              0.0);
 }
 
@@ -488,28 +387,22 @@ void Test::lowerThanOperatorTests()
 
 void Test::greaterThanOperatorTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
+                                         "{\n"
+                                         "    return pNb1 > pNb2;\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("greaterThanFunc",
-                   "double greaterThanFunc(double pNb1, double pNb2)\n"
-                   "{\n"
-                   "    return pNb1 > pNb2;\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0, 5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 5.7),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0+2.7, 5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0+2.7, 5.7),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(5.7, 3.0),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(5.7, 3.0),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A, B),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(A, B),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A+2.9, B),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(A+2.9, B),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(B, A),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(B, A),
              1.0);
 }
 
@@ -517,28 +410,22 @@ void Test::greaterThanOperatorTests()
 
 void Test::lowerOrEqualThanOperatorTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
+                                         "{\n"
+                                         "    return pNb1 <= pNb2;\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("lowerOrEqualThanFunc",
-                   "double lowerOrEqualThanFunc(double pNb1, double pNb2)\n"
-                   "{\n"
-                   "    return pNb1 <= pNb2;\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0, 5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 5.7),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0+2.7, 5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0+2.7, 5.7),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(5.7, 3.0),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(5.7, 3.0),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A, B),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(A, B),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A+2.9, B),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(A+2.9, B),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(B, A),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(B, A),
              0.0);
 }
 
@@ -546,28 +433,22 @@ void Test::lowerOrEqualThanOperatorTests()
 
 void Test::greaterOrEqualThanOperatorTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
+                                         "{\n"
+                                         "    return (double) (pNb1 >= pNb2);\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("greaterOrEqualThanFunc",
-                   "double greaterOrEqualThanFunc(double pNb1, double pNb2)\n"
-                   "{\n"
-                   "    return (double) (pNb1 >= pNb2);\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0, 5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 5.7),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0+2.7, 5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0+2.7, 5.7),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(5.7, 3.0),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(5.7, 3.0),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A, B),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(A, B),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A+2.9, B),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(A+2.9, B),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(B, A),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(B, A),
              1.0);
 }
 
@@ -575,24 +456,20 @@ void Test::greaterOrEqualThanOperatorTests()
 
 void Test::absFunctionTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("extern double fabs(double);\n"
+                                         "\n"
+                                         "double function(double pNb)\n"
+                                         "{\n"
+                                         "    return fabs(pNb);\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("absFunc",
-                   "double absFunc(double pNb)\n"
-                   "{\n"
-                   "    return fabs(pNb);\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
              3.0);
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(-3.0),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(-3.0),
              3.0);
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(A),
              5.0);
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(MinusA),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(MinusA),
              5.0);
 }
 
@@ -600,20 +477,16 @@ void Test::absFunctionTests()
 
 void Test::expFunctionTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("extern double exp(double);\n"
+                                         "\n"
+                                         "double function(double pNb)\n"
+                                         "{\n"
+                                         "    return exp(pNb);\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("expFunc",
-                   "double expFunc(double pNb)\n"
-                   "{\n"
-                   "    return exp(pNb);\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
              exp(3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(A),
              exp(A));
 }
 
@@ -621,20 +494,16 @@ void Test::expFunctionTests()
 
 void Test::logFunctionTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("extern double log(double);\n"
+                                         "\n"
+                                         "double function(double pNb)\n"
+                                         "{\n"
+                                         "    return log(pNb);\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("logFunc",
-                   "double logFunc(double pNb)\n"
-                   "{\n"
-                   "    return log(pNb);\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
              log(3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(A),
              log(A));
 }
 
@@ -642,24 +511,20 @@ void Test::logFunctionTests()
 
 void Test::ceilFunctionTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("extern double ceil(double);\n"
+                                         "\n"
+                                         "double function(double pNb)\n"
+                                         "{\n"
+                                         "    return ceil(pNb);\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("ceilFunc",
-                   "double ceilFunc(double pNb)\n"
-                   "{\n"
-                   "    return ceil(pNb);\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(5.7),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(5.7),
              6.0);
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(B),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(B),
              8.0);
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(-5.7),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(-5.7),
              -5.0);
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(MinusB),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(MinusB),
              -7.0);
 }
 
@@ -667,24 +532,20 @@ void Test::ceilFunctionTests()
 
 void Test::floorFunctionTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("extern double floor(double);\n"
+                                         "\n"
+                                         "double function(double pNb)\n"
+                                         "{\n"
+                                         "    return floor(pNb);\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("floorFunc",
-                   "double floorFunc(double pNb)\n"
-                   "{\n"
-                   "    return floor(pNb);\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(5.7),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(5.7),
              5.0);
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(B),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(B),
              7.0);
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(-5.7),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(-5.7),
              -6.0);
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(MinusB),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(MinusB),
              -8.0);
 }
 
@@ -692,20 +553,16 @@ void Test::floorFunctionTests()
 
 void Test::factorialFunctionTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("extern double factorial(double);\n"
+                                         "\n"
+                                         "double function(double pNb)\n"
+                                         "{\n"
+                                         "    return factorial(pNb);\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("factorialFunc",
-                   "double factorialFunc(double pNb)\n"
-                   "{\n"
-                   "    return factorial(pNb);\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
              6.0);
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(A),
              120.0);
 }
 
@@ -713,20 +570,16 @@ void Test::factorialFunctionTests()
 
 void Test::sinFunctionTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("extern double sin(double);\n"
+                                         "\n"
+                                         "double function(double pNb)\n"
+                                         "{\n"
+                                         "    return sin(pNb);\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("sinFunc",
-                   "double sinFunc(double pNb)\n"
-                   "{\n"
-                   "    return sin(pNb);\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
              sin(3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(A),
              sin(A));
 }
 
@@ -734,20 +587,16 @@ void Test::sinFunctionTests()
 
 void Test::cosFunctionTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("extern double cos(double);\n"
+                                         "\n"
+                                         "double function(double pNb)\n"
+                                         "{\n"
+                                         "    return cos(pNb);\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("cosFunc",
-                   "double cosFunc(double pNb)\n"
-                   "{\n"
-                   "    return cos(pNb);\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
              cos(3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(A),
              cos(A));
 }
 
@@ -755,20 +604,16 @@ void Test::cosFunctionTests()
 
 void Test::tanFunctionTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("extern double tan(double);\n"
+                                         "\n"
+                                         "double function(double pNb)\n"
+                                         "{\n"
+                                         "    return tan(pNb);\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("tanFunc",
-                   "double tanFunc(double pNb)\n"
-                   "{\n"
-                   "    return tan(pNb);\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
              tan(3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(A),
              tan(A));
 }
 
@@ -776,20 +621,16 @@ void Test::tanFunctionTests()
 
 void Test::sinhFunctionTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("extern double sinh(double);\n"
+                                         "\n"
+                                         "double function(double pNb)\n"
+                                         "{\n"
+                                         "    return sinh(pNb);\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("sinhFunc",
-                   "double sinhFunc(double pNb)\n"
-                   "{\n"
-                   "    return sinh(pNb);\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
              sinh(3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(A),
              sinh(A));
 }
 
@@ -797,20 +638,16 @@ void Test::sinhFunctionTests()
 
 void Test::coshFunctionTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("extern double cosh(double);\n"
+                                         "\n"
+                                         "double function(double pNb)\n"
+                                         "{\n"
+                                         "    return cosh(pNb);\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("coshFunc",
-                   "double coshFunc(double pNb)\n"
-                   "{\n"
-                   "    return cosh(pNb);\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
              cosh(3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(A),
              cosh(A));
 }
 
@@ -818,20 +655,16 @@ void Test::coshFunctionTests()
 
 void Test::tanhFunctionTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("extern double tanh(double);\n"
+                                         "\n"
+                                         "double function(double pNb)\n"
+                                         "{\n"
+                                         "    return tanh(pNb);\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("tanhFunc",
-                   "double tanhFunc(double pNb)\n"
-                   "{\n"
-                   "    return tanh(pNb);\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
              tanh(3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(A),
              tanh(A));
 }
 
@@ -839,20 +672,16 @@ void Test::tanhFunctionTests()
 
 void Test::asinFunctionTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("extern double asin(double);\n"
+                                         "\n"
+                                         "double function(double pNb)\n"
+                                         "{\n"
+                                         "    return asin(pNb);\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("asinFunc",
-                   "double asinFunc(double pNb)\n"
-                   "{\n"
-                   "    return asin(pNb);\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(1.0/3.0),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(1.0/3.0),
              asin(1.0/3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(1.0/A),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(1.0/A),
              asin(1.0/A));
 }
 
@@ -860,20 +689,16 @@ void Test::asinFunctionTests()
 
 void Test::acosFunctionTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("extern double acos(double);\n"
+                                         "\n"
+                                         "double function(double pNb)\n"
+                                         "{\n"
+                                         "    return acos(pNb);\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("acosFunc",
-                   "double acosFunc(double pNb)\n"
-                   "{\n"
-                   "    return acos(pNb);\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(1.0/3.0),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(1.0/3.0),
              acos(1.0/3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(1.0/A),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(1.0/A),
              acos(1.0/A));
 }
 
@@ -881,20 +706,16 @@ void Test::acosFunctionTests()
 
 void Test::atanFunctionTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("extern double atan(double);\n"
+                                         "\n"
+                                         "double function(double pNb)\n"
+                                         "{\n"
+                                         "    return atan(pNb);\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("atanFunc",
-                   "double atanFunc(double pNb)\n"
-                   "{\n"
-                   "    return atan(pNb);\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
              atan(3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(A),
              atan(A));
 }
 
@@ -902,20 +723,16 @@ void Test::atanFunctionTests()
 
 void Test::asinhFunctionTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("extern double asinh(double);\n"
+                                         "\n"
+                                         "double function(double pNb)\n"
+                                         "{\n"
+                                         "    return asinh(pNb);\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("asinhFunc",
-                   "double asinhFunc(double pNb)\n"
-                   "{\n"
-                   "    return asinh(pNb);\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
              asinh(3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(A),
              asinh(A));
 }
 
@@ -923,20 +740,16 @@ void Test::asinhFunctionTests()
 
 void Test::acoshFunctionTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("extern double acosh(double);\n"
+                                         "\n"
+                                         "double function(double pNb)\n"
+                                         "{\n"
+                                         "    return acosh(pNb);\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("acoshFunc",
-                   "double acoshFunc(double pNb)\n"
-                   "{\n"
-                   "    return acosh(pNb);\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
              acosh(3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(A),
              acosh(A));
 }
 
@@ -944,20 +757,16 @@ void Test::acoshFunctionTests()
 
 void Test::atanhFunctionTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("extern double atanh(double);\n"
+                                         "\n"
+                                         "double function(double pNb)\n"
+                                         "{\n"
+                                         "    return atanh(pNb);\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("atanhFunc",
-                   "double atanhFunc(double pNb)\n"
-                   "{\n"
-                   "    return atanh(pNb);\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(1.0/3.0),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(1.0/3.0),
              atanh(1.0/3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(1.0/A),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(1.0/A),
              atanh(1.0/A));
 }
 
@@ -965,20 +774,16 @@ void Test::atanhFunctionTests()
 
 void Test::arbitraryLogFunctionTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("extern double arbitrary_log(double, double);\n"
+                                         "\n"
+                                         "double function(double pNb1, double pNb2)\n"
+                                         "{\n"
+                                         "    return arbitrary_log(pNb1, pNb2);\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("arbitraryLogFunc",
-                   "double arbitraryLogFunc(double pNb1, double pNb2)\n"
-                   "{\n"
-                   "    return arbitrary_log(pNb1, pNb2);\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0, 5.0),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 5.0),
              log(3.0)/log(5.0));
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A, B),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(A, B),
              log(A)/log(B));
 }
 
@@ -986,20 +791,16 @@ void Test::arbitraryLogFunctionTests()
 
 void Test::powFunctionTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("extern double pow(double, double);\n"
+                                         "\n"
+                                         "double function(double pNb1, double pNb2)\n"
+                                         "{\n"
+                                         "    return pow(pNb1, pNb2);\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("powFunc",
-                   "double powFunc(double pNb1, double pNb2)\n"
-                   "{\n"
-                   "    return pow(pNb1, pNb2);\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0, 5.0),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 5.0),
              pow(3.0, 5.0));
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(A, B),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(A, B),
              pow(A, B));
 }
 
@@ -1007,34 +808,28 @@ void Test::powFunctionTests()
 
 void Test::gcdFunctionTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("extern double gcd_multi(int, ...);\n"
+                                         "\n"
+                                         "double function(double pNb1, double pNb2)\n"
+                                         "{\n"
+                                         "    return gcd_multi(2, pNb1, pNb2);\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("gcdFunc2",
-                   "double gcdFunc2(double pNb1, double pNb2)\n"
-                   "{\n"
-                   "    return gcd_multi(2, pNb1, pNb2);\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0),
              273.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(BigA, BigB),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(BigA, BigB),
              273.0);
 
-    function = mComputerEngine->addFunction("gcdFunc3",
-                   "double gcdFunc3(double pNb1, double pNb2, double pNb3)\n"
-                   "{\n"
-                   "    return gcd_multi(3, pNb1, pNb2, pNb3);\n"
-                   "}"
-               );
+    QVERIFY(mCompilerEngine->compileCode("extern double gcd_multi(int, ...);\n"
+                                         "\n"
+                                         "double function(double pNb1, double pNb2, double pNb3)\n"
+                                         "{\n"
+                                         "    return gcd_multi(3, pNb1, pNb2, pNb3);\n"
+                                         "}"));
 
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double, double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0, 5.0*7.0*17.0),
+    QCOMPARE(((double (*)(double, double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0, 5.0*7.0*17.0),
              7.0);
-    QCOMPARE(((double (*)(double, double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(BigA, BigB, BigC),
+    QCOMPARE(((double (*)(double, double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(BigA, BigB, BigC),
              7.0);
 }
 
@@ -1042,34 +837,28 @@ void Test::gcdFunctionTests()
 
 void Test::lcmFunctionTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("extern double lcm_multi(int, ...);\n"
+                                         "\n"
+                                         "double function(double pNb1, double pNb2)\n"
+                                         "{\n"
+                                         "    return lcm_multi(2, pNb1, pNb2);\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("lcmFunc2",
-                   "double lcmFunc2(double pNb1, double pNb2)\n"
-                   "{\n"
-                   "    return lcm_multi(2, pNb1, pNb2);\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0),
              510510.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(BigA, BigB),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(BigA, BigB),
              510510.0);
 
-    function = mComputerEngine->addFunction("lcmFunc3",
-                   "double lcmFunc3(double pNb1, double pNb2, double pNb3)\n"
-                   "{\n"
-                   "    return lcm_multi(3, pNb1, pNb2, pNb3);\n"
-                   "}"
-               );
+    QVERIFY(mCompilerEngine->compileCode("extern double lcm_multi(int, ...);\n"
+                                         "\n"
+                                         "double function(double pNb1, double pNb2, double pNb3)\n"
+                                         "{\n"
+                                         "    return lcm_multi(3, pNb1, pNb2, pNb3);\n"
+                                         "}"));
 
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double, double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0, 5.0*7.0*17.0),
+    QCOMPARE(((double (*)(double, double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0, 5.0*7.0*17.0),
              510510.0);
-    QCOMPARE(((double (*)(double, double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(BigA, BigB, BigC),
+    QCOMPARE(((double (*)(double, double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(BigA, BigB, BigC),
              510510.0);
 }
 
@@ -1077,34 +866,28 @@ void Test::lcmFunctionTests()
 
 void Test::maxFunctionTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("extern double multi_max(int, ...);\n"
+                                         "\n"
+                                         "double function(double pNb1, double pNb2)\n"
+                                         "{\n"
+                                         "    return multi_max(2, pNb1, pNb2);\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("maxFunc2",
-                   "double maxFunc2(double pNb1, double pNb2)\n"
-                   "{\n"
-                   "    return multi_max(2, pNb1, pNb2);\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0),
              15015.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(BigA, BigB),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(BigA, BigB),
              15015.0);
 
-    function = mComputerEngine->addFunction("maxFunc3",
-                   "double maxFunc3(double pNb1, double pNb2, double pNb3)\n"
-                   "{\n"
-                   "    return multi_max(3, pNb1, pNb2, pNb3);\n"
-                   "}"
-               );
+    QVERIFY(mCompilerEngine->compileCode("extern double multi_max(int, ...);\n"
+                                         "\n"
+                                         "double function(double pNb1, double pNb2, double pNb3)\n"
+                                         "{\n"
+                                         "    return multi_max(3, pNb1, pNb2, pNb3);\n"
+                                         "}"));
 
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double, double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0, 5.0*7.0*17.0),
+    QCOMPARE(((double (*)(double, double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0, 5.0*7.0*17.0),
              15015.0);
-    QCOMPARE(((double (*)(double, double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(BigA, BigB, BigC),
+    QCOMPARE(((double (*)(double, double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(BigA, BigB, BigC),
              15015.0);
 }
 
@@ -1112,34 +895,28 @@ void Test::maxFunctionTests()
 
 void Test::minFunctionTests()
 {
-    llvm::Function *function;
+    QVERIFY(mCompilerEngine->compileCode("extern double multi_min(int, ...);\n"
+                                         "\n"
+                                         "double function(double pNb1, double pNb2)\n"
+                                         "{\n"
+                                         "    return multi_min(2, pNb1, pNb2);\n"
+                                         "}"));
 
-    function = mComputerEngine->addFunction("minFunc2",
-                   "double minFunc2(double pNb1, double pNb2)\n"
-                   "{\n"
-                   "    return multi_min(2, pNb1, pNb2);\n"
-                   "}"
-               );
-
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0),
              9282.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(BigA, BigB),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(BigA, BigB),
              9282.0);
 
-    function = mComputerEngine->addFunction("minFunc3",
-                   "double minFunc3(double pNb1, double pNb2, double pNb3)\n"
-                   "{\n"
-                   "    return multi_min(3, pNb1, pNb2, pNb3);\n"
-                   "}"
-               );
+    QVERIFY(mCompilerEngine->compileCode("extern double multi_min(int, ...);\n"
+                                         "\n"
+                                         "double function(double pNb1, double pNb2, double pNb3)\n"
+                                         "{\n"
+                                         "    return multi_min(3, pNb1, pNb2, pNb3);\n"
+                                         "}"));
 
-    QVERIFY(function);
-
-    QCOMPARE(((double (*)(double, double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0, 5.0*7.0*17.0),
+    QCOMPARE(((double (*)(double, double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0, 5.0*7.0*17.0),
              595.0);
-    QCOMPARE(((double (*)(double, double, double)) (intptr_t) mComputerEngine->executionEngine()->getPointerToFunction(function))(BigA, BigB, BigC),
+    QCOMPARE(((double (*)(double, double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(BigA, BigB, BigC),
              595.0);
 }
 
@@ -1147,12 +924,10 @@ void Test::minFunctionTests()
 
 void Test::defIntFunctionTests()
 {
-    QVERIFY(!mComputerEngine->addFunction("defIntFunc",
-                 "double defIntFunc()\n"
-                 "{\n"
-                 "    return defint();\n"
-                 "}"
-             ));
+    QVERIFY(!mCompilerEngine->compileCode("double function()\n"
+                                          "{\n"
+                                          "    return defint();\n"
+                                          "}"));
 }
 
 //==============================================================================

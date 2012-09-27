@@ -2,8 +2,8 @@
 // Compiler plugin
 //==============================================================================
 
-#ifndef COMPUTERPLUGIN_H
-#define COMPUTERPLUGIN_H
+#ifndef COMPILERPLUGIN_H
+#define COMPILERPLUGIN_H
 
 //==============================================================================
 

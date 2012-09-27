@@ -1,6 +1,3 @@
-#include <iostream>
-#include <QDir>
-#include <QTextStream>
 //==============================================================================
 // Compiler engine class
 //==============================================================================
@@ -11,6 +8,8 @@
 //==============================================================================
 
 #include <QApplication>
+#include <QDir>
+#include <QTextStream>
 
 //==============================================================================
 
@@ -71,7 +70,7 @@ CompilerEngine::~CompilerEngine()
 
 //==============================================================================
 
-void CompilerEngine::reset()
+void CompilerEngine::reset(const bool &pResetError)
 {
     // Delete some internal objects
 
@@ -82,7 +81,8 @@ void CompilerEngine::reset()
     mModule = 0;
     mExecutionEngine = 0;
 
-    mError = QString();
+    if (pResetError)
+        mError = QString();
 }
 
 //==============================================================================
@@ -289,7 +289,7 @@ bool CompilerEngine::compileCode(const QString &pCode,
 
         tempFile.remove();
 
-        reset();
+        reset(false);
 
         return false;
     }

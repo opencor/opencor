@@ -305,7 +305,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
     if (mCellmlFileRuntime->isValid()) {
         mOutput->append(" - The CellML file's runtime was properly generated.");
-        mOutput->append(QString("    [Information] Model type = %1").arg((mCellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?"ODE":"DAE"));
+        mOutput->append(QString("    [Information] Model type = %1.").arg((mCellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?"ODE":"DAE"));
     } else {
         mOutput->append(" - The CellML file's runtime was NOT properly generated:");
 
@@ -718,7 +718,7 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
         } else {
             // Output the total simulation time
 
-            mOutput->append(QString(" - Simulation time (using the %1 solver): %2 s").arg(solverName,
+            mOutput->append(QString(" - Simulation time (using the %1 solver): %2 s.").arg(solverName,
                                                                                           QString::number(0.001*time.elapsed(), 'g', 3)));
 
             // Last bit of simulation data

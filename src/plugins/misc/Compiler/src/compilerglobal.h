@@ -1,14 +1,14 @@
-#ifndef COMPUTERGLOBAL_H
-#define COMPUTERGLOBAL_H
+#ifndef COMPILERGLOBAL_H
+#define COMPILERGLOBAL_H
 
 #ifdef _WIN32
-    #ifdef Computer_PLUGIN
-        #define COMPUTER_EXPORT __declspec(dllexport)
+    #ifdef Compiler_PLUGIN
+        #define COMPILER_EXPORT __declspec(dllexport)
     #else
-        #define COMPUTER_EXPORT __declspec(dllimport)
+        #define COMPILER_EXPORT __declspec(dllimport)
     #endif
 #else
-    #define COMPUTER_EXPORT
+    #define COMPILER_EXPORT
 #endif
 
 #endif

@@ -31,7 +31,7 @@ int main(int pArgc, char *pArgv[])
 
     Tests tests;
 
-    tests["Computer"] = QStringList() << "test";
+    tests["Compiler"] = QStringList() << "test";
 
     // Run the different tests
 

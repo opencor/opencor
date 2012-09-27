@@ -2,8 +2,8 @@
 // Compiler engine class
 //==============================================================================
 
-#ifndef COMPUTERENGINE_H
-#define COMPUTERENGINE_H
+#ifndef COMPILERENGINE_H
+#define COMPILERENGINE_H
 
 //==============================================================================
 
@@ -29,7 +29,7 @@ namespace Compiler {
 
 //==============================================================================
 
-class COMPUTER_EXPORT CompilerEngine : public QObject
+class COMPILER_EXPORT CompilerEngine : public QObject
 {
     Q_OBJECT
 
@@ -50,7 +50,7 @@ private:
 
     QString mError;
 
-    void reset();
+    void reset(const bool &pResetError = true);
 };
 
 //==============================================================================

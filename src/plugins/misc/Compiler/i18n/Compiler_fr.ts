@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>OpenCOR::Computer::ComputerEngine</name>
+    <name>OpenCOR::Compiler::CompilerEngine</name>
     <message>
         <source>definite integrals are not yet supported</source>
         <translation>les intégrales définies ne sont pas encore supportées</translation>

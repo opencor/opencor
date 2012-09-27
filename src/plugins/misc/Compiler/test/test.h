@@ -1,5 +1,5 @@
 //==============================================================================
-// Computer test
+// Compiler test
 //==============================================================================
 
 #include <QtTest/QtTest>
@@ -16,9 +16,9 @@ namespace OpenCOR {
 
 //==============================================================================
 
-namespace Computer {
-    class ComputerEngine;
-}   // namespace Computer
+namespace Compiler {
+    class CompilerEngine;
+}   // namespace Compiler
 
 //==============================================================================
 
@@ -31,7 +31,7 @@ class Test : public QObject
     Q_OBJECT
 
 private:
-    OpenCOR::Computer::ComputerEngine *mComputerEngine;
+    OpenCOR::Compiler::CompilerEngine *mCompilerEngine;
 
 private Q_SLOTS:
     void initTestCase();
