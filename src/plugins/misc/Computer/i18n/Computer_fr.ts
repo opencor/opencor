@@ -28,12 +28,12 @@
         <translation>le moteur de diagnostiques n&apos;a pas pu être créé</translation>
     </message>
     <message>
-        <source>the &lt;strong&gt;%1&lt;/strong&gt; function could not be found</source>
-        <translation>la fonction &lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être trouvée</translation>
+        <source>the model could not be compiled</source>
+        <translation>le modèle n&apos;a pas pu être compilé</translation>
     </message>
     <message>
-        <source>the &lt;strong&gt;%1&lt;/strong&gt; function could not be compiled</source>
-        <translation>la fonction &lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être compilée</translation>
+        <source>the JIT execution engine could not be created</source>
+        <translation>le moteur d&apos;exécution JIT n&apos;a pas pu être créé</translation>
     </message>
 </context>
 </TS>

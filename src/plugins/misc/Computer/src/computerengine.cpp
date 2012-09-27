@@ -54,53 +54,35 @@ namespace Computer {
 //==============================================================================
 
 ComputerEngine::ComputerEngine() :
+    mModule(0),
+    mExecutionEngine(0),
     mError(QString())
 {
-    // Create a module
-
-    static int counter = 0;
-
-    mModule = new llvm::Module(qPrintable(QString("Module #%1").arg(QString::number(++counter))),
-                               llvm::getGlobalContext());
-
-    // Initialise the native target, so not only can we then create a JIT
-    // execution engine, but more importantly its data layout will match that of
-    // our target platform...
-
-    llvm::InitializeNativeTarget();
-
-    // Create a JIT execution engine
-
-    mExecutionEngine = llvm::ExecutionEngine::createJIT(mModule);
 }
 
 //==============================================================================
 
 ComputerEngine::~ComputerEngine()
 {
+    // Reset ourselves
+
+    reset();
+}
+
+//==============================================================================
+
+void ComputerEngine::reset()
+{
     // Delete some internal objects
 
     delete mExecutionEngine;
     // Note: we must NOT delete mModule, since it gets deleted when deleting
     //       mExecutionEngine...
-}
 
-//==============================================================================
+    mModule = 0;
+    mExecutionEngine = 0;
 
-llvm::Module * ComputerEngine::module()
-{
-    // Return the computer engine's module
-
-    return mModule;
-}
-
-//==============================================================================
-
-llvm::ExecutionEngine * ComputerEngine::executionEngine()
-{
-    // Return the computer engine's execution engine
-
-    return mExecutionEngine;
+    mError = QString();
 }
 
 //==============================================================================
@@ -130,77 +112,45 @@ llvm::sys::Path getExecutablePath(const char *pArg) {
 
 //==============================================================================
 
-llvm::Function * ComputerEngine::addFunction(const QString &pFunctionName,
-                                             const QString &pFunctionBody,
-                                             const bool &pOutputErrors)
+bool ComputerEngine::compileCode(const QString &pCode,
+                                 const bool &pOutputErrors)
 {
+    // Reset our computer engine
+
+    reset();
+
     // Check whether we want to compute a definite integral
 
-    if (pFunctionBody.contains("defint(func")) {
+    if (pCode.contains("defint(func")) {
         mError = tr("definite integrals are not yet supported");
 
-        return 0;
+        return false;
     }
 
-    // Save the function in a temporary file, after having prepended it with
-    // all possible external functions which it may, or not, need
-    // Note: indeed, we cannot include header files since we don't (and don't
-    //       want to avoid complications) deploy them with OpenCOR. So, instead,
-    //       we must declare as external functions all the functions which we
-    //       would normally use through header files...
+    // Retrieve the application file name and determine the name of the
+    // temporary file which will contain our model code
 
     QByteArray appByteArray = qApp->applicationFilePath().toLatin1();
     const char *appFileName = appByteArray.constData();
 
     QByteArray tempFileByteArray = QString(QDir::tempPath()+QDir::separator()+QFileInfo(appFileName).baseName()+".c").toLatin1();
     const char *tempFileName = tempFileByteArray.constData();
+
+    // Save the model code in our temporary file
+
     QFile tempFile(tempFileName);
 
     if (!tempFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        // The temporary file can't be opened, so...
-
         mError = tr("<strong>%1</strong> could not be created").arg(tempFileName);
 
         tempFile.remove();
 
-        return 0;
+        return false;
     }
 
     QTextStream out(&tempFile);
 
-    out << "extern double fabs(double);\n"
-        << "\n"
-        << "extern double exp(double);\n"
-        << "extern double log(double);\n"
-        << "\n"
-        << "extern double ceil(double);\n"
-        << "extern double floor(double);\n"
-        << "\n"
-        << "extern double factorial(double);\n"
-        << "\n"
-        << "extern double sin(double);\n"
-        << "extern double cos(double);\n"
-        << "extern double tan(double);\n"
-        << "extern double sinh(double);\n"
-        << "extern double cosh(double);\n"
-        << "extern double tanh(double);\n"
-        << "extern double asin(double);\n"
-        << "extern double acos(double);\n"
-        << "extern double atan(double);\n"
-        << "extern double asinh(double);\n"
-        << "extern double acosh(double);\n"
-        << "extern double atanh(double);\n"
-        << "\n"
-        << "extern double arbitrary_log(double, double);\n"
-        << "\n"
-        << "extern double pow(double, double);\n"
-        << "\n"
-        << "extern double gcd_multi(int, ...);\n"
-        << "extern double lcm_multi(int, ...);\n"
-        << "extern double multi_max(int, ...);\n"
-        << "extern double multi_min(int, ...);\n"
-        << "\n"
-        << pFunctionBody;
+    out << pCode;
 
     tempFile.close();
 
@@ -239,7 +189,7 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunctionName,
 
         tempFile.remove();
 
-        return 0;
+        return false;
     }
 
     // The compilation object should have only one command, so if it doesn't
@@ -253,7 +203,7 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunctionName,
 
         tempFile.remove();
 
-        return 0;
+        return false;
     }
 
     // Retrieve the command job
@@ -266,7 +216,7 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunctionName,
 
         tempFile.remove();
 
-        return 0;
+        return false;
     }
 
     // Create a compiler invocation using our command's arguments
@@ -297,7 +247,34 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunctionName,
 
         tempFile.remove();
 
-        return 0;
+        return false;
+    }
+
+    // Create an LLVM module
+
+    static int counter = 0;
+
+    mModule = new llvm::Module(qPrintable(QString("Module #%1").arg(QString::number(++counter))),
+                               llvm::getGlobalContext());
+
+    // Initialise the native target, so not only can we then create a JIT
+    // execution engine, but more importantly its data layout will match that of
+    // our target platform...
+
+    llvm::InitializeNativeTarget();
+
+    // Create a JIT execution engine
+
+    mExecutionEngine = llvm::ExecutionEngine::createJIT(mModule);
+
+    if (!mExecutionEngine) {
+        mError = tr("the JIT execution engine could not be created");
+
+        tempFile.remove();
+
+        delete mModule;
+
+        return false;
     }
 
     // Create and execute the frontend to generate the LLVM assembly code,
@@ -308,11 +285,13 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunctionName,
     codeGenerationAction->setLinkModule(mModule);
 
     if (!compilerInstance.ExecuteAction(*codeGenerationAction, outputStream)) {
-        mError = tr("the <strong>%1</strong> function could not be compiled").arg(pFunctionName);
+        mError = tr("the model could not be compiled");
 
         tempFile.remove();
 
-        return 0;
+        reset();
+
+        return false;
     }
 
     // The LLVM assembly code was generated, so we can update our module and
@@ -322,22 +301,18 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunctionName,
 
     tempFile.remove();
 
-    // Try to retrieve the function we have just added
+    // Everything went fine, so...
 
-    llvm::Function *res = mModule->getFunction(qPrintable(pFunctionName));
+    return true;
+}
 
-    if (!res) {
-        mError = tr("the <strong>%1</strong> function could not be found").arg(pFunctionName);
+//==============================================================================
 
-        return 0;
-    }
+void * ComputerEngine::getFunction(const QString &pFunctionName)
+{
+    // Return the requested function
 
-    // Everything went fine, so reset the engine's error and return the function
-    // we have just added
-
-    mError = QString();
-
-    return res;
+    return mExecutionEngine?mExecutionEngine->getPointerToFunction(mModule->getFunction(qPrintable(pFunctionName))):0;
 }
 
 //==============================================================================

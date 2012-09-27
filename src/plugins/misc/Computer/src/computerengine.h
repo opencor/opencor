@@ -37,21 +37,20 @@ public:
     explicit ComputerEngine();
     ~ComputerEngine();
 
-    llvm::Module * module();
-    llvm::ExecutionEngine * executionEngine();
-
     QString error() const;
     bool hasError() const;
 
-    llvm::Function * addFunction(const QString &pFunctionName,
-                                 const QString &pFunctionBody,
-                                 const bool &pOutputErrors = false);
+    bool compileCode(const QString &pCode, const bool &pOutputErrors = false);
+
+    void * getFunction(const QString &pFunctionName);
 
 private:
     llvm::Module *mModule;
     llvm::ExecutionEngine *mExecutionEngine;
 
     QString mError;
+
+    void reset();
 };
 
 //==============================================================================

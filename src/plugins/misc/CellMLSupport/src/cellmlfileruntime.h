@@ -121,9 +121,6 @@ private:
 
     iface::cellml_services::CodeInformation * getOdeCodeInformation(iface::cellml_api::Model *pCellmlApiModel);
     iface::cellml_services::CodeInformation * getDaeCodeInformation(iface::cellml_api::Model *pCellmlApiModel);
-
-    void addAndCheckFunction(const QString &pFunctionName,
-                             const QString &pFunctionBody);
 };
 
 //==============================================================================
