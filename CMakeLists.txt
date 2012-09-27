@@ -165,7 +165,7 @@ SET(PLUGINS
     misc/Core
 
     3rdparty/LLVM
-    misc/Computer
+    misc/Compiler
 
     api/CellMLAPI
 

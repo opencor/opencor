@@ -1,39 +1,40 @@
 //==============================================================================
-// Computer plugin
+// Compiler plugin
 //==============================================================================
 
-#include "computerplugin.h"
+#ifndef COMPUTERPLUGIN_H
+#define COMPUTERPLUGIN_H
+
+//==============================================================================
+
+#include "plugininfo.h"
+#include "i18ninterface.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace Computer {
+namespace Compiler {
 
 //==============================================================================
 
-PLUGININFO_FUNC ComputerPluginInfo()
+PLUGININFO_FUNC CompilerPluginInfo();
+
+//==============================================================================
+
+class CompilerPlugin : public QObject, public I18nInterface
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", "A plugin to support code compilation");
-    descriptions.insert("fr", "Une extension pour supporter la compilation de code");
-
-    return new PluginInfo(PluginInfo::V001,
-                          PluginInfo::General,
-                          PluginInfo::Miscellaneous,
-                          false,
-                          QStringList() << "LLVM",
-                          descriptions);
-}
+    Q_OBJECT
+    Q_INTERFACES(OpenCOR::I18nInterface)
+};
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(Computer, ComputerPlugin)
-
-//==============================================================================
-
-}   // namespace Computer
+}   // namespace Compiler
 }   // namespace OpenCOR
+
+//==============================================================================
+
+#endif
 
 //==============================================================================
 // End of file

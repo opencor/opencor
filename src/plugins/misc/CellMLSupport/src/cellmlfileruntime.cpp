@@ -3,7 +3,7 @@
 //==============================================================================
 
 #include "cellmlfileruntime.h"
-#include "computerengine.h"
+#include "compilerengine.h"
 
 //==============================================================================
 
@@ -30,7 +30,7 @@ namespace CellMLSupport {
 CellmlFileRuntime::CellmlFileRuntime() :
     mCellmlApiOdeCodeInformation(0),
     mCellmlApiDaeCodeInformation(0),
-    mComputerEngine(0)
+    mCompilerEngine(0)
 {
     // Initialise the runtime's properties
 
@@ -45,7 +45,7 @@ CellmlFileRuntime::~CellmlFileRuntime()
     // Note: both mCellmlApiOdeCodeInformation and mCellmlApiDaeCodeInformation
     //       get automatically deleted, if needed, so...
 
-    delete mComputerEngine;
+    delete mCompilerEngine;
 }
 
 //==============================================================================
@@ -210,9 +210,9 @@ void CellmlFileRuntime::reset(const bool &pResetIssues)
     resetOdeCodeInformation();
     resetDaeCodeInformation();
 
-    delete mComputerEngine;
+    delete mCompilerEngine;
 
-    mComputerEngine = new Computer::ComputerEngine();
+    mCompilerEngine = new Compiler::CompilerEngine();
 
     resetOdeFunctions();
     resetDaeFunctions();
@@ -549,14 +549,14 @@ CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pCellmlA
 #endif
 
 #ifdef QT_DEBUG
-    if (!mComputerEngine->compileCode(modelCode, true))
+    if (!mCompilerEngine->compileCode(modelCode, true))
 #else
-    if (!mComputerEngine->compileCode(modelCode))
+    if (!mCompilerEngine->compileCode(modelCode))
 #endif
         // Something went wrong, so output the error that was found
 
         mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                   QString("%1").arg(mComputerEngine->error()));
+                                   QString("%1").arg(mCompilerEngine->error()));
 
 #ifdef QT_DEBUG
     qDebug(" - CellML code compilation time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
@@ -571,9 +571,9 @@ CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pCellmlA
     } else if (mModelType == Ode) {
         // ODE functions
 
-        mOdeFunctions.initializeConstants = (InitializeConstantsFunction) (intptr_t) mComputerEngine->getFunction("initializeConstants");
-        mOdeFunctions.computeRates        = (ComputeOdeRatesFunction) (intptr_t) mComputerEngine->getFunction("computeRates");
-        mOdeFunctions.computeVariables    = (ComputeVariablesFunction) (intptr_t) mComputerEngine->getFunction("computeVariables");
+        mOdeFunctions.initializeConstants = (InitializeConstantsFunction) (intptr_t) mCompilerEngine->getFunction("initializeConstants");
+        mOdeFunctions.computeRates        = (ComputeOdeRatesFunction) (intptr_t) mCompilerEngine->getFunction("computeRates");
+        mOdeFunctions.computeVariables    = (ComputeVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeVariables");
 
         Q_ASSERT(mOdeFunctions.initializeConstants);
         Q_ASSERT(mOdeFunctions.computeRates);
@@ -581,12 +581,12 @@ CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pCellmlA
     } else {
         // DAE functions
 
-        mDaeFunctions.initializeConstants       = (InitializeConstantsFunction) (intptr_t) mComputerEngine->getFunction("initializeConstants");
-        mDaeFunctions.computeResiduals          = (ComputeDaeResidualsFunction) (intptr_t) mComputerEngine->getFunction("computeResiduals");
-        mDaeFunctions.computeVariables          = (ComputeVariablesFunction) (intptr_t) mComputerEngine->getFunction("computeVariables");
-        mDaeFunctions.computeEssentialVariables = (ComputeDaeEssentialVariablesFunction) (intptr_t) mComputerEngine->getFunction("computeEssentialVariables");
-        mDaeFunctions.computeRootInformation    = (ComputeDaeRootInformationFunction) (intptr_t) mComputerEngine->getFunction("computeRootInformation");
-        mDaeFunctions.computeStateInformation   = (ComputeDaeStateInformationFunction) (intptr_t) mComputerEngine->getFunction("computeStateInformation");
+        mDaeFunctions.initializeConstants       = (InitializeConstantsFunction) (intptr_t) mCompilerEngine->getFunction("initializeConstants");
+        mDaeFunctions.computeResiduals          = (ComputeDaeResidualsFunction) (intptr_t) mCompilerEngine->getFunction("computeResiduals");
+        mDaeFunctions.computeVariables          = (ComputeVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeVariables");
+        mDaeFunctions.computeEssentialVariables = (ComputeDaeEssentialVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeEssentialVariables");
+        mDaeFunctions.computeRootInformation    = (ComputeDaeRootInformationFunction) (intptr_t) mCompilerEngine->getFunction("computeRootInformation");
+        mDaeFunctions.computeStateInformation   = (ComputeDaeStateInformationFunction) (intptr_t) mCompilerEngine->getFunction("computeStateInformation");
 
         Q_ASSERT(mDaeFunctions.initializeConstants);
         Q_ASSERT(mDaeFunctions.computeResiduals);

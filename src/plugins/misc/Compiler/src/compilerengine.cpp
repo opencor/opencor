@@ -2,11 +2,11 @@
 #include <QDir>
 #include <QTextStream>
 //==============================================================================
-// Computer engine class
+// Compiler engine class
 //==============================================================================
 
-#include "computerengine.h"
-#include "computermath.h"
+#include "compilerengine.h"
+#include "compilermath.h"
 
 //==============================================================================
 
@@ -49,11 +49,11 @@
 //==============================================================================
 
 namespace OpenCOR {
-namespace Computer {
+namespace Compiler {
 
 //==============================================================================
 
-ComputerEngine::ComputerEngine() :
+CompilerEngine::CompilerEngine() :
     mModule(0),
     mExecutionEngine(0),
     mError(QString())
@@ -62,7 +62,7 @@ ComputerEngine::ComputerEngine() :
 
 //==============================================================================
 
-ComputerEngine::~ComputerEngine()
+CompilerEngine::~CompilerEngine()
 {
     // Reset ourselves
 
@@ -71,7 +71,7 @@ ComputerEngine::~ComputerEngine()
 
 //==============================================================================
 
-void ComputerEngine::reset()
+void CompilerEngine::reset()
 {
     // Delete some internal objects
 
@@ -87,16 +87,16 @@ void ComputerEngine::reset()
 
 //==============================================================================
 
-QString ComputerEngine::error() const
+QString CompilerEngine::error() const
 {
-    // Return the computer engine's error
+    // Return the compiler engine's error
 
     return mError;
 }
 
 //==============================================================================
 
-bool ComputerEngine::hasError() const
+bool CompilerEngine::hasError() const
 {
     // Return whether an error occurred
 
@@ -112,10 +112,10 @@ llvm::sys::Path getExecutablePath(const char *pArg) {
 
 //==============================================================================
 
-bool ComputerEngine::compileCode(const QString &pCode,
+bool CompilerEngine::compileCode(const QString &pCode,
                                  const bool &pOutputErrors)
 {
-    // Reset our computer engine
+    // Reset our compiler engine
 
     reset();
 
@@ -308,7 +308,7 @@ bool ComputerEngine::compileCode(const QString &pCode,
 
 //==============================================================================
 
-void * ComputerEngine::getFunction(const QString &pFunctionName)
+void * CompilerEngine::getFunction(const QString &pFunctionName)
 {
     // Return the requested function
 
@@ -317,7 +317,7 @@ void * ComputerEngine::getFunction(const QString &pFunctionName)
 
 //==============================================================================
 
-}   // namespace Computer
+}   // namespace Compiler
 }   // namespace OpenCOR
 
 //==============================================================================

@@ -1,35 +1,61 @@
 //==============================================================================
-// Computer plugin
+// Compiler engine class
 //==============================================================================
 
-#ifndef COMPUTERPLUGIN_H
-#define COMPUTERPLUGIN_H
+#ifndef COMPUTERENGINE_H
+#define COMPUTERENGINE_H
 
 //==============================================================================
 
-#include "plugininfo.h"
-#include "i18ninterface.h"
+#include "compilerglobal.h"
+
+//==============================================================================
+
+#include <QMap>
+#include <QStringList>
+
+//==============================================================================
+
+namespace llvm {
+    class ExecutionEngine;
+    class Function;
+    class Module;
+}   // namespace llvm
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace Computer {
+namespace Compiler {
 
 //==============================================================================
 
-PLUGININFO_FUNC ComputerPluginInfo();
-
-//==============================================================================
-
-class ComputerPlugin : public QObject, public I18nInterface
+class COMPUTER_EXPORT CompilerEngine : public QObject
 {
     Q_OBJECT
-    Q_INTERFACES(OpenCOR::I18nInterface)
+
+public:
+    explicit CompilerEngine();
+    ~CompilerEngine();
+
+    QString error() const;
+    bool hasError() const;
+
+    bool compileCode(const QString &pCode, const bool &pOutputErrors = false);
+
+    void * getFunction(const QString &pFunctionName);
+
+private:
+    llvm::Module *mModule;
+    llvm::ExecutionEngine *mExecutionEngine;
+
+    QString mError;
+
+    void reset();
 };
 
 //==============================================================================
 
-}   // namespace Computer
+}   // namespace Compiler
 }   // namespace OpenCOR
 
 //==============================================================================

@@ -29,7 +29,7 @@ ADD_PLUGIN(RawCellMLView
     OPENCOR_DEPENDENCIES
         CellMLAPI
         CellMLSupport
-        Computer
+        Compiler
         Core
         ${LLVM_PLUGIN}
         QScintilla

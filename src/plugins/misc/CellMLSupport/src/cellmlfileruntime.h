@@ -28,9 +28,9 @@ namespace OpenCOR {
 
 //==============================================================================
 
-namespace Computer {
-    class ComputerEngine;
-}   // namespace Computer
+namespace Compiler {
+    class CompilerEngine;
+}   // namespace Compiler
 
 namespace CellMLSupport {
 
@@ -99,7 +99,7 @@ private:
     ObjRef<iface::cellml_services::CodeInformation> mCellmlApiOdeCodeInformation;
     ObjRef<iface::cellml_services::IDACodeInformation> mCellmlApiDaeCodeInformation;
 
-    Computer::ComputerEngine *mComputerEngine;
+    Compiler::CompilerEngine *mCompilerEngine;
 
     OdeFunctions mOdeFunctions;
     DaeFunctions mDaeFunctions;

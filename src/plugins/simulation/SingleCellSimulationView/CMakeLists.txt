@@ -43,7 +43,7 @@ ADD_PLUGIN(SingleCellSimulationView
     OPENCOR_DEPENDENCIES
         CellMLAPI
         CellMLSupport
-        Computer
+        Compiler
         Core
         CoreSolver
         ${LLVM_PLUGIN}

@@ -50,7 +50,7 @@ ADD_PLUGIN(CellMLSupport
         src
     OPENCOR_DEPENDENCIES
         CellMLAPI
-        Computer
+        Compiler
         Core
         ${LLVM_PLUGIN}
     OPENCOR_BINARY_DEPENDENCIES
