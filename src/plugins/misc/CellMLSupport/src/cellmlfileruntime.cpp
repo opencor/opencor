@@ -382,7 +382,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pCellmlA
     getOdeCodeInformation(pCellmlApiModel);
 
 #ifdef QT_DEBUG
-    qDebug(" - CellML ODE code information time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
+    qDebug(" - CellML ODE code information time: %s s.", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
 #endif
 
     if (!mCellmlApiOdeCodeInformation) {
@@ -415,7 +415,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pCellmlA
         genericCodeInformation = getDaeCodeInformation(pCellmlApiModel);
 
 #ifdef QT_DEBUG
-        qDebug(" - CellML DAE code information time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
+        qDebug(" - CellML DAE code information time: %s s.", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
     }
 #endif
 
@@ -559,7 +559,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pCellmlA
                                    QString("%1").arg(mCompilerEngine->error()));
 
 #ifdef QT_DEBUG
-    qDebug(" - CellML code compilation time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
+    qDebug(" - CellML code compilation time: %s s.", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
 #endif
 
     // Keep track of the ODE/DAE functions, but only if no issues were reported

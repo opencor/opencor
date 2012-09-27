@@ -174,7 +174,7 @@ bool CellmlFile::load()
         mCellmlApiModel = modelLoader->loadFromURL(QUrl::fromLocalFile(mFileName).toString().toStdWString().c_str());
 
 #ifdef QT_DEBUG
-        qDebug(" - CellML Loading time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
+        qDebug(" - CellML Loading time: %s s.", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
 #endif
     } catch (iface::cellml_api::CellMLException &) {
         // Something went wrong with the loading of the model, so...
@@ -199,7 +199,7 @@ bool CellmlFile::load()
             mCellmlApiModel->fullyInstantiateImports();
 
 #ifdef QT_DEBUG
-            qDebug(" - CellML full instantiation time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
+            qDebug(" - CellML full instantiation time: %s s.", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
 #endif
         } catch (...) {
             // Something went wrong with the full instantiation of the imports,
@@ -431,7 +431,7 @@ bool CellmlFile::isValid()
         ObjRef<iface::cellml_services::CellMLValidityErrorSet> cellmlValidityErrorSet = vacssService->validateModel(mCellmlApiModel);
 
 #ifdef QT_DEBUG
-        qDebug(" - CellML validation time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
+        qDebug(" - CellML validation time: %s s.", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
 #endif
 
         // Determine the number of errors and warnings
@@ -547,7 +547,7 @@ bool CellmlFile::isValid()
         }
 
 #ifdef QT_DEBUG
-        qDebug(" - CellML warnings vs. errors time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
+        qDebug(" - CellML warnings vs. errors time: %s s.", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
 #endif
 
         if (cellmlErrorsCount)
