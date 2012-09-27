@@ -11,11 +11,8 @@ namespace Computer {
 
 //==============================================================================
 
-ComputerError::ComputerError(const QString &pMessage,
-                             const int &pLine, const int &pColumn) :
-    mMessage(pMessage),
-    mLine(pLine),
-    mColumn(pColumn)
+ComputerError::ComputerError(const QString &pMessage) :
+    mMessage(pMessage)
 {
 }
 
@@ -25,7 +22,7 @@ bool ComputerError::isEmpty() const
 {
     // Return whether the error is empty
 
-    return mMessage.isEmpty() && !mLine && !mColumn;
+    return mMessage.isEmpty();
 }
 
 //==============================================================================
@@ -45,24 +42,6 @@ QString ComputerError::formattedMessage() const
     // message is capitalised and its end consists of a full stop)
 
     return mMessage.left(1).toUpper()+mMessage.right(mMessage.size()-1)+".";
-}
-
-//==============================================================================
-
-int ComputerError::line() const
-{
-    // Return the error's line
-
-    return mLine;
-}
-
-//==============================================================================
-
-int ComputerError::column() const
-{
-    // Return the error's column
-
-    return mColumn;
 }
 
 //==============================================================================
