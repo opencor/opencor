@@ -558,11 +558,11 @@ void CellmlFileRuntime::addAndCheckFunction(const QString &pFunctionName,
 
     // Check that everything went fine
 
-    if (!mComputerEngine->error().isEmpty())
+    if (mComputerEngine->hasError())
         // Something went wrong, so output the error that was found
 
         mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                   QString("%1").arg(mComputerEngine->error().message()));
+                                   QString("%1").arg(mComputerEngine->error()));
 }
 
 //==============================================================================

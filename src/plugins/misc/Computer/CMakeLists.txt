@@ -13,7 +13,6 @@ ADD_PLUGIN(Computer
         ../../plugininfo.cpp
 
         src/computerengine.cpp
-        src/computererror.cpp
         src/computermath.cpp
         src/computerplugin.cpp
     HEADERS_MOC

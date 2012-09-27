@@ -54,7 +54,7 @@ namespace Computer {
 //==============================================================================
 
 ComputerEngine::ComputerEngine() :
-    mError(ComputerError())
+    mError(QString())
 {
     // Create a module
 
@@ -105,11 +105,20 @@ llvm::ExecutionEngine * ComputerEngine::executionEngine()
 
 //==============================================================================
 
-ComputerError ComputerEngine::error()
+QString ComputerEngine::error() const
 {
     // Return the computer engine's error
 
     return mError;
+}
+
+//==============================================================================
+
+bool ComputerEngine::hasError() const
+{
+    // Return whether an error occurred
+
+    return !mError.isEmpty();
 }
 
 //==============================================================================
@@ -128,7 +137,7 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunctionName,
     // Check whether we want to compute a definite integral
 
     if (pFunctionBody.contains("defint(func")) {
-        mError = ComputerError(tr("definite integrals are not yet supported"));
+        mError = tr("definite integrals are not yet supported");
 
         return 0;
     }
@@ -150,7 +159,7 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunctionName,
     if (!tempFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
         // The temporary file can't be opened, so...
 
-        mError = ComputerError(tr("<strong>%1</strong> could not be created").arg(tempFileName));
+        mError = tr("<strong>%1</strong> could not be created").arg(tempFileName);
 
         tempFile.remove();
 
@@ -226,7 +235,7 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunctionName,
     if (!compilation) {
         // We couldn't get a compilation object, so...
 
-        mError = ComputerError(tr("the compilation object could not be created"));
+        mError = tr("the compilation object could not be created");
 
         tempFile.remove();
 
@@ -240,7 +249,7 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunctionName,
 
     if (   (jobList.size() != 1)
         || !llvm::isa<clang::driver::Command>(*jobList.begin())) {
-        mError = ComputerError(tr("the compilation object must contain only one command"));
+        mError = tr("the compilation object must contain only one command");
 
         tempFile.remove();
 
@@ -253,7 +262,7 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunctionName,
     QString commandName = command->getCreator().getName();
 
     if (commandName.compare("clang")) {
-        mError = ComputerError(tr("a <strong>clang</strong> command was expected, but a <strong>%1</strong> command was found instead").arg(commandName));
+        mError = tr("a <strong>clang</strong> command was expected, but a <strong>%1</strong> command was found instead").arg(commandName);
 
         tempFile.remove();
 
@@ -284,7 +293,7 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunctionName,
                                                                         compilerInstance.getDiagnosticOpts()));
 
     if (!compilerInstance.hasDiagnostics()) {
-        mError = ComputerError(tr("the diagnostics engine could not be created"));
+        mError = tr("the diagnostics engine could not be created");
 
         tempFile.remove();
 
@@ -299,7 +308,7 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunctionName,
     codeGenerationAction->setLinkModule(mModule);
 
     if (!compilerInstance.ExecuteAction(*codeGenerationAction, outputStream)) {
-        mError = ComputerError(tr("the <strong>%1</strong> function could not be compiled").arg(pFunctionName));
+        mError = tr("the <strong>%1</strong> function could not be compiled").arg(pFunctionName);
 
         tempFile.remove();
 
@@ -318,7 +327,7 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunctionName,
     llvm::Function *res = mModule->getFunction(qPrintable(pFunctionName));
 
     if (!res) {
-        mError = ComputerError(tr("the <strong>%1</strong> function could not be found").arg(pFunctionName));
+        mError = tr("the <strong>%1</strong> function could not be found").arg(pFunctionName);
 
         return 0;
     }
@@ -326,7 +335,7 @@ llvm::Function * ComputerEngine::addFunction(const QString &pFunctionName,
     // Everything went fine, so reset the engine's error and return the function
     // we have just added
 
-    mError = ComputerError();
+    mError = QString();
 
     return res;
 }

@@ -8,7 +8,6 @@
 //==============================================================================
 
 #include "computerglobal.h"
-#include "computererror.h"
 
 //==============================================================================
 
@@ -41,7 +40,8 @@ public:
     llvm::Module * module();
     llvm::ExecutionEngine * executionEngine();
 
-    ComputerError error();
+    QString error() const;
+    bool hasError() const;
 
     llvm::Function * addFunction(const QString &pFunctionName,
                                  const QString &pFunctionBody,
@@ -51,7 +51,7 @@ private:
     llvm::Module *mModule;
     llvm::ExecutionEngine *mExecutionEngine;
 
-    ComputerError mError;
+    QString mError;
 };
 
 //==============================================================================
