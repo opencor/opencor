@@ -518,8 +518,8 @@ void SingleCellSimulationViewWidget::outputSolverErrorMsg()
 
 void SingleCellSimulationViewWidget::on_actionRun_triggered()
 {
-    if (mModel == Unknown)
-        // The model is not supported, so...
+    if ((mModel == Unknown) || !mCellmlFileRuntime->isValid())
+        // The model is either not supported or not valid, so...
 
         return;
 
