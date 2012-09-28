@@ -305,7 +305,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
     if (mCellmlFileRuntime->isValid()) {
         mOutput->append(" - The CellML file's runtime was properly generated.");
-        mOutput->append(QString("    [Information] Model type = %1.").arg((mCellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?"ODE":"DAE"));
+        mOutput->append(QString("    [Information] Model type: %1.").arg((mCellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?"ODE":"DAE"));
     } else {
         mOutput->append(" - The CellML file's runtime was NOT properly generated:");
 
@@ -508,10 +508,9 @@ void SingleCellSimulationViewWidget::changeEvent(QEvent *pEvent)
 
 void SingleCellSimulationViewWidget::outputSolverErrorMsg()
 {
-    // Output the current solver error message, if any
+    // Output the current solver error message
 
-    if (!mSolverErrorMsg.isEmpty())
-        mOutput->append(QString(" - Solver error: %1").arg(mSolverErrorMsg));
+    mOutput->append(QString(" - Solver error: %1").arg(mSolverErrorMsg));
 }
 
 //==============================================================================

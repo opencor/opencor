@@ -85,13 +85,10 @@ void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
     Q_UNUSED(pModule);
     Q_UNUSED(pFunction);
 
-    if (pErrorCode != IDA_WARNING) {
+    if (pErrorCode != IDA_WARNING)
         // IDA really generated an error, so forward it to the IdaSolver object
 
-        QString errorMsg = pErrorMsg;
-
-        reinterpret_cast<IdaSolver *>(pUserData)->emitError(errorMsg.left(1).toLower()+errorMsg.right(errorMsg.size()-1));
-    }
+        reinterpret_cast<IdaSolver *>(pUserData)->emitError(pErrorMsg);
 }
 
 //==============================================================================

@@ -131,9 +131,9 @@ private Q_SLOTS:
     void on_actionDebugMode_triggered();
     void on_actionAdd_triggered();
     void on_actionRemove_triggered();
+    void on_actionCsvExport_triggered();
 
     void solverError(const QString &pErrorMsg);
-    void on_actionCsvExport_triggered();
 };
 
 //==============================================================================

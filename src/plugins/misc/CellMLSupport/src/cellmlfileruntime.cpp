@@ -470,6 +470,8 @@ CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pCellmlA
                         "\n"
                         "    int *aPRET;\n"
                         "};\n"
+                        "\n"
+                        "extern void do_nonlinearsolve(void (*)(double *, double *, void*), double *, int *, int, void *);\n"
                         "\n";
 
     modelCode += QString::fromStdWString(genericCodeInformation->functionsString());

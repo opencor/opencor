@@ -53,14 +53,11 @@ void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
     Q_UNUSED(pModule);
     Q_UNUSED(pFunction);
 
-    if (pErrorCode != CV_WARNING) {
+    if (pErrorCode != CV_WARNING)
         // CVODE really generated an error, so forward it to the CvodeSolver
         // object
 
-        QString errorMsg = pErrorMsg;
-
-        reinterpret_cast<CvodeSolver *>(pUserData)->emitError(errorMsg.left(1).toLower()+errorMsg.right(errorMsg.size()-1));
-    }
+        reinterpret_cast<CvodeSolver *>(pUserData)->emitError(pErrorMsg);
 }
 
 //==============================================================================
