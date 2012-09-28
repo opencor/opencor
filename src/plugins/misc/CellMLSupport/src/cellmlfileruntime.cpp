@@ -458,6 +458,18 @@ CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pCellmlA
                         "extern double lcm_multi(int, ...);\n"
                         "extern double multi_max(int, ...);\n"
                         "extern double multi_min(int, ...);\n"
+                        "\n"
+                        "struct rootfind_info\n"
+                        "{\n"
+                        "    double aVOI;\n"
+                        "\n"
+                        "    double *aCONSTANTS;\n"
+                        "    double *aRATES;\n"
+                        "    double *aSTATES;\n"
+                        "    double *aALGEBRAIC;\n"
+                        "\n"
+                        "    int *aPRET;\n"
+                        "};\n"
                         "\n";
 
     modelCode += QString::fromStdWString(genericCodeInformation->functionsString());
