@@ -419,8 +419,9 @@ CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pCellmlA
     }
 #endif
 
-    // Generate the model code, after having prepended to it all possible
-    // external functions which it may, or not, need
+    // Generate the model code, after having prepended to it all the external
+    // functions which may, or not, be needed, as well as the functions that may
+    // be needed by DAE models
     // Note: indeed, we cannot include header files since we don't (and don't
     //       want to avoid complications) deploy them with OpenCOR. So, instead,
     //       we must declare as external functions all the functions which we
@@ -459,6 +460,8 @@ CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pCellmlA
                         "extern double multi_min(int, ...);\n"
                         "\n";
 
+    modelCode += QString::fromStdWString(genericCodeInformation->functionsString());
+    modelCode += "\n";
     modelCode += QString("int initializeConstants(double *CONSTANTS, double *RATES, double *STATES)\n"
                          "{\n"
                          "    int ret = 0;\n"
