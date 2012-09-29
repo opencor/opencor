@@ -189,8 +189,8 @@ double atanh(double pNb)
 
 //==============================================================================
 
-void do_nonlinearsolve(void (*pFunction)(double *pU, double *pF, void *pUserData),
-                       double *pParams, int *pRes, int pSize, void *pData)
+void do_nonlinearsolve(void (*pFunction)(double *, double *, void *),
+                       double *pParams, int *pRes, int pSize, void *pUserData)
 {
 }
 
