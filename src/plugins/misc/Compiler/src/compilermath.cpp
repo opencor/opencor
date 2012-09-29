@@ -188,5 +188,12 @@ double atanh(double pNb)
 #endif
 
 //==============================================================================
+
+void do_nonlinearsolve(void (*pFunction)(double *pU, double *pF, void *pUserData),
+                       double *pParams, int *pRes, int pSize, void *pData)
+{
+}
+
+//==============================================================================
 // End of file
 //==============================================================================
