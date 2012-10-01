@@ -117,8 +117,7 @@ IdaSolver::~IdaSolver()
 
 //==============================================================================
 
-void IdaSolver::initialize(const double &pVoiStart,
-                           const bool &pPositiveDirection,
+void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
                            const int &pStatesCount, const int &pCondVarCount,
                            double *pConstants, double *pRates, double *pStates,
                            double *pAlgebraic, double *pCondVar,
@@ -132,8 +131,7 @@ void IdaSolver::initialize(const double &pVoiStart,
     if (!mSolver) {
         // Initialise the ODE solver itself
 
-        OpenCOR::CoreSolver::CoreDaeSolver::initialize(pVoiStart,
-                                                       pPositiveDirection,
+        OpenCOR::CoreSolver::CoreDaeSolver::initialize(pVoiStart, pVoiEnd,
                                                        pStatesCount,
                                                        pCondVarCount,
                                                        pConstants, pRates,
@@ -223,7 +221,7 @@ void IdaSolver::initialize(const double &pVoiStart,
 
         IDASetId(mSolver, idVector);
         IDACalcIC(mSolver, IDA_YA_YDP_INIT,
-                  pVoiStart+(pPositiveDirection?VoiEpsilon:-VoiEpsilon));
+                  pVoiStart+((pVoiEnd-pVoiStart > 0)?VoiEpsilon:-VoiEpsilon));
 
         N_VDestroy_Serial(idVector);
         delete[] id;
@@ -240,7 +238,7 @@ void IdaSolver::initialize(const double &pVoiStart,
         // Compute the model's new initial conditions
 
         IDACalcIC(mSolver, IDA_YA_YDP_INIT,
-                  pVoiStart+(pPositiveDirection?VoiEpsilon:-VoiEpsilon));
+                  pVoiStart+((pVoiEnd-pVoiStart > 0)?VoiEpsilon:-VoiEpsilon));
     }
 }
 

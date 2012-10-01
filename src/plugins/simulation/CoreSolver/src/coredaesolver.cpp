@@ -25,8 +25,7 @@ CoreDaeSolver::CoreDaeSolver() :
 
 //==============================================================================
 
-void CoreDaeSolver::initialize(const double &pVoiStart,
-                               const bool &pPositiveDirection,
+void CoreDaeSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
                                const int &pStatesCount, const int &pCondVarCount,
                                double *pConstants, double *pRates,
                                double *pStates, double *pAlgebraic,
@@ -37,7 +36,7 @@ void CoreDaeSolver::initialize(const double &pVoiStart,
                                ComputeStateInformationFunction pComputeStateInformation)
 {
     Q_UNUSED(pVoiStart);
-    Q_UNUSED(pPositiveDirection);
+    Q_UNUSED(pVoiEnd);
     Q_UNUSED(pComputeEssentialVariables);
     Q_UNUSED(pComputeResiduals);
     Q_UNUSED(pComputeRootInformation);

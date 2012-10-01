@@ -46,8 +46,7 @@ public:
     explicit IdaSolver();
     ~IdaSolver();
 
-    virtual void initialize(const double &pVoiStart,
-                            const bool &pPositiveDirection,
+    virtual void initialize(const double &pVoiStart, const double &pVoiEnd,
                             const int &pStatesCount, const int &pCondVarCount,
                             double *pConstants, double *pRates, double *pStates,
                             double *pAlgebraic, double *pCondVar,
