@@ -121,6 +121,10 @@ private:
 
     iface::cellml_services::CodeInformation * getOdeCodeInformation(iface::cellml_api::Model *pCellmlApiModel);
     iface::cellml_services::CodeInformation * getDaeCodeInformation(iface::cellml_api::Model *pCellmlApiModel);
+
+    QString functionCode(const QString &pFunctionSignature,
+                         const QString &pFunctionBody,
+                         const bool &pHasDefines = false);
 };
 
 //==============================================================================
