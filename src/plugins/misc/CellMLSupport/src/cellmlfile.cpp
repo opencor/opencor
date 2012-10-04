@@ -10,8 +10,11 @@
 #include <QFile>
 #include <QRegExp>
 #include <QTextStream>
-#include <QTime>
 #include <QUrl>
+
+#ifdef QT_DEBUG
+    #include <QTime>
+#endif
 
 //==============================================================================
 
