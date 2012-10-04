@@ -8,6 +8,7 @@
 //==============================================================================
 
 #include <QFileInfo>
+#include <QXmlStreamReader>
 
 //==============================================================================
 
@@ -74,9 +75,55 @@ QString CellMLSupportPlugin::fileTypeDescription(const QString &pMimeType) const
 
 bool isCellmlFile(const QString &pFileName)
 {
-    // Return whether the file is a CellML file based on its file extension
+    // Return whether the file is a CellML file
 
-    return !QFileInfo(pFileName).suffix().compare(CellMLSupport::CellmlFileExtension);
+    if (!QFileInfo(pFileName).suffix().compare(CellMLSupport::CellmlFileExtension))
+        // We are dealing with a file which file extension is that of a CellML
+        // file, so...
+
+        return true;
+
+    // The file doesn't have the 'correct' file extension, so quickly check its
+    // contents
+
+    QFile file(pFileName);
+
+    if (!file.open(QIODevice::ReadOnly))
+        // We can't open the file, so...
+
+        return false;
+
+    // Try to read the file as if it was an XML file
+
+    QXmlStreamReader xml(&file);
+
+    bool res = false;
+
+    while (!xml.atEnd() && !xml.hasError()) {
+        xml.readNext();
+
+        if (xml.isStartElement()) {
+            // This is our root element, so for the file to be considered a
+            // CellML file it should be a model element in either the CellML 1.0
+            // or 1.1 namespace
+
+            if (   !xml.name().toString().compare("model")
+                && (   (!xml.namespaceUri().toString().compare("http://www.cellml.org/cellml/1.0#"))
+                    || (!xml.namespaceUri().toString().compare("http://www.cellml.org/cellml/1.1#"))))
+                // All the requirements are gathered for the file to be
+                // considered a CellML file, so...
+
+                res = true;
+
+            break;
+        }
+    }
+
+    file.close();
+
+    // We are done, so...
+
+    return res;
 }
 
 //==============================================================================
