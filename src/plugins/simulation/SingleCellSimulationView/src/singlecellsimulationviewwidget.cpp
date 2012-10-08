@@ -349,8 +349,11 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
     } else if (   !fileBaseName.compare("cortassa_2006_1_0_S1")
                || !fileBaseName.compare("cortassa_2006_1_1_S1")) {
         mModel = Cortassa2006;
+    } else if (!fileBaseName.compare("parabola_as_ode_model")) {
+        mModel = Parabola;
     } else if (   !fileBaseName.compare("dae_model")
                || !fileBaseName.compare("newton_raphson_parabola_model")
+               || !fileBaseName.compare("parabola_as_dae_model")
                || !fileBaseName.compare("saucerman_brunton_michailova_mcculloch_model_2003")
                || !fileBaseName.compare("simple_dae_model")) {
         mModel = Dae;
@@ -450,6 +453,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         mStatesIndex    =   1;
 
         break;
+    case Parabola:
     case Dae:
         mVoiEnd         = 10;     // dimensionless
         mVoiOutput      =  0.1;   // dimensionless

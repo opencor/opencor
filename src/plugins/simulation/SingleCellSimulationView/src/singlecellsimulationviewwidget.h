@@ -86,6 +86,7 @@ private:
         Zhang2000,
         Mitchell2003,
         Cortassa2006,
+        Parabola,
         Dae
     } mModel;
 
