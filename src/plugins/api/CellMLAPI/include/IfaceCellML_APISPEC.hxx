@@ -161,6 +161,7 @@ namespace iface
       static const char* INTERFACE_NAME() { return "cellml_api::CellMLDOMElement"; }
       virtual ~CellMLDOMElement() {}
       virtual already_AddRefd<iface::dom::Element>  domElement() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual already_AddRefd<iface::cellml_api::CellMLElement>  findCellMLElementFromDOMElement(iface::dom::Element* x) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_CellMLAPISPEC_PRE 
     class  PUBLIC_CellMLAPISPEC_POST NamedCellMLElement
