@@ -230,7 +230,7 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
 
         IDAReInit(mSolver, pVoiStart, mStatesVector, mRatesVector);
 
-        // Compute the model's new initial conditions
+        // Recompute the model's new initial conditions
 
         IDACalcIC(mSolver, IDA_YA_YDP_INIT,
                   pVoiStart+((pVoiEnd-pVoiStart > 0)?VoiEpsilon:-VoiEpsilon));
