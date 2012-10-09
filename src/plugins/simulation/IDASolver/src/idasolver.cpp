@@ -225,11 +225,6 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
 
         N_VDestroy_Serial(idVector);
         delete[] id;
-
-        // Initialise the states and rates with the values determined by IDA
-
-        memcpy(pStates, N_VGetArrayPointer(((IDAMem) mSolver)->ida_ynew), pStatesCount*SizeOfDouble);
-        memcpy(pRates, N_VGetArrayPointer(((IDAMem) mSolver)->ida_ypnew), pStatesCount*SizeOfDouble);
     } else {
         // Reinitialise the IDA object
 
