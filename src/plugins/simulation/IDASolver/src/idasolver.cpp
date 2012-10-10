@@ -112,6 +112,7 @@ IdaSolver::~IdaSolver()
 
     N_VDestroy_Serial(mStatesVector);
     N_VDestroy_Serial(mRatesVector);
+
     IDAFree(&mSolver);
 }
 
@@ -159,6 +160,11 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
                                  mProperties.value(AbsoluteToleranceProperty).toDouble():
                                  DefaultAbsoluteTolerance;
 
+        // Create the states vector
+
+        mStatesVector = N_VMake_Serial(pStatesCount, pStates);
+        mRatesVector  = N_VMake_Serial(pStatesCount, pRates);
+
         // Create the IDA solver
 
         mSolver = IDACreate();
@@ -166,11 +172,6 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
         // Use our own error handler
 
         IDASetErrHandlerFn(mSolver, errorHandler, this);
-
-        // Create the states vector
-
-        mStatesVector = N_VMake_Serial(pStatesCount, pStates);
-        mRatesVector  = N_VMake_Serial(pStatesCount, pRates);
 
         // Initialise the IDA solver
 
@@ -225,6 +226,7 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
                   pVoiStart+((pVoiEnd-pVoiStart > 0)?VoiEpsilon:-VoiEpsilon));
 
         N_VDestroy_Serial(idVector);
+
         delete[] id;
     } else {
         // Reinitialise the IDA object

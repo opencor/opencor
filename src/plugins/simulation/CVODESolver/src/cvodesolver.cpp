@@ -79,6 +79,7 @@ CvodeSolver::~CvodeSolver()
     // Delete some internal objects
 
     N_VDestroy_Serial(mStatesVector);
+
     CVodeFree(&mSolver);
 }
 
@@ -114,6 +115,10 @@ void CvodeSolver::initialize(const double &pVoiStart, const int &pStatesCount,
                                  mProperties.value(AbsoluteToleranceProperty).toDouble():
                                  DefaultAbsoluteTolerance;
 
+        // Create the states vector
+
+        mStatesVector = N_VMake_Serial(pStatesCount, pStates);
+
         // Create the CVODE solver
 
         mSolver = CVodeCreate(CV_BDF, CV_NEWTON);
@@ -121,10 +126,6 @@ void CvodeSolver::initialize(const double &pVoiStart, const int &pStatesCount,
         // Use our own error handler
 
         CVodeSetErrHandlerFn(mSolver, errorHandler, this);
-
-        // Create the states vector
-
-        mStatesVector = N_VMake_Serial(pStatesCount, pStates);
 
         // Initialise the CVODE solver
 
