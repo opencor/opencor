@@ -545,6 +545,14 @@ CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pCellmlA
                                   QString::fromStdWString(mCellmlApiDaeCodeInformation->stateInformationString()));
     }
 
+    // Remove any '\r' character from our model code
+    // Note: this is only so that it looks better on Windows when we need to
+    //       debug things...
+
+#if defined Q_WS_WIN && defined QT_DEBUG
+    modelCode.replace("\r", "");
+#endif
+
     // Compile the model code and check that everything went fine
 
 #ifdef QT_DEBUG
