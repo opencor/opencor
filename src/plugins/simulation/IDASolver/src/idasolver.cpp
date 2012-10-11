@@ -37,7 +37,7 @@ static const double DefaultAbsoluteTolerance = 1e-7;
 int residualFunction(double pVoi, N_Vector pStates, N_Vector pRates,
                      N_Vector pResiduals, void *pUserData)
 {
-    // Compute the model
+    // Compute the residual function
 
     IdaSolverUserData *userData = reinterpret_cast<IdaSolverUserData *>(pUserData);
 
@@ -63,7 +63,7 @@ int residualFunction(double pVoi, N_Vector pStates, N_Vector pRates,
 int rootFindingFunction(double pVoi, N_Vector pStates, N_Vector pRates,
                         double *pRoots, void *pUserData)
 {
-    // Do the root finding
+    // Compute the root finding function
 
     IdaSolverUserData *userData = reinterpret_cast<IdaSolverUserData *>(pUserData);
 
@@ -86,7 +86,7 @@ void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
     Q_UNUSED(pFunction);
 
     if (pErrorCode != IDA_WARNING)
-        // IDA really generated an error, so forward it to the IdaSolver object
+        // IDA generated an error, so forward it to the IdaSolver object
 
         reinterpret_cast<IdaSolver *>(pUserData)->emitError(pErrorMsg);
 }
@@ -244,14 +244,6 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
 
 void IdaSolver::solve(double &pVoi, const double &pVoiEnd) const
 {
-    Q_ASSERT(mStatesCount > 0);
-    Q_ASSERT(mCondVarCount >= 0);
-    Q_ASSERT(mConstants);
-    Q_ASSERT(mRates);
-    Q_ASSERT(mStates);
-    Q_ASSERT(mAlgebraic);
-    Q_ASSERT(mCondVar);
-
     // Solve the model
 
     IDASolve(mSolver, pVoiEnd, &pVoi, mStatesVector, mRatesVector, IDA_NORMAL);

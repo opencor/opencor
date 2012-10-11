@@ -31,7 +31,7 @@ static const double DefaultAbsoluteTolerance = 1e-7;
 
 int rhsFunction(double pVoi, N_Vector pStates, N_Vector pRates, void *pUserData)
 {
-    // Compute the model
+    // Compute the RHS function
 
     CvodeSolverUserData *userData = reinterpret_cast<CvodeSolverUserData *>(pUserData);
 
@@ -54,8 +54,7 @@ void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
     Q_UNUSED(pFunction);
 
     if (pErrorCode != CV_WARNING)
-        // CVODE really generated an error, so forward it to the CvodeSolver
-        // object
+        // CVODE generated an error, so forward it to the CvodeSolver object
 
         reinterpret_cast<CvodeSolver *>(pUserData)->emitError(pErrorMsg);
 }
@@ -166,13 +165,6 @@ void CvodeSolver::initialize(const double &pVoiStart, const int &pStatesCount,
 
 void CvodeSolver::solve(double &pVoi, const double &pVoiEnd) const
 {
-    Q_ASSERT(mStatesCount > 0);
-    Q_ASSERT(mConstants);
-    Q_ASSERT(mRates);
-    Q_ASSERT(mStates);
-    Q_ASSERT(mAlgebraic);
-    Q_ASSERT(mComputeRates);
-
     // Solve the model
 
     CVode(mSolver, pVoiEnd, mStatesVector, &pVoi, CV_NORMAL);
