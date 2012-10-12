@@ -79,6 +79,7 @@ public:
     bool isValid() const;
 
     ModelType modelType() const;
+    bool needNonLinearAlgebraicSolver() const;
 
     int constantsCount() const;
     int statesCount() const;
@@ -95,6 +96,7 @@ public:
 
 private:
     ModelType mModelType;
+    bool mAtLeastOneNonLinearAlgebraicSystem;
 
     ObjRef<iface::cellml_services::CodeInformation> mCellmlApiOdeCodeInformation;
     ObjRef<iface::cellml_services::IDACodeInformation> mCellmlApiDaeCodeInformation;

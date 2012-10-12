@@ -189,97 +189,10 @@ double atanh(double pNb)
 
 //==============================================================================
 
-#include "nvector/nvector_serial.h"
-#include "kinsol/kinsol.h"
-#include "kinsol/kinsol_dense.h"
-
-//==============================================================================
-
-struct KinsolSolverUserData {
-    void (*function)(double *pY, double *pF, void *userData);
-    void *userData;
-    int size;
-};
-
-//==============================================================================
-
-void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
-                  char *pErrorMsg, void *pUserData)
-{
-    Q_UNUSED(pModule);
-    Q_UNUSED(pFunction);
-
-/*---GRY---
-    if (pErrorCode != KIN_WARNING)
-        // KINSOL really generated an error, so forward it to the KinsolSolver
-        // object
-
-        reinterpret_cast<KinsolSolver *>(pUserData)->emitError(pErrorMsg);
-*/
-Q_UNUSED(pErrorCode);
-Q_UNUSED(pErrorMsg);
-Q_UNUSED(pUserData);
-}
-
-//==============================================================================
-
-int systemFunction(N_Vector pY, N_Vector pF, void *pUserData)
-{
-    struct KinsolSolverUserData *userData = reinterpret_cast<struct KinsolSolverUserData *>(pUserData);
-
-    userData->function(NV_DATA_S(pY), NV_DATA_S(pF), userData->userData);
-
-    return 0;
-}
-
-//==============================================================================
-
 void do_nonlinearsolve(void (*pFunction)(double *, double *, void *),
                        double *pParams, int *pRes, int pSize, void *pUserData)
 {
-    // Create some vectors
-
-    N_Vector params = N_VMake_Serial(pSize, pParams);
-    N_Vector ones = N_VNew_Serial(pSize);
-
-    N_VConst(1.0, ones);
-
-    // Create the KINSOL solver
-
-    void *solver = KINCreate();
-
-    // Use our own error handler
-
-    KINSetErrHandlerFn(solver, errorHandler, 0/*---GRY--- this */);
-
-    // Initialise the KINSOL solver
-
-    KINInit(solver, systemFunction, params);
-
-    // Set some user data
-
-    struct KinsolSolverUserData userData;
-
-    userData.function = pFunction;
-    userData.userData = pUserData;
-    userData.size = pSize;
-
-    KINSetUserData(solver, &userData);
-
-    // Set the linear solver
-
-    KINDense(solver, pSize);
-
-    // Solve the linear system
-
-    KINSol(solver, params, KIN_LINESEARCH, ones, ones);
-
-    // Delete some internal objects
-
-    N_VDestroy_Serial(params);
-    N_VDestroy_Serial(ones);
-
-    KINFree(&solver);
+//---GRY--- TO BE DONE...
 
     // Everything went fine, so...
 

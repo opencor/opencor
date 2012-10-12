@@ -68,6 +68,15 @@ CellmlFileRuntime::ModelType CellmlFileRuntime::modelType() const
 
 //==============================================================================
 
+bool CellmlFileRuntime::needNonLinearAlgebraicSolver() const
+{
+    // Return whether the model needs a non-linear algebraic solver
+
+    return mAtLeastOneNonLinearAlgebraicSystem;
+}
+
+//==============================================================================
+
 int CellmlFileRuntime::constantsCount() const
 {
     // Return the number of constants in the model
@@ -206,6 +215,7 @@ void CellmlFileRuntime::reset(const bool &pResetIssues)
     // Reset all of the runtime's properties
 
     mModelType = Undefined;
+    mAtLeastOneNonLinearAlgebraicSystem = false;
 
     resetOdeCodeInformation();
     resetDaeCodeInformation();
@@ -436,8 +446,8 @@ CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pCellmlA
 
     mModelType = mCellmlApiOdeCodeInformation->flaggedEquations()->length()?Dae:Ode;
 
-    // If the model is of DAE type, then we must get the 'right' code
-    // information
+    // If the model is of DAE type, then we don't want the ODE-specific code
+    // information, but the DAE-specific code information
 
     iface::cellml_services::CodeInformation *genericCodeInformation;
 
@@ -499,6 +509,10 @@ CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pCellmlA
     QString functionsString = QString::fromStdWString(genericCodeInformation->functionsString());
 
     if (!functionsString.isEmpty()) {
+        // We will need to solve at least one non-linear algebraic system, so...
+
+        mAtLeastOneNonLinearAlgebraicSystem = true;
+
         modelCode += "struct rootfind_info\n"
                      "{\n"
                      "    double aVOI;\n"
