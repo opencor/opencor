@@ -293,15 +293,15 @@
     </message>
     <message>
         <source>ODE</source>
-        <translation type="unfinished">EDO</translation>
+        <translation>EDO</translation>
     </message>
     <message>
         <source>DAE</source>
-        <translation type="unfinished">EAD</translation>
+        <translation>EAD</translation>
     </message>
     <message>
-        <source>Non-linear algebraic</source>
-        <translation type="unfinished">Algébrique non-linéaire</translation>
+        <source>NLA</source>
+        <translation>ANL</translation>
     </message>
 </context>
 </TS>

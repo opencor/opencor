@@ -2,7 +2,7 @@
 // Core non-linear algebraic solver class
 //==============================================================================
 
-#include "corenonlinearalgebraicsolver.h"
+#include "corenlasolver.h"
 
 //==============================================================================
 
@@ -11,7 +11,7 @@ namespace CoreSolver {
 
 //==============================================================================
 
-CoreNonLinearAlgebraicSolver::CoreNonLinearAlgebraicSolver() :
+CoreNlaSolver::CoreNlaSolver() :
     mComputeSystem(0),
     mParameters(0),
     mSize(0),
@@ -21,9 +21,8 @@ CoreNonLinearAlgebraicSolver::CoreNonLinearAlgebraicSolver() :
 
 //==============================================================================
 
-void CoreNonLinearAlgebraicSolver::initialize(ComputeSystemFunction pComputeSystem,
-                                              double *pParameters, int pSize,
-                                              void *pUserData)
+void CoreNlaSolver::initialize(ComputeSystemFunction pComputeSystem,
+                               double *pParameters, int pSize, void *pUserData)
 {
     // Initialise the non-linear algebraic solver
 

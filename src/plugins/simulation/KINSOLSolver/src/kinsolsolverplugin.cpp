@@ -46,7 +46,7 @@ Solver::Type KINSOLSolverPlugin::type() const
 {
     // Return the type of the solver
 
-    return Solver::NonLinearAlgebraic;
+    return Solver::Nla;
 }
 
 //==============================================================================

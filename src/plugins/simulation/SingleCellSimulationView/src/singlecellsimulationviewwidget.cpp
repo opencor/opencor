@@ -5,6 +5,7 @@
 #include "cellmlfilemanager.h"
 #include "cellmlfileruntime.h"
 #include "coredaesolver.h"
+#include "corenlasolver.h"
 #include "coreodesolver.h"
 #include "coreutils.h"
 #include "singlecellsimulationviewgraphpanelwidget.h"
@@ -541,6 +542,7 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
 
     CoreSolver::CoreOdeSolver *odeSolver = 0;
     CoreSolver::CoreDaeSolver *daeSolver = 0;
+    CoreSolver::CoreNlaSolver *nlaSolver = 0;
     QString solverName = QString();
 
     if (needOdeSolver) {
@@ -652,6 +654,27 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
         //       conditions
     }
 
+    // Check whether we need a non-linear algebraic solver
+
+    if (mCellmlFileRuntime->needNlaSolver()) {
+        foreach (SolverInterface *solverInterface, mSolverInterfaces)
+            if (!solverInterface->name().compare("KINSOL")) {
+                // The KINSOL solver was found, so retrieve an instance of it
+
+                nlaSolver = reinterpret_cast<CoreSolver::CoreNlaSolver *>(solverInterface->instance());
+
+                break;
+            }
+
+        if (!nlaSolver) {
+            // The NLA solver couldn't be found, so...
+
+            mOutput->append(" - The KINSOL solver is needed, but it could not be found.");
+
+            return;
+        }
+    }
+
     // Initialise the constants and compute the rates and variables, but only if
     // the initialisation of the solver went fine
 
@@ -743,6 +766,7 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
 
     delete odeSolver;
     delete daeSolver;
+    delete nlaSolver;
 }
 
 //==============================================================================

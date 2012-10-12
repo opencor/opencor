@@ -68,11 +68,11 @@ CellmlFileRuntime::ModelType CellmlFileRuntime::modelType() const
 
 //==============================================================================
 
-bool CellmlFileRuntime::needNonLinearAlgebraicSolver() const
+bool CellmlFileRuntime::needNlaSolver() const
 {
     // Return whether the model needs a non-linear algebraic solver
 
-    return mAtLeastOneNonLinearAlgebraicSystem;
+    return mAtLeastOneNlaSystem;
 }
 
 //==============================================================================
@@ -215,7 +215,7 @@ void CellmlFileRuntime::reset(const bool &pResetIssues)
     // Reset all of the runtime's properties
 
     mModelType = Undefined;
-    mAtLeastOneNonLinearAlgebraicSystem = false;
+    mAtLeastOneNlaSystem = false;
 
     resetOdeCodeInformation();
     resetDaeCodeInformation();
@@ -511,7 +511,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pCellmlA
     if (!functionsString.isEmpty()) {
         // We will need to solve at least one non-linear algebraic system, so...
 
-        mAtLeastOneNonLinearAlgebraicSystem = true;
+        mAtLeastOneNlaSystem = true;
 
         modelCode += "struct rootfind_info\n"
                      "{\n"

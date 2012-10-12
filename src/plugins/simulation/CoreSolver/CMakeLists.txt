@@ -7,7 +7,7 @@ ADD_PLUGIN(CoreSolver
         ../../plugininfo.cpp
 
         src/coredaesolver.cpp
-        src/corenonlinearalgebraicsolver.cpp
+        src/corenlasolver.cpp
         src/coreodesolver.cpp
         src/coresolver.cpp
         src/coresolverplugin.cpp

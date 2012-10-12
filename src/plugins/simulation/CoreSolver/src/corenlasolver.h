@@ -2,8 +2,8 @@
 // Core non-linear algebraic solver class
 //==============================================================================
 
-#ifndef CORENONLINEARALGEBRAICSOLVER_H
-#define CORENONLINEARALGEBRAICSOLVER_H
+#ifndef CORENLASOLVER_H
+#define CORENLASOLVER_H
 
 //==============================================================================
 
@@ -16,12 +16,12 @@ namespace CoreSolver {
 
 //==============================================================================
 
-class CORESOLVER_EXPORT CoreNonLinearAlgebraicSolver : public CoreSolver
+class CORESOLVER_EXPORT CoreNlaSolver : public CoreSolver
 {
 public:
     typedef int (*ComputeSystemFunction)(double *, double *, void *);
 
-    explicit CoreNonLinearAlgebraicSolver();
+    explicit CoreNlaSolver();
 
     virtual void initialize(ComputeSystemFunction pComputeSystem,
                             double *pParameters, int pSize, void *pUserData);

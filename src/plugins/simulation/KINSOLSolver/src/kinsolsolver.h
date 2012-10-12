@@ -7,7 +7,7 @@
 
 //==============================================================================
 
-#include "corenonlinearalgebraicsolver.h"
+#include "corenlasolver.h"
 
 //==============================================================================
 
@@ -21,14 +21,14 @@ namespace KINSOLSolver {
 //==============================================================================
 
 struct KinsolSolverUserData {
-    OpenCOR::CoreSolver::CoreNonLinearAlgebraicSolver::ComputeSystemFunction computeSystem;
+    OpenCOR::CoreSolver::CoreNlaSolver::ComputeSystemFunction computeSystem;
 
     void *userData;
 };
 
 //==============================================================================
 
-class KinsolSolver : public CoreSolver::CoreNonLinearAlgebraicSolver
+class KinsolSolver : public CoreSolver::CoreNlaSolver
 {
 public:
     explicit KinsolSolver();

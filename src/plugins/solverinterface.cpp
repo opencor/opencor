@@ -23,8 +23,8 @@ QString SolverInterface::typeAsString() const
         return QObject::tr("ODE");
     case Solver::Dae:
         return QObject::tr("DAE");
-    case Solver::NonLinearAlgebraic:
-        return QObject::tr("Non-linear algebraic");
+    case Solver::Nla:
+        return QObject::tr("NLA");
     default:
         return "???";
     }

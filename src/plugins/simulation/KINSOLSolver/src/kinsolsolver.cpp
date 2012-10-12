@@ -85,10 +85,8 @@ void KinsolSolver::initialize(ComputeSystemFunction pComputeSystem,
 
     // Initialise the ODE solver itself
 
-    OpenCOR::CoreSolver::CoreNonLinearAlgebraicSolver::initialize(pComputeSystem,
-                                                                  pParameters,
-                                                                  pSize,
-                                                                  pUserData);
+    OpenCOR::CoreSolver::CoreNlaSolver::initialize(pComputeSystem, pParameters,
+                                                   pSize, pUserData);
 
     // Create some vectors
 
