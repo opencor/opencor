@@ -108,6 +108,11 @@ IdaSolver::IdaSolver() :
 
 IdaSolver::~IdaSolver()
 {
+    if (!mSolver)
+        // The solver hasn't been initialised, so...
+
+        return;
+
     // Delete some internal objects
 
     N_VDestroy_Serial(mStatesVector);

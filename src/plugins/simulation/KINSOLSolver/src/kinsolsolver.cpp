@@ -67,6 +67,11 @@ KinsolSolver::~KinsolSolver()
 
 void KinsolSolver::reset()
 {
+    if (!mSolver)
+        // The solver hasn't been initialised, so...
+
+        return;
+
     N_VDestroy_Serial(mParametersVector);
     N_VDestroy_Serial(mOnesVector);
 
