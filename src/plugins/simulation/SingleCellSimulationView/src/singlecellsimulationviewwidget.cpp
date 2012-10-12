@@ -354,6 +354,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
     } else if (   !fileBaseName.compare("dae_model")
                || !fileBaseName.compare("newton_raphson_parabola_model")
                || !fileBaseName.compare("parabola_as_dae_model")
+               || !fileBaseName.compare("parabola_variant_as_dae_model")
                || !fileBaseName.compare("saucerman_brunton_michailova_mcculloch_model_2003")
                || !fileBaseName.compare("simple_dae_model")) {
         mModel = Dae;
