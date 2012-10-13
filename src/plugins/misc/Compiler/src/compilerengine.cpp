@@ -9,6 +9,7 @@
 
 #include <QApplication>
 #include <QDir>
+#include <QTemporaryFile>
 #include <QTextStream>
 
 //==============================================================================
@@ -129,24 +130,24 @@ bool CompilerEngine::compileCode(const QString &pCode,
 
     // Retrieve the application file name and determine the name of the
     // temporary file which will contain our model code
+    // Note: the temporary file will automatically get deleted when going out of
+    //       scope...
 
     QByteArray appByteArray = qApp->applicationFilePath().toLatin1();
     const char *appFileName = appByteArray.constData();
 
-    QByteArray tempFileByteArray = QString(QDir::tempPath()+QDir::separator()+QFileInfo(appFileName).baseName()+".c").toLatin1();
-    const char *tempFileName = tempFileByteArray.constData();
+    QTemporaryFile tempFile(QDir::tempPath()+QDir::separator()+QFileInfo(appFileName).baseName()+"_XXXXXX.c");
 
-    // Save the model code in our temporary file
-
-    QFile tempFile(tempFileName);
-
-    if (!tempFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        mError = tr("<strong>%1</strong> could not be created").arg(tempFileName);
-
-        tempFile.remove();
+    if (!tempFile.open()) {
+        mError = tr("<strong>%1</strong> could not be created").arg(tempFile.fileName());
 
         return false;
     }
+
+    QByteArray tempFileByteArray = tempFile.fileName().toLatin1();
+    const char *tempFileName = tempFileByteArray.constData();
+
+    // Save the model code in our temporary file
 
     QTextStream out(&tempFile);
 
@@ -187,8 +188,6 @@ bool CompilerEngine::compileCode(const QString &pCode,
 
         mError = tr("the compilation object could not be created");
 
-        tempFile.remove();
-
         return false;
     }
 
@@ -201,8 +200,6 @@ bool CompilerEngine::compileCode(const QString &pCode,
         || !llvm::isa<clang::driver::Command>(*jobList.begin())) {
         mError = tr("the compilation object must contain only one command");
 
-        tempFile.remove();
-
         return false;
     }
 
@@ -213,8 +210,6 @@ bool CompilerEngine::compileCode(const QString &pCode,
 
     if (commandName.compare("clang")) {
         mError = tr("a <strong>clang</strong> command was expected, but a <strong>%1</strong> command was found instead").arg(commandName);
-
-        tempFile.remove();
 
         return false;
     }
@@ -245,17 +240,12 @@ bool CompilerEngine::compileCode(const QString &pCode,
     if (!compilerInstance.hasDiagnostics()) {
         mError = tr("the diagnostics engine could not be created");
 
-        tempFile.remove();
-
         return false;
     }
 
     // Create an LLVM module
 
-    static int counter = 0;
-
-    mModule = new llvm::Module(qPrintable(QString("Module #%1").arg(QString::number(++counter))),
-                               llvm::getGlobalContext());
+    mModule = new llvm::Module(tempFileName, llvm::getGlobalContext());
 
     // Initialise the native target, so not only can we then create a JIT
     // execution engine, but more importantly its data layout will match that of
@@ -269,8 +259,6 @@ bool CompilerEngine::compileCode(const QString &pCode,
 
     if (!mExecutionEngine) {
         mError = tr("the JIT execution engine could not be created");
-
-        tempFile.remove();
 
         delete mModule;
 
@@ -287,19 +275,14 @@ bool CompilerEngine::compileCode(const QString &pCode,
     if (!compilerInstance.ExecuteAction(*codeGenerationAction, outputStream)) {
         mError = tr("the model could not be compiled");
 
-        tempFile.remove();
-
         reset(false);
 
         return false;
     }
 
-    // The LLVM assembly code was generated, so we can update our module and
-    // delete our temporary file
+    // The LLVM assembly code was generated, so we can update our module
 
     mModule = codeGenerationAction->takeModule();
-
-    tempFile.remove();
 
     // Everything went fine, so...
 
