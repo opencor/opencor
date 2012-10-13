@@ -191,7 +191,8 @@ double atanh(double pNb)
 //==============================================================================
 
 void do_nonlinearsolve(void (*pFunction)(double *, double *, void *),
-                       double *pParameters, int *pRes, int pSize, void *pUserData)
+                       double *pParameters, int *pRes, int pSize,
+                       void *pUserData)
 {
     OpenCOR::CoreSolver::CoreNlaSolver *globalNlaSolver = OpenCOR::CoreSolver::globalNlaSolver();
 
