@@ -165,19 +165,22 @@ SET(PLUGINS
     misc/Core
 
     3rdparty/LLVM
-    misc/Compiler
 
     api/CellMLAPI
 
-    misc/CellMLSupport
     misc/RICORDOSupport
 
     editing/CoreEditing
+
+    simulation/CoreSolver
+
+    misc/Compiler
+
+    misc/CellMLSupport
+
     editing/CoreCellMLEditing
 
     3rdparty/SUNDIALS
-
-    simulation/CoreSolver
 
     simulation/CVODESolver
     simulation/ForwardEulerSolver

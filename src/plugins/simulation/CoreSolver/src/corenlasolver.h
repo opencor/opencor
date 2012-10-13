@@ -19,7 +19,7 @@ namespace CoreSolver {
 class CORESOLVER_EXPORT CoreNlaSolver : public CoreSolver
 {
 public:
-    typedef int (*ComputeSystemFunction)(double *, double *, void *);
+    typedef void (*ComputeSystemFunction)(double *, double *, void *);
 
     explicit CoreNlaSolver();
 
@@ -35,6 +35,12 @@ private:
     int mSize;
     void *mUserData;
 };
+
+//==============================================================================
+
+void CORESOLVER_EXPORT resetGlobalNlaSolver();
+void CORESOLVER_EXPORT setGlobalNlaSolver(CoreNlaSolver *pGlobalNlaSolver);
+CoreNlaSolver CORESOLVER_EXPORT * globalNlaSolver();
 
 //==============================================================================
 

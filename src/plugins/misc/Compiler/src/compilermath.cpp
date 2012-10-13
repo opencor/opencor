@@ -3,6 +3,7 @@
 //==============================================================================
 
 #include "compilermath.h"
+#include "corenlasolver.h"
 
 //==============================================================================
 
@@ -190,13 +191,28 @@ double atanh(double pNb)
 //==============================================================================
 
 void do_nonlinearsolve(void (*pFunction)(double *, double *, void *),
-                       double *pParams, int *pRes, int pSize, void *pUserData)
+                       double *pParameters, int *pRes, int pSize, void *pUserData)
 {
-//---GRY--- TO BE DONE...
+    OpenCOR::CoreSolver::CoreNlaSolver *globalNlaSolver = OpenCOR::CoreSolver::globalNlaSolver();
 
-    // Everything went fine, so...
+    if (globalNlaSolver) {
+        // Initialise our global non-linear algebraic solver
 
-    *pRes = 1;
+        globalNlaSolver->initialize(pFunction, pParameters, pSize, pUserData);
+
+        // Solve the non-linear algebraic system
+
+        globalNlaSolver->solve();
+
+        // Everything went fine, so...
+
+        *pRes = 1;
+    } else {
+
+        // We couldn't solve the non-linear algebraic system, so...
+
+        *pRes = 0;
+    }
 }
 
 //==============================================================================

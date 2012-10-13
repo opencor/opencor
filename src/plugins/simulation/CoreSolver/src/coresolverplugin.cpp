@@ -2,6 +2,7 @@
 // CoreSolver plugin
 //==============================================================================
 
+#include "corenlasolver.h"
 #include "coresolverplugin.h"
 
 //==============================================================================
@@ -29,6 +30,15 @@ PLUGININFO_FUNC CoreSolverPluginInfo()
 //==============================================================================
 
 Q_EXPORT_PLUGIN2(CoreSolver, CoreSolverPlugin)
+
+//==============================================================================
+
+CoreSolverPlugin::~CoreSolverPlugin()
+{
+    // Reset our global non-linear algebraic solver
+
+    resetGlobalNlaSolver();
+}
 
 //==============================================================================
 

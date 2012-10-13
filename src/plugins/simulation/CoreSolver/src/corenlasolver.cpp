@@ -11,6 +11,10 @@ namespace CoreSolver {
 
 //==============================================================================
 
+static CoreNlaSolver *gGlobalNlaSolver = 0;
+
+//==============================================================================
+
 CoreNlaSolver::CoreNlaSolver() :
     mComputeSystem(0),
     mParameters(0),
@@ -31,6 +35,41 @@ void CoreNlaSolver::initialize(ComputeSystemFunction pComputeSystem,
     mParameters = pParameters;
     mSize = pSize;
     mUserData = pUserData;
+}
+
+//==============================================================================
+
+void resetGlobalNlaSolver()
+{
+    // Reset our global non-linear algebraic solver, if needed
+
+    if (gGlobalNlaSolver) {
+        delete gGlobalNlaSolver;
+
+        gGlobalNlaSolver = 0;
+    }
+}
+
+//==============================================================================
+
+void setGlobalNlaSolver(CoreNlaSolver *pGlobalNlaSolver)
+{
+    // Set our global non-linear algebraic solver after deleting the previous
+    // one, if needed
+
+    if (gGlobalNlaSolver)
+        delete gGlobalNlaSolver;
+
+    gGlobalNlaSolver = pGlobalNlaSolver;
+}
+
+//==============================================================================
+
+CoreNlaSolver * globalNlaSolver()
+{
+    // Return our global non-linear algebraic solver
+
+    return gGlobalNlaSolver;
 }
 
 //==============================================================================

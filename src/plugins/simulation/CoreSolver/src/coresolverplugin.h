@@ -23,6 +23,9 @@ PLUGININFO_FUNC CoreSolverPluginInfo();
 class CoreSolverPlugin : public QObject
 {
     Q_OBJECT
+
+public:
+    ~CoreSolverPlugin();
 };
 
 //==============================================================================

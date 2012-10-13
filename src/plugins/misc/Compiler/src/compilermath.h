@@ -31,7 +31,9 @@ extern "C" double COMPILER_EXPORT multi_min(int pCount, ...);
 #endif
 
 extern "C" void COMPILER_EXPORT do_nonlinearsolve(void (*pFunction)(double *, double *, void *),
-                                                  double *pParams, int *pRes, int pSize, void *pUserData);
+                                                  double *pParameters,
+                                                  int *pRes, int pSize,
+                                                  void *pUserData);
 
 //==============================================================================
 
