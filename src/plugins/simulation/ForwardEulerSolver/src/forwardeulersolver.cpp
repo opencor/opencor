@@ -45,14 +45,6 @@ void ForwardEulerSolver::initialize(const double &pVoiStart,
 
 void ForwardEulerSolver::solve(double &pVoi, const double &pVoiEnd) const
 {
-    Q_ASSERT(mStatesCount > 0);
-    Q_ASSERT(mConstants);
-    Q_ASSERT(mRates);
-    Q_ASSERT(mStates);
-    Q_ASSERT(mAlgebraic);
-    Q_ASSERT(mStep > 0);
-    Q_ASSERT(mComputeRates);
-
     // Y_n+1 = Y_n + h * f(t_n, Y_n)
 
     double voiStart = pVoi;
