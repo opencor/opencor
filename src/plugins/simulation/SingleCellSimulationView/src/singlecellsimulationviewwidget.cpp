@@ -305,8 +305,14 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
     mCellmlFileRuntime = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName)->runtime();
 
     if (mCellmlFileRuntime->isValid()) {
+        QString additionalInformation = QString();
+
+        if (mCellmlFileRuntime->needNlaSolver())
+            additionalInformation = " + Non-linear algebraic system(s)";
+
         mOutput->append(" - The CellML file's runtime was properly generated.");
-        mOutput->append(QString("    [Information] Model type: %1.").arg((mCellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?"ODE":"DAE"));
+        mOutput->append(QString("    [Information] Model type: %1%2.").arg((mCellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?"ODE":"DAE",
+                                                                           additionalInformation));
     } else {
         mOutput->append(" - The CellML file's runtime was NOT properly generated:");
 
