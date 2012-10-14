@@ -12,13 +12,6 @@
 //==============================================================================
 
 #include "CCGSBootstrap.hpp"
-#include "MaLaESBootstrap.hpp"
-
-//==============================================================================
-
-#include "llvm/Module.h"
-#include "llvm/ExecutionEngine/ExecutionEngine.h"
-#include "llvm/ExecutionEngine/GenericValue.h"
 
 //==============================================================================
 
