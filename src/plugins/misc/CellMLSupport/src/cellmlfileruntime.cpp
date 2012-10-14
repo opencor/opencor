@@ -4,6 +4,7 @@
 
 #include "cellmlfileruntime.h"
 #include "compilerengine.h"
+#include "compilermath.h"
 
 //==============================================================================
 
@@ -12,6 +13,11 @@
 //==============================================================================
 
 #include "CCGSBootstrap.hpp"
+
+//==============================================================================
+
+#include "llvm/ADT/StringRef.h"
+#include "llvm/Support/DynamicLibrary.h"
 
 //==============================================================================
 
@@ -586,32 +592,27 @@ CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pCellmlA
         // Some issues were reported, so...
 
         reset(false);
-    } else if (mModelType == Ode) {
-        // ODE functions
-
-        mOdeFunctions.initializeConstants = (InitializeConstantsFunction) (intptr_t) mCompilerEngine->getFunction("initializeConstants");
-        mOdeFunctions.computeRates        = (ComputeOdeRatesFunction) (intptr_t) mCompilerEngine->getFunction("computeRates");
-        mOdeFunctions.computeVariables    = (ComputeVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeVariables");
-
-        Q_ASSERT(mOdeFunctions.initializeConstants);
-        Q_ASSERT(mOdeFunctions.computeRates);
-        Q_ASSERT(mOdeFunctions.computeVariables);
     } else {
-        // DAE functions
+        // Add the symbol of any required external function, if any
 
-        mDaeFunctions.initializeConstants       = (InitializeConstantsFunction) (intptr_t) mCompilerEngine->getFunction("initializeConstants");
-        mDaeFunctions.computeResiduals          = (ComputeDaeResidualsFunction) (intptr_t) mCompilerEngine->getFunction("computeResiduals");
-        mDaeFunctions.computeVariables          = (ComputeVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeVariables");
-        mDaeFunctions.computeEssentialVariables = (ComputeDaeEssentialVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeEssentialVariables");
-        mDaeFunctions.computeRootInformation    = (ComputeDaeRootInformationFunction) (intptr_t) mCompilerEngine->getFunction("computeRootInformation");
-        mDaeFunctions.computeStateInformation   = (ComputeDaeStateInformationFunction) (intptr_t) mCompilerEngine->getFunction("computeStateInformation");
+        if (mAtLeastOneNlaSystem)
+            llvm::sys::DynamicLibrary::AddSymbol("do_nonlinearsolve",
+                                                 (void *) (intptr_t) do_nonlinearsolve);
 
-        Q_ASSERT(mDaeFunctions.initializeConstants);
-        Q_ASSERT(mDaeFunctions.computeResiduals);
-        Q_ASSERT(mDaeFunctions.computeVariables);
-        Q_ASSERT(mDaeFunctions.computeEssentialVariables);
-        Q_ASSERT(mDaeFunctions.computeRootInformation);
-        Q_ASSERT(mDaeFunctions.computeStateInformation);
+        // Retrieve the ODE/DAE functions
+
+        if (mModelType == Ode) {
+            mOdeFunctions.initializeConstants = (InitializeConstantsFunction) (intptr_t) mCompilerEngine->getFunction("initializeConstants");
+            mOdeFunctions.computeRates        = (ComputeOdeRatesFunction) (intptr_t) mCompilerEngine->getFunction("computeRates");
+            mOdeFunctions.computeVariables    = (ComputeVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeVariables");
+        } else {
+            mDaeFunctions.initializeConstants       = (InitializeConstantsFunction) (intptr_t) mCompilerEngine->getFunction("initializeConstants");
+            mDaeFunctions.computeResiduals          = (ComputeDaeResidualsFunction) (intptr_t) mCompilerEngine->getFunction("computeResiduals");
+            mDaeFunctions.computeVariables          = (ComputeVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeVariables");
+            mDaeFunctions.computeEssentialVariables = (ComputeDaeEssentialVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeEssentialVariables");
+            mDaeFunctions.computeRootInformation    = (ComputeDaeRootInformationFunction) (intptr_t) mCompilerEngine->getFunction("computeRootInformation");
+            mDaeFunctions.computeStateInformation   = (ComputeDaeStateInformationFunction) (intptr_t) mCompilerEngine->getFunction("computeStateInformation");
+        }
     }
 
     // We are done, so return ourselves
