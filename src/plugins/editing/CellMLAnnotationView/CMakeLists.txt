@@ -51,6 +51,7 @@ ADD_PLUGIN(CellMLAnnotationView
         CellMLSupport
         Compiler
         Core
+        CoreSolver
         ${LLVM_PLUGIN}
         QJson
         RICORDOSupport

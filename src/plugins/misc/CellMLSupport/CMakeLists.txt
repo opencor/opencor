@@ -52,6 +52,7 @@ ADD_PLUGIN(CellMLSupport
         CellMLAPI
         Compiler
         Core
+        CoreSolver
         ${LLVM_PLUGIN}
     OPENCOR_BINARY_DEPENDENCIES
         ${LLVM_BINARY_PLUGIN}

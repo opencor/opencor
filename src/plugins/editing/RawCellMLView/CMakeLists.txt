@@ -31,6 +31,7 @@ ADD_PLUGIN(RawCellMLView
         CellMLSupport
         Compiler
         Core
+        CoreSolver
         ${LLVM_PLUGIN}
         QScintilla
         QScintillaSupport
