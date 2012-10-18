@@ -54,7 +54,17 @@
             <li>
                 <a href="http://qt-project.org/">Qt</a> SDK 1.2.1: this combines Qt 4.8.1 (a cross-platform application and UI framework) and Qt Creator 2.4.1 (a cross-platform environment for Qt), among other things:
                 <ul>
-                    <li><a href="http://sw.nokia.com/id/23f71960-21d3-4b7a-9329-4d5484c49c68/Qt_SDK_Win_online">Windows</a>;</li>
+                    <li>
+                        <a href="http://sw.nokia.com/id/23f71960-21d3-4b7a-9329-4d5484c49c68/Qt_SDK_Win_online">Windows</a>;
+                        <div>
+                            <strong>Note:</strong> to be able to debug, you will need to configure Qt Creator as follows (via the <code>Tools</code> | <code>Options...</code> menu):
+                            <ul>
+                                <li>From <code>Build & Run</code> | <code>Tool Chains</code>, clone the first entry and provide the requested path;</li>
+                                <li>From <code>Debugger</code> | <code>General</code>, add a new source paths mapping with <code>c:\iwmake\build_vs2010_opensource_________________PADDING_________________</code> and <code>C:\QtSDK\QtSources\4.8.1</code> as the source and target paths, respectively (note that your target path might be different depending on where you installed Qt); and</li>
+                                <li>From <code>Debugger</code> | <code>CDB</code>, add a symbol path by inserting a symbol server.</li>
+                            </ul>
+                        </div>
+                    </li>
                     <li>
                         Linux <a href="http://sw.nokia.com/id/f33d3d5a-d847-4b30-8637-9a6b33f83ed2/Qt_SDK_Lin32_online">32-bit</a>/<a href="http://sw.nokia.com/id/b54dbe8e-c45e-4598-982f-eddbb6886ff5/Qt_SDK_Lin64_online">64-bit</a>; and
                         <div>
