@@ -42,6 +42,12 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
+    void addGraphPanel();
+    void removeGraphPanel();
+
+    void clearGraphPanels();
+    void clearActiveGraphPanel();
+
 private:
     Ui::SingleCellSimulationViewContentsWidget *mGui;
 

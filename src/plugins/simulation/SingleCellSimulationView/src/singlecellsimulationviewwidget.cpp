@@ -275,20 +275,18 @@ void SingleCellSimulationViewWidget::addSolverInterface(SolverInterface *pSolver
 
 void SingleCellSimulationViewWidget::clearGraphPanels()
 {
-    // Clear all the graph panels
+    // Ask our contents widget to clear all the graph panels
 
-//---GRY---
-//    for (int i = 0, iMax = mGraphPanels->count(); i < iMax; ++i)
-//        qobject_cast<SingleCellSimulationViewGraphPanelWidget *>(mGraphPanels->widget(i))->resetCurves();
+    mContentsWidget->clearGraphPanels();
 }
 
 //==============================================================================
 
 void SingleCellSimulationViewWidget::clearActiveGraphPanel()
 {
-    // Clear the current graph panel
+    // Ask our contents widget to clear the current graph panel
 
-//---GRY---    mGraphPanels->activeGraphPanel()->resetCurves();
+    mContentsWidget->clearActiveGraphPanel();
 }
 
 //==============================================================================
@@ -794,18 +792,18 @@ void SingleCellSimulationViewWidget::on_actionDebugMode_triggered()
 
 void SingleCellSimulationViewWidget::on_actionAdd_triggered()
 {
-    // Add a new graph panel
+    // Ask our contents widget to add a new graph panel
 
-//---GRY---    mGraphPanels->addGraphPanel();
+    mContentsWidget->addGraphPanel();
 }
 
 //==============================================================================
 
 void SingleCellSimulationViewWidget::on_actionRemove_triggered()
 {
-    // Remove the current graph panel
+    // Ask our contents widget to remove the current graph panel
 
-//---GRY---    mGraphPanels->removeGraphPanel();
+    mContentsWidget->removeGraphPanel();
 }
 
 //==============================================================================

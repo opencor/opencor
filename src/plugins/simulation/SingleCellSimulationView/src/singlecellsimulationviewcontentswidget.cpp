@@ -75,6 +75,42 @@ void SingleCellSimulationViewContentsWidget::saveSettings(QSettings *pSettings) 
 
 //==============================================================================
 
+void SingleCellSimulationViewContentsWidget::addGraphPanel()
+{
+    // Ask our graph panels widget to add a new graph panel
+
+    mGraphPanelsWidget->addGraphPanel();
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewContentsWidget::removeGraphPanel()
+{
+    // Ask our graph panels widget to remove the current graph panel
+
+    mGraphPanelsWidget->removeGraphPanel();
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewContentsWidget::clearGraphPanels()
+{
+    // Ask our graph panels widget to clear all the graph panels
+
+    mGraphPanelsWidget->clearGraphPanels();
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewContentsWidget::clearActiveGraphPanel()
+{
+    // Ask our graph panels widget to clear the current graph panel
+
+    mGraphPanelsWidget->clearActiveGraphPanel();
+}
+
+//==============================================================================
+
 }   // namespace SingleCellSimulationView
 }   // namespace OpenCOR
 

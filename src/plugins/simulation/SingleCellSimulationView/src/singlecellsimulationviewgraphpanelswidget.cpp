@@ -266,10 +266,29 @@ SingleCellSimulationViewGraphPanelWidget * SingleCellSimulationViewGraphPanelsWi
     }
 
     // There are no graph panels, so...
-    // Note: indeed, since if there is at least one graph panel, then we have an
-    //       active graph panel...
+    // Note: we should never reached this point since there should always be at
+    //       one graph panel...
 
     return 0;
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewGraphPanelsWidget::clearGraphPanels()
+{
+    // Clear all the graph panels
+
+    for (int i = 0, iMax = count(); i < iMax; ++i)
+        qobject_cast<SingleCellSimulationViewGraphPanelWidget *>(widget(i))->resetCurves();
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewGraphPanelsWidget::clearActiveGraphPanel()
+{
+    // Clear the current graph panel
+
+    activeGraphPanel()->resetCurves();
 }
 
 //==============================================================================
