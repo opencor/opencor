@@ -27,6 +27,7 @@ namespace SingleCellSimulationView {
 //==============================================================================
 
 class SingleCellSimulationViewGraphPanelsWidget;
+class SingleCellSimulationViewGraphPanelWidget;
 
 //==============================================================================
 
@@ -44,6 +45,8 @@ public:
 
     void addGraphPanel();
     void removeGraphPanel();
+
+    SingleCellSimulationViewGraphPanelWidget * activeGraphPanel();
 
     void clearGraphPanels();
     void clearActiveGraphPanel();

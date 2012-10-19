@@ -9,6 +9,7 @@
 #include "coreodesolver.h"
 #include "coreutils.h"
 #include "singlecellsimulationviewcontentswidget.h"
+#include "singlecellsimulationviewgraphpanelwidget.h"
 #include "singlecellsimulationviewwidget.h"
 #include "toolbar.h"
 
@@ -528,7 +529,6 @@ void SingleCellSimulationViewWidget::outputSolverErrorMsg()
 
 void SingleCellSimulationViewWidget::on_actionRun_triggered()
 {
-/*---GRY---
     if ((mModel == Unknown) || !mCellmlFileRuntime->isValid())
         // The model is either not supported or not valid, so...
 
@@ -540,7 +540,7 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
 
     // Retrieve the active graph panel
 
-    SingleCellSimulationViewGraphPanelWidget *firstGraphPanel = qobject_cast<SingleCellSimulationViewGraphPanelWidget *>(mGraphPanels->widget(0));
+    SingleCellSimulationViewGraphPanelWidget *activeGraphPanel = mContentsWidget->activeGraphPanel();
 
     // Retrieve the requested ODE/DAE solver
 
@@ -630,7 +630,7 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
 
     // Set the minimal and maximal value for the X axis
 
-    firstGraphPanel->plot()->setAxisScale(QwtPlot::xBottom, voiStart, mVoiEnd);
+    activeGraphPanel->plot()->setAxisScale(QwtPlot::xBottom, voiStart, mVoiEnd);
 
     // Get some arrays to store the simulation data
 
@@ -641,7 +641,7 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
 
     // Add a curve to our plotting area
 
-    QwtPlotCurve *curve = firstGraphPanel->addCurve();
+    QwtPlotCurve *curve = activeGraphPanel->addCurve();
 
     // Retrieve the ODE functions from the CellML file runtime
 
@@ -711,7 +711,7 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
             if (mSlowPlotting) {
                 curve->setSamples(xData, yData);
 
-                firstGraphPanel->plot()->replot();
+                activeGraphPanel->plot()->replot();
             }
 
             // Solve the model and compute its variables
@@ -744,7 +744,7 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
             if (!mSlowPlotting) {
                 curve->setSamples(xData, yData);
 
-                firstGraphPanel->plot()->replot();
+                activeGraphPanel->plot()->replot();
             }
         } else {
             // Output the total simulation time
@@ -763,7 +763,7 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
 
             curve->setSamples(xData, yData);
 
-            firstGraphPanel->plot()->replot();
+            activeGraphPanel->plot()->replot();
         }
     }
 
@@ -773,7 +773,6 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
     delete daeSolver;
 
     CoreSolver::resetGlobalNlaSolver();
-*/
 }
 
 //==============================================================================

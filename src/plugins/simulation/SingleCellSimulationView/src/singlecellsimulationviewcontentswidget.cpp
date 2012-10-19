@@ -93,6 +93,15 @@ void SingleCellSimulationViewContentsWidget::removeGraphPanel()
 
 //==============================================================================
 
+SingleCellSimulationViewGraphPanelWidget * SingleCellSimulationViewContentsWidget::activeGraphPanel()
+{
+    // Ask our graph panels widget to retrieve the active graph panel
+
+    return mGraphPanelsWidget->activeGraphPanel();
+}
+
+//==============================================================================
+
 void SingleCellSimulationViewContentsWidget::clearGraphPanels()
 {
     // Ask our graph panels widget to clear all the graph panels
