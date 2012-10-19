@@ -37,9 +37,8 @@ SingleCellSimulationViewContentsWidget::SingleCellSimulationViewContentsWidget(Q
 
     mGraphPanelsWidget->setObjectName("GraphPanels");
 
-//---GRY---
-//    connect(mGraphPanelsWidget, SIGNAL(removeGraphPanelsEnabled(const bool &)),
-//            mGui->actionRemove, SLOT(setEnabled(bool)));
+    connect(mGraphPanelsWidget, SIGNAL(removeGraphPanelsEnabled(const bool &)),
+            this, SIGNAL(removeGraphPanelsEnabled(const bool &)));
 }
 
 //==============================================================================

@@ -55,6 +55,9 @@ private:
     Ui::SingleCellSimulationViewContentsWidget *mGui;
 
     SingleCellSimulationViewGraphPanelsWidget *mGraphPanelsWidget;
+
+Q_SIGNALS:
+    void removeGraphPanelsEnabled(const bool &pEnabled);
 };
 
 //==============================================================================
