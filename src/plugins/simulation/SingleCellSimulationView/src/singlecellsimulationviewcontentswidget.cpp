@@ -33,12 +33,12 @@ SingleCellSimulationViewContentsWidget::SingleCellSimulationViewContentsWidget(Q
     // Create a splitter for our graph panels and create a connection to keep
     // track of whether we can remove graph panels
 
-    mGraphPanels = new SingleCellSimulationViewGraphPanelsWidget(this);
+    mGraphPanelsWidget = new SingleCellSimulationViewGraphPanelsWidget(this);
 
-    mGraphPanels->setObjectName("GraphPanels");
+    mGraphPanelsWidget->setObjectName("GraphPanels");
 
 //---GRY---
-//    connect(mGraphPanels, SIGNAL(removeGraphPanelsEnabled(const bool &)),
+//    connect(mGraphPanelsWidget, SIGNAL(removeGraphPanelsEnabled(const bool &)),
 //            mGui->actionRemove, SLOT(setEnabled(bool)));
 }
 
@@ -57,8 +57,8 @@ void SingleCellSimulationViewContentsWidget::loadSettings(QSettings *pSettings)
 {
     // Retrieve the settings of our graph panels widget
 
-    pSettings->beginGroup(mGraphPanels->objectName());
-        mGraphPanels->loadSettings(pSettings);
+    pSettings->beginGroup(mGraphPanelsWidget->objectName());
+        mGraphPanelsWidget->loadSettings(pSettings);
     pSettings->endGroup();
 }
 
@@ -68,8 +68,8 @@ void SingleCellSimulationViewContentsWidget::saveSettings(QSettings *pSettings) 
 {
     // Keep track of the settings of our graph panels widget
 
-    pSettings->beginGroup(mGraphPanels->objectName());
-        mGraphPanels->saveSettings(pSettings);
+    pSettings->beginGroup(mGraphPanelsWidget->objectName());
+        mGraphPanelsWidget->saveSettings(pSettings);
     pSettings->endGroup();
 }
 

@@ -112,7 +112,7 @@ private:
 
     QSplitter *mSplitter;
 
-    SingleCellSimulationViewContentsWidget *mContents;
+    SingleCellSimulationViewContentsWidget *mContentsWidget;
     QTextEdit *mOutput;
 
     QProgressBar *mProgressBar;

@@ -45,7 +45,7 @@ public:
 private:
     Ui::SingleCellSimulationViewContentsWidget *mGui;
 
-    SingleCellSimulationViewGraphPanelsWidget *mGraphPanels;
+    SingleCellSimulationViewGraphPanelsWidget *mGraphPanelsWidget;
 };
 
 //==============================================================================

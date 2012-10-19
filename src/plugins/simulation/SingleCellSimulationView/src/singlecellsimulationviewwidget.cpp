@@ -78,11 +78,11 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     // Create our contents widget and create a connection to keep track of
     // whether we can remove graph panels
 
-    mContents = new SingleCellSimulationViewContentsWidget(this);
+    mContentsWidget = new SingleCellSimulationViewContentsWidget(this);
 
-    mContents->setObjectName("Contents");
+    mContentsWidget->setObjectName("Contents");
 
-    connect(mContents, SIGNAL(removeGraphPanelsEnabled(const bool &)),
+    connect(mContentsWidget, SIGNAL(removeGraphPanelsEnabled(const bool &)),
             mGui->actionRemove, SLOT(setEnabled(bool)));
 
     // Create a simulation output widget with a layout on which we put a
@@ -112,7 +112,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     //       exists between the graph panels and the simulation output widget.
     //       So, yes, it's purely about aesthetic...
 
-    mSplitter->addWidget(mContents);
+    mSplitter->addWidget(mContentsWidget);
     mSplitter->addWidget(simulationOutputWidget);
 
     mSplitter->setSizes(QList<int>() << qApp->desktop()->screenGeometry().height() << 1);
@@ -225,8 +225,8 @@ void SingleCellSimulationViewWidget::loadSettings(QSettings *pSettings)
 
     // Retrieve the settings of our contents widget
 
-    pSettings->beginGroup(mContents->objectName());
-        mContents->loadSettings(pSettings);
+    pSettings->beginGroup(mContentsWidget->objectName());
+        mContentsWidget->loadSettings(pSettings);
     pSettings->endGroup();
 }
 
@@ -254,8 +254,8 @@ void SingleCellSimulationViewWidget::saveSettings(QSettings *pSettings) const
 
     // Keep track of the settings of our contents widget
 
-    pSettings->beginGroup(mContents->objectName());
-        mContents->saveSettings(pSettings);
+    pSettings->beginGroup(mContentsWidget->objectName());
+        mContentsWidget->saveSettings(pSettings);
     pSettings->endGroup();
 }
 
