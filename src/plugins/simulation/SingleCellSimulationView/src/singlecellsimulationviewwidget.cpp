@@ -8,8 +8,7 @@
 #include "corenlasolver.h"
 #include "coreodesolver.h"
 #include "coreutils.h"
-#include "singlecellsimulationviewgraphpanelwidget.h"
-#include "singlecellsimulationviewgraphpanelswidget.h"
+#include "singlecellsimulationviewcontentswidget.h"
 #include "singlecellsimulationviewwidget.h"
 #include "toolbar.h"
 
@@ -76,14 +75,14 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
 
     mSplitter = new QSplitter(Qt::Vertical, this);
 
-    // Create a splitter for our graph panels and create a connection to keep
-    // track of whether we can remove graph panels
+    // Create our contents widget and create a connection to keep track of
+    // whether we can remove graph panels
 
-    mGraphPanels = new SingleCellSimulationViewGraphPanelsWidget(this);
+    mContents = new SingleCellSimulationViewContentsWidget(this);
 
-    mGraphPanels->setObjectName("GraphPanels");
+    mContents->setObjectName("Contents");
 
-    connect(mGraphPanels, SIGNAL(removeGraphPanelsEnabled(const bool &)),
+    connect(mContents, SIGNAL(removeGraphPanelsEnabled(const bool &)),
             mGui->actionRemove, SLOT(setEnabled(bool)));
 
     // Create a simulation output widget with a layout on which we put a
@@ -106,14 +105,14 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     simulationOutputLayout->addWidget(Core::newLineWidget(this));
     simulationOutputLayout->addWidget(mOutput);
 
-    // Populate our splitter and use as much space as possible for the graph
-    // panels (by asking their height to be that of the desktop's), and add it
-    // to our single cell simulation view widget
+    // Populate our splitter and use as much space as possible for our contents
+    // (by asking their height to be that of the desktop's), and add it to our
+    // single cell simulation view widget
     // Note: we add some spacing before our splitter to match the space that
     //       exists between the graph panels and the simulation output widget.
     //       So, yes, it's purely about aesthetic...
 
-    mSplitter->addWidget(mGraphPanels);
+    mSplitter->addWidget(mContents);
     mSplitter->addWidget(simulationOutputWidget);
 
     mSplitter->setSizes(QList<int>() << qApp->desktop()->screenGeometry().height() << 1);
@@ -164,8 +163,8 @@ void SingleCellSimulationViewWidget::retranslateUi()
 
 //==============================================================================
 
-static const QString SettingsGraphPanelsSizesCount = "GraphPanelsSizesCount";
-static const QString SettingsGraphPanelsSize       = "GraphPanelsSize%1";
+static const QString SettingsSizesCount = "SizesCount";
+static const QString SettingsSize       = "Size%1";
 
 //==============================================================================
 
@@ -213,21 +212,21 @@ void SingleCellSimulationViewWidget::loadSettings(QSettings *pSettings)
 
     // Retrieve and set the sizes of our splitter
 
-    int sizesCount = pSettings->value(SettingsGraphPanelsSizesCount, 0).toInt();
+    int sizesCount = pSettings->value(SettingsSizesCount, 0).toInt();
 
     if (sizesCount) {
         QList<int> sizes = QList<int>();
 
         for (int i = 0; i < sizesCount; ++i)
-            sizes << pSettings->value(SettingsGraphPanelsSize.arg(QString::number(i))).toInt();
+            sizes << pSettings->value(SettingsSize.arg(QString::number(i))).toInt();
 
         mSplitter->setSizes(sizes);
     }
 
-    // Retrieve the settings of our graph panels widget
+    // Retrieve the settings of our contents widget
 
-    pSettings->beginGroup(mGraphPanels->objectName());
-        mGraphPanels->loadSettings(pSettings);
+    pSettings->beginGroup(mContents->objectName());
+        mContents->loadSettings(pSettings);
     pSettings->endGroup();
 }
 
@@ -241,21 +240,22 @@ void SingleCellSimulationViewWidget::saveSettings(QSettings *pSettings) const
 
     if (!sizes.count() || !sizes.first())
         // Either we have no splitter sizes (how could this ever be the case?!)
-        // or our first vertical splitter size has a value of zero (which would
-        // mean that we previously left OpenCOR without going into Simulation
-        // mode and the vertical splitter sizes are not meaningful), so...
+        // or our vertical splitter's first size has a value of zero (which
+        // would mean that we previously left OpenCOR without going into
+        // Simulation mode and the vertical splitter sizes are not meaningful),
+        // so...
 
         return;
 
-    pSettings->setValue(SettingsGraphPanelsSizesCount, sizes.count());
+    pSettings->setValue(SettingsSizesCount, sizes.count());
 
     for (int i = 0, iMax = sizes.count(); i < iMax; ++i)
-        pSettings->setValue(SettingsGraphPanelsSize.arg(QString::number(i)), sizes[i]);
+        pSettings->setValue(SettingsSize.arg(QString::number(i)), sizes[i]);
 
-    // Keep track of the settings of our graph panels widget
+    // Keep track of the settings of our contents widget
 
-    pSettings->beginGroup(mGraphPanels->objectName());
-        mGraphPanels->saveSettings(pSettings);
+    pSettings->beginGroup(mContents->objectName());
+        mContents->saveSettings(pSettings);
     pSettings->endGroup();
 }
 
@@ -277,8 +277,9 @@ void SingleCellSimulationViewWidget::clearGraphPanels()
 {
     // Clear all the graph panels
 
-    for (int i = 0, iMax = mGraphPanels->count(); i < iMax; ++i)
-        qobject_cast<SingleCellSimulationViewGraphPanelWidget *>(mGraphPanels->widget(i))->resetCurves();
+//---GRY---
+//    for (int i = 0, iMax = mGraphPanels->count(); i < iMax; ++i)
+//        qobject_cast<SingleCellSimulationViewGraphPanelWidget *>(mGraphPanels->widget(i))->resetCurves();
 }
 
 //==============================================================================
@@ -287,7 +288,7 @@ void SingleCellSimulationViewWidget::clearActiveGraphPanel()
 {
     // Clear the current graph panel
 
-    mGraphPanels->activeGraphPanel()->resetCurves();
+//---GRY---    mGraphPanels->activeGraphPanel()->resetCurves();
 }
 
 //==============================================================================
@@ -529,6 +530,7 @@ void SingleCellSimulationViewWidget::outputSolverErrorMsg()
 
 void SingleCellSimulationViewWidget::on_actionRun_triggered()
 {
+/*---GRY---
     if ((mModel == Unknown) || !mCellmlFileRuntime->isValid())
         // The model is either not supported or not valid, so...
 
@@ -773,6 +775,7 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
     delete daeSolver;
 
     CoreSolver::resetGlobalNlaSolver();
+*/
 }
 
 //==============================================================================
@@ -793,7 +796,7 @@ void SingleCellSimulationViewWidget::on_actionAdd_triggered()
 {
     // Add a new graph panel
 
-    mGraphPanels->addGraphPanel();
+//---GRY---    mGraphPanels->addGraphPanel();
 }
 
 //==============================================================================
@@ -802,7 +805,7 @@ void SingleCellSimulationViewWidget::on_actionRemove_triggered()
 {
     // Remove the current graph panel
 
-    mGraphPanels->removeGraphPanel();
+//---GRY---    mGraphPanels->removeGraphPanel();
 }
 
 //==============================================================================
