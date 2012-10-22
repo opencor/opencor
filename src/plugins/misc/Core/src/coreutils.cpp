@@ -14,6 +14,7 @@
 #include <QLabel>
 #include <QResource>
 #include <QSettings>
+#include <QTextEdit>
 #include <QWidget>
 
 //==============================================================================
@@ -169,10 +170,41 @@ QString nativeCanonicalFileName(const QString &pFileName)
 QFrame * newLineWidget(QWidget *pParent, const bool &pHorizontal)
 {
     // Return a 'real' line widget, i.e. one which is 1 pixel wide
+    // Note: we want the line to be of the colour which is used by Qt to render
+    //       the border of a 'normal' bordered widget...
+
+    // Retrieve, if not already done, the colour used for a 'normal' border
+    // Note #1: we use a QTextEdit widget and retrieve the colour of the pixel
+    //          which is in the middle of the right border...
+    // Note #2: we don't rely on the top border because it may be rendered in a
+    //          special way. In the same way, we don't rely on a corner as such
+    //          in case it's rendered as a rounded corner...
+
+    static bool firstTime = true;
+    static QString borderColorStyle = QString();
+
+    if (firstTime) {
+        QTextEdit textEdit;
+        QImage image = QImage(textEdit.size(),
+                              QImage::Format_ARGB32_Premultiplied);
+
+        textEdit.render(&image);
+
+        QColor borderColor = QColor(image.pixel(image.width()-1,
+                                                0.5*image.height()));
+
+        borderColorStyle = QString("border: 1px solid rgb(%1, %2, %3);").arg(QString::number(borderColor.red()),
+                                                                             QString::number(borderColor.green()),
+                                                                             QString::number(borderColor.blue()));
+
+        firstTime = false;
+    }
+
+    // Create and return our line widget
 
     QFrame *res = new QFrame(pParent);
 
-    res->setFrameShape(QFrame::StyledPanel);
+    res->setStyleSheet(borderColorStyle);
 
     if (pHorizontal) {
         res->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
