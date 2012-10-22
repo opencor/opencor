@@ -169,9 +169,15 @@ QString nativeCanonicalFileName(const QString &pFileName)
 
 QFrame * newLineWidget(QWidget *pParent, const bool &pHorizontal)
 {
-    // Return a 'real' line widget, i.e. one which is 1 pixel wide
-    // Note: we want the line to be of the colour which is used by Qt to render
-    //       the border of a 'normal' bordered widget...
+    // Return a 'real' line widget, i.e. one which is 1 pixel wide, using a
+    // QFrame widget
+
+#ifdef Q_WS_MAC
+    // We want the line to be of the colour which is used by Qt to render the
+    // border of a 'normal' bordered widget. On Windows and Linux, we can
+    // achieve this by setting the frame shape of a QFrame widget, but this
+    // doesn't work on OS X, so we need to retrieve that colour from somewhere
+    // else...
 
     // Retrieve, if not already done, the colour used for a 'normal' border
     // Note #1: we use a QTextEdit widget and retrieve the colour of the pixel
@@ -199,12 +205,17 @@ QFrame * newLineWidget(QWidget *pParent, const bool &pHorizontal)
 
         firstTime = false;
     }
+#endif
 
     // Create and return our line widget
 
     QFrame *res = new QFrame(pParent);
 
+#ifdef Q_WS_MAC
     res->setStyleSheet(borderColorStyle);
+#else
+    res->setFrameShape(QFrame::StyledPanel);
+#endif
 
     if (pHorizontal) {
         res->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
