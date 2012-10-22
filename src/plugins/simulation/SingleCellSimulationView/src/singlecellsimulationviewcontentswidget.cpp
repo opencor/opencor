@@ -9,6 +9,8 @@
 
 //==============================================================================
 
+#include <QApplication>
+#include <QDesktopWidget>
 #include <QSettings>
 
 //==============================================================================
@@ -66,9 +68,30 @@ SingleCellSimulationViewContentsWidget::~SingleCellSimulationViewContentsWidget(
 
 //==============================================================================
 
+static const QString SettingsContentsCount = "ContentsCount";
+static const QString SettingsContentsSize  = "ContentsSize%1";
+
+//==============================================================================
+
 void SingleCellSimulationViewContentsWidget::loadSettings(QSettings *pSettings)
 {
-    // Retrieve the settings of our information and graph panels widget
+    // Retrieve and set our sizes
+
+    int sizesCount = pSettings->value(SettingsContentsCount, 0).toInt();
+    QList<int> newSizes = QList<int>();
+
+    if (!sizesCount)
+        // There are no previous sizes, so get some default ones
+
+        newSizes << 0.25*qApp->desktop()->screenGeometry().width()
+                 << 0.75*qApp->desktop()->screenGeometry().width();
+    else
+        for (int i = 0; i < sizesCount; ++i)
+            newSizes << pSettings->value(SettingsContentsSize.arg(QString::number(i))).toInt();
+
+    setSizes(newSizes);
+
+    // Retrieve the settings of our information and graph panels widgets
 
     pSettings->beginGroup(mInformationWidget->objectName());
         mInformationWidget->loadSettings(pSettings);
@@ -83,7 +106,16 @@ void SingleCellSimulationViewContentsWidget::loadSettings(QSettings *pSettings)
 
 void SingleCellSimulationViewContentsWidget::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of the settings of our information graph panels widget
+    // Keep track of our sizes
+
+    pSettings->setValue(SettingsContentsCount, count());
+
+    QList<int> contentsSizes = sizes();
+
+    for (int i = 0, iMax = contentsSizes.count(); i < iMax; ++i)
+        pSettings->setValue(SettingsContentsSize.arg(QString::number(i)), contentsSizes[i]);
+
+    // Keep track of the settings of our information and graph panels widgets
 
     pSettings->beginGroup(mInformationWidget->objectName());
         mInformationWidget->saveSettings(pSettings);
