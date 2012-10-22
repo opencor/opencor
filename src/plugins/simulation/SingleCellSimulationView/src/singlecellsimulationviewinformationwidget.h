@@ -7,11 +7,7 @@
 
 //==============================================================================
 
-#include "commonwidget.h"
-
-//==============================================================================
-
-#include <QSplitter>
+#include "widget.h"
 
 //==============================================================================
 
@@ -26,8 +22,7 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-class SingleCellSimulationViewInformationWidget : public QSplitter,
-                                                  public Core::CommonWidget
+class SingleCellSimulationViewInformationWidget : public Core::Widget
 {
     Q_OBJECT
 
