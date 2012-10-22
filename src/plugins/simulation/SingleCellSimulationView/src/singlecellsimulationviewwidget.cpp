@@ -118,7 +118,6 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
 
     mSplitter->setSizes(QList<int>() << qApp->desktop()->screenGeometry().height() << 1);
 
-    mGui->layout->addSpacing(mSplitter->handleWidth());
     mGui->layout->addWidget(mSplitter);
 
     // Create our (thin) simulation progress widget

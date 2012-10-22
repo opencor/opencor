@@ -1,9 +1,9 @@
 //==============================================================================
-// Single cell simulation view contents widget
+// Single cell simulation view information widget
 //==============================================================================
 
-#ifndef SINGLECELLSIMULATIONVIEWCONTENTSWIDGET_H
-#define SINGLECELLSIMULATIONVIEWCONTENTSWIDGET_H
+#ifndef SINGLECELLSIMULATIONVIEWINFORMATIONWIDGET_H
+#define SINGLECELLSIMULATIONVIEWINFORMATIONWIDGET_H
 
 //==============================================================================
 
@@ -16,7 +16,7 @@
 //==============================================================================
 
 namespace Ui {
-    class SingleCellSimulationViewContentsWidget;
+    class SingleCellSimulationViewInformationWidget;
 }
 
 //==============================================================================
@@ -26,40 +26,20 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-class SingleCellSimulationViewGraphPanelsWidget;
-class SingleCellSimulationViewGraphPanelWidget;
-class SingleCellSimulationViewInformationWidget;
-
-//==============================================================================
-
-class SingleCellSimulationViewContentsWidget : public QSplitter,
-                                               public Core::CommonWidget
+class SingleCellSimulationViewInformationWidget : public QSplitter,
+                                                  public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
-    explicit SingleCellSimulationViewContentsWidget(QWidget *pParent);
-    ~SingleCellSimulationViewContentsWidget();
+    explicit SingleCellSimulationViewInformationWidget(QWidget *pParent);
+    ~SingleCellSimulationViewInformationWidget();
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-    void addGraphPanel();
-    void removeGraphPanel();
-
-    SingleCellSimulationViewGraphPanelWidget * activeGraphPanel();
-
-    void clearGraphPanels();
-    void clearActiveGraphPanel();
-
 private:
-    Ui::SingleCellSimulationViewContentsWidget *mGui;
-
-    SingleCellSimulationViewInformationWidget *mInformationWidget;
-    SingleCellSimulationViewGraphPanelsWidget *mGraphPanelsWidget;
-
-Q_SIGNALS:
-    void removeGraphPanelsEnabled(const bool &pEnabled);
+    Ui::SingleCellSimulationViewInformationWidget *mGui;
 };
 
 //==============================================================================

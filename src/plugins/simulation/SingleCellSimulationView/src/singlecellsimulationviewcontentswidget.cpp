@@ -2,13 +2,14 @@
 // Single cell simulation view contents widget
 //==============================================================================
 
+#include "borderedwidget.h"
 #include "singlecellsimulationviewcontentswidget.h"
 #include "singlecellsimulationviewgraphpanelswidget.h"
+#include "singlecellsimulationviewinformationwidget.h"
 
 //==============================================================================
 
 #include <QSettings>
-#include <QWheelEvent>
 
 //==============================================================================
 
@@ -30,6 +31,12 @@ SingleCellSimulationViewContentsWidget::SingleCellSimulationViewContentsWidget(Q
 
     mGui->setupUi(this);
 
+    // Create a splitter for our information
+
+    mInformationWidget = new SingleCellSimulationViewInformationWidget(this);
+
+    mInformationWidget->setObjectName("Information");
+
     // Create a splitter for our graph panels and create a connection to keep
     // track of whether we can remove graph panels
 
@@ -39,6 +46,13 @@ SingleCellSimulationViewContentsWidget::SingleCellSimulationViewContentsWidget(Q
 
     connect(mGraphPanelsWidget, SIGNAL(removeGraphPanelsEnabled(const bool &)),
             this, SIGNAL(removeGraphPanelsEnabled(const bool &)));
+
+    // Add our information and graph panels widgets to ourselves
+
+    addWidget(new Core::BorderedWidget(mInformationWidget,
+                                       false, false, true, true));
+    addWidget(new Core::BorderedWidget(mGraphPanelsWidget,
+                                       false, true, true, false));
 }
 
 //==============================================================================
@@ -54,7 +68,11 @@ SingleCellSimulationViewContentsWidget::~SingleCellSimulationViewContentsWidget(
 
 void SingleCellSimulationViewContentsWidget::loadSettings(QSettings *pSettings)
 {
-    // Retrieve the settings of our graph panels widget
+    // Retrieve the settings of our information and graph panels widget
+
+    pSettings->beginGroup(mInformationWidget->objectName());
+        mInformationWidget->loadSettings(pSettings);
+    pSettings->endGroup();
 
     pSettings->beginGroup(mGraphPanelsWidget->objectName());
         mGraphPanelsWidget->loadSettings(pSettings);
@@ -65,7 +83,11 @@ void SingleCellSimulationViewContentsWidget::loadSettings(QSettings *pSettings)
 
 void SingleCellSimulationViewContentsWidget::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of the settings of our graph panels widget
+    // Keep track of the settings of our information graph panels widget
+
+    pSettings->beginGroup(mInformationWidget->objectName());
+        mInformationWidget->saveSettings(pSettings);
+    pSettings->endGroup();
 
     pSettings->beginGroup(mGraphPanelsWidget->objectName());
         mGraphPanelsWidget->saveSettings(pSettings);
