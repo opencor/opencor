@@ -183,7 +183,7 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     QWidget *centralWidget = new QWidget(this);
     QVBoxLayout *centralWidgetVBoxLayout = new QVBoxLayout(centralWidget);
 
-    centralWidgetVBoxLayout->setContentsMargins(QMargins());
+    centralWidgetVBoxLayout->setMargin(0);
     centralWidgetVBoxLayout->setSpacing(0);
 
     centralWidget->setLayout(centralWidgetVBoxLayout);

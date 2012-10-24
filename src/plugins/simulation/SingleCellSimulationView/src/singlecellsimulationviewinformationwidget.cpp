@@ -30,8 +30,10 @@ SingleCellSimulationViewInformationWidget::SingleCellSimulationViewInformationWi
 
     mGui->setupUi(this);
 
-//---GRY--- ADD A WIDGET, JUST FOR TESTING PURPOSES...
-mGui->layout->addWidget(new Core::CollapsableWidget(this));
+//---GRY--- THE BELOW IS JUST FOR TESTING PURPOSES...
+Core::CollapsableWidget *collapsableWidget = new Core::CollapsableWidget("Test", 0, this);
+
+mGui->layout->addWidget(collapsableWidget);
 }
 
 //==============================================================================
