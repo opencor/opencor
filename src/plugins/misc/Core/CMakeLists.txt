@@ -30,6 +30,7 @@ ADD_PLUGIN(Core
 
         src/borderedwidget.cpp
         src/centralwidget.cpp
+        src/collapsablewidget.cpp
         src/commonwidget.cpp
         src/coreplugin.cpp
         src/coreutils.cpp
@@ -50,6 +51,7 @@ ADD_PLUGIN(Core
 
         src/borderedwidget.h
         src/centralwidget.h
+        src/collapsablewidget.h
         src/coreplugin.h
         src/dockwidget.h
         src/filemanager.h
