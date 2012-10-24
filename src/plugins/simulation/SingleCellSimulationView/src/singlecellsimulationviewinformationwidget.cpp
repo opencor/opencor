@@ -1,3 +1,6 @@
+#include "collapsablewidget.h"
+//---GRY--- THE ABOVE IS TO BE REMOVED...
+
 //==============================================================================
 // Single cell simulation view information widget
 //==============================================================================
@@ -28,7 +31,7 @@ SingleCellSimulationViewInformationWidget::SingleCellSimulationViewInformationWi
     mGui->setupUi(this);
 
 //---GRY--- ADD A WIDGET, JUST FOR TESTING PURPOSES...
-mGui->layout->addWidget(new QWidget(this));
+mGui->layout->addWidget(new Core::CollapsableWidget(this));
 }
 
 //==============================================================================
