@@ -34,7 +34,6 @@ class CORE_EXPORT CollapsableWidget : public QWidget, public CommonWidget
 public:
     explicit CollapsableWidget(const QString &pTitle, QWidget *pBody,
                                QWidget *pParent = 0);
-    explicit CollapsableWidget(const QString &pTitle, QWidget *pParent = 0);
     explicit CollapsableWidget(QWidget *pParent = 0);
 
     QString title() const;
@@ -43,10 +42,15 @@ public:
     QWidget * body() const;
     void setBody(QWidget *pBody);
 
+    void setCollapsed(const bool &pCollapsed);
+    bool isCollapsed() const;
+
 protected:
     virtual QSize sizeHint() const;
 
 private:
+    bool mCollapsed;
+
     QLabel *mTitle;
     QToolButton *mButton;
 
@@ -55,6 +59,11 @@ private:
     QWidget *mBody;
 
     void constructor(const QString &pTitle = QString(), QWidget *pBody = 0);
+
+    void updateGui(const bool &pCollapsed);
+
+private Q_SLOTS:
+    void toggleCollapsableState();
 };
 
 //==============================================================================

@@ -47,22 +47,12 @@ void CollapsableWidget::constructor(const QString &pTitle, QWidget *pBody)
     mTitle->setAlignment(Qt::AlignCenter);
 #endif
 
-    if (pBody) {
-        mButton->setIcon(QIcon(":/oxygen/actions/arrow-down.png"));
-    }
-    else {
-#ifdef Q_WS_MAC
-        mButton->setIcon(QIcon(":/oxygen/actions/arrow-right.png"));
-#else
-        mButton->setIcon(QIcon(":/oxygen/actions/arrow-left.png"));
-#endif
-
-        mButton->setEnabled(false);
-    }
-
     int iconSize = 0.4*mTitle->height();
 
     mButton->setIconSize(QSize(iconSize, iconSize));
+
+    connect(mButton, SIGNAL(clicked()),
+            this, SLOT(toggleCollapsableState()));
 
 #ifdef Q_WS_MAC
     headerLayout->addWidget(mButton);
@@ -77,6 +67,11 @@ void CollapsableWidget::constructor(const QString &pTitle, QWidget *pBody)
     // Create our separator
 
     mSeparator = Core::newLineWidget(this);
+
+    // Update our GUI by showing our widget collapsed or not, depdending on
+    // whether there is a body
+
+    updateGui(!pBody);
 
     // Populate our main layout
 
@@ -103,18 +98,6 @@ CollapsableWidget::CollapsableWidget(const QString &pTitle,
     // Construct our object
 
     constructor(pTitle, pBody);
-}
-
-//==============================================================================
-
-CollapsableWidget::CollapsableWidget(const QString &pTitle,
-                                     QWidget *pParent) :
-    QWidget(pParent),
-    CommonWidget(pParent)
-{
-    // Construct our object
-
-    constructor(pTitle);
 }
 
 //==============================================================================
@@ -172,20 +155,82 @@ void CollapsableWidget::setBody(QWidget *pBody)
     // Set our body
 
     if (pBody != mBody) {
-        if (mBody) {
-            mSeparator->hide();
+        bool bodyBefore = mBody;
 
+        if (mBody)
             layout()->removeWidget(mBody);
-        }
 
         mBody = pBody;
 
         if (pBody) {
-            mSeparator->show();
-
             layout()->addWidget(pBody);
+
+            // Update our GUI, using the previous collapsable state of our
+            // widget, in case there was already a body before, or by asking
+            // it to be uncollapsed now that there is a body
+
+            updateGui(bodyBefore?mCollapsed:false);
+        } else {
+            // There is no body (still or anymore), so collapse ourselves
+
+            updateGui(true);
         }
     }
+}
+
+//==============================================================================
+
+void CollapsableWidget::setCollapsed(const bool &pCollapsed)
+{
+    // Collapse or uncollapse ourselves, if needed
+
+    if (pCollapsed != mCollapsed)
+        updateGui(pCollapsed);
+}
+
+//==============================================================================
+
+bool CollapsableWidget::isCollapsed() const
+{
+    // Return wheter we are collapsed
+
+    return mCollapsed;
+}
+
+//==============================================================================
+
+void CollapsableWidget::updateGui(const bool &pCollapsed)
+{
+    // Update our widget's GUI
+
+    mCollapsed = pCollapsed;
+
+    if (pCollapsed) {
+#ifdef Q_WS_MAC
+        mButton->setIcon(QIcon(":/oxygen/actions/arrow-right.png"));
+#else
+        mButton->setIcon(QIcon(":/oxygen/actions/arrow-left.png"));
+#endif
+    }
+    else {
+        mButton->setIcon(QIcon(":/oxygen/actions/arrow-down.png"));
+    }
+
+    mSeparator->setVisible(!pCollapsed);
+
+    if (mBody)
+        mBody->setVisible(!pCollapsed);
+
+    mButton->setEnabled(mBody);
+}
+
+//==============================================================================
+
+void CollapsableWidget::toggleCollapsableState()
+{
+    // Toggle the collapsable state of our widget and update its GUI
+
+    updateGui(!mCollapsed);
 }
 
 //==============================================================================
