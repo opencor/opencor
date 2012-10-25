@@ -12,7 +12,9 @@
 
 //==============================================================================
 
+class QFrame;
 class QLabel;
+class QToolButton;
 
 //==============================================================================
 
@@ -26,8 +28,10 @@ class CORE_EXPORT CollapsableWidget : public Widget
     Q_OBJECT
 
 public:
-    explicit CollapsableWidget(const QString &pTitle = QString(),
-                               QWidget *pBody = 0, QWidget *pParent = 0);
+    explicit CollapsableWidget(const QString &pTitle, QWidget *pBody,
+                               QWidget *pParent = 0);
+    explicit CollapsableWidget(const QString &pTitle, QWidget *pParent = 0);
+    explicit CollapsableWidget(QWidget *pParent = 0);
 
     QString title() const;
     void setTitle(const QString &pTitle);
@@ -37,7 +41,13 @@ public:
 
 private:
     QLabel *mTitle;
+    QToolButton *mButton;
+
+    QFrame *mSeparator;
+
     QWidget *mBody;
+
+    void constructor(const QString &pTitle = QString(), QWidget *pBody = 0);
 };
 
 //==============================================================================
