@@ -35,8 +35,8 @@ SingleCellSimulationViewInformationWidget::SingleCellSimulationViewInformationWi
 
 //---GRY--- THE BELOW IS JUST FOR TESTING PURPOSES...
 Core::CollapsableWidget *collapsableWidget1 = new Core::CollapsableWidget("Collapsable widget #1", new QCalendarWidget(this), this);
-Core::CollapsableWidget *collapsableWidget2 = new Core::CollapsableWidget("Collapsable widget #2", 0, this);
-Core::CollapsableWidget *collapsableWidget3 = new Core::CollapsableWidget("Collapsable widget #3", new QCalendarWidget(this), this);
+Core::CollapsableWidget *collapsableWidget2 = new Core::CollapsableWidget("Collapsable widget #2", 0/*new QCalendarWidget(this)*/, this);
+Core::CollapsableWidget *collapsableWidget3 = new Core::CollapsableWidget("Collapsable widget #3", 0/*new QCalendarWidget(this)*/, this);
 
 mGui->layout->addWidget(collapsableWidget1);
 mGui->layout->addWidget(Core::newLineWidget(this));
@@ -44,7 +44,7 @@ mGui->layout->addWidget(collapsableWidget2);
 mGui->layout->addWidget(Core::newLineWidget(this));
 mGui->layout->addWidget(collapsableWidget3);
 mGui->layout->addWidget(Core::newLineWidget(this));
-mGui->layout->addStretch();
+mGui->layout->addStretch(1);
 }
 
 //==============================================================================

@@ -38,6 +38,7 @@ void CollapsableWidget::constructor(const QString &pTitle, QWidget *pBody)
     QHBoxLayout *headerLayout = new QHBoxLayout(header);
 
     headerLayout->setMargin(0);
+    headerLayout->setSpacing(0);
 
     mTitle = new QLabel(pTitle, header);
     mButton = new QToolButton(header);
