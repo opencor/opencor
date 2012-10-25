@@ -126,26 +126,30 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(CellMLSuppor
     if (rdfTriples.count()) {
         // Create labels to act as headers
 
-        newGridLayout->addWidget(Core::newLabel(newGridWidget,
-                                                tr("Qualifier"),
-                                                1.25, true, false, Qt::AlignCenter),
+        newGridLayout->addWidget(Core::newLabel(tr("Qualifier"),
+                                                1.25, true, false,
+                                                Qt::AlignCenter,
+                                                newGridWidget),
                                  0, 0);
-        newGridLayout->addWidget(Core::newLabel(newGridWidget,
-                                                tr("Resource"),
-                                                1.25, true, false, Qt::AlignCenter),
+        newGridLayout->addWidget(Core::newLabel(tr("Resource"),
+                                                1.25, true, false,
+                                                Qt::AlignCenter,
+                                                newGridWidget),
                                  0, 1);
-        newGridLayout->addWidget(Core::newLabel(newGridWidget,
-                                                tr("Id"),
-                                                1.25, true, false, Qt::AlignCenter),
+        newGridLayout->addWidget(Core::newLabel(tr("Id"),
+                                                1.25, true, false,
+                                                Qt::AlignCenter,
+                                                newGridWidget),
                                  0, 2);
 
         // Number of terms
 
-        newGridLayout->addWidget(Core::newLabel(newGridWidget,
-                                                (rdfTriples.count() == 1)?
+        newGridLayout->addWidget(Core::newLabel((rdfTriples.count() == 1)?
                                                     tr("(1 term)"):
                                                     tr("(%1 terms)").arg(QString::number(rdfTriples.count())),
-                                                1.0, false, true, Qt::AlignCenter),
+                                                1.0, false, true,
+                                                Qt::AlignCenter,
+                                                newGridWidget),
                                  0, 3);
 
         // Add the RDF triples information to our layout
@@ -164,9 +168,10 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(CellMLSuppor
                                             rdfTriple->bioQualifierAsString();
             QString rdfTripleInformation = qualifierAsString+"|"+rdfTriple->resource()+"|"+rdfTriple->id()+"|"+QString::number(++row);
 
-            QLabel *qualifierLabel = Core::newLabelLink(newGridWidget,
-                                                        "<a href=\""+rdfTripleInformation+"\">"+qualifierAsString+"</a>",
-                                                        1.0, false, false, Qt::AlignCenter);
+            QLabel *qualifierLabel = Core::newLabel("<a href=\""+rdfTripleInformation+"\">"+qualifierAsString+"</a>",
+                                                    1.0, false, false,
+                                                    Qt::AlignCenter,
+                                                    newGridWidget);
 
             connect(qualifierLabel, SIGNAL(linkActivated(const QString &)),
                     this, SLOT(lookupQualifier(const QString &)));
@@ -175,9 +180,10 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(CellMLSuppor
 
             // Resource
 
-            QLabel *resourceLabel = Core::newLabelLink(newGridWidget,
-                                                       "<a href=\""+rdfTripleInformation+"\">"+rdfTriple->resource()+"</a>",
-                                                       1.0, false, false, Qt::AlignCenter);
+            QLabel *resourceLabel = Core::newLabel("<a href=\""+rdfTripleInformation+"\">"+rdfTriple->resource()+"</a>",
+                                                   1.0, false, false,
+                                                   Qt::AlignCenter,
+                                                   newGridWidget);
 
             resourceLabel->setAccessibleDescription("http://identifiers.org/"+rdfTriple->resource()+"/?redirect=true");
             resourceLabel->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -191,9 +197,10 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(CellMLSuppor
 
             // Id
 
-            QLabel *idLabel = Core::newLabelLink(newGridWidget,
-                                                 "<a href=\""+rdfTripleInformation+"\">"+rdfTriple->id()+"</a>",
-                                                 1.0, false, false, Qt::AlignCenter);
+            QLabel *idLabel = Core::newLabel("<a href=\""+rdfTripleInformation+"\">"+rdfTriple->id()+"</a>",
+                                             1.0, false, false,
+                                             Qt::AlignCenter,
+                                             newGridWidget);
 
             connect(idLabel, SIGNAL(customContextMenuRequested(const QPoint &)),
                     this, SLOT(showCustomContextMenu(const QPoint &)));
@@ -248,9 +255,10 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(CellMLSuppor
     } else {
         // No RDF triples, so...
 
-        newGridLayout->addWidget(Core::newLabel(newGridWidget,
-                                                tr("There is no metadata associated with the current CellML element..."),
-                                                1.25, false, false, Qt::AlignCenter),
+        newGridLayout->addWidget(Core::newLabel(tr("There is no metadata associated with the current CellML element..."),
+                                                1.25, false, false,
+                                                Qt::AlignCenter,
+                                                newGridWidget),
                                  0, 0);
     }
 

@@ -71,7 +71,7 @@ void PluginDelegate::paint(QPainter *pPainter,
 
 //==============================================================================
 
-PluginsWindow::PluginsWindow(QWidget *pParent, PluginManager *pPluginManager) :
+PluginsWindow::PluginsWindow(PluginManager *pPluginManager, QWidget *pParent) :
     QDialog(pParent),
     CommonWidget(pParent),
     mGui(new Ui::PluginsWindow),

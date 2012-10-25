@@ -176,8 +176,8 @@ static const int DefaultZoomLevel = 10;
 
 //==============================================================================
 
-HelpWidget::HelpWidget(QWidget *pParent, QHelpEngine *pHelpEngine,
-                       const QUrl &pHomePage) :
+HelpWidget::HelpWidget(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
+                       QWidget *pParent) :
     QWebView(pParent),
     CommonWidget(pParent),
     mHelpEngine(pHelpEngine),

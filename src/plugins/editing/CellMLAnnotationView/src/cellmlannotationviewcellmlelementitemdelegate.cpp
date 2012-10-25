@@ -12,8 +12,8 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewCellmlElementItemDelegate::CellmlAnnotationViewCellmlElementItemDelegate(QWidget *pParent,
-                                                                                             QStandardItemModel *pDataModel) :
+CellmlAnnotationViewCellmlElementItemDelegate::CellmlAnnotationViewCellmlElementItemDelegate(QStandardItemModel *pDataModel,
+                                                                                             QWidget *pParent) :
     QStyledItemDelegate(pParent),
     mCellmlDataModel(pDataModel)
 {

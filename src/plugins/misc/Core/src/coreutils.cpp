@@ -167,7 +167,7 @@ QString nativeCanonicalFileName(const QString &pFileName)
 
 //==============================================================================
 
-QFrame * newLineWidget(QWidget *pParent, const bool &pHorizontal)
+QFrame * newLineWidget(const bool &pHorizontal, QWidget *pParent)
 {
     // Return a 'real' line widget, i.e. one which is 1 pixel wide, using a
     // QFrame widget
@@ -230,12 +230,20 @@ QFrame * newLineWidget(QWidget *pParent, const bool &pHorizontal)
 
 //==============================================================================
 
-QLabel * newLabel(QWidget *pParent, const QString &pText,
-                  const double &pFontPercentage,
-                  const bool &pBold, const bool &pItalic,
-                  const Qt::Alignment &pAlignment)
+QFrame * newLineWidget(QWidget *pParent)
 {
-    // Create and return a label, allowing to set some of its properties
+    // Create and return a 'real' horizontal line widget
+
+    return newLineWidget(true, pParent);
+}
+
+//==============================================================================
+
+QLabel * newLabel(const QString &pText, const double &pFontPercentage,
+                  const bool &pBold, const bool &pItalic,
+                  const Qt::Alignment &pAlignment, QWidget *pParent)
+{
+    // Create and return a label, after having set some of its properties
 
     QLabel *res = new QLabel(pText, pParent);
 
@@ -248,29 +256,57 @@ QLabel * newLabel(QWidget *pParent, const QString &pText,
     res->setAlignment(pAlignment);
     res->setFont(font);
 
-    return res;
-}
-
-//==============================================================================
-
-QLabel * newLabelLink(QWidget *pParent, const QString &pText,
-                      const double &pFontPercentage,
-                      const bool &pBold, const bool &pItalic,
-                      const Qt::Alignment &pAlignment)
-{
-    // Create a label link, allowing to set set some of its properties
-
-    QLabel *res = newLabel(pParent, pText, pFontPercentage,
-                           pBold, pItalic, pAlignment);
-
     // Prevent Qt from associating a context menu with the label (something
     // which it does automatically when a label is a link...)
 
     res->setContextMenuPolicy(Qt::NoContextMenu);
 
-    // Return our label link
+    // Return our link
 
     return res;
+}
+
+//==============================================================================
+
+QLabel * newLabel(const QString &pText, const double &pFontPercentage,
+                  const bool &pBold, const bool &pItalic, QWidget *pParent)
+{
+    // Create and return a label
+
+    return newLabel(pText, pFontPercentage, pBold, pItalic,
+                    Qt::AlignLeft|Qt::AlignVCenter, pParent);
+}
+
+//==============================================================================
+
+QLabel * newLabel(const QString &pText, const double &pFontPercentage,
+                  const bool &pBold, QWidget *pParent)
+{
+    // Create and return a label
+
+    return newLabel(pText, pFontPercentage, pBold, false,
+                    Qt::AlignLeft|Qt::AlignVCenter, pParent);
+}
+
+//==============================================================================
+
+QLabel * newLabel(const QString &pText, const double &pFontPercentage,
+                  QWidget *pParent)
+{
+    // Create and return a label
+
+    return newLabel(pText, pFontPercentage, false, false,
+                    Qt::AlignLeft|Qt::AlignVCenter, pParent);
+}
+
+//==============================================================================
+
+QLabel * newLabel(const QString &pText, QWidget *pParent)
+{
+    // Create and return a label
+
+    return newLabel(pText, 1.0, false, false, Qt::AlignLeft|Qt::AlignVCenter,
+                    pParent);
 }
 
 //==============================================================================

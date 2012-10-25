@@ -277,7 +277,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
 
     // Add our qualifier widget to our main layout
 
-    newFormLayout->addRow(Core::newLabel(newFormWidget, tr("Qualifier:"), 1.0, true),
+    newFormLayout->addRow(Core::newLabel(tr("Qualifier:"), 1.0, true, newFormWidget),
                           qualifierWidget);
 
     // Add our term field
@@ -328,7 +328,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
 
     // Add our term widget to our main layout
 
-    newFormLayout->addRow(Core::newLabel(newFormWidget, tr("Term:"), 1.0, true),
+    newFormLayout->addRow(Core::newLabel(tr("Term:"), 1.0, true, newFormWidget),
                           termWidget);
 
     // Reset the tab order from our parent's CellML list's tree view
@@ -468,26 +468,30 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
     if (pItems.count()) {
         // Create labels to act as headers
 
-        newGridLayout->addWidget(Core::newLabel(newGridWidget,
-                                                tr("Name"),
-                                                1.25, true, false, Qt::AlignCenter),
+        newGridLayout->addWidget(Core::newLabel(tr("Name"),
+                                                1.25, true, false,
+                                                Qt::AlignCenter,
+                                                newGridWidget),
                                  0, 0);
-        newGridLayout->addWidget(Core::newLabel(newGridWidget,
-                                                tr("Resource"),
-                                                1.25, true, false, Qt::AlignCenter),
+        newGridLayout->addWidget(Core::newLabel(tr("Resource"),
+                                                1.25, true, false,
+                                                Qt::AlignCenter,
+                                                newGridWidget),
                                  0, 1);
-        newGridLayout->addWidget(Core::newLabel(newGridWidget,
-                                                tr("Id"),
-                                                1.25, true, false, Qt::AlignCenter),
+        newGridLayout->addWidget(Core::newLabel(tr("Id"),
+                                                1.25, true, false,
+                                                Qt::AlignCenter,
+                                                newGridWidget),
                                  0, 2);
 
         // Number of terms
 
-        newGridLayout->addWidget(Core::newLabel(newGridWidget,
-                                                (pItems.count() == 1)?
+        newGridLayout->addWidget(Core::newLabel((pItems.count() == 1)?
                                                     tr("(1 term)"):
                                                     tr("(%1 terms)").arg(QString::number(pItems.count())),
-                                                1.0, false, true, Qt::AlignCenter),
+                                                1.0, false, true,
+                                                Qt::AlignCenter,
+                                                newGridWidget),
                                  0, 3);
 
         // Add the items
@@ -497,18 +501,20 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
         foreach (const Item &item, pItems) {
             // Name
 
-            newGridLayout->addWidget(Core::newLabel(newGridWidget,
-                                                    item.name,
-                                                    1.0, false, false, Qt::AlignCenter),
+            newGridLayout->addWidget(Core::newLabel(item.name,
+                                                    1.0, false, false,
+                                                    Qt::AlignCenter,
+                                                    newGridWidget),
                                      ++row, 0);
 
             // Resource
 
             QString itemInformation = item.resource+"|"+item.id;
 
-            QLabel *resourceLabel = Core::newLabelLink(newGridWidget,
-                                                       "<a href=\""+itemInformation+"\">"+item.resource+"</a>",
-                                                       1.0, false, false, Qt::AlignCenter);
+            QLabel *resourceLabel = Core::newLabel("<a href=\""+itemInformation+"\">"+item.resource+"</a>",
+                                                   1.0, false, false,
+                                                   Qt::AlignCenter,
+                                                   newGridWidget);
 
             resourceLabel->setAccessibleDescription("http://identifiers.org/"+item.resource+"/?redirect=true");
             resourceLabel->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -522,9 +528,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 
             // Id
 
-            QLabel *idLabel = Core::newLabelLink(newGridWidget,
-                                                 "<a href=\""+itemInformation+"\">"+item.id+"</a>",
-                                                 1.0, false, false, Qt::AlignCenter);
+            QLabel *idLabel = Core::newLabel("<a href=\""+itemInformation+"\">"+item.id+"</a>",
+                                             1.0, false, false,
+                                             Qt::AlignCenter,
+                                             newGridWidget);
 
             idLabel->setAccessibleDescription("http://identifiers.org/"+item.resource+"/"+item.id+"/?profile=most_reliable&redirect=true");
             idLabel->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -591,8 +598,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
             labelText = tr("<strong>Error:</strong> ")+errorMsg+dots;
         }
 
-        newGridLayout->addWidget(Core::newLabel(newGridWidget, labelText,
-                                                1.25, false, false, Qt::AlignCenter),
+        newGridLayout->addWidget(Core::newLabel(labelText,
+                                                1.25, false, false,
+                                                Qt::AlignCenter,
+                                                newGridWidget),
                                  0, 0);
 
         // Pretend that we want to look nothing up, if needed

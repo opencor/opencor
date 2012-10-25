@@ -34,9 +34,9 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(QWidget *pParent,
-                                                       CellMLAnnotationViewPlugin *pPluginParent,
-                                                       const QString &pFileName) :
+CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(CellMLAnnotationViewPlugin *pPluginParent,
+                                                       const QString &pFileName,
+                                                       QWidget *pParent) :
     QSplitter(pParent),
     CommonWidget(pParent),
     mGui(new Ui::CellmlAnnotationViewWidget),

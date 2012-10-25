@@ -38,8 +38,8 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     // Create our unsupported metadata message widget
 
-    mUnsupportedMetadataMsg = new Core::UserMessageWidget(pParent,
-                                                          ":/oxygen/actions/help-about.png");
+    mUnsupportedMetadataMsg = new Core::UserMessageWidget(":/oxygen/actions/help-about.png",
+                                                          pParent);
     mBorderedUnsupportedMetadataMsg = new Core::BorderedWidget(mUnsupportedMetadataMsg,
                                                                false, true, true, false);
 

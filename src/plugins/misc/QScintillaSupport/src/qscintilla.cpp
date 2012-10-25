@@ -21,9 +21,8 @@ namespace QScintillaSupport {
 
 //==============================================================================
 
-QScintilla::QScintilla(QWidget *pParent, const QString &pContents,
-                       const bool &pReadOnly, QsciLexer *pLexer) :
-    QsciScintilla(pParent)
+void QScintilla::constructor(const QString &pContents, const bool &pReadOnly,
+                             QsciLexer *pLexer)
 {
     // Remove the frame around our Scintilla editor
 
@@ -63,6 +62,28 @@ QScintilla::QScintilla(QWidget *pParent, const QString &pContents,
 
     setText(pContents);
     setReadOnly(pReadOnly);
+}
+
+//==============================================================================
+
+QScintilla::QScintilla(const QString &pContents, const bool &pReadOnly,
+                       QsciLexer *pLexer, QWidget *pParent) :
+    QsciScintilla(pParent)
+{
+    // Construct our object
+
+    constructor(pContents, pReadOnly, pLexer);
+}
+
+//==============================================================================
+
+QScintilla::QScintilla(const QString &pContents, const bool &pReadOnly,
+                       QWidget *pParent) :
+    QsciScintilla(pParent)
+{
+    // Construct our object
+
+    constructor(pContents, pReadOnly);
 }
 
 //==============================================================================

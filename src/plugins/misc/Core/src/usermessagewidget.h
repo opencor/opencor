@@ -32,9 +32,9 @@ class CORE_EXPORT UserMessageWidget : public Widget
     Q_OBJECT
 
 public:
-    explicit UserMessageWidget(QWidget *pParent,
-                               const QString &pIcon = QString(),
-                               const QString &pMessage = QString());
+    explicit UserMessageWidget(const QString &pIcon, const QString &pMessage,
+                               QWidget *pParent = 0);
+    explicit UserMessageWidget(const QString &pIcon, QWidget *pParent = 0);
     ~UserMessageWidget();
 
     void setIcon(const QString &pIcon);
@@ -47,6 +47,9 @@ private:
 
     QString mIcon;
     QString mMessage;
+
+    void constructor(const QString &pIcon,
+                     const QString &pMessage = QString());
 
     void updateLabel();
 };

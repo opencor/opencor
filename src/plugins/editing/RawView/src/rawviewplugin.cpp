@@ -66,7 +66,7 @@ QWidget * RawViewPlugin::viewWidget(const QString &pFileName)
     // Create a new view widget, if none could be retrieved
 
     if (!res) {
-        res = new RawViewWidget(mMainWindow, pFileName);
+        res = new RawViewWidget(pFileName, mMainWindow);
 
         // Keep track of our new view widget
 

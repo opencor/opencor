@@ -161,8 +161,10 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
             file.close();
         }
 
-        mBorderedEditor = new Core::BorderedWidget(new QScintillaSupport::QScintilla(parentWidget(), fileContents, fileIsWritable,
-                                                                                     new QsciLexerXML(this)),
+        mBorderedEditor = new Core::BorderedWidget(new QScintillaSupport::QScintilla(fileContents,
+                                                                                     fileIsWritable,
+                                                                                     new QsciLexerXML(this),
+                                                                                     parentWidget()),
                                                    true, false, false, false);
 
         // Keep track of our bordered editor and add it to ourselves

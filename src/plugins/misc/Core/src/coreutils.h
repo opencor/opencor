@@ -37,19 +37,26 @@ void CORE_EXPORT setFocusTo(QWidget *pWidget);
 
 QString CORE_EXPORT nativeCanonicalFileName(const QString &pFileName);
 
-QFrame CORE_EXPORT * newLineWidget(QWidget *pParent,
-                                   const bool &pHorizontal = true);
+QFrame CORE_EXPORT * newLineWidget(const bool &pHorizontal,
+                                   QWidget *pParent = 0);
+QFrame CORE_EXPORT * newLineWidget(QWidget *pParent = 0);
 
-QLabel CORE_EXPORT * newLabel(QWidget *pParent, const QString &pText,
-                              const double &pFontPercentage = 1.0,
-                              const bool &pBold = false,
-                              const bool &pItalic = false,
-                              const Qt::Alignment &pAlignment = Qt::AlignLeft|Qt::AlignVCenter);
-QLabel CORE_EXPORT * newLabelLink(QWidget *pParent, const QString &pText,
-                                  const double &pFontPercentage = 1.0,
-                                  const bool &pBold = false,
-                                  const bool &pItalic = false,
-                                  const Qt::Alignment &pAlignment = Qt::AlignLeft|Qt::AlignVCenter);
+QLabel CORE_EXPORT * newLabel(const QString &pText,
+                              const double &pFontPercentage,
+                              const bool &pBold, const bool &pItalic,
+                              const Qt::Alignment &pAlignment,
+                              QWidget *pParent = 0);
+QLabel CORE_EXPORT * newLabel(const QString &pText,
+                              const double &pFontPercentage,
+                              const bool &pBold, const bool &pItalic,
+                              QWidget *pParent = 0);
+QLabel CORE_EXPORT * newLabel(const QString &pText,
+                              const double &pFontPercentage,
+                              const bool &pBold, QWidget *pParent = 0);
+QLabel CORE_EXPORT * newLabel(const QString &pText,
+                              const double &pFontPercentage,
+                              QWidget *pParent = 0);
+QLabel CORE_EXPORT * newLabel(const QString &pText, QWidget *pParent = 0);
 
 QString CORE_EXPORT copyright();
 

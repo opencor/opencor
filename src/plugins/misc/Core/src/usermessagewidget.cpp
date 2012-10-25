@@ -15,14 +15,16 @@ namespace Core {
 
 //==============================================================================
 
-UserMessageWidget::UserMessageWidget(QWidget *pParent,
-                                     const QString &pIcon,
-                                     const QString &pMessage) :
-    Widget(pParent),
-    mGui(new Ui::UserMessageWidget),
-    mIcon(pIcon),
-    mMessage(pMessage)
+void UserMessageWidget::constructor(const QString &pIcon,
+                                    const QString &pMessage)
 {
+    // Some initialisations
+
+    mGui = new Ui::UserMessageWidget();
+
+    mIcon = pIcon;
+    mMessage = pMessage;
+
     // Set up the GUI
 
     mGui->setupUi(this);
@@ -43,6 +45,28 @@ UserMessageWidget::UserMessageWidget(QWidget *pParent,
     // 'Initialise' the label
 
     updateLabel();
+}
+
+//==============================================================================
+
+UserMessageWidget::UserMessageWidget(const QString &pIcon,
+                                     const QString &pMessage,
+                                     QWidget *pParent) :
+    Widget(pParent)
+{
+    // Construct our object
+
+    constructor(pIcon, pMessage);
+}
+
+//==============================================================================
+
+UserMessageWidget::UserMessageWidget(const QString &pIcon, QWidget *pParent) :
+    Widget(pParent)
+{
+    // Construct our object
+
+    constructor(pIcon);
 }
 
 //==============================================================================
