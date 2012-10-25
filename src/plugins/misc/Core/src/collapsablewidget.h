@@ -7,8 +7,12 @@
 
 //==============================================================================
 
+#include "commonwidget.h"
 #include "coreglobal.h"
-#include "widget.h"
+
+//==============================================================================
+
+#include <QWidget>
 
 //==============================================================================
 
@@ -23,7 +27,7 @@ namespace Core {
 
 //==============================================================================
 
-class CORE_EXPORT CollapsableWidget : public Widget
+class CORE_EXPORT CollapsableWidget : public QWidget, public CommonWidget
 {
     Q_OBJECT
 
@@ -38,6 +42,9 @@ public:
 
     QWidget * body() const;
     void setBody(QWidget *pBody);
+
+protected:
+    virtual QSize sizeHint() const;
 
 private:
     QLabel *mTitle;

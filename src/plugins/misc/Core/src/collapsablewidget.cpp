@@ -29,7 +29,7 @@ void CollapsableWidget::constructor(const QString &pTitle, QWidget *pBody)
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
 
     mainLayout->setMargin(0);
-//    mainLayout->setSpacing(0);
+    mainLayout->setSpacing(0);
 
     // Create our header
 
@@ -62,9 +62,6 @@ void CollapsableWidget::constructor(const QString &pTitle, QWidget *pBody)
     int iconSize = 0.4*mTitle->height();
 
     mButton->setIconSize(QSize(iconSize, iconSize));
-
-//    mButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-//    mButton->set
 
 #ifdef Q_WS_MAC
     headerLayout->addWidget(mButton);
@@ -99,7 +96,8 @@ void CollapsableWidget::constructor(const QString &pTitle, QWidget *pBody)
 
 CollapsableWidget::CollapsableWidget(const QString &pTitle,
                                      QWidget *pBody, QWidget *pParent) :
-    Widget(pParent)
+    QWidget(pParent),
+    CommonWidget(pParent)
 {
     // Construct our object
 
@@ -110,7 +108,8 @@ CollapsableWidget::CollapsableWidget(const QString &pTitle,
 
 CollapsableWidget::CollapsableWidget(const QString &pTitle,
                                      QWidget *pParent) :
-    Widget(pParent)
+    QWidget(pParent),
+    CommonWidget(pParent)
 {
     // Construct our object
 
@@ -120,11 +119,21 @@ CollapsableWidget::CollapsableWidget(const QString &pTitle,
 //==============================================================================
 
 CollapsableWidget::CollapsableWidget(QWidget *pParent) :
-    Widget(pParent)
+    QWidget(pParent),
+    CommonWidget(pParent)
 {
     // Construct our object
 
     constructor();
+}
+
+//==============================================================================
+
+QSize CollapsableWidget::sizeHint() const
+{
+    // Suggest a default size for our collapsable widget
+
+    return defaultSize(0);
 }
 
 //==============================================================================
