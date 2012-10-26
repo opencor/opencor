@@ -9,15 +9,13 @@
 
 #include "commonwidget.h"
 #include "coreglobal.h"
-
-//==============================================================================
-
-#include <QWidget>
+#include "widget.h"
 
 //==============================================================================
 
 class QFrame;
 class QLabel;
+class QScrollArea;
 class QToolButton;
 
 //==============================================================================
@@ -27,7 +25,7 @@ namespace Core {
 
 //==============================================================================
 
-class CORE_EXPORT CollapsableWidget : public QWidget, public CommonWidget
+class CORE_EXPORT CollapsableWidget : public Widget
 {
     Q_OBJECT
 
@@ -45,9 +43,6 @@ public:
     void setCollapsed(const bool &pCollapsed);
     bool isCollapsed() const;
 
-protected:
-    virtual QSize sizeHint() const;
-
 private:
     bool mCollapsed;
 
@@ -56,6 +51,7 @@ private:
 
     QFrame *mSeparator;
 
+    QScrollArea *mScrollArea;
     QWidget *mBody;
 
     void constructor(const QString &pTitle = QString(), QWidget *pBody = 0);

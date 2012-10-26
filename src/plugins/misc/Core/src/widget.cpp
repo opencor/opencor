@@ -11,9 +11,19 @@ namespace Core {
 
 //==============================================================================
 
+Widget::Widget(const QSize &pSizeHint, QWidget *pParent) :
+    QWidget(pParent),
+    CommonWidget(pParent),
+    mSizeHint(pSizeHint)
+{
+}
+
+//==============================================================================
+
 Widget::Widget(QWidget *pParent) :
     QWidget(pParent),
-    CommonWidget(pParent)
+    CommonWidget(pParent),
+    mSizeHint(defaultSize(0.15))
 {
 }
 
@@ -21,9 +31,12 @@ Widget::Widget(QWidget *pParent) :
 
 QSize Widget::sizeHint() const
 {
-    // Suggest a default size for the widget
+    // Suggest our default size for the widget
 
-    return defaultSize(0.15);
+    if (mSizeHint.isValid())
+        return mSizeHint;
+    else
+        return QWidget::sizeHint();
 }
 
 //==============================================================================

@@ -9,6 +9,7 @@
 
 #include <QLabel>
 #include <QLayout>
+#include <QScrollArea>
 #include <QToolButton>
 
 //==============================================================================
@@ -68,13 +69,22 @@ void CollapsableWidget::constructor(const QString &pTitle, QWidget *pBody)
 
     mSeparator = Core::newLineWidget(this);
 
+    // Create our scroll area widget
+    // Note: the idea is to have our the body of our collapsable widget within
+    //       a scroll area, this in case the body is too wide...
+
+    mScrollArea = new QScrollArea(this);
+
+    mScrollArea->setFrameStyle(QFrame::NoFrame);
+
     // Populate our main layout
 
     mainLayout->addWidget(header);
     mainLayout->addWidget(mSeparator);
+    mainLayout->addWidget(mScrollArea);
 
     if (pBody)
-        mainLayout->addWidget(pBody);
+        mScrollArea->setWidget(pBody);
 
     // Apply the main layout to ourselves
 
@@ -90,8 +100,7 @@ void CollapsableWidget::constructor(const QString &pTitle, QWidget *pBody)
 
 CollapsableWidget::CollapsableWidget(const QString &pTitle,
                                      QWidget *pBody, QWidget *pParent) :
-    QWidget(pParent),
-    CommonWidget(pParent)
+    Widget(QSize(), pParent)
 {
     // Construct our object
 
@@ -101,21 +110,11 @@ CollapsableWidget::CollapsableWidget(const QString &pTitle,
 //==============================================================================
 
 CollapsableWidget::CollapsableWidget(QWidget *pParent) :
-    QWidget(pParent),
-    CommonWidget(pParent)
+    Widget(QSize(), pParent)
 {
     // Construct our object
 
     constructor();
-}
-
-//==============================================================================
-
-QSize CollapsableWidget::sizeHint() const
-{
-    // Suggest a default size for our collapsable widget
-
-    return defaultSize(0);
 }
 
 //==============================================================================
@@ -155,13 +154,10 @@ void CollapsableWidget::setBody(QWidget *pBody)
     if (pBody != mBody) {
         bool bodyBefore = mBody;
 
-        if (mBody)
-            layout()->removeWidget(mBody);
-
         mBody = pBody;
 
         if (pBody) {
-            layout()->addWidget(pBody);
+            mScrollArea->setWidget(pBody);
 
             // Update our GUI, using the previous collapsable state of our
             // widget, in case there was already a body before, or by asking
@@ -203,6 +199,8 @@ void CollapsableWidget::updateGui(const bool &pCollapsed)
 
     mCollapsed = pCollapsed;
 
+    //  Customise some widgets
+
     if (pCollapsed) {
 #ifdef Q_WS_MAC
         mButton->setIcon(QIcon(":/oxygen/actions/arrow-right.png"));
@@ -214,12 +212,14 @@ void CollapsableWidget::updateGui(const bool &pCollapsed)
         mButton->setIcon(QIcon(":/oxygen/actions/arrow-down.png"));
     }
 
+    // Enable/disable some widgets
+
     mButton->setEnabled(mBody);
 
-    mSeparator->setVisible(!pCollapsed);
+    // Show/hide some widgets
 
-    if (mBody)
-        mBody->setVisible(!pCollapsed);
+    mSeparator->setVisible(!pCollapsed);
+    mScrollArea->setVisible(!pCollapsed);
 }
 
 //==============================================================================
