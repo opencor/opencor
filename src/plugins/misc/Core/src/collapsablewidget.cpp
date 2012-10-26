@@ -75,8 +75,6 @@ void CollapsableWidget::constructor(const QString &pTitle, QWidget *pBody)
 
     if (pBody)
         mainLayout->addWidget(pBody);
-    else
-        mSeparator->hide();
 
     // Apply the main layout to ourselves
 
@@ -216,12 +214,12 @@ void CollapsableWidget::updateGui(const bool &pCollapsed)
         mButton->setIcon(QIcon(":/oxygen/actions/arrow-down.png"));
     }
 
+    mButton->setEnabled(mBody);
+
     mSeparator->setVisible(!pCollapsed);
 
     if (mBody)
         mBody->setVisible(!pCollapsed);
-
-    mButton->setEnabled(mBody);
 }
 
 //==============================================================================
