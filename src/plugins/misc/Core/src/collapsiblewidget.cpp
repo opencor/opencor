@@ -216,6 +216,10 @@ void CollapsibleWidget::resizeEvent(QResizeEvent *pEvent)
             newScrollAreaHeight += mScrollArea->horizontalScrollBar()->height();
 
         // Update our height and that of our scroll area widget
+        // Note: our height must be updated after that of our scroll area
+        //       widget since our initial height will be determined by that of
+        //       the scroll area (hence, also, we don't update our height the
+        //       very first time round)...
 
         int scrollAreaHeightDiff = newScrollAreaHeight-mScrollArea->height();
 
