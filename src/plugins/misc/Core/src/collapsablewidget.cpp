@@ -75,6 +75,7 @@ void CollapsableWidget::constructor(const QString &pTitle, QWidget *pBody)
 
     mScrollArea = new QScrollArea(this);
 
+    mScrollArea->setAlignment(Qt::AlignCenter);
     mScrollArea->setFrameStyle(QFrame::NoFrame);
 
     // Populate our main layout
