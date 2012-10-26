@@ -68,11 +68,6 @@ void CollapsableWidget::constructor(const QString &pTitle, QWidget *pBody)
 
     mSeparator = Core::newLineWidget(this);
 
-    // Update our GUI by showing our widget collapsed or not, depdending on
-    // whether there is a body
-
-    updateGui(!pBody);
-
     // Populate our main layout
 
     mainLayout->addWidget(header);
@@ -86,6 +81,11 @@ void CollapsableWidget::constructor(const QString &pTitle, QWidget *pBody)
     // Apply the main layout to ourselves
 
     setLayout(mainLayout);
+
+    // Update our GUI by showing our widget collapsed or not, depdending on
+    // whether there is a body
+
+    updateGui(!pBody);
 }
 
 //==============================================================================
