@@ -49,6 +49,7 @@ protected:
 private:
     bool mCollapsed;
 
+    QWidget *mHeader;
     QLabel *mTitle;
     QToolButton *mButton;
 
@@ -57,7 +58,8 @@ private:
     QScrollArea *mScrollArea;
     QWidget *mBody;
 
-    int mFirstHeightUpdate;
+    bool mFirstHeightUpdate;
+    int mOldHeight;
 
     void constructor(const QString &pTitle = QString(), QWidget *pBody = 0);
 

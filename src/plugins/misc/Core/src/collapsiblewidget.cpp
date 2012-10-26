@@ -27,6 +27,7 @@ void CollapsibleWidget::constructor(const QString &pTitle, QWidget *pBody)
     mBody = pBody;
 
     mFirstHeightUpdate = true;
+    mOldHeight = 0;
 
     // Create a vertical layout which will contain our header and body
 
@@ -37,15 +38,15 @@ void CollapsibleWidget::constructor(const QString &pTitle, QWidget *pBody)
 
     // Create our header
 
-    QWidget *header = new QWidget(this);
+    mHeader = new QWidget(this);
 
-    QHBoxLayout *headerLayout = new QHBoxLayout(header);
+    QHBoxLayout *headerLayout = new QHBoxLayout(mHeader);
 
     headerLayout->setMargin(0);
     headerLayout->setSpacing(0);
 
-    mTitle = new QLabel(pTitle, header);
-    mButton = new QToolButton(header);
+    mTitle = new QLabel(pTitle, mHeader);
+    mButton = new QToolButton(mHeader);
 
 #ifdef Q_WS_MAC
     mTitle->setAlignment(Qt::AlignCenter);
@@ -66,7 +67,7 @@ void CollapsibleWidget::constructor(const QString &pTitle, QWidget *pBody)
     headerLayout->addWidget(mButton);
 #endif
 
-    header->setLayout(headerLayout);
+    mHeader->setLayout(headerLayout);
 
     // Create our separator
 
@@ -83,7 +84,7 @@ void CollapsibleWidget::constructor(const QString &pTitle, QWidget *pBody)
 
     // Populate our main layout
 
-    mainLayout->addWidget(header);
+    mainLayout->addWidget(mHeader);
     mainLayout->addWidget(mSeparator);
     mainLayout->addWidget(mScrollArea);
 
@@ -205,7 +206,7 @@ void CollapsibleWidget::resizeEvent(QResizeEvent *pEvent)
 
     // Resize our height, if needed
 
-    if (mBody) {
+    if (!mCollapsed && mBody) {
         // Determine what the height of our scroll area widget should be
 
         int newScrollAreaHeight = mBody->height();
@@ -261,6 +262,16 @@ void CollapsibleWidget::updateGui(const bool &pCollapsed)
 
     mSeparator->setVisible(!pCollapsed);
     mScrollArea->setVisible(!pCollapsed);
+
+    if (!mFirstHeightUpdate) {
+        if (pCollapsed) {
+            mOldHeight = height();
+
+            setFixedHeight(mHeader->height());
+        } else if (mOldHeight) {
+            setFixedHeight(mOldHeight);//mTitle->height()+mSeparator->height()+mBody->height()+20);
+        }
+    }
 }
 
 //==============================================================================
