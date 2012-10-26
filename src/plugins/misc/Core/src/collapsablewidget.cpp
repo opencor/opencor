@@ -10,6 +10,7 @@
 #include <QLabel>
 #include <QLayout>
 #include <QScrollArea>
+#include <QScrollBar>
 #include <QToolButton>
 
 //==============================================================================
@@ -24,6 +25,8 @@ void CollapsableWidget::constructor(const QString &pTitle, QWidget *pBody)
     // Some initialisations
 
     mBody = pBody;
+
+    mFirstHeightUpdate = true;
 
     // Create a vertical layout which will contain our header and body
 
@@ -190,6 +193,39 @@ bool CollapsableWidget::isCollapsed() const
     // Return wheter we are collapsed
 
     return mCollapsed;
+}
+
+//==============================================================================
+
+void CollapsableWidget::resizeEvent(QResizeEvent *pEvent)
+{
+    // Default handling of the event
+
+    Widget::resizeEvent(pEvent);
+
+    // Resize our height, if needed
+
+    if (mBody) {
+        // Determine what the height of our scroll area widget should be
+
+        int newScrollAreaHeight = mBody->height();
+
+        if (mScrollArea->width() < mBody->width())
+            // We need to account for the horizontal scroll bar
+
+            newScrollAreaHeight += mScrollArea->horizontalScrollBar()->height();
+
+        // Update our height and that of our scroll area widget
+
+        int scrollAreaHeightDiff = newScrollAreaHeight-mScrollArea->height();
+
+        mScrollArea->setFixedHeight(newScrollAreaHeight);
+
+        if (mFirstHeightUpdate)
+            mFirstHeightUpdate = false;
+        else
+            setFixedHeight(height()+scrollAreaHeightDiff);
+    }
 }
 
 //==============================================================================

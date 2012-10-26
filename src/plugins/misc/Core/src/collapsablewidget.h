@@ -43,6 +43,9 @@ public:
     void setCollapsed(const bool &pCollapsed);
     bool isCollapsed() const;
 
+protected:
+    virtual void resizeEvent(QResizeEvent *pEvent);
+
 private:
     bool mCollapsed;
 
@@ -53,6 +56,8 @@ private:
 
     QScrollArea *mScrollArea;
     QWidget *mBody;
+
+    int mFirstHeightUpdate;
 
     void constructor(const QString &pTitle = QString(), QWidget *pBody = 0);
 
