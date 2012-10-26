@@ -1,4 +1,4 @@
-#include "collapsablewidget.h"
+#include "collapsiblewidget.h"
 #include "coreutils.h"
 
 #include <QCalendarWidget>
@@ -35,25 +35,25 @@ SingleCellSimulationViewInformationWidget::SingleCellSimulationViewInformationWi
     mGui->setupUi(this);
 
 //---GRY--- THE BELOW IS JUST FOR TESTING PURPOSES...
-Core::CollapsableWidget *collapsableWidget1 = new Core::CollapsableWidget("Collapsable widget #1", new QCalendarWidget(this), this);
-Core::CollapsableWidget *collapsableWidget2 = new Core::CollapsableWidget(this);
-Core::CollapsableWidget *collapsableWidget3 = new Core::CollapsableWidget("Collapsable widget #3", 0, this);
-Core::CollapsableWidget *collapsableWidget4 = new Core::CollapsableWidget("Collapsable widget #4", new QCalendarWidget(this), this);
+Core::CollapsibleWidget *collapsibleWidget1 = new Core::CollapsibleWidget("Collapsible widget #1", new QCalendarWidget(this), this);
+Core::CollapsibleWidget *collapsibleWidget2 = new Core::CollapsibleWidget(this);
+Core::CollapsibleWidget *collapsibleWidget3 = new Core::CollapsibleWidget("Collapsible widget #3", 0, this);
+Core::CollapsibleWidget *collapsibleWidget4 = new Core::CollapsibleWidget("Collapsible widget #4", new QCalendarWidget(this), this);
 
-collapsableWidget1->setCollapsed(true);
-collapsableWidget1->setBody(new QDial(this));
-collapsableWidget2->setTitle("Collapsable widget #2");
-collapsableWidget3->setBody(new QCalendarWidget(this));
-collapsableWidget4->body()->hide();
-collapsableWidget4->setBody(0);
+collapsibleWidget1->setCollapsed(true);
+collapsibleWidget1->setBody(new QDial(this));
+collapsibleWidget2->setTitle("Collapsible widget #2");
+collapsibleWidget3->setBody(new QCalendarWidget(this));
+collapsibleWidget4->body()->hide();
+collapsibleWidget4->setBody(0);
 
-mGui->layout->addWidget(collapsableWidget1);
+mGui->layout->addWidget(collapsibleWidget1);
 mGui->layout->addWidget(Core::newLineWidget(this));
-mGui->layout->addWidget(collapsableWidget2);
+mGui->layout->addWidget(collapsibleWidget2);
 mGui->layout->addWidget(Core::newLineWidget(this));
-mGui->layout->addWidget(collapsableWidget3);
+mGui->layout->addWidget(collapsibleWidget3);
 mGui->layout->addWidget(Core::newLineWidget(this));
-mGui->layout->addWidget(collapsableWidget4);
+mGui->layout->addWidget(collapsibleWidget4);
 mGui->layout->addWidget(Core::newLineWidget(this));
 mGui->layout->addStretch(1);
 }

@@ -1,9 +1,9 @@
 //==============================================================================
-// Collapsable widget
+// Collapsible widget
 //==============================================================================
 
-#ifndef COLLAPSABLEWIDGET_H
-#define COLLAPSABLEWIDGET_H
+#ifndef COLLAPSIBLEWIDGET_H
+#define COLLAPSIBLEWIDGET_H
 
 //==============================================================================
 
@@ -25,14 +25,14 @@ namespace Core {
 
 //==============================================================================
 
-class CORE_EXPORT CollapsableWidget : public Widget
+class CORE_EXPORT CollapsibleWidget : public Widget
 {
     Q_OBJECT
 
 public:
-    explicit CollapsableWidget(const QString &pTitle, QWidget *pBody,
+    explicit CollapsibleWidget(const QString &pTitle, QWidget *pBody,
                                QWidget *pParent = 0);
-    explicit CollapsableWidget(QWidget *pParent = 0);
+    explicit CollapsibleWidget(QWidget *pParent = 0);
 
     QString title() const;
     void setTitle(const QString &pTitle);
@@ -64,7 +64,7 @@ private:
     void updateGui(const bool &pCollapsed);
 
 private Q_SLOTS:
-    void toggleCollapsableState();
+    void toggleCollapsibleState();
 };
 
 //==============================================================================

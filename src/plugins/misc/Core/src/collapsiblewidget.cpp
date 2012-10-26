@@ -1,8 +1,8 @@
 //==============================================================================
-// Collapsable widget
+// Collapsible widget
 //==============================================================================
 
-#include "collapsablewidget.h"
+#include "collapsiblewidget.h"
 #include "coreutils.h"
 
 //==============================================================================
@@ -20,7 +20,7 @@ namespace Core {
 
 //==============================================================================
 
-void CollapsableWidget::constructor(const QString &pTitle, QWidget *pBody)
+void CollapsibleWidget::constructor(const QString &pTitle, QWidget *pBody)
 {
     // Some initialisations
 
@@ -56,7 +56,7 @@ void CollapsableWidget::constructor(const QString &pTitle, QWidget *pBody)
     mButton->setIconSize(QSize(iconSize, iconSize));
 
     connect(mButton, SIGNAL(clicked()),
-            this, SLOT(toggleCollapsableState()));
+            this, SLOT(toggleCollapsibleState()));
 
 #ifdef Q_WS_MAC
     headerLayout->addWidget(mButton);
@@ -73,7 +73,7 @@ void CollapsableWidget::constructor(const QString &pTitle, QWidget *pBody)
     mSeparator = Core::newLineWidget(this);
 
     // Create our scroll area widget
-    // Note: the idea is to have our the body of our collapsable widget within
+    // Note: the idea is to have our the body of our collapsible widget within
     //       a scroll area, this in case the body is too wide...
 
     mScrollArea = new QScrollArea(this);
@@ -102,7 +102,7 @@ void CollapsableWidget::constructor(const QString &pTitle, QWidget *pBody)
 
 //==============================================================================
 
-CollapsableWidget::CollapsableWidget(const QString &pTitle,
+CollapsibleWidget::CollapsibleWidget(const QString &pTitle,
                                      QWidget *pBody, QWidget *pParent) :
     Widget(QSize(), pParent)
 {
@@ -113,7 +113,7 @@ CollapsableWidget::CollapsableWidget(const QString &pTitle,
 
 //==============================================================================
 
-CollapsableWidget::CollapsableWidget(QWidget *pParent) :
+CollapsibleWidget::CollapsibleWidget(QWidget *pParent) :
     Widget(QSize(), pParent)
 {
     // Construct our object
@@ -123,7 +123,7 @@ CollapsableWidget::CollapsableWidget(QWidget *pParent) :
 
 //==============================================================================
 
-QString CollapsableWidget::title() const
+QString CollapsibleWidget::title() const
 {
     // Return our title
 
@@ -132,7 +132,7 @@ QString CollapsableWidget::title() const
 
 //==============================================================================
 
-void CollapsableWidget::setTitle(const QString &pTitle)
+void CollapsibleWidget::setTitle(const QString &pTitle)
 {
     // Set our title
 
@@ -142,7 +142,7 @@ void CollapsableWidget::setTitle(const QString &pTitle)
 
 //==============================================================================
 
-QWidget * CollapsableWidget::body() const
+QWidget * CollapsibleWidget::body() const
 {
     // Return our body
 
@@ -151,7 +151,7 @@ QWidget * CollapsableWidget::body() const
 
 //==============================================================================
 
-void CollapsableWidget::setBody(QWidget *pBody)
+void CollapsibleWidget::setBody(QWidget *pBody)
 {
     // Set our body
 
@@ -163,7 +163,7 @@ void CollapsableWidget::setBody(QWidget *pBody)
         if (pBody) {
             mScrollArea->setWidget(pBody);
 
-            // Update our GUI, using the previous collapsable state of our
+            // Update our GUI, using the previous collapsible state of our
             // widget, in case there was already a body before, or by asking
             // it to be uncollapsed now that there is a body
 
@@ -178,7 +178,7 @@ void CollapsableWidget::setBody(QWidget *pBody)
 
 //==============================================================================
 
-void CollapsableWidget::setCollapsed(const bool &pCollapsed)
+void CollapsibleWidget::setCollapsed(const bool &pCollapsed)
 {
     // Collapse or uncollapse ourselves, if needed
 
@@ -188,7 +188,7 @@ void CollapsableWidget::setCollapsed(const bool &pCollapsed)
 
 //==============================================================================
 
-bool CollapsableWidget::isCollapsed() const
+bool CollapsibleWidget::isCollapsed() const
 {
     // Return wheter we are collapsed
 
@@ -197,7 +197,7 @@ bool CollapsableWidget::isCollapsed() const
 
 //==============================================================================
 
-void CollapsableWidget::resizeEvent(QResizeEvent *pEvent)
+void CollapsibleWidget::resizeEvent(QResizeEvent *pEvent)
 {
     // Default handling of the event
 
@@ -230,7 +230,7 @@ void CollapsableWidget::resizeEvent(QResizeEvent *pEvent)
 
 //==============================================================================
 
-void CollapsableWidget::updateGui(const bool &pCollapsed)
+void CollapsibleWidget::updateGui(const bool &pCollapsed)
 {
     // Update our widget's GUI
 
@@ -261,9 +261,9 @@ void CollapsableWidget::updateGui(const bool &pCollapsed)
 
 //==============================================================================
 
-void CollapsableWidget::toggleCollapsableState()
+void CollapsibleWidget::toggleCollapsibleState()
 {
-    // Toggle the collapsable state of our widget and update its GUI
+    // Toggle the collapsible state of our widget and update its GUI
 
     updateGui(!mCollapsed);
 }
