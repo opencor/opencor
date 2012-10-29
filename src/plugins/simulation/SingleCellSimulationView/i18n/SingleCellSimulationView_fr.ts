@@ -4,8 +4,20 @@
 <context>
     <name>OpenCOR::SingleCellSimulationView::SingleCellSimulationViewInformationWidget</name>
     <message>
-        <source>General</source>
-        <translation>Général</translation>
+        <source>Simulation</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Solvers</source>
+        <translation>Solveurs</translation>
+    </message>
+    <message>
+        <source>Traces</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Parameters</source>
+        <translation>Paramètres</translation>
     </message>
 </context>
 <context>

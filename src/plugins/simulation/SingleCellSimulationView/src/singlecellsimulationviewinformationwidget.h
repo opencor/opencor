@@ -47,7 +47,10 @@ public:
 private:
     Ui::SingleCellSimulationViewInformationWidget *mGui;
 
-    Core::CollapsibleWidget *mGeneralCollapsibleWidget;
+    Core::CollapsibleWidget *mSimulationCollapsibleWidget;
+    Core::CollapsibleWidget *mSolversCollapsibleWidget;
+    Core::CollapsibleWidget *mTracesCollapsibleWidget;
+    Core::CollapsibleWidget *mParametersCollapsibleWidget;
 };
 
 //==============================================================================

@@ -29,15 +29,33 @@ SingleCellSimulationViewInformationWidget::SingleCellSimulationViewInformationWi
 
     mGui->setupUi(this);
 
-    // Create our general collapsible widget
+    // Create our simulation collapsible widget
 
-    mGeneralCollapsibleWidget = new Core::CollapsibleWidget(this);
+    mSimulationCollapsibleWidget = new Core::CollapsibleWidget(this);
+
+    // Create our solvers collapsible widget
+
+    mSolversCollapsibleWidget = new Core::CollapsibleWidget(this);
+
+    // Create our traces collapsible widget
+
+    mTracesCollapsibleWidget = new Core::CollapsibleWidget(this);
+
+    // Create our parameters collapsible widget
+
+    mParametersCollapsibleWidget = new Core::CollapsibleWidget(this);
 
     // Add our collapsible widgets to our layout
     // Note: we add a stretch at the end to make sure that our collapsible
     //       widgets take as little vertical space as possible...
 
-    mGui->layout->addWidget(mGeneralCollapsibleWidget);
+    mGui->layout->addWidget(mSimulationCollapsibleWidget);
+    mGui->layout->addWidget(Core::newLineWidget(this));
+    mGui->layout->addWidget(mSolversCollapsibleWidget);
+    mGui->layout->addWidget(Core::newLineWidget(this));
+    mGui->layout->addWidget(mTracesCollapsibleWidget);
+    mGui->layout->addWidget(Core::newLineWidget(this));
+    mGui->layout->addWidget(mParametersCollapsibleWidget);
     mGui->layout->addWidget(Core::newLineWidget(this));
     mGui->layout->addStretch(1);
 
@@ -66,7 +84,10 @@ void SingleCellSimulationViewInformationWidget::retranslateUi()
 
     // Retranslate the title of our collapsible widgets
 
-    mGeneralCollapsibleWidget->setTitle(tr("General"));
+    mSimulationCollapsibleWidget->setTitle(tr("Simulation"));
+    mSolversCollapsibleWidget->setTitle(tr("Solvers"));
+    mTracesCollapsibleWidget->setTitle(tr("Traces"));
+    mParametersCollapsibleWidget->setTitle(tr("Parameters"));
 }
 
 //==============================================================================
