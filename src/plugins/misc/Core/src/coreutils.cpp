@@ -199,9 +199,11 @@ QFrame * newLineWidget(const bool &pHorizontal, QWidget *pParent)
         QColor borderColor = QColor(image.pixel(image.width()-1,
                                                 0.5*image.height()));
 
-        borderColorStyle = QString("border: 1px solid rgb(%1, %2, %3);").arg(QString::number(borderColor.red()),
-                                                                             QString::number(borderColor.green()),
-                                                                             QString::number(borderColor.blue()));
+        borderColorStyle = QString("QFrame {"
+                                   "    border: 1px solid rgb(%1, %2, %3);"
+                                   "}").arg(QString::number(borderColor.red()),
+                                            QString::number(borderColor.green()),
+                                            QString::number(borderColor.blue()));
 
         firstTime = false;
     }

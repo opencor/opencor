@@ -53,7 +53,13 @@ void CollapsibleWidget::constructor(const QString &pTitle, QWidget *pBody)
     int iconSize = 0.4*mTitle->height();
 
     mButton->setIconSize(QSize(iconSize, iconSize));
-    mButton->setStyleSheet("border: 0px;");
+    mButton->setStyleSheet("QToolButton {"
+                           "    border: 0px;"
+                           "}"
+                           ""
+                           "QToolButton::pressed {"
+                           "    margin: 0px;"
+                           "}");
 
     connect(mButton, SIGNAL(clicked()),
             this, SLOT(toggleCollapsibleState()));
