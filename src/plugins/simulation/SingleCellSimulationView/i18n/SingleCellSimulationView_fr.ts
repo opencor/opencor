@@ -28,6 +28,13 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::SingleCellSimulationView::SingleCellSimulationViewSimulationInformationWidget</name>
+    <message>
+        <source>Starting point:</source>
+        <translation>Point de départ :</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>ODE</source>

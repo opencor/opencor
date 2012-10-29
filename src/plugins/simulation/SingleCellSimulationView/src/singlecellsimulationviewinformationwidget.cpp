@@ -92,6 +92,10 @@ void SingleCellSimulationViewInformationWidget::retranslateUi()
     mSolversCollapsibleWidget->setTitle(tr("Solvers"));
     mTracesCollapsibleWidget->setTitle(tr("Traces"));
     mParametersCollapsibleWidget->setTitle(tr("Parameters"));
+
+    // Retranslate our various collapsible widgets' body
+
+    mSimulationInformationWidget->retranslateUi();
 }
 
 //==============================================================================
