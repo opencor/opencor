@@ -23,6 +23,7 @@ ADD_PLUGIN(SingleCellSimulationView
         src/singlecellsimulationviewgraphpanelswidget.cpp
         src/singlecellsimulationviewinformationwidget.cpp
         src/singlecellsimulationviewplugin.cpp
+        src/singlecellsimulationviewsimulationinformationwidget.cpp
         src/singlecellsimulationviewwidget.cpp
     HEADERS_MOC
         ../../plugin.h
@@ -33,12 +34,14 @@ ADD_PLUGIN(SingleCellSimulationView
         src/singlecellsimulationviewgraphpanelswidget.h
         src/singlecellsimulationviewinformationwidget.h
         src/singlecellsimulationviewplugin.h
+        src/singlecellsimulationviewsimulationinformationwidget.h
         src/singlecellsimulationviewwidget.h
     UIS
         src/singlecellsimulationviewcontentswidget.ui
         src/singlecellsimulationviewgraphpanelwidget.ui
         src/singlecellsimulationviewgraphpanelswidget.ui
         src/singlecellsimulationviewinformationwidget.ui
+        src/singlecellsimulationviewsimulationinformationwidget.ui
         src/singlecellsimulationviewwidget.ui
     DEFINITIONS
         ${LLVM_DEFINITIONS}

@@ -1,9 +1,9 @@
 //==============================================================================
-// Single cell simulation view information widget
+// Single cell simulation view simulation information widget
 //==============================================================================
 
-#ifndef SINGLECELLSIMULATIONVIEWINFORMATIONWIDGET_H
-#define SINGLECELLSIMULATIONVIEWINFORMATIONWIDGET_H
+#ifndef SINGLECELLSIMULATIONVIEWSIMULATIONINFORMATIONWIDGET_H
+#define SINGLECELLSIMULATIONVIEWSIMULATIONINFORMATIONWIDGET_H
 
 //==============================================================================
 
@@ -12,36 +12,23 @@
 //==============================================================================
 
 namespace Ui {
-    class SingleCellSimulationViewInformationWidget;
+    class SingleCellSimulationViewSimulationInformationWidget;
 }
 
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
-namespace Core {
-    class CollapsibleWidget;
-}   // namespace Core
-
-//==============================================================================
-
 namespace SingleCellSimulationView {
 
 //==============================================================================
 
-class SingleCellSimulationViewSimulationInformationWidget;
-
-//==============================================================================
-
-class SingleCellSimulationViewInformationWidget : public Core::Widget
+class SingleCellSimulationViewSimulationInformationWidget : public Core::Widget
 {
     Q_OBJECT
 
 public:
-    explicit SingleCellSimulationViewInformationWidget(QWidget *pParent);
-    ~SingleCellSimulationViewInformationWidget();
+    explicit SingleCellSimulationViewSimulationInformationWidget(QWidget *pParent);
+    ~SingleCellSimulationViewSimulationInformationWidget();
 
     virtual void retranslateUi();
 
@@ -49,16 +36,7 @@ public:
     virtual void saveSettings(QSettings *pSettings) const;
 
 private:
-    Ui::SingleCellSimulationViewInformationWidget *mGui;
-
-    Core::CollapsibleWidget *mSimulationCollapsibleWidget;
-    SingleCellSimulationViewSimulationInformationWidget *mSimulationInformationWidget;
-
-    Core::CollapsibleWidget *mSolversCollapsibleWidget;
-
-    Core::CollapsibleWidget *mTracesCollapsibleWidget;
-
-    Core::CollapsibleWidget *mParametersCollapsibleWidget;
+    Ui::SingleCellSimulationViewSimulationInformationWidget *mGui;
 };
 
 //==============================================================================

@@ -5,6 +5,7 @@
 #include "collapsiblewidget.h"
 #include "coreutils.h"
 #include "singlecellsimulationviewinformationwidget.h"
+#include "singlecellsimulationviewsimulationinformationwidget.h"
 
 //==============================================================================
 
@@ -31,7 +32,10 @@ SingleCellSimulationViewInformationWidget::SingleCellSimulationViewInformationWi
 
     // Create our simulation collapsible widget
 
-    mSimulationCollapsibleWidget = new Core::CollapsibleWidget(this);
+    mSimulationInformationWidget = new SingleCellSimulationViewSimulationInformationWidget(this);
+    mSimulationCollapsibleWidget = new Core::CollapsibleWidget(QString(),
+                                                               mSimulationInformationWidget,
+                                                               this);
 
     // Create our solvers collapsible widget
 
