@@ -48,24 +48,18 @@ void CollapsibleWidget::constructor(const QString &pTitle, QWidget *pBody)
     mTitle = new QLabel(pTitle, mHeader);
     mButton = new QToolButton(mHeader);
 
-#ifdef Q_WS_MAC
     mTitle->setAlignment(Qt::AlignCenter);
-#endif
 
     int iconSize = 0.4*mTitle->height();
 
     mButton->setIconSize(QSize(iconSize, iconSize));
+    mButton->setStyleSheet("border: 0px;");
 
     connect(mButton, SIGNAL(clicked()),
             this, SLOT(toggleCollapsibleState()));
 
-#ifdef Q_WS_MAC
     headerLayout->addWidget(mButton);
-#endif
     headerLayout->addWidget(mTitle);
-#ifndef Q_WS_MAC
-    headerLayout->addWidget(mButton);
-#endif
 
     mHeader->setLayout(headerLayout);
 
@@ -243,16 +237,10 @@ void CollapsibleWidget::updateGui(const bool &pCollapsed)
 
     //  Customise some widgets
 
-    if (pCollapsed) {
-#ifdef Q_WS_MAC
+    if (pCollapsed)
         mButton->setIcon(QIcon(":/oxygen/actions/arrow-right.png"));
-#else
-        mButton->setIcon(QIcon(":/oxygen/actions/arrow-left.png"));
-#endif
-    }
-    else {
+    else
         mButton->setIcon(QIcon(":/oxygen/actions/arrow-down.png"));
-    }
 
     // Enable/disable some widgets
 

@@ -30,22 +30,22 @@ SingleCellSimulationViewInformationWidget::SingleCellSimulationViewInformationWi
 
     mGui->setupUi(this);
 
-    // Create our simulation collapsible widget
+    // Create our Simulation collapsible widget
 
     mSimulationInformationWidget = new SingleCellSimulationViewSimulationInformationWidget(this);
     mSimulationCollapsibleWidget = new Core::CollapsibleWidget(QString(),
                                                                mSimulationInformationWidget,
                                                                this);
 
-    // Create our solvers collapsible widget
+    // Create our Solvers collapsible widget
 
     mSolversCollapsibleWidget = new Core::CollapsibleWidget(this);
 
-    // Create our traces collapsible widget
+    // Create our Traces collapsible widget
 
     mTracesCollapsibleWidget = new Core::CollapsibleWidget(this);
 
-    // Create our parameters collapsible widget
+    // Create our Parameters collapsible widget
 
     mParametersCollapsibleWidget = new Core::CollapsibleWidget(this);
 
