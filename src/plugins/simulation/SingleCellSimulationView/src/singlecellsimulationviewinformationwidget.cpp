@@ -1,14 +1,9 @@
-#include "collapsiblewidget.h"
-#include "coreutils.h"
-
-#include <QCalendarWidget>
-#include <QDial>
-//---GRY--- THE ABOVE IS TO BE REMOVED...
-
 //==============================================================================
 // Single cell simulation view information widget
 //==============================================================================
 
+#include "collapsiblewidget.h"
+#include "coreutils.h"
 #include "singlecellsimulationviewinformationwidget.h"
 
 //==============================================================================
@@ -34,28 +29,22 @@ SingleCellSimulationViewInformationWidget::SingleCellSimulationViewInformationWi
 
     mGui->setupUi(this);
 
-//---GRY--- THE BELOW IS JUST FOR TESTING PURPOSES...
-Core::CollapsibleWidget *collapsibleWidget1 = new Core::CollapsibleWidget("Collapsible widget #1", new QCalendarWidget(this), this);
-Core::CollapsibleWidget *collapsibleWidget2 = new Core::CollapsibleWidget(this);
-Core::CollapsibleWidget *collapsibleWidget3 = new Core::CollapsibleWidget("Collapsible widget #3", 0, this);
-Core::CollapsibleWidget *collapsibleWidget4 = new Core::CollapsibleWidget("Collapsible widget #4", new QCalendarWidget(this), this);
+    // Create our general collapsible widget
 
-collapsibleWidget1->setCollapsed(true);
-collapsibleWidget1->setBody(new QDial(this));
-collapsibleWidget2->setTitle("Collapsible widget #2");
-collapsibleWidget3->setBody(new QCalendarWidget(this));
-collapsibleWidget4->body()->hide();
-collapsibleWidget4->setBody(0);
+    mGeneralCollapsibleWidget = new Core::CollapsibleWidget(this);
 
-mGui->layout->addWidget(collapsibleWidget1);
-mGui->layout->addWidget(Core::newLineWidget(this));
-mGui->layout->addWidget(collapsibleWidget2);
-mGui->layout->addWidget(Core::newLineWidget(this));
-mGui->layout->addWidget(collapsibleWidget3);
-mGui->layout->addWidget(Core::newLineWidget(this));
-mGui->layout->addWidget(collapsibleWidget4);
-mGui->layout->addWidget(Core::newLineWidget(this));
-mGui->layout->addStretch(1);
+    // Add our collapsible widgets to our layout
+    // Note: we add a stretch at the end to make sure that our collapsible
+    //       widgets take as little vertical space as possible...
+
+    mGui->layout->addWidget(mGeneralCollapsibleWidget);
+    mGui->layout->addWidget(Core::newLineWidget(this));
+    mGui->layout->addStretch(1);
+
+    // Some further initialisations which are done as part of retranslating the
+    // GUI (so that they can be updated when changing languages)
+
+    retranslateUi();
 }
 
 //==============================================================================
@@ -65,6 +54,19 @@ SingleCellSimulationViewInformationWidget::~SingleCellSimulationViewInformationW
     // Delete the GUI
 
     delete mGui;
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewInformationWidget::retranslateUi()
+{
+    // Retranslate the whole widget
+
+    mGui->retranslateUi(this);
+
+    // Retranslate the title of our collapsible widgets
+
+    mGeneralCollapsibleWidget->setTitle(tr("General"));
 }
 
 //==============================================================================

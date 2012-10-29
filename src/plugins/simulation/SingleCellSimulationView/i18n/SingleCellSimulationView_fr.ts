@@ -2,6 +2,13 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR" sourcelanguage="en_GB">
 <context>
+    <name>OpenCOR::SingleCellSimulationView::SingleCellSimulationViewInformationWidget</name>
+    <message>
+        <source>General</source>
+        <translation>Général</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::SingleCellSimulationView::SingleCellSimulationViewPlugin</name>
     <message>
         <source>Single Cell</source>

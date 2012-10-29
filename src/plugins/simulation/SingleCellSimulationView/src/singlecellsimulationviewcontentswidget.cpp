@@ -68,6 +68,19 @@ SingleCellSimulationViewContentsWidget::~SingleCellSimulationViewContentsWidget(
 
 //==============================================================================
 
+void SingleCellSimulationViewContentsWidget::retranslateUi()
+{
+    // Retranslate the whole widget
+
+    mGui->retranslateUi(this);
+
+    // Retranslate our information widget
+
+    mInformationWidget->retranslateUi();
+}
+
+//==============================================================================
+
 static const QString SettingsContentsCount = "ContentsCount";
 static const QString SettingsContentsSize  = "ContentsSize%1";
 

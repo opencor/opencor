@@ -18,6 +18,15 @@ namespace Ui {
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace Core {
+    class CollapsibleWidget;
+}   // namespace Core
+
+//==============================================================================
+
 namespace SingleCellSimulationView {
 
 //==============================================================================
@@ -30,11 +39,15 @@ public:
     explicit SingleCellSimulationViewInformationWidget(QWidget *pParent);
     ~SingleCellSimulationViewInformationWidget();
 
+    virtual void retranslateUi();
+
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
 private:
     Ui::SingleCellSimulationViewInformationWidget *mGui;
+
+    Core::CollapsibleWidget *mGeneralCollapsibleWidget;
 };
 
 //==============================================================================

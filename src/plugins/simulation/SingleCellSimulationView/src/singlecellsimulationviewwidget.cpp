@@ -159,6 +159,10 @@ void SingleCellSimulationViewWidget::retranslateUi()
     // Retranslate the whole view
 
     mGui->retranslateUi(this);
+
+    // Retranslate our contents widget
+
+    mContentsWidget->retranslateUi();
 }
 
 //==============================================================================

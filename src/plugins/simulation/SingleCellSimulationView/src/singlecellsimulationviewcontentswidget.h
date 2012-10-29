@@ -41,6 +41,8 @@ public:
     explicit SingleCellSimulationViewContentsWidget(QWidget *pParent);
     ~SingleCellSimulationViewContentsWidget();
 
+    virtual void retranslateUi();
+
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
