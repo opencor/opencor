@@ -256,6 +256,7 @@ void CollapsibleWidget::updateGui(const bool &pCollapsed)
 
     // Enable/disable some widgets
 
+    mTitle->setEnabled(mBody);
     mButton->setEnabled(mBody);
 
     // Show/hide some widgets
