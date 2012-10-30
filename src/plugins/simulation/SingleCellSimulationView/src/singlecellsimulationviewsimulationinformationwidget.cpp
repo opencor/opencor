@@ -2,14 +2,17 @@
 // Single cell simulation view simulation information widget
 //==============================================================================
 
-#include "coreutils.h"
 #include "singlecellsimulationviewsimulationinformationwidget.h"
 
 //==============================================================================
 
-#include <QLabel>
-#include <QLineEdit>
 #include <QSettings>
+
+//==============================================================================
+
+#include <QtDesigner/QDesignerComponents>
+#include <QtDesigner/QDesignerFormEditorInterface>
+#include <QtDesigner/QDesignerPropertyEditorInterface>
 
 //==============================================================================
 
@@ -32,21 +35,21 @@ SingleCellSimulationViewSimulationInformationWidget::SingleCellSimulationViewSim
 
     // Create our Start Point row
 
-    mStartingPointLabel = Core::newLabel(QString(), 1.0, true, this);
-    mStartingPointField = new QLineEdit(this);
+    mFormEditor = QDesignerComponents::createFormEditor(0);
+    mPropertyEditor = QDesignerComponents::createPropertyEditor(mFormEditor, this);
 
-    mGui->layout->addRow(mStartingPointLabel, mStartingPointField);
-
-    // Some further initialisations which are done as part of retranslating the
-    // GUI (so that they can be updated when changing languages)
-
-    retranslateUi();
+    mGui->layout->addWidget(mPropertyEditor);
 }
 
 //==============================================================================
 
 SingleCellSimulationViewSimulationInformationWidget::~SingleCellSimulationViewSimulationInformationWidget()
 {
+    // Delete some internal objects
+
+    delete mPropertyEditor;
+    delete mFormEditor;
+
     // Delete the GUI
 
     delete mGui;
@@ -59,10 +62,6 @@ void SingleCellSimulationViewSimulationInformationWidget::retranslateUi()
     // Retranslate the whole widget
 
     mGui->retranslateUi(this);
-
-    // Retranslate the label of our rows
-
-    mStartingPointLabel->setText(tr("Starting point:"));
 }
 
 //==============================================================================
