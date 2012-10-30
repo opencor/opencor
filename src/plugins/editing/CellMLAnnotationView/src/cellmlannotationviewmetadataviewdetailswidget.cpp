@@ -9,10 +9,6 @@
 
 //==============================================================================
 
-#include "ui_cellmlannotationviewmetadataviewdetailswidget.h"
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace CellMLAnnotationView {
 
@@ -20,13 +16,8 @@ namespace CellMLAnnotationView {
 
 CellmlAnnotationViewMetadataViewDetailsWidget::CellmlAnnotationViewMetadataViewDetailsWidget(CellmlAnnotationViewWidget *pParent) :
     QStackedWidget(pParent),
-    CommonWidget(pParent),
-    mGui(new Ui::CellmlAnnotationViewMetadataViewDetailsWidget)
+    CommonWidget(pParent)
 {
-    // Set up the GUI
-
-    mGui->setupUi(this);
-
     // Create our different metadata views
 
     mRawView    = new CellmlAnnotationViewMetadataRawViewDetailsWidget(pParent);
@@ -45,20 +36,9 @@ CellmlAnnotationViewMetadataViewDetailsWidget::CellmlAnnotationViewMetadataViewD
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataViewDetailsWidget::~CellmlAnnotationViewMetadataViewDetailsWidget()
-{
-    // Delete the GUI
-
-    delete mGui;
-}
-
-//==============================================================================
-
 void CellmlAnnotationViewMetadataViewDetailsWidget::retranslateUi()
 {
     // Retranslate our GUI
-
-    mGui->retranslateUi(this);
 
     mRawView->retranslateUi();
     mNormalView->retranslateUi();

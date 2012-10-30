@@ -16,12 +16,6 @@
 
 //==============================================================================
 
-namespace Ui {
-    class CellmlAnnotationViewMetadataViewDetailsWidget;
-}
-
-//==============================================================================
-
 class QVBoxLayout;
 
 //==============================================================================
@@ -47,7 +41,6 @@ class CellmlAnnotationViewMetadataViewDetailsWidget : public QStackedWidget,
 
 public:
     explicit CellmlAnnotationViewMetadataViewDetailsWidget(CellmlAnnotationViewWidget *pParent);
-    ~CellmlAnnotationViewMetadataViewDetailsWidget();
 
     virtual void retranslateUi();
 
@@ -59,8 +52,6 @@ public:
     CellmlAnnotationViewMetadataNormalViewDetailsWidget *normalView() const;
 
 private:
-    Ui::CellmlAnnotationViewMetadataViewDetailsWidget *mGui;
-
     CellmlAnnotationViewMetadataRawViewDetailsWidget *mRawView;
     CellmlAnnotationViewMetadataNormalViewDetailsWidget *mNormalView;
 };
