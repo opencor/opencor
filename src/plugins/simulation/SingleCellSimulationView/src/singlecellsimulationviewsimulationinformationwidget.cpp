@@ -20,7 +20,7 @@ namespace SingleCellSimulationView {
 //==============================================================================
 
 SingleCellSimulationViewSimulationInformationWidget::SingleCellSimulationViewSimulationInformationWidget(QWidget *pParent) :
-    Widget(defaultSize(0), pParent),
+    Widget(pParent),
     mGui(new Ui::SingleCellSimulationViewSimulationInformationWidget)
 {
     // Set up the GUI
