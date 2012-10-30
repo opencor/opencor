@@ -31,7 +31,6 @@ SingleCellSimulationViewSimulationInformationWidget::SingleCellSimulationViewSim
     mFormEditor(QDesignerComponents::createFormEditor(0)),
     mPropertyEditor(QDesignerComponents::createPropertyEditor(mFormEditor, this)),
     mProperties(new QObject())
-
 {
     // Set up the GUI
 
@@ -39,7 +38,9 @@ SingleCellSimulationViewSimulationInformationWidget::SingleCellSimulationViewSim
 
     // Add our property editor to our layout
 
-    mProperties->setProperty("Test", 3);
+    mProperties->setProperty("Boolean", true);
+    mProperties->setProperty("Integer", 3);
+    mProperties->setProperty("Double", 7.0);
 
     mPropertyEditor->setObject(mProperties);
 
