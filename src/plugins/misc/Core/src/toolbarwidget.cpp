@@ -1,8 +1,8 @@
 //==============================================================================
-// Toolbar
+// Tool bar widget
 //==============================================================================
 
-#include "toolbar.h"
+#include "toolbarwidget.h"
 
 //==============================================================================
 
@@ -11,11 +11,11 @@ namespace Core {
 
 //==============================================================================
 
-ToolBar::ToolBar(QWidget *pParent) :
+ToolBarWidget::ToolBarWidget(QWidget *pParent) :
     QToolBar(pParent)
 {
-    // Remove the border which is normally drawn for a toolbar (indeed, it
-    // doesn't look great when on a docked window, so...)
+    // Remove the border which is normally drawn for a tool bar widget (indeed,
+    // it doesn't look great when on a docked window, so...)
 
     setStyleSheet("QToolBar {"
                   "    border: 0px;"

@@ -1,9 +1,9 @@
 //==============================================================================
-// Toolbar
+// Tool bar widget
 //==============================================================================
 
-#ifndef TOOLBAR_H
-#define TOOLBAR_H
+#ifndef TOOLBARWIDGET_H
+#define TOOLBARWIDGET_H
 
 //==============================================================================
 
@@ -20,12 +20,12 @@ namespace Core {
 
 //==============================================================================
 
-class CORE_EXPORT ToolBar : public QToolBar
+class CORE_EXPORT ToolBarWidget : public QToolBar
 {
     Q_OBJECT
 
 public:
-    explicit ToolBar(QWidget *pParent);
+    explicit ToolBarWidget(QWidget *pParent);
 };
 
 //==============================================================================

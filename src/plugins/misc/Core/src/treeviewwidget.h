@@ -1,9 +1,9 @@
 //==============================================================================
-// Enhanced tree view
+// Enhanced tree view widget
 //==============================================================================
 
-#ifndef TREEVIEW_H
-#define TREEVIEW_H
+#ifndef TREEVIEWWIDGET_H
+#define TREEVIEWWIDGET_H
 
 //==============================================================================
 
@@ -21,12 +21,12 @@ namespace Core {
 
 //==============================================================================
 
-class CORE_EXPORT TreeView : public QTreeView, public CommonWidget
+class CORE_EXPORT TreeViewWidget : public QTreeView, public CommonWidget
 {
     Q_OBJECT
 
 public:
-    explicit TreeView(QWidget *pParent);
+    explicit TreeViewWidget(QWidget *pParent);
 
     void selectFirstNode();
 

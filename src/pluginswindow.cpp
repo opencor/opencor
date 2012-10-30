@@ -86,9 +86,9 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager, QWidget *pParent) :
 
     mGui->noteLabel->setText(mGui->noteLabel->text().arg(qApp->applicationName()));
 
-    // Set up the tree view with a delegate, so that we can select plugins that
-    // are shown as 'disabled' (to reflect the fact that users cannot decide
-    // whether they should be loaded)
+    // Set up the tree view widget with a delegate, so that we can select
+    // plugins that are shown as 'disabled' (to reflect the fact that users
+    // cannot decide whether they should be loaded)
 
     mDataModel = new QStandardItemModel(mGui->pluginsTreeView);
     mPluginDelegate = new PluginDelegate(mDataModel);
@@ -162,8 +162,8 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager, QWidget *pParent) :
 
     updatePluginsLoadingState(0, true);
 
-    // Expand the whole tree view and make sure that it only takes as much width
-    // as necessary
+    // Expand the whole tree view widget and make sure that it only takes as
+    // much width as necessary
     // Note: for some reasons (maybe because we have check boxes?), the
     //       retrieved column size gives us a width that is slightly too small
     //       and therefore requires a horizontal scroll bar, hence we add 15% to

@@ -9,7 +9,7 @@
 
 #include "filemanager.h"
 #include "fileorganisermodel.h"
-#include "treeview.h"
+#include "treeviewwidget.h"
 
 //==============================================================================
 
@@ -18,7 +18,7 @@ namespace FileOrganiser {
 
 //==============================================================================
 
-class FileOrganiserWidget : public Core::TreeView
+class FileOrganiserWidget : public Core::TreeViewWidget
 {
     Q_OBJECT
 

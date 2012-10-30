@@ -49,7 +49,7 @@ CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
 
     // We want our own context menu for the help widget (indeed, we don't want
     // the default one which has the reload menu item and not the other actions
-    // that we have in our toolbar, so...)
+    // that we have in our tool bar widget, so...)
 
     mCellmlModelRepositoryWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 

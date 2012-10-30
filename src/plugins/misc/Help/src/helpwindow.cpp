@@ -5,7 +5,7 @@
 #include "coreutils.h"
 #include "helpwindow.h"
 #include "helpwidget.h"
-#include "toolbar.h"
+#include "toolbarwidget.h"
 
 //==============================================================================
 
@@ -55,25 +55,25 @@ HelpWindow::HelpWindow(QWidget *pParent) :
 
     mHelpEngine = new QHelpEngine(mQhcFileName);
 
-    // Create a toolbar with different buttons
+    // Create a tool bar widget with different buttons
 
-    Core::ToolBar *toolbar = new Core::ToolBar(this);
+    Core::ToolBarWidget *toolBar = new Core::ToolBarWidget(this);
 
-    toolbar->addAction(mGui->actionHome);
-    toolbar->addSeparator();
-    toolbar->addAction(mGui->actionBack);
-    toolbar->addAction(mGui->actionForward);
-    toolbar->addSeparator();
-    toolbar->addAction(mGui->actionCopy);
-    toolbar->addSeparator();
-    toolbar->addAction(mGui->actionNormalSize);
-    toolbar->addSeparator();
-    toolbar->addAction(mGui->actionZoomIn);
-    toolbar->addAction(mGui->actionZoomOut);
-    toolbar->addSeparator();
-    toolbar->addAction(mGui->actionPrint);
+    toolBar->addAction(mGui->actionHome);
+    toolBar->addSeparator();
+    toolBar->addAction(mGui->actionBack);
+    toolBar->addAction(mGui->actionForward);
+    toolBar->addSeparator();
+    toolBar->addAction(mGui->actionCopy);
+    toolBar->addSeparator();
+    toolBar->addAction(mGui->actionNormalSize);
+    toolBar->addSeparator();
+    toolBar->addAction(mGui->actionZoomIn);
+    toolBar->addAction(mGui->actionZoomOut);
+    toolBar->addSeparator();
+    toolBar->addAction(mGui->actionPrint);
 
-    mGui->layout->addWidget(toolbar);
+    mGui->layout->addWidget(toolBar);
 
     // Create and add the help widget
 
@@ -85,7 +85,7 @@ HelpWindow::HelpWindow(QWidget *pParent) :
 
     // We want our own context menu for the help widget (indeed, we don't want
     // the default one which has the reload menu item and not the other actions
-    // that we have in our toolbar, so...)
+    // that we have in our tool bar widget, so...)
 
     mHelpWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
@@ -249,7 +249,7 @@ void HelpWindow::showCustomContextMenu(const QPoint &pPosition) const
     Q_UNUSED(pPosition);
 
     // Create a custom context menu which items match the contents of our
-    // toolbar
+    // tool bar widget
 
     QMenu menu;
 

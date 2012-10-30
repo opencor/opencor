@@ -6,7 +6,7 @@
 #include "cellmlannotationviewmetadataeditdetailswidget.h"
 #include "cellmlannotationviewwidget.h"
 #include "coreutils.h"
-#include "treeview.h"
+#include "treeviewwidget.h"
 
 //==============================================================================
 
@@ -331,7 +331,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
     newFormLayout->addRow(Core::newLabel(tr("Term:"), 1.0, true, newFormWidget),
                           termWidget);
 
-    // Reset the tab order from our parent's CellML list's tree view
+    // Reset the tab order from our parent's CellML list's tree view widget
     // Note: ideally, we would take advantage of Qt's signal/slot approach with
     //       the signal being emitted here and the slot being implemented in
     //       mParent, but this wouldn't work here since updateGui() gets called

@@ -8,7 +8,7 @@
 //==============================================================================
 
 #include "filebrowsermodel.h"
-#include "treeview.h"
+#include "treeviewwidget.h"
 
 //==============================================================================
 
@@ -17,7 +17,7 @@ namespace FileBrowser {
 
 //==============================================================================
 
-class FileBrowserWidget : public Core::TreeView
+class FileBrowserWidget : public Core::TreeViewWidget
 {
     Q_OBJECT
 

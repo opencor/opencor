@@ -4,7 +4,7 @@
 
 #include "cellmlannotationviewmetadatarawviewdetailswidget.h"
 #include "cellmlannotationviewwidget.h"
-#include "treeview.h"
+#include "treeviewwidget.h"
 
 //==============================================================================
 
@@ -30,7 +30,7 @@ CellmlAnnotationViewMetadataRawViewDetailsWidget::CellmlAnnotationViewMetadataRa
 
     mGui->setupUi(this);
 
-    mTreeView  = new Core::TreeView(this);
+    mTreeView  = new Core::TreeViewWidget(this);
     mDataModel = new QStandardItemModel(mTreeView);
 
     mTreeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -83,13 +83,13 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(CellMLSupport::
 
     setUpdatesEnabled(false);
 
-    // Remove all previous RDF triples from our tree view
+    // Remove all previous RDF triples from our tree view widget
 
     while (mDataModel->rowCount())
         foreach (QStandardItem *item, mDataModel->takeRow(0))
             delete item;
 
-    // Add the 'new' RDF triples to our tree view
+    // Add the 'new' RDF triples to our tree view widget
     // Note: for the RDF triple's subject, we try to remove the CellML file's
     //       URI base, thus only leaving the equivalent of a CellML element
     //       cmeta:id which will speak more to the user than a possibly long URI

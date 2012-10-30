@@ -11,7 +11,7 @@
 #include "singlecellsimulationviewcontentswidget.h"
 #include "singlecellsimulationviewgraphpanelwidget.h"
 #include "singlecellsimulationviewwidget.h"
-#include "toolbar.h"
+#include "toolbarwidget.h"
 
 //==============================================================================
 
@@ -55,21 +55,21 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
 
     mGui->setupUi(this);
 
-    // Create a toolbar with different buttons
+    // Create a tool bar widget with different buttons
 
-    Core::ToolBar *toolbar = new Core::ToolBar(this);
+    Core::ToolBarWidget *toolBar = new Core::ToolBarWidget(this);
 
-    toolbar->addAction(mGui->actionRun);
-    toolbar->addAction(mGui->actionStop);
-    toolbar->addSeparator();
-    toolbar->addAction(mGui->actionDebugMode);
-    toolbar->addSeparator();
-    toolbar->addAction(mGui->actionAdd);
-    toolbar->addAction(mGui->actionRemove);
-    toolbar->addSeparator();
-    toolbar->addAction(mGui->actionCsvExport);
+    toolBar->addAction(mGui->actionRun);
+    toolBar->addAction(mGui->actionStop);
+    toolBar->addSeparator();
+    toolBar->addAction(mGui->actionDebugMode);
+    toolBar->addSeparator();
+    toolBar->addAction(mGui->actionAdd);
+    toolBar->addAction(mGui->actionRemove);
+    toolBar->addSeparator();
+    toolBar->addAction(mGui->actionCsvExport);
 
-    mGui->layout->addWidget(toolbar);
+    mGui->layout->addWidget(toolBar);
     mGui->layout->addWidget(Core::newLineWidget(this));
 
     // Create our splitter

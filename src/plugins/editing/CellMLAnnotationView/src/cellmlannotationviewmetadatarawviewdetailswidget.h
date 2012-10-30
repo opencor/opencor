@@ -27,7 +27,7 @@ namespace OpenCOR {
 //==============================================================================
 
 namespace Core {
-    class TreeView;
+    class TreeViewWidget;
 }   // namespace Core
 
 //==============================================================================
@@ -57,7 +57,7 @@ private:
 
     Ui::CellmlAnnotationViewMetadataRawViewDetailsWidget *mGui;
 
-    Core::TreeView *mTreeView;
+    Core::TreeViewWidget *mTreeView;
     QStandardItemModel *mDataModel;
 };
 

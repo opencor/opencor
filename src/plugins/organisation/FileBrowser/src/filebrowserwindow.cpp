@@ -4,7 +4,7 @@
 
 #include "filebrowserwindow.h"
 #include "filebrowserwidget.h"
-#include "toolbar.h"
+#include "toolbarwidget.h"
 
 //==============================================================================
 
@@ -31,18 +31,18 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
 
     mGui->setupUi(this);
 
-    // Create a toolbar with different buttons
+    // Create a tool bar widget with different buttons
 
-    Core::ToolBar *toolbar = new Core::ToolBar(this);
+    Core::ToolBarWidget *toolBar = new Core::ToolBarWidget(this);
 
-    toolbar->addAction(mGui->actionHome);
-    toolbar->addSeparator();
-    toolbar->addAction(mGui->actionParent);
-    toolbar->addSeparator();
-    toolbar->addAction(mGui->actionPrevious);
-    toolbar->addAction(mGui->actionNext);
+    toolBar->addAction(mGui->actionHome);
+    toolBar->addSeparator();
+    toolBar->addAction(mGui->actionParent);
+    toolBar->addSeparator();
+    toolBar->addAction(mGui->actionPrevious);
+    toolBar->addAction(mGui->actionNext);
 
-    mGui->layout->addWidget(toolbar);
+    mGui->layout->addWidget(toolBar);
 
     // Create and add the file browser widget
 
@@ -164,7 +164,7 @@ void FileBrowserWindow::on_actionNext_triggered()
 void FileBrowserWindow::showCustomContextMenu(const QPoint &) const
 {
     // Create a custom context menu which items match the contents of our
-    // toolbar
+    // tool bar widget
 
     QMenu menu;
 

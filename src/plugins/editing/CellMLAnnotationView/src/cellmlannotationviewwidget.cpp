@@ -13,7 +13,7 @@
 #include "cellmlannotationviewwidget.h"
 #include "cellmlfilemanager.h"
 #include "coreutils.h"
-#include "treeview.h"
+#include "treeviewwidget.h"
 
 //==============================================================================
 

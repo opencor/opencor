@@ -27,7 +27,7 @@ static const QString DeletedFileIcon     = ":oxygen/status/image-missing.png";
 //==============================================================================
 
 FileOrganiserWidget::FileOrganiserWidget(QWidget *pParent) :
-    TreeView(pParent)
+    TreeViewWidget(pParent)
 {
     // Create an instance of the data model that we want to view
 
@@ -297,7 +297,7 @@ bool FileOrganiserWidget::viewportEvent(QEvent *pEvent)
 
     // Default handling of the event
 
-    return TreeView::viewportEvent(pEvent);
+    return TreeViewWidget::viewportEvent(pEvent);
 }
 
 //==============================================================================
@@ -330,7 +330,7 @@ void FileOrganiserWidget::dragMoveEvent(QDragMoveEvent *pEvent)
     // Default handling of the event
     // Note: this gives us the drop indicator
 
-    TreeView::dragMoveEvent(pEvent);
+    TreeViewWidget::dragMoveEvent(pEvent);
 
     // Accept the proposed action for the event, but only if there are objects
     // to drop and if we are not trying to drop the objects above/on/below one
@@ -1057,7 +1057,7 @@ void FileOrganiserWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Default handling of the event
 
-    TreeView::keyPressEvent(pEvent);
+    TreeViewWidget::keyPressEvent(pEvent);
 
     // Let people know about a key having been pressed with the view of opening
     // one or several files

@@ -38,8 +38,8 @@ ADD_PLUGIN(Core
         src/file.cpp
         src/filemanager.cpp
         src/organisationwidget.cpp
-        src/toolbar.cpp
-        src/treeview.cpp
+        src/toolbarwidget.cpp
+        src/treeviewwidget.cpp
         src/usermessagewidget.cpp
         src/widget.cpp
     HEADERS_MOC
@@ -56,8 +56,8 @@ ADD_PLUGIN(Core
         src/dockwidget.h
         src/filemanager.h
         src/organisationwidget.h
-        src/toolbar.h
-        src/treeview.h
+        src/toolbarwidget.h
+        src/treeviewwidget.h
         src/usermessagewidget.h
         src/widget.h
     UIS

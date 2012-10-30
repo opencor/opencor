@@ -31,7 +31,7 @@ namespace OpenCOR {
 //==============================================================================
 
 namespace Core {
-    class TreeView;
+    class TreeViewWidget;
 }   // namespace Core
 
 //==============================================================================
@@ -56,7 +56,7 @@ public:
 
     virtual void retranslateUi();
 
-    Core::TreeView * treeView() const;
+    Core::TreeViewWidget * treeView() const;
 
     CellmlAnnotationViewCellmlElementItem * currentCellmlElementItem() const;
 
@@ -65,7 +65,7 @@ private:
 
     Ui::CellmlAnnotationViewCellmlListWidget *mGui;
 
-    Core::TreeView *mTreeView;
+    Core::TreeViewWidget *mTreeView;
     QStandardItemModel *mDataModel;
     CellmlAnnotationViewCellmlElementItemDelegate *mItemDelegate;
 

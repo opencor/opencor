@@ -6,7 +6,7 @@
 #include "cellmlannotationviewcellmlelementitemdelegate.h"
 #include "cellmlannotationviewcellmllistwidget.h"
 #include "cellmlannotationviewwidget.h"
-#include "treeview.h"
+#include "treeviewwidget.h"
 
 //==============================================================================
 
@@ -34,10 +34,10 @@ CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(Cellm
 
     mGui->setupUi(this);
 
-    // Create and customise our tree view which will contain all of the imports,
-    // units, components, groups and connections from a CellML file
+    // Create and customise our tree view widget which will contain all of the
+    // imports, units, components, groups and connections from a CellML file
 
-    mTreeView     = new Core::TreeView(pParent);
+    mTreeView     = new Core::TreeViewWidget(pParent);
     mDataModel    = new QStandardItemModel(mTreeView);
     mItemDelegate = new CellmlAnnotationViewCellmlElementItemDelegate(mDataModel,
                                                                       mTreeView);
@@ -58,7 +58,7 @@ CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(Cellm
 
     mGui->layout->addWidget(mTreeView);
 
-    // We want a context menu for our tree view
+    // We want a context menu for our tree view widget
 
     mTreeView->setContextMenuPolicy(Qt::CustomContextMenu);
 
@@ -77,20 +77,20 @@ CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(Cellm
     connect(mTreeView->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
             this, SLOT(updateMetadataDetails(const QModelIndex &, const QModelIndex &)));
 
-    // Populate our tree view
+    // Populate our tree view widget
 
     populateDataModel();
 
-    // Make our tree view our focus proxy
+    // Make our tree view widget our focus proxy
 
     setFocusProxy(mTreeView);
 
-    // Expand our tree view enough so that we can see the meaningful parts of
-    // the CellML file
+    // Expand our tree view widget enough so that we can see the meaningful
+    // parts of the CellML file
 
     mTreeView->expandToDepth(1);
 
-    // Resize our tree view, just to be on the safe side
+    // Resize our tree view widget, just to be on the safe side
 
     resizeTreeViewToContents();
 }
@@ -112,7 +112,7 @@ void CellmlAnnotationViewCellmlListWidget::retranslateUi()
 
     mGui->retranslateUi(this);
 
-    // Retranslate some of the CellML elements in our tree view
+    // Retranslate some of the CellML elements in our tree view widget
 
     retranslateDataItem(static_cast<CellmlAnnotationViewCellmlElementItem *>(mDataModel->invisibleRootItem()));
 }
@@ -493,7 +493,7 @@ void CellmlAnnotationViewCellmlListWidget::populateComponentReferenceDataModel(C
 
 void CellmlAnnotationViewCellmlListWidget::resizeTreeViewToContents()
 {
-    // Resize our tree view so that its contents is visible
+    // Resize our tree view widget so that its contents is visible
 
     mTreeView->resizeColumnToContents(0);
 }
@@ -564,7 +564,7 @@ void CellmlAnnotationViewCellmlListWidget::showCustomContextMenu(const QPoint &p
     bool showContextMenu = (posItem == crtItem);
 
     // Create a custom context menu which items match the contents of our
-    // toolbar
+    // tool bar widget
 
     if (showContextMenu) {
         // Update the enabled status of our actions
@@ -715,9 +715,9 @@ bool CellmlAnnotationViewCellmlListWidget::indexIsAllExpanded(const QModelIndex 
 
 //==============================================================================
 
-Core::TreeView * CellmlAnnotationViewCellmlListWidget::treeView() const
+Core::TreeViewWidget * CellmlAnnotationViewCellmlListWidget::treeView() const
 {
-    // Return our tree view
+    // Return our tree view widget
 
     return mTreeView;
 }

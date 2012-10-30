@@ -123,12 +123,12 @@ void CellMLAnnotationViewPlugin::loadSettings(QSettings *pSettings)
 
 void CellMLAnnotationViewPlugin::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of the tree view's and CellML annotation's width
+    // Keep track of the tree view widget's and CellML annotation's width
     // Note: we must also keep track of the CellML annotation's width because
     //       when loading our settings (see above), the view widget doesn't yet
     //       have a 'proper' width, so we couldn't simply assume that the Cellml
     //       annotation's initial width is this view widget's width minus the
-    //       tree view's initial width, so...
+    //       tree view widget's initial width, so...
 
     pSettings->beginGroup(SettingsCellmlAnnotationWidget);
         // Sizes

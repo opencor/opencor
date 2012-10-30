@@ -4,7 +4,7 @@
 
 #include "fileorganiserwindow.h"
 #include "fileorganiserwidget.h"
-#include "toolbar.h"
+#include "toolbarwidget.h"
 
 //==============================================================================
 
@@ -30,14 +30,14 @@ FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
 
     mGui->setupUi(this);
 
-    // Create a toolbar with different buttons
+    // Create a tool bar widget with different buttons
 
-    Core::ToolBar *toolbar = new Core::ToolBar(this);
+    Core::ToolBarWidget *toolBar = new Core::ToolBarWidget(this);
 
-    toolbar->addAction(mGui->actionNew);
-    toolbar->addAction(mGui->actionDelete);
+    toolBar->addAction(mGui->actionNew);
+    toolBar->addAction(mGui->actionDelete);
 
-    mGui->layout->addWidget(toolbar);
+    mGui->layout->addWidget(toolBar);
 
     // Create and add the file organiser widget
 
@@ -135,7 +135,7 @@ void FileOrganiserWindow::on_actionDelete_triggered()
 void FileOrganiserWindow::showCustomContextMenu(const QPoint &) const
 {
     // Create a custom context menu which items match the contents of our
-    // toolbar
+    // tool bar widget
 
     QMenu menu;
 

@@ -1,8 +1,8 @@
 //==============================================================================
-// Enhanced tree view
+// Enhanced tree view widget
 //==============================================================================
 
-#include "treeview.h"
+#include "treeviewwidget.h"
 
 //==============================================================================
 
@@ -16,16 +16,17 @@ namespace Core {
 
 //==============================================================================
 
-TreeView::TreeView(QWidget *pParent) :
+TreeViewWidget::TreeViewWidget(QWidget *pParent) :
     QTreeView(pParent),
     CommonWidget(pParent)
 {
-    // Set some properties for the tree view itself
+    // Set some properties for the tree view widget itself
 
     setAllColumnsShowFocus(true);
 #ifdef Q_WS_MAC
     setAttribute(Qt::WA_MacShowFocusRect, 0);
-    // Note: the above removes the focus border since it messes up our toolbar
+    // Note: the above removes the focus border since it messes up our tree view
+    //       widget
 #endif
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     setUniformRowHeights(true);
@@ -33,7 +34,7 @@ TreeView::TreeView(QWidget *pParent) :
 
 //==============================================================================
 
-void TreeView::selectFirstNode()
+void TreeViewWidget::selectFirstNode()
 {
     // Select the first node, if any
 
@@ -45,18 +46,18 @@ void TreeView::selectFirstNode()
 
 //==============================================================================
 
-bool TreeView::isEditing() const
+bool TreeViewWidget::isEditing() const
 {
-    // Return whether the tree view is in editing mode
+    // Return whether the tree view widget is in editing mode
 
     return state() == QAbstractItemView::EditingState;
 }
 
 //==============================================================================
 
-QSize TreeView::sizeHint() const
+QSize TreeViewWidget::sizeHint() const
 {
-    // Suggest a default size for the tree view
+    // Suggest a default size for the tree view widget
     // Note: this is critical if we want a docked widget, with a tree view
     //       widget on it, to have a decent size when docked to the main window
 
@@ -65,7 +66,7 @@ QSize TreeView::sizeHint() const
 
 //==============================================================================
 
-void TreeView::startDrag(Qt::DropActions pSupportedActions)
+void TreeViewWidget::startDrag(Qt::DropActions pSupportedActions)
 {
     // This a reimplementation of QAbstractItemView::startDrag, so that we can
     // provide OpenCOR with a better pixmap for the drag object

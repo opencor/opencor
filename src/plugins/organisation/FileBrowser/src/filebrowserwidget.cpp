@@ -23,7 +23,7 @@ static const QString HomeFolder = QDir::homePath();
 //==============================================================================
 
 FileBrowserWidget::FileBrowserWidget(QWidget *pParent) :
-    TreeView(pParent),
+    TreeViewWidget(pParent),
     mNeedDefColWidth(true),
     mInitPathDirs(QStringList()),
     mInitPathDir(QString()),
@@ -109,11 +109,11 @@ void FileBrowserWidget::loadSettings(QSettings *pSettings)
         // folder and/or file (depending on whether the initial path refers to a
         // file)
         // Note: indeed, should mInitPath refer to a file, then to directly set
-        //       the current index of the tree view to that of a file won't give
-        //       us the expected behaviour (i.e. the parent folder being open
-        //       and expanded, and the file selected), so instead one must set
-        //       the current index to that of the parent folder and then select
-        //       the file
+        //       the current index of the tree view widget to that of a file
+        //       won't give us the expected behaviour (i.e. the parent folder
+        //       being open and expanded, and the file selected), so instead
+        //       one must set the current index to that of the parent folder
+        //       and then select the file
 
         if (initPathFileInfo.isDir()) {
             // We are dealing with a folder, so...
@@ -207,7 +207,7 @@ bool FileBrowserWidget::viewportEvent(QEvent *pEvent)
 
     // Default handling of the event
 
-    return TreeView::viewportEvent(pEvent);
+    return TreeViewWidget::viewportEvent(pEvent);
 }
 
 //==============================================================================
@@ -425,7 +425,7 @@ void FileBrowserWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Default handling of the event
 
-    TreeView::keyPressEvent(pEvent);
+    TreeViewWidget::keyPressEvent(pEvent);
 
     // Deselect folders, if required
 
@@ -456,7 +456,7 @@ void FileBrowserWidget::mousePressEvent(QMouseEvent *pEvent)
 {
     // Default handling of the event
 
-    TreeView::mousePressEvent(pEvent);
+    TreeViewWidget::mousePressEvent(pEvent);
 
     // Deselect folders, if required
 
@@ -469,7 +469,7 @@ void FileBrowserWidget::mouseMoveEvent(QMouseEvent *pEvent)
 {
     // Default handling of the event
 
-    TreeView::mouseMoveEvent(pEvent);
+    TreeViewWidget::mouseMoveEvent(pEvent);
 
     // Deselect folders, if required
 
