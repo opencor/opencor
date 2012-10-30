@@ -64,7 +64,7 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::retranslateUi()
 
     mGui->retranslateUi(this);
 
-    // Update the header labels
+    // Update our header labels
 
     mDataModel->setHorizontalHeaderLabels(QStringList() << tr("#")
                                                         << tr("Subject")

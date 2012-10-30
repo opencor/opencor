@@ -11,6 +11,10 @@
 
 //==============================================================================
 
+class QStandardItemModel;
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace SingleCellSimulationView {
 
@@ -22,6 +26,11 @@ class SingleCellSimulationViewSimulationInformationWidget : public Core::Propert
 
 public:
     explicit SingleCellSimulationViewSimulationInformationWidget(QWidget *pParent);
+
+    virtual void retranslateUi();
+
+private:
+    QStandardItemModel *mDataModel;
 };
 
 //==============================================================================

@@ -20,7 +20,7 @@ TreeViewWidget::TreeViewWidget(QWidget *pParent) :
     QTreeView(pParent),
     CommonWidget(pParent)
 {
-    // Set some properties for the tree view widget itself
+    // Set some properties for our tree view widget
 
     setAllColumnsShowFocus(true);
 #ifdef Q_WS_MAC
@@ -48,7 +48,7 @@ void TreeViewWidget::selectFirstNode()
 
 bool TreeViewWidget::isEditing() const
 {
-    // Return whether the tree view widget is in editing mode
+    // Return whether our tree view widget is in editing mode
 
     return state() == QAbstractItemView::EditingState;
 }
@@ -57,7 +57,7 @@ bool TreeViewWidget::isEditing() const
 
 QSize TreeViewWidget::sizeHint() const
 {
-    // Suggest a default size for the tree view widget
+    // Suggest a default size for our tree view widget
     // Note: this is critical if we want a docked widget, with a tree view
     //       widget on it, to have a decent size when docked to the main window
 
