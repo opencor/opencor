@@ -29,7 +29,8 @@ SingleCellSimulationViewSimulationInformationWidget::SingleCellSimulationViewSim
     Widget(defaultSize(0), pParent),
     mGui(new Ui::SingleCellSimulationViewSimulationInformationWidget),
     mFormEditor(QDesignerComponents::createFormEditor(0)),
-    mPropertyEditor(QDesignerComponents::createPropertyEditor(mFormEditor, this))
+    mPropertyEditor(QDesignerComponents::createPropertyEditor(mFormEditor, this)),
+    mProperties(new QObject())
 
 {
     // Set up the GUI
@@ -37,6 +38,10 @@ SingleCellSimulationViewSimulationInformationWidget::SingleCellSimulationViewSim
     mGui->setupUi(this);
 
     // Add our property editor to our layout
+
+    mProperties->setProperty("Test", 3);
+
+    mPropertyEditor->setObject(mProperties);
 
     mGui->layout->addWidget(mPropertyEditor);
 }
@@ -46,6 +51,8 @@ SingleCellSimulationViewSimulationInformationWidget::SingleCellSimulationViewSim
 SingleCellSimulationViewSimulationInformationWidget::~SingleCellSimulationViewSimulationInformationWidget()
 {
     // Delete some internal objects
+
+    delete mProperties;
 
     delete mPropertyEditor;
     delete mFormEditor;
