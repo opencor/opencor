@@ -45,8 +45,6 @@ private:
 
     QDesignerFormEditorInterface *mFormEditor;
     QDesignerPropertyEditorInterface *mPropertyEditor;
-
-    QObject *mProperties;
 };
 
 //==============================================================================
