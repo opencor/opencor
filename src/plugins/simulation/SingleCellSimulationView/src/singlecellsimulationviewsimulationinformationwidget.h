@@ -7,13 +7,7 @@
 
 //==============================================================================
 
-#include "widget.h"
-
-//==============================================================================
-
-namespace Ui {
-    class SingleCellSimulationViewSimulationInformationWidget;
-}
+#include "propertyeditorwidget.h"
 
 //==============================================================================
 
@@ -22,21 +16,12 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-class SingleCellSimulationViewSimulationInformationWidget : public Core::Widget
+class SingleCellSimulationViewSimulationInformationWidget : public Core::PropertyEditorWidget
 {
     Q_OBJECT
 
 public:
     explicit SingleCellSimulationViewSimulationInformationWidget(QWidget *pParent);
-    ~SingleCellSimulationViewSimulationInformationWidget();
-
-    virtual void retranslateUi();
-
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
-
-private:
-    Ui::SingleCellSimulationViewSimulationInformationWidget *mGui;
 };
 
 //==============================================================================

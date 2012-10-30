@@ -20,44 +20,8 @@ namespace SingleCellSimulationView {
 //==============================================================================
 
 SingleCellSimulationViewSimulationInformationWidget::SingleCellSimulationViewSimulationInformationWidget(QWidget *pParent) :
-    Widget(pParent),
-    mGui(new Ui::SingleCellSimulationViewSimulationInformationWidget)
+    PropertyEditorWidget(pParent)
 {
-    // Set up the GUI
-
-    mGui->setupUi(this);
-}
-
-//==============================================================================
-
-SingleCellSimulationViewSimulationInformationWidget::~SingleCellSimulationViewSimulationInformationWidget()
-{
-    // Delete the GUI
-
-    delete mGui;
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewSimulationInformationWidget::retranslateUi()
-{
-    // Retranslate the whole widget
-
-    mGui->retranslateUi(this);
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewSimulationInformationWidget::loadSettings(QSettings *pSettings)
-{
-//---GRY--- TO BE DONE...
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewSimulationInformationWidget::saveSettings(QSettings *pSettings) const
-{
-    //---GRY--- TO BE DONE...
 }
 
 //==============================================================================

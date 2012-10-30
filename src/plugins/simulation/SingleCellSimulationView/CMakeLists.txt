@@ -41,7 +41,6 @@ ADD_PLUGIN(SingleCellSimulationView
         src/singlecellsimulationviewgraphpanelwidget.ui
         src/singlecellsimulationviewgraphpanelswidget.ui
         src/singlecellsimulationviewinformationwidget.ui
-        src/singlecellsimulationviewsimulationinformationwidget.ui
         src/singlecellsimulationviewwidget.ui
     DEFINITIONS
         ${LLVM_DEFINITIONS}
