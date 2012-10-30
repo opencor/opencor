@@ -27,16 +27,16 @@ namespace SingleCellSimulationView {
 
 SingleCellSimulationViewSimulationInformationWidget::SingleCellSimulationViewSimulationInformationWidget(QWidget *pParent) :
     Widget(defaultSize(0), pParent),
-    mGui(new Ui::SingleCellSimulationViewSimulationInformationWidget)
+    mGui(new Ui::SingleCellSimulationViewSimulationInformationWidget),
+    mFormEditor(QDesignerComponents::createFormEditor(0)),
+    mPropertyEditor(QDesignerComponents::createPropertyEditor(mFormEditor, this))
+
 {
     // Set up the GUI
 
     mGui->setupUi(this);
 
-    // Create our Start Point row
-
-    mFormEditor = QDesignerComponents::createFormEditor(0);
-    mPropertyEditor = QDesignerComponents::createPropertyEditor(mFormEditor, this);
+    // Add our property editor to our layout
 
     mGui->layout->addWidget(mPropertyEditor);
 }
