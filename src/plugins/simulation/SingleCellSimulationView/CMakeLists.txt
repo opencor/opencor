@@ -61,8 +61,6 @@ ADD_PLUGIN(SingleCellSimulationView
         ${LLVM_BINARY_PLUGIN}
     QT_DEPENDENCIES
         QtCore
-        QtDesigner
-        QtDesignerComponents
         QtGui
         QtNetwork
         QtSvg

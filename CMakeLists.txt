@@ -338,27 +338,6 @@ IF(APPLE)
             QtCore
     )
 
-    DEPLOY_MAC_OS_X_LIBRARY(QtDesigner
-        TYPE
-            Framework
-        FRAMEWORKS
-            QtCore
-            QtGui
-            QtScript
-            QtXml
-    )
-
-    DEPLOY_MAC_OS_X_LIBRARY(QtDesignerComponents
-        TYPE
-            Framework
-        FRAMEWORKS
-            QtCore
-            QtDesigner
-            QtGui
-            QtScript
-            QtXml
-    )
-
     DEPLOY_MAC_OS_X_LIBRARY(QtHelp
         TYPE
             Framework

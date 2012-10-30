@@ -11,14 +11,14 @@
 
 //==============================================================================
 
-namespace Ui {
-    class SingleCellSimulationViewSimulationInformationWidget;
-}
+class QLabel;
+class QLineEdit;
 
 //==============================================================================
 
-class QDesignerFormEditorInterface;
-class QDesignerPropertyEditorInterface;
+namespace Ui {
+    class SingleCellSimulationViewSimulationInformationWidget;
+}
 
 //==============================================================================
 
@@ -43,8 +43,8 @@ public:
 private:
     Ui::SingleCellSimulationViewSimulationInformationWidget *mGui;
 
-    QDesignerFormEditorInterface *mFormEditor;
-    QDesignerPropertyEditorInterface *mPropertyEditor;
+    QLabel *mStartingPointLabel;
+    QLineEdit *mStartingPointField;
 };
 
 //==============================================================================
