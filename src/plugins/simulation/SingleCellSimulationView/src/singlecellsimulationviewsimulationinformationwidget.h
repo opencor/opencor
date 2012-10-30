@@ -11,11 +11,6 @@
 
 //==============================================================================
 
-class QLabel;
-class QLineEdit;
-
-//==============================================================================
-
 namespace Ui {
     class SingleCellSimulationViewSimulationInformationWidget;
 }
@@ -42,9 +37,6 @@ public:
 
 private:
     Ui::SingleCellSimulationViewSimulationInformationWidget *mGui;
-
-    QLabel *mStartingPointLabel;
-    QLineEdit *mStartingPointField;
 };
 
 //==============================================================================
