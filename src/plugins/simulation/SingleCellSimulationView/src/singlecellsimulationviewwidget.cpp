@@ -57,19 +57,19 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
 
     // Create a tool bar widget with different buttons
 
-    Core::ToolBarWidget *toolBar = new Core::ToolBarWidget(this);
+    Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget(this);
 
-    toolBar->addAction(mGui->actionRun);
-    toolBar->addAction(mGui->actionStop);
-    toolBar->addSeparator();
-    toolBar->addAction(mGui->actionDebugMode);
-    toolBar->addSeparator();
-    toolBar->addAction(mGui->actionAdd);
-    toolBar->addAction(mGui->actionRemove);
-    toolBar->addSeparator();
-    toolBar->addAction(mGui->actionCsvExport);
+    toolBarWidget->addAction(mGui->actionRun);
+    toolBarWidget->addAction(mGui->actionStop);
+    toolBarWidget->addSeparator();
+    toolBarWidget->addAction(mGui->actionDebugMode);
+    toolBarWidget->addSeparator();
+    toolBarWidget->addAction(mGui->actionAdd);
+    toolBarWidget->addAction(mGui->actionRemove);
+    toolBarWidget->addSeparator();
+    toolBarWidget->addAction(mGui->actionCsvExport);
 
-    mGui->layout->addWidget(toolBar);
+    mGui->layout->addWidget(toolBarWidget);
     mGui->layout->addWidget(Core::newLineWidget(this));
 
     // Create our splitter

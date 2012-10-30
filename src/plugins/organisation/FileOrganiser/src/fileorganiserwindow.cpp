@@ -32,12 +32,12 @@ FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
 
     // Create a tool bar widget with different buttons
 
-    Core::ToolBarWidget *toolBar = new Core::ToolBarWidget(this);
+    Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget(this);
 
-    toolBar->addAction(mGui->actionNew);
-    toolBar->addAction(mGui->actionDelete);
+    toolBarWidget->addAction(mGui->actionNew);
+    toolBarWidget->addAction(mGui->actionDelete);
 
-    mGui->layout->addWidget(toolBar);
+    mGui->layout->addWidget(toolBarWidget);
 
     // Create and add the file organiser widget
 

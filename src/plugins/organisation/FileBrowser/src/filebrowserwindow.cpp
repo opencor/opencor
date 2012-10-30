@@ -33,16 +33,16 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
 
     // Create a tool bar widget with different buttons
 
-    Core::ToolBarWidget *toolBar = new Core::ToolBarWidget(this);
+    Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget(this);
 
-    toolBar->addAction(mGui->actionHome);
-    toolBar->addSeparator();
-    toolBar->addAction(mGui->actionParent);
-    toolBar->addSeparator();
-    toolBar->addAction(mGui->actionPrevious);
-    toolBar->addAction(mGui->actionNext);
+    toolBarWidget->addAction(mGui->actionHome);
+    toolBarWidget->addSeparator();
+    toolBarWidget->addAction(mGui->actionParent);
+    toolBarWidget->addSeparator();
+    toolBarWidget->addAction(mGui->actionPrevious);
+    toolBarWidget->addAction(mGui->actionNext);
 
-    mGui->layout->addWidget(toolBar);
+    mGui->layout->addWidget(toolBarWidget);
 
     // Create and add the file browser widget
 

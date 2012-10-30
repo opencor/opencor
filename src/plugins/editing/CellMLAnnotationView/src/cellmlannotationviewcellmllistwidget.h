@@ -56,7 +56,7 @@ public:
 
     virtual void retranslateUi();
 
-    Core::TreeViewWidget * treeView() const;
+    Core::TreeViewWidget * treeViewWidget() const;
 
     CellmlAnnotationViewCellmlElementItem * currentCellmlElementItem() const;
 
@@ -65,7 +65,7 @@ private:
 
     Ui::CellmlAnnotationViewCellmlListWidget *mGui;
 
-    Core::TreeViewWidget *mTreeView;
+    Core::TreeViewWidget *mTreeViewWidget;
     QStandardItemModel *mDataModel;
     CellmlAnnotationViewCellmlElementItemDelegate *mItemDelegate;
 

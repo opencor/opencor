@@ -337,7 +337,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
     //       mParent, but this wouldn't work here since updateGui() gets called
     //       as part of the creation of this metadata details widget, so...
 
-    setTabOrder(qobject_cast<QWidget *>(mParent->cellmlList()->treeView()),
+    setTabOrder(qobject_cast<QWidget *>(mParent->cellmlList()->treeViewWidget()),
                 mQualifierValue);
     setTabOrder(mQualifierValue, mLookupQualifierButton);
     setTabOrder(mLookupQualifierButton, mTermValue);

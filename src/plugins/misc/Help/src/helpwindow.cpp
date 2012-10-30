@@ -57,23 +57,23 @@ HelpWindow::HelpWindow(QWidget *pParent) :
 
     // Create a tool bar widget with different buttons
 
-    Core::ToolBarWidget *toolBar = new Core::ToolBarWidget(this);
+    Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget(this);
 
-    toolBar->addAction(mGui->actionHome);
-    toolBar->addSeparator();
-    toolBar->addAction(mGui->actionBack);
-    toolBar->addAction(mGui->actionForward);
-    toolBar->addSeparator();
-    toolBar->addAction(mGui->actionCopy);
-    toolBar->addSeparator();
-    toolBar->addAction(mGui->actionNormalSize);
-    toolBar->addSeparator();
-    toolBar->addAction(mGui->actionZoomIn);
-    toolBar->addAction(mGui->actionZoomOut);
-    toolBar->addSeparator();
-    toolBar->addAction(mGui->actionPrint);
+    toolBarWidget->addAction(mGui->actionHome);
+    toolBarWidget->addSeparator();
+    toolBarWidget->addAction(mGui->actionBack);
+    toolBarWidget->addAction(mGui->actionForward);
+    toolBarWidget->addSeparator();
+    toolBarWidget->addAction(mGui->actionCopy);
+    toolBarWidget->addSeparator();
+    toolBarWidget->addAction(mGui->actionNormalSize);
+    toolBarWidget->addSeparator();
+    toolBarWidget->addAction(mGui->actionZoomIn);
+    toolBarWidget->addAction(mGui->actionZoomOut);
+    toolBarWidget->addSeparator();
+    toolBarWidget->addAction(mGui->actionPrint);
 
-    mGui->layout->addWidget(toolBar);
+    mGui->layout->addWidget(toolBarWidget);
 
     // Create and add the help widget
 

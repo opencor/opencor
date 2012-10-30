@@ -121,7 +121,7 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(CellMLAnnotationViewPlugi
     //       node of our lists in a reverse order, i.e. finish with our CellML
     //       list...
 
-    mCellmlList->treeView()->selectFirstNode();
+    mCellmlList->treeViewWidget()->selectFirstNode();
 }
 
 //==============================================================================

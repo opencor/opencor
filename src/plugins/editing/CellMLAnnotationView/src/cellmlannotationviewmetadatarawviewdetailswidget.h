@@ -57,7 +57,7 @@ private:
 
     Ui::CellmlAnnotationViewMetadataRawViewDetailsWidget *mGui;
 
-    Core::TreeViewWidget *mTreeView;
+    Core::TreeViewWidget *mTreeViewWidget;
     QStandardItemModel *mDataModel;
 };
 

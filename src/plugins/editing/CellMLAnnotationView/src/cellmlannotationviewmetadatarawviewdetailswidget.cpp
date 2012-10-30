@@ -30,16 +30,16 @@ CellmlAnnotationViewMetadataRawViewDetailsWidget::CellmlAnnotationViewMetadataRa
 
     mGui->setupUi(this);
 
-    mTreeView  = new Core::TreeViewWidget(this);
-    mDataModel = new QStandardItemModel(mTreeView);
+    mTreeViewWidget  = new Core::TreeViewWidget(this);
+    mDataModel = new QStandardItemModel(mTreeViewWidget);
 
-    mTreeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    mTreeView->setFrameShape(QFrame::NoFrame);
-    mTreeView->setModel(mDataModel);
-    mTreeView->setRootIsDecorated(false);
-    mTreeView->setSelectionMode(QAbstractItemView::SingleSelection);
+    mTreeViewWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    mTreeViewWidget->setFrameShape(QFrame::NoFrame);
+    mTreeViewWidget->setModel(mDataModel);
+    mTreeViewWidget->setRootIsDecorated(false);
+    mTreeViewWidget->setSelectionMode(QAbstractItemView::SingleSelection);
 
-    mGui->layout->addWidget(mTreeView);
+    mGui->layout->addWidget(mTreeViewWidget);
 
     // Some further initialisations which are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
@@ -108,10 +108,10 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(CellMLSupport::
 
     // Make sure that all the columns have their contents fit
 
-    mTreeView->resizeColumnToContents(0);
-    mTreeView->resizeColumnToContents(1);
-    mTreeView->resizeColumnToContents(2);
-    mTreeView->resizeColumnToContents(3);
+    mTreeViewWidget->resizeColumnToContents(0);
+    mTreeViewWidget->resizeColumnToContents(1);
+    mTreeViewWidget->resizeColumnToContents(2);
+    mTreeViewWidget->resizeColumnToContents(3);
 
     // Allow ourselves to be updated again
 
