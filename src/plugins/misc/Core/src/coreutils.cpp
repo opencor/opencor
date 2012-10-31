@@ -171,8 +171,8 @@ QColor borderColor()
 {
     // Return the colour to be used for a border
 
-    QSettings settings(qApp->applicationName());
     QColor res;
+    QSettings settings(qApp->applicationName());
 
     settings.beginGroup(SettingsGlobal);
         res = settings.value(SettingsBorderColor).value<QColor>();
