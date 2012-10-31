@@ -18,7 +18,7 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QSettings>
-#include <QTextEdit>
+#include <QStackedWidget>
 
 //==============================================================================
 
@@ -322,22 +322,36 @@ void CorePlugin::handleArguments(const QStringList &pArguments)
 void CorePlugin::retrieveBorderColor()
 {
     // Retrieve the colour used for a 'normal' border
-    // Note #1: we use a QTextEdit widget and retrieve the colour of the pixel
-    //          which is in the middle of the right border...
+    // Note #1: we use a QStackedWidget object and retrieve the colour of the
+    //          pixel which is in the middle of the right border...
     // Note #2: we don't rely on the top border because it may be rendered in a
     //          special way. In the same way, we don't rely on a corner as such
     //          in case it's rendered as a rounded corner...
+    // Note #3: our widget must be shown otherwise, the retrieved border colour
+    //          will be black, so we show it off screen...
 
-    QTextEdit textEdit;
-    QImage image = QImage(textEdit.size(),
+    // Create our widget and show it off screen
+
+    QStackedWidget stackedWidget;
+
+    stackedWidget.setFrameShape(QFrame::StyledPanel);
+
+    stackedWidget.move(-2*stackedWidget.width(),
+                       -2*stackedWidget.height());
+
+    stackedWidget.show();
+
+    // Render the widget to an image
+
+    QImage image = QImage(stackedWidget.size(),
                           QImage::Format_ARGB32_Premultiplied);
 
-    textEdit.render(&image);
+    stackedWidget.render(&image);
+
+    // Retrieve the colour we are after
 
     QColor newBorderColor = QColor(image.pixel(image.width()-1,
                                    0.5*image.height()));
-//---GRY---
-newBorderColor = QColor(255, 0, 0);
 
     // Use our settings to keep track of the colour
 
