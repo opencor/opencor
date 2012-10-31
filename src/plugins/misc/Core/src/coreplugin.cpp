@@ -327,8 +327,10 @@ void CorePlugin::retrieveBorderColor()
     // Note #2: we don't rely on the top border because it may be rendered in a
     //          special way. In the same way, we don't rely on a corner as such
     //          in case it's rendered as a rounded corner...
-    // Note #3: our widget must be shown otherwise, the retrieved border colour
-    //          will be black, so we show it off screen...
+    // Note #3: on OS X, our widget must be shown otherwise, the retrieved
+    //          border colour will be black. So we show it off screen, even on
+    //          Windows and Linux, in case their behaviour was to change in the
+    //          future...
 
     // Create our widget and show it off screen
 
