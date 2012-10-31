@@ -12,6 +12,10 @@
 
 //==============================================================================
 
+class QStandardItem;
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace Core {
 
@@ -23,6 +27,9 @@ class CORE_EXPORT PropertyEditorWidget : public TreeViewWidget
 
 public:
     explicit PropertyEditorWidget(QWidget *pParent);
+
+    static QStandardItem * newNonEditableItem();
+    static QStandardItem * newEditableItem();
 
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);

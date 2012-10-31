@@ -37,6 +37,9 @@ SingleCellSimulationViewInformationWidget::SingleCellSimulationViewInformationWi
                                                                mSimulationInformationWidget,
                                                                this);
 
+mSimulationInformationWidget->setUnit("ms");
+//---GRY--- THE ABOVE IS JUST FOR TESTING PURPOSES...
+
     // Create our Solvers collapsible widget
 
     mSolversCollapsibleWidget = new Core::CollapsibleWidget(this);

@@ -41,6 +41,18 @@
         <source>Unit</source>
         <translation>Unité</translation>
     </message>
+    <message>
+        <source>Starting point</source>
+        <translation>Point de départ</translation>
+    </message>
+    <message>
+        <source>Ending point</source>
+        <translation>Point d&apos;arrivée</translation>
+    </message>
+    <message>
+        <source>Point interval</source>
+        <translation>Interval de point</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>

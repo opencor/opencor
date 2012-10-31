@@ -29,6 +29,8 @@ public:
 
     virtual void retranslateUi();
 
+    void setUnit(const QString &pUnit);
+
 private:
     QStandardItemModel *mDataModel;
 };

@@ -7,6 +7,7 @@
 //==============================================================================
 
 #include <QKeyEvent>
+#include <QStandardItem>
 
 //==============================================================================
 
@@ -18,6 +19,31 @@ namespace Core {
 PropertyEditorWidget::PropertyEditorWidget(QWidget *pParent) :
     TreeViewWidget(pParent)
 {
+    // Customise ourself
+
+    setSelectionMode(QAbstractItemView::SingleSelection);
+}
+
+//==============================================================================
+
+QStandardItem * PropertyEditorWidget::newNonEditableItem()
+{
+    // Create and return a non-editable item
+
+    QStandardItem *res = new QStandardItem();
+
+    res->setFlags(res->flags() & ~Qt::ItemIsEditable);
+
+    return res;
+}
+
+//==============================================================================
+
+QStandardItem * PropertyEditorWidget::newEditableItem()
+{
+    // Create and return an editable item
+
+    return new QStandardItem();
 }
 
 //==============================================================================
