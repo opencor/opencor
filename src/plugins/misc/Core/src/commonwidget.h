@@ -61,15 +61,13 @@ public:
 protected:
     QSize defaultSize(const double &pRatio) const;
 
-    void initBorderColor();
-    void drawBorderIfDocked(const bool &pForceDrawing = false,
-                            const bool &pTop = true, const bool &pLeft = true,
-                            const bool &pBottom = true, const bool &pRight = true);
+    void drawBorder(const bool &pDockedTop, const bool &pDockedLeft,
+                    const bool &pDockedBottom, const bool &pDockedRight,
+                    const bool &pFloatingTop, const bool &pFloatingLeft,
+                    const bool &pFloatingBottom, const bool &pFloatingRight);
 
 private:
     QWidget *mParent;
-
-    QColor mBorderColor;
 };
 
 //==============================================================================

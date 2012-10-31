@@ -15,6 +15,7 @@
 #include <QResource>
 #include <QSettings>
 #include <QTextEdit>
+#include <QVariant>
 #include <QWidget>
 
 //==============================================================================
@@ -85,44 +86,43 @@ bool saveResourceAs(const QString &pResource, const QString &pFilename)
 
 //==============================================================================
 
-void * instance(const QString &pClassName, void *pDefaultGlobalInstance)
+void * globalInstance(const QString &pObjectName, void *pDefaultGlobalInstance)
 {
-    // Retrieve the 'global' instance associated with a given class
-    // Note: initially, the plan was to have a static instance of a given class
-    //       and return its address. However, this approach doesn't work on
-    //       Windows and Linux (but does on OS X). Indeed, say that the Core
-    //       plugin is required by two other plugins, then these two plugins
-    //       won't get the same 'copy' of the Core plugin. (It seems like) each
-    //       'copy' gets its own address space. (This is not the case on OS X,
-    //       (most likely) because of the way applications are bundled on that
-    //       platform.) To address this issue, we keep track of the address of a
-    //       'global' instance using QSettings. Now, this approach works fine on
-    //       both Windows and Linux, but... not on OS X (!!). (It would seem
-    //       that) there are some read/write conflicts (when using QSettings).
-    //       These conflicts would normally be addressed using a mutex, but then
-    //       we would be back to the issue of being able to share something
-    //       between different plugins. So, instead, we, on OS X, revert to our
-    //       original plan...
+    // Retrieve the 'global' instance of an object
+    // Note: initially, the plan was to have a static instance of an object and
+    //       return its address. However, this approach doesn't work on Windows
+    //       and Linux (but does on OS X). Indeed, say that the Core plugin is
+    //       required by two other plugins, then these two plugins won't get the
+    //       same 'copy' of the Core plugin. (It seems like) each 'copy' gets
+    //       its own address space. (This is not the case on OS X, (most likely)
+    //       because of the way applications are bundled on that platform.) To
+    //       address this issue, we keep track of the address of a 'global'
+    //       instance using QSettings. Now, this approach works fine on both
+    //       Windows and Linux, but... not on OS X (!!). (It would seem that)
+    //       there are some read/write conflicts (when using QSettings). These
+    //       conflicts would normally be addressed using a mutex, but then we
+    //       would be back to the issue of being able to share something between
+    //       different plugins. So, instead, we, on OS X, revert to our original
+    //       plan...
 
 #ifdef Q_WS_MAC
-    Q_UNUSED(pClassName);
+    Q_UNUSED(pObjectName);
 
     return (void *) pDefaultGlobalInstance;
 #else
-
     QSettings settings(qApp->applicationName());
     qlonglong globalInstance;
 
-    settings.beginGroup("Instances");
-        globalInstance = settings.value(pClassName, 0).toLongLong();
+    settings.beginGroup(SettingsGlobal);
+        globalInstance = settings.value(pObjectName, 0).toLongLong();
 
         if (!globalInstance) {
-            // There is no 'global' instance associated with the given class, so
-            // use the class's default 'global' instance we were given
+            // There is no 'global' instance associated with the given object,
+            // so use the object's default 'global' instance we were given
 
             globalInstance = (qlonglong) pDefaultGlobalInstance;
 
-            settings.setValue(pClassName, globalInstance);
+            settings.setValue(pObjectName, globalInstance);
         }
     settings.endGroup();
 
@@ -167,54 +167,37 @@ QString nativeCanonicalFileName(const QString &pFileName)
 
 //==============================================================================
 
+QColor borderColor()
+{
+    // Return the colour to be used for a border
+
+    QSettings settings(qApp->applicationName());
+    QColor res;
+
+    settings.beginGroup(SettingsGlobal);
+        res = settings.value(SettingsBorderColor).value<QColor>();
+    settings.endGroup();
+
+    return res;
+}
+
+//==============================================================================
+
 QFrame * newLineWidget(const bool &pHorizontal, QWidget *pParent)
 {
-    // Return a 'real' line widget, i.e. one which is 1 pixel wide, using a
-    // QFrame widget
-
-#ifdef Q_WS_MAC
-    // We want the line to be of the colour which is used by Qt to render the
-    // border of a 'normal' bordered widget. On Windows and Linux, we can
-    // achieve this by setting the frame shape of a QFrame widget, but this
-    // doesn't work on OS X, so we need to retrieve that colour from somewhere
-    // else...
-
-    // Retrieve, if not already done, the colour used for a 'normal' border
-    // Note #1: we use a QTextEdit widget and retrieve the colour of the pixel
-    //          which is in the middle of the right border...
-    // Note #2: we don't rely on the top border because it may be rendered in a
-    //          special way. In the same way, we don't rely on a corner as such
-    //          in case it's rendered as a rounded corner...
-
-    static bool firstTime = true;
-    static QString borderColorStyle = QString();
-
-    if (firstTime) {
-        QTextEdit textEdit;
-        QImage image = QImage(textEdit.size(),
-                              QImage::Format_ARGB32_Premultiplied);
-
-        textEdit.render(&image);
-
-        QColor borderColor = QColor(image.pixel(image.width()-1,
-                                                0.5*image.height()));
-
-        borderColorStyle = QString("QFrame {"
-                                   "    border: 1px solid rgb(%1, %2, %3);"
-                                   "}").arg(QString::number(borderColor.red()),
-                                            QString::number(borderColor.green()),
-                                            QString::number(borderColor.blue()));
-
-        firstTime = false;
-    }
-#endif
-
-    // Create and return our line widget
+    // Create and return a 'real' line widget, i.e. one which is 1 pixel wide,
+    // using a QFrame widget
 
     QFrame *res = new QFrame(pParent);
 
 #ifdef Q_WS_MAC
-    res->setStyleSheet(borderColorStyle);
+    QColor currentBorderColor = borderColor();
+
+    res->setStyleSheet(QString("QFrame {"
+                               "    border: 1px solid rgb(%1, %2, %3);"
+                               "}").arg(QString::number(currentBorderColor.red()),
+                                        QString::number(currentBorderColor.green()),
+                                        QString::number(currentBorderColor.blue())));
 #else
     res->setFrameShape(QFrame::StyledPanel);
 #endif

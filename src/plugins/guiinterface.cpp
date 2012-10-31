@@ -331,6 +331,15 @@ void GuiInterface::destroy()
 
 //==============================================================================
 
+void GuiInterface::changeEvent(QEvent *pEvent)
+{
+    // Nothing to do by default...
+
+    Q_UNUSED(pEvent);
+}
+
+//==============================================================================
+
 QWidget * GuiInterface::viewWidget(const QString &pFileName)
 {
     Q_UNUSED(pFileName);

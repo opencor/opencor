@@ -270,6 +270,15 @@ void MainWindow::changeEvent(QEvent *pEvent)
 
     QMainWindow::changeEvent(pEvent);
 
+    // Let our plugins know that something changed
+
+    foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
+        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+
+        if (guiInterface)
+            guiInterface->changeEvent(pEvent);
+    }
+
     // If the system's locale has changed, then update OpenCOR's locale in case
     // the user wants to use the system's locale
 
@@ -321,7 +330,7 @@ void MainWindow::showEvent(QShowEvent *pEvent)
 
 void MainWindow::closeEvent(QCloseEvent *pEvent)
 {
-    // Check our plugins that it's OK to close
+    // Check with our plugins that it's OK to close
 
     bool canClose = true;
 

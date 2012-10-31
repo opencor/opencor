@@ -67,30 +67,16 @@ QSize CellmlModelRepositoryWidget::sizeHint() const
 
 //==============================================================================
 
-void CellmlModelRepositoryWidget::changeEvent(QEvent *pEvent)
-{
-    // Default handling of the event
-
-    QWebView::changeEvent(pEvent);
-
-    // Check whether the palette has changed and if so then (re)initialise the
-    // colour to be used for the border when docked
-
-    if (pEvent->type() == QEvent::PaletteChange)
-        initBorderColor();
-}
-
-//==============================================================================
-
 void CellmlModelRepositoryWidget::paintEvent(QPaintEvent *pEvent)
 {
     // Default handling of the event
 
     QWebView::paintEvent(pEvent);
 
-    // Draw a border in case we are docked
+    // Draw a border
 
-    drawBorderIfDocked(true, true, false, false, false);
+    drawBorder(true, false, true, false,
+               true, false, false, false);
 }
 
 //==============================================================================

@@ -11,6 +11,7 @@
 
 //==============================================================================
 
+#include <QColor>
 #include <QString>
 
 //==============================================================================
@@ -26,16 +27,23 @@ namespace Core {
 
 //==============================================================================
 
+static const QString SettingsGlobal      = "Global";
+static const QString SettingsBorderColor = "BorderColor";
+
+//==============================================================================
+
 QByteArray CORE_EXPORT resourceAsByteArray(const QString &pResource);
 bool CORE_EXPORT saveResourceAs(const QString &pResource,
                                 const QString &pFilename);
 
-void CORE_EXPORT * instance(const QString &pClassName,
-                            void *pDefaultGlobalInstance);
+void CORE_EXPORT * globalInstance(const QString &pObjectName,
+                                  void *pDefaultGlobalInstance);
 
 void CORE_EXPORT setFocusTo(QWidget *pWidget);
 
 QString CORE_EXPORT nativeCanonicalFileName(const QString &pFileName);
+
+QColor CORE_EXPORT borderColor();
 
 QFrame CORE_EXPORT * newLineWidget(const bool &pHorizontal,
                                    QWidget *pParent = 0);

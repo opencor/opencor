@@ -20,9 +20,10 @@
 
 void removeInstances()
 {
-    // Remove all 'global' instances
+    // Remove all the 'global' information shared among OpenCOR and the
+    // different plugins
 
-    QSettings(qApp->applicationName()).remove("Instances");
+    QSettings(qApp->applicationName()).remove("Global");
 }
 
 //==============================================================================

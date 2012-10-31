@@ -51,6 +51,8 @@ public:
 
     virtual void handleArguments(const QStringList &pArguments);
 
+    virtual void changeEvent(QEvent *pEvent);
+
     virtual void retranslateUi();
 
     virtual bool canClose();
@@ -75,6 +77,8 @@ private:
     QStringList mRecentFileNames;
 
     void updateFileReopenMenu();
+
+    void retrieveBorderColor();
 
 private Q_SLOTS:
     void fileOpened(const QString &pFileName);

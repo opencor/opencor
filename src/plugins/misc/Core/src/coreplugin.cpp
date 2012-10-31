@@ -4,6 +4,7 @@
 
 #include "centralwidget.h"
 #include "coreplugin.h"
+#include "coreutils.h"
 #include "fileinterface.h"
 #include "organisationwidget.h"
 #include "plugin.h"
@@ -11,10 +12,13 @@
 //==============================================================================
 
 #include <QAction>
+#include <QApplication>
+#include <QEvent>
 #include <QMainWindow>
 #include <QMenu>
 #include <QMessageBox>
 #include <QSettings>
+#include <QTextEdit>
 
 //==============================================================================
 
@@ -182,6 +186,8 @@ void CorePlugin::initialize()
     // Miscellaneous
 
     mRecentFileNames = QStringList();
+
+    retrieveBorderColor();
 }
 
 //==============================================================================
@@ -309,6 +315,48 @@ void CorePlugin::handleArguments(const QStringList &pArguments)
             // it
 
             mCentralWidget->openFile(argument);
+}
+
+//==============================================================================
+
+void CorePlugin::retrieveBorderColor()
+{
+    // Retrieve the colour used for a 'normal' border
+    // Note #1: we use a QTextEdit widget and retrieve the colour of the pixel
+    //          which is in the middle of the right border...
+    // Note #2: we don't rely on the top border because it may be rendered in a
+    //          special way. In the same way, we don't rely on a corner as such
+    //          in case it's rendered as a rounded corner...
+
+    QTextEdit textEdit;
+    QImage image = QImage(textEdit.size(),
+                          QImage::Format_ARGB32_Premultiplied);
+
+    textEdit.render(&image);
+
+    QColor newBorderColor = QColor(image.pixel(image.width()-1,
+                                   0.5*image.height()));
+//---GRY---
+newBorderColor = QColor(255, 0, 0);
+
+    // Use our settings to keep track of the colour
+
+    QSettings settings(qApp->applicationName());
+
+    settings.beginGroup(SettingsGlobal);
+        settings.setValue(SettingsBorderColor, newBorderColor);
+    settings.endGroup();
+}
+
+//==============================================================================
+
+void CorePlugin::changeEvent(QEvent *pEvent)
+{
+    // Check whether the palette has changed and if so then retrieve the new
+    // colour to be used for a border
+
+    if (pEvent->type() == QEvent::PaletteChange)
+        retrieveBorderColor();
 }
 
 //==============================================================================

@@ -185,6 +185,8 @@ class GuiInterface : public Interface
 public:
     explicit GuiInterface();
 
+    virtual void changeEvent(QEvent *pEvent);
+
     virtual QWidget * viewWidget(const QString &pFileName);
     virtual bool hasViewWidget(const QString &pFileName) const;
     virtual void deleteViewWidget(const QString &pFileName);

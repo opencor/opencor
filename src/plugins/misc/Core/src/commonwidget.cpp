@@ -3,6 +3,7 @@
 //==============================================================================
 
 #include "commonwidget.h"
+#include "coreutils.h"
 #include "dockwidget.h"
 
 //==============================================================================
@@ -25,9 +26,6 @@ namespace Core {
 CommonWidget::CommonWidget(QWidget *pParent) :
     mParent(pParent)
 {
-    // Initialise the border's colour
-
-    initBorderColor();
 }
 
 //==============================================================================
@@ -78,87 +76,43 @@ void CommonWidget::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void CommonWidget::initBorderColor()
+void CommonWidget::drawBorder(const bool &pDockedTop, const bool &pDockedLeft,
+                              const bool &pDockedBottom, const bool &pDockedRight,
+                              const bool &pFloatingTop, const bool &pFloatingLeft,
+                              const bool &pFloatingBottom, const bool &pFloatingRight)
 {
-    // We want the border to be of the same colour as the one used by Qt when
-    // rendering the border of a frame with QFrame::StyledPanel as a shape. Now,
-    // the problem is that this colour isn't defined anywhere, so we create a
-    // frame, render it to an image and manually retrieve the colour of the
-    // frame's border...
+    // Draw a border around the widget
 
-    QFrame frame;
-    QImage image = QImage(frame.size(), QImage::Format_ARGB32_Premultiplied);
-
-    frame.setFrameShape(QFrame::StyledPanel);
-    frame.render(&image);
-
-    mBorderColor = QColor(image.pixel(0, 0));
-}
-
-//==============================================================================
-
-void CommonWidget::drawBorderIfDocked(const bool &pForceDrawing,
-                                      const bool &pTop, const bool &pLeft,
-                                      const bool &pBottom, const bool &pRight)
-{
-#ifdef Q_WS_MAC
-    // There is no need to draw a border on OS X if we are docked, so unless we
-    // want to force the drawing we just return
-
-    if (!pForceDrawing)
-        return;
-#endif
-
-    // Draw a border, but only if we are docked
-
-    DockWidget *dockWidget = qobject_cast<DockWidget *>(mParent);
+    DockWidget *dockWidget = dynamic_cast<DockWidget *>(mParent);
     QWidget *widget = dynamic_cast<QWidget *>(this);
 
-#ifdef Q_WS_MAC
     if (dockWidget && widget) {
-#else
-    if (dockWidget && widget && (pForceDrawing || !dockWidget->isFloating())) {
-#endif
-        // The QObject/dynamic castings were successful, so our parent is really
-        // a DockWidget, we are really a QWidget, and to top it all our parent
-        // is floating (or we want to force the drawing), so let's go ahead...
-
-        QRect border = widget->rect();
+        // The castings were successful, so our parent is really a DockWidget,
+        // we are really a QWidget, and to top it all our parent is floating (or
+        // we want to force the drawing), so let's go ahead...
 
         QPainter painter(widget);
 
-        QPen pen = painter.pen();
+        QPen newPen = painter.pen();
 
-        pen.setColor(mBorderColor);
+//---GRY---        newPen.setColor(borderColor());
+newPen.setColor(QColor(0, 0, 255));
 
-        painter.setPen(pen);
+        painter.setPen(newPen);
 
-#ifdef Q_WS_MAC
-        if (pTop)
-#else
-        if (pTop || !dockWidget->isFloating())
-#endif
+        bool isDocked = !dockWidget->isFloating();
+        QRect border = widget->rect();
+
+        if ((pDockedTop && isDocked) || (pFloatingTop && !isDocked))
             painter.drawLine(border.topLeft(), border.topRight());
 
-#ifdef Q_WS_MAC
-        if (pLeft)
-#else
-        if (pLeft || !dockWidget->isFloating())
-#endif
+        if ((pDockedLeft && isDocked) || (pFloatingLeft && !isDocked))
             painter.drawLine(border.topLeft(), border.bottomLeft());
 
-#ifdef Q_WS_MAC
-        if (pBottom)
-#else
-        if (pBottom || !dockWidget->isFloating())
-#endif
+        if ((pDockedBottom && isDocked) || (pFloatingBottom && !isDocked))
             painter.drawLine(border.bottomLeft(), border.bottomRight());
 
-#ifdef Q_WS_MAC
-        if (pRight)
-#else
-        if (pRight || !dockWidget->isFloating())
-#endif
+        if ((pDockedRight && isDocked) || (pFloatingRight && !isDocked))
             painter.drawLine(border.topRight(), border.bottomRight());
     }
 }
