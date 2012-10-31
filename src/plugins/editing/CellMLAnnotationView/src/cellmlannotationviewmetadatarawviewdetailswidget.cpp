@@ -4,11 +4,6 @@
 
 #include "cellmlannotationviewmetadatarawviewdetailswidget.h"
 #include "cellmlannotationviewwidget.h"
-#include "treeviewwidget.h"
-
-//==============================================================================
-
-#include "ui_cellmlannotationviewmetadatarawviewdetailswidget.h"
 
 //==============================================================================
 
@@ -22,24 +17,18 @@ namespace CellMLAnnotationView {
 //==============================================================================
 
 CellmlAnnotationViewMetadataRawViewDetailsWidget::CellmlAnnotationViewMetadataRawViewDetailsWidget(CellmlAnnotationViewWidget *pParent) :
-    Widget(pParent),
-    mCellmlFile(pParent->cellmlFile()),
-    mGui(new Ui::CellmlAnnotationViewMetadataRawViewDetailsWidget)
+    TreeViewWidget(pParent),
+    mCellmlFile(pParent->cellmlFile())
 {
-    // Set up the GUI
+    // Customise ourselves
 
-    mGui->setupUi(this);
+    mDataModel = new QStandardItemModel(this);
 
-    mTreeViewWidget  = new Core::TreeViewWidget(this);
-    mDataModel = new QStandardItemModel(mTreeViewWidget);
-
-    mTreeViewWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    mTreeViewWidget->setFrameShape(QFrame::NoFrame);
-    mTreeViewWidget->setModel(mDataModel);
-    mTreeViewWidget->setRootIsDecorated(false);
-    mTreeViewWidget->setSelectionMode(QAbstractItemView::SingleSelection);
-
-    mGui->layout->addWidget(mTreeViewWidget);
+    setEditTriggers(QAbstractItemView::NoEditTriggers);
+    setFrameShape(QFrame::NoFrame);
+    setModel(mDataModel);
+    setRootIsDecorated(false);
+    setSelectionMode(QAbstractItemView::SingleSelection);
 
     // Some further initialisations which are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
@@ -49,21 +38,8 @@ CellmlAnnotationViewMetadataRawViewDetailsWidget::CellmlAnnotationViewMetadataRa
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataRawViewDetailsWidget::~CellmlAnnotationViewMetadataRawViewDetailsWidget()
-{
-    // Delete the GUI
-
-    delete mGui;
-}
-
-//==============================================================================
-
 void CellmlAnnotationViewMetadataRawViewDetailsWidget::retranslateUi()
 {
-    // Retranslate our GUI
-
-    mGui->retranslateUi(this);
-
     // Update our header labels
 
     mDataModel->setHorizontalHeaderLabels(QStringList() << tr("#")
@@ -108,10 +84,10 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(CellMLSupport::
 
     // Make sure that all the columns have their contents fit
 
-    mTreeViewWidget->resizeColumnToContents(0);
-    mTreeViewWidget->resizeColumnToContents(1);
-    mTreeViewWidget->resizeColumnToContents(2);
-    mTreeViewWidget->resizeColumnToContents(3);
+    resizeColumnToContents(0);
+    resizeColumnToContents(1);
+    resizeColumnToContents(2);
+    resizeColumnToContents(3);
 
     // Allow ourselves to be updated again
 

@@ -39,7 +39,6 @@ ADD_PLUGIN(CellMLAnnotationView
         src/cellmlannotationviewmetadatadetailswidget.ui
         src/cellmlannotationviewmetadataeditdetailswidget.ui
         src/cellmlannotationviewmetadatanormalviewdetailswidget.ui
-        src/cellmlannotationviewmetadatarawviewdetailswidget.ui
         src/cellmlannotationviewwidget.ui
     DEFINITIONS
         ${LLVM_DEFINITIONS}

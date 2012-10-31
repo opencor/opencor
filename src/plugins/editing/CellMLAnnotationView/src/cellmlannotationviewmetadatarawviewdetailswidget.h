@@ -8,13 +8,7 @@
 //==============================================================================
 
 #include "cellmlfile.h"
-#include "widget.h"
-
-//==============================================================================
-
-namespace Ui {
-    class CellmlAnnotationViewMetadataRawViewDetailsWidget;
-}
+#include "treeviewwidget.h"
 
 //==============================================================================
 
@@ -23,15 +17,6 @@ class QStandardItemModel;
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
-namespace Core {
-    class TreeViewWidget;
-}   // namespace Core
-
-//==============================================================================
-
 namespace CellMLAnnotationView {
 
 //==============================================================================
@@ -40,13 +25,12 @@ class CellmlAnnotationViewWidget;
 
 //==============================================================================
 
-class CellmlAnnotationViewMetadataRawViewDetailsWidget : public Core::Widget
+class CellmlAnnotationViewMetadataRawViewDetailsWidget : public Core::TreeViewWidget
 {
     Q_OBJECT
 
 public:
     explicit CellmlAnnotationViewMetadataRawViewDetailsWidget(CellmlAnnotationViewWidget *pParent);
-    ~CellmlAnnotationViewMetadataRawViewDetailsWidget();
 
     virtual void retranslateUi();
 
@@ -55,9 +39,6 @@ public:
 private:
     CellMLSupport::CellmlFile *mCellmlFile;
 
-    Ui::CellmlAnnotationViewMetadataRawViewDetailsWidget *mGui;
-
-    Core::TreeViewWidget *mTreeViewWidget;
     QStandardItemModel *mDataModel;
 };
 
