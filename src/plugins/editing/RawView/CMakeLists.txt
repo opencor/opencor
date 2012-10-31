@@ -15,6 +15,8 @@ ADD_PLUGIN(RawView
     HEADERS_MOC
         src/rawviewplugin.h
         src/rawviewwidget.h
+    DEFINITIONS
+        QSCINTILLA_DLL
     INCLUDE_DIRS
         src
     OPENCOR_DEPENDENCIES
