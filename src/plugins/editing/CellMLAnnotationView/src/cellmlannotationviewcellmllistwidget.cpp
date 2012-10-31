@@ -46,7 +46,6 @@ CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(Cellm
     mTreeViewWidget->setItemDelegate(mItemDelegate);
 
     mTreeViewWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    mTreeViewWidget->setFrameShape(QFrame::NoFrame);
     mTreeViewWidget->setHeaderHidden(true);
     mTreeViewWidget->setRootIsDecorated(false);
     mTreeViewWidget->setSelectionMode(QAbstractItemView::SingleSelection);

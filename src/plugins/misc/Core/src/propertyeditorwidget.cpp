@@ -21,7 +21,6 @@ PropertyEditorWidget::PropertyEditorWidget(QWidget *pParent) :
 {
     // Customise ourself
 
-    setFrameShape(QFrame::NoFrame);
     setSelectionMode(QAbstractItemView::SingleSelection);
 }
 

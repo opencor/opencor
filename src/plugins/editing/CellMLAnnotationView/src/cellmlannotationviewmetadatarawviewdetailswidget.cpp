@@ -25,7 +25,6 @@ CellmlAnnotationViewMetadataRawViewDetailsWidget::CellmlAnnotationViewMetadataRa
     mDataModel = new QStandardItemModel(this);
 
     setEditTriggers(QAbstractItemView::NoEditTriggers);
-    setFrameShape(QFrame::NoFrame);
     setModel(mDataModel);
     setRootIsDecorated(false);
     setSelectionMode(QAbstractItemView::SingleSelection);

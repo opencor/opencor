@@ -28,6 +28,7 @@ TreeViewWidget::TreeViewWidget(QWidget *pParent) :
     // Note: the above removes the focus border since it messes up our tree view
     //       widget
 #endif
+    setFrameShape(QFrame::NoFrame);
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     setUniformRowHeights(true);
 }

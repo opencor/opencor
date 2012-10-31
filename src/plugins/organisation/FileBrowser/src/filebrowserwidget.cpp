@@ -38,6 +38,7 @@ FileBrowserWidget::FileBrowserWidget(QWidget *pParent) :
     // Set some properties for the file browser widget itself
 
     setDragDropMode(QAbstractItemView::DragOnly);
+    setFrameShape(QFrame::StyledPanel);
     setModel(mDataModel);
     setSortingEnabled(true);
 
