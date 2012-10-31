@@ -23,6 +23,9 @@ class CORE_EXPORT PropertyEditorWidget : public TreeViewWidget
 
 public:
     explicit PropertyEditorWidget(QWidget *pParent);
+
+protected:
+    virtual void keyPressEvent(QKeyEvent *pEvent);
 };
 
 //==============================================================================
