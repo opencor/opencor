@@ -190,7 +190,6 @@ QFrame * newLineWidget(const bool &pHorizontal, QWidget *pParent)
 
     QFrame *res = new QFrame(pParent);
 
-#ifdef Q_WS_MAC
     QColor currentBorderColor = borderColor();
 
     res->setStyleSheet(QString("QFrame {"
@@ -198,9 +197,6 @@ QFrame * newLineWidget(const bool &pHorizontal, QWidget *pParent)
                                "}").arg(QString::number(currentBorderColor.red()),
                                         QString::number(currentBorderColor.green()),
                                         QString::number(currentBorderColor.blue())));
-#else
-    res->setFrameShape(QFrame::StyledPanel);
-#endif
 
     if (pHorizontal) {
         res->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
