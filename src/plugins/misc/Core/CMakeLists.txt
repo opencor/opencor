@@ -64,7 +64,6 @@ ADD_PLUGIN(Core
         src/widget.h
     UIS
         src/centralwidget.ui
-        src/usermessagewidget.ui
     INCLUDE_DIRS
         src
     QT_DEPENDENCIES

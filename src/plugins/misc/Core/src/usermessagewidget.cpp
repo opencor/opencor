@@ -6,10 +6,6 @@
 
 //==============================================================================
 
-#include "ui_usermessagewidget.h"
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace Core {
 
@@ -20,27 +16,27 @@ void UserMessageWidget::constructor(const QString &pIcon,
 {
     // Some initialisations
 
-    mGui = new Ui::UserMessageWidget();
-
     mIcon = pIcon;
     mMessage = pMessage;
 
-    // Set up the GUI
-
-    mGui->setupUi(this);
-
-    // Customise the background colour
+    // Customise our background
 
     setAutoFillBackground(true);
     setBackgroundRole(QPalette::Base);
 
-    // Increase the size of the font
+    // Increase the size of our font
 
-    QFont font = mGui->message->font();
+    QFont newFont = font();
 
-    font.setPointSize(1.5*font.pointSize());
+    newFont.setPointSize(1.5*newFont.pointSize());
 
-    mGui->message->setFont(font);
+    setFont(newFont);
+
+    // Some other customisations
+
+    setContextMenuPolicy(Qt::NoContextMenu);
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    setWordWrap(true);
 
     // 'Initialise' our message
 
@@ -52,7 +48,7 @@ void UserMessageWidget::constructor(const QString &pIcon,
 UserMessageWidget::UserMessageWidget(const QString &pIcon,
                                      const QString &pMessage,
                                      QWidget *pParent) :
-    Widget(pParent)
+    QLabel(pParent)
 {
     // Construct our object
 
@@ -62,20 +58,11 @@ UserMessageWidget::UserMessageWidget(const QString &pIcon,
 //==============================================================================
 
 UserMessageWidget::UserMessageWidget(const QString &pIcon, QWidget *pParent) :
-    Widget(pParent)
+    QLabel(pParent)
 {
     // Construct our object
 
     constructor(pIcon);
-}
-
-//==============================================================================
-
-UserMessageWidget::~UserMessageWidget()
-{
-    // Delete the GUI
-
-    delete mGui;
 }
 
 //==============================================================================
@@ -85,16 +72,16 @@ void UserMessageWidget::updateMessage()
     // Update our message by setting the icon to the left and the message itself
     // to the right
 
-    mGui->message->setText(QString("<table align=center>"
-                                   "    <tr valign=middle>"
-                                   "        <td align=right>"
-                                   "            <img src=\"%1\"/>"
-                                   "        </td>"
-                                   "        <td align=left>"
-                                   "            %2"
-                                   "        </td>"
-                                   "    </tr>"
-                                   "</table>").arg(mIcon, mMessage));
+    setText(QString("<table align=center>"
+                    "    <tr valign=middle>"
+                    "        <td align=right>"
+                    "            <img src=\"%1\"/>"
+                    "        </td>"
+                    "        <td align=left>"
+                    "            %2"
+                    "        </td>"
+                    "    </tr>"
+                    "</table>").arg(mIcon, mMessage));
 }
 
 //==============================================================================
@@ -121,15 +108,6 @@ void UserMessageWidget::setMessage(const QString &pMessage)
 
         updateMessage();
     }
-}
-
-//==============================================================================
-
-QLabel * UserMessageWidget::message() const
-{
-    // Return our message
-
-    return mGui->message;
 }
 
 //==============================================================================

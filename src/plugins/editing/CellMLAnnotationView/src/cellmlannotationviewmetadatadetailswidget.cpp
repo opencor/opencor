@@ -123,7 +123,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
     // A connection to handle the clicking of the link in the unsupported
     // message
 
-    connect(mUnsupportedMetadataMsg->message(), SIGNAL(linkActivated(const QString &)),
+    connect(mUnsupportedMetadataMsg, SIGNAL(linkActivated(const QString &)),
             this, SLOT(removeAllMetadata()));
 
     // Populate our splitter widget
