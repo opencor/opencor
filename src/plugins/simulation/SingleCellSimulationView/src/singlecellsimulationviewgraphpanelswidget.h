@@ -15,12 +15,6 @@
 
 //==============================================================================
 
-namespace Ui {
-    class SingleCellSimulationViewGraphPanelsWidget;
-}
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace SingleCellSimulationView {
 
@@ -37,7 +31,6 @@ class SingleCellSimulationViewGraphPanelsWidget : public QSplitter,
 
 public:
     explicit SingleCellSimulationViewGraphPanelsWidget(QWidget *pParent);
-    ~SingleCellSimulationViewGraphPanelsWidget();
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
@@ -52,9 +45,6 @@ public:
 
 protected:
     virtual void wheelEvent(QWheelEvent *pEvent);
-
-private:
-    Ui::SingleCellSimulationViewGraphPanelsWidget *mGui;
 
 Q_SIGNALS:
     void grapPanelAdded(SingleCellSimulationViewGraphPanelWidget *pGraphPanel);
