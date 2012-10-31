@@ -12,7 +12,7 @@
   </property>
   <layout class="QHBoxLayout" name="layout">
    <item>
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="message">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
        <horstretch>0</horstretch>

@@ -36,15 +36,15 @@ void UserMessageWidget::constructor(const QString &pIcon,
 
     // Increase the size of the font
 
-    QFont font = mGui->label->font();
+    QFont font = mGui->message->font();
 
     font.setPointSize(1.5*font.pointSize());
 
-    mGui->label->setFont(font);
+    mGui->message->setFont(font);
 
-    // 'Initialise' the label
+    // 'Initialise' our message
 
-    updateLabel();
+    updateMessage();
 }
 
 //==============================================================================
@@ -80,21 +80,21 @@ UserMessageWidget::~UserMessageWidget()
 
 //==============================================================================
 
-void UserMessageWidget::updateLabel()
+void UserMessageWidget::updateMessage()
 {
-    // Update the label by setting the icon to the left and the message to the
-    // right
+    // Update our message by setting the icon to the left and the message itself
+    // to the right
 
-    mGui->label->setText(QString("<table align=center>"
-                                 "    <tr valign=middle>"
-                                 "        <td align=right>"
-                                 "            <img src=\"%1\"/>"
-                                 "        </td>"
-                                 "        <td align=left>"
-                                 "            %2"
-                                 "        </td>"
-                                 "    </tr>"
-                                 "</table>").arg(mIcon, mMessage));
+    mGui->message->setText(QString("<table align=center>"
+                                   "    <tr valign=middle>"
+                                   "        <td align=right>"
+                                   "            <img src=\"%1\"/>"
+                                   "        </td>"
+                                   "        <td align=left>"
+                                   "            %2"
+                                   "        </td>"
+                                   "    </tr>"
+                                   "</table>").arg(mIcon, mMessage));
 }
 
 //==============================================================================
@@ -106,7 +106,7 @@ void UserMessageWidget::setIcon(const QString &pIcon)
     if (pIcon.compare(mIcon)) {
         mIcon = pIcon;
 
-        updateLabel();
+        updateMessage();
     }
 }
 
@@ -119,17 +119,17 @@ void UserMessageWidget::setMessage(const QString &pMessage)
     if (pMessage.compare(mMessage)) {
         mMessage = pMessage;
 
-        updateLabel();
+        updateMessage();
     }
 }
 
 //==============================================================================
 
-QLabel * UserMessageWidget::label() const
+QLabel * UserMessageWidget::message() const
 {
-    // Return our label
+    // Return our message
 
-    return mGui->label;
+    return mGui->message;
 }
 
 //==============================================================================

@@ -40,7 +40,7 @@ public:
     void setIcon(const QString &pIcon);
     void setMessage(const QString &pMessage);
 
-    QLabel *label() const;
+    QLabel *message() const;
 
 private:
     Ui::UserMessageWidget *mGui;
@@ -51,7 +51,7 @@ private:
     void constructor(const QString &pIcon,
                      const QString &pMessage = QString());
 
-    void updateLabel();
+    void updateMessage();
 };
 
 //==============================================================================
