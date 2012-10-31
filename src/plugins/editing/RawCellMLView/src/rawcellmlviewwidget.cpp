@@ -147,14 +147,14 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
 
         QFile file(pFileName);
         QString fileContents = QString();
-        bool fileIsWritable = false;
+        bool fileIsReadOnly = false;
 
         if (file.open(QIODevice::ReadOnly|QIODevice::Text)) {
             // We could open the file, so retrieve its contents and whether it
             // can be written to
 
             fileContents = QTextStream(&file).readAll();
-            fileIsWritable = !(QFileInfo(pFileName).isWritable());
+            fileIsReadOnly = !(QFileInfo(pFileName).isWritable());
 
             // We are done with the file, so close it
 
@@ -162,7 +162,7 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
         }
 
         mBorderedEditor = new Core::BorderedWidget(new QScintillaSupport::QScintilla(fileContents,
-                                                                                     fileIsWritable,
+                                                                                     fileIsReadOnly,
                                                                                      new QsciLexerXML(this),
                                                                                      parentWidget()),
                                                    true, false, false, false);

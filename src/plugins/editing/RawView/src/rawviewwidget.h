@@ -7,13 +7,7 @@
 
 //==============================================================================
 
-#include "widget.h"
-
-//==============================================================================
-
-namespace Ui {
-    class RawViewWidget;
-}
+#include "qscintilla.h"
 
 //==============================================================================
 
@@ -22,16 +16,12 @@ namespace RawView {
 
 //==============================================================================
 
-class RawViewWidget : public Core::Widget
+class RawViewWidget : public QScintillaSupport::QScintilla
 {
     Q_OBJECT
 
 public:
     explicit RawViewWidget(const QString &pFileName, QWidget *pParent = 0);
-    ~RawViewWidget();
-
-private:
-    Ui::RawViewWidget *mGui;
 };
 
 //==============================================================================

@@ -27,12 +27,17 @@ public:
                         QsciLexer *pLexer, QWidget *pParent = 0);
     explicit QScintilla(const QString &pContents, const bool &pReadOnly,
                         QWidget *pParent = 0);
+    explicit QScintilla(QsciLexer *pLexer, QWidget *pParent = 0);
+    explicit QScintilla(QWidget *pParent = 0);
+
+    void setContents(const QString &pContents);
 
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *pEvent);
 
 private:
-    void constructor(const QString &pContents, const bool &pReadOnly,
+    void constructor(const QString &pContents = QString(),
+                     const bool &pReadOnly = false,
                      QsciLexer *pLexer = 0);
 };
 

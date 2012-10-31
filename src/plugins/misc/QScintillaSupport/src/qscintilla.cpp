@@ -88,6 +88,35 @@ QScintilla::QScintilla(const QString &pContents, const bool &pReadOnly,
 
 //==============================================================================
 
+QScintilla::QScintilla(QsciLexer *pLexer, QWidget *pParent) :
+    QsciScintilla(pParent)
+{
+    // Construct our object
+
+    constructor(QString(), false, pLexer);
+}
+
+//==============================================================================
+
+QScintilla::QScintilla(QWidget *pParent) :
+    QsciScintilla(pParent)
+{
+    // Construct our object
+
+    constructor();
+}
+
+//==============================================================================
+
+void QScintilla::setContents(const QString &pContents)
+{
+    // Set our contents
+
+    setText(pContents);
+}
+
+//==============================================================================
+
 void QScintilla::dragEnterEvent(QDragEnterEvent *pEvent)
 {
     // Accept the proposed action for the event, but only if we are not dropping
