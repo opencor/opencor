@@ -170,8 +170,8 @@ QString nativeCanonicalFileName(const QString &pFileName)
 QColor borderColor()
 {
     // Return the colour to be used for a border
-    // Note: we retrieve it from our settings after it got set when loading the
-    //       plugin (see CorePlugin::retrieveBorderColor())...
+    // Note: we retrieve it from our settings which is updated by our plugin
+    //       itself (see CorePlugin::retrieveBorderColor())...
 
     QColor res;
     QSettings settings(qApp->applicationName());
