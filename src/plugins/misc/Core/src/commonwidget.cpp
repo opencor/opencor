@@ -9,11 +9,13 @@
 //==============================================================================
 
 #include <QApplication>
+#include <QColor>
 #include <QDesktopWidget>
 #include <QFrame>
 #include <QObject>
 #include <QPainter>
 #include <QPen>
+#include <QSettings>
 #include <QWidget>
 
 //==============================================================================
@@ -76,6 +78,24 @@ void CommonWidget::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
+QColor CommonWidget::borderColor()
+{
+    // Return the colour to be used for a border
+    // Note: we retrieve it from our settings which is updated by our plugin
+    //       itself (see CorePlugin::retrieveBorderColor())...
+
+    QColor res;
+    QSettings settings(qApp->applicationName());
+
+    settings.beginGroup(SettingsGlobal);
+        res = settings.value(SettingsBorderColor).value<QColor>();
+    settings.endGroup();
+
+    return res;
+}
+
+//==============================================================================
+
 void CommonWidget::drawBorder(const bool &pDockedTop, const bool &pDockedLeft,
                               const bool &pDockedBottom, const bool &pDockedRight,
                               const bool &pFloatingTop, const bool &pFloatingLeft,
@@ -95,8 +115,7 @@ void CommonWidget::drawBorder(const bool &pDockedTop, const bool &pDockedLeft,
 
         QPen newPen = painter.pen();
 
-//---GRY---        newPen.setColor(borderColor());
-newPen.setColor(QColor(0, 0, 255));
+        newPen.setColor(borderColor());
 
         painter.setPen(newPen);
 

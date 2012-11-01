@@ -2,6 +2,7 @@
 // Core utilities
 //==============================================================================
 
+#include "commonwidget.h"
 #include "coreutils.h"
 
 //==============================================================================
@@ -167,24 +168,6 @@ QString nativeCanonicalFileName(const QString &pFileName)
 
 //==============================================================================
 
-QColor borderColor()
-{
-    // Return the colour to be used for a border
-    // Note: we retrieve it from our settings which is updated by our plugin
-    //       itself (see CorePlugin::retrieveBorderColor())...
-
-    QColor res;
-    QSettings settings(qApp->applicationName());
-
-    settings.beginGroup(SettingsGlobal);
-        res = settings.value(SettingsBorderColor).value<QColor>();
-    settings.endGroup();
-
-    return res;
-}
-
-//==============================================================================
-
 QFrame * newLineWidget(const bool &pHorizontal, QWidget *pParent)
 {
     // Create and return a 'real' line widget, i.e. one which is 1 pixel wide,
@@ -192,7 +175,7 @@ QFrame * newLineWidget(const bool &pHorizontal, QWidget *pParent)
 
     QFrame *res = new QFrame(pParent);
 
-    QColor currentBorderColor = borderColor();
+    QColor currentBorderColor = CommonWidget::borderColor();
 
     res->setStyleSheet(QString("QFrame {"
                                "    border: 1px solid rgb(%1, %2, %3);"

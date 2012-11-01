@@ -58,6 +58,8 @@ public:
 
     virtual void loadingOfSettingsDone(const Plugins &pLoadedPlugins);
 
+    static QColor borderColor();
+
 protected:
     QSize defaultSize(const double &pRatio) const;
 
