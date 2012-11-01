@@ -42,6 +42,7 @@ namespace SingleCellSimulationView {
 SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent) :
     Widget(pParent),
     mGui(new Ui::SingleCellSimulationViewWidget),
+    mCanSaveSettings(false),
     mCellmlFileRuntime(0), mModel(Unknown),
     mStatesCount(0), mCondVarCount(0),
     mConstants(0), mRates(0), mStates(0), mAlgebraic(0), mCondVar(0),
@@ -235,18 +236,12 @@ void SingleCellSimulationViewWidget::loadSettings(QSettings *pSettings)
 
 void SingleCellSimulationViewWidget::saveSettings(QSettings *pSettings) const
 {
+    if (!mCanSaveSettings)
+        return;
+
     // Keep track of our splitter sizes
 
     QList<int> crtSizes = mSplitter->sizes();
-
-    if (!crtSizes.count() || !crtSizes.first())
-        // Either we have no splitter sizes (how could this ever be the case?!)
-        // or our vertical splitter's first size has a value of zero (which
-        // would mean that we previously left OpenCOR without going into
-        // Simulation mode and the vertical splitter sizes are not meaningful),
-        // so...
-
-        return;
 
     pSettings->setValue(SettingsSizesCount, crtSizes.count());
 
@@ -514,6 +509,21 @@ void SingleCellSimulationViewWidget::changeEvent(QEvent *pEvent)
 
     if (pEvent->type() == QEvent::PaletteChange)
         setProgressBarStyleSheet();
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewWidget::paintEvent(QPaintEvent *pEvent)
+{
+    // Default handling of the event
+
+    Widget::paintEvent(pEvent);
+
+    // The view has been painted at least once which means that the sizes of
+    // mSplitter are meaningful and, as a consequence, we can save our settings
+    // upon leaving OpenCOR
+
+    mCanSaveSettings = true;
 }
 
 //==============================================================================

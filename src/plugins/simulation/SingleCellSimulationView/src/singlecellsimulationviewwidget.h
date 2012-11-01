@@ -67,9 +67,12 @@ public:
 
 protected:
     virtual void changeEvent(QEvent *pEvent);
+    virtual void paintEvent(QPaintEvent *pEvent);
 
 private:
     Ui::SingleCellSimulationViewWidget *mGui;
+
+    bool mCanSaveSettings;
 
     CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
 
