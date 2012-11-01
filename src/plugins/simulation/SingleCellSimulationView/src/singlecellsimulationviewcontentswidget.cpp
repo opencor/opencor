@@ -123,10 +123,10 @@ void SingleCellSimulationViewContentsWidget::saveSettings(QSettings *pSettings) 
 
     pSettings->setValue(SettingsContentsCount, count());
 
-    QList<int> contentsSizes = sizes();
+    QList<int> crtSizes = sizes();
 
-    for (int i = 0, iMax = contentsSizes.count(); i < iMax; ++i)
-        pSettings->setValue(SettingsContentsSize.arg(QString::number(i)), contentsSizes[i]);
+    for (int i = 0, iMax = crtSizes.count(); i < iMax; ++i)
+        pSettings->setValue(SettingsContentsSize.arg(QString::number(i)), crtSizes[i]);
 
     // Keep track of the settings of our information and graph panels widgets
 

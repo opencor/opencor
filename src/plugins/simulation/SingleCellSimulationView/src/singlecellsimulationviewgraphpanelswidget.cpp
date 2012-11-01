@@ -57,12 +57,12 @@ void SingleCellSimulationViewGraphPanelsWidget::loadSettings(QSettings *pSetting
 
     // Retrieve and set the size of each graph panel
 
-    QList<int> graphPanelSizes = QList<int>();
+    QList<int> newSizes = QList<int>();
 
     for (int i = 0; i < graphPanelsCount; ++i)
-        graphPanelSizes << pSettings->value(SettingsGraphPanelSize.arg(QString::number(i))).toInt();
+        newSizes << pSettings->value(SettingsGraphPanelSize.arg(QString::number(i))).toInt();
 
-    setSizes(graphPanelSizes);
+    setSizes(newSizes);
 
     // Select the graph panel that used to be active
 
@@ -87,10 +87,10 @@ void SingleCellSimulationViewGraphPanelsWidget::saveSettings(QSettings *pSetting
             break;
         }
 
-    QList<int> graphPanelSizes = sizes();
+    QList<int> crtSizes = sizes();
 
-    for (int i = 0, iMax = graphPanelSizes.count(); i < iMax; ++i)
-        pSettings->setValue(SettingsGraphPanelSize.arg(QString::number(i)), graphPanelSizes[i]);
+    for (int i = 0, iMax = crtSizes.count(); i < iMax; ++i)
+        pSettings->setValue(SettingsGraphPanelSize.arg(QString::number(i)), crtSizes[i]);
 }
 
 //==============================================================================

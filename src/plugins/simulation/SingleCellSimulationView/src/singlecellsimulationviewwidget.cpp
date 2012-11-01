@@ -216,12 +216,12 @@ void SingleCellSimulationViewWidget::loadSettings(QSettings *pSettings)
     int sizesCount = pSettings->value(SettingsSizesCount, 0).toInt();
 
     if (sizesCount) {
-        QList<int> sizes = QList<int>();
+        QList<int> newSizes = QList<int>();
 
         for (int i = 0; i < sizesCount; ++i)
-            sizes << pSettings->value(SettingsSize.arg(QString::number(i))).toInt();
+            newSizes << pSettings->value(SettingsSize.arg(QString::number(i))).toInt();
 
-        mSplitter->setSizes(sizes);
+        mSplitter->setSizes(newSizes);
     }
 
     // Retrieve the settings of our contents widget
@@ -237,12 +237,9 @@ void SingleCellSimulationViewWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our splitter sizes
 
-    QList<int> sizes = mSplitter->sizes();
+    QList<int> crtSizes = mSplitter->sizes();
 
-qDebug(">>> sizes.count(): %d", sizes.count());
-qDebug(">>> sizes.first(): %d", sizes.first());
-
-    if (!sizes.count() || !sizes.first())
+    if (!crtSizes.count() || !crtSizes.first())
         // Either we have no splitter sizes (how could this ever be the case?!)
         // or our vertical splitter's first size has a value of zero (which
         // would mean that we previously left OpenCOR without going into
@@ -251,10 +248,10 @@ qDebug(">>> sizes.first(): %d", sizes.first());
 
         return;
 
-    pSettings->setValue(SettingsSizesCount, sizes.count());
+    pSettings->setValue(SettingsSizesCount, crtSizes.count());
 
-    for (int i = 0, iMax = sizes.count(); i < iMax; ++i)
-        pSettings->setValue(SettingsSize.arg(QString::number(i)), sizes[i]);
+    for (int i = 0, iMax = crtSizes.count(); i < iMax; ++i)
+        pSettings->setValue(SettingsSize.arg(QString::number(i)), crtSizes[i]);
 
     // Keep track of the settings of our contents widget
 
