@@ -106,12 +106,9 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     simulationOutputLayout->addWidget(Core::newLineWidget(this));
     simulationOutputLayout->addWidget(mOutput);
 
-    // Populate our splitter and use as much space as possible for our contents
-    // (by asking their height to be that of the desktop's), and add it to our
-    // single cell simulation view widget
-    // Note: we add some spacing before our splitter to match the space that
-    //       exists between the graph panels and the simulation output widget.
-    //       So, yes, it's purely about aesthetic...
+    // Populate our splitter and use as much space as possible for it by asking
+    // for its height to be that of the desktop's, and then add our splitter to
+    // our single cell simulation view widget
 
     mSplitter->addWidget(mContentsWidget);
     mSplitter->addWidget(simulationOutputWidget);
@@ -241,6 +238,9 @@ void SingleCellSimulationViewWidget::saveSettings(QSettings *pSettings) const
     // Keep track of our splitter sizes
 
     QList<int> sizes = mSplitter->sizes();
+
+qDebug(">>> sizes.count(): %d", sizes.count());
+qDebug(">>> sizes.first(): %d", sizes.first());
 
     if (!sizes.count() || !sizes.first())
         // Either we have no splitter sizes (how could this ever be the case?!)
