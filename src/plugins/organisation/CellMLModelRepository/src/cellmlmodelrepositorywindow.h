@@ -36,7 +36,7 @@ class CellmlModelRepositoryWindow : public Core::OrganisationWidget
     Q_OBJECT
 
 public:
-    explicit CellmlModelRepositoryWindow(QWidget *pParent);
+    explicit CellmlModelRepositoryWindow(QWidget *pParent = 0);
     ~CellmlModelRepositoryWindow();
 
     virtual void retranslateUi();

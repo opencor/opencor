@@ -30,7 +30,7 @@ class SingleCellSimulationViewGraphPanelsWidget : public QSplitter,
     Q_OBJECT
 
 public:
-    explicit SingleCellSimulationViewGraphPanelsWidget(QWidget *pParent);
+    explicit SingleCellSimulationViewGraphPanelsWidget(QWidget *pParent = 0);
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;

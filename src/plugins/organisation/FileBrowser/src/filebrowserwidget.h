@@ -22,7 +22,7 @@ class FileBrowserWidget : public Core::TreeViewWidget
     Q_OBJECT
 
 public:
-    explicit FileBrowserWidget(QWidget *pParent);
+    explicit FileBrowserWidget(QWidget *pParent = 0);
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;

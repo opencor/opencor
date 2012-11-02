@@ -26,7 +26,7 @@ class VIEWER_EXPORT ViewerWidget : public Core::Widget
     Q_OBJECT
 
 public:
-    explicit ViewerWidget(QWidget *pParent);
+    explicit ViewerWidget(QWidget *pParent = 0);
 
     bool setContent(const QString &pContent, QString *pErrorMsg = 0,
                     int *pErrorLine = 0, int *pErrorColumn = 0);

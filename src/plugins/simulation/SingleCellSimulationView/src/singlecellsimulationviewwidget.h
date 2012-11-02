@@ -53,7 +53,7 @@ class SingleCellSimulationViewWidget : public Core::Widget
     Q_OBJECT
 
 public:
-    explicit SingleCellSimulationViewWidget(QWidget *pParent);
+    explicit SingleCellSimulationViewWidget(QWidget *pParent = 0);
     ~SingleCellSimulationViewWidget();
 
     virtual void retranslateUi();

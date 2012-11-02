@@ -49,7 +49,7 @@ namespace Core {
 class CORE_EXPORT CommonWidget
 {
 public:
-    explicit CommonWidget(QWidget *pParent);
+    explicit CommonWidget(QWidget *pParent = 0);
 
     virtual void retranslateUi();
 

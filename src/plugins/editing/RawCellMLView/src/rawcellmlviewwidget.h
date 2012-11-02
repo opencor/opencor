@@ -52,7 +52,7 @@ class RawCellmlViewWidget : public QSplitter, public Core::CommonWidget
     Q_OBJECT
 
 public:
-    explicit RawCellmlViewWidget(QWidget *pParent);
+    explicit RawCellmlViewWidget(QWidget *pParent = 0);
     ~RawCellmlViewWidget();
 
     virtual void loadSettings(QSettings *pSettings);

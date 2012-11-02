@@ -36,7 +36,7 @@ class HelpWindow : public Core::DockWidget
     Q_OBJECT
 
 public:
-    explicit HelpWindow(QWidget *pParent);
+    explicit HelpWindow(QWidget *pParent = 0);
     ~HelpWindow();
 
     virtual void retranslateUi();

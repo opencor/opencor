@@ -38,7 +38,7 @@ class SingleCellSimulationViewContentsWidget : public QSplitter,
     Q_OBJECT
 
 public:
-    explicit SingleCellSimulationViewContentsWidget(QWidget *pParent);
+    explicit SingleCellSimulationViewContentsWidget(QWidget *pParent = 0);
     ~SingleCellSimulationViewContentsWidget();
 
     virtual void retranslateUi();

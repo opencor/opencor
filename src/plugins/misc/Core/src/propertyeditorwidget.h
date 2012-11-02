@@ -27,6 +27,7 @@ class CORE_EXPORT PropertyEditorWidget : public TreeViewWidget
 
 public:
     explicit PropertyEditorWidget(QWidget *pParent);
+    explicit PropertyEditorWidget(QWidget *pParent = 0);
 
     static QStandardItem * newNonEditableItem();
     static QStandardItem * newEditableItem();

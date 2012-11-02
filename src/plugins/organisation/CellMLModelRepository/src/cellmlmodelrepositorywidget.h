@@ -25,7 +25,7 @@ class CellmlModelRepositoryWidget : public QWebView, public Core::CommonWidget
     Q_OBJECT
 
 public:
-    explicit CellmlModelRepositoryWidget(QWidget *pParent);
+    explicit CellmlModelRepositoryWidget(QWidget *pParent = 0);
 
     void output(const QString &pOutput);
 

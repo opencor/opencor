@@ -26,7 +26,7 @@ class CORE_EXPORT OrganisationWidget : public DockWidget
     Q_OBJECT
 
 public:
-    explicit OrganisationWidget(QWidget *pParent);
+    explicit OrganisationWidget(QWidget *pParent = 0);
 
 Q_SIGNALS:
     void filesOpened(const QStringList &pFiles);

@@ -36,7 +36,7 @@ class SingleCellSimulationViewGraphPanelWidget : public Core::Widget
     Q_OBJECT
 
 public:
-    explicit SingleCellSimulationViewGraphPanelWidget(QWidget *pParent);
+    explicit SingleCellSimulationViewGraphPanelWidget(QWidget *pParent = 0);
     ~SingleCellSimulationViewGraphPanelWidget();
 
     QwtPlotCurve * addCurve();

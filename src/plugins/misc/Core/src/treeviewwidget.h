@@ -26,7 +26,7 @@ class CORE_EXPORT TreeViewWidget : public QTreeView, public CommonWidget
     Q_OBJECT
 
 public:
-    explicit TreeViewWidget(QWidget *pParent);
+    explicit TreeViewWidget(QWidget *pParent = 0);
 
     void selectFirstNode();
 
