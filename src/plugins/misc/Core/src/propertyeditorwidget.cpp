@@ -72,7 +72,7 @@ QStandardItem * PropertyEditorWidget::newEditableItem()
 
 void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 {
-    // Check for some key combinations and ignore them, if needed
+    // Check some key combinations
 
     if (   (pEvent->modifiers() & Qt::ControlModifier)
         && (pEvent->key() == Qt::Key_A))
@@ -81,7 +81,7 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 
         pEvent->ignore();
     else
-        // Not a key combination which we don't want, so...
+        // Not a key combination we handle, so...
 
         TreeViewWidget::keyPressEvent(pEvent);
 }
