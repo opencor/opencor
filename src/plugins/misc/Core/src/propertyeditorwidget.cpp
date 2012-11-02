@@ -21,7 +21,29 @@ PropertyEditorWidget::PropertyEditorWidget(QWidget *pParent) :
 {
     // Customise ourself
 
+//    setEditTriggers(QAbstractItemView::NoEditTriggers);
     setSelectionMode(QAbstractItemView::SingleSelection);
+}
+
+//==============================================================================
+
+void PropertyEditorWidget::initialize(QStandardItemModel *pModel)
+{
+    // Stop tracking the change of property, if needed
+
+    if (selectionModel())
+        disconnect(selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
+                   this, SLOT(editProperty(const QModelIndex &, const QModelIndex &)));
+
+    // Update our model
+
+    setModel(pModel);
+
+    // Keep track of the change of property
+    // Note: the idea is to automatically start the editing of a property...
+
+    connect(selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
+            this, SLOT(editProperty(const QModelIndex &, const QModelIndex &)));
 }
 
 //==============================================================================
@@ -62,6 +84,18 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
         // Not a key combination which we don't want, so...
 
         TreeViewWidget::keyPressEvent(pEvent);
+}
+
+//==============================================================================
+
+void PropertyEditorWidget::editProperty(const QModelIndex &pNewItem,
+                                        const QModelIndex &pOldItem)
+{
+    Q_UNUSED(pOldItem);
+
+    // Edit the current property (which value is always in column 1)
+
+    edit(model()->index(pNewItem.row(), 1));
 }
 
 //==============================================================================

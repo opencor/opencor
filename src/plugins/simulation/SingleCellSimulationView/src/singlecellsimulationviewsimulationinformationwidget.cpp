@@ -23,11 +23,13 @@ SingleCellSimulationViewSimulationInformationWidget::SingleCellSimulationViewSim
 
     setRootIsDecorated(false);
 
-    // Create and use our data model
+    // Create our data model
 
     mDataModel = new QStandardItemModel(this);
 
-    setModel(mDataModel);
+    // Initialise ourselves
+
+    initialize(mDataModel);
 
     // Populate our data model
 

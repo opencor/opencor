@@ -13,6 +13,7 @@
 //==============================================================================
 
 class QStandardItem;
+class QStandardItemModel;
 
 //==============================================================================
 
@@ -26,14 +27,19 @@ class CORE_EXPORT PropertyEditorWidget : public TreeViewWidget
     Q_OBJECT
 
 public:
-    explicit PropertyEditorWidget(QWidget *pParent);
     explicit PropertyEditorWidget(QWidget *pParent = 0);
+
+    void initialize(QStandardItemModel *pModel);
 
     static QStandardItem * newNonEditableItem();
     static QStandardItem * newEditableItem();
 
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
+
+private Q_SLOTS:
+    void editProperty(const QModelIndex &pNewItem,
+                      const QModelIndex &pOldItem);
 };
 
 //==============================================================================
