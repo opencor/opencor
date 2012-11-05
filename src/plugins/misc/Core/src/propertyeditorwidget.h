@@ -28,13 +28,22 @@ namespace Core {
 
 class PropertyItemDelegate : public QStyledItemDelegate
 {
+    Q_OBJECT
+
 public:
     explicit PropertyItemDelegate();
+
+    virtual QWidget *createEditor(QWidget *pParent,
+                                  const QStyleOptionViewItem &pOption,
+                                  const QModelIndex &pIndex) const;
 
     void setModel(QStandardItemModel *pModel);
 
 private:
     QStandardItemModel *mModel;
+
+private slots:
+    void commitAndCloseEditor();
 };
 
 //==============================================================================

@@ -6,7 +6,13 @@
 
 //==============================================================================
 
+#include <float.h>
+
+//==============================================================================
+
+#include <QDoubleSpinBox>
 #include <QKeyEvent>
+#include <QLineEdit>
 #include <QStandardItem>
 
 //==============================================================================
@@ -20,6 +26,48 @@ PropertyItemDelegate::PropertyItemDelegate() :
     QStyledItemDelegate(),
     mModel(0)
 {
+}
+
+//==============================================================================
+
+QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
+                                             const QStyleOptionViewItem &pOption,
+                                             const QModelIndex &pIndex) const
+{
+    Q_UNUSED(pOption);
+
+    // Create and return an editor for our double
+    // Note: we don't allow the editing of a string, so...
+
+    QStandardItem *item = mModel->itemFromIndex(pIndex);
+
+    QDoubleSpinBox *editor = new QDoubleSpinBox(pParent);
+
+    editor->setRange(-DBL_MAX, DBL_MAX);
+    editor->setValue(item->text().toDouble());
+
+#ifdef Q_WS_MAC
+    editor->setAttribute(Qt::WA_MacShowFocusRect, 0);
+    // Note: the above removes the focus border since it messes up the look of
+    //       our editor
+#endif
+
+    connect(editor, SIGNAL(editingFinished()),
+            this, SLOT(commitAndCloseEditor()));
+
+    return editor;
+}
+
+//==============================================================================
+
+void PropertyItemDelegate::commitAndCloseEditor()
+{
+    // Commit the new value and close the editor
+
+    QDoubleSpinBox *editor = qobject_cast<QDoubleSpinBox *>(sender());
+
+    emit commitData(editor);
+    emit closeEditor(editor);
 }
 
 //==============================================================================
