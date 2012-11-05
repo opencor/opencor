@@ -10,15 +10,20 @@
 
 //==============================================================================
 
-#include <QDoubleSpinBox>
 #include <QKeyEvent>
-#include <QLineEdit>
 #include <QStandardItem>
 
 //==============================================================================
 
 namespace OpenCOR {
 namespace Core {
+
+//==============================================================================
+
+DoubleEditWidget::DoubleEditWidget(const double &pValue, QWidget *pParent) :
+    QLineEdit(QString::number(pValue), pParent)
+{
+}
 
 //==============================================================================
 
@@ -41,10 +46,8 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
 
     QStandardItem *item = mModel->itemFromIndex(pIndex);
 
-    QDoubleSpinBox *editor = new QDoubleSpinBox(pParent);
-
-    editor->setRange(-DBL_MAX, DBL_MAX);
-    editor->setValue(item->text().toDouble());
+    DoubleEditWidget *editor = new DoubleEditWidget(item->text().toDouble(),
+                                                    pParent);
 
 #ifdef Q_WS_MAC
     editor->setAttribute(Qt::WA_MacShowFocusRect, 0);
@@ -64,7 +67,7 @@ void PropertyItemDelegate::commitAndCloseEditor()
 {
     // Commit the new value and close the editor
 
-    QDoubleSpinBox *editor = qobject_cast<QDoubleSpinBox *>(sender());
+    DoubleEditWidget *editor = qobject_cast<DoubleEditWidget *>(sender());
 
     emit commitData(editor);
     emit closeEditor(editor);

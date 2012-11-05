@@ -12,6 +12,7 @@
 
 //==============================================================================
 
+#include <QLineEdit>
 #include <QStandardItem>
 #include <QStyledItemDelegate>
 
@@ -23,6 +24,16 @@ class QStandardItemModel;
 
 namespace OpenCOR {
 namespace Core {
+
+//==============================================================================
+
+class DoubleEditWidget : public QLineEdit
+{
+    Q_OBJECT
+
+public:
+    explicit DoubleEditWidget(const double &pValue, QWidget *pParent = 0);
+};
 
 //==============================================================================
 
