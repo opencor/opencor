@@ -25,7 +25,7 @@ namespace OpenCOR {
 
 //==============================================================================
 
-PluginDelegate::PluginDelegate(QStandardItemModel *pDataModel) :
+PluginItemDelegate::PluginItemDelegate(QStandardItemModel *pDataModel) :
     QStyledItemDelegate(),
     mDataModel(pDataModel)
 {
@@ -33,9 +33,9 @@ PluginDelegate::PluginDelegate(QStandardItemModel *pDataModel) :
 
 //==============================================================================
 
-void PluginDelegate::paint(QPainter *pPainter,
-                           const QStyleOptionViewItem &pOption,
-                           const QModelIndex &pIndex) const
+void PluginItemDelegate::paint(QPainter *pPainter,
+                               const QStyleOptionViewItem &pOption,
+                               const QModelIndex &pIndex) const
 {
     // Paint the item as normal, except for the items which are not checkable
     // (i.e. plugins which the user cannot decide whether to load) in which case
@@ -91,10 +91,10 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager, QWidget *pParent) :
     // cannot decide whether they should be loaded)
 
     mDataModel = new QStandardItemModel(mGui->pluginsTreeView);
-    mPluginDelegate = new PluginDelegate(mDataModel);
+    mPluginItemDelegate = new PluginItemDelegate(mDataModel);
 
     mGui->pluginsTreeView->setModel(mDataModel);
-    mGui->pluginsTreeView->setItemDelegate(mPluginDelegate);
+    mGui->pluginsTreeView->setItemDelegate(mPluginItemDelegate);
 
     // Populate the data model with our different categories of plugins
     // Note: we create all of them in one go (rather than when required), so
