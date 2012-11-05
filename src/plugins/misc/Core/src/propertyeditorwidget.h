@@ -12,11 +12,11 @@
 
 //==============================================================================
 
+#include <QStandardItem>
 #include <QStyledItemDelegate>
 
 //==============================================================================
 
-class QStandardItem;
 class QStandardItemModel;
 
 //==============================================================================
@@ -39,6 +39,26 @@ private:
 
 //==============================================================================
 
+class PropertyItem : public QStandardItem
+{
+public:
+    enum Type
+    {
+        String = QStandardItem::UserType,
+        Double = QStandardItem::UserType+1
+    };
+
+    explicit PropertyItem(const Type &pType, const QString &pValue = QString(),
+                          const bool &pEditable = true);
+
+    virtual int type() const;
+
+private:
+    Type mType;
+};
+
+//==============================================================================
+
 class CORE_EXPORT PropertyEditorWidget : public TreeViewWidget
 {
     Q_OBJECT
@@ -48,8 +68,8 @@ public:
 
     void initialize(QStandardItemModel *pModel);
 
-    static QStandardItem * newNonEditableItem();
-    static QStandardItem * newEditableItem();
+    static PropertyItem * newNonEditableString(const QString &pValue = QString());
+    static PropertyItem * newEditableDouble(const double &pValue);
 
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);

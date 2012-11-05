@@ -34,6 +34,28 @@ void PropertyItemDelegate::setModel(QStandardItemModel *pModel)
 
 //==============================================================================
 
+PropertyItem::PropertyItem(const Type &pType, const QString &pValue,
+                           const bool &pEditable) :
+    QStandardItem(pValue),
+    mType(pType)
+{
+    // Check whether the item should be editable
+
+    if (!pEditable)
+        setFlags(flags() & ~Qt::ItemIsEditable);
+}
+
+//==============================================================================
+
+int PropertyItem::type() const
+{
+    // Return the property item's type
+
+    return mType;
+}
+
+//==============================================================================
+
 PropertyEditorWidget::PropertyEditorWidget(QWidget *pParent) :
     TreeViewWidget(pParent)
 {
@@ -73,24 +95,20 @@ void PropertyEditorWidget::initialize(QStandardItemModel *pModel)
 
 //==============================================================================
 
-QStandardItem * PropertyEditorWidget::newNonEditableItem()
+PropertyItem * PropertyEditorWidget::newNonEditableString(const QString &pValue)
 {
     // Create and return a non-editable item
 
-    QStandardItem *res = new QStandardItem();
-
-    res->setFlags(res->flags() & ~Qt::ItemIsEditable);
-
-    return res;
+    return new PropertyItem(PropertyItem::String, pValue, false);
 }
 
 //==============================================================================
 
-QStandardItem * PropertyEditorWidget::newEditableItem()
+PropertyItem * PropertyEditorWidget::newEditableDouble(const double &pValue)
 {
     // Create and return an editable item
 
-    return new QStandardItem();
+    return new PropertyItem(PropertyItem::Double, QString::number(pValue));
 }
 
 //==============================================================================
