@@ -16,12 +16,35 @@ namespace Core {
 
 //==============================================================================
 
+PluginItemDelegate::PluginItemDelegate() :
+    QStyledItemDelegate(),
+    mModel(0)
+{
+}
+
+//==============================================================================
+
+void PluginItemDelegate::setModel(QStandardItemModel *pModel)
+{
+    // Set the model to be used by us
+
+    if (pModel != mModel)
+        mModel = pModel;
+}
+
+//==============================================================================
+
 PropertyEditorWidget::PropertyEditorWidget(QWidget *pParent) :
     TreeViewWidget(pParent)
 {
-    // Customise ourself
+    // Create and set our item delegate
 
-//    setEditTriggers(QAbstractItemView::NoEditTriggers);
+    mPluginItemDelegate = new PluginItemDelegate();
+
+    setItemDelegate(mPluginItemDelegate);
+
+    // Further customise ourself
+
     setSelectionMode(QAbstractItemView::SingleSelection);
 }
 
@@ -35,9 +58,11 @@ void PropertyEditorWidget::initialize(QStandardItemModel *pModel)
         disconnect(selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
                    this, SLOT(editProperty(const QModelIndex &, const QModelIndex &)));
 
-    // Update our model
+    // Update our model and, as a result, our item delegate
 
     setModel(pModel);
+
+    mPluginItemDelegate->setModel(pModel);
 
     // Keep track of the change of property
     // Note: the idea is to automatically start the editing of a property...

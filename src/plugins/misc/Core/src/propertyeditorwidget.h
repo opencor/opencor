@@ -12,6 +12,10 @@
 
 //==============================================================================
 
+#include <QStyledItemDelegate>
+
+//==============================================================================
+
 class QStandardItem;
 class QStandardItemModel;
 
@@ -19,6 +23,19 @@ class QStandardItemModel;
 
 namespace OpenCOR {
 namespace Core {
+
+//==============================================================================
+
+class PluginItemDelegate : public QStyledItemDelegate
+{
+public:
+    explicit PluginItemDelegate();
+
+    void setModel(QStandardItemModel *pModel);
+
+private:
+    QStandardItemModel *mModel;
+};
 
 //==============================================================================
 
@@ -36,6 +53,9 @@ public:
 
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
+
+private:
+    PluginItemDelegate *mPluginItemDelegate;
 
 private Q_SLOTS:
     void editProperty(const QModelIndex &pNewItem,
