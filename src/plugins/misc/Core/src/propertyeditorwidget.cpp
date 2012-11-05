@@ -16,7 +16,7 @@ namespace Core {
 
 //==============================================================================
 
-PluginItemDelegate::PluginItemDelegate() :
+PropertyItemDelegate::PropertyItemDelegate() :
     QStyledItemDelegate(),
     mModel(0)
 {
@@ -24,7 +24,7 @@ PluginItemDelegate::PluginItemDelegate() :
 
 //==============================================================================
 
-void PluginItemDelegate::setModel(QStandardItemModel *pModel)
+void PropertyItemDelegate::setModel(QStandardItemModel *pModel)
 {
     // Set the model to be used by us
 
@@ -39,9 +39,9 @@ PropertyEditorWidget::PropertyEditorWidget(QWidget *pParent) :
 {
     // Create and set our item delegate
 
-    mPluginItemDelegate = new PluginItemDelegate();
+    mPropertyItemDelegate = new PropertyItemDelegate();
 
-    setItemDelegate(mPluginItemDelegate);
+    setItemDelegate(mPropertyItemDelegate);
 
     // Further customise ourself
 
@@ -62,7 +62,7 @@ void PropertyEditorWidget::initialize(QStandardItemModel *pModel)
 
     setModel(pModel);
 
-    mPluginItemDelegate->setModel(pModel);
+    mPropertyItemDelegate->setModel(pModel);
 
     // Keep track of the change of property
     // Note: the idea is to automatically start the editing of a property...

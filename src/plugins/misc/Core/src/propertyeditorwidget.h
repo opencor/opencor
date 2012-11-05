@@ -26,10 +26,10 @@ namespace Core {
 
 //==============================================================================
 
-class PluginItemDelegate : public QStyledItemDelegate
+class PropertyItemDelegate : public QStyledItemDelegate
 {
 public:
-    explicit PluginItemDelegate();
+    explicit PropertyItemDelegate();
 
     void setModel(QStandardItemModel *pModel);
 
@@ -55,7 +55,7 @@ protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
 
 private:
-    PluginItemDelegate *mPluginItemDelegate;
+    PropertyItemDelegate *mPropertyItemDelegate;
 
 private Q_SLOTS:
     void editProperty(const QModelIndex &pNewItem,
