@@ -30,23 +30,22 @@ class CellmlAnnotationViewCellmlElementItem : public QStandardItem
 public:
     enum Type
     {
-        None                  = QStandardItem::UserType,
-        Error                 = QStandardItem::UserType+1,
-        Warning               = QStandardItem::UserType+2,
-        Model                 = QStandardItem::UserType+3,
-        Import                = QStandardItem::UserType+4,
-        ImportUnit            = QStandardItem::UserType+5,
-        ImportComponent       = QStandardItem::UserType+6,
-        Unit                  = QStandardItem::UserType+7,
-        UnitElement           = QStandardItem::UserType+8,
-        Component             = QStandardItem::UserType+9,
-        Variable              = QStandardItem::UserType+10,
-        Group                 = QStandardItem::UserType+11,
-        RelationshipReference = QStandardItem::UserType+12,
-        ComponentReference    = QStandardItem::UserType+13,
-        Connection            = QStandardItem::UserType+14,
-        ComponentMapping      = QStandardItem::UserType+15,
-        VariableMapping       = QStandardItem::UserType+16
+        Error                 = QStandardItem::UserType,
+        Warning               = QStandardItem::UserType+1,
+        Model                 = QStandardItem::UserType+2,
+        Import                = QStandardItem::UserType+3,
+        ImportUnit            = QStandardItem::UserType+4,
+        ImportComponent       = QStandardItem::UserType+5,
+        Unit                  = QStandardItem::UserType+6,
+        UnitElement           = QStandardItem::UserType+7,
+        Component             = QStandardItem::UserType+8,
+        Variable              = QStandardItem::UserType+9,
+        Group                 = QStandardItem::UserType+10,
+        RelationshipReference = QStandardItem::UserType+11,
+        ComponentReference    = QStandardItem::UserType+12,
+        Connection            = QStandardItem::UserType+13,
+        ComponentMapping      = QStandardItem::UserType+14,
+        VariableMapping       = QStandardItem::UserType+15
     };
 
     explicit CellmlAnnotationViewCellmlElementItem(const bool &pError, const QString &pText);
