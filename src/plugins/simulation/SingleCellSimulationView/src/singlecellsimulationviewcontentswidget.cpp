@@ -55,6 +55,10 @@ SingleCellSimulationViewContentsWidget::SingleCellSimulationViewContentsWidget(Q
                                        false, false, true, true));
     addWidget(new Core::BorderedWidget(mGraphPanelsWidget,
                                        false, true, true, false));
+
+    // Make the information widget our focus proxy
+
+    setFocusProxy(mInformationWidget);
 }
 
 //==============================================================================

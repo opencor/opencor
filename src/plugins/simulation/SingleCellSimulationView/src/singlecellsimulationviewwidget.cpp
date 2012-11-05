@@ -131,6 +131,10 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
 
     mGui->layout->addWidget(Core::newLineWidget(this));
     mGui->layout->addWidget(mProgressBar);
+
+    // Make the contents widget our focus proxy
+
+    setFocusProxy(mContentsWidget);
 }
 
 //==============================================================================
