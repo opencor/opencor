@@ -31,7 +31,7 @@ FileOrganiserWidget::FileOrganiserWidget(QWidget *pParent) :
 {
     // Create an instance of the data model that we want to view
 
-    mDataModel = new FileOrganiserModel(this);
+    mModel = new FileOrganiserModel(this);
 
     // Create our 'local' file manager (as opposed to the 'global' file manager
     // that comes with the FileManager class)
@@ -44,7 +44,7 @@ FileOrganiserWidget::FileOrganiserWidget(QWidget *pParent) :
     setEditTriggers(QAbstractItemView::EditKeyPressed);
     setFrameShape(QFrame::StyledPanel);
     setHeaderHidden(true);
-    setModel(mDataModel);
+    setModel(mModel);
 
     // Some connections
 
@@ -77,7 +77,7 @@ FileOrganiserWidget::~FileOrganiserWidget()
 
 //==============================================================================
 
-static const QString SettingsDataModel    = "DataModel";
+static const QString SettingsModel        = "Model";
 static const QString SettingsSelectedItem = "SelectedItem";
 
 //==============================================================================
@@ -107,7 +107,7 @@ void FileOrganiserWidget::loadItemSettings(QSettings *pSettings,
             // except for keeping track of it for when retrieving its child
             // items, if any
 
-            childParentItem = mDataModel->invisibleRootItem();
+            childParentItem = mModel->invisibleRootItem();
         } else {
             // This is not the root folder item, so we can create the item which
             // is either a folder or a file, depending on its number of child
@@ -180,7 +180,7 @@ void FileOrganiserWidget::loadSettings(QSettings *pSettings)
 
     // Retrieve the data model
 
-    pSettings->beginGroup(SettingsDataModel);
+    pSettings->beginGroup(SettingsModel);
         loadItemSettings(pSettings, 0);
     pSettings->endGroup();
 
@@ -188,7 +188,7 @@ void FileOrganiserWidget::loadSettings(QSettings *pSettings)
 
     QByteArray hierarchyData = pSettings->value(SettingsSelectedItem).toByteArray();
 
-    setCurrentIndex(mDataModel->decodeHierarchyData(hierarchyData));
+    setCurrentIndex(mModel->decodeHierarchyData(hierarchyData));
 
     // Resize the widget, just to be on the safe side
 
@@ -212,7 +212,7 @@ void FileOrganiserWidget::saveItemSettings(QSettings *pSettings,
     //  - The number of child items the (folder) item has, if any
     //  - Whether the (folder) items is expanded
 
-    if (   (pItem == mDataModel->invisibleRootItem())
+    if (   (pItem == mModel->invisibleRootItem())
         || pItem->data(Item::Folder).toBool()) {
         // We are dealing with a folder item (be it the root folder item or not)
 
@@ -250,9 +250,9 @@ void FileOrganiserWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the data model
 
-    pSettings->remove(SettingsDataModel);
-    pSettings->beginGroup(SettingsDataModel);
-        saveItemSettings(pSettings, mDataModel->invisibleRootItem(), -1);
+    pSettings->remove(SettingsModel);
+    pSettings->beginGroup(SettingsModel);
+        saveItemSettings(pSettings, mModel->invisibleRootItem(), -1);
     pSettings->endGroup();
 
     // Keep track of the currently selected item, but only if it is visible
@@ -273,9 +273,9 @@ void FileOrganiserWidget::saveSettings(QSettings *pSettings) const
             break;
         }
 
-    pSettings->setValue(SettingsSelectedItem, mDataModel->encodeHierarchyData(crtItemVisible?
-                                                                                  currentIndex():
-                                                                                  QModelIndex()));
+    pSettings->setValue(SettingsSelectedItem, mModel->encodeHierarchyData(crtItemVisible?
+                                                                              currentIndex():
+                                                                              QModelIndex()));
 }
 
 //==============================================================================
@@ -288,7 +288,7 @@ bool FileOrganiserWidget::viewportEvent(QEvent *pEvent)
         // are dealing with a folder item
 
         QHelpEvent *helpEvent = static_cast<QHelpEvent *>(pEvent);
-        QStandardItem *crtItem = mDataModel->itemFromIndex(indexAt(helpEvent->pos()));
+        QStandardItem *crtItem = mModel->itemFromIndex(indexAt(helpEvent->pos()));
 
         if (crtItem)
             setToolTip(QDir::toNativeSeparators(crtItem->data(Item::Folder).toBool()?
@@ -348,13 +348,13 @@ void FileOrganiserWidget::dragMoveEvent(QDragMoveEvent *pEvent)
     //          the file organiser widget)
 
     QByteArray data = pEvent->mimeData()->data(FileOrganiserMimeType);
-    QModelIndexList indexes = mDataModel->decodeData(data);
-    QStandardItem *dropItem = mDataModel->itemFromIndex(indexAt(pEvent->pos()));
+    QModelIndexList indexes = mModel->decodeData(data);
+    QStandardItem *dropItem = mModel->itemFromIndex(indexAt(pEvent->pos()));
     bool draggingOnSelfOrChild = false;
 
     if (dropItem)
         for (int i = 0; (i < indexes.count()) && !draggingOnSelfOrChild; ++i)
-            draggingOnSelfOrChild = itemIsOrIsChildOf(dropItem, mDataModel->itemFromIndex(indexes[i]));
+            draggingOnSelfOrChild = itemIsOrIsChildOf(dropItem, mModel->itemFromIndex(indexes[i]));
 
     if (   (pEvent->mimeData()->urls().count() || indexes.count())
         && (   (dropItem && dropItem->data(Item::Folder).toBool())
@@ -389,7 +389,7 @@ void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
     if (dropPosition == QAbstractItemView::OnViewport) {
         // We dropped the files on the viewport, so...
 
-        dropItem = mDataModel->invisibleRootItem();
+        dropItem = mModel->invisibleRootItem();
 
         // Change the drop position since we know that we want want the objects
         // to be dropped on the root folder
@@ -399,7 +399,7 @@ void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
         // We dropped the files above/on/below a folder or above/below a file,
         // so...
 
-        dropItem = mDataModel->itemFromIndex(indexAt(pEvent->pos()));
+        dropItem = mModel->itemFromIndex(indexAt(pEvent->pos()));
     }
 
     // Check the type of MIME data to be dropped
@@ -411,7 +411,7 @@ void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
         // Retrieve the list of indexes to move around and clean it
 
         QByteArray data = pEvent->mimeData()->data(FileOrganiserMimeType);
-        QModelIndexList indexes = cleanIndexList(mDataModel->decodeData(data));
+        QModelIndexList indexes = cleanIndexList(mModel->decodeData(data));
 
         // Convert our list of indexes to a list of items
         // Note: indeed, by moving the item corresponding to a particular index,
@@ -421,7 +421,7 @@ void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
         QList<QStandardItem *> items;
 
         for (int i = 0, iMax = indexes.count(); i < iMax; ++i)
-            items << mDataModel->itemFromIndex(indexes[i]);
+            items << mModel->itemFromIndex(indexes[i]);
 
         // Move the contents of the list to its final destination
 
@@ -527,7 +527,7 @@ QModelIndexList FileOrganiserWidget::cleanIndexList(const QModelIndexList &pInde
             // the list of cleaned indexes doesn't contain any of the index's
             // children. If it does, then we must remove all of them
 
-            QStandardItem *crtItem = mDataModel->itemFromIndex(crtIndex);
+            QStandardItem *crtItem = mModel->itemFromIndex(crtIndex);
 
             if (crtItem && crtItem->data(Item::Folder).toBool())
                 for (int j = res.count()-1; j >= 0; --j)
@@ -542,7 +542,7 @@ QModelIndexList FileOrganiserWidget::cleanIndexList(const QModelIndexList &pInde
     // the model
 
     for (int i = res.count()-1; i >= 0; --i) {
-        QStandardItem *crtItem = mDataModel->itemFromIndex(res[i]);
+        QStandardItem *crtItem = mModel->itemFromIndex(res[i]);
 
         if (crtItem && !crtItem->data(Item::Folder).toBool())
             // The index corresponds to a valid file item, so check whether in
@@ -551,7 +551,7 @@ QModelIndexList FileOrganiserWidget::cleanIndexList(const QModelIndexList &pInde
             // model
 
             for (int j = 0; j < i; ++j) {
-                QStandardItem *testItem = mDataModel->itemFromIndex(res[j]);
+                QStandardItem *testItem = mModel->itemFromIndex(res[j]);
 
                 if (   testItem
                     && !testItem->data(Item::Folder).toBool()
@@ -616,7 +616,7 @@ void FileOrganiserWidget::backupExpandedInformation(QStandardItem *pItem) const
     if (pItem->data(Item::Folder).toBool()) {
         // Keep track of the expanded state of pItem
 
-        pItem->setData(isExpanded(mDataModel->indexFromItem(pItem)),
+        pItem->setData(isExpanded(mModel->indexFromItem(pItem)),
                        Item::Expanded);
 
         // Do the same with all of pItem's children, if any
@@ -636,7 +636,7 @@ void FileOrganiserWidget::restoreExpandedInformation(QStandardItem *pItem)
     if (pItem->data(Item::Folder).toBool()) {
         // Retrieve the expanded state of pItem
 
-        setExpanded(mDataModel->indexFromItem(pItem),
+        setExpanded(mModel->indexFromItem(pItem),
                     pItem->data(Item::Expanded).toBool());
 
         // Do the same with all of pItem's children, if any
@@ -690,8 +690,8 @@ void FileOrganiserWidget::newFolder()
     QModelIndexList selectedIndexes = selectionModel()->selectedIndexes();
     int selectedIndexesCount = selectedIndexes.count();
     QStandardItem *crtItem = !selectedIndexesCount?
-                                mDataModel->invisibleRootItem():
-                                mDataModel->itemFromIndex(selectedIndexes.first());
+                                mModel->invisibleRootItem():
+                                mModel->itemFromIndex(selectedIndexes.first());
     QStandardItem *newFolderItem = new QStandardItem(QIcon(CollapsedFolderIcon),
                                                      newFolderName(crtItem));
 
@@ -730,7 +730,7 @@ QStandardItem * FileOrganiserWidget::parentItem(QStandardItem *pDropItem,
                 pDropItem:
                 pDropItem->parent()?
                     pDropItem->parent():
-                    mDataModel->invisibleRootItem();
+                    mModel->invisibleRootItem();
 }
 
 //==============================================================================
@@ -890,7 +890,7 @@ void FileOrganiserWidget::moveItem(QStandardItem *pItem,
 
     QStandardItem *crtParentItem = pItem->parent()?
                                        pItem->parent():
-                                       mDataModel->invisibleRootItem();
+                                       mModel->invisibleRootItem();
     QStandardItem *newParentItem = parentItem(pDropItem, pDropPosition);
 
     // Second, check whether the (file) item points to a file which is already
@@ -954,8 +954,8 @@ void FileOrganiserWidget::collapseEmptyFolders(QStandardItem *pFolder)
 
     // Collapse the current folder, if necessary and if it isn't the root folder
 
-    if ((pFolder != mDataModel->invisibleRootItem()) && !pFolder->rowCount())
-        collapse(mDataModel->indexFromItem(pFolder));
+    if ((pFolder != mModel->invisibleRootItem()) && !pFolder->rowCount())
+        collapse(mModel->indexFromItem(pFolder));
 }
 
 //==============================================================================
@@ -982,14 +982,14 @@ void FileOrganiserWidget::deleteItems()
         //       removed, since if that's the case then nothing will be done...
 
         QModelIndex crtIndex = selectedIndexes.first();
-        QStandardItem *crtItem = mDataModel->itemFromIndex(crtIndex);
+        QStandardItem *crtItem = mModel->itemFromIndex(crtIndex);
 
         if (crtItem && !crtItem->data(Item::Folder).toBool())
             mFileManager->unmanage(crtItem->data(Item::Path).toString());
 
         // Remove the item from the model itself
 
-        mDataModel->removeRow(crtIndex.row(), crtIndex.parent());
+        mModel->removeRow(crtIndex.row(), crtIndex.parent());
 
         // Update our list of selected indexes
 
@@ -998,7 +998,7 @@ void FileOrganiserWidget::deleteItems()
 
     // Collapse any folder that doesn't contain any file/folder anymore
 
-    collapseEmptyFolders(mDataModel->invisibleRootItem());
+    collapseEmptyFolders(mModel->invisibleRootItem());
 
     // Resize the widget to its contents in case its width was too wide (and
     // therefore required a horizontal scrollbar), but is now fine
@@ -1012,7 +1012,7 @@ QString FileOrganiserWidget::filePath(const QModelIndex &pFileIndex) const
 {
     // Return the file path of pFileIndex
 
-    return mDataModel->filePath(pFileIndex);
+    return mModel->filePath(pFileIndex);
 }
 
 //==============================================================================
@@ -1085,7 +1085,7 @@ void FileOrganiserWidget::expandedFolder(const QModelIndex &pFolderIndex)
 {
     // The folder is being expanded, so update its icon to reflect its new state
 
-    mDataModel->itemFromIndex(pFolderIndex)->setIcon(QIcon(ExpandedFolderIcon));
+    mModel->itemFromIndex(pFolderIndex)->setIcon(QIcon(ExpandedFolderIcon));
 
     // Resize the widget, just to be on the safe side
 
@@ -1098,7 +1098,7 @@ void FileOrganiserWidget::collapsedFolder(const QModelIndex &pFolderIndex)
 {
     // The folder is being expanded, so update its icon to reflect its new state
 
-    mDataModel->itemFromIndex(pFolderIndex)->setIcon(QIcon(CollapsedFolderIcon));
+    mModel->itemFromIndex(pFolderIndex)->setIcon(QIcon(CollapsedFolderIcon));
 
     // Resize the widget, just to be on the safe side
 
@@ -1118,7 +1118,7 @@ bool FileOrganiserWidget::canCreateNewFolder() const
         // One item is currently selected, so the only way we could create a new
         // folder is if the current item is also a folder
 
-        return mDataModel->itemFromIndex(selectedIndexes.first())->data(Item::Folder).toBool();
+        return mModel->itemFromIndex(selectedIndexes.first())->data(Item::Folder).toBool();
     else
         // Either no item or several items are currently selected, so the only
         // way we could create a new folder is if no item is currently selected
@@ -1168,7 +1168,7 @@ void FileOrganiserWidget::fileContentsChanged(const QString &pFileName) const
     // may have been deleted and recreated, so go through all the (file) items
     // and update the icon of the ones that refer to the file in question
 
-    updateFileItems(mDataModel->invisibleRootItem(), pFileName,
+    updateFileItems(mModel->invisibleRootItem(), pFileName,
                     Core::File::Changed);
 }
 
@@ -1178,7 +1178,7 @@ void FileOrganiserWidget::fileDeleted(const QString &pFileName) const
 {
     // A file has been deleted, so...
 
-    updateFileItems(mDataModel->invisibleRootItem(), pFileName,
+    updateFileItems(mModel->invisibleRootItem(), pFileName,
                     Core::File::Deleted);
 }
 

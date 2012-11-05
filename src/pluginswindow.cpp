@@ -25,9 +25,9 @@ namespace OpenCOR {
 
 //==============================================================================
 
-PluginItemDelegate::PluginItemDelegate(QStandardItemModel *pDataModel) :
+PluginItemDelegate::PluginItemDelegate(QStandardItemModel *pModel) :
     QStyledItemDelegate(),
-    mDataModel(pDataModel)
+    mModel(pModel)
 {
 }
 
@@ -41,7 +41,7 @@ void PluginItemDelegate::paint(QPainter *pPainter,
     // (i.e. plugins which the user cannot decide whether to load) in which case
     // we paint them as if they were disabled
 
-    QStandardItem *pluginItem = mDataModel->itemFromIndex(pIndex);
+    QStandardItem *pluginItem = mModel->itemFromIndex(pIndex);
 
     QStyleOptionViewItemV4 option(pOption);
 
@@ -90,10 +90,10 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager, QWidget *pParent) :
     // plugins that are shown as 'disabled' (to reflect the fact that users
     // cannot decide whether they should be loaded)
 
-    mDataModel = new QStandardItemModel(mGui->pluginsTreeView);
-    mPluginItemDelegate = new PluginItemDelegate(mDataModel);
+    mModel = new QStandardItemModel(mGui->pluginsTreeView);
+    mPluginItemDelegate = new PluginItemDelegate(mModel);
 
-    mGui->pluginsTreeView->setModel(mDataModel);
+    mGui->pluginsTreeView->setModel(mModel);
     mGui->pluginsTreeView->setItemDelegate(mPluginItemDelegate);
 
     // Populate the data model with our different categories of plugins
@@ -154,7 +154,7 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager, QWidget *pParent) :
     foreach (QStandardItem *categoryItem, mPluginCategories)
         if (!categoryItem->hasChildren())
             mGui->pluginsTreeView->setRowHidden(categoryItem->row(),
-                                                mDataModel->invisibleRootItem()->index(),
+                                                mModel->invisibleRootItem()->index(),
                                                 true);
 
     // Make sure that the loading state of all the plugins is right, including
@@ -219,7 +219,7 @@ void PluginsWindow::selectFirstVisiblePlugin()
 
     foreach (QStandardItem *categoryItem, mPluginCategories)
         if (!mGui->pluginsTreeView->isRowHidden(categoryItem->row(),
-                                                mDataModel->invisibleRootItem()->index()))
+                                                mModel->invisibleRootItem()->index()))
             // We have found the first visible category, so now find its first
             // visible plugin
 
@@ -335,7 +335,7 @@ void PluginsWindow::updatePluginInfo(const QModelIndex &pNewIndex,
 
     // Update the information view with the plugin's information
 
-    Plugin *plugin = mPluginManager->plugin(mDataModel->itemFromIndex(pNewIndex)->text());
+    Plugin *plugin = mPluginManager->plugin(mModel->itemFromIndex(pNewIndex)->text());
     PluginInfo pluginInfo = plugin->info();
 
     // The plugin's name
@@ -391,7 +391,7 @@ void PluginsWindow::updatePluginsLoadingState(QStandardItem *pChangedPluginItem,
     // Disable the connection that handles a change in a plugin's loading state
     // (otherwise what we are doing here is going to be completely uneffective)
 
-    disconnect(mDataModel, SIGNAL(itemChanged(QStandardItem *)),
+    disconnect(mModel, SIGNAL(itemChanged(QStandardItem *)),
                this, SLOT(updatePluginsLoadingState(QStandardItem *)));
 
     // Prevent the list view from being updated, since we may end up changing
@@ -498,7 +498,7 @@ void PluginsWindow::updatePluginsLoadingState(QStandardItem *pChangedPluginItem,
     // Re-enable the connection that handles a change in a plugin's loading
     // state
 
-    connect(mDataModel, SIGNAL(itemChanged(QStandardItem *)),
+    connect(mModel, SIGNAL(itemChanged(QStandardItem *)),
             this, SLOT(updatePluginsLoadingState(QStandardItem *)));
 }
 
@@ -567,7 +567,7 @@ void PluginsWindow::newPluginCategory(const PluginInfo::Category &pCategory,
 
     categoryItem->setEnabled(false);
 
-    mDataModel->invisibleRootItem()->appendRow(categoryItem);
+    mModel->invisibleRootItem()->appendRow(categoryItem);
 
     mPluginCategories.insert(pCategory, categoryItem);
 }
@@ -604,7 +604,7 @@ void PluginsWindow::on_selectablePluginsCheckBox_toggled(bool pChecked)
                 }
 
             mGui->pluginsTreeView->setRowHidden(categoryItem->row(),
-                                                mDataModel->invisibleRootItem()->index(),
+                                                mModel->invisibleRootItem()->index(),
                                                 hideCategory);
         }
 

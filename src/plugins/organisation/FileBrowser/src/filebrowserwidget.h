@@ -44,7 +44,7 @@ protected:
     virtual void mouseMoveEvent(QMouseEvent *pEvent);
 
 private:
-    FileBrowserModel *mDataModel;
+    FileBrowserModel *mModel;
 
     bool mNeedDefColWidth;
 

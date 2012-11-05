@@ -22,10 +22,10 @@ CellmlAnnotationViewMetadataRawViewDetailsWidget::CellmlAnnotationViewMetadataRa
 {
     // Customise ourselves
 
-    mDataModel = new QStandardItemModel(this);
+    mModel = new QStandardItemModel(this);
 
     setEditTriggers(QAbstractItemView::NoEditTriggers);
-    setModel(mDataModel);
+    setModel(mModel);
     setRootIsDecorated(false);
     setSelectionMode(QAbstractItemView::SingleSelection);
 
@@ -41,10 +41,10 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::retranslateUi()
 {
     // Update our header labels
 
-    mDataModel->setHorizontalHeaderLabels(QStringList() << tr("#")
-                                                        << tr("Subject")
-                                                        << tr("Predicate")
-                                                        << tr("Object"));
+    mModel->setHorizontalHeaderLabels(QStringList() << tr("#")
+                                                    << tr("Subject")
+                                                    << tr("Predicate")
+                                                    << tr("Object"));
 }
 
 //==============================================================================
@@ -60,8 +60,8 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(CellMLSupport::
 
     // Remove all previous RDF triples from our tree view widget
 
-    while (mDataModel->rowCount())
-        foreach (QStandardItem *item, mDataModel->takeRow(0))
+    while (mModel->rowCount())
+        foreach (QStandardItem *item, mModel->takeRow(0))
             delete item;
 
     // Add the 'new' RDF triples to our tree view widget
@@ -74,12 +74,12 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(CellMLSupport::
 
     foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple,
              pCellmlElement->rdfTriples())
-        mDataModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << new QStandardItem(QString::number(++rdfTripleCounter))
-                                                                            << new QStandardItem((rdfTriple->subject()->type() == CellMLSupport::CellmlFileRdfTripleElement::UriReference)?
-                                                                                                     rdfTriple->metadataId():
-                                                                                                     rdfTriple->subject()->asString())
-                                                                            << new QStandardItem(rdfTriple->predicate()->asString())
-                                                                            << new QStandardItem(rdfTriple->object()->asString()));
+        mModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << new QStandardItem(QString::number(++rdfTripleCounter))
+                                                                        << new QStandardItem((rdfTriple->subject()->type() == CellMLSupport::CellmlFileRdfTripleElement::UriReference)?
+                                                                                                 rdfTriple->metadataId():
+                                                                                                 rdfTriple->subject()->asString())
+                                                                        << new QStandardItem(rdfTriple->predicate()->asString())
+                                                                        << new QStandardItem(rdfTriple->object()->asString()));
 
     // Make sure that all the columns have their contents fit
 

@@ -38,11 +38,11 @@ CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(Cellm
     // imports, units, components, groups and connections from a CellML file
 
     mTreeViewWidget = new Core::TreeViewWidget(pParent);
-    mDataModel      = new QStandardItemModel(mTreeViewWidget);
-    mItemDelegate   = new CellmlAnnotationViewCellmlElementItemDelegate(mDataModel,
+    mModel          = new QStandardItemModel(mTreeViewWidget);
+    mItemDelegate   = new CellmlAnnotationViewCellmlElementItemDelegate(mModel,
                                                                         mTreeViewWidget);
 
-    mTreeViewWidget->setModel(mDataModel);
+    mTreeViewWidget->setModel(mModel);
     mTreeViewWidget->setItemDelegate(mItemDelegate);
 
     mTreeViewWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -78,7 +78,7 @@ CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(Cellm
 
     // Populate our tree view widget
 
-    populateDataModel();
+    populateModel();
 
     // Make our tree view widget our focus proxy
 
@@ -113,7 +113,7 @@ void CellmlAnnotationViewCellmlListWidget::retranslateUi()
 
     // Retranslate some of the CellML elements in our tree view widget
 
-    retranslateDataItem(static_cast<CellmlAnnotationViewCellmlElementItem *>(mDataModel->invisibleRootItem()));
+    retranslateDataItem(static_cast<CellmlAnnotationViewCellmlElementItem *>(mModel->invisibleRootItem()));
 }
 
 //==============================================================================
@@ -190,7 +190,7 @@ void CellmlAnnotationViewCellmlListWidget::retranslateDataItem(CellmlAnnotationV
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlListWidget::populateDataModel()
+void CellmlAnnotationViewCellmlListWidget::populateModel()
 {
     // Make sure that the CellML file was properly loaded
 
@@ -202,10 +202,10 @@ void CellmlAnnotationViewCellmlListWidget::populateDataModel()
         // the issue(s) and leave
 
         for (int i = 0; i < issuesCount; ++i)
-            mDataModel->invisibleRootItem()->appendRow(new CellmlAnnotationViewCellmlElementItem(issues[i].type() == CellMLSupport::CellmlFileIssue::Error,
-                                                                                                 QString("[%1:%2] %3").arg(QString::number(issues[i].line()),
-                                                                                                                           QString::number(issues[i].column()),
-                                                                                                                           issues[i].formattedMessage())));
+            mModel->invisibleRootItem()->appendRow(new CellmlAnnotationViewCellmlElementItem(issues[i].type() == CellMLSupport::CellmlFileIssue::Error,
+                                                                                             QString("[%1:%2] %3").arg(QString::number(issues[i].line()),
+                                                                                                                       QString::number(issues[i].column()),
+                                                                                                                       issues[i].formattedMessage())));
 
         return;
     }
@@ -215,7 +215,7 @@ void CellmlAnnotationViewCellmlListWidget::populateDataModel()
     CellmlAnnotationViewCellmlElementItem *modelItem = new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::Model,
                                                                                                  mCellmlFile->model());
 
-    mDataModel->invisibleRootItem()->appendRow(modelItem);
+    mModel->invisibleRootItem()->appendRow(modelItem);
 
     // Retrieve the model's imports
 
@@ -282,7 +282,7 @@ void CellmlAnnotationViewCellmlListWidget::populateDataModel()
 
     // Retrieve the model's units
 
-    populateUnitsDataModel(modelItem, mCellmlFile->units());
+    populateUnitsModel(modelItem, mCellmlFile->units());
 
     // Retrieve the model's components
 
@@ -307,7 +307,7 @@ void CellmlAnnotationViewCellmlListWidget::populateDataModel()
 
             // Retrieve the model's component's units
 
-            populateUnitsDataModel(componentItem, component->units());
+            populateUnitsModel(componentItem, component->units());
 
             // Retrieve the model's component's variables
 
@@ -391,8 +391,8 @@ void CellmlAnnotationViewCellmlListWidget::populateDataModel()
 
                 foreach (CellMLSupport::CellmlFileComponentReference *componentReference,
                          group->componentReferences())
-                    populateComponentReferenceDataModel(componentReferencesItem,
-                                                        componentReference);
+                    populateComponentReferenceModel(componentReferencesItem,
+                                                    componentReference);
             }
         }
     }
@@ -438,8 +438,8 @@ void CellmlAnnotationViewCellmlListWidget::populateDataModel()
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlListWidget::populateUnitsDataModel(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem,
-                                                                  CellMLSupport::CellmlFileUnits *pUnits)
+void CellmlAnnotationViewCellmlListWidget::populateUnitsModel(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem,
+                                                              CellMLSupport::CellmlFileUnits *pUnits)
 {
     // Retrieve the units
 
@@ -473,8 +473,8 @@ void CellmlAnnotationViewCellmlListWidget::populateUnitsDataModel(CellmlAnnotati
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlListWidget::populateComponentReferenceDataModel(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem,
-                                                                               CellMLSupport::CellmlFileComponentReference *pComponentReference)
+void CellmlAnnotationViewCellmlListWidget::populateComponentReferenceModel(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem,
+                                                                           CellMLSupport::CellmlFileComponentReference *pComponentReference)
 {
     CellmlAnnotationViewCellmlElementItem *componentReferenceItem = new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::ComponentReference,
                                                                                                               pComponentReference);
@@ -485,7 +485,7 @@ void CellmlAnnotationViewCellmlListWidget::populateComponentReferenceDataModel(C
 
     foreach (CellMLSupport::CellmlFileComponentReference *componentReference,
              pComponentReference->componentReferences())
-        populateComponentReferenceDataModel(componentReferenceItem, componentReference);
+        populateComponentReferenceModel(componentReferenceItem, componentReference);
 }
 
 //==============================================================================
@@ -540,7 +540,7 @@ void CellmlAnnotationViewCellmlListWidget::updateMetadataDetails(const QModelInd
 
         // Let people know that we request to see some metadata details
 
-        emit metadataDetailsRequested(static_cast<CellmlAnnotationViewCellmlElementItem *>(mDataModel->itemFromIndex(crtIndex))->element());
+        emit metadataDetailsRequested(static_cast<CellmlAnnotationViewCellmlElementItem *>(mModel->itemFromIndex(crtIndex))->element());
     }
 
     // We are done, so...
@@ -557,7 +557,7 @@ void CellmlAnnotationViewCellmlListWidget::showCustomContextMenu(const QPoint &p
     // Determine whether to show the context menu by checking whether the
     // current item is the same as the one over which we are
 
-    CellmlAnnotationViewCellmlElementItem *posItem = static_cast<CellmlAnnotationViewCellmlElementItem *>(mDataModel->itemFromIndex(mTreeViewWidget->indexAt(mTreeViewWidget->mapFromGlobal(QCursor::pos()-mTreeViewWidget->pos()))));
+    CellmlAnnotationViewCellmlElementItem *posItem = static_cast<CellmlAnnotationViewCellmlElementItem *>(mModel->itemFromIndex(mTreeViewWidget->indexAt(mTreeViewWidget->mapFromGlobal(QCursor::pos()-mTreeViewWidget->pos()))));
     CellmlAnnotationViewCellmlElementItem *crtItem = currentCellmlElementItem();
 
     bool showContextMenu = (posItem == crtItem);
@@ -667,7 +667,7 @@ void CellmlAnnotationViewCellmlListWidget::indexExpandAll(const QModelIndex &pIn
     if (pIndex.child(0, 0) != QModelIndex()) {
         mTreeViewWidget->expand(pIndex);
 
-        QStandardItem *item = mDataModel->itemFromIndex(pIndex);
+        QStandardItem *item = mModel->itemFromIndex(pIndex);
 
         for (int i = 0, iMax = item->rowCount(); i < iMax; ++i)
             indexExpandAll(item->child(i)->index());
@@ -682,7 +682,7 @@ void CellmlAnnotationViewCellmlListWidget::indexCollapseAll(const QModelIndex &p
     // Note: see the note in indexExpandAll() above...
 
     if (pIndex.child(0, 0) != QModelIndex()) {
-        QStandardItem *item = mDataModel->itemFromIndex(pIndex);
+        QStandardItem *item = mModel->itemFromIndex(pIndex);
 
         for (int i = 0, iMax = item->rowCount(); i < iMax; ++i)
             indexCollapseAll(item->child(i)->index());
@@ -700,7 +700,7 @@ bool CellmlAnnotationViewCellmlListWidget::indexIsAllExpanded(const QModelIndex 
     // Note: see the note in indexExpandAll() above...
 
     if (pIndex.child(0, 0) != QModelIndex()) {
-        QStandardItem *item = mDataModel->itemFromIndex(pIndex);
+        QStandardItem *item = mModel->itemFromIndex(pIndex);
 
         for (int i = 0, iMax = item->rowCount(); i < iMax; ++i)
             if (!indexIsAllExpanded(item->child(i)->index()))
@@ -727,7 +727,7 @@ CellmlAnnotationViewCellmlElementItem * CellmlAnnotationViewCellmlListWidget::cu
 {
     // Return the current CellML element item
 
-    return static_cast<CellmlAnnotationViewCellmlElementItem *>(mDataModel->itemFromIndex(mTreeViewWidget->currentIndex()));
+    return static_cast<CellmlAnnotationViewCellmlElementItem *>(mModel->itemFromIndex(mTreeViewWidget->currentIndex()));
 }
 
 //==============================================================================

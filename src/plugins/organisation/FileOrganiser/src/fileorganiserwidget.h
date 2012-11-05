@@ -44,7 +44,7 @@ protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
 
 private:
-    FileOrganiserModel *mDataModel;
+    FileOrganiserModel *mModel;
     Core::FileManager *mFileManager;
 
     void loadItemSettings(QSettings *pSettings, QStandardItem *pParentItem);

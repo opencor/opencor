@@ -39,7 +39,7 @@ public:
 private:
     CellMLSupport::CellmlFile *mCellmlFile;
 
-    QStandardItemModel *mDataModel;
+    QStandardItemModel *mModel;
 };
 
 //==============================================================================

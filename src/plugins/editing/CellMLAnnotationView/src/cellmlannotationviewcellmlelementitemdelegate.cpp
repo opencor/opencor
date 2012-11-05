@@ -12,10 +12,10 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewCellmlElementItemDelegate::CellmlAnnotationViewCellmlElementItemDelegate(QStandardItemModel *pDataModel,
+CellmlAnnotationViewCellmlElementItemDelegate::CellmlAnnotationViewCellmlElementItemDelegate(QStandardItemModel *pModel,
                                                                                              QWidget *pParent) :
     QStyledItemDelegate(pParent),
-    mCellmlDataModel(pDataModel)
+    mModel(pModel)
 {
 }
 
@@ -29,7 +29,7 @@ void CellmlAnnotationViewCellmlElementItemDelegate::paint(QPainter *pPainter,
     // (i.e. plugins which the user cannot decide whether to load) in which case
     // we paint them as if they were disabled
 
-    CellmlAnnotationViewCellmlElementItem *cellmlElementItem = static_cast<CellmlAnnotationViewCellmlElementItem *>(mCellmlDataModel->itemFromIndex(pIndex));
+    CellmlAnnotationViewCellmlElementItem *cellmlElementItem = static_cast<CellmlAnnotationViewCellmlElementItem *>(mModel->itemFromIndex(pIndex));
 
     QStyleOptionViewItemV4 option(pOption);
 

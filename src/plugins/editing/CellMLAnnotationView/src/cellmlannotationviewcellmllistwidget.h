@@ -66,18 +66,18 @@ private:
     Ui::CellmlAnnotationViewCellmlListWidget *mGui;
 
     Core::TreeViewWidget *mTreeViewWidget;
-    QStandardItemModel *mDataModel;
+    QStandardItemModel *mModel;
     CellmlAnnotationViewCellmlElementItemDelegate *mItemDelegate;
 
     QList<QModelIndex> mIndexes;
 
     void retranslateDataItem(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem);
 
-    void populateDataModel();
-    void populateUnitsDataModel(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem,
-                                CellMLSupport::CellmlFileUnits *pUnits);
-    void populateComponentReferenceDataModel(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem,
-                                             CellMLSupport::CellmlFileComponentReference *pComponentReference);
+    void populateModel();
+    void populateUnitsModel(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem,
+                            CellMLSupport::CellmlFileUnits *pUnits);
+    void populateComponentReferenceModel(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem,
+                                         CellMLSupport::CellmlFileComponentReference *pComponentReference);
 
     void indexExpandAll(const QModelIndex &pIndex) const;
     void indexCollapseAll(const QModelIndex &pIndex) const;
