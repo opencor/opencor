@@ -281,7 +281,7 @@ QString copyright()
 {
     // Return a generic copyright
 
-    return QObject::tr("Copyright")+" ©2011-"+QString::number(QDate::currentDate().year());
+    return QObject::tr("Copyright")+" Â©2011-"+QString::number(QDate::currentDate().year());
 }
 
 //==============================================================================

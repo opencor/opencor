@@ -16,7 +16,7 @@ PLUGININFO_FUNC QJsonPluginInfo()
     Descriptions descriptions;
 
     descriptions.insert("en", "A plugin to access <a href=\"http://qjson.sourceforge.net/\">QJson</a>");
-    descriptions.insert("fr", "Une extension pour accéder à <a href=\"http://qjson.sourceforge.net/\">QJson</a>");
+    descriptions.insert("fr", "Une extension pour accÃ©der Ã  <a href=\"http://qjson.sourceforge.net/\">QJson</a>");
 
     return new PluginInfo(PluginInfo::V001,
                           PluginInfo::General,

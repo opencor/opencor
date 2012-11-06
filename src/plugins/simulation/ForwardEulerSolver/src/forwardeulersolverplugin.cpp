@@ -17,7 +17,7 @@ PLUGININFO_FUNC ForwardEulerSolverPluginInfo()
     Descriptions descriptions;
 
     descriptions.insert("en", "A plugin which implements the <a href=\"http://en.wikipedia.org/wiki/Euler_method\">Forward Euler method</a> to solve ODEs");
-    descriptions.insert("fr", "Une extension qui implémente la <a href=\"http://en.wikipedia.org/wiki/Euler_method\">méthode Forward Euler</a> pour résoudres des EDOs");
+    descriptions.insert("fr", "Une extension qui implÃ©mente la <a href=\"http://en.wikipedia.org/wiki/Euler_method\">mÃ©thode Forward Euler</a> pour rÃ©soudres des EDOs");
 
     return new PluginInfo(PluginInfo::V001,
                           PluginInfo::General,

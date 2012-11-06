@@ -21,7 +21,7 @@ PLUGININFO_FUNC FileBrowserPluginInfo()
     Descriptions descriptions;
 
     descriptions.insert("en", "A plugin to access your local files");
-    descriptions.insert("fr", "Une extension pour accéder à vos fichiers locaux");
+    descriptions.insert("fr", "Une extension pour accÃ©der Ã  vos fichiers locaux");
 
     return new PluginInfo(PluginInfo::V001,
                           PluginInfo::Gui,
