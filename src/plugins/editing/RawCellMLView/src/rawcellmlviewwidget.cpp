@@ -174,13 +174,19 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
         addWidget(mBorderedEditor);
     }
 
-    // Make sure that 'new' bordered editor is visible
+    // Make sure that our 'new' bordered editor is visible
 
     mBorderedEditor->show();
 
-    // Set the raw CellML view widget's focus proxy to the 'new' editor
+    // Set the raw CellML view widget's focus proxy to our 'new' editor and
+    // make sure that it immediately gets the focus
+    // Note: if we were not to immediately give our 'new' editor the focus,
+    //       then the central widget would give the focus to our 'old' editor
+    //       (see CentralWidget::updateGui()), so...
 
     setFocusProxy(mBorderedEditor->widget());
+
+    mBorderedEditor->widget()->setFocus();
 
     // Adjust our sizes
 
