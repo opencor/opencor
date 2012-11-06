@@ -130,14 +130,24 @@ void SingleCellSimulationViewInformationWidget::currentEditor(QWidget *pEditor)
     // property or have stopped editing one, so update our focus proxy
     // accordingly
 
-    if (pEditor)
-        // We are editing a property, so use the editor as our focus proxy
+    if (pEditor) {
+        // We are editing a property, so use its editor as our focus proxy and
+        // make sure that it immediately gets the focus
+        // Note: if we were not to immediately give the editor the focus, then
+        //       the central widget would give the focus to our 'old' editor
+        //       (see CentralWidget::updateGui()), so...
 
         setFocusProxy(pEditor);
-    else
-        // We have stopped editing a property, so reset our focus proxy
+
+        pEditor->setFocus();
+    } else {
+        // We have stopped editing a property, so reset our focus proxy and make
+        // sure that we get the focus (see above for the reason)
 
         setFocusProxy(0);
+
+        setFocus();
+    }
 }
 
 //==============================================================================
