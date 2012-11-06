@@ -157,7 +157,7 @@ PropertyEditorWidget::PropertyEditorWidget(QWidget *pParent) :
     mPropertyItemDelegate = new PropertyItemDelegate();
 
     connect(mPropertyItemDelegate, SIGNAL(currentEditor(QWidget *)),
-            this, SIGNAL(currentEditor(QWidget *)));
+            this, SLOT(currentEditor(QWidget *)));
 
     setItemDelegate(mPropertyItemDelegate);
 
@@ -223,6 +223,34 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
         // Not a key combination we handle, so...
 
         TreeViewWidget::keyPressEvent(pEvent);
+}
+
+//==============================================================================
+
+void PropertyEditorWidget::currentEditor(QWidget *pEditor)
+{
+    // The current editor has changed, meaning that either we are editing a
+    // property or have stopped editing one, so update our focus proxy
+    // accordingly
+
+    if (pEditor) {
+        // We are editing a property, so use its editor as our focus proxy and
+        // make sure that it immediately gets the focus
+        // Note: if we were not to immediately give the editor the focus, then
+        //       the central widget would give the focus to our 'old' editor
+        //       (see CentralWidget::updateGui()), so...
+
+        setFocusProxy(pEditor);
+
+        pEditor->setFocus();
+    } else {
+        // We have stopped editing a property, so reset our focus proxy and make
+        // sure that we get the focus (see above for the reason)
+
+        setFocusProxy(0);
+
+        setFocus();
+    }
 }
 
 //==============================================================================

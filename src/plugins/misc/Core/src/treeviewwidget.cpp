@@ -35,14 +35,32 @@ TreeViewWidget::TreeViewWidget(QWidget *pParent) :
 
 //==============================================================================
 
-void TreeViewWidget::selectFirstNode()
+void TreeViewWidget::selectItem(const int &pRow, const int &pColumn)
 {
-    // Select the first node, if any
+    // Select the requested item, if any
 
     QStandardItemModel *treeViewModel = static_cast<QStandardItemModel *>(model());
 
-    if (treeViewModel && treeViewModel->invisibleRootItem()->rowCount())
-        setCurrentIndex(treeViewModel->invisibleRootItem()->child(0)->index());
+    if (treeViewModel) {
+        // The tree view has a model associated to it, so we can retrieve the
+        // requested item
+
+        QStandardItem *treeViewItem = treeViewModel->invisibleRootItem()->child(pRow, pColumn);
+
+        if (treeViewItem)
+            // The requested item exists, so select it...
+
+            setCurrentIndex(treeViewItem->index());
+    }
+}
+
+//==============================================================================
+
+void TreeViewWidget::selectFirstItem()
+{
+    // Select the first item
+
+    selectItem();
 }
 
 //==============================================================================

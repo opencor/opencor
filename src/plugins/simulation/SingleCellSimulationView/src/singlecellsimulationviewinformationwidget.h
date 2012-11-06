@@ -59,9 +59,6 @@ private:
     Core::CollapsibleWidget *mTracesCollapsibleWidget;
 
     Core::CollapsibleWidget *mParametersCollapsibleWidget;
-
-private Q_SLOTS:
-    void currentEditor(QWidget *pNewEditor);
 };
 
 //==============================================================================

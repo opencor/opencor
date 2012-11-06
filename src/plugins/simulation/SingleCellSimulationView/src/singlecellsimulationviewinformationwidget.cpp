@@ -37,9 +37,6 @@ SingleCellSimulationViewInformationWidget::SingleCellSimulationViewInformationWi
                                                                mSimulationInformationWidget,
                                                                this);
 
-    connect(mSimulationInformationWidget, SIGNAL(currentEditor(QWidget *)),
-            this, SLOT(currentEditor(QWidget *)));
-
 mSimulationInformationWidget->setUnit("ms");
 //---GRY--- THE ABOVE IS JUST FOR TESTING PURPOSES...
 
@@ -76,7 +73,7 @@ mSimulationInformationWidget->setUnit("ms");
 
     // Select our first property
 
-    mSimulationInformationWidget->selectFirstNode();
+    mSimulationInformationWidget->selectFirstItem();
 }
 
 //==============================================================================
@@ -120,34 +117,6 @@ void SingleCellSimulationViewInformationWidget::loadSettings(QSettings *pSetting
 void SingleCellSimulationViewInformationWidget::saveSettings(QSettings *pSettings) const
 {
     //---GRY--- TO BE DONE...
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewInformationWidget::currentEditor(QWidget *pEditor)
-{
-    // The current editor has changed, meaning that either we are editing a
-    // property or have stopped editing one, so update our focus proxy
-    // accordingly
-
-    if (pEditor) {
-        // We are editing a property, so use its editor as our focus proxy and
-        // make sure that it immediately gets the focus
-        // Note: if we were not to immediately give the editor the focus, then
-        //       the central widget would give the focus to our 'old' editor
-        //       (see CentralWidget::updateGui()), so...
-
-        setFocusProxy(pEditor);
-
-        pEditor->setFocus();
-    } else {
-        // We have stopped editing a property, so reset our focus proxy and make
-        // sure that we get the focus (see above for the reason)
-
-        setFocusProxy(0);
-
-        setFocus();
-    }
 }
 
 //==============================================================================

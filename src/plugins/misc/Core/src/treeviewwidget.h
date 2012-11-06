@@ -28,7 +28,8 @@ class CORE_EXPORT TreeViewWidget : public QTreeView, public CommonWidget
 public:
     explicit TreeViewWidget(QWidget *pParent = 0);
 
-    void selectFirstNode();
+    void selectItem(const int &pRow = 0, const int &pColumn = 0);
+    void selectFirstItem();
 
     bool isEditing() const;
 

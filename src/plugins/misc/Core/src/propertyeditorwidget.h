@@ -107,10 +107,9 @@ protected:
 private:
     PropertyItemDelegate *mPropertyItemDelegate;
 
-Q_SIGNALS:
+private Q_SLOTS:
     void currentEditor(QWidget *pEditor);
 
-private Q_SLOTS:
     void editProperty(const QModelIndex &pNewItem,
                       const QModelIndex &pOldItem);
 };

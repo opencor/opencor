@@ -116,12 +116,12 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(CellMLAnnotationViewPlugi
 
     setFocusProxy(mCellmlList);
 
-    // Select the first node from our lists
+    // Select the first item from our lists
     // Note: our CellML list is our primary list, so we must select the first
-    //       node of our lists in a reverse order, i.e. finish with our CellML
+    //       item of our lists in a reverse order, i.e. finish with our CellML
     //       list...
 
-    mCellmlList->treeViewWidget()->selectFirstNode();
+    mCellmlList->treeViewWidget()->selectFirstItem();
 }
 
 //==============================================================================
