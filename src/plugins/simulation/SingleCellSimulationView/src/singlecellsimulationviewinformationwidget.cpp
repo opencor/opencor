@@ -37,6 +37,9 @@ SingleCellSimulationViewInformationWidget::SingleCellSimulationViewInformationWi
                                                                mSimulationInformationWidget,
                                                                this);
 
+    connect(mSimulationInformationWidget, SIGNAL(currentEditor(QWidget *)),
+            this, SLOT(currentEditor(QWidget *)));
+
 mSimulationInformationWidget->setUnit("ms");
 //---GRY--- THE ABOVE IS JUST FOR TESTING PURPOSES...
 
@@ -70,6 +73,10 @@ mSimulationInformationWidget->setUnit("ms");
     // GUI (so that they can be updated when changing languages)
 
     retranslateUi();
+
+    // Select our first property
+
+    mSimulationInformationWidget->selectFirstNode();
 }
 
 //==============================================================================
@@ -113,6 +120,24 @@ void SingleCellSimulationViewInformationWidget::loadSettings(QSettings *pSetting
 void SingleCellSimulationViewInformationWidget::saveSettings(QSettings *pSettings) const
 {
     //---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewInformationWidget::currentEditor(QWidget *pEditor)
+{
+    // The current editor has changed, meaning that either we are editing a
+    // property or have stopped editing one, so update our focus proxy
+    // accordingly
+
+    if (pEditor)
+        // We are editing a property, so use the editor as our focus proxy
+
+        setFocusProxy(pEditor);
+    else
+        // We have stopped editing a property, so reset our focus proxy
+
+        setFocusProxy(0);
 }
 
 //==============================================================================

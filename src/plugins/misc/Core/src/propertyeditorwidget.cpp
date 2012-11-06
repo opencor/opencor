@@ -84,8 +84,16 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
     DoubleEditWidget *editor = new DoubleEditWidget(item->text().toDouble(),
                                                     pParent);
 
+    // Keep track of when the editing finishes
+
     connect(editor, SIGNAL(editingFinished()),
             this, SLOT(commitAndCloseEditor()));
+
+    // Let people know that there is a new editor
+
+    emit currentEditor(editor);
+
+    // Return the editor
 
     return editor;
 }
@@ -100,6 +108,10 @@ void PropertyItemDelegate::commitAndCloseEditor()
 
     emit commitData(editor);
     emit closeEditor(editor);
+
+    // Let people know that there is no moe editor
+
+    emit currentEditor(0);
 }
 
 //==============================================================================
@@ -139,9 +151,13 @@ int PropertyItem::type() const
 PropertyEditorWidget::PropertyEditorWidget(QWidget *pParent) :
     TreeViewWidget(pParent)
 {
-    // Create and set our item delegate
+    // Create our item delegate and set it, after making sure that we forward
+    // its currentEditor() signal
 
     mPropertyItemDelegate = new PropertyItemDelegate();
+
+    connect(mPropertyItemDelegate, SIGNAL(currentEditor(QWidget *)),
+            this, SIGNAL(currentEditor(QWidget *)));
 
     setItemDelegate(mPropertyItemDelegate);
 

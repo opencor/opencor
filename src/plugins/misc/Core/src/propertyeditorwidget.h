@@ -60,6 +60,9 @@ public:
 private:
     QStandardItemModel *mModel;
 
+Q_SIGNALS:
+    void currentEditor(QWidget *pEditor) const;
+
 private slots:
     void commitAndCloseEditor();
 };
@@ -103,6 +106,9 @@ protected:
 
 private:
     PropertyItemDelegate *mPropertyItemDelegate;
+
+Q_SIGNALS:
+    void currentEditor(QWidget *pEditor);
 
 private Q_SLOTS:
     void editProperty(const QModelIndex &pNewItem,
