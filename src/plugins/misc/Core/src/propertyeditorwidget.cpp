@@ -23,6 +23,11 @@ namespace Core {
 DoubleEditWidget::DoubleEditWidget(const double &pValue, QWidget *pParent) :
     QLineEdit(QString::number(pValue), pParent)
 {
+#ifdef Q_WS_MAC
+    setAttribute(Qt::WA_MacShowFocusRect, 0);
+    // Note: the above removes the focus border since it messes up the look of
+    //       our editor
+#endif
 }
 
 //==============================================================================
@@ -48,12 +53,6 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
 
     DoubleEditWidget *editor = new DoubleEditWidget(item->text().toDouble(),
                                                     pParent);
-
-#ifdef Q_WS_MAC
-    editor->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    // Note: the above removes the focus border since it messes up the look of
-    //       our editor
-#endif
 
     connect(editor, SIGNAL(editingFinished()),
             this, SLOT(commitAndCloseEditor()));
