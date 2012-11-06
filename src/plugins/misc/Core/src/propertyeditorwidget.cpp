@@ -151,8 +151,8 @@ int PropertyItem::type() const
 PropertyEditorWidget::PropertyEditorWidget(QWidget *pParent) :
     TreeViewWidget(pParent)
 {
-    // Create our item delegate and set it, after making sure that we forward
-    // its currentEditor() signal
+    // Create our item delegate and set it, after making sure that we handle its
+    // currentEditor() signal
 
     mPropertyItemDelegate = new PropertyItemDelegate();
 
