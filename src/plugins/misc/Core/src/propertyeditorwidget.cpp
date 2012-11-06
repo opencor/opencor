@@ -89,9 +89,17 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
     connect(editor, SIGNAL(editingFinished()),
             this, SLOT(commitAndCloseEditor()));
 
+    // Propagate the fact that the user wants to go to the previous/next
+    // property
+
+    connect(editor, SIGNAL(goToPreviousPropertyRequested()),
+            this, SIGNAL(goToPreviousPropertyRequested()));
+    connect(editor, SIGNAL(goToNextPropertyRequested()),
+            this, SIGNAL(goToNextPropertyRequested()));
+
     // Let people know that there is a new editor
 
-    emit currentEditor(editor);
+    emit openEditor(editor);
 
     // Return the editor
 
@@ -108,10 +116,6 @@ void PropertyItemDelegate::commitAndCloseEditor()
 
     emit commitData(editor);
     emit closeEditor(editor);
-
-    // Let people know that there is no moe editor
-
-    emit currentEditor(0);
 }
 
 //==============================================================================
@@ -151,13 +155,20 @@ int PropertyItem::type() const
 PropertyEditorWidget::PropertyEditorWidget(QWidget *pParent) :
     TreeViewWidget(pParent)
 {
-    // Create our item delegate and set it, after making sure that we handle its
-    // currentEditor() signal
+    // Create our item delegate and set it, after making sure that we handle a
+    // few of its signals
 
     mPropertyItemDelegate = new PropertyItemDelegate();
 
-    connect(mPropertyItemDelegate, SIGNAL(currentEditor(QWidget *)),
-            this, SLOT(currentEditor(QWidget *)));
+    connect(mPropertyItemDelegate, SIGNAL(openEditor(QWidget *)),
+            this, SLOT(editorOpened(QWidget *)));
+    connect(mPropertyItemDelegate, SIGNAL(closeEditor(QWidget *, QAbstractItemDelegate::EndEditHint)),
+            this, SLOT(editorClosed()));
+
+    connect(mPropertyItemDelegate, SIGNAL(goToPreviousPropertyRequested()),
+            this, SLOT(goToPreviousProperty()));
+    connect(mPropertyItemDelegate, SIGNAL(goToNextPropertyRequested()),
+            this, SLOT(goToNextProperty()));
 
     setItemDelegate(mPropertyItemDelegate);
 
@@ -227,30 +238,29 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
-void PropertyEditorWidget::currentEditor(QWidget *pEditor)
+void PropertyEditorWidget::editorOpened(QWidget *pEditor)
 {
-    // The current editor has changed, meaning that either we are editing a
-    // property or have stopped editing one, so update our focus proxy
-    // accordingly
+    // We are starting the editing of a property, so use its editor as our focus
+    // proxy and make sure that it immediately gets the focus
+    // Note: if we were not to immediately give the editor the focus, then the
+    //       central widget would give the focus to the previously focused
+    //       widget (see CentralWidget::updateGui()), so...
 
-    if (pEditor) {
-        // We are editing a property, so use its editor as our focus proxy and
-        // make sure that it immediately gets the focus
-        // Note: if we were not to immediately give the editor the focus, then
-        //       the central widget would give the focus to our 'old' editor
-        //       (see CentralWidget::updateGui()), so...
+    setFocusProxy(pEditor);
 
-        setFocusProxy(pEditor);
+    pEditor->setFocus();
+}
 
-        pEditor->setFocus();
-    } else {
-        // We have stopped editing a property, so reset our focus proxy and make
-        // sure that we get the focus (see above for the reason)
+//==============================================================================
 
-        setFocusProxy(0);
+void PropertyEditorWidget::editorClosed()
+{
+    // We have stopped editing a property, so reset our focus proxy and make
+    // sure that we get the focus (see editorOpened() above for the reason)
 
-        setFocus();
-    }
+    setFocusProxy(0);
+
+    setFocus();
 }
 
 //==============================================================================
@@ -263,6 +273,30 @@ void PropertyEditorWidget::editProperty(const QModelIndex &pNewItem,
     // Edit the current property (which value is always in column 1)
 
     edit(model()->index(pNewItem.row(), 1));
+}
+
+//==============================================================================
+
+void PropertyEditorWidget::goToPreviousProperty()
+{
+    // Go to the previous property
+
+    int newRow = currentIndex().row()-1;
+
+    if (newRow >= 0)
+        selectItem(newRow);
+}
+
+//==============================================================================
+
+void PropertyEditorWidget::goToNextProperty()
+{
+    // Go to the next property
+
+    int newRow = currentIndex().row()+1;
+
+    if (newRow < model()->rowCount())
+        selectItem(newRow);
 }
 
 //==============================================================================

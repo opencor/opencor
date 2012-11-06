@@ -61,7 +61,10 @@ private:
     QStandardItemModel *mModel;
 
 Q_SIGNALS:
-    void currentEditor(QWidget *pEditor) const;
+    void openEditor(QWidget *pEditor) const;
+
+    void goToPreviousPropertyRequested();
+    void goToNextPropertyRequested();
 
 private slots:
     void commitAndCloseEditor();
@@ -108,10 +111,14 @@ private:
     PropertyItemDelegate *mPropertyItemDelegate;
 
 private Q_SLOTS:
-    void currentEditor(QWidget *pEditor);
+    void editorOpened(QWidget *pEditor);
+    void editorClosed();
 
     void editProperty(const QModelIndex &pNewItem,
                       const QModelIndex &pOldItem);
+
+    void goToPreviousProperty();
+    void goToNextProperty();
 };
 
 //==============================================================================
