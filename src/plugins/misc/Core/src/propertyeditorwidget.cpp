@@ -32,6 +32,36 @@ DoubleEditWidget::DoubleEditWidget(const double &pValue, QWidget *pParent) :
 
 //==============================================================================
 
+void DoubleEditWidget::keyPressEvent(QKeyEvent *pEvent)
+{
+    // Let people know if the user wants to go to the previous/next property
+
+    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
+        && !(pEvent->modifiers() & Qt::ControlModifier)
+        && !(pEvent->modifiers() & Qt::AltModifier)
+        && !(pEvent->modifiers() & Qt::MetaModifier)) {
+        if (pEvent->key() == Qt::Key_Up) {
+            // The user wants to go to the previous property, so...
+
+            emit goToPreviousPropertyRequested();
+
+            return;
+        } else if (pEvent->key() == Qt::Key_Down) {
+            // The user wants to go to the previous property, so...
+
+            emit goToNextPropertyRequested();
+
+            return;
+        }
+    }
+
+    // Default handling of the event
+
+    QLineEdit::keyPressEvent(pEvent);
+}
+
+//==============================================================================
+
 PropertyItemDelegate::PropertyItemDelegate() :
     QStyledItemDelegate(),
     mModel(0)

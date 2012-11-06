@@ -33,6 +33,13 @@ class DoubleEditWidget : public QLineEdit
 
 public:
     explicit DoubleEditWidget(const double &pValue, QWidget *pParent = 0);
+
+protected:
+    virtual void keyPressEvent(QKeyEvent *pEvent);
+
+Q_SIGNALS:
+    void goToPreviousPropertyRequested();
+    void goToNextPropertyRequested();
 };
 
 //==============================================================================
