@@ -329,7 +329,7 @@ void FileOrganiserWidget::dragMoveEvent(QDragMoveEvent *pEvent)
     setState(QAbstractItemView::DraggingState);
 
     // Default handling of the event
-    // Note: this gives us the drop indicator
+    // Note: this gives us the drop indicator...
 
     TreeViewWidget::dragMoveEvent(pEvent);
 

@@ -99,6 +99,10 @@ void ViewerWidget::paintEvent(QPaintEvent *pEvent)
 
     mMmlDocument.paint(&painter, QPoint(0.5*(width()-mmlDocumentSize.width()),
                                         0.5*(height()-mmlDocumentSize.height())));
+
+    // Accept the event
+
+    pEvent->accept();
 }
 
 //==============================================================================
