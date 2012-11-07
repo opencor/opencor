@@ -113,7 +113,7 @@ private:
     QWidget *mPropertyEditor;
     int mPropertyRow;
 
-    void editProperty(const int &pRow);
+    void editProperty(const int &pPropertyRow);
 
     void goToNeighbouringProperty(const int &pShift);
 
