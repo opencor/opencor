@@ -65,9 +65,6 @@ Q_SIGNALS:
 
     void goToPreviousPropertyRequested();
     void goToNextPropertyRequested();
-
-private slots:
-    void commitAndCloseEditor();
 };
 
 //==============================================================================
@@ -107,15 +104,22 @@ public:
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
 
+    virtual void mousePressEvent(QMouseEvent *pEvent);
+    virtual void mouseMoveEvent(QMouseEvent *pEvent);
+
 private:
     PropertyItemDelegate *mPropertyItemDelegate;
+
+    QWidget *mPropertyEditor;
+    int mPropertyRow;
+
+    void editProperty(const int &pRow);
+
+    void goToNeighbouringProperty(const int &pShift);
 
 private Q_SLOTS:
     void editorOpened(QWidget *pEditor);
     void editorClosed();
-
-    void editProperty(const QModelIndex &pNewItem,
-                      const QModelIndex &pOldItem);
 
     void goToPreviousProperty();
     void goToNextProperty();

@@ -44,20 +44,20 @@ void DoubleEditWidget::keyPressEvent(QKeyEvent *pEvent)
             // The user wants to go to the previous property, so...
 
             emit goToPreviousPropertyRequested();
-
-            return;
         } else if (pEvent->key() == Qt::Key_Down) {
             // The user wants to go to the previous property, so...
 
             emit goToNextPropertyRequested();
+        } else {
+            // Default handling of the event
 
-            return;
+            QLineEdit::keyPressEvent(pEvent);
         }
+    } else {
+        // Default handling of the event
+
+        QLineEdit::keyPressEvent(pEvent);
     }
-
-    // Default handling of the event
-
-    QLineEdit::keyPressEvent(pEvent);
 }
 
 //==============================================================================
@@ -84,11 +84,6 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
     DoubleEditWidget *editor = new DoubleEditWidget(item->text().toDouble(),
                                                     pParent);
 
-    // Keep track of when the editing finishes
-
-    connect(editor, SIGNAL(editingFinished()),
-            this, SLOT(commitAndCloseEditor()));
-
     // Propagate the fact that the user wants to go to the previous/next
     // property
 
@@ -104,18 +99,6 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
     // Return the editor
 
     return editor;
-}
-
-//==============================================================================
-
-void PropertyItemDelegate::commitAndCloseEditor()
-{
-    // Commit the new value and close the editor
-
-    DoubleEditWidget *editor = qobject_cast<DoubleEditWidget *>(sender());
-
-    emit commitData(editor);
-    emit closeEditor(editor);
 }
 
 //==============================================================================
@@ -153,7 +136,9 @@ int PropertyItem::type() const
 //==============================================================================
 
 PropertyEditorWidget::PropertyEditorWidget(QWidget *pParent) :
-    TreeViewWidget(pParent)
+    TreeViewWidget(pParent),
+    mPropertyEditor(0),
+    mPropertyRow(-1)
 {
     // Create our item delegate and set it, after making sure that we handle a
     // few of its signals
@@ -181,23 +166,11 @@ PropertyEditorWidget::PropertyEditorWidget(QWidget *pParent) :
 
 void PropertyEditorWidget::initialize(QStandardItemModel *pModel)
 {
-    // Stop tracking the change of property, if needed
-
-    if (selectionModel())
-        disconnect(selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
-                   this, SLOT(editProperty(const QModelIndex &, const QModelIndex &)));
-
     // Update our model and, as a result, our item delegate
 
     setModel(pModel);
 
     mPropertyItemDelegate->setModel(pModel);
-
-    // Keep track of the change of property
-    // Note: the idea is to automatically start the editing of a property...
-
-    connect(selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
-            this, SLOT(editProperty(const QModelIndex &, const QModelIndex &)));
 }
 
 //==============================================================================
@@ -225,15 +198,73 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
     // Check some key combinations
 
     if (   (pEvent->modifiers() & Qt::ControlModifier)
-        && (pEvent->key() == Qt::Key_A))
+        && (pEvent->key() == Qt::Key_A)) {
         // The user wants to select everything which we don't want to allow,
-        // so...
+        // so... do nothing...
 
-        pEvent->ignore();
-    else
-        // Not a key combination we handle, so...
+        ;
+    } else if (   !(pEvent->modifiers() & Qt::ShiftModifier)
+               && !(pEvent->modifiers() & Qt::ControlModifier)
+               && !(pEvent->modifiers() & Qt::AltModifier)
+               && !(pEvent->modifiers() & Qt::MetaModifier)) {
+        // None of the modifiers is selected
+
+        if (   (pEvent->key() == Qt::Key_Return)
+            || (pEvent->key() == Qt::Key_Enter)) {
+            // The user wants to start/stop editing the property
+
+            if (mPropertyRow == -1)
+                // We are not currently editing the property, so start editing
+                // it
+
+                editProperty(currentIndex().row());
+            else
+                // We are currently editing the property, so stop editing it
+
+                editProperty(-1);
+        } else if (pEvent->key() == Qt::Key_Up) {
+            // The user wants to go the previous property
+
+            goToPreviousProperty();
+        } else if (pEvent->key() == Qt::Key_Down) {
+            // The user wants to go to the next property
+
+            goToNextProperty();
+        } else {
+            // Default handling of the event
+
+            TreeViewWidget::keyPressEvent(pEvent);
+        }
+    } else {
+        // Default handling of the event
 
         TreeViewWidget::keyPressEvent(pEvent);
+    }
+}
+
+//==============================================================================
+
+void PropertyEditorWidget::mousePressEvent(QMouseEvent *pEvent)
+{
+    // Edit the property, but only if we are not already editing it
+
+    int propertyRow = indexAt(pEvent->pos()).row();
+
+    if (propertyRow != mPropertyRow)
+        editProperty(propertyRow);
+}
+
+//==============================================================================
+
+void PropertyEditorWidget::mouseMoveEvent(QMouseEvent *pEvent)
+{
+    // Edit the property, but only if we are not already editing it and if we
+    // are over a property
+
+    int propertyRow = indexAt(pEvent->pos()).row();
+
+    if ((propertyRow != -1) && (propertyRow != mPropertyRow))
+        editProperty(propertyRow);
 }
 
 //==============================================================================
@@ -249,6 +280,11 @@ void PropertyEditorWidget::editorOpened(QWidget *pEditor)
     setFocusProxy(pEditor);
 
     pEditor->setFocus();
+
+    // Keep track of some information about the property
+
+    mPropertyEditor = pEditor;
+    mPropertyRow    = currentIndex().row();
 }
 
 //==============================================================================
@@ -261,18 +297,66 @@ void PropertyEditorWidget::editorClosed()
     setFocusProxy(0);
 
     setFocus();
+
+    // Reset some information about the property
+
+    mPropertyEditor = 0;
+    mPropertyRow    = -1;
 }
 
 //==============================================================================
 
-void PropertyEditorWidget::editProperty(const QModelIndex &pNewItem,
-                                        const QModelIndex &pOldItem)
+void PropertyEditorWidget::editProperty(const int &pRow)
 {
-    Q_UNUSED(pOldItem);
+    // Edit the property which row is given, but only if we are not already
+    // editing it
 
-    // Edit the current property (which value is always in column 1)
+    if (pRow != mPropertyRow) {
+        // We want to edit a new property, so first stop the editing of the
+        // current one, if any
 
-    edit(model()->index(pNewItem.row(), 1));
+        if (mPropertyRow != -1) {
+            // A property is currently being edited, so commit its data and
+            // then close its corresponding editor
+
+            commitData(mPropertyEditor);
+            closeEditor(mPropertyEditor, QAbstractItemDelegate::NoHint);
+
+            // Update our state
+            // Note: this is very important otherwise our state will remain
+            //       that of editing...
+
+            setState(NoState);
+        }
+
+        // Now that the editing of our old property has finished, we can start
+        // the editing of our new property, if any
+
+        if (pRow != -1) {
+            // There is a new property to edit, so first select it
+
+            selectItem(pRow);
+
+            // Now, we can 'properly' edit the property's value
+            // Note: the property's value's column is always 1...
+
+            edit(model()->index(pRow, 1));
+        }
+    }
+}
+
+//==============================================================================
+
+void PropertyEditorWidget::goToNeighbouringProperty(const int &pShift)
+{
+    // Go to the previous/next property
+
+    int row = currentIndex().row()+pShift;
+
+    if ((row >= 0) && (row < model()->rowCount()))
+        // The previous/next property exists, so we can edit it
+
+        editProperty(row);
 }
 
 //==============================================================================
@@ -281,10 +365,7 @@ void PropertyEditorWidget::goToPreviousProperty()
 {
     // Go to the previous property
 
-    int newRow = currentIndex().row()-1;
-
-    if (newRow >= 0)
-        selectItem(newRow);
+    goToNeighbouringProperty(-1);
 }
 
 //==============================================================================
@@ -293,10 +374,7 @@ void PropertyEditorWidget::goToNextProperty()
 {
     // Go to the next property
 
-    int newRow = currentIndex().row()+1;
-
-    if (newRow < model()->rowCount())
-        selectItem(newRow);
+    goToNeighbouringProperty(1);
 }
 
 //==============================================================================
