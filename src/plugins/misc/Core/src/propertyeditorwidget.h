@@ -95,9 +95,10 @@ class CORE_EXPORT PropertyEditorWidget : public TreeViewWidget
 public:
     explicit PropertyEditorWidget(QWidget *pParent = 0);
 
-    virtual void setModel(QAbstractItemModel *pModel);
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
 
-    void resizeColumnsToContents();
+    virtual void setModel(QAbstractItemModel *pModel);
 
     static PropertyItem * newNonEditableString(const QString &pValue = QString());
     static PropertyItem * newEditableDouble(const double &pValue);

@@ -170,7 +170,7 @@ void SingleCellSimulationViewWidget::retranslateUi()
 //==============================================================================
 
 static const QString SettingsSizesCount = "SizesCount";
-static const QString SettingsSize       = "Size%1";
+static const QString SettingsSize       = "Size";
 
 //==============================================================================
 
@@ -224,7 +224,7 @@ void SingleCellSimulationViewWidget::loadSettings(QSettings *pSettings)
         QList<int> newSizes = QList<int>();
 
         for (int i = 0; i < sizesCount; ++i)
-            newSizes << pSettings->value(SettingsSize.arg(QString::number(i))).toInt();
+            newSizes << pSettings->value(SettingsSize+QString::number(i)).toInt();
 
         mSplitter->setSizes(newSizes);
     }
@@ -250,7 +250,7 @@ void SingleCellSimulationViewWidget::saveSettings(QSettings *pSettings) const
     pSettings->setValue(SettingsSizesCount, crtSizes.count());
 
     for (int i = 0, iMax = crtSizes.count(); i < iMax; ++i)
-        pSettings->setValue(SettingsSize.arg(QString::number(i)), crtSizes[i]);
+        pSettings->setValue(SettingsSize+QString::number(i), crtSizes[i]);
 
     // Keep track of the settings of our contents widget
 

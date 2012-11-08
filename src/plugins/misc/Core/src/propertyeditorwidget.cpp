@@ -12,7 +12,9 @@
 
 #include <QHeaderView>
 #include <QKeyEvent>
+#include <QSettings>
 #include <QStandardItem>
+#include <QVariant>
 
 //==============================================================================
 
@@ -168,6 +170,37 @@ PropertyEditorWidget::PropertyEditorWidget(QWidget *pParent) :
 
 //==============================================================================
 
+static const QString SettingsColumnWidth = "ColumnWidth";
+
+//==============================================================================
+
+void PropertyEditorWidget::loadSettings(QSettings *pSettings)
+{
+    // Retrieve the width of each column
+
+    QString columnWidthKey;
+
+    for (int i = 0, iMax = header()->count(); i < iMax; ++i) {
+        columnWidthKey = SettingsColumnWidth+QString::number(i);
+
+        setColumnWidth(i, pSettings->value(columnWidthKey,
+                                           columnWidth(i)).toInt());
+    }
+}
+
+//==============================================================================
+
+void PropertyEditorWidget::saveSettings(QSettings *pSettings) const
+{
+    // Keep track of the width of each column
+
+    for (int i = 0, iMax = header()->count(); i < iMax; ++i)
+        pSettings->setValue(SettingsColumnWidth+QString::number(i),
+                            columnWidth(i));
+}
+
+//==============================================================================
+
 void PropertyEditorWidget::setModel(QAbstractItemModel *pModel)
 {
     // Stop tracking data changes in the old model
@@ -184,23 +217,6 @@ void PropertyEditorWidget::setModel(QAbstractItemModel *pModel)
 
     connect(model(), SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
             this, SLOT(updateHeight()));
-}
-
-//==============================================================================
-
-void PropertyEditorWidget::resizeColumnsToContents()
-{
-    // Resize all our columns to their contents
-
-    if (!model())
-        // We don't have a model associated to us, so...
-
-        return;
-
-    // Resize our columns so that their contents fits perfectly
-
-    for (int i = 0; i < model()->columnCount(); ++i)
-        resizeColumnToContents(i);
 }
 
 //==============================================================================
@@ -352,7 +368,7 @@ void PropertyEditorWidget::updateHeight()
     int newHeight = header()->height();
     QAbstractItemModel *itemModel = model();
 
-    for (int i = 0; i < itemModel->rowCount(); ++i)
+    for (int i = 0, iMax = itemModel->rowCount(); i < iMax; ++i)
         newHeight += rowHeight(itemModel->index(i, 0));
 
     setFixedHeight(newHeight);

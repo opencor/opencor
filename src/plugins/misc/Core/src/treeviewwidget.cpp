@@ -7,6 +7,7 @@
 //==============================================================================
 
 #include <QDrag>
+#include <QHeaderView>
 #include <QStandardItemModel>
 
 //==============================================================================
@@ -31,6 +32,16 @@ TreeViewWidget::TreeViewWidget(QWidget *pParent) :
     setFrameShape(QFrame::NoFrame);
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     setUniformRowHeights(true);
+}
+
+//==============================================================================
+
+void TreeViewWidget::resizeColumnsToContents()
+{
+    // Resize all our columns to their contents
+
+    for (int i = 0, iMax = header()->count(); i < iMax; ++i)
+        resizeColumnToContents(i);
 }
 
 //==============================================================================

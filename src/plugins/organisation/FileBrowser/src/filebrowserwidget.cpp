@@ -177,7 +177,7 @@ void FileBrowserWidget::loadSettings(QSettings *pSettings)
 
 void FileBrowserWidget::saveSettings(QSettings *pSettings) const
 {
-    // Retrieve the width of each column
+    // Keep track of the width of each column
 
     for (int i = 0, iMax = header()->count(); i < iMax; ++i)
         pSettings->setValue(SettingsColumnWidth+QString::number(i),

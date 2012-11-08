@@ -30,7 +30,7 @@ SingleCellSimulationViewGraphPanelsWidget::SingleCellSimulationViewGraphPanelsWi
 
 static const QString SettingsGraphPanelsCount = "GraphPanelsCount";
 static const QString SettingsActiveGraphPanel = "ActiveGraphPanel";
-static const QString SettingsGraphPanelSize   = "GraphPanelSize%1";
+static const QString SettingsGraphPanelSize   = "GraphPanelSize";
 
 //==============================================================================
 
@@ -60,7 +60,7 @@ void SingleCellSimulationViewGraphPanelsWidget::loadSettings(QSettings *pSetting
     QList<int> newSizes = QList<int>();
 
     for (int i = 0; i < graphPanelsCount; ++i)
-        newSizes << pSettings->value(SettingsGraphPanelSize.arg(QString::number(i))).toInt();
+        newSizes << pSettings->value(SettingsGraphPanelSize+QString::number(i)).toInt();
 
     setSizes(newSizes);
 
@@ -90,7 +90,7 @@ void SingleCellSimulationViewGraphPanelsWidget::saveSettings(QSettings *pSetting
     QList<int> crtSizes = sizes();
 
     for (int i = 0, iMax = crtSizes.count(); i < iMax; ++i)
-        pSettings->setValue(SettingsGraphPanelSize.arg(QString::number(i)), crtSizes[i]);
+        pSettings->setValue(SettingsGraphPanelSize+QString::number(i), crtSizes[i]);
 }
 
 //==============================================================================

@@ -86,7 +86,7 @@ void SingleCellSimulationViewContentsWidget::retranslateUi()
 //==============================================================================
 
 static const QString SettingsContentsCount = "ContentsCount";
-static const QString SettingsContentsSize  = "ContentsSize%1";
+static const QString SettingsContentsSize  = "ContentsSize";
 
 //==============================================================================
 
@@ -104,7 +104,7 @@ void SingleCellSimulationViewContentsWidget::loadSettings(QSettings *pSettings)
                  << 0.75*qApp->desktop()->screenGeometry().width();
     else
         for (int i = 0; i < sizesCount; ++i)
-            newSizes << pSettings->value(SettingsContentsSize.arg(QString::number(i))).toInt();
+            newSizes << pSettings->value(SettingsContentsSize+QString::number(i)).toInt();
 
     setSizes(newSizes);
 
@@ -130,7 +130,7 @@ void SingleCellSimulationViewContentsWidget::saveSettings(QSettings *pSettings) 
     QList<int> crtSizes = sizes();
 
     for (int i = 0, iMax = crtSizes.count(); i < iMax; ++i)
-        pSettings->setValue(SettingsContentsSize.arg(QString::number(i)), crtSizes[i]);
+        pSettings->setValue(SettingsContentsSize+QString::number(i), crtSizes[i]);
 
     // Keep track of the settings of our information and graph panels widgets
 
