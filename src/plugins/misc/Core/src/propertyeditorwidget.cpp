@@ -170,8 +170,9 @@ void PropertyEditorWidget::setModel(QAbstractItemModel *pModel)
 {
     // Stop tracking data changes in the old model
 
-    disconnect(model(), SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
-               this, SLOT(updateHeight()));
+    if (model())
+        disconnect(model(), SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
+                   this, SLOT(updateHeight()));
 
     // Update our model
 
