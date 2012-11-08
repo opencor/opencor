@@ -9,8 +9,6 @@
 
 #include <QLabel>
 #include <QLayout>
-#include <QScrollArea>
-#include <QScrollBar>
 #include <QToolButton>
 
 //==============================================================================
@@ -73,22 +71,13 @@ void CollapsibleWidget::constructor(const QString &pTitle, QWidget *pBody)
 
     mSeparator = Core::newLineWidget(this);
 
-    // Create and customise our scroll area widget
-    // Note: the idea is to have our the body of our collapsible widget within
-    //       a scroll area, this in case the body is too wide...
-
-    mScrollArea = new QScrollArea(this);
-
-    mScrollArea->setFrameStyle(QFrame::NoFrame);
-
     // Populate our main layout
 
     mainLayout->addWidget(mHeader);
     mainLayout->addWidget(mSeparator);
-    mainLayout->addWidget(mScrollArea);
 
     if (pBody)
-        mScrollArea->setWidget(pBody);
+        mainLayout->addWidget(pBody);
 
     // Apply the main layout to ourselves
 
@@ -156,42 +145,31 @@ void CollapsibleWidget::setBody(QWidget *pBody)
     // Set our body
 
     if (pBody != mBody) {
-        bool bodyBefore = mBody;
+        // Remove the old body, if any
 
-        mBody = pBody;
+        if (mBody)
+            layout()->removeWidget(mBody);
+
+        // Add the new body, if any
 
         if (pBody) {
-            mScrollArea->setWidget(pBody);
+            layout()->addWidget(pBody);
 
             // Update our GUI, using the previous collapsible state of our
             // widget, in case there was already a body before, or by asking
-            // it to be uncollapsed now that there is a body
+            // it to be expanded now that there is a body
 
-            updateGui(bodyBefore?mCollapsed:false);
+            updateGui(mBody?mCollapsed:false);
         } else {
-            // There is no body (still or anymore), so collapse ourselves
+            // There is no body anymore, so collapse ourselves
 
             updateGui(true);
         }
+
+        // Keep track of the new body
+
+        mBody = pBody;
     }
-}
-
-//==============================================================================
-
-void CollapsibleWidget::setAlignment(const Qt::Alignment &pAlignment)
-{
-    // Set our alignment
-
-    mScrollArea->setAlignment(pAlignment);
-}
-
-//==============================================================================
-
-Qt::Alignment CollapsibleWidget::alignment() const
-{
-    // Return wheter our alignment
-
-    return mScrollArea->alignment();
 }
 
 //==============================================================================
@@ -211,43 +189,6 @@ bool CollapsibleWidget::isCollapsed() const
     // Return wheter we are collapsed
 
     return mCollapsed;
-}
-
-//==============================================================================
-
-void CollapsibleWidget::resizeEvent(QResizeEvent *pEvent)
-{
-    // Default handling of the event
-
-    Widget::resizeEvent(pEvent);
-
-    // Resize our height, if needed
-
-    if (!mCollapsed && mBody) {
-        // Determine what the height of our scroll area widget should be
-
-        int newScrollAreaHeight = mBody->height();
-
-        if (mScrollArea->width() < mBody->width())
-            // We need to account for the horizontal scroll bar
-
-            newScrollAreaHeight += mScrollArea->horizontalScrollBar()->height();
-
-        // Update our height and that of our scroll area widget
-        // Note: our height must be updated after that of our scroll area
-        //       widget since our initial height will be determined by that of
-        //       the scroll area (hence, also, we don't update our height the
-        //       very first time round)...
-
-        int scrollAreaHeightDiff = newScrollAreaHeight-mScrollArea->height();
-
-        mScrollArea->setFixedHeight(newScrollAreaHeight);
-
-        if (mFirstHeightUpdate)
-            mFirstHeightUpdate = false;
-        else
-            setFixedHeight(height()+scrollAreaHeightDiff);
-    }
 }
 
 //==============================================================================
@@ -273,7 +214,11 @@ void CollapsibleWidget::updateGui(const bool &pCollapsed)
     // Show/hide some widgets
 
     mSeparator->setVisible(!pCollapsed);
-    mScrollArea->setVisible(!pCollapsed);
+
+    if (mBody)
+        mBody->setVisible(!pCollapsed);
+
+    // Update our height
 
     if (!mFirstHeightUpdate) {
         if (pCollapsed) {
@@ -281,7 +226,7 @@ void CollapsibleWidget::updateGui(const bool &pCollapsed)
 
             setFixedHeight(mHeader->height());
         } else if (mOldHeight) {
-            setFixedHeight(mOldHeight);//mTitle->height()+mSeparator->height()+mBody->height()+20);
+            setFixedHeight(mOldHeight);
         }
     }
 }
