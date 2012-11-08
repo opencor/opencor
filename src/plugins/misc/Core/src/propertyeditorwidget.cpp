@@ -233,10 +233,13 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 
             editProperty(-1);
         else
-            // We are not currently editing the property, so start editing
+            // We are not currently editing the property, so start editing it
             // it
+            // Note: we could use mPropertyRow, but if it was to be equal to -1
+            //       we would have to use currentIndex().row(), so we might as
+            //       well use the latter all the time...
 
-            editProperty(mPropertyRow);
+            editProperty(currentIndex().row());
 
         // Accept the event
 

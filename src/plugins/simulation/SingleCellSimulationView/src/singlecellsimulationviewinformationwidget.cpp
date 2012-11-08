@@ -74,6 +74,10 @@ mSimulationInformationWidget->setUnit("ms");
     // Select our first property
 
     mSimulationInformationWidget->selectFirstItem();
+
+    // Make our simulation information widget our focus proxy
+
+    setFocusProxy(mSimulationInformationWidget);
 }
 
 //==============================================================================
