@@ -532,14 +532,8 @@ void FileBrowserWidget::directoryLoaded(const QString &pPath)
         // Set the default width of the columns, if needed, so that it fits
         // their contents
 
-        if (mNeedDefColWidth) {
-            header()->setResizeMode(QHeaderView::ResizeToContents);
-
-            qApp->processEvents();
-            // Note: this ensures that the columns actually get resized
-
-            header()->setResizeMode(QHeaderView::Interactive);
-        }
+        if (mNeedDefColWidth)
+            resizeColumnsToContents();
 
         // Remove the loaded directory from mInitPathDirs
 
