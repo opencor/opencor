@@ -23,13 +23,11 @@ SingleCellSimulationViewSimulationInformationWidget::SingleCellSimulationViewSim
 
     setRootIsDecorated(false);
 
-    // Create our data model
+    // Create and set our data model
 
     mModel = new QStandardItemModel(this);
 
-    // Initialise ourselves
-
-    initialize(mModel);
+    setModel(mModel);
 
     // Populate our data model
 
@@ -49,6 +47,10 @@ SingleCellSimulationViewSimulationInformationWidget::SingleCellSimulationViewSim
     // GUI (so that they can be updated when changing languages)
 
     retranslateUi();
+
+    // Resize our columns
+
+    resizeColumnsToContents();
 }
 
 //==============================================================================

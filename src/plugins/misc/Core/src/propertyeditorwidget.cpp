@@ -20,8 +20,8 @@ namespace Core {
 
 //==============================================================================
 
-DoubleEditWidget::DoubleEditWidget(const double &pValue, QWidget *pParent) :
-    QLineEdit(QString::number(pValue), pParent)
+DoubleEditWidget::DoubleEditWidget(QWidget *pParent) :
+    QLineEdit(pParent)
 {
 #ifdef Q_WS_MAC
     setAttribute(Qt::WA_MacShowFocusRect, 0);
@@ -72,27 +72,17 @@ void DoubleEditWidget::keyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
-PropertyItemDelegate::PropertyItemDelegate() :
-    QStyledItemDelegate(),
-    mModel(0)
-{
-}
-
-//==============================================================================
-
 QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
                                              const QStyleOptionViewItem &pOption,
                                              const QModelIndex &pIndex) const
 {
     Q_UNUSED(pOption);
+    Q_UNUSED(pIndex);
 
     // Create and return an editor for our double
     // Note: we don't allow the editing of a string, so...
 
-    QStandardItem *item = mModel->itemFromIndex(pIndex);
-
-    DoubleEditWidget *editor = new DoubleEditWidget(item->text().toDouble(),
-                                                    pParent);
+    DoubleEditWidget *editor = new DoubleEditWidget(pParent);
 
     // Propagate a few signals
 
@@ -120,16 +110,6 @@ bool PropertyItemDelegate::eventFilter(QObject *pObject, QEvent *pEvent)
         return false;
     else
         return QStyledItemDelegate::eventFilter(pObject, pEvent);
-}
-
-//==============================================================================
-
-void PropertyItemDelegate::setModel(QStandardItemModel *pModel)
-{
-    // Set the model to be used by us
-
-    if (pModel != mModel)
-        mModel = pModel;
 }
 
 //==============================================================================
@@ -185,13 +165,19 @@ PropertyEditorWidget::PropertyEditorWidget(QWidget *pParent) :
 
 //==============================================================================
 
-void PropertyEditorWidget::initialize(QStandardItemModel *pModel)
+void PropertyEditorWidget::resizeColumnsToContents()
 {
-    // Update our model and, as a result, our item delegate
+    // Resize all our columns to their contents
 
-    setModel(pModel);
+    if (!model())
+        // We don't have a model associated to us, so...
 
-    mPropertyItemDelegate->setModel(pModel);
+        return;
+
+    // Resize our columns so that their contents fits perfectly
+
+    for (int i = 0; i < model()->columnCount(); ++i)
+        resizeColumnToContents(i);
 }
 
 //==============================================================================

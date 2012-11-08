@@ -32,7 +32,7 @@ class DoubleEditWidget : public QLineEdit
     Q_OBJECT
 
 public:
-    explicit DoubleEditWidget(const double &pValue, QWidget *pParent = 0);
+    explicit DoubleEditWidget(QWidget *pParent = 0);
 
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
@@ -49,13 +49,9 @@ class PropertyItemDelegate : public QStyledItemDelegate
     Q_OBJECT
 
 public:
-    explicit PropertyItemDelegate();
-
     virtual QWidget *createEditor(QWidget *pParent,
                                   const QStyleOptionViewItem &pOption,
                                   const QModelIndex &pIndex) const;
-
-    void setModel(QStandardItemModel *pModel);
 
 protected:
     virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
@@ -99,7 +95,7 @@ class CORE_EXPORT PropertyEditorWidget : public TreeViewWidget
 public:
     explicit PropertyEditorWidget(QWidget *pParent = 0);
 
-    void initialize(QStandardItemModel *pModel);
+    void resizeColumnsToContents();
 
     static PropertyItem * newNonEditableString(const QString &pValue = QString());
     static PropertyItem * newEditableDouble(const double &pValue);
