@@ -43,7 +43,7 @@ void DoubleEditWidget::keyPressEvent(QKeyEvent *pEvent)
         // None of the modifiers is selected
 
         if (pEvent->key() == Qt::Key_Up) {
-            // The user wants to go to the previous property, so...
+            // The user wants to go to the previous property
 
             emit goToPreviousPropertyRequested();
 
@@ -51,7 +51,7 @@ void DoubleEditWidget::keyPressEvent(QKeyEvent *pEvent)
 
             pEvent->accept();
         } else if (pEvent->key() == Qt::Key_Down) {
-            // The user wants to go to the previous property, so...
+            // The user wants to go to the next property
 
             emit goToNextPropertyRequested();
 
@@ -108,6 +108,18 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
     // Return the editor
 
     return editor;
+}
+
+//==============================================================================
+
+bool PropertyItemDelegate::eventFilter(QObject *pObject, QEvent *pEvent)
+{
+    // We want to handle keys ourselves, so...
+
+    if(pEvent->type()==QEvent::KeyPress)
+         return false;
+    else
+        return QStyledItemDelegate::eventFilter(pObject, pEvent);
 }
 
 //==============================================================================
@@ -212,30 +224,38 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
         // so just accept the event...
 
         pEvent->accept();
+    } else if (   (pEvent->key() == Qt::Key_Return)
+               || (pEvent->key() == Qt::Key_Enter)) {
+        // The user wants to start/stop editing the property
+
+        if (mPropertyEditor)
+            // We are currently editing the property, so stop editing it
+
+            editProperty(-1);
+        else
+            // We are not currently editing the property, so start editing
+            // it
+
+            editProperty(mPropertyRow);
+
+        // Accept the event
+
+        pEvent->accept();
+    } else if (pEvent->key() == Qt::Key_Escape) {
+        // The user wants to cancel the editing of the property
+
+        cancelPropertyEditing();
+
+        // Accept the event
+
+        pEvent->accept();
     } else if (   !(pEvent->modifiers() & Qt::ShiftModifier)
                && !(pEvent->modifiers() & Qt::ControlModifier)
                && !(pEvent->modifiers() & Qt::AltModifier)
                && !(pEvent->modifiers() & Qt::MetaModifier)) {
         // None of the modifiers is selected
 
-        if (   (pEvent->key() == Qt::Key_Return)
-            || (pEvent->key() == Qt::Key_Enter)) {
-            // The user wants to start/stop editing the property
-
-            if (mPropertyEditor)
-                // We are currently editing the property, so stop editing it
-
-                editProperty(-1);
-            else
-                // We are not currently editing the property, so start editing
-                // it
-
-                editProperty(mPropertyRow);
-
-            // Accept the event
-
-            pEvent->accept();
-        } else if (pEvent->key() == Qt::Key_Up) {
+        if (pEvent->key() == Qt::Key_Up) {
             // The user wants to go the previous property
 
             goToPreviousProperty();
@@ -349,7 +369,8 @@ void PropertyEditorWidget::editorClosed()
 
 //==============================================================================
 
-void PropertyEditorWidget::editProperty(const int &pPropertyRow)
+void PropertyEditorWidget::editProperty(const int &pPropertyRow,
+                                        const bool &pCommitData)
 {
     // We want to edit a new property, so first stop the editing of the current
     // one, if any
@@ -358,8 +379,13 @@ void PropertyEditorWidget::editProperty(const int &pPropertyRow)
         // A property is currently being edited, so commit its data and then
         // close its corresponding editor
 
-        commitData(mPropertyEditor);
-        closeEditor(mPropertyEditor, QAbstractItemDelegate::NoHint);
+        if (pCommitData)
+            commitData(mPropertyEditor);
+
+        closeEditor(mPropertyEditor,
+                    pCommitData?
+                        QAbstractItemDelegate::SubmitModelCache:
+                        QAbstractItemDelegate::RevertModelCache);
 
         // Update our state
         // Note: this is very important otherwise our state will remain that of
@@ -385,6 +411,15 @@ void PropertyEditorWidget::editProperty(const int &pPropertyRow)
 
         edit(model()->index(pPropertyRow, 1));
     }
+}
+
+//==============================================================================
+
+void PropertyEditorWidget::cancelPropertyEditing()
+{
+    // The user wants to cancel the editing of the property
+
+    editProperty(-1, false);
 }
 
 //==============================================================================

@@ -57,6 +57,9 @@ public:
 
     void setModel(QStandardItemModel *pModel);
 
+protected:
+    virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
+
 private:
     QStandardItemModel *mModel;
 
@@ -113,7 +116,9 @@ private:
     QWidget *mPropertyEditor;
     int mPropertyRow;
 
-    void editProperty(const int &pPropertyRow);
+    void editProperty(const int &pPropertyRow, const bool &pCommitData = true);
+
+    void cancelPropertyEditing();
 
     void goToNeighbouringProperty(const int &pShift);
 
