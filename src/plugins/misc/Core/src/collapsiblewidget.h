@@ -40,6 +40,9 @@ public:
     QWidget * body() const;
     void setBody(QWidget *pBody);
 
+    void setAlignment(const Qt::Alignment &pAlignment);
+    Qt::Alignment alignment() const;
+
     void setCollapsed(const bool &pCollapsed);
     bool isCollapsed() const;
 

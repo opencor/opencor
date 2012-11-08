@@ -73,13 +73,12 @@ void CollapsibleWidget::constructor(const QString &pTitle, QWidget *pBody)
 
     mSeparator = Core::newLineWidget(this);
 
-    // Create our scroll area widget
+    // Create and customise our scroll area widget
     // Note: the idea is to have our the body of our collapsible widget within
     //       a scroll area, this in case the body is too wide...
 
     mScrollArea = new QScrollArea(this);
 
-    mScrollArea->setAlignment(Qt::AlignCenter);
     mScrollArea->setFrameStyle(QFrame::NoFrame);
 
     // Populate our main layout
@@ -175,6 +174,24 @@ void CollapsibleWidget::setBody(QWidget *pBody)
             updateGui(true);
         }
     }
+}
+
+//==============================================================================
+
+void CollapsibleWidget::setAlignment(const Qt::Alignment &pAlignment)
+{
+    // Set our alignment
+
+    mScrollArea->setAlignment(pAlignment);
+}
+
+//==============================================================================
+
+Qt::Alignment CollapsibleWidget::alignment() const
+{
+    // Return wheter our alignment
+
+    return mScrollArea->alignment();
 }
 
 //==============================================================================
