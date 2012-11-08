@@ -10,6 +10,7 @@
 
 //==============================================================================
 
+#include <QHeaderView>
 #include <QKeyEvent>
 #include <QStandardItem>
 
@@ -158,9 +159,28 @@ PropertyEditorWidget::PropertyEditorWidget(QWidget *pParent) :
 
     setItemDelegate(mPropertyItemDelegate);
 
-    // Further customise ourself
+    // Further customise ourselves
 
     setSelectionMode(QAbstractItemView::SingleSelection);
+}
+
+//==============================================================================
+
+void PropertyEditorWidget::setModel(QAbstractItemModel *pModel)
+{
+    // Stop tracking data changes in the old model
+
+    disconnect(model(), SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
+               this, SLOT(updateHeight()));
+
+    // Update our model
+
+    TreeViewWidget::setModel(pModel);
+
+    // Update our height following data changes
+
+    connect(model(), SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
+            this, SLOT(updateHeight()));
 }
 
 //==============================================================================
@@ -318,6 +338,21 @@ void PropertyEditorWidget::mouseMoveEvent(QMouseEvent *pEvent)
     // Accept the event
 
     pEvent->accept();
+}
+
+//==============================================================================
+
+void PropertyEditorWidget::updateHeight()
+{
+    // Update our height based on the number of rows
+
+    int newHeight = header()->height();
+    QAbstractItemModel *itemModel = model();
+
+    for (int i = 0; i < itemModel->rowCount(); ++i)
+        newHeight += rowHeight(itemModel->index(i, 0));
+
+    setFixedHeight(newHeight);
 }
 
 //==============================================================================

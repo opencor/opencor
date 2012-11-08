@@ -95,6 +95,8 @@ class CORE_EXPORT PropertyEditorWidget : public TreeViewWidget
 public:
     explicit PropertyEditorWidget(QWidget *pParent = 0);
 
+    virtual void setModel(QAbstractItemModel *pModel);
+
     void resizeColumnsToContents();
 
     static PropertyItem * newNonEditableString(const QString &pValue = QString());
@@ -119,6 +121,8 @@ private:
     void goToNeighbouringProperty(const int &pShift);
 
 private Q_SLOTS:
+    void updateHeight();
+
     void editorOpened(QWidget *pEditor);
     void editorClosed();
 
