@@ -218,6 +218,22 @@ void CollapsibleWidget::updateGui(const bool &pCollapsed)
     if (mBody)
         mBody->setVisible(!pCollapsed);
 
+    // Update our focus proxy and make sure that the new focus proxy immediately
+    // gets the focus
+    // Note: if we were not to immediately give the new focus proxy the focus,
+    //       then the central widget would give the focus to the previously
+    //       focused widget (see CentralWidget::updateGui()), so...
+
+    if (pCollapsed || !mBody) {
+        setFocusProxy(0);
+
+        setFocus();
+    } else {
+        setFocusProxy(mBody);
+
+        mBody->setFocus();
+    }
+
     // Update our height
 
     if (!mFirstHeightUpdate) {

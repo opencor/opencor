@@ -75,9 +75,9 @@ mSimulationInformationWidget->setUnit("ms");
 
     mSimulationInformationWidget->selectFirstItem();
 
-    // Make our simulation information widget our focus proxy
+    // Make our simulation collapsible widget our focus proxy
 
-    setFocusProxy(mSimulationInformationWidget);
+    setFocusProxy(mSimulationCollapsibleWidget);
 }
 
 //==============================================================================
