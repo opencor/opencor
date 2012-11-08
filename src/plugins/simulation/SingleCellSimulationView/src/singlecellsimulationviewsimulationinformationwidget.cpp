@@ -41,9 +41,9 @@ SingleCellSimulationViewSimulationInformationWidget::SingleCellSimulationViewSim
     mModel->invisibleRootItem()->setChild(1, 1, newEditableDouble(1000 /*---GRY--- JUST FOR TESTING... */));
     mModel->invisibleRootItem()->setChild(2, 1, newEditableDouble(1 /*---GRY--- JUST FOR TESTING... */));
 
-    mModel->invisibleRootItem()->setChild(0, 2, newNonEditableString("ms" /*---GRY--- JUST FOR TESTING... */));
-    mModel->invisibleRootItem()->setChild(1, 2, newNonEditableString("ms" /*---GRY--- JUST FOR TESTING... */));
-    mModel->invisibleRootItem()->setChild(2, 2, newNonEditableString("ms" /*---GRY--- JUST FOR TESTING... */));
+    mModel->invisibleRootItem()->setChild(0, 2, newNonEditableString());
+    mModel->invisibleRootItem()->setChild(1, 2, newNonEditableString());
+    mModel->invisibleRootItem()->setChild(2, 2, newNonEditableString());
 
     // Some further initialisations which are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
