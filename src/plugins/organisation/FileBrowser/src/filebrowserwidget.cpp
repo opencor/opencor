@@ -42,6 +42,8 @@ FileBrowserWidget::FileBrowserWidget(QWidget *pParent) :
     setModel(mModel);
     setSortingEnabled(true);
 
+    header()->setMovable(false);
+
     // Some connections
 
     connect(selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),

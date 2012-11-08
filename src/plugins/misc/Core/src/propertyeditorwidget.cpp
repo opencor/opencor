@@ -162,6 +162,8 @@ PropertyEditorWidget::PropertyEditorWidget(QWidget *pParent) :
     // Further customise ourselves
 
     setSelectionMode(QAbstractItemView::SingleSelection);
+
+    header()->setMovable(false);
 }
 
 //==============================================================================
