@@ -221,7 +221,7 @@ void CollapsibleWidget::updateGui(const bool &pCollapsed)
 {
     // Update our widget's GUI
 
-    mCollapsed = pCollapsed;
+    mCollapsed = pCollapsed && mBody;
 
     //  Customise some widgets
 
