@@ -9,7 +9,9 @@
 
 #include <QLabel>
 #include <QLayout>
+#include <QSettings>
 #include <QToolButton>
+#include <QVariant>
 
 //==============================================================================
 
@@ -108,6 +110,28 @@ CollapsibleWidget::CollapsibleWidget(QWidget *pParent) :
     // Construct our object
 
     constructor();
+}
+
+//==============================================================================
+
+static const QString SettingsCollapsed = "Collapsed";
+
+//==============================================================================
+
+void CollapsibleWidget::loadSettings(QSettings *pSettings)
+{
+    // Retrieve our collapsable state
+
+    setCollapsed(pSettings->value(SettingsCollapsed, false).toBool());
+}
+
+//==============================================================================
+
+void CollapsibleWidget::saveSettings(QSettings *pSettings) const
+{
+    // Keep track of our collapsable state
+
+    pSettings->setValue(SettingsCollapsed, isCollapsed());
 }
 
 //==============================================================================

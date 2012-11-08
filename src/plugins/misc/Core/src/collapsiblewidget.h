@@ -34,6 +34,9 @@ public:
                                QWidget *pParent = 0);
     explicit CollapsibleWidget(QWidget *pParent = 0);
 
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
+
     QString title() const;
     void setTitle(const QString &pTitle);
 

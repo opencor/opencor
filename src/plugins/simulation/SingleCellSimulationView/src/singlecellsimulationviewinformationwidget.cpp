@@ -37,6 +37,9 @@ SingleCellSimulationViewInformationWidget::SingleCellSimulationViewInformationWi
                                                                mSimulationInformationWidget,
                                                                this);
 
+    mSimulationInformationWidget->setObjectName("SimulationInformation");
+    mSimulationCollapsibleWidget->setObjectName("SimulationCollapsible");
+
 mSimulationInformationWidget->setUnit("ms");
 //---GRY--- THE ABOVE IS JUST FOR TESTING PURPOSES...
 
@@ -44,13 +47,19 @@ mSimulationInformationWidget->setUnit("ms");
 
     mSolversCollapsibleWidget = new Core::CollapsibleWidget(this);
 
+    mSolversCollapsibleWidget->setObjectName("SolversInformation");
+
     // Create our Traces collapsible widget
 
     mTracesCollapsibleWidget = new Core::CollapsibleWidget(this);
 
+    mTracesCollapsibleWidget->setObjectName("TracesInformation");
+
     // Create our Parameters collapsible widget
 
     mParametersCollapsibleWidget = new Core::CollapsibleWidget(this);
+
+    mParametersCollapsibleWidget->setObjectName("ParametersInformation");
 
     // Add our collapsible widgets to our layout
     // Note: we add a stretch at the end to make sure that our collapsible
@@ -113,14 +122,54 @@ void SingleCellSimulationViewInformationWidget::retranslateUi()
 
 void SingleCellSimulationViewInformationWidget::loadSettings(QSettings *pSettings)
 {
-//---GRY--- TO BE DONE...
+    // Retrieve the settings of our collapsible widgets and their bodies
+
+    pSettings->beginGroup(mSimulationCollapsibleWidget->objectName());
+        mSimulationCollapsibleWidget->loadSettings(pSettings);
+    pSettings->endGroup();
+
+    pSettings->beginGroup(mSimulationInformationWidget->objectName());
+        mSimulationInformationWidget->loadSettings(pSettings);
+    pSettings->endGroup();
+
+    pSettings->beginGroup(mSolversCollapsibleWidget->objectName());
+        mSolversCollapsibleWidget->loadSettings(pSettings);
+    pSettings->endGroup();
+
+    pSettings->beginGroup(mTracesCollapsibleWidget->objectName());
+        mTracesCollapsibleWidget->loadSettings(pSettings);
+    pSettings->endGroup();
+
+    pSettings->beginGroup(mParametersCollapsibleWidget->objectName());
+        mParametersCollapsibleWidget->loadSettings(pSettings);
+    pSettings->endGroup();
 }
 
 //==============================================================================
 
 void SingleCellSimulationViewInformationWidget::saveSettings(QSettings *pSettings) const
 {
-    //---GRY--- TO BE DONE...
+    // Keep track of the settings of our collapsible widgets and their bodies
+
+    pSettings->beginGroup(mSimulationCollapsibleWidget->objectName());
+        mSimulationCollapsibleWidget->saveSettings(pSettings);
+    pSettings->endGroup();
+
+    pSettings->beginGroup(mSimulationInformationWidget->objectName());
+        mSimulationInformationWidget->saveSettings(pSettings);
+    pSettings->endGroup();
+
+    pSettings->beginGroup(mSolversCollapsibleWidget->objectName());
+        mSolversCollapsibleWidget->saveSettings(pSettings);
+    pSettings->endGroup();
+
+    pSettings->beginGroup(mTracesCollapsibleWidget->objectName());
+        mTracesCollapsibleWidget->saveSettings(pSettings);
+    pSettings->endGroup();
+
+    pSettings->beginGroup(mParametersCollapsibleWidget->objectName());
+        mParametersCollapsibleWidget->saveSettings(pSettings);
+    pSettings->endGroup();
 }
 
 //==============================================================================
