@@ -317,7 +317,9 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 {
     // Get a runtime for the CellML file
 
-    mCellmlFileRuntime = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName)->runtime();
+    CellMLSupport::CellmlFile *mCellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
+
+    mCellmlFileRuntime = mCellmlFile->runtime();
 
     QString status = QString();
 
@@ -347,10 +349,14 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
     outputStatus(status);
 
-    // Exit if we got an invalid runtime
+    // Leave if we got an invalid runtime
 
     if (!mCellmlFileRuntime->isValid())
         return;
+
+    // Retrieve the unit of the variable of integration
+
+//---GRY--- TO BE DONE...
 
     // Check whether we 'support' the model
 
