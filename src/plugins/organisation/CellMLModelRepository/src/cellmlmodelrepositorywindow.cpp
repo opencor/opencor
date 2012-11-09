@@ -124,7 +124,7 @@ void CellmlModelRepositoryWindow::outputModelList(const QStringList &pModelList)
             // Something went wrong while trying to retrieve the list of models,
             // so...
 
-            QString errorMsg = mErrorMsg.left(1).toLower()+mErrorMsg.right(mErrorMsg.size()-1);
+            QString errorMsg = mErrorMsg.at(0).toLower()+mErrorMsg.right(mErrorMsg.size()-1);
             QString dots = (errorMsg[errorMsg.size()-1] == '.')?"..":"...";
 
             contents = leadingSpaces+tr("<strong>Error:</strong> ")+errorMsg+dots;

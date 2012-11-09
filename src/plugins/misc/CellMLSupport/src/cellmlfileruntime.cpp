@@ -275,10 +275,10 @@ void CellmlFileRuntime::checkCodeInformation(iface::cellml_services::CodeInforma
                                        tr("the model is overconstrained (i.e. some variables are either both initialised and computed or computed more than once)"));
         }
     } else {
-        // The code generation didn't go fine, so...
+        // The code generation didn't work, so...
 
         mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                   tr("a problem occurred during the compilation of the model: %1").arg(codeGenerationErrorMessage));
+                                   tr("a problem occurred during the compilation of the model"));
     }
 }
 
@@ -431,14 +431,8 @@ CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pCellmlA
     qDebug(" - CellML ODE code information time: %s s.", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
 #endif
 
-    if (!mCellmlApiOdeCodeInformation) {
-        // No ODE code information could be retrieved, so...
-
-        mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                   tr("no code information could be retrieved for the model"));
-
+    if (!mCellmlApiOdeCodeInformation)
         return this;
-    }
 
     // An ODE code information could be retrieved, so we can determine the
     // model's type

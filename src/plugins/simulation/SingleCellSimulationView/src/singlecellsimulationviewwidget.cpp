@@ -39,6 +39,14 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
+static const QString OutputTab  = "&nbsp;&nbsp;&nbsp;&nbsp;";
+static const QString OutputGood = " style=\"color: green;\"";
+static const QString OutputInfo = " style=\"color: navy;\"";
+static const QString OutputBad  = " style=\"color: maroon;\"";
+static const QString OutputBrLn = "<br/>\n";
+
+//==============================================================================
+
 SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent) :
     Widget(pParent),
     mGui(new Ui::SingleCellSimulationViewWidget),
@@ -291,17 +299,33 @@ void SingleCellSimulationViewWidget::clearActiveGraphPanel()
 
 //==============================================================================
 
+void SingleCellSimulationViewWidget::outputStatus(const QString &pStatus)
+{
+    // Move to the end of the output (just in case...)
+
+    mOutput->moveCursor(QTextCursor::End);
+
+    // Output the status and make sure it's visible
+
+    mOutput->insertHtml(pStatus);
+    mOutput->moveCursor(QTextCursor::End);
+}
+
+//==============================================================================
+
 void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 {
-    // Clear the graph panels and output
-
-    clearGraphPanels();
-
-    mOutput->clear();
-
-    // Get a runtime for the file
+    // Get a runtime for the CellML file
 
     mCellmlFileRuntime = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName)->runtime();
+
+    QString status = QString();
+
+    if (!mOutput->document()->isEmpty())
+        status += "<hr/>\n";
+
+    status += "<strong>"+pFileName+"</strong>"+OutputBrLn;
+    status += OutputTab+"<strong>Runtime:</strong> ";
 
     if (mCellmlFileRuntime->isValid()) {
         QString additionalInformation = QString();
@@ -309,21 +333,24 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         if (mCellmlFileRuntime->needNlaSolver())
             additionalInformation = " + Non-linear algebraic system(s)";
 
-        mOutput->append(" - The CellML file's runtime was properly generated.");
-        mOutput->append(QString("    [Information] Model type: %1%2.").arg((mCellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?"ODE":"DAE",
-                                                                           additionalInformation));
+        status += "<span"+OutputGood+">valid</span>.<br/>\n";
+        status += QString(OutputTab+"<strong>Model type:</strong> <span"+OutputInfo+">%1%2</span>."+OutputBrLn).arg((mCellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?"ODE":"DAE",
+                                                                                                                    additionalInformation);
     } else {
-        mOutput->append(" - The CellML file's runtime was NOT properly generated:");
+        status += "<span"+OutputBad+">invalid</span>."+OutputBrLn;
 
         foreach (const CellMLSupport::CellmlFileIssue &issue,
                  mCellmlFileRuntime->issues())
-            mOutput->append(QString("    [%1] %2").arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?"Error":"Warning",
-                                                       issue.formattedMessage()));
-
-        // The runtime is not valid, so...
-
-        return;
+            status += QString(OutputTab+"<span"+OutputBad+"><strong>%1:</strong> %2.</span>"+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?"Error":"Warning",
+                                                                                                             issue.message());
     }
+
+    outputStatus(status);
+
+    // Exit if we got an invalid runtime
+
+    if (!mCellmlFileRuntime->isValid())
+        return;
 
     // Check whether we 'support' the model
 
@@ -369,7 +396,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
         mModel = Unknown;
 
-        mOutput->append(" - The model is not 'supported'.");
+        outputStatus(OutputTab+"<span"+OutputBad+"><strong>Warning:</strong> the model is not 'supported'.</span>"+OutputBrLn);
 
         return;
     }
@@ -536,7 +563,7 @@ void SingleCellSimulationViewWidget::outputSolverErrorMsg()
 {
     // Output the current solver error message
 
-    mOutput->append(QString(" - Solver error: %1").arg(mSolverErrorMsg));
+    outputStatus(OutputTab+"<span"+OutputBad+"><strong"+OutputBad+">Solver error:</strong> "+mSolverErrorMsg+".</span>"+OutputBrLn);
 }
 
 //==============================================================================
@@ -578,7 +605,7 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
         if (!odeSolver) {
             // The ODE solver couldn't be found, so...
 
-            mOutput->append(QString(" - The %1 solver is needed, but it could not be found.").arg(mOdeSolverName));
+            outputStatus(OutputTab+"<span"+OutputBad+"><strong>Error:</strong> the "+mOdeSolverName+" solver is needed, but it could not be found.</span>"+OutputBrLn);
 
             return;
         }
@@ -596,7 +623,7 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
         if (!daeSolver) {
             // The DAE solver couldn't be found, so...
 
-            mOutput->append(" - The IDA solver is needed, but it could not be found.");
+            outputStatus(OutputTab+"<span"+OutputBad+"><strong>Error:</strong> the IDA solver is needed, but it could not be found.</span>"+OutputBrLn);
 
             return;
         }
@@ -617,19 +644,23 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
         if (!CoreSolver::globalNlaSolver()) {
             // The NLA solver couldn't be found, so...
 
-            mOutput->append(" - The KINSOL solver is needed, but it could not be found.");
+            outputStatus(OutputTab+"<span"+OutputBad+"><strong>Error:</strong> the KINSOL solver is needed, but it could not be found.</span>"+OutputBrLn);
 
             return;
         }
     }
 
-    // Keep track of any error that might be reported by our solver
+    // Keep track of any error that might be reported by any of our solvers
 
     if (needOdeSolver)
         connect(odeSolver, SIGNAL(error(const QString &)),
                 this, SLOT(solverError(const QString &)));
     else
         connect(daeSolver, SIGNAL(error(const QString &)),
+                this, SLOT(solverError(const QString &)));
+
+    if (CoreSolver::globalNlaSolver())
+        connect(CoreSolver::globalNlaSolver(), SIGNAL(error(const QString &)),
                 this, SLOT(solverError(const QString &)));
 
     mSolverErrorMsg = QString();
@@ -763,8 +794,7 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
         } else {
             // Output the total simulation time
 
-            mOutput->append(QString(" - Simulation time (using the %1 solver): %2 s.").arg(solverName,
-                                                                                          QString::number(0.001*time.elapsed(), 'g', 3)));
+            outputStatus(QString(OutputTab+"<strong>Simulation time:</strong> <span"+OutputInfo+">%1 s</span>."+OutputBrLn).arg(QString::number(0.001*time.elapsed(), 'g', 3)));
 
             // Last bit of simulation data
 

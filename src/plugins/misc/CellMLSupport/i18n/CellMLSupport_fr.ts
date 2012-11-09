@@ -26,10 +26,6 @@
         <translation>un problème inattendu s&apos;est produit lors de la compilation du modèle</translation>
     </message>
     <message>
-        <source>a problem occurred during the compilation of the model: %1</source>
-        <translation>un problème s&apos;est produit durant la compilation du modèle : %1</translation>
-    </message>
-    <message>
         <source>the model is underconstrained (i.e. some variables need to be initialised or computed)</source>
         <translation>le modèle n&apos;est pas assez constraint (i.e. des variables ont besoin d&apos;être intiialisées ou calculées)</translation>
     </message>
@@ -42,12 +38,12 @@
         <translation>Le modèle est trop constraint (i.e. des variables sont soit à la fois initialisées et calculées soit calculées plus d&apos;une fois)</translation>
     </message>
     <message>
-        <source>no code information could be retrieved for the model</source>
-        <translation>aucune information de code n&apos;a pu être trouvée pour le modèle</translation>
-    </message>
-    <message>
         <source>the model code could not be generated</source>
         <translation>Le code pour le modèle n&apos;a pas pu être généré</translation>
+    </message>
+    <message>
+        <source>a problem occurred during the compilation of the model</source>
+        <translation>un problème s&apos;est produit durant la compilation du modèle</translation>
     </message>
 </context>
 </TS>

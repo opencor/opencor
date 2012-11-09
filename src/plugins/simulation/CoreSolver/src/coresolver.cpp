@@ -30,9 +30,17 @@ void CoreSolver::setProperty(const QString &pName, const QVariant &pValue)
 
 void CoreSolver::emitError(const QString &pErrorMsg)
 {
-    // Let people know that an error occured
+    // Let people know that an error occured, but first reformat the error a
+    // bit, if needed
 
-    emit error(pErrorMsg);
+    QString errorMsg = pErrorMsg.at(0).toLower()+pErrorMsg.right(pErrorMsg.size()-1);
+
+    if (!pErrorMsg.right(3).compare("..."))
+        emit error(errorMsg.left(errorMsg.size()-3));
+    else if (!pErrorMsg.right(1).compare("."))
+        emit error(errorMsg.left(errorMsg.size()-1));
+    else
+        emit error(errorMsg);
 }
 
 //==============================================================================

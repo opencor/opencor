@@ -122,6 +122,8 @@ private:
 
     QString mSolverErrorMsg;
 
+    void outputStatus(const QString &pStatus);
+
     void clearGraphPanels();
     void clearActiveGraphPanel();
 
