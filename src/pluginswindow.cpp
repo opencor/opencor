@@ -314,9 +314,9 @@ QString PluginsWindow::statusDescription(Plugin *pPlugin) const
         return tr("The %1 library is not a plugin").arg(pPlugin->name());
     case Plugin::MissingDependencies:
         if (pPlugin->statusErrorsCount() == 1)
-            return tr("The %1 plugin could not be loaded due to the %2 plugin missing").arg(pPlugin->name(), pPlugin->statusErrors());
+            return tr("The %1 plugin could not be loaded due to the %2 plugin being missing or invalid").arg(pPlugin->name(), pPlugin->statusErrors());
         else
-            return tr("The %1 plugin could not be loaded due to missing plugins:\n%2").arg(pPlugin->name(), pPlugin->statusErrors());
+            return tr("The %1 plugin could not be loaded due to missing or invalid plugins:\n%2").arg(pPlugin->name(), pPlugin->statusErrors());
     case Plugin::NotPluginOrMissingDependencies:
         return tr("The %1 library is not a plugin or it is, but it could not be loaded due to a/some missing plugin/s").arg(pPlugin->name());
     default:   // Plugin::UndefinedStatus

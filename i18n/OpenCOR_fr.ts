@@ -228,13 +228,13 @@
         <translation>La librairie %1 n&apos;est pas une extension</translation>
     </message>
     <message>
-        <source>The %1 plugin could not be loaded due to the %2 plugin missing</source>
-        <translation>L&apos;extension %1 n&apos;a pas pu être installée à cause de l&apos;extension %2 qui manque</translation>
+        <source>The %1 plugin could not be loaded due to the %2 plugin being missing or invalid</source>
+        <translation>L&apos;extension %1 n&apos;a pas pu être installée à cause de l&apos;extension %2 étant manquante ou invalide</translation>
     </message>
     <message>
-        <source>The %1 plugin could not be loaded due to missing plugins:
+        <source>The %1 plugin could not be loaded due to missing or invalid plugins:
 %2</source>
-        <translation>L&apos;extension %1 n&apos;a pas pu être installée à cause d&apos;extensions qui manquent :
+        <translation>L&apos;extension %1 n&apos;a pas pu être installée à cause d&apos;extensions manquantes ou invalides :
 %2</translation>
     </message>
     <message>
