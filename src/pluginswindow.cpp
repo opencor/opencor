@@ -292,10 +292,9 @@ QString PluginsWindow::statusDescription(Plugin *pPlugin) const
     switch (pPlugin->status()) {
     case Plugin::NotFound:
         return tr("The %1 plugin could not be found").arg(pPlugin->name());
-    case Plugin::IncompatibleVersion:
-        return tr("The version of the plugin (%1) is not compatible with that of %2 (%3)").arg(versionAsString(pPlugin->info().version()),
-                                                                                               qApp->applicationName(),
-                                                                                               versionAsString(mPluginManager->version()));
+    case Plugin::InvalidFormatVersion:
+        return tr("The version of the format used by the plugin (%1) is not valid (%2 is expected)").arg(versionAsString(pPlugin->info().version()),
+                                                                                                         versionAsString(mPluginManager->version()));
     case Plugin::NotSuitable:
         return tr("The %1 plugin is not of the right type").arg(pPlugin->name());
     case Plugin::NotWanted:
@@ -316,8 +315,6 @@ QString PluginsWindow::statusDescription(Plugin *pPlugin) const
             return tr("The %1 plugin could not be loaded due to the %2 plugin being missing or invalid").arg(pPlugin->name(), pPlugin->statusErrors());
         else
             return tr("The %1 plugin could not be loaded due to missing or invalid plugins:\n%2").arg(pPlugin->name(), pPlugin->statusErrors());
-    case Plugin::NotPluginOrMissingOrInvalidDependencies:
-        return tr("The %1 library is not a plugin or it is, but it could not be loaded due to a/some missing or invalid plugin/s").arg(pPlugin->name());
     default:   // Plugin::UndefinedStatus
         return tr("The status of the %1 plugin status is undefined").arg(pPlugin->name());
     }

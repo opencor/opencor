@@ -56,25 +56,21 @@ public:
     {
         UndefinedStatus,
         NotFound,
-        IncompatibleVersion,
+        InvalidFormatVersion,
         NotSuitable,
         NotWanted,
         NotNeeded,
         Loaded,
         NotLoaded,
         NotPlugin,
-        MissingOrInvalidDependencies,
-        NotPluginOrMissingOrInvalidDependencies
+        MissingOrInvalidDependencies
     };
 
     explicit Plugin(const QString &pFileName,
                     const PluginInfo::Type &pGuiOrConsoleType,
                     const bool &pForceLoading,
                     const PluginInfo::Version &pExpectedVersion,
-                    const QString &pPluginsDir
-#ifndef Q_WS_WIN
-                    , PluginManager *pPluginManager
-#endif
+                    const QString &pPluginsDir, PluginManager *pPluginManager
                    );
 
     QString name() const;

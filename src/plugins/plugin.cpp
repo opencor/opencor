@@ -23,10 +23,7 @@ Plugin::Plugin(const QString &pFileName,
                const PluginInfo::Type &pGuiOrConsoleType,
                const bool &pForceLoading,
                const PluginInfo::Version &pExpectedVersion,
-               const QString &pPluginsDir
-#ifndef Q_WS_WIN
-               , PluginManager *pPluginManager
-#endif
+               const QString &pPluginsDir, PluginManager *pPluginManager
               ) :
     mName(name(pFileName)),
     // Note: to get the name of the plugin from its file name, we must remove
@@ -58,13 +55,17 @@ Plugin::Plugin(const QString &pFileName,
                 || pForceLoading)) {
             // We are dealing with the right kind of plugin, so check that all
             // of its dependencies, if any, are loaded
-            // Note: the reason we only do this on non-Windows systems is that
-            //       on Windows a shared library's dependencies must be loaded
-            //       before the shared library itself can be loaded while on
-            //       Linux / OS X, it's possible to load a shared library even
-            //       if its dependencies are not loaded, so...
+            // Note: normally, we would only do this on non-Windows systems
+            //       since, on Windows, a shared library's dependencies must be
+            //       loaded before the shared library itself can be loaded,
+            //       while on Linux / OS X, it's possible to load a shared
+            //       library even if its dependencies are not loaded. However,
+            //       we want to check that the version of the format used by the
+            //       plugin matches the one used by OpenCOR, so in the end we
+            //       also do it on Windows. Indeed, it might very well be that a
+            //       plugin can still be loaded fine, yet use an invalid format,
+            //       so...
 
-#ifndef Q_WS_WIN
             bool pluginDependenciesLoaded = true;
 
             mStatusErrors = "";
@@ -93,14 +94,11 @@ Plugin::Plugin(const QString &pFileName,
                 // There is only one error, so remove the leading " - "
 
                 mStatusErrors = mStatusErrors.remove(0, 3);
-#endif
 
             // Check whether all of the plugin's dependencies, if any, were
             // loaded, and if so then try to load the plugin itself
 
-#ifndef Q_WS_WIN
             if (pluginDependenciesLoaded) {
-#endif
                 // All the plugin's dependencies, if any, were loaded, so try to
                 // load the plugin itself
 
@@ -119,24 +117,18 @@ Plugin::Plugin(const QString &pFileName,
                     mStatus = NotLoaded;
                     mStatusErrors = pluginLoader.errorString();
                 }
-#ifndef Q_WS_WIN
             }
-#endif
         } else if (mInfo.type() == PluginInfo::UndefinedType) {
             // We couldn't retrieve the plugin information which means that we
             // are not dealing with an OpenCOR plugin or that one or several of
             // the plugin's dependencies weren't loaded, so...
 
-#ifdef Q_WS_WIN
-            mStatus = NotPluginOrMissingOrInvalidDependencies;
-#else
             mStatus = NotPlugin;
-#endif
         } else if (mInfo.version() != pExpectedVersion) {
             // We are dealing with a plugin which relies on a different version,
             // so...
 
-            mStatus = IncompatibleVersion;
+            mStatus = InvalidFormatVersion;
         } else if (   (mInfo.type() != PluginInfo::General)
                    && (mInfo.type() != pGuiOrConsoleType)) {
             // We are dealing with a plugin which is not of the type we are

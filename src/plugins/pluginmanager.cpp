@@ -101,10 +101,7 @@ PluginManager::PluginManager(QSettings *pSettings,
     foreach (const QString &fileName, orderedFileNames)
         mPlugins << new Plugin(fileName, mGuiOrConsoleType,
                                plugins.contains(Plugin::name(fileName)),
-                               version(), pluginsDir()
-#ifndef Q_WS_WIN
-                               , this
-#endif
+                               version(), pluginsDir(), this
                               );
 }
 
