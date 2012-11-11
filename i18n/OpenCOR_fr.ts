@@ -246,8 +246,8 @@
         <translation>Le statut de l&apos;extension %1 est indéfini</translation>
     </message>
     <message>
-        <source>The version used by the %1 plugin (%2) is not compatible with that of %3 (%4)</source>
-        <translation>La version utilisée par l&apos;extension %1 (%2) n&apos;est pas compatible avec celle d&apos;%3 (%4)</translation>
+        <source>The version of the plugin (%1) is not compatible with that of %2 (%3)</source>
+        <translation>La version de l&apos;extension (%1) n&apos;est pas compatible avec celle d&apos;%2 (%3)</translation>
     </message>
     <message>
         <source>Miscellaneous</source>

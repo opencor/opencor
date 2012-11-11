@@ -293,10 +293,9 @@ QString PluginsWindow::statusDescription(Plugin *pPlugin) const
     case Plugin::NotFound:
         return tr("The %1 plugin could not be found").arg(pPlugin->name());
     case Plugin::IncompatibleVersion:
-        return tr("The version used by the %1 plugin (%2) is not compatible with that of %3 (%4)").arg(pPlugin->name(),
-                                                                                                       versionAsString(pPlugin->info().version()),
-                                                                                                       qApp->applicationName(),
-                                                                                                       versionAsString(mPluginManager->version()));
+        return tr("The version of the plugin (%1) is not compatible with that of %2 (%3)").arg(versionAsString(pPlugin->info().version()),
+                                                                                               qApp->applicationName(),
+                                                                                               versionAsString(mPluginManager->version()));
     case Plugin::NotSuitable:
         return tr("The %1 plugin is not of the right type").arg(pPlugin->name());
     case Plugin::NotWanted:
