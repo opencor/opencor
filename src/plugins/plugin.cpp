@@ -80,7 +80,7 @@ Plugin::Plugin(const QString &pFileName,
 
                     pluginDependenciesLoaded = false;
 
-                    mStatus = MissingDependencies;
+                    mStatus = MissingOrInvalidDependencies;
 
                     if (!mStatusErrors.isEmpty())
                         mStatusErrors += "\n";
@@ -128,7 +128,7 @@ Plugin::Plugin(const QString &pFileName,
             // the plugin's dependencies weren't loaded, so...
 
 #ifdef Q_WS_WIN
-            mStatus = NotPluginOrMissingDependencies;
+            mStatus = NotPluginOrMissingOrInvalidDependencies;
 #else
             mStatus = NotPlugin;
 #endif

@@ -238,8 +238,8 @@
 %2</translation>
     </message>
     <message>
-        <source>The %1 library is not a plugin or it is, but it could not be loaded due to a/some missing plugin/s</source>
-        <translation>La librairie %1 n&apos;est pas une extension ou elle en est une, mais elle n&apos;a pas pu être installée à cause d&apos;une/d&apos;extension/s qui manque/nt</translation>
+        <source>The %1 library is not a plugin or it is, but it could not be loaded due to a/some missing or invalid plugin/s</source>
+        <translation>La librairie %1 n&apos;est pas une extension ou elle en est une, mais elle n&apos;a pas pu être installée à cause d&apos;une/d&apos;extension/s manquante/s ou invalide/s</translation>
     </message>
     <message>
         <source>The status of the %1 plugin status is undefined</source>

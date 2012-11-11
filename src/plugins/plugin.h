@@ -63,8 +63,8 @@ public:
         Loaded,
         NotLoaded,
         NotPlugin,
-        MissingDependencies,
-        NotPluginOrMissingDependencies
+        MissingOrInvalidDependencies,
+        NotPluginOrMissingOrInvalidDependencies
     };
 
     explicit Plugin(const QString &pFileName,
