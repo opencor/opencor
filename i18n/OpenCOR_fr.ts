@@ -221,7 +221,7 @@
         <source>The %1 plugin could not be loaded due to the following problems:
 %2</source>
         <translation>L&apos;extension %1 n&apos;a pas pu être installée à cause des problèmes suivants :
-%2</source>
+%2</translation>
     </message>
     <message>
         <source>The %1 library is not a plugin</source>
@@ -235,7 +235,7 @@
         <source>The %1 plugin could not be loaded due to missing plugins:
 %2</source>
         <translation>L&apos;extension %1 n&apos;a pas pu être installée à cause d&apos;extensions qui manquent :
-%2</source>
+%2</translation>
     </message>
     <message>
         <source>The %1 library is not a plugin or it is, but it could not be loaded due to a/some missing plugin/s</source>
