@@ -266,20 +266,20 @@ void PluginsWindow::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-QString PluginsWindow::versionAsString(const PluginInfo::Version &pVersion) const
+QString PluginsWindow::formatVersionAsString(const PluginInfo::FormatVersion &pFormatVersion) const
 {
-    // Return the given version as a string
+    // Return the given format version as a string
     // Note: ideally, this function would be part of the CoreInterface class,
     //       but this class is used by all the plugins and because this method
     //       requires a translation, well... we can't have it there since a
     //       translation will otherwise be required for each plugin, so...
     //       another solution is to have it here...
 
-    switch (pVersion) {
-    case PluginInfo::V001:
-        return tr("Version 001");
+    switch (pFormatVersion) {
+    case PluginInfo::FormatVersion001:
+        return tr("001");
     default:
-        return tr("Unknown version");
+        return tr("unknown");
     }
 }
 
@@ -293,8 +293,8 @@ QString PluginsWindow::statusDescription(Plugin *pPlugin) const
     case Plugin::NotFound:
         return tr("The %1 plugin could not be found").arg(pPlugin->name());
     case Plugin::InvalidFormatVersion:
-        return tr("The version of the format used by the plugin (%1) is not valid (%2 is expected)").arg(versionAsString(pPlugin->info().version()),
-                                                                                                         versionAsString(mPluginManager->version()));
+        return tr("The version of the format used by the plugin (%1) is not valid (%2 is expected)").arg(formatVersionAsString(pPlugin->info().formatVersion()),
+                                                                                                         formatVersionAsString(mPluginManager->formatVersion()));
     case Plugin::NotSuitable:
         return tr("The %1 plugin is not of the right type").arg(pPlugin->name());
     case Plugin::NotWanted:

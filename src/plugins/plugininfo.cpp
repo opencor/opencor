@@ -10,11 +10,11 @@ namespace OpenCOR {
 
 //==============================================================================
 
-PluginInfo::PluginInfo(const Version &pVersion, const Type &pType,
+PluginInfo::PluginInfo(const FormatVersion &pFormatVersion, const Type &pType,
                        const Category &pCategory, const bool &pManageable,
                        const QStringList &pDependencies,
                        const Descriptions &pDescriptions) :
-    mVersion(pVersion),
+    mFormatVersion(pFormatVersion),
     mType(pType),
     mCategory(pCategory),
     mManageable(pManageable),
@@ -26,20 +26,20 @@ PluginInfo::PluginInfo(const Version &pVersion, const Type &pType,
 
 //==============================================================================
 
-PluginInfo::Version PluginInfo::version() const
+PluginInfo::FormatVersion PluginInfo::formatVersion() const
 {
-    // Return the version used by the plugin
+    // Return the format version used by the plugin
 
-    return mVersion;
+    return mFormatVersion;
 }
 
 //==============================================================================
 
-void PluginInfo::setVersion(const Version &pVersion)
+void PluginInfo::setFormatVersion(const FormatVersion &pFormatVersion)
 {
-    // Set the plugin's version
+    // Set the plugin's format version
 
-    mVersion = pVersion;
+    mFormatVersion = pFormatVersion;
 }
 
 //==============================================================================

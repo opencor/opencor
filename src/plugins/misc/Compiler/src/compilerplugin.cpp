@@ -18,7 +18,7 @@ PLUGININFO_FUNC CompilerPluginInfo()
     descriptions.insert("en", "A plugin to support code compilation");
     descriptions.insert("fr", "Une extension pour supporter la compilation de code");
 
-    return new PluginInfo(PluginInfo::V001,
+    return new PluginInfo(PluginInfo::FormatVersion001,
                           PluginInfo::General,
                           PluginInfo::Miscellaneous,
                           false,

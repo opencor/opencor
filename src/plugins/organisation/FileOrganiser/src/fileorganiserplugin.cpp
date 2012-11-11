@@ -23,7 +23,7 @@ PLUGININFO_FUNC FileOrganiserPluginInfo()
     descriptions.insert("en", "A plugin to virtually organise your files");
     descriptions.insert("fr", "Une extension pour organiser virtuellement vos fichiers");
 
-    return new PluginInfo(PluginInfo::V001,
+    return new PluginInfo(PluginInfo::FormatVersion001,
                           PluginInfo::Gui,
                           PluginInfo::Organisation,
                           true,

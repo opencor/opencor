@@ -21,9 +21,9 @@ PLUGININFO_FUNC RawViewPluginInfo()
     Descriptions descriptions;
 
     descriptions.insert("en", "A plugin to edit files using a text editor");
-    descriptions.insert("fr", "Une extension pour éditer des fichiers à l'aide d'un éditeur de texte");
+    descriptions.insert("fr", "Une extension pour éditer des fichiers �  l'aide d'un éditeur de texte");
 
-    return new PluginInfo(PluginInfo::V001,
+    return new PluginInfo(PluginInfo::FormatVersion001,
                           PluginInfo::Gui,
                           PluginInfo::Editing,
                           true,

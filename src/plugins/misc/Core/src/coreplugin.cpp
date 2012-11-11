@@ -34,7 +34,7 @@ PLUGININFO_FUNC CorePluginInfo()
     descriptions.insert("en", "The core plugin");
     descriptions.insert("fr", "L'extension de base");
 
-    return new PluginInfo(PluginInfo::V001,
+    return new PluginInfo(PluginInfo::FormatVersion001,
                           PluginInfo::Gui,
                           PluginInfo::Miscellaneous,
                           false,

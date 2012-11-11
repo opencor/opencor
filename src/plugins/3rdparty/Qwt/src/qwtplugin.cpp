@@ -16,9 +16,9 @@ PLUGININFO_FUNC QwtPluginInfo()
     Descriptions descriptions;
 
     descriptions.insert("en", "A plugin to access <a href=\"http://qwt.sourceforge.net/\">Qwt</a>");
-    descriptions.insert("fr", "Une extension pour accéder à <a href=\"http://qwt.sourceforge.net/\">Qwt</a>");
+    descriptions.insert("fr", "Une extension pour accéder �  <a href=\"http://qwt.sourceforge.net/\">Qwt</a>");
 
-    return new PluginInfo(PluginInfo::V001,
+    return new PluginInfo(PluginInfo::FormatVersion001,
                           PluginInfo::Gui,
                           PluginInfo::ThirdParty,
                           false,

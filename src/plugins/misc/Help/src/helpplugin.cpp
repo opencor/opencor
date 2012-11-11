@@ -24,7 +24,7 @@ PLUGININFO_FUNC HelpPluginInfo()
     descriptions.insert("en", "A plugin to provide help");
     descriptions.insert("fr", "Une extension pour fournir de l'aide");
 
-    return new PluginInfo(PluginInfo::V001,
+    return new PluginInfo(PluginInfo::FormatVersion001,
                           PluginInfo::Gui,
                           PluginInfo::Miscellaneous,
                           true,

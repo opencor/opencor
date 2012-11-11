@@ -18,7 +18,7 @@ PLUGININFO_FUNC CoreSimulationPluginInfo()
     descriptions.insert("en", "The core simulation plugin");
     descriptions.insert("fr", "L'extension de simulation de base");
 
-    return new PluginInfo(PluginInfo::V001,
+    return new PluginInfo(PluginInfo::FormatVersion001,
                           PluginInfo::Gui,
                           PluginInfo::Simulation,
                           false,

@@ -69,7 +69,7 @@ public:
     explicit Plugin(const QString &pFileName,
                     const PluginInfo::Type &pGuiOrConsoleType,
                     const bool &pForceLoading,
-                    const PluginInfo::Version &pExpectedVersion,
+                    const PluginInfo::FormatVersion &pExpectedFormatVersion,
                     const QString &pPluginsDir, PluginManager *pPluginManager
                    );
 

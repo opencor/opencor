@@ -186,12 +186,12 @@
         <translation>Externe</translation>
     </message>
     <message>
-        <source>Version 001</source>
+        <source>001</source>
         <translation></translation>
     </message>
     <message>
-        <source>Unknown version</source>
-        <translation>Version inconnue</translation>
+        <source>unknown</source>
+        <translation>inconnue</translation>
     </message>
     <message>
         <source>The %1 plugin could not be found</source>

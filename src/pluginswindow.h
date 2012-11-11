@@ -83,7 +83,7 @@ private:
     void newPluginCategory(const PluginInfo::Category &pCategory,
                            const QString &pName);
 
-    QString versionAsString(const PluginInfo::Version &pVersion) const;
+    QString formatVersionAsString(const PluginInfo::FormatVersion &pFormatVersion) const;
     QString statusDescription(Plugin *pPlugin) const;
 
     void selectFirstVisiblePlugin();

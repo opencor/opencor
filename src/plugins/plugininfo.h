@@ -47,10 +47,10 @@ typedef QMap<QString, QString> Descriptions;
 class PluginInfo
 {
 public:
-    enum Version
+    enum FormatVersion
     {
-        UndefinedVersion,
-        V001
+        UndefinedFormatVersion,
+        FormatVersion001
     };
 
     enum Type
@@ -72,15 +72,15 @@ public:
         ThirdParty
     };
 
-    explicit PluginInfo(const Version &pVersion = UndefinedVersion,
+    explicit PluginInfo(const FormatVersion &pFormatVersion = UndefinedFormatVersion,
                         const Type &pType = UndefinedType,
                         const Category &pCategory = Miscellaneous,
                         const bool &pManageable = false,
                         const QStringList &pDependencies = QStringList(),
                         const Descriptions &pDescriptions = Descriptions());
 
-    Version version() const;
-    void setVersion(const Version &pVersion);
+    FormatVersion formatVersion() const;
+    void setFormatVersion(const FormatVersion &pFormatVersion);
 
     Type type() const;
     void setType(const Type &pType);
@@ -103,7 +103,7 @@ public:
     void setDescriptions(const Descriptions &pDescriptions);
 
 private:
-    Version mVersion;
+    FormatVersion mFormatVersion;
     Type mType;
     Category mCategory;
     bool mManageable;

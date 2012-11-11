@@ -22,7 +22,7 @@ PLUGININFO_FUNC CoreCellMLEditingPluginInfo()
     descriptions.insert("en", "The core CellML editing plugin");
     descriptions.insert("fr", "L'extension d'édition CellML de base");
 
-    return new PluginInfo(PluginInfo::V001,
+    return new PluginInfo(PluginInfo::FormatVersion001,
                           PluginInfo::Gui,
                           PluginInfo::Editing,
                           false,

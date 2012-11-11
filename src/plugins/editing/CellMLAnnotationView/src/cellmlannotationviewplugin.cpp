@@ -29,7 +29,7 @@ PLUGININFO_FUNC CellMLAnnotationViewPluginInfo()
     descriptions.insert("en", "A plugin to annotate CellML files");
     descriptions.insert("fr", "Une extension pour annoter des fichiers CellML");
 
-    return new PluginInfo(PluginInfo::V001,
+    return new PluginInfo(PluginInfo::FormatVersion001,
                           PluginInfo::Gui,
                           PluginInfo::Editing,
                           true,

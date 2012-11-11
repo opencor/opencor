@@ -22,7 +22,7 @@ namespace OpenCOR {
 Plugin::Plugin(const QString &pFileName,
                const PluginInfo::Type &pGuiOrConsoleType,
                const bool &pForceLoading,
-               const PluginInfo::Version &pExpectedVersion,
+               const PluginInfo::FormatVersion &pExpectedFormatVersion,
                const QString &pPluginsDir, PluginManager *pPluginManager
               ) :
     mName(name(pFileName)),
@@ -44,11 +44,11 @@ Plugin::Plugin(const QString &pFileName,
 
         mInfo.setFullDependencies(requiredPlugins(pPluginsDir, mName));
 
-        // Try to load the plugin, but only if it uses the right plugin version,
+        // Try to load the plugin, but only if it uses the right format version,
         // if it is either a general plugin or one of the type we are happy
         // with, and if it is manageable or is required by another plugin
 
-        if (    (mInfo.version() == pExpectedVersion)
+        if (    (mInfo.formatVersion() == pExpectedFormatVersion)
             && (   (mInfo.type() == PluginInfo::General)
                 || (mInfo.type() == pGuiOrConsoleType))
             && (   (mInfo.manageable() && load(mName))
@@ -60,11 +60,10 @@ Plugin::Plugin(const QString &pFileName,
             //       loaded before the shared library itself can be loaded,
             //       while on Linux / OS X, it's possible to load a shared
             //       library even if its dependencies are not loaded. However,
-            //       we want to check that the version of the format used by the
-            //       plugin matches the one used by OpenCOR, so in the end we
-            //       also do it on Windows. Indeed, it might very well be that a
-            //       plugin can still be loaded fine, yet use an invalid format,
-            //       so...
+            //       we want to check that the format version used by the plugin
+            //       matches the one used by OpenCOR, so in the end we also do
+            //       it on Windows. Indeed, it might very well be that a plugin
+            //       can still be loaded fine, yet use an invalid format, so...
 
             bool pluginDependenciesLoaded = true;
 
@@ -124,9 +123,9 @@ Plugin::Plugin(const QString &pFileName,
             // the plugin's dependencies weren't loaded, so...
 
             mStatus = NotPlugin;
-        } else if (mInfo.version() != pExpectedVersion) {
-            // We are dealing with a plugin which relies on a different version,
-            // so...
+        } else if (mInfo.formatVersion() != pExpectedFormatVersion) {
+            // We are dealing with a plugin which relies on a different format
+            // version, so...
 
             mStatus = InvalidFormatVersion;
         } else if (   (mInfo.type() != PluginInfo::General)
@@ -267,7 +266,7 @@ PluginInfo Plugin::info(const QString &pFileName)
         PluginInfo *pluginInfo = static_cast<PluginInfo *>(pluginInfoFunc());
         PluginInfo res;
 
-        res.setVersion(pluginInfo->version());
+        res.setFormatVersion(pluginInfo->formatVersion());
         res.setType(pluginInfo->type());
         res.setCategory(pluginInfo->category());
         res.setManageable(pluginInfo->manageable());
