@@ -12,6 +12,7 @@
 
 #include <QHeaderView>
 #include <QKeyEvent>
+#include <QScrollBar>
 #include <QSettings>
 #include <QStandardItem>
 #include <QVariant>
@@ -185,6 +186,15 @@ void PropertyEditorWidget::loadSettings(QSettings *pSettings)
 
         setColumnWidth(i, pSettings->value(columnWidthKey,
                                            columnWidth(i)).toInt());
+
+        // On Windows, no matter what, scroll bars will always be shown after
+        // setting the columns' width, so... we decrease the last column's width
+        // by the width of the vertical scroll bar. Not nice, I know, but...
+        // Note: that hack doesn't seem required on either Linux or OS X, but we
+        //       never know, so we also do it on those platforms...
+
+        if (i == iMax-1)
+            setColumnWidth(i, columnWidth(i)-verticalScrollBar()->width());
     }
 }
 
