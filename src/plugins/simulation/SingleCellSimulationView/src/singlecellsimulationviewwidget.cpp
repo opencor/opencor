@@ -184,46 +184,6 @@ static const QString SettingsSize       = "Size";
 
 void SingleCellSimulationViewWidget::loadSettings(QSettings *pSettings)
 {
-#ifdef QT_DEBUG
-    foreach (SolverInterface *solverInterface, mSolverInterfaces) {
-        qDebug("---------------------------------------");
-        qDebug("'%s' solver:", qPrintable(solverInterface->name()));
-        qDebug(" - Type: %s", qPrintable(solverInterface->typeAsString()));
-
-        Solver::Properties properties = solverInterface->properties();
-
-        if (properties.count()) {
-            qDebug(" - Properties:");
-
-            Solver::Properties::const_iterator iter = properties.constBegin();
-            Solver::Properties::const_iterator iterEnd = properties.constEnd();
-
-            while (iter != iterEnd) {
-                QString type;
-
-                switch (iter.value()) {
-                case Solver::Double:
-                    type = "Double";
-
-                    break;
-                case Solver::Integer:
-                    type = "Integer";
-
-                    break;
-                default:
-                    type = "???";
-                }
-
-                qDebug("    - %s: %s", qPrintable(iter.key()), qPrintable(type));
-
-                ++iter;
-            }
-        } else {
-            qDebug(" - Properties: none");
-        }
-    }
-#endif
-
     // Retrieve and set the sizes of our splitter
 
     int sizesCount = pSettings->value(SettingsSizesCount, 0).toInt();
@@ -273,10 +233,51 @@ void SingleCellSimulationViewWidget::addSolverInterface(SolverInterface *pSolver
 {
     // Add the solver interface to our list
 
-    if (!mSolverInterfaces.contains(pSolverInterface))
+    if (!mSolverInterfaces.contains(pSolverInterface)) {
         // The solver interface is not yet in our list, so...
 
         mSolverInterfaces << pSolverInterface;
+
+#ifdef QT_DEBUG
+        // Display the solver's properties
+
+        qDebug("---------------------------------------");
+        qDebug("'%s' solver:", qPrintable(pSolverInterface->name()));
+        qDebug(" - Type: %s", qPrintable(pSolverInterface->typeAsString()));
+
+        Solver::Properties properties = pSolverInterface->properties();
+
+        if (properties.count()) {
+            qDebug(" - Properties:");
+
+            Solver::Properties::const_iterator iter = properties.constBegin();
+            Solver::Properties::const_iterator iterEnd = properties.constEnd();
+
+            while (iter != iterEnd) {
+                QString type;
+
+                switch (iter.value()) {
+                case Solver::Double:
+                    type = "Double";
+
+                    break;
+                case Solver::Integer:
+                    type = "Integer";
+
+                    break;
+                default:
+                    type = "???";
+                }
+
+                qDebug("    - %s: %s", qPrintable(iter.key()), qPrintable(type));
+
+                ++iter;
+            }
+        } else {
+            qDebug(" - Properties: none");
+        }
+#endif
+    }
 }
 
 //==============================================================================
