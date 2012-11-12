@@ -24,7 +24,7 @@ PLUGININFO_FUNC SingleCellSimulationViewPluginInfo()
     Descriptions descriptions;
 
     descriptions.insert("en", "A plugin to run single cell simulations");
-    descriptions.insert("fr", "Une extension pour exécuter des simulations unicellulaires");
+    descriptions.insert("fr", "Une extension pour exÃ©cuter des simulations unicellulaires");
 
     return new PluginInfo(PluginInfo::FormatVersion001,
                           PluginInfo::Gui,

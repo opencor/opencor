@@ -16,7 +16,7 @@ PLUGININFO_FUNC SUNDIALSPluginInfo()
     Descriptions descriptions;
 
     descriptions.insert("en", "A plugin to access CVODE and IDA from the <a href=\"https://computation.llnl.gov/casc/sundials/description/description.html\">SUNDIALS</a> library");
-    descriptions.insert("fr", "Une extension pour accéder à CVODE et à IDA de la librairie <a href=\"https://computation.llnl.gov/casc/sundials/description/description.html\">SUNDIALS</a>");
+    descriptions.insert("fr", "Une extension pour accÃ©der Ã  CVODE et Ã  IDA de la librairie <a href=\"https://computation.llnl.gov/casc/sundials/description/description.html\">SUNDIALS</a>");
 
     return new PluginInfo(PluginInfo::FormatVersion001,
                           PluginInfo::General,

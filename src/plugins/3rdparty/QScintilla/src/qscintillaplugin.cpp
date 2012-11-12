@@ -16,7 +16,7 @@ PLUGININFO_FUNC QScintillaPluginInfo()
     Descriptions descriptions;
 
     descriptions.insert("en", "A plugin to access <a href=\"http://www.riverbankcomputing.co.uk/software/qscintilla/\">QScintilla</a>");
-    descriptions.insert("fr", "Une extension pour accéder à <a href=\"http://www.riverbankcomputing.co.uk/software/qscintilla/\">QScintilla</a>");
+    descriptions.insert("fr", "Une extension pour accÃ©der Ã  <a href=\"http://www.riverbankcomputing.co.uk/software/qscintilla/\">QScintilla</a>");
 
     return new PluginInfo(PluginInfo::FormatVersion001,
                           PluginInfo::Gui,

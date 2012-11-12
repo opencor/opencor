@@ -21,7 +21,7 @@ PLUGININFO_FUNC CellMLModelRepositoryPluginInfo()
     Descriptions descriptions;
 
     descriptions.insert("en", "A plugin to access the <a href=\"http://models.cellml.org/\">CellML Model Repository</a>");
-    descriptions.insert("fr", "Une extension pour accéder au <a href=\"http://models.cellml.org/\">Répertoire de Modèles CellML</a>");
+    descriptions.insert("fr", "Une extension pour accÃ©der au <a href=\"http://models.cellml.org/\">RÃ©pertoire de ModÃ¨les CellML</a>");
 
     return new PluginInfo(PluginInfo::FormatVersion001,
                           PluginInfo::Gui,

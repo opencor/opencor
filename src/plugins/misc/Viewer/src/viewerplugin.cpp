@@ -16,7 +16,7 @@ PLUGININFO_FUNC ViewerPluginInfo()
     Descriptions descriptions;
 
     descriptions.insert("en", "A plugin to graphically visualise various modelling concepts (e.g. mathematical equations)");
-    descriptions.insert("fr", "Une extension pour visualiser graphiquement différents concepts de modélisation (par exemple des équations mathématiques)");
+    descriptions.insert("fr", "Une extension pour visualiser graphiquement diffÃ©rents concepts de modÃ©lisation (par exemple des Ã©quations mathÃ©matiques)");
 
     return new PluginInfo(PluginInfo::FormatVersion001,
                           PluginInfo::Gui,
