@@ -16,8 +16,8 @@ PLUGININFO_FUNC IDASolverPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", "A plugin which uses <a href=\"https://computation.llnl.gov/casc/sundials/description/description.html#descr_ida\">IDA</a> to solve DAEs");
-    descriptions.insert("fr", "Une extension qui utilise <a href=\"https://computation.llnl.gov/casc/sundials/description/description.html#descr_ida\">IDA</a> pour résoudre des EADs");
+    descriptions.insert("en", QString::fromUtf8("A plugin which uses <a href=\"https://computation.llnl.gov/casc/sundials/description/description.html#descr_ida\">IDA</a> to solve DAEs"));
+    descriptions.insert("fr", QString::fromUtf8("Une extension qui utilise <a href=\"https://computation.llnl.gov/casc/sundials/description/description.html#descr_ida\">IDA</a> pour résoudre des EADs"));
 
     return new PluginInfo(PluginInfo::FormatVersion001,
                           PluginInfo::General,

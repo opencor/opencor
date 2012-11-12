@@ -31,8 +31,8 @@ PLUGININFO_FUNC CorePluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", "The core plugin");
-    descriptions.insert("fr", "L'extension de base");
+    descriptions.insert("en", QString::fromUtf8("The core plugin"));
+    descriptions.insert("fr", QString::fromUtf8("L'extension de base"));
 
     return new PluginInfo(PluginInfo::FormatVersion001,
                           PluginInfo::Gui,

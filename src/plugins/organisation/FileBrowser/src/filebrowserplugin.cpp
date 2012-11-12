@@ -20,8 +20,8 @@ PLUGININFO_FUNC FileBrowserPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", "A plugin to access your local files");
-    descriptions.insert("fr", "Une extension pour accéder à vos fichiers locaux");
+    descriptions.insert("en", QString::fromUtf8("A plugin to access your local files"));
+    descriptions.insert("fr", QString::fromUtf8("Une extension pour accéder à vos fichiers locaux"));
 
     return new PluginInfo(PluginInfo::FormatVersion001,
                           PluginInfo::Gui,

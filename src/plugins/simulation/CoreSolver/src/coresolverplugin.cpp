@@ -16,8 +16,8 @@ PLUGININFO_FUNC CoreSolverPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", "The core solver plugin");
-    descriptions.insert("fr", "L'extension de solveur de base");
+    descriptions.insert("en", QString::fromUtf8("The core solver plugin"));
+    descriptions.insert("fr", QString::fromUtf8("L'extension de solveur de base"));
 
     return new PluginInfo(PluginInfo::FormatVersion001,
                           PluginInfo::General,
