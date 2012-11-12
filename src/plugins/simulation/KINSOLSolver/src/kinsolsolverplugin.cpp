@@ -17,7 +17,7 @@ PLUGININFO_FUNC KINSOLSolverPluginInfo()
     Descriptions descriptions;
 
     descriptions.insert("en", "A plugin which uses <a href=\"https://computation.llnl.gov/casc/sundials/description/description.html#descr_kinsol\">KINSOL</a> to solve non-linear systems");
-    descriptions.insert("fr", "Une extension qui utilise <a href=\"https://computation.llnl.gov/casc/sundials/description/description.html#descr_kinsol\">KINSOL</a> pour rÃ©soudres des systÃ¨mes non-linÃ©aires");
+    descriptions.insert("fr", "Une extension qui utilise <a href=\"https://computation.llnl.gov/casc/sundials/description/description.html#descr_kinsol\">KINSOL</a> pour résoudre des systèmes non-linéaires");
 
     return new PluginInfo(PluginInfo::FormatVersion001,
                           PluginInfo::General,

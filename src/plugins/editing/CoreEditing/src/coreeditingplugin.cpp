@@ -20,7 +20,7 @@ PLUGININFO_FUNC CoreEditingPluginInfo()
     Descriptions descriptions;
 
     descriptions.insert("en", "The core editing plugin");
-    descriptions.insert("fr", "L'extension d'Ã©dition de base");
+    descriptions.insert("fr", "L'extension d'édition de base");
 
     return new PluginInfo(PluginInfo::FormatVersion001,
                           PluginInfo::Gui,
