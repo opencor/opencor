@@ -69,6 +69,8 @@ public:
 
     CellmlFileRdfTriples rdfTriples(const QString &pCmetaId) const;
 
+    CellmlFileComponent * component(const QString &pComponentName);
+
 private:
     QString mFileName;
 

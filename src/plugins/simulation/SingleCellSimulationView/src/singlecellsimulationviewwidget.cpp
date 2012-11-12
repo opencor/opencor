@@ -10,6 +10,8 @@
 #include "coreutils.h"
 #include "singlecellsimulationviewcontentswidget.h"
 #include "singlecellsimulationviewgraphpanelwidget.h"
+#include "singlecellsimulationviewinformationwidget.h"
+#include "singlecellsimulationviewsimulationinformationwidget.h"
 #include "singlecellsimulationviewwidget.h"
 #include "toolbarwidget.h"
 
@@ -314,13 +316,22 @@ void SingleCellSimulationViewWidget::outputStatus(const QString &pStatus)
 
 //==============================================================================
 
+void SingleCellSimulationViewWidget::outputStatusError(const QString &pStatusError)
+{
+    // Output the status error
+
+    outputStatus(OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+pStatusError+".</span>"+OutputBrLn);
+}
+
+//==============================================================================
+
 void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 {
     // Get a runtime for the CellML file
 
-    CellMLSupport::CellmlFile *mCellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
+    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
 
-    mCellmlFileRuntime = mCellmlFile->runtime();
+    mCellmlFileRuntime = cellmlFile->runtime();
 
     QString status = QString();
 
@@ -328,24 +339,24 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         status += "<hr/>\n";
 
     status += "<strong>"+pFileName+"</strong>"+OutputBrLn;
-    status += OutputTab+"<strong>Runtime:</strong> ";
+    status += OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
 
     if (mCellmlFileRuntime->isValid()) {
         QString additionalInformation = QString();
 
         if (mCellmlFileRuntime->needNlaSolver())
-            additionalInformation = " + Non-linear algebraic system(s)";
+            additionalInformation = " + "+tr("Non-linear algebraic system(s)");
 
-        status += "<span"+OutputGood+">valid</span>.<br/>\n";
-        status += QString(OutputTab+"<strong>Model type:</strong> <span"+OutputInfo+">%1%2</span>."+OutputBrLn).arg((mCellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?"ODE":"DAE",
-                                                                                                                    additionalInformation);
+        status += "<span"+OutputGood+">"+tr("valid")+"</span>.<br/>\n";
+        status += QString(OutputTab+"<strong>"+tr("Model type:")+"</strong> <span"+OutputInfo+">%1%2</span>."+OutputBrLn).arg((mCellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?tr("ODE"):tr("DAE"),
+                                                                                                                              additionalInformation);
     } else {
-        status += "<span"+OutputBad+">invalid</span>."+OutputBrLn;
+        status += "<span"+OutputBad+">"+tr("invalid")+"</span>."+OutputBrLn;
 
         foreach (const CellMLSupport::CellmlFileIssue &issue,
                  mCellmlFileRuntime->issues())
-            status += QString(OutputTab+"<span"+OutputBad+"><strong>%1:</strong> %2.</span>"+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?"Error":"Warning",
-                                                                                                             issue.message());
+            status += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
+                                                                                                            issue.message());
     }
 
     outputStatus(status);
@@ -353,11 +364,26 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
     // Leave if we got an invalid runtime
 
     if (!mCellmlFileRuntime->isValid())
+        // Note: no need to output a status error since one will have already
+        //       been generated while trying to get the runtime (see above)...
+
         return;
 
-    // Retrieve the unit of the variable of integration
+    // Retrieve the unit of the variable of integration, if any
 
-//---GRY--- TO BE DONE...
+    CellMLSupport::CellmlFileVariable *variableOfIntegration = mCellmlFileRuntime->variableOfIntegration();
+
+    if (variableOfIntegration) {
+        // We have a variable of integration, so we can retrieve its unit
+
+        mContentsWidget->informationWidget()->simulationWidget()->setUnit(mCellmlFileRuntime->variableOfIntegration()->unit());
+    } else {
+        // We don't have a variable of integration, so...
+
+        outputStatusError(tr("the model must have at least one ODE or DAE"));
+
+        return;
+    }
 
     // Check whether we 'support' the model
 
@@ -612,7 +638,7 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
         if (!odeSolver) {
             // The ODE solver couldn't be found, so...
 
-            outputStatus(OutputTab+"<span"+OutputBad+"><strong>Error:</strong> the "+mOdeSolverName+" solver is needed, but it could not be found.</span>"+OutputBrLn);
+            outputStatusError("the "+mOdeSolverName+" solver is needed, but it could not be found");
 
             return;
         }
@@ -630,7 +656,7 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
         if (!daeSolver) {
             // The DAE solver couldn't be found, so...
 
-            outputStatus(OutputTab+"<span"+OutputBad+"><strong>Error:</strong> the IDA solver is needed, but it could not be found.</span>"+OutputBrLn);
+            outputStatusError("the IDA solver is needed, but it could not be found");
 
             return;
         }
@@ -651,7 +677,7 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
         if (!CoreSolver::globalNlaSolver()) {
             // The NLA solver couldn't be found, so...
 
-            outputStatus(OutputTab+"<span"+OutputBad+"><strong>Error:</strong> the KINSOL solver is needed, but it could not be found.</span>"+OutputBrLn);
+            outputStatusError("the KINSOL solver is needed, but it could not be found");
 
             return;
         }

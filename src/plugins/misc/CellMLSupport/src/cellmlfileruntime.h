@@ -36,6 +36,11 @@ namespace CellMLSupport {
 
 //==============================================================================
 
+class CellmlFile;
+class CellmlFileVariable;
+
+//==============================================================================
+
 class CELLMLSUPPORT_EXPORT CellmlFileRuntime : public QObject
 {
     Q_OBJECT
@@ -92,7 +97,9 @@ public:
 
     CellmlFileIssues issues() const;
 
-    CellmlFileRuntime * update(iface::cellml_api::Model *pCellmlApiModel = 0);
+    CellmlFileRuntime * update(OpenCOR::CellMLSupport::CellmlFile *pCellmlFile = 0);
+
+    CellmlFileVariable * variableOfIntegration() const;
 
 private:
     ModelType mModelType;
@@ -100,6 +107,8 @@ private:
 
     ObjRef<iface::cellml_services::CodeInformation> mCellmlApiOdeCodeInformation;
     ObjRef<iface::cellml_services::IDACodeInformation> mCellmlApiDaeCodeInformation;
+
+    CellmlFileVariable *mVariableOfIntegration;
 
     Compiler::CompilerEngine *mCompilerEngine;
 

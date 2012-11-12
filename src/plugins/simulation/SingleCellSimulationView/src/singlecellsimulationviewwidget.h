@@ -123,6 +123,7 @@ private:
     QString mSolverErrorMsg;
 
     void outputStatus(const QString &pStatus);
+    void outputStatusError(const QString &pStatusError);
 
     void clearGraphPanels();
     void clearActiveGraphPanel();

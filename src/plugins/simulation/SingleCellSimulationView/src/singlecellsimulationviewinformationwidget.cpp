@@ -174,6 +174,15 @@ void SingleCellSimulationViewInformationWidget::saveSettings(QSettings *pSetting
 
 //==============================================================================
 
+SingleCellSimulationViewSimulationInformationWidget * SingleCellSimulationViewInformationWidget::simulationWidget()
+{
+    // Return our simulation widget
+
+    return mSimulationInformationWidget;
+}
+
+//==============================================================================
+
 }   // namespace SingleCellSimulationView
 }   // namespace OpenCOR
 

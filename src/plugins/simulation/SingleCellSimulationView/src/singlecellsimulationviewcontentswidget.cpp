@@ -145,6 +145,15 @@ void SingleCellSimulationViewContentsWidget::saveSettings(QSettings *pSettings) 
 
 //==============================================================================
 
+SingleCellSimulationViewInformationWidget * SingleCellSimulationViewContentsWidget::informationWidget()
+{
+    // Return our information widget
+
+    return mInformationWidget;
+}
+
+//==============================================================================
+
 void SingleCellSimulationViewContentsWidget::addGraphPanel()
 {
     // Ask our graph panels widget to add a new graph panel

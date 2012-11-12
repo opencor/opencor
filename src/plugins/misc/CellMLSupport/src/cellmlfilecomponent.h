@@ -37,6 +37,8 @@ public:
     CellmlFileVariables * variables();
     CellmlFileMathmlElements * mathmlElements();
 
+    CellmlFileVariable * variable(const QString &pVariableName);
+
 private:
     CellmlFileUnits mUnits;
     CellmlFileVariables mVariables;

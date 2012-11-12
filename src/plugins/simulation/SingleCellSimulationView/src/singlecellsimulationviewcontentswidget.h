@@ -46,6 +46,8 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
+    SingleCellSimulationViewInformationWidget * informationWidget();
+
     void addGraphPanel();
     void removeGraphPanel();
 

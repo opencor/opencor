@@ -613,7 +613,7 @@ CellmlFileRuntime * CellmlFile::runtime()
     if (load()) {
         // The file is loaded, so return an updated version of its runtime
 
-        mRuntime->update(mCellmlApiModel);
+        mRuntime->update(this);
 
         mRuntimeUpdateNeeded = !mRuntime->isValid();
 
@@ -714,6 +714,21 @@ CellmlFileRdfTriples CellmlFile::rdfTriples(const QString &pCmetaId) const
     // with pCmetaId
 
     return mRdfTriples.contains(pCmetaId);
+}
+
+//==============================================================================
+
+CellmlFileComponent * CellmlFile::component(const QString &pComponentName)
+{
+    foreach (CellmlFileComponent *component, mComponents)
+        if (!component->name().compare(pComponentName))
+            // We have found the component we are after
+
+            return component;
+
+    // The component we are after couldn't be found, so...
+
+    return 0;
 }
 
 //==============================================================================

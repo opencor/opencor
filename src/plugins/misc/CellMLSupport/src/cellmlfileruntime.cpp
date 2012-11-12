@@ -2,6 +2,7 @@
 // CellML file runtime class
 //==============================================================================
 
+#include "cellmlfile.h"
 #include "cellmlfileruntime.h"
 #include "compilerengine.h"
 #include "compilermath.h"
@@ -29,6 +30,7 @@ namespace CellMLSupport {
 CellmlFileRuntime::CellmlFileRuntime() :
     mCellmlApiOdeCodeInformation(0),
     mCellmlApiDaeCodeInformation(0),
+    mVariableOfIntegration(0),
     mCompilerEngine(0)
 {
     // Initialise the runtime's properties
@@ -41,8 +43,10 @@ CellmlFileRuntime::CellmlFileRuntime() :
 CellmlFileRuntime::~CellmlFileRuntime()
 {
     // Delete some internal objects
-    // Note: both mCellmlApiOdeCodeInformation and mCellmlApiDaeCodeInformation
-    //       get automatically deleted, if needed, so...
+    // Note #1: mCellmlApiOdeCodeInformation and mCellmlApiDaeCodeInformation
+    //          get automatically deleted, if needed, so...
+    // Note #2: mVariableOfIntegration is only a pointer reference, so no need
+    //          to delete it as such...
 
     delete mCompilerEngine;
 }
@@ -219,6 +223,8 @@ void CellmlFileRuntime::reset(const bool &pResetIssues)
     resetOdeCodeInformation();
     resetDaeCodeInformation();
 
+    mVariableOfIntegration = 0;
+
     delete mCompilerEngine;
 
     mCompilerEngine = new Compiler::CompilerEngine();
@@ -391,7 +397,7 @@ QString CellmlFileRuntime::functionCode(const QString &pFunctionSignature,
 
 //==============================================================================
 
-CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pCellmlApiModel)
+CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
 {
     // Reset the runtime's properties
 
@@ -410,7 +416,9 @@ CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pCellmlA
     // Note #3: ideally, there would be a more convenient way to determine the
     //          type of a model, but well... there isn't, so...
 
-    if (!pCellmlApiModel)
+    iface::cellml_api::Model *cellmlApiModel = pCellmlFile->cellmlApiModel();
+
+    if (!cellmlApiModel)
         // No model was provided, so...
 
         return this;
@@ -425,7 +433,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pCellmlA
     time.start();
 #endif
 
-    getOdeCodeInformation(pCellmlApiModel);
+    getOdeCodeInformation(cellmlApiModel);
 
 #ifdef QT_DEBUG
     qDebug(" - CellML ODE code information time: %s s.", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
@@ -452,11 +460,43 @@ CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pCellmlA
         time.restart();
 #endif
 
-        genericCodeInformation = getDaeCodeInformation(pCellmlApiModel);
+        genericCodeInformation = getDaeCodeInformation(cellmlApiModel);
 
 #ifdef QT_DEBUG
         qDebug(" - CellML DAE code information time: %s s.", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
     }
+#endif
+
+    // Retrieve the variable of integration, if any
+
+    ObjRef<iface::cellml_services::ComputationTargetIterator> computationTargetIterator = mCellmlApiOdeCodeInformation->iterateTargets();
+
+    forever {
+        ObjRef<iface::cellml_services::ComputationTarget> computationTarget = computationTargetIterator->nextComputationTarget();
+
+        if (!computationTarget)
+            // We couldn't find a variable of integration, so...
+
+            break;
+
+        if (computationTarget->type() == iface::cellml_services::VARIABLE_OF_INTEGRATION) {
+            // We have found our variable of integration, so retrieve our
+            // internal representation of it and leave our loop
+
+            ObjRef<iface::cellml_api::CellMLVariable> variable = computationTarget->variable();
+
+            mVariableOfIntegration = pCellmlFile->component(QString::fromStdWString(variable->componentName()))->variable(QString::fromStdWString(variable->name()));
+
+            break;
+        }
+    }
+
+#ifdef QT_DEBUG
+    if (mVariableOfIntegration)
+        qDebug(" - Variable of integration: %s [%s]", qPrintable(mVariableOfIntegration->name()),
+                                                      qPrintable(mVariableOfIntegration->unit()));
+    else
+        qDebug(" - Variable of integration: none.");
 #endif
 
     // Generate the model code, after having prepended to it all the external
@@ -612,6 +652,15 @@ CellmlFileRuntime * CellmlFileRuntime::update(iface::cellml_api::Model *pCellmlA
     // We are done, so return ourselves
 
     return this;
+}
+
+//==============================================================================
+
+CellmlFileVariable * CellmlFileRuntime::variableOfIntegration() const
+{
+    // Return our variable of integration, if any
+
+    return mVariableOfIntegration;
 }
 
 //==============================================================================

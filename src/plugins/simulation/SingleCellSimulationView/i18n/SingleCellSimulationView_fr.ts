@@ -55,6 +55,49 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::SingleCellSimulationView::SingleCellSimulationViewWidget</name>
+    <message>
+        <source>the model must have at least one ODE or DAE</source>
+        <translation>le modèle doit avoir au moins une EDO ou EAD</translation>
+    </message>
+    <message>
+        <source>Non-linear algebraic system(s)</source>
+        <translation>Système(s) algébrique(s) non-linéaire(s)</translation>
+    </message>
+    <message>
+        <source>valid</source>
+        <translation>valide</translation>
+    </message>
+    <message>
+        <source>ODE</source>
+        <translation>EDO</translation>
+    </message>
+    <message>
+        <source>DAE</source>
+        <translation>EAD</translation>
+    </message>
+    <message>
+        <source>invalid</source>
+        <translation>invalide</translation>
+    </message>
+    <message>
+        <source>Error:</source>
+        <translation>Erreur :</translation>
+    </message>
+    <message>
+        <source>Runtime:</source>
+        <translation>Modèle d&apos;exécution :</translation>
+    </message>
+    <message>
+        <source>Model type:</source>
+        <translation>Type de modèle :</translation>
+    </message>
+    <message>
+        <source>Warning:</source>
+        <translation>Attention :</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>ODE</source>

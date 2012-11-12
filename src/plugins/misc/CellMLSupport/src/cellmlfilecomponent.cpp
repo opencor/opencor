@@ -118,6 +118,21 @@ CellmlFileMathmlElements * CellmlFileComponent::mathmlElements()
 
 //==============================================================================
 
+CellmlFileVariable * CellmlFileComponent::variable(const QString &pVariableName)
+{
+    foreach (CellmlFileVariable *variable, mVariables)
+        if (!variable->name().compare(pVariableName))
+            // We have found the variable we are after
+
+            return variable;
+
+    // The variable we are after couldn't be found, so...
+
+    return 0;
+}
+
+//==============================================================================
+
 }   // namespace CellMLSupport
 }   // namespace OpenCOR
 
