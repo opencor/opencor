@@ -583,6 +583,12 @@ static const QString SettingsStatusBarVisibility = "StatusBarVisibility";
 
 void MainWindow::loadSettings()
 {
+    // Retrieve and set the language to be used by OpenCOR
+    // Note: the setting is forced in order to account for locale-dependent
+    //       initialisations (e.g. see CentralWidget::retranslateUi())...
+
+    setLocale(mSettings->value(SettingsLocale, SystemLocale).toString(), true);
+
     // Retrieve the geometry and state of the main window
 
     if (   !restoreGeometry(mSettings->value(SettingsGeometry).toByteArray())
@@ -636,15 +642,6 @@ void MainWindow::loadSettings()
         if (coreInterface)
             coreInterface->loadingOfSettingsDone(loadedPlugins);
     }
-
-    // Retrieve and set the language to be used by OpenCOR
-    // Note #1: this must be done after we are done with loading the settings
-    //          since some plugins may have created widgets which may need
-    //          translating...
-    // Note #2: the setting is forced in order to account for locale-dependent
-    //          initialisations (e.g. see CentralWidget::retranslateUi())...
-
-    setLocale(mSettings->value(SettingsLocale, SystemLocale).toString(), true);
 }
 
 //==============================================================================
