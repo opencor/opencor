@@ -31,6 +31,10 @@ public:
 
     void setUnit(const QString &pUnit);
 
+    double startingPoint() const;
+    double endingPoint() const;
+    double pointInterval() const;
+
 private:
     QStandardItemModel *mModel;
 };

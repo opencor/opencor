@@ -493,8 +493,8 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
 
 #ifdef QT_DEBUG
     if (mVariableOfIntegration)
-        qDebug(" - Variable of integration: %s [%s]", qPrintable(mVariableOfIntegration->name()),
-                                                      qPrintable(mVariableOfIntegration->unit()));
+        qDebug(" - Variable of integration: %s [%s].", qPrintable(mVariableOfIntegration->name()),
+                                                       qPrintable(mVariableOfIntegration->unit()));
     else
         qDebug(" - Variable of integration: none.");
 #endif

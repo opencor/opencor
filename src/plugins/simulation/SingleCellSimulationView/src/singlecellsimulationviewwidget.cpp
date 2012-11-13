@@ -56,7 +56,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     mCellmlFileRuntime(0), mModel(Unknown),
     mStatesCount(0), mCondVarCount(0),
     mConstants(0), mRates(0), mStates(0), mAlgebraic(0), mCondVar(0),
-    mVoiEnd(0), mVoiStep(0), mVoiMaximumStep(0), mVoiOutput(0), mStatesIndex(0),
+    mVoiStep(0), mVoiMaximumStep(0), mStatesIndex(0),
     mOdeSolverName("CVODE"),
     mSlowPlotting(true),
     mSolverInterfaces(SolverInterfaces()),
@@ -477,60 +477,44 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
     switch (mModel) {
     case Hodgkin1952:
-        mVoiEnd    = 50;      // ms
         mVoiStep   =  0.01;   // ms
-        mVoiOutput =  0.1;    // ms
 
         break;
     case Noble1962:
     case LuoRudy1991:
     case Mitchell2003:
-        mVoiEnd         = 1000;      // ms
         mVoiStep        =    0.01;   // ms
-        mVoiOutput      =    1;      // ms
         mVoiMaximumStep =    1;      // ms
 
         break;
     case Noble1984:
     case Zhang2000:
-        mVoiEnd    = 1;         // s
         mVoiStep   = 0.00001;   // s
-        mVoiOutput = 0.001;     // s
 
         break;
     case Noble1991:
-        mVoiEnd         = 1;         // s
         mVoiStep        = 0.00001;   // s
-        mVoiOutput      = 0.001;     // s
         mVoiMaximumStep = 0.002;     // s
 
         break;
     case Noble1998:
-        mVoiEnd         = 1;         // s
         mVoiStep        = 0.00001;   // s
-        mVoiOutput      = 0.001;     // s
         mVoiMaximumStep = 0.003;     // s
 
         break;
     case Cortassa2006:
-        mVoiEnd         = 300;      // dimensionless
         mVoiStep        =   0.01;   // dimensionless
-        mVoiOutput      =   1;      // dimensionless
         mVoiMaximumStep =   0.5;    // dimensionless
         mStatesIndex    =   1;
 
         break;
     case Parabola:
     case Dae:
-        mVoiEnd         = 10;     // dimensionless
-        mVoiOutput      =  0.1;   // dimensionless
         mVoiMaximumStep =  1;     // dimensionless
 
         break;
     default:   // van der Pol 1928
-        mVoiEnd    = 10;      // s
         mVoiStep   =  0.01;   // s
-        mVoiOutput =  0.01;   // s
     }
 }
 
@@ -700,15 +684,19 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
 
     // Get some initial values for the ODE solver and our simulation in general
 
-    double voi = 0;
-    double voiStart = voi;
-    int voiOutputCount = 0;
+    double startingPoint = mContentsWidget->informationWidget()->simulationWidget()->startingPoint();
+    double endingPoint   = mContentsWidget->informationWidget()->simulationWidget()->endingPoint();
+    double pointInterval = mContentsWidget->informationWidget()->simulationWidget()->pointInterval();
 
-    double hundredOverVoiEnd = 100/mVoiEnd;
+    double currentPoint = startingPoint;
+
+    int pointCount = 0;
+
+    double hundredOverEndingPoint = 100/endingPoint;
 
     // Set the minimal and maximal value for the X axis
 
-    activeGraphPanel->plot()->setAxisScale(QwtPlot::xBottom, voiStart, mVoiEnd);
+    activeGraphPanel->plot()->setAxisScale(QwtPlot::xBottom, startingPoint, endingPoint);
 
     // Get some arrays to store the simulation data
 
@@ -741,12 +729,12 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
         else
             odeSolver->setProperty("Step", mVoiStep);
 
-        odeSolver->initialize(voi, mStatesCount, mConstants, mRates, mStates,
+        odeSolver->initialize(currentPoint, mStatesCount, mConstants, mRates, mStates,
                               mAlgebraic, odeFunctions.computeRates);
     } else {
         daeSolver->setProperty("Maximum step", mVoiMaximumStep);
 
-        daeSolver->initialize(voi, mVoiEnd, mStatesCount, mCondVarCount,
+        daeSolver->initialize(currentPoint, endingPoint, mStatesCount, mCondVarCount,
                               mConstants, mRates, mStates, mAlgebraic, mCondVar,
                               daeFunctions.computeEssentialVariables,
                               daeFunctions.computeResiduals,
@@ -775,11 +763,11 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
             // variables have been computed
 
             if (needOdeSolver)
-                odeFunctions.computeVariables(voi, mConstants, mRates, mStates, mAlgebraic);
+                odeFunctions.computeVariables(currentPoint, mConstants, mRates, mStates, mAlgebraic);
             else
-                daeFunctions.computeVariables(voi, mConstants, mRates, mStates, mAlgebraic);
+                daeFunctions.computeVariables(currentPoint, mConstants, mRates, mStates, mAlgebraic);
 
-            xData << voi;
+            xData << currentPoint;
             yData << mStates[mStatesIndex];
 
             // Make sure that the graph panel is up-to-date
@@ -795,16 +783,16 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
             // Solve the model and compute its variables
 
             if (needOdeSolver)
-                odeSolver->solve(voi, qMin(voiStart+(++voiOutputCount)*mVoiOutput, mVoiEnd));
+                odeSolver->solve(currentPoint, qMin(startingPoint+(++pointCount)*pointInterval, endingPoint));
             else
-                daeSolver->solve(voi, qMin(voiStart+(++voiOutputCount)*mVoiOutput, mVoiEnd));
+                daeSolver->solve(currentPoint, qMin(startingPoint+(++pointCount)*pointInterval, endingPoint));
 
             // Update the progress bar
             //---GRY--- OUR USE OF QProgressBar IS VERY SLOW AT THE MOMENT...
 
             if (mSlowPlotting)
-                mProgressBar->setValue(voi*hundredOverVoiEnd);
-        } while ((voi != mVoiEnd) && mSolverErrorMsg.isEmpty());
+                mProgressBar->setValue(currentPoint*hundredOverEndingPoint);
+        } while ((currentPoint != endingPoint) && mSolverErrorMsg.isEmpty());
 
         // Reset the progress bar
 
@@ -831,7 +819,7 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
 
             // Last bit of simulation data
 
-            xData << voi;
+            xData << currentPoint;
             yData << mStates[mStatesIndex];
 
             // Make sure that the graph panel is up-to-date

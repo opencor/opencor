@@ -101,10 +101,9 @@ private:
     double *mAlgebraic;
     double *mCondVar;
 
-    double mVoiEnd;
     double mVoiStep;
     double mVoiMaximumStep;
-    double mVoiOutput;
+
     int mStatesIndex;
 
     QString mOdeSolverName;

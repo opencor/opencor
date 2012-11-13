@@ -83,6 +83,33 @@ void SingleCellSimulationViewSimulationInformationWidget::setUnit(const QString 
 
 //==============================================================================
 
+double SingleCellSimulationViewSimulationInformationWidget::startingPoint() const
+{
+    // Return our starting point
+
+    return mModel->invisibleRootItem()->child(0, 1)->text().toDouble();
+}
+
+//==============================================================================
+
+double SingleCellSimulationViewSimulationInformationWidget::endingPoint() const
+{
+    // Return our starting point
+
+    return mModel->invisibleRootItem()->child(1, 1)->text().toDouble();
+}
+
+//==============================================================================
+
+double SingleCellSimulationViewSimulationInformationWidget::pointInterval() const
+{
+    // Return our starting point
+
+    return mModel->invisibleRootItem()->child(2, 1)->text().toDouble();
+}
+
+//==============================================================================
+
 }   // namespace SingleCellSimulationView
 }   // namespace OpenCOR
 
