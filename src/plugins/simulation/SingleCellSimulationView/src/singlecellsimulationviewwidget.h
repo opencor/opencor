@@ -45,6 +45,23 @@ namespace SingleCellSimulationView {
 //==============================================================================
 
 class SingleCellSimulationViewContentsWidget;
+class SingleCellSimulationViewSimulationInformationWidget;
+
+//==============================================================================
+
+class SingleCellSimulationViewWidgetUserSettings
+{
+public:
+    explicit SingleCellSimulationViewWidgetUserSettings();
+
+    void get(SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings);
+    void set(SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings);
+
+private:
+    double mStartingPoint;
+    double mEndingPoint;
+    double mPointInterval;
+};
 
 //==============================================================================
 
@@ -75,6 +92,9 @@ private:
     bool mCanSaveSettings;
 
     CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
+
+    SingleCellSimulationViewWidgetUserSettings *mUserSettings;
+    QMap<QString, SingleCellSimulationViewWidgetUserSettings *> mModelUserSettings;
 
     enum {
         Unknown,

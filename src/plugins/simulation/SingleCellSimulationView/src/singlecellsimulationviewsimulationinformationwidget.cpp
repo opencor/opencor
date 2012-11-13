@@ -92,20 +92,47 @@ double SingleCellSimulationViewSimulationInformationWidget::startingPoint() cons
 
 //==============================================================================
 
+void SingleCellSimulationViewSimulationInformationWidget::setStartingPoint(const double &pValue)
+{
+    // Set our starting point
+
+    mModel->invisibleRootItem()->child(0, 1)->setText(QString::number(pValue));
+}
+
+//==============================================================================
+
 double SingleCellSimulationViewSimulationInformationWidget::endingPoint() const
 {
-    // Return our starting point
+    // Return our ending point
 
     return mModel->invisibleRootItem()->child(1, 1)->text().toDouble();
 }
 
 //==============================================================================
 
+void SingleCellSimulationViewSimulationInformationWidget::setEndingPoint(const double &pValue)
+{
+    // Set our ending point
+
+    mModel->invisibleRootItem()->child(1, 1)->setText(QString::number(pValue));
+}
+
+//==============================================================================
+
 double SingleCellSimulationViewSimulationInformationWidget::pointInterval() const
 {
-    // Return our starting point
+    // Return our point interval
 
     return mModel->invisibleRootItem()->child(2, 1)->text().toDouble();
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewSimulationInformationWidget::setPointInterval(const double &pValue)
+{
+    // Set our point interval
+
+    mModel->invisibleRootItem()->child(2, 1)->setText(QString::number(pValue));
 }
 
 //==============================================================================

@@ -41,6 +41,37 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
+SingleCellSimulationViewWidgetUserSettings::SingleCellSimulationViewWidgetUserSettings() :
+    mStartingPoint(0.0),
+    mEndingPoint(1000.0),
+    mPointInterval(1.0)
+{
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewWidgetUserSettings::get(SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings)
+{
+    // Get our user settings from our simulation information widget
+
+    mStartingPoint = pSimulationSettings->startingPoint();
+    mEndingPoint   = pSimulationSettings->endingPoint();
+    mPointInterval = pSimulationSettings->pointInterval();
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewWidgetUserSettings::set(SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings)
+{
+    // Set our user settings to our simulation information widget
+
+    pSimulationSettings->setStartingPoint(mStartingPoint);
+    pSimulationSettings->setEndingPoint(mEndingPoint);
+    pSimulationSettings->setPointInterval(mPointInterval);
+}
+
+//==============================================================================
+
 static const QString OutputTab  = "&nbsp;&nbsp;&nbsp;&nbsp;";
 static const QString OutputGood = " style=\"color: green;\"";
 static const QString OutputInfo = " style=\"color: navy;\"";
@@ -53,10 +84,13 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     Widget(pParent),
     mGui(new Ui::SingleCellSimulationViewWidget),
     mCanSaveSettings(false),
-    mCellmlFileRuntime(0), mModel(Unknown),
+    mCellmlFileRuntime(0),
+    mUserSettings(0),
+    mModelUserSettings(QMap<QString, SingleCellSimulationViewWidgetUserSettings *>()),
+    mModel(Unknown),
     mStatesCount(0), mCondVarCount(0),
     mConstants(0), mRates(0), mStates(0), mAlgebraic(0), mCondVar(0),
-    mVoiStep(0), mVoiMaximumStep(0), mStatesIndex(0),
+    mVoiStep(0.0), mVoiMaximumStep(0.0), mStatesIndex(0),
     mOdeSolverName("CVODE"),
     mSlowPlotting(true),
     mSolverInterfaces(SolverInterfaces()),
@@ -151,6 +185,11 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
 
 SingleCellSimulationViewWidget::~SingleCellSimulationViewWidget()
 {
+    // Delete our model settings
+
+    foreach (SingleCellSimulationViewWidgetUserSettings *modelSettings, mModelUserSettings)
+        delete modelSettings;
+
     // Delete the arrays for our model
 
     delete[] mConstants;
@@ -349,6 +388,30 @@ void SingleCellSimulationViewWidget::setUserSettingsEnabled(const bool &pEnabled
 
 void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 {
+    // Keep track of the user settings for the previous model, if any
+
+    SingleCellSimulationViewSimulationInformationWidget *simulationSettings = mContentsWidget->informationWidget()->simulationWidget();
+
+    if (mUserSettings)
+        mUserSettings->get(simulationSettings);
+
+    // Retrieve our settings related to the current model, if any
+
+    mUserSettings = mModelUserSettings.value(pFileName);
+
+    if (!mUserSettings) {
+        // No user settings currently exist for the model, so create some,
+        // initialise them and then keep track of them
+
+        mUserSettings = new SingleCellSimulationViewWidgetUserSettings();
+
+        mModelUserSettings.insert(pFileName, mUserSettings);
+    }
+
+    // (Re-)initialise our GUI with the user settings for the model
+
+    mUserSettings->set(simulationSettings);
+
     // Get a runtime for the CellML file
 
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
@@ -383,13 +446,19 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
     outputStatus(status);
 
-    // Leave if we got an invalid runtime
+    // Check if we have an invalid runtime and, if so, set the unit to an
+    // unknown and then leave
 
-    if (!mCellmlFileRuntime->isValid())
+    static const QString UnknownUnit = "???";
+
+    if (!mCellmlFileRuntime->isValid()) {
         // Note: no need to output a status error since one will have already
         //       been generated while trying to get the runtime (see above)...
 
+        simulationSettings->setUnit(UnknownUnit);
+
         return;
+    }
 
     // Retrieve the unit of the variable of integration, if any
 
@@ -398,9 +467,11 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
     if (variableOfIntegration) {
         // We have a variable of integration, so we can retrieve its unit
 
-        mContentsWidget->informationWidget()->simulationWidget()->setUnit(mCellmlFileRuntime->variableOfIntegration()->unit());
+        simulationSettings->setUnit(mCellmlFileRuntime->variableOfIntegration()->unit());
     } else {
         // We don't have a variable of integration, so...
+
+        simulationSettings->setUnit(UnknownUnit);
 
         outputStatusError(tr("the model must have at least one ODE or DAE"));
 
