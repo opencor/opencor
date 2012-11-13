@@ -325,6 +325,28 @@ void SingleCellSimulationViewWidget::outputStatusError(const QString &pStatusErr
 
 //==============================================================================
 
+void SingleCellSimulationViewWidget::outputStatusSimulationError(const QString &pStatusSimulationError)
+{
+    // Output the status simulation error
+
+    outputStatusError(pStatusSimulationError);
+
+    // Re-enable the user settings
+
+    setUserSettingsEnabled(true);
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewWidget::setUserSettingsEnabled(const bool &pEnabled)
+{
+    // Enable or disable the user settings
+
+    mContentsWidget->informationWidget()->simulationWidget()->setEnabled(pEnabled);
+}
+
+//==============================================================================
+
 void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 {
     // Get a runtime for the CellML file
@@ -580,7 +602,7 @@ void SingleCellSimulationViewWidget::outputSolverErrorMsg()
 {
     // Output the current solver error message
 
-    outputStatus(OutputTab+"<span"+OutputBad+"><strong"+OutputBad+">Solver error:</strong> "+mSolverErrorMsg+".</span>"+OutputBrLn);
+    outputStatus(OutputTab+"<span"+OutputBad+"><strong"+OutputBad+">"+tr("Solver error:")+"</strong> "+mSolverErrorMsg+".</span>"+OutputBrLn);
 }
 
 //==============================================================================
@@ -591,6 +613,10 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
         // The model is either not supported or not valid, so...
 
         return;
+
+    // Disable the user settings
+
+    setUserSettingsEnabled(false);
 
     // Clear the graph panels and output
 
@@ -622,7 +648,7 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
         if (!odeSolver) {
             // The ODE solver couldn't be found, so...
 
-            outputStatusError("the "+mOdeSolverName+" solver is needed, but it could not be found");
+            outputStatusSimulationError("the "+mOdeSolverName+" solver is needed, but it could not be found");
 
             return;
         }
@@ -640,7 +666,7 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
         if (!daeSolver) {
             // The DAE solver couldn't be found, so...
 
-            outputStatusError("the IDA solver is needed, but it could not be found");
+            outputStatusSimulationError("the IDA solver is needed, but it could not be found");
 
             return;
         }
@@ -661,7 +687,7 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
         if (!CoreSolver::globalNlaSolver()) {
             // The NLA solver couldn't be found, so...
 
-            outputStatusError("the KINSOL solver is needed, but it could not be found");
+            outputStatusSimulationError("the KINSOL solver is needed, but it could not be found");
 
             return;
         }
@@ -684,9 +710,11 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
 
     // Get some initial values for the ODE solver and our simulation in general
 
-    double startingPoint = mContentsWidget->informationWidget()->simulationWidget()->startingPoint();
-    double endingPoint   = mContentsWidget->informationWidget()->simulationWidget()->endingPoint();
-    double pointInterval = mContentsWidget->informationWidget()->simulationWidget()->pointInterval();
+    SingleCellSimulationViewSimulationInformationWidget *simulationSettings = mContentsWidget->informationWidget()->simulationWidget();
+
+    double startingPoint = simulationSettings->startingPoint();
+    double endingPoint   = simulationSettings->endingPoint();
+    double pointInterval = simulationSettings->pointInterval();
 
     double currentPoint = startingPoint;
 
@@ -838,6 +866,10 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
     delete daeSolver;
 
     CoreSolver::resetGlobalNlaSolver();
+
+    // Re-enable the user settings
+
+    setUserSettingsEnabled(true);
 }
 
 //==============================================================================

@@ -123,6 +123,9 @@ private:
 
     void outputStatus(const QString &pStatus);
     void outputStatusError(const QString &pStatusError);
+    void outputStatusSimulationError(const QString &pStatusSimulationError);
+
+    void setUserSettingsEnabled(const bool &pEnabled);
 
     void clearGraphPanels();
     void clearActiveGraphPanel();
