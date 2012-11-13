@@ -905,12 +905,6 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
 
             if (mSlowPlotting)
                 mProgressBar->setValue(currentPoint*hundredOverEndingPoint);
-
-            // Process any pending message
-            // Note: this is, for example, useful to see the progress of the the
-            //       graphical output on OS X...
-
-            qApp->processEvents();
         } while ((currentPoint != endingPoint) && mSolverErrorMsg.isEmpty());
 
         // Reset the progress bar
