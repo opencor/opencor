@@ -145,7 +145,7 @@ private:
     void outputStatusError(const QString &pStatusError);
     void outputStatusSimulationError(const QString &pStatusSimulationError);
 
-    void setUserSettingsEnabled(const bool &pEnabled);
+    void setSimulationMode(const bool &pEnabled);
 
     void clearGraphPanels();
     void clearActiveGraphPanel();

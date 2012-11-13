@@ -105,6 +105,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget(this);
 
     toolBarWidget->addAction(mGui->actionRun);
+    toolBarWidget->addAction(mGui->actionPause);
     toolBarWidget->addAction(mGui->actionStop);
     toolBarWidget->addSeparator();
     toolBarWidget->addAction(mGui->actionDebugMode);
@@ -113,6 +114,8 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     toolBarWidget->addAction(mGui->actionRemove);
     toolBarWidget->addSeparator();
     toolBarWidget->addAction(mGui->actionCsvExport);
+
+    mGui->actionPause->setVisible(false);
 
     mGui->layout->addWidget(toolBarWidget);
     mGui->layout->addWidget(Core::newLineWidget(this));
@@ -370,18 +373,29 @@ void SingleCellSimulationViewWidget::outputStatusSimulationError(const QString &
 
     outputStatusError(pStatusSimulationError);
 
-    // Re-enable the user settings
+    // Leave the simulation mode
 
-    setUserSettingsEnabled(true);
+    setSimulationMode(false);
 }
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::setUserSettingsEnabled(const bool &pEnabled)
+void SingleCellSimulationViewWidget::setSimulationMode(const bool &pEnabled)
 {
+    // Hide our run action and show our pause action instead
+
+    mGui->actionRun->setVisible(!pEnabled);
+    mGui->actionPause->setVisible(pEnabled);
+
     // Enable or disable the user settings
 
-    mContentsWidget->informationWidget()->simulationWidget()->setEnabled(pEnabled);
+    mContentsWidget->informationWidget()->simulationWidget()->setEnabled(!pEnabled);
+
+    // Make sure that the GUI gets updated straightaway
+    // Note: this is required on OS X, so we may as well do it on Windows and
+    //       Linux too since it doesn't harm...
+
+    qApp->processEvents();
 }
 
 //==============================================================================
@@ -685,9 +699,9 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
 
         return;
 
-    // Disable the user settings
+    // Go into simulation mode
 
-    setUserSettingsEnabled(false);
+    setSimulationMode(true);
 
     // Clear the graph panels and output
 
@@ -891,6 +905,12 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
 
             if (mSlowPlotting)
                 mProgressBar->setValue(currentPoint*hundredOverEndingPoint);
+
+            // Process any pending message
+            // Note: this is, for example, useful to see the progress of the the
+            //       graphical output on OS X...
+
+            qApp->processEvents();
         } while ((currentPoint != endingPoint) && mSolverErrorMsg.isEmpty());
 
         // Reset the progress bar
@@ -938,9 +958,9 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
 
     CoreSolver::resetGlobalNlaSolver();
 
-    // Re-enable the user settings
+    // Leave the simulation mode
 
-    setUserSettingsEnabled(true);
+    setSimulationMode(false);
 }
 
 //==============================================================================
