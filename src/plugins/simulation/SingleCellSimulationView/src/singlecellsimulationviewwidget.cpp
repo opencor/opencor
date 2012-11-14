@@ -3,13 +3,8 @@
 //==============================================================================
 
 #include "cellmlfilemanager.h"
-#include "cellmlfileruntime.h"
-#include "coredaesolver.h"
-#include "corenlasolver.h"
-#include "coreodesolver.h"
 #include "coreutils.h"
 #include "singlecellsimulationviewcontentswidget.h"
-#include "singlecellsimulationviewgraphpanelwidget.h"
 #include "singlecellsimulationviewinformationwidget.h"
 #include "singlecellsimulationviewsimulationinformationwidget.h"
 #include "singlecellsimulationviewwidget.h"
@@ -27,12 +22,6 @@
 #include <QSettings>
 #include <QSplitter>
 #include <QTextEdit>
-#include <QTime>
-
-//==============================================================================
-
-#include "qwt_plot.h"
-#include "qwt_plot_curve.h"
 
 //==============================================================================
 
@@ -84,17 +73,10 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     Widget(pParent),
     mGui(new Ui::SingleCellSimulationViewWidget),
     mCanSaveSettings(false),
+    mSolverInterfaces(SolverInterfaces()),
     mCellmlFileRuntime(0),
     mUserSettings(0),
-    mModelUserSettings(QMap<QString, SingleCellSimulationViewWidgetUserSettings *>()),
-    mModel(Unknown),
-    mStatesCount(0), mCondVarCount(0),
-    mConstants(0), mRates(0), mStates(0), mAlgebraic(0), mCondVar(0),
-    mVoiStep(0.0), mVoiMaximumStep(0.0), mStatesIndex(0),
-    mOdeSolverName("CVODE"),
-    mSlowPlotting(true),
-    mSolverInterfaces(SolverInterfaces()),
-    mSolverErrorMsg(QString())
+    mModelUserSettings(QMap<QString, SingleCellSimulationViewWidgetUserSettings *>())
 {
     // Set up the GUI
 
@@ -192,14 +174,6 @@ SingleCellSimulationViewWidget::~SingleCellSimulationViewWidget()
 
     foreach (SingleCellSimulationViewWidgetUserSettings *modelSettings, mModelUserSettings)
         delete modelSettings;
-
-    // Delete the arrays for our model
-
-    delete[] mConstants;
-    delete[] mRates;
-    delete[] mStates;
-    delete[] mAlgebraic;
-    delete[] mCondVar;
 
     // Delete the GUI
 
@@ -397,12 +371,6 @@ void SingleCellSimulationViewWidget::setSimulationMode(const bool &pEnabled)
     // Enable or disable the user settings
 
     mContentsWidget->informationWidget()->simulationWidget()->setEnabled(!pEnabled);
-
-    // Make sure that the GUI gets updated straightaway
-    // Note: this is required on OS X, so we may as well do it on Windows and
-    //       Linux too since it doesn't harm...
-
-    qApp->processEvents();
 }
 
 //==============================================================================
@@ -467,169 +435,39 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
     outputStatus(status);
 
+    // Enable or disable the run and stop actions depending on whether the
+    // runtime is valid
+
+    CellMLSupport::CellmlFileVariable *variableOfIntegration = mCellmlFileRuntime->isValid()?mCellmlFileRuntime->variableOfIntegration():0;
+
+    mGui->actionRun->setEnabled(variableOfIntegration);
+    mGui->actionStop->setEnabled(variableOfIntegration);
+
+    // By default, we assume that the runtime isn't valid or that there is no
+    // variable of integration, meaning that that we can't show the unit of the
+    // variable of integration
+
+    simulationSettings->setUnit("???");
+
     // Check if we have an invalid runtime and, if so, set the unit to an
-    // unknown and then leave
+    // unknown one and leave
 
-    static const QString UnknownUnit = "???";
-
-    if (!mCellmlFileRuntime->isValid()) {
+    if (!mCellmlFileRuntime->isValid())
         // Note: no need to output a status error since one will have already
         //       been generated while trying to get the runtime (see above)...
 
-        simulationSettings->setUnit(UnknownUnit);
-
         return;
-    }
 
     // Retrieve the unit of the variable of integration, if any
 
-    CellMLSupport::CellmlFileVariable *variableOfIntegration = mCellmlFileRuntime->variableOfIntegration();
-
-    if (variableOfIntegration) {
+    if (variableOfIntegration)
         // We have a variable of integration, so we can retrieve its unit
 
         simulationSettings->setUnit(mCellmlFileRuntime->variableOfIntegration()->unit());
-    } else {
+    else
         // We don't have a variable of integration, so...
 
-        simulationSettings->setUnit(UnknownUnit);
-
         outputStatusError(tr("the model must have at least one ODE or DAE"));
-
-        return;
-    }
-
-    // Check whether we 'support' the model
-
-    QString fileBaseName = QFileInfo(pFileName).baseName();
-
-    if (!fileBaseName.compare("van_der_pol_model_1928")) {
-        mModel = VanDerPol1928;
-    } else if (   !fileBaseName.compare("hodgkin_huxley_squid_axon_model_1952")
-               || !fileBaseName.compare("hodgkin_huxley_squid_axon_model_1952_modified")
-               || !fileBaseName.compare("hodgkin_huxley_squid_axon_model_1952_original")) {
-        mModel = Hodgkin1952;
-    } else if (!fileBaseName.compare("noble_model_1962")) {
-        mModel = Noble1962;
-    } else if (!fileBaseName.compare("noble_noble_SAN_model_1984")) {
-        mModel = Noble1984;
-    } else if (!fileBaseName.compare("luo_rudy_1991")) {
-        mModel = LuoRudy1991;
-    } else if (!fileBaseName.compare("noble_model_1991")) {
-        mModel = Noble1991;
-    } else if (!fileBaseName.compare("noble_model_1998")) {
-        mModel = Noble1998;
-    } else if (   !fileBaseName.compare("zhang_SAN_model_2000_0D_capable")
-               || !fileBaseName.compare("zhang_SAN_model_2000_1D_capable")
-               || !fileBaseName.compare("zhang_SAN_model_2000_all")
-               || !fileBaseName.compare("zhang_SAN_model_2000_published")) {
-        mModel = Zhang2000;
-    } else if (!fileBaseName.compare("mitchell_schaeffer_2003")) {
-        mModel = Mitchell2003;
-    } else if (   !fileBaseName.compare("cortassa_2006_1_0_S1")
-               || !fileBaseName.compare("cortassa_2006_1_1_S1")) {
-        mModel = Cortassa2006;
-    } else if (!fileBaseName.compare("parabola_as_ode_model")) {
-        mModel = Parabola;
-    } else if (   !fileBaseName.compare("dae_model")
-               || !fileBaseName.compare("newton_raphson_parabola_model")
-               || !fileBaseName.compare("parabola_as_dae_model")
-               || !fileBaseName.compare("parabola_variant_as_dae_model")
-               || !fileBaseName.compare("saucerman_brunton_michailova_mcculloch_model_2003")
-               || !fileBaseName.compare("simple_dae_model")) {
-        mModel = Dae;
-    } else {
-        // The model is not 'supported', so...
-
-        mModel = Unknown;
-
-        outputStatus(OutputTab+"<span"+OutputBad+"><strong>Warning:</strong> the model is not 'supported'.</span>"+OutputBrLn);
-
-        return;
-    }
-
-    // Delete the arrays for our model
-
-    delete[] mConstants;
-    delete[] mRates;
-    delete[] mStates;
-    delete[] mAlgebraic;
-    delete[] mCondVar;
-
-    // Create and initialise our arrays for our model
-
-    int constantsCount = mCellmlFileRuntime->constantsCount();
-    int ratesCount = mCellmlFileRuntime->ratesCount();
-    mStatesCount = mCellmlFileRuntime->statesCount();
-    int algebraicCount = mCellmlFileRuntime->algebraicCount();
-    mCondVarCount = mCellmlFileRuntime->condVarCount();
-
-    mConstants = new double[constantsCount];
-    mRates     = new double[ratesCount];
-    mStates    = new double[mStatesCount];
-    mAlgebraic = new double[algebraicCount];
-    mCondVar   = new double[mCondVarCount];
-
-    for (int i = 0; i < constantsCount; ++i)
-        mConstants[i] = 0;
-
-    for (int i = 0; i < ratesCount; ++i)
-        mRates[i] = 0;
-
-    for (int i = 0; i < mStatesCount; ++i)
-        mStates[i] = 0;
-
-    for (int i = 0; i < algebraicCount; ++i)
-        mAlgebraic[i] = 0;
-
-    for (int i = 0; i < mCondVarCount; ++i)
-        mCondVar[i] = 0;
-
-    // Get some initial values for the ODE solver and our simulation in general
-
-    mVoiMaximumStep = 0;
-
-    switch (mModel) {
-    case Hodgkin1952:
-        mVoiStep   =  0.01;   // ms
-
-        break;
-    case Noble1962:
-    case LuoRudy1991:
-    case Mitchell2003:
-        mVoiStep        =    0.01;   // ms
-        mVoiMaximumStep =    1;      // ms
-
-        break;
-    case Noble1984:
-    case Zhang2000:
-        mVoiStep   = 0.00001;   // s
-
-        break;
-    case Noble1991:
-        mVoiStep        = 0.00001;   // s
-        mVoiMaximumStep = 0.002;     // s
-
-        break;
-    case Noble1998:
-        mVoiStep        = 0.00001;   // s
-        mVoiMaximumStep = 0.003;     // s
-
-        break;
-    case Cortassa2006:
-        mVoiStep        =   0.01;   // dimensionless
-        mVoiMaximumStep =   0.5;    // dimensionless
-        mStatesIndex    =   1;
-
-        break;
-    case Parabola:
-    case Dae:
-        mVoiMaximumStep =  1;     // dimensionless
-
-        break;
-    default:   // van der Pol 1928
-        mVoiStep   =  0.01;   // s
-    }
 }
 
 //==============================================================================
@@ -690,274 +528,11 @@ void SingleCellSimulationViewWidget::paintEvent(QPaintEvent *pEvent)
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::outputSolverErrorMsg()
-{
-    // Output the current solver error message
-
-    outputStatus(OutputTab+"<span"+OutputBad+"><strong"+OutputBad+">"+tr("Solver error:")+"</strong> "+mSolverErrorMsg+".</span>"+OutputBrLn);
-}
-
-//==============================================================================
-
 void SingleCellSimulationViewWidget::on_actionRun_triggered()
 {
-    if ((mModel == Unknown) || !mCellmlFileRuntime->isValid())
-        // The model is either not supported or not valid, so...
-
-        return;
-
     // Go into simulation mode
 
     setSimulationMode(true);
-
-    // Clear the graph panels and output
-
-    clearGraphPanels();
-
-    // Retrieve the active graph panel
-
-    SingleCellSimulationViewGraphPanelWidget *activeGraphPanel = mContentsWidget->activeGraphPanel();
-
-    // Retrieve the requested ODE/DAE solver
-
-    bool needOdeSolver = mModel != Dae;
-
-    CoreSolver::CoreOdeSolver *odeSolver = 0;
-    CoreSolver::CoreDaeSolver *daeSolver = 0;
-    QString solverName = QString();
-
-    if (needOdeSolver) {
-        foreach (SolverInterface *solverInterface, mSolverInterfaces)
-            if (!solverInterface->name().compare(mOdeSolverName)) {
-                // The ODE solver was found, so retrieve an instance of it
-
-                odeSolver = reinterpret_cast<CoreSolver::CoreOdeSolver *>(solverInterface->instance());
-                solverName = solverInterface->name();
-
-                break;
-            }
-
-        if (!odeSolver) {
-            // The ODE solver couldn't be found, so...
-
-            outputStatusSimulationError("the "+mOdeSolverName+" solver is needed, but it could not be found");
-
-            return;
-        }
-    } else {
-        foreach (SolverInterface *solverInterface, mSolverInterfaces)
-            if (!solverInterface->name().compare("IDA")) {
-                // The DAE solver was found, so retrieve an instance of it
-
-                daeSolver = reinterpret_cast<CoreSolver::CoreDaeSolver *>(solverInterface->instance());
-                solverName = "IDA";
-
-                break;
-            }
-
-        if (!daeSolver) {
-            // The DAE solver couldn't be found, so...
-
-            outputStatusSimulationError("the IDA solver is needed, but it could not be found");
-
-            return;
-        }
-    }
-
-    // Check whether we need a non-linear algebraic solver
-
-    if (mCellmlFileRuntime->needNlaSolver()) {
-        foreach (SolverInterface *solverInterface, mSolverInterfaces)
-            if (!solverInterface->name().compare("KINSOL")) {
-                // The KINSOL solver was found, so retrieve an instance of it
-
-                CoreSolver::setGlobalNlaSolver(reinterpret_cast<CoreSolver::CoreNlaSolver *>(solverInterface->instance()));
-
-                break;
-            }
-
-        if (!CoreSolver::globalNlaSolver()) {
-            // The NLA solver couldn't be found, so...
-
-            outputStatusSimulationError("the KINSOL solver is needed, but it could not be found");
-
-            return;
-        }
-    }
-
-    // Keep track of any error that might be reported by any of our solvers
-
-    if (needOdeSolver)
-        connect(odeSolver, SIGNAL(error(const QString &)),
-                this, SLOT(solverError(const QString &)));
-    else
-        connect(daeSolver, SIGNAL(error(const QString &)),
-                this, SLOT(solverError(const QString &)));
-
-    if (CoreSolver::globalNlaSolver())
-        connect(CoreSolver::globalNlaSolver(), SIGNAL(error(const QString &)),
-                this, SLOT(solverError(const QString &)));
-
-    mSolverErrorMsg = QString();
-
-    // Get some initial values for the ODE solver and our simulation in general
-
-    SingleCellSimulationViewSimulationInformationWidget *simulationSettings = mContentsWidget->informationWidget()->simulationWidget();
-
-    double startingPoint = simulationSettings->startingPoint();
-    double endingPoint   = simulationSettings->endingPoint();
-    double pointInterval = simulationSettings->pointInterval();
-
-    double currentPoint = startingPoint;
-
-    int pointCount = 0;
-
-    double hundredOverEndingPoint = 100/endingPoint;
-
-    // Set the minimal and maximal value for the X axis
-
-    activeGraphPanel->plot()->setAxisScale(QwtPlot::xBottom, startingPoint, endingPoint);
-
-    // Get some arrays to store the simulation data
-
-    typedef QVector<double> Doubles;
-
-    Doubles xData;
-    Doubles yData;
-
-    // Add a curve to our plotting area
-
-    QwtPlotCurve *curve = activeGraphPanel->addCurve();
-
-    // Retrieve the ODE functions from the CellML file runtime
-
-    CellMLSupport::CellmlFileRuntime::OdeFunctions odeFunctions = mCellmlFileRuntime->odeFunctions();
-    CellMLSupport::CellmlFileRuntime::DaeFunctions daeFunctions = mCellmlFileRuntime->daeFunctions();
-
-    // Initialise the model's 'constants'
-
-    if (needOdeSolver)
-        odeFunctions.initializeConstants(mConstants, mRates, mStates);
-    else
-        daeFunctions.initializeConstants(mConstants, mRates, mStates);
-
-    // Initialise our ODE/DAE solver
-
-    if (needOdeSolver) {
-        if (!solverName.compare("CVODE"))
-            odeSolver->setProperty("Maximum step", mVoiMaximumStep);
-        else
-            odeSolver->setProperty("Step", mVoiStep);
-
-        odeSolver->initialize(currentPoint, mStatesCount, mConstants, mRates, mStates,
-                              mAlgebraic, odeFunctions.computeRates);
-    } else {
-        daeSolver->setProperty("Maximum step", mVoiMaximumStep);
-
-        daeSolver->initialize(currentPoint, endingPoint, mStatesCount, mCondVarCount,
-                              mConstants, mRates, mStates, mAlgebraic, mCondVar,
-                              daeFunctions.computeEssentialVariables,
-                              daeFunctions.computeResiduals,
-                              daeFunctions.computeRootInformation,
-                              daeFunctions.computeStateInformation);
-        // Note: the second argument is just to provide the DAE solver with an
-        //       indication of the direction in which we want to integrate the
-        //       model, so that it can properly determine the model's initial
-        //       conditions
-    }
-
-    // Initialise the constants and compute the rates and variables, but only if
-    // the initialisation of the solver went fine
-
-    if (!mSolverErrorMsg.isEmpty()) {
-        // We couldn't initialise the solver, so...
-
-        outputSolverErrorMsg();
-    } else {
-        QTime time;
-
-        time.start();
-
-        do {
-            // Output the current simulation data after making sure that all the
-            // variables have been computed
-
-            if (needOdeSolver)
-                odeFunctions.computeVariables(currentPoint, mConstants, mRates, mStates, mAlgebraic);
-            else
-                daeFunctions.computeVariables(currentPoint, mConstants, mRates, mStates, mAlgebraic);
-
-            xData << currentPoint;
-            yData << mStates[mStatesIndex];
-
-            // Make sure that the graph panel is up-to-date
-            //---GRY--- NOT AT ALL THE WAY IT SHOULD BE DONE, BUT GOOD ENOUGH
-            //          FOR DEMONSTRATION PURPOSES...
-
-            if (mSlowPlotting) {
-                curve->setSamples(xData, yData);
-
-                activeGraphPanel->plot()->replot();
-            }
-
-            // Solve the model and compute its variables
-
-            if (needOdeSolver)
-                odeSolver->solve(currentPoint, qMin(startingPoint+(++pointCount)*pointInterval, endingPoint));
-            else
-                daeSolver->solve(currentPoint, qMin(startingPoint+(++pointCount)*pointInterval, endingPoint));
-
-            // Update the progress bar
-            //---GRY--- OUR USE OF QProgressBar IS VERY SLOW AT THE MOMENT...
-
-            if (mSlowPlotting)
-                mProgressBar->setValue(currentPoint*hundredOverEndingPoint);
-        } while ((currentPoint != endingPoint) && mSolverErrorMsg.isEmpty());
-
-        // Reset the progress bar
-
-        mProgressBar->setValue(0);
-
-        if (!mSolverErrorMsg.isEmpty()) {
-            // The solver reported an error, so...
-
-            outputSolverErrorMsg();
-
-            // Make sure that the graph panel is up-to-date
-            //---GRY--- NOT AT ALL THE WAY IT SHOULD BE DONE, BUT GOOD ENOUGH
-            //          FOR DEMONSTRATION PURPOSES...
-
-            if (!mSlowPlotting) {
-                curve->setSamples(xData, yData);
-
-                activeGraphPanel->plot()->replot();
-            }
-        } else {
-            // Output the total simulation time
-
-            outputStatus(QString(OutputTab+"<strong>Simulation time:</strong> <span"+OutputInfo+">%1 s</span>."+OutputBrLn).arg(QString::number(0.001*time.elapsed(), 'g', 3)));
-
-            // Last bit of simulation data
-
-            xData << currentPoint;
-            yData << mStates[mStatesIndex];
-
-            // Make sure that the graph panel is up-to-date
-            //---GRY--- NOT AT ALL THE WAY IT SHOULD BE DONE, BUT GOOD ENOUGH
-            //          FOR DEMONSTRATION PURPOSES...
-
-            curve->setSamples(xData, yData);
-
-            activeGraphPanel->plot()->replot();
-        }
-    }
-
-    // Delete the solver
-
-    delete odeSolver;
-    delete daeSolver;
-
-    CoreSolver::resetGlobalNlaSolver();
 
     // Leave the simulation mode
 
@@ -966,14 +541,23 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
 
 //==============================================================================
 
+void SingleCellSimulationViewWidget::on_actionPause_triggered()
+{
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewWidget::on_actionStop_triggered()
+{
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
 void SingleCellSimulationViewWidget::on_actionDebugMode_triggered()
 {
-    //---GRY--- TEMPORARY WAY TO DETERMINE WHICH ODE SOLVER TO USE
-
-    if (mGui->actionDebugMode->isChecked())
-        mOdeSolverName = "Forward Euler";
-    else
-        mOdeSolverName = "CVODE";
+//---GRY--- TO BE DONE...
 }
 
 //==============================================================================
@@ -998,18 +582,7 @@ void SingleCellSimulationViewWidget::on_actionRemove_triggered()
 
 void SingleCellSimulationViewWidget::on_actionCsvExport_triggered()
 {
-    //---GRY--- TEMPORARY WAY TO SPECIFY WHETHER TO PLOT SLOWLY
-
-    mSlowPlotting = !mSlowPlotting;
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewWidget::solverError(const QString &pErrorMsg)
-{
-    // The solver emitted an error, so...
-
-    mSolverErrorMsg = pErrorMsg;
+//---GRY--- TO BE DONE...
 }
 
 //==============================================================================

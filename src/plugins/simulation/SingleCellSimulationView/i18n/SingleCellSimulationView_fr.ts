@@ -96,10 +96,6 @@
         <source>Warning:</source>
         <translation>Attention :</translation>
     </message>
-    <message>
-        <source>Solver error:</source>
-        <translation>Erreur du solveur :</translation>
-    </message>
 </context>
 <context>
     <name>QObject</name>

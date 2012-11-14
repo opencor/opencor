@@ -78,18 +78,6 @@
     <string>Enable the debug mode</string>
    </property>
   </action>
-  <action name="actionCsvExport">
-   <property name="icon">
-    <iconset resource="../res/SingleCellSimulationView.qrc">
-     <normaloff>:/oxygen/mimetypes/text-csv.png</normaloff>:/oxygen/mimetypes/text-csv.png</iconset>
-   </property>
-   <property name="text">
-    <string>&amp;CSV Export</string>
-   </property>
-   <property name="statusTip">
-    <string>Export the simulation data to CSV</string>
-   </property>
-  </action>
   <action name="actionAdd">
    <property name="icon">
     <iconset resource="../res/SingleCellSimulationView.qrc">
@@ -112,6 +100,18 @@
    </property>
    <property name="statusTip">
     <string>Remove the current graph panel</string>
+   </property>
+  </action>
+  <action name="actionCsvExport">
+   <property name="icon">
+    <iconset resource="../res/SingleCellSimulationView.qrc">
+     <normaloff>:/oxygen/mimetypes/text-csv.png</normaloff>:/oxygen/mimetypes/text-csv.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;CSV Export</string>
+   </property>
+   <property name="statusTip">
+    <string>Export the simulation data to CSV</string>
    </property>
   </action>
  </widget>

@@ -91,46 +91,12 @@ private:
 
     bool mCanSaveSettings;
 
+    SolverInterfaces mSolverInterfaces;
+
     CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
 
     SingleCellSimulationViewWidgetUserSettings *mUserSettings;
     QMap<QString, SingleCellSimulationViewWidgetUserSettings *> mModelUserSettings;
-
-    enum {
-        Unknown,
-        VanDerPol1928,
-        Hodgkin1952,
-        Noble1962,
-        Noble1984,
-        LuoRudy1991,
-        Noble1991,
-        Noble1998,
-        Zhang2000,
-        Mitchell2003,
-        Cortassa2006,
-        Parabola,
-        Dae
-    } mModel;
-
-    int mStatesCount;
-    int mCondVarCount;
-
-    double *mConstants;
-    double *mRates;
-    double *mStates;
-    double *mAlgebraic;
-    double *mCondVar;
-
-    double mVoiStep;
-    double mVoiMaximumStep;
-
-    int mStatesIndex;
-
-    QString mOdeSolverName;
-
-    bool mSlowPlotting;
-
-    SolverInterfaces mSolverInterfaces;
 
     QSplitter *mSplitter;
 
@@ -138,8 +104,6 @@ private:
     QTextEdit *mOutput;
 
     QProgressBar *mProgressBar;
-
-    QString mSolverErrorMsg;
 
     void outputStatus(const QString &pStatus);
     void outputStatusError(const QString &pStatusError);
@@ -150,18 +114,19 @@ private:
     void clearGraphPanels();
     void clearActiveGraphPanel();
 
-    void outputSolverErrorMsg();
-
     void setProgressBarStyleSheet();
 
 private Q_SLOTS:
     void on_actionRun_triggered();
+    void on_actionPause_triggered();
+    void on_actionStop_triggered();
+
     void on_actionDebugMode_triggered();
+
     void on_actionAdd_triggered();
     void on_actionRemove_triggered();
-    void on_actionCsvExport_triggered();
 
-    void solverError(const QString &pErrorMsg);
+    void on_actionCsvExport_triggered();
 };
 
 //==============================================================================
