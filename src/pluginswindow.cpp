@@ -74,6 +74,15 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager, QWidget *pParent) :
 
     mGui->setupUi(this);
 
+    // Make sure that all the widgets in our details form layout can be resized
+    // if necessary and if possible
+    // Note: indeed, it's not the case on OS X since the field growth policy is
+    //       set to FieldsStayAtSizeHint on that platform and also on Windows
+    //       and Linux to make sure that, if anything, we get the same behaviour
+    //       on all the platforms we support...
+
+    mGui->detailsFormLayout->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
+
     // Update the note label
 
     mGui->noteLabel->setText(mGui->noteLabel->text().arg(qApp->applicationName()));
