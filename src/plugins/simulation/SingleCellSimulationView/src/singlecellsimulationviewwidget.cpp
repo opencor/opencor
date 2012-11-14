@@ -350,6 +350,13 @@ void SingleCellSimulationViewWidget::outputStatus(const QString &pStatus)
 
     mOutput->moveCursor(QTextCursor::End);
 
+    // Make sure that the output ends as expected and if not then add BrLn to it
+
+    static const QString EndOfOutput = "<br /></p></body></html>";
+
+    if (mOutput->toHtml().right(EndOfOutput.size()).compare(EndOfOutput))
+        mOutput->insertHtml(OutputBrLn);
+
     // Output the status and make sure it's visible
 
     mOutput->insertHtml(pStatus);
