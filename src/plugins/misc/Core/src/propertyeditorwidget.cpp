@@ -79,7 +79,9 @@ void LineEditWidget::keyPressEvent(QKeyEvent *pEvent)
 DoubleEditWidget::DoubleEditWidget(QWidget *pParent) :
     LineEditWidget(pParent)
 {
-//---GRY--- USE A SPECIFIC MASK FOR DOUBLES...
+    // Set a validator which accepts any double
+
+    setValidator(new QRegExpValidator(QRegExp("^[+-]?[0-9]*\\.?[0-9]+([eE][+-]?[0-9]+)?$"), this));
 }
 
 //==============================================================================
