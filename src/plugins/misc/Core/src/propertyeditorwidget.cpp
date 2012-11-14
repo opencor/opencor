@@ -24,7 +24,7 @@ namespace Core {
 
 //==============================================================================
 
-DoubleEditWidget::DoubleEditWidget(QWidget *pParent) :
+LineEditWidget::LineEditWidget(QWidget *pParent) :
     QLineEdit(pParent)
 {
 #ifdef Q_WS_MAC
@@ -36,7 +36,7 @@ DoubleEditWidget::DoubleEditWidget(QWidget *pParent) :
 
 //==============================================================================
 
-void DoubleEditWidget::keyPressEvent(QKeyEvent *pEvent)
+void LineEditWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Check some key combinations
 
@@ -76,6 +76,14 @@ void DoubleEditWidget::keyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
+DoubleEditWidget::DoubleEditWidget(QWidget *pParent) :
+    LineEditWidget(pParent)
+{
+//---GRY--- USE A SPECIFIC MASK FOR DOUBLES...
+}
+
+//==============================================================================
+
 QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
                                              const QStyleOptionViewItem &pOption,
                                              const QModelIndex &pIndex) const
@@ -83,10 +91,20 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
     Q_UNUSED(pOption);
     Q_UNUSED(pIndex);
 
-    // Create and return an editor for our double
-    // Note: we don't allow the editing of a string, so...
+    // Create and return an editor for our item, based on its type
 
-    DoubleEditWidget *editor = new DoubleEditWidget(pParent);
+    QWidget *editor;
+
+    switch (static_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex)->type()) {
+    case PropertyItem::Double:
+        editor = new DoubleEditWidget(pParent);
+
+        break;
+    default:
+        // PropertyItem::String
+
+        editor = new LineEditWidget(pParent);
+    }
 
     // Propagate a few signals
 

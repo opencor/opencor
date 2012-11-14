@@ -27,12 +27,12 @@ namespace Core {
 
 //==============================================================================
 
-class DoubleEditWidget : public QLineEdit
+class LineEditWidget : public QLineEdit
 {
     Q_OBJECT
 
 public:
-    explicit DoubleEditWidget(QWidget *pParent = 0);
+    explicit LineEditWidget(QWidget *pParent = 0);
 
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
@@ -40,6 +40,16 @@ protected:
 Q_SIGNALS:
     void goToPreviousPropertyRequested();
     void goToNextPropertyRequested();
+};
+
+//==============================================================================
+
+class DoubleEditWidget : public LineEditWidget
+{
+    Q_OBJECT
+
+public:
+    explicit DoubleEditWidget(QWidget *pParent = 0);
 };
 
 //==============================================================================
@@ -55,9 +65,6 @@ public:
 
 protected:
     virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
-
-private:
-    QStandardItemModel *mModel;
 
 Q_SIGNALS:
     void openEditor(QWidget *pEditor) const;
