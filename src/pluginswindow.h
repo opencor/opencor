@@ -41,13 +41,8 @@ class PluginManager;
 class PluginItemDelegate : public QStyledItemDelegate
 {
 public:
-    explicit PluginItemDelegate(QStandardItemModel *pModel);
-
     virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
                        const QModelIndex &pIndex) const;
-
-private:
-    QStandardItemModel *mModel;
 };
 
 //==============================================================================

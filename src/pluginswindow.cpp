@@ -25,14 +25,6 @@ namespace OpenCOR {
 
 //==============================================================================
 
-PluginItemDelegate::PluginItemDelegate(QStandardItemModel *pModel) :
-    QStyledItemDelegate(),
-    mModel(pModel)
-{
-}
-
-//==============================================================================
-
 void PluginItemDelegate::paint(QPainter *pPainter,
                                const QStyleOptionViewItem &pOption,
                                const QModelIndex &pIndex) const
@@ -41,7 +33,7 @@ void PluginItemDelegate::paint(QPainter *pPainter,
     // (i.e. plugins which the user cannot decide whether to load) in which case
     // we paint them as if they were disabled
 
-    QStandardItem *pluginItem = mModel->itemFromIndex(pIndex);
+    QStandardItem *pluginItem = static_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex);
 
     QStyleOptionViewItemV4 option(pOption);
 
@@ -91,7 +83,7 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager, QWidget *pParent) :
     // cannot decide whether they should be loaded)
 
     mModel = new QStandardItemModel(mGui->pluginsTreeView);
-    mPluginItemDelegate = new PluginItemDelegate(mModel);
+    mPluginItemDelegate = new PluginItemDelegate();
 
     mGui->pluginsTreeView->setModel(mModel);
     mGui->pluginsTreeView->setItemDelegate(mPluginItemDelegate);

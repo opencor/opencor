@@ -39,8 +39,7 @@ CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(Cellm
 
     mTreeViewWidget = new Core::TreeViewWidget(pParent);
     mModel          = new QStandardItemModel(mTreeViewWidget);
-    mItemDelegate   = new CellmlAnnotationViewCellmlElementItemDelegate(mModel,
-                                                                        mTreeViewWidget);
+    mItemDelegate   = new CellmlAnnotationViewCellmlElementItemDelegate();
 
     mTreeViewWidget->setModel(mModel);
     mTreeViewWidget->setItemDelegate(mItemDelegate);
