@@ -51,7 +51,9 @@ Q_SIGNALS:
 
     void progress(const double &pProgress);
 
-    void status(const bool &pError, const QString &pMessage);
+    void elapsedTime(const int &pElapsedTime);
+
+    void error(const QString &pMessage);
 
 private Q_SLOTS:
     void finished();

@@ -30,11 +30,11 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-static const QString OutputTab  = "&nbsp;&nbsp;&nbsp;&nbsp;";
-static const QString OutputGood = " style=\"color: green;\"";
-static const QString OutputInfo = " style=\"color: navy;\"";
-static const QString OutputBad  = " style=\"color: maroon;\"";
-static const QString OutputBrLn = "<br/>\n";
+static const QString StatusTab  = "&nbsp;&nbsp;&nbsp;&nbsp;";
+static const QString StatusGood = " style=\"color: green;\"";
+static const QString StatusInfo = " style=\"color: navy;\"";
+static const QString StatusBad  = " style=\"color: maroon;\"";
+static const QString StatusBrLn = "<br/>\n";
 
 //==============================================================================
 
@@ -293,10 +293,10 @@ void SingleCellSimulationViewWidget::outputStatus(const QString &pStatus)
 
     // Make sure that the output ends as expected and if not then add BrLn to it
 
-    static const QString EndOfOutput = "<br /></p></body></html>";
+    static const QString EndOfStatus = "<br /></p></body></html>";
 
-    if (mOutput->toHtml().right(EndOfOutput.size()).compare(EndOfOutput))
-        mOutput->insertHtml(OutputBrLn);
+    if (mOutput->toHtml().right(EndOfStatus.size()).compare(EndOfStatus))
+        mOutput->insertHtml(StatusBrLn);
 
     // Output the status and make sure it's visible
 
@@ -310,7 +310,7 @@ void SingleCellSimulationViewWidget::outputStatusError(const QString &pStatusErr
 {
     // Output the status error
 
-    outputStatus(OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+pStatusError+".</span>"+OutputBrLn);
+    outputStatus(StatusTab+"<span"+StatusBad+"><strong>"+tr("Error:")+"</strong> "+pStatusError+".</span>"+StatusBrLn);
 }
 
 //==============================================================================
@@ -364,6 +364,12 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
         disconnect(mSimulation, SIGNAL(progress(const double &)),
                    this, SLOT(simulationWorkerProgress(const double &)));
+
+        disconnect(mSimulation, SIGNAL(elapsedTime(const int &)),
+                   this, SLOT(simulationElapsedTime(const int &)));
+
+        disconnect(mSimulation, SIGNAL(error(const QString &)),
+                   this, SLOT(outputStatusError(const QString &)));
     }
 
     // Retrieve our simulation settings for the current model, if any
@@ -387,8 +393,11 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         connect(mSimulation, SIGNAL(progress(const double &)),
                 this, SLOT(simulationWorkerProgress(const double &)));
 
-        connect(mSimulation, SIGNAL(status(const bool &, const QString &)),
-                this, SLOT(simulationStatus(const bool &, const QString &)));
+        connect(mSimulation, SIGNAL(elapsedTime(const int &)),
+                this, SLOT(simulationElapsedTime(const int &)));
+
+        connect(mSimulation, SIGNAL(error(const QString &)),
+                this, SLOT(outputStatusError(const QString &)));
 
         // Keep track of our simulation settings
 
@@ -410,8 +419,8 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
     if (!mOutput->document()->isEmpty())
         status += "<hr/>\n";
 
-    status += "<strong>"+pFileName+"</strong>"+OutputBrLn;
-    status += OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
+    status += "<strong>"+pFileName+"</strong>"+StatusBrLn;
+    status += StatusTab+"<strong>"+tr("Runtime:")+"</strong> ";
 
     if (mCellmlFileRuntime->isValid()) {
         QString additionalInformation = QString();
@@ -419,15 +428,15 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         if (mCellmlFileRuntime->needNlaSolver())
             additionalInformation = " + "+tr("Non-linear algebraic system(s)");
 
-        status += "<span"+OutputGood+">"+tr("valid")+"</span>.<br/>\n";
-        status += QString(OutputTab+"<strong>"+tr("Model type:")+"</strong> <span"+OutputInfo+">%1%2</span>."+OutputBrLn).arg((mCellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?tr("ODE"):tr("DAE"),
+        status += "<span"+StatusGood+">"+tr("valid")+"</span>.<br/>\n";
+        status += QString(StatusTab+"<strong>"+tr("Model type:")+"</strong> <span"+StatusInfo+">%1%2</span>."+StatusBrLn).arg((mCellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?tr("ODE"):tr("DAE"),
                                                                                                                               additionalInformation);
     } else {
-        status += "<span"+OutputBad+">"+tr("invalid")+"</span>."+OutputBrLn;
+        status += "<span"+StatusBad+">"+tr("invalid")+"</span>."+StatusBrLn;
 
         foreach (const CellMLSupport::CellmlFileIssue &issue,
                  mCellmlFileRuntime->issues())
-            status += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
+            status += QString(StatusTab+"<span"+StatusBad+"><strong>%1</strong> %2.</span>"+StatusBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
                                                                                                             issue.message());
     }
 
@@ -639,15 +648,11 @@ void SingleCellSimulationViewWidget::simulationWorkerProgress(const double &pPro
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::simulationStatus(const bool &pError,
-                                                      const QString &pStatus)
+void SingleCellSimulationViewWidget::simulationElapsedTime(const int &pElapsedTime)
 {
-    // Our simulation has generated a status, so output it
+    // Our simulation has given an elapsed times, so output it
 
-    if (pError)
-        outputStatusError(pStatus);
-    else
-        outputStatus(pStatus);
+    outputStatus(QString(StatusTab+"<strong>Simulation time:</strong> <span"+StatusInfo+">"+QString::number(0.001*pElapsedTime, 'g', 3)+" s</span>."+StatusBrLn));
 }
 
 //==============================================================================

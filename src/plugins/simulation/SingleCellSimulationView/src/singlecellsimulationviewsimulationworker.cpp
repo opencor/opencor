@@ -6,6 +6,10 @@
 
 //==============================================================================
 
+#include <QTime>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace SingleCellSimulationView {
 
@@ -48,7 +52,14 @@ void SingleCellSimulationViewSimulationWorker::run()
 
     emit running();
 
-    // Just some stuff which takes a bit of time
+    // Start our timer
+
+    QTime timer;
+    int totalElapsedTime = 0;
+
+    timer.start();
+
+    // Our main work loop
 
     bool increasingPoints = mEndingPoint > mStartingPoint;
     const double oneHundredOverPointRange = 100.0/(mEndingPoint-mStartingPoint);
@@ -68,11 +79,20 @@ void SingleCellSimulationViewSimulationWorker::run()
 
         mPauseMutex.lock();
             if(mPausing) {
+                // We have been asked to pause, so do just that after having
+                // stopped our timer
+
+                totalElapsedTime += timer.elapsed();
+
                 mPauseCondition.wait(&mPauseMutex);
 
                 // Let people know that we are running again
 
                 emit running();
+
+                // Restart our timer
+
+                timer.restart();
             }
         mPauseMutex.unlock();
 
@@ -88,6 +108,12 @@ void SingleCellSimulationViewSimulationWorker::run()
     // Pretend that we are doing something with the last point
 
     qDebug("[%06d] voi = %f...", voiCounter, currentPoint);
+
+    // Let people know about how long it took to complete the work
+
+    totalElapsedTime += timer.elapsed();
+
+    emit elapsedTime(totalElapsedTime);
 
     // We are done, so let people know about it, after making sure that mActive
     // has been reset (in case the worker actually completed its job)

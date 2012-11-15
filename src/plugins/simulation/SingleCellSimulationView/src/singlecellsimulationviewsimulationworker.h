@@ -52,6 +52,8 @@ Q_SIGNALS:
 
     void finished();
 
+    void elapsedTime(const int &pElapsedTime);
+
 private Q_SLOTS:
     void run();
 };

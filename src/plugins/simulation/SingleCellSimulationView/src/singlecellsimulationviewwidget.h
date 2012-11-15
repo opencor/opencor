@@ -92,7 +92,6 @@ private:
     QProgressBar *mProgressBar;
 
     void outputStatus(const QString &pStatus);
-    void outputStatusError(const QString &pStatusError);
 
     void setRunPauseMode(const bool &pRunEnabled);
     void setSimulationMode(const bool &pEnabled);
@@ -120,7 +119,9 @@ private Q_SLOTS:
 
     void simulationWorkerProgress(const double &pProgress);
 
-    void simulationStatus(const bool &pError, const QString &pStatus);
+    void simulationElapsedTime(const int &pElapsedTime);
+
+    void outputStatusError(const QString &pStatusError);
 };
 
 //==============================================================================

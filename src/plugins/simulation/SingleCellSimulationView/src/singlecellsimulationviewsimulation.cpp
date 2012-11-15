@@ -69,13 +69,13 @@ void SingleCellSimulationViewSimulation::run()
         bool simulationSettingsOk = false;
 
         if (mStartingPoint == mEndingPoint)
-            emit status(true, tr("the starting and ending points cannot have the same value"));
+            emit error(tr("the starting and ending points cannot have the same value"));
         else if (mPointInterval == 0)
-            emit status(true, tr("the point interval cannot be equal to zero"));
+            emit error(tr("the point interval cannot be equal to zero"));
         else if ((mStartingPoint < mEndingPoint) && (mPointInterval < 0))
-            emit status(true, tr("the ending point is greater than the starting point, so the point interval should be greater than zero"));
+            emit error(tr("the ending point is greater than the starting point, so the point interval should be greater than zero"));
         else if ((mStartingPoint > mEndingPoint) && (mPointInterval > 0))
-            emit status(true, tr("the ending point is smaller than the starting point, so the point interval should be smaller than zero"));
+            emit error(tr("the ending point is smaller than the starting point, so the point interval should be smaller than zero"));
         else
             simulationSettingsOk = true;
 
@@ -105,6 +105,9 @@ void SingleCellSimulationViewSimulation::run()
 
         connect(mWorker, SIGNAL(progress(const double &)),
                 this, SIGNAL(progress(const double &)));
+
+        connect(mWorker, SIGNAL(elapsedTime(const int &)),
+                this, SIGNAL(elapsedTime(const int &)));
 
         connect(mWorker, SIGNAL(finished()),
                 this, SLOT(finished()));
