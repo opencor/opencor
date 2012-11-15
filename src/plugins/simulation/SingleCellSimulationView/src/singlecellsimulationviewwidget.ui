@@ -47,8 +47,14 @@
    <property name="shortcut">
     <string>F9</string>
    </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
   </action>
   <action name="actionStop">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../res/SingleCellSimulationView.qrc">
      <normaloff>:/oxygen/actions/media-playback-stop.png</normaloff>:/oxygen/actions/media-playback-stop.png</iconset>
@@ -80,7 +86,7 @@
   </action>
   <action name="actionAdd">
    <property name="icon">
-    <iconset resource="../res/SingleCellSimulationView.qrc">
+    <iconset resource="../../../editing/CellMLAnnotationView/res/CellMLAnnotationView.qrc">
      <normaloff>:/oxygen/actions/list-add.png</normaloff>:/oxygen/actions/list-add.png</iconset>
    </property>
    <property name="text">
@@ -92,7 +98,7 @@
   </action>
   <action name="actionRemove">
    <property name="icon">
-    <iconset resource="../res/SingleCellSimulationView.qrc">
+    <iconset resource="../../../editing/CellMLAnnotationView/res/CellMLAnnotationView.qrc">
      <normaloff>:/oxygen/actions/list-remove.png</normaloff>:/oxygen/actions/list-remove.png</iconset>
    </property>
    <property name="text">
@@ -116,6 +122,7 @@
   </action>
  </widget>
  <resources>
+  <include location="../../../editing/CellMLAnnotationView/res/CellMLAnnotationView.qrc"/>
   <include location="../res/SingleCellSimulationView.qrc"/>
  </resources>
  <connections/>

@@ -12,7 +12,7 @@
 
 //==============================================================================
 
-#include <QWidget>
+//#include <QWidget>
 
 //==============================================================================
 
@@ -45,23 +45,9 @@ namespace SingleCellSimulationView {
 //==============================================================================
 
 class SingleCellSimulationViewContentsWidget;
+class SingleCellSimulationViewSimulation;
 class SingleCellSimulationViewSimulationInformationWidget;
-
-//==============================================================================
-
-class SingleCellSimulationViewWidgetUserSettings
-{
-public:
-    explicit SingleCellSimulationViewWidgetUserSettings();
-
-    void get(SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings);
-    void set(SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings);
-
-private:
-    double mStartingPoint;
-    double mEndingPoint;
-    double mPointInterval;
-};
+class SingleCellSimulationViewSimulationWorker;
 
 //==============================================================================
 
@@ -95,8 +81,8 @@ private:
 
     CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
 
-    SingleCellSimulationViewWidgetUserSettings *mUserSettings;
-    QMap<QString, SingleCellSimulationViewWidgetUserSettings *> mModelUserSettings;
+    SingleCellSimulationViewSimulation *mSimulation;
+    QMap<QString, SingleCellSimulationViewSimulation *> mSimulations;
 
     QSplitter *mSplitter;
 
@@ -109,6 +95,7 @@ private:
     void outputStatusError(const QString &pStatusError);
     void outputStatusSimulationError(const QString &pStatusSimulationError);
 
+    void setRunPauseMode(const bool &pRunEnabled);
     void setSimulationMode(const bool &pEnabled);
 
     void clearGraphPanels();
@@ -127,6 +114,10 @@ private Q_SLOTS:
     void on_actionRemove_triggered();
 
     void on_actionCsvExport_triggered();
+
+    void simulationWorkerRunning();
+    void simulationWorkerPausing();
+    void simulationWorkerStopped();
 };
 
 //==============================================================================

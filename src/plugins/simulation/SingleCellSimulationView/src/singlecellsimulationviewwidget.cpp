@@ -6,6 +6,7 @@
 #include "coreutils.h"
 #include "singlecellsimulationviewcontentswidget.h"
 #include "singlecellsimulationviewinformationwidget.h"
+#include "singlecellsimulationviewsimulation.h"
 #include "singlecellsimulationviewsimulationinformationwidget.h"
 #include "singlecellsimulationviewwidget.h"
 #include "toolbarwidget.h"
@@ -17,7 +18,6 @@
 //==============================================================================
 
 #include <QDesktopWidget>
-#include <QFileInfo>
 #include <QProgressBar>
 #include <QSettings>
 #include <QSplitter>
@@ -27,37 +27,6 @@
 
 namespace OpenCOR {
 namespace SingleCellSimulationView {
-
-//==============================================================================
-
-SingleCellSimulationViewWidgetUserSettings::SingleCellSimulationViewWidgetUserSettings() :
-    mStartingPoint(0.0),
-    mEndingPoint(1000.0),
-    mPointInterval(1.0)
-{
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewWidgetUserSettings::get(SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings)
-{
-    // Get our user settings from our simulation information widget
-
-    mStartingPoint = pSimulationSettings->startingPoint();
-    mEndingPoint   = pSimulationSettings->endingPoint();
-    mPointInterval = pSimulationSettings->pointInterval();
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewWidgetUserSettings::set(SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings)
-{
-    // Set our user settings to our simulation information widget
-
-    pSimulationSettings->setStartingPoint(mStartingPoint);
-    pSimulationSettings->setEndingPoint(mEndingPoint);
-    pSimulationSettings->setPointInterval(mPointInterval);
-}
 
 //==============================================================================
 
@@ -75,8 +44,8 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     mCanSaveSettings(false),
     mSolverInterfaces(SolverInterfaces()),
     mCellmlFileRuntime(0),
-    mUserSettings(0),
-    mModelUserSettings(QMap<QString, SingleCellSimulationViewWidgetUserSettings *>())
+    mSimulation(0),
+    mSimulations(QMap<QString, SingleCellSimulationViewSimulation *>())
 {
     // Set up the GUI
 
@@ -96,8 +65,6 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     toolBarWidget->addAction(mGui->actionRemove);
     toolBarWidget->addSeparator();
     toolBarWidget->addAction(mGui->actionCsvExport);
-
-    mGui->actionPause->setVisible(false);
 
     mGui->layout->addWidget(toolBarWidget);
     mGui->layout->addWidget(Core::newLineWidget(this));
@@ -172,8 +139,8 @@ SingleCellSimulationViewWidget::~SingleCellSimulationViewWidget()
 {
     // Delete our model settings
 
-    foreach (SingleCellSimulationViewWidgetUserSettings *modelSettings, mModelUserSettings)
-        delete modelSettings;
+    foreach (SingleCellSimulationViewSimulation *simulation, mSimulations)
+        delete simulation;
 
     // Delete the GUI
 
@@ -361,14 +328,27 @@ void SingleCellSimulationViewWidget::outputStatusSimulationError(const QString &
 
 //==============================================================================
 
+void SingleCellSimulationViewWidget::setRunPauseMode(const bool &pRunEnabled)
+{
+    // Show/hide our run and pause actions
+
+    mGui->actionRun->setVisible(pRunEnabled);
+    mGui->actionPause->setVisible(!pRunEnabled);
+}
+
+//==============================================================================
+
 void SingleCellSimulationViewWidget::setSimulationMode(const bool &pEnabled)
 {
-    // Hide our run action and show our pause action instead
+    // Set our run/pause mode
 
-    mGui->actionRun->setVisible(!pEnabled);
-    mGui->actionPause->setVisible(pEnabled);
+    setRunPauseMode(!pEnabled);
 
-    // Enable or disable the user settings
+    // Enable/disable our stop action
+
+    mGui->actionStop->setEnabled(pEnabled);
+
+    // Enable or disable the simulation widget
 
     mContentsWidget->informationWidget()->simulationWidget()->setEnabled(!pEnabled);
 }
@@ -377,29 +357,41 @@ void SingleCellSimulationViewWidget::setSimulationMode(const bool &pEnabled)
 
 void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 {
-    // Keep track of the user settings for the previous model, if any
+    // Keep track of the simulation settings for the previous model, if any
 
     SingleCellSimulationViewSimulationInformationWidget *simulationSettings = mContentsWidget->informationWidget()->simulationWidget();
 
-    if (mUserSettings)
-        mUserSettings->get(simulationSettings);
+    if (mSimulation)
+        mSimulation->fromGui(simulationSettings);
 
-    // Retrieve our settings related to the current model, if any
+    // Retrieve our simulation settings for the current model, if any
 
-    mUserSettings = mModelUserSettings.value(pFileName);
+    mSimulation = mSimulations.value(pFileName);
 
-    if (!mUserSettings) {
-        // No user settings currently exist for the model, so create some,
-        // initialise them and then keep track of them
+    if (!mSimulation) {
+        // No simulation settings currently exist for the model, so create some
 
-        mUserSettings = new SingleCellSimulationViewWidgetUserSettings();
+        mSimulation = new SingleCellSimulationViewSimulation();
 
-        mModelUserSettings.insert(pFileName, mUserSettings);
+        // Create some connections to keep track of the state of our simulation
+        // worker
+
+        connect(mSimulation, SIGNAL(running()),
+                this, SLOT(simulationWorkerRunning()));
+        connect(mSimulation, SIGNAL(pausing()),
+                this, SLOT(simulationWorkerPausing()));
+        connect(mSimulation, SIGNAL(stopped()),
+                this, SLOT(simulationWorkerStopped()));
+
+        // Keep track of our simulation settings
+
+        mSimulations.insert(pFileName, mSimulation);
     }
 
-    // (Re-)initialise our GUI with the user settings for the model
+    // (Re-)initialise our GUI with our simulation settings for the current
+    // model
 
-    mUserSettings->set(simulationSettings);
+    mSimulation->toGui(simulationSettings);
 
     // Get a runtime for the CellML file
 
@@ -435,13 +427,12 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
     outputStatus(status);
 
-    // Enable or disable the run and stop actions depending on whether the
-    // runtime is valid
+    // Enable or disable the run action depending on whether the runtime is
+    // valid
 
     CellMLSupport::CellmlFileVariable *variableOfIntegration = mCellmlFileRuntime->isValid()?mCellmlFileRuntime->variableOfIntegration():0;
 
     mGui->actionRun->setEnabled(variableOfIntegration);
-    mGui->actionStop->setEnabled(variableOfIntegration);
 
     // By default, we assume that the runtime isn't valid or that there is no
     // variable of integration, meaning that that we can't show the unit of the
@@ -530,27 +521,27 @@ void SingleCellSimulationViewWidget::paintEvent(QPaintEvent *pEvent)
 
 void SingleCellSimulationViewWidget::on_actionRun_triggered()
 {
-    // Go into simulation mode
+    // Start the simulation
 
-    setSimulationMode(true);
-
-    // Leave the simulation mode
-
-    setSimulationMode(false);
+    mSimulation->run();
 }
 
 //==============================================================================
 
 void SingleCellSimulationViewWidget::on_actionPause_triggered()
 {
-//---GRY--- TO BE DONE...
+    // Pause the simulation
+
+    mSimulation->pause();
 }
 
 //==============================================================================
 
 void SingleCellSimulationViewWidget::on_actionStop_triggered()
 {
-//---GRY--- TO BE DONE...
+    // Stop the simulation
+
+    mSimulation->stop();
 }
 
 //==============================================================================
@@ -583,6 +574,33 @@ void SingleCellSimulationViewWidget::on_actionRemove_triggered()
 void SingleCellSimulationViewWidget::on_actionCsvExport_triggered()
 {
 //---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewWidget::simulationWorkerRunning()
+{
+    // Our simulation worker is running, so reflect it at the GUI level
+
+    setSimulationMode(true);
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewWidget::simulationWorkerPausing()
+{
+    // Our simulation worker is pausing, so reflect it at the GUI level
+
+    setRunPauseMode(true);
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewWidget::simulationWorkerStopped()
+{
+    // Our simulation worker has stopped, so reflect it at the GUI level
+
+    setSimulationMode(false);
 }
 
 //==============================================================================

@@ -23,6 +23,7 @@ ADD_PLUGIN(SingleCellSimulationView
         src/singlecellsimulationviewgraphpanelswidget.cpp
         src/singlecellsimulationviewinformationwidget.cpp
         src/singlecellsimulationviewplugin.cpp
+        src/singlecellsimulationviewsimulation.cpp
         src/singlecellsimulationviewsimulationinformationwidget.cpp
         src/singlecellsimulationviewsimulationworker.cpp
         src/singlecellsimulationviewwidget.cpp
@@ -35,6 +36,7 @@ ADD_PLUGIN(SingleCellSimulationView
         src/singlecellsimulationviewgraphpanelswidget.h
         src/singlecellsimulationviewinformationwidget.h
         src/singlecellsimulationviewplugin.h
+        src/singlecellsimulationviewsimulation.h
         src/singlecellsimulationviewsimulationinformationwidget.h
         src/singlecellsimulationviewsimulationworker.h
         src/singlecellsimulationviewwidget.h

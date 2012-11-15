@@ -1,15 +1,13 @@
 //==============================================================================
-// Single cell simulation view simulation worker
+// Single cell simulation view simulation
 //==============================================================================
 
-#ifndef SINGLECELLSIMULATIONVIEWSIMULATIONWORKER_H
-#define SINGLECELLSIMULATIONVIEWSIMULATIONWORKER_H
+#ifndef SINGLECELLSIMULATIONVIEW_H
+#define SINGLECELLSIMULATIONVIEW_H
 
 //==============================================================================
 
-#include <QMutex>
 #include <QObject>
-#include <QWaitCondition>
 
 //==============================================================================
 
@@ -18,34 +16,41 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-class SingleCellSimulationViewSimulationWorker : public QObject
+class SingleCellSimulationViewSimulationInformationWidget;
+class SingleCellSimulationViewSimulationWorker;
+
+//==============================================================================
+
+class SingleCellSimulationViewSimulation : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit SingleCellSimulationViewSimulationWorker();
+    explicit SingleCellSimulationViewSimulation();
+    ~SingleCellSimulationViewSimulation();
 
-    bool isPausing() const;
+    void fromGui(SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings);
+    void toGui(SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings);
 
+    void run();
     void pause();
-    void resume();
     void stop();
 
 private:
-    bool mActive;
-    bool mPausing;
+    QThread *mWorkerThread;
+    SingleCellSimulationViewSimulationWorker *mWorker;
 
-    QMutex mPauseMutex;
-    QWaitCondition mPauseCondition;
+    double mStartingPoint;
+    double mEndingPoint;
+    double mPointInterval;
 
 Q_SIGNALS:
     void running();
     void pausing();
-
-    void finished();
+    void stopped();
 
 private Q_SLOTS:
-    void run();
+    void finished();
 };
 
 //==============================================================================
