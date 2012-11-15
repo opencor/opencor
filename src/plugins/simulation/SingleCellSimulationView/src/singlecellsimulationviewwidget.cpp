@@ -359,14 +359,11 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
                    this, SLOT(simulationWorkerRunning()));
         disconnect(mSimulation, SIGNAL(pausing()),
                    this, SLOT(simulationWorkerPausing()));
-        disconnect(mSimulation, SIGNAL(stopped()),
-                   this, SLOT(simulationWorkerStopped()));
+        disconnect(mSimulation, SIGNAL(stopped(const int &)),
+                   this, SLOT(simulationWorkerStopped(const int &)));
 
         disconnect(mSimulation, SIGNAL(progress(const double &)),
                    this, SLOT(simulationWorkerProgress(const double &)));
-
-        disconnect(mSimulation, SIGNAL(elapsedTime(const int &)),
-                   this, SLOT(simulationElapsedTime(const int &)));
 
         disconnect(mSimulation, SIGNAL(error(const QString &)),
                    this, SLOT(outputStatusError(const QString &)));
@@ -387,14 +384,11 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
                 this, SLOT(simulationWorkerRunning()));
         connect(mSimulation, SIGNAL(pausing()),
                 this, SLOT(simulationWorkerPausing()));
-        connect(mSimulation, SIGNAL(stopped()),
-                this, SLOT(simulationWorkerStopped()));
+        connect(mSimulation, SIGNAL(stopped(const int &)),
+                this, SLOT(simulationWorkerStopped(const int &)));
 
         connect(mSimulation, SIGNAL(progress(const double &)),
                 this, SLOT(simulationWorkerProgress(const double &)));
-
-        connect(mSimulation, SIGNAL(elapsedTime(const int &)),
-                this, SLOT(simulationElapsedTime(const int &)));
 
         connect(mSimulation, SIGNAL(error(const QString &)),
                 this, SLOT(outputStatusError(const QString &)));
@@ -614,7 +608,7 @@ void SingleCellSimulationViewWidget::on_actionCsvExport_triggered()
 
 void SingleCellSimulationViewWidget::simulationWorkerRunning()
 {
-    // Our simulation worker is running, so reflect it at the GUI level
+    // Our simulation worker is running, so update our simulation mode
 
     setSimulationMode(true);
 }
@@ -623,16 +617,19 @@ void SingleCellSimulationViewWidget::simulationWorkerRunning()
 
 void SingleCellSimulationViewWidget::simulationWorkerPausing()
 {
-    // Our simulation worker is pausing, so reflect it at the GUI level
+    // Our simulation worker is pausing, so update our run/pause mode
 
     setRunPauseMode(true);
 }
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::simulationWorkerStopped()
+void SingleCellSimulationViewWidget::simulationWorkerStopped(const int &pElapsedTime)
 {
-    // Our simulation worker has stopped, so reflect it at the GUI level
+    // Our simulation worker has stopped, so output the elapsed time and update
+    // our simulation mode
+
+    outputStatus(QString(StatusTab+"<strong>Simulation time:</strong> <span"+StatusInfo+">"+QString::number(0.001*pElapsedTime, 'g', 3)+" s</span>."+StatusBrLn));
 
     setSimulationMode(false);
 }
@@ -644,15 +641,6 @@ void SingleCellSimulationViewWidget::simulationWorkerProgress(const double &pPro
     // Our simulation has progressed, so update our progress bar
 
     mProgressBar->setValue(pProgress);
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewWidget::simulationElapsedTime(const int &pElapsedTime)
-{
-    // Our simulation has given an elapsed times, so output it
-
-    outputStatus(QString(StatusTab+"<strong>Simulation time:</strong> <span"+StatusInfo+">"+QString::number(0.001*pElapsedTime, 'g', 3)+" s</span>."+StatusBrLn));
 }
 
 //==============================================================================

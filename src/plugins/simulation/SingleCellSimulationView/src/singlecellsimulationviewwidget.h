@@ -115,11 +115,9 @@ private Q_SLOTS:
 
     void simulationWorkerRunning();
     void simulationWorkerPausing();
-    void simulationWorkerStopped();
+    void simulationWorkerStopped(const int &pElapsedTime);
 
     void simulationWorkerProgress(const double &pProgress);
-
-    void simulationElapsedTime(const int &pElapsedTime);
 
     void outputStatusError(const QString &pStatusError);
 };

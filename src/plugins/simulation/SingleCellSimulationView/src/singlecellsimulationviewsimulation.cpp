@@ -109,12 +109,12 @@ void SingleCellSimulationViewSimulation::run()
         connect(mWorker, SIGNAL(elapsedTime(const int &)),
                 this, SIGNAL(elapsedTime(const int &)));
 
-        connect(mWorker, SIGNAL(finished()),
-                this, SLOT(finished()));
+        connect(mWorker, SIGNAL(finished(const int &)),
+                this, SLOT(finished(const int &)));
 
-        connect(mWorker, SIGNAL(finished()),
+        connect(mWorker, SIGNAL(finished(const int &)),
                 mWorkerThread, SLOT(quit()));
-        connect(mWorker, SIGNAL(finished()),
+        connect(mWorker, SIGNAL(finished(const int &)),
                 mWorker, SLOT(deleteLater()));
 
         connect(mWorkerThread, SIGNAL(finished()),
@@ -164,7 +164,7 @@ void SingleCellSimulationViewSimulation::stop()
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulation::finished()
+void SingleCellSimulationViewSimulation::finished(const int &pElapsedTime)
 {
     // Our worker is done (and it will get deleted and everything), so...
 
@@ -173,7 +173,7 @@ void SingleCellSimulationViewSimulation::finished()
 
     // Let people know that we have stopped
 
-    emit stopped();
+    emit stopped(pElapsedTime);
 }
 
 //==============================================================================

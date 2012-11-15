@@ -47,7 +47,7 @@ private:
 Q_SIGNALS:
     void running();
     void pausing();
-    void stopped();
+    void stopped(const int &pElapsedTime);
 
     void progress(const double &pProgress);
 
@@ -56,7 +56,7 @@ Q_SIGNALS:
     void error(const QString &pMessage);
 
 private Q_SLOTS:
-    void finished();
+    void finished(const int &pElapsedTime);
 };
 
 //==============================================================================

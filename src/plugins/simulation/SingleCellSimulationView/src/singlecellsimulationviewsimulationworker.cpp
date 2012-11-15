@@ -44,6 +44,13 @@ void SingleCellSimulationViewSimulationWorker::run()
     if (mActive)
         return;
 
+    // Start our timer
+
+    QTime timer;
+    int totalElapsedTime = 0;
+
+    timer.start();
+
     // We are about to run, so...
 
     mActive = true;
@@ -51,13 +58,6 @@ void SingleCellSimulationViewSimulationWorker::run()
     // Let people know that we are running
 
     emit running();
-
-    // Start our timer
-
-    QTime timer;
-    int totalElapsedTime = 0;
-
-    timer.start();
 
     // Our main work loop
 
@@ -113,19 +113,21 @@ void SingleCellSimulationViewSimulationWorker::run()
 
     emit progress(100.0);
 
-    // Let people know about how long it took to complete the work
+    // Retrieve the total elapsed time
 
     totalElapsedTime += timer.elapsed();
 
-    emit elapsedTime(totalElapsedTime);
-
-    // We are done, so let people know about it, after making sure that mActive
-    // has been reset (in case the worker actually completed its job)
+    // We are done, so...
 
     mActive = false;
 
+    // Reset our progress
+
     emit progress(0.0);
-    emit finished();
+
+    // Let people know that we are done and give them the total elapsed time too
+
+    emit finished(totalElapsedTime);
 }
 
 //==============================================================================
