@@ -30,10 +30,9 @@ SingleCellSimulationViewSimulation::SingleCellSimulationViewSimulation() :
 
 SingleCellSimulationViewSimulation::~SingleCellSimulationViewSimulation()
 {
-    // Shutdown our worker by stopping it
+    // Stop our worker (just in case...)
 
-    if (mWorkerThread && mWorker)
-        stop();
+    stop();
 }
 
 //==============================================================================
@@ -116,6 +115,11 @@ void SingleCellSimulationViewSimulation::run()
 
 void SingleCellSimulationViewSimulation::pause()
 {
+    // Check that our worker exists
+
+    if (!mWorkerThread && !mWorker)
+        return;
+
     // Ask our worker to pause
 
     mWorker->pause();
@@ -125,6 +129,11 @@ void SingleCellSimulationViewSimulation::pause()
 
 void SingleCellSimulationViewSimulation::stop()
 {
+    // Check that our worker exists
+
+    if (!mWorkerThread && !mWorker)
+        return;
+
     // Ask our worker to stop
 
     mWorker->stop();

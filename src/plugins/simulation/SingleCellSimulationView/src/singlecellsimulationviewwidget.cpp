@@ -137,7 +137,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
 
 SingleCellSimulationViewWidget::~SingleCellSimulationViewWidget()
 {
-    // Delete our model settings
+    // Delete our simulation settings
 
     foreach (SingleCellSimulationViewSimulation *simulation, mSimulations)
         delete simulation;
@@ -534,6 +534,11 @@ void SingleCellSimulationViewWidget::paintEvent(QPaintEvent *pEvent)
 
 void SingleCellSimulationViewWidget::on_actionRun_triggered()
 {
+    // Make sure that we have a simulation
+
+    if (!mSimulation)
+        return;
+
     // Start the simulation
 
     mSimulation->run();
@@ -543,6 +548,11 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
 
 void SingleCellSimulationViewWidget::on_actionPause_triggered()
 {
+    // Make sure that we have a simulation
+
+    if (!mSimulation)
+        return;
+
     // Pause the simulation
 
     mSimulation->pause();
@@ -552,6 +562,11 @@ void SingleCellSimulationViewWidget::on_actionPause_triggered()
 
 void SingleCellSimulationViewWidget::on_actionStop_triggered()
 {
+    // Make sure that we have a simulation
+
+    if (!mSimulation)
+        return;
+
     // Stop the simulation
 
     mSimulation->stop();
