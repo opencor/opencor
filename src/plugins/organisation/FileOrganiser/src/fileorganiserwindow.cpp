@@ -132,8 +132,10 @@ void FileOrganiserWindow::on_actionDelete_triggered()
 
 //==============================================================================
 
-void FileOrganiserWindow::showCustomContextMenu(const QPoint &) const
+void FileOrganiserWindow::showCustomContextMenu(const QPoint &pPosition) const
 {
+    Q_UNUSED(pPosition);
+
     // Create a custom context menu which items match the contents of our
     // tool bar widget
 
