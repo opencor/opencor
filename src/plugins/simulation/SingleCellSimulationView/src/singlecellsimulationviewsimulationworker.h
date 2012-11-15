@@ -42,6 +42,8 @@ Q_SIGNALS:
     void running();
     void pausing();
 
+    void progress(const double &pProgress);
+
     void finished();
 
 private Q_SLOTS:

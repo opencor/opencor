@@ -118,6 +118,8 @@ private Q_SLOTS:
     void simulationWorkerRunning();
     void simulationWorkerPausing();
     void simulationWorkerStopped();
+
+    void simulationWorkerProgress(const double &pProgress);
 };
 
 //==============================================================================

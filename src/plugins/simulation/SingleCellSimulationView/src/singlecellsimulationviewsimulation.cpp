@@ -84,6 +84,9 @@ void SingleCellSimulationViewSimulation::run()
         connect(mWorker, SIGNAL(pausing()),
                 this, SIGNAL(pausing()));
 
+        connect(mWorker, SIGNAL(progress(const double &)),
+                this, SIGNAL(progress(const double &)));
+
         connect(mWorker, SIGNAL(finished()),
                 this, SLOT(finished()));
 

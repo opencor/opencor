@@ -357,12 +357,20 @@ void SingleCellSimulationViewWidget::setSimulationMode(const bool &pEnabled)
 
 void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 {
-    // Keep track of the simulation settings for the previous model, if any
+    // Do a few things for the previous model, if needed
 
     SingleCellSimulationViewSimulationInformationWidget *simulationSettings = mContentsWidget->informationWidget()->simulationWidget();
 
-    if (mSimulation)
+    if (mSimulation) {
+        // Keep track of the simulation settings for the previous model
+
         mSimulation->fromGui(simulationSettings);
+
+        // Stop keeping track of the simulation's progress
+
+        disconnect(mSimulation, SIGNAL(progress(const double &)),
+                   this, SLOT(simulationWorkerProgress(const double &)));
+    }
 
     // Retrieve our simulation settings for the current model, if any
 
@@ -382,6 +390,11 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
                 this, SLOT(simulationWorkerPausing()));
         connect(mSimulation, SIGNAL(stopped()),
                 this, SLOT(simulationWorkerStopped()));
+
+        // Create a connection to keep track the simulation's progress
+
+        connect(mSimulation, SIGNAL(progress(const double &)),
+                this, SLOT(simulationWorkerProgress(const double &)));
 
         // Keep track of our simulation settings
 
@@ -601,6 +614,15 @@ void SingleCellSimulationViewWidget::simulationWorkerStopped()
     // Our simulation worker has stopped, so reflect it at the GUI level
 
     setSimulationMode(false);
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewWidget::simulationWorkerProgress(const double &pProgress)
+{
+    // Our simulation has progressed, so update our progress bar
+
+    mProgressBar->setValue(pProgress);
 }
 
 //==============================================================================

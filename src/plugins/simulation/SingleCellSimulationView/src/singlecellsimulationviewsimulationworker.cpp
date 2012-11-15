@@ -45,10 +45,14 @@ void SingleCellSimulationViewSimulationWorker::run()
 
     // Just some stuff which takes a bit of time
 
-    for (int i = 0; (i <= 100000) && mActive; ++i) {
+    for (int i = 0, iMax = 100000; (i <= iMax) && mActive; ++i) {
         // Output some debug information
 
         qDebug("[%06d] Running the simulation...", i);
+
+        // Let people know about our progress
+
+        emit progress(100.0*i/iMax);
 
         // Check whether we should be pausing
 
@@ -68,6 +72,7 @@ void SingleCellSimulationViewSimulationWorker::run()
 
     mActive = false;
 
+    emit progress(0.0);
     emit finished();
 }
 
