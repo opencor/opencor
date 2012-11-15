@@ -109,6 +109,10 @@ void SingleCellSimulationViewSimulationWorker::run()
 
     qDebug("[%06d] voi = %f...", voiCounter, currentPoint);
 
+    // Let people know about our final progress
+
+    emit progress(100.0);
+
     // Let people know about how long it took to complete the work
 
     totalElapsedTime += timer.elapsed();
