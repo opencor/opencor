@@ -338,6 +338,12 @@ void SingleCellSimulationViewWidget::setSimulationMode(const bool &pEnabled)
     // Enable or disable the simulation widget
 
     mContentsWidget->informationWidget()->simulationWidget()->setEnabled(!pEnabled);
+
+    // Give the focus to our focus proxy, in case we leave the simulation mode
+    // (so that the user can modify simulation settings, etc.)
+
+    if (!pEnabled)
+        focusProxy()->setFocus();
 }
 
 //==============================================================================
