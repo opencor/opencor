@@ -64,10 +64,30 @@ void SingleCellSimulationViewSimulation::run()
     // Initialize our worker, if necessary
 
     if (!mWorkerThread && !mWorker) {
+        // First, check that our simulation settings we were given are sound
+
+        bool simulationSettingsOk = false;
+
+        if (mStartingPoint == mEndingPoint)
+            emit status(true, tr("the starting and ending points cannot have the same value"));
+        else if (mPointInterval == 0)
+            emit status(true, tr("the point interval cannot be equal to zero"));
+        else if ((mStartingPoint < mEndingPoint) && (mPointInterval < 0))
+            emit status(true, tr("the ending point is greater than the starting point, so the point interval should be greater than zero"));
+        else if ((mStartingPoint > mEndingPoint) && (mPointInterval > 0))
+            emit status(true, tr("the ending point is smaller than the starting point, so the point interval should be smaller than zero"));
+        else
+            simulationSettingsOk = true;
+
+        if (!simulationSettingsOk)
+            // Something wrong with our simulation settings, so...
+
+            return;
+
         // Create our worker and the thread in which it will work
 
         mWorkerThread = new QThread();
-        mWorker       = new SingleCellSimulationViewSimulationWorker();
+        mWorker       = new SingleCellSimulationViewSimulationWorker(mStartingPoint, mEndingPoint, mPointInterval);
 
         // Move our worker to its thread
 

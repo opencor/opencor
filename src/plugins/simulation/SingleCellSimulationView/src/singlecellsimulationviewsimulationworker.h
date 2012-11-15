@@ -23,7 +23,9 @@ class SingleCellSimulationViewSimulationWorker : public QObject
     Q_OBJECT
 
 public:
-    explicit SingleCellSimulationViewSimulationWorker();
+    explicit SingleCellSimulationViewSimulationWorker(const double &pStartingPoint,
+                                                      const double &pEndingPoint,
+                                                      const double &pPointInterval);
 
     bool isPausing() const;
 
@@ -37,6 +39,10 @@ private:
 
     QMutex mPauseMutex;
     QWaitCondition mPauseCondition;
+
+    double mStartingPoint;
+    double mEndingPoint;
+    double mPointInterval;
 
 Q_SIGNALS:
     void running();

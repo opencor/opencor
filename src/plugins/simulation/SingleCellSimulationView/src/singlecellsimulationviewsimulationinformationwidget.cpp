@@ -31,17 +31,17 @@ SingleCellSimulationViewSimulationInformationWidget::SingleCellSimulationViewSim
 
     // Populate our data model
 
-    mModel->invisibleRootItem()->setChild(0, 0, newNonEditableString());
-    mModel->invisibleRootItem()->setChild(1, 0, newNonEditableString());
-    mModel->invisibleRootItem()->setChild(2, 0, newNonEditableString());
+    mModel->invisibleRootItem()->setChild(0, 0, newString(false));
+    mModel->invisibleRootItem()->setChild(1, 0, newString(false));
+    mModel->invisibleRootItem()->setChild(2, 0, newString(false));
 
-    mModel->invisibleRootItem()->setChild(0, 1, newEditableDouble(0 /*---GRY--- JUST FOR TESTING... */));
-    mModel->invisibleRootItem()->setChild(1, 1, newEditableDouble(1000 /*---GRY--- JUST FOR TESTING... */));
-    mModel->invisibleRootItem()->setChild(2, 1, newEditableDouble(1 /*---GRY--- JUST FOR TESTING... */));
+    mModel->invisibleRootItem()->setChild(0, 1, newDouble(true));
+    mModel->invisibleRootItem()->setChild(1, 1, newDouble(true));
+    mModel->invisibleRootItem()->setChild(2, 1, newDouble(true));
 
-    mModel->invisibleRootItem()->setChild(0, 2, newNonEditableString());
-    mModel->invisibleRootItem()->setChild(1, 2, newNonEditableString());
-    mModel->invisibleRootItem()->setChild(2, 2, newNonEditableString());
+    mModel->invisibleRootItem()->setChild(0, 2, newString(false));
+    mModel->invisibleRootItem()->setChild(1, 2, newString(false));
+    mModel->invisibleRootItem()->setChild(2, 2, newString(false));
 
     // Some further initialisations which are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)

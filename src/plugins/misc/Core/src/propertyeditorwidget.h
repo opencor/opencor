@@ -84,8 +84,7 @@ public:
         Double = QStandardItem::UserType+1
     };
 
-    explicit PropertyItem(const Type &pType, const QString &pValue = QString(),
-                          const bool &pEditable = true);
+    explicit PropertyItem(const Type &pType, const bool &pEditable = true);
 
     virtual int type() const;
 
@@ -107,8 +106,8 @@ public:
 
     virtual void setModel(QAbstractItemModel *pModel);
 
-    static PropertyItem * newNonEditableString(const QString &pValue = QString());
-    static PropertyItem * newEditableDouble(const double &pValue);
+    static PropertyItem * newString(const bool &pEditable = true);
+    static PropertyItem * newDouble(const bool &pEditable = true);
 
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);

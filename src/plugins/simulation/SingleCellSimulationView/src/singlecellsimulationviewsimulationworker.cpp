@@ -11,9 +11,14 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-SingleCellSimulationViewSimulationWorker::SingleCellSimulationViewSimulationWorker() :
+SingleCellSimulationViewSimulationWorker::SingleCellSimulationViewSimulationWorker(const double &pStartingPoint,
+                                                                                   const double &pEndingPoint,
+                                                                                   const double &pPointInterval) :
     mActive(false),
-    mPausing(false)
+    mPausing(false),
+    mStartingPoint(pStartingPoint),
+    mEndingPoint(pEndingPoint),
+    mPointInterval(pPointInterval)
 {
 }
 
@@ -45,14 +50,19 @@ void SingleCellSimulationViewSimulationWorker::run()
 
     // Just some stuff which takes a bit of time
 
-    for (int i = 0, iMax = 100000; (i <= iMax) && mActive; ++i) {
-        // Output some debug information
+    bool increasingPoints = mEndingPoint > mStartingPoint;
+    const double oneHundredOverPointRange = 100.0/(mEndingPoint-mStartingPoint);
+    int voiCounter = 0;
+    double currentPoint = mStartingPoint;
 
-        qDebug("[%06d] Running the simulation...", i);
+    while ((currentPoint != mEndingPoint) && mActive) {
+        // Pretend that we are doing something
+
+        qDebug("[%06d] voi = %f...", voiCounter, currentPoint);
 
         // Let people know about our progress
 
-        emit progress(100.0*i/iMax);
+        emit progress((currentPoint-mStartingPoint)*oneHundredOverPointRange);
 
         // Check whether we should be pausing
 
@@ -65,7 +75,19 @@ void SingleCellSimulationViewSimulationWorker::run()
                 emit running();
             }
         mPauseMutex.unlock();
+
+        // Go to the next point, if needed
+
+        ++voiCounter;
+
+        currentPoint = increasingPoints?
+                           qMin(mEndingPoint, mStartingPoint+voiCounter*mPointInterval):
+                           qMax(mEndingPoint, mStartingPoint+voiCounter*mPointInterval);
     }
+
+    // Pretend that we are doing something with the last point
+
+    qDebug("[%06d] voi = %f...", voiCounter, currentPoint);
 
     // We are done, so let people know about it, after making sure that mActive
     // has been reset (in case the worker actually completed its job)

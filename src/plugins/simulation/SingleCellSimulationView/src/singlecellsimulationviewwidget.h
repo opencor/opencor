@@ -93,7 +93,6 @@ private:
 
     void outputStatus(const QString &pStatus);
     void outputStatusError(const QString &pStatusError);
-    void outputStatusSimulationError(const QString &pStatusSimulationError);
 
     void setRunPauseMode(const bool &pRunEnabled);
     void setSimulationMode(const bool &pEnabled);
@@ -120,6 +119,8 @@ private Q_SLOTS:
     void simulationWorkerStopped();
 
     void simulationWorkerProgress(const double &pProgress);
+
+    void simulationStatus(const bool &pError, const QString &pStatus);
 };
 
 //==============================================================================

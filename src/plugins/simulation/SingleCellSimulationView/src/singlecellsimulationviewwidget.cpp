@@ -315,19 +315,6 @@ void SingleCellSimulationViewWidget::outputStatusError(const QString &pStatusErr
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::outputStatusSimulationError(const QString &pStatusSimulationError)
-{
-    // Output the status simulation error
-
-    outputStatusError(pStatusSimulationError);
-
-    // Leave the simulation mode
-
-    setSimulationMode(false);
-}
-
-//==============================================================================
-
 void SingleCellSimulationViewWidget::setRunPauseMode(const bool &pRunEnabled)
 {
     // Show/hide our run and pause actions
@@ -366,7 +353,14 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
         mSimulation->updateFromGui(simulationSettings);
 
-        // Stop keeping track of the simulation's progress
+        // Remove a few connections
+
+        disconnect(mSimulation, SIGNAL(running()),
+                   this, SLOT(simulationWorkerRunning()));
+        disconnect(mSimulation, SIGNAL(pausing()),
+                   this, SLOT(simulationWorkerPausing()));
+        disconnect(mSimulation, SIGNAL(stopped()),
+                   this, SLOT(simulationWorkerStopped()));
 
         disconnect(mSimulation, SIGNAL(progress(const double &)),
                    this, SLOT(simulationWorkerProgress(const double &)));
@@ -381,8 +375,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
         mSimulation = new SingleCellSimulationViewSimulation();
 
-        // Create some connections to keep track of the state of our simulation
-        // worker
+        // Create a few connections
 
         connect(mSimulation, SIGNAL(running()),
                 this, SLOT(simulationWorkerRunning()));
@@ -391,10 +384,11 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         connect(mSimulation, SIGNAL(stopped()),
                 this, SLOT(simulationWorkerStopped()));
 
-        // Create a connection to keep track the simulation's progress
-
         connect(mSimulation, SIGNAL(progress(const double &)),
                 this, SLOT(simulationWorkerProgress(const double &)));
+
+        connect(mSimulation, SIGNAL(status(const bool &, const QString &)),
+                this, SLOT(simulationStatus(const bool &, const QString &)));
 
         // Keep track of our simulation settings
 
@@ -538,6 +532,10 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
     if (!mSimulation)
         return;
 
+    // Make sure that our simulation settings are up-to-date
+
+    mSimulation->updateFromGui(mContentsWidget->informationWidget()->simulationWidget());
+
     // Start the simulation
 
     mSimulation->run();
@@ -637,6 +635,19 @@ void SingleCellSimulationViewWidget::simulationWorkerProgress(const double &pPro
     // Our simulation has progressed, so update our progress bar
 
     mProgressBar->setValue(pProgress);
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewWidget::simulationStatus(const bool &pError,
+                                                      const QString &pStatus)
+{
+    // Our simulation has generated a status, so output it
+
+    if (pError)
+        outputStatusError(pStatus);
+    else
+        outputStatus(pStatus);
 }
 
 //==============================================================================

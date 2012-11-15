@@ -138,9 +138,8 @@ bool PropertyItemDelegate::eventFilter(QObject *pObject, QEvent *pEvent)
 
 //==============================================================================
 
-PropertyItem::PropertyItem(const Type &pType, const QString &pValue,
-                           const bool &pEditable) :
-    QStandardItem(pValue),
+PropertyItem::PropertyItem(const Type &pType, const bool &pEditable) :
+    QStandardItem(),
     mType(pType)
 {
     // Check whether the item should be editable
@@ -251,20 +250,20 @@ void PropertyEditorWidget::setModel(QAbstractItemModel *pModel)
 
 //==============================================================================
 
-PropertyItem * PropertyEditorWidget::newNonEditableString(const QString &pValue)
+PropertyItem * PropertyEditorWidget::newString(const bool &pEditable)
 {
-    // Create and return a non-editable item
+    // Create and return a string item
 
-    return new PropertyItem(PropertyItem::String, pValue, false);
+    return new PropertyItem(PropertyItem::String, pEditable);
 }
 
 //==============================================================================
 
-PropertyItem * PropertyEditorWidget::newEditableDouble(const double &pValue)
+PropertyItem * PropertyEditorWidget::newDouble(const bool &pEditable)
 {
-    // Create and return an editable item
+    // Create and return a double item
 
-    return new PropertyItem(PropertyItem::Double, QString::number(pValue));
+    return new PropertyItem(PropertyItem::Double, pEditable);
 }
 
 //==============================================================================
