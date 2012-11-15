@@ -29,8 +29,8 @@ public:
     explicit SingleCellSimulationViewSimulation();
     ~SingleCellSimulationViewSimulation();
 
-    void fromGui(SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings);
-    void toGui(SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings);
+    void updateFromGui(SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings);
+    void updateGui(SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings);
 
     void run();
     void pause();

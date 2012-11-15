@@ -37,9 +37,9 @@ SingleCellSimulationViewSimulation::~SingleCellSimulationViewSimulation()
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulation::fromGui(SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings)
+void SingleCellSimulationViewSimulation::updateFromGui(SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings)
 {
-    // Load our settings from our simulation information widget
+    // Update our settings from our simulation information widget
 
     mStartingPoint = pSimulationSettings->startingPoint();
     mEndingPoint   = pSimulationSettings->endingPoint();
@@ -48,9 +48,9 @@ void SingleCellSimulationViewSimulation::fromGui(SingleCellSimulationViewSimulat
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulation::toGui(SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings)
+void SingleCellSimulationViewSimulation::updateGui(SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings)
 {
-    // Save our settings to our simulation information widget
+    // Update our simulation information widget using our settings
 
     pSimulationSettings->setStartingPoint(mStartingPoint);
     pSimulationSettings->setEndingPoint(mEndingPoint);

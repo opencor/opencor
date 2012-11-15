@@ -362,9 +362,9 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
     SingleCellSimulationViewSimulationInformationWidget *simulationSettings = mContentsWidget->informationWidget()->simulationWidget();
 
     if (mSimulation) {
-        // Keep track of the simulation settings for the previous model
+        // Update our simulation settings for the previous model from the GUI
 
-        mSimulation->fromGui(simulationSettings);
+        mSimulation->updateFromGui(simulationSettings);
 
         // Stop keeping track of the simulation's progress
 
@@ -401,10 +401,9 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         mSimulations.insert(pFileName, mSimulation);
     }
 
-    // (Re-)initialise our GUI with our simulation settings for the current
-    // model
+    // Update our GUI using our simulation settings for the current model
 
-    mSimulation->toGui(simulationSettings);
+    mSimulation->updateGui(simulationSettings);
 
     // Get a runtime for the CellML file
 
