@@ -135,10 +135,12 @@ void SingleCellSimulationViewSimulation::run()
 
         mWorkerThread->start();
     } else {
-        // Our worker has already been initialized, so it means that it is
-        // pausing, so just resume it
+        // Our worker (incl. its thread) has already been initialized, so just
+        // run it
+        // Note: it might have been paused in between in which case it will
+        //       automatically resume itself...
 
-        mWorker->resume();
+        mWorker->run();
     }
 }
 

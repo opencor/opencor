@@ -18,8 +18,7 @@ namespace SingleCellSimulationView {
 SingleCellSimulationViewSimulationWorker::SingleCellSimulationViewSimulationWorker(const double &pStartingPoint,
                                                                                    const double &pEndingPoint,
                                                                                    const double &pPointInterval) :
-    mActive(false),
-    mPausing(false),
+    mStatus(Unknown),
     mStartingPoint(pStartingPoint),
     mEndingPoint(pEndingPoint),
     mPointInterval(pPointInterval)
@@ -28,164 +27,140 @@ SingleCellSimulationViewSimulationWorker::SingleCellSimulationViewSimulationWork
 
 //==============================================================================
 
-bool SingleCellSimulationViewSimulationWorker::isPausing() const
-{
-    // Return whether we are pausing
-
-    return mPausing;
-}
-
-//==============================================================================
-
 void SingleCellSimulationViewSimulationWorker::run()
 {
-    // Make sure that we are not already active
+    // Check our status
 
-    if (mActive)
-        return;
+    if (mStatus == Unknown) {
+        // Our status is currently unknown which means that we have yet to be
+        // run
 
-    // Start our timer
+        mStatus = Running;
 
-    QTime timer;
-    int totalElapsedTime = 0;
+        // Let people know that we are running
 
-    timer.start();
+        emit running();
 
-    // We are about to run, so...
+        // Start our timer
 
-    mActive = true;
+        QTime timer;
+        int totalElapsedTime = 0;
 
-    // Let people know that we are running
+        timer.start();
 
-    emit running();
+        // Our main work loop
 
-    // Our main work loop
+        bool increasingPoints = mEndingPoint > mStartingPoint;
+        const double oneHundredOverPointRange = 100.0/(mEndingPoint-mStartingPoint);
+        int voiCounter = 0;
+        double currentPoint = mStartingPoint;
 
-    bool increasingPoints = mEndingPoint > mStartingPoint;
-    const double oneHundredOverPointRange = 100.0/(mEndingPoint-mStartingPoint);
-    int voiCounter = 0;
-    double currentPoint = mStartingPoint;
+        while ((currentPoint != mEndingPoint) && (mStatus != Unknown)) {
+            // Pretend that we are doing something
 
-    while ((currentPoint != mEndingPoint) && mActive) {
-        // Pretend that we are doing something
+            qDebug("[%06d] voi = %f...", voiCounter, currentPoint);
 
-        qDebug("[%06d] voi = %f...", voiCounter, currentPoint);
+            // Let people know about our progress
 
-        // Let people know about our progress
+            emit progress((currentPoint-mStartingPoint)*oneHundredOverPointRange);
 
-        emit progress((currentPoint-mStartingPoint)*oneHundredOverPointRange);
+            // Check whether we should be pausing
 
-        // Check whether we should be pausing
-
-        mPauseMutex.lock();
-            if(mPausing) {
-                // We have been asked to pause, so do just that after having
-                // stopped our timer
+            if(mStatus == Pausing) {
+                // We have been asked to pause, so do just that after stopping
+                // our timer
 
                 totalElapsedTime += timer.elapsed();
 
-                mPauseCondition.wait(&mPauseMutex);
+                mStatusMutex.lock();
+                    mStatusCondition.wait(&mStatusMutex);
+                mStatusMutex.unlock();
 
-                // Restart our timer
+                // We are running again
 
-                timer.restart();
+                mStatus = Running;
 
                 // Let people know that we are running again
 
                 emit running();
+
+                // Restart our timer
+
+                timer.restart();
             }
-        mPauseMutex.unlock();
 
-        // Go to the next point, if needed
+            // Go to the next point, if needed
 
-        ++voiCounter;
+            ++voiCounter;
 
-        currentPoint = increasingPoints?
-                           qMin(mEndingPoint, mStartingPoint+voiCounter*mPointInterval):
-                           qMax(mEndingPoint, mStartingPoint+voiCounter*mPointInterval);
+            currentPoint = increasingPoints?
+                               qMin(mEndingPoint, mStartingPoint+voiCounter*mPointInterval):
+                               qMax(mEndingPoint, mStartingPoint+voiCounter*mPointInterval);
+        }
+
+        // Pretend that we are doing something with the last point
+
+        qDebug("[%06d] voi = %f...", voiCounter, currentPoint);
+
+        // Let people know about our final progress
+
+        emit progress(100.0);
+
+        // Retrieve the total elapsed time
+
+        totalElapsedTime += timer.elapsed();
+
+        // We are done, so...
+
+        mStatus = Finished;
+
+        // Reset our progress
+
+        emit progress(0.0);
+
+        // Let people know that we are done and give them the total elapsed time too
+
+        emit finished(totalElapsedTime);
+    } else if (mStatus == Pausing) {
+        // We are currently pausing, so resume ourselves
+
+        mStatusCondition.wakeAll();
     }
-
-    // Pretend that we are doing something with the last point
-
-    qDebug("[%06d] voi = %f...", voiCounter, currentPoint);
-
-    // Let people know about our final progress
-
-    emit progress(100.0);
-
-    // Retrieve the total elapsed time
-
-    totalElapsedTime += timer.elapsed();
-
-    // We are done, so...
-
-    mActive = false;
-
-    // Reset our progress
-
-    emit progress(0.0);
-
-    // Let people know that we are done and give them the total elapsed time too
-
-    emit finished(totalElapsedTime);
 }
 
 //==============================================================================
 
 void SingleCellSimulationViewSimulationWorker::pause()
 {
-    // Check that we are active and not already pausing
+    // Pause ourselves, but only if we are currently running
 
-    if (!mActive || mPausing)
-        return;
+    if (mStatus == Running) {
+        // Pause ourselves
 
-    // Pause ourselves
+        mStatus = Pausing;
 
-    mPauseMutex.lock();
-        mPausing = true;
-    mPauseMutex.unlock();
+        // Let people know that we are pausing
 
-    // Let people know that we are pausing
-
-    emit pausing();
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewSimulationWorker::resume()
-{
-    // Check that we are active and pausing
-
-    if (!mActive || !mPausing)
-        return;
-
-    // Resume ourselves
-
-    mPauseMutex.lock();
-        mPausing = false;
-    mPauseMutex.unlock();
-
-    mPauseCondition.wakeAll();
+        emit pausing();
+    }
 }
 
 //==============================================================================
 
 void SingleCellSimulationViewSimulationWorker::stop()
 {
-    // Check that we are active
+    // Check that we are either running or pausing
 
-    if (!mActive)
-        return;
+    if ((mStatus == Running) || (mStatus == Pausing)) {
+        // Resume ourselves, if needed
 
-    // Resume ourselves, if needed
+        if (mStatus == Pausing)
+            mStatusCondition.wakeAll();
 
-    if (mPausing)
-        resume();
+        // Stop ourselves
 
-    // Leave it to our run() method to handle the stopping by setting mActive to
-    // false
-
-    mActive = false;
+        mStatus = Stopped;
+    }
 }
 
 //==============================================================================

@@ -27,18 +27,25 @@ public:
                                                       const double &pEndingPoint,
                                                       const double &pPointInterval);
 
-    bool isPausing() const;
-
     void pause();
-    void resume();
     void stop();
 
 private:
+    enum Status {
+        Unknown,
+        Running,
+        Pausing,
+        Stopped,
+        Finished
+    };
+
+    Status mStatus;
+
     bool mActive;
     bool mPausing;
 
-    QMutex mPauseMutex;
-    QWaitCondition mPauseCondition;
+    QMutex mStatusMutex;
+    QWaitCondition mStatusCondition;
 
     double mStartingPoint;
     double mEndingPoint;
@@ -52,7 +59,7 @@ Q_SIGNALS:
 
     void finished(const int &pElapsedTime);
 
-private Q_SLOTS:
+public Q_SLOTS:
     void run();
 };
 
