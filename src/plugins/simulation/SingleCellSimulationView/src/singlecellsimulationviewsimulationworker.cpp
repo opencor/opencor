@@ -86,13 +86,13 @@ void SingleCellSimulationViewSimulationWorker::run()
 
                 mPauseCondition.wait(&mPauseMutex);
 
-                // Let people know that we are running again
-
-                emit running();
-
                 // Restart our timer
 
                 timer.restart();
+
+                // Let people know that we are running again
+
+                emit running();
             }
         mPauseMutex.unlock();
 
