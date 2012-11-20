@@ -125,7 +125,7 @@ void SingleCellSimulationViewSimulation::run()
 
         mWorker->resume();
     else
-        // Our worker is not paused, meaning that ou worker thread needs to be
+        // Our worker is not paused, meaning that our worker thread needs to be
         // started
 
         mWorkerThread->start();
