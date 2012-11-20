@@ -165,7 +165,8 @@ void SingleCellSimulationViewSimulationWorker::resume()
         mPausing = false;
     mPauseMutex.unlock();
 
-    mPauseCondition.wakeAll();}
+    mPauseCondition.wakeAll();
+}
 
 //==============================================================================
 
