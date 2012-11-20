@@ -182,7 +182,7 @@ void SingleCellSimulationViewSimulationWorker::stop()
     if (mPausing)
         resume();
 
-    // Leave it to our run() method to handle the stop by setting mActive to
+    // Leave it to our run() method to handle the stopping by setting mActive to
     // false
 
     mActive = false;
