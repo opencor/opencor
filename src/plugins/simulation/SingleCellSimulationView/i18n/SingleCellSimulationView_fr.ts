@@ -45,6 +45,10 @@
         <source>the ending point is smaller than the starting point, so the point interval should be smaller than zero</source>
         <translation>le point d&apos;arrivée est plus petit que le point de départ, donc l&apos;interval de point devrait être plus petit que zéro</translation>
     </message>
+    <message>
+        <source>the simulation worker and/or its thread could not be initialised</source>
+        <translation>l&apos;agent de simulation et/ou son fil n&apos;a/ont pas pu être initialisé/s</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::SingleCellSimulationView::SingleCellSimulationViewSimulationInformationWidget</name>

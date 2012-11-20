@@ -89,6 +89,20 @@ void SingleCellSimulationViewSimulation::run()
         mWorkerThread = new QThread();
         mWorker       = new SingleCellSimulationViewSimulationWorker(mStartingPoint, mEndingPoint, mPointInterval);
 
+        // Check that the worker and its thread have been properly created
+
+        if (!mWorkerThread || !mWorker) {
+            delete mWorkerThread;
+            delete mWorker;
+
+            mWorkerThread = 0;
+            mWorker       = 0;
+
+            emit error(tr("the simulation worker and/or its thread could not be initialised"));
+
+            return;
+        }
+
         // Move our worker to its thread
 
         mWorker->moveToThread(mWorkerThread);
@@ -116,47 +130,36 @@ void SingleCellSimulationViewSimulation::run()
 
         connect(mWorkerThread, SIGNAL(finished()),
                 mWorkerThread, SLOT(deleteLater()));
-    }
 
-    // Start our worker thread or resume our worker, depending on the case
-
-    if (mWorker->isPausing())
-        // Our worker is pausing, so resume it
-
-        mWorker->resume();
-    else
-        // Our worker is not paused, meaning that our worker thread needs to be
-        // started
+        // Start our worker thread
 
         mWorkerThread->start();
+    } else {
+        // Our worker has already been initialized, so it means that it is
+        // pausing, so just resume it
+
+        mWorker->resume();
+    }
 }
 
 //==============================================================================
 
 void SingleCellSimulationViewSimulation::pause()
 {
-    // Check that our worker exists
+    // Ask our worker to pause, but only if it exists
 
-    if (!mWorkerThread && !mWorker)
-        return;
-
-    // Ask our worker to pause
-
-    mWorker->pause();
+    if (mWorkerThread && mWorker)
+        mWorker->pause();
 }
 
 //==============================================================================
 
 void SingleCellSimulationViewSimulation::stop()
 {
-    // Check that our worker exists
+    // Ask our worker to stop, but only if it exists
 
-    if (!mWorkerThread && !mWorker)
-        return;
-
-    // Ask our worker to stop
-
-    mWorker->stop();
+    if (mWorkerThread && mWorker)
+        mWorker->stop();
 }
 
 //==============================================================================
