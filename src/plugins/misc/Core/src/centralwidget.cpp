@@ -202,8 +202,6 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     // Some connections to handle our files tab bar
 
     connect(mFileTabs, SIGNAL(currentChanged(int)),
-            this, SLOT(fileSelected(const int &)));
-    connect(mFileTabs, SIGNAL(currentChanged(int)),
             this, SLOT(updateGui()));
     connect(mFileTabs, SIGNAL(tabMoved(int, int)),
             this, SLOT(fileMoved(const int &, const int &)));
@@ -863,15 +861,6 @@ bool CentralWidget::activateFile(const QString &pFileName)
     // We couldn't find the file, so...
 
     return false;
-}
-
-//==============================================================================
-
-void CentralWidget::fileSelected(const int &pIndex)
-{
-    // Let people know that a file has been selected
-
-    emit fileSelected((pIndex == -1)?QString():mFileNames[pIndex]);
 }
 
 //==============================================================================

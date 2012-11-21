@@ -179,7 +179,6 @@ Q_SIGNALS:
     void fileSaved(const QString &pFileName);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
     void fileClosed(const QString &pFileName);
-    void fileSelected(const QString &pFileName);
 
     void canSave(const bool &pEnabled);
     void canSaveAs(const bool &pEnabled);
@@ -206,7 +205,6 @@ private Q_SLOTS:
     bool closeFile(const int &pIndex = -1);
     void closeAllFiles(const bool &pForceClosing = false);
 
-    void fileSelected(const int &pIndex);
     void fileMoved(const int &pFromIndex, const int &pToIndex);
 };
 
