@@ -1101,7 +1101,6 @@ void CentralWidget::updateGui()
         // There is a current file, so retrieve its view
 
         QString fileName = mFileNames[fileTabsCrtIndex];
-
         QWidget *newView = mGuiInterface->viewWidget(fileName);
 
         if (!newView) {
