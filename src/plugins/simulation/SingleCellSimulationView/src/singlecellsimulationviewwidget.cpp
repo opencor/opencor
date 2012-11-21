@@ -362,14 +362,14 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         // Remove a few connections
 
         disconnect(mSimulation, SIGNAL(running()),
-                   this, SLOT(simulationWorkerRunning()));
+                   this, SLOT(simulationRunning()));
         disconnect(mSimulation, SIGNAL(pausing()),
-                   this, SLOT(simulationWorkerPausing()));
+                   this, SLOT(simulationPausing()));
         disconnect(mSimulation, SIGNAL(stopped(const int &)),
-                   this, SLOT(simulationWorkerStopped(const int &)));
+                   this, SLOT(simulationStopped(const int &)));
 
         disconnect(mSimulation, SIGNAL(progress(const double &)),
-                   this, SLOT(simulationWorkerProgress(const double &)));
+                   this, SLOT(simulationProgress(const double &)));
 
         disconnect(mSimulation, SIGNAL(error(const QString &)),
                    this, SLOT(outputStatusError(const QString &)));
@@ -387,14 +387,14 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         // Create a few connections
 
         connect(mSimulation, SIGNAL(running()),
-                this, SLOT(simulationWorkerRunning()));
+                this, SLOT(simulationRunning()));
         connect(mSimulation, SIGNAL(pausing()),
-                this, SLOT(simulationWorkerPausing()));
+                this, SLOT(simulationPausing()));
         connect(mSimulation, SIGNAL(stopped(const int &)),
-                this, SLOT(simulationWorkerStopped(const int &)));
+                this, SLOT(simulationStopped(const int &)));
 
         connect(mSimulation, SIGNAL(progress(const double &)),
-                this, SLOT(simulationWorkerProgress(const double &)));
+                this, SLOT(simulationProgress(const double &)));
 
         connect(mSimulation, SIGNAL(error(const QString &)),
                 this, SLOT(outputStatusError(const QString &)));
@@ -612,7 +612,7 @@ void SingleCellSimulationViewWidget::on_actionCsvExport_triggered()
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::simulationWorkerRunning()
+void SingleCellSimulationViewWidget::simulationRunning()
 {
     // Our simulation worker is running, so update our simulation mode
 
@@ -621,7 +621,7 @@ void SingleCellSimulationViewWidget::simulationWorkerRunning()
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::simulationWorkerPausing()
+void SingleCellSimulationViewWidget::simulationPausing()
 {
     // Our simulation worker is pausing, so update our run/pause mode
 
@@ -630,7 +630,7 @@ void SingleCellSimulationViewWidget::simulationWorkerPausing()
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::simulationWorkerStopped(const int &pElapsedTime)
+void SingleCellSimulationViewWidget::simulationStopped(const int &pElapsedTime)
 {
     // Our simulation worker has stopped, so output the elapsed time and update
     // our simulation mode
@@ -642,7 +642,7 @@ void SingleCellSimulationViewWidget::simulationWorkerStopped(const int &pElapsed
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::simulationWorkerProgress(const double &pProgress)
+void SingleCellSimulationViewWidget::simulationProgress(const double &pProgress)
 {
     // Our simulation has progressed, so update our progress bar
 

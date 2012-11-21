@@ -113,11 +113,11 @@ private Q_SLOTS:
 
     void on_actionCsvExport_triggered();
 
-    void simulationWorkerRunning();
-    void simulationWorkerPausing();
-    void simulationWorkerStopped(const int &pElapsedTime);
+    void simulationRunning();
+    void simulationPausing();
+    void simulationStopped(const int &pElapsedTime);
 
-    void simulationWorkerProgress(const double &pProgress);
+    void simulationProgress(const double &pProgress);
 
     void outputStatusError(const QString &pStatusError);
 };
