@@ -115,11 +115,16 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     mGui->layout->addWidget(mSplitter);
 
     // Create our (thin) simulation progress widget
+    // Note: we set the maximum value to 32,768 (rather than leaving it to the
+    //       default value of 100), so that we can get a smooth progress and not
+    //       a jerky one (should the progress bar be more than 100 pixels
+    //       wide)...
 
     mProgressBar = new QProgressBar(this);
 
     mProgressBar->setAlignment(Qt::AlignCenter);
     mProgressBar->setFixedHeight(3);
+    mProgressBar->setMaximum(32768);
     mProgressBar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     mProgressBar->setTextVisible(false);
 
@@ -315,21 +320,13 @@ void SingleCellSimulationViewWidget::outputError(const QString &pError)
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::setRunPauseMode(const bool &pRunEnabled)
+void SingleCellSimulationViewWidget::setSimulationMode(const bool &pEnabled,
+                                                       const bool &pRunVisible)
 {
     // Show/hide our run and pause actions
 
-    mGui->actionRun->setVisible(pRunEnabled);
-    mGui->actionPause->setVisible(!pRunEnabled);
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewWidget::setSimulationMode(const bool &pEnabled)
-{
-    // Set our run/pause mode
-
-    setRunPauseMode(!pEnabled);
+    mGui->actionRun->setVisible(pRunVisible);
+    mGui->actionPause->setVisible(!pRunVisible);
 
     // Enable/disable our stop action
 
@@ -384,25 +381,25 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
         mSimulation = new SingleCellSimulationViewSimulation(pFileName);
 
-        // Create a few connections
-
-        connect(mSimulation, SIGNAL(running()),
-                this, SLOT(simulationRunning()));
-        connect(mSimulation, SIGNAL(pausing()),
-                this, SLOT(simulationPausing()));
-        connect(mSimulation, SIGNAL(stopped(const int &)),
-                this, SLOT(simulationStopped(const int &)));
-
-        connect(mSimulation, SIGNAL(progress(const double &)),
-                this, SLOT(simulationProgress(const double &)));
-
-        connect(mSimulation, SIGNAL(error(const QString &)),
-                this, SLOT(outputError(const QString &)));
-
         // Keep track of our simulation settings
 
         mSimulations.insert(pFileName, mSimulation);
     }
+
+    // Create a few connections
+
+    connect(mSimulation, SIGNAL(running()),
+            this, SLOT(simulationRunning()));
+    connect(mSimulation, SIGNAL(pausing()),
+            this, SLOT(simulationPausing()));
+    connect(mSimulation, SIGNAL(stopped(const int &)),
+            this, SLOT(simulationStopped(const int &)));
+
+    connect(mSimulation, SIGNAL(progress(const double &)),
+            this, SLOT(simulationProgress(const double &)));
+
+    connect(mSimulation, SIGNAL(error(const QString &)),
+            this, SLOT(outputError(const QString &)));
 
     // Update our GUI using our simulation settings for the current model
 
@@ -440,12 +437,25 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
     output(information);
 
-    // Enable or disable the run action depending on whether the runtime is
-    // valid
+    // Retrieve our variable of integration, if any
 
     CellMLSupport::CellmlFileVariable *variableOfIntegration = cellmlFileRuntime->isValid()?cellmlFileRuntime->variableOfIntegration():0;
 
+    // Enable/disable our run action depending on whether we have a variable of
+    // integration
+
     mGui->actionRun->setEnabled(variableOfIntegration);
+
+    // Set our simulation mode
+
+    setSimulationMode(   (mSimulation->workerStatus() == SingleCellSimulationViewSimulationWorker::Running)
+                      || (mSimulation->workerStatus() == SingleCellSimulationViewSimulationWorker::Pausing),
+                         (mSimulation->workerStatus() == SingleCellSimulationViewSimulationWorker::Unknown)
+                      || (mSimulation->workerStatus() == SingleCellSimulationViewSimulationWorker::Pausing));
+
+    // Update our progress bar
+
+    simulationProgress(mSimulation->workerProgress());
 
     // By default, we assume that the runtime isn't valid or that there is no
     // variable of integration, meaning that that we can't show the unit of the
@@ -614,7 +624,7 @@ void SingleCellSimulationViewWidget::simulationRunning()
 {
     // Our simulation worker is running, so update our simulation mode
 
-    setSimulationMode(true);
+    setSimulationMode(true, false);
 }
 
 //==============================================================================
@@ -623,7 +633,7 @@ void SingleCellSimulationViewWidget::simulationPausing()
 {
     // Our simulation worker is pausing, so update our run/pause mode
 
-    setRunPauseMode(true);
+    setSimulationMode(true, true);
 }
 
 //==============================================================================
@@ -635,7 +645,7 @@ void SingleCellSimulationViewWidget::simulationStopped(const int &pElapsedTime)
 
     output(QString(OutputTab+"<strong>Simulation time:</strong> <span"+OutputInfo+">"+QString::number(0.001*pElapsedTime, 'g', 3)+" s</span>."+OutputBrLn));
 
-    setSimulationMode(false);
+    setSimulationMode(false, true);
 }
 
 //==============================================================================
@@ -644,7 +654,7 @@ void SingleCellSimulationViewWidget::simulationProgress(const double &pProgress)
 {
     // Our simulation has progressed, so update our progress bar
 
-    mProgressBar->setValue(pProgress);
+    mProgressBar->setValue(pProgress*mProgressBar->maximum());
 }
 
 //==============================================================================

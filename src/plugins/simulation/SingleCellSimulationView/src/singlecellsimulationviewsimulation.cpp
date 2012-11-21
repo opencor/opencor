@@ -5,7 +5,6 @@
 #include "cellmlfilemanager.h"
 #include "singlecellsimulationviewsimulation.h"
 #include "singlecellsimulationviewsimulationinformationwidget.h"
-#include "singlecellsimulationviewsimulationworker.h"
 
 //==============================================================================
 
@@ -70,9 +69,31 @@ CellMLSupport::CellmlFileRuntime * SingleCellSimulationViewSimulation::cellmlFil
 
 //==============================================================================
 
+SingleCellSimulationViewSimulationWorker::Status SingleCellSimulationViewSimulation::workerStatus() const
+{
+    // Return the status of our worker, if active
+
+    return (mWorkerThread && mWorker)?
+               mWorker->status():
+               SingleCellSimulationViewSimulationWorker::Unknown;
+}
+
+//==============================================================================
+
+double SingleCellSimulationViewSimulation::workerProgress() const
+{
+    // Return the progress of our worker, if active
+
+    return (mWorkerThread && mWorker)?
+               mWorker->progress():
+               0.0;
+}
+
+//==============================================================================
+
 void SingleCellSimulationViewSimulation::run()
 {
-    // Initialize our worker, if necessary
+    // Initialise our worker, if not active
 
     if (!mWorkerThread && !mWorker) {
         // First, check that our simulation settings we were given are sound
@@ -146,9 +167,8 @@ void SingleCellSimulationViewSimulation::run()
 
         mWorkerThread->start();
     } else {
-        // Our worker (incl. its thread) has already been initialized, so just
-        // run it
-        // Note: it might have been paused in between in which case it will
+        // Our worker is already active, so just run it
+        // Note: it might have been paused in between, in which case it will
         //       automatically resume itself...
 
         mWorker->run();
@@ -159,7 +179,7 @@ void SingleCellSimulationViewSimulation::run()
 
 void SingleCellSimulationViewSimulation::pause()
 {
-    // Ask our worker to pause, but only if it exists
+    // Ask our worker to pause, if active
 
     if (mWorkerThread && mWorker)
         mWorker->pause();
@@ -169,7 +189,7 @@ void SingleCellSimulationViewSimulation::pause()
 
 void SingleCellSimulationViewSimulation::stop()
 {
-    // Ask our worker to stop, but only if it exists
+    // Ask our worker to stop, if active
 
     if (mWorkerThread && mWorker)
         mWorker->stop();

@@ -7,6 +7,10 @@
 
 //==============================================================================
 
+#include "singlecellsimulationviewsimulationworker.h"
+
+//==============================================================================
+
 #include <QObject>
 
 //==============================================================================
@@ -26,7 +30,6 @@ namespace SingleCellSimulationView {
 //==============================================================================
 
 class SingleCellSimulationViewSimulationInformationWidget;
-class SingleCellSimulationViewSimulationWorker;
 
 //==============================================================================
 
@@ -42,6 +45,9 @@ public:
     void updateGui(SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings);
 
     CellMLSupport::CellmlFileRuntime * cellmlFileRuntime() const;
+
+    SingleCellSimulationViewSimulationWorker::Status workerStatus() const;
+    double workerProgress() const;
 
     void run();
     void pause();

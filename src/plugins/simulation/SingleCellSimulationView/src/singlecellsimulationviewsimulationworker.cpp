@@ -18,11 +18,47 @@ namespace SingleCellSimulationView {
 SingleCellSimulationViewSimulationWorker::SingleCellSimulationViewSimulationWorker(const double &pStartingPoint,
                                                                                    const double &pEndingPoint,
                                                                                    const double &pPointInterval) :
-    mStatus(Unknown),
+    mStatus(Idling),
     mStartingPoint(pStartingPoint),
     mEndingPoint(pEndingPoint),
     mPointInterval(pPointInterval)
 {
+    // Initialise our progress
+    // Note: we use setProgress() since it will let people know about our
+    //       progress...
+
+    setProgress(0.0);
+}
+
+//==============================================================================
+
+SingleCellSimulationViewSimulationWorker::Status SingleCellSimulationViewSimulationWorker::status() const
+{
+    // Return our status
+
+    return mStatus;
+}
+
+//==============================================================================
+
+double SingleCellSimulationViewSimulationWorker::progress() const
+{
+    // Return our progress
+
+    return mProgress;
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewSimulationWorker::setProgress(const double &pProgress)
+{
+    // Set our progress
+
+    mProgress = pProgress;
+
+    // Let people know about our progress
+
+    emit progress(pProgress);
 }
 
 //==============================================================================
@@ -31,9 +67,8 @@ void SingleCellSimulationViewSimulationWorker::run()
 {
     // Check our status
 
-    if (mStatus == Unknown) {
-        // Our status is currently unknown which means that we have yet to be
-        // run
+    if (mStatus == Idling) {
+        // We are currently idling which means that we can be run
 
         mStatus = Running;
 
@@ -51,18 +86,18 @@ void SingleCellSimulationViewSimulationWorker::run()
         // Our main work loop
 
         bool increasingPoints = mEndingPoint > mStartingPoint;
-        const double oneHundredOverPointRange = 100.0/(mEndingPoint-mStartingPoint);
+        const double oneOverPointRange = 1.0/(mEndingPoint-mStartingPoint);
         int voiCounter = 0;
         double currentPoint = mStartingPoint;
 
-        while ((currentPoint != mEndingPoint) && (mStatus != Unknown)) {
-            // Pretend that we are doing something
+        while ((currentPoint != mEndingPoint) && (mStatus != Stopped)) {
+            // Handle our current point
 
-            qDebug("[%06d] voi = %f...", voiCounter, currentPoint);
+//---GRY--- TO BE DONE...
 
             // Let people know about our progress
 
-            emit progress((currentPoint-mStartingPoint)*oneHundredOverPointRange);
+            setProgress((currentPoint-mStartingPoint)*oneOverPointRange);
 
             // Check whether we should be pausing
 
@@ -98,13 +133,13 @@ void SingleCellSimulationViewSimulationWorker::run()
                                qMax(mEndingPoint, mStartingPoint+voiCounter*mPointInterval);
         }
 
-        // Pretend that we are doing something with the last point
+        // Handle our last point
 
-        qDebug("[%06d] voi = %f...", voiCounter, currentPoint);
+//---GRY--- TO BE DONE...
 
         // Let people know about our final progress
 
-        emit progress(100.0);
+        setProgress(1.0);
 
         // Retrieve the total elapsed time
 
@@ -116,7 +151,7 @@ void SingleCellSimulationViewSimulationWorker::run()
 
         // Reset our progress
 
-        emit progress(0.0);
+        setProgress(0.0);
 
         // Let people know that we are done and give them the total elapsed time too
 

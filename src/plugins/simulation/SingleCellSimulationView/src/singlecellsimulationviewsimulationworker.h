@@ -23,22 +23,26 @@ class SingleCellSimulationViewSimulationWorker : public QObject
     Q_OBJECT
 
 public:
-    explicit SingleCellSimulationViewSimulationWorker(const double &pStartingPoint,
-                                                      const double &pEndingPoint,
-                                                      const double &pPointInterval);
-
-    void pause();
-    void stop();
-
-private:
     enum Status {
         Unknown,
+        Idling,
         Running,
         Pausing,
         Stopped,
         Finished
     };
 
+    explicit SingleCellSimulationViewSimulationWorker(const double &pStartingPoint,
+                                                      const double &pEndingPoint,
+                                                      const double &pPointInterval);
+
+    Status status() const;
+    double progress() const;
+
+    void pause();
+    void stop();
+
+private:
     Status mStatus;
 
     bool mActive;
@@ -50,6 +54,10 @@ private:
     double mStartingPoint;
     double mEndingPoint;
     double mPointInterval;
+
+    double mProgress;
+
+    void setProgress(const double &pProgress);
 
 Q_SIGNALS:
     void running();

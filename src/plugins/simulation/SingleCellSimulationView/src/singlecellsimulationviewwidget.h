@@ -82,8 +82,7 @@ private:
 
     void output(const QString &pMessage);
 
-    void setRunPauseMode(const bool &pRunEnabled);
-    void setSimulationMode(const bool &pEnabled);
+    void setSimulationMode(const bool &pEnabled, const bool &pRunVisible);
 
     void clearGraphPanels();
     void clearActiveGraphPanel();
