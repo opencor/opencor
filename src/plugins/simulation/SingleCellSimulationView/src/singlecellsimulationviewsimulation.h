@@ -12,6 +12,15 @@
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace CellMLSupport {
+    class CellmlFileRuntime;
+}   // namespace CellMLSuppoer
+
+//==============================================================================
+
 namespace SingleCellSimulationView {
 
 //==============================================================================
@@ -26,11 +35,13 @@ class SingleCellSimulationViewSimulation : public QObject
     Q_OBJECT
 
 public:
-    explicit SingleCellSimulationViewSimulation();
+    explicit SingleCellSimulationViewSimulation(const QString &pFileName);
     ~SingleCellSimulationViewSimulation();
 
     void updateFromGui(SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings);
     void updateGui(SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings);
+
+    CellMLSupport::CellmlFileRuntime * cellmlFileRuntime() const;
 
     void run();
     void pause();
@@ -39,6 +50,8 @@ public:
 private:
     QThread *mWorkerThread;
     SingleCellSimulationViewSimulationWorker *mWorker;
+
+    QString mFileName;
 
     double mStartingPoint;
     double mEndingPoint;

@@ -2,6 +2,7 @@
 // Single cell simulation view simulation
 //==============================================================================
 
+#include "cellmlfilemanager.h"
 #include "singlecellsimulationviewsimulation.h"
 #include "singlecellsimulationviewsimulationinformationwidget.h"
 #include "singlecellsimulationviewsimulationworker.h"
@@ -17,9 +18,10 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-SingleCellSimulationViewSimulation::SingleCellSimulationViewSimulation() :
+SingleCellSimulationViewSimulation::SingleCellSimulationViewSimulation(const QString &pFileName) :
     mWorkerThread(0),
     mWorker(0),
+    mFileName(pFileName),
     mStartingPoint(0.0),
     mEndingPoint(1000.0),
     mPointInterval(1.0)
@@ -55,6 +57,15 @@ void SingleCellSimulationViewSimulation::updateGui(SingleCellSimulationViewSimul
     pSimulationSettings->setStartingPoint(mStartingPoint);
     pSimulationSettings->setEndingPoint(mEndingPoint);
     pSimulationSettings->setPointInterval(mPointInterval);
+}
+
+//==============================================================================
+
+CellMLSupport::CellmlFileRuntime * SingleCellSimulationViewSimulation::cellmlFileRuntime() const
+{
+    // Retrieve and return our runtime
+
+    return CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName)->runtime();
 }
 
 //==============================================================================

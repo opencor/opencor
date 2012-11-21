@@ -2,7 +2,8 @@
 // Single cell simulation view widget
 //==============================================================================
 
-#include "cellmlfilemanager.h"
+#include "cellmlfileruntime.h"
+#include "cellmlfilevariable.h"
 #include "coreutils.h"
 #include "singlecellsimulationviewcontentswidget.h"
 #include "singlecellsimulationviewinformationwidget.h"
@@ -30,11 +31,11 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-static const QString StatusTab  = "&nbsp;&nbsp;&nbsp;&nbsp;";
-static const QString StatusGood = " style=\"color: green;\"";
-static const QString StatusInfo = " style=\"color: navy;\"";
-static const QString StatusBad  = " style=\"color: maroon;\"";
-static const QString StatusBrLn = "<br/>\n";
+static const QString OutputTab  = "&nbsp;&nbsp;&nbsp;&nbsp;";
+static const QString OutputGood = " style=\"color: green;\"";
+static const QString OutputInfo = " style=\"color: navy;\"";
+static const QString OutputBad  = " style=\"color: maroon;\"";
+static const QString OutputBrLn = "<br/>\n";
 
 //==============================================================================
 
@@ -43,7 +44,6 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     mGui(new Ui::SingleCellSimulationViewWidget),
     mCanSaveSettings(false),
     mSolverInterfaces(SolverInterfaces()),
-    mCellmlFileRuntime(0),
     mSimulation(0),
     mSimulations(QMap<QString, SingleCellSimulationViewSimulation *>())
 {
@@ -285,7 +285,7 @@ void SingleCellSimulationViewWidget::clearActiveGraphPanel()
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::outputStatus(const QString &pStatus)
+void SingleCellSimulationViewWidget::output(const QString &pMessage)
 {
     // Move to the end of the output (just in case...)
 
@@ -293,24 +293,24 @@ void SingleCellSimulationViewWidget::outputStatus(const QString &pStatus)
 
     // Make sure that the output ends as expected and if not then add BrLn to it
 
-    static const QString EndOfStatus = "<br /></p></body></html>";
+    static const QString EndOfOutput = "<br /></p></body></html>";
 
-    if (mOutput->toHtml().right(EndOfStatus.size()).compare(EndOfStatus))
-        mOutput->insertHtml(StatusBrLn);
+    if (mOutput->toHtml().right(EndOfOutput.size()).compare(EndOfOutput))
+        mOutput->insertHtml(OutputBrLn);
 
-    // Output the status and make sure it's visible
+    // Output the message and make sure that it's visible
 
-    mOutput->insertHtml(pStatus);
+    mOutput->insertHtml(pMessage);
     mOutput->moveCursor(QTextCursor::End);
 }
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::outputStatusError(const QString &pStatusError)
+void SingleCellSimulationViewWidget::outputError(const QString &pError)
 {
     // Output the status error
 
-    outputStatus(StatusTab+"<span"+StatusBad+"><strong>"+tr("Error:")+"</strong> "+pStatusError+".</span>"+StatusBrLn);
+    output(OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+pError+".</span>"+OutputBrLn);
 }
 
 //==============================================================================
@@ -372,7 +372,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
                    this, SLOT(simulationProgress(const double &)));
 
         disconnect(mSimulation, SIGNAL(error(const QString &)),
-                   this, SLOT(outputStatusError(const QString &)));
+                   this, SLOT(outputError(const QString &)));
     }
 
     // Retrieve our simulation settings for the current model, if any
@@ -382,7 +382,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
     if (!mSimulation) {
         // No simulation settings currently exist for the model, so create some
 
-        mSimulation = new SingleCellSimulationViewSimulation();
+        mSimulation = new SingleCellSimulationViewSimulation(pFileName);
 
         // Create a few connections
 
@@ -397,7 +397,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
                 this, SLOT(simulationProgress(const double &)));
 
         connect(mSimulation, SIGNAL(error(const QString &)),
-                this, SLOT(outputStatusError(const QString &)));
+                this, SLOT(outputError(const QString &)));
 
         // Keep track of our simulation settings
 
@@ -408,44 +408,42 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
     mSimulation->updateGui(simulationSettings);
 
-    // Get a runtime for the CellML file
+    // Output some information about our CellML file
 
-    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
+    CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = mSimulation->cellmlFileRuntime();
 
-    mCellmlFileRuntime = cellmlFile->runtime();
-
-    QString status = QString();
+    QString information = QString();
 
     if (!mOutput->document()->isEmpty())
-        status += "<hr/>\n";
+        information += "<hr/>\n";
 
-    status += "<strong>"+pFileName+"</strong>"+StatusBrLn;
-    status += StatusTab+"<strong>"+tr("Runtime:")+"</strong> ";
+    information += "<strong>"+pFileName+"</strong>"+OutputBrLn;
+    information += OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
 
-    if (mCellmlFileRuntime->isValid()) {
+    if (cellmlFileRuntime->isValid()) {
         QString additionalInformation = QString();
 
-        if (mCellmlFileRuntime->needNlaSolver())
+        if (cellmlFileRuntime->needNlaSolver())
             additionalInformation = " + "+tr("Non-linear algebraic system(s)");
 
-        status += "<span"+StatusGood+">"+tr("valid")+"</span>.<br/>\n";
-        status += QString(StatusTab+"<strong>"+tr("Model type:")+"</strong> <span"+StatusInfo+">%1%2</span>."+StatusBrLn).arg((mCellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?tr("ODE"):tr("DAE"),
-                                                                                                                              additionalInformation);
+        information += "<span"+OutputGood+">"+tr("valid")+"</span>.<br/>\n";
+        information += QString(OutputTab+"<strong>"+tr("Model type:")+"</strong> <span"+OutputInfo+">%1%2</span>."+OutputBrLn).arg((cellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?tr("ODE"):tr("DAE"),
+                                                                                                                                   additionalInformation);
     } else {
-        status += "<span"+StatusBad+">"+tr("invalid")+"</span>."+StatusBrLn;
+        information += "<span"+OutputBad+">"+tr("invalid")+"</span>."+OutputBrLn;
 
         foreach (const CellMLSupport::CellmlFileIssue &issue,
-                 mCellmlFileRuntime->issues())
-            status += QString(StatusTab+"<span"+StatusBad+"><strong>%1</strong> %2.</span>"+StatusBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
-                                                                                                            issue.message());
+                 cellmlFileRuntime->issues())
+            information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
+                                                                                                                 issue.message());
     }
 
-    outputStatus(status);
+    output(information);
 
     // Enable or disable the run action depending on whether the runtime is
     // valid
 
-    CellMLSupport::CellmlFileVariable *variableOfIntegration = mCellmlFileRuntime->isValid()?mCellmlFileRuntime->variableOfIntegration():0;
+    CellMLSupport::CellmlFileVariable *variableOfIntegration = cellmlFileRuntime->isValid()?cellmlFileRuntime->variableOfIntegration():0;
 
     mGui->actionRun->setEnabled(variableOfIntegration);
 
@@ -458,9 +456,9 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
     // Check if we have an invalid runtime and, if so, set the unit to an
     // unknown one and leave
 
-    if (!mCellmlFileRuntime->isValid())
-        // Note: no need to output a status error since one will have already
-        //       been generated while trying to get the runtime (see above)...
+    if (!cellmlFileRuntime->isValid())
+        // Note: no need to output an error since one will have already been
+        //       generated while trying to get the runtime (see above)...
 
         return;
 
@@ -469,11 +467,11 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
     if (variableOfIntegration)
         // We have a variable of integration, so we can retrieve its unit
 
-        simulationSettings->setUnit(mCellmlFileRuntime->variableOfIntegration()->unit());
+        simulationSettings->setUnit(cellmlFileRuntime->variableOfIntegration()->unit());
     else
         // We don't have a variable of integration, so...
 
-        outputStatusError(tr("the model must have at least one ODE or DAE"));
+        outputError(tr("the model must have at least one ODE or DAE"));
 }
 
 //==============================================================================
@@ -635,7 +633,7 @@ void SingleCellSimulationViewWidget::simulationStopped(const int &pElapsedTime)
     // Our simulation worker has stopped, so output the elapsed time and update
     // our simulation mode
 
-    outputStatus(QString(StatusTab+"<strong>Simulation time:</strong> <span"+StatusInfo+">"+QString::number(0.001*pElapsedTime, 'g', 3)+" s</span>."+StatusBrLn));
+    output(QString(OutputTab+"<strong>Simulation time:</strong> <span"+OutputInfo+">"+QString::number(0.001*pElapsedTime, 'g', 3)+" s</span>."+OutputBrLn));
 
     setSimulationMode(false);
 }

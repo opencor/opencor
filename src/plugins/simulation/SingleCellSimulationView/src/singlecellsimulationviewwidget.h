@@ -31,15 +31,6 @@ namespace Ui {
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
-namespace CellMLSupport {
-    class CellmlFileRuntime;
-}   // namespace CellMLSuppoer
-
-//==============================================================================
-
 namespace SingleCellSimulationView {
 
 //==============================================================================
@@ -79,8 +70,6 @@ private:
 
     SolverInterfaces mSolverInterfaces;
 
-    CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
-
     SingleCellSimulationViewSimulation *mSimulation;
     QMap<QString, SingleCellSimulationViewSimulation *> mSimulations;
 
@@ -91,7 +80,7 @@ private:
 
     QProgressBar *mProgressBar;
 
-    void outputStatus(const QString &pStatus);
+    void output(const QString &pMessage);
 
     void setRunPauseMode(const bool &pRunEnabled);
     void setSimulationMode(const bool &pEnabled);
@@ -119,7 +108,7 @@ private Q_SLOTS:
 
     void simulationProgress(const double &pProgress);
 
-    void outputStatusError(const QString &pStatusError);
+    void outputError(const QString &pError);
 };
 
 //==============================================================================
