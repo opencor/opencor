@@ -6,7 +6,6 @@
 
 //==============================================================================
 
-#include <QApplication>
 #include <QHBoxLayout>
 #include <QPaintEvent>
 
