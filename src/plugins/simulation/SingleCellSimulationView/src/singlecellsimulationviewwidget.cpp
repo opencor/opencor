@@ -490,7 +490,7 @@ void SingleCellSimulationViewWidget::setProgressBarStyleSheet()
 {
     // Customise our progress bar to be a very simple (and fast) one
 
-    QPalette progressBarPalette = qApp->palette();
+    QPalette progressBarPalette = palette();
     QColor progressBarBackground = progressBarPalette.color(QPalette::Window);
     QColor progressBarChunkBackground = progressBarPalette.color(QPalette::Highlight);
 

@@ -184,7 +184,7 @@ void SingleCellSimulationViewGraphPanelWidget::setMarkerColor()
 {
     // Set the marker's colour based on whether the graph panel is active
 
-    QPalette markerPalette = qApp->palette();
+    QPalette markerPalette = palette();
 
     markerPalette.setColor(QPalette::WindowText, mActive?
                                                     markerPalette.color(QPalette::Highlight):
