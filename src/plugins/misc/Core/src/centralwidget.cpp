@@ -7,6 +7,7 @@
 #include "filemanager.h"
 #include "plugin.h"
 #include "usermessagewidget.h"
+#include "viewwidget.h"
 
 //==============================================================================
 
@@ -1108,7 +1109,7 @@ void CentralWidget::updateGui()
             // (should the view be of the right type) to keep track of any
             // request for a change in its corresponding file tab icon
 
-            Widget *newViewWidget = qobject_cast<Widget *>(newView);
+            ViewWidget *newViewWidget = qobject_cast<ViewWidget *>(newView);
 
             if (newViewWidget)
                 connect(newViewWidget, SIGNAL(fileTabIcon(const QString &, const QIcon &)),
