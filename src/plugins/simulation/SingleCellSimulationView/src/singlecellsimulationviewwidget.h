@@ -69,6 +69,8 @@ private:
     SingleCellSimulationViewSimulation *mSimulation;
     QMap<QString, SingleCellSimulationViewSimulation *> mSimulations;
 
+    QList<SingleCellSimulationViewSimulation *> mStoppedSimulations;
+
     QSplitter *mSplitter;
 
     SingleCellSimulationViewContentsWidget *mContentsWidget;
@@ -102,6 +104,8 @@ private Q_SLOTS:
     void simulationRunning();
     void simulationPausing();
     void simulationStopped(const int &pElapsedTime);
+
+    void resetFileTabIcon();
 
     void simulationProgress(const double &pProgress);
 

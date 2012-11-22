@@ -18,11 +18,15 @@
 
 //==============================================================================
 
+#include <QBrush>
 #include <QDesktopWidget>
+#include <QImage>
+#include <QPainter>
 #include <QProgressBar>
 #include <QSettings>
 #include <QSplitter>
 #include <QTextEdit>
+#include <QTimer>
 
 //==============================================================================
 
@@ -46,6 +50,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     mSolverInterfaces(SolverInterfaces()),
     mSimulation(0),
     mSimulations(QMap<QString, SingleCellSimulationViewSimulation *>()),
+    mStoppedSimulations(QList<SingleCellSimulationViewSimulation *>()),
     mProgresses(QMap<QString, int>())
 {
     // Set up the GUI
@@ -635,13 +640,35 @@ void SingleCellSimulationViewWidget::simulationStopped(const int &pElapsedTime)
     }
 
     // Remove our tracking of our simulation progress and let people know that
-    // we should update the icon of our file tab
+    // we should reset our file tab icon
 
     if (simulation) {
         mProgresses.remove(simulation->fileName());
 
-        emit fileTabIcon(simulation->fileName(), QIcon());
+        // We want to leave the full simulation progress on for a few
+        // milliseconds, so delay a bit our resetting of file tab icon
+        // Note: we can't directly pass simulation to resetFileTabIcon(), so
+        //       instead we use mStoppedSimulations which is a list of
+        //       simulations in case several simulations were to stop at around
+        //       the same time...
+
+        mStoppedSimulations << simulation;
+
+        QTimer::singleShot(789, this, SLOT(resetFileTabIcon()));
     }
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewWidget::resetFileTabIcon()
+{
+    // Let people know that we want to reset our file tab icon
+
+    SingleCellSimulationViewSimulation *simulation = mStoppedSimulations.first();
+
+    mStoppedSimulations.removeFirst();
+
+    emit fileTabIcon(simulation->fileName(), QIcon());
 }
 
 //==============================================================================
@@ -667,8 +694,11 @@ void SingleCellSimulationViewWidget::simulationProgress(const double &pProgress)
     //       be able to tell for which simulation the progress is...
 
     if (simulation) {
+        static const int TabBarIconSize = style()->pixelMetric(QStyle::PM_TabBarIconSize, 0, this);
+
         int oldProgress = mProgresses.value(simulation->fileName(), -1);
-        int newProgress = 10*pProgress;
+        int newProgress = (TabBarIconSize-2)*pProgress;
+        // Note: TabBarIconSize-2 because we want a one-pixel wide border...
 
         if (newProgress != oldProgress) {
             // The progress has changed, so keep track of its new value and
@@ -676,7 +706,22 @@ void SingleCellSimulationViewWidget::simulationProgress(const double &pProgress)
 
             mProgresses.insert(simulation->fileName(), newProgress);
 
-            emit fileTabIcon(simulation->fileName(), QIcon(":/oxygen/actions/media-playback-start.png"));
+            // Create an image that shows the progress of our simulation
+
+            QImage tabBarIcon = QImage(TabBarIconSize, mProgressBar->height()+2,
+                                       QImage::Format_ARGB32_Premultiplied);
+            QPainter tabBarIconPainter(&tabBarIcon);
+
+            QPalette tabBarIconPalette = palette();
+
+            tabBarIconPainter.setBrush(QBrush(tabBarIconPalette.color(QPalette::Window)));
+            tabBarIconPainter.setPen(QPen(CommonWidget::borderColor()));
+
+            tabBarIconPainter.drawRect(0, 0, tabBarIcon.width()-1, tabBarIcon.height()-1);
+            tabBarIconPainter.fillRect(QRect(1, 1, newProgress, tabBarIcon.height()-2),
+                                       QBrush(tabBarIconPalette.color(QPalette::Highlight)));
+
+            emit fileTabIcon(simulation->fileName(), QIcon(QPixmap::fromImage(tabBarIcon)));
         }
     }
 }
