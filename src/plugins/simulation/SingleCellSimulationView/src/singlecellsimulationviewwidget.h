@@ -105,6 +105,7 @@ private Q_SLOTS:
     void simulationPausing();
     void simulationStopped(const int &pElapsedTime);
 
+    void resetProgressBar();
     void resetFileTabIcon();
 
     void simulationProgress(const double &pProgress);

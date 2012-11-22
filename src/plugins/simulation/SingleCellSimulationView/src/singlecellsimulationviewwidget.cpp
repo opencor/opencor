@@ -625,16 +625,18 @@ void SingleCellSimulationViewWidget::simulationPausing()
 
 void SingleCellSimulationViewWidget::simulationStopped(const int &pElapsedTime)
 {
+    static const int ResetDelay = 789;
+
     // Our simulation worker has stopped, so output the elapsed time, reset our
-    // progress bar and update our simulation mode, but only if it is the active
-    // simulation
+    // progress bar (with a bit of a delay) and update our simulation mode, but
+    // only if it is the active simulation
 
     SingleCellSimulationViewSimulation *simulation = qobject_cast<SingleCellSimulationViewSimulation *>(sender());
 
     if (simulation == mSimulation) {
         output(QString(OutputTab+"<strong>Simulation time:</strong> <span"+OutputInfo+">"+QString::number(0.001*pElapsedTime, 'g', 3)+" s</span>."+OutputBrLn));
 
-        mProgressBar->setValue(0);
+        QTimer::singleShot(ResetDelay, this, SLOT(resetProgressBar()));
 
         setSimulationMode(false, true);
     }
@@ -654,8 +656,17 @@ void SingleCellSimulationViewWidget::simulationStopped(const int &pElapsedTime)
 
         mStoppedSimulations << simulation;
 
-        QTimer::singleShot(789, this, SLOT(resetFileTabIcon()));
+        QTimer::singleShot(ResetDelay, this, SLOT(resetFileTabIcon()));
     }
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewWidget::resetProgressBar()
+{
+    // Reset our progress bar
+
+    mProgressBar->setValue(0);
 }
 
 //==============================================================================
