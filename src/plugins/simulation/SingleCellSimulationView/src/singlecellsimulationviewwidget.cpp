@@ -625,7 +625,10 @@ void SingleCellSimulationViewWidget::simulationPausing()
 
 void SingleCellSimulationViewWidget::simulationStopped(const int &pElapsedTime)
 {
-    static const int ResetDelay = 789;
+    // We want a short delay before resetting the progress bar and the file tab
+    // icon, so that the user can really see when the simulation has completed
+
+    static const int ResetDelay = 169;
 
     // Our simulation worker has stopped, so output the elapsed time, reset our
     // progress bar (with a bit of a delay) and update our simulation mode, but
@@ -647,8 +650,7 @@ void SingleCellSimulationViewWidget::simulationStopped(const int &pElapsedTime)
     if (simulation) {
         mProgresses.remove(simulation->fileName());
 
-        // We want to leave the full simulation progress on for a few
-        // milliseconds, so delay a bit our resetting of file tab icon
+        // Reset our file tab icon (with a bit of a delay)
         // Note: we can't directly pass simulation to resetFileTabIcon(), so
         //       instead we use mStoppedSimulations which is a list of
         //       simulations in case several simulations were to stop at around
