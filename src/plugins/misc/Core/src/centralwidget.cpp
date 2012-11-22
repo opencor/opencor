@@ -1103,7 +1103,17 @@ void CentralWidget::updateGui()
         QString fileName = mFileNames[fileTabsCrtIndex];
         QWidget *newView = mGuiInterface->viewWidget(fileName);
 
-        if (!newView) {
+        if (newView) {
+            // We have a view for the current file, so create a connection
+            // (should the view be of the right type) to keep track of any
+            // request for a change in its corresponding file tab icon
+
+            Widget *newViewWidget = qobject_cast<Widget *>(newView);
+
+            if (newViewWidget)
+                connect(newViewWidget, SIGNAL(fileTabIcon(const QString &, const QIcon &)),
+                        this, SLOT(fileTabIcon(const QString &, const QIcon &)));
+        } else {
             // The interface doesn't have a view for the current file, so use
             // our no-view widget instead and update its message
 
@@ -1239,7 +1249,8 @@ void CentralWidget::updateModifiedSettings()
             if (!tabText.endsWith("*"))
                 mFileTabs->setTabText(i, tabText+"*");
         } else {
-            // The current isn't modified, so update its tab text, if needed
+            // The current file isn't modified, so update its tab text, if
+            // needed
 
             if (tabText.endsWith("*"))
                 mFileTabs->setTabText(i, tabText.remove("*"));
@@ -1257,6 +1268,23 @@ void CentralWidget::updateModifiedSettings()
                      FileManager::instance()->isModified(mFileNames[mFileTabs->currentIndex()]):
                      false);
     emit canSaveAll(atLeastOneModifiedFile);
+}
+
+//==============================================================================
+
+void CentralWidget::fileTabIcon(const QString &pFileName, const QIcon &pIcon)
+{
+    // Update the icon of the requested file tab
+
+    for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i)
+        if (!pFileName.compare(mFileNames[i])) {
+            // This is the file tab for which we want to update the icon, so do
+            // it and leave
+
+            mFileTabs->setTabIcon(i, pIcon);
+
+            break;
+        }
 }
 
 //==============================================================================

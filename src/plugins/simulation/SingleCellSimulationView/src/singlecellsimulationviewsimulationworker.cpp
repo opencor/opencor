@@ -150,8 +150,10 @@ void SingleCellSimulationViewSimulationWorker::run()
         mStatus = Finished;
 
         // Reset our progress
+        // Note: we would normally use setProgress(), but we don't want the
+        //       progress() signal to be emitted, so...
 
-        setProgress(0.0);
+        mProgress = 0.0;
 
         // Let people know that we are done and give them the total elapsed time too
 

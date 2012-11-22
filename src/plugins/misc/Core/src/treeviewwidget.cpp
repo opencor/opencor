@@ -53,7 +53,7 @@ void TreeViewWidget::selectItem(const int &pRow, const int &pColumn)
     QStandardItemModel *treeViewModel = static_cast<QStandardItemModel *>(model());
 
     if (treeViewModel) {
-        // The tree view has a model associated to it, so we can retrieve the
+        // The tree view has a model associated with it, so we can retrieve the
         // requested item
 
         QStandardItem *treeViewItem = treeViewModel->invisibleRootItem()->child(pRow, pColumn);

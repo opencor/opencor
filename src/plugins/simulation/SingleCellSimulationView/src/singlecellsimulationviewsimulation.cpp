@@ -60,6 +60,15 @@ void SingleCellSimulationViewSimulation::updateGui(SingleCellSimulationViewSimul
 
 //==============================================================================
 
+QString SingleCellSimulationViewSimulation::fileName() const
+{
+    // Retrieve and return our file name
+
+    return mFileName;
+}
+
+//==============================================================================
+
 CellMLSupport::CellmlFileRuntime * SingleCellSimulationViewSimulation::cellmlFileRuntime() const
 {
     // Retrieve and return our runtime

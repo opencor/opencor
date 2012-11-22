@@ -34,6 +34,9 @@ protected:
 
 private:
     QSize mSizeHint;
+
+Q_SIGNALS:
+    void fileTabIcon(const QString &pFileName, const QIcon &pIcon);
 };
 
 //==============================================================================

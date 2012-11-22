@@ -80,6 +80,8 @@ private:
 
     QProgressBar *mProgressBar;
 
+    QMap<QString, int> mProgresses;
+
     void output(const QString &pMessage);
 
     void setSimulationMode(const bool &pEnabled, const bool &pRunVisible);
@@ -107,7 +109,7 @@ private Q_SLOTS:
 
     void simulationProgress(const double &pProgress);
 
-    void outputError(const QString &pError);
+    void simulationError(const QString &pError);
 };
 
 //==============================================================================

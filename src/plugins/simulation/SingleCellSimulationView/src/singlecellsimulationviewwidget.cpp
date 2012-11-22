@@ -45,7 +45,8 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     mCanSaveSettings(false),
     mSolverInterfaces(SolverInterfaces()),
     mSimulation(0),
-    mSimulations(QMap<QString, SingleCellSimulationViewSimulation *>())
+    mSimulations(QMap<QString, SingleCellSimulationViewSimulation *>()),
+    mProgresses(QMap<QString, int>())
 {
     // Set up the GUI
 
@@ -311,15 +312,6 @@ void SingleCellSimulationViewWidget::output(const QString &pMessage)
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::outputError(const QString &pError)
-{
-    // Output the status error
-
-    output(OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+pError+".</span>"+OutputBrLn);
-}
-
-//==============================================================================
-
 void SingleCellSimulationViewWidget::setSimulationMode(const bool &pEnabled,
                                                        const bool &pRunVisible)
 {
@@ -351,26 +343,10 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
     SingleCellSimulationViewSimulationInformationWidget *simulationSettings = mContentsWidget->informationWidget()->simulationWidget();
 
-    if (mSimulation) {
+    if (mSimulation)
         // Update our simulation settings for the previous model from the GUI
 
         mSimulation->updateFromGui(simulationSettings);
-
-        // Remove a few connections
-
-        disconnect(mSimulation, SIGNAL(running()),
-                   this, SLOT(simulationRunning()));
-        disconnect(mSimulation, SIGNAL(pausing()),
-                   this, SLOT(simulationPausing()));
-        disconnect(mSimulation, SIGNAL(stopped(const int &)),
-                   this, SLOT(simulationStopped(const int &)));
-
-        disconnect(mSimulation, SIGNAL(progress(const double &)),
-                   this, SLOT(simulationProgress(const double &)));
-
-        disconnect(mSimulation, SIGNAL(error(const QString &)),
-                   this, SLOT(outputError(const QString &)));
-    }
 
     // Retrieve our simulation settings for the current model, if any
 
@@ -381,25 +357,25 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
         mSimulation = new SingleCellSimulationViewSimulation(pFileName);
 
+        // Create a few connections
+
+        connect(mSimulation, SIGNAL(running()),
+                this, SLOT(simulationRunning()));
+        connect(mSimulation, SIGNAL(pausing()),
+                this, SLOT(simulationPausing()));
+        connect(mSimulation, SIGNAL(stopped(const int &)),
+                this, SLOT(simulationStopped(const int &)));
+
+        connect(mSimulation, SIGNAL(progress(const double &)),
+                this, SLOT(simulationProgress(const double &)));
+
+        connect(mSimulation, SIGNAL(error(const QString &)),
+                this, SLOT(simulationError(const QString &)));
+
         // Keep track of our simulation settings
 
         mSimulations.insert(pFileName, mSimulation);
     }
-
-    // Create a few connections
-
-    connect(mSimulation, SIGNAL(running()),
-            this, SLOT(simulationRunning()));
-    connect(mSimulation, SIGNAL(pausing()),
-            this, SLOT(simulationPausing()));
-    connect(mSimulation, SIGNAL(stopped(const int &)),
-            this, SLOT(simulationStopped(const int &)));
-
-    connect(mSimulation, SIGNAL(progress(const double &)),
-            this, SLOT(simulationProgress(const double &)));
-
-    connect(mSimulation, SIGNAL(error(const QString &)),
-            this, SLOT(outputError(const QString &)));
 
     // Update our GUI using our simulation settings for the current model
 
@@ -481,7 +457,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
     else
         // We don't have a variable of integration, so...
 
-        outputError(tr("the model must have at least one ODE or DAE"));
+        simulationError(tr("the model must have at least one ODE or DAE"));
 }
 
 //==============================================================================
@@ -622,18 +598,22 @@ void SingleCellSimulationViewWidget::on_actionCsvExport_triggered()
 
 void SingleCellSimulationViewWidget::simulationRunning()
 {
-    // Our simulation worker is running, so update our simulation mode
+    // Our simulation worker is running, so update our simulation mode, but only
+    // if it is the active simulation
 
-    setSimulationMode(true, false);
+    if (qobject_cast<SingleCellSimulationViewSimulation *>(sender()) == mSimulation)
+        setSimulationMode(true, false);
 }
 
 //==============================================================================
 
 void SingleCellSimulationViewWidget::simulationPausing()
 {
-    // Our simulation worker is pausing, so update our run/pause mode
+    // Our simulation worker is pausing, so update our run/pause mode, but only
+    // if it is the active simulation
 
-    setSimulationMode(true, true);
+    if (qobject_cast<SingleCellSimulationViewSimulation *>(sender()) == mSimulation)
+        setSimulationMode(true, true);
 }
 
 //==============================================================================
@@ -641,20 +621,75 @@ void SingleCellSimulationViewWidget::simulationPausing()
 void SingleCellSimulationViewWidget::simulationStopped(const int &pElapsedTime)
 {
     // Our simulation worker has stopped, so output the elapsed time and update
-    // our simulation mode
+    // our simulation mode, but only if it is the active simulation
 
-    output(QString(OutputTab+"<strong>Simulation time:</strong> <span"+OutputInfo+">"+QString::number(0.001*pElapsedTime, 'g', 3)+" s</span>."+OutputBrLn));
+    SingleCellSimulationViewSimulation *simulation = qobject_cast<SingleCellSimulationViewSimulation *>(sender());
 
-    setSimulationMode(false, true);
+    if (simulation == mSimulation) {
+        output(QString(OutputTab+"<strong>Simulation time:</strong> <span"+OutputInfo+">"+QString::number(0.001*pElapsedTime, 'g', 3)+" s</span>."+OutputBrLn));
+
+        setSimulationMode(false, true);
+    }
+
+    // Remove our tracking of our simulation progress and let people know that
+    // we should update the icon of our file tab
+
+    if (simulation) {
+        mProgresses.remove(simulation->fileName());
+
+        emit fileTabIcon(simulation->fileName(), QIcon());
+    }
 }
 
 //==============================================================================
 
 void SingleCellSimulationViewWidget::simulationProgress(const double &pProgress)
 {
-    // Our simulation has progressed, so update our progress bar
+    // Our simulation worker has made some progres, so update our progress bar,
+    // but only if it is the active simulation
 
-    mProgressBar->setValue(pProgress*mProgressBar->maximum());
+    SingleCellSimulationViewSimulation *simulation = qobject_cast<SingleCellSimulationViewSimulation *>(sender());
+
+    if (!simulation || (simulation == mSimulation))
+        // Note: we test for simulation to be valid since simulationProgress()
+        //       can also be called directly (as opposed to being called as a
+        //       response to a signal) as is done in initialize() above...
+
+        mProgressBar->setValue(pProgress*mProgressBar->maximum());
+
+    // Let people know that we should update the icon of our file tab
+    // Note: we need to retrieve the name of the file associated with the
+    //       simulation since we have only one SingleCellSimulationViewWidget
+    //       object and anyone handling this signal (e.g. CentralWidget) won't
+    //       be able to tell for which simulation the progress is...
+
+    if (simulation) {
+        int oldProgress = mProgresses.value(simulation->fileName(), -1);
+        int newProgress = 10*pProgress;
+
+        if (newProgress != oldProgress) {
+            // The progress has changed, so keep track of its new value and
+            // update our file tab icon
+
+            mProgresses.insert(simulation->fileName(), newProgress);
+
+            emit fileTabIcon(simulation->fileName(), QIcon(":/oxygen/actions/media-playback-start.png"));
+        }
+    }
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewWidget::simulationError(const QString &pError)
+{
+    // Output the simulation error, but only if it is for the active simulation
+
+    SingleCellSimulationViewSimulation *simulation = qobject_cast<SingleCellSimulationViewSimulation *>(sender());
+
+    if (!simulation || (simulation == mSimulation))
+        // Note: see the corresponding note in simulationProgress() above...
+
+        output(OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+pError+".</span>"+OutputBrLn);
 }
 
 //==============================================================================

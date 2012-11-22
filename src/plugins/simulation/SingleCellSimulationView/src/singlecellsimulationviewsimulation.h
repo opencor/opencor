@@ -44,6 +44,8 @@ public:
     void updateFromGui(SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings);
     void updateGui(SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings);
 
+    QString fileName() const;
+
     CellMLSupport::CellmlFileRuntime * cellmlFileRuntime() const;
 
     SingleCellSimulationViewSimulationWorker::Status workerStatus() const;
