@@ -1283,7 +1283,7 @@ void CentralWidget::fileTabIcon(const QString &pFileName, const QIcon &pIcon)
 
             mFileTabs->setTabIcon(i, pIcon);
 
-            break;
+            return;
         }
 }
 
