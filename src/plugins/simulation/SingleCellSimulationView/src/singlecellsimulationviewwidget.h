@@ -8,11 +8,7 @@
 //==============================================================================
 
 #include "solverinterface.h"
-#include "widget.h"
-
-//==============================================================================
-
-//#include <QWidget>
+#include "viewwidget.h"
 
 //==============================================================================
 
@@ -42,7 +38,7 @@ class SingleCellSimulationViewSimulationWorker;
 
 //==============================================================================
 
-class SingleCellSimulationViewWidget : public Core::Widget
+class SingleCellSimulationViewWidget : public Core::ViewWidget
 {
     Q_OBJECT
 

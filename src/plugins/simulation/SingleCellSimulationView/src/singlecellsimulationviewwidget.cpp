@@ -40,7 +40,7 @@ static const QString OutputBrLn = "<br/>\n";
 //==============================================================================
 
 SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent) :
-    Widget(pParent),
+    ViewWidget(pParent),
     mGui(new Ui::SingleCellSimulationViewWidget),
     mCanSaveSettings(false),
     mSolverInterfaces(SolverInterfaces()),

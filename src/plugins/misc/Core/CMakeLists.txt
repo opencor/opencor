@@ -42,6 +42,7 @@ ADD_PLUGIN(Core
         src/toolbarwidget.cpp
         src/treeviewwidget.cpp
         src/usermessagewidget.cpp
+        src/viewwidget.cpp
         src/widget.cpp
     HEADERS_MOC
         ../../../3rdparty/QtSingleApplication/src/qtlocalpeer.h
@@ -61,6 +62,7 @@ ADD_PLUGIN(Core
         src/toolbarwidget.h
         src/treeviewwidget.h
         src/usermessagewidget.h
+        src/viewwidget.h
         src/widget.h
     UIS
         src/centralwidget.ui

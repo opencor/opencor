@@ -1,18 +1,14 @@
 //==============================================================================
-// Widget
+// View widget
 //==============================================================================
 
-#ifndef WIDGET_H
-#define WIDGET_H
+#ifndef VIEWWIDGET_H
+#define VIEWWIDGET_H
 
 //==============================================================================
 
-#include "commonwidget.h"
 #include "coreglobal.h"
-
-//==============================================================================
-
-#include <QWidget>
+#include "widget.h"
 
 //==============================================================================
 
@@ -21,19 +17,15 @@ namespace Core {
 
 //==============================================================================
 
-class CORE_EXPORT Widget : public QWidget, public CommonWidget
+class CORE_EXPORT ViewWidget : public Widget
 {
     Q_OBJECT
 
 public:
-    explicit Widget(const QSize &pSizeHint, QWidget *pParent = 0);
-    explicit Widget(QWidget *pParent = 0);
+    explicit ViewWidget(QWidget *pParent = 0);
 
-protected:
-    virtual QSize sizeHint() const;
-
-private:
-    QSize mSizeHint;
+Q_SIGNALS:
+    void fileTabIcon(const QString &pFileName, const QIcon &pIcon);
 };
 
 //==============================================================================
