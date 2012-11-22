@@ -620,13 +620,16 @@ void SingleCellSimulationViewWidget::simulationPausing()
 
 void SingleCellSimulationViewWidget::simulationStopped(const int &pElapsedTime)
 {
-    // Our simulation worker has stopped, so output the elapsed time and update
-    // our simulation mode, but only if it is the active simulation
+    // Our simulation worker has stopped, so output the elapsed time, reset our
+    // progress bar and update our simulation mode, but only if it is the active
+    // simulation
 
     SingleCellSimulationViewSimulation *simulation = qobject_cast<SingleCellSimulationViewSimulation *>(sender());
 
     if (simulation == mSimulation) {
         output(QString(OutputTab+"<strong>Simulation time:</strong> <span"+OutputInfo+">"+QString::number(0.001*pElapsedTime, 'g', 3)+" s</span>."+OutputBrLn));
+
+        mProgressBar->setValue(0);
 
         setSimulationMode(false, true);
     }
