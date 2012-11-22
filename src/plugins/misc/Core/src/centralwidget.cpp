@@ -1109,7 +1109,7 @@ void CentralWidget::updateGui()
             // (should the view be of the right type) to keep track of any
             // request for a change in its corresponding file tab icon
 
-            ViewWidget *newViewWidget = qobject_cast<ViewWidget *>(newView);
+            ViewWidget *newViewWidget = dynamic_cast<ViewWidget *>(newView);
 
             if (newViewWidget)
                 connect(newViewWidget, SIGNAL(fileTabIcon(const QString &, const QIcon &)),
