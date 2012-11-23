@@ -12,6 +12,10 @@
 
 //==============================================================================
 
+#include "qwt_slider.h"
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace SingleCellSimulationView {
 
@@ -21,6 +25,7 @@ SingleCellSimulationViewSimulation::SingleCellSimulationViewSimulation(const QSt
     mWorkerThread(0),
     mWorker(0),
     mFileName(pFileName),
+    mDelay(0),
     mStartingPoint(0.0),
     mEndingPoint(1000.0),
     mPointInterval(1.0)
@@ -38,8 +43,13 @@ SingleCellSimulationViewSimulation::~SingleCellSimulationViewSimulation()
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulation::updateFromGui(SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings)
+void SingleCellSimulationViewSimulation::updateFromGui(QwtSlider *pSlider,
+                                                       SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings)
 {
+    // Update our delay from our slider
+
+    mDelay = pSlider->value();
+
     // Update our settings from our simulation information widget
 
     mStartingPoint = pSimulationSettings->startingPoint();
@@ -49,8 +59,13 @@ void SingleCellSimulationViewSimulation::updateFromGui(SingleCellSimulationViewS
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulation::updateGui(SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings)
+void SingleCellSimulationViewSimulation::updateGui(QwtSlider *pSlider,
+                                                   SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings)
 {
+    // Update our slider using our delay
+
+    pSlider->setValue(mDelay);
+
     // Update our simulation information widget using our settings
 
     pSimulationSettings->setStartingPoint(mStartingPoint);
@@ -128,7 +143,8 @@ void SingleCellSimulationViewSimulation::run()
         // Create our worker and the thread in which it will work
 
         mWorkerThread = new QThread();
-        mWorker       = new SingleCellSimulationViewSimulationWorker(mStartingPoint, mEndingPoint, mPointInterval);
+        mWorker       = new SingleCellSimulationViewSimulationWorker(mDelay,
+                                                                     mStartingPoint, mEndingPoint, mPointInterval);
 
         // Check that the worker and its thread have been properly created
 

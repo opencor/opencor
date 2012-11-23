@@ -78,8 +78,8 @@ private:
 
     QList<SingleCellSimulationViewSimulation *> mStoppedSimulations;
 
-    QwtSlider *mSlider;
-    QLabel *mSliderValue;
+    QwtSlider *mDelaySlider;
+    QLabel *mDelaySliderValue;
 
     QSplitter *mSplitter;
 

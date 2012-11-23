@@ -15,6 +15,10 @@
 
 //==============================================================================
 
+class QwtSlider;
+
+//==============================================================================
+
 namespace OpenCOR {
 
 //==============================================================================
@@ -41,8 +45,10 @@ public:
     explicit SingleCellSimulationViewSimulation(const QString &pFileName);
     ~SingleCellSimulationViewSimulation();
 
-    void updateFromGui(SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings);
-    void updateGui(SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings);
+    void updateFromGui(QwtSlider *pSlider,
+                       SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings);
+    void updateGui(QwtSlider *pSlider,
+                   SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings);
 
     QString fileName() const;
 
@@ -60,6 +66,8 @@ private:
     SingleCellSimulationViewSimulationWorker *mWorker;
 
     QString mFileName;
+
+    int mDelay;
 
     double mStartingPoint;
     double mEndingPoint;

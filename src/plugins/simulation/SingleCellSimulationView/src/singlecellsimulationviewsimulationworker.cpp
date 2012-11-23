@@ -15,10 +15,12 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-SingleCellSimulationViewSimulationWorker::SingleCellSimulationViewSimulationWorker(const double &pStartingPoint,
+SingleCellSimulationViewSimulationWorker::SingleCellSimulationViewSimulationWorker(const int &pDelay,
+                                                                                   const double &pStartingPoint,
                                                                                    const double &pEndingPoint,
                                                                                    const double &pPointInterval) :
     mStatus(Idling),
+    mDelay(pDelay),
     mStartingPoint(pStartingPoint),
     mEndingPoint(pEndingPoint),
     mPointInterval(pPointInterval)
@@ -131,6 +133,18 @@ void SingleCellSimulationViewSimulationWorker::run()
             currentPoint = increasingPoints?
                                qMin(mEndingPoint, mStartingPoint+voiCounter*mPointInterval):
                                qMax(mEndingPoint, mStartingPoint+voiCounter*mPointInterval);
+
+            // Delay things a bit, if needed
+
+            if (mDelay) {
+                totalElapsedTime += timer.elapsed();
+
+                mStatusMutex.lock();
+                    mStatusCondition.wait(&mStatusMutex, mDelay);
+                mStatusMutex.unlock();
+
+                timer.restart();
+            }
         }
 
         // Handle our last point

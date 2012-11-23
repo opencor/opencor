@@ -32,7 +32,8 @@ public:
         Finished
     };
 
-    explicit SingleCellSimulationViewSimulationWorker(const double &pStartingPoint,
+    explicit SingleCellSimulationViewSimulationWorker(const int &pDelay,
+                                                      const double &pStartingPoint,
                                                       const double &pEndingPoint,
                                                       const double &pPointInterval);
 
@@ -50,6 +51,8 @@ private:
 
     QMutex mStatusMutex;
     QWaitCondition mStatusCondition;
+
+    int mDelay;
 
     double mStartingPoint;
     double mEndingPoint;
