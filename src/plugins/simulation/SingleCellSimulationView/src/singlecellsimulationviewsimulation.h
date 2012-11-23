@@ -8,6 +8,7 @@
 //==============================================================================
 
 #include "singlecellsimulationviewsimulationworker.h"
+#include "thread.h"
 
 //==============================================================================
 
@@ -60,7 +61,7 @@ public:
     void stop();
 
 private:
-    QThread *mWorkerThread;
+    Core::Thread *mWorkerThread;
     SingleCellSimulationViewSimulationWorker *mWorker;
 
     QString mFileName;

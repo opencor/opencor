@@ -8,10 +8,6 @@
 
 //==============================================================================
 
-#include <QThread>
-
-//==============================================================================
-
 #include "qwt_slider.h"
 
 //==============================================================================
@@ -124,7 +120,7 @@ void SingleCellSimulationViewSimulation::run()
 
         // Create our worker and the thread in which it will work
 
-        mWorkerThread = new QThread();
+        mWorkerThread = new Core::Thread();
         mWorker       = new SingleCellSimulationViewSimulationWorker(mData);
 
         // Check that the worker and its thread have been properly created

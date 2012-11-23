@@ -4,6 +4,7 @@
 
 #include "singlecellsimulationviewsimulationdata.h"
 #include "singlecellsimulationviewsimulationworker.h"
+#include "thread.h"
 
 //==============================================================================
 
@@ -142,9 +143,7 @@ void SingleCellSimulationViewSimulationWorker::run()
             if (mData->delay()) {
                 totalElapsedTime += timer.elapsed();
 
-                mStatusMutex.lock();
-                    mStatusCondition.wait(&mStatusMutex, mData->delay());
-                mStatusMutex.unlock();
+                static_cast<Core::Thread *>(thread())->usleep(mData->delay());
 
                 timer.restart();
             }
