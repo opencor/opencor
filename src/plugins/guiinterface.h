@@ -12,6 +12,7 @@
 
 //==============================================================================
 
+#include <QIcon>
 #include <QList>
 #include <QMap>
 #include <QKeySequence>
@@ -190,7 +191,9 @@ public:
     virtual QWidget * viewWidget(const QString &pFileName);
     virtual bool hasViewWidget(const QString &pFileName) const;
     virtual void deleteViewWidget(const QString &pFileName);
-    virtual QString viewName();
+    virtual QString viewName() const;
+
+    virtual QIcon fileTabIcon(const QString &pFileName) const;
 
     virtual bool saveFile(const QString &pOldFileName,
                           const QString &pNewFileName);

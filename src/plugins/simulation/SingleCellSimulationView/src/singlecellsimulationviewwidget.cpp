@@ -389,7 +389,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
     if (mSimulation->workerStatus() != SingleCellSimulationViewSimulationWorker::Unknown) {
         mProgresses.remove(mSimulation->fileName());
 
-        emit fileTabIcon(mSimulation->fileName(), QIcon());
+        emit updateFileTabIcon(mSimulation->fileName(), QIcon());
     }
 
     // Update our GUI using our simulation settings for the current model
@@ -477,6 +477,48 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         // We don't have a variable of integration, so...
 
         simulationError(tr("the model must have at least one ODE or DAE"));
+}
+
+//==============================================================================
+
+int SingleCellSimulationViewWidget::fileTabBarIconSize() const
+{
+    // Return the size of a file tab icon
+
+    return style()->pixelMetric(QStyle::PM_TabBarIconSize, 0, this);
+}
+
+//==============================================================================
+
+QIcon SingleCellSimulationViewWidget::fileTabIcon(const QString &pFileName) const
+{
+    // Return the requested file tab icon
+
+    SingleCellSimulationViewSimulation *simulation = mSimulations.value(pFileName);
+    int progress = simulation?mProgresses.value(simulation->fileName(), -1):-1;
+
+    if (simulation && (progress != -1)) {
+        // Create an image that shows the progress of our simulation
+
+        QImage tabBarIcon = QImage(fileTabBarIconSize(), mProgressBar->height()+2,
+                                   QImage::Format_ARGB32_Premultiplied);
+        QPainter tabBarIconPainter(&tabBarIcon);
+
+        QPalette tabBarIconPalette = palette();
+
+        tabBarIconPainter.setBrush(QBrush(tabBarIconPalette.color(QPalette::Window)));
+        tabBarIconPainter.setPen(QPen(CommonWidget::borderColor()));
+
+        tabBarIconPainter.drawRect(0, 0, tabBarIcon.width()-1, tabBarIcon.height()-1);
+        tabBarIconPainter.fillRect(QRect(1, 1, progress, tabBarIcon.height()-2),
+                                   QBrush(tabBarIconPalette.color(QPalette::Highlight)));
+
+        return QIcon(QPixmap::fromImage(tabBarIcon));
+    } else {
+        // No simulation settings currently exist for the model, so...
+
+        return QIcon();
+    }
 }
 
 //==============================================================================
@@ -662,7 +704,7 @@ void SingleCellSimulationViewWidget::simulationStopped(const int &pElapsedTime)
     // we should reset our file tab icon, but only if we are the active
     // simulation
 
-    if (simulation && (simulation != mSimulation)) {
+    if (simulation) {
         // Stop keeping track of the simulation progress
 
         mProgresses.remove(simulation->fileName());
@@ -673,9 +715,11 @@ void SingleCellSimulationViewWidget::simulationStopped(const int &pElapsedTime)
         //       simulations in case several simulations were to stop at around
         //       the same time...
 
-        mStoppedSimulations << simulation;
+        if (simulation != mSimulation) {
+            mStoppedSimulations << simulation;
 
-        QTimer::singleShot(ResetDelay, this, SLOT(resetFileTabIcon()));
+            QTimer::singleShot(ResetDelay, this, SLOT(resetFileTabIcon()));
+        }
     }
 }
 
@@ -698,7 +742,7 @@ void SingleCellSimulationViewWidget::resetFileTabIcon()
 
     mStoppedSimulations.removeFirst();
 
-    emit fileTabIcon(simulation->fileName(), QIcon());
+    emit updateFileTabIcon(simulation->fileName(), QIcon());
 }
 
 //==============================================================================
@@ -727,37 +771,23 @@ void SingleCellSimulationViewWidget::simulationProgress(const double &pProgress,
     //       be able to tell for which simulation the progress is...
 
     if (simulation && (simulation != mSimulation)) {
-        int tabBarIconSize = style()->pixelMetric(QStyle::PM_TabBarIconSize, 0, this);
-
         int oldProgress = mProgresses.value(simulation->fileName(), -1);
-        int newProgress = (tabBarIconSize-2)*pProgress;
-        // Note: tabBarIconSize-2 because we want a one-pixel wide border...
+        int newProgress = (fileTabBarIconSize()-2)*pProgress;
+        // Note: fileTabBarIconSize()-2 because we want a one-pixel wide
+        //       border...
 
         if (newProgress != oldProgress) {
             // The progress has changed (or we want to force the updating of a
-            // specific simulation), so keep track of its new value (only if we
-            // are not dealing with a specific simulation) and update our file
-            // tab icon
+            // specific simulation), so keep track of its new value and update
+            // our file tab icon
 
-            if (!pSimulation)
-                mProgresses.insert(simulation->fileName(), newProgress);
+            mProgresses.insert(simulation->fileName(), newProgress);
 
-            // Create an image that shows the progress of our simulation
+            // Let people know about the file tab icon to be used for the
+            // model
 
-            QImage tabBarIcon = QImage(tabBarIconSize, mProgressBar->height()+2,
-                                       QImage::Format_ARGB32_Premultiplied);
-            QPainter tabBarIconPainter(&tabBarIcon);
-
-            QPalette tabBarIconPalette = palette();
-
-            tabBarIconPainter.setBrush(QBrush(tabBarIconPalette.color(QPalette::Window)));
-            tabBarIconPainter.setPen(QPen(CommonWidget::borderColor()));
-
-            tabBarIconPainter.drawRect(0, 0, tabBarIcon.width()-1, tabBarIcon.height()-1);
-            tabBarIconPainter.fillRect(QRect(1, 1, newProgress, tabBarIcon.height()-2),
-                                       QBrush(tabBarIconPalette.color(QPalette::Highlight)));
-
-            emit fileTabIcon(simulation->fileName(), QIcon(QPixmap::fromImage(tabBarIcon)));
+            emit updateFileTabIcon(simulation->fileName(),
+                                   fileTabIcon(simulation->fileName()));
         }
     }
 }

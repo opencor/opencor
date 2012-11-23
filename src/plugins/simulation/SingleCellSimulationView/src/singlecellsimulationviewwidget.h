@@ -55,6 +55,8 @@ public:
 
     void initialize(const QString &pFileName);
 
+    QIcon fileTabIcon(const QString &pFileName) const;
+
 protected:
     virtual void changeEvent(QEvent *pEvent);
     virtual void paintEvent(QPaintEvent *pEvent);
@@ -88,6 +90,8 @@ private:
     void clearActiveGraphPanel();
 
     void setProgressBarStyleSheet();
+
+    int fileTabBarIconSize() const;
 
 private Q_SLOTS:
     void on_actionRun_triggered();

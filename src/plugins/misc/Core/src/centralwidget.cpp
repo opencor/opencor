@@ -1113,12 +1113,17 @@ void CentralWidget::updateGui()
             // We have a view for the current file, so create a connection
             // (should the view be of the right type) to keep track of any
             // request for a change in its corresponding file tab icon
+            // Note: we pass Qt::UniqueConnection in our call to connect(),
+            //       thus ensuring that we don't have several identical
+            //       connections (something which could happen if we were to
+            //       switch views and back)...
 
             ViewWidget *newViewWidget = dynamic_cast<ViewWidget *>(newView);
 
             if (newViewWidget)
-                connect(newViewWidget, SIGNAL(fileTabIcon(const QString &, const QIcon &)),
-                        this, SLOT(updateFileTabIcon(const QString &, const QIcon &)));
+                connect(newViewWidget, SIGNAL(updateFileTabIcon(const QString &, const QIcon &)),
+                        this, SLOT(updateFileTabIcon(const QString &, const QIcon &)),
+                        Qt::UniqueConnection);
         } else {
             // The interface doesn't have a view for the current file, so use
             // our no-view widget instead and update its message
@@ -1280,7 +1285,11 @@ void CentralWidget::updateModifiedSettings()
 
 void CentralWidget::updateFileTabIcons()
 {
-//---GRY--- TO BE DONE...
+    // Update all the file tab icons
+
+    if (mGuiInterface)
+        for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i)
+            mFileTabs->setTabIcon(i, mGuiInterface->fileTabIcon(mFileNames[i]));
 }
 
 //==============================================================================
@@ -1288,17 +1297,24 @@ void CentralWidget::updateFileTabIcons()
 void CentralWidget::updateFileTabIcon(const QString &pFileName,
                                       const QIcon &pIcon)
 {
-    // Update the icon of the requested file tab
+    // Update the requested file tab icon, but only if the view (from which the
+    // signal was emitted) is the currently active one
 
-    for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i)
-        if (!pFileName.compare(mFileNames[i])) {
-            // This is the file tab for which we want to update the icon, so do
-            // it and leave
+    QWidget *viewWidget = dynamic_cast<QWidget *>(sender());
 
-            mFileTabs->setTabIcon(i, pIcon);
+    if (viewWidget->isVisible())
+        // The view from which the signal was emitted is visible, so we can
+        // handle its signal
 
-            return;
-        }
+        for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i)
+            if (!pFileName.compare(mFileNames[i])) {
+                // This is the file tab for which we want to update the icon, so do
+                // it and leave
+
+                mFileTabs->setTabIcon(i, pIcon);
+
+                return;
+            }
 }
 
 //==============================================================================

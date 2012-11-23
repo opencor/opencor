@@ -121,7 +121,7 @@ void RawCellMLViewPlugin::deleteViewWidget(const QString &pFileName)
 
 //==============================================================================
 
-QString RawCellMLViewPlugin::viewName()
+QString RawCellMLViewPlugin::viewName() const
 {
     // Return our raw CellML view's name
 

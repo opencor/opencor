@@ -120,11 +120,20 @@ QWidget * SingleCellSimulationViewPlugin::viewWidget(const QString &pFileName)
 
 //==============================================================================
 
-QString SingleCellSimulationViewPlugin::viewName()
+QString SingleCellSimulationViewPlugin::viewName() const
 {
     // Return our single cell view's name
 
     return tr("Single Cell");
+}
+
+//==============================================================================
+
+QIcon SingleCellSimulationViewPlugin::fileTabIcon(const QString &pFileName) const
+{
+    // Return the requested file tab icon
+
+    return mViewWidget->fileTabIcon(pFileName);
 }
 
 //==============================================================================

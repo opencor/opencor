@@ -25,7 +25,7 @@ public:
     explicit ViewWidget(QWidget *pParent = 0);
 
 Q_SIGNALS:
-    void fileTabIcon(const QString &pFileName, const QIcon &pIcon);
+    void updateFileTabIcon(const QString &pFileName, const QIcon &pIcon);
 };
 
 //==============================================================================

@@ -371,11 +371,22 @@ void GuiInterface::deleteViewWidget(const QString &pFileName)
 
 //==============================================================================
 
-QString GuiInterface::viewName()
+QString GuiInterface::viewName() const
 {
     // Return an empty string by default...
 
     return QString();
+}
+
+//==============================================================================
+
+QIcon GuiInterface::fileTabIcon(const QString &pFileName) const
+{
+    Q_UNUSED(pFileName);
+
+    // Return an empty icon by default...
+
+    return QIcon();
 }
 
 //==============================================================================

@@ -240,7 +240,7 @@ void CellMLAnnotationViewPlugin::deleteViewWidget(const QString &pFileName)
 
 //==============================================================================
 
-QString CellMLAnnotationViewPlugin::viewName()
+QString CellMLAnnotationViewPlugin::viewName() const
 {
     // Return our CellML annotation view's name
 

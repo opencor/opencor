@@ -46,7 +46,7 @@ public:
     virtual QWidget * viewWidget(const QString &pFileName);
     virtual bool hasViewWidget(const QString &pFileName) const;
     virtual void deleteViewWidget(const QString &pFileName);
-    virtual QString viewName();
+    virtual QString viewName() const;
 
 private:
     RawCellmlViewWidget *mViewWidget;

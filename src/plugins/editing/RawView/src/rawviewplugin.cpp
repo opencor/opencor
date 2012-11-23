@@ -108,7 +108,7 @@ void RawViewPlugin::deleteViewWidget(const QString &pFileName)
 
 //==============================================================================
 
-QString RawViewPlugin::viewName()
+QString RawViewPlugin::viewName() const
 {
     // Return our raw view's name
 
