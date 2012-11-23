@@ -108,7 +108,8 @@ private Q_SLOTS:
     void resetProgressBar();
     void resetFileTabIcon();
 
-    void simulationProgress(const double &pProgress);
+    void simulationProgress(const double &pProgress,
+                            SingleCellSimulationViewSimulation *pSimulation = 0);
 
     void simulationError(const QString &pError);
 };

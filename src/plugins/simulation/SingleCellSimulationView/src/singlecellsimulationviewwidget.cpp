@@ -346,12 +346,13 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 {
     // Do a few things for the previous model, if needed
 
+    SingleCellSimulationViewSimulation *previousSimulation = mSimulation;
     SingleCellSimulationViewSimulationInformationWidget *simulationSettings = mContentsWidget->informationWidget()->simulationWidget();
 
-    if (mSimulation)
+    if (previousSimulation)
         // Update our simulation settings for the previous model from the GUI
 
-        mSimulation->updateFromGui(simulationSettings);
+        previousSimulation->updateFromGui(simulationSettings);
 
     // Retrieve our simulation settings for the current model, if any
 
@@ -380,6 +381,15 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         // Keep track of our simulation settings
 
         mSimulations.insert(pFileName, mSimulation);
+    }
+
+    // Reset our file tab icon and stop tracking its simulation progress (in
+    // case a simulation is running)
+
+    if (mSimulation->workerStatus() != SingleCellSimulationViewSimulationWorker::Unknown) {
+        mProgresses.remove(mSimulation->fileName());
+
+        emit fileTabIcon(mSimulation->fileName(), QIcon());
     }
 
     // Update our GUI using our simulation settings for the current model
@@ -434,7 +444,11 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
                          (mSimulation->workerStatus() == SingleCellSimulationViewSimulationWorker::Unknown)
                       || (mSimulation->workerStatus() == SingleCellSimulationViewSimulationWorker::Pausing));
 
-    // Update our progress bar
+    // Update our previous (if any) and current simulation progresses
+
+    if (   previousSimulation
+        && (previousSimulation->workerStatus() != SingleCellSimulationViewSimulationWorker::Unknown))
+        simulationProgress(previousSimulation->workerProgress(), previousSimulation);
 
     simulationProgress(mSimulation->workerProgress());
 
@@ -645,9 +659,12 @@ void SingleCellSimulationViewWidget::simulationStopped(const int &pElapsedTime)
     }
 
     // Remove our tracking of our simulation progress and let people know that
-    // we should reset our file tab icon
+    // we should reset our file tab icon, but only if we are the active
+    // simulation
 
-    if (simulation) {
+    if (simulation && (simulation != mSimulation)) {
+        // Stop keeping track of the simulation progress
+
         mProgresses.remove(simulation->fileName());
 
         // Reset our file tab icon (with a bit of a delay)
@@ -686,12 +703,13 @@ void SingleCellSimulationViewWidget::resetFileTabIcon()
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::simulationProgress(const double &pProgress)
+void SingleCellSimulationViewWidget::simulationProgress(const double &pProgress,
+                                                        SingleCellSimulationViewSimulation *pSimulation)
 {
     // Our simulation worker has made some progres, so update our progress bar,
     // but only if it is the active simulation
 
-    SingleCellSimulationViewSimulation *simulation = qobject_cast<SingleCellSimulationViewSimulation *>(sender());
+    SingleCellSimulationViewSimulation *simulation = pSimulation?pSimulation:qobject_cast<SingleCellSimulationViewSimulation *>(sender());
 
     if (!simulation || (simulation == mSimulation))
         // Note: we test for simulation to be valid since simulationProgress()
@@ -700,28 +718,33 @@ void SingleCellSimulationViewWidget::simulationProgress(const double &pProgress)
 
         mProgressBar->setValue(pProgress*mProgressBar->maximum());
 
-    // Let people know that we should update the icon of our file tab
+    // Let people know that we should update the icon of our file tab, but only
+    // if it isn't the active simulation (there is already the progress bar, so
+    // no need to duplicate this simulation progress information)
     // Note: we need to retrieve the name of the file associated with the
     //       simulation since we have only one SingleCellSimulationViewWidget
     //       object and anyone handling this signal (e.g. CentralWidget) won't
     //       be able to tell for which simulation the progress is...
 
-    if (simulation) {
-        static const int TabBarIconSize = style()->pixelMetric(QStyle::PM_TabBarIconSize, 0, this);
+    if (simulation && (simulation != mSimulation)) {
+        int tabBarIconSize = style()->pixelMetric(QStyle::PM_TabBarIconSize, 0, this);
 
         int oldProgress = mProgresses.value(simulation->fileName(), -1);
-        int newProgress = (TabBarIconSize-2)*pProgress;
-        // Note: TabBarIconSize-2 because we want a one-pixel wide border...
+        int newProgress = (tabBarIconSize-2)*pProgress;
+        // Note: tabBarIconSize-2 because we want a one-pixel wide border...
 
         if (newProgress != oldProgress) {
-            // The progress has changed, so keep track of its new value and
-            // update our file tab icon
+            // The progress has changed (or we want to force the updating of a
+            // specific simulation), so keep track of its new value (only if we
+            // are not dealing with a specific simulation) and update our file
+            // tab icon
 
-            mProgresses.insert(simulation->fileName(), newProgress);
+            if (!pSimulation)
+                mProgresses.insert(simulation->fileName(), newProgress);
 
             // Create an image that shows the progress of our simulation
 
-            QImage tabBarIcon = QImage(TabBarIconSize, mProgressBar->height()+2,
+            QImage tabBarIcon = QImage(tabBarIconSize, mProgressBar->height()+2,
                                        QImage::Format_ARGB32_Premultiplied);
             QPainter tabBarIconPainter(&tabBarIcon);
 
