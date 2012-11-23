@@ -707,6 +707,11 @@ void SingleCellSimulationViewWidget::updateSliderValue(const double &pSliderValu
     // Update our slider value
 
     mDelaySliderValue->setText(QLocale().toString(pSliderValue)+" ms");
+
+    // Also update our simulation settings
+
+    if (mSimulation)
+        mSimulation->setDelay(mDelaySlider->value());
 }
 
 //==============================================================================

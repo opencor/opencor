@@ -61,6 +61,8 @@ public:
     void pause();
     void stop();
 
+    void setDelay(const int &pDelay);
+
 private:
     QThread *mWorkerThread;
     SingleCellSimulationViewSimulationWorker *mWorker;

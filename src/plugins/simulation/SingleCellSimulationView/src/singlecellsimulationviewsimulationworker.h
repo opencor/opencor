@@ -43,6 +43,8 @@ public:
     void pause();
     void stop();
 
+    void setDelay(const int &pDelay);
+
 private:
     Status mStatus;
 

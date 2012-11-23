@@ -236,6 +236,18 @@ void SingleCellSimulationViewSimulation::finished(const int &pElapsedTime)
 
 //==============================================================================
 
+void SingleCellSimulationViewSimulation::setDelay(const int &pDelay)
+{
+    // Set our delay and update that of our worker, if active
+
+    mDelay = pDelay;
+
+    if (mWorkerThread && mWorker)
+        mWorker->setDelay(pDelay);
+}
+
+//==============================================================================
+
 }   // namespace SingleCellSimulationView
 }   // namespace OpenCOR
 

@@ -216,6 +216,15 @@ void SingleCellSimulationViewSimulationWorker::stop()
 
 //==============================================================================
 
+void SingleCellSimulationViewSimulationWorker::setDelay(const int &pDelay)
+{
+    // Set our delay
+
+    mDelay = pDelay;
+}
+
+//==============================================================================
+
 }   // namespace SingleCellSimulationView
 }   // namespace OpenCOR
 
