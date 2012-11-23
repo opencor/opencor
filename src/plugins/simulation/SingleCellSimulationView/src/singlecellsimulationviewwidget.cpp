@@ -62,10 +62,13 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
 
     mGui->setupUi(this);
 
-    // Create a slider (and a label to show its value) to specify the delay in
-    // the plotting of simulation data
+    // Create a slider (and a label to show its value) to specify the delay
+    // (in milliseconds) between two data points
 
     mSlider = new QwtSlider(this);
+#ifndef Q_WS_MAC
+    QWidget *sliderSpace = new QWidget(this);
+#endif
     mSliderValue = new QLabel(this);
 
     mSlider->setBorderWidth(1);
@@ -73,6 +76,10 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     mSlider->setHandleSize(0.5*mSlider->handleSize().width(),
                                mSlider->handleSize().height());
     mSlider->setRange(0.0, 1000.0);
+
+#ifndef Q_WS_MAC
+    sliderSpace->setFixedWidth(4);
+#endif
 
     connect(mSlider, SIGNAL(valueChanged(double)),
             this, SLOT(updateSliderValue(const double &)));
@@ -88,6 +95,9 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     toolBarWidget->addAction(mGui->actionStop);
     toolBarWidget->addSeparator();
     toolBarWidget->addWidget(mSlider);
+#ifndef Q_WS_MAC
+    toolBarWidget->addWidget(sliderSpace);
+#endif
     toolBarWidget->addWidget(mSliderValue);
     toolBarWidget->addSeparator();
     toolBarWidget->addAction(mGui->actionDebugMode);
@@ -190,6 +200,14 @@ void SingleCellSimulationViewWidget::retranslateUi()
     // Retranslate the whole view
 
     mGui->retranslateUi(this);
+
+    // Retranslate our slider and its value
+
+    mSlider->setToolTip(tr("Delay"));
+    mSliderValue->setToolTip(mSlider->toolTip());
+
+    mSlider->setStatusTip(tr("Delay in milliseconds between two data points"));
+    mSliderValue->setStatusTip(mSlider->statusTip());
 
     // Retranslate our contents widget
 

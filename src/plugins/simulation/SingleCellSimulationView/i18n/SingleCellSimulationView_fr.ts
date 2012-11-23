@@ -119,6 +119,14 @@
         <source>Warning:</source>
         <translation>Attention :</translation>
     </message>
+    <message>
+        <source>Delay</source>
+        <translation>Délai</translation>
+    </message>
+    <message>
+        <source>Delay in milliseconds between two data points</source>
+        <translation>Délai en millisecondes entre deux points de données</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
