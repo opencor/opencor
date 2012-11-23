@@ -205,9 +205,10 @@ private Q_SLOTS:
     bool closeFile(const int &pIndex = -1);
     void closeAllFiles(const bool &pForceClosing = false);
 
-    void fileMoved(const int &pFromIndex, const int &pToIndex);
+    void moveFile(const int &pFromIndex, const int &pToIndex);
 
-    void fileTabIcon(const QString &pFileName, const QIcon &pIcon);
+    void updateFileTabIcons();
+    void updateFileTabIcon(const QString &pFileName, const QIcon &pIcon);
 };
 
 //==============================================================================

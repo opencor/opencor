@@ -205,7 +205,7 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     connect(mFileTabs, SIGNAL(currentChanged(int)),
             this, SLOT(updateGui()));
     connect(mFileTabs, SIGNAL(tabMoved(int, int)),
-            this, SLOT(fileMoved(const int &, const int &)));
+            this, SLOT(moveFile(const int &, const int &)));
     connect(mFileTabs, SIGNAL(tabCloseRequested(int)),
             this, SLOT(closeFile(const int &)));
 
@@ -213,12 +213,17 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
 
     connect(mModeTabs, SIGNAL(currentChanged(int)),
             this, SLOT(updateGui()));
+    connect(mModeTabs, SIGNAL(currentChanged(int)),
+            this, SLOT(updateFileTabIcons()));
 
     // Some connections to handle our mode views tab bar
 
-    foreach (CentralWidgetMode *mode, mModes)
+    foreach (CentralWidgetMode *mode, mModes) {
         connect(mode->views(), SIGNAL(currentChanged(int)),
                 this, SLOT(updateGui()));
+        connect(mode->views(), SIGNAL(currentChanged(int)),
+                this, SLOT(updateFileTabIcons()));
+    }
 
     // A connection to handle a change in the modified status of a file
 
@@ -866,7 +871,7 @@ bool CentralWidget::activateFile(const QString &pFileName)
 
 //==============================================================================
 
-void CentralWidget::fileMoved(const int &pFromIndex, const int &pToIndex)
+void CentralWidget::moveFile(const int &pFromIndex, const int &pToIndex)
 {
     // Update our list of file names to reflect the fact that a tab has been
     // moved
@@ -1113,7 +1118,7 @@ void CentralWidget::updateGui()
 
             if (newViewWidget)
                 connect(newViewWidget, SIGNAL(fileTabIcon(const QString &, const QIcon &)),
-                        this, SLOT(fileTabIcon(const QString &, const QIcon &)));
+                        this, SLOT(updateFileTabIcon(const QString &, const QIcon &)));
         } else {
             // The interface doesn't have a view for the current file, so use
             // our no-view widget instead and update its message
@@ -1273,7 +1278,15 @@ void CentralWidget::updateModifiedSettings()
 
 //==============================================================================
 
-void CentralWidget::fileTabIcon(const QString &pFileName, const QIcon &pIcon)
+void CentralWidget::updateFileTabIcons()
+{
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
+void CentralWidget::updateFileTabIcon(const QString &pFileName,
+                                      const QIcon &pIcon)
 {
     // Update the icon of the requested file tab
 
