@@ -33,6 +33,7 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
+class SingleCellSimulationViewSimulationData;
 class SingleCellSimulationViewSimulationInformationWidget;
 
 //==============================================================================
@@ -45,12 +46,9 @@ public:
     explicit SingleCellSimulationViewSimulation(const QString &pFileName);
     ~SingleCellSimulationViewSimulation();
 
-    void updateFromGui(QwtSlider *pSlider,
-                       SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings);
-    void updateGui(QwtSlider *pSlider,
-                   SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings);
-
     QString fileName() const;
+
+    SingleCellSimulationViewSimulationData * data() const;
 
     CellMLSupport::CellmlFileRuntime * cellmlFileRuntime() const;
 
@@ -61,19 +59,13 @@ public:
     void pause();
     void stop();
 
-    void setDelay(const int &pDelay);
-
 private:
     QThread *mWorkerThread;
     SingleCellSimulationViewSimulationWorker *mWorker;
 
     QString mFileName;
 
-    int mDelay;
-
-    double mStartingPoint;
-    double mEndingPoint;
-    double mPointInterval;
+    SingleCellSimulationViewSimulationData *mData;
 
 Q_SIGNALS:
     void running();

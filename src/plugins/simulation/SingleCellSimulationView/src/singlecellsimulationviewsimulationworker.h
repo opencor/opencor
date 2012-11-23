@@ -18,6 +18,10 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
+class SingleCellSimulationViewSimulationData;
+
+//==============================================================================
+
 class SingleCellSimulationViewSimulationWorker : public QObject
 {
     Q_OBJECT
@@ -32,18 +36,13 @@ public:
         Finished
     };
 
-    explicit SingleCellSimulationViewSimulationWorker(const int &pDelay,
-                                                      const double &pStartingPoint,
-                                                      const double &pEndingPoint,
-                                                      const double &pPointInterval);
+    explicit SingleCellSimulationViewSimulationWorker(SingleCellSimulationViewSimulationData *pData);
 
     Status status() const;
     double progress() const;
 
     void pause();
     void stop();
-
-    void setDelay(const int &pDelay);
 
 private:
     Status mStatus;
@@ -54,11 +53,7 @@ private:
     QMutex mStatusMutex;
     QWaitCondition mStatusCondition;
 
-    int mDelay;
-
-    double mStartingPoint;
-    double mEndingPoint;
-    double mPointInterval;
+    SingleCellSimulationViewSimulationData *mData;
 
     double mProgress;
 

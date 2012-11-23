@@ -4,7 +4,7 @@
 
 #include "cellmlfilemanager.h"
 #include "singlecellsimulationviewsimulation.h"
-#include "singlecellsimulationviewsimulationinformationwidget.h"
+#include "singlecellsimulationviewsimulationdata.h"
 
 //==============================================================================
 
@@ -24,12 +24,11 @@ namespace SingleCellSimulationView {
 SingleCellSimulationViewSimulation::SingleCellSimulationViewSimulation(const QString &pFileName) :
     mWorkerThread(0),
     mWorker(0),
-    mFileName(pFileName),
-    mDelay(0),
-    mStartingPoint(0.0),
-    mEndingPoint(1000.0),
-    mPointInterval(1.0)
+    mFileName(pFileName)
 {
+    // Get ourselves some data
+
+    mData = new SingleCellSimulationViewSimulationData();
 }
 
 //==============================================================================
@@ -39,38 +38,10 @@ SingleCellSimulationViewSimulation::~SingleCellSimulationViewSimulation()
     // Stop our worker (just in case...)
 
     stop();
-}
 
-//==============================================================================
+    // Delete some internal objects
 
-void SingleCellSimulationViewSimulation::updateFromGui(QwtSlider *pSlider,
-                                                       SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings)
-{
-    // Update our delay from our slider
-
-    mDelay = pSlider->value();
-
-    // Update our settings from our simulation information widget
-
-    mStartingPoint = pSimulationSettings->startingPoint();
-    mEndingPoint   = pSimulationSettings->endingPoint();
-    mPointInterval = pSimulationSettings->pointInterval();
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewSimulation::updateGui(QwtSlider *pSlider,
-                                                   SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings)
-{
-    // Update our slider using our delay
-
-    pSlider->setValue(mDelay);
-
-    // Update our simulation information widget using our settings
-
-    pSimulationSettings->setStartingPoint(mStartingPoint);
-    pSimulationSettings->setEndingPoint(mEndingPoint);
-    pSimulationSettings->setPointInterval(mPointInterval);
+    delete mData;
 }
 
 //==============================================================================
@@ -80,6 +51,15 @@ QString SingleCellSimulationViewSimulation::fileName() const
     // Retrieve and return our file name
 
     return mFileName;
+}
+
+//==============================================================================
+
+SingleCellSimulationViewSimulationData * SingleCellSimulationViewSimulation::data() const
+{
+    // Retrieve and return our data
+
+    return mData;
 }
 
 //==============================================================================
@@ -124,13 +104,15 @@ void SingleCellSimulationViewSimulation::run()
 
         bool simulationSettingsOk = false;
 
-        if (mStartingPoint == mEndingPoint)
+        if (mData->startingPoint() == mData->endingPoint())
             emit error(tr("the starting and ending points cannot have the same value"));
-        else if (mPointInterval == 0)
+        else if (mData->pointInterval() == 0)
             emit error(tr("the point interval cannot be equal to zero"));
-        else if ((mStartingPoint < mEndingPoint) && (mPointInterval < 0))
+        else if (   (mData->startingPoint() < mData->endingPoint())
+                 && (mData->pointInterval() < 0))
             emit error(tr("the ending point is greater than the starting point, so the point interval should be greater than zero"));
-        else if ((mStartingPoint > mEndingPoint) && (mPointInterval > 0))
+        else if (   (mData->startingPoint() > mData->endingPoint())
+                 && (mData->pointInterval() > 0))
             emit error(tr("the ending point is smaller than the starting point, so the point interval should be smaller than zero"));
         else
             simulationSettingsOk = true;
@@ -143,8 +125,7 @@ void SingleCellSimulationViewSimulation::run()
         // Create our worker and the thread in which it will work
 
         mWorkerThread = new QThread();
-        mWorker       = new SingleCellSimulationViewSimulationWorker(mDelay,
-                                                                     mStartingPoint, mEndingPoint, mPointInterval);
+        mWorker       = new SingleCellSimulationViewSimulationWorker(mData);
 
         // Check that the worker and its thread have been properly created
 
@@ -232,18 +213,6 @@ void SingleCellSimulationViewSimulation::finished(const int &pElapsedTime)
     // Let people know that we have stopped
 
     emit stopped(pElapsedTime);
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewSimulation::setDelay(const int &pDelay)
-{
-    // Set our delay and update that of our worker, if active
-
-    mDelay = pDelay;
-
-    if (mWorkerThread && mWorker)
-        mWorker->setDelay(pDelay);
 }
 
 //==============================================================================

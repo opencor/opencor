@@ -8,6 +8,7 @@
 #include "singlecellsimulationviewcontentswidget.h"
 #include "singlecellsimulationviewinformationwidget.h"
 #include "singlecellsimulationviewsimulation.h"
+#include "singlecellsimulationviewsimulationdata.h"
 #include "singlecellsimulationviewsimulationinformationwidget.h"
 #include "singlecellsimulationviewwidget.h"
 #include "toolbarwidget.h"
@@ -396,7 +397,8 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
     if (previousSimulation)
         // Update our simulation settings for the previous model from the GUI
 
-        previousSimulation->updateFromGui(mDelaySlider, simulationSettings);
+        previousSimulation->data()->updateFromGui(mDelaySlider,
+                                                  simulationSettings);
 
     // Retrieve our simulation settings for the current model, if any
 
@@ -438,7 +440,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
     // Update our GUI using our simulation settings for the current model
 
-    mSimulation->updateGui(mDelaySlider, simulationSettings);
+    mSimulation->data()->updateGui(mDelaySlider, simulationSettings);
 
     // Output some information about our CellML file
 
@@ -632,8 +634,8 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
 
     // Make sure that our simulation settings are up-to-date
 
-    mSimulation->updateFromGui(mDelaySlider,
-                               mContentsWidget->informationWidget()->simulationWidget());
+    mSimulation->data()->updateFromGui(mDelaySlider,
+                                       mContentsWidget->informationWidget()->simulationWidget());
 
     // Start the simulation
 
@@ -711,7 +713,7 @@ void SingleCellSimulationViewWidget::updateSliderValue(const double &pSliderValu
     // Also update our simulation settings
 
     if (mSimulation)
-        mSimulation->setDelay(mDelaySlider->value());
+        mSimulation->data()->setDelay(mDelaySlider->value());
 }
 
 //==============================================================================

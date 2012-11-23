@@ -2,6 +2,7 @@
 // Single cell simulation view simulation worker
 //==============================================================================
 
+#include "singlecellsimulationviewsimulationdata.h"
 #include "singlecellsimulationviewsimulationworker.h"
 
 //==============================================================================
@@ -15,15 +16,9 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-SingleCellSimulationViewSimulationWorker::SingleCellSimulationViewSimulationWorker(const int &pDelay,
-                                                                                   const double &pStartingPoint,
-                                                                                   const double &pEndingPoint,
-                                                                                   const double &pPointInterval) :
+SingleCellSimulationViewSimulationWorker::SingleCellSimulationViewSimulationWorker(SingleCellSimulationViewSimulationData *pData) :
     mStatus(Idling),
-    mDelay(pDelay),
-    mStartingPoint(pStartingPoint),
-    mEndingPoint(pEndingPoint),
-    mPointInterval(pPointInterval)
+    mData(pData)
 {
     // Initialise our progress
     // Note: we use setProgress() since it will let people know about our
@@ -87,19 +82,23 @@ void SingleCellSimulationViewSimulationWorker::run()
 
         // Our main work loop
 
-        bool increasingPoints = mEndingPoint > mStartingPoint;
-        const double oneOverPointRange = 1.0/(mEndingPoint-mStartingPoint);
-        int voiCounter = 0;
-        double currentPoint = mStartingPoint;
+        double startingPoint = mData->startingPoint();
+        double endingPoint   = mData->endingPoint();
+        double pointInterval = mData->pointInterval();
 
-        while ((currentPoint != mEndingPoint) && (mStatus != Stopped)) {
+        bool increasingPoints = endingPoint > startingPoint;
+        const double oneOverPointRange = 1.0/(endingPoint-startingPoint);
+        int voiCounter = 0;
+        double currentPoint = startingPoint;
+
+        while ((currentPoint != endingPoint) && (mStatus != Stopped)) {
             // Handle our current point
 
 //---GRY--- TO BE DONE...
 
             // Let people know about our progress
 
-            setProgress((currentPoint-mStartingPoint)*oneOverPointRange);
+            setProgress((currentPoint-startingPoint)*oneOverPointRange);
 
             // Check whether we should be pausing
 
@@ -131,16 +130,20 @@ void SingleCellSimulationViewSimulationWorker::run()
             ++voiCounter;
 
             currentPoint = increasingPoints?
-                               qMin(mEndingPoint, mStartingPoint+voiCounter*mPointInterval):
-                               qMax(mEndingPoint, mStartingPoint+voiCounter*mPointInterval);
+                               qMin(endingPoint, startingPoint+voiCounter*pointInterval):
+                               qMax(endingPoint, startingPoint+voiCounter*pointInterval);
 
             // Delay things a bit, if needed
+            // Note: unlike for the starting/ending points and point interval,
+            //       we always retrieve the delay from our data structure since
+            //       it can be changed ay any time (through the GUI) unlike
+            //       those other properties...
 
-            if (mDelay) {
+            if (mData->delay()) {
                 totalElapsedTime += timer.elapsed();
 
                 mStatusMutex.lock();
-                    mStatusCondition.wait(&mStatusMutex, mDelay);
+                    mStatusCondition.wait(&mStatusMutex, mData->delay());
                 mStatusMutex.unlock();
 
                 timer.restart();
@@ -212,15 +215,6 @@ void SingleCellSimulationViewSimulationWorker::stop()
 
         mStatus = Stopped;
     }
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewSimulationWorker::setDelay(const int &pDelay)
-{
-    // Set our delay
-
-    mDelay = pDelay;
 }
 
 //==============================================================================
