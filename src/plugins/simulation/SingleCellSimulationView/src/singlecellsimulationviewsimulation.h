@@ -2,8 +2,8 @@
 // Single cell simulation view simulation
 //==============================================================================
 
-#ifndef SINGLECELLSIMULATIONVIEW_H
-#define SINGLECELLSIMULATIONVIEW_H
+#ifndef SINGLECELLSIMULATIONVIEWSIMULATION_H
+#define SINGLECELLSIMULATIONVIEWSIMULATION_H
 
 //==============================================================================
 
