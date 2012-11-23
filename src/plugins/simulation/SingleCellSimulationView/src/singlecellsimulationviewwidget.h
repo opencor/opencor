@@ -13,10 +13,15 @@
 //==============================================================================
 
 class QFrame;
+class QLabel;
 class QProgressBar;
 class QSettings;
 class QSplitter;
 class QTextEdit;
+
+//==============================================================================
+
+class QwtSlider;
 
 //==============================================================================
 
@@ -73,6 +78,9 @@ private:
 
     QList<SingleCellSimulationViewSimulation *> mStoppedSimulations;
 
+    QwtSlider *mSlider;
+    QLabel *mSliderValue;
+
     QSplitter *mSplitter;
 
     SingleCellSimulationViewContentsWidget *mContentsWidget;
@@ -104,6 +112,8 @@ private Q_SLOTS:
     void on_actionRemove_triggered();
 
     void on_actionCsvExport_triggered();
+
+    void updateSliderValue(const double &pSliderValue);
 
     void simulationRunning();
     void simulationPausing();

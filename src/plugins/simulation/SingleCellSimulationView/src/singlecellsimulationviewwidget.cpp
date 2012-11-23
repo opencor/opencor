@@ -21,12 +21,17 @@
 #include <QBrush>
 #include <QDesktopWidget>
 #include <QImage>
+#include <QLabel>
 #include <QPainter>
 #include <QProgressBar>
 #include <QSettings>
 #include <QSplitter>
 #include <QTextEdit>
 #include <QTimer>
+
+//==============================================================================
+
+#include "qwt_slider.h"
 
 //==============================================================================
 
@@ -57,6 +62,23 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
 
     mGui->setupUi(this);
 
+    // Create a slider (and a label to show its value) to specify the delay in
+    // the plotting of simulation data
+
+    mSlider = new QwtSlider(this);
+    mSliderValue = new QLabel(this);
+
+    mSlider->setBorderWidth(1);
+    mSlider->setFixedWidth(0.1*qApp->desktop()->screenGeometry().width());
+    mSlider->setHandleSize(0.5*mSlider->handleSize().width(),
+                               mSlider->handleSize().height());
+    mSlider->setRange(0.0, 1000.0);
+
+    connect(mSlider, SIGNAL(valueChanged(double)),
+            this, SLOT(updateSliderValue(const double &)));
+
+    updateSliderValue(mSlider->value());
+
     // Create a tool bar widget with different buttons
 
     Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget(this);
@@ -64,6 +86,9 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     toolBarWidget->addAction(mGui->actionRun);
     toolBarWidget->addAction(mGui->actionPause);
     toolBarWidget->addAction(mGui->actionStop);
+    toolBarWidget->addSeparator();
+    toolBarWidget->addWidget(mSlider);
+    toolBarWidget->addWidget(mSliderValue);
     toolBarWidget->addSeparator();
     toolBarWidget->addAction(mGui->actionDebugMode);
     toolBarWidget->addSeparator();
@@ -653,6 +678,15 @@ void SingleCellSimulationViewWidget::on_actionRemove_triggered()
 void SingleCellSimulationViewWidget::on_actionCsvExport_triggered()
 {
 //---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewWidget::updateSliderValue(const double &pSliderValue)
+{
+    // Update our slider value
+
+    mSliderValue->setText(QLocale().toString(pSliderValue)+" ms");
 }
 
 //==============================================================================
