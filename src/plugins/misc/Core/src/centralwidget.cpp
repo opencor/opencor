@@ -1300,7 +1300,7 @@ void CentralWidget::updateFileTabIcon(const QString &pFileName,
     // Update the requested file tab icon, but only if the view (from which the
     // signal was emitted) is the currently active one
 
-    QWidget *viewWidget = dynamic_cast<QWidget *>(sender());
+    QWidget *viewWidget = qobject_cast<QWidget *>(sender());
 
     if (viewWidget->isVisible())
         // The view from which the signal was emitted is visible, so we can
