@@ -28,6 +28,7 @@
 #include <QSplitter>
 #include <QTextEdit>
 #include <QTimer>
+#include <QVariant>
 
 //==============================================================================
 
@@ -218,6 +219,7 @@ void SingleCellSimulationViewWidget::retranslateUi()
 
 static const QString SettingsSizesCount = "SizesCount";
 static const QString SettingsSize       = "Size";
+static const QString SettingsDelay      = "Delay";
 
 //==============================================================================
 
@@ -235,6 +237,10 @@ void SingleCellSimulationViewWidget::loadSettings(QSettings *pSettings)
 
         mSplitter->setSizes(newSizes);
     }
+
+    // Retrieve the delay between data points
+
+    mSlider->setValue(pSettings->value(SettingsDelay, 0).toDouble());
 
     // Retrieve the settings of our contents widget
 
@@ -258,6 +264,10 @@ void SingleCellSimulationViewWidget::saveSettings(QSettings *pSettings) const
 
     for (int i = 0, iMax = crtSizes.count(); i < iMax; ++i)
         pSettings->setValue(SettingsSize+QString::number(i), crtSizes[i]);
+
+    // Keep track of the delay between data points
+
+    pSettings->setValue(SettingsDelay, mSlider->value());
 
     // Keep track of the settings of our contents widget
 
