@@ -60,6 +60,9 @@ public:
 
     static QColor borderColor();
 
+    static QColor windowColor();
+    static QColor highlightColor();
+
 protected:
     QSize defaultSize(const double &pRatio) const;
 
@@ -70,6 +73,8 @@ protected:
 
 private:
     QWidget *mParent;
+
+    static QColor specificColor(const QString &pColor);
 };
 
 //==============================================================================

@@ -2,6 +2,7 @@
 // Single cell simulation view progress bar widget
 //==============================================================================
 
+#include "commonwidget.h"
 #include "singlecellsimulationviewprogressbarwidget.h"
 
 //==============================================================================
@@ -20,27 +21,6 @@ SingleCellSimulationViewProgressBarWidget::SingleCellSimulationViewProgressBarWi
     QWidget(pParent),
     mValue(0.0)
 {
-    // Initialise our colours
-
-    updateColors();
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewProgressBarWidget::changeEvent(QEvent *pEvent)
-{
-    // Default handling of the event
-
-    QWidget::changeEvent(pEvent);
-
-    // Check whether the palette has changed and if so then update both our
-    // colours and ourselves
-
-    if (pEvent->type() == QEvent::PaletteChange) {
-        updateColors();
-
-        update();
-    }
 }
 
 //==============================================================================
@@ -54,10 +34,12 @@ void SingleCellSimulationViewProgressBarWidget::paintEvent(QPaintEvent *pEvent)
     int value = mValue*width();
 
     if (value)
-        painter.fillRect(0, 0, value, height(), mForegroundColor);
+        painter.fillRect(0, 0, value, height(),
+                         Core::CommonWidget::highlightColor());
 
     if (value != width())
-        painter.fillRect(value, 0, width()-value, height(), mBackgroundColor);
+        painter.fillRect(value, 0, width()-value, height(),
+                         Core::CommonWidget::windowColor());
 
     // Accept the event
 
@@ -77,18 +59,6 @@ void SingleCellSimulationViewProgressBarWidget::setValue(const double &pValue)
 
         update();
     }
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewProgressBarWidget::updateColors()
-{
-    // Update both our background and foreground colours
-
-    QPalette widgetPalette = palette();
-
-    mBackgroundColor = widgetPalette.color(QPalette::Window);
-    mForegroundColor = widgetPalette.color(QPalette::Highlight);
 }
 
 //==============================================================================

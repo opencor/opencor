@@ -78,20 +78,51 @@ void CommonWidget::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
+QColor CommonWidget::specificColor(const QString &pColor)
+{
+    // Return a specific colour
+
+    QColor res;
+    QSettings settings(qApp->applicationName());
+
+    settings.beginGroup(SettingsGlobal);
+        res = settings.value(pColor).value<QColor>();
+    settings.endGroup();
+
+    return res;
+}
+
+//==============================================================================
+
 QColor CommonWidget::borderColor()
 {
     // Return the colour to be used for a border
     // Note: we retrieve it from our settings which is updated by our plugin
     //       itself (see CorePlugin::retrieveBorderColor())...
 
-    QColor res;
-    QSettings settings(qApp->applicationName());
+    return specificColor(SettingsBorderColor);
+}
 
-    settings.beginGroup(SettingsGlobal);
-        res = settings.value(SettingsBorderColor).value<QColor>();
-    settings.endGroup();
+//==============================================================================
 
-    return res;
+QColor CommonWidget::windowColor()
+{
+    // Return the colour to be used for a window
+    // Note: we retrieve it from our settings which is updated by our plugin
+    //       itself (see CorePlugin::changeEvent())...
+
+    return specificColor(SettingsWindowColor);
+}
+
+//==============================================================================
+
+QColor CommonWidget::highlightColor()
+{
+    // Return the colour to be used for a highlight
+    // Note: we retrieve it from our settings which is updated by our plugin
+    //       itself (see CorePlugin::changeEvent())...
+
+    return specificColor(SettingsHighlightColor);
 }
 
 //==============================================================================

@@ -187,7 +187,7 @@ void CorePlugin::initialize()
 
     mRecentFileNames = QStringList();
 
-    retrieveBorderColor();
+    retrieveColors();
 }
 
 //==============================================================================
@@ -338,9 +338,7 @@ void CorePlugin::retrieveBorderColor()
 
     stackedWidget.setFrameShape(QFrame::StyledPanel);
 
-    stackedWidget.move(-2*stackedWidget.width(),
-                       -2*stackedWidget.height());
-
+    stackedWidget.move(-2*stackedWidget.width(), -2*stackedWidget.height());
     stackedWidget.show();
 
     // Render the widget to an image
@@ -366,13 +364,32 @@ void CorePlugin::retrieveBorderColor()
 
 //==============================================================================
 
+void CorePlugin::retrieveColors()
+{
+    // Retrieve our border colour
+
+    retrieveBorderColor();
+
+    // Retrieve some other colours
+
+    QSettings settings(qApp->applicationName());
+    QPalette appPalette = qApp->palette();
+
+    settings.beginGroup(SettingsGlobal);
+        settings.setValue(SettingsWindowColor, appPalette.color(QPalette::Window));
+        settings.setValue(SettingsHighlightColor, appPalette.color(QPalette::Highlight));
+    settings.endGroup();
+}
+
+//==============================================================================
+
 void CorePlugin::changeEvent(QEvent *pEvent)
 {
-    // Check whether the palette has changed and if so then retrieve the new
-    // colour to be used for a border
+    // Check whether the palette has changed and if so then retrieve some new
+    // colours to be used
 
     if (pEvent->type() == QEvent::PaletteChange)
-        retrieveBorderColor();
+        retrieveColors();
 }
 
 //==============================================================================

@@ -26,16 +26,10 @@ public:
     void setValue(const double &pValue);
 
 protected:
-    virtual void changeEvent(QEvent *pEvent);
     virtual void paintEvent(QPaintEvent *pEvent);
 
 private:
     double mValue;
-
-    QColor mBackgroundColor;
-    QColor mForegroundColor;
-
-    void updateColors();
 };
 
 //==============================================================================

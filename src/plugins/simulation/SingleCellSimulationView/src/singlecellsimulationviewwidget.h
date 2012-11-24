@@ -64,7 +64,6 @@ public:
     QIcon fileTabIcon(const QString &pFileName) const;
 
 protected:
-    virtual void changeEvent(QEvent *pEvent);
     virtual void paintEvent(QPaintEvent *pEvent);
 
 private:
@@ -91,17 +90,12 @@ private:
 
     QMap<QString, int> mProgresses;
 
-    QColor mTabBarIconBackgroundColor;
-    QColor mTabBarIconForegroundColor;
-
     void output(const QString &pMessage);
 
     void setSimulationMode(const bool &pEnabled, const bool &pRunVisible);
 
     void clearGraphPanels();
     void clearActiveGraphPanel();
-
-    void updateTabBarIconColors();
 
     int tabBarIconSize() const;
 

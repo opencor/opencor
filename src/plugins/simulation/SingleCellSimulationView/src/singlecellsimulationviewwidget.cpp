@@ -171,10 +171,6 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     mGui->layout->addWidget(Core::newLineWidget(this));
     mGui->layout->addWidget(mProgressBar);
 
-    // Initialise our tab bar icon colours
-
-    updateTabBarIconColors();
-
     // Make our contents widget our focus proxy
 
     setFocusProxy(mContentsWidget);
@@ -526,18 +522,6 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::updateTabBarIconColors()
-{
-    // Update both our tab bar icon background and foreground colours
-
-    QPalette widgetPalette = palette();
-
-    mTabBarIconBackgroundColor = widgetPalette.color(QPalette::Window);
-    mTabBarIconForegroundColor = widgetPalette.color(QPalette::Highlight);
-}
-
-//==============================================================================
-
 int SingleCellSimulationViewWidget::tabBarIconSize() const
 {
     // Return the size of a file tab icon
@@ -561,12 +545,12 @@ QIcon SingleCellSimulationViewWidget::fileTabIcon(const QString &pFileName) cons
                                    QImage::Format_ARGB32_Premultiplied);
         QPainter tabBarIconPainter(&tabBarIcon);
 
-        tabBarIconPainter.setBrush(QBrush(mTabBarIconBackgroundColor));
+        tabBarIconPainter.setBrush(QBrush(CommonWidget::windowColor()));
         tabBarIconPainter.setPen(QPen(CommonWidget::borderColor()));
 
         tabBarIconPainter.drawRect(0, 0, tabBarIcon.width()-1, tabBarIcon.height()-1);
         tabBarIconPainter.fillRect(1, 1, progress, tabBarIcon.height()-2,
-                                   mTabBarIconForegroundColor);
+                                   CommonWidget::highlightColor());
 
         return QIcon(QPixmap::fromImage(tabBarIcon));
     } else {
@@ -574,21 +558,6 @@ QIcon SingleCellSimulationViewWidget::fileTabIcon(const QString &pFileName) cons
 
         return QIcon();
     }
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewWidget::changeEvent(QEvent *pEvent)
-{
-    // Default handling of the event
-
-    Core::ViewWidget::changeEvent(pEvent);
-
-    // Check whether the palette has changed and if so then update tab bar icon
-    // colours
-
-    if (pEvent->type() == QEvent::PaletteChange)
-        updateTabBarIconColors();
 }
 
 //==============================================================================

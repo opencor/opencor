@@ -79,6 +79,7 @@ private:
     void updateFileReopenMenu();
 
     void retrieveBorderColor();
+    void retrieveColors();
 
 private Q_SLOTS:
     void fileOpened(const QString &pFileName);
