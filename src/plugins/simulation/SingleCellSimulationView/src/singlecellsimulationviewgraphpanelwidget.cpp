@@ -96,7 +96,7 @@ void SingleCellSimulationViewGraphPanelWidget::changeEvent(QEvent *pEvent)
     // used to highlight the active graph panel
 
     if (pEvent->type() == QEvent::PaletteChange)
-        setMarkerColor();
+        updateMarkerColor();
 }
 
 //==============================================================================
@@ -179,9 +179,9 @@ bool SingleCellSimulationViewGraphPanelWidget::isActive() const
 
 //==============================================================================
 
-void SingleCellSimulationViewGraphPanelWidget::setMarkerColor()
+void SingleCellSimulationViewGraphPanelWidget::updateMarkerColor()
 {
-    // Set the marker's colour based on whether the graph panel is active
+    // Update the marker's colour based on whether the graph panel is active
 
     QPalette newPalette = palette();
 
@@ -205,7 +205,7 @@ void SingleCellSimulationViewGraphPanelWidget::setActive(const bool &pActive)
 
     // Update the marker's colour
 
-    setMarkerColor();
+    updateMarkerColor();
 
     // Let people know if the graph panel has been activated or inactivated
 

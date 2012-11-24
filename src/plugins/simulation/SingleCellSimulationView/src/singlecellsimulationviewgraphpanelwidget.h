@@ -61,7 +61,7 @@ private:
 
     QList<QwtPlotCurve *> mPlotCurves;
 
-    void setMarkerColor();
+    void updateMarkerColor();
 
 Q_SIGNALS:
     void activated(SingleCellSimulationViewGraphPanelWidget *pGraphPanel);
