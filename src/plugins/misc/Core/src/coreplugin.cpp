@@ -373,11 +373,10 @@ void CorePlugin::retrieveColors()
     // Retrieve some other colours
 
     QSettings settings(qApp->applicationName());
-    QPalette appPalette = qApp->palette();
 
     settings.beginGroup(SettingsGlobal);
-        settings.setValue(SettingsWindowColor, appPalette.color(QPalette::Window));
-        settings.setValue(SettingsHighlightColor, appPalette.color(QPalette::Highlight));
+        settings.setValue(SettingsWindowColor, qApp->palette().color(QPalette::Window));
+        settings.setValue(SettingsHighlightColor, qApp->palette().color(QPalette::Highlight));
     settings.endGroup();
 }
 

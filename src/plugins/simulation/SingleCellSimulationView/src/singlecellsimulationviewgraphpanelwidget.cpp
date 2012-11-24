@@ -185,9 +185,10 @@ void SingleCellSimulationViewGraphPanelWidget::updateMarkerColor()
 
     QPalette newPalette = palette();
 
-    newPalette.setColor(QPalette::WindowText, mActive?
-                                                  newPalette.color(QPalette::Highlight):
-                                                  newPalette.color(QPalette::Window));
+    newPalette.setColor(QPalette::WindowText,
+                        mActive?
+                            CommonWidget::highlightColor():
+                            CommonWidget::windowColor());
 
     mMarker->setPalette(newPalette);
 }
