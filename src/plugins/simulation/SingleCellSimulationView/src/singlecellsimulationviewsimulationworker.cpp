@@ -4,11 +4,14 @@
 
 #include "singlecellsimulationviewsimulationdata.h"
 #include "singlecellsimulationviewsimulationworker.h"
-#include "thread.h"
 
 //==============================================================================
 
 #include <QTime>
+
+//==============================================================================
+
+#include <cmath>
 
 //==============================================================================
 
@@ -58,6 +61,23 @@ void SingleCellSimulationViewSimulationWorker::setProgress(const double &pProgre
 
     emit progress(pProgress);
 }
+
+//==============================================================================
+
+#pragma optimize("", off)
+void delay(const int &pDelay)
+{
+    // Just waste some CPU time by computing an exponential...
+    // Note #1: ideally, we would use QThread::usleep(), but on some operating
+    //          systems (e.g. Windows), it doesn't sleep for the correct number
+    //          of microseconds (and can even hang OpenCOR), so...
+    // Note #2: this function isn't optimised thus making sure that exponential
+    //          is really executed...
+
+    for (int i = 0, iMax = 100000*pDelay; i < iMax; ++i)
+        std::exp((double) i);
+}
+#pragma optimize("", on)
 
 //==============================================================================
 
@@ -143,7 +163,7 @@ void SingleCellSimulationViewSimulationWorker::run()
             if (mData->delay()) {
                 totalElapsedTime += timer.elapsed();
 
-                static_cast<Core::Thread *>(thread())->usleep(mData->delay());
+                delay(mData->delay());
 
                 timer.restart();
             }

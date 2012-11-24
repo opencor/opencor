@@ -39,7 +39,6 @@ ADD_PLUGIN(Core
         src/filemanager.cpp
         src/organisationwidget.cpp
         src/propertyeditorwidget.cpp
-        src/thread.cpp
         src/toolbarwidget.cpp
         src/treeviewwidget.cpp
         src/usermessagewidget.cpp
