@@ -153,9 +153,11 @@ void SingleCellSimulationViewSimulationWorker::run()
 
 //---GRY--- TO BE DONE...
 
-        // Let people know about our final progress
+        // Let people know about our final progress, but only if we didn't stop
+        // the simulation
 
-        setProgress(1.0);
+        if (mStatus != Stopped)
+            setProgress(1.0);
 
         // Retrieve the total elapsed time
 
