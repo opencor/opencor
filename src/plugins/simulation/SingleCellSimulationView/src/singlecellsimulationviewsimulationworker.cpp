@@ -64,8 +64,13 @@ void SingleCellSimulationViewSimulationWorker::setProgress(const double &pProgre
 
 //==============================================================================
 
-#pragma optimize("", off)
+#ifdef Q_WS_WIN
+    #pragma optimize("", off)
+
 void delay(const int &pDelay)
+#else
+void __attribute__((optimize("O0"))) delay(const int &pDelay)
+#endif
 {
     // Just waste some CPU time by computing an exponential...
     // Note #1: ideally, we would use QThread::usleep(), but on some operating
@@ -74,10 +79,14 @@ void delay(const int &pDelay)
     // Note #2: this function isn't optimised thus making sure that exponential
     //          is really executed...
 
-    for (int i = 0, iMax = 100000*pDelay; i < iMax; ++i)
-        std::exp((double) i);
+    double dummy = 0;
+
+    for (int i = 0, iMax = 1000*pDelay; i < iMax; ++i)
+        dummy += std::exp((double) i);
 }
-#pragma optimize("", on)
+#ifdef Q_WS_WIN
+    #pragma optimize("", on)
+#endif
 
 //==============================================================================
 

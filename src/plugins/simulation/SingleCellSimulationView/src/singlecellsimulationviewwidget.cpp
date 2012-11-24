@@ -77,7 +77,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     mDelaySlider->setFixedWidth(0.1*qApp->desktop()->screenGeometry().width());
     mDelaySlider->setHandleSize(0.5*mDelaySlider->handleSize().width(),
                                     mDelaySlider->handleSize().height());
-    mDelaySlider->setRange(0.0, 100.0, 1.0, 10.0);
+    mDelaySlider->setRange(0.0, 1000.0, 1.0);
 
 #ifndef Q_WS_MAC
     delaySliderSpace->setFixedWidth(4);
