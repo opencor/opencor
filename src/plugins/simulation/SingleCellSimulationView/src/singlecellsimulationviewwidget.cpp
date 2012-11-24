@@ -7,6 +7,7 @@
 #include "coreutils.h"
 #include "singlecellsimulationviewcontentswidget.h"
 #include "singlecellsimulationviewinformationwidget.h"
+#include "singlecellsimulationviewprogressbarwidget.h"
 #include "singlecellsimulationviewsimulation.h"
 #include "singlecellsimulationviewsimulationdata.h"
 #include "singlecellsimulationviewsimulationinformationwidget.h"
@@ -24,7 +25,6 @@
 #include <QImage>
 #include <QLabel>
 #include <QPainter>
-#include <QProgressBar>
 #include <QSettings>
 #include <QSplitter>
 #include <QTextEdit>
@@ -163,18 +163,17 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     //       a jerky one (should the progress bar be more than 100 pixels
     //       wide)...
 
-    mProgressBar = new QProgressBar(this);
+    mProgressBar = new SingleCellSimulationViewProgressBarWidget(this);
 
-    mProgressBar->setAlignment(Qt::AlignCenter);
     mProgressBar->setFixedHeight(3);
-    mProgressBar->setMaximum(32768);
     mProgressBar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-    mProgressBar->setTextVisible(false);
-
-    setProgressBarStyleSheet();
 
     mGui->layout->addWidget(Core::newLineWidget(this));
     mGui->layout->addWidget(mProgressBar);
+
+    // Initialise our tab bar icon colours
+
+    updateTabBarIconColors();
 
     // Make our contents widget our focus proxy
 
@@ -527,7 +526,19 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
 //==============================================================================
 
-int SingleCellSimulationViewWidget::fileTabBarIconSize() const
+void SingleCellSimulationViewWidget::updateTabBarIconColors()
+{
+    // Update both our tab bar icon background and foreground colours
+
+    QPalette widgetPalette = palette();
+
+    mTabBarIconBackgroundColor = widgetPalette.color(QPalette::Window);
+    mTabBarIconForegroundColor = widgetPalette.color(QPalette::Highlight);
+}
+
+//==============================================================================
+
+int SingleCellSimulationViewWidget::tabBarIconSize() const
 {
     // Return the size of a file tab icon
 
@@ -546,18 +557,16 @@ QIcon SingleCellSimulationViewWidget::fileTabIcon(const QString &pFileName) cons
     if (simulation && (progress != -1)) {
         // Create an image that shows the progress of our simulation
 
-        QImage tabBarIcon = QImage(fileTabBarIconSize(), mProgressBar->height()+2,
+        QImage tabBarIcon = QImage(tabBarIconSize(), mProgressBar->height()+2,
                                    QImage::Format_ARGB32_Premultiplied);
         QPainter tabBarIconPainter(&tabBarIcon);
 
-        QPalette tabBarIconPalette = palette();
-
-        tabBarIconPainter.setBrush(QBrush(tabBarIconPalette.color(QPalette::Window)));
+        tabBarIconPainter.setBrush(QBrush(mTabBarIconBackgroundColor));
         tabBarIconPainter.setPen(QPen(CommonWidget::borderColor()));
 
         tabBarIconPainter.drawRect(0, 0, tabBarIcon.width()-1, tabBarIcon.height()-1);
-        tabBarIconPainter.fillRect(QRect(1, 1, progress, tabBarIcon.height()-2),
-                                   QBrush(tabBarIconPalette.color(QPalette::Highlight)));
+        tabBarIconPainter.fillRect(1, 1, progress, tabBarIcon.height()-2,
+                                   mTabBarIconForegroundColor);
 
         return QIcon(QPixmap::fromImage(tabBarIcon));
     } else {
@@ -569,43 +578,17 @@ QIcon SingleCellSimulationViewWidget::fileTabIcon(const QString &pFileName) cons
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::setProgressBarStyleSheet()
-{
-    // Customise our progress bar to be a very simple (and fast) one
-
-    QPalette progressBarPalette = palette();
-    QColor progressBarBackground = progressBarPalette.color(QPalette::Window);
-    QColor progressBarChunkBackground = progressBarPalette.color(QPalette::Highlight);
-
-    mProgressBar->setStyleSheet(QString("QProgressBar {"
-                                        "    background: rgb(%1, %2, %3);"
-                                        "    border: 0px;"
-                                        "}"
-                                        ""
-                                        "QProgressBar::chunk {"
-                                        "    background: rgb(%4, %5, %6);"
-                                        "    border: 0px;"
-                                        "}").arg(QString::number(progressBarBackground.red()),
-                                                 QString::number(progressBarBackground.green()),
-                                                 QString::number(progressBarBackground.blue()),
-                                                 QString::number(progressBarChunkBackground.red()),
-                                                 QString::number(progressBarChunkBackground.green()),
-                                                 QString::number(progressBarChunkBackground.blue())));
-}
-
-//==============================================================================
-
 void SingleCellSimulationViewWidget::changeEvent(QEvent *pEvent)
 {
     // Default handling of the event
 
-    Widget::changeEvent(pEvent);
+    Core::ViewWidget::changeEvent(pEvent);
 
-    // Check whether the palette has changed and if so then update the colours
-    // to be used by our progress bar
+    // Check whether the palette has changed and if so then update tab bar icon
+    // colours
 
     if (pEvent->type() == QEvent::PaletteChange)
-        setProgressBarStyleSheet();
+        updateTabBarIconColors();
 }
 
 //==============================================================================
@@ -790,7 +773,7 @@ void SingleCellSimulationViewWidget::resetProgressBar()
 {
     // Reset our progress bar
 
-    mProgressBar->setValue(0);
+    mProgressBar->setValue(0.0);
 }
 
 //==============================================================================
@@ -821,7 +804,7 @@ void SingleCellSimulationViewWidget::simulationProgress(const double &pProgress,
         //       can also be called directly (as opposed to being called as a
         //       response to a signal) as is done in initialize() above...
 
-        mProgressBar->setValue(pProgress*mProgressBar->maximum());
+        mProgressBar->setValue(pProgress);
 
     // Let people know that we should update the icon of our file tab, but only
     // if it isn't the active simulation (there is already the progress bar, so
@@ -833,8 +816,8 @@ void SingleCellSimulationViewWidget::simulationProgress(const double &pProgress,
 
     if (simulation && (simulation != mSimulation)) {
         int oldProgress = mProgresses.value(simulation->fileName(), -1);
-        int newProgress = (fileTabBarIconSize()-2)*pProgress;
-        // Note: fileTabBarIconSize()-2 because we want a one-pixel wide
+        int newProgress = (tabBarIconSize()-2)*pProgress;
+        // Note: tabBarIconSize()-2 because we want a one-pixel wide
         //       border...
 
         if (newProgress != oldProgress) {

@@ -37,6 +37,7 @@ namespace SingleCellSimulationView {
 //==============================================================================
 
 class SingleCellSimulationViewContentsWidget;
+class SingleCellSimulationViewProgressBarWidget;
 class SingleCellSimulationViewSimulation;
 class SingleCellSimulationViewSimulationInformationWidget;
 class SingleCellSimulationViewSimulationWorker;
@@ -86,9 +87,12 @@ private:
     SingleCellSimulationViewContentsWidget *mContentsWidget;
     QTextEdit *mOutput;
 
-    QProgressBar *mProgressBar;
+    SingleCellSimulationViewProgressBarWidget *mProgressBar;
 
     QMap<QString, int> mProgresses;
+
+    QColor mTabBarIconBackgroundColor;
+    QColor mTabBarIconForegroundColor;
 
     void output(const QString &pMessage);
 
@@ -97,9 +101,9 @@ private:
     void clearGraphPanels();
     void clearActiveGraphPanel();
 
-    void setProgressBarStyleSheet();
+    void updateTabBarIconColors();
 
-    int fileTabBarIconSize() const;
+    int tabBarIconSize() const;
 
 private Q_SLOTS:
     void on_actionRun_triggered();
