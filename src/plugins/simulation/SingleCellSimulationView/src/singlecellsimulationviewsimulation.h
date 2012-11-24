@@ -15,10 +15,6 @@
 
 //==============================================================================
 
-class QThread;
-
-//==============================================================================
-
 class QwtSlider;
 
 //==============================================================================
@@ -27,9 +23,15 @@ namespace OpenCOR {
 
 //==============================================================================
 
+namespace Core {
+    class Thread;
+}   // namespace Core
+
+//==============================================================================
+
 namespace CellMLSupport {
     class CellmlFileRuntime;
-}   // namespace CellMLSuppoer
+}   // namespace CellMLSupport
 
 //==============================================================================
 
@@ -64,7 +66,7 @@ public:
     void stop();
 
 private:
-    QThread *mWorkerThread;
+    Core::Thread *mWorkerThread;
     SingleCellSimulationViewSimulationWorker *mWorker;
 
     QString mFileName;

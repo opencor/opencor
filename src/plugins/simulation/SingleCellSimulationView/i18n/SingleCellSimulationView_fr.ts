@@ -124,8 +124,8 @@
         <translation>Délai</translation>
     </message>
     <message>
-        <source>Delay between two data points</source>
-        <translation>Délai entre deux points de données</translation>
+        <source>Delay in milliseconds between two data points</source>
+        <translation>Délai en millisecondes entre deux points de données</translation>
     </message>
 </context>
 <context>

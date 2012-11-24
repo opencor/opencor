@@ -77,7 +77,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     mDelaySlider->setFixedWidth(0.1*qApp->desktop()->screenGeometry().width());
     mDelaySlider->setHandleSize(0.5*mDelaySlider->handleSize().width(),
                                     mDelaySlider->handleSize().height());
-    mDelaySlider->setRange(0.0, 1000.0, 1.0);
+    mDelaySlider->setRange(0.0, 50.0, 1.0, 10.0);
 
 #ifndef Q_WS_MAC
     delaySliderSpace->setFixedWidth(4);
@@ -208,7 +208,7 @@ void SingleCellSimulationViewWidget::retranslateUi()
     mDelaySlider->setToolTip(tr("Delay"));
     mDelaySliderValue->setToolTip(mDelaySlider->toolTip());
 
-    mDelaySlider->setStatusTip(tr("Delay between two data points"));
+    mDelaySlider->setStatusTip(tr("Delay in milliseconds between two data points"));
     mDelaySliderValue->setStatusTip(mDelaySlider->statusTip());
 
     // Retranslate our contents widget
@@ -708,7 +708,7 @@ void SingleCellSimulationViewWidget::updateSliderValue(const double &pSliderValu
 {
     // Update our slider value
 
-    mDelaySliderValue->setText(QLocale().toString(pSliderValue));
+    mDelaySliderValue->setText(QLocale().toString(pSliderValue)+" ms");
 
     // Also update our simulation settings
 
