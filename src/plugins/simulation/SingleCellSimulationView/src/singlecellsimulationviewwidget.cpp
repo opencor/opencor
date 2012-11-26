@@ -469,14 +469,72 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
     // Retrieve the unit of the variable of integration, if any
 
-    if (variableOfIntegration)
-        // We have a variable of integration, so we can retrieve its unit
-
-        simulationSettings->setUnit(cellmlFileRuntime->variableOfIntegration()->unit());
-    else
+    if (!variableOfIntegration) {
         // We don't have a variable of integration, so...
 
         simulationError(tr("the model must have at least one ODE or DAE"));
+
+        return;
+    }
+
+    // Retrieve the unit of our variable of integration
+
+    simulationSettings->setUnit(cellmlFileRuntime->variableOfIntegration()->unit());
+
+#ifdef QT_DEBUG
+    // Output the type of solvers that are available to the model
+
+    qDebug("---------------------------------------");
+    qDebug("%s", qPrintable(pFileName));
+
+    Solver::Type solverType;
+
+    if (cellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode) {
+        solverType = Solver::Ode;
+
+        information = " - ODE solver(s): ";
+    } else {
+        solverType = Solver::Dae;
+
+        information = " - DAE solver(s): ";
+    }
+
+    int solverCounter = 0;
+
+    foreach (SolverInterface *solverInterface, mSolverInterfaces)
+        if (solverInterface->type() == solverType) {
+            if (++solverCounter == 1)
+                information += solverInterface->name();
+            else
+                information += " | "+solverInterface->name();
+        }
+
+    if (!solverCounter)
+        information += "none";
+
+    information += ".";
+
+    if (cellmlFileRuntime->needNlaSolver()) {
+        information += "\n - NLA solver(s): ";
+
+        int solverCounter = 0;
+
+        foreach (SolverInterface *solverInterface, mSolverInterfaces)
+            if (solverInterface->type() == Solver::Nla) {
+                if (++solverCounter == 1)
+                    information += solverInterface->name();
+                else
+                    information += " | "+solverInterface->name();
+            }
+
+        if (!solverCounter)
+            information += "none";
+
+        information += ".";
+    }
+
+    qDebug("%s", qPrintable(information));
+#endif
 }
 
 //==============================================================================
