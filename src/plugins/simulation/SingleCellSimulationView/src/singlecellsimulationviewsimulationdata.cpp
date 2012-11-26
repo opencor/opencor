@@ -2,9 +2,11 @@
 // Single cell simulation view simulation data
 //==============================================================================
 
+#include "singlecellsimulationviewcontentswidget.h"
 #include "singlecellsimulationviewinformationsimulationwidget.h"
 #include "singlecellsimulationviewinformationwidget.h"
 #include "singlecellsimulationviewsimulationdata.h"
+#include "singlecellsimulationviewwidget.h"
 
 //==============================================================================
 
@@ -27,34 +29,36 @@ SingleCellSimulationViewSimulationData::SingleCellSimulationViewSimulationData()
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulationData::updateFromGui(QwtSlider *pSlider,
-                                                           SingleCellSimulationViewInformationWidget *pSettings)
+void SingleCellSimulationViewSimulationData::updateFromGui(SingleCellSimulationViewWidget *pGui)
 {
     // Update our delay from our slider
 
-    mDelay = pSlider->value();
+    mDelay = pGui->delayWidget()->value();
 
     // Update our settings from our simulation information widget
 
-    mStartingPoint = pSettings->simulationWidget()->startingPoint();
-    mEndingPoint   = pSettings->simulationWidget()->endingPoint();
-    mPointInterval = pSettings->simulationWidget()->pointInterval();
+    SingleCellSimulationViewInformationSimulationWidget *simulationWidget = pGui->contentsWidget()->informationWidget()->simulationWidget();
+
+    mStartingPoint = simulationWidget->startingPoint();
+    mEndingPoint   = simulationWidget->endingPoint();
+    mPointInterval = simulationWidget->pointInterval();
 }
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulationData::updateGui(QwtSlider *pSlider,
-                                                       SingleCellSimulationViewInformationWidget *pSettings)
+void SingleCellSimulationViewSimulationData::updateGui(SingleCellSimulationViewWidget *pGui)
 {
     // Update our slider using our delay
 
-    pSlider->setValue(mDelay);
+    pGui->delayWidget()->setValue(mDelay);
 
     // Update our simulation information widget using our settings
 
-    pSettings->simulationWidget()->setStartingPoint(mStartingPoint);
-    pSettings->simulationWidget()->setEndingPoint(mEndingPoint);
-    pSettings->simulationWidget()->setPointInterval(mPointInterval);
+    SingleCellSimulationViewInformationSimulationWidget *simulationWidget = pGui->contentsWidget()->informationWidget()->simulationWidget();
+
+    simulationWidget->setStartingPoint(mStartingPoint);
+    simulationWidget->setEndingPoint(mEndingPoint);
+    simulationWidget->setPointInterval(mPointInterval);
 }
 
 //==============================================================================

@@ -61,6 +61,10 @@ public:
 
     QIcon fileTabIcon(const QString &pFileName) const;
 
+    QwtSlider * delayWidget() const;
+
+    SingleCellSimulationViewContentsWidget * contentsWidget() const;
+
 protected:
     virtual void paintEvent(QPaintEvent *pEvent);
 
@@ -76,8 +80,8 @@ private:
 
     QList<SingleCellSimulationViewSimulation *> mStoppedSimulations;
 
-    QwtSlider *mDelaySlider;
-    QLabel *mDelaySliderValue;
+    QwtSlider *mDelayWidget;
+    QLabel *mDelayValueWidget;
 
     QSplitter *mSplitter;
 
@@ -109,7 +113,7 @@ private Q_SLOTS:
 
     void on_actionCsvExport_triggered();
 
-    void updateSliderValue(const double &pSliderValue);
+    void updateDelayValue(const double &pDelayValue);
 
     void simulationRunning();
     void simulationPausing();

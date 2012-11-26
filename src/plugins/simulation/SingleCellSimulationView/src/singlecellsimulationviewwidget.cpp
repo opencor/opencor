@@ -68,26 +68,26 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     // Create a slider (and a label to show its value) to specify the delay
     // (in milliseconds) between two data points
 
-    mDelaySlider = new QwtSlider(this);
+    mDelayWidget = new QwtSlider(this);
 #ifndef Q_WS_MAC
     QWidget *delaySliderSpace = new QWidget(this);
 #endif
-    mDelaySliderValue = new QLabel(this);
+    mDelayValueWidget = new QLabel(this);
 
-    mDelaySlider->setBorderWidth(1);
-    mDelaySlider->setFixedWidth(0.1*qApp->desktop()->screenGeometry().width());
-    mDelaySlider->setHandleSize(0.5*mDelaySlider->handleSize().width(),
-                                    mDelaySlider->handleSize().height());
-    mDelaySlider->setRange(0.0, 50.0, 1.0, 10.0);
+    mDelayWidget->setBorderWidth(1);
+    mDelayWidget->setFixedWidth(0.1*qApp->desktop()->screenGeometry().width());
+    mDelayWidget->setHandleSize(0.5*mDelayWidget->handleSize().width(),
+                                    mDelayWidget->handleSize().height());
+    mDelayWidget->setRange(0.0, 50.0, 1.0, 10.0);
 
 #ifndef Q_WS_MAC
     delaySliderSpace->setFixedWidth(4);
 #endif
 
-    connect(mDelaySlider, SIGNAL(valueChanged(double)),
-            this, SLOT(updateSliderValue(const double &)));
+    connect(mDelayWidget, SIGNAL(valueChanged(double)),
+            this, SLOT(updateDelayValue(const double &)));
 
-    updateSliderValue(mDelaySlider->value());
+    updateDelayValue(mDelayWidget->value());
 
     // Create a tool bar widget with different buttons
 
@@ -97,11 +97,11 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     toolBarWidget->addAction(mGui->actionPause);
     toolBarWidget->addAction(mGui->actionStop);
     toolBarWidget->addSeparator();
-    toolBarWidget->addWidget(mDelaySlider);
+    toolBarWidget->addWidget(mDelayWidget);
 #ifndef Q_WS_MAC
     toolBarWidget->addWidget(delaySliderSpace);
 #endif
-    toolBarWidget->addWidget(mDelaySliderValue);
+    toolBarWidget->addWidget(mDelayValueWidget);
     toolBarWidget->addSeparator();
     toolBarWidget->addAction(mGui->actionDebugMode);
     toolBarWidget->addSeparator();
@@ -181,7 +181,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
 
 SingleCellSimulationViewWidget::~SingleCellSimulationViewWidget()
 {
-    // Delete our simulation settings
+    // Delete our simulation data
 
     foreach (SingleCellSimulationViewSimulation *simulation, mSimulations)
         delete simulation;
@@ -199,13 +199,13 @@ void SingleCellSimulationViewWidget::retranslateUi()
 
     mGui->retranslateUi(this);
 
-    // Retranslate our slider and its value
+    // Retranslate our delay and delay value widgets
 
-    mDelaySlider->setToolTip(tr("Delay"));
-    mDelaySliderValue->setToolTip(mDelaySlider->toolTip());
+    mDelayWidget->setToolTip(tr("Delay"));
+    mDelayValueWidget->setToolTip(mDelayWidget->toolTip());
 
-    mDelaySlider->setStatusTip(tr("Delay in milliseconds between two data points"));
-    mDelaySliderValue->setStatusTip(mDelaySlider->statusTip());
+    mDelayWidget->setStatusTip(tr("Delay in milliseconds between two data points"));
+    mDelayValueWidget->setStatusTip(mDelayWidget->statusTip());
 
     // Retranslate our contents widget
 
@@ -334,7 +334,7 @@ void SingleCellSimulationViewWidget::setSimulationMode(const bool &pEnabled,
     mContentsWidget->informationWidget()->simulationWidget()->setEnabled(!pEnabled);
 
     // Give the focus to our focus proxy, in case we leave the simulation mode
-    // (so that the user can modify simulation settings, etc.)
+    // (so that the user can modify simulation data, etc.)
 
     if (!pEnabled)
         focusProxy()->setFocus();
@@ -349,16 +349,16 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
     SingleCellSimulationViewSimulation *previousSimulation = mSimulation;
 
     if (previousSimulation)
-        // Update our simulation settings for the previous model from the GUI
+        // Update our previous simulation's data from the GUI
 
-        previousSimulation->data()->updateFromGui(mDelaySlider, mContentsWidget->informationWidget());
+        previousSimulation->data()->updateFromGui(this);
 
-    // Retrieve our simulation settings for the current model, if any
+    // Retrieve our simulation data for the current model, if any
 
     mSimulation = mSimulations.value(pFileName);
 
     if (!mSimulation) {
-        // No simulation settings currently exist for the model, so create some
+        // No simulation data currently exist for the model, so create some
 
         mSimulation = new SingleCellSimulationViewSimulation(pFileName);
 
@@ -377,7 +377,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         connect(mSimulation, SIGNAL(error(const QString &)),
                 this, SLOT(simulationError(const QString &)));
 
-        // Keep track of our simulation settings
+        // Keep track of our simulation data
 
         mSimulations.insert(pFileName, mSimulation);
     }
@@ -391,9 +391,9 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         emit updateFileTabIcon(mSimulation->fileName(), QIcon());
     }
 
-    // Update our GUI using our simulation settings for the current model
+    // Update our GUI using ou simulation's data
 
-    mSimulation->data()->updateGui(mDelaySlider, mContentsWidget->informationWidget());
+    mSimulation->data()->updateGui(this);
 
     // Output some information about our CellML file
 
@@ -570,7 +570,7 @@ QIcon SingleCellSimulationViewWidget::fileTabIcon(const QString &pFileName) cons
 
         return QIcon(QPixmap::fromImage(tabBarIcon));
     } else {
-        // No simulation settings currently exist for the model, so...
+        // No simulation data currently exist for the model, so...
 
         return QIcon();
     }
@@ -600,9 +600,9 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
     if (!mSimulation)
         return;
 
-    // Make sure that our simulation settings are up-to-date
+    // Make sure that our simulation data are up-to-date
 
-    mSimulation->data()->updateFromGui(mDelaySlider, mContentsWidget->informationWidget());
+    mSimulation->data()->updateFromGui(this);
 
     // Start the simulation
 
@@ -671,16 +671,16 @@ void SingleCellSimulationViewWidget::on_actionCsvExport_triggered()
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::updateSliderValue(const double &pSliderValue)
+void SingleCellSimulationViewWidget::updateDelayValue(const double &pDelayValue)
 {
-    // Update our slider value
+    // Update our delay value widget
 
-    mDelaySliderValue->setText(QLocale().toString(pSliderValue)+" ms");
+    mDelayValueWidget->setText(QLocale().toString(pDelayValue)+" ms");
 
-    // Also update our simulation settings
+    // Also update our simulation data
 
     if (mSimulation)
-        mSimulation->data()->setDelay(mDelaySlider->value());
+        mSimulation->data()->setDelay(mDelayWidget->value());
 }
 
 //==============================================================================
@@ -832,6 +832,24 @@ void SingleCellSimulationViewWidget::simulationError(const QString &pError)
         // Note: see the corresponding note in simulationProgress() above...
 
         output(OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+pError+".</span>"+OutputBrLn);
+}
+
+//==============================================================================
+
+QwtSlider * SingleCellSimulationViewWidget::delayWidget() const
+{
+    // Return our delay widget
+
+    return mDelayWidget;
+}
+
+//==============================================================================
+
+SingleCellSimulationViewContentsWidget * SingleCellSimulationViewWidget::contentsWidget() const
+{
+    // Return our contents widget
+
+    return mContentsWidget;
 }
 
 //==============================================================================
