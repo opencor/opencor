@@ -39,15 +39,11 @@ SingleCellSimulationViewContentsWidget::SingleCellSimulationViewContentsWidget(Q
 
     mInformationWidget->setObjectName("Information");
 
-    // Create a splitter for our graph panels and create a connection to keep
-    // track of whether we can remove graph panels
+    // Create a splitter for our graph panels
 
     mGraphPanelsWidget = new SingleCellSimulationViewGraphPanelsWidget(this);
 
     mGraphPanelsWidget->setObjectName("GraphPanels");
-
-    connect(mGraphPanelsWidget, SIGNAL(removeGraphPanelsEnabled(const bool &)),
-            this, SIGNAL(removeGraphPanelsEnabled(const bool &)));
 
     // Add our information and graph panels widgets to ourselves
 
@@ -154,47 +150,11 @@ SingleCellSimulationViewInformationWidget * SingleCellSimulationViewContentsWidg
 
 //==============================================================================
 
-void SingleCellSimulationViewContentsWidget::addGraphPanel()
+SingleCellSimulationViewGraphPanelsWidget * SingleCellSimulationViewContentsWidget::graphPanelsWidget()
 {
-    // Ask our graph panels widget to add a new graph panel
+    // Return our graph panels widget
 
-    mGraphPanelsWidget->addGraphPanel();
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewContentsWidget::removeGraphPanel()
-{
-    // Ask our graph panels widget to remove the current graph panel
-
-    mGraphPanelsWidget->removeGraphPanel();
-}
-
-//==============================================================================
-
-SingleCellSimulationViewGraphPanelWidget * SingleCellSimulationViewContentsWidget::activeGraphPanel()
-{
-    // Ask our graph panels widget to retrieve the active graph panel
-
-    return mGraphPanelsWidget->activeGraphPanel();
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewContentsWidget::clearGraphPanels()
-{
-    // Ask our graph panels widget to clear all the graph panels
-
-    mGraphPanelsWidget->clearGraphPanels();
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewContentsWidget::clearActiveGraphPanel()
-{
-    // Ask our graph panels widget to clear the current graph panel
-
-    mGraphPanelsWidget->clearActiveGraphPanel();
+    return mGraphPanelsWidget;
 }
 
 //==============================================================================

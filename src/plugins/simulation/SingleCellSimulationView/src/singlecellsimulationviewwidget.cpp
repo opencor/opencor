@@ -6,6 +6,7 @@
 #include "cellmlfilevariable.h"
 #include "coreutils.h"
 #include "singlecellsimulationviewcontentswidget.h"
+#include "singlecellsimulationviewgraphpanelswidget.h"
 #include "singlecellsimulationviewinformationwidget.h"
 #include "singlecellsimulationviewprogressbarwidget.h"
 #include "singlecellsimulationviewsimulation.h"
@@ -123,7 +124,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
 
     mContentsWidget->setObjectName("Contents");
 
-    connect(mContentsWidget, SIGNAL(removeGraphPanelsEnabled(const bool &)),
+    connect(mContentsWidget->graphPanelsWidget(), SIGNAL(removeGraphPanelsEnabled(const bool &)),
             mGui->actionRemove, SLOT(setEnabled(bool)));
 
     // Create a simulation output widget with a layout on which we put a
@@ -279,18 +280,18 @@ void SingleCellSimulationViewWidget::addSolverInterface(SolverInterface *pSolver
 
 void SingleCellSimulationViewWidget::clearGraphPanels()
 {
-    // Ask our contents widget to clear all the graph panels
+    // Ask our graph panels widget to clear all the graph panels
 
-    mContentsWidget->clearGraphPanels();
+    mContentsWidget->graphPanelsWidget()->clearGraphPanels();
 }
 
 //==============================================================================
 
 void SingleCellSimulationViewWidget::clearActiveGraphPanel()
 {
-    // Ask our contents widget to clear the current graph panel
+    // Ask our graph panels widget to clear the current graph panel
 
-    mContentsWidget->clearActiveGraphPanel();
+    mContentsWidget->graphPanelsWidget()->clearActiveGraphPanel();
 }
 
 //==============================================================================
@@ -650,18 +651,18 @@ void SingleCellSimulationViewWidget::on_actionDebugMode_triggered()
 
 void SingleCellSimulationViewWidget::on_actionAdd_triggered()
 {
-    // Ask our contents widget to add a new graph panel
+    // Ask our graph panels widget to add a new graph panel
 
-    mContentsWidget->addGraphPanel();
+    mContentsWidget->graphPanelsWidget()->addGraphPanel();
 }
 
 //==============================================================================
 
 void SingleCellSimulationViewWidget::on_actionRemove_triggered()
 {
-    // Ask our contents widget to remove the current graph panel
+    // Ask our graph panels widget to remove the current graph panel
 
-    mContentsWidget->removeGraphPanel();
+    mContentsWidget->graphPanelsWidget()->removeGraphPanel();
 }
 
 //==============================================================================

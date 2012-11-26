@@ -47,23 +47,13 @@ public:
     virtual void saveSettings(QSettings *pSettings) const;
 
     SingleCellSimulationViewInformationWidget * informationWidget();
-
-    void addGraphPanel();
-    void removeGraphPanel();
-
-    SingleCellSimulationViewGraphPanelWidget * activeGraphPanel();
-
-    void clearGraphPanels();
-    void clearActiveGraphPanel();
+    SingleCellSimulationViewGraphPanelsWidget * graphPanelsWidget();
 
 private:
     Ui::SingleCellSimulationViewContentsWidget *mGui;
 
     SingleCellSimulationViewInformationWidget *mInformationWidget;
     SingleCellSimulationViewGraphPanelsWidget *mGraphPanelsWidget;
-
-Q_SIGNALS:
-    void removeGraphPanelsEnabled(const bool &pEnabled);
 };
 
 //==============================================================================
