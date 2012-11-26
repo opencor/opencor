@@ -12,6 +12,7 @@
 #include "singlecellsimulationviewsimulation.h"
 #include "singlecellsimulationviewsimulationdata.h"
 #include "singlecellsimulationviewinformationsimulationwidget.h"
+#include "singlecellsimulationviewinformationsolverswidget.h"
 #include "singlecellsimulationviewwidget.h"
 #include "toolbarwidget.h"
 
@@ -390,6 +391,10 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
         emit updateFileTabIcon(mSimulation->fileName(), QIcon());
     }
+
+    // Initialise our GUI's solvers widget using our simulation
+
+    mContentsWidget->informationWidget()->solversWidget()->initialize(mSimulation);
 
     // Update our GUI using ou simulation's data
 
@@ -832,6 +837,15 @@ void SingleCellSimulationViewWidget::simulationError(const QString &pError)
         // Note: see the corresponding note in simulationProgress() above...
 
         output(OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+pError+".</span>"+OutputBrLn);
+}
+
+//==============================================================================
+
+SingleCellSimulationViewSimulation * SingleCellSimulationViewWidget::simulation() const
+{
+    // Return our (current) simulation
+
+    return mSimulation;
 }
 
 //==============================================================================

@@ -61,6 +61,8 @@ public:
 
     QIcon fileTabIcon(const QString &pFileName) const;
 
+    SingleCellSimulationViewSimulation * simulation() const;
+
     QwtSlider * delayWidget() const;
 
     SingleCellSimulationViewContentsWidget * contentsWidget() const;

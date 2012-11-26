@@ -16,12 +16,18 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
+class SingleCellSimulationViewSimulation;
+
+//==============================================================================
+
 class SingleCellSimulationViewInformationSolversWidget : public Core::Widget
 {
     Q_OBJECT
 
 public:
     explicit SingleCellSimulationViewInformationSolversWidget(QWidget *pParent = 0);
+
+    void initialize(SingleCellSimulationViewSimulation *pSimulation);
 };
 
 //==============================================================================

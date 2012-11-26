@@ -3,6 +3,7 @@
 //==============================================================================
 
 #include "singlecellsimulationviewinformationsolverswidget.h"
+#include "singlecellsimulationviewsimulation.h"
 
 //==============================================================================
 
@@ -14,6 +15,13 @@ namespace SingleCellSimulationView {
 SingleCellSimulationViewInformationSolversWidget::SingleCellSimulationViewInformationSolversWidget(QWidget *pParent) :
     Widget(pParent)
 {
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewInformationSolversWidget::initialize(SingleCellSimulationViewSimulation *pSimulation)
+{
+//---GRY--- TO BE DONE...
 }
 
 //==============================================================================
