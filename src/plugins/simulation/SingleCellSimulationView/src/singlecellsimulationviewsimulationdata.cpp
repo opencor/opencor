@@ -3,7 +3,7 @@
 //==============================================================================
 
 #include "singlecellsimulationviewsimulationdata.h"
-#include "singlecellsimulationviewsimulationinformationwidget.h"
+#include "singlecellsimulationviewinformationsimulationwidget.h"
 
 //==============================================================================
 
@@ -27,7 +27,7 @@ SingleCellSimulationViewSimulationData::SingleCellSimulationViewSimulationData()
 //==============================================================================
 
 void SingleCellSimulationViewSimulationData::updateFromGui(QwtSlider *pSlider,
-                                                           SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings)
+                                                           SingleCellSimulationViewInformationSimulationWidget *pSimulationSettings)
 {
     // Update our delay from our slider
 
@@ -43,7 +43,7 @@ void SingleCellSimulationViewSimulationData::updateFromGui(QwtSlider *pSlider,
 //==============================================================================
 
 void SingleCellSimulationViewSimulationData::updateGui(QwtSlider *pSlider,
-                                                       SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings)
+                                                       SingleCellSimulationViewInformationSimulationWidget *pSimulationSettings)
 {
     // Update our slider using our delay
 

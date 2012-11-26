@@ -40,7 +40,6 @@ namespace SingleCellSimulationView {
 //==============================================================================
 
 class SingleCellSimulationViewSimulationData;
-class SingleCellSimulationViewSimulationInformationWidget;
 
 //==============================================================================
 

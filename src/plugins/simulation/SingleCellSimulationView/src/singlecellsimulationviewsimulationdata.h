@@ -16,7 +16,7 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-class SingleCellSimulationViewSimulationInformationWidget;
+class SingleCellSimulationViewInformationSimulationWidget;
 
 //==============================================================================
 
@@ -26,9 +26,9 @@ public:
     explicit SingleCellSimulationViewSimulationData();
 
     void updateFromGui(QwtSlider *pSlider,
-                       SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings);
+                       SingleCellSimulationViewInformationSimulationWidget *pSimulationSettings);
     void updateGui(QwtSlider *pSlider,
-                   SingleCellSimulationViewSimulationInformationWidget *pSimulationSettings);
+                   SingleCellSimulationViewInformationSimulationWidget *pSimulationSettings);
 
     int delay() const;
     void setDelay(const int &pDelay);

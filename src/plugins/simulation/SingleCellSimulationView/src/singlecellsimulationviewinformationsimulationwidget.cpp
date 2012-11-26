@@ -1,8 +1,8 @@
 //==============================================================================
-// Single cell simulation view simulation information widget
+// Single cell simulation view information simulation widget
 //==============================================================================
 
-#include "singlecellsimulationviewsimulationinformationwidget.h"
+#include "singlecellsimulationviewinformationsimulationwidget.h"
 
 //==============================================================================
 
@@ -16,7 +16,7 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-SingleCellSimulationViewSimulationInformationWidget::SingleCellSimulationViewSimulationInformationWidget(QWidget *pParent) :
+SingleCellSimulationViewInformationSimulationWidget::SingleCellSimulationViewInformationSimulationWidget(QWidget *pParent) :
     PropertyEditorWidget(pParent)
 {
     // We don't have any hierarchy, so disable decoration
@@ -55,7 +55,7 @@ SingleCellSimulationViewSimulationInformationWidget::SingleCellSimulationViewSim
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulationInformationWidget::retranslateUi()
+void SingleCellSimulationViewInformationSimulationWidget::retranslateUi()
 {
     // Update ou header labels
 
@@ -72,7 +72,7 @@ void SingleCellSimulationViewSimulationInformationWidget::retranslateUi()
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulationInformationWidget::setUnit(const QString &pUnit)
+void SingleCellSimulationViewInformationSimulationWidget::setUnit(const QString &pUnit)
 {
     // Set the unit for our different properties
 
@@ -83,7 +83,7 @@ void SingleCellSimulationViewSimulationInformationWidget::setUnit(const QString 
 
 //==============================================================================
 
-double SingleCellSimulationViewSimulationInformationWidget::startingPoint() const
+double SingleCellSimulationViewInformationSimulationWidget::startingPoint() const
 {
     // Return our starting point
 
@@ -92,7 +92,7 @@ double SingleCellSimulationViewSimulationInformationWidget::startingPoint() cons
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulationInformationWidget::setStartingPoint(const double &pValue)
+void SingleCellSimulationViewInformationSimulationWidget::setStartingPoint(const double &pValue)
 {
     // Set our starting point
 
@@ -101,7 +101,7 @@ void SingleCellSimulationViewSimulationInformationWidget::setStartingPoint(const
 
 //==============================================================================
 
-double SingleCellSimulationViewSimulationInformationWidget::endingPoint() const
+double SingleCellSimulationViewInformationSimulationWidget::endingPoint() const
 {
     // Return our ending point
 
@@ -110,7 +110,7 @@ double SingleCellSimulationViewSimulationInformationWidget::endingPoint() const
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulationInformationWidget::setEndingPoint(const double &pValue)
+void SingleCellSimulationViewInformationSimulationWidget::setEndingPoint(const double &pValue)
 {
     // Set our ending point
 
@@ -119,7 +119,7 @@ void SingleCellSimulationViewSimulationInformationWidget::setEndingPoint(const d
 
 //==============================================================================
 
-double SingleCellSimulationViewSimulationInformationWidget::pointInterval() const
+double SingleCellSimulationViewInformationSimulationWidget::pointInterval() const
 {
     // Return our point interval
 
@@ -128,7 +128,7 @@ double SingleCellSimulationViewSimulationInformationWidget::pointInterval() cons
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulationInformationWidget::setPointInterval(const double &pValue)
+void SingleCellSimulationViewInformationSimulationWidget::setPointInterval(const double &pValue)
 {
     // Set our point interval
 

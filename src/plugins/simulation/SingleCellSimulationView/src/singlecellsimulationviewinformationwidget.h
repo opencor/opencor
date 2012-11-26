@@ -31,7 +31,7 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-class SingleCellSimulationViewSimulationInformationWidget;
+class SingleCellSimulationViewInformationSimulationWidget;
 
 //==============================================================================
 
@@ -48,13 +48,13 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-    SingleCellSimulationViewSimulationInformationWidget * simulationWidget();
+    SingleCellSimulationViewInformationSimulationWidget * simulationWidget();
 
 private:
     Ui::SingleCellSimulationViewInformationWidget *mGui;
 
     Core::CollapsibleWidget *mSimulationCollapsibleWidget;
-    SingleCellSimulationViewSimulationInformationWidget *mSimulationInformationWidget;
+    SingleCellSimulationViewInformationSimulationWidget *mSimulationWidget;
 
     Core::CollapsibleWidget *mSolversCollapsibleWidget;
 

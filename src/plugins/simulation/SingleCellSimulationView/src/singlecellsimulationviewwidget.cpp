@@ -11,7 +11,7 @@
 #include "singlecellsimulationviewprogressbarwidget.h"
 #include "singlecellsimulationviewsimulation.h"
 #include "singlecellsimulationviewsimulationdata.h"
-#include "singlecellsimulationviewsimulationinformationwidget.h"
+#include "singlecellsimulationviewinformationsimulationwidget.h"
 #include "singlecellsimulationviewwidget.h"
 #include "toolbarwidget.h"
 
@@ -347,7 +347,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
     // Do a few things for the previous model, if needed
 
     SingleCellSimulationViewSimulation *previousSimulation = mSimulation;
-    SingleCellSimulationViewSimulationInformationWidget *simulationSettings = mContentsWidget->informationWidget()->simulationWidget();
+    SingleCellSimulationViewInformationSimulationWidget *simulationSettings = mContentsWidget->informationWidget()->simulationWidget();
 
     if (previousSimulation)
         // Update our simulation settings for the previous model from the GUI

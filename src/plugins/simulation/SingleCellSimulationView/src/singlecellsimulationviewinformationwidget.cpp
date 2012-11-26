@@ -5,7 +5,7 @@
 #include "collapsiblewidget.h"
 #include "coreutils.h"
 #include "singlecellsimulationviewinformationwidget.h"
-#include "singlecellsimulationviewsimulationinformationwidget.h"
+#include "singlecellsimulationviewinformationsimulationwidget.h"
 
 //==============================================================================
 
@@ -32,15 +32,15 @@ SingleCellSimulationViewInformationWidget::SingleCellSimulationViewInformationWi
 
     // Create our Simulation collapsible widget
 
-    mSimulationInformationWidget = new SingleCellSimulationViewSimulationInformationWidget(this);
+    mSimulationWidget = new SingleCellSimulationViewInformationSimulationWidget(this);
     mSimulationCollapsibleWidget = new Core::CollapsibleWidget(QString(),
-                                                               mSimulationInformationWidget,
+                                                               mSimulationWidget,
                                                                this);
 
-    mSimulationInformationWidget->setObjectName("SimulationInformation");
+    mSimulationWidget->setObjectName("SimulationInformation");
     mSimulationCollapsibleWidget->setObjectName("SimulationCollapsible");
 
-mSimulationInformationWidget->setUnit("ms");
+mSimulationWidget->setUnit("ms");
 //---GRY--- THE ABOVE IS JUST FOR TESTING PURPOSES...
 
     // Create our Solvers collapsible widget
@@ -82,7 +82,7 @@ mSimulationInformationWidget->setUnit("ms");
 
     // Select our first property
 
-    mSimulationInformationWidget->selectFirstItem();
+    mSimulationWidget->selectFirstItem();
 
     // Make our simulation collapsible widget our focus proxy
 
@@ -115,7 +115,7 @@ void SingleCellSimulationViewInformationWidget::retranslateUi()
 
     // Retranslate our various collapsible widgets' body
 
-    mSimulationInformationWidget->retranslateUi();
+    mSimulationWidget->retranslateUi();
 }
 
 //==============================================================================
@@ -128,8 +128,8 @@ void SingleCellSimulationViewInformationWidget::loadSettings(QSettings *pSetting
         mSimulationCollapsibleWidget->loadSettings(pSettings);
     pSettings->endGroup();
 
-    pSettings->beginGroup(mSimulationInformationWidget->objectName());
-        mSimulationInformationWidget->loadSettings(pSettings);
+    pSettings->beginGroup(mSimulationWidget->objectName());
+        mSimulationWidget->loadSettings(pSettings);
     pSettings->endGroup();
 
     pSettings->beginGroup(mSolversCollapsibleWidget->objectName());
@@ -155,8 +155,8 @@ void SingleCellSimulationViewInformationWidget::saveSettings(QSettings *pSetting
         mSimulationCollapsibleWidget->saveSettings(pSettings);
     pSettings->endGroup();
 
-    pSettings->beginGroup(mSimulationInformationWidget->objectName());
-        mSimulationInformationWidget->saveSettings(pSettings);
+    pSettings->beginGroup(mSimulationWidget->objectName());
+        mSimulationWidget->saveSettings(pSettings);
     pSettings->endGroup();
 
     pSettings->beginGroup(mSolversCollapsibleWidget->objectName());
@@ -174,11 +174,11 @@ void SingleCellSimulationViewInformationWidget::saveSettings(QSettings *pSetting
 
 //==============================================================================
 
-SingleCellSimulationViewSimulationInformationWidget * SingleCellSimulationViewInformationWidget::simulationWidget()
+SingleCellSimulationViewInformationSimulationWidget * SingleCellSimulationViewInformationWidget::simulationWidget()
 {
     // Return our simulation widget
 
-    return mSimulationInformationWidget;
+    return mSimulationWidget;
 }
 
 //==============================================================================

@@ -2,6 +2,33 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR" sourcelanguage="en_GB">
 <context>
+    <name>OpenCOR::SingleCellSimulationView::SingleCellSimulationViewInformationSimulationWidget</name>
+    <message>
+        <source>Property</source>
+        <translation>Propriété</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation>Valeur</translation>
+    </message>
+    <message>
+        <source>Unit</source>
+        <translation>Unité</translation>
+    </message>
+    <message>
+        <source>Starting point</source>
+        <translation>Point de départ</translation>
+    </message>
+    <message>
+        <source>Ending point</source>
+        <translation>Point d&apos;arrivée</translation>
+    </message>
+    <message>
+        <source>Point interval</source>
+        <translation>Interval de point</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::SingleCellSimulationView::SingleCellSimulationViewInformationWidget</name>
     <message>
         <source>Simulation</source>
@@ -48,33 +75,6 @@
     <message>
         <source>the simulation worker and/or its thread could not be initialised</source>
         <translation>l&apos;agent de simulation et/ou son fil n&apos;a/ont pas pu être initialisé/s</translation>
-    </message>
-</context>
-<context>
-    <name>OpenCOR::SingleCellSimulationView::SingleCellSimulationViewSimulationInformationWidget</name>
-    <message>
-        <source>Property</source>
-        <translation>Propriété</translation>
-    </message>
-    <message>
-        <source>Value</source>
-        <translation>Valeur</translation>
-    </message>
-    <message>
-        <source>Unit</source>
-        <translation>Unité</translation>
-    </message>
-    <message>
-        <source>Starting point</source>
-        <translation>Point de départ</translation>
-    </message>
-    <message>
-        <source>Ending point</source>
-        <translation>Point d&apos;arrivée</translation>
-    </message>
-    <message>
-        <source>Point interval</source>
-        <translation>Interval de point</translation>
     </message>
 </context>
 <context>

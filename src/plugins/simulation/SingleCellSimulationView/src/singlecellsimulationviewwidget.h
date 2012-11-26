@@ -39,8 +39,6 @@ namespace SingleCellSimulationView {
 class SingleCellSimulationViewContentsWidget;
 class SingleCellSimulationViewProgressBarWidget;
 class SingleCellSimulationViewSimulation;
-class SingleCellSimulationViewSimulationInformationWidget;
-class SingleCellSimulationViewSimulationWorker;
 
 //==============================================================================
 

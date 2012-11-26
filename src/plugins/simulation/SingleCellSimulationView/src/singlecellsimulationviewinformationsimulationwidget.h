@@ -1,9 +1,9 @@
 //==============================================================================
-// Single cell simulation view simulation information widget
+// Single cell simulation view information simulation widget
 //==============================================================================
 
-#ifndef SINGLECELLSIMULATIONVIEWSIMULATIONINFORMATIONWIDGET_H
-#define SINGLECELLSIMULATIONVIEWSIMULATIONINFORMATIONWIDGET_H
+#ifndef SINGLECELLSIMULATIONVIEWINFORMATIONSIMULATIONWIDGET_H
+#define SINGLECELLSIMULATIONVIEWINFORMATIONSIMULATIONWIDGET_H
 
 //==============================================================================
 
@@ -20,12 +20,12 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-class SingleCellSimulationViewSimulationInformationWidget : public Core::PropertyEditorWidget
+class SingleCellSimulationViewInformationSimulationWidget : public Core::PropertyEditorWidget
 {
     Q_OBJECT
 
 public:
-    explicit SingleCellSimulationViewSimulationInformationWidget(QWidget *pParent = 0);
+    explicit SingleCellSimulationViewInformationSimulationWidget(QWidget *pParent = 0);
 
     virtual void retranslateUi();
 

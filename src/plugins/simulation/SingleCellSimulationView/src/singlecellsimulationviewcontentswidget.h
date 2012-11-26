@@ -27,7 +27,6 @@ namespace SingleCellSimulationView {
 //==============================================================================
 
 class SingleCellSimulationViewGraphPanelsWidget;
-class SingleCellSimulationViewGraphPanelWidget;
 class SingleCellSimulationViewInformationWidget;
 
 //==============================================================================
