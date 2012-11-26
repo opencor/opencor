@@ -48,6 +48,7 @@ ADD_PLUGIN(SingleCellSimulationView
     UIS
         src/singlecellsimulationviewcontentswidget.ui
         src/singlecellsimulationviewgraphpanelwidget.ui
+        src/singlecellsimulationviewinformationsolverswidget.ui
         src/singlecellsimulationviewinformationwidget.ui
         src/singlecellsimulationviewwidget.ui
     DEFINITIONS

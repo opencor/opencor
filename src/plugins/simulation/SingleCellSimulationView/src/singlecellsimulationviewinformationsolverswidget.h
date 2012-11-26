@@ -11,6 +11,12 @@
 
 //==============================================================================
 
+namespace Ui {
+    class SingleCellSimulationViewInformationSolversWidget;
+}
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace SingleCellSimulationView {
 
@@ -26,8 +32,14 @@ class SingleCellSimulationViewInformationSolversWidget : public Core::Widget
 
 public:
     explicit SingleCellSimulationViewInformationSolversWidget(QWidget *pParent = 0);
+    ~SingleCellSimulationViewInformationSolversWidget();
+
+    virtual void retranslateUi();
 
     void initialize(SingleCellSimulationViewSimulation *pSimulation);
+
+private:
+    Ui::SingleCellSimulationViewInformationSolversWidget *mGui;
 };
 
 //==============================================================================
