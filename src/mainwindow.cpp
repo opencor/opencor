@@ -187,7 +187,9 @@ MainWindow::MainWindow() :
     //       something which is done without knowing anything about other
     //       plugins. However, there may be things that require knowledge of
     //       what one or several other plugins are about, and this is something
-    //       that can only be done once all the plugins have been initialised...
+    //       that can only be done once all the plugins have been initialised
+    //       (e.g. the SingleCellSimulationView plugin needs to know which
+    //       solvers, if any, are available to it)...
 
     foreach (Plugin *plugin, loadedPlugins) {
         CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
@@ -195,6 +197,52 @@ MainWindow::MainWindow() :
         if (coreInterface)
             coreInterface->initializationsDone(loadedPlugins);
     }
+
+#ifdef QT_DEBUG
+    // Display our solvers' properties
+
+    foreach (Plugin *plugin, loadedPlugins) {
+        SolverInterface *solverInterface = qobject_cast<SolverInterface *>(plugin->instance());
+
+        if (solverInterface) {
+            qDebug("---------------------------------------");
+            qDebug("'%s' solver:", qPrintable(solverInterface->name()));
+            qDebug(" - Type: %s", qPrintable(solverInterface->typeAsString()));
+
+            Solver::Properties properties = solverInterface->properties();
+
+            if (properties.count()) {
+                qDebug(" - Properties:");
+
+                Solver::Properties::const_iterator iter = properties.constBegin();
+                Solver::Properties::const_iterator iterEnd = properties.constEnd();
+
+                while (iter != iterEnd) {
+                    QString type;
+
+                    switch (iter.value()) {
+                    case Solver::Double:
+                        type = "Double";
+
+                        break;
+                    case Solver::Integer:
+                        type = "Integer";
+
+                        break;
+                    default:
+                        type = "???";
+                    }
+
+                    qDebug("    - %s: %s", qPrintable(iter.key()), qPrintable(type));
+
+                    ++iter;
+                }
+            } else {
+                qDebug(" - Properties: none");
+            }
+        }
+    }
+#endif
 
     // Retrieve the user settings from the previous session, if any
 
