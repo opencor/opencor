@@ -31,11 +31,11 @@ SingleCellSimulationViewSimulationData::SingleCellSimulationViewSimulationData()
 
 void SingleCellSimulationViewSimulationData::updateFromGui(SingleCellSimulationViewWidget *pGui)
 {
-    // Update our delay from our slider
+    // Update our delay from our GUI's delay widget
 
     mDelay = pGui->delayWidget()->value();
 
-    // Update our settings from our simulation information widget
+    // Update some of our data from our GUI's simulation widget
 
     SingleCellSimulationViewInformationSimulationWidget *simulationWidget = pGui->contentsWidget()->informationWidget()->simulationWidget();
 
@@ -48,11 +48,11 @@ void SingleCellSimulationViewSimulationData::updateFromGui(SingleCellSimulationV
 
 void SingleCellSimulationViewSimulationData::updateGui(SingleCellSimulationViewWidget *pGui)
 {
-    // Update our slider using our delay
+    // Update our GUI's delay widget using our delay
 
     pGui->delayWidget()->setValue(mDelay);
 
-    // Update our simulation information widget using our settings
+    // Update our GUI's simulation widget using some of our data
 
     SingleCellSimulationViewInformationSimulationWidget *simulationWidget = pGui->contentsWidget()->informationWidget()->simulationWidget();
 
