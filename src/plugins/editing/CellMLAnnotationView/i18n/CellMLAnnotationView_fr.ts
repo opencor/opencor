@@ -185,6 +185,10 @@
         <source>&lt;strong&gt;Error:&lt;/strong&gt; </source>
         <translation>&lt;strong&gt;Erreur :&lt;/strong&gt; </translation>
     </message>
+    <message>
+        <source>the search returned invalid results</source>
+        <translation>la recherche a retourné des résultats invalides</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataNormalViewDetailsWidget</name>

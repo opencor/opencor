@@ -5,6 +5,7 @@
 #include "cellmlannotationviewcellmllistwidget.h"
 #include "cellmlannotationviewmetadataeditdetailswidget.h"
 #include "cellmlannotationviewwidget.h"
+#include "cellmlfilerdftriple.h"
 #include "coreutils.h"
 #include "treeviewwidget.h"
 
@@ -838,7 +839,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termChanged(const QString &p
     // Check whether the term could be directly added, resulting in the add term
     // button being enabled/disabled, depending on the case
 
-    mTermIsDirect = pTerm.contains(QRegExp("^[0-9a-z]+(.[0-9a-z]+)?/[0-9A-Z]+(:[0-9A-Z]+)?$"));
+    mTermIsDirect = QRegExp("^"+CellMLSupport::ResourceRegExp+"/"+CellMLSupport::IdRegExp+"$").exactMatch(pTerm);
 
     // Update our items' GUI
 
@@ -922,23 +923,35 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
                     QVariantList termVariant = termsVariant.toList();
 
                     for (int i = 0, iMax = termVariant.count(); i < iMax; ++i) {
-                        // At this stage, we have an term in the form of a MIRIAM
-                        // URN and a name (as well as a URL, but we don't care about
-                        // it), so we need to decode the MIRIAM URN to retrieve the
-                        // corresponding resource and id
+                        // At this stage, we have a term (in the form of either
+                        // a MIRIAM URN or an identifiers.org URI) and a name
+                        // (as well as a URL, but we don't care about it), so we
+                        // need to decode the term to retrieve the corresponding
+                        // resource and id
 
                         QVariantMap termMap = termVariant[i].toMap();
 
                         QString resource = QString();
                         QString id = QString();
 
-                        CellMLSupport::CellmlFileRdfTriple::decodeMiriamUrn(termMap["uri"].toString(),
-                                                                            resource, id);
+                        if (!CellMLSupport::CellmlFileRdfTriple::decodeTerm(termMap["uri"].toString(),
+                                                                            resource, id)) {
+                            // The term couldn't be decoded, so...
 
-                        // Add the term to our list
+                            items = Items();
 
-                        items << item(termMap["name"].toString(), resource, id);
+                            errorMsg = tr("the search returned invalid results");
+
+                            break;
+                        } else {
+                            // The term could be decoded, so add it to our list
+
+                            items << item(termMap["name"].toString(), resource, id);
+                        }
                     }
+
+                    if (!errorMsg.isEmpty())
+                        break;
                 }
             } else {
                 // Something went wrong, so...
@@ -971,7 +984,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addTerm()
     // Add the term to our CellML element as an RDF triple
 
     CellMLSupport::CellmlFileRdfTriple *rdfTriple;
-    QStringList termInformation = mTerm.split("/");
+    QStringList termInformation = mTerm.replace("%3A", ":").split("/");
 
     if (mQualifierIndex < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
         rdfTriple = mCellmlElement->addMetadata(CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierIndex+1),

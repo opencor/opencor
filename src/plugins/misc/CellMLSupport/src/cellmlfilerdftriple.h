@@ -24,6 +24,11 @@ namespace CellMLSupport {
 
 //==============================================================================
 
+static const QString ResourceRegExp = "[0-9a-z]+((-|\\.)[0-9a-z]+)?";
+static const QString IdRegExp = "[0-9A-Z\\.%-_:]+(:[0-9A-Z\\.%-_:]+)?";
+
+//==============================================================================
+
 class CellmlFile;
 
 //==============================================================================
@@ -103,8 +108,7 @@ public:
     QString resource() const;
     QString id() const;
 
-    static void decodeMiriamUrn(const QString &pMiriamUrn, QString &pResource, QString &pId);
-    static void decodeIdentifiersDotOrgUri(const QString &pIdentifiersDotOrgUri, QString &pResource, QString &pId);
+    static bool decodeTerm(const QString &pTerm, QString &pResource, QString &pId);
 
 private:
     CellmlFile *mCellmlFile;

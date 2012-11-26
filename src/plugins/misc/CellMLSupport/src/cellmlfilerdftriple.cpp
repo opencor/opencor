@@ -87,24 +87,12 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
                 break;
             }
 
-    if (mType == BioModelsDotNetQualifier) {
+    if (mType == BioModelsDotNetQualifier)
         // We seem to be dealing with either a model or a bio(logy) qualifier,
-        // so check whether its object is either a valid MIRIAM URN or a valid
-        // identifiers.org URI
+        // so we try to decode its object which should be either a valid MIRIAM
+        // URN or a valid identifiers.org URI
 
-        QString objectAsString = mObject->asString();
-
-        if (QRegExp("^urn:miriam:[a-zA-Z0-9\\._%]+:[a-zA-Z0-9\\._%]+").exactMatch(objectAsString)) {
-            // The object is a valid MIRIAM URN, so retrieve its corresponding
-            // resource and id
-
-            decodeMiriamUrn(objectAsString, mResource, mId);
-        } else if (QRegExp("^http://identifiers.org/[a-zA-Z0-9\\._:]+/[a-zA-Z0-9\\._:]+").exactMatch(objectAsString)) {
-            // The object is a valid identifiers.org URI, so retrieve its
-            // corresponding resource and id
-
-            decodeIdentifiersDotOrgUri(objectAsString, mResource, mId);
-        } else {
+        if (!decodeTerm(mObject->asString(), mResource, mId)) {
             // The object is neither a valid MIRIAM URN nor a valid
             // identifiers.org URI which means that the RDF triple is not a
             // valid model/bio(logy) qualifier, so...
@@ -114,7 +102,6 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
             mModelQualifier = ModelUnknown;
             mBioQualifier   = BioUnknown;
         }
-    }
 }
 
 //==============================================================================
@@ -445,33 +432,57 @@ CellmlFileRdfTriple::Type CellmlFileRdfTriples::type() const
 
 //==============================================================================
 
-void CellmlFileRdfTriple::decodeMiriamUrn(const QString &pMiriamUrn,
-                                          QString &pResource, QString &pId)
+bool CellmlFileRdfTriple::decodeTerm(const QString &pTerm, QString &pResource,
+                                     QString &pId)
 {
-    // Decode the MIRIAM URN to retrieve the corresponding resource and id
+    // Decode the term, based on whether it matches that of a MIRIAN URN or an
+    // identifiers.org URI
 
-    QStringList miriamUrnList = pMiriamUrn.split(":");
+    bool res = true;
 
-    pResource = miriamUrnList[2].replace("%3A", ":");
-    pId       = miriamUrnList[3].replace("%3A", ":");
-}
+    if (QRegExp("^urn:miriam:"+ResourceRegExp+":"+IdRegExp).exactMatch(pTerm)) {
+        // The term is a MIRIAM URN, so retrieve its corresponding resource and
+        // id
 
-//==============================================================================
+        QStringList miriamUrnList = pTerm.split(":");
 
-void CellmlFileRdfTriple::decodeIdentifiersDotOrgUri(const QString &pIdentifiersDotOrgUri,
-                                                     QString &pResource,
-                                                     QString &pId)
-{
-    // Decode the identifiers.org URI to retrieve the corresponding resource and
-    // id
+        pResource = miriamUrnList[2];
+        pId       = miriamUrnList[3].replace("%3A", ":");
+    } else if (QRegExp("^http://identifiers.org/"+ResourceRegExp+"/#?"+IdRegExp).exactMatch(pTerm)) {
+        // The term is an identifiers.org URI, so retrieve its corresponding
+        // resource and id
 
-    QString identifiersDotOrgUri = pIdentifiersDotOrgUri;
-    // Note: the above is because pIdentifiersDotOrgUri is a const, so we can't
-    //       directly use QString::remove() on it...
-    QStringList identifiersDotOrgUriList = identifiersDotOrgUri.remove("http://identifiers.org/").split("/");
+        QString identifiersDotOrgUri = pTerm;
+        // Note: the above is because pTerm is a const, so we can't directly use
+        //       QString::remove() on it...
+        QStringList identifiersDotOrgUriList = identifiersDotOrgUri.remove("http://identifiers.org/").split("/");
 
-    pResource = identifiersDotOrgUriList[0];
-    pId       = identifiersDotOrgUriList[1];
+        pResource = identifiersDotOrgUriList[0];
+        pId       = identifiersDotOrgUriList[1].replace("%3A", ":");
+
+        // Remove the leading '#', if any, from the id
+        // Note: semanticSBML does, for example, prepend a '#'...
+
+        if (pId.at(0) == '#')
+            pId = pId.right(pId.size()-1);
+    } else {
+        // Not a term we can recognise, so...
+
+        pResource = "???";
+        pId       = "???";
+
+        res = false;
+
+#ifdef QT_DEBUG
+        qDebug("---------------------------------------");
+        qDebug("Invalid RDF term:");
+        qDebug(" - Term: %s", qPrintable(pTerm));
+#endif
+    }
+
+    // Return the result of our decoding
+
+    return res;
 }
 
 //==============================================================================

@@ -8,7 +8,6 @@
 //==============================================================================
 
 #include <QFile>
-#include <QRegExp>
 #include <QTextStream>
 #include <QUrl>
 
