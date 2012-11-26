@@ -48,6 +48,10 @@ SingleCellSimulationViewInformationSimulationWidget::SingleCellSimulationViewInf
 
     retranslateUi();
 
+    // Select our first property
+
+    selectFirstItem();
+
     // Resize our columns
 
     resizeColumnsToContents();
