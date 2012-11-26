@@ -347,13 +347,11 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
     // Do a few things for the previous model, if needed
 
     SingleCellSimulationViewSimulation *previousSimulation = mSimulation;
-    SingleCellSimulationViewInformationSimulationWidget *simulationSettings = mContentsWidget->informationWidget()->simulationWidget();
 
     if (previousSimulation)
         // Update our simulation settings for the previous model from the GUI
 
-        previousSimulation->data()->updateFromGui(mDelaySlider,
-                                                  simulationSettings);
+        previousSimulation->data()->updateFromGui(mDelaySlider, mContentsWidget->informationWidget());
 
     // Retrieve our simulation settings for the current model, if any
 
@@ -395,7 +393,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
     // Update our GUI using our simulation settings for the current model
 
-    mSimulation->data()->updateGui(mDelaySlider, simulationSettings);
+    mSimulation->data()->updateGui(mDelaySlider, mContentsWidget->informationWidget());
 
     // Output some information about our CellML file
 
@@ -457,7 +455,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
     // variable of integration, meaning that that we can't show the unit of the
     // variable of integration
 
-    simulationSettings->setUnit("???");
+    mContentsWidget->informationWidget()->simulationWidget()->setUnit("???");
 
     // Check if we have an invalid runtime and, if so, set the unit to an
     // unknown one and leave
@@ -480,7 +478,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
     // Retrieve the unit of our variable of integration
 
-    simulationSettings->setUnit(cellmlFileRuntime->variableOfIntegration()->unit());
+    mContentsWidget->informationWidget()->simulationWidget()->setUnit(cellmlFileRuntime->variableOfIntegration()->unit());
 
 #ifdef QT_DEBUG
     // Output the type of solvers that are available to the model
@@ -604,8 +602,7 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
 
     // Make sure that our simulation settings are up-to-date
 
-    mSimulation->data()->updateFromGui(mDelaySlider,
-                                       mContentsWidget->informationWidget()->simulationWidget());
+    mSimulation->data()->updateFromGui(mDelaySlider, mContentsWidget->informationWidget());
 
     // Start the simulation
 
