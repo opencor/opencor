@@ -436,7 +436,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
     getOdeCodeInformation(cellmlApiModel);
 
 #ifdef QT_DEBUG
-    qDebug(" - CellML ODE code information time: %s s.", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
+    qDebug(" - CellML ODE code information time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
 #endif
 
     if (!mCellmlApiOdeCodeInformation)
@@ -463,7 +463,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
         genericCodeInformation = getDaeCodeInformation(cellmlApiModel);
 
 #ifdef QT_DEBUG
-        qDebug(" - CellML DAE code information time: %s s.", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
+        qDebug(" - CellML DAE code information time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
     }
 #endif
 
@@ -493,10 +493,10 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
 
 #ifdef QT_DEBUG
     if (mVariableOfIntegration)
-        qDebug(" - Variable of integration: %s [%s].", qPrintable(mVariableOfIntegration->name()),
-                                                       qPrintable(mVariableOfIntegration->unit()));
+        qDebug(" - Variable of integration: %s [%s]", qPrintable(mVariableOfIntegration->name()),
+                                                      qPrintable(mVariableOfIntegration->unit()));
     else
-        qDebug(" - Variable of integration: none.");
+        qDebug(" - Variable of integration: none");
 #endif
 
     // Generate the model code, after having prepended to it all the external
@@ -617,7 +617,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
                                    QString("%1").arg(mCompilerEngine->error()));
 
 #ifdef QT_DEBUG
-    qDebug(" - CellML code compilation time: %s s.", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
+    qDebug(" - CellML code compilation time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
 #endif
 
     // Keep track of the ODE/DAE functions, but only if no issues were reported

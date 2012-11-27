@@ -38,12 +38,12 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     // Create our unsupported metadata message widget
 
-    mUnsupportedMetadataMsg = new Core::UserMessageWidget(":/oxygen/actions/help-about.png",
-                                                          pParent);
-    mBorderedUnsupportedMetadataMsg = new Core::BorderedWidget(mUnsupportedMetadataMsg,
-                                                               false, true, true, false);
+    mUnsupportedMetadataMessage = new Core::UserMessageWidget(":/oxygen/actions/help-about.png",
+                                                              pParent);
+    mBorderedUnsupportedMetadataMessage = new Core::BorderedWidget(mUnsupportedMetadataMessage,
+                                                                   false, true, true, false);
 
-    mBorderedUnsupportedMetadataMsg->setVisible(false);
+    mBorderedUnsupportedMetadataMessage->setVisible(false);
     // Note: we don't initially want to see it, so...
 
     // Create our splitter widget
@@ -123,7 +123,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
     // A connection to handle the clicking of the link in the unsupported
     // message
 
-    connect(mUnsupportedMetadataMsg, SIGNAL(linkActivated(const QString &)),
+    connect(mUnsupportedMetadataMessage, SIGNAL(linkActivated(const QString &)),
             this, SLOT(removeAllMetadata()));
 
     // Populate our splitter widget
@@ -140,7 +140,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
     // Add our unsupported metadata message widget and splitter widget to our
     // layout
 
-    mGui->layout->addWidget(mBorderedUnsupportedMetadataMsg);
+    mGui->layout->addWidget(mBorderedUnsupportedMetadataMessage);
     mGui->layout->addWidget(mSplitter);
 
     // Some further initialisations which are done as part of retranslating the
@@ -169,16 +169,16 @@ void CellmlAnnotationViewMetadataDetailsWidget::retranslateUi()
     mMetadataEditDetails->retranslateUi();
     mMetadataViewDetails->retranslateUi();
 
-    // Update our unsupported metadata message
+    // Retranslate our unsupported metadata message
 
-    mUnsupportedMetadataMsg->setMessage( "<div align=center>"
-                                         "    <p>"
-                                         "        "+tr("Sorry, but the <strong>%1</strong> view does not support this type of metadata...").arg(mParent->pluginViewName())
-                                        +"    </p>"
-                                         "    <p>"
-                                         "        <small><em>("+tr("Please click <a href=\"here\">here</a> if you want to remove the existing metadata.")+")</em></small>"
-                                         "    </p>"
-                                         "</div>");
+    mUnsupportedMetadataMessage->setMessage( "<div align=center>"
+                                             "    <p>"
+                                             "        "+tr("Sorry, but the <strong>%1</strong> view does not support this type of metadata...").arg(mParent->pluginViewName())
+                                            +"    </p>"
+                                             "    <p>"
+                                             "        <small><em>("+tr("Please click <a href=\"here\">here</a> if you want to remove the existing metadata.")+")</em></small>"
+                                             "    </p>"
+                                             "</div>");
 }
 
 //==============================================================================
@@ -197,7 +197,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateGui(CellMLSupport::CellmlF
 
     bool isUnknownMetadata = pCellmlElement->rdfTriples().type() == CellMLSupport::CellmlFileRdfTriple::Unknown;
 
-    mBorderedUnsupportedMetadataMsg->setVisible(isUnknownMetadata);
+    mBorderedUnsupportedMetadataMessage->setVisible(isUnknownMetadata);
 
     // Show/hide our metadata edit details and web viewer, depending on whether
     // the type of the metadata is known

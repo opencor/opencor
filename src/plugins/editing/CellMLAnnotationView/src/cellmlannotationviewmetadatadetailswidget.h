@@ -66,8 +66,8 @@ private:
 
     Ui::CellmlAnnotationViewMetadataDetailsWidget *mGui;
 
-    Core::BorderedWidget *mBorderedUnsupportedMetadataMsg;
-    Core::UserMessageWidget *mUnsupportedMetadataMsg;
+    Core::BorderedWidget *mBorderedUnsupportedMetadataMessage;
+    Core::UserMessageWidget *mUnsupportedMetadataMessage;
 
     QSplitter *mSplitter;
 

@@ -20,7 +20,8 @@ namespace Core {
 BorderedWidget::BorderedWidget(QWidget *pWidget,
                                const bool &pTop, const bool &pLeft,
                                const bool &pBottom, const bool &pRight) :
-    Widget(pWidget->parentWidget())
+    Widget(pWidget->parentWidget()),
+    mWidget(pWidget)
 {
     // We want our widget to be bordered by a single line which colour matches
     // that of the application's theme. Because of that colour requirement, we
@@ -59,10 +60,6 @@ BorderedWidget::BorderedWidget(QWidget *pWidget,
 
     gridLayout->setRowStretch(1, 1);
     gridLayout->setColumnStretch(1, 1);
-
-    // Keep track of our bordered widget
-
-    mWidget = pWidget;
 }
 
 //==============================================================================
