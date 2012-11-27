@@ -11,10 +11,6 @@
 
 //==============================================================================
 
-class QStandardItemModel;
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace SingleCellSimulationView {
 
@@ -39,9 +35,6 @@ public:
 
     double pointInterval() const;
     void setPointInterval(const double &pValue);
-
-private:
-    QStandardItemModel *mModel;
 };
 
 //==============================================================================

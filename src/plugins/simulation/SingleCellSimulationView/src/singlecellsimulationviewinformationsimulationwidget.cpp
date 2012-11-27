@@ -23,12 +23,6 @@ SingleCellSimulationViewInformationSimulationWidget::SingleCellSimulationViewInf
 
     setRootIsDecorated(false);
 
-    // Create and set our data model
-
-    mModel = new QStandardItemModel(this);
-
-    setModel(mModel);
-
     // Populate our data model
 
     mModel->invisibleRootItem()->setChild(0, 0, newString(false));
@@ -61,11 +55,9 @@ SingleCellSimulationViewInformationSimulationWidget::SingleCellSimulationViewInf
 
 void SingleCellSimulationViewInformationSimulationWidget::retranslateUi()
 {
-    // Update ou header labels
+    // Default retranslation
 
-    mModel->setHorizontalHeaderLabels(QStringList() << tr("Property")
-                                                    << tr("Value")
-                                                    << tr("Unit"));
+    PropertyEditorWidget::retranslateUi();
 
     // Update our property names
 

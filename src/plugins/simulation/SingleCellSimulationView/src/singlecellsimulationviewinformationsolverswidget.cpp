@@ -3,16 +3,13 @@
 //==============================================================================
 
 #include "cellmlfileruntime.h"
+#include "propertyeditorwidget.h"
 #include "singlecellsimulationviewinformationsolverswidget.h"
 #include "singlecellsimulationviewsimulation.h"
 
 //==============================================================================
 
 #include "ui_singlecellsimulationviewinformationsolverswidget.h"
-
-//==============================================================================
-
-#include <QLabel>
 
 //==============================================================================
 
@@ -30,17 +27,11 @@ SingleCellSimulationViewInformationSolversWidget::SingleCellSimulationViewInform
 
     mGui->setupUi(this);
 
-    // Add a label and a property widgets for our ODE/DAE solver
+    // Create and add our property editor widget
 
-    mOdeDaeSolverLabel = new QLabel(this);
+    mPropertyEditorWidget = new Core::PropertyEditorWidget(this);
 
-    mGui->layout->addWidget(mOdeDaeSolverLabel);
-
-    // Add a label and a property widgets for our NLA solver
-
-    mNlaSolverLabel = new QLabel(this);
-
-    mGui->layout->addWidget(mNlaSolverLabel);
+    mGui->layout->addWidget(mPropertyEditorWidget);
 }
 
 //==============================================================================
@@ -60,10 +51,9 @@ void SingleCellSimulationViewInformationSolversWidget::retranslateUi()
 
     mGui->retranslateUi(this);
 
-    // Retranslate our widgets
+    // Retranslate our property editor widget
 
-    mOdeDaeSolverLabel->setText(mOdeSolver?tr("ODE solver:"):tr("DAE solver:"));
-    mNlaSolverLabel->setText(tr("Non-linear algebraic solver:"));
+    mPropertyEditorWidget->retranslateUi();
 }
 
 //==============================================================================
@@ -81,10 +71,6 @@ void SingleCellSimulationViewInformationSolversWidget::initialize(CellMLSupport:
         // Check whether we need an ODE or DAE solver
 
         mOdeSolver = pCellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode;
-
-        // Show/hide the NLA solver information
-
-        mNlaSolverLabel->setVisible(pCellmlFileRuntime->needNlaSolver());
 
         // Retranslate our GUI
 

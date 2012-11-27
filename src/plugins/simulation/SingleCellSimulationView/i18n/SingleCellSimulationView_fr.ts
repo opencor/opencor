@@ -4,18 +4,6 @@
 <context>
     <name>OpenCOR::SingleCellSimulationView::SingleCellSimulationViewInformationSimulationWidget</name>
     <message>
-        <source>Property</source>
-        <translation>Propriété</translation>
-    </message>
-    <message>
-        <source>Value</source>
-        <translation>Valeur</translation>
-    </message>
-    <message>
-        <source>Unit</source>
-        <translation>Unité</translation>
-    </message>
-    <message>
         <source>Starting point</source>
         <translation>Point de départ</translation>
     </message>
@@ -26,21 +14,6 @@
     <message>
         <source>Point interval</source>
         <translation>Interval de point</translation>
-    </message>
-</context>
-<context>
-    <name>OpenCOR::SingleCellSimulationView::SingleCellSimulationViewInformationSolversWidget</name>
-    <message>
-        <source>Non-linear algebraic solver:</source>
-        <translation>Solveur algébrique non-linéaire :</translation>
-    </message>
-    <message>
-        <source>ODE solver:</source>
-        <translation>Solveur EDO :</translation>
-    </message>
-    <message>
-        <source>DAE solver:</source>
-        <translation>Solveur EAD :</translation>
     </message>
 </context>
 <context>

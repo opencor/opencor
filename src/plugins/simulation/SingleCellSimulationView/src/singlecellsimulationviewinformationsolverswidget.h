@@ -17,10 +17,6 @@ namespace Ui {
 
 //==============================================================================
 
-class QLabel;
-
-//==============================================================================
-
 namespace OpenCOR {
 
 //==============================================================================
@@ -28,6 +24,12 @@ namespace OpenCOR {
 namespace CellMLSupport {
     class CellmlFileRuntime;
 }   // namespace CellMLSupport
+
+//==============================================================================
+
+namespace Core {
+    class PropertyEditorWidget;
+}   // namespace Core
 
 //==============================================================================
 
@@ -56,8 +58,7 @@ private:
 
     bool mOdeSolver;
 
-    QLabel *mOdeDaeSolverLabel;
-    QLabel *mNlaSolverLabel;
+    Core::PropertyEditorWidget *mPropertyEditorWidget;
 };
 
 //==============================================================================

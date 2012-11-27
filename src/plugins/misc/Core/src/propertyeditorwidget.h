@@ -101,15 +101,17 @@ class CORE_EXPORT PropertyEditorWidget : public TreeViewWidget
 public:
     explicit PropertyEditorWidget(QWidget *pParent = 0);
 
+    virtual void retranslateUi();
+
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
-
-    virtual void setModel(QAbstractItemModel *pModel);
 
     static PropertyItem * newString(const bool &pEditable = true);
     static PropertyItem * newDouble(const bool &pEditable = true);
 
 protected:
+    QStandardItemModel *mModel;
+
     virtual void keyPressEvent(QKeyEvent *pEvent);
 
     virtual void mousePressEvent(QMouseEvent *pEvent);

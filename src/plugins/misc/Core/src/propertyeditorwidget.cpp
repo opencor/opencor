@@ -164,6 +164,17 @@ PropertyEditorWidget::PropertyEditorWidget(QWidget *pParent) :
     mPropertyEditor(0),
     mPropertyRow(-1)
 {
+    // Create and set our data model
+
+    mModel = new QStandardItemModel(this);
+
+    setModel(mModel);
+
+    // Update our height following data changes
+
+    connect(mModel, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
+            this, SLOT(updateHeight()));
+
     // Create our item delegate and set it, after making sure that we handle a
     // few of its signals
 
@@ -186,6 +197,21 @@ PropertyEditorWidget::PropertyEditorWidget(QWidget *pParent) :
     setSelectionMode(QAbstractItemView::SingleSelection);
 
     header()->setMovable(false);
+
+    // Initialise our height
+
+    updateHeight();
+}
+
+//==============================================================================
+
+void PropertyEditorWidget::retranslateUi()
+{
+    // Retranslate our header labels
+
+    mModel->setHorizontalHeaderLabels(QStringList() << tr("Property")
+                                                    << tr("Value")
+                                                    << tr("Unit"));
 }
 
 //==============================================================================
@@ -226,26 +252,6 @@ void PropertyEditorWidget::saveSettings(QSettings *pSettings) const
     for (int i = 0, iMax = header()->count(); i < iMax; ++i)
         pSettings->setValue(SettingsColumnWidth+QString::number(i),
                             columnWidth(i));
-}
-
-//==============================================================================
-
-void PropertyEditorWidget::setModel(QAbstractItemModel *pModel)
-{
-    // Stop tracking data changes in the old model
-
-    if (model())
-        disconnect(model(), SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
-                   this, SLOT(updateHeight()));
-
-    // Update our model
-
-    TreeViewWidget::setModel(pModel);
-
-    // Update our height following data changes
-
-    connect(model(), SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
-            this, SLOT(updateHeight()));
 }
 
 //==============================================================================
