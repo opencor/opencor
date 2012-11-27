@@ -223,7 +223,7 @@ void CollapsibleWidget::updateGui(const bool &pCollapsed)
 
     mCollapsed = pCollapsed && mBody;
 
-    //  Customise some widgets
+    //  Customise our button
 
     if (pCollapsed)
         mButton->setIcon(QIcon(":/oxygen/actions/arrow-right.png"));
@@ -235,9 +235,9 @@ void CollapsibleWidget::updateGui(const bool &pCollapsed)
     mTitle->setEnabled(mBody);
     mButton->setEnabled(mBody);
 
-    // Show/hide some widgets
 
     mSeparator->setVisible(!pCollapsed);
+    // Show/hide our body
 
     if (mBody)
         mBody->setVisible(!pCollapsed);
