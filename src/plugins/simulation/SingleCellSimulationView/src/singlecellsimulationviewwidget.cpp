@@ -12,6 +12,7 @@
 #include "singlecellsimulationviewprogressbarwidget.h"
 #include "singlecellsimulationviewsimulation.h"
 #include "singlecellsimulationviewsimulationdata.h"
+#include "singlecellsimulationviewinformationparameterswidget.h"
 #include "singlecellsimulationviewinformationsimulationwidget.h"
 #include "singlecellsimulationviewinformationsolverswidget.h"
 #include "singlecellsimulationviewwidget.h"
@@ -492,9 +493,11 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
             mContentsWidget->informationWidget()->simulationWidget()->setUnit(cellmlFileRuntime->variableOfIntegration()->unit());
 
-            // Initialise our GUI's solvers widget using our simulation
+            // Initialise our GUI's solvers and parameters widgets using our
+            // simulation
 
             mContentsWidget->informationWidget()->solversWidget()->initialize(cellmlFileRuntime);
+            mContentsWidget->informationWidget()->parametersWidget()->initialize(cellmlFileRuntime);
 
             // Update our GUI using our simulation's data
 

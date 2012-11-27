@@ -4,6 +4,7 @@
 
 #include "collapsiblewidget.h"
 #include "coreutils.h"
+#include "singlecellsimulationviewinformationparameterswidget.h"
 #include "singlecellsimulationviewinformationsimulationwidget.h"
 #include "singlecellsimulationviewinformationsolverswidget.h"
 #include "singlecellsimulationviewinformationwidget.h"
@@ -55,8 +56,10 @@ SingleCellSimulationViewInformationWidget::SingleCellSimulationViewInformationWi
 
     // Create our Parameters collapsible widget
 
-    mParametersCollapsibleWidget = new Core::CollapsibleWidget(this);
+    mParametersWidget = new SingleCellSimulationViewInformationParametersWidget(this);
+    mParametersCollapsibleWidget = new Core::CollapsibleWidget(QString(), mParametersWidget, this);
 
+    mParametersWidget->setObjectName("Parameters");
     mParametersCollapsibleWidget->setObjectName("ParametersCollapsible");
 
     // Add our collapsible widgets to our layout
@@ -111,6 +114,7 @@ void SingleCellSimulationViewInformationWidget::retranslateUi()
 
     mSimulationWidget->retranslateUi();
     mSolversWidget->retranslateUi();
+    mParametersWidget->retranslateUi();
 }
 
 //==============================================================================
@@ -147,6 +151,10 @@ void SingleCellSimulationViewInformationWidget::loadSettings(QSettings *pSetting
 
     pSettings->beginGroup(mParametersCollapsibleWidget->objectName());
         mParametersCollapsibleWidget->loadSettings(pSettings);
+    pSettings->endGroup();
+
+    pSettings->beginGroup(mParametersWidget->objectName());
+        mParametersWidget->loadSettings(pSettings);
     pSettings->endGroup();
 }
 
@@ -185,6 +193,10 @@ void SingleCellSimulationViewInformationWidget::saveSettings(QSettings *pSetting
     pSettings->beginGroup(mParametersCollapsibleWidget->objectName());
         mParametersCollapsibleWidget->saveSettings(pSettings);
     pSettings->endGroup();
+
+    pSettings->beginGroup(mParametersWidget->objectName());
+        mParametersWidget->saveSettings(pSettings);
+    pSettings->endGroup();
 }
 
 //==============================================================================
@@ -203,6 +215,15 @@ SingleCellSimulationViewInformationSolversWidget * SingleCellSimulationViewInfor
     // Return our solvers widget
 
     return mSolversWidget;
+}
+
+//==============================================================================
+
+SingleCellSimulationViewInformationParametersWidget * SingleCellSimulationViewInformationWidget::parametersWidget()
+{
+    // Return our parameters widget
+
+    return mParametersWidget;
 }
 
 //==============================================================================

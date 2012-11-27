@@ -1,9 +1,9 @@
 //==============================================================================
-// Single cell simulation view information solvers widget
+// Single cell simulation view information parameters widget
 //==============================================================================
 
-#ifndef SINGLECELLSIMULATIONVIEWINFORMATIONSOLVERSWIDGET_H
-#define SINGLECELLSIMULATIONVIEWINFORMATIONSOLVERSWIDGET_H
+#ifndef SINGLECELLSIMULATIONVIEWINFORMATIONPARAMETERSWIDGET_H
+#define SINGLECELLSIMULATIONVIEWINFORMATIONPARAMETERSWIDGET_H
 
 //==============================================================================
 
@@ -25,17 +25,14 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-class SingleCellSimulationViewInformationSolversWidget : public Core::PropertyEditorWidget
+class SingleCellSimulationViewInformationParametersWidget : public Core::PropertyEditorWidget
 {
     Q_OBJECT
 
 public:
-    explicit SingleCellSimulationViewInformationSolversWidget(QWidget *pParent = 0);
+    explicit SingleCellSimulationViewInformationParametersWidget(QWidget *pParent = 0);
 
     void initialize(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
-
-private:
-    bool mOdeSolver;
 };
 
 //==============================================================================

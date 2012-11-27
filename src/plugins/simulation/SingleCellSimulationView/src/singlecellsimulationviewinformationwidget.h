@@ -31,6 +31,7 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
+class SingleCellSimulationViewInformationParametersWidget;
 class SingleCellSimulationViewInformationSimulationWidget;
 class SingleCellSimulationViewInformationSolversWidget;
 
@@ -51,6 +52,7 @@ public:
 
     SingleCellSimulationViewInformationSimulationWidget * simulationWidget();
     SingleCellSimulationViewInformationSolversWidget * solversWidget();
+    SingleCellSimulationViewInformationParametersWidget * parametersWidget();
 
 private:
     Ui::SingleCellSimulationViewInformationWidget *mGui;
@@ -64,6 +66,7 @@ private:
     Core::CollapsibleWidget *mTracesCollapsibleWidget;
 
     Core::CollapsibleWidget *mParametersCollapsibleWidget;
+    SingleCellSimulationViewInformationParametersWidget *mParametersWidget;
 };
 
 //==============================================================================

@@ -1,9 +1,9 @@
 //==============================================================================
-// Single cell simulation view information solvers widget
+// Single cell simulation view information parameters widget
 //==============================================================================
 
 #include "cellmlfileruntime.h"
-#include "singlecellsimulationviewinformationsolverswidget.h"
+#include "singlecellsimulationviewinformationparameterswidget.h"
 
 //==============================================================================
 
@@ -12,27 +12,19 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-SingleCellSimulationViewInformationSolversWidget::SingleCellSimulationViewInformationSolversWidget(QWidget *pParent) :
-    PropertyEditorWidget(pParent),
-    mOdeSolver(true)
+SingleCellSimulationViewInformationParametersWidget::SingleCellSimulationViewInformationParametersWidget(QWidget *pParent) :
+    PropertyEditorWidget(pParent)
 {
 }
 
 //==============================================================================
 
-void SingleCellSimulationViewInformationSolversWidget::initialize(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime)
+void SingleCellSimulationViewInformationParametersWidget::initialize(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime)
 {
     // Make sure that we have a CellML file runtime
 
     if (!pCellmlFileRuntime)
         return;
-
-    // Make sure that the CellML file runtime is valid
-
-    if (pCellmlFileRuntime->isValid())
-        // Check whether we need an ODE or DAE solver
-
-        mOdeSolver = pCellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode;
 }
 
 //==============================================================================
