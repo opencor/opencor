@@ -32,11 +32,22 @@ namespace Ui {
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace Core {
+    class ToolBarWidget;
+    class UserMessageWidget;
+}   // namespace Core
+
+//==============================================================================
+
 namespace SingleCellSimulationView {
 
 //==============================================================================
 
 class SingleCellSimulationViewContentsWidget;
+class SingleCellSimulationViewPlugin;
 class SingleCellSimulationViewProgressBarWidget;
 class SingleCellSimulationViewSimulation;
 
@@ -47,7 +58,8 @@ class SingleCellSimulationViewWidget : public Core::ViewWidget
     Q_OBJECT
 
 public:
-    explicit SingleCellSimulationViewWidget(QWidget *pParent = 0);
+    explicit SingleCellSimulationViewWidget(SingleCellSimulationViewPlugin *pPluginParent,
+                                            QWidget *pParent = 0);
     ~SingleCellSimulationViewWidget();
 
     virtual void retranslateUi();
@@ -73,6 +85,8 @@ protected:
 private:
     Ui::SingleCellSimulationViewWidget *mGui;
 
+    SingleCellSimulationViewPlugin *mPluginParent;
+
     bool mCanSaveSettings;
 
     SolverInterfaces mSolverInterfaces;
@@ -82,15 +96,21 @@ private:
 
     QList<SingleCellSimulationViewSimulation *> mStoppedSimulations;
 
+    Core::ToolBarWidget *mToolBarWidget;
+
     QwtSlider *mDelayWidget;
     QLabel *mDelayValueWidget;
 
-    QSplitter *mSplitter;
+    QSplitter *mSplitterWidget;
+    QList<int> mSplitterWidgetSizes;
 
     SingleCellSimulationViewContentsWidget *mContentsWidget;
-    QTextEdit *mOutput;
 
-    SingleCellSimulationViewProgressBarWidget *mProgressBar;
+    Core::UserMessageWidget *mInvalidModelMessageWidget;
+
+    QTextEdit *mOutputWidget;
+
+    SingleCellSimulationViewProgressBarWidget *mProgressBarWidget;
 
     QMap<QString, int> mProgresses;
 
@@ -128,6 +148,8 @@ private Q_SLOTS:
                             SingleCellSimulationViewSimulation *pSimulation = 0);
 
     void simulationError(const QString &pError);
+
+    void splitterWidgetMoved();
 };
 
 //==============================================================================

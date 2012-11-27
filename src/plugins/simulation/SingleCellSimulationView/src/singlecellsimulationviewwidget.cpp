@@ -8,6 +8,7 @@
 #include "singlecellsimulationviewcontentswidget.h"
 #include "singlecellsimulationviewgraphpanelswidget.h"
 #include "singlecellsimulationviewinformationwidget.h"
+#include "singlecellsimulationviewplugin.h"
 #include "singlecellsimulationviewprogressbarwidget.h"
 #include "singlecellsimulationviewsimulation.h"
 #include "singlecellsimulationviewsimulationdata.h"
@@ -15,6 +16,7 @@
 #include "singlecellsimulationviewinformationsolverswidget.h"
 #include "singlecellsimulationviewwidget.h"
 #include "toolbarwidget.h"
+#include "usermessagewidget.h"
 
 //==============================================================================
 
@@ -52,14 +54,17 @@ static const QString OutputBrLn = "<br/>\n";
 
 //==============================================================================
 
-SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent) :
+SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulationViewPlugin *pPluginParent,
+                                                               QWidget *pParent) :
     ViewWidget(pParent),
     mGui(new Ui::SingleCellSimulationViewWidget),
+    mPluginParent(pPluginParent),
     mCanSaveSettings(false),
     mSolverInterfaces(SolverInterfaces()),
     mSimulation(0),
     mSimulations(QMap<QString, SingleCellSimulationViewSimulation *>()),
     mStoppedSimulations(QList<SingleCellSimulationViewSimulation *>()),
+    mSplitterWidgetSizes(QList<int>()),
     mProgresses(QMap<QString, int>())
 {
     // Set up the GUI
@@ -71,7 +76,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
 
     mDelayWidget = new QwtSlider(this);
 #ifndef Q_WS_MAC
-    QWidget *delaySliderSpace = new QWidget(this);
+    QWidget *delaySliderSpaceWidget = new QWidget(this);
 #endif
     mDelayValueWidget = new QLabel(this);
 
@@ -82,7 +87,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     mDelayWidget->setRange(0.0, 50.0, 1.0, 10.0);
 
 #ifndef Q_WS_MAC
-    delaySliderSpace->setFixedWidth(4);
+    delaySliderSpaceWidget->setFixedWidth(4);
 #endif
 
     connect(mDelayWidget, SIGNAL(valueChanged(double)),
@@ -92,31 +97,37 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
 
     // Create a tool bar widget with different buttons
 
-    Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget(this);
+    mToolBarWidget = new Core::ToolBarWidget(this);
 
-    toolBarWidget->addAction(mGui->actionRun);
-    toolBarWidget->addAction(mGui->actionPause);
-    toolBarWidget->addAction(mGui->actionStop);
-    toolBarWidget->addSeparator();
-    toolBarWidget->addWidget(mDelayWidget);
+    mToolBarWidget->addAction(mGui->actionRun);
+    mToolBarWidget->addAction(mGui->actionPause);
+    mToolBarWidget->addAction(mGui->actionStop);
+    mToolBarWidget->addSeparator();
+    mToolBarWidget->addWidget(mDelayWidget);
 #ifndef Q_WS_MAC
-    toolBarWidget->addWidget(delaySliderSpace);
+    mToolBarWidget->addWidget(delaySliderSpaceWidget);
 #endif
-    toolBarWidget->addWidget(mDelayValueWidget);
-    toolBarWidget->addSeparator();
-    toolBarWidget->addAction(mGui->actionDebugMode);
-    toolBarWidget->addSeparator();
-    toolBarWidget->addAction(mGui->actionAdd);
-    toolBarWidget->addAction(mGui->actionRemove);
-    toolBarWidget->addSeparator();
-    toolBarWidget->addAction(mGui->actionCsvExport);
+    mToolBarWidget->addWidget(mDelayValueWidget);
+    mToolBarWidget->addSeparator();
+    mToolBarWidget->addAction(mGui->actionDebugMode);
+    mToolBarWidget->addSeparator();
+    mToolBarWidget->addAction(mGui->actionAdd);
+    mToolBarWidget->addAction(mGui->actionRemove);
+    mToolBarWidget->addSeparator();
+    mToolBarWidget->addAction(mGui->actionCsvExport);
 
-    mGui->layout->addWidget(toolBarWidget);
+    mGui->layout->addWidget(mToolBarWidget);
     mGui->layout->addWidget(Core::newLineWidget(this));
 
-    // Create our splitter
+    // Create our splitter widget and keep track of its movement
+    // Note: we need to keep track of its movement so that saveSettings() can
+    //       work fine even when mContentsWidget is not visible (which happens
+    //       when a CellML file cannot be run for some reason or another)...
 
-    mSplitter = new QSplitter(Qt::Vertical, this);
+    mSplitterWidget = new QSplitter(Qt::Vertical, this);
+
+    connect(mSplitterWidget, SIGNAL(splitterMoved(int,int)),
+            this, SLOT(splitterWidgetMoved()));
 
     // Create our contents widget and create a connection to keep track of
     // whether we can remove graph panels
@@ -128,7 +139,14 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
     connect(mContentsWidget->graphPanelsWidget(), SIGNAL(removeGraphPanelsEnabled(const bool &)),
             mGui->actionRemove, SLOT(setEnabled(bool)));
 
-    // Create a simulation output widget with a layout on which we put a
+    // Create and add our invalid simulation message widget
+
+    mInvalidModelMessageWidget = new Core::UserMessageWidget(":/oxygen/actions/help-about.png",
+                                                             pParent);
+
+    mGui->layout->addWidget(mInvalidModelMessageWidget);
+
+    // Create our simulation output widget with a layout on which we put a
     // separating line and our simulation output list view
     // Note: the separating line is because we remove, for aesthetical reasons,
     //       the border of our simulation output list view...
@@ -141,37 +159,33 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(QWidget *pParent)
 
     simulationOutputWidget->setLayout(simulationOutputLayout);
 
-    mOutput = new QTextEdit(this);
+    mOutputWidget = new QTextEdit(this);
 
-    mOutput->setFrameStyle(QFrame::NoFrame);
+    mOutputWidget->setFrameStyle(QFrame::NoFrame);
 
     simulationOutputLayout->addWidget(Core::newLineWidget(this));
-    simulationOutputLayout->addWidget(mOutput);
+    simulationOutputLayout->addWidget(mOutputWidget);
 
     // Populate our splitter and use as much space as possible for it by asking
     // for its height to be that of the desktop's, and then add our splitter to
     // our single cell simulation view widget
 
-    mSplitter->addWidget(mContentsWidget);
-    mSplitter->addWidget(simulationOutputWidget);
+    mSplitterWidget->addWidget(mContentsWidget);
+    mSplitterWidget->addWidget(simulationOutputWidget);
 
-    mSplitter->setSizes(QList<int>() << qApp->desktop()->screenGeometry().height() << 1);
+    mSplitterWidget->setSizes(QList<int>() << qApp->desktop()->screenGeometry().height() << 1);
 
-    mGui->layout->addWidget(mSplitter);
+    mGui->layout->addWidget(mSplitterWidget);
 
     // Create our (thin) simulation progress widget
-    // Note: we set the maximum value to 32,768 (rather than leaving it to the
-    //       default value of 100), so that we can get a smooth progress and not
-    //       a jerky one (should the progress bar be more than 100 pixels
-    //       wide)...
 
-    mProgressBar = new SingleCellSimulationViewProgressBarWidget(this);
+    mProgressBarWidget = new SingleCellSimulationViewProgressBarWidget(this);
 
-    mProgressBar->setFixedHeight(3);
-    mProgressBar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+    mProgressBarWidget->setFixedHeight(3);
+    mProgressBarWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 
     mGui->layout->addWidget(Core::newLineWidget(this));
-    mGui->layout->addWidget(mProgressBar);
+    mGui->layout->addWidget(mProgressBarWidget);
 
     // Make our contents widget our focus proxy
 
@@ -196,7 +210,7 @@ SingleCellSimulationViewWidget::~SingleCellSimulationViewWidget()
 
 void SingleCellSimulationViewWidget::retranslateUi()
 {
-    // Retranslate the whole view
+    // Retranslate our GUI
 
     mGui->retranslateUi(this);
 
@@ -207,6 +221,17 @@ void SingleCellSimulationViewWidget::retranslateUi()
 
     mDelayWidget->setStatusTip(tr("Delay in milliseconds between two data points"));
     mDelayValueWidget->setStatusTip(mDelayWidget->statusTip());
+
+    // Retranslate our invalid model message
+
+    mInvalidModelMessageWidget->setMessage("<div align=center>"
+                                           "    <p>"
+                                           "        "+tr("Sorry, but the <strong>%1</strong> view requires a valid CellML file to work...").arg(mPluginParent->viewName())
+                                          +"    </p>"
+                                           "    <p>"
+                                           "        <small><em>("+tr("See below for more information.")+")</em></small>"
+                                           "    </p>"
+                                           "</div>");
 
     // Retranslate our contents widget
 
@@ -227,12 +252,12 @@ void SingleCellSimulationViewWidget::loadSettings(QSettings *pSettings)
     int sizesCount = pSettings->value(SettingsSizesCount, 0).toInt();
 
     if (sizesCount) {
-        QList<int> newSizes = QList<int>();
+        mSplitterWidgetSizes = QList<int>();
 
         for (int i = 0; i < sizesCount; ++i)
-            newSizes << pSettings->value(SettingsSize+QString::number(i)).toInt();
+            mSplitterWidgetSizes << pSettings->value(SettingsSize+QString::number(i)).toInt();
 
-        mSplitter->setSizes(newSizes);
+        mSplitterWidget->setSizes(mSplitterWidgetSizes);
     }
 
     // Retrieve the settings of our contents widget
@@ -251,12 +276,10 @@ void SingleCellSimulationViewWidget::saveSettings(QSettings *pSettings) const
 
     // Keep track of our splitter sizes
 
-    QList<int> crtSizes = mSplitter->sizes();
+    pSettings->setValue(SettingsSizesCount, mSplitterWidgetSizes.count());
 
-    pSettings->setValue(SettingsSizesCount, crtSizes.count());
-
-    for (int i = 0, iMax = crtSizes.count(); i < iMax; ++i)
-        pSettings->setValue(SettingsSize+QString::number(i), crtSizes[i]);
+    for (int i = 0, iMax = mSplitterWidgetSizes.count(); i < iMax; ++i)
+        pSettings->setValue(SettingsSize+QString::number(i), mSplitterWidgetSizes[i]);
 
     // Keep track of the settings of our contents widget
 
@@ -301,19 +324,19 @@ void SingleCellSimulationViewWidget::output(const QString &pMessage)
 {
     // Move to the end of the output (just in case...)
 
-    mOutput->moveCursor(QTextCursor::End);
+    mOutputWidget->moveCursor(QTextCursor::End);
 
     // Make sure that the output ends as expected and if not then add BrLn to it
 
     static const QString EndOfOutput = "<br /></p></body></html>";
 
-    if (mOutput->toHtml().right(EndOfOutput.size()).compare(EndOfOutput))
-        mOutput->insertHtml(OutputBrLn);
+    if (mOutputWidget->toHtml().right(EndOfOutput.size()).compare(EndOfOutput))
+        mOutputWidget->insertHtml(OutputBrLn);
 
     // Output the message and make sure that it's visible
 
-    mOutput->insertHtml(pMessage);
-    mOutput->moveCursor(QTextCursor::End);
+    mOutputWidget->insertHtml(pMessage);
+    mOutputWidget->moveCursor(QTextCursor::End);
 }
 
 //==============================================================================
@@ -392,21 +415,13 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         emit updateFileTabIcon(mSimulation->fileName(), QIcon());
     }
 
-    // Initialise our GUI's solvers widget using our simulation
-
-    mContentsWidget->informationWidget()->solversWidget()->initialize(mSimulation);
-
-    // Update our GUI using ou simulation's data
-
-    mSimulation->data()->updateGui(this);
-
     // Output some information about our CellML file
 
     CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = mSimulation->cellmlFileRuntime();
 
     QString information = QString();
 
-    if (!mOutput->document()->isEmpty())
+    if (!mOutputWidget->document()->isEmpty())
         information += "<hr/>\n";
 
     information += "<strong>"+pFileName+"</strong>"+OutputBrLn;
@@ -418,7 +433,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         if (cellmlFileRuntime->needNlaSolver())
             additionalInformation = " + "+tr("Non-linear algebraic system(s)");
 
-        information += "<span"+OutputGood+">"+tr("valid")+"</span>.<br/>\n";
+        information += "<span"+OutputGood+">"+tr("valid")+"</span>."+OutputBrLn;
         information += QString(OutputTab+"<strong>"+tr("Model type:")+"</strong> <span"+OutputInfo+">%1%2</span>."+OutputBrLn).arg((cellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?tr("ODE"):tr("DAE"),
                                                                                                                                    additionalInformation);
     } else {
@@ -426,7 +441,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
         foreach (const CellMLSupport::CellmlFileIssue &issue,
                  cellmlFileRuntime->issues())
-            information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
+            information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2</span>."+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
                                                                                                                  issue.message());
     }
 
@@ -456,89 +471,100 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
     simulationProgress(mSimulation->workerProgress());
 
-    // By default, we assume that the runtime isn't valid or that there is no
-    // variable of integration, meaning that that we can't show the unit of the
-    // variable of integration
+    // Check that we have a valid runtime
 
-    mContentsWidget->informationWidget()->simulationWidget()->setUnit("???");
+    bool hasError = true;
 
-    // Check if we have an invalid runtime and, if so, set the unit to an
-    // unknown one and leave
-
-    if (!cellmlFileRuntime->isValid())
-        // Note: no need to output an error since one will have already been
+    if (cellmlFileRuntime->isValid()) {
+        // We have a valid runtime
+        // Note: if we didn't have a valid runtime, then there would be no need
+        //       to output an error message since one would have already been
         //       generated while trying to get the runtime (see above)...
 
-        return;
+        // Retrieve the unit of the variable of integration, if any
 
-    // Retrieve the unit of the variable of integration, if any
+        if (!variableOfIntegration) {
+            // We don't have a variable of integration, so...
 
-    if (!variableOfIntegration) {
-        // We don't have a variable of integration, so...
+            simulationError(tr("the model must have at least one ODE or DAE"));
+        } else {
+            // Retrieve the unit of our variable of integration
 
-        simulationError(tr("the model must have at least one ODE or DAE"));
+            mContentsWidget->informationWidget()->simulationWidget()->setUnit(cellmlFileRuntime->variableOfIntegration()->unit());
 
-        return;
-    }
+            // Initialise our GUI's solvers widget using our simulation
 
-    // Retrieve the unit of our variable of integration
+            mContentsWidget->informationWidget()->solversWidget()->initialize(cellmlFileRuntime);
 
-    mContentsWidget->informationWidget()->simulationWidget()->setUnit(cellmlFileRuntime->variableOfIntegration()->unit());
+            // Update our GUI using our simulation's data
+
+            mSimulation->data()->updateGui(this);
 
 #ifdef QT_DEBUG
-    // Output the type of solvers that are available to the model
+            // Output the type of solvers that are available to run the model
 
-    qDebug("---------------------------------------");
-    qDebug("%s", qPrintable(pFileName));
+            qDebug("---------------------------------------");
+            qDebug("%s", qPrintable(pFileName));
 
-    Solver::Type solverType;
+            Solver::Type solverType;
 
-    if (cellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode) {
-        solverType = Solver::Ode;
+            if (cellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode) {
+                solverType = Solver::Ode;
 
-        information = " - ODE solver(s): ";
-    } else {
-        solverType = Solver::Dae;
+                information = " - ODE solver(s): ";
+            } else {
+                solverType = Solver::Dae;
 
-        information = " - DAE solver(s): ";
-    }
-
-    int solverCounter = 0;
-
-    foreach (SolverInterface *solverInterface, mSolverInterfaces)
-        if (solverInterface->type() == solverType) {
-            if (++solverCounter == 1)
-                information += solverInterface->name();
-            else
-                information += " | "+solverInterface->name();
-        }
-
-    if (!solverCounter)
-        information += "none";
-
-    information += ".";
-
-    if (cellmlFileRuntime->needNlaSolver()) {
-        information += "\n - NLA solver(s): ";
-
-        int solverCounter = 0;
-
-        foreach (SolverInterface *solverInterface, mSolverInterfaces)
-            if (solverInterface->type() == Solver::Nla) {
-                if (++solverCounter == 1)
-                    information += solverInterface->name();
-                else
-                    information += " | "+solverInterface->name();
+                information = " - DAE solver(s): ";
             }
 
-        if (!solverCounter)
-            information += "none";
+            int solverCounter = 0;
 
-        information += ".";
+            foreach (SolverInterface *solverInterface, mSolverInterfaces)
+                if (solverInterface->type() == solverType) {
+                    if (++solverCounter == 1)
+                        information += solverInterface->name();
+                    else
+                        information += " | "+solverInterface->name();
+                }
+
+            if (!solverCounter)
+                information += "none";
+
+            if (cellmlFileRuntime->needNlaSolver()) {
+                information += "\n - NLA solver(s): ";
+
+                int solverCounter = 0;
+
+                foreach (SolverInterface *solverInterface, mSolverInterfaces)
+                    if (solverInterface->type() == Solver::Nla) {
+                        if (++solverCounter == 1)
+                            information += solverInterface->name();
+                        else
+                            information += " | "+solverInterface->name();
+                    }
+
+                if (!solverCounter)
+                    information += "none";
+            }
+
+            qDebug("%s", qPrintable(information));
+#endif
+
+            // Everything went fine, so...
+
+            hasError = false;
+        }
     }
 
-    qDebug("%s", qPrintable(information));
-#endif
+    // Check if an error occurred and, if so, show/hide some widgets
+
+    mToolBarWidget->setVisible(!hasError);
+
+    mContentsWidget->setVisible(!hasError);
+    mInvalidModelMessageWidget->setVisible(hasError);
+
+    mProgressBarWidget->setVisible(!hasError);
 }
 
 //==============================================================================
@@ -562,7 +588,7 @@ QIcon SingleCellSimulationViewWidget::fileTabIcon(const QString &pFileName) cons
     if (simulation && (progress != -1)) {
         // Create an image that shows the progress of our simulation
 
-        QImage tabBarIcon = QImage(tabBarIconSize(), mProgressBar->height()+2,
+        QImage tabBarIcon = QImage(tabBarIconSize(), mProgressBarWidget->height()+2,
                                    QImage::Format_ARGB32_Premultiplied);
         QPainter tabBarIconPainter(&tabBarIcon);
 
@@ -590,8 +616,8 @@ void SingleCellSimulationViewWidget::paintEvent(QPaintEvent *pEvent)
     Widget::paintEvent(pEvent);
 
     // The view has been painted at least once which means that the sizes of
-    // mSplitter are meaningful and, as a consequence, we can save our settings
-    // upon leaving OpenCOR
+    // mSplitterWidget are meaningful and, as a consequence, we can save our
+    // settings upon leaving OpenCOR
 
     mCanSaveSettings = true;
 }
@@ -762,7 +788,7 @@ void SingleCellSimulationViewWidget::resetProgressBar()
 {
     // Reset our progress bar
 
-    mProgressBar->setValue(0.0);
+    mProgressBarWidget->setValue(0.0);
 }
 
 //==============================================================================
@@ -793,7 +819,7 @@ void SingleCellSimulationViewWidget::simulationProgress(const double &pProgress,
         //       can also be called directly (as opposed to being called as a
         //       response to a signal) as is done in initialize() above...
 
-        mProgressBar->setValue(pProgress);
+        mProgressBarWidget->setValue(pProgress);
 
     // Let people know that we should update the icon of our file tab, but only
     // if it isn't the active simulation (there is already the progress bar, so
@@ -864,6 +890,15 @@ SingleCellSimulationViewContentsWidget * SingleCellSimulationViewWidget::content
     // Return our contents widget
 
     return mContentsWidget;
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewWidget::splitterWidgetMoved()
+{
+    // Our splitter has been moved, so keep track of its new sizes
+
+    mSplitterWidgetSizes = mSplitterWidget->sizes();
 }
 
 //==============================================================================

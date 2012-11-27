@@ -29,6 +29,21 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::SingleCellSimulationView::SingleCellSimulationViewInformationSolversWidget</name>
+    <message>
+        <source>Non-linear algebraic solver:</source>
+        <translation>Solveur algébrique non-linéaire :</translation>
+    </message>
+    <message>
+        <source>ODE solver:</source>
+        <translation>Solveur EDO :</translation>
+    </message>
+    <message>
+        <source>DAE solver:</source>
+        <translation>Solveur EAD :</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::SingleCellSimulationView::SingleCellSimulationViewInformationWidget</name>
     <message>
         <source>Simulation</source>
@@ -126,6 +141,14 @@
     <message>
         <source>Delay in milliseconds between two data points</source>
         <translation>Délai en millisecondes entre deux points de données</translation>
+    </message>
+    <message>
+        <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; view requires a valid CellML file to work...</source>
+        <translation>Désolé, mais la vue &lt;strong&gt;%1&lt;/strong&gt; nécessite un fichier CellML valide pour fonctionner...</translation>
+    </message>
+    <message>
+        <source>See below for more information.</source>
+        <translation>Voi plus bas pour plus d&apos;informations.</translation>
     </message>
 </context>
 <context>

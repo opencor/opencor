@@ -17,7 +17,20 @@ namespace Ui {
 
 //==============================================================================
 
+class QLabel;
+
+//==============================================================================
+
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace CellMLSupport {
+    class CellmlFileRuntime;
+}   // namespace CellMLSupport
+
+//==============================================================================
+
 namespace SingleCellSimulationView {
 
 //==============================================================================
@@ -36,10 +49,15 @@ public:
 
     virtual void retranslateUi();
 
-    void initialize(SingleCellSimulationViewSimulation *pSimulation);
+    void initialize(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
 
 private:
     Ui::SingleCellSimulationViewInformationSolversWidget *mGui;
+
+    bool mOdeSolver;
+
+    QLabel *mOdeDaeSolverLabel;
+    QLabel *mNlaSolverLabel;
 };
 
 //==============================================================================

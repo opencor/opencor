@@ -54,7 +54,7 @@ void SingleCellSimulationViewPlugin::initialize()
 {
     // Create our single view widget
 
-    mViewWidget = new SingleCellSimulationViewWidget(mMainWindow);
+    mViewWidget = new SingleCellSimulationViewWidget(this, mMainWindow);
 
     // Hide our single view widget since it may not initially be shown in our
     // central widget
