@@ -12,7 +12,6 @@ ADD_PLUGIN(QtMmlWidget
     HEADERS_MOC
         src/qtmmlwidgetplugin.h
     INCLUDE_DIRS
-        include
         src
     QT_DEPENDENCIES
         QtCore
