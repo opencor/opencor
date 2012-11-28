@@ -21,11 +21,9 @@ SingleCellSimulationViewSimulationWorker::SingleCellSimulationViewSimulationWork
     mStatus(Idling),
     mData(pData)
 {
-    // Initialise our progress
-    // Note: we use setProgress() since it will let people know about our
-    //       progress...
+    // Initialise our progress and let people know about it
 
-    setProgress(0.0);
+    updateAndEmitProgress(0.0);
 }
 
 //==============================================================================
@@ -48,7 +46,7 @@ double SingleCellSimulationViewSimulationWorker::progress() const
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulationWorker::setProgress(const double &pProgress)
+void SingleCellSimulationViewSimulationWorker::updateAndEmitProgress(const double &pProgress)
 {
     // Set our progress
 
@@ -99,7 +97,7 @@ void SingleCellSimulationViewSimulationWorker::run()
 
             // Let people know about our progress
 
-            setProgress((currentPoint-startingPoint)*oneOverPointRange);
+            updateAndEmitProgress((currentPoint-startingPoint)*oneOverPointRange);
 
             // Check whether we should be pausing
 
@@ -157,21 +155,21 @@ void SingleCellSimulationViewSimulationWorker::run()
         // the simulation
 
         if (mStatus != Stopped)
-            setProgress(1.0);
-
-        // Retrieve the total elapsed time
-
-        totalElapsedTime += timer.elapsed();
+            updateAndEmitProgress(1.0);
 
         // We are done, so...
 
         mStatus = Finished;
 
         // Reset our progress
-        // Note: we would normally use setProgress(), but we don't want the
-        //       progress() signal to be emitted, so...
+        // Note: we would normally use updateAndEmitProgress(), but we don't
+        //       want to emit the progress, so...
 
         mProgress = 0.0;
+
+        // Retrieve the total elapsed time
+
+        totalElapsedTime += timer.elapsed();
 
         // Let people know that we are done and give them the total elapsed time too
 

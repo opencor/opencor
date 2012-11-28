@@ -57,7 +57,7 @@ private:
 
     double mProgress;
 
-    void setProgress(const double &pProgress);
+    void updateAndEmitProgress(const double &pProgress);
 
 Q_SIGNALS:
     void running();
