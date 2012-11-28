@@ -187,9 +187,9 @@ void Test::moduloOperatorTests()
                                          "}"));
 
     QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(11.0*3.0, 5.0),
-             (double) ((int) (11.0*3.0) % (int) 5.0));
+             double(int(11.0*3.0) % int(5.0)));
     QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(11.0*A, B),
-             (double) ((int) (11.0*A) % (int) B));
+             double(int(11.0*A) % int(B)));
 }
 
 //==============================================================================

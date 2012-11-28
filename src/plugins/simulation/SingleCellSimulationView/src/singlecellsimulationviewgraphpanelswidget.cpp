@@ -157,7 +157,7 @@ SingleCellSimulationViewGraphPanelWidget * SingleCellSimulationViewGraphPanelsWi
     // Resize the graph panels, thus making sure that their size is what it
     // should be (see issue #58)
 
-    double scalingFactor = (double) (count()-1)/count();
+    double scalingFactor = double(count()-1)/count();
 
     for (int i = 0, iMax = origSizes.count(); i < iMax; ++i)
         origSizes[i] *= scalingFactor;

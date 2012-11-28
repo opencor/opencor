@@ -86,8 +86,8 @@ void ViewerWidget::paintEvent(QPaintEvent *pEvent)
     //       the equation being clipped, hence we go for 93% of the 'optimal'
     //       size...
 
-    mMmlDocument.setBaseFontPointSize(qRound(93*qMin((double) width()*mOneOverMmlDocumentWidth,
-                                                     (double) height()*mOneOverMmlDocumentHeight)));
+    mMmlDocument.setBaseFontPointSize(qRound(93*qMin(mOneOverMmlDocumentWidth*width(),
+                                                     mOneOverMmlDocumentHeight*height())));
 
     // Clear the background
 
