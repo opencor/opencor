@@ -35,6 +35,8 @@ ADD_PLUGIN(QtPropertyBrowser
         src/qtpropertybrowser.qrc
     INCLUDE_DIRS
         src
+    DEFINITIONS
+        QT_QTPROPERTYBROWSER_EXPORT
     QT_DEPENDENCIES
         QtCore
         QtGui

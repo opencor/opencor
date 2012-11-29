@@ -54,6 +54,7 @@ ADD_PLUGIN(SingleCellSimulationView
         src/singlecellsimulationviewwidget.ui
     DEFINITIONS
         ${LLVM_DEFINITIONS}
+        QT_QTPROPERTYBROWSER_IMPORT
     INCLUDE_DIRS
         ../../3rdparty/Qwt/src
 
