@@ -191,7 +191,10 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     SET(PLUGIN_NAME ${PLUGIN_NAME})
 
     SET(SOURCES)
+    SET(SOURCES_TO_MOC)
     SET(HEADERS_MOC)
+    SET(HEADERS_MOC_TO_CPP)
+    SET(RESOURCES)
     SET(UIS)
     SET(INCLUDE_DIRS)
     SET(DEFINITIONS)
@@ -229,26 +232,32 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             ENDIF()
         ELSEIF(${PARAMETER} STREQUAL "SOURCES")
             SET(TYPE_OF_PARAMETER 1)
-        ELSEIF(${PARAMETER} STREQUAL "HEADERS_MOC")
+        ELSEIF(${PARAMETER} STREQUAL "SOURCES_TO_MOC")
             SET(TYPE_OF_PARAMETER 2)
-        ELSEIF(${PARAMETER} STREQUAL "UIS")
+        ELSEIF(${PARAMETER} STREQUAL "HEADERS_MOC")
             SET(TYPE_OF_PARAMETER 3)
-        ELSEIF(${PARAMETER} STREQUAL "INCLUDE_DIRS")
+        ELSEIF(${PARAMETER} STREQUAL "HEADERS_MOC_TO_CPP")
             SET(TYPE_OF_PARAMETER 4)
-        ELSEIF(${PARAMETER} STREQUAL "DEFINITIONS")
+        ELSEIF(${PARAMETER} STREQUAL "RESOURCES")
             SET(TYPE_OF_PARAMETER 5)
-        ELSEIF(${PARAMETER} STREQUAL "OPENCOR_DEPENDENCIES")
+        ELSEIF(${PARAMETER} STREQUAL "UIS")
             SET(TYPE_OF_PARAMETER 6)
-        ELSEIF(${PARAMETER} STREQUAL "OPENCOR_BINARY_DEPENDENCIES")
+        ELSEIF(${PARAMETER} STREQUAL "INCLUDE_DIRS")
             SET(TYPE_OF_PARAMETER 7)
-        ELSEIF(${PARAMETER} STREQUAL "QT_DEPENDENCIES")
+        ELSEIF(${PARAMETER} STREQUAL "DEFINITIONS")
             SET(TYPE_OF_PARAMETER 8)
-        ELSEIF(${PARAMETER} STREQUAL "EXTERNAL_DEPENDENCIES_DIR")
+        ELSEIF(${PARAMETER} STREQUAL "OPENCOR_DEPENDENCIES")
             SET(TYPE_OF_PARAMETER 9)
-        ELSEIF(${PARAMETER} STREQUAL "EXTERNAL_DEPENDENCIES")
+        ELSEIF(${PARAMETER} STREQUAL "OPENCOR_BINARY_DEPENDENCIES")
             SET(TYPE_OF_PARAMETER 10)
-        ELSEIF(${PARAMETER} STREQUAL "TESTS")
+        ELSEIF(${PARAMETER} STREQUAL "QT_DEPENDENCIES")
             SET(TYPE_OF_PARAMETER 11)
+        ELSEIF(${PARAMETER} STREQUAL "EXTERNAL_DEPENDENCIES_DIR")
+            SET(TYPE_OF_PARAMETER 12)
+        ELSEIF(${PARAMETER} STREQUAL "EXTERNAL_DEPENDENCIES")
+            SET(TYPE_OF_PARAMETER 13)
+        ELSEIF(${PARAMETER} STREQUAL "TESTS")
+            SET(TYPE_OF_PARAMETER 14)
         ELSE()
             # Not one of the headers, so add the parameter to the corresponding
             # set
@@ -256,38 +265,34 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             IF(${TYPE_OF_PARAMETER} EQUAL 1)
                 SET(SOURCES ${SOURCES} ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 2)
-                SET(HEADERS_MOC ${HEADERS_MOC} ${PARAMETER})
+                SET(SOURCES_TO_MOC ${SOURCES_TO_MOC} ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 3)
-                SET(UIS ${UIS} ${PARAMETER})
+                SET(HEADERS_MOC ${HEADERS_MOC} ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 4)
-                SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${PARAMETER})
+                SET(HEADERS_MOC_TO_CPP ${HEADERS_MOC_TO_CPP} ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 5)
-                SET(DEFINITIONS ${DEFINITIONS} ${PARAMETER})
+                SET(RESOURCES ${RESOURCES} ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 6)
-                SET(OPENCOR_DEPENDENCIES ${OPENCOR_DEPENDENCIES} ${PARAMETER})
+                SET(UIS ${UIS} ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 7)
-                SET(OPENCOR_BINARY_DEPENDENCIES ${OPENCOR_BINARY_DEPENDENCIES} ${PARAMETER})
+                SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 8)
-                SET(QT_DEPENDENCIES ${QT_DEPENDENCIES} ${PARAMETER})
+                SET(DEFINITIONS ${DEFINITIONS} ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 9)
-                SET(EXTERNAL_DEPENDENCIES_DIR ${PARAMETER})
+                SET(OPENCOR_DEPENDENCIES ${OPENCOR_DEPENDENCIES} ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 10)
-                SET(EXTERNAL_DEPENDENCIES ${EXTERNAL_DEPENDENCIES} ${PARAMETER})
+                SET(OPENCOR_BINARY_DEPENDENCIES ${OPENCOR_BINARY_DEPENDENCIES} ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 11)
+                SET(QT_DEPENDENCIES ${QT_DEPENDENCIES} ${PARAMETER})
+            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 12)
+                SET(EXTERNAL_DEPENDENCIES_DIR ${PARAMETER})
+            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 13)
+                SET(EXTERNAL_DEPENDENCIES ${EXTERNAL_DEPENDENCIES} ${PARAMETER})
+            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 14)
                 SET(TESTS ${TESTS} ${PARAMETER})
             ENDIF()
         ENDIF()
     ENDFOREACH()
-
-    # Resource file, if any
-
-    SET(QRC_FILE res/${PLUGIN_NAME}.qrc)
-
-    IF(EXISTS "${PROJECT_SOURCE_DIR}/${QRC_FILE}")
-        SET(RESOURCES ${QRC_FILE})
-    ELSE()
-        SET(RESOURCES)
-    ENDIF()
 
     # Various include directories
 
@@ -295,11 +300,23 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     INCLUDE_DIRECTORIES(${INCLUDE_DIRS})
 
-    # Update the translation (.ts) files and generate the language (.qm) files
-    # which will later on be embedded in the plugin itself
+    # Resource file, if any
 
-    IF(NOT "${RESOURCES}" STREQUAL "")
-        UPDATE_LANGUAGE_FILES(${PLUGIN_NAME})
+    IF("${RESOURCES}" STREQUAL "")
+        # No resources were given, so check whether we have one nonetheless
+
+        SET(QRC_FILE res/${PLUGIN_NAME}.qrc)
+
+        IF(EXISTS "${PROJECT_SOURCE_DIR}/${QRC_FILE}")
+            SET(RESOURCES ${QRC_FILE})
+        ENDIF()
+
+        # Update the translation (.ts) files and generate the language (.qm)
+        # files which will later on be embedded in the plugin itself
+
+        IF(NOT "${RESOURCES}" STREQUAL "")
+            UPDATE_LANGUAGE_FILES(${PLUGIN_NAME})
+        ENDIF()
     ENDIF()
 
     # Definition to make sure that the plugin can be used by other plugins
@@ -312,7 +329,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         ADD_DEFINITIONS(-D${DEFINITION})
     ENDFOREACH()
 
-    # Rules to build the plugin
+    # Generate and add the different files needed by the plugin
 
     IF("${HEADERS_MOC}" STREQUAL "")
         SET(SOURCES_MOC)
@@ -326,8 +343,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         QT4_WRAP_UI(SOURCES_UIS ${UIS})
     ENDIF()
 
-    QT4_ADD_RESOURCES(SOURCES_RCS ${RESOURCES})
-
     IF("${RESOURCES}" STREQUAL "")
         SET(SOURCES_RCS)
     ELSE()
@@ -340,6 +355,56 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         ${SOURCES_UIS}
         ${SOURCES_RCS}
     )
+
+    # Generate and add as dependencies the .moc files needed by the plugin
+    # Note: this is rarely needed (e.g. the QtPropertyBrowser plugin)...
+
+    IF(NOT "${SOURCES_TO_MOC}" STREQUAL "")
+        SET(FILES_TO_MOC)
+
+        FOREACH(FILE ${SOURCES_TO_MOC})
+            GET_FILENAME_COMPONENT(FILE_WE ${FILE} NAME_WE)
+
+            SET(FILE_TO_MOC ${FILE_WE}.moc)
+
+            QT4_GENERATE_MOC(${FILE} ${FILE_TO_MOC})
+
+            LIST(APPEND FILES_TO_MOC ${FILE_TO_MOC})
+        ENDFOREACH()
+
+        ADD_CUSTOM_TARGET(${PLUGIN_NAME}_FILES_TO_MOC
+            DEPENDS ${FILES_TO_MOC}
+        )
+
+        ADD_DEPENDENCIES(${PROJECT_NAME}
+            ${PLUGIN_NAME}_FILES_TO_MOC
+        )
+    ENDIF()
+
+    # Generate and add as dependencies the .cpp files needed by the plugin
+    # Note: this is rarely needed (e.g. the QtPropertyBrowser plugin)...
+
+    IF(NOT "${HEADERS_MOC_TO_CPP}" STREQUAL "")
+        SET(FILES_TO_CPP)
+
+        FOREACH(FILE ${HEADERS_MOC_TO_CPP})
+            GET_FILENAME_COMPONENT(FILE_WE ${FILE} NAME_WE)
+
+            SET(FILE_TO_CPP moc_${FILE_WE}.cpp)
+
+            QT4_GENERATE_MOC(${FILE} ${FILE_TO_CPP})
+
+            LIST(APPEND FILES_TO_CPP ${FILE_TO_CPP})
+        ENDFOREACH()
+
+        ADD_CUSTOM_TARGET(${PLUGIN_NAME}_FILES_TO_CPP
+            DEPENDS ${FILES_TO_CPP}
+        )
+
+        ADD_DEPENDENCIES(${PROJECT_NAME}
+            ${PLUGIN_NAME}_FILES_TO_CPP
+        )
+    ENDIF()
 
     # OpenCOR dependencies
 
@@ -679,13 +744,13 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
 
     SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
-    ADD_CUSTOM_TARGET(${MAIN_PROJECT_NAME}_${PLUGIN_NAME}_COPY_PLUGIN_TO_PLUGINS_DIRECTORY ALL
+    ADD_CUSTOM_TARGET(${PLUGIN_NAME}_COPY_PLUGIN_TO_PLUGINS_DIRECTORY ALL
                       COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
                                                        ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
 
     # Make a copy of the plugin to our main build directory
 
-    ADD_CUSTOM_TARGET(${MAIN_PROJECT_NAME}_${PLUGIN_NAME}_COPY_PLUGIN_TO_BUILD_DIRECTORY ALL
+    ADD_CUSTOM_TARGET(${PLUGIN_NAME}_COPY_PLUGIN_TO_BUILD_DIRECTORY ALL
                       COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
                                                        ${CMAKE_BINARY_DIR}/${PLUGIN_FILENAME})
 
@@ -699,7 +764,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
         #       to the system version of the Qt libraries, so...
 
         FOREACH(QT_DEPENDENCY ${QT_DEPENDENCIES})
-            ADD_CUSTOM_TARGET(${MAIN_PROJECT_NAME}_${PLUGIN_NAME}_UPDATE_MAC_OS_X_QT_REFERENCE ALL
+            ADD_CUSTOM_TARGET(${PLUGIN_NAME}_UPDATE_MAC_OS_X_QT_REFERENCE ALL
                                COMMAND install_name_tool -change @executable_path/../Frameworks/${QT_DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_DEPENDENCY}
                                                                  ${QT_LIBRARY_DIR}/${QT_DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_DEPENDENCY}
                                                                  ${LIBRARY_OUTPUT_PATH}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
