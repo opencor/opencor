@@ -17,6 +17,11 @@ namespace Ui {
 
 //==============================================================================
 
+class QtProperty;
+class QtTreePropertyBrowser;
+
+//==============================================================================
+
 namespace OpenCOR {
 
 //==============================================================================
@@ -56,6 +61,13 @@ public:
 
 private:
     Ui::SingleCellSimulationViewInformationWidget *mGui;
+
+    QtTreePropertyBrowser *mPropertyEditor;
+
+    QtProperty *mSimulationSection;
+    QtProperty *mSolversSection;
+    QtProperty *mTracesSection;
+    QtProperty *mParametersSection;
 
     Core::CollapsibleWidget *mSimulationCollapsibleWidget;
     SingleCellSimulationViewInformationSimulationWidget *mSimulationWidget;
