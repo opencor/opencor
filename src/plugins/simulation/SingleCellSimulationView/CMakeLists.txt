@@ -65,6 +65,7 @@ ADD_PLUGIN(SingleCellSimulationView
         Core
         CoreSolver
         ${LLVM_PLUGIN}
+        QtPropertyBrowser
         Qwt
     OPENCOR_BINARY_DEPENDENCIES
         ${LLVM_BINARY_PLUGIN}
