@@ -36,6 +36,7 @@ namespace OpenCOR {
 //==============================================================================
 
 namespace Core {
+    class ProgressBarWidget;
     class ToolBarWidget;
     class UserMessageWidget;
 }   // namespace Core
@@ -48,7 +49,6 @@ namespace SingleCellSimulationView {
 
 class SingleCellSimulationViewContentsWidget;
 class SingleCellSimulationViewPlugin;
-class SingleCellSimulationViewProgressBarWidget;
 class SingleCellSimulationViewSimulation;
 
 //==============================================================================
@@ -110,7 +110,7 @@ private:
 
     QTextEdit *mOutputWidget;
 
-    SingleCellSimulationViewProgressBarWidget *mProgressBarWidget;
+    Core::ProgressBarWidget *mProgressBarWidget;
 
     QMap<QString, int> mProgresses;
 

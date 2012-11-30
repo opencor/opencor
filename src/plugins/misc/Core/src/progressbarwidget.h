@@ -1,9 +1,14 @@
 //==============================================================================
-// Single cell simulation view progress bar widget
+// Progress bar widget
 //==============================================================================
 
-#ifndef SINGLECELLSIMULATIONVIEWPROGRESSBARWIDGET_H
-#define SINGLECELLSIMULATIONVIEWPROGRESSBARWIDGET_H
+#ifndef PROGRESSBARWIDGET_H
+#define PROGRESSBARWIDGET_H
+
+//==============================================================================
+
+#include "coreglobal.h"
+#include "widget.h"
 
 //==============================================================================
 
@@ -12,16 +17,16 @@
 //==============================================================================
 
 namespace OpenCOR {
-namespace SingleCellSimulationView {
+namespace Core {
 
 //==============================================================================
 
-class SingleCellSimulationViewProgressBarWidget : public QWidget
+class CORE_EXPORT ProgressBarWidget : public Widget
 {
     Q_OBJECT
 
 public:
-    explicit SingleCellSimulationViewProgressBarWidget(QWidget *pParent = 0);
+    explicit ProgressBarWidget(QWidget *pParent = 0);
 
     void setValue(const double &pValue);
 
@@ -38,7 +43,7 @@ private:
 //==============================================================================
 
 }   // namespace Core
-}   // namespace SingleCellSimulationView
+}   // namespace OpenCOR
 
 //==============================================================================
 

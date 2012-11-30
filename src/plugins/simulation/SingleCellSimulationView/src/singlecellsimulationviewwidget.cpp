@@ -5,11 +5,11 @@
 #include "cellmlfileruntime.h"
 #include "cellmlfilevariable.h"
 #include "coreutils.h"
+#include "progressbarwidget.h"
 #include "singlecellsimulationviewcontentswidget.h"
 #include "singlecellsimulationviewgraphpanelswidget.h"
 #include "singlecellsimulationviewinformationwidget.h"
 #include "singlecellsimulationviewplugin.h"
-#include "singlecellsimulationviewprogressbarwidget.h"
 #include "singlecellsimulationviewsimulation.h"
 #include "singlecellsimulationviewsimulationdata.h"
 #include "singlecellsimulationviewinformationparameterswidget.h"
@@ -180,7 +180,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
 
     // Create our (thin) simulation progress widget
 
-    mProgressBarWidget = new SingleCellSimulationViewProgressBarWidget(this);
+    mProgressBarWidget = new Core::ProgressBarWidget(this);
 
     mProgressBarWidget->setFixedHeight(3);
     mProgressBarWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);

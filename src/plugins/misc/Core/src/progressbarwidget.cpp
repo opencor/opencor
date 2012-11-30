@@ -1,9 +1,9 @@
 //==============================================================================
-// Single cell simulation view progress bar widget
+// Progress bar widget
 //==============================================================================
 
 #include "commonwidget.h"
-#include "singlecellsimulationviewprogressbarwidget.h"
+#include "progressbarwidget.h"
 
 //==============================================================================
 
@@ -13,12 +13,12 @@
 //==============================================================================
 
 namespace OpenCOR {
-namespace SingleCellSimulationView {
+namespace Core {
 
 //==============================================================================
 
-SingleCellSimulationViewProgressBarWidget::SingleCellSimulationViewProgressBarWidget(QWidget *pParent) :
-    QWidget(pParent),
+ProgressBarWidget::ProgressBarWidget(QWidget *pParent) :
+    Widget(QSize(), pParent),
     mWidth(0),
     mValue(0.0)
 {
@@ -26,7 +26,7 @@ SingleCellSimulationViewProgressBarWidget::SingleCellSimulationViewProgressBarWi
 
 //==============================================================================
 
-void SingleCellSimulationViewProgressBarWidget::paintEvent(QPaintEvent *pEvent)
+void ProgressBarWidget::paintEvent(QPaintEvent *pEvent)
 {
     // Paint ourselves
 
@@ -49,7 +49,7 @@ void SingleCellSimulationViewProgressBarWidget::paintEvent(QPaintEvent *pEvent)
 
 //==============================================================================
 
-void SingleCellSimulationViewProgressBarWidget::resizeEvent(QResizeEvent *pEvent)
+void ProgressBarWidget::resizeEvent(QResizeEvent *pEvent)
 {
     // Keep track of our new width
 
@@ -57,12 +57,12 @@ void SingleCellSimulationViewProgressBarWidget::resizeEvent(QResizeEvent *pEvent
 
     // Default handling of the event
 
-    QWidget::resizeEvent(pEvent);
+    Widget::resizeEvent(pEvent);
 }
 
 //==============================================================================
 
-void SingleCellSimulationViewProgressBarWidget::setValue(const double &pValue)
+void ProgressBarWidget::setValue(const double &pValue)
 {
     // Update both our value and ourselves, if needed
 
@@ -84,7 +84,7 @@ void SingleCellSimulationViewProgressBarWidget::setValue(const double &pValue)
 
 //==============================================================================
 
-}   // namespace SingleCellSimulationView
+}   // namespace Core
 }   // namespace OpenCOR
 
 //==============================================================================
