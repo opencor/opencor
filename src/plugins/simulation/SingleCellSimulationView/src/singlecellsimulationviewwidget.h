@@ -15,13 +15,10 @@
 class QFrame;
 class QLabel;
 class QProgressBar;
+class QScrollBar;
 class QSettings;
 class QSplitter;
 class QTextEdit;
-
-//==============================================================================
-
-class QwtSlider;
 
 //==============================================================================
 
@@ -75,7 +72,7 @@ public:
 
     SingleCellSimulationViewSimulation * simulation() const;
 
-    QwtSlider * delayWidget() const;
+    QScrollBar *delayWidget() const;
 
     SingleCellSimulationViewContentsWidget * contentsWidget() const;
 
@@ -98,7 +95,7 @@ private:
 
     Core::ToolBarWidget *mToolBarWidget;
 
-    QwtSlider *mDelayWidget;
+    QScrollBar *mDelayWidget;
     QLabel *mDelayValueWidget;
 
     QSplitter *mSplitterWidget;
@@ -135,7 +132,7 @@ private Q_SLOTS:
 
     void on_actionCsvExport_triggered();
 
-    void updateDelayValue(const double &pDelayValue);
+    void updateDelayValue(const int &pDelayValue);
 
     void simulationRunning();
     void simulationPausing();

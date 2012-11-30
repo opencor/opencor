@@ -30,6 +30,7 @@
 #include <QImage>
 #include <QLabel>
 #include <QPainter>
+#include <QScrollBar>
 #include <QSettings>
 #include <QSplitter>
 #include <QTextEdit>
@@ -75,24 +76,21 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
     // Create a slider (and a label to show its value) to specify the delay
     // (in milliseconds) between two data points
 
-    mDelayWidget = new QwtSlider(this);
+    mDelayWidget = new QScrollBar(Qt::Horizontal, this);
 #ifndef Q_WS_MAC
     QWidget *delaySliderSpaceWidget = new QWidget(this);
 #endif
     mDelayValueWidget = new QLabel(this);
 
-    mDelayWidget->setBorderWidth(1);
     mDelayWidget->setFixedWidth(0.1*qApp->desktop()->screenGeometry().width());
-    mDelayWidget->setHandleSize(0.5*mDelayWidget->handleSize().width(),
-                                    mDelayWidget->handleSize().height());
-    mDelayWidget->setRange(0.0, 50.0, 1.0, 10.0);
+    mDelayWidget->setRange(0, 50);
 
 #ifndef Q_WS_MAC
     delaySliderSpaceWidget->setFixedWidth(4);
 #endif
 
-    connect(mDelayWidget, SIGNAL(valueChanged(double)),
-            this, SLOT(updateDelayValue(const double &)));
+    connect(mDelayWidget, SIGNAL(valueChanged(int)),
+            this, SLOT(updateDelayValue(const int &)));
 
     updateDelayValue(mDelayWidget->value());
 
@@ -705,7 +703,7 @@ void SingleCellSimulationViewWidget::on_actionCsvExport_triggered()
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::updateDelayValue(const double &pDelayValue)
+void SingleCellSimulationViewWidget::updateDelayValue(const int &pDelayValue)
 {
     // Update our delay value widget
 
@@ -714,7 +712,7 @@ void SingleCellSimulationViewWidget::updateDelayValue(const double &pDelayValue)
     // Also update our simulation data
 
     if (mSimulation)
-        mSimulation->data()->setDelay(mDelayWidget->value());
+        mSimulation->data()->setDelay(pDelayValue);
 }
 
 //==============================================================================
@@ -879,7 +877,7 @@ SingleCellSimulationViewSimulation * SingleCellSimulationViewWidget::simulation(
 
 //==============================================================================
 
-QwtSlider * SingleCellSimulationViewWidget::delayWidget() const
+QScrollBar * SingleCellSimulationViewWidget::delayWidget() const
 {
     // Return our delay widget
 
