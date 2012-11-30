@@ -1308,8 +1308,8 @@ void CentralWidget::updateFileTabIcon(const QString &pFileName,
 
         for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i)
             if (!pFileName.compare(mFileNames[i])) {
-                // This is the file tab for which we want to update the icon, so do
-                // it and leave
+                // This is the file tab for which we want to update the icon, so
+                // do it and leave
 
                 mFileTabs->setTabIcon(i, pIcon);
 

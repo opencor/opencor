@@ -74,7 +74,11 @@ void SingleCellSimulationViewProgressBarWidget::setValue(const double &pValue)
         mValue = value;
 
         if (needUpdate)
-            update();
+            // Note: normally, we would be using update(), but on Windows many
+            //       successive updates will result in a very choppy progress,
+            //       so...
+
+            repaint();
     }
 }
 
