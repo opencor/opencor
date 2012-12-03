@@ -196,6 +196,7 @@ SET(PLUGINS
     3rdparty/Qwt
 
     misc/QScintillaSupport
+    misc/QtPropertyBrowserSupport
 
     # Build the remaining plugins
 

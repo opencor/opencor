@@ -16,7 +16,7 @@
 //==============================================================================
 
 //---GRY---
-#include<QDate>
+#include <QDate>
 #include <QtTreePropertyBrowser>
 #include <QtVariantPropertyManager>
 
