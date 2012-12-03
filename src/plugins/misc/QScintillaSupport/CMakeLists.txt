@@ -6,7 +6,7 @@ ADD_PLUGIN(QScintillaSupport
     SOURCES
         ../../plugininfo.cpp
 
-        src/qscintilla.cpp
+        src/qscintillawidget.cpp
         src/qscintillasupportplugin.cpp
     HEADERS_MOC
         src/qscintillasupportplugin.h

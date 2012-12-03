@@ -1,10 +1,10 @@
 //==============================================================================
-// QScintilla class
+// QScintillaWidget class
 //==============================================================================
 
 #include "commonwidget.h"
 #include "filemanager.h"
-#include "qscintilla.h"
+#include "qscintillawidget.h"
 
 //==============================================================================
 
@@ -21,8 +21,8 @@ namespace QScintillaSupport {
 
 //==============================================================================
 
-void QScintilla::constructor(const QString &pContents, const bool &pReadOnly,
-                             QsciLexer *pLexer)
+void QScintillaWidget::constructor(const QString &pContents,
+                                   const bool &pReadOnly, QsciLexer *pLexer)
 {
     // Remove the frame around our Scintilla editor
 
@@ -66,8 +66,9 @@ void QScintilla::constructor(const QString &pContents, const bool &pReadOnly,
 
 //==============================================================================
 
-QScintilla::QScintilla(const QString &pContents, const bool &pReadOnly,
-                       QsciLexer *pLexer, QWidget *pParent) :
+QScintillaWidget::QScintillaWidget(const QString &pContents,
+                                   const bool &pReadOnly,
+                                   QsciLexer *pLexer, QWidget *pParent) :
     QsciScintilla(pParent)
 {
     // Construct our object
@@ -77,8 +78,8 @@ QScintilla::QScintilla(const QString &pContents, const bool &pReadOnly,
 
 //==============================================================================
 
-QScintilla::QScintilla(const QString &pContents, const bool &pReadOnly,
-                       QWidget *pParent) :
+QScintillaWidget::QScintillaWidget(const QString &pContents,
+                                   const bool &pReadOnly, QWidget *pParent) :
     QsciScintilla(pParent)
 {
     // Construct our object
@@ -88,7 +89,7 @@ QScintilla::QScintilla(const QString &pContents, const bool &pReadOnly,
 
 //==============================================================================
 
-QScintilla::QScintilla(QsciLexer *pLexer, QWidget *pParent) :
+QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     QsciScintilla(pParent)
 {
     // Construct our object
@@ -98,7 +99,7 @@ QScintilla::QScintilla(QsciLexer *pLexer, QWidget *pParent) :
 
 //==============================================================================
 
-QScintilla::QScintilla(QWidget *pParent) :
+QScintillaWidget::QScintillaWidget(QWidget *pParent) :
     QsciScintilla(pParent)
 {
     // Construct our object
@@ -108,7 +109,7 @@ QScintilla::QScintilla(QWidget *pParent) :
 
 //==============================================================================
 
-void QScintilla::setContents(const QString &pContents)
+void QScintillaWidget::setContents(const QString &pContents)
 {
     // Set our contents
 
@@ -117,7 +118,7 @@ void QScintilla::setContents(const QString &pContents)
 
 //==============================================================================
 
-void QScintilla::dragEnterEvent(QDragEnterEvent *pEvent)
+void QScintillaWidget::dragEnterEvent(QDragEnterEvent *pEvent)
 {
     // Accept the proposed action for the event, but only if we are not dropping
     // URIs

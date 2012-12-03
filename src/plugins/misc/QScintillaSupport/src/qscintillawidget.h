@@ -1,9 +1,9 @@
 //==============================================================================
-// QScintilla class
+// QScintillaWidget class
 //==============================================================================
 
-#ifndef QSCINTILLA_H
-#define QSCINTILLA_H
+#ifndef QSCINTILLAWIDGET_H
+#define QSCINTILLAWIDGET_H
 
 //==============================================================================
 
@@ -20,15 +20,15 @@ namespace QScintillaSupport {
 
 //==============================================================================
 
-class QSCINTILLASUPPORT_EXPORT QScintilla : public QsciScintilla
+class QSCINTILLASUPPORT_EXPORT QScintillaWidget : public QsciScintilla
 {
 public:
-    explicit QScintilla(const QString &pContents, const bool &pReadOnly,
-                        QsciLexer *pLexer, QWidget *pParent = 0);
-    explicit QScintilla(const QString &pContents, const bool &pReadOnly,
-                        QWidget *pParent = 0);
-    explicit QScintilla(QsciLexer *pLexer, QWidget *pParent = 0);
-    explicit QScintilla(QWidget *pParent = 0);
+    explicit QScintillaWidget(const QString &pContents, const bool &pReadOnly,
+                              QsciLexer *pLexer, QWidget *pParent = 0);
+    explicit QScintillaWidget(const QString &pContents, const bool &pReadOnly,
+                              QWidget *pParent = 0);
+    explicit QScintillaWidget(QsciLexer *pLexer, QWidget *pParent = 0);
+    explicit QScintillaWidget(QWidget *pParent = 0);
 
     void setContents(const QString &pContents);
 

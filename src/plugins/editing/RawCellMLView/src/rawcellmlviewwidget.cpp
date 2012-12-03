@@ -4,7 +4,7 @@
 
 #include "borderedwidget.h"
 #include "coreutils.h"
-#include "qscintilla.h"
+#include "qscintillawidget.h"
 #include "rawcellmlviewwidget.h"
 #include "viewerwidget.h"
 
@@ -161,10 +161,10 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
             file.close();
         }
 
-        mBorderedEditor = new Core::BorderedWidget(new QScintillaSupport::QScintilla(fileContents,
-                                                                                     fileIsReadOnly,
-                                                                                     new QsciLexerXML(this),
-                                                                                     parentWidget()),
+        mBorderedEditor = new Core::BorderedWidget(new QScintillaSupport::QScintillaWidget(fileContents,
+                                                                                           fileIsReadOnly,
+                                                                                           new QsciLexerXML(this),
+                                                                                           parentWidget()),
                                                    true, false, false, false);
 
         // Keep track of our bordered editor and add it to ourselves

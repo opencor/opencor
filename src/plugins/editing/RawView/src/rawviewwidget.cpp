@@ -17,7 +17,7 @@ namespace RawView {
 //==============================================================================
 
 RawViewWidget::RawViewWidget(const QString &pFileName, QWidget *pParent) :
-    QScintilla(pParent)
+    QScintillaWidget(pParent)
 {
     // Customise ourselves
 

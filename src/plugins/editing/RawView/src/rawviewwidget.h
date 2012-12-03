@@ -7,7 +7,7 @@
 
 //==============================================================================
 
-#include "qscintilla.h"
+#include "qscintillawidget.h"
 
 //==============================================================================
 
@@ -16,7 +16,7 @@ namespace RawView {
 
 //==============================================================================
 
-class RawViewWidget : public QScintillaSupport::QScintilla
+class RawViewWidget : public QScintillaSupport::QScintillaWidget
 {
     Q_OBJECT
 
