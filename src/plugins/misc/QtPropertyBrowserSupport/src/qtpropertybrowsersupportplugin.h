@@ -7,6 +7,7 @@
 
 //==============================================================================
 
+#include "i18ninterface.h"
 #include "plugininfo.h"
 
 //==============================================================================
@@ -20,9 +21,10 @@ PLUGININFO_FUNC QtPropertyBrowserSupportPluginInfo();
 
 //==============================================================================
 
-class QtPropertyBrowserSupportPlugin : public QObject
+class QtPropertyBrowserSupportPlugin : public QObject, public I18nInterface
 {
     Q_OBJECT
+    Q_INTERFACES(OpenCOR::I18nInterface)
 };
 
 //==============================================================================

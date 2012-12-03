@@ -49,6 +49,9 @@ QT_BEGIN_NAMESPACE
 
 class QTreeWidgetItem;
 class QtTreePropertyBrowserPrivate;
+//---OPENCOR--- BEGIN
+class QTreeWidget;
+//---OPENCOR--- END
 
 class QT_QTPROPERTYBROWSER_EXPORT QtTreePropertyBrowser : public QtAbstractPropertyBrowser
 {
@@ -74,6 +77,9 @@ public:
     QtTreePropertyBrowser(QWidget *parent = 0);
     ~QtTreePropertyBrowser();
 
+//---OPENCOR--- BEGIN
+    QTreeWidget * treeWidget() const;
+//---OPENCOR--- END
     int indentation() const;
     void setIndentation(int i);
 

@@ -7,6 +7,7 @@
 
 //==============================================================================
 
+#include "commonwidget.h"
 #include "qtpropertybrowsersupportglobal.h"
 
 //==============================================================================
@@ -25,10 +26,15 @@ namespace QtPropertyBrowserSupport {
 
 //==============================================================================
 
-class QTPROPERTYBROWSERSUPPORT_EXPORT QtPropertyBrowserWidget : public QtTreePropertyBrowser
+class QTPROPERTYBROWSERSUPPORT_EXPORT QtPropertyBrowserWidget : public QtTreePropertyBrowser,
+                                                                public Core::CommonWidget
 {
+    Q_OBJECT
+
 public:
     explicit QtPropertyBrowserWidget(QWidget *pParent = 0);
+
+    virtual void retranslateUi();
 
     QtVariantProperty * addProperty(const int pType, const QString &pName);
 

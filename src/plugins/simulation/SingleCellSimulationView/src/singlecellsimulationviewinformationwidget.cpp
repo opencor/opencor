@@ -156,6 +156,9 @@ void SingleCellSimulationViewInformationWidget::retranslateUi()
 
     mGui->retranslateUi(this);
 
+mPropertyEditor->retranslateUi();
+//---GRY--- THE ABOVE IS HERE ONLY UNTIL WE ARE DONE WITH OUR TESTING OF THE
+//          PROPERTY EDITOR...
     // Retranslate the title of our collapsible widgets
 
     mSimulationCollapsibleWidget->setTitle(tr("Simulation"));

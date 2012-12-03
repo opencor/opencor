@@ -781,6 +781,12 @@ QtTreePropertyBrowser::~QtTreePropertyBrowser()
     delete d_ptr;
 }
 
+//---OPENCOR--- BEGIN
+QTreeWidget * QtTreePropertyBrowser::treeWidget() const
+{
+    return d_ptr->m_treeWidget;
+}
+//---OPENCOR--- END
 /*!
     \property QtTreePropertyBrowser::indentation
     \brief indentation of the items in the tree view.
