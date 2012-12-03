@@ -52,7 +52,6 @@ ADD_PLUGIN(SingleCellSimulationView
         src/singlecellsimulationviewwidget.ui
     DEFINITIONS
         ${LLVM_DEFINITIONS}
-        QT_QTPROPERTYBROWSER_IMPORT
     INCLUDE_DIRS
         ../../3rdparty/Qwt/src
 
@@ -65,6 +64,7 @@ ADD_PLUGIN(SingleCellSimulationView
         CoreSolver
         ${LLVM_PLUGIN}
         QtPropertyBrowser
+        QtPropertyBrowserSupport
         Qwt
     OPENCOR_BINARY_DEPENDENCIES
         ${LLVM_BINARY_PLUGIN}

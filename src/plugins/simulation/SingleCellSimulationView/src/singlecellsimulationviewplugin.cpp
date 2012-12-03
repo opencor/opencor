@@ -31,7 +31,7 @@ PLUGININFO_FUNC SingleCellSimulationViewPluginInfo()
                           PluginInfo::Simulation,
                           true,
                           QStringList() << "CoreSimulation" << "CellMLSupport"
-                                        << "QtPropertyBrowser" << "Qwt",
+                                        << "QtPropertyBrowserSupport" << "Qwt",
                           descriptions);
 }
 

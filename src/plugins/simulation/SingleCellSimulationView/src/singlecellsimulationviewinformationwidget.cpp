@@ -4,6 +4,7 @@
 
 #include "collapsiblewidget.h"
 #include "coreutils.h"
+#include "qtpropertybrowserwidget.h"
 #include "singlecellsimulationviewinformationparameterswidget.h"
 #include "singlecellsimulationviewinformationsimulationwidget.h"
 #include "singlecellsimulationviewinformationsolverswidget.h"
@@ -17,7 +18,6 @@
 
 //---GRY---
 #include <QDate>
-#include <QtTreePropertyBrowser>
 #include <QtVariantPropertyManager>
 
 //==============================================================================
@@ -41,7 +41,7 @@ SingleCellSimulationViewInformationWidget::SingleCellSimulationViewInformationWi
 
     // Create and customise our property editor
 
-    mPropertyEditor = new QtTreePropertyBrowser(this);
+    mPropertyEditor = new QtPropertyBrowserSupport::QtPropertyBrowserWidget(this);
 
     QtVariantPropertyManager *propertyManager = new QtVariantPropertyManager(this);
     QtVariantEditorFactory *editorFactory = new QtVariantEditorFactory(this);

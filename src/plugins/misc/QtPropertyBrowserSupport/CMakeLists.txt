@@ -2,7 +2,7 @@ PROJECT(QtPropertyBrowserSupportPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(QtPropertySupportSupport
+ADD_PLUGIN(QtPropertyBrowserSupport
     SOURCES
         ../../plugininfo.cpp
 

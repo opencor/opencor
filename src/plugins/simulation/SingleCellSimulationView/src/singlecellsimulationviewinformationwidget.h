@@ -32,6 +32,12 @@ namespace Core {
 
 //==============================================================================
 
+namespace QtPropertyBrowserSupport {
+    class QtPropertyBrowserWidget;
+}   // namespace QtPropertyBrowserSupport
+
+//==============================================================================
+
 namespace SingleCellSimulationView {
 
 //==============================================================================
@@ -62,7 +68,7 @@ public:
 private:
     Ui::SingleCellSimulationViewInformationWidget *mGui;
 
-    QtTreePropertyBrowser *mPropertyEditor;
+    QtPropertyBrowserSupport::QtPropertyBrowserWidget *mPropertyEditor;
 
     QtProperty *mSimulationSection;
     QtProperty *mSolversSection;
