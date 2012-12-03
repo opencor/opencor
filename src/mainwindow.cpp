@@ -782,22 +782,35 @@ void MainWindow::setLocale(const QString &pLocale, const bool &pForceSetting)
                                           tr("Organisation"));
 
         // Update the locale of our various loaded plugins
-        // Note: we do this in reverse order of the loaded plugins since some
-        //       plugins loaded first (e.g. the Core plugin) may need an updated
-        //       translation from a plugin that depends on them (e.g. the
-        //       RawView plugin depends on the Core plugin and the Core plugin
-        //       needs the RawView plugin to be properly translated before being
-        //       translated, since it needs to know the name of the view that
-        //       was created by the RawView plugin), so...
+        // Note: we must set the locale of all the plugins before we can safely
+        //       retranslate them. Indeed, a plugin may require another plugin
+        //       (which was loaded either before or after) to work properly. For
+        //       example, the QtPropertyBrowserSupport plugin is loaded before
+        //       the SingleCellSimulation plugin. Yet, the latter plugin needs
+        //       the former plugin to be translated before the it can be used
+        //       properly. Conversely, the Core plugin is loaded before the
+        //       RawView plugin. Yet, the former plugin needs the latter plugin
+        //       to be translated before it can be used properly (indeed, the
+        //       Core plugin needs to know the name of the view that was created
+        //       by the RawView plugin). So...
 
         Plugins loadedPlugins = mPluginManager->loadedPlugins();
+        QList<I18nInterface *> i18nInterfaces = QList<I18nInterface *>();
 
-        for (int i = loadedPlugins.count()-1; i >= 0; --i) {
+        for (int i = 0, iMax = loadedPlugins.count(); i < iMax; ++i) {
             I18nInterface *i18nInterface = qobject_cast<I18nInterface *>(loadedPlugins[i]->instance());
 
-            if (i18nInterface)
+            if (i18nInterface) {
                 i18nInterface->setLocale(newLocale);
+
+                i18nInterfaces << i18nInterface;
+            }
         }
+
+        // Retranslate our various plugins
+
+        foreach (I18nInterface *i18nInterface, i18nInterfaces)
+            i18nInterface->retranslateUi();
 
         // Reorder our various View menus, just in case
 

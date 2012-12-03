@@ -21,10 +21,6 @@ void I18nInterface::setLocale(const QString &pLocale)
     qApp->removeTranslator(&mTranslator);
     mTranslator.load(QString(":%1_%2").arg(mPluginName, pLocale));
     qApp->installTranslator(&mTranslator);
-
-    // Retranslate the plugin
-
-    retranslateUi();
 }
 
 //==============================================================================
