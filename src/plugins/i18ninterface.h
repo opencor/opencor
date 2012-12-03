@@ -39,7 +39,7 @@ private:
 
 //==============================================================================
 
-Q_DECLARE_INTERFACE(OpenCOR::I18nInterface, "OpenCOR.I18nInterface")
+Q_DECLARE_INTERFACE(OpenCOR::I18nInterface, "OpenCOR::I18nInterface")
 
 //==============================================================================
 

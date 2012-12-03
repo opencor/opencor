@@ -63,7 +63,7 @@ typedef QList<SolverInterface *> SolverInterfaces;
 
 //==============================================================================
 
-Q_DECLARE_INTERFACE(OpenCOR::SolverInterface, "OpenCOR.SolverInterface")
+Q_DECLARE_INTERFACE(OpenCOR::SolverInterface, "OpenCOR::SolverInterface")
 
 //==============================================================================
 

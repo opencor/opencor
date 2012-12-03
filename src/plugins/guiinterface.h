@@ -240,7 +240,7 @@ private:
 
 //==============================================================================
 
-Q_DECLARE_INTERFACE(OpenCOR::GuiInterface, "OpenCOR.GuiInterface")
+Q_DECLARE_INTERFACE(OpenCOR::GuiInterface, "OpenCOR::GuiInterface")
 
 //==============================================================================
 

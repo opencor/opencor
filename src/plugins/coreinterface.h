@@ -67,7 +67,7 @@ protected:
 
 //==============================================================================
 
-Q_DECLARE_INTERFACE(OpenCOR::CoreInterface, "OpenCOR.CoreInterface")
+Q_DECLARE_INTERFACE(OpenCOR::CoreInterface, "OpenCOR::CoreInterface")
 
 //==============================================================================
 

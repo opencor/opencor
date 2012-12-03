@@ -66,7 +66,7 @@ public:
 
 //==============================================================================
 
-Q_DECLARE_INTERFACE(OpenCOR::FileInterface, "OpenCOR.FileInterface")
+Q_DECLARE_INTERFACE(OpenCOR::FileInterface, "OpenCOR::FileInterface")
 
 //==============================================================================
 
