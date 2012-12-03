@@ -37,8 +37,8 @@ QtPropertyBrowserWidget::QtPropertyBrowserWidget(QWidget *pParent) :
     treeWidget()->setAttribute(Qt::WA_MacShowFocusRect, 0);
     // Note: the above removes the focus border since it messes up the look of
     //       our property editor...
-    treeWidget()->setFrameShape(QFrame::NoFrame);
 #endif
+    treeWidget()->setFrameShape(QFrame::NoFrame);
 }
 
 //==============================================================================
