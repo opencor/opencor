@@ -30,12 +30,14 @@ QtPropertyBrowserWidget::QtPropertyBrowserWidget(QWidget *pParent) :
     setAlternatingRowColors(false);
     setFactoryForManager(mPropertyManager, editorFactory);
     setPropertiesWithoutValueMarked(true);
+    setResizeMode(QtTreePropertyBrowser::Interactive);
     setRootIsDecorated(false);
 
 #ifdef Q_WS_MAC
     treeWidget()->setAttribute(Qt::WA_MacShowFocusRect, 0);
     // Note: the above removes the focus border since it messes up the look of
     //       our property editor...
+    treeWidget()->setFrameShape(QFrame::NoFrame);
 #endif
 }
 
