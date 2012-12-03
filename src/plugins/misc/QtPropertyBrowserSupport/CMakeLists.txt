@@ -4,12 +4,13 @@ PROJECT(QtPropertyBrowserSupportPlugin)
 
 ADD_PLUGIN(QtPropertyBrowserSupport
     SOURCES
+        ../../i18ninterface.cpp
+        ../../interface.cpp
         ../../plugininfo.cpp
 
         src/qtpropertybrowserwidget.cpp
         src/qtpropertybrowsersupportplugin.cpp
     HEADERS_MOC
-        src/qtpropertybrowserwidget.h
         src/qtpropertybrowsersupportplugin.h
     INCLUDE_DIRS
         src
