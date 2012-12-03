@@ -15,6 +15,11 @@
 
 //==============================================================================
 
+class QtVariantProperty;
+class QtVariantPropertyManager;
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace QtPropertyBrowserSupport {
 
@@ -24,6 +29,11 @@ class QTPROPERTYBROWSERSUPPORT_EXPORT QtPropertyBrowserWidget : public QtTreePro
 {
 public:
     explicit QtPropertyBrowserWidget(QWidget *pParent = 0);
+
+    QtVariantProperty * addProperty(const int pType, const QString &pName);
+
+private:
+    QtVariantPropertyManager *mPropertyManager;
 };
 
 //==============================================================================
