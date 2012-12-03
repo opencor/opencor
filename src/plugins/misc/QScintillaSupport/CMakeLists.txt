@@ -9,6 +9,7 @@ ADD_PLUGIN(QScintillaSupport
         src/qscintillawidget.cpp
         src/qscintillasupportplugin.cpp
     HEADERS_MOC
+        src/qscintillawidget.h
         src/qscintillasupportplugin.h
     INCLUDE_DIRS
         src
