@@ -22,6 +22,8 @@ namespace QScintillaSupport {
 
 class QSCINTILLASUPPORT_EXPORT QScintillaWidget : public QsciScintilla
 {
+    Q_OBJECT
+
 public:
     explicit QScintillaWidget(const QString &pContents, const bool &pReadOnly,
                               QsciLexer *pLexer, QWidget *pParent = 0);

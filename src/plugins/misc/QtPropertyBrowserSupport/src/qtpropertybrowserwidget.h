@@ -29,6 +29,8 @@ namespace QtPropertyBrowserSupport {
 class QTPROPERTYBROWSERSUPPORT_EXPORT QtPropertyBrowserWidget : public QtTreePropertyBrowser,
                                                                 public Core::CommonWidget
 {
+    Q_OBJECT
+
 public:
     explicit QtPropertyBrowserWidget(QWidget *pParent = 0);
 

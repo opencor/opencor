@@ -9,7 +9,10 @@ ADD_PLUGIN(QScintillaSupport
         src/qscintillawidget.cpp
         src/qscintillasupportplugin.cpp
     HEADERS_MOC
+        src/qscintillawidget.h
         src/qscintillasupportplugin.h
+    DEFINITIONS
+        QSCINTILLA_DLL
     INCLUDE_DIRS
         src
     OPENCOR_DEPENDENCIES

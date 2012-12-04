@@ -11,6 +11,7 @@ ADD_PLUGIN(QtPropertyBrowserSupport
         src/qtpropertybrowserwidget.cpp
         src/qtpropertybrowsersupportplugin.cpp
     HEADERS_MOC
+        src/qtpropertybrowserwidget.h
         src/qtpropertybrowsersupportplugin.h
     INCLUDE_DIRS
         src
