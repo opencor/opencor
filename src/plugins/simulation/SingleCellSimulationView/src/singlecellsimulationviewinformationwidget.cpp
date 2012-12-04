@@ -38,53 +38,6 @@ SingleCellSimulationViewInformationWidget::SingleCellSimulationViewInformationWi
 
     mGui->setupUi(this);
 
-    // Create and customise our property editor
-
-    mPropertyEditor = new QtPropertyBrowserSupport::QtPropertyBrowserWidget(this);
-
-
-
-
-
-
-
-
-
-    // Testing of QtPropertyBrowser
-    //---GRY--- THE BELOW IS FOR TESTING PURPOSES ONLY...
-
-    QtVariantProperty *item = mPropertyEditor->addProperty(QVariant::Bool, QLatin1String(" Bool Property"));
-    item->setValue(true);
-
-    item = mPropertyEditor->addProperty(QVariant::Int, QLatin1String(" Int Property"));
-    item->setValue(20);
-    item->setAttribute(QLatin1String("minimum"), 0);
-    item->setAttribute(QLatin1String("maximum"), 100);
-    item->setAttribute(QLatin1String("singleStep"), 10);
-
-    item = mPropertyEditor->addProperty(QVariant::Double, QLatin1String(" Double Property"));
-    item->setValue(1.2345);
-    item->setAttribute(QLatin1String("singleStep"), 0.1);
-    item->setAttribute(QLatin1String("decimals"), 3);
-
-    item = mPropertyEditor->addProperty(QtVariantPropertyManager::enumTypeId(),
-                    QLatin1String(" Enum Property"));
-    QStringList enumNames;
-    enumNames << "Enum0" << "Enum1" << "Enum2";
-    item->setAttribute(QLatin1String("enumNames"), enumNames);
-    item->setValue(1);
-
-    mGui->layout->addWidget(mPropertyEditor);
-    mGui->layout->addWidget(Core::newLineWidget(this));
-
-
-
-
-
-
-
-
-
     // Create our Simulation collapsible widget
 
     mSimulationWidget = new SingleCellSimulationViewInformationSimulationWidget(this);
@@ -156,9 +109,6 @@ void SingleCellSimulationViewInformationWidget::retranslateUi()
 
     mGui->retranslateUi(this);
 
-mPropertyEditor->retranslateUi();
-//---GRY--- THE ABOVE IS HERE ONLY UNTIL WE ARE DONE WITH OUR TESTING OF THE
-//          PROPERTY EDITOR...
     // Retranslate the title of our collapsible widgets
 
     mSimulationCollapsibleWidget->setTitle(tr("Simulation"));

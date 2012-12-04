@@ -2,21 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>OpenCOR::SingleCellSimulationView::SingleCellSimulationViewInformationSimulationWidget</name>
-    <message>
-        <source>Starting point</source>
-        <translation>Point de départ</translation>
-    </message>
-    <message>
-        <source>Ending point</source>
-        <translation>Point d&apos;arrivée</translation>
-    </message>
-    <message>
-        <source>Point interval</source>
-        <translation>Interval de point</translation>
-    </message>
-</context>
-<context>
     <name>OpenCOR::SingleCellSimulationView::SingleCellSimulationViewInformationWidget</name>
     <message>
         <source>Simulation</source>
