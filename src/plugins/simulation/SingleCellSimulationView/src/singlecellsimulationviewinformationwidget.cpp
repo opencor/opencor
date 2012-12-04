@@ -69,8 +69,6 @@ SingleCellSimulationViewInformationWidget::SingleCellSimulationViewInformationWi
     mParametersCollapsibleWidget->setObjectName("ParametersCollapsible");
 
     // Add our collapsible widgets to our layout
-    // Note: we add a stretch at the end to make sure that our collapsible
-    //       widgets take as little vertical space as possible...
 
     mGui->layout->addWidget(mSimulationCollapsibleWidget);
     mGui->layout->addWidget(Core::newLineWidget(this));
@@ -80,7 +78,6 @@ SingleCellSimulationViewInformationWidget::SingleCellSimulationViewInformationWi
     mGui->layout->addWidget(Core::newLineWidget(this));
     mGui->layout->addWidget(mParametersCollapsibleWidget);
     mGui->layout->addWidget(Core::newLineWidget(this));
-    mGui->layout->addStretch(1);
 
     // Some further initialisations which are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)

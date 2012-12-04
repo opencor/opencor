@@ -13,7 +13,7 @@ namespace SingleCellSimulationView {
 //==============================================================================
 
 SingleCellSimulationViewInformationSolversWidget::SingleCellSimulationViewInformationSolversWidget(QWidget *pParent) :
-    PropertyEditorWidget(pParent),
+    QtPropertyBrowserWidget(pParent),
     mOdeSolver(true)
 {
 }

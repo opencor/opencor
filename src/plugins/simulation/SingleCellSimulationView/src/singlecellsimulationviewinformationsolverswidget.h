@@ -7,7 +7,7 @@
 
 //==============================================================================
 
-#include "propertyeditorwidget.h"
+#include "qtpropertybrowserwidget.h"
 
 //==============================================================================
 
@@ -25,7 +25,7 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-class SingleCellSimulationViewInformationSolversWidget : public Core::PropertyEditorWidget
+class SingleCellSimulationViewInformationSolversWidget : public QtPropertyBrowserSupport::QtPropertyBrowserWidget
 {
     Q_OBJECT
 
