@@ -232,8 +232,10 @@ void CollapsibleWidget::updateGui(const bool &pCollapsed)
     mTitle->setEnabled(mBody);
     mButton->setEnabled(mBody);
 
+    // Show/hide our separator
 
     mSeparator->setVisible(!pCollapsed);
+
     // Show/hide our body
 
     if (mBody)
