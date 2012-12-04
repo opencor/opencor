@@ -36,7 +36,8 @@ public:
 
     virtual void retranslateUi();
 
-    QtVariantProperty * addProperty(const int pType, const QString &pName);
+    QtVariantProperty * addProperty(const int pType,
+                                    const QString &pName = QString());
 
 private:
     QtVariantPropertyManager *mPropertyManager;

@@ -6,8 +6,11 @@
 
 //==============================================================================
 
-//#include <QSettings>
-//#include <QStandardItemModel>
+#include <QVariant>
+
+//==============================================================================
+
+#include <QtVariantProperty>
 
 //==============================================================================
 
@@ -25,17 +28,9 @@ SingleCellSimulationViewInformationSimulationWidget::SingleCellSimulationViewInf
 
     // Populate our data model
 
-//    mModel->invisibleRootItem()->setChild(0, 0, newString(false));
-//    mModel->invisibleRootItem()->setChild(1, 0, newString(false));
-//    mModel->invisibleRootItem()->setChild(2, 0, newString(false));
-
-//    mModel->invisibleRootItem()->setChild(0, 1, newDouble(true));
-//    mModel->invisibleRootItem()->setChild(1, 1, newDouble(true));
-//    mModel->invisibleRootItem()->setChild(2, 1, newDouble(true));
-
-//    mModel->invisibleRootItem()->setChild(0, 2, newString(false));
-//    mModel->invisibleRootItem()->setChild(1, 2, newString(false));
-//    mModel->invisibleRootItem()->setChild(2, 2, newString(false));
+    mStartingPoint = addProperty(QVariant::Double);
+    mEndingPoint = addProperty(QVariant::Double);
+    mPointInterval = addProperty(QVariant::Double);
 
     // Some further initialisations which are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
@@ -61,9 +56,9 @@ void SingleCellSimulationViewInformationSimulationWidget::retranslateUi()
 
     // Update our property names
 
-//    mModel->invisibleRootItem()->child(0, 0)->setText(tr("Starting point"));
-//    mModel->invisibleRootItem()->child(1, 0)->setText(tr("Ending point"));
-//    mModel->invisibleRootItem()->child(2, 0)->setText(tr("Point interval"));
+    mStartingPoint->setPropertyName(tr("Starting point"));
+    mEndingPoint->setPropertyName(tr("Ending point"));
+    mPointInterval->setPropertyName(tr("Point interval"));
 }
 
 //==============================================================================
@@ -83,8 +78,7 @@ double SingleCellSimulationViewInformationSimulationWidget::startingPoint() cons
 {
     // Return our starting point
 
-//    return mModel->invisibleRootItem()->child(0, 1)->text().toDouble();
-return 0.0;
+    return mStartingPoint->value().toDouble();
 }
 
 //==============================================================================
@@ -93,7 +87,7 @@ void SingleCellSimulationViewInformationSimulationWidget::setStartingPoint(const
 {
     // Set our starting point
 
-//    mModel->invisibleRootItem()->child(0, 1)->setText(QString::number(pValue));
+    mStartingPoint->setValue(pValue);
 }
 
 //==============================================================================
@@ -102,8 +96,7 @@ double SingleCellSimulationViewInformationSimulationWidget::endingPoint() const
 {
     // Return our ending point
 
-//    return mModel->invisibleRootItem()->child(1, 1)->text().toDouble();
-return 0.0;
+    return mEndingPoint->value().toDouble();
 }
 
 //==============================================================================
@@ -112,7 +105,7 @@ void SingleCellSimulationViewInformationSimulationWidget::setEndingPoint(const d
 {
     // Set our ending point
 
-//    mModel->invisibleRootItem()->child(1, 1)->setText(QString::number(pValue));
+    mEndingPoint->setValue(pValue);
 }
 
 //==============================================================================
@@ -121,8 +114,7 @@ double SingleCellSimulationViewInformationSimulationWidget::pointInterval() cons
 {
     // Return our point interval
 
-//    return mModel->invisibleRootItem()->child(2, 1)->text().toDouble();
-return 0.0;
+    return mPointInterval->value().toDouble();
 }
 
 //==============================================================================
@@ -131,7 +123,7 @@ void SingleCellSimulationViewInformationSimulationWidget::setPointInterval(const
 {
     // Set our point interval
 
-//    mModel->invisibleRootItem()->child(2, 1)->setText(QString::number(pValue));
+    mPointInterval->setValue(pValue);
 }
 
 //==============================================================================

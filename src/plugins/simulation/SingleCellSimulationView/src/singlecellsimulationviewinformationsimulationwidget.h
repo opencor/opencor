@@ -35,6 +35,11 @@ public:
 
     double pointInterval() const;
     void setPointInterval(const double &pValue);
+
+private:
+    QtVariantProperty *mStartingPoint;
+    QtVariantProperty *mEndingPoint;
+    QtVariantProperty *mPointInterval;
 };
 
 //==============================================================================
