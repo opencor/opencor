@@ -68,8 +68,24 @@
 <context>
     <name>OpenCOR::SingleCellSimulationView::SingleCellSimulationViewWidget</name>
     <message>
-        <source>the model must have at least one ODE or DAE</source>
-        <translation>le modèle doit avoir au moins une EDO ou EAD</translation>
+        <source>Delay</source>
+        <translation>Délai</translation>
+    </message>
+    <message>
+        <source>Delay in milliseconds between two data points</source>
+        <translation>Délai en millisecondes entre deux points de données</translation>
+    </message>
+    <message>
+        <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; view requires a valid CellML file to work...</source>
+        <translation>Désolé, mais la vue &lt;strong&gt;%1&lt;/strong&gt; nécessite un fichier CellML valide pour fonctionner...</translation>
+    </message>
+    <message>
+        <source>See below for more information.</source>
+        <translation>Voi plus bas pour plus d&apos;informations.</translation>
+    </message>
+    <message>
+        <source>Runtime:</source>
+        <translation>Modèle d&apos;exécution :</translation>
     </message>
     <message>
         <source>Non-linear algebraic system(s)</source>
@@ -78,6 +94,10 @@
     <message>
         <source>valid</source>
         <translation>valide</translation>
+    </message>
+    <message>
+        <source>Model type:</source>
+        <translation>Type de modèle :</translation>
     </message>
     <message>
         <source>ODE</source>
@@ -96,32 +116,12 @@
         <translation>Erreur :</translation>
     </message>
     <message>
-        <source>Runtime:</source>
-        <translation>Modèle d&apos;exécution :</translation>
-    </message>
-    <message>
-        <source>Model type:</source>
-        <translation>Type de modèle :</translation>
-    </message>
-    <message>
         <source>Warning:</source>
         <translation>Attention :</translation>
     </message>
     <message>
-        <source>Delay</source>
-        <translation>Délai</translation>
-    </message>
-    <message>
-        <source>Delay in milliseconds between two data points</source>
-        <translation>Délai en millisecondes entre deux points de données</translation>
-    </message>
-    <message>
-        <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; view requires a valid CellML file to work...</source>
-        <translation>Désolé, mais la vue &lt;strong&gt;%1&lt;/strong&gt; nécessite un fichier CellML valide pour fonctionner...</translation>
-    </message>
-    <message>
-        <source>See below for more information.</source>
-        <translation>Voi plus bas pour plus d&apos;informations.</translation>
+        <source>the model must have at least one ODE or DAE</source>
+        <translation>le modèle doit avoir au moins une EDO ou EAD</translation>
     </message>
 </context>
 <context>

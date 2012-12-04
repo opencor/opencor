@@ -55,7 +55,7 @@ FileBrowserWidget::FileBrowserWidget(QWidget *pParent) :
 
 //==============================================================================
 
-static const QString SettingsColumnWidth = "ColumnWidth";
+static const QString SettingsColumnWidth = "ColumnWidth%1";
 static const QString SettingsInitialPath = "InitialPath";
 static const QString SettingsSortColumn  = "SortColumn";
 static const QString SettingsSortOrder   = "SortOrder";
@@ -80,7 +80,7 @@ void FileBrowserWidget::loadSettings(QSettings *pSettings)
     QString columnWidthKey;
 
     for (int i = 0, iMax = header()->count(); i < iMax; ++i) {
-        columnWidthKey = SettingsColumnWidth+QString::number(i);
+        columnWidthKey = SettingsColumnWidth.arg(i);
 
         mNeedDefColWidth =     mNeedDefColWidth
                            && !pSettings->contains(columnWidthKey);
@@ -180,8 +180,7 @@ void FileBrowserWidget::saveSettings(QSettings *pSettings) const
     // Keep track of the width of each column
 
     for (int i = 0, iMax = header()->count(); i < iMax; ++i)
-        pSettings->setValue(SettingsColumnWidth+QString::number(i),
-                            columnWidth(i));
+        pSettings->setValue(SettingsColumnWidth.arg(i), columnWidth(i));
 
     // Keep track of the sorting information
 
