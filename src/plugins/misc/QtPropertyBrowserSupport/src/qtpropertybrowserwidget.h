@@ -36,8 +36,13 @@ public:
 
     virtual void retranslateUi();
 
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
+
     QtVariantProperty * addProperty(const int pType,
                                     const QString &pName = QString());
+
+    void selectFirstProperty();
 
 private:
     QtVariantPropertyManager *mPropertyManager;

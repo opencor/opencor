@@ -29,7 +29,7 @@ SingleCellSimulationViewInformationSimulationWidget::SingleCellSimulationViewInf
     // Populate our data model
 
     mStartingPoint = addProperty(QVariant::Double);
-    mEndingPoint = addProperty(QVariant::Double);
+    mEndingPoint   = addProperty(QVariant::Double);
     mPointInterval = addProperty(QVariant::Double);
 
     // Some further initialisations which are done as part of retranslating the
@@ -39,7 +39,7 @@ SingleCellSimulationViewInformationSimulationWidget::SingleCellSimulationViewInf
 
     // Select our first property
 
-//    selectFirstItem();
+    selectFirstProperty();
 
     // Resize our columns
 
