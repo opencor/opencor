@@ -26,9 +26,6 @@ void CollapsibleWidget::constructor(const QString &pTitle, QWidget *pBody)
 
     mBody = pBody;
 
-    mFirstHeightUpdate = true;
-    mOldHeight = 0;
-
     // Create a vertical layout which will contain our header and body
 
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
@@ -256,18 +253,6 @@ void CollapsibleWidget::updateGui(const bool &pCollapsed)
         setFocusProxy(mBody);
 
         mBody->setFocus();
-    }
-
-    // Update our height
-
-    if (!mFirstHeightUpdate) {
-        if (pCollapsed) {
-            mOldHeight = height();
-
-            setFixedHeight(mHeader->height());
-        } else if (mOldHeight) {
-            setFixedHeight(mOldHeight);
-        }
     }
 }
 

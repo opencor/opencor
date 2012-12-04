@@ -57,9 +57,6 @@ private:
 
     QWidget *mBody;
 
-    bool mFirstHeightUpdate;
-    int mOldHeight;
-
     void constructor(const QString &pTitle = QString(), QWidget *pBody = 0);
 
     void updateGui(const bool &pCollapsed);
