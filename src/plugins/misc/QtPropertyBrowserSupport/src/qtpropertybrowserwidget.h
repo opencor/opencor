@@ -46,7 +46,7 @@ class QTPROPERTYBROWSERSUPPORT_EXPORT QtPropertyBrowserWidget : public QtTreePro
     Q_OBJECT
 
 public:
-    explicit QtPropertyBrowserWidget(const bool &pAutoResizeHeight = false,
+    explicit QtPropertyBrowserWidget(const bool &pAutoResizeHeight,
                                      QWidget *pParent = 0);
     explicit QtPropertyBrowserWidget(QWidget *pParent = 0);
 
