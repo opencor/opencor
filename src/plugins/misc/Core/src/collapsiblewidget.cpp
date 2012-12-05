@@ -173,23 +173,22 @@ void CollapsibleWidget::setBody(QWidget *pBody)
 
         // Add the new body, if any
 
-        if (pBody) {
+        if (pBody)
             layout()->addWidget(pBody);
 
-            // Update our GUI, using the previous collapsible state of our
-            // widget, in case there was already a body before, or by asking
-            // it to be expanded now that there is a body
+        // Determine what our collapsed state should be
 
-            updateGui(mBody?mCollapsed:false);
-        } else {
-            // There is no body anymore, so collapse ourselves
-
-            updateGui(true);
-        }
+        bool collapsed = pBody?
+                             mBody?mCollapsed:false:
+                             true;
 
         // Keep track of the new body
 
         mBody = pBody;
+
+        // Update our GUI
+
+        updateGui(collapsed);
     }
 }
 
