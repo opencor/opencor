@@ -80,7 +80,7 @@ QtPropertyBrowserWidget::QtPropertyBrowserWidget(QWidget *pParent) :
 {
     // Construct our object
 
-    constructor(false);
+    constructor();
 }
 
 //==============================================================================
@@ -132,7 +132,7 @@ void QtPropertyBrowserWidget::saveSettings(QSettings *pSettings) const
 
 QSize QtPropertyBrowserWidget::sizeHint() const
 {
-    // Return either our ideal or default size, depending on the case
+    // Return either our default/ideal size, depending on the case
 
     if (mAutoResizeHeight) {
         // We automatically resize our height, so determine our ideal size which

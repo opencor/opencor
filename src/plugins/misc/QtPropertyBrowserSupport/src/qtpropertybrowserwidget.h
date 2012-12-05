@@ -72,7 +72,7 @@ private:
 
     bool mAutoResizeHeight;
 
-    void constructor(const bool &pAutoResizeHeight);
+    void constructor(const bool &pAutoResizeHeight = false);
 };
 
 //==============================================================================
