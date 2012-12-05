@@ -43,7 +43,7 @@ void CollapsibleWidget::constructor(const QString &pTitle, QWidget *pBody)
     headerLayout->setSpacing(0);
 
     mButton = new QToolButton(mHeader);
-    mTitle = new QLabel(QString(), mHeader);
+    mTitle  = new QLabel(QString(), mHeader);
 
     int iconSize = 0.4*mTitle->height();
 
