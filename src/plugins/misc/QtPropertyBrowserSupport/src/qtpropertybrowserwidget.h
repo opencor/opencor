@@ -62,8 +62,6 @@ public:
 
     void selectFirstProperty();
 
-    void resizeHeight();
-
 protected:
     virtual void resizeEvent(QResizeEvent *pEvent);
 

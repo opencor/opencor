@@ -186,10 +186,13 @@ void QtPropertyBrowserWidget::selectFirstProperty()
 
 //==============================================================================
 
-void QtPropertyBrowserWidget::resizeHeight()
+void QtPropertyBrowserWidget::resizeEvent(QResizeEvent *pEvent)
 {
-    // Resize our height (so that the tree widget shows only our properties and
-    // no blank), if required
+    // Default handling of the event
+
+    QtTreePropertyBrowser::resizeEvent(pEvent);
+
+    // Resize our height, so that we don't have any blank space at the bottom
 
     if (mAutoResizeHeight) {
         QSize idealSize = sizeHint();
@@ -203,20 +206,6 @@ void QtPropertyBrowserWidget::resizeHeight()
         //       height of our horizontal scroll bar, should it be shown (i.e.
         //       if our width is smaller than that of our ideal size)...
     }
-}
-
-//==============================================================================
-
-void QtPropertyBrowserWidget::resizeEvent(QResizeEvent *pEvent)
-{
-    // Default handling of the event
-
-    QtTreePropertyBrowser::resizeEvent(pEvent);
-
-    // Resize our height, so that we don't have any blank space at the bottom
-
-    if (mAutoResizeHeight)
-        resizeHeight();
 }
 
 //==============================================================================
