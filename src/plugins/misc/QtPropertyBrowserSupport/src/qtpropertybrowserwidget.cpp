@@ -7,6 +7,7 @@
 //==============================================================================
 
 #include <QHeaderView>
+#include <QScrollBar>
 #include <QSettings>
 #include <QTreeWidget>
 
@@ -21,10 +22,21 @@ namespace QtPropertyBrowserSupport {
 
 //==============================================================================
 
-QtPropertyBrowserWidget::QtPropertyBrowserWidget(QWidget *pParent) :
-    QtTreePropertyBrowser(pParent)
+int QtPropertyBrowserTreeWidget::rowHeight(const QModelIndex &pIndex) const
+{
+    // Return the row's height (using the protected version of rowHeight()
+    // defined in QTreeWidget)
+
+    return QTreeWidget::rowHeight(pIndex);
+}
+
+//==============================================================================
+
+void QtPropertyBrowserWidget::constructor(const bool &pAutoResizeHeight)
 {
     // Customise ourselves
+
+    mAutoResizeHeight = pAutoResizeHeight;
 
     mPropertyManager = new QtVariantPropertyManager(this);
     QtVariantEditorFactory *editorFactory = new QtVariantEditorFactory(this);
@@ -42,9 +54,33 @@ QtPropertyBrowserWidget::QtPropertyBrowserWidget(QWidget *pParent) :
 #endif
     treeWidget()->setFrameShape(QFrame::NoFrame);
 
+    if (pAutoResizeHeight)
+        treeWidget()->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
     // Make our tree widget our focus proxy
 
     setFocusProxy(treeWidget());
+}
+
+//==============================================================================
+
+QtPropertyBrowserWidget::QtPropertyBrowserWidget(const bool &pAutoResizeHeight,
+                                                 QWidget *pParent) :
+    QtTreePropertyBrowser(pParent)
+{
+    // Construct our object
+
+    constructor(pAutoResizeHeight);
+}
+
+//==============================================================================
+
+QtPropertyBrowserWidget::QtPropertyBrowserWidget(QWidget *pParent) :
+    QtTreePropertyBrowser(pParent)
+{
+    // Construct our object
+
+    constructor(false);
 }
 
 //==============================================================================
@@ -94,6 +130,35 @@ void QtPropertyBrowserWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
+QSize QtPropertyBrowserWidget::sizeHint() const
+{
+    // Return either our ideal or default size, depending on the case
+
+    if (mAutoResizeHeight) {
+        // We automatically resize our height, so determine our ideal size which
+        // is based on the width of our different columns, and the height of our
+        // header and our different rows
+
+        QtPropertyBrowserTreeWidget *propertyWidget = static_cast<QtPropertyBrowserTreeWidget *>(treeWidget());
+        int hintWidth  = 0;
+        int hintHeight = propertyWidget->header()->height();
+
+        for (int i = 0, iMax = propertyWidget->header()->count(); i < iMax; ++i)
+            hintWidth += propertyWidget->columnWidth(i);
+
+        for (int i = 0, iMax = properties().count(); i < iMax; ++i)
+            hintHeight += propertyWidget->rowHeight(propertyWidget->model()->index(i, 0));
+
+        return QSize(hintWidth, hintHeight);
+    } else {
+        // We don't automatically resize our height, so...
+
+        return QtTreePropertyBrowser::sizeHint();
+    }
+}
+
+//==============================================================================
+
 QtVariantProperty * QtPropertyBrowserWidget::addProperty(const int pType,
                                                          const QString &pName)
 {
@@ -117,6 +182,41 @@ void QtPropertyBrowserWidget::selectFirstProperty()
     // Select the first property, if any
 
     setCurrentItem(items(properties().first()).first());
+}
+
+//==============================================================================
+
+void QtPropertyBrowserWidget::resizeHeight()
+{
+    // Resize our height (so that the tree widget shows only our properties and
+    // no blank), if required
+
+    if (mAutoResizeHeight) {
+        QSize idealSize = sizeHint();
+        QTreeWidget *propertyWidget = treeWidget();
+
+        propertyWidget->setFixedHeight( idealSize.height()
+                                       +((width() < idealSize.width())?
+                                             propertyWidget->horizontalScrollBar()->height():
+                                             0));
+        // Note: the new height consists of our ideal height to which we add the
+        //       height of our horizontal scroll bar, should it be shown (i.e.
+        //       if our width is smaller than that of our ideal size)...
+    }
+}
+
+//==============================================================================
+
+void QtPropertyBrowserWidget::resizeEvent(QResizeEvent *pEvent)
+{
+    // Default handling of the event
+
+    QtTreePropertyBrowser::resizeEvent(pEvent);
+
+    // Resize our height, so that we don't have any blank space at the bottom
+
+    if (mAutoResizeHeight)
+        resizeHeight();
 }
 
 //==============================================================================
