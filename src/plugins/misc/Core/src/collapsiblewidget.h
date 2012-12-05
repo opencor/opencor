@@ -50,8 +50,9 @@ private:
     bool mCollapsed;
 
     QWidget *mHeader;
-    QLabel *mTitle;
+
     QToolButton *mButton;
+    QLabel *mTitle;
 
     QFrame *mSeparator;
 

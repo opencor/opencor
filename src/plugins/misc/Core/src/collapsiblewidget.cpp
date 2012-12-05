@@ -42,10 +42,8 @@ void CollapsibleWidget::constructor(const QString &pTitle, QWidget *pBody)
     headerLayout->setMargin(0);
     headerLayout->setSpacing(0);
 
-    mTitle = new QLabel(pTitle, mHeader);
     mButton = new QToolButton(mHeader);
-
-    mTitle->setAlignment(Qt::AlignCenter);
+    mTitle = new QLabel(QString(), mHeader);
 
     int iconSize = 0.4*mTitle->height();
 
@@ -60,6 +58,8 @@ void CollapsibleWidget::constructor(const QString &pTitle, QWidget *pBody)
 
     connect(mButton, SIGNAL(clicked()),
             this, SLOT(toggleCollapsibleState()));
+
+    mTitle->setAlignment(Qt::AlignCenter);
 
     headerLayout->addWidget(mButton);
     headerLayout->addWidget(mTitle);
