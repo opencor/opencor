@@ -20,7 +20,7 @@ namespace SingleCellSimulationView {
 //==============================================================================
 
 SingleCellSimulationViewInformationSimulationWidget::SingleCellSimulationViewInformationSimulationWidget(QWidget *pParent) :
-    QtPropertyBrowserWidget(pParent)
+    QtPropertyBrowserWidget(true, pParent)
 {
     // We don't have any hierarchy, so disable decoration
 
