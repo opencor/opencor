@@ -26,7 +26,8 @@ namespace SingleCellSimulationView {
 //==============================================================================
 
 SingleCellSimulationViewInformationWidget::SingleCellSimulationViewInformationWidget(QWidget *pParent) :
-    Widget(pParent),
+    QScrollArea(pParent),
+    CommonWidget(pParent),
     mGui(new Ui::SingleCellSimulationViewInformationWidget)
 {
     // Set up the GUI

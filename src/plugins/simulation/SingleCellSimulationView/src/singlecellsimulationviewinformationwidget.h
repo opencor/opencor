@@ -7,7 +7,11 @@
 
 //==============================================================================
 
-#include "widget.h"
+#include "commonwidget.h"
+
+//==============================================================================
+
+#include <QScrollArea>
 
 //==============================================================================
 
@@ -43,7 +47,8 @@ class SingleCellSimulationViewInformationSolversWidget;
 
 //==============================================================================
 
-class SingleCellSimulationViewInformationWidget : public Core::Widget
+class SingleCellSimulationViewInformationWidget : public QScrollArea,
+                                                  public Core::CommonWidget
 {
     Q_OBJECT
 
