@@ -36,7 +36,7 @@ SingleCellSimulationViewInformationWidget::SingleCellSimulationViewInformationWi
     // Create our Simulation collapsible widget
 
     mSimulationWidget = new SingleCellSimulationViewInformationSimulationWidget(this);
-    mSimulationCollapsibleWidget = new Core::CollapsibleWidget(QString(), mSimulationWidget, this);
+    mSimulationCollapsibleWidget = new Core::CollapsibleWidget(mSimulationWidget, this);
 
     mSimulationWidget->setObjectName("Simulation");
     mSimulationCollapsibleWidget->setObjectName("SimulationCollapsible");
@@ -44,21 +44,21 @@ SingleCellSimulationViewInformationWidget::SingleCellSimulationViewInformationWi
     // Create our Solvers collapsible widget
 
     mSolversWidget = new SingleCellSimulationViewInformationSolversWidget(this);
-    mSolversCollapsibleWidget = new Core::CollapsibleWidget(QString(), mSolversWidget, this);
+    mSolversCollapsibleWidget = new Core::CollapsibleWidget(mSolversWidget, this);
 
     mSolversWidget->setObjectName("Solvers");
     mSolversCollapsibleWidget->setObjectName("SolversCollapsible");
 
     // Create our Traces collapsible widget
 
-    mTracesCollapsibleWidget = new Core::CollapsibleWidget(this);
+    mTracesCollapsibleWidget = new Core::CollapsibleWidget(0, this);
 
     mTracesCollapsibleWidget->setObjectName("TracesCollapsible");
 
     // Create our Parameters collapsible widget
 
     mParametersWidget = new SingleCellSimulationViewInformationParametersWidget(this);
-    mParametersCollapsibleWidget = new Core::CollapsibleWidget(QString(), mParametersWidget, this);
+    mParametersCollapsibleWidget = new Core::CollapsibleWidget(mParametersWidget, this);
 
     mParametersWidget->setObjectName("Parameters");
     mParametersCollapsibleWidget->setObjectName("ParametersCollapsible");

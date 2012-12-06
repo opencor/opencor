@@ -20,12 +20,10 @@ namespace Core {
 
 //==============================================================================
 
-void CollapsibleWidget::constructor(const QString &pTitle, QWidget *pBody)
+CollapsibleWidget::CollapsibleWidget(QWidget *pBody, QWidget *pParent) :
+    Widget(QSize(), pParent),
+    mBody(pBody)
 {
-    // Some initialisations
-
-    mBody = pBody;
-
     // Create a vertical layout which will contain our header and body
 
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
@@ -86,27 +84,6 @@ void CollapsibleWidget::constructor(const QString &pTitle, QWidget *pBody)
     // whether there is a body
 
     updateGui(!pBody);
-}
-
-//==============================================================================
-
-CollapsibleWidget::CollapsibleWidget(const QString &pTitle,
-                                     QWidget *pBody, QWidget *pParent) :
-    Widget(QSize(), pParent)
-{
-    // Construct our object
-
-    constructor(pTitle, pBody);
-}
-
-//==============================================================================
-
-CollapsibleWidget::CollapsibleWidget(QWidget *pParent) :
-    Widget(QSize(), pParent)
-{
-    // Construct our object
-
-    constructor();
 }
 
 //==============================================================================

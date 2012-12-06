@@ -30,9 +30,7 @@ class CORE_EXPORT CollapsibleWidget : public Widget
     Q_OBJECT
 
 public:
-    explicit CollapsibleWidget(const QString &pTitle, QWidget *pBody,
-                               QWidget *pParent = 0);
-    explicit CollapsibleWidget(QWidget *pParent = 0);
+    explicit CollapsibleWidget(QWidget *pBody, QWidget *pParent = 0);
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
@@ -57,8 +55,6 @@ private:
     QFrame *mSeparator;
 
     QWidget *mBody;
-
-    void constructor(const QString &pTitle = QString(), QWidget *pBody = 0);
 
     void updateGui(const bool &pCollapsed);
 
