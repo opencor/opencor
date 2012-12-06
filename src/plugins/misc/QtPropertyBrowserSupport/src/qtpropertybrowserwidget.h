@@ -71,6 +71,9 @@ private:
     bool mAutoResizeHeight;
 
     void constructor(const bool &pAutoResizeHeight = false);
+
+private Q_SLOTS:
+    void resizeHeight();
 };
 
 //==============================================================================

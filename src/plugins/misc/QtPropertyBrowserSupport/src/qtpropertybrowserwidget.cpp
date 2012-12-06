@@ -47,19 +47,26 @@ void QtPropertyBrowserWidget::constructor(const bool &pAutoResizeHeight)
     setResizeMode(QtTreePropertyBrowser::Interactive);
     setRootIsDecorated(false);
 
+    QTreeWidget *propertyWidget = treeWidget();
+
 #ifdef Q_WS_MAC
-    treeWidget()->setAttribute(Qt::WA_MacShowFocusRect, 0);
+    propertyWidget->setAttribute(Qt::WA_MacShowFocusRect, 0);
     // Note: the above removes the focus border since it messes up the look of
     //       our property editor...
 #endif
-    treeWidget()->setFrameShape(QFrame::NoFrame);
+    propertyWidget->setFrameShape(QFrame::NoFrame);
 
     if (pAutoResizeHeight)
-        treeWidget()->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        propertyWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    // Resize our height in case one of our header's sections gets resized
+
+    connect(propertyWidget->header(), SIGNAL(sectionResized(int, int, int)),
+            this, SLOT(resizeHeight()));
 
     // Make our tree widget our focus proxy
 
-    setFocusProxy(treeWidget());
+    setFocusProxy(propertyWidget);
 }
 
 //==============================================================================
@@ -192,7 +199,17 @@ void QtPropertyBrowserWidget::resizeEvent(QResizeEvent *pEvent)
 
     QtTreePropertyBrowser::resizeEvent(pEvent);
 
-    // Resize our height, so that we don't have any blank space at the bottom
+    // Resize our height
+
+    resizeHeight();
+}
+
+//==============================================================================
+
+void QtPropertyBrowserWidget::resizeHeight()
+{
+    // Resize our height, so that we don't have any blank space at the bottom,
+    // but only if required
 
     if (mAutoResizeHeight) {
         QSize idealSize = sizeHint();

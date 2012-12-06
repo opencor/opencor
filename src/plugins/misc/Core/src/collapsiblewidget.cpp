@@ -24,18 +24,34 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(QWidget *pParent) :
     QWidget(pParent),
     mCollapsed(false)
 {
-    // Create a horizontal layout and add a button and label to it
+    // Create our main (vertical) layout
 
-    QHBoxLayout *layout = new QHBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
     layout->setMargin(0);
     layout->setSpacing(0);
 
-    mButton = new QToolButton(this);
-    mTitle  = new QLabel(QString(), this);
+    setLayout(layout);
+
+    // Create a sub-widget with a horizontal layout
+
+    QWidget *subWidget = new QWidget(this);
+
+    QHBoxLayout *subLayout = new QHBoxLayout(subWidget);
+
+    subLayout->setMargin(0);
+    subLayout->setSpacing(0);
+
+    subWidget->setLayout(subLayout);
+
+    // Create and customise our button and title
+
+    mButton = new QToolButton(subWidget);
+    mTitle  = new QLabel(QString(), subWidget);
 
     int iconSize = 0.4*mTitle->height();
 
+    mButton->setIcon(QIcon(":/oxygen/actions/arrow-down.png"));
     mButton->setIconSize(QSize(iconSize, iconSize));
     mButton->setStyleSheet("QToolButton {"
                            "    border: 0px;"
@@ -47,10 +63,15 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(QWidget *pParent) :
 
     mTitle->setAlignment(Qt::AlignCenter);
 
-    layout->addWidget(mButton);
-    layout->addWidget(mTitle);
+    // Add our button and title to our sub-layout
 
-    setLayout(layout);
+    subLayout->addWidget(mButton);
+    subLayout->addWidget(mTitle);
+
+    // Add our sub-widget and a horizontal line to our main layout
+
+    layout->addWidget(subWidget);
+    layout->addWidget(Core::newLineWidget(this));
 
     // Create a connection to keep track of the collapsed state of our header
 
@@ -124,14 +145,17 @@ CollapsibleWidget::CollapsibleWidget(QWidget *pParent) :
 {
     // Create a vertical layout which will contain our headers and widgets
 
-    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    mLayout = new QVBoxLayout(this);
 
-    mainLayout->setMargin(0);
-    mainLayout->setSpacing(0);
+    mLayout->setMargin(0);
+    mLayout->setSpacing(0);
 
-    // Apply the main layout to ourselves
+    setLayout(mLayout);
 
-    setLayout(mainLayout);
+    // Add a stretch to our layout so that its contents will take as little
+    // space as possible
+
+    mLayout->addStretch(1);
 }
 
 //==============================================================================
@@ -200,20 +224,33 @@ void CollapsibleWidget::setHeaderTitle(const int &pIndex, const QString &pTitle)
 
 void CollapsibleWidget::addWidget(QWidget *pWidget)
 {
+    // Make sure that there is a widget to add
+
+    if (!pWidget)
+        return;
+
     // We want to add a new widget, so we first need to add a new header to our
     // layout
 
+    int beforeIndex = 2*mHeaders.count();
+
     CollapsibleHeaderWidget *header = new CollapsibleHeaderWidget(this);
 
-    layout()->addWidget(header);
+    mLayout->insertWidget(beforeIndex, header);
 
     mHeaders.append(header);
 
     // Now, we can add the new widget itself
 
-    layout()->addWidget(pWidget);
+    mLayout->insertWidget(++beforeIndex, pWidget);
 
     mBodies.append(pWidget);
+
+    // Create a connection to show/hide our widget depending on the collapsed
+    // state of our header
+
+    connect(header, SIGNAL(contentsVisible(const bool &)),
+            pWidget, SLOT(setVisible(bool)));
 }
 
 //==============================================================================

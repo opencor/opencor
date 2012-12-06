@@ -16,7 +16,9 @@
 class QFrame;
 class QLabel;
 class QScrollArea;
+class QSpacerItem;
 class QToolButton;
+class QVBoxLayout;
 
 //==============================================================================
 
@@ -72,6 +74,8 @@ public:
     void addWidget(QWidget *pWidget);
 
 private:
+    QVBoxLayout *mLayout;
+
     QList<CollapsibleHeaderWidget *> mHeaders;
     QList<QWidget *> mBodies;
 };

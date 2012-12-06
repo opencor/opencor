@@ -48,7 +48,7 @@ SingleCellSimulationViewContentsWidget::SingleCellSimulationViewContentsWidget(Q
     // Add our information and graph panels widgets to ourselves
 
     addWidget(new Core::BorderedWidget(mInformationWidget,
-                                       false, false, false, true));
+                                       false, false, true, true));
     addWidget(new Core::BorderedWidget(mGraphPanelsWidget,
                                        false, true, true, false));
 

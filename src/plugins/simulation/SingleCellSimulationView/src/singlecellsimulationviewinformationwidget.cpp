@@ -35,6 +35,10 @@ SingleCellSimulationViewInformationWidget::SingleCellSimulationViewInformationWi
 
     mGui->setupUi(this);
 
+    // Remoe the frame around our scroll area
+
+    setFrameShape(QFrame::NoFrame);
+
     // Create our collapsible widget
 
     mCollapsibleWidget = new Core::CollapsibleWidget(this);
@@ -72,6 +76,10 @@ SingleCellSimulationViewInformationWidget::SingleCellSimulationViewInformationWi
     mCollapsibleWidget->addWidget(mSolversWidget);
     mCollapsibleWidget->addWidget(mTracesWidget);
     mCollapsibleWidget->addWidget(mParametersWidget);
+
+    // Set the focus proxy of our collapsible widget
+
+    mCollapsibleWidget->setFocusProxy(mSimulationWidget);
 
     // Add our collapsible widget to our layout
 
