@@ -20,7 +20,8 @@ namespace Core {
 
 //==============================================================================
 
-CollapsibleHeaderWidget::CollapsibleHeaderWidget(QWidget *pParent) :
+CollapsibleHeaderWidget::CollapsibleHeaderWidget(const QColor &pSeparatorColor,
+                                                 QWidget *pParent) :
     QWidget(pParent),
     mCollapsed(false)
 {
@@ -71,7 +72,7 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(QWidget *pParent) :
     // Add our sub-widget and a horizontal line to our main layout
 
     layout->addWidget(subWidget);
-    layout->addWidget(Core::newLineWidget(this));
+    layout->addWidget(Core::newLineWidget(pSeparatorColor, this));
 
     // Create a connection to keep track of the collapsed state of our header
 
@@ -133,16 +134,20 @@ void CollapsibleHeaderWidget::toggleCollapsedState()
 
     // Let people know about our new new collapsed state
 
-    emit contentsVisible(!mCollapsed);
+    emit widgetVisible(!mCollapsed);
 }
 
 //==============================================================================
 
-CollapsibleWidget::CollapsibleWidget(QWidget *pParent) :
-    Widget(QSize(), pParent),
-    mHeaders(QList<CollapsibleHeaderWidget *>()),
-    mBodies(QList<QWidget *>())
+void CollapsibleWidget::constructor(const QColor &pSeparatorColor)
 {
+    // Some initialisations
+
+    mSeparatorColor = pSeparatorColor;
+
+    mHeaders = QList<CollapsibleHeaderWidget *>();
+    mBodies  = QList<QWidget *>();
+
     // Create a vertical layout which will contain our headers and widgets
 
     mLayout = new QVBoxLayout(this);
@@ -156,6 +161,27 @@ CollapsibleWidget::CollapsibleWidget(QWidget *pParent) :
     // space as possible
 
     mLayout->addStretch(1);
+}
+
+//==============================================================================
+
+CollapsibleWidget::CollapsibleWidget(const QColor &pSeparatorColor,
+                                     QWidget *pParent) :
+    Widget(QSize(), pParent)
+{
+    // Construct our object
+
+    constructor(pSeparatorColor);
+}
+
+//==============================================================================
+
+CollapsibleWidget::CollapsibleWidget(QWidget *pParent) :
+    Widget(QSize(), pParent)
+{
+    // Construct our object
+
+    constructor();
 }
 
 //==============================================================================
@@ -234,7 +260,7 @@ void CollapsibleWidget::addWidget(QWidget *pWidget)
 
     int beforeIndex = 2*mHeaders.count();
 
-    CollapsibleHeaderWidget *header = new CollapsibleHeaderWidget(this);
+    CollapsibleHeaderWidget *header = new CollapsibleHeaderWidget(mSeparatorColor, this);
 
     mLayout->insertWidget(beforeIndex, header);
 
@@ -249,7 +275,7 @@ void CollapsibleWidget::addWidget(QWidget *pWidget)
     // Create a connection to show/hide our widget depending on the collapsed
     // state of our header
 
-    connect(header, SIGNAL(contentsVisible(const bool &)),
+    connect(header, SIGNAL(widgetVisible(const bool &)),
             pWidget, SLOT(setVisible(bool)));
 }
 

@@ -32,7 +32,8 @@ class CollapsibleHeaderWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit CollapsibleHeaderWidget(QWidget *pParent = 0);
+    explicit CollapsibleHeaderWidget(const QColor &pSeparatorColor,
+                                     QWidget *pParent = 0);
 
     bool isCollapsed() const;
     void setCollapsed(const bool &pCollapsed);
@@ -47,7 +48,7 @@ private:
     QLabel *mTitle;
 
 Q_SIGNALS:
-    void contentsVisible(const bool &pVisible);
+    void widgetVisible(const bool &pVisible);
 
 private Q_SLOTS:
     void toggleCollapsedState();
@@ -60,6 +61,8 @@ class CORE_EXPORT CollapsibleWidget : public Widget
     Q_OBJECT
 
 public:
+    explicit CollapsibleWidget(const QColor &pSeparatorColor,
+                               QWidget *pParent = 0);
     explicit CollapsibleWidget(QWidget *pParent = 0);
 
     virtual void loadSettings(QSettings *pSettings);
@@ -76,8 +79,12 @@ public:
 private:
     QVBoxLayout *mLayout;
 
+    QColor mSeparatorColor;
+
     QList<CollapsibleHeaderWidget *> mHeaders;
     QList<QWidget *> mBodies;
+
+    void constructor(const QColor &pSeparatorColor = CommonWidget::borderColor());
 };
 
 //==============================================================================

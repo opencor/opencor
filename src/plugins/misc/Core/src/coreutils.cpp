@@ -168,20 +168,19 @@ QString nativeCanonicalFileName(const QString &pFileName)
 
 //==============================================================================
 
-QFrame * newLineWidget(const bool &pHorizontal, QWidget *pParent)
+QFrame * newLineWidget(const bool &pHorizontal, const QColor &pColor,
+                       QWidget *pParent)
 {
     // Create and return a 'real' line widget, i.e. one which is 1 pixel wide,
     // using a QFrame widget
 
     QFrame *res = new QFrame(pParent);
 
-    QColor currentBorderColor = CommonWidget::borderColor();
-
     res->setStyleSheet(QString("QFrame {"
                                "    border: 1px solid rgb(%1, %2, %3);"
-                               "}").arg(QString::number(currentBorderColor.red()),
-                                        QString::number(currentBorderColor.green()),
-                                        QString::number(currentBorderColor.blue())));
+                               "}").arg(QString::number(pColor.red()),
+                                        QString::number(pColor.green()),
+                                        QString::number(pColor.blue())));
 
     if (pHorizontal) {
         res->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
@@ -196,11 +195,29 @@ QFrame * newLineWidget(const bool &pHorizontal, QWidget *pParent)
 
 //==============================================================================
 
+QFrame * newLineWidget(const bool &pHorizontal, QWidget *pParent)
+{
+    // Create and return a 'real' horizontal line widget
+
+    return newLineWidget(pHorizontal, CommonWidget::borderColor(), pParent);
+}
+
+//==============================================================================
+
+QFrame * newLineWidget(const QColor &pColor, QWidget *pParent)
+{
+    // Create and return a 'real' horizontal line widget
+
+    return newLineWidget(true, pColor, pParent);
+}
+
+//==============================================================================
+
 QFrame * newLineWidget(QWidget *pParent)
 {
     // Create and return a 'real' horizontal line widget
 
-    return newLineWidget(true, pParent);
+    return newLineWidget(true, CommonWidget::borderColor(), pParent);
 }
 
 //==============================================================================

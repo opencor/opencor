@@ -41,7 +41,9 @@ SingleCellSimulationViewInformationWidget::SingleCellSimulationViewInformationWi
 
     // Create our collapsible widget
 
-    mCollapsibleWidget = new Core::CollapsibleWidget(this);
+    QStyleOptionViewItemV3 option;
+
+    mCollapsibleWidget = new Core::CollapsibleWidget(static_cast<QRgb>(QApplication::style()->styleHint(QStyle::SH_Table_GridLineColor, &option)), this);
 
     mCollapsibleWidget->setObjectName("Collapsible");
 

@@ -46,6 +46,11 @@ void CORE_EXPORT setFocusTo(QWidget *pWidget);
 QString CORE_EXPORT nativeCanonicalFileName(const QString &pFileName);
 
 QFrame CORE_EXPORT * newLineWidget(const bool &pHorizontal,
+                                   const QColor &pColor,
+                                   QWidget *pParent = 0);
+QFrame CORE_EXPORT * newLineWidget(const bool &pHorizontal,
+                                   QWidget *pParent = 0);
+QFrame CORE_EXPORT * newLineWidget(const QColor &pColor,
                                    QWidget *pParent = 0);
 QFrame CORE_EXPORT * newLineWidget(QWidget *pParent = 0);
 
