@@ -37,9 +37,9 @@ public:
     void setPointInterval(const double &pValue);
 
 private:
-    QtVariantProperty *mStartingPoint;
-    QtVariantProperty *mEndingPoint;
-    QtVariantProperty *mPointInterval;
+    QtProperty *mStartingPoint;
+    QtProperty *mEndingPoint;
+    QtProperty *mPointInterval;
 };
 
 //==============================================================================

@@ -22,7 +22,6 @@
 //==============================================================================
 
 class QtVariantProperty;
-class QtVariantPropertyManager;
 
 //==============================================================================
 
@@ -48,6 +47,9 @@ class DoublePropertyManager : public QtAbstractPropertyManager
 public:
     explicit DoublePropertyManager(QObject *pParent = 0);
 
+    double value(QtProperty *pProperty) const;
+    void setValue(QtProperty *pProperty, const double &pValue);
+
     QString unit(QtProperty *pProperty) const;
     void setUnit(QtProperty *pProperty, const QString &pUnit);
 
@@ -66,17 +68,18 @@ private:
     QMap<const QtProperty *, Data> mData;
 
 Q_SIGNALS:
+    void valueChanged(QtProperty *pProperty, const double &pValue);
     void unitChanged(QtProperty *pProperty, const QString &pUnit);
 };
 
 //==============================================================================
 
-class DoubleEditWidget : public QLineEdit
+class DoubleEditorWidget : public QLineEdit
 {
     Q_OBJECT
 
 public:
-    explicit DoubleEditWidget(QWidget *pParent = 0);
+    explicit DoubleEditorWidget(QWidget *pParent = 0);
 
     void setUnit(const QString &pUnit);
 
@@ -95,12 +98,12 @@ Q_SIGNALS:
 
 //==============================================================================
 
-class DoubleEditFactory : public QtAbstractEditorFactory<DoublePropertyManager>
+class DoubleEditorFactory : public QtAbstractEditorFactory<DoublePropertyManager>
 {
     Q_OBJECT
 
 public:
-    explicit DoubleEditFactory(QObject *pParent = 0);
+    explicit DoubleEditorFactory(QObject *pParent = 0);
 
 protected:
     virtual void connectPropertyManager(DoublePropertyManager *pManager);
@@ -110,8 +113,8 @@ protected:
                                    QtProperty *pProperty, QWidget *pParent);
 
 private:
-    QMap<QtProperty *, QList<DoubleEditWidget *> > mEditors;
-    QMap<DoubleEditWidget *, QtProperty *> mProperties;
+    QMap<QtProperty *, QList<DoubleEditorWidget *> > mDoubleEditors;
+    QMap<DoubleEditorWidget *, QtProperty *> mProperties;
 
 Q_SIGNALS:
     void goToPreviousPropertyRequested();
@@ -142,8 +145,10 @@ public:
 
     virtual QSize sizeHint() const;
 
-    QtVariantProperty * addProperty(const int pType,
-                                    const QString &pName = QString());
+    QtProperty *addDoubleProperty(const QString &pName = QString());
+
+    double doublePropertyValue(QtProperty *pProperty) const;
+    void setDoublePropertyValue(QtProperty *pProperty, const double &pValue);
 
     void selectFirstProperty();
 
@@ -151,7 +156,7 @@ protected:
     virtual void resizeEvent(QResizeEvent *pEvent);
 
 private:
-    QtVariantPropertyManager *mPropertyManager;
+    DoublePropertyManager *mDoublePropertyManager;
 
     bool mAutoResizeHeight;
 

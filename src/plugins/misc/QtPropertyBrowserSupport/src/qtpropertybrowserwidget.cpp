@@ -14,10 +14,6 @@
 
 //==============================================================================
 
-#include <QtVariantPropertyManager>
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace QtPropertyBrowserSupport {
 
@@ -37,6 +33,44 @@ DoublePropertyManager::DoublePropertyManager(QObject *pParent) :
     QtAbstractPropertyManager(pParent),
     mData(QMap<const QtProperty *, Data>())
 {
+}
+
+//==============================================================================
+
+double DoublePropertyManager::value(QtProperty *pProperty) const
+{
+    // Make sure that the property exists
+
+    if (!mData.contains(pProperty))
+        return 0.0;
+
+    // Return the property's value
+
+    return mData[pProperty].value;
+}
+
+//==============================================================================
+
+void DoublePropertyManager::setValue(QtProperty *pProperty, const double &pValue)
+{
+    // Make sure that the property exists
+
+    if (!mData.contains(pProperty))
+        return;
+
+    // Set the property's value
+
+    Data data = mData[pProperty];
+
+    if (pValue != data.value) {
+        data.value = pValue;
+
+        mData[pProperty] = data;
+    }
+
+    // Let people know that the property's value has changed
+
+    emit valueChanged(pProperty, pValue);
 }
 
 //==============================================================================
@@ -111,15 +145,18 @@ void DoublePropertyManager::uninitializeProperty(QtProperty *pProperty)
 
 //==============================================================================
 
-DoubleEditWidget::DoubleEditWidget(QWidget *pParent) :
+DoubleEditorWidget::DoubleEditorWidget(QWidget *pParent) :
     QLineEdit(pParent),
     mUnit(QString())
 {
+    // Customise ourselves
+
 #ifdef Q_WS_MAC
     setAttribute(Qt::WA_MacShowFocusRect, 0);
     // Note: the above removes the focus border since it messes up the look of
     //       our editor
 #endif
+    setFrame(false);
 
     // Set a validator which accepts any double
 
@@ -128,7 +165,7 @@ DoubleEditWidget::DoubleEditWidget(QWidget *pParent) :
 
 //==============================================================================
 
-void DoubleEditWidget::keyPressEvent(QKeyEvent *pEvent)
+void DoubleEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Check some key combinations
 
@@ -168,7 +205,7 @@ void DoubleEditWidget::keyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
-void DoubleEditWidget::setUnit(const QString &pUnit)
+void DoubleEditorWidget::setUnit(const QString &pUnit)
 {
     // Update our unit, if needed
 
@@ -184,16 +221,16 @@ void DoubleEditWidget::setUnit(const QString &pUnit)
 
 //==============================================================================
 
-DoubleEditFactory::DoubleEditFactory(QObject *pParent) :
+DoubleEditorFactory::DoubleEditorFactory(QObject *pParent) :
     QtAbstractEditorFactory(pParent),
-    mEditors(QMap<QtProperty *, QList<DoubleEditWidget *> >()),
-    mProperties(QMap<DoubleEditWidget *, QtProperty *>())
+    mDoubleEditors(QMap<QtProperty *, QList<DoubleEditorWidget *> >()),
+    mProperties(QMap<DoubleEditorWidget *, QtProperty *>())
 {
 }
 
 //==============================================================================
 
-void DoubleEditFactory::connectPropertyManager(DoublePropertyManager *pManager)
+void DoubleEditorFactory::connectPropertyManager(DoublePropertyManager *pManager)
 {
     // Keep track of changes to a property's unit
 
@@ -203,7 +240,7 @@ void DoubleEditFactory::connectPropertyManager(DoublePropertyManager *pManager)
 
 //==============================================================================
 
-void DoubleEditFactory::disconnectPropertyManager(DoublePropertyManager *pManager)
+void DoubleEditorFactory::disconnectPropertyManager(DoublePropertyManager *pManager)
 {
     // Stop tracking changes to a property's unit
 
@@ -213,13 +250,13 @@ void DoubleEditFactory::disconnectPropertyManager(DoublePropertyManager *pManage
 
 //==============================================================================
 
-QWidget * DoubleEditFactory::createEditor(DoublePropertyManager *pManager,
-                                          QtProperty *pProperty,
-                                          QWidget *pParent)
+QWidget * DoubleEditorFactory::createEditor(DoublePropertyManager *pManager,
+                                            QtProperty *pProperty,
+                                            QWidget *pParent)
 {
     // Create an editor
 
-    DoubleEditWidget *res = new DoubleEditWidget(pParent);
+    DoubleEditorWidget *res = new DoubleEditorWidget(pParent);
 
     // Set its unit
 
@@ -227,7 +264,7 @@ QWidget * DoubleEditFactory::createEditor(DoublePropertyManager *pManager,
 
     // Keep track of things
 
-    mEditors[pProperty].append(res);
+    mDoubleEditors[pProperty].append(res);
     mProperties[res] = pProperty;
 
     // Propagate a few signals
@@ -249,38 +286,39 @@ QWidget * DoubleEditFactory::createEditor(DoublePropertyManager *pManager,
 
 //==============================================================================
 
-void DoubleEditFactory::editorDestroyed(QObject *pEditor)
+void DoubleEditorFactory::editorDestroyed(QObject *pEditor)
 {
     // Remove any trace of the given editor
 
-    QMap<DoubleEditWidget *, QtProperty *>::ConstIterator editorsIterator = mProperties.constBegin();
+    QMap<DoubleEditorWidget *, QtProperty *>::ConstIterator doubleEditorsIterator = mProperties.constBegin();
 
-    while (editorsIterator != mProperties.constEnd()) {
-        if (editorsIterator.key() == pEditor) {
-            DoubleEditWidget *editor = editorsIterator.key();
-            QtProperty *property = editorsIterator.value();
+    while (doubleEditorsIterator != mProperties.constEnd()) {
+        if (doubleEditorsIterator.key() == pEditor) {
+            DoubleEditorWidget *doubleEditor = doubleEditorsIterator.key();
+            QtProperty *property = doubleEditorsIterator.value();
 
-            mProperties.remove(editor);
+            mProperties.remove(doubleEditor);
 
-            mEditors[property].removeAll(editor);
+            mDoubleEditors[property].removeAll(doubleEditor);
 
-            if (mEditors[property].isEmpty())
-                mEditors.remove(property);
+            if (mDoubleEditors[property].isEmpty())
+                mDoubleEditors.remove(property);
 
             return;
         }
 
-        ++editorsIterator;
+        ++doubleEditorsIterator;
     }
 }
 
 //==============================================================================
 
-void DoubleEditFactory::unitChanged(QtProperty *pProperty, const QString &pUnit)
+void DoubleEditorFactory::unitChanged(QtProperty *pProperty,
+                                      const QString &pUnit)
 {
     // Make sure that at least one editor exists for our property
 
-    if (!mEditors.contains(pProperty))
+    if (!mDoubleEditors.contains(pProperty))
         return;
 
     // Make sure that our property has a manager
@@ -290,15 +328,15 @@ void DoubleEditFactory::unitChanged(QtProperty *pProperty, const QString &pUnit)
     if (!manager)
         return;
 
-    // Update the unit of all our editors
+    // Update the unit of all our double editors
 
-    QList<DoubleEditWidget *> editors = mEditors[pProperty];
-    QListIterator<DoubleEditWidget *> editorsIterator(editors);
+    QList<DoubleEditorWidget *> doubleEditors = mDoubleEditors[pProperty];
+    QListIterator<DoubleEditorWidget *> doubleEditorsIterator(doubleEditors);
 
-    while (editorsIterator.hasNext()) {
-        DoubleEditWidget *editor = editorsIterator.next();
+    while (doubleEditorsIterator.hasNext()) {
+        DoubleEditorWidget *doubleEditor = doubleEditorsIterator.next();
 
-        editor->setUnit(pUnit);
+        doubleEditor->setUnit(pUnit);
     }
 }
 
@@ -310,11 +348,10 @@ void QtPropertyBrowserWidget::constructor(const bool &pAutoResizeHeight)
 
     mAutoResizeHeight = pAutoResizeHeight;
 
-    mPropertyManager = new QtVariantPropertyManager(this);
-    QtVariantEditorFactory *editorFactory = new QtVariantEditorFactory(this);
+    mDoublePropertyManager = new DoublePropertyManager(this);
 
     setAlternatingRowColors(false);
-    setFactoryForManager(mPropertyManager, editorFactory);
+    setFactoryForManager(mDoublePropertyManager, new DoubleEditorFactory(this));
     setPropertiesWithoutValueMarked(true);
     setResizeMode(QtTreePropertyBrowser::Interactive);
     setRootIsDecorated(false);
@@ -439,12 +476,11 @@ QSize QtPropertyBrowserWidget::sizeHint() const
 
 //==============================================================================
 
-QtVariantProperty * QtPropertyBrowserWidget::addProperty(const int pType,
-                                                         const QString &pName)
+QtProperty * QtPropertyBrowserWidget::addDoubleProperty(const QString &pName)
 {
     // Create a property
 
-    QtVariantProperty *res = mPropertyManager->addProperty(pType, pName);
+    QtProperty *res = mDoublePropertyManager->addProperty(pName);
 
     // Add it to our GUI
 
@@ -453,6 +489,25 @@ QtVariantProperty * QtPropertyBrowserWidget::addProperty(const int pType,
     // Return it
 
     return res;
+}
+
+//==============================================================================
+
+double QtPropertyBrowserWidget::doublePropertyValue(QtProperty *pProperty) const
+{
+    // Return the double property value
+
+    return mDoublePropertyManager->value(pProperty);
+}
+
+//==============================================================================
+
+void QtPropertyBrowserWidget::setDoublePropertyValue(QtProperty *pProperty,
+                                                     const double &pValue)
+{
+    // Set the double property value
+
+    mDoublePropertyManager->setValue(pProperty, pValue);
 }
 
 //==============================================================================
