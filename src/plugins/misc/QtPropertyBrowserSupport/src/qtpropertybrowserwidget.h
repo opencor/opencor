@@ -46,6 +46,9 @@ class DoublePropertyManager : public QtAbstractPropertyManager
     Q_OBJECT
 
 public:
+    explicit DoublePropertyManager(QObject *pParent = 0);
+
+    QString unit(QtProperty *pProperty) const;
     void setUnit(QtProperty *pProperty, const QString &pUnit);
 
 protected:
@@ -61,6 +64,63 @@ private:
     };
 
     QMap<const QtProperty *, Data> mData;
+
+Q_SIGNALS:
+    void unitChanged(QtProperty *pProperty, const QString &pUnit);
+};
+
+//==============================================================================
+
+class DoubleEditWidget : public QLineEdit
+{
+    Q_OBJECT
+
+public:
+    explicit DoubleEditWidget(QWidget *pParent = 0);
+
+    void setUnit(const QString &pUnit);
+
+protected:
+    virtual void keyPressEvent(QKeyEvent *pEvent);
+
+private:
+    QString mUnit;
+
+Q_SIGNALS:
+    void unitChanged(const QString &pUnit);
+
+    void goToPreviousPropertyRequested();
+    void goToNextPropertyRequested();
+};
+
+//==============================================================================
+
+class DoubleEditFactory : public QtAbstractEditorFactory<DoublePropertyManager>
+{
+    Q_OBJECT
+
+public:
+    explicit DoubleEditFactory(QObject *pParent = 0);
+
+protected:
+    virtual void connectPropertyManager(DoublePropertyManager *pManager);
+    virtual void disconnectPropertyManager(DoublePropertyManager *pManager);
+
+    virtual QWidget * createEditor(DoublePropertyManager *pManager,
+                                   QtProperty *pProperty, QWidget *pParent);
+
+private:
+    QMap<QtProperty *, QList<DoubleEditWidget *> > mEditors;
+    QMap<DoubleEditWidget *, QtProperty *> mProperties;
+
+Q_SIGNALS:
+    void goToPreviousPropertyRequested();
+    void goToNextPropertyRequested();
+
+private Q_SLOTS:
+    void editorDestroyed(QObject *pEditor);
+
+    void unitChanged(QtProperty *pProperty, const QString &pUnit);
 };
 
 //==============================================================================
