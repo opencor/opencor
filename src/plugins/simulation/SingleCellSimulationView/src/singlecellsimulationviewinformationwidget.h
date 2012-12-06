@@ -44,6 +44,7 @@ namespace SingleCellSimulationView {
 class SingleCellSimulationViewInformationParametersWidget;
 class SingleCellSimulationViewInformationSimulationWidget;
 class SingleCellSimulationViewInformationSolversWidget;
+class SingleCellSimulationViewInformationTracesWidget;
 
 //==============================================================================
 
@@ -63,6 +64,7 @@ public:
 
     SingleCellSimulationViewInformationSimulationWidget * simulationWidget();
     SingleCellSimulationViewInformationSolversWidget * solversWidget();
+    SingleCellSimulationViewInformationTracesWidget * tracesWidget();
     SingleCellSimulationViewInformationParametersWidget * parametersWidget();
 
 private:
@@ -70,15 +72,11 @@ private:
 
     QtPropertyBrowserSupport::QtPropertyBrowserWidget *mPropertyEditor;
 
-    Core::CollapsibleWidget *mSimulationCollapsibleWidget;
+    Core::CollapsibleWidget *mCollapsibleWidget;
+
     SingleCellSimulationViewInformationSimulationWidget *mSimulationWidget;
-
-    Core::CollapsibleWidget *mSolversCollapsibleWidget;
     SingleCellSimulationViewInformationSolversWidget *mSolversWidget;
-
-    Core::CollapsibleWidget *mTracesCollapsibleWidget;
-
-    Core::CollapsibleWidget *mParametersCollapsibleWidget;
+    SingleCellSimulationViewInformationTracesWidget *mTracesWidget;
     SingleCellSimulationViewInformationParametersWidget *mParametersWidget;
 };
 

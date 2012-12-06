@@ -20,28 +20,19 @@ namespace Core {
 
 //==============================================================================
 
-CollapsibleWidget::CollapsibleWidget(QWidget *pBody, QWidget *pParent) :
-    Widget(QSize(), pParent),
-    mBody(pBody)
+CollapsibleHeaderWidget::CollapsibleHeaderWidget(QWidget *pParent) :
+    QWidget(pParent),
+    mCollapsed(false)
 {
-    // Create a vertical layout which will contain our header and body
+    // Create a horizontal layout and add a button and label to it
 
-    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    QHBoxLayout *layout = new QHBoxLayout(this);
 
-    mainLayout->setMargin(0);
-    mainLayout->setSpacing(0);
+    layout->setMargin(0);
+    layout->setSpacing(0);
 
-    // Create our header
-
-    mHeader = new QWidget(this);
-
-    QHBoxLayout *headerLayout = new QHBoxLayout(mHeader);
-
-    headerLayout->setMargin(0);
-    headerLayout->setSpacing(0);
-
-    mButton = new QToolButton(mHeader);
-    mTitle  = new QLabel(QString(), mHeader);
+    mButton = new QToolButton(this);
+    mTitle  = new QLabel(QString(), this);
 
     int iconSize = 0.4*mTitle->height();
 
@@ -54,134 +45,22 @@ CollapsibleWidget::CollapsibleWidget(QWidget *pBody, QWidget *pParent) :
                            "    margin: 0px;"
                            "}");
 
-    connect(mButton, SIGNAL(clicked()),
-            this, SLOT(toggleCollapsibleState()));
-
     mTitle->setAlignment(Qt::AlignCenter);
 
-    headerLayout->addWidget(mButton);
-    headerLayout->addWidget(mTitle);
+    layout->addWidget(mButton);
+    layout->addWidget(mTitle);
 
-    mHeader->setLayout(headerLayout);
+    setLayout(layout);
 
-    // Create our separator
+    // Create a connection to keep track of the collapsed state of our header
 
-    mSeparator = Core::newLineWidget(this);
-
-    // Populate our main layout
-
-    mainLayout->addWidget(mHeader);
-    mainLayout->addWidget(mSeparator);
-
-    if (pBody)
-        mainLayout->addWidget(pBody);
-
-    // Apply the main layout to ourselves
-
-    setLayout(mainLayout);
-
-    // Update our GUI by showing our widget collapsed or not, depdending on
-    // whether there is a body
-
-    updateGui(!pBody);
+    connect(mButton, SIGNAL(clicked()),
+            this, SLOT(toggleCollapsedState()));
 }
 
 //==============================================================================
 
-static const QString SettingsCollapsed = "Collapsed";
-
-//==============================================================================
-
-void CollapsibleWidget::loadSettings(QSettings *pSettings)
-{
-    // Retrieve our collapsable state
-
-    setCollapsed(pSettings->value(SettingsCollapsed, false).toBool());
-}
-
-//==============================================================================
-
-void CollapsibleWidget::saveSettings(QSettings *pSettings) const
-{
-    // Keep track of our collapsable state
-
-    pSettings->setValue(SettingsCollapsed, isCollapsed());
-}
-
-//==============================================================================
-
-QString CollapsibleWidget::title() const
-{
-    // Return our title
-
-    return mTitle->text();
-}
-
-//==============================================================================
-
-void CollapsibleWidget::setTitle(const QString &pTitle)
-{
-    // Set our title
-
-    if (pTitle.compare(mTitle->text()))
-        mTitle->setText(pTitle);
-}
-
-//==============================================================================
-
-QWidget * CollapsibleWidget::body() const
-{
-    // Return our body
-
-    return mBody;
-}
-
-//==============================================================================
-
-void CollapsibleWidget::setBody(QWidget *pBody)
-{
-    // Set our body
-
-    if (pBody != mBody) {
-        // Remove the old body, if any
-
-        if (mBody)
-            layout()->removeWidget(mBody);
-
-        // Add the new body, if any
-
-        if (pBody)
-            layout()->addWidget(pBody);
-
-        // Determine what our collapsed state should be
-
-        bool collapsed = pBody?
-                             mBody?mCollapsed:false:
-                             true;
-
-        // Keep track of the new body
-
-        mBody = pBody;
-
-        // Update our GUI
-
-        updateGui(collapsed);
-    }
-}
-
-//==============================================================================
-
-void CollapsibleWidget::setCollapsed(const bool &pCollapsed)
-{
-    // Collapse or uncollapse ourselves, if needed
-
-    if (pCollapsed != mCollapsed)
-        updateGui(pCollapsed);
-}
-
-//==============================================================================
-
-bool CollapsibleWidget::isCollapsed() const
+bool CollapsibleHeaderWidget::isCollapsed() const
 {
     // Return wheter we are collapsed
 
@@ -190,57 +69,151 @@ bool CollapsibleWidget::isCollapsed() const
 
 //==============================================================================
 
-void CollapsibleWidget::updateGui(const bool &pCollapsed)
+void CollapsibleHeaderWidget::setCollapsed(const bool &pCollapsed)
 {
-    // Update our widget's GUI
+    // Collapse or uncollapse ourselves, if needed
 
-    mCollapsed = pCollapsed && mBody;
-
-    //  Customise our button
-
-    if (pCollapsed)
-        mButton->setIcon(QIcon(":/oxygen/actions/arrow-right.png"));
-    else
-        mButton->setIcon(QIcon(":/oxygen/actions/arrow-down.png"));
-
-    // Enable/disable some widgets
-
-    mTitle->setEnabled(mBody);
-    mButton->setEnabled(mBody);
-
-    // Show/hide our separator
-
-    mSeparator->setVisible(!pCollapsed);
-
-    // Show/hide our body
-
-    if (mBody)
-        mBody->setVisible(!pCollapsed);
-
-    // Update our focus proxy and make sure that the new focus proxy immediately
-    // gets the focus
-    // Note: if we were not to immediately give the new focus proxy the focus,
-    //       then the central widget would give the focus to the previously
-    //       focused widget (see CentralWidget::updateGui()), so...
-
-    if (pCollapsed || !mBody) {
-        setFocusProxy(0);
-
-        setFocus();
-    } else {
-        setFocusProxy(mBody);
-
-        mBody->setFocus();
-    }
+    if (pCollapsed != mCollapsed)
+        toggleCollapsedState();
 }
 
 //==============================================================================
 
-void CollapsibleWidget::toggleCollapsibleState()
+QString CollapsibleHeaderWidget::title() const
 {
-    // Toggle the collapsible state of our widget and update its GUI
+    // Return our title
 
-    updateGui(!mCollapsed);
+    return mTitle->text();
+}
+
+//==============================================================================
+
+void CollapsibleHeaderWidget::setTitle(const QString &pTitle)
+{
+    // Set our title
+
+    mTitle->setText(pTitle);
+}
+
+//==============================================================================
+
+void CollapsibleHeaderWidget::toggleCollapsedState()
+{
+    // Toggle our collapsed state
+
+    mCollapsed = !mCollapsed;
+
+    // Update our button's icon to reflect our new collapsed state
+
+    if (mCollapsed)
+        mButton->setIcon(QIcon(":/oxygen/actions/arrow-right.png"));
+    else
+        mButton->setIcon(QIcon(":/oxygen/actions/arrow-down.png"));
+
+    // Let people know about our new new collapsed state
+
+    emit contentsVisible(!mCollapsed);
+}
+
+//==============================================================================
+
+CollapsibleWidget::CollapsibleWidget(QWidget *pParent) :
+    Widget(QSize(), pParent),
+    mHeaders(QList<CollapsibleHeaderWidget *>()),
+    mBodies(QList<QWidget *>())
+{
+    // Create a vertical layout which will contain our headers and widgets
+
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+
+    mainLayout->setMargin(0);
+    mainLayout->setSpacing(0);
+
+    // Apply the main layout to ourselves
+
+    setLayout(mainLayout);
+}
+
+//==============================================================================
+
+static const QString SettingsCollapsed = "Collapsed%1";
+
+//==============================================================================
+
+void CollapsibleWidget::loadSettings(QSettings *pSettings)
+{
+    // Retrieve our collapsable state
+
+    for (int i = 0, iMax = mHeaders.count(); i < iMax; ++i)
+        setCollapsed(i, pSettings->value(SettingsCollapsed.arg(i), false).toBool());
+}
+
+//==============================================================================
+
+void CollapsibleWidget::saveSettings(QSettings *pSettings) const
+{
+    // Keep track of our collapsable state
+
+    for (int i = 0, iMax = mHeaders.count(); i < iMax; ++i)
+        pSettings->setValue(SettingsCollapsed.arg(i), isCollapsed(i));
+}
+
+//==============================================================================
+
+bool CollapsibleWidget::isCollapsed(const int &pIndex) const
+{
+    // Return wheter our requested header is collapsed
+
+    return mHeaders.value(pIndex)?mHeaders.at(pIndex)->isCollapsed():false;
+}
+
+//==============================================================================
+
+void CollapsibleWidget::setCollapsed(const int &pIndex, const bool &pCollapsed)
+{
+    // Collapse or uncollapse our requested header
+
+    if (mHeaders.value(pIndex))
+        mHeaders.at(pIndex)->setCollapsed(pCollapsed);
+}
+
+//==============================================================================
+
+QString CollapsibleWidget::headerTitle(const int &pIndex) const
+{
+    // Return the title of our requested header
+
+    return mHeaders.value(pIndex)?mHeaders.at(pIndex)->title():QString();
+}
+
+//==============================================================================
+
+void CollapsibleWidget::setHeaderTitle(const int &pIndex, const QString &pTitle)
+{
+    // Set the title of our requested header
+
+    if (mHeaders.value(pIndex))
+        mHeaders.at(pIndex)->setTitle(pTitle);
+}
+
+//==============================================================================
+
+void CollapsibleWidget::addWidget(QWidget *pWidget)
+{
+    // We want to add a new widget, so we first need to add a new header to our
+    // layout
+
+    CollapsibleHeaderWidget *header = new CollapsibleHeaderWidget(this);
+
+    layout()->addWidget(header);
+
+    mHeaders.append(header);
+
+    // Now, we can add the new widget itself
+
+    layout()->addWidget(pWidget);
+
+    mBodies.append(pWidget);
 }
 
 //==============================================================================

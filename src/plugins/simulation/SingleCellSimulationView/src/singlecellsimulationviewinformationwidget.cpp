@@ -8,6 +8,7 @@
 #include "singlecellsimulationviewinformationparameterswidget.h"
 #include "singlecellsimulationviewinformationsimulationwidget.h"
 #include "singlecellsimulationviewinformationsolverswidget.h"
+#include "singlecellsimulationviewinformationtraceswidget.h"
 #include "singlecellsimulationviewinformationwidget.h"
 
 //==============================================================================
@@ -34,55 +35,56 @@ SingleCellSimulationViewInformationWidget::SingleCellSimulationViewInformationWi
 
     mGui->setupUi(this);
 
-    // Create our Simulation collapsible widget
+    // Create our collapsible widget
+
+    mCollapsibleWidget = new Core::CollapsibleWidget(this);
+
+    mCollapsibleWidget->setObjectName("Collapsible");
+
+    // Create our simulation widget
 
     mSimulationWidget = new SingleCellSimulationViewInformationSimulationWidget(this);
-    mSimulationCollapsibleWidget = new Core::CollapsibleWidget(mSimulationWidget, this);
 
     mSimulationWidget->setObjectName("Simulation");
-    mSimulationCollapsibleWidget->setObjectName("SimulationCollapsible");
 
-    // Create our Solvers collapsible widget
+    // Create our solvers widget
 
     mSolversWidget = new SingleCellSimulationViewInformationSolversWidget(this);
-    mSolversCollapsibleWidget = new Core::CollapsibleWidget(mSolversWidget, this);
 
     mSolversWidget->setObjectName("Solvers");
-    mSolversCollapsibleWidget->setObjectName("SolversCollapsible");
 
-    // Create our Traces collapsible widget
+    // Create our traces widget
 
-    mTracesCollapsibleWidget = new Core::CollapsibleWidget(0, this);
+    mTracesWidget = new SingleCellSimulationViewInformationTracesWidget(this);
 
-    mTracesCollapsibleWidget->setObjectName("TracesCollapsible");
+    mTracesWidget->setObjectName("Traces");
 
-    // Create our Parameters collapsible widget
+    // Create our parameters widget
 
     mParametersWidget = new SingleCellSimulationViewInformationParametersWidget(this);
-    mParametersCollapsibleWidget = new Core::CollapsibleWidget(mParametersWidget, this);
 
     mParametersWidget->setObjectName("Parameters");
-    mParametersCollapsibleWidget->setObjectName("ParametersCollapsible");
 
-    // Add our collapsible widgets to our layout
+    // Add our simulation, solvers, traces and parameters widgets to our
+    // collapsible widget
 
-    mGui->layout->addWidget(mSimulationCollapsibleWidget);
-    mGui->layout->addWidget(Core::newLineWidget(this));
-    mGui->layout->addWidget(mSolversCollapsibleWidget);
-    mGui->layout->addWidget(Core::newLineWidget(this));
-    mGui->layout->addWidget(mTracesCollapsibleWidget);
-    mGui->layout->addWidget(Core::newLineWidget(this));
-    mGui->layout->addWidget(mParametersCollapsibleWidget);
-    mGui->layout->addWidget(Core::newLineWidget(this));
+    mCollapsibleWidget->addWidget(mSimulationWidget);
+    mCollapsibleWidget->addWidget(mSolversWidget);
+    mCollapsibleWidget->addWidget(mTracesWidget);
+    mCollapsibleWidget->addWidget(mParametersWidget);
+
+    // Add our collapsible widget to our layout
+
+    mGui->layout->addWidget(mCollapsibleWidget);
 
     // Some further initialisations which are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
 
     retranslateUi();
 
-    // Make our simulation collapsible widget our focus proxy
+    // Make our collapsible widget our focus proxy
 
-    setFocusProxy(mSimulationCollapsibleWidget);
+    setFocusProxy(mCollapsibleWidget);
 }
 
 //==============================================================================
@@ -102,17 +104,18 @@ void SingleCellSimulationViewInformationWidget::retranslateUi()
 
     mGui->retranslateUi(this);
 
-    // Retranslate the title of our collapsible widgets
+    // Retranslate the different titles of our collapsible widget
 
-    mSimulationCollapsibleWidget->setTitle(tr("Simulation"));
-    mSolversCollapsibleWidget->setTitle(tr("Solvers"));
-    mTracesCollapsibleWidget->setTitle(tr("Traces"));
-    mParametersCollapsibleWidget->setTitle(tr("Parameters"));
+    mCollapsibleWidget->setHeaderTitle(0, tr("Simulation"));
+    mCollapsibleWidget->setHeaderTitle(1, tr("Solvers"));
+    mCollapsibleWidget->setHeaderTitle(2, tr("Traces"));
+    mCollapsibleWidget->setHeaderTitle(3, tr("Parameters"));
 
-    // Retranslate our various collapsible widgets' body
+    // Retranslate our simulation, solvers, traces and parameters widgets
 
     mSimulationWidget->retranslateUi();
     mSolversWidget->retranslateUi();
+    mTracesWidget->retranslateUi();
     mParametersWidget->retranslateUi();
 }
 
@@ -120,37 +123,31 @@ void SingleCellSimulationViewInformationWidget::retranslateUi()
 
 void SingleCellSimulationViewInformationWidget::loadSettings(QSettings *pSettings)
 {
-    // Retrieve the settings of our simulation collapsible widget and its body
+    // Retrieve the settings of our collapsible widget
 
-    pSettings->beginGroup(mSimulationCollapsibleWidget->objectName());
-        mSimulationCollapsibleWidget->loadSettings(pSettings);
+    pSettings->beginGroup(mCollapsibleWidget->objectName());
+        mCollapsibleWidget->loadSettings(pSettings);
     pSettings->endGroup();
+
+    // Retrieve the settings of our simulation widget
 
     pSettings->beginGroup(mSimulationWidget->objectName());
         mSimulationWidget->loadSettings(pSettings);
     pSettings->endGroup();
 
-    // Retrieve the settings of our solvers collapsible widget and its body
-
-    pSettings->beginGroup(mSolversCollapsibleWidget->objectName());
-        mSolversCollapsibleWidget->loadSettings(pSettings);
-    pSettings->endGroup();
+    // Retrieve the settings of our solvers widget
 
     pSettings->beginGroup(mSolversWidget->objectName());
         mSolversWidget->loadSettings(pSettings);
     pSettings->endGroup();
 
-    // Retrieve the settings of our traces collapsible widget and its body
+    // Retrieve the settings of our traces widget
 
-    pSettings->beginGroup(mTracesCollapsibleWidget->objectName());
-        mTracesCollapsibleWidget->loadSettings(pSettings);
+    pSettings->beginGroup(mTracesWidget->objectName());
+        mTracesWidget->loadSettings(pSettings);
     pSettings->endGroup();
 
-    // Retrieve the settings of our parameters collapsible widget and its body
-
-    pSettings->beginGroup(mParametersCollapsibleWidget->objectName());
-        mParametersCollapsibleWidget->loadSettings(pSettings);
-    pSettings->endGroup();
+    // Retrieve the settings of our parameters widget
 
     pSettings->beginGroup(mParametersWidget->objectName());
         mParametersWidget->loadSettings(pSettings);
@@ -161,37 +158,31 @@ void SingleCellSimulationViewInformationWidget::loadSettings(QSettings *pSetting
 
 void SingleCellSimulationViewInformationWidget::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of the settings of our simulation collapsible widget and its body
+    // Keep track of the settings of our collapsible widget
 
-    pSettings->beginGroup(mSimulationCollapsibleWidget->objectName());
-        mSimulationCollapsibleWidget->saveSettings(pSettings);
+    pSettings->beginGroup(mCollapsibleWidget->objectName());
+        mCollapsibleWidget->saveSettings(pSettings);
     pSettings->endGroup();
+
+    // Keep track of the settings of our simulation widget
 
     pSettings->beginGroup(mSimulationWidget->objectName());
         mSimulationWidget->saveSettings(pSettings);
     pSettings->endGroup();
 
-    // Keep track of the settings of our solvers collapsible widget and its body
-
-    pSettings->beginGroup(mSolversCollapsibleWidget->objectName());
-        mSolversCollapsibleWidget->saveSettings(pSettings);
-    pSettings->endGroup();
+    // Keep track of the settings of our solvers widget
 
     pSettings->beginGroup(mSolversWidget->objectName());
         mSolversWidget->saveSettings(pSettings);
     pSettings->endGroup();
 
-    // Keep track of the settings of our traces collapsible widget and its body
+    // Keep track of the settings of our traces widget
 
-    pSettings->beginGroup(mTracesCollapsibleWidget->objectName());
-        mTracesCollapsibleWidget->saveSettings(pSettings);
+    pSettings->beginGroup(mTracesWidget->objectName());
+        mTracesWidget->saveSettings(pSettings);
     pSettings->endGroup();
 
-    // Keep track of the settings of our parameters collapsible widget and its body
-
-    pSettings->beginGroup(mParametersCollapsibleWidget->objectName());
-        mParametersCollapsibleWidget->saveSettings(pSettings);
-    pSettings->endGroup();
+    // Keep track of the settings of our parameters widget
 
     pSettings->beginGroup(mParametersWidget->objectName());
         mParametersWidget->saveSettings(pSettings);
@@ -214,6 +205,15 @@ SingleCellSimulationViewInformationSolversWidget * SingleCellSimulationViewInfor
     // Return our solvers widget
 
     return mSolversWidget;
+}
+
+//==============================================================================
+
+SingleCellSimulationViewInformationTracesWidget * SingleCellSimulationViewInformationWidget::tracesWidget()
+{
+    // Return our traces widget
+
+    return mTracesWidget;
 }
 
 //==============================================================================

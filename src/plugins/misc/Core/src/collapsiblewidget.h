@@ -25,41 +25,55 @@ namespace Core {
 
 //==============================================================================
 
+class CollapsibleHeaderWidget : public QWidget
+{
+    Q_OBJECT
+
+public:
+    explicit CollapsibleHeaderWidget(QWidget *pParent = 0);
+
+    bool isCollapsed() const;
+    void setCollapsed(const bool &pCollapsed);
+
+    QString title() const;
+    void setTitle(const QString &pTitle);
+
+private:
+    bool mCollapsed;
+
+    QToolButton *mButton;
+    QLabel *mTitle;
+
+Q_SIGNALS:
+    void contentsVisible(const bool &pVisible);
+
+private Q_SLOTS:
+    void toggleCollapsedState();
+};
+
+//==============================================================================
+
 class CORE_EXPORT CollapsibleWidget : public Widget
 {
     Q_OBJECT
 
 public:
-    explicit CollapsibleWidget(QWidget *pBody, QWidget *pParent = 0);
+    explicit CollapsibleWidget(QWidget *pParent = 0);
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-    QString title() const;
-    void setTitle(const QString &pTitle);
+    bool isCollapsed(const int &pIndex) const;
+    void setCollapsed(const int &pIndex, const bool &pCollapsed);
 
-    QWidget * body() const;
-    void setBody(QWidget *pBody);
+    QString headerTitle(const int &pIndex) const;
+    void setHeaderTitle(const int &pIndex, const QString &pTitle);
 
-    void setCollapsed(const bool &pCollapsed);
-    bool isCollapsed() const;
+    void addWidget(QWidget *pWidget);
 
 private:
-    bool mCollapsed;
-
-    QWidget *mHeader;
-
-    QToolButton *mButton;
-    QLabel *mTitle;
-
-    QFrame *mSeparator;
-
-    QWidget *mBody;
-
-    void updateGui(const bool &pCollapsed);
-
-private Q_SLOTS:
-    void toggleCollapsibleState();
+    QList<CollapsibleHeaderWidget *> mHeaders;
+    QList<QWidget *> mBodies;
 };
 
 //==============================================================================
