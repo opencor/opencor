@@ -32,6 +32,58 @@ int QtPropertyBrowserTreeWidget::rowHeight(const QModelIndex &pIndex) const
 
 //==============================================================================
 
+void DoublePropertyManager::setUnit(QtProperty *pProperty, const QString &pUnit)
+{
+    // Make sure that the property exists
+
+    if (!mData.contains(pProperty))
+        return;
+
+    // Set the unit for the given property
+
+    Data data = mData[pProperty];
+
+    if (pUnit.compare(data.unit)) {
+        data.unit = pUnit;
+
+        mData[pProperty] = data;
+    }
+}
+
+//==============================================================================
+
+QString DoublePropertyManager::valueText(const QtProperty *pProperty) const
+{
+    // Make sure that the property exists
+
+    if (!mData.contains(pProperty))
+        return QString();
+
+    // Return our property as a string
+
+    return QString::number(mData[pProperty].value);
+}
+
+//==============================================================================
+
+void DoublePropertyManager::initializeProperty(QtProperty *pProperty)
+{
+    // Initialise the property
+
+    mData[pProperty] = Data();
+}
+
+//==============================================================================
+
+void DoublePropertyManager::uninitializeProperty(QtProperty *pProperty)
+{
+    // Uninitialise the property
+
+    mData.remove(pProperty);
+}
+
+//==============================================================================
+
 void QtPropertyBrowserWidget::constructor(const bool &pAutoResizeHeight)
 {
     // Customise ourselves

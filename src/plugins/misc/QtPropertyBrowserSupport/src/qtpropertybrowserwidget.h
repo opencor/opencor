@@ -16,6 +16,7 @@
 
 //==============================================================================
 
+#include <QtAbstractPropertyManager>
 #include <QtTreePropertyBrowser>
 
 //==============================================================================
@@ -36,6 +37,30 @@ class QtPropertyBrowserTreeWidget : public QTreeWidget
 
 public:
     int rowHeight(const QModelIndex &pIndex) const;
+};
+
+//==============================================================================
+
+class DoublePropertyManager : public QtAbstractPropertyManager
+{
+    Q_OBJECT
+
+public:
+    void setUnit(QtProperty *pProperty, const QString &pUnit);
+
+protected:
+    virtual QString valueText(const QtProperty *pProperty) const;
+
+    virtual void initializeProperty(QtProperty *pProperty);
+    virtual void uninitializeProperty(QtProperty *pProperty);
+
+private:
+    struct Data {
+        double value;
+        QString unit;
+    };
+
+    QMap<const QtProperty *, Data> mData;
 };
 
 //==============================================================================
