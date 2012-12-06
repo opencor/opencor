@@ -49,25 +49,25 @@ SingleCellSimulationViewInformationWidget::SingleCellSimulationViewInformationWi
 
     // Create our simulation widget
 
-    mSimulationWidget = new SingleCellSimulationViewInformationSimulationWidget(this);
+    mSimulationWidget = new SingleCellSimulationViewInformationSimulationWidget(mCollapsibleWidget);
 
     mSimulationWidget->setObjectName("Simulation");
 
     // Create our solvers widget
 
-    mSolversWidget = new SingleCellSimulationViewInformationSolversWidget(this);
+    mSolversWidget = new SingleCellSimulationViewInformationSolversWidget(mCollapsibleWidget);
 
     mSolversWidget->setObjectName("Solvers");
 
     // Create our traces widget
 
-    mTracesWidget = new SingleCellSimulationViewInformationTracesWidget(this);
+    mTracesWidget = new SingleCellSimulationViewInformationTracesWidget(mCollapsibleWidget);
 
     mTracesWidget->setObjectName("Traces");
 
     // Create our parameters widget
 
-    mParametersWidget = new SingleCellSimulationViewInformationParametersWidget(this);
+    mParametersWidget = new SingleCellSimulationViewInformationParametersWidget(mCollapsibleWidget);
 
     mParametersWidget->setObjectName("Parameters");
 
@@ -79,10 +79,6 @@ SingleCellSimulationViewInformationWidget::SingleCellSimulationViewInformationWi
     mCollapsibleWidget->addWidget(mTracesWidget);
     mCollapsibleWidget->addWidget(mParametersWidget);
 
-    // Set the focus proxy of our collapsible widget
-
-    mCollapsibleWidget->setFocusProxy(mSimulationWidget);
-
     // Add our collapsible widget to our layout
 
     mGui->layout->addWidget(mCollapsibleWidget);
@@ -92,9 +88,9 @@ SingleCellSimulationViewInformationWidget::SingleCellSimulationViewInformationWi
 
     retranslateUi();
 
-    // Make our collapsible widget our focus proxy
+    // Make our simulation widget our focus proxy
 
-    setFocusProxy(mCollapsibleWidget);
+    setFocusProxy(mSimulationWidget);
 }
 
 //==============================================================================
