@@ -133,13 +133,13 @@ bool PropertyItemDelegate::eventFilter(QObject *pObject, QEvent *pEvent)
 
 //==============================================================================
 
-PropertyItem::PropertyItem(const Type &pType, const bool &pEditable) :
+PropertyItem::PropertyItem(const Type &pType) :
     QStandardItem(),
     mType(pType)
 {
-    // Check whether the item should be editable
+    // If the property item is of double type, then it should be editable
 
-    if (!pEditable)
+    if (pType != Double)
         setFlags(flags() & ~Qt::ItemIsEditable);
 }
 
@@ -308,20 +308,80 @@ void PropertyEditorWidget::selectFirstProperty()
 
 //==============================================================================
 
-PropertyItem * PropertyEditorWidget::newString()
+int PropertyEditorWidget::addDoubleProperty()
 {
-    // Create and return a string item
+    // Determine the index of our new double property
 
-    return new PropertyItem(PropertyItem::String, false);
+    int res = mModel->rowCount();
+
+    // Populate our data model with our new double property
+
+    mModel->invisibleRootItem()->setChild(res, 0, new PropertyItem(PropertyItem::String));
+    mModel->invisibleRootItem()->setChild(res, 1, new PropertyItem(PropertyItem::Double));
+    mModel->invisibleRootItem()->setChild(res, 2, new PropertyItem(PropertyItem::String));
+
+    // Return the index of our new double property
+
+    return res;
 }
 
 //==============================================================================
 
-PropertyItem * PropertyEditorWidget::newDouble(const bool &pEditable)
+void PropertyEditorWidget::setPropertyName(const int &pPropertyIndex,
+                                           const QString &pPropertyName)
 {
-    // Create and return a double item
+    // Set the name of the given property, if valid
 
-    return new PropertyItem(PropertyItem::Double, pEditable);
+    if ((pPropertyIndex >= 0) && (pPropertyIndex < mModel->rowCount()))
+        mModel->invisibleRootItem()->child(pPropertyIndex, 0)->setText(pPropertyName);
+}
+
+//==============================================================================
+
+double PropertyEditorWidget::doublePropertyValue(const int &pPropertyIndex) const
+{
+    // Return the value of the given double property, if valid
+
+    if ((pPropertyIndex >= 0) && (pPropertyIndex < mModel->rowCount())) {
+        PropertyItem *doublePropertyItem = static_cast<PropertyItem *>(mModel->invisibleRootItem()->child(pPropertyIndex, 1));
+
+        if (doublePropertyItem->type() == PropertyItem::Double)
+            return doublePropertyItem->text().toDouble();
+        else
+            // The property item is not of double type, so...
+
+            return 0.0;
+    } else {
+        // The property index is no valid, so...
+
+        return 0.0;
+    }
+}
+
+//==============================================================================
+
+void PropertyEditorWidget::setDoublePropertyValue(const int &pPropertyIndex,
+                                                  const double &pPropertyValue)
+{
+    // Set the value of the given double property, if valid
+
+    if ((pPropertyIndex >= 0) && (pPropertyIndex < mModel->rowCount())) {
+        PropertyItem *doublePropertyItem = static_cast<PropertyItem *>(mModel->invisibleRootItem()->child(pPropertyIndex, 1));
+
+        if (doublePropertyItem->type() == PropertyItem::Double)
+            doublePropertyItem->setText(QString::number(pPropertyValue));
+    }
+}
+
+//==============================================================================
+
+void PropertyEditorWidget::setPropertyUnit(const int &pPropertyIndex,
+                                           const QString &pPropertyUnit)
+{
+    // Set the name of the given property, if valid
+
+    if ((pPropertyIndex >= 0) && (pPropertyIndex < mModel->rowCount()))
+        mModel->invisibleRootItem()->child(pPropertyIndex, 2)->setText(pPropertyUnit);
 }
 
 //==============================================================================
@@ -341,12 +401,11 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
         // The user wants to start/stop editing the property
 
         if (mPropertyEditor)
-            // We are currently editing the property, so stop editing it
+            // We are currently editing a property, so stop editing it
 
             editProperty(-1);
         else
-            // We are not currently editing the property, so start editing it
-            // it
+            // We are not currently editing a property, so start editing it
             // Note: we could use mPropertyRow, but if it was to be equal to -1
             //       we would have to use currentIndex().row(), so we might as
             //       well use the latter all the time...
@@ -471,7 +530,22 @@ void PropertyEditorWidget::updateHeight()
 
         setFixedHeight( idealSize.height()
                        +((width() < idealSize.width())?
+#if defined Q_WS_WIN || defined Q_WS_MAC
                             horizontalScrollBar()->height():
+#else
+                            horizontalScrollBar()->height()+3:
+                            // Note: why on earth does Linux require three more
+                            //       pixels?!... Indeed, if don't add them, then
+                            //       there won't be enough space to show the
+                            //       last property (upon selecting it) and the
+                            //       widget will increase its height, resulting
+                            //       in some blank space at the bottom and a
+                            //       vertical bar being shown! We could prevent
+                            //       the vertical bar from ever being shown, but
+                            //       not sure what could be done about the blank
+                            //       space, hence we 'manually' add those three
+                            //       pixels...
+#endif
                             0));
         // Note: the new height consists of our ideal height to which we add the
         //       height of our horizontal scroll bar, should it be shown (i.e.
@@ -550,7 +624,8 @@ void PropertyEditorWidget::editProperty(const int &pPropertyRow,
     // editing of our new property, if any
 
     if (pPropertyRow != -1) {
-        // There is a new property to edit, so first select it
+        // There is a new property to edit, so first make sure that it is
+        // selected
 
         selectItem(pPropertyRow);
 

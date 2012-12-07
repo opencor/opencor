@@ -35,6 +35,11 @@ public:
 
     double pointInterval() const;
     void setPointInterval(const double &pValue);
+
+private:
+    int mStartingPointIndex;
+    int mEndingPointIndex;
+    int mPointIntervalIndex;
 };
 
 //==============================================================================

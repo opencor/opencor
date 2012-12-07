@@ -20,17 +20,9 @@ SingleCellSimulationViewInformationSimulationWidget::SingleCellSimulationViewInf
 {
     // Populate our data model
 
-    mModel->invisibleRootItem()->setChild(0, 0, newString());
-    mModel->invisibleRootItem()->setChild(1, 0, newString());
-    mModel->invisibleRootItem()->setChild(2, 0, newString());
-
-    mModel->invisibleRootItem()->setChild(0, 1, newDouble(true));
-    mModel->invisibleRootItem()->setChild(1, 1, newDouble(true));
-    mModel->invisibleRootItem()->setChild(2, 1, newDouble(true));
-
-    mModel->invisibleRootItem()->setChild(0, 2, newString());
-    mModel->invisibleRootItem()->setChild(1, 2, newString());
-    mModel->invisibleRootItem()->setChild(2, 2, newString());
+    mStartingPointIndex = addDoubleProperty();
+    mEndingPointIndex   = addDoubleProperty();
+    mPointIntervalIndex = addDoubleProperty();
 
     // Some further initialisations which are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
@@ -56,9 +48,9 @@ void SingleCellSimulationViewInformationSimulationWidget::retranslateUi()
 
     // Update our property names
 
-    mModel->invisibleRootItem()->child(0, 0)->setText(tr("Starting point"));
-    mModel->invisibleRootItem()->child(1, 0)->setText(tr("Ending point"));
-    mModel->invisibleRootItem()->child(2, 0)->setText(tr("Point interval"));
+    setPropertyName(mStartingPointIndex, tr("Starting point"));
+    setPropertyName(mEndingPointIndex, tr("Ending point"));
+    setPropertyName(mPointIntervalIndex, tr("Point interval"));
 }
 
 //==============================================================================
@@ -67,9 +59,9 @@ void SingleCellSimulationViewInformationSimulationWidget::setUnit(const QString 
 {
     // Set the unit for our different properties, if needed
 
-    if (pUnit.compare(mModel->invisibleRootItem()->child(0, 2)->text()))
-        for (int i = 0; i < 3; ++i)
-            mModel->invisibleRootItem()->child(i, 2)->setText(pUnit);
+    setPropertyUnit(mStartingPointIndex, pUnit);
+    setPropertyUnit(mEndingPointIndex, pUnit);
+    setPropertyUnit(mPointIntervalIndex, pUnit);
 }
 
 //==============================================================================
@@ -78,7 +70,7 @@ double SingleCellSimulationViewInformationSimulationWidget::startingPoint() cons
 {
     // Return our starting point
 
-    return mModel->invisibleRootItem()->child(0, 1)->text().toDouble();
+    return doublePropertyValue(mStartingPointIndex);
 }
 
 //==============================================================================
@@ -87,7 +79,7 @@ void SingleCellSimulationViewInformationSimulationWidget::setStartingPoint(const
 {
     // Set our starting point
 
-    mModel->invisibleRootItem()->child(0, 1)->setText(QString::number(pValue));
+    setDoublePropertyValue(mStartingPointIndex, pValue);
 }
 
 //==============================================================================
@@ -96,7 +88,7 @@ double SingleCellSimulationViewInformationSimulationWidget::endingPoint() const
 {
     // Return our ending point
 
-    return mModel->invisibleRootItem()->child(1, 1)->text().toDouble();
+    return doublePropertyValue(mEndingPointIndex);
 }
 
 //==============================================================================
@@ -105,7 +97,7 @@ void SingleCellSimulationViewInformationSimulationWidget::setEndingPoint(const d
 {
     // Set our ending point
 
-    mModel->invisibleRootItem()->child(1, 1)->setText(QString::number(pValue));
+    setDoublePropertyValue(mEndingPointIndex, pValue);
 }
 
 //==============================================================================
@@ -114,7 +106,7 @@ double SingleCellSimulationViewInformationSimulationWidget::pointInterval() cons
 {
     // Return our point interval
 
-    return mModel->invisibleRootItem()->child(2, 1)->text().toDouble();
+    return doublePropertyValue(mPointIntervalIndex);
 }
 
 //==============================================================================
@@ -123,7 +115,7 @@ void SingleCellSimulationViewInformationSimulationWidget::setPointInterval(const
 {
     // Set our point interval
 
-    mModel->invisibleRootItem()->child(2, 1)->setText(QString::number(pValue));
+    setDoublePropertyValue(mPointIntervalIndex, pValue);
 }
 
 //==============================================================================

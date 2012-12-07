@@ -74,7 +74,7 @@ public:
         Double = QStandardItem::UserType+1
     };
 
-    explicit PropertyItem(const Type &pType, const bool &pEditable = false);
+    explicit PropertyItem(const Type &pType);
 
     virtual int type() const;
 
@@ -102,14 +102,21 @@ public:
 
     void selectFirstProperty();
 
-    static PropertyItem * newString();
-    static PropertyItem * newDouble(const bool &pEditable = false);
+    int addDoubleProperty();
+
+    void setPropertyName(const int &pPropertyIndex,
+                         const QString &pPropertyName);
+
+    double doublePropertyValue(const int &pPropertyIndex) const;
+    void setDoublePropertyValue(const int &pPropertyIndex,
+                                const double &pPropertyValue);
+
+    void setPropertyUnit(const int &pPropertyIndex,
+                         const QString &pPropertyUnit);
 
     void cancelPropertyEditing();
 
 protected:
-    QStandardItemModel *mModel;
-
     virtual void keyPressEvent(QKeyEvent *pEvent);
 
     virtual void mousePressEvent(QMouseEvent *pEvent);
@@ -119,6 +126,8 @@ protected:
 
 private:
     bool mAutoUpdateHeight;
+
+    QStandardItemModel *mModel;
 
     PropertyItemDelegate *mPropertyItemDelegate;
 
