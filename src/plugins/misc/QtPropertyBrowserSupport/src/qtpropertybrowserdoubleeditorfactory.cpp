@@ -23,8 +23,10 @@ DoubleEditorFactory::DoubleEditorFactory(QObject *pParent) :
 
 void DoubleEditorFactory::connectPropertyManager(DoublePropertyManager *pManager)
 {
-    // Keep track of changes to a property's unit
+    // Keep track of changes to a property's value and unit
 
+    connect(pManager, SIGNAL(valueChanged(QtProperty *, const double &)),
+            this, SLOT(valueChanged(QtProperty *, const double &)));
     connect(pManager, SIGNAL(unitChanged(QtProperty *, const QString &)),
             this, SLOT(unitChanged(QtProperty *, const QString &)));
 }
@@ -33,8 +35,10 @@ void DoubleEditorFactory::connectPropertyManager(DoublePropertyManager *pManager
 
 void DoubleEditorFactory::disconnectPropertyManager(DoublePropertyManager *pManager)
 {
-    // Stop tracking changes to a property's unit
+    // Stop tracking changes to a property's value and unit
 
+    disconnect(pManager, SIGNAL(valueChanged(QtProperty *, const double &)),
+               this, SLOT(valueChanged(QtProperty *, const double &)));
     disconnect(pManager, SIGNAL(unitChanged(QtProperty *, const QString &)),
                this, SLOT(unitChanged(QtProperty *, const QString &)));
 }
@@ -99,6 +103,33 @@ void DoubleEditorFactory::editorDestroyed(QObject *pEditor)
         }
 
         ++doubleEditorsIterator;
+    }
+}
+
+//==============================================================================
+
+void DoubleEditorFactory::valueChanged(QtProperty *pProperty,
+                                       const double &pValue)
+{
+    // Make sure that at least one editor exists for our property
+
+    if (!mDoubleEditors.contains(pProperty))
+        return;
+
+    // Make sure that our property has a manager
+
+    if (!propertyManager(pProperty))
+        return;
+
+    // Update the value of all our double editors
+
+    QList<DoubleEditorWidget *> doubleEditors = mDoubleEditors[pProperty];
+    QListIterator<DoubleEditorWidget *> doubleEditorsIterator(doubleEditors);
+
+    while (doubleEditorsIterator.hasNext()) {
+        DoubleEditorWidget *doubleEditor = doubleEditorsIterator.next();
+
+        doubleEditor->setValue(pValue);
     }
 }
 
