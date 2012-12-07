@@ -31,12 +31,6 @@ namespace Core {
 
 //==============================================================================
 
-namespace QtPropertyBrowserSupport {
-    class QtPropertyBrowserWidget;
-}   // namespace QtPropertyBrowserSupport
-
-//==============================================================================
-
 namespace SingleCellSimulationView {
 
 //==============================================================================
@@ -67,10 +61,10 @@ public:
     SingleCellSimulationViewInformationTracesWidget * tracesWidget();
     SingleCellSimulationViewInformationParametersWidget * parametersWidget();
 
+    void cancelEditing();
+
 private:
     Ui::SingleCellSimulationViewInformationWidget *mGui;
-
-    QtPropertyBrowserSupport::QtPropertyBrowserWidget *mPropertyEditor;
 
     Core::CollapsibleWidget *mCollapsibleWidget;
 

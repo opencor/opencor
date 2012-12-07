@@ -12,7 +12,7 @@ namespace SingleCellSimulationView {
 //==============================================================================
 
 SingleCellSimulationViewInformationTracesWidget::SingleCellSimulationViewInformationTracesWidget(QWidget *pParent) :
-    QtPropertyBrowserWidget(true, pParent)
+    PropertyEditorWidget(true, pParent)
 {
 }
 

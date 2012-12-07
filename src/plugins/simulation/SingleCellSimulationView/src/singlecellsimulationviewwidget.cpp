@@ -78,7 +78,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
 
     mDelayWidget = new QScrollBar(Qt::Horizontal, this);
 #ifndef Q_WS_MAC
-    QWidget *delaySliderSpaceWidget = new QWidget(this);
+    QWidget *delaySpaceWidget = new QWidget(this);
 #endif
     mDelayValueWidget = new QLabel(this);
 
@@ -86,7 +86,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
     mDelayWidget->setRange(0, 50);
 
 #ifndef Q_WS_MAC
-    delaySliderSpaceWidget->setFixedWidth(4);
+    delaySpaceWidget->setFixedWidth(4);
 #endif
 
     connect(mDelayWidget, SIGNAL(valueChanged(int)),
@@ -104,7 +104,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
     mToolBarWidget->addSeparator();
     mToolBarWidget->addWidget(mDelayWidget);
 #ifndef Q_WS_MAC
-    mToolBarWidget->addWidget(delaySliderSpaceWidget);
+    mToolBarWidget->addWidget(delaySpaceWidget);
 #endif
     mToolBarWidget->addWidget(mDelayValueWidget);
     mToolBarWidget->addSeparator();
@@ -631,6 +631,10 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
 
     if (!mSimulation)
         return;
+
+    // Cancel any editing of our simulation information
+
+    mContentsWidget->informationWidget()->cancelEditing();
 
     // Make sure that our simulation data are up-to-date
 

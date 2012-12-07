@@ -6,7 +6,7 @@
 
 //==============================================================================
 
-#include <QVariant>
+#include <QStandardItemModel>
 
 //==============================================================================
 
@@ -16,13 +16,21 @@ namespace SingleCellSimulationView {
 //==============================================================================
 
 SingleCellSimulationViewInformationSimulationWidget::SingleCellSimulationViewInformationSimulationWidget(QWidget *pParent) :
-    QtPropertyBrowserWidget(true, pParent)
+    PropertyEditorWidget(true, pParent)
 {
     // Populate our data model
 
-    mStartingPoint = addDoubleProperty();
-    mEndingPoint   = addDoubleProperty();
-    mPointInterval = addDoubleProperty();
+    mModel->invisibleRootItem()->setChild(0, 0, newString());
+    mModel->invisibleRootItem()->setChild(1, 0, newString());
+    mModel->invisibleRootItem()->setChild(2, 0, newString());
+
+    mModel->invisibleRootItem()->setChild(0, 1, newDouble(true));
+    mModel->invisibleRootItem()->setChild(1, 1, newDouble(true));
+    mModel->invisibleRootItem()->setChild(2, 1, newDouble(true));
+
+    mModel->invisibleRootItem()->setChild(0, 2, newString());
+    mModel->invisibleRootItem()->setChild(1, 2, newString());
+    mModel->invisibleRootItem()->setChild(2, 2, newString());
 
     // Some further initialisations which are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
@@ -32,6 +40,10 @@ SingleCellSimulationViewInformationSimulationWidget::SingleCellSimulationViewInf
     // Select our first property
 
     selectFirstProperty();
+
+    // Resize our columns
+
+    resizeColumnsToContents();
 }
 
 //==============================================================================
@@ -40,13 +52,13 @@ void SingleCellSimulationViewInformationSimulationWidget::retranslateUi()
 {
     // Default retranslation
 
-    QtPropertyBrowserWidget::retranslateUi();
+    PropertyEditorWidget::retranslateUi();
 
     // Update our property names
 
-    mStartingPoint->setPropertyName(tr("Starting point"));
-    mEndingPoint->setPropertyName(tr("Ending point"));
-    mPointInterval->setPropertyName(tr("Point interval"));
+    mModel->invisibleRootItem()->child(0, 0)->setText(tr("Starting point"));
+    mModel->invisibleRootItem()->child(1, 0)->setText(tr("Ending point"));
+    mModel->invisibleRootItem()->child(2, 0)->setText(tr("Point interval"));
 }
 
 //==============================================================================
@@ -55,11 +67,9 @@ void SingleCellSimulationViewInformationSimulationWidget::setUnit(const QString 
 {
     // Set the unit for our different properties, if needed
 
-    if (doublePropertyUnit(mStartingPoint).compare(pUnit)) {
-        setDoublePropertyUnit(mStartingPoint, pUnit);
-        setDoublePropertyUnit(mEndingPoint, pUnit);
-        setDoublePropertyUnit(mPointInterval, pUnit);
-    }
+    if (pUnit.compare(mModel->invisibleRootItem()->child(0, 2)->text()))
+        for (int i = 0; i < 3; ++i)
+            mModel->invisibleRootItem()->child(i, 2)->setText(pUnit);
 }
 
 //==============================================================================
@@ -68,7 +78,7 @@ double SingleCellSimulationViewInformationSimulationWidget::startingPoint() cons
 {
     // Return our starting point
 
-    return doublePropertyValue(mStartingPoint);
+    return mModel->invisibleRootItem()->child(0, 1)->text().toDouble();
 }
 
 //==============================================================================
@@ -77,7 +87,7 @@ void SingleCellSimulationViewInformationSimulationWidget::setStartingPoint(const
 {
     // Set our starting point
 
-    setDoublePropertyValue(mStartingPoint, pValue);
+    mModel->invisibleRootItem()->child(0, 1)->setText(QString::number(pValue));
 }
 
 //==============================================================================
@@ -86,7 +96,7 @@ double SingleCellSimulationViewInformationSimulationWidget::endingPoint() const
 {
     // Return our ending point
 
-    return doublePropertyValue(mEndingPoint);
+    return mModel->invisibleRootItem()->child(1, 1)->text().toDouble();
 }
 
 //==============================================================================
@@ -95,7 +105,7 @@ void SingleCellSimulationViewInformationSimulationWidget::setEndingPoint(const d
 {
     // Set our ending point
 
-    setDoublePropertyValue(mEndingPoint, pValue);
+    mModel->invisibleRootItem()->child(1, 1)->setText(QString::number(pValue));
 }
 
 //==============================================================================
@@ -104,7 +114,7 @@ double SingleCellSimulationViewInformationSimulationWidget::pointInterval() cons
 {
     // Return our point interval
 
-    return doublePropertyValue(mPointInterval);
+    return mModel->invisibleRootItem()->child(2, 1)->text().toDouble();
 }
 
 //==============================================================================
@@ -113,7 +123,7 @@ void SingleCellSimulationViewInformationSimulationWidget::setPointInterval(const
 {
     // Set our point interval
 
-    setDoublePropertyValue(mPointInterval, pValue);
+    mModel->invisibleRootItem()->child(2, 1)->setText(QString::number(pValue));
 }
 
 //==============================================================================

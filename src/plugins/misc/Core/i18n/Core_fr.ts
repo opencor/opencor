@@ -132,6 +132,21 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::Core::PropertyEditorWidget</name>
+    <message>
+        <source>Property</source>
+        <translation>Propriété</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation>Valeur</translation>
+    </message>
+    <message>
+        <source>Unit</source>
+        <translation>Unité</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>Copyright</source>

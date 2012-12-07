@@ -4,7 +4,6 @@
 
 #include "collapsiblewidget.h"
 #include "coreutils.h"
-#include "qtpropertybrowserwidget.h"
 #include "singlecellsimulationviewinformationparameterswidget.h"
 #include "singlecellsimulationviewinformationsimulationwidget.h"
 #include "singlecellsimulationviewinformationsolverswidget.h"
@@ -35,15 +34,13 @@ SingleCellSimulationViewInformationWidget::SingleCellSimulationViewInformationWi
 
     mGui->setupUi(this);
 
-    // Remoe the frame around our scroll area
+    // Remove the frame around our scroll area
 
     setFrameShape(QFrame::NoFrame);
 
     // Create our collapsible widget
 
-    QStyleOptionViewItemV3 option;
-
-    mCollapsibleWidget = new Core::CollapsibleWidget(static_cast<QRgb>(QApplication::style()->styleHint(QStyle::SH_Table_GridLineColor, &option)), this);
+    mCollapsibleWidget = new Core::CollapsibleWidget(this);
 
     mCollapsibleWidget->setObjectName("Collapsible");
 
@@ -229,6 +226,18 @@ SingleCellSimulationViewInformationParametersWidget * SingleCellSimulationViewIn
     // Return our parameters widget
 
     return mParametersWidget;
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewInformationWidget::cancelEditing()
+{
+    // Cancel the editing of any of the information we support
+
+    mSimulationWidget->cancelPropertyEditing();
+    mSolversWidget->cancelPropertyEditing();
+    mTracesWidget->cancelPropertyEditing();
+    mParametersWidget->cancelPropertyEditing();
 }
 
 //==============================================================================

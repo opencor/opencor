@@ -13,7 +13,7 @@ namespace SingleCellSimulationView {
 //==============================================================================
 
 SingleCellSimulationViewInformationParametersWidget::SingleCellSimulationViewInformationParametersWidget(QWidget *pParent) :
-    QtPropertyBrowserWidget(pParent)
+    PropertyEditorWidget(pParent)
 {
 }
 

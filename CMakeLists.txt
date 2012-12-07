@@ -192,11 +192,9 @@ SET(PLUGINS
     3rdparty/QJson
     3rdparty/QScintilla
     3rdparty/QtMmlWidget
-    3rdparty/QtPropertyBrowser
     3rdparty/Qwt
 
     misc/QScintillaSupport
-    misc/QtPropertyBrowserSupport
 
     # Build the remaining plugins
 

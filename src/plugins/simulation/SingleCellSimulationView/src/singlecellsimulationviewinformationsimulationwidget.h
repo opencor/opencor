@@ -7,7 +7,7 @@
 
 //==============================================================================
 
-#include "qtpropertybrowserwidget.h"
+#include "propertyeditorwidget.h"
 
 //==============================================================================
 
@@ -16,7 +16,7 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-class SingleCellSimulationViewInformationSimulationWidget : public QtPropertyBrowserSupport::QtPropertyBrowserWidget
+class SingleCellSimulationViewInformationSimulationWidget : public Core::PropertyEditorWidget
 {
     Q_OBJECT
 
@@ -35,11 +35,6 @@ public:
 
     double pointInterval() const;
     void setPointInterval(const double &pValue);
-
-private:
-    QtProperty *mStartingPoint;
-    QtProperty *mEndingPoint;
-    QtProperty *mPointInterval;
 };
 
 //==============================================================================

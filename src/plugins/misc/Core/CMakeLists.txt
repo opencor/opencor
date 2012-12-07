@@ -39,6 +39,7 @@ ADD_PLUGIN(Core
         src/filemanager.cpp
         src/organisationwidget.cpp
         src/progressbarwidget.cpp
+        src/propertyeditorwidget.cpp
         src/thread.cpp
         src/toolbarwidget.cpp
         src/treeviewwidget.cpp
@@ -60,6 +61,7 @@ ADD_PLUGIN(Core
         src/filemanager.h
         src/organisationwidget.h
         src/progressbarwidget.h
+        src/propertyeditorwidget.h
         src/toolbarwidget.h
         src/treeviewwidget.h
         src/usermessagewidget.h
