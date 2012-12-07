@@ -53,8 +53,9 @@ QWidget * DoubleEditorFactory::createEditor(DoublePropertyManager *pManager,
 
     DoubleEditorWidget *res = new DoubleEditorWidget(pParent);
 
-    // Set its unit
+    // Set its value and unit
 
+    res->setValue(pManager->value(pProperty));
     res->setUnit(pManager->unit(pProperty));
 
     // Keep track of things

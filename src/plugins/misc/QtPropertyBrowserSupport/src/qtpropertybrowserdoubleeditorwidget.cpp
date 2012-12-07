@@ -80,7 +80,7 @@ void DoubleEditorWidget::setValue(const double &pValue)
 {
     // Update our value, if needed
 
-    if (pValue != text().toDouble())
+    if (!QString::number(pValue).compare(text()))
         return;
 
     setText(QString::number(pValue));
