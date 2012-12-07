@@ -61,6 +61,9 @@ public:
     double doublePropertyValue(QtProperty *pProperty) const;
     void setDoublePropertyValue(QtProperty *pProperty, const double &pValue);
 
+    QString doublePropertyUnit(QtProperty *pProperty) const;
+    void setDoublePropertyUnit(QtProperty *pProperty, const QString &pUnit);
+
     void selectFirstProperty();
 
 protected:

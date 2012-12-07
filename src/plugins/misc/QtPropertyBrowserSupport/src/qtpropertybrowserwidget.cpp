@@ -182,7 +182,7 @@ QtProperty * QtPropertyBrowserWidget::addDoubleProperty(const QString &pName)
 
 double QtPropertyBrowserWidget::doublePropertyValue(QtProperty *pProperty) const
 {
-    // Return the double property value
+    // Return the double property's value
 
     return mDoublePropertyManager->value(pProperty);
 }
@@ -192,9 +192,28 @@ double QtPropertyBrowserWidget::doublePropertyValue(QtProperty *pProperty) const
 void QtPropertyBrowserWidget::setDoublePropertyValue(QtProperty *pProperty,
                                                      const double &pValue)
 {
-    // Set the double property value
+    // Set the double property's value
 
     mDoublePropertyManager->setValue(pProperty, pValue);
+}
+
+//==============================================================================
+
+QString QtPropertyBrowserWidget::doublePropertyUnit(QtProperty *pProperty) const
+{
+    // Return the double property's unit
+
+    return mDoublePropertyManager->unit(pProperty);
+}
+
+//==============================================================================
+
+void QtPropertyBrowserWidget::setDoublePropertyUnit(QtProperty *pProperty,
+                                                     const QString &pUnit)
+{
+    // Set the double property's unit
+
+    mDoublePropertyManager->setUnit(pProperty, pUnit);
 }
 
 //==============================================================================

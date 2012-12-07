@@ -32,10 +32,6 @@ SingleCellSimulationViewInformationSimulationWidget::SingleCellSimulationViewInf
     // Select our first property
 
     selectFirstProperty();
-
-    // Resize our columns
-
-//---GRY---    resizeColumnsToContents();
 }
 
 //==============================================================================
@@ -57,12 +53,13 @@ void SingleCellSimulationViewInformationSimulationWidget::retranslateUi()
 
 void SingleCellSimulationViewInformationSimulationWidget::setUnit(const QString &pUnit)
 {
-    // Set the unit for our different properties
+    // Set the unit for our different properties, if needed
 
-//---GRY---
-//    if (pUnit.compare(mModel->invisibleRootItem()->child(0, 2)->text()))
-//        for (int i = 0; i < 3; ++i)
-//            mModel->invisibleRootItem()->child(i, 2)->setText(pUnit);
+    if (doublePropertyUnit(mStartingPoint).compare(pUnit)) {
+        setDoublePropertyUnit(mStartingPoint, pUnit);
+        setDoublePropertyUnit(mEndingPoint, pUnit);
+        setDoublePropertyUnit(mPointInterval, pUnit);
+    }
 }
 
 //==============================================================================
