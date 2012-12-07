@@ -76,22 +76,6 @@ void DoubleEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
-void DoubleEditorWidget::setValue(const double &pValue)
-{
-    // Update our value, if needed
-
-    if (pValue != text().toDouble())
-        return;
-
-    setText(QString::number(pValue));
-
-    // Let people know that the value has changed
-
-    emit valueChanged(pValue);
-}
-
-//==============================================================================
-
 void DoubleEditorWidget::setUnit(const QString &pUnit)
 {
     // Update our unit, if needed

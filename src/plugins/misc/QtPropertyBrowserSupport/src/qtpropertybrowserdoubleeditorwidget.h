@@ -23,7 +23,6 @@ class DoubleEditorWidget : public QLineEdit
 public:
     explicit DoubleEditorWidget(QWidget *pParent = 0);
 
-    void setValue(const double &pValue);
     void setUnit(const QString &pUnit);
 
 protected:
@@ -33,7 +32,6 @@ private:
     QString mUnit;
 
 Q_SIGNALS:
-    void valueChanged(const double &pValue);
     void unitChanged(const QString &pUnit);
 
     void goToPreviousPropertyRequested();
