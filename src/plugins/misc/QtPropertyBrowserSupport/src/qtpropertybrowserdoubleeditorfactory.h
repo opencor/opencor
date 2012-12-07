@@ -32,10 +32,10 @@ public:
     explicit DoubleEditorFactory(QObject *pParent = 0);
 
 protected:
-    virtual void connectPropertyManager(DoublePropertyManager *pManager);
-    virtual void disconnectPropertyManager(DoublePropertyManager *pManager);
+    virtual void connectPropertyManager(DoublePropertyManager *pDoublePropertyManager);
+    virtual void disconnectPropertyManager(DoublePropertyManager *pDoublePropertyManager);
 
-    virtual QWidget * createEditor(DoublePropertyManager *pManager,
+    virtual QWidget * createEditor(DoublePropertyManager *pDoublePropertyManager,
                                    QtProperty *pProperty, QWidget *pParent);
 
 private:
@@ -47,6 +47,8 @@ Q_SIGNALS:
     void goToNextPropertyRequested();
 
 private Q_SLOTS:
+    void editorValueChanged(DoubleEditorWidget *pDoubleEditor,
+                            const double &pValue);
     void editorDestroyed(QObject *pEditor);
 
     void valueChanged(QtProperty *pProperty, const double &pValue);

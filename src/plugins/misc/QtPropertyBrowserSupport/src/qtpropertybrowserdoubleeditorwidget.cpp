@@ -32,6 +32,11 @@ DoubleEditorWidget::DoubleEditorWidget(QWidget *pParent) :
     // Set a validator which accepts any double
 
     setValidator(new QRegExpValidator(QRegExp("^[+-]?[0-9]*\\.?[0-9]+([eE][+-]?[0-9]+)?$"), this));
+
+    // Keep track of when the text is changed
+
+    connect(this, SIGNAL(textChanged(const QString &)),
+            this, SLOT(emitValueChanged(const QString &)));
 }
 
 //==============================================================================
@@ -84,10 +89,8 @@ void DoubleEditorWidget::setValue(const double &pValue)
         return;
 
     setText(QString::number(pValue));
-
-    // Let people know that the value has changed
-
-    emit valueChanged(pValue);
+    // Note: this will emit the textChanged() signal which we catch to then emit
+    //       our valueChanged() signal...
 }
 
 //==============================================================================
@@ -103,7 +106,16 @@ void DoubleEditorWidget::setUnit(const QString &pUnit)
 
     // Let people know that the unit has changed
 
-    emit unitChanged(pUnit);
+    emit unitChanged(this, pUnit);
+}
+
+//==============================================================================
+
+void DoubleEditorWidget::emitValueChanged(const QString &pValue)
+{
+    // Let people know that the value has changed
+
+    emit valueChanged(this, pValue.toDouble());
 }
 
 //==============================================================================

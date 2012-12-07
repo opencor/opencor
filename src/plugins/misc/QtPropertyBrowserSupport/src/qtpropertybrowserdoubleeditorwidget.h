@@ -33,11 +33,14 @@ private:
     QString mUnit;
 
 Q_SIGNALS:
-    void valueChanged(const double &pValue);
-    void unitChanged(const QString &pUnit);
+    void valueChanged(DoubleEditorWidget *, const double &pValue);
+    void unitChanged(DoubleEditorWidget *, const QString &pUnit);
 
     void goToPreviousPropertyRequested();
     void goToNextPropertyRequested();
+
+private Q_SLOTS:
+    void emitValueChanged(const QString &pValue);
 };
 
 //==============================================================================

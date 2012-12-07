@@ -21,31 +21,31 @@ DoubleEditorFactory::DoubleEditorFactory(QObject *pParent) :
 
 //==============================================================================
 
-void DoubleEditorFactory::connectPropertyManager(DoublePropertyManager *pManager)
+void DoubleEditorFactory::connectPropertyManager(DoublePropertyManager *pDoublePropertyManager)
 {
     // Keep track of changes to a property's value and unit
 
-    connect(pManager, SIGNAL(valueChanged(QtProperty *, const double &)),
+    connect(pDoublePropertyManager, SIGNAL(valueChanged(QtProperty *, const double &)),
             this, SLOT(valueChanged(QtProperty *, const double &)));
-    connect(pManager, SIGNAL(unitChanged(QtProperty *, const QString &)),
+    connect(pDoublePropertyManager, SIGNAL(unitChanged(QtProperty *, const QString &)),
             this, SLOT(unitChanged(QtProperty *, const QString &)));
 }
 
 //==============================================================================
 
-void DoubleEditorFactory::disconnectPropertyManager(DoublePropertyManager *pManager)
+void DoubleEditorFactory::disconnectPropertyManager(DoublePropertyManager *pDoublePropertyManager)
 {
     // Stop tracking changes to a property's value and unit
 
-    disconnect(pManager, SIGNAL(valueChanged(QtProperty *, const double &)),
+    disconnect(pDoublePropertyManager, SIGNAL(valueChanged(QtProperty *, const double &)),
                this, SLOT(valueChanged(QtProperty *, const double &)));
-    disconnect(pManager, SIGNAL(unitChanged(QtProperty *, const QString &)),
+    disconnect(pDoublePropertyManager, SIGNAL(unitChanged(QtProperty *, const QString &)),
                this, SLOT(unitChanged(QtProperty *, const QString &)));
 }
 
 //==============================================================================
 
-QWidget * DoubleEditorFactory::createEditor(DoublePropertyManager *pManager,
+QWidget * DoubleEditorFactory::createEditor(DoublePropertyManager *pDoublePropertyManager,
                                             QtProperty *pProperty,
                                             QWidget *pParent)
 {
@@ -55,8 +55,8 @@ QWidget * DoubleEditorFactory::createEditor(DoublePropertyManager *pManager,
 
     // Set its value and unit
 
-    res->setValue(pManager->value(pProperty));
-    res->setUnit(pManager->unit(pProperty));
+    res->setValue(pDoublePropertyManager->value(pProperty));
+    res->setUnit(pDoublePropertyManager->unit(pProperty));
 
     // Keep track of things
 
@@ -70,6 +70,11 @@ QWidget * DoubleEditorFactory::createEditor(DoublePropertyManager *pManager,
     connect(res, SIGNAL(goToNextPropertyRequested()),
             this, SIGNAL(goToNextPropertyRequested()));
 
+    // Keep track of when the value is changed
+
+    connect(res, SIGNAL(valueChanged(DoubleEditorWidget *, const double &)),
+            this, SLOT(editorValueChanged(DoubleEditorWidget *, const double &)));
+
     // Keep track of when the editor has been destroyed
 
     connect(res, SIGNAL(destroyed(QObject *)),
@@ -78,6 +83,24 @@ QWidget * DoubleEditorFactory::createEditor(DoublePropertyManager *pManager,
     // Return our editor
 
     return res;
+}
+
+//==============================================================================
+
+void DoubleEditorFactory::editorValueChanged(DoubleEditorWidget *pDoubleEditor,
+                                             const double &pValue)
+{
+    // Make sure that we have a property associated to the given double editor
+
+    if (!mProperties.contains(pDoubleEditor))
+        return;
+
+    // Update our property with the new value
+
+    QtProperty *property = mProperties[pDoubleEditor];
+    DoublePropertyManager *doublePropertyManager = propertyManager(property);
+
+    doublePropertyManager->setValue(property, pValue);
 }
 
 //==============================================================================
