@@ -8,9 +8,15 @@ ADD_PLUGIN(QtPropertyBrowserSupport
         ../../interface.cpp
         ../../plugininfo.cpp
 
+        src/qtpropertybrowserdoubleeditorfactory.cpp
+        src/qtpropertybrowserdoubleeditorwidget.cpp
+        src/qtpropertybrowserdoublepropertymanager.cpp
         src/qtpropertybrowserwidget.cpp
         src/qtpropertybrowsersupportplugin.cpp
     HEADERS_MOC
+        src/qtpropertybrowserdoubleeditorfactory.h
+        src/qtpropertybrowserdoubleeditorwidget.h
+        src/qtpropertybrowserdoublepropertymanager.h
         src/qtpropertybrowserwidget.h
         src/qtpropertybrowsersupportplugin.h
     INCLUDE_DIRS
