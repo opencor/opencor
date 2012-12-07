@@ -3,13 +3,11 @@
 //==============================================================================
 
 #include "qtpropertybrowserdoubleeditorfactory.h"
-//#include "qtpropertybrowserdoublepropertymanager.h"
 #include "qtpropertybrowserwidget.h"
 
 //==============================================================================
 
 #include <QHeaderView>
-//#include <QKeyEvent>
 #include <QScrollBar>
 #include <QSettings>
 #include <QTreeWidget>
