@@ -184,7 +184,7 @@ double QtPropertyBrowserWidget::doublePropertyValue(QtProperty *pProperty) const
 {
     // Return the double property's value
 
-    return mDoublePropertyManager->value(pProperty);
+    return mDoublePropertyManager->value(pProperty).toDouble();
 }
 
 //==============================================================================
@@ -194,7 +194,7 @@ void QtPropertyBrowserWidget::setDoublePropertyValue(QtProperty *pProperty,
 {
     // Set the double property's value
 
-    mDoublePropertyManager->setValue(pProperty, pValue);
+    mDoublePropertyManager->setValue(pProperty, QString::number(pValue));
 }
 
 //==============================================================================

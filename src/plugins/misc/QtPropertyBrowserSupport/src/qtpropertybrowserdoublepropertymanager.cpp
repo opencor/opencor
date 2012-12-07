@@ -19,12 +19,12 @@ DoublePropertyManager::DoublePropertyManager(QObject *pParent) :
 
 //==============================================================================
 
-double DoublePropertyManager::value(QtProperty *pProperty) const
+QString DoublePropertyManager::value(QtProperty *pProperty) const
 {
     // Make sure that the property exists
 
     if (!mData.contains(pProperty))
-        return 0.0;
+        return QString();
 
     // Return the property's value
 
@@ -34,7 +34,7 @@ double DoublePropertyManager::value(QtProperty *pProperty) const
 //==============================================================================
 
 void DoublePropertyManager::setValue(QtProperty *pProperty,
-                                     const double &pValue)
+                                     const QString &pValue)
 {
     // Make sure that the property exists
 
@@ -45,7 +45,7 @@ void DoublePropertyManager::setValue(QtProperty *pProperty,
 
     Data data = mData[pProperty];
 
-    if (pValue != data.value) {
+    if (pValue.compare(data.value)) {
         data.value = pValue;
 
         mData[pProperty] = data;
@@ -106,7 +106,7 @@ QString DoublePropertyManager::valueText(const QtProperty *pProperty) const
 
     // Return our property as a string
 
-    return QString::number(mData[pProperty].value);
+    return mData[pProperty].value;
 }
 
 //==============================================================================

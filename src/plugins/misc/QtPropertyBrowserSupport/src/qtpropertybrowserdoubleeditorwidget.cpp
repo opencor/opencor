@@ -81,14 +81,14 @@ void DoubleEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
-void DoubleEditorWidget::setValue(const double &pValue)
+void DoubleEditorWidget::setValue(const QString &pValue)
 {
     // Update our value, if needed
 
-    if (!QString::number(pValue).compare(text()))
+    if (!pValue.compare(text()))
         return;
 
-    setText(QString::number(pValue));
+    setText(pValue);
     // Note: this will emit the textChanged() signal which we catch to then emit
     //       our valueChanged() signal...
 }
@@ -115,7 +115,7 @@ void DoubleEditorWidget::emitValueChanged(const QString &pValue)
 {
     // Let people know that the value has changed
 
-    emit valueChanged(this, pValue.toDouble());
+    emit valueChanged(this, pValue);
 }
 
 //==============================================================================

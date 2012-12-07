@@ -25,8 +25,8 @@ void DoubleEditorFactory::connectPropertyManager(DoublePropertyManager *pDoubleP
 {
     // Keep track of changes to a property's value and unit
 
-    connect(pDoublePropertyManager, SIGNAL(valueChanged(QtProperty *, const double &)),
-            this, SLOT(valueChanged(QtProperty *, const double &)));
+    connect(pDoublePropertyManager, SIGNAL(valueChanged(QtProperty *, const QString &)),
+            this, SLOT(valueChanged(QtProperty *, const QString &)));
     connect(pDoublePropertyManager, SIGNAL(unitChanged(QtProperty *, const QString &)),
             this, SLOT(unitChanged(QtProperty *, const QString &)));
 }
@@ -37,8 +37,8 @@ void DoubleEditorFactory::disconnectPropertyManager(DoublePropertyManager *pDoub
 {
     // Stop tracking changes to a property's value and unit
 
-    disconnect(pDoublePropertyManager, SIGNAL(valueChanged(QtProperty *, const double &)),
-               this, SLOT(valueChanged(QtProperty *, const double &)));
+    disconnect(pDoublePropertyManager, SIGNAL(valueChanged(QtProperty *, const QString &)),
+               this, SLOT(valueChanged(QtProperty *, const QString &)));
     disconnect(pDoublePropertyManager, SIGNAL(unitChanged(QtProperty *, const QString &)),
                this, SLOT(unitChanged(QtProperty *, const QString &)));
 }
@@ -72,8 +72,8 @@ QWidget * DoubleEditorFactory::createEditor(DoublePropertyManager *pDoubleProper
 
     // Keep track of when the value is changed
 
-    connect(res, SIGNAL(valueChanged(DoubleEditorWidget *, const double &)),
-            this, SLOT(editorValueChanged(DoubleEditorWidget *, const double &)));
+    connect(res, SIGNAL(valueChanged(DoubleEditorWidget *, const QString &)),
+            this, SLOT(editorValueChanged(DoubleEditorWidget *, const QString &)));
 
     // Keep track of when the editor has been destroyed
 
@@ -88,7 +88,7 @@ QWidget * DoubleEditorFactory::createEditor(DoublePropertyManager *pDoubleProper
 //==============================================================================
 
 void DoubleEditorFactory::editorValueChanged(DoubleEditorWidget *pDoubleEditor,
-                                             const double &pValue)
+                                             const QString &pValue)
 {
     // Make sure that we have a property associated to the given double editor
 
@@ -134,7 +134,7 @@ void DoubleEditorFactory::editorDestroyed(QObject *pEditor)
 //==============================================================================
 
 void DoubleEditorFactory::valueChanged(QtProperty *pProperty,
-                                       const double &pValue)
+                                       const QString &pValue)
 {
     // Make sure that at least one editor exists for our property
 

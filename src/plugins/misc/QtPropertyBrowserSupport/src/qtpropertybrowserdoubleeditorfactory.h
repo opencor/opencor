@@ -48,10 +48,10 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void editorValueChanged(DoubleEditorWidget *pDoubleEditor,
-                            const double &pValue);
+                            const QString &pValue);
     void editorDestroyed(QObject *pEditor);
 
-    void valueChanged(QtProperty *pProperty, const double &pValue);
+    void valueChanged(QtProperty *pProperty, const QString &pValue);
     void unitChanged(QtProperty *pProperty, const QString &pUnit);
 };
 

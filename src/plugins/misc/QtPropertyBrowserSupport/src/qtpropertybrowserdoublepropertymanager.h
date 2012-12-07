@@ -23,8 +23,8 @@ class DoublePropertyManager : public QtAbstractPropertyManager
 public:
     explicit DoublePropertyManager(QObject *pParent = 0);
 
-    double value(QtProperty *pProperty) const;
-    void setValue(QtProperty *pProperty, const double &pValue);
+    QString value(QtProperty *pProperty) const;
+    void setValue(QtProperty *pProperty, const QString &pValue);
 
     QString unit(QtProperty *pProperty) const;
     void setUnit(QtProperty *pProperty, const QString &pUnit);
@@ -37,14 +37,14 @@ protected:
 
 private:
     struct Data {
-        double value;
+        QString value;
         QString unit;
     };
 
     QMap<const QtProperty *, Data> mData;
 
 Q_SIGNALS:
-    void valueChanged(QtProperty *pProperty, const double &pValue);
+    void valueChanged(QtProperty *pProperty, const QString &pValue);
     void unitChanged(QtProperty *pProperty, const QString &pUnit);
 };
 
