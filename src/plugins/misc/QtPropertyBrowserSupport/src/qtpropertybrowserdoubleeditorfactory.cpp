@@ -100,7 +100,8 @@ void DoubleEditorFactory::editorValueChanged(DoubleEditorWidget *pDoubleEditor,
     QtProperty *property = mProperties[pDoubleEditor];
     DoublePropertyManager *doublePropertyManager = propertyManager(property);
 
-    doublePropertyManager->setValue(property, pValue);
+    if (doublePropertyManager)
+        doublePropertyManager->setValue(property, pValue);
 }
 
 //==============================================================================

@@ -33,7 +33,8 @@ double DoublePropertyManager::value(QtProperty *pProperty) const
 
 //==============================================================================
 
-void DoublePropertyManager::setValue(QtProperty *pProperty, const double &pValue)
+void DoublePropertyManager::setValue(QtProperty *pProperty,
+                                     const double &pValue)
 {
     // Make sure that the property exists
 
