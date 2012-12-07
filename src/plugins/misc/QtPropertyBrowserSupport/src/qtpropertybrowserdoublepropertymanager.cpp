@@ -48,11 +48,12 @@ void DoublePropertyManager::setValue(QtProperty *pProperty, const double &pValue
         data.value = pValue;
 
         mData[pProperty] = data;
+
+        // Let people know that the property's value has changed
+
+        emit propertyChanged(pProperty);
+        emit valueChanged(pProperty, pValue);
     }
-
-    // Let people know that the property's value has changed
-
-    emit valueChanged(pProperty, pValue);
 }
 
 //==============================================================================
@@ -86,11 +87,11 @@ void DoublePropertyManager::setUnit(QtProperty *pProperty, const QString &pUnit)
         data.unit = pUnit;
 
         mData[pProperty] = data;
+
+        // Let people know that the property's unit has changed
+
+        emit unitChanged(pProperty, pUnit);
     }
-
-    // Let people know that the property's unit has changed
-
-    emit unitChanged(pProperty, pUnit);
 }
 
 //==============================================================================

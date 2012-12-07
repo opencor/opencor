@@ -18,10 +18,6 @@ namespace SingleCellSimulationView {
 SingleCellSimulationViewInformationSimulationWidget::SingleCellSimulationViewInformationSimulationWidget(QWidget *pParent) :
     QtPropertyBrowserWidget(true, pParent)
 {
-    // We don't have any hierarchy, so disable decoration
-
-    setRootIsDecorated(false);
-
     // Populate our data model
 
     mStartingPoint = addDoubleProperty();
