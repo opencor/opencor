@@ -35,6 +35,9 @@ public:
     explicit CollapsibleHeaderWidget(const QColor &pSeparatorColor,
                                      QWidget *pParent = 0);
 
+    void setFirstHeader(const bool &pFirstHeader);
+    void setLastHeader(const bool &pFirstHeader);
+
     bool isCollapsed() const;
     void setCollapsed(const bool &pCollapsed);
 
@@ -44,8 +47,15 @@ public:
 private:
     bool mCollapsed;
 
+    bool mLastHeader;
+
+    QFrame *mTopSeparator;
+    QFrame *mBottomSeparator;
+
     QToolButton *mButton;
     QLabel *mTitle;
+
+    void updateBottomSeparatorVisibleStatus();
 
 Q_SIGNALS:
     void widgetVisible(const bool &pVisible);
@@ -82,7 +92,6 @@ private:
     QColor mSeparatorColor;
 
     QList<CollapsibleHeaderWidget *> mHeaders;
-    QList<QWidget *> mBodies;
 
     void constructor(const QColor &pSeparatorColor = CommonWidget::borderColor());
 };

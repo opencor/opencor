@@ -23,7 +23,8 @@ namespace Core {
 CollapsibleHeaderWidget::CollapsibleHeaderWidget(const QColor &pSeparatorColor,
                                                  QWidget *pParent) :
     QWidget(pParent),
-    mCollapsed(false)
+    mCollapsed(false),
+    mLastHeader(false)
 {
     // Create our main (vertical) layout
 
@@ -69,15 +70,45 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(const QColor &pSeparatorColor,
     subLayout->addWidget(mButton);
     subLayout->addWidget(mTitle);
 
-    // Add our sub-widget and a horizontal line to our main layout
+    // Add a top separator, our sub-widget and a bottom separator to our main
+    // layout
+    // Note: we keep track of our top and bottom separators since we may need
+    //       to hide them in some cases/circumstances...
 
+    mTopSeparator    = Core::newLineWidget(pSeparatorColor, this);
+    mBottomSeparator = Core::newLineWidget(pSeparatorColor, this);
+
+    layout->addWidget(mTopSeparator);
     layout->addWidget(subWidget);
-    layout->addWidget(Core::newLineWidget(pSeparatorColor, this));
+    layout->addWidget(mBottomSeparator);
 
     // Create a connection to keep track of the collapsed state of our header
 
     connect(mButton, SIGNAL(clicked()),
             this, SLOT(toggleCollapsedState()));
+}
+
+//==============================================================================
+
+void CollapsibleHeaderWidget::setFirstHeader(const bool &pFirstHeader)
+{
+    // Show/hide our top separator depending on whether we are the first header
+
+    mTopSeparator->setVisible(!pFirstHeader);
+}
+
+//==============================================================================
+
+void CollapsibleHeaderWidget::setLastHeader(const bool &pLastHeader)
+{
+    // Keep track of our last header status and update our bottom separator
+    // visible status, if needed
+
+    if (pLastHeader != mLastHeader) {
+        mLastHeader = pLastHeader;
+
+        updateBottomSeparatorVisibleStatus();
+    }
 }
 
 //==============================================================================
@@ -119,6 +150,16 @@ void CollapsibleHeaderWidget::setTitle(const QString &pTitle)
 
 //==============================================================================
 
+void CollapsibleHeaderWidget::updateBottomSeparatorVisibleStatus()
+{
+    // Show/hide our bottom separator depending on whether we are collapsed or
+    // whether we are the last header
+
+    mBottomSeparator->setVisible(!mCollapsed || mLastHeader);
+}
+
+//==============================================================================
+
 void CollapsibleHeaderWidget::toggleCollapsedState()
 {
     // Toggle our collapsed state
@@ -131,6 +172,10 @@ void CollapsibleHeaderWidget::toggleCollapsedState()
         mButton->setIcon(QIcon(":/oxygen/actions/arrow-right.png"));
     else
         mButton->setIcon(QIcon(":/oxygen/actions/arrow-down.png"));
+
+    // Update our bottom separator visible status
+
+    updateBottomSeparatorVisibleStatus();
 
     // Let people know about our new new collapsed state
 
@@ -146,7 +191,6 @@ void CollapsibleWidget::constructor(const QColor &pSeparatorColor)
     mSeparatorColor = pSeparatorColor;
 
     mHeaders = QList<CollapsibleHeaderWidget *>();
-    mBodies  = QList<QWidget *>();
 
     // Create a vertical layout which will contain our headers and widgets
 
@@ -262,15 +306,28 @@ void CollapsibleWidget::addWidget(QWidget *pWidget)
 
     CollapsibleHeaderWidget *header = new CollapsibleHeaderWidget(mSeparatorColor, this);
 
+    // Let our header know whether it is the first header
+
+    header->setFirstHeader(!beforeIndex);
+
+    // Let our header know that, if anything, it is our new last header, meaning
+    // that our previous header is not the last one anymore
+
+    if (!mHeaders.isEmpty())
+        mHeaders.last()->setLastHeader(false);
+
+    header->setLastHeader(true);
+
+    // Now, we can actually add the header to our layout, as well as keep track
+    // of it
+
     mLayout->insertWidget(beforeIndex, header);
 
     mHeaders.append(header);
 
-    // Now, we can add the new widget itself
+    // Add the new widget itself
 
     mLayout->insertWidget(++beforeIndex, pWidget);
-
-    mBodies.append(pWidget);
 
     // Create a connection to show/hide our widget depending on the collapsed
     // state of our header
