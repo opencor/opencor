@@ -80,6 +80,13 @@ protected:
     virtual void paintEvent(QPaintEvent *pEvent);
 
 private:
+    enum ErrorType
+    {
+        General,
+        InvalidCellmlFile,
+        InvalidSimulationEnvironment
+    };
+
     Ui::SingleCellSimulationViewWidget *mGui;
 
     SingleCellSimulationViewPlugin *mPluginParent;
@@ -111,6 +118,8 @@ private:
 
     QMap<QString, int> mProgresses;
 
+    ErrorType mErrorType;
+
     void output(const QString &pMessage);
 
     void setSimulationMode(const bool &pEnabled, const bool &pRunVisible);
@@ -119,6 +128,8 @@ private:
     void clearActiveGraphPanel();
 
     int tabBarIconSize() const;
+
+    void updateInvalidModelMessageWidget();
 
 private Q_SLOTS:
     void on_actionRun_triggered();
@@ -144,7 +155,8 @@ private Q_SLOTS:
     void simulationProgress(const double &pProgress,
                             SingleCellSimulationViewSimulation *pSimulation = 0);
 
-    void simulationError(const QString &pError);
+    void simulationError(const QString &pError,
+                         const ErrorType &pErrorType = General);
 
     void splitterWidgetMoved();
 };

@@ -81,7 +81,9 @@ void SingleCellSimulationViewInformationSolversWidget::initialize(CellMLSupport:
         // Check whether we need an NLA solver, and add a list property if, if
         // needed
 
-        if (pCellmlFileRuntime->needNlaSolver()) {
+        mNeedNlaSolver = pCellmlFileRuntime->needNlaSolver();
+
+        if (mNeedNlaSolver) {
             solvers = QStringList();
 
             foreach (SolverInterface *solverInterface, pSolverInterfaces)
@@ -99,6 +101,42 @@ void SingleCellSimulationViewInformationSolversWidget::initialize(CellMLSupport:
 
         retranslateUi();
     }
+}
+
+//==============================================================================
+
+bool SingleCellSimulationViewInformationSolversWidget::needOdeSolver() const
+{
+    // Return whether we need an ODE solver
+
+    return mNeedOdeSolver;
+}
+
+//==============================================================================
+
+bool SingleCellSimulationViewInformationSolversWidget::needNlaSolver() const
+{
+    // Return whether we need an NLA solver
+
+    return mNeedNlaSolver;
+}
+
+//==============================================================================
+
+QStringList SingleCellSimulationViewInformationSolversWidget::odeOrDaeSolvers() const
+{
+    // Return the available ODE/DAE solvers, if any
+
+    return (mOdeOrDaeSolversIndex == -1)?QStringList():propertyValue(mOdeOrDaeSolversIndex)->list();
+}
+
+//==============================================================================
+
+QStringList SingleCellSimulationViewInformationSolversWidget::nlaSolvers() const
+{
+    // Return the available NLA solvers, if any
+
+    return (mNlaSolversIndex == -1)?QStringList():propertyValue(mNlaSolversIndex)->list();
 }
 
 //==============================================================================

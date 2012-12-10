@@ -142,6 +142,42 @@
         <source>the model must have at least one ODE or DAE</source>
         <translation>le modèle doit avoir au moins une EDO ou EAD</translation>
     </message>
+    <message>
+        <source>the model needs both an ODE and an NLA solver, but none are available</source>
+        <translation>le modèle a besoin à la fois d&apos;un solveur EDO et d&apos;un solveur ALN, mais aucun n&apos;est disponible</translation>
+    </message>
+    <message>
+        <source>the model needs both a DAE and an NLA solver, but none are available</source>
+        <translation>le modèle a besoin à la fois d&apos;un solveur EAD et d&apos;un solveur ALN, mais aucun n&apos;est disponible</translation>
+    </message>
+    <message>
+        <source>the model needs both an ODE and an NLA solver, but no NLA solver is available</source>
+        <translation>le modèle a besoin à la fois d&apos;un solveur EDO et d&apos;un solveur ALN, mais aucun solveur ALN n&apos;est disponible</translation>
+    </message>
+    <message>
+        <source>the model needs both a DAE and an NLA solver, but no NLA solver is available</source>
+        <translation>le modèle a besoin à la fois d&apos;un solveur EAD et d&apos;un solveur ALN, mais aucun solveur ALN n&apos;est disponible</translation>
+    </message>
+    <message>
+        <source>the model needs both an ODE and an NLA solver, but no ODE solver is available</source>
+        <translation>le modèle a besoin à la fois d&apos;un solveur EDO et d&apos;un solveur ALN, mais aucun solveur EDO n&apos;est disponible</translation>
+    </message>
+    <message>
+        <source>the model needs both a DAE and an NLA solver, but no DAE solver is available</source>
+        <translation>le modèle a besoin à la fois d&apos;un solveur EAD et d&apos;un solveur ALN, mais aucun solveur EAD n&apos;est disponible</translation>
+    </message>
+    <message>
+        <source>the model needs an ODE solver, but none is available</source>
+        <translation>le modèle a besoin d&apos;un solveur EDO, mais aucun n&apos;est disponible</translation>
+    </message>
+    <message>
+        <source>the model needs a DAE solver, but none is available</source>
+        <translation>le modèle a besoin d&apos;un solveur EAD, mais aucun n&apos;est disponible</translation>
+    </message>
+    <message>
+        <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; view requires a valid simulation environment to work...</source>
+        <translation>Désolé, mais la vue &lt;strong&gt;%1&lt;/strong&gt; nécessite un environnement de simulation valide pour fonctionner...</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>

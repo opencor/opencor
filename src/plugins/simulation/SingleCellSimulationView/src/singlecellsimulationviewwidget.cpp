@@ -223,14 +223,7 @@ void SingleCellSimulationViewWidget::retranslateUi()
 
     // Retranslate our invalid model message
 
-    mInvalidModelMessageWidget->setMessage("<div align=center>"
-                                           "    <p>"
-                                           "        "+tr("Sorry, but the <strong>%1</strong> view requires a valid CellML file to work...").arg(mPluginParent->viewName())
-                                          +"    </p>"
-                                           "    <p>"
-                                           "        <small><em>("+tr("See below for more information.")+")</em></small>"
-                                           "    </p>"
-                                           "</div>");
+    updateInvalidModelMessageWidget();
 
     // Retranslate our contents widget
 
@@ -365,6 +358,25 @@ void SingleCellSimulationViewWidget::setSimulationMode(const bool &pEnabled,
 
 //==============================================================================
 
+void SingleCellSimulationViewWidget::updateInvalidModelMessageWidget()
+{
+    // Update our invalid model message
+
+    mInvalidModelMessageWidget->setMessage("<div align=center>"
+                                           "    <p>"
+                                          +((mErrorType == InvalidCellmlFile)?
+                                                "        "+tr("Sorry, but the <strong>%1</strong> view requires a valid CellML file to work...").arg(mPluginParent->viewName()):
+                                                "        "+tr("Sorry, but the <strong>%1</strong> view requires a valid simulation environment to work...").arg(mPluginParent->viewName())
+                                           )
+                                          +"    </p>"
+                                           "    <p>"
+                                           "        <small><em>("+tr("See below for more information.")+")</em></small>"
+                                           "    </p>"
+                                           "</div>");
+}
+
+//==============================================================================
+
 void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 {
     // Do a few things for the previous model, if needed
@@ -485,7 +497,8 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         if (!variableOfIntegration) {
             // We don't have a variable of integration, so...
 
-            simulationError(tr("the model must have at least one ODE or DAE"));
+            simulationError(tr("the model must have at least one ODE or DAE"),
+                            InvalidCellmlFile);
         } else {
             // Retrieve the unit of our variable of integration
 
@@ -494,7 +507,9 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
             // Initialise our GUI's solvers and parameters widgets using our
             // simulation
 
-            mContentsWidget->informationWidget()->solversWidget()->initialize(cellmlFileRuntime, mSolverInterfaces);
+            SingleCellSimulationViewInformationSolversWidget *solversWidget = mContentsWidget->informationWidget()->solversWidget();
+
+            solversWidget->initialize(cellmlFileRuntime, mSolverInterfaces);
             mContentsWidget->informationWidget()->parametersWidget()->initialize(cellmlFileRuntime);
 
             // Update our GUI using our simulation's data
@@ -507,43 +522,32 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
             qDebug("---------------------------------------");
             qDebug("%s", qPrintable(pFileName));
 
-            Solver::Type solverType;
-
-            if (cellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode) {
-                solverType = Solver::Ode;
-
+            if (solversWidget->needOdeSolver())
                 information = " - ODE solver(s): ";
-            } else {
-                solverType = Solver::Dae;
-
+            else
                 information = " - DAE solver(s): ";
-            }
 
             int solverCounter = 0;
 
-            foreach (SolverInterface *solverInterface, mSolverInterfaces)
-                if (solverInterface->type() == solverType) {
-                    if (++solverCounter == 1)
-                        information += solverInterface->name();
-                    else
-                        information += " | "+solverInterface->name();
-                }
+            foreach (const QString &odeOrDaeSolver, solversWidget->odeOrDaeSolvers())
+                if (++solverCounter == 1)
+                    information += odeOrDaeSolver;
+                else
+                    information += " | "+odeOrDaeSolver;
 
             if (!solverCounter)
                 information += "none available";
 
-            if (cellmlFileRuntime->needNlaSolver()) {
+            if (solversWidget->needNlaSolver()) {
                 information += "\n - NLA solver(s): ";
 
                 int solverCounter = 0;
 
-                foreach (SolverInterface *solverInterface, mSolverInterfaces)
-                    if (solverInterface->type() == Solver::Nla) {
-                        if (++solverCounter == 1)
-                            information += solverInterface->name();
-                        else
-                            information += " | "+solverInterface->name();
-                    }
+                foreach (const QString &nlaSolver, solversWidget->nlaSolvers())
+                    if (++solverCounter == 1)
+                        information += nlaSolver;
+                    else
+                        information += " | "+nlaSolver;
 
                 if (!solverCounter)
                     information += "none available";
@@ -552,9 +556,52 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
             qDebug("%s", qPrintable(information));
 #endif
 
-            // Everything went fine, so...
+            // Check whether we have at least one ODE/DAE solver and, if needed,
+            // at least one NLA solver
 
-            hasError = false;
+            bool noOdeOrDaeSolverAvailable = solversWidget->odeOrDaeSolvers().isEmpty();
+
+            if (solversWidget->needNlaSolver()) {
+                if (solversWidget->nlaSolvers().isEmpty()) {
+                    if (noOdeOrDaeSolverAvailable) {
+                        if (solversWidget->needOdeSolver())
+                            simulationError(tr("the model needs both an ODE and an NLA solver, but none are available"),
+                                            InvalidSimulationEnvironment);
+                        else
+                            simulationError(tr("the model needs both a DAE and an NLA solver, but none are available"),
+                                            InvalidSimulationEnvironment);
+                    } else {
+                        if (solversWidget->needOdeSolver())
+                            simulationError(tr("the model needs both an ODE and an NLA solver, but no NLA solver is available"),
+                                            InvalidSimulationEnvironment);
+                        else
+                            simulationError(tr("the model needs both a DAE and an NLA solver, but no NLA solver is available"),
+                                            InvalidSimulationEnvironment);
+                    }
+                } else if (noOdeOrDaeSolverAvailable) {
+                    if (solversWidget->needOdeSolver())
+                        simulationError(tr("the model needs both an ODE and an NLA solver, but no ODE solver is available"),
+                                        InvalidSimulationEnvironment);
+                    else
+                        simulationError(tr("the model needs both a DAE and an NLA solver, but no DAE solver is available"),
+                                        InvalidSimulationEnvironment);
+                } else {
+                    // We have the solver(s) we need, so...
+
+                    hasError = false;
+                }
+            } else if (noOdeOrDaeSolverAvailable) {
+                if (solversWidget->needOdeSolver())
+                    simulationError(tr("the model needs an ODE solver, but none is available"),
+                                    InvalidSimulationEnvironment);
+                else
+                    simulationError(tr("the model needs a DAE solver, but none is available"),
+                                    InvalidSimulationEnvironment);
+            } else {
+                // We have the solver(s) we need, so...
+
+                hasError = false;
+            }
         }
     }
 
@@ -858,16 +905,22 @@ void SingleCellSimulationViewWidget::simulationProgress(const double &pProgress,
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::simulationError(const QString &pError)
+void SingleCellSimulationViewWidget::simulationError(const QString &pError,
+                                                     const ErrorType &pErrorType)
 {
     // Output the simulation error, but only if it is for the active simulation
 
     SingleCellSimulationViewSimulation *simulation = qobject_cast<SingleCellSimulationViewSimulation *>(sender());
 
-    if (!simulation || (simulation == mSimulation))
+    if (!simulation || (simulation == mSimulation)) {
         // Note: see the corresponding note in simulationProgress() above...
 
+        mErrorType = pErrorType;
+
+        updateInvalidModelMessageWidget();
+
         output(OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+pError+".</span>"+OutputBrLn);
+    }
 }
 
 //==============================================================================

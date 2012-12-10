@@ -38,8 +38,15 @@ public:
     void initialize(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
                     const SolverInterfaces &pSolverInterfaces);
 
+    bool needOdeSolver() const;
+    bool needNlaSolver() const;
+
+    QStringList odeOrDaeSolvers() const;
+    QStringList nlaSolvers() const;
+
 private:
     bool mNeedOdeSolver;
+    bool mNeedNlaSolver;
 
     int mOdeOrDaeSolversIndex;
     int mNlaSolversIndex;
