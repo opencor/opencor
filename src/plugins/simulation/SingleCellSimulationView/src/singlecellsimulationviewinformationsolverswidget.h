@@ -33,10 +33,14 @@ class SingleCellSimulationViewInformationSolversWidget : public Core::PropertyEd
 public:
     explicit SingleCellSimulationViewInformationSolversWidget(QWidget *pParent = 0);
 
+    virtual void retranslateUi();
+
     void initialize(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
                     const SolverInterfaces &pSolverInterfaces);
 
 private:
+    bool mNeedOdeSolver;
+
     int mOdeOrDaeSolversIndex;
     int mNlaSolversIndex;
 };

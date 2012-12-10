@@ -530,7 +530,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
                 }
 
             if (!solverCounter)
-                information += "none";
+                information += "none available";
 
             if (cellmlFileRuntime->needNlaSolver()) {
                 information += "\n - NLA solver(s): ";
@@ -546,7 +546,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
                     }
 
                 if (!solverCounter)
-                    information += "none";
+                    information += "none available";
             }
 
             qDebug("%s", qPrintable(information));

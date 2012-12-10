@@ -136,7 +136,8 @@ bool PropertyItemDelegate::eventFilter(QObject *pObject, QEvent *pEvent)
 PropertyItem::PropertyItem(const Type &pType, const QStringList &pList) :
     QStandardItem(),
     mType(pType),
-    mList(pList)
+    mList(pList),
+    mEmptyListValue(QString("???"))
 {
     // If the property item is of double type, then it should be editable
 
@@ -151,6 +152,34 @@ int PropertyItem::type() const
     // Return the property item's type
 
     return mType;
+}
+
+//==============================================================================
+
+QStringList PropertyItem::list() const
+{
+    // Return the property item's list
+
+    return mList;
+}
+
+//==============================================================================
+
+QString PropertyItem::emptyListValue() const
+{
+    // Return the property item's empty list value
+
+    return mEmptyListValue;
+}
+
+//==============================================================================
+
+void PropertyItem::setEmptyListValue(const QString &pEmptyListValue)
+{
+    // Set the value of our empty list value, if needed
+
+    if (pEmptyListValue.compare(mEmptyListValue))
+        mEmptyListValue = pEmptyListValue;
 }
 
 //==============================================================================
@@ -242,6 +271,16 @@ void PropertyEditorWidget::retranslateUi()
     mModel->setHorizontalHeaderLabels(QStringList() << tr("Property")
                                                     << tr("Value")
                                                     << tr("Unit"));
+
+    // 'Retranslate' the value of empty list properties
+
+    for (int i = 0, iMax = mModel->rowCount(); i < iMax; ++i) {
+        PropertyItem *propertyItem = propertyValue(i);
+
+        if (   (propertyItem->type() == PropertyItem::List)
+               && (propertyItem->list().isEmpty()))
+            propertyItem->setText(propertyItem->emptyListValue());
+    }
 }
 
 //==============================================================================
@@ -329,6 +368,15 @@ int PropertyEditorWidget::addProperty(const PropertyItem::Type &pType,
 
 //==============================================================================
 
+PropertyItem * PropertyEditorWidget::propertyValue(const int &pIndex) const
+{
+    // Return a pointer to our property value
+
+    return static_cast<PropertyItem *>(mModel->invisibleRootItem()->child(pIndex, 1));
+}
+
+//==============================================================================
+
 int PropertyEditorWidget::addDoubleProperty()
 {
     // Add a double property and return its index
@@ -340,30 +388,44 @@ int PropertyEditorWidget::addDoubleProperty()
 
 int PropertyEditorWidget::addListProperty(const QStringList &pList)
 {
-    // Add a list property and return its index
+    // Add a list property and retrieve its index
 
-    return addProperty(PropertyItem::List, pList);
+    int res = addProperty(PropertyItem::List, pList);
+
+    // Use the first item of our list as the default value, assuming the list is
+    // not empty
+
+    if (pList.isEmpty())
+        // The list is empty, so...
+
+        mModel->invisibleRootItem()->child(res, 1)->setText(static_cast<PropertyItem *>(mModel->invisibleRootItem()->child(res, 1))->emptyListValue());
+    else
+        mModel->invisibleRootItem()->child(res, 1)->setText(pList.first());
+
+    // Return the index of our list property
+
+    return res;
 }
 
 //==============================================================================
 
-void PropertyEditorWidget::setPropertyName(const int &pPropertyIndex,
-                                           const QString &pPropertyName)
+void PropertyEditorWidget::setPropertyName(const int &pIndex,
+                                           const QString &pName)
 {
     // Set the name of the given property, if valid
 
-    if ((pPropertyIndex >= 0) && (pPropertyIndex < mModel->rowCount()))
-        mModel->invisibleRootItem()->child(pPropertyIndex, 0)->setText(pPropertyName);
+    if ((pIndex >= 0) && (pIndex < mModel->rowCount()))
+        mModel->invisibleRootItem()->child(pIndex, 0)->setText(pName);
 }
 
 //==============================================================================
 
-double PropertyEditorWidget::doublePropertyValue(const int &pPropertyIndex) const
+double PropertyEditorWidget::doublePropertyValue(const int &pIndex) const
 {
     // Return the value of the given double property, if valid
 
-    if ((pPropertyIndex >= 0) && (pPropertyIndex < mModel->rowCount())) {
-        PropertyItem *doublePropertyItem = static_cast<PropertyItem *>(mModel->invisibleRootItem()->child(pPropertyIndex, 1));
+    if ((pIndex >= 0) && (pIndex < mModel->rowCount())) {
+        PropertyItem *doublePropertyItem = static_cast<PropertyItem *>(mModel->invisibleRootItem()->child(pIndex, 1));
 
         if (doublePropertyItem->type() == PropertyItem::Double)
             return doublePropertyItem->text().toDouble();
@@ -380,28 +442,28 @@ double PropertyEditorWidget::doublePropertyValue(const int &pPropertyIndex) cons
 
 //==============================================================================
 
-void PropertyEditorWidget::setDoublePropertyValue(const int &pPropertyIndex,
-                                                  const double &pPropertyValue)
+void PropertyEditorWidget::setDoublePropertyValue(const int &pIndex,
+                                                  const double &pValue)
 {
     // Set the value of the given double property, if valid
 
-    if ((pPropertyIndex >= 0) && (pPropertyIndex < mModel->rowCount())) {
-        PropertyItem *doublePropertyItem = static_cast<PropertyItem *>(mModel->invisibleRootItem()->child(pPropertyIndex, 1));
+    if ((pIndex >= 0) && (pIndex < mModel->rowCount())) {
+        PropertyItem *doublePropertyItem = static_cast<PropertyItem *>(mModel->invisibleRootItem()->child(pIndex, 1));
 
         if (doublePropertyItem->type() == PropertyItem::Double)
-            doublePropertyItem->setText(QString::number(pPropertyValue));
+            doublePropertyItem->setText(QString::number(pValue));
     }
 }
 
 //==============================================================================
 
-void PropertyEditorWidget::setPropertyUnit(const int &pPropertyIndex,
-                                           const QString &pPropertyUnit)
+void PropertyEditorWidget::setPropertyUnit(const int &pIndex,
+                                           const QString &pUnit)
 {
     // Set the name of the given property, if valid
 
-    if ((pPropertyIndex >= 0) && (pPropertyIndex < mModel->rowCount()))
-        mModel->invisibleRootItem()->child(pPropertyIndex, 2)->setText(pPropertyUnit);
+    if ((pIndex >= 0) && (pIndex < mModel->rowCount()))
+        mModel->invisibleRootItem()->child(pIndex, 2)->setText(pUnit);
 }
 
 //==============================================================================
@@ -611,7 +673,7 @@ void PropertyEditorWidget::editorClosed()
 
 //==============================================================================
 
-void PropertyEditorWidget::editProperty(const int &pPropertyRow,
+void PropertyEditorWidget::editProperty(const int &pIndex,
                                         const bool &pCommitData)
 {
     // We want to edit a new property, so first stop the editing of the current
@@ -643,16 +705,16 @@ void PropertyEditorWidget::editProperty(const int &pPropertyRow,
     // Now that the editing of our old property has finished, we can start the
     // editing of our new property, if any
 
-    if (pPropertyRow != -1) {
+    if (pIndex != -1) {
         // There is a new property to edit, so first make sure that it is
         // selected
 
-        selectItem(pPropertyRow);
+        selectItem(pIndex);
 
         // Now, we can 'properly' edit the property's value
         // Note: the property's value's column is always 1...
 
-        edit(model()->index(pPropertyRow, 1));
+        edit(model()->index(pIndex, 1));
     }
 }
 

@@ -14,6 +14,7 @@ namespace SingleCellSimulationView {
 
 SingleCellSimulationViewInformationSolversWidget::SingleCellSimulationViewInformationSolversWidget(QWidget *pParent) :
     PropertyEditorWidget(true, pParent),
+    mNeedOdeSolver(true),
     mOdeOrDaeSolversIndex(-1),
     mNlaSolversIndex(-1)
 {
@@ -21,10 +22,38 @@ SingleCellSimulationViewInformationSolversWidget::SingleCellSimulationViewInform
 
 //==============================================================================
 
+void SingleCellSimulationViewInformationSolversWidget::retranslateUi()
+{
+    // Update our property names
+
+    if (mOdeOrDaeSolversIndex != -1) {
+        setPropertyName(mOdeOrDaeSolversIndex, mNeedOdeSolver?tr("ODE solver"):tr("DAE solver"));
+
+        propertyValue(mOdeOrDaeSolversIndex)->setEmptyListValue(tr("None available"));
+    }
+
+    if (mNlaSolversIndex != -1) {
+        setPropertyName(mNlaSolversIndex, tr("NLA solver"));
+
+        propertyValue(mNlaSolversIndex)->setEmptyListValue(tr("None available"));
+    }
+
+    // Default retranslation
+    // Note: we must do it last since we set the empty list value of some
+    //       properties above...
+
+    PropertyEditorWidget::retranslateUi();
+}
+
+//==============================================================================
+
 void SingleCellSimulationViewInformationSolversWidget::initialize(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
                                                                   const SolverInterfaces &pSolverInterfaces)
 {
-    // Reset our solvers information by romoving all of its contents
+    // Reset our solvers information
+
+    mOdeOrDaeSolversIndex = -1;
+    mNlaSolversIndex      = -1;
 
     removeAllProperties();
 
@@ -39,8 +68,8 @@ void SingleCellSimulationViewInformationSolversWidget::initialize(CellMLSupport:
         // Check whether we need an ODE or DAE solver, and add a list property
         // for the ODE or DEA solvers
 
-        bool needOdeSolver = pCellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode;
-        Solver::Type solverType = needOdeSolver?Solver::Ode:Solver::Dae;
+        mNeedOdeSolver = pCellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode;
+        Solver::Type solverType = mNeedOdeSolver?Solver::Ode:Solver::Dae;
         QStringList solvers = QStringList();
 
         foreach (SolverInterface *solverInterface, pSolverInterfaces)
@@ -65,6 +94,10 @@ void SingleCellSimulationViewInformationSolversWidget::initialize(CellMLSupport:
 
             mNlaSolversIndex = -1;
         }
+
+        // Retranslate ourselves so that the property names get properly set
+
+        retranslateUi();
     }
 }
 

@@ -80,9 +80,15 @@ public:
 
     virtual int type() const;
 
+    QStringList list() const;
+
+    QString emptyListValue() const;
+    void setEmptyListValue(const QString &pEmptyListValue);
+
 private:
     Type mType;
     QStringList mList;
+    QString mEmptyListValue;
 };
 
 //==============================================================================
@@ -105,18 +111,17 @@ public:
 
     void selectFirstProperty();
 
+    PropertyItem * propertyValue(const int &pIndex) const;
+
     int addDoubleProperty();
     int addListProperty(const QStringList &pList);
 
-    void setPropertyName(const int &pPropertyIndex,
-                         const QString &pPropertyName);
+    void setPropertyName(const int &pIndex, const QString &pName);
 
-    double doublePropertyValue(const int &pPropertyIndex) const;
-    void setDoublePropertyValue(const int &pPropertyIndex,
-                                const double &pPropertyValue);
+    double doublePropertyValue(const int &pIndex) const;
+    void setDoublePropertyValue(const int &pIndex, const double &pValue);
 
-    void setPropertyUnit(const int &pPropertyIndex,
-                         const QString &pPropertyUnit);
+    void setPropertyUnit(const int &pIndex, const QString &pUnit);
 
     void cancelPropertyEditing();
 
@@ -144,7 +149,7 @@ private:
 
     int addProperty(const PropertyItem::Type &pType,
                     const QStringList &pList = QStringList());
-    void editProperty(const int &pPropertyRow, const bool &pCommitData = true);
+    void editProperty(const int &pIndex, const bool &pCommitData = true);
 
     void goToNeighbouringProperty(const int &pShift);
 
