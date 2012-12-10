@@ -65,7 +65,7 @@ Q_SIGNALS:
 
 //==============================================================================
 
-class PropertyItem : public QStandardItem
+class CORE_EXPORT PropertyItem : public QStandardItem
 {
 public:
     enum Type
