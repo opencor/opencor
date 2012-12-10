@@ -731,13 +731,27 @@ void PropertyEditorWidget::cancelPropertyEditing()
 
 void PropertyEditorWidget::removeAllProperties()
 {
+    // Keep track of our columns' width
+    // Note: indeed, everything gets reset after we call mModel->clear() below,
+    //       so...
+
+    QList<int> columnWidths = QList<int>();
+
+    for (int i = 0, iMax = header()->count(); i < iMax; ++i)
+        columnWidths << columnWidth(i);
+
     // Remove all the properties we currently hold
 
     mModel->clear();
 
-    // Get the hedaers reset
+    // Get the headers reset
 
     retranslateUi();
+
+    // Set our 'new' columns' width
+
+    for (int i = 0, iMax = header()->count(); i < iMax; ++i)
+        setColumnWidth(i, columnWidths[i]);
 }
 
 //==============================================================================
