@@ -102,6 +102,9 @@ private:
 
     Core::ToolBarWidget *mToolBarWidget;
 
+    QFrame *mTopSeparator;
+    QFrame *mBottomSeparator;
+
     QScrollBar *mDelayWidget;
     QLabel *mDelayValueWidget;
 

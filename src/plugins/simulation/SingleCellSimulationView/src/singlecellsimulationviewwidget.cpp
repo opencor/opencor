@@ -27,6 +27,7 @@
 
 #include <QBrush>
 #include <QDesktopWidget>
+#include <QFrame>
 #include <QImage>
 #include <QLabel>
 #include <QPainter>
@@ -115,8 +116,10 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mGui->actionCsvExport);
 
+    mTopSeparator = Core::newLineWidget(this);
+
     mGui->layout->addWidget(mToolBarWidget);
-    mGui->layout->addWidget(Core::newLineWidget(this));
+    mGui->layout->addWidget(mTopSeparator);
 
     // Create our splitter widget and keep track of its movement
     // Note: we need to keep track of its movement so that saveSettings() can
@@ -183,7 +186,9 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
     mProgressBarWidget->setFixedHeight(3);
     mProgressBarWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 
-    mGui->layout->addWidget(Core::newLineWidget(this));
+    mBottomSeparator = Core::newLineWidget(this);
+
+    mGui->layout->addWidget(mBottomSeparator);
     mGui->layout->addWidget(mProgressBarWidget);
 
     // Make our contents widget our focus proxy
@@ -608,10 +613,12 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
     // Check if an error occurred and, if so, show/hide some widgets
 
     mToolBarWidget->setVisible(!hasError);
+    mTopSeparator->setVisible(!hasError);
 
     mContentsWidget->setVisible(!hasError);
     mInvalidModelMessageWidget->setVisible(hasError);
 
+    mBottomSeparator->setVisible(!hasError);
     mProgressBarWidget->setVisible(!hasError);
 
     // Make sure that the last output message is visible
