@@ -15,12 +15,6 @@
 
 //==============================================================================
 
-namespace Ui {
-    class SingleCellSimulationViewContentsWidget;
-}
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace SingleCellSimulationView {
 
@@ -38,7 +32,6 @@ class SingleCellSimulationViewContentsWidget : public QSplitter,
 
 public:
     explicit SingleCellSimulationViewContentsWidget(QWidget *pParent = 0);
-    ~SingleCellSimulationViewContentsWidget();
 
     virtual void retranslateUi();
 
@@ -49,8 +42,6 @@ public:
     SingleCellSimulationViewGraphPanelsWidget * graphPanelsWidget();
 
 private:
-    Ui::SingleCellSimulationViewContentsWidget *mGui;
-
     QList<int> mSplitterSizes;
 
     SingleCellSimulationViewInformationWidget *mInformationWidget;

@@ -48,7 +48,6 @@ ADD_PLUGIN(SingleCellSimulationView
         src/singlecellsimulationviewsimulationworker.h
         src/singlecellsimulationviewwidget.h
     UIS
-        src/singlecellsimulationviewcontentswidget.ui
         src/singlecellsimulationviewgraphpanelwidget.ui
         src/singlecellsimulationviewinformationwidget.ui
         src/singlecellsimulationviewwidget.ui

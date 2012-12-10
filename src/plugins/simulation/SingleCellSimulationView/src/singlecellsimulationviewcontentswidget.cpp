@@ -15,10 +15,6 @@
 
 //==============================================================================
 
-#include "ui_singlecellsimulationviewcontentswidget.h"
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace SingleCellSimulationView {
 
@@ -27,13 +23,8 @@ namespace SingleCellSimulationView {
 SingleCellSimulationViewContentsWidget::SingleCellSimulationViewContentsWidget(QWidget *pParent) :
     QSplitter(pParent),
     CommonWidget(pParent),
-    mGui(new Ui::SingleCellSimulationViewContentsWidget),
     mSplitterSizes(QList<int>())
 {
-    // Set up the GUI
-
-    mGui->setupUi(this);
-
     // Keep track of our movement
     // Note: we need to keep track of our movement so that saveSettings() can
     //       work fine even when we are not visible (which happens when a CellML
@@ -68,21 +59,8 @@ SingleCellSimulationViewContentsWidget::SingleCellSimulationViewContentsWidget(Q
 
 //==============================================================================
 
-SingleCellSimulationViewContentsWidget::~SingleCellSimulationViewContentsWidget()
-{
-    // Delete the GUI
-
-    delete mGui;
-}
-
-//==============================================================================
-
 void SingleCellSimulationViewContentsWidget::retranslateUi()
 {
-    // Retranslate the whole widget
-
-    mGui->retranslateUi(this);
-
     // Retranslate our information widget
 
     mInformationWidget->retranslateUi();
