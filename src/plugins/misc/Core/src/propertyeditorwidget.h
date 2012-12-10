@@ -71,15 +71,18 @@ public:
     enum Type
     {
         String = QStandardItem::UserType,
-        Double = QStandardItem::UserType+1
+        Double = QStandardItem::UserType+1,
+        List   = QStandardItem::UserType+2
     };
 
-    explicit PropertyItem(const Type &pType);
+    explicit PropertyItem(const Type &pType,
+                          const QStringList &pList = QStringList());
 
     virtual int type() const;
 
 private:
     Type mType;
+    QStringList mList;
 };
 
 //==============================================================================
@@ -103,6 +106,7 @@ public:
     void selectFirstProperty();
 
     int addDoubleProperty();
+    int addListProperty(const QStringList &pList);
 
     void setPropertyName(const int &pPropertyIndex,
                          const QString &pPropertyName);
@@ -115,6 +119,8 @@ public:
                          const QString &pPropertyUnit);
 
     void cancelPropertyEditing();
+
+    void removeAllProperties();
 
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
@@ -136,6 +142,8 @@ private:
 
     void constructor(const bool &pAutoUpdateHeight = false);
 
+    int addProperty(const PropertyItem::Type &pType,
+                    const QStringList &pList = QStringList());
     void editProperty(const int &pPropertyRow, const bool &pCommitData = true);
 
     void goToNeighbouringProperty(const int &pShift);

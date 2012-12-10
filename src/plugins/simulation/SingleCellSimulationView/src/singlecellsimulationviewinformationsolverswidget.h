@@ -8,6 +8,7 @@
 //==============================================================================
 
 #include "propertyeditorwidget.h"
+#include "solverinterface.h"
 
 //==============================================================================
 
@@ -32,10 +33,12 @@ class SingleCellSimulationViewInformationSolversWidget : public Core::PropertyEd
 public:
     explicit SingleCellSimulationViewInformationSolversWidget(QWidget *pParent = 0);
 
-    void initialize(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
+    void initialize(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
+                    const SolverInterfaces &pSolverInterfaces);
 
 private:
-    bool mOdeSolver;
+    int mOdeOrDaeSolversIndex;
+    int mNlaSolversIndex;
 };
 
 //==============================================================================

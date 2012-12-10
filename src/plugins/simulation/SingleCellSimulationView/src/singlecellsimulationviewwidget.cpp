@@ -494,7 +494,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
             // Initialise our GUI's solvers and parameters widgets using our
             // simulation
 
-            mContentsWidget->informationWidget()->solversWidget()->initialize(cellmlFileRuntime);
+            mContentsWidget->informationWidget()->solversWidget()->initialize(cellmlFileRuntime, mSolverInterfaces);
             mContentsWidget->informationWidget()->parametersWidget()->initialize(cellmlFileRuntime);
 
             // Update our GUI using our simulation's data

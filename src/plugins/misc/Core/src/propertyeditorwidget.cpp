@@ -133,9 +133,10 @@ bool PropertyItemDelegate::eventFilter(QObject *pObject, QEvent *pEvent)
 
 //==============================================================================
 
-PropertyItem::PropertyItem(const Type &pType) :
+PropertyItem::PropertyItem(const Type &pType, const QStringList &pList) :
     QStandardItem(),
-    mType(pType)
+    mType(pType),
+    mList(pList)
 {
     // If the property item is of double type, then it should be editable
 
@@ -308,7 +309,8 @@ void PropertyEditorWidget::selectFirstProperty()
 
 //==============================================================================
 
-int PropertyEditorWidget::addDoubleProperty()
+int PropertyEditorWidget::addProperty(const PropertyItem::Type &pType,
+                                      const QStringList &pList)
 {
     // Determine the index of our new double property
 
@@ -317,12 +319,30 @@ int PropertyEditorWidget::addDoubleProperty()
     // Populate our data model with our new double property
 
     mModel->invisibleRootItem()->setChild(res, 0, new PropertyItem(PropertyItem::String));
-    mModel->invisibleRootItem()->setChild(res, 1, new PropertyItem(PropertyItem::Double));
+    mModel->invisibleRootItem()->setChild(res, 1, new PropertyItem(pType, pList));
     mModel->invisibleRootItem()->setChild(res, 2, new PropertyItem(PropertyItem::String));
 
     // Return the index of our new double property
 
     return res;
+}
+
+//==============================================================================
+
+int PropertyEditorWidget::addDoubleProperty()
+{
+    // Add a double property and return its index
+
+    return addProperty(PropertyItem::Double);
+}
+
+//==============================================================================
+
+int PropertyEditorWidget::addListProperty(const QStringList &pList)
+{
+    // Add a list property and return its index
+
+    return addProperty(PropertyItem::List, pList);
 }
 
 //==============================================================================
@@ -643,6 +663,15 @@ void PropertyEditorWidget::cancelPropertyEditing()
     // The user wants to cancel the editing of the property
 
     editProperty(-1, false);
+}
+
+//==============================================================================
+
+void PropertyEditorWidget::removeAllProperties()
+{
+    // Remove all the properties we currently hold
+
+    mModel->clear();
 }
 
 //==============================================================================
