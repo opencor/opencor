@@ -181,6 +181,10 @@ SingleCellSimulationViewGraphPanelWidget * SingleCellSimulationViewGraphPanelsWi
 
     res->setActive(true);
 
+    // Keep track of our new sizes
+
+    splitterMoved();
+
     // Let people know that we have added a graph panel
 
     emit grapPanelAdded(res);
@@ -233,6 +237,10 @@ void SingleCellSimulationViewGraphPanelsWidget::removeGraphPanel()
             break;
         }
     }
+
+    // Keep track of our new sizes
+
+    splitterMoved();
 
     // Let people know that we have removed a graph panel
 
