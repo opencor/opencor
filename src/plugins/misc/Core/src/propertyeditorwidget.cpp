@@ -672,6 +672,10 @@ void PropertyEditorWidget::removeAllProperties()
     // Remove all the properties we currently hold
 
     mModel->clear();
+
+    // Get the hedaers reset
+
+    retranslateUi();
 }
 
 //==============================================================================
