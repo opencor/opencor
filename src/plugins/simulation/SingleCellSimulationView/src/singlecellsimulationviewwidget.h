@@ -76,9 +76,6 @@ public:
 
     SingleCellSimulationViewContentsWidget * contentsWidget() const;
 
-protected:
-    virtual void paintEvent(QPaintEvent *pEvent);
-
 private:
     enum ErrorType
     {
@@ -90,8 +87,6 @@ private:
     Ui::SingleCellSimulationViewWidget *mGui;
 
     SingleCellSimulationViewPlugin *mPluginParent;
-
-    bool mCanSaveSettings;
 
     SolverInterfaces mSolverInterfaces;
 

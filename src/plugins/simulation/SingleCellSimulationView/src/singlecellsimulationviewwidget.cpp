@@ -62,7 +62,6 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
     ViewWidget(pParent),
     mGui(new Ui::SingleCellSimulationViewWidget),
     mPluginParent(pPluginParent),
-    mCanSaveSettings(false),
     mSolverInterfaces(SolverInterfaces()),
     mSimulation(0),
     mSimulations(QMap<QString, SingleCellSimulationViewSimulation *>()),
@@ -268,9 +267,6 @@ void SingleCellSimulationViewWidget::loadSettings(QSettings *pSettings)
 
 void SingleCellSimulationViewWidget::saveSettings(QSettings *pSettings) const
 {
-    if (!mCanSaveSettings)
-        return;
-
     // Keep track of our splitter sizes
 
     pSettings->setValue(SettingsSizesCount, mSplitterWidgetSizes.count());
@@ -666,21 +662,6 @@ QIcon SingleCellSimulationViewWidget::fileTabIcon(const QString &pFileName) cons
 
         return QIcon();
     }
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewWidget::paintEvent(QPaintEvent *pEvent)
-{
-    // Default handling of the event
-
-    Widget::paintEvent(pEvent);
-
-    // The view has been painted at least once which means that the sizes of
-    // mSplitterWidget are meaningful and, as a consequence, we can save our
-    // settings upon leaving OpenCOR
-
-    mCanSaveSettings = true;
 }
 
 //==============================================================================
