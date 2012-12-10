@@ -32,10 +32,6 @@ SingleCellSimulationViewInformationSimulationWidget::SingleCellSimulationViewInf
     // Select our first property
 
     selectFirstProperty();
-
-    // Resize our columns
-
-    resizeColumnsToContents();
 }
 
 //==============================================================================
