@@ -51,8 +51,13 @@ public:
 private:
     Ui::SingleCellSimulationViewContentsWidget *mGui;
 
+    QList<int> mSplitterSizes;
+
     SingleCellSimulationViewInformationWidget *mInformationWidget;
     SingleCellSimulationViewGraphPanelsWidget *mGraphPanelsWidget;
+
+private Q_SLOTS:
+    void splitterMoved();
 };
 
 //==============================================================================

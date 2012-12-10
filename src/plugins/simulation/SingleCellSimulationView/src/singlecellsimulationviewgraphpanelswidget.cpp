@@ -19,11 +19,20 @@ namespace SingleCellSimulationView {
 
 SingleCellSimulationViewGraphPanelsWidget::SingleCellSimulationViewGraphPanelsWidget(QWidget *pParent) :
     QSplitter(pParent),
-    CommonWidget(pParent)
+    CommonWidget(pParent),
+    mSplitterSizes(QList<int>())
 {
     // Set our orientation
 
     setOrientation(Qt::Vertical);
+
+    // Keep track of our movement
+    // Note: we need to keep track of our movement so that saveSettings() can
+    //       work fine even when we are not visible (which happens when a CellML
+    //       file cannot be run for some reason or another)...
+
+    connect(this, SIGNAL(splitterMoved(int,int)),
+            this, SLOT(splitterMoved()));
 }
 
 //==============================================================================
@@ -57,12 +66,12 @@ void SingleCellSimulationViewGraphPanelsWidget::loadSettings(QSettings *pSetting
 
     // Retrieve and set the size of each graph panel
 
-    QList<int> newSizes = QList<int>();
+    mSplitterSizes = QList<int>();
 
     for (int i = 0; i < graphPanelsCount; ++i)
-        newSizes << pSettings->value(SettingsGraphPanelSize.arg(i)).toInt();
+        mSplitterSizes << pSettings->value(SettingsGraphPanelSize.arg(i)).toInt();
 
-    setSizes(newSizes);
+    setSizes(mSplitterSizes);
 
     // Select the graph panel that used to be active
 
@@ -76,9 +85,9 @@ void SingleCellSimulationViewGraphPanelsWidget::saveSettings(QSettings *pSetting
     // Keep track of the number of graph panels, of which graph panel was the
     // active one, and of the size of each graph panel
 
-    pSettings->setValue(SettingsGraphPanelsCount, count());
+    pSettings->setValue(SettingsGraphPanelsCount, mSplitterSizes.count());
 
-    for (int i = 0, iMax = count(); i < iMax; ++i)
+    for (int i = 0, iMax = mSplitterSizes.count(); i < iMax; ++i)
         if (qobject_cast<SingleCellSimulationViewGraphPanelWidget *>(widget(i))->isActive()) {
             // We found the active graph panel, so...
 
@@ -87,10 +96,8 @@ void SingleCellSimulationViewGraphPanelsWidget::saveSettings(QSettings *pSetting
             break;
         }
 
-    QList<int> crtSizes = sizes();
-
-    for (int i = 0, iMax = crtSizes.count(); i < iMax; ++i)
-        pSettings->setValue(SettingsGraphPanelSize.arg(i), crtSizes[i]);
+    for (int i = 0, iMax = mSplitterSizes.count(); i < iMax; ++i)
+        pSettings->setValue(SettingsGraphPanelSize.arg(i), mSplitterSizes[i]);
 }
 
 //==============================================================================
@@ -275,6 +282,15 @@ void SingleCellSimulationViewGraphPanelsWidget::clearActiveGraphPanel()
     // Clear the current graph panel
 
     activeGraphPanel()->resetCurves();
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewGraphPanelsWidget::splitterMoved()
+{
+    // Our splitter has been moved, so keep track of its new sizes
+
+    mSplitterSizes = sizes();
 }
 
 //==============================================================================

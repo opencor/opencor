@@ -46,6 +46,9 @@ public:
 protected:
     virtual void wheelEvent(QWheelEvent *pEvent);
 
+private:
+    QList<int> mSplitterSizes;
+
 Q_SIGNALS:
     void grapPanelAdded(SingleCellSimulationViewGraphPanelWidget *pGraphPanel);
     void grapPanelRemoved();
@@ -53,6 +56,8 @@ Q_SIGNALS:
     void removeGraphPanelsEnabled(const bool &pEnabled);
 
 private Q_SLOTS:
+    void splitterMoved();
+
     void graphPanelActivated(SingleCellSimulationViewGraphPanelWidget *pGraphPanel);
 };
 

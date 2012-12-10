@@ -27,19 +27,28 @@ namespace SingleCellSimulationView {
 SingleCellSimulationViewContentsWidget::SingleCellSimulationViewContentsWidget(QWidget *pParent) :
     QSplitter(pParent),
     CommonWidget(pParent),
-    mGui(new Ui::SingleCellSimulationViewContentsWidget)
+    mGui(new Ui::SingleCellSimulationViewContentsWidget),
+    mSplitterSizes(QList<int>())
 {
     // Set up the GUI
 
     mGui->setupUi(this);
 
-    // Create a splitter for our information
+    // Keep track of our movement
+    // Note: we need to keep track of our movement so that saveSettings() can
+    //       work fine even when we are not visible (which happens when a CellML
+    //       file cannot be run for some reason or another)...
+
+    connect(this, SIGNAL(splitterMoved(int,int)),
+            this, SLOT(splitterMoved()));
+
+    // Create our information widget
 
     mInformationWidget = new SingleCellSimulationViewInformationWidget(this);
 
     mInformationWidget->setObjectName("Information");
 
-    // Create a splitter for our graph panels
+    // Create our graph panels widget
 
     mGraphPanelsWidget = new SingleCellSimulationViewGraphPanelsWidget(this);
 
@@ -91,18 +100,18 @@ void SingleCellSimulationViewContentsWidget::loadSettings(QSettings *pSettings)
     // Retrieve and set our sizes
 
     int sizesCount = pSettings->value(SettingsContentsCount, 0).toInt();
-    QList<int> newSizes = QList<int>();
+    mSplitterSizes = QList<int>();
 
     if (!sizesCount)
         // There are no previous sizes, so get some default ones
 
-        newSizes << 0.25*qApp->desktop()->screenGeometry().width()
-                 << 0.75*qApp->desktop()->screenGeometry().width();
+        mSplitterSizes << 0.25*qApp->desktop()->screenGeometry().width()
+                       << 0.75*qApp->desktop()->screenGeometry().width();
     else
         for (int i = 0; i < sizesCount; ++i)
-            newSizes << pSettings->value(SettingsContentsSize.arg(i)).toInt();
+            mSplitterSizes << pSettings->value(SettingsContentsSize.arg(i)).toInt();
 
-    setSizes(newSizes);
+    setSizes(mSplitterSizes);
 
     // Retrieve the settings of our information and graph panels widgets
 
@@ -121,12 +130,10 @@ void SingleCellSimulationViewContentsWidget::saveSettings(QSettings *pSettings) 
 {
     // Keep track of our sizes
 
-    pSettings->setValue(SettingsContentsCount, count());
+    pSettings->setValue(SettingsContentsCount, mSplitterSizes.count());
 
-    QList<int> crtSizes = sizes();
-
-    for (int i = 0, iMax = crtSizes.count(); i < iMax; ++i)
-        pSettings->setValue(SettingsContentsSize.arg(i), crtSizes[i]);
+    for (int i = 0, iMax = mSplitterSizes.count(); i < iMax; ++i)
+        pSettings->setValue(SettingsContentsSize.arg(i), mSplitterSizes[i]);
 
     // Keep track of the settings of our information and graph panels widgets
 
@@ -155,6 +162,15 @@ SingleCellSimulationViewGraphPanelsWidget * SingleCellSimulationViewContentsWidg
     // Return our graph panels widget
 
     return mGraphPanelsWidget;
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewContentsWidget::splitterMoved()
+{
+    // Our splitter has been moved, so keep track of its new sizes
+
+    mSplitterSizes = sizes();
 }
 
 //==============================================================================
