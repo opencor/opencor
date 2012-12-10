@@ -613,6 +613,12 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
     mInvalidModelMessageWidget->setVisible(hasError);
 
     mProgressBarWidget->setVisible(!hasError);
+
+    // Make sure that the last output message is visible
+    // Note: indeed, to (re)show some widgets (see above) will shift the output
+    //       a bit, so...
+
+    mOutputWidget->moveCursor(QTextCursor::End);
 }
 
 //==============================================================================
