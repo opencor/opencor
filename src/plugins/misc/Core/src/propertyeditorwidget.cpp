@@ -81,6 +81,28 @@ void DoubleEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
+ListEditorWidget::ListEditorWidget(QWidget *pParent) :
+    QComboBox(pParent)
+{
+#ifdef Q_WS_MAC
+//    setAttribute(Qt::WA_MacShowFocusRect, 0);
+    // Note: the above removes the focus border since it messes up the look of
+    //       our editor
+#endif
+//    setFrame(false);
+}
+
+//==============================================================================
+
+void ListEditorWidget::keyPressEvent(QKeyEvent *pEvent)
+{
+    // Default handling of the event
+
+    QComboBox::keyPressEvent(pEvent);
+}
+
+//==============================================================================
+
 QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
                                              const QStyleOptionViewItem &pOption,
                                              const QModelIndex &pIndex) const
@@ -91,12 +113,22 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
     // Create and return an editor for our item, based on its type
 
     QWidget *editor;
+    PropertyItem *propertyItem = static_cast<PropertyItem *>(static_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex));
 
-    switch (static_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex)->type()) {
+    switch (propertyItem->type()) {
     case PropertyItem::Double:
         editor = new DoubleEditorWidget(pParent);
 
         break;
+    case PropertyItem::List: {
+        ListEditorWidget *listEditor = new ListEditorWidget(pParent);
+
+        listEditor->addItems(propertyItem->list());
+
+        editor = listEditor;
+
+        break;
+    }
     default:
         // PropertyItem::String
 
@@ -139,9 +171,9 @@ PropertyItem::PropertyItem(const Type &pType, const QStringList &pList) :
     mList(pList),
     mEmptyListValue(QString("???"))
 {
-    // If the property item is of double type, then it should be editable
+    // If the property item is of string type, then it should not be editable
 
-    if (pType != Double)
+    if (pType == String)
         setFlags(flags() & ~Qt::ItemIsEditable);
 }
 
@@ -191,7 +223,7 @@ void PropertyEditorWidget::constructor(const bool &pAutoUpdateHeight)
     mAutoUpdateHeight = pAutoUpdateHeight;
 
     mPropertyEditor =  0;
-    mPropertyRow    = -1;
+    mPropertyIndex  = -1;
 
     // Customise ourselves
 
@@ -351,17 +383,17 @@ void PropertyEditorWidget::selectFirstProperty()
 int PropertyEditorWidget::addProperty(const PropertyItem::Type &pType,
                                       const QStringList &pList)
 {
-    // Determine the index of our new double property
+    // Determine the index of our new property
 
     int res = mModel->rowCount();
 
-    // Populate our data model with our new double property
+    // Populate our data model with our new property
 
     mModel->invisibleRootItem()->setChild(res, 0, new PropertyItem(PropertyItem::String));
     mModel->invisibleRootItem()->setChild(res, 1, new PropertyItem(pType, pList));
     mModel->invisibleRootItem()->setChild(res, 2, new PropertyItem(PropertyItem::String));
 
-    // Return the index of our new double property
+    // Return the index of our new property
 
     return res;
 }
@@ -488,9 +520,9 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
             editProperty(-1);
         else
             // We are not currently editing a property, so start editing it
-            // Note: we could use mPropertyRow, but if it was to be equal to -1
-            //       we would have to use currentIndex().row(), so we might as
-            //       well use the latter all the time...
+            // Note: we could use mPropertyIndex, but if it was to be equal to
+            //       -1 we would have to use currentIndex().row(), so we might
+            //       as well use the latter all the time...
 
             editProperty(currentIndex().row());
 
@@ -545,16 +577,16 @@ void PropertyEditorWidget::mousePressEvent(QMouseEvent *pEvent)
 {
     // Start/stop the editing of the property
 
-    int propertyRow = indexAt(pEvent->pos()).row();
+    int propertyIndex = indexAt(pEvent->pos()).row();
 
     if (mPropertyEditor) {
         // We are already editing a property, so either stop its editing or
         // start editing anoher property
 
-        if (propertyRow != mPropertyRow)
+        if (propertyIndex != mPropertyIndex)
             // We want to edit another property
 
-            editProperty(propertyRow);
+            editProperty(propertyIndex);
         else
             // We want to stop editing the property
 
@@ -563,7 +595,7 @@ void PropertyEditorWidget::mousePressEvent(QMouseEvent *pEvent)
         // We are not currently editing a property, so start editing the current
         // one
 
-        editProperty(propertyRow);
+        editProperty(propertyIndex);
     }
 
     // Accept the event
@@ -577,10 +609,10 @@ void PropertyEditorWidget::mouseMoveEvent(QMouseEvent *pEvent)
 {
     // Edit the property, but only if we want to edit a new one
 
-    int propertyRow = indexAt(pEvent->pos()).row();
+    int propertyIndex = indexAt(pEvent->pos()).row();
 
-    if ((propertyRow != -1) && (propertyRow != mPropertyRow))
-        editProperty(propertyRow);
+    if ((propertyIndex != -1) && (propertyIndex != mPropertyIndex))
+        editProperty(propertyIndex);
 
     // Accept the event
 
@@ -652,15 +684,26 @@ void PropertyEditorWidget::editorOpened(QWidget *pEditor)
     // Keep track of some information about the property
 
     mPropertyEditor = pEditor;
-    mPropertyRow    = currentIndex().row();
+    mPropertyIndex  = currentIndex().row();
 }
 
 //==============================================================================
 
 void PropertyEditorWidget::editorClosed()
 {
-    // We have stopped editing a property, so reset our focus proxy and make
-    // sure that we get the focus (see editorOpened() above for the reason)
+    // We have stopped editing a property, so make sure that if we were editing
+    // a list item, then its value gets properly set
+    // Note: indeed, by default the value will be the index of the selected item
+    //       in the list while we want the actual text corresponding to the
+    //       selected item...
+
+    PropertyItem *propertyItem = propertyValue(mPropertyIndex);
+
+    if (propertyItem->type() == PropertyItem::List)
+        propertyItem->setText(static_cast<ListEditorWidget *>(mPropertyEditor)->currentText());
+
+    // Next, we need to reset our focus proxy and make sure that we get the
+    // focus (see editorOpened() above for the reason)
 
     setFocusProxy(0);
 
@@ -669,6 +712,7 @@ void PropertyEditorWidget::editorClosed()
     // Reset some information about the property
 
     mPropertyEditor = 0;
+    mPropertyIndex  = -1;
 }
 
 //==============================================================================

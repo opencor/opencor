@@ -12,6 +12,7 @@
 
 //==============================================================================
 
+#include <QComboBox>
 #include <QLineEdit>
 #include <QStandardItem>
 #include <QStyledItemDelegate>
@@ -33,6 +34,23 @@ class DoubleEditorWidget : public QLineEdit
 
 public:
     explicit DoubleEditorWidget(QWidget *pParent = 0);
+
+protected:
+    virtual void keyPressEvent(QKeyEvent *pEvent);
+
+Q_SIGNALS:
+    void goToPreviousPropertyRequested();
+    void goToNextPropertyRequested();
+};
+
+//==============================================================================
+
+class ListEditorWidget : public QComboBox
+{
+    Q_OBJECT
+
+public:
+    explicit ListEditorWidget(QWidget *pParent = 0);
 
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
@@ -143,7 +161,7 @@ private:
     PropertyItemDelegate *mPropertyItemDelegate;
 
     QWidget *mPropertyEditor;
-    int mPropertyRow;
+    int mPropertyIndex;
 
     void constructor(const bool &pAutoUpdateHeight = false);
 
