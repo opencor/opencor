@@ -48,8 +48,8 @@ private:
     bool mNeedOdeSolver;
     bool mNeedNlaSolver;
 
-    int mOdeOrDaeSolversIndex;
-    int mNlaSolversIndex;
+    Core::Property mOdeOrDaeSolversProperty;
+    Core::Property mNlaSolversProperty;
 };
 
 //==============================================================================

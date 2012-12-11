@@ -120,8 +120,12 @@ struct Property
     PropertyItem *value;
     PropertyItem *unit;
 
-    explicit Property(PropertyItem *pName, PropertyItem *pValue,
-                      PropertyItem *pUnit);
+    explicit Property(PropertyItem *pName = 0, PropertyItem *pValue = 0,
+                      PropertyItem *pUnit = 0);
+
+    bool operator!=(const Property &pOther) const;
+
+    bool isEmpty() const;
 };
 
 //==============================================================================
@@ -144,19 +148,15 @@ public:
 
     void selectFirstProperty();
 
-    PropertyItem * propertyValue(const int &pIndex) const;
+    Property addDoubleProperty(const QString &pName = QString());
 
-    int addDoubleProperty(const QString &pName = QString());
+    Property addListProperty(const QString &pName, const QStringList &pList);
+    Property addListProperty(const QStringList &pList);
 
-    int addListProperty(const QString &pName, const QStringList &pList);
-    int addListProperty(const QStringList &pList);
+    void setStringProperty(PropertyItem *pPropertyItem, const QString &pValue);
 
-    void setPropertyName(const int &pIndex, const QString &pName);
-
-    double doublePropertyValue(const int &pIndex) const;
-    void setDoublePropertyValue(const int &pIndex, const double &pValue);
-
-    void setPropertyUnit(const int &pIndex, const QString &pUnit);
+    double doubleProperty(PropertyItem *pPropertyItem) const;
+    void setDoubleProperty(PropertyItem *pPropertyItem, const double &pValue);
 
     void cancelPropertyEditing();
 
@@ -178,15 +178,20 @@ private:
     PropertyItemDelegate *mPropertyItemDelegate;
 
     QWidget *mPropertyEditor;
-    int mPropertyIndex;
+    Property mProperty;
 
     void constructor(const bool &pAutoUpdateHeight = false);
 
-    int addProperty(const PropertyItem::Type &pType, const QString &pName,
-                    const QStringList &pList = QStringList());
-    void editProperty(const int &pIndex, const bool &pCommitData = true);
+    Property addProperty(const PropertyItem::Type &pType, const QString &pName,
+                         const QStringList &pList = QStringList());
+
+    void editProperty(const Property &pProperty,
+                      const bool &pCommitData = true);
 
     void goToNeighbouringProperty(const int &pShift);
+
+    Property property(const int &pRow) const;
+    Property currentProperty() const;
 
 private Q_SLOTS:
     void updateHeight();

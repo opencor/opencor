@@ -255,14 +255,32 @@ Property::Property(PropertyItem *pName, PropertyItem *pValue,
 
 //==============================================================================
 
+bool Property::operator!=(const Property &pOther) const
+{
+    // Return whether the two properties are different
+
+    return (name != pOther.name) || (value != pOther.value) || (unit != pOther.unit);
+}
+
+//==============================================================================
+
+bool Property::isEmpty() const
+{
+    // Return whether the property is empty
+
+    return !name && !value && !unit;
+}
+
+//==============================================================================
+
 void PropertyEditorWidget::constructor(const bool &pAutoUpdateHeight)
 {
     // Some initialisations
 
     mAutoUpdateHeight = pAutoUpdateHeight;
 
-    mPropertyEditor =  0;
-    mPropertyIndex  = -1;
+    mProperty       = Property();
+    mPropertyEditor = 0;
 
     // Customise ourselves
 
@@ -346,11 +364,11 @@ void PropertyEditorWidget::retranslateUi()
     // 'Retranslate' the value of empty list properties
 
     for (int i = 0, iMax = mModel->rowCount(); i < iMax; ++i) {
-        PropertyItem *propertyItem = propertyValue(i);
+        PropertyItem *propertyValue = property(i).value;
 
-        if (   (propertyItem->type() == PropertyItem::List)
-               && (propertyItem->list().isEmpty()))
-            propertyItem->setText(propertyItem->emptyListValue());
+        if (   (propertyValue->type() == PropertyItem::List)
+               && (propertyValue->list().isEmpty()))
+            propertyValue->setText(propertyValue->emptyListValue());
     }
 }
 
@@ -419,51 +437,44 @@ void PropertyEditorWidget::selectFirstProperty()
 
 //==============================================================================
 
-int PropertyEditorWidget::addProperty(const PropertyItem::Type &pType,
-                                      const QString &pName,
-                                      const QStringList &pList)
+Property PropertyEditorWidget::addProperty(const PropertyItem::Type &pType,
+                                           const QString &pName,
+                                           const QStringList &pList)
 {
-    // Determine the index of our new property
+    // Determine our new property's information
 
-    int res = mModel->rowCount();
+    Property res = Property(new PropertyItem(PropertyItem::String, pName),
+                            new PropertyItem(pType, pList),
+                            new PropertyItem(PropertyItem::String));
 
     // Populate our data model with our new property
 
-    mModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << new PropertyItem(PropertyItem::String, pName)
-                                                                    << new PropertyItem(pType, pList)
-                                                                    << new PropertyItem(PropertyItem::String));
+    mModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << res.name
+                                                                    << res.value
+                                                                    << res.unit);
 
-    // Return the index of our new property
+    // Return our new property's information
 
     return res;
 }
 
 //==============================================================================
 
-PropertyItem * PropertyEditorWidget::propertyValue(const int &pIndex) const
+Property PropertyEditorWidget::addDoubleProperty(const QString &pName)
 {
-    // Return a pointer to our property value
-
-    return static_cast<PropertyItem *>(mModel->invisibleRootItem()->child(pIndex, 1));
-}
-
-//==============================================================================
-
-int PropertyEditorWidget::addDoubleProperty(const QString &pName)
-{
-    // Add a double property and return its index
+    // Add a double property and return its information
 
     return addProperty(PropertyItem::Double, pName);
 }
 
 //==============================================================================
 
-int PropertyEditorWidget::addListProperty(const QString &pName,
+Property PropertyEditorWidget::addListProperty(const QString &pName,
                                           const QStringList &pList)
 {
-    // Add a list property and retrieve its index
+    // Add a list property and retrieve its information
 
-    int res = addProperty(PropertyItem::List, pName, pList);
+    Property res = addProperty(PropertyItem::List, pName, pList);
 
     // Use the first item of our list as the default value, assuming the list is
     // not empty
@@ -471,81 +482,58 @@ int PropertyEditorWidget::addListProperty(const QString &pName,
     if (pList.isEmpty())
         // The list is empty, so...
 
-        mModel->invisibleRootItem()->child(res, 1)->setText(static_cast<PropertyItem *>(mModel->invisibleRootItem()->child(res, 1))->emptyListValue());
+        res.value->setText(res.value->emptyListValue());
     else
-        mModel->invisibleRootItem()->child(res, 1)->setText(pList.first());
+        res.value->setText(pList.first());
 
-    // Return the index of our list property
+    // Return our list property's information
 
     return res;
 }
 
 //==============================================================================
 
-int PropertyEditorWidget::addListProperty(const QStringList &pList)
+Property PropertyEditorWidget::addListProperty(const QStringList &pList)
 {
-    // Add a list property and return its index
+    // Add a list property and return its information
 
     return addListProperty(QString(), pList);
 }
 
 //==============================================================================
 
-void PropertyEditorWidget::setPropertyName(const int &pIndex,
-                                           const QString &pName)
+void PropertyEditorWidget::setStringProperty(PropertyItem *pPropertyItem,
+                                             const QString &pValue)
 {
-    // Set the name of the given property, if valid
+    // Set the value of the given string property, if valid
 
-    if ((pIndex >= 0) && (pIndex < mModel->rowCount()))
-        mModel->invisibleRootItem()->child(pIndex, 0)->setText(pName);
+    if (pPropertyItem && (pPropertyItem->type() == PropertyItem::String))
+        pPropertyItem->setText(pValue);
 }
 
 //==============================================================================
 
-double PropertyEditorWidget::doublePropertyValue(const int &pIndex) const
+double PropertyEditorWidget::doubleProperty(PropertyItem *pPropertyItem) const
 {
     // Return the value of the given double property, if valid
 
-    if ((pIndex >= 0) && (pIndex < mModel->rowCount())) {
-        PropertyItem *doublePropertyItem = static_cast<PropertyItem *>(mModel->invisibleRootItem()->child(pIndex, 1));
-
-        if (doublePropertyItem->type() == PropertyItem::Double)
-            return doublePropertyItem->text().toDouble();
-        else
-            // The property item is not of double type, so...
-
-            return 0.0;
-    } else {
-        // The property index is no valid, so...
+    if (pPropertyItem && (pPropertyItem->type() == PropertyItem::Double))
+        return pPropertyItem->text().toDouble();
+    else
+        // The property item is either not valid or not of double type, so...
 
         return 0.0;
-    }
 }
 
 //==============================================================================
 
-void PropertyEditorWidget::setDoublePropertyValue(const int &pIndex,
-                                                  const double &pValue)
+void PropertyEditorWidget::setDoubleProperty(PropertyItem *pPropertyItem,
+                                             const double &pValue)
 {
     // Set the value of the given double property, if valid
 
-    if ((pIndex >= 0) && (pIndex < mModel->rowCount())) {
-        PropertyItem *doublePropertyItem = static_cast<PropertyItem *>(mModel->invisibleRootItem()->child(pIndex, 1));
-
-        if (doublePropertyItem->type() == PropertyItem::Double)
-            doublePropertyItem->setText(QString::number(pValue));
-    }
-}
-
-//==============================================================================
-
-void PropertyEditorWidget::setPropertyUnit(const int &pIndex,
-                                           const QString &pUnit)
-{
-    // Set the name of the given property, if valid
-
-    if ((pIndex >= 0) && (pIndex < mModel->rowCount()))
-        mModel->invisibleRootItem()->child(pIndex, 2)->setText(pUnit);
+    if (pPropertyItem && (pPropertyItem->type() == PropertyItem::Double))
+        pPropertyItem->setText(QString::number(pValue));
 }
 
 //==============================================================================
@@ -565,16 +553,18 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
         // The user wants to start/stop editing the property
 
         if (mPropertyEditor)
-            // We are currently editing a property, so stop editing it
+            // We are currently editing a property, so stop editing it by
+            // pretending to edit an empty property
 
-            editProperty(-1);
+            editProperty(Property());
         else
-            // We are not currently editing a property, so start editing it
-            // Note: we could use mPropertyIndex, but if it was to be equal to
-            //       -1 we would have to use currentIndex().row(), so we might
-            //       as well use the latter all the time...
+            // We are not currently editing a property, so start editing the
+            // current one
+            // Note: we could use mProperty, but if it was to be empty then we
+            //       would have to use currentIndex().row(), so we might as well
+            //       use the latter all the time...
 
-            editProperty(currentIndex().row());
+            editProperty(property(currentIndex().row()));
 
         // Accept the event
 
@@ -627,25 +617,26 @@ void PropertyEditorWidget::mousePressEvent(QMouseEvent *pEvent)
 {
     // Start/stop the editing of the property
 
-    int propertyIndex = indexAt(pEvent->pos()).row();
+    Property mouseProperty = property(indexAt(pEvent->pos()).row());
 
     if (mPropertyEditor) {
         // We are already editing a property, so either stop its editing or
         // start editing anoher property
 
-        if (propertyIndex != mPropertyIndex)
+        if (mouseProperty != mProperty)
             // We want to edit another property
 
-            editProperty(propertyIndex);
+            editProperty(mouseProperty);
         else
-            // We want to stop editing the property
+            // We want to stop editing the property, so pretend we want to edit
+            // an empty property
 
-            editProperty(-1);
+            editProperty(Property());
     } else {
         // We are not currently editing a property, so start editing the current
         // one
 
-        editProperty(propertyIndex);
+        editProperty(mouseProperty);
     }
 
     // Accept the event
@@ -659,10 +650,10 @@ void PropertyEditorWidget::mouseMoveEvent(QMouseEvent *pEvent)
 {
     // Edit the property, but only if we want to edit a new one
 
-    int propertyIndex = indexAt(pEvent->pos()).row();
+    Property mouseProperty = property(indexAt(pEvent->pos()).row());
 
-    if ((propertyIndex != -1) && (propertyIndex != mPropertyIndex))
-        editProperty(propertyIndex);
+    if (!mouseProperty.isEmpty() && (mouseProperty != mProperty))
+        editProperty(mouseProperty);
 
     // Accept the event
 
@@ -724,19 +715,17 @@ void PropertyEditorWidget::editorOpened(QWidget *pEditor)
     // Keep track of some information about the property
 
     mPropertyEditor = pEditor;
-    mPropertyIndex  = currentIndex().row();
+    mProperty       = currentProperty();
 
     // We are starting the editing of a property, so make sure that if we are to
     // edit a list item, then its original value gets properly set
     // Note: indeed, by default the first list item will be selected...
 
-    PropertyItem *propertyItem = propertyValue(mPropertyIndex);
-
-    if (propertyItem->type() == PropertyItem::List) {
+    if (mProperty.value->type() == PropertyItem::List) {
         ListEditorWidget *propertyEditor = static_cast<ListEditorWidget *>(mPropertyEditor);
 
-        for (int i = 0, iMax = propertyItem->list().count(); i < iMax; ++i)
-            if (!propertyItem->text().compare(propertyItem->list()[i])) {
+        for (int i = 0, iMax = mProperty.value->list().count(); i < iMax; ++i)
+            if (!mProperty.value->text().compare(mProperty.value->list()[i])) {
                 propertyEditor->setCurrentIndex(i);
 
                 break;
@@ -764,10 +753,8 @@ void PropertyEditorWidget::editorClosed()
     //       in the list while we want the actual text corresponding to the
     //       selected item...
 
-    PropertyItem *propertyItem = propertyValue(mPropertyIndex);
-
-    if (propertyItem->type() == PropertyItem::List)
-        propertyItem->setText(static_cast<ListEditorWidget *>(mPropertyEditor)->currentText());
+    if (mProperty.value->type() == PropertyItem::List)
+        mProperty.value->setText(static_cast<ListEditorWidget *>(mPropertyEditor)->currentText());
 
     // Next, we need to reset our focus proxy and make sure that we get the
     // focus (see editorOpened() above for the reason)
@@ -778,13 +765,13 @@ void PropertyEditorWidget::editorClosed()
 
     // Reset some information about the property
 
-    mPropertyEditor =  0;
-    mPropertyIndex  = -1;
+    mPropertyEditor = 0;
+    mProperty       = Property();
 }
 
 //==============================================================================
 
-void PropertyEditorWidget::editProperty(const int &pIndex,
+void PropertyEditorWidget::editProperty(const Property &pProperty,
                                         const bool &pCommitData)
 {
     // We want to edit a new property, so first stop the editing of the current
@@ -816,16 +803,17 @@ void PropertyEditorWidget::editProperty(const int &pIndex,
     // Now that the editing of our old property has finished, we can start the
     // editing of our new property, if any
 
-    if (pIndex != -1) {
+    if (!pProperty.isEmpty()) {
         // There is a new property to edit, so first make sure that it is
         // selected
 
-        selectItem(pIndex);
+        QModelIndex propertyIndex = pProperty.value->index();
+
+        setCurrentIndex(propertyIndex);
 
         // Now, we can 'properly' edit the property's value
-        // Note: the property's value's column is always 1...
 
-        edit(model()->index(pIndex, 1));
+        edit(propertyIndex);
     }
 }
 
@@ -835,7 +823,7 @@ void PropertyEditorWidget::cancelPropertyEditing()
 {
     // The user wants to cancel the editing of the property
 
-    editProperty(-1, false);
+    editProperty(Property(), false);
 }
 
 //==============================================================================
@@ -858,7 +846,7 @@ void PropertyEditorWidget::goToNeighbouringProperty(const int &pShift)
     if ((row >= 0) && (row < model()->rowCount()))
         // The previous/next property exists, so we can edit it
 
-        editProperty(row);
+        editProperty(property(row));
 }
 
 //==============================================================================
@@ -877,6 +865,26 @@ void PropertyEditorWidget::goToNextProperty()
     // Go to the next property
 
     goToNeighbouringProperty(1);
+}
+
+//==============================================================================
+
+Property PropertyEditorWidget::property(const int &pRow) const
+{
+    // Return some information about the property at the given row
+
+    return Property(static_cast<PropertyItem *>(mModel->itemFromIndex(mModel->index(pRow, 0))),
+                    static_cast<PropertyItem *>(mModel->itemFromIndex(mModel->index(pRow, 1))),
+                    static_cast<PropertyItem *>(mModel->itemFromIndex(mModel->index(pRow, 2))));
+}
+
+//==============================================================================
+
+Property PropertyEditorWidget::currentProperty() const
+{
+    // Return some information about the current property
+
+    return property(currentIndex().row());
 }
 
 //==============================================================================

@@ -20,9 +20,9 @@ SingleCellSimulationViewInformationSimulationWidget::SingleCellSimulationViewInf
 {
     // Populate our data model
 
-    mStartingPointIndex = addDoubleProperty();
-    mEndingPointIndex   = addDoubleProperty();
-    mPointIntervalIndex = addDoubleProperty();
+    mStartingPointProperty = addDoubleProperty();
+    mEndingPointProperty   = addDoubleProperty();
+    mPointIntervalProperty = addDoubleProperty();
 
     // Some further initialisations which are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
@@ -44,9 +44,9 @@ void SingleCellSimulationViewInformationSimulationWidget::retranslateUi()
 
     // Update our property names
 
-    setPropertyName(mStartingPointIndex, tr("Starting point"));
-    setPropertyName(mEndingPointIndex, tr("Ending point"));
-    setPropertyName(mPointIntervalIndex, tr("Point interval"));
+    setStringProperty(mStartingPointProperty.name, tr("Starting point"));
+    setStringProperty(mEndingPointProperty.name, tr("Ending point"));
+    setStringProperty(mPointIntervalProperty.name, tr("Point interval"));
 }
 
 //==============================================================================
@@ -55,9 +55,9 @@ void SingleCellSimulationViewInformationSimulationWidget::setUnit(const QString 
 {
     // Set the unit for our different properties, if needed
 
-    setPropertyUnit(mStartingPointIndex, pUnit);
-    setPropertyUnit(mEndingPointIndex, pUnit);
-    setPropertyUnit(mPointIntervalIndex, pUnit);
+    setStringProperty(mStartingPointProperty.unit, pUnit);
+    setStringProperty(mEndingPointProperty.unit, pUnit);
+    setStringProperty(mPointIntervalProperty.unit, pUnit);
 }
 
 //==============================================================================
@@ -66,7 +66,7 @@ double SingleCellSimulationViewInformationSimulationWidget::startingPoint() cons
 {
     // Return our starting point
 
-    return doublePropertyValue(mStartingPointIndex);
+    return doubleProperty(mStartingPointProperty.value);
 }
 
 //==============================================================================
@@ -75,7 +75,7 @@ void SingleCellSimulationViewInformationSimulationWidget::setStartingPoint(const
 {
     // Set our starting point
 
-    setDoublePropertyValue(mStartingPointIndex, pValue);
+    setDoubleProperty(mStartingPointProperty.value, pValue);
 }
 
 //==============================================================================
@@ -84,7 +84,7 @@ double SingleCellSimulationViewInformationSimulationWidget::endingPoint() const
 {
     // Return our ending point
 
-    return doublePropertyValue(mEndingPointIndex);
+    return doubleProperty(mEndingPointProperty.value);
 }
 
 //==============================================================================
@@ -93,7 +93,7 @@ void SingleCellSimulationViewInformationSimulationWidget::setEndingPoint(const d
 {
     // Set our ending point
 
-    setDoublePropertyValue(mEndingPointIndex, pValue);
+    setDoubleProperty(mEndingPointProperty.value, pValue);
 }
 
 //==============================================================================
@@ -102,7 +102,7 @@ double SingleCellSimulationViewInformationSimulationWidget::pointInterval() cons
 {
     // Return our point interval
 
-    return doublePropertyValue(mPointIntervalIndex);
+    return doubleProperty(mPointIntervalProperty.value);
 }
 
 //==============================================================================
@@ -111,7 +111,7 @@ void SingleCellSimulationViewInformationSimulationWidget::setPointInterval(const
 {
     // Set our point interval
 
-    setDoublePropertyValue(mPointIntervalIndex, pValue);
+    setDoubleProperty(mPointIntervalProperty.value, pValue);
 }
 
 //==============================================================================

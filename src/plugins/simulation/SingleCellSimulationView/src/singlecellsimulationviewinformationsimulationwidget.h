@@ -37,9 +37,9 @@ public:
     void setPointInterval(const double &pValue);
 
 private:
-    int mStartingPointIndex;
-    int mEndingPointIndex;
-    int mPointIntervalIndex;
+    Core::Property mStartingPointProperty;
+    Core::Property mEndingPointProperty;
+    Core::Property mPointIntervalProperty;
 };
 
 //==============================================================================
