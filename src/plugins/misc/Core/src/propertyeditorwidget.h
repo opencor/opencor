@@ -114,7 +114,7 @@ private:
 
 //==============================================================================
 
-struct Property
+struct CORE_EXPORT Property
 {
     PropertyItem *name;
     PropertyItem *value;
