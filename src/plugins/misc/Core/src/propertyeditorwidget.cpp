@@ -81,19 +81,6 @@ void DoubleEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
-ListEditorWidget::ListEditorWidget(QWidget *pParent) :
-    QComboBox(pParent)
-{
-#ifdef Q_WS_MAC
-//    setAttribute(Qt::WA_MacShowFocusRect, 0);
-    // Note: the above removes the focus border since it messes up the look of
-    //       our editor
-#endif
-//    setFrame(false);
-}
-
-//==============================================================================
-
 void ListEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Default handling of the event

@@ -49,9 +49,6 @@ class ListEditorWidget : public QComboBox
 {
     Q_OBJECT
 
-public:
-    explicit ListEditorWidget(QWidget *pParent = 0);
-
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
 
@@ -86,8 +83,7 @@ Q_SIGNALS:
 class CORE_EXPORT PropertyItem : public QStandardItem
 {
 public:
-    enum Type
-    {
+    enum Type {
         String = QStandardItem::UserType,
         Double = QStandardItem::UserType+1,
         List   = QStandardItem::UserType+2
