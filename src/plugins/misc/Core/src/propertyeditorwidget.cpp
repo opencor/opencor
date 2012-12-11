@@ -159,16 +159,51 @@ bool PropertyItemDelegate::eventFilter(QObject *pObject, QEvent *pEvent)
 
 //==============================================================================
 
-PropertyItem::PropertyItem(const Type &pType, const QStringList &pList) :
-    QStandardItem(),
-    mType(pType),
-    mList(pList),
-    mEmptyListValue(QString("???"))
+void PropertyItem::constructor(const Type &pType, const QString &pName,
+                               const QStringList &pList)
 {
+    // Some initialisations
+
+    mType = pType;
+    mList = pList;
+    mEmptyListValue = QString("???");
+
+    setText(pName);
+
     // If the property item is of string type, then it should not be editable
 
     if (pType == String)
         setFlags(flags() & ~Qt::ItemIsEditable);
+}
+
+//==============================================================================
+
+PropertyItem::PropertyItem(const Type &pType) :
+    QStandardItem()
+{
+    // Construct our object
+
+    constructor(pType, QString(), QStringList());
+}
+
+//==============================================================================
+
+PropertyItem::PropertyItem(const Type &pType, const QString &pName) :
+    QStandardItem()
+{
+    // Construct our object
+
+    constructor(pType, pName, QStringList());
+}
+
+//==============================================================================
+
+PropertyItem::PropertyItem(const Type &pType, const QStringList &pList) :
+    QStandardItem()
+{
+    // Construct our object
+
+    constructor(pType, QString(), pList);
 }
 
 //==============================================================================
@@ -375,6 +410,7 @@ void PropertyEditorWidget::selectFirstProperty()
 //==============================================================================
 
 int PropertyEditorWidget::addProperty(const PropertyItem::Type &pType,
+                                      const QString &pName,
                                       const QStringList &pList)
 {
     // Determine the index of our new property
@@ -383,7 +419,7 @@ int PropertyEditorWidget::addProperty(const PropertyItem::Type &pType,
 
     // Populate our data model with our new property
 
-    mModel->invisibleRootItem()->setChild(res, 0, new PropertyItem(PropertyItem::String));
+    mModel->invisibleRootItem()->setChild(res, 0, new PropertyItem(PropertyItem::String, pName));
     mModel->invisibleRootItem()->setChild(res, 1, new PropertyItem(pType, pList));
     mModel->invisibleRootItem()->setChild(res, 2, new PropertyItem(PropertyItem::String));
 
@@ -403,20 +439,21 @@ PropertyItem * PropertyEditorWidget::propertyValue(const int &pIndex) const
 
 //==============================================================================
 
-int PropertyEditorWidget::addDoubleProperty()
+int PropertyEditorWidget::addDoubleProperty(const QString &pName)
 {
     // Add a double property and return its index
 
-    return addProperty(PropertyItem::Double);
+    return addProperty(PropertyItem::Double, pName);
 }
 
 //==============================================================================
 
-int PropertyEditorWidget::addListProperty(const QStringList &pList)
+int PropertyEditorWidget::addListProperty(const QString &pName,
+                                          const QStringList &pList)
 {
     // Add a list property and retrieve its index
 
-    int res = addProperty(PropertyItem::List, pList);
+    int res = addProperty(PropertyItem::List, pName, pList);
 
     // Use the first item of our list as the default value, assuming the list is
     // not empty
@@ -431,6 +468,15 @@ int PropertyEditorWidget::addListProperty(const QStringList &pList)
     // Return the index of our list property
 
     return res;
+}
+
+//==============================================================================
+
+int PropertyEditorWidget::addListProperty(const QStringList &pList)
+{
+    // Add a list property and return its index
+
+    return addListProperty(QString(), pList);
 }
 
 //==============================================================================
