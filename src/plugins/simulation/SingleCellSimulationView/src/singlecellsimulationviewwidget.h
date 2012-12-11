@@ -77,8 +77,7 @@ public:
     SingleCellSimulationViewContentsWidget * contentsWidget() const;
 
 private:
-    enum ErrorType
-    {
+    enum ErrorType {
         General,
         InvalidCellmlFile,
         InvalidSimulationEnvironment

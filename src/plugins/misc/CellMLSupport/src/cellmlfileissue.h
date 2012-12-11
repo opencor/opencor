@@ -28,8 +28,7 @@ static const QString Cellml_1_1 = "1.1";
 class CELLMLSUPPORT_EXPORT CellmlFileIssue
 {
 public:
-    enum Type
-    {
+    enum Type {
         Error,
         Warning
     };

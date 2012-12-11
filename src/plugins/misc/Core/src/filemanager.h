@@ -34,8 +34,7 @@ class CORE_EXPORT FileManager : public QObject
     Q_OBJECT
 
 public:
-    enum Status
-    {
+    enum Status {
         // As a result of managing a file
 
         DoesNotExist,

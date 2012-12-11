@@ -52,8 +52,7 @@ class Plugin : public QObject
     Q_OBJECT
 
 public:
-    enum Status
-    {
+    enum Status {
         UndefinedStatus,
         NotFound,
         InvalidFormatVersion,

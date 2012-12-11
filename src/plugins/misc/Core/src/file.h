@@ -19,8 +19,7 @@ namespace Core {
 class File
 {
 public:
-    enum Status
-    {
+    enum Status {
         Changed,
         Unchanged,
         Deleted

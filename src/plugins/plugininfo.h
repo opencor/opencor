@@ -47,22 +47,19 @@ typedef QMap<QString, QString> Descriptions;
 class PluginInfo
 {
 public:
-    enum FormatVersion
-    {
+    enum FormatVersion {
         UndefinedFormatVersion,
         FormatVersion001
     };
 
-    enum Type
-    {
+    enum Type {
         UndefinedType,
         General,
         Console,
         Gui
     };
 
-    enum Category
-    {
+    enum Category {
         Organisation,
         Editing,
         Simulation,

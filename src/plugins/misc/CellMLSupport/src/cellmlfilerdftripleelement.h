@@ -29,8 +29,7 @@ namespace CellMLSupport {
 class CELLMLSUPPORT_EXPORT CellmlFileRdfTripleElement
 {
 public:
-    enum Type
-    {
+    enum Type {
         Id,
         UriReference,
         PlainLiteral,

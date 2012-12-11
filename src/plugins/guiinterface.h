@@ -48,8 +48,7 @@ class DockWidget;
 class GuiMenuSettings
 {
 public:
-    enum GuiMenuSettingsType
-    {
+    enum GuiMenuSettingsType {
         File,
         View
     };
@@ -73,8 +72,7 @@ private:
 class GuiMenuActionSettings
 {
 public:
-    enum GuiMenuActionSettingsType
-    {
+    enum GuiMenuActionSettingsType {
         File,
         FileNew
     };
@@ -95,8 +93,7 @@ private:
 class GuiViewSettings
 {
 public:
-    enum Mode
-    {
+    enum Mode {
         Editing,
         Simulation,
         Analysis
@@ -117,8 +114,7 @@ private:
 class GuiWindowSettings
 {
 public:
-    enum GuiWindowSettingsType
-    {
+    enum GuiWindowSettingsType {
         Organisation,
         Editing,
         Help

@@ -46,8 +46,7 @@ class CELLMLSUPPORT_EXPORT CellmlFileRuntime : public QObject
     Q_OBJECT
 
 public:
-    enum ModelType
-    {
+    enum ModelType {
         Ode,
         Dae,
         Undefined
