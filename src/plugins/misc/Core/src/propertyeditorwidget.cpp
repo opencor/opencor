@@ -245,6 +245,16 @@ void PropertyItem::setEmptyListValue(const QString &pEmptyListValue)
 
 //==============================================================================
 
+Property::Property(PropertyItem *pName, PropertyItem *pValue,
+                   PropertyItem *pUnit) :
+    name(pName),
+    value(pValue),
+    unit(pUnit)
+{
+}
+
+//==============================================================================
+
 void PropertyEditorWidget::constructor(const bool &pAutoUpdateHeight)
 {
     // Some initialisations
@@ -419,9 +429,9 @@ int PropertyEditorWidget::addProperty(const PropertyItem::Type &pType,
 
     // Populate our data model with our new property
 
-    mModel->invisibleRootItem()->setChild(res, 0, new PropertyItem(PropertyItem::String, pName));
-    mModel->invisibleRootItem()->setChild(res, 1, new PropertyItem(pType, pList));
-    mModel->invisibleRootItem()->setChild(res, 2, new PropertyItem(PropertyItem::String));
+    mModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << new PropertyItem(PropertyItem::String, pName)
+                                                                    << new PropertyItem(pType, pList)
+                                                                    << new PropertyItem(PropertyItem::String));
 
     // Return the index of our new property
 

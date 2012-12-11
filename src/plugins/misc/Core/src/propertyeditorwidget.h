@@ -114,6 +114,18 @@ private:
 
 //==============================================================================
 
+struct Property
+{
+    PropertyItem *name;
+    PropertyItem *value;
+    PropertyItem *unit;
+
+    explicit Property(PropertyItem *pName, PropertyItem *pValue,
+                      PropertyItem *pUnit);
+};
+
+//==============================================================================
+
 class CORE_EXPORT PropertyEditorWidget : public TreeViewWidget
 {
     Q_OBJECT
