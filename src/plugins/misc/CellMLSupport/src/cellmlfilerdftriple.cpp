@@ -463,7 +463,7 @@ bool CellmlFileRdfTriple::decodeTerm(const QString &pTerm, QString &pResource,
         // Remove the leading '#', if any, from the id
         // Note: semanticSBML does, for example, prepend a '#'...
 
-        if (pId.at(0) == '#')
+        if (pId[0] == '#')
             pId = pId.right(pId.size()-1);
     } else {
         // Not a term we can recognise, so...

@@ -47,7 +47,7 @@ QString CellmlFileIssue::formattedMessage() const
     // Return the issue's message fully formatted (i.e. the beginning of the
     // message is capitalised and its end consists of a full stop)
 
-    return mMessage.at(0).toUpper()+mMessage.right(mMessage.size()-1)+".";
+    return mMessage[0].toUpper()+mMessage.right(mMessage.size()-1)+".";
 }
 
 //==============================================================================

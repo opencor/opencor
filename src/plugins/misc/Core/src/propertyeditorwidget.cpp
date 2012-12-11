@@ -81,6 +81,13 @@ void DoubleEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
+ListEditorWidget::ListEditorWidget(QWidget *pParent) :
+    QComboBox(pParent)
+{
+}
+
+//==============================================================================
+
 void ListEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Default handling of the event
@@ -673,7 +680,7 @@ void PropertyEditorWidget::editorOpened(QWidget *pEditor)
         ListEditorWidget *propertyEditor = static_cast<ListEditorWidget *>(mPropertyEditor);
 
         for (int i = 0, iMax = propertyItem->list().count(); i < iMax; ++i)
-            if (!propertyItem->text().compare(propertyItem->list().at(i))) {
+            if (!propertyItem->text().compare(propertyItem->list()[i])) {
                 propertyEditor->setCurrentIndex(i);
 
                 break;

@@ -258,7 +258,7 @@ bool CollapsibleWidget::isCollapsed(const int &pIndex) const
 {
     // Return wheter our requested header is collapsed
 
-    return mHeaders.value(pIndex)?mHeaders.at(pIndex)->isCollapsed():false;
+    return mHeaders.value(pIndex)?mHeaders[pIndex]->isCollapsed():false;
 }
 
 //==============================================================================
@@ -268,7 +268,7 @@ void CollapsibleWidget::setCollapsed(const int &pIndex, const bool &pCollapsed)
     // Collapse or uncollapse our requested header
 
     if (mHeaders.value(pIndex))
-        mHeaders.at(pIndex)->setCollapsed(pCollapsed);
+        mHeaders[pIndex]->setCollapsed(pCollapsed);
 }
 
 //==============================================================================
@@ -277,7 +277,7 @@ QString CollapsibleWidget::headerTitle(const int &pIndex) const
 {
     // Return the title of our requested header
 
-    return mHeaders.value(pIndex)?mHeaders.at(pIndex)->title():QString();
+    return mHeaders.value(pIndex)?mHeaders[pIndex]->title():QString();
 }
 
 //==============================================================================
@@ -287,7 +287,7 @@ void CollapsibleWidget::setHeaderTitle(const int &pIndex, const QString &pTitle)
     // Set the title of our requested header
 
     if (mHeaders.value(pIndex))
-        mHeaders.at(pIndex)->setTitle(pTitle);
+        mHeaders[pIndex]->setTitle(pTitle);
 }
 
 //==============================================================================

@@ -594,7 +594,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
             else
                 labelText = tr("Sorry, but no terms were found for <strong>%1</strong>...").arg(mTerm);
         } else {
-            QString errorMsg = pErrorMsg.at(0).toLower()+pErrorMsg.right(pErrorMsg.size()-1);
+            QString errorMsg = pErrorMsg[0].toLower()+pErrorMsg.right(pErrorMsg.size()-1);
             QString dots = (errorMsg[errorMsg.size()-1] == '.')?"..":"...";
 
             labelText = tr("<strong>Error:</strong> ")+errorMsg+dots;

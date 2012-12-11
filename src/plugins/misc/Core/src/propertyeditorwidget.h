@@ -49,6 +49,9 @@ class ListEditorWidget : public QComboBox
 {
     Q_OBJECT
 
+public:
+    explicit ListEditorWidget(QWidget *pParent = 0);
+
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
 
