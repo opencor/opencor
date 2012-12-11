@@ -671,8 +671,30 @@ void PropertyEditorWidget::updateHeight()
 
 void PropertyEditorWidget::editorOpened(QWidget *pEditor)
 {
-    // We are starting the editing of a property, so use its editor as our focus
-    // proxy and make sure that it immediately gets the focus
+    // Keep track of some information about the property
+
+    mPropertyEditor = pEditor;
+    mPropertyIndex  = currentIndex().row();
+
+    // We are starting the editing of a property, so make sure that if we are to
+    // edit a list item, then its original value gets properly set
+    // Note: indeed, by default the first list item will be selected...
+
+    PropertyItem *propertyItem = propertyValue(mPropertyIndex);
+
+    if (propertyItem->type() == PropertyItem::List) {
+        ListEditorWidget *propertyEditor = static_cast<ListEditorWidget *>(mPropertyEditor);
+
+        for (int i = 0, iMax = propertyItem->list().count(); i < iMax; ++i)
+            if (!propertyItem->text().compare(propertyItem->list().at(i))) {
+                propertyEditor->setCurrentIndex(i);
+
+                break;
+            }
+    }
+
+    // Next, we need to use the property's editor as our focus proxy and make
+    // sure that it immediately gets the focus
     // Note: if we were not to immediately give the editor the focus, then the
     //       central widget would give the focus to the previously focused
     //       widget (see CentralWidget::updateGui()), so...
@@ -680,11 +702,6 @@ void PropertyEditorWidget::editorOpened(QWidget *pEditor)
     setFocusProxy(pEditor);
 
     pEditor->setFocus();
-
-    // Keep track of some information about the property
-
-    mPropertyEditor = pEditor;
-    mPropertyIndex  = currentIndex().row();
 }
 
 //==============================================================================
@@ -711,7 +728,7 @@ void PropertyEditorWidget::editorClosed()
 
     // Reset some information about the property
 
-    mPropertyEditor = 0;
+    mPropertyEditor =  0;
     mPropertyIndex  = -1;
 }
 
