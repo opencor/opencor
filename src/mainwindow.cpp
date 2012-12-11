@@ -214,13 +214,11 @@ MainWindow::MainWindow() :
             if (properties.count()) {
                 qDebug(" - Properties:");
 
-                Solver::Properties::const_iterator iter = properties.constBegin();
-                Solver::Properties::const_iterator iterEnd = properties.constEnd();
-
-                while (iter != iterEnd) {
+                for (int i = 0, iMax = properties.count(); i < iMax; ++i) {
+                    Solver::Property property = properties[i];
                     QString type;
 
-                    switch (iter.value()) {
+                    switch (property.type) {
                     case Solver::Double:
                         type = "Double";
 
@@ -233,9 +231,7 @@ MainWindow::MainWindow() :
                         type = "???";
                     }
 
-                    qDebug("    - %s: %s", qPrintable(iter.key()), qPrintable(type));
-
-                    ++iter;
+                    qDebug("    - %s: %s", qPrintable(property.name), qPrintable(type));
                 }
             } else {
                 qDebug(" - Properties: none");
