@@ -501,6 +501,16 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
             simulationError(tr("the model must have at least one ODE or DAE"),
                             InvalidCellmlFile);
         } else {
+            // Show our contents widget in case it got previously hidden
+            // Note: indeed, if it was to remain hidden then some
+            //       initialisations wouldn't work (e.g. the solvers widget has
+            //       property editor which all properties need to be removed and
+            //       if the contents widget is not visible, then upon
+            //       repopulating the property editor, scrollbars will be shown
+            //       even though they are not needed), so...
+
+            mContentsWidget->setVisible(true);
+
             // Retrieve the unit of our variable of integration
 
             mContentsWidget->informationWidget()->simulationWidget()->setUnit(cellmlFileRuntime->variableOfIntegration()->unit());
