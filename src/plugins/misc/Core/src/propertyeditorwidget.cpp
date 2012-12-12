@@ -302,9 +302,15 @@ void PropertyEditorWidget::constructor(const bool &pAutoUpdateHeight)
 
     setItemDelegate(mPropertyItemDelegate);
 
-    // Resize our height in case one of our header's sections gets resized
+    // Resize our height in case one of our header's sections gets resized, or
+    // one the properties gets expanded/collapsed
 
     connect(header(), SIGNAL(sectionResized(int, int, int)),
+            this, SLOT(updateHeight()));
+
+    connect(this, SIGNAL(collapsed(const QModelIndex &)),
+            this, SLOT(updateHeight()));
+    connect(this, SIGNAL(expanded(const QModelIndex &)),
             this, SLOT(updateHeight()));
 
     // Further customise ourselves
@@ -387,6 +393,26 @@ void PropertyEditorWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
+int PropertyEditorWidget::childrenRowHeight(const QStandardItem *pItem) const
+{
+    // Return the total height of the given index's children
+
+    int res = 0;
+
+    if (pItem->hasChildren())
+        for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i) {
+            QStandardItem *childItem = pItem->child(i, 0);
+            int childIndexHeight     = rowHeight(childItem->index());
+
+            if (childIndexHeight)
+                res += childIndexHeight+childrenRowHeight(childItem);
+        }
+
+    return res;
+}
+
+//==============================================================================
+
 QSize PropertyEditorWidget::sizeHint() const
 {
     // Return either our default/ideal size, depending on the case
@@ -402,8 +428,17 @@ QSize PropertyEditorWidget::sizeHint() const
         for (int i = 0, iMax = header()->count(); i < iMax; ++i)
             hintWidth += columnWidth(i);
 
-        for (int i = 0, iMax = mModel->rowCount(); i < iMax; ++i)
-            hintHeight += rowHeight(mModel->index(i, 0));
+        for (int i = 0, iMax = mModel->rowCount(); i < iMax; ++i) {
+            QStandardItem *rowItem = mModel->item(i, 0);
+            int rowItemHeight      = rowHeight(rowItem->index());
+
+            if (rowItemHeight)
+                // Our current row has some height, meaning that it is visible,
+                // so we can its height to ou hintHeight, as well as retrieve
+                // the total height of our row's children
+
+                hintHeight += rowItemHeight+childrenRowHeight(rowItem);
+        }
 
         return QSize(hintWidth, hintHeight);
     } else {
@@ -425,7 +460,8 @@ void PropertyEditorWidget::selectFirstProperty()
 
 //==============================================================================
 
-Property PropertyEditorWidget::addProperty(const PropertyItem::Type &pType)
+Property PropertyEditorWidget::addProperty(const Property &pParent,
+                                           const PropertyItem::Type &pType)
 {
     // Determine our new property's information
 
@@ -435,9 +471,23 @@ Property PropertyEditorWidget::addProperty(const PropertyItem::Type &pType)
 
     // Populate our data model with our new property
 
-    mModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << res.name
-                                                                    << res.value
-                                                                    << res.unit);
+    if (pParent.isEmpty()) {
+        // We want to add a root property
+
+        mModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << res.name
+                                                                        << res.value
+                                                                        << res.unit);
+    } else {
+        // We want to add a child property
+
+        pParent.name->appendRow(QList<QStandardItem *>() << res.name
+                                                         << res.value
+                                                         << res.unit);
+
+        // If we want to see the child property, we need root decoration
+
+        setRootIsDecorated(true);
+    }
 
     // Return our new property's information
 
@@ -446,20 +496,38 @@ Property PropertyEditorWidget::addProperty(const PropertyItem::Type &pType)
 
 //==============================================================================
 
-Property PropertyEditorWidget::addDoubleProperty()
+Property PropertyEditorWidget::addCategoryProperty(const Property &pParent)
 {
-    // Add a double property and return its information
+    // Add a category property and return its information
 
-    return addProperty(PropertyItem::Double);
+    return addProperty(pParent, PropertyItem::Empty);
 }
 
 //==============================================================================
 
-Property PropertyEditorWidget::addListProperty()
+Property PropertyEditorWidget::addIntegerProperty(const Property &pParent)
+{
+    // Add an integer property and return its information
+
+    return addProperty(pParent, PropertyItem::Integer);
+}
+
+//==============================================================================
+
+Property PropertyEditorWidget::addDoubleProperty(const Property &pParent)
+{
+    // Add a double property and return its information
+
+    return addProperty(pParent, PropertyItem::Double);
+}
+
+//==============================================================================
+
+Property PropertyEditorWidget::addListProperty(const Property &pParent)
 {
     // Add a list property and return its information
 
-    return addProperty(PropertyItem::List);
+    return addProperty(pParent, PropertyItem::List);
 }
 
 //==============================================================================
@@ -577,6 +645,10 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 
 void PropertyEditorWidget::mousePressEvent(QMouseEvent *pEvent)
 {
+    // Default handling of the event
+
+    TreeViewWidget::mousePressEvent(pEvent);
+
     // Start/stop the editing of the property
 
     Property mouseProperty = property(indexAt(pEvent->pos()).row());
@@ -610,6 +682,10 @@ void PropertyEditorWidget::mousePressEvent(QMouseEvent *pEvent)
 
 void PropertyEditorWidget::mouseMoveEvent(QMouseEvent *pEvent)
 {
+    // Default handling of the event
+
+    TreeViewWidget::mouseMoveEvent(pEvent);
+
     // Edit the property, but only if we want to edit a new one
 
     Property mouseProperty = property(indexAt(pEvent->pos()).row());
@@ -796,7 +872,7 @@ void PropertyEditorWidget::removeAllProperties()
 
     mModel->removeRows(0, mModel->rowCount());
 
-    // By default, we don't want root to be decorated
+    // By default, we don't want root decoration
 
     setRootIsDecorated(false);
 }

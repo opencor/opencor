@@ -54,11 +54,20 @@ private:
     bool mNeedNlaSolver;
 
     Core::Property mOdeSolversProperty;
-    Core::Property mDaeSolversProperty;
-    Core::Property mNlaSolversProperty;
+    Core::Property mOdeSolversListProperty;
 
-    Core::Property addSolverProperties(const SolverInterfaces &pSolverInterfaces,
-                                       const Solver::Type &pSolverType);
+    Core::Property mDaeSolversProperty;
+    Core::Property mDaeSolversListProperty;
+
+    Core::Property mNlaSolversProperty;
+    Core::Property mNlaSolversListProperty;
+
+    QMap<QString, Core::Properties> mSolversProperties;
+
+    void addSolverProperties(const SolverInterfaces &pSolverInterfaces,
+                             const Solver::Type &pSolverType,
+                             Core::Property &pSolversProperty,
+                             Core::Property &pSolversListProperty);
 };
 
 //==============================================================================

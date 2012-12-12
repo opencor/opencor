@@ -87,9 +87,11 @@ class CORE_EXPORT PropertyItem : public QStandardItem
 {
 public:
     enum Type {
-        String = QStandardItem::UserType,
-        Double = QStandardItem::UserType+1,
-        List   = QStandardItem::UserType+2
+        Empty   = QStandardItem::UserType,
+        String  = QStandardItem::UserType+1,
+        Integer = QStandardItem::UserType+2,
+        Double  = QStandardItem::UserType+3,
+        List    = QStandardItem::UserType+4
     };
 
     explicit PropertyItem(const Type &pType);
@@ -126,6 +128,10 @@ struct CORE_EXPORT Property
 
 //==============================================================================
 
+typedef QList<Property> Properties;
+
+//==============================================================================
+
 class CORE_EXPORT PropertyEditorWidget : public TreeViewWidget
 {
     Q_OBJECT
@@ -144,8 +150,10 @@ public:
 
     void selectFirstProperty();
 
-    Property addDoubleProperty();
-    Property addListProperty();
+    Property addCategoryProperty(const Property &pParent = Property());
+    Property addIntegerProperty(const Property &pParent = Property());
+    Property addDoubleProperty(const Property &pParent = Property());
+    Property addListProperty(const Property &pParent = Property());
 
     void setStringProperty(PropertyItem *pPropertyItem, const QString &pValue);
 
@@ -178,7 +186,8 @@ private:
 
     void constructor(const bool &pAutoUpdateHeight = false);
 
-    Property addProperty(const PropertyItem::Type &pType);
+    Property addProperty(const Property &pParent,
+                         const PropertyItem::Type &pType);
 
     void editProperty(const Property &pProperty,
                       const bool &pCommitData = true);
@@ -187,6 +196,8 @@ private:
 
     Property property(const int &pRow) const;
     Property currentProperty() const;
+
+    int childrenRowHeight(const QStandardItem *pItem) const;
 
 private Q_SLOTS:
     void updateHeight();

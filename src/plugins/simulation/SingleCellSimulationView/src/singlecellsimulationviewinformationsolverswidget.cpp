@@ -31,20 +31,23 @@ void SingleCellSimulationViewInformationSolversWidget::retranslateUi()
 
     if (!mOdeSolversProperty.isEmpty()) {
         setStringProperty(mOdeSolversProperty.name, tr("ODE solver"));
+        setStringProperty(mOdeSolversListProperty.name, tr("Name"));
 
-        mOdeSolversProperty.value->setEmptyListValue(tr("None available"));
+        mOdeSolversListProperty.value->setEmptyListValue(tr("None available"));
     }
 
     if (!mDaeSolversProperty.isEmpty()) {
         setStringProperty(mDaeSolversProperty.name, tr("DAE solver"));
+        setStringProperty(mDaeSolversListProperty.name, tr("Name"));
 
-        mDaeSolversProperty.value->setEmptyListValue(tr("None available"));
+        mDaeSolversListProperty.value->setEmptyListValue(tr("None available"));
     }
 
     if (!mNlaSolversProperty.isEmpty()) {
         setStringProperty(mNlaSolversProperty.name, tr("NLA solver"));
+        setStringProperty(mNlaSolversListProperty.name, tr("Name"));
 
-        mNlaSolversProperty.value->setEmptyListValue(tr("None available"));
+        mNlaSolversListProperty.value->setEmptyListValue(tr("None available"));
     }
 
     // Default retranslation
@@ -56,17 +59,27 @@ void SingleCellSimulationViewInformationSolversWidget::retranslateUi()
 
 //==============================================================================
 
-Core::Property SingleCellSimulationViewInformationSolversWidget::addSolverProperties(const SolverInterfaces &pSolverInterfaces,
-                                                                                     const Solver::Type &pSolverType)
+void SingleCellSimulationViewInformationSolversWidget::addSolverProperties(const SolverInterfaces &pSolverInterfaces,
+                                                                           const Solver::Type &pSolverType,
+                                                                           Core::Property &pSolversProperty,
+                                                                           Core::Property &pSolversListProperty)
 {
     // Make sure that we have at least one solver interface
 
-    if (pSolverInterfaces.isEmpty())
-        return Core::Property();
+    if (pSolverInterfaces.isEmpty()) {
+        pSolversProperty     = Core::Property();
+        pSolversListProperty = Core::Property();
 
-    // Add our list property
+        return;
+    }
 
-    Core::Property res = addListProperty();
+    // Add our category property
+
+    pSolversProperty = addCategoryProperty();
+
+    // Add our list property for the solvers
+
+    pSolversListProperty = addListProperty(pSolversProperty);
 
     // Retrieve the name of the solvers which type is the one we are interested
     // in
@@ -74,14 +87,48 @@ Core::Property SingleCellSimulationViewInformationSolversWidget::addSolverProper
     QStringList solvers = QStringList();
 
     foreach (SolverInterface *solverInterface, pSolverInterfaces)
-        if (solverInterface->type() == pSolverType)
+        if (solverInterface->type() == pSolverType) {
+            // Keep track of the solver's name
+
             solvers << solverInterface->name();
 
-    res.value->setList(solvers);
+            // Add the solver's properties
 
-    // Return the property that contains the solver interfaces
+            Core::Property property;
+            Core::Properties properties = Core::Properties();
 
-    return res;
+            foreach (const Solver::Property &solverInterfaceProperty,
+                     solverInterface->properties()) {
+                // Add the solver's property
+
+                switch (solverInterfaceProperty.type) {
+                case Solver::Double:
+                    property = addDoubleProperty(pSolversProperty);
+
+                    break;
+                default:
+                    // Solver::Integer
+
+                    property = addIntegerProperty(pSolversProperty);
+                }
+
+                // Set the solver's property name
+
+                setStringProperty(property.name, solverInterfaceProperty.name);
+
+                // Keep track of the solver's property
+
+                properties << property;
+            }
+
+            // Keep track of the solver's properties
+
+            mSolversProperties.insert(solverInterface->name(), properties);
+        }
+
+    // Add the list of solvers to our list property value item
+
+    pSolversListProperty.value->setList(solvers);
 }
 
 //==============================================================================
@@ -94,9 +141,9 @@ void SingleCellSimulationViewInformationSolversWidget::setSolverInterfaces(const
 
     // Add properties for our different solvers
 
-    mOdeSolversProperty = addSolverProperties(pSolverInterfaces, Solver::Ode);
-    mDaeSolversProperty = addSolverProperties(pSolverInterfaces, Solver::Dae);
-    mNlaSolversProperty = addSolverProperties(pSolverInterfaces, Solver::Nla);
+    addSolverProperties(pSolverInterfaces, Solver::Ode, mOdeSolversProperty, mOdeSolversListProperty);
+    addSolverProperties(pSolverInterfaces, Solver::Dae, mDaeSolversProperty, mDaeSolversListProperty);
+    addSolverProperties(pSolverInterfaces, Solver::Nla, mNlaSolversProperty, mNlaSolversListProperty);
 }
 
 //==============================================================================
@@ -167,7 +214,7 @@ QStringList SingleCellSimulationViewInformationSolversWidget::odeSolvers() const
 {
     // Return the available ODE solvers, if any
 
-    return mOdeSolversProperty.isEmpty()?QStringList():mOdeSolversProperty.value->list();
+    return mOdeSolversListProperty.isEmpty()?QStringList():mOdeSolversListProperty.value->list();
 }
 
 //==============================================================================
@@ -176,7 +223,7 @@ QStringList SingleCellSimulationViewInformationSolversWidget::daeSolvers() const
 {
     // Return the available DAE solvers, if any
 
-    return mDaeSolversProperty.isEmpty()?QStringList():mDaeSolversProperty.value->list();
+    return mDaeSolversListProperty.isEmpty()?QStringList():mDaeSolversListProperty.value->list();
 }
 
 //==============================================================================
@@ -185,7 +232,7 @@ QStringList SingleCellSimulationViewInformationSolversWidget::nlaSolvers() const
 {
     // Return the available NLA solvers, if any
 
-    return mNlaSolversProperty.isEmpty()?QStringList():mNlaSolversProperty.value->list();
+    return mNlaSolversListProperty.isEmpty()?QStringList():mNlaSolversListProperty.value->list();
 }
 
 //==============================================================================

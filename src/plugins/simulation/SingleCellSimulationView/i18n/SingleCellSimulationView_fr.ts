@@ -34,6 +34,10 @@
         <source>None available</source>
         <translation>Aucun disponible</translation>
     </message>
+    <message>
+        <source>Name</source>
+        <translation>Nom</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::SingleCellSimulationView::SingleCellSimulationViewInformationWidget</name>
