@@ -159,51 +159,16 @@ bool PropertyItemDelegate::eventFilter(QObject *pObject, QEvent *pEvent)
 
 //==============================================================================
 
-void PropertyItem::constructor(const Type &pType, const QString &pName,
-                               const QStringList &pList)
+PropertyItem::PropertyItem(const Type &pType) :
+    QStandardItem(),
+    mType(pType),
+    mList(QStringList()),
+    mEmptyListValue(QString("???"))
 {
-    // Some initialisations
-
-    mType = pType;
-    mList = pList;
-    mEmptyListValue = QString("???");
-
-    setText(pName);
-
     // If the property item is of string type, then it should not be editable
 
     if (pType == String)
         setFlags(flags() & ~Qt::ItemIsEditable);
-}
-
-//==============================================================================
-
-PropertyItem::PropertyItem(const Type &pType) :
-    QStandardItem()
-{
-    // Construct our object
-
-    constructor(pType, QString(), QStringList());
-}
-
-//==============================================================================
-
-PropertyItem::PropertyItem(const Type &pType, const QString &pName) :
-    QStandardItem()
-{
-    // Construct our object
-
-    constructor(pType, pName, QStringList());
-}
-
-//==============================================================================
-
-PropertyItem::PropertyItem(const Type &pType, const QStringList &pList) :
-    QStandardItem()
-{
-    // Construct our object
-
-    constructor(pType, QString(), pList);
 }
 
 //==============================================================================
@@ -226,6 +191,29 @@ QStringList PropertyItem::list() const
 
 //==============================================================================
 
+void PropertyItem::setList(const QStringList &pList)
+{
+    // Set the value of our list, if appropriate
+
+    if ((mType == List) && (pList != mList)) {
+        // Keep track of the list
+
+        mList = pList;
+
+        // Use the first item of our list as the default value, assuming the
+        // list is not empty
+
+        if (pList.isEmpty())
+            // The list is empty, so...
+
+            setText(mEmptyListValue);
+        else
+            setText(pList.first());
+    }
+}
+
+//==============================================================================
+
 QString PropertyItem::emptyListValue() const
 {
     // Return the property item's empty list value
@@ -239,7 +227,7 @@ void PropertyItem::setEmptyListValue(const QString &pEmptyListValue)
 {
     // Set the value of our empty list value, if needed
 
-    if (pEmptyListValue.compare(mEmptyListValue))
+    if ((mType == List) && pEmptyListValue.compare(mEmptyListValue))
         mEmptyListValue = pEmptyListValue;
 }
 
@@ -437,14 +425,12 @@ void PropertyEditorWidget::selectFirstProperty()
 
 //==============================================================================
 
-Property PropertyEditorWidget::addProperty(const PropertyItem::Type &pType,
-                                           const QString &pName,
-                                           const QStringList &pList)
+Property PropertyEditorWidget::addProperty(const PropertyItem::Type &pType)
 {
     // Determine our new property's information
 
-    Property res = Property(new PropertyItem(PropertyItem::String, pName),
-                            new PropertyItem(pType, pList),
+    Property res = Property(new PropertyItem(PropertyItem::String),
+                            new PropertyItem(pType),
                             new PropertyItem(PropertyItem::String));
 
     // Populate our data model with our new property
@@ -460,44 +446,20 @@ Property PropertyEditorWidget::addProperty(const PropertyItem::Type &pType,
 
 //==============================================================================
 
-Property PropertyEditorWidget::addDoubleProperty(const QString &pName)
+Property PropertyEditorWidget::addDoubleProperty()
 {
     // Add a double property and return its information
 
-    return addProperty(PropertyItem::Double, pName);
+    return addProperty(PropertyItem::Double);
 }
 
 //==============================================================================
 
-Property PropertyEditorWidget::addListProperty(const QString &pName,
-                                          const QStringList &pList)
-{
-    // Add a list property and retrieve its information
-
-    Property res = addProperty(PropertyItem::List, pName, pList);
-
-    // Use the first item of our list as the default value, assuming the list is
-    // not empty
-
-    if (pList.isEmpty())
-        // The list is empty, so...
-
-        res.value->setText(res.value->emptyListValue());
-    else
-        res.value->setText(pList.first());
-
-    // Return our list property's information
-
-    return res;
-}
-
-//==============================================================================
-
-Property PropertyEditorWidget::addListProperty(const QStringList &pList)
+Property PropertyEditorWidget::addListProperty()
 {
     // Add a list property and return its information
 
-    return addListProperty(QString(), pList);
+    return addProperty(PropertyItem::List);
 }
 
 //==============================================================================

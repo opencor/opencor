@@ -93,12 +93,11 @@ public:
     };
 
     explicit PropertyItem(const Type &pType);
-    explicit PropertyItem(const Type &pType, const QString &pName);
-    explicit PropertyItem(const Type &pType, const QStringList &pList);
 
     virtual int type() const;
 
     QStringList list() const;
+    void setList(const QStringList &pList);
 
     QString emptyListValue() const;
     void setEmptyListValue(const QString &pEmptyListValue);
@@ -107,9 +106,6 @@ private:
     Type mType;
     QStringList mList;
     QString mEmptyListValue;
-
-    void constructor(const Type &pType, const QString &pName,
-                     const QStringList &pList);
 };
 
 //==============================================================================
@@ -148,10 +144,8 @@ public:
 
     void selectFirstProperty();
 
-    Property addDoubleProperty(const QString &pName = QString());
-
-    Property addListProperty(const QString &pName, const QStringList &pList);
-    Property addListProperty(const QStringList &pList);
+    Property addDoubleProperty();
+    Property addListProperty();
 
     void setStringProperty(PropertyItem *pPropertyItem, const QString &pValue);
 
@@ -184,8 +178,7 @@ private:
 
     void constructor(const bool &pAutoUpdateHeight = false);
 
-    Property addProperty(const PropertyItem::Type &pType, const QString &pName,
-                         const QStringList &pList = QStringList());
+    Property addProperty(const PropertyItem::Type &pType);
 
     void editProperty(const Property &pProperty,
                       const bool &pCommitData = true);

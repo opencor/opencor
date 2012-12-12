@@ -59,6 +59,15 @@ void SingleCellSimulationViewInformationSolversWidget::retranslateUi()
 Core::Property SingleCellSimulationViewInformationSolversWidget::addSolverProperties(const SolverInterfaces &pSolverInterfaces,
                                                                                      const Solver::Type &pSolverType)
 {
+    // Make sure that we have at least one solver interface
+
+    if (pSolverInterfaces.isEmpty())
+        return Core::Property();
+
+    // Add our list property
+
+    Core::Property res = addListProperty();
+
     // Retrieve the name of the solvers which type is the one we are interested
     // in
 
@@ -68,9 +77,11 @@ Core::Property SingleCellSimulationViewInformationSolversWidget::addSolverProper
         if (solverInterface->type() == pSolverType)
             solvers << solverInterface->name();
 
-    // Return the property that contains the requested solvers
+    res.value->setList(solvers);
 
-    return solvers.isEmpty()?Core::Property():addListProperty(solvers);
+    // Return the property that contains the solver interfaces
+
+    return res;
 }
 
 //==============================================================================
