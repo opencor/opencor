@@ -534,6 +534,8 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
             qDebug("---------------------------------------");
             qDebug("%s", qPrintable(pFileName));
 
+            information = QString();
+
             if (solversWidget->needOdeSolver()) {
                 information += "\n - ODE solver(s): ";
 
@@ -579,7 +581,8 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
                     information += "none available";
             }
 
-            qDebug("%s", qPrintable(information));
+            qDebug("%s", qPrintable(information.remove(0, 1)));
+            // Note: we must remove the leading '\n'...
 #endif
 
             // Check whether we have at least one ODE/DAE solver and, if needed,
