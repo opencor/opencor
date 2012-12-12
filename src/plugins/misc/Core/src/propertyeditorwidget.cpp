@@ -833,6 +833,31 @@ void PropertyEditorWidget::removeAllProperties()
     // Remove all the properties we currently hold
 
     mModel->removeRows(0, mModel->rowCount());
+
+    // By default, we don't want root to be decorated
+
+    setRootIsDecorated(false);
+}
+
+//==============================================================================
+
+void PropertyEditorWidget::setPropertyVisible(const Property &pProperty,
+                                              const bool &pVisible)
+{
+    // Show/hide the property, if not empty
+
+    if (pProperty.isEmpty())
+        return;
+
+    setRowHidden(pProperty.name->row(),
+                 pProperty.name->parent()?
+                     pProperty.name->parent()->index():
+                     mModel->invisibleRootItem()->index(),
+                 !pVisible);
+
+    // Make sure that our height is correct
+
+    updateHeight();
 }
 
 //==============================================================================

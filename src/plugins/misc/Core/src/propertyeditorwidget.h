@@ -162,6 +162,8 @@ public:
 
     void removeAllProperties();
 
+    void setPropertyVisible(const Property &pProperty, const bool &pVisible);
+
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
 
