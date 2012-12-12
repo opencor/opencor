@@ -69,14 +69,21 @@ void SingleCellSimulationViewPlugin::initializationsDone(const Plugins &pLoadedP
 {
     // Retrieve the different solvers that are available to us
 
+    SolverInterfaces solverInterfaces = SolverInterfaces();
+
     foreach (Plugin *loadedPlugin, pLoadedPlugins) {
         SolverInterface *solverInterface = qobject_cast<SolverInterface *>(loadedPlugin->instance());
 
         if (solverInterface)
             // The plugin implements our solver interface, so...
 
-            mViewWidget->addSolverInterface(solverInterface);
+            solverInterfaces << solverInterface;
     }
+
+    // Initialise our view widget with the different solvers that are available
+    // to us
+
+    mViewWidget->setSolverInterfaces(solverInterfaces);
 }
 
 //==============================================================================

@@ -35,21 +35,30 @@ public:
 
     virtual void retranslateUi();
 
+    void setSolverInterfaces(const SolverInterfaces &pSolverInterfaces);
+
     void initialize(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
                     const SolverInterfaces &pSolverInterfaces);
 
     bool needOdeSolver() const;
+    bool needDaeSolver() const;
     bool needNlaSolver() const;
 
-    QStringList odeOrDaeSolvers() const;
+    QStringList odeSolvers() const;
+    QStringList daeSolvers() const;
     QStringList nlaSolvers() const;
 
 private:
     bool mNeedOdeSolver;
+    bool mNeedDaeSolver;
     bool mNeedNlaSolver;
 
-    Core::Property mOdeOrDaeSolversProperty;
+    Core::Property mOdeSolversProperty;
+    Core::Property mDaeSolversProperty;
     Core::Property mNlaSolversProperty;
+
+    Core::Property addSolverProperties(const SolverInterfaces &pSolverInterfaces,
+                                       const Solver::Type &pSolverType);
 };
 
 //==============================================================================
