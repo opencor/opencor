@@ -30,22 +30,22 @@ void SingleCellSimulationViewInformationSolversWidget::retranslateUi()
     // Update our property names
 
     if (!mOdeSolversProperty.isEmpty()) {
-        setStringProperty(mOdeSolversProperty.name, tr("ODE solver"));
-        setStringProperty(mOdeSolversListProperty.name, tr("Name"));
+        setNonEditablePropertyItem(mOdeSolversProperty.name, tr("ODE solver"));
+        setNonEditablePropertyItem(mOdeSolversListProperty.name, tr("Name"));
 
         mOdeSolversListProperty.value->setEmptyListValue(tr("None available"));
     }
 
     if (!mDaeSolversProperty.isEmpty()) {
-        setStringProperty(mDaeSolversProperty.name, tr("DAE solver"));
-        setStringProperty(mDaeSolversListProperty.name, tr("Name"));
+        setNonEditablePropertyItem(mDaeSolversProperty.name, tr("DAE solver"));
+        setNonEditablePropertyItem(mDaeSolversListProperty.name, tr("Name"));
 
         mDaeSolversListProperty.value->setEmptyListValue(tr("None available"));
     }
 
     if (!mNlaSolversProperty.isEmpty()) {
-        setStringProperty(mNlaSolversProperty.name, tr("NLA solver"));
-        setStringProperty(mNlaSolversListProperty.name, tr("Name"));
+        setNonEditablePropertyItem(mNlaSolversProperty.name, tr("NLA solver"));
+        setNonEditablePropertyItem(mNlaSolversListProperty.name, tr("Name"));
 
         mNlaSolversListProperty.value->setEmptyListValue(tr("None available"));
     }
@@ -114,7 +114,7 @@ void SingleCellSimulationViewInformationSolversWidget::addSolverProperties(const
 
                 // Set the solver's property name
 
-                setStringProperty(property.name, solverInterfaceProperty.name);
+                setNonEditablePropertyItem(property.name, solverInterfaceProperty.name);
 
                 // Keep track of the solver's property
 

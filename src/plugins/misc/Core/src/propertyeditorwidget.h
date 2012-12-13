@@ -87,11 +87,10 @@ class CORE_EXPORT PropertyItem : public QStandardItem
 {
 public:
     enum Type {
-        Empty   = QStandardItem::UserType,
-        String  = QStandardItem::UserType+1,
-        Integer = QStandardItem::UserType+2,
-        Double  = QStandardItem::UserType+3,
-        List    = QStandardItem::UserType+4
+        Category = QStandardItem::UserType,
+        Integer  = QStandardItem::UserType+1,
+        Double   = QStandardItem::UserType+2,
+        List     = QStandardItem::UserType+3
     };
 
     explicit PropertyItem(const Type &pType);
@@ -114,16 +113,23 @@ private:
 
 struct CORE_EXPORT Property
 {
-    PropertyItem *name;
+    QStandardItem *name;
     PropertyItem *value;
-    PropertyItem *unit;
+    QStandardItem *unit;
 
-    explicit Property(PropertyItem *pName = 0, PropertyItem *pValue = 0,
-                      PropertyItem *pUnit = 0);
+    explicit Property();
+    explicit Property(const PropertyItem::Type &pType);
+    explicit Property(QStandardItem *pName, PropertyItem *pValue,
+                      QStandardItem *pUnit);
 
     bool operator!=(const Property &pOther) const;
 
     bool isEmpty() const;
+
+    QList<QStandardItem *> items() const;
+
+private:
+    QStandardItem * nonEditableItem() const;
 };
 
 //==============================================================================
@@ -155,10 +161,12 @@ public:
     Property addDoubleProperty(const Property &pParent = Property());
     Property addListProperty(const Property &pParent = Property());
 
-    void setStringProperty(PropertyItem *pPropertyItem, const QString &pValue);
+    void setNonEditablePropertyItem(QStandardItem *pPropertyItem,
+                                    const QString &pValue);
 
-    double doubleProperty(PropertyItem *pPropertyItem) const;
-    void setDoubleProperty(PropertyItem *pPropertyItem, const double &pValue);
+    double doublePropertyItem(PropertyItem *pPropertyItem) const;
+    void setDoublePropertyItem(PropertyItem *pPropertyItem,
+                               const double &pValue);
 
     void cancelPropertyEditing();
 

@@ -165,10 +165,6 @@ PropertyItem::PropertyItem(const Type &pType) :
     mList(QStringList()),
     mEmptyListValue(QString("???"))
 {
-    // If the property item is of string type, then it should not be editable
-
-    if (pType == String)
-        setFlags(flags() & ~Qt::ItemIsEditable);
 }
 
 //==============================================================================
@@ -233,12 +229,43 @@ void PropertyItem::setEmptyListValue(const QString &pEmptyListValue)
 
 //==============================================================================
 
-Property::Property(PropertyItem *pName, PropertyItem *pValue,
-                   PropertyItem *pUnit) :
+Property::Property() :
+    name(0),
+    value(0),
+    unit(0)
+{
+}
+
+//==============================================================================
+
+Property::Property(const PropertyItem::Type &pType) :
+    name(nonEditableItem()),
+    value(new PropertyItem(pType)),
+    unit(nonEditableItem())
+{
+}
+
+//==============================================================================
+
+Property::Property(QStandardItem *pName, PropertyItem *pValue,
+                   QStandardItem *pUnit) :
     name(pName),
     value(pValue),
     unit(pUnit)
 {
+}
+
+//==============================================================================
+
+QStandardItem * Property::nonEditableItem() const
+{
+    // Create and return a non-editable item
+
+    QStandardItem *res = new QStandardItem();
+
+    res->setFlags(res->flags() & ~Qt::ItemIsEditable);
+
+    return res;
 }
 
 //==============================================================================
@@ -257,6 +284,15 @@ bool Property::isEmpty() const
     // Return whether the property is empty
 
     return !name && !value && !unit;
+}
+
+//==============================================================================
+
+QList<QStandardItem *> Property::items() const
+{
+    // Return our items as a list
+
+    return QList<QStandardItem *>() << name << value << unit;
 }
 
 //==============================================================================
@@ -465,24 +501,18 @@ Property PropertyEditorWidget::addProperty(const Property &pParent,
 {
     // Determine our new property's information
 
-    Property res = Property(new PropertyItem(PropertyItem::String),
-                            new PropertyItem(pType),
-                            new PropertyItem(PropertyItem::String));
+    Property res = Property(pType);
 
     // Populate our data model with our new property
 
     if (pParent.isEmpty()) {
         // We want to add a root property
 
-        mModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << res.name
-                                                                        << res.value
-                                                                        << res.unit);
+        mModel->invisibleRootItem()->appendRow(res.items());
     } else {
         // We want to add a child property
 
-        pParent.name->appendRow(QList<QStandardItem *>() << res.name
-                                                         << res.value
-                                                         << res.unit);
+        pParent.name->appendRow(res.items());
 
         // If we want to see the child property, we need root decoration
 
@@ -500,7 +530,7 @@ Property PropertyEditorWidget::addCategoryProperty(const Property &pParent)
 {
     // Add a category property and return its information
 
-    return addProperty(pParent, PropertyItem::Empty);
+    return addProperty(pParent, PropertyItem::Category);
 }
 
 //==============================================================================
@@ -532,20 +562,21 @@ Property PropertyEditorWidget::addListProperty(const Property &pParent)
 
 //==============================================================================
 
-void PropertyEditorWidget::setStringProperty(PropertyItem *pPropertyItem,
-                                             const QString &pValue)
+void PropertyEditorWidget::setNonEditablePropertyItem(QStandardItem *pPropertyItem,
+                                                      const QString &pValue)
 {
-    // Set the value of the given string property, if valid
+    // Set the value of the given non-editable property item, if it exists
 
-    if (pPropertyItem && (pPropertyItem->type() == PropertyItem::String))
+    if (pPropertyItem)
         pPropertyItem->setText(pValue);
 }
 
 //==============================================================================
 
-double PropertyEditorWidget::doubleProperty(PropertyItem *pPropertyItem) const
+double PropertyEditorWidget::doublePropertyItem(PropertyItem *pPropertyItem) const
 {
-    // Return the value of the given double property, if valid
+    // Return the value of the given double property item, if it exists and is
+    // valid
 
     if (pPropertyItem && (pPropertyItem->type() == PropertyItem::Double))
         return pPropertyItem->text().toDouble();
@@ -557,10 +588,11 @@ double PropertyEditorWidget::doubleProperty(PropertyItem *pPropertyItem) const
 
 //==============================================================================
 
-void PropertyEditorWidget::setDoubleProperty(PropertyItem *pPropertyItem,
-                                             const double &pValue)
+void PropertyEditorWidget::setDoublePropertyItem(PropertyItem *pPropertyItem,
+                                                 const double &pValue)
 {
-    // Set the value of the given double property, if valid
+    // Set the value of the given double property item, if it exists and is
+    // valid
 
     if (pPropertyItem && (pPropertyItem->type() == PropertyItem::Double))
         pPropertyItem->setText(QString::number(pValue));
@@ -646,6 +678,8 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 void PropertyEditorWidget::mousePressEvent(QMouseEvent *pEvent)
 {
     // Default handling of the event
+    // Note: we make use of it so that when double clicking a category, it gets
+    //       expanded/collapsed...
 
     TreeViewWidget::mousePressEvent(pEvent);
 
@@ -682,10 +716,6 @@ void PropertyEditorWidget::mousePressEvent(QMouseEvent *pEvent)
 
 void PropertyEditorWidget::mouseMoveEvent(QMouseEvent *pEvent)
 {
-    // Default handling of the event
-
-    TreeViewWidget::mouseMoveEvent(pEvent);
-
     // Edit the property, but only if we want to edit a new one
 
     Property mouseProperty = property(indexAt(pEvent->pos()).row());
@@ -752,8 +782,8 @@ void PropertyEditorWidget::editorOpened(QWidget *pEditor)
 {
     // Keep track of some information about the property
 
-    mPropertyEditor = pEditor;
     mProperty       = currentProperty();
+    mPropertyEditor = pEditor;
 
     // We are starting the editing of a property, so make sure that if we are to
     // edit a list item, then its original value gets properly set
@@ -803,8 +833,8 @@ void PropertyEditorWidget::editorClosed()
 
     // Reset some information about the property
 
-    mPropertyEditor = 0;
     mProperty       = Property();
+    mPropertyEditor = 0;
 }
 
 //==============================================================================
@@ -936,9 +966,9 @@ Property PropertyEditorWidget::property(const int &pRow) const
 {
     // Return some information about the property at the given row
 
-    return Property(static_cast<PropertyItem *>(mModel->itemFromIndex(mModel->index(pRow, 0))),
+    return Property(mModel->itemFromIndex(mModel->index(pRow, 0)),
                     static_cast<PropertyItem *>(mModel->itemFromIndex(mModel->index(pRow, 1))),
-                    static_cast<PropertyItem *>(mModel->itemFromIndex(mModel->index(pRow, 2))));
+                    mModel->itemFromIndex(mModel->index(pRow, 2)));
 }
 
 //==============================================================================
