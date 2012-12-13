@@ -28,12 +28,12 @@ namespace Core {
 
 //==============================================================================
 
-class DoubleEditorWidget : public QLineEdit
+class NumberEditorWidget : public QLineEdit
 {
     Q_OBJECT
 
 public:
-    explicit DoubleEditorWidget(QWidget *pParent = 0);
+    explicit NumberEditorWidget(QWidget *pParent = 0);
 
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
@@ -41,6 +41,26 @@ protected:
 Q_SIGNALS:
     void goToPreviousPropertyRequested();
     void goToNextPropertyRequested();
+};
+
+//==============================================================================
+
+class IntegerEditorWidget : public NumberEditorWidget
+{
+    Q_OBJECT
+
+public:
+    explicit IntegerEditorWidget(QWidget *pParent = 0);
+};
+
+//==============================================================================
+
+class DoubleEditorWidget : public NumberEditorWidget
+{
+    Q_OBJECT
+
+public:
+    explicit DoubleEditorWidget(QWidget *pParent = 0);
 };
 
 //==============================================================================
@@ -163,6 +183,10 @@ public:
 
     void setNonEditablePropertyItem(QStandardItem *pPropertyItem,
                                     const QString &pValue);
+
+    int integerPropertyItem(PropertyItem *pPropertyItem) const;
+    void setIntegerPropertyItem(PropertyItem *pPropertyItem,
+                                const int &pValue);
 
     double doublePropertyItem(PropertyItem *pPropertyItem) const;
     void setDoublePropertyItem(PropertyItem *pPropertyItem,

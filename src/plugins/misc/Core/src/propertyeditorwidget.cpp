@@ -24,7 +24,7 @@ namespace Core {
 
 //==============================================================================
 
-DoubleEditorWidget::DoubleEditorWidget(QWidget *pParent) :
+NumberEditorWidget::NumberEditorWidget(QWidget *pParent) :
     QLineEdit(pParent)
 {
 #ifdef Q_WS_MAC
@@ -33,15 +33,11 @@ DoubleEditorWidget::DoubleEditorWidget(QWidget *pParent) :
     //       our editor
 #endif
     setFrame(QFrame::NoFrame);
-
-    // Set a validator which accepts any double
-
-    setValidator(new QRegExpValidator(QRegExp("^[+-]?[0-9]*\\.?[0-9]+([eE][+-]?[0-9]+)?$"), this));
 }
 
 //==============================================================================
 
-void DoubleEditorWidget::keyPressEvent(QKeyEvent *pEvent)
+void NumberEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Check some key combinations
 
@@ -81,6 +77,26 @@ void DoubleEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
+IntegerEditorWidget::IntegerEditorWidget(QWidget *pParent) :
+    NumberEditorWidget(pParent)
+{
+    // Set a validator which accepts any integer
+
+    setValidator(new QRegExpValidator(QRegExp("^[+-]?[0-9]*([eE][+-]?[0-9]+)?$"), this));
+}
+
+//==============================================================================
+
+DoubleEditorWidget::DoubleEditorWidget(QWidget *pParent) :
+    NumberEditorWidget(pParent)
+{
+    // Set a validator which accepts any double
+
+    setValidator(new QRegExpValidator(QRegExp("^[+-]?[0-9]*\\.?[0-9]+([eE][+-]?[0-9]+)?$"), this));
+}
+
+//==============================================================================
+
 ListEditorWidget::ListEditorWidget(QWidget *pParent) :
     QComboBox(pParent)
 {
@@ -110,6 +126,10 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
     PropertyItem *propertyItem = static_cast<PropertyItem *>(static_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex));
 
     switch (propertyItem->type()) {
+    case PropertyItem::Integer:
+        editor = new IntegerEditorWidget(pParent);
+
+        break;
     case PropertyItem::Double:
         editor = new DoubleEditorWidget(pParent);
 
@@ -124,7 +144,7 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
         break;
     }
     default:
-        // PropertyItem::String
+        // PropertyItem::Category
 
         return 0;
     }
@@ -569,6 +589,33 @@ void PropertyEditorWidget::setNonEditablePropertyItem(QStandardItem *pPropertyIt
 
     if (pPropertyItem)
         pPropertyItem->setText(pValue);
+}
+
+//==============================================================================
+
+int PropertyEditorWidget::integerPropertyItem(PropertyItem *pPropertyItem) const
+{
+    // Return the value of the given double property item, if it exists and is
+    // valid
+
+    if (pPropertyItem && (pPropertyItem->type() == PropertyItem::Integer))
+        return pPropertyItem->text().toInt();
+    else
+        // The property item is either not valid or not of double type, so...
+
+        return 0.0;
+}
+
+//==============================================================================
+
+void PropertyEditorWidget::setIntegerPropertyItem(PropertyItem *pPropertyItem,
+                                                  const int &pValue)
+{
+    // Set the value of the given double property item, if it exists and is
+    // valid
+
+    if (pPropertyItem && (pPropertyItem->type() == PropertyItem::Integer))
+        pPropertyItem->setText(QString::number(pValue));
 }
 
 //==============================================================================
