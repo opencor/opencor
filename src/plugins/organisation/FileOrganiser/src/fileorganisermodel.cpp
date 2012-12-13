@@ -39,7 +39,7 @@ void FileOrganiserModel::encodeHierarchyData(const QModelIndex &pIndex,
 {
     // Encode the item's hierarchy
 
-    if (pIndex != QModelIndex()) {
+    if (pIndex.isValid()) {
         // The current index is valid, try to encode its parent's hierarchy
 
         encodeHierarchyData(pIndex.parent(), pStream, pLevel+1);

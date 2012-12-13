@@ -260,7 +260,7 @@ void FileOrganiserWidget::saveSettings(QSettings *pSettings) const
     bool crtItemVisible = true;
     QModelIndex crtIndexParent = currentIndex().parent();
 
-    while (crtIndexParent != QModelIndex())
+    while (crtIndexParent.isValid())
         if (isExpanded(crtIndexParent)) {
             // The current parent is expanded, so check to its parent
 
@@ -273,9 +273,7 @@ void FileOrganiserWidget::saveSettings(QSettings *pSettings) const
             break;
         }
 
-    pSettings->setValue(SettingsSelectedItem, mModel->encodeHierarchyData(crtItemVisible?
-                                                                              currentIndex():
-                                                                              QModelIndex()));
+    pSettings->setValue(SettingsSelectedItem, mModel->encodeHierarchyData(crtItemVisible?currentIndex():QModelIndex()));
 }
 
 //==============================================================================
@@ -478,7 +476,7 @@ bool FileOrganiserWidget::parentIndexExists(const QModelIndex &pIndex,
 
     QModelIndex parentIndex = pIndex.parent();
 
-    if (parentIndex != QModelIndex()) {
+    if (parentIndex.isValid()) {
         // The current index has a valid parent, so check whether the parent is
         // in the list
 

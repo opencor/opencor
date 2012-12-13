@@ -568,7 +568,7 @@ void FileBrowserWidget::goToPath(const QString &pPath, const bool &pExpand)
 
     QModelIndex pathIndex = mModel->index(pPath);
 
-    if ((pathIndex != QModelIndex()) && (pathIndex != currentIndex())) {
+    if ((pathIndex.isValid()) && (pathIndex != currentIndex())) {
         // The path exists, so we can go to it
 
         if (pExpand)
@@ -631,9 +631,7 @@ QString FileBrowserWidget::currentPathParent() const
 
     QModelIndex crtIndexParent = currentIndex().parent();
 
-    return (crtIndexParent != QModelIndex())?
-               mModel->filePath(crtIndexParent):
-               "";
+    return crtIndexParent.isValid()?mModel->filePath(crtIndexParent):QString();
 }
 
 //==============================================================================
@@ -642,9 +640,7 @@ QString FileBrowserWidget::pathOf(const QModelIndex &pIndex) const
 {
     // Return the file path of pIndex, if it exists
 
-    return (pIndex != QModelIndex())?
-               mModel->filePath(pIndex):
-               "";
+    return pIndex.isValid()?mModel->filePath(pIndex):QString();
 }
 
 //==============================================================================

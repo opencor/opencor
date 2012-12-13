@@ -505,7 +505,7 @@ void CellmlAnnotationViewCellmlListWidget::updateMetadataDetails(const QModelInd
 
     // Make sure that we have a valid new index
 
-    if (pNewIndex == QModelIndex())
+    if (!pNewIndex.isValid())
         return;
 
     // Keep track of the fact that there is a CellML element to update
@@ -663,7 +663,7 @@ void CellmlAnnotationViewCellmlListWidget::indexExpandAll(const QModelIndex &pIn
     //       a call to expand() is quite expensive, so the fewer of those we
     //       make the better...
 
-    if (pIndex.child(0, 0) != QModelIndex()) {
+    if (pIndex.child(0, 0).isValid()) {
         mTreeViewWidget->expand(pIndex);
 
         QStandardItem *item = mModel->itemFromIndex(pIndex);
@@ -680,7 +680,7 @@ void CellmlAnnotationViewCellmlListWidget::indexCollapseAll(const QModelIndex &p
     // Recursively collapse all the CellML elements below the current one
     // Note: see the note in indexExpandAll() above...
 
-    if (pIndex.child(0, 0) != QModelIndex()) {
+    if (pIndex.child(0, 0).isValid()) {
         QStandardItem *item = mModel->itemFromIndex(pIndex);
 
         for (int i = 0, iMax = item->rowCount(); i < iMax; ++i)
@@ -698,7 +698,7 @@ bool CellmlAnnotationViewCellmlListWidget::indexIsAllExpanded(const QModelIndex 
     // are expanded
     // Note: see the note in indexExpandAll() above...
 
-    if (pIndex.child(0, 0) != QModelIndex()) {
+    if (pIndex.child(0, 0).isValid()) {
         QStandardItem *item = mModel->itemFromIndex(pIndex);
 
         for (int i = 0, iMax = item->rowCount(); i < iMax; ++i)
