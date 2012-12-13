@@ -8,6 +8,7 @@
 
 #include <QDrag>
 #include <QHeaderView>
+#include <QMouseEvent>
 #include <QStandardItemModel>
 
 //==============================================================================
@@ -92,6 +93,23 @@ QSize TreeViewWidget::sizeHint() const
     //       widget on it, to have a decent size when docked to the main window
 
     return defaultSize(0.15);
+}
+
+//==============================================================================
+
+void TreeViewWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
+{
+    // Retrieve the index of the item which row is the same as our current item,
+    // but which column is 0, so that we can expand/collapse properly
+
+    QModelIndex currIndex = currentIndex();
+    QModelIndex index = model()->index(currIndex.row(), 0, currIndex.parent());
+
+    setExpanded(index, !isExpanded(index));
+
+    // Accept the event
+
+    pEvent->accept();
 }
 
 //==============================================================================

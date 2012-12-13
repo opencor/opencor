@@ -777,12 +777,6 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 
 void PropertyEditorWidget::mousePressEvent(QMouseEvent *pEvent)
 {
-    // Default handling of the event
-    // Note: we make use of it so that when double clicking a category, it gets
-    //       expanded/collapsed...
-
-    TreeViewWidget::mousePressEvent(pEvent);
-
     // Start/stop the editing of the property
 
     Property mouseProperty = property(indexAt(pEvent->pos()));

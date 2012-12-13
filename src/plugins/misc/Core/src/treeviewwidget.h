@@ -38,6 +38,8 @@ public:
 protected:
     virtual QSize sizeHint() const;
 
+    virtual void mouseDoubleClickEvent(QMouseEvent *event);
+
     virtual void startDrag(Qt::DropActions pSupportedActions);
 };
 
