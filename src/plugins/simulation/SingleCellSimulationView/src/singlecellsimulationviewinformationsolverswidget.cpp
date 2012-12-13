@@ -112,7 +112,7 @@ void SingleCellSimulationViewInformationSolversWidget::addSolverProperties(const
                     property = addIntegerProperty(pSolversProperty);
                 }
 
-                // Set the solver's property name
+                // Set the solver's property's name
 
                 setNonEditablePropertyItem(property.name, solverInterfaceProperty.name);
 
