@@ -106,9 +106,40 @@ ListEditorWidget::ListEditorWidget(QWidget *pParent) :
 
 void ListEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 {
-    // Default handling of the event
+    // Check some key combinations
 
-    QComboBox::keyPressEvent(pEvent);
+    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
+        && !(pEvent->modifiers() & Qt::ControlModifier)
+        && !(pEvent->modifiers() & Qt::AltModifier)
+        && !(pEvent->modifiers() & Qt::MetaModifier)) {
+        // None of the modifiers is selected
+
+        if (pEvent->key() == Qt::Key_Up) {
+            // The user wants to go to the previous property
+
+            emit goToPreviousPropertyRequested();
+
+            // Accept the event
+
+            pEvent->accept();
+        } else if (pEvent->key() == Qt::Key_Down) {
+            // The user wants to go to the next property
+
+            emit goToNextPropertyRequested();
+
+            // Accept the event
+
+            pEvent->accept();
+        } else {
+            // Default handling of the event
+
+            QComboBox::keyPressEvent(pEvent);
+        }
+    } else {
+        // Default handling of the event
+
+        QComboBox::keyPressEvent(pEvent);
+    }
 }
 
 //==============================================================================
@@ -403,6 +434,34 @@ PropertyEditorWidget::PropertyEditorWidget(QWidget *pParent) :
 
 //==============================================================================
 
+void PropertyEditorWidget::retranslateEmptyListProperties(QStandardItem *pItem)
+{
+    // Retranslate the current item, should it be an empty list
+
+    QModelIndex index = pItem->index();
+
+    if (index.isValid()) {
+        // The index is valid (i.e. it's not our invisible root item), so
+        // retrieve the corresponding property item
+
+        PropertyItem *propertyValue = property(index).value;
+
+        // Check whether the property value is of list type and whether its list
+        // is empty and, if so, then set its text value accordingly
+
+        if (   (propertyValue->type() == PropertyItem::List)
+               && (propertyValue->list().isEmpty()))
+            propertyValue->setText(propertyValue->emptyListValue());
+    }
+
+    // Retranslate the current item's children, if any
+
+    for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i)
+        retranslateEmptyListProperties(pItem->child(i));
+}
+
+//==============================================================================
+
 void PropertyEditorWidget::retranslateUi()
 {
     // Retranslate our header labels
@@ -411,15 +470,9 @@ void PropertyEditorWidget::retranslateUi()
                                                     << tr("Value")
                                                     << tr("Unit"));
 
-    // 'Retranslate' the value of empty list properties
+    // 'Retranslate' the value of all empty list properties
 
-    for (int i = 0, iMax = mModel->rowCount(); i < iMax; ++i) {
-        PropertyItem *propertyValue = property(i).value;
-
-        if (   (propertyValue->type() == PropertyItem::List)
-               && (propertyValue->list().isEmpty()))
-            propertyValue->setText(propertyValue->emptyListValue());
-    }
+    retranslateEmptyListProperties(mModel->invisibleRootItem());
 }
 
 //==============================================================================
@@ -673,7 +726,7 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
             //       would have to use currentIndex().row(), so we might as well
             //       use the latter all the time...
 
-            editProperty(property(currentIndex().row()));
+            editProperty(property(currentIndex()));
 
         // Accept the event
 
@@ -732,7 +785,7 @@ void PropertyEditorWidget::mousePressEvent(QMouseEvent *pEvent)
 
     // Start/stop the editing of the property
 
-    Property mouseProperty = property(indexAt(pEvent->pos()).row());
+    Property mouseProperty = property(indexAt(pEvent->pos()));
 
     if (mPropertyEditor) {
         // We are already editing a property, so either stop its editing or
@@ -765,7 +818,7 @@ void PropertyEditorWidget::mouseMoveEvent(QMouseEvent *pEvent)
 {
     // Edit the property, but only if we want to edit a new one
 
-    Property mouseProperty = property(indexAt(pEvent->pos()).row());
+    Property mouseProperty = property(indexAt(pEvent->pos()));
 
     if (!mouseProperty.isEmpty() && (mouseProperty != mProperty))
         editProperty(mouseProperty);
@@ -868,8 +921,12 @@ void PropertyEditorWidget::editorClosed()
     //       in the list while we want the actual text corresponding to the
     //       selected item...
 
-    if (mProperty.value->type() == PropertyItem::List)
-        mProperty.value->setText(static_cast<ListEditorWidget *>(mPropertyEditor)->currentText());
+    if (mProperty.value->type() == PropertyItem::List) {
+        if (mProperty.value->list().isEmpty())
+            mProperty.value->setText(mProperty.value->emptyListValue());
+        else
+            mProperty.value->setText(static_cast<ListEditorWidget *>(mPropertyEditor)->currentText());
+    }
 
     // Next, we need to reset our focus proxy and make sure that we get the
     // focus (see editorOpened() above for the reason)
@@ -979,14 +1036,19 @@ void PropertyEditorWidget::setPropertyVisible(const Property &pProperty,
 
 void PropertyEditorWidget::goToNeighbouringProperty(const int &pShift)
 {
-    // Go to the previous/next property
+    // Determine the index of the current index's neighbour
 
-    int row = currentIndex().row()+pShift;
+    QModelIndex neighbouringIndex = QModelIndex();
 
-    if ((row >= 0) && (row < model()->rowCount()))
-        // The previous/next property exists, so we can edit it
+    if (pShift == 1)
+        neighbouringIndex = indexBelow(currentIndex());
+    else if (pShift == -1)
+        neighbouringIndex = indexAbove(currentIndex());
 
-        editProperty(property(row));
+    // Edit the neighbouring property, if any
+
+    if (neighbouringIndex.isValid())
+        editProperty(property(neighbouringIndex));
 }
 
 //==============================================================================
@@ -1009,13 +1071,21 @@ void PropertyEditorWidget::goToNextProperty()
 
 //==============================================================================
 
-Property PropertyEditorWidget::property(const int &pRow) const
+Property PropertyEditorWidget::property(const QModelIndex &pIndex) const
 {
-    // Return some information about the property at the given row
+    // Make sure that the given index is valid
 
-    return Property(mModel->itemFromIndex(mModel->index(pRow, 0)),
-                    static_cast<PropertyItem *>(mModel->itemFromIndex(mModel->index(pRow, 1))),
-                    mModel->itemFromIndex(mModel->index(pRow, 2)));
+    if (!pIndex.isValid())
+        return Property();
+
+    // Return some information about the property at the given index
+
+    QModelIndex parent = pIndex.parent();
+    int row = pIndex.row();
+
+    return Property(mModel->itemFromIndex(mModel->index(row, 0, parent)),
+                    static_cast<PropertyItem *>(mModel->itemFromIndex(mModel->index(row, 1, parent))),
+                    mModel->itemFromIndex(mModel->index(row, 2, parent)));
 }
 
 //==============================================================================
@@ -1024,7 +1094,7 @@ Property PropertyEditorWidget::currentProperty() const
 {
     // Return some information about the current property
 
-    return property(currentIndex().row());
+    return property(currentIndex());
 }
 
 //==============================================================================

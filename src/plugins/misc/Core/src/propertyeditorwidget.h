@@ -218,6 +218,8 @@ private:
 
     void constructor(const bool &pAutoUpdateHeight = false);
 
+    void retranslateEmptyListProperties(QStandardItem *pItem);
+
     Property addProperty(const Property &pParent,
                          const PropertyItem::Type &pType);
 
@@ -226,7 +228,7 @@ private:
 
     void goToNeighbouringProperty(const int &pShift);
 
-    Property property(const int &pRow) const;
+    Property property(const QModelIndex &pIndex) const;
     Property currentProperty() const;
 
     int childrenRowHeight(const QStandardItem *pItem) const;
