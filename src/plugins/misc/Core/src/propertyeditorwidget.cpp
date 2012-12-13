@@ -172,6 +172,11 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
 
         editor = listEditor;
 
+        // Propagate the signal
+
+        connect(listEditor, SIGNAL(currentIndexChanged(const QString &)),
+                this, SIGNAL(listItemChanged(const QString &)));
+
         break;
     }
     default:
@@ -202,7 +207,7 @@ bool PropertyItemDelegate::eventFilter(QObject *pObject, QEvent *pEvent)
 {
     // We want to handle key events ourselves, so...
 
-    if(pEvent->type()==QEvent::KeyPress)
+    if(pEvent->type() == QEvent::KeyPress)
         return false;
     else
         return QStyledItemDelegate::eventFilter(pObject, pEvent);
@@ -386,6 +391,9 @@ void PropertyEditorWidget::constructor(const bool &pAutoUpdateHeight)
             this, SLOT(goToPreviousProperty()));
     connect(mPropertyItemDelegate, SIGNAL(goToNextPropertyRequested()),
             this, SLOT(goToNextProperty()));
+
+    connect(mPropertyItemDelegate, SIGNAL(listItemChanged(const QString &)),
+            this, SLOT(updateProperties(const QString &)));
 
     setItemDelegate(mPropertyItemDelegate);
 
@@ -1089,6 +1097,14 @@ Property PropertyEditorWidget::currentProperty() const
     // Return some information about the current property
 
     return property(currentIndex());
+}
+
+//==============================================================================
+
+void PropertyEditorWidget::updateProperties(const QString &pItem)
+{
+qDebug(">>> updateProperties() | mProperty.name->text(): %s", qPrintable(mProperty.name->text()));
+qDebug(">>> updateProperties() | pItem: %s", qPrintable(pItem));
 }
 
 //==============================================================================

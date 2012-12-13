@@ -99,6 +99,8 @@ Q_SIGNALS:
 
     void goToPreviousPropertyRequested();
     void goToNextPropertyRequested();
+
+    void listItemChanged(const QString &pItem);
 };
 
 //==============================================================================
@@ -241,6 +243,8 @@ private Q_SLOTS:
 
     void goToPreviousProperty();
     void goToNextProperty();
+
+    void updateProperties(const QString &pItem);
 };
 
 //==============================================================================
