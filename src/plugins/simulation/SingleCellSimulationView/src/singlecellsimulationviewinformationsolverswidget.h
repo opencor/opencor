@@ -51,8 +51,7 @@ public:
 
     void setSolverInterfaces(const SolverInterfaces &pSolverInterfaces);
 
-    void initialize(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
-                    const SolverInterfaces &pSolverInterfaces);
+    void initialize(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
 
     bool needOdeSolver() const;
     bool needDaeSolver() const;
@@ -74,6 +73,9 @@ private:
     bool doListPropertyChanged(const SingleCellSimulationViewInformationSolversWidgetData &pSolverData,
                                const QString &pSolverName,
                                const bool &pForceHandling = false);
+
+    void setPropertiesUnit(const SingleCellSimulationViewInformationSolversWidgetData &pSolverData,
+                           const QString &pVoiUnit);
 
 private Q_SLOTS:
     void listPropertyChanged(const QString &pValue);

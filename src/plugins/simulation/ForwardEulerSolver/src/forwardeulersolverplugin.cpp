@@ -57,7 +57,7 @@ Solver::Properties ForwardEulerSolverPlugin::properties() const
 
     Solver::Properties res = Solver::Properties();
 
-    res.append(Solver::Property(StepProperty, Solver::Double));
+    res.append(Solver::Property(StepProperty, Solver::Double, true));
 
     return res;
 }

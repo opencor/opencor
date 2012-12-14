@@ -40,8 +40,10 @@ struct Property
 {
     QString name;
     PropertyType type;
+    bool hasVoiUnit;
 
-    explicit Property(const QString &pName, const PropertyType &pType);
+    explicit Property(const QString &pName, const PropertyType &pType,
+                      const bool &pHasVoiUnit = false);
 };
 
 //==============================================================================

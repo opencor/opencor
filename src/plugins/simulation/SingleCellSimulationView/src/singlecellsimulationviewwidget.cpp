@@ -62,7 +62,6 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
     ViewWidget(pParent),
     mGui(new Ui::SingleCellSimulationViewWidget),
     mPluginParent(pPluginParent),
-    mSolverInterfaces(SolverInterfaces()),
     mSimulation(0),
     mSimulations(QMap<QString, SingleCellSimulationViewSimulation *>()),
     mStoppedSimulations(QList<SingleCellSimulationViewSimulation *>()),
@@ -285,10 +284,6 @@ void SingleCellSimulationViewWidget::saveSettings(QSettings *pSettings) const
 
 void SingleCellSimulationViewWidget::setSolverInterfaces(const SolverInterfaces &pSolverInterfaces)
 {
-    // Keep track of the solver interfaces
-
-    mSolverInterfaces = pSolverInterfaces;
-
     // Let our solvers widget know about the solver interfaces
 
     mContentsWidget->informationWidget()->solversWidget()->setSolverInterfaces(pSolverInterfaces);
@@ -521,7 +516,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
             SingleCellSimulationViewInformationSolversWidget *solversWidget = mContentsWidget->informationWidget()->solversWidget();
 
-            solversWidget->initialize(cellmlFileRuntime, mSolverInterfaces);
+            solversWidget->initialize(cellmlFileRuntime);
             mContentsWidget->informationWidget()->parametersWidget()->initialize(cellmlFileRuntime);
 
             // Update our GUI using our simulation's data

@@ -53,7 +53,7 @@ void SingleCellSimulationViewInformationSimulationWidget::retranslateUi()
 
 void SingleCellSimulationViewInformationSimulationWidget::setUnit(const QString &pUnit)
 {
-    // Set the unit for our different properties, if needed
+    // Set the unit of our different properties
 
     setNonEditablePropertyItem(mStartingPointProperty.unit, pUnit);
     setNonEditablePropertyItem(mEndingPointProperty.unit, pUnit);

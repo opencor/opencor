@@ -3,6 +3,7 @@
 //==============================================================================
 
 #include "cellmlfileruntime.h"
+#include "cellmlfilevariable.h"
 #include "singlecellsimulationviewinformationsolverswidget.h"
 
 //==============================================================================
@@ -122,6 +123,15 @@ void SingleCellSimulationViewInformationSolversWidget::addSolverProperties(const
 
                 setNonEditablePropertyItem(property.name, solverInterfaceProperty.name);
 
+                // Set the solver's property's 'unit', if needed
+
+                if (solverInterfaceProperty.hasVoiUnit)
+                    setNonEditablePropertyItem(property.unit, "???");
+                    // Note: to assign a non-empty string to our unit item is
+                    //       just a way for us to keep track of the fact that
+                    //       the property should have a unit (see
+                    //       setPropertiesUnit())...
+
                 // Keep track of the solver's property
 
                 properties << property;
@@ -169,8 +179,25 @@ void SingleCellSimulationViewInformationSolversWidget::setSolverInterfaces(const
 
 //==============================================================================
 
-void SingleCellSimulationViewInformationSolversWidget::initialize(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
-                                                                  const SolverInterfaces &pSolverInterfaces)
+void SingleCellSimulationViewInformationSolversWidget::setPropertiesUnit(const SingleCellSimulationViewInformationSolversWidgetData &pSolverData,
+                                                                         const QString &pVoiUnit)
+{
+    // Check whether we need this type of solver and, if not, leave
+
+    if (!pSolverData.needSolver)
+        return;
+
+    // Go through the solvers' properties and set the unit of the relevant ones
+
+    foreach (const Core::Properties &properties, pSolverData.solversProperties)
+        foreach (const Core::Property &property, properties)
+            if (!property.unit->text().isEmpty())
+                property.unit->setText(pVoiUnit);
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewInformationSolversWidget::initialize(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime)
 {
     // Make sure that we have a CellML file runtime
 
@@ -200,6 +227,14 @@ void SingleCellSimulationViewInformationSolversWidget::initialize(CellMLSupport:
 
         retranslateUi();
     }
+
+    // Set the unit of our different properties, if needed
+
+    QString voiUnit = pCellmlFileRuntime->variableOfIntegration()->unit();
+
+    setPropertiesUnit(mOdeSolverData, voiUnit);
+    setPropertiesUnit(mDaeSolverData, voiUnit);
+    setPropertiesUnit(mNlaSolverData, voiUnit);
 }
 
 //==============================================================================
