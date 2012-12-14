@@ -25,9 +25,9 @@ class ForwardEulerSolver : public CoreSolver::CoreOdeSolver
 public:
     explicit ForwardEulerSolver();
 
-    virtual void initialize(const double &pVoiStart, const int &pStatesCount,
-                            double *pConstants, double *pRates,
-                            double *pStates, double *pAlgebraic,
+    virtual void initialize(const double &pVoiStart, const double &pVoiEnd,
+                            const int &pStatesCount, double *pConstants,
+                            double *pRates, double *pStates, double *pAlgebraic,
                             ComputeRatesFunction pComputeRates);
 
     virtual void solve(double &pVoi, const double &pVoiEnd) const;

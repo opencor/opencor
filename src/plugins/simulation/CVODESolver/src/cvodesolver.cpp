@@ -89,17 +89,19 @@ CvodeSolver::~CvodeSolver()
 
 //==============================================================================
 
-void CvodeSolver::initialize(const double &pVoiStart, const int &pStatesCount,
-                             double *pConstants, double *pRates,
-                             double *pStates, double *pAlgebraic,
+void CvodeSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
+                             const int &pStatesCount, double *pConstants,
+                             double *pRates, double *pStates,
+                             double *pAlgebraic,
                              ComputeRatesFunction pComputeRates)
 {
     if (!mSolver) {
         // Initialise the ODE solver itself
 
-        OpenCOR::CoreSolver::CoreOdeSolver::initialize(pVoiStart, pStatesCount,
-                                                       pConstants, pRates,
-                                                       pStates, pAlgebraic,
+        OpenCOR::CoreSolver::CoreOdeSolver::initialize(pVoiStart, pVoiEnd,
+                                                       pStatesCount, pConstants,
+                                                       pRates, pStates,
+                                                       pAlgebraic,
                                                        pComputeRates);
 
         // Retrieve some of the CVODE properties
