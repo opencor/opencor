@@ -26,6 +26,20 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
+struct SingleCellSimulationViewInformationSolversWidgetData
+{
+    bool needSolver;
+
+    Core::Property solversProperty;
+    Core::Property solversListProperty;
+
+    QMap<QString, Core::Properties> solversProperties;
+
+    explicit SingleCellSimulationViewInformationSolversWidgetData();
+};
+
+//==============================================================================
+
 class SingleCellSimulationViewInformationSolversWidget : public Core::PropertyEditorWidget
 {
     Q_OBJECT
@@ -49,28 +63,20 @@ public:
     QStringList nlaSolvers() const;
 
 private:
-    bool mNeedOdeSolver;
-    bool mNeedDaeSolver;
-    bool mNeedNlaSolver;
-
-    Core::Property mOdeSolversProperty;
-    Core::Property mOdeSolversListProperty;
-
-    Core::Property mDaeSolversProperty;
-    Core::Property mDaeSolversListProperty;
-
-    Core::Property mNlaSolversProperty;
-    Core::Property mNlaSolversListProperty;
-
-    QMap<QString, Core::Properties> mSolversProperties;
+    SingleCellSimulationViewInformationSolversWidgetData mOdeSolverData;
+    SingleCellSimulationViewInformationSolversWidgetData mDaeSolverData;
+    SingleCellSimulationViewInformationSolversWidgetData mNlaSolverData;
 
     void addSolverProperties(const SolverInterfaces &pSolverInterfaces,
                              const Solver::Type &pSolverType,
-                             Core::Property &pSolversProperty,
-                             Core::Property &pSolversListProperty);
+                             SingleCellSimulationViewInformationSolversWidgetData &pSolverData);
+
+    bool doListPropertyChanged(const SingleCellSimulationViewInformationSolversWidgetData &pSolverData,
+                               const QString &pSolverName,
+                               const bool &pForceHandling = false);
 
 private Q_SLOTS:
-    void updateProperties(const QString &pValue);
+    void listPropertyChanged(const QString &pValue);
 };
 
 //==============================================================================

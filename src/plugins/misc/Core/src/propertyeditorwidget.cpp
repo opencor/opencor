@@ -336,6 +336,15 @@ bool Property::operator!=(const Property &pOther) const
 
 //==============================================================================
 
+bool Property::operator==(const Property &pOther) const
+{
+    // Return whether the two properties are the same
+
+    return (name == pOther.name) && (value == pOther.value) && (unit == pOther.unit);
+}
+
+//==============================================================================
+
 bool Property::isEmpty() const
 {
     // Return whether the property is empty

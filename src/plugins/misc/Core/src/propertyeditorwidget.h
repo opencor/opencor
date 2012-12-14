@@ -145,6 +145,7 @@ struct CORE_EXPORT Property
                       QStandardItem *pUnit);
 
     bool operator!=(const Property &pOther) const;
+    bool operator==(const Property &pOther) const;
 
     bool isEmpty() const;
 
