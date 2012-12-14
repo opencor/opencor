@@ -373,11 +373,6 @@ void PropertyEditorWidget::constructor(const bool &pAutoUpdateHeight)
 
     setModel(mModel);
 
-    // Update our height following data changes
-
-    connect(mModel, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
-            this, SLOT(updateHeight()));
-
     // Create our item delegate and set it, after making sure that we handle a
     // few of its signals
 
@@ -398,8 +393,11 @@ void PropertyEditorWidget::constructor(const bool &pAutoUpdateHeight)
 
     setItemDelegate(mPropertyItemDelegate);
 
-    // Resize our height in case one of our header's sections gets resized, or
-    // one the properties gets expanded/collapsed
+    // Resize our height in case data have been changed, one of our header's
+    // sections gets resized or one the properties gets expanded/collapsed
+
+    connect(mModel, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
+            this, SLOT(updateHeight()));
 
     connect(header(), SIGNAL(sectionResized(int, int, int)),
             this, SLOT(updateHeight()));
