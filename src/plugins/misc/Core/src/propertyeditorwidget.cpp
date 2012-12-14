@@ -176,7 +176,7 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
         // changed
 
         connect(listEditor, SIGNAL(currentIndexChanged(const QString &)),
-                this, SIGNAL(listPropertyChanged()));
+                this, SIGNAL(listPropertyChanged(const QString &)));
 
         break;
     }
@@ -388,8 +388,8 @@ void PropertyEditorWidget::constructor(const bool &pAutoUpdateHeight)
     connect(mPropertyItemDelegate, SIGNAL(goToNextPropertyRequested()),
             this, SLOT(goToNextProperty()));
 
-    connect(mPropertyItemDelegate, SIGNAL(listPropertyChanged()),
-            this, SIGNAL(listPropertyChanged()));
+    connect(mPropertyItemDelegate, SIGNAL(listPropertyChanged(const QString &)),
+            this, SIGNAL(listPropertyChanged(const QString &)));
 
     setItemDelegate(mPropertyItemDelegate);
 

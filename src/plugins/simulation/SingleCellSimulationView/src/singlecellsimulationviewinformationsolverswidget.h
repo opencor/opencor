@@ -70,7 +70,7 @@ private:
                              Core::Property &pSolversListProperty);
 
 private Q_SLOTS:
-    void updateProperties();
+    void updateProperties(const QString &pValue);
 };
 
 //==============================================================================

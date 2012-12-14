@@ -132,8 +132,8 @@ void SingleCellSimulationViewInformationSolversWidget::addSolverProperties(const
 
     // Keep track of changes to list properties
 
-    connect(this, SIGNAL(listPropertyChanged()),
-            this, SLOT(updateProperties()));
+    connect(this, SIGNAL(listPropertyChanged(const QString &)),
+            this, SLOT(updateProperties(const QString &)));
 }
 
 //==============================================================================
@@ -246,13 +246,14 @@ QStringList SingleCellSimulationViewInformationSolversWidget::nlaSolvers() const
 
 //==============================================================================
 
-void SingleCellSimulationViewInformationSolversWidget::updateProperties()
+void SingleCellSimulationViewInformationSolversWidget::updateProperties(const QString &pValue)
 {
 qDebug("---------------------------------------");
 qDebug(">>> updateProperties() | List property changed...");
 Core::Property property = currentProperty();
 qDebug(">>> updateProperties() | Property: %s", qPrintable(property.name->text()));
-qDebug(">>> updateProperties() | New value: %s", qPrintable(property.value->text()));
+qDebug(">>> updateProperties() | Current value: %s", qPrintable(property.value->text()));
+qDebug(">>> updateProperties() | New value: %s", qPrintable(pValue));
 }
 
 //==============================================================================

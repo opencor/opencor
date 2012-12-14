@@ -100,7 +100,7 @@ Q_SIGNALS:
     void goToPreviousPropertyRequested();
     void goToNextPropertyRequested();
 
-    void listPropertyChanged();
+    void listPropertyChanged(const QString &pValue);
 };
 
 //==============================================================================
@@ -236,7 +236,7 @@ private:
     int childrenRowHeight(const QStandardItem *pItem) const;
 
 Q_SIGNALS:
-    void listPropertyChanged() const;
+    void listPropertyChanged(const QString &pValue) const;
 
 private Q_SLOTS:
     void updateHeight();
