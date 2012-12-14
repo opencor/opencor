@@ -20,7 +20,7 @@ CoreSolver::CoreSolver() :
 
 void CoreSolver::setProperty(const QString &pName, const QVariant &pValue)
 {
-    // Add/replace a property's value, but only if it is a valid one
+    // Set a property's value, but only if it is a valid property
 
     if (isValidProperty(pName))
         mProperties.insert(pName, pValue);
