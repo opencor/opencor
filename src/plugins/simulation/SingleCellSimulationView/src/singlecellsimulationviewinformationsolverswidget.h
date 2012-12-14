@@ -68,6 +68,9 @@ private:
                              const Solver::Type &pSolverType,
                              Core::Property &pSolversProperty,
                              Core::Property &pSolversListProperty);
+
+private Q_SLOTS:
+    void updateProperties();
 };
 
 //==============================================================================

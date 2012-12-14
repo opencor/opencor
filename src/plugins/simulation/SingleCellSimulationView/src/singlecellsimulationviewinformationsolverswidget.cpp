@@ -129,6 +129,11 @@ void SingleCellSimulationViewInformationSolversWidget::addSolverProperties(const
     // Add the list of solvers to our list property value item
 
     pSolversListProperty.value->setList(solvers);
+
+    // Keep track of changes to list properties
+
+    connect(this, SIGNAL(listPropertyChanged()),
+            this, SLOT(updateProperties()));
 }
 
 //==============================================================================
@@ -144,6 +149,10 @@ void SingleCellSimulationViewInformationSolversWidget::setSolverInterfaces(const
     addSolverProperties(pSolverInterfaces, Solver::Ode, mOdeSolversProperty, mOdeSolversListProperty);
     addSolverProperties(pSolverInterfaces, Solver::Dae, mDaeSolversProperty, mDaeSolversListProperty);
     addSolverProperties(pSolverInterfaces, Solver::Nla, mNlaSolversProperty, mNlaSolversListProperty);
+
+    // Expand all our properties
+
+    expandAll();
 }
 
 //==============================================================================
@@ -233,6 +242,17 @@ QStringList SingleCellSimulationViewInformationSolversWidget::nlaSolvers() const
     // Return the available NLA solvers, if any
 
     return mNlaSolversListProperty.isEmpty()?QStringList():mNlaSolversListProperty.value->list();
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewInformationSolversWidget::updateProperties()
+{
+qDebug("---------------------------------------");
+qDebug(">>> updateProperties() | List property changed...");
+Core::Property property = currentProperty();
+qDebug(">>> updateProperties() | Property: %s", qPrintable(property.name->text()));
+qDebug(">>> updateProperties() | New value: %s", qPrintable(property.value->text()));
 }
 
 //==============================================================================

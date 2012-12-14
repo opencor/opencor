@@ -100,7 +100,7 @@ Q_SIGNALS:
     void goToPreviousPropertyRequested();
     void goToNextPropertyRequested();
 
-    void listItemChanged(const QString &pItem);
+    void listPropertyChanged();
 };
 
 //==============================================================================
@@ -208,6 +208,9 @@ protected:
 
     virtual void resizeEvent(QResizeEvent *pEvent);
 
+    Property property(const QModelIndex &pIndex) const;
+    Property currentProperty() const;
+
 private:
     bool mAutoUpdateHeight;
 
@@ -215,8 +218,8 @@ private:
 
     PropertyItemDelegate *mPropertyItemDelegate;
 
-    QWidget *mPropertyEditor;
     Property mProperty;
+    QWidget *mPropertyEditor;
 
     void constructor(const bool &pAutoUpdateHeight = false);
 
@@ -230,10 +233,10 @@ private:
 
     void goToNeighbouringProperty(const int &pShift);
 
-    Property property(const QModelIndex &pIndex) const;
-    Property currentProperty() const;
-
     int childrenRowHeight(const QStandardItem *pItem) const;
+
+Q_SIGNALS:
+    void listPropertyChanged() const;
 
 private Q_SLOTS:
     void updateHeight();
@@ -243,8 +246,6 @@ private Q_SLOTS:
 
     void goToPreviousProperty();
     void goToNextProperty();
-
-    void updateProperties(const QString &pItem);
 };
 
 //==============================================================================

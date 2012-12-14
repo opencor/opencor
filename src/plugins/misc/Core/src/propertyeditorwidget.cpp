@@ -172,10 +172,11 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
 
         editor = listEditor;
 
-        // Propagate the signal
+        // Propagate the signal telling us about the list property value having
+        // changed
 
         connect(listEditor, SIGNAL(currentIndexChanged(const QString &)),
-                this, SIGNAL(listItemChanged(const QString &)));
+                this, SIGNAL(listPropertyChanged()));
 
         break;
     }
@@ -392,8 +393,8 @@ void PropertyEditorWidget::constructor(const bool &pAutoUpdateHeight)
     connect(mPropertyItemDelegate, SIGNAL(goToNextPropertyRequested()),
             this, SLOT(goToNextProperty()));
 
-    connect(mPropertyItemDelegate, SIGNAL(listItemChanged(const QString &)),
-            this, SLOT(updateProperties(const QString &)));
+    connect(mPropertyItemDelegate, SIGNAL(listPropertyChanged()),
+            this, SIGNAL(listPropertyChanged()));
 
     setItemDelegate(mPropertyItemDelegate);
 
@@ -930,8 +931,8 @@ void PropertyEditorWidget::editorClosed()
             mProperty.value->setText(static_cast<ListEditorWidget *>(mPropertyEditor)->currentText());
     }
 
-    // Next, we need to reset our focus proxy and make sure that we get the
-    // focus (see editorOpened() above for the reason)
+    // Reset our focus proxy and make sure that we get the focus (see
+    // editorOpened() above for the reason)
 
     setFocusProxy(0);
 
@@ -1097,14 +1098,6 @@ Property PropertyEditorWidget::currentProperty() const
     // Return some information about the current property
 
     return property(currentIndex());
-}
-
-//==============================================================================
-
-void PropertyEditorWidget::updateProperties(const QString &pItem)
-{
-qDebug(">>> updateProperties() | mProperty.name->text(): %s", qPrintable(mProperty.name->text()));
-qDebug(">>> updateProperties() | pItem: %s", qPrintable(pItem));
 }
 
 //==============================================================================
