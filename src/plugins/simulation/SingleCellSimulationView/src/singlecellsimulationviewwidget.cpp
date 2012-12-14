@@ -330,7 +330,7 @@ void SingleCellSimulationViewWidget::output(const QString &pMessage)
     // Output the message and make sure that it's visible
 
     mOutputWidget->insertHtml(pMessage);
-    mOutputWidget->moveCursor(QTextCursor::End);
+    mOutputWidget->ensureCursorVisible();
 }
 
 //==============================================================================
@@ -636,6 +636,8 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
     // Check if an error occurred and, if so, show/hide some widgets
 
+    bool previousHasError = mInvalidModelMessageWidget->isVisible();
+
     mToolBarWidget->setVisible(!hasError);
     mTopSeparator->setVisible(!hasError);
 
@@ -646,10 +648,15 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
     mProgressBarWidget->setVisible(!hasError);
 
     // Make sure that the last output message is visible
-    // Note: indeed, to (re)show some widgets (see above) will shift the output
-    //       a bit, so...
+    // Note: indeed, to (re)show some widgets (see above) will change the height
+    //       of our output widget, messing up the vertical scroll bar a bit (if
+    //       visible), resulting in the output being shifted a bit, so...
 
-    mOutputWidget->moveCursor(QTextCursor::End);
+    if (previousHasError != hasError) {
+        qApp->processEvents();
+
+        mOutputWidget->ensureCursorVisible();
+    }
 }
 
 //==============================================================================
