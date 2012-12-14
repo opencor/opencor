@@ -74,6 +74,8 @@ public:
 
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
+    virtual void mousePressEvent(QMouseEvent *pEvent);
+    virtual void mouseDoubleClickEvent(QMouseEvent *pEvent);
 
 Q_SIGNALS:
     void goToPreviousPropertyRequested();

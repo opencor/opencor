@@ -144,6 +144,39 @@ void ListEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
+void ListEditorWidget::mousePressEvent(QMouseEvent *pEvent)
+{
+    // We don't want to call the default handler of the event (since this would
+    // the list of items), but we don't want to ignore the event either (since
+    // our parent might then handle it and mess things up for us), so just do
+    // nothing and accept the event
+
+    pEvent->accept();
+}
+
+//==============================================================================
+
+void ListEditorWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
+{
+    // We want to go to the next item in the list (and go back to the first one
+    // if we are at the end of the list), so determine the new current index
+
+    int newCurrentIndex = currentIndex()+1;
+
+    if (newCurrentIndex == count())
+        newCurrentIndex = 0;
+
+    // Set the new current index
+
+    setCurrentIndex(newCurrentIndex);
+
+    // Accept the event
+
+    pEvent->accept();
+}
+
+//==============================================================================
+
 QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
                                              const QStyleOptionViewItem &pOption,
                                              const QModelIndex &pIndex) const
