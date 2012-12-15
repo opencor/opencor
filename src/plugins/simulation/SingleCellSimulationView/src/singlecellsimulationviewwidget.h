@@ -77,7 +77,7 @@ public:
     SingleCellSimulationViewSimulation * simulation() const;
 
     int delayValue() const;
-    void setDelayValue(const int &pValue);
+    void setDelayValue(const int &pDelayValue);
 
     SingleCellSimulationViewContentsWidget * contentsWidget() const;
 

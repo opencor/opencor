@@ -94,7 +94,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
     connect(mDelayWidget, SIGNAL(valueChanged(double)),
             this, SLOT(updateDelayValue(const double &)));
 
-    mDelayWidget->setValue(mDelayWidget->maxValue());
+    setDelayValue(0);
 
     // Create a tool bar widget with different buttons
 
@@ -785,14 +785,12 @@ void SingleCellSimulationViewWidget::updateDelayValue(const double &pDelayValue)
 {
     // Update our delay value widget
 
-    double delayValue = mDelayWidget->maxValue()-pDelayValue;
-
-    mDelayValueWidget->setText(QLocale().toString(delayValue)+" ms");
+    mDelayValueWidget->setText(QLocale().toString(pDelayValue)+" ms");
 
     // Also update our simulation data
 
     if (mSimulation)
-        mSimulation->data()->setDelay(delayValue);
+        mSimulation->data()->setDelay(pDelayValue);
 }
 
 //==============================================================================
@@ -967,16 +965,18 @@ int SingleCellSimulationViewWidget::delayValue() const
 {
     // Return the value of our delay widget
 
-    return mDelayWidget->maxValue()-mDelayWidget->value();
+    return mDelayWidget->value();
 }
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::setDelayValue(const int &pValue)
+void SingleCellSimulationViewWidget::setDelayValue(const int &pDelayValue)
 {
     // Set the value of our delay widget
 
-    mDelayWidget->setValue(mDelayWidget->maxValue()-pValue);
+    mDelayWidget->setValue(pDelayValue);
+
+    updateDelayValue(pDelayValue);
 }
 
 //==============================================================================
