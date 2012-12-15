@@ -10,10 +10,6 @@
 
 //==============================================================================
 
-#include <QScrollBar>
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace SingleCellSimulationView {
 
@@ -33,7 +29,7 @@ void SingleCellSimulationViewSimulationData::updateFromGui(SingleCellSimulationV
 {
     // Update our delay from our GUI's delay widget
 
-    mDelay = pGui->delayWidget()->value();
+    mDelay = pGui->delayValue();
 
     // Update some of our data from our GUI's simulation widget
 
@@ -50,7 +46,7 @@ void SingleCellSimulationViewSimulationData::updateGui(SingleCellSimulationViewW
 {
     // Update our GUI's delay widget using our delay
 
-    pGui->delayWidget()->setValue(mDelay);
+    pGui->setDelayValue(mDelay);
 
     // Update our GUI's simulation widget using some of our data
 

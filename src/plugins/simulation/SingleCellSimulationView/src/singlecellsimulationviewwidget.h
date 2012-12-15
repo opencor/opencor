@@ -22,6 +22,10 @@ class QTextEdit;
 
 //==============================================================================
 
+class QwtWheel;
+
+//==============================================================================
+
 namespace Ui {
     class SingleCellSimulationViewWidget;
 }
@@ -72,7 +76,8 @@ public:
 
     SingleCellSimulationViewSimulation * simulation() const;
 
-    QScrollBar *delayWidget() const;
+    int delayValue() const;
+    void setDelayValue(const int &pValue);
 
     SingleCellSimulationViewContentsWidget * contentsWidget() const;
 
@@ -97,7 +102,7 @@ private:
     QFrame *mTopSeparator;
     QFrame *mBottomSeparator;
 
-    QScrollBar *mDelayWidget;
+    QwtWheel *mDelayWidget;
     QLabel *mDelayValueWidget;
 
     QSplitter *mSplitterWidget;
@@ -138,7 +143,7 @@ private Q_SLOTS:
 
     void on_actionCsvExport_triggered();
 
-    void updateDelayValue(const int &pDelayValue);
+    void updateDelayValue(const double &pDelayValue);
 
     void simulationRunning();
     void simulationPausing();

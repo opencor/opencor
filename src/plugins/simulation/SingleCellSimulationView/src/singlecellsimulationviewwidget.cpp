@@ -40,7 +40,7 @@
 
 //==============================================================================
 
-#include "qwt_slider.h"
+#include "qwt_wheel.h"
 
 //==============================================================================
 
@@ -72,26 +72,29 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
 
     mGui->setupUi(this);
 
-    // Create a slider (and a label to show its value) to specify the delay
-    // (in milliseconds) between two data points
+    // Create a wheel (and a label to show its value) to specify the delay (in
+    // milliseconds) between the output of two data points
 
-    mDelayWidget = new QScrollBar(Qt::Horizontal, this);
+    mDelayWidget = new QwtWheel(this);
 #ifndef Q_WS_MAC
     QWidget *delaySpaceWidget = new QWidget(this);
 #endif
     mDelayValueWidget = new QLabel(this);
 
-    mDelayWidget->setFixedWidth(0.1*qApp->desktop()->screenGeometry().width());
-    mDelayWidget->setRange(0, 50);
+    mDelayWidget->setBorderWidth(0);
+    mDelayWidget->setFixedSize(0.07*qApp->desktop()->screenGeometry().width(),
+                               0.5*mDelayWidget->height());
+    mDelayWidget->setRange(0.0, 50.0, 1.0);
+    mDelayWidget->setWheelBorderWidth(0);
 
 #ifndef Q_WS_MAC
     delaySpaceWidget->setFixedWidth(4);
 #endif
 
-    connect(mDelayWidget, SIGNAL(valueChanged(int)),
-            this, SLOT(updateDelayValue(const int &)));
+    connect(mDelayWidget, SIGNAL(valueChanged(double)),
+            this, SLOT(updateDelayValue(const double &)));
 
-    updateDelayValue(mDelayWidget->value());
+    mDelayWidget->setValue(mDelayWidget->maxValue());
 
     // Create a tool bar widget with different buttons
 
@@ -778,16 +781,18 @@ void SingleCellSimulationViewWidget::on_actionCsvExport_triggered()
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::updateDelayValue(const int &pDelayValue)
+void SingleCellSimulationViewWidget::updateDelayValue(const double &pDelayValue)
 {
     // Update our delay value widget
 
-    mDelayValueWidget->setText(QLocale().toString(pDelayValue)+" ms");
+    double delayValue = mDelayWidget->maxValue()-pDelayValue;
+
+    mDelayValueWidget->setText(QLocale().toString(delayValue)+" ms");
 
     // Also update our simulation data
 
     if (mSimulation)
-        mSimulation->data()->setDelay(pDelayValue);
+        mSimulation->data()->setDelay(delayValue);
 }
 
 //==============================================================================
@@ -958,11 +963,20 @@ SingleCellSimulationViewSimulation * SingleCellSimulationViewWidget::simulation(
 
 //==============================================================================
 
-QScrollBar * SingleCellSimulationViewWidget::delayWidget() const
+int SingleCellSimulationViewWidget::delayValue() const
 {
-    // Return our delay widget
+    // Return the value of our delay widget
 
-    return mDelayWidget;
+    return mDelayWidget->maxValue()-mDelayWidget->value();
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewWidget::setDelayValue(const int &pValue)
+{
+    // Set the value of our delay widget
+
+    mDelayWidget->setValue(mDelayWidget->maxValue()-pValue);
 }
 
 //==============================================================================
