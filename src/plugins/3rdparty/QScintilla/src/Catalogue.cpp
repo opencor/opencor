@@ -91,6 +91,7 @@ int Scintilla_LinkLexers() {
 	LINK_LEXER(lmASY);
 	LINK_LEXER(lmAU3);
 	LINK_LEXER(lmAVE);
+	LINK_LEXER(lmAVS);
 	LINK_LEXER(lmBaan);
 	LINK_LEXER(lmBash);
 	LINK_LEXER(lmBatch);
@@ -101,6 +102,7 @@ int Scintilla_LinkLexers() {
 	LINK_LEXER(lmClwNoCase);
 	LINK_LEXER(lmCmake);
 	LINK_LEXER(lmCOBOL);
+	LINK_LEXER(lmCoffeeScript);
 	LINK_LEXER(lmConf);
 	LINK_LEXER(lmCPP);
 	LINK_LEXER(lmCPPNoCase);
@@ -108,6 +110,7 @@ int Scintilla_LinkLexers() {
 	LINK_LEXER(lmCss);
 	LINK_LEXER(lmD);
 	LINK_LEXER(lmDiff);
+	LINK_LEXER(lmECL);
 	LINK_LEXER(lmEiffel);
 	LINK_LEXER(lmEiffelkw);
 	LINK_LEXER(lmErlang);
@@ -144,12 +147,13 @@ int Scintilla_LinkLexers() {
 	LINK_LEXER(lmNull);
 	LINK_LEXER(lmOctave);
 	LINK_LEXER(lmOpal);
+	LINK_LEXER(lmOScript);
 	LINK_LEXER(lmPascal);
 	LINK_LEXER(lmPB);
 	LINK_LEXER(lmPerl);
 	LINK_LEXER(lmPHPSCRIPT);
 	LINK_LEXER(lmPLM);
-	LINK_LEXER(lmPo);
+	LINK_LEXER(lmPO);
 	LINK_LEXER(lmPOV);
 	LINK_LEXER(lmPowerPro);
 	LINK_LEXER(lmPowerShell);
@@ -172,12 +176,14 @@ int Scintilla_LinkLexers() {
 	LINK_LEXER(lmTADS3);
 	LINK_LEXER(lmTAL);
 	LINK_LEXER(lmTCL);
+	LINK_LEXER(lmTCMD);
 	LINK_LEXER(lmTeX);
 	LINK_LEXER(lmTxt2tags);
 	LINK_LEXER(lmVB);
 	LINK_LEXER(lmVBScript);
 	LINK_LEXER(lmVerilog);
 	LINK_LEXER(lmVHDL);
+	LINK_LEXER(lmVisualProlog);
 */
 	LINK_LEXER(lmXML);
 /*---OPENCOR---

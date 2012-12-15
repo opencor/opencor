@@ -33,7 +33,8 @@
 // The ctor.
 QsciLexerCSS::QsciLexerCSS(QObject *parent)
     : QsciLexer(parent),
-      fold_comments(false), fold_compact(true)
+      fold_comments(false), fold_compact(true), hss_language(false),
+      less_language(false), scss_language(false)
 {
 }
 
@@ -297,6 +298,9 @@ QString QsciLexerCSS::description(int style) const
 
     case MediaRule:
         return tr("Media rule");
+
+    case Variable:
+        return tr("Variable");
     }
 
     return QString();
@@ -308,6 +312,9 @@ void QsciLexerCSS::refreshProperties()
 {
     setCommentProp();
     setCompactProp();
+    setHSSProp();
+    setLessProp();
+    setSCSSProp();
 }
 
 
@@ -318,6 +325,9 @@ bool QsciLexerCSS::readProperties(QSettings &qs,const QString &prefix)
 
     fold_comments = qs.value(prefix + "foldcomments", false).toBool();
     fold_compact = qs.value(prefix + "foldcompact", true).toBool();
+    hss_language = qs.value(prefix + "hsslanguage", false).toBool();
+    less_language = qs.value(prefix + "lesslanguage", false).toBool();
+    scss_language = qs.value(prefix + "scsslanguage", false).toBool();
 
     return rc;
 }
@@ -330,6 +340,9 @@ bool QsciLexerCSS::writeProperties(QSettings &qs,const QString &prefix) const
 
     qs.setValue(prefix + "foldcomments", fold_comments);
     qs.setValue(prefix + "foldcompact", fold_compact);
+    qs.setValue(prefix + "hsslanguage", hss_language);
+    qs.setValue(prefix + "lesslanguage", less_language);
+    qs.setValue(prefix + "scsslanguage", scss_language);
 
     return rc;
 }
@@ -378,4 +391,52 @@ void QsciLexerCSS::setFoldCompact(bool fold)
 void QsciLexerCSS::setCompactProp()
 {
     emit propertyChanged("fold.compact",(fold_compact ? "1" : "0"));
+}
+
+
+// Set if HSS is supported.
+void QsciLexerCSS::setHSSLanguage(bool enabled)
+{
+    hss_language = enabled;
+
+    setHSSProp();
+}
+
+
+// Set the "lexer.css.hss.language" property.
+void QsciLexerCSS::setHSSProp()
+{
+    emit propertyChanged("lexer.css.hss.language",(hss_language ? "1" : "0"));
+}
+
+
+// Set if Less CSS is supported.
+void QsciLexerCSS::setLessLanguage(bool enabled)
+{
+    less_language = enabled;
+
+    setLessProp();
+}
+
+
+// Set the "lexer.css.less.language" property.
+void QsciLexerCSS::setLessProp()
+{
+    emit propertyChanged("lexer.css.less.language",(less_language ? "1" : "0"));
+}
+
+
+// Set if Sassy CSS is supported.
+void QsciLexerCSS::setSCSSLanguage(bool enabled)
+{
+    scss_language = enabled;
+
+    setSCSSProp();
+}
+
+
+// Set the "lexer.css.scss.language" property.
+void QsciLexerCSS::setSCSSProp()
+{
+    emit propertyChanged("lexer.css.scss.language",(scss_language ? "1" : "0"));
 }

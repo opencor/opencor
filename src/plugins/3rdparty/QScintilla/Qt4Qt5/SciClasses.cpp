@@ -58,7 +58,7 @@ QsciSciCallTip::~QsciSciCallTip()
 // Paint a call tip.
 void QsciSciCallTip::paintEvent(QPaintEvent *)
 {
-    QSCI_SCI_NAMESPACE(Surface) *surfaceWindow = QSCI_SCI_NAMESPACE(Surface)::Allocate();
+    QSCI_SCI_NAMESPACE(Surface) *surfaceWindow = QSCI_SCI_NAMESPACE(Surface)::Allocate(SC_TECHNOLOGY_DEFAULT);
 
     if (!surfaceWindow)
         return;

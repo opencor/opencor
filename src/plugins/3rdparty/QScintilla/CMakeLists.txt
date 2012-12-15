@@ -18,26 +18,26 @@ ADD_PLUGIN(QScintilla
         lexlib/StyleContext.cpp
         lexlib/WordList.cpp
 
-        Qt4/ListBoxQt.cpp
-        Qt4/PlatQt.cpp
-        Qt4/qsciabstractapis.cpp
-        Qt4/qsciapis.cpp
-        Qt4/qscicommand.cpp
-        Qt4/qscicommandset.cpp
-        Qt4/qscidocument.cpp
-        Qt4/qscilexer.cpp
-        Qt4/qscilexercpp.cpp
-        Qt4/qscilexercss.cpp
-        Qt4/qscilexerhtml.cpp
-        Qt4/qscilexerjavascript.cpp
-        Qt4/qscilexerpython.cpp
-        Qt4/qscilexerxml.cpp
-        Qt4/qsciscintilla.cpp
-        Qt4/qsciscintillabase.cpp
-        Qt4/qscistyle.cpp
-        Qt4/qscistyledtext.cpp
-        Qt4/SciClasses.cpp
-        Qt4/ScintillaQt.cpp
+        Qt4Qt5/ListBoxQt.cpp
+        Qt4Qt5/PlatQt.cpp
+        Qt4Qt5/qsciabstractapis.cpp
+        Qt4Qt5/qsciapis.cpp
+        Qt4Qt5/qscicommand.cpp
+        Qt4Qt5/qscicommandset.cpp
+        Qt4Qt5/qscidocument.cpp
+        Qt4Qt5/qscilexer.cpp
+        Qt4Qt5/qscilexercpp.cpp
+        Qt4Qt5/qscilexercss.cpp
+        Qt4Qt5/qscilexerhtml.cpp
+        Qt4Qt5/qscilexerjavascript.cpp
+        Qt4Qt5/qscilexerpython.cpp
+        Qt4Qt5/qscilexerxml.cpp
+        Qt4Qt5/qsciscintilla.cpp
+        Qt4Qt5/qsciscintillabase.cpp
+        Qt4Qt5/qscistyle.cpp
+        Qt4Qt5/qscistyledtext.cpp
+        Qt4Qt5/SciClasses.cpp
+        Qt4Qt5/ScintillaQt.cpp
 
         src/AutoComplete.cpp
         src/CallTip.cpp
@@ -63,19 +63,19 @@ ADD_PLUGIN(QScintilla
         src/ViewStyle.cpp
         src/XPM.cpp
     HEADERS_MOC
-        Qt4/SciClasses.h
+        Qt4Qt5/SciClasses.h
 
-        Qt4/Qsci/qsciabstractapis.h
-        Qt4/Qsci/qsciapis.h
-        Qt4/Qsci/qscilexer.h
-        Qt4/Qsci/qscilexercpp.h
-        Qt4/Qsci/qscilexercss.h
-        Qt4/Qsci/qscilexerhtml.h
-        Qt4/Qsci/qscilexerjavascript.h
-        Qt4/Qsci/qscilexerpython.h
-        Qt4/Qsci/qscilexerxml.h
-        Qt4/Qsci/qsciscintilla.h
-        Qt4/Qsci/qsciscintillabase.h
+        Qt4Qt5/Qsci/qsciabstractapis.h
+        Qt4Qt5/Qsci/qsciapis.h
+        Qt4Qt5/Qsci/qscilexer.h
+        Qt4Qt5/Qsci/qscilexercpp.h
+        Qt4Qt5/Qsci/qscilexercss.h
+        Qt4Qt5/Qsci/qscilexerhtml.h
+        Qt4Qt5/Qsci/qscilexerjavascript.h
+        Qt4Qt5/Qsci/qscilexerpython.h
+        Qt4Qt5/Qsci/qscilexerxml.h
+        Qt4Qt5/Qsci/qsciscintilla.h
+        Qt4Qt5/Qsci/qsciscintillabase.h
 
         src/qscintillaplugin.h
     DEFINITIONS
@@ -85,7 +85,7 @@ ADD_PLUGIN(QScintilla
     INCLUDE_DIRS
         include
         lexlib
-        Qt4
+        Qt4Qt5
         src
     QT_DEPENDENCIES
         QtCore
