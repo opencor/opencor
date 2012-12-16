@@ -168,6 +168,9 @@ class CORE_EXPORT PropertyEditorWidget : public TreeViewWidget
     Q_OBJECT
 
 public:
+    explicit PropertyEditorWidget(const bool &pShowUnits,
+                                  const bool &pAutoUpdateHeight,
+                                  QWidget *pParent = 0);
     explicit PropertyEditorWidget(const bool &pAutoUpdateHeight,
                                   QWidget *pParent = 0);
     explicit PropertyEditorWidget(QWidget *pParent = 0);
@@ -215,6 +218,7 @@ protected:
     Property currentProperty() const;
 
 private:
+    bool mShowUnits;
     bool mAutoUpdateHeight;
 
     QStandardItemModel *mModel;
@@ -224,7 +228,8 @@ private:
     Property mProperty;
     QWidget *mPropertyEditor;
 
-    void constructor(const bool &pAutoUpdateHeight = false);
+    void constructor(const bool &pShowUnits = true,
+                     const bool &pAutoUpdateHeight = false);
 
     void retranslateEmptyListProperties(QStandardItem *pItem);
 

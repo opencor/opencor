@@ -396,10 +396,12 @@ QList<QStandardItem *> Property::items() const
 
 //==============================================================================
 
-void PropertyEditorWidget::constructor(const bool &pAutoUpdateHeight)
+void PropertyEditorWidget::constructor(const bool &pShowUnits,
+                                       const bool &pAutoUpdateHeight)
 {
     // Some initialisations
 
+    mShowUnits = pShowUnits;
     mAutoUpdateHeight = pAutoUpdateHeight;
 
     mProperty       = Property();
@@ -459,13 +461,25 @@ void PropertyEditorWidget::constructor(const bool &pAutoUpdateHeight)
 
 //==============================================================================
 
+PropertyEditorWidget::PropertyEditorWidget(const bool &pShowUnits,
+                                           const bool &pAutoUpdateHeight,
+                                           QWidget *pParent) :
+    TreeViewWidget(pParent)
+{
+    // Construct our object
+
+    constructor(pShowUnits, pAutoUpdateHeight);
+}
+
+//==============================================================================
+
 PropertyEditorWidget::PropertyEditorWidget(const bool &pAutoUpdateHeight,
                                            QWidget *pParent) :
     TreeViewWidget(pParent)
 {
     // Construct our object
 
-    constructor(pAutoUpdateHeight);
+    constructor(true, pAutoUpdateHeight);
 }
 
 //==============================================================================
@@ -512,9 +526,13 @@ void PropertyEditorWidget::retranslateUi()
 {
     // Retranslate our header labels
 
-    mModel->setHorizontalHeaderLabels(QStringList() << tr("Property")
-                                                    << tr("Value")
-                                                    << tr("Unit"));
+    if (mShowUnits)
+        mModel->setHorizontalHeaderLabels(QStringList() << tr("Property")
+                                                        << tr("Value")
+                                                        << tr("Unit"));
+    else
+        mModel->setHorizontalHeaderLabels(QStringList() << tr("Property")
+                                                        << tr("Value"));
 
     // 'Retranslate' the value of all empty list properties
 
