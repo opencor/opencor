@@ -32,7 +32,9 @@ class SingleCellSimulationViewInformationParametersWidget : public Core::Propert
 public:
     explicit SingleCellSimulationViewInformationParametersWidget(QWidget *pParent = 0);
 
-    void initialize(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
+    void initialize(const QString &pFileName,
+                    OpenCOR::CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
+    void finalize(const QString &pFileName);
 };
 
 //==============================================================================

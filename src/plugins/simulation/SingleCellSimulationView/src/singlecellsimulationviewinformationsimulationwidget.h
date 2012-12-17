@@ -12,6 +12,15 @@
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace CellMLSupport {
+    class CellmlFileRuntime;
+}   // namespace CellMLSupport
+
+//==============================================================================
+
 namespace SingleCellSimulationView {
 
 //==============================================================================
@@ -25,16 +34,13 @@ public:
 
     virtual void retranslateUi();
 
-    void setUnit(const QString &pUnit);
+    void initialize(const QString &pFileName,
+                    OpenCOR::CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
+    void finalize(const QString &pFileName);
 
     double startingPoint() const;
-    void setStartingPoint(const double &pValue);
-
     double endingPoint() const;
-    void setEndingPoint(const double &pValue);
-
     double pointInterval() const;
-    void setPointInterval(const double &pValue);
 
 private:
     Core::Property mStartingPointProperty;

@@ -197,8 +197,11 @@ void SingleCellSimulationViewInformationSolversWidget::setPropertiesUnit(const S
 
 //==============================================================================
 
-void SingleCellSimulationViewInformationSolversWidget::initialize(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime)
+void SingleCellSimulationViewInformationSolversWidget::initialize(const QString &pFileName,
+                                                                  CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime)
 {
+    Q_UNUSED(pFileName);
+
     // Make sure that we have a CellML file runtime
 
     if (!pCellmlFileRuntime)
@@ -207,8 +210,7 @@ void SingleCellSimulationViewInformationSolversWidget::initialize(CellMLSupport:
     // Make sure that the CellML file runtime is valid
 
     if (pCellmlFileRuntime->isValid()) {
-        // Check whether we need an ODE or DAE solver, and add a list property
-        // for the ODE or DEA solvers
+        // Show/hide the ODE/DAE solver information
 
         mOdeSolverData.needSolver = pCellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode;
         mDaeSolverData.needSolver = !mOdeSolverData.needSolver;
@@ -216,8 +218,7 @@ void SingleCellSimulationViewInformationSolversWidget::initialize(CellMLSupport:
         setPropertyVisible(mOdeSolverData.solversProperty, mOdeSolverData.needSolver);
         setPropertyVisible(mDaeSolverData.solversProperty, mDaeSolverData.needSolver);
 
-        // Check whether we need an NLA solver, and add a list property if, if
-        // needed
+        // Show/hide the NLA solver information
 
         mNlaSolverData.needSolver = pCellmlFileRuntime->needNlaSolver();
 
@@ -235,6 +236,13 @@ void SingleCellSimulationViewInformationSolversWidget::initialize(CellMLSupport:
     setPropertiesUnit(mOdeSolverData, voiUnit);
     setPropertiesUnit(mDaeSolverData, voiUnit);
     setPropertiesUnit(mNlaSolverData, voiUnit);
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewInformationSolversWidget::finalize(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
 }
 
 //==============================================================================

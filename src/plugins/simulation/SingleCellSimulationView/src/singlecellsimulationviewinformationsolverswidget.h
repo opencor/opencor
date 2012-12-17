@@ -51,7 +51,9 @@ public:
 
     void setSolverInterfaces(const SolverInterfaces &pSolverInterfaces);
 
-    void initialize(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
+    void initialize(const QString &pFileName,
+                    CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
+    void finalize(const QString &pFileName);
 
     bool needOdeSolver() const;
     bool needDaeSolver() const;

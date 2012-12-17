@@ -2,6 +2,8 @@
 // Single cell simulation view information simulation widget
 //==============================================================================
 
+#include "cellmlfileruntime.h"
+#include "cellmlfilevariable.h"
 #include "singlecellsimulationviewinformationsimulationwidget.h"
 
 //==============================================================================
@@ -57,13 +59,30 @@ void SingleCellSimulationViewInformationSimulationWidget::retranslateUi()
 
 //==============================================================================
 
-void SingleCellSimulationViewInformationSimulationWidget::setUnit(const QString &pUnit)
+void SingleCellSimulationViewInformationSimulationWidget::initialize(const QString &pFileName,
+                                                                     CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime)
 {
-    // Set the unit of our different properties
+    Q_UNUSED(pFileName);
 
-    setNonEditablePropertyItem(mStartingPointProperty.unit, pUnit);
-    setNonEditablePropertyItem(mEndingPointProperty.unit, pUnit);
-    setNonEditablePropertyItem(mPointIntervalProperty.unit, pUnit);
+    // Make sure that we have a CellML file runtime
+
+    if (!pCellmlFileRuntime)
+        return;
+
+    // Iniialise the unit of our different properties
+
+    QString unit = pCellmlFileRuntime->variableOfIntegration()->unit();
+
+    setNonEditablePropertyItem(mStartingPointProperty.unit, unit);
+    setNonEditablePropertyItem(mEndingPointProperty.unit, unit);
+    setNonEditablePropertyItem(mPointIntervalProperty.unit, unit);
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewInformationSimulationWidget::finalize(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
 }
 
 //==============================================================================
@@ -77,15 +96,6 @@ double SingleCellSimulationViewInformationSimulationWidget::startingPoint() cons
 
 //==============================================================================
 
-void SingleCellSimulationViewInformationSimulationWidget::setStartingPoint(const double &pValue)
-{
-    // Set our starting point
-
-    setDoublePropertyItem(mStartingPointProperty.value, pValue);
-}
-
-//==============================================================================
-
 double SingleCellSimulationViewInformationSimulationWidget::endingPoint() const
 {
     // Return our ending point
@@ -95,29 +105,11 @@ double SingleCellSimulationViewInformationSimulationWidget::endingPoint() const
 
 //==============================================================================
 
-void SingleCellSimulationViewInformationSimulationWidget::setEndingPoint(const double &pValue)
-{
-    // Set our ending point
-
-    setDoublePropertyItem(mEndingPointProperty.value, pValue);
-}
-
-//==============================================================================
-
 double SingleCellSimulationViewInformationSimulationWidget::pointInterval() const
 {
     // Return our point interval
 
     return doublePropertyItem(mPointIntervalProperty.value);
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewInformationSimulationWidget::setPointInterval(const double &pValue)
-{
-    // Set our point interval
-
-    setDoublePropertyItem(mPointIntervalProperty.value, pValue);
 }
 
 //==============================================================================

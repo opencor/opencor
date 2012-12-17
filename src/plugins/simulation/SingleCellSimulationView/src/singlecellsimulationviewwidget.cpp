@@ -4,7 +4,6 @@
 
 #include "cellmlfilemanager.h"
 #include "cellmlfileruntime.h"
-#include "cellmlfilevariable.h"
 #include "coreutils.h"
 #include "progressbarwidget.h"
 #include "singlecellsimulationviewcontentswidget.h"
@@ -379,10 +378,25 @@ void SingleCellSimulationViewWidget::updateInvalidModelMessageWidget()
 
 void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 {
-    // Keep track of our simulation data for our previous model and retrieve our
-    // simulation data for the current model, if any
+    // Keep track of our simulation data for our previous model and finalise a
+    // few things, if needed
 
     SingleCellSimulationViewSimulation *previousSimulation = mSimulation;
+    SingleCellSimulationViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
+    SingleCellSimulationViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
+    SingleCellSimulationViewInformationSolversWidget *solversWidget = informationWidget->solversWidget();
+    SingleCellSimulationViewInformationParametersWidget *parametersWidget = informationWidget->parametersWidget();
+
+    if (previousSimulation) {
+        QString previousFileName = previousSimulation->fileName();
+
+        simulationWidget->finalize(previousFileName);
+        solversWidget->finalize(previousFileName);
+        parametersWidget->finalize(previousFileName);
+    }
+
+    // Retrieve our simulation data for the current model, if any
+
     mSimulation = mSimulations.value(pFileName);
 
     if (!mSimulation) {
@@ -503,17 +517,11 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
             mContentsWidget->setVisible(true);
 
-            // Retrieve the unit of our variable of integration
+            // Initialise our GUI's simulation, solvers and parameters widgets
 
-            mContentsWidget->informationWidget()->simulationWidget()->setUnit(cellmlFileRuntime->variableOfIntegration()->unit());
-
-            // Initialise our GUI's solvers and parameters widgets using our
-            // simulation
-
-            SingleCellSimulationViewInformationSolversWidget *solversWidget = mContentsWidget->informationWidget()->solversWidget();
-
-            solversWidget->initialize(cellmlFileRuntime);
-            mContentsWidget->informationWidget()->parametersWidget()->initialize(cellmlFileRuntime);
+            simulationWidget->initialize(pFileName, cellmlFileRuntime);
+            solversWidget->initialize(pFileName, cellmlFileRuntime);
+            parametersWidget->initialize(pFileName, cellmlFileRuntime);
 
 #ifdef QT_DEBUG
             // Output the type of solvers that are available to run the model
