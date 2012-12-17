@@ -2,7 +2,7 @@
 // Single cell simulation view simulation worker
 //==============================================================================
 
-#include "singlecellsimulationviewsimulationdata.h"
+#include "singlecellsimulationviewsimulation.h"
 #include "singlecellsimulationviewsimulationworker.h"
 #include "thread.h"
 
@@ -81,9 +81,9 @@ void SingleCellSimulationViewSimulationWorker::run()
 
         // Our main work loop
 
-        double startingPoint = mData->startingPoint();
-        double endingPoint   = mData->endingPoint();
-        double pointInterval = mData->pointInterval();
+        double startingPoint = mData->startingPoint;
+        double endingPoint   = mData->endingPoint;
+        double pointInterval = mData->pointInterval;
 
         bool increasingPoints = endingPoint > startingPoint;
         const double oneOverPointRange = 1.0/(endingPoint-startingPoint);
@@ -138,10 +138,10 @@ void SingleCellSimulationViewSimulationWorker::run()
             //       it can be changed ay any time (through the GUI) unlike
             //       those other properties...
 
-            if (mData->delay()) {
+            if (mData->delay) {
                 totalElapsedTime += timer.elapsed();
 
-                static_cast<Core::Thread *>(thread())->msleep(mData->delay());
+                static_cast<Core::Thread *>(thread())->msleep(mData->delay);
 
                 timer.restart();
             }

@@ -39,7 +39,18 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-class SingleCellSimulationViewSimulationData;
+class SingleCellSimulationViewWidget;
+
+//==============================================================================
+
+struct SingleCellSimulationViewSimulationData
+{
+    int delay;
+
+    double startingPoint;
+    double endingPoint;
+    double pointInterval;
+};
 
 //==============================================================================
 
@@ -53,10 +64,12 @@ public:
 
     QString fileName() const;
 
-    SingleCellSimulationViewSimulationData * data() const;
-
     SingleCellSimulationViewSimulationWorker::Status workerStatus() const;
     double workerProgress() const;
+
+    void setData(SingleCellSimulationViewWidget *pGui);
+
+    void setDelay(const int &pDelay);
 
     void run();
     void pause();
@@ -68,7 +81,7 @@ private:
 
     QString mFileName;
 
-    SingleCellSimulationViewSimulationData *mData;
+    SingleCellSimulationViewSimulationData mData;
 
 Q_SIGNALS:
     void running();

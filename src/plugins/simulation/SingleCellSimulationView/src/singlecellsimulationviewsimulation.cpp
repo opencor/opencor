@@ -2,8 +2,11 @@
 // Single cell simulation view simulation
 //==============================================================================
 
+#include "singlecellsimulationviewcontentswidget.h"
+#include "singlecellsimulationviewinformationsimulationwidget.h"
+#include "singlecellsimulationviewinformationwidget.h"
 #include "singlecellsimulationviewsimulation.h"
-#include "singlecellsimulationviewsimulationdata.h"
+#include "singlecellsimulationviewwidget.h"
 #include "thread.h"
 
 //==============================================================================
@@ -20,11 +23,9 @@ namespace SingleCellSimulationView {
 SingleCellSimulationViewSimulation::SingleCellSimulationViewSimulation(const QString &pFileName) :
     mWorkerThread(0),
     mWorker(0),
-    mFileName(pFileName)
+    mFileName(pFileName),
+    mData(SingleCellSimulationViewSimulationData())
 {
-    // Get ourselves some data
-
-    mData = new SingleCellSimulationViewSimulationData();
 }
 
 //==============================================================================
@@ -34,10 +35,6 @@ SingleCellSimulationViewSimulation::~SingleCellSimulationViewSimulation()
     // Stop our worker (just in case...)
 
     stop();
-
-    // Delete some internal objects
-
-    delete mData;
 }
 
 //==============================================================================
@@ -47,15 +44,6 @@ QString SingleCellSimulationViewSimulation::fileName() const
     // Retrieve and return our file name
 
     return mFileName;
-}
-
-//==============================================================================
-
-SingleCellSimulationViewSimulationData * SingleCellSimulationViewSimulation::data() const
-{
-    // Retrieve and return our data
-
-    return mData;
 }
 
 //==============================================================================
@@ -82,6 +70,34 @@ double SingleCellSimulationViewSimulation::workerProgress() const
 
 //==============================================================================
 
+void SingleCellSimulationViewSimulation::setData(SingleCellSimulationViewWidget *pGui)
+{
+    // Set our data using information from the GUI
+
+    // Set our delay
+
+    setDelay(pGui->delayValue());
+
+    // Update some of our data from our GUI's simulation widget
+
+    SingleCellSimulationViewInformationSimulationWidget *simulationWidget = pGui->contentsWidget()->informationWidget()->simulationWidget();
+
+    mData.startingPoint = simulationWidget->startingPoint();
+    mData.endingPoint   = simulationWidget->endingPoint();
+    mData.pointInterval = simulationWidget->pointInterval();
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewSimulation::setDelay(const int &pDelay)
+{
+    // Set our delay
+
+    mData.delay = pDelay;
+}
+
+//==============================================================================
+
 void SingleCellSimulationViewSimulation::run()
 {
     // Initialise our worker, if not active
@@ -91,15 +107,15 @@ void SingleCellSimulationViewSimulation::run()
 
         bool simulationSettingsOk = false;
 
-        if (mData->startingPoint() == mData->endingPoint())
+        if (mData.startingPoint == mData.endingPoint)
             emit error(tr("the starting and ending points cannot have the same value"));
-        else if (mData->pointInterval() == 0)
+        else if (mData.pointInterval == 0)
             emit error(tr("the point interval cannot be equal to zero"));
-        else if (   (mData->startingPoint() < mData->endingPoint())
-                 && (mData->pointInterval() < 0))
+        else if (   (mData.startingPoint < mData.endingPoint)
+                 && (mData.pointInterval < 0))
             emit error(tr("the ending point is greater than the starting point, so the point interval should be greater than zero"));
-        else if (   (mData->startingPoint() > mData->endingPoint())
-                 && (mData->pointInterval() > 0))
+        else if (   (mData.startingPoint > mData.endingPoint)
+                 && (mData.pointInterval > 0))
             emit error(tr("the ending point is smaller than the starting point, so the point interval should be smaller than zero"));
         else
             simulationSettingsOk = true;
@@ -112,7 +128,7 @@ void SingleCellSimulationViewSimulation::run()
         // Create our worker and the thread in which it will work
 
         mWorkerThread = new Core::Thread();
-        mWorker       = new SingleCellSimulationViewSimulationWorker(mData);
+        mWorker       = new SingleCellSimulationViewSimulationWorker(&mData);
 
         // Check that the worker and its thread have been properly created
 

@@ -12,7 +12,6 @@
 #include "singlecellsimulationviewinformationwidget.h"
 #include "singlecellsimulationviewplugin.h"
 #include "singlecellsimulationviewsimulation.h"
-#include "singlecellsimulationviewsimulationdata.h"
 #include "singlecellsimulationviewinformationparameterswidget.h"
 #include "singlecellsimulationviewinformationsimulationwidget.h"
 #include "singlecellsimulationviewinformationsolverswidget.h"
@@ -380,17 +379,10 @@ void SingleCellSimulationViewWidget::updateInvalidModelMessageWidget()
 
 void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 {
-    // Do a few things for the previous model, if needed
+    // Keep track of our simulation data for our previous model and retrieve our
+    // simulation data for the current model, if any
 
     SingleCellSimulationViewSimulation *previousSimulation = mSimulation;
-
-    if (previousSimulation)
-        // Update our previous simulation's data from the GUI
-
-        previousSimulation->data()->updateFromGui(this);
-
-    // Retrieve our simulation data for the current model, if any
-
     mSimulation = mSimulations.value(pFileName);
 
     if (!mSimulation) {
@@ -522,10 +514,6 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
             solversWidget->initialize(cellmlFileRuntime);
             mContentsWidget->informationWidget()->parametersWidget()->initialize(cellmlFileRuntime);
-
-            // Update our GUI using our simulation's data
-
-            mSimulation->data()->updateGui(this);
 
 #ifdef QT_DEBUG
             // Output the type of solvers that are available to run the model
@@ -717,9 +705,9 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
 
         mContentsWidget->informationWidget()->cancelEditing();
 
-        // Make sure that our simulation data are up-to-date
+        // Set our simulation data
 
-        mSimulation->data()->updateFromGui(this);
+        mSimulation->setData(this);
     }
 
     // Start/resume the simulation
@@ -798,7 +786,7 @@ void SingleCellSimulationViewWidget::updateDelayValue(const double &pDelayValue)
     // Also update our simulation data
 
     if (mSimulation)
-        mSimulation->data()->setDelay(pDelayValue);
+        mSimulation->setDelay(pDelayValue);
 }
 
 //==============================================================================

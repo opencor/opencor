@@ -18,7 +18,7 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-class SingleCellSimulationViewSimulationData;
+struct SingleCellSimulationViewSimulationData;
 
 //==============================================================================
 

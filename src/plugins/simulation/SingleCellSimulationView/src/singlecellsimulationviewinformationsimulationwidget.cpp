@@ -18,11 +18,17 @@ namespace SingleCellSimulationView {
 SingleCellSimulationViewInformationSimulationWidget::SingleCellSimulationViewInformationSimulationWidget(QWidget *pParent) :
     PropertyEditorWidget(true, pParent)
 {
-    // Populate our data model
+    // Populate our property editor
 
     mStartingPointProperty = addDoubleProperty();
     mEndingPointProperty   = addDoubleProperty();
     mPointIntervalProperty = addDoubleProperty();
+
+    // Initialise our property values
+
+    setDoublePropertyItem(mStartingPointProperty.value, 0.0);
+    setDoublePropertyItem(mEndingPointProperty.value, 1000.0);
+    setDoublePropertyItem(mPointIntervalProperty.value, 1.0);
 
     // Some further initialisations which are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
