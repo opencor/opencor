@@ -2,6 +2,7 @@
 // Single cell simulation view widget
 //==============================================================================
 
+#include "cellmlfilemanager.h"
 #include "cellmlfileruntime.h"
 #include "cellmlfilevariable.h"
 #include "coreutils.h"
@@ -428,7 +429,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
     // Output some information about our CellML file
 
-    CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = mSimulation->cellmlFileRuntime();
+    CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName)->runtime();
 
     QString information = QString();
 
@@ -706,15 +707,22 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
     if (!mSimulation)
         return;
 
-    // Cancel any editing of our simulation information
+    // Get ready for the simulation
+    // Note: there are a few things that we need to do before running the
+    //       simulation, but those things don't need to be done again when
+    //       resuming a simulation...
 
-    mContentsWidget->informationWidget()->cancelEditing();
+    if (mSimulation->workerStatus() == SingleCellSimulationViewSimulationWorker::Unknown) {
+        // Cancel any editing of our simulation information
 
-    // Make sure that our simulation data are up-to-date
+        mContentsWidget->informationWidget()->cancelEditing();
 
-    mSimulation->data()->updateFromGui(this);
+        // Make sure that our simulation data are up-to-date
 
-    // Start the simulation
+        mSimulation->data()->updateFromGui(this);
+    }
+
+    // Start/resume the simulation
 
     mSimulation->run();
 }

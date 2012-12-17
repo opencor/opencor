@@ -2,7 +2,6 @@
 // Single cell simulation view simulation
 //==============================================================================
 
-#include "cellmlfilemanager.h"
 #include "singlecellsimulationviewsimulation.h"
 #include "singlecellsimulationviewsimulationdata.h"
 #include "thread.h"
@@ -57,15 +56,6 @@ SingleCellSimulationViewSimulationData * SingleCellSimulationViewSimulation::dat
     // Retrieve and return our data
 
     return mData;
-}
-
-//==============================================================================
-
-CellMLSupport::CellmlFileRuntime * SingleCellSimulationViewSimulation::cellmlFileRuntime() const
-{
-    // Retrieve and return our runtime
-
-    return CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName)->runtime();
 }
 
 //==============================================================================

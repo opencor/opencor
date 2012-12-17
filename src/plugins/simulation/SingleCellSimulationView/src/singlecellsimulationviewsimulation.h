@@ -55,8 +55,6 @@ public:
 
     SingleCellSimulationViewSimulationData * data() const;
 
-    CellMLSupport::CellmlFileRuntime * cellmlFileRuntime() const;
-
     SingleCellSimulationViewSimulationWorker::Status workerStatus() const;
     double workerProgress() const;
 
