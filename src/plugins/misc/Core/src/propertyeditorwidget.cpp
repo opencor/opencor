@@ -396,7 +396,19 @@ QList<QStandardItem *> Property::items() const
 
 //==============================================================================
 
+PropertyEditorWidgetGuiStateProperty::PropertyEditorWidgetGuiStateProperty(PropertyItem *pItem,
+                                                                           const bool &pHidden,
+                                                                           const QString &pValue) :
+    item(pItem),
+    hidden(pHidden),
+    value(pValue)
+{
+}
+
+//==============================================================================
+
 PropertyEditorWidgetGuiState::PropertyEditorWidgetGuiState() :
+    properties(PropertyEditorWidgetGuiStateProperties()),
     currentIndex(QModelIndex())
 {
 }
@@ -413,6 +425,8 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
 
     mProperty       = Property();
     mPropertyEditor = 0;
+
+    mPropertyValues = PropertyItems();
 
     // Customise ourselves
 
@@ -640,13 +654,31 @@ void PropertyEditorWidget::selectFirstProperty()
 
 //==============================================================================
 
-PropertyEditorWidgetGuiState PropertyEditorWidget::guiState() const
+PropertyEditorWidgetGuiState PropertyEditorWidget::guiState()
 {
-    // Retrieve and return our GUI state
+    // Cancel any property editing, if any
+
+    cancelPropertyEditing();
+
+    // Retrieve our GUI state
 
     PropertyEditorWidgetGuiState guiState = PropertyEditorWidgetGuiState();
 
+    // Retrieve the visible state and value of our different properties
+
+    foreach (PropertyItem *propertyValue, mPropertyValues)
+        guiState.properties << PropertyEditorWidgetGuiStateProperty(propertyValue,
+                                                                    isRowHidden(propertyValue->row(),
+                                                                                propertyValue->parent()?
+                                                                                    propertyValue->parent()->index():
+                                                                                    mModel->invisibleRootItem()->index()),
+                                                                    propertyValue->text());
+
+    // Retrieve our current index
+
     guiState.currentIndex = currentIndex();
+
+    // Return our GUI state
 
     return guiState;
 }
@@ -656,6 +688,20 @@ PropertyEditorWidgetGuiState PropertyEditorWidget::guiState() const
 void PropertyEditorWidget::setGuiState(const PropertyEditorWidgetGuiState &pGuiState)
 {
     // Set our GUI state
+
+    // Set the visible state and value of our different properties
+
+    foreach (const PropertyEditorWidgetGuiStateProperty &property, pGuiState.properties) {
+        setRowHidden(property.item->row(),
+                     property.item->parent()?
+                         property.item->parent()->index():
+                         mModel->invisibleRootItem()->index(),
+                     property.hidden);
+
+        property.item->setText(property.value);
+    }
+
+    // Set our current index, if it is valid
 
     if (pGuiState.currentIndex.isValid())
         setCurrentIndex(pGuiState.currentIndex);
@@ -685,6 +731,10 @@ Property PropertyEditorWidget::addProperty(const Property &pParent,
 
         setRootIsDecorated(true);
     }
+
+    // Keep track of our new property's value
+
+    mPropertyValues << res.value;
 
     // Return our new property's information
 

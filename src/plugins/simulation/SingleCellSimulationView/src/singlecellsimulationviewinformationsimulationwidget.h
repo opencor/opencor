@@ -25,19 +25,6 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-struct SingleCellSimulationViewInformationSimulationWidgetData
-{
-    explicit SingleCellSimulationViewInformationSimulationWidgetData();
-
-    Core::PropertyEditorWidgetGuiState guiState;
-
-    double startingPoint;
-    double endingPoint;
-    double pointInterval;
-};
-
-//==============================================================================
-
 class SingleCellSimulationViewInformationSimulationWidget : public Core::PropertyEditorWidget
 {
     Q_OBJECT
@@ -60,7 +47,7 @@ private:
     Core::Property mEndingPointProperty;
     Core::Property mPointIntervalProperty;
 
-    QMap<QString, SingleCellSimulationViewInformationSimulationWidgetData> mData;
+    QMap<QString, Core::PropertyEditorWidgetGuiState> mGuiStates;
 };
 
 //==============================================================================

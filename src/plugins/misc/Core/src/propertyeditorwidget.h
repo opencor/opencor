@@ -135,6 +135,10 @@ private:
 
 //==============================================================================
 
+typedef QList<PropertyItem *> PropertyItems;
+
+//==============================================================================
+
 struct CORE_EXPORT Property
 {
     QStandardItem *name;
@@ -163,9 +167,29 @@ typedef QList<Property> Properties;
 
 //==============================================================================
 
+struct PropertyEditorWidgetGuiStateProperty
+{
+    explicit PropertyEditorWidgetGuiStateProperty(PropertyItem *pItem,
+                                                  const bool &pHidden,
+                                                  const QString &pValue);
+
+    PropertyItem *item;
+
+    bool hidden;
+    QString value;
+};
+
+//==============================================================================
+
+typedef QList<PropertyEditorWidgetGuiStateProperty> PropertyEditorWidgetGuiStateProperties;
+
+//==============================================================================
+
 struct CORE_EXPORT PropertyEditorWidgetGuiState
 {
     explicit PropertyEditorWidgetGuiState();
+
+    PropertyEditorWidgetGuiStateProperties properties;
 
     QModelIndex currentIndex;
 };
@@ -193,7 +217,7 @@ public:
 
     void selectFirstProperty();
 
-    PropertyEditorWidgetGuiState guiState() const;
+    PropertyEditorWidgetGuiState guiState();
     void setGuiState(const PropertyEditorWidgetGuiState &pGuiState);
 
     Property addCategoryProperty(const Property &pParent = Property());
@@ -239,6 +263,8 @@ private:
 
     Property mProperty;
     QWidget *mPropertyEditor;
+
+    PropertyItems mPropertyValues;
 
     void constructor(const bool &pShowUnits = true,
                      const bool &pAutoUpdateHeight = false);

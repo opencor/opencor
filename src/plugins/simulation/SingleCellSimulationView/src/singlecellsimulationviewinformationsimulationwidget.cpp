@@ -17,24 +17,21 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-SingleCellSimulationViewInformationSimulationWidgetData::SingleCellSimulationViewInformationSimulationWidgetData() :
-    guiState(Core::PropertyEditorWidgetGuiState()),
-    startingPoint(0.0),
-    endingPoint(1000.0),
-    pointInterval(1.0)
-{
-}
-
-//==============================================================================
-
 SingleCellSimulationViewInformationSimulationWidget::SingleCellSimulationViewInformationSimulationWidget(QWidget *pParent) :
-    PropertyEditorWidget(true, pParent)
+    PropertyEditorWidget(true, pParent),
+    mGuiStates(QMap<QString, Core::PropertyEditorWidgetGuiState>())
 {
     // Populate our property editor
 
     mStartingPointProperty = addDoubleProperty();
     mEndingPointProperty   = addDoubleProperty();
     mPointIntervalProperty = addDoubleProperty();
+
+    // Initialise our property values
+
+    setDoublePropertyItem(mStartingPointProperty.value, 0.0);
+    setDoublePropertyItem(mEndingPointProperty.value, 1000.0);
+    setDoublePropertyItem(mPointIntervalProperty.value, 1.0);
 
     // Some further initialisations which are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
@@ -71,17 +68,9 @@ void SingleCellSimulationViewInformationSimulationWidget::initialize(const QStri
     if (!pCellmlFileRuntime)
         return;
 
-    // Initialise our GUI state
+    // Retrieve and initialise our GUI state
 
-    SingleCellSimulationViewInformationSimulationWidgetData data = mData.value(pFileName);
-
-    setGuiState(data.guiState);
-
-    // Initialise the value of our different properties
-
-    setDoublePropertyItem(mStartingPointProperty.value, data.startingPoint);
-    setDoublePropertyItem(mEndingPointProperty.value, data.endingPoint);
-    setDoublePropertyItem(mPointIntervalProperty.value, data.pointInterval);
+    setGuiState(mGuiStates.value(pFileName));
 
     // Iniialise the unit of our different properties
 
@@ -96,25 +85,9 @@ void SingleCellSimulationViewInformationSimulationWidget::initialize(const QStri
 
 void SingleCellSimulationViewInformationSimulationWidget::finalize(const QString &pFileName)
 {
-    // Cancel any property editing, if any
+    // Keep track of our GUI state
 
-    cancelPropertyEditing();
-
-    // Retrieve our GUI state
-
-    SingleCellSimulationViewInformationSimulationWidgetData data = mData.value(pFileName);
-
-    data.guiState = guiState();
-
-    // Retrieve the value of our different properties
-
-    data.startingPoint = doublePropertyItem(mStartingPointProperty.value);
-    data.endingPoint   = doublePropertyItem(mEndingPointProperty.value);
-    data.pointInterval = doublePropertyItem(mPointIntervalProperty.value);
-
-    // Keep track of our data
-
-    mData.insert(pFileName, data);
+    mGuiStates.insert(pFileName, guiState());
 }
 
 //==============================================================================
