@@ -163,6 +163,15 @@ typedef QList<Property> Properties;
 
 //==============================================================================
 
+struct CORE_EXPORT PropertyEditorWidgetGuiState
+{
+    explicit PropertyEditorWidgetGuiState();
+
+    QModelIndex currentIndex;
+};
+
+//==============================================================================
+
 class CORE_EXPORT PropertyEditorWidget : public TreeViewWidget
 {
     Q_OBJECT
@@ -183,6 +192,9 @@ public:
     virtual QSize sizeHint() const;
 
     void selectFirstProperty();
+
+    PropertyEditorWidgetGuiState guiState() const;
+    void setGuiState(const PropertyEditorWidgetGuiState &pGuiState);
 
     Property addCategoryProperty(const Property &pParent = Property());
     Property addIntegerProperty(const Property &pParent = Property());

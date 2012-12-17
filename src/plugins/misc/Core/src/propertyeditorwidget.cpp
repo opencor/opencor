@@ -396,6 +396,13 @@ QList<QStandardItem *> Property::items() const
 
 //==============================================================================
 
+PropertyEditorWidgetGuiState::PropertyEditorWidgetGuiState() :
+    currentIndex(QModelIndex())
+{
+}
+
+//==============================================================================
+
 void PropertyEditorWidget::constructor(const bool &pShowUnits,
                                        const bool &pAutoUpdateHeight)
 {
@@ -629,6 +636,29 @@ void PropertyEditorWidget::selectFirstProperty()
     // Convenience function to select the first property, i.e. the first item
 
     selectFirstItem();
+}
+
+//==============================================================================
+
+PropertyEditorWidgetGuiState PropertyEditorWidget::guiState() const
+{
+    // Retrieve and return our GUI state
+
+    PropertyEditorWidgetGuiState guiState = PropertyEditorWidgetGuiState();
+
+    guiState.currentIndex = currentIndex();
+
+    return guiState;
+}
+
+//==============================================================================
+
+void PropertyEditorWidget::setGuiState(const PropertyEditorWidgetGuiState &pGuiState)
+{
+    // Set our GUI state
+
+    if (pGuiState.currentIndex.isValid())
+        setCurrentIndex(pGuiState.currentIndex);
 }
 
 //==============================================================================

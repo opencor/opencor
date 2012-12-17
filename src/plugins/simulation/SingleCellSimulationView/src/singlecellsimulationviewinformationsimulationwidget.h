@@ -29,11 +29,11 @@ struct SingleCellSimulationViewInformationSimulationWidgetData
 {
     explicit SingleCellSimulationViewInformationSimulationWidgetData();
 
+    Core::PropertyEditorWidgetGuiState guiState;
+
     double startingPoint;
     double endingPoint;
     double pointInterval;
-
-    QModelIndex currentIndex;
 };
 
 //==============================================================================
