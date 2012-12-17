@@ -17,6 +17,16 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
+SingleCellSimulationViewInformationSimulationWidgetData::SingleCellSimulationViewInformationSimulationWidgetData() :
+    startingPoint(0.0),
+    endingPoint(1000.0),
+    pointInterval(1.0),
+    currentIndex(QModelIndex())
+{
+}
+
+//==============================================================================
+
 SingleCellSimulationViewInformationSimulationWidget::SingleCellSimulationViewInformationSimulationWidget(QWidget *pParent) :
     PropertyEditorWidget(true, pParent)
 {
@@ -25,12 +35,6 @@ SingleCellSimulationViewInformationSimulationWidget::SingleCellSimulationViewInf
     mStartingPointProperty = addDoubleProperty();
     mEndingPointProperty   = addDoubleProperty();
     mPointIntervalProperty = addDoubleProperty();
-
-    // Initialise our property values
-
-    setDoublePropertyItem(mStartingPointProperty.value, 0.0);
-    setDoublePropertyItem(mEndingPointProperty.value, 1000.0);
-    setDoublePropertyItem(mPointIntervalProperty.value, 1.0);
 
     // Some further initialisations which are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
@@ -62,12 +66,21 @@ void SingleCellSimulationViewInformationSimulationWidget::retranslateUi()
 void SingleCellSimulationViewInformationSimulationWidget::initialize(const QString &pFileName,
                                                                      CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime)
 {
-    Q_UNUSED(pFileName);
-
     // Make sure that we have a CellML file runtime
 
     if (!pCellmlFileRuntime)
         return;
+
+    // Retrieve and initialisae the value of our different properties
+
+    SingleCellSimulationViewInformationSimulationWidgetData data = mData.value(pFileName);
+
+    setDoublePropertyItem(mStartingPointProperty.value, data.startingPoint);
+    setDoublePropertyItem(mEndingPointProperty.value, data.endingPoint);
+    setDoublePropertyItem(mPointIntervalProperty.value, data.pointInterval);
+
+    if (data.currentIndex.isValid())
+        setCurrentIndex(data.currentIndex);
 
     // Iniialise the unit of our different properties
 
@@ -82,7 +95,21 @@ void SingleCellSimulationViewInformationSimulationWidget::initialize(const QStri
 
 void SingleCellSimulationViewInformationSimulationWidget::finalize(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    // Cancel any property editing, if any
+
+    cancelPropertyEditing();
+
+    // Retrieve and keep track of the value of our different properties
+
+    SingleCellSimulationViewInformationSimulationWidgetData data = mData.value(pFileName);
+
+    data.startingPoint = doublePropertyItem(mStartingPointProperty.value);
+    data.endingPoint   = doublePropertyItem(mEndingPointProperty.value);
+    data.pointInterval = doublePropertyItem(mPointIntervalProperty.value);
+
+    data.currentIndex = currentIndex();
+
+    mData.insert(pFileName, data);
 }
 
 //==============================================================================
