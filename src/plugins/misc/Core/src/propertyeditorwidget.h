@@ -169,13 +169,15 @@ typedef QList<Property> Properties;
 
 struct PropertyEditorWidgetGuiStateProperty
 {
-    PropertyItem *item;
+    Property property;
 
     bool isHidden;
+    bool isExpanded;
     QString value;
 
-    explicit PropertyEditorWidgetGuiStateProperty(PropertyItem *pItem,
+    explicit PropertyEditorWidgetGuiStateProperty(const Property &pProperty,
                                                   const bool &pIsHidden,
+                                                  const bool &pIsExpanded,
                                                   const QString &pValue);
 };
 
@@ -261,10 +263,9 @@ private:
 
     PropertyItemDelegate *mPropertyItemDelegate;
 
+    Properties mProperties;
     Property mProperty;
     QWidget *mPropertyEditor;
-
-    PropertyItems mPropertyValues;
 
     void constructor(const bool &pShowUnits = true,
                      const bool &pAutoUpdateHeight = false);

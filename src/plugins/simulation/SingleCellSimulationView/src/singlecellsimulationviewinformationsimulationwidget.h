@@ -48,6 +48,7 @@ private:
     Core::Property mPointIntervalProperty;
 
     QMap<QString, Core::PropertyEditorWidgetGuiState> mGuiStates;
+    Core::PropertyEditorWidgetGuiState mDefaultGuiState;
 };
 
 //==============================================================================

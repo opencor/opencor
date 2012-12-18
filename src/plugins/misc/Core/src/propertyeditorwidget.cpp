@@ -396,11 +396,13 @@ QList<QStandardItem *> Property::items() const
 
 //==============================================================================
 
-PropertyEditorWidgetGuiStateProperty::PropertyEditorWidgetGuiStateProperty(PropertyItem *pItem,
+PropertyEditorWidgetGuiStateProperty::PropertyEditorWidgetGuiStateProperty(const Property &pProperty,
                                                                            const bool &pIsHidden,
+                                                                           const bool &pIsExpanded,
                                                                            const QString &pValue) :
-    item(pItem),
+    property(pProperty),
     isHidden(pIsHidden),
+    isExpanded(pIsExpanded),
     value(pValue)
 {
 }
@@ -423,10 +425,9 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
     mShowUnits = pShowUnits;
     mAutoUpdateHeight = pAutoUpdateHeight;
 
+    mProperties     = Properties();
     mProperty       = Property();
     mPropertyEditor = 0;
-
-    mPropertyValues = PropertyItems();
 
     // Customise ourselves
 
@@ -664,15 +665,17 @@ PropertyEditorWidgetGuiState PropertyEditorWidget::guiState()
 
     PropertyEditorWidgetGuiState guiState = PropertyEditorWidgetGuiState();
 
-    // Retrieve the visible state and value of our different properties
+    // Retrieve the hidden state, expanded state and value of our different
+    // properties
 
-    foreach (PropertyItem *propertyValue, mPropertyValues)
-        guiState.properties << PropertyEditorWidgetGuiStateProperty(propertyValue,
-                                                                    isRowHidden(propertyValue->row(),
-                                                                                propertyValue->parent()?
-                                                                                    propertyValue->parent()->index():
+    foreach (const Property &property, mProperties)
+        guiState.properties << PropertyEditorWidgetGuiStateProperty(property,
+                                                                    isRowHidden(property.name->row(),
+                                                                                property.name->parent()?
+                                                                                    property.name->parent()->index():
                                                                                     mModel->invisibleRootItem()->index()),
-                                                                    propertyValue->text());
+                                                                    isExpanded(property.name->index()),
+                                                                    property.value->text());
 
     // Retrieve our current index
 
@@ -689,16 +692,19 @@ void PropertyEditorWidget::setGuiState(const PropertyEditorWidgetGuiState &pGuiS
 {
     // Set our GUI state
 
-    // Set the visible state and value of our different properties
+    // Set the hidden state, expanded state and value of our different
+    // properties
 
     foreach (const PropertyEditorWidgetGuiStateProperty &property, pGuiState.properties) {
-        setRowHidden(property.item->row(),
-                     property.item->parent()?
-                         property.item->parent()->index():
+        setRowHidden(property.property.name->row(),
+                     property.property.name->parent()?
+                         property.property.name->parent()->index():
                          mModel->invisibleRootItem()->index(),
                      property.isHidden);
 
-        property.item->setText(property.value);
+        setExpanded(property.property.name->index(), property.isExpanded);
+
+        property.property.value->setText(property.value);
     }
 
     // Set our current index, if it is valid
@@ -732,9 +738,9 @@ Property PropertyEditorWidget::addProperty(const Property &pParent,
         setRootIsDecorated(true);
     }
 
-    // Keep track of our new property's value
+    // Keep track of our new property
 
-    mPropertyValues << res.value;
+    mProperties << res;
 
     // Return our new property's information
 

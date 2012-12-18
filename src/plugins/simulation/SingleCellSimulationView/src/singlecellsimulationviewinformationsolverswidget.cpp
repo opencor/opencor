@@ -27,7 +27,9 @@ SingleCellSimulationViewInformationSolversWidget::SingleCellSimulationViewInform
     PropertyEditorWidget(true, pParent),
     mOdeSolverData(SingleCellSimulationViewInformationSolversWidgetData()),
     mDaeSolverData(SingleCellSimulationViewInformationSolversWidgetData()),
-    mNlaSolverData(SingleCellSimulationViewInformationSolversWidgetData())
+    mNlaSolverData(SingleCellSimulationViewInformationSolversWidgetData()),
+    mGuiStates(QMap<QString, Core::PropertyEditorWidgetGuiState>()),
+    mDefaultGuiState(Core::PropertyEditorWidgetGuiState())
 {
 }
 
@@ -175,6 +177,10 @@ void SingleCellSimulationViewInformationSolversWidget::setSolverInterfaces(const
     // Expand all our properties
 
     expandAll();
+
+    // Retrieve our default GUI state
+
+    mDefaultGuiState = guiState();
 }
 
 //==============================================================================
@@ -200,12 +206,16 @@ void SingleCellSimulationViewInformationSolversWidget::setPropertiesUnit(const S
 void SingleCellSimulationViewInformationSolversWidget::initialize(const QString &pFileName,
                                                                   CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime)
 {
-    Q_UNUSED(pFileName);
-
     // Make sure that we have a CellML file runtime
 
     if (!pCellmlFileRuntime)
         return;
+
+    // Retrieve and initialise our GUI state
+
+    setGuiState(mGuiStates.contains(pFileName)?
+                    mGuiStates.value(pFileName):
+                    mDefaultGuiState);
 
     // Make sure that the CellML file runtime is valid
 
@@ -242,7 +252,9 @@ void SingleCellSimulationViewInformationSolversWidget::initialize(const QString 
 
 void SingleCellSimulationViewInformationSolversWidget::finalize(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    // Keep track of our GUI state
+
+    mGuiStates.insert(pFileName, guiState());
 }
 
 //==============================================================================

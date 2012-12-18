@@ -33,6 +33,10 @@ SingleCellSimulationViewInformationSimulationWidget::SingleCellSimulationViewInf
     setDoublePropertyItem(mEndingPointProperty.value, 1000.0);
     setDoublePropertyItem(mPointIntervalProperty.value, 1.0);
 
+    // Retrieve our default GUI state
+
+    mDefaultGuiState = guiState();
+
     // Some further initialisations which are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
 
@@ -70,7 +74,9 @@ void SingleCellSimulationViewInformationSimulationWidget::initialize(const QStri
 
     // Retrieve and initialise our GUI state
 
-    setGuiState(mGuiStates.value(pFileName));
+    setGuiState(mGuiStates.contains(pFileName)?
+                    mGuiStates.value(pFileName):
+                    mDefaultGuiState);
 
     // Iniialise the unit of our different properties
 

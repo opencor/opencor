@@ -68,6 +68,9 @@ private:
     SingleCellSimulationViewInformationSolversWidgetData mDaeSolverData;
     SingleCellSimulationViewInformationSolversWidgetData mNlaSolverData;
 
+    QMap<QString, Core::PropertyEditorWidgetGuiState> mGuiStates;
+    Core::PropertyEditorWidgetGuiState mDefaultGuiState;
+
     void addSolverProperties(const SolverInterfaces &pSolverInterfaces,
                              const Solver::Type &pSolverType,
                              SingleCellSimulationViewInformationSolversWidgetData &pSolverData);
