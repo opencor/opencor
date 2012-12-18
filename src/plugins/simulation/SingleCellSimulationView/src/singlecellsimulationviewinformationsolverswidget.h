@@ -26,16 +26,28 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-struct SingleCellSimulationViewInformationSolversWidgetData
+class SingleCellSimulationViewInformationSolversWidgetData
 {
-    bool needSolver;
+public:
+    explicit SingleCellSimulationViewInformationSolversWidgetData(const Core::Property &pSolversProperty,
+                                                                  const Core::Property &pSolversListProperty,
+                                                                  const QMap<QString, Core::Properties> &pSolversProperties);
 
-    Core::Property solversProperty;
-    Core::Property solversListProperty;
+    bool needSolver() const;
+    void setNeedSolver(const bool &pNeedSolver);
 
-    QMap<QString, Core::Properties> solversProperties;
+    Core::Property solversProperty() const;
+    Core::Property solversListProperty() const;
 
-    explicit SingleCellSimulationViewInformationSolversWidgetData();
+    QMap<QString, Core::Properties> solversProperties() const;
+
+private:
+    bool mNeedSolver;
+
+    Core::Property mSolversProperty;
+    Core::Property mSolversListProperty;
+
+    QMap<QString, Core::Properties> mSolversProperties;
 };
 
 //==============================================================================
@@ -46,6 +58,7 @@ class SingleCellSimulationViewInformationSolversWidget : public Core::PropertyEd
 
 public:
     explicit SingleCellSimulationViewInformationSolversWidget(QWidget *pParent = 0);
+    ~SingleCellSimulationViewInformationSolversWidget();
 
     virtual void retranslateUi();
 
@@ -64,22 +77,21 @@ public:
     QStringList nlaSolvers() const;
 
 private:
-    SingleCellSimulationViewInformationSolversWidgetData mOdeSolverData;
-    SingleCellSimulationViewInformationSolversWidgetData mDaeSolverData;
-    SingleCellSimulationViewInformationSolversWidgetData mNlaSolverData;
+    SingleCellSimulationViewInformationSolversWidgetData *mOdeSolverData;
+    SingleCellSimulationViewInformationSolversWidgetData *mDaeSolverData;
+    SingleCellSimulationViewInformationSolversWidgetData *mNlaSolverData;
 
     QMap<QString, Core::PropertyEditorWidgetGuiState> mGuiStates;
     Core::PropertyEditorWidgetGuiState mDefaultGuiState;
 
-    void addSolverProperties(const SolverInterfaces &pSolverInterfaces,
-                             const Solver::Type &pSolverType,
-                             SingleCellSimulationViewInformationSolversWidgetData &pSolverData);
+    SingleCellSimulationViewInformationSolversWidgetData * addSolverProperties(const SolverInterfaces &pSolverInterfaces,
+                                                                               const Solver::Type &pSolverType);
 
-    bool doListPropertyChanged(const SingleCellSimulationViewInformationSolversWidgetData &pSolverData,
+    bool doListPropertyChanged(SingleCellSimulationViewInformationSolversWidgetData *pSolverData,
                                const QString &pSolverName,
                                const bool &pForceHandling = false);
 
-    void setPropertiesUnit(const SingleCellSimulationViewInformationSolversWidgetData &pSolverData,
+    void setPropertiesUnit(SingleCellSimulationViewInformationSolversWidgetData *pSolverData,
                            const QString &pVoiUnit);
 
 private Q_SLOTS:
