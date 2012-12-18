@@ -20,7 +20,8 @@ namespace KINSOLSolver {
 
 //==============================================================================
 
-class KinsolSolverUserData {
+class KinsolSolverUserData
+{
 public:
     explicit KinsolSolverUserData(void *pUserData,
                                   OpenCOR::CoreSolver::CoreNlaSolver::ComputeSystemFunction pComputeSystem);
