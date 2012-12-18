@@ -16,9 +16,10 @@ namespace Solver {
 //==============================================================================
 
 Property::Property(const PropertyType &pType, const QString &pName,
-                   const bool &pHasVoiUnit) :
+                   const QVariant &pDefaultValue, const bool &pHasVoiUnit) :
     type(pType),
     name(pName),
+    defaultValue(pDefaultValue),
     hasVoiUnit(pHasVoiUnit)
 {
 }

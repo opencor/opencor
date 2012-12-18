@@ -178,7 +178,7 @@ void SingleCellSimulationViewInformationSolversWidget::setSolverInterfaces(const
 
     expandAll();
 
-    // Clear any track of GUI states and retrieve our default GUI state
+    // Clear any track of previous GUI states and retrieve our default GUI state
     // Note: we need to clear any track of GUI states since we removed all the
     //       properties and added 'new' ones, so any previous GUI state we might
     //       have had would have been wrong...

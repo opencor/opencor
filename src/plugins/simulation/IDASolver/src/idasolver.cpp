@@ -21,19 +21,6 @@ static const int SizeOfDouble = sizeof(double);
 
 //==============================================================================
 
-// Default IDA parameter values
-// Note #1: a maximum step of 0 means that there is no maximum step as such and
-//          that IDA can use whatever step it sees fit...
-// Note #2: IDA's default maximum number of steps is 500 which ought to be big
-//          enough in most cases...
-
-static const double DefaultMaximumStep = 0;
-static const int DefaultMaximumNumberOfSteps = 500;
-static const double DefaultRelativeTolerance = 1e-7;
-static const double DefaultAbsoluteTolerance = 1e-7;
-
-//==============================================================================
-
 int residualFunction(double pVoi, N_Vector pStates, N_Vector pRates,
                      N_Vector pResiduals, void *pUserData)
 {
@@ -132,7 +119,7 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
                            ComputeRootInformationFunction pComputeRootInformation,
                            ComputeStateInformationFunction pComputeStateInformation)
 {
-    static const double VoiEpsilon = 1e-9;
+    static const double VoiEpsilon = 1.0e-9;
 
     if (!mSolver) {
         // Initialise the ODE solver itself

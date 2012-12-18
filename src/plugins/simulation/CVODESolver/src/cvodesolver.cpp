@@ -16,19 +16,6 @@ namespace CVODESolver {
 
 //==============================================================================
 
-// Default CVODE parameter values
-// Note #1: a maximum step of 0 means that there is no maximum step as such and
-//          that CVODE can use whatever step it sees fit...
-// Note #2: CVODE's default maximum number of steps is 500 which ought to be big
-//          enough in most cases...
-
-static const double DefaultMaximumStep = 0;
-static const int DefaultMaximumNumberOfSteps = 500;
-static const double DefaultRelativeTolerance = 1e-7;
-static const double DefaultAbsoluteTolerance = 1e-7;
-
-//==============================================================================
-
 int rhsFunction(double pVoi, N_Vector pStates, N_Vector pRates, void *pUserData)
 {
     // Compute the RHS function

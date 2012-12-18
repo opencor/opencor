@@ -57,10 +57,10 @@ Solver::Properties CVODESolverPlugin::properties() const
 
     Solver::Properties res = Solver::Properties();
 
-    res.append(Solver::Property(Solver::Double, MaximumStepProperty, true));
-    res.append(Solver::Property(Solver::Integer, MaximumNumberOfStepsProperty));
-    res.append(Solver::Property(Solver::Double, RelativeToleranceProperty));
-    res.append(Solver::Property(Solver::Double, AbsoluteToleranceProperty));
+    res.append(Solver::Property(Solver::Double, MaximumStepProperty, DefaultMaximumStep, true));
+    res.append(Solver::Property(Solver::Integer, MaximumNumberOfStepsProperty, DefaultMaximumNumberOfSteps));
+    res.append(Solver::Property(Solver::Double, RelativeToleranceProperty, DefaultRelativeTolerance));
+    res.append(Solver::Property(Solver::Double, AbsoluteToleranceProperty, DefaultAbsoluteTolerance));
 
     return res;
 }

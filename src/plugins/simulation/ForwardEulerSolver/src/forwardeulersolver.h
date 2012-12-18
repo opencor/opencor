@@ -20,6 +20,10 @@ static const QString StepProperty = "Step";
 
 //==============================================================================
 
+static const double DefaultStep = 1.0;
+
+//==============================================================================
+
 class ForwardEulerSolver : public CoreSolver::CoreOdeSolver
 {
 public:
