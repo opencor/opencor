@@ -33,20 +33,20 @@ Q_EXPORT_PLUGIN2(CVODESolver, CVODESolverPlugin)
 
 //==============================================================================
 
-QString CVODESolverPlugin::name() const
-{
-    // Return the name of the solver
-
-    return "CVODE";
-}
-
-//==============================================================================
-
 Solver::Type CVODESolverPlugin::type() const
 {
     // Return the type of the solver
 
     return Solver::Ode;
+}
+
+//==============================================================================
+
+QString CVODESolverPlugin::name() const
+{
+    // Return the name of the solver
+
+    return "CVODE";
 }
 
 //==============================================================================
@@ -57,10 +57,10 @@ Solver::Properties CVODESolverPlugin::properties() const
 
     Solver::Properties res = Solver::Properties();
 
-    res.append(Solver::Property(MaximumStepProperty, Solver::Double, true));
-    res.append(Solver::Property(MaximumNumberOfStepsProperty, Solver::Integer));
-    res.append(Solver::Property(RelativeToleranceProperty, Solver::Double));
-    res.append(Solver::Property(AbsoluteToleranceProperty, Solver::Double));
+    res.append(Solver::Property(Solver::Double, MaximumStepProperty, true));
+    res.append(Solver::Property(Solver::Integer, MaximumNumberOfStepsProperty));
+    res.append(Solver::Property(Solver::Double, RelativeToleranceProperty));
+    res.append(Solver::Property(Solver::Double, AbsoluteToleranceProperty));
 
     return res;
 }

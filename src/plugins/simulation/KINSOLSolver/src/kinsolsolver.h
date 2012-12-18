@@ -21,9 +21,9 @@ namespace KINSOLSolver {
 //==============================================================================
 
 struct KinsolSolverUserData {
-    OpenCOR::CoreSolver::CoreNlaSolver::ComputeSystemFunction computeSystem;
-
     void *userData;
+
+    OpenCOR::CoreSolver::CoreNlaSolver::ComputeSystemFunction computeSystem;
 };
 
 //==============================================================================

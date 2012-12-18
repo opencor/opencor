@@ -33,20 +33,20 @@ Q_EXPORT_PLUGIN2(IDASolver, IDASolverPlugin)
 
 //==============================================================================
 
-QString IDASolverPlugin::name() const
-{
-    // Return the name of the solver
-
-    return "IDA";
-}
-
-//==============================================================================
-
 Solver::Type IDASolverPlugin::type() const
 {
     // Return the type of the solver
 
     return Solver::Dae;
+}
+
+//==============================================================================
+
+QString IDASolverPlugin::name() const
+{
+    // Return the name of the solver
+
+    return "IDA";
 }
 
 //==============================================================================
@@ -57,10 +57,10 @@ Solver::Properties IDASolverPlugin::properties() const
 
     Solver::Properties res = Solver::Properties();
 
-    res.append(Solver::Property(MaximumStepProperty, Solver::Double, true));
-    res.append(Solver::Property(MaximumNumberOfStepsProperty, Solver::Integer));
-    res.append(Solver::Property(RelativeToleranceProperty, Solver::Double));
-    res.append(Solver::Property(AbsoluteToleranceProperty, Solver::Double));
+    res.append(Solver::Property(Solver::Double, MaximumStepProperty, true));
+    res.append(Solver::Property(Solver::Integer, MaximumNumberOfStepsProperty));
+    res.append(Solver::Property(Solver::Double, RelativeToleranceProperty));
+    res.append(Solver::Property(Solver::Double, AbsoluteToleranceProperty));
 
     return res;
 }

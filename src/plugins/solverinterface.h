@@ -38,11 +38,11 @@ enum PropertyType {
 
 struct Property
 {
-    QString name;
     PropertyType type;
+    QString name;
     bool hasVoiUnit;
 
-    explicit Property(const QString &pName, const PropertyType &pType,
+    explicit Property(const PropertyType &pType, const QString &pName,
                       const bool &pHasVoiUnit = false);
 };
 
@@ -59,8 +59,8 @@ typedef QList<Property> Properties;
 class SolverInterface : public Interface
 {
 public:
-    virtual QString name() const = 0;
     virtual Solver::Type type() const = 0;
+    virtual QString name() const = 0;
     virtual Solver::Properties properties() const = 0;
 
     QString typeAsString() const;

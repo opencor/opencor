@@ -30,8 +30,8 @@ class IDASolverPlugin : public QObject, public SolverInterface
     Q_INTERFACES(OpenCOR::SolverInterface)
 
 public:
-    virtual QString name() const;
     virtual Solver::Type type() const;
+    virtual QString name() const;
     virtual Solver::Properties properties() const;
 
     virtual void * instance() const;

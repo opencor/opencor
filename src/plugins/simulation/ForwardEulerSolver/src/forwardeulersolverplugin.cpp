@@ -33,20 +33,20 @@ Q_EXPORT_PLUGIN2(ForwardEulerSolver, ForwardEulerSolverPlugin)
 
 //==============================================================================
 
-QString ForwardEulerSolverPlugin::name() const
-{
-    // Return the name of the solver
-
-    return "Forward Euler";
-}
-
-//==============================================================================
-
 Solver::Type ForwardEulerSolverPlugin::type() const
 {
     // Return the type of the solver
 
     return Solver::Ode;
+}
+
+//==============================================================================
+
+QString ForwardEulerSolverPlugin::name() const
+{
+    // Return the name of the solver
+
+    return "Forward Euler";
 }
 
 //==============================================================================
@@ -57,7 +57,7 @@ Solver::Properties ForwardEulerSolverPlugin::properties() const
 
     Solver::Properties res = Solver::Properties();
 
-    res.append(Solver::Property(StepProperty, Solver::Double, true));
+    res.append(Solver::Property(Solver::Double, StepProperty, true));
 
     return res;
 }

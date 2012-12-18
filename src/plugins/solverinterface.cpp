@@ -15,10 +15,10 @@ namespace Solver {
 
 //==============================================================================
 
-Property::Property(const QString &pName, const PropertyType &pType,
+Property::Property(const PropertyType &pType, const QString &pName,
                    const bool &pHasVoiUnit) :
-    name(pName),
     type(pType),
+    name(pName),
     hasVoiUnit(pHasVoiUnit)
 {
 }

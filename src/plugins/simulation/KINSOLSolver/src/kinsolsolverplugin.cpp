@@ -33,20 +33,20 @@ Q_EXPORT_PLUGIN2(KINSOLSolver, KINSOLSolverPlugin)
 
 //==============================================================================
 
-QString KINSOLSolverPlugin::name() const
-{
-    // Return the name of the solver
-
-    return "KINSOL";
-}
-
-//==============================================================================
-
 Solver::Type KINSOLSolverPlugin::type() const
 {
     // Return the type of the solver
 
     return Solver::Nla;
+}
+
+//==============================================================================
+
+QString KINSOLSolverPlugin::name() const
+{
+    // Return the name of the solver
+
+    return "KINSOL";
 }
 
 //==============================================================================
