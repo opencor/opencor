@@ -409,7 +409,7 @@ PropertyEditorWidgetGuiStateProperty::PropertyEditorWidgetGuiStateProperty(Prope
 
 PropertyEditorWidgetGuiState::PropertyEditorWidgetGuiState() :
     properties(PropertyEditorWidgetGuiStateProperties()),
-    currentIndex(QModelIndex())
+    currentProperty(QModelIndex())
 {
 }
 
@@ -676,7 +676,7 @@ PropertyEditorWidgetGuiState PropertyEditorWidget::guiState()
 
     // Retrieve our current index
 
-    guiState.currentIndex = currentIndex();
+    guiState.currentProperty = currentIndex();
 
     // Return our GUI state
 
@@ -703,8 +703,8 @@ void PropertyEditorWidget::setGuiState(const PropertyEditorWidgetGuiState &pGuiS
 
     // Set our current index, if it is valid
 
-    if (pGuiState.currentIndex.isValid())
-        setCurrentIndex(pGuiState.currentIndex);
+    if (pGuiState.currentProperty.isValid())
+        setCurrentIndex(pGuiState.currentProperty);
 }
 
 //==============================================================================

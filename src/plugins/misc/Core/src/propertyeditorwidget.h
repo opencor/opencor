@@ -189,7 +189,7 @@ struct CORE_EXPORT PropertyEditorWidgetGuiState
 {
     PropertyEditorWidgetGuiStateProperties properties;
 
-    QModelIndex currentIndex;
+    QModelIndex currentProperty;
 
     explicit PropertyEditorWidgetGuiState();
 };
