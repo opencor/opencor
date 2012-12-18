@@ -169,14 +169,14 @@ typedef QList<Property> Properties;
 
 struct PropertyEditorWidgetGuiStateProperty
 {
-    explicit PropertyEditorWidgetGuiStateProperty(PropertyItem *pItem,
-                                                  const bool &pHidden,
-                                                  const QString &pValue);
-
     PropertyItem *item;
 
     bool hidden;
     QString value;
+
+    explicit PropertyEditorWidgetGuiStateProperty(PropertyItem *pItem,
+                                                  const bool &pHidden,
+                                                  const QString &pValue);
 };
 
 //==============================================================================
@@ -187,11 +187,11 @@ typedef QList<PropertyEditorWidgetGuiStateProperty> PropertyEditorWidgetGuiState
 
 struct CORE_EXPORT PropertyEditorWidgetGuiState
 {
-    explicit PropertyEditorWidgetGuiState();
-
     PropertyEditorWidgetGuiStateProperties properties;
 
     QModelIndex currentIndex;
+
+    explicit PropertyEditorWidgetGuiState();
 };
 
 //==============================================================================
