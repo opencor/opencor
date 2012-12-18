@@ -32,13 +32,13 @@ int residualFunction(double pVoi, N_Vector pStates, N_Vector pRates,
     double *rates     = N_VGetArrayPointer(pRates);
     double *residuals = N_VGetArrayPointer(pResiduals);
 
-    userData->computeEssentialVariables(pVoi, userData->constants, rates,
-                                        states, userData->algebraic,
-                                        userData->condVar);
+    userData->computeEssentialVariables()(pVoi, userData->constants(), rates,
+                                          states, userData->algebraic(),
+                                          userData->condVar());
 
-    userData->computeResiduals(pVoi, userData->constants, rates, states,
-                               userData->algebraic, userData->condVar,
-                               residuals);
+    userData->computeResiduals()(pVoi, userData->constants(), rates, states,
+                                 userData->algebraic(), userData->condVar(),
+                                 residuals);
 
     // Everything went fine, so...
 
@@ -54,10 +54,10 @@ int rootFindingFunction(double pVoi, N_Vector pStates, N_Vector pRates,
 
     IdaSolverUserData *userData = reinterpret_cast<IdaSolverUserData *>(pUserData);
 
-    userData->computeRootInformation(pVoi, userData->constants,
-                                     N_VGetArrayPointer(pRates),
-                                     N_VGetArrayPointer(pStates),
-                                     userData->algebraic, pRoots);
+    userData->computeRootInformation()(pVoi, userData->constants(),
+                                       N_VGetArrayPointer(pRates),
+                                       N_VGetArrayPointer(pStates),
+                                       userData->algebraic(), pRoots);
 
     // Everything went fine, so...
 
@@ -80,10 +80,80 @@ void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
 
 //==============================================================================
 
+IdaSolverUserData::IdaSolverUserData(double *pConstants, double *pAlgebraic, double *pCondVar,
+                                     OpenCOR::CoreSolver::CoreDaeSolver::ComputeEssentialVariablesFunction pComputeEssentialVariables,
+                                     OpenCOR::CoreSolver::CoreDaeSolver::ComputeResidualsFunction pComputeResiduals,
+                                     OpenCOR::CoreSolver::CoreDaeSolver::ComputeRootInformationFunction pComputeRootInformation) :
+    mConstants(pConstants),
+    mAlgebraic(pAlgebraic),
+    mCondVar(pCondVar),
+    mComputeEssentialVariables(pComputeEssentialVariables),
+    mComputeResiduals(pComputeResiduals),
+    mComputeRootInformation(pComputeRootInformation)
+{
+}
+
+//==============================================================================
+
+double * IdaSolverUserData::constants() const
+{
+    // Return our constants array
+
+    return mConstants;
+}
+
+//==============================================================================
+
+double * IdaSolverUserData::algebraic() const
+{
+    // Return our algebraic array
+
+    return mAlgebraic;
+}
+
+//==============================================================================
+
+double * IdaSolverUserData::condVar() const
+{
+    // Return our condVar array
+
+    return mCondVar;
+}
+
+//==============================================================================
+
+OpenCOR::CoreSolver::CoreDaeSolver::ComputeEssentialVariablesFunction IdaSolverUserData::computeEssentialVariables() const
+{
+    // Return our compute essential variables function
+
+    return mComputeEssentialVariables;
+}
+
+//==============================================================================
+
+OpenCOR::CoreSolver::CoreDaeSolver::ComputeResidualsFunction IdaSolverUserData::computeResiduals() const
+{
+    // Return our compute residuals function
+
+    return mComputeResiduals;
+}
+
+//==============================================================================
+
+OpenCOR::CoreSolver::CoreDaeSolver::ComputeRootInformationFunction IdaSolverUserData::computeRootInformation() const
+{
+    // Return our compute root information function
+
+    return mComputeRootInformation;
+}
+
+//==============================================================================
+
 IdaSolver::IdaSolver() :
     mSolver(0),
     mStatesVector(0),
     mRatesVector(0),
+    mUserData(0),
     mMaximumStep(DefaultMaximumStep),
     mMaximumNumberOfSteps(DefaultMaximumNumberOfSteps),
     mRelativeTolerance(DefaultRelativeTolerance),
@@ -106,6 +176,8 @@ IdaSolver::~IdaSolver()
     N_VDestroy_Serial(mRatesVector);
 
     IDAFree(&mSolver);
+
+    delete mUserData;
 }
 
 //==============================================================================
@@ -177,15 +249,14 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
 
         // Set some user data
 
-        mUserData.constants = pConstants;
-        mUserData.algebraic = pAlgebraic;
-        mUserData.condVar   = pCondVar;
+        delete mUserData;   // Just in case the solver got initialised before
 
-        mUserData.computeResiduals          = pComputeResiduals;
-        mUserData.computeEssentialVariables = pComputeEssentialVariables;
-        mUserData.computeRootInformation    = pComputeRootInformation;
+        mUserData = new IdaSolverUserData(pConstants, pAlgebraic, pCondVar,
+                                          pComputeEssentialVariables,
+                                          pComputeResiduals,
+                                          pComputeRootInformation);
 
-        IDASetUserData(mSolver, &mUserData);
+        IDASetUserData(mSolver, mUserData);
 
         // Set the linear solver
 

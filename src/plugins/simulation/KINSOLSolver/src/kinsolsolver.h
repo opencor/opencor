@@ -20,10 +20,19 @@ namespace KINSOLSolver {
 
 //==============================================================================
 
-struct KinsolSolverUserData {
-    void *userData;
+class KinsolSolverUserData {
+public:
+    explicit KinsolSolverUserData(void *pUserData,
+                                  OpenCOR::CoreSolver::CoreNlaSolver::ComputeSystemFunction pComputeSystem);
 
-    OpenCOR::CoreSolver::CoreNlaSolver::ComputeSystemFunction computeSystem;
+    void * userData() const;
+
+    OpenCOR::CoreSolver::CoreNlaSolver::ComputeSystemFunction computeSystem() const;
+
+private:
+    void *mUserData;
+
+    OpenCOR::CoreSolver::CoreNlaSolver::ComputeSystemFunction mComputeSystem;
 };
 
 //==============================================================================
@@ -43,7 +52,7 @@ private:
     void *mSolver;
     N_Vector mParametersVector;
     N_Vector mOnesVector;
-    KinsolSolverUserData mKinsolUserData;
+    KinsolSolverUserData *mUserData;
 
     void reset();
 };

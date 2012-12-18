@@ -110,7 +110,7 @@ void SingleCellSimulationViewInformationSolversWidget::addSolverProperties(const
                      solverInterface->properties()) {
                 // Add the solver's property
 
-                switch (solverInterfaceProperty.type) {
+                switch (solverInterfaceProperty.type()) {
                 case Solver::Double:
                     property = addDoubleProperty(pSolverData.solversProperty);
 
@@ -123,24 +123,24 @@ void SingleCellSimulationViewInformationSolversWidget::addSolverProperties(const
 
                 // Set the solver's property's name
 
-                setNonEditablePropertyItem(property.name, solverInterfaceProperty.name);
+                setNonEditablePropertyItem(property.name, solverInterfaceProperty.name());
 
                 // Set the solver's property's default value
 
-                switch (solverInterfaceProperty.type) {
+                switch (solverInterfaceProperty.type()) {
                 case Solver::Double:
-                    setDoublePropertyItem(property.value, solverInterfaceProperty.defaultValue.toDouble());
+                    setDoublePropertyItem(property.value, solverInterfaceProperty.defaultValue().toDouble());
 
                     break;
                 default:
                     // Solver::Integer
 
-                    setIntegerPropertyItem(property.value, solverInterfaceProperty.defaultValue.toInt());
+                    setIntegerPropertyItem(property.value, solverInterfaceProperty.defaultValue().toInt());
                 }
 
                 // Set the solver's property's 'unit', if needed
 
-                if (solverInterfaceProperty.hasVoiUnit)
+                if (solverInterfaceProperty.hasVoiUnit())
                     setNonEditablePropertyItem(property.unit, "???");
                     // Note: to assign a non-empty string to our unit item is
                     //       just a way for us to keep track of the fact that

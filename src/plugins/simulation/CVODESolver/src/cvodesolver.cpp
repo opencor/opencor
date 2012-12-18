@@ -22,10 +22,10 @@ int rhsFunction(double pVoi, N_Vector pStates, N_Vector pRates, void *pUserData)
 
     CvodeSolverUserData *userData = reinterpret_cast<CvodeSolverUserData *>(pUserData);
 
-    userData->computeRates(pVoi, userData->constants,
-                           N_VGetArrayPointer_Serial(pRates),
-                           N_VGetArrayPointer_Serial(pStates),
-                           userData->algebraic);
+    userData->computeRates()(pVoi, userData->constants(),
+                             N_VGetArrayPointer_Serial(pRates),
+                             N_VGetArrayPointer_Serial(pStates),
+                             userData->algebraic());
 
     // Everything went fine, so...
 
@@ -48,9 +48,47 @@ void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
 
 //==============================================================================
 
+CvodeSolverUserData::CvodeSolverUserData(double *pConstants, double *pAlgebraic,
+                                         OpenCOR::CoreSolver::CoreOdeSolver::ComputeRatesFunction pComputeRates) :
+    mConstants(pConstants),
+    mAlgebraic(pAlgebraic),
+    mComputeRates(pComputeRates)
+{
+}
+
+//==============================================================================
+
+double * CvodeSolverUserData::constants() const
+{
+    // Return our constants array
+
+    return mConstants;
+}
+
+//==============================================================================
+
+double * CvodeSolverUserData::algebraic() const
+{
+    // Return our algebraic array
+
+    return mAlgebraic;
+}
+
+//==============================================================================
+
+OpenCOR::CoreSolver::CoreOdeSolver::ComputeRatesFunction CvodeSolverUserData::computeRates() const
+{
+    // Return our compute rates function
+
+    return mComputeRates;
+}
+
+//==============================================================================
+
 CvodeSolver::CvodeSolver() :
     mSolver(0),
     mStatesVector(0),
+    mUserData(0),
     mMaximumStep(DefaultMaximumStep),
     mMaximumNumberOfSteps(DefaultMaximumNumberOfSteps),
     mRelativeTolerance(DefaultRelativeTolerance),
@@ -72,6 +110,8 @@ CvodeSolver::~CvodeSolver()
     N_VDestroy_Serial(mStatesVector);
 
     CVodeFree(&mSolver);
+
+    delete mUserData;
 }
 
 //==============================================================================
@@ -126,12 +166,12 @@ void CvodeSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
 
         // Set some user data
 
-        mUserData.constants = pConstants;
-        mUserData.algebraic = pAlgebraic;
+        delete mUserData;   // Just in case the solver got initialised before
 
-        mUserData.computeRates = pComputeRates;
+        mUserData = new CvodeSolverUserData(pConstants, pAlgebraic,
+                                            pComputeRates);
 
-        CVodeSetUserData(mSolver, &mUserData);
+        CVodeSetUserData(mSolver, mUserData);
 
         // Set the linear solver
 

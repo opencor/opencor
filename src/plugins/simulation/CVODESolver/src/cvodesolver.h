@@ -40,12 +40,22 @@ static const double DefaultAbsoluteTolerance = 1.0e-7;
 
 //==============================================================================
 
-struct CvodeSolverUserData
+class CvodeSolverUserData
 {
-    double *constants;
-    double *algebraic;
+public:
+    explicit CvodeSolverUserData(double *pConstants, double *pAlgebraic,
+                                 OpenCOR::CoreSolver::CoreOdeSolver::ComputeRatesFunction pComputeRates);
 
-    OpenCOR::CoreSolver::CoreOdeSolver::ComputeRatesFunction computeRates;
+    double * constants() const;
+    double * algebraic() const;
+
+    OpenCOR::CoreSolver::CoreOdeSolver::ComputeRatesFunction computeRates() const;
+
+private:
+    double *mConstants;
+    double *mAlgebraic;
+
+    OpenCOR::CoreSolver::CoreOdeSolver::ComputeRatesFunction mComputeRates;
 };
 
 //==============================================================================
@@ -66,7 +76,7 @@ public:
 private:
     void *mSolver;
     N_Vector mStatesVector;
-    CvodeSolverUserData mUserData;
+    CvodeSolverUserData *mUserData;
 
     double mMaximumStep;
     int mMaximumNumberOfSteps;

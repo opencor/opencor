@@ -37,16 +37,23 @@ enum PropertyType {
 
 //==============================================================================
 
-struct Property
+class Property
 {
-    PropertyType type;
-    QString name;
-    QVariant defaultValue;
-    bool hasVoiUnit;
-
+public:
     explicit Property(const PropertyType &pType, const QString &pName,
                       const QVariant &pDefaultValue,
                       const bool &pHasVoiUnit = false);
+
+    PropertyType type() const;
+    QString name() const;
+    QVariant defaultValue() const;
+    bool hasVoiUnit() const;
+
+private:
+    PropertyType mType;
+    QString mName;
+    QVariant mDefaultValue;
+    bool mHasVoiUnit;
 };
 
 //==============================================================================

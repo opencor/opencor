@@ -218,7 +218,7 @@ MainWindow::MainWindow() :
                     Solver::Property property = properties[i];
                     QString type;
 
-                    switch (property.type) {
+                    switch (property.type()) {
                     case Solver::Double:
                         type = "Double";
 
@@ -231,7 +231,7 @@ MainWindow::MainWindow() :
                         type = "???";
                     }
 
-                    qDebug("    - %s: %s", qPrintable(property.name), qPrintable(type));
+                    qDebug("    - %s: %s", qPrintable(property.name()), qPrintable(type));
                 }
             } else {
                 qDebug(" - Properties: none");

@@ -20,11 +20,11 @@ int systemFunction(N_Vector pY, N_Vector pF, void *pUserData)
 {
     // Compute the system function
 
-    struct KinsolSolverUserData *userData = reinterpret_cast<struct KinsolSolverUserData *>(pUserData);
+    KinsolSolverUserData *userData = reinterpret_cast<KinsolSolverUserData *>(pUserData);
 
-    userData->computeSystem(N_VGetArrayPointer_Serial(pY),
-                            N_VGetArrayPointer_Serial(pF),
-                            userData->userData);
+    userData->computeSystem()(N_VGetArrayPointer_Serial(pY),
+                              N_VGetArrayPointer_Serial(pF),
+                              userData->userData());
 
     // Everything went fine, so...
 
@@ -47,10 +47,38 @@ void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
 
 //==============================================================================
 
+KinsolSolverUserData::KinsolSolverUserData(void *pUserData,
+                                           CoreSolver::CoreNlaSolver::ComputeSystemFunction pComputeSystem) :
+    mUserData(pUserData),
+    mComputeSystem(pComputeSystem)
+{
+}
+
+//==============================================================================
+
+void * KinsolSolverUserData::userData() const
+{
+    // Return our user data
+
+    return mUserData;
+}
+
+//==============================================================================
+
+OpenCOR::CoreSolver::CoreNlaSolver::ComputeSystemFunction KinsolSolverUserData::computeSystem() const
+{
+    // Return our compute system function
+
+    return mComputeSystem;
+}
+
+//==============================================================================
+
 KinsolSolver::KinsolSolver() :
     mSolver(0),
     mParametersVector(0),
-    mOnesVector(0)
+    mOnesVector(0),
+    mUserData(0)
 {
 }
 
@@ -76,6 +104,8 @@ void KinsolSolver::reset()
     N_VDestroy_Serial(mOnesVector);
 
     KINFree(&mSolver);
+
+    delete mUserData;
 }
 
 //==============================================================================
@@ -114,10 +144,12 @@ void KinsolSolver::initialize(ComputeSystemFunction pComputeSystem,
 
     // Set some user data
 
-    mKinsolUserData.computeSystem = pComputeSystem;
-    mKinsolUserData.userData = pUserData;
+    delete mUserData;   // Just in case the solver got initialised before
 
-    KINSetUserData(mSolver, &mKinsolUserData);
+    mUserData = new KinsolSolverUserData(pUserData,
+                                         pComputeSystem);
+
+    KINSetUserData(mSolver, mUserData);
 
     // Set the linear solver
 
