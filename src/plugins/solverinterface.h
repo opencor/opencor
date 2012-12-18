@@ -13,6 +13,7 @@
 
 #include <QList>
 #include <QTranslator>
+#include <QVariant>
 
 //==============================================================================
 
@@ -40,7 +41,7 @@ struct Property
 {
     PropertyType type;
     QString name;
-    QVariant defaulValue;
+    QVariant defaultValue;
     bool hasVoiUnit;
 
     explicit Property(const PropertyType &pType, const QString &pName,
