@@ -125,6 +125,19 @@ void SingleCellSimulationViewInformationSolversWidget::addSolverProperties(const
 
                 setNonEditablePropertyItem(property.name, solverInterfaceProperty.name);
 
+                // Set the solver's property's default value
+
+                switch (solverInterfaceProperty.type) {
+                case Solver::Double:
+                    setDoublePropertyItem(property.value, solverInterfaceProperty.defaultValue.toDouble());
+
+                    break;
+                default:
+                    // Solver::Integer
+
+                    setIntegerPropertyItem(property.value, solverInterfaceProperty.defaultValue.toInt());
+                }
+
                 // Set the solver's property's 'unit', if needed
 
                 if (solverInterfaceProperty.hasVoiUnit)
