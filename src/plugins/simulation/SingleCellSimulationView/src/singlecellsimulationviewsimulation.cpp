@@ -117,6 +117,10 @@ SingleCellSimulationViewSimulation::~SingleCellSimulationViewSimulation()
     // Stop our worker (just in case...)
 
     stop();
+
+    // Delete some internal objects
+
+    delete mData;
 }
 
 //==============================================================================
