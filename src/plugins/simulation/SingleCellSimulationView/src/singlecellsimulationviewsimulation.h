@@ -43,13 +43,29 @@ class SingleCellSimulationViewWidget;
 
 //==============================================================================
 
-struct SingleCellSimulationViewSimulationData
+class SingleCellSimulationViewSimulationData
 {
-    int delay;
+public:
+    explicit SingleCellSimulationViewSimulationData();
 
-    double startingPoint;
-    double endingPoint;
-    double pointInterval;
+    int delay() const;
+    void setDelay(const int &pDelay);
+
+    double startingPoint() const;
+    void setStartingPoint(const double &pStartingPoint);
+
+    double endingPoint() const;
+    void setEndingPoint(const double &pEndingPoint);
+
+    double pointInterval() const;
+    void setPointInterval(const double &pPointInterval);
+
+private:
+    int mDelay;
+
+    double mStartingPoint;
+    double mEndingPoint;
+    double mPointInterval;
 };
 
 //==============================================================================
@@ -81,7 +97,7 @@ private:
 
     QString mFileName;
 
-    SingleCellSimulationViewSimulationData mData;
+    SingleCellSimulationViewSimulationData *mData;
 
 Q_SIGNALS:
     void running();
