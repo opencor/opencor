@@ -171,11 +171,11 @@ struct PropertyEditorWidgetGuiStateProperty
 {
     PropertyItem *item;
 
-    bool hidden;
+    bool isHidden;
     QString value;
 
     explicit PropertyEditorWidgetGuiStateProperty(PropertyItem *pItem,
-                                                  const bool &pHidden,
+                                                  const bool &pIsHidden,
                                                   const QString &pValue);
 };
 

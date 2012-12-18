@@ -397,10 +397,10 @@ QList<QStandardItem *> Property::items() const
 //==============================================================================
 
 PropertyEditorWidgetGuiStateProperty::PropertyEditorWidgetGuiStateProperty(PropertyItem *pItem,
-                                                                           const bool &pHidden,
+                                                                           const bool &pIsHidden,
                                                                            const QString &pValue) :
     item(pItem),
-    hidden(pHidden),
+    isHidden(pIsHidden),
     value(pValue)
 {
 }
@@ -696,7 +696,7 @@ void PropertyEditorWidget::setGuiState(const PropertyEditorWidgetGuiState &pGuiS
                      property.item->parent()?
                          property.item->parent()->index():
                          mModel->invisibleRootItem()->index(),
-                     property.hidden);
+                     property.isHidden);
 
         property.item->setText(property.value);
     }
