@@ -31,6 +31,7 @@ class SingleCellSimulationViewInformationSimulationWidget : public Core::Propert
 
 public:
     explicit SingleCellSimulationViewInformationSimulationWidget(QWidget *pParent = 0);
+    ~SingleCellSimulationViewInformationSimulationWidget();
 
     virtual void retranslateUi();
 
@@ -47,8 +48,8 @@ private:
     Core::Property *mEndingPointProperty;
     Core::Property *mPointIntervalProperty;
 
-    QMap<QString, Core::PropertyEditorWidgetGuiState> mGuiStates;
-    Core::PropertyEditorWidgetGuiState mDefaultGuiState;
+    QMap<QString, Core::PropertyEditorWidgetGuiState *> mGuiStates;
+    Core::PropertyEditorWidgetGuiState *mDefaultGuiState;
 };
 
 //==============================================================================

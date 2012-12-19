@@ -388,22 +388,95 @@ QList<QStandardItem *> Property::items() const
 //==============================================================================
 
 PropertyEditorWidgetGuiStateProperty::PropertyEditorWidgetGuiStateProperty(Property *pProperty,
-                                                                           const bool &pIsHidden,
-                                                                           const bool &pIsExpanded,
+                                                                           const bool &pHidden,
+                                                                           const bool &pExpanded,
                                                                            const QString &pValue) :
-    property(pProperty),
-    isHidden(pIsHidden),
-    isExpanded(pIsExpanded),
-    value(pValue)
+    mProperty(pProperty),
+    mHidden(pHidden),
+    mExpanded(pExpanded),
+    mValue(pValue)
 {
 }
 
 //==============================================================================
 
-PropertyEditorWidgetGuiState::PropertyEditorWidgetGuiState() :
-    properties(PropertyEditorWidgetGuiStateProperties()),
-    currentProperty(QModelIndex())
+Property * PropertyEditorWidgetGuiStateProperty::property() const
 {
+    // Return our property
+
+    return mProperty;
+}
+
+//==============================================================================
+
+bool PropertyEditorWidgetGuiStateProperty::isHidden() const
+{
+    // Return whether our property is hidden
+
+    return mHidden;
+}
+
+//==============================================================================
+
+bool PropertyEditorWidgetGuiStateProperty::isExpanded() const
+{
+    // Return whether our property is expanded
+
+    return mExpanded;
+}
+
+//==============================================================================
+
+QString PropertyEditorWidgetGuiStateProperty::value() const
+{
+    // Return our property's value
+
+    return mValue;
+}
+
+//==============================================================================
+
+PropertyEditorWidgetGuiState::PropertyEditorWidgetGuiState(const QModelIndex &pCurrentProperty) :
+    mProperties(PropertyEditorWidgetGuiStateProperties()),
+    mCurrentProperty(pCurrentProperty)
+{
+}
+
+//==============================================================================
+
+PropertyEditorWidgetGuiState::~PropertyEditorWidgetGuiState()
+{
+    // Delete some internal objects
+
+    foreach (PropertyEditorWidgetGuiStateProperty *property, mProperties)
+        delete property;
+}
+
+//==============================================================================
+
+PropertyEditorWidgetGuiStateProperties PropertyEditorWidgetGuiState::properties() const
+{
+    // Return our properties
+
+    return mProperties;
+}
+
+//==============================================================================
+
+void PropertyEditorWidgetGuiState::addProperty(PropertyEditorWidgetGuiStateProperty *pProperty)
+{
+    // Add the property to our list
+
+    mProperties << pProperty;
+}
+
+//==============================================================================
+
+QModelIndex PropertyEditorWidgetGuiState::currentProperty() const
+{
+    // Return our current property
+
+    return mCurrentProperty;
 }
 
 //==============================================================================
@@ -656,7 +729,7 @@ void PropertyEditorWidget::selectFirstProperty()
 
 //==============================================================================
 
-PropertyEditorWidgetGuiState PropertyEditorWidget::guiState()
+PropertyEditorWidgetGuiState * PropertyEditorWidget::guiState()
 {
     // Cancel any property editing, if any
 
@@ -664,54 +737,51 @@ PropertyEditorWidgetGuiState PropertyEditorWidget::guiState()
 
     // Retrieve our GUI state
 
-    PropertyEditorWidgetGuiState guiState = PropertyEditorWidgetGuiState();
+    PropertyEditorWidgetGuiState *res = new PropertyEditorWidgetGuiState(currentIndex());
 
     // Retrieve the hidden state, expanded state and value of our different
     // properties
 
     foreach (Property *property, mProperties)
-        guiState.properties << PropertyEditorWidgetGuiStateProperty(property,
-                                                                    isRowHidden(property->name()->row(),
-                                                                                property->name()->parent()?
-                                                                                    property->name()->parent()->index():
-                                                                                    mModel->invisibleRootItem()->index()),
-                                                                    isExpanded(property->name()->index()),
-                                                                    property->value()->text());
-
-    // Retrieve our current index
-
-    guiState.currentProperty = currentIndex();
+        res->addProperty(new PropertyEditorWidgetGuiStateProperty(property,
+                                                                  isRowHidden(property->name()->row(),
+                                                                              property->name()->parent()?
+                                                                                  property->name()->parent()->index():
+                                                                                  mModel->invisibleRootItem()->index()),
+                                                                  isExpanded(property->name()->index()),
+                                                                  property->value()->text()));
 
     // Return our GUI state
 
-    return guiState;
+    return res;
 }
 
 //==============================================================================
 
-void PropertyEditorWidget::setGuiState(const PropertyEditorWidgetGuiState &pGuiState)
+void PropertyEditorWidget::setGuiState(PropertyEditorWidgetGuiState *pGuiState)
 {
     // Set our GUI state
 
     // Set the hidden state, expanded state and value of our different
     // properties
 
-    foreach (const PropertyEditorWidgetGuiStateProperty &property, pGuiState.properties) {
-        setRowHidden(property.property->name()->row(),
-                     property.property->name()->parent()?
-                         property.property->name()->parent()->index():
+    foreach (PropertyEditorWidgetGuiStateProperty *guiStateProperty, pGuiState->properties()) {
+        setRowHidden(guiStateProperty->property()->name()->row(),
+                     guiStateProperty->property()->name()->parent()?
+                         guiStateProperty->property()->name()->parent()->index():
                          mModel->invisibleRootItem()->index(),
-                     property.isHidden);
+                     guiStateProperty->isHidden());
 
-        setExpanded(property.property->name()->index(), property.isExpanded);
+        setExpanded(guiStateProperty->property()->name()->index(),
+                    guiStateProperty->isExpanded());
 
-        property.property->value()->setText(property.value);
+        guiStateProperty->property()->value()->setText(guiStateProperty->value());
     }
 
     // Set our current index, if it is valid
 
-    if (pGuiState.currentProperty.isValid())
-        setCurrentIndex(pGuiState.currentProperty);
+    if (pGuiState->currentProperty().isValid())
+        setCurrentIndex(pGuiState->currentProperty());
 }
 
 //==============================================================================

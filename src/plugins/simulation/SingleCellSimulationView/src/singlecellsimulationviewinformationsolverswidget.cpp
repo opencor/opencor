@@ -75,8 +75,8 @@ SingleCellSimulationViewInformationSolversWidget::SingleCellSimulationViewInform
     mOdeSolverData(0),
     mDaeSolverData(0),
     mNlaSolverData(0),
-    mGuiStates(QMap<QString, Core::PropertyEditorWidgetGuiState>()),
-    mDefaultGuiState(Core::PropertyEditorWidgetGuiState())
+    mGuiStates(QMap<QString, Core::PropertyEditorWidgetGuiState *>()),
+    mDefaultGuiState(0)
 {
 }
 
@@ -89,6 +89,8 @@ SingleCellSimulationViewInformationSolversWidget::~SingleCellSimulationViewInfor
     delete mOdeSolverData;
     delete mDaeSolverData;
     delete mNlaSolverData;
+
+    resetAllGuiStates();
 }
 
 //==============================================================================
@@ -123,6 +125,20 @@ void SingleCellSimulationViewInformationSolversWidget::retranslateUi()
     //       properties above...
 
     PropertyEditorWidget::retranslateUi();
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewInformationSolversWidget::resetAllGuiStates()
+{
+    // Reset all our GUI states including our default one
+
+    foreach (Core::PropertyEditorWidgetGuiState *guiState, mGuiStates)
+        delete guiState;
+
+    mGuiStates.clear();
+
+    delete mDefaultGuiState;
 }
 
 //==============================================================================
@@ -257,7 +273,7 @@ void SingleCellSimulationViewInformationSolversWidget::setSolverInterfaces(const
 
     // Clear any track of previous GUI states and retrieve our default GUI state
 
-    mGuiStates.clear();
+    resetAllGuiStates();
 
     mDefaultGuiState = guiState();
 }

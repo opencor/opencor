@@ -81,8 +81,10 @@ private:
     SingleCellSimulationViewInformationSolversWidgetData *mDaeSolverData;
     SingleCellSimulationViewInformationSolversWidgetData *mNlaSolverData;
 
-    QMap<QString, Core::PropertyEditorWidgetGuiState> mGuiStates;
-    Core::PropertyEditorWidgetGuiState mDefaultGuiState;
+    QMap<QString, Core::PropertyEditorWidgetGuiState *> mGuiStates;
+    Core::PropertyEditorWidgetGuiState *mDefaultGuiState;
+
+    void resetAllGuiStates();
 
     SingleCellSimulationViewInformationSolversWidgetData * addSolverProperties(const SolverInterfaces &pSolverInterfaces,
                                                                                const Solver::Type &pSolverType);

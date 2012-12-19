@@ -19,7 +19,7 @@ namespace SingleCellSimulationView {
 
 SingleCellSimulationViewInformationSimulationWidget::SingleCellSimulationViewInformationSimulationWidget(QWidget *pParent) :
     PropertyEditorWidget(true, pParent),
-    mGuiStates(QMap<QString, Core::PropertyEditorWidgetGuiState>())
+    mGuiStates(QMap<QString, Core::PropertyEditorWidgetGuiState *>())
 {
     // Populate our property editor
 
@@ -45,6 +45,18 @@ SingleCellSimulationViewInformationSimulationWidget::SingleCellSimulationViewInf
     // Retrieve our default GUI state
 
     mDefaultGuiState = guiState();
+}
+
+//==============================================================================
+
+SingleCellSimulationViewInformationSimulationWidget::~SingleCellSimulationViewInformationSimulationWidget()
+{
+    // Delete some internal objects
+
+    foreach (Core::PropertyEditorWidgetGuiState *guiState, mGuiStates)
+        delete guiState;
+
+    delete mDefaultGuiState;
 }
 
 //==============================================================================

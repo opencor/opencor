@@ -166,33 +166,49 @@ typedef QList<Property *> Properties;
 
 //==============================================================================
 
-struct PropertyEditorWidgetGuiStateProperty
+class PropertyEditorWidgetGuiStateProperty
 {
-    Property * property;
-
-    bool isHidden;
-    bool isExpanded;
-    QString value;
-
+public:
     explicit PropertyEditorWidgetGuiStateProperty(Property *pProperty,
-                                                  const bool &pIsHidden,
-                                                  const bool &pIsExpanded,
+                                                  const bool &pHidden,
+                                                  const bool &pExpanded,
                                                   const QString &pValue);
+
+    Property * property() const;
+
+    bool isHidden() const;
+    bool isExpanded() const;
+    QString value() const;
+
+private:
+    Property *mProperty;
+
+    bool mHidden;
+    bool mExpanded;
+    QString mValue;
 };
 
 //==============================================================================
 
-typedef QList<PropertyEditorWidgetGuiStateProperty> PropertyEditorWidgetGuiStateProperties;
+typedef QList<PropertyEditorWidgetGuiStateProperty *> PropertyEditorWidgetGuiStateProperties;
 
 //==============================================================================
 
-struct CORE_EXPORT PropertyEditorWidgetGuiState
+class CORE_EXPORT PropertyEditorWidgetGuiState
 {
-    PropertyEditorWidgetGuiStateProperties properties;
+public:
+    explicit PropertyEditorWidgetGuiState(const QModelIndex &pCurrentProperty);
+    ~PropertyEditorWidgetGuiState();
 
-    QModelIndex currentProperty;
+    PropertyEditorWidgetGuiStateProperties properties() const;
+    void addProperty(PropertyEditorWidgetGuiStateProperty *pProperty);
 
-    explicit PropertyEditorWidgetGuiState();
+    QModelIndex currentProperty() const;
+
+private:
+    PropertyEditorWidgetGuiStateProperties mProperties;
+
+    QModelIndex mCurrentProperty;
 };
 
 //==============================================================================
@@ -219,8 +235,8 @@ public:
 
     void selectFirstProperty();
 
-    PropertyEditorWidgetGuiState guiState();
-    void setGuiState(const PropertyEditorWidgetGuiState &pGuiState);
+    PropertyEditorWidgetGuiState * guiState();
+    void setGuiState(PropertyEditorWidgetGuiState *pGuiState);
 
     Property * addCategoryProperty(Property *pParent = 0);
     Property * addIntegerProperty(Property *pParent = 0);
