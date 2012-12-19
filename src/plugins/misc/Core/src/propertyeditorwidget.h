@@ -139,43 +139,42 @@ typedef QList<PropertyItem *> PropertyItems;
 
 //==============================================================================
 
-struct CORE_EXPORT Property
+class CORE_EXPORT Property
 {
-    QStandardItem *name;
-    PropertyItem *value;
-    QStandardItem *unit;
-
-    explicit Property();
+public:
     explicit Property(const PropertyItem::Type &pType);
     explicit Property(QStandardItem *pName, PropertyItem *pValue,
                       QStandardItem *pUnit);
 
-    bool operator!=(const Property &pOther) const;
-    bool operator==(const Property &pOther) const;
-
-    bool isEmpty() const;
+    QStandardItem * name() const;
+    PropertyItem * value() const;
+    QStandardItem * unit() const;
 
     QList<QStandardItem *> items() const;
 
 private:
+    QStandardItem *mName;
+    PropertyItem *mValue;
+    QStandardItem *mUnit;
+
     QStandardItem * nonEditableItem() const;
 };
 
 //==============================================================================
 
-typedef QList<Property> Properties;
+typedef QList<Property *> Properties;
 
 //==============================================================================
 
 struct PropertyEditorWidgetGuiStateProperty
 {
-    Property property;
+    Property * property;
 
     bool isHidden;
     bool isExpanded;
     QString value;
 
-    explicit PropertyEditorWidgetGuiStateProperty(const Property &pProperty,
+    explicit PropertyEditorWidgetGuiStateProperty(Property *pProperty,
                                                   const bool &pIsHidden,
                                                   const bool &pIsExpanded,
                                                   const QString &pValue);
@@ -209,6 +208,7 @@ public:
     explicit PropertyEditorWidget(const bool &pAutoUpdateHeight,
                                   QWidget *pParent = 0);
     explicit PropertyEditorWidget(QWidget *pParent = 0);
+    ~PropertyEditorWidget();
 
     virtual void retranslateUi();
 
@@ -222,10 +222,10 @@ public:
     PropertyEditorWidgetGuiState guiState();
     void setGuiState(const PropertyEditorWidgetGuiState &pGuiState);
 
-    Property addCategoryProperty(const Property &pParent = Property());
-    Property addIntegerProperty(const Property &pParent = Property());
-    Property addDoubleProperty(const Property &pParent = Property());
-    Property addListProperty(const Property &pParent = Property());
+    Property * addCategoryProperty(Property *pParent = 0);
+    Property * addIntegerProperty(Property *pParent = 0);
+    Property * addDoubleProperty(Property *pParent = 0);
+    Property * addListProperty(Property *pParent = 0);
 
     void setNonEditablePropertyItem(QStandardItem *pPropertyItem,
                                     const QString &pValue);
@@ -242,7 +242,7 @@ public:
 
     void removeAllProperties();
 
-    void setPropertyVisible(const Property &pProperty, const bool &pVisible);
+    void setPropertyVisible(Property *pProperty, const bool &pVisible);
 
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
@@ -252,8 +252,8 @@ protected:
 
     virtual void resizeEvent(QResizeEvent *pEvent);
 
-    Property property(const QModelIndex &pIndex) const;
-    Property currentProperty() const;
+    Property * property(const QModelIndex &pIndex) const;
+    Property * currentProperty() const;
 
 private:
     bool mShowUnits;
@@ -264,7 +264,7 @@ private:
     PropertyItemDelegate *mPropertyItemDelegate;
 
     Properties mProperties;
-    Property mProperty;
+    Property *mProperty;
     QWidget *mPropertyEditor;
 
     void constructor(const bool &pShowUnits = true,
@@ -272,11 +272,9 @@ private:
 
     void retranslateEmptyListProperties(QStandardItem *pItem);
 
-    Property addProperty(const Property &pParent,
-                         const PropertyItem::Type &pType);
+    Property * addProperty(Property *pParent, const PropertyItem::Type &pType);
 
-    void editProperty(const Property &pProperty,
-                      const bool &pCommitData = true);
+    void editProperty(Property *pProperty, const bool &pCommitData = true);
 
     void goToNeighbouringProperty(const int &pShift);
 

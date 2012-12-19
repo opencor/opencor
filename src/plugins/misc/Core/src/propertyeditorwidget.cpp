@@ -319,19 +319,10 @@ void PropertyItem::setEmptyListValue(const QString &pEmptyListValue)
 
 //==============================================================================
 
-Property::Property() :
-    name(0),
-    value(0),
-    unit(0)
-{
-}
-
-//==============================================================================
-
 Property::Property(const PropertyItem::Type &pType) :
-    name(nonEditableItem()),
-    value(new PropertyItem(pType)),
-    unit(nonEditableItem())
+    mName(nonEditableItem()),
+    mValue(new PropertyItem(pType)),
+    mUnit(nonEditableItem())
 {
 }
 
@@ -339,9 +330,9 @@ Property::Property(const PropertyItem::Type &pType) :
 
 Property::Property(QStandardItem *pName, PropertyItem *pValue,
                    QStandardItem *pUnit) :
-    name(pName),
-    value(pValue),
-    unit(pUnit)
+    mName(pName),
+    mValue(pValue),
+    mUnit(pUnit)
 {
 }
 
@@ -360,29 +351,29 @@ QStandardItem * Property::nonEditableItem() const
 
 //==============================================================================
 
-bool Property::operator!=(const Property &pOther) const
+QStandardItem * Property::name() const
 {
-    // Return whether the two properties are different
+    // Return our name item
 
-    return (name != pOther.name) || (value != pOther.value) || (unit != pOther.unit);
+    return mName;
 }
 
 //==============================================================================
 
-bool Property::operator==(const Property &pOther) const
+PropertyItem * Property::value() const
 {
-    // Return whether the two properties are the same
+    // Return our value item
 
-    return (name == pOther.name) && (value == pOther.value) && (unit == pOther.unit);
+    return mValue;
 }
 
 //==============================================================================
 
-bool Property::isEmpty() const
+QStandardItem * Property::unit() const
 {
-    // Return whether the property is empty
+    // Return our unit item
 
-    return !name && !value && !unit;
+    return mUnit;
 }
 
 //==============================================================================
@@ -391,12 +382,12 @@ QList<QStandardItem *> Property::items() const
 {
     // Return our items as a list
 
-    return QList<QStandardItem *>() << name << value << unit;
+    return QList<QStandardItem *>() << mName << mValue << mUnit;
 }
 
 //==============================================================================
 
-PropertyEditorWidgetGuiStateProperty::PropertyEditorWidgetGuiStateProperty(const Property &pProperty,
+PropertyEditorWidgetGuiStateProperty::PropertyEditorWidgetGuiStateProperty(Property *pProperty,
                                                                            const bool &pIsHidden,
                                                                            const bool &pIsExpanded,
                                                                            const QString &pValue) :
@@ -426,7 +417,7 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
     mAutoUpdateHeight = pAutoUpdateHeight;
 
     mProperties     = Properties();
-    mProperty       = Property();
+    mProperty       = 0;
     mPropertyEditor = 0;
 
     // Customise ourselves
@@ -516,6 +507,16 @@ PropertyEditorWidget::PropertyEditorWidget(QWidget *pParent) :
 
 //==============================================================================
 
+PropertyEditorWidget::~PropertyEditorWidget()
+{
+    // Delete some internal objects
+
+    foreach (Property *property, mProperties)
+        delete property;
+}
+
+//==============================================================================
+
 void PropertyEditorWidget::retranslateEmptyListProperties(QStandardItem *pItem)
 {
     // Retranslate the current item, should it be an empty list
@@ -526,13 +527,13 @@ void PropertyEditorWidget::retranslateEmptyListProperties(QStandardItem *pItem)
         // The index is valid (i.e. it's not our invisible root item), so
         // retrieve the corresponding property item
 
-        PropertyItem *propertyValue = property(index).value;
+        PropertyItem *propertyValue = property(index)->value();
 
         // Check whether the property value is of list type and whether its list
         // is empty and, if so, then set its text value accordingly
 
         if (   (propertyValue->type() == PropertyItem::List)
-               && (propertyValue->list().isEmpty()))
+            && (propertyValue->list().isEmpty()))
             propertyValue->setText(propertyValue->emptyListValue());
     }
 
@@ -668,14 +669,14 @@ PropertyEditorWidgetGuiState PropertyEditorWidget::guiState()
     // Retrieve the hidden state, expanded state and value of our different
     // properties
 
-    foreach (const Property &property, mProperties)
+    foreach (Property *property, mProperties)
         guiState.properties << PropertyEditorWidgetGuiStateProperty(property,
-                                                                    isRowHidden(property.name->row(),
-                                                                                property.name->parent()?
-                                                                                    property.name->parent()->index():
+                                                                    isRowHidden(property->name()->row(),
+                                                                                property->name()->parent()?
+                                                                                    property->name()->parent()->index():
                                                                                     mModel->invisibleRootItem()->index()),
-                                                                    isExpanded(property.name->index()),
-                                                                    property.value->text());
+                                                                    isExpanded(property->name()->index()),
+                                                                    property->value()->text());
 
     // Retrieve our current index
 
@@ -696,15 +697,15 @@ void PropertyEditorWidget::setGuiState(const PropertyEditorWidgetGuiState &pGuiS
     // properties
 
     foreach (const PropertyEditorWidgetGuiStateProperty &property, pGuiState.properties) {
-        setRowHidden(property.property.name->row(),
-                     property.property.name->parent()?
-                         property.property.name->parent()->index():
+        setRowHidden(property.property->name()->row(),
+                     property.property->name()->parent()?
+                         property.property->name()->parent()->index():
                          mModel->invisibleRootItem()->index(),
                      property.isHidden);
 
-        setExpanded(property.property.name->index(), property.isExpanded);
+        setExpanded(property.property->name()->index(), property.isExpanded);
 
-        property.property.value->setText(property.value);
+        property.property->value()->setText(property.value);
     }
 
     // Set our current index, if it is valid
@@ -715,27 +716,27 @@ void PropertyEditorWidget::setGuiState(const PropertyEditorWidgetGuiState &pGuiS
 
 //==============================================================================
 
-Property PropertyEditorWidget::addProperty(const Property &pParent,
-                                           const PropertyItem::Type &pType)
+Property * PropertyEditorWidget::addProperty(Property *pParent,
+                                             const PropertyItem::Type &pType)
 {
     // Determine our new property's information
 
-    Property res = Property(pType);
+    Property *res = new Property(pType);
 
     // Populate our data model with our new property
 
-    if (pParent.isEmpty()) {
-        // We want to add a root property
-
-        mModel->invisibleRootItem()->appendRow(res.items());
-    } else {
+    if (pParent) {
         // We want to add a child property
 
-        pParent.name->appendRow(res.items());
+        pParent->name()->appendRow(res->items());
 
         // If we want to see the child property, we need root decoration
 
         setRootIsDecorated(true);
+    } else {
+        // We want to add a root property
+
+        mModel->invisibleRootItem()->appendRow(res->items());
     }
 
     // Keep track of our new property
@@ -749,7 +750,7 @@ Property PropertyEditorWidget::addProperty(const Property &pParent,
 
 //==============================================================================
 
-Property PropertyEditorWidget::addCategoryProperty(const Property &pParent)
+Property * PropertyEditorWidget::addCategoryProperty(Property *pParent)
 {
     // Add a category property and return its information
 
@@ -758,7 +759,7 @@ Property PropertyEditorWidget::addCategoryProperty(const Property &pParent)
 
 //==============================================================================
 
-Property PropertyEditorWidget::addIntegerProperty(const Property &pParent)
+Property * PropertyEditorWidget::addIntegerProperty(Property *pParent)
 {
     // Add an integer property and return its information
 
@@ -767,7 +768,7 @@ Property PropertyEditorWidget::addIntegerProperty(const Property &pParent)
 
 //==============================================================================
 
-Property PropertyEditorWidget::addDoubleProperty(const Property &pParent)
+Property * PropertyEditorWidget::addDoubleProperty(Property *pParent)
 {
     // Add a double property and return its information
 
@@ -776,7 +777,7 @@ Property PropertyEditorWidget::addDoubleProperty(const Property &pParent)
 
 //==============================================================================
 
-Property PropertyEditorWidget::addListProperty(const Property &pParent)
+Property * PropertyEditorWidget::addListProperty(Property *pParent)
 {
     // Add a list property and return its information
 
@@ -865,10 +866,9 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
         // The user wants to start/stop editing the property
 
         if (mPropertyEditor)
-            // We are currently editing a property, so stop editing it by
-            // pretending to edit an empty property
+            // We are currently editing a property, so stop editing it
 
-            editProperty(Property());
+            editProperty(0);
         else
             // We are not currently editing a property, so start editing the
             // current one
@@ -929,7 +929,7 @@ void PropertyEditorWidget::mousePressEvent(QMouseEvent *pEvent)
 {
     // Start/stop the editing of the property
 
-    Property mouseProperty = property(indexAt(pEvent->pos()));
+    Property *mouseProperty = property(indexAt(pEvent->pos()));
 
     if (mPropertyEditor) {
         // We are already editing a property, so either stop its editing or
@@ -940,10 +940,9 @@ void PropertyEditorWidget::mousePressEvent(QMouseEvent *pEvent)
 
             editProperty(mouseProperty);
         else
-            // We want to stop editing the property, so pretend we want to edit
-            // an empty property
+            // We want to stop editing the property
 
-            editProperty(Property());
+            editProperty(0);
     } else {
         // We are not currently editing a property, so start editing the current
         // one
@@ -962,9 +961,9 @@ void PropertyEditorWidget::mouseMoveEvent(QMouseEvent *pEvent)
 {
     // Edit the property, but only if we want to edit a new one
 
-    Property mouseProperty = property(indexAt(pEvent->pos()));
+    Property *mouseProperty = property(indexAt(pEvent->pos()));
 
-    if (!mouseProperty.isEmpty() && (mouseProperty != mProperty))
+    if (mouseProperty && (mouseProperty != mProperty))
         editProperty(mouseProperty);
 
     // Accept the event
@@ -1033,11 +1032,11 @@ void PropertyEditorWidget::editorOpened(QWidget *pEditor)
     // edit a list item, then its original value gets properly set
     // Note: indeed, by default the first list item will be selected...
 
-    if (mProperty.value->type() == PropertyItem::List) {
+    if (mProperty->value()->type() == PropertyItem::List) {
         ListEditorWidget *propertyEditor = static_cast<ListEditorWidget *>(mPropertyEditor);
 
-        for (int i = 0, iMax = mProperty.value->list().count(); i < iMax; ++i)
-            if (!mProperty.value->text().compare(mProperty.value->list()[i])) {
+        for (int i = 0, iMax = mProperty->value()->list().count(); i < iMax; ++i)
+            if (!mProperty->value()->text().compare(mProperty->value()->list()[i])) {
                 propertyEditor->setCurrentIndex(i);
 
                 break;
@@ -1065,11 +1064,11 @@ void PropertyEditorWidget::editorClosed()
     //       in the list while we want the actual text corresponding to the
     //       selected item...
 
-    if (mProperty.value->type() == PropertyItem::List) {
-        if (mProperty.value->list().isEmpty())
-            mProperty.value->setText(mProperty.value->emptyListValue());
+    if (mProperty->value()->type() == PropertyItem::List) {
+        if (mProperty->value()->list().isEmpty())
+            mProperty->value()->setText(mProperty->value()->emptyListValue());
         else
-            mProperty.value->setText(static_cast<ListEditorWidget *>(mPropertyEditor)->currentText());
+            mProperty->value()->setText(static_cast<ListEditorWidget *>(mPropertyEditor)->currentText());
     }
 
     // Reset our focus proxy and make sure that we get the focus (see
@@ -1081,13 +1080,13 @@ void PropertyEditorWidget::editorClosed()
 
     // Reset some information about the property
 
-    mProperty       = Property();
+    mProperty       = 0;
     mPropertyEditor = 0;
 }
 
 //==============================================================================
 
-void PropertyEditorWidget::editProperty(const Property &pProperty,
+void PropertyEditorWidget::editProperty(Property *pProperty,
                                         const bool &pCommitData)
 {
     // We want to edit a new property, so first stop the editing of the current
@@ -1119,11 +1118,11 @@ void PropertyEditorWidget::editProperty(const Property &pProperty,
     // Now that the editing of our old property has finished, we can start the
     // editing of our new property, if any
 
-    if (!pProperty.isEmpty()) {
+    if (pProperty) {
         // There is a new property to edit, so first make sure that it is
         // selected
 
-        QModelIndex propertyIndex = pProperty.value->index();
+        QModelIndex propertyIndex = pProperty->value()->index();
 
         setCurrentIndex(propertyIndex);
 
@@ -1139,7 +1138,7 @@ void PropertyEditorWidget::cancelPropertyEditing()
 {
     // The user wants to cancel the editing of the property
 
-    editProperty(Property(), false);
+    editProperty(0, false);
 }
 
 //==============================================================================
@@ -1157,17 +1156,17 @@ void PropertyEditorWidget::removeAllProperties()
 
 //==============================================================================
 
-void PropertyEditorWidget::setPropertyVisible(const Property &pProperty,
+void PropertyEditorWidget::setPropertyVisible(Property *pProperty,
                                               const bool &pVisible)
 {
     // Show/hide the property, if not empty
 
-    if (pProperty.isEmpty())
+    if (!pProperty)
         return;
 
-    setRowHidden(pProperty.name->row(),
-                 pProperty.name->parent()?
-                     pProperty.name->parent()->index():
+    setRowHidden(pProperty->name()->row(),
+                 pProperty->name()->parent()?
+                     pProperty->name()->parent()->index():
                      mModel->invisibleRootItem()->index(),
                  !pVisible);
 
@@ -1215,26 +1214,29 @@ void PropertyEditorWidget::goToNextProperty()
 
 //==============================================================================
 
-Property PropertyEditorWidget::property(const QModelIndex &pIndex) const
+Property * PropertyEditorWidget::property(const QModelIndex &pIndex) const
 {
     // Make sure that the given index is valid
 
     if (!pIndex.isValid())
-        return Property();
+        return 0;
 
-    // Return some information about the property at the given index
+    // Return our information about the property at the given index
 
-    QModelIndex parent = pIndex.parent();
-    int row = pIndex.row();
+    foreach (Property *property, mProperties)
+        if (   (property->name()->index()  == pIndex)
+            || (property->value()->index() == pIndex)
+            || (property->unit()->index()  == pIndex))
+            return property;
 
-    return Property(mModel->itemFromIndex(mModel->index(row, 0, parent)),
-                    static_cast<PropertyItem *>(mModel->itemFromIndex(mModel->index(row, 1, parent))),
-                    mModel->itemFromIndex(mModel->index(row, 2, parent)));
+    // Somehow, we couldn't find the property (how is that possible?!), so...
+
+    return 0;
 }
 
 //==============================================================================
 
-Property PropertyEditorWidget::currentProperty() const
+Property * PropertyEditorWidget::currentProperty() const
 {
     // Return some information about the current property
 

@@ -13,8 +13,8 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-SingleCellSimulationViewInformationSolversWidgetData::SingleCellSimulationViewInformationSolversWidgetData(const Core::Property &pSolversProperty,
-                                                                                                           const Core::Property &pSolversListProperty,
+SingleCellSimulationViewInformationSolversWidgetData::SingleCellSimulationViewInformationSolversWidgetData(Core::Property *pSolversProperty,
+                                                                                                           Core::Property *pSolversListProperty,
                                                                                                            const QMap<QString, Core::Properties> &pSolversProperties) :
     mNeedSolver(true),
     mSolversProperty(pSolversProperty),
@@ -43,7 +43,7 @@ void SingleCellSimulationViewInformationSolversWidgetData::setNeedSolver(const b
 
 //==============================================================================
 
-Core::Property SingleCellSimulationViewInformationSolversWidgetData::solversProperty() const
+Core::Property * SingleCellSimulationViewInformationSolversWidgetData::solversProperty() const
 {
     // Return our solvers property
 
@@ -52,7 +52,7 @@ Core::Property SingleCellSimulationViewInformationSolversWidgetData::solversProp
 
 //==============================================================================
 
-Core::Property SingleCellSimulationViewInformationSolversWidgetData::solversListProperty() const
+Core::Property * SingleCellSimulationViewInformationSolversWidgetData::solversListProperty() const
 {
     // Return our solvers list property
 
@@ -97,25 +97,25 @@ void SingleCellSimulationViewInformationSolversWidget::retranslateUi()
 {
     // Update our property names
 
-    if (mOdeSolverData && !mOdeSolverData->solversProperty().isEmpty()) {
-        setNonEditablePropertyItem(mOdeSolverData->solversProperty().name, tr("ODE solver"));
-        setNonEditablePropertyItem(mOdeSolverData->solversListProperty().name, tr("Name"));
+    if (mOdeSolverData) {
+        setNonEditablePropertyItem(mOdeSolverData->solversProperty()->name(), tr("ODE solver"));
+        setNonEditablePropertyItem(mOdeSolverData->solversListProperty()->name(), tr("Name"));
 
-        mOdeSolverData->solversListProperty().value->setEmptyListValue(tr("None available"));
+        mOdeSolverData->solversListProperty()->value()->setEmptyListValue(tr("None available"));
     }
 
-    if (mDaeSolverData && !mDaeSolverData->solversProperty().isEmpty()) {
-        setNonEditablePropertyItem(mDaeSolverData->solversProperty().name, tr("DAE solver"));
-        setNonEditablePropertyItem(mDaeSolverData->solversListProperty().name, tr("Name"));
+    if (mDaeSolverData) {
+        setNonEditablePropertyItem(mDaeSolverData->solversProperty()->name(), tr("DAE solver"));
+        setNonEditablePropertyItem(mDaeSolverData->solversListProperty()->name(), tr("Name"));
 
-        mDaeSolverData->solversListProperty().value->setEmptyListValue(tr("None available"));
+        mDaeSolverData->solversListProperty()->value()->setEmptyListValue(tr("None available"));
     }
 
-    if (mNlaSolverData && !mNlaSolverData->solversProperty().isEmpty()) {
-        setNonEditablePropertyItem(mNlaSolverData->solversProperty().name, tr("NLA solver"));
-        setNonEditablePropertyItem(mNlaSolverData->solversListProperty().name, tr("Name"));
+    if (mNlaSolverData) {
+        setNonEditablePropertyItem(mNlaSolverData->solversProperty()->name(), tr("NLA solver"));
+        setNonEditablePropertyItem(mNlaSolverData->solversListProperty()->name(), tr("Name"));
 
-        mNlaSolverData->solversListProperty().value->setEmptyListValue(tr("None available"));
+        mNlaSolverData->solversListProperty()->value()->setEmptyListValue(tr("None available"));
     }
 
     // Default retranslation
@@ -137,11 +137,11 @@ SingleCellSimulationViewInformationSolversWidgetData * SingleCellSimulationViewI
 
     // Add our category property
 
-    Core::Property solversProperty = addCategoryProperty();
+    Core::Property *solversProperty = addCategoryProperty();
 
     // Add our list property for the solvers
 
-    Core::Property solversListProperty = addListProperty(solversProperty);
+    Core::Property *solversListProperty = addListProperty(solversProperty);
 
     // Retrieve the name of the solvers which type is the one we are interested
     // in
@@ -157,7 +157,7 @@ SingleCellSimulationViewInformationSolversWidgetData * SingleCellSimulationViewI
 
             // Add the solver's properties
 
-            Core::Property property;
+            Core::Property *property;
             Core::Properties properties = Core::Properties();
 
             foreach (const Solver::Property &solverInterfaceProperty,
@@ -177,25 +177,25 @@ SingleCellSimulationViewInformationSolversWidgetData * SingleCellSimulationViewI
 
                 // Set the solver's property's name
 
-                setNonEditablePropertyItem(property.name, solverInterfaceProperty.name());
+                setNonEditablePropertyItem(property->name(), solverInterfaceProperty.name());
 
                 // Set the solver's property's default value
 
                 switch (solverInterfaceProperty.type()) {
                 case Solver::Double:
-                    setDoublePropertyItem(property.value, solverInterfaceProperty.defaultValue().toDouble());
+                    setDoublePropertyItem(property->value(), solverInterfaceProperty.defaultValue().toDouble());
 
                     break;
                 default:
                     // Solver::Integer
 
-                    setIntegerPropertyItem(property.value, solverInterfaceProperty.defaultValue().toInt());
+                    setIntegerPropertyItem(property->value(), solverInterfaceProperty.defaultValue().toInt());
                 }
 
                 // Set the solver's property's 'unit', if needed
 
                 if (solverInterfaceProperty.hasVoiUnit())
-                    setNonEditablePropertyItem(property.unit, "???");
+                    setNonEditablePropertyItem(property->unit(), "???");
                     // Note: to assign a non-empty string to our unit item is
                     //       just a way for us to keep track of the fact that
                     //       the property should have a unit (see
@@ -213,7 +213,7 @@ SingleCellSimulationViewInformationSolversWidgetData * SingleCellSimulationViewI
 
     // Add the list of solvers to our list property value item
 
-    solversListProperty.value->setList(solvers);
+    solversListProperty->value()->setList(solvers);
 
     // Keep track of changes to list properties
 
@@ -247,9 +247,9 @@ void SingleCellSimulationViewInformationSolversWidget::setSolverInterfaces(const
 
     // Show/hide the relevant properties
 
-    doListPropertyChanged(mOdeSolverData, mOdeSolverData->solversListProperty().value->text(), true);
-    doListPropertyChanged(mDaeSolverData, mDaeSolverData->solversListProperty().value->text(), true);
-    doListPropertyChanged(mNlaSolverData, mNlaSolverData->solversListProperty().value->text(), true);
+    doListPropertyChanged(mOdeSolverData, mOdeSolverData->solversListProperty()->value()->text(), true);
+    doListPropertyChanged(mDaeSolverData, mDaeSolverData->solversListProperty()->value()->text(), true);
+    doListPropertyChanged(mNlaSolverData, mNlaSolverData->solversListProperty()->value()->text(), true);
 
     // Expand all our properties
 
@@ -275,9 +275,9 @@ void SingleCellSimulationViewInformationSolversWidget::setPropertiesUnit(SingleC
     // Go through the solvers' properties and set the unit of the relevant ones
 
     foreach (const Core::Properties &properties, pSolverData->solversProperties())
-        foreach (const Core::Property &property, properties)
-            if (!property.unit->text().isEmpty())
-                property.unit->setText(pVoiUnit);
+        foreach (Core::Property *property, properties)
+            if (!property->unit()->text().isEmpty())
+                property->unit()->setText(pVoiUnit);
 }
 
 //==============================================================================
@@ -369,7 +369,7 @@ QStringList SingleCellSimulationViewInformationSolversWidget::odeSolvers() const
 {
     // Return the available ODE solvers, if any
 
-    return mOdeSolverData->solversListProperty().isEmpty()?QStringList():mOdeSolverData->solversListProperty().value->list();
+    return mOdeSolverData?mOdeSolverData->solversListProperty()->value()->list():QStringList();
 }
 
 //==============================================================================
@@ -378,7 +378,7 @@ QStringList SingleCellSimulationViewInformationSolversWidget::daeSolvers() const
 {
     // Return the available DAE solvers, if any
 
-    return mDaeSolverData->solversListProperty().isEmpty()?QStringList():mDaeSolverData->solversListProperty().value->list();
+    return mDaeSolverData?mDaeSolverData->solversListProperty()->value()->list():QStringList();
 }
 
 //==============================================================================
@@ -387,7 +387,7 @@ QStringList SingleCellSimulationViewInformationSolversWidget::nlaSolvers() const
 {
     // Return the available NLA solvers, if any
 
-    return mNlaSolverData->solversListProperty().isEmpty()?QStringList():mNlaSolverData->solversListProperty().value->list();
+    return mNlaSolverData?mNlaSolverData->solversListProperty()->value()->list():QStringList();
 }
 
 //==============================================================================
@@ -417,7 +417,7 @@ bool SingleCellSimulationViewInformationSolversWidget::doListPropertyChanged(Sin
         while (iter != pSolverData->solversProperties().constEnd()) {
             bool propertyVisible = !iter.key().compare(pSolverName);
 
-            foreach (const Core::Property &property, iter.value())
+            foreach (Core::Property *property, iter.value())
                 setPropertyVisible(property, propertyVisible);
 
             ++iter;

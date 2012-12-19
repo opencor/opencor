@@ -29,23 +29,23 @@ namespace SingleCellSimulationView {
 class SingleCellSimulationViewInformationSolversWidgetData
 {
 public:
-    explicit SingleCellSimulationViewInformationSolversWidgetData(const Core::Property &pSolversProperty,
-                                                                  const Core::Property &pSolversListProperty,
+    explicit SingleCellSimulationViewInformationSolversWidgetData(Core::Property *pSolversProperty,
+                                                                  Core::Property *pSolversListProperty,
                                                                   const QMap<QString, Core::Properties> &pSolversProperties);
 
     bool needSolver() const;
     void setNeedSolver(const bool &pNeedSolver);
 
-    Core::Property solversProperty() const;
-    Core::Property solversListProperty() const;
+    Core::Property * solversProperty() const;
+    Core::Property * solversListProperty() const;
 
     QMap<QString, Core::Properties> solversProperties() const;
 
 private:
     bool mNeedSolver;
 
-    Core::Property mSolversProperty;
-    Core::Property mSolversListProperty;
+    Core::Property *mSolversProperty;
+    Core::Property *mSolversListProperty;
 
     QMap<QString, Core::Properties> mSolversProperties;
 };

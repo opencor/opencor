@@ -43,9 +43,9 @@ public:
     double pointInterval() const;
 
 private:
-    Core::Property mStartingPointProperty;
-    Core::Property mEndingPointProperty;
-    Core::Property mPointIntervalProperty;
+    Core::Property *mStartingPointProperty;
+    Core::Property *mEndingPointProperty;
+    Core::Property *mPointIntervalProperty;
 
     QMap<QString, Core::PropertyEditorWidgetGuiState> mGuiStates;
     Core::PropertyEditorWidgetGuiState mDefaultGuiState;
