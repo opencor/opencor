@@ -109,11 +109,10 @@ public:
     void zoomOut();
 
 protected:
-    virtual void mouseReleaseEvent(QMouseEvent *pEvent);
-    virtual void wheelEvent(QWheelEvent *pEvent);
-
     virtual QSize sizeHint() const;
 
+    virtual void mouseReleaseEvent(QMouseEvent *pEvent);
+    virtual void wheelEvent(QWheelEvent *pEvent);
     virtual void paintEvent(QPaintEvent *pEvent);
 
 private:

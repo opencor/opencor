@@ -278,29 +278,6 @@ void FileOrganiserWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-bool FileOrganiserWidget::viewportEvent(QEvent *pEvent)
-{
-    if (pEvent->type() == QEvent::ToolTip) {
-        // We need to show a tool tip, so make sure that it's up to date by
-        // setting it to the path of the current file item or to nothing if we
-        // are dealing with a folder item
-
-        QHelpEvent *helpEvent = static_cast<QHelpEvent *>(pEvent);
-        QStandardItem *crtItem = mModel->itemFromIndex(indexAt(helpEvent->pos()));
-
-        if (crtItem)
-            setToolTip(QDir::toNativeSeparators(crtItem->data(Item::Folder).toBool()?
-                                                    "":
-                                                    crtItem->data(Item::Path).toString()));
-    }
-
-    // Default handling of the event
-
-    return TreeViewWidget::viewportEvent(pEvent);
-}
-
-//==============================================================================
-
 void FileOrganiserWidget::dragEnterEvent(QDragEnterEvent *pEvent)
 {
     // Accept the proposed action for the event, but only if we are dropping
@@ -464,6 +441,56 @@ void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
     //       may, in some cases, remain visible (a bug in Qt?), so...
 
     setState(QAbstractItemView::NoState);
+}
+
+//==============================================================================
+
+void FileOrganiserWidget::keyPressEvent(QKeyEvent *pEvent)
+{
+    // Default handling of the event
+
+    TreeViewWidget::keyPressEvent(pEvent);
+
+    // Let people know about a key having been pressed with the view of opening
+    // one or several files
+
+    QStringList crtSelectedFiles = selectedFiles();
+
+    if (   crtSelectedFiles.count()
+#ifdef Q_OS_MAC
+        && (   (pEvent->modifiers() & Qt::ControlModifier)
+            && (pEvent->key() == Qt::Key_Down)))
+#else
+        && (   (pEvent->key() == Qt::Key_Enter)
+            || (pEvent->key() == Qt::Key_Return)))
+#endif
+        // There are some files that are selected and we want to open them, so
+        // let people know about it
+
+        emit filesOpened(crtSelectedFiles);
+}
+
+//==============================================================================
+
+bool FileOrganiserWidget::viewportEvent(QEvent *pEvent)
+{
+    if (pEvent->type() == QEvent::ToolTip) {
+        // We need to show a tool tip, so make sure that it's up to date by
+        // setting it to the path of the current file item or to nothing if we
+        // are dealing with a folder item
+
+        QHelpEvent *helpEvent = static_cast<QHelpEvent *>(pEvent);
+        QStandardItem *crtItem = mModel->itemFromIndex(indexAt(helpEvent->pos()));
+
+        if (crtItem)
+            setToolTip(QDir::toNativeSeparators(crtItem->data(Item::Folder).toBool()?
+                                                    "":
+                                                    crtItem->data(Item::Path).toString()));
+    }
+
+    // Default handling of the event
+
+    return TreeViewWidget::viewportEvent(pEvent);
 }
 
 //==============================================================================
@@ -1048,33 +1075,6 @@ QStringList FileOrganiserWidget::selectedFiles() const
     }
 
     return res;
-}
-
-//==============================================================================
-
-void FileOrganiserWidget::keyPressEvent(QKeyEvent *pEvent)
-{
-    // Default handling of the event
-
-    TreeViewWidget::keyPressEvent(pEvent);
-
-    // Let people know about a key having been pressed with the view of opening
-    // one or several files
-
-    QStringList crtSelectedFiles = selectedFiles();
-
-    if (   crtSelectedFiles.count()
-#ifdef Q_OS_MAC
-        && (   (pEvent->modifiers() & Qt::ControlModifier)
-            && (pEvent->key() == Qt::Key_Down)))
-#else
-        && (   (pEvent->key() == Qt::Key_Enter)
-            || (pEvent->key() == Qt::Key_Return)))
-#endif
-        // There are some files that are selected and we want to open them, so
-        // let people know about it
-
-        emit filesOpened(crtSelectedFiles);
 }
 
 //==============================================================================

@@ -354,6 +354,17 @@ void HelpWidget::setZoomLevel(const int &pZoomLevel)
 
 //==============================================================================
 
+QSize HelpWidget::sizeHint() const
+{
+    // Suggest a default size for the help widget
+    // Note: this is critical if we want a docked widget, with a help widget
+    //       on it, to have a decent size when docked to the main window
+
+    return defaultSize(0.2);
+}
+
+//==============================================================================
+
 void HelpWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 {
     // Handle some special mouse buttons for navigating the help
@@ -412,17 +423,6 @@ void HelpWidget::wheelEvent(QWheelEvent *pEvent)
 
         QWebView::wheelEvent(pEvent);
     }
-}
-
-//==============================================================================
-
-QSize HelpWidget::sizeHint() const
-{
-    // Suggest a default size for the help widget
-    // Note: this is critical if we want a docked widget, with a help widget
-    //       on it, to have a decent size when docked to the main window
-
-    return defaultSize(0.2);
 }
 
 //==============================================================================

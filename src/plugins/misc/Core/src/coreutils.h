@@ -29,6 +29,7 @@ namespace Core {
 
 static const QString SettingsGlobal         = "Global";
 static const QString SettingsBorderColor    = "BorderColor";
+static const QString SettingsBaseColor      = "BaseColor";
 static const QString SettingsWindowColor    = "WindowColor";
 static const QString SettingsHighlightColor = "HighlightColor";
 

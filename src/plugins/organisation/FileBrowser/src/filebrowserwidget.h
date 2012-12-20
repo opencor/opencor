@@ -36,12 +36,10 @@ public:
     void goToNextFileOrFolder();
 
 protected:
-    virtual bool viewportEvent(QEvent *pEvent);
-
     virtual void keyPressEvent(QKeyEvent *pEvent);
-
     virtual void mousePressEvent(QMouseEvent *pEvent);
     virtual void mouseMoveEvent(QMouseEvent *pEvent);
+    virtual bool viewportEvent(QEvent *pEvent);
 
 private:
     FileBrowserModel *mModel;

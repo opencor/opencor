@@ -196,24 +196,6 @@ void FileBrowserWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-bool FileBrowserWidget::viewportEvent(QEvent *pEvent)
-{
-    if (pEvent->type() == QEvent::ToolTip) {
-        // We need to show a tool tip, so make sure that it's up to date by
-        // setting it to the path of the current item
-
-        QHelpEvent *helpEvent = static_cast<QHelpEvent *>(pEvent);
-
-        setToolTip(QDir::toNativeSeparators(mModel->filePath(indexAt(helpEvent->pos()))));
-    }
-
-    // Default handling of the event
-
-    return TreeViewWidget::viewportEvent(pEvent);
-}
-
-//==============================================================================
-
 QStringList FileBrowserWidget::selectedFiles() const
 {
     // Retrieve all the files that are currently selected
@@ -476,6 +458,24 @@ void FileBrowserWidget::mouseMoveEvent(QMouseEvent *pEvent)
     // Deselect folders, if required
 
     deselectFolders();
+}
+
+//==============================================================================
+
+bool FileBrowserWidget::viewportEvent(QEvent *pEvent)
+{
+    if (pEvent->type() == QEvent::ToolTip) {
+        // We need to show a tool tip, so make sure that it's up to date by
+        // setting it to the path of the current item
+
+        QHelpEvent *helpEvent = static_cast<QHelpEvent *>(pEvent);
+
+        setToolTip(QDir::toNativeSeparators(mModel->filePath(indexAt(helpEvent->pos()))));
+    }
+
+    // Default handling of the event
+
+    return TreeViewWidget::viewportEvent(pEvent);
 }
 
 //==============================================================================

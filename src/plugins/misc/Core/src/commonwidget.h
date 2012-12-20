@@ -60,6 +60,7 @@ public:
 
     static QColor borderColor();
 
+    static QColor baseColor();
     static QColor windowColor();
     static QColor highlightColor();
 

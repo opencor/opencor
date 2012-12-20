@@ -36,11 +36,11 @@ void ProgressBarWidget::paintEvent(QPaintEvent *pEvent)
 
     if (value)
         painter.fillRect(0, 0, value, height(),
-                         Core::CommonWidget::highlightColor());
+                         CommonWidget::highlightColor());
 
     if (value != mWidth)
         painter.fillRect(value, 0, mWidth-value, height(),
-                         Core::CommonWidget::windowColor());
+                         CommonWidget::windowColor());
 
     // Accept the event
 

@@ -35,13 +35,11 @@ public:
     QString filePath(const QModelIndex &pFileIndex) const;
 
 protected:
-    virtual bool viewportEvent(QEvent *pEvent);
-
     virtual void dragEnterEvent(QDragEnterEvent *pEvent);
     virtual void dragMoveEvent(QDragMoveEvent *pEvent);
     virtual void dropEvent(QDropEvent *pEvent);
-
     virtual void keyPressEvent(QKeyEvent *pEvent);
+    virtual bool viewportEvent(QEvent *pEvent);
 
 private:
     FileOrganiserModel *mModel;

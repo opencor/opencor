@@ -96,7 +96,7 @@ QColor CommonWidget::specificColor(const QString &pColor)
 
 QColor CommonWidget::borderColor()
 {
-    // Return the colour to be used for a border
+    // Return the border colour
     // Note: we retrieve it from our settings which is updated by our plugin
     //       itself (see CorePlugin::retrieveBorderColor())...
 
@@ -105,9 +105,20 @@ QColor CommonWidget::borderColor()
 
 //==============================================================================
 
+QColor CommonWidget::baseColor()
+{
+    // Return the base colour
+    // Note: we retrieve it from our settings which is updated by our plugin
+    //       itself (see CorePlugin::changeEvent())...
+
+    return specificColor(SettingsBaseColor);
+}
+
+//==============================================================================
+
 QColor CommonWidget::windowColor()
 {
-    // Return the colour to be used for a window
+    // Return the window colour
     // Note: we retrieve it from our settings which is updated by our plugin
     //       itself (see CorePlugin::changeEvent())...
 
@@ -118,7 +129,7 @@ QColor CommonWidget::windowColor()
 
 QColor CommonWidget::highlightColor()
 {
-    // Return the colour to be used for a highlight
+    // Return the highlight colour
     // Note: we retrieve it from our settings which is updated by our plugin
     //       itself (see CorePlugin::changeEvent())...
 
