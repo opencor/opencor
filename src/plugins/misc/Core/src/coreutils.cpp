@@ -106,7 +106,7 @@ void * globalInstance(const QString &pObjectName, void *pDefaultGlobalInstance)
     //       different plugins. So, instead, we, on OS X, revert to our original
     //       plan...
 
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
     Q_UNUSED(pObjectName);
 
     return (void *) pDefaultGlobalInstance;

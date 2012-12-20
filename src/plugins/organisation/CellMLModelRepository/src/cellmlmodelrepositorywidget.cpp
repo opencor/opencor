@@ -76,7 +76,7 @@ void CellmlModelRepositoryWidget::paintEvent(QPaintEvent *pEvent)
     // Draw a border
 
     drawBorder(
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
                true, false, true, false,
 #else
                true, true, true, true,

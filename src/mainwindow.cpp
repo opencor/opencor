@@ -18,7 +18,7 @@
 
 //==============================================================================
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     #include <windows.h>
 #endif
 
@@ -30,17 +30,17 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QSettings>
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
     #include <QShortcut>
 #endif
 #include <QUrl>
-#ifdef Q_WS_X11
+#if !defined(Q_OS_WIN) && !defined(Q_OS_MAC)
     #include <QX11Info>
 #endif
 
 //==============================================================================
 
-#ifdef Q_WS_X11
+#if !defined(Q_OS_WIN) && !defined(Q_OS_MAC)
     #include <X11/Xlib.h>
     // Note: for some reason, this header file must be included after QUrl,
     //       so...
@@ -107,7 +107,7 @@ MainWindow::MainWindow() :
     //       possible)...
 
     mGui->actionFullScreen->setShortcut(Qt::Key_F11);
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     // Note: QKeySequence::Quit corresponds to nothing on Windows, yet one might
     //       expect it to correspond to Alt+F4 and maybe even to Ctrl+Q, so...
 
@@ -118,7 +118,7 @@ MainWindow::MainWindow() :
     mGui->actionExit->setShortcut(QKeySequence::Quit);
 #endif
 
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
     // A special shortcut to have OpenCOR minimised on OS X when pressing Cmd+M
     // Note: indeed, when pressing Cmd+M on OS X, the active application is
     //       expected to minimise itself, so...
@@ -936,7 +936,7 @@ void MainWindow::showSelf()
     //       not bring OpenCOR to the foreground, so... instead we do what
     //       follows, depending on the operating system...
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     // Show ourselves the Windows way
 
     // Retrieve OpenCOR's window Id
@@ -980,7 +980,7 @@ void MainWindow::showSelf()
     //       application is already in the foreground. Fair enough, but it
     //       happens that, here, the user wants OpenCOR to be brought to the
     //       foreground, hence the above code to get the effect we are after...
-#elif defined(Q_WS_MAC)
+#elif defined(Q_OS_MAC)
     // Do what one would normally do
 
     activateWindow();

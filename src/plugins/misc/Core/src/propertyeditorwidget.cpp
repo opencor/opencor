@@ -27,7 +27,7 @@ namespace Core {
 NumberEditorWidget::NumberEditorWidget(QWidget *pParent) :
     QLineEdit(pParent)
 {
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
     setAttribute(Qt::WA_MacShowFocusRect, 0);
     // Note: the above removes the focus border since it messes up the look of
     //       our editor
@@ -1066,21 +1066,21 @@ void PropertyEditorWidget::updateHeight()
 
         setFixedHeight( idealSize.height()
                        +((width() < idealSize.width())?
-#if defined Q_WS_WIN || defined Q_WS_MAC
+#if defined(Q_OS_WIN) || defined(Q_OS_MAC)
                             horizontalScrollBar()->height():
 #else
                             horizontalScrollBar()->height()+3:
                             // Note: why on earth does Linux require three more
-                            //       pixels?!... Indeed, if don't add them, then
-                            //       there won't be enough space to show the
-                            //       last property (upon selecting it) and the
-                            //       widget will increase its height, resulting
-                            //       in some blank space at the bottom and a
-                            //       vertical bar being shown! We could prevent
-                            //       the vertical bar from ever being shown, but
-                            //       not sure what could be done about the blank
-                            //       space, hence we 'manually' add those three
-                            //       pixels...
+                            //       pixels?!... Indeed, if we don't add them,
+                            //       then there won't be enough space to show
+                            //       the last property (upon selecting it) and
+                            //       the widget will increase its height,
+                            //       resulting in some blank space at the bottom
+                            //       and a vertical bar being shown! We could
+                            //       prevent the vertical bar from ever being
+                            //       shown, but not sure what could be done
+                            //       about the blank space, hence we 'manually'
+                            //       add those three pixels...
 #endif
                             0));
         // Note: the new height consists of our ideal height to which we add the

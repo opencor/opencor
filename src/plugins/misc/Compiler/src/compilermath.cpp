@@ -163,7 +163,7 @@ double multi_max(int pCount, ...)
 
 //==============================================================================
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 double asinh(double pNb)
 {
     return log(pNb+sqrt(pNb*pNb+1));
@@ -172,7 +172,7 @@ double asinh(double pNb)
 
 //==============================================================================
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 double acosh(double pNb)
 {
     return log(pNb+sqrt(pNb*pNb-1));
@@ -181,7 +181,7 @@ double acosh(double pNb)
 
 //==============================================================================
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 double atanh(double pNb)
 {
     return 0.5*(log(1+pNb)-log(1-pNb));

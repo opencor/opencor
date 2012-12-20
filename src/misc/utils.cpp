@@ -43,7 +43,7 @@ QString exec(const QString &pProg, const QString &pArgs)
 
 QString getOsName()
 {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     switch (QSysInfo::WindowsVersion) {
     case QSysInfo::WV_NT:
         return "Microsoft Windows NT";
@@ -60,7 +60,7 @@ QString getOsName()
     default:
         return "Microsoft Windows";
     }
-#elif defined(Q_WS_MAC)
+#elif defined(Q_OS_MAC)
     // Note #1: the version of Qt that we use on OS X only supports Mac OS X
     //          10.5 and above, so...
     // Note #2: from version 10.7, Apple uses OS X rather than Mac OS X...

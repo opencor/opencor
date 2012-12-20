@@ -33,10 +33,10 @@ namespace Core {
 
 // The default font family and size below were taken from Qt Creator
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const QString DefaultFontFamily = "Courier";
     static const int DefaultFontSize = 10;
-#elif defined(Q_WS_MAC)
+#elif defined(Q_OS_MAC)
     static const QString DefaultFontFamily = "Monaco";
     static const int DefaultFontSize = 12;
 #else

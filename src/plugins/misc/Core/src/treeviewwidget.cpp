@@ -25,7 +25,7 @@ TreeViewWidget::TreeViewWidget(QWidget *pParent) :
     // Set some properties for our tree view widget
 
     setAllColumnsShowFocus(true);
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
     setAttribute(Qt::WA_MacShowFocusRect, 0);
     // Note: the above removes the focus border since it messes up the look of
     //       our tree view widget...

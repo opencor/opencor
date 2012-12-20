@@ -75,7 +75,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
     // milliseconds) between the output of two data points
 
     mDelayWidget = new QwtWheel(this);
-#ifndef Q_WS_MAC
+#ifndef Q_OS_MAC
     QWidget *delaySpaceWidget = new QWidget(this);
 #endif
     mDelayValueWidget = new QLabel(this);
@@ -86,7 +86,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
     mDelayWidget->setRange(0.0, 50.0, 1.0);
     mDelayWidget->setWheelBorderWidth(0);
 
-#ifndef Q_WS_MAC
+#ifndef Q_OS_MAC
     delaySpaceWidget->setFixedWidth(4);
 #endif
 
@@ -104,7 +104,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
     mToolBarWidget->addAction(mGui->actionStop);
     mToolBarWidget->addSeparator();
     mToolBarWidget->addWidget(mDelayWidget);
-#ifndef Q_WS_MAC
+#ifndef Q_OS_MAC
     mToolBarWidget->addWidget(delaySpaceWidget);
 #endif
     mToolBarWidget->addWidget(mDelayValueWidget);

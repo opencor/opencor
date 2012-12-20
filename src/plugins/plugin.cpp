@@ -241,7 +241,7 @@ PluginInfo Plugin::info(const QString &pFileName)
 
     typedef void * (*PluginInfoFunc)();
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     QString origPath = QDir::currentPath();
 
     QDir::setCurrent(QFileInfo(pFileName).absolutePath());
@@ -250,7 +250,7 @@ PluginInfo Plugin::info(const QString &pFileName)
     PluginInfoFunc pluginInfoFunc = (PluginInfoFunc) QLibrary::resolve(pFileName,
                                                                        qPrintable(name(pFileName)+"PluginInfo"));
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     QDir::setCurrent(origPath);
 #endif
 

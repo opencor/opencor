@@ -19,13 +19,13 @@ namespace OpenCOR {
 
 //==============================================================================
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const QString PluginPrefix = "";
     static const QString PluginExtension = ".dll";
 #else
     static const QString PluginPrefix = "lib";
 
-    #ifdef Q_WS_MAC
+    #ifdef Q_OS_MAC
         static const QString PluginExtension = ".dylib";
     #else
         static const QString PluginExtension = ".so";

@@ -72,15 +72,15 @@ void CorePlugin::initialize()
 
     mFilePreviousAction = newAction(mMainWindow, false,
                                     ":/oxygen/actions/go-previous.png",
-#ifndef Q_WS_MAC
+#ifdef Q_OS_MAC
+                                    QKeySequence::PreviousChild);
+#else
     // Note: QKeySequence::PreviousChild should, on Windows and Linux,
     //       correspond to Ctrl+Shift+Tab, but somehow it corresponds to
     //       Ctrl+Shift+Backtab and though it works on Linux (but not on
     //       Windows), it doesn't look good, so...
 
                                     QList<QKeySequence>() << QKeySequence(Qt::CTRL|Qt::SHIFT|Qt::Key_Tab));
-#else
-                                    QKeySequence::PreviousChild);
 #endif
     mFileNextAction     = newAction(mMainWindow, false,
                                     ":/oxygen/actions/go-next.png",
