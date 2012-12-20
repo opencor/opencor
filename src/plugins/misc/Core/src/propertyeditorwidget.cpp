@@ -171,6 +171,7 @@ void ListEditorWidget::mousePressEvent(QMouseEvent *pEvent)
     // handling of the event (so that the list of items gets displayed) while do
     // nothing if the user clicked somewhere else (this to so that if the user
     // double clicks on the widget, then we can select the next item)
+    // Note: sadly, this just doesn't work on OS X, but maybe it's 'normal'?...
 
     QStyleOptionComboBox styleOption;
 
