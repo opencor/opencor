@@ -144,18 +144,6 @@ void ListEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
-void ListEditorWidget::mousePressEvent(QMouseEvent *pEvent)
-{
-    // We don't want to call the default handler of the event (since this would
-    // the list of items), but we don't want to ignore the event either (since
-    // our parent might then handle it and mess things up for us), so just do
-    // nothing and accept the event
-
-    pEvent->accept();
-}
-
-//==============================================================================
-
 void ListEditorWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
 {
     // We want to go to the next item in the list (and go back to the first one
@@ -169,6 +157,30 @@ void ListEditorWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
     // Set the new current index
 
     setCurrentIndex(newCurrentIndex);
+
+    // Accept the event
+
+    pEvent->accept();
+}
+
+//==============================================================================
+
+void ListEditorWidget::mousePressEvent(QMouseEvent *pEvent)
+{
+    // Check whether the user clicked on the arrow and, if so, allow the default
+    // handling of the event (so that the list of items gets displayed) while do
+    // nothing if the user clicked somewhere else (this to so that if the user
+    // double clicks on the widget, then we can select the next item)
+
+    QStyleOptionComboBox styleOption;
+
+    initStyleOption(&styleOption);
+
+    if (style()->hitTestComplexControl(QStyle::CC_ComboBox, &styleOption,
+                                       pEvent->pos(), this) == QStyle::SC_ComboBoxArrow)
+        // The mouse is over the arrow, so...
+
+        QComboBox::mousePressEvent(pEvent);
 
     // Accept the event
 
