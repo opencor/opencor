@@ -171,15 +171,53 @@ void ListEditorWidget::mousePressEvent(QMouseEvent *pEvent)
     // handling of the event (so that the list of items gets displayed) while do
     // nothing if the user clicked somewhere else (this to so that if the user
     // double clicks on the widget, then we can select the next item)
-    // Note: sadly, this just doesn't work on OS X, but maybe it's 'normal'?...
+    // Note: we would normally call style()->hitTestComplexControl() and, if it
+    //       returns QStyle::SC_ComboBoxArrow, then allow the default handling
+    //       of the event, but if this works fine on Windows and Linux, it just
+    //       doesn't work on OS X. Indeed, no matter where we are over the
+    //       widget, style()->hitTestComplexControl() will always (and as
+    //       expected; see [QtSources]/gui/styles/qmacstyle_mac.mm) return
+    //       QStyle::SC_ComboBoxArrow. So, to get the behaviour we are after, we
+    //       do what is done in [QtSources]/gui/styles/qcommonstyle.cpp...
+
+    // Retrieve our style option
 
     QStyleOptionComboBox styleOption;
 
     initStyleOption(&styleOption);
 
-    if (style()->hitTestComplexControl(QStyle::CC_ComboBox, &styleOption,
-                                       pEvent->pos(), this) == QStyle::SC_ComboBoxArrow)
-        // The mouse is over the arrow, so...
+    // Go through the different sub controls (starting with the arrow) and
+    // determine over which one we are
+
+    uint subControl = QStyle::SC_ComboBoxArrow;
+    QRect subControlRect;
+
+    while (subControl) {
+        // Retrieve the sub control's region
+
+        subControlRect = style()->subControlRect(QStyle::CC_ComboBox,
+                                                 &styleOption,
+                                                 QStyle::SubControl(subControl),
+                                                 this);
+
+        // Check whether the sub control exists (i.e. its region is valid) and,
+        // if so, whether we ore over it
+
+        if (subControlRect.isValid() && subControlRect.contains(pEvent->pos()))
+            // The sub control exists and we are over it, so...
+
+            break;
+
+        // Either the sub control doesn't exist or we are not over it, so try
+        // the next sub control
+
+        subControl >>= 1;
+    }
+
+    // Check whether the 'current' sub control is the arrow we are after
+
+    if (QStyle::SubControl(subControl) == QStyle::SC_ComboBoxArrow)
+        // It is the arrow we are after, so...
 
         QComboBox::mousePressEvent(pEvent);
 
