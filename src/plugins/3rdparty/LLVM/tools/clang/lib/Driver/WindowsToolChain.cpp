@@ -24,9 +24,6 @@
   #define WIN32_LEAN_AND_MEAN
   #define NOGDI
   #define NOMINMAX
-//---OPENCOR--- BEGIN
-#undef UNICODE
-//---OPENCOR--- END
   #include <Windows.h>
 #endif
 
@@ -84,19 +81,15 @@ bool Windows::IsIntegratedAssemblerDefault() const {
 }
 
 bool Windows::IsUnwindTablesDefault() const {
-  // FIXME: Gross; we should probably have some separate target
-  // definition, possibly even reusing the one in clang.
-  return getArchName() == "x86_64";
+  return getArch() == llvm::Triple::x86_64;
 }
 
-const char *Windows::GetDefaultRelocationModel() const {
-  return "static";
+bool Windows::isPICDefault() const {
+  return getArch() == llvm::Triple::x86_64;
 }
 
-const char *Windows::GetForcedPicModel() const {
-  if (getArchName() == "x86_64")
-    return "pic";
-  return 0;
+bool Windows::isPICDefaultForced() const {
+  return getArch() == llvm::Triple::x86_64;
 }
 
 // FIXME: This probably should goto to some platform utils place.

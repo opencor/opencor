@@ -14,9 +14,6 @@
 #include "clang/Driver/Util.h"
 #include "llvm/ADT/DenseMap.h"
 #include "llvm/Support/Path.h"
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace clang {
 namespace driver {
@@ -28,12 +25,7 @@ namespace driver {
 
 /// Compilation - A set of tasks to perform for a single driver
 /// invocation.
-/*---OPENCOR---
 class Compilation {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT Compilation {
-//---OPENCOR--- END
   /// The driver we were created by.
   const Driver &TheDriver;
 
@@ -84,6 +76,8 @@ public:
 
   const DerivedArgList &getArgs() const { return *TranslatedArgs; }
 
+  DerivedArgList &getArgs() { return *TranslatedArgs; }
+
   ActionList &getActions() { return Actions; }
   const ActionList &getActions() const { return Actions; }
 
@@ -104,8 +98,7 @@ public:
   StringRef getSysRoot() const;
 
   /// getArgsForToolChain - Return the derived argument list for the
-  /// tool chain \arg TC (or the default tool chain, if TC is not
-  /// specified).
+  /// tool chain \p TC (or the default tool chain, if TC is not specified).
   ///
   /// \param BoundArch - The bound architecture name, or 0.
   const DerivedArgList &getArgsForToolChain(const ToolChain *TC,
@@ -147,6 +140,14 @@ public:
   /// \param Quote - Should separate arguments be quoted.
   void PrintJob(raw_ostream &OS, const Job &J,
                 const char *Terminator, bool Quote) const;
+
+  /// PrintDiagnosticJob - Print one job in -### format, but with the 
+  /// superfluous options removed, which are not necessary for 
+  /// reproducing the crash.
+  ///
+  /// \param OS - The stream to print on.
+  /// \param J - The job to print.
+  void PrintDiagnosticJob(raw_ostream &OS, const Job &J) const;
 
   /// ExecuteCommand - Execute an actual command.
   ///

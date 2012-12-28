@@ -12,7 +12,21 @@
 #ifndef ASMSTMT
 #  define ASMSTMT(Type, Base) STMT(Type, Base)
 #endif
-ASMSTMT(AsmStmt, Stmt)
+ABSTRACT_STMT(ASMSTMT(AsmStmt, Stmt))
+#ifndef GCCASMSTMT
+#  define GCCASMSTMT(Type, Base) ASMSTMT(Type, Base)
+#endif
+GCCASMSTMT(GCCAsmStmt, AsmStmt)
+#undef GCCASMSTMT
+
+#ifndef MSASMSTMT
+#  define MSASMSTMT(Type, Base) ASMSTMT(Type, Base)
+#endif
+MSASMSTMT(MSAsmStmt, AsmStmt)
+#undef MSASMSTMT
+
+STMT_RANGE(AsmStmt, GCCAsmStmt, MSAsmStmt)
+
 #undef ASMSTMT
 
 #ifndef ATTRIBUTEDSTMT
@@ -417,6 +431,12 @@ EXTVECTORELEMENTEXPR(ExtVectorElementExpr, Expr)
 FLOATINGLITERAL(FloatingLiteral, Expr)
 #undef FLOATINGLITERAL
 
+#ifndef FUNCTIONPARMPACKEXPR
+#  define FUNCTIONPARMPACKEXPR(Type, Base) EXPR(Type, Base)
+#endif
+FUNCTIONPARMPACKEXPR(FunctionParmPackExpr, Expr)
+#undef FUNCTIONPARMPACKEXPR
+
 #ifndef GNUNULLEXPR
 #  define GNUNULLEXPR(Type, Base) EXPR(Type, Base)
 #endif
@@ -483,6 +503,12 @@ OBJCARRAYLITERAL(ObjCArrayLiteral, Expr)
 OBJCBOOLLITERALEXPR(ObjCBoolLiteralExpr, Expr)
 #undef OBJCBOOLLITERALEXPR
 
+#ifndef OBJCBOXEDEXPR
+#  define OBJCBOXEDEXPR(Type, Base) EXPR(Type, Base)
+#endif
+OBJCBOXEDEXPR(ObjCBoxedExpr, Expr)
+#undef OBJCBOXEDEXPR
+
 #ifndef OBJCDICTIONARYLITERAL
 #  define OBJCDICTIONARYLITERAL(Type, Base) EXPR(Type, Base)
 #endif
@@ -518,12 +544,6 @@ OBJCIVARREFEXPR(ObjCIvarRefExpr, Expr)
 #endif
 OBJCMESSAGEEXPR(ObjCMessageExpr, Expr)
 #undef OBJCMESSAGEEXPR
-
-#ifndef OBJCNUMERICLITERAL
-#  define OBJCNUMERICLITERAL(Type, Base) EXPR(Type, Base)
-#endif
-OBJCNUMERICLITERAL(ObjCNumericLiteral, Expr)
-#undef OBJCNUMERICLITERAL
 
 #ifndef OBJCPROPERTYREFEXPR
 #  define OBJCPROPERTYREFEXPR(Type, Base) EXPR(Type, Base)
@@ -827,7 +847,7 @@ SWITCHSTMT(SwitchStmt, Stmt)
 WHILESTMT(WhileStmt, Stmt)
 #undef WHILESTMT
 
-LAST_STMT_RANGE(Stmt, AsmStmt, WhileStmt)
+LAST_STMT_RANGE(Stmt, GCCAsmStmt, WhileStmt)
 
 #undef STMT
 #undef STMT_RANGE

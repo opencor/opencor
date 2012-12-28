@@ -36,6 +36,7 @@
 #include "llvm/Support/raw_ostream.h"
 
 #include "clang/Basic/Diagnostic.h"
+#include "clang/Basic/DiagnosticOptions.h"
 #include "clang/CodeGen/CodeGenAction.h"
 #include "clang/Driver/Compilation.h"
 #include "clang/Driver/Driver.h"
@@ -43,7 +44,6 @@
 #include "clang/Driver/Tool.h"
 #include "clang/Frontend/CompilerInvocation.h"
 #include "clang/Frontend/CompilerInstance.h"
-#include "clang/Frontend/DiagnosticOptions.h"
 #include "clang/Frontend/TextDiagnosticPrinter.h"
 
 //==============================================================================
@@ -113,8 +113,7 @@ llvm::sys::Path getExecutablePath(const char *pArg) {
 
 //==============================================================================
 
-bool CompilerEngine::compileCode(const QString &pCode,
-                                 const bool &pOutputErrors)
+bool CompilerEngine::compileCode(const QString &pCode)
 {
     // Reset our compiler engine
 
@@ -157,11 +156,16 @@ bool CompilerEngine::compileCode(const QString &pCode,
 
     // Get a driver to compile our function
 
-    llvm::raw_ostream &outputStream = pOutputErrors?llvm::errs():llvm::nulls();
+#ifdef QT_DEBUG
+    llvm::raw_ostream &outputStream = llvm::errs();
+#else
+    llvm::raw_ostream &outputStream = llvm::nulls();
+#endif
+    llvm::IntrusiveRefCntPtr<clang::DiagnosticOptions> diagnosticOptions = new clang::DiagnosticOptions();
 
     clang::DiagnosticsEngine diagnosticsEngine(llvm::IntrusiveRefCntPtr<clang::DiagnosticIDs>(new clang::DiagnosticIDs()),
-                                               new clang::TextDiagnosticPrinter(outputStream,
-                                                                                clang::DiagnosticOptions()));
+                                               &*diagnosticOptions,
+                                               new clang::TextDiagnosticPrinter(outputStream, &*diagnosticOptions));
     clang::driver::Driver driver(getExecutablePath(appFileName).str(),
                                  llvm::sys::getDefaultTargetTriple(),
                                  "a.out", true, diagnosticsEngine);
@@ -234,8 +238,7 @@ bool CompilerEngine::compileCode(const QString &pCode,
 
     compilerInstance.createDiagnostics(int(commandArguments.size()),
                                        const_cast<char **>(commandArguments.data()),
-                                       new clang::TextDiagnosticPrinter(outputStream,
-                                                                        compilerInstance.getDiagnosticOpts()));
+                                       new clang::TextDiagnosticPrinter(outputStream, &*diagnosticOptions));
 
     if (!compilerInstance.hasDiagnostics()) {
         mError = tr("the diagnostics engine could not be created");
@@ -272,7 +275,7 @@ bool CompilerEngine::compileCode(const QString &pCode,
 
     codeGenerationAction->setLinkModule(mModule);
 
-    if (!compilerInstance.ExecuteAction(*codeGenerationAction, outputStream)) {
+    if (!compilerInstance.ExecuteAction(*codeGenerationAction)) {
         mError = tr("the model could not be compiled");
 
         reset(false);

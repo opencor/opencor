@@ -4,7 +4,7 @@ AcquiredAfterAttr *AcquiredAfterAttr::clone(ASTContext &C) const {
   return new (C) AcquiredAfterAttr(getLocation(), C, args, argsSize);
 }
 
-void AcquiredAfterAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void AcquiredAfterAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((acquired_after(";
   bool isFirst = true;
   for (AcquiredAfterAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
@@ -19,7 +19,7 @@ AcquiredBeforeAttr *AcquiredBeforeAttr::clone(ASTContext &C) const {
   return new (C) AcquiredBeforeAttr(getLocation(), C, args, argsSize);
 }
 
-void AcquiredBeforeAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void AcquiredBeforeAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((acquired_before(";
   bool isFirst = true;
   for (AcquiredBeforeAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
@@ -34,7 +34,7 @@ AliasAttr *AliasAttr::clone(ASTContext &C) const {
   return new (C) AliasAttr(getLocation(), C, getAliasee());
 }
 
-void AliasAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void AliasAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((alias(\"" << getAliasee() << "\")))";
 }
 
@@ -42,7 +42,7 @@ AlignMac68kAttr *AlignMac68kAttr::clone(ASTContext &C) const {
   return new (C) AlignMac68kAttr(getLocation(), C);
 }
 
-void AlignMac68kAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void AlignMac68kAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
 }
 
 bool AlignedAttr::isAlignmentDependent() const {
@@ -59,18 +59,35 @@ unsigned AlignedAttr::getAlignment(ASTContext &Ctx) const {
     return 0; // FIXME
 }
 AlignedAttr *AlignedAttr::clone(ASTContext &C) const {
-  return new (C) AlignedAttr(getLocation(), C, isalignmentExpr, isalignmentExpr ? static_cast<void*>(alignmentExpr) : alignmentType);
+  return new (C) AlignedAttr(getLocation(), C, isalignmentExpr, isalignmentExpr ? static_cast<void*>(alignmentExpr) : alignmentType, isMSDeclSpec);
 }
 
-void AlignedAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
-  OS << " __attribute__((aligned(" << getAlignment(Ctx) << ")))";
+void AlignedAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
+  OS << " __attribute__((aligned(";
+  alignmentExpr->printPretty(OS, 0, Policy);
+  OS << ", " << getIsMSDeclSpec() << ")))";
+}
+
+AllocSizeAttr *AllocSizeAttr::clone(ASTContext &C) const {
+  return new (C) AllocSizeAttr(getLocation(), C, args, argsSize);
+}
+
+void AllocSizeAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
+  OS << " __attribute__((alloc_size(";
+  bool isFirst = true;
+  for (AllocSizeAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << *i;
+  }
+  OS << ")))";
 }
 
 AlwaysInlineAttr *AlwaysInlineAttr::clone(ASTContext &C) const {
   return new (C) AlwaysInlineAttr(getLocation(), C);
 }
 
-void AlwaysInlineAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void AlwaysInlineAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((always_inline))";
 }
 
@@ -78,7 +95,7 @@ AnalyzerNoReturnAttr *AnalyzerNoReturnAttr::clone(ASTContext &C) const {
   return new (C) AnalyzerNoReturnAttr(getLocation(), C);
 }
 
-void AnalyzerNoReturnAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void AnalyzerNoReturnAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((analyzer_noreturn))";
 }
 
@@ -86,7 +103,7 @@ AnnotateAttr *AnnotateAttr::clone(ASTContext &C) const {
   return new (C) AnnotateAttr(getLocation(), C, getAnnotation());
 }
 
-void AnnotateAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void AnnotateAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((annotate(\"" << getAnnotation() << "\")))";
 }
 
@@ -94,22 +111,30 @@ ArcWeakrefUnavailableAttr *ArcWeakrefUnavailableAttr::clone(ASTContext &C) const
   return new (C) ArcWeakrefUnavailableAttr(getLocation(), C);
 }
 
-void ArcWeakrefUnavailableAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void ArcWeakrefUnavailableAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((objc_arc_weak_reference_unavailable))";
+}
+
+ArgumentWithTypeTagAttr *ArgumentWithTypeTagAttr::clone(ASTContext &C) const {
+  return new (C) ArgumentWithTypeTagAttr(getLocation(), C, argumentKind, argumentIdx, typeTagIdx, isPointer);
+}
+
+void ArgumentWithTypeTagAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
+  OS << " __attribute__((argument_with_type_tag(" << getArgumentKind()->getName() << ", " << getArgumentIdx() << ", " << getTypeTagIdx() << ", " << getIsPointer() << ")))";
 }
 
 AsmLabelAttr *AsmLabelAttr::clone(ASTContext &C) const {
   return new (C) AsmLabelAttr(getLocation(), C, getLabel());
 }
 
-void AsmLabelAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void AsmLabelAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
 }
 
 AvailabilityAttr *AvailabilityAttr::clone(ASTContext &C) const {
   return new (C) AvailabilityAttr(getLocation(), C, platform, getIntroduced(), getDeprecated(), getObsoleted(), unavailable, getMessage());
 }
 
-void AvailabilityAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void AvailabilityAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((availability(" << getPlatform()->getName();
   if (!getIntroduced().empty()) OS << ", introduced=" << getIntroduced();
   if (!getDeprecated().empty()) OS << ", deprecated=" << getDeprecated();
@@ -122,7 +147,7 @@ BlocksAttr *BlocksAttr::clone(ASTContext &C) const {
   return new (C) BlocksAttr(getLocation(), C, type);
 }
 
-void BlocksAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void BlocksAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((blocks(" << getType() << ")))";
 }
 
@@ -130,7 +155,7 @@ CDeclAttr *CDeclAttr::clone(ASTContext &C) const {
   return new (C) CDeclAttr(getLocation(), C);
 }
 
-void CDeclAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void CDeclAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((cdecl))";
 }
 
@@ -138,7 +163,7 @@ CFAuditedTransferAttr *CFAuditedTransferAttr::clone(ASTContext &C) const {
   return new (C) CFAuditedTransferAttr(getLocation(), C);
 }
 
-void CFAuditedTransferAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void CFAuditedTransferAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((cf_audited_transfer))";
 }
 
@@ -146,7 +171,7 @@ CFConsumedAttr *CFConsumedAttr::clone(ASTContext &C) const {
   return new (C) CFConsumedAttr(getLocation(), C);
 }
 
-void CFConsumedAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void CFConsumedAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((cf_consumed))";
 }
 
@@ -154,7 +179,7 @@ CFReturnsNotRetainedAttr *CFReturnsNotRetainedAttr::clone(ASTContext &C) const {
   return new (C) CFReturnsNotRetainedAttr(getLocation(), C);
 }
 
-void CFReturnsNotRetainedAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void CFReturnsNotRetainedAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((cf_returns_not_retained))";
 }
 
@@ -162,7 +187,7 @@ CFReturnsRetainedAttr *CFReturnsRetainedAttr::clone(ASTContext &C) const {
   return new (C) CFReturnsRetainedAttr(getLocation(), C);
 }
 
-void CFReturnsRetainedAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void CFReturnsRetainedAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((cf_returns_retained))";
 }
 
@@ -170,7 +195,7 @@ CFUnknownTransferAttr *CFUnknownTransferAttr::clone(ASTContext &C) const {
   return new (C) CFUnknownTransferAttr(getLocation(), C);
 }
 
-void CFUnknownTransferAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void CFUnknownTransferAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((cf_unknown_transfer))";
 }
 
@@ -178,7 +203,7 @@ CUDAConstantAttr *CUDAConstantAttr::clone(ASTContext &C) const {
   return new (C) CUDAConstantAttr(getLocation(), C);
 }
 
-void CUDAConstantAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void CUDAConstantAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((constant))";
 }
 
@@ -186,7 +211,7 @@ CUDADeviceAttr *CUDADeviceAttr::clone(ASTContext &C) const {
   return new (C) CUDADeviceAttr(getLocation(), C);
 }
 
-void CUDADeviceAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void CUDADeviceAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((device))";
 }
 
@@ -194,7 +219,7 @@ CUDAGlobalAttr *CUDAGlobalAttr::clone(ASTContext &C) const {
   return new (C) CUDAGlobalAttr(getLocation(), C);
 }
 
-void CUDAGlobalAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void CUDAGlobalAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((global))";
 }
 
@@ -202,7 +227,7 @@ CUDAHostAttr *CUDAHostAttr::clone(ASTContext &C) const {
   return new (C) CUDAHostAttr(getLocation(), C);
 }
 
-void CUDAHostAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void CUDAHostAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((host))";
 }
 
@@ -210,7 +235,7 @@ CUDALaunchBoundsAttr *CUDALaunchBoundsAttr::clone(ASTContext &C) const {
   return new (C) CUDALaunchBoundsAttr(getLocation(), C, maxThreads, minBlocks);
 }
 
-void CUDALaunchBoundsAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void CUDALaunchBoundsAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((launch_bounds(" << getMaxThreads() << ", " << getMinBlocks() << ")))";
 }
 
@@ -218,7 +243,7 @@ CUDASharedAttr *CUDASharedAttr::clone(ASTContext &C) const {
   return new (C) CUDASharedAttr(getLocation(), C);
 }
 
-void CUDASharedAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void CUDASharedAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((shared))";
 }
 
@@ -226,7 +251,7 @@ CarriesDependencyAttr *CarriesDependencyAttr::clone(ASTContext &C) const {
   return new (C) CarriesDependencyAttr(getLocation(), C);
 }
 
-void CarriesDependencyAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void CarriesDependencyAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((carries_dependency))";
 }
 
@@ -234,15 +259,23 @@ CleanupAttr *CleanupAttr::clone(ASTContext &C) const {
   return new (C) CleanupAttr(getLocation(), C, functionDecl);
 }
 
-void CleanupAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void CleanupAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((cleanup(" << getFunctionDecl()->getNameInfo().getAsString() << ")))";
+}
+
+ColdAttr *ColdAttr::clone(ASTContext &C) const {
+  return new (C) ColdAttr(getLocation(), C);
+}
+
+void ColdAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
+  OS << " __attribute__((cold))";
 }
 
 CommonAttr *CommonAttr::clone(ASTContext &C) const {
   return new (C) CommonAttr(getLocation(), C);
 }
 
-void CommonAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void CommonAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((common))";
 }
 
@@ -250,7 +283,7 @@ ConstAttr *ConstAttr::clone(ASTContext &C) const {
   return new (C) ConstAttr(getLocation(), C);
 }
 
-void ConstAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void ConstAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((const))";
 }
 
@@ -258,7 +291,7 @@ ConstructorAttr *ConstructorAttr::clone(ASTContext &C) const {
   return new (C) ConstructorAttr(getLocation(), C, priority);
 }
 
-void ConstructorAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void ConstructorAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((constructor(" << getPriority() << ")))";
 }
 
@@ -266,7 +299,7 @@ DLLExportAttr *DLLExportAttr::clone(ASTContext &C) const {
   return new (C) DLLExportAttr(getLocation(), C);
 }
 
-void DLLExportAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void DLLExportAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((dllexport))";
 }
 
@@ -274,7 +307,7 @@ DLLImportAttr *DLLImportAttr::clone(ASTContext &C) const {
   return new (C) DLLImportAttr(getLocation(), C);
 }
 
-void DLLImportAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void DLLImportAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((dllimport))";
 }
 
@@ -282,7 +315,7 @@ DeprecatedAttr *DeprecatedAttr::clone(ASTContext &C) const {
   return new (C) DeprecatedAttr(getLocation(), C, getMessage());
 }
 
-void DeprecatedAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void DeprecatedAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((deprecated(\"" << getMessage() << "\")))";
 }
 
@@ -290,7 +323,7 @@ DestructorAttr *DestructorAttr::clone(ASTContext &C) const {
   return new (C) DestructorAttr(getLocation(), C, priority);
 }
 
-void DestructorAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void DestructorAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((destructor(" << getPriority() << ")))";
 }
 
@@ -298,7 +331,7 @@ ExclusiveLockFunctionAttr *ExclusiveLockFunctionAttr::clone(ASTContext &C) const
   return new (C) ExclusiveLockFunctionAttr(getLocation(), C, args, argsSize);
 }
 
-void ExclusiveLockFunctionAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void ExclusiveLockFunctionAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((exclusive_lock_function(";
   bool isFirst = true;
   for (ExclusiveLockFunctionAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
@@ -313,7 +346,7 @@ ExclusiveLocksRequiredAttr *ExclusiveLocksRequiredAttr::clone(ASTContext &C) con
   return new (C) ExclusiveLocksRequiredAttr(getLocation(), C, args, argsSize);
 }
 
-void ExclusiveLocksRequiredAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void ExclusiveLocksRequiredAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((exclusive_locks_required(";
   bool isFirst = true;
   for (ExclusiveLocksRequiredAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
@@ -328,7 +361,7 @@ ExclusiveTrylockFunctionAttr *ExclusiveTrylockFunctionAttr::clone(ASTContext &C)
   return new (C) ExclusiveTrylockFunctionAttr(getLocation(), C, successValue, args, argsSize);
 }
 
-void ExclusiveTrylockFunctionAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void ExclusiveTrylockFunctionAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((exclusive_trylock_function(" << getSuccessValue() << ", ";
   bool isFirst = true;
   for (ExclusiveTrylockFunctionAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
@@ -339,11 +372,19 @@ void ExclusiveTrylockFunctionAttr::printPretty(llvm::raw_ostream &OS, ASTContext
   OS << ")))";
 }
 
+FallThroughAttr *FallThroughAttr::clone(ASTContext &C) const {
+  return new (C) FallThroughAttr(getLocation(), C);
+}
+
+void FallThroughAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
+  OS << " __attribute__((fallthrough))";
+}
+
 FastCallAttr *FastCallAttr::clone(ASTContext &C) const {
   return new (C) FastCallAttr(getLocation(), C);
 }
 
-void FastCallAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void FastCallAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((fastcall))";
 }
 
@@ -351,14 +392,22 @@ FinalAttr *FinalAttr::clone(ASTContext &C) const {
   return new (C) FinalAttr(getLocation(), C);
 }
 
-void FinalAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void FinalAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
+}
+
+ForceInlineAttr *ForceInlineAttr::clone(ASTContext &C) const {
+  return new (C) ForceInlineAttr(getLocation(), C);
+}
+
+void ForceInlineAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
+  OS << " __attribute__((__forceinline))";
 }
 
 FormatAttr *FormatAttr::clone(ASTContext &C) const {
   return new (C) FormatAttr(getLocation(), C, getType(), formatIdx, firstArg);
 }
 
-void FormatAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void FormatAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((format(\"" << getType() << "\", " << getFormatIdx() << ", " << getFirstArg() << ")))";
 }
 
@@ -366,7 +415,7 @@ FormatArgAttr *FormatArgAttr::clone(ASTContext &C) const {
   return new (C) FormatArgAttr(getLocation(), C, formatIdx);
 }
 
-void FormatArgAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void FormatArgAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((format_arg(" << getFormatIdx() << ")))";
 }
 
@@ -374,7 +423,7 @@ GNUInlineAttr *GNUInlineAttr::clone(ASTContext &C) const {
   return new (C) GNUInlineAttr(getLocation(), C);
 }
 
-void GNUInlineAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void GNUInlineAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((gnu_inline))";
 }
 
@@ -382,7 +431,7 @@ GuardedByAttr *GuardedByAttr::clone(ASTContext &C) const {
   return new (C) GuardedByAttr(getLocation(), C, arg);
 }
 
-void GuardedByAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void GuardedByAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((guarded_by(" << getArg() << ")))";
 }
 
@@ -390,15 +439,23 @@ GuardedVarAttr *GuardedVarAttr::clone(ASTContext &C) const {
   return new (C) GuardedVarAttr(getLocation(), C);
 }
 
-void GuardedVarAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void GuardedVarAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((guarded_var))";
+}
+
+HotAttr *HotAttr::clone(ASTContext &C) const {
+  return new (C) HotAttr(getLocation(), C);
+}
+
+void HotAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
+  OS << " __attribute__((hot))";
 }
 
 IBActionAttr *IBActionAttr::clone(ASTContext &C) const {
   return new (C) IBActionAttr(getLocation(), C);
 }
 
-void IBActionAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void IBActionAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((ibaction))";
 }
 
@@ -406,7 +463,7 @@ IBOutletAttr *IBOutletAttr::clone(ASTContext &C) const {
   return new (C) IBOutletAttr(getLocation(), C);
 }
 
-void IBOutletAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void IBOutletAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((iboutlet))";
 }
 
@@ -414,7 +471,7 @@ IBOutletCollectionAttr *IBOutletCollectionAttr::clone(ASTContext &C) const {
   return new (C) IBOutletCollectionAttr(getLocation(), C, interface, interfaceLoc);
 }
 
-void IBOutletCollectionAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void IBOutletCollectionAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((iboutletcollection(" << getInterface().getAsString() << ", " << getInterfaceLoc().getRawEncoding() << ")))";
 }
 
@@ -422,7 +479,7 @@ InitPriorityAttr *InitPriorityAttr::clone(ASTContext &C) const {
   return new (C) InitPriorityAttr(getLocation(), C, priority);
 }
 
-void InitPriorityAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void InitPriorityAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((init_priority(" << getPriority() << ")))";
 }
 
@@ -430,7 +487,7 @@ LockReturnedAttr *LockReturnedAttr::clone(ASTContext &C) const {
   return new (C) LockReturnedAttr(getLocation(), C, arg);
 }
 
-void LockReturnedAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void LockReturnedAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((lock_returned(" << getArg() << ")))";
 }
 
@@ -438,7 +495,7 @@ LockableAttr *LockableAttr::clone(ASTContext &C) const {
   return new (C) LockableAttr(getLocation(), C);
 }
 
-void LockableAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void LockableAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((lockable))";
 }
 
@@ -446,7 +503,7 @@ LocksExcludedAttr *LocksExcludedAttr::clone(ASTContext &C) const {
   return new (C) LocksExcludedAttr(getLocation(), C, args, argsSize);
 }
 
-void LocksExcludedAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void LocksExcludedAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((locks_excluded(";
   bool isFirst = true;
   for (LocksExcludedAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
@@ -461,28 +518,28 @@ MBlazeInterruptHandlerAttr *MBlazeInterruptHandlerAttr::clone(ASTContext &C) con
   return new (C) MBlazeInterruptHandlerAttr(getLocation(), C);
 }
 
-void MBlazeInterruptHandlerAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void MBlazeInterruptHandlerAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
 }
 
 MBlazeSaveVolatilesAttr *MBlazeSaveVolatilesAttr::clone(ASTContext &C) const {
   return new (C) MBlazeSaveVolatilesAttr(getLocation(), C);
 }
 
-void MBlazeSaveVolatilesAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void MBlazeSaveVolatilesAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
 }
 
 MSP430InterruptAttr *MSP430InterruptAttr::clone(ASTContext &C) const {
   return new (C) MSP430InterruptAttr(getLocation(), C, number);
 }
 
-void MSP430InterruptAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void MSP430InterruptAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
 }
 
 MallocAttr *MallocAttr::clone(ASTContext &C) const {
   return new (C) MallocAttr(getLocation(), C);
 }
 
-void MallocAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void MallocAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((malloc))";
 }
 
@@ -490,30 +547,46 @@ MaxFieldAlignmentAttr *MaxFieldAlignmentAttr::clone(ASTContext &C) const {
   return new (C) MaxFieldAlignmentAttr(getLocation(), C, alignment);
 }
 
-void MaxFieldAlignmentAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void MaxFieldAlignmentAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
 }
 
 MayAliasAttr *MayAliasAttr::clone(ASTContext &C) const {
   return new (C) MayAliasAttr(getLocation(), C);
 }
 
-void MayAliasAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void MayAliasAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((may_alias))";
+}
+
+MinSizeAttr *MinSizeAttr::clone(ASTContext &C) const {
+  return new (C) MinSizeAttr(getLocation(), C);
+}
+
+void MinSizeAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
+  OS << " __attribute__((minsize))";
 }
 
 MsStructAttr *MsStructAttr::clone(ASTContext &C) const {
   return new (C) MsStructAttr(getLocation(), C);
 }
 
-void MsStructAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
-  OS << " __attribute__((__ms_struct__))";
+void MsStructAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
+  OS << " __attribute__((ms_struct))";
+}
+
+MultipleInheritanceAttr *MultipleInheritanceAttr::clone(ASTContext &C) const {
+  return new (C) MultipleInheritanceAttr(getLocation(), C);
+}
+
+void MultipleInheritanceAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
+  OS << " __attribute__((__multiple_inheritance))";
 }
 
 NSBridgedAttr *NSBridgedAttr::clone(ASTContext &C) const {
   return new (C) NSBridgedAttr(getLocation(), C, bridgedType);
 }
 
-void NSBridgedAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void NSBridgedAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((ns_bridged(" << getBridgedType()->getName() << ")))";
 }
 
@@ -521,7 +594,7 @@ NSConsumedAttr *NSConsumedAttr::clone(ASTContext &C) const {
   return new (C) NSConsumedAttr(getLocation(), C);
 }
 
-void NSConsumedAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void NSConsumedAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((ns_consumed))";
 }
 
@@ -529,7 +602,7 @@ NSConsumesSelfAttr *NSConsumesSelfAttr::clone(ASTContext &C) const {
   return new (C) NSConsumesSelfAttr(getLocation(), C);
 }
 
-void NSConsumesSelfAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void NSConsumesSelfAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((ns_consumes_self))";
 }
 
@@ -537,7 +610,7 @@ NSReturnsAutoreleasedAttr *NSReturnsAutoreleasedAttr::clone(ASTContext &C) const
   return new (C) NSReturnsAutoreleasedAttr(getLocation(), C);
 }
 
-void NSReturnsAutoreleasedAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void NSReturnsAutoreleasedAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((ns_returns_autoreleased))";
 }
 
@@ -545,7 +618,7 @@ NSReturnsNotRetainedAttr *NSReturnsNotRetainedAttr::clone(ASTContext &C) const {
   return new (C) NSReturnsNotRetainedAttr(getLocation(), C);
 }
 
-void NSReturnsNotRetainedAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void NSReturnsNotRetainedAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((ns_returns_not_retained))";
 }
 
@@ -553,7 +626,7 @@ NSReturnsRetainedAttr *NSReturnsRetainedAttr::clone(ASTContext &C) const {
   return new (C) NSReturnsRetainedAttr(getLocation(), C);
 }
 
-void NSReturnsRetainedAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void NSReturnsRetainedAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((ns_returns_retained))";
 }
 
@@ -561,7 +634,7 @@ NakedAttr *NakedAttr::clone(ASTContext &C) const {
   return new (C) NakedAttr(getLocation(), C);
 }
 
-void NakedAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void NakedAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((naked))";
 }
 
@@ -569,7 +642,7 @@ NoAddressSafetyAnalysisAttr *NoAddressSafetyAnalysisAttr::clone(ASTContext &C) c
   return new (C) NoAddressSafetyAnalysisAttr(getLocation(), C);
 }
 
-void NoAddressSafetyAnalysisAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void NoAddressSafetyAnalysisAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((no_address_safety_analysis))";
 }
 
@@ -577,7 +650,7 @@ NoCommonAttr *NoCommonAttr::clone(ASTContext &C) const {
   return new (C) NoCommonAttr(getLocation(), C);
 }
 
-void NoCommonAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void NoCommonAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((nocommon))";
 }
 
@@ -585,7 +658,7 @@ NoDebugAttr *NoDebugAttr::clone(ASTContext &C) const {
   return new (C) NoDebugAttr(getLocation(), C);
 }
 
-void NoDebugAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void NoDebugAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((nodebug))";
 }
 
@@ -593,7 +666,7 @@ NoInlineAttr *NoInlineAttr::clone(ASTContext &C) const {
   return new (C) NoInlineAttr(getLocation(), C);
 }
 
-void NoInlineAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void NoInlineAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((noinline))";
 }
 
@@ -601,7 +674,7 @@ NoInstrumentFunctionAttr *NoInstrumentFunctionAttr::clone(ASTContext &C) const {
   return new (C) NoInstrumentFunctionAttr(getLocation(), C);
 }
 
-void NoInstrumentFunctionAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void NoInstrumentFunctionAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((no_instrument_function))";
 }
 
@@ -609,7 +682,7 @@ NoReturnAttr *NoReturnAttr::clone(ASTContext &C) const {
   return new (C) NoReturnAttr(getLocation(), C);
 }
 
-void NoReturnAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void NoReturnAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((noreturn))";
 }
 
@@ -617,7 +690,7 @@ NoThreadSafetyAnalysisAttr *NoThreadSafetyAnalysisAttr::clone(ASTContext &C) con
   return new (C) NoThreadSafetyAnalysisAttr(getLocation(), C);
 }
 
-void NoThreadSafetyAnalysisAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void NoThreadSafetyAnalysisAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((no_thread_safety_analysis))";
 }
 
@@ -625,7 +698,7 @@ NoThrowAttr *NoThrowAttr::clone(ASTContext &C) const {
   return new (C) NoThrowAttr(getLocation(), C);
 }
 
-void NoThrowAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void NoThrowAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((nothrow))";
 }
 
@@ -633,7 +706,7 @@ NonNullAttr *NonNullAttr::clone(ASTContext &C) const {
   return new (C) NonNullAttr(getLocation(), C, args, argsSize);
 }
 
-void NonNullAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void NonNullAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((nonnull(";
   bool isFirst = true;
   for (NonNullAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
@@ -648,7 +721,7 @@ ObjCExceptionAttr *ObjCExceptionAttr::clone(ASTContext &C) const {
   return new (C) ObjCExceptionAttr(getLocation(), C);
 }
 
-void ObjCExceptionAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void ObjCExceptionAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((objc_exception))";
 }
 
@@ -656,7 +729,7 @@ ObjCMethodFamilyAttr *ObjCMethodFamilyAttr::clone(ASTContext &C) const {
   return new (C) ObjCMethodFamilyAttr(getLocation(), C, family);
 }
 
-void ObjCMethodFamilyAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void ObjCMethodFamilyAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((objc_method_family(" << getFamily() << ")))";
 }
 
@@ -664,7 +737,7 @@ ObjCNSObjectAttr *ObjCNSObjectAttr::clone(ASTContext &C) const {
   return new (C) ObjCNSObjectAttr(getLocation(), C);
 }
 
-void ObjCNSObjectAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void ObjCNSObjectAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((NSObject))";
 }
 
@@ -672,7 +745,7 @@ ObjCPreciseLifetimeAttr *ObjCPreciseLifetimeAttr::clone(ASTContext &C) const {
   return new (C) ObjCPreciseLifetimeAttr(getLocation(), C);
 }
 
-void ObjCPreciseLifetimeAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void ObjCPreciseLifetimeAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((objc_precise_lifetime))";
 }
 
@@ -680,15 +753,23 @@ ObjCRequiresPropertyDefsAttr *ObjCRequiresPropertyDefsAttr::clone(ASTContext &C)
   return new (C) ObjCRequiresPropertyDefsAttr(getLocation(), C);
 }
 
-void ObjCRequiresPropertyDefsAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void ObjCRequiresPropertyDefsAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((objc_requires_property_definitions))";
+}
+
+ObjCRequiresSuperAttr *ObjCRequiresSuperAttr::clone(ASTContext &C) const {
+  return new (C) ObjCRequiresSuperAttr(getLocation(), C);
+}
+
+void ObjCRequiresSuperAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
+  OS << " __attribute__((objc_requires_super))";
 }
 
 ObjCReturnsInnerPointerAttr *ObjCReturnsInnerPointerAttr::clone(ASTContext &C) const {
   return new (C) ObjCReturnsInnerPointerAttr(getLocation(), C);
 }
 
-void ObjCReturnsInnerPointerAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void ObjCReturnsInnerPointerAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((objc_returns_inner_pointer))";
 }
 
@@ -696,7 +777,7 @@ ObjCRootClassAttr *ObjCRootClassAttr::clone(ASTContext &C) const {
   return new (C) ObjCRootClassAttr(getLocation(), C);
 }
 
-void ObjCRootClassAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void ObjCRootClassAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((objc_root_class))";
 }
 
@@ -704,7 +785,7 @@ OpenCLKernelAttr *OpenCLKernelAttr::clone(ASTContext &C) const {
   return new (C) OpenCLKernelAttr(getLocation(), C);
 }
 
-void OpenCLKernelAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void OpenCLKernelAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((opencl_kernel_function))";
 }
 
@@ -712,7 +793,7 @@ OverloadableAttr *OverloadableAttr::clone(ASTContext &C) const {
   return new (C) OverloadableAttr(getLocation(), C);
 }
 
-void OverloadableAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void OverloadableAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((overloadable))";
 }
 
@@ -720,14 +801,14 @@ OverrideAttr *OverrideAttr::clone(ASTContext &C) const {
   return new (C) OverrideAttr(getLocation(), C);
 }
 
-void OverrideAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void OverrideAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
 }
 
 OwnershipAttr *OwnershipAttr::clone(ASTContext &C) const {
   return new (C) OwnershipAttr(getLocation(), C, ownKind, getModule(), args, argsSize);
 }
 
-void OwnershipAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void OwnershipAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((ownership_holds(" << getOwnKind() << ", \"" << getModule() << "\", ";
   bool isFirst = true;
   for (OwnershipAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
@@ -742,7 +823,7 @@ PackedAttr *PackedAttr::clone(ASTContext &C) const {
   return new (C) PackedAttr(getLocation(), C);
 }
 
-void PackedAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void PackedAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((packed))";
 }
 
@@ -750,7 +831,7 @@ PascalAttr *PascalAttr::clone(ASTContext &C) const {
   return new (C) PascalAttr(getLocation(), C);
 }
 
-void PascalAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void PascalAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((pascal))";
 }
 
@@ -758,15 +839,23 @@ PcsAttr *PcsAttr::clone(ASTContext &C) const {
   return new (C) PcsAttr(getLocation(), C, pCS);
 }
 
-void PcsAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void PcsAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((pcs(" << getPCS() << ")))";
+}
+
+PnaclCallAttr *PnaclCallAttr::clone(ASTContext &C) const {
+  return new (C) PnaclCallAttr(getLocation(), C);
+}
+
+void PnaclCallAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
+  OS << " __attribute__((pnaclcall))";
 }
 
 PtGuardedByAttr *PtGuardedByAttr::clone(ASTContext &C) const {
   return new (C) PtGuardedByAttr(getLocation(), C, arg);
 }
 
-void PtGuardedByAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void PtGuardedByAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((pt_guarded_by(" << getArg() << ")))";
 }
 
@@ -774,15 +863,31 @@ PtGuardedVarAttr *PtGuardedVarAttr::clone(ASTContext &C) const {
   return new (C) PtGuardedVarAttr(getLocation(), C);
 }
 
-void PtGuardedVarAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void PtGuardedVarAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((pt_guarded_var))";
+}
+
+Ptr32Attr *Ptr32Attr::clone(ASTContext &C) const {
+  return new (C) Ptr32Attr(getLocation(), C);
+}
+
+void Ptr32Attr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
+  OS << " __attribute__((__ptr32))";
+}
+
+Ptr64Attr *Ptr64Attr::clone(ASTContext &C) const {
+  return new (C) Ptr64Attr(getLocation(), C);
+}
+
+void Ptr64Attr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
+  OS << " __attribute__((__ptr64))";
 }
 
 PureAttr *PureAttr::clone(ASTContext &C) const {
   return new (C) PureAttr(getLocation(), C);
 }
 
-void PureAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void PureAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((pure))";
 }
 
@@ -790,7 +895,7 @@ RegparmAttr *RegparmAttr::clone(ASTContext &C) const {
   return new (C) RegparmAttr(getLocation(), C, numParams);
 }
 
-void RegparmAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void RegparmAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((regparm(" << getNumParams() << ")))";
 }
 
@@ -798,7 +903,7 @@ ReqdWorkGroupSizeAttr *ReqdWorkGroupSizeAttr::clone(ASTContext &C) const {
   return new (C) ReqdWorkGroupSizeAttr(getLocation(), C, xDim, yDim, zDim);
 }
 
-void ReqdWorkGroupSizeAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void ReqdWorkGroupSizeAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((reqd_work_group_size(" << getXDim() << ", " << getYDim() << ", " << getZDim() << ")))";
 }
 
@@ -806,7 +911,7 @@ ReturnsTwiceAttr *ReturnsTwiceAttr::clone(ASTContext &C) const {
   return new (C) ReturnsTwiceAttr(getLocation(), C);
 }
 
-void ReturnsTwiceAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void ReturnsTwiceAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((returns_twice))";
 }
 
@@ -814,7 +919,7 @@ ScopedLockableAttr *ScopedLockableAttr::clone(ASTContext &C) const {
   return new (C) ScopedLockableAttr(getLocation(), C);
 }
 
-void ScopedLockableAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void ScopedLockableAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((scoped_lockable))";
 }
 
@@ -822,7 +927,7 @@ SectionAttr *SectionAttr::clone(ASTContext &C) const {
   return new (C) SectionAttr(getLocation(), C, getName());
 }
 
-void SectionAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void SectionAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((section(\"" << getName() << "\")))";
 }
 
@@ -830,7 +935,7 @@ SentinelAttr *SentinelAttr::clone(ASTContext &C) const {
   return new (C) SentinelAttr(getLocation(), C, sentinel, nullPos);
 }
 
-void SentinelAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void SentinelAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((sentinel(" << getSentinel() << ", " << getNullPos() << ")))";
 }
 
@@ -838,7 +943,7 @@ SharedLockFunctionAttr *SharedLockFunctionAttr::clone(ASTContext &C) const {
   return new (C) SharedLockFunctionAttr(getLocation(), C, args, argsSize);
 }
 
-void SharedLockFunctionAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void SharedLockFunctionAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((shared_lock_function(";
   bool isFirst = true;
   for (SharedLockFunctionAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
@@ -853,7 +958,7 @@ SharedLocksRequiredAttr *SharedLocksRequiredAttr::clone(ASTContext &C) const {
   return new (C) SharedLocksRequiredAttr(getLocation(), C, args, argsSize);
 }
 
-void SharedLocksRequiredAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void SharedLocksRequiredAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((shared_locks_required(";
   bool isFirst = true;
   for (SharedLocksRequiredAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
@@ -868,7 +973,7 @@ SharedTrylockFunctionAttr *SharedTrylockFunctionAttr::clone(ASTContext &C) const
   return new (C) SharedTrylockFunctionAttr(getLocation(), C, successValue, args, argsSize);
 }
 
-void SharedTrylockFunctionAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void SharedTrylockFunctionAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((shared_trylock_function(" << getSuccessValue() << ", ";
   bool isFirst = true;
   for (SharedTrylockFunctionAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
@@ -879,19 +984,35 @@ void SharedTrylockFunctionAttr::printPretty(llvm::raw_ostream &OS, ASTContext &C
   OS << ")))";
 }
 
+SingleInheritanceAttr *SingleInheritanceAttr::clone(ASTContext &C) const {
+  return new (C) SingleInheritanceAttr(getLocation(), C);
+}
+
+void SingleInheritanceAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
+  OS << " __attribute__((__single_inheritance))";
+}
+
 StdCallAttr *StdCallAttr::clone(ASTContext &C) const {
   return new (C) StdCallAttr(getLocation(), C);
 }
 
-void StdCallAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void StdCallAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((stdcall))";
+}
+
+TLSModelAttr *TLSModelAttr::clone(ASTContext &C) const {
+  return new (C) TLSModelAttr(getLocation(), C, getModel());
+}
+
+void TLSModelAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
+  OS << " __attribute__((tls_model(\"" << getModel() << "\")))";
 }
 
 ThisCallAttr *ThisCallAttr::clone(ASTContext &C) const {
   return new (C) ThisCallAttr(getLocation(), C);
 }
 
-void ThisCallAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void ThisCallAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((thiscall))";
 }
 
@@ -899,15 +1020,23 @@ TransparentUnionAttr *TransparentUnionAttr::clone(ASTContext &C) const {
   return new (C) TransparentUnionAttr(getLocation(), C);
 }
 
-void TransparentUnionAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void TransparentUnionAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((transparent_union))";
+}
+
+TypeTagForDatatypeAttr *TypeTagForDatatypeAttr::clone(ASTContext &C) const {
+  return new (C) TypeTagForDatatypeAttr(getLocation(), C, argumentKind, matchingCType, layoutCompatible, mustBeNull);
+}
+
+void TypeTagForDatatypeAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
+  OS << " __attribute__((type_tag_for_datatype(" << getArgumentKind()->getName() << ", " << getMatchingCType().getAsString() << ", " << getLayoutCompatible() << ", " << getMustBeNull() << ")))";
 }
 
 UnavailableAttr *UnavailableAttr::clone(ASTContext &C) const {
   return new (C) UnavailableAttr(getLocation(), C, getMessage());
 }
 
-void UnavailableAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void UnavailableAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((unavailable(\"" << getMessage() << "\")))";
 }
 
@@ -915,7 +1044,7 @@ UnlockFunctionAttr *UnlockFunctionAttr::clone(ASTContext &C) const {
   return new (C) UnlockFunctionAttr(getLocation(), C, args, argsSize);
 }
 
-void UnlockFunctionAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void UnlockFunctionAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((unlock_function(";
   bool isFirst = true;
   for (UnlockFunctionAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
@@ -930,7 +1059,7 @@ UnusedAttr *UnusedAttr::clone(ASTContext &C) const {
   return new (C) UnusedAttr(getLocation(), C);
 }
 
-void UnusedAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void UnusedAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((unused))";
 }
 
@@ -938,7 +1067,7 @@ UsedAttr *UsedAttr::clone(ASTContext &C) const {
   return new (C) UsedAttr(getLocation(), C);
 }
 
-void UsedAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void UsedAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((used))";
 }
 
@@ -946,7 +1075,7 @@ UuidAttr *UuidAttr::clone(ASTContext &C) const {
   return new (C) UuidAttr(getLocation(), C, getGuid());
 }
 
-void UuidAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void UuidAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((uuid(\"" << getGuid() << "\")))";
 }
 
@@ -954,15 +1083,23 @@ VecReturnAttr *VecReturnAttr::clone(ASTContext &C) const {
   return new (C) VecReturnAttr(getLocation(), C);
 }
 
-void VecReturnAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void VecReturnAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((vecreturn))";
+}
+
+VirtualInheritanceAttr *VirtualInheritanceAttr::clone(ASTContext &C) const {
+  return new (C) VirtualInheritanceAttr(getLocation(), C);
+}
+
+void VirtualInheritanceAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
+  OS << " __attribute__((__virtual_inheritance))";
 }
 
 VisibilityAttr *VisibilityAttr::clone(ASTContext &C) const {
   return new (C) VisibilityAttr(getLocation(), C, visibility);
 }
 
-void VisibilityAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void VisibilityAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((visibility(" << getVisibility() << ")))";
 }
 
@@ -970,7 +1107,7 @@ WarnUnusedResultAttr *WarnUnusedResultAttr::clone(ASTContext &C) const {
   return new (C) WarnUnusedResultAttr(getLocation(), C);
 }
 
-void WarnUnusedResultAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void WarnUnusedResultAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((warn_unused_result))";
 }
 
@@ -978,7 +1115,7 @@ WeakAttr *WeakAttr::clone(ASTContext &C) const {
   return new (C) WeakAttr(getLocation(), C);
 }
 
-void WeakAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void WeakAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((weak))";
 }
 
@@ -986,7 +1123,7 @@ WeakImportAttr *WeakImportAttr::clone(ASTContext &C) const {
   return new (C) WeakImportAttr(getLocation(), C);
 }
 
-void WeakImportAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void WeakImportAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((weak_import))";
 }
 
@@ -994,14 +1131,30 @@ WeakRefAttr *WeakRefAttr::clone(ASTContext &C) const {
   return new (C) WeakRefAttr(getLocation(), C);
 }
 
-void WeakRefAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void WeakRefAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
   OS << " __attribute__((weakref))";
+}
+
+Win64Attr *Win64Attr::clone(ASTContext &C) const {
+  return new (C) Win64Attr(getLocation(), C);
+}
+
+void Win64Attr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
+  OS << " __attribute__((w64))";
+}
+
+WorkGroupSizeHintAttr *WorkGroupSizeHintAttr::clone(ASTContext &C) const {
+  return new (C) WorkGroupSizeHintAttr(getLocation(), C, xDim, yDim, zDim);
+}
+
+void WorkGroupSizeHintAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
+  OS << " __attribute__((work_group_size_hint(" << getXDim() << ", " << getYDim() << ", " << getZDim() << ")))";
 }
 
 X86ForceAlignArgPointerAttr *X86ForceAlignArgPointerAttr::clone(ASTContext &C) const {
   return new (C) X86ForceAlignArgPointerAttr(getLocation(), C);
 }
 
-void X86ForceAlignArgPointerAttr::printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const {
+void X86ForceAlignArgPointerAttr::printPretty(llvm::raw_ostream &OS, const PrintingPolicy &Policy) const {
 }
 

@@ -50,6 +50,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const AlignedAttr *A = cast<AlignedAttr>(At);
       return A->clone(C);
     }
+    case attr::AllocSize: {
+      const AllocSizeAttr *A = cast<AllocSizeAttr>(At);
+      return A->clone(C);
+    }
     case attr::AlwaysInline: {
       const AlwaysInlineAttr *A = cast<AlwaysInlineAttr>(At);
       return A->clone(C);
@@ -64,6 +68,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
     }
     case attr::ArcWeakrefUnavailable: {
       const ArcWeakrefUnavailableAttr *A = cast<ArcWeakrefUnavailableAttr>(At);
+      return A->clone(C);
+    }
+    case attr::ArgumentWithTypeTag: {
+      const ArgumentWithTypeTagAttr *A = cast<ArgumentWithTypeTagAttr>(At);
       return A->clone(C);
     }
     case attr::AsmLabel: {
@@ -132,6 +140,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
     }
     case attr::Cleanup: {
       const CleanupAttr *A = cast<CleanupAttr>(At);
+      return A->clone(C);
+    }
+    case attr::Cold: {
+      const ColdAttr *A = cast<ColdAttr>(At);
       return A->clone(C);
     }
     case attr::Common: {
@@ -213,12 +225,20 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       }
       return new (C) ExclusiveTrylockFunctionAttr(A->getLocation(), C, tempInstSuccessValue, tempInstArgs, A->args_size());
     }
+    case attr::FallThrough: {
+      const FallThroughAttr *A = cast<FallThroughAttr>(At);
+      return A->clone(C);
+    }
     case attr::FastCall: {
       const FastCallAttr *A = cast<FastCallAttr>(At);
       return A->clone(C);
     }
     case attr::Final: {
       const FinalAttr *A = cast<FinalAttr>(At);
+      return A->clone(C);
+    }
+    case attr::ForceInline: {
+      const ForceInlineAttr *A = cast<ForceInlineAttr>(At);
       return A->clone(C);
     }
     case attr::Format: {
@@ -245,6 +265,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
     }
     case attr::GuardedVar: {
       const GuardedVarAttr *A = cast<GuardedVarAttr>(At);
+      return A->clone(C);
+    }
+    case attr::Hot: {
+      const HotAttr *A = cast<HotAttr>(At);
       return A->clone(C);
     }
     case attr::IBAction: {
@@ -316,8 +340,16 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const MayAliasAttr *A = cast<MayAliasAttr>(At);
       return A->clone(C);
     }
+    case attr::MinSize: {
+      const MinSizeAttr *A = cast<MinSizeAttr>(At);
+      return A->clone(C);
+    }
     case attr::MsStruct: {
       const MsStructAttr *A = cast<MsStructAttr>(At);
+      return A->clone(C);
+    }
+    case attr::MultipleInheritance: {
+      const MultipleInheritanceAttr *A = cast<MultipleInheritanceAttr>(At);
       return A->clone(C);
     }
     case attr::NSBridged: {
@@ -404,6 +436,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const ObjCRequiresPropertyDefsAttr *A = cast<ObjCRequiresPropertyDefsAttr>(At);
       return A->clone(C);
     }
+    case attr::ObjCRequiresSuper: {
+      const ObjCRequiresSuperAttr *A = cast<ObjCRequiresSuperAttr>(At);
+      return A->clone(C);
+    }
     case attr::ObjCReturnsInnerPointer: {
       const ObjCReturnsInnerPointerAttr *A = cast<ObjCReturnsInnerPointerAttr>(At);
       return A->clone(C);
@@ -440,6 +476,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const PcsAttr *A = cast<PcsAttr>(At);
       return A->clone(C);
     }
+    case attr::PnaclCall: {
+      const PnaclCallAttr *A = cast<PnaclCallAttr>(At);
+      return A->clone(C);
+    }
     case attr::PtGuardedBy: {
       const PtGuardedByAttr *A = cast<PtGuardedByAttr>(At);
       Expr * tempInstArg;
@@ -452,6 +492,14 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
     }
     case attr::PtGuardedVar: {
       const PtGuardedVarAttr *A = cast<PtGuardedVarAttr>(At);
+      return A->clone(C);
+    }
+    case attr::Ptr32: {
+      const Ptr32Attr *A = cast<Ptr32Attr>(At);
+      return A->clone(C);
+    }
+    case attr::Ptr64: {
+      const Ptr64Attr *A = cast<Ptr64Attr>(At);
       return A->clone(C);
     }
     case attr::Pure: {
@@ -533,8 +581,16 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       }
       return new (C) SharedTrylockFunctionAttr(A->getLocation(), C, tempInstSuccessValue, tempInstArgs, A->args_size());
     }
+    case attr::SingleInheritance: {
+      const SingleInheritanceAttr *A = cast<SingleInheritanceAttr>(At);
+      return A->clone(C);
+    }
     case attr::StdCall: {
       const StdCallAttr *A = cast<StdCallAttr>(At);
+      return A->clone(C);
+    }
+    case attr::TLSModel: {
+      const TLSModelAttr *A = cast<TLSModelAttr>(At);
       return A->clone(C);
     }
     case attr::ThisCall: {
@@ -543,6 +599,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
     }
     case attr::TransparentUnion: {
       const TransparentUnionAttr *A = cast<TransparentUnionAttr>(At);
+      return A->clone(C);
+    }
+    case attr::TypeTagForDatatype: {
+      const TypeTagForDatatypeAttr *A = cast<TypeTagForDatatypeAttr>(At);
       return A->clone(C);
     }
     case attr::Unavailable: {
@@ -580,9 +640,12 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const VecReturnAttr *A = cast<VecReturnAttr>(At);
       return A->clone(C);
     }
-    case attr::Visibility: {
-      const VisibilityAttr *A = cast<VisibilityAttr>(At);
+    case attr::VirtualInheritance: {
+      const VirtualInheritanceAttr *A = cast<VirtualInheritanceAttr>(At);
       return A->clone(C);
+    }
+    case attr::Visibility: {
+      return NULL;
     }
     case attr::WarnUnusedResult: {
       const WarnUnusedResultAttr *A = cast<WarnUnusedResultAttr>(At);
@@ -598,6 +661,14 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
     }
     case attr::WeakRef: {
       const WeakRefAttr *A = cast<WeakRefAttr>(At);
+      return A->clone(C);
+    }
+    case attr::Win64: {
+      const Win64Attr *A = cast<Win64Attr>(At);
+      return A->clone(C);
+    }
+    case attr::WorkGroupSizeHint: {
+      const WorkGroupSizeHintAttr *A = cast<WorkGroupSizeHintAttr>(At);
       return A->clone(C);
     }
     case attr::X86ForceAlignArgPointer: {

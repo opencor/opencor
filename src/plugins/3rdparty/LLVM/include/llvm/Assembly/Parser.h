@@ -15,9 +15,6 @@
 #define LLVM_ASSEMBLY_PARSER_H
 
 #include <string>
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 
@@ -44,12 +41,7 @@ Module *ParseAssemblyFile(
 /// that this does not verify that the generated Module is valid, so you should
 /// run the verifier after parsing the file to check that it is okay.
 /// @brief Parse LLVM Assembly from a string
-/*---OPENCOR---
 Module *ParseAssemblyString(
-*/
-//---OPENCOR--- BEGIN
-Module LLVM_EXPORT *ParseAssemblyString(
-//---OPENCOR--- END
   const char *AsmString, ///< The string containing assembly
   Module *M,             ///< A module to add the assembly too.
   SMDiagnostic &Error,   ///< Error result info.

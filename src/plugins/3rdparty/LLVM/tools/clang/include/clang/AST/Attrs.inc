@@ -20,7 +20,7 @@ class AcquiredAfterAttr : public InheritableAttr {
   }
 
   virtual AcquiredAfterAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   typedef Expr ** args_iterator;
   args_iterator args_begin() const {
     return args;
@@ -35,7 +35,6 @@ class AcquiredAfterAttr : public InheritableAttr {
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::AcquiredAfter; }
-  static bool classof(const AcquiredAfterAttr *) { return true; }
   virtual bool isLateParsed() const { return 1; }
 };
 
@@ -56,7 +55,7 @@ class AcquiredBeforeAttr : public InheritableAttr {
   }
 
   virtual AcquiredBeforeAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   typedef Expr ** args_iterator;
   args_iterator args_begin() const {
     return args;
@@ -71,7 +70,6 @@ class AcquiredBeforeAttr : public InheritableAttr {
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::AcquiredBefore; }
-  static bool classof(const AcquiredBeforeAttr *) { return true; }
   virtual bool isLateParsed() const { return 1; }
 };
 
@@ -91,7 +89,7 @@ char *aliasee;
   }
 
   virtual AliasAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   llvm::StringRef getAliasee() const {
     return llvm::StringRef(aliasee, aliaseeLength);
   }
@@ -107,7 +105,6 @@ char *aliasee;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Alias; }
-  static bool classof(const AliasAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -121,11 +118,10 @@ class AlignMac68kAttr : public InheritableAttr {
   }
 
   virtual AlignMac68kAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::AlignMac68k; }
-  static bool classof(const AlignMac68kAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -136,22 +132,27 @@ Expr *alignmentExpr;
 TypeSourceInfo *alignmentType;
 };
 
+bool isMSDeclSpec;
+
 
  public:
   AlignedAttr(SourceRange R, ASTContext &Ctx
               , bool IsAlignmentExpr, void *Alignment
+              , bool IsMSDeclSpec
              )
     : InheritableAttr(attr::Aligned, R)
               , isalignmentExpr(IsAlignmentExpr)
+              , isMSDeclSpec(IsMSDeclSpec)
   {
     if (isalignmentExpr)
        alignmentExpr = reinterpret_cast<Expr *>(Alignment);
     else
        alignmentType = reinterpret_cast<TypeSourceInfo *>(Alignment);
+
   }
 
   virtual AlignedAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   bool isAlignmentDependent() const;
   unsigned getAlignment(ASTContext &Ctx) const;
   bool isAlignmentExpr() const {
@@ -166,10 +167,48 @@ TypeSourceInfo *alignmentType;
     return alignmentType;
   }
 
+  bool getIsMSDeclSpec() const {
+    return isMSDeclSpec;
+  }
+
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Aligned; }
-  static bool classof(const AlignedAttr *) { return true; }
+  virtual bool isLateParsed() const { return 0; }
+};
+
+class AllocSizeAttr : public Attr {
+  unsigned argsSize;
+  unsigned *args;
+
+
+ public:
+  AllocSizeAttr(SourceRange R, ASTContext &Ctx
+              , unsigned *Args, unsigned ArgsSize
+             )
+    : Attr(attr::AllocSize, R)
+              , argsSize(ArgsSize), args(new (Ctx, 16) unsigned[argsSize])
+  {
+    std::memcpy(args, Args, argsSize * sizeof(unsigned));
+
+  }
+
+  virtual AllocSizeAttr *clone (ASTContext &C) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
+  typedef unsigned* args_iterator;
+  args_iterator args_begin() const {
+    return args;
+  }
+  args_iterator args_end() const {
+    return args + argsSize;
+  }
+  unsigned args_size() const {
+    return argsSize;
+  }
+
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::AllocSize; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -183,11 +222,10 @@ class AlwaysInlineAttr : public InheritableAttr {
   }
 
   virtual AlwaysInlineAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::AlwaysInline; }
-  static bool classof(const AlwaysInlineAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -201,11 +239,10 @@ class AnalyzerNoReturnAttr : public InheritableAttr {
   }
 
   virtual AnalyzerNoReturnAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::AnalyzerNoReturn; }
-  static bool classof(const AnalyzerNoReturnAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -225,7 +262,7 @@ char *annotation;
   }
 
   virtual AnnotateAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   llvm::StringRef getAnnotation() const {
     return llvm::StringRef(annotation, annotationLength);
   }
@@ -241,7 +278,6 @@ char *annotation;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Annotate; }
-  static bool classof(const AnnotateAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -255,11 +291,63 @@ class ArcWeakrefUnavailableAttr : public InheritableAttr {
   }
 
   virtual ArcWeakrefUnavailableAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ArcWeakrefUnavailable; }
-  static bool classof(const ArcWeakrefUnavailableAttr *) { return true; }
+  virtual bool isLateParsed() const { return 0; }
+};
+
+class ArgumentWithTypeTagAttr : public InheritableAttr {
+IdentifierInfo * argumentKind;
+
+unsigned argumentIdx;
+
+unsigned typeTagIdx;
+
+bool isPointer;
+
+
+ public:
+  ArgumentWithTypeTagAttr(SourceRange R, ASTContext &Ctx
+              , IdentifierInfo * ArgumentKind
+              , unsigned ArgumentIdx
+              , unsigned TypeTagIdx
+              , bool IsPointer
+             )
+    : InheritableAttr(attr::ArgumentWithTypeTag, R)
+              , argumentKind(ArgumentKind)
+              , argumentIdx(ArgumentIdx)
+              , typeTagIdx(TypeTagIdx)
+              , isPointer(IsPointer)
+  {
+
+
+
+
+  }
+
+  virtual ArgumentWithTypeTagAttr *clone (ASTContext &C) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
+  IdentifierInfo * getArgumentKind() const {
+    return argumentKind;
+  }
+
+  unsigned getArgumentIdx() const {
+    return argumentIdx;
+  }
+
+  unsigned getTypeTagIdx() const {
+    return typeTagIdx;
+  }
+
+  bool getIsPointer() const {
+    return isPointer;
+  }
+
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::ArgumentWithTypeTag; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -279,7 +367,7 @@ char *label;
   }
 
   virtual AsmLabelAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   llvm::StringRef getLabel() const {
     return llvm::StringRef(label, labelLength);
   }
@@ -295,7 +383,6 @@ char *label;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::AsmLabel; }
-  static bool classof(const AsmLabelAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -343,7 +430,7 @@ char *message;
   }
 
   virtual AvailabilityAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   IdentifierInfo * getPlatform() const {
     return platform;
   }
@@ -388,12 +475,11 @@ char *message;
 static llvm::StringRef getPrettyPlatformName(llvm::StringRef Platform) {
     return llvm::StringSwitch<llvm::StringRef>(Platform)
              .Case("ios", "iOS")
-             .Case("macosx", "Mac OS X")
+             .Case("macosx", "OS X")
              .Default(llvm::StringRef());
 } 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Availability; }
-  static bool classof(const AvailabilityAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -417,7 +503,7 @@ private:
   }
 
   virtual BlocksAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   BlockType getType() const {
     return type;
   }
@@ -425,7 +511,6 @@ private:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Blocks; }
-  static bool classof(const BlocksAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -439,11 +524,10 @@ class CDeclAttr : public InheritableAttr {
   }
 
   virtual CDeclAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::CDecl; }
-  static bool classof(const CDeclAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -457,11 +541,10 @@ class CFAuditedTransferAttr : public InheritableAttr {
   }
 
   virtual CFAuditedTransferAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::CFAuditedTransfer; }
-  static bool classof(const CFAuditedTransferAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -475,11 +558,10 @@ class CFConsumedAttr : public InheritableParamAttr {
   }
 
   virtual CFConsumedAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::CFConsumed; }
-  static bool classof(const CFConsumedAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -493,11 +575,10 @@ class CFReturnsNotRetainedAttr : public InheritableAttr {
   }
 
   virtual CFReturnsNotRetainedAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::CFReturnsNotRetained; }
-  static bool classof(const CFReturnsNotRetainedAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -511,11 +592,10 @@ class CFReturnsRetainedAttr : public InheritableAttr {
   }
 
   virtual CFReturnsRetainedAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::CFReturnsRetained; }
-  static bool classof(const CFReturnsRetainedAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -529,11 +609,10 @@ class CFUnknownTransferAttr : public InheritableAttr {
   }
 
   virtual CFUnknownTransferAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::CFUnknownTransfer; }
-  static bool classof(const CFUnknownTransferAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -547,29 +626,27 @@ class CUDAConstantAttr : public InheritableAttr {
   }
 
   virtual CUDAConstantAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::CUDAConstant; }
-  static bool classof(const CUDAConstantAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
-class CUDADeviceAttr : public Attr {
+class CUDADeviceAttr : public InheritableAttr {
 
  public:
   CUDADeviceAttr(SourceRange R, ASTContext &Ctx
              )
-    : Attr(attr::CUDADevice, R)
+    : InheritableAttr(attr::CUDADevice, R)
   {
   }
 
   virtual CUDADeviceAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::CUDADevice; }
-  static bool classof(const CUDADeviceAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -583,29 +660,27 @@ class CUDAGlobalAttr : public InheritableAttr {
   }
 
   virtual CUDAGlobalAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::CUDAGlobal; }
-  static bool classof(const CUDAGlobalAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
-class CUDAHostAttr : public Attr {
+class CUDAHostAttr : public InheritableAttr {
 
  public:
   CUDAHostAttr(SourceRange R, ASTContext &Ctx
              )
-    : Attr(attr::CUDAHost, R)
+    : InheritableAttr(attr::CUDAHost, R)
   {
   }
 
   virtual CUDAHostAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::CUDAHost; }
-  static bool classof(const CUDAHostAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -629,7 +704,7 @@ int minBlocks;
   }
 
   virtual CUDALaunchBoundsAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   int getMaxThreads() const {
     return maxThreads;
   }
@@ -641,7 +716,6 @@ int minBlocks;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::CUDALaunchBounds; }
-  static bool classof(const CUDALaunchBoundsAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -655,11 +729,10 @@ class CUDASharedAttr : public InheritableAttr {
   }
 
   virtual CUDASharedAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::CUDAShared; }
-  static bool classof(const CUDASharedAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -673,11 +746,10 @@ class CarriesDependencyAttr : public InheritableParamAttr {
   }
 
   virtual CarriesDependencyAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::CarriesDependency; }
-  static bool classof(const CarriesDependencyAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -696,7 +768,7 @@ FunctionDecl * functionDecl;
   }
 
   virtual CleanupAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   FunctionDecl * getFunctionDecl() const {
     return functionDecl;
   }
@@ -704,7 +776,23 @@ FunctionDecl * functionDecl;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Cleanup; }
-  static bool classof(const CleanupAttr *) { return true; }
+  virtual bool isLateParsed() const { return 0; }
+};
+
+class ColdAttr : public InheritableAttr {
+
+ public:
+  ColdAttr(SourceRange R, ASTContext &Ctx
+             )
+    : InheritableAttr(attr::Cold, R)
+  {
+  }
+
+  virtual ColdAttr *clone (ASTContext &C) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::Cold; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -718,11 +806,10 @@ class CommonAttr : public InheritableAttr {
   }
 
   virtual CommonAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Common; }
-  static bool classof(const CommonAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -736,11 +823,10 @@ class ConstAttr : public InheritableAttr {
   }
 
   virtual ConstAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Const; }
-  static bool classof(const ConstAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -759,7 +845,7 @@ int priority;
   }
 
   virtual ConstructorAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   int getPriority() const {
     return priority;
   }
@@ -767,7 +853,6 @@ int priority;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Constructor; }
-  static bool classof(const ConstructorAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -781,11 +866,10 @@ class DLLExportAttr : public InheritableAttr {
   }
 
   virtual DLLExportAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::DLLExport; }
-  static bool classof(const DLLExportAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -799,11 +883,10 @@ class DLLImportAttr : public InheritableAttr {
   }
 
   virtual DLLImportAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::DLLImport; }
-  static bool classof(const DLLImportAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -823,7 +906,7 @@ char *message;
   }
 
   virtual DeprecatedAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   llvm::StringRef getMessage() const {
     return llvm::StringRef(message, messageLength);
   }
@@ -839,7 +922,6 @@ char *message;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Deprecated; }
-  static bool classof(const DeprecatedAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -858,7 +940,7 @@ int priority;
   }
 
   virtual DestructorAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   int getPriority() const {
     return priority;
   }
@@ -866,7 +948,6 @@ int priority;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Destructor; }
-  static bool classof(const DestructorAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -887,7 +968,7 @@ class ExclusiveLockFunctionAttr : public InheritableAttr {
   }
 
   virtual ExclusiveLockFunctionAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   typedef Expr ** args_iterator;
   args_iterator args_begin() const {
     return args;
@@ -902,7 +983,6 @@ class ExclusiveLockFunctionAttr : public InheritableAttr {
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ExclusiveLockFunction; }
-  static bool classof(const ExclusiveLockFunctionAttr *) { return true; }
   virtual bool isLateParsed() const { return 1; }
 };
 
@@ -923,7 +1003,7 @@ class ExclusiveLocksRequiredAttr : public InheritableAttr {
   }
 
   virtual ExclusiveLocksRequiredAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   typedef Expr ** args_iterator;
   args_iterator args_begin() const {
     return args;
@@ -938,7 +1018,6 @@ class ExclusiveLocksRequiredAttr : public InheritableAttr {
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ExclusiveLocksRequired; }
-  static bool classof(const ExclusiveLocksRequiredAttr *) { return true; }
   virtual bool isLateParsed() const { return 1; }
 };
 
@@ -964,7 +1043,7 @@ Expr * successValue;
   }
 
   virtual ExclusiveTrylockFunctionAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   Expr * getSuccessValue() const {
     return successValue;
   }
@@ -983,8 +1062,24 @@ Expr * successValue;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ExclusiveTrylockFunction; }
-  static bool classof(const ExclusiveTrylockFunctionAttr *) { return true; }
   virtual bool isLateParsed() const { return 1; }
+};
+
+class FallThroughAttr : public Attr {
+
+ public:
+  FallThroughAttr(SourceRange R, ASTContext &Ctx
+             )
+    : Attr(attr::FallThrough, R)
+  {
+  }
+
+  virtual FallThroughAttr *clone (ASTContext &C) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::FallThrough; }
+  virtual bool isLateParsed() const { return 0; }
 };
 
 class FastCallAttr : public InheritableAttr {
@@ -997,11 +1092,10 @@ class FastCallAttr : public InheritableAttr {
   }
 
   virtual FastCallAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::FastCall; }
-  static bool classof(const FastCallAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1015,11 +1109,27 @@ class FinalAttr : public InheritableAttr {
   }
 
   virtual FinalAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Final; }
-  static bool classof(const FinalAttr *) { return true; }
+  virtual bool isLateParsed() const { return 0; }
+};
+
+class ForceInlineAttr : public InheritableAttr {
+
+ public:
+  ForceInlineAttr(SourceRange R, ASTContext &Ctx
+             )
+    : InheritableAttr(attr::ForceInline, R)
+  {
+  }
+
+  virtual ForceInlineAttr *clone (ASTContext &C) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::ForceInline; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1049,7 +1159,7 @@ int firstArg;
   }
 
   virtual FormatAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   llvm::StringRef getType() const {
     return llvm::StringRef(type, typeLength);
   }
@@ -1073,7 +1183,6 @@ int firstArg;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Format; }
-  static bool classof(const FormatAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1092,7 +1201,7 @@ int formatIdx;
   }
 
   virtual FormatArgAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   int getFormatIdx() const {
     return formatIdx;
   }
@@ -1100,7 +1209,6 @@ int formatIdx;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::FormatArg; }
-  static bool classof(const FormatArgAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1114,11 +1222,10 @@ class GNUInlineAttr : public InheritableAttr {
   }
 
   virtual GNUInlineAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::GNUInline; }
-  static bool classof(const GNUInlineAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1137,7 +1244,7 @@ Expr * arg;
   }
 
   virtual GuardedByAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   Expr * getArg() const {
     return arg;
   }
@@ -1145,7 +1252,6 @@ Expr * arg;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::GuardedBy; }
-  static bool classof(const GuardedByAttr *) { return true; }
   virtual bool isLateParsed() const { return 1; }
 };
 
@@ -1159,11 +1265,27 @@ class GuardedVarAttr : public InheritableAttr {
   }
 
   virtual GuardedVarAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::GuardedVar; }
-  static bool classof(const GuardedVarAttr *) { return true; }
+  virtual bool isLateParsed() const { return 0; }
+};
+
+class HotAttr : public InheritableAttr {
+
+ public:
+  HotAttr(SourceRange R, ASTContext &Ctx
+             )
+    : InheritableAttr(attr::Hot, R)
+  {
+  }
+
+  virtual HotAttr *clone (ASTContext &C) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::Hot; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1177,11 +1299,10 @@ class IBActionAttr : public InheritableAttr {
   }
 
   virtual IBActionAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::IBAction; }
-  static bool classof(const IBActionAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1195,11 +1316,10 @@ class IBOutletAttr : public InheritableAttr {
   }
 
   virtual IBOutletAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::IBOutlet; }
-  static bool classof(const IBOutletAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1223,7 +1343,7 @@ SourceLocation interfaceLoc;
   }
 
   virtual IBOutletCollectionAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   QualType getInterface() const {
     return interface;
   }
@@ -1235,7 +1355,6 @@ SourceLocation interfaceLoc;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::IBOutletCollection; }
-  static bool classof(const IBOutletCollectionAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1254,7 +1373,7 @@ unsigned priority;
   }
 
   virtual InitPriorityAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   unsigned getPriority() const {
     return priority;
   }
@@ -1262,7 +1381,6 @@ unsigned priority;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::InitPriority; }
-  static bool classof(const InitPriorityAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1281,7 +1399,7 @@ Expr * arg;
   }
 
   virtual LockReturnedAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   Expr * getArg() const {
     return arg;
   }
@@ -1289,7 +1407,6 @@ Expr * arg;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::LockReturned; }
-  static bool classof(const LockReturnedAttr *) { return true; }
   virtual bool isLateParsed() const { return 1; }
 };
 
@@ -1303,11 +1420,10 @@ class LockableAttr : public InheritableAttr {
   }
 
   virtual LockableAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Lockable; }
-  static bool classof(const LockableAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1328,7 +1444,7 @@ class LocksExcludedAttr : public InheritableAttr {
   }
 
   virtual LocksExcludedAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   typedef Expr ** args_iterator;
   args_iterator args_begin() const {
     return args;
@@ -1343,7 +1459,6 @@ class LocksExcludedAttr : public InheritableAttr {
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::LocksExcluded; }
-  static bool classof(const LocksExcludedAttr *) { return true; }
   virtual bool isLateParsed() const { return 1; }
 };
 
@@ -1357,11 +1472,10 @@ class MBlazeInterruptHandlerAttr : public InheritableAttr {
   }
 
   virtual MBlazeInterruptHandlerAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::MBlazeInterruptHandler; }
-  static bool classof(const MBlazeInterruptHandlerAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1375,11 +1489,10 @@ class MBlazeSaveVolatilesAttr : public InheritableAttr {
   }
 
   virtual MBlazeSaveVolatilesAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::MBlazeSaveVolatiles; }
-  static bool classof(const MBlazeSaveVolatilesAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1398,7 +1511,7 @@ unsigned number;
   }
 
   virtual MSP430InterruptAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   unsigned getNumber() const {
     return number;
   }
@@ -1406,7 +1519,6 @@ unsigned number;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::MSP430Interrupt; }
-  static bool classof(const MSP430InterruptAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1420,11 +1532,10 @@ class MallocAttr : public InheritableAttr {
   }
 
   virtual MallocAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Malloc; }
-  static bool classof(const MallocAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1443,7 +1554,7 @@ unsigned alignment;
   }
 
   virtual MaxFieldAlignmentAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   unsigned getAlignment() const {
     return alignment;
   }
@@ -1451,7 +1562,6 @@ unsigned alignment;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::MaxFieldAlignment; }
-  static bool classof(const MaxFieldAlignmentAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1465,11 +1575,27 @@ class MayAliasAttr : public InheritableAttr {
   }
 
   virtual MayAliasAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::MayAlias; }
-  static bool classof(const MayAliasAttr *) { return true; }
+  virtual bool isLateParsed() const { return 0; }
+};
+
+class MinSizeAttr : public InheritableAttr {
+
+ public:
+  MinSizeAttr(SourceRange R, ASTContext &Ctx
+             )
+    : InheritableAttr(attr::MinSize, R)
+  {
+  }
+
+  virtual MinSizeAttr *clone (ASTContext &C) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::MinSize; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1483,11 +1609,27 @@ class MsStructAttr : public InheritableAttr {
   }
 
   virtual MsStructAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::MsStruct; }
-  static bool classof(const MsStructAttr *) { return true; }
+  virtual bool isLateParsed() const { return 0; }
+};
+
+class MultipleInheritanceAttr : public InheritableAttr {
+
+ public:
+  MultipleInheritanceAttr(SourceRange R, ASTContext &Ctx
+             )
+    : InheritableAttr(attr::MultipleInheritance, R)
+  {
+  }
+
+  virtual MultipleInheritanceAttr *clone (ASTContext &C) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::MultipleInheritance; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1506,7 +1648,7 @@ IdentifierInfo * bridgedType;
   }
 
   virtual NSBridgedAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   IdentifierInfo * getBridgedType() const {
     return bridgedType;
   }
@@ -1514,7 +1656,6 @@ IdentifierInfo * bridgedType;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NSBridged; }
-  static bool classof(const NSBridgedAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1528,11 +1669,10 @@ class NSConsumedAttr : public InheritableParamAttr {
   }
 
   virtual NSConsumedAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NSConsumed; }
-  static bool classof(const NSConsumedAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1546,11 +1686,10 @@ class NSConsumesSelfAttr : public InheritableAttr {
   }
 
   virtual NSConsumesSelfAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NSConsumesSelf; }
-  static bool classof(const NSConsumesSelfAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1564,11 +1703,10 @@ class NSReturnsAutoreleasedAttr : public InheritableAttr {
   }
 
   virtual NSReturnsAutoreleasedAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NSReturnsAutoreleased; }
-  static bool classof(const NSReturnsAutoreleasedAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1582,11 +1720,10 @@ class NSReturnsNotRetainedAttr : public InheritableAttr {
   }
 
   virtual NSReturnsNotRetainedAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NSReturnsNotRetained; }
-  static bool classof(const NSReturnsNotRetainedAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1600,11 +1737,10 @@ class NSReturnsRetainedAttr : public InheritableAttr {
   }
 
   virtual NSReturnsRetainedAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NSReturnsRetained; }
-  static bool classof(const NSReturnsRetainedAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1618,11 +1754,10 @@ class NakedAttr : public InheritableAttr {
   }
 
   virtual NakedAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Naked; }
-  static bool classof(const NakedAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1636,11 +1771,10 @@ class NoAddressSafetyAnalysisAttr : public InheritableAttr {
   }
 
   virtual NoAddressSafetyAnalysisAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NoAddressSafetyAnalysis; }
-  static bool classof(const NoAddressSafetyAnalysisAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1654,11 +1788,10 @@ class NoCommonAttr : public InheritableAttr {
   }
 
   virtual NoCommonAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NoCommon; }
-  static bool classof(const NoCommonAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1672,11 +1805,10 @@ class NoDebugAttr : public InheritableAttr {
   }
 
   virtual NoDebugAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NoDebug; }
-  static bool classof(const NoDebugAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1690,11 +1822,10 @@ class NoInlineAttr : public InheritableAttr {
   }
 
   virtual NoInlineAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NoInline; }
-  static bool classof(const NoInlineAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1708,11 +1839,10 @@ class NoInstrumentFunctionAttr : public InheritableAttr {
   }
 
   virtual NoInstrumentFunctionAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NoInstrumentFunction; }
-  static bool classof(const NoInstrumentFunctionAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1726,11 +1856,10 @@ class NoReturnAttr : public InheritableAttr {
   }
 
   virtual NoReturnAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NoReturn; }
-  static bool classof(const NoReturnAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1744,11 +1873,10 @@ class NoThreadSafetyAnalysisAttr : public InheritableAttr {
   }
 
   virtual NoThreadSafetyAnalysisAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NoThreadSafetyAnalysis; }
-  static bool classof(const NoThreadSafetyAnalysisAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1762,11 +1890,10 @@ class NoThrowAttr : public InheritableAttr {
   }
 
   virtual NoThrowAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NoThrow; }
-  static bool classof(const NoThrowAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1787,7 +1914,7 @@ class NonNullAttr : public InheritableAttr {
   }
 
   virtual NonNullAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   typedef unsigned* args_iterator;
   args_iterator args_begin() const {
     return args;
@@ -1808,7 +1935,6 @@ bool isNonNull(unsigned idx) const {
   } 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NonNull; }
-  static bool classof(const NonNullAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1822,11 +1948,10 @@ class ObjCExceptionAttr : public InheritableAttr {
   }
 
   virtual ObjCExceptionAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ObjCException; }
-  static bool classof(const ObjCExceptionAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1855,7 +1980,7 @@ private:
   }
 
   virtual ObjCMethodFamilyAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   FamilyKind getFamily() const {
     return family;
   }
@@ -1863,7 +1988,6 @@ private:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ObjCMethodFamily; }
-  static bool classof(const ObjCMethodFamilyAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1877,11 +2001,10 @@ class ObjCNSObjectAttr : public InheritableAttr {
   }
 
   virtual ObjCNSObjectAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ObjCNSObject; }
-  static bool classof(const ObjCNSObjectAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1895,11 +2018,10 @@ class ObjCPreciseLifetimeAttr : public Attr {
   }
 
   virtual ObjCPreciseLifetimeAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ObjCPreciseLifetime; }
-  static bool classof(const ObjCPreciseLifetimeAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1913,11 +2035,27 @@ class ObjCRequiresPropertyDefsAttr : public InheritableAttr {
   }
 
   virtual ObjCRequiresPropertyDefsAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ObjCRequiresPropertyDefs; }
-  static bool classof(const ObjCRequiresPropertyDefsAttr *) { return true; }
+  virtual bool isLateParsed() const { return 0; }
+};
+
+class ObjCRequiresSuperAttr : public InheritableAttr {
+
+ public:
+  ObjCRequiresSuperAttr(SourceRange R, ASTContext &Ctx
+             )
+    : InheritableAttr(attr::ObjCRequiresSuper, R)
+  {
+  }
+
+  virtual ObjCRequiresSuperAttr *clone (ASTContext &C) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::ObjCRequiresSuper; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1931,11 +2069,10 @@ class ObjCReturnsInnerPointerAttr : public Attr {
   }
 
   virtual ObjCReturnsInnerPointerAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ObjCReturnsInnerPointer; }
-  static bool classof(const ObjCReturnsInnerPointerAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1949,11 +2086,10 @@ class ObjCRootClassAttr : public Attr {
   }
 
   virtual ObjCRootClassAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ObjCRootClass; }
-  static bool classof(const ObjCRootClassAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1967,11 +2103,10 @@ class OpenCLKernelAttr : public Attr {
   }
 
   virtual OpenCLKernelAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::OpenCLKernel; }
-  static bool classof(const OpenCLKernelAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -1985,11 +2120,10 @@ class OverloadableAttr : public Attr {
   }
 
   virtual OverloadableAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Overloadable; }
-  static bool classof(const OverloadableAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -2003,11 +2137,10 @@ class OverrideAttr : public InheritableAttr {
   }
 
   virtual OverrideAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Override; }
-  static bool classof(const OverrideAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -2046,7 +2179,7 @@ char *module;
   }
 
   virtual OwnershipAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   OwnershipKind getOwnKind() const {
     return ownKind;
   }
@@ -2077,7 +2210,6 @@ char *module;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Ownership; }
-  static bool classof(const OwnershipAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -2091,11 +2223,10 @@ class PackedAttr : public InheritableAttr {
   }
 
   virtual PackedAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Packed; }
-  static bool classof(const PackedAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -2109,11 +2240,10 @@ class PascalAttr : public InheritableAttr {
   }
 
   virtual PascalAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Pascal; }
-  static bool classof(const PascalAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -2138,7 +2268,7 @@ private:
   }
 
   virtual PcsAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   PCSType getPCS() const {
     return pCS;
   }
@@ -2146,7 +2276,23 @@ private:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Pcs; }
-  static bool classof(const PcsAttr *) { return true; }
+  virtual bool isLateParsed() const { return 0; }
+};
+
+class PnaclCallAttr : public InheritableAttr {
+
+ public:
+  PnaclCallAttr(SourceRange R, ASTContext &Ctx
+             )
+    : InheritableAttr(attr::PnaclCall, R)
+  {
+  }
+
+  virtual PnaclCallAttr *clone (ASTContext &C) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::PnaclCall; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -2165,7 +2311,7 @@ Expr * arg;
   }
 
   virtual PtGuardedByAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   Expr * getArg() const {
     return arg;
   }
@@ -2173,7 +2319,6 @@ Expr * arg;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::PtGuardedBy; }
-  static bool classof(const PtGuardedByAttr *) { return true; }
   virtual bool isLateParsed() const { return 1; }
 };
 
@@ -2187,11 +2332,44 @@ class PtGuardedVarAttr : public InheritableAttr {
   }
 
   virtual PtGuardedVarAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::PtGuardedVar; }
-  static bool classof(const PtGuardedVarAttr *) { return true; }
+  virtual bool isLateParsed() const { return 0; }
+};
+
+class Ptr32Attr : public InheritableAttr {
+
+ public:
+  Ptr32Attr(SourceRange R, ASTContext &Ctx
+             )
+    : InheritableAttr(attr::Ptr32, R)
+  {
+  }
+
+  virtual Ptr32Attr *clone (ASTContext &C) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::Ptr32; }
+  virtual bool isLateParsed() const { return 0; }
+};
+
+class Ptr64Attr : public InheritableAttr {
+
+ public:
+  Ptr64Attr(SourceRange R, ASTContext &Ctx
+             )
+    : InheritableAttr(attr::Ptr64, R)
+  {
+  }
+
+  virtual Ptr64Attr *clone (ASTContext &C) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::Ptr64; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -2205,11 +2383,10 @@ class PureAttr : public InheritableAttr {
   }
 
   virtual PureAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Pure; }
-  static bool classof(const PureAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -2228,7 +2405,7 @@ unsigned numParams;
   }
 
   virtual RegparmAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   unsigned getNumParams() const {
     return numParams;
   }
@@ -2236,7 +2413,6 @@ unsigned numParams;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Regparm; }
-  static bool classof(const RegparmAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -2265,7 +2441,7 @@ unsigned zDim;
   }
 
   virtual ReqdWorkGroupSizeAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   unsigned getXDim() const {
     return xDim;
   }
@@ -2281,7 +2457,6 @@ unsigned zDim;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ReqdWorkGroupSize; }
-  static bool classof(const ReqdWorkGroupSizeAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -2295,11 +2470,10 @@ class ReturnsTwiceAttr : public InheritableAttr {
   }
 
   virtual ReturnsTwiceAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ReturnsTwice; }
-  static bool classof(const ReturnsTwiceAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -2313,11 +2487,10 @@ class ScopedLockableAttr : public InheritableAttr {
   }
 
   virtual ScopedLockableAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ScopedLockable; }
-  static bool classof(const ScopedLockableAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -2337,7 +2510,7 @@ char *name;
   }
 
   virtual SectionAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   llvm::StringRef getName() const {
     return llvm::StringRef(name, nameLength);
   }
@@ -2353,7 +2526,6 @@ char *name;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Section; }
-  static bool classof(const SectionAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -2377,7 +2549,7 @@ int nullPos;
   }
 
   virtual SentinelAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   int getSentinel() const {
     return sentinel;
   }
@@ -2389,7 +2561,6 @@ int nullPos;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Sentinel; }
-  static bool classof(const SentinelAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -2410,7 +2581,7 @@ class SharedLockFunctionAttr : public InheritableAttr {
   }
 
   virtual SharedLockFunctionAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   typedef Expr ** args_iterator;
   args_iterator args_begin() const {
     return args;
@@ -2425,7 +2596,6 @@ class SharedLockFunctionAttr : public InheritableAttr {
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::SharedLockFunction; }
-  static bool classof(const SharedLockFunctionAttr *) { return true; }
   virtual bool isLateParsed() const { return 1; }
 };
 
@@ -2446,7 +2616,7 @@ class SharedLocksRequiredAttr : public InheritableAttr {
   }
 
   virtual SharedLocksRequiredAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   typedef Expr ** args_iterator;
   args_iterator args_begin() const {
     return args;
@@ -2461,7 +2631,6 @@ class SharedLocksRequiredAttr : public InheritableAttr {
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::SharedLocksRequired; }
-  static bool classof(const SharedLocksRequiredAttr *) { return true; }
   virtual bool isLateParsed() const { return 1; }
 };
 
@@ -2487,7 +2656,7 @@ Expr * successValue;
   }
 
   virtual SharedTrylockFunctionAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   Expr * getSuccessValue() const {
     return successValue;
   }
@@ -2506,8 +2675,24 @@ Expr * successValue;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::SharedTrylockFunction; }
-  static bool classof(const SharedTrylockFunctionAttr *) { return true; }
   virtual bool isLateParsed() const { return 1; }
+};
+
+class SingleInheritanceAttr : public InheritableAttr {
+
+ public:
+  SingleInheritanceAttr(SourceRange R, ASTContext &Ctx
+             )
+    : InheritableAttr(attr::SingleInheritance, R)
+  {
+  }
+
+  virtual SingleInheritanceAttr *clone (ASTContext &C) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::SingleInheritance; }
+  virtual bool isLateParsed() const { return 0; }
 };
 
 class StdCallAttr : public InheritableAttr {
@@ -2520,11 +2705,45 @@ class StdCallAttr : public InheritableAttr {
   }
 
   virtual StdCallAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::StdCall; }
-  static bool classof(const StdCallAttr *) { return true; }
+  virtual bool isLateParsed() const { return 0; }
+};
+
+class TLSModelAttr : public InheritableAttr {
+unsigned modelLength;
+char *model;
+
+
+ public:
+  TLSModelAttr(SourceRange R, ASTContext &Ctx
+              , llvm::StringRef Model
+             )
+    : InheritableAttr(attr::TLSModel, R)
+              , modelLength(Model.size()),model(new (Ctx, 1) char[modelLength])
+  {
+      std::memcpy(model, Model.data(), modelLength);
+  }
+
+  virtual TLSModelAttr *clone (ASTContext &C) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
+  llvm::StringRef getModel() const {
+    return llvm::StringRef(model, modelLength);
+  }
+  unsigned getModelLength() const {
+    return modelLength;
+  }
+  void setModel(ASTContext &C, llvm::StringRef S) {
+    modelLength = S.size();
+    this->model = new (C, 1) char [modelLength];
+    std::memcpy(this->model, S.data(), modelLength);
+  }
+
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::TLSModel; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -2538,11 +2757,10 @@ class ThisCallAttr : public InheritableAttr {
   }
 
   virtual ThisCallAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ThisCall; }
-  static bool classof(const ThisCallAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -2556,11 +2774,63 @@ class TransparentUnionAttr : public InheritableAttr {
   }
 
   virtual TransparentUnionAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::TransparentUnion; }
-  static bool classof(const TransparentUnionAttr *) { return true; }
+  virtual bool isLateParsed() const { return 0; }
+};
+
+class TypeTagForDatatypeAttr : public InheritableAttr {
+IdentifierInfo * argumentKind;
+
+QualType matchingCType;
+
+bool layoutCompatible;
+
+bool mustBeNull;
+
+
+ public:
+  TypeTagForDatatypeAttr(SourceRange R, ASTContext &Ctx
+              , IdentifierInfo * ArgumentKind
+              , QualType MatchingCType
+              , bool LayoutCompatible
+              , bool MustBeNull
+             )
+    : InheritableAttr(attr::TypeTagForDatatype, R)
+              , argumentKind(ArgumentKind)
+              , matchingCType(MatchingCType)
+              , layoutCompatible(LayoutCompatible)
+              , mustBeNull(MustBeNull)
+  {
+
+
+
+
+  }
+
+  virtual TypeTagForDatatypeAttr *clone (ASTContext &C) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
+  IdentifierInfo * getArgumentKind() const {
+    return argumentKind;
+  }
+
+  QualType getMatchingCType() const {
+    return matchingCType;
+  }
+
+  bool getLayoutCompatible() const {
+    return layoutCompatible;
+  }
+
+  bool getMustBeNull() const {
+    return mustBeNull;
+  }
+
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::TypeTagForDatatype; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -2580,7 +2850,7 @@ char *message;
   }
 
   virtual UnavailableAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   llvm::StringRef getMessage() const {
     return llvm::StringRef(message, messageLength);
   }
@@ -2596,7 +2866,6 @@ char *message;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Unavailable; }
-  static bool classof(const UnavailableAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -2617,7 +2886,7 @@ class UnlockFunctionAttr : public InheritableAttr {
   }
 
   virtual UnlockFunctionAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   typedef Expr ** args_iterator;
   args_iterator args_begin() const {
     return args;
@@ -2632,7 +2901,6 @@ class UnlockFunctionAttr : public InheritableAttr {
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::UnlockFunction; }
-  static bool classof(const UnlockFunctionAttr *) { return true; }
   virtual bool isLateParsed() const { return 1; }
 };
 
@@ -2646,11 +2914,10 @@ class UnusedAttr : public InheritableAttr {
   }
 
   virtual UnusedAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Unused; }
-  static bool classof(const UnusedAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -2664,11 +2931,10 @@ class UsedAttr : public InheritableAttr {
   }
 
   virtual UsedAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Used; }
-  static bool classof(const UsedAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -2688,7 +2954,7 @@ char *guid;
   }
 
   virtual UuidAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   llvm::StringRef getGuid() const {
     return llvm::StringRef(guid, guidLength);
   }
@@ -2704,7 +2970,6 @@ char *guid;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Uuid; }
-  static bool classof(const UuidAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -2718,11 +2983,27 @@ class VecReturnAttr : public InheritableAttr {
   }
 
   virtual VecReturnAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::VecReturn; }
-  static bool classof(const VecReturnAttr *) { return true; }
+  virtual bool isLateParsed() const { return 0; }
+};
+
+class VirtualInheritanceAttr : public InheritableAttr {
+
+ public:
+  VirtualInheritanceAttr(SourceRange R, ASTContext &Ctx
+             )
+    : InheritableAttr(attr::VirtualInheritance, R)
+  {
+  }
+
+  virtual VirtualInheritanceAttr *clone (ASTContext &C) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::VirtualInheritance; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -2748,7 +3029,7 @@ private:
   }
 
   virtual VisibilityAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
   VisibilityType getVisibility() const {
     return visibility;
   }
@@ -2756,7 +3037,6 @@ private:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Visibility; }
-  static bool classof(const VisibilityAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -2770,11 +3050,10 @@ class WarnUnusedResultAttr : public InheritableAttr {
   }
 
   virtual WarnUnusedResultAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::WarnUnusedResult; }
-  static bool classof(const WarnUnusedResultAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -2788,11 +3067,10 @@ class WeakAttr : public InheritableAttr {
   }
 
   virtual WeakAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Weak; }
-  static bool classof(const WeakAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -2806,11 +3084,10 @@ class WeakImportAttr : public InheritableAttr {
   }
 
   virtual WeakImportAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::WeakImport; }
-  static bool classof(const WeakImportAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -2824,11 +3101,71 @@ class WeakRefAttr : public InheritableAttr {
   }
 
   virtual WeakRefAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::WeakRef; }
-  static bool classof(const WeakRefAttr *) { return true; }
+  virtual bool isLateParsed() const { return 0; }
+};
+
+class Win64Attr : public InheritableAttr {
+
+ public:
+  Win64Attr(SourceRange R, ASTContext &Ctx
+             )
+    : InheritableAttr(attr::Win64, R)
+  {
+  }
+
+  virtual Win64Attr *clone (ASTContext &C) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::Win64; }
+  virtual bool isLateParsed() const { return 0; }
+};
+
+class WorkGroupSizeHintAttr : public InheritableAttr {
+unsigned xDim;
+
+unsigned yDim;
+
+unsigned zDim;
+
+
+ public:
+  WorkGroupSizeHintAttr(SourceRange R, ASTContext &Ctx
+              , unsigned XDim
+              , unsigned YDim
+              , unsigned ZDim
+             )
+    : InheritableAttr(attr::WorkGroupSizeHint, R)
+              , xDim(XDim)
+              , yDim(YDim)
+              , zDim(ZDim)
+  {
+
+
+
+  }
+
+  virtual WorkGroupSizeHintAttr *clone (ASTContext &C) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
+  unsigned getXDim() const {
+    return xDim;
+  }
+
+  unsigned getYDim() const {
+    return yDim;
+  }
+
+  unsigned getZDim() const {
+    return zDim;
+  }
+
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::WorkGroupSizeHint; }
   virtual bool isLateParsed() const { return 0; }
 };
 
@@ -2842,11 +3179,10 @@ class X86ForceAlignArgPointerAttr : public InheritableAttr {
   }
 
   virtual X86ForceAlignArgPointerAttr *clone (ASTContext &C) const;
-  virtual void printPretty(llvm::raw_ostream &OS, ASTContext &Ctx) const;
+  virtual void printPretty(llvm::raw_ostream &OS,                           const PrintingPolicy &Policy) const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::X86ForceAlignArgPointer; }
-  static bool classof(const X86ForceAlignArgPointerAttr *) { return true; }
   virtual bool isLateParsed() const { return 0; }
 };
 

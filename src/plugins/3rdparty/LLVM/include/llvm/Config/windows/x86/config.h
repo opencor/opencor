@@ -1,6 +1,4 @@
-/**************************************
-** Created by Kevin from config.h.in **
-***************************************/
+/* include/llvm/Config/config.h.cmake corresponding to config.h.in. */
 
 #ifndef CONFIG_H
 #define CONFIG_H
@@ -14,14 +12,23 @@
 /* Directories clang will search for headers */
 #define C_INCLUDE_DIRS ""
 
-/* Define if CBE is enabled for printf %a output */
-#define ENABLE_CBE_PRINTF_A 1
+/* Default <path> to all compiler invocations for --sysroot=<path>. */
+#undef DEFAULT_SYSROOT
+
+/* Define if you want backtraces on crash */
+#define ENABLE_BACKTRACES
 
 /* Define if position independent code is enabled */
 #define ENABLE_PIC
 
-/* Define if timestamp information (e.g., __DATE___) is allowed */
+/* Define if timestamp information (e.g., __DATE__) is allowed */
 #define ENABLE_TIMESTAMPS 1
+
+/* Directory where gcc is installed. */
+#undef GCC_INSTALL_PREFIX
+
+/* Define to 1 if you have the `arc4random' function. */
+/* #undef HAVE_ARC4RANDOM */
 
 /* Define to 1 if you have the `argz_append' function. */
 /* #undef HAVE_ARGZ_APPEND */
@@ -45,7 +52,7 @@
 #define HAVE_ASSERT_H 1
 
 /* Define to 1 if you have the `backtrace' function. */
-#undef HAVE_BACKTRACE
+/* #undef HAVE_BACKTRACE */
 
 /* Define to 1 if you have the `bcopy' function. */
 #undef HAVE_BCOPY
@@ -155,7 +162,7 @@
 /* #undef HAVE_GETTIMEOFDAY */
 
 /* Define if the Graphviz program is available */
-#undef HAVE_GRAPHVIZ
+/* #undef HAVE_GRAPHVIZ */
 
 /* Define if the gv program is available */
 /* #undef HAVE_GV */
@@ -203,7 +210,7 @@
 #undef HAVE_LIBUDIS86
 
 /* Define to 1 if you have the <limits.h> header file. */
-#define HAVE_LIMITS_H 1
+/* #undef HAVE_LIMITS_H */
 
 /* Define if you can use -Wl,-export-dynamic. */
 #define HAVE_LINK_EXPORT_DYNAMIC 1
@@ -228,7 +235,7 @@
 /* #undef HAVE_MALLINFO */
 
 /* Define to 1 if you have the <malloc.h> header file. */
-#define HAVE_MALLOC_H 1
+/* #undef HAVE_MALLOC_H */
 
 /* Define to 1 if you have the <malloc/malloc.h> header file. */
 /* #undef HAVE_MALLOC_MALLOC_H */
@@ -548,6 +555,9 @@
 /* Has gcc/MSVC atomic intrinsics */
 #define LLVM_HAS_ATOMICS 1
 
+/* Host triple LLVM will be executed on */
+#define LLVM_HOSTTRIPLE "i686-pc-win32"
+
 /* Installation directory for include files */
 /* #undef LLVM_INCLUDEDIR */
 
@@ -615,13 +625,19 @@
 /* #undef LLVM_PATH_XDOT_PY */
 
 /* Installation prefix directory */
-#define LLVM_PREFIX "C:/Program Files (x86)/LLVM"
+#define LLVM_PREFIX "C:/Program Files/LLVM"
+
+/* Define if we have the Intel JIT API runtime support library */
+/* #undef LLVM_USE_INTEL_JITEVENTS */
+
+/* Define if we have the oprofile JIT-support library */
+/* #undef LLVM_USE_OPROFILE */
 
 /* Major version of the LLVM API */
 #define LLVM_VERSION_MAJOR 3
 
 /* Minor version of the LLVM API */
-#define LLVM_VERSION_MINOR 1
+#define LLVM_VERSION_MINOR 2
 
 /* Define if the OS needs help to load dependent libraries for dlopen(). */
 #define LTDL_DLOPEN_DEPLIBS 1
@@ -654,13 +670,13 @@
 #define PACKAGE_NAME "LLVM"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "LLVM 3.1svn"
+#define PACKAGE_STRING "LLVM 3.2svn"
 
 /* Define to the one symbol short name of this package. */
 #undef PACKAGE_TARNAME
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "3.1svn"
+#define PACKAGE_VERSION "3.2svn"
 
 /* Define as the return type of signal handlers (`int' or `void'). */
 #define RETSIGTYPE void
@@ -712,11 +728,5 @@
 
 /* Added by Kevin -- Maximum path length */
 #define MAXPATHLEN 160
-
-/* Support for Intel JIT Events API is enabled */
-/* #undef LLVM_USE_INTEL_JITEVENTS */
-
-/* Support for OProfile JIT API is enabled */
-/* #undef LLVM_USE_OPROFILE */
 
 #endif

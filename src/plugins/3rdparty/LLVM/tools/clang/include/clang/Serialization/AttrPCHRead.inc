@@ -47,8 +47,18 @@
       alignmentPtr = ReadExpr(F);
     else
       alignmentPtr = GetTypeSourceInfo(F, Record, Idx);
-    New = new (Context) AlignedAttr(Range, Context, isalignmentExpr, alignmentPtr);
+    bool isMSDeclSpec = Record[Idx++];
+    New = new (Context) AlignedAttr(Range, Context, isalignmentExpr, alignmentPtr, isMSDeclSpec);
     cast<InheritableAttr>(New)->setInherited(isInherited);
+    break;
+  }
+  case attr::AllocSize: {
+  unsigned argsSize = Record[Idx++];
+  llvm::SmallVector<unsigned, 4> args;
+  args.reserve(argsSize);
+  for (unsigned i = argsSize; i; --i)
+    args.push_back(Record[Idx++]);
+    New = new (Context) AllocSizeAttr(Range, Context, args.data(), argsSize);
     break;
   }
   case attr::AlwaysInline: {
@@ -73,6 +83,16 @@
   case attr::ArcWeakrefUnavailable: {
     bool isInherited = Record[Idx++];
     New = new (Context) ArcWeakrefUnavailableAttr(Range, Context);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    break;
+  }
+  case attr::ArgumentWithTypeTag: {
+    bool isInherited = Record[Idx++];
+    IdentifierInfo * argumentKind = GetIdentifierInfo(F, Record, Idx);
+    unsigned argumentIdx = Record[Idx++];
+    unsigned typeTagIdx = Record[Idx++];
+    bool isPointer = Record[Idx++];
+    New = new (Context) ArgumentWithTypeTagAttr(Range, Context, argumentKind, argumentIdx, typeTagIdx, isPointer);
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
@@ -145,7 +165,9 @@
     break;
   }
   case attr::CUDADevice: {
+    bool isInherited = Record[Idx++];
     New = new (Context) CUDADeviceAttr(Range, Context);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
   case attr::CUDAGlobal: {
@@ -155,7 +177,9 @@
     break;
   }
   case attr::CUDAHost: {
+    bool isInherited = Record[Idx++];
     New = new (Context) CUDAHostAttr(Range, Context);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
   case attr::CUDALaunchBounds: {
@@ -182,6 +206,12 @@
     bool isInherited = Record[Idx++];
     FunctionDecl * functionDecl = GetLocalDeclAs<FunctionDecl >(F, Record[Idx++]);
     New = new (Context) CleanupAttr(Range, Context, functionDecl);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    break;
+  }
+  case attr::Cold: {
+    bool isInherited = Record[Idx++];
+    New = new (Context) ColdAttr(Range, Context);
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
@@ -264,6 +294,10 @@
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
+  case attr::FallThrough: {
+    New = new (Context) FallThroughAttr(Range, Context);
+    break;
+  }
   case attr::FastCall: {
     bool isInherited = Record[Idx++];
     New = new (Context) FastCallAttr(Range, Context);
@@ -273,6 +307,12 @@
   case attr::Final: {
     bool isInherited = Record[Idx++];
     New = new (Context) FinalAttr(Range, Context);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    break;
+  }
+  case attr::ForceInline: {
+    bool isInherited = Record[Idx++];
+    New = new (Context) ForceInlineAttr(Range, Context);
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
@@ -308,6 +348,12 @@
   case attr::GuardedVar: {
     bool isInherited = Record[Idx++];
     New = new (Context) GuardedVarAttr(Range, Context);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    break;
+  }
+  case attr::Hot: {
+    bool isInherited = Record[Idx++];
+    New = new (Context) HotAttr(Range, Context);
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
@@ -400,9 +446,21 @@
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
+  case attr::MinSize: {
+    bool isInherited = Record[Idx++];
+    New = new (Context) MinSizeAttr(Range, Context);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    break;
+  }
   case attr::MsStruct: {
     bool isInherited = Record[Idx++];
     New = new (Context) MsStructAttr(Range, Context);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    break;
+  }
+  case attr::MultipleInheritance: {
+    bool isInherited = Record[Idx++];
+    New = new (Context) MultipleInheritanceAttr(Range, Context);
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
@@ -537,6 +595,12 @@
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
+  case attr::ObjCRequiresSuper: {
+    bool isInherited = Record[Idx++];
+    New = new (Context) ObjCRequiresSuperAttr(Range, Context);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    break;
+  }
   case attr::ObjCReturnsInnerPointer: {
     New = new (Context) ObjCReturnsInnerPointerAttr(Range, Context);
     break;
@@ -591,6 +655,12 @@
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
+  case attr::PnaclCall: {
+    bool isInherited = Record[Idx++];
+    New = new (Context) PnaclCallAttr(Range, Context);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    break;
+  }
   case attr::PtGuardedBy: {
     bool isInherited = Record[Idx++];
     Expr * arg = ReadSubExpr();
@@ -601,6 +671,18 @@
   case attr::PtGuardedVar: {
     bool isInherited = Record[Idx++];
     New = new (Context) PtGuardedVarAttr(Range, Context);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    break;
+  }
+  case attr::Ptr32: {
+    bool isInherited = Record[Idx++];
+    New = new (Context) Ptr32Attr(Range, Context);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    break;
+  }
+  case attr::Ptr64: {
+    bool isInherited = Record[Idx++];
+    New = new (Context) Ptr64Attr(Range, Context);
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
@@ -687,9 +769,22 @@
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
+  case attr::SingleInheritance: {
+    bool isInherited = Record[Idx++];
+    New = new (Context) SingleInheritanceAttr(Range, Context);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    break;
+  }
   case attr::StdCall: {
     bool isInherited = Record[Idx++];
     New = new (Context) StdCallAttr(Range, Context);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    break;
+  }
+  case attr::TLSModel: {
+    bool isInherited = Record[Idx++];
+    std::string model= ReadString(Record, Idx);
+    New = new (Context) TLSModelAttr(Range, Context, model);
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
@@ -702,6 +797,16 @@
   case attr::TransparentUnion: {
     bool isInherited = Record[Idx++];
     New = new (Context) TransparentUnionAttr(Range, Context);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    break;
+  }
+  case attr::TypeTagForDatatype: {
+    bool isInherited = Record[Idx++];
+    IdentifierInfo * argumentKind = GetIdentifierInfo(F, Record, Idx);
+    QualType matchingCType = getLocalType(F, Record[Idx++]);
+    bool layoutCompatible = Record[Idx++];
+    bool mustBeNull = Record[Idx++];
+    New = new (Context) TypeTagForDatatypeAttr(Range, Context, argumentKind, matchingCType, layoutCompatible, mustBeNull);
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
@@ -748,6 +853,12 @@
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
+  case attr::VirtualInheritance: {
+    bool isInherited = Record[Idx++];
+    New = new (Context) VirtualInheritanceAttr(Range, Context);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    break;
+  }
   case attr::Visibility: {
     bool isInherited = Record[Idx++];
     VisibilityAttr::VisibilityType visibility(static_cast<VisibilityAttr::VisibilityType>(Record[Idx++]));
@@ -776,6 +887,21 @@
   case attr::WeakRef: {
     bool isInherited = Record[Idx++];
     New = new (Context) WeakRefAttr(Range, Context);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    break;
+  }
+  case attr::Win64: {
+    bool isInherited = Record[Idx++];
+    New = new (Context) Win64Attr(Range, Context);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    break;
+  }
+  case attr::WorkGroupSizeHint: {
+    bool isInherited = Record[Idx++];
+    unsigned xDim = Record[Idx++];
+    unsigned yDim = Record[Idx++];
+    unsigned zDim = Record[Idx++];
+    New = new (Context) WorkGroupSizeHintAttr(Range, Context, xDim, yDim, zDim);
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }

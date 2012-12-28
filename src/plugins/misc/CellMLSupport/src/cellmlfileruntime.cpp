@@ -606,11 +606,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
     time.restart();
 #endif
 
-#ifdef QT_DEBUG
-    if (!mCompilerEngine->compileCode(modelCode, true))
-#else
     if (!mCompilerEngine->compileCode(modelCode))
-#endif
         // Something went wrong, so output the error that was found
 
         mIssues << CellmlFileIssue(CellmlFileIssue::Error,

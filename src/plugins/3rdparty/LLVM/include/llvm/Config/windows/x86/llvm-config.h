@@ -40,6 +40,9 @@
 /* Has gcc/MSVC atomic intrinsics */
 #define LLVM_HAS_ATOMICS 1
 
+/* Host triple LLVM will be executed on */
+#define LLVM_HOSTTRIPLE "i686-pc-win32"
+
 /* Installation directory for include files */
 /* #undef LLVM_INCLUDEDIR */
 
@@ -107,12 +110,12 @@
 /* #undef LLVM_PATH_XDOT_PY */
 
 /* Installation prefix directory */
-#define LLVM_PREFIX "C:/Program Files (x86)/LLVM"
+#define LLVM_PREFIX "C:/Program Files/LLVM"
 
 /* Major version of the LLVM API */
 #define LLVM_VERSION_MAJOR 3
 
 /* Minor version of the LLVM API */
-#define LLVM_VERSION_MINOR 1
+#define LLVM_VERSION_MINOR 2
 
 #endif

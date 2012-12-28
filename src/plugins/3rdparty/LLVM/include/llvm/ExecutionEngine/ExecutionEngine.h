@@ -28,9 +28,6 @@
 #include <vector>
 #include <map>
 #include <string>
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 
@@ -45,7 +42,7 @@ class JITMemoryManager;
 class MachineCodeInfo;
 class Module;
 class MutexGuard;
-class TargetData;
+class DataLayout;
 class Triple;
 class Type;
 
@@ -91,19 +88,14 @@ public:
 
   /// \brief Erase an entry from the mapping table.
   ///
-  /// \returns The address that \arg ToUnmap was happed to.
+  /// \returns The address that \p ToUnmap was happed to.
   void *RemoveMapping(const MutexGuard &, const GlobalValue *ToUnmap);
 };
 
 /// \brief Abstract interface for implementation execution of LLVM modules,
 /// designed to support both interpreter and just-in-time (JIT) compiler
 /// implementations.
-/*---OPENCOR---
 class ExecutionEngine {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT ExecutionEngine {
-//---OPENCOR--- END
   /// The state object holding the global address mapping, which must be
   /// accessed synchronously.
   //
@@ -112,7 +104,7 @@ class LLVM_EXPORT ExecutionEngine {
   ExecutionEngineState EEState;
 
   /// The target data for the platform for which execution is being performed.
-  const TargetData *TD;
+  const DataLayout *TD;
 
   /// Whether lazy JIT compilation is enabled.
   bool CompilingLazily;
@@ -131,7 +123,7 @@ protected:
   /// optimize for the case where there is only one module.
   SmallVector<Module*, 1> Modules;
 
-  void setTargetData(const TargetData *td) { TD = td; }
+  void setDataLayout(const DataLayout *td) { TD = td; }
 
   /// getMemoryforGV - Allocate memory for a global variable.
   virtual char *getMemoryForGV(const GlobalVariable *GV);
@@ -221,7 +213,7 @@ public:
 
   //===--------------------------------------------------------------------===//
 
-  const TargetData *getTargetData() const { return TD; }
+  const DataLayout *getDataLayout() const { return TD; }
 
   /// removeModule - Remove a Module from the list of modules.  Returns true if
   /// M is found.
@@ -252,10 +244,17 @@ public:
   /// Map the address of a JIT section as returned from the memory manager
   /// to the address in the target process as the running code will see it.
   /// This is the address which will be used for relocation resolution.
-  virtual void mapSectionAddress(void *LocalAddress, uint64_t TargetAddress) {
+  virtual void mapSectionAddress(const void *LocalAddress, uint64_t TargetAddress) {
     llvm_unreachable("Re-mapping of section addresses not supported with this "
                      "EE!");
   }
+
+  // finalizeObject - This method should be called after sections within an
+  // object have been relocated using mapSectionAddress.  When this method is
+  // called the MCJIT execution engine will reapply relocations for a loaded
+  // object.  This method has no effect for the legacy JIT engine or the
+  // interpeter.
+  virtual void finalizeObject() {}
 
   /// runStaticConstructorsDestructors - This method is used to execute all of
   /// the static constructors or destructors for a program.
@@ -362,7 +361,7 @@ public:
   /// variable, possibly emitting it to memory if needed.  This is used by the
   /// Emitter.
   virtual void *getOrEmitGlobalVariable(const GlobalVariable *GV) {
-    return getPointerToGlobal((GlobalValue*)GV);
+    return getPointerToGlobal((const GlobalValue *)GV);
   }
 
   /// Registers a listener to be called back on various events within

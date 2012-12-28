@@ -18,25 +18,16 @@
 #include "clang/Basic/Diagnostic.h"
 #include "clang/Basic/LLVM.h"
 #include "llvm/ADT/OwningPtr.h"
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
+#include "llvm/ADT/IntrusiveRefCntPtr.h"
 
 namespace clang {
 class DiagnosticOptions;
 class LangOptions;
 class TextDiagnostic;
 
-/*---OPENCOR---
 class TextDiagnosticPrinter : public DiagnosticConsumer {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT TextDiagnosticPrinter : public DiagnosticConsumer {
-//---OPENCOR--- END
   raw_ostream &OS;
-  const LangOptions *LangOpts;
-  const DiagnosticOptions *DiagOpts;
-  const SourceManager *SM;
+  llvm::IntrusiveRefCntPtr<DiagnosticOptions> DiagOpts;
 
   /// \brief Handle to the currently active text diagnostic emitter.
   OwningPtr<TextDiagnostic> TextDiag;
@@ -47,7 +38,7 @@ class LLVM_EXPORT TextDiagnosticPrinter : public DiagnosticConsumer {
   unsigned OwnsOutputStream : 1;
 
 public:
-  TextDiagnosticPrinter(raw_ostream &os, const DiagnosticOptions &diags,
+  TextDiagnosticPrinter(raw_ostream &os, DiagnosticOptions *diags,
                         bool OwnsOutputStream = false);
   virtual ~TextDiagnosticPrinter();
 

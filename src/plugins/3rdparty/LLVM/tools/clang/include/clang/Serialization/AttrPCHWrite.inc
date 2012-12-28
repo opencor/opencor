@@ -37,6 +37,14 @@
       AddStmt(SA->getAlignmentExpr());
     else
       AddTypeSourceInfo(SA->getAlignmentType(), Record);
+    Record.push_back(SA->getIsMSDeclSpec());
+    break;
+  }
+  case attr::AllocSize: {
+    const AllocSizeAttr *SA = cast<AllocSizeAttr>(A);
+    Record.push_back(SA->args_size());
+    for (AllocSizeAttr::args_iterator i = SA->args_begin(), e = SA->args_end(); i != e; ++i)
+      Record.push_back((*i));
     break;
   }
   case attr::AlwaysInline: {
@@ -58,6 +66,15 @@
   case attr::ArcWeakrefUnavailable: {
     const ArcWeakrefUnavailableAttr *SA = cast<ArcWeakrefUnavailableAttr>(A);
     Record.push_back(SA->isInherited());
+    break;
+  }
+  case attr::ArgumentWithTypeTag: {
+    const ArgumentWithTypeTagAttr *SA = cast<ArgumentWithTypeTagAttr>(A);
+    Record.push_back(SA->isInherited());
+    AddIdentifierRef(SA->getArgumentKind(), Record);
+    Record.push_back(SA->getArgumentIdx());
+    Record.push_back(SA->getTypeTagIdx());
+    Record.push_back(SA->getIsPointer());
     break;
   }
   case attr::AsmLabel: {
@@ -119,6 +136,8 @@ Record.push_back(SA->getType());
     break;
   }
   case attr::CUDADevice: {
+    const CUDADeviceAttr *SA = cast<CUDADeviceAttr>(A);
+    Record.push_back(SA->isInherited());
     break;
   }
   case attr::CUDAGlobal: {
@@ -127,6 +146,8 @@ Record.push_back(SA->getType());
     break;
   }
   case attr::CUDAHost: {
+    const CUDAHostAttr *SA = cast<CUDAHostAttr>(A);
+    Record.push_back(SA->isInherited());
     break;
   }
   case attr::CUDALaunchBounds: {
@@ -150,6 +171,11 @@ Record.push_back(SA->getType());
     const CleanupAttr *SA = cast<CleanupAttr>(A);
     Record.push_back(SA->isInherited());
     AddDeclRef(SA->getFunctionDecl(), Record);
+    break;
+  }
+  case attr::Cold: {
+    const ColdAttr *SA = cast<ColdAttr>(A);
+    Record.push_back(SA->isInherited());
     break;
   }
   case attr::Common: {
@@ -215,6 +241,9 @@ Record.push_back(SA->getType());
       AddStmt((*i));
     break;
   }
+  case attr::FallThrough: {
+    break;
+  }
   case attr::FastCall: {
     const FastCallAttr *SA = cast<FastCallAttr>(A);
     Record.push_back(SA->isInherited());
@@ -222,6 +251,11 @@ Record.push_back(SA->getType());
   }
   case attr::Final: {
     const FinalAttr *SA = cast<FinalAttr>(A);
+    Record.push_back(SA->isInherited());
+    break;
+  }
+  case attr::ForceInline: {
+    const ForceInlineAttr *SA = cast<ForceInlineAttr>(A);
     Record.push_back(SA->isInherited());
     break;
   }
@@ -252,6 +286,11 @@ Record.push_back(SA->getType());
   }
   case attr::GuardedVar: {
     const GuardedVarAttr *SA = cast<GuardedVarAttr>(A);
+    Record.push_back(SA->isInherited());
+    break;
+  }
+  case attr::Hot: {
+    const HotAttr *SA = cast<HotAttr>(A);
     Record.push_back(SA->isInherited());
     break;
   }
@@ -329,8 +368,18 @@ Record.push_back(SA->getType());
     Record.push_back(SA->isInherited());
     break;
   }
+  case attr::MinSize: {
+    const MinSizeAttr *SA = cast<MinSizeAttr>(A);
+    Record.push_back(SA->isInherited());
+    break;
+  }
   case attr::MsStruct: {
     const MsStructAttr *SA = cast<MsStructAttr>(A);
+    Record.push_back(SA->isInherited());
+    break;
+  }
+  case attr::MultipleInheritance: {
+    const MultipleInheritanceAttr *SA = cast<MultipleInheritanceAttr>(A);
     Record.push_back(SA->isInherited());
     break;
   }
@@ -442,6 +491,11 @@ Record.push_back(SA->getFamily());
     Record.push_back(SA->isInherited());
     break;
   }
+  case attr::ObjCRequiresSuper: {
+    const ObjCRequiresSuperAttr *SA = cast<ObjCRequiresSuperAttr>(A);
+    Record.push_back(SA->isInherited());
+    break;
+  }
   case attr::ObjCReturnsInnerPointer: {
     break;
   }
@@ -485,6 +539,11 @@ Record.push_back(SA->getOwnKind());
 Record.push_back(SA->getPCS());
     break;
   }
+  case attr::PnaclCall: {
+    const PnaclCallAttr *SA = cast<PnaclCallAttr>(A);
+    Record.push_back(SA->isInherited());
+    break;
+  }
   case attr::PtGuardedBy: {
     const PtGuardedByAttr *SA = cast<PtGuardedByAttr>(A);
     Record.push_back(SA->isInherited());
@@ -493,6 +552,16 @@ Record.push_back(SA->getPCS());
   }
   case attr::PtGuardedVar: {
     const PtGuardedVarAttr *SA = cast<PtGuardedVarAttr>(A);
+    Record.push_back(SA->isInherited());
+    break;
+  }
+  case attr::Ptr32: {
+    const Ptr32Attr *SA = cast<Ptr32Attr>(A);
+    Record.push_back(SA->isInherited());
+    break;
+  }
+  case attr::Ptr64: {
+    const Ptr64Attr *SA = cast<Ptr64Attr>(A);
     Record.push_back(SA->isInherited());
     break;
   }
@@ -563,9 +632,20 @@ Record.push_back(SA->getPCS());
       AddStmt((*i));
     break;
   }
+  case attr::SingleInheritance: {
+    const SingleInheritanceAttr *SA = cast<SingleInheritanceAttr>(A);
+    Record.push_back(SA->isInherited());
+    break;
+  }
   case attr::StdCall: {
     const StdCallAttr *SA = cast<StdCallAttr>(A);
     Record.push_back(SA->isInherited());
+    break;
+  }
+  case attr::TLSModel: {
+    const TLSModelAttr *SA = cast<TLSModelAttr>(A);
+    Record.push_back(SA->isInherited());
+    AddString(SA->getModel(), Record);
     break;
   }
   case attr::ThisCall: {
@@ -576,6 +656,15 @@ Record.push_back(SA->getPCS());
   case attr::TransparentUnion: {
     const TransparentUnionAttr *SA = cast<TransparentUnionAttr>(A);
     Record.push_back(SA->isInherited());
+    break;
+  }
+  case attr::TypeTagForDatatype: {
+    const TypeTagForDatatypeAttr *SA = cast<TypeTagForDatatypeAttr>(A);
+    Record.push_back(SA->isInherited());
+    AddIdentifierRef(SA->getArgumentKind(), Record);
+    AddTypeRef(SA->getMatchingCType(), Record);
+    Record.push_back(SA->getLayoutCompatible());
+    Record.push_back(SA->getMustBeNull());
     break;
   }
   case attr::Unavailable: {
@@ -613,6 +702,11 @@ Record.push_back(SA->getPCS());
     Record.push_back(SA->isInherited());
     break;
   }
+  case attr::VirtualInheritance: {
+    const VirtualInheritanceAttr *SA = cast<VirtualInheritanceAttr>(A);
+    Record.push_back(SA->isInherited());
+    break;
+  }
   case attr::Visibility: {
     const VisibilityAttr *SA = cast<VisibilityAttr>(A);
     Record.push_back(SA->isInherited());
@@ -637,6 +731,19 @@ Record.push_back(SA->getVisibility());
   case attr::WeakRef: {
     const WeakRefAttr *SA = cast<WeakRefAttr>(A);
     Record.push_back(SA->isInherited());
+    break;
+  }
+  case attr::Win64: {
+    const Win64Attr *SA = cast<Win64Attr>(A);
+    Record.push_back(SA->isInherited());
+    break;
+  }
+  case attr::WorkGroupSizeHint: {
+    const WorkGroupSizeHintAttr *SA = cast<WorkGroupSizeHintAttr>(A);
+    Record.push_back(SA->isInherited());
+    Record.push_back(SA->getXDim());
+    Record.push_back(SA->getYDim());
+    Record.push_back(SA->getZDim());
     break;
   }
   case attr::X86ForceAlignArgPointer: {

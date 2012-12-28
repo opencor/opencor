@@ -9,7 +9,7 @@ To build LLVM (incl. Clang) is time consuming and therefore not something we wan
  - CMakeLists.txt.build: this CMakeLists.txt file should be used (after having been renamed to CMakeLists.txt) whenever LLVM needs to be rebuilt. Once this is done, use of CMakeLists.txt[.use] should be resumed.
 
 Note #1: configuration files for LLVM (incl. Clang) were generated using CMake (on Windows, we also need Python 2.7.x; http://www.python.org/download/):
-    1) Uncompress llvm-3.1.src.tar.gz and clang-3.1.src.tar.gz
+    1) Uncompress llvm-3.2.src.tar.gz and clang-3.2.src.tar.gz
     2) Move the contents of <CLANG-SOURCE_CODE> to <LLVM-SOURCE_CODE>/tools/clang
     3) From the command line:
            cd <LLVM-SOURCE_CODE>
@@ -18,4 +18,4 @@ Note #1: configuration files for LLVM (incl. Clang) were generated using CMake (
            cmake ..   OR   cmake -G "Visual Studio 10" ..
            make       OR   msbuild LLVM.sln
        From there, the files were manually copied over. They can be found in the windows, linux and macosx folders of various LLVM (incl. Clang) folders.
-Note #2: OpencOR 'only' works on Windows, Linux and Mac OS X, so we only need to target X86 at this stage.
+Note #2: OpencOR 'only' works on Windows, Linux and OS X, so we only need to target X86 at this stage.

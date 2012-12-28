@@ -83,7 +83,7 @@ DIAG(note_odr_objc_property_impl_kind, CLASS_NOTE, diag::MAP_FATAL, "property %0
 DIAG(note_odr_objc_superclass, CLASS_NOTE, diag::MAP_FATAL, "inherits from superclass %0 here", 0, true, false, false, false, 0)
 DIAG(note_odr_objc_synthesize_ivar_here, CLASS_NOTE, diag::MAP_FATAL, "property is synthesized to ivar %0 here", 0, true, false, false, false, 0)
 DIAG(note_odr_parameter_pack_non_pack, CLASS_NOTE, diag::MAP_FATAL, "%select{parameter|parameter pack}0 declared here", 0, true, false, false, false, 0)
-DIAG(note_odr_tag_kind_here, CLASS_NOTE, diag::MAP_FATAL, "%0 is a %select{struct|union|class|enum}1 here", 0, true, false, false, false, 0)
+DIAG(note_odr_tag_kind_here, CLASS_NOTE, diag::MAP_FATAL, "%0 is a %select{struct|interface|union|class|enum}1 here", 0, true, false, false, false, 0)
 DIAG(note_odr_template_parameter_here, CLASS_NOTE, diag::MAP_FATAL, "template parameter declared here", 0, true, false, false, false, 0)
 DIAG(note_odr_template_parameter_list, CLASS_NOTE, diag::MAP_FATAL, "template parameter list also declared here", 0, true, false, false, false, 0)
 DIAG(note_odr_value_here, CLASS_NOTE, diag::MAP_FATAL, "declared here with type %0", 0, true, false, false, false, 0)

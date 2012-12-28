@@ -22,9 +22,6 @@
 #include "llvm/ADT/OwningPtr.h"
 #include "llvm/Support/DataTypes.h"
 #include <vector>
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 
@@ -112,12 +109,7 @@ private:
 /// constant references to global variables in the module.  When a global
 /// variable is destroyed, it should have no entries in the GlobalValueRefMap.
 /// @brief The main container class for the LLVM Intermediate Representation.
-/*---OPENCOR---
 class Module {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT Module {
-//---OPENCOR--- END
 /// @name Types And Enumerations
 /// @{
 public:
@@ -309,10 +301,6 @@ public:
   typedef DenseMap<StructType*, unsigned, DenseMapInfo<StructType*> >
                    NumeredTypesMapTy;
 
-  /// findUsedStructTypes - Walk the entire module and find all of the
-  /// struct types that are in use, returning them in a vector.
-  void findUsedStructTypes(std::vector<StructType*> &StructTypes) const;
-  
   /// getTypeByName - Return the type with the specified name, or null if there
   /// is none by that name.
   StructType *getTypeByName(StringRef Name) const;
@@ -504,6 +492,13 @@ public:
   AliasListType          &getAliasList()              { return AliasList; }
   static iplist<GlobalAlias> Module::*getSublistAccess(GlobalAlias*) {
     return &Module::AliasList;
+  }
+  /// Get the Module's list of named metadata (constant).
+  const NamedMDListType  &getNamedMDList() const      { return NamedMDList; }
+  /// Get the Module's list of named metadata.
+  NamedMDListType        &getNamedMDList()            { return NamedMDList; }
+  static ilist<NamedMDNode> Module::*getSublistAccess(NamedMDNode*) {
+    return &Module::NamedMDList;
   }
   /// Get the symbol table of global variable and function identifiers
   const ValueSymbolTable &getValueSymbolTable() const { return *ValSymTab; }

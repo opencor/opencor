@@ -40,6 +40,9 @@
 /* Has gcc/MSVC atomic intrinsics */
 #define LLVM_HAS_ATOMICS 1
 
+/* Host triple LLVM will be executed on */
+#define LLVM_HOSTTRIPLE "i686-pc-linux-gnu"
+
 /* Installation directory for include files */
 /* #undef LLVM_INCLUDEDIR */
 
@@ -113,6 +116,6 @@
 #define LLVM_VERSION_MAJOR 3
 
 /* Minor version of the LLVM API */
-#define LLVM_VERSION_MINOR 1
+#define LLVM_VERSION_MINOR 2
 
 #endif

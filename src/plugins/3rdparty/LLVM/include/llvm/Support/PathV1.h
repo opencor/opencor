@@ -20,9 +20,6 @@
 #include <set>
 #include <string>
 #include <vector>
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 #define LLVM_PATH_DEPRECATED_MSG(replacement) \
   "PathV1 has been deprecated and will be removed as soon as all LLVM and" \
@@ -91,12 +88,7 @@ namespace sys {
   /// notion that the operation modifies the file system.
   /// @since 1.4
   /// @brief An abstraction for operating system paths.
-/*---OPENCOR---
   class Path {
-*/
-//---OPENCOR--- BEGIN
-  class LLVM_EXPORT Path {
-//---OPENCOR--- END
     /// @name Constructors
     /// @{
     public:
@@ -691,8 +683,8 @@ namespace sys {
       /// This function returns status information about the file. The type of
       /// path (file or directory) is updated to reflect the actual contents
       /// of the file system.
-      /// @returns 0 on failure, with Error explaining why (if non-zero)
-      /// @returns a pointer to a FileStatus structure on success.
+      /// @returns 0 on failure, with Error explaining why (if non-zero),
+      /// otherwise returns a pointer to a FileStatus structure on success.
       /// @brief Get file status.
       const FileStatus *getFileStatus(
         bool forceUpdate = false, ///< Force an update from the file system

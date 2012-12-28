@@ -14,7 +14,7 @@
 #include "clang/Frontend/Utils.h"
 #include "clang/Basic/FileManager.h"
 #include "clang/Basic/LangOptions.h"
-#include "clang/Frontend/HeaderSearchOptions.h"
+#include "clang/Lex/HeaderSearchOptions.h"
 #include "clang/Lex/HeaderSearch.h"
 #include "llvm/ADT/SmallString.h"
 #include "llvm/ADT/SmallPtrSet.h"
@@ -40,6 +40,7 @@ class InitHeaderSearch {
   std::vector<std::pair<IncludeDirGroup, DirectoryLookup> > IncludePath;
   typedef std::vector<std::pair<IncludeDirGroup,
                       DirectoryLookup> >::const_iterator path_iterator;
+  std::vector<std::pair<std::string, bool> > SystemHeaderPrefixes;
   HeaderSearch &Headers;
   bool Verbose;
   std::string IncludeSysroot;
@@ -56,6 +57,12 @@ public:
   void AddPath(const Twine &Path, IncludeDirGroup Group,
                bool isCXXAware, bool isUserSupplied,
                bool isFramework, bool IgnoreSysRoot = false);
+
+  /// AddSystemHeaderPrefix - Add the specified prefix to the system header
+  /// prefix list.
+  void AddSystemHeaderPrefix(StringRef Prefix, bool IsSystemHeader) {
+    SystemHeaderPrefixes.push_back(std::make_pair(Prefix, IsSystemHeader));
+  }
 
   /// AddGnuCPlusPlusIncludePaths - Add the necessary paths to support a gnu
   ///  libstdc++.
@@ -210,6 +217,8 @@ void InitHeaderSearch::AddDefaultCIncludePaths(const llvm::Triple &triple,
     switch (os) {
     case llvm::Triple::FreeBSD:
     case llvm::Triple::NetBSD:
+    case llvm::Triple::OpenBSD:
+    case llvm::Triple::Bitrig:
       break;
     default:
       // FIXME: temporary hack: hard-coded paths.
@@ -311,7 +320,9 @@ void InitHeaderSearch::AddDefaultCIncludePaths(const llvm::Triple &triple,
       P.appendComponent("../../../include"); // <sysroot>/include
       AddPath(P.str(), System, true, false, false);
       AddPath("/mingw/include", System, true, false, false);
+#if defined(_WIN32)
       AddPath("c:/mingw/include", System, true, false, false); 
+#endif
     }
     break;
       
@@ -387,12 +398,14 @@ AddDefaultCPlusPlusIncludePaths(const llvm::Triple &triple, const HeaderSearchOp
     AddMinGW64CXXPaths(HSOpts.ResourceDir, "4.7.0");
     // mingw.org C++ include paths
     AddMinGWCPlusPlusIncludePaths("/mingw/lib/gcc", "mingw32", "4.5.2"); //MSYS
+#if defined(_WIN32)
     AddMinGWCPlusPlusIncludePaths("c:/MinGW/lib/gcc", "mingw32", "4.6.2");
     AddMinGWCPlusPlusIncludePaths("c:/MinGW/lib/gcc", "mingw32", "4.6.1");
     AddMinGWCPlusPlusIncludePaths("c:/MinGW/lib/gcc", "mingw32", "4.5.2");
     AddMinGWCPlusPlusIncludePaths("c:/MinGW/lib/gcc", "mingw32", "4.5.0");
     AddMinGWCPlusPlusIncludePaths("c:/MinGW/lib/gcc", "mingw32", "4.4.0");
     AddMinGWCPlusPlusIncludePaths("c:/MinGW/lib/gcc", "mingw32", "4.3.0");
+#endif
     break;
   case llvm::Triple::DragonFly:
     AddPath("/usr/include/c++/4.1", CXXSystem, true, false, false);
@@ -623,6 +636,8 @@ void InitHeaderSearch::Realize(const LangOptions &Lang) {
   bool DontSearchCurDir = false;  // TODO: set to true if -I- is set?
   Headers.SetSearchPaths(SearchList, NumQuoted, NumAngled, DontSearchCurDir);
 
+  Headers.SetSystemHeaderPrefixes(SystemHeaderPrefixes);
+
   // If verbose, print the list of directories that will be searched.
   if (Verbose) {
     llvm::errs() << "#include \"...\" search starts here:\n";
@@ -659,6 +674,10 @@ void clang::ApplyHeaderSearchOptions(HeaderSearch &HS,
   }
 
   Init.AddDefaultIncludePaths(Lang, Triple, HSOpts);
+
+  for (unsigned i = 0, e = HSOpts.SystemHeaderPrefixes.size(); i != e; ++i)
+    Init.AddSystemHeaderPrefix(HSOpts.SystemHeaderPrefixes[i].Prefix,
+                               HSOpts.SystemHeaderPrefixes[i].IsSystemHeader);
 
   if (HSOpts.UseBuiltinIncludes) {
     // Set up the builtin include directory in the module map.

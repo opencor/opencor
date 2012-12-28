@@ -1,11 +1,14 @@
-//===- TableGen'erated file -------------------------------------*- C++ -*-===//
-//
-// Calling Convention Implementation Fragment
-//
-// Automatically generated file, do not edit!
-//
-//===----------------------------------------------------------------------===//
+/*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
+|*                                                                            *|
+|* Calling Convention Implementation Fragment                                 *|
+|*                                                                            *|
+|* Automatically generated file, do not edit!                                 *|
+|*                                                                            *|
+\*===----------------------------------------------------------------------===*/
 
+static bool CC_Intel_OCL_BI(unsigned ValNo, MVT ValVT,
+                            MVT LocVT, CCValAssign::LocInfo LocInfo,
+                            ISD::ArgFlagsTy ArgFlags, CCState &State);
 static bool CC_X86(unsigned ValNo, MVT ValVT,
                    MVT LocVT, CCValAssign::LocInfo LocInfo,
                    ISD::ArgFlagsTy ArgFlags, CCState &State);
@@ -42,6 +45,9 @@ static bool CC_X86_64_GHC(unsigned ValNo, MVT ValVT,
 static bool CC_X86_Win64_C(unsigned ValNo, MVT ValVT,
                            MVT LocVT, CCValAssign::LocInfo LocInfo,
                            ISD::ArgFlagsTy ArgFlags, CCState &State);
+static bool RetCC_Intel_OCL_BI(unsigned ValNo, MVT ValVT,
+                               MVT LocVT, CCValAssign::LocInfo LocInfo,
+                               ISD::ArgFlagsTy ArgFlags, CCState &State);
 static bool RetCC_X86(unsigned ValNo, MVT ValVT,
                       MVT LocVT, CCValAssign::LocInfo LocInfo,
                       ISD::ArgFlagsTy ArgFlags, CCState &State);
@@ -68,9 +74,110 @@ static bool RetCC_X86_Win64_C(unsigned ValNo, MVT ValVT,
                               ISD::ArgFlagsTy ArgFlags, CCState &State);
 
 
+static bool CC_Intel_OCL_BI(unsigned ValNo, MVT ValVT,
+                            MVT LocVT, CCValAssign::LocInfo LocInfo,
+                            ISD::ArgFlagsTy ArgFlags, CCState &State) {
+
+  if (LocVT == MVT::i32) {
+    if (State.getTarget().getSubtarget<X86Subtarget>().isTargetWin32()) {
+      unsigned Offset1 = State.AllocateStack(4, 4);
+      State.addLoc(CCValAssign::getMem(ValNo, ValVT, Offset1, LocVT, LocInfo));
+      return false;
+    }
+  }
+
+  if (LocVT == MVT::i32) {
+    if (State.getTarget().getSubtarget<X86Subtarget>().isTargetWin64()) {
+      static const uint16_t RegList2[] = {
+        X86::ECX, X86::EDX, X86::R8D, X86::R9D
+      };
+      if (unsigned Reg = State.AllocateReg(RegList2, 4)) {
+        State.addLoc(CCValAssign::getReg(ValNo, ValVT, Reg, LocVT, LocInfo));
+        return false;
+      }
+    }
+  }
+
+  if (LocVT == MVT::i64) {
+    if (State.getTarget().getSubtarget<X86Subtarget>().isTargetWin64()) {
+      static const uint16_t RegList3[] = {
+        X86::RCX, X86::RDX, X86::R8, X86::R9
+      };
+      if (unsigned Reg = State.AllocateReg(RegList3, 4)) {
+        State.addLoc(CCValAssign::getReg(ValNo, ValVT, Reg, LocVT, LocInfo));
+        return false;
+      }
+    }
+  }
+
+  if (LocVT == MVT::i32) {
+    static const uint16_t RegList4[] = {
+      X86::EDI, X86::ESI, X86::EDX, X86::ECX
+    };
+    if (unsigned Reg = State.AllocateReg(RegList4, 4)) {
+      State.addLoc(CCValAssign::getReg(ValNo, ValVT, Reg, LocVT, LocInfo));
+      return false;
+    }
+  }
+
+  if (LocVT == MVT::i64) {
+    static const uint16_t RegList5[] = {
+      X86::RDI, X86::RSI, X86::RDX, X86::RCX
+    };
+    if (unsigned Reg = State.AllocateReg(RegList5, 4)) {
+      State.addLoc(CCValAssign::getReg(ValNo, ValVT, Reg, LocVT, LocInfo));
+      return false;
+    }
+  }
+
+  if (LocVT == MVT::f32 ||
+      LocVT == MVT::f64 ||
+      LocVT == MVT::v4i32 ||
+      LocVT == MVT::v2i64 ||
+      LocVT == MVT::v4f32 ||
+      LocVT == MVT::v2f64) {
+    static const uint16_t RegList6[] = {
+      X86::XMM0, X86::XMM1, X86::XMM2, X86::XMM3
+    };
+    if (unsigned Reg = State.AllocateReg(RegList6, 4)) {
+      State.addLoc(CCValAssign::getReg(ValNo, ValVT, Reg, LocVT, LocInfo));
+      return false;
+    }
+  }
+
+  if (LocVT == MVT::v8f32 ||
+      LocVT == MVT::v4f64 ||
+      LocVT == MVT::v8i32 ||
+      LocVT == MVT::v4i64) {
+    static const uint16_t RegList7[] = {
+      X86::YMM0, X86::YMM1, X86::YMM2, X86::YMM3
+    };
+    if (unsigned Reg = State.AllocateReg(RegList7, 4)) {
+      State.addLoc(CCValAssign::getReg(ValNo, ValVT, Reg, LocVT, LocInfo));
+      return false;
+    }
+  }
+
+  if (State.getTarget().getSubtarget<X86Subtarget>().isTargetWin64()) {
+    if (!CC_X86_Win64_C(ValNo, ValVT, LocVT, LocInfo, ArgFlags, State))
+      return false;
+  }
+
+  if (!CC_X86_64_C(ValNo, ValVT, LocVT, LocInfo, ArgFlags, State))
+    return false;
+
+  return true;  // CC didn't match.
+}
+
+
 static bool CC_X86(unsigned ValNo, MVT ValVT,
                    MVT LocVT, CCValAssign::LocInfo LocInfo,
                    ISD::ArgFlagsTy ArgFlags, CCState &State) {
+
+  if (State.getCallingConv() == CallingConv::Intel_OCL_BI) {
+    if (!CC_Intel_OCL_BI(ValNo, ValVT, LocVT, LocInfo, ArgFlags, State))
+      return false;
+  }
 
   if (State.getTarget().getSubtarget<X86Subtarget>().is64Bit()) {
     if (!CC_X86_64(ValNo, ValVT, LocVT, LocInfo, ArgFlags, State))
@@ -211,7 +318,7 @@ static bool CC_X86_32_Common(unsigned ValNo, MVT ValVT,
 
   if (LocVT == MVT::f80) {
     unsigned Offset5 = State.AllocateStack(
-      State.getTarget().getTargetData()->getTypeAllocSize(EVT(LocVT).getTypeForEVT(State.getContext())), 4);
+      State.getTarget().getDataLayout()->getTypeAllocSize(EVT(LocVT).getTypeForEVT(State.getContext())), 4);
     State.addLoc(CCValAssign::getMem(ValNo, ValVT, Offset5, LocVT, LocInfo));
     return false;
   }
@@ -371,13 +478,15 @@ static bool CC_X86_32_FastCall(unsigned ValNo, MVT ValVT,
     }
   }
 
-  if (LocVT == MVT::i32) {
-    static const uint16_t RegList1[] = {
-      X86::ECX, X86::EDX
-    };
-    if (unsigned Reg = State.AllocateReg(RegList1, 2)) {
-      State.addLoc(CCValAssign::getReg(ValNo, ValVT, Reg, LocVT, LocInfo));
-      return false;
+  if (ArgFlags.isInReg()) {
+    if (LocVT == MVT::i32) {
+      static const uint16_t RegList1[] = {
+        X86::ECX, X86::EDX
+      };
+      if (unsigned Reg = State.AllocateReg(RegList1, 2)) {
+        State.addLoc(CCValAssign::getReg(ValNo, ValVT, Reg, LocVT, LocInfo));
+        return false;
+      }
     }
   }
 
@@ -584,8 +693,8 @@ static bool CC_X86_64_C(unsigned ValNo, MVT ValVT,
 
   if (LocVT == MVT::f80) {
     unsigned Offset6 = State.AllocateStack(
-      State.getTarget().getTargetData()->getTypeAllocSize(EVT(LocVT).getTypeForEVT(State.getContext())), 
-      State.getTarget().getTargetData()->getABITypeAlignment(EVT(LocVT).getTypeForEVT(State.getContext())));
+      State.getTarget().getDataLayout()->getTypeAllocSize(EVT(LocVT).getTypeForEVT(State.getContext())), 
+      State.getTarget().getDataLayout()->getABITypeAlignment(EVT(LocVT).getTypeForEVT(State.getContext())));
     State.addLoc(CCValAssign::getMem(ValNo, ValVT, Offset6, LocVT, LocInfo));
     return false;
   }
@@ -786,8 +895,8 @@ static bool CC_X86_Win64_C(unsigned ValNo, MVT ValVT,
 
   if (LocVT == MVT::f80) {
     unsigned Offset10 = State.AllocateStack(
-      State.getTarget().getTargetData()->getTypeAllocSize(EVT(LocVT).getTypeForEVT(State.getContext())), 
-      State.getTarget().getTargetData()->getABITypeAlignment(EVT(LocVT).getTypeForEVT(State.getContext())));
+      State.getTarget().getDataLayout()->getTypeAllocSize(EVT(LocVT).getTypeForEVT(State.getContext())), 
+      State.getTarget().getDataLayout()->getABITypeAlignment(EVT(LocVT).getTypeForEVT(State.getContext())));
     State.addLoc(CCValAssign::getMem(ValNo, ValVT, Offset10, LocVT, LocInfo));
     return false;
   }
@@ -796,9 +905,53 @@ static bool CC_X86_Win64_C(unsigned ValNo, MVT ValVT,
 }
 
 
+static bool RetCC_Intel_OCL_BI(unsigned ValNo, MVT ValVT,
+                               MVT LocVT, CCValAssign::LocInfo LocInfo,
+                               ISD::ArgFlagsTy ArgFlags, CCState &State) {
+
+  if (LocVT == MVT::f32 ||
+      LocVT == MVT::f64 ||
+      LocVT == MVT::v4i32 ||
+      LocVT == MVT::v2i64 ||
+      LocVT == MVT::v4f32 ||
+      LocVT == MVT::v2f64) {
+    static const uint16_t RegList1[] = {
+      X86::XMM0, X86::XMM1, X86::XMM2, X86::XMM3
+    };
+    if (unsigned Reg = State.AllocateReg(RegList1, 4)) {
+      State.addLoc(CCValAssign::getReg(ValNo, ValVT, Reg, LocVT, LocInfo));
+      return false;
+    }
+  }
+
+  if (LocVT == MVT::v8f32 ||
+      LocVT == MVT::v4f64 ||
+      LocVT == MVT::v8i32 ||
+      LocVT == MVT::v4i64) {
+    static const uint16_t RegList2[] = {
+      X86::YMM0, X86::YMM1, X86::YMM2, X86::YMM3
+    };
+    if (unsigned Reg = State.AllocateReg(RegList2, 4)) {
+      State.addLoc(CCValAssign::getReg(ValNo, ValVT, Reg, LocVT, LocInfo));
+      return false;
+    }
+  }
+
+  if (!RetCC_X86Common(ValNo, ValVT, LocVT, LocInfo, ArgFlags, State))
+    return false;
+
+  return true;  // CC didn't match.
+}
+
+
 static bool RetCC_X86(unsigned ValNo, MVT ValVT,
                       MVT LocVT, CCValAssign::LocInfo LocInfo,
                       ISD::ArgFlagsTy ArgFlags, CCState &State) {
+
+  if (State.getCallingConv() == CallingConv::Intel_OCL_BI) {
+    if (!RetCC_Intel_OCL_BI(ValNo, ValVT, LocVT, LocInfo, ArgFlags, State))
+      return false;
+  }
 
   if (State.getTarget().getSubtarget<X86Subtarget>().is64Bit()) {
     if (!RetCC_X86_64(ValNo, ValVT, LocVT, LocInfo, ArgFlags, State))
@@ -818,9 +971,9 @@ static bool RetCC_X86Common(unsigned ValNo, MVT ValVT,
 
   if (LocVT == MVT::i8) {
     static const uint16_t RegList1[] = {
-      X86::AL, X86::DL
+      X86::AL, X86::DL, X86::CL
     };
-    if (unsigned Reg = State.AllocateReg(RegList1, 2)) {
+    if (unsigned Reg = State.AllocateReg(RegList1, 3)) {
       State.addLoc(CCValAssign::getReg(ValNo, ValVT, Reg, LocVT, LocInfo));
       return false;
     }
@@ -828,9 +981,9 @@ static bool RetCC_X86Common(unsigned ValNo, MVT ValVT,
 
   if (LocVT == MVT::i16) {
     static const uint16_t RegList2[] = {
-      X86::AX, X86::DX
+      X86::AX, X86::DX, X86::CX
     };
-    if (unsigned Reg = State.AllocateReg(RegList2, 2)) {
+    if (unsigned Reg = State.AllocateReg(RegList2, 3)) {
       State.addLoc(CCValAssign::getReg(ValNo, ValVT, Reg, LocVT, LocInfo));
       return false;
     }
@@ -838,9 +991,9 @@ static bool RetCC_X86Common(unsigned ValNo, MVT ValVT,
 
   if (LocVT == MVT::i32) {
     static const uint16_t RegList3[] = {
-      X86::EAX, X86::EDX
+      X86::EAX, X86::EDX, X86::ECX
     };
-    if (unsigned Reg = State.AllocateReg(RegList3, 2)) {
+    if (unsigned Reg = State.AllocateReg(RegList3, 3)) {
       State.addLoc(CCValAssign::getReg(ValNo, ValVT, Reg, LocVT, LocInfo));
       return false;
     }
@@ -848,9 +1001,9 @@ static bool RetCC_X86Common(unsigned ValNo, MVT ValVT,
 
   if (LocVT == MVT::i64) {
     static const uint16_t RegList4[] = {
-      X86::RAX, X86::RDX
+      X86::RAX, X86::RDX, X86::RCX
     };
-    if (unsigned Reg = State.AllocateReg(RegList4, 2)) {
+    if (unsigned Reg = State.AllocateReg(RegList4, 3)) {
       State.addLoc(CCValAssign::getReg(ValNo, ValVT, Reg, LocVT, LocInfo));
       return false;
     }

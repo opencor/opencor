@@ -40,7 +40,7 @@ public:
     QString error() const;
     bool hasError() const;
 
-    bool compileCode(const QString &pCode, const bool &pOutputErrors = false);
+    bool compileCode(const QString &pCode);
 
     void * getFunction(const QString &pFunctionName);
 

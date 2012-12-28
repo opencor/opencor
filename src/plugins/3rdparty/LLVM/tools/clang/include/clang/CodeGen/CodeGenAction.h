@@ -12,9 +12,6 @@
 
 #include "clang/Frontend/FrontendAction.h"
 #include "llvm/ADT/OwningPtr.h"
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
   class LLVMContext;
@@ -24,12 +21,7 @@ namespace llvm {
 namespace clang {
 class BackendConsumer;
 
-/*---OPENCOR---
 class CodeGenAction : public ASTFrontendAction {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT CodeGenAction : public ASTFrontendAction {
-//---OPENCOR--- END
 private:
   unsigned Act;
   OwningPtr<llvm::Module> TheModule;
@@ -38,7 +30,7 @@ private:
   bool OwnsVMContext;
 
 protected:
-  /// Create a new code generation action.  If the optional \arg _VMContext
+  /// Create a new code generation action.  If the optional \p _VMContext
   /// parameter is supplied, the action uses it without taking ownership,
   /// otherwise it creates a fresh LLVM context and takes ownership.
   CodeGenAction(unsigned _Act, llvm::LLVMContext *_VMContext = 0);
@@ -88,12 +80,7 @@ public:
   EmitLLVMAction(llvm::LLVMContext *_VMContext = 0);
 };
 
-/*---OPENCOR---
 class EmitLLVMOnlyAction : public CodeGenAction {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT EmitLLVMOnlyAction : public CodeGenAction {
-//---OPENCOR--- END
   virtual void anchor();
 public:
   EmitLLVMOnlyAction(llvm::LLVMContext *_VMContext = 0);
