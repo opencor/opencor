@@ -12,6 +12,9 @@
 
 #include "clang/Frontend/FrontendAction.h"
 #include "llvm/ADT/OwningPtr.h"
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
   class LLVMContext;
@@ -21,7 +24,12 @@ namespace llvm {
 namespace clang {
 class BackendConsumer;
 
+/*---OPENCOR---
 class CodeGenAction : public ASTFrontendAction {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT CodeGenAction : public ASTFrontendAction {
+//---OPENCOR--- END
 private:
   unsigned Act;
   OwningPtr<llvm::Module> TheModule;
@@ -80,7 +88,12 @@ public:
   EmitLLVMAction(llvm::LLVMContext *_VMContext = 0);
 };
 
+/*---OPENCOR---
 class EmitLLVMOnlyAction : public CodeGenAction {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT EmitLLVMOnlyAction : public CodeGenAction {
+//---OPENCOR--- END
   virtual void anchor();
 public:
   EmitLLVMOnlyAction(llvm::LLVMContext *_VMContext = 0);

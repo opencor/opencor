@@ -18,6 +18,9 @@
 #include "llvm/ADT/IntrusiveRefCntPtr.h"
 #include "llvm/ADT/StringRef.h"
 #include "clang/Basic/LLVM.h"
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
   template<typename T, unsigned> class SmallVector;
@@ -111,7 +114,12 @@ public:
 
 /// \brief Used for handling and querying diagnostic IDs. Can be used and shared
 /// by multiple Diagnostics for multiple translation units.
+/*---OPENCOR---
 class DiagnosticIDs : public RefCountedBase<DiagnosticIDs> {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT DiagnosticIDs : public RefCountedBase<DiagnosticIDs> {
+//---OPENCOR--- END
 public:
   /// Level The level of the diagnostic, after it has been through mapping.
   enum Level {

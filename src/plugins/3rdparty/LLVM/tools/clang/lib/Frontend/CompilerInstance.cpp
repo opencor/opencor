@@ -653,14 +653,21 @@ bool CompilerInstance::InitializeSourceManager(const FrontendInputFile &Input,
 
 // High-Level Operations
 
+/*---OPENCOR---
 bool CompilerInstance::ExecuteAction(FrontendAction &Act) {
+*/
+//---OPENCOR--- BEGIN
+bool CompilerInstance::ExecuteAction(FrontendAction &Act, raw_ostream &OS) {
+//---OPENCOR--- END
   assert(hasDiagnostics() && "Diagnostics engine is not initialized!");
   assert(!getFrontendOpts().ShowHelp && "Client must handle '-help'!");
   assert(!getFrontendOpts().ShowVersion && "Client must handle '-version'!");
 
   // FIXME: Take this as an argument, once all the APIs we used have moved to
   // taking it as an input instead of hard-coding llvm::errs.
+/*---OPENCOR---
   raw_ostream &OS = llvm::errs();
+*/
 
   // Create the target instance.
   setTarget(TargetInfo::CreateTargetInfo(getDiagnostics(), getTargetOpts()));

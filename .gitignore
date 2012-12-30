@@ -5,3 +5,4 @@
 /src/plugins/3rdparty/LLVM/include/llvm/Support/DataTypes.h
 /src/plugins/3rdparty/LLVM/lib/Target/X86/X86GenAsmMatcher.inc
 /src/plugins/3rdparty/LLVM/lib/Target/X86/X86GenDAGISel.inc
+/src/plugins/3rdparty/LLVM/lib/Target/X86/X86GenRegisterInfo.inc

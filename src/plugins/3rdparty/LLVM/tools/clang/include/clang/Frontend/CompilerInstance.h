@@ -23,6 +23,9 @@
 #include <list>
 #include <string>
 #include <utility>
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
 class raw_fd_ostream;
@@ -64,7 +67,12 @@ class TargetInfo;
 /// in to the compiler instance for everything. When possible, utility functions
 /// come in two forms; a short form that reuses the CompilerInstance objects,
 /// and a long form that takes explicit instances of any required objects.
+/*---OPENCOR---
 class CompilerInstance : public ModuleLoader {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT CompilerInstance : public ModuleLoader {
+//---OPENCOR--- END
   /// The options used in this compiler instance.
   IntrusiveRefCntPtr<CompilerInvocation> Invocation;
 
@@ -170,7 +178,12 @@ public:
   //
   // FIXME: Eliminate the llvm_shutdown requirement, that should either be part
   // of the context or else not CompilerInstance specific.
+/*---OPENCOR---
   bool ExecuteAction(FrontendAction &Act);
+*/
+//---OPENCOR--- BEGIN
+  bool ExecuteAction(FrontendAction &Act, raw_ostream &OS = llvm::errs());
+//---OPENCOR--- END
 
   /// }
   /// @name Compiler Invocation and Options

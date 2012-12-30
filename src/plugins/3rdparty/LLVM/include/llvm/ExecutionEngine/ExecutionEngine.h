@@ -28,6 +28,9 @@
 #include <vector>
 #include <map>
 #include <string>
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
 
@@ -95,7 +98,12 @@ public:
 /// \brief Abstract interface for implementation execution of LLVM modules,
 /// designed to support both interpreter and just-in-time (JIT) compiler
 /// implementations.
+/*---OPENCOR---
 class ExecutionEngine {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT ExecutionEngine {
+//---OPENCOR--- END
   /// The state object holding the global address mapping, which must be
   /// accessed synchronously.
   //

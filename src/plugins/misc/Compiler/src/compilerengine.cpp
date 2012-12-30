@@ -15,20 +15,10 @@
 //==============================================================================
 
 #include "llvm/LLVMContext.h"
-
-#ifdef Q_OS_WIN
-    // To include llvm/Module.h results in some indirect warnings from MSVC, but
-    // it's LLVM's task to address them not ours, so...
-
-    #pragma warning(disable: 4146)
-#endif
-
 #include "llvm/Module.h"
-
-#ifdef Q_OS_WIN
-    #pragma warning(default: 4146)
-#endif
-
+#include "llvm/ADT/IntrusiveRefCntPtr.h"
+#include "llvm/ADT/OwningPtr.h"
+#include "llvm/ADT/SmallVector.h"
 #include "llvm/ExecutionEngine/ExecutionEngine.h"
 #include "llvm/Support/TargetSelect.h"
 #include "llvm/Support/Host.h"
@@ -36,12 +26,14 @@
 #include "llvm/Support/raw_ostream.h"
 
 #include "clang/Basic/Diagnostic.h"
+#include "clang/Basic/DiagnosticIDs.h"
 #include "clang/Basic/DiagnosticOptions.h"
 #include "clang/CodeGen/CodeGenAction.h"
 #include "clang/Driver/Compilation.h"
 #include "clang/Driver/Driver.h"
 #include "clang/Driver/Job.h"
 #include "clang/Driver/Tool.h"
+#include "clang/Driver/Util.h"
 #include "clang/Frontend/CompilerInvocation.h"
 #include "clang/Frontend/CompilerInstance.h"
 #include "clang/Frontend/TextDiagnosticPrinter.h"
@@ -270,12 +262,16 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     // Create and execute the frontend to generate the LLVM assembly code,
     // making sure that all added functions end up in the same module
+    // Note: the LLVM team has been meaning to modify
+    //       CompilerInstance::ExecuteAction() so that we could specify the
+    //       output stream we want to use (rather than always use llvm::errs()),
+    //       but they have yet to actually do it, so we modified it ourselves...
 
     llvm::OwningPtr<clang::CodeGenAction> codeGenerationAction(new clang::EmitLLVMOnlyAction(&mModule->getContext()));
 
     codeGenerationAction->setLinkModule(mModule);
 
-    if (!compilerInstance.ExecuteAction(*codeGenerationAction)) {
+    if (!compilerInstance.ExecuteAction(*codeGenerationAction, outputStream)) {
         mError = tr("the model could not be compiled");
 
         reset(false);
