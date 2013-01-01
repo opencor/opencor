@@ -114,7 +114,7 @@ MACRO(INITIALISE_PROJECT)
     # Windows and Linux before being able to test it
 
     IF(APPLE)
-        SET(DEST_PLUGINS_DIR ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME})
+        SET(DEST_PLUGINS_DIR ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME})
     ELSE()
         SET(DEST_PLUGINS_DIR ${CMAKE_BINARY_DIR}/plugins/${MAIN_PROJECT_NAME})
     ENDIF()
@@ -434,7 +434,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                            COMMAND install_name_tool -id ${PLUGIN_FILENAME}
-                                                         ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
+                                                         ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
 
         # Make sure that the plugin refers to our embedded version of the other
         # plugins on which it depends
@@ -443,7 +443,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                                COMMAND install_name_tool -change ${PLUGIN_BUILD_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${OPENCOR_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX}
                                                                  @executable_path/../PlugIns/${MAIN_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${OPENCOR_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                                                                 ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
+                                                                 ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
         ENDFOREACH()
 
         # Make sure that the plugin refers to our embedded version of the
@@ -455,7 +455,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                                COMMAND install_name_tool -change ${OPENCOR_BINARY_DEPENDENCY}
                                                                  @executable_path/../PlugIns/${MAIN_PROJECT_NAME}/${OPENCOR_BINARY_DEPENDENCY}
-                                                                 ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
+                                                                 ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
         ENDFOREACH()
 
         # Make sure that the plugin refers to our embedded version of the Qt
@@ -465,7 +465,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                                COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${QT_DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_DEPENDENCY}
                                                                  @executable_path/../Frameworks/${QT_DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_DEPENDENCY}
-                                                                 ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
+                                                                 ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
         ENDFOREACH()
 
         # Make sure that the plugin refers to our embedded version of the
@@ -484,12 +484,12 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                                COMMAND install_name_tool -change ${EXTERNAL_DEPENDENCY_FILENAME}
                                                                  @executable_path/../Frameworks/${EXTERNAL_DEPENDENCY_FILENAME}
-                                                                 ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
+                                                                 ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
 
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                                COMMAND install_name_tool -change @executable_path/../lib/${EXTERNAL_DEPENDENCY_FILENAME}
                                                                  @executable_path/../Frameworks/${EXTERNAL_DEPENDENCY_FILENAME}
-                                                                 ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
+                                                                 ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
         ENDFOREACH()
     ENDIF()
 
@@ -697,7 +697,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
         #       to the system version of the Qt libraries, so...
 
         FOREACH(QT_DEPENDENCY ${QT_DEPENDENCIES})
-            ADD_CUSTOM_TARGET(${PLUGIN_NAME}_UPDATE_MAC_OS_X_QT_REFERENCE ALL
+            ADD_CUSTOM_TARGET(${PLUGIN_NAME}_UPDATE_OS_X_QT_REFERENCE ALL
                                COMMAND install_name_tool -change @executable_path/../Frameworks/${QT_DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_DEPENDENCY}
                                                                  ${QT_LIBRARY_DIR}/${QT_DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_DEPENDENCY}
                                                                  ${LIBRARY_OUTPUT_PATH}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
@@ -712,7 +712,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
     ENDIF()
 ENDMACRO()
 
-MACRO(DEPLOY_MAC_OS_X_LIBRARY LIBRARY_NAME)
+MACRO(DEPLOY_OS_X_LIBRARY LIBRARY_NAME)
     # Various initialisations
 
     SET(TYPE)
@@ -752,7 +752,7 @@ MACRO(DEPLOY_MAC_OS_X_LIBRARY LIBRARY_NAME)
     # Deploy the library itself
 
     IF("${TYPE}" STREQUAL "Library")
-        SET(LIBRARY_LIB_DIR ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/Frameworks)
+        SET(LIBRARY_LIB_DIR ${OS_X_PROJECT_BINARY_DIR}/Contents/Frameworks)
 
         IF("${DIR}" STREQUAL "")
             # We must deploy a Qt library
@@ -788,7 +788,7 @@ MACRO(DEPLOY_MAC_OS_X_LIBRARY LIBRARY_NAME)
         # We must deploy a library which is bundled in a Qt framework
 
         SET(LIBRARY_RELATIVE_FILEPATH ${LIBRARY_NAME}.framework/Versions/${QT_VERSION_MAJOR}/${LIBRARY_NAME})
-        SET(LIBRARY_FILEPATH ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/Frameworks/${LIBRARY_RELATIVE_FILEPATH})
+        SET(LIBRARY_FILEPATH ${OS_X_PROJECT_BINARY_DIR}/Contents/Frameworks/${LIBRARY_RELATIVE_FILEPATH})
 
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                            COMMAND ${CMAKE_COMMAND} -E copy ${QT_LIBRARY_DIR}/${LIBRARY_RELATIVE_FILEPATH}
@@ -847,12 +847,12 @@ MACRO(DEPLOY_MAC_OS_X_LIBRARY LIBRARY_NAME)
     ENDIF()
 ENDMACRO()
 
-MACRO(CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT PLUGIN_DIRNAME PLUGIN_NAME)
+MACRO(CLEAN_OS_X_PLUGIN_DEPLOYMENT PLUGIN_DIRNAME PLUGIN_NAME)
     SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                        COMMAND install_name_tool -id ${PLUGIN_FILENAME}
-                                                     ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${PLUGIN_DIRNAME}/${PLUGIN_FILENAME})
+                                                     ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${PLUGIN_DIRNAME}/${PLUGIN_FILENAME})
 ENDMACRO()
 
 MACRO(COPY_FILE_TO_BUILD_DIR DEST_DIRNAME DIRNAME FILENAME)

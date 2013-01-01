@@ -9,7 +9,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 #       copied, so...
 
 SET(MAIN_PROJECT_NAME ${PROJECT_NAME})
-SET(MAC_OS_X_PROJECT_BINARY_DIR ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app)
+SET(OS_X_PROJECT_BINARY_DIR ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app)
 
 # Some in-house CMake functions/macros
 
@@ -309,7 +309,7 @@ IF(APPLE)
     #       OK...
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} PRE_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E remove -f ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/Resources/qt.conf)
+                       COMMAND ${CMAKE_COMMAND} -E remove -f ${OS_X_PROJECT_BINARY_DIR}/Contents/Resources/qt.conf)
 
     # Remove the PlugIns directory left from a previous build
     # Note: this prevents us from getting some error messages...
@@ -317,28 +317,28 @@ IF(APPLE)
     FOREACH(QT_FOLDER accessible bearer codecs graphicssystems imageformats
                       phonon_backend qmltooling)
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} PRE_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E remove_directory ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${QT_FOLDER})
+                           COMMAND ${CMAKE_COMMAND} -E remove_directory ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${QT_FOLDER})
     ENDFOREACH()
 
     # Use macdeployqt to have all the Qt files required by OpenCOR added to the
     # bundle
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND ${QT_BINARY_DIR}/macdeployqt ${MAC_OS_X_PROJECT_BINARY_DIR})
+                       COMMAND ${QT_BINARY_DIR}/macdeployqt ${OS_X_PROJECT_BINARY_DIR})
 
     # Some Qt libraries/frameworks don't get deployed by macdeployqt since they
     # are not used by OpenCOR directly anymore but by some plugins. We must
     # therefore deploy them ourselves and make sure that their Qt dependencies
     # refer to our embedded version of the Qt libraries
 
-    DEPLOY_MAC_OS_X_LIBRARY(libQtCLucene
+    DEPLOY_OS_X_LIBRARY(libQtCLucene
         TYPE
             Library
         FRAMEWORKS
             QtCore
     )
 
-    DEPLOY_MAC_OS_X_LIBRARY(QtHelp
+    DEPLOY_OS_X_LIBRARY(QtHelp
         TYPE
             Framework
         FRAMEWORKS
@@ -351,7 +351,7 @@ IF(APPLE)
             libQtCLucene
     )
 
-    DEPLOY_MAC_OS_X_LIBRARY(QtSvg
+    DEPLOY_OS_X_LIBRARY(QtSvg
         TYPE
             Framework
         FRAMEWORKS
@@ -359,7 +359,7 @@ IF(APPLE)
             QtGui
     )
 
-    DEPLOY_MAC_OS_X_LIBRARY(QtWebKit
+    DEPLOY_OS_X_LIBRARY(QtWebKit
         TYPE
             Framework
         FRAMEWORKS
@@ -371,7 +371,7 @@ IF(APPLE)
             QtXml
     )
 
-    DEPLOY_MAC_OS_X_LIBRARY(QtXml
+    DEPLOY_OS_X_LIBRARY(QtXml
         TYPE
             Framework
         FRAMEWORKS
@@ -381,26 +381,26 @@ IF(APPLE)
     # Clean up the plugins that are deployed by mmacdeployqt
     # Note: it's not essential, it's merely to have 'clean' plugins...
 
-    CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT(accessible qtaccessiblewidgets)
+    CLEAN_OS_X_PLUGIN_DEPLOYMENT(accessible qtaccessiblewidgets)
 
-    CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT(bearer qgenericbearer)
+    CLEAN_OS_X_PLUGIN_DEPLOYMENT(bearer qgenericbearer)
 
-    CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT(codecs qcncodecs)
-    CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT(codecs qjpcodecs)
-    CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT(codecs qkrcodecs)
-    CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT(codecs qtwcodecs)
+    CLEAN_OS_X_PLUGIN_DEPLOYMENT(codecs qcncodecs)
+    CLEAN_OS_X_PLUGIN_DEPLOYMENT(codecs qjpcodecs)
+    CLEAN_OS_X_PLUGIN_DEPLOYMENT(codecs qkrcodecs)
+    CLEAN_OS_X_PLUGIN_DEPLOYMENT(codecs qtwcodecs)
 
-    CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT(graphicssystems qtracegraphicssystem)
+    CLEAN_OS_X_PLUGIN_DEPLOYMENT(graphicssystems qtracegraphicssystem)
 
-    CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT(imageformats qgif)
-    CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT(imageformats qico)
-    CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT(imageformats qjpeg)
-    CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT(imageformats qmng)
-    CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT(imageformats qtiff)
+    CLEAN_OS_X_PLUGIN_DEPLOYMENT(imageformats qgif)
+    CLEAN_OS_X_PLUGIN_DEPLOYMENT(imageformats qico)
+    CLEAN_OS_X_PLUGIN_DEPLOYMENT(imageformats qjpeg)
+    CLEAN_OS_X_PLUGIN_DEPLOYMENT(imageformats qmng)
+    CLEAN_OS_X_PLUGIN_DEPLOYMENT(imageformats qtiff)
 
-    CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT(phonon_backend phonon_qt7)
+    CLEAN_OS_X_PLUGIN_DEPLOYMENT(phonon_backend phonon_qt7)
 
-    CLEAN_MAC_OS_X_PLUGIN_DEPLOYMENT(qmltooling qmldbg_tcp)
+    CLEAN_OS_X_PLUGIN_DEPLOYMENT(qmltooling qmldbg_tcp)
 
     # Add the SQLite plugin to the bundle (required by the Help plugin)
     # Note: this would, ideally, be done as part of the packaging, but we do it
@@ -409,7 +409,7 @@ IF(APPLE)
     #       have a virtual machine with a 'blank' OS X system on it unlike with
     #       Windows and Linux)...
 
-    SET(SQLDRIVERS_DIR ${MAC_OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/sqldrivers)
+    SET(SQLDRIVERS_DIR ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/sqldrivers)
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                        COMMAND ${CMAKE_COMMAND} -E copy ${QT_PLUGINS_DIR}/sqldrivers/libqsqlite.dylib

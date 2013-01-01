@@ -107,7 +107,7 @@ phonon</pre>
                 From there, we can compare the above list against the list of Qt libraries that got deployed to <code>[OpenCOR.app]/Contents/Frameworks</code> by <code>macdeployqt</code>, and see which ones are missing.
             </li>
             <li>
-                <strong>Qt libraries deployment:</strong> any missing Qt library can be deployed using our CMake <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>DEPLOY_MAC_OS_X_QT_LIBRARY</code></a> macro, but first we must determine the library's Qt dependencies. For example, for <code>QtHelp</code>, we could enter the following on the command line
+                <strong>Qt libraries deployment:</strong> any missing Qt library can be deployed using our CMake <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>DEPLOY_OS_X_QT_LIBRARY</code></a> macro, but first we must determine the library's Qt dependencies. For example, for <code>QtHelp</code>, we could enter the following on the command line
                 <pre class="prettyprint">$ doc/developer/develop/res/qtdependencies /Developer/QtSDK/Desktop/Qt/4.8.1/gcc/lib/QtHelp.framework/Versions/4/QtHelp
 QtCore
 QtGui
@@ -116,8 +116,8 @@ QtNetwork
 QtSql
 QtXml
 libQtCLucene.4.dylib</pre>
-                The <code>QtHelp</code> dependency can be ignored, leaving us with the following call to <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>DEPLOY_MAC_OS_X_LIBRARY</code></a> which is also used in <a href="https://github.com/opencor/opencor/blob/master/CMakeLists.txt"><code>[OpenCOR]/CMakeLists.txt</code></a>:
-                <pre class="prettyprint">DEPLOY_MAC_OS_X_LIBRARY(QtHelp
+                The <code>QtHelp</code> dependency can be ignored, leaving us with the following call to <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>DEPLOY_OS_X_LIBRARY</code></a> which is also used in <a href="https://github.com/opencor/opencor/blob/master/CMakeLists.txt"><code>[OpenCOR]/CMakeLists.txt</code></a>:
+                <pre class="prettyprint">DEPLOY_OS_X_LIBRARY(QtHelp
     TYPE
         Framework
     FRAMEWORKS
