@@ -149,7 +149,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
     // Get a driver to compile our function
 
 #ifdef QT_DEBUG
-    llvm::raw_ostream &outputStream = llvm::errs();
+    llvm::raw_ostream &outputStream = llvm::outs();
 #else
     llvm::raw_ostream &outputStream = llvm::nulls();
 #endif

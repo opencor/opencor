@@ -426,16 +426,16 @@ public:
 
 /// outs() - This returns a reference to a raw_ostream for standard output.
 /// Use it like: outs() << "foo" << "bar";
+/*---OPENCOR---
 raw_ostream &outs();
+*/
+//---OPENCOR--- BEGIN
+raw_ostream LLVM_EXPORT &outs();
+//---OPENCOR--- END
 
 /// errs() - This returns a reference to a raw_ostream for standard error.
 /// Use it like: errs() << "foo" << "bar";
-/*---OPENCOR---
 raw_ostream &errs();
-*/
-//---OPENCOR--- BEGIN
-raw_ostream LLVM_EXPORT &errs();
-//---OPENCOR--- END
 
 /// nulls() - This returns a reference to a raw_ostream which simply discards
 /// output.
