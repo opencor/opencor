@@ -25,7 +25,7 @@ class QWT_EXPORT QwtInterval
 {
 public:
     /*!
-      Flag indicating if a border is included or excluded
+      Flag indicating if a border is included or excluded 
       \sa setBorderFlags(), borderFlags()
     */
     enum BorderFlag
@@ -87,18 +87,7 @@ public:
     QwtInterval operator|( double ) const;
     QwtInterval &operator|=( double );
 
-/*---OPENCOR---
     bool isValid() const;
-*/
-//---OPENCOR--- BEGIN
-    // Note: to add 'inline' to the definition avoids a warning that reads:
-    //       qwt_interval.h:277: warning: 'bool QwtInterval::isValid() const'
-    //       redeclared without dllimport attribute after being referenced with
-    //       dll linkage
-    //       http://comments.gmane.org/gmane.comp.graphics.qwt.general/3248
-
-    inline bool isValid() const;
-//---OPENCOR--- END
     bool isNull() const;
     void invalidate();
 
@@ -210,6 +199,19 @@ inline double QwtInterval::maxValue() const
 }
 
 /*!
+   A interval is valid when minValue() <= maxValue().
+   In case of QwtInterval::ExcludeBorders it is true
+   when minValue() < maxValue()
+*/
+inline bool QwtInterval::isValid() const
+{
+    if ( ( d_borderFlags & ExcludeBorders ) == 0 )
+        return d_minValue <= d_maxValue;
+    else
+        return d_minValue < d_maxValue;
+}
+
+/*!
    Return the width of an interval
    The width of invalid intervals is 0.0, otherwise the result is
    maxValue() - minValue().
@@ -271,19 +273,6 @@ inline QwtInterval QwtInterval::operator|( double value ) const
 inline bool QwtInterval::isNull() const
 {
     return isValid() && d_minValue >= d_maxValue;
-}
-
-/*!
-   A interval is valid when minValue() <= maxValue().
-   In case of QwtInterval::ExcludeBorders it is true
-   when minValue() < maxValue()
-*/
-inline bool QwtInterval::isValid() const
-{
-    if ( ( d_borderFlags & ExcludeBorders ) == 0 )
-        return d_minValue <= d_maxValue;
-    else
-        return d_minValue < d_maxValue;
 }
 
 /*!

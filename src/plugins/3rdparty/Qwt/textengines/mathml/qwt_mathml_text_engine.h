@@ -26,7 +26,7 @@ QwtText::setTextEngine(QwtText::MathMLText, new QwtMathMLTextEngine());
   \endverbatim
 
   \sa QwtTextEngine, QwtText::setTextEngine
-  \warning Unfortunately the MathML renderer doesn't support rotating of texts. 
+  \warning Unfortunately the MathML renderer doesn't support rotating of texts.
 */
 
 class QWT_EXPORT QwtMathMLTextEngine: public QwtTextEngine
@@ -35,19 +35,19 @@ public:
     QwtMathMLTextEngine();
     virtual ~QwtMathMLTextEngine();
 
-    virtual double heightForWidth(const QFont &font, int flags, 
-        const QString &text, double width) const;
+    virtual double heightForWidth( const QFont &font, int flags,
+        const QString &text, double width ) const;
 
-    virtual QSizeF textSize(const QFont &font, int flags,
-        const QString &text) const;
+    virtual QSizeF textSize( const QFont &font, int flags,
+                             const QString &text ) const;
 
-    virtual void draw(QPainter *painter, const QRectF &rect,
-        int flags, const QString &text) const;
+    virtual void draw( QPainter *painter, const QRectF &rect,
+        int flags, const QString &text ) const;
 
-    virtual bool mightRender(const QString &) const;
+    virtual bool mightRender( const QString & ) const;
 
-    virtual void textMargins(const QFont &, const QString &,
-        double &left, double &right, double &top, double &bottom) const;
+    virtual void textMargins( const QFont &, const QString &,
+        double &left, double &right, double &top, double &bottom ) const;
 };
 
 #endif

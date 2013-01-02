@@ -113,6 +113,8 @@ ADD_PLUGIN(Qwt
         src/qwt_thermo.h
         src/qwt_wheel.h
         src/qwtplugin.h
+    DEFINITIONS
+        QWT_MAKEDLL
     INCLUDE_DIRS
         src
         textengines/mathml
