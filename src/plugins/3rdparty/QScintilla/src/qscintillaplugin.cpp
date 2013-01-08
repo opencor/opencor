@@ -28,8 +28,8 @@ PLUGININFO_FUNC QScintillaPluginInfo()
 
 //==============================================================================
 
-}   // namespace QJson
 }   // namespace QScintilla
+}   // namespace OpenCOR
 
 //==============================================================================
 // End of file
