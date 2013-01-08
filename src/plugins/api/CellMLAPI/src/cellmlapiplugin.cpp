@@ -28,10 +28,6 @@ PLUGININFO_FUNC CellMLAPIPluginInfo()
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(CellMLAPI, CellMLAPIPlugin)
-
-//==============================================================================
-
 }   // namespace CellMLAPI
 }   // namespace OpenCOR
 

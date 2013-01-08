@@ -40,7 +40,12 @@ extern "C++" {
 // Under Windows, define QSCINTILLA_MAKE_DLL to create a Scintilla DLL, or
 // define QSCINTILLA_DLL to link against a Scintilla DLL, or define neither
 // to either build or link against a static Scintilla library.
+/*---OPENCOR---
 #if defined(Q_WS_WIN)
+*/
+//---OPENCOR--- BEGIN
+#if defined(Q_OS_WIN)
+//---OPENCOR--- END
 
 #if defined(QSCINTILLA_DLL)
 #define QSCINTILLA_EXPORT       __declspec(dllimport)

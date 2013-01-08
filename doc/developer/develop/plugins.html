@@ -89,7 +89,7 @@
             <li>
                 <strong>Qt dependencies:</strong> our shell script, <a href="https://github.com/opencor/opencor/blob/master/doc/developer/develop/res/qtdependencies"><code>qtdependencies</code></a>, can be used to check which libraries are required by one or several Qt binaries. Thus, to check which Qt libraries are required by OpenCOR's plugins, we could enter the following on the command line, this after having built OpenCOR:
                 <pre class="prettyprint">$ cd [OpenCOR]
-$ doc/developer/develop/res/qtdependencies build/OpenCOR.app/Contents/PlugIns
+$ doc/developer/develop/res/qtdependencies build/OpenCOR.app/Contents/PlugIns/OpenCOR
 QtCore
 QtDBus
 QtDeclarative
@@ -108,28 +108,55 @@ phonon</pre>
             </li>
             <li>
                 <strong>Qt libraries deployment:</strong> any missing Qt library can be deployed using our CMake <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>DEPLOY_OS_X_QT_LIBRARY</code></a> macro, but first we must determine the library's Qt dependencies. For example, for <code>QtHelp</code>, we could enter the following on the command line
-                <pre class="prettyprint">$ doc/developer/develop/res/qtdependencies /Developer/QtSDK/Desktop/Qt/4.8.1/gcc/lib/QtHelp.framework/Versions/4/QtHelp
+                <pre class="prettyprint">$ doc/developer/develop/res/qtdependencies /Applications/Qt5.0.0/5.0.0/clang_64/lib/QtHelp.framework/Versions/5/QtHelp
+QtCLucene
 QtCore
 QtGui
 QtHelp
 QtNetwork
 QtSql
-QtXml
-libQtCLucene.4.dylib</pre>
-                The <code>QtHelp</code> dependency can be ignored, leaving us with the following call to <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>DEPLOY_OS_X_LIBRARY</code></a> which is also used in <a href="https://github.com/opencor/opencor/blob/master/CMakeLists.txt"><code>[OpenCOR]/CMakeLists.txt</code></a>:
-                <pre class="prettyprint">DEPLOY_OS_X_LIBRARY(QtHelp
-    TYPE
-        Framework
-    FRAMEWORKS
+QtWidgets</pre>
+                The <code>QtHelp</code> dependency can be ignored, leaving us with the following call to <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>ADD_PLUGIN</code></a> which is also used in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Help/CMakeLists.txt"><code>[OpenCOR]/src/plugins/misc/Help/CMakeLists.txt</code></a>:
+                <pre class="prettyprint">ADD_PLUGIN(Help
+    SOURCES
+        ../../coreinterface.cpp
+        ../../guiinterface.cpp
+        ../../i18ninterface.cpp
+        ../../interface.cpp
+        ../../plugininfo.cpp
+
+        src/helpplugin.cpp
+        src/helpwidget.cpp
+        src/helpwindow.cpp
+    HEADERS_MOC
+        src/helpplugin.h
+        src/helpwidget.h
+        src/helpwindow.h
+    UIS
+        src/helpwindow.ui
+    INCLUDE_DIRS
+        src
+    OPENCOR_DEPENDENCIES
+        Core
+    QT_MODULES
+        Help
+        Network
+        WebKitWidgets
+        Widgets
+    QT_DEPENDENCIES
         QtCore
         QtGui
+        QtHelp
         QtNetwork
-        QtSql
-        QtXml
-    LIBRARIES
-        libQtCLucene
+        QtOpenGL
+        QtPrintSupport
+        QtQml
+        QtQuick
+        QtWebKit
+        QtWebKitWidgets
+        QtWidgets
 )</pre>
-                This will embed <code>QtHelp</code> (as a framework, hence its type above) within the OpenCOR bundle, after having stripped it from anything that is not essential (thus reducing its size) and having ensured that its Qt dependencies (i.e. the <code>QtCore</code>, <code>QtGui</code>, <code>QtNetwork</code>, <code>QtSql</code> and <code>QtXml</code> frameworks and the <code>libQtCLucene</code> library) point to our embedded version of Qt.
+                This will embed <code>QtHelp</code> within the OpenCOR bundle, after having stripped it from anything that is not essential (thus reducing its size) and having ensured that its Qt dependencies (i.e. the <code>QtCore</code>, <code>QtGui</code>, <code>QtHelp</code>,  <code>QtNetwork</code>, <code>QtOpenGL</code>, <code>QtPrintSupport</code>, <code>QtQml</code>, <code>QtQuick</code>, <code>QtWebKit</code>, <code>QtWebKitWidgets</code> and <code>QtWidgets</code>) point to our embedded version of Qt.
             </li>
         </ul>
 

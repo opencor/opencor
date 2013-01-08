@@ -23,6 +23,8 @@ PLUGININFO_FUNC LLVMPluginInfo();
 class LLVMPlugin : public QObject
 {
     Q_OBJECT
+
+    Q_PLUGIN_METADATA(IID "OpenCOR.LLVMPlugin" FILE "llvmplugin.json")
 };
 
 //==============================================================================

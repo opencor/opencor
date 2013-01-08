@@ -1136,6 +1136,8 @@ ADD_PLUGIN(LLVM
         tools/clang/include
     DEFINITIONS
         ${LLVM_DEFINITIONS}
+    QT_MODULES
+        Core
     QT_DEPENDENCIES
         QtCore
 )

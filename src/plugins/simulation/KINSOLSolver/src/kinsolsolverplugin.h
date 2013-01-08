@@ -27,6 +27,9 @@ PLUGININFO_FUNC KINSOLSolverPluginInfo();
 class KINSOLSolverPlugin : public QObject, public SolverInterface
 {
     Q_OBJECT
+
+    Q_PLUGIN_METADATA(IID "OpenCOR.KINSOLSolverPlugin" FILE "kinsolsolverplugin.json")
+
     Q_INTERFACES(OpenCOR::SolverInterface)
 
 public:

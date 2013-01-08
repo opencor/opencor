@@ -16,6 +16,8 @@ ADD_PLUGIN(CoreSolver
         src/coresolverplugin.h
     INCLUDE_DIRS
         src
+    QT_MODULES
+        Core
     QT_DEPENDENCIES
         QtCore
 )

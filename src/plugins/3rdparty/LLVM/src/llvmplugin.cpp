@@ -28,10 +28,6 @@ PLUGININFO_FUNC LLVMPluginInfo()
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(LLVM, LLVMPlugin)
-
-//==============================================================================
-
 }   // namespace LLVM
 }   // namespace OpenCOR
 

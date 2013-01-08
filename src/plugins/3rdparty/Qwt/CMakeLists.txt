@@ -114,13 +114,23 @@ ADD_PLUGIN(Qwt
         src/qwt_wheel.h
         src/qwtplugin.h
     DEFINITIONS
+        QWT_DLL
         QWT_MAKEDLL
     INCLUDE_DIRS
         src
         textengines/mathml
+    QT_MODULES
+        Concurrent
+        PrintSupport
+        Svg
+        Widgets
+        Xml
     QT_DEPENDENCIES
+        QtConcurrent
         QtCore
         QtGui
+        QtPrintSupport
         QtSvg
+        QtWidgets
         QtXml
 )

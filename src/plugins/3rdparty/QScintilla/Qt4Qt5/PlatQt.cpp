@@ -110,7 +110,12 @@ void Font::Create(const FontParameters &fp)
         strategy = QFont::PreferDefault;
     }
 
+/*---OPENCOR---
 #if defined(Q_WS_MAC)
+*/
+//---OPENCOR--- BEGIN
+#if defined(Q_OS_MAC)
+//---OPENCOR--- END
 #if QT_VERSION >= 0x040700
     strategy = static_cast<QFont::StyleStrategy>(strategy | QFont::ForceIntegerMetrics);
 #else

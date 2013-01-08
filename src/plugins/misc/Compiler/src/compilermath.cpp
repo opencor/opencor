@@ -118,7 +118,7 @@ double lcm_multi(int pCount, ...)
 double multi_min(int pCount, ...)
 {
     if (!pCount)
-        return strtod("NAN", NULL);
+        return strtod("NAN", 0);
 
     va_list parameters;
 
@@ -142,7 +142,7 @@ double multi_min(int pCount, ...)
 double multi_max(int pCount, ...)
 {
     if (!pCount)
-        return strtod("NAN", NULL);
+        return strtod("NAN", 0);
 
     va_list parameters;
 

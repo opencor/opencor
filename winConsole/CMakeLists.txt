@@ -2,7 +2,7 @@ PROJECT(OpenCOR)
 
 # Minimum version of CMake required
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.9)
 
 # Some in-house CMake functions/macros
 
@@ -39,20 +39,17 @@ INCLUDE_DIRECTORIES(../src/misc)
 
 INCLUDE_THIRD_PARTY_LIBRARY(.. LibQxt)
 
-# Qt specific
-
-SET(QT_DONT_USE_QTGUI TRUE)
-# Note: since we want a console version of OpenCOR...
-
-INCLUDE(${QT_USE_FILE})
-
 # Build the console version of OpenCOR
 
-QT4_ADD_RESOURCES(SOURCES_RCS ${RESOURCES})
+QT5_ADD_RESOURCES(SOURCES_RCS ${RESOURCES})
 
 ADD_EXECUTABLE(${PROJECT_NAME}
     ${SOURCES}
     ${SOURCES_RCS}
+)
+
+QT5_USE_MODULES(${PROJECT_NAME}
+    Core
 )
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME}

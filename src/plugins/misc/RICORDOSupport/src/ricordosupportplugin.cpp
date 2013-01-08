@@ -28,10 +28,6 @@ PLUGININFO_FUNC RICORDOSupportPluginInfo()
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(RICORDOSupport, RICORDOSupportPlugin)
-
-//==============================================================================
-
 }   // namespace RICORDOSupport
 }   // namespace OpenCOR
 

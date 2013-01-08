@@ -21,6 +21,7 @@
 #include <QLabel>
 #include <QMainWindow>
 #include <QMessageBox>
+#include <QMimeData>
 #include <QSettings>
 #include <QStackedWidget>
 #include <QUrl>

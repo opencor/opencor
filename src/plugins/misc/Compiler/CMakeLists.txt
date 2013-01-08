@@ -27,9 +27,12 @@ ADD_PLUGIN(Compiler
         ${LLVM_PLUGIN}
     OPENCOR_BINARY_DEPENDENCIES
         ${LLVM_BINARY_PLUGIN}
+    QT_MODULES
+        Widgets
     QT_DEPENDENCIES
         QtCore
         QtGui
+        QtWidgets
     TESTS
         test
 )

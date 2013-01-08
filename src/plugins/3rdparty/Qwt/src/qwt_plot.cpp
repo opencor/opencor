@@ -378,9 +378,19 @@ void QwtPlot::updateLayout()
 
                 QRegion r( scaleRect[axisId] );
                 if ( axisEnabled( yLeft ) )
+/*---OPENCOR---
                     r = r.subtract( QRegion( scaleRect[yLeft] ) );
+*/
+//---OPENCOR--- BEGIN
+                    r = r.subtracted( QRegion( scaleRect[yLeft] ) );
+//---OPENCOR--- END
                 if ( axisEnabled( yRight ) )
+/*---OPENCOR---
                     r = r.subtract( QRegion( scaleRect[yRight] ) );
+*/
+//---OPENCOR--- BEGIN
+                    r = r.subtracted( QRegion( scaleRect[yRight] ) );
+//---OPENCOR--- END
                 r.translate( -scaleRect[ axisId ].x(),
                     -scaleRect[axisId].y() );
 

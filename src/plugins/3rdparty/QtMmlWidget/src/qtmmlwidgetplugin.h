@@ -23,6 +23,8 @@ PLUGININFO_FUNC QtMmlWidgetPluginInfo();
 class QtMmlWidgetPlugin : public QObject
 {
     Q_OBJECT
+
+    Q_PLUGIN_METADATA(IID "OpenCOR.QtMmlWidgetPlugin" FILE "qtmmlwidgetplugin.json")
 };
 
 //==============================================================================

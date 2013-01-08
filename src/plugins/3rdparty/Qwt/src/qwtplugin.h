@@ -23,6 +23,8 @@ PLUGININFO_FUNC QwtPluginInfo();
 class QwtPlugin : public QObject
 {
     Q_OBJECT
+
+    Q_PLUGIN_METADATA(IID "OpenCOR.QwtPlugin" FILE "qwtplugin.json")
 };
 
 //==============================================================================

@@ -29,10 +29,6 @@ PLUGININFO_FUNC ForwardEulerSolverPluginInfo()
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(ForwardEulerSolver, ForwardEulerSolverPlugin)
-
-//==============================================================================
-
 Solver::Type ForwardEulerSolverPlugin::type() const
 {
     // Return the type of the solver

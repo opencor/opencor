@@ -34,10 +34,6 @@ PLUGININFO_FUNC HelpPluginInfo()
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(Help, HelpPlugin)
-
-//==============================================================================
-
 void HelpPlugin::initialize()
 {
     // Create an action to show/hide our help window

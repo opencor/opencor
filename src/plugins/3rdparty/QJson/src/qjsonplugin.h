@@ -23,6 +23,8 @@ PLUGININFO_FUNC QJsonPluginInfo();
 class QJsonPlugin : public QObject
 {
     Q_OBJECT
+
+    Q_PLUGIN_METADATA(IID "OpenCOR.QJsonPlugin" FILE "qjsonplugin.json")
 };
 
 //==============================================================================

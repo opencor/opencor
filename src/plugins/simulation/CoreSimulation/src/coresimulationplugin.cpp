@@ -28,10 +28,6 @@ PLUGININFO_FUNC CoreSimulationPluginInfo()
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(CoreSimulation, CoreSimulationPlugin)
-
-//==============================================================================
-
 }   // namespace CoreSimulation
 }   // namespace OpenCOR
 

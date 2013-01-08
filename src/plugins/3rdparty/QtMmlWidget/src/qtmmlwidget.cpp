@@ -44,10 +44,20 @@
 ** 
 ****************************************************************************/
 
+/*---OPENCOR---
 #include <QtGui/QApplication>
+*/
+//---OPENCOR--- BEGIN
+#include <QApplication>
+//---OPENCOR--- END
 #include <QtCore/QString>
 #include <QtCore/QMap>
+/*---OPENCOR---
 #include <QtGui/QDesktopWidget>
+*/
+//---OPENCOR--- BEGIN
+#include <QDesktopWidget>
+//---OPENCOR--- END
 #include <QtGui/QPainter>
 #include <QtGui/QPaintEvent>
 
@@ -3122,7 +3132,12 @@ MmlDocument::MmlDocument()
 
     // Some defaults which happen to work on my computer,
     // but probably won't work on other's
+/*---OPENCOR---
 #if defined(Q_WS_WIN)
+*/
+//---OPENCOR--- BEGIN
+#if defined(Q_OS_WIN)
+//---OPENCOR--- END
     m_normal_font_name = "Times New Roman";
 #else
     m_normal_font_name = "Century Schoolbook L";
@@ -5470,7 +5485,12 @@ void QtMmlWidget::paintEvent(QPaintEvent *e)
     QFrame::paintEvent(e);
     QPainter p(this);
     if (e->rect().intersects(contentsRect()))
+/*---OPENCOR---
         p.setClipRegion(e->region().intersect(contentsRect()));
+*/
+//---OPENCOR--- BEGIN
+        p.setClipRegion(e->region().intersected(contentsRect()));
+//---OPENCOR--- END
 
     QSize s = m_doc->size();
     int x = (width() - s.width())/2;

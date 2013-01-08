@@ -27,6 +27,9 @@ PLUGININFO_FUNC CVODESolverPluginInfo();
 class CVODESolverPlugin : public QObject, public SolverInterface
 {
     Q_OBJECT
+
+    Q_PLUGIN_METADATA(IID "OpenCOR.CVODESolverPlugin" FILE "cvodesolverplugin.json")
+
     Q_INTERFACES(OpenCOR::SolverInterface)
 
 public:

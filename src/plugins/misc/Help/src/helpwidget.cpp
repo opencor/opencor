@@ -71,13 +71,13 @@ qint64 HelpNetworkReply::readData(char *pBuffer, qint64 pMaxlen)
     // Read the data, should there be some to read
 
     if (len) {
-        qMemCopy(pBuffer, mData.constData(), len);
+        memcpy(pBuffer, mData.constData(), len);
 
         mData.remove(0, len);
     }
 
-    // Should there be no data left to read, then let ourselves know
-    // immediately that we are done
+    // Should there be no data left to read, then let ourselves know immediately
+    // that we are done
 
     if (!mData.length())
         QTimer::singleShot(0, this, SIGNAL(finished()));

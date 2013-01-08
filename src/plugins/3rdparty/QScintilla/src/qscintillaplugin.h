@@ -23,6 +23,8 @@ PLUGININFO_FUNC QScintillaPluginInfo();
 class QScintillaPlugin : public QObject
 {
     Q_OBJECT
+
+    Q_PLUGIN_METADATA(IID "OpenCOR.QScintillaPlugin" FILE "qscintillaplugin.json")
 };
 
 //==============================================================================

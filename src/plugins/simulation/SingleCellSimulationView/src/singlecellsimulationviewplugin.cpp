@@ -37,10 +37,6 @@ PLUGININFO_FUNC SingleCellSimulationViewPluginInfo()
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(SingleCellSimulationView, SingleCellSimulationViewPlugin)
-
-//==============================================================================
-
 SingleCellSimulationViewPlugin::SingleCellSimulationViewPlugin()
 {
     // Set our settings

@@ -29,10 +29,6 @@ PLUGININFO_FUNC CVODESolverPluginInfo()
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(CVODESolver, CVODESolverPlugin)
-
-//==============================================================================
-
 Solver::Type CVODESolverPlugin::type() const
 {
     // Return the type of the solver

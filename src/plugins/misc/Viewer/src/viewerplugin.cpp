@@ -28,10 +28,6 @@ PLUGININFO_FUNC ViewerPluginInfo()
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(Viewer, ViewerPlugin)
-
-//==============================================================================
-
 }   // namespace Viewer
 }   // namespace OpenCOR
 

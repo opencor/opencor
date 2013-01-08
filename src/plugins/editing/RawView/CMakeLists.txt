@@ -23,8 +23,11 @@ ADD_PLUGIN(RawView
         Core
         QScintilla
         QScintillaSupport
+    QT_MODULES
+        Widgets
     QT_DEPENDENCIES
         QtCore
         QtGui
         QtNetwork
+        QtWidgets
 )

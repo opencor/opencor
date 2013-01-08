@@ -23,6 +23,8 @@ PLUGININFO_FUNC CellMLAPIPluginInfo();
 class CellMLAPIPlugin : public QObject
 {
     Q_OBJECT
+
+    Q_PLUGIN_METADATA(IID "OpenCOR.CellMLAPIPlugin" FILE "cellmlapiplugin.json")
 };
 
 //==============================================================================

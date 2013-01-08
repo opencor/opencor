@@ -56,10 +56,13 @@ ADD_PLUGIN(CellMLSupport
         ${LLVM_PLUGIN}
     OPENCOR_BINARY_DEPENDENCIES
         ${LLVM_BINARY_PLUGIN}
+    QT_MODULES
+        Widgets
     QT_DEPENDENCIES
         QtCore
         QtGui
         QtNetwork
+        QtWidgets
     EXTERNAL_DEPENDENCIES
         ${CELLML_API_EXTERNAL_DEPENDENCIES}
 )

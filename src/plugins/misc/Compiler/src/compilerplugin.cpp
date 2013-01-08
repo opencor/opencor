@@ -28,10 +28,6 @@ PLUGININFO_FUNC CompilerPluginInfo()
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(Compiler, CompilerPlugin)
-
-//==============================================================================
-
 }   // namespace Compiler
 }   // namespace OpenCOR
 

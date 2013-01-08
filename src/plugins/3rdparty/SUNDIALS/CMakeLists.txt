@@ -44,7 +44,7 @@ ADD_PLUGIN(SUNDIALS
         src/kinsol/kinsol_spgmr.c
         src/kinsol/kinsol_spils.c
         src/kinsol/kinsol_sptfqmr.c
-        
+
         src/nvec_ser/nvector_serial.c
 
         src/sundials/sundials_band.c
@@ -64,6 +64,8 @@ ADD_PLUGIN(SUNDIALS
     DEFINITIONS
         BUILD_SUNDIALS_LIBRARY
         NO_FPRINTF_OUTPUT
+    QT_MODULES
+        Core
     QT_DEPENDENCIES
         QtCore
 )

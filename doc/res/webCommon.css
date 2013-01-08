@@ -1,4 +1,4 @@
-@import url("common.css");
+@import "common.css";
 
 span.opencor {
     display: none;

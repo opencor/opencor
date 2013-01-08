@@ -71,8 +71,12 @@ ADD_PLUGIN(Core
         src/centralwidget.ui
     INCLUDE_DIRS
         src
+    QT_MODULES
+        Network
+        Widgets
     QT_DEPENDENCIES
         QtCore
         QtGui
         QtNetwork
+        QtWidgets
 )

@@ -17,6 +17,8 @@ ADD_PLUGIN(CVODESolver
     OPENCOR_DEPENDENCIES
         CoreSolver
         SUNDIALS
+    QT_MODULES
+        Core
     QT_DEPENDENCIES
         QtCore
 )

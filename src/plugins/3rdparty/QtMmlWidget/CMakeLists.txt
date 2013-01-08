@@ -13,8 +13,12 @@ ADD_PLUGIN(QtMmlWidget
         src/qtmmlwidgetplugin.h
     INCLUDE_DIRS
         src
+    QT_MODULES
+        Widgets
+        Xml
     QT_DEPENDENCIES
         QtCore
         QtGui
+        QtWidgets
         QtXml
 )

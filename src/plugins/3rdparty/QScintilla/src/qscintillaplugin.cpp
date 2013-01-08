@@ -28,10 +28,6 @@ PLUGININFO_FUNC QScintillaPluginInfo()
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(QScintilla, QScintillaPlugin)
-
-//==============================================================================
-
 }   // namespace QJson
 }   // namespace QScintilla
 

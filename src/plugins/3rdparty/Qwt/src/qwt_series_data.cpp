@@ -323,10 +323,20 @@ QwtPointArrayData::QwtPointArrayData( const double *x,
         const double *y, size_t size )
 {
     d_x.resize( size );
+/*---OPENCOR---
     qMemCopy( d_x.data(), x, size * sizeof( double ) );
+*/
+//---OPENCOR--- BEGIN
+    memcpy( d_x.data(), x, size * sizeof( double ) );
+//---OPENCOR--- END
 
     d_y.resize( size );
+/*---OPENCOR---
     qMemCopy( d_y.data(), y, size * sizeof( double ) );
+*/
+//---OPENCOR--- BEGIN
+    memcpy( d_y.data(), y, size * sizeof( double ) );
+//---OPENCOR--- END
 }
 
 /*!

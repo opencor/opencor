@@ -231,7 +231,12 @@ void QwtPainter::fillRect( QPainter *painter,
 
     QRectF r = rect;
     if ( deviceClipping )
+/*---OPENCOR---
         r = r.intersect( clipRect );
+*/
+//---OPENCOR--- BEGIN
+        r = r.intersected( clipRect );
+//---OPENCOR--- END
 
     if ( r.isValid() )
         painter->fillRect( r, brush );
@@ -405,7 +410,12 @@ void QwtPainter::drawPolyline( QPainter *painter,
     if ( deviceClipping )
     {
         QPolygonF polygon( pointCount );
+/*---OPENCOR---
         qMemCopy( polygon.data(), points, pointCount * sizeof( QPointF ) );
+*/
+//---OPENCOR--- BEGIN
+        memcpy( polygon.data(), points, pointCount * sizeof( QPointF ) );
+//---OPENCOR--- END
 
         polygon = QwtClipper::clipPolygonF( clipRect, polygon );
         ::drawPolyline( painter,

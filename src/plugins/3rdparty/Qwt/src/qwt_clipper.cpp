@@ -137,7 +137,12 @@ public:
     ~PointBuffer()
     {
         if ( m_buffer )
+/*---OPENCOR---
             qFree( m_buffer );
+*/
+//---OPENCOR--- BEGIN
+            free( m_buffer );
+//---OPENCOR--- END
     }
 
     inline void setPoints( int numPoints, const Point *points )
@@ -145,7 +150,12 @@ public:
         reserve( numPoints );
 
         m_size = numPoints;
+/*---OPENCOR---
         qMemCopy( m_buffer, points, m_size * sizeof( Point ) );
+*/
+//---OPENCOR--- BEGIN
+        memcpy( m_buffer, points, m_size * sizeof( Point ) );
+//---OPENCOR--- END
     }
 
     inline void reset() 
@@ -190,7 +200,12 @@ private:
         while ( m_capacity < size )
             m_capacity *= 2;
 
+/*---OPENCOR---
         m_buffer = ( Point * ) qRealloc( 
+*/
+//---OPENCOR--- BEGIN
+        m_buffer = ( Point * ) realloc(
+//---OPENCOR--- END
             m_buffer, m_capacity * sizeof( Point ) );
     }
 
@@ -229,7 +244,12 @@ public:
 
         Polygon p;
         p.resize( points1.size() );
+/*---OPENCOR---
         qMemCopy( p.data(), points1.data(), points1.size() * sizeof( Point ) );
+*/
+//---OPENCOR--- BEGIN
+        memcpy( p.data(), points1.data(), points1.size() * sizeof( Point ) );
+//---OPENCOR--- END
 
         return p;
     }

@@ -33,10 +33,6 @@ PLUGININFO_FUNC FileBrowserPluginInfo()
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(FileBrowser, FileBrowserPlugin)
-
-//==============================================================================
-
 void FileBrowserPlugin::initialize()
 {
     // Create an action to show/hide our file browser window

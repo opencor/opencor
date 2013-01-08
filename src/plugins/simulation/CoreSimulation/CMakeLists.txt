@@ -13,7 +13,8 @@ ADD_PLUGIN(CoreSimulation
         src
     OPENCOR_DEPENDENCIES
         CoreSolver
+    QT_MODULES
+        Core
     QT_DEPENDENCIES
         QtCore
-        QtGui
 )

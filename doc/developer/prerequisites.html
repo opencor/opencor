@@ -37,7 +37,7 @@
                     <strong>Note #2:</strong> Git can be used either from the command line or with <a href="http://code.google.com/p/tortoisegit/">TortoiseGit</a> (or <a href="http://windows.github.com/">GitHub for Windows</a>), <a href="http://sourceforge.net/projects/qgit/">QGit</a> and <a href="http://gitx.frim.nl/">GitX</a> (or <a href="http://mac.github.com/">GitHub for Mac</a>) on Windows, Linux and OS X, respectively.
                 </div>
             </li>
-            <li><a href="http://www.cmake.org/">CMake</a> 2.8+ (the <a href="http://packages.ubuntu.com/precise/cmake">cmake</a> package on Ubuntu): a cross-platform build system;</li>
+            <li><a href="http://www.cmake.org/">CMake</a> 2.8.9+ (the <a href="http://packages.ubuntu.com/precise/cmake">cmake</a> package on Ubuntu): a cross-platform build system;</li>
             <li>
                 C++ toolchain: a set of C++ tools. The toolchain is different depending on the platform you are using:
                 <ul>
@@ -48,58 +48,43 @@
                         </div>
                     </li>
                     <li>Linux: the <a href="http://packages.ubuntu.com/precise/g++">g++</a> package on Ubuntu; and</li>
-                    <li>OS X: <a href="http://developer.apple.com/xcode/">Xcode</a> 4.5. You will also need to get both the command line tools and PackageMaker from the auxiliary tools (you can do so via the <code>Xcode</code> | <code>Open Developer Tool</code> | <code>More Developer Tools...</code> menu in Xcode).</li>
+                    <li>OS X: <a href="http://developer.apple.com/xcode/">Xcode</a> 4.5. You will also need to get both the command line tools and PackageMaker (from the auxiliary tools), which can be done via the <code>Xcode</code> | <code>Open Developer Tool</code> | <code>More Developer Tools...</code> menu in Xcode.</li>
                 </ul>
             </li>
             <li>
-                <a href="http://qt-project.org/">Qt</a> SDK 1.2.1: this combines Qt 4.8.1 (a cross-platform application and UI framework) and Qt Creator 2.4.1 (a cross-platform environment for Qt), among other things:
+                <a href="http://qt-project.org/">Qt</a> 5.0: this combines Qt 5.0.0 (a cross-platform application and UI framework) and Qt Creator 2.6.1 (the supporting Qt IDE):
                 <ul>
                     <li>
-                        <a href="http://sw.nokia.com/id/23f71960-21d3-4b7a-9329-4d5484c49c68/Qt_SDK_Win_online">Windows</a>;
+                        <a href="http://releases.qt-project.org/qt5/5.0.0/qt-windows-opensource-5.0.0-msvc2010_32-x86-offline.exe">Windows</a>;
                         <div>
-                            <strong>Note:</strong> to be able to debug, you will need to configure Qt Creator as follows (via the <code>Tools</code> | <code>Options...</code> menu):
-                            <ul>
-                                <li>From <code>Build & Run</code> | <code>Tool Chains</code>, clone the first entry and provide the requested path;</li>
-                                <li>From <code>Debugger</code> | <code>General</code>, add a new source paths mapping with <code>c:\iwmake\build_vs2010_opensource_________________PADDING_________________</code> and <code>C:\QtSDK\QtSources\4.8.1</code> as the source and target paths, respectively (note that your target path might be different depending on where you installed Qt); and</li>
-                                <li>From <code>Debugger</code> | <code>CDB</code>, add a symbol path by inserting a symbol server.</li>
-                            </ul>
+                            <strong>Note:</strong> to be able to debug, you will need to configure Qt Creator via the <code>Tools</code> | <code>Options...</code> menu. From there, select <code>Debugger</code> | <code>CDB</code>, and add a symbol path by inserting a symbol server.
                         </div>
                     </li>
                     <li>
-                        Linux <a href="http://sw.nokia.com/id/f33d3d5a-d847-4b30-8637-9a6b33f83ed2/Qt_SDK_Lin32_online">32-bit</a>/<a href="http://sw.nokia.com/id/b54dbe8e-c45e-4598-982f-eddbb6886ff5/Qt_SDK_Lin64_online">64-bit</a>; and
+                        Linux <a href="http://releases.qt-project.org/qt5/5.0.0/qt-linux-opensource-5.0.0-x86-offline.run">32-bit</a>/<a href="http://releases.qt-project.org/qt5/5.0.0/qt-linux-opensource-5.0.0-x86_64-offline.run">64-bit</a>; and
                         <div>
-                            <strong>Note:</strong> we would recommend sudo installing the SDK, so that it gets installed under under <code>/opt/QtSDK</code> rather than under your home directory.
+                            <strong>Note:</strong> we would recommend sudo installing Qt, so that it gets installed under under <code>/opt</code> rather than under your home directory.
                         </div>
                     </li>
                     <li>
-                        <a href = "http://sw.nokia.com/id/0ea024bd-2879-4098-98d8-67966a9615ef/Qt_SDK_Mac64_online">OS X</a>.
+                        <a href = "http://releases.qt-project.org/qt5/5.0.0/qt-mac-opensource-5.0.0-clang-offline.dmg">OS X</a>.
                         <div>
-                            <strong>Note #1:</strong> you might want to install the SDK under <code>/Applications</code> rather than your home folder as suggested by the installer.
-                        </div>
-                        <div>
-                            <strong>Note #2:</strong> Qt 4.8.1 does not yet support <a href="http://www.apple.com/osx/">OS X</a> 10.8 (Mountain Lion), so <a href="res/qglobal.patch">here</a> is a patch for both <code>/Applications/QtSDK/Desktop/Qt/4.8.1/gcc/include/QtCore/qglobal.h</code> and <code>/Applications/QtSDK/Desktop/Qt/4.8.1/gcc/lib/QtCore.framework/Headers/qglobal.h</code>.
+                            <strong>Note:</strong> you might want to install Qt under <code>/Applications</code> rather than your home folder as suggested by the installer.
                         </div>
                     </li>
                 </ul>
-                <div>
-                    <strong>Note:</strong> the Qt SDK will, by default, install everything that is needed to build OpenCOR, so it is really up to you which package(s) you want to install (you can always add/remove packages later on, if wanted/needed). Just for reference, <a href="res/pics/QtSDK.png">here</a> are the packages that we selected for our Windows build (it is very similar on Linux and OS X).
-                </div>
             </li>
             <li><a href="http://nsis.sourceforge.net/">NSIS</a> (Windows only): a program for creating Windows installers.</li>
         </ul>
 
         <p>
-            Note that our build environment requires the version of Qt mentioned above, i.e. 4.8.1. It may be that OpenCOR could be built using an earlier version of Qt, but this is not supported (and not recommended either). Still, should you want to give it a try, then look for <code>FIND_PACKAGE(Qt4 4.8.1 REQUIRED)</code> in <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>[OpenCOR]/cmake/common.cmake</code></a> and replace <code>4.8.1</code> with whatever version of Qt that you want to use.
-        </p>
-
-        <p>
-            Finally, you might want/need to update your <code>PATH</code> environment variable by adding the following paths:
+            Finally, you might want to update your <code>PATH</code> environment variable by adding the following path(s) (so that you can <a href="buildRunAndTest.html">build</a> OpenCOR from the command line):
         </p>
 
         <ul>
-            <li>Windows: <code>C:\Program Files\CMake 2.8\bin</code> (or <code>C:\Program Files (x86)\CMake 2.8\bin</code> if you are running a 64-bit version of Windows) and <code>C:\QtSDK\Desktop\Qt\4.8.1\msvc2010\bin</code>;</li>
-            <li>Linux: <code>/opt/QtSDK/Desktop/Qt/4.8.1/gcc/bin</code> (in <code>/etc/environment</code> on Ubuntu); and</li>
-            <li>OS X: <code>/Applications/QtSDK/Desktop/Qt/4.8.1/gcc/bin</code> (in <code>/etc/profile</code>).</li>
+            <li>Windows: <code>C:\Program Files\CMake 2.8\bin</code> (or <code>C:\Program Files (x86)\CMake 2.8\bin</code> if you are running a 64-bit version of Windows) and <code>C:\Qt\Qt5.0.0\5.0.0\msvc2010\bin</code>;</li>
+            <li>Linux: <code>/opt/Qt5.0.0/5.0.0/gcc/bin</code> (or <code>/opt/Qt5.0.0/5.0.0/gcc_64/bin</code>) in <code>/etc/environment</code> on Ubuntu; and</li>
+            <li>OS X: <code>/Applications/Qt5.0.0/5.0.0/clang_64/bin</code> in <code>/etc/profile</code>.</li>
         </ul>
 
         <script type="text/javascript">

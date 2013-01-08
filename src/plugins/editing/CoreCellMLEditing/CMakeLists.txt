@@ -17,8 +17,11 @@ ADD_PLUGIN(CoreCellMLEditing
         src
     OPENCOR_DEPENDENCIES
         Core
+    QT_MODULES
+        Widgets
     QT_DEPENDENCIES
         QtCore
         QtGui
         QtNetwork
+        QtWidgets
 )

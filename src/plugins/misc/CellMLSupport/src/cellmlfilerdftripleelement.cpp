@@ -78,8 +78,8 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pCe
                 mId = ids.value(id);
 
                 if (mId == QString()) {
-                    // There is no genId value for the current id, so generate
-                    // one and keep track of it
+                    // There is no id value for the current id, so generate one
+                    // and keep track of it
 
                     mId = QString("id_%1").arg(++counter, 5, 10, QChar('0'));
 

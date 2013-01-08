@@ -24,6 +24,9 @@ PLUGININFO_FUNC CompilerPluginInfo();
 class CompilerPlugin : public QObject, public I18nInterface
 {
     Q_OBJECT
+
+    Q_PLUGIN_METADATA(IID "OpenCOR.CompilerPlugin" FILE "compilerplugin.json")
+
     Q_INTERFACES(OpenCOR::I18nInterface)
 };
 

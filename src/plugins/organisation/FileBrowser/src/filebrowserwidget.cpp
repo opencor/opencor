@@ -42,7 +42,7 @@ FileBrowserWidget::FileBrowserWidget(QWidget *pParent) :
     setModel(mModel);
     setSortingEnabled(true);
 
-    header()->setMovable(false);
+    header()->setSectionsMovable(false);
 
     // Some connections
 

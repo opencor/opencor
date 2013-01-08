@@ -29,10 +29,6 @@ PLUGININFO_FUNC IDASolverPluginInfo()
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(IDASolver, IDASolverPlugin)
-
-//==============================================================================
-
 Solver::Type IDASolverPlugin::type() const
 {
     // Return the type of the solver

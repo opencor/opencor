@@ -16,9 +16,12 @@ ADD_PLUGIN(Viewer
     OPENCOR_DEPENDENCIES
         Core
         QtMmlWidget
+    QT_MODULES
+        Widgets
     QT_DEPENDENCIES
         QtCore
         QtGui
         QtNetwork
+        QtWidgets
         QtXml
 )

@@ -44,10 +44,6 @@ PLUGININFO_FUNC CorePluginInfo()
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(Core, CorePlugin)
-
-//==============================================================================
-
 void CorePlugin::initialize()
 {
     // Create our central widget
@@ -325,8 +321,8 @@ void CorePlugin::retrieveBorderColor()
     // Note #1: we use a QStackedWidget object and retrieve the colour of the
     //          pixel which is in the middle of the right border...
     // Note #2: we don't rely on the top border because it may be rendered in a
-    //          special way. In the same way, we don't rely on a corner as such
-    //          in case it's rendered as a rounded corner...
+    //          special way. Also, we don't rely on a corner as such in case
+    //          it's rendered as a rounded corner...
     // Note #3: on OS X, our widget must be shown otherwise, the retrieved
     //          border colour will be black. So we show it off screen, even on
     //          Windows and Linux, in case their behaviour was to change in the

@@ -3,7 +3,7 @@ PROJECT(HelpPlugin)
 # Generate the help files which will be embedded in the executable as a
 # resource
 
-EXECUTE_PROCESS(COMMAND ${QT_QCOLLECTIONGENERATOR_EXECUTABLE} ${CMAKE_SOURCE_DIR}/doc/${MAIN_PROJECT_NAME}.qhcp
+EXECUTE_PROCESS(COMMAND ${QT_BINARY_DIR}/qcollectiongenerator ${CMAKE_SOURCE_DIR}/doc/${MAIN_PROJECT_NAME}.qhcp
                                                            -o ${CMAKE_BINARY_DIR}/${MAIN_PROJECT_NAME}.qhc)
 
 # Add the plugin
@@ -29,10 +29,21 @@ ADD_PLUGIN(Help
         src
     OPENCOR_DEPENDENCIES
         Core
+    QT_MODULES
+        Help
+        Network
+        WebKitWidgets
+        Widgets
     QT_DEPENDENCIES
         QtCore
         QtGui
         QtHelp
         QtNetwork
+        QtOpenGL
+        QtPrintSupport
+        QtQml
+        QtQuick
         QtWebKit
+        QtWebKitWidgets
+        QtWidgets
 )

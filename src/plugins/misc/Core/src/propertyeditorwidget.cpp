@@ -589,7 +589,7 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
 
     setSelectionMode(QAbstractItemView::SingleSelection);
 
-    header()->setMovable(false);
+    header()->setSectionsMovable(false);
 
     // Initialise our height
 

@@ -28,10 +28,6 @@ PLUGININFO_FUNC QScintillaSupportPluginInfo()
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(QScintillaSupport, QScintillaSupportPlugin)
-
-//==============================================================================
-
 }   // namespace QScintillaSupport
 }   // namespace OpenCOR
 

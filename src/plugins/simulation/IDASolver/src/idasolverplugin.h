@@ -27,6 +27,9 @@ PLUGININFO_FUNC IDASolverPluginInfo();
 class IDASolverPlugin : public QObject, public SolverInterface
 {
     Q_OBJECT
+
+    Q_PLUGIN_METADATA(IID "OpenCOR.IDASolverPlugin" FILE "idasolverplugin.json")
+
     Q_INTERFACES(OpenCOR::SolverInterface)
 
 public:

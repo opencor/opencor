@@ -23,6 +23,8 @@ PLUGININFO_FUNC RICORDOSupportPluginInfo();
 class RICORDOSupportPlugin : public QObject
 {
     Q_OBJECT
+
+    Q_PLUGIN_METADATA(IID "OpenCOR.RICORDOSupportPlugin" FILE "ricordosupportplugin.json")
 };
 
 //==============================================================================

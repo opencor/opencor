@@ -55,11 +55,20 @@ ADD_PLUGIN(CellMLAnnotationView
         RICORDOSupport
     OPENCOR_BINARY_DEPENDENCIES
         ${LLVM_BINARY_PLUGIN}
+    QT_MODULES
+        WebKitWidgets
+        Widgets
     QT_DEPENDENCIES
         QtCore
         QtGui
         QtNetwork
+        QtOpenGL
+        QtPrintSupport
+        QtQml
+        QtQuick
         QtWebKit
+        QtWebKitWidgets
+        QtWidgets
     EXTERNAL_DEPENDENCIES
         ${CELLML_API_EXTERNAL_DEPENDENCIES}
 )

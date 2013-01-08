@@ -31,6 +31,9 @@ class FileBrowserPlugin : public QObject, public CoreInterface,
                           public GuiInterface, public I18nInterface
 {
     Q_OBJECT
+
+    Q_PLUGIN_METADATA(IID "OpenCOR.FileBrowserPlugin" FILE "filebrowserplugin.json")
+
     Q_INTERFACES(OpenCOR::CoreInterface)
     Q_INTERFACES(OpenCOR::GuiInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)

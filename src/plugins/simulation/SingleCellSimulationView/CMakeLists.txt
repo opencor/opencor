@@ -52,6 +52,7 @@ ADD_PLUGIN(SingleCellSimulationView
         src/singlecellsimulationviewwidget.ui
     DEFINITIONS
         ${LLVM_DEFINITIONS}
+        QWT_DLL
     INCLUDE_DIRS
         ../../3rdparty/Qwt/src
 
@@ -66,11 +67,16 @@ ADD_PLUGIN(SingleCellSimulationView
         Qwt
     OPENCOR_BINARY_DEPENDENCIES
         ${LLVM_BINARY_PLUGIN}
+    QT_MODULES
+        Widgets
     QT_DEPENDENCIES
+        QtConcurrent
         QtCore
         QtGui
         QtNetwork
+        QtPrintSupport
         QtSvg
+        QtWidgets
         QtXml
     EXTERNAL_DEPENDENCIES
         ${CELLML_API_EXTERNAL_DEPENDENCIES}

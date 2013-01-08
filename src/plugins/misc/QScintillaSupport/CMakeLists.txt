@@ -18,8 +18,12 @@ ADD_PLUGIN(QScintillaSupport
     OPENCOR_DEPENDENCIES
         Core
         QScintilla
+    QT_MODULES
+        Network
+        Widgets
     QT_DEPENDENCIES
         QtCore
         QtGui
         QtNetwork
+        QtWidgets
 )

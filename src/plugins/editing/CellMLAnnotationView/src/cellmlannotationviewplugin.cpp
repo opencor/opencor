@@ -39,10 +39,6 @@ PLUGININFO_FUNC CellMLAnnotationViewPluginInfo()
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(CellMLAnnotationView, CellMLAnnotationViewPlugin)
-
-//==============================================================================
-
 CellMLAnnotationViewPlugin::CellMLAnnotationViewPlugin() :
     mSizes(QList<int>()),
     mMetadataDetailsWidgetSizes(QList<int>()),

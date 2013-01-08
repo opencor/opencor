@@ -23,6 +23,8 @@ ADD_PLUGIN(QJson
         QJSON_MAKEDLL
     INCLUDE_DIRS
         src
+    QT_MODULES
+        Core
     QT_DEPENDENCIES
         QtCore
 )

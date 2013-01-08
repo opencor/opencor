@@ -28,10 +28,6 @@ PLUGININFO_FUNC SUNDIALSPluginInfo()
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(SUNDIALS, SUNDIALSPlugin)
-
-//==============================================================================
-
 }   // namespace SUNDIALS
 }   // namespace OpenCOR
 

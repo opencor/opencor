@@ -24,6 +24,8 @@ class CoreSolverPlugin : public QObject
 {
     Q_OBJECT
 
+    Q_PLUGIN_METADATA(IID "OpenCOR.CoreSolverPlugin" FILE "coresolverplugin.json")
+
 public:
     ~CoreSolverPlugin();
 };

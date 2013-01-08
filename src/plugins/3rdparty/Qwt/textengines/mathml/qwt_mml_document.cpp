@@ -3084,7 +3084,12 @@ QwtMmlDocument::QwtMmlDocument()
 
     // Some defaults which happen to work on my computer,
     // but probably won't work on other's
+/*---OPENCOR---
 #if defined(Q_WS_WIN)
+*/
+//---OPENCOR--- BEGIN
+#if defined(Q_OS_MAC)
+//---OPENCOR--- END
     m_normal_font_name = "Times New Roman";
 #else
     m_normal_font_name = "Century Schoolbook L";

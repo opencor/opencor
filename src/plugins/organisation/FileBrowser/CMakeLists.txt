@@ -25,8 +25,11 @@ ADD_PLUGIN(FileBrowser
         src
     OPENCOR_DEPENDENCIES
         Core
+    QT_MODULES
+        Widgets
     QT_DEPENDENCIES
         QtCore
         QtGui
         QtNetwork
+        QtWidgets
 )

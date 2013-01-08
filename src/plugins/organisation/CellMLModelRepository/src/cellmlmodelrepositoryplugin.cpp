@@ -33,10 +33,6 @@ PLUGININFO_FUNC CellMLModelRepositoryPluginInfo()
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(CellMLModelRepository, CellMLModelRepositoryPlugin)
-
-//==============================================================================
-
 void CellMLModelRepositoryPlugin::initialize()
 {
     // Create an action to show/hide our CellML Model Repository window

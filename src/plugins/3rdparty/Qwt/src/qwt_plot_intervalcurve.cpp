@@ -411,12 +411,22 @@ void QwtPlotIntervalCurve::drawTube( QPainter *painter,
             QPolygonF p;
 
             p.resize( size );
+/*---OPENCOR---
             qMemCopy( p.data(), points, size * sizeof( QPointF ) );
+*/
+//---OPENCOR--- BEGIN
+            memcpy( p.data(), points, size * sizeof( QPointF ) );
+//---OPENCOR--- END
             p = QwtClipper::clipPolygonF( clipRect, p );
             QwtPainter::drawPolyline( painter, p );
 
             p.resize( size );
+/*---OPENCOR---
             qMemCopy( p.data(), points + size, size * sizeof( QPointF ) );
+*/
+//---OPENCOR--- BEGIN
+            memcpy( p.data(), points + size, size * sizeof( QPointF ) );
+//---OPENCOR--- END
             p = QwtClipper::clipPolygonF( clipRect, p );
             QwtPainter::drawPolyline( painter, p );
         }

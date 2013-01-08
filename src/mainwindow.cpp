@@ -34,17 +34,6 @@
     #include <QShortcut>
 #endif
 #include <QUrl>
-#if !defined(Q_OS_WIN) && !defined(Q_OS_MAC)
-    #include <QX11Info>
-#endif
-
-//==============================================================================
-
-#if !defined(Q_OS_WIN) && !defined(Q_OS_MAC)
-    #include <X11/Xlib.h>
-    // Note: for some reason, this header file must be included after QUrl,
-    //       so...
-#endif
 
 //==============================================================================
 
@@ -82,13 +71,19 @@ MainWindow::MainWindow() :
     setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
 
     // Set up the GUI
+    // Note: the application icon (which needs to be set for Linux, but not for
+    //       Windows or OS X, since it's set through CMake in those cases (see
+    //       CMakeLists.txt)) is set within the GUI file. This being said, it's
+    //       good to have it set for all three platforms, since it can then be
+    //       used in, for example, the about box...
 
     mGui->setupUi(this);
-    // Note: the application icon (which needs to be set for Linux, but neither
-    //       for Windows nor OS X, since it's set through CMake in those cases
-    //       (see CMakeLists.txt)) is set within the GUI file. This being said,
-    //       it's good to have it set for all three platforms, since it can then
-    //       be used in, for example, the about box, so...
+
+    // Title of our main window
+    // Note: we don't set it in our .ui file since this will require
+    //       'translating' it in other languages...
+
+    setWindowTitle("OpenCOR");
 
     // A connection to handle the status bar
 
@@ -358,15 +353,6 @@ void MainWindow::showEvent(QShowEvent *pEvent)
         // the status bar is visible...
 
         mGui->actionStatusBar->setChecked(statusBar()->isVisible());
-
-        // Bring ourselves to the foreground
-        // Note: indeed, when starting/restarting OpenCOR (as a result of a
-        //       Reset All in the case of a restart), OpenCOR will on OS X be
-        //       behind any other application. Now, because it doesn't harm to
-        //       bring ourselves to the foreground when on Windows or Linux, we
-        //       may as well do it on those platforms too...
-
-        showSelf();
     }
 }
 
@@ -941,13 +927,12 @@ void MainWindow::showSelf()
 
     // Retrieve OpenCOR's window Id
 
-    WId mainWinId = winId();
+    HWND mainWinId = reinterpret_cast<HWND>(winId());
 
     // Bring OpenCOR to the foreground
 
-    DWORD foregroundThreadProcId = GetWindowThreadProcessId(GetForegroundWindow(),
-                                                            NULL);
-    DWORD mainThreadProcId = GetWindowThreadProcessId(mainWinId, NULL);
+    DWORD foregroundThreadProcId = GetWindowThreadProcessId(GetForegroundWindow(), 0);
+    DWORD mainThreadProcId = GetWindowThreadProcessId(mainWinId, 0);
 
     if (foregroundThreadProcId != mainThreadProcId) {
         // OpenCOR's thread process Id is not that of the foreground window, so
@@ -980,7 +965,7 @@ void MainWindow::showSelf()
     //       application is already in the foreground. Fair enough, but it
     //       happens that, here, the user wants OpenCOR to be brought to the
     //       foreground, hence the above code to get the effect we are after...
-#elif defined(Q_OS_MAC)
+#else
     // Do what one would normally do
 
     activateWindow();
@@ -989,25 +974,6 @@ void MainWindow::showSelf()
     //       starting OpenCOR, but it's not when we come here as a result of
     //       trying to start another instance of OpenCOR), but better be safe
     //       than sorry, so...
-#else
-    // Show ourselves the X11 way
-
-    // Send ourselves a message asking us to activate ourselves
-
-    XEvent event;
-    XWindowAttributes windowAttributes;
-
-    memset(&event, 0, sizeof(event));
-
-    event.xclient.type = ClientMessage;
-    event.xclient.display = x11Info().display();
-    event.xclient.window = winId();
-    event.xclient.message_type = XInternAtom(x11Info().display(), "_NET_ACTIVE_WINDOW", False);
-    event.xclient.format = 32;
-
-    XGetWindowAttributes(x11Info().display(), winId(), &windowAttributes);
-    XSendEvent(x11Info().display(), windowAttributes.screen->root, False,
-               SubstructureRedirectMask|SubstructureNotifyMask, &event);
 #endif
 }
 

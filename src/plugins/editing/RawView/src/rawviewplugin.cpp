@@ -33,10 +33,6 @@ PLUGININFO_FUNC RawViewPluginInfo()
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(RawView, RawViewPlugin)
-
-//==============================================================================
-
 RawViewPlugin::RawViewPlugin() :
     mViewWidgets(QMap<QString, RawViewWidget *>())
 {

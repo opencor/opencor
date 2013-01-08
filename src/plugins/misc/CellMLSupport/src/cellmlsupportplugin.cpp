@@ -34,10 +34,6 @@ PLUGININFO_FUNC CellMLSupportPluginInfo()
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(CellMLSupport, CellMLSupportPlugin)
-
-//==============================================================================
-
 void CellMLSupportPlugin::initializationsDone(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);

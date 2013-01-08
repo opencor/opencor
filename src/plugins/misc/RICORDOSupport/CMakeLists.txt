@@ -11,7 +11,8 @@ ADD_PLUGIN(RICORDOSupport
         src/ricordosupportplugin.h
     INCLUDE_DIRS
         src
+    QT_MODULES
+        Core
     QT_DEPENDENCIES
         QtCore
-        QtGui
 )

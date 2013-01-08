@@ -34,6 +34,9 @@ class CellMLSupportPlugin : public QObject, public CoreInterface,
                             public FileInterface, public I18nInterface
 {
     Q_OBJECT
+
+    Q_PLUGIN_METADATA(IID "OpenCOR.CellMLSupportPlugin" FILE "cellmlsupportplugin.json")
+
     Q_INTERFACES(OpenCOR::CoreInterface)
     Q_INTERFACES(OpenCOR::FileInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)

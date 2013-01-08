@@ -24,9 +24,18 @@ ADD_PLUGIN(CellMLModelRepository
     OPENCOR_DEPENDENCIES
         Core
         QJson
+    QT_MODULES
+        WebKitWidgets
+        Widgets
     QT_DEPENDENCIES
         QtCore
         QtGui
         QtNetwork
+        QtOpenGL
+        QtPrintSupport
+        QtQml
+        QtQuick
         QtWebKit
+        QtWebKitWidgets
+        QtWidgets
 )

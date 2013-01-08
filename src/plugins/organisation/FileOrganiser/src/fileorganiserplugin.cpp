@@ -33,10 +33,6 @@ PLUGININFO_FUNC FileOrganiserPluginInfo()
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(FileOrganiser, FileOrganiserPlugin)
-
-//==============================================================================
-
 void FileOrganiserPlugin::initialize()
 {
     // Create an action to show/hide our file organiser window

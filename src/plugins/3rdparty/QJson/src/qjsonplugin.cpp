@@ -28,10 +28,6 @@ PLUGININFO_FUNC QJsonPluginInfo()
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(QJson, QJsonPlugin)
-
-//==============================================================================
-
 }   // namespace QJson
 }   // namespace OpenCOR
 

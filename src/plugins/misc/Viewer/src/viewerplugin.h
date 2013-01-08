@@ -23,6 +23,8 @@ PLUGININFO_FUNC ViewerPluginInfo();
 class ViewerPlugin : public QObject
 {
     Q_OBJECT
+
+    Q_PLUGIN_METADATA(IID "OpenCOR.ViewerPlugin" FILE "viewerplugin.json")
 };
 
 //==============================================================================

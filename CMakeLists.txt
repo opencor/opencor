@@ -2,7 +2,7 @@ PROJECT(OpenCOR)
 
 # Minimum required version of CMake
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.9)
 
 # Name of the main project and location of the built OpenCOR binary
 # Note: these are required, on OS X, to determine where plugins should be
@@ -85,22 +85,6 @@ INCLUDE_DIRECTORIES(
     src/widgets
 )
 
-# Qt specific
-
-SET(QT_USE_PHONON TRUE)
-SET(QT_USE_QTHELP TRUE)
-SET(QT_USE_QTNETWORK TRUE)
-SET(QT_USE_QTSQL TRUE)
-SET(QT_USE_QTSVG TRUE)
-SET(QT_USE_QTWEBKIT TRUE)
-SET(QT_USE_QTXML TRUE)
-
-IF(NOT WIN32 AND NOT APPLE)
-    SET(QT_USE_QTDBUS TRUE)
-ENDIF()
-
-INCLUDE(${QT_USE_FILE})
-
 # Update the translation (.ts) files and generate the language (.qm) files
 # which will later on be embedded in the executable as resources
 
@@ -137,21 +121,21 @@ IF(ENABLE_TESTING)
 
     # Build our main test program
 
-    SET(RUNTESTS_PROGRAM runtests)
+    SET(RUNTESTS_NAME runtests)
 
-    ADD_EXECUTABLE(${RUNTESTS_PROGRAM}
+    ADD_EXECUTABLE(${RUNTESTS_NAME}
         test/main.cpp
     )
 
-    TARGET_LINK_LIBRARIES(${RUNTESTS_PROGRAM}
-        ${QT_QTCORE_LIBRARY}
+    QT5_USE_MODULES(${RUNTESTS_NAME}
+        Core
     )
 
     # Copy our main test program to our tests directory
 
-    SET(MAIN_TEST_FILENAME ${RUNTESTS_PROGRAM}${CMAKE_EXECUTABLE_SUFFIX})
+    SET(MAIN_TEST_FILENAME ${RUNTESTS_NAME}${CMAKE_EXECUTABLE_SUFFIX})
 
-    ADD_CUSTOM_COMMAND(TARGET ${RUNTESTS_PROGRAM} POST_BUILD
+    ADD_CUSTOM_COMMAND(TARGET ${RUNTESTS_NAME} POST_BUILD
                        COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/${MAIN_TEST_FILENAME}
                                                         ${DEST_TESTS_DIR}/${MAIN_TEST_FILENAME})
 ENDIF()
@@ -229,9 +213,9 @@ ENDFOREACH()
 
 # Build the GUI version of OpenCOR
 
-QT4_WRAP_CPP(SOURCES_MOC ${HEADERS_MOC})
-QT4_WRAP_UI(SOURCES_UIS ${UIS})
-QT4_ADD_RESOURCES(SOURCES_RCS ${RESOURCES})
+QT5_WRAP_CPP(SOURCES_MOC ${HEADERS_MOC})
+QT5_WRAP_UI(SOURCES_UIS ${UIS})
+QT5_ADD_RESOURCES(SOURCES_RCS ${RESOURCES})
 
 ADD_EXECUTABLE(${PROJECT_NAME} WIN32 MACOSX_BUNDLE
     ${SOURCES}
@@ -240,22 +224,20 @@ ADD_EXECUTABLE(${PROJECT_NAME} WIN32 MACOSX_BUNDLE
     ${SOURCES_RCS}
 )
 
-TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-    ${QT_PHONON_LIBRARY}
-    ${QT_QTCORE_LIBRARY}
-    ${QT_QTGUI_LIBRARY}
-    ${QT_QTNETWORK_LIBRARY}
+QT5_USE_MODULES(${PROJECT_NAME}
+    Concurrent
+    Help
+    Network
+    PrintSupport
+    Svg
+    WebKitWidgets
+    Widgets
+    Xml
 )
 
 IF(WIN32)
     TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-        ${QT_QTMAIN_LIBRARY}
-    )
-ENDIF()
-
-IF(NOT WIN32 AND NOT APPLE)
-    TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-        ${QT_QTDBUS_LIBRARY}
+        ${Qt5Core_QTMAIN_LIBRARIES}
     )
 ENDIF()
 
@@ -286,9 +268,7 @@ IF(NOT APPLE)
     ENDIF()
 ENDIF()
 
-# Some OS X specific information, as well as some pre- and post-processing
-# Note: the post-processing ensures that OpenCOR can be used on any OS X machine
-# that doesn't have Qt and the SQLite plugin
+# Some OS X specific information
 
 IF(APPLE)
     # Configure and use our own Info.plist file
@@ -314,8 +294,7 @@ IF(APPLE)
     # Remove the PlugIns directory left from a previous build
     # Note: this prevents us from getting some error messages...
 
-    FOREACH(QT_FOLDER accessible bearer codecs graphicssystems imageformats
-                      phonon_backend qmltooling)
+    FOREACH(QT_FOLDER accessible imageformats platforms printsupport)
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} PRE_BUILD
                            COMMAND ${CMAKE_COMMAND} -E remove_directory ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${QT_FOLDER})
     ENDFOREACH()
@@ -325,111 +304,6 @@ IF(APPLE)
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                        COMMAND ${QT_BINARY_DIR}/macdeployqt ${OS_X_PROJECT_BINARY_DIR})
-
-    # Some Qt libraries/frameworks don't get deployed by macdeployqt since they
-    # are not used by OpenCOR directly anymore but by some plugins. We must
-    # therefore deploy them ourselves and make sure that their Qt dependencies
-    # refer to our embedded version of the Qt libraries
-
-    DEPLOY_OS_X_LIBRARY(libQtCLucene
-        TYPE
-            Library
-        FRAMEWORKS
-            QtCore
-    )
-
-    DEPLOY_OS_X_LIBRARY(QtHelp
-        TYPE
-            Framework
-        FRAMEWORKS
-            QtCore
-            QtGui
-            QtNetwork
-            QtSql
-            QtXml
-        LIBRARIES
-            libQtCLucene
-    )
-
-    DEPLOY_OS_X_LIBRARY(QtSvg
-        TYPE
-            Framework
-        FRAMEWORKS
-            QtCore
-            QtGui
-    )
-
-    DEPLOY_OS_X_LIBRARY(QtWebKit
-        TYPE
-            Framework
-        FRAMEWORKS
-            phonon
-            QtCore
-            QtDBus
-            QtGui
-            QtNetwork
-            QtXml
-    )
-
-    DEPLOY_OS_X_LIBRARY(QtXml
-        TYPE
-            Framework
-        FRAMEWORKS
-            QtCore
-    )
-
-    # Clean up the plugins that are deployed by mmacdeployqt
-    # Note: it's not essential, it's merely to have 'clean' plugins...
-
-    CLEAN_OS_X_PLUGIN_DEPLOYMENT(accessible qtaccessiblewidgets)
-
-    CLEAN_OS_X_PLUGIN_DEPLOYMENT(bearer qgenericbearer)
-
-    CLEAN_OS_X_PLUGIN_DEPLOYMENT(codecs qcncodecs)
-    CLEAN_OS_X_PLUGIN_DEPLOYMENT(codecs qjpcodecs)
-    CLEAN_OS_X_PLUGIN_DEPLOYMENT(codecs qkrcodecs)
-    CLEAN_OS_X_PLUGIN_DEPLOYMENT(codecs qtwcodecs)
-
-    CLEAN_OS_X_PLUGIN_DEPLOYMENT(graphicssystems qtracegraphicssystem)
-
-    CLEAN_OS_X_PLUGIN_DEPLOYMENT(imageformats qgif)
-    CLEAN_OS_X_PLUGIN_DEPLOYMENT(imageformats qico)
-    CLEAN_OS_X_PLUGIN_DEPLOYMENT(imageformats qjpeg)
-    CLEAN_OS_X_PLUGIN_DEPLOYMENT(imageformats qmng)
-    CLEAN_OS_X_PLUGIN_DEPLOYMENT(imageformats qtiff)
-
-    CLEAN_OS_X_PLUGIN_DEPLOYMENT(phonon_backend phonon_qt7)
-
-    CLEAN_OS_X_PLUGIN_DEPLOYMENT(qmltooling qmldbg_tcp)
-
-    # Add the SQLite plugin to the bundle (required by the Help plugin)
-    # Note: this would, ideally, be done as part of the packaging, but we do it
-    #       here, since it allows us to test things as if Qt wasn't installed
-    #       on our development OS X machine (which is useful since we cannot
-    #       have a virtual machine with a 'blank' OS X system on it unlike with
-    #       Windows and Linux)...
-
-    SET(SQLDRIVERS_DIR ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/sqldrivers)
-
-    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E copy ${QT_PLUGINS_DIR}/sqldrivers/libqsqlite.dylib
-                                                        ${SQLDRIVERS_DIR}/libqsqlite.dylib)
-
-    # Make sure that the SQLite plugin refers to our embedded version
-
-    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND install_name_tool -id libqsqlite.dylib
-                                                     ${SQLDRIVERS_DIR}/libqsqlite.dylib)
-
-    # Make sure that the SQLite plugin refers to our embedded version of QtCore
-    # and QtSql on which it depends
-
-    FOREACH(QT_LIBRARY QtCore QtSql)
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
-                                                             @executable_path/../Frameworks/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
-                                                             ${SQLDRIVERS_DIR}/libqsqlite.dylib)
-    ENDFOREACH()
 ENDIF()
 
 # Package OpenCOR (using CPack)

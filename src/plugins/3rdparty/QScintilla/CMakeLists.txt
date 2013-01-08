@@ -87,7 +87,10 @@ ADD_PLUGIN(QScintilla
         lexlib
         Qt4Qt5
         src
+    QT_MODULES
+        Widgets
     QT_DEPENDENCIES
         QtCore
         QtGui
+        QtWidgets
 )

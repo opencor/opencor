@@ -56,19 +56,6 @@ MACRO(INITIALISE_PROJECT)
         ENDIF()
     ENDIF()
 
-    # Ask MSVC not to treat wchat_t as a built-in type
-
-    IF(WIN32)
-        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:wchar_t-")
-    ENDIF()
-
-    # Ask MSVC to ignore the LNK4099 warning since it has nothing to do with
-    # OpenCOR itself
-
-    IF(WIN32)
-        SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} /IGNORE:4099")
-    ENDIF()
-
     # Make sure that we can use install_name_tool without any prolem
 
     IF(APPLE)
@@ -77,21 +64,14 @@ MACRO(INITIALISE_PROJECT)
 
     # Required packages
 
-    IF(APPLE)
-        # Note: when calling CMake from Qt Creator, on OS X, our PATH is not
-        #       passed to CMake, meaning that CMake cannot find Qt. So, we have
-        #       no choice but to set QT_QMAKE_EXECUTABLE, so that CMake can find
-        #       Qt and we do this assuming that Qt's path is set in /etc/profile
-        #       (as recommended in our developer's documentation)...
+    FIND_PACKAGE(Qt5Widgets REQUIRED)
 
-        EXECUTE_PROCESS(
-            COMMAND sh -c ". /etc/profile && which qmake"
-            OUTPUT_STRIP_TRAILING_WHITESPACE
-            OUTPUT_VARIABLE QT_QMAKE_EXECUTABLE
-        )
-    ENDIF()
+    # Keep track of some information about Qt
 
-    FIND_PACKAGE(Qt4 4.8.1 REQUIRED)
+    SET(QT_BINARY_DIR ${_qt5_widgets_install_prefix}/bin)
+    SET(QT_LIBRARY_DIR ${_qt5_widgets_install_prefix}/lib)
+    SET(QT_PLUGINS_DIR ${_qt5_widgets_install_prefix}/plugins)
+    SET(QT_VERSION_MAJOR 5)
 
     # Whether we are building for 32-bit or 64-bit
 
@@ -169,11 +149,11 @@ MACRO(UPDATE_LANGUAGE_FILES TARGET_NAME)
         SET(TS_FILE i18n/${LANGUAGE_FILE}.ts)
 
         IF(EXISTS "${PROJECT_SOURCE_DIR}/${TS_FILE}")
-            EXECUTE_PROCESS(COMMAND ${QT_LUPDATE_EXECUTABLE} -no-obsolete
+            EXECUTE_PROCESS(COMMAND ${QT_BINARY_DIR}/lupdate -no-obsolete
                                                              ${SOURCES} ${HEADERS_MOC} ${UIS}
                                                          -ts ${TS_FILE}
                             WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
-            EXECUTE_PROCESS(COMMAND ${QT_LRELEASE_EXECUTABLE} ${PROJECT_SOURCE_DIR}/${TS_FILE}
+            EXECUTE_PROCESS(COMMAND ${QT_BINARY_DIR}/lrelease ${PROJECT_SOURCE_DIR}/${TS_FILE}
                                                           -qm ${CMAKE_BINARY_DIR}/${LANGUAGE_FILE}.qm)
         ENDIF()
     ENDFOREACH()
@@ -197,6 +177,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     SET(DEFINITIONS)
     SET(OPENCOR_DEPENDENCIES)
     SET(OPENCOR_BINARY_DEPENDENCIES)
+    SET(QT_MODULES)
     SET(QT_DEPENDENCIES)
     SET(EXTERNAL_DEPENDENCIES_DIR)
     SET(EXTERNAL_DEPENDENCIES)
@@ -241,14 +222,16 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             SET(TYPE_OF_PARAMETER 6)
         ELSEIF(${PARAMETER} STREQUAL "OPENCOR_BINARY_DEPENDENCIES")
             SET(TYPE_OF_PARAMETER 7)
-        ELSEIF(${PARAMETER} STREQUAL "QT_DEPENDENCIES")
+        ELSEIF(${PARAMETER} STREQUAL "QT_MODULES")
             SET(TYPE_OF_PARAMETER 8)
-        ELSEIF(${PARAMETER} STREQUAL "EXTERNAL_DEPENDENCIES_DIR")
+        ELSEIF(${PARAMETER} STREQUAL "QT_DEPENDENCIES")
             SET(TYPE_OF_PARAMETER 9)
-        ELSEIF(${PARAMETER} STREQUAL "EXTERNAL_DEPENDENCIES")
+        ELSEIF(${PARAMETER} STREQUAL "EXTERNAL_DEPENDENCIES_DIR")
             SET(TYPE_OF_PARAMETER 10)
-        ELSEIF(${PARAMETER} STREQUAL "TESTS")
+        ELSEIF(${PARAMETER} STREQUAL "EXTERNAL_DEPENDENCIES")
             SET(TYPE_OF_PARAMETER 11)
+        ELSEIF(${PARAMETER} STREQUAL "TESTS")
+            SET(TYPE_OF_PARAMETER 12)
         ELSE()
             # Not one of the headers, so add the parameter to the corresponding
             # set
@@ -268,12 +251,14 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 7)
                 LIST(APPEND OPENCOR_BINARY_DEPENDENCIES ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 8)
-                LIST(APPEND QT_DEPENDENCIES ${PARAMETER})
+                LIST(APPEND QT_MODULES ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 9)
-                SET(EXTERNAL_DEPENDENCIES_DIR ${PARAMETER})
+                LIST(APPEND QT_DEPENDENCIES ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 10)
-                LIST(APPEND EXTERNAL_DEPENDENCIES ${PARAMETER})
+                SET(EXTERNAL_DEPENDENCIES_DIR ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 11)
+                LIST(APPEND EXTERNAL_DEPENDENCIES ${PARAMETER})
+            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 12)
                 LIST(APPEND TESTS ${PARAMETER})
             ENDIF()
         ENDIF()
@@ -317,19 +302,19 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     IF("${HEADERS_MOC}" STREQUAL "")
         SET(SOURCES_MOC)
     ELSE()
-        QT4_WRAP_CPP(SOURCES_MOC ${HEADERS_MOC})
+        QT5_WRAP_CPP(SOURCES_MOC ${HEADERS_MOC})
     ENDIF()
 
     IF("${UIS}" STREQUAL "")
         SET(SOURCES_UIS)
     ELSE()
-        QT4_WRAP_UI(SOURCES_UIS ${UIS})
+        QT5_WRAP_UI(SOURCES_UIS ${UIS})
     ENDIF()
 
     IF("${RESOURCES}" STREQUAL "")
         SET(SOURCES_RCS)
     ELSE()
-        QT4_ADD_RESOURCES(SOURCES_RCS ${RESOURCES})
+        QT5_ADD_RESOURCES(SOURCES_RCS ${RESOURCES})
     ENDIF()
 
     ADD_LIBRARY(${PROJECT_NAME} SHARED
@@ -355,25 +340,11 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         )
     ENDFOREACH()
 
-    # Qt dependencies
+    # Qt modules
 
-    FOREACH(QT_DEPENDENCY ${QT_DEPENDENCIES})
-        IF(WIN32)
-            IF(DEBUG_MODE)
-                SET(QT_DEPENDENCY_VERSION d)
-            ELSE()
-                SET(QT_DEPENDENCY_VERSION)
-            ENDIF()
-
-            SET(QT_LIBRARY_PATH ${QT_LIBRARY_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}${QT_DEPENDENCY}${QT_DEPENDENCY_VERSION}${QT_VERSION_MAJOR}${CMAKE_STATIC_LIBRARY_SUFFIX})
-        ELSEIF(APPLE)
-            SET(QT_LIBRARY_PATH ${QT_LIBRARY_DIR}/${QT_DEPENDENCY}.framework)
-        ELSE()
-            SET(QT_LIBRARY_PATH ${QT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX})
-        ENDIF()
-
-        TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-            ${QT_LIBRARY_PATH}
+    FOREACH(QT_MODULE ${QT_MODULES})
+        QT5_USE_MODULES(${PROJECT_NAME}
+            ${QT_MODULE}
         )
     ENDFOREACH()
 
@@ -532,7 +503,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
                 # Rules to build the test
 
-                QT4_WRAP_CPP(TEST_SOURCES_MOC
+                QT5_WRAP_CPP(TEST_SOURCES_MOC
                     ../../plugin.h
                     ../../pluginmanager.h
 
@@ -565,25 +536,11 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     )
                 ENDFOREACH()
 
-                # Qt dependencies
+                # Qt modules
 
-                FOREACH(QT_DEPENDENCY ${QT_DEPENDENCIES} QtTest)
-                    IF(WIN32)
-                        IF(DEBUG_MODE)
-                            SET(QT_DEPENDENCY_VERSION d)
-                        ELSE()
-                            SET(QT_DEPENDENCY_VERSION)
-                        ENDIF()
-
-                        SET(QT_LIBRARY_PATH ${QT_LIBRARY_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}${QT_DEPENDENCY}${QT_DEPENDENCY_VERSION}${QT_VERSION_MAJOR}${CMAKE_STATIC_LIBRARY_SUFFIX})
-                    ELSEIF(APPLE)
-                        SET(QT_LIBRARY_PATH ${QT_LIBRARY_DIR}/${QT_DEPENDENCY}.framework)
-                    ELSE()
-                        SET(QT_LIBRARY_PATH ${QT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX})
-                    ENDIF()
-
-                    TARGET_LINK_LIBRARIES(${TEST_NAME}
-                        ${QT_LIBRARY_PATH}
+                FOREACH(QT_MODULE ${QT_MODULES} Test)
+                    QT5_USE_MODULES(${TEST_NAME}
+                        ${QT_MODULE}
                     )
                 ENDFOREACH()
 
@@ -712,147 +669,37 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
     ENDIF()
 ENDMACRO()
 
-MACRO(DEPLOY_OS_X_LIBRARY LIBRARY_NAME)
-    # Various initialisations
-
-    SET(TYPE)
-    SET(DIR)
-    SET(FRAMEWORKS)
-    SET(LIBRARIES)
-
-    # Analyse the extra parameters
-
-    SET(TYPE_OF_PARAMETER 0)
-
-    FOREACH(PARAMETER ${ARGN})
-        IF(${PARAMETER} STREQUAL "TYPE")
-            SET(TYPE_OF_PARAMETER 1)
-        ELSEIF(${PARAMETER} STREQUAL "DIR")
-            SET(TYPE_OF_PARAMETER 2)
-        ELSEIF(${PARAMETER} STREQUAL "FRAMEWORKS")
-            SET(TYPE_OF_PARAMETER 3)
-        ELSEIF(${PARAMETER} STREQUAL "LIBRARIES")
-            SET(TYPE_OF_PARAMETER 4)
-        ELSE()
-            # Not one of the headers, so add the parameter to the corresponding
-            # set
-
-            IF(${TYPE_OF_PARAMETER} EQUAL 1)
-                SET(TYPE ${PARAMETER})
-            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 2)
-                SET(DIR ${PARAMETER})
-            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 3)
-                LIST(APPEND FRAMEWORKS ${PARAMETER})
-            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 4)
-                LIST(APPEND LIBRARIES ${PARAMETER})
-            ENDIF()
-        ENDIF()
-    ENDFOREACH()
-
+MACRO(DEPLOY_OS_X_LIBRARY LIBRARY_NAME DIRNAME)
     # Deploy the library itself
 
-    IF("${TYPE}" STREQUAL "Library")
-        SET(LIBRARY_LIB_DIR ${OS_X_PROJECT_BINARY_DIR}/Contents/Frameworks)
+    SET(LIBRARY_FILEPATH ${OS_X_PROJECT_BINARY_DIR}/Contents/Frameworks/${LIBRARY_NAME})
 
-        IF("${DIR}" STREQUAL "")
-            # We must deploy a Qt library
+    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                       COMMAND ${CMAKE_COMMAND} -E copy ${DIRNAME}/${LIBRARY_NAME}
+                                                        ${LIBRARY_FILEPATH})
 
-            SET(LIBRARY_RELATIVE_FILEPATH ${LIBRARY_NAME}.${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX})
-            SET(LIBRARY_FILEPATH ${LIBRARY_LIB_DIR}/${LIBRARY_RELATIVE_FILEPATH})
+    # Copy the library to the build directory, so that we can test any plugin
+    # that has a dependency on it
 
-            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND ${CMAKE_COMMAND} -E copy ${QT_LIBRARY_DIR}/${LIBRARY_RELATIVE_FILEPATH}
-                                                                ${LIBRARY_FILEPATH})
-        ELSE()
-            # We must deploy a third-party library
-
-            SET(LIBRARY_FILEPATH ${LIBRARY_LIB_DIR}/${LIBRARY_NAME})
-
-            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND ${CMAKE_COMMAND} -E copy ${DIR}/${LIBRARY_NAME}
-                                                                ${LIBRARY_FILEPATH})
-
-            # In the case of a third-party library, we must also copy the
-            # library to the build directory, so that we can test any plugin
-            # that has a dependency on it
-            # Note: we don't care about stripping the library from anything that
-            #       is not essential, cleaning up its id, making sure that it
-            #       refers to our embedded version of the Qt libraries on which
-            #       it depends, etc. since it's never going to be deployed...
-
-            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND ${CMAKE_COMMAND} -E copy ${DIR}/${LIBRARY_NAME}
-                                                                ${CMAKE_BINARY_DIR}/${LIBRARY_NAME})
-        ENDIF()
-    ELSE()
-        # We must deploy a library which is bundled in a Qt framework
-
-        SET(LIBRARY_RELATIVE_FILEPATH ${LIBRARY_NAME}.framework/Versions/${QT_VERSION_MAJOR}/${LIBRARY_NAME})
-        SET(LIBRARY_FILEPATH ${OS_X_PROJECT_BINARY_DIR}/Contents/Frameworks/${LIBRARY_RELATIVE_FILEPATH})
-
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E copy ${QT_LIBRARY_DIR}/${LIBRARY_RELATIVE_FILEPATH}
-                                                            ${LIBRARY_FILEPATH})
-    ENDIF()
+    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                       COMMAND ${CMAKE_COMMAND} -E copy ${DIRNAME}/${LIBRARY_NAME}
+                                                        ${CMAKE_BINARY_DIR}/${LIBRARY_NAME})
 
     # Strip the library from anything that is not essential
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                        COMMAND strip -S -x ${LIBRARY_FILEPATH})
 
-    # Do things that are only related to Qt libraries or non-Qt libraries
+    # Make sure that the library refers to our embedded version of the libraries
+    # on which it depends
+    # Note: that information is provided through our optional arguments...
 
-    IF("${DIR}" STREQUAL "")
-        # Clean up the library's id
-
-        IF("${TYPE}" STREQUAL "Library")
-            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -id ${LIBRARY_NAME}.${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX}
+    FOREACH(DEPENDENCY_NAME ${ARGN})
+        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                           COMMAND install_name_tool -change ${DEPENDENCY_NAME}
+                                                             @executable_path/../Frameworks/${DEPENDENCY_NAME}
                                                              ${LIBRARY_FILEPATH})
-        ELSE()
-            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -id ${LIBRARY_NAME}
-                                                             ${LIBRARY_FILEPATH})
-        ENDIF()
-
-        # Make sure that the library refers to our embedded version of the Qt
-        # libraries on which it depends
-
-        FOREACH(LIBRARY ${LIBRARIES})
-            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${LIBRARY}.${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                                                                 @executable_path/../Frameworks/${LIBRARY}.${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                                                                 ${LIBRARY_FILEPATH})
-        ENDFOREACH()
-
-        # Make sure that the library refers to our embedded version of the Qt
-        # frameworks on which it depends
-
-        FOREACH(FRAMEWORK ${FRAMEWORKS})
-            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${FRAMEWORK}.framework/Versions/${QT_VERSION_MAJOR}/${FRAMEWORK}
-                                                                 @executable_path/../Frameworks/${FRAMEWORK}.framework/Versions/${QT_VERSION_MAJOR}/${FRAMEWORK}
-                                                                 ${LIBRARY_FILEPATH})
-        ENDFOREACH()
-    ELSE()
-        # Make sure that the third-party library refers to our embedded version
-        # of the libraries on which it depends
-
-        FOREACH(LIBRARY ${LIBRARIES})
-            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change ${LIBRARY}
-                                                                 @executable_path/../Frameworks/${LIBRARY}
-                                                                 ${LIBRARY_FILEPATH})
-        ENDFOREACH()
-    ENDIF()
-ENDMACRO()
-
-MACRO(CLEAN_OS_X_PLUGIN_DEPLOYMENT PLUGIN_DIRNAME PLUGIN_NAME)
-    SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
-
-    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND install_name_tool -id ${PLUGIN_FILENAME}
-                                                     ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${PLUGIN_DIRNAME}/${PLUGIN_FILENAME})
+    ENDFOREACH()
 ENDMACRO()
 
 MACRO(COPY_FILE_TO_BUILD_DIR DEST_DIRNAME DIRNAME FILENAME)
@@ -882,7 +729,7 @@ MACRO(COPY_FILE_TO_BUILD_DIR DEST_DIRNAME DIRNAME FILENAME)
     ENDIF()
 ENDMACRO()
 
-MACRO(DEPLOY_WINDOWS_EXTERNAL_DEPENDENCY DIRNAME FILENAME)
+MACRO(DEPLOY_WINDOWS_LIBRARY DIRNAME FILENAME)
     # Copy the library file to both the build and build/bin folders, so we can
     # test things without first having to deploy OpenCOR
 
@@ -894,7 +741,7 @@ MACRO(DEPLOY_WINDOWS_EXTERNAL_DEPENDENCY DIRNAME FILENAME)
     INSTALL(FILES ${DIRNAME}/${FILENAME} DESTINATION bin)
 ENDMACRO()
 
-MACRO(DEPLOY_LINUX_EXTERNAL_DEPENDENCY DIRNAME FILENAME)
+MACRO(DEPLOY_LINUX_LIBRARY DIRNAME FILENAME)
     # Copy the library file to the build folder, so we can test things without
     # first having to deploy OpenCOR
 

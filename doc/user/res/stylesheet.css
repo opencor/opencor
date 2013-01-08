@@ -1,15 +1,10 @@
-@import url("../../res/webCommon.css");
-@import url("/doc/res/common.css");
-/* Note #1: the first import used to be sufficient for use within either a   */
-/*          web page or a Qt help page, but not anymore. So, instead, we now */
-/*          have the first import for use within a web page and the second   */
-/*          import for use within a Qt help page. Indeed, with Qt 4.8.1,     */
-/*          QtWebKit is now stricter (or, most likely, it didn't use to be   */
-/*          strict enough before and now does what it should have been doing */
-/*          all along?), hence the above 'dirty trick' to get things to work */
-/*          in both cases...                                                 */
-/* Note #2: because we support our own URL scheme, we now have a Web         */
-/*          specific common CSS file...                                      */
+@import "../../res/webCommon.css";
+@import "/doc/res/common.css";
+/* Note #1: the first import is used within a web page while the second      */
+/*          within a Qt help page...                                         */
+/* Note #2: OpenCOR supports its own URL scheme which we handle through our  */
+/*          common CSS file, but it needs to be disabled for the web site,   */
+/*          hence we have and use our Web common CSS file instead...         */
 
 a {
     color: rgb(54, 96, 146);

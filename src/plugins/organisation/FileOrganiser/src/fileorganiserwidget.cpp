@@ -9,6 +9,7 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QHelpEvent>
+#include <QMimeData>
 #include <QSettings>
 #include <QUrl>
 

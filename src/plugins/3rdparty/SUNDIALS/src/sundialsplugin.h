@@ -23,6 +23,8 @@ PLUGININFO_FUNC SUNDIALSPluginInfo();
 class SUNDIALSPlugin : public QObject
 {
     Q_OBJECT
+
+    Q_PLUGIN_METADATA(IID "OpenCOR.SUNDIALSPlugin" FILE "sundialsplugin.json")
 };
 
 //==============================================================================

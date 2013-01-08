@@ -29,10 +29,6 @@ PLUGININFO_FUNC KINSOLSolverPluginInfo()
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(KINSOLSolver, KINSOLSolverPlugin)
-
-//==============================================================================
-
 Solver::Type KINSOLSolverPlugin::type() const
 {
     // Return the type of the solver

@@ -255,6 +255,7 @@ void QwtPlotRenderer::renderDocument( QwtPlot *plot,
     }
     else if ( fmt == "ps" )
     {
+/*---OPENCOR---
 #ifndef QT_NO_PRINTER
         QPrinter printer;
         printer.setFullPage( true );
@@ -267,6 +268,7 @@ void QwtPlotRenderer::renderDocument( QwtPlot *plot,
         QPainter painter( &printer );
         render( plot, &painter, documentRect );
 #endif
+*/
     }
     else if ( fmt == "svg" )
     {

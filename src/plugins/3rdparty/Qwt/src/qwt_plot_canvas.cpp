@@ -18,9 +18,11 @@
 #include <qpaintengine.h>
 #include <qevent.h>
 #include <qbitmap.h>
+/*---OPENCOR---
 #ifdef Q_WS_X11
 #include <qx11info_x11.h>
 #endif
+*/
 
 class QwtStyleSheetRecorder: public QwtNullPaintDevice
 {
@@ -778,10 +780,12 @@ void QwtPlotCanvas::paintEvent( QPaintEvent *event )
         {
             bs = QPixmap( size() );
 
+/*---OPENCOR---
 #ifdef Q_WS_X11
             if ( bs.x11Info().screen() != x11Info().screen() )
                 bs.x11SetScreen( x11Info().screen() );
 #endif
+*/
 
             if ( testAttribute(Qt::WA_StyledBackground) )
             {

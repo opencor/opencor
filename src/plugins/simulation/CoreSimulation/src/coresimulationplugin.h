@@ -23,6 +23,8 @@ PLUGININFO_FUNC CoreSimulationPluginInfo();
 class CoreSimulationPlugin : public QObject
 {
     Q_OBJECT
+
+    Q_PLUGIN_METADATA(IID "OpenCOR.CoreSimulationPlugin" FILE "coresimulationplugin.json")
 };
 
 //==============================================================================

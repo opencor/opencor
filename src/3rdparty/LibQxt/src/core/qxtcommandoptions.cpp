@@ -106,14 +106,29 @@ static const char* qxt_qt_options[] =
 #ifdef QT_DEBUG
     "nograb",       QT_TRANSLATE_NOOP("QxtCommandOptions", "never grab the mouse or keyboard"),
 #endif
+/*---OPENCOR---
 #if defined(QT_DEBUG) && defined(Q_WS_X11)
+*/
+//---OPENCOR--- BEGIN
+#if defined(QT_DEBUG) && !defined(Q_OS_WIN) && !defined(Q_OS_MAC)
+//---OPENCOR--- END
     "dograb",       QT_TRANSLATE_NOOP("QxtCommandOptions", "grab the mouse/keyboard even in a debugger"),
     "sync",         QT_TRANSLATE_NOOP("QxtCommandOptions", "run in synchronous mode for debugging"),
 #endif
+/*---OPENCOR---
 #ifdef Q_WS_WIN
+*/
+//---OPENCOR--- BEGIN
+#ifdef Q_OS_WIN
+//---OPENCOR--- END
     "direct3d",     QT_TRANSLATE_NOOP("QxtCommandOptions", "use Direct3D by default"),
 #endif
+/*---OPENCOR---
 #ifdef Q_WS_X11
+*/
+//---OPENCOR--- BEGIN
+#if !defined(Q_OS_WIN) && !defined(Q_OS_MAC)
+//---OPENCOR--- END
     "=display",     QT_TRANSLATE_NOOP("QxtCommandOptions", "sets the X11 display"),
     "=geometry",    QT_TRANSLATE_NOOP("QxtCommandOptions", "sets the geometry of the first window"),
     "=font",        "",

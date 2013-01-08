@@ -28,10 +28,6 @@ PLUGININFO_FUNC QtMmlWidgetPluginInfo()
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(QtMmlWidget, QtMmlWidgetPlugin)
-
-//==============================================================================
-
 }   // namespace QtMmlWidget
 }   // namespace OpenCOR
 

@@ -32,10 +32,6 @@ PLUGININFO_FUNC CoreEditingPluginInfo()
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(CoreEditing, CoreEditingPlugin)
-
-//==============================================================================
-
 void CoreEditingPlugin::initialize()
 {
     // Create our Edit menu

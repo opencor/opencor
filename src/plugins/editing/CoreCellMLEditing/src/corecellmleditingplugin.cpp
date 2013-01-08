@@ -32,10 +32,6 @@ PLUGININFO_FUNC CoreCellMLEditingPluginInfo()
 
 //==============================================================================
 
-Q_EXPORT_PLUGIN2(CoreCellMLEditing, CoreCellMLEditingPlugin)
-
-//==============================================================================
-
 void CoreCellMLEditingPlugin::initialize()
 {
     // Create our different File|New actions

@@ -29,6 +29,9 @@ class RawViewWidget;
 class RawViewPlugin : public QObject, public GuiInterface, public I18nInterface
 {
     Q_OBJECT
+
+    Q_PLUGIN_METADATA(IID "OpenCOR.RawViewPlugin" FILE "rawviewplugin.json")
+
     Q_INTERFACES(OpenCOR::GuiInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
 
