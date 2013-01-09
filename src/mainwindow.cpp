@@ -101,7 +101,6 @@ MainWindow::MainWindow() :
     // Note: we do it here, so that we can use standard shortcuts (whenever
     //       possible)...
 
-    mGui->actionFullScreen->setShortcut(Qt::Key_F11);
 #ifdef Q_OS_WIN
     // Note: QKeySequence::Quit corresponds to Alt+F4 on Windows, but it doesn't
     //       get shown in the menu item, not to mention that we would also like
@@ -122,6 +121,8 @@ MainWindow::MainWindow() :
     new QShortcut(QKeySequence("Ctrl+M"),
                   this, SLOT(showMinimized()));
 #endif
+
+    mGui->actionFullScreen->setShortcut(QKeySequence::FullScreen);
 
     // Initialise our various plugins
 

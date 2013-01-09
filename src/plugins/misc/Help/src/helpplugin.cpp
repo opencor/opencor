@@ -40,7 +40,7 @@ void HelpPlugin::initialize()
 
     mHelpAction = newAction(mMainWindow, true,
                             ":/oxygen/apps/help-browser.png",
-                            QKeySequence::HelpContents);
+                            Qt::Key_F1);
 
     // Create our help window
 
