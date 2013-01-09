@@ -8,7 +8,6 @@
 //==============================================================================
 
 #include "plugininfo.h"
-#include "i18ninterface.h"
 
 //==============================================================================
 
@@ -21,13 +20,11 @@ PLUGININFO_FUNC CompilerPluginInfo();
 
 //==============================================================================
 
-class CompilerPlugin : public QObject, public I18nInterface
+class CompilerPlugin : public QObject
 {
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID "OpenCOR.CompilerPlugin" FILE "compilerplugin.json")
-
-    Q_INTERFACES(OpenCOR::I18nInterface)
 };
 
 //==============================================================================
