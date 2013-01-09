@@ -236,8 +236,6 @@ MainWindow::MainWindow() :
 
     // Initialise the checked state of our full screen action, since OpenCOR may
     // (re)start in full screen mode
-    // Note: useful on OS X since there is now a special full screen button in
-    //       the main window's title bar...
 
     mGui->actionFullScreen->setChecked(isFullScreen());
 }
@@ -323,11 +321,15 @@ void MainWindow::changeEvent(QEvent *pEvent)
         // the user wants to use the system's locale
 
         setLocale(SystemLocale);
+#ifdef Q_OS_MAC
     else if (pEvent->type() == QEvent::WindowStateChange)
         // The window state has changed, so update the checked state of our full
         // screen action
+        // Note: useful on OS X since there is now a special full screen button
+        //       in the main window's title bar...
 
         mGui->actionFullScreen->setChecked(isFullScreen());
+#endif
 }
 
 //==============================================================================
@@ -1083,11 +1085,25 @@ void MainWindow::messageReceived(const QString &pMessage)
 void MainWindow::on_actionFullScreen_triggered()
 {
     // Switch to / back from full screen mode
+    // Note: there is a bit of black magic needed for OS X. Indeed, on OS X,
+    //       OpenCOR can be switched to / back from full screen mode either
+    //       through its menu or using its full screen mode button (located in
+    //       the top right of its title bar). If one uses only one method, then
+    //       to simply use showFullScreen() and showNormal() is fine, but if for
+    //       some reasons the user decides to mix both methods then the black
+    //       magic is needed...!?
 
-    if (isFullScreen())
+    if (isFullScreen()) {
         showNormal();
-    else
+#ifdef Q_OS_MAC
         showFullScreen();
+#endif
+    } else {
+        showFullScreen();
+#ifdef Q_OS_MAC
+        showNormal();
+#endif
+    }
 }
 
 //==============================================================================
