@@ -103,8 +103,9 @@ MainWindow::MainWindow() :
 
     mGui->actionFullScreen->setShortcut(Qt::Key_F11);
 #ifdef Q_OS_WIN
-    // Note: QKeySequence::Quit corresponds to nothing on Windows, yet one might
-    //       expect it to correspond to Alt+F4 and maybe even to Ctrl+Q, so...
+    // Note: QKeySequence::Quit corresponds to Alt+F4 on Windows, but it doesn't
+    //       get shown in the menu item, not to mention that we would also like
+    //       to support Ctrl+Q, so...
 
     mGui->actionExit->setShortcuts(QList<QKeySequence>()
                                        << QKeySequence(Qt::ALT|Qt::Key_F4)
@@ -120,13 +121,6 @@ MainWindow::MainWindow() :
 
     new QShortcut(QKeySequence("Ctrl+M"),
                   this, SLOT(showMinimized()));
-
-    // A special shortcut to have OpenCOR hidden on OS X when pressing Cmd+H
-    // Note: indeed, when pressing Cmd+H on OS X, the active application is
-    //       expected to hide itself, so...
-
-    new QShortcut(QKeySequence("Ctrl+H"),
-                  this, SLOT(hide()));
 #endif
 
     // Initialise our various plugins
