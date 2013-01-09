@@ -57,8 +57,8 @@ public:
 
 protected:
     virtual void changeEvent(QEvent *pEvent);
-    virtual void showEvent(QShowEvent *pEvent);
     virtual void closeEvent(QCloseEvent *pEvent);
+    virtual void showEvent(QShowEvent *pEvent);
 
 private:
     Ui::MainWindow *mGui;

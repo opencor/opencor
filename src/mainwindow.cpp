@@ -234,8 +234,8 @@ MainWindow::MainWindow() :
 
     loadSettings();
 
-    // Initialise the checking state of the full screen action, since OpenCOR
-    // may (re)start in full screen mode
+    // Initialise the checked state of our full screen action, since OpenCOR may
+    // (re)start in full screen mode
 
     mGui->actionFullScreen->setChecked(isFullScreen());
 }
@@ -313,42 +313,19 @@ void MainWindow::changeEvent(QEvent *pEvent)
             guiInterface->changeEvent(pEvent);
     }
 
-    // If the system's locale has changed, then update OpenCOR's locale in case
-    // the user wants to use the system's locale
+    // Do a few more things for some changes
 
     if (   (pEvent->type() == QEvent::LocaleChange)
         && (mGui->actionSystem->isChecked()))
+        // The system's locale has changed, so update OpenCOR's locale in case
+        // the user wants to use the system's locale
+
         setLocale(SystemLocale);
-}
+    else if (pEvent->type() == QEvent::WindowStateChange)
+        // The window state has changed, so update the checked state of our full
+        // screen action
 
-//==============================================================================
-
-void MainWindow::showEvent(QShowEvent *pEvent)
-{
-    // Default handling of the event
-
-    QMainWindow::showEvent(pEvent);
-
-    // Things which need to be done and can only be done once the main window is
-    // fully created
-
-    static bool firstTime = true;
-
-    if (firstTime) {
-        firstTime = false;
-
-        // The first time we show OpenCOR, we want to make sure that its menu is
-        // fine (i.e. it respects OpenCOR's settings that were loaded in the
-        // constructor). Various connections (set in the constructor) take care
-        // of this, but there is still one menu item (which tells us whether the
-        // status bar is to be shown) for which no connection can be set. So, we
-        // have to 'manually' set the status of that menu item here (as opposed
-        // to, say, the constructor), since we may need (on Windows at least)
-        // all of OpenCOR to be visible in order to be able to determine whether
-        // the status bar is visible...
-
-        mGui->actionStatusBar->setChecked(statusBar()->isVisible());
-    }
+        mGui->actionFullScreen->setChecked(isFullScreen());
 }
 
 //==============================================================================
@@ -384,6 +361,36 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
         // Ignore the event, i.e. don't close ourselves
 
         pEvent->ignore();
+    }
+}
+
+//==============================================================================
+
+void MainWindow::showEvent(QShowEvent *pEvent)
+{
+    // Default handling of the event
+
+    QMainWindow::showEvent(pEvent);
+
+    // Things which need to be done and can only be done once the main window is
+    // fully created
+
+    static bool firstTime = true;
+
+    if (firstTime) {
+        firstTime = false;
+
+        // The first time we show OpenCOR, we want to make sure that its menu is
+        // fine (i.e. it respects OpenCOR's settings that were loaded in the
+        // constructor). Various connections (set in the constructor) take care
+        // of this, but there is still one menu item (which tells us whether the
+        // status bar is to be shown) for which no connection can be set. So, we
+        // have to 'manually' set the status of that menu item here (as opposed
+        // to, say, the constructor), since we may need (on Windows at least)
+        // all of OpenCOR to be visible in order to be able to determine whether
+        // the status bar is visible...
+
+        mGui->actionStatusBar->setChecked(statusBar()->isVisible());
     }
 }
 
@@ -619,7 +626,7 @@ void MainWindow::loadSettings()
     if (   !restoreGeometry(mSettings->value(SettingsGeometry).toByteArray())
         || !restoreState(mSettings->value(SettingsState).toByteArray())) {
         // The geometry and/or state of the main window couldn't be retrieved,
-        // so go with some default settins
+        // so go with some default settings
 
         // Default size and position of the main window
 
@@ -1075,10 +1082,10 @@ void MainWindow::on_actionFullScreen_triggered()
 {
     // Switch to / back from full screen mode
 
-    if (mGui->actionFullScreen->isChecked())
-        showFullScreen();
-    else
+    if (isFullScreen())
         showNormal();
+    else
+        showFullScreen();
 }
 
 //==============================================================================
