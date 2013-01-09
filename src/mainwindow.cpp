@@ -236,6 +236,8 @@ MainWindow::MainWindow() :
 
     // Initialise the checked state of our full screen action, since OpenCOR may
     // (re)start in full screen mode
+    // Note: useful on OS X since there is now a special full screen button in
+    //       the main window's title bar...
 
     mGui->actionFullScreen->setChecked(isFullScreen());
 }
