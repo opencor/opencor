@@ -152,8 +152,6 @@ SET(PLUGINS
 
     api/CellMLAPI
 
-    misc/RICORDOSupport
-
     editing/CoreEditing
 
     simulation/CoreSolver

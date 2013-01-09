@@ -51,7 +51,6 @@ ADD_PLUGIN(CellMLAnnotationView
         Core
         CoreSolver
         ${LLVM_PLUGIN}
-        RICORDOSupport
     OPENCOR_BINARY_DEPENDENCIES
         ${LLVM_BINARY_PLUGIN}
     QT_MODULES
