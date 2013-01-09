@@ -13,14 +13,12 @@
 //==============================================================================
 
 #include <QClipboard>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QMenu>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
-
-//==============================================================================
-
-#include <QJsonParser>
 
 //==============================================================================
 
@@ -201,13 +199,13 @@ void CellmlModelRepositoryWindow::finished(QNetworkReply *pNetworkReply)
     if (pNetworkReply->error() == QNetworkReply::NoError) {
         // Parse the JSON code
 
-        QJson::Parser jsonParser;
-        bool parsingOk;
+        QJsonParseError jsonParseError;
+        QJsonDocument jsonDocument = QJsonDocument::fromJson(pNetworkReply->readAll(), &jsonParseError);
 
-        QVariantMap resultMap = jsonParser.parse(pNetworkReply->readAll(), &parsingOk).toMap();
-
-        if (parsingOk) {
+        if (jsonParseError.error == QJsonParseError::NoError) {
             // Retrieve the list of CellML models
+
+            QVariantMap resultMap = jsonDocument.object().toVariantMap();
 
             foreach (const QVariant &modelVariant, resultMap["values"].toList()) {
                 QVariantList modelDetailsVariant = modelVariant.toList();
@@ -222,7 +220,7 @@ void CellmlModelRepositoryWindow::finished(QNetworkReply *pNetworkReply)
         } else {
             // Something went wrong, so...
 
-            mErrorMsg = jsonParser.errorString();
+            mErrorMsg = jsonParseError.errorString();
         }
     } else {
         // Something went wrong, so...

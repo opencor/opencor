@@ -19,6 +19,8 @@
 #include <QClipboard>
 #include <QComboBox>
 #include <QFormLayout>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QLabel>
 #include <QLineEdit>
 #include <QMenu>
@@ -30,10 +32,6 @@
 #include <QStackedWidget>
 #include <QVariant>
 #include <QVBoxLayout>
-
-//==============================================================================
-
-#include <QJsonParser>
 
 //==============================================================================
 
@@ -912,13 +910,13 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
         if (pNetworkReply->error() == QNetworkReply::NoError) {
             // Parse the JSON code
 
-            QJson::Parser jsonParser;
-            bool parsingOk;
+            QJsonParseError jsonParseError;
+            QJsonDocument jsonDocument = QJsonDocument::fromJson(pNetworkReply->readAll(), &jsonParseError);
 
-            QVariantMap resultMap = jsonParser.parse(pNetworkReply->readAll(), &parsingOk).toMap();
-
-            if (parsingOk) {
+            if (jsonParseError.error == QJsonParseError::NoError) {
                 // Retrieve the list of terms
+
+                QVariantMap resultMap = jsonDocument.object().toVariantMap();
 
                 foreach (const QVariant &termsVariant, resultMap["result"].toList()) {
                     QVariantList termVariant = termsVariant.toList();
@@ -957,7 +955,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
             } else {
                 // Something went wrong, so...
 
-                errorMsg = jsonParser.errorString();
+                mErrorMsg = jsonParseError.errorString();
             }
         } else {
             // Something went wrong, so...

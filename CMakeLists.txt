@@ -173,7 +173,6 @@ SET(PLUGINS
 
     simulation/CoreSimulation
 
-    3rdparty/QJson
     3rdparty/QScintilla
     3rdparty/QtMmlWidget
     3rdparty/Qwt

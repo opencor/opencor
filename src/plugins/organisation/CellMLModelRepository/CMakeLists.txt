@@ -23,7 +23,6 @@ ADD_PLUGIN(CellMLModelRepository
         src
     OPENCOR_DEPENDENCIES
         Core
-        QJson
     QT_MODULES
         WebKitWidgets
         Widgets
