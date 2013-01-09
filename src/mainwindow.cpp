@@ -83,7 +83,7 @@ MainWindow::MainWindow() :
     // Note: we don't set it in our .ui file since this will require
     //       'translating' it in other languages...
 
-    setWindowTitle("OpenCOR");
+    setWindowTitle(qApp->applicationName());
 
     // A connection to handle the status bar
 
@@ -1064,7 +1064,7 @@ void MainWindow::messageReceived(const QString &pMessage)
 
         handleAction(url);
     } else {
-        // It's not a GUI action, so bring ourselves to the forground
+        // It's not a GUI action, so bring ourselves to the foreground
 
         showSelf();
 
