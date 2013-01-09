@@ -1085,7 +1085,7 @@ void MainWindow::messageReceived(const QString &pMessage)
 void MainWindow::on_actionFullScreen_triggered()
 {
     // Switch to / back from full screen mode
-    // Note: there is a bit of black magic needed for OS X. Indeed, on OS X,
+    // Note: some black magic is needed for OS X. Indeed, on that platform,
     //       OpenCOR can be switched to / back from full screen mode either
     //       through its menu or using its full screen mode button (located in
     //       the top right of its title bar). If one uses only one method, then
