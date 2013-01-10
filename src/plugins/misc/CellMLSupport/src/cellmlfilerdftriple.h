@@ -25,7 +25,7 @@ namespace CellMLSupport {
 //==============================================================================
 
 static const QString ResourceRegExp = "[0-9a-z]+((-|\\.)[0-9a-z]+)?";
-static const QString IdRegExp = "[0-9A-Z\\.%-_:]+(:[0-9A-Z\\.%-_:]+)?";
+static const QString IdRegExp = "[0-9A-Za-z\\.%-_:]+(:[0-9A-Za-z\\.%-_:]+)?";
 
 //==============================================================================
 
