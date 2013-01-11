@@ -437,7 +437,7 @@ ELSE()
 
     # Qt files required by OpenCOR
 
-    FOREACH(QT_LIBRARY Core Gui Help Network PrintSupport Svg WebKitWidgets Widgets Xml)
+    FOREACH(QT_LIBRARY CLucene Core DBus Gui Help Network OpenGL PrintSupport Qml Quick Sql Svg V8 WebKit WebKitWidgets Widgets Xml)
         INSTALL(FILES
                 ${QT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}
                 RENAME ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}
@@ -496,17 +496,27 @@ ELSE()
         ENDIF()
     ENDFOREACH()
 
-    # SQLite plugin (required to see the help file)
+    # Qt configuration file to tell OpenCOR where to look for plugins
 
-    DEPLOY_LINUX_FILE(plugins/sqldrivers ${QT_PLUGINS_DIR}/sqldrivers
-                      ${CMAKE_SHARED_LIBRARY_PREFIX}qsqlite${CMAKE_SHARED_LIBRARY_SUFFIX})
+    DEPLOY_LINUX_FILE(bin ${CMAKE_SOURCE_DIR}/distrib/linux
+                      qt.conf)
 
-    # Some image format plugins (required to see some web pages)
+    # Qt plugins required by OpenCOR
 
-    DEPLOY_LINUX_FILE(plugins/imageformats ${QT_PLUGINS_DIR}/imageformats
-                      ${CMAKE_SHARED_LIBRARY_PREFIX}qgif${CMAKE_SHARED_LIBRARY_SUFFIX})
-    DEPLOY_LINUX_FILE(plugins/imageformats ${QT_PLUGINS_DIR}/imageformats
-                      ${CMAKE_SHARED_LIBRARY_PREFIX}qjpeg${CMAKE_SHARED_LIBRARY_SUFFIX})
+    FOREACH(QT_PLUGIN_FILE quick widgets)
+        DEPLOY_LINUX_FILE(plugins/accessible ${QT_PLUGINS_DIR}/accessible
+                          ${CMAKE_SHARED_LIBRARY_PREFIX}qtaccessible${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    ENDFOREACH()
+
+    FOREACH(QT_PLUGIN_FILE qlinuxfb qminimal qxcb)
+        DEPLOY_LINUX_FILE(plugins/platforms ${QT_PLUGINS_DIR}/platforms
+                          ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    ENDFOREACH()
+
+    FOREACH(QT_PLUGIN_FILE qsqlite)
+        DEPLOY_LINUX_FILE(plugins/sqldrivers ${QT_PLUGINS_DIR}/sqldrivers
+                          ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    ENDFOREACH()
 
     # Shell script to run OpenCOR
 
