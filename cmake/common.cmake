@@ -69,6 +69,8 @@ MACRO(INITIALISE_PROJECT)
     SET(QT_LIBRARY_DIR ${_qt5_widgets_install_prefix}/lib)
     SET(QT_PLUGINS_DIR ${_qt5_widgets_install_prefix}/plugins)
     SET(QT_VERSION_MAJOR 5)
+    SET(QT_VERSION_MINOR 0)
+    SET(QT_VERSION_PATCH 0)
 
     # Whether we are building for 32-bit or 64-bit
 
