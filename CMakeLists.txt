@@ -288,8 +288,11 @@ IF(APPLE)
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} PRE_BUILD
                        COMMAND ${CMAKE_COMMAND} -E remove -f ${OS_X_PROJECT_BINARY_DIR}/Contents/Resources/qt.conf)
 
-    # Remove the PlugIns directory left from a previous build
-    # Note: this prevents us from getting some error messages...
+    # Remove the plugins left from a previous build
+    # Note #1: this prevents us from getting several error messages when
+    #          deploying the plugins...
+    # Note #2: we must not remove the sqldrivers plugin, otherwise it won't get
+    #          redeployed (issue with macdeployqt?)...
 
     FOREACH(QT_FOLDER accessible imageformats platforms printsupport)
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} PRE_BUILD
