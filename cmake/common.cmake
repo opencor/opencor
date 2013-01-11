@@ -32,8 +32,6 @@ MACRO(INITIALISE_PROJECT)
             SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
         ENDIF()
     ELSE()
-        SET(CMAKE_BUILD_TYPE "Release")
-
         MESSAGE("Building a release version...")
 
         SET(DEBUG_MODE OFF)
