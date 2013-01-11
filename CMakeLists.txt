@@ -338,12 +338,6 @@ IF(WIN32)
     INSTALL(FILES ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME}.com DESTINATION bin)
 
     # MSVC files required by OpenCOR
-    # Note: we would normally use
-    #           INCLUDE(InstallRequiredSystemLibraries)
-    #       but it doesn't work with MSVC Express since that version of MSVC
-    #       doesn't come with redistributables, and even if we were to install
-    #       the redistributables, it would still not work because CMake checks
-    #       a registry key which is not set, so...
 
     FOREACH(MSVC_LIBRARY msvcp100 msvcr100)
         INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/windows/x86/${CMAKE_SHARED_LIBRARY_PREFIX}${MSVC_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION bin)
@@ -351,18 +345,39 @@ IF(WIN32)
 
     # Qt files required by OpenCOR
 
-    FOREACH(QT_LIBRARY phonon QtCLucene QtCore QtGui QtHelp QtNetwork QtSql QtSvg QtWebKit QtXml)
-        INSTALL(FILES ${QT_BINARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_LIBRARY}${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION bin)
+    FOREACH(QT_LIBRARY Core Gui Help Network PrintSupport Quick Sql Svg WebKitWidgets Widgets Xml)
+        INSTALL(FILES ${QT_BINARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION bin)
     ENDFOREACH()
 
-    # SQLite plugin (required to see the help file)
+    FOREACH(QT_FILE icudt icuin icuuc)
+        INSTALL(FILES ${QT_BINARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}49${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION bin)
+    ENDFOREACH()
 
-    INSTALL(FILES ${QT_PLUGINS_DIR}/sqldrivers/${CMAKE_SHARED_LIBRARY_PREFIX}qsqlite${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION plugins/sqldrivers)
+    FOREACH(QT_FILE libGLESv2 D3DCompiler_43)
+        INSTALL(FILES ${QT_BINARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION bin)
+    ENDFOREACH()
 
-    # Some image format plugins (required to see some web pages)
+    # Qt plugins required by OpenCOR
 
-    INSTALL(FILES ${QT_PLUGINS_DIR}/imageformats/${CMAKE_SHARED_LIBRARY_PREFIX}qgif${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION plugins/imageformats)
-    INSTALL(FILES ${QT_PLUGINS_DIR}/imageformats/${CMAKE_SHARED_LIBRARY_PREFIX}qjpeg${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION plugins/imageformats)
+    FOREACH(QT_PLUGIN_FILE quick widgets)
+        INSTALL(FILES ${QT_PLUGINS_DIR}/accessible/${CMAKE_SHARED_LIBRARY_PREFIX}qtaccessible${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION plugins/accessible)
+    ENDFOREACH()
+
+    FOREACH(QT_PLUGIN_FILE qgif qico qjpeg qmng qsvg qtga qtiff qwbmp)
+        INSTALL(FILES ${QT_PLUGINS_DIR}/imageformats/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION plugins/imageformats)
+    ENDFOREACH()
+
+    FOREACH(QT_PLUGIN_FILE qminimal qwindows)
+        INSTALL(FILES ${QT_PLUGINS_DIR}/platforms/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION plugins/platforms)
+    ENDFOREACH()
+
+    FOREACH(QT_PLUGIN_FILE windowsprintersupport)
+        INSTALL(FILES ${QT_PLUGINS_DIR}/printsupport/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION plugins/printsupport)
+    ENDFOREACH()
+
+    FOREACH(QT_PLUGIN_FILE qsqlite)
+        INSTALL(FILES ${QT_PLUGINS_DIR}/sqldrivers/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION plugins/sqldrivers)
+    ENDFOREACH()
 
     # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
     # version of OpenCOR)
@@ -508,8 +523,18 @@ ELSE()
                           ${CMAKE_SHARED_LIBRARY_PREFIX}qtaccessible${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX})
     ENDFOREACH()
 
+    FOREACH(QT_PLUGIN_FILE qgif qico qjpeg qmng qsvg qtga qtiff qwbmp)
+        DEPLOY_LINUX_FILE(plugins/imageformats ${QT_PLUGINS_DIR}/imageformats
+                          ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    ENDFOREACH()
+
     FOREACH(QT_PLUGIN_FILE qlinuxfb qminimal qxcb)
         DEPLOY_LINUX_FILE(plugins/platforms ${QT_PLUGINS_DIR}/platforms
+                          ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    ENDFOREACH()
+
+    FOREACH(QT_PLUGIN_FILE cupsprintersupport)
+        DEPLOY_LINUX_FILE(plugins/printsupport ${QT_PLUGINS_DIR}/printsupport
                           ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX})
     ENDFOREACH()
 
