@@ -974,6 +974,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
 
         updateGui(mCellmlElement);
     }
+
+    // Delete (later) the network reply
+
+    pNetworkReply->deleteLater();
 }
 
 //==============================================================================

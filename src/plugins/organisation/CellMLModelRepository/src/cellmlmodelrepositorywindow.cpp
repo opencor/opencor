@@ -240,6 +240,10 @@ void CellmlModelRepositoryWindow::finished(QNetworkReply *pNetworkReply)
     // only if the current window already has the focus
 
     Core::setFocusTo(mGui->filterValue);
+
+    // Delete (later) the network reply
+
+    pNetworkReply->deleteLater();
 }
 
 //==============================================================================

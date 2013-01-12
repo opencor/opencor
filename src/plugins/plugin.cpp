@@ -175,7 +175,7 @@ PluginInfo Plugin::info() const
 
 QObject * Plugin::instance() const
 {
-    // Return the plugin's insance
+    // Return the plugin's instance
 
     return mInstance;
 }
