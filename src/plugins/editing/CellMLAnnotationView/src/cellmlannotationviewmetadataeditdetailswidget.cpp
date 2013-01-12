@@ -896,10 +896,14 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
 
         if (mTerm.compare(pNetworkReply->url().toString()
                                               .remove(QRegExp("^"+QRegExp::escape(SemanticSbmlUrlStart)))
-                                              .remove(QRegExp(QRegExp::escape(SemanticSbmlUrlEnd)+"$"))))
-            // Not the correct term, so...
+                                              .remove(QRegExp(QRegExp::escape(SemanticSbmlUrlEnd)+"$")))) {
+            // Not the correct term, so... delete (later) the network reply and
+            // leave
+
+            pNetworkReply->deleteLater();
 
             return;
+        }
 
         // The network reply is for the current term, so retrieve the list of
         // terms, should we have retrieved it without any problem
