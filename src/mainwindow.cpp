@@ -972,14 +972,13 @@ void MainWindow::showSelf()
     //       happens that, here, the user wants OpenCOR to be brought to the
     //       foreground, hence the above code to get the effect we are after...
 #else
-    // Do what one would normally do
+    // We are on Linux or OS X, so we can simply activate the window and raise
+//---GRY--- THERE ARE A COUPLE OF ISSUES WITH raise(), SEE
+//          https://bugreports.qt-project.org/browse/QTBUG-29087
+//          https://bugreports.qt-project.org/browse/QTBUG-29107
 
     activateWindow();
     raise();
-    // Note: raise() is not always required (e.g. on OS X, it's required when
-    //       starting OpenCOR, but it's not when we come here as a result of
-    //       trying to start another instance of OpenCOR), but better be safe
-    //       than sorry, so...
 #endif
 }
 
