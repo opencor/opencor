@@ -489,10 +489,8 @@ ELSE()
     ENDIF()
 
     FOREACH(LIBRARY stdc++.so.6)
-        # Note: stdc++.so.6 is required by a few Qt libraries and may be needed
-        #       when packaging on a particular version of Ubuntu and deploying
-        #       on another (e.g. packaging on Ubuntu 11.04 and deploying on
-        #       Ubuntu 10.04), so...
+        # Note: stdc++.so.6 is required by a few Qt libraries and may not be
+        #       present on the target machine, so...
 
         IF(EXISTS "${LIBRARY_FOLDER}/${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY}")
             SET(CORRECT_LIBRARY ${LIBRARY_FOLDER}/${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY})
