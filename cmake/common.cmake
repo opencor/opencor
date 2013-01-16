@@ -53,6 +53,12 @@ MACRO(INITIALISE_PROJECT)
         ENDIF()
     ENDIF()
 
+    # Make sure that we can use install_name_tool without any prolem
+
+    IF(APPLE)
+        SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -headerpad_max_install_names")
+    ENDIF()
+
     # Required packages
 
     FIND_PACKAGE(Qt5Widgets REQUIRED)
