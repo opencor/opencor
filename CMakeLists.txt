@@ -334,62 +334,49 @@ IF(WIN32)
     #       work (anymore?) while it works fine on Linux and OS X. Could that
     #       have something to do with us now using MSVC?...
 
-    INSTALL(FILES ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX}
-            DESTINATION bin)
-    INSTALL(FILES ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME}.com
-            DESTINATION bin)
+    INSTALL(FILES ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX} DESTINATION bin)
+    INSTALL(FILES ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME}.com DESTINATION bin)
 
     # MSVC files required by OpenCOR
 
     FOREACH(MSVC_LIBRARY msvcp100 msvcr100)
-        INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/windows/x86/${CMAKE_SHARED_LIBRARY_PREFIX}${MSVC_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                DESTINATION bin)
+        INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/windows/x86/${CMAKE_SHARED_LIBRARY_PREFIX}${MSVC_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION bin)
     ENDFOREACH()
 
     # Qt files required by OpenCOR
 
     FOREACH(QT_LIBRARY CLucene Core Gui Help Network OpenGL PrintSupport Qml Quick Sql Svg V8 WebKit WebKitWidgets Widgets Xml)
-        INSTALL(FILES ${QT_BINARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                DESTINATION bin)
+        INSTALL(FILES ${QT_BINARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION bin)
     ENDFOREACH()
 
     FOREACH(QT_FILE icudt icuin icuuc)
-        INSTALL(FILES ${QT_BINARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}49${CMAKE_SHARED_LIBRARY_SUFFIX}
-                DESTINATION bin)
+        INSTALL(FILES ${QT_BINARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}49${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION bin)
     ENDFOREACH()
 
     FOREACH(QT_FILE libEGL libGLESv2 D3DCompiler_43)
-        INSTALL(FILES ${QT_BINARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                DESTINATION bin)
+        INSTALL(FILES ${QT_BINARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION bin)
     ENDFOREACH()
 
     # Qt plugins required by OpenCOR
 
     FOREACH(QT_PLUGIN_FILE quick widgets)
-        INSTALL(FILES ${QT_PLUGINS_DIR}/accessible/${CMAKE_SHARED_LIBRARY_PREFIX}qtaccessible${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                DESTINATION plugins/accessible)
+        INSTALL(FILES ${QT_PLUGINS_DIR}/accessible/${CMAKE_SHARED_LIBRARY_PREFIX}qtaccessible${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION plugins/accessible)
     ENDFOREACH()
 
     FOREACH(QT_PLUGIN_FILE qgif qico qjpeg qmng qsvg qtga qtiff qwbmp)
-        INSTALL(FILES ${QT_PLUGINS_DIR}/imageformats/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                DESTINATION plugins/imageformats)
+        INSTALL(FILES ${QT_PLUGINS_DIR}/imageformats/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION plugins/imageformats)
     ENDFOREACH()
 
     FOREACH(QT_PLUGIN_FILE qminimal qwindows)
-        INSTALL(FILES ${QT_PLUGINS_DIR}/platforms/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                DESTINATION bin/platforms)
-        # Note: yes, the platforms plugin must be installed in the bin folder
-        #       and not the plugins folder...
+        INSTALL(FILES ${QT_PLUGINS_DIR}/platforms/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION plugins/platforms)
     ENDFOREACH()
 
     FOREACH(QT_PLUGIN_FILE windowsprintersupport)
-        INSTALL(FILES ${QT_PLUGINS_DIR}/printsupport/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                DESTINATION plugins/printsupport)
+        INSTALL(FILES ${QT_PLUGINS_DIR}/printsupport/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION plugins/printsupport)
     ENDFOREACH()
 
     FOREACH(QT_PLUGIN_FILE qsqlite)
-        INSTALL(FILES ${QT_PLUGINS_DIR}/sqldrivers/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                DESTINATION plugins/sqldrivers)
+        INSTALL(FILES ${QT_PLUGINS_DIR}/sqldrivers/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION plugins/sqldrivers)
     ENDFOREACH()
 
     # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
@@ -401,10 +388,8 @@ IF(WIN32)
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/application.bat.in ${BatFile})
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/application.vbs.in ${VbsFile})
 
-    INSTALL(FILES ${BatFile}
-            DESTINATION .)
-    INSTALL(FILES ${VbsFile}
-            DESTINATION .)
+    INSTALL(FILES ${BatFile} DESTINATION .)
+    INSTALL(FILES ${VbsFile} DESTINATION .)
 
     # File type association
     # Note: the calls to SHChangeNotify are to ensure that Windows refreshes
@@ -446,8 +431,7 @@ ELSEIF(APPLE)
 
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/application.sh.in ${ShellFile})
 
-    INSTALL(FILES ${ShellFile} RENAME ${PROJECT_NAME}
-            DESTINATION .
+    INSTALL(FILES ${ShellFile} RENAME ${PROJECT_NAME} DESTINATION .
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 ELSE()
     # Select TGZ as the packager on Linux
@@ -471,24 +455,26 @@ ELSE()
     FOREACH(QT_LIBRARY CLucene Core DBus Gui Help Network OpenGL PrintSupport Qml Quick Sql Svg V8 WebKit WebKitWidgets Widgets Xml)
         INSTALL(FILES
                 ${QT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}
+                RENAME ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}
                 DESTINATION lib
-                RENAME ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
+        )
     ENDFOREACH()
 
     FOREACH(QT_FILE icudata icui18n icuuc)
         INSTALL(FILES
                 ${QT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.49.1.2
+                RENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.49
                 DESTINATION lib
-                RENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.49)
+        )
     ENDFOREACH()
 
-    # Additional libraries required by Qt, but which are not available on a
-    # 'blank' version of Ubuntu or their version differs from one version of
-    # Ubuntu to another
+    # Additional libraries required by Qt, but not available on a 'blank'
+    # version of Ubuntu or their version differs from one version of Ubuntu to
+    # another
     # Note: it seems that, starting with Ubuntu 11.04, some libraries may end
     #       up in /usr/lib/i386-linux-gnu or /usr/lib/x86_64-linux-gnu,
     #       depending on whether the system is 32-bit or 64-bit, so we need to
-    #       check those folders first...
+    #       check for these folders first...
 
     SET(DEFAULT_LIBRARY_FOLDER /usr/lib)
     SET(X86_LIBRARY_FOLDER ${DEFAULT_LIBRARY_FOLDER}/i386-linux-gnu)
@@ -504,7 +490,7 @@ ELSE()
 
     FOREACH(LIBRARY stdc++.so.6)
         # Note: stdc++.so.6 is required by a few Qt libraries and may not be
-        #       present or different on the target machine, so...
+        #       present on the target machine, so...
 
         IF(EXISTS "${LIBRARY_FOLDER}/${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY}")
             SET(CORRECT_LIBRARY ${LIBRARY_FOLDER}/${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY})
@@ -519,8 +505,7 @@ ELSE()
         ELSE()
             GET_FILENAME_COMPONENT(REAL_CORRECT_LIBRARY ${CORRECT_LIBRARY} REALPATH)
 
-            INSTALL(FILES ${REAL_CORRECT_LIBRARY} RENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY}
-                    DESTINATION lib)
+            INSTALL(FILES ${REAL_CORRECT_LIBRARY} RENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY} DESTINATION lib)
         ENDIF()
     ENDFOREACH()
 
@@ -562,18 +547,12 @@ ELSE()
 
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/linux/application.sh.in ${ShellFile})
 
-    INSTALL(FILES ${ShellFile} RENAME ${PROJECT_NAME}
-            DESTINATION .
-            PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+    INSTALL(FILES ${ShellFile} RENAME ${PROJECT_NAME} DESTINATION . PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 ENDIF()
 
-# Some sample CellML files
+# Some files common to all three platforms
 
-INSTALL(FILES ${CMAKE_SOURCE_DIR}/models/hodgkin_huxley_squid_axon_model_1952.cellml
-        DESTINATION models
-        PERMISSIONS OWNER_READ GROUP_READ WORLD_READ)
-INSTALL(FILES ${CMAKE_SOURCE_DIR}/models/van_der_pol_model_1928.cellml
-        DESTINATION models
-        PERMISSIONS OWNER_READ GROUP_READ WORLD_READ)
+INSTALL(FILES ${CMAKE_SOURCE_DIR}/models/hodgkin_huxley_squid_axon_model_1952.cellml DESTINATION models PERMISSIONS OWNER_READ GROUP_READ WORLD_READ)
+INSTALL(FILES ${CMAKE_SOURCE_DIR}/models/van_der_pol_model_1928.cellml DESTINATION models PERMISSIONS OWNER_READ GROUP_READ WORLD_READ)
 
 INCLUDE(CPack)
