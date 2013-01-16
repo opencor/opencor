@@ -9,7 +9,6 @@
 
 #include <QAction>
 #include <QDesktopServices>
-#include <QDir>
 #include <QHelpEngine>
 #include <QMouseEvent>
 #include <QSettings>
@@ -97,7 +96,7 @@ HelpNetworkAccessManager::HelpNetworkAccessManager(QHelpEngine *pHelpEngine,
 {
     // Retrieve the error message template
 
-    QFile helpWidgetErrorFile(":Help_helpWidgetErrorHtml");
+    QFile helpWidgetErrorFile(":Help_helpWidgetError");
 
     helpWidgetErrorFile.open(QIODevice::ReadOnly);
 
@@ -203,16 +202,6 @@ HelpWidget::HelpWidget(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
     page()->setNetworkAccessManager(new HelpNetworkAccessManager(pHelpEngine,
                                                                  this));
 
-    // Apply our CSS style (so that our help can interact with OpenCOR through
-    // OpenCOR's own URL scheme)
-
-    mCssFileName =  QDir::tempPath()+QDir::separator()
-                   +QFileInfo(qApp->applicationFilePath()).baseName()
-                   +".css";
-
-    Core::saveResourceAs(":Help_helpCss", mCssFileName);
-
-    page()->settings()->setUserStyleSheetUrl(QUrl::fromLocalFile(mCssFileName));
 
     // Prevent objects from being dropped on us
     // Note: by default, QWebView allows for objects to be dropped on itself,
@@ -246,15 +235,6 @@ HelpWidget::HelpWidget(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
     // Go to the home page
 
     goToHomePage();
-}
-
-//==============================================================================
-
-HelpWidget::~HelpWidget()
-{
-    // Delete our CSS file
-
-    QFile(mCssFileName).remove();
 }
 
 //==============================================================================

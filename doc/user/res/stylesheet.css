@@ -1,3 +1,11 @@
+@import "../../res/webCommon.css";
+@import "/doc/res/common.css";
+/* Note #1: the first import is used within a web page while the second      */
+/*          within a Qt help page...                                         */
+/* Note #2: OpenCOR supports its own URL scheme which we handle through our  */
+/*          common CSS file, but it needs to be disabled for the web site,   */
+/*          hence we have and use our Web common CSS file instead...         */
+
 a {
     color: rgb(54, 96, 146);
 }
@@ -18,10 +26,6 @@ div.header {
 
 div.section {
     color: rgb(54, 96, 146);
-}
-
-span.opencor {
-    display: none;
 }
 
 p.center {

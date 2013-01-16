@@ -13,10 +13,10 @@
 
             <file>res/common.css</file>
             <file>res/common.js</file>
+            <file>res/image.html</file>
 
             <file>user/res/pics/pluginsScreenshot01.png</file>
 
-            <file>user/res/image.html</file>
             <file>user/res/menu.js</file>
             <file>user/res/stylesheet.css</file>
 

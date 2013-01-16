@@ -95,7 +95,6 @@ class HelpWidget : public QWebView, public Core::CommonWidget
 public:
     explicit HelpWidget(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
                         QWidget *pParent = 0);
-    ~HelpWidget();
 
     virtual void retranslateUi();
 
@@ -118,8 +117,6 @@ protected:
 
 private:
     QHelpEngine *mHelpEngine;
-
-    QString mCssFileName;
 
     QUrl mHomePage;
 

@@ -51,8 +51,7 @@ private:
 
     QHelpEngine *mHelpEngine;
 
-    QString mQchFileName;
-    QString mQhcFileName;
+    QString mQchFileName, mQhcFileName;
 
 private Q_SLOTS:
     void on_actionHome_triggered();

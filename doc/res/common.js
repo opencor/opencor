@@ -81,12 +81,12 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
                 indent += "&nbsp;&nbsp;&nbsp;&nbsp;"
 
             var currentMenuItem = false;
-
+                
             if (   (data[i][1].toLowerCase() == pageName.toLowerCase())
                 || ((pageName == "OpenCOR") && (data[i][1] == "Home"))
                 || (pageName == data[i][1]+" Plugin"))
                 currentMenuItem = true;
-
+                
             if (i != data.length-1) {
                 // A 'normal' menu item
 
