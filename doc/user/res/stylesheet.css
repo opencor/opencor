@@ -37,6 +37,10 @@ code {
     color: rgb(54, 96, 146);
 }
 
+img.centerLink {
+    border: none;
+}
+
 img.centerLink:hover {
     background: rgba(54, 96, 146, 0.05);
     border: 1px solid rgba(54, 96, 146, 0.13);
