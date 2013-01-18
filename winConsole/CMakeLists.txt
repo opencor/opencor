@@ -64,5 +64,5 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
 
 # Copy the console version of OpenCOR to the main build folder
 
-COPY_FILE_TO_BUILD_DIR(bin ${CMAKE_BINARY_DIR}
+COPY_FILE_TO_BUILD_DIR(${CMAKE_BINARY_DIR} bin
                        ${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX} ${PROJECT_NAME}.com)
