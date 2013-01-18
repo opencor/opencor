@@ -1,8 +1,8 @@
 MACRO(RETRIEVE_LLVM_SETTINGS)
     # Retrieve some LLVM settings
 
-    IF(MSVC)
-        SET(LLVM_MSVC_DEFINITIONS
+    IF(WIN32)
+        SET(LLVM_DEFINITIONS
             _CRT_NONSTDC_NO_DEPRECATE
             _CRT_NONSTDC_NO_WARNINGS
 
@@ -13,21 +13,19 @@ MACRO(RETRIEVE_LLVM_SETTINGS)
             _SCL_SECURE_NO_WARNINGS
         )
     ELSEIF(APPLE)
-        SET(LLVM_MSVC_DEFINITIONS)
+        SET(LLVM_DEFINITIONS)
     ELSE()
-        SET(LLVM_MSVC_DEFINITIONS
+        SET(LLVM_DEFINITIONS
             __STDC_FORMAT_MACROS
         )
     ENDIF()
 
-    SET(LLVM_DEFINITIONS
-        ${LLVM_MSVC_DEFINITIONS}
-
+    LIST(APPEND LLVM_DEFINITIONS
         __STDC_CONSTANT_MACROS
         __STDC_LIMIT_MACROS
     )
 
-    IF(MSVC)
+    IF(WIN32)
         SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4244")
         SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4244 /wd4291 /wd4351 /wd4355 /wd4624 /wd4722 /wd4805")
         # Note: to build LLVM generates quite a few warnings from MSVC, so
