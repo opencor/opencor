@@ -100,7 +100,7 @@ INCLUDE_THIRD_PARTY_LIBRARY(. QtSingleApplication)
 # Linux, it's done through res/OpenCOR.qrc
 
 IF(WIN32)
-    SET(SOURCES ${SOURCES} ${CMAKE_SOURCE_DIR}/res/${PROJECT_NAME}.rc)
+    LIST(APPEND SOURCES ${CMAKE_SOURCE_DIR}/res/${PROJECT_NAME}.rc)
 ELSEIF(APPLE)
     SET(IconFile ${PROJECT_NAME}.icns)
 
@@ -108,7 +108,7 @@ ELSEIF(APPLE)
 
     SET_SOURCE_FILES_PROPERTIES(res/boomy/${IconFile} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
-    SET(SOURCES ${SOURCES} res/boomy/${IconFile})
+    LIST(APPEND SOURCES res/boomy/${IconFile})
 ENDIF()
 
 # Check whether tests are required and, if so, set the destination tests
@@ -251,7 +251,7 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
 IF(NOT APPLE)
     # Copy the OpenCOR executable to the build/bin folder
 
-    COPY_FILE_TO_BUILD_DIR(bin ${CMAKE_BINARY_DIR}
+    COPY_FILE_TO_BUILD_DIR(${CMAKE_BINARY_DIR} bin
                            ${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX})
 
     IF(WIN32)
@@ -260,12 +260,12 @@ IF(NOT APPLE)
         # that make.bat asks for the OpenCOR executable to be generated in
         # build to match what does Qt Creator, so...
 
-        COPY_FILE_TO_BUILD_DIR(Release ${CMAKE_BINARY_DIR}
+        COPY_FILE_TO_BUILD_DIR(${CMAKE_BINARY_DIR} Release
                                ${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX})
     ENDIF()
 ENDIF()
 
-# Some OS X specific information
+# Get our application bundle ready
 
 IF(APPLE)
     # Configure and use our own Info.plist file
@@ -281,29 +281,32 @@ IF(APPLE)
         MACOSX_BUNDLE_INFO_PLIST ${InfoPlistFile}
     )
 
-    # Remove any qt.conf file left from a previous build
-    # Note: this prevents us from getting a warning when everything is actually
-    #       OK...
+    # Note: ideally, what follows would be done using macdeployqt, but it has
+    #       regularly been causing us problems, so instead we have decided to do
+    #       everything ourselves...
 
-    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} PRE_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E remove -f ${OS_X_PROJECT_BINARY_DIR}/Contents/Resources/qt.conf)
-
-    # Remove the plugins left from a previous build
-    # Note #1: this prevents us from getting several error messages when
-    #          deploying the plugins...
-    # Note #2: we must not remove the sqldrivers plugin, otherwise it won't get
-    #          redeployed (issue with macdeployqt?)...
-
-    FOREACH(QT_FOLDER accessible imageformats platforms printsupport)
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} PRE_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E remove_directory ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${QT_FOLDER})
-    ENDFOREACH()
-
-    # Use macdeployqt to have all the Qt files required by OpenCOR added to the
-    # bundle
+    # Copy our qt.conf file over
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND ${QT_BINARY_DIR}/macdeployqt ${OS_X_PROJECT_BINARY_DIR})
+                       COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/distrib/osx/qt.conf
+                                                        ${OS_X_PROJECT_BINARY_DIR}/Contents/Resources/qt.conf)
+
+    # Clean up our main executable
+
+    OS_X_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${OS_X_PROJECT_BINARY_DIR}/Contents/MacOS ${PROJECT_NAME}
+                                            QtConcurrent QtCore QtGui QtHelp QtNetwork QtOpenGL QtPrintSupport QtQml QtQuick QtSvg QtWebKit QtWebKitWidgets QtWidgets QtXml)
+
+    # Deploy our Qt dependencies
+
+    OS_X_DEPLOY_QT_LIBRARIES(QtCLucene QtConcurrent QtCore QtGui QtHelp QtNetwork QtOpenGL QtPrintSupport QtQml QtQuick QtSql QtSvg QtV8 QtWebKit QtWebKitWidgets QtWidgets QtXml)
+
+    # Deploy some plugins
+
+    OS_X_DEPLOY_QT_PLUGIN(accessible qtaccessiblequick qtaccessiblewidgets)
+    OS_X_DEPLOY_QT_PLUGIN(imageformats qgif qico qjpeg qmng qsvg qtga qtiff qwbmp)
+    OS_X_DEPLOY_QT_PLUGIN(platforms qcocoa)
+    OS_X_DEPLOY_QT_PLUGIN(printsupport cocoaprintersupport)
+    OS_X_DEPLOY_QT_PLUGIN(sqldrivers qsqlite qsqlodbc qsqlpsql)
 ENDIF()
 
 # Package OpenCOR (using CPack)
@@ -346,34 +349,16 @@ IF(WIN32)
                 DESTINATION bin)
     ENDFOREACH()
 
-    # Qt files required by OpenCOR
+    # Qt libraries required by OpenCOR
 
-    FOREACH(QT_LIBRARY CLucene Core Gui Help Network OpenGL PrintSupport Qml Quick Sql Svg V8 WebKit WebKitWidgets Widgets Xml)
-        INSTALL(FILES ${QT_BINARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                DESTINATION bin)
-    ENDFOREACH()
-
-    FOREACH(QT_FILE icudt icuin icuuc)
-        INSTALL(FILES ${QT_BINARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}49${CMAKE_SHARED_LIBRARY_SUFFIX}
-                DESTINATION bin)
-    ENDFOREACH()
-
-    FOREACH(QT_FILE libEGL libGLESv2 D3DCompiler_43)
-        INSTALL(FILES ${QT_BINARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                DESTINATION bin)
-    ENDFOREACH()
+    WINDOWS_DEPLOY_QT_LIBRARIES(Qt5CLucene Qt5Core Qt5Gui Qt5Help Qt5Network Qt5OpenGL Qt5PrintSupport Qt5Qml Qt5Quick Qt5Sql Qt5Svg Qt5V8 Qt5WebKit Qt5WebKitWidgets Qt5Widgets Qt5Xml)
+    WINDOWS_DEPLOY_QT_LIBRARIES(icudt49 icuin49 icuuc49)
+    WINDOWS_DEPLOY_QT_LIBRARIES(libEGL libGLESv2 D3DCompiler_43)
 
     # Qt plugins required by OpenCOR
 
-    FOREACH(QT_PLUGIN_FILE quick widgets)
-        INSTALL(FILES ${QT_PLUGINS_DIR}/accessible/${CMAKE_SHARED_LIBRARY_PREFIX}qtaccessible${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                DESTINATION plugins/accessible)
-    ENDFOREACH()
-
-    FOREACH(QT_PLUGIN_FILE qgif qico qjpeg qmng qsvg qtga qtiff qwbmp)
-        INSTALL(FILES ${QT_PLUGINS_DIR}/imageformats/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                DESTINATION plugins/imageformats)
-    ENDFOREACH()
+    WINDOWS_DEPLOY_QT_PLUGIN(accessible qtaccessiblequick qtaccessiblewidgets)
+    WINDOWS_DEPLOY_QT_PLUGIN(imageformats qgif qico qjpeg qmng qsvg qtga qtiff qwbmp)
 
     FOREACH(QT_PLUGIN_FILE qminimal qwindows)
         INSTALL(FILES ${QT_PLUGINS_DIR}/platforms/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}
@@ -382,15 +367,8 @@ IF(WIN32)
         #       and not the plugins folder...
     ENDFOREACH()
 
-    FOREACH(QT_PLUGIN_FILE windowsprintersupport)
-        INSTALL(FILES ${QT_PLUGINS_DIR}/printsupport/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                DESTINATION plugins/printsupport)
-    ENDFOREACH()
-
-    FOREACH(QT_PLUGIN_FILE qsqlite)
-        INSTALL(FILES ${QT_PLUGINS_DIR}/sqldrivers/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                DESTINATION plugins/sqldrivers)
-    ENDFOREACH()
+    WINDOWS_DEPLOY_QT_PLUGIN(printsupport windowsprintersupport)
+    WINDOWS_DEPLOY_QT_PLUGIN(sqldrivers qsqlite)
 
     # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
     # version of OpenCOR)
@@ -442,11 +420,12 @@ ELSEIF(APPLE)
     # Shell script to run OpenCOR (useful when downloading a ZIPped version of
     # OpenCOR)
 
-    SET(ShellFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.sh)
+    SET(SHELL_FILENAME ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.sh)
 
-    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/application.sh.in ${ShellFile})
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/application.sh.in ${SHELL_FILENAME})
 
-    INSTALL(FILES ${ShellFile} RENAME ${PROJECT_NAME}
+    INSTALL(FILES ${SHELL_FILENAME}
+            RENAME ${PROJECT_NAME}
             DESTINATION .
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 ELSE()
@@ -466,20 +445,20 @@ ELSE()
 
     INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
 
-    # Qt files required by OpenCOR
+    # Qt libraries required by OpenCOR
+    # Note: unlike for Windows and OS X, we don't have a macro for deploying our
+    #       Qt libraries. Indeed, on Linux, the version of a file is appended to
+    #       its suffix, so unless making the macro unnecessarily cumbersome to
+    #       use, it's better to do things ourselves...
 
-    FOREACH(QT_LIBRARY CLucene Core DBus Gui Help Network OpenGL PrintSupport Qml Quick Sql Svg V8 WebKit WebKitWidgets Widgets Xml)
-        INSTALL(FILES
-                ${QT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}
-                DESTINATION lib
-                RENAME ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
+    FOREACH(QT_LIBRARY Qt5CLucene Qt5Core Qt5DBus Qt5Gui Qt5Help Qt5Network Qt5OpenGL Qt5PrintSupport Qt5Qml Qt5Quick Qt5Sql Qt5Svg Qt5V8 Qt5WebKit Qt5WebKitWidgets Qt5Widgets Qt5Xml)
+        INSTALL(FILES ${QT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}
+                DESTINATION lib)
     ENDFOREACH()
 
-    FOREACH(QT_FILE icudata icui18n icuuc)
-        INSTALL(FILES
-                ${QT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.49.1.2
-                DESTINATION lib
-                RENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.49)
+    FOREACH(QT_LIBRARY icudata icui18n icuuc)
+        INSTALL(FILES ${QT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.49
+                DESTINATION lib)
     ENDFOREACH()
 
     # Additional libraries required by Qt, but which are not available on a
@@ -526,35 +505,16 @@ ELSE()
 
     # Qt configuration file to tell OpenCOR where to look for plugins
 
-    DEPLOY_LINUX_FILE(bin ${CMAKE_SOURCE_DIR}/distrib/linux
-                      qt.conf)
+    INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/linux/qt.conf
+            DESTINATION bin)
 
     # Qt plugins required by OpenCOR
 
-    FOREACH(QT_PLUGIN_FILE quick widgets)
-        DEPLOY_LINUX_FILE(plugins/accessible ${QT_PLUGINS_DIR}/accessible
-                          ${CMAKE_SHARED_LIBRARY_PREFIX}qtaccessible${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    ENDFOREACH()
-
-    FOREACH(QT_PLUGIN_FILE qgif qico qjpeg qmng qsvg qtga qtiff qwbmp)
-        DEPLOY_LINUX_FILE(plugins/imageformats ${QT_PLUGINS_DIR}/imageformats
-                          ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    ENDFOREACH()
-
-    FOREACH(QT_PLUGIN_FILE qlinuxfb qminimal qxcb)
-        DEPLOY_LINUX_FILE(plugins/platforms ${QT_PLUGINS_DIR}/platforms
-                          ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    ENDFOREACH()
-
-    FOREACH(QT_PLUGIN_FILE cupsprintersupport)
-        DEPLOY_LINUX_FILE(plugins/printsupport ${QT_PLUGINS_DIR}/printsupport
-                          ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    ENDFOREACH()
-
-    FOREACH(QT_PLUGIN_FILE qsqlite)
-        DEPLOY_LINUX_FILE(plugins/sqldrivers ${QT_PLUGINS_DIR}/sqldrivers
-                          ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    ENDFOREACH()
+    LINUX_DEPLOY_QT_PLUGIN(accessible qtaccessiblequick qtaccessiblewidgets)
+    LINUX_DEPLOY_QT_PLUGIN(imageformats qgif qico qjpeg qmng qsvg qtga qtiff qwbmp)
+    LINUX_DEPLOY_QT_PLUGIN(platforms qlinuxfb qminimal qxcb)
+    LINUX_DEPLOY_QT_PLUGIN(printsupport cupsprintersupport)
+    LINUX_DEPLOY_QT_PLUGIN(sqldrivers qsqlite)
 
     # Shell script to run OpenCOR
 

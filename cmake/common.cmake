@@ -63,8 +63,6 @@ MACRO(INITIALISE_PROJECT)
     SET(QT_LIBRARY_DIR ${_qt5_widgets_install_prefix}/lib)
     SET(QT_PLUGINS_DIR ${_qt5_widgets_install_prefix}/plugins)
     SET(QT_VERSION_MAJOR 5)
-    SET(QT_VERSION_MINOR 0)
-    SET(QT_VERSION_PATCH 0)
 
     # Whether we are building for 32-bit or 64-bit
 
@@ -392,13 +390,10 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     # A few OS X specific things
 
     IF(APPLE)
-        # Clean up our plugin's id
+        # Clean up our plugin
 
-        SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
-
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND install_name_tool -id ${PLUGIN_FILENAME}
-                                                         ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
+        OS_X_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}
+                                                ${PLUGIN_FILENAME} ${QT_DEPENDENCIES})
 
         # Make sure that the plugin refers to our embedded version of the other
         # plugins on which it depends
@@ -422,37 +417,21 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                                                                  ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
         ENDFOREACH()
 
-        # Make sure that the plugin refers to our embedded version of the Qt
-        # libraries on which it depends
-
-        FOREACH(QT_DEPENDENCY ${QT_DEPENDENCIES})
-            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${QT_DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_DEPENDENCY}
-                                                                 @executable_path/../Frameworks/${QT_DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_DEPENDENCY}
-                                                                 ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
-        ENDFOREACH()
-
         # Make sure that the plugin refers to our embedded version of the
         # external dependencies on which it depends
-        # Note #1: we do it in two different ways, since some external libraries
-        #          we use refer to the library itself (e.g. CellML) while others
-        #          refer to some @executable_path information (e.g. LLVM), so...
-        # Note #2: we must do it for both the deployed and 'test' versions of
-        #          the plugin...
+        # Note: we do it in two different ways, since some external libraries we
+        #       use refer to the library itself (e.g. CellML) while others refer
+        #       to some @executable_path information (e.g. LLVM), so...
 
         FOREACH(EXTERNAL_DEPENDENCY ${EXTERNAL_DEPENDENCIES})
-            # First, for the deployed version of the plugin
-
-            SET(EXTERNAL_DEPENDENCY_FILENAME ${EXTERNAL_DEPENDENCY})
-
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change ${EXTERNAL_DEPENDENCY_FILENAME}
-                                                                 @executable_path/../Frameworks/${EXTERNAL_DEPENDENCY_FILENAME}
+                               COMMAND install_name_tool -change ${EXTERNAL_DEPENDENCY}
+                                                                 @executable_path/../Frameworks/${EXTERNAL_DEPENDENCY}
                                                                  ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
 
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change @executable_path/../lib/${EXTERNAL_DEPENDENCY_FILENAME}
-                                                                 @executable_path/../Frameworks/${EXTERNAL_DEPENDENCY_FILENAME}
+                               COMMAND install_name_tool -change @executable_path/../lib/${EXTERNAL_DEPENDENCY}
+                                                                 @executable_path/../Frameworks/${EXTERNAL_DEPENDENCY}
                                                                  ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
         ENDFOREACH()
     ENDIF()
@@ -461,7 +440,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     # have already been copied
 
     IF(NOT APPLE)
-        INSTALL(FILES ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME} DESTINATION plugins/${MAIN_PROJECT_NAME})
+        INSTALL(FILES ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME}
+                DESTINATION plugins/${MAIN_PROJECT_NAME})
     ENDIF()
 
     # Create some tests, if any and if required
@@ -558,20 +538,21 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
                 # Make sure that, on OS X, the test refers to our test version
                 # of the external libraries on which it depends
+                # Note: we do it in two different ways, since some external
+                #       libraries we use refer to the library itself (e.g.
+                #       CellML) while others refer to some @executable_path
+                #       information (e.g. LLVM), so...
 
                 IF(APPLE)
                     FOREACH(EXTERNAL_DEPENDENCY ${EXTERNAL_DEPENDENCIES})
-                        SET(EXTERNAL_DEPENDENCY_FILENAME ${EXTERNAL_DEPENDENCY})
-
-
                         ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
-                                           COMMAND install_name_tool -change ${EXTERNAL_DEPENDENCY_FILENAME}
-                                                                             ${CMAKE_BINARY_DIR}/${EXTERNAL_DEPENDENCY_FILENAME}
+                                           COMMAND install_name_tool -change ${EXTERNAL_DEPENDENCY}
+                                                                             ${CMAKE_BINARY_DIR}/${EXTERNAL_DEPENDENCY}
                                                                              ${DEST_TESTS_DIR}/${TEST_FILENAME})
 
                         ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
-                                           COMMAND install_name_tool -change @executable_path/../lib/${EXTERNAL_DEPENDENCY_FILENAME}
-                                                                             ${CMAKE_BINARY_DIR}/${EXTERNAL_DEPENDENCY_FILENAME}
+                                           COMMAND install_name_tool -change @executable_path/../lib/${EXTERNAL_DEPENDENCY}
+                                                                             ${CMAKE_BINARY_DIR}/${EXTERNAL_DEPENDENCY}
                                                                              ${DEST_TESTS_DIR}/${TEST_FILENAME})
                     ENDFOREACH()
                 ENDIF()
@@ -604,9 +585,9 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
             # set
 
             IF(${TYPE_OF_PARAMETER} EQUAL 1)
-                SET(INCLUDE_DIRS ${INCLUDE_DIRS} ${PARAMETER})
+                LIST(APPEND INCLUDE_DIRS ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 2)
-                SET(QT_DEPENDENCIES ${QT_DEPENDENCIES} ${PARAMETER})
+                LIST(APPEND QT_DEPENDENCIES ${PARAMETER})
             ENDIF()
         ENDIF()
     ENDFOREACH()
@@ -623,7 +604,8 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
 
     # Copy the plugin to our plugins directory
     # Note: this is done so that we can, on Windows and Linux, test the use of
-    #       plugins in OpenCOR without first having to package and deploy it...
+    #       plugins in OpenCOR without first having to package and deploy
+    #       everything...
 
     SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
@@ -648,9 +630,9 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
 
         FOREACH(QT_DEPENDENCY ${QT_DEPENDENCIES})
             ADD_CUSTOM_TARGET(${PLUGIN_NAME}_UPDATE_OS_X_QT_REFERENCE ALL
-                               COMMAND install_name_tool -change @executable_path/../Frameworks/${QT_DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_DEPENDENCY}
-                                                                 ${QT_LIBRARY_DIR}/${QT_DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_DEPENDENCY}
-                                                                 ${LIBRARY_OUTPUT_PATH}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
+                              COMMAND install_name_tool -change @executable_path/../Frameworks/${QT_DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_DEPENDENCY}
+                                                                ${QT_LIBRARY_DIR}/${QT_DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_DEPENDENCY}
+                                                                ${LIBRARY_OUTPUT_PATH}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
         ENDFOREACH()
     ENDIF()
 
@@ -658,51 +640,19 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
     # have already been copied
 
     IF(NOT APPLE)
-        INSTALL(FILES ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME} DESTINATION plugins/${MAIN_PROJECT_NAME})
+        INSTALL(FILES ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
+                DESTINATION plugins/${MAIN_PROJECT_NAME})
     ENDIF()
 ENDMACRO()
 
-MACRO(DEPLOY_OS_X_LIBRARY LIBRARY_NAME DIRNAME)
-    # Deploy the library itself
-
-    SET(LIBRARY_FILEPATH ${OS_X_PROJECT_BINARY_DIR}/Contents/Frameworks/${LIBRARY_NAME})
-
-    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E copy ${DIRNAME}/${LIBRARY_NAME}
-                                                        ${LIBRARY_FILEPATH})
-
-    # Copy the library to the build directory, so that we can test any plugin
-    # that has a dependency on it
-
-    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E copy ${DIRNAME}/${LIBRARY_NAME}
-                                                        ${CMAKE_BINARY_DIR}/${LIBRARY_NAME})
-
-    # Strip the library from anything that is not essential
-
-    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND strip -S -x ${LIBRARY_FILEPATH})
-
-    # Make sure that the library refers to our embedded version of the libraries
-    # on which it depends
-    # Note: that information is provided through our optional arguments...
-
-    FOREACH(DEPENDENCY_NAME ${ARGN})
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND install_name_tool -change ${DEPENDENCY_NAME}
-                                                             @executable_path/../Frameworks/${DEPENDENCY_NAME}
-                                                             ${LIBRARY_FILEPATH})
-    ENDFOREACH()
-ENDMACRO()
-
-MACRO(COPY_FILE_TO_BUILD_DIR DEST_DIRNAME DIRNAME FILENAME)
+MACRO(COPY_FILE_TO_BUILD_DIR ORIG_DIRNAME DEST_DIRNAME FILENAME)
     IF(EXISTS ${CMAKE_BINARY_DIR}/../cmake)
-        # A cmake directory exists at the same level as the binary directory,
+        # A CMake directory exists at the same level as the binary directory,
         # so we are dealing with the main project
 
         SET(REAL_DEST_DIRNAME ${CMAKE_BINARY_DIR}/${DEST_DIRNAME})
     ELSE()
-        # No cmake directory exists at the same level as the binary directory,
+        # No CMake directory exists at the same level as the binary directory,
         # so we are dealing with a non-main project
 
         SET(REAL_DEST_DIRNAME ${CMAKE_BINARY_DIR}/../../build/${DEST_DIRNAME})
@@ -710,48 +660,190 @@ MACRO(COPY_FILE_TO_BUILD_DIR DEST_DIRNAME DIRNAME FILENAME)
 
     IF("${ARGN}" STREQUAL "")
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E copy ${DIRNAME}/${FILENAME}
+                           COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
                                                             ${REAL_DEST_DIRNAME}/${FILENAME})
     ELSE()
         # An argument was passed so use it to rename the file which is to be
         # copied
 
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E copy ${DIRNAME}/${FILENAME}
+                           COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
                                                             ${REAL_DEST_DIRNAME}/${ARGN})
     ENDIF()
 ENDMACRO()
 
-MACRO(DEPLOY_WINDOWS_LIBRARY DIRNAME FILENAME)
+MACRO(WINDOWS_DEPLOY_QT_LIBRARIES)
+    FOREACH(LIBRARY ${ARGN})
+        # Deploy the Qt library itself
+
+        INSTALL(FILES ${QT_BINARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_VERSION_MAJOR}${LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                DESTINATION bin)
+    ENDFOREACH()
+ENDMACRO()
+
+MACRO(WINDOWS_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
+    FOREACH(PLUGIN_NAME ${ARGN})
+        # Deploy the Qt plugin itself
+
+        INSTALL(FILES ${QT_PLUGINS_DIR}/${PLUGIN_CATEGORY}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                DESTINATION plugins/${PLUGIN_CATEGORY})
+    ENDFOREACH()
+ENDMACRO()
+
+MACRO(WINDOWS_DEPLOY_LIBRARY DIRNAME FILENAME)
     # Copy the library file to both the build and build/bin folders, so we can
     # test things without first having to deploy OpenCOR
 
-    COPY_FILE_TO_BUILD_DIR(. ${DIRNAME} ${FILENAME})
-    COPY_FILE_TO_BUILD_DIR(bin ${DIRNAME} ${FILENAME})
+    COPY_FILE_TO_BUILD_DIR(${DIRNAME} . ${FILENAME})
+    COPY_FILE_TO_BUILD_DIR(${DIRNAME} bin ${FILENAME})
 
     # Install the library file
 
-    INSTALL(FILES ${DIRNAME}/${FILENAME} DESTINATION bin)
+    INSTALL(FILES ${DIRNAME}/${FILENAME}
+            DESTINATION bin)
 ENDMACRO()
 
-MACRO(DEPLOY_LINUX_LIBRARY DIRNAME FILENAME)
+MACRO(LINUX_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
+    FOREACH(PLUGIN_NAME ${ARGN})
+        # Deploy the Qt plugin itself
+
+        INSTALL(FILES ${QT_PLUGINS_DIR}/${PLUGIN_CATEGORY}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                DESTINATION plugins/${PLUGIN_CATEGORY})
+    ENDFOREACH()
+ENDMACRO()
+
+MACRO(LINUX_DEPLOY_LIBRARY DIRNAME FILENAME)
     # Copy the library file to the build folder, so we can test things without
     # first having to deploy OpenCOR
 
-    COPY_FILE_TO_BUILD_DIR(. ${DIRNAME} ${FILENAME})
+    COPY_FILE_TO_BUILD_DIR(${DIRNAME} . ${FILENAME})
 
     # Install the library file
 
     INSTALL(FILES ${DIRNAME}/${FILENAME} DESTINATION lib)
 ENDMACRO()
 
-MACRO(DEPLOY_LINUX_FILE DEST_DIRNAME DIRNAME FILENAME)
-    # Copy the Linux file to its destination, so we can test things without
-    # first having to deploy OpenCOR
+MACRO(OS_X_QT_DEPENDENCIES FILENAME QT_DEPENDENCIES)
+    # Retrieve the file's full-path Qt dependencies as a list
 
-    COPY_FILE_TO_BUILD_DIR(${DEST_DIRNAME} ${DIRNAME} ${FILENAME})
+    SET(QT_LIBRARY_DIR_FOR_GREP "\t${QT_LIBRARY_DIR}/")
 
-    # Install the Linux file
+    EXECUTE_PROCESS(COMMAND otool -L ${FILENAME}
+                    COMMAND grep ${QT_LIBRARY_DIR_FOR_GREP}
+                    OUTPUT_VARIABLE RAW_QT_DEPENDENCIES)
 
-    INSTALL(FILES ${DIRNAME}/${FILENAME} DESTINATION ${DEST_DIRNAME})
+    STRING(REPLACE "\n" ";" RAW_QT_DEPENDENCIES "${RAW_QT_DEPENDENCIES}")
+
+    # Extract and return the Qt depencies as a list
+
+    SET(${QT_DEPENDENCIES})
+
+    FOREACH(RAW_QT_DEPENDENCY ${RAW_QT_DEPENDENCIES})
+        STRING(REPLACE ${QT_LIBRARY_DIR_FOR_GREP} "" RAW_QT_DEPENDENCY "${RAW_QT_DEPENDENCY}")
+        STRING(REGEX REPLACE "\\.framework.*$" "" QT_DEPENDENCY "${RAW_QT_DEPENDENCY}")
+
+        LIST(APPEND ${QT_DEPENDENCIES} ${QT_DEPENDENCY})
+    ENDFOREACH()
+ENDMACRO()
+
+MACRO(OS_X_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES DIRNAME FILENAME)
+    # Strip the Qt file of all local symbols
+
+    SET(FULL_FILENAME ${DIRNAME}/${FILENAME})
+
+    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                       COMMAND strip -x ${FULL_FILENAME})
+
+    # Clean up the Qt file's id
+
+    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                       COMMAND install_name_tool -id ${FILENAME}
+                                                     ${FULL_FILENAME})
+
+    # Make sure that the Qt file refers to our embedded version of its Qt
+    # dependencies
+
+    FOREACH(DEPENDENCY ${ARGN})
+        SET(DEPENDENCY_FILENAME ${DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${DEPENDENCY})
+
+        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                           COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${DEPENDENCY_FILENAME}
+                                                             @executable_path/../Frameworks/${DEPENDENCY_FILENAME}
+                                                             ${FULL_FILENAME})
+    ENDFOREACH()
+ENDMACRO()
+
+MACRO(OS_X_DEPLOY_QT_FILE ORIG_DIRNAME DEST_DIRNAME FILENAME)
+    # Copy the Qt file itself
+
+    SET(ORIG_FILENAME ${ORIG_DIRNAME}/${FILENAME})
+
+    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                       COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_FILENAME}
+                                                        ${DEST_DIRNAME}/${FILENAME})
+
+    # Retrieve the Qt file's Qt dependencies
+
+    OS_X_QT_DEPENDENCIES(${ORIG_FILENAME} DEPENDENCIES)
+
+    # Clean up the Qt file
+
+    OS_X_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${DEST_DIRNAME} ${FILENAME} ${DEPENDENCIES})
+ENDMACRO()
+
+MACRO(OS_X_DEPLOY_QT_LIBRARIES)
+    FOREACH(LIBRARY_NAME ${ARGN})
+        # Deploy the Qt library itself
+
+        SET(QT_FRAMEWORK_DIR ${LIBRARY_NAME}.framework/Versions/${QT_VERSION_MAJOR})
+
+        OS_X_DEPLOY_QT_FILE(${QT_LIBRARY_DIR}/${QT_FRAMEWORK_DIR}
+                            ${OS_X_PROJECT_BINARY_DIR}/Contents/Frameworks/${QT_FRAMEWORK_DIR}
+                            ${LIBRARY_NAME})
+    ENDFOREACH()
+ENDMACRO()
+
+MACRO(OS_X_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
+    FOREACH(PLUGIN_NAME ${ARGN})
+        # Deploy the Qt plugin itself
+
+        OS_X_DEPLOY_QT_FILE(${QT_PLUGINS_DIR}/${PLUGIN_CATEGORY}
+                            ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${PLUGIN_CATEGORY}
+                            ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    ENDFOREACH()
+ENDMACRO()
+
+MACRO(OS_X_DEPLOY_LIBRARY DIRNAME LIBRARY_NAME)
+    # Copy the library itself
+
+    SET(LIBRARY_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(LIBRARY_FILEPATH ${OS_X_PROJECT_BINARY_DIR}/Contents/Frameworks/${LIBRARY_FILENAME})
+
+    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                       COMMAND ${CMAKE_COMMAND} -E copy ${DIRNAME}/${LIBRARY_FILENAME}
+                                                        ${LIBRARY_FILEPATH})
+
+    # Copy the library to the build directory, so that we can test any plugin
+    # that has a dependency on it
+
+    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                       COMMAND ${CMAKE_COMMAND} -E copy ${DIRNAME}/${LIBRARY_FILENAME}
+                                                        ${CMAKE_BINARY_DIR}/${LIBRARY_FILENAME})
+
+    # Strip the library of all local symbols
+
+    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                       COMMAND strip -x ${LIBRARY_FILEPATH})
+
+    # Make sure that the library refers to our embedded version of the libraries
+    # on which it depends
+
+    FOREACH(DEPENDENCY_NAME ${ARGN})
+        SET(DEPENDENCY_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${DEPENDENCY_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
+
+        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                           COMMAND install_name_tool -change ${DEPENDENCY_FILENAME}
+                                                             @executable_path/../Frameworks/${DEPENDENCY_FILENAME}
+                                                             ${LIBRARY_FILEPATH})
+    ENDFOREACH()
 ENDMACRO()
