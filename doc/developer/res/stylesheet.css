@@ -1,3 +1,5 @@
+@import "../../res/common.css";
+
 a {
     color: rgb(49, 133, 155);
 }
@@ -7,9 +9,9 @@ a:visited {
 }
 
 a:hover {
-    background-color: rgba(49, 133, 155, 0.05);
-    color: rgb(49, 133, 155);
     border: 1px solid rgba(49, 133, 155, 0.13);
+    background: rgba(49, 133, 155, 0.05);
+    color: rgb(49, 133, 155);
 }
 
 div.header {
@@ -21,18 +23,18 @@ div.section {
 }
 
 pre {
-    background: rgba(49, 133, 155, 0.05);
     border: 1px solid rgba(49, 133, 155, 0.13);
+    background: rgba(49, 133, 155, 0.05);
 }
 
 pre.good {
-    background: rgba(118, 146, 60, 0.05);
     border: 1px solid rgba(118, 146, 60, 0.13);
+    background: rgba(118, 146, 60, 0.05);
 }
 
 pre.bad {
-    background: rgba(149, 55, 52, 0.05);
     border: 1px solid rgba(149, 55, 52, 0.13);
+    background: rgba(149, 55, 52, 0.05);
 }
 
 code {

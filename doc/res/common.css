@@ -17,9 +17,9 @@ a:visited {
 
 a:hover {
     margin: -1px;
-    background-color: rgba(103, 103, 103, 0.05);
-    color: rgb(103, 103, 103);
     border: 1px solid rgba(103, 103, 103, 0.13);
+    background: rgba(103, 103, 103, 0.05);
+    color: rgb(103, 103, 103);
 }
 
 a.image:hover {
@@ -67,9 +67,9 @@ img.centerLink {
 img.centerLink:hover {
     margin-top: -1px;
     margin-bottom: -1px;
-    background: rgba(103, 103, 103, 0.05);
     border: 1px solid rgba(103, 103, 103, 0.13);
     border-radius: 7px;
+    background: rgba(103, 103, 103, 0.05);
 }
 
 li {
@@ -78,9 +78,9 @@ li {
 
 pre {
     margin: 3px 13px 3px 13px;
+    border: 1px solid rgba(103, 103, 103, 0.13);
     padding: 3px;
     background: rgba(103, 103, 103, 0.05);
-    border: 1px solid rgba(103, 103, 103, 0.13);
     white-space: pre-wrap;
 }
 
@@ -90,9 +90,9 @@ div.copyright {
     left: 0px;
     width: 100%;
     height: 17px;
+    border-top: 1px solid rgba(161, 161, 161, 0.39);
     background: rgb(229, 229, 229);
     color: rgb(161, 161, 161);
-    border-top: 1px solid rgba(161, 161, 161, 0.39);
     font-size: 9pt;
     font-weight: bold;
     text-align: center;

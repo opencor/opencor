@@ -1,3 +1,5 @@
+@import "common.css";
+
 div.header {
     background: rgb(103, 103, 103);
 }
@@ -8,19 +10,19 @@ div.section {
 
 img.downloads {
     margin: 0px;
+    border: none;
     padding: 3px 7px 3px 7px;
     position: fixed;
     top: 3px;
     right: 3px;
     background: none;
-    border: none;
 }
 
 img.downloads:hover {
     margin: -1px;
-    background: rgba(103, 103, 103, 0.05);
     border: 1px solid rgba(103, 103, 103, 0.13);
     border-radius: 13px;
+    background: rgba(103, 103, 103, 0.05);
 }
 
 table.downloads th {
@@ -35,4 +37,5 @@ table.downloads div {
     color: rgb(103, 103, 103);
     font-size: 13pt;
     font-style: italic;
+    font-weight: bold;
 }

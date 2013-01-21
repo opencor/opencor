@@ -1,3 +1,6 @@
+@import "webCommon.css";
+@import "qthelp://opencor/doc/res/common.css";
+
 a {
     color: rgb(54, 96, 146);
 }
@@ -7,9 +10,9 @@ a:visited {
 }
 
 a:hover {
-    background-color: rgba(54, 96, 146, 0.05);
-    color: rgb(54, 96, 146);
     border: 1px solid rgba(54, 96, 146, 0.13);
+    background: rgba(54, 96, 146, 0.05);
+    color: rgb(54, 96, 146);
 }
 
 div.header {
@@ -20,17 +23,13 @@ div.section {
     color: rgb(54, 96, 146);
 }
 
-span.opencor {
-    display: none;
-}
-
 p.center {
     text-align: center;
 }
 
 pre {
-    background: rgba(54, 96, 146, 0.05);
     border: 1px solid rgba(54, 96, 146, 0.13);
+    background: rgba(54, 96, 146, 0.05);
 }
 
 code {
@@ -42,8 +41,8 @@ img.centerLink {
 }
 
 img.centerLink:hover {
-    background: rgba(54, 96, 146, 0.05);
     border: 1px solid rgba(54, 96, 146, 0.13);
+    background: rgba(54, 96, 146, 0.05);
 }
 
 table.toolbarButtons th {
