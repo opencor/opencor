@@ -25,6 +25,13 @@ img.downloads:hover {
     background: rgba(103, 103, 103, 0.05);
 }
 
+p.warning {
+    border: 3px solid rgba(149, 55, 52, 0.69);
+    padding: 3px;
+    background: rgba(149, 55, 52, 0.13);
+    color: rgb(149, 55, 52);
+}
+
 table.downloads th {
     padding: 7px 13px;
 }
