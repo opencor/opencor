@@ -325,8 +325,8 @@ void MainWindow::changeEvent(QEvent *pEvent)
     else if (pEvent->type() == QEvent::WindowStateChange)
         // The window state has changed, so update the checked state of our full
         // screen action
-        // Note: useful on OS X since there is now a special full screen button
-        //       in the main window's title bar...
+        // Note: useful on OS X since there is a special full screen button in
+        //       the main window's title bar...
 
         mGui->actionFullScreen->setChecked(isFullScreen());
 #endif
