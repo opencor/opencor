@@ -35,7 +35,7 @@
             <li>
                 C++ toolchain: a set of C++ tools. The toolchain is different depending on the platform you are using:
                 <ul>
-                    <li>Windows: <a href="http://www.microsoft.com/visualstudio/eng/products/visual-studio-2010-express">Visual C++ 2010 Express SP1</a> (for debugging, you will also need the <a href="http://msdn.microsoft.com/en-us/windows/hardware/gg463009/">Debugging Tools for Windows as a Standalone Component</a>);</li>
+                    <li>Windows: <a href="http://www.microsoft.com/visualstudio/eng/products/visual-studio-2010-express">Visual C++ 2010 Express SP1</a>;</li>
                     <li>Linux: the <a href="http://packages.ubuntu.com/precise/g++">g++</a> package on Ubuntu; and</li>
                     <li>OS X: <a href="http://developer.apple.com/xcode/">Xcode</a> 4.5 (you will also need to get both the command line tools and PackageMaker (from the auxiliary tools), which can be done via the <code>Xcode</code> | <code>Open Developer Tool</code> | <code>More Developer Tools...</code> menu in Xcode).</li>
                 </ul>
@@ -47,6 +47,9 @@
                     <li>Linux <a href="http://releases.qt-project.org/qt5/5.0.0/qt-linux-opensource-5.0.0-x86-offline.run">32-bit</a>/<a href="http://releases.qt-project.org/qt5/5.0.0/qt-linux-opensource-5.0.0-x86_64-offline.run">64-bit</a> (we would recommend sudo installing Qt, so that it gets installed under under <code>/opt</code> rather than under your home directory); and</li>
                     <li><a href = "http://releases.qt-project.org/qt5/5.0.0/qt-mac-opensource-5.0.0-clang-offline.dmg">OS X</a> (you might want to install Qt under <code>/Applications</code> rather than your home folder as suggested by the installer).</li>
                 </ul>
+                <div>
+                    <strong>Note:</strong> please refer to the <a href="http://doc.qt.digia.com/qtcreator-snapshot/creator-debugging.html">Qt Reference Documentation</a> for information on how to debug using Qt Creator.
+                </div>
             </li>
             <li><a href="http://nsis.sourceforge.net/">NSIS</a> (Windows only): a program for creating Windows installers.</li>
         </ul>
@@ -56,8 +59,8 @@
         </p>
 
         <ul>
-            <li>Windows: <code>C:\Program Files\CMake 2.8\bin</code> (or <code>C:\Program Files (x86)\CMake 2.8\bin</code> if you are running a 64-bit version of Windows) and <code>C:\Qt\Qt5.0.0\5.0.0\msvc2010\bin</code>;</li>
-            <li>Linux: <code>/opt/Qt5.0.0/5.0.0/gcc/bin</code> (or <code>/opt/Qt5.0.0/5.0.0/gcc_64/bin</code>) in <code>/etc/environment</code> on Ubuntu; and</li>
+            <li>Windows: <code>C:\Program Files\CMake 2.8\bin</code> (or <code>C:\Program Files (x86)\CMake 2.8\bin</code>, if you are running a 64-bit version of Windows) and <code>C:\Qt\Qt5.0.0\5.0.0\msvc2010\bin</code>;</li>
+            <li>Linux: <code>/opt/Qt5.0.0/5.0.0/gcc/bin</code> (or <code>/opt/Qt5.0.0/5.0.0/gcc_64/bin</code>, if you are running a 64-bit version of Linux) in <code>/etc/environment</code> on Ubuntu; and</li>
             <li>OS X: <code>/Applications/Qt5.0.0/5.0.0/clang_64/bin</code> in <code>/etc/profile</code>.</li>
         </ul>
 
