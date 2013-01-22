@@ -1,5 +1,19 @@
 PROJECT(QwtPlugin)
 
+MACRO(RETRIEVE_QWT_SETTINGS)
+    # Ignore some warnings on Windows
+
+    IF(WIN32)
+        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4250 /wd4805")
+            # Note: on Windows, some warnings get generated. Yet, we have nothing to
+            #       do with them, so we ignore them...
+    ENDIF()
+ENDMACRO()
+
+# Retrieve some Qwt settings
+
+RETRIEVE_QWT_SETTINGS()
+
 # Add the plugin
 
 ADD_PLUGIN(Qwt

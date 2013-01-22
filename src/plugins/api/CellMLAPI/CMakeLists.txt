@@ -59,10 +59,12 @@ MACRO(RETRIEVE_CELLML_API_SETTINGS)
         )
     ENDIF()
 
+    # Ignore some warnings on Windows
+
     IF(WIN32)
         SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4091 /wd4290")
-        # Note: to build the CellML API without disabling the above warnings
-        #       will generate hundreds of warnings from MSVC, so...
+        # Note: on Windows, some warnings get generated. Yet, we have nothing to
+        #       do with them, so we ignore them...
     ENDIF()
 ENDMACRO()
 
