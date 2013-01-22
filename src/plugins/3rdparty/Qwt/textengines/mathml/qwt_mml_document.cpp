@@ -3088,7 +3088,7 @@ QwtMmlDocument::QwtMmlDocument()
 #if defined(Q_WS_WIN)
 */
 //---OPENCOR--- BEGIN
-#if defined(Q_OS_MAC)
+#if defined(Q_OS_WIN)
 //---OPENCOR--- END
     m_normal_font_name = "Times New Roman";
 #else
@@ -4022,7 +4022,7 @@ void QwtMmlNode::paint( QPainter *p )
     if ( bg.isValid() )
         p->fillRect( myRect(), bg );
     if ( fg.isValid() )
-        p->setPen( color() );
+        p->setPen( QPen( color(), 0 ) );
 
     QwtMmlNode *child = firstChild();
     for ( ; child != 0; child = child->nextSibling() )
@@ -4038,7 +4038,7 @@ void QwtMmlNode::paintSymbol( QPainter *p ) const
     if ( g_draw_frames && myRect().isValid() )
     {
         p->save();
-        p->setPen( Qt::red );
+        p->setPen( QPen( Qt::red, 0 ) );
         p->drawRect( m_my_rect );
         QPen pen = p->pen();
         pen.setStyle( Qt::DotLine );

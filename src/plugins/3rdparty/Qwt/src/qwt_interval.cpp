@@ -285,8 +285,8 @@ QwtInterval QwtInterval::limited( double lowerBound, double upperBound ) const
 /*!
    Extend the interval
 
-   If value is below minValue, value becomes the lower limit.
-   If value is above maxValue, value becomes the upper limit.
+   If value is below minValue(), value becomes the lower limit.
+   If value is above maxValue(), value becomes the upper limit.
 
    extend has no effect for invalid intervals
 

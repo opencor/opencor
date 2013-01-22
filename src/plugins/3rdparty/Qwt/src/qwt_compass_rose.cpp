@@ -165,7 +165,7 @@ void QwtSimpleCompassRose::drawRose(
         if ( 2.0 * M_PI / step > 32 )
             leafWidth = 16;
 
-        const double origin = north / 180.0 * M_PI;
+        const double origin = qwtRadians( north );
         for ( double angle = origin;
             angle < 2.0 * M_PI + origin; angle += step )
         {

@@ -231,30 +231,27 @@ void QwtTextLabel::drawContents( QPainter *painter )
     painter->setFont( font() );
     painter->setPen( palette().color( QPalette::Active, QPalette::Text ) );
 
-    drawText( painter, r );
+    drawText( painter, QRectF( r ) );
 
     if ( hasFocus() )
     {
-        const int margin = 2;
+        const int m = 2;
 
-        QRect focusRect = contentsRect();
-        focusRect.setRect( focusRect.x() + margin, focusRect.y() + margin,
-            focusRect.width() - 2 * margin - 2,
-            focusRect.height() - 2 * margin - 2 );
+        QRect focusRect = contentsRect().adjusted( m, m, -m + 1, -m + 1);
 
         QwtPainter::drawFocusRect( painter, this, focusRect );
     }
 }
 
 //! Redraw the text
-void QwtTextLabel::drawText( QPainter *painter, const QRect &textRect )
+void QwtTextLabel::drawText( QPainter *painter, const QRectF &textRect )
 {
     d_data->text.draw( painter, textRect );
 }
 
 /*!
-  Calculate the rect for the text in widget coordinates
-  \return Text rect
+  Calculate geometry for the text in widget coordinates
+  \return Geometry for the text
 */
 QRect QwtTextLabel::textRect() const
 {

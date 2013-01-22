@@ -56,10 +56,11 @@ public:
 
     QRect textRect() const;
 
+    virtual void drawText( QPainter *, const QRectF & );
+
 protected:
     virtual void paintEvent( QPaintEvent *e );
     virtual void drawContents( QPainter * );
-    virtual void drawText( QPainter *, const QRect & );
 
 private:
     void init();

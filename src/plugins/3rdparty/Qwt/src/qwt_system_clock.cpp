@@ -8,6 +8,55 @@
  *****************************************************************************/
 
 #include "qwt_system_clock.h"
+
+#if QT_VERSION >= 0x040800
+#define USE_ELAPSED_TIMER 1
+#endif
+
+#if USE_ELAPSED_TIMER
+
+#include <qelapsedtimer.h>
+
+class QwtSystemClock::PrivateData
+{
+public:
+    QElapsedTimer timer;
+};
+
+QwtSystemClock::QwtSystemClock()
+{
+    d_data = new PrivateData();
+}
+
+QwtSystemClock::~QwtSystemClock()
+{
+    delete d_data;
+}
+    
+bool QwtSystemClock::isNull() const
+{
+    return d_data->timer.isValid();
+}
+        
+void QwtSystemClock::start()
+{
+    d_data->timer.start();
+}
+
+double QwtSystemClock::restart()
+{
+    const qint64 nsecs = d_data->timer.restart();
+    return nsecs / 1e6;
+}
+
+double QwtSystemClock::elapsed() const
+{
+    const qint64 nsecs = d_data->timer.nsecsElapsed();
+    return nsecs / 1e6;
+}
+    
+#else // !USE_ELAPSED_TIMER
+
 #include <qdatetime.h>
 
 #if !defined(Q_OS_WIN)
@@ -110,7 +159,7 @@ double QwtHighResolutionClock::msecsTo(
         mach_timebase_info_data_t info;
         kern_return_t err = mach_timebase_info( &info );
 
-        //Convert the timebase into ms
+        // convert the timebase into ms
         if ( err == 0  )
             conversion = 1e-6 * ( double ) info.numer / ( double ) info.denom;
     }
@@ -345,20 +394,4 @@ double QwtSystemClock::elapsed() const
     return elapsed;
 }
 
-/*!
-  \return Accuracy of the system clock in milliseconds.
-*/
-double QwtSystemClock::precision()
-{
-    static double prec = 0.0;
-    if ( prec <= 0.0 )
-    {
-#if defined(QWT_HIGH_RESOLUTION_CLOCK)
-        prec = QwtHighResolutionClock::precision();
 #endif
-        if ( prec <= 0.0 )
-            prec = 1.0; // QTime offers 1 ms
-    }
-
-    return prec;
-}

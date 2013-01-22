@@ -19,12 +19,90 @@
 #define qExp(x) ::exp(x)
 #endif
 
+static inline double qwtLog( double base, double value )
+{
+    return log( value ) / log( base );
+}
+
+static inline QwtInterval qwtLogInterval( double base, const QwtInterval &interval )
+{
+    return QwtInterval( qwtLog( base, interval.minValue() ),
+            qwtLog( base, interval.maxValue() ) );
+}
+
+static inline QwtInterval qwtPowInterval( double base, const QwtInterval &interval ) 
+{
+    return QwtInterval( qPow( base, interval.minValue() ),
+            qPow( base, interval.maxValue() ) );
+}
+
+
+#if 1
+
+// this version often doesn't find the best ticks: f.e for 15: 5, 10
+static double qwtStepSize( double intervalSize, int maxSteps, uint base )
+{
+    const double minStep = 
+        QwtScaleArithmetic::divideInterval( intervalSize, maxSteps, base );
+
+    if ( minStep != 0.0 )
+    {
+        // # ticks per interval
+        const int numTicks = qCeil( qAbs( intervalSize / minStep ) ) - 1;
+
+        // Do the minor steps fit into the interval?
+        if ( qwtFuzzyCompare( ( numTicks +  1 ) * qAbs( minStep ),
+            qAbs( intervalSize ), intervalSize ) > 0 )
+        {
+            // The minor steps doesn't fit into the interval
+            return 0.5 * intervalSize;
+        }
+    }
+
+    return minStep;
+}
+
+#else
+
+static double qwtStepSize( double intervalSize, int maxSteps, uint base )
+{
+    if ( maxSteps <= 0 )
+        return 0.0;
+
+    if ( maxSteps > 2 )
+    {
+        for ( int numSteps = maxSteps; numSteps > 1; numSteps-- )
+        {
+            const double stepSize = intervalSize / numSteps;
+
+            const double p = ::floor( ::log( stepSize ) / ::log( base ) );
+            const double fraction = qPow( base, p );
+
+            for ( uint n = base; n > 1; n /= 2 )
+            {
+                if ( qFuzzyCompare( stepSize, n * fraction ) )
+                    return stepSize;
+
+                if ( n == 3 && ( base % 2 ) == 0 )
+                {
+                    if ( qFuzzyCompare( stepSize, 2 * fraction ) )
+                        return stepSize;
+                }
+            }
+        }
+    }
+
+    return intervalSize * 0.5;
+}
+
+#endif
+
 static const double _eps = 1.0e-6;
 
 /*!
   Ceil a value, relative to an interval
 
-  \param value Value to ceil
+  \param value Value to be ceiled
   \param intervalSize Interval size
 
   \sa floorEps()
@@ -41,7 +119,7 @@ double QwtScaleArithmetic::ceilEps( double value,
 /*!
   Floor a value, relative to an interval
 
-  \param value Value to floor
+  \param value Value to be floored
   \param intervalSize Interval size
 
   \sa floorEps()
@@ -72,59 +150,36 @@ double QwtScaleArithmetic::divideEps( double intervalSize, double numSteps )
 }
 
 /*!
-  Find the smallest value out of {1,2,5}*10^n with an integer number n
-  which is greater than or equal to x
+  Calculate a step size for a given interval
 
-  \param x Input value
-*/
-double QwtScaleArithmetic::ceil125( double x )
+  \param intervalSize Interval size
+  \param numSteps Number of steps
+  \param base Base for the division ( usually 10 )
+ */
+double QwtScaleArithmetic::divideInterval( 
+    double intervalSize, int numSteps, uint base ) 
 {
-    if ( x == 0.0 )
+    if ( numSteps <= 0 )
         return 0.0;
 
-    const double sign = ( x > 0 ) ? 1.0 : -1.0;
-    const double lx = ::log10( qFabs( x ) );
-    const double p10 = ::floor( lx );
-
-    double fr = qPow( 10.0, lx - p10 );
-    if ( fr <= 1.0 )
-        fr = 1.0;
-    else if ( fr <= 2.0 )
-        fr = 2.0;
-    else if ( fr <= 5.0 )
-        fr = 5.0;
-    else
-        fr = 10.0;
-
-    return sign * fr * qPow( 10.0, p10 );
-}
-
-/*!
-  \brief Find the largest value out of {1,2,5}*10^n with an integer number n
-  which is smaller than or equal to x
-
-  \param x Input value
-*/
-double QwtScaleArithmetic::floor125( double x )
-{
-    if ( x == 0.0 )
+    const double v = QwtScaleArithmetic::divideEps( intervalSize, numSteps );
+    if ( v == 0.0 )
         return 0.0;
 
-    double sign = ( x > 0 ) ? 1.0 : -1.0;
-    const double lx = ::log10( qFabs( x ) );
-    const double p10 = ::floor( lx );
+    const double lx = qwtLog( base, qFabs( v ) );
+    const double p = ::floor( lx );
 
-    double fr = qPow( 10.0, lx - p10 );
-    if ( fr >= 10.0 )
-        fr = 10.0;
-    else if ( fr >= 5.0 )
-        fr = 5.0;
-    else if ( fr >= 2.0 )
-        fr = 2.0;
-    else
-        fr = 1.0;
+    const double fraction = qPow( base, lx - p );
 
-    return sign * fr * qPow( 10.0, p10 );
+    uint n = base;
+    while ( ( n > 1 ) && ( fraction <= n / 2 ) )
+        n /= 2;
+
+    double stepSize = n * qPow( base, p );
+    if ( v < 0 )
+        stepSize = -stepSize;
+
+    return stepSize;
 }
 
 class QwtScaleEngine::PrivateData
@@ -134,23 +189,39 @@ public:
         attributes( QwtScaleEngine::NoAttribute ),
         lowerMargin( 0.0 ),
         upperMargin( 0.0 ),
-        referenceValue( 0.0 )
+        referenceValue( 0.0 ),
+        base( 10 ),
+        transform( NULL )
     {
     }
 
-    QwtScaleEngine::Attributes attributes;       // scale attributes
+    ~PrivateData()
+    {
+        delete transform;
+    }
 
-    double lowerMargin;      // margins
+    QwtScaleEngine::Attributes attributes;
+
+    double lowerMargin;
     double upperMargin;
 
-    double referenceValue; // reference value
+    double referenceValue;
 
+    uint base;
+
+    QwtTransform* transform;
 };
 
-//! Constructor
-QwtScaleEngine::QwtScaleEngine()
+/*!
+  Constructor
+
+  \param base Base of the scale engine
+  \sa setBase()
+ */
+QwtScaleEngine::QwtScaleEngine( uint base )
 {
     d_data = new PrivateData;
+    setBase( base );
 }
 
 
@@ -158,6 +229,44 @@ QwtScaleEngine::QwtScaleEngine()
 QwtScaleEngine::~QwtScaleEngine ()
 {
     delete d_data;
+}
+
+/*!
+   Assign a transformation
+
+   \param transform Transformation
+
+   The transformation object is used as factory for clones
+   that are returned by transformation()
+
+   The scale engine takes ownership of the transformation.
+
+   \sa QwtTransform::copy(), transformation()
+
+ */
+void QwtScaleEngine::setTransformation( QwtTransform *transform )
+{
+    if ( transform != d_data->transform )
+    {
+        delete d_data->transform;
+        d_data->transform = transform;
+    }
+}
+
+/*!
+   Create and return a clone of the transformation 
+   of the engine. When the engine has no special transformation
+   NULL is returned, indicating no transformation.
+
+   \sa setTransformation()
+ */
+QwtTransform *QwtScaleEngine::transformation() const
+{
+    QwtTransform *transform = NULL;
+    if ( d_data->transform )
+        transform = d_data->transform->copy();
+
+    return transform;
 }
 
 /*!
@@ -193,7 +302,7 @@ double QwtScaleEngine::upperMargin() const
   the enclosed intervals and the boundaries of the scale.
 
   \warning
-  \li QwtLog10ScaleEngine measures the margins in decades.
+  \li QwtLogScaleEngine measures the margins in decades.
 
   \sa upperMargin(), lowerMargin()
 */
@@ -215,11 +324,8 @@ void QwtScaleEngine::setMargins( double lower, double upper )
 double QwtScaleEngine::divideInterval(
     double intervalSize, int numSteps ) const
 {
-    if ( numSteps <= 0 )
-        return 0.0;
-
-    double v = QwtScaleArithmetic::divideEps( intervalSize, numSteps );
-    return QwtScaleArithmetic::ceil125( v );
+    return QwtScaleArithmetic::divideInterval( 
+        intervalSize, numSteps, d_data->base );
 }
 
 /*!
@@ -227,8 +333,6 @@ double QwtScaleEngine::divideInterval(
 
   \param interval Interval
   \param value Value
-
-  \sa QwtScaleArithmetic::compareEps()
 */
 bool QwtScaleEngine::contains(
     const QwtInterval &interval, double value ) const
@@ -356,8 +460,8 @@ void QwtScaleEngine::setReference( double r )
 }
 
 /*!
- \return the reference value
- \sa setReference(), setAttribute()
+  \return the reference value
+  \sa setReference(), setAttribute()
 */
 double QwtScaleEngine::reference() const
 {
@@ -365,22 +469,54 @@ double QwtScaleEngine::reference() const
 }
 
 /*!
-  Return a transformation, for linear scales
-*/
-QwtScaleTransformation *QwtLinearScaleEngine::transformation() const
-{
-    return new QwtScaleTransformation( QwtScaleTransformation::Linear );
+  Set the base of the scale engine
+
+  While a base of 10 is what 99.9% of all applications need
+  certain scales might need a different base: f.e 2
+
+  The default setting is 10
+
+  \sa base()
+ */
+void QwtScaleEngine::setBase( uint base )
+{ 
+    d_data->base = qMax( base, 2U );
 }
 
 /*!
-    Align and divide an interval
+  \return base Base of the scale engine
+  \sa setBase()
+ */
+uint QwtScaleEngine::base() const
+{
+    return d_data->base;
+}
 
-   \param maxNumSteps Max. number of steps
-   \param x1 First limit of the interval (In/Out)
-   \param x2 Second limit of the interval (In/Out)
-   \param stepSize Step size (Out)
+/*!
+  Constructor
 
-   \sa setAttribute()
+  \param base Base of the scale engine
+  \sa setBase()
+ */
+QwtLinearScaleEngine::QwtLinearScaleEngine( uint base ):
+    QwtScaleEngine( base )
+{
+}
+
+//! Destructor
+QwtLinearScaleEngine::~QwtLinearScaleEngine()
+{
+}
+
+/*!
+  Align and divide an interval
+
+  \param maxNumSteps Max. number of steps
+  \param x1 First limit of the interval (In/Out)
+  \param x2 Second limit of the interval (In/Out)
+  \param stepSize Step size (Out)
+
+  \sa setAttribute()
 */
 void QwtLinearScaleEngine::autoScale( int maxNumSteps,
     double &x1, double &x2, double &stepSize ) const
@@ -400,7 +536,8 @@ void QwtLinearScaleEngine::autoScale( int maxNumSteps,
     if ( interval.width() == 0.0 )
         interval = buildInterval( interval.minValue() );
 
-    stepSize = divideInterval( interval.width(), qMax( maxNumSteps, 1 ) );
+    stepSize = QwtScaleArithmetic::divideInterval( 
+        interval.width(), qMax( maxNumSteps, 1 ), base() );
 
     if ( !testAttribute( QwtScaleEngine::Floating ) )
         interval = align( interval, stepSize );
@@ -420,15 +557,13 @@ void QwtLinearScaleEngine::autoScale( int maxNumSteps,
 
    \param x1 First interval limit
    \param x2 Second interval limit
-   \param maxMajSteps Maximum for the number of major steps
-   \param maxMinSteps Maximum number of minor steps
-   \param stepSize Step size. If stepSize == 0, the scaleEngine
+   \param maxMajorSteps Maximum for the number of major steps
+   \param maxMinorSteps Maximum number of minor steps
+   \param stepSize Step size. If stepSize == 0, the engine
                    calculates one.
-
-   \sa QwtScaleEngine::stepSize(), QwtScaleEngine::subDivide()
 */
 QwtScaleDiv QwtLinearScaleEngine::divideScale( double x1, double x2,
-    int maxMajSteps, int maxMinSteps, double stepSize ) const
+    int maxMajorSteps, int maxMinorSteps, double stepSize ) const
 {
     QwtInterval interval = QwtInterval( x1, x2 ).normalized();
     if ( interval.width() <= 0 )
@@ -437,10 +572,11 @@ QwtScaleDiv QwtLinearScaleEngine::divideScale( double x1, double x2,
     stepSize = qAbs( stepSize );
     if ( stepSize == 0.0 )
     {
-        if ( maxMajSteps < 1 )
-            maxMajSteps = 1;
+        if ( maxMajorSteps < 1 )
+            maxMajorSteps = 1;
 
-        stepSize = divideInterval( interval.width(), maxMajSteps );
+        stepSize = QwtScaleArithmetic::divideInterval( 
+            interval.width(), maxMajorSteps, base() );
     }
 
     QwtScaleDiv scaleDiv;
@@ -448,7 +584,7 @@ QwtScaleDiv QwtLinearScaleEngine::divideScale( double x1, double x2,
     if ( stepSize != 0.0 )
     {
         QList<double> ticks[QwtScaleDiv::NTickTypes];
-        buildTicks( interval, stepSize, maxMinSteps, ticks );
+        buildTicks( interval, stepSize, maxMinorSteps, ticks );
 
         scaleDiv = QwtScaleDiv( interval, ticks );
     }
@@ -464,13 +600,13 @@ QwtScaleDiv QwtLinearScaleEngine::divideScale( double x1, double x2,
 
    \param interval Interval
    \param stepSize Step size
-   \param maxMinSteps Maximum number of minor steps
+   \param maxMinorSteps Maximum number of minor steps
    \param ticks Arrays to be filled with the calculated ticks
 
    \sa buildMajorTicks(), buildMinorTicks
 */
 void QwtLinearScaleEngine::buildTicks(
-    const QwtInterval& interval, double stepSize, int maxMinSteps,
+    const QwtInterval& interval, double stepSize, int maxMinorSteps,
     QList<double> ticks[QwtScaleDiv::NTickTypes] ) const
 {
     const QwtInterval boundingInterval = align( interval, stepSize );
@@ -478,9 +614,9 @@ void QwtLinearScaleEngine::buildTicks(
     ticks[QwtScaleDiv::MajorTick] =
         buildMajorTicks( boundingInterval, stepSize );
 
-    if ( maxMinSteps > 0 )
+    if ( maxMinorSteps > 0 )
     {
-        buildMinorTicks( ticks[QwtScaleDiv::MajorTick], maxMinSteps, stepSize,
+        buildMinorTicks( ticks[QwtScaleDiv::MajorTick], maxMinorSteps, stepSize,
             ticks[QwtScaleDiv::MinorTick], ticks[QwtScaleDiv::MediumTick] );
     }
 
@@ -528,7 +664,7 @@ QList<double> QwtLinearScaleEngine::buildMajorTicks(
    \brief Calculate minor/medium ticks for major ticks
 
    \param majorTicks Major ticks
-   \param maxMinSteps Maximum number of minor steps
+   \param maxMinorSteps Maximum number of minor steps
    \param stepSize Step size
    \param minorTicks Array to be filled with the calculated minor ticks
    \param mediumTicks Array to be filled with the calculated medium ticks
@@ -536,24 +672,16 @@ QList<double> QwtLinearScaleEngine::buildMajorTicks(
 */
 void QwtLinearScaleEngine::buildMinorTicks(
     const QList<double>& majorTicks,
-    int maxMinSteps, double stepSize,
+    int maxMinorSteps, double stepSize,
     QList<double> &minorTicks,
     QList<double> &mediumTicks ) const
 {
-    double minStep = divideInterval( stepSize, maxMinSteps );
+    double minStep = qwtStepSize( stepSize, maxMinorSteps, base() );
     if ( minStep == 0.0 )
         return;
 
     // # ticks per interval
-    int numTicks = qCeil( qAbs( stepSize / minStep ) ) - 1;
-
-    // Do the minor steps fit into the interval?
-    if ( qwtFuzzyCompare( ( numTicks +  1 ) * qAbs( minStep ),
-        qAbs( stepSize ), stepSize ) > 0 )
-    {
-        numTicks = 1;
-        minStep = stepSize * 0.5;
-    }
+    const int numTicks = qCeil( qAbs( stepSize / minStep ) ) - 1;
 
     int medIndex = -1;
     if ( numTicks % 2 )
@@ -615,11 +743,20 @@ QwtInterval QwtLinearScaleEngine::align(
 }
 
 /*!
-  Return a transformation, for logarithmic (base 10) scales
-*/
-QwtScaleTransformation *QwtLog10ScaleEngine::transformation() const
+  Constructor
+
+  \param base Base of the scale engine
+  \sa setBase()
+ */
+QwtLogScaleEngine::QwtLogScaleEngine( uint base ):
+    QwtScaleEngine( base )
 {
-    return new QwtScaleTransformation( QwtScaleTransformation::Log10 );
+    setTransformation( new QwtLogTransform() );
+}
+
+//! Destructor
+QwtLogScaleEngine::~QwtLogScaleEngine()
+{
 }
 
 /*!
@@ -632,18 +769,20 @@ QwtScaleTransformation *QwtLog10ScaleEngine::transformation() const
 
    \sa QwtScaleEngine::setAttribute()
 */
-void QwtLog10ScaleEngine::autoScale( int maxNumSteps,
+void QwtLogScaleEngine::autoScale( int maxNumSteps,
     double &x1, double &x2, double &stepSize ) const
 {
     if ( x1 > x2 )
         qSwap( x1, x2 );
 
-    QwtInterval interval( x1 / qPow( 10.0, lowerMargin() ),
-        x2 * qPow( 10.0, upperMargin() ) );
+    const double logBase = base();
 
-    if ( interval.maxValue() / interval.minValue() < 10.0 )
+    QwtInterval interval( x1 / qPow( logBase, lowerMargin() ),
+        x2 * qPow( logBase, upperMargin() ) );
+
+    if ( interval.maxValue() / interval.minValue() < logBase )
     {
-        // scale width is less than one decade -> try to build a linear scale
+        // scale width is less than one step -> try to build a linear scale
 
         QwtLinearScaleEngine linearScaler;
         linearScaler.setAttributes( attributes() );
@@ -655,14 +794,13 @@ void QwtLog10ScaleEngine::autoScale( int maxNumSteps,
         QwtInterval linearInterval = QwtInterval( x1, x2 ).normalized();
         linearInterval = linearInterval.limited( LOG_MIN, LOG_MAX );
 
-        if ( linearInterval.maxValue() / linearInterval.minValue() < 10.0 )
+        if ( linearInterval.maxValue() / linearInterval.minValue() < logBase )
         {
-            // the aligned scale is still less than a decade
-    
+            // the aligned scale is still less than one step
             if ( stepSize < 0.0 )
-                stepSize = -::log10( qAbs( stepSize ) );
+                stepSize = -qwtLog( logBase, qAbs( stepSize ) );
             else
-                stepSize = ::log10( stepSize );
+                stepSize = qwtLog( logBase, stepSize );
 
             return;
         }
@@ -687,7 +825,8 @@ void QwtLog10ScaleEngine::autoScale( int maxNumSteps,
     if ( interval.width() == 0.0 )
         interval = buildInterval( interval.minValue() );
 
-    stepSize = divideInterval( log10( interval ).width(), qMax( maxNumSteps, 1 ) );
+    stepSize = divideInterval( qwtLogInterval( logBase, interval ).width(), 
+        qMax( maxNumSteps, 1 ) );
     if ( stepSize < 1.0 )
         stepSize = 1.0;
 
@@ -709,15 +848,13 @@ void QwtLog10ScaleEngine::autoScale( int maxNumSteps,
 
    \param x1 First interval limit
    \param x2 Second interval limit
-   \param maxMajSteps Maximum for the number of major steps
-   \param maxMinSteps Maximum number of minor steps
-   \param stepSize Step size. If stepSize == 0, the scaleEngine
+   \param maxMajorSteps Maximum for the number of major steps
+   \param maxMinorSteps Maximum number of minor steps
+   \param stepSize Step size. If stepSize == 0, the engine
                    calculates one.
-
-   \sa QwtScaleEngine::stepSize(), QwtLog10ScaleEngine::subDivide()
 */
-QwtScaleDiv QwtLog10ScaleEngine::divideScale( double x1, double x2,
-    int maxMajSteps, int maxMinSteps, double stepSize ) const
+QwtScaleDiv QwtLogScaleEngine::divideScale( double x1, double x2,
+    int maxMajorSteps, int maxMinorSteps, double stepSize ) const
 {
     QwtInterval interval = QwtInterval( x1, x2 ).normalized();
     interval = interval.limited( LOG_MIN, LOG_MAX );
@@ -725,7 +862,9 @@ QwtScaleDiv QwtLog10ScaleEngine::divideScale( double x1, double x2,
     if ( interval.width() <= 0 )
         return QwtScaleDiv();
 
-    if ( interval.maxValue() / interval.minValue() < 10.0 )
+    const double logBase = base();
+
+    if ( interval.maxValue() / interval.minValue() < logBase )
     {
         // scale width is less than one decade -> build linear scale
 
@@ -737,22 +876,23 @@ QwtScaleDiv QwtLog10ScaleEngine::divideScale( double x1, double x2,
         if ( stepSize != 0.0 )
         {
             if ( stepSize < 0.0 )
-                stepSize = -qPow( 10.0, -stepSize );
+                stepSize = -qPow( logBase, -stepSize );
             else
-                stepSize = qPow( 10.0, stepSize );
+                stepSize = qPow( logBase, stepSize );
         }
 
         return linearScaler.divideScale( x1, x2,
-            maxMajSteps, maxMinSteps, stepSize );
+            maxMajorSteps, maxMinorSteps, stepSize );
     }
 
     stepSize = qAbs( stepSize );
     if ( stepSize == 0.0 )
     {
-        if ( maxMajSteps < 1 )
-            maxMajSteps = 1;
+        if ( maxMajorSteps < 1 )
+            maxMajorSteps = 1;
 
-        stepSize = divideInterval( log10( interval ).width(), maxMajSteps );
+        stepSize = divideInterval( 
+            qwtLogInterval( logBase, interval ).width(), maxMajorSteps );
         if ( stepSize < 1.0 )
             stepSize = 1.0; // major step must be >= 1 decade
     }
@@ -761,7 +901,7 @@ QwtScaleDiv QwtLog10ScaleEngine::divideScale( double x1, double x2,
     if ( stepSize != 0.0 )
     {
         QList<double> ticks[QwtScaleDiv::NTickTypes];
-        buildTicks( interval, stepSize, maxMinSteps, ticks );
+        buildTicks( interval, stepSize, maxMinorSteps, ticks );
 
         scaleDiv = QwtScaleDiv( interval, ticks );
     }
@@ -776,14 +916,14 @@ QwtScaleDiv QwtLog10ScaleEngine::divideScale( double x1, double x2,
    \brief Calculate ticks for an interval
 
    \param interval Interval
-   \param maxMinSteps Maximum number of minor steps
+   \param maxMinorSteps Maximum number of minor steps
    \param stepSize Step size
    \param ticks Arrays to be filled with the calculated ticks
 
    \sa buildMajorTicks(), buildMinorTicks
 */
-void QwtLog10ScaleEngine::buildTicks(
-    const QwtInterval& interval, double stepSize, int maxMinSteps,
+void QwtLogScaleEngine::buildTicks(
+    const QwtInterval& interval, double stepSize, int maxMinorSteps,
     QList<double> ticks[QwtScaleDiv::NTickTypes] ) const
 {
     const QwtInterval boundingInterval = align( interval, stepSize );
@@ -791,10 +931,10 @@ void QwtLog10ScaleEngine::buildTicks(
     ticks[QwtScaleDiv::MajorTick] =
         buildMajorTicks( boundingInterval, stepSize );
 
-    if ( maxMinSteps > 0 )
+    if ( maxMinorSteps > 0 )
     {
-        ticks[QwtScaleDiv::MinorTick] = buildMinorTicks(
-            ticks[QwtScaleDiv::MajorTick], maxMinSteps, stepSize );
+        buildMinorTicks( ticks[QwtScaleDiv::MajorTick], maxMinorSteps, stepSize,
+            ticks[QwtScaleDiv::MinorTick], ticks[QwtScaleDiv::MediumTick] );
     }
 
     for ( int i = 0; i < QwtScaleDiv::NTickTypes; i++ )
@@ -809,10 +949,10 @@ void QwtLog10ScaleEngine::buildTicks(
 
    \return Calculated ticks
 */
-QList<double> QwtLog10ScaleEngine::buildMajorTicks(
+QList<double> QwtLogScaleEngine::buildMajorTicks(
     const QwtInterval &interval, double stepSize ) const
 {
-    double width = log10( interval ).width();
+    double width = qwtLogInterval( base(), interval ).width();
 
     int numTicks = qRound( width / stepSize ) + 1;
     if ( numTicks > 10000 )
@@ -838,93 +978,98 @@ QList<double> QwtLog10ScaleEngine::buildMajorTicks(
    \brief Calculate minor/medium ticks for major ticks
 
    \param majorTicks Major ticks
-   \param maxMinSteps Maximum number of minor steps
+   \param maxMinorSteps Maximum number of minor steps
    \param stepSize Step size
+   \param minorTicks Array to be filled with the calculated minor ticks
+   \param mediumTicks Array to be filled with the calculated medium ticks
 */
-QList<double> QwtLog10ScaleEngine::buildMinorTicks(
+void QwtLogScaleEngine::buildMinorTicks(
     const QList<double> &majorTicks,
-    int maxMinSteps, double stepSize ) const
+    int maxMinorSteps, double stepSize,
+    QList<double> &minorTicks,
+    QList<double> &mediumTicks ) const
 {
-    if ( stepSize < 1.1 )          // major step width is one decade
+    const double logBase = base();
+
+    if ( stepSize < 1.1 )          // major step width is one base
     {
-        if ( maxMinSteps < 1 )
-            return QList<double>();
+        double minStep = divideInterval( stepSize, maxMinorSteps + 1 );
+        if ( minStep == 0.0 )
+            return;
+        
+        const int numSteps = qRound( stepSize / minStep ); 
 
-        int k0, kstep, kmax;
+        int mediumTickIndex = -1;
+        if ( ( numSteps > 2 ) && ( numSteps % 2 == 0 ) )
+            mediumTickIndex = numSteps / 2;
 
-        if ( maxMinSteps >= 8 )
-        {
-            k0 = 2;
-            kmax = 9;
-            kstep = 1;
-        }
-        else if ( maxMinSteps >= 4 )
-        {
-            k0 = 2;
-            kmax = 8;
-            kstep = 2;
-        }
-        else if ( maxMinSteps >= 2 )
-        {
-            k0 = 2;
-            kmax = 5;
-            kstep = 3;
-        }
-        else
-        {
-            k0 = 5;
-            kmax = 5;
-            kstep = 1;
-        }
-
-        QList<double> minorTicks;
-
-        for ( int i = 0; i < majorTicks.count(); i++ )
+        for ( int i = 0; i < majorTicks.count() - 1; i++ )
         {
             const double v = majorTicks[i];
-            for ( int k = k0; k <= kmax; k += kstep )
-                minorTicks += v * double( k );
-        }
+            const double s = logBase / numSteps;
 
-        return minorTicks;
+            if ( s >= 1.0 )
+            {
+                for ( int j = 2; j < numSteps; j++ )
+                {
+                    minorTicks += v * j * s;
+                }
+            }
+            else
+            {
+                for ( int j = 1; j < numSteps; j++ )
+                {
+                    const double tick = v + j * v * ( logBase - 1 ) / numSteps;
+                    if ( j == mediumTickIndex )
+                        mediumTicks += tick;
+                    else
+                        minorTicks += tick;
+                }
+            }
+        }
     }
-    else  // major step > one decade
+    else
     {
-        double minStep = divideInterval( stepSize, maxMinSteps );
+        double minStep = divideInterval( stepSize, maxMinorSteps );
         if ( minStep == 0.0 )
-            return QList<double>();
+            return;
 
         if ( minStep < 1.0 )
             minStep = 1.0;
 
         // # subticks per interval
-        int nMin = qRound( stepSize / minStep ) - 1;
+        int numTicks = qRound( stepSize / minStep ) - 1;
 
         // Do the minor steps fit into the interval?
-
-        if ( qwtFuzzyCompare( ( nMin +  1 ) * minStep,
-            qAbs( stepSize ), stepSize ) > 0 )
+        if ( qwtFuzzyCompare( ( numTicks +  1 ) * minStep,
+            stepSize, stepSize ) > 0 )
         {
-            nMin = 0;
+            numTicks = 0;
         }
 
-        if ( nMin < 1 )
-            return QList<double>();      // no subticks
+        if ( numTicks < 1 )
+            return; 
 
-        // substep factor = 10^substeps
-        const qreal minFactor = qMax( qPow( 10.0, minStep ), qreal( 10.0 ) );
+        int mediumTickIndex = -1;
+        if ( ( numTicks > 2 ) && ( numTicks % 2 ) )
+            mediumTickIndex = numTicks / 2;
 
-        QList<double> minorTicks;
+        // substep factor = base^substeps
+        const qreal minFactor = qMax( qPow( logBase, minStep ), qreal( logBase ) );
+
         for ( int i = 0; i < majorTicks.count(); i++ )
         {
-            double val = majorTicks[i];
-            for ( int k = 0; k < nMin; k++ )
+            double tick = majorTicks[i];
+            for ( int j = 0; j < numTicks; j++ )
             {
-                val *= minFactor;
-                minorTicks += val;
+                tick *= minFactor;
+
+                if ( j == mediumTickIndex )
+                    mediumTicks += tick;
+                else
+                    minorTicks += tick;
             }
         }
-        return minorTicks;
     }
 }
 
@@ -939,10 +1084,10 @@ QList<double> QwtLog10ScaleEngine::buildMinorTicks(
 
   \return Aligned interval
 */
-QwtInterval QwtLog10ScaleEngine::align(
+QwtInterval QwtLogScaleEngine::align(
     const QwtInterval &interval, double stepSize ) const
 {
-    const QwtInterval intv = log10( interval );
+    const QwtInterval intv = qwtLogInterval( base(), interval );
 
     double x1 = QwtScaleArithmetic::floorEps( intv.minValue(), stepSize );
     if ( qwtFuzzyCompare( interval.minValue(), x1, stepSize ) == 0 )
@@ -952,24 +1097,5 @@ QwtInterval QwtLog10ScaleEngine::align(
     if ( qwtFuzzyCompare( interval.maxValue(), x2, stepSize ) == 0 )
         x2 = interval.maxValue();
 
-    return pow10( QwtInterval( x1, x2 ) );
-}
-
-/*!
-  Return the interval [log10(interval.minValue(), log10(interval.maxValue]
-*/
-
-QwtInterval QwtLog10ScaleEngine::log10( const QwtInterval &interval ) const
-{
-    return QwtInterval( ::log10( interval.minValue() ),
-            ::log10( interval.maxValue() ) );
-}
-
-/*!
-  Return the interval [pow10(interval.minValue(), pow10(interval.maxValue]
-*/
-QwtInterval QwtLog10ScaleEngine::pow10( const QwtInterval &interval ) const
-{
-    return QwtInterval( qPow( 10.0, interval.minValue() ),
-            qPow( 10.0, interval.maxValue() ) );
+    return qwtPowInterval( base(), QwtInterval( x1, x2 ) );
 }

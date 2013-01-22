@@ -28,7 +28,6 @@
   using QwtAbstractScaleDraw::setScaleDiv(const QwtScaleDiv &s),
   the scale can be drawn with the QwtAbstractScaleDraw::draw() member.
 */
-
 class QWT_EXPORT QwtScaleDraw: public QwtAbstractScaleDraw
 {
 public:

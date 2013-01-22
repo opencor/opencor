@@ -68,7 +68,7 @@ QwtSpline::QwtSpline()
 
 /*!
    Copy constructor
-   \param other Spline used for initilization
+   \param other Spline used for initialization
 */
 QwtSpline::QwtSpline( const QwtSpline& other )
 {
@@ -77,7 +77,7 @@ QwtSpline::QwtSpline( const QwtSpline& other )
 
 /*!
    Assignment operator
-   \param other Spline used for initilization
+   \param other Spline used for initialization
 */
 QwtSpline &QwtSpline::operator=( const QwtSpline & other )
 {
@@ -152,7 +152,7 @@ bool QwtSpline::setPoints( const QPolygonF& points )
 }
 
 /*!
-   Return points passed by setPoints
+   Return points passed by setPoints()
 */
 QPolygonF QwtSpline::points() const
 {

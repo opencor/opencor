@@ -83,7 +83,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
     mDelayWidget->setBorderWidth(0);
     mDelayWidget->setFixedSize(0.07*qApp->desktop()->screenGeometry().width(),
                                0.5*mDelayWidget->height());
-    mDelayWidget->setRange(0.0, 50.0, 1.0);
+    mDelayWidget->setRange(0.0, 50.0);
     mDelayWidget->setWheelBorderWidth(0);
 
 #ifndef Q_OS_MAC

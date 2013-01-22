@@ -260,7 +260,7 @@ QString QwtText::text() const
 
    The default setting is Qt::AlignCenter
 
-   \param renderFlags Bitwise OR of the flags used like in QPainter::drawText
+   \param renderFlags Bitwise OR of the flags used like in QPainter::drawText()
 
    \sa renderFlags(), QwtTextEngine::draw()
    \note Some renderFlags might have no effect, depending on the text format.
@@ -595,7 +595,7 @@ void QwtText::draw( QPainter *painter, const QRectF &rect ) const
 
    In case of QwtText::AutoText the first text engine
    (beside QwtPlainTextEngine) is returned, where QwtTextEngine::mightRender
-   returns true. If there is none QwtPlainTextEngine is returnd.
+   returns true. If there is none QwtPlainTextEngine is returned.
 
    If no text engine is registered for the format QwtPlainTextEngine
    is returnd.

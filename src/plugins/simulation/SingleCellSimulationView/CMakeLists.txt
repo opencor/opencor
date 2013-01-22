@@ -74,6 +74,7 @@ ADD_PLUGIN(SingleCellSimulationView
         QtCore
         QtGui
         QtNetwork
+        QtOpenGL
         QtPrintSupport
         QtSvg
         QtWidgets

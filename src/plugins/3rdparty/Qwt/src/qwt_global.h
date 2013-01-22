@@ -14,8 +14,8 @@
 
 // QWT_VERSION is (major << 16) + (minor << 8) + patch.
 
-#define QWT_VERSION       0x060002
-#define QWT_VERSION_STR   "6.0.2"
+#define QWT_VERSION       0x060100
+#define QWT_VERSION_STR   "6.1.0"
 
 #if defined(_MSC_VER) /* MSVC Compiler */
 /* template-class specialization 'identifier' is already instantiated */
@@ -35,7 +35,5 @@
 #ifndef QWT_EXPORT
 #define QWT_EXPORT
 #endif
-
-// #define QWT_NO_COMPAT 1 // disable withdrawn functionality
 
 #endif 

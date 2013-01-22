@@ -55,12 +55,12 @@ SingleCellSimulationViewGraphPanelWidget::SingleCellSimulationViewGraphPanelWidg
     mPlot = new QwtPlot(this);
 
     mPlot->setCanvasBackground(Qt::white);
-    mPlot->setCanvasLineWidth(0);
+//    mPlot->setCanvasLineWidth(0);
     mPlot->setFrameStyle(QFrame::NoFrame);
 
     QwtPlotGrid *grid = new QwtPlotGrid();
 
-    grid->setMajPen(QPen(Qt::gray, 0, Qt::DotLine));
+    grid->setMajorPen(Qt::gray, 0, Qt::DotLine);
 
     grid->attach(mPlot);
 
