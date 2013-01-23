@@ -9,6 +9,7 @@
 
 //==============================================================================
 
+#include <QRegularExpression>
 #include <QTime>
 
 //==============================================================================
@@ -493,10 +494,59 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
 
 #ifdef QT_DEBUG
     if (mVariableOfIntegration)
-        qDebug(" - Variable of integration: %s [%s]", qPrintable(mVariableOfIntegration->name()),
-                                                      qPrintable(mVariableOfIntegration->unit()));
+        qDebug(" - Variable of integration: %s [unit: %s]",
+               qPrintable(mVariableOfIntegration->name()),
+               qPrintable(mVariableOfIntegration->unit()));
     else
         qDebug(" - Variable of integration: none");
+#endif
+
+#ifdef QT_DEBUG
+    // Model parameters
+
+    qDebug(" - Model parameters:");
+
+    computationTargetIterator = mCellmlApiOdeCodeInformation->iterateTargets();
+
+    forever {
+        ObjRef<iface::cellml_services::ComputationTarget> computationTarget = computationTargetIterator->nextComputationTarget();
+
+        if (!computationTarget)
+            // No more model paramaters, so...
+
+            break;
+
+        // Determine the type of the model parameter
+        // Note: ideally, we would use computationTarget->type(), but it will
+        //       return iface::cellml_services::ALGEBRAIC for both a rate and a
+        //       'proper' algebraic variable, so...
+
+        QString modelParamName = QString::fromStdWString(computationTarget->name());
+
+        static const QString indexRegExp = "0|[1-9][0-9]*";
+
+        QRegularExpression constantRegExp("^CONSTANTS\["+indexRegExp+"]$");
+        QRegularExpression stateRegExp("^STATES\["+indexRegExp+"]$");
+        QRegularExpression algebraicRegExp("^ALGEBRAIC\["+indexRegExp+"]$");
+
+        QString type = QString();
+
+        if (constantRegExp.match(modelParamName).hasMatch())
+            type = "constant";
+        else if (stateRegExp.match(modelParamName).hasMatch())
+            type = "state";
+        else if (algebraicRegExp.match(modelParamName).hasMatch())
+            type = "algebraic";
+
+        if (!type.isEmpty()) {
+            ObjRef<iface::cellml_api::CellMLVariable> variable = computationTarget->variable();
+
+            qDebug("    - %s [component: %s] [type: %s] [index: %d]",
+                   qPrintable(QString::fromStdWString(variable->name())),
+                   qPrintable(QString::fromStdWString(variable->componentName())),
+                   qPrintable(type), computationTarget->assignedIndex());
+        }
+    }
 #endif
 
     // Generate the model code, after having prepended to it all the external
