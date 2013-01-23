@@ -38,10 +38,6 @@ SingleCellSimulationViewInformationSimulationWidget::SingleCellSimulationViewInf
 
     retranslateUi();
 
-    // Select our first property
-
-    selectFirstProperty();
-
     // Retrieve our default GUI state
 
     mDefaultGuiState = guiState();
