@@ -45,6 +45,9 @@ public:
 
     virtual void retranslateUi();
 
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
+
     void initialize(const QString &pFileName,
                     CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
     void finalize(const QString &pFileName);
@@ -54,8 +57,14 @@ public:
 private:
     QMap<QString, Core::PropertyEditorWidget *> mPropertyEditors;
 
+    QList<int> mColumnWidths;
+
     void populateModel(OpenCOR::Core::PropertyEditorWidget *pPropertyEditor,
                        CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
+
+private Q_SLOTS:
+    void propertyEditorSectionResized(const int &pLogicalIndex,
+                                      const int &pOldSize, const int &pNewSize);
 };
 
 //==============================================================================

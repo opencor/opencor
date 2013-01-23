@@ -8,6 +8,11 @@
 
 //==============================================================================
 
+#include <QHeaderView>
+#include <QSettings>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace SingleCellSimulationView {
 
@@ -15,8 +20,17 @@ namespace SingleCellSimulationView {
 
 SingleCellSimulationViewInformationParametersWidget::SingleCellSimulationViewInformationParametersWidget(QWidget *pParent) :
     QStackedWidget(pParent),
-    mPropertyEditors(QMap<QString, Core::PropertyEditorWidget *>())
+    mPropertyEditors(QMap<QString, Core::PropertyEditorWidget *>()),
+    mColumnWidths(QList<int>())
 {
+    // Determine the default width of each column of our property editors
+
+    Core::PropertyEditorWidget *tempPropertyEditor = new Core::PropertyEditorWidget(this);
+
+    for (int i = 0, iMax = tempPropertyEditor->header()->count(); i < iMax; ++i)
+        mColumnWidths.append(tempPropertyEditor->columnWidth(i));
+
+    delete tempPropertyEditor;
 }
 
 //==============================================================================
@@ -27,6 +41,32 @@ void SingleCellSimulationViewInformationParametersWidget::retranslateUi()
 
     foreach (Core::PropertyEditorWidget *propertyEditor, mPropertyEditors)
         propertyEditor->retranslateUi();
+}
+
+//==============================================================================
+
+static const QString SettingsColumnWidth = "ColumnWidth%1";
+
+//==============================================================================
+
+void SingleCellSimulationViewInformationParametersWidget::loadSettings(QSettings *pSettings)
+{
+    // Retrieve the width of each column of our property editors
+
+    for (int i = 0, iMax = mColumnWidths.size(); i < iMax; ++i)
+        mColumnWidths[i] = pSettings->value(SettingsColumnWidth.arg(i),
+                                            mColumnWidths.at(i)).toInt();
+
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewInformationParametersWidget::saveSettings(QSettings *pSettings) const
+{
+    // Keep track of the width of each column of our current property editor
+
+    for (int i = 0, iMax = mColumnWidths.size(); i < iMax; ++i)
+        pSettings->setValue(SettingsColumnWidth.arg(i), mColumnWidths.at(i));
 }
 
 //==============================================================================
@@ -51,9 +91,19 @@ void SingleCellSimulationViewInformationParametersWidget::initialize(const QStri
 
         propertyEditor = new Core::PropertyEditorWidget(this);
 
+        // Initialise our property editor's columns' width
+
+        for (int i = 0, iMax = mColumnWidths.size(); i < iMax; ++i)
+            propertyEditor->setColumnWidth(i, mColumnWidths.at(i));
+
         // Populate our property editor
 
         populateModel(propertyEditor, pCellmlFileRuntime);
+
+        // Keep track of changes to columns' width
+
+        connect(propertyEditor->header(), SIGNAL(sectionResized(int,int,int)),
+                this, SLOT(propertyEditorSectionResized(const int &, const int &, const int &)));
 
         // Add our new property editor to ourselves
 
@@ -108,6 +158,24 @@ void SingleCellSimulationViewInformationParametersWidget::populateModel(Core::Pr
 
     pPropertyEditor->setNonEditablePropertyItem(property->name(), "Dummy");
     pPropertyEditor->setIntegerPropertyItem(property->value(), ++counter);
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewInformationParametersWidget::propertyEditorSectionResized(const int &pLogicalIndex,
+                                                                                       const int &pOldSize,
+                                                                                       const int &pNewSize)
+{
+    Q_UNUSED(pOldSize);
+
+    // Update the column width of all our property editors
+
+    foreach (Core::PropertyEditorWidget *propertyEditor, mPropertyEditors)
+        propertyEditor->header()->resizeSection(pLogicalIndex, pNewSize);
+
+    // Keep track of the new column width
+
+    mColumnWidths[pLogicalIndex] = pNewSize;
 }
 
 //==============================================================================
