@@ -19,6 +19,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QRegularExpression>
 
 //==============================================================================
 
@@ -150,7 +151,7 @@ void CellmlModelRepositoryWindow::on_filterValue_textChanged(const QString &text
     // Generate a Web page that contains all the models which match our search
     // criteria
 
-    outputModelList(mModelNames.filter(QRegExp(text, Qt::CaseInsensitive)));
+    outputModelList(mModelNames.filter(QRegularExpression(text, QRegularExpression::CaseInsensitiveOption)));
 }
 
 //==============================================================================

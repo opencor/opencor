@@ -7,6 +7,7 @@
 
 //==============================================================================
 
+#include <QRegularExpression>
 #include <QStringList>
 
 //==============================================================================
@@ -65,7 +66,7 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
     //       of their information in the form of a resource and an id...
 
     for (int i = FirstModelQualifier; i <= LastModelQualifier; ++i)
-        if (!mPredicate->asString().compare(QString("http://biomodels.net/model-qualifiers/%1").arg(modelQualifierAsString(ModelQualifier(i)).remove(QRegExp("^model:"))))) {
+        if (!mPredicate->asString().compare(QString("http://biomodels.net/model-qualifiers/%1").arg(modelQualifierAsString(ModelQualifier(i)).remove(QRegularExpression("^model:"))))) {
             // It looks like we might be dealing with a model qualifier
 
             mType = BioModelsDotNetQualifier;
@@ -77,7 +78,7 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
 
     if (mType == Unknown)
         for (int i = FirstBioQualifier; i <= LastBioQualifier; ++i)
-            if (!mPredicate->asString().compare(QString("http://biomodels.net/biology-qualifiers/%1").arg(bioQualifierAsString(BioQualifier(i)).remove(QRegExp("^bio:"))))){
+            if (!mPredicate->asString().compare(QString("http://biomodels.net/biology-qualifiers/%1").arg(bioQualifierAsString(BioQualifier(i)).remove(QRegularExpression("^bio:"))))){
                 // It looks like we might be dealing with a model qualifier
 
                 mType = BioModelsDotNetQualifier;
@@ -122,7 +123,7 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
     // Create our RDF triple elements
 
     mSubject   = new CellmlFileRdfTripleElement(pSubject);
-    mPredicate = new CellmlFileRdfTripleElement(QString("http://biomodels.net/model-qualifiers/%1").arg(modelQualifierAsString(pModelQualifier).remove(QRegExp("^model:"))));
+    mPredicate = new CellmlFileRdfTripleElement(QString("http://biomodels.net/model-qualifiers/%1").arg(modelQualifierAsString(pModelQualifier).remove(QRegularExpression("^model:"))));
     mObject    = new CellmlFileRdfTripleElement(QString("http://identifiers.org/%1/%2").arg(pResource, pId));
 }
 
@@ -144,7 +145,7 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
     // Create our RDF triple elements
 
     mSubject   = new CellmlFileRdfTripleElement(pSubject);
-    mPredicate = new CellmlFileRdfTripleElement(QString("http://biomodels.net/biology-qualifiers/%1").arg(bioQualifierAsString(pBioQualifier).remove(QRegExp("^bio:"))));
+    mPredicate = new CellmlFileRdfTripleElement(QString("http://biomodels.net/biology-qualifiers/%1").arg(bioQualifierAsString(pBioQualifier).remove(QRegularExpression("^bio:"))));
     mObject    = new CellmlFileRdfTripleElement(QString("http://identifiers.org/%1/%2").arg(pResource, pId));
 }
 
@@ -226,7 +227,7 @@ QString CellmlFileRdfTriple::metadataId() const
         // The subject of our RDF triple is a URI reference, so we can retrieve
         // its metadata id
 
-        return mSubject->uriReference().remove(QRegExp("^"+QRegExp::escape(mCellmlFile->uriBase())+"#?"));
+        return mSubject->uriReference().remove(QRegularExpression("^"+QRegularExpression::escape(mCellmlFile->uriBase())+"#?"));
     else
         // We don't recognise the subject of our RDF triple, so...
 
@@ -440,7 +441,7 @@ bool CellmlFileRdfTriple::decodeTerm(const QString &pTerm, QString &pResource,
 
     bool res = true;
 
-    if (QRegExp("^urn:miriam:"+ResourceRegExp+":"+IdRegExp).exactMatch(pTerm)) {
+    if (QRegularExpression("^urn:miriam:"+ResourceRegExp+":"+IdRegExp).match(pTerm).hasMatch()) {
         // The term is a MIRIAM URN, so retrieve its corresponding resource and
         // id
 
@@ -448,7 +449,7 @@ bool CellmlFileRdfTriple::decodeTerm(const QString &pTerm, QString &pResource,
 
         pResource = miriamUrnList[2];
         pId       = miriamUrnList[3].replace("%3A", ":");
-    } else if (QRegExp("^http://identifiers.org/"+ResourceRegExp+"/#?"+IdRegExp).exactMatch(pTerm)) {
+    } else if (QRegularExpression("^http://identifiers.org/"+ResourceRegExp+"/#?"+IdRegExp).match(pTerm).hasMatch()) {
         // The term is an identifiers.org URI, so retrieve its corresponding
         // resource and id
 
