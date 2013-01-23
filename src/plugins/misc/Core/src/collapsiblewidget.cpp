@@ -7,7 +7,6 @@
 
 //==============================================================================
 
-#include <QLabel>
 #include <QLayout>
 #include <QSettings>
 #include <QToolButton>
@@ -17,6 +16,26 @@
 
 namespace OpenCOR {
 namespace Core {
+
+//==============================================================================
+
+CollapsibleHeaderTitleWidget::CollapsibleHeaderTitleWidget(QWidget *pParent) :
+    QLabel(pParent)
+{
+}
+
+//==============================================================================
+
+void CollapsibleHeaderTitleWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
+{
+    // Default handling of the event
+
+    QLabel::mouseDoubleClickEvent(pEvent);
+
+    // Let people know that the widget has been double clicked
+
+    emit doubleClicked();
+}
 
 //==============================================================================
 
@@ -49,7 +68,7 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(const QColor &pSeparatorColor,
     // Create and customise our button and title
 
     mButton = new QToolButton(subWidget);
-    mTitle  = new QLabel(QString(), subWidget);
+    mTitle  = new CollapsibleHeaderTitleWidget(subWidget);
 
     int iconSize = 0.4*mTitle->height();
 
@@ -82,9 +101,11 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(const QColor &pSeparatorColor,
     layout->addWidget(subWidget);
     layout->addWidget(mBottomSeparator);
 
-    // Create a connection to keep track of the collapsed state of our header
+    // Connections to toggle our collapsed state
 
     connect(mButton, SIGNAL(clicked()),
+            this, SLOT(toggleCollapsedState()));
+    connect(mTitle, SIGNAL(doubleClicked()),
             this, SLOT(toggleCollapsedState()));
 }
 

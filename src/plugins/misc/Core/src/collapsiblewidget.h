@@ -13,6 +13,10 @@
 
 //==============================================================================
 
+#include <QLabel>
+
+//==============================================================================
+
 class QFrame;
 class QLabel;
 class QScrollArea;
@@ -24,6 +28,22 @@ class QVBoxLayout;
 
 namespace OpenCOR {
 namespace Core {
+
+//==============================================================================
+
+class CollapsibleHeaderTitleWidget : public QLabel
+{
+    Q_OBJECT
+
+public:
+    explicit CollapsibleHeaderTitleWidget(QWidget *pParent = 0);
+
+protected:
+    virtual void mouseDoubleClickEvent(QMouseEvent *pEvent);
+
+Q_SIGNALS:
+    void doubleClicked();
+};
 
 //==============================================================================
 
@@ -53,7 +73,7 @@ private:
     QFrame *mBottomSeparator;
 
     QToolButton *mButton;
-    QLabel *mTitle;
+    CollapsibleHeaderTitleWidget *mTitle;
 
     void updateBottomSeparatorVisibleStatus();
 
