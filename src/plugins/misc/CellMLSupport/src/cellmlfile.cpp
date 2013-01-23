@@ -618,9 +618,9 @@ CellmlFileRuntime * CellmlFile::runtime()
 
         return mRuntime;
     } else {
-        // The file isn't valid, so reset its runtime
+        // The file coudln't be loaded, so...
 
-        return mRuntime->update();
+        return 0;
     }
 }
 

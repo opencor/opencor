@@ -182,6 +182,10 @@
         <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; view requires a valid simulation environment to work...</source>
         <translation>Désolé, mais la vue &lt;strong&gt;%1&lt;/strong&gt; nécessite un environnement de simulation valide pour fonctionner...</translation>
     </message>
+    <message>
+        <source>none</source>
+        <translation>aucun</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>

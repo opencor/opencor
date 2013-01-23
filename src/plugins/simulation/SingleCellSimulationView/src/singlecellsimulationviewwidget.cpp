@@ -435,7 +435,9 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
     // Output some information about our CellML file
 
-    CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName)->runtime();
+    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
+    CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = cellmlFile->runtime();
+    bool validCellmlFileRuntime = cellmlFileRuntime && cellmlFileRuntime->isValid();
 
     QString information = QString();
 
@@ -445,7 +447,9 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
     information += "<strong>"+pFileName+"</strong>"+OutputBrLn;
     information += OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
 
-    if (cellmlFileRuntime->isValid()) {
+    if (validCellmlFileRuntime) {
+        // A valid runtime could be retrieved for the CellML file
+
         QString additionalInformation = QString();
 
         if (cellmlFileRuntime->needNlaSolver())
@@ -455,10 +459,13 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         information += QString(OutputTab+"<strong>"+tr("Model type:")+"</strong> <span"+OutputInfo+">%1%2</span>."+OutputBrLn).arg((cellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?tr("ODE"):tr("DAE"),
                                                                                                                                    additionalInformation);
     } else {
-        information += "<span"+OutputBad+">"+tr("invalid")+"</span>."+OutputBrLn;
+        // We couldn't retrieve a runtime for the CellML file or we could, but
+        // it's not valid
+
+        information += "<span"+OutputBad+">"+(cellmlFileRuntime?tr("invalid"):tr("none"))+"</span>."+OutputBrLn;
 
         foreach (const CellMLSupport::CellmlFileIssue &issue,
-                 cellmlFileRuntime->issues())
+                 cellmlFileRuntime?cellmlFileRuntime->issues():cellmlFile->issues())
             information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2</span>."+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
                                                                                                                  issue.message());
     }
@@ -467,7 +474,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
     // Retrieve our variable of integration, if any
 
-    CellMLSupport::CellmlFileVariable *variableOfIntegration = cellmlFileRuntime->isValid()?cellmlFileRuntime->variableOfIntegration():0;
+    CellMLSupport::CellmlFileVariable *variableOfIntegration = validCellmlFileRuntime?cellmlFileRuntime->variableOfIntegration():0;
 
     // Enable/disable our run action depending on whether we have a variable of
     // integration
@@ -493,7 +500,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
     bool hasError = true;
 
-    if (cellmlFileRuntime->isValid()) {
+    if (validCellmlFileRuntime) {
         // We have a valid runtime
         // Note: if we didn't have a valid runtime, then there would be no need
         //       to output an error message since one would have already been

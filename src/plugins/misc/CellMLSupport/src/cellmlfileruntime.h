@@ -96,7 +96,7 @@ public:
 
     CellmlFileIssues issues() const;
 
-    CellmlFileRuntime * update(OpenCOR::CellMLSupport::CellmlFile *pCellmlFile = 0);
+    CellmlFileRuntime * update(OpenCOR::CellMLSupport::CellmlFile *pCellmlFile);
 
     CellmlFileVariable * variableOfIntegration() const;
 
