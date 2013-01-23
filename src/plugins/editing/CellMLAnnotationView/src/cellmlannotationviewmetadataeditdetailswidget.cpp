@@ -28,6 +28,7 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QPushButton>
+#include <QRegularExpression>
 #include <QScrollBar>
 #include <QStackedWidget>
 #include <QVariant>
@@ -838,7 +839,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termChanged(const QString &p
     // Check whether the term could be directly added, resulting in the add term
     // button being enabled/disabled, depending on the case
 
-    mTermIsDirect = QRegExp("^"+CellMLSupport::ResourceRegExp+"/"+CellMLSupport::IdRegExp+"$").exactMatch(pTerm);
+    mTermIsDirect = QRegularExpression("^"+CellMLSupport::ResourceRegExp+"/"+CellMLSupport::IdRegExp+"$").match(pTerm).hasMatch();
 
     // Update our items' GUI
 
@@ -895,8 +896,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
         // corresponds to that of the current term
 
         if (mTerm.compare(pNetworkReply->url().toString()
-                                              .remove(QRegExp("^"+QRegExp::escape(SemanticSbmlUrlStart)))
-                                              .remove(QRegExp(QRegExp::escape(SemanticSbmlUrlEnd)+"$")))) {
+                                              .remove(QRegularExpression("^"+QRegularExpression::escape(SemanticSbmlUrlStart)))
+                                              .remove(QRegularExpression(QRegularExpression::escape(SemanticSbmlUrlEnd)+"$")))) {
             // Not the correct term, so... delete (later) the network reply and
             // leave
 

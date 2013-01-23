@@ -17,6 +17,7 @@
 #include <QLabel>
 #include <QMenu>
 #include <QPushButton>
+#include <QRegularExpression>
 #include <QScrollBar>
 #include <QStackedWidget>
 
@@ -502,8 +503,8 @@ QString CellmlAnnotationViewMetadataNormalViewDetailsWidget::rdfTripleInformatio
 
     // Extract the RDF triple information from the text
 
-    res.remove(QRegExp("^[^\"]*\""));
-    res.remove(QRegExp("\"[^\"]*$"));
+    res.remove(QRegularExpression("^[^\"]*\""));
+    res.remove(QRegularExpression("\"[^\"]*$"));
 
     // We are done with retrieving the RDF triple information for the given row,
     // so...
