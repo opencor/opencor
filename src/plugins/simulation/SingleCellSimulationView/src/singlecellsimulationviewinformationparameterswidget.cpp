@@ -21,6 +21,16 @@ SingleCellSimulationViewInformationParametersWidget::SingleCellSimulationViewInf
 
 //==============================================================================
 
+void SingleCellSimulationViewInformationParametersWidget::retranslateUi()
+{
+    // Retranslate all our property editors
+
+    foreach (Core::PropertyEditorWidget *propertyEditor, mPropertyEditors)
+        propertyEditor->retranslateUi();
+}
+
+//==============================================================================
+
 void SingleCellSimulationViewInformationParametersWidget::initialize(const QString &pFileName,
                                                                      CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime)
 {
@@ -91,6 +101,13 @@ void SingleCellSimulationViewInformationParametersWidget::populateModel(Core::Pr
     Q_UNUSED(pCellmlFileRuntime);
 
 //---GRY--- TO BE DONE...
+
+    static int counter = 0;
+
+    Core::Property *property = pPropertyEditor->addIntegerProperty();
+
+    pPropertyEditor->setNonEditablePropertyItem(property->name(), "Dummy");
+    pPropertyEditor->setIntegerPropertyItem(property->value(), ++counter);
 }
 
 //==============================================================================

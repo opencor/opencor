@@ -592,6 +592,10 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
 
     header()->setSectionsMovable(false);
 
+    // Retranslate ourselves
+
+    retranslateUi();
+
     // Initialise our height
 
     updateHeight();

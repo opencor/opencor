@@ -43,6 +43,8 @@ class SingleCellSimulationViewInformationParametersWidget : public QStackedWidge
 public:
     explicit SingleCellSimulationViewInformationParametersWidget(QWidget *pParent = 0);
 
+    virtual void retranslateUi();
+
     void initialize(const QString &pFileName,
                     CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
     void finalize(const QString &pFileName);
