@@ -266,7 +266,7 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
         break;
     }
     default:
-        // PropertyItem::Category
+        // PropertyItem::Section
 
         return 0;
     }
@@ -872,11 +872,11 @@ Property * PropertyEditorWidget::addProperty(Property *pParent,
 
 //==============================================================================
 
-Property * PropertyEditorWidget::addCategoryProperty(Property *pParent)
+Property * PropertyEditorWidget::addSectionProperty(Property *pParent)
 {
-    // Add a category property and return its information
+    // Add a section property and return its information
 
-    return addProperty(pParent, PropertyItem::Category);
+    return addProperty(pParent, PropertyItem::Section);
 }
 
 //==============================================================================

@@ -7,11 +7,21 @@
 
 //==============================================================================
 
-#include "propertyeditorwidget.h"
+#include "commonwidget.h"
+
+//==============================================================================
+
+#include <QStackedWidget>
 
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace Core {
+    class PropertyEditorWidget;
+}   // namespace Core
 
 //==============================================================================
 
@@ -25,7 +35,8 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-class SingleCellSimulationViewInformationParametersWidget : public Core::PropertyEditorWidget
+class SingleCellSimulationViewInformationParametersWidget : public QStackedWidget,
+                                                            public Core::CommonWidget
 {
     Q_OBJECT
 
@@ -33,8 +44,16 @@ public:
     explicit SingleCellSimulationViewInformationParametersWidget(QWidget *pParent = 0);
 
     void initialize(const QString &pFileName,
-                    OpenCOR::CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
+                    CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
     void finalize(const QString &pFileName);
+
+    void cancelPropertyEditing();
+
+private:
+    QMap<QString, Core::PropertyEditorWidget *> mPropertyEditors;
+
+    void populateModel(OpenCOR::Core::PropertyEditorWidget *pPropertyEditor,
+                       CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
 };
 
 //==============================================================================

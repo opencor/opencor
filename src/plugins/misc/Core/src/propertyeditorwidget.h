@@ -111,7 +111,7 @@ class CORE_EXPORT PropertyItem : public QStandardItem
 {
 public:
     enum Type {
-        Category = QStandardItem::UserType,
+        Section  = QStandardItem::UserType,
         Integer  = QStandardItem::UserType+1,
         Double   = QStandardItem::UserType+2,
         List     = QStandardItem::UserType+3
@@ -238,7 +238,7 @@ public:
     PropertyEditorWidgetGuiState * guiState();
     void setGuiState(PropertyEditorWidgetGuiState *pGuiState);
 
-    Property * addCategoryProperty(Property *pParent = 0);
+    Property * addSectionProperty(Property *pParent = 0);
     Property * addIntegerProperty(Property *pParent = 0);
     Property * addDoubleProperty(Property *pParent = 0);
     Property * addListProperty(Property *pParent = 0);

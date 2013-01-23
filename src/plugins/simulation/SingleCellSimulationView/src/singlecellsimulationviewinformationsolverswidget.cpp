@@ -151,9 +151,9 @@ SingleCellSimulationViewInformationSolversWidgetData * SingleCellSimulationViewI
     if (pSolverInterfaces.isEmpty())
         return 0;
 
-    // Add our category property
+    // Add our section property
 
-    Core::Property *solversProperty = addCategoryProperty();
+    Core::Property *solversProperty = addSectionProperty();
 
     // Add our list property for the solvers
 
