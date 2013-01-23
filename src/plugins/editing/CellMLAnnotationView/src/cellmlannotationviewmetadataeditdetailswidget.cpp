@@ -192,6 +192,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(CellMLSupport::Cel
             addButton->setEnabled(!mCellmlElement->hasMetadata(CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierIndex-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
                                                                item.resource, item.id));
     }
+
+    // Update our items' GUI
+
+    updateItemsGui(Items(), QString(), !mTermIsDirect);
 }
 
 //==============================================================================
@@ -588,10 +592,14 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
         } else if (pLookupTerm) {
             labelText = tr("Please wait while we are retrieving possible terms for <strong>%1</strong>...").arg(mTerm);
         } else if (pErrorMsg.isEmpty()) {
-            if (mTermIsDirect)
-                labelText = tr("<strong>Information:</strong> you can directly add <strong>%1</strong>...").arg(mTerm);
-            else
+            if (mTermIsDirect) {
+                if (mAddTermButton->isEnabled())
+                    labelText = tr("<strong>Information:</strong> you can directly add the term <strong>%1</strong>...").arg(mTerm);
+                else
+                    labelText = tr("<strong>Information:</strong> the term <strong>%1</strong> has, using the above qualifier, already been added...").arg(mTerm);
+            } else {
                 labelText = tr("Sorry, but no terms were found for <strong>%1</strong>...").arg(mTerm);
+            }
         } else {
             QString errorMsg = pErrorMsg[0].toLower()+pErrorMsg.right(pErrorMsg.size()-1);
             QString dots = (errorMsg[errorMsg.size()-1] == '.')?"..":"...";
@@ -840,10 +848,6 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termChanged(const QString &p
     // button being enabled/disabled, depending on the case
 
     mTermIsDirect = QRegularExpression("^"+CellMLSupport::ResourceRegExp+"/"+CellMLSupport::IdRegExp+"$").match(pTerm).hasMatch();
-
-    // Update our items' GUI
-
-    updateItemsGui(Items(), QString(), !mTermIsDirect);
 
     // Update the enabled state of our various add buttons
 

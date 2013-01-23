@@ -178,16 +178,20 @@
         <translation>Désolé, mais aucuns termes n&apos;ont été trouvés pour &lt;strong&gt;%1&lt;/strong&gt;...</translation>
     </message>
     <message>
-        <source>&lt;strong&gt;Information:&lt;/strong&gt; you can directly add &lt;strong&gt;%1&lt;/strong&gt;...</source>
-        <translation>&lt;strong&gt;Information :&lt;/strong&gt; vous pouvez directement ajouter &lt;strong&gt;%1&lt;/strong&gt;...</translation>
-    </message>
-    <message>
         <source>&lt;strong&gt;Error:&lt;/strong&gt; </source>
         <translation>&lt;strong&gt;Erreur :&lt;/strong&gt; </translation>
     </message>
     <message>
         <source>the search returned invalid results</source>
         <translation>la recherche a retourné des résultats invalides</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;Information:&lt;/strong&gt; you can directly add the term &lt;strong&gt;%1&lt;/strong&gt;...</source>
+        <translation>&lt;strong&gt;Information :&lt;/strong&gt; vous pouvez directement ajouter le terme &lt;strong&gt;%1&lt;/strong&gt;...</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;Information:&lt;/strong&gt; the term &lt;strong&gt;%1&lt;/strong&gt; has, using the above qualifier, already been added...</source>
+        <translation>&lt;strong&gt;Information :&lt;/strong&gt; le terme &lt;strong&gt;%1&lt;/strong&gt; a, avec le qualificatif ci-dessus, déjà été ajouté...</translation>
     </message>
 </context>
 <context>
