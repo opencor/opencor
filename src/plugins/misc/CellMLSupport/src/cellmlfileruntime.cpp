@@ -541,8 +541,9 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
         if (!type.isEmpty()) {
             ObjRef<iface::cellml_api::CellMLVariable> variable = computationTarget->variable();
 
-            qDebug("    - %s [component: %s] [type: %s] [index: %d]",
+            qDebug("    - %s [unit: %s] [component: %s] [type: %s] [index: %d]",
                    qPrintable(QString::fromStdWString(variable->name())),
+                   qPrintable(QString::fromStdWString(variable->unitsName())),
                    qPrintable(QString::fromStdWString(variable->componentName())),
                    qPrintable(type), computationTarget->assignedIndex());
         }
