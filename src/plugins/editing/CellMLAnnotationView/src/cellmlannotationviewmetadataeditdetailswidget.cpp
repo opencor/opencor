@@ -192,10 +192,6 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(CellMLSupport::Cel
             addButton->setEnabled(!mCellmlElement->hasMetadata(CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierIndex-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
                                                                item.resource, item.id));
     }
-
-    // Update our items' GUI
-
-    updateItemsGui(Items(), QString(), !mTermIsDirect);
 }
 
 //==============================================================================
@@ -848,6 +844,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termChanged(const QString &p
     // button being enabled/disabled, depending on the case
 
     mTermIsDirect = QRegularExpression("^"+CellMLSupport::ResourceRegExp+"/"+CellMLSupport::IdRegExp+"$").match(pTerm).hasMatch();
+
+    // Update our items' GUI
+
+    updateItemsGui(Items(), QString(), !mTermIsDirect);
 
     // Update the enabled state of our various add buttons
 
