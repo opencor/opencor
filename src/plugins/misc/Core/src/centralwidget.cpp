@@ -281,6 +281,10 @@ void CentralWidget::retranslateUi()
             modeViews->setTabText(i, mode->viewInterfaces()->value(i)->viewName());
     }
 
+    // Retranslate our modified settings, if needed
+
+    updateModifiedSettings();
+
     // Retranslate our no view widget message
 
     updateNoViewMsg();
