@@ -95,6 +95,8 @@ public:
 
 protected:
     virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
+    virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
+                       const QModelIndex &pIndex) const;
 
 Q_SIGNALS:
     void openEditor(QWidget *pEditor) const;
@@ -112,9 +114,11 @@ class CORE_EXPORT PropertyItem : public QStandardItem
 public:
     enum Type {
         Section  = QStandardItem::UserType,
-        Integer  = QStandardItem::UserType+1,
-        Double   = QStandardItem::UserType+2,
-        List     = QStandardItem::UserType+3
+        Name     = QStandardItem::UserType+1,
+        Integer  = QStandardItem::UserType+2,
+        Double   = QStandardItem::UserType+3,
+        List     = QStandardItem::UserType+4,
+        Unit     = QStandardItem::UserType+5
     };
 
     explicit PropertyItem(const Type &pType);
@@ -156,8 +160,6 @@ private:
     QStandardItem *mName;
     PropertyItem *mValue;
     QStandardItem *mUnit;
-
-    QStandardItem * nonEditableItem() const;
 };
 
 //==============================================================================
