@@ -156,8 +156,8 @@ void SingleCellSimulationViewInformationParametersWidget::populateModel(Core::Pr
     foreach (CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter, pCellmlFileRuntime->modelParameters()) {
         Core::Property *property = pPropertyEditor->addDoubleProperty();
 
-        pPropertyEditor->setNonEditablePropertyItem(property->name(), modelParameter->variable()->name());
-        pPropertyEditor->setNonEditablePropertyItem(property->unit(), modelParameter->variable()->unit());
+        pPropertyEditor->setNonEditablePropertyItem(property->name(), modelParameter->name());
+        pPropertyEditor->setNonEditablePropertyItem(property->unit(), modelParameter->unit());
     }
 }
 

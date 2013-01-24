@@ -37,7 +37,6 @@ namespace CellMLSupport {
 //==============================================================================
 
 class CellmlFile;
-class CellmlFileVariable;
 
 //==============================================================================
 
@@ -45,22 +44,29 @@ class CELLMLSUPPORT_EXPORT CellmlFileRuntimeModelParameter
 {
 public:
     enum ModelParameterType {
+        Voi,
         Constant,
         State,
         Algebraic,
         Undefined
     };
 
-    explicit CellmlFileRuntimeModelParameter(CellmlFileVariable *pVariable,
+    explicit CellmlFileRuntimeModelParameter(const QString &pName,
+                                             const QString &pUnit,
+                                             const QString &pComponent,
                                              const ModelParameterType &pType,
                                              const int &pIndex);
 
-    CellmlFileVariable * variable() const;
+    QString name() const;
+    QString unit() const;
+    QString component() const;
     ModelParameterType type() const;
     int index() const;
 
 private:
-    CellmlFileVariable *mVariable;
+    QString mName;
+    QString mUnit;
+    QString mComponent;
     ModelParameterType mType;
     int mIndex;
 };
@@ -130,7 +136,7 @@ public:
 
     CellmlFileRuntime * update(OpenCOR::CellMLSupport::CellmlFile *pCellmlFile);
 
-    CellmlFileVariable * variableOfIntegration() const;
+    CellmlFileRuntimeModelParameter * variableOfIntegration() const;
 
 private:
     ModelType mModelType;
@@ -139,8 +145,6 @@ private:
     ObjRef<iface::cellml_services::CodeInformation> mCellmlApiOdeCodeInformation;
     ObjRef<iface::cellml_services::IDACodeInformation> mCellmlApiDaeCodeInformation;
 
-    CellmlFileVariable *mVariableOfIntegration;
-
     Compiler::CompilerEngine *mCompilerEngine;
 
     OdeFunctions mOdeFunctions;
@@ -148,6 +152,7 @@ private:
 
     CellmlFileIssues mIssues;
 
+    CellmlFileRuntimeModelParameter *mVariableOfIntegration;
     CellmlFileRuntimeModelParameters mModelParameters;
 
     void resetOdeCodeInformation();

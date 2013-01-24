@@ -474,7 +474,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
     // Retrieve our variable of integration, if any
 
-    CellMLSupport::CellmlFileVariable *variableOfIntegration = validCellmlFileRuntime?cellmlFileRuntime->variableOfIntegration():0;
+    CellMLSupport::CellmlFileRuntimeModelParameter *variableOfIntegration = validCellmlFileRuntime?cellmlFileRuntime->variableOfIntegration():0;
 
     // Enable/disable our run action depending on whether we have a variable of
     // integration
