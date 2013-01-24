@@ -22,7 +22,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
     // Constructor for either an error or a warning
 
     // Disable the item and use its text as a tooltip (in case it's too long and
-    // therefore doesn't fit within the allocated space we have)
+    // doesn't fit within the allocated space we have)
     // Note: the item will get 're-enabled' by our item delegate...
 
     setEnabled(false);
@@ -46,7 +46,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
     // Constructor for a category
 
     // Disable the item
-    // Note: the item will get 're-enabled' by our item delegate...
+    // Note: it will get 're-enabled' by our item delegate...
 
     setEnabled(false);
 

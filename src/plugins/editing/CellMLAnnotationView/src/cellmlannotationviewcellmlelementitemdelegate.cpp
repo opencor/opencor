@@ -16,9 +16,7 @@ void CellmlAnnotationViewCellmlElementItemDelegate::paint(QPainter *pPainter,
                                                           const QStyleOptionViewItem &pOption,
                                                           const QModelIndex &pIndex) const
 {
-    // Paint the item as normal, except for the items which are not checkable
-    // (i.e. plugins which the user cannot decide whether to load) in which case
-    // we paint them as if they were disabled
+    // Paint the item as normal, except for error/warning/category items
 
     CellmlAnnotationViewCellmlElementItem *cellmlElementItem = static_cast<CellmlAnnotationViewCellmlElementItem *>(static_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex));
 
