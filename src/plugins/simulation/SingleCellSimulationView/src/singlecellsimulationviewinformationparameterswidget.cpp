@@ -148,13 +148,37 @@ void SingleCellSimulationViewInformationParametersWidget::cancelPropertyEditing(
 void SingleCellSimulationViewInformationParametersWidget::populateModel(Core::PropertyEditorWidget *pPropertyEditor,
                                                                         CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime)
 {
-    Q_UNUSED(pPropertyEditor);
-    Q_UNUSED(pCellmlFileRuntime);
+    // Populate our property editor with the model parameters
 
-//---GRY--- TO BE DONE...
+    QString currentComponent = QString();
+    Core::Property *currentSection = 0;
 
     foreach (CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter, pCellmlFileRuntime->modelParameters()) {
-        Core::Property *property = pPropertyEditor->addDoubleProperty();
+        // Check whether the current model parameter is in the same component as
+        // the previous one
+
+        QString newComponent = modelParameter->component();
+
+        if (newComponent.compare(currentComponent)) {
+            // The current model parameter is in a different component, so
+            // create a new section for the 'new' component
+
+            currentSection = pPropertyEditor->addSectionProperty();
+
+            pPropertyEditor->setNonEditablePropertyItem(currentSection->name(), newComponent);
+
+            // Expand the section
+
+            pPropertyEditor->setExpanded(currentSection->name()->index(), true);
+
+            // Keep track of the 'new' component
+
+            currentComponent = newComponent;
+        }
+
+        // Add the current model parameter to the 'current' component section
+
+        Core::Property *property = pPropertyEditor->addDoubleProperty(currentSection);
 
         pPropertyEditor->setNonEditablePropertyItem(property->name(), modelParameter->name());
         pPropertyEditor->setNonEditablePropertyItem(property->unit(), modelParameter->unit());

@@ -469,6 +469,24 @@ QString CellmlFileRuntime::functionCode(const QString &pFunctionSignature,
 
 //==============================================================================
 
+bool sortModelParameters(CellmlFileRuntimeModelParameter *pModelParameter1,
+                         CellmlFileRuntimeModelParameter *pModelParameter2)
+{
+    // Determine which of the two model parameters should be first
+
+    if (!pModelParameter1->component().compare(pModelParameter2->component()))
+        // The model parameters are in the same component, so check their names
+
+        return pModelParameter1->name() < pModelParameter2->name();
+    else
+        // The model parameters are in different components, so check the name
+        // of their components
+
+        return pModelParameter1->component() < pModelParameter2->component();
+}
+
+//==============================================================================
+
 CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
 {
     // Reset the runtime's properties
@@ -539,7 +557,8 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
     }
 #endif
 
-    // Retrieve all the model parameters
+    // Retrieve all the model parameters and sort them by component/variable
+    // name
 
     ObjRef<iface::cellml_services::ComputationTargetIterator> computationTargetIterator = mCellmlApiOdeCodeInformation->iterateTargets();
 
@@ -599,6 +618,8 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
                 mModelParameters.append(modelParameter);
         }
     }
+
+    qSort(mModelParameters.begin(), mModelParameters.end(), sortModelParameters);
 
 #ifdef QT_DEBUG
     if (mVariableOfIntegration)
