@@ -164,15 +164,9 @@ void SingleCellSimulationViewInformationParametersWidget::populateModel(Core::Pr
 
             section = pPropertyEditor->addSectionProperty();
 
-            // Customise our section
-
             section->name()->setIcon(QIcon(":CellMLSupport_componentNode"));
 
             pPropertyEditor->setNonEditablePropertyItem(section->name(), newComponent);
-
-            // Expand the section
-
-            pPropertyEditor->setExpanded(section->name()->index(), true);
         }
 
         // Add the current model parameter to the 'current' component section
@@ -184,6 +178,10 @@ void SingleCellSimulationViewInformationParametersWidget::populateModel(Core::Pr
         pPropertyEditor->setNonEditablePropertyItem(property->name(), modelParameter->name());
         pPropertyEditor->setNonEditablePropertyItem(property->unit(), modelParameter->unit());
     }
+
+    // Expand all our properties
+
+    pPropertyEditor->expandAll();
 }
 
 //==============================================================================
@@ -194,6 +192,13 @@ void SingleCellSimulationViewInformationParametersWidget::propertyEditorSectionR
 {
     Q_UNUSED(pOldSize);
 
+    // Prevent all our property editors from responding to an updating of their
+    // columns' width
+
+    foreach (Core::PropertyEditorWidget *propertyEditor, mPropertyEditors)
+        disconnect(propertyEditor->header(), SIGNAL(sectionResized(int,int,int)),
+                   this, SLOT(propertyEditorSectionResized(const int &, const int &, const int &)));
+
     // Update the column width of all our property editors
 
     foreach (Core::PropertyEditorWidget *propertyEditor, mPropertyEditors)
@@ -202,6 +207,13 @@ void SingleCellSimulationViewInformationParametersWidget::propertyEditorSectionR
     // Keep track of the new column width
 
     mColumnWidths[pLogicalIndex] = pNewSize;
+
+    // Re-allow all our property editors to respond to an updating of their
+    // columns' width
+
+    foreach (Core::PropertyEditorWidget *propertyEditor, mPropertyEditors)
+        connect(propertyEditor->header(), SIGNAL(sectionResized(int,int,int)),
+                this, SLOT(propertyEditorSectionResized(const int &, const int &, const int &)));
 }
 
 //==============================================================================

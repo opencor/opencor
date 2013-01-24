@@ -878,9 +878,19 @@ Property * PropertyEditorWidget::addProperty(Property *pParent,
 
 Property * PropertyEditorWidget::addSectionProperty(Property *pParent)
 {
-    // Add a section property and return its information
+    // Add a section property
 
-    return addProperty(pParent, PropertyItem::Section);
+    Property *res = addProperty(pParent, PropertyItem::Section);
+
+    // Span our section property
+
+    setFirstColumnSpanned(res->name()->row(),
+                          pParent?pParent->name()->index():mModel->invisibleRootItem()->index(),
+                          true);
+
+    // Return our section property information
+
+    return res;
 }
 
 //==============================================================================

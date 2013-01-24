@@ -159,8 +159,8 @@ SingleCellSimulationViewInformationSolversWidgetData * SingleCellSimulationViewI
 
     Core::Property *solversListProperty = addListProperty(solversProperty);
 
-    // Retrieve the name of the solvers which type is the one we are interested
-    // in
+    // Retrieve the name of the solvers which type is the one in whhich we are
+    // interested
 
     QStringList solvers = QStringList();
     QMap<QString, Core::Properties> solversProperties = QMap<QString, Core::Properties>();
@@ -213,9 +213,8 @@ SingleCellSimulationViewInformationSolversWidgetData * SingleCellSimulationViewI
                 if (solverInterfaceProperty.hasVoiUnit())
                     setNonEditablePropertyItem(property->unit(), "???");
                     // Note: to assign a non-empty string to our unit item is
-                    //       just a way for us to keep track of the fact that
-                    //       the property should have a unit (see
-                    //       setPropertiesUnit())...
+                    //       just a way for us to make sure that the property's
+                    //       will get initialised (see setPropertiesUnit())...
 
                 // Keep track of the solver's property
 
