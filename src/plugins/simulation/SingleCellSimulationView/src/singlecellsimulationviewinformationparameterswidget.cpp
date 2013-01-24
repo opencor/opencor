@@ -3,6 +3,7 @@
 //==============================================================================
 
 #include "cellmlfileruntime.h"
+#include "cellmlfilevariable.h"
 #include "propertyeditorwidget.h"
 #include "singlecellsimulationviewinformationparameterswidget.h"
 
@@ -152,12 +153,12 @@ void SingleCellSimulationViewInformationParametersWidget::populateModel(Core::Pr
 
 //---GRY--- TO BE DONE...
 
-    static int counter = 0;
+    foreach (CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter, pCellmlFileRuntime->modelParameters()) {
+        Core::Property *property = pPropertyEditor->addDoubleProperty();
 
-    Core::Property *property = pPropertyEditor->addIntegerProperty();
-
-    pPropertyEditor->setNonEditablePropertyItem(property->name(), "Dummy");
-    pPropertyEditor->setIntegerPropertyItem(property->value(), ++counter);
+        pPropertyEditor->setNonEditablePropertyItem(property->name(), modelParameter->variable()->name());
+        pPropertyEditor->setNonEditablePropertyItem(property->unit(), modelParameter->variable()->unit());
+    }
 }
 
 //==============================================================================

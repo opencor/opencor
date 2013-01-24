@@ -202,6 +202,15 @@ CellmlFileIssues CellmlFileRuntime::issues() const
 
 //==============================================================================
 
+CellmlFileRuntimeModelParameters CellmlFileRuntime::modelParameters() const
+{
+    // Return the model parameter(s)
+
+    return mModelParameters;
+}
+
+//==============================================================================
+
 void CellmlFileRuntime::resetOdeCodeInformation()
 {
     // Reset the ODE code information

@@ -126,6 +126,8 @@ public:
 
     CellmlFileIssues issues() const;
 
+    CellmlFileRuntimeModelParameters modelParameters() const;
+
     CellmlFileRuntime * update(OpenCOR::CellMLSupport::CellmlFile *pCellmlFile);
 
     CellmlFileVariable * variableOfIntegration() const;
