@@ -150,8 +150,7 @@ void SingleCellSimulationViewInformationParametersWidget::populateModel(Core::Pr
 {
     // Populate our property editor with the model parameters
 
-    QString currentComponent = QString();
-    Core::Property *currentSection = 0;
+    Core::Property *section = 0;
 
     foreach (CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter, pCellmlFileRuntime->modelParameters()) {
         // Check whether the current model parameter is in the same component as
@@ -159,26 +158,28 @@ void SingleCellSimulationViewInformationParametersWidget::populateModel(Core::Pr
 
         QString newComponent = modelParameter->component();
 
-        if (newComponent.compare(currentComponent)) {
+        if (!section || newComponent.compare(section->name()->text())) {
             // The current model parameter is in a different component, so
             // create a new section for the 'new' component
 
-            currentSection = pPropertyEditor->addSectionProperty();
+            section = pPropertyEditor->addSectionProperty();
 
-            pPropertyEditor->setNonEditablePropertyItem(currentSection->name(), newComponent);
+            // Customise our section
+
+            section->name()->setIcon(QIcon(":CellMLSupport_componentNode"));
+
+            pPropertyEditor->setNonEditablePropertyItem(section->name(), newComponent);
 
             // Expand the section
 
-            pPropertyEditor->setExpanded(currentSection->name()->index(), true);
-
-            // Keep track of the 'new' component
-
-            currentComponent = newComponent;
+            pPropertyEditor->setExpanded(section->name()->index(), true);
         }
 
         // Add the current model parameter to the 'current' component section
 
-        Core::Property *property = pPropertyEditor->addDoubleProperty(currentSection);
+        Core::Property *property = pPropertyEditor->addDoubleProperty(section);
+
+        property->name()->setIcon(QIcon(":CellMLSupport_variableNode"));
 
         pPropertyEditor->setNonEditablePropertyItem(property->name(), modelParameter->name());
         pPropertyEditor->setNonEditablePropertyItem(property->unit(), modelParameter->unit());
