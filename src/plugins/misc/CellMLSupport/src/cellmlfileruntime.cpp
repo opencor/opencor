@@ -470,6 +470,10 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
 
     // Retrieve the variable of integration, if any
 
+#ifdef QT_DEBUG
+    QString voiCompName = QString();
+#endif
+
     ObjRef<iface::cellml_services::ComputationTargetIterator> computationTargetIterator = mCellmlApiOdeCodeInformation->iterateTargets();
 
     forever {
@@ -486,6 +490,10 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
 
             ObjRef<iface::cellml_api::CellMLVariable> variable = computationTarget->variable();
 
+#ifdef QT_DEBUG
+    voiCompName = QString::fromStdWString(variable->componentName());
+#endif
+
             mVariableOfIntegration = pCellmlFile->component(QString::fromStdWString(variable->componentName()))->variable(QString::fromStdWString(variable->name()));
 
             break;
@@ -494,9 +502,10 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
 
 #ifdef QT_DEBUG
     if (mVariableOfIntegration)
-        qDebug(" - Variable of integration: %s [unit: %s]",
+        qDebug(" - Variable of integration: %s [unit: %s] [component: %s]",
                qPrintable(mVariableOfIntegration->name()),
-               qPrintable(mVariableOfIntegration->unit()));
+               qPrintable(mVariableOfIntegration->unit()),
+               qPrintable(voiCompName));
     else
         qDebug(" - Variable of integration: none");
 #endif
@@ -525,9 +534,9 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
 
         static const QString indexRegExp = "0|[1-9][0-9]*";
 
-        QRegularExpression constantRegExp("^CONSTANTS\["+indexRegExp+"]$");
-        QRegularExpression stateRegExp("^STATES\["+indexRegExp+"]$");
-        QRegularExpression algebraicRegExp("^ALGEBRAIC\["+indexRegExp+"]$");
+        QRegularExpression constantRegExp("^CONSTANTS\\["+indexRegExp+"\\]$");
+        QRegularExpression stateRegExp("^STATES\\["+indexRegExp+"\\]$");
+        QRegularExpression algebraicRegExp("^ALGEBRAIC\\["+indexRegExp+"\\]$");
 
         QString type = QString();
 
