@@ -15,6 +15,7 @@ CellmlFileVariable::CellmlFileVariable(CellmlFile *pCellmlFile,
                                        iface::cellml_api::CellMLVariable *pCellmlApiVariable) :
     CellmlFileNamedElement(pCellmlFile, pCellmlApiVariable),
     mUnit(QString::fromStdWString(pCellmlApiVariable->unitsName())),
+    mComponent(QString::fromStdWString(pCellmlApiVariable->componentName())),
     mInitialValue(QString::fromStdWString(pCellmlApiVariable->initialValue()))
 {
     // Retrieve the type of public and private interfaces the variable has
@@ -51,6 +52,15 @@ QString CellmlFileVariable::unit() const
     // Return the variable's unit
 
     return mUnit;
+}
+
+//==============================================================================
+
+QString CellmlFileVariable::component() const
+{
+    // Return the variable's component
+
+    return mComponent;
 }
 
 //==============================================================================

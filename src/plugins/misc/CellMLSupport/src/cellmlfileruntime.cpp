@@ -28,13 +28,52 @@ namespace CellMLSupport {
 
 //==============================================================================
 
+CellmlFileRuntimeModelParameter::CellmlFileRuntimeModelParameter(CellmlFileVariable *pVariable,
+                                                                 const ModelParameterType &pType,
+                                                                 const int &pIndex) :
+    mVariable(pVariable),
+    mType(pType),
+    mIndex(pIndex)
+{
+}
+
+//==============================================================================
+
+CellmlFileVariable * CellmlFileRuntimeModelParameter::variable() const
+{
+    // Return our variable
+
+    return mVariable;
+}
+
+//==============================================================================
+
+CellmlFileRuntimeModelParameter::ModelParameterType CellmlFileRuntimeModelParameter::type() const
+{
+    // Return our type
+
+    return mType;
+}
+
+//==============================================================================
+
+int CellmlFileRuntimeModelParameter::index() const
+{
+    // Return our index
+
+    return mIndex;
+}
+
+//==============================================================================
+
 CellmlFileRuntime::CellmlFileRuntime() :
     mCellmlApiOdeCodeInformation(0),
     mCellmlApiDaeCodeInformation(0),
     mVariableOfIntegration(0),
-    mCompilerEngine(0)
+    mCompilerEngine(0),
+    mModelParameters(CellmlFileRuntimeModelParameters())
 {
-    // Initialise the runtime's properties
+    // Reset (initialise, here) our properties
 
     reset();
 }
@@ -43,13 +82,9 @@ CellmlFileRuntime::CellmlFileRuntime() :
 
 CellmlFileRuntime::~CellmlFileRuntime()
 {
-    // Delete some internal objects
-    // Note #1: mCellmlApiOdeCodeInformation and mCellmlApiDaeCodeInformation
-    //          get automatically deleted, if needed, so...
-    // Note #2: mVariableOfIntegration is only a pointer reference, so no need
-    //          to delete it as such...
+    // Reset our properties
 
-    delete mCompilerEngine;
+    reset();
 }
 
 //==============================================================================
@@ -235,6 +270,11 @@ void CellmlFileRuntime::reset(const bool &pResetIssues)
 
     if (pResetIssues)
         mIssues.clear();
+
+    foreach (CellmlFileRuntimeModelParameter *modelParameter, mModelParameters)
+        delete modelParameter;
+
+    mModelParameters.clear();
 }
 
 //==============================================================================
@@ -470,10 +510,6 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
 
     // Retrieve the variable of integration, if any
 
-#ifdef QT_DEBUG
-    QString voiCompName = QString();
-#endif
-
     ObjRef<iface::cellml_services::ComputationTargetIterator> computationTargetIterator = mCellmlApiOdeCodeInformation->iterateTargets();
 
     forever {
@@ -490,10 +526,6 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
 
             ObjRef<iface::cellml_api::CellMLVariable> variable = computationTarget->variable();
 
-#ifdef QT_DEBUG
-    voiCompName = QString::fromStdWString(variable->componentName());
-#endif
-
             mVariableOfIntegration = pCellmlFile->component(QString::fromStdWString(variable->componentName()))->variable(QString::fromStdWString(variable->name()));
 
             break;
@@ -505,15 +537,12 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
         qDebug(" - Variable of integration: %s [unit: %s] [component: %s]",
                qPrintable(mVariableOfIntegration->name()),
                qPrintable(mVariableOfIntegration->unit()),
-               qPrintable(voiCompName));
+               qPrintable(mVariableOfIntegration->component()));
     else
         qDebug(" - Variable of integration: none");
 #endif
 
-#ifdef QT_DEBUG
-    // Model parameters
-
-    qDebug(" - Model parameters:");
+    // Retrieve all the model parameters
 
     computationTargetIterator = mCellmlApiOdeCodeInformation->iterateTargets();
 
@@ -538,23 +567,56 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
         QRegularExpression stateRegExp("^STATES\\["+indexRegExp+"\\]$");
         QRegularExpression algebraicRegExp("^ALGEBRAIC\\["+indexRegExp+"\\]$");
 
-        QString type = QString();
+        CellmlFileRuntimeModelParameter::ModelParameterType modelParameterType = CellmlFileRuntimeModelParameter::Undefined;
 
         if (constantRegExp.match(modelParamName).hasMatch())
-            type = "constant";
+            modelParameterType = CellmlFileRuntimeModelParameter::Constant;
         else if (stateRegExp.match(modelParamName).hasMatch())
-            type = "state";
+            modelParameterType = CellmlFileRuntimeModelParameter::State;
         else if (algebraicRegExp.match(modelParamName).hasMatch())
-            type = "algebraic";
+            modelParameterType = CellmlFileRuntimeModelParameter::Algebraic;
 
-        if (!type.isEmpty()) {
+        if (modelParameterType != CellmlFileRuntimeModelParameter::Undefined) {
             ObjRef<iface::cellml_api::CellMLVariable> variable = computationTarget->variable();
 
+            mModelParameters.append(new CellmlFileRuntimeModelParameter(pCellmlFile->component(QString::fromStdWString(variable->componentName()))->variable(QString::fromStdWString(variable->name())),
+                                                                        modelParameterType,
+                                                                        computationTarget->assignedIndex()));
+        }
+    }
+
+#ifdef QT_DEBUG
+    if (mModelParameters.isEmpty()) {
+        qDebug(" - Model parameters: none");
+    } else {
+        qDebug(" - Model parameters:");
+
+        foreach (CellmlFileRuntimeModelParameter *modelParameter, mModelParameters) {
+            QString modelParameterType = QString();
+
+            switch (modelParameter->type()) {
+            case CellmlFileRuntimeModelParameter::Constant:
+                modelParameterType = "constant";
+
+                break;
+            case CellmlFileRuntimeModelParameter::State:
+                modelParameterType = "state";
+
+                break;
+            case CellmlFileRuntimeModelParameter::Algebraic:
+                modelParameterType = "algebraic";
+
+                break;
+            default:
+                modelParameterType = "???";
+            }
+
             qDebug("    - %s [unit: %s] [component: %s] [type: %s] [index: %d]",
-                   qPrintable(QString::fromStdWString(variable->name())),
-                   qPrintable(QString::fromStdWString(variable->unitsName())),
-                   qPrintable(QString::fromStdWString(variable->componentName())),
-                   qPrintable(type), computationTarget->assignedIndex());
+                   qPrintable(modelParameter->variable()->name()),
+                   qPrintable(modelParameter->variable()->unit()),
+                   qPrintable(modelParameter->variable()->component()),
+                   qPrintable(modelParameterType),
+                   modelParameter->index());
         }
     }
 #endif

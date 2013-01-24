@@ -41,6 +41,36 @@ class CellmlFileVariable;
 
 //==============================================================================
 
+class CELLMLSUPPORT_EXPORT CellmlFileRuntimeModelParameter
+{
+public:
+    enum ModelParameterType {
+        Constant,
+        State,
+        Algebraic,
+        Undefined
+    };
+
+    explicit CellmlFileRuntimeModelParameter(CellmlFileVariable *pVariable,
+                                             const ModelParameterType &pType,
+                                             const int &pIndex);
+
+    CellmlFileVariable * variable() const;
+    ModelParameterType type() const;
+    int index() const;
+
+private:
+    CellmlFileVariable *mVariable;
+    ModelParameterType mType;
+    int mIndex;
+};
+
+//==============================================================================
+
+typedef QList<CellmlFileRuntimeModelParameter *> CellmlFileRuntimeModelParameters;
+
+//==============================================================================
+
 class CELLMLSUPPORT_EXPORT CellmlFileRuntime : public QObject
 {
     Q_OBJECT
@@ -115,6 +145,8 @@ private:
     DaeFunctions mDaeFunctions;
 
     CellmlFileIssues mIssues;
+
+    CellmlFileRuntimeModelParameters mModelParameters;
 
     void resetOdeCodeInformation();
     void resetDaeCodeInformation();

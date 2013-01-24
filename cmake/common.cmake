@@ -753,8 +753,10 @@ MACRO(OS_X_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES DIRNAME FILENAME)
 
     SET(FULL_FILENAME ${DIRNAME}/${FILENAME})
 
-    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND strip -x ${FULL_FILENAME})
+    IF(NOT DEBUG_MODE)
+        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                           COMMAND strip -x ${FULL_FILENAME})
+    ENDIF()
 
     # Clean up the Qt file's id
 
@@ -834,8 +836,10 @@ MACRO(OS_X_DEPLOY_LIBRARY DIRNAME LIBRARY_NAME)
 
     # Strip the library of all local symbols
 
-    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND strip -x ${LIBRARY_FILEPATH})
+    IF(NOT DEBUG_MODE)
+        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                           COMMAND strip -x ${LIBRARY_FILEPATH})
+    ENDIF()
 
     # Make sure that the library refers to our embedded version of the libraries
     # on which it depends

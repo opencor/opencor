@@ -30,6 +30,7 @@ public:
                                 iface::cellml_api::CellMLVariable *pCellmlApiVariable);
 
     QString unit() const;
+    QString component() const;
     QString initialValue() const;
     CellmlFileVariableInterface publicInterface() const;
     CellmlFileVariableInterface privateInterface() const;
@@ -39,6 +40,7 @@ public:
 
 private:
     QString mUnit;
+    QString mComponent;
     QString mInitialValue;
     CellmlFileVariableInterface mPublicInterface;
     CellmlFileVariableInterface mPrivateInterface;
