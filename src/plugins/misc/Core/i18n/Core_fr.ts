@@ -43,6 +43,22 @@
         <source>&lt;strong&gt;%1&lt;/strong&gt; has been modified. Do you want to save it before closing it?</source>
         <translation>&lt;strong&gt;%1&lt;/strong&gt; a été modifié. Voulez-vous le sauvegarder avant de le fermer ?</translation>
     </message>
+    <message>
+        <source>A file is being edited, so switching modes is not possible for now</source>
+        <translation>Un fichier est en train d&apos;être édité, il n&apos;est donc pas possible de changer de mode pour le moment</translation>
+    </message>
+    <message>
+        <source>Several files are being edited, so switching modes is not possible for now</source>
+        <translation>Plusieurs fichiers sont en train d&apos;être édités, il n&apos;est donc pas possible de changer de mode pour le moment</translation>
+    </message>
+    <message>
+        <source>A file is being edited, so switching views is not possible for now</source>
+        <translation>Un fichier est en train d&apos;être édité, il n&apos;est donc pas possible de changer de vue pour le moment</translation>
+    </message>
+    <message>
+        <source>Several files are being edited, so switching views is not possible for now</source>
+        <translation>Plusieurs fichiers sont en train d&apos;être édités, il n&apos;est donc pas possible de changer de vue pour le moment</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::Core::CorePlugin</name>

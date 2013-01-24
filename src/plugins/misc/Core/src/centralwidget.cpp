@@ -1245,7 +1245,7 @@ void CentralWidget::updateModifiedSettings()
     // Enable or disable the Mode and Views tabs, depending on whether one or
     // several files have been modified, and update the tab text if necessary
 
-    bool atLeastOneModifiedFile = false;
+    int nbOfModifiedFiles = 0;
 
     for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i) {
         QString tabText = mFileTabs->tabText(i);
@@ -1254,7 +1254,7 @@ void CentralWidget::updateModifiedSettings()
             // The current file has been modified, so the Mode and Views tabs
             // should be disabled
 
-            atLeastOneModifiedFile = true;
+            ++nbOfModifiedFiles;
 
             // Update the tab text, if needed
 
@@ -1269,17 +1269,30 @@ void CentralWidget::updateModifiedSettings()
         }
     }
 
-    mModeTabs->setEnabled(!atLeastOneModifiedFile);
+    // Enable/disable the Mode and View tabs
 
-    foreach (CentralWidgetMode *mode, mModes)
-        mode->views()->setEnabled(!atLeastOneModifiedFile);
+    mModeTabs->setEnabled(!nbOfModifiedFiles);
+    mModeTabs->setToolTip(nbOfModifiedFiles?
+                              (nbOfModifiedFiles == 1)?
+                                  tr("A file is being edited, so switching modes is not possible for now"):
+                                  tr("Several files are being edited, so switching modes is not possible for now"):
+                              QString());
+
+    foreach (CentralWidgetMode *mode, mModes) {
+        mode->views()->setEnabled(!nbOfModifiedFiles);
+        mode->views()->setToolTip(nbOfModifiedFiles?
+                                      (nbOfModifiedFiles == 1)?
+                                          tr("A file is being edited, so switching views is not possible for now"):
+                                          tr("Several files are being edited, so switching views is not possible for now"):
+                                      QString());
+    }
 
     // Let people know that we can save at least one file
 
     emit canSave(mFileTabs->count()?
                      FileManager::instance()->isModified(mFileNames[mFileTabs->currentIndex()]):
                      false);
-    emit canSaveAll(atLeastOneModifiedFile);
+    emit canSaveAll(nbOfModifiedFiles);
 }
 
 //==============================================================================
