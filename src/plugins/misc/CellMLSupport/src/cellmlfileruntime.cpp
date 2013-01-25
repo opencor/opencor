@@ -614,13 +614,6 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
 
     ObjRef<iface::cellml_services::ComputationTargetIterator> computationTargetIterator = mCellmlApiOdeCodeInformation->iterateTargets();
 
-    static const QString indexRegExp = "(0|[1-9][0-9]*)";
-
-    QRegularExpression voiRegExp("^VOI$");
-    QRegularExpression constantRegExp("^CONSTANTS\\["+indexRegExp+"\\]$");
-    QRegularExpression stateRegExp("^STATES\\["+indexRegExp+"\\]$");
-    QRegularExpression algebraicRegExp("^ALGEBRAIC\\["+indexRegExp+"\\]$");
-
     forever {
         ObjRef<iface::cellml_services::ComputationTarget> computationTarget = computationTargetIterator->nextComputationTarget();
 
@@ -630,21 +623,45 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
             break;
 
         // Determine the type of the model parameter
-        // Note: ideally, we would use computationTarget->type(), but it will
-        //       return iface::cellml_services::ALGEBRAIC for both a rate and a
-        //       'proper' algebraic variable, so...
 
-        QString modelParameterName = QString::fromStdWString(computationTarget->name());
-        CellmlFileRuntimeModelParameter::ModelParameterType modelParameterType = CellmlFileRuntimeModelParameter::Undefined;
+        CellmlFileRuntimeModelParameter::ModelParameterType modelParameterType;
 
-        if (voiRegExp.match(modelParameterName).hasMatch())
+        switch (computationTarget->type()) {
+        case iface::cellml_services::VARIABLE_OF_INTEGRATION:
             modelParameterType = CellmlFileRuntimeModelParameter::Voi;
-        else if (constantRegExp.match(modelParameterName).hasMatch())
+
+            break;
+        case iface::cellml_services::CONSTANT:
             modelParameterType = CellmlFileRuntimeModelParameter::Constant;
-        else if (stateRegExp.match(modelParameterName).hasMatch())
+
+            break;
+        case iface::cellml_services::STATE_VARIABLE:
             modelParameterType = CellmlFileRuntimeModelParameter::State;
-        else if (algebraicRegExp.match(modelParameterName).hasMatch())
+
+            break;
+        case iface::cellml_services::ALGEBRAIC:
+            // We are dealing with either a 'proper' algebraic variable or a
+            // rate variable
+            // Note: if the variable's degree is equal to zero, then we are
+            //       dealing with a 'proper' algebraic variable otherwise we
+            //       are dealing with a rate variable. There may be several
+            //       rate variables with the same name (but different degrees)
+            //       and a state variable with the same name will also exist.
+            //       So, to distinguish between all of them, we 'customise' the
+            //       variable's name by appending n single quotes to a rate
+            //       variable of degree n (e.g. for a state variable which name
+            //       is V, the corresponding rate variables of degree 1, 2 and
+            //       3 will be V', V'' and V''', respectively)...
+
             modelParameterType = CellmlFileRuntimeModelParameter::Algebraic;
+
+            break;
+        default:
+            // We are dealing with a type of computed target which is of no
+            // interest to us, so...
+
+            modelParameterType = CellmlFileRuntimeModelParameter::Undefined;
+        }
 
         // Keep track of the model parameter, should its type be known
 
@@ -657,7 +674,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
             //       we use CellmlFileRuntimeModelParameter instead...
 
             ObjRef<iface::cellml_api::CellMLVariable> variable = computationTarget->variable();
-            CellmlFileRuntimeModelParameter *modelParameter = new CellmlFileRuntimeModelParameter(QString::fromStdWString(variable->name()),
+            CellmlFileRuntimeModelParameter *modelParameter = new CellmlFileRuntimeModelParameter(QString::fromStdWString(variable->name())+QString(computationTarget->degree(), '\''),
                                                                                                   QString::fromStdWString(variable->unitsName()),
                                                                                                   QString::fromStdWString(variable->componentName()),
                                                                                                   modelParameterType,
