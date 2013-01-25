@@ -562,6 +562,13 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
 
     ObjRef<iface::cellml_services::ComputationTargetIterator> computationTargetIterator = mCellmlApiOdeCodeInformation->iterateTargets();
 
+    static const QString indexRegExp = "(0|[1-9][0-9]*)";
+
+    QRegularExpression voiRegExp("^VOI$");
+    QRegularExpression constantRegExp("^CONSTANTS\\["+indexRegExp+"\\]$");
+    QRegularExpression stateRegExp("^STATES\\["+indexRegExp+"\\]$");
+    QRegularExpression algebraicRegExp("^ALGEBRAIC\\["+indexRegExp+"\\]$");
+
     forever {
         ObjRef<iface::cellml_services::ComputationTarget> computationTarget = computationTargetIterator->nextComputationTarget();
 
@@ -576,14 +583,6 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
         //       'proper' algebraic variable, so...
 
         QString modelParameterName = QString::fromStdWString(computationTarget->name());
-
-        static const QString indexRegExp = "0|[1-9][0-9]*";
-
-        QRegularExpression voiRegExp("^VOI$");
-        QRegularExpression constantRegExp("^CONSTANTS\\["+indexRegExp+"\\]$");
-        QRegularExpression stateRegExp("^STATES\\["+indexRegExp+"\\]$");
-        QRegularExpression algebraicRegExp("^ALGEBRAIC\\["+indexRegExp+"\\]$");
-
         CellmlFileRuntimeModelParameter::ModelParameterType modelParameterType = CellmlFileRuntimeModelParameter::Undefined;
 
         if (voiRegExp.match(modelParameterName).hasMatch())
@@ -635,9 +634,19 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
     } else {
         qDebug(" - Model parameters:");
 
+        QString component = QString();
+
         foreach (CellmlFileRuntimeModelParameter *modelParameter, mModelParameters)
             if (   (modelParameter->type() != CellmlFileRuntimeModelParameter::Voi)
                 && (modelParameter->type() != CellmlFileRuntimeModelParameter::Undefined)) {
+                QString crtComponent = modelParameter->component();
+
+                if (modelParameter->component().compare(component)) {
+                    qDebug("    - %s:", qPrintable(crtComponent));
+
+                    component = crtComponent;
+                }
+
                 QString modelParameterType = QString();
 
                 switch (modelParameter->type()) {
@@ -657,7 +666,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
                     modelParameterType = "???";
                 }
 
-                qDebug("    - %s [unit: %s] [component: %s] [type: %s] [index: %d]",
+                qDebug("       - %s [unit: %s] [component: %s] [type: %s] [index: %d]",
                        qPrintable(modelParameter->name()),
                        qPrintable(modelParameter->unit()),
                        qPrintable(modelParameter->component()),

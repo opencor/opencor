@@ -156,9 +156,9 @@ void SingleCellSimulationViewInformationParametersWidget::populateModel(Core::Pr
         // Check whether the current model parameter is in the same component as
         // the previous one
 
-        QString newComponent = modelParameter->component();
+        QString crtComponent = modelParameter->component();
 
-        if (!section || newComponent.compare(section->name()->text())) {
+        if (!section || crtComponent.compare(section->name()->text())) {
             // The current model parameter is in a different component, so
             // create a new section for the 'new' component
 
@@ -166,7 +166,7 @@ void SingleCellSimulationViewInformationParametersWidget::populateModel(Core::Pr
 
             section->name()->setIcon(QIcon(":CellMLSupport_componentNode"));
 
-            pPropertyEditor->setNonEditablePropertyItem(section->name(), newComponent);
+            pPropertyEditor->setNonEditablePropertyItem(section->name(), crtComponent);
         }
 
         // Add the current model parameter to the 'current' component section
