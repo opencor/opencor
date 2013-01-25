@@ -102,12 +102,14 @@ void SingleCellSimulationViewSimulationData::setPointInterval(const double &pPoi
 
 //==============================================================================
 
-SingleCellSimulationViewSimulation::SingleCellSimulationViewSimulation(const QString &pFileName) :
+SingleCellSimulationViewSimulation::SingleCellSimulationViewSimulation(const QString &pFileName,
+                                                                       CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime) :
     mWorker(0),
     mWorkerThread(0),
     mFileName(pFileName),
     mData(new SingleCellSimulationViewSimulationData())
 {
+    Q_UNUSED(pCellmlFileRuntime);
 }
 
 //==============================================================================

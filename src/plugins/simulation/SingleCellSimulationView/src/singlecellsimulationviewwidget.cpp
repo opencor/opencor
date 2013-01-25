@@ -396,12 +396,15 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
     // Retrieve our simulation object for the current model, if any
 
+    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
+    CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = cellmlFile->runtime();
+
     mSimulation = mSimulations.value(pFileName);
 
     if (!mSimulation) {
         // No simulation object currently exists for the model, so create one
 
-        mSimulation = new SingleCellSimulationViewSimulation(pFileName);
+        mSimulation = new SingleCellSimulationViewSimulation(pFileName, cellmlFileRuntime);
 
         // Create a few connections
 
@@ -434,10 +437,6 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
     // Output some information about our CellML file
 
-    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
-    CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = cellmlFile->runtime();
-    bool validCellmlFileRuntime = cellmlFileRuntime && cellmlFileRuntime->isValid();
-
     QString information = QString();
 
     if (!mOutputWidget->document()->isEmpty())
@@ -445,6 +444,8 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
     information += "<strong>"+pFileName+"</strong>"+OutputBrLn;
     information += OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
+
+    bool validCellmlFileRuntime = cellmlFileRuntime && cellmlFileRuntime->isValid();
 
     if (validCellmlFileRuntime) {
         // A valid runtime could be retrieved for the CellML file

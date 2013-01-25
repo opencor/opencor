@@ -75,7 +75,8 @@ class SingleCellSimulationViewSimulation : public QObject
     Q_OBJECT
 
 public:
-    explicit SingleCellSimulationViewSimulation(const QString &pFileName);
+    explicit SingleCellSimulationViewSimulation(const QString &pFileName,
+                                                CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
     ~SingleCellSimulationViewSimulation();
 
     QString fileName() const;
