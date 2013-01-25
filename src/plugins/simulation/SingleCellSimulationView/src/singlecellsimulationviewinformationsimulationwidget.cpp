@@ -23,9 +23,9 @@ SingleCellSimulationViewInformationSimulationWidget::SingleCellSimulationViewInf
 {
     // Populate our property editor
 
-    mStartingPointProperty = addDoubleProperty();
-    mEndingPointProperty   = addDoubleProperty();
-    mPointIntervalProperty = addDoubleProperty();
+    mStartingPointProperty = addDoubleProperty(true);
+    mEndingPointProperty   = addDoubleProperty(true);
+    mPointIntervalProperty = addDoubleProperty(true);
 
     // Initialise our property values
 
@@ -65,9 +65,9 @@ void SingleCellSimulationViewInformationSimulationWidget::retranslateUi()
 
     // Update our property names
 
-    setNonEditablePropertyItem(mStartingPointProperty->name(), tr("Starting point"));
-    setNonEditablePropertyItem(mEndingPointProperty->name(), tr("Ending point"));
-    setNonEditablePropertyItem(mPointIntervalProperty->name(), tr("Point interval"));
+    setStringPropertyItem(mStartingPointProperty->name(), tr("Starting point"));
+    setStringPropertyItem(mEndingPointProperty->name(), tr("Ending point"));
+    setStringPropertyItem(mPointIntervalProperty->name(), tr("Point interval"));
 }
 
 //==============================================================================
@@ -90,9 +90,9 @@ void SingleCellSimulationViewInformationSimulationWidget::initialize(const QStri
 
     QString unit = pCellmlFileRuntime->variableOfIntegration()->unit();
 
-    setNonEditablePropertyItem(mStartingPointProperty->unit(), unit);
-    setNonEditablePropertyItem(mEndingPointProperty->unit(), unit);
-    setNonEditablePropertyItem(mPointIntervalProperty->unit(), unit);
+    setStringPropertyItem(mStartingPointProperty->unit(), unit);
+    setStringPropertyItem(mEndingPointProperty->unit(), unit);
+    setStringPropertyItem(mPointIntervalProperty->unit(), unit);
 }
 
 //==============================================================================

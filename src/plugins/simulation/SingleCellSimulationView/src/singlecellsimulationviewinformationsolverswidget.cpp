@@ -100,22 +100,22 @@ void SingleCellSimulationViewInformationSolversWidget::retranslateUi()
     // Update our property names
 
     if (mOdeSolverData) {
-        setNonEditablePropertyItem(mOdeSolverData->solversProperty()->name(), tr("ODE solver"));
-        setNonEditablePropertyItem(mOdeSolverData->solversListProperty()->name(), tr("Name"));
+        setStringPropertyItem(mOdeSolverData->solversProperty()->name(), tr("ODE solver"));
+        setStringPropertyItem(mOdeSolverData->solversListProperty()->name(), tr("Name"));
 
         mOdeSolverData->solversListProperty()->value()->setEmptyListValue(tr("None available"));
     }
 
     if (mDaeSolverData) {
-        setNonEditablePropertyItem(mDaeSolverData->solversProperty()->name(), tr("DAE solver"));
-        setNonEditablePropertyItem(mDaeSolverData->solversListProperty()->name(), tr("Name"));
+        setStringPropertyItem(mDaeSolverData->solversProperty()->name(), tr("DAE solver"));
+        setStringPropertyItem(mDaeSolverData->solversListProperty()->name(), tr("Name"));
 
         mDaeSolverData->solversListProperty()->value()->setEmptyListValue(tr("None available"));
     }
 
     if (mNlaSolverData) {
-        setNonEditablePropertyItem(mNlaSolverData->solversProperty()->name(), tr("NLA solver"));
-        setNonEditablePropertyItem(mNlaSolverData->solversListProperty()->name(), tr("Name"));
+        setStringPropertyItem(mNlaSolverData->solversProperty()->name(), tr("NLA solver"));
+        setStringPropertyItem(mNlaSolverData->solversListProperty()->name(), tr("Name"));
 
         mNlaSolverData->solversListProperty()->value()->setEmptyListValue(tr("None available"));
     }
@@ -182,18 +182,18 @@ SingleCellSimulationViewInformationSolversWidgetData * SingleCellSimulationViewI
 
                 switch (solverInterfaceProperty.type()) {
                 case Solver::Double:
-                    property = addDoubleProperty(solversProperty);
+                    property = addDoubleProperty(true, solversProperty);
 
                     break;
                 default:
                     // Solver::Integer
 
-                    property = addIntegerProperty(solversProperty);
+                    property = addIntegerProperty(true, solversProperty);
                 }
 
                 // Set the solver's property's name
 
-                setNonEditablePropertyItem(property->name(), solverInterfaceProperty.name());
+                setStringPropertyItem(property->name(), solverInterfaceProperty.name());
 
                 // Set the solver's property's default value
 
@@ -211,7 +211,7 @@ SingleCellSimulationViewInformationSolversWidgetData * SingleCellSimulationViewI
                 // Set the solver's property's 'unit', if needed
 
                 if (solverInterfaceProperty.hasVoiUnit())
-                    setNonEditablePropertyItem(property->unit(), "???");
+                    setStringPropertyItem(property->unit(), "???");
                     // Note: to assign a non-empty string to our unit item is
                     //       just a way for us to make sure that the property's
                     //       will get initialised (see setPropertiesUnit())...

@@ -114,14 +114,13 @@ class CORE_EXPORT PropertyItem : public QStandardItem
 public:
     enum Type {
         Section  = QStandardItem::UserType,
-        Name     = QStandardItem::UserType+1,
+        String   = QStandardItem::UserType+1,
         Integer  = QStandardItem::UserType+2,
         Double   = QStandardItem::UserType+3,
-        List     = QStandardItem::UserType+4,
-        Unit     = QStandardItem::UserType+5
+        List     = QStandardItem::UserType+4
     };
 
-    explicit PropertyItem(const Type &pType);
+    explicit PropertyItem(const Type &pType, const bool &pEditable);
 
     virtual int type() const;
 
@@ -146,7 +145,7 @@ typedef QList<PropertyItem *> PropertyItems;
 class CORE_EXPORT Property
 {
 public:
-    explicit Property(const PropertyItem::Type &pType);
+    explicit Property(const PropertyItem::Type &pType, const bool &pEditable);
     explicit Property(QStandardItem *pName, PropertyItem *pValue,
                       QStandardItem *pUnit);
 
@@ -241,12 +240,14 @@ public:
     void setGuiState(PropertyEditorWidgetGuiState *pGuiState);
 
     Property * addSectionProperty(Property *pParent = 0);
-    Property * addIntegerProperty(Property *pParent = 0);
-    Property * addDoubleProperty(Property *pParent = 0);
+    Property * addIntegerProperty(const bool &pEditable,
+                                  Property *pParent = 0);
+    Property * addDoubleProperty(const bool &pEditable,
+                                 Property *pParent = 0);
     Property * addListProperty(Property *pParent = 0);
 
-    void setNonEditablePropertyItem(QStandardItem *pPropertyItem,
-                                    const QString &pValue);
+    void setStringPropertyItem(QStandardItem *pPropertyItem,
+                               const QString &pValue);
 
     int integerPropertyItem(PropertyItem *pPropertyItem) const;
     void setIntegerPropertyItem(PropertyItem *pPropertyItem,
@@ -290,7 +291,8 @@ private:
 
     void retranslateEmptyListProperties(QStandardItem *pItem);
 
-    Property * addProperty(Property *pParent, const PropertyItem::Type &pType);
+    Property * addProperty(const PropertyItem::Type &pType,
+                           const bool &pEditable, Property *pParent);
 
     void editProperty(Property *pProperty, const bool &pCommitData = true);
 

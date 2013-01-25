@@ -37,13 +37,11 @@ void CellmlAnnotationViewCellmlElementItemDelegate::paint(QPainter *pPainter,
     if (   (cellmlElementItem->type() == CellmlAnnotationViewCellmlElementItem::Error)
         || (cellmlElementItem->type() == CellmlAnnotationViewCellmlElementItem::Warning)
         || cellmlElementItem->isCategory()) {
-        // This is an error/warning/category item, so prevent it from being
-        // hoverable. Otherwise, show the item enabled since it's actually
-        // disabled (so we can't select it), yet we want to see as if it was
-        // enabled...
+        // This is an error/warning/category item, so reset its enabled state
+        // since it's actually disabled (so we can't select it), yet we want to
+        // see as if it was enabled, so...
 
-        option.state &= ~QStyle::State_MouseOver;
-        option.state |=  QStyle::State_Enabled;
+        option.state |= QStyle::State_Enabled;
 
         // In the case of a category, we make the font bold
 

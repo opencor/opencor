@@ -166,17 +166,17 @@ void SingleCellSimulationViewInformationParametersWidget::populateModel(Core::Pr
 
             section->name()->setIcon(QIcon(":CellMLSupport_componentNode"));
 
-            pPropertyEditor->setNonEditablePropertyItem(section->name(), crtComponent);
+            pPropertyEditor->setStringPropertyItem(section->name(), crtComponent);
         }
 
         // Add the current model parameter to the 'current' component section
 
-        Core::Property *property = pPropertyEditor->addDoubleProperty(section);
+        Core::Property *property = pPropertyEditor->addDoubleProperty(modelParameter->type() != CellMLSupport::CellmlFileRuntimeModelParameter::Algebraic, section);
 
         property->name()->setIcon(QIcon(":CellMLSupport_variableNode"));
 
-        pPropertyEditor->setNonEditablePropertyItem(property->name(), modelParameter->name());
-        pPropertyEditor->setNonEditablePropertyItem(property->unit(), modelParameter->unit());
+        pPropertyEditor->setStringPropertyItem(property->name(), modelParameter->name());
+        pPropertyEditor->setStringPropertyItem(property->unit(), modelParameter->unit());
     }
 
     // Expand all our properties

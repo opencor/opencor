@@ -314,14 +314,13 @@ void PropertyItemDelegate::paint(QPainter *pPainter,
     initStyleOption(&option, pIndex);
 
     if (propertyItem->type() == PropertyItem::Section) {
-        // This is a section item, so prevent it from being hoverable.
-        // Otherwise, show the item enabled since it's actually disabled (so we
-        // can't select it), yet we want to see as if it was enabled...
+        // This is a section item, so reset its enabled state since it's
+        // actually disabled (so we can't select it), yet we want to see as if
+        // it was enabled, so...
 
-        option.state &= ~QStyle::State_MouseOver;
-        option.state |=  QStyle::State_Enabled;
+        option.state |= QStyle::State_Enabled;
 
-        // In the case of a category, we make the font bold
+        // Make our section item bold
 
         option.font.setBold(true);
     }
@@ -331,16 +330,16 @@ void PropertyItemDelegate::paint(QPainter *pPainter,
 
 //==============================================================================
 
-PropertyItem::PropertyItem(const Type &pType) :
+PropertyItem::PropertyItem(const Type &pType, const bool &pEditable) :
     QStandardItem(),
     mType(pType),
     mList(QStringList()),
     mEmptyListValue(QString("???"))
 {
-    // Disable the editing of the property item if it is of section, name or
-    // unit type
+    // Disable the editing of the property item if it is of section or string
+    // type
 
-    if ((pType == Section) || (pType == Name) || (pType == Unit))
+    if (!pEditable)
         setFlags(flags() & ~Qt::ItemIsEditable);
 }
 
@@ -411,10 +410,10 @@ void PropertyItem::setEmptyListValue(const QString &pEmptyListValue)
 
 //==============================================================================
 
-Property::Property(const PropertyItem::Type &pType) :
-    mName(new PropertyItem((pType == PropertyItem::Section)?pType:PropertyItem::Name)),
-    mValue((pType == PropertyItem::Section)?0:new PropertyItem(pType)),
-    mUnit((pType == PropertyItem::Section)?0:new PropertyItem(PropertyItem::Unit))
+Property::Property(const PropertyItem::Type &pType, const bool &pEditable) :
+    mName(new PropertyItem((pType == PropertyItem::Section)?pType:PropertyItem::String, false)),
+    mValue((pType == PropertyItem::Section)?0:new PropertyItem(pType, pEditable)),
+    mUnit((pType == PropertyItem::Section)?0:new PropertyItem(PropertyItem::String, false))
 {
     // Disable ourselves if we are of section type
     // Note: we will get 're-enabled' by our item delegate...
@@ -892,12 +891,13 @@ void PropertyEditorWidget::setGuiState(PropertyEditorWidgetGuiState *pGuiState)
 
 //==============================================================================
 
-Property * PropertyEditorWidget::addProperty(Property *pParent,
-                                             const PropertyItem::Type &pType)
+Property * PropertyEditorWidget::addProperty(const PropertyItem::Type &pType,
+                                             const bool &pEditable,
+                                             Property *pParent)
 {
     // Determine our new property's information
 
-    Property *res = new Property(pType);
+    Property *res = new Property(pType, pEditable);
 
     // Populate our data model with our new property
 
@@ -937,7 +937,7 @@ Property * PropertyEditorWidget::addSectionProperty(Property *pParent)
 {
     // Add a section property
 
-    Property *res = addProperty(pParent, PropertyItem::Section);
+    Property *res = addProperty(PropertyItem::Section, false, pParent);
 
     // Return our section property information
 
@@ -946,20 +946,22 @@ Property * PropertyEditorWidget::addSectionProperty(Property *pParent)
 
 //==============================================================================
 
-Property * PropertyEditorWidget::addIntegerProperty(Property *pParent)
+Property * PropertyEditorWidget::addIntegerProperty(const bool &pEditable,
+                                                    Property *pParent)
 {
     // Add an integer property and return its information
 
-    return addProperty(pParent, PropertyItem::Integer);
+    return addProperty(PropertyItem::Integer, pEditable, pParent);
 }
 
 //==============================================================================
 
-Property * PropertyEditorWidget::addDoubleProperty(Property *pParent)
+Property * PropertyEditorWidget::addDoubleProperty(const bool &pEditable,
+                                                   Property *pParent)
 {
     // Add a double property and return its information
 
-    return addProperty(pParent, PropertyItem::Double);
+    return addProperty(PropertyItem::Double, pEditable, pParent);
 }
 
 //==============================================================================
@@ -968,19 +970,21 @@ Property * PropertyEditorWidget::addListProperty(Property *pParent)
 {
     // Add a list property and return its information
 
-    return addProperty(pParent, PropertyItem::List);
+    return addProperty(PropertyItem::List, true, pParent);
 }
 
 //==============================================================================
 
-void PropertyEditorWidget::setNonEditablePropertyItem(QStandardItem *pPropertyItem,
-                                                      const QString &pValue)
+void PropertyEditorWidget::setStringPropertyItem(QStandardItem *pPropertyItem,
+                                                 const QString &pValue)
 {
-    // Set the value of the given non-editable property item, if it exists, and
-    // use its value as a tooltip (in case it's too long and doesn't fit within
-    // the allocated space we have)
+    // Set the value of the given string property item, if it exists, and use
+    // its value as a tooltip (in case it's too long and doesn't fit within the
+    // allocated space we have)
 
-    if (pPropertyItem) {
+    if (pPropertyItem &&
+        (   (pPropertyItem->type() == PropertyItem::Section)
+         || (pPropertyItem->type() == PropertyItem::String))) {
         pPropertyItem->setText(pValue);
         pPropertyItem->setToolTip(pPropertyItem->text());
     }
@@ -1333,9 +1337,11 @@ void PropertyEditorWidget::editProperty(Property *pProperty,
 
         setCurrentIndex(propertyIndex);
 
-        // Now, we can 'properly' edit the property's value
+        // Now, we can 'properly' edit the property's value, but only if the
+        // property's value is actually editable
 
-        edit(propertyIndex);
+        if (pProperty->value()->isEditable())
+            edit(propertyIndex);
     }
 }
 
