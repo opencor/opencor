@@ -537,7 +537,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
             information = QString();
 
-            if (solversWidget->needOdeSolver()) {
+            if (cellmlFileRuntime->needOdeSolver()) {
                 information += "\n - ODE solver(s): ";
 
                 int solverCounter = 0;
@@ -552,7 +552,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
                     information += "none available";
             }
 
-            if (solversWidget->needDaeSolver()) {
+            if (cellmlFileRuntime->needDaeSolver()) {
                 information += "\n - DAE solver(s): ";
 
                 int solverCounter = 0;
@@ -567,7 +567,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
                     information += "none available";
             }
 
-            if (solversWidget->needNlaSolver()) {
+            if (cellmlFileRuntime->needNlaSolver()) {
                 information += "\n - NLA solver(s): ";
 
                 int solverCounter = 0;
@@ -586,12 +586,12 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
             // Note: we must remove the leading '\n'...
 #endif
 
-            // Check whether we have at least one ODE/DAE solver and, if needed,
-            // at least one NLA solver
+            // Check whether we have at least one ODE or DAE solver and, if
+            // needed, at least one NLA solver
 
-            if (solversWidget->needNlaSolver()) {
+            if (cellmlFileRuntime->needNlaSolver()) {
                 if (solversWidget->nlaSolvers().isEmpty()) {
-                    if (solversWidget->needOdeSolver()) {
+                    if (cellmlFileRuntime->needOdeSolver()) {
                         if (solversWidget->odeSolvers().isEmpty())
                             simulationError(tr("the model needs both an ODE and an NLA solver, but none are available"),
                                             InvalidSimulationEnvironment);
@@ -606,11 +606,11 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
                             simulationError(tr("the model needs both a DAE and an NLA solver, but no NLA solver is available"),
                                             InvalidSimulationEnvironment);
                     }
-                } else if (   solversWidget->needOdeSolver()
+                } else if (   cellmlFileRuntime->needOdeSolver()
                            && solversWidget->odeSolvers().isEmpty()) {
                     simulationError(tr("the model needs both an ODE and an NLA solver, but no ODE solver is available"),
                                     InvalidSimulationEnvironment);
-                } else if (   solversWidget->needDaeSolver()
+                } else if (   cellmlFileRuntime->needDaeSolver()
                            && solversWidget->daeSolvers().isEmpty()) {
                         simulationError(tr("the model needs both a DAE and an NLA solver, but no DAE solver is available"),
                                         InvalidSimulationEnvironment);
@@ -619,11 +619,11 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
                     hasError = false;
                 }
-            } else if (   solversWidget->needOdeSolver()
+            } else if (   cellmlFileRuntime->needOdeSolver()
                        && solversWidget->odeSolvers().isEmpty()) {
                 simulationError(tr("the model needs an ODE solver, but none is available"),
                                 InvalidSimulationEnvironment);
-            } else if (   solversWidget->needDaeSolver()
+            } else if (   cellmlFileRuntime->needDaeSolver()
                        && solversWidget->daeSolvers().isEmpty()) {
                 simulationError(tr("the model needs a DAE solver, but none is available"),
                                 InvalidSimulationEnvironment);

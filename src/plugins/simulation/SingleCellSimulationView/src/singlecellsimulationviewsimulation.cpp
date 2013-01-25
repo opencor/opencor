@@ -103,8 +103,8 @@ void SingleCellSimulationViewSimulationData::setPointInterval(const double &pPoi
 //==============================================================================
 
 SingleCellSimulationViewSimulation::SingleCellSimulationViewSimulation(const QString &pFileName) :
-    mWorkerThread(0),
     mWorker(0),
+    mWorkerThread(0),
     mFileName(pFileName),
     mData(new SingleCellSimulationViewSimulationData())
 {
@@ -138,9 +138,7 @@ SingleCellSimulationViewSimulationWorker::Status SingleCellSimulationViewSimulat
 {
     // Return the status of our worker, if active
 
-    return (mWorkerThread && mWorker)?
-               mWorker->status():
-               SingleCellSimulationViewSimulationWorker::Unknown;
+    return mWorker?mWorker->status():SingleCellSimulationViewSimulationWorker::Unknown;
 }
 
 //==============================================================================
@@ -149,9 +147,7 @@ double SingleCellSimulationViewSimulation::workerProgress() const
 {
     // Return the progress of our worker, if active
 
-    return (mWorkerThread && mWorker)?
-               mWorker->progress():
-               0.0;
+    return mWorker?mWorker->progress():0.0;
 }
 
 //==============================================================================
@@ -188,7 +184,7 @@ void SingleCellSimulationViewSimulation::run()
 {
     // Initialise our worker, if not active
 
-    if (!mWorkerThread && !mWorker) {
+    if (!mWorker) {
         // First, check that our simulation settings we were given are sound
 
         bool simulationSettingsOk = false;
@@ -213,17 +209,17 @@ void SingleCellSimulationViewSimulation::run()
 
         // Create our worker and the thread in which it will work
 
-        mWorkerThread = new Core::Thread();
         mWorker       = new SingleCellSimulationViewSimulationWorker(mData);
+        mWorkerThread = new Core::Thread();
 
-        // Check that the worker and its thread have been properly created
+        // Check that both the worker and its thread have been properly created
 
-        if (!mWorkerThread || !mWorker) {
-            delete mWorkerThread;
+        if (!mWorker || !mWorkerThread) {
             delete mWorker;
+            delete mWorkerThread;
 
-            mWorkerThread = 0;
             mWorker       = 0;
+            mWorkerThread = 0;
 
             emit error(tr("the simulation worker and/or its thread could not be initialised"));
 
@@ -276,7 +272,7 @@ void SingleCellSimulationViewSimulation::pause()
 {
     // Ask our worker to pause, if active
 
-    if (mWorkerThread && mWorker)
+    if (mWorker)
         mWorker->pause();
 }
 
@@ -286,7 +282,7 @@ void SingleCellSimulationViewSimulation::stop()
 {
     // Ask our worker to stop, if active
 
-    if (mWorkerThread && mWorker)
+    if (mWorker)
         mWorker->stop();
 }
 
@@ -296,8 +292,8 @@ void SingleCellSimulationViewSimulation::finished(const int &pElapsedTime)
 {
     // Our worker is done (and it will get deleted and everything), so...
 
-    mWorkerThread = 0;
     mWorker       = 0;
+    mWorkerThread = 0;
 
     // Let people know that we have stopped
 

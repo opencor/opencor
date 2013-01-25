@@ -129,6 +129,24 @@ CellmlFileRuntime::ModelType CellmlFileRuntime::modelType() const
 
 //==============================================================================
 
+bool CellmlFileRuntime::needOdeSolver() const
+{
+    // Return whether the model needs an ODE solver
+
+    return mModelType == Ode;
+}
+
+//==============================================================================
+
+bool CellmlFileRuntime::needDaeSolver() const
+{
+    // Return whether the model needs a DAE solver
+
+    return mModelType == Dae;
+}
+
+//==============================================================================
+
 bool CellmlFileRuntime::needNlaSolver() const
 {
     // Return whether the model needs a non-linear algebraic solver

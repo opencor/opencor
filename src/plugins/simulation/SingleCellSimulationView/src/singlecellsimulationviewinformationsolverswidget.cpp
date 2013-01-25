@@ -16,29 +16,10 @@ namespace SingleCellSimulationView {
 SingleCellSimulationViewInformationSolversWidgetData::SingleCellSimulationViewInformationSolversWidgetData(Core::Property *pSolversProperty,
                                                                                                            Core::Property *pSolversListProperty,
                                                                                                            const QMap<QString, Core::Properties> &pSolversProperties) :
-    mNeedSolver(true),
     mSolversProperty(pSolversProperty),
     mSolversListProperty(pSolversListProperty),
     mSolversProperties(pSolversProperties)
 {
-}
-
-//==============================================================================
-
-bool SingleCellSimulationViewInformationSolversWidgetData::needSolver() const
-{
-    // Return whether we need a solver
-
-    return mNeedSolver;
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewInformationSolversWidgetData::setNeedSolver(const bool &pNeedSolver)
-{
-    // Set whether we need a solver
-
-    mNeedSolver = pNeedSolver;
 }
 
 //==============================================================================
@@ -282,11 +263,6 @@ void SingleCellSimulationViewInformationSolversWidget::setSolverInterfaces(const
 void SingleCellSimulationViewInformationSolversWidget::setPropertiesUnit(SingleCellSimulationViewInformationSolversWidgetData *pSolverData,
                                                                          const QString &pVoiUnit)
 {
-    // Check whether we need this type of solver and, if not, leave
-
-    if (!pSolverData->needSolver())
-        return;
-
     // Go through the solvers' properties and set the unit of the relevant ones
 
     foreach (const Core::Properties &properties, pSolverData->solversProperties())
@@ -316,17 +292,12 @@ void SingleCellSimulationViewInformationSolversWidget::initialize(const QString 
     if (pCellmlFileRuntime->isValid()) {
         // Show/hide the ODE/DAE solver information
 
-        mOdeSolverData->setNeedSolver(pCellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode);
-        mDaeSolverData->setNeedSolver(!mOdeSolverData->needSolver());
-
-        setPropertyVisible(mOdeSolverData->solversProperty(), mOdeSolverData->needSolver());
-        setPropertyVisible(mDaeSolverData->solversProperty(), mDaeSolverData->needSolver());
+        setPropertyVisible(mOdeSolverData->solversProperty(), pCellmlFileRuntime->needOdeSolver());
+        setPropertyVisible(mDaeSolverData->solversProperty(), pCellmlFileRuntime->needDaeSolver());
 
         // Show/hide the NLA solver information
 
-        mNlaSolverData->setNeedSolver(pCellmlFileRuntime->needNlaSolver());
-
-        setPropertyVisible(mNlaSolverData->solversProperty(), mNlaSolverData->needSolver());
+        setPropertyVisible(mNlaSolverData->solversProperty(), pCellmlFileRuntime->needNlaSolver());
 
         // Retranslate ourselves so that the property names get properly set
 
@@ -349,33 +320,6 @@ void SingleCellSimulationViewInformationSolversWidget::finalize(const QString &p
     // Keep track of our GUI state
 
     mGuiStates.insert(pFileName, guiState());
-}
-
-//==============================================================================
-
-bool SingleCellSimulationViewInformationSolversWidget::needOdeSolver() const
-{
-    // Return whether we need an ODE solver
-
-    return mOdeSolverData->needSolver();
-}
-
-//==============================================================================
-
-bool SingleCellSimulationViewInformationSolversWidget::needDaeSolver() const
-{
-    // Return whether we need a DAE solver
-
-    return mDaeSolverData->needSolver();
-}
-
-//==============================================================================
-
-bool SingleCellSimulationViewInformationSolversWidget::needNlaSolver() const
-{
-    // Return whether we need an NLA solver
-
-    return mNlaSolverData->needSolver();
 }
 
 //==============================================================================

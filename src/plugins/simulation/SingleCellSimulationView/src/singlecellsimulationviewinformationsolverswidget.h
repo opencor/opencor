@@ -33,17 +33,12 @@ public:
                                                                   Core::Property *pSolversListProperty,
                                                                   const QMap<QString, Core::Properties> &pSolversProperties);
 
-    bool needSolver() const;
-    void setNeedSolver(const bool &pNeedSolver);
-
     Core::Property * solversProperty() const;
     Core::Property * solversListProperty() const;
 
     QMap<QString, Core::Properties> solversProperties() const;
 
 private:
-    bool mNeedSolver;
-
     Core::Property *mSolversProperty;
     Core::Property *mSolversListProperty;
 
@@ -67,10 +62,6 @@ public:
     void initialize(const QString &pFileName,
                     CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
     void finalize(const QString &pFileName);
-
-    bool needOdeSolver() const;
-    bool needDaeSolver() const;
-    bool needNlaSolver() const;
 
     QStringList odeSolvers() const;
     QStringList daeSolvers() const;

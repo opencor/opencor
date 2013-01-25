@@ -119,6 +119,9 @@ public:
     bool isValid() const;
 
     ModelType modelType() const;
+
+    bool needOdeSolver() const;
+    bool needDaeSolver() const;
     bool needNlaSolver() const;
 
     int constantsCount() const;

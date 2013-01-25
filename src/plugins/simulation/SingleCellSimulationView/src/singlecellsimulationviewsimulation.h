@@ -84,7 +84,6 @@ public:
     double workerProgress() const;
 
     void setData(SingleCellSimulationViewWidget *pGui);
-
     void setDelay(const int &pDelay);
 
     void run();
@@ -92,8 +91,8 @@ public:
     void stop();
 
 private:
-    Core::Thread *mWorkerThread;
     SingleCellSimulationViewSimulationWorker *mWorker;
+    Core::Thread *mWorkerThread;
 
     QString mFileName;
 
