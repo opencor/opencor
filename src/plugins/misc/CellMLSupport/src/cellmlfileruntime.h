@@ -89,29 +89,13 @@ public:
     };
 
     typedef int (*InitializeConstantsFunction)(double *, double *, double *);
-    typedef int (*ComputeOdeRatesFunction)(double, double *, double *, double *, double *);
-    typedef int (*ComputeDaeResidualsFunction)(double, double *, double *, double *, double *, double *, double *);
+
+    typedef int (*ComputeEssentialVariablesFunction)(double, double *, double *, double *, double *, double *);
+    typedef int (*ComputeRatesFunction)(double, double *, double *, double *, double *);
+    typedef int (*ComputeResidualsFunction)(double, double *, double *, double *, double *, double *, double *);
+    typedef int (*ComputeRootInformationFunction)(double, double *, double *, double *, double *, double *);
+    typedef int (*ComputeStateInformationFunction)(double *);
     typedef int (*ComputeVariablesFunction)(double, double *, double *, double *, double *);
-    typedef int (*ComputeDaeEssentialVariablesFunction)(double, double *, double *, double *, double *, double *);
-    typedef int (*ComputeDaeRootInformationFunction)(double, double *, double *, double *, double *, double *);
-    typedef int (*ComputeDaeStateInformationFunction)(double *);
-
-    struct OdeFunctions
-    {
-        InitializeConstantsFunction initializeConstants;
-        ComputeOdeRatesFunction computeRates;
-        ComputeVariablesFunction computeVariables;
-    };
-
-    struct DaeFunctions
-    {
-        InitializeConstantsFunction initializeConstants;
-        ComputeDaeResidualsFunction computeResiduals;
-        ComputeVariablesFunction computeVariables;
-        ComputeDaeEssentialVariablesFunction computeEssentialVariables;
-        ComputeDaeRootInformationFunction computeRootInformation;
-        ComputeDaeStateInformationFunction computeStateInformation;
-    };
 
     explicit CellmlFileRuntime();
     ~CellmlFileRuntime();
@@ -130,8 +114,14 @@ public:
     int algebraicCount() const;
     int condVarCount() const;
 
-    OdeFunctions odeFunctions() const;
-    DaeFunctions daeFunctions() const;
+    InitializeConstantsFunction initializeConstants() const;
+
+    ComputeEssentialVariablesFunction computeEssentialVariables() const;
+    ComputeRatesFunction computeRates() const;
+    ComputeResidualsFunction computeResiduals() const;
+    ComputeRootInformationFunction computeRootInformation() const;
+    ComputeStateInformationFunction computeStateInformation() const;
+    ComputeVariablesFunction computeVariables() const;
 
     CellmlFileIssues issues() const;
 
@@ -150,19 +140,24 @@ private:
 
     Compiler::CompilerEngine *mCompilerEngine;
 
-    OdeFunctions mOdeFunctions;
-    DaeFunctions mDaeFunctions;
-
     CellmlFileIssues mIssues;
 
     CellmlFileRuntimeModelParameter *mVariableOfIntegration;
     CellmlFileRuntimeModelParameters mModelParameters;
 
+    InitializeConstantsFunction mInitializeConstants;
+
+    ComputeEssentialVariablesFunction mComputeEssentialVariables;
+    ComputeRatesFunction mComputeRates;
+    ComputeResidualsFunction mComputeResiduals;
+    ComputeRootInformationFunction mComputeRootInformation;
+    ComputeStateInformationFunction mComputeStateInformation;
+    ComputeVariablesFunction mComputeVariables;
+
     void resetOdeCodeInformation();
     void resetDaeCodeInformation();
 
-    void resetOdeFunctions();
-    void resetDaeFunctions();
+    void resetFunctions();
 
     void reset(const bool &pResetIssues = true);
 

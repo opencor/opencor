@@ -2,6 +2,7 @@
 // Single cell simulation view simulation
 //==============================================================================
 
+#include "cellmlfileruntime.h"
 #include "singlecellsimulationviewcontentswidget.h"
 #include "singlecellsimulationviewinformationsimulationwidget.h"
 #include "singlecellsimulationviewinformationwidget.h"
@@ -20,12 +21,36 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-SingleCellSimulationViewSimulationData::SingleCellSimulationViewSimulationData() :
+SingleCellSimulationViewSimulationData::SingleCellSimulationViewSimulationData(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime) :
     mDelay(0),
     mStartingPoint(0.0),
     mEndingPoint(1000.0),
     mPointInterval(1.0)
 {
+    // Create the various arrays needed to compute a model
+
+    mConstants = new double[pCellmlFileRuntime->constantsCount()];
+    mRates     = new double[pCellmlFileRuntime->ratesCount()];
+    mStates    = new double[pCellmlFileRuntime->statesCount()];
+    mAlgebraic = new double[pCellmlFileRuntime->algebraicCount()];
+    mCondVar   = new double[pCellmlFileRuntime->condVarCount()];
+
+    // Initialise some of our 'constants' (arrays)
+
+    pCellmlFileRuntime->initializeConstants()(mConstants, mRates, mStates);
+}
+
+//==============================================================================
+
+SingleCellSimulationViewSimulationData::~SingleCellSimulationViewSimulationData()
+{
+    // Delete some internal objects
+
+    delete[] mConstants;
+    delete[] mRates;
+    delete[] mStates;
+    delete[] mAlgebraic;
+    delete[] mCondVar;
 }
 
 //==============================================================================
@@ -107,9 +132,8 @@ SingleCellSimulationViewSimulation::SingleCellSimulationViewSimulation(const QSt
     mWorker(0),
     mWorkerThread(0),
     mFileName(pFileName),
-    mData(new SingleCellSimulationViewSimulationData())
+    mData(new SingleCellSimulationViewSimulationData(pCellmlFileRuntime))
 {
-    Q_UNUSED(pCellmlFileRuntime);
 }
 
 //==============================================================================

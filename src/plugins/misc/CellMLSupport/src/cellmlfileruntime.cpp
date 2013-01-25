@@ -215,20 +215,65 @@ int CellmlFileRuntime::condVarCount() const
 
 //==============================================================================
 
-CellmlFileRuntime::OdeFunctions CellmlFileRuntime::odeFunctions() const
+CellmlFileRuntime::InitializeConstantsFunction CellmlFileRuntime::initializeConstants() const
 {
-    // Return the ODE functions
+    // Return the initializeConstants function
 
-    return mOdeFunctions;
+    return mInitializeConstants;
 }
 
 //==============================================================================
 
-CellmlFileRuntime::DaeFunctions CellmlFileRuntime::daeFunctions() const
+CellmlFileRuntime::ComputeEssentialVariablesFunction CellmlFileRuntime::computeEssentialVariables() const
 {
-    // Return the DAE functions
+    // Return the computeEssentialVariables function
 
-    return mDaeFunctions;
+    return mComputeEssentialVariables;
+}
+
+//==============================================================================
+
+CellmlFileRuntime::ComputeRatesFunction CellmlFileRuntime::computeRates() const
+{
+    // Return the computeRates function
+
+    return mComputeRates;
+}
+
+//==============================================================================
+
+CellmlFileRuntime::ComputeResidualsFunction CellmlFileRuntime::computeResiduals() const
+{
+    // Return the computeResiduals function
+
+    return mComputeResiduals;
+}
+
+//==============================================================================
+
+CellmlFileRuntime::ComputeRootInformationFunction CellmlFileRuntime::computeRootInformation() const
+{
+    // Return the computeRootInformation function
+
+    return mComputeRootInformation;
+}
+
+//==============================================================================
+
+CellmlFileRuntime::ComputeStateInformationFunction CellmlFileRuntime::computeStateInformation() const
+{
+    // Return the computeStateInformation function
+
+    return mComputeStateInformation;
+}
+
+//==============================================================================
+
+CellmlFileRuntime::ComputeVariablesFunction CellmlFileRuntime::computeVariables() const
+{
+    // Return the computeVariables function
+
+    return mComputeVariables;
 }
 
 //==============================================================================
@@ -273,27 +318,17 @@ void CellmlFileRuntime::resetDaeCodeInformation()
 
 //==============================================================================
 
-void CellmlFileRuntime::resetOdeFunctions()
+void CellmlFileRuntime::resetFunctions()
 {
-    // Reset the ODE functions
+    // Reset the functions
 
-    mOdeFunctions.initializeConstants = 0;
-    mOdeFunctions.computeRates        = 0;
-    mOdeFunctions.computeVariables    = 0;
-}
-
-//==============================================================================
-
-void CellmlFileRuntime::resetDaeFunctions()
-{
-    // Reset the DEA functions
-
-    mDaeFunctions.initializeConstants       = 0;
-    mDaeFunctions.computeResiduals          = 0;
-    mDaeFunctions.computeVariables          = 0;
-    mDaeFunctions.computeEssentialVariables = 0;
-    mDaeFunctions.computeRootInformation    = 0;
-    mDaeFunctions.computeStateInformation   = 0;
+    mInitializeConstants = 0;
+    mComputeEssentialVariables = 0;
+    mComputeRates = 0;
+    mComputeResiduals = 0;
+    mComputeRootInformation = 0;
+    mComputeStateInformation = 0;
+    mComputeVariables = 0;
 }
 
 //==============================================================================
@@ -312,8 +347,7 @@ void CellmlFileRuntime::reset(const bool &pResetIssues)
 
     mCompilerEngine = new Compiler::CompilerEngine();
 
-    resetOdeFunctions();
-    resetDaeFunctions();
+    resetFunctions();
 
     if (pResetIssues)
         mIssues.clear();
@@ -827,16 +861,16 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
         // Retrieve the ODE/DAE functions
 
         if (mModelType == Ode) {
-            mOdeFunctions.initializeConstants = (InitializeConstantsFunction) (intptr_t) mCompilerEngine->getFunction("initializeConstants");
-            mOdeFunctions.computeRates        = (ComputeOdeRatesFunction) (intptr_t) mCompilerEngine->getFunction("computeRates");
-            mOdeFunctions.computeVariables    = (ComputeVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeVariables");
+            mInitializeConstants = (InitializeConstantsFunction) (intptr_t) mCompilerEngine->getFunction("initializeConstants");
+            mComputeRates        = (ComputeRatesFunction) (intptr_t) mCompilerEngine->getFunction("computeRates");
+            mComputeVariables    = (ComputeVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeVariables");
         } else {
-            mDaeFunctions.initializeConstants       = (InitializeConstantsFunction) (intptr_t) mCompilerEngine->getFunction("initializeConstants");
-            mDaeFunctions.computeResiduals          = (ComputeDaeResidualsFunction) (intptr_t) mCompilerEngine->getFunction("computeResiduals");
-            mDaeFunctions.computeVariables          = (ComputeVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeVariables");
-            mDaeFunctions.computeEssentialVariables = (ComputeDaeEssentialVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeEssentialVariables");
-            mDaeFunctions.computeRootInformation    = (ComputeDaeRootInformationFunction) (intptr_t) mCompilerEngine->getFunction("computeRootInformation");
-            mDaeFunctions.computeStateInformation   = (ComputeDaeStateInformationFunction) (intptr_t) mCompilerEngine->getFunction("computeStateInformation");
+            mInitializeConstants       = (InitializeConstantsFunction) (intptr_t) mCompilerEngine->getFunction("initializeConstants");
+            mComputeResiduals          = (ComputeResidualsFunction) (intptr_t) mCompilerEngine->getFunction("computeResiduals");
+            mComputeVariables          = (ComputeVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeVariables");
+            mComputeEssentialVariables = (ComputeEssentialVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeEssentialVariables");
+            mComputeRootInformation    = (ComputeRootInformationFunction) (intptr_t) mCompilerEngine->getFunction("computeRootInformation");
+            mComputeStateInformation   = (ComputeStateInformationFunction) (intptr_t) mCompilerEngine->getFunction("computeStateInformation");
         }
     }
 

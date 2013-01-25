@@ -46,7 +46,8 @@ class SingleCellSimulationViewWidget;
 class SingleCellSimulationViewSimulationData
 {
 public:
-    explicit SingleCellSimulationViewSimulationData();
+    explicit SingleCellSimulationViewSimulationData(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
+    ~SingleCellSimulationViewSimulationData();
 
     int delay() const;
     void setDelay(const int &pDelay);
@@ -66,6 +67,12 @@ private:
     double mStartingPoint;
     double mEndingPoint;
     double mPointInterval;
+
+    double *mConstants;
+    double *mRates;
+    double *mStates;
+    double *mAlgebraic;
+    double *mCondVar;
 };
 
 //==============================================================================
