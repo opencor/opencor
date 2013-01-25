@@ -200,7 +200,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
 
 SingleCellSimulationViewWidget::~SingleCellSimulationViewWidget()
 {
-    // Delete our simulation data
+    // Delete our simulation objects
 
     foreach (SingleCellSimulationViewSimulation *simulation, mSimulations)
         delete simulation;
@@ -392,15 +392,14 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
         simulationWidget->finalize(previousFileName);
         solversWidget->finalize(previousFileName);
-        parametersWidget->finalize(previousFileName);
     }
 
-    // Retrieve our simulation data for the current model, if any
+    // Retrieve our simulation object for the current model, if any
 
     mSimulation = mSimulations.value(pFileName);
 
     if (!mSimulation) {
-        // No simulation data currently exist for the model, so create some
+        // No simulation object currently exists for the model, so create one
 
         mSimulation = new SingleCellSimulationViewSimulation(pFileName);
 
@@ -419,7 +418,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         connect(mSimulation, SIGNAL(error(const QString &)),
                 this, SLOT(simulationError(const QString &)));
 
-        // Keep track of our simulation data
+        // Keep track of our simulation object
 
         mSimulations.insert(pFileName, mSimulation);
     }
@@ -695,7 +694,7 @@ QIcon SingleCellSimulationViewWidget::fileTabIcon(const QString &pFileName) cons
 
         return QIcon(QPixmap::fromImage(tabBarIcon));
     } else {
-        // No simulation data currently exist for the model, so...
+        // No simulation object currently exists for the model, so...
 
         return QIcon();
     }
@@ -720,7 +719,7 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
 
         mContentsWidget->informationWidget()->cancelEditing();
 
-        // Set our simulation data
+        // Set our simulation object data
 
         mSimulation->setData(this);
     }
@@ -798,7 +797,7 @@ void SingleCellSimulationViewWidget::updateDelayValue(const double &pDelayValue)
 
     mDelayValueWidget->setText(QLocale().toString(pDelayValue)+" ms");
 
-    // Also update our simulation data
+    // Also update our simulation object
 
     if (mSimulation)
         mSimulation->setDelay(pDelayValue);

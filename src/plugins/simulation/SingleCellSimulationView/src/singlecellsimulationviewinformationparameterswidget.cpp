@@ -122,13 +122,6 @@ void SingleCellSimulationViewInformationParametersWidget::initialize(const QStri
 
 //==============================================================================
 
-void SingleCellSimulationViewInformationParametersWidget::finalize(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-}
-
-//==============================================================================
-
 void SingleCellSimulationViewInformationParametersWidget::cancelPropertyEditing()
 {
     // Retrieve our current property editor, if any

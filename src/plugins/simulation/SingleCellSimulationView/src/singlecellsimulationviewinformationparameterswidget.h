@@ -50,7 +50,6 @@ public:
 
     void initialize(const QString &pFileName,
                     CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
-    void finalize(const QString &pFileName);
 
     void cancelPropertyEditing();
 
