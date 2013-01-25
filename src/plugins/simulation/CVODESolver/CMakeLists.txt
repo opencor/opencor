@@ -4,6 +4,7 @@ PROJECT(CVODESolverPlugin)
 
 ADD_PLUGIN(CVODESolver
     SOURCES
+        ../../i18ninterface.cpp
         ../../interface.cpp
         ../../plugininfo.cpp
         ../../solverinterface.cpp
@@ -19,6 +20,9 @@ ADD_PLUGIN(CVODESolver
         SUNDIALS
     QT_MODULES
         Core
+        Widgets
     QT_DEPENDENCIES
         QtCore
+        QtGui
+        QtWidgets
 )

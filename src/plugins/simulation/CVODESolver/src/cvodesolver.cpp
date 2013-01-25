@@ -133,20 +133,25 @@ void CvodeSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
 
         // Retrieve some of the CVODE properties
 
-        mMaximumStep = mProperties.contains(MaximumStepProperty)?
-                           mProperties.value(MaximumStepProperty).toDouble():
-                           DefaultMaximumStep;
+        if (mProperties.contains(MaximumStepProperty))
+            mMaximumStep = mProperties.value(MaximumStepProperty).toDouble();
+        else
+            emit error(QObject::tr("the 'maximum step' property value could not be retrieved"));
 
-        mMaximumNumberOfSteps = mProperties.contains(MaximumNumberOfStepsProperty)?
-                                    mProperties.value(MaximumNumberOfStepsProperty).toDouble():
-                                    DefaultMaximumNumberOfSteps;
+        if (mProperties.contains(MaximumNumberOfStepsProperty))
+            mMaximumNumberOfSteps = mProperties.value(MaximumNumberOfStepsProperty).toDouble();
+        else
+            emit error(QObject::tr("the 'maximum number of steps' property value could not be retrieved"));
 
-        mRelativeTolerance = mProperties.contains(RelativeToleranceProperty)?
-                                 mProperties.value(RelativeToleranceProperty).toDouble():
-                                 DefaultRelativeTolerance;
-        mAbsoluteTolerance = mProperties.contains(AbsoluteToleranceProperty)?
-                                 mProperties.value(AbsoluteToleranceProperty).toDouble():
-                                 DefaultAbsoluteTolerance;
+        if (mProperties.contains(RelativeToleranceProperty))
+            mRelativeTolerance = mProperties.value(RelativeToleranceProperty).toDouble();
+        else
+            emit error(QObject::tr("the 'relative tolerance' property value could not be retrieved"));
+
+        if (mProperties.contains(AbsoluteToleranceProperty))
+            mAbsoluteTolerance = mProperties.value(AbsoluteToleranceProperty).toDouble();
+        else
+            emit error(QObject::tr("the 'absolute tolerance' property value could not be retrieved"));
 
         // Create the states vector
 

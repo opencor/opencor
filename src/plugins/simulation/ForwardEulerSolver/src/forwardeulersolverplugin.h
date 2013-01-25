@@ -7,11 +7,9 @@
 
 //==============================================================================
 
-#include "solverinterface.h"
-
-//==============================================================================
-
+#include "i18ninterface.h"
 #include "plugininfo.h"
+#include "solverinterface.h"
 
 //==============================================================================
 
@@ -24,12 +22,14 @@ PLUGININFO_FUNC ForwardEulerSolverPluginInfo();
 
 //==============================================================================
 
-class ForwardEulerSolverPlugin : public QObject, public SolverInterface
+class ForwardEulerSolverPlugin : public QObject, public SolverInterface,
+                                 public I18nInterface
 {
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID "OpenCOR.ForwardEulerSolverPlugin" FILE "forwardeulersolverplugin.json")
 
+    Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::SolverInterface)
 
 public:

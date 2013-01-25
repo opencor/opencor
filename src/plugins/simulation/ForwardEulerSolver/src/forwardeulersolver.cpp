@@ -34,9 +34,10 @@ void ForwardEulerSolver::initialize(const double &pVoiStart,
 
     // Retrieve the solver's properties
 
-    mStep = mProperties.contains(StepProperty)?
-                mProperties.value(StepProperty).toDouble():
-                DefaultStep;
+    if (mProperties.contains(StepProperty))
+        mStep = mProperties.value(StepProperty).toDouble();
+    else
+        emit error(QObject::tr("the 'step' property value could not be retrieved"));
 }
 
 //==============================================================================

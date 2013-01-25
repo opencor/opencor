@@ -4,6 +4,7 @@ PROJECT(ForwardEulerSolverPlugin)
 
 ADD_PLUGIN(ForwardEulerSolver
     SOURCES
+        ../../i18ninterface.cpp
         ../../interface.cpp
         ../../plugininfo.cpp
         ../../solverinterface.cpp
@@ -18,6 +19,9 @@ ADD_PLUGIN(ForwardEulerSolver
         CoreSolver
     QT_MODULES
         Core
+        Widgets
     QT_DEPENDENCIES
         QtCore
+        QtGui
+        QtWidgets
 )
