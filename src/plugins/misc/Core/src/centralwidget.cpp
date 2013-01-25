@@ -1273,23 +1273,17 @@ void CentralWidget::updateModifiedSettings()
         }
     }
 
-    // Enable/disable the Mode and View tabs
+    // Enable/disable the Editing mode's View tabs, in case some files have been
+    // modified
 
-    mModeTabs->setEnabled(!nbOfModifiedFiles);
-    mModeTabs->setToolTip(nbOfModifiedFiles?
-                              (nbOfModifiedFiles == 1)?
-                                  tr("A file is being edited, so switching modes is not possible for now"):
-                                  tr("Several files are being edited, so switching modes is not possible for now"):
-                              QString());
+    QTabBar *editingViews = mModes.value(GuiViewSettings::Editing)->views();
 
-    foreach (CentralWidgetMode *mode, mModes) {
-        mode->views()->setEnabled(!nbOfModifiedFiles);
-        mode->views()->setToolTip(nbOfModifiedFiles?
-                                      (nbOfModifiedFiles == 1)?
-                                          tr("A file is being edited, so switching views is not possible for now"):
-                                          tr("Several files are being edited, so switching views is not possible for now"):
-                                      QString());
-    }
+    editingViews->setEnabled(!nbOfModifiedFiles);
+    editingViews->setToolTip(nbOfModifiedFiles?
+                                 (nbOfModifiedFiles == 1)?
+                                     tr("A file is being edited, so switching editing views is not possible for now"):
+                                     tr("Several files are being edited, so switching editing views is not possible for now"):
+                                 QString());
 
     // Let people know that we can save at least one file
 
