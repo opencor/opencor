@@ -314,11 +314,12 @@ void PropertyItemDelegate::paint(QPainter *pPainter,
     initStyleOption(&option, pIndex);
 
     if (propertyItem->type() == PropertyItem::Section) {
-        // This is a section item, so reset its enabled state since it's
-        // actually disabled (so we can't select it), yet we want to see as if
-        // it was enabled, so...
+        // This is a section item, so prevent it from hoverable and make it look
+        // enabled since it's actually disabled (so we can't select it), yet we
+        // want to see as if it was enabled, so...
 
-        option.state |= QStyle::State_Enabled;
+        option.state &= ~QStyle::State_MouseOver;
+        option.state |=  QStyle::State_Enabled;
 
         // Make our section item bold
 

@@ -47,11 +47,12 @@ void PluginItemDelegate::paint(QPainter *pPainter,
 
             option.state &= ~QStyle::State_Enabled;
     } else {
-        // This is not a plugin item, but a category item, so reset its enabled
-        // state since it's actually disabled (so we can't select it), yet we
-        // want to see as if it was enabled, so...
+        // This is not a plugin item, but a category item, so prevent it from
+        // hoverable and make it look enabled since it's actually disabled (so
+        // we can't select it), yet we want to see as if it was enabled, so...
 
-        option.state |= QStyle::State_Enabled;
+        option.state &= ~QStyle::State_MouseOver;
+        option.state |=  QStyle::State_Enabled;
 
         // Make our category item bold
 
