@@ -52,12 +52,14 @@ public:
     };
 
     explicit CellmlFileRuntimeModelParameter(const QString &pName,
+                                             const int &pDegree,
                                              const QString &pUnit,
                                              const QString &pComponent,
                                              const ModelParameterType &pType,
                                              const int &pIndex);
 
     QString name() const;
+    int degree() const;
     QString unit() const;
     QString component() const;
     ModelParameterType type() const;
@@ -65,6 +67,7 @@ public:
 
 private:
     QString mName;
+    int mDegree;
     QString mUnit;
     QString mComponent;
     ModelParameterType mType;

@@ -29,11 +29,13 @@ namespace CellMLSupport {
 //==============================================================================
 
 CellmlFileRuntimeModelParameter::CellmlFileRuntimeModelParameter(const QString &pName,
+                                                                 const int &pDegree,
                                                                  const QString &pUnit,
                                                                  const QString &pComponent,
                                                                  const ModelParameterType &pType,
                                                                  const int &pIndex) :
     mName(pName),
+    mDegree(pDegree),
     mUnit(pUnit),
     mComponent(pComponent),
     mType(pType),
@@ -48,6 +50,15 @@ QString CellmlFileRuntimeModelParameter::name() const
     // Return our name
 
     return mName;
+}
+
+//==============================================================================
+
+int CellmlFileRuntimeModelParameter::degree() const
+{
+    // Return our degree
+
+    return mDegree;
 }
 
 //==============================================================================
@@ -528,15 +539,23 @@ bool sortModelParameters(CellmlFileRuntimeModelParameter *pModelParameter1,
     // Note: the two comparisons which result we return are case insensitive,
     //       so that it's easier for people to search a model parameter...
 
-    if (!pModelParameter1->component().compare(pModelParameter2->component()))
-        // The model parameters are in the same component, so check their names
+    if (!pModelParameter1->component().compare(pModelParameter2->component())) {
+        // The model parameters are in the same component, so check their
+        // name
 
-        return pModelParameter1->name().compare(pModelParameter2->name(), Qt::CaseInsensitive) < 0;
-    else
-        // The model parameters are in different components, so check the name
-        // of their components
+        if (!pModelParameter1->name().compare(pModelParameter2->name()))
+            // The model parameters have the same name, so check their degree
+
+            return pModelParameter1->degree() < pModelParameter2->degree();
+        else
+            // The model parameters have different names, so...
+
+            return pModelParameter1->name().compare(pModelParameter2->name(), Qt::CaseInsensitive) < 0;
+    } else {
+        // The model parameters are in different components, so...
 
         return pModelParameter1->component().compare(pModelParameter2->component(), Qt::CaseInsensitive) < 0;
+    }
 }
 
 //==============================================================================
@@ -646,14 +665,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
             // rate variable
             // Note: if the variable's degree is equal to zero, then we are
             //       dealing with a 'proper' algebraic variable otherwise we
-            //       are dealing with a rate variable. There may be several
-            //       rate variables with the same name (but different degrees)
-            //       and a state variable with the same name will also exist.
-            //       So, to distinguish between all of them, we 'customise' the
-            //       variable's name by appending n single quotes to a rate
-            //       variable of degree n (e.g. for a state variable which name
-            //       is V, the corresponding rate variables of degree 1, 2 and
-            //       3 will be V', V'' and V''', respectively)...
+            //       are dealing with a rate variable...
 
             modelParameterType = CellmlFileRuntimeModelParameter::Algebraic;
 
@@ -676,7 +688,8 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
             //       we use CellmlFileRuntimeModelParameter instead...
 
             ObjRef<iface::cellml_api::CellMLVariable> variable = computationTarget->variable();
-            CellmlFileRuntimeModelParameter *modelParameter = new CellmlFileRuntimeModelParameter(QString::fromStdWString(variable->name())+QString(computationTarget->degree(), '\''),
+            CellmlFileRuntimeModelParameter *modelParameter = new CellmlFileRuntimeModelParameter(QString::fromStdWString(variable->name()),
+                                                                                                  computationTarget->degree(),
                                                                                                   QString::fromStdWString(variable->unitsName()),
                                                                                                   QString::fromStdWString(variable->componentName()),
                                                                                                   modelParameterType,

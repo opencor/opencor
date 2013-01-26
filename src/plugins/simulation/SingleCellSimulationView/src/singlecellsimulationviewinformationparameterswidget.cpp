@@ -163,12 +163,23 @@ void SingleCellSimulationViewInformationParametersWidget::populateModel(Core::Pr
         }
 
         // Add the current model parameter to the 'current' component section
+        // Note: in case of an algebraic variable, if its degree is equal to
+        //       zero, then we are dealing with a 'proper' algebraic variable
+        //       otherwise a rate variable. Now, there may be several rate
+        //       variables with the same name (but different degrees) and a
+        //       state variable with the same name will also exist. So, to
+        //       distinguish between all of them, we 'customise' our variable's
+        //       name by appending n single quotes with n the degree of our
+        //       variable (that degree is zero for all but rate variables; e.g.
+        //       for a state variable which name is V, the corresponding rate
+        //       variables of degree 1, 2 and 3 will be V', V'' and V''',
+        //       respectively)...
 
         Core::Property *property = pPropertyEditor->addDoubleProperty(modelParameter->type() != CellMLSupport::CellmlFileRuntimeModelParameter::Algebraic, section);
 
         property->name()->setIcon(QIcon(":CellMLSupport_variableNode"));
 
-        pPropertyEditor->setStringPropertyItem(property->name(), modelParameter->name());
+        pPropertyEditor->setStringPropertyItem(property->name(), modelParameter->name()+QString(modelParameter->degree(), '\''));
         pPropertyEditor->setStringPropertyItem(property->unit(), modelParameter->unit());
     }
 
