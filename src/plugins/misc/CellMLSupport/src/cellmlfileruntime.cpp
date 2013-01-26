@@ -525,16 +525,18 @@ bool sortModelParameters(CellmlFileRuntimeModelParameter *pModelParameter1,
                          CellmlFileRuntimeModelParameter *pModelParameter2)
 {
     // Determine which of the two model parameters should be first
+    // Note: the two comparisons which result we return are case insensitive,
+    //       so that it's easier for people to search a model parameter...
 
     if (!pModelParameter1->component().compare(pModelParameter2->component()))
         // The model parameters are in the same component, so check their names
 
-        return pModelParameter1->name() < pModelParameter2->name();
+        return pModelParameter1->name().compare(pModelParameter2->name(), Qt::CaseInsensitive) < 0;
     else
         // The model parameters are in different components, so check the name
         // of their components
 
-        return pModelParameter1->component() < pModelParameter2->component();
+        return pModelParameter1->component().compare(pModelParameter2->component(), Qt::CaseInsensitive) < 0;
 }
 
 //==============================================================================
