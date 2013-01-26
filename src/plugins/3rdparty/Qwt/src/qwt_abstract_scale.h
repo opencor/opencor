@@ -40,8 +40,8 @@ class QWT_EXPORT QwtAbstractScale: public QWidget
     Q_PROPERTY( double lowerBound READ lowerBound WRITE setLowerBound )
     Q_PROPERTY( double upperBound READ upperBound WRITE setUpperBound )
 
-    Q_PROPERTY( int scaleMaxMajor READ scaleMaxMajor WRITE setScaleMaxMinor )
-    Q_PROPERTY( int scaleMaxMinor READ scaleMaxMinor WRITE setScaleMaxMajor )
+    Q_PROPERTY( int scaleMaxMajor READ scaleMaxMajor WRITE setScaleMaxMajor )
+    Q_PROPERTY( int scaleMaxMinor READ scaleMaxMinor WRITE setScaleMaxMinor )
 
     Q_PROPERTY( double scaleStepSize READ scaleStepSize WRITE setScaleStepSize )
 

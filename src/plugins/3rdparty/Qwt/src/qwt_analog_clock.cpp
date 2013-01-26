@@ -50,6 +50,8 @@ QwtAnalogClock::QwtAnalogClock( QWidget *parent ):
     setOrigin( 270.0 );
     setScaleDraw( new QwtAnalogClockScaleDraw() );
 
+    setTotalSteps( 60 );
+
     const int secondsPerHour = 60.0 * 60.0; 
 
     QList<double> majorTicks;

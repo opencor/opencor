@@ -16,6 +16,7 @@
 #include "qwt_graphic.h"
 #include <qrect.h>
 #include <qlist.h>
+#include <qmetatype.h>
 
 class QPainter;
 class QwtScaleMap;
@@ -300,5 +301,7 @@ private:
 Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotItem::ItemAttributes )
 Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotItem::ItemInterests )
 Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotItem::RenderHints )
+
+Q_DECLARE_METATYPE( QwtPlotItem * )
 
 #endif

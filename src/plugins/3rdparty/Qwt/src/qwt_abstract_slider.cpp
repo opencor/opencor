@@ -380,7 +380,7 @@ void QwtAbstractSlider::keyPressEvent( QKeyEvent *event )
     {
         case Qt::Key_Left:
         {
-            numSteps = -d_data->singleSteps;
+            numSteps = -static_cast<int>( d_data->singleSteps );
             if ( isInverted() )
                 numSteps = -numSteps;
 
@@ -396,7 +396,7 @@ void QwtAbstractSlider::keyPressEvent( QKeyEvent *event )
         }
         case Qt::Key_Down:
         {
-            numSteps = -d_data->singleSteps;
+            numSteps = -static_cast<int>( d_data->singleSteps );
             if ( d_data->invertedControls )
                 numSteps = -numSteps;
             break;
@@ -418,7 +418,7 @@ void QwtAbstractSlider::keyPressEvent( QKeyEvent *event )
         }
         case Qt::Key_PageDown:
         {
-            numSteps = -d_data->pageSteps;
+            numSteps = -static_cast<int>( d_data->pageSteps );
             if ( d_data->invertedControls )
                 numSteps = -numSteps;
             break;
@@ -459,6 +459,8 @@ void QwtAbstractSlider::keyPressEvent( QKeyEvent *event )
 
   The range of the slider is divided into a number of steps from
   which the value increments according to user inputs depend. 
+
+  The default setting is 100.
 
   \param stepCount Number of steps
 
@@ -796,7 +798,7 @@ double QwtAbstractSlider::alignedValue( double value ) const
  */
 void QwtAbstractSlider::scaleChange()
 {
-    const double value = qBound( minimum(), value, maximum() );
+    const double value = qBound( minimum(), d_data->value, maximum() );
 
     const bool changed = ( value != d_data->value );
     if ( changed )

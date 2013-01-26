@@ -63,7 +63,7 @@ public:
    Constructor
 
    Auto deletion is enabled.
-   \sa setAutoDelete(), attachItem()
+   \sa setAutoDelete(), QwtPlotItem::attach()
 */
 QwtPlotDict::QwtPlotDict()
 {
@@ -75,7 +75,7 @@ QwtPlotDict::QwtPlotDict()
    Destructor
 
    If autoDelete() is on, all attached items will be deleted
-   \sa setAutoDelete(), autoDelete(), attachItem()
+   \sa setAutoDelete(), autoDelete(), QwtPlotItem::attach()
 */
 QwtPlotDict::~QwtPlotDict()
 {
@@ -89,7 +89,7 @@ QwtPlotDict::~QwtPlotDict()
    If Auto deletion is on all attached plot items will be deleted
    in the destructor of QwtPlotDict. The default value is on.
 
-   \sa autoDelete(), attachItem()
+   \sa autoDelete(), insertItem()
 */
 void QwtPlotDict::setAutoDelete( bool autoDelete )
 {
@@ -98,7 +98,7 @@ void QwtPlotDict::setAutoDelete( bool autoDelete )
 
 /*!
    \return true if auto deletion is enabled
-   \sa setAutoDelete(), attachItem()
+   \sa setAutoDelete(), insertItem()
 */
 bool QwtPlotDict::autoDelete() const
 {

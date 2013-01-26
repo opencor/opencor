@@ -14,6 +14,7 @@
 #include "qwt_math.h"
 #include "qwt_scale_div.h"
 #include "qwt_text.h"
+#include "qwt_scale_engine.h"
 #include <qpainter.h>
 #include <qevent.h>
 #include <qmath.h>
@@ -105,6 +106,9 @@ void QwtScaleWidget::initScale( QwtScaleDraw::Alignment align )
     d_data->scaleDraw = new QwtScaleDraw;
     d_data->scaleDraw->setAlignment( align );
     d_data->scaleDraw->setLength( 10 );
+
+    d_data->scaleDraw->setScaleDiv(
+        QwtLinearScaleEngine().divideScale( 0.0, 100.0, 10, 5 ) );
 
     d_data->colorBar.colorMap = new QwtLinearColorMap();
     d_data->colorBar.isEnabled = false;

@@ -28,11 +28,15 @@ class QWT_EXPORT QwtTextLabel : public QFrame
 
     Q_PROPERTY( int indent READ indent WRITE setIndent )
     Q_PROPERTY( int margin READ margin WRITE setMargin )
+    Q_PROPERTY( QString plainText READ plainText WRITE setPlainText )
 
 public:
     explicit QwtTextLabel( QWidget *parent = NULL );
     explicit QwtTextLabel( const QwtText &, QWidget *parent = NULL );
     virtual ~QwtTextLabel();
+
+    void setPlainText( const QString & );
+    QString plainText() const;
 
 public Q_SLOTS:
     void setText( const QString &,

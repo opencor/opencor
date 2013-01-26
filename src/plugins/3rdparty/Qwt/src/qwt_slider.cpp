@@ -21,7 +21,7 @@
 #include <qapplication.h>
 
 static QSize qwtHandleSize( const QSize &size, 
-    Qt::Orientation orientation, QwtSlider::BackgroundStyles bgStyles )
+    Qt::Orientation orientation, bool hasTrough )
 {
     QSize handleSize = size;
 
@@ -31,7 +31,7 @@ static QSize qwtHandleSize( const QSize &size,
         handleSize.setWidth( 2 * handleThickness );
         handleSize.setHeight( handleThickness );
 
-        if ( !( bgStyles & QwtSlider::Trough ) )
+        if ( !hasTrough )
             handleSize.transpose();
 
         if ( orientation == Qt::Vertical )
@@ -77,7 +77,8 @@ public:
         borderWidth( 2 ),
         spacing( 4 ),
         scalePosition( QwtSlider::TrailingScale ),
-        bgStyle( QwtSlider::Trough ),
+        hasTrough( true ),
+        hasGroove( false ),
         mouseOffset( 0 )
     {
     }
@@ -96,7 +97,9 @@ public:
 
     Qt::Orientation orientation;
     QwtSlider::ScalePosition scalePosition;
-    QwtSlider::BackgroundStyles bgStyle;
+
+    bool hasTrough;
+    bool hasGroove;
 
     int mouseOffset;
 
@@ -413,7 +416,7 @@ void QwtSlider::drawSlider(
 {
     QRect innerRect( sliderRect );
 
-    if ( d_data->bgStyle & QwtSlider::Trough )
+    if ( d_data->hasTrough )
     {
         const int bw = d_data->borderWidth;
         innerRect = sliderRect.adjusted( bw, bw, -bw, -bw );
@@ -423,9 +426,9 @@ void QwtSlider::drawSlider(
     }
 
     const QSize handleSize = qwtHandleSize( d_data->handleSize,
-        d_data->orientation, d_data->bgStyle );
+        d_data->orientation, d_data->hasTrough );
 
-    if ( d_data->bgStyle & QwtSlider::Groove )
+    if ( d_data->hasGroove )
     {
         const int slotExtent = 4;
         const int slotMargin = 4;
@@ -713,11 +716,11 @@ void QwtSlider::changeEvent( QEvent *event )
 void QwtSlider::layoutSlider( bool update_geometry )
 {
     int bw = 0;
-    if ( d_data->bgStyle & QwtSlider::Trough )
+    if ( d_data->hasTrough )
         bw = d_data->borderWidth;
 
     const QSize handleSize = qwtHandleSize( d_data->handleSize,
-        d_data->orientation, d_data->bgStyle );
+        d_data->orientation, d_data->hasTrough );
 
     QRect sliderRect = contentsRect();
 
@@ -819,26 +822,62 @@ void QwtSlider::layoutSlider( bool update_geometry )
 }
 
 /*!
-  Set the background style.
+  En/Disable the trough
 
-  \param style Background style
-  \sa backgroundStyle()
-*/
-void QwtSlider::setBackgroundStyle( BackgroundStyles style )
+  The slider can be cutomized by showing a trough for the
+  handle.
+
+  \param on When true, the groove is visible
+  \sa hasTrough(), setGroove()
+ */
+void QwtSlider::setTrough( bool on )
 {
-    d_data->bgStyle = style;
+    if ( d_data->hasTrough != on )
+    {
+        d_data->hasTrough = on;
 
-    if ( testAttribute( Qt::WA_WState_Polished ) )
-        layoutSlider( true );
+        if ( testAttribute( Qt::WA_WState_Polished ) )
+            layoutSlider( true );
+    }
 }
 
 /*!
-  \return the background style.
-*/
-QwtSlider::BackgroundStyles QwtSlider::backgroundStyle() const
+  \return True, when the trough is visisble
+  \sa setTrough(), hasGroove()
+ */
+bool QwtSlider::hasTrough() const
 {
-    return d_data->bgStyle;
+    return d_data->hasTrough;
 }
+
+/*!
+  En/Disable the groove
+
+  The slider can be cutomized by showing a groove for the
+  handle.
+
+  \param on When true, the groove is visible
+  \sa hasGroove(), setThrough()
+ */
+void QwtSlider::setGroove( bool on )
+{
+    if ( d_data->hasGroove != on )
+    {
+        d_data->hasGroove = on;
+        
+        if ( testAttribute( Qt::WA_WState_Polished ) )
+            layoutSlider( true );
+    }
+}
+
+/*!
+  \return True, when the groove is visisble
+  \sa setGroove(), hasTrough()
+ */
+bool QwtSlider::hasGroove() const
+{
+    return d_data->hasGroove;
+} 
 
 /*!
   \return minimumSizeHint()
@@ -859,10 +898,10 @@ QSize QwtSlider::minimumSizeHint() const
         return d_data->sizeHintCache;
 
     const QSize handleSize = qwtHandleSize( d_data->handleSize,
-        d_data->orientation, d_data->bgStyle );
+        d_data->orientation, d_data->hasTrough );
 
     int bw = 0;
-    if ( d_data->bgStyle & QwtSlider::Trough )
+    if ( d_data->hasTrough )
         bw = d_data->borderWidth;
 
     int sliderLength = 0; 
@@ -937,7 +976,7 @@ QRect QwtSlider::handleRect() const
 
     QRect rect;
     rect.setSize( qwtHandleSize( d_data->handleSize,
-        d_data->orientation, d_data->bgStyle ) );
+        d_data->orientation, d_data->hasTrough ) );
     rect.moveCenter( center );
 
     return rect;

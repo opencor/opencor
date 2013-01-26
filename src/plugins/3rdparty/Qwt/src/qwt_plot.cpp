@@ -29,17 +29,17 @@ static inline void qwtEnableLegendItems( QwtPlot *plot, bool on )
     {
         QObject::connect( 
             plot, SIGNAL( legendDataChanged(
-                const QwtPlotItem *, const QList<QwtLegendData> & ) ),
+                const QVariant &, const QList<QwtLegendData> & ) ),
             plot, SLOT( updateLegendItems( 
-                const QwtPlotItem *, const QList<QwtLegendData> & ) ) );
+                const QVariant &, const QList<QwtLegendData> & ) ) );
     }
     else
     {
         QObject::disconnect( 
             plot, SIGNAL( legendDataChanged(
-                const QwtPlotItem *, const QList<QwtLegendData> & ) ),
+                const QVariant &, const QList<QwtLegendData> & ) ),
             plot, SLOT( updateLegendItems( 
-                const QwtPlotItem *, const QList<QwtLegendData> & ) ) );
+                const QVariant &, const QList<QwtLegendData> & ) ) );
     }
 }
 
@@ -916,10 +916,10 @@ void QwtPlot::insertLegend( QwtAbstractLegend *legend,
         {
             connect( this, 
                 SIGNAL( legendDataChanged( 
-                    const QwtPlotItem *, const QList<QwtLegendData> & ) ),
+                    const QVariant &, const QList<QwtLegendData> & ) ),
                 d_data->legend, 
                 SLOT( updateLegend( 
-                    const QwtPlotItem *, const QList<QwtLegendData> & ) ) 
+                    const QVariant &, const QList<QwtLegendData> & ) ) 
             );
 
             if ( d_data->legend->parent() != this )
@@ -986,7 +986,7 @@ void QwtPlot::insertLegend( QwtAbstractLegend *legend,
 }
 
 /*!
-  Emit legendDataChanged() for a plot item
+  Emit legendDataChanged() for all plot item
 
   \sa QwtPlotItem::legendData(), legendDataChanged()
  */
@@ -1016,7 +1016,8 @@ void QwtPlot::updateLegend( const QwtPlotItem *plotItem )
     if ( plotItem->testItemAttribute( QwtPlotItem::Legend ) )
         legendData = plotItem->legendData();
 
-    Q_EMIT legendDataChanged( plotItem, legendData );
+    const QVariant itemInfo = itemToInfo( const_cast< QwtPlotItem *>( plotItem) );
+    Q_EMIT legendDataChanged( itemInfo, legendData );
 }
 
 /*!
@@ -1025,21 +1026,26 @@ void QwtPlot::updateLegend( const QwtPlotItem *plotItem )
   Call QwtPlotItem::updateLegend(), when the QwtPlotItem::LegendInterest
   flag is set.
 
-  \param plotItem Plot item
+  \param itemInfo Info about the plot item
+  \param legendData Entries to be displayed for the plot item ( usually 1 )
 
   \sa QwtPlotItem::LegendInterest,
       QwtPlotLegendItem, QwtPlotItem::updateLegend()
  */
-void QwtPlot::updateLegendItems( const QwtPlotItem *plotItem,
-    const QList<QwtLegendData> &data )
+void QwtPlot::updateLegendItems( const QVariant &itemInfo,
+    const QList<QwtLegendData> &legendData )
 {
-    const QwtPlotItemList& itmList = itemList();
-    for ( QwtPlotItemIterator it = itmList.begin();
-        it != itmList.end(); ++it )
+    QwtPlotItem *plotItem = infoToItem( itemInfo );
+    if ( plotItem )
     {
-        QwtPlotItem *item = *it;
-        if ( item->testItemInterest( QwtPlotItem::LegendInterest ) )
-            item->updateLegend( plotItem, data );
+        const QwtPlotItemList& itmList = itemList();
+        for ( QwtPlotItemIterator it = itmList.begin();
+            it != itmList.end(); ++it )
+        {
+            QwtPlotItem *item = *it;
+            if ( item->testItemInterest( QwtPlotItem::LegendInterest ) )
+                item->updateLegend( plotItem, legendData );
+        }
     }
 }
 
@@ -1082,12 +1088,65 @@ void QwtPlot::attachItem( QwtPlotItem *plotItem, bool on )
         // the item wants to be represented on the legend
 
         if ( on )
+        {
             updateLegend( plotItem );
+        }
         else
-            Q_EMIT legendDataChanged( plotItem, QList<QwtLegendData>() );
+        {
+            const QVariant itemInfo = itemToInfo( plotItem );
+            Q_EMIT legendDataChanged( itemInfo, QList<QwtLegendData>() );
+        }
     }
 
     if ( autoReplot() )
         update();
 }
+
+/*!
+  \brief Build an information, that can be used to identify
+         a plot item on the legend.
+
+  The default implementation simply wraps the plot item
+  into a QVariant object. When overloading itemToInfo()
+  usually infoToItem() needs to reimplemeted too.
+
+\code
+    QVariant itemInfo;
+    qVariantSetValue( itemInfo, plotItem );
+\endcode
+
+  \param plotItem Plot item
+  \sa infoToItem()
+ */
+QVariant QwtPlot::itemToInfo( QwtPlotItem *plotItem ) const
+{
+    QVariant itemInfo;
+    qVariantSetValue( itemInfo, plotItem );
+
+    return itemInfo;
+}
+
+/*!
+  \brief Identify the plot item according to an item info object,
+         that has bee generated from itemToInfo().
+
+  The default implementation simply tries to unwrap a QwtPlotItem 
+  pointer:
+
+\code
+    if ( itemInfo.canConvert<QwtPlotItem *>() )
+        return qvariant_cast<QwtPlotItem *>( itemInfo );
+\endcode
+  \param itemInfo Plot item
+  \return A plot item, when successful, otherwise a NULL pointer.
+  \sa itemToInfo()
+*/
+QwtPlotItem *QwtPlot::infoToItem( const QVariant &itemInfo ) const
+{
+    if ( itemInfo.canConvert<QwtPlotItem *>() )
+        return qvariant_cast<QwtPlotItem *>( itemInfo );
+
+    return NULL;
+}
+
 

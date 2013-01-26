@@ -19,8 +19,10 @@ class QwtScaleDraw;
   \brief The Slider Widget
 
   QwtSlider is a slider widget which operates on an interval
-  of type double. QwtSlider supports different layouts as
-  well as a scale.
+  of type double. Its position is related to a scale showing
+  the current value.
+
+  The slider can be customized by having a through, a groove - or both.
 
   \image html sliders.png
 */
@@ -35,8 +37,10 @@ class QWT_EXPORT QwtSlider: public QwtAbstractSlider
                 READ orientation WRITE setOrientation )
     Q_PROPERTY( ScalePosition scalePosition READ scalePosition
         WRITE setScalePosition )
-    Q_PROPERTY( BackgroundStyles backgroundStyle 
-        READ backgroundStyle WRITE setBackgroundStyle )
+
+    Q_PROPERTY( bool trough READ hasTrough WRITE setTrough )
+    Q_PROPERTY( bool groove READ hasGroove WRITE setGroove )
+
     Q_PROPERTY( QSize handleSize READ handleSize WRITE setHandleSize )
     Q_PROPERTY( int borderWidth READ borderWidth WRITE setBorderWidth )
     Q_PROPERTY( int spacing READ spacing WRITE setSpacing )
@@ -60,22 +64,6 @@ public:
         TrailingScale
     };
 
-    /*!
-      Background style.
-      \sa QwtSlider()
-     */
-    enum BackgroundStyle
-    {
-        //! Trough background
-        Trough = 0x01,
-
-        //! Groove
-        Groove = 0x02,
-    };
-
-    //! Background styles
-    typedef QFlags<BackgroundStyle> BackgroundStyles;
-
     explicit QwtSlider( QWidget *parent = NULL );
     explicit QwtSlider( Qt::Orientation, QWidget *parent = NULL );
 
@@ -87,8 +75,11 @@ public:
     void setScalePosition( ScalePosition );
     ScalePosition scalePosition() const;
 
-    void setBackgroundStyle( BackgroundStyles );
-    BackgroundStyles backgroundStyle() const;
+    void setTrough( bool );
+    bool hasTrough() const;
+
+    void setGroove( bool );
+    bool hasGroove() const;
 
     void setHandleSize( const QSize & );
     QSize handleSize() const;
@@ -136,7 +127,5 @@ private:
     class PrivateData;
     PrivateData *d_data;
 };
-
-Q_DECLARE_OPERATORS_FOR_FLAGS( QwtSlider::BackgroundStyles )
 
 #endif

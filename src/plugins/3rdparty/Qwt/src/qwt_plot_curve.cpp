@@ -173,7 +173,7 @@ bool QwtPlotCurve::testPaintAttribute( PaintAttribute attribute ) const
 */
 void QwtPlotCurve::setLegendAttribute( LegendAttribute attribute, bool on )
 {
-    if ( on != ( d_data->legendAttributes & attribute ) )
+    if ( on != testLegendAttribute( attribute ) )
     {
         if ( on )
             d_data->legendAttributes |= attribute;

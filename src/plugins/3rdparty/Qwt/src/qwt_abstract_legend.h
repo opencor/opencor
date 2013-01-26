@@ -15,7 +15,7 @@
 #include <qframe.h>
 #include <qlist.h>
 
-class QwtPlotItem;
+class QVariant;
 
 /*!
   \brief Abstract base class for legend widgets
@@ -61,10 +61,10 @@ public Q_SLOTS:
     /*!
       \brief Update the entries for a plot item
 
-      \param plotItem Plot items
-      \param data List of legend entry attributes of plotItem
+      \param itemInfo Info about an item
+      \param data List of legend entry attributes for the  item
      */
-    virtual void updateLegend( const QwtPlotItem *plotItem, 
+    virtual void updateLegend( const QVariant &itemInfo, 
         const QList<QwtLegendData> &data ) = 0;
 };
 

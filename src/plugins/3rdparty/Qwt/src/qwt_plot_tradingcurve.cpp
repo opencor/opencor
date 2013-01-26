@@ -25,66 +25,6 @@ static inline bool qwtIsSampleInside( const QwtOHLCSample &sample,
     return !isOffScreen;
 }
 
-static inline void qwtDrawBar( QPainter *painter,
-    const QwtOHLCSample &sample, Qt::Orientation orientation, 
-    bool inverted, double width )
-{
-    double w2 = 0.5 * width;
-    if ( inverted )
-        w2 *= -1;
-
-    if ( orientation == Qt::Vertical )
-    {
-        QwtPainter::drawLine( painter,
-            sample.time, sample.low, sample.time, sample.high );
-
-        QwtPainter::drawLine( painter,
-            sample.time - w2, sample.open, sample.time, sample.open );
-        QwtPainter::drawLine( painter,
-            sample.time + w2, sample.close, sample.time, sample.close );
-    }
-    else
-    {
-        QwtPainter::drawLine( painter, sample.low, sample.time,
-            sample.high, sample.time );
-        QwtPainter::drawLine( painter,
-            sample.open, sample.time - w2, sample.open, sample.time );
-        QwtPainter::drawLine( painter,
-            sample.close, sample.time + w2, sample.close, sample.time );
-    }
-}
-
-static inline void qwtDrawCandleStick( QPainter *painter,
-    const QwtOHLCSample &sample, Qt::Orientation orientation, double width )
-{
-    const double t = sample.time;
-    const double v1 = qMin( sample.low, sample.high );
-    const double v2 = qMin( sample.open, sample.close );
-    const double v3 = qMax( sample.low, sample.high );
-    const double v4 = qMax( sample.open, sample.close );
-
-    if ( orientation == Qt::Vertical )
-    {
-        QwtPainter::drawLine( painter, t, v1, t, v2 );
-        QwtPainter::drawLine( painter, t, v3, t, v4 );
-
-        QRectF rect( t - 0.5 * width, sample.open,
-            width, sample.close - sample.open );
-
-        QwtPainter::drawRect( painter, rect );
-    }
-    else
-    {
-        QwtPainter::drawLine( painter, v1, t, v2, t );
-        QwtPainter::drawLine( painter, v3, t, v4, t );
-
-        const QRectF rect( sample.open, t - 0.5 * width,
-            sample.close - sample.open, width );
-
-        QwtPainter::drawRect( painter, rect );
-    }
-}
-
 class QwtPlotTradingCurve::PrivateData
 {
 public:
@@ -503,8 +443,6 @@ void QwtPlotTradingCurve::drawSymbols( QPainter *painter,
     }
 
     const bool inverted = timeMap->isInverting();
-
-
     const bool doClip = d_data->paintAttributes & ClipSymbols;
     const bool doAlign = QwtPainter::roundingAlignment( painter );
 
@@ -548,15 +486,15 @@ void QwtPlotTradingCurve::drawSymbols( QPainter *painter,
             {
                 case Bar:
                 {
-                    qwtDrawBar( painter,
-                        translatedSample, orient, inverted, symbolWidth );
+                    drawBar( painter, translatedSample, 
+                        orient, inverted, symbolWidth );
                     break;
                 }
                 case CandleStick:
                 {
                     painter->setBrush( d_data->symbolBrush[ brushIndex ] );
-                    qwtDrawCandleStick( painter,
-                        translatedSample, orient, symbolWidth );
+                    drawCandleStick( painter, translatedSample, 
+                        orient, symbolWidth );
                     break;
                 }
                 default:
@@ -565,7 +503,7 @@ void QwtPlotTradingCurve::drawSymbols( QPainter *painter,
                     {
                         painter->setBrush( d_data->symbolBrush[ brushIndex ] );
                         drawUserSymbol( painter, d_data->symbolStyle,
-                            symbolWidth, translatedSample );
+                            translatedSample, orient, inverted, symbolWidth );
                     }
                 }
             }
@@ -580,17 +518,110 @@ void QwtPlotTradingCurve::drawSymbols( QPainter *painter,
 
   \param painter Qt painter, initialized with pen/brush
   \param symbolStyle Symbol style
-  \param symbolWidth Width of the symbol in paint device coordinates
   \param sample Samples already translated into paint device coordinates
+  \param orientation Vertical or horizontal
+  \param inverted True, when the opposite scale 
+                  ( Qt::Vertical: x, Qt::Horizontal: y ) is increasing
+                  in the opposite direction as QPainter coordinates.
+  \param symbolWidth Width of the symbol in paint device coordinates
 */
 void QwtPlotTradingCurve::drawUserSymbol( QPainter *painter,
-    SymbolStyle symbolStyle, double symbolWidth,
-    const QwtOHLCSample &sample ) const
+    SymbolStyle symbolStyle, const QwtOHLCSample &sample,
+    Qt::Orientation orientation, bool inverted, double symbolWidth ) const
 {
     Q_UNUSED( painter )
     Q_UNUSED( symbolStyle )
+    Q_UNUSED( orientation )
+    Q_UNUSED( inverted )
     Q_UNUSED( symbolWidth )
     Q_UNUSED( sample )
+}
+
+/*!
+  \brief Draw a bar
+
+  \param painter Qt painter, initialized with pen/brush
+  \param sample Sample, already translated into paint device coordinates
+  \param orientation Vertical or horizontal
+  \param inverted When inverted is false the open tick is painted
+                  to the left/top, otherwise it is painted right/bottom.
+                  The close tick is painted in the opposite direction
+                  of the open tick.
+                  painted in the opposite d
+                  opposite direction.
+  \param width Width or height of the candle, depending on the orientation
+
+  \sa Bar
+*/
+void QwtPlotTradingCurve::drawBar( QPainter *painter,
+    const QwtOHLCSample &sample, Qt::Orientation orientation, 
+    bool inverted, double width ) const
+{
+    double w2 = 0.5 * width;
+    if ( inverted )
+        w2 *= -1;
+
+    if ( orientation == Qt::Vertical )
+    {
+        QwtPainter::drawLine( painter,
+            sample.time, sample.low, sample.time, sample.high );
+
+        QwtPainter::drawLine( painter,
+            sample.time - w2, sample.open, sample.time, sample.open );
+        QwtPainter::drawLine( painter,
+            sample.time + w2, sample.close, sample.time, sample.close );
+    }
+    else
+    {
+        QwtPainter::drawLine( painter, sample.low, sample.time,
+            sample.high, sample.time );
+        QwtPainter::drawLine( painter,
+            sample.open, sample.time - w2, sample.open, sample.time );
+        QwtPainter::drawLine( painter,
+            sample.close, sample.time + w2, sample.close, sample.time );
+    }
+}
+
+/*!
+  \brief Draw a candle stick
+
+  \param painter Qt painter, initialized with pen/brush
+  \param sample Samples already translated into paint device coordinates
+  \param orientation Vertical or horizontal
+  \param width Width or height of the candle, depending on the orientation
+
+  \sa CandleStick
+*/
+void QwtPlotTradingCurve::drawCandleStick( QPainter *painter,
+    const QwtOHLCSample &sample, Qt::Orientation orientation, 
+    double width ) const
+{
+    const double t = sample.time;
+    const double v1 = qMin( sample.low, sample.high );
+    const double v2 = qMin( sample.open, sample.close );
+    const double v3 = qMax( sample.low, sample.high );
+    const double v4 = qMax( sample.open, sample.close );
+
+    if ( orientation == Qt::Vertical )
+    {
+        QwtPainter::drawLine( painter, t, v1, t, v2 );
+        QwtPainter::drawLine( painter, t, v3, t, v4 );
+
+        QRectF rect( t - 0.5 * width, sample.open,
+            width, sample.close - sample.open );
+
+        QwtPainter::drawRect( painter, rect );
+    }
+    else
+    {
+        QwtPainter::drawLine( painter, v1, t, v2, t );
+        QwtPainter::drawLine( painter, v3, t, v4, t );
+
+        const QRectF rect( sample.open, t - 0.5 * width,
+            sample.close - sample.open, width );
+
+        QwtPainter::drawRect( painter, rect );
+    }
 }
 
 /*!

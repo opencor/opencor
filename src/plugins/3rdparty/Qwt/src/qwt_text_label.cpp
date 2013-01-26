@@ -63,13 +63,32 @@ void QwtTextLabel::init()
 }
 
 /*!
+   Interface for the designer plugin - does the same as setText()
+   \sa plainText()
+ */
+void QwtTextLabel::setPlainText( const QString &text )
+{
+    setText( QwtText( text ) );
+}
+
+/*!
+   Interface for the designer plugin
+   \sa setPlainText(), text()
+ */
+QString QwtTextLabel::plainText() const
+{
+    return d_data->text.text();
+}
+
+/*!
    Change the label's text, keeping all other QwtText attributes
    \param text New text
    \param textFormat Format of text
 
   \sa QwtText
 */
-void QwtTextLabel::setText( const QString &text, QwtText::TextFormat textFormat )
+void QwtTextLabel::setText( const QString &text, 
+    QwtText::TextFormat textFormat )
 {
     d_data->text.setText( text, textFormat );
 

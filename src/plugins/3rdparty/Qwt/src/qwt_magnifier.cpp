@@ -111,6 +111,11 @@ bool QwtMagnifier::isEnabled() const
 
    The wheel factor defines the ratio between the current range
    on the parent widget and the zoomed range for each step of the wheel.
+
+   Use values > 1 for magnification (i.e. 2.0) and values < 1 for
+   scaling down (i.e. 1/2.0 = 0.5). You can use this feature for
+   inverting the direction of the wheel.
+
    The default value is 0.9.
 
    \param factor Wheel factor

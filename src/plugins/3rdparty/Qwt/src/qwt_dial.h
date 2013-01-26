@@ -56,6 +56,8 @@ class QWT_EXPORT QwtDial: public QwtAbstractSlider
     Q_PROPERTY( Shadow frameShadow READ frameShadow WRITE setFrameShadow )
     Q_PROPERTY( Mode mode READ mode WRITE setMode )
     Q_PROPERTY( double origin READ origin WRITE setOrigin )
+    Q_PROPERTY( double minScaleArc READ minScaleArc WRITE setMinScaleArc )
+    Q_PROPERTY( double maxScaleArc READ maxScaleArc WRITE setMaxScaleArc )
 
 public:
 
@@ -103,7 +105,10 @@ public:
 
     void setScaleArc( double min, double max );
 
+    void setMinScaleArc( double min );
     double minScaleArc() const;
+
+    void setMaxScaleArc( double min );
     double maxScaleArc() const;
 
     virtual void setOrigin( double );

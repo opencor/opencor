@@ -138,7 +138,8 @@ class QwtText::PrivateData
 public:
     PrivateData():
         renderFlags( Qt::AlignCenter ),
-        backgroundPen( Qt::NoPen ),
+        borderRadius( 0 ),
+        borderPen( Qt::NoPen ),
         backgroundBrush( Qt::NoBrush ),
         paintAttributes( 0 ),
         layoutAttributes( 0 ),
@@ -150,7 +151,8 @@ public:
     QString text;
     QFont font;
     QColor color;
-    QPen backgroundPen;
+    double borderRadius;
+    QPen borderPen;
     QBrush backgroundBrush;
 
     QwtText::PaintAttributes paintAttributes;
@@ -218,7 +220,8 @@ bool QwtText::operator==( const QwtText &other ) const
         d_data->text == other.d_data->text &&
         d_data->font == other.d_data->font &&
         d_data->color == other.d_data->color &&
-        d_data->backgroundPen == other.d_data->backgroundPen &&
+        d_data->borderRadius == other.d_data->borderRadius &&
+        d_data->borderPen == other.d_data->borderPen &&
         d_data->backgroundBrush == other.d_data->backgroundBrush &&
         d_data->paintAttributes == other.d_data->paintAttributes &&
         d_data->textEngine == other.d_data->textEngine;
@@ -352,31 +355,51 @@ QColor QwtText::usedColor( const QColor &defaultColor ) const
 }
 
 /*!
+  Set the radius for the corners of the border frame
+
+  \param radius Radius of a rounded corner
+  \sa borderRadius(), setBorderPen(), setBackgroundBrush()
+*/
+void QwtText::setBorderRadius( double radius )
+{
+    d_data->borderRadius = qMax( 0.0, radius );
+}
+
+/*!
+  \return Radius for the corners of the border frame
+  \sa setBorderRadius(), borderPen(), backgroundBrush()
+*/
+double QwtText::borderRadius() const
+{
+    return d_data->borderRadius;
+}
+
+/*!
    Set the background pen
 
    \param pen Background pen
-   \sa backgroundPen(), setBackgroundBrush()
+   \sa borderPen(), setBackgroundBrush()
 */
-void QwtText::setBackgroundPen( const QPen &pen )
+void QwtText::setBorderPen( const QPen &pen )
 {
-    d_data->backgroundPen = pen;
+    d_data->borderPen = pen;
     setPaintAttribute( PaintBackground );
 }
 
 /*!
    \return Background pen
-   \sa setBackgroundPen(), backgroundBrush()
+   \sa setBorderPen(), backgroundBrush()
 */
-QPen QwtText::backgroundPen() const
+QPen QwtText::borderPen() const
 {
-    return d_data->backgroundPen;
+    return d_data->borderPen;
 }
 
 /*!
    Set the background brush
 
    \param brush Background brush
-   \sa backgroundBrush(), setBackgroundPen()
+   \sa backgroundBrush(), setBorderPen()
 */
 void QwtText::setBackgroundBrush( const QBrush &brush )
 {
@@ -386,7 +409,7 @@ void QwtText::setBackgroundBrush( const QBrush &brush )
 
 /*!
    \return Background brush
-   \sa setBackgroundBrush(), backgroundPen()
+   \sa setBackgroundBrush(), borderPen()
 */
 QBrush QwtText::backgroundBrush() const
 {
@@ -400,7 +423,7 @@ QBrush QwtText::backgroundBrush() const
    \param on On/Off
 
    \note Used by setFont(), setColor(),
-         setBackgroundPen() and setBackgroundBrush()
+         setBorderPen() and setBackgroundBrush()
    \sa testPaintAttribute()
 */
 void QwtText::setPaintAttribute( PaintAttribute attribute, bool on )
@@ -542,13 +565,25 @@ void QwtText::draw( QPainter *painter, const QRectF &rect ) const
 {
     if ( d_data->paintAttributes & PaintBackground )
     {
-        if ( d_data->backgroundPen != Qt::NoPen ||
+        if ( d_data->borderPen != Qt::NoPen ||
             d_data->backgroundBrush != Qt::NoBrush )
         {
             painter->save();
-            painter->setPen( d_data->backgroundPen );
+
+            painter->setPen( d_data->borderPen );
             painter->setBrush( d_data->backgroundBrush );
-            QwtPainter::drawRect( painter, rect );
+
+            if ( d_data->borderRadius == 0 )
+            {
+                QwtPainter::drawRect( painter, rect );
+            }
+            else
+            {
+                painter->setRenderHint( QPainter::Antialiasing, true );
+                painter->drawRoundedRect( rect,
+                    d_data->borderRadius, d_data->borderRadius );
+            }
+
             painter->restore();
         }
     }

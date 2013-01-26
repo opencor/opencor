@@ -147,6 +147,12 @@ QwtCompass::QwtCompass( QWidget* parent ):
 
     setOrigin( 270.0 );
     setWrapping( true );
+
+    setScaleMaxMajor( 36 );
+    setScaleMaxMinor( 10 );
+
+    setScale( 0.0, 360.0 ); // degrees as default
+    setTotalSteps( 360 );
 }
 
 //!  Destructor

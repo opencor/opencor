@@ -12,6 +12,7 @@
 
 #include "qwt_global.h"
 #include "qwt_abstract_legend.h"
+#include <qvariant.h>
 
 class QScrollBar;
 
@@ -42,10 +43,10 @@ public:
     QWidget *contentsWidget();
     const QWidget *contentsWidget() const;
 
-    QWidget *legendWidget( const QwtPlotItem * ) const;
-    QList<QWidget *> legendWidgets( const QwtPlotItem * ) const;
+    QWidget *legendWidget( const QVariant &  ) const;
+    QList<QWidget *> legendWidgets( const QVariant & ) const;
 
-    QwtPlotItem *plotItem( const QWidget * ) const;
+    QVariant itemInfo( const QWidget * ) const;
 
     virtual bool eventFilter( QObject *, QEvent * );
 
@@ -69,33 +70,33 @@ Q_SIGNALS:
       A signal which is emitted when the user has clicked on
       a legend label, which is in QwtLegendData::Clickable mode.
 
-      \param plotItem Corresponding plot item of the
+      \param itemInfo Info for the item item of the
                       selected legend item
       \param index Index of the legend label in the list of widgets
                    that are associated with the plot item
 
       \note clicks are disabled as default
-      \sa setDefaultItemMode(), defaultItemMode()
+      \sa setDefaultItemMode(), defaultItemMode(), QwtPlot::itemToInfo()
      */
-    void clicked( QwtPlotItem *plotItem, int index );
+    void clicked( const QVariant &itemInfo, int index );
 
     /*!
       A signal which is emitted when the user has clicked on
       a legend label, which is in QwtLegendData::Checkable mode
 
-      \param plotItem Corresponding plot item of the
+      \param itemInfo Info for the item of the
                       selected legend label
       \param index Index of the legend label in the list of widgets
                    that are associated with the plot item
       \param on True when the legend label is checked
 
       \note clicks are disabled as default
-      \sa setDefaultItemMode(), defaultItemMode()
+      \sa setDefaultItemMode(), defaultItemMode(), QwtPlot::itemToInfo()
      */
-    void checked( QwtPlotItem *plotItem, bool on, int index );
+    void checked( const QVariant &itemInfo, bool on, int index );
 
 public Q_SLOTS:
-    virtual void updateLegend( const QwtPlotItem *, 
+    virtual void updateLegend( const QVariant &,
         const QList<QwtLegendData> & );
 
 protected Q_SLOTS:

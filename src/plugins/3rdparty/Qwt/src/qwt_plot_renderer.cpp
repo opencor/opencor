@@ -244,6 +244,7 @@ void QwtPlotRenderer::renderDocument( QwtPlot *plot,
     {
 #ifndef QT_NO_PRINTER
         QPrinter printer;
+        printer.setColorMode( QPrinter::Color );
         printer.setFullPage( true );
         printer.setPaperSize( sizeMM, QPrinter::Millimeter );
         printer.setDocName( title );
@@ -260,6 +261,7 @@ void QwtPlotRenderer::renderDocument( QwtPlot *plot,
 #if QT_VERSION < 0x050000
 #ifndef QT_NO_PRINTER
         QPrinter printer;
+        printer.setColorMode( QPrinter::Color );
         printer.setFullPage( true );
         printer.setPaperSize( sizeMM, QPrinter::Millimeter );
         printer.setDocName( title );
@@ -952,17 +954,15 @@ bool QwtPlotRenderer::updateCanvasMargins( QwtPlot *plot,
 /*!
    \brief Execute a file dialog and render the plot to the selected file
 
-   The document will be rendered in 85 dpi for a size 30x20 cm
-
    \param plot Plot widget
    \param documentName Default document name
+   \param sizeMM Size for the document in millimeters.
+   \param resolution Resolution in dots per Inch (dpi)
 
-   \note exportTo() is handy for testing, but usually an application
-         wants to configure the export individually 
-         using renderDocument() or even more low level methods
-         of QwtPlotRenderer.
+   \sa renderDocument()
 */
-bool QwtPlotRenderer::exportTo( QwtPlot *plot, const QString &documentName )
+bool QwtPlotRenderer::exportTo( QwtPlot *plot, const QString &documentName,
+     const QSizeF &sizeMM, int resolution )
 {       
     if ( plot == NULL )
         return false;
@@ -1009,7 +1009,7 @@ bool QwtPlotRenderer::exportTo( QwtPlot *plot, const QString &documentName )
     if ( fileName.isEmpty() )
         return false;
 
-    renderDocument( plot, fileName, QSizeF( 300, 200 ), 85 );
+    renderDocument( plot, fileName, sizeMM, resolution );
 
     return true;
 }   

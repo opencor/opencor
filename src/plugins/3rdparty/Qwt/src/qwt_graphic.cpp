@@ -515,8 +515,8 @@ QSize QwtGraphic::sizeMetrics() const
  */
 void QwtGraphic::setDefaultSize( const QSizeF &size )
 {
-    const double w = qMax( 0.0, size.width() );
-    const double h = qMax( 0.0, size.height() );
+    const double w = qMax( qreal( 0.0 ), size.width() );
+    const double h = qMax( qreal( 0.0 ), size.height() );
 
     d_data->defaultSize = QSizeF( w, h );
 }

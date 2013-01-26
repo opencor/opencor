@@ -150,12 +150,10 @@ QwtDial::QwtDial( QWidget* parent ):
 
     setScaleDraw( scaleDraw );
 
-    setScaleMaxMajor( 36 );
-    setScaleMaxMinor( 10 );
-
     setScaleArc( 0.0, 360.0 ); // scale as a full circle
-    setScale( 0.0, 360.0 ); // degrees as default
-    setTotalSteps( 360 );
+
+    setScaleMaxMajor( 10 );
+    setScaleMaxMinor( 5 );
 
     setValue( 0.0 );
 }
@@ -614,6 +612,12 @@ void QwtDial::setScaleArc( double minArc, double maxArc )
     }
 }
 
+//! \sa setScaleArc()
+void QwtDial::setMinScaleArc( double min )
+{
+    setScaleArc( min, d_data->maxScaleArc );
+}
+
 /*! 
   \return Lower limit of the scale arc
   \sa setScaleArc()
@@ -621,6 +625,12 @@ void QwtDial::setScaleArc( double minArc, double maxArc )
 double QwtDial::minScaleArc() const
 {
     return d_data->minScaleArc;
+}
+
+//! \sa setScaleArc()
+void QwtDial::setMaxScaleArc( double max )
+{
+    setScaleArc( d_data->minScaleArc, max );
 }
 
 /*! 

@@ -20,6 +20,8 @@
 #if defined(_MSC_VER) /* MSVC Compiler */
 /* template-class specialization 'identifier' is already instantiated */
 #pragma warning(disable: 4660)
+/* inherits via dominance */
+#pragma warning(disable: 4250)
 #endif // _MSC_VER
 
 #ifdef QWT_DLL

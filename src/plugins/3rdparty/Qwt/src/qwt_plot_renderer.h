@@ -12,10 +12,10 @@
 
 #include "qwt_global.h"
 #include <qobject.h>
+#include <qsize.h>
 
 class QwtPlot;
 class QwtScaleMap;
-class QSizeF;
 class QRectF;
 class QPainter;
 class QPaintDevice;
@@ -149,7 +149,8 @@ public:
     virtual void renderLegend( 
         const QwtPlot *, QPainter *, const QRectF & ) const;
 
-    bool exportTo( QwtPlot *, const QString &documentName );
+    bool exportTo( QwtPlot *, const QString &documentName,
+        const QSizeF &sizeMM = QSizeF( 300, 200 ), int resolution = 85 );
 
 private:
     void buildCanvasMaps( const QwtPlot *,

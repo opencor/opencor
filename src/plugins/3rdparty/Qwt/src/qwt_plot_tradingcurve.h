@@ -150,8 +150,15 @@ protected:
         const QwtScaleMap &xMap, const QwtScaleMap &yMap,
         const QRectF &canvasRect, int from, int to ) const;
 
-    virtual void drawUserSymbol( QPainter *,
-        SymbolStyle, double symbolWidth, const QwtOHLCSample & ) const;
+    virtual void drawUserSymbol( QPainter *, 
+        SymbolStyle, const QwtOHLCSample &,
+        Qt::Orientation, bool inverted, double width ) const;
+
+    void drawBar( QPainter *painter, const QwtOHLCSample &, 
+        Qt::Orientation, bool inverted, double width ) const;
+
+    void drawCandleStick( QPainter *, const QwtOHLCSample &, 
+        Qt::Orientation, double width ) const;
 
     virtual double scaledSymbolWidth(
         const QwtScaleMap &xMap, const QwtScaleMap &yMap,

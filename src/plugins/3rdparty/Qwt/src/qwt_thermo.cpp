@@ -114,7 +114,6 @@ QwtThermo::QwtThermo( QWidget *parent ):
     QwtAbstractScale( parent )
 {
     d_data = new PrivateData;
-    setScale( 0.0, 1.0 );
 
     QSizePolicy policy( QSizePolicy::MinimumExpanding, QSizePolicy::Fixed );
     if ( d_data->orientation == Qt::Vertical )
@@ -123,6 +122,7 @@ QwtThermo::QwtThermo( QWidget *parent ):
     setSizePolicy( policy );
 
     setAttribute( Qt::WA_WState_OwnSizePolicy, false );
+    layoutThermo( true );
 }
 
 //! Destructor

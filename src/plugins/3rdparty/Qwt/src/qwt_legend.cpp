@@ -20,54 +20,104 @@
 #include <qstyle.h>
 #include <qstyleoption.h>
 
-class QwtLegendMap: public QMap<const QwtPlotItem *, QList<QWidget *> >
+class QwtLegendMap
 {
 public:
+    inline bool isEmpty() const { return d_entries.isEmpty(); }
+
+    void insert( const QVariant &, const QList<QWidget *> & );
+    void remove( const QVariant & );
+
     void removeWidget( const QWidget * );
-    QList<QWidget *> legendWidgets( const QwtPlotItem * ) const;
-    const QwtPlotItem *plotItem( const QWidget * ) const;
-    QwtPlotItem *plotItem( const QWidget * );
+
+    QList<QWidget *> legendWidgets( const QVariant & ) const;
+    QVariant itemInfo( const QWidget * ) const;
+
+private:
+    // we don't know anything about itemInfo and therefore don't have
+    // any key that can be used for a map or hashtab.
+    // But a simple linear list is o.k. here, as we will never have
+    // more than a few entries.
+
+    class Entry
+    {
+    public:
+        QVariant itemInfo;
+        QList<QWidget *> widgets;
+    };
+
+    QList< Entry > d_entries;
 };
 
-void QwtLegendMap::removeWidget( const QWidget *widget )
+void QwtLegendMap::insert( const QVariant &itemInfo, 
+    const QList<QWidget *> &widgets )
 {
-    while ( QwtPlotItem *item = plotItem( widget ) )
+    for ( int i = 0; i < d_entries.size(); i++ )
     {
-        QList<QWidget *> widgets = legendWidgets( item );
-        widgets.removeAll( const_cast< QWidget *>( widget ) );
-        insert( item, widgets );
-    }
-}
-
-QwtPlotItem *QwtLegendMap::plotItem( const QWidget *widget )
-{
-    if ( widget == NULL )
-        return NULL;
-
-    for ( Iterator it = begin(); it != end(); ++it )
-    {
-        const QList< QWidget *> &widgets = it.value();
-        for ( int i = 0; i < widgets.size(); i++ )
+        Entry &entry = d_entries[i];
+        if ( entry.itemInfo == itemInfo )
         {
-            if ( widgets[i] == widget )
-                return const_cast<QwtPlotItem *>( it.key() );
+            entry.widgets = widgets;
+            return;
         }
     }
 
-    return NULL;
+    Entry newEntry;
+    newEntry.itemInfo = itemInfo;
+    newEntry.widgets = widgets;
+
+    d_entries += newEntry;
 }
 
-const QwtPlotItem *QwtLegendMap::plotItem( const QWidget *widget ) const
+void QwtLegendMap::remove( const QVariant &itemInfo )
 {
-    QwtLegendMap *that = const_cast<QwtLegendMap *>( this );
-    return that->plotItem( widget );
+    for ( int i = 0; i < d_entries.size(); i++ )
+    {
+        Entry &entry = d_entries[i];
+        if ( entry.itemInfo == itemInfo )
+        {
+            d_entries.removeAt( i );
+            return;
+        }
+    }
 }
 
-QList<QWidget *> QwtLegendMap::legendWidgets( const QwtPlotItem *item ) const
+void QwtLegendMap::removeWidget( const QWidget *widget )
 {
-    const ConstIterator it = find( item );
-    if ( it != constEnd() )
-        return it.value();
+    QWidget *w = const_cast<QWidget *>( widget );
+
+    for ( int i = 0; i < d_entries.size(); i++ )
+        d_entries[ i ].widgets.removeAll( w );
+}
+
+QVariant QwtLegendMap::itemInfo( const QWidget *widget ) const
+{
+    if ( widget != NULL )
+    {
+        QWidget *w = const_cast<QWidget *>( widget );
+
+        for ( int i = 0; i < d_entries.size(); i++ )
+        {
+            const Entry &entry = d_entries[i];
+            if ( entry.widgets.indexOf( w ) >= 0 )
+                return entry.itemInfo;
+        }
+    }
+
+    return QVariant();
+}
+
+QList<QWidget *> QwtLegendMap::legendWidgets( const QVariant &itemInfo ) const
+{
+    if ( itemInfo.isValid() )
+    {
+        for ( int i = 0; i < d_entries.size(); i++ )
+        {
+            const Entry &entry = d_entries[i];
+            if ( entry.itemInfo == itemInfo )
+                return entry.widgets;
+        }
+    }
 
     return QList<QWidget *>();
 }
@@ -199,7 +249,6 @@ public:
 
 /*!
   Constructor
-
   \param parent Parent widget
 */
 QwtLegend::QwtLegend( QWidget *parent ):
@@ -331,15 +380,15 @@ const QWidget *QwtLegend::contentsWidget() const
 }
 
 /*!
-  \brief Update the entries for a plot item
+  \brief Update the entries for an item
 
-  \param plotItem Plot items
-  \param data List of legend entry attributes of plot item
+  \param itemInfo Info for an item
+  \param data List of legend entry attributes for the item
  */
-void QwtLegend::updateLegend( const QwtPlotItem *plotItem, 
+void QwtLegend::updateLegend( const QVariant &itemInfo, 
     const QList<QwtLegendData> &data )
 {
-    QList<QWidget *> widgetList = legendWidgets( plotItem );
+    QList<QWidget *> widgetList = legendWidgets( itemInfo );
 
     if ( widgetList.size() != data.size() )
     {
@@ -370,11 +419,11 @@ void QwtLegend::updateLegend( const QwtPlotItem *plotItem,
 
         if ( widgetList.isEmpty() )
         {
-            d_data->itemMap.remove( plotItem );
+            d_data->itemMap.remove( itemInfo );
         }
         else
         {
-            d_data->itemMap.insert( plotItem, widgetList );
+            d_data->itemMap.insert( itemInfo, widgetList );
         }
 
         updateTabOrder();
@@ -540,15 +589,15 @@ void QwtLegend::itemClicked()
     QWidget *w = qobject_cast<QWidget *>( sender() );
     if ( w )
     {
-        QwtPlotItem *plotItem = d_data->itemMap.plotItem( w );
-        if ( plotItem )
+        const QVariant itemInfo = d_data->itemMap.itemInfo( w );
+        if ( itemInfo.isValid() )
         {
             const QList<QWidget *> widgetList =
-                d_data->itemMap.legendWidgets( plotItem );
+                d_data->itemMap.legendWidgets( itemInfo );
 
             const int index = widgetList.indexOf( w );
             if ( index >= 0 )
-                Q_EMIT clicked( plotItem, index );
+                Q_EMIT clicked( itemInfo, index );
         }
     }
 }
@@ -562,15 +611,15 @@ void QwtLegend::itemChecked( bool on )
     QWidget *w = qobject_cast<QWidget *>( sender() );
     if ( w )
     {
-        QwtPlotItem *plotItem = d_data->itemMap.plotItem( w );
-        if ( plotItem )
+        const QVariant itemInfo = d_data->itemMap.itemInfo( w );
+        if ( itemInfo.isValid() )
         {
             const QList<QWidget *> widgetList =
-                d_data->itemMap.legendWidgets( plotItem );
+                d_data->itemMap.legendWidgets( itemInfo );
 
             const int index = widgetList.indexOf( w );
             if ( index >= 0 )
-                Q_EMIT checked( plotItem, on, index );
+                Q_EMIT checked( itemInfo, on, index );
         }
     }
 }
@@ -685,22 +734,24 @@ void QwtLegend::renderItem( QPainter *painter,
 }
 
 /*!
-  \return List of widgets associated to a plot item
-  \sa legendWidget(), plotItem()
+  \return List of widgets associated to a item
+  \param itemInfo Info about an item
+  \sa legendWidget(), itemInfo(), QwtPlot::itemToInfo()
  */
-QList<QWidget *> QwtLegend::legendWidgets( const QwtPlotItem *item ) const
+QList<QWidget *> QwtLegend::legendWidgets( const QVariant &itemInfo ) const
 {
-    return d_data->itemMap.legendWidgets( item );
+    return d_data->itemMap.legendWidgets( itemInfo );
 }
 
 /*!
-  \return First widget in the list of widgets associated to a plot item
-  \sa plotItem()
-  \note Almost all types of plot items have only one widget
+  \return First widget in the list of widgets associated to an item
+  \param itemInfo Info about an item
+  \sa itemInfo(), QwtPlot::itemToInfo()
+  \note Almost all types of items have only one widget
 */
-QWidget *QwtLegend::legendWidget( const QwtPlotItem *item ) const
+QWidget *QwtLegend::legendWidget( const QVariant &itemInfo ) const
 {
-    const QList<QWidget *> list = d_data->itemMap.legendWidgets( item );
+    const QList<QWidget *> list = d_data->itemMap.legendWidgets( itemInfo );
     if ( list.isEmpty() )
         return NULL;
 
@@ -708,18 +759,18 @@ QWidget *QwtLegend::legendWidget( const QwtPlotItem *item ) const
 }
 
 /*!
-  Find the plot item that is associated to a widget
+  Find the item that is associated to a widget
 
   \param widget Widget on the legend
-  \return Associated plot item 
+  \return Associated item info
   \sa legendWidget()
  */
-QwtPlotItem *QwtLegend::plotItem( const QWidget *widget ) const
+QVariant QwtLegend::itemInfo( const QWidget *widget ) const
 {
-    return d_data->itemMap.plotItem( widget );
+    return d_data->itemMap.itemInfo( widget );
 }
 
-//! \return True, when no plot item is inserted
+//! \return True, when no item is inserted
 bool QwtLegend::isEmpty() const
 {
     return d_data->itemMap.isEmpty();

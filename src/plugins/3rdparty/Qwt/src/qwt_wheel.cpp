@@ -1058,8 +1058,6 @@ void QwtWheel::setRange( double min, double max )
     d_data->minimum = min;
     d_data->maximum = max;
 
-    const double value = qBound( min, value, max );
-
     if ( d_data->value < min || d_data->value > max )
     {
         d_data->value = qBound( min, d_data->value, max );

@@ -32,10 +32,11 @@ class QwtTextEngine;
     A text might include control sequences (f.e tags) describing
     how to render it. Each format (f.e MathML, TeX, Qt Rich Text)
     has its own set of control sequences, that can be handles by
-    a QwtTextEngine for this format.
+    a special QwtTextEngine for this format.
   - Background\n
     A text might have a background, defined by a QPen and QBrush
-    to improve its visibility.
+    to improve its visibility. The corners of the background might
+    be rounded.
   - Font\n
     A text might have an individual font.
   - Color\n
@@ -168,8 +169,11 @@ public:
 
     QColor usedColor( const QColor & ) const;
 
-    void setBackgroundPen( const QPen & );
-    QPen backgroundPen() const;
+    void setBorderRadius( double );
+    double borderRadius() const;
+
+    void setBorderPen( const QPen & );
+    QPen borderPen() const;
 
     void setBackgroundBrush( const QBrush & );
     QBrush backgroundBrush() const;

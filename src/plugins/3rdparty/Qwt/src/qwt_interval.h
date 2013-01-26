@@ -11,6 +11,8 @@
 #define QWT_INTERVAL_H
 
 #include "qwt_global.h"
+#include <qmetatype.h>
+
 #ifndef QT_NO_DEBUG_STREAM
 #include <qdebug.h>
 #endif
@@ -288,6 +290,7 @@ inline void QwtInterval::invalidate()
 }
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( QwtInterval::BorderFlags )
+Q_DECLARE_METATYPE( QwtInterval )
 
 #ifndef QT_NO_DEBUG_STREAM
 QWT_EXPORT QDebug operator<<( QDebug, const QwtInterval & );

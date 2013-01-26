@@ -17,6 +17,7 @@
 #include "qwt_interval.h"
 #include <qframe.h>
 #include <qlist.h>
+#include <qvariant.h>
 
 class QwtPlotLayout;
 class QwtAbstractLegend;
@@ -73,8 +74,19 @@ myPlot->replot();
 class QWT_EXPORT QwtPlot: public QFrame, public QwtPlotDict
 {
     Q_OBJECT
+
+    Q_PROPERTY( QBrush canvasBackground 
+        READ canvasBackground WRITE setCanvasBackground )
+    Q_PROPERTY( bool autoReplot READ autoReplot WRITE setAutoReplot )
+
+#if 0
+    // This property is intended to configure the plot
+    // widget from a special dialog in the deigner plugin.
+    // Disabled until such a dialog has been implemented.
+
     Q_PROPERTY( QString propertiesDocument
         READ grabProperties WRITE applyProperties )
+#endif
 
 public:
     //! \brief Axis index
@@ -117,14 +129,14 @@ public:
     };
 
     explicit QwtPlot( QWidget * = NULL );
-    explicit QwtPlot( const QwtText &title, QWidget *p = NULL );
+    explicit QwtPlot( const QwtText &title, QWidget * = NULL );
 
     virtual ~QwtPlot();
 
     void applyProperties( const QString & );
     QString grabProperties() const;
 
-    void setAutoReplot( bool tf = true );
+    void setAutoReplot( bool = true );
     bool autoReplot() const;
 
     // Layout
@@ -242,6 +254,9 @@ public:
     virtual void drawItems( QPainter *, const QRectF &,
         const QwtScaleMap maps[axisCnt] ) const;
 
+    virtual QVariant itemToInfo( QwtPlotItem * ) const;
+    virtual QwtPlotItem *infoToItem( const QVariant & ) const;
+
 Q_SIGNALS:
     /*!
       A signal indicating, that an item has been attached/detached
@@ -255,10 +270,13 @@ Q_SIGNALS:
       A signal with the attributes how to update 
       the legend entries for a plot item.
 
-      \param plotItem Plot item
-      \param data List of attributes for items on a legend
+      \param itemInfo Info about a plot item, build from itemToInfo()
+      \param data Attributes of the entries ( usually <= 1 ) for
+                  the plot item.
+
+      \sa itemToInfo(), infoToItem(), QwtAbstractLegend::updateLegend()
      */
-    void legendDataChanged( const QwtPlotItem *plotItem, 
+    void legendDataChanged( const QVariant &itemInfo, 
         const QList<QwtLegendData> &data );
 
 public Q_SLOTS:
@@ -271,7 +289,7 @@ protected:
     virtual void resizeEvent( QResizeEvent *e );
 
 private Q_SLOTS:
-    void updateLegendItems( const QwtPlotItem *plotItem,
+    void updateLegendItems( const QVariant &itemInfo,
         const QList<QwtLegendData> &data );
 
 private:

@@ -651,6 +651,8 @@ void QwtPlotItem::updateScaleDiv( const QwtScaleDiv &xScaleDiv,
    \param item Plot item to be displayed on a legend
    \param data Attributes how to display item on the legend
 
+   \sa QwtPlotLegendItem
+
    \note Plot items, that want to be displayed on a legend
          need to enable the QwtPlotItem::Legend flag and to implement
          legendData() and legendIcon()
