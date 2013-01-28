@@ -33,13 +33,13 @@ SingleCellSimulationViewSimulationData::SingleCellSimulationViewSimulationData(C
     int ratesCount = pCellmlFileRuntime->ratesCount();
     int statesCount = pCellmlFileRuntime->statesCount();
     int algebraicCount = pCellmlFileRuntime->algebraicCount();
-    int condVarCountCount = pCellmlFileRuntime->condVarCount();
+    int condVarCount = pCellmlFileRuntime->condVarCount();
 
     mConstants = new double[constantsCount];
     mRates     = new double[ratesCount];
     mStates    = new double[statesCount];
     mAlgebraic = new double[algebraicCount];
-    mCondVar   = new double[condVarCountCount];
+    mCondVar   = new double[condVarCount];
 
     // Make sure that all our arrays are initialised with zeros
 
@@ -49,11 +49,15 @@ SingleCellSimulationViewSimulationData::SingleCellSimulationViewSimulationData(C
     memset(mRates, 0, ratesCount*sizeOfDouble);
     memset(mStates, 0, statesCount*sizeOfDouble);
     memset(mAlgebraic, 0, algebraicCount*sizeOfDouble);
-    memset(mCondVar, 0, condVarCountCount*sizeOfDouble);
+    memset(mCondVar, 0, condVarCount*sizeOfDouble);
 
-    // Initialise our 'constants'
+    // Initialise our model parameter values which means both initialising our
+    // 'constants' and computing our 'variables'
+    // Note: both methods are common and identical for both ODE and DAE
+    //       solvers...
 
     pCellmlFileRuntime->initializeConstants()(mConstants, mRates, mStates);
+    pCellmlFileRuntime->computeVariables()(mStartingPoint, mConstants, mRates, mStates, mAlgebraic);
 }
 
 //==============================================================================
