@@ -64,6 +64,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
     mSimulation(0),
     mSimulations(QMap<QString, SingleCellSimulationViewSimulation *>()),
     mStoppedSimulations(QList<SingleCellSimulationViewSimulation *>()),
+    mDelays(QMap<QString, int>()),
     mSplitterWidgetSizes(QList<int>()),
     mProgresses(QMap<QString, int>())
 {
@@ -388,11 +389,21 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
     SingleCellSimulationViewInformationParametersWidget *parametersWidget = informationWidget->parametersWidget();
 
     if (previousSimulation) {
+        // There is a previous simulation, so finalise a few things
+
         QString previousFileName = previousSimulation->fileName();
 
         simulationWidget->finalize(previousFileName);
         solversWidget->finalize(previousFileName);
+
+        // Keep track of the value of the delay widget
+
+        mDelays.insert(previousFileName, mDelayWidget->value());
     }
+
+    // Retrieve the value of our delay widget
+
+    setDelayValue( mDelays.value(pFileName, 0));
 
     // Retrieve our simulation object for the current model, if any
 
@@ -405,6 +416,10 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         // No simulation object currently exists for the model, so create one
 
         mSimulation = new SingleCellSimulationViewSimulation(pFileName, cellmlFileRuntime);
+
+        // Set our simulation object's delay
+
+        mSimulation->setDelay(mDelayWidget->value());
 
         // Create a few connections
 
@@ -724,15 +739,10 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
     //       simulation, but those things don't need to be done again when
     //       resuming a simulation...
 
-    if (mSimulation->workerStatus() == SingleCellSimulationViewSimulationWorker::Unknown) {
+    if (mSimulation->workerStatus() == SingleCellSimulationViewSimulationWorker::Unknown)
         // Cancel any editing of our simulation information
 
         mContentsWidget->informationWidget()->cancelEditing();
-
-        // Set our simulation object data
-
-        mSimulation->setData(this);
-    }
 
     // Start/resume the simulation
 
@@ -984,15 +994,6 @@ SingleCellSimulationViewSimulation * SingleCellSimulationViewWidget::simulation(
     // Return our (current) simulation
 
     return mSimulation;
-}
-
-//==============================================================================
-
-int SingleCellSimulationViewWidget::delayValue() const
-{
-    // Return the value of our delay widget
-
-    return mDelayWidget->value();
 }
 
 //==============================================================================

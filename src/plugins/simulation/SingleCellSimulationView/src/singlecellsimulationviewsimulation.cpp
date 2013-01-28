@@ -224,25 +224,6 @@ double SingleCellSimulationViewSimulation::workerProgress() const
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulation::setData(SingleCellSimulationViewWidget *pGui)
-{
-    // Set our data using information from the GUI
-
-    // Set our delay
-
-    setDelay(pGui->delayValue());
-
-    // Update some of our data from our GUI's simulation widget
-
-    SingleCellSimulationViewInformationSimulationWidget *simulationWidget = pGui->contentsWidget()->informationWidget()->simulationWidget();
-
-    mData->setStartingPoint(simulationWidget->startingPoint());
-    mData->setEndingPoint(simulationWidget->endingPoint());
-    mData->setPointInterval(simulationWidget->pointInterval());
-}
-
-//==============================================================================
-
 void SingleCellSimulationViewSimulation::setDelay(const int &pDelay)
 {
     // Set our delay

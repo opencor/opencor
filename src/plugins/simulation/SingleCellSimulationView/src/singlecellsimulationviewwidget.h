@@ -77,9 +77,6 @@ public:
 
     SingleCellSimulationViewSimulation * simulation() const;
 
-    int delayValue() const;
-    void setDelayValue(const int &pDelayValue);
-
     SingleCellSimulationViewContentsWidget * contentsWidget() const;
 
 private:
@@ -97,6 +94,8 @@ private:
     QMap<QString, SingleCellSimulationViewSimulation *> mSimulations;
 
     QList<SingleCellSimulationViewSimulation *> mStoppedSimulations;
+
+    QMap<QString, int> mDelays;
 
     Core::ToolBarWidget *mToolBarWidget;
 
@@ -120,6 +119,8 @@ private:
     QMap<QString, int> mProgresses;
 
     ErrorType mErrorType;
+
+    void setDelayValue(const int &pDelayValue);
 
     void output(const QString &pMessage);
 

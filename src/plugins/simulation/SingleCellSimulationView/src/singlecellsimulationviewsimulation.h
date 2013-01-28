@@ -101,7 +101,6 @@ public:
     SingleCellSimulationViewSimulationWorker::Status workerStatus() const;
     double workerProgress() const;
 
-    void setData(SingleCellSimulationViewWidget *pGui);
     void setDelay(const int &pDelay);
 
     void reset();
