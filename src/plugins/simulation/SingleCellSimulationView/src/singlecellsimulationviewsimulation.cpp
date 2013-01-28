@@ -180,10 +180,6 @@ SingleCellSimulationViewSimulation::SingleCellSimulationViewSimulation(const QSt
 
     connect(mData, SIGNAL(dataChanged(SingleCellSimulationViewSimulationData *)),
             this, SIGNAL(dataChanged(SingleCellSimulationViewSimulationData *)));
-
-    // Reset our data (and indirectly let people know that our data has changed)
-
-    mData->reset();
 }
 
 //==============================================================================
