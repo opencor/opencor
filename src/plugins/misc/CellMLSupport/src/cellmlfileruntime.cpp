@@ -750,8 +750,9 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
                     modelParameterType = "???";
                 }
 
-                qDebug("       - %s [unit: %s] [component: %s] [type: %s] [index: %d]",
+                qDebug("       - %s [degree: %d] [unit: %s] [component: %s] [type: %s] [index: %d]",
                        qPrintable(modelParameter->name()),
+                       modelParameter->degree(),
                        qPrintable(modelParameter->unit()),
                        qPrintable(modelParameter->component()),
                        qPrintable(modelParameterType),

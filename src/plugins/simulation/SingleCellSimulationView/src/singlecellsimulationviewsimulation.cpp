@@ -29,13 +29,29 @@ SingleCellSimulationViewSimulationData::SingleCellSimulationViewSimulationData(C
 {
     // Create the various arrays needed to compute a model
 
-    mConstants = new double[pCellmlFileRuntime->constantsCount()];
-    mRates     = new double[pCellmlFileRuntime->ratesCount()];
-    mStates    = new double[pCellmlFileRuntime->statesCount()];
-    mAlgebraic = new double[pCellmlFileRuntime->algebraicCount()];
-    mCondVar   = new double[pCellmlFileRuntime->condVarCount()];
+    int constantsCount = pCellmlFileRuntime->constantsCount();
+    int ratesCount = pCellmlFileRuntime->ratesCount();
+    int statesCount = pCellmlFileRuntime->statesCount();
+    int algebraicCount = pCellmlFileRuntime->algebraicCount();
+    int condVarCountCount = pCellmlFileRuntime->condVarCount();
 
-    // Initialise some of our 'constants' (arrays)
+    mConstants = new double[constantsCount];
+    mRates     = new double[ratesCount];
+    mStates    = new double[statesCount];
+    mAlgebraic = new double[algebraicCount];
+    mCondVar   = new double[condVarCountCount];
+
+    // Make sure that all our arrays are initialised with zeros
+
+    static const int sizeOfDouble = sizeof(double);
+
+    memset(mConstants, 0, constantsCount*sizeOfDouble);
+    memset(mRates, 0, ratesCount*sizeOfDouble);
+    memset(mStates, 0, statesCount*sizeOfDouble);
+    memset(mAlgebraic, 0, algebraicCount*sizeOfDouble);
+    memset(mCondVar, 0, condVarCountCount*sizeOfDouble);
+
+    // Initialise our 'constants'
 
     pCellmlFileRuntime->initializeConstants()(mConstants, mRates, mStates);
 }
