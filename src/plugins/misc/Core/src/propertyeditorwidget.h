@@ -257,6 +257,8 @@ public:
     void setDoublePropertyItem(PropertyItem *pPropertyItem,
                                const double &pValue);
 
+    Properties properties() const;
+
     void cancelPropertyEditing();
 
     void removeAllProperties();
@@ -281,6 +283,7 @@ private:
     PropertyItemDelegate *mPropertyItemDelegate;
 
     Properties mProperties;
+
     Property *mProperty;
     QWidget *mPropertyEditor;
 

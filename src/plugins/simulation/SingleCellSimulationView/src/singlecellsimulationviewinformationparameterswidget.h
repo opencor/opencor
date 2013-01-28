@@ -21,17 +21,23 @@ namespace OpenCOR {
 
 namespace Core {
     class PropertyEditorWidget;
+    class PropertyItem;
 }   // namespace Core
 
 //==============================================================================
 
 namespace CellMLSupport {
     class CellmlFileRuntime;
+    class CellmlFileRuntimeModelParameter;
 }   // namespace CellMLSupport
 
 //==============================================================================
 
 namespace SingleCellSimulationView {
+
+//==============================================================================
+
+class SingleCellSimulationViewSimulationData;
 
 //==============================================================================
 
@@ -51,10 +57,15 @@ public:
     void initialize(const QString &pFileName,
                     CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
 
+    void updateData(SingleCellSimulationViewSimulationData *pData);
+
     void cancelPropertyEditing();
 
 private:
     QMap<QString, Core::PropertyEditorWidget *> mPropertyEditors;
+
+    QMap<Core::PropertyItem *, CellMLSupport::CellmlFileRuntimeModelParameter *> mModelParameters;
+    QMap<CellMLSupport::CellmlFileRuntimeModelParameter *, Core::PropertyItem *> mModelParameterValues;
 
     QList<int> mColumnWidths;
 

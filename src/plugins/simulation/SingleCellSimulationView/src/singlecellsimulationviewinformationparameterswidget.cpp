@@ -6,6 +6,7 @@
 #include "cellmlfilevariable.h"
 #include "propertyeditorwidget.h"
 #include "singlecellsimulationviewinformationparameterswidget.h"
+#include "singlecellsimulationviewsimulation.h"
 
 //==============================================================================
 
@@ -22,6 +23,8 @@ namespace SingleCellSimulationView {
 SingleCellSimulationViewInformationParametersWidget::SingleCellSimulationViewInformationParametersWidget(QWidget *pParent) :
     QStackedWidget(pParent),
     mPropertyEditors(QMap<QString, Core::PropertyEditorWidget *>()),
+    mModelParameters(QMap<Core::PropertyItem *, CellMLSupport::CellmlFileRuntimeModelParameter *>()),
+    mModelParameterValues(QMap<CellMLSupport::CellmlFileRuntimeModelParameter *, Core::PropertyItem *>()),
     mColumnWidths(QList<int>())
 {
     // Determine the default width of each column of our property editors
@@ -75,8 +78,6 @@ void SingleCellSimulationViewInformationParametersWidget::saveSettings(QSettings
 void SingleCellSimulationViewInformationParametersWidget::initialize(const QString &pFileName,
                                                                      CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime)
 {
-    Q_UNUSED(pFileName);
-
     // Make sure that we have a CellML file runtime
 
     if (!pCellmlFileRuntime)
@@ -118,6 +119,45 @@ void SingleCellSimulationViewInformationParametersWidget::initialize(const QStri
     // Set our retrieved property editor as our widget
 
     setCurrentWidget(propertyEditor);
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewInformationParametersWidget::updateData(SingleCellSimulationViewSimulationData *pData)
+{
+    // Retrieve our current property editor, if any
+
+    Core::PropertyEditorWidget *propertyEditor = qobject_cast<Core::PropertyEditorWidget *>(currentWidget());
+
+    if (!propertyEditor)
+        return;
+
+    // Update our property editor's data
+
+    foreach (Core::Property *property, propertyEditor->properties()) {
+        Core::PropertyItem *propertyValue = property->value();
+        CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter = mModelParameters.value(propertyValue);
+
+        if (modelParameter)
+            switch (modelParameter->type()) {
+            case CellMLSupport::CellmlFileRuntimeModelParameter::Constant:
+                propertyValue->setText(QString::number(pData->constants()[modelParameter->index()]));
+
+                break;
+            case CellMLSupport::CellmlFileRuntimeModelParameter::State:
+                propertyValue->setText(QString::number(pData->states()[modelParameter->index()]));
+
+                break;
+            case CellMLSupport::CellmlFileRuntimeModelParameter::Algebraic:
+                propertyValue->setText(QString::number(pData->algebraic()[modelParameter->index()]));
+
+                break;
+            default:
+                // Either Voi or Undefined, so...
+
+                ;
+            }
+    }
 }
 
 //==============================================================================
@@ -181,6 +221,12 @@ void SingleCellSimulationViewInformationParametersWidget::populateModel(Core::Pr
 
         pPropertyEditor->setStringPropertyItem(property->name(), modelParameter->name()+QString(modelParameter->degree(), '\''));
         pPropertyEditor->setStringPropertyItem(property->unit(), modelParameter->unit());
+
+        // Keep track of the two-way link between model parameters and value
+        // cells
+
+        mModelParameters.insert(property->value(), modelParameter);
+        mModelParameterValues.insert(modelParameter, property->value());
     }
 
     // Expand all our properties

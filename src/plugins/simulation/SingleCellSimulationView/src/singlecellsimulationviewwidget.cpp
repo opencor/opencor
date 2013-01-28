@@ -827,7 +827,10 @@ void SingleCellSimulationViewWidget::updateDelayValue(const double &pDelayValue)
 
 void SingleCellSimulationViewWidget::simulationDataChanged(SingleCellSimulationViewSimulationData *pData)
 {
-//---GRY--- TO BE DONE...
+    // Some simulation data has changed, so ask our parameters widget to update
+    // itself
+
+    mContentsWidget->informationWidget()->parametersWidget()->updateData(pData);
 }
 
 //==============================================================================

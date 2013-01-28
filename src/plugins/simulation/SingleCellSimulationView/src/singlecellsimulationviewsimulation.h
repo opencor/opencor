@@ -51,6 +51,10 @@ public:
     explicit SingleCellSimulationViewSimulationData(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
     ~SingleCellSimulationViewSimulationData();
 
+    double * constants() const;
+    double * states() const;
+    double * algebraic() const;
+
     int delay() const;
     void setDelay(const int &pDelay);
 

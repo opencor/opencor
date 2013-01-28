@@ -68,6 +68,33 @@ SingleCellSimulationViewSimulationData::~SingleCellSimulationViewSimulationData(
 
 //==============================================================================
 
+double * SingleCellSimulationViewSimulationData::constants() const
+{
+    // Return our constants array
+
+    return mConstants;
+}
+
+//==============================================================================
+
+double * SingleCellSimulationViewSimulationData::states() const
+{
+    // Return our states array
+
+    return mStates;
+}
+
+//==============================================================================
+
+double * SingleCellSimulationViewSimulationData::algebraic() const
+{
+    // Return our algebraic array
+
+    return mAlgebraic;
+}
+
+//==============================================================================
+
 int SingleCellSimulationViewSimulationData::delay() const
 {
     // Return our delay

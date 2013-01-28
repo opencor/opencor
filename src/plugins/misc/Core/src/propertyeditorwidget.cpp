@@ -573,7 +573,8 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
     mShowUnits = pShowUnits;
     mAutoUpdateHeight = pAutoUpdateHeight;
 
-    mProperties     = Properties();
+    mProperties = Properties();
+
     mProperty       = 0;
     mPropertyEditor = 0;
 
@@ -1344,6 +1345,15 @@ void PropertyEditorWidget::editProperty(Property *pProperty,
         if (pProperty->value()->isEditable())
             edit(propertyIndex);
     }
+}
+
+//==============================================================================
+
+Properties PropertyEditorWidget::properties() const
+{
+    // Return our properties
+
+    return mProperties;
 }
 
 //==============================================================================
