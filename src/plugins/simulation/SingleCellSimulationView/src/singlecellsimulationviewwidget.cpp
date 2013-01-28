@@ -408,6 +408,9 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
         // Create a few connections
 
+        connect(mSimulation, SIGNAL(dataChanged(SingleCellSimulationViewSimulationData *)),
+                this, SLOT(simulationDataChanged(SingleCellSimulationViewSimulationData *)));
+
         connect(mSimulation, SIGNAL(running()),
                 this, SLOT(simulationRunning()));
         connect(mSimulation, SIGNAL(pausing()),
@@ -659,6 +662,12 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
         mOutputWidget->ensureCursorVisible();
     }
+
+    // If no error occurred, then reset our simulation, so that its data gets
+    // reset (initialised)
+
+    if (!hasError)
+        mSimulation->reset();
 }
 
 //==============================================================================
@@ -802,6 +811,13 @@ void SingleCellSimulationViewWidget::updateDelayValue(const double &pDelayValue)
 
     if (mSimulation)
         mSimulation->setDelay(pDelayValue);
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewWidget::simulationDataChanged(SingleCellSimulationViewSimulationData *pData)
+{
+//---GRY--- TO BE DONE...
 }
 
 //==============================================================================

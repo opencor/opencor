@@ -43,8 +43,10 @@ class SingleCellSimulationViewWidget;
 
 //==============================================================================
 
-class SingleCellSimulationViewSimulationData
+class SingleCellSimulationViewSimulationData : public QObject
 {
+    Q_OBJECT
+
 public:
     explicit SingleCellSimulationViewSimulationData(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
     ~SingleCellSimulationViewSimulationData();
@@ -61,7 +63,12 @@ public:
     double pointInterval() const;
     void setPointInterval(const double &pPointInterval);
 
+    void reset();
+    void recomputeVariables(const double &pStartingPoint);
+
 private:
+    CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
+
     int mDelay;
 
     double mStartingPoint;
@@ -73,6 +80,9 @@ private:
     double *mStates;
     double *mAlgebraic;
     double *mCondVar;
+
+Q_SIGNALS:
+    void dataChanged(SingleCellSimulationViewSimulationData *pData);
 };
 
 //==============================================================================
@@ -94,6 +104,9 @@ public:
     void setData(SingleCellSimulationViewWidget *pGui);
     void setDelay(const int &pDelay);
 
+    void reset();
+    void recomputeVariables(const double &pStartingPoint);
+
     void run();
     void pause();
     void stop();
@@ -107,6 +120,8 @@ private:
     SingleCellSimulationViewSimulationData *mData;
 
 Q_SIGNALS:
+    void dataChanged(SingleCellSimulationViewSimulationData *pData);
+
     void running();
     void pausing();
     void stopped(const int &pElapsedTime);

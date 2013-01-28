@@ -51,6 +51,7 @@ namespace SingleCellSimulationView {
 class SingleCellSimulationViewContentsWidget;
 class SingleCellSimulationViewPlugin;
 class SingleCellSimulationViewSimulation;
+class SingleCellSimulationViewSimulationData;
 
 //==============================================================================
 
@@ -144,6 +145,8 @@ private Q_SLOTS:
     void on_actionCsvExport_triggered();
 
     void updateDelayValue(const double &pDelayValue);
+
+    void simulationDataChanged(SingleCellSimulationViewSimulationData *pData);
 
     void simulationRunning();
     void simulationPausing();

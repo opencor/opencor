@@ -22,6 +22,7 @@ namespace SingleCellSimulationView {
 //==============================================================================
 
 SingleCellSimulationViewSimulationData::SingleCellSimulationViewSimulationData(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime) :
+    mCellmlFileRuntime(pCellmlFileRuntime),
     mDelay(0),
     mStartingPoint(0.0),
     mEndingPoint(1000.0),
@@ -50,14 +51,6 @@ SingleCellSimulationViewSimulationData::SingleCellSimulationViewSimulationData(C
     memset(mStates, 0, statesCount*sizeOfDouble);
     memset(mAlgebraic, 0, algebraicCount*sizeOfDouble);
     memset(mCondVar, 0, condVarCount*sizeOfDouble);
-
-    // Initialise our model parameter values which means both initialising our
-    // 'constants' and computing our 'variables'
-    // Note: both methods are common and identical for both ODE and DAE
-    //       solvers...
-
-    pCellmlFileRuntime->initializeConstants()(mConstants, mRates, mStates);
-    pCellmlFileRuntime->computeVariables()(mStartingPoint, mConstants, mRates, mStates, mAlgebraic);
 }
 
 //==============================================================================
@@ -107,6 +100,10 @@ void SingleCellSimulationViewSimulationData::setStartingPoint(const double &pSta
     // Set our starting point
 
     mStartingPoint = pStartingPoint;
+
+    // Recompute our 'variables'
+
+    recomputeVariables(pStartingPoint);
 }
 
 //==============================================================================
@@ -147,6 +144,31 @@ void SingleCellSimulationViewSimulationData::setPointInterval(const double &pPoi
 
 //==============================================================================
 
+void SingleCellSimulationViewSimulationData::reset()
+{
+    // Reset our model parameter values which means both initialising our
+    // 'constants' and computing our 'variables'
+    // Note: recomputeVariables() will let people know that our data changed...
+
+    mCellmlFileRuntime->initializeConstants()(mConstants, mRates, mStates);
+    recomputeVariables(mStartingPoint);
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewSimulationData::recomputeVariables(const double &pStartingPoint)
+{
+    // Recompute our 'variables'
+
+    mCellmlFileRuntime->computeVariables()(pStartingPoint, mConstants, mRates, mStates, mAlgebraic);
+
+    // Let people know that our data has changed
+
+    emit dataChanged(this);
+}
+
+//==============================================================================
+
 SingleCellSimulationViewSimulation::SingleCellSimulationViewSimulation(const QString &pFileName,
                                                                        CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime) :
     mWorker(0),
@@ -154,6 +176,14 @@ SingleCellSimulationViewSimulation::SingleCellSimulationViewSimulation(const QSt
     mFileName(pFileName),
     mData(new SingleCellSimulationViewSimulationData(pCellmlFileRuntime))
 {
+    // A connection to keep track of changes
+
+    connect(mData, SIGNAL(dataChanged(SingleCellSimulationViewSimulationData *)),
+            this, SIGNAL(dataChanged(SingleCellSimulationViewSimulationData *)));
+
+    // Reset our data (and indirectly let people know that our data has changed)
+
+    mData->reset();
 }
 
 //==============================================================================
@@ -222,6 +252,24 @@ void SingleCellSimulationViewSimulation::setDelay(const int &pDelay)
     // Set our delay
 
     mData->setDelay(pDelay);
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewSimulation::reset()
+{
+    // Reset our data
+
+    mData->reset();
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewSimulation::recomputeVariables(const double &pStartingPoint)
+{
+    // Recompute our 'variables'
+
+    mData->recomputeVariables(pStartingPoint);
 }
 
 //==============================================================================
