@@ -138,18 +138,18 @@ void SingleCellSimulationViewInformationParametersWidget::updateData(SingleCellS
         Core::PropertyItem *propertyValue = property->value();
         CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter = mModelParameters.value(propertyValue);
 
-        if (modelParameter)
+        if (modelParameter) {
             switch (modelParameter->type()) {
             case CellMLSupport::CellmlFileRuntimeModelParameter::Constant:
-                propertyValue->setText(QString::number(pData->constants()[modelParameter->index()]));
+                propertyEditor->setDoublePropertyItem(propertyValue, pData->constants()[modelParameter->index()]);
 
                 break;
             case CellMLSupport::CellmlFileRuntimeModelParameter::State:
-                propertyValue->setText(QString::number(pData->states()[modelParameter->index()]));
+                propertyEditor->setDoublePropertyItem(propertyValue, pData->states()[modelParameter->index()]);
 
                 break;
             case CellMLSupport::CellmlFileRuntimeModelParameter::Algebraic:
-                propertyValue->setText(QString::number(pData->algebraic()[modelParameter->index()]));
+                propertyEditor->setDoublePropertyItem(propertyValue, pData->algebraic()[modelParameter->index()]);
 
                 break;
             default:
@@ -157,6 +157,7 @@ void SingleCellSimulationViewInformationParametersWidget::updateData(SingleCellS
 
                 ;
             }
+        }
     }
 }
 
