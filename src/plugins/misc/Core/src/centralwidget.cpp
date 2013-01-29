@@ -806,7 +806,7 @@ bool CentralWidget::closeFile(const int &pIndex)
                 if (guiInterface && guiInterface->hasViewWidget(fileName)) {
                     mContents->removeWidget(guiInterface->viewWidget(fileName));
 
-                    guiInterface->deleteViewWidget(fileName);
+                    guiInterface->removeViewWidget(fileName);
                 }
             }
 

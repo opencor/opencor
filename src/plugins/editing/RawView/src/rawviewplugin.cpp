@@ -85,7 +85,7 @@ bool RawViewPlugin::hasViewWidget(const QString &pFileName) const
 
 //==============================================================================
 
-void RawViewPlugin::deleteViewWidget(const QString &pFileName)
+void RawViewPlugin::removeViewWidget(const QString &pFileName)
 {
     // Remove the view widget from our list, should there be one for the given
     // file name

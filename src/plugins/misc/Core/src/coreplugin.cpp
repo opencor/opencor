@@ -472,11 +472,12 @@ void CorePlugin::fileClosed(const QString &pFileName)
 {
     // Add the file to our list of recent files (making sure that we don't end
     // up with more than 10 recent file names) and update our reopen sub-menu
+    // Note: the most recent file is to be shown first...
 
-    mRecentFileNames << pFileName;
+    mRecentFileNames.prepend(pFileName);
 
     while (mRecentFileNames.count() > 10)
-        mRecentFileNames.removeFirst();
+        mRecentFileNames.removeLast();
 
     updateFileReopenMenu();
 }

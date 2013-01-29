@@ -217,7 +217,7 @@ bool CellMLAnnotationViewPlugin::hasViewWidget(const QString &pFileName) const
 
 //==============================================================================
 
-void CellMLAnnotationViewPlugin::deleteViewWidget(const QString &pFileName)
+void CellMLAnnotationViewPlugin::removeViewWidget(const QString &pFileName)
 {
     // Remove the view widget from our list, should there be one for the given
     // file name

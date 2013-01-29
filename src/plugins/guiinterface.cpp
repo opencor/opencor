@@ -362,7 +362,7 @@ bool GuiInterface::hasViewWidget(const QString &pFileName) const
 
 //==============================================================================
 
-void GuiInterface::deleteViewWidget(const QString &pFileName)
+void GuiInterface::removeViewWidget(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
