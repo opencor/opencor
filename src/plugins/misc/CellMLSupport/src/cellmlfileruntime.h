@@ -47,6 +47,7 @@ public:
         Voi,
         Constant,
         State,
+        Rate,
         Algebraic,
         Undefined
     };

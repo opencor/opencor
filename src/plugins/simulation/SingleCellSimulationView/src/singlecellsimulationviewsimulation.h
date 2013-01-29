@@ -53,6 +53,7 @@ public:
 
     double * constants() const;
     double * states() const;
+    double * rates() const;
     double * algebraic() const;
 
     int delay() const;
@@ -80,8 +81,8 @@ private:
     double mPointInterval;
 
     double *mConstants;
-    double *mRates;
     double *mStates;
+    double *mRates;
     double *mAlgebraic;
     double *mCondVar;
 

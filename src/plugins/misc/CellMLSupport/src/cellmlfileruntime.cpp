@@ -633,7 +633,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
     // Retrieve all the model parameters and sort them by component/variable
     // name
 
-    ObjRef<iface::cellml_services::ComputationTargetIterator> computationTargetIterator = mCellmlApiOdeCodeInformation->iterateTargets();
+    ObjRef<iface::cellml_services::ComputationTargetIterator> computationTargetIterator = genericCodeInformation->iterateTargets();
 
     forever {
         ObjRef<iface::cellml_services::ComputationTarget> computationTarget = computationTargetIterator->nextComputationTarget();
@@ -657,6 +657,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
 
             break;
         case iface::cellml_services::STATE_VARIABLE:
+        case iface::cellml_services::PSEUDOSTATE_VARIABLE:
             modelParameterType = CellmlFileRuntimeModelParameter::State;
 
             break;
@@ -667,7 +668,10 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
             //       dealing with a 'proper' algebraic variable otherwise we
             //       are dealing with a rate variable...
 
-            modelParameterType = CellmlFileRuntimeModelParameter::Algebraic;
+            if (computationTarget->degree())
+                modelParameterType = CellmlFileRuntimeModelParameter::Rate;
+            else
+                modelParameterType = CellmlFileRuntimeModelParameter::Algebraic;
 
             break;
         default:
@@ -740,6 +744,10 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
                     break;
                 case CellmlFileRuntimeModelParameter::State:
                     modelParameterType = "state";
+
+                    break;
+                case CellmlFileRuntimeModelParameter::Rate:
+                    modelParameterType = "rate";
 
                     break;
                 case CellmlFileRuntimeModelParameter::Algebraic:

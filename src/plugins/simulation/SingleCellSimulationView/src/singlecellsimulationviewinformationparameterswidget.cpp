@@ -148,6 +148,10 @@ void SingleCellSimulationViewInformationParametersWidget::updateData(SingleCellS
                 propertyEditor->setDoublePropertyItem(propertyValue, pData->states()[modelParameter->index()]);
 
                 break;
+            case CellMLSupport::CellmlFileRuntimeModelParameter::Rate:
+                propertyEditor->setDoublePropertyItem(propertyValue, pData->rates()[modelParameter->index()]);
+
+                break;
             case CellMLSupport::CellmlFileRuntimeModelParameter::Algebraic:
                 propertyEditor->setDoublePropertyItem(propertyValue, pData->algebraic()[modelParameter->index()]);
 
@@ -216,7 +220,9 @@ void SingleCellSimulationViewInformationParametersWidget::populateModel(Core::Pr
         //       variables of degree 1, 2 and 3 will be V', V'' and V''',
         //       respectively)...
 
-        Core::Property *property = pPropertyEditor->addDoubleProperty(modelParameter->type() != CellMLSupport::CellmlFileRuntimeModelParameter::Algebraic, section);
+        bool canEditProperty =    (modelParameter->type() != CellMLSupport::CellmlFileRuntimeModelParameter::Rate)
+                               && (modelParameter->type() != CellMLSupport::CellmlFileRuntimeModelParameter::Algebraic);
+        Core::Property *property = pPropertyEditor->addDoubleProperty(canEditProperty, section);
 
         property->name()->setIcon(QIcon(":CellMLSupport_variableNode"));
 

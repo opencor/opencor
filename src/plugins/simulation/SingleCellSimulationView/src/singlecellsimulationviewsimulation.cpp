@@ -37,8 +37,8 @@ SingleCellSimulationViewSimulationData::SingleCellSimulationViewSimulationData(C
     int condVarCount = pCellmlFileRuntime->condVarCount();
 
     mConstants = new double[constantsCount];
-    mRates     = new double[ratesCount];
     mStates    = new double[statesCount];
+    mRates     = new double[ratesCount];
     mAlgebraic = new double[algebraicCount];
     mCondVar   = new double[condVarCount];
 
@@ -47,8 +47,8 @@ SingleCellSimulationViewSimulationData::SingleCellSimulationViewSimulationData(C
     static const int sizeOfDouble = sizeof(double);
 
     memset(mConstants, 0, constantsCount*sizeOfDouble);
-    memset(mRates, 0, ratesCount*sizeOfDouble);
     memset(mStates, 0, statesCount*sizeOfDouble);
+    memset(mRates, 0, ratesCount*sizeOfDouble);
     memset(mAlgebraic, 0, algebraicCount*sizeOfDouble);
     memset(mCondVar, 0, condVarCount*sizeOfDouble);
 }
@@ -60,8 +60,8 @@ SingleCellSimulationViewSimulationData::~SingleCellSimulationViewSimulationData(
     // Delete some internal objects
 
     delete[] mConstants;
-    delete[] mRates;
     delete[] mStates;
+    delete[] mRates;
     delete[] mAlgebraic;
     delete[] mCondVar;
 }
@@ -82,6 +82,15 @@ double * SingleCellSimulationViewSimulationData::states() const
     // Return our states array
 
     return mStates;
+}
+
+//==============================================================================
+
+double * SingleCellSimulationViewSimulationData::rates() const
+{
+    // Return our rates array
+
+    return mRates;
 }
 
 //==============================================================================
