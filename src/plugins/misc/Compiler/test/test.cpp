@@ -233,7 +233,7 @@ void Test::notOperatorTests()
 
     QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
              0.0);
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(!3.0),
+    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(0.0),
              1.0);
     QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(A),
              0.0);
@@ -252,11 +252,11 @@ void Test::orOperatorTests()
 
     QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 5.7),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(!3.0, 5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(0.0, 5.7),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, !5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 0.0),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(!3.0, !5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(0.0, 0.0),
              0.0);
     QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(A, B),
              1.0);
@@ -279,11 +279,11 @@ void Test::xorOperatorTests()
 
     QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 5.7),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(!3.0, 5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(0.0, 5.7),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, !5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 0.0),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(!3.0, !5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(0.0, 0.0),
              0.0);
     QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(A, B),
              0.0);
@@ -306,11 +306,11 @@ void Test::andOperatorTests()
 
     QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 5.7),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(!3.0, 5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(0.0, 5.7),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, !5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 0.0),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(!3.0, !5.7),
+    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(0.0, 0.0),
              0.0);
     QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(A, B),
              1.0);

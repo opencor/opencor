@@ -31,6 +31,10 @@ MACRO(INITIALISE_PROJECT)
         ELSE()
             SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
         ENDIF()
+
+        # Make sure that debugging is on for Qt
+
+        ADD_DEFINITIONS(-DQT_DEBUG)
     ELSE()
         MESSAGE("Building a release version...")
 
@@ -51,6 +55,10 @@ MACRO(INITIALISE_PROJECT)
             # Note #2: the above linking option has become obsolete on OS X,
             #          so...
         ENDIF()
+
+        # Make sure that debugging is off for Qt
+
+        ADD_DEFINITIONS(-DQT_NO_DEBUG)
     ENDIF()
 
     # Required packages

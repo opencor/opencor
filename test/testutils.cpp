@@ -7,7 +7,9 @@
 
 //==============================================================================
 
+#pragma GCC diagnostic ignored "-Wunused-private-field"
 #include <QtTest/QtTest>
+#pragma GCC diagnostic warning "-Wunused-private-field"
 
 //==============================================================================
 
