@@ -49,8 +49,7 @@ public:
     virtual void saveSettings(QSettings *pSettings) const;
 
     virtual QWidget * viewWidget(const QString &pFileName);
-    virtual bool hasViewWidget(const QString &pFileName) const;
-    virtual void removeViewWidget(const QString &pFileName);
+    virtual QWidget * removeViewWidget(const QString &pFileName);
     virtual QString viewName() const;
 
     virtual QIcon fileTabIcon(const QString &pFileName) const;

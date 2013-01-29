@@ -803,11 +803,8 @@ bool CentralWidget::closeFile(const int &pIndex)
             foreach (Plugin *plugin, mLoadedPlugins) {
                 GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
 
-                if (guiInterface && guiInterface->hasViewWidget(fileName)) {
-                    mContents->removeWidget(guiInterface->viewWidget(fileName));
-
-                    guiInterface->removeViewWidget(fileName);
-                }
+                if (guiInterface)
+                    mContents->removeWidget(guiInterface->removeViewWidget(fileName));
             }
 
         // Unregister the file from our file manager

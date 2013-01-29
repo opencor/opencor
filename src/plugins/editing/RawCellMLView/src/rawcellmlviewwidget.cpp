@@ -118,25 +118,6 @@ void RawCellmlViewWidget::saveSettings(QSettings *pSettings) const
 
 void RawCellmlViewWidget::initialize(const QString &pFileName)
 {
-    // Retrieve the size of our viewer and current editor, and hide the editor
-
-    bool needInitialSizes = !mBorderedEditor;
-
-    int borderedViewerHeight = 0;
-    int borderedEditorHeight = 0;
-
-    if (mBorderedEditor) {
-        // An editor is currently available, so retrieve the size of both our
-        // viewer and the current editor
-
-        borderedViewerHeight = mBorderedViewer->height();
-        borderedEditorHeight = mBorderedEditor->height();
-
-        // Hide the current editor
-
-        mBorderedEditor->hide();
-    }
-
     // Retrieve the editor associated with the file name, if any
 
     mBorderedEditor = mBorderedEditors.value(pFileName);
@@ -174,9 +155,31 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
         addWidget(mBorderedEditor);
     }
 
-    // Make sure that our 'new' bordered editor is visible
+    // Show/hide our bordered editors and adjust our sizes
 
-    mBorderedEditor->show();
+    QList<int> newSizes = QList<int>() << mBorderedViewerHeight;
+
+    for (int i = 1, iMax = count(); i < iMax; ++i) {
+        Core::BorderedWidget *borderedEditor = static_cast<Core::BorderedWidget *>(widget(i));
+
+        if (borderedEditor == mBorderedEditor) {
+            // This is the editor we are after, so show it and set its size
+
+            borderedEditor->show();
+
+            newSizes << mBorderedEditorHeight;
+        } else {
+            // Not the editor we are after, so hide it and set its size
+            // Note: theoretically speaking, we could set its size to whatever
+            //       value we want since it's anyway hidden...
+
+            borderedEditor->hide();
+
+            newSizes << 0;
+        }
+    }
+
+    setSizes(newSizes);
 
     // Set the raw CellML view widget's focus proxy to our 'new' editor and
     // make sure that it immediately gets the focus
@@ -187,32 +190,6 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
     setFocusProxy(mBorderedEditor->widget());
 
     mBorderedEditor->widget()->setFocus();
-
-    // Adjust our sizes
-
-    if (needInitialSizes) {
-        // We need to initialise our sizes, so...
-
-        setSizes(QList<int>() << mBorderedViewerHeight
-                              << mBorderedEditorHeight);
-    } else {
-        // Our sizes have already been initialised, so set our sizes so that
-        // our 'new' editor gets its size set to that of the 'old' editor
-
-        QList<int> newSizes = QList<int>() << borderedViewerHeight;
-
-        for (int i = 1, iMax = count(); i < iMax; ++i)
-            if (static_cast<Core::BorderedWidget *>(widget(i)) == mBorderedEditor)
-                // This is the editor we are after, so...
-
-                newSizes << borderedEditorHeight;
-            else
-                // Not the editor we are after, so...
-
-                newSizes << 0;
-
-        setSizes(newSizes);
-    }
 }
 
 //==============================================================================

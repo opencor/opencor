@@ -40,8 +40,7 @@ public:
     ~RawViewPlugin();
 
     virtual QWidget * viewWidget(const QString &pFileName);
-    virtual bool hasViewWidget(const QString &pFileName) const;
-    virtual void removeViewWidget(const QString &pFileName);
+    virtual QWidget * removeViewWidget(const QString &pFileName);
     virtual QString viewName() const;
 
 private:

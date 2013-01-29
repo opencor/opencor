@@ -76,30 +76,23 @@ QWidget * RawViewPlugin::viewWidget(const QString &pFileName)
 
 //==============================================================================
 
-bool RawViewPlugin::hasViewWidget(const QString &pFileName) const
-{
-    // Return whether a view widget exists for the given file name
-
-    return mViewWidgets.value(pFileName);
-}
-
-//==============================================================================
-
-void RawViewPlugin::removeViewWidget(const QString &pFileName)
+QWidget * RawViewPlugin::removeViewWidget(const QString &pFileName)
 {
     // Remove the view widget from our list, should there be one for the given
     // file name
 
-    RawViewWidget *viewWidget = mViewWidgets.value(pFileName);
+    RawViewWidget *res = mViewWidgets.value(pFileName);
 
-    if (viewWidget) {
+    if (res) {
         // There is a view widget for the given file name, so delete it and
         // remove it from our list
 
-        delete viewWidget;
+        delete res;
 
         mViewWidgets.remove(pFileName);
     }
+
+    return res;
 }
 
 //==============================================================================
