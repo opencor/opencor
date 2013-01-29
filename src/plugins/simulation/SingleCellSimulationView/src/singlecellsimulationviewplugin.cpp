@@ -124,6 +124,24 @@ QWidget * SingleCellSimulationViewPlugin::viewWidget(const QString &pFileName)
 
 //==============================================================================
 
+bool SingleCellSimulationViewPlugin::hasViewWidget(const QString &pFileName) const
+{
+    // Return whether a view widget exists for the given file name
+
+    return mViewWidget->isManaged(pFileName);
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewPlugin::removeViewWidget(const QString &pFileName)
+{
+    // Ask our generic view widget to finalise the given file
+
+    mViewWidget->finalize(pFileName);
+}
+
+//==============================================================================
+
 QString SingleCellSimulationViewPlugin::viewName() const
 {
     // Return our single cell view's name

@@ -687,6 +687,37 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
 //==============================================================================
 
+bool SingleCellSimulationViewWidget::isManaged(const QString &pFileName) const
+{
+    // Return whether the given file name is managed
+
+    return mSimulations.value(pFileName);
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewWidget::finalize(const QString &pFileName)
+{
+    // Remove the bordered editor, should there be one for the given file name
+
+    SingleCellSimulationViewSimulation *simulation = mSimulations.value(pFileName);
+
+    if (simulation) {
+        // There is a simulation object for the given file name, so delete it
+        // and remove it from our list
+
+        delete simulation;
+
+        mSimulations.remove(pFileName);
+
+        // Reset our memory of the current simulation object
+
+        mSimulation = 0;
+    }
+}
+
+//==============================================================================
+
 int SingleCellSimulationViewWidget::tabBarIconSize() const
 {
     // Return the size of a file tab icon

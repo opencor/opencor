@@ -240,7 +240,7 @@ void RawCellmlViewWidget::finalize(const QString &pFileName)
 
         mBorderedEditors.remove(pFileName);
 
-        // Reset our memory of who is the current bordered editor
+        // Reset our memory of the current bordered editor
 
         mBorderedEditor = 0;
     }

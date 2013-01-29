@@ -110,7 +110,7 @@ bool RawCellMLViewPlugin::hasViewWidget(const QString &pFileName) const
 
 void RawCellMLViewPlugin::removeViewWidget(const QString &pFileName)
 {
-    // Ask our generic raw CellML view widget to finalise the given file
+    // Ask our generic view widget to finalise the given file
 
     mViewWidget->finalize(pFileName);
 }
