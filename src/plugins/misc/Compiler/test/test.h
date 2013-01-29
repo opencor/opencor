@@ -2,6 +2,10 @@
 // Compiler test
 //==============================================================================
 
+#include <QtGlobal>
+
+//==============================================================================
+
 #ifdef Q_OS_MAC
     #pragma GCC diagnostic ignored "-Wunused-private-field"
 #endif
