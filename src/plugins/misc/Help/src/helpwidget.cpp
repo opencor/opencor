@@ -129,9 +129,8 @@ QNetworkReply * HelpNetworkAccessManager::createRequest(Operation,
 
 //==============================================================================
 
-HelpPage::HelpPage(QHelpEngine *pHelpEngine, QObject *pParent) :
-    QWebPage(pParent),
-    mHelpEngine(pHelpEngine)
+HelpPage::HelpPage(QObject *pParent) :
+    QWebPage(pParent)
 {
 }
 
@@ -198,7 +197,7 @@ HelpWidget::HelpWidget(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
 
     // Use our own help page and help network access manager classes
 
-    setPage(new HelpPage(pHelpEngine, this));
+    setPage(new HelpPage(this));
 
     page()->setNetworkAccessManager(new HelpNetworkAccessManager(pHelpEngine,
                                                                  this));

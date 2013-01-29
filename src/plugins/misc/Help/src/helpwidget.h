@@ -73,7 +73,7 @@ private:
 class HelpPage : public QWebPage
 {
 public:
-    explicit HelpPage(QHelpEngine *pHelpEngine, QObject *pParent);
+    explicit HelpPage(QObject *pParent);
 
 protected:
     virtual bool acceptNavigationRequest(QWebFrame*,
@@ -81,8 +81,6 @@ protected:
                                          QWebPage::NavigationType);
 
 private:
-    QHelpEngine *mHelpEngine;
-
     QMap<QString, QString> mFileNames;
 };
 
