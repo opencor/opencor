@@ -7,8 +7,10 @@
 
         <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 
+        <link href="../3rdparty/googleCodePrettify/prettify.css" rel="stylesheet" type="text/css"/>
         <link href="res/stylesheet.css" rel="stylesheet" type="text/css"/>
 
+        <script src="../3rdparty/googleCodePrettify/prettify.js" type="text/javascript"></script>
         <script src="../3rdparty/jQuery/jquery.js" type="text/javascript"></script>
         <script src="../res/common.js" type="text/javascript"></script>
         <script src="res/menu.js" type="text/javascript"></script>
@@ -21,7 +23,7 @@
         <p>
             The following issues/limitations have been reported/observed while using OpenCOR on our <a href="supportedPlatforms.html">supported platforms</a>. They may apply to you, or not, depending on the platform you use and your specific circumstances.
         </p>
-        
+
         <div class="section">
             Windows, Linux and OS X
         </div>
@@ -39,6 +41,23 @@
         <ul>
             <li>
                 OpenCOR's File Browser plugin may, on some systems, result in OpenCOR being slow to respond at startup. This has nothing to do with OpenCOR, but with Windows or, more precisely, a program which tightly integrates with it. There are <a href="http://www.brighthub.com/computing/windows-platform/articles/86552.aspx">several known causes and solutions</a> to this problem. However, should none of those solutions work for you, you might then have to uninstall the plugin.
+            </li>
+        </ul>
+
+        <div class="section">
+            Linux
+        </div>
+
+        <ul>
+            <li>
+                If you run Linux as a virtual machine within <a href="https://www.virtualbox.org/">VirtualBox</a>, then be aware that there are known 3D issues (e.g. see <a href="https://www.virtualbox.org/ticket/6848">https://www.virtualbox.org/ticket/6848</a>). Now, it happens that OpenCOR needs 3D support, so to get it to work in your virtual machine, indirect rendering will have to be used (note: to disable 3D hardware acceleration in your virtual machine will not be enough). This can be done every time you run OpenCOR:
+
+                <pre class="prettyprint">$ LIBGL_ALWAYS_INDIRECT=1 ./OpenCOR</pre>
+
+                Or once and for all by exporting <code>LIBGL_ALWAYS_INDIRECT</code> (e.g. in your <code>~/.bashrc</code> file):
+
+                <pre class="prettyprint">$ export LIBGL_ALWAYS_INDIRECT=1</pre>
+
             </li>
         </ul>
 
