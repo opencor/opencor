@@ -234,7 +234,6 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
                                              const QModelIndex &pIndex) const
 {
     Q_UNUSED(pOption);
-    Q_UNUSED(pIndex);
 
     // Create and return an editor for our item, based on its type
 
@@ -591,22 +590,22 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
     // Create our item delegate and set it, after making sure that we handle a
     // few of its signals
 
-    mPropertyItemDelegate = new PropertyItemDelegate();
+    PropertyItemDelegate *propertyItemDelegate = new PropertyItemDelegate();
 
-    connect(mPropertyItemDelegate, SIGNAL(openEditor(QWidget *)),
+    connect(propertyItemDelegate, SIGNAL(openEditor(QWidget *)),
             this, SLOT(editorOpened(QWidget *)));
-    connect(mPropertyItemDelegate, SIGNAL(closeEditor(QWidget *, QAbstractItemDelegate::EndEditHint)),
+    connect(propertyItemDelegate, SIGNAL(closeEditor(QWidget *, QAbstractItemDelegate::EndEditHint)),
             this, SLOT(editorClosed()));
 
-    connect(mPropertyItemDelegate, SIGNAL(goToPreviousPropertyRequested()),
+    connect(propertyItemDelegate, SIGNAL(goToPreviousPropertyRequested()),
             this, SLOT(goToPreviousProperty()));
-    connect(mPropertyItemDelegate, SIGNAL(goToNextPropertyRequested()),
+    connect(propertyItemDelegate, SIGNAL(goToNextPropertyRequested()),
             this, SLOT(goToNextProperty()));
 
-    connect(mPropertyItemDelegate, SIGNAL(listPropertyChanged(const QString &)),
+    connect(propertyItemDelegate, SIGNAL(listPropertyChanged(const QString &)),
             this, SIGNAL(listPropertyChanged(const QString &)));
 
-    setItemDelegate(mPropertyItemDelegate);
+    setItemDelegate(propertyItemDelegate);
 
     // Resize our height in case data have been changed or one the properties
     // gets expanded/collapsed

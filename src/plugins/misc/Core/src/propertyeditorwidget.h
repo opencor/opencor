@@ -280,8 +280,6 @@ private:
 
     QStandardItemModel *mModel;
 
-    PropertyItemDelegate *mPropertyItemDelegate;
-
     Properties mProperties;
 
     Property *mProperty;
