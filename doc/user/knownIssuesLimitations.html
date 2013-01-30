@@ -50,14 +50,17 @@
 
         <ul>
             <li>
-                If you run Linux as a virtual machine within <a href="https://www.virtualbox.org/">VirtualBox</a>, then be aware that there are known 3D issues (e.g. see <a href="https://www.virtualbox.org/ticket/6848">https://www.virtualbox.org/ticket/6848</a>). Now, it happens that OpenCOR needs 3D support, so to get it to work in your virtual machine, indirect rendering will have to be used (note: to disable 3D hardware acceleration in your virtual machine will not be enough). This can be done every time you run OpenCOR:
+                If you run Linux as a virtual machine within <a href="https://www.virtualbox.org/">VirtualBox</a>, then please be aware that there are known issues with 3D support (e.g. see <a href="https://www.virtualbox.org/ticket/6848">https://www.virtualbox.org/ticket/6848</a>). Now, it happens that OpenCOR needs 3D support, so to get it to work in your virtual machine, indirect rendering has to be used and this can be done either every time you run OpenCOR:
 
                 <pre class="prettyprint">$ LIBGL_ALWAYS_INDIRECT=1 ./OpenCOR</pre>
 
-                Or once and for all by exporting <code>LIBGL_ALWAYS_INDIRECT</code> (e.g. in your <code>~/.bashrc</code> file):
+                or once and for all by exporting <code>LIBGL_ALWAYS_INDIRECT</code> (e.g. in your <code>~/.bashrc</code> file):
 
                 <pre class="prettyprint">$ export LIBGL_ALWAYS_INDIRECT=1</pre>
 
+                <div>
+                    <strong>Note:</strong> to disable 3D hardware acceleration in your virtual machine is not enough.
+                </div>
             </li>
         </ul>
 
