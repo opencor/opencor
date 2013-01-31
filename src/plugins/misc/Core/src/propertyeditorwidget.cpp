@@ -375,17 +375,10 @@ void PropertyItem::setList(const QStringList &pList)
         // Use the first item of our list as the default value, assuming the
         // list is not empty
 
-        if (pList.isEmpty())
-            // The list is empty, so...
-
-            setText(mEmptyListValue);
-        else
-            setText(pList.first());
-
-        // Use the value as a tooltip (in case it's too long and doesn't fit
-        // within the allocated space we have)
-
-        setToolTip(text());
+        PropertyEditorWidget::setPropertyItem(this,
+                                              pList.isEmpty()?
+                                                  mEmptyListValue:
+                                                  pList.first());
     }
 }
 
@@ -607,7 +600,7 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
 
     setItemDelegate(propertyItemDelegate);
 
-    // Resize our height in case data have been changed or one the properties
+    // Resize our height in case some data has changed or one of the properties
     // gets expanded/collapsed
 
     connect(mModel, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
@@ -685,24 +678,16 @@ void PropertyEditorWidget::retranslateEmptyListProperties(QStandardItem *pItem)
     QModelIndex index = pItem->index();
 
     if (index.isValid()) {
-        // The index is valid (i.e. it's not our invisible root item), so
-        // retrieve the corresponding property item
+        // The index is valid (i.e. it's not our invisible root item), soc heck
+        // whether the property value is of list type and whether its list is
+        // empty and, if so, then set its text value accordingly
 
         PropertyItem *propertyValue = property(index)->value();
 
-        // Check whether the property value is of list type and whether its list
-        // is empty and, if so, then set its text value accordingly
-
         if (   propertyValue
             && (propertyValue->type() == PropertyItem::List)
-            && (propertyValue->list().isEmpty())) {
-            propertyValue->setText(propertyValue->emptyListValue());
-
-            // Use the value as a tooltip (in case it's too long and doesn't fit
-            // within the allocated space we have)
-
-            propertyValue->setToolTip(propertyValue->text());
-        }
+            && (propertyValue->list().isEmpty()))
+            setPropertyItem(propertyValue, propertyValue->emptyListValue());
     }
 
     // Retranslate the current item's children, if any
@@ -874,14 +859,8 @@ void PropertyEditorWidget::setGuiState(PropertyEditorWidgetGuiState *pGuiState)
 
         PropertyItem *propertyValue = guiStateProperty->property()->value();
 
-        if (propertyValue) {
-            propertyValue->setText(guiStateProperty->value());
-
-            // Use the value as a tooltip (in case it's too long and doesn't fit
-            // within the allocated space we have)
-
-            propertyValue->setToolTip(propertyValue->text());
-        }
+        if (propertyValue)
+            setPropertyItem(propertyValue, guiStateProperty->value());
     }
 
     // Set our current index, if it is valid
@@ -976,24 +955,38 @@ Property * PropertyEditorWidget::addListProperty(Property *pParent)
 
 //==============================================================================
 
-void PropertyEditorWidget::setStringPropertyItem(QStandardItem *pPropertyItem,
-                                                 const QString &pValue)
+void PropertyEditorWidget::setPropertyItem(QStandardItem *pPropertyItem,
+                                           const QString &pValue)
 {
-    // Set the value of the given string property item, if it exists, and use
-    // its value as a tooltip (in case it's too long and doesn't fit within the
-    // allocated space we have)
+    // Set the value of the given property item, if it exists, and use its value
+    // as a tooltip (in case it's too long and doesn't fit within the allocated
+    // space we have)
 
-    if (pPropertyItem &&
-        (   (pPropertyItem->type() == PropertyItem::Section)
-         || (pPropertyItem->type() == PropertyItem::String))) {
+    if (pPropertyItem) {
+        // Set the property item itself
+
         pPropertyItem->setText(pValue);
-        pPropertyItem->setToolTip(pPropertyItem->text());
+        pPropertyItem->setToolTip(pValue);
     }
 }
 
 //==============================================================================
 
-int PropertyEditorWidget::integerPropertyItem(PropertyItem *pPropertyItem) const
+void PropertyEditorWidget::setStringPropertyItem(QStandardItem *pPropertyItem,
+                                                 const QString &pValue)
+{
+    // Set the value of the given property item, if it exists and is of string
+    // type
+
+    if (pPropertyItem &&
+        (   (pPropertyItem->type() == PropertyItem::Section)
+         || (pPropertyItem->type() == PropertyItem::String)))
+        setPropertyItem(pPropertyItem, pValue);
+}
+
+//==============================================================================
+
+int PropertyEditorWidget::integerPropertyItem(PropertyItem *pPropertyItem)
 {
     // Return the value of the given double property item, if it exists and is
     // valid
@@ -1011,19 +1004,16 @@ int PropertyEditorWidget::integerPropertyItem(PropertyItem *pPropertyItem) const
 void PropertyEditorWidget::setIntegerPropertyItem(PropertyItem *pPropertyItem,
                                                   const int &pValue)
 {
-    // Set the value of the given double property item, if it exists and is
-    // valid, and use its value as a tooltip (in case it's too long and doesn't
-    // fit within the allocated space we have)
+    // Set the value of the given property item, if it exists and is of integer
+    // type
 
-    if (pPropertyItem && (pPropertyItem->type() == PropertyItem::Integer)) {
-        pPropertyItem->setText(QString::number(pValue));
-        pPropertyItem->setToolTip(pPropertyItem->text());
-    }
+    if (pPropertyItem && (pPropertyItem->type() == PropertyItem::Integer))
+        setPropertyItem(pPropertyItem, QString::number(pValue));
 }
 
 //==============================================================================
 
-double PropertyEditorWidget::doublePropertyItem(PropertyItem *pPropertyItem) const
+double PropertyEditorWidget::doublePropertyItem(PropertyItem *pPropertyItem)
 {
     // Return the value of the given double property item, if it exists and is
     // valid
@@ -1041,14 +1031,11 @@ double PropertyEditorWidget::doublePropertyItem(PropertyItem *pPropertyItem) con
 void PropertyEditorWidget::setDoublePropertyItem(PropertyItem *pPropertyItem,
                                                  const double &pValue)
 {
-    // Set the value of the given double property item, if it exists and is
-    // valid, and use its value as a tooltip (in case it's too long and doesn't
-    // fit within the allocated space we have)
+    // Set the value of the given property item, if it exists and is of double
+    // type
 
-    if (pPropertyItem && (pPropertyItem->type() == PropertyItem::Double)) {
-        pPropertyItem->setText(QString::number(pValue));
-        pPropertyItem->setToolTip(pPropertyItem->text());
-    }
+    if (pPropertyItem && (pPropertyItem->type() == PropertyItem::Double))
+        setPropertyItem(pPropertyItem, QString::number(pValue));
 }
 
 //==============================================================================
@@ -1234,11 +1221,13 @@ void PropertyEditorWidget::editorOpened(QWidget *pEditor)
     // edit a list item, then its original value gets properly set
     // Note: indeed, by default the first list item will be selected...
 
-    if (mProperty->value()->type() == PropertyItem::List) {
+    PropertyItem *propertyValue = mProperty->value();
+
+    if (propertyValue->type() == PropertyItem::List) {
         ListEditorWidget *propertyEditor = static_cast<ListEditorWidget *>(mPropertyEditor);
 
-        for (int i = 0, iMax = mProperty->value()->list().count(); i < iMax; ++i)
-            if (!mProperty->value()->text().compare(mProperty->value()->list()[i])) {
+        for (int i = 0, iMax = propertyValue->list().count(); i < iMax; ++i)
+            if (!propertyValue->text().compare(propertyValue->list()[i])) {
                 propertyEditor->setCurrentIndex(i);
 
                 break;
@@ -1262,21 +1251,19 @@ void PropertyEditorWidget::editorClosed()
 {
     // We have stopped editing a property, so make sure that if we were editing
     // a list item, then its value gets properly set
-    // Note: indeed, by default the value will be the index of the selected item
-    //       in the list while we want the actual text corresponding to the
-    //       selected item...
 
-    if (mProperty->value()->type() == PropertyItem::List) {
-        if (mProperty->value()->list().isEmpty())
-            mProperty->value()->setText(mProperty->value()->emptyListValue());
-        else
-            mProperty->value()->setText(static_cast<ListEditorWidget *>(mPropertyEditor)->currentText());
+    PropertyItem *propertyValue = mProperty->value();
 
-        // Use the value as a tooltip (in case it's too long and doesn't fit
-        // within the allocated space we have)
+    if (propertyValue->type() == PropertyItem::List)
+        setPropertyItem(propertyValue,
+                        propertyValue->list().isEmpty()?
+                            propertyValue->emptyListValue():
+                            static_cast<ListEditorWidget *>(mPropertyEditor)->currentText());
+    else
+        // Not a list item, but still need to call setPropertyItem() so that the
+        // item's tool tip gets updated
 
-        mProperty->value()->setToolTip(mProperty->value()->text());
-    }
+        setPropertyItem(propertyValue, propertyValue->text());
 
     // Reset our focus proxy and make sure that we get the focus (see
     // editorOpened() above for the reason)
@@ -1289,6 +1276,10 @@ void PropertyEditorWidget::editorClosed()
 
     mProperty       = 0;
     mPropertyEditor = 0;
+
+    // Let people know that the property value has changed
+
+    emit propertyChanged(propertyValue);
 }
 
 //==============================================================================

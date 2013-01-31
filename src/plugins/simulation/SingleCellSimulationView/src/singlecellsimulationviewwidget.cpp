@@ -6,6 +6,7 @@
 #include "cellmlfileruntime.h"
 #include "coreutils.h"
 #include "progressbarwidget.h"
+#include "propertyeditorwidget.h"
 #include "singlecellsimulationviewcontentswidget.h"
 #include "singlecellsimulationviewgraphpanelswidget.h"
 #include "singlecellsimulationviewinformationwidget.h"
@@ -132,12 +133,18 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
     connect(mSplitterWidget, SIGNAL(splitterMoved(int,int)),
             this, SLOT(splitterWidgetMoved()));
 
-    // Create our contents widget and create a connection to keep track of
-    // whether we can remove graph panels
+    // Create our contents widget
 
     mContentsWidget = new SingleCellSimulationViewContentsWidget(this);
 
     mContentsWidget->setObjectName("Contents");
+
+    // Create some connections to keep track of changes to our property values
+
+    connect(mContentsWidget->informationWidget()->simulationWidget(), SIGNAL(propertyChanged(Core::PropertyItem *)),
+            this, SLOT(simulationPropertyChanged(Core::PropertyItem *)));
+
+    // Create a connection to keep track of whether we can remove graph panels
 
     connect(mContentsWidget->graphPanelsWidget(), SIGNAL(removeGraphPanelsEnabled(const bool &)),
             mGui->actionRemove, SLOT(setEnabled(bool)));
@@ -1057,6 +1064,23 @@ void SingleCellSimulationViewWidget::splitterWidgetMoved()
     // Our splitter has been moved, so keep track of its new sizes
 
     mSplitterWidgetSizes = mSplitterWidget->sizes();
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewWidget::simulationPropertyChanged(Core::PropertyItem *pPropertyItem)
+{
+    // Check which simulation property has been modified and update our
+    // simulation data object accordingly
+
+    SingleCellSimulationViewInformationSimulationWidget *simulationWidget = mContentsWidget->informationWidget()->simulationWidget();
+
+    if (pPropertyItem == simulationWidget->startingPointPropertyValue())
+        mSimulation->data()->setStartingPoint(Core::PropertyEditorWidget::doublePropertyItem(pPropertyItem));
+    else if (pPropertyItem == simulationWidget->endingPointPropertyValue())
+        mSimulation->data()->setEndingPoint(Core::PropertyEditorWidget::doublePropertyItem(pPropertyItem));
+    else if (pPropertyItem == simulationWidget->pointIntervalPropertyValue())
+        mSimulation->data()->setPointInterval(Core::PropertyEditorWidget::doublePropertyItem(pPropertyItem));
 }
 
 //==============================================================================

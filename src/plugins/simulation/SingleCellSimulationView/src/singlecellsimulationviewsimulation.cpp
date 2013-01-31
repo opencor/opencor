@@ -242,6 +242,15 @@ QString SingleCellSimulationViewSimulation::fileName() const
 
 //==============================================================================
 
+SingleCellSimulationViewSimulationData * SingleCellSimulationViewSimulation::data() const
+{
+    // Retrieve and return our data
+
+    return mData;
+}
+
+//==============================================================================
+
 SingleCellSimulationViewSimulationWorker::Status SingleCellSimulationViewSimulation::workerStatus() const
 {
     // Return the status of our worker, if active

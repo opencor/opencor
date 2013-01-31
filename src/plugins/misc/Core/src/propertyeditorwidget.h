@@ -249,11 +249,11 @@ public:
     void setStringPropertyItem(QStandardItem *pPropertyItem,
                                const QString &pValue);
 
-    int integerPropertyItem(PropertyItem *pPropertyItem) const;
+    static int integerPropertyItem(PropertyItem *pPropertyItem);
     void setIntegerPropertyItem(PropertyItem *pPropertyItem,
                                 const int &pValue);
 
-    double doublePropertyItem(PropertyItem *pPropertyItem) const;
+    static double doublePropertyItem(PropertyItem *pPropertyItem);
     void setDoublePropertyItem(PropertyItem *pPropertyItem,
                                const double &pValue);
 
@@ -263,6 +263,7 @@ public:
 
     void removeAllProperties();
 
+    static void setPropertyItem(QStandardItem *pPropertyItem, const QString &pValue);
     void setPropertyVisible(Property *pProperty, const bool &pVisible);
 
 protected:
@@ -300,7 +301,8 @@ private:
     int childrenRowHeight(const QStandardItem *pItem) const;
 
 Q_SIGNALS:
-    void listPropertyChanged(const QString &pValue) const;
+    void propertyChanged(Core::PropertyItem *pPropertyItem);
+    void listPropertyChanged(const QString &pValue);
 
 private Q_SLOTS:
     void updateHeight();

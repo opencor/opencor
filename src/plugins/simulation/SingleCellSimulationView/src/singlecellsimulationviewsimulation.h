@@ -103,6 +103,8 @@ public:
 
     QString fileName() const;
 
+    SingleCellSimulationViewSimulationData * data() const;
+
     SingleCellSimulationViewSimulationWorker::Status workerStatus() const;
     double workerProgress() const;
 
