@@ -572,15 +572,11 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 
         QStringList mimeTypes = mGuiInterface->guiSettings()->view()->mimeTypes();
 
-        QString supportedFileTypes;
-        int supportedFileTypeNb = 0;
-        QString defaultFileExtension = QString();
+        QString supportedFileTypes = QString();
 
         foreach (const FileType &supportedFileType, mSupportedFileTypes)
             if (mimeTypes.contains(supportedFileType.mimeType())) {
-                if (++supportedFileTypeNb == 1)
-                    defaultFileExtension = supportedFileType.fileExtension();
-                else
+                if (!supportedFileTypes.isEmpty())
                     supportedFileTypes += ";;";
 
                 supportedFileTypes +=  supportedFileType.description()
@@ -589,9 +585,15 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 
         newFileName = QDir::toNativeSeparators(QFileDialog::getSaveFileName(mMainWindow, tr("Save File"),
                                                                             newFileName.isEmpty()?
-                                                                                mActiveDir.path()+QDir::separator()+"Untitled"+"."+defaultFileExtension:
-                                                                                newFileName,
+                                                                                mActiveDir.path():
+                                                                                QFileInfo(newFileName).canonicalPath(),
+#ifdef Q_OS_MAC
+//---GRY--- FOR SOME REASONS, OS X / Qt DOESN'T LIKE US SPECIFYING SUPPORTED
+//          FILE TYPES...!? (SEE https://github.com/opencor/opencor/issues/110)
+                                                                            "", 0,
+#else
                                                                             supportedFileTypes, 0,
+#endif
                                                                             QFileDialog::DontConfirmOverwrite));
 
         // Update our active directory, if possible
