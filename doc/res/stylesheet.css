@@ -26,7 +26,7 @@ img.downloads:hover {
 }
 
 p.warning {
-    border: 3px solid rgba(149, 55, 52, 0.69);
+    border: 2px solid rgba(149, 55, 52, 0.69);
     padding: 3px;
     background: rgba(149, 55, 52, 0.13);
     color: rgb(149, 55, 52);
