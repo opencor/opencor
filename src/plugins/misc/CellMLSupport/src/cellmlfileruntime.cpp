@@ -871,6 +871,10 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
     // Retrieve the body of the function that initialises constants and extract
     // the statements that are related to computed variables (since we want to
     // be able to recompute those whenever the user modifies a model parameter)
+    // Note: ideally, we wouldn't have to do that, but the fact is that the
+    //       CellML API doesn't distinguish between 'proper' and 'computed'
+    //       constants, so...
+    //       (See https://tracker.physiomeproject.org/show_bug.cgi?id=3499)
 
     QStringList initConstsList = QString::fromStdWString(genericCodeInformation->initConstsString()).split("\r\n");
     QString initConsts = QString();
