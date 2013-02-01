@@ -585,6 +585,11 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
 
     PropertyItemDelegate *propertyItemDelegate = new PropertyItemDelegate();
 
+
+connect(selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
+        this, SLOT(editorClosed()));
+
+
     connect(propertyItemDelegate, SIGNAL(openEditor(QWidget *)),
             this, SLOT(editorOpened(QWidget *)));
     connect(propertyItemDelegate, SIGNAL(closeEditor(QWidget *, QAbstractItemDelegate::EndEditHint)),
@@ -1249,6 +1254,11 @@ void PropertyEditorWidget::editorOpened(QWidget *pEditor)
 
 void PropertyEditorWidget::editorClosed()
 {
+    // Make sure that we were editing a property
+
+    if (!mPropertyEditor)
+        return;
+
     // We have stopped editing a property, so make sure that if we were editing
     // a list item, then its value gets properly set
 
