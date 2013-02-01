@@ -313,13 +313,6 @@ void PropertyItemDelegate::paint(QPainter *pPainter,
     initStyleOption(&option, pIndex);
 
     if (propertyItem->type() == PropertyItem::Section) {
-        // This is a section item, so prevent it from being hoverable and make
-        // it look enabled since it's actually disabled (so we can't select it),
-        // yet we want to see it as if it was enabled, so...
-
-        option.state &= ~QStyle::State_MouseOver;
-        option.state |=  QStyle::State_Enabled;
-
         // Make our section item bold
 
         option.font.setBold(true);
@@ -405,14 +398,9 @@ void PropertyItem::setEmptyListValue(const QString &pEmptyListValue)
 
 Property::Property(const PropertyItem::Type &pType, const bool &pEditable) :
     mName(new PropertyItem((pType == PropertyItem::Section)?pType:PropertyItem::String, false)),
-    mValue((pType == PropertyItem::Section)?0:new PropertyItem(pType, pEditable)),
-    mUnit((pType == PropertyItem::Section)?0:new PropertyItem(PropertyItem::String, false))
+    mValue(new PropertyItem(pType, pEditable)),
+    mUnit(new PropertyItem(PropertyItem::String, false))
 {
-    // Disable ourselves if we are of section type
-    // Note: we will get 're-enabled' by our item delegate...
-
-    if (pType == PropertyItem::Section)
-        name()->setEnabled(false);
 }
 
 //==============================================================================
@@ -1447,8 +1435,8 @@ Property * PropertyEditorWidget::property(const QModelIndex &pIndex) const
 
     foreach (Property *property, mProperties)
         if (   (property->name()->index()  == pIndex)
-            || (property->value() && (property->value()->index() == pIndex))
-            || (property->unit()  && (property->unit()->index()  == pIndex)))
+            || (property->value()->index() == pIndex)
+            || (property->unit()->index()  == pIndex))
             return property;
 
     // Somehow, we couldn't find the property (how is that even possible?!),
