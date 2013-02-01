@@ -69,7 +69,7 @@ public:
     void setPointInterval(const double &pPointInterval);
 
     void reset();
-    void recomputeVariables();
+    void recomputeComputedConstantsAndVariables();
 
 private:
     CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
@@ -111,7 +111,7 @@ public:
     void setDelay(const int &pDelay);
 
     void reset();
-    void recomputeVariables();
+    void recomputeComputedConstantsAndVariables();
 
     void run();
     void pause();
@@ -126,8 +126,6 @@ private:
     SingleCellSimulationViewSimulationData *mData;
 
 Q_SIGNALS:
-    void dataChanged(SingleCellSimulationViewSimulationData *pData);
-
     void running();
     void pausing();
     void stopped(const int &pElapsedTime);

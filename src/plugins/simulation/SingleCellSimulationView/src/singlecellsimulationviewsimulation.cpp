@@ -137,9 +137,9 @@ void SingleCellSimulationViewSimulationData::setStartingPoint(const double &pSta
 
     mStartingPoint = pStartingPoint;
 
-    // Recompute our 'variables'
+    // Recompute our 'computed constants' and 'variables'
 
-    recomputeVariables();
+    recomputeComputedConstantsAndVariables();
 }
 
 //==============================================================================
@@ -183,19 +183,21 @@ void SingleCellSimulationViewSimulationData::setPointInterval(const double &pPoi
 void SingleCellSimulationViewSimulationData::reset()
 {
     // Reset our model parameter values which means both initialising our
-    // 'constants' and computing our 'variables'
-    // Note: recomputeVariables() will let people know that our data changed...
+    // 'constants' and computing our 'computed constants' and 'variables'
+    // Note: recomputeComputedConstantsAndVariables() will let people know that
+    //       our data changed...
 
     mCellmlFileRuntime->initializeConstants()(mConstants, mRates, mStates);
-    recomputeVariables();
+    recomputeComputedConstantsAndVariables();
 }
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulationData::recomputeVariables()
+void SingleCellSimulationViewSimulationData::recomputeComputedConstantsAndVariables()
 {
-    // Recompute our 'variables'
+    // Recompute our 'computed constants' and 'variables'
 
+    mCellmlFileRuntime->computeComputedConstants()(mConstants, mRates, mStates);
     mCellmlFileRuntime->computeVariables()(mStartingPoint, mConstants, mRates, mStates, mAlgebraic);
 
     // Let people know that our data has changed
@@ -212,10 +214,6 @@ SingleCellSimulationViewSimulation::SingleCellSimulationViewSimulation(const QSt
     mFileName(pFileName),
     mData(new SingleCellSimulationViewSimulationData(pCellmlFileRuntime))
 {
-    // A connection to keep track of changes
-
-    connect(mData, SIGNAL(dataChanged(SingleCellSimulationViewSimulationData *)),
-            this, SIGNAL(dataChanged(SingleCellSimulationViewSimulationData *)));
 }
 
 //==============================================================================
@@ -287,11 +285,11 @@ void SingleCellSimulationViewSimulation::reset()
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulation::recomputeVariables()
+void SingleCellSimulationViewSimulation::recomputeComputedConstantsAndVariables()
 {
-    // Recompute our 'variables'
+    // Recompute our 'computed constants' and 'variables'
 
-    mData->recomputeVariables();
+    mData->recomputeComputedConstantsAndVariables();
 }
 
 //==============================================================================

@@ -157,6 +157,7 @@ void SingleCellSimulationViewInformationParametersWidget::updateProperties()
         if (modelParameter)
             switch (modelParameter->type()) {
             case CellMLSupport::CellmlFileRuntimeModelParameter::Constant:
+            case CellMLSupport::CellmlFileRuntimeModelParameter::ComputedConstant:
                 propertyEditor->setDoublePropertyItem(propertyValue, mSimulationData->constants()[modelParameter->index()]);
 
                 break;
@@ -211,9 +212,9 @@ void SingleCellSimulationViewInformationParametersWidget::propertyChanged(Core::
             ;
         }
 
-    // Recompute our 'variables'
+    // Recompute our 'computed constants' and 'variables'
 
-    mSimulationData->recomputeVariables();
+    mSimulationData->recomputeComputedConstantsAndVariables();
 }
 
 //==============================================================================
@@ -271,8 +272,8 @@ void SingleCellSimulationViewInformationParametersWidget::populateModel(Core::Pr
         //       variables of degree 1, 2 and 3 will be V', V'' and V''',
         //       respectively)...
 
-        bool canEditProperty =    (modelParameter->type() != CellMLSupport::CellmlFileRuntimeModelParameter::Rate)
-                               && (modelParameter->type() != CellMLSupport::CellmlFileRuntimeModelParameter::Algebraic);
+        bool canEditProperty =    (modelParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::Constant)
+                               || (modelParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::State);
         Core::Property *property = pPropertyEditor->addDoubleProperty(canEditProperty, section);
 
         property->name()->setIcon(QIcon(":CellMLSupport_variableNode"));

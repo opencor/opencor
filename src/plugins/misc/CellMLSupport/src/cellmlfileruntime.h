@@ -46,6 +46,7 @@ public:
     enum ModelParameterType {
         Voi,
         Constant,
+        ComputedConstant,
         State,
         Rate,
         Algebraic,
@@ -94,6 +95,7 @@ public:
 
     typedef int (*InitializeConstantsFunction)(double *CONSTANTS, double *RATES, double *STATES);
 
+    typedef int (*ComputeComputedConstantsFunction)(double *CONSTANTS, double *RATES, double *STATES);
     typedef int (*ComputeEssentialVariablesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR);
     typedef int (*ComputeRatesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
     typedef int (*ComputeResidualsFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR, double *resid);
@@ -120,6 +122,7 @@ public:
 
     InitializeConstantsFunction initializeConstants() const;
 
+    ComputeComputedConstantsFunction computeComputedConstants() const;
     ComputeEssentialVariablesFunction computeEssentialVariables() const;
     ComputeRatesFunction computeRates() const;
     ComputeResidualsFunction computeResiduals() const;
@@ -151,6 +154,7 @@ private:
 
     InitializeConstantsFunction mInitializeConstants;
 
+    ComputeComputedConstantsFunction mComputeComputedConstants;
     ComputeEssentialVariablesFunction mComputeEssentialVariables;
     ComputeRatesFunction mComputeRates;
     ComputeResidualsFunction mComputeResiduals;

@@ -10,6 +10,7 @@
 //==============================================================================
 
 #include <QRegularExpression>
+#include <QStringList>
 #include <QTime>
 
 //==============================================================================
@@ -235,6 +236,15 @@ CellmlFileRuntime::InitializeConstantsFunction CellmlFileRuntime::initializeCons
 
 //==============================================================================
 
+CellmlFileRuntime::ComputeComputedConstantsFunction CellmlFileRuntime::computeComputedConstants() const
+{
+    // Return the computeComputedConstants function
+
+    return mComputeComputedConstants;
+}
+
+//==============================================================================
+
 CellmlFileRuntime::ComputeEssentialVariablesFunction CellmlFileRuntime::computeEssentialVariables() const
 {
     // Return the computeEssentialVariables function
@@ -334,6 +344,8 @@ void CellmlFileRuntime::resetFunctions()
     // Reset the functions
 
     mInitializeConstants = 0;
+
+    mComputeComputedConstants = 0;
     mComputeEssentialVariables = 0;
     mComputeRates = 0;
     mComputeResiduals = 0;
@@ -652,10 +664,28 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
             modelParameterType = CellmlFileRuntimeModelParameter::Voi;
 
             break;
-        case iface::cellml_services::CONSTANT:
-            modelParameterType = CellmlFileRuntimeModelParameter::Constant;
+        case iface::cellml_services::CONSTANT: {
+            // We are dealing with a constant, but the question is whether that
+            // constant is a 'proper' constant or a 'computed' constant and this
+            // can be determined by checking whether the computed target has an
+            // initial value
+
+            ObjRef<iface::cellml_api::CellMLVariable> variable = computationTarget->variable();
+            CellmlFileVariable *cellmlVariable = pCellmlFile->component(QString::fromStdWString(variable->componentName()))->variable(QString::fromStdWString(variable->name()));
+
+            if (cellmlVariable->initialValue().isEmpty())
+                // The computed target doesn't have an initial value, so it must
+                // be a 'computed' constant
+
+                modelParameterType = CellmlFileRuntimeModelParameter::ComputedConstant;
+            else
+                // The computed target has an initial value, so it must be a
+                // 'proper' constant
+
+                modelParameterType = CellmlFileRuntimeModelParameter::Constant;
 
             break;
+        }
         case iface::cellml_services::STATE_VARIABLE:
         case iface::cellml_services::PSEUDOSTATE_VARIABLE:
             modelParameterType = CellmlFileRuntimeModelParameter::State;
@@ -740,6 +770,10 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
                 switch (modelParameter->type()) {
                 case CellmlFileRuntimeModelParameter::Constant:
                     modelParameterType = "constant";
+
+                    break;
+                case CellmlFileRuntimeModelParameter::ComputedConstant:
+                    modelParameterType = "computed constant";
 
                     break;
                 case CellmlFileRuntimeModelParameter::State:
@@ -834,10 +868,40 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
         modelCode += "\n";
     }
 
+    // Retrieve the body of the function that initialises constants and extract
+    // the statements that are related to computed variables (since we want to
+    // be able to recompute those whenever the user modifies a model parameter)
+
+    QStringList initConstsList = QString::fromStdWString(genericCodeInformation->initConstsString()).split("\r\n");
+    QString initConsts = QString();
+    QString compCompConsts = QString();
+
+    foreach (const QString &initConst, initConstsList)
+        // Add the statement either to our list of 'proper' constants or
+        // 'computed' constants
+
+        if (QRegularExpression("^CONSTANTS\\[(0|[1-9][0-9]*)\\] = [^0-9]").match(initConst).hasMatch()) {
+            // We have dealing with a statement for a computed constant, so...
+
+            if (!compCompConsts.isEmpty())
+                compCompConsts += "\n";
+
+            compCompConsts += initConst;
+        } else {
+            if (!initConsts.isEmpty())
+                initConsts += "\n";
+
+            initConsts += initConst;
+        }
+
     modelCode += functionCode("int initializeConstants(double *CONSTANTS, double *RATES, double *STATES)",
-                              QString::fromStdWString(genericCodeInformation->initConstsString()),
-                              true);
+                              initConsts, true);
     modelCode += "\n";
+    modelCode += functionCode("int computeComputedConstants(double *CONSTANTS, double *RATES, double *STATES)",
+                              compCompConsts, true);
+    modelCode += "\n";
+
+    // Retrieve the body of the remaining functions
 
     if (mModelType == Ode)
         modelCode += functionCode("int computeRates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)",
@@ -903,10 +967,14 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
 
         if (mModelType == Ode) {
             mInitializeConstants = (InitializeConstantsFunction) (intptr_t) mCompilerEngine->getFunction("initializeConstants");
-            mComputeRates        = (ComputeRatesFunction) (intptr_t) mCompilerEngine->getFunction("computeRates");
-            mComputeVariables    = (ComputeVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeVariables");
+
+            mComputeComputedConstants = (ComputeComputedConstantsFunction) (intptr_t) mCompilerEngine->getFunction("computeComputedConstants");
+            mComputeRates             = (ComputeRatesFunction) (intptr_t) mCompilerEngine->getFunction("computeRates");
+            mComputeVariables         = (ComputeVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeVariables");
         } else {
-            mInitializeConstants       = (InitializeConstantsFunction) (intptr_t) mCompilerEngine->getFunction("initializeConstants");
+            mInitializeConstants = (InitializeConstantsFunction) (intptr_t) mCompilerEngine->getFunction("initializeConstants");
+
+            mComputeComputedConstants  = (ComputeComputedConstantsFunction) (intptr_t) mCompilerEngine->getFunction("computeComputedConstants");
             mComputeResiduals          = (ComputeResidualsFunction) (intptr_t) mCompilerEngine->getFunction("computeResiduals");
             mComputeVariables          = (ComputeVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeVariables");
             mComputeEssentialVariables = (ComputeEssentialVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeEssentialVariables");
