@@ -24,7 +24,6 @@ SingleCellSimulationViewInformationParametersWidget::SingleCellSimulationViewInf
     QStackedWidget(pParent),
     mPropertyEditors(QMap<QString, Core::PropertyEditorWidget *>()),
     mModelParameters(QMap<Core::PropertyItem *, CellMLSupport::CellmlFileRuntimeModelParameter *>()),
-    mModelParameterValues(QMap<CellMLSupport::CellmlFileRuntimeModelParameter *, Core::PropertyItem *>()),
     mColumnWidths(QList<int>()),
     mSimulationData(0)
 {
@@ -281,11 +280,9 @@ void SingleCellSimulationViewInformationParametersWidget::populateModel(Core::Pr
         pPropertyEditor->setStringPropertyItem(property->name(), modelParameter->name()+QString(modelParameter->degree(), '\''));
         pPropertyEditor->setStringPropertyItem(property->unit(), modelParameter->unit());
 
-        // Keep track of the two-way link between model parameters and value
-        // cells
+        // Keep track of the link between our property value and model parameter
 
         mModelParameters.insert(property->value(), modelParameter);
-        mModelParameterValues.insert(modelParameter, property->value());
     }
 
     // Expand all our properties

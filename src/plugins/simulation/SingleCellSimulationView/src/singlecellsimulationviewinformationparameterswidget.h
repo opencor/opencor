@@ -64,7 +64,6 @@ private:
     QMap<QString, Core::PropertyEditorWidget *> mPropertyEditors;
 
     QMap<Core::PropertyItem *, CellMLSupport::CellmlFileRuntimeModelParameter *> mModelParameters;
-    QMap<CellMLSupport::CellmlFileRuntimeModelParameter *, Core::PropertyItem *> mModelParameterValues;
 
     QList<int> mColumnWidths;
 
