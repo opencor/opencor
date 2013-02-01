@@ -150,8 +150,6 @@ private Q_SLOTS:
 
     void updateDelayValue(const double &pDelayValue);
 
-    void simulationDataChanged(SingleCellSimulationViewSimulationData *pData);
-
     void simulationRunning();
     void simulationPausing();
     void simulationStopped(const int &pElapsedTime);

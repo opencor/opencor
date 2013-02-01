@@ -200,7 +200,7 @@ void SingleCellSimulationViewSimulationData::recomputeVariables(const double &pS
 
     // Let people know that our data has changed
 
-    emit dataChanged(this);
+    emit dataChanged();
 }
 
 //==============================================================================

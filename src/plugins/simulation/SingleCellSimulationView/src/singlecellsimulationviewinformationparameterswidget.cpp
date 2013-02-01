@@ -25,7 +25,8 @@ SingleCellSimulationViewInformationParametersWidget::SingleCellSimulationViewInf
     mPropertyEditors(QMap<QString, Core::PropertyEditorWidget *>()),
     mModelParameters(QMap<Core::PropertyItem *, CellMLSupport::CellmlFileRuntimeModelParameter *>()),
     mModelParameterValues(QMap<CellMLSupport::CellmlFileRuntimeModelParameter *, Core::PropertyItem *>()),
-    mColumnWidths(QList<int>())
+    mColumnWidths(QList<int>()),
+    mSimulationData(0)
 {
     // Determine the default width of each column of our property editors
 
@@ -76,12 +77,17 @@ void SingleCellSimulationViewInformationParametersWidget::saveSettings(QSettings
 //==============================================================================
 
 void SingleCellSimulationViewInformationParametersWidget::initialize(const QString &pFileName,
-                                                                     CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime)
+                                                                     CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
+                                                                     SingleCellSimulationViewSimulationData *pSimulationData)
 {
     // Make sure that we have a CellML file runtime
 
     if (!pCellmlFileRuntime)
         return;
+
+    // Keep track of the simulation data
+
+    mSimulationData = pSimulationData;
 
     // Retrieve the property editor for the given file name or create one, if
     // none exists
@@ -112,6 +118,11 @@ void SingleCellSimulationViewInformationParametersWidget::initialize(const QStri
         connect(propertyEditor, SIGNAL(propertyChanged(Core::PropertyItem *)),
                 this, SIGNAL(propertyChanged(Core::PropertyItem *)));
 
+        // Keep track of when some of the model's data has changed
+
+        connect(pSimulationData, SIGNAL(dataChanged()),
+                this, SLOT(updateData()));
+
         // Add our new property editor to ourselves
 
         addWidget(propertyEditor);
@@ -128,7 +139,7 @@ void SingleCellSimulationViewInformationParametersWidget::initialize(const QStri
 
 //==============================================================================
 
-void SingleCellSimulationViewInformationParametersWidget::updateData(SingleCellSimulationViewSimulationData *pData)
+void SingleCellSimulationViewInformationParametersWidget::updateData()
 {
     // Retrieve our current property editor, if any
 
@@ -146,19 +157,19 @@ void SingleCellSimulationViewInformationParametersWidget::updateData(SingleCellS
         if (modelParameter) {
             switch (modelParameter->type()) {
             case CellMLSupport::CellmlFileRuntimeModelParameter::Constant:
-                propertyEditor->setDoublePropertyItem(propertyValue, pData->constants()[modelParameter->index()]);
+                propertyEditor->setDoublePropertyItem(propertyValue, mSimulationData->constants()[modelParameter->index()]);
 
                 break;
             case CellMLSupport::CellmlFileRuntimeModelParameter::State:
-                propertyEditor->setDoublePropertyItem(propertyValue, pData->states()[modelParameter->index()]);
+                propertyEditor->setDoublePropertyItem(propertyValue, mSimulationData->states()[modelParameter->index()]);
 
                 break;
             case CellMLSupport::CellmlFileRuntimeModelParameter::Rate:
-                propertyEditor->setDoublePropertyItem(propertyValue, pData->rates()[modelParameter->index()]);
+                propertyEditor->setDoublePropertyItem(propertyValue, mSimulationData->rates()[modelParameter->index()]);
 
                 break;
             case CellMLSupport::CellmlFileRuntimeModelParameter::Algebraic:
-                propertyEditor->setDoublePropertyItem(propertyValue, pData->algebraic()[modelParameter->index()]);
+                propertyEditor->setDoublePropertyItem(propertyValue, mSimulationData->algebraic()[modelParameter->index()]);
 
                 break;
             default:

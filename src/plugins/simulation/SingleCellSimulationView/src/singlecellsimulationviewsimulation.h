@@ -87,7 +87,7 @@ private:
     double *mCondVar;
 
 Q_SIGNALS:
-    void dataChanged(SingleCellSimulationViewSimulationData *pData);
+    void dataChanged();
 };
 
 //==============================================================================

@@ -55,9 +55,8 @@ public:
     virtual void saveSettings(QSettings *pSettings) const;
 
     void initialize(const QString &pFileName,
-                    CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
-
-    void updateData(SingleCellSimulationViewSimulationData *pData);
+                    CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
+                    SingleCellSimulationViewSimulationData *pSimulationData);
 
     void cancelPropertyEditing();
 
@@ -69,6 +68,8 @@ private:
 
     QList<int> mColumnWidths;
 
+    SingleCellSimulationViewSimulationData *mSimulationData;
+
     void populateModel(OpenCOR::Core::PropertyEditorWidget *pPropertyEditor,
                        CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
 
@@ -78,6 +79,8 @@ Q_SIGNALS:
 private Q_SLOTS:
     void propertyEditorSectionResized(const int &pLogicalIndex,
                                       const int &pOldSize, const int &pNewSize);
+
+    void updateData();
 };
 
 //==============================================================================

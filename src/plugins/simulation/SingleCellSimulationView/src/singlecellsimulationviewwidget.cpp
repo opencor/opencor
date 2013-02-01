@@ -437,9 +437,6 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
         // Create a few connections
 
-        connect(mSimulation, SIGNAL(dataChanged(SingleCellSimulationViewSimulationData *)),
-                this, SLOT(simulationDataChanged(SingleCellSimulationViewSimulationData *)));
-
         connect(mSimulation, SIGNAL(running()),
                 this, SLOT(simulationRunning()));
         connect(mSimulation, SIGNAL(pausing()),
@@ -560,7 +557,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
             simulationWidget->initialize(pFileName, cellmlFileRuntime);
             solversWidget->initialize(pFileName, cellmlFileRuntime);
-            parametersWidget->initialize(pFileName, cellmlFileRuntime);
+            parametersWidget->initialize(pFileName, cellmlFileRuntime, mSimulation->data());
 
 #ifdef QT_DEBUG
             // Output the type of solvers that are available to run the model
@@ -866,16 +863,6 @@ void SingleCellSimulationViewWidget::updateDelayValue(const double &pDelayValue)
 
     if (mSimulation)
         mSimulation->setDelay(pDelayValue);
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewWidget::simulationDataChanged(SingleCellSimulationViewSimulationData *pData)
-{
-    // Some simulation data has changed, so ask our parameters widget to update
-    // itself
-
-    mContentsWidget->informationWidget()->parametersWidget()->updateData(pData);
 }
 
 //==============================================================================
