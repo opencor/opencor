@@ -113,15 +113,15 @@ void SingleCellSimulationViewInformationParametersWidget::initialize(const QStri
         connect(propertyEditor->header(), SIGNAL(sectionResized(int,int,int)),
                 this, SLOT(propertyEditorSectionResized(const int &, const int &, const int &)));
 
-        // Let people know that a property value has changed
-
-        connect(propertyEditor, SIGNAL(propertyChanged(Core::PropertyItem *)),
-                this, SIGNAL(propertyChanged(Core::PropertyItem *)));
-
         // Keep track of when some of the model's data has changed
 
         connect(pSimulationData, SIGNAL(dataChanged()),
-                this, SLOT(updateData()));
+                this, SLOT(updateProperties()));
+
+        // Keep track of when the user changes a property value
+
+        connect(propertyEditor, SIGNAL(propertyChanged(Core::PropertyItem *)),
+                this, SLOT(propertyChanged(Core::PropertyItem *)));
 
         // Add our new property editor to ourselves
 
@@ -139,7 +139,7 @@ void SingleCellSimulationViewInformationParametersWidget::initialize(const QStri
 
 //==============================================================================
 
-void SingleCellSimulationViewInformationParametersWidget::updateData()
+void SingleCellSimulationViewInformationParametersWidget::updateProperties()
 {
     // Retrieve our current property editor, if any
 
@@ -154,7 +154,7 @@ void SingleCellSimulationViewInformationParametersWidget::updateData()
         Core::PropertyItem *propertyValue = property->value();
         CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter = mModelParameters.value(propertyValue);
 
-        if (modelParameter) {
+        if (modelParameter)
             switch (modelParameter->type()) {
             case CellMLSupport::CellmlFileRuntimeModelParameter::Constant:
                 propertyEditor->setDoublePropertyItem(propertyValue, mSimulationData->constants()[modelParameter->index()]);
@@ -177,8 +177,43 @@ void SingleCellSimulationViewInformationParametersWidget::updateData()
 
                 ;
             }
-        }
     }
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewInformationParametersWidget::propertyChanged(Core::PropertyItem *pPropertyItem)
+{
+    // Retrieve our current property editor, if any
+
+    Core::PropertyEditorWidget *propertyEditor = qobject_cast<Core::PropertyEditorWidget *>(currentWidget());
+
+    if (!propertyEditor)
+        return;
+
+    // Update our simulation data
+
+    CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter = mModelParameters.value(pPropertyItem);
+
+    if (modelParameter)
+        switch (modelParameter->type()) {
+        case CellMLSupport::CellmlFileRuntimeModelParameter::Constant:
+            mSimulationData->constants()[modelParameter->index()] = propertyEditor->doublePropertyItem(pPropertyItem);
+
+            break;
+        case CellMLSupport::CellmlFileRuntimeModelParameter::State:
+            mSimulationData->states()[modelParameter->index()] = propertyEditor->doublePropertyItem(pPropertyItem);
+
+            break;
+        default:
+            // Either Voi, Rate, Algebraic or Undefined, so...
+
+            ;
+        }
+
+    // Recompute our 'variables'
+
+    mSimulationData->recomputeVariables();
 }
 
 //==============================================================================

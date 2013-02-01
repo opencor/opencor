@@ -140,18 +140,12 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
 
     mContentsWidget->setObjectName("Contents");
 
-    // Create some connections to keep track of changes to our property values
+    // Keep track of changes to our simulation properties
 
     connect(mContentsWidget->informationWidget()->simulationWidget(), SIGNAL(propertyChanged(Core::PropertyItem *)),
             this, SLOT(simulationPropertyChanged(Core::PropertyItem *)));
-    connect(mContentsWidget->informationWidget()->solversWidget(), SIGNAL(propertyChanged(Core::PropertyItem *)),
-            this, SLOT(solversPropertyChanged(Core::PropertyItem *)));
-    connect(mContentsWidget->informationWidget()->tracesWidget(), SIGNAL(propertyChanged(Core::PropertyItem *)),
-            this, SLOT(tracesPropertyChanged(Core::PropertyItem *)));
-    connect(mContentsWidget->informationWidget()->parametersWidget(), SIGNAL(propertyChanged(Core::PropertyItem *)),
-            this, SLOT(parametersPropertyChanged(Core::PropertyItem *)));
 
-    // Create a connection to keep track of whether we can remove graph panels
+    // Keep track of whether we can remove graph panels
 
     connect(mContentsWidget->graphPanelsWidget(), SIGNAL(removeGraphPanelsEnabled(const bool &)),
             mGui->actionRemove, SLOT(setEnabled(bool)));
@@ -1075,33 +1069,6 @@ void SingleCellSimulationViewWidget::simulationPropertyChanged(Core::PropertyIte
         mSimulation->data()->setEndingPoint(Core::PropertyEditorWidget::doublePropertyItem(pPropertyItem));
     else if (pPropertyItem == simulationWidget->pointIntervalPropertyValue())
         mSimulation->data()->setPointInterval(Core::PropertyEditorWidget::doublePropertyItem(pPropertyItem));
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewWidget::solversPropertyChanged(Core::PropertyItem *pPropertyItem)
-{
-//---GRY--- TO BE DONE...
-
-    qDebug(">>> A solvers property has changed: %s", qPrintable(pPropertyItem->text()));
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewWidget::tracesPropertyChanged(Core::PropertyItem *pPropertyItem)
-{
-//---GRY--- TO BE DONE...
-
-    qDebug(">>> A traces property has changed: %s", qPrintable(pPropertyItem->text()));
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewWidget::parametersPropertyChanged(Core::PropertyItem *pPropertyItem)
-{
-//---GRY--- TO BE DONE...
-
-    qDebug(">>> A parameters property has changed: %s", qPrintable(pPropertyItem->text()));
 }
 
 //==============================================================================

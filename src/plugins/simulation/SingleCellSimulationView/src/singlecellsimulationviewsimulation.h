@@ -69,7 +69,7 @@ public:
     void setPointInterval(const double &pPointInterval);
 
     void reset();
-    void recomputeVariables(const double &pStartingPoint);
+    void recomputeVariables();
 
 private:
     CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
@@ -111,7 +111,7 @@ public:
     void setDelay(const int &pDelay);
 
     void reset();
-    void recomputeVariables(const double &pStartingPoint);
+    void recomputeVariables();
 
     void run();
     void pause();

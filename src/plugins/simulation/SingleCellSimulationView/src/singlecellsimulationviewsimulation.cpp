@@ -139,7 +139,7 @@ void SingleCellSimulationViewSimulationData::setStartingPoint(const double &pSta
 
     // Recompute our 'variables'
 
-    recomputeVariables(pStartingPoint);
+    recomputeVariables();
 }
 
 //==============================================================================
@@ -187,16 +187,16 @@ void SingleCellSimulationViewSimulationData::reset()
     // Note: recomputeVariables() will let people know that our data changed...
 
     mCellmlFileRuntime->initializeConstants()(mConstants, mRates, mStates);
-    recomputeVariables(mStartingPoint);
+    recomputeVariables();
 }
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulationData::recomputeVariables(const double &pStartingPoint)
+void SingleCellSimulationViewSimulationData::recomputeVariables()
 {
     // Recompute our 'variables'
 
-    mCellmlFileRuntime->computeVariables()(pStartingPoint, mConstants, mRates, mStates, mAlgebraic);
+    mCellmlFileRuntime->computeVariables()(mStartingPoint, mConstants, mRates, mStates, mAlgebraic);
 
     // Let people know that our data has changed
 
@@ -287,11 +287,11 @@ void SingleCellSimulationViewSimulation::reset()
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulation::recomputeVariables(const double &pStartingPoint)
+void SingleCellSimulationViewSimulation::recomputeVariables()
 {
     // Recompute our 'variables'
 
-    mData->recomputeVariables(pStartingPoint);
+    mData->recomputeVariables();
 }
 
 //==============================================================================
