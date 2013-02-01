@@ -107,6 +107,11 @@ void SingleCellSimulationViewInformationParametersWidget::initialize(const QStri
         connect(propertyEditor->header(), SIGNAL(sectionResized(int,int,int)),
                 this, SLOT(propertyEditorSectionResized(const int &, const int &, const int &)));
 
+        // Let people know that a property value has changed
+
+        connect(propertyEditor, SIGNAL(propertyChanged(Core::PropertyItem *)),
+                this, SIGNAL(propertyChanged(Core::PropertyItem *)));
+
         // Add our new property editor to ourselves
 
         addWidget(propertyEditor);

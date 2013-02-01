@@ -72,6 +72,9 @@ private:
     void populateModel(OpenCOR::Core::PropertyEditorWidget *pPropertyEditor,
                        CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
 
+Q_SIGNALS:
+    void propertyChanged(Core::PropertyItem *pPropertyItem);
+
 private Q_SLOTS:
     void propertyEditorSectionResized(const int &pLogicalIndex,
                                       const int &pOldSize, const int &pNewSize);
