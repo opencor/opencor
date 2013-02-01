@@ -313,9 +313,9 @@ void PropertyItemDelegate::paint(QPainter *pPainter,
     initStyleOption(&option, pIndex);
 
     if (propertyItem->type() == PropertyItem::Section) {
-        // This is a section item, so prevent it from hoverable and make it look
-        // enabled since it's actually disabled (so we can't select it), yet we
-        // want to see as if it was enabled, so...
+        // This is a section item, so prevent it from being hoverable and make
+        // it look enabled since it's actually disabled (so we can't select it),
+        // yet we want to see it as if it was enabled, so...
 
         option.state &= ~QStyle::State_MouseOver;
         option.state |=  QStyle::State_Enabled;
@@ -417,8 +417,8 @@ Property::Property(const PropertyItem::Type &pType, const bool &pEditable) :
 
 //==============================================================================
 
-Property::Property(QStandardItem *pName, PropertyItem *pValue,
-                   QStandardItem *pUnit) :
+Property::Property(PropertyItem *pName, PropertyItem *pValue,
+                   PropertyItem *pUnit) :
     mName(pName),
     mValue(pValue),
     mUnit(pUnit)
@@ -427,7 +427,7 @@ Property::Property(QStandardItem *pName, PropertyItem *pValue,
 
 //==============================================================================
 
-QStandardItem * Property::name() const
+PropertyItem * Property::name() const
 {
     // Return our name item
 
@@ -445,7 +445,7 @@ PropertyItem * Property::value() const
 
 //==============================================================================
 
-QStandardItem * Property::unit() const
+PropertyItem * Property::unit() const
 {
     // Return our unit item
 
@@ -585,10 +585,8 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
 
     PropertyItemDelegate *propertyItemDelegate = new PropertyItemDelegate();
 
-
-connect(selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
-        this, SLOT(editorClosed()));
-
+    connect(selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
+            this, SLOT(editorClosed()));
 
     connect(propertyItemDelegate, SIGNAL(openEditor(QWidget *)),
             this, SLOT(editorOpened(QWidget *)));
@@ -1453,7 +1451,8 @@ Property * PropertyEditorWidget::property(const QModelIndex &pIndex) const
             || (property->unit()  && (property->unit()->index()  == pIndex)))
             return property;
 
-    // Somehow, we couldn't find the property (how is that possible?!), so...
+    // Somehow, we couldn't find the property (how is that even possible?!),
+    // so...
 
     return 0;
 }

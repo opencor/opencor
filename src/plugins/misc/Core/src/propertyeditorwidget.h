@@ -146,19 +146,19 @@ class CORE_EXPORT Property
 {
 public:
     explicit Property(const PropertyItem::Type &pType, const bool &pEditable);
-    explicit Property(QStandardItem *pName, PropertyItem *pValue,
-                      QStandardItem *pUnit);
+    explicit Property(PropertyItem *pName, PropertyItem *pValue,
+                      PropertyItem *pUnit);
 
-    QStandardItem * name() const;
+    PropertyItem * name() const;
     PropertyItem * value() const;
-    QStandardItem * unit() const;
+    PropertyItem * unit() const;
 
     QList<QStandardItem *> items() const;
 
 private:
-    QStandardItem *mName;
+    PropertyItem *mName;
     PropertyItem *mValue;
-    QStandardItem *mUnit;
+    PropertyItem *mUnit;
 };
 
 //==============================================================================
