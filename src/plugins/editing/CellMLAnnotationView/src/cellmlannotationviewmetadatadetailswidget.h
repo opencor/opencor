@@ -66,6 +66,9 @@ private:
 
     Ui::CellmlAnnotationViewMetadataDetailsWidget *mGui;
 
+    Core::BorderedWidget *mBorderedCategoryMessage;
+    Core::UserMessageWidget *mCategoryMessage;
+
     Core::BorderedWidget *mBorderedUnsupportedMetadataMessage;
     Core::UserMessageWidget *mUnsupportedMetadataMessage;
 

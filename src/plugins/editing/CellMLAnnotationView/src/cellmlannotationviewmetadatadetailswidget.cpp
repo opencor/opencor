@@ -38,6 +38,16 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     // Create our unsupported metadata message widget
 
+    mCategoryMessage = new Core::UserMessageWidget(":/oxygen/actions/help-about.png",
+                                                   pParent);
+    mBorderedCategoryMessage = new Core::BorderedWidget(mCategoryMessage,
+                                                        false, true, true, false);
+
+    mBorderedCategoryMessage->setVisible(false);
+    // Note: we don't initially want to see it, so...
+
+    // Create our unsupported metadata message widget
+
     mUnsupportedMetadataMessage = new Core::UserMessageWidget(":/oxygen/actions/help-about.png",
                                                               pParent);
     mBorderedUnsupportedMetadataMessage = new Core::BorderedWidget(mUnsupportedMetadataMessage,
@@ -140,6 +150,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
     // Add our unsupported metadata message widget and splitter widget to our
     // layout
 
+    mGui->layout->addWidget(mBorderedCategoryMessage);
     mGui->layout->addWidget(mBorderedUnsupportedMetadataMessage);
     mGui->layout->addWidget(mSplitter);
 
@@ -169,6 +180,14 @@ void CellmlAnnotationViewMetadataDetailsWidget::retranslateUi()
     mMetadataEditDetails->retranslateUi();
     mMetadataViewDetails->retranslateUi();
 
+    // Retranslate our category message
+
+    mCategoryMessage->setMessage( "<div align=center>"
+                                  "    <p>"
+                                  "        "+tr("Please select a CellML element...")
+                                 +"    </p>"
+                                  "</div>");
+
     // Retranslate our unsupported metadata message
 
     mUnsupportedMetadataMessage->setMessage( "<div align=center>"
@@ -185,35 +204,42 @@ void CellmlAnnotationViewMetadataDetailsWidget::retranslateUi()
 
 void CellmlAnnotationViewMetadataDetailsWidget::updateGui(CellMLSupport::CellmlFileElement *pCellmlElement)
 {
-    if (!pCellmlElement)
-        return;
-
     // Keep track of the CellML element
 
     mCellmlElement = pCellmlElement;
 
+    // Show/hide our category message depending, if needed
+
+    bool isCategoryElement = !pCellmlElement;
+
+    mBorderedCategoryMessage->setVisible(isCategoryElement);
+    mSplitter->setVisible(!isCategoryElement);
+
     // Show/hide our unsupported metadata message depending on whether the type
     // of the RDF triples is known
 
-    bool isUnknownMetadata = pCellmlElement->rdfTriples().type() == CellMLSupport::CellmlFileRdfTriple::Unknown;
+    bool isUnknownMetadata = isCategoryElement?
+                                 true:
+                                 pCellmlElement->rdfTriples().type() == CellMLSupport::CellmlFileRdfTriple::Unknown;
 
-    mBorderedUnsupportedMetadataMessage->setVisible(isUnknownMetadata);
+    mBorderedUnsupportedMetadataMessage->setVisible(!isCategoryElement && isUnknownMetadata);
 
     // Show/hide our metadata edit details and web viewer, depending on whether
     // the type of the metadata is known
 
-    mBorderedMetadataEditDetails->setVisible(!isUnknownMetadata);
-    mBorderedWebView->setVisible(!isUnknownMetadata);
+    mBorderedMetadataEditDetails->setVisible(!isCategoryElement && !isUnknownMetadata);
+    mBorderedWebView->setVisible(!isCategoryElement && !isUnknownMetadata);
 
-    mBorderedMetadataViewDetails->setTopBorderVisible(!isUnknownMetadata);
-    mBorderedMetadataViewDetails->setBottomBorderVisible(!isUnknownMetadata);
+    mBorderedMetadataViewDetails->setTopBorderVisible(!isCategoryElement && !isUnknownMetadata);
+    mBorderedMetadataViewDetails->setBottomBorderVisible(!isCategoryElement && !isUnknownMetadata);
 
     // Update our metadata edit and view details, if needed
 
-    if (!isUnknownMetadata)
+    if (!isCategoryElement && !isUnknownMetadata)
         mMetadataEditDetails->updateGui(pCellmlElement);
 
-    mMetadataViewDetails->updateGui(pCellmlElement);
+    if (!isCategoryElement)
+        mMetadataViewDetails->updateGui(pCellmlElement);
 }
 
 //==============================================================================

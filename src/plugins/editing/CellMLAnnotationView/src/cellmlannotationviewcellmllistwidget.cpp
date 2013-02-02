@@ -35,16 +35,15 @@ void CellmlAnnotationViewCellmlElementItemDelegate::paint(QPainter *pPainter,
     initStyleOption(&option, pIndex);
 
     if (   (cellmlElementItem->type() == CellmlAnnotationViewCellmlElementItem::Error)
-        || (cellmlElementItem->type() == CellmlAnnotationViewCellmlElementItem::Warning)
-        || cellmlElementItem->isCategory()) {
-        // This is an error/warning/category item, so prevent it from hoverable
-        // and make it look enabled since it's actually disabled (so we can't
-        // select it), yet we want to see as if it was enabled, so...
+        || (cellmlElementItem->type() == CellmlAnnotationViewCellmlElementItem::Warning)) {
+        // This is an error/warning item, so prevent it from hoverable and make
+        // it look enabled since it's actually disabled (so we can't select it),
+        // yet we want to see as if it was enabled, so...
 
         option.state &= ~QStyle::State_MouseOver;
         option.state |=  QStyle::State_Enabled;
-
-        // In the case of a category, we make the font bold
+    } else if (cellmlElementItem->isCategory()) {
+        // We are dealing with a category so show it bold
 
         option.font.setBold(cellmlElementItem->isCategory());
     }
@@ -87,10 +86,10 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
 {
     // Constructor for a category
 
-    // Disable the item
-    // Note: it will get 're-enabled' by our item delegate...
+    // Use its text as a tooltip (in case it's too long and doesn't fit within
+    // the allocated space we have)
 
-    setEnabled(false);
+    setToolTip(pText);
 
     // Set the icon for the item
 
@@ -156,6 +155,11 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
 
         setText(static_cast<CellMLSupport::CellmlFileNamedElement *>(pElement)->name());
     }
+
+    // Use its text as a tooltip (in case it's too long and doesn't fit within
+    // the allocated space we have)
+
+    setToolTip(text());
 
     // Set the icon for the item
 
@@ -795,42 +799,44 @@ void CellmlAnnotationViewCellmlListWidget::showCustomContextMenu(const QPoint &p
 {
     Q_UNUSED(pPosition);
 
-    // Determine whether to show the context menu by checking whether the
-    // current item is the same as the one over which we are
+    // Determine whether to show the context menu based on whether we are over
+    // an item
 
     CellmlAnnotationViewCellmlElementItem *posItem = static_cast<CellmlAnnotationViewCellmlElementItem *>(mModel->itemFromIndex(mTreeViewWidget->indexAt(mTreeViewWidget->mapFromGlobal(QCursor::pos()-mTreeViewWidget->pos()))));
-    CellmlAnnotationViewCellmlElementItem *crtItem = currentCellmlElementItem();
 
-    bool showContextMenu = (posItem == crtItem);
+    if (posItem) {
+        // We are over an item, so create a custom context menu which items
+        // match the contents of our tool bar widget
 
-    // Create a custom context menu which items match the contents of our
-    // tool bar widget
-
-    if (showContextMenu) {
         // Update the enabled status of our actions
 
-        if (crtItem->hasChildren()) {
+        if (posItem->hasChildren()) {
             mGui->actionExpandAll->setEnabled(!indexIsAllExpanded(mTreeViewWidget->currentIndex()));
             mGui->actionCollapseAll->setEnabled(mTreeViewWidget->isExpanded(mTreeViewWidget->currentIndex()));
         }
 
-        mGui->actionRemoveCurrentMetadata->setEnabled(crtItem->element()->rdfTriples().count());
-        mGui->actionRemoveAllMetadata->setEnabled(mCellmlFile->rdfTriples()->count());
+        if (!posItem->isCategory()) {
+            mGui->actionRemoveCurrentMetadata->setEnabled(posItem->element()->rdfTriples().count());
+            mGui->actionRemoveAllMetadata->setEnabled(mCellmlFile->rdfTriples()->count());
+        }
 
-        // Create and show the context menu
+        // Create and show the context menu, if it isn't empty
 
         QMenu menu;
 
-        if (crtItem->hasChildren()) {
+        if (posItem->hasChildren()) {
             menu.addAction(mGui->actionExpandAll);
             menu.addAction(mGui->actionCollapseAll);
             menu.addSeparator();
         }
 
-        menu.addAction(mGui->actionRemoveCurrentMetadata);
-        menu.addAction(mGui->actionRemoveAllMetadata);
+        if (!posItem->isCategory()) {
+            menu.addAction(mGui->actionRemoveCurrentMetadata);
+            menu.addAction(mGui->actionRemoveAllMetadata);
+        }
 
-        menu.exec(QCursor::pos());
+        if (!menu.isEmpty())
+            menu.exec(QCursor::pos());
     }
 }
 

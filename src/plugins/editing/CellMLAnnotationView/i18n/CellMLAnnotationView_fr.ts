@@ -118,6 +118,10 @@
         <source>Please click &lt;a href=&quot;here&quot;&gt;here&lt;/a&gt; if you want to remove the existing metadata.</source>
         <translation>Veuillez cliquer &lt;a href=&quot;ici&quot;&gt;ici&lt;/a&gt; si vous voulez supprimer la ou les métadonnées actuelles.</translation>
     </message>
+    <message>
+        <source>Please select a CellML element...</source>
+        <translation>Veuillez sélectionner un élément CellML...</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataEditDetailsWidget</name>
