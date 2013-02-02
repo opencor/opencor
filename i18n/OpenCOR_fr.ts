@@ -249,12 +249,9 @@
         <source>Miscellaneous</source>
         <translation>Divers</translation>
     </message>
-</context>
-<context>
-    <name>PluginsWindow</name>
     <message>
-        <source>Plugins</source>
-        <translation>Extensions</translation>
+        <source>Plugin:</source>
+        <translation>Extension :</translation>
     </message>
     <message>
         <source>Type:</source>
@@ -269,20 +266,55 @@
         <translation>Description :</translation>
     </message>
     <message>
-        <source>Name:</source>
-        <translation>Nom :</translation>
-    </message>
-    <message>
         <source>Status:</source>
         <translation>Statut :</translation>
     </message>
     <message>
-        <source>&lt;b&gt;&lt;u&gt;Note:&lt;/u&gt;&lt;/b&gt; %1 must be restarted for your changes to be effective.</source>
-        <translation>&lt;b&gt;&lt;u&gt;Note :&lt;/u&gt;&lt;/b&gt; %1 doit etre relancé pour que vos changements deviennent effectifs.</translation>
+        <source>Category:</source>
+        <translation>Catégorie :</translation>
+    </message>
+    <message>
+        <source>Organisation plugins are used to search, open, organise, etc. your files.</source>
+        <translation>Les extensions Organisation sont utilisées pour chercher, ouvrir, organiser, etc. vos fichiers.</translation>
+    </message>
+    <message>
+        <source>Editing plugins are used to edit part or all of your files using one of several possible views.</source>
+        <translation>Les extensions Edition sont utilisées pour éditer tout ou partie de vos fichiers en utilisant une des plusieurs vues possibles.</translation>
+    </message>
+    <message>
+        <source>Simulation plugins are used to simulate your files.</source>
+        <translation>Les extensions Simulation sont utilisées pour simuler vos fichiers.</translation>
+    </message>
+    <message>
+        <source>Analysis plugins are used to analyse your data files.</source>
+        <translation>Les extensions Analyse sont utilisées pour analyser vos fichiers.</translation>
+    </message>
+    <message>
+        <source>Miscellaneous plugins are used for various purposes.</source>
+        <translation>Les extensions Divers sont utilisées pour différentes choses.</translation>
+    </message>
+    <message>
+        <source>API plugins are used to provide access to external APIs.</source>
+        <translation>Les extensions API sont utilisées pour donner accès à des APIs externes.</translation>
+    </message>
+    <message>
+        <source>Third-party plugins are used to provide access to third-party libraries.</source>
+        <translation>Les extensions Externe sont utilisées pour donner accès à des librairies externes.</translation>
+    </message>
+</context>
+<context>
+    <name>PluginsWindow</name>
+    <message>
+        <source>Plugins</source>
+        <translation>Extensions</translation>
     </message>
     <message>
         <source>Show only selectable plugins</source>
         <translation>Montrer seulement les extensions sélectables</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;&lt;u&gt;Note:&lt;/u&gt;&lt;/b&gt; %1 will need to be restarted for your changes to be effective.</source>
+        <translation>&lt;b&gt;&lt;u&gt;Note :&lt;/u&gt;&lt;/b&gt; %1 devra être relancé pour que vos changements puissent être effectifs.</translation>
     </message>
 </context>
 <context>

@@ -81,7 +81,7 @@ private:
     QString formatVersionAsString(const PluginInfo::FormatVersion &pFormatVersion) const;
     QString statusDescription(Plugin *pPlugin) const;
 
-    void selectFirstVisiblePlugin();
+    void selectFirstVisibleCategory();
 
 private Q_SLOTS:
     void on_selectablePluginsCheckBox_toggled(bool pChecked);
@@ -89,8 +89,8 @@ private Q_SLOTS:
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();
 
-    void updatePluginInfo(const QModelIndex &pNewIndex,
-                          const QModelIndex &pOldIndex) const;
+    void updateInformation(const QModelIndex &pNewIndex,
+                           const QModelIndex &pOldIndex) const;
     void updatePluginsLoadingState(QStandardItem *pChangedPluginItem = 0,
                                    const bool &pInitializing = false);
 

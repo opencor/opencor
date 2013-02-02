@@ -29,7 +29,7 @@ void PluginItemDelegate::paint(QPainter *pPainter,
                                const QStyleOptionViewItem &pOption,
                                const QModelIndex &pIndex) const
 {
-    // Paint the item as normal, except for the items which are not checkable
+    // Paint the item as normal, except for the items which are not selectable
     // (i.e. plugins which the user cannot decide whether to load) in which case
     // we paint them as if they were disabled
 
@@ -40,21 +40,15 @@ void PluginItemDelegate::paint(QPainter *pPainter,
     initStyleOption(&option, pIndex);
 
     if (pluginItem->parent()) {
-        // This is a plugin item, so check whether it should look enabled
+        // We are dealing with a plugin item, so check whether it should look
+        // enabled
 
         if (!pluginItem->isCheckable())
             // No, it shouldn't...
 
             option.state &= ~QStyle::State_Enabled;
     } else {
-        // This is not a plugin item, but a category item, so prevent it from
-        // hoverable and make it look enabled since it's actually disabled (so
-        // we can't select it), yet we want to see as if it was enabled, so...
-
-        option.state &= ~QStyle::State_MouseOver;
-        option.state |=  QStyle::State_Enabled;
-
-        // Make our category item bold
+        // We are dealing with a category item, so show it bold
 
         option.font.setBold(true);
     }
@@ -189,17 +183,21 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager, QWidget *pParent) :
     // Connection to handle a plugin's information
 
     connect(mGui->pluginsTreeView->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
-            this, SLOT(updatePluginInfo(const QModelIndex &, const QModelIndex &)));
+            this, SLOT(updateInformation(const QModelIndex &, const QModelIndex &)));
 
     // Connection to handle the activation of a link in the description
 
-    connect(mGui->descriptionValue, SIGNAL(linkActivated(const QString &)),
+    connect(mGui->fieldFourValue, SIGNAL(linkActivated(const QString &)),
             this, SLOT(openLink(const QString &)));
 
     // Connection to handle the window's buttons
 
     connect(mGui->buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked(bool)),
             this, SLOT(apply()));
+
+    // Select the first category item
+
+    selectFirstVisibleCategory();
 }
 
 //==============================================================================
@@ -213,29 +211,25 @@ PluginsWindow::~PluginsWindow()
 
 //==============================================================================
 
-void PluginsWindow::selectFirstVisiblePlugin()
+void PluginsWindow::selectFirstVisibleCategory()
 {
-    // Select the first plugin by looking at the first visible category
-    // Note: if no category is visible, then it means that no plugin is visible,
-    //       hence nothing needs to be done indeed...
+    // Select the first visible category
 
     foreach (QStandardItem *categoryItem, mPluginCategories)
         if (!mGui->pluginsTreeView->isRowHidden(categoryItem->row(),
-                                                mModel->invisibleRootItem()->index()))
-            // We have found the first visible category, so now find its first
-            // visible plugin
+                                                mModel->invisibleRootItem()->index())) {
+            // We have found the first visible category, so...
 
-            for (int i = 0, iMax = categoryItem->rowCount(); i < iMax; ++i)
-                if (!mGui->pluginsTreeView->isRowHidden(categoryItem->child(i)->row(),
-                                                        categoryItem->index())) {
-                    // We have found our first visible plugin, so...
+            mGui->pluginsTreeView->setCurrentIndex(categoryItem->index());
 
-                    mGui->pluginsTreeView->setCurrentIndex(categoryItem->child(i)->index());
+            // We are done, so...
 
-                    // We are done, so...
+            return;
+        }
 
-                    return;
-                }
+    // No visible category could be found, so...
+
+    mGui->pluginsTreeView->setCurrentIndex(QModelIndex());
 }
 
 //==============================================================================
@@ -324,59 +318,127 @@ QString PluginsWindow::statusDescription(Plugin *pPlugin) const
 
 //==============================================================================
 
-void PluginsWindow::updatePluginInfo(const QModelIndex &pNewIndex,
-                                     const QModelIndex &pOldIndex) const
+void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
+                                      const QModelIndex &pOldIndex) const
 {
     Q_UNUSED(pOldIndex);
 
-    // Update the information view with the plugin's information
+    // Make sure that we have a valid index
+    // Note: it may happen (e.g. there are only non-selectable plugins and we
+    //       only want to see selectable plugins) that no categories/plugins are
+    //       shown, so...
 
-    Plugin *plugin = mPluginManager->plugin(mModel->itemFromIndex(pNewIndex)->text());
-    PluginInfo pluginInfo = plugin->info();
+    bool validItem = pNewIndex.isValid();
+    bool pluginItem = false;
 
-    // The plugin's name
+    if (validItem) {
+        // Update the information view with the category's or plugin's information
 
-    mGui->nameValue->setText(plugin->name());
+        QString itemText = mModel->itemFromIndex(pNewIndex)->text();
+        Plugin *plugin = mPluginManager->plugin(itemText);
 
-    // The plugin's type
+        if (plugin) {
+            // We are dealing with a plugin, so retrieve the plugin's information
 
-    switch (pluginInfo.type()) {
-    case PluginInfo::General:
-        mGui->typeValue->setText(tr("General"));
+            pluginItem = true;
 
-        break;
-    case PluginInfo::Console:
-        mGui->typeValue->setText(tr("Console"));
+            PluginInfo pluginInfo = plugin->info();
 
-        break;
-    case PluginInfo::Gui:
-        mGui->typeValue->setText(tr("GUI"));
+            // The plugin's name
 
-        break;
-    default:
-        mGui->typeValue->setText(tr("Undefined"));
+            mGui->fieldOneLabel->setText(tr("Plugin:"));
+            mGui->fieldOneValue->setText(plugin->name());
+
+            // The plugin's type
+
+            mGui->fieldTwoLabel->setText(tr("Type:"));
+
+            switch (pluginInfo.type()) {
+            case PluginInfo::General:
+                mGui->fieldTwoValue->setText(tr("General"));
+
+                break;
+            case PluginInfo::Console:
+                mGui->fieldTwoValue->setText(tr("Console"));
+
+                break;
+            case PluginInfo::Gui:
+                mGui->fieldTwoValue->setText(tr("GUI"));
+
+                break;
+            default:
+                mGui->fieldTwoValue->setText(tr("Undefined"));
+            }
+
+            // The plugin's dependencies
+
+            QStringList dependencies = pluginInfo.dependencies();
+
+            mGui->fieldThreeLabel->setText(tr("Dependencies:"));
+
+            if (dependencies.isEmpty())
+                mGui->fieldThreeValue->setText("None");
+            else
+                mGui->fieldThreeValue->setText("- "+dependencies.join("\n- "));
+
+            // The plugin's description
+
+            QString description = pluginInfo.description(mMainWindow->locale());
+
+            mGui->fieldFourLabel->setText(tr("Description:"));
+            mGui->fieldFourValue->setText(description.isEmpty()?
+                                              tr("None"):
+                                              description);
+
+            // The plugin's status
+
+            mGui->fieldFiveLabel->setText(tr("Status:"));
+            mGui->fieldFiveValue->setText(statusDescription(plugin));
+        } else {
+            // We are not dealing with a plugin, but a plugin category
+
+            // The category's name
+
+            mGui->fieldOneLabel->setText(tr("Category:"));
+            mGui->fieldOneValue->setText(itemText);
+
+            // The category's description
+
+            mGui->fieldTwoLabel->setText(tr("Description:"));
+
+            if (!itemText.compare(tr("Organisation")))
+                mGui->fieldTwoValue->setText(tr("Organisation plugins are used to search, open, organise, etc. your files."));
+            else if (!itemText.compare(tr("Editing")))
+                mGui->fieldTwoValue->setText(tr("Editing plugins are used to edit part or all of your files using one of several possible views."));
+            else if (!itemText.compare(tr("Simulation")))
+                mGui->fieldTwoValue->setText(tr("Simulation plugins are used to simulate your files."));
+            else if (!itemText.compare(tr("Analysis")))
+                mGui->fieldTwoValue->setText(tr("Analysis plugins are used to analyse your data files."));
+            else if (!itemText.compare(tr("Miscellaneous")))
+                mGui->fieldTwoValue->setText(tr("Miscellaneous plugins are used for various purposes."));
+            else if (!itemText.compare(tr("API")))
+                mGui->fieldTwoValue->setText(tr("API plugins are used to provide access to external APIs."));
+            else if (!itemText.compare(tr("Third-party")))
+                mGui->fieldTwoValue->setText(tr("Third-party plugins are used to provide access to third-party libraries."));
+        }
     }
 
-    // The plugin's dependencies
+    // Show/hide the different fields
 
-    QStringList dependencies = pluginInfo.dependencies();
+    mGui->fieldOneLabel->setVisible(validItem);
+    mGui->fieldOneValue->setVisible(validItem);
 
-    if (dependencies.isEmpty())
-        mGui->dependenciesValue->setText("None");
-    else
-        mGui->dependenciesValue->setText("- "+dependencies.join("\n- "));
+    mGui->fieldTwoLabel->setVisible(validItem);
+    mGui->fieldTwoValue->setVisible(validItem);
 
-    // The plugin's description
+    mGui->fieldThreeLabel->setVisible(validItem && pluginItem);
+    mGui->fieldThreeValue->setVisible(validItem && pluginItem);
 
-    QString description = pluginInfo.description(mMainWindow->locale());
+    mGui->fieldFourLabel->setVisible(validItem && pluginItem);
+    mGui->fieldFourValue->setVisible(validItem && pluginItem);
 
-    mGui->descriptionValue->setText(description.isEmpty()?
-                                        tr("None"):
-                                        description);
-
-    // The plugin's status
-
-    mGui->statusValue->setText(statusDescription(plugin));
+    mGui->fieldFiveLabel->setVisible(validItem && pluginItem);
+    mGui->fieldFiveValue->setVisible(validItem && pluginItem);
 }
 
 //==============================================================================
@@ -555,15 +617,13 @@ void PluginsWindow::apply()
 void PluginsWindow::newPluginCategory(const PluginInfo::Category &pCategory,
                                       const QString &pName)
 {
-    // Create the category item, disable it (but it will be seen as enabled, we
-    // just don't want to allow the user to select it), add it to our data model
-    // and then to our list of plugin categories
+    // Create and add a category item to our data model
 
     QStandardItem *categoryItem = new QStandardItem(pName);
 
-    categoryItem->setEnabled(false);
-
     mModel->invisibleRootItem()->appendRow(categoryItem);
+
+    // Add the category item to our list of plugin categories
 
     mPluginCategories.insert(pCategory, categoryItem);
 }
@@ -604,9 +664,9 @@ void PluginsWindow::on_selectablePluginsCheckBox_toggled(bool pChecked)
                                                 hideCategory);
         }
 
-    // Select the first plugin item
+    // Select the first category item
 
-    selectFirstVisiblePlugin();
+    selectFirstVisibleCategory();
 }
 
 //==============================================================================

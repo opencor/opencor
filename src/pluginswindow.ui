@@ -37,73 +37,88 @@
        <item>
         <widget class="QWidget" name="detailsWidget" native="true">
          <layout class="QFormLayout" name="detailsFormLayout">
-          <property name="margin">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
            <number>0</number>
           </property>
           <item row="0" column="0">
-           <widget class="QLabel" name="nameLabel">
+           <widget class="QLabel" name="fieldOneLabel">
             <property name="font">
              <font>
               <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
-            <property name="text">
-             <string>Name:</string>
-            </property>
             <property name="alignment">
              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QLabel" name="nameValue">
+           <widget class="QLabel" name="fieldOneValue">
             <property name="text">
              <string/>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
           <item row="1" column="0">
-           <widget class="QLabel" name="typeLabel">
+           <widget class="QLabel" name="fieldTwoLabel">
             <property name="font">
              <font>
               <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
-            <property name="text">
-             <string>Type:</string>
-            </property>
             <property name="alignment">
              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QLabel" name="typeValue">
+           <widget class="QLabel" name="fieldTwoValue">
             <property name="text">
              <string/>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
           <item row="2" column="0">
-           <widget class="QLabel" name="dependenciesLabel">
+           <widget class="QLabel" name="fieldThreeLabel">
             <property name="font">
              <font>
               <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
-            <property name="text">
-             <string>Dependencies:</string>
-            </property>
             <property name="alignment">
              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QLabel" name="dependenciesValue">
+           <widget class="QLabel" name="fieldThreeValue">
             <property name="text">
              <string/>
             </property>
@@ -113,23 +128,23 @@
            </widget>
           </item>
           <item row="3" column="0">
-           <widget class="QLabel" name="descriptionLabel">
+           <widget class="QLabel" name="fieldFourLabel">
             <property name="font">
              <font>
               <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
-            <property name="text">
-             <string>Description:</string>
-            </property>
             <property name="alignment">
              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
           <item row="3" column="1">
-           <widget class="QLabel" name="descriptionValue">
+           <widget class="QLabel" name="fieldFourValue">
             <property name="text">
              <string/>
             </property>
@@ -139,23 +154,23 @@
            </widget>
           </item>
           <item row="4" column="0">
-           <widget class="QLabel" name="statusLabel">
+           <widget class="QLabel" name="fieldFiveLabel">
             <property name="font">
              <font>
               <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
-            <property name="text">
-             <string>Status:</string>
-            </property>
             <property name="alignment">
              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
           <item row="4" column="1">
-           <widget class="QLabel" name="statusValue">
+           <widget class="QLabel" name="fieldFiveValue">
             <property name="text">
              <string/>
             </property>
@@ -197,7 +212,7 @@
    <item>
     <widget class="QLabel" name="noteLabel">
      <property name="text">
-      <string>&lt;b&gt;&lt;u&gt;Note:&lt;/u&gt;&lt;/b&gt; %1 must be restarted for your changes to be effective.</string>
+      <string>&lt;b&gt;&lt;u&gt;Note:&lt;/u&gt;&lt;/b&gt; %1 will need to be restarted for your changes to be effective.</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>
