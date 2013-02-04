@@ -12,13 +12,8 @@ namespace CoreSolver {
 //==============================================================================
 
 CoreDaeSolver::CoreDaeSolver() :
-    CoreSolver(),
-    mStatesCount(0),
+    CoreVoiSolver(),
     mCondVarCount(0),
-    mConstants(0),
-    mRates(0),
-    mStates(0),
-    mAlgebraic(0),
     mCondVar(0)
 {
 }
@@ -48,8 +43,8 @@ void CoreDaeSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
     mCondVarCount = pCondVarCount;
 
     mConstants = pConstants;
-    mRates     = pRates;
     mStates    = pStates;
+    mRates     = pRates;
     mAlgebraic = pAlgebraic;
     mCondVar   = pCondVar;
 }

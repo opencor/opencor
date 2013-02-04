@@ -7,7 +7,7 @@
 
 //==============================================================================
 
-#include "coresolver.h"
+#include "corevoisolver.h"
 
 //==============================================================================
 
@@ -16,7 +16,7 @@ namespace CoreSolver {
 
 //==============================================================================
 
-class CORESOLVER_EXPORT CoreDaeSolver : public CoreSolver
+class CORESOLVER_EXPORT CoreDaeSolver : public CoreVoiSolver
 {
 public:
     typedef int (*ComputeEssentialVariablesFunction)(double, double *, double *, double *, double *, double *);
@@ -35,16 +35,9 @@ public:
                             ComputeRootInformationFunction pComputeRootInformation,
                             ComputeStateInformationFunction pComputeStateInformation);
 
-    virtual void solve(double &pVoi, const double &pVoiEnd) const = 0;
-
 protected:
-    int mStatesCount;
     int mCondVarCount;
 
-    double *mConstants;
-    double *mRates;
-    double *mStates;
-    double *mAlgebraic;
     double *mCondVar;
 };
 

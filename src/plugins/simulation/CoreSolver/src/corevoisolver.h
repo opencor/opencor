@@ -1,8 +1,13 @@
 //==============================================================================
-// Core ODE solver class
+// Core VOI solver class
 //==============================================================================
 
-#include "coreodesolver.h"
+#ifndef COREVOISOLVER_H
+#define COREVOISOLVER_H
+
+//==============================================================================
+
+#include "coresolver.h"
 
 //==============================================================================
 
@@ -11,37 +16,30 @@ namespace CoreSolver {
 
 //==============================================================================
 
-CoreOdeSolver::CoreOdeSolver() :
-    CoreVoiSolver(),
-    mComputeRates(0)
+class CORESOLVER_EXPORT CoreVoiSolver : public CoreSolver
 {
-}
+public:
+    explicit CoreVoiSolver();
 
-//==============================================================================
+    virtual void solve(double &pVoi, const double &pVoiEnd) const = 0;
 
-void CoreOdeSolver::initialize(const double &pVoiStart, const int &pStatesCount,
-                               double *pConstants, double *pStates,
-                               double *pRates, double *pAlgebraic,
-                               ComputeRatesFunction pComputeRates)
-{
-    Q_UNUSED(pVoiStart);
+protected:
+    int mStatesCount;
 
-    // Initialise the ODE solver
-
-    mStatesCount = pStatesCount;
-
-    mConstants = pConstants;
-    mStates    = pStates;
-    mRates     = pRates;
-    mAlgebraic = pAlgebraic;
-
-    mComputeRates = pComputeRates;
-}
+    double *mConstants;
+    double *mStates;
+    double *mRates;
+    double *mAlgebraic;
+};
 
 //==============================================================================
 
 }   // namespace CoreSolver
 }   // namespace OpenCOR
+
+//==============================================================================
+
+#endif
 
 //==============================================================================
 // End of file

@@ -83,6 +83,7 @@ void SingleCellSimulationViewSimulationWorker::run()
 
         // Set up our ODE/DAE solver
 
+        CoreSolver::CoreVoiSolver *voiSolver = 0;
         CoreSolver::CoreOdeSolver *odeSolver = 0;
         CoreSolver::CoreDaeSolver *daeSolver = 0;
 
@@ -92,7 +93,7 @@ void SingleCellSimulationViewSimulationWorker::run()
                     // The requested ODE solver was found, so retrieve an
                     // instance of it
 
-                    odeSolver = reinterpret_cast<CoreSolver::CoreOdeSolver *>(solverInterface->instance());
+                    voiSolver = odeSolver = reinterpret_cast<CoreSolver::CoreOdeSolver *>(solverInterface->instance());
 
                     break;
                 }
@@ -102,7 +103,7 @@ void SingleCellSimulationViewSimulationWorker::run()
                     // The requested DAE solver was found, so retrieve an
                     // instance of it
 
-                    daeSolver = reinterpret_cast<CoreSolver::CoreDaeSolver *>(solverInterface->instance());
+                    voiSolver = daeSolver = reinterpret_cast<CoreSolver::CoreDaeSolver *>(solverInterface->instance());
 
                     break;
                 }
@@ -197,9 +198,17 @@ void SingleCellSimulationViewSimulationWorker::run()
             // Our main work loop
 
             while ((currentPoint != endingPoint) && (mStatus != Stopped)) {
-                // Handle our current point
+                // Handle our current point after making sure that all the
+                // variables have been computed
+
+                mCellmlFileRuntime->computeVariables()(currentPoint,
+                                                       mData->constants(),
+                                                       mData->rates(),
+                                                       mData->states(),
+                                                       mData->algebraic());
 
 //---GRY--- TO BE DONE...
+qDebug(">>> [%f]", currentPoint);
 
                 // Let people know about our progress
 
@@ -230,21 +239,24 @@ void SingleCellSimulationViewSimulationWorker::run()
                     timer.restart();
                 }
 
-                // Go to the next point, if needed
+                // Determine our next point
 
                 ++voiCounter;
 
-                currentPoint = increasingPoints?
-                                   qMin(endingPoint, startingPoint+voiCounter*pointInterval):
-                                   qMax(endingPoint, startingPoint+voiCounter*pointInterval);
+                double nextPoint = increasingPoints?
+                                       qMin(endingPoint, startingPoint+voiCounter*pointInterval):
+                                       qMax(endingPoint, startingPoint+voiCounter*pointInterval);
 
-                // Delay things a bit, if needed
-                // Note: unlike for the starting/ending points and point interval,
-                //       we always retrieve the delay from our data structure since
-                //       it can be changed ay any time (through the GUI) unlike
-                //       those other properties...
+                // Compute our model
+qDebug(">>> %f ---> %f", currentPoint, nextPoint);
 
-                if (mData->delay()) {
+                voiSolver->solve(currentPoint, nextPoint);
+
+                currentPoint = nextPoint;
+
+                // Delay things a bit, if (really) needed
+
+                if (mData->delay() && (mStatus != Stopped)) {
                     totalElapsedTime += timer.elapsed();
 
                     static_cast<Core::Thread *>(thread())->msleep(mData->delay());
@@ -256,6 +268,7 @@ void SingleCellSimulationViewSimulationWorker::run()
             // Handle our last point
 
 //---GRY--- TO BE DONE...
+qDebug(">>> [%f]", currentPoint);
 
             // Let people know about our final progress, but only if we didn't stop
             // the simulation
