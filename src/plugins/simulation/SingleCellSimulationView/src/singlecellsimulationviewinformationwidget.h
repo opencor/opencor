@@ -70,7 +70,9 @@ private:
 
     SingleCellSimulationViewInformationSimulationWidget *mSimulationWidget;
     SingleCellSimulationViewInformationSolversWidget *mSolversWidget;
-    SingleCellSimulationViewInformationTracesWidget *mTracesWidget;
+//    SingleCellSimulationViewInformationTracesWidget *mTracesWidget;
+//---GRY--- THE ABOVE IS TEMPORARY, I.E. WE NEED TO BE ABLE TO PLOT DATA FOR A
+//          DEMONSTRATION, BUT WON'T HAVE TO HANDLE TRACES IN TIME, SO...
     SingleCellSimulationViewInformationParametersWidget *mParametersWidget;
 };
 

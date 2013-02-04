@@ -50,10 +50,6 @@
         <translation>Solveurs</translation>
     </message>
     <message>
-        <source>Traces</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Parameters</source>
         <translation>Paramètres</translation>
     </message>

@@ -58,9 +58,11 @@ SingleCellSimulationViewInformationWidget::SingleCellSimulationViewInformationWi
 
     // Create our traces widget
 
-    mTracesWidget = new SingleCellSimulationViewInformationTracesWidget(mCollapsibleWidget);
+//    mTracesWidget = new SingleCellSimulationViewInformationTracesWidget(mCollapsibleWidget);
 
-    mTracesWidget->setObjectName("Traces");
+//    mTracesWidget->setObjectName("Traces");
+//---GRY--- THE ABOVE IS TEMPORARY, I.E. WE NEED TO BE ABLE TO PLOT DATA FOR A
+//          DEMONSTRATION, BUT WON'T HAVE TO HANDLE TRACES IN TIME, SO...
 
     // Create our parameters widget
 
@@ -73,7 +75,9 @@ SingleCellSimulationViewInformationWidget::SingleCellSimulationViewInformationWi
 
     mCollapsibleWidget->addWidget(mSimulationWidget);
     mCollapsibleWidget->addWidget(mSolversWidget);
-    mCollapsibleWidget->addWidget(mTracesWidget);
+//    mCollapsibleWidget->addWidget(mTracesWidget);
+//---GRY--- THE ABOVE IS TEMPORARY, I.E. WE NEED TO BE ABLE TO PLOT DATA FOR A
+//          DEMONSTRATION, BUT WON'T HAVE TO HANDLE TRACES IN TIME, SO...
     mCollapsibleWidget->addWidget(mParametersWidget);
 
     // Add our collapsible widget to our layout
@@ -107,14 +111,19 @@ void SingleCellSimulationViewInformationWidget::retranslateUi()
 
     mCollapsibleWidget->setHeaderTitle(0, tr("Simulation"));
     mCollapsibleWidget->setHeaderTitle(1, tr("Solvers"));
-    mCollapsibleWidget->setHeaderTitle(2, tr("Traces"));
-    mCollapsibleWidget->setHeaderTitle(3, tr("Parameters"));
+//    mCollapsibleWidget->setHeaderTitle(2, tr("Traces"));
+//    mCollapsibleWidget->setHeaderTitle(3, tr("Parameters"));
+mCollapsibleWidget->setHeaderTitle(2, tr("Parameters"));
+//---GRY--- THE ABOVE IS TEMPORARY, I.E. WE NEED TO BE ABLE TO PLOT DATA FOR A
+//          DEMONSTRATION, BUT WON'T HAVE TO HANDLE TRACES IN TIME, SO...
 
     // Retranslate our simulation, solvers, traces and parameters widgets
 
     mSimulationWidget->retranslateUi();
     mSolversWidget->retranslateUi();
-    mTracesWidget->retranslateUi();
+//    mTracesWidget->retranslateUi();
+//---GRY--- THE ABOVE IS TEMPORARY, I.E. WE NEED TO BE ABLE TO PLOT DATA FOR A
+//          DEMONSTRATION, BUT WON'T HAVE TO HANDLE TRACES IN TIME, SO...
     mParametersWidget->retranslateUi();
 }
 
@@ -142,9 +151,11 @@ void SingleCellSimulationViewInformationWidget::loadSettings(QSettings *pSetting
 
     // Retrieve the settings of our traces widget
 
-    pSettings->beginGroup(mTracesWidget->objectName());
-        mTracesWidget->loadSettings(pSettings);
-    pSettings->endGroup();
+//    pSettings->beginGroup(mTracesWidget->objectName());
+//        mTracesWidget->loadSettings(pSettings);
+//    pSettings->endGroup();
+//---GRY--- THE ABOVE IS TEMPORARY, I.E. WE NEED TO BE ABLE TO PLOT DATA FOR A
+//          DEMONSTRATION, BUT WON'T HAVE TO HANDLE TRACES IN TIME, SO...
 
     // Retrieve the settings of our parameters widget
 
@@ -177,9 +188,11 @@ void SingleCellSimulationViewInformationWidget::saveSettings(QSettings *pSetting
 
     // Keep track of the settings of our traces widget
 
-    pSettings->beginGroup(mTracesWidget->objectName());
-        mTracesWidget->saveSettings(pSettings);
-    pSettings->endGroup();
+//    pSettings->beginGroup(mTracesWidget->objectName());
+//        mTracesWidget->saveSettings(pSettings);
+//    pSettings->endGroup();
+//---GRY--- THE ABOVE IS TEMPORARY, I.E. WE NEED TO BE ABLE TO PLOT DATA FOR A
+//          DEMONSTRATION, BUT WON'T HAVE TO HANDLE TRACES IN TIME, SO...
 
     // Keep track of the settings of our parameters widget
 
@@ -208,12 +221,14 @@ SingleCellSimulationViewInformationSolversWidget * SingleCellSimulationViewInfor
 
 //==============================================================================
 
-SingleCellSimulationViewInformationTracesWidget * SingleCellSimulationViewInformationWidget::tracesWidget()
-{
-    // Return our traces widget
+//SingleCellSimulationViewInformationTracesWidget * SingleCellSimulationViewInformationWidget::tracesWidget()
+//{
+//    // Return our traces widget
 
-    return mTracesWidget;
-}
+//    return mTracesWidget;
+//}
+//---GRY--- THE ABOVE IS TEMPORARY, I.E. WE NEED TO BE ABLE TO PLOT DATA FOR A
+//          DEMONSTRATION, BUT WON'T HAVE TO HANDLE TRACES IN TIME, SO...
 
 //==============================================================================
 
@@ -232,7 +247,9 @@ void SingleCellSimulationViewInformationWidget::cancelEditing()
 
     mSimulationWidget->cancelPropertyEditing();
     mSolversWidget->cancelPropertyEditing();
-    mTracesWidget->cancelPropertyEditing();
+//    mTracesWidget->cancelPropertyEditing();
+//---GRY--- THE ABOVE IS TEMPORARY, I.E. WE NEED TO BE ABLE TO PLOT DATA FOR A
+//          DEMONSTRATION, BUT WON'T HAVE TO HANDLE TRACES IN TIME, SO...
     mParametersWidget->cancelPropertyEditing();
 }
 
