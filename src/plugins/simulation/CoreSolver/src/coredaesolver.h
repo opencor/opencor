@@ -28,7 +28,7 @@ public:
 
     virtual void initialize(const double &pVoiStart, const double &pVoiEnd,
                             const int &pStatesCount, const int &pCondVarCount,
-                            double *pConstants, double *pRates, double *pStates,
+                            double *pConstants, double *pStates, double *pRates,
                             double *pAlgebraic, double *pCondVar,
                             ComputeEssentialVariablesFunction pComputeEssentialVariables,
                             ComputeResidualsFunction pComputeResiduals,

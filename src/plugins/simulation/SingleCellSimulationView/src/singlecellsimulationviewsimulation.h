@@ -57,6 +57,7 @@ public:
     double * states() const;
     double * rates() const;
     double * algebraic() const;
+    double * condVar() const;
 
     int delay() const;
     void setDelay(const int &pDelay);

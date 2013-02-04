@@ -3,7 +3,9 @@
 //==============================================================================
 
 #include "cellmlfileruntime.h"
+#include "coredaesolver.h"
 #include "corenlasolver.h"
+#include "coreodesolver.h"
 #include "singlecellsimulationviewsimulation.h"
 #include "singlecellsimulationviewsimulationworker.h"
 #include "thread.h"
@@ -25,7 +27,8 @@ SingleCellSimulationViewSimulationWorker::SingleCellSimulationViewSimulationWork
     mStatus(Idling),
     mSolverInterfaces(pSolverInterfaces),
     mCellmlFileRuntime(pCellmlFileRuntime),
-    mData(pData)
+    mData(pData),
+    mError(false)
 {
     // Initialise our progress and let people know about it
 
@@ -78,14 +81,62 @@ void SingleCellSimulationViewSimulationWorker::run()
 
         emit running();
 
-        // Start our timer
+        // Set up our ODE/DAE solver
 
-        QTime timer;
-        int totalElapsedTime = 0;
+        CoreSolver::CoreOdeSolver *odeSolver = 0;
+        CoreSolver::CoreDaeSolver *daeSolver = 0;
 
-        timer.start();
+        if (mCellmlFileRuntime->needOdeSolver()) {
+            foreach (SolverInterface *solverInterface, mSolverInterfaces)
+                if (!solverInterface->name().compare(mData->odeSolverName())) {
+                    // The requested ODE solver was found, so retrieve an
+                    // instance of it
 
-        // Our main work loop
+                    odeSolver = reinterpret_cast<CoreSolver::CoreOdeSolver *>(solverInterface->instance());
+
+                    break;
+                }
+        } else {
+            foreach (SolverInterface *solverInterface, mSolverInterfaces)
+                if (!solverInterface->name().compare("IDA")) {
+                    // The requested DAE solver was found, so retrieve an
+                    // instance of it
+
+                    daeSolver = reinterpret_cast<CoreSolver::CoreDaeSolver *>(solverInterface->instance());
+
+                    break;
+                }
+        }
+
+        // Set up our NLA solver, if needed
+
+        if (mCellmlFileRuntime->needNlaSolver())
+            foreach (SolverInterface *solverInterface, mSolverInterfaces)
+                if (!solverInterface->name().compare(mData->nlaSolverName())) {
+                    // The requested NLA solver was found, so retrieve an
+                    // instance of it
+
+                    CoreSolver::setGlobalNlaSolver(reinterpret_cast<CoreSolver::CoreNlaSolver *>(solverInterface->instance()));
+
+                    break;
+                }
+
+        // Keep track of any error that might be reported by any of our solvers
+
+        mError = false;
+
+        if (mCellmlFileRuntime->needOdeSolver())
+            connect(odeSolver, SIGNAL(error(const QString &)),
+                    this, SLOT(emitError(const QString &)));
+        else
+            connect(daeSolver, SIGNAL(error(const QString &)),
+                    this, SLOT(emitError(const QString &)));
+
+        if (mCellmlFileRuntime->needNlaSolver())
+            connect(CoreSolver::globalNlaSolver(), SIGNAL(error(const QString &)),
+                    this, SLOT(emitError(const QString &)));
+
+        // Retrieve our simulation properties
 
         double startingPoint = mData->startingPoint();
         double endingPoint   = mData->endingPoint();
@@ -96,90 +147,156 @@ void SingleCellSimulationViewSimulationWorker::run()
         int voiCounter = 0;
         double currentPoint = startingPoint;
 
-        while ((currentPoint != endingPoint) && (mStatus != Stopped)) {
-            // Handle our current point
+        // Initialise our ODE/DAE solver
 
-//---GRY--- TO BE DONE...
+        if (mCellmlFileRuntime->needOdeSolver()) {
+            odeSolver->setProperties(mData->odeSolverProperties());
 
-            // Let people know about our progress
+            odeSolver->initialize(currentPoint,
+                                  mCellmlFileRuntime->statesCount(),
+                                  mData->constants(), mData->rates(),
+                                  mData->states(), mData->algebraic(),
+                                  mCellmlFileRuntime->computeRates());
+        } else {
+            daeSolver->setProperties(mData->daeSolverProperties());
 
-            updateAndEmitProgress((currentPoint-startingPoint)*oneOverPointRange);
-
-            // Check whether we should be pausing
-
-            if(mStatus == Pausing) {
-                // We have been asked to pause, so do just that after stopping
-                // our timer
-
-                totalElapsedTime += timer.elapsed();
-
-                mStatusMutex.lock();
-                    mStatusCondition.wait(&mStatusMutex);
-                mStatusMutex.unlock();
-
-                // We are running again
-
-                mStatus = Running;
-
-                // Let people know that we are running again
-
-                emit running();
-
-                // Restart our timer
-
-                timer.restart();
-            }
-
-            // Go to the next point, if needed
-
-            ++voiCounter;
-
-            currentPoint = increasingPoints?
-                               qMin(endingPoint, startingPoint+voiCounter*pointInterval):
-                               qMax(endingPoint, startingPoint+voiCounter*pointInterval);
-
-            // Delay things a bit, if needed
-            // Note: unlike for the starting/ending points and point interval,
-            //       we always retrieve the delay from our data structure since
-            //       it can be changed ay any time (through the GUI) unlike
-            //       those other properties...
-
-            if (mData->delay()) {
-                totalElapsedTime += timer.elapsed();
-
-                static_cast<Core::Thread *>(thread())->msleep(mData->delay());
-
-                timer.restart();
-            }
+            daeSolver->initialize(currentPoint, endingPoint,
+                                  mCellmlFileRuntime->statesCount(),
+                                  mCellmlFileRuntime->condVarCount(),
+                                  mData->constants(), mData->states(),
+                                  mData->rates(), mData->algebraic(),
+                                  mData->condVar(),
+                                  mCellmlFileRuntime->computeEssentialVariables(),
+                                  mCellmlFileRuntime->computeResiduals(),
+                                  mCellmlFileRuntime->computeRootInformation(),
+                                  mCellmlFileRuntime->computeStateInformation());
         }
 
-        // Handle our last point
+        // Initialise our NLA solver
+//---GRY--- CHECK do_nonlinearsolve() IN compilermath.cpp SINCE IT ISN'T
+//          CURRENTLY NEEDED. HOWEVER, OUR CURRENT APPROACH IS NOT NICE AND WE
+//          REALLY SHOULD INITIALISE THINGS HERE...
+
+        if (mCellmlFileRuntime->needNlaSolver()) {
+            CoreSolver::globalNlaSolver()->setProperties(mData->nlaSolverProperties());
+
+//            CoreSolver::globalNlaSolver()->initialize(...);
+        }
+
+        // Now, we are ready to compute our model, but only if no error has
+        // occurred so far
+
+        if (!mError) {
+            // Start our timer
+
+            QTime timer;
+            int totalElapsedTime = 0;
+
+            timer.start();
+
+            // Our main work loop
+
+            while ((currentPoint != endingPoint) && (mStatus != Stopped)) {
+                // Handle our current point
 
 //---GRY--- TO BE DONE...
 
-        // Let people know about our final progress, but only if we didn't stop
-        // the simulation
+                // Let people know about our progress
 
-        if (mStatus != Stopped)
-            updateAndEmitProgress(1.0);
+                updateAndEmitProgress((currentPoint-startingPoint)*oneOverPointRange);
 
-        // Reset our progress
-        // Note: we would normally use updateAndEmitProgress(), but we don't
-        //       want to emit the progress, so...
+                // Check whether we should be pausing
 
-        mProgress = 0.0;
+                if(mStatus == Pausing) {
+                    // We have been asked to pause, so do just that after stopping
+                    // our timer
 
-        // Retrieve the total elapsed time
+                    totalElapsedTime += timer.elapsed();
 
-        totalElapsedTime += timer.elapsed();
+                    mStatusMutex.lock();
+                        mStatusCondition.wait(&mStatusMutex);
+                    mStatusMutex.unlock();
 
-        // We are done, so...
+                    // We are running again
 
-        mStatus = Finished;
+                    mStatus = Running;
 
-        // Let people know that we are done and give them the total elapsed time too
+                    // Let people know that we are running again
 
-        emit finished(totalElapsedTime);
+                    emit running();
+
+                    // Restart our timer
+
+                    timer.restart();
+                }
+
+                // Go to the next point, if needed
+
+                ++voiCounter;
+
+                currentPoint = increasingPoints?
+                                   qMin(endingPoint, startingPoint+voiCounter*pointInterval):
+                                   qMax(endingPoint, startingPoint+voiCounter*pointInterval);
+
+                // Delay things a bit, if needed
+                // Note: unlike for the starting/ending points and point interval,
+                //       we always retrieve the delay from our data structure since
+                //       it can be changed ay any time (through the GUI) unlike
+                //       those other properties...
+
+                if (mData->delay()) {
+                    totalElapsedTime += timer.elapsed();
+
+                    static_cast<Core::Thread *>(thread())->msleep(mData->delay());
+
+                    timer.restart();
+                }
+            }
+
+            // Handle our last point
+
+//---GRY--- TO BE DONE...
+
+            // Let people know about our final progress, but only if we didn't stop
+            // the simulation
+
+            if (mStatus != Stopped)
+                updateAndEmitProgress(1.0);
+
+            // Reset our progress
+            // Note: we would normally use updateAndEmitProgress(), but we don't
+            //       want to emit the progress, so...
+
+            mProgress = 0.0;
+
+            // Retrieve the total elapsed time
+
+            totalElapsedTime += timer.elapsed();
+
+            // We are done, so...
+
+            mStatus = Finished;
+
+            // Let people know that we are done and give them the total elapsed time too
+
+            emit finished(totalElapsedTime);
+        } else {
+            // An error occurred, so...
+
+            mStatus = Finished;
+
+            // Let people know that we are done
+            // Note: we use -1 as a way to indicate that things went wrong...
+
+            emit finished(-1);
+        }
+
+        // Delete our solver(s)
+
+        delete odeSolver;
+        delete daeSolver;
+
+        CoreSolver::resetGlobalNlaSolver();
     }
 }
 
@@ -237,6 +354,17 @@ void SingleCellSimulationViewSimulationWorker::stop()
 
         mStatus = Stopped;
     }
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewSimulationWorker::emitError(const QString &pMessage)
+{
+    // A solver error occurred, so keep track of it and let people know about it
+
+    mError = true;
+
+    emit error(pMessage);
 }
 
 //==============================================================================

@@ -110,6 +110,15 @@ double * SingleCellSimulationViewSimulationData::algebraic() const
 
 //==============================================================================
 
+double * SingleCellSimulationViewSimulationData::condVar() const
+{
+    // Return our condVar array
+
+    return mCondVar;
+}
+
+//==============================================================================
+
 int SingleCellSimulationViewSimulationData::delay() const
 {
     // Return our delay
@@ -488,6 +497,9 @@ void SingleCellSimulationViewSimulation::run(const SolverInterfaces &pSolverInte
 
         connect(mWorker, SIGNAL(finished(const int &)),
                 this, SLOT(finished(const int &)));
+
+        connect(mWorker, SIGNAL(error(const QString &)),
+                this, SIGNAL(error(const QString &)));
 
         connect(mWorker, SIGNAL(finished(const int &)),
                 mWorkerThread, SLOT(quit()));

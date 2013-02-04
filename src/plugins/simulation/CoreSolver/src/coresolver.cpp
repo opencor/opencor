@@ -18,12 +18,11 @@ CoreSolver::CoreSolver() :
 
 //==============================================================================
 
-void CoreSolver::setProperty(const QString &pName, const QVariant &pValue)
+void CoreSolver::setProperties(const Properties &pProperties)
 {
     // Set a property's value, but only if it is a valid property
 
-    if (isValidProperty(pName))
-        mProperties.insert(pName, pValue);
+    mProperties = pProperties;
 }
 
 //==============================================================================
@@ -41,18 +40,6 @@ void CoreSolver::emitError(const QString &pErrorMsg)
         emit error(errorMsg.left(errorMsg.size()-1));
     else
         emit error(errorMsg);
-}
-
-//==============================================================================
-
-bool CoreSolver::isValidProperty(const QString &pName) const
-{
-    Q_UNUSED(pName);
-
-    // Check whether the property name is known to us which, by default, isn't
-    // the case
-
-    return false;
 }
 
 //==============================================================================

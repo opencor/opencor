@@ -198,12 +198,15 @@ void do_nonlinearsolve(void (*pFunction)(double *, double *, void *),
 //---GRY--- WHAT IF WE WERE TO RUN TWO SIMULATIONS AT THE SAME TIME AND BOTH OF
 //          THEM NEED AN NLA SOLVER? SEE corenlasolver.cpp, gGlobalNlaSolver
 //          GETS RESET ONCE A SIMULATION IS DONE. ALSO, WHAT IF TWO SIMULATIONS
-//          WANT TO USE DIFFERENT NLA SOLVERS?...
+//          WANT TO USE DIFFERENT NLA SOLVERS?... WHAT ABOUT PASSING AN EXTRA
+//          PARAMETER TO IDENTIFY THE CURRENT SIMULATION AND THUS USE THE
+//          CORRECT NLA SOLVER?...
 
     if (globalNlaSolver) {
         // Initialise our global non-linear algebraic solver
 
         globalNlaSolver->initialize(pFunction, pParameters, pSize, pUserData);
+//---GRY--- DO WE REALLY NEED TO INITIALISE THINGS EVERY TIME?...
 
         // Solve the non-linear algebraic system
 

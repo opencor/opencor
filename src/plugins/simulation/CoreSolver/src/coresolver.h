@@ -32,14 +32,12 @@ class CORESOLVER_EXPORT CoreSolver : public QObject
 public:
     explicit CoreSolver();
 
-    void setProperty(const QString &pName, const QVariant &pValue);
+    void setProperties(const Properties &pProperties);
 
     void emitError(const QString &pErrorMsg);
 
 protected:
     Properties mProperties;
-
-    virtual bool isValidProperty(const QString &pName) const;
 
 Q_SIGNALS:
     void error(const QString &pErrorMsg);

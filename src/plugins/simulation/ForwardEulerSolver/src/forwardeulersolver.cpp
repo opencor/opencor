@@ -19,18 +19,16 @@ ForwardEulerSolver::ForwardEulerSolver() :
 //==============================================================================
 
 void ForwardEulerSolver::initialize(const double &pVoiStart,
-                                    const double &pVoiEnd,
                                     const int &pStatesCount, double *pConstants,
-                                    double *pRates, double *pStates,
+                                    double *pStates, double *pRates,
                                     double *pAlgebraic,
                                     ComputeRatesFunction pComputeRates)
 {
     // Initialise the ODE solver itself
 
-    OpenCOR::CoreSolver::CoreOdeSolver::initialize(pVoiStart, pVoiEnd,
-                                                   pStatesCount, pConstants,
-                                                   pRates, pStates, pAlgebraic,
-                                                   pComputeRates);
+    OpenCOR::CoreSolver::CoreOdeSolver::initialize(pVoiStart, pStatesCount,
+                                                   pConstants, pStates, pRates,
+                                                   pAlgebraic, pComputeRates);
 
     // Retrieve the solver's properties
 
@@ -74,15 +72,6 @@ void ForwardEulerSolver::solve(double &pVoi, const double &pVoiEnd) const
         else
             pVoi = voiStart+(++nbOfSteps)*mStep;
     }
-}
-
-//==============================================================================
-
-bool ForwardEulerSolver::isValidProperty(const QString &pName) const
-{
-    // Check whether the property name is known to us
-
-    return !pName.compare(StepProperty);
 }
 
 //==============================================================================

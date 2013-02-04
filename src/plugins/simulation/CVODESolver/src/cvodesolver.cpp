@@ -116,19 +116,17 @@ CvodeSolver::~CvodeSolver()
 
 //==============================================================================
 
-void CvodeSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
-                             const int &pStatesCount, double *pConstants,
-                             double *pRates, double *pStates,
-                             double *pAlgebraic,
+void CvodeSolver::initialize(const double &pVoiStart, const int &pStatesCount,
+                             double *pConstants, double *pStates,
+                             double *pRates, double *pAlgebraic,
                              ComputeRatesFunction pComputeRates)
 {
     if (!mSolver) {
         // Initialise the ODE solver itself
 
-        OpenCOR::CoreSolver::CoreOdeSolver::initialize(pVoiStart, pVoiEnd,
-                                                       pStatesCount, pConstants,
-                                                       pRates, pStates,
-                                                       pAlgebraic,
+        OpenCOR::CoreSolver::CoreOdeSolver::initialize(pVoiStart, pStatesCount,
+                                                       pConstants, pStates,
+                                                       pRates, pAlgebraic,
                                                        pComputeRates);
 
         // Retrieve some of the CVODE properties
@@ -218,18 +216,6 @@ void CvodeSolver::solve(double &pVoi, const double &pVoiEnd) const
 
     mComputeRates(pVoiEnd, mConstants, mRates,
                   N_VGetArrayPointer_Serial(mStatesVector), mAlgebraic);
-}
-
-//==============================================================================
-
-bool CvodeSolver::isValidProperty(const QString &pName) const
-{
-    // Check whether the property name is known to us
-
-    return    !pName.compare(MaximumStepProperty)
-           || !pName.compare(MaximumNumberOfStepsProperty)
-           || !pName.compare(RelativeToleranceProperty)
-           || !pName.compare(AbsoluteToleranceProperty);
 }
 
 //==============================================================================

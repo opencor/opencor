@@ -24,14 +24,12 @@ CoreOdeSolver::CoreOdeSolver() :
 
 //==============================================================================
 
-void CoreOdeSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
-                               const int &pStatesCount, double *pConstants,
-                               double *pRates, double *pStates,
-                               double *pAlgebraic,
+void CoreOdeSolver::initialize(const double &pVoiStart, const int &pStatesCount,
+                               double *pConstants, double *pStates,
+                               double *pRates, double *pAlgebraic,
                                ComputeRatesFunction pComputeRates)
 {
     Q_UNUSED(pVoiStart);
-    Q_UNUSED(pVoiEnd);
 
     // Initialise the ODE solver
 

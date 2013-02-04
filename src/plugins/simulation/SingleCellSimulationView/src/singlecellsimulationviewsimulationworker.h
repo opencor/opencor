@@ -77,6 +77,8 @@ private:
 
     double mProgress;
 
+    bool mError;
+
     void updateAndEmitProgress(const double &pProgress);
 
 Q_SIGNALS:
@@ -87,8 +89,12 @@ Q_SIGNALS:
 
     void finished(const int &pElapsedTime);
 
+    void error(const QString &pMessage);
+
 public Q_SLOTS:
     void run();
+
+    void emitError(const QString &pMessage);
 };
 
 //==============================================================================

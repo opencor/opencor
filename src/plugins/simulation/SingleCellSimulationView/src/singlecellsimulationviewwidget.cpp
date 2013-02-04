@@ -943,18 +943,22 @@ void SingleCellSimulationViewWidget::simulationStopped(const int &pElapsedTime)
     SingleCellSimulationViewSimulation *simulation = qobject_cast<SingleCellSimulationViewSimulation *>(sender());
 
     if (simulation == mSimulation) {
-        SingleCellSimulationViewSimulationData *simulationData = mSimulation->data();
-        QString solversInformation = QString();
+        if (pElapsedTime != -1) {
+            // We have a valid elapsed time, so show the simulation time
 
-        if (!simulationData->odeSolverName().isEmpty())
-            solversInformation += simulationData->odeSolverName();
-        else
-            solversInformation += simulationData->daeSolverName();
+            SingleCellSimulationViewSimulationData *simulationData = mSimulation->data();
+            QString solversInformation = QString();
 
-        if (!simulationData->nlaSolverName().isEmpty())
-            solversInformation += "+"+simulationData->nlaSolverName();
+            if (!simulationData->odeSolverName().isEmpty())
+                solversInformation += simulationData->odeSolverName();
+            else
+                solversInformation += simulationData->daeSolverName();
 
-        output(QString(OutputTab+"<strong>Simulation time:</strong> <span"+OutputInfo+">"+QString::number(0.001*pElapsedTime, 'g', 3)+" s (using "+solversInformation+")</span>."+OutputBrLn));
+            if (!simulationData->nlaSolverName().isEmpty())
+                solversInformation += "+"+simulationData->nlaSolverName();
+
+            output(QString(OutputTab+"<strong>Simulation time:</strong> <span"+OutputInfo+">"+QString::number(0.001*pElapsedTime, 'g', 3)+" s (using "+solversInformation+")</span>."+OutputBrLn));
+        }
 
         QTimer::singleShot(ResetDelay, this, SLOT(resetProgressBar()));
 

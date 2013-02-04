@@ -26,10 +26,10 @@ CoreDaeSolver::CoreDaeSolver() :
 //==============================================================================
 
 void CoreDaeSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
-                               const int &pStatesCount, const int &pCondVarCount,
-                               double *pConstants, double *pRates,
-                               double *pStates, double *pAlgebraic,
-                               double *pCondVar,
+                               const int &pStatesCount,
+                               const int &pCondVarCount, double *pConstants,
+                               double *pStates, double *pRates,
+                               double *pAlgebraic, double *pCondVar,
                                ComputeEssentialVariablesFunction pComputeEssentialVariables,
                                ComputeResidualsFunction pComputeResiduals,
                                ComputeRootInformationFunction pComputeRootInformation,

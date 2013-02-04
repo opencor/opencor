@@ -319,18 +319,6 @@ void IdaSolver::solve(double &pVoi, const double &pVoiEnd) const
 
 //==============================================================================
 
-bool IdaSolver::isValidProperty(const QString &pName) const
-{
-    // Check whether the property name is known to us
-
-    return    !pName.compare(MaximumStepProperty)
-           || !pName.compare(MaximumNumberOfStepsProperty)
-           || !pName.compare(RelativeToleranceProperty)
-           || !pName.compare(AbsoluteToleranceProperty);
-}
-
-//==============================================================================
-
 }   // namespace IDASolver
 }   // namespace OpenCOR
 
