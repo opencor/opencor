@@ -163,7 +163,7 @@ SingleCellSimulationViewInformationSolversWidgetData * SingleCellSimulationViewI
 
                 switch (solverInterfaceProperty.type()) {
                 case Solver::Double:
-                    property = addDoubleProperty(true, solversProperty);
+                    property = addDoubleProperty(true, false, solversProperty);
 
                     break;
                 default:

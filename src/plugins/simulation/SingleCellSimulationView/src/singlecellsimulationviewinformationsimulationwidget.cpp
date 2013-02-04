@@ -23,9 +23,9 @@ SingleCellSimulationViewInformationSimulationWidget::SingleCellSimulationViewInf
 {
     // Populate our property editor
 
-    mStartingPointProperty = addDoubleProperty(true);
-    mEndingPointProperty   = addDoubleProperty(true);
-    mPointIntervalProperty = addDoubleProperty(true);
+    mStartingPointProperty = addDoubleProperty(true, false);
+    mEndingPointProperty   = addDoubleProperty(true, false);
+    mPointIntervalProperty = addDoubleProperty(true, false);
 
     // Initialise our property values
 

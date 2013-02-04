@@ -273,7 +273,7 @@ void SingleCellSimulationViewInformationParametersWidget::populateModel(Core::Pr
 
         bool canEditProperty =    (modelParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::Constant)
                                || (modelParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::State);
-        Core::Property *property = pPropertyEditor->addDoubleProperty(canEditProperty, section);
+        Core::Property *property = pPropertyEditor->addDoubleProperty(canEditProperty, true, section);
 
         property->name()->setIcon(QIcon(":CellMLSupport_variableNode"));
 

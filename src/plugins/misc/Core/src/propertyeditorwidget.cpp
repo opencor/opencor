@@ -396,11 +396,15 @@ void PropertyItem::setEmptyListValue(const QString &pEmptyListValue)
 
 //==============================================================================
 
-Property::Property(const PropertyItem::Type &pType, const bool &pEditable) :
+Property::Property(const PropertyItem::Type &pType, const bool &pEditable,
+                   const bool &pCheckable) :
     mName(new PropertyItem((pType == PropertyItem::Section)?pType:PropertyItem::String, false)),
     mValue(new PropertyItem(pType, pEditable)),
     mUnit(new PropertyItem(PropertyItem::String, false))
 {
+    // Make the property checkable, if needed
+
+    mName->setCheckable(pCheckable);
 }
 
 //==============================================================================
@@ -864,11 +868,12 @@ void PropertyEditorWidget::setGuiState(PropertyEditorWidgetGuiState *pGuiState)
 
 Property * PropertyEditorWidget::addProperty(const PropertyItem::Type &pType,
                                              const bool &pEditable,
+                                             const bool &pCheckable,
                                              Property *pParent)
 {
     // Determine our new property's information
 
-    Property *res = new Property(pType, pEditable);
+    Property *res = new Property(pType, pEditable, pCheckable);
 
     // Populate our data model with our new property
 
@@ -908,7 +913,7 @@ Property * PropertyEditorWidget::addSectionProperty(Property *pParent)
 {
     // Add a section property
 
-    Property *res = addProperty(PropertyItem::Section, false, pParent);
+    Property *res = addProperty(PropertyItem::Section, false, false, pParent);
 
     // Return our section property information
 
@@ -922,17 +927,18 @@ Property * PropertyEditorWidget::addIntegerProperty(const bool &pEditable,
 {
     // Add an integer property and return its information
 
-    return addProperty(PropertyItem::Integer, pEditable, pParent);
+    return addProperty(PropertyItem::Integer, pEditable, false, pParent);
 }
 
 //==============================================================================
 
 Property * PropertyEditorWidget::addDoubleProperty(const bool &pEditable,
+                                                   const bool &pCheckable,
                                                    Property *pParent)
 {
     // Add a double property and return its information
 
-    return addProperty(PropertyItem::Double, pEditable, pParent);
+    return addProperty(PropertyItem::Double, pEditable, pCheckable, pParent);
 }
 
 //==============================================================================
@@ -941,7 +947,7 @@ Property * PropertyEditorWidget::addListProperty(Property *pParent)
 {
     // Add a list property and return its information
 
-    return addProperty(PropertyItem::List, true, pParent);
+    return addProperty(PropertyItem::List, true, false, pParent);
 }
 
 //==============================================================================

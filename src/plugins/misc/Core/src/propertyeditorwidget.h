@@ -145,7 +145,8 @@ typedef QList<PropertyItem *> PropertyItems;
 class CORE_EXPORT Property
 {
 public:
-    explicit Property(const PropertyItem::Type &pType, const bool &pEditable);
+    explicit Property(const PropertyItem::Type &pType, const bool &pEditable,
+                      const bool &pCheckable);
     explicit Property(PropertyItem *pName, PropertyItem *pValue,
                       PropertyItem *pUnit);
 
@@ -243,6 +244,7 @@ public:
     Property * addIntegerProperty(const bool &pEditable,
                                   Property *pParent = 0);
     Property * addDoubleProperty(const bool &pEditable,
+                                 const bool &pCheckable,
                                  Property *pParent = 0);
     Property * addListProperty(Property *pParent = 0);
 
@@ -292,7 +294,8 @@ private:
     void retranslateEmptyListProperties(QStandardItem *pItem);
 
     Property * addProperty(const PropertyItem::Type &pType,
-                           const bool &pEditable, Property *pParent);
+                           const bool &pEditable, const bool &pCheckable,
+                           Property *pParent);
 
     void editProperty(Property *pProperty, const bool &pCommitData = true);
 
