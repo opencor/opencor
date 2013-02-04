@@ -19,10 +19,10 @@ namespace CoreSolver {
 class CORESOLVER_EXPORT CoreDaeSolver : public CoreVoiSolver
 {
 public:
-    typedef int (*ComputeEssentialVariablesFunction)(double, double *, double *, double *, double *, double *);
-    typedef int (*ComputeResidualsFunction)(double, double *, double *, double *, double *, double *, double *);
-    typedef int (*ComputeRootInformationFunction)(double, double *, double *, double *, double *, double *);
-    typedef int (*ComputeStateInformationFunction)(double *);
+    typedef int (*ComputeEssentialVariablesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR);
+    typedef int (*ComputeResidualsFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR, double *resid);
+    typedef int (*ComputeRootInformationFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR);
+    typedef int (*ComputeStateInformationFunction)(double *SI);
 
     explicit CoreDaeSolver();
 
