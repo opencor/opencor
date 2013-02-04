@@ -155,8 +155,8 @@ void SingleCellSimulationViewSimulationWorker::run()
 
             odeSolver->initialize(currentPoint,
                                   mCellmlFileRuntime->statesCount(),
-                                  mData->constants(), mData->rates(),
-                                  mData->states(), mData->algebraic(),
+                                  mData->constants(), mData->states(),
+                                  mData->rates(), mData->algebraic(),
                                   mCellmlFileRuntime->computeRates());
         } else {
             daeSolver->setProperties(mData->daeSolverProperties());
