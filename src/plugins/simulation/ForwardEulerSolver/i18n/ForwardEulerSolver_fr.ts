@@ -19,5 +19,9 @@
         <source>the &apos;step&apos; property value could not be retrieved</source>
         <translation>la valeur de la propriété &apos;step&apos; n&apos;a pas pu être retrouvée</translation>
     </message>
+    <message>
+        <source>the &apos;step&apos; property value cannot be equal to zero</source>
+        <translation>la valeur de la propriété &apos;step&apos; ne peut pas être égale à zéro</translation>
+    </message>
 </context>
 </TS>

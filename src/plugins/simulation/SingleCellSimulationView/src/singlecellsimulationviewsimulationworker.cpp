@@ -199,9 +199,9 @@ void SingleCellSimulationViewSimulationWorker::run()
 QString states;
 for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
     if (i)
-        states += ","+QString::number(i);
+        states += ",STATES["+QString::number(i)+"]";
     else
-        states += QString::number(i);
+        states = "STATES["+QString::number(i)+"]";
 qDebug("time,%s", qPrintable(states));
 
             while (   (currentPoint != endingPoint) && !mError
@@ -252,19 +252,14 @@ qDebug("%f,%s", currentPoint, qPrintable(states));
                     timer.restart();
                 }
 
-                // Determine our next point
+                // Determine our next point and compute our model up to it
 
                 ++voiCounter;
 
-                double nextPoint = increasingPoints?
-                                       qMin(endingPoint, startingPoint+voiCounter*pointInterval):
-                                       qMax(endingPoint, startingPoint+voiCounter*pointInterval);
-
-                // Compute our model
-
-                voiSolver->solve(currentPoint, nextPoint);
-
-                currentPoint = nextPoint;
+                voiSolver->solve(currentPoint,
+                                 increasingPoints?
+                                     qMin(endingPoint, startingPoint+voiCounter*pointInterval):
+                                     qMax(endingPoint, startingPoint+voiCounter*pointInterval));
 
                 // Delay things a bit, if (really) needed
 
