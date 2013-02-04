@@ -204,7 +204,8 @@ for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
         states += QString::number(i);
 qDebug("time,%s", qPrintable(states));
 
-            while ((currentPoint != endingPoint) && (mStatus != Stopped)) {
+            while (   (currentPoint != endingPoint) && !mError
+                   && (mStatus != Stopped)) {
                 // Handle our current point after making sure that all the
                 // variables have been computed
 
@@ -276,7 +277,8 @@ qDebug("%f,%s", currentPoint, qPrintable(states));
                 }
             }
 
-            // Handle our last point
+            if (!mError && (mStatus != Stopped)) {
+                // Handle our last point
 
 //---GRY--- TO BE DONE...
 for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
@@ -286,11 +288,11 @@ for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
         states = QString::number(mData->states()[i]);
 qDebug("%f,%s", currentPoint, qPrintable(states));
 
-            // Let people know about our final progress, but only if we didn't stop
-            // the simulation
+                // Let people know about our final progress, but only if we didn't stop
+                // the simulation
 
-            if (mStatus != Stopped)
                 updateAndEmitProgress(1.0);
+            }
 
             // Reset our progress
             // Note: we would normally use updateAndEmitProgress(), but we don't
@@ -300,7 +302,8 @@ qDebug("%f,%s", currentPoint, qPrintable(states));
 
             // Retrieve the total elapsed time
 
-            totalElapsedTime += timer.elapsed();
+            if (!mError)
+                totalElapsedTime += timer.elapsed();
 
             // We are done, so...
 
@@ -308,14 +311,15 @@ qDebug("%f,%s", currentPoint, qPrintable(states));
 
             // Let people know that we are done and give them the total elapsed time too
 
-            emit finished(totalElapsedTime);
+            emit finished(mError?-1:totalElapsedTime);
+            // Note: we use -1 as a way to indicate that something went wrong...
         } else {
             // An error occurred, so...
 
             mStatus = Finished;
 
             // Let people know that we are done
-            // Note: we use -1 as a way to indicate that things went wrong...
+            // Note: we use -1 as a way to indicate that something went wrong...
 
             emit finished(-1);
         }
