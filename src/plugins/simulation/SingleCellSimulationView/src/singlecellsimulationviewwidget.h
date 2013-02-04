@@ -93,6 +93,8 @@ private:
 
     SingleCellSimulationViewPlugin *mPluginParent;
 
+    SolverInterfaces mSolverInterfaces;
+
     SingleCellSimulationViewSimulation *mSimulation;
     QMap<QString, SingleCellSimulationViewSimulation *> mSimulations;
 

@@ -7,6 +7,10 @@
 
 //==============================================================================
 
+#include "solverinterface.h"
+
+//==============================================================================
+
 #include <QMutex>
 #include <QObject>
 #include <QWaitCondition>
@@ -14,6 +18,15 @@
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace CellMLSupport {
+    class CellmlFileRuntime;
+}   // namespace CellMLSupport
+
+//==============================================================================
+
 namespace SingleCellSimulationView {
 
 //==============================================================================
@@ -36,12 +49,15 @@ public:
         Finished
     };
 
-    explicit SingleCellSimulationViewSimulationWorker(SingleCellSimulationViewSimulationData *pData);
+    explicit SingleCellSimulationViewSimulationWorker(const SolverInterfaces &pSolverInterfaces,
+                                                      CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
+                                                      SingleCellSimulationViewSimulationData *pData);
 
     Status status() const;
     double progress() const;
 
     void pause();
+    void resume();
     void stop();
 
 private:
@@ -52,6 +68,10 @@ private:
 
     QMutex mStatusMutex;
     QWaitCondition mStatusCondition;
+
+    SolverInterfaces mSolverInterfaces;
+
+    CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
 
     SingleCellSimulationViewSimulationData *mData;
 

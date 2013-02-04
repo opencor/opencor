@@ -80,8 +80,12 @@
         <translation>le point d&apos;arrivée est plus petit que le point de départ, donc l&apos;interval de point devrait être plus petit que zéro</translation>
     </message>
     <message>
-        <source>the simulation worker and/or its thread could not be initialised</source>
-        <translation>l&apos;agent de simulation et/ou son fil n&apos;a/ont pas pu être initialisé/s</translation>
+        <source>the simulation worker could not be created</source>
+        <translation>l&apos;agent de simulation n&apos;a pas pu être créé</translation>
+    </message>
+    <message>
+        <source>the thread for the simulation worker could not be created</source>
+        <translation>Le fil de l&apos;agent de simulation n&apos;a pas pu être créé</translation>
     </message>
 </context>
 <context>

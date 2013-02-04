@@ -2,6 +2,8 @@
 // Single cell simulation view simulation worker
 //==============================================================================
 
+#include "cellmlfileruntime.h"
+#include "corenlasolver.h"
 #include "singlecellsimulationviewsimulation.h"
 #include "singlecellsimulationviewsimulationworker.h"
 #include "thread.h"
@@ -17,8 +19,12 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-SingleCellSimulationViewSimulationWorker::SingleCellSimulationViewSimulationWorker(SingleCellSimulationViewSimulationData *pData) :
+SingleCellSimulationViewSimulationWorker::SingleCellSimulationViewSimulationWorker(const SolverInterfaces &pSolverInterfaces,
+                                                                                   CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
+                                                                                   SingleCellSimulationViewSimulationData *pData) :
     mStatus(Idling),
+    mSolverInterfaces(pSolverInterfaces),
+    mCellmlFileRuntime(pCellmlFileRuntime),
     mData(pData)
 {
     // Initialise our progress and let people know about it
@@ -61,10 +67,10 @@ void SingleCellSimulationViewSimulationWorker::updateAndEmitProgress(const doubl
 
 void SingleCellSimulationViewSimulationWorker::run()
 {
-    // Check our status
+    // Run ourselves, but only if we are currently idling
 
     if (mStatus == Idling) {
-        // We are currently idling which means that we can be run
+        // We are running
 
         mStatus = Running;
 
@@ -157,10 +163,6 @@ void SingleCellSimulationViewSimulationWorker::run()
         if (mStatus != Stopped)
             updateAndEmitProgress(1.0);
 
-        // We are done, so...
-
-        mStatus = Finished;
-
         // Reset our progress
         // Note: we would normally use updateAndEmitProgress(), but we don't
         //       want to emit the progress, so...
@@ -171,13 +173,13 @@ void SingleCellSimulationViewSimulationWorker::run()
 
         totalElapsedTime += timer.elapsed();
 
+        // We are done, so...
+
+        mStatus = Finished;
+
         // Let people know that we are done and give them the total elapsed time too
 
         emit finished(totalElapsedTime);
-    } else if (mStatus == Pausing) {
-        // We are currently pausing, so resume ourselves
-
-        mStatusCondition.wakeAll();
     }
 }
 
@@ -188,13 +190,34 @@ void SingleCellSimulationViewSimulationWorker::pause()
     // Pause ourselves, but only if we are currently running
 
     if (mStatus == Running) {
-        // Pause ourselves
+        // We are pausing
 
         mStatus = Pausing;
 
         // Let people know that we are pausing
 
         emit pausing();
+    }
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewSimulationWorker::resume()
+{
+    // Resume ourselves, but only if are currently pausing
+
+    if (mStatus == Pausing) {
+        // Actually resume ourselves
+
+        mStatusCondition.wakeAll();
+
+        // We are running again
+
+        mStatus = Running;
+
+        // Let people know that we are running again
+
+        emit running();
     }
 }
 

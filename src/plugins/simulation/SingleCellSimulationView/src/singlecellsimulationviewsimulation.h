@@ -9,6 +9,7 @@
 
 #include "coresolver.h"
 #include "singlecellsimulationviewsimulationworker.h"
+#include "solverinterface.h"
 
 //==============================================================================
 
@@ -141,8 +142,9 @@ public:
     void reset();
     void recomputeComputedConstantsAndVariables();
 
-    void run();
+    void run(const SolverInterfaces &pSolverInterfaces);
     void pause();
+    void resume();
     void stop();
 
 private:
@@ -150,6 +152,8 @@ private:
     Core::Thread *mWorkerThread;
 
     QString mFileName;
+
+    CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
 
     SingleCellSimulationViewSimulationData *mData;
 

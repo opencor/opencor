@@ -335,6 +335,7 @@ SingleCellSimulationViewSimulation::SingleCellSimulationViewSimulation(const QSt
     mWorker(0),
     mWorkerThread(0),
     mFileName(pFileName),
+    mCellmlFileRuntime(pCellmlFileRuntime),
     mData(new SingleCellSimulationViewSimulationData(pCellmlFileRuntime))
 {
 }
@@ -417,7 +418,7 @@ void SingleCellSimulationViewSimulation::recomputeComputedConstantsAndVariables(
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulation::run()
+void SingleCellSimulationViewSimulation::run(const SolverInterfaces &pSolverInterfaces)
 {
     // Initialise our worker, if not active
 
@@ -444,21 +445,26 @@ void SingleCellSimulationViewSimulation::run()
 
             return;
 
-        // Create our worker and the thread in which it will work
+        // Create our worker
 
-        mWorker       = new SingleCellSimulationViewSimulationWorker(mData);
+        mWorker = new SingleCellSimulationViewSimulationWorker(pSolverInterfaces, mCellmlFileRuntime, mData);
+
+        if (!mWorker) {
+            emit error(tr("the simulation worker could not be created"));
+
+            return;
+        }
+
+        // Create the thread in which our worker will work
+
         mWorkerThread = new Core::Thread();
 
-        // Check that both the worker and its thread have been properly created
-
-        if (!mWorker || !mWorkerThread) {
+        if (!mWorkerThread) {
             delete mWorker;
-            delete mWorkerThread;
 
-            mWorker       = 0;
-            mWorkerThread = 0;
+            mWorker = 0;
 
-            emit error(tr("the simulation worker and/or its thread could not be initialised"));
+            emit error(tr("the thread for the simulation worker could not be created"));
 
             return;
         }
@@ -494,12 +500,6 @@ void SingleCellSimulationViewSimulation::run()
         // Start our worker thread
 
         mWorkerThread->start();
-    } else {
-        // Our worker is already active, so just run it
-        // Note: it might have been paused in between, in which case it will
-        //       automatically resume itself...
-
-        mWorker->run();
     }
 }
 
@@ -511,6 +511,16 @@ void SingleCellSimulationViewSimulation::pause()
 
     if (mWorker)
         mWorker->pause();
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewSimulation::resume()
+{
+    // Ask our worker to resume, if active
+
+    if (mWorker)
+        mWorker->resume();
 }
 
 //==============================================================================

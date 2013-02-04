@@ -298,6 +298,10 @@ void SingleCellSimulationViewWidget::setSolverInterfaces(const SolverInterfaces 
     // Let our solvers widget know about the solver interfaces
 
     mContentsWidget->informationWidget()->solversWidget()->setSolverInterfaces(pSolverInterfaces);
+
+    // Keep track of the solver interfaces
+
+    mSolverInterfaces = pSolverInterfaces;
 }
 
 //==============================================================================
@@ -816,11 +820,15 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
                                                  (property->value()->type() == Core::PropertyItem::Integer)?
                                                      Core::PropertyEditorWidget::integerPropertyItem(property->value()):
                                                      Core::PropertyEditorWidget::doublePropertyItem(property->value()));
+
+        // Run our simulation
+
+        mSimulation->run(mSolverInterfaces);
+    } else if (mSimulation->workerStatus() == SingleCellSimulationViewSimulationWorker::Pausing) {
+        // Our simulation was paused, so resume it
+
+        mSimulation->resume();
     }
-
-    // Start/resume the simulation
-
-    mSimulation->run();
 }
 
 //==============================================================================
