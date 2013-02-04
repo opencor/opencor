@@ -139,7 +139,7 @@ void CvodeSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
             emit error(QObject::tr("the 'maximum step' property value could not be retrieved"));
 
         if (mProperties.contains(MaximumNumberOfStepsProperty))
-            mMaximumNumberOfSteps = mProperties.value(MaximumNumberOfStepsProperty).toDouble();
+            mMaximumNumberOfSteps = mProperties.value(MaximumNumberOfStepsProperty).toInt();
         else
             emit error(QObject::tr("the 'maximum number of steps' property value could not be retrieved"));
 
