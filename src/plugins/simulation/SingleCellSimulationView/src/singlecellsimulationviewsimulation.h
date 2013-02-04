@@ -68,6 +68,15 @@ public:
     double pointInterval() const;
     void setPointInterval(const double &pPointInterval);
 
+    QString odeSolverName() const;
+    void setOdeSolverName(const QString &pOdeSolverName);
+
+    QString daeSolverName() const;
+    void setDaeSolverName(const QString &pDaeSolverName);
+
+    QString nlaSolverName() const;
+    void setNlaSolverName(const QString &pNlaSolverName);
+
     void reset();
     void recomputeComputedConstantsAndVariables();
 
@@ -79,6 +88,10 @@ private:
     double mStartingPoint;
     double mEndingPoint;
     double mPointInterval;
+
+    QString mOdeSolverName;
+    QString mDaeSolverName;
+    QString mNlaSolverName;
 
     double *mConstants;
     double *mStates;

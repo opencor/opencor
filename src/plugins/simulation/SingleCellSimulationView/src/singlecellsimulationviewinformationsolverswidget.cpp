@@ -351,6 +351,33 @@ QStringList SingleCellSimulationViewInformationSolversWidget::nlaSolvers() const
 
 //==============================================================================
 
+SingleCellSimulationViewInformationSolversWidgetData * SingleCellSimulationViewInformationSolversWidget::odeSolverData() const
+{
+    // Return our ODE solver data
+
+    return mOdeSolverData;
+}
+
+//==============================================================================
+
+SingleCellSimulationViewInformationSolversWidgetData * SingleCellSimulationViewInformationSolversWidget::daeSolverData() const
+{
+    // Return our DAE solver data
+
+    return mDaeSolverData;
+}
+
+//==============================================================================
+
+SingleCellSimulationViewInformationSolversWidgetData * SingleCellSimulationViewInformationSolversWidget::nlaSolverData() const
+{
+    // Return our NLA solver data
+
+    return mNlaSolverData;
+}
+
+//==============================================================================
+
 bool SingleCellSimulationViewInformationSolversWidget::doListPropertyChanged(SingleCellSimulationViewInformationSolversWidgetData *pSolverData,
                                                                              const QString &pSolverName,
                                                                              const bool &pForceHandling)

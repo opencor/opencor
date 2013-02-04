@@ -166,6 +166,7 @@ private Q_SLOTS:
     void splitterWidgetMoved();
 
     void simulationPropertyChanged(Core::PropertyItem *pPropertyItem);
+    void solversPropertyChanged(Core::PropertyItem *pPropertyItem);
 };
 
 //==============================================================================

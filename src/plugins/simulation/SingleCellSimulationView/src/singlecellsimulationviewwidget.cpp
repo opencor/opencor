@@ -140,10 +140,12 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
 
     mContentsWidget->setObjectName("Contents");
 
-    // Keep track of changes to our simulation properties
+    // Keep track of changes to our simulation and solvers properties
 
     connect(mContentsWidget->informationWidget()->simulationWidget(), SIGNAL(propertyChanged(Core::PropertyItem *)),
             this, SLOT(simulationPropertyChanged(Core::PropertyItem *)));
+    connect(mContentsWidget->informationWidget()->solversWidget(), SIGNAL(propertyChanged(Core::PropertyItem *)),
+            this, SLOT(solversPropertyChanged(Core::PropertyItem *)));
 
     // Keep track of whether we can remove graph panels
 
@@ -1064,12 +1066,29 @@ void SingleCellSimulationViewWidget::simulationPropertyChanged(Core::PropertyIte
 
     SingleCellSimulationViewInformationSimulationWidget *simulationWidget = mContentsWidget->informationWidget()->simulationWidget();
 
-    if (pPropertyItem == simulationWidget->startingPointPropertyValue())
+    if (pPropertyItem == simulationWidget->startingPointProperty()->value())
         mSimulation->data()->setStartingPoint(Core::PropertyEditorWidget::doublePropertyItem(pPropertyItem));
-    else if (pPropertyItem == simulationWidget->endingPointPropertyValue())
+    else if (pPropertyItem == simulationWidget->endingPointProperty()->value())
         mSimulation->data()->setEndingPoint(Core::PropertyEditorWidget::doublePropertyItem(pPropertyItem));
-    else if (pPropertyItem == simulationWidget->pointIntervalPropertyValue())
+    else if (pPropertyItem == simulationWidget->pointIntervalProperty()->value())
         mSimulation->data()->setPointInterval(Core::PropertyEditorWidget::doublePropertyItem(pPropertyItem));
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewWidget::solversPropertyChanged(Core::PropertyItem *pPropertyItem)
+{
+    // Check which simulation property has been modified and update our
+    // simulation data object accordingly
+
+    SingleCellSimulationViewInformationSolversWidget *solversWidget = mContentsWidget->informationWidget()->solversWidget();
+
+    if (pPropertyItem == solversWidget->odeSolverData()->solversListProperty()->value())
+        mSimulation->data()->setOdeSolverName(Core::PropertyEditorWidget::stringPropertyItem(pPropertyItem));
+    else if (pPropertyItem == solversWidget->daeSolverData()->solversListProperty()->value())
+        mSimulation->data()->setDaeSolverName(Core::PropertyEditorWidget::stringPropertyItem(pPropertyItem));
+    else if (pPropertyItem == solversWidget->nlaSolverData()->solversListProperty()->value())
+        mSimulation->data()->setNlaSolverName(Core::PropertyEditorWidget::stringPropertyItem(pPropertyItem));
 }
 
 //==============================================================================

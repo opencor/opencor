@@ -67,6 +67,10 @@ public:
     QStringList daeSolvers() const;
     QStringList nlaSolvers() const;
 
+    SingleCellSimulationViewInformationSolversWidgetData * odeSolverData() const;
+    SingleCellSimulationViewInformationSolversWidgetData * daeSolverData() const;
+    SingleCellSimulationViewInformationSolversWidgetData * nlaSolverData() const;
+
 private:
     SingleCellSimulationViewInformationSolversWidgetData *mOdeSolverData;
     SingleCellSimulationViewInformationSolversWidgetData *mDaeSolverData;

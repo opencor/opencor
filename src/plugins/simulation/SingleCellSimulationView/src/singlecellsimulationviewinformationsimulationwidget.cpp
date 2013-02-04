@@ -106,29 +106,29 @@ void SingleCellSimulationViewInformationSimulationWidget::finalize(const QString
 
 //==============================================================================
 
-Core::PropertyItem * SingleCellSimulationViewInformationSimulationWidget::startingPointPropertyValue() const
+Core::Property * SingleCellSimulationViewInformationSimulationWidget::startingPointProperty() const
 {
-    // Return our starting point property value
+    // Return our starting point property
 
-    return mStartingPointProperty->value();
+    return mStartingPointProperty;
 }
 
 //==============================================================================
 
-Core::PropertyItem * SingleCellSimulationViewInformationSimulationWidget::endingPointPropertyValue() const
+Core::Property * SingleCellSimulationViewInformationSimulationWidget::endingPointProperty() const
 {
-    // Return our ending point property value
+    // Return our ending point property
 
-    return mEndingPointProperty->value();
+    return mEndingPointProperty;
 }
 
 //==============================================================================
 
-Core::PropertyItem * SingleCellSimulationViewInformationSimulationWidget::pointIntervalPropertyValue() const
+Core::Property * SingleCellSimulationViewInformationSimulationWidget::pointIntervalProperty() const
 {
-    // Return our point interval property value
+    // Return our point interval property
 
-    return mPointIntervalProperty->value();
+    return mPointIntervalProperty;
 }
 
 //==============================================================================

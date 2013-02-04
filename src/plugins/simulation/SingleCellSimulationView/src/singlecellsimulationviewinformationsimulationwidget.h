@@ -39,9 +39,9 @@ public:
                     OpenCOR::CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
     void finalize(const QString &pFileName);
 
-    Core::PropertyItem * startingPointPropertyValue() const;
-    Core::PropertyItem * endingPointPropertyValue() const;
-    Core::PropertyItem * pointIntervalPropertyValue() const;
+    Core::Property * startingPointProperty() const;
+    Core::Property * endingPointProperty() const;
+    Core::Property * pointIntervalProperty() const;
 
     double startingPoint() const;
     double endingPoint() const;

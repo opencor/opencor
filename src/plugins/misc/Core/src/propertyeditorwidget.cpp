@@ -969,6 +969,23 @@ void PropertyEditorWidget::setPropertyItem(QStandardItem *pPropertyItem,
 
 //==============================================================================
 
+QString PropertyEditorWidget::stringPropertyItem(PropertyItem *pPropertyItem)
+{
+    // Return the value of the given string property item, if it exists and is
+    // valid
+
+    if (pPropertyItem &&
+        (   (pPropertyItem->type() == PropertyItem::String)
+         || (pPropertyItem->type() == PropertyItem::List)))
+        return pPropertyItem->text();
+    else
+        // The property item is either not valid or not of string type, so...
+
+        return QString();
+}
+
+//==============================================================================
+
 void PropertyEditorWidget::setStringPropertyItem(QStandardItem *pPropertyItem,
                                                  const QString &pValue)
 {
@@ -985,15 +1002,15 @@ void PropertyEditorWidget::setStringPropertyItem(QStandardItem *pPropertyItem,
 
 int PropertyEditorWidget::integerPropertyItem(PropertyItem *pPropertyItem)
 {
-    // Return the value of the given double property item, if it exists and is
+    // Return the value of the given integer property item, if it exists and is
     // valid
 
     if (pPropertyItem && (pPropertyItem->type() == PropertyItem::Integer))
         return pPropertyItem->text().toInt();
     else
-        // The property item is either not valid or not of double type, so...
+        // The property item is either not valid or not of integer type, so...
 
-        return 0.0;
+        return 0;
 }
 
 //==============================================================================
