@@ -196,13 +196,6 @@ void SingleCellSimulationViewSimulationWorker::run()
             timer.start();
 
             // Our main work loop
-QString states;
-for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
-    if (i)
-        states += ",STATES["+QString::number(i)+"]";
-    else
-        states = "STATES["+QString::number(i)+"]";
-qDebug("time,%s", qPrintable(states));
 
             while (   (currentPoint != endingPoint) && !mError
                    && (mStatus != Stopped)) {
@@ -216,12 +209,6 @@ qDebug("time,%s", qPrintable(states));
                                                        mData->algebraic());
 
 //---GRY--- TO BE DONE...
-for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
-    if (i)
-        states += ","+QString::number(mData->states()[i]);
-    else
-        states = QString::number(mData->states()[i]);
-qDebug("%f,%s", currentPoint, qPrintable(states));
 
                 // Let people know about our progress
 
@@ -273,15 +260,16 @@ qDebug("%f,%s", currentPoint, qPrintable(states));
             }
 
             if (!mError && (mStatus != Stopped)) {
-                // Handle our last point
+                // Handle our last point after making sure that all the
+                // variables have been computed
+
+                mCellmlFileRuntime->computeVariables()(currentPoint,
+                                                       mData->constants(),
+                                                       mData->rates(),
+                                                       mData->states(),
+                                                       mData->algebraic());
 
 //---GRY--- TO BE DONE...
-for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
-    if (i)
-        states += ","+QString::number(mData->states()[i]);
-    else
-        states = QString::number(mData->states()[i]);
-qDebug("%f,%s", currentPoint, qPrintable(states));
 
                 // Let people know about our final progress, but only if we didn't stop
                 // the simulation
