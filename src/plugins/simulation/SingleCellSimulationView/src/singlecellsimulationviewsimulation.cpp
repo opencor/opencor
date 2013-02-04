@@ -195,7 +195,6 @@ QString SingleCellSimulationViewSimulationData::odeSolverName() const
 void SingleCellSimulationViewSimulationData::setOdeSolverName(const QString &pOdeSolverName)
 {
     // Set our ODE solver name
-qDebug(">>> Setting the ODE solver name: %s", qPrintable(pOdeSolverName));
 
     mOdeSolverName = pOdeSolverName;
 }
@@ -214,7 +213,6 @@ QString SingleCellSimulationViewSimulationData::daeSolverName() const
 void SingleCellSimulationViewSimulationData::setDaeSolverName(const QString &pDaeSolverName)
 {
     // Set our DAE solver name
-qDebug(">>> Setting the DAE solver name: %s", qPrintable(pDaeSolverName));
 
     mDaeSolverName = pDaeSolverName;
 }
@@ -233,7 +231,6 @@ QString SingleCellSimulationViewSimulationData::nlaSolverName() const
 void SingleCellSimulationViewSimulationData::setNlaSolverName(const QString &pNlaSolverName)
 {
     // Set our NLA solver name
-qDebug(">>> Setting the NLA solver name: %s", qPrintable(pNlaSolverName));
 
     mNlaSolverName = pNlaSolverName;
 }
