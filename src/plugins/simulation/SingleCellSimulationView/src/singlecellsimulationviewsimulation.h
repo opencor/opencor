@@ -91,6 +91,7 @@ public:
 
     void reset();
     void recomputeComputedConstantsAndVariables();
+    void recomputeVariables(const double &pCurrentPoint);
 
 private:
     CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;

@@ -73,6 +73,9 @@ void SingleCellSimulationViewSimulationWorker::run()
     // Run ourselves, but only if we are currently idling
 
     if (mStatus == Idling) {
+mData->reset();
+//---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
+
         // We are running
 
         mStatus = Running;
@@ -196,19 +199,28 @@ void SingleCellSimulationViewSimulationWorker::run()
             timer.start();
 
             // Our main work loop
+QString states;
+for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
+    if (i)
+        states += ",STATES["+QString::number(i)+"]";
+    else
+        states = "STATES["+QString::number(i)+"]";
+qDebug("time,%s", qPrintable(states));
 
             while (   (currentPoint != endingPoint) && !mError
                    && (mStatus != Stopped)) {
                 // Handle our current point after making sure that all the
                 // variables have been computed
 
-                mCellmlFileRuntime->computeVariables()(currentPoint,
-                                                       mData->constants(),
-                                                       mData->rates(),
-                                                       mData->states(),
-                                                       mData->algebraic());
+                mData->recomputeVariables(currentPoint);
 
 //---GRY--- TO BE DONE...
+for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
+    if (i)
+        states += ","+QString::number(mData->states()[i]);
+    else
+        states = QString::number(mData->states()[i]);
+qDebug("%f,%s", currentPoint, qPrintable(states));
 
                 // Let people know about our progress
 
@@ -263,13 +275,15 @@ void SingleCellSimulationViewSimulationWorker::run()
                 // Handle our last point after making sure that all the
                 // variables have been computed
 
-                mCellmlFileRuntime->computeVariables()(currentPoint,
-                                                       mData->constants(),
-                                                       mData->rates(),
-                                                       mData->states(),
-                                                       mData->algebraic());
+                mData->recomputeVariables(currentPoint);
 
 //---GRY--- TO BE DONE...
+for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
+    if (i)
+        states += ","+QString::number(mData->states()[i]);
+    else
+        states = QString::number(mData->states()[i]);
+qDebug("%f,%s", currentPoint, qPrintable(states));
 
                 // Let people know about our final progress, but only if we didn't stop
                 // the simulation

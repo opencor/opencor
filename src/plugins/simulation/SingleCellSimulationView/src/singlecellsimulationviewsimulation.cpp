@@ -339,6 +339,19 @@ void SingleCellSimulationViewSimulationData::recomputeComputedConstantsAndVariab
 
 //==============================================================================
 
+void SingleCellSimulationViewSimulationData::recomputeVariables(const double &pCurrentPoint)
+{
+    // Recompute our 'variables'
+
+    mCellmlFileRuntime->computeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic);
+
+    // Let people know that our data has changed
+
+    emit dataChanged();
+}
+
+//==============================================================================
+
 SingleCellSimulationViewSimulation::SingleCellSimulationViewSimulation(const QString &pFileName,
                                                                        CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime) :
     mWorker(0),
