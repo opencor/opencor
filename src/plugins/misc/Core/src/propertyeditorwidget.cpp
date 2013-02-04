@@ -969,23 +969,6 @@ void PropertyEditorWidget::setPropertyItem(QStandardItem *pPropertyItem,
 
 //==============================================================================
 
-QString PropertyEditorWidget::stringPropertyItem(PropertyItem *pPropertyItem)
-{
-    // Return the value of the given string property item, if it exists and is
-    // valid
-
-    if (pPropertyItem &&
-        (   (pPropertyItem->type() == PropertyItem::String)
-         || (pPropertyItem->type() == PropertyItem::List)))
-        return pPropertyItem->text();
-    else
-        // The property item is either not valid or not of string type, so...
-
-        return QString();
-}
-
-//==============================================================================
-
 void PropertyEditorWidget::setStringPropertyItem(QStandardItem *pPropertyItem,
                                                  const QString &pValue)
 {

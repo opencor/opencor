@@ -28,8 +28,11 @@ SingleCellSimulationViewSimulationData::SingleCellSimulationViewSimulationData(C
     mEndingPoint(1000.0),
     mPointInterval(1.0),
     mOdeSolverName(QString()),
+    mOdeSolverProperties(CoreSolver::Properties()),
     mDaeSolverName(QString()),
-    mNlaSolverName(QString())
+    mDaeSolverProperties(CoreSolver::Properties()),
+    mNlaSolverName(QString()),
+    mNlaSolverProperties(CoreSolver::Properties())
 {
     // Create the various arrays needed to compute a model
 
@@ -187,7 +190,7 @@ QString SingleCellSimulationViewSimulationData::odeSolverName() const
 {
     // Return our ODE solver name
 
-    return mOdeSolverName;
+    return mCellmlFileRuntime->needOdeSolver()?mOdeSolverName:QString();
 }
 
 //==============================================================================
@@ -196,7 +199,28 @@ void SingleCellSimulationViewSimulationData::setOdeSolverName(const QString &pOd
 {
     // Set our ODE solver name
 
-    mOdeSolverName = pOdeSolverName;
+    if (mCellmlFileRuntime->needOdeSolver())
+        mOdeSolverName = pOdeSolverName;
+}
+
+//==============================================================================
+
+CoreSolver::Properties SingleCellSimulationViewSimulationData::odeSolverProperties() const
+{
+    // Return our ODE solver's properties
+
+    return mCellmlFileRuntime->needOdeSolver()?mOdeSolverProperties:CoreSolver::Properties();
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewSimulationData::addOdeSolverProperty(const QString &pName,
+                                                                  const QVariant &pValue)
+{
+    // Add an ODE solver property
+
+    if (mCellmlFileRuntime->needOdeSolver())
+        mOdeSolverProperties.insert(pName, pValue);
 }
 
 //==============================================================================
@@ -205,7 +229,7 @@ QString SingleCellSimulationViewSimulationData::daeSolverName() const
 {
     // Return our DAE solver name
 
-    return mDaeSolverName;
+    return mCellmlFileRuntime->needDaeSolver()?mDaeSolverName:QString();
 }
 
 //==============================================================================
@@ -214,7 +238,28 @@ void SingleCellSimulationViewSimulationData::setDaeSolverName(const QString &pDa
 {
     // Set our DAE solver name
 
-    mDaeSolverName = pDaeSolverName;
+    if (mCellmlFileRuntime->needDaeSolver())
+        mDaeSolverName = pDaeSolverName;
+}
+
+//==============================================================================
+
+CoreSolver::Properties SingleCellSimulationViewSimulationData::daeSolverProperties() const
+{
+    // Return our DAE solver's properties
+
+    return mCellmlFileRuntime->needDaeSolver()?mDaeSolverProperties:CoreSolver::Properties();
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewSimulationData::addDaeSolverProperty(const QString &pName,
+                                                                  const QVariant &pValue)
+{
+    // Add an DAE solver property
+
+    if (mCellmlFileRuntime->needDaeSolver())
+        mDaeSolverProperties.insert(pName, pValue);
 }
 
 //==============================================================================
@@ -223,7 +268,7 @@ QString SingleCellSimulationViewSimulationData::nlaSolverName() const
 {
     // Return our NLA solver name
 
-    return mNlaSolverName;
+    return mCellmlFileRuntime->needNlaSolver()?mNlaSolverName:QString();
 }
 
 //==============================================================================
@@ -232,7 +277,28 @@ void SingleCellSimulationViewSimulationData::setNlaSolverName(const QString &pNl
 {
     // Set our NLA solver name
 
-    mNlaSolverName = pNlaSolverName;
+    if (mCellmlFileRuntime->needNlaSolver())
+        mNlaSolverName = pNlaSolverName;
+}
+
+//==============================================================================
+
+CoreSolver::Properties SingleCellSimulationViewSimulationData::nlaSolverProperties() const
+{
+    // Return our NLA solver's properties
+
+    return mCellmlFileRuntime->needNlaSolver()?mNlaSolverProperties:CoreSolver::Properties();
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewSimulationData::addNlaSolverProperty(const QString &pName,
+                                                                  const QVariant &pValue)
+{
+    // Add an NLA solver property
+
+    if (mCellmlFileRuntime->needNlaSolver())
+        mNlaSolverProperties.insert(pName, pValue);
 }
 
 //==============================================================================

@@ -140,12 +140,10 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
 
     mContentsWidget->setObjectName("Contents");
 
-    // Keep track of changes to our simulation and solvers properties
+    // Keep track of changes to some of our simulation properties
 
     connect(mContentsWidget->informationWidget()->simulationWidget(), SIGNAL(propertyChanged(Core::PropertyItem *)),
             this, SLOT(simulationPropertyChanged(Core::PropertyItem *)));
-    connect(mContentsWidget->informationWidget()->solversWidget(), SIGNAL(propertyChanged(Core::PropertyItem *)),
-            this, SLOT(solversPropertyChanged(Core::PropertyItem *)));
 
     // Keep track of whether we can remove graph panels
 
@@ -778,10 +776,47 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
     //       simulation, but those things don't need to be done again when
     //       resuming a simulation...
 
-    if (mSimulation->workerStatus() == SingleCellSimulationViewSimulationWorker::Unknown)
+    if (mSimulation->workerStatus() == SingleCellSimulationViewSimulationWorker::Unknown) {
         // Cancel any editing of our simulation information
 
         mContentsWidget->informationWidget()->cancelEditing();
+
+        // Retrieve our simulation properties
+        // Note: we don't need to retrieve the value of our starting point value
+        //       since we already have it (see simulationPropertyChanged())...
+
+        SingleCellSimulationViewSimulationData *simulationData = mSimulation->data();
+        SingleCellSimulationViewInformationSimulationWidget *simulationWidget = mContentsWidget->informationWidget()->simulationWidget();
+
+        simulationData->setEndingPoint(Core::PropertyEditorWidget::doublePropertyItem(simulationWidget->endingPointProperty()->value()));
+        simulationData->setPointInterval(Core::PropertyEditorWidget::doublePropertyItem(simulationWidget->pointIntervalProperty()->value()));
+
+        // Retrieve our solvers' properties
+
+        SingleCellSimulationViewInformationSolversWidget *solversWidget = mContentsWidget->informationWidget()->solversWidget();
+
+        simulationData->setOdeSolverName(solversWidget->odeSolverData()->solversListProperty()->value()->text());
+        simulationData->setDaeSolverName(solversWidget->daeSolverData()->solversListProperty()->value()->text());
+        simulationData->setNlaSolverName(solversWidget->nlaSolverData()->solversListProperty()->value()->text());
+
+        foreach (Core::Property *property, solversWidget->odeSolverData()->solversProperties().value(simulationData->odeSolverName()))
+            simulationData->addOdeSolverProperty(property->name()->text(),
+                                                 (property->value()->type() == Core::PropertyItem::Integer)?
+                                                     Core::PropertyEditorWidget::integerPropertyItem(property->value()):
+                                                     Core::PropertyEditorWidget::doublePropertyItem(property->value()));
+
+        foreach (Core::Property *property, solversWidget->daeSolverData()->solversProperties().value(simulationData->daeSolverName()))
+            simulationData->addDaeSolverProperty(property->name()->text(),
+                                                 (property->value()->type() == Core::PropertyItem::Integer)?
+                                                     Core::PropertyEditorWidget::integerPropertyItem(property->value()):
+                                                     Core::PropertyEditorWidget::doublePropertyItem(property->value()));
+
+        foreach (Core::Property *property, solversWidget->nlaSolverData()->solversProperties().value(simulationData->nlaSolverName()))
+            simulationData->addNlaSolverProperty(property->name()->text(),
+                                                 (property->value()->type() == Core::PropertyItem::Integer)?
+                                                     Core::PropertyEditorWidget::integerPropertyItem(property->value()):
+                                                     Core::PropertyEditorWidget::doublePropertyItem(property->value()));
+    }
 
     // Start/resume the simulation
 
@@ -900,7 +935,18 @@ void SingleCellSimulationViewWidget::simulationStopped(const int &pElapsedTime)
     SingleCellSimulationViewSimulation *simulation = qobject_cast<SingleCellSimulationViewSimulation *>(sender());
 
     if (simulation == mSimulation) {
-        output(QString(OutputTab+"<strong>Simulation time:</strong> <span"+OutputInfo+">"+QString::number(0.001*pElapsedTime, 'g', 3)+" s</span>."+OutputBrLn));
+        SingleCellSimulationViewSimulationData *simulationData = mSimulation->data();
+        QString solversInformation = QString();
+
+        if (!simulationData->odeSolverName().isEmpty())
+            solversInformation += simulationData->odeSolverName();
+        else
+            solversInformation += simulationData->daeSolverName();
+
+        if (!simulationData->nlaSolverName().isEmpty())
+            solversInformation += "+"+simulationData->nlaSolverName();
+
+        output(QString(OutputTab+"<strong>Simulation time:</strong> <span"+OutputInfo+">"+QString::number(0.001*pElapsedTime, 'g', 3)+" s (using "+solversInformation+")</span>."+OutputBrLn));
 
         QTimer::singleShot(ResetDelay, this, SLOT(resetProgressBar()));
 
@@ -1001,7 +1047,7 @@ void SingleCellSimulationViewWidget::simulationProgress(const double &pProgress,
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::simulationError(const QString &pError,
+void SingleCellSimulationViewWidget::simulationError(const QString &pMessage,
                                                      const ErrorType &pErrorType)
 {
     // Output the simulation error, but only if it is for the active simulation
@@ -1015,7 +1061,7 @@ void SingleCellSimulationViewWidget::simulationError(const QString &pError,
 
         updateInvalidModelMessageWidget();
 
-        output(OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+pError+".</span>"+OutputBrLn);
+        output(OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+pMessage+".</span>"+OutputBrLn);
     }
 }
 
@@ -1061,34 +1107,17 @@ void SingleCellSimulationViewWidget::splitterWidgetMoved()
 
 void SingleCellSimulationViewWidget::simulationPropertyChanged(Core::PropertyItem *pPropertyItem)
 {
-    // Check which simulation property has been modified and update our
-    // simulation data object accordingly
+    // Check whether our simulation's starting point property has been modified
+    // and if so, then update our simulation data object accordingly
+    // Note: this is the only simulation property we need to check because it's
+    //       the only one that can potentially have an effect on the value of
+    //       'computed constants' and 'variables'...
+
 
     SingleCellSimulationViewInformationSimulationWidget *simulationWidget = mContentsWidget->informationWidget()->simulationWidget();
 
     if (pPropertyItem == simulationWidget->startingPointProperty()->value())
         mSimulation->data()->setStartingPoint(Core::PropertyEditorWidget::doublePropertyItem(pPropertyItem));
-    else if (pPropertyItem == simulationWidget->endingPointProperty()->value())
-        mSimulation->data()->setEndingPoint(Core::PropertyEditorWidget::doublePropertyItem(pPropertyItem));
-    else if (pPropertyItem == simulationWidget->pointIntervalProperty()->value())
-        mSimulation->data()->setPointInterval(Core::PropertyEditorWidget::doublePropertyItem(pPropertyItem));
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewWidget::solversPropertyChanged(Core::PropertyItem *pPropertyItem)
-{
-    // Check which simulation property has been modified and update our
-    // simulation data object accordingly
-
-    SingleCellSimulationViewInformationSolversWidget *solversWidget = mContentsWidget->informationWidget()->solversWidget();
-
-    if (pPropertyItem == solversWidget->odeSolverData()->solversListProperty()->value())
-        mSimulation->data()->setOdeSolverName(Core::PropertyEditorWidget::stringPropertyItem(pPropertyItem));
-    else if (pPropertyItem == solversWidget->daeSolverData()->solversListProperty()->value())
-        mSimulation->data()->setDaeSolverName(Core::PropertyEditorWidget::stringPropertyItem(pPropertyItem));
-    else if (pPropertyItem == solversWidget->nlaSolverData()->solversListProperty()->value())
-        mSimulation->data()->setNlaSolverName(Core::PropertyEditorWidget::stringPropertyItem(pPropertyItem));
 }
 
 //==============================================================================

@@ -248,7 +248,6 @@ public:
                                  Property *pParent = 0);
     Property * addListProperty(Property *pParent = 0);
 
-    static QString stringPropertyItem(PropertyItem *pPropertyItem);
     void setStringPropertyItem(QStandardItem *pPropertyItem,
                                const QString &pValue);
 

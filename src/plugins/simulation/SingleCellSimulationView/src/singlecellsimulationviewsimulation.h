@@ -7,6 +7,7 @@
 
 //==============================================================================
 
+#include "coresolver.h"
 #include "singlecellsimulationviewsimulationworker.h"
 
 //==============================================================================
@@ -71,11 +72,20 @@ public:
     QString odeSolverName() const;
     void setOdeSolverName(const QString &pOdeSolverName);
 
+    CoreSolver::Properties odeSolverProperties() const;
+    void addOdeSolverProperty(const QString &pName, const QVariant &pValue);
+
     QString daeSolverName() const;
     void setDaeSolverName(const QString &pDaeSolverName);
 
+    CoreSolver::Properties daeSolverProperties() const;
+    void addDaeSolverProperty(const QString &pName, const QVariant &pValue);
+
     QString nlaSolverName() const;
     void setNlaSolverName(const QString &pNlaSolverName);
+
+    CoreSolver::Properties nlaSolverProperties() const;
+    void addNlaSolverProperty(const QString &pName, const QVariant &pValue);
 
     void reset();
     void recomputeComputedConstantsAndVariables();
@@ -90,8 +100,13 @@ private:
     double mPointInterval;
 
     QString mOdeSolverName;
+    CoreSolver::Properties mOdeSolverProperties;
+
     QString mDaeSolverName;
+    CoreSolver::Properties mDaeSolverProperties;
+
     QString mNlaSolverName;
+    CoreSolver::Properties mNlaSolverProperties;
 
     double *mConstants;
     double *mStates;

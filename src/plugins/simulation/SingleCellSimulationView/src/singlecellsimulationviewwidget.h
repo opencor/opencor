@@ -160,13 +160,12 @@ private Q_SLOTS:
     void simulationProgress(const double &pProgress,
                             SingleCellSimulationViewSimulation *pSimulation = 0);
 
-    void simulationError(const QString &pError,
+    void simulationError(const QString &pMessage,
                          const ErrorType &pErrorType = General);
 
     void splitterWidgetMoved();
 
     void simulationPropertyChanged(Core::PropertyItem *pPropertyItem);
-    void solversPropertyChanged(Core::PropertyItem *pPropertyItem);
 };
 
 //==============================================================================
