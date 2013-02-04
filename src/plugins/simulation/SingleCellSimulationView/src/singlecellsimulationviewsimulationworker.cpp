@@ -196,6 +196,13 @@ void SingleCellSimulationViewSimulationWorker::run()
             timer.start();
 
             // Our main work loop
+QString states;
+for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
+    if (i)
+        states += ","+QString::number(i);
+    else
+        states += QString::number(i);
+qDebug("time,%s", qPrintable(states));
 
             while ((currentPoint != endingPoint) && (mStatus != Stopped)) {
                 // Handle our current point after making sure that all the
@@ -208,7 +215,12 @@ void SingleCellSimulationViewSimulationWorker::run()
                                                        mData->algebraic());
 
 //---GRY--- TO BE DONE...
-qDebug(">>> [%f]", currentPoint);
+for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
+    if (i)
+        states += ","+QString::number(mData->states()[i]);
+    else
+        states = QString::number(mData->states()[i]);
+qDebug("%f,%s", currentPoint, qPrintable(states));
 
                 // Let people know about our progress
 
@@ -248,7 +260,6 @@ qDebug(">>> [%f]", currentPoint);
                                        qMax(endingPoint, startingPoint+voiCounter*pointInterval);
 
                 // Compute our model
-qDebug(">>> %f ---> %f", currentPoint, nextPoint);
 
                 voiSolver->solve(currentPoint, nextPoint);
 
@@ -268,7 +279,12 @@ qDebug(">>> %f ---> %f", currentPoint, nextPoint);
             // Handle our last point
 
 //---GRY--- TO BE DONE...
-qDebug(">>> [%f]", currentPoint);
+for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
+    if (i)
+        states += ","+QString::number(mData->states()[i]);
+    else
+        states = QString::number(mData->states()[i]);
+qDebug("%f,%s", currentPoint, qPrintable(states));
 
             // Let people know about our final progress, but only if we didn't stop
             // the simulation
