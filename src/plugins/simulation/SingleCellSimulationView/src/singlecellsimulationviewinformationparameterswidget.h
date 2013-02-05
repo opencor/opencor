@@ -73,7 +73,9 @@ private:
                        CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
 
 Q_SIGNALS:
-void propertyChecked(Core::Property *pProperty, const bool &pChecked);
+void parameterNeeded(const QString &pFileName,
+                     CellMLSupport::CellmlFileRuntimeModelParameter *pParameter,
+                     const bool &pNeeded);
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 
 private Q_SLOTS:
@@ -82,6 +84,9 @@ private Q_SLOTS:
 
     void updateProperties();
     void propertyChanged(Core::Property *pProperty);
+
+void emitParameterNeeded(Core::Property *pProperty, const bool &pNeeded);
+//---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 };
 
 //==============================================================================

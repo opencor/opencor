@@ -155,8 +155,12 @@ mActiveGraphPanel(0)
 
     connect(mContentsWidget->graphPanelsWidget(), SIGNAL(removeGraphPanelsEnabled(const bool &)),
             mGui->actionRemove, SLOT(setEnabled(bool)));
-connect(mContentsWidget->informationWidget()->parametersWidget(), SIGNAL(propertyChecked(Core::Property *, const bool &)),
-        this, SLOT(parametersPropertyChecked(Core::Property *, const bool &)));
+connect(mContentsWidget->informationWidget()->parametersWidget(), SIGNAL(parameterNeeded(const QString &,
+                                                                                         CellMLSupport::CellmlFileRuntimeModelParameter *,
+                                                                                         const bool &)),
+        this, SLOT(parameterNeeded(const QString &,
+                                   CellMLSupport::CellmlFileRuntimeModelParameter *,
+                                   const bool &)));
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 
     // Create and add our invalid simulation message widget
@@ -1150,10 +1154,11 @@ void SingleCellSimulationViewWidget::simulationPropertyChanged(Core::Property *p
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::parametersPropertyChecked(Core::Property *pProperty,
-                                                               const bool &pChecked)
+void SingleCellSimulationViewWidget::parameterNeeded(const QString &pFileName,
+                                                     CellMLSupport::CellmlFileRuntimeModelParameter *pParameter,
+                                                     const bool &pNeeded)
 {
-    qDebug(">>> %s: %s", qPrintable(pProperty->name()->text()), pChecked?"YES":"NO");
+    qDebug(">>> %s | %s | %d | %d: %s", qPrintable(pFileName), qPrintable(pParameter->name()), pParameter->type(), pParameter->index(), pNeeded?"YES":"NO");
 }
 
 //==============================================================================

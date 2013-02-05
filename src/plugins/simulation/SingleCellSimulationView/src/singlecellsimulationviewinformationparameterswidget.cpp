@@ -122,7 +122,7 @@ void SingleCellSimulationViewInformationParametersWidget::initialize(const QStri
         connect(propertyEditor, SIGNAL(propertyChanged(Core::Property *)),
                 this, SLOT(propertyChanged(Core::Property *)));
 connect(propertyEditor, SIGNAL(propertyChecked(Core::Property *, const bool &)),
-        this, SIGNAL(propertyChecked(Core::Property *, const bool &)));
+        this, SLOT(emitParameterNeeded(Core::Property *, const bool &)));
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 
         // Add our new property editor to ourselves
@@ -216,6 +216,24 @@ void SingleCellSimulationViewInformationParametersWidget::propertyChanged(Core::
     // Recompute our 'computed constants' and 'variables'
 
     mSimulationData->recomputeComputedConstantsAndVariables();
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewInformationParametersWidget::emitParameterNeeded(Core::Property *pProperty,
+                                                                              const bool &pNeeded)
+{
+    // Retrieve our current property editor, if any
+
+    Core::PropertyEditorWidget *propertyEditor = qobject_cast<Core::PropertyEditorWidget *>(currentWidget());
+
+    if (!propertyEditor)
+        return;
+
+    // Let people know whether a parameter for the given file name is needed
+
+    emit parameterNeeded(mPropertyEditors.key(propertyEditor),
+                         mModelParameters.value(pProperty), pNeeded);
 }
 
 //==============================================================================

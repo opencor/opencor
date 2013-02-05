@@ -45,6 +45,12 @@ namespace Core {
 
 //==============================================================================
 
+namespace CellMLSupport {
+    class CellmlFileRuntimeModelParameter;
+}   // namespace CellMLSupport
+
+//==============================================================================
+
 namespace SingleCellSimulationView {
 
 //==============================================================================
@@ -173,7 +179,9 @@ private Q_SLOTS:
 
     void simulationPropertyChanged(Core::Property *pProperty);
 
-void parametersPropertyChecked(Core::Property *pProperty, const bool &pChecked);
+void parameterNeeded(const QString &pFileName,
+                     CellMLSupport::CellmlFileRuntimeModelParameter *pParameter,
+                     const bool &pNeeded);
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 };
 
