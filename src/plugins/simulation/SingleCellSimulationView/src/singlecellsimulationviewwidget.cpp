@@ -1199,6 +1199,7 @@ void SingleCellSimulationViewWidget::parameterNeeded(const QString &pFileName,
 void SingleCellSimulationViewWidget::results(SingleCellSimulationViewSimulationDataResults *pResults)
 {
 //---GRY--- TO BE DONE...
+qDebug(">>> Some data has been generated... [%f]", pResults->point());
 }
 
 //==============================================================================

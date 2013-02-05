@@ -64,6 +64,51 @@ SingleCellSimulationViewSimulationDataResults::~SingleCellSimulationViewSimulati
 
 //==============================================================================
 
+double SingleCellSimulationViewSimulationDataResults::point() const
+{
+    // Return our point
+
+    return mPoint;
+}
+
+//==============================================================================
+
+double * SingleCellSimulationViewSimulationDataResults::constants() const
+{
+    // Return our constants array
+
+    return mConstants;
+}
+
+//==============================================================================
+
+double * SingleCellSimulationViewSimulationDataResults::states() const
+{
+    // Return our states array
+
+    return mStates;
+}
+
+//==============================================================================
+
+double * SingleCellSimulationViewSimulationDataResults::rates() const
+{
+    // Return our rates array
+
+    return mRates;
+}
+
+//==============================================================================
+
+double * SingleCellSimulationViewSimulationDataResults::algebraic() const
+{
+    // Return our algebraic array
+
+    return mAlgebraic;
+}
+
+//==============================================================================
+
 SingleCellSimulationViewSimulationData::SingleCellSimulationViewSimulationData(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime) :
     mCellmlFileRuntime(pCellmlFileRuntime),
     mDelay(0),
