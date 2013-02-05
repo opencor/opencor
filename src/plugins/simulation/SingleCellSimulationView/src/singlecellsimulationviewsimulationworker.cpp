@@ -74,6 +74,7 @@ void SingleCellSimulationViewSimulationWorker::run()
 
     if (mStatus == Idling) {
 mData->reset();
+mData->resetResults();
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 
         // We are running
@@ -148,7 +149,7 @@ mData->reset();
 
         bool increasingPoints = endingPoint > startingPoint;
         const double oneOverPointRange = 1.0/(endingPoint-startingPoint);
-        int voiCounter = 0;
+        int pointCounter = 0;
         double currentPoint = startingPoint;
 
         // Initialise our ODE/DAE solver
@@ -199,13 +200,13 @@ mData->reset();
             timer.start();
 
             // Our main work loop
-QString states;
-for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
-    if (i)
-        states += ",STATES["+QString::number(i)+"]";
-    else
-        states = "STATES["+QString::number(i)+"]";
-qDebug("time,%s", qPrintable(states));
+//QString states;
+//for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
+//    if (i)
+//        states += ",STATES["+QString::number(i)+"]";
+//    else
+//        states = "STATES["+QString::number(i)+"]";
+//qDebug("time,%s", qPrintable(states));
 
             while (   (currentPoint != endingPoint) && !mError
                    && (mStatus != Stopped)) {
@@ -214,13 +215,15 @@ qDebug("time,%s", qPrintable(states));
 
                 mData->recomputeVariables(currentPoint);
 
+                mData->addResults(currentPoint);
+
 //---GRY--- TO BE DONE...
-for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
-    if (i)
-        states += ","+QString::number(mData->states()[i]);
-    else
-        states = QString::number(mData->states()[i]);
-qDebug("%f,%s", currentPoint, qPrintable(states));
+//for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
+//    if (i)
+//        states += ","+QString::number(mData->results()[mData->resultsFilled()-1].states[i]);
+//    else
+//        states = QString::number(mData->results()[mData->resultsFilled()-1].states[i]);
+//qDebug("%f,%s", mData->results()[mData->resultsFilled()-1].point, qPrintable(states));
 
                 // Let people know about our progress
 
@@ -253,12 +256,12 @@ qDebug("%f,%s", currentPoint, qPrintable(states));
 
                 // Determine our next point and compute our model up to it
 
-                ++voiCounter;
+                ++pointCounter;
 
                 voiSolver->solve(currentPoint,
                                  increasingPoints?
-                                     qMin(endingPoint, startingPoint+voiCounter*pointInterval):
-                                     qMax(endingPoint, startingPoint+voiCounter*pointInterval));
+                                     qMin(endingPoint, startingPoint+pointCounter*pointInterval):
+                                     qMax(endingPoint, startingPoint+pointCounter*pointInterval));
 
                 // Delay things a bit, if (really) needed
 
@@ -277,13 +280,15 @@ qDebug("%f,%s", currentPoint, qPrintable(states));
 
                 mData->recomputeVariables(currentPoint);
 
+                mData->addResults(currentPoint);
+
 //---GRY--- TO BE DONE...
-for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
-    if (i)
-        states += ","+QString::number(mData->states()[i]);
-    else
-        states = QString::number(mData->states()[i]);
-qDebug("%f,%s", currentPoint, qPrintable(states));
+//for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
+//    if (i)
+//        states += ","+QString::number(mData->results()[mData->resultsFilled()-1].states[i]);
+//    else
+//        states = QString::number(mData->results()[mData->resultsFilled()-1].states[i]);
+//qDebug("%f,%s", mData->results()[mData->resultsFilled()-1].point, qPrintable(states));
 
                 // Let people know about our final progress, but only if we didn't stop
                 // the simulation

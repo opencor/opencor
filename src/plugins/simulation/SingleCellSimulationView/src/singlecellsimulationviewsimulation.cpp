@@ -12,6 +12,10 @@
 
 //==============================================================================
 
+#include <qmath.h>
+
+//==============================================================================
+
 #include "qwt_slider.h"
 
 //==============================================================================
@@ -32,7 +36,10 @@ SingleCellSimulationViewSimulationData::SingleCellSimulationViewSimulationData(C
     mDaeSolverName(QString()),
     mDaeSolverProperties(CoreSolver::Properties()),
     mNlaSolverName(QString()),
-    mNlaSolverProperties(CoreSolver::Properties())
+    mNlaSolverProperties(CoreSolver::Properties()),
+    mResults(0),
+    mResultsCount(0),
+    mResultsFilled(0)
 {
     // Create the various arrays needed to compute a model
 
@@ -348,6 +355,87 @@ void SingleCellSimulationViewSimulationData::recomputeVariables(const double &pC
     // Let people know that our data has changed
 
     emit dataChanged();
+}
+
+//==============================================================================
+
+SingleCellSimulationViewSimulationData::Results * SingleCellSimulationViewSimulationData::results() const
+{
+    // Return our results
+
+    return mResults;
+}
+
+//==============================================================================
+
+int SingleCellSimulationViewSimulationData::resultsCount() const
+{
+    // Return our results count
+
+    return mResultsCount;
+}
+
+//==============================================================================
+
+int SingleCellSimulationViewSimulationData::resultsFilled() const
+{
+    // Return our results filled
+
+    return mResultsFilled;
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewSimulationData::resetResults()
+{
+    // Remove previous results
+
+    for (int i = 0; i < mResultsCount; ++i) {
+        Results *results = &mResults[i];
+
+        delete[] results->constants;
+        delete[] results->states;
+        delete[] results->rates;
+        delete[] results->algebraic;
+    }
+
+    delete[] mResults;
+
+    // Create our arrays of results
+
+    mResultsCount  = qCeil((mEndingPoint-mStartingPoint)/mPointInterval)+1;
+    mResultsFilled = 0;
+
+    mResults = new Results[mResultsCount];
+
+    for (int i = 0; i < mResultsCount; ++i) {
+        Results *results = &mResults[i];
+
+        results->constants = new double[mCellmlFileRuntime->constantsCount()];
+        results->states    = new double[mCellmlFileRuntime->statesCount()];
+        results->rates     = new double[mCellmlFileRuntime->ratesCount()];
+        results->algebraic = new double[mCellmlFileRuntime->algebraicCount()];
+    }
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewSimulationData::addResults(const double &pPoint)
+{
+    // Add the given results to our arrays of results
+
+    static const int sizeOfDouble = sizeof(double);
+
+    Results *results = &mResults[mResultsFilled];
+
+    results->point = pPoint;
+
+    memcpy(results->constants, mConstants, mCellmlFileRuntime->constantsCount()*sizeOfDouble);
+    memcpy(results->states, mStates, mCellmlFileRuntime->statesCount()*sizeOfDouble);
+    memcpy(results->rates, mRates, mCellmlFileRuntime->ratesCount()*sizeOfDouble);
+    memcpy(results->algebraic, mAlgebraic, mCellmlFileRuntime->algebraicCount()*sizeOfDouble);
+
+    ++mResultsFilled;
 }
 
 //==============================================================================

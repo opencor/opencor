@@ -50,6 +50,15 @@ class SingleCellSimulationViewSimulationData : public QObject
     Q_OBJECT
 
 public:
+    struct Results {
+        double point;
+
+        double *constants;
+        double *states;
+        double *rates;
+        double *algebraic;
+    };
+
     explicit SingleCellSimulationViewSimulationData(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
     ~SingleCellSimulationViewSimulationData();
 
@@ -93,6 +102,13 @@ public:
     void recomputeComputedConstantsAndVariables();
     void recomputeVariables(const double &pCurrentPoint);
 
+    Results * results() const;
+    int resultsCount() const;
+    int resultsFilled() const;
+
+    void resetResults();
+    void addResults(const double &pPoint);
+
 private:
     CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
 
@@ -116,6 +132,10 @@ private:
     double *mRates;
     double *mAlgebraic;
     double *mCondVar;
+
+    Results *mResults;
+    int mResultsCount;
+    int mResultsFilled;
 
 Q_SIGNALS:
     void dataChanged();
