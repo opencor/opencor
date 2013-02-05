@@ -464,6 +464,9 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         connect(mSimulation, SIGNAL(error(const QString &)),
                 this, SLOT(simulationError(const QString &)));
 
+connect(mSimulation->data(), SIGNAL(results(SingleCellSimulationViewSimulationDataResults *)),
+        this, SLOT(results(SingleCellSimulationViewSimulationDataResults *)));
+//---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
         // Keep track of our simulation object
 
         mSimulations.insert(pFileName, mSimulation);
@@ -1178,20 +1181,24 @@ void SingleCellSimulationViewWidget::parameterNeeded(const QString &pFileName,
 
     // Check whether to create/remove the trace
 
-    if (trace && !pNeeded)
+    if (trace && !pNeeded) {
         // We have a trace and we want to remove it
-{
-qDebug(">>> Removing trace [%s]...", qPrintable(key));
+
         mActiveGraphPanel->removeTrace(trace);
 
         mTraces.remove(key);
-}
-    else if (!trace && pNeeded)
+    } else if (!trace && pNeeded) {
         // We don't have a trace and want to create one
-{
-qDebug(">>> Adding trace [%s]...", qPrintable(key));
+
         mTraces.insert(key, mActiveGraphPanel->addTrace());
+    }
 }
+
+//==============================================================================
+
+void SingleCellSimulationViewWidget::results(SingleCellSimulationViewSimulationDataResults *pResults)
+{
+//---GRY--- TO BE DONE...
 }
 
 //==============================================================================

@@ -45,20 +45,40 @@ class SingleCellSimulationViewWidget;
 
 //==============================================================================
 
+class SingleCellSimulationViewSimulationDataResults
+{
+public:
+    explicit SingleCellSimulationViewSimulationDataResults(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
+                                                           const double &pPoint,
+                                                           double *pConstants,
+                                                           double *pStates,
+                                                           double *pRates,
+                                                           double *pAlgebraic);
+    ~SingleCellSimulationViewSimulationDataResults();
+
+    double point() const;
+
+    double * constants() const;
+    double * states() const;
+    double * rates() const;
+    double * algebraic() const;
+
+private:
+    double mPoint;
+
+    double *mConstants;
+    double *mStates;
+    double *mRates;
+    double *mAlgebraic;
+};
+
+//==============================================================================
+
 class SingleCellSimulationViewSimulationData : public QObject
 {
     Q_OBJECT
 
 public:
-    struct Results {
-        double point;
-
-        double *constants;
-        double *states;
-        double *rates;
-        double *algebraic;
-    };
-
     explicit SingleCellSimulationViewSimulationData(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
     ~SingleCellSimulationViewSimulationData();
 
@@ -102,9 +122,7 @@ public:
     void recomputeComputedConstantsAndVariables();
     void recomputeVariables(const double &pCurrentPoint);
 
-    Results * results() const;
-    int resultsCount() const;
-    int resultsFilled() const;
+    QList<SingleCellSimulationViewSimulationDataResults *> results() const;
 
     void resetResults();
     void addResults(const double &pPoint);
@@ -133,12 +151,12 @@ private:
     double *mAlgebraic;
     double *mCondVar;
 
-    Results *mResults;
-    int mResultsCount;
-    int mResultsFilled;
+    QList<SingleCellSimulationViewSimulationDataResults *> mResults;
 
 Q_SIGNALS:
     void dataChanged();
+
+    void results(SingleCellSimulationViewSimulationDataResults *pResults);
 };
 
 //==============================================================================

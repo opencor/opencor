@@ -25,6 +25,45 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
+SingleCellSimulationViewSimulationDataResults::SingleCellSimulationViewSimulationDataResults(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
+                                                                                             const double &pPoint,
+                                                                                             double *pConstants,
+                                                                                             double *pStates,
+                                                                                             double *pRates,
+                                                                                             double *pAlgebraic) :
+    mPoint(pPoint)
+{
+    // Create our various arrays
+
+    mConstants = new double[pCellmlFileRuntime->constantsCount()];
+    mStates    = new double[pCellmlFileRuntime->statesCount()];
+    mRates     = new double[pCellmlFileRuntime->ratesCount()];
+    mAlgebraic = new double[pCellmlFileRuntime->algebraicCount()];
+
+    // Initialise our various arrays
+
+    static const int SizeOfDouble = sizeof(double);
+
+    memcpy(mConstants, pConstants, pCellmlFileRuntime->constantsCount()*SizeOfDouble);
+    memcpy(mStates, pStates, pCellmlFileRuntime->statesCount()*SizeOfDouble);
+    memcpy(mRates, pRates, pCellmlFileRuntime->ratesCount()*SizeOfDouble);
+    memcpy(mAlgebraic, pAlgebraic, pCellmlFileRuntime->algebraicCount()*SizeOfDouble);
+}
+
+//==============================================================================
+
+SingleCellSimulationViewSimulationDataResults::~SingleCellSimulationViewSimulationDataResults()
+{
+    // Delete some internal objects
+
+    delete[] mConstants;
+    delete[] mStates;
+    delete[] mRates;
+    delete[] mAlgebraic;
+}
+
+//==============================================================================
+
 SingleCellSimulationViewSimulationData::SingleCellSimulationViewSimulationData(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime) :
     mCellmlFileRuntime(pCellmlFileRuntime),
     mDelay(0),
@@ -37,33 +76,25 @@ SingleCellSimulationViewSimulationData::SingleCellSimulationViewSimulationData(C
     mDaeSolverProperties(CoreSolver::Properties()),
     mNlaSolverName(QString()),
     mNlaSolverProperties(CoreSolver::Properties()),
-    mResults(0),
-    mResultsCount(0),
-    mResultsFilled(0)
+    mResults(QList<SingleCellSimulationViewSimulationDataResults *>())
 {
-    // Create the various arrays needed to compute a model
+    // Create the various arrays needed to compute our model
 
-    int constantsCount = pCellmlFileRuntime->constantsCount();
-    int ratesCount = pCellmlFileRuntime->ratesCount();
-    int statesCount = pCellmlFileRuntime->statesCount();
-    int algebraicCount = pCellmlFileRuntime->algebraicCount();
-    int condVarCount = pCellmlFileRuntime->condVarCount();
-
-    mConstants = new double[constantsCount];
-    mStates    = new double[statesCount];
-    mRates     = new double[ratesCount];
-    mAlgebraic = new double[algebraicCount];
-    mCondVar   = new double[condVarCount];
+    mConstants = new double[pCellmlFileRuntime->constantsCount()];
+    mStates    = new double[pCellmlFileRuntime->statesCount()];
+    mRates     = new double[pCellmlFileRuntime->ratesCount()];
+    mAlgebraic = new double[pCellmlFileRuntime->algebraicCount()];
+    mCondVar   = new double[pCellmlFileRuntime->condVarCount()];
 
     // Make sure that all our arrays are initialised with zeros
 
-    static const int sizeOfDouble = sizeof(double);
+    static const int SizeOfDouble = sizeof(double);
 
-    memset(mConstants, 0, constantsCount*sizeOfDouble);
-    memset(mStates, 0, statesCount*sizeOfDouble);
-    memset(mRates, 0, ratesCount*sizeOfDouble);
-    memset(mAlgebraic, 0, algebraicCount*sizeOfDouble);
-    memset(mCondVar, 0, condVarCount*sizeOfDouble);
+    memset(mConstants, 0, pCellmlFileRuntime->constantsCount()*SizeOfDouble);
+    memset(mStates, 0, pCellmlFileRuntime->statesCount()*SizeOfDouble);
+    memset(mRates, 0, pCellmlFileRuntime->ratesCount()*SizeOfDouble);
+    memset(mAlgebraic, 0, pCellmlFileRuntime->algebraicCount()*SizeOfDouble);
+    memset(mCondVar, 0, pCellmlFileRuntime->condVarCount()*SizeOfDouble);
 }
 
 //==============================================================================
@@ -359,7 +390,7 @@ void SingleCellSimulationViewSimulationData::recomputeVariables(const double &pC
 
 //==============================================================================
 
-SingleCellSimulationViewSimulationData::Results * SingleCellSimulationViewSimulationData::results() const
+QList<SingleCellSimulationViewSimulationDataResults *> SingleCellSimulationViewSimulationData::results() const
 {
     // Return our results
 
@@ -368,74 +399,29 @@ SingleCellSimulationViewSimulationData::Results * SingleCellSimulationViewSimula
 
 //==============================================================================
 
-int SingleCellSimulationViewSimulationData::resultsCount() const
-{
-    // Return our results count
-
-    return mResultsCount;
-}
-
-//==============================================================================
-
-int SingleCellSimulationViewSimulationData::resultsFilled() const
-{
-    // Return our results filled
-
-    return mResultsFilled;
-}
-
-//==============================================================================
-
 void SingleCellSimulationViewSimulationData::resetResults()
 {
-    // Remove previous results
+    // Remove any previous results
 
-    for (int i = 0; i < mResultsCount; ++i) {
-        Results *results = &mResults[i];
+    foreach (SingleCellSimulationViewSimulationDataResults *results, mResults)
+        delete results;
 
-        delete[] results->constants;
-        delete[] results->states;
-        delete[] results->rates;
-        delete[] results->algebraic;
-    }
-
-    delete[] mResults;
-
-    // Create our arrays of results
-
-    mResultsCount  = qCeil((mEndingPoint-mStartingPoint)/mPointInterval)+1;
-    mResultsFilled = 0;
-
-    mResults = new Results[mResultsCount];
-
-    for (int i = 0; i < mResultsCount; ++i) {
-        Results *results = &mResults[i];
-
-        results->constants = new double[mCellmlFileRuntime->constantsCount()];
-        results->states    = new double[mCellmlFileRuntime->statesCount()];
-        results->rates     = new double[mCellmlFileRuntime->ratesCount()];
-        results->algebraic = new double[mCellmlFileRuntime->algebraicCount()];
-    }
+    mResults.clear();
 }
 
 //==============================================================================
 
 void SingleCellSimulationViewSimulationData::addResults(const double &pPoint)
 {
-    // Add the given results to our arrays of results
+    // Keep track of our new results
 
-    static const int sizeOfDouble = sizeof(double);
+    SingleCellSimulationViewSimulationDataResults *newResults = new SingleCellSimulationViewSimulationDataResults(mCellmlFileRuntime,
+                                                                                                                  pPoint, mConstants, mStates, mRates, mAlgebraic);
+    mResults << newResults;
 
-    Results *results = &mResults[mResultsFilled];
+    // Let people know that new results have been added
 
-    results->point = pPoint;
-
-    memcpy(results->constants, mConstants, mCellmlFileRuntime->constantsCount()*sizeOfDouble);
-    memcpy(results->states, mStates, mCellmlFileRuntime->statesCount()*sizeOfDouble);
-    memcpy(results->rates, mRates, mCellmlFileRuntime->ratesCount()*sizeOfDouble);
-    memcpy(results->algebraic, mAlgebraic, mCellmlFileRuntime->algebraicCount()*sizeOfDouble);
-
-    ++mResultsFilled;
+    emit results(newResults);
 }
 
 //==============================================================================
