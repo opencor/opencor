@@ -43,6 +43,7 @@
 //==============================================================================
 
 #include "qwt_plot.h"
+#include "qwt_plot_curve.h"
 #include "qwt_wheel.h"
 
 //==============================================================================
@@ -1190,7 +1191,16 @@ void SingleCellSimulationViewWidget::parameterNeeded(const QString &pFileName,
     } else if (!trace && pNeeded) {
         // We don't have a trace and want to create one
 
-        mTraces.insert(key, mActiveGraphPanel->addTrace());
+        QwtPlotCurve *trace = mActiveGraphPanel->addTrace();
+
+        mTraces.insert(key, trace);
+
+        // Populate the trace if some results are available
+
+//        QList<SingleCellSimulationViewSimulationDataResults *> results = mSimulation->data()->results();
+
+//        if (!results.isEmpty())
+//            trace->setRawSamples(results.);
     }
 }
 
@@ -1199,7 +1209,15 @@ void SingleCellSimulationViewWidget::parameterNeeded(const QString &pFileName,
 void SingleCellSimulationViewWidget::results(SingleCellSimulationViewSimulationDataResults *pResults)
 {
 //---GRY--- TO BE DONE...
-qDebug(">>> Some data has been generated... [%f]", pResults->point());
+qDebug(">>> Some data has been generated... [%f] [%d]", pResults->points()[pResults->lastResultIndex()], pResults->lastResultIndex());
+
+    QMap<QString, QwtPlotCurve *>::const_iterator iter = mTraces.constBegin();
+
+    while (iter != mTraces.constEnd()) {
+        qDebug(">>> %s", qPrintable(iter.key()));
+
+        ++iter;
+    }
 }
 
 //==============================================================================
