@@ -717,17 +717,11 @@ connect(mSimulation->data(), SIGNAL(results(SingleCellSimulationViewSimulationDa
 QMap<QString, QwtPlotCurve *>::const_iterator iter = mTraces.constBegin();
 
 while (iter != mTraces.constEnd()) {
-    qDebug(">>> %s", qPrintable(iter.key()));
-
     // Retrieve the file name associated with the trace
 
     QString fileName = iter.key();
 
     fileName.chop(fileName.size()-fileName.indexOf('|'));
-
-qDebug(".........................");
-qDebug(">>> fileName:  %s", qPrintable(fileName));
-qDebug(">>> pFileName: %s", qPrintable(fileName));
 
     // Show/hide our trace depending on whether it is associated with the
     // requested file name
@@ -1191,7 +1185,7 @@ QString SingleCellSimulationViewWidget::parameterKey(const QString &pFileName,
 {
     // Determine and return the key for the parameter
 
-    return pFileName+"|"+pParameter->name()+"|"+QString::number(pParameter->type())+"|"+QString::number(pParameter->index());
+    return pFileName+"|"+QString::number(pParameter->type())+"|"+QString::number(pParameter->index());
 }
 
 //==============================================================================
@@ -1252,7 +1246,51 @@ void SingleCellSimulationViewWidget::results(SingleCellSimulationViewSimulationD
     QMap<QString, QwtPlotCurve *>::const_iterator iter = mTraces.constBegin();
 
     while (iter != mTraces.constEnd()) {
-        qDebug(">>> %s", qPrintable(iter.key()));
+        // Retrieve the file name associated with the trace
+
+        QString fileName = iter.key();
+
+        fileName.chop(fileName.size()-fileName.indexOf('|'));
+
+        // Retrieve the type of the parameter associated with the trace
+
+        QString typeAsString = iter.key();
+
+        typeAsString.remove(fileName+"|");
+        typeAsString.chop(typeAsString.size()-typeAsString.indexOf('|'));
+
+        // Retrieve the index of the parameter associated with the trace
+
+        QString indexAsString = iter.key();
+
+        indexAsString.remove(fileName+"|"+typeAsString+"|");
+
+        // Update the traces which are associated with the current file name
+
+        QwtPlotCurve *trace = iter.value();
+
+        if (!fileName.compare(mSimulation->fileName())) {
+            if (pResults) {
+                double *yData;
+
+                CellMLSupport::CellmlFileRuntimeModelParameter::ModelParameterType type = CellMLSupport::CellmlFileRuntimeModelParameter::ModelParameterType(typeAsString.toInt());
+                int index = indexAsString.toInt();
+
+                if (   (type == CellMLSupport::CellmlFileRuntimeModelParameter::Constant)
+                    || (type == CellMLSupport::CellmlFileRuntimeModelParameter::ComputedConstant))
+                    yData = pResults->constants()[index];
+                else if (type == CellMLSupport::CellmlFileRuntimeModelParameter::State)
+                    yData = pResults->states()[index];
+                else if (type == CellMLSupport::CellmlFileRuntimeModelParameter::Rate)
+                    yData = pResults->rates()[index];
+                else
+                    yData = pResults->algebraic()[index];
+
+                trace->setRawSamples(pResults->points(), yData, pResults->size());
+            }
+        }
+
+        // Go to the next trace
 
         ++iter;
     }
