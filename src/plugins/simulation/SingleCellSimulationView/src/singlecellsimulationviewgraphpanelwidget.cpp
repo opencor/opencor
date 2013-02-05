@@ -30,7 +30,7 @@ SingleCellSimulationViewGraphPanelWidget::SingleCellSimulationViewGraphPanelWidg
     Widget(pParent),
     mGui(new Ui::SingleCellSimulationViewGraphPanelWidget),
     mActive(false),
-    mPlotCurves(QList<QwtPlotCurve *>())
+    mPlotTraces(QList<QwtPlotCurve *>())
 {
     // Set up the GUI
 
@@ -77,7 +77,7 @@ SingleCellSimulationViewGraphPanelWidget::~SingleCellSimulationViewGraphPanelWid
 {
     // Delete some internal objects
 
-    removeCurves();
+    removeTraces();
 
     // Delete the GUI
 
@@ -116,9 +116,9 @@ void SingleCellSimulationViewGraphPanelWidget::mousePressEvent(QMouseEvent *pEve
 
 //==============================================================================
 
-QwtPlotCurve * SingleCellSimulationViewGraphPanelWidget::addCurve()
+QwtPlotCurve * SingleCellSimulationViewGraphPanelWidget::addTrace()
 {
-    // Create a new curve
+    // Create a new trace
 
     QwtPlotCurve *res = new QwtPlotCurve();
 
@@ -131,9 +131,9 @@ QwtPlotCurve * SingleCellSimulationViewGraphPanelWidget::addCurve()
 
     res->attach(mPlot);
 
-    // Add it to our list of curves
+    // Add it to our list of traces
 
-    mPlotCurves << res;
+    mPlotTraces << res;
 
     // Return it to the caller
 
@@ -142,32 +142,32 @@ QwtPlotCurve * SingleCellSimulationViewGraphPanelWidget::addCurve()
 
 //==============================================================================
 
-void SingleCellSimulationViewGraphPanelWidget::removeCurve(QwtPlotCurve *pCurve)
+void SingleCellSimulationViewGraphPanelWidget::removeTrace(QwtPlotCurve *pTrace)
 {
-    // Make sure that we have a curve
+    // Make sure that we have a trace
 
-    if (!pCurve)
+    if (!pTrace)
         return;
 
-    // Detach and then delete the curve
+    // Detach and then delete the trace
 
-    pCurve->detach();
+    pTrace->detach();
 
-    delete pCurve;
+    delete pTrace;
 
-    // Stop tracking the curve
+    // Stop tracking the trace
 
-    mPlotCurves.removeOne(pCurve);
+    mPlotTraces.removeOne(pTrace);
 }
 
 //==============================================================================
 
-void SingleCellSimulationViewGraphPanelWidget::removeCurves()
+void SingleCellSimulationViewGraphPanelWidget::removeTraces()
 {
-    // Remove any existing curve
+    // Remove any existing trace
 
-    foreach (QwtPlotCurve *curve, mPlotCurves)
-        removeCurve(curve);
+    foreach (QwtPlotCurve *trace, mPlotTraces)
+        removeTrace(trace);
 }
 
 //==============================================================================

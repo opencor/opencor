@@ -39,10 +39,10 @@ public:
     explicit SingleCellSimulationViewGraphPanelWidget(QWidget *pParent = 0);
     ~SingleCellSimulationViewGraphPanelWidget();
 
-    QwtPlotCurve * addCurve();
+    QwtPlotCurve * addTrace();
 
-    void removeCurve(QwtPlotCurve *pCurve);
-    void removeCurves();
+    void removeTrace(QwtPlotCurve *pTrace);
+    void removeTraces();
 
     bool isActive() const;
     void setActive(const bool &pActive);
@@ -61,7 +61,7 @@ private:
 
     bool mActive;
 
-    QList<QwtPlotCurve *> mPlotCurves;
+    QList<QwtPlotCurve *> mPlotTraces;
 
     void updateMarkerColor();
 
