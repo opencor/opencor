@@ -22,6 +22,7 @@ class QTextEdit;
 
 //==============================================================================
 
+class QwtPlotCurve;
 class QwtWheel;
 
 //==============================================================================
@@ -133,6 +134,7 @@ private:
     ErrorType mErrorType;
 
 SingleCellSimulationViewGraphPanelWidget *mActiveGraphPanel;
+QMap<QString, QwtPlotCurve *> mTraces;
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 
     void setDelayValue(const int &pDelayValue);
@@ -147,6 +149,10 @@ SingleCellSimulationViewGraphPanelWidget *mActiveGraphPanel;
     int tabBarIconSize() const;
 
     void updateInvalidModelMessageWidget();
+
+QString parameterKey(const QString &pFileName,
+                     CellMLSupport::CellmlFileRuntimeModelParameter *pParameter) const;
+//---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 
 private Q_SLOTS:
     void on_actionRun_triggered();

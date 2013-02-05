@@ -71,7 +71,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
     mDelays(QMap<QString, int>()),
     mSplitterWidgetSizes(QList<int>()),
     mProgresses(QMap<QString, int>()),
-mActiveGraphPanel(0)
+mTraces(QMap<QString, QwtPlotCurve *>())
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 {
     // Set up the GUI
@@ -284,6 +284,8 @@ void SingleCellSimulationViewWidget::loadSettings(QSettings *pSettings)
     pSettings->beginGroup(mContentsWidget->objectName());
         mContentsWidget->loadSettings(pSettings);
     pSettings->endGroup();
+mActiveGraphPanel = mContentsWidget->graphPanelsWidget()->activeGraphPanel();
+//---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 }
 
 //==============================================================================
@@ -837,8 +839,6 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
 // Retrieve the active graph panel
 //---GRY--- THE BELOW IS TEMPORARY, JUST FOR OUR DEMO...
 
-mActiveGraphPanel = mContentsWidget->graphPanelsWidget()->activeGraphPanel();
-
 mActiveGraphPanel->plot()->setAxisScale(QwtPlot::xBottom, simulationData->startingPoint(), simulationData->endingPoint());
 
         // Run our simulation
@@ -1154,11 +1154,44 @@ void SingleCellSimulationViewWidget::simulationPropertyChanged(Core::Property *p
 
 //==============================================================================
 
+QString SingleCellSimulationViewWidget::parameterKey(const QString &pFileName,
+                                                     CellMLSupport::CellmlFileRuntimeModelParameter *pParameter) const
+{
+    // Determine and return the key for the parameter
+
+    return pFileName+"|"+pParameter->name()+"|"+QString::number(pParameter->type())+"|"+QString::number(pParameter->index());
+}
+
+//==============================================================================
+
 void SingleCellSimulationViewWidget::parameterNeeded(const QString &pFileName,
                                                      CellMLSupport::CellmlFileRuntimeModelParameter *pParameter,
                                                      const bool &pNeeded)
 {
-    qDebug(">>> %s | %s | %d | %d: %s", qPrintable(pFileName), qPrintable(pParameter->name()), pParameter->type(), pParameter->index(), pNeeded?"YES":"NO");
+    // Determine the key for the parameter
+
+    QString key = parameterKey(pFileName, pParameter);
+
+    // Retrieve the trace associated with the key, if any
+
+    QwtPlotCurve *trace = mTraces.value(key);
+
+    // Check whether to create/remove the trace
+
+    if (trace && !pNeeded)
+        // We have a trace and we want to remove it
+{
+qDebug(">>> Removing trace [%s]...", qPrintable(key));
+        mActiveGraphPanel->removeTrace(trace);
+
+        mTraces.remove(key);
+}
+    else if (!trace && pNeeded)
+        // We don't have a trace and want to create one
+{
+qDebug(">>> Adding trace [%s]...", qPrintable(key));
+        mTraces.insert(key, mActiveGraphPanel->addTrace());
+}
 }
 
 //==============================================================================
