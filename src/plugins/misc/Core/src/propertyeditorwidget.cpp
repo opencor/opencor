@@ -579,6 +579,9 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
 
     connect(selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
             this, SLOT(editorClosed()));
+connect(mModel, SIGNAL(itemChanged(QStandardItem *)),
+        this, SLOT(emitPropertyChecked(QStandardItem *)));
+//---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 
     connect(propertyItemDelegate, SIGNAL(openEditor(QWidget *)),
             this, SLOT(editorOpened(QWidget *)));
@@ -598,7 +601,7 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
     // Resize our height in case some data has changed or one of the properties
     // gets expanded/collapsed
 
-    connect(mModel, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
+    connect(mModel, SIGNAL(itemChanged(QStandardItem *)),
             this, SLOT(updateHeight()));
 
     connect(this, SIGNAL(collapsed(const QModelIndex &)),
@@ -1274,14 +1277,14 @@ void PropertyEditorWidget::editorClosed()
 
     setFocus();
 
+    // Let people know that the property value has changed
+
+    emit propertyChanged(mProperty);
+
     // Reset some information about the property
 
     mProperty       = 0;
     mPropertyEditor = 0;
-
-    // Let people know that the property value has changed
-
-    emit propertyChanged(propertyValue);
 }
 
 //==============================================================================
@@ -1458,6 +1461,16 @@ Property * PropertyEditorWidget::currentProperty() const
     // Return some information about the current property
 
     return property(currentIndex());
+}
+
+//==============================================================================
+
+void PropertyEditorWidget::emitPropertyChecked(QStandardItem *pItem)
+{
+    // Let people know whether our current property is checked
+
+    emit propertyChecked(property(pItem->index()),
+                         pItem->checkState() == Qt::Checked);
 }
 
 //==============================================================================

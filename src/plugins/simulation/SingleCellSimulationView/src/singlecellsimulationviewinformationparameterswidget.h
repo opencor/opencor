@@ -20,8 +20,8 @@ namespace OpenCOR {
 //==============================================================================
 
 namespace Core {
+    class Property;
     class PropertyEditorWidget;
-    class PropertyItem;
 }   // namespace Core
 
 //==============================================================================
@@ -63,7 +63,7 @@ public:
 private:
     QMap<QString, Core::PropertyEditorWidget *> mPropertyEditors;
 
-    QMap<Core::PropertyItem *, CellMLSupport::CellmlFileRuntimeModelParameter *> mModelParameters;
+    QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeModelParameter *> mModelParameters;
 
     QList<int> mColumnWidths;
 
@@ -73,13 +73,15 @@ private:
                        CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
 
 Q_SIGNALS:
+void propertyChecked(Core::Property *pProperty, const bool &pChecked);
+//---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 
 private Q_SLOTS:
     void propertyEditorSectionResized(const int &pLogicalIndex,
                                       const int &pOldSize, const int &pNewSize);
 
     void updateProperties();
-    void propertyChanged(Core::PropertyItem *pPropertyItem);
+    void propertyChanged(Core::Property *pProperty);
 };
 
 //==============================================================================

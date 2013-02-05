@@ -37,8 +37,8 @@ namespace OpenCOR {
 //==============================================================================
 
 namespace Core {
+    class Property;
     class ProgressBarWidget;
-    class PropertyItem;
     class ToolBarWidget;
     class UserMessageWidget;
 }   // namespace Core
@@ -171,7 +171,10 @@ private Q_SLOTS:
 
     void splitterWidgetMoved();
 
-    void simulationPropertyChanged(Core::PropertyItem *pPropertyItem);
+    void simulationPropertyChanged(Core::Property *pProperty);
+
+void parametersPropertyChecked(Core::Property *pProperty, const bool &pChecked);
+//---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 };
 
 //==============================================================================

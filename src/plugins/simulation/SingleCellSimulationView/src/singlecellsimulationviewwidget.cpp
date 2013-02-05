@@ -148,13 +148,16 @@ mActiveGraphPanel(0)
 
     // Keep track of changes to some of our simulation properties
 
-    connect(mContentsWidget->informationWidget()->simulationWidget(), SIGNAL(propertyChanged(Core::PropertyItem *)),
-            this, SLOT(simulationPropertyChanged(Core::PropertyItem *)));
+    connect(mContentsWidget->informationWidget()->simulationWidget(), SIGNAL(propertyChanged(Core::Property *)),
+            this, SLOT(simulationPropertyChanged(Core::Property *)));
 
     // Keep track of whether we can remove graph panels
 
     connect(mContentsWidget->graphPanelsWidget(), SIGNAL(removeGraphPanelsEnabled(const bool &)),
             mGui->actionRemove, SLOT(setEnabled(bool)));
+connect(mContentsWidget->informationWidget()->parametersWidget(), SIGNAL(propertyChecked(Core::Property *, const bool &)),
+        this, SLOT(parametersPropertyChecked(Core::Property *, const bool &)));
+//---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 
     // Create and add our invalid simulation message widget
 
@@ -1130,7 +1133,7 @@ void SingleCellSimulationViewWidget::splitterWidgetMoved()
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::simulationPropertyChanged(Core::PropertyItem *pPropertyItem)
+void SingleCellSimulationViewWidget::simulationPropertyChanged(Core::Property *pProperty)
 {
     // Check whether our simulation's starting point property has been modified
     // and if so, then update our simulation data object accordingly
@@ -1141,8 +1144,16 @@ void SingleCellSimulationViewWidget::simulationPropertyChanged(Core::PropertyIte
 
     SingleCellSimulationViewInformationSimulationWidget *simulationWidget = mContentsWidget->informationWidget()->simulationWidget();
 
-    if (pPropertyItem == simulationWidget->startingPointProperty()->value())
-        mSimulation->data()->setStartingPoint(Core::PropertyEditorWidget::doublePropertyItem(pPropertyItem));
+    if (pProperty == simulationWidget->startingPointProperty())
+        mSimulation->data()->setStartingPoint(Core::PropertyEditorWidget::doublePropertyItem(pProperty->value()));
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewWidget::parametersPropertyChecked(Core::Property *pProperty,
+                                                               const bool &pChecked)
+{
+    qDebug(">>> %s: %s", qPrintable(pProperty->name()->text()), pChecked?"YES":"NO");
 }
 
 //==============================================================================
