@@ -280,7 +280,7 @@ void SingleCellSimulationViewGraphPanelsWidget::clearGraphPanels()
     // Clear all the graph panels
 
     for (int i = 0, iMax = count(); i < iMax; ++i)
-        qobject_cast<SingleCellSimulationViewGraphPanelWidget *>(widget(i))->resetCurves();
+        qobject_cast<SingleCellSimulationViewGraphPanelWidget *>(widget(i))->removeCurves();
 }
 
 //==============================================================================
@@ -289,7 +289,7 @@ void SingleCellSimulationViewGraphPanelsWidget::clearActiveGraphPanel()
 {
     // Clear the current graph panel
 
-    activeGraphPanel()->resetCurves();
+    activeGraphPanel()->removeCurves();
 }
 
 //==============================================================================

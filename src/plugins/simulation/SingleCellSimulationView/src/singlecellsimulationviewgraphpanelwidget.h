@@ -40,7 +40,7 @@ public:
     ~SingleCellSimulationViewGraphPanelWidget();
 
     QwtPlotCurve * addCurve();
-    void resetCurves();
+    void removeCurves();
 
     bool isActive() const;
     void setActive(const bool &pActive);

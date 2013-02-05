@@ -77,7 +77,7 @@ SingleCellSimulationViewGraphPanelWidget::~SingleCellSimulationViewGraphPanelWid
 {
     // Delete some internal objects
 
-    resetCurves();
+    removeCurves();
 
     // Delete the GUI
 
@@ -142,7 +142,7 @@ QwtPlotCurve * SingleCellSimulationViewGraphPanelWidget::addCurve()
 
 //==============================================================================
 
-void SingleCellSimulationViewGraphPanelWidget::resetCurves()
+void SingleCellSimulationViewGraphPanelWidget::removeCurves()
 {
     // Remove any existing curve
 
