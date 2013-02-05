@@ -142,21 +142,32 @@ QwtPlotCurve * SingleCellSimulationViewGraphPanelWidget::addCurve()
 
 //==============================================================================
 
+void SingleCellSimulationViewGraphPanelWidget::removeCurve(QwtPlotCurve *pCurve)
+{
+    // Make sure that we have a curve
+
+    if (!pCurve)
+        return;
+
+    // Detach and then delete the curve
+
+    pCurve->detach();
+
+    delete pCurve;
+
+    // Stop tracking the curve
+
+    mPlotCurves.removeOne(pCurve);
+}
+
+//==============================================================================
+
 void SingleCellSimulationViewGraphPanelWidget::removeCurves()
 {
     // Remove any existing curve
 
-    foreach (QwtPlotCurve *curve, mPlotCurves) {
-        curve->detach();
-
-        delete curve;
-    }
-
-    mPlotCurves.clear();
-
-    // Refresh the graph panel
-
-    mPlot->replot();
+    foreach (QwtPlotCurve *curve, mPlotCurves)
+        removeCurve(curve);
 }
 
 //==============================================================================
