@@ -1197,10 +1197,23 @@ void SingleCellSimulationViewWidget::parameterNeeded(const QString &pFileName,
 
         // Populate the trace if some results are available
 
-//        QList<SingleCellSimulationViewSimulationDataResults *> results = mSimulation->data()->results();
+        SingleCellSimulationViewSimulationDataResults *results = mSimulation->data()->results();
 
-//        if (!results.isEmpty())
-//            trace->setRawSamples(results.);
+        if (results) {
+            double *yData;
+
+            if (   (pParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::Constant)
+                || (pParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::ComputedConstant))
+                yData = results->constants()[pParameter->index()];
+            else if (pParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::State)
+                yData = results->states()[pParameter->index()];
+            else if (pParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::Rate)
+                yData = results->rates()[pParameter->index()];
+            else
+                yData = results->algebraic()[pParameter->index()];
+
+            trace->setRawSamples(results->points(), yData, results->size());
+        }
     }
 }
 
@@ -1208,9 +1221,6 @@ void SingleCellSimulationViewWidget::parameterNeeded(const QString &pFileName,
 
 void SingleCellSimulationViewWidget::results(SingleCellSimulationViewSimulationDataResults *pResults)
 {
-//---GRY--- TO BE DONE...
-qDebug(">>> Some data has been generated... [%f] [%d]", pResults->points()[pResults->lastResultIndex()], pResults->lastResultIndex());
-
     QMap<QString, QwtPlotCurve *>::const_iterator iter = mTraces.constBegin();
 
     while (iter != mTraces.constEnd()) {

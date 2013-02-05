@@ -142,7 +142,8 @@ QwtPlotCurve * SingleCellSimulationViewGraphPanelWidget::addTrace()
 
 //==============================================================================
 
-void SingleCellSimulationViewGraphPanelWidget::removeTrace(QwtPlotCurve *pTrace)
+void SingleCellSimulationViewGraphPanelWidget::removeTrace(QwtPlotCurve *pTrace,
+                                                           const bool &pReplot)
 {
     // Make sure that we have a trace
 
@@ -158,6 +159,11 @@ void SingleCellSimulationViewGraphPanelWidget::removeTrace(QwtPlotCurve *pTrace)
     // Stop tracking the trace
 
     mPlotTraces.removeOne(pTrace);
+
+    // Replot ourselves, if needed
+
+    if (pReplot)
+        mPlot->replot();
 }
 
 //==============================================================================
@@ -167,7 +173,11 @@ void SingleCellSimulationViewGraphPanelWidget::removeTraces()
     // Remove any existing trace
 
     foreach (QwtPlotCurve *trace, mPlotTraces)
-        removeTrace(trace);
+        removeTrace(trace, false);
+
+    // Replot ourselves
+
+    mPlot->replot();
 }
 
 //==============================================================================

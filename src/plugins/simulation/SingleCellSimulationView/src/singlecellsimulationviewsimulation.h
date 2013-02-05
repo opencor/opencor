@@ -55,7 +55,7 @@ public:
     void addData(const double &pPoint, double *pConstants, double *pStates,
                  double *pRates, double *pAlgebraic);
 
-    int lastResultIndex() const;
+    int size() const;
 
     double * points() const;
 
@@ -67,7 +67,7 @@ public:
 private:
     CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
 
-    int mLastResultIndex;
+    int mSize;
 
     double *mPoints;
 

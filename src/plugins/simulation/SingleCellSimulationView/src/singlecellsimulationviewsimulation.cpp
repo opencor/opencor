@@ -28,7 +28,7 @@ namespace SingleCellSimulationView {
 SingleCellSimulationViewSimulationDataResults::SingleCellSimulationViewSimulationDataResults(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
                                                                                              const int &pSize) :
     mCellmlFileRuntime(pCellmlFileRuntime),
-    mLastResultIndex(-1)
+    mSize(0)
 {
     // Create our points array
 
@@ -110,30 +110,30 @@ void SingleCellSimulationViewSimulationDataResults::addData(const double &pPoint
 {
     // Add the data to our different arrays
 
-    ++mLastResultIndex;
-
-    mPoints[mLastResultIndex] = pPoint;
+    mPoints[mSize] = pPoint;
 
     for (int i = 0, iMax = mCellmlFileRuntime->constantsCount(); i < iMax; ++i)
-        mConstants[i][mLastResultIndex] = pConstants[i];
+        mConstants[i][mSize] = pConstants[i];
 
     for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
-        mStates[i][mLastResultIndex] = pStates[i];
+        mStates[i][mSize] = pStates[i];
 
     for (int i = 0, iMax = mCellmlFileRuntime->ratesCount(); i < iMax; ++i)
-        mRates[i][mLastResultIndex] = pRates[i];
+        mRates[i][mSize] = pRates[i];
 
     for (int i = 0, iMax = mCellmlFileRuntime->algebraicCount(); i < iMax; ++i)
-        mAlgebraic[i][mLastResultIndex] = pAlgebraic[i];
+        mAlgebraic[i][mSize] = pAlgebraic[i];
+
+    ++mSize;
 }
 
 //==============================================================================
 
-int SingleCellSimulationViewSimulationDataResults::lastResultIndex() const
+int SingleCellSimulationViewSimulationDataResults::size() const
 {
-    // Return our last result index
+    // Return our size
 
-    return mLastResultIndex;
+    return mSize;
 }
 
 //==============================================================================

@@ -41,7 +41,7 @@ public:
 
     QwtPlotCurve * addTrace();
 
-    void removeTrace(QwtPlotCurve *pTrace);
+    void removeTrace(QwtPlotCurve *pTrace, const bool &pReplot = true);
     void removeTraces();
 
     bool isActive() const;
