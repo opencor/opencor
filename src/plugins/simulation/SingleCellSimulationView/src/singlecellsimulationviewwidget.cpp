@@ -9,13 +9,14 @@
 #include "propertyeditorwidget.h"
 #include "singlecellsimulationviewcontentswidget.h"
 #include "singlecellsimulationviewgraphpanelswidget.h"
-#include "singlecellsimulationviewinformationwidget.h"
-#include "singlecellsimulationviewplugin.h"
-#include "singlecellsimulationviewsimulation.h"
+#include "singlecellsimulationviewgraphpanelwidget.h"
 #include "singlecellsimulationviewinformationparameterswidget.h"
 #include "singlecellsimulationviewinformationsimulationwidget.h"
 #include "singlecellsimulationviewinformationsolverswidget.h"
 #include "singlecellsimulationviewinformationtraceswidget.h"
+#include "singlecellsimulationviewinformationwidget.h"
+#include "singlecellsimulationviewplugin.h"
+#include "singlecellsimulationviewsimulation.h"
 #include "singlecellsimulationviewwidget.h"
 #include "toolbarwidget.h"
 #include "usermessagewidget.h"
@@ -41,6 +42,7 @@
 
 //==============================================================================
 
+#include "qwt_plot.h"
 #include "qwt_wheel.h"
 
 //==============================================================================
@@ -68,7 +70,9 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
     mStoppedSimulations(QList<SingleCellSimulationViewSimulation *>()),
     mDelays(QMap<QString, int>()),
     mSplitterWidgetSizes(QList<int>()),
-    mProgresses(QMap<QString, int>())
+    mProgresses(QMap<QString, int>()),
+mActiveGraphPanel(0)
+//---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 {
     // Set up the GUI
 
@@ -112,13 +116,14 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
     mToolBarWidget->addWidget(delaySpaceWidget);
 #endif
     mToolBarWidget->addWidget(mDelayValueWidget);
-    mToolBarWidget->addSeparator();
-    mToolBarWidget->addAction(mGui->actionDebugMode);
-    mToolBarWidget->addSeparator();
-    mToolBarWidget->addAction(mGui->actionAdd);
-    mToolBarWidget->addAction(mGui->actionRemove);
-    mToolBarWidget->addSeparator();
-    mToolBarWidget->addAction(mGui->actionCsvExport);
+//    mToolBarWidget->addSeparator();
+//    mToolBarWidget->addAction(mGui->actionDebugMode);
+//    mToolBarWidget->addSeparator();
+//    mToolBarWidget->addAction(mGui->actionAdd);
+//    mToolBarWidget->addAction(mGui->actionRemove);
+//    mToolBarWidget->addSeparator();
+//    mToolBarWidget->addAction(mGui->actionCsvExport);
+//---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 
     mTopSeparator = Core::newLineWidget(this);
 
@@ -821,6 +826,13 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
                                                  (property->value()->type() == Core::PropertyItem::Integer)?
                                                      Core::PropertyEditorWidget::integerPropertyItem(property->value()):
                                                      Core::PropertyEditorWidget::doublePropertyItem(property->value()));
+
+// Retrieve the active graph panel
+//---GRY--- THE BELOW IS TEMPORARY, JUST FOR OUR DEMO...
+
+mActiveGraphPanel = mContentsWidget->graphPanelsWidget()->activeGraphPanel();
+
+mActiveGraphPanel->plot()->setAxisScale(QwtPlot::xBottom, simulationData->startingPoint(), simulationData->endingPoint());
 
         // Run our simulation
 

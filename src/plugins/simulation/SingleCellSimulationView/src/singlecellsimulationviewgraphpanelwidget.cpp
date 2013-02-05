@@ -54,8 +54,8 @@ SingleCellSimulationViewGraphPanelWidget::SingleCellSimulationViewGraphPanelWidg
 
     mPlot = new QwtPlot(this);
 
+    mPlot->setAutoReplot(true);
     mPlot->setCanvasBackground(Qt::white);
-//    mPlot->setCanvasLineWidth(0);
     mPlot->setFrameStyle(QFrame::NoFrame);
 
     QwtPlotGrid *grid = new QwtPlotGrid();

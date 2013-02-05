@@ -50,6 +50,7 @@ namespace SingleCellSimulationView {
 //==============================================================================
 
 class SingleCellSimulationViewContentsWidget;
+class SingleCellSimulationViewGraphPanelWidget;
 class SingleCellSimulationViewPlugin;
 class SingleCellSimulationViewSimulation;
 class SingleCellSimulationViewSimulationData;
@@ -124,6 +125,9 @@ private:
     QMap<QString, int> mProgresses;
 
     ErrorType mErrorType;
+
+SingleCellSimulationViewGraphPanelWidget *mActiveGraphPanel;
+//---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 
     void setDelayValue(const int &pDelayValue);
 
