@@ -1469,8 +1469,10 @@ void PropertyEditorWidget::emitPropertyChecked(QStandardItem *pItem)
 {
     // Let people know whether our current property is checked
 
-    emit propertyChecked(property(pItem->index()),
-                         pItem->checkState() == Qt::Checked);
+    Property *itemProperty = property(pItem->index());
+
+    emit propertyChecked(itemProperty,
+                         itemProperty->name()->checkState() == Qt::Checked);
 }
 
 //==============================================================================

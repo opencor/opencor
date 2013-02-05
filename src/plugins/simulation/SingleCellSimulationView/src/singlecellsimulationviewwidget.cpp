@@ -712,6 +712,34 @@ connect(mSimulation->data(), SIGNAL(results(SingleCellSimulationViewSimulationDa
 
     if (!hasError)
         mSimulation->reset();
+
+//---GRY--- THE BELOW IS TEMPORARY, JUST FOR OUR DEMO...
+QMap<QString, QwtPlotCurve *>::const_iterator iter = mTraces.constBegin();
+
+while (iter != mTraces.constEnd()) {
+    qDebug(">>> %s", qPrintable(iter.key()));
+
+    // Retrieve the file name associated with the trace
+
+    QString fileName = iter.key();
+
+    fileName.chop(fileName.size()-fileName.indexOf('|'));
+
+qDebug(".........................");
+qDebug(">>> fileName:  %s", qPrintable(fileName));
+qDebug(">>> pFileName: %s", qPrintable(fileName));
+
+    // Show/hide our trace depending on whether it is associated with the
+    // requested file name
+
+    iter.value()->setVisible(!fileName.compare(pFileName));
+
+    // Go to the next trace
+
+    ++iter;
+}
+
+mActiveGraphPanel->plot()->setAxisScale(QwtPlot::xBottom, mSimulation->data()->startingPoint(), mSimulation->data()->endingPoint());
 }
 
 //==============================================================================
