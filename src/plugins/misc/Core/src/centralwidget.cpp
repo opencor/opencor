@@ -16,7 +16,6 @@
 //==============================================================================
 
 #include <QDragEnterEvent>
-#include <QFileDialog>
 #include <QFileInfo>
 #include <QLabel>
 #include <QMainWindow>

@@ -29,6 +29,8 @@
 
 #include <QBrush>
 #include <QDesktopWidget>
+#include <QDir>
+#include <QFileDialog>
 #include <QFrame>
 #include <QImage>
 #include <QLabel>
@@ -937,7 +939,15 @@ void SingleCellSimulationViewWidget::on_actionRemove_triggered()
 void SingleCellSimulationViewWidget::on_actionCsvExport_triggered()
 {
 //---GRY--- TO BE DONE...
-    mSimulation->data()->results()->exportToCsv("/Users/Alan/Desktop/data.csv");
+
+    // Export our simulation data results to a CSV file
+
+    QString fileName = Core::getSaveFileName(tr("Export to a CSV file"),
+                                             QString(),
+                                             tr("CSV File")+" (*.csv)");
+
+    if (!fileName.isEmpty())
+        mSimulation->data()->results()->exportToCsv(fileName);
 }
 
 //==============================================================================

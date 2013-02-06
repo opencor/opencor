@@ -186,6 +186,14 @@
         <source>none</source>
         <translation>aucun</translation>
     </message>
+    <message>
+        <source>Export to a CSV file</source>
+        <translation>Exporter vers un fichier CSV</translation>
+    </message>
+    <message>
+        <source>CSV File</source>
+        <translation>Fichier CSV</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
