@@ -27,7 +27,10 @@ namespace Core {
 
 //==============================================================================
 
-static const QString SettingsGlobal         = "Global";
+static const QString SettingsGlobal = "Global";
+
+static const QString SettingsActiveDirectory = "ActiveDirectory";
+
 static const QString SettingsBorderColor    = "BorderColor";
 static const QString SettingsBaseColor      = "BaseColor";
 static const QString SettingsWindowColor    = "WindowColor";
@@ -41,6 +44,15 @@ bool CORE_EXPORT saveResourceAs(const QString &pResource,
 
 void CORE_EXPORT * globalInstance(const QString &pObjectName,
                                   void *pDefaultGlobalInstance);
+
+void CORE_EXPORT setActiveDirectory(const QString &pDirName);
+QString CORE_EXPORT activeDirectory();
+
+QStringList CORE_EXPORT getOpenFileNames(const QString &pCaption,
+                                         const QString &pFilter);
+QString CORE_EXPORT getSaveFileName(const QString &pCaption,
+                                    const QString &pFileName,
+                                    const QString &pFilter);
 
 void CORE_EXPORT setFocusTo(QWidget *pWidget);
 

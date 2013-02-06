@@ -11,8 +11,10 @@
 #include <QDate>
 #include <QDir>
 #include <QFile>
+#include <QFileDialog>
 #include <QFrame>
 #include <QLabel>
+#include <QMessageBox>
 #include <QResource>
 #include <QSettings>
 #include <QTextEdit>
@@ -131,6 +133,124 @@ void * globalInstance(const QString &pObjectName, void *pDefaultGlobalInstance)
 
     return (void *) globalInstance;
 #endif
+}
+
+//==============================================================================
+
+void CORE_EXPORT setActiveDirectory(const QString &pDirName)
+{
+    // Keep track of the active directory
+
+    QSettings settings(qApp->applicationName());
+
+    settings.beginGroup(SettingsGlobal);
+        settings.setValue(SettingsActiveDirectory, pDirName);
+    settings.endGroup();
+}
+
+//==============================================================================
+
+QString CORE_EXPORT activeDirectory()
+{
+    // Retrieve and return the active directory
+
+    QString res;
+    QSettings settings(qApp->applicationName());
+
+    settings.beginGroup(SettingsGlobal);
+        res = settings.value(SettingsActiveDirectory).toString();
+    settings.endGroup();
+
+    return res;
+}
+
+//==============================================================================
+
+QStringList CORE_EXPORT getOpenFileNames(const QString &pCaption,
+                                         const QString &pFilter)
+{
+    // Retrieve and return one or several open file names
+
+    QStringList res = QFileDialog::getOpenFileNames(qApp->activeWindow(),
+                                                    pCaption,
+                                                    activeDirectory(),
+                                                    pFilter);
+
+    if (res.count())
+        // We have retrieve at least one open file name, so we can keep track of
+        // the folder in which it is
+        // Note #1: we use the last open file name to determine the folder that
+        //          is to be remembered since on Windows 7, at least, it's
+        //          possible to search for files from within the file dialog
+        //          box, the last open file name should be the one we are
+        //          'interested' in...
+        // Note #2: this doesn't, unfortunately, address the case where the user
+        //          goes to a directory and then closes the file dialog box
+        //          without selecting any open file name. There might be a way
+        //          to get it to work, but that would involve using the exec()
+        //          method rather than the static getOpenFilesNames() method,
+        //          which would result in a non-native looking file dialog box
+        //          (on Windows 7 at least), so it's not an option
+        //          unfortunately...
+
+        setActiveDirectory(QFileInfo(res[res.count()-1]).path());
+
+    // Return the open file name(s)
+
+    return res;
+}
+
+//==============================================================================
+
+QString CORE_EXPORT getSaveFileName(const QString &pCaption,
+                                    const QString &pFileName,
+                                    const QString &pFilter)
+{
+    // Retrieve and return a save file name
+qDebug(">>> pFilter: %s", qPrintable(pFilter));
+
+    QString res = QDir::toNativeSeparators(QFileDialog::getSaveFileName(qApp->activeWindow(),
+                                                                        pCaption,
+                                                                        pFileName.isEmpty()?
+                                                                            activeDirectory():
+                                                                            QFileInfo(pFileName).canonicalPath(),
+#ifdef Q_OS_MAC
+//---GRY--- FOR SOME REASONS, OS X / Qt DOESN'T LIKE US SPECIFYING SUPPORTED
+//          FILE TYPES...!? (SEE https://github.com/opencor/opencor/issues/110)
+                                                                        QString(), 0,
+#else
+                                                                        pFilter, 0,
+#endif
+                                                                        QFileDialog::DontConfirmOverwrite));
+
+    // Make sure that we got a save file name
+
+    if (!res.isEmpty()) {
+        // Update our active directory
+
+        QFileInfo resInfo = res;
+
+        setActiveDirectory(resInfo.path());
+
+        // Check whether the save file already exists
+
+        if (resInfo.exists())
+            // The save file already exists, so ask whether we want to overwrite
+            // it
+
+            if (QMessageBox::question(qApp->activeWindow(),
+                                      qApp->applicationName(),
+                                      QObject::tr("<strong>%1</strong> already exists. Do you want to overwrite it?").arg(res),
+                                      QMessageBox::Yes|QMessageBox::No,
+                                      QMessageBox::Yes) == QMessageBox::No )
+                // We don't want to overwrite the save file, so...
+
+                return QString();
+    }
+
+    // Everything went fine,so return the save file name
+
+    return res;
 }
 
 //==============================================================================

@@ -122,7 +122,6 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     mGui(new Ui::CentralWidget),
     mStatus(Starting),
     mLoadedPlugins(Plugins()),
-    mActiveDir(QDir()),
     mSupportedFileTypes(FileTypes()),
     mFileNames(QStringList()),
     mGuiInterface(0)
@@ -292,11 +291,10 @@ void CentralWidget::retranslateUi()
 
 //==============================================================================
 
-static const QString SettingsFileNames           = "FileNames";
-static const QString SettingsCurrentFileName     = "CurrentFileName";
-static const QString SettingsCurrentMode         = "CurrentMode";
-static const QString SettingsCurrentViewForMode  = "CurrentViewForMode";
-static const QString SettingsFileDialogDirectory = "FileDialogDirectory";
+static const QString SettingsFileNames          = "FileNames";
+static const QString SettingsCurrentFileName    = "CurrentFileName";
+static const QString SettingsCurrentMode        = "CurrentMode";
+static const QString SettingsCurrentViewForMode = "CurrentViewForMode";
 
 //==============================================================================
 
@@ -379,8 +377,8 @@ void CentralWidget::loadSettings(QSettings *pSettings)
 
     // Retrieve the active directory
 
-    mActiveDir.setPath(pSettings->value(SettingsFileDialogDirectory,
-                                        QDir::currentPath()).toString());
+    setActiveDirectory(pSettings->value(SettingsActiveDirectory,
+                                        QDir::homePath()).toString());
 }
 
 //==============================================================================
@@ -421,7 +419,7 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 
     // Keep track of the active directory
 
-    pSettings->setValue(SettingsFileDialogDirectory, mActiveDir.path());
+    pSettings->setValue(SettingsActiveDirectory, activeDirectory());
 }
 
 //==============================================================================
@@ -521,32 +519,13 @@ void CentralWidget::openFile()
                               +supportedFileType.description()
                               +" (*."+supportedFileType.fileExtension()+")";
 
-    QStringList files = QFileDialog::getOpenFileNames(mMainWindow,
-                                                      tr("Open File"),
-                                                      mActiveDir.path(),
-                                                      tr("All Files")
-                                                      +" (*"
+    QStringList files = getOpenFileNames(tr("Open File"),
+                                         tr("All Files")
+                                         +" (*"
 #ifdef Q_OS_WIN
-                                                      +".*"
+                                         +".*"
 #endif
-                                                      +")"+supportedFileTypes);
-
-    if (files.count())
-        // There is at least one file which is to be opened, so we can keep
-        // track of the folder in which it is
-        // Note #1: we use the last file to determine the folder that is to be
-        //          remembered since on Windows 7, at least, it's possible to
-        //          search for files from within the file dialog box, the last
-        //          file should be the one we are 'interested' in...
-        // Note #2: this doesn't, unfortunately, address the case where the user
-        //          goes to a directory and then closes the file dialog box
-        //          without selecting any file. There might be a way to get it
-        //          to work, but that would involve using the exec method rather
-        //          than the static getOpenFilesNames method, which would result
-        //          in a non-native looking file dialog box (on Windows 7 at
-        //          least), so it's not an option unfortunately...
-
-        mActiveDir = QFileInfo(files[files.count()-1]).path();
+                                         +")"+supportedFileTypes);
 
     // Open the file(s)
 
@@ -583,39 +562,14 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
                                       +" (*."+supportedFileType.fileExtension()+")";
             }
 
-        newFileName = QDir::toNativeSeparators(QFileDialog::getSaveFileName(mMainWindow, tr("Save File"),
-                                                                            newFileName.isEmpty()?
-                                                                                mActiveDir.path():
-                                                                                QFileInfo(newFileName).canonicalPath(),
-#ifdef Q_OS_MAC
-//---GRY--- FOR SOME REASONS, OS X / Qt DOESN'T LIKE US SPECIFYING SUPPORTED
-//          FILE TYPES...!? (SEE https://github.com/opencor/opencor/issues/110)
-                                                                            "", 0,
-#else
-                                                                            supportedFileTypes, 0,
-#endif
-                                                                            QFileDialog::DontConfirmOverwrite));
+        newFileName = getSaveFileName(tr("Save File"), newFileName, supportedFileTypes);
 
-        // Update our active directory, if possible
+        // Determine whether a new file name was retrieved and leave if not
 
         hasNewFileName = !newFileName.isEmpty();
 
-        if (hasNewFileName)
-            mActiveDir = QFileInfo(newFileName).path();
-
-        // Check whether the 'new' file already exists
-
-        if (hasNewFileName && QFileInfo(newFileName).exists())
-            // The 'new' file already exists, so ask whether we want to
-            // overwrite it
-
-            if( QMessageBox::question(mMainWindow, qApp->applicationName(),
-                                      tr("<strong>%1</strong> already exists. Do you want to overwrite it?").arg(newFileName),
-                                      QMessageBox::Yes|QMessageBox::No,
-                                      QMessageBox::Yes) == QMessageBox::No )
-                // We don't want to overwrite the 'new' file, so...
-
-                return false;
+        if (!hasNewFileName)
+            return false;
     }
 
     // Try to save the file in case it has been modified or it needs a new file

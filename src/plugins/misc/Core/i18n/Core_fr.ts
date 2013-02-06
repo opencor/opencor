@@ -32,10 +32,6 @@
         <translation>Sauvegarder Fichier</translation>
     </message>
     <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; already exists. Do you want to overwrite it?</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; existe déjà. Voulez-vous le remplacer ?</translation>
-    </message>
-    <message>
         <source>Sorry, but &lt;strong&gt;%1&lt;/strong&gt; could not be saved.</source>
         <translation>Désolé, mais &lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être sauvegardé.</translation>
     </message>
@@ -49,7 +45,7 @@
     </message>
     <message>
         <source>Several files are being edited, so switching editing views is not possible for now</source>
-        <translation type="unfinished"></translation>
+        <translation>Plusieurs fichiers sont en train d&apos;être édités, donc changer de vues d&apos;édition n&apos;est pas possible pour le moment</translation>
     </message>
 </context>
 <context>
@@ -159,6 +155,10 @@
     <message>
         <source>Copyright</source>
         <translation>Tous droits réservés</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; already exists. Do you want to overwrite it?</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; existe déjà. Voulez-vous le remplacer ?</translation>
     </message>
 </context>
 </TS>

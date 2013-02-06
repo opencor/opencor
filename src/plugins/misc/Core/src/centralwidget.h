@@ -133,8 +133,6 @@ private:
     QTabBar *mModeTabs;
     QTabBar *mFileTabs;
 
-    QDir mActiveDir;
-
     FileTypes mSupportedFileTypes;
 
     QStringList mFileNames;
