@@ -36,7 +36,7 @@ SingleCellSimulationViewGraphPanelWidget::SingleCellSimulationViewGraphPanelWidg
 
     mGui->setupUi(this);
 
-    // Create, customise and add a marker to our layout
+    // Create, customise and add an inactive marker to our layout
 
     static const int MarkerWidth = 3;
 
