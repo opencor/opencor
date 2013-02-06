@@ -749,7 +749,7 @@ bool SingleCellSimulationViewWidget::isManaged(const QString &pFileName) const
 
 void SingleCellSimulationViewWidget::finalize(const QString &pFileName)
 {
-    // Remove the bordered editor, should there be one for the given file name
+    // Remove the simulation object, should there be one for the given file name
 
     SingleCellSimulationViewSimulation *simulation = mSimulations.value(pFileName);
 
@@ -761,9 +761,11 @@ void SingleCellSimulationViewWidget::finalize(const QString &pFileName)
 
         mSimulations.remove(pFileName);
 
-        // Reset our memory of the current simulation object
+        // Reset our memory of the current simulation object, but only if it's
+        // the same as our simulation object
 
-        mSimulation = 0;
+        if (simulation == mSimulation)
+            mSimulation = 0;
     }
 }
 
