@@ -207,7 +207,6 @@ QString CORE_EXPORT getSaveFileName(const QString &pCaption,
                                     const QString &pFilter)
 {
     // Retrieve and return a save file name
-qDebug(">>> pFilter: %s", qPrintable(pFilter));
 
     QString res = QDir::toNativeSeparators(QFileDialog::getSaveFileName(qApp->activeWindow(),
                                                                         pCaption,

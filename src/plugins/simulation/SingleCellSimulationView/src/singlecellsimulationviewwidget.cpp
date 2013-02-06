@@ -34,6 +34,7 @@
 #include <QFrame>
 #include <QImage>
 #include <QLabel>
+#include <QMessageBox>
 #include <QPainter>
 #include <QScrollBar>
 #include <QSettings>
@@ -938,7 +939,15 @@ void SingleCellSimulationViewWidget::on_actionRemove_triggered()
 
 void SingleCellSimulationViewWidget::on_actionCsvExport_triggered()
 {
-//---GRY--- TO BE DONE...
+    // Make sure that we have simulation data results to export to CSV
+
+    if (   !mSimulation->data()->results()
+        || !mSimulation->data()->results()->size()) {
+        QMessageBox::warning(qApp->activeWindow(), tr("CSV Export"),
+                             tr("Sorry, but there are no simulation results to export to CSV."));
+
+        return;
+    }
 
     // Export our simulation data results to a CSV file
 

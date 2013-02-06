@@ -194,6 +194,14 @@
         <source>CSV File</source>
         <translation>Fichier CSV</translation>
     </message>
+    <message>
+        <source>CSV Export</source>
+        <translation>Export CSV</translation>
+    </message>
+    <message>
+        <source>Sorry, but there are no simulation results to export to CSV.</source>
+        <translation>Désolé, mais il n&apos;y a pas de résultats de simulation à exporter vers CSV.</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
