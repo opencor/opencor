@@ -12,6 +12,11 @@
 
 //==============================================================================
 
+#include <QFile>
+#include <QTextStream>
+
+//==============================================================================
+
 #include <qmath.h>
 
 //==============================================================================
@@ -179,6 +184,78 @@ double ** SingleCellSimulationViewSimulationDataResults::algebraic() const
     // Return our algebraic array
 
     return mAlgebraic;
+}
+
+//==============================================================================
+
+bool SingleCellSimulationViewSimulationDataResults::exportToCsv(const QString &pFileName) const
+{
+    // Export of all of our data to a CSV file
+
+    QFile file(pFileName);
+
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        // The file can't be opened, so...
+
+        file.remove();
+
+        return false;
+    }
+
+    // Write out the contents of the CellML file to the file
+
+    QTextStream out(&file);
+
+    // Header
+
+    int constantsCount = mCellmlFileRuntime->constantsCount();
+    int statesCount = mCellmlFileRuntime->statesCount();
+    int ratesCount = mCellmlFileRuntime->ratesCount();
+    int algebraicCount = mCellmlFileRuntime->algebraicCount();
+
+    out << "VOI";
+
+    for (int i = 0; i < constantsCount; ++i)
+        out << ",CONSTANTS[" << i << "]";
+
+    for (int i = 0; i < statesCount; ++i)
+        out << ",STATES[" << i << "]";
+
+    for (int i = 0; i < ratesCount; ++i)
+        out << ",RATES[" << i << "]";
+
+    for (int i = 0; i < algebraicCount; ++i)
+        out << ",ALGEBRAIC[" << i << "]";
+
+    out << "\n";
+
+    // Data itself
+
+    for (int j = 0; j < mSize; ++j) {
+        out << mPoints[j];
+
+        for (int i = 0; i < constantsCount; ++i)
+            out << "," << mConstants[i][j];
+
+        for (int i = 0; i < statesCount; ++i)
+            out << "," << mStates[i][j];
+
+        for (int i = 0; i < ratesCount; ++i)
+            out << "," << mRates[i][j];
+
+        for (int i = 0; i < algebraicCount; ++i)
+            out << "," << mAlgebraic[i][j];
+
+        out << "\n";
+    }
+
+    // We are done, so close our file
+
+    file.close();
+
+    // Everything went fine, so...
+
+    return true;
 }
 
 //==============================================================================

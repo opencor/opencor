@@ -64,6 +64,8 @@ public:
     double **rates() const;
     double **algebraic() const;
 
+    bool exportToCsv(const QString &pFileName) const;
+
 private:
     CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
 
@@ -124,6 +126,7 @@ public:
     void addNlaSolverProperty(const QString &pName, const QVariant &pValue);
 
     void reset();
+
     void recomputeComputedConstantsAndVariables();
     void recomputeVariables(const double &pCurrentPoint);
 

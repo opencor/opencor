@@ -122,9 +122,9 @@ mTraces(QMap<QString, QwtPlotCurve *>())
 //    mToolBarWidget->addSeparator();
 //    mToolBarWidget->addAction(mGui->actionAdd);
 //    mToolBarWidget->addAction(mGui->actionRemove);
-//    mToolBarWidget->addSeparator();
-//    mToolBarWidget->addAction(mGui->actionCsvExport);
-//---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
+    //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
+    mToolBarWidget->addSeparator();
+    mToolBarWidget->addAction(mGui->actionCsvExport);
 
     mTopSeparator = Core::newLineWidget(this);
 
@@ -937,6 +937,7 @@ void SingleCellSimulationViewWidget::on_actionRemove_triggered()
 void SingleCellSimulationViewWidget::on_actionCsvExport_triggered()
 {
 //---GRY--- TO BE DONE...
+    mSimulation->data()->results()->exportToCsv("/Users/Alan/Desktop/data.csv");
 }
 
 //==============================================================================
