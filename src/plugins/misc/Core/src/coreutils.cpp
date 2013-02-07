@@ -15,6 +15,7 @@
 #include <QFrame>
 #include <QLabel>
 #include <QMessageBox>
+#include <QProcess>
 #include <QResource>
 #include <QSettings>
 #include <QTextEdit>
@@ -23,8 +24,37 @@
 
 //==============================================================================
 
+#ifdef Q_OS_MAC
+    #include <sys/sysctl.h>
+#endif
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace Core {
+
+//==============================================================================
+
+size_t totalPhysicalMemory()
+{
+    // Retrieve and return in bytes the total amount of physical memory
+    // available
+
+    size_t res = 0L;
+
+#ifdef Q_OS_MAC
+    int mib[2];
+
+    mib[0] = CTL_HW;
+    mib[1] = HW_MEMSIZE;
+
+    size_t len = sizeof(res);
+
+    sysctl(mib, 2, &res, &len, 0, 0);
+#endif
+
+    return res;
+}
 
 //==============================================================================
 

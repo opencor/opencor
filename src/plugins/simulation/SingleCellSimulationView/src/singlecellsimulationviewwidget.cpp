@@ -827,6 +827,8 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
     //       resuming a simulation...
 
     if (mSimulation->workerStatus() == SingleCellSimulationViewSimulationWorker::Unknown) {
+qDebug(">>> Total memory available: %ld byte(s)", Core::totalPhysicalMemory());
+
         // Cancel any editing of our simulation information
 
         mContentsWidget->informationWidget()->cancelEditing();
