@@ -74,12 +74,13 @@ void CorePlugin::initialize()
     //       Ctrl+Shift+Backtab and though it works on Linux (but not on
     //       Windows), it doesn't look good, so...
 
-                                    QList<QKeySequence>() << QKeySequence(Qt::CTRL|Qt::SHIFT|Qt::Key_Tab));
+                                    QList<QKeySequence>() << QKeySequence(Qt::CTRL|Qt::SHIFT|Qt::Key_Tab)
 #elif defined(Q_OS_MAC)
-                                    QKeySequence::PreviousChild);
+                                    QKeySequence::PreviousChild
 #else
     #error Unsupported platform
 #endif
+                                   );
     mFileNextAction     = newAction(mMainWindow, false,
                                     ":/oxygen/actions/go-next.png",
                                     QKeySequence::NextChild);
