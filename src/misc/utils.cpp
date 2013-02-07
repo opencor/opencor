@@ -21,22 +21,16 @@ namespace OpenCOR {
 
 //==============================================================================
 
-QString exec(const QString &pProg, const QString &pArgs)
+QString exec(const QString &pProgram, const QStringList &pArgs)
 {
-    if (QFileInfo(pProg).exists()) {
-        // The program exists, so we can execute it
+    // Execute and return the output of a program given its arguments
 
-        QProcess process;
+    QProcess process;
 
-        process.start(pProg, pArgs.split(' '));
-        process.waitForFinished();
+    process.start(pProgram, pArgs);
+    process.waitForFinished();
 
-        return process.readAll().trimmed();
-    } else {
-        // The program doesn't exist, so...
-
-        return QString();
-    }
+    return process.readAll().trimmed();
 }
 
 //==============================================================================
@@ -63,14 +57,14 @@ QString getOsName()
         return "Microsoft Windows";
     }
 #elif defined(Q_OS_LINUX)
-    QString os = exec("/bin/uname", "-o");
+    QString os = exec("uname", QStringList() << "-o");
 
     if (os.isEmpty())
-        // We couldn't find /bin/uname, so...
+        // We couldn't find uname or something went wrong, so...
 
         return "Linux";
     else
-        return os+" "+exec("/bin/uname", "-r");
+        return os+" "+exec("uname", QStringList() << "-r");
 #elif defined(Q_OS_MAC)
     // Note: from version 10.7, Apple uses OS X rather than Mac OS X...
 
