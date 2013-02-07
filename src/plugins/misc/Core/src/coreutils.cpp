@@ -24,7 +24,9 @@
 
 //==============================================================================
 
-#ifdef Q_OS_MAC
+#if defined(Q_OS_WIN)
+    #include <Windows.h>
+#elif defined(Q_OS_MAC)
     #include <sys/sysctl.h>
 #endif
 
@@ -42,7 +44,15 @@ unsigned long totalPhysicalMemory()
 
     unsigned long res = 0;
 
-#if defined(Q_OS_LINUX)
+#if defined(Q_OS_WIN)
+    MEMORYSTATUSEX memStatus;
+
+    memStatus.dwLength = sizeof(memStatus);
+
+    GlobalMemoryStatusEx(&memStatus);
+
+    res = memStatus.ullTotalPhys;
+#elif defined(Q_OS_LINUX)
     res = sysconf(_SC_PHYS_PAGES)*sysconf(_SC_PAGESIZE);
 #elif defined(Q_OS_MAC)
     int mib[2];
@@ -53,6 +63,8 @@ unsigned long totalPhysicalMemory()
     size_t len = sizeof(res);
 
     sysctl(mib, 2, &res, &len, 0, 0);
+#else
+    #error Unsupported platform
 #endif
 
     return res;
