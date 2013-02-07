@@ -68,15 +68,25 @@ QString getOsName()
     if (os.isEmpty())
         // We couldn't find /bin/uname, so...
 
-        return "Unknown";
+        return "Linux";
     else
         return os+" "+exec("/bin/uname", "-r");
 #elif defined(Q_OS_MAC)
-    // Note #1: the version of Qt that we use on OS X only supports Mac OS X
-    //          10.5 and above, so...
-    // Note #2: from version 10.7, Apple uses OS X rather than Mac OS X...
+    // Note: from version 10.7, Apple uses OS X rather than Mac OS X...
 
     switch (QSysInfo::MacintoshVersion) {
+    case QSysInfo::MV_9:
+        return "Mac OS 9";
+    case QSysInfo::MV_10_0:
+        return "Mac OS X 10.0 (Cheetah)";
+    case QSysInfo::MV_10_1:
+        return "Mac OS X 10.1 (Puma)";
+    case QSysInfo::MV_10_2:
+        return "Mac OS X 10.2 (Jaguar)";
+    case QSysInfo::MV_10_3:
+        return "Mac OS X 10.3 (Panther)";
+    case QSysInfo::MV_10_4:
+        return "Mac OS X 10.4 (Tiger)";
     case QSysInfo::MV_10_5:
         return "Mac OS X 10.5 (Leopard)";
     case QSysInfo::MV_10_6:
@@ -86,7 +96,9 @@ QString getOsName()
     case QSysInfo::MV_10_8:
         return "OS X 10.8 (Mountain Lion)";
     default:
-        return "Mac OS X";
+        return "Mac OS";
+        // Note: we return Mac OS rather than Mac OS X or even OS X since we
+        //       handle all the recent versions...
     }
 #else
     #error Unsupported platform
