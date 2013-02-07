@@ -57,6 +57,8 @@ QString getOsName()
         return "Microsoft Windows Vista";
     case QSysInfo::WV_WINDOWS7:
         return "Microsoft Windows 7";
+    case QSysInfo::WV_WINDOWS8:
+        return "Microsoft Windows 8";
     default:
         return "Microsoft Windows";
     }
