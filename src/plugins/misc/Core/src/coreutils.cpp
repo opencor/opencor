@@ -35,14 +35,16 @@ namespace Core {
 
 //==============================================================================
 
-long     totalPhysicalMemory()
+unsigned long totalPhysicalMemory()
 {
     // Retrieve and return in bytes the total amount of physical memory
     // available
 
-    long res = 0;
+    unsigned long res = 0;
 
-#ifdef Q_OS_MAC
+#if defined(Q_OS_LINUX)
+    res = sysconf(_SC_PHYS_PAGES)*sysconf(_SC_PAGESIZE);
+#elif defined(Q_OS_MAC)
     int mib[2];
 
     mib[0] = CTL_HW;
