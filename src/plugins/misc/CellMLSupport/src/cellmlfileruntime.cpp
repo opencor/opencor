@@ -935,7 +935,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
     //       debug things...
 
 #if defined(Q_OS_WIN) && defined(QT_DEBUG)
-    modelCode.replace("\r", "");
+    modelCode.remove('\r');
 #endif
 
     // Compile the model code and check that everything went fine
