@@ -86,7 +86,7 @@ mTraces(QMap<QString, QwtPlotCurve *>())
     // milliseconds) between the output of two data points
 
     mDelayWidget = new QwtWheel(this);
-#ifndef Q_OS_MAC
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     QWidget *delaySpaceWidget = new QWidget(this);
 #endif
     mDelayValueWidget = new QLabel(this);
@@ -98,7 +98,7 @@ mTraces(QMap<QString, QwtPlotCurve *>())
     mDelayWidget->setRange(0.0, 50.0);
     mDelayWidget->setWheelBorderWidth(0);
 
-#ifndef Q_OS_MAC
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     delaySpaceWidget->setFixedWidth(4);
 #endif
 
@@ -116,7 +116,7 @@ mTraces(QMap<QString, QwtPlotCurve *>())
     mToolBarWidget->addAction(mGui->actionStop);
     mToolBarWidget->addSeparator();
     mToolBarWidget->addWidget(mDelayWidget);
-#ifndef Q_OS_MAC
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     mToolBarWidget->addWidget(delaySpaceWidget);
 #endif
     mToolBarWidget->addWidget(mDelayValueWidget);

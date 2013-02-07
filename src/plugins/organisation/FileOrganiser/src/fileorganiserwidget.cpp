@@ -458,12 +458,14 @@ void FileOrganiserWidget::keyPressEvent(QKeyEvent *pEvent)
     QStringList crtSelectedFiles = selectedFiles();
 
     if (   crtSelectedFiles.count()
-#ifdef Q_OS_MAC
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+       && (   (pEvent->key() == Qt::Key_Enter)
+           || (pEvent->key() == Qt::Key_Return)))
+#elif defined(Q_OS_MAC)
         && (   (pEvent->modifiers() & Qt::ControlModifier)
             && (pEvent->key() == Qt::Key_Down)))
 #else
-        && (   (pEvent->key() == Qt::Key_Enter)
-            || (pEvent->key() == Qt::Key_Return)))
+    #error Unsupported platform
 #endif
         // There are some files that are selected and we want to open them, so
         // let people know about it

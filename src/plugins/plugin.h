@@ -19,17 +19,17 @@ namespace OpenCOR {
 
 //==============================================================================
 
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN)
     static const QString PluginPrefix = "";
     static const QString PluginExtension = ".dll";
-#else
+#elif defined(Q_OS_LINUX)
     static const QString PluginPrefix = "lib";
-
-    #ifdef Q_OS_MAC
-        static const QString PluginExtension = ".dylib";
-    #else
-        static const QString PluginExtension = ".so";
-    #endif
+    static const QString PluginExtension = ".so";
+#elif defined(Q_OS_MAC)
+    static const QString PluginPrefix = "lib";
+    static const QString PluginExtension = ".dylib";
+#else
+    #error Unsupported platform
 #endif
 
 //==============================================================================

@@ -110,7 +110,7 @@ static const char* qxt_qt_options[] =
 #if defined(QT_DEBUG) && defined(Q_WS_X11)
 */
 //---OPENCOR--- BEGIN
-#if defined(QT_DEBUG) && !defined(Q_OS_WIN) && !defined(Q_OS_MAC)
+#if defined(QT_DEBUG) && defined(Q_OS_LINUX)
 //---OPENCOR--- END
     "dograb",       QT_TRANSLATE_NOOP("QxtCommandOptions", "grab the mouse/keyboard even in a debugger"),
     "sync",         QT_TRANSLATE_NOOP("QxtCommandOptions", "run in synchronous mode for debugging"),
@@ -127,7 +127,7 @@ static const char* qxt_qt_options[] =
 #ifdef Q_WS_X11
 */
 //---OPENCOR--- BEGIN
-#if !defined(Q_OS_WIN) && !defined(Q_OS_MAC)
+#ifdef Q_OS_LINUX
 //---OPENCOR--- END
     "=display",     QT_TRANSLATE_NOOP("QxtCommandOptions", "sets the X11 display"),
     "=geometry",    QT_TRANSLATE_NOOP("QxtCommandOptions", "sets the geometry of the first window"),

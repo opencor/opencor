@@ -17,7 +17,7 @@
 
 //==============================================================================
 
-#if !defined(Q_OS_WIN) && !defined(Q_OS_MAC)
+#ifdef Q_OS_LINUX
     #include <stdint.h>
     // Note: the above header file is required on Linux, so we can use uint32_t
     //       (required to 'properly' make use of the CellML API). Now, we would

@@ -213,12 +213,14 @@ QString CORE_EXPORT getSaveFileName(const QString &pCaption,
                                                                         pFileName.isEmpty()?
                                                                             activeDirectory():
                                                                             QFileInfo(pFileName).canonicalPath(),
-#ifdef Q_OS_MAC
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+                                                                        pFilter, 0,
+#elif defined(Q_OS_MAC)
 //---GRY--- FOR SOME REASONS, OS X / Qt DOESN'T LIKE US SPECIFYING SUPPORTED
 //          FILE TYPES...!? (SEE https://github.com/opencor/opencor/issues/110)
                                                                         QString(), 0,
 #else
-                                                                        pFilter, 0,
+    #error Unsupported platform
 #endif
                                                                         QFileDialog::DontConfirmOverwrite));
 

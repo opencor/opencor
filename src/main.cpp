@@ -41,7 +41,9 @@ int main(int pArgc, char *pArgv[])
 
     OpenCOR::initApplication(app);
 
-#ifndef Q_OS_WIN
+#if defined(Q_OS_WIN)
+    // Do nothing...
+#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
     // Try to run OpenCOR as a console application
     // Note: in the case of Windows, we have two binaries (.com and .exe which
     //       are for the pure console and GUI versions of OpenCOR, resp.). This
@@ -61,6 +63,8 @@ int main(int pArgc, char *pArgv[])
 
         return res;
     }
+#else
+    #error Unsupported platform
 #endif
 
     // Send a message (containing the arguments that were passed to this

@@ -101,7 +101,7 @@ MainWindow::MainWindow() :
     // Note: we do it here, so that we can use standard shortcuts (whenever
     //       possible)...
 
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN)
     // Note: QKeySequence::Quit corresponds to Alt+F4 on Windows, but it doesn't
     //       get shown in the menu item, not to mention that we would also like
     //       to support Ctrl+Q, so...
@@ -109,8 +109,10 @@ MainWindow::MainWindow() :
     mGui->actionExit->setShortcuts(QList<QKeySequence>()
                                        << QKeySequence(Qt::ALT|Qt::Key_F4)
                                        << QKeySequence(Qt::CTRL|Qt::Key_Q));
-#else
+#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
     mGui->actionExit->setShortcut(QKeySequence::Quit);
+#else
+    #error Unsupported platform
 #endif
 
 #ifdef Q_OS_MAC
@@ -928,7 +930,7 @@ void MainWindow::showSelf()
     //       not bring OpenCOR to the foreground, so... instead we do what
     //       follows, depending on the operating system...
 
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN)
     // Show ourselves the Windows way
 
     // Retrieve OpenCOR's window Id
@@ -971,7 +973,7 @@ void MainWindow::showSelf()
     //       application is already in the foreground. Fair enough, but it
     //       happens that, here, the user wants OpenCOR to be brought to the
     //       foreground, hence the above code to get the effect we are after...
-#else
+#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
     // We are on Linux or OS X, so we can simply activate the window and raise
 //---GRY--- THERE ARE A COUPLE OF ISSUES WITH raise(), SEE
 //          https://bugreports.qt-project.org/browse/QTBUG-29087
@@ -979,6 +981,8 @@ void MainWindow::showSelf()
 
     activateWindow();
     raise();
+#else
+    #error Unsupported platform
 #endif
 }
 

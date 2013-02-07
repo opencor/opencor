@@ -634,11 +634,20 @@ void QsciScintillaBase::mousePressEvent(QMouseEvent *e)
 #if defined(Q_WS_X11)
 */
 //---OPENCOR--- BEGIN
-#if !defined(Q_OS_WIN) && !defined(Q_OS_MAC)
+#if defined(Q_OS_LINUX)
 //---OPENCOR--- END
         bool alt = ctrl;
+/*---OPENCOR---
 #else
+*/
+//---OPENCOR--- BEGIN
+#elif defined(Q_OS_WIN) || defined(Q_OS_MAC)
+//---OPENCOR--- END
         bool alt = e->modifiers() & Qt::AltModifier;
+//---OPENCOR--- BEGIN
+#else
+    #error Unsupported platform
+//---OPENCOR--- END
 #endif
 
         sci->ButtonDown(pt, clickTime, shift, ctrl, alt);

@@ -28,7 +28,7 @@ QString exec(const QString &pProg, const QString &pArgs)
 
         QProcess process;
 
-        process.start(pProg,  pArgs.split(' '));
+        process.start(pProg, pArgs.split(' '));
         process.waitForFinished();
 
         return process.readAll().trimmed();
@@ -43,7 +43,7 @@ QString exec(const QString &pProg, const QString &pArgs)
 
 QString getOsName()
 {
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN)
     switch (QSysInfo::WindowsVersion) {
     case QSysInfo::WV_NT:
         return "Microsoft Windows NT";
@@ -62,6 +62,15 @@ QString getOsName()
     default:
         return "Microsoft Windows";
     }
+#elif defined(Q_OS_LINUX)
+    QString os = exec("/bin/uname", "-o");
+
+    if (os.isEmpty())
+        // We couldn't find /bin/uname, so...
+
+        return "Unknown";
+    else
+        return os+" "+exec("/bin/uname", "-r");
 #elif defined(Q_OS_MAC)
     // Note #1: the version of Qt that we use on OS X only supports Mac OS X
     //          10.5 and above, so...
@@ -80,14 +89,7 @@ QString getOsName()
         return "Mac OS X";
     }
 #else
-    QString os = exec("/bin/uname", "-o");
-
-    if (os.isEmpty())
-        // We couldn't find /bin/uname, so...
-
-        return "Unknown";
-    else
-        return os+" "+exec("/bin/uname", "-r");
+    #error Unsupported platform
 #endif
 }
 

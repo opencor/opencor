@@ -435,10 +435,12 @@ void HelpWidget::paintEvent(QPaintEvent *pEvent)
     // Draw a border
 
     drawBorder(
-#ifdef Q_OS_MAC
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+               true, true, true, true,
+#elif defined(Q_OS_MAC)
                true, false, true, false,
 #else
-               true, true, true, true,
+    #error Unsupported platform
 #endif
                true, false, false, false
               );

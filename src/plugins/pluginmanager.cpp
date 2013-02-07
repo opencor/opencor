@@ -26,14 +26,16 @@ PluginManager::PluginManager(QSettings *pSettings,
 {
     mPluginsDir =  QDir(qApp->applicationDirPath()).canonicalPath()
                   +QDir::separator()+QString("..")
-#ifdef Q_OS_MAC
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+                  +QDir::separator()+"plugins"
+#elif defined(Q_OS_MAC)
                   +QDir::separator()+"PlugIns"
 #else
-                  +QDir::separator()+"plugins"
+    #error Unsupported platform
 #endif
                   +QDir::separator()+qApp->applicationName();
 
-#ifndef Q_OS_MAC
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     // The plugins directory should be correct, but in case we try to run
     // OpenCOR on Windows or Linux AND from within Qt Creator, then the binary
     // will be running from [OpenCOR]/build/OpenCOR[.exe] rather than

@@ -1187,7 +1187,7 @@ void PropertyEditorWidget::updateHeight()
                        +((width() < idealSize.width())?
 #if defined(Q_OS_WIN) || defined(Q_OS_MAC)
                             horizontalScrollBar()->height():
-#else
+#elif defined(Q_OS_LINUX)
                             horizontalScrollBar()->height()+3:
                             // Note: why on earth does Linux require three more
                             //       pixels?!... Indeed, if we don't add them,
@@ -1200,6 +1200,8 @@ void PropertyEditorWidget::updateHeight()
                             //       shown, but not sure what could be done
                             //       about the blank space, hence we 'manually'
                             //       add those three pixels...
+#else
+    #error Unsupported platform
 #endif
                             0));
         // Note: the new height consists of our ideal height to which we add the

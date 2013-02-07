@@ -30,18 +30,19 @@ namespace OpenCOR {
 namespace Core {
 
 //==============================================================================
+// Note: the default font family and size below were taken from Qt Creator...
 
-// The default font family and size below were taken from Qt Creator
-
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN)
     static const QString DefaultFontFamily = "Courier";
     static const int DefaultFontSize = 10;
+#elif defined(Q_OS_LINUX)
+    static const QString DefaultFontFamily = "Monospace";
+    static const int DefaultFontSize = 9;
 #elif defined(Q_OS_MAC)
     static const QString DefaultFontFamily = "Monaco";
     static const int DefaultFontSize = 12;
 #else
-    static const QString DefaultFontFamily = "Monospace";
-    static const int DefaultFontSize = 9;
+    #error Unsupported platform
 #endif
 
 //==============================================================================
