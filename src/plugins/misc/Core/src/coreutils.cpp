@@ -35,12 +35,12 @@ namespace Core {
 
 //==============================================================================
 
-size_t totalPhysicalMemory()
+long     totalPhysicalMemory()
 {
     // Retrieve and return in bytes the total amount of physical memory
     // available
 
-    size_t res = 0L;
+    long res = 0;
 
 #ifdef Q_OS_MAC
     int mib[2];
