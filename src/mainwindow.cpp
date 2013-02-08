@@ -1208,7 +1208,7 @@ void MainWindow::restart(const bool &pSaveSettings) const
 
 void MainWindow::resetAll()
 {
-    if( QMessageBox::question(this, qApp->applicationName(),
+    if (QMessageBox::question(this, qApp->applicationName(),
                               tr("You are about to reset <strong>all</strong> of your settings. Do you wish to proceed?"),
                               QMessageBox::Yes|QMessageBox::No,
                               QMessageBox::Yes) == QMessageBox::Yes ) {
