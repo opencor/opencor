@@ -827,7 +827,12 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
     //       resuming a simulation...
 
     if (mSimulation->workerStatus() == SingleCellSimulationViewSimulationWorker::Unknown) {
-qDebug(">>> Total memory available: %s byte(s)", qPrintable(QString::number(Core::totalPhysicalMemory())));
+unsigned long totalRam = Core::totalPhysicalMemory();
+unsigned long availableRam = Core::availablePhysicalMemory();
+
+qDebug(">>> Total RAM:     %s byte(s)", qPrintable(QString::number(totalRam)));
+qDebug(">>> Available RAM: %s byte(s) [%.2f%%]", qPrintable(QString::number(availableRam)),
+                                                 0.01*qRound(10000.0*availableRam/totalRam));
 
         // Cancel any editing of our simulation information
 

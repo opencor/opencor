@@ -27,6 +27,8 @@
 #if defined(Q_OS_WIN)
     #include <Windows.h>
 #elif defined(Q_OS_MAC)
+    #include <mach/host_info.h>
+    #include <mach/mach_host.h>
     #include <sys/sysctl.h>
 #endif
 
@@ -40,18 +42,17 @@ namespace Core {
 unsigned long totalPhysicalMemory()
 {
     // Retrieve and return in bytes the total amount of physical memory
-    // available
 
     unsigned long res = 0;
 
 #if defined(Q_OS_WIN)
-    MEMORYSTATUSEX memStatus;
+    MEMORYSTATUSEX memoryStatus;
 
-    memStatus.dwLength = sizeof(memStatus);
+    memoryStatus.dwLength = sizeof(memoryStatus);
 
-    GlobalMemoryStatusEx(&memStatus);
+    GlobalMemoryStatusEx(&memoryStatus);
 
-    res = memStatus.ullTotalPhys;
+    res = memoryStatus.ullTotalPhys;
 #elif defined(Q_OS_LINUX)
     res = sysconf(_SC_PHYS_PAGES)*sysconf(_SC_PAGESIZE);
 #elif defined(Q_OS_MAC)
@@ -63,6 +64,39 @@ unsigned long totalPhysicalMemory()
     size_t len = sizeof(res);
 
     sysctl(mib, 2, &res, &len, 0, 0);
+#else
+    #error Unsupported platform
+#endif
+
+    return res;
+}
+
+//==============================================================================
+
+unsigned long availablePhysicalMemory()
+{
+    // Retrieve and return in bytes the available amount of physical memory
+
+    unsigned long res = 0;
+
+#if defined(Q_OS_WIN)
+    MEMORYSTATUSEX memoryStatus;
+
+    memoryStatus.dwLength = sizeof(memoryStatus);
+
+    GlobalMemoryStatusEx(&memoryStatus);
+
+    res = memoryStatus.ullAvailPhys;
+#elif defined(Q_OS_LINUX)
+    res = sysconf(_SC_PHYS_PAGES)*sysconf(_SC_PAGESIZE);
+#elif defined(Q_OS_MAC)
+    vm_statistics_data_t vmStats;
+    mach_msg_type_number_t infoCount = HOST_VM_INFO_COUNT;
+
+    host_statistics(mach_host_self(), HOST_VM_INFO,
+                    host_info_t(&vmStats), &infoCount);
+
+    res = (vmStats.free_count+vmStats.inactive_count)*vm_page_size;
 #else
     #error Unsupported platform
 #endif

@@ -39,6 +39,7 @@ static const QString SettingsHighlightColor = "HighlightColor";
 //==============================================================================
 
 unsigned long CORE_EXPORT totalPhysicalMemory();
+unsigned long CORE_EXPORT availablePhysicalMemory();
 
 QByteArray CORE_EXPORT resourceAsByteArray(const QString &pResource);
 bool CORE_EXPORT saveResourceAs(const QString &pResource,

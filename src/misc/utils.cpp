@@ -21,7 +21,7 @@ namespace OpenCOR {
 
 //==============================================================================
 
-QString exec(const QString &pProgram, const QStringList &pArgs)
+QString exec(const QString &pProgram, const QStringList &pArgs = QStringList())
 {
     // Execute and return the output of a program given its arguments
 
