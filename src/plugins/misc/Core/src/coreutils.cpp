@@ -88,7 +88,7 @@ unsigned long availablePhysicalMemory()
 
     res = memoryStatus.ullAvailPhys;
 #elif defined(Q_OS_LINUX)
-    res = sysconf(_SC_PHYS_PAGES)*sysconf(_SC_PAGESIZE);
+    res = sysconf(_SC_AVPHYS_PAGES)*sysconf(_SC_PAGESIZE);
 #elif defined(Q_OS_MAC)
     vm_statistics_data_t vmStats;
     mach_msg_type_number_t infoCount = HOST_VM_INFO_COUNT;
