@@ -23,9 +23,9 @@ namespace Core {
 class CORE_EXPORT Thread : public QThread
 {
 public:
-    static void sleep(const unsigned long &pDuration);
-    static void msleep(const unsigned long &pDuration);
-    static void usleep(const unsigned long &pDuration);
+    static void sleep(const size_t &pDuration);
+    static void msleep(const size_t &pDuration);
+    static void usleep(const size_t &pDuration);
 };
 
 //==============================================================================

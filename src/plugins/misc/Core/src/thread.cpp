@@ -11,7 +11,7 @@ namespace Core {
 
 //==============================================================================
 
-void Thread::sleep(const unsigned long &pDuration)
+void Thread::sleep(const size_t &pDuration)
 {
     // Sleep for a few seconds
 
@@ -20,7 +20,7 @@ void Thread::sleep(const unsigned long &pDuration)
 
 //==============================================================================
 
-void Thread::msleep(const unsigned long &pDuration)
+void Thread::msleep(const size_t &pDuration)
 {
     // Sleep for a few milliseconds
 
@@ -29,7 +29,7 @@ void Thread::msleep(const unsigned long &pDuration)
 
 //==============================================================================
 
-void Thread::usleep(const unsigned long &pDuration)
+void Thread::usleep(const size_t &pDuration)
 {
     // Sleep for a few microseconds
     // Note: this may not be reliable on some platforms...
