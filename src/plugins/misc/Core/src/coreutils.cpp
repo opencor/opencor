@@ -24,6 +24,10 @@
 
 //==============================================================================
 
+#include <qmath.h>
+
+//==============================================================================
+
 #if defined(Q_OS_WIN)
     #include <Windows.h>
 #elif defined(Q_OS_MAC)
@@ -39,11 +43,55 @@ namespace Core {
 
 //==============================================================================
 
-unsigned long totalPhysicalMemory()
+QString sizeAsString(const double &pSize, const int &pPrecision)
+{
+    // Note: pSize is a double rather than a size_t (as is the case when we want
+    //       to retrieve the total/free amount of memory available; see below)
+    //       in case we need to convert an insane size...
+
+    static const double OneKiloByte = qPow(2.0, 10.0);
+    static const double OneOverOneKiloByte = 1.0/OneKiloByte;
+
+    static const double OneMegaByte = qPow(2.0, 20.0);
+    static const double OneOverOneMegaByte = 1.0/qPow(2.0, 20.0);
+
+    static const double OneGigaByte = qPow(2.0, 30.0);
+    static const double OneOverOneGigaByte = 1.0/qPow(2.0, 30.0);
+
+    static const double OneTeraByte = qPow(2.0, 40.0);
+    static const double OneOverOneTeraByte = 1.0/qPow(2.0, 40.0);
+
+    static const double OnePetaByte = qPow(2.0, 50.0);
+    static const double OneOverOnePetaByte = 1.0/qPow(2.0, 50.0);
+
+    static const double OneExaByte = qPow(2.0, 60.0);
+    static const double OneOverOneExaByte = 1.0/qPow(2.0, 60.0);
+
+    double scaling = qPow(10.0, pPrecision);
+
+    if (pSize < OneKiloByte)
+        return QString::number(pSize)+" "+QObject::tr("B");
+    else if (pSize < OneMegaByte)
+        return QString::number(ceil(scaling*pSize*OneOverOneKiloByte)/scaling)+" "+QObject::tr("KB");
+    else if (pSize < OneGigaByte)
+        return QString::number(ceil(scaling*pSize*OneOverOneMegaByte)/scaling)+" "+QObject::tr("MB");
+    else if (pSize < OneTeraByte)
+        return QString::number(ceil(scaling*pSize*OneOverOneGigaByte)/scaling)+" "+QObject::tr("GB");
+    else if (pSize < OnePetaByte)
+        return QString::number(ceil(scaling*pSize*OneOverOneTeraByte)/scaling)+" "+QObject::tr("TB");
+    else if (pSize < OneExaByte)
+        return QString::number(ceil(scaling*pSize*OneOverOnePetaByte)/scaling)+" "+QObject::tr("PB");
+    else
+        return QString::number(ceil(scaling*pSize*OneOverOneExaByte)/scaling)+" "+QObject::tr("EB");
+}
+
+//==============================================================================
+
+size_t totalMemory()
 {
     // Retrieve and return in bytes the total amount of physical memory
 
-    unsigned long res = 0;
+    size_t res = 0;
 
 #if defined(Q_OS_WIN)
     MEMORYSTATUSEX memoryStatus;
@@ -73,11 +121,11 @@ unsigned long totalPhysicalMemory()
 
 //==============================================================================
 
-unsigned long availablePhysicalMemory()
+size_t freeMemory()
 {
     // Retrieve and return in bytes the available amount of physical memory
 
-    unsigned long res = 0;
+    size_t res = 0;
 
 #if defined(Q_OS_WIN)
     MEMORYSTATUSEX memoryStatus;

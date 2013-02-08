@@ -1,4 +1,4 @@
-//==============================================================================
+﻿//==============================================================================
 // Single cell simulation view simulation
 //==============================================================================
 
@@ -189,6 +189,8 @@ public:
 
     void reset();
     void recomputeComputedConstantsAndVariables();
+
+    double neededMemory() const;
 
     void run(const SolverInterfaces &pSolverInterfaces);
     void pause();

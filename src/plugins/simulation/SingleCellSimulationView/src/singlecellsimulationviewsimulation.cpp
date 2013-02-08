@@ -708,6 +708,27 @@ void SingleCellSimulationViewSimulation::recomputeComputedConstantsAndVariables(
 
 //==============================================================================
 
+double SingleCellSimulationViewSimulation::neededMemory() const
+{
+    // Determine and return the amount of needed memory to run our simulation
+    // Note: we return the amount as a double rather than a size_t (as we do
+    //       when retrieving the total/free amount of memory available; see
+    //       [OpenCOR]/src/plugins/misc/Core/src/coreutils.cpp) in case a
+    //       simulation requires an insane amount of memory...
+
+    static const int SizeOfDouble = sizeof(double);
+
+    return  ceil((mData->endingPoint()-mData->startingPoint())/mData->pointInterval()+1)
+           *( 1
+             +mCellmlFileRuntime->constantsCount()
+             +mCellmlFileRuntime->statesCount()
+             +mCellmlFileRuntime->ratesCount()
+             +mCellmlFileRuntime->algebraicCount())
+           *SizeOfDouble;
+}
+
+//==============================================================================
+
 void SingleCellSimulationViewSimulation::run(const SolverInterfaces &pSolverInterfaces)
 {
     // Initialise our worker, if not active

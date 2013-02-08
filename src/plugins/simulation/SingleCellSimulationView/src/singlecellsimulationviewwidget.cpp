@@ -827,13 +827,6 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
     //       resuming a simulation...
 
     if (mSimulation->workerStatus() == SingleCellSimulationViewSimulationWorker::Unknown) {
-unsigned long totalRam = Core::totalPhysicalMemory();
-unsigned long availableRam = Core::availablePhysicalMemory();
-
-qDebug(">>> Total RAM:     %s byte(s)", qPrintable(QString::number(totalRam)));
-qDebug(">>> Available RAM: %s byte(s) [%.2f%%]", qPrintable(QString::number(availableRam)),
-                                                 0.01*qRound(10000.0*availableRam/totalRam));
-
         // Cancel any editing of our simulation information
 
         mContentsWidget->informationWidget()->cancelEditing();
@@ -879,9 +872,34 @@ qDebug(">>> Available RAM: %s byte(s) [%.2f%%]", qPrintable(QString::number(avai
 
 mActiveGraphPanel->plot()->setAxisScale(QwtPlot::xBottom, simulationData->startingPoint(), simulationData->endingPoint());
 
-        // Run our simulation
+        // Check how much memory is needed to run our simulation
 
-        mSimulation->run(mSolverInterfaces);
+        bool runSimulation = true;
+
+        double freeMemory = Core::freeMemory();
+        double neededMemory = mSimulation->neededMemory();
+
+        if (neededMemory > freeMemory) {
+            // More memory is needed to run the simulation than currently
+            // available, so ask the user whether he still wants to go ahead
+
+            QString freeMemoryAsString = Core::sizeAsString(freeMemory);
+            QString neededMemoryAsString = Core::sizeAsString(neededMemory);
+
+            if (QMessageBox::question(qApp->activeWindow(),
+                                      qApp->applicationName(),
+                                      tr("This simulation requires %1 of memory to run while you currently have %2 of memory left. Do you still want to go ahead and (try to) run the simulation?").arg(neededMemoryAsString, freeMemoryAsString),
+                                      QMessageBox::Yes|QMessageBox::No,
+                                      QMessageBox::No) == QMessageBox::No)
+                // The user doesn't want to run the simulation
+
+                runSimulation = false;
+        }
+
+        // Run the simulation if possible/wanted
+
+        if (runSimulation)
+            mSimulation->run(mSolverInterfaces);
     } else if (mSimulation->workerStatus() == SingleCellSimulationViewSimulationWorker::Pausing) {
         // Our simulation was paused, so resume it
 
