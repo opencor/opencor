@@ -888,7 +888,7 @@ mActiveGraphPanel->plot()->setAxisScale(QwtPlot::xBottom, simulationData->starti
 
             if (QMessageBox::question(qApp->activeWindow(),
                                       qApp->applicationName(),
-                                      tr("This simulation requires %1 of memory to run while you currently have %2 of memory left. Do you still want to go ahead and (try to) run the simulation?").arg(neededMemoryAsString, freeMemoryAsString),
+                                      tr("This simulation requires %1 of memory while you have %2 left. Do you still wish to proceed?").arg(neededMemoryAsString, freeMemoryAsString),
                                       QMessageBox::Yes|QMessageBox::No,
                                       QMessageBox::No) == QMessageBox::No)
                 // The user doesn't want to run the simulation

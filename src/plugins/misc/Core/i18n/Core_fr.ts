@@ -162,31 +162,31 @@
     </message>
     <message>
         <source>B</source>
-        <translation type="unfinished"></translation>
+        <translation>o</translation>
     </message>
     <message>
         <source>KB</source>
-        <translation type="unfinished"></translation>
+        <translation>Ko</translation>
     </message>
     <message>
         <source>MB</source>
-        <translation type="unfinished"></translation>
+        <translation>Mo</translation>
     </message>
     <message>
         <source>EB</source>
-        <translation type="unfinished"></translation>
+        <translation>Eo</translation>
     </message>
     <message>
         <source>GB</source>
-        <translation type="unfinished"></translation>
+        <translation>Go</translation>
     </message>
     <message>
         <source>TB</source>
-        <translation type="unfinished"></translation>
+        <translation>To</translation>
     </message>
     <message>
         <source>PB</source>
-        <translation type="unfinished"></translation>
+        <translation>Po</translation>
     </message>
 </context>
 </TS>
