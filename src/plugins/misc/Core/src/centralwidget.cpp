@@ -686,32 +686,31 @@ bool CentralWidget::canCloseFile(const int &pIndex)
 {
     QString fileName = mFileNames[pIndex];
 
-    if (FileManager::instance()->isModified(fileName)) {
+    if (FileManager::instance()->isModified(fileName))
         // The current file is modified, so ask the user whether to save it or
         // ignore it
 
-        int response = QMessageBox::question(mMainWindow, qApp->applicationName(),
-                                             tr("<strong>%1</strong> has been modified. Do you want to save it before closing it?").arg(fileName),
-                                             QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel,
-                                             QMessageBox::Yes);
+        switch (QMessageBox::question(mMainWindow, qApp->applicationName(),
+                                      tr("<strong>%1</strong> has been modified. Do you want to save it before closing it?").arg(fileName),
+                                      QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel,
+                                      QMessageBox::Yes)) {
+        case QMessageBox::Yes:
+            // The user wants to save the file, so...
 
-        if (response == QMessageBox::Yes) {
-            // The user wants to save the file
+            return saveFile(pIndex);
+        case QMessageBox::No:
+            // The user doesn't want to save the file, so...
 
-            if (!saveFile(pIndex))
-                // The file couldn't be saved, so...
-
-                return false;
-        } else if (response == QMessageBox::Cancel) {
+            return true;
+        default:   // QMessageBox::Cancel
             // The user wants to cancel, so...
 
             return false;
         }
-    }
+    else
+        // The current file is not modified, so...
 
-    // Everything went fine, so...
-
-    return true;
+        return true;
 }
 
 //==============================================================================
