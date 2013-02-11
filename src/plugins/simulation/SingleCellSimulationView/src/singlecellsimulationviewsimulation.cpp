@@ -664,8 +664,8 @@ SingleCellSimulationViewSimulation::~SingleCellSimulationViewSimulation()
 
     // Delete some internal objects
 
-    delete mData;
     delete mResults;
+    delete mData;
 }
 
 //==============================================================================
