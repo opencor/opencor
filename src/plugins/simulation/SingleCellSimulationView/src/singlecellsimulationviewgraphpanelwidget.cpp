@@ -12,6 +12,7 @@
 //==============================================================================
 
 #include "qwt_plot.h"
+#include "qwt_plot_canvas.h"
 #include "qwt_plot_curve.h"
 #include "qwt_plot_grid.h"
 
@@ -56,6 +57,8 @@ SingleCellSimulationViewGraphPanelWidget::SingleCellSimulationViewGraphPanelWidg
 
     mPlot->setAutoReplot(true);
     mPlot->setCanvasBackground(Qt::white);
+
+    qobject_cast<QwtPlotCanvas *>(mPlot->canvas())->setFrameShape(QFrame::NoFrame);
 
     QwtPlotGrid *grid = new QwtPlotGrid();
 
