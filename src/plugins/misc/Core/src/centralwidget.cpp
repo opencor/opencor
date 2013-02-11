@@ -748,7 +748,7 @@ bool CentralWidget::closeFile(const int &pIndex)
 
         // Ask all the view plugins to remove the corresponding view for the
         // file, but only if we are not stopping since we cannot otherwise
-        // guarantee that all the plugins are loaded and working fine
+        // guarantee that all the plugins are still loaded and working fine
         // Note: it's fine to do it this way, since our widgets' parent will, by
         //       default, delete them for us (unless a plugin has been badly
         //       coded!)...
