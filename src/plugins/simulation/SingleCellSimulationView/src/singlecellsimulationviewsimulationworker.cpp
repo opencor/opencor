@@ -23,11 +23,13 @@ namespace SingleCellSimulationView {
 
 SingleCellSimulationViewSimulationWorker::SingleCellSimulationViewSimulationWorker(const SolverInterfaces &pSolverInterfaces,
                                                                                    CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
-                                                                                   SingleCellSimulationViewSimulationData *pData) :
+                                                                                   SingleCellSimulationViewSimulationData *pData,
+                                                                                   SingleCellSimulationViewSimulationResults *pResults) :
     mStatus(Idling),
     mSolverInterfaces(pSolverInterfaces),
     mCellmlFileRuntime(pCellmlFileRuntime),
     mData(pData),
+    mResults(pResults),
     mError(false)
 {
     // Initialise our progress and let people know about it
@@ -74,7 +76,7 @@ void SingleCellSimulationViewSimulationWorker::run()
 
     if (mStatus == Idling) {
 mData->reset();
-mData->resetResults();
+mResults->reset();
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 
         // We are running
@@ -215,7 +217,7 @@ mData->resetResults();
 
                 mData->recomputeVariables(currentPoint);
 
-                mData->addResults(currentPoint);
+                mResults->addPoint(currentPoint);
 
 //---GRY--- TO BE DONE...
 //for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
@@ -280,7 +282,7 @@ mData->resetResults();
 
                 mData->recomputeVariables(currentPoint);
 
-                mData->addResults(currentPoint);
+                mResults->addPoint(currentPoint);
 
 //---GRY--- TO BE DONE...
 //for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)

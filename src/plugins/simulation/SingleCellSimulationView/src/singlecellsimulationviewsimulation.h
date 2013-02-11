@@ -45,42 +45,6 @@ class SingleCellSimulationViewWidget;
 
 //==============================================================================
 
-class SingleCellSimulationViewSimulationDataResults
-{
-public:
-    explicit SingleCellSimulationViewSimulationDataResults(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
-                                                           const int &pSize);
-    ~SingleCellSimulationViewSimulationDataResults();
-
-    void addData(const double &pPoint, double *pConstants, double *pStates,
-                 double *pRates, double *pAlgebraic);
-
-    int size() const;
-
-    double * points() const;
-
-    double **constants() const;
-    double **states() const;
-    double **rates() const;
-    double **algebraic() const;
-
-    bool exportToCsv(const QString &pFileName) const;
-
-private:
-    CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
-
-    int mSize;
-
-    double *mPoints;
-
-    double **mConstants;
-    double **mStates;
-    double **mRates;
-    double **mAlgebraic;
-};
-
-//==============================================================================
-
 class SingleCellSimulationViewSimulationData : public QObject
 {
     Q_OBJECT
@@ -107,6 +71,8 @@ public:
     double pointInterval() const;
     void setPointInterval(const double &pPointInterval);
 
+    double size() const;
+
     QString odeSolverName() const;
     void setOdeSolverName(const QString &pOdeSolverName);
 
@@ -129,11 +95,6 @@ public:
 
     void recomputeComputedConstantsAndVariables();
     void recomputeVariables(const double &pCurrentPoint);
-
-    SingleCellSimulationViewSimulationDataResults * results() const;
-
-    void resetResults();
-    void addResults(const double &pPoint);
 
 private:
     CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
@@ -159,12 +120,55 @@ private:
     double *mAlgebraic;
     double *mCondVar;
 
-    SingleCellSimulationViewSimulationDataResults *mResults;
-
 Q_SIGNALS:
     void dataChanged();
+};
 
-    void results(SingleCellSimulationViewSimulationDataResults *pResults);
+//==============================================================================
+
+class SingleCellSimulationViewSimulationResults : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit SingleCellSimulationViewSimulationResults(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
+                                                       SingleCellSimulationViewSimulationData *pData);
+    ~SingleCellSimulationViewSimulationResults();
+
+    void reset();
+
+    void addPoint(const double &pPoint);
+
+    int size() const;
+
+    double * points() const;
+
+    double **constants() const;
+    double **states() const;
+    double **rates() const;
+    double **algebraic() const;
+
+    bool exportToCsv(const QString &pFileName) const;
+
+private:
+    CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
+
+    SingleCellSimulationViewSimulationData *mData;
+
+    int mSize;
+
+    double *mPoints;
+
+    double **mConstants;
+    double **mStates;
+    double **mRates;
+    double **mAlgebraic;
+
+    void createArrays();
+    void deleteArrays();
+
+Q_SIGNALS:
+    void results(SingleCellSimulationViewSimulationResults *pResults);
 };
 
 //==============================================================================
@@ -181,6 +185,7 @@ public:
     QString fileName() const;
 
     SingleCellSimulationViewSimulationData * data() const;
+    SingleCellSimulationViewSimulationResults * results() const;
 
     SingleCellSimulationViewSimulationWorker::Status workerStatus() const;
     double workerProgress() const;
@@ -206,6 +211,7 @@ private:
     CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
 
     SingleCellSimulationViewSimulationData *mData;
+    SingleCellSimulationViewSimulationResults *mResults;
 
 Q_SIGNALS:
     void running();

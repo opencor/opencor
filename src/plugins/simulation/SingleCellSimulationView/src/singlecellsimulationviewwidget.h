@@ -61,7 +61,7 @@ class SingleCellSimulationViewGraphPanelWidget;
 class SingleCellSimulationViewPlugin;
 class SingleCellSimulationViewSimulation;
 class SingleCellSimulationViewSimulationData;
-class SingleCellSimulationViewSimulationDataResults;
+class SingleCellSimulationViewSimulationResults;
 
 //==============================================================================
 
@@ -189,7 +189,7 @@ private Q_SLOTS:
 void parameterNeeded(const QString &pFileName,
                      CellMLSupport::CellmlFileRuntimeModelParameter *pParameter,
                      const bool &pNeeded);
-void results(SingleCellSimulationViewSimulationDataResults *pResults);
+void results(SingleCellSimulationViewSimulationResults *pResults);
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 };
 

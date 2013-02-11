@@ -438,6 +438,8 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
     // Retrieve our simulation object for the current model, if any
 
+    bool newSimulation = false;
+
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
     CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = cellmlFile->runtime();
 
@@ -447,6 +449,8 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         // No simulation object currently exists for the model, so create one
 
         mSimulation = new SingleCellSimulationViewSimulation(pFileName, cellmlFileRuntime);
+
+        newSimulation = true;
 
         // Set our simulation object's delay
 
@@ -467,8 +471,8 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         connect(mSimulation, SIGNAL(error(const QString &)),
                 this, SLOT(simulationError(const QString &)));
 
-connect(mSimulation->data(), SIGNAL(results(SingleCellSimulationViewSimulationDataResults *)),
-        this, SLOT(results(SingleCellSimulationViewSimulationDataResults *)));
+connect(mSimulation->results(), SIGNAL(results(SingleCellSimulationViewSimulationResults *)),
+        this, SLOT(results(SingleCellSimulationViewSimulationResults *)));
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
         // Keep track of our simulation object
 
@@ -709,10 +713,11 @@ connect(mSimulation->data(), SIGNAL(results(SingleCellSimulationViewSimulationDa
         mOutputWidget->ensureCursorVisible();
     }
 
-    // If no error occurred, then reset our simulation, so that its data gets
-    // reset (initialised)
+    // If no error occurred and if we are dealing with a new simulation, then
+    // reset our simulation, so that both its data and results get reset (i.e.
+    // initialised in the case of its data)
 
-    if (!hasError)
+    if (!hasError && newSimulation)
         mSimulation->reset();
 
 //---GRY--- THE BELOW IS TEMPORARY, JUST FOR OUR DEMO...
@@ -965,8 +970,8 @@ void SingleCellSimulationViewWidget::on_actionCsvExport_triggered()
 {
     // Make sure that we have simulation data results to export to CSV
 
-    if (   !mSimulation->data()->results()
-        || !mSimulation->data()->results()->size()) {
+    if (   !mSimulation->results()
+        || !mSimulation->results()->size()) {
         QMessageBox::warning(qApp->activeWindow(), tr("CSV Export"),
                              tr("Sorry, but there are no simulation results to export to CSV."));
 
@@ -980,7 +985,7 @@ void SingleCellSimulationViewWidget::on_actionCsvExport_triggered()
                                              tr("CSV File")+" (*.csv)");
 
     if (!fileName.isEmpty())
-        mSimulation->data()->results()->exportToCsv(fileName);
+        mSimulation->results()->exportToCsv(fileName);
 }
 
 //==============================================================================
@@ -1265,7 +1270,7 @@ void SingleCellSimulationViewWidget::parameterNeeded(const QString &pFileName,
 
         // Populate the trace if some results are available
 
-        SingleCellSimulationViewSimulationDataResults *results = mSimulation->data()->results();
+        SingleCellSimulationViewSimulationResults *results = mSimulation->results();
 
         if (results) {
             double *yData;
@@ -1287,7 +1292,7 @@ void SingleCellSimulationViewWidget::parameterNeeded(const QString &pFileName,
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::results(SingleCellSimulationViewSimulationDataResults *pResults)
+void SingleCellSimulationViewWidget::results(SingleCellSimulationViewSimulationResults *pResults)
 {
     QMap<QString, QwtPlotCurve *>::const_iterator iter = mTraces.constBegin();
 

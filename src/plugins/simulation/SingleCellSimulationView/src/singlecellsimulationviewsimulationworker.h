@@ -32,6 +32,7 @@ namespace SingleCellSimulationView {
 //==============================================================================
 
 class SingleCellSimulationViewSimulationData;
+class SingleCellSimulationViewSimulationResults;
 
 //==============================================================================
 
@@ -51,7 +52,8 @@ public:
 
     explicit SingleCellSimulationViewSimulationWorker(const SolverInterfaces &pSolverInterfaces,
                                                       CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
-                                                      SingleCellSimulationViewSimulationData *pData);
+                                                      SingleCellSimulationViewSimulationData *pData,
+                                                      SingleCellSimulationViewSimulationResults *pResults);
 
     Status status() const;
     double progress() const;
@@ -74,6 +76,7 @@ private:
     CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
 
     SingleCellSimulationViewSimulationData *mData;
+    SingleCellSimulationViewSimulationResults *mResults;
 
     double mProgress;
 
