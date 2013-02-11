@@ -55,8 +55,8 @@ FileManager * FileManager::instance()
 
     static FileManager instance;
 
-    return (FileManager *) Core::globalInstance("OpenCOR::Core::FileManager::instance()",
-                                                &instance);
+    return static_cast<FileManager *>(Core::globalInstance("OpenCOR::Core::FileManager::instance()",
+                                                           &instance));
 }
 
 //==============================================================================

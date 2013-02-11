@@ -56,7 +56,7 @@ MainWindow::MainWindow() :
 {
     // Create our settings object
 
-    mSettings = new QSettings(qApp->applicationName());
+    mSettings = new QSettings();
 
     // Create our plugin manager (which will automatically load our various
     // plugins)

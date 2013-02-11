@@ -224,8 +224,8 @@ void * globalInstance(const QString &pObjectName, void *pDefaultGlobalInstance)
     //       required by two other plugins, then these two plugins won't get the
     //       same 'copy' of the Core plugin. (It seems like) each 'copy' gets
     //       its own address space. (This is not the case on OS X, (most likely)
-    //       because of the way applications are bundled on that platform.) To
-    //       address this issue, we keep track of the address of a 'global'
+    //       because of the way applications are bundled on that platform.) So,
+    //       to address this issue, we keep track of the address of a 'global'
     //       instance using QSettings. Now, this approach works fine on both
     //       Windows and Linux, but... not on OS X (!!). (It would seem that)
     //       there are some read/write conflicts (when using QSettings). These
@@ -239,7 +239,7 @@ void * globalInstance(const QString &pObjectName, void *pDefaultGlobalInstance)
 
     return (void *) pDefaultGlobalInstance;
 #else
-    QSettings settings(qApp->applicationName());
+    QSettings settings;
     qlonglong globalInstance;
 
     settings.beginGroup(SettingsGlobal);
@@ -249,7 +249,7 @@ void * globalInstance(const QString &pObjectName, void *pDefaultGlobalInstance)
             // There is no 'global' instance associated with the given object,
             // so use the object's default 'global' instance we were given
 
-            globalInstance = (qlonglong) pDefaultGlobalInstance;
+            globalInstance = qlonglong(pDefaultGlobalInstance);
 
             settings.setValue(pObjectName, globalInstance);
         }
@@ -267,7 +267,7 @@ void CORE_EXPORT setActiveDirectory(const QString &pDirName)
 {
     // Keep track of the active directory
 
-    QSettings settings(qApp->applicationName());
+    QSettings settings;
 
     settings.beginGroup(SettingsGlobal);
         settings.setValue(SettingsActiveDirectory, pDirName);
@@ -281,7 +281,7 @@ QString CORE_EXPORT activeDirectory()
     // Retrieve and return the active directory
 
     QString res;
-    QSettings settings(qApp->applicationName());
+    QSettings settings;
 
     settings.beginGroup(SettingsGlobal);
         res = settings.value(SettingsActiveDirectory).toString();

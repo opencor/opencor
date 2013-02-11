@@ -354,7 +354,7 @@ void CorePlugin::retrieveBorderColor()
 
     // Use our settings to keep track of the colour
 
-    QSettings settings(qApp->applicationName());
+    QSettings settings;
 
     settings.beginGroup(SettingsGlobal);
         settings.setValue(SettingsBorderColor, newBorderColor);
@@ -371,7 +371,7 @@ void CorePlugin::retrieveColors()
 
     // Retrieve some other colours
 
-    QSettings settings(qApp->applicationName());
+    QSettings settings;
 
     settings.beginGroup(SettingsGlobal);
         settings.setValue(SettingsBaseColor, qApp->palette().color(QPalette::Base));
