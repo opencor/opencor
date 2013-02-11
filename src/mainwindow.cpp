@@ -288,6 +288,11 @@ MainWindow::~MainWindow()
             solverInterface->destroy();
     }
 
+    // Delete our central widget
+    // Note: if we don't have one, then nothing will happen, so...
+
+    delete centralWidget();
+
     // Delete some internal objects
 
     delete mPluginManager;
