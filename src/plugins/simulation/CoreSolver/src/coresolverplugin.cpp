@@ -31,7 +31,7 @@ PLUGININFO_FUNC CoreSolverPluginInfo()
 
 CoreSolverPlugin::~CoreSolverPlugin()
 {
-    // Reset our global non-linear algebraic solver
+    // Reset our global NLA solver
 
     resetGlobalNlaSolver();
 }

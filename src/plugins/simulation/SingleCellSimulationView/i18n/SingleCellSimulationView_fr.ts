@@ -111,10 +111,6 @@
         <translation>Modèle d&apos;exécution :</translation>
     </message>
     <message>
-        <source>Non-linear algebraic system(s)</source>
-        <translation>Système(s) algébrique(s) non-linéaire(s)</translation>
-    </message>
-    <message>
         <source>valid</source>
         <translation>valide</translation>
     </message>
@@ -205,6 +201,10 @@
     <message>
         <source>This simulation requires %1 of memory while you have %2 left. Do you still wish to proceed?</source>
         <translation>Cette simulation nécessite %1 de mémoire alors qu&apos;il vous en reste %2. Voulez-vous quand même continuer ?</translation>
+    </message>
+    <message>
+        <source>NLA system(s)</source>
+        <translation>Système(s) ANL</translation>
     </message>
 </context>
 <context>

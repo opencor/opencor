@@ -1,5 +1,5 @@
 //==============================================================================
-// Core non-linear algebraic solver class
+// Core NLA solver class
 //==============================================================================
 
 #include "corenlasolver.h"
@@ -28,7 +28,7 @@ CoreNlaSolver::CoreNlaSolver() :
 void CoreNlaSolver::initialize(ComputeSystemFunction pComputeSystem,
                                double *pParameters, int pSize, void *pUserData)
 {
-    // Initialise the non-linear algebraic solver
+    // Initialise ourselves
 
     mComputeSystem = pComputeSystem;
 
@@ -41,7 +41,7 @@ void CoreNlaSolver::initialize(ComputeSystemFunction pComputeSystem,
 
 void resetGlobalNlaSolver()
 {
-    // Reset our global non-linear algebraic solver, if needed
+    // Reset our global NLA solver, if needed
 
     if (gGlobalNlaSolver) {
         delete gGlobalNlaSolver;
@@ -54,8 +54,7 @@ void resetGlobalNlaSolver()
 
 void setGlobalNlaSolver(CoreNlaSolver *pGlobalNlaSolver)
 {
-    // Set our global non-linear algebraic solver after deleting the previous
-    // one, if needed
+    // Set our global NLA solver after deleting the previous one, if needed
 
     if (gGlobalNlaSolver)
         delete gGlobalNlaSolver;
@@ -67,7 +66,7 @@ void setGlobalNlaSolver(CoreNlaSolver *pGlobalNlaSolver)
 
 CoreNlaSolver * globalNlaSolver()
 {
-    // Return our global non-linear algebraic solver
+    // Return our global NLA solver
 
     return gGlobalNlaSolver;
 }
