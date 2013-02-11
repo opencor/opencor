@@ -120,12 +120,11 @@ mTraces(QMap<QString, QwtPlotCurve *>())
     mToolBarWidget->addWidget(delaySpaceWidget);
 #endif
     mToolBarWidget->addWidget(mDelayValueWidget);
-//    mToolBarWidget->addSeparator();
-//    mToolBarWidget->addAction(mGui->actionDebugMode);
-//    mToolBarWidget->addSeparator();
-//    mToolBarWidget->addAction(mGui->actionAdd);
-//    mToolBarWidget->addAction(mGui->actionRemove);
-    //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
+    mToolBarWidget->addSeparator();
+    mToolBarWidget->addAction(mGui->actionDebugMode);
+    mToolBarWidget->addSeparator();
+    mToolBarWidget->addAction(mGui->actionAdd);
+    mToolBarWidget->addAction(mGui->actionRemove);
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mGui->actionCsvExport);
 
