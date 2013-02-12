@@ -107,7 +107,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
     mNumber(pNumber),
     mElement(pElement)
 {
-    static const QChar rightArrow = QChar(0x2192);
+    static const QChar RightArrow = QChar(0x2192);
 
     // Set the text for some types
 
@@ -136,7 +136,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
         CellMLSupport::CellmlFileMapComponents *mapComponents = static_cast<CellMLSupport::CellmlFileMapComponents *>(pElement);
 
         setText(QString("%1 %2 %3").arg(mapComponents->firstComponent(),
-                                        rightArrow,
+                                        RightArrow,
                                         mapComponents->secondComponent()));
 
         break;
@@ -145,7 +145,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
         CellMLSupport::CellmlFileMapVariablesItem *mapVariables = static_cast<CellMLSupport::CellmlFileMapVariablesItem *>(pElement);
 
         setText(QString("%1 %2 %3").arg(mapVariables->firstVariable(),
-                                        rightArrow,
+                                        RightArrow,
                                         mapVariables->secondVariable()));
 
         break;

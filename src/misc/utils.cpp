@@ -104,9 +104,9 @@ QString getOsName()
 QString getAppVersion(QCoreApplication *pApp)
 {
     QString bitVersion;
-    static int sizeOfPointer = sizeof(void *);
+    static const int SizeOfPointer = sizeof(void *);
 
-    switch (sizeOfPointer) {
+    switch (SizeOfPointer) {
     case 4:
         bitVersion = " (32-bit)";
 
