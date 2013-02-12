@@ -51,7 +51,7 @@ void TreeViewWidget::selectItem(const int &pRow, const int &pColumn)
 {
     // Select the requested item, if any
 
-    QStandardItemModel *treeViewModel = static_cast<QStandardItemModel *>(model());
+    QStandardItemModel *treeViewModel = qobject_cast<QStandardItemModel *>(model());
 
     if (treeViewModel) {
         // The tree view has a model associated with it, so we can retrieve the

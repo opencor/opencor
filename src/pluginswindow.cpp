@@ -33,7 +33,7 @@ void PluginItemDelegate::paint(QPainter *pPainter,
     // (i.e. plugins which the user cannot decide whether to load) in which case
     // we paint them as if they were disabled
 
-    QStandardItem *pluginItem = static_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex);
+    QStandardItem *pluginItem = qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex);
 
     QStyleOptionViewItemV4 option(pOption);
 

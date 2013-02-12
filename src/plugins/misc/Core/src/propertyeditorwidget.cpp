@@ -238,7 +238,7 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
     // Create and return an editor for our item, based on its type
 
     QWidget *editor;
-    PropertyItem *propertyItem = static_cast<PropertyItem *>(static_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex));
+    PropertyItem *propertyItem = static_cast<PropertyItem *>(qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex));
 
     switch (propertyItem->type()) {
     case PropertyItem::Integer:
@@ -306,7 +306,7 @@ void PropertyItemDelegate::paint(QPainter *pPainter,
 {
     // Paint the item as normal, except if it is a section item
 
-    PropertyItem *propertyItem = static_cast<PropertyItem *>(static_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex));
+    PropertyItem *propertyItem = static_cast<PropertyItem *>(qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex));
 
     QStyleOptionViewItemV4 option(pOption);
 

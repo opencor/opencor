@@ -164,8 +164,7 @@ QByteArray resourceAsByteArray(const QString &pResource)
         if (resource.isCompressed())
             // The resource is compressed, so uncompress it before returning it
 
-            return qUncompress(reinterpret_cast<const uchar *>(resource.data()),
-                               resource.size());
+            return qUncompress(resource.data(), resource.size());
         else
             // The resource is not compressed, so just return it after doing the
             // right conversion

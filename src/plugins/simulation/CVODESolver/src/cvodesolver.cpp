@@ -20,7 +20,7 @@ int rhsFunction(double pVoi, N_Vector pStates, N_Vector pRates, void *pUserData)
 {
     // Compute the RHS function
 
-    CvodeSolverUserData *userData = reinterpret_cast<CvodeSolverUserData *>(pUserData);
+    CvodeSolverUserData *userData = static_cast<CvodeSolverUserData *>(pUserData);
 
     userData->computeRates()(pVoi, userData->constants(),
                              N_VGetArrayPointer_Serial(pRates),

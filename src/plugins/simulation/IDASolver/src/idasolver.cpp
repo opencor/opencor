@@ -26,7 +26,7 @@ int residualFunction(double pVoi, N_Vector pStates, N_Vector pRates,
 {
     // Compute the residual function
 
-    IdaSolverUserData *userData = reinterpret_cast<IdaSolverUserData *>(pUserData);
+    IdaSolverUserData *userData = static_cast<IdaSolverUserData *>(pUserData);
 
     double *states    = N_VGetArrayPointer(pStates);
     double *rates     = N_VGetArrayPointer(pRates);
@@ -52,7 +52,7 @@ int rootFindingFunction(double pVoi, N_Vector pStates, N_Vector pRates,
 {
     // Compute the root finding function
 
-    IdaSolverUserData *userData = reinterpret_cast<IdaSolverUserData *>(pUserData);
+    IdaSolverUserData *userData = static_cast<IdaSolverUserData *>(pUserData);
 
     userData->computeRootInformation()(pVoi, userData->constants(),
                                        N_VGetArrayPointer(pRates),
@@ -75,7 +75,7 @@ void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
     if (pErrorCode != IDA_WARNING)
         // IDA generated an error, so forward it to the IdaSolver object
 
-        reinterpret_cast<IdaSolver *>(pUserData)->emitError(pErrorMsg);
+        static_cast<IdaSolver *>(pUserData)->emitError(pErrorMsg);
 }
 
 //==============================================================================

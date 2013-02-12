@@ -20,7 +20,7 @@ int systemFunction(N_Vector pY, N_Vector pF, void *pUserData)
 {
     // Compute the system function
 
-    KinsolSolverUserData *userData = reinterpret_cast<KinsolSolverUserData *>(pUserData);
+    KinsolSolverUserData *userData = static_cast<KinsolSolverUserData *>(pUserData);
 
     userData->computeSystem()(N_VGetArrayPointer_Serial(pY),
                               N_VGetArrayPointer_Serial(pF),
@@ -42,7 +42,7 @@ void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
     if (pErrorCode != KIN_WARNING)
         // KINSOL generated an error, so forward it to the KinsolSolver object
 
-        reinterpret_cast<KinsolSolver *>(pUserData)->emitError(pErrorMsg);
+        static_cast<KinsolSolver *>(pUserData)->emitError(pErrorMsg);
 }
 
 //==============================================================================

@@ -156,7 +156,7 @@ bool HelpPage::acceptNavigationRequest(QWebFrame*,
         // This is an action which we want OpenCOR or one of its plugins to
         // execute
 
-        static_cast<SharedTools::QtSingleApplication *>(qApp)->handleAction(url);
+        qobject_cast<SharedTools::QtSingleApplication *>(qApp)->handleAction(url);
 
         return false;
     } else {

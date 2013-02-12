@@ -145,7 +145,7 @@ void CommonWidget::drawBorder(const bool &pDockedTop, const bool &pDockedLeft,
 {
     // Draw a border around the widget
 
-    DockWidget *dockWidget = dynamic_cast<DockWidget *>(mParent);
+    DockWidget *dockWidget = qobject_cast<DockWidget *>(mParent);
     QWidget *widget = dynamic_cast<QWidget *>(this);
 
     if (dockWidget && widget) {

@@ -28,7 +28,7 @@ void CellmlAnnotationViewCellmlElementItemDelegate::paint(QPainter *pPainter,
 {
     // Paint the item as normal, except for error/warning/category items
 
-    CellmlAnnotationViewCellmlElementItem *cellmlElementItem = static_cast<CellmlAnnotationViewCellmlElementItem *>(static_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex));
+    CellmlAnnotationViewCellmlElementItem *cellmlElementItem = static_cast<CellmlAnnotationViewCellmlElementItem *>(qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex));
 
     QStyleOptionViewItemV4 option(pOption);
 

@@ -99,7 +99,7 @@ mResults->reset();
                     // The requested ODE solver was found, so retrieve an
                     // instance of it
 
-                    voiSolver = odeSolver = reinterpret_cast<CoreSolver::CoreOdeSolver *>(solverInterface->instance());
+                    voiSolver = odeSolver = static_cast<CoreSolver::CoreOdeSolver *>(solverInterface->instance());
 
                     break;
                 }
@@ -109,7 +109,7 @@ mResults->reset();
                     // The requested DAE solver was found, so retrieve an
                     // instance of it
 
-                    voiSolver = daeSolver = reinterpret_cast<CoreSolver::CoreDaeSolver *>(solverInterface->instance());
+                    voiSolver = daeSolver = static_cast<CoreSolver::CoreDaeSolver *>(solverInterface->instance());
 
                     break;
                 }
@@ -120,8 +120,8 @@ mResults->reset();
         if (mCellmlFileRuntime->needNlaSolver())
             foreach (SolverInterface *solverInterface, mSolverInterfaces)
                 if (!solverInterface->name().compare(mData->nlaSolverName())) {
-                    // The requested NLA solver was found, so retrieve an
-                    // instance of it
+                    // The requested NLA solver was found, so retrieve and keep
+                    // track of an instance of it
 
                     CoreSolver::setGlobalNlaSolver(reinterpret_cast<CoreSolver::CoreNlaSolver *>(solverInterface->instance()));
 
