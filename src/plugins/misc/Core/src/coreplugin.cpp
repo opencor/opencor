@@ -349,15 +349,14 @@ void CorePlugin::retrieveBorderColor()
 
     // Retrieve the colour we are after
 
-    QColor newBorderColor = QColor(image.pixel(image.width()-1,
-                                   0.5*image.height()));
+    QColor borderColor = QColor(image.pixel(image.width()-1, 0.5*image.height()));
 
     // Use our settings to keep track of the colour
 
-    QSettings settings;
+    QSettings settings(SettingsApplicationName);
 
     settings.beginGroup(SettingsGlobal);
-        settings.setValue(SettingsBorderColor, newBorderColor);
+        settings.setValue(SettingsBorderColor, borderColor);
     settings.endGroup();
 }
 
@@ -371,7 +370,7 @@ void CorePlugin::retrieveColors()
 
     // Retrieve some other colours
 
-    QSettings settings;
+    QSettings settings(SettingsApplicationName);
 
     settings.beginGroup(SettingsGlobal);
         settings.setValue(SettingsBaseColor, qApp->palette().color(QPalette::Base));

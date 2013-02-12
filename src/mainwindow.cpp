@@ -56,7 +56,7 @@ MainWindow::MainWindow() :
 {
     // Create our settings object
 
-    mSettings = new QSettings();
+    mSettings = new QSettings(SettingsApplicationName);
 
     // Create our plugin manager (which will automatically load our various
     // plugins)
@@ -1222,7 +1222,7 @@ void MainWindow::resetAll()
         // windows are, for instance, properly reset with regards to their
         // dimensions)
 
-        QSettings(qApp->applicationName()).clear();
+        mSettings->clear();
 
         // Restart OpenCOR without first saving its settings
 

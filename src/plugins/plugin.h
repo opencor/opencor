@@ -19,6 +19,11 @@ namespace OpenCOR {
 
 //==============================================================================
 
+static const QString SettingsApplicationName = "OpenCOR";
+static const QString SettingsPlugins = "Plugins";
+
+//==============================================================================
+
 #if defined(Q_OS_WIN)
     static const QString PluginPrefix = "";
     static const QString PluginExtension = ".dll";
@@ -31,10 +36,6 @@ namespace OpenCOR {
 #else
     #error Unsupported platform
 #endif
-
-//==============================================================================
-
-static const QString SettingsPlugins = "Plugins";
 
 //==============================================================================
 

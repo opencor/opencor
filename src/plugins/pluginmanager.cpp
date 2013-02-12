@@ -19,7 +19,6 @@ namespace OpenCOR {
 
 PluginManager::PluginManager(QSettings *pSettings,
                              const PluginInfo::Type &pGuiOrConsoleType) :
-    mSettings(pSettings),
     mFormatVersion(PluginInfo::FormatVersion001),
     mGuiOrConsoleType(pGuiOrConsoleType),
     mPlugins(Plugins())
@@ -173,15 +172,6 @@ PluginInfo::FormatVersion PluginManager::formatVersion() const
     // Return the format version used by the plugin manager
 
     return mFormatVersion;
-}
-
-//==============================================================================
-
-QSettings * PluginManager::settings() const
-{
-    // Return the settings object
-
-    return mSettings;
 }
 
 //==============================================================================

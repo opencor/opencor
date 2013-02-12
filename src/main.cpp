@@ -2,8 +2,8 @@
 // Main
 //==============================================================================
 
-#include "mainwindow.h"
 #include "common.h"
+#include "mainwindow.h"
 
 //==============================================================================
 
@@ -22,7 +22,7 @@ void removeInstances()
     // Remove all the 'global' information shared among OpenCOR and the
     // different plugins
 
-    QSettings(qApp->applicationName()).remove("Global");
+    QSettings(OpenCOR::SettingsApplicationName).remove("Global");
 }
 
 //==============================================================================

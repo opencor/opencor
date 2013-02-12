@@ -40,13 +40,9 @@ public:
     QString pluginsDir() const;
     Plugin * plugin(const QString &pName) const;
 
-    QSettings * settings() const;
-
     PluginInfo::FormatVersion formatVersion() const;
 
 private:
-    QSettings *mSettings;
-
     PluginInfo::FormatVersion mFormatVersion;
     PluginInfo::Type mGuiOrConsoleType;
 
