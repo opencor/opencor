@@ -30,7 +30,8 @@ extern "C" double COMPILER_EXPORT multi_min(int pCount, ...);
     extern "C" double COMPILER_EXPORT atanh(double pNb);
 #endif
 
-extern "C" void COMPILER_EXPORT do_nonlinearsolve(void (*pFunction)(double *,
+extern "C" void COMPILER_EXPORT do_nonlinearsolve(char *pRuntime,
+                                                  void (*pFunction)(double *,
                                                                     double *,
                                                                     void *),
                                                   double *pParameters,

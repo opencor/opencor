@@ -117,13 +117,21 @@ mResults->reset();
 
         // Set up our NLA solver, if needed
 
+        CoreSolver::CoreNlaSolver *nlaSolver = 0;
+
         if (mCellmlFileRuntime->needNlaSolver())
             foreach (SolverInterface *solverInterface, mSolverInterfaces)
                 if (!solverInterface->name().compare(mData->nlaSolverName())) {
-                    // The requested NLA solver was found, so retrieve and keep
-                    // track of an instance of it
+                    // The requested NLA solver was found, so retrieve an
+                    // instance of it
 
-                    CoreSolver::setGlobalNlaSolver(reinterpret_cast<CoreSolver::CoreNlaSolver *>(solverInterface->instance()));
+                    nlaSolver = static_cast<CoreSolver::CoreNlaSolver *>(solverInterface->instance());
+
+                    // Keep track of our NLA solver, so that do_nonlinearsolve()
+                    // can work as expected
+
+                    CoreSolver::setNlaSolver(mCellmlFileRuntime->address(),
+                                             nlaSolver);
 
                     break;
                 }
@@ -132,15 +140,15 @@ mResults->reset();
 
         mError = false;
 
-        if (mCellmlFileRuntime->needOdeSolver())
+        if (odeSolver)
             connect(odeSolver, SIGNAL(error(const QString &)),
                     this, SLOT(emitError(const QString &)));
         else
             connect(daeSolver, SIGNAL(error(const QString &)),
                     this, SLOT(emitError(const QString &)));
 
-        if (mCellmlFileRuntime->needNlaSolver())
-            connect(CoreSolver::globalNlaSolver(), SIGNAL(error(const QString &)),
+        if (nlaSolver)
+            connect(nlaSolver, SIGNAL(error(const QString &)),
                     this, SLOT(emitError(const QString &)));
 
         // Retrieve our simulation properties
@@ -156,7 +164,7 @@ mResults->reset();
 
         // Initialise our ODE/DAE solver
 
-        if (mCellmlFileRuntime->needOdeSolver()) {
+        if (odeSolver) {
             odeSolver->setProperties(mData->odeSolverProperties());
 
             odeSolver->initialize(currentPoint,
@@ -180,15 +188,9 @@ mResults->reset();
         }
 
         // Initialise our NLA solver
-//---GRY--- CHECK do_nonlinearsolve() IN compilermath.cpp SINCE IT ISN'T
-//          CURRENTLY NEEDED. HOWEVER, OUR CURRENT APPROACH IS NOT NICE AND WE
-//          REALLY SHOULD INITIALISE THINGS HERE...
 
-        if (mCellmlFileRuntime->needNlaSolver()) {
-            CoreSolver::globalNlaSolver()->setProperties(mData->nlaSolverProperties());
-
-//            CoreSolver::globalNlaSolver()->initialize(...);
-        }
+        if (nlaSolver)
+            nlaSolver->setProperties(mData->nlaSolverProperties());
 
         // Now, we are ready to compute our model, but only if no error has
         // occurred so far
@@ -333,7 +335,9 @@ mResults->reset();
         delete odeSolver;
         delete daeSolver;
 
-        CoreSolver::resetGlobalNlaSolver();
+        delete nlaSolver;
+
+        CoreSolver::unsetNlaSolver(mCellmlFileRuntime->address());
     }
 }
 

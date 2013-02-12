@@ -29,15 +29,6 @@ PLUGININFO_FUNC CoreSolverPluginInfo()
 
 //==============================================================================
 
-CoreSolverPlugin::~CoreSolverPlugin()
-{
-    // Reset our global NLA solver
-
-    resetGlobalNlaSolver();
-}
-
-//==============================================================================
-
 }   // namespace CoreSolver
 }   // namespace OpenCOR
 

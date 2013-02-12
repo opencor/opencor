@@ -106,6 +106,8 @@ public:
     explicit CellmlFileRuntime();
     ~CellmlFileRuntime();
 
+    QString address() const;
+
     bool isValid() const;
 
     ModelType modelType() const;

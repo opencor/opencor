@@ -123,6 +123,19 @@ CellmlFileRuntime::~CellmlFileRuntime()
 
 //==============================================================================
 
+QString CellmlFileRuntime::address() const
+{
+    // Return our address as a string
+
+    QString res;
+
+    res.sprintf("%p", this);
+
+    return res;
+}
+
+//==============================================================================
+
 bool CellmlFileRuntime::isValid() const
 {
     // The runtime is valid if no issues were found
@@ -161,7 +174,7 @@ bool CellmlFileRuntime::needDaeSolver() const
 
 bool CellmlFileRuntime::needNlaSolver() const
 {
-    // Return whether the model needs a non-linear algebraic solver
+    // Return whether the model needs an NLA solver
 
     return mAtLeastOneNlaSystem;
 }
@@ -528,6 +541,9 @@ QString CellmlFileRuntime::functionCode(const QString &pFunctionSignature,
 
         res += pFunctionBody;
 
+        if (!pFunctionBody.endsWith("\n"))
+            res += "\n";
+
         if (pHasDefines)
             res += "\n"
                    "#undef ALGEBRAIC\n"
@@ -846,7 +862,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
     QString functionsString = QString::fromStdWString(genericCodeInformation->functionsString());
 
     if (!functionsString.isEmpty()) {
-        // We will need to solve at least one non-linear algebraic system, so...
+        // We will need to solve at least one NLA system, so...
 
         mAtLeastOneNlaSystem = true;
 
@@ -862,10 +878,14 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
                      "    int *aPRET;\n"
                      "};\n"
                      "\n"
-                     "extern void do_nonlinearsolve(void (*)(double *, double *, void*), double *, int *, int, void *);\n";
+                     "extern void do_nonlinearsolve(char *, void (*)(double *, double *, void*), double *, int *, int, void *);\n";
         modelCode += "\n";
-        modelCode += functionsString;
+        modelCode += functionsString.replace("do_nonlinearsolve(", QString("do_nonlinearsolve(\"%1\", ").arg(address()));
         modelCode += "\n";
+
+        // Note: the new parameter which is added to all our calls to
+        //       do_nonlinearsolver() is so that do_nonlinearsolver() can
+        //       retrieve the correct instance of our NLA solver...
     }
 
     // Retrieve the body of the function that initialises constants and extract

@@ -190,34 +190,30 @@ double atanh(double pNb)
 
 //==============================================================================
 
-void do_nonlinearsolve(void (*pFunction)(double *, double *, void *),
+void do_nonlinearsolve(char *pRuntime,
+                       void (*pFunction)(double *, double *, void *),
                        double *pParameters, int *pRes, int pSize,
                        void *pUserData)
 {
-    OpenCOR::CoreSolver::CoreNlaSolver *globalNlaSolver = OpenCOR::CoreSolver::globalNlaSolver();
-//---GRY--- WHAT IF WE WERE TO RUN TWO SIMULATIONS AT THE SAME TIME AND BOTH OF
-//          THEM NEED AN NLA SOLVER? SEE corenlasolver.cpp, gGlobalNlaSolver
-//          GETS RESET ONCE A SIMULATION IS DONE. ALSO, WHAT IF TWO SIMULATIONS
-//          WANT TO USE DIFFERENT NLA SOLVERS?... WHAT ABOUT PASSING AN EXTRA
-//          PARAMETER TO IDENTIFY THE CURRENT SIMULATION AND THUS USE THE
-//          CORRECT NLA SOLVER?...
+    // Retrieve the NLA solver which we should use
 
-    if (globalNlaSolver) {
-        // Initialise our global non-linear algebraic solver
+    OpenCOR::CoreSolver::CoreNlaSolver *nlaSolver = OpenCOR::CoreSolver::nlaSolver(pRuntime);
 
-        globalNlaSolver->initialize(pFunction, pParameters, pSize, pUserData);
-//---GRY--- DO WE REALLY NEED TO INITIALISE THINGS EVERY TIME?...
+    if (nlaSolver) {
+        // We have found our NLA solver, so initialise it
 
-        // Solve the non-linear algebraic system
+        nlaSolver->initialize(pFunction, pParameters, pSize, pUserData);
 
-        globalNlaSolver->solve();
+        // Now, we can solve our NLA system
+
+        nlaSolver->solve();
 
         // Everything went fine, so...
 
         *pRes = 1;
     } else {
-
-        // We couldn't solve the non-linear algebraic system, so...
+        // We couldn't retrieve an NLA solver, so...
+        // Note: this should never happen, but better be safe than sorry, so...
 
         *pRes = 0;
     }

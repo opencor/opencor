@@ -38,9 +38,11 @@ private:
 
 //==============================================================================
 
-void CORESOLVER_EXPORT resetGlobalNlaSolver();
-void CORESOLVER_EXPORT setGlobalNlaSolver(CoreNlaSolver *pGlobalNlaSolver);
-CoreNlaSolver CORESOLVER_EXPORT * globalNlaSolver();
+CoreNlaSolver CORESOLVER_EXPORT * nlaSolver(const QString &pRuntime);
+
+void CORESOLVER_EXPORT setNlaSolver(const QString &pRuntime,
+                                    CoreNlaSolver *pGlobalNlaSolver);
+void CORESOLVER_EXPORT unsetNlaSolver(const QString &pRuntime);
 
 //==============================================================================
 

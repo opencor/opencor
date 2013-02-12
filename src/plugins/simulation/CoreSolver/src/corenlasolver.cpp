@@ -3,15 +3,16 @@
 //==============================================================================
 
 #include "corenlasolver.h"
+#include "plugin.h"
+
+//==============================================================================
+
+#include <QSettings>
 
 //==============================================================================
 
 namespace OpenCOR {
 namespace CoreSolver {
-
-//==============================================================================
-
-static CoreNlaSolver *gGlobalNlaSolver = 0;
 
 //==============================================================================
 
@@ -39,36 +40,50 @@ void CoreNlaSolver::initialize(ComputeSystemFunction pComputeSystem,
 
 //==============================================================================
 
-void resetGlobalNlaSolver()
+static const QString SettingsGlobal = "Global";
+
+//==============================================================================
+
+CoreNlaSolver * nlaSolver(const QString &pRuntime)
 {
-    // Reset our global NLA solver, if needed
+    // Return the runtime's NLA solver
 
-    if (gGlobalNlaSolver) {
-        delete gGlobalNlaSolver;
+    QSettings settings(SettingsApplicationName);
+    qlonglong res;
 
-        gGlobalNlaSolver = 0;
-    }
+    settings.beginGroup(SettingsGlobal);
+        res = settings.value(pRuntime, 0).toLongLong();
+    settings.endGroup();
+
+    // Return the NLA solver
+
+    return static_cast<CoreNlaSolver *>((void *) res);
 }
 
 //==============================================================================
 
-void setGlobalNlaSolver(CoreNlaSolver *pGlobalNlaSolver)
+void setNlaSolver(const QString &pRuntime, CoreNlaSolver *pGlobalNlaSolver)
 {
-    // Set our global NLA solver after deleting the previous one, if needed
+    // Keep track of the runtime's NLA solver
 
-    if (gGlobalNlaSolver)
-        delete gGlobalNlaSolver;
+    QSettings settings(SettingsApplicationName);
 
-    gGlobalNlaSolver = pGlobalNlaSolver;
+    settings.beginGroup(SettingsGlobal);
+        settings.setValue(pRuntime, qlonglong(pGlobalNlaSolver));
+    settings.endGroup();
 }
 
 //==============================================================================
 
-CoreNlaSolver * globalNlaSolver()
+void unsetNlaSolver(const QString &pRuntime)
 {
-    // Return our global NLA solver
+    // Stop tracking the runtime's NLA solver
 
-    return gGlobalNlaSolver;
+    QSettings settings(SettingsApplicationName);
+
+    settings.beginGroup(SettingsGlobal);
+        settings.remove(pRuntime);
+    settings.endGroup();
 }
 
 //==============================================================================
