@@ -8,7 +8,6 @@
 //==============================================================================
 
 #include <QDir>
-#include <QPointer>
 #include <QProcess>
 #include <QSettings>
 
