@@ -884,8 +884,8 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
         modelCode += "\n";
 
         // Note: the new parameter which is added to all our calls to
-        //       do_nonlinearsolver() is so that do_nonlinearsolver() can
-        //       retrieve the correct instance of our NLA solver...
+        //       do_nonlinearsolve() is so that do_nonlinearsolve() can retrieve
+        //       the correct instance of our NLA solver...
     }
 
     // Retrieve the body of the function that initialises constants and extract
