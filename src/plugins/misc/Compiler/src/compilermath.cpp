@@ -190,10 +190,10 @@ double atanh(double pNb)
 
 //==============================================================================
 
-void do_nonlinearsolve(char *pRuntime,
-                       void (*pFunction)(double *, double *, void *),
-                       double *pParameters, int *pRes, int pSize,
-                       void *pUserData)
+void doNonLinearSolve(char *pRuntime,
+                      void (*pFunction)(double *, double *, void *),
+                      double *pParameters, int *pRes, int pSize,
+                      void *pUserData)
 {
     // Retrieve the NLA solver which we should use
 

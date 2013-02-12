@@ -30,13 +30,13 @@ extern "C" double COMPILER_EXPORT multi_min(int pCount, ...);
     extern "C" double COMPILER_EXPORT atanh(double pNb);
 #endif
 
-extern "C" void COMPILER_EXPORT do_nonlinearsolve(char *pRuntime,
-                                                  void (*pFunction)(double *,
-                                                                    double *,
-                                                                    void *),
-                                                  double *pParameters,
-                                                  int *pRes, int pSize,
-                                                  void *pUserData);
+extern "C" void COMPILER_EXPORT doNonLinearSolve(char *pRuntime,
+                                                 void (*pFunction)(double *,
+                                                                   double *,
+                                                                   void *),
+                                                 double *pParameters,
+                                                 int *pRes, int pSize,
+                                                 void *pUserData);
 
 //==============================================================================
 

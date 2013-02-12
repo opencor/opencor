@@ -878,13 +878,16 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
                      "    int *aPRET;\n"
                      "};\n"
                      "\n"
-                     "extern void do_nonlinearsolve(char *, void (*)(double *, double *, void*), double *, int *, int, void *);\n";
+                     "extern void doNonLinearSolve(char *, void (*)(double *, double *, void*), double *, int *, int, void *);\n";
         modelCode += "\n";
-        modelCode += functionsString.replace("do_nonlinearsolve(", QString("do_nonlinearsolve(\"%1\", ").arg(address()));
+        modelCode += functionsString.replace("do_nonlinearsolve(", QString("doNonLinearSolve(\"%1\", ").arg(address()));
         modelCode += "\n";
 
-        // Note: the new parameter which is added to all our calls to
-        //       do_nonlinearsolve() is so that do_nonlinearsolve() can retrieve
+        // Note: we rename do_nonlinearsolve() to doNonLinearSolve() because
+        //       CellML's CIS service already defines do_nonlinearsolve(), yet
+        //       we want to use our own non-linear solve routine defined in our
+        //       Compiler plugin. Also, we add a new parameter to all our calls
+        //       to doNonLinearSolve() so that doNonLinearSolve() can retrieve
         //       the correct instance of our NLA solver...
     }
 
@@ -986,8 +989,8 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
         // Add the symbol of any required external function, if any
 
         if (mAtLeastOneNlaSystem)
-            llvm::sys::DynamicLibrary::AddSymbol("do_nonlinearsolve",
-                                                 (void *) (intptr_t) do_nonlinearsolve);
+            llvm::sys::DynamicLibrary::AddSymbol("doNonLinearSolve",
+                                                 (void *) (intptr_t) doNonLinearSolve);
 
         // Retrieve the ODE/DAE functions
 

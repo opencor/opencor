@@ -127,7 +127,7 @@ mResults->reset();
 
                     nlaSolver = static_cast<CoreSolver::CoreNlaSolver *>(solverInterface->instance());
 
-                    // Keep track of our NLA solver, so that do_nonlinearsolve()
+                    // Keep track of our NLA solver, so that doNonLinearSolve()
                     // can work as expected
 
                     CoreSolver::setNlaSolver(mCellmlFileRuntime->address(),
