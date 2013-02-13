@@ -661,24 +661,19 @@ bool SingleCellSimulationViewSimulationResults::exportToCsv(const QString &pFile
 
     // Header
 
-    int constantsCount = mCellmlFileRuntime->constantsCount();
-    int statesCount = mCellmlFileRuntime->statesCount();
-    int ratesCount = mCellmlFileRuntime->ratesCount();
-    int algebraicCount = mCellmlFileRuntime->algebraicCount();
+    static const QString Header = "%1 | %2 (%3)";
 
-    out << "VOI";
+    out << Header.arg(mCellmlFileRuntime->variableOfIntegration()->component(),
+                      mCellmlFileRuntime->variableOfIntegration()->name(),
+                      mCellmlFileRuntime->variableOfIntegration()->unit());
 
-    for (int i = 0; i < constantsCount; ++i)
-        out << ",CONSTANTS[" << i << "]";
+    for (int i = 0, iMax = mCellmlFileRuntime->modelParameters().count(); i < iMax; ++i) {
+        CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter = mCellmlFileRuntime->modelParameters()[i];
 
-    for (int i = 0; i < statesCount; ++i)
-        out << ",STATES[" << i << "]";
-
-    for (int i = 0; i < ratesCount; ++i)
-        out << ",RATES[" << i << "]";
-
-    for (int i = 0; i < algebraicCount; ++i)
-        out << ",ALGEBRAIC[" << i << "]";
+        out << "," << Header.arg(modelParameter->component(),
+                                 modelParameter->name()+QString(modelParameter->degree(), '\''),
+                                 modelParameter->unit());
+    }
 
     out << "\n";
 
@@ -687,17 +682,33 @@ bool SingleCellSimulationViewSimulationResults::exportToCsv(const QString &pFile
     for (int j = 0; j < mSize; ++j) {
         out << mPoints[j];
 
-        for (int i = 0; i < constantsCount; ++i)
-            out << "," << mConstants[i][j];
+        for (int i = 0, iMax = mCellmlFileRuntime->modelParameters().count(); i < iMax; ++i) {
+            CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter = mCellmlFileRuntime->modelParameters()[i];
 
-        for (int i = 0; i < statesCount; ++i)
-            out << "," << mStates[i][j];
+            switch (modelParameter->type()) {
+            case CellMLSupport::CellmlFileRuntimeModelParameter::Constant:
+            case CellMLSupport::CellmlFileRuntimeModelParameter::ComputedConstant:
+                out << "," << mConstants[modelParameter->index()][j];
 
-        for (int i = 0; i < ratesCount; ++i)
-            out << "," << mRates[i][j];
+                break;
+            case CellMLSupport::CellmlFileRuntimeModelParameter::State:
+                out << "," << mStates[modelParameter->index()][j];
 
-        for (int i = 0; i < algebraicCount; ++i)
-            out << "," << mAlgebraic[i][j];
+                break;
+            case CellMLSupport::CellmlFileRuntimeModelParameter::Rate:
+                out << "," << mRates[modelParameter->index()][j];
+
+                break;
+            case CellMLSupport::CellmlFileRuntimeModelParameter::Algebraic:
+                out << "," << mAlgebraic[modelParameter->index()][j];
+
+                break;
+            default:
+                // Either Voi or Undefined, so...
+
+                ;
+            }
+        }
 
         out << "\n";
     }
