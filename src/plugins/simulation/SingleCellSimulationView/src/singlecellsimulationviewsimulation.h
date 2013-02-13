@@ -63,7 +63,8 @@ public:
     void setDelay(const int &pDelay);
 
     double startingPoint() const;
-    void setStartingPoint(const double &pStartingPoint);
+    void setStartingPoint(const double &pStartingPoint,
+                          const bool &pRecompute = true);
 
     double endingPoint() const;
     void setEndingPoint(const double &pEndingPoint);
@@ -86,10 +87,12 @@ public:
     void addDaeSolverProperty(const QString &pName, const QVariant &pValue);
 
     QString nlaSolverName() const;
-    void setNlaSolverName(const QString &pNlaSolverName);
+    void setNlaSolverName(const QString &pNlaSolverName,
+                          const bool &pReset = true);
 
     CoreSolver::Properties nlaSolverProperties() const;
-    void addNlaSolverProperty(const QString &pName, const QVariant &pValue);
+    void addNlaSolverProperty(const QString &pName, const QVariant &pValue,
+                              const bool &pReset = true);
 
     void reset();
 

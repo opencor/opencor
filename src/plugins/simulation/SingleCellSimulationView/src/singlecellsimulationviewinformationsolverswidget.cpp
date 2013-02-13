@@ -5,6 +5,7 @@
 #include "cellmlfileruntime.h"
 #include "cellmlfilevariable.h"
 #include "singlecellsimulationviewinformationsolverswidget.h"
+#include "singlecellsimulationviewsimulation.h"
 
 //==============================================================================
 
@@ -274,7 +275,8 @@ void SingleCellSimulationViewInformationSolversWidget::setPropertiesUnit(SingleC
 //==============================================================================
 
 void SingleCellSimulationViewInformationSolversWidget::initialize(const QString &pFileName,
-                                                                  CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime)
+                                                                  CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
+                                                                  SingleCellSimulationViewSimulationData *pSimulationData)
 {
     // Make sure that we have a CellML file runtime
 
@@ -311,6 +313,18 @@ void SingleCellSimulationViewInformationSolversWidget::initialize(const QString 
     setPropertiesUnit(mOdeSolverData, voiUnit);
     setPropertiesUnit(mDaeSolverData, voiUnit);
     setPropertiesUnit(mNlaSolverData, voiUnit);
+
+    // Initialise our simulation's NLA solver's properties, so that we can then
+    // properly reset our simulation the first time round
+
+    pSimulationData->setNlaSolverName(mNlaSolverData->solversListProperty()->value()->text(), false);
+
+    foreach (Core::Property *property, mNlaSolverData->solversProperties().value(pSimulationData->nlaSolverName()))
+        pSimulationData->addNlaSolverProperty(property->name()->text(),
+                                              (property->value()->type() == Core::PropertyItem::Integer)?
+                                                  Core::PropertyEditorWidget::integerPropertyItem(property->value()):
+                                                  Core::PropertyEditorWidget::doublePropertyItem(property->value()),
+                                              false);
 }
 
 //==============================================================================

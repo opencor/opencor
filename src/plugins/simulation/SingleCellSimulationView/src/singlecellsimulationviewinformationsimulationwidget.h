@@ -25,6 +25,10 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
+class SingleCellSimulationViewSimulationData;
+
+//==============================================================================
+
 class SingleCellSimulationViewInformationSimulationWidget : public Core::PropertyEditorWidget
 {
     Q_OBJECT
@@ -36,7 +40,8 @@ public:
     virtual void retranslateUi();
 
     void initialize(const QString &pFileName,
-                    OpenCOR::CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
+                    OpenCOR::CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
+                    SingleCellSimulationViewSimulationData *pSimulationData);
     void finalize(const QString &pFileName);
 
     Core::Property * startingPointProperty() const;

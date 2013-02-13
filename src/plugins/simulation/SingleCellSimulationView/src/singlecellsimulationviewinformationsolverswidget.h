@@ -26,6 +26,10 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
+class SingleCellSimulationViewSimulationData;
+
+//==============================================================================
+
 class SingleCellSimulationViewInformationSolversWidgetData
 {
 public:
@@ -60,7 +64,8 @@ public:
     void setSolverInterfaces(const SolverInterfaces &pSolverInterfaces);
 
     void initialize(const QString &pFileName,
-                    CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
+                    CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
+                    SingleCellSimulationViewSimulationData *pSimulationData);
     void finalize(const QString &pFileName);
 
     QStringList odeSolvers() const;

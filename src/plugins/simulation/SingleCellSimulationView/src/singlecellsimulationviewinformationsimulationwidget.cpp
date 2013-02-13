@@ -5,6 +5,7 @@
 #include "cellmlfileruntime.h"
 #include "cellmlfilevariable.h"
 #include "singlecellsimulationviewinformationsimulationwidget.h"
+#include "singlecellsimulationviewsimulation.h"
 
 //==============================================================================
 
@@ -73,7 +74,8 @@ void SingleCellSimulationViewInformationSimulationWidget::retranslateUi()
 //==============================================================================
 
 void SingleCellSimulationViewInformationSimulationWidget::initialize(const QString &pFileName,
-                                                                     CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime)
+                                                                     CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
+                                                                     SingleCellSimulationViewSimulationData *pSimulationData)
 {
     // Make sure that we have a CellML file runtime
 
@@ -93,6 +95,11 @@ void SingleCellSimulationViewInformationSimulationWidget::initialize(const QStri
     setStringPropertyItem(mStartingPointProperty->unit(), unit);
     setStringPropertyItem(mEndingPointProperty->unit(), unit);
     setStringPropertyItem(mPointIntervalProperty->unit(), unit);
+
+    // Initialise our simulation's starting point so that we can then properly
+    // reset our simulation the first time round
+
+    pSimulationData->setStartingPoint(Core::PropertyEditorWidget::doublePropertyItem(mStartingPointProperty->value()), false);
 }
 
 //==============================================================================
