@@ -225,39 +225,30 @@ void * globalInstance(const QString &pObjectName, void *pDefaultGlobalInstance)
     //       its own address space. (This is not the case on OS X, (most likely)
     //       because of the way applications are bundled on that platform.) So,
     //       to address this issue, we keep track of the address of a 'global'
-    //       instance using QSettings. Now, this approach works fine on both
-    //       Windows and Linux, but... not on OS X (!!). (It would seem that)
-    //       there are some read/write conflicts (when using QSettings). These
-    //       conflicts would normally be addressed using a mutex, but then we
-    //       would be back to the issue of being able to share something between
-    //       different plugins. So, instead, we, on OS X, revert to our original
-    //       plan...
+    //       instance using QSettings...
 
-#ifdef Q_OS_MAC
-    Q_UNUSED(pObjectName);
-
-    return (void *) pDefaultGlobalInstance;
-#else
     QSettings settings(SettingsOrganization, SettingsApplication);
-    qlonglong globalInstance;
+    qulonglong globalInstance;
 
     settings.beginGroup(SettingsGlobal);
-        globalInstance = settings.value(pObjectName, 0).toLongLong();
+        globalInstance = settings.value(pObjectName, 0).toULongLong();
 
         if (!globalInstance) {
             // There is no 'global' instance associated with the given object,
             // so use the object's default 'global' instance we were given
 
-            globalInstance = qlonglong(pDefaultGlobalInstance);
+            globalInstance = qulonglong(pDefaultGlobalInstance);
 
-            settings.setValue(pObjectName, globalInstance);
+            settings.setValue(pObjectName, QString::number(globalInstance));
+            // Note: for some reasons, on OS X, to set a qulonglong value
+            //       directly doesn't work (is that a problem with QVariant?),
+            //       so do it using a QString value instead...
         }
     settings.endGroup();
 
     // Return the class's 'global' instance
 
     return (void *) globalInstance;
-#endif
 }
 
 //==============================================================================
