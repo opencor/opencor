@@ -22,7 +22,7 @@ void removeInstances()
     // Remove all the 'global' information shared among OpenCOR and the
     // different plugins
 
-    QSettings(OpenCOR::SettingsApplicationName).remove("Global");
+    QSettings(OpenCOR::SettingsOrganization, OpenCOR::SettingsApplication).remove("Global");
 }
 
 //==============================================================================

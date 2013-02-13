@@ -83,7 +83,7 @@ QColor CommonWidget::specificColor(const QString &pColor)
     // Return a specific colour
 
     QColor res;
-    QSettings settings(SettingsApplicationName);
+    QSettings settings(SettingsOrganization, SettingsApplication);
 
     settings.beginGroup(SettingsGlobal);
         res = settings.value(pColor).value<QColor>();

@@ -300,7 +300,7 @@ bool Plugin::load(const QString &pName)
     //       PluginsWindow::PluginsWindow (which points to ~/PluginsWindow),
     //       so...
 
-    QSettings settings(SettingsApplicationName);
+    QSettings settings(SettingsOrganization, SettingsApplication);
 
     settings.beginGroup(SettingsPlugins);
         settings.beginGroup(pName);
@@ -318,7 +318,7 @@ void Plugin::setLoad(const QString &pName, const bool &pToBeLoaded)
     // Keep track of the plugin's loading requirement
     // Note: see the Plugin::load's note...
 
-    QSettings settings(SettingsApplicationName);
+    QSettings settings(SettingsOrganization, SettingsApplication);
 
     settings.beginGroup(SettingsPlugins);
         settings.beginGroup(pName);

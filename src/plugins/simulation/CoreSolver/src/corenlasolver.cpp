@@ -48,7 +48,7 @@ CoreNlaSolver * nlaSolver(const QString &pRuntime)
 {
     // Return the runtime's NLA solver
 
-    QSettings settings(SettingsApplicationName);
+    QSettings settings(SettingsOrganization, SettingsApplication);
     qlonglong res;
 
     settings.beginGroup(SettingsGlobal);
@@ -66,7 +66,7 @@ void setNlaSolver(const QString &pRuntime, CoreNlaSolver *pGlobalNlaSolver)
 {
     // Keep track of the runtime's NLA solver
 
-    QSettings settings(SettingsApplicationName);
+    QSettings settings(SettingsOrganization, SettingsApplication);
 
     settings.beginGroup(SettingsGlobal);
         settings.setValue(pRuntime, qlonglong(pGlobalNlaSolver));
@@ -79,7 +79,7 @@ void unsetNlaSolver(const QString &pRuntime)
 {
     // Stop tracking the runtime's NLA solver
 
-    QSettings settings(SettingsApplicationName);
+    QSettings settings(SettingsOrganization, SettingsApplication);
 
     settings.beginGroup(SettingsGlobal);
         settings.remove(pRuntime);

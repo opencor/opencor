@@ -19,7 +19,8 @@ namespace OpenCOR {
 
 //==============================================================================
 
-static const QString SettingsApplicationName = "OpenCOR";
+static const QString SettingsOrganization = "Physiome";
+static const QString SettingsApplication = "OpenCOR";
 static const QString SettingsPlugins = "Plugins";
 
 //==============================================================================
