@@ -332,12 +332,13 @@ mResults->reset();
 
         // Delete our solver(s)
 
-        delete odeSolver;
-        delete daeSolver;
+        delete voiSolver;
 
-        delete nlaSolver;
+        if (nlaSolver) {
+            delete nlaSolver;
 
-        CoreSolver::unsetNlaSolver(mCellmlFileRuntime->address());
+            CoreSolver::unsetNlaSolver(mCellmlFileRuntime->address());
+        }
     }
 }
 

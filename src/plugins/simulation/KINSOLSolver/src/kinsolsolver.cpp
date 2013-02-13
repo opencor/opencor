@@ -120,8 +120,7 @@ void KinsolSolver::initialize(ComputeSystemFunction pComputeSystem,
 
     // Initialise the ODE solver itself
 
-    OpenCOR::CoreSolver::CoreNlaSolver::initialize(pComputeSystem, pParameters,
-                                                   pSize, pUserData);
+    OpenCOR::CoreSolver::CoreNlaSolver::initialize(pComputeSystem, pParameters, pSize);
 
     // Create some vectors
 
@@ -144,10 +143,7 @@ void KinsolSolver::initialize(ComputeSystemFunction pComputeSystem,
 
     // Set some user data
 
-    delete mUserData;   // Just in case the solver got initialised before
-
-    mUserData = new KinsolSolverUserData(pUserData,
-                                         pComputeSystem);
+    mUserData = new KinsolSolverUserData(pUserData, pComputeSystem);
 
     KINSetUserData(mSolver, mUserData);
 
@@ -162,8 +158,7 @@ void KinsolSolver::solve() const
 {
     // Solve the linear system
 
-    KINSol(mSolver, mParametersVector, KIN_LINESEARCH,
-           mOnesVector, mOnesVector);
+    KINSol(mSolver, mParametersVector, KIN_LINESEARCH, mOnesVector, mOnesVector);
 }
 
 //==============================================================================

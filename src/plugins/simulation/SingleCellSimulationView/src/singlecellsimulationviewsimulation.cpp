@@ -3,11 +3,13 @@
 //==============================================================================
 
 #include "cellmlfileruntime.h"
+#include "corenlasolver.h"
 #include "singlecellsimulationviewcontentswidget.h"
 #include "singlecellsimulationviewinformationsimulationwidget.h"
 #include "singlecellsimulationviewinformationwidget.h"
 #include "singlecellsimulationviewsimulation.h"
 #include "singlecellsimulationviewwidget.h"
+#include "solverinterface.h"
 #include "thread.h"
 
 //==============================================================================
@@ -30,8 +32,10 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-SingleCellSimulationViewSimulationData::SingleCellSimulationViewSimulationData(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime) :
+SingleCellSimulationViewSimulationData::SingleCellSimulationViewSimulationData(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
+                                                                               const SolverInterfaces &pSolverInterfaces) :
     mCellmlFileRuntime(pCellmlFileRuntime),
+    mSolverInterfaces(pSolverInterfaces),
     mDelay(0),
     mStartingPoint(0.0),
     mEndingPoint(1000.0),
@@ -355,16 +359,53 @@ void SingleCellSimulationViewSimulationData::reset()
     // 'constants' and computing our 'computed constants' and 'variables'
     // Note #1: we must check whether our runtime needs NLA solver and, if so,
     //          then retrieve an instance of our NLA solver since some of the
-    //          resetting may require solve one or several NLA systems...
+    //          resetting may require solving one or several NLA systems...
     // Note #2: recomputeComputedConstantsAndVariables() will let people know
     //          that our data has changed...
 
+    CoreSolver::CoreNlaSolver *nlaSolver = 0;
+
     if (mCellmlFileRuntime->needNlaSolver()) {
-//---GRY--- TO BE DONE...
+        // Retrieve an instance of our NLA solver
+
+        foreach (SolverInterface *solverInterface, mSolverInterfaces)
+            if (!solverInterface->name().compare(mNlaSolverName)) {
+                // The requested NLA solver was found, so retrieve an instance
+                // of it
+
+                nlaSolver = static_cast<CoreSolver::CoreNlaSolver *>(solverInterface->instance());
+
+                // Keep track of our NLA solver, so that doNonLinearSolve() can
+                // work as expected
+
+                CoreSolver::setNlaSolver(mCellmlFileRuntime->address(),
+                                         nlaSolver);
+
+                break;
+            }
+
+        // Keep track of any error that might be reported by our NLA solver
+
+        connect(nlaSolver, SIGNAL(error(const QString &)),
+                this, SIGNAL(error(const QString &)));
+
+        // Initialise our NLA solver
+
+        nlaSolver->setProperties(mNlaSolverProperties);
     }
+
+    // Reset our model parameter values
 
     mCellmlFileRuntime->initializeConstants()(mConstants, mRates, mStates);
     recomputeComputedConstantsAndVariables();
+
+    // Delete our NLA solver, if any
+
+    if (nlaSolver) {
+        delete nlaSolver;
+
+        CoreSolver::unsetNlaSolver(mCellmlFileRuntime->address());
+    }
 }
 
 //==============================================================================
@@ -673,14 +714,20 @@ bool SingleCellSimulationViewSimulationResults::exportToCsv(const QString &pFile
 //==============================================================================
 
 SingleCellSimulationViewSimulation::SingleCellSimulationViewSimulation(const QString &pFileName,
-                                                                       CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime) :
+                                                                       CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
+                                                                       const SolverInterfaces &pSolverInterfaces) :
     mWorker(0),
     mWorkerThread(0),
     mFileName(pFileName),
     mCellmlFileRuntime(pCellmlFileRuntime),
-    mData(new SingleCellSimulationViewSimulationData(pCellmlFileRuntime)),
+    mSolverInterfaces(pSolverInterfaces),
+    mData(new SingleCellSimulationViewSimulationData(pCellmlFileRuntime, pSolverInterfaces)),
     mResults(new SingleCellSimulationViewSimulationResults(pCellmlFileRuntime, mData))
 {
+    // Keep track of any error occurring in our data
+
+    connect(mData, SIGNAL(error(const QString &)),
+            this, SIGNAL(error(const QString &)));
 }
 
 //==============================================================================
@@ -793,7 +840,7 @@ double SingleCellSimulationViewSimulation::neededMemory() const
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulation::run(const SolverInterfaces &pSolverInterfaces)
+void SingleCellSimulationViewSimulation::run()
 {
     // Initialise our worker, if not active
 
@@ -822,7 +869,7 @@ void SingleCellSimulationViewSimulation::run(const SolverInterfaces &pSolverInte
 
         // Create our worker
 
-        mWorker = new SingleCellSimulationViewSimulationWorker(pSolverInterfaces, mCellmlFileRuntime, mData, mResults);
+        mWorker = new SingleCellSimulationViewSimulationWorker(mSolverInterfaces, mCellmlFileRuntime, mData, mResults);
 
         if (!mWorker) {
             emit error(tr("the simulation worker could not be created"));

@@ -24,7 +24,8 @@ public:
     explicit CoreNlaSolver();
 
     virtual void initialize(ComputeSystemFunction pComputeSystem,
-                            double *pParameters, int pSize, void *pUserData);
+                            double *pParameters, int pSize,
+                            void *pUserData = 0);
 
     virtual void solve() const = 0;
 

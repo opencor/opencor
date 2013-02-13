@@ -69,6 +69,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
     ViewWidget(pParent),
     mGui(new Ui::SingleCellSimulationViewWidget),
     mPluginParent(pPluginParent),
+    mSolverInterfaces(SolverInterfaces()),
     mSimulation(0),
     mSimulations(QMap<QString, SingleCellSimulationViewSimulation *>()),
     mStoppedSimulations(QList<SingleCellSimulationViewSimulation *>()),
@@ -450,7 +451,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
     if (!mSimulation) {
         // No simulation object currently exists for the model, so create one
 
-        mSimulation = new SingleCellSimulationViewSimulation(pFileName, cellmlFileRuntime);
+        mSimulation = new SingleCellSimulationViewSimulation(pFileName, cellmlFileRuntime, mSolverInterfaces);
 
         newSimulation = true;
 
@@ -904,7 +905,7 @@ mActiveGraphPanel->plot()->setAxisScale(QwtPlot::xBottom, simulationData->starti
         // Run the simulation if possible/wanted
 
         if (runSimulation)
-            mSimulation->run(mSolverInterfaces);
+            mSimulation->run();
     } else if (mSimulation->workerStatus() == SingleCellSimulationViewSimulationWorker::Pausing) {
         // Our simulation was paused, so resume it
 

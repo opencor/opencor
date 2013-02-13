@@ -50,7 +50,8 @@ class SingleCellSimulationViewSimulationData : public QObject
     Q_OBJECT
 
 public:
-    explicit SingleCellSimulationViewSimulationData(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
+    explicit SingleCellSimulationViewSimulationData(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
+                                                    const SolverInterfaces &pSolverInterfaces);
     ~SingleCellSimulationViewSimulationData();
 
     double * constants() const;
@@ -102,6 +103,8 @@ public:
 private:
     CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
 
+    SolverInterfaces mSolverInterfaces;
+
     int mDelay;
 
     double mStartingPoint;
@@ -125,6 +128,8 @@ private:
 
 Q_SIGNALS:
     void dataChanged();
+
+    void error(const QString &pMessage);
 };
 
 //==============================================================================
@@ -182,7 +187,8 @@ class SingleCellSimulationViewSimulation : public QObject
 
 public:
     explicit SingleCellSimulationViewSimulation(const QString &pFileName,
-                                                CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
+                                                CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
+                                                const SolverInterfaces &pSolverInterfaces);
     ~SingleCellSimulationViewSimulation();
 
     QString fileName() const;
@@ -200,7 +206,7 @@ public:
 
     double neededMemory() const;
 
-    void run(const SolverInterfaces &pSolverInterfaces);
+    void run();
     void pause();
     void resume();
     void stop();
@@ -212,6 +218,8 @@ private:
     QString mFileName;
 
     CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
+
+    SolverInterfaces mSolverInterfaces;
 
     SingleCellSimulationViewSimulationData *mData;
     SingleCellSimulationViewSimulationResults *mResults;
