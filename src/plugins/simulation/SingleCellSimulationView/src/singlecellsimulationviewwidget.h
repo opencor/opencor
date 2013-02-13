@@ -185,6 +185,7 @@ private Q_SLOTS:
     void splitterWidgetMoved();
 
     void simulationPropertyChanged(Core::Property *pProperty);
+    void solversPropertyChanged(Core::Property *pProperty);
 
 void parameterNeeded(const QString &pFileName,
                      CellMLSupport::CellmlFileRuntimeModelParameter *pParameter,

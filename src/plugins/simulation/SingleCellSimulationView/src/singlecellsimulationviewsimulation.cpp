@@ -149,7 +149,8 @@ double SingleCellSimulationViewSimulationData::startingPoint() const
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulationData::setStartingPoint(const double &pStartingPoint)
+void SingleCellSimulationViewSimulationData::setStartingPoint(const double &pStartingPoint,
+                                                              const bool &pRecompute)
 {
     // Set our starting point
 
@@ -157,7 +158,8 @@ void SingleCellSimulationViewSimulationData::setStartingPoint(const double &pSta
 
     // Recompute our 'computed constants' and 'variables'
 
-    recomputeComputedConstantsAndVariables();
+    if (pRecompute)
+        recomputeComputedConstantsAndVariables();
 }
 
 //==============================================================================
@@ -297,12 +299,22 @@ QString SingleCellSimulationViewSimulationData::nlaSolverName() const
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulationData::setNlaSolverName(const QString &pNlaSolverName)
+void SingleCellSimulationViewSimulationData::setNlaSolverName(const QString &pNlaSolverName,
+                                                              const bool &pReset)
 {
     // Set our NLA solver name
 
-    if (mCellmlFileRuntime->needNlaSolver())
+    if (mCellmlFileRuntime->needNlaSolver()) {
         mNlaSolverName = pNlaSolverName;
+
+        // Reset our model parameter values
+        // Note: to only recompute our 'computed constants' and 'variables' is
+        //       not sufficient since some constants may also need to be
+        //       reinitialised...
+
+        if (pReset)
+            reset();
+    }
 }
 
 //==============================================================================
@@ -317,12 +329,22 @@ CoreSolver::Properties SingleCellSimulationViewSimulationData::nlaSolverProperti
 //==============================================================================
 
 void SingleCellSimulationViewSimulationData::addNlaSolverProperty(const QString &pName,
-                                                                  const QVariant &pValue)
+                                                                  const QVariant &pValue,
+                                                                  const bool &pReset)
 {
     // Add an NLA solver property
 
-    if (mCellmlFileRuntime->needNlaSolver())
+    if (mCellmlFileRuntime->needNlaSolver()) {
         mNlaSolverProperties.insert(pName, pValue);
+
+        // Reset our model parameter values
+        // Note: to only recompute our 'computed constants' and 'variables' is
+        //       not sufficient since some constants may also need to be
+        //       reinitialised...
+
+        if (pReset)
+            reset();
+    }
 }
 
 //==============================================================================
@@ -331,8 +353,15 @@ void SingleCellSimulationViewSimulationData::reset()
 {
     // Reset our model parameter values which means both initialising our
     // 'constants' and computing our 'computed constants' and 'variables'
-    // Note: recomputeComputedConstantsAndVariables() will let people know that
-    //       our data changed...
+    // Note #1: we must check whether our runtime needs NLA solver and, if so,
+    //          then retrieve an instance of our NLA solver since some of the
+    //          resetting may require solve one or several NLA systems...
+    // Note #2: recomputeComputedConstantsAndVariables() will let people know
+    //          that our data has changed...
+
+    if (mCellmlFileRuntime->needNlaSolver()) {
+//---GRY--- TO BE DONE...
+    }
 
     mCellmlFileRuntime->initializeConstants()(mConstants, mRates, mStates);
     recomputeComputedConstantsAndVariables();

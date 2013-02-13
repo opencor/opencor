@@ -149,10 +149,12 @@ mTraces(QMap<QString, QwtPlotCurve *>())
 
     mContentsWidget->setObjectName("Contents");
 
-    // Keep track of changes to some of our simulation properties
+    // Keep track of changes to some of our simulation and solvers properties
 
     connect(mContentsWidget->informationWidget()->simulationWidget(), SIGNAL(propertyChanged(Core::Property *)),
             this, SLOT(simulationPropertyChanged(Core::Property *)));
+    connect(mContentsWidget->informationWidget()->solversWidget(), SIGNAL(propertyChanged(Core::Property *)),
+            this, SLOT(solversPropertyChanged(Core::Property *)));
 
     // Keep track of whether we can remove graph panels
 
@@ -578,9 +580,13 @@ connect(mSimulation->results(), SIGNAL(results(SingleCellSimulationViewSimulatio
             mContentsWidget->setVisible(true);
 
             // Initialise our GUI's simulation, solvers and parameters widgets
+            // Note: this will also initialise some of our simulation data (i.e.
+            //       our simulation's starting point and simulation's NLA
+            //       solver's properties) which is needed since we want to be
+            //       able to reset our simulation below...
 
-            simulationWidget->initialize(pFileName, cellmlFileRuntime);
-            solversWidget->initialize(pFileName, cellmlFileRuntime);
+            simulationWidget->initialize(pFileName, cellmlFileRuntime, mSimulation->data());
+            solversWidget->initialize(pFileName, cellmlFileRuntime, mSimulation->data());
             parametersWidget->initialize(pFileName, cellmlFileRuntime, mSimulation->data());
 
 #ifdef QT_DEBUG
@@ -846,12 +852,13 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
         simulationData->setPointInterval(Core::PropertyEditorWidget::doublePropertyItem(simulationWidget->pointIntervalProperty()->value()));
 
         // Retrieve our solvers' properties
+        // Note: we don't need to retrieve the NLA solver's properties since we
+        //       already have them (see solversPropertyChanged())...
 
         SingleCellSimulationViewInformationSolversWidget *solversWidget = mContentsWidget->informationWidget()->solversWidget();
 
         simulationData->setOdeSolverName(solversWidget->odeSolverData()->solversListProperty()->value()->text());
         simulationData->setDaeSolverName(solversWidget->daeSolverData()->solversListProperty()->value()->text());
-        simulationData->setNlaSolverName(solversWidget->nlaSolverData()->solversListProperty()->value()->text());
 
         foreach (Core::Property *property, solversWidget->odeSolverData()->solversProperties().value(simulationData->odeSolverName()))
             simulationData->addOdeSolverProperty(property->name()->text(),
@@ -861,12 +868,6 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
 
         foreach (Core::Property *property, solversWidget->daeSolverData()->solversProperties().value(simulationData->daeSolverName()))
             simulationData->addDaeSolverProperty(property->name()->text(),
-                                                 (property->value()->type() == Core::PropertyItem::Integer)?
-                                                     Core::PropertyEditorWidget::integerPropertyItem(property->value()):
-                                                     Core::PropertyEditorWidget::doublePropertyItem(property->value()));
-
-        foreach (Core::Property *property, solversWidget->nlaSolverData()->solversProperties().value(simulationData->nlaSolverName()))
-            simulationData->addNlaSolverProperty(property->name()->text(),
                                                  (property->value()->type() == Core::PropertyItem::Integer)?
                                                      Core::PropertyEditorWidget::integerPropertyItem(property->value()):
                                                      Core::PropertyEditorWidget::doublePropertyItem(property->value()));
@@ -1217,16 +1218,41 @@ void SingleCellSimulationViewWidget::splitterWidgetMoved()
 void SingleCellSimulationViewWidget::simulationPropertyChanged(Core::Property *pProperty)
 {
     // Check whether our simulation's starting point property has been modified
-    // and if so, then update our simulation data object accordingly
+    // and, if so, then update our simulation data object accordingly
     // Note: this is the only simulation property we need to check because it's
     //       the only one that can potentially have an effect on the value of
     //       'computed constants' and 'variables'...
-
 
     SingleCellSimulationViewInformationSimulationWidget *simulationWidget = mContentsWidget->informationWidget()->simulationWidget();
 
     if (pProperty == simulationWidget->startingPointProperty())
         mSimulation->data()->setStartingPoint(Core::PropertyEditorWidget::doublePropertyItem(pProperty->value()));
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewWidget::solversPropertyChanged(Core::Property *pProperty)
+{
+    // Check whether any of our NLA solver's properties has been modified and,
+    // if so, then update our simulation data object accordingly
+    // Note: these are the only solvers propeties property we need to check
+    //       because they are the only ones that can potentially have an effect
+    //       on the value of 'computed constants' and 'variables'...
+
+    SingleCellSimulationViewInformationSolversWidget *solversWidget = mContentsWidget->informationWidget()->solversWidget();
+
+    if (pProperty == solversWidget->nlaSolverData()->solversListProperty())
+        mSimulation->data()->setNlaSolverName(pProperty->value()->text());
+    else
+        foreach (Core::Property *property, solversWidget->nlaSolverData()->solversProperties().value(mSimulation->data()->nlaSolverName()))
+            if (pProperty == property) {
+                mSimulation->data()->addNlaSolverProperty(pProperty->name()->text(),
+                                                          (pProperty->value()->type() == Core::PropertyItem::Integer)?
+                                                              Core::PropertyEditorWidget::integerPropertyItem(pProperty->value()):
+                                                              Core::PropertyEditorWidget::doublePropertyItem(pProperty->value()));
+
+                break;
+            }
 }
 
 //==============================================================================
