@@ -491,6 +491,10 @@ connect(mSimulation->results(), SIGNAL(results(SingleCellSimulationViewSimulatio
         emit updateFileTabIcon(mSimulation->fileName(), QIcon());
     }
 
+    // Set the initial enabled state of our CSV action
+
+    mGui->actionCsvExport->setEnabled(mSimulation->results()->size());
+
     // Output some information about our CellML file
 
     QString information = QString();
@@ -1321,6 +1325,8 @@ void SingleCellSimulationViewWidget::parameterNeeded(const QString &pFileName,
 
 void SingleCellSimulationViewWidget::results(SingleCellSimulationViewSimulationResults *pResults)
 {
+    // Update our traces, if any
+
     QMap<QString, QwtPlotCurve *>::const_iterator iter = mTraces.constBegin();
 
     while (iter != mTraces.constEnd()) {
@@ -1372,6 +1378,10 @@ void SingleCellSimulationViewWidget::results(SingleCellSimulationViewSimulationR
 
         ++iter;
     }
+
+    // Allow the export to CSV
+
+    mGui->actionCsvExport->setEnabled(true);
 }
 
 //==============================================================================
