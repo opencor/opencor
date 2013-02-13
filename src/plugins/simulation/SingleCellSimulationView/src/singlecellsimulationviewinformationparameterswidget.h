@@ -69,7 +69,7 @@ private:
 
     SingleCellSimulationViewSimulationData *mSimulationData;
 
-    void populateModel(OpenCOR::Core::PropertyEditorWidget *pPropertyEditor,
+    void populateModel(Core::PropertyEditorWidget *pPropertyEditor,
                        CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
 
 Q_SIGNALS:

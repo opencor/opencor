@@ -1150,7 +1150,7 @@ void MainWindow::on_actionPlugins_triggered()
     if (mPluginManager->plugins().count()) {
         // There are some plugins, so we can show the plugins window
 
-        OpenCOR::PluginsWindow pluginsWindow(mPluginManager, this);
+        PluginsWindow pluginsWindow(mPluginManager, this);
 
         mSettings->beginGroup(pluginsWindow.objectName());
             pluginsWindow.loadSettings(mSettings);

@@ -44,18 +44,18 @@ class CvodeSolverUserData
 {
 public:
     explicit CvodeSolverUserData(double *pConstants, double *pAlgebraic,
-                                 OpenCOR::CoreSolver::CoreOdeSolver::ComputeRatesFunction pComputeRates);
+                                 CoreSolver::CoreOdeSolver::ComputeRatesFunction pComputeRates);
 
     double * constants() const;
     double * algebraic() const;
 
-    OpenCOR::CoreSolver::CoreOdeSolver::ComputeRatesFunction computeRates() const;
+    CoreSolver::CoreOdeSolver::ComputeRatesFunction computeRates() const;
 
 private:
     double *mConstants;
     double *mAlgebraic;
 
-    OpenCOR::CoreSolver::CoreOdeSolver::ComputeRatesFunction mComputeRates;
+    CoreSolver::CoreOdeSolver::ComputeRatesFunction mComputeRates;
 };
 
 //==============================================================================

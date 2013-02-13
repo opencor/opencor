@@ -81,9 +81,9 @@ void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
 //==============================================================================
 
 IdaSolverUserData::IdaSolverUserData(double *pConstants, double *pAlgebraic, double *pCondVar,
-                                     OpenCOR::CoreSolver::CoreDaeSolver::ComputeEssentialVariablesFunction pComputeEssentialVariables,
-                                     OpenCOR::CoreSolver::CoreDaeSolver::ComputeResidualsFunction pComputeResiduals,
-                                     OpenCOR::CoreSolver::CoreDaeSolver::ComputeRootInformationFunction pComputeRootInformation) :
+                                     CoreSolver::CoreDaeSolver::ComputeEssentialVariablesFunction pComputeEssentialVariables,
+                                     CoreSolver::CoreDaeSolver::ComputeResidualsFunction pComputeResiduals,
+                                     CoreSolver::CoreDaeSolver::ComputeRootInformationFunction pComputeRootInformation) :
     mConstants(pConstants),
     mAlgebraic(pAlgebraic),
     mCondVar(pCondVar),
@@ -122,7 +122,7 @@ double * IdaSolverUserData::condVar() const
 
 //==============================================================================
 
-OpenCOR::CoreSolver::CoreDaeSolver::ComputeEssentialVariablesFunction IdaSolverUserData::computeEssentialVariables() const
+CoreSolver::CoreDaeSolver::ComputeEssentialVariablesFunction IdaSolverUserData::computeEssentialVariables() const
 {
     // Return our compute essential variables function
 
@@ -131,7 +131,7 @@ OpenCOR::CoreSolver::CoreDaeSolver::ComputeEssentialVariablesFunction IdaSolverU
 
 //==============================================================================
 
-OpenCOR::CoreSolver::CoreDaeSolver::ComputeResidualsFunction IdaSolverUserData::computeResiduals() const
+CoreSolver::CoreDaeSolver::ComputeResidualsFunction IdaSolverUserData::computeResiduals() const
 {
     // Return our compute residuals function
 
@@ -140,7 +140,7 @@ OpenCOR::CoreSolver::CoreDaeSolver::ComputeResidualsFunction IdaSolverUserData::
 
 //==============================================================================
 
-OpenCOR::CoreSolver::CoreDaeSolver::ComputeRootInformationFunction IdaSolverUserData::computeRootInformation() const
+CoreSolver::CoreDaeSolver::ComputeRootInformationFunction IdaSolverUserData::computeRootInformation() const
 {
     // Return our compute root information function
 

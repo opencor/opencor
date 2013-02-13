@@ -40,7 +40,7 @@ public:
     virtual void retranslateUi();
 
     void initialize(const QString &pFileName,
-                    OpenCOR::CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
+                    CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
                     SingleCellSimulationViewSimulationData *pSimulationData);
     void finalize(const QString &pFileName);
 

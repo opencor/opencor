@@ -44,26 +44,26 @@ class IdaSolverUserData
 {
 public:
     explicit IdaSolverUserData(double *pConstants, double *pAlgebraic, double *pCondVar,
-                               OpenCOR::CoreSolver::CoreDaeSolver::ComputeEssentialVariablesFunction pComputeEssentialVariables,
-                               OpenCOR::CoreSolver::CoreDaeSolver::ComputeResidualsFunction pComputeResiduals,
-                               OpenCOR::CoreSolver::CoreDaeSolver::ComputeRootInformationFunction pComputeRootInformation);
+                               CoreSolver::CoreDaeSolver::ComputeEssentialVariablesFunction pComputeEssentialVariables,
+                               CoreSolver::CoreDaeSolver::ComputeResidualsFunction pComputeResiduals,
+                               CoreSolver::CoreDaeSolver::ComputeRootInformationFunction pComputeRootInformation);
 
     double * constants() const;
     double * algebraic() const;
     double * condVar() const;
 
-    OpenCOR::CoreSolver::CoreDaeSolver::ComputeEssentialVariablesFunction computeEssentialVariables() const;
-    OpenCOR::CoreSolver::CoreDaeSolver::ComputeResidualsFunction computeResiduals() const;
-    OpenCOR::CoreSolver::CoreDaeSolver::ComputeRootInformationFunction computeRootInformation() const;
+    CoreSolver::CoreDaeSolver::ComputeEssentialVariablesFunction computeEssentialVariables() const;
+    CoreSolver::CoreDaeSolver::ComputeResidualsFunction computeResiduals() const;
+    CoreSolver::CoreDaeSolver::ComputeRootInformationFunction computeRootInformation() const;
 
 private:
     double *mConstants;
     double *mAlgebraic;
     double *mCondVar;
 
-    OpenCOR::CoreSolver::CoreDaeSolver::ComputeEssentialVariablesFunction mComputeEssentialVariables;
-    OpenCOR::CoreSolver::CoreDaeSolver::ComputeResidualsFunction mComputeResiduals;
-    OpenCOR::CoreSolver::CoreDaeSolver::ComputeRootInformationFunction mComputeRootInformation;
+    CoreSolver::CoreDaeSolver::ComputeEssentialVariablesFunction mComputeEssentialVariables;
+    CoreSolver::CoreDaeSolver::ComputeResidualsFunction mComputeResiduals;
+    CoreSolver::CoreDaeSolver::ComputeRootInformationFunction mComputeRootInformation;
 };
 
 //==============================================================================

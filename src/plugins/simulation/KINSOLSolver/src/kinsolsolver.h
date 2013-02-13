@@ -24,16 +24,16 @@ class KinsolSolverUserData
 {
 public:
     explicit KinsolSolverUserData(void *pUserData,
-                                  OpenCOR::CoreSolver::CoreNlaSolver::ComputeSystemFunction pComputeSystem);
+                                  CoreSolver::CoreNlaSolver::ComputeSystemFunction pComputeSystem);
 
     void * userData() const;
 
-    OpenCOR::CoreSolver::CoreNlaSolver::ComputeSystemFunction computeSystem() const;
+    CoreSolver::CoreNlaSolver::ComputeSystemFunction computeSystem() const;
 
 private:
     void *mUserData;
 
-    OpenCOR::CoreSolver::CoreNlaSolver::ComputeSystemFunction mComputeSystem;
+    CoreSolver::CoreNlaSolver::ComputeSystemFunction mComputeSystem;
 };
 
 //==============================================================================

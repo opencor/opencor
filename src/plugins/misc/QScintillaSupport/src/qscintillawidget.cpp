@@ -39,8 +39,7 @@ void QScintillaWidget::constructor(const QString &pContents,
         // A lexer was provided, so specify its fonts and associate it with our
         // Scintilla editor
 
-        QFont defaultFont = QFont(OpenCOR::Core::DefaultFontFamily,
-                                  OpenCOR::Core::DefaultFontSize);
+        QFont defaultFont = QFont(Core::DefaultFontFamily, Core::DefaultFontSize);
 
         pLexer->setDefaultFont(defaultFont);
         pLexer->setFont(defaultFont);
@@ -55,8 +54,7 @@ void QScintillaWidget::constructor(const QString &pContents,
         // No lexer was provided, so simply specify a default font family and
         // size for our Scintilla editor
 
-        setFont(QFont(OpenCOR::Core::DefaultFontFamily,
-                      OpenCOR::Core::DefaultFontSize));
+        setFont(QFont(Core::DefaultFontFamily, Core::DefaultFontSize));
     }
 
     // Set the contents of our Scintilla editor and its read-only property

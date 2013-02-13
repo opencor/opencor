@@ -49,7 +49,7 @@ void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
 //==============================================================================
 
 CvodeSolverUserData::CvodeSolverUserData(double *pConstants, double *pAlgebraic,
-                                         OpenCOR::CoreSolver::CoreOdeSolver::ComputeRatesFunction pComputeRates) :
+                                         CoreSolver::CoreOdeSolver::ComputeRatesFunction pComputeRates) :
     mConstants(pConstants),
     mAlgebraic(pAlgebraic),
     mComputeRates(pComputeRates)
@@ -76,7 +76,7 @@ double * CvodeSolverUserData::algebraic() const
 
 //==============================================================================
 
-OpenCOR::CoreSolver::CoreOdeSolver::ComputeRatesFunction CvodeSolverUserData::computeRates() const
+CoreSolver::CoreOdeSolver::ComputeRatesFunction CvodeSolverUserData::computeRates() const
 {
     // Return our compute rates function
 

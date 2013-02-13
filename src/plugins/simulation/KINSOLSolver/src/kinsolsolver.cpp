@@ -65,7 +65,7 @@ void * KinsolSolverUserData::userData() const
 
 //==============================================================================
 
-OpenCOR::CoreSolver::CoreNlaSolver::ComputeSystemFunction KinsolSolverUserData::computeSystem() const
+CoreSolver::CoreNlaSolver::ComputeSystemFunction KinsolSolverUserData::computeSystem() const
 {
     // Return our compute system function
 

@@ -136,7 +136,7 @@ public:
 
     CellmlFileRuntimeModelParameters modelParameters() const;
 
-    CellmlFileRuntime * update(OpenCOR::CellMLSupport::CellmlFile *pCellmlFile);
+    CellmlFileRuntime * update(CellmlFile *pCellmlFile);
 
     CellmlFileRuntimeModelParameter * variableOfIntegration() const;
 
