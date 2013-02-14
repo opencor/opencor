@@ -75,10 +75,6 @@ void SingleCellSimulationViewSimulationWorker::run()
     // Run ourselves, but only if we are currently idling
 
     if (mStatus == Idling) {
-mData->reset();
-mResults->reset();
-//---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
-
         // We are running
 
         mStatus = Running;
@@ -195,11 +191,14 @@ mResults->reset();
         // Now, we are ready to compute our model, but only if no error has
         // occurred so far
 
+        int elapsedTime;
+
         if (!mError) {
             // Start our timer
 
             QTime timer;
-            int totalElapsedTime = 0;
+
+            elapsedTime = 0;
 
             timer.start();
 
@@ -221,10 +220,10 @@ mResults->reset();
                 // Check whether we should be pausing
 
                 if(mStatus == Pausing) {
-                    // We have been asked to pause, so do just that after stopping
-                    // our timer
+                    // We have been asked to pause, so do just that after
+                    // stopping our timer
 
-                    totalElapsedTime += timer.elapsed();
+                    elapsedTime += timer.elapsed();
 
                     mStatusMutex.lock();
                         mStatusCondition.wait(&mStatusMutex);
@@ -255,13 +254,16 @@ mResults->reset();
                 // Delay things a bit, if (really) needed
 
                 if (mData->delay() && (mStatus != Stopped)) {
-                    totalElapsedTime += timer.elapsed();
+                    elapsedTime += timer.elapsed();
 
                     static_cast<Core::Thread *>(thread())->msleep(mData->delay());
 
                     timer.restart();
                 }
             }
+
+            // Handle our last point and let people know about our final
+            // progress, but only if we didn't stop the simulation
 
             if (!mError && (mStatus != Stopped)) {
                 // Handle our last point after making sure that all the
@@ -271,8 +273,7 @@ mResults->reset();
 
                 mResults->addPoint(currentPoint);
 
-                // Let people know about our final progress, but only if we didn't stop
-                // the simulation
+                // Let people know about our final progress
 
                 updateAndEmitProgress(1.0);
             }
@@ -283,28 +284,21 @@ mResults->reset();
 
             mProgress = 0.0;
 
-            // Retrieve the total elapsed time
+            // Retrieve the total elapsed time, should no error have occurred
 
-            if (!mError)
-                totalElapsedTime += timer.elapsed();
+            if (mError)
+                // An error occurred, so...
 
-            // We are done, so...
-
-            mStatus = Finished;
-
-            // Let people know that we are done and give them the total elapsed time too
-
-            emit finished(mError?-1:totalElapsedTime);
-            // Note: we use -1 as a way to indicate that something went wrong...
+                elapsedTime = -1;
+                // Note: we use -1 as a way to indicate that something went
+                //       wrong...
+            else
+                elapsedTime += timer.elapsed();
         } else {
             // An error occurred, so...
 
-            mStatus = Finished;
-
-            // Let people know that we are done
+            elapsedTime = -1;
             // Note: we use -1 as a way to indicate that something went wrong...
-
-            emit finished(-1);
         }
 
         // Delete our solver(s)
@@ -316,6 +310,14 @@ mResults->reset();
 
             CoreSolver::unsetNlaSolver(mCellmlFileRuntime->address());
         }
+
+        // We are done, so...
+
+        mStatus = Finished;
+
+        // Let people know that we are done and give them the elapsed time
+
+        emit finished(elapsedTime);
     }
 }
 

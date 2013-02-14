@@ -909,7 +909,11 @@ mActiveGraphPanel->plot()->setAxisScale(QwtPlot::xBottom, simulationData->starti
         // Run the simulation if possible/wanted
 
         if (runSimulation)
+{
+mSimulation->reset();
+//---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
             mSimulation->run();
+}
     } else if (mSimulation->workerStatus() == SingleCellSimulationViewSimulationWorker::Pausing) {
         // Our simulation was paused, so resume it
 
@@ -1336,42 +1340,45 @@ void SingleCellSimulationViewWidget::simulationResultsUpdated(SingleCellSimulati
 
         fileName.chop(fileName.size()-fileName.indexOf('|'));
 
-        // Retrieve the type of the parameter associated with the trace
-
-        QString typeAsString = iter.key();
-
-        typeAsString.remove(fileName+"|");
-        typeAsString.chop(typeAsString.size()-typeAsString.indexOf('|'));
-
-        // Retrieve the index of the parameter associated with the trace
-
-        QString indexAsString = iter.key();
-
-        indexAsString.remove(fileName+"|"+typeAsString+"|");
-
-        // Update the traces which are associated with the current file name
+        // Update the trace, should it be associated with the current file name
 
         QwtPlotCurve *trace = iter.value();
 
         if (!fileName.compare(mSimulation->fileName())) {
-            if (pResults) {
-                double *yData;
+            double *yData;
 
-                CellMLSupport::CellmlFileRuntimeModelParameter::ModelParameterType type = CellMLSupport::CellmlFileRuntimeModelParameter::ModelParameterType(typeAsString.toInt());
-                int index = indexAsString.toInt();
+            // Retrieve the type of the parameter associated with the trace
 
-                if (   (type == CellMLSupport::CellmlFileRuntimeModelParameter::Constant)
-                    || (type == CellMLSupport::CellmlFileRuntimeModelParameter::ComputedConstant))
-                    yData = pResults->constants()[index];
-                else if (type == CellMLSupport::CellmlFileRuntimeModelParameter::State)
-                    yData = pResults->states()[index];
-                else if (type == CellMLSupport::CellmlFileRuntimeModelParameter::Rate)
-                    yData = pResults->rates()[index];
-                else
-                    yData = pResults->algebraic()[index];
+            QString typeAsString = iter.key();
 
-                trace->setRawSamples(pResults->points(), yData, pResults->size());
-            }
+            typeAsString.remove(fileName+"|");
+            typeAsString.chop(typeAsString.size()-typeAsString.indexOf('|'));
+
+            CellMLSupport::CellmlFileRuntimeModelParameter::ModelParameterType type = CellMLSupport::CellmlFileRuntimeModelParameter::ModelParameterType(typeAsString.toInt());
+
+            // Retrieve the index of the parameter associated with the trace
+
+            QString indexAsString = iter.key();
+
+            indexAsString.remove(fileName+"|"+typeAsString+"|");
+
+            int index = indexAsString.toInt();
+
+            // Retrieve the Y array
+
+            if (   (type == CellMLSupport::CellmlFileRuntimeModelParameter::Constant)
+                || (type == CellMLSupport::CellmlFileRuntimeModelParameter::ComputedConstant))
+                yData = pResults->constants()[index];
+            else if (type == CellMLSupport::CellmlFileRuntimeModelParameter::State)
+                yData = pResults->states()[index];
+            else if (type == CellMLSupport::CellmlFileRuntimeModelParameter::Rate)
+                yData = pResults->rates()[index];
+            else
+                yData = pResults->algebraic()[index];
+
+            // Assign the X and Y arrays to our trace
+
+            trace->setRawSamples(pResults->points(), yData, pResults->size());
         }
 
         // Go to the next trace
@@ -1379,9 +1386,9 @@ void SingleCellSimulationViewWidget::simulationResultsUpdated(SingleCellSimulati
         ++iter;
     }
 
-    // Allow the export to CSV
+    // Enable/disable the export to CSV
 
-    mGui->actionCsvExport->setEnabled(true);
+    mGui->actionCsvExport->setEnabled(pResults->size());
 }
 
 //==============================================================================

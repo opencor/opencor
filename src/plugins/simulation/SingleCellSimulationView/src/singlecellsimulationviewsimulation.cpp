@@ -554,6 +554,10 @@ void SingleCellSimulationViewSimulationResults::reset()
 
     deleteArrays();
     createArrays();
+
+    // Let people know that our results have been updated
+
+    emit updated(this);
 }
 
 //==============================================================================
