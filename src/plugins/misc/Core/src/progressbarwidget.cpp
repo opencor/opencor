@@ -20,6 +20,7 @@ namespace Core {
 ProgressBarWidget::ProgressBarWidget(QWidget *pParent) :
     Widget(QSize(), pParent),
     mWidth(0),
+    mOldValue(0.0),
     mValue(0.0)
 {
 }
@@ -69,16 +70,17 @@ void ProgressBarWidget::setValue(const double &pValue)
     double value = qMin(1.0, qMax(pValue, 0.0));
 
     if (value != mValue) {
-        bool needUpdate = int(value*mWidth) != int(mValue*mWidth);
-
         mValue = value;
 
-        if (needUpdate)
+        if (int(mOldValue*mWidth) != int(mValue*mWidth)) {
             // Note: normally, we would be using update(), but on Windows many
             //       successive updates will result in a very choppy progress,
             //       so...
 
+            mOldValue = mValue;
+
             repaint();
+        }
     }
 }
 

@@ -37,6 +37,7 @@ protected:
 private:
     int mWidth;
 
+    double mOldValue;
     double mValue;
 };
 
