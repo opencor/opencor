@@ -204,13 +204,6 @@ mResults->reset();
             timer.start();
 
             // Our main work loop
-//QString states;
-//for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
-//    if (i)
-//        states += ",STATES["+QString::number(i)+"]";
-//    else
-//        states = "STATES["+QString::number(i)+"]";
-//qDebug("time,%s", qPrintable(states));
 
             while (   (currentPoint != endingPoint) && !mError
                    && (mStatus != Stopped)) {
@@ -220,14 +213,6 @@ mResults->reset();
                 mData->recomputeVariables(currentPoint);
 
                 mResults->addPoint(currentPoint);
-
-//---GRY--- TO BE DONE...
-//for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
-//    if (i)
-//        states += ","+QString::number(mData->results()[mData->resultsFilled()-1].states[i]);
-//    else
-//        states = QString::number(mData->results()[mData->resultsFilled()-1].states[i]);
-//qDebug("%f,%s", mData->results()[mData->resultsFilled()-1].point, qPrintable(states));
 
                 // Let people know about our progress
 
@@ -285,14 +270,6 @@ mResults->reset();
                 mData->recomputeVariables(currentPoint);
 
                 mResults->addPoint(currentPoint);
-
-//---GRY--- TO BE DONE...
-//for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
-//    if (i)
-//        states += ","+QString::number(mData->results()[mData->resultsFilled()-1].states[i]);
-//    else
-//        states = QString::number(mData->results()[mData->resultsFilled()-1].states[i]);
-//qDebug("%f,%s", mData->results()[mData->resultsFilled()-1].point, qPrintable(states));
 
                 // Let people know about our final progress, but only if we didn't stop
                 // the simulation
