@@ -127,7 +127,7 @@ private:
     double *mCondVar;
 
 Q_SIGNALS:
-    void dataChanged();
+    void updated();
 
     void error(const QString &pMessage);
 };
@@ -176,7 +176,7 @@ private:
     void deleteArrays();
 
 Q_SIGNALS:
-    void results(SingleCellSimulationViewSimulationResults *pResults);
+    void updated(SingleCellSimulationViewSimulationResults *pResults);
 };
 
 //==============================================================================

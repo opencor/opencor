@@ -190,7 +190,7 @@ private Q_SLOTS:
 void parameterNeeded(const QString &pFileName,
                      CellMLSupport::CellmlFileRuntimeModelParameter *pParameter,
                      const bool &pNeeded);
-void results(SingleCellSimulationViewSimulationResults *pResults);
+void simulationResultsUpdated(SingleCellSimulationViewSimulationResults *pResults);
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 };
 

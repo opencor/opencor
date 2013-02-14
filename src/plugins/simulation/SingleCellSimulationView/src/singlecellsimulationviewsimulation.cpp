@@ -417,9 +417,9 @@ void SingleCellSimulationViewSimulationData::recomputeComputedConstantsAndVariab
     mCellmlFileRuntime->computeComputedConstants()(mConstants, mRates, mStates);
     mCellmlFileRuntime->computeVariables()(mStartingPoint, mConstants, mRates, mStates, mAlgebraic);
 
-    // Let people know that our data has changed
+    // Let people know that our data has been updated
 
-    emit dataChanged();
+    emit updated();
 }
 
 //==============================================================================
@@ -430,9 +430,9 @@ void SingleCellSimulationViewSimulationData::recomputeVariables(const double &pC
 
     mCellmlFileRuntime->computeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic);
 
-    // Let people know that our data has changed
+    // Let people know that our data has been updated
 
-    emit dataChanged();
+    emit updated();
 }
 
 //==============================================================================
@@ -580,9 +580,9 @@ void SingleCellSimulationViewSimulationResults::addPoint(const double &pPoint)
 
     ++mSize;
 
-    // Let people know that new results have been added
+    // Let people know that our results have been updated
 
-    emit results(this);
+    emit updated(this);
 }
 
 //==============================================================================

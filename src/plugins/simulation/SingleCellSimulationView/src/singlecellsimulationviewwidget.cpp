@@ -474,8 +474,8 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         connect(mSimulation, SIGNAL(error(const QString &)),
                 this, SLOT(simulationError(const QString &)));
 
-connect(mSimulation->results(), SIGNAL(results(SingleCellSimulationViewSimulationResults *)),
-        this, SLOT(results(SingleCellSimulationViewSimulationResults *)));
+connect(mSimulation->results(), SIGNAL(updated(SingleCellSimulationViewSimulationResults *)),
+        this, SLOT(simulationResultsUpdated(SingleCellSimulationViewSimulationResults *)));
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
         // Keep track of our simulation object
 
@@ -1323,7 +1323,7 @@ void SingleCellSimulationViewWidget::parameterNeeded(const QString &pFileName,
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::results(SingleCellSimulationViewSimulationResults *pResults)
+void SingleCellSimulationViewWidget::simulationResultsUpdated(SingleCellSimulationViewSimulationResults *pResults)
 {
     // Update our traces, if any
 

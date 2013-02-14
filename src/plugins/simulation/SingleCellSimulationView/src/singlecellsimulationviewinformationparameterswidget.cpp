@@ -114,7 +114,7 @@ void SingleCellSimulationViewInformationParametersWidget::initialize(const QStri
 
         // Keep track of when some of the model's data has changed
 
-        connect(pSimulationData, SIGNAL(dataChanged()),
+        connect(pSimulationData, SIGNAL(updated()),
                 this, SLOT(updateProperties()));
 
         // Keep track of when the user changes a property value
