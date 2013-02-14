@@ -45,9 +45,9 @@ namespace Core {
 
 QString sizeAsString(const double &pSize, const int &pPrecision)
 {
-    // Note: pSize is a double rather than a size_t (as is the case when we want
-    //       to retrieve the total/free amount of memory available; see below)
-    //       in case we need to convert an insane size...
+    // Note: pSize is a double rather than a qulonglong (as is the case when we
+    //       want to retrieve the total/free amount of memory available; see
+    //       below), in case we need to convert an insane size...
 
     static const double OneKiloByte = qPow(2.0, 10.0);
     static const double OneOverOneKiloByte = 1.0/OneKiloByte;
@@ -87,11 +87,11 @@ QString sizeAsString(const double &pSize, const int &pPrecision)
 
 //==============================================================================
 
-size_t totalMemory()
+qulonglong totalMemory()
 {
     // Retrieve and return in bytes the total amount of physical memory
 
-    size_t res = 0;
+    qulonglong res = 0;
 
 #if defined(Q_OS_WIN)
     MEMORYSTATUSEX memoryStatus;
@@ -100,9 +100,9 @@ size_t totalMemory()
 
     GlobalMemoryStatusEx(&memoryStatus);
 
-    res = memoryStatus.ullTotalPhys;
+    res = qulonglong(memoryStatus.ullTotalPhys);
 #elif defined(Q_OS_LINUX)
-    res = sysconf(_SC_PHYS_PAGES)*sysconf(_SC_PAGESIZE);
+    res = qulonglong(sysconf(_SC_PHYS_PAGES))*qulonglong(sysconf(_SC_PAGESIZE));
 #elif defined(Q_OS_MAC)
     int mib[2];
 
@@ -121,11 +121,11 @@ size_t totalMemory()
 
 //==============================================================================
 
-size_t freeMemory()
+qulonglong freeMemory()
 {
     // Retrieve and return in bytes the available amount of physical memory
 
-    size_t res = 0;
+    qulonglong res = 0;
 
 #if defined(Q_OS_WIN)
     MEMORYSTATUSEX memoryStatus;
@@ -134,9 +134,9 @@ size_t freeMemory()
 
     GlobalMemoryStatusEx(&memoryStatus);
 
-    res = memoryStatus.ullAvailPhys;
+    res = qulonglong(memoryStatus.ullAvailPhys);
 #elif defined(Q_OS_LINUX)
-    res = sysconf(_SC_AVPHYS_PAGES)*sysconf(_SC_PAGESIZE);
+    res = qulonglong(sysconf(_SC_AVPHYS_PAGES))*qulonglong(sysconf(_SC_PAGESIZE));
 #elif defined(Q_OS_MAC)
     vm_statistics_data_t vmStats;
     mach_msg_type_number_t infoCount = HOST_VM_INFO_COUNT;
@@ -144,7 +144,7 @@ size_t freeMemory()
     host_statistics(mach_host_self(), HOST_VM_INFO,
                     host_info_t(&vmStats), &infoCount);
 
-    res = (vmStats.free_count+vmStats.inactive_count)*vm_page_size;
+    res = (qulonglong(vmStats.free_count)+qulonglong(vmStats.inactive_count))*qulonglong(vm_page_size);
 #else
     #error Unsupported platform
 #endif

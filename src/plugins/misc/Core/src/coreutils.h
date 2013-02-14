@@ -41,8 +41,8 @@ static const QString SettingsHighlightColor = "HighlightColor";
 QString CORE_EXPORT sizeAsString(const double &pSize,
                                  const int &pPrecision = 1);
 
-size_t totalMemory();
-size_t CORE_EXPORT freeMemory();
+qulonglong totalMemory();
+qulonglong CORE_EXPORT freeMemory();
 
 QByteArray CORE_EXPORT resourceAsByteArray(const QString &pResource);
 bool CORE_EXPORT saveResourceAs(const QString &pResource,
