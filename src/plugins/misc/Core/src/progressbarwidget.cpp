@@ -72,14 +72,15 @@ void ProgressBarWidget::setValue(const double &pValue)
     if (value != mValue) {
         mValue = value;
 
-        if (int(mOldValue*mWidth) != int(mValue*mWidth)) {
-            // Note: normally, we would be using update(), but on Windows many
-            //       successive updates will result in a very choppy progress,
-            //       so...
+        // Repaint ourselves, but only if necessary
 
+        if (int(mOldValue*mWidth) != int(mValue*mWidth)) {
             mOldValue = mValue;
 
             repaint();
+            // Note: normally, we would be using update(), but on Windows many
+            //       successive updates will result in a very choppy progress,
+            //       so...
         }
     }
 }
