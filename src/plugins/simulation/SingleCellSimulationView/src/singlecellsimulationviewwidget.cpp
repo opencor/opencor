@@ -76,7 +76,8 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
     mDelays(QMap<QString, int>()),
     mSplitterWidgetSizes(QList<int>()),
     mProgresses(QMap<QString, int>()),
-mTraces(QMap<QString, QwtPlotCurve *>())
+mTraces(QMap<QString, QwtPlotCurve *>()),
+mSimulationResultsSize(0)
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 {
     // Set up the GUI
@@ -468,14 +469,11 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         connect(mSimulation, SIGNAL(stopped(const int &)),
                 this, SLOT(simulationStopped(const int &)));
 
-        connect(mSimulation, SIGNAL(progress(const double &)),
-                this, SLOT(simulationProgress(const double &)));
-
         connect(mSimulation, SIGNAL(error(const QString &)),
                 this, SLOT(simulationError(const QString &)));
 
-connect(mSimulation->results(), SIGNAL(updated(SingleCellSimulationViewSimulationResults *)),
-        this, SLOT(simulationResultsUpdated(SingleCellSimulationViewSimulationResults *)));
+connect(mSimulation->results(), SIGNAL(updated()),
+        this, SLOT(updateResults()));
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
         // Keep track of our simulation object
 
@@ -485,7 +483,7 @@ connect(mSimulation->results(), SIGNAL(updated(SingleCellSimulationViewSimulatio
     // Reset our file tab icon and stop tracking its simulation progress (in
     // case a simulation is running)
 
-    if (mSimulation->workerStatus() != SingleCellSimulationViewSimulationWorker::Unknown) {
+    if (mSimulation->workerStatus() != SingleCellSimulationViewSimulation::Unknown) {
         mProgresses.remove(mSimulation->fileName());
 
         emit updateFileTabIcon(mSimulation->fileName(), QIcon());
@@ -543,18 +541,18 @@ connect(mSimulation->results(), SIGNAL(updated(SingleCellSimulationViewSimulatio
 
     // Set our simulation mode
 
-    setSimulationMode(   (mSimulation->workerStatus() == SingleCellSimulationViewSimulationWorker::Running)
-                      || (mSimulation->workerStatus() == SingleCellSimulationViewSimulationWorker::Pausing),
-                         (mSimulation->workerStatus() == SingleCellSimulationViewSimulationWorker::Unknown)
-                      || (mSimulation->workerStatus() == SingleCellSimulationViewSimulationWorker::Pausing));
+    setSimulationMode(   (mSimulation->workerStatus() == SingleCellSimulationViewSimulation::Running)
+                      || (mSimulation->workerStatus() == SingleCellSimulationViewSimulation::Pausing),
+                         (mSimulation->workerStatus() == SingleCellSimulationViewSimulation::Unknown)
+                      || (mSimulation->workerStatus() == SingleCellSimulationViewSimulation::Pausing));
 
     // Update our previous (if any) and current simulation progresses
 
     if (   previousSimulation
-        && (previousSimulation->workerStatus() != SingleCellSimulationViewSimulationWorker::Unknown))
-        simulationProgress(previousSimulation->workerProgress(), previousSimulation);
+        && (previousSimulation->workerStatus() != SingleCellSimulationViewSimulation::Unknown))
+        updateResults(previousSimulation);
 
-    simulationProgress(mSimulation->workerProgress());
+    updateResults();
 
     // Check that we have a valid runtime
 
@@ -841,7 +839,7 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
     //       simulation, but those things don't need to be done again when
     //       resuming a simulation...
 
-    if (mSimulation->workerStatus() == SingleCellSimulationViewSimulationWorker::Unknown) {
+    if (mSimulation->workerStatus() == SingleCellSimulationViewSimulation::Unknown) {
         // Cancel any editing of our simulation information
 
         mContentsWidget->informationWidget()->cancelEditing();
@@ -911,10 +909,11 @@ mActiveGraphPanel->plot()->setAxisScale(QwtPlot::xBottom, simulationData->starti
         if (runSimulation)
 {
 mSimulation->reset();
+mSimulationResultsSize = 0;
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
             mSimulation->run();
 }
-    } else if (mSimulation->workerStatus() == SingleCellSimulationViewSimulationWorker::Pausing) {
+    } else if (mSimulation->workerStatus() == SingleCellSimulationViewSimulation::Pausing) {
         // Our simulation was paused, so resume it
 
         mSimulation->resume();
@@ -1119,53 +1118,6 @@ void SingleCellSimulationViewWidget::resetFileTabIcon()
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::simulationProgress(const double &pProgress,
-                                                        SingleCellSimulationViewSimulation *pSimulation)
-{
-    // Our simulation worker has made some progres, so update our progress bar,
-    // but only if it is the active simulation
-
-    SingleCellSimulationViewSimulation *simulation = pSimulation?pSimulation:qobject_cast<SingleCellSimulationViewSimulation *>(sender());
-
-    if (!simulation || (simulation == mSimulation))
-        // Note: we test for simulation to be valid since simulationProgress()
-        //       can also be called directly (as opposed to being called as a
-        //       response to a signal) as is done in initialize() above...
-
-        mProgressBarWidget->setValue(pProgress);
-
-    // Let people know that we should update the icon of our file tab, but only
-    // if it isn't the active simulation (there is already the progress bar, so
-    // no need to duplicate this simulation progress information)
-    // Note: we need to retrieve the name of the file associated with the
-    //       simulation since we have only one SingleCellSimulationViewWidget
-    //       object and anyone handling this signal (e.g. CentralWidget) won't
-    //       be able to tell for which simulation the progress is...
-
-    if (simulation && (simulation != mSimulation)) {
-        int oldProgress = mProgresses.value(simulation->fileName(), -1);
-        int newProgress = (tabBarIconSize()-2)*pProgress;
-        // Note: tabBarIconSize()-2 because we want a one-pixel wide
-        //       border...
-
-        if (newProgress != oldProgress) {
-            // The progress has changed (or we want to force the updating of a
-            // specific simulation), so keep track of its new value and update
-            // our file tab icon
-
-            mProgresses.insert(simulation->fileName(), newProgress);
-
-            // Let people know about the file tab icon to be used for the
-            // model
-
-            emit updateFileTabIcon(simulation->fileName(),
-                                   fileTabIcon(simulation->fileName()));
-        }
-    }
-}
-
-//==============================================================================
-
 void SingleCellSimulationViewWidget::simulationError(const QString &pMessage,
                                                      const ErrorType &pErrorType)
 {
@@ -1174,7 +1126,9 @@ void SingleCellSimulationViewWidget::simulationError(const QString &pMessage,
     SingleCellSimulationViewSimulation *simulation = qobject_cast<SingleCellSimulationViewSimulation *>(sender());
 
     if (!simulation || (simulation == mSimulation)) {
-        // Note: see the corresponding note in simulationProgress() above...
+        // Note: we test for simulation to be valid since simulationError() can
+        //       also be called directly (as opposed to being called as a
+        //       response to a signal) as is done in initialize() above...
 
         mErrorType = pErrorType;
 
@@ -1327,68 +1281,110 @@ void SingleCellSimulationViewWidget::parameterNeeded(const QString &pFileName,
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::simulationResultsUpdated(SingleCellSimulationViewSimulationResults *pResults)
+void SingleCellSimulationViewWidget::updateResults(SingleCellSimulationViewSimulation *pSimulation)
 {
-    // Update our traces, if any
+    // Update our traces, if any and only if actually necessary
 
-    QMap<QString, QwtPlotCurve *>::const_iterator iter = mTraces.constBegin();
+    SingleCellSimulationViewSimulation *simulation = pSimulation?pSimulation:mSimulation;
 
-    while (iter != mTraces.constEnd()) {
-        // Retrieve the file name associated with the trace
+    if (mSimulationResultsSize != simulation->results()->size()) {
+        mSimulationResultsSize = simulation->results()->size();
 
-        QString fileName = iter.key();
+        QMap<QString, QwtPlotCurve *>::const_iterator iter = mTraces.constBegin();
 
-        fileName.chop(fileName.size()-fileName.indexOf('|'));
+        while (iter != mTraces.constEnd()) {
+            // Retrieve the file name associated with the trace
 
-        // Update the trace, should it be associated with the current file name
+            QString fileName = iter.key();
 
-        QwtPlotCurve *trace = iter.value();
+            fileName.chop(fileName.size()-fileName.indexOf('|'));
 
-        if (!fileName.compare(mSimulation->fileName())) {
-            double *yData;
+            // Update the trace, should it be associated with the current file name
 
-            // Retrieve the type of the parameter associated with the trace
+            QwtPlotCurve *trace = iter.value();
 
-            QString typeAsString = iter.key();
+            if (!fileName.compare(mSimulation->fileName())) {
+                double *yData;
 
-            typeAsString.remove(fileName+"|");
-            typeAsString.chop(typeAsString.size()-typeAsString.indexOf('|'));
+                // Retrieve the type of the parameter associated with the trace
 
-            CellMLSupport::CellmlFileRuntimeModelParameter::ModelParameterType type = CellMLSupport::CellmlFileRuntimeModelParameter::ModelParameterType(typeAsString.toInt());
+                QString typeAsString = iter.key();
 
-            // Retrieve the index of the parameter associated with the trace
+                typeAsString.remove(fileName+"|");
+                typeAsString.chop(typeAsString.size()-typeAsString.indexOf('|'));
 
-            QString indexAsString = iter.key();
+                CellMLSupport::CellmlFileRuntimeModelParameter::ModelParameterType type = CellMLSupport::CellmlFileRuntimeModelParameter::ModelParameterType(typeAsString.toInt());
 
-            indexAsString.remove(fileName+"|"+typeAsString+"|");
+                // Retrieve the index of the parameter associated with the trace
 
-            int index = indexAsString.toInt();
+                QString indexAsString = iter.key();
 
-            // Retrieve the Y array
+                indexAsString.remove(fileName+"|"+typeAsString+"|");
 
-            if (   (type == CellMLSupport::CellmlFileRuntimeModelParameter::Constant)
-                || (type == CellMLSupport::CellmlFileRuntimeModelParameter::ComputedConstant))
-                yData = pResults->constants()[index];
-            else if (type == CellMLSupport::CellmlFileRuntimeModelParameter::State)
-                yData = pResults->states()[index];
-            else if (type == CellMLSupport::CellmlFileRuntimeModelParameter::Rate)
-                yData = pResults->rates()[index];
-            else
-                yData = pResults->algebraic()[index];
+                int index = indexAsString.toInt();
 
-            // Assign the X and Y arrays to our trace
+                // Retrieve the Y array
 
-            trace->setRawSamples(pResults->points(), yData, pResults->size());
+                if (   (type == CellMLSupport::CellmlFileRuntimeModelParameter::Constant)
+                    || (type == CellMLSupport::CellmlFileRuntimeModelParameter::ComputedConstant))
+                    yData = simulation->results()->constants()[index];
+                else if (type == CellMLSupport::CellmlFileRuntimeModelParameter::State)
+                    yData = simulation->results()->states()[index];
+                else if (type == CellMLSupport::CellmlFileRuntimeModelParameter::Rate)
+                    yData = simulation->results()->rates()[index];
+                else
+                    yData = simulation->results()->algebraic()[index];
+
+                // Assign the X and Y arrays to our trace
+
+                trace->setRawSamples(simulation->results()->points(), yData, simulation->results()->size());
+            }
+
+            // Go to the next trace
+
+            ++iter;
         }
+    }
 
-        // Go to the next trace
+    // Our simulation worker has made some progres, so update our progress bar,
+    // but only if it is the active simulation
 
-        ++iter;
+    if (simulation == mSimulation) {
+        // We are dealing with the active simulation, so update our progress bar
+
+        mProgressBarWidget->setValue(simulation->workerProgress());
+    } else {
+        // We are dealing with another simulation, so let people know that we
+        // should update the icon of its corresponding file tab
+        // Note: we need to retrieve the name of the file associated with the
+        //       other simulation since we have only one simulation object at
+        //       any given time, and anyone handling the updateFileTabIcon()
+        //       signal (e.g. CentralWidget) won't be able to tell for which
+        //       simulation the update is...
+
+        int oldProgress = mProgresses.value(simulation->fileName(), -1);
+        int newProgress = (tabBarIconSize()-2)*simulation->workerProgress();
+        // Note: tabBarIconSize()-2 because we want a one-pixel wide
+        //       border...
+
+        if (newProgress != oldProgress) {
+            // The progress has changed (or we want to force the updating of a
+            // specific simulation), so keep track of its new value and update
+            // our file tab icon
+
+            mProgresses.insert(simulation->fileName(), newProgress);
+
+            // Let people know about the file tab icon to be used for the
+            // model
+
+            emit updateFileTabIcon(simulation->fileName(),
+                                   fileTabIcon(simulation->fileName()));
+        }
     }
 
     // Enable/disable the export to CSV
 
-    mGui->actionCsvExport->setEnabled(pResults->size());
+    mGui->actionCsvExport->setEnabled(simulation->results()->size());
 }
 
 //==============================================================================

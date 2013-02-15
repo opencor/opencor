@@ -559,7 +559,7 @@ void SingleCellSimulationViewSimulationResults::reset()
 
     // Let people know that our results have been updated
 
-    emit updated(this);
+    emit updated();
 }
 
 //==============================================================================
@@ -590,7 +590,7 @@ void SingleCellSimulationViewSimulationResults::addPoint(const double &pPoint,
     // Let people know that our results have been updated
 
     if (pEmitSignal)
-        emit updated(this);
+        emit updated();
 }
 
 //==============================================================================
@@ -740,6 +740,8 @@ SingleCellSimulationViewSimulation::SingleCellSimulationViewSimulation(const QSt
     mFileName(pFileName),
     mCellmlFileRuntime(pCellmlFileRuntime),
     mSolverInterfaces(pSolverInterfaces),
+    mWorkerStatus(Unknown),
+    mWorkerProgress(0.0),
     mData(new SingleCellSimulationViewSimulationData(pCellmlFileRuntime, pSolverInterfaces)),
     mResults(new SingleCellSimulationViewSimulationResults(pCellmlFileRuntime, mData))
 {
@@ -792,20 +794,20 @@ SingleCellSimulationViewSimulationResults * SingleCellSimulationViewSimulation::
 
 //==============================================================================
 
-SingleCellSimulationViewSimulationWorker::Status SingleCellSimulationViewSimulation::workerStatus() const
+SingleCellSimulationViewSimulation::WorkerStatus SingleCellSimulationViewSimulation::workerStatus() const
 {
-    // Return the status of our worker, if active
+    // Return our worker's status
 
-    return mWorker?mWorker->status():SingleCellSimulationViewSimulationWorker::Unknown;
+    return mWorkerStatus;
 }
 
 //==============================================================================
 
 double SingleCellSimulationViewSimulation::workerProgress() const
 {
-    // Return the progress of our worker, if active
+    // Return our worker's progress
 
-    return mWorker?mWorker->progress():0.0;
+    return mWorkerProgress;
 }
 
 //==============================================================================
@@ -888,7 +890,7 @@ void SingleCellSimulationViewSimulation::run()
 
         // Create our worker
 
-        mWorker = new SingleCellSimulationViewSimulationWorker(mSolverInterfaces, mCellmlFileRuntime, mData, mResults);
+        mWorker = new SingleCellSimulationViewSimulationWorker(mSolverInterfaces, mCellmlFileRuntime, this);
 
         if (!mWorker) {
             emit error(tr("the simulation worker could not be created"));
@@ -924,9 +926,6 @@ void SingleCellSimulationViewSimulation::run()
         connect(mWorker, SIGNAL(pausing()),
                 this, SIGNAL(pausing()));
 
-        connect(mWorker, SIGNAL(progress(const double &)),
-                this, SIGNAL(progress(const double &)));
-
         connect(mWorker, SIGNAL(finished(const int &)),
                 this, SLOT(finished(const int &)));
 
@@ -942,6 +941,9 @@ void SingleCellSimulationViewSimulation::run()
                 mWorkerThread, SLOT(deleteLater()));
 
         // Start our worker thread
+
+        mWorkerStatus   = Idling;
+        mWorkerProgress = 0.0;
 
         mWorkerThread->start();
     }
@@ -985,6 +987,9 @@ void SingleCellSimulationViewSimulation::finished(const int &pElapsedTime)
 
     mWorker       = 0;
     mWorkerThread = 0;
+
+    mWorkerStatus   = Unknown;
+    mWorkerProgress = 0.0;
 
     // Let people know that we have stopped
 

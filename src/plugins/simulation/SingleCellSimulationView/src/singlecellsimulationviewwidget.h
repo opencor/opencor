@@ -136,6 +136,7 @@ private:
 
 SingleCellSimulationViewGraphPanelWidget *mActiveGraphPanel;
 QMap<QString, QwtPlotCurve *> mTraces;
+int mSimulationResultsSize;
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 
     void setDelayValue(const int &pDelayValue);
@@ -176,9 +177,6 @@ private Q_SLOTS:
     void resetProgressBar();
     void resetFileTabIcon();
 
-    void simulationProgress(const double &pProgress,
-                            SingleCellSimulationViewSimulation *pSimulation = 0);
-
     void simulationError(const QString &pMessage,
                          const ErrorType &pErrorType = General);
 
@@ -190,7 +188,7 @@ private Q_SLOTS:
 void parameterNeeded(const QString &pFileName,
                      CellMLSupport::CellmlFileRuntimeModelParameter *pParameter,
                      const bool &pNeeded);
-void simulationResultsUpdated(SingleCellSimulationViewSimulationResults *pResults);
+void updateResults(SingleCellSimulationViewSimulation *pSimulation = 0);
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 };
 

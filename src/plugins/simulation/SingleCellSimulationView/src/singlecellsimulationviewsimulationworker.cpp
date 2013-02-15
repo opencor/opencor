@@ -23,51 +23,12 @@ namespace SingleCellSimulationView {
 
 SingleCellSimulationViewSimulationWorker::SingleCellSimulationViewSimulationWorker(const SolverInterfaces &pSolverInterfaces,
                                                                                    CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
-                                                                                   SingleCellSimulationViewSimulationData *pData,
-                                                                                   SingleCellSimulationViewSimulationResults *pResults) :
-    mStatus(Idling),
+                                                                                   SingleCellSimulationViewSimulation *pSimulation) :
     mSolverInterfaces(pSolverInterfaces),
     mCellmlFileRuntime(pCellmlFileRuntime),
-    mData(pData),
-    mResults(pResults),
+    mSimulation(pSimulation),
     mError(false)
 {
-    // Initialise our progress and let people know about it
-
-    updateAndEmitProgress(0.0);
-}
-
-//==============================================================================
-
-SingleCellSimulationViewSimulationWorker::Status SingleCellSimulationViewSimulationWorker::status() const
-{
-    // Return our status
-
-    return mStatus;
-}
-
-//==============================================================================
-
-double SingleCellSimulationViewSimulationWorker::progress() const
-{
-    // Return our progress
-
-    return mProgress;
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewSimulationWorker::updateAndEmitProgress(const double &pProgress,
-                                                                     const bool &pEmitSignal)
-{
-    // Set our progress
-
-    mProgress = pProgress;
-
-    // Let people know about our progress
-
-    if (pEmitSignal)
-        emit progress(pProgress);
 }
 
 //==============================================================================
@@ -76,10 +37,10 @@ void SingleCellSimulationViewSimulationWorker::run()
 {
     // Run ourselves, but only if we are currently idling
 
-    if (mStatus == Idling) {
+    if (mSimulation->mWorkerStatus == SingleCellSimulationViewSimulation::Idling) {
         // We are now running
 
-        mStatus = Running;
+        mSimulation->mWorkerStatus = SingleCellSimulationViewSimulation::Running;
 
         // Let people know that we are running
 
@@ -93,7 +54,7 @@ void SingleCellSimulationViewSimulationWorker::run()
 
         if (mCellmlFileRuntime->needOdeSolver()) {
             foreach (SolverInterface *solverInterface, mSolverInterfaces)
-                if (!solverInterface->name().compare(mData->odeSolverName())) {
+                if (!solverInterface->name().compare(mSimulation->data()->odeSolverName())) {
                     // The requested ODE solver was found, so retrieve an
                     // instance of it
 
@@ -119,7 +80,7 @@ void SingleCellSimulationViewSimulationWorker::run()
 
         if (mCellmlFileRuntime->needNlaSolver())
             foreach (SolverInterface *solverInterface, mSolverInterfaces)
-                if (!solverInterface->name().compare(mData->nlaSolverName())) {
+                if (!solverInterface->name().compare(mSimulation->data()->nlaSolverName())) {
                     // The requested NLA solver was found, so retrieve an
                     // instance of it
 
@@ -151,9 +112,9 @@ void SingleCellSimulationViewSimulationWorker::run()
 
         // Retrieve our simulation properties
 
-        double startingPoint = mData->startingPoint();
-        double endingPoint   = mData->endingPoint();
-        double pointInterval = mData->pointInterval();
+        double startingPoint = mSimulation->data()->startingPoint();
+        double endingPoint   = mSimulation->data()->endingPoint();
+        double pointInterval = mSimulation->data()->pointInterval();
 
         bool increasingPoints = endingPoint > startingPoint;
         const double oneOverPointsRange = 1.0/(endingPoint-startingPoint);
@@ -163,22 +124,26 @@ void SingleCellSimulationViewSimulationWorker::run()
         // Initialise our ODE/DAE solver
 
         if (odeSolver) {
-            odeSolver->setProperties(mData->odeSolverProperties());
+            odeSolver->setProperties(mSimulation->data()->odeSolverProperties());
 
             odeSolver->initialize(currentPoint,
                                   mCellmlFileRuntime->statesCount(),
-                                  mData->constants(), mData->states(),
-                                  mData->rates(), mData->algebraic(),
+                                  mSimulation->data()->constants(),
+                                  mSimulation->data()->states(),
+                                  mSimulation->data()->rates(),
+                                  mSimulation->data()->algebraic(),
                                   mCellmlFileRuntime->computeRates());
         } else {
-            daeSolver->setProperties(mData->daeSolverProperties());
+            daeSolver->setProperties(mSimulation->data()->daeSolverProperties());
 
             daeSolver->initialize(currentPoint, endingPoint,
                                   mCellmlFileRuntime->statesCount(),
                                   mCellmlFileRuntime->condVarCount(),
-                                  mData->constants(), mData->states(),
-                                  mData->rates(), mData->algebraic(),
-                                  mData->condVar(),
+                                  mSimulation->data()->constants(),
+                                  mSimulation->data()->states(),
+                                  mSimulation->data()->rates(),
+                                  mSimulation->data()->algebraic(),
+                                  mSimulation->data()->condVar(),
                                   mCellmlFileRuntime->computeEssentialVariables(),
                                   mCellmlFileRuntime->computeResiduals(),
                                   mCellmlFileRuntime->computeRootInformation(),
@@ -188,7 +153,7 @@ void SingleCellSimulationViewSimulationWorker::run()
         // Initialise our NLA solver
 
         if (nlaSolver)
-            nlaSolver->setProperties(mData->nlaSolverProperties());
+            nlaSolver->setProperties(mSimulation->data()->nlaSolverProperties());
 
         // Now, we are ready to compute our model, but only if no error has
         // occurred so far
@@ -212,7 +177,7 @@ void SingleCellSimulationViewSimulationWorker::run()
             // Our main work loop
 
             while (   (currentPoint != endingPoint) && !mError
-                   && (mStatus != Stopped)) {
+                   && (mSimulation->mWorkerStatus != SingleCellSimulationViewSimulation::Stopped)) {
                 // Check whether we came here more than 10 ms ago (i.e. 100 Hz)
                 // and, if so, then allow for signals to be emitted
                 // Note: if a simulation is quick to run, then many signals
@@ -245,21 +210,20 @@ void SingleCellSimulationViewSimulationWorker::run()
                     canEmitSignals = true;
                 }
 
-                // Handle our current point after making sure that all the
-                // variables have been computed
+                // Update our progress
 
-                mData->recomputeVariables(currentPoint, canEmitSignals);
+                mSimulation->mWorkerProgress = (currentPoint-startingPoint)*oneOverPointsRange;
 
-                mResults->addPoint(currentPoint, canEmitSignals);
+                // Add our new point after making sure that all the variables
+                // have been computed
 
-                // Let people know about our progress
+                mSimulation->data()->recomputeVariables(currentPoint, canEmitSignals);
 
-                updateAndEmitProgress((currentPoint-startingPoint)*oneOverPointsRange,
-                                      canEmitSignals);
+                mSimulation->results()->addPoint(currentPoint, canEmitSignals);
 
                 // Check whether we should be pausing
 
-                if(mStatus == Pausing) {
+                if(mSimulation->mWorkerStatus == SingleCellSimulationViewSimulation::Pausing) {
                     // We have been asked to pause, so do just that after
                     // stopping our timer
 
@@ -271,7 +235,7 @@ void SingleCellSimulationViewSimulationWorker::run()
 
                     // We are now running again
 
-                    mStatus = Running;
+                    mSimulation->mWorkerStatus = SingleCellSimulationViewSimulation::Running;
 
                     // Let people know that we are running again
 
@@ -293,38 +257,32 @@ void SingleCellSimulationViewSimulationWorker::run()
 
                 // Delay things a bit, if (really) needed
 
-                if (mData->delay() && (mStatus != Stopped)) {
+                if (   mSimulation->data()->delay()
+                    && (mSimulation->mWorkerStatus != SingleCellSimulationViewSimulation::Stopped)) {
                     elapsedTime += timer.elapsed();
 
-                    static_cast<Core::Thread *>(thread())->msleep(mData->delay());
+                    static_cast<Core::Thread *>(thread())->msleep(mSimulation->data()->delay());
 
                     timer.restart();
                 }
             }
 
-            // Handle our last point and let people know about our final
-            // progress, but only if we didn't stop the simulation
+            // Update our progress and add our last point, but only if we didn't
+            // stop the simulation
 
-            if (!mError && (mStatus != Stopped)) {
-                // Handle our last point after making sure that all the
-                // variables have been computed
+            if (   !mError
+                && (mSimulation->mWorkerStatus != SingleCellSimulationViewSimulation::Stopped)) {
+                // Update our progress
 
-                mData->recomputeVariables(currentPoint);
+                mSimulation->mWorkerProgress = 1.0;
 
-                mResults->addPoint(currentPoint);
+                // Add our last point after making sure that all the variables
+                // have been computed
 
-                // Let people know about our final progress
+                mSimulation->data()->recomputeVariables(currentPoint);
 
-                updateAndEmitProgress(1.0);
+                mSimulation->results()->addPoint(currentPoint);
             }
-
-            // Reset our progress, but without letting people know about it
-            // Note: the idea is that we want people to know up to which point
-            //       the simulation progressed (which can be shown using a
-            //       progress bar). From there, it's up to them to reset
-            //       themselves (e.g. reset their progress bar)...
-
-            updateAndEmitProgress(0.0, false);
 
             // Retrieve the total elapsed time, should no error have occurred
 
@@ -355,7 +313,7 @@ void SingleCellSimulationViewSimulationWorker::run()
 
         // We are done, so...
 
-        mStatus = Finished;
+        mSimulation->mWorkerStatus = SingleCellSimulationViewSimulation::Finished;
 
         // Let people know that we are done and give them the elapsed time
 
@@ -369,10 +327,10 @@ void SingleCellSimulationViewSimulationWorker::pause()
 {
     // Pause ourselves, but only if we are currently running
 
-    if (mStatus == Running) {
+    if (mSimulation->mWorkerStatus == SingleCellSimulationViewSimulation::Running) {
         // We are now pausing
 
-        mStatus = Pausing;
+        mSimulation->mWorkerStatus = SingleCellSimulationViewSimulation::Pausing;
 
         // Let people know that we are pausing
 
@@ -386,14 +344,14 @@ void SingleCellSimulationViewSimulationWorker::resume()
 {
     // Resume ourselves, but only if are currently pausing
 
-    if (mStatus == Pausing) {
+    if (mSimulation->mWorkerStatus == SingleCellSimulationViewSimulation::Pausing) {
         // Actually resume ourselves
 
         mStatusCondition.wakeAll();
 
         // We are now running again
 
-        mStatus = Running;
+        mSimulation->mWorkerStatus = SingleCellSimulationViewSimulation::Running;
 
         // Let people know that we are running again
 
@@ -407,15 +365,16 @@ void SingleCellSimulationViewSimulationWorker::stop()
 {
     // Check that we are either running or pausing
 
-    if ((mStatus == Running) || (mStatus == Pausing)) {
+    if (   (mSimulation->mWorkerStatus == SingleCellSimulationViewSimulation::Running)
+        || (mSimulation->mWorkerStatus == SingleCellSimulationViewSimulation::Pausing)) {
         // Resume ourselves, if needed
 
-        if (mStatus == Pausing)
+        if (mSimulation->mWorkerStatus == SingleCellSimulationViewSimulation::Pausing)
             mStatusCondition.wakeAll();
 
         // Stop ourselves
 
-        mStatus = Stopped;
+        mSimulation->mWorkerStatus = SingleCellSimulationViewSimulation::Stopped;
     }
 }
 

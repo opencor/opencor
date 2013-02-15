@@ -31,8 +31,7 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-class SingleCellSimulationViewSimulationData;
-class SingleCellSimulationViewSimulationResults;
+class SingleCellSimulationViewSimulation;
 
 //==============================================================================
 
@@ -41,30 +40,15 @@ class SingleCellSimulationViewSimulationWorker : public QObject
     Q_OBJECT
 
 public:
-    enum Status {
-        Unknown,
-        Idling,
-        Running,
-        Pausing,
-        Stopped,
-        Finished
-    };
-
     explicit SingleCellSimulationViewSimulationWorker(const SolverInterfaces &pSolverInterfaces,
                                                       CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
-                                                      SingleCellSimulationViewSimulationData *pData,
-                                                      SingleCellSimulationViewSimulationResults *pResults);
-
-    Status status() const;
-    double progress() const;
+                                                      SingleCellSimulationViewSimulation *pSimulation);
 
     void pause();
     void resume();
     void stop();
 
 private:
-    Status mStatus;
-
     bool mActive;
     bool mPausing;
 
@@ -75,21 +59,13 @@ private:
 
     CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
 
-    SingleCellSimulationViewSimulationData *mData;
-    SingleCellSimulationViewSimulationResults *mResults;
-
-    double mProgress;
+    SingleCellSimulationViewSimulation *mSimulation;
 
     bool mError;
-
-    void updateAndEmitProgress(const double &pProgress,
-                               const bool &pEmitSignal = true);
 
 Q_SIGNALS:
     void running();
     void pausing();
-
-    void progress(const double &pProgress);
 
     void finished(const int &pElapsedTime);
 
