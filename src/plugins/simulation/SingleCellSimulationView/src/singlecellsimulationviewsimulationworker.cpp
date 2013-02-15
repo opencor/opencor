@@ -213,31 +213,32 @@ void SingleCellSimulationViewSimulationWorker::run()
 
             while (   (currentPoint != endingPoint) && !mError
                    && (mStatus != Stopped)) {
-                // Check whether we came here more than 15 ms ago (i.e. ~67 Hz)
+                // Check whether we came here more than 10 ms ago (i.e. 100 Hz)
                 // and, if so, then allow for signals to be emitted
                 // Note: if a simulation is quick to run, then many signals
                 //       would get emitted and their handling could make OpenCOR
-                //       unresponsive, so by waiting for 15 ms (i.e. ~67 Hz
-                //       which is more than human eyes can handle) we reduce the
-                //       number of signals being emitted while still allowing
-                //       for their smooth handling...
-
-
+                //       unresponsive, so by waiting for 10 ms (i.e. 100 Hz
+                //       which is more than what human eyes can handle) we
+                //       reduce the number of signals being emitted while still
+                //       allowing for their smooth handling...
 
                 if (currentPoint == startingPoint) {
-                    // This our first point, so start our signals timer
+                    // This our first point, so start our signals timer and
+                    // allow signals to be emitted
 
                     signalsTimer.start();
 
                     canEmitSignals = true;
-                } else if (signalsTimer.elapsed() < 15) {
-                    // These are not our first results and it has been less than 17 ms since
-                    // we were last here, so...
+                } else if (signalsTimer.elapsed() < 10) {
+                    // This is not our first point and it has been less than 10
+                    // ms since we were last here, so prevent signals from being
+                    // emitted
 
                     canEmitSignals = false;
                 } else {
-                    // There are not our first results it has been more than 17 ms since we
-                    // were last here, so retart our timer
+                    // This is not our first point and it has been more than 10
+                    // ms since we were last here, so retart our timer and allow
+                    // signals to be emitted
 
                     signalsTimer.restart();
 
