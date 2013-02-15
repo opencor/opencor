@@ -82,7 +82,8 @@ private:
 
     bool mError;
 
-    void updateAndEmitProgress(const double &pProgress);
+    void updateAndEmitProgress(const double &pProgress,
+                               const bool &pEmitSignal = true);
 
 Q_SIGNALS:
     void running();

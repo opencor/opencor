@@ -424,7 +424,8 @@ void SingleCellSimulationViewSimulationData::recomputeComputedConstantsAndVariab
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulationData::recomputeVariables(const double &pCurrentPoint)
+void SingleCellSimulationViewSimulationData::recomputeVariables(const double &pCurrentPoint,
+                                                                const bool &pEmitSignal)
 {
     // Recompute our 'variables'
 
@@ -432,7 +433,8 @@ void SingleCellSimulationViewSimulationData::recomputeVariables(const double &pC
 
     // Let people know that our data has been updated
 
-    emit updated();
+    if (pEmitSignal)
+        emit updated();
 }
 
 //==============================================================================
@@ -562,7 +564,8 @@ void SingleCellSimulationViewSimulationResults::reset()
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulationResults::addPoint(const double &pPoint)
+void SingleCellSimulationViewSimulationResults::addPoint(const double &pPoint,
+                                                         const bool &pEmitSignal)
 {
     // Add the data to our different arrays
 
@@ -586,7 +589,8 @@ void SingleCellSimulationViewSimulationResults::addPoint(const double &pPoint)
 
     // Let people know that our results have been updated
 
-    emit updated(this);
+    if (pEmitSignal)
+        emit updated(this);
 }
 
 //==============================================================================

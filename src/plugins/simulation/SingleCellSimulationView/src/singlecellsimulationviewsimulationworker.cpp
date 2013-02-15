@@ -57,7 +57,8 @@ double SingleCellSimulationViewSimulationWorker::progress() const
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulationWorker::updateAndEmitProgress(const double &pProgress)
+void SingleCellSimulationViewSimulationWorker::updateAndEmitProgress(const double &pProgress,
+                                                                     const bool &pEmitSignal)
 {
     // Set our progress
 
@@ -65,7 +66,8 @@ void SingleCellSimulationViewSimulationWorker::updateAndEmitProgress(const doubl
 
     // Let people know about our progress
 
-    emit progress(pProgress);
+    if (pEmitSignal)
+        emit progress(pProgress);
 }
 
 //==============================================================================
@@ -75,7 +77,7 @@ void SingleCellSimulationViewSimulationWorker::run()
     // Run ourselves, but only if we are currently idling
 
     if (mStatus == Idling) {
-        // We are running
+        // We are now running
 
         mStatus = Running;
 
@@ -154,7 +156,7 @@ void SingleCellSimulationViewSimulationWorker::run()
         double pointInterval = mData->pointInterval();
 
         bool increasingPoints = endingPoint > startingPoint;
-        const double oneOverPointRange = 1.0/(endingPoint-startingPoint);
+        const double oneOverPointsRange = 1.0/(endingPoint-startingPoint);
         int pointCounter = 0;
         double currentPoint = startingPoint;
 
@@ -194,6 +196,11 @@ void SingleCellSimulationViewSimulationWorker::run()
         int elapsedTime;
 
         if (!mError) {
+            // Signals timer
+
+            QTime signalsTimer;
+            bool canEmitSignals;
+
             // Start our timer
 
             QTime timer;
@@ -206,16 +213,48 @@ void SingleCellSimulationViewSimulationWorker::run()
 
             while (   (currentPoint != endingPoint) && !mError
                    && (mStatus != Stopped)) {
+                // Check whether we came here more than 15 ms ago (i.e. ~67 Hz)
+                // and, if so, then allow for signals to be emitted
+                // Note: if a simulation is quick to run, then many signals
+                //       would get emitted and their handling could make OpenCOR
+                //       unresponsive, so by waiting for 15 ms (i.e. ~67 Hz
+                //       which is more than human eyes can handle) we reduce the
+                //       number of signals being emitted while still allowing
+                //       for their smooth handling...
+
+
+
+                if (currentPoint == startingPoint) {
+                    // This our first point, so start our signals timer
+
+                    signalsTimer.start();
+
+                    canEmitSignals = true;
+                } else if (signalsTimer.elapsed() < 15) {
+                    // These are not our first results and it has been less than 17 ms since
+                    // we were last here, so...
+
+                    canEmitSignals = false;
+                } else {
+                    // There are not our first results it has been more than 17 ms since we
+                    // were last here, so retart our timer
+
+                    signalsTimer.restart();
+
+                    canEmitSignals = true;
+                }
+
                 // Handle our current point after making sure that all the
                 // variables have been computed
 
-                mData->recomputeVariables(currentPoint);
+                mData->recomputeVariables(currentPoint, canEmitSignals);
 
-                mResults->addPoint(currentPoint);
+                mResults->addPoint(currentPoint, canEmitSignals);
 
                 // Let people know about our progress
 
-                updateAndEmitProgress((currentPoint-startingPoint)*oneOverPointRange);
+                updateAndEmitProgress((currentPoint-startingPoint)*oneOverPointsRange,
+                                      canEmitSignals);
 
                 // Check whether we should be pausing
 
@@ -229,7 +268,7 @@ void SingleCellSimulationViewSimulationWorker::run()
                         mStatusCondition.wait(&mStatusMutex);
                     mStatusMutex.unlock();
 
-                    // We are running again
+                    // We are now running again
 
                     mStatus = Running;
 
@@ -278,11 +317,13 @@ void SingleCellSimulationViewSimulationWorker::run()
                 updateAndEmitProgress(1.0);
             }
 
-            // Reset our progress
-            // Note: we would normally use updateAndEmitProgress(), but we don't
-            //       want to emit the progress, so...
+            // Reset our progress, but without letting people know about it
+            // Note: the idea is that we want people to know up to which point
+            //       the simulation progressed (which can be shown using a
+            //       progress bar). From there, it's up to them to reset
+            //       themselves (e.g. reset their progress bar)...
 
-            mProgress = 0.0;
+            updateAndEmitProgress(0.0, false);
 
             // Retrieve the total elapsed time, should no error have occurred
 
@@ -328,7 +369,7 @@ void SingleCellSimulationViewSimulationWorker::pause()
     // Pause ourselves, but only if we are currently running
 
     if (mStatus == Running) {
-        // We are pausing
+        // We are now pausing
 
         mStatus = Pausing;
 
@@ -349,7 +390,7 @@ void SingleCellSimulationViewSimulationWorker::resume()
 
         mStatusCondition.wakeAll();
 
-        // We are running again
+        // We are now running again
 
         mStatus = Running;
 

@@ -98,7 +98,8 @@ public:
     void reset();
 
     void recomputeComputedConstantsAndVariables();
-    void recomputeVariables(const double &pCurrentPoint);
+    void recomputeVariables(const double &pCurrentPoint,
+                            const bool &pEmitSignal = true);
 
 private:
     CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
@@ -145,7 +146,7 @@ public:
 
     void reset();
 
-    void addPoint(const double &pPoint);
+    void addPoint(const double &pPoint, const bool &pEmitSignal = true);
 
     int size() const;
 
