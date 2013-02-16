@@ -727,7 +727,7 @@ connect(mSimulation->results(), SIGNAL(updated()),
     // initialised in the case of its data)
 
     if (!hasError && newSimulation)
-        mSimulation->reset();
+        mSimulation->reset(true);
 
 //---GRY--- THE BELOW IS TEMPORARY, JUST FOR OUR DEMO...
 QMap<QString, QwtPlotCurve *>::const_iterator iter = mTraces.constBegin();

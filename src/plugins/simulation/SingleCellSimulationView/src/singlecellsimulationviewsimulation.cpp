@@ -463,11 +463,11 @@ SingleCellSimulationViewSimulationResults::~SingleCellSimulationViewSimulationRe
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulationResults::createArrays()
+void SingleCellSimulationViewSimulationResults::createArrays(const bool &pNoData)
 {
     // Determine the size of our arrays
 
-    int dataSize = mData->size();
+    int dataSize = pNoData?0:mData->size();
 
     // Create our points array
 
@@ -546,7 +546,7 @@ void SingleCellSimulationViewSimulationResults::deleteArrays()
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulationResults::reset()
+void SingleCellSimulationViewSimulationResults::reset(const bool &pNoData)
 {
     // Reset our size
 
@@ -555,7 +555,7 @@ void SingleCellSimulationViewSimulationResults::reset()
     // Reset our arrays
 
     deleteArrays();
-    createArrays();
+    createArrays(pNoData);
 
     // Let people know that our results have been updated
 
@@ -821,12 +821,12 @@ void SingleCellSimulationViewSimulation::setDelay(const int &pDelay)
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulation::reset()
+void SingleCellSimulationViewSimulation::reset(const bool &pNoResultsData)
 {
     // Reset both our data and results
 
     mData->reset();
-    mResults->reset();
+    mResults->reset(pNoResultsData);
 }
 
 //==============================================================================
