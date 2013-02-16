@@ -908,8 +908,11 @@ mActiveGraphPanel->plot()->setAxisScale(QwtPlot::xBottom, simulationData->starti
 
         if (runSimulation)
 {
-mSimulation->reset();
 mSimulationResultsSize = 0;
+if (!mSimulation->reset())
+    QMessageBox::warning(qApp->activeWindow(), tr("Run the simulation"),
+                         tr("Sorry, but we could not allocate the required memory for the simulation."));
+else
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
             mSimulation->run();
 }
@@ -1327,13 +1330,13 @@ void SingleCellSimulationViewWidget::updateResults(SingleCellSimulationViewSimul
 
                 if (   (type == CellMLSupport::CellmlFileRuntimeModelParameter::Constant)
                     || (type == CellMLSupport::CellmlFileRuntimeModelParameter::ComputedConstant))
-                    yData = simulation->results()->constants()[index];
+                    yData = simulation->results()->constants()?simulation->results()->constants()[index]:0;
                 else if (type == CellMLSupport::CellmlFileRuntimeModelParameter::State)
-                    yData = simulation->results()->states()[index];
+                    yData = simulation->results()->states()?simulation->results()->states()[index]:0;
                 else if (type == CellMLSupport::CellmlFileRuntimeModelParameter::Rate)
-                    yData = simulation->results()->rates()[index];
+                    yData = simulation->results()->rates()?simulation->results()->rates()[index]:0;
                 else
-                    yData = simulation->results()->algebraic()[index];
+                    yData = simulation->results()->algebraic()?simulation->results()->algebraic()[index]:0;
 
                 // Assign the X and Y arrays to our trace
 

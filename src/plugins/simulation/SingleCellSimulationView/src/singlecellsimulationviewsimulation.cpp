@@ -463,97 +463,161 @@ SingleCellSimulationViewSimulationResults::~SingleCellSimulationViewSimulationRe
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulationResults::createArrays(const bool &pArrays)
+bool SingleCellSimulationViewSimulationResults::createArrays()
 {
-    if (pArrays) {
-        // Create our points array
+    static const int SizeOfDoublePointer = sizeof(double *);
 
+    // Create our points array
+
+    try {
         mPoints = new double[mData->size()];
+    } catch(...) {
+        return false;
+    }
 
-        // Create our constants arrays
+    // Create our constants arrays
 
+    try {
         mConstants = new double*[mCellmlFileRuntime->constantsCount()];
 
-        for (int i = 0, iMax = mCellmlFileRuntime->constantsCount(); i < iMax; ++i)
+        memset(mConstants, 0, mCellmlFileRuntime->constantsCount()*SizeOfDoublePointer);
+    } catch(...) {
+        deleteArrays();
+
+        return false;
+    }
+
+    for (int i = 0, iMax = mCellmlFileRuntime->constantsCount(); i < iMax; ++i)
+        try {
             mConstants[i] = new double[mData->size()];
+        } catch(...) {
+            deleteArrays();
 
-        // Create our states arrays
+            return false;
+        }
 
+    // Create our states arrays
+
+    try {
         mStates = new double*[mCellmlFileRuntime->statesCount()];
 
-        for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
+        memset(mStates, 0, mCellmlFileRuntime->statesCount()*SizeOfDoublePointer);
+    } catch(...) {
+        deleteArrays();
+
+        return false;
+    }
+
+    for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
+        try {
             mStates[i] = new double[mData->size()];
+        } catch(...) {
+            deleteArrays();
 
-        // Create our rates arrays
+            return false;
+        }
 
+    // Create our rates arrays
+
+    try {
         mRates = new double*[mCellmlFileRuntime->ratesCount()];
 
-        for (int i = 0, iMax = mCellmlFileRuntime->ratesCount(); i < iMax; ++i)
+        memset(mRates, 0, mCellmlFileRuntime->ratesCount()*SizeOfDoublePointer);
+    } catch(...) {
+        deleteArrays();
+
+        return false;
+    }
+
+    for (int i = 0, iMax = mCellmlFileRuntime->ratesCount(); i < iMax; ++i)
+        try {
             mRates[i] = new double[mData->size()];
+        } catch(...) {
+            deleteArrays();
 
-        // Create our algebraic arrays
+            return false;
+        }
 
+    // Create our algebraic arrays
+
+    try {
         mAlgebraic = new double*[mCellmlFileRuntime->algebraicCount()];
 
-        for (int i = 0, iMax = mCellmlFileRuntime->algebraicCount(); i < iMax; ++i)
-            mAlgebraic[i] = new double[mData->size()];
-    } else {
-        // We want empty arrays, so...
+        memset(mAlgebraic, 0, mCellmlFileRuntime->algebraicCount()*SizeOfDoublePointer);
+    } catch(...) {
+        deleteArrays();
 
-        mPoints = 0;
-
-        mConstants = 0;
-        mStates    = 0;
-        mRates     = 0;
-        mAlgebraic = 0;
+        return false;
     }
+
+    for (int i = 0, iMax = mCellmlFileRuntime->algebraicCount(); i < iMax; ++i)
+        try {
+            mAlgebraic[i] = new double[mData->size()];
+        } catch(...) {
+            deleteArrays();
+
+            return false;
+        }
+
+    // We could allocate all of our required memory, so...
+
+    return true;
 }
 
 //==============================================================================
 
 void SingleCellSimulationViewSimulationResults::deleteArrays()
 {
-    if (!mPoints)
-        // There are no arrays to delete, so...
-
-        return;
-
     // Delete our points array
 
     delete[] mPoints;
 
+    mPoints = 0;
+
     // Delete our constants arrays
 
-    for (int i = 0, iMax = mCellmlFileRuntime->constantsCount(); i < iMax; ++i)
-        delete[] mConstants[i];
+    if (mConstants)
+        for (int i = 0, iMax = mCellmlFileRuntime->constantsCount(); i < iMax; ++i)
+            delete[] mConstants[i];
 
     delete mConstants;
 
+    mConstants = 0;
+
     // Delete our states arrays
 
-    for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
-        delete[] mStates[i];
+    if (mStates)
+        for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
+            delete[] mStates[i];
 
     delete mStates;
 
+    mStates = 0;
+
     // Delete our rates arrays
 
-    for (int i = 0, iMax = mCellmlFileRuntime->ratesCount(); i < iMax; ++i)
-        delete[] mRates[i];
+    if (mRates)
+        for (int i = 0, iMax = mCellmlFileRuntime->ratesCount(); i < iMax; ++i)
+            delete[] mRates[i];
 
     delete mRates;
 
+    mRates = 0;
+
     // Delete our algebraic arrays
 
-    for (int i = 0, iMax = mCellmlFileRuntime->algebraicCount(); i < iMax; ++i)
-        delete[] mAlgebraic[i];
+    if (mAlgebraic)
+        for (int i = 0, iMax = mCellmlFileRuntime->algebraicCount(); i < iMax; ++i)
+            delete[] mAlgebraic[i];
 
     delete mAlgebraic;
+
+    mAlgebraic = 0;
 }
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulationResults::reset(const bool &pArrays)
+bool SingleCellSimulationViewSimulationResults::reset(const bool &pCreateArrays)
 {
     // Reset our size
 
@@ -562,11 +626,17 @@ void SingleCellSimulationViewSimulationResults::reset(const bool &pArrays)
     // Reset our arrays
 
     deleteArrays();
-    createArrays(pArrays);
+
+    bool res = pCreateArrays?createArrays():true;
 
     // Let people know that our results have been updated
 
-    emit updated();
+    if (pCreateArrays && res)
+        emit updated();
+
+    // We are done, so...
+
+    return res;
 }
 
 //==============================================================================
@@ -828,12 +898,13 @@ void SingleCellSimulationViewSimulation::setDelay(const int &pDelay)
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulation::reset(const bool &pResultsArrays)
+bool SingleCellSimulationViewSimulation::reset(const bool &pResultsArrays)
 {
     // Reset both our data and results
 
     mData->reset();
-    mResults->reset(pResultsArrays);
+
+    return mResults->reset(pResultsArrays);
 }
 
 //==============================================================================
