@@ -208,7 +208,7 @@ double SingleCellSimulationViewSimulationData::size() const
 {
     // Return the size of our simulation (i.e. the number of data points which
     // should be generated)
-    // Note: we return a double rather than a size_t in case the simulation
+    // Note: we return a double rather than a qulonglong in case the simulation
     //       requires an insane amount of memory...
 
     return ceil((mEndingPoint-mStartingPoint)/mPointInterval)+1;
@@ -469,8 +469,10 @@ bool SingleCellSimulationViewSimulationResults::createArrays()
 
     // Create our points array
 
+    qulonglong dataSize = qulonglong(mData->size());
+
     try {
-        mPoints = new double[mData->size()];
+        mPoints = new double[dataSize];
     } catch(...) {
         return false;
     }
@@ -489,7 +491,7 @@ bool SingleCellSimulationViewSimulationResults::createArrays()
 
     for (int i = 0, iMax = mCellmlFileRuntime->constantsCount(); i < iMax; ++i)
         try {
-            mConstants[i] = new double[mData->size()];
+            mConstants[i] = new double[dataSize];
         } catch(...) {
             deleteArrays();
 
@@ -510,7 +512,7 @@ bool SingleCellSimulationViewSimulationResults::createArrays()
 
     for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
         try {
-            mStates[i] = new double[mData->size()];
+            mStates[i] = new double[dataSize];
         } catch(...) {
             deleteArrays();
 
@@ -531,7 +533,7 @@ bool SingleCellSimulationViewSimulationResults::createArrays()
 
     for (int i = 0, iMax = mCellmlFileRuntime->ratesCount(); i < iMax; ++i)
         try {
-            mRates[i] = new double[mData->size()];
+            mRates[i] = new double[dataSize];
         } catch(...) {
             deleteArrays();
 
@@ -552,7 +554,7 @@ bool SingleCellSimulationViewSimulationResults::createArrays()
 
     for (int i = 0, iMax = mCellmlFileRuntime->algebraicCount(); i < iMax; ++i)
         try {
-            mAlgebraic[i] = new double[mData->size()];
+            mAlgebraic[i] = new double[dataSize];
         } catch(...) {
             deleteArrays();
 
@@ -918,10 +920,10 @@ void SingleCellSimulationViewSimulation::recomputeComputedConstantsAndVariables(
 
 //==============================================================================
 
-double SingleCellSimulationViewSimulation::neededMemory() const
+double SingleCellSimulationViewSimulation::requiredMemory() const
 {
-    // Determine and return the amount of needed memory to run our simulation
-    // Note: we return the amount as a double rather than a size_t (as we do
+    // Determine and return the amount of required memory to run our simulation
+    // Note: we return the amount as a double rather than a qulonglong (as we do
     //       when retrieving the total/free amount of memory available; see
     //       [OpenCOR]/src/plugins/misc/Core/src/coreutils.cpp) in case a
     //       simulation requires an insane amount of memory...

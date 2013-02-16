@@ -199,8 +199,8 @@
         <translation>Désolé, mais il n&apos;y a pas de résultats de simulation à exporter vers CSV.</translation>
     </message>
     <message>
-        <source>This simulation requires %1 of memory while you have %2 left. Do you still wish to proceed?</source>
-        <translation>Cette simulation nécessite %1 de mémoire alors qu&apos;il vous en reste %2. Voulez-vous quand même continuer ?</translation>
+        <source>Sorry, but the simulation requires %1 of memory while you have %2 left.</source>
+        <translation>Désolé, mais la simulation requiert %1 de mémoire alors qu&apos;il vous reste %2.</translation>
     </message>
     <message>
         <source>NLA system(s)</source>

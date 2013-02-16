@@ -885,23 +885,16 @@ mActiveGraphPanel->plot()->setAxisScale(QwtPlot::xBottom, simulationData->starti
         bool runSimulation = true;
 
         double freeMemory = Core::freeMemory();
-        double neededMemory = mSimulation->neededMemory();
+        double requiredMemory = mSimulation->requiredMemory();
 
-        if (neededMemory > freeMemory) {
-            // More memory is needed to run the simulation than currently
-            // available, so ask the user whether he still wants to go ahead
+        if (requiredMemory > freeMemory) {
+            // More memory is required to run the simulation than is currently
+            // available, so let our user know about it
 
-            QString freeMemoryAsString = Core::sizeAsString(freeMemory);
-            QString neededMemoryAsString = Core::sizeAsString(neededMemory);
+            QMessageBox::warning(qApp->activeWindow(), tr("Run the simulation"),
+                                 tr("Sorry, but the simulation requires %1 of memory while you have %2 left.").arg(Core::sizeAsString(requiredMemory), Core::sizeAsString(freeMemory)));
 
-            if (QMessageBox::question(qApp->activeWindow(),
-                                      qApp->applicationName(),
-                                      tr("This simulation requires %1 of memory while you have %2 left. Do you still wish to proceed?").arg(neededMemoryAsString, freeMemoryAsString),
-                                      QMessageBox::Yes|QMessageBox::No,
-                                      QMessageBox::No) == QMessageBox::No)
-                // The user doesn't want to run the simulation
-
-                runSimulation = false;
+            runSimulation = false;
         }
 
         // Run the simulation if possible/wanted

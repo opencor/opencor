@@ -216,7 +216,7 @@ public:
     bool reset(const bool &pResultsArrays = true);
     void recomputeComputedConstantsAndVariables();
 
-    double neededMemory() const;
+    double requiredMemory() const;
 
     void run();
     void pause();
