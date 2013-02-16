@@ -305,9 +305,17 @@ void SingleCellSimulationViewInformationParametersWidget::populateModel(Core::Pr
         mModelParameters.insert(property, modelParameter);
     }
 
+    // Prevent ourselves from being updated (to avoid any flickering)
+
+    pPropertyEditor->setUpdatesEnabled(false);
+
     // Expand all our properties
 
     pPropertyEditor->expandAll();
+
+    // Allow ourselves to be updated again
+
+    pPropertyEditor->setUpdatesEnabled(true);
 }
 
 //==============================================================================

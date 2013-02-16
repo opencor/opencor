@@ -213,6 +213,14 @@ bool CellmlFile::load()
             return false;
         }
 
+    // Analyse our CellML file
+
+#ifdef QT_DEBUG
+    QTime time;
+
+    time.start();
+#endif
+
     // Retrieve the URI base
 
     ObjRef<iface::cellml_api::URI> xmlBase = mCellmlApiModel->xmlBase();
@@ -326,6 +334,10 @@ bool CellmlFile::load()
             }
         }
     }
+
+#ifdef QT_DEBUG
+    qDebug(" - CellML analysis time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
+#endif
 
     // All done, so...
 
