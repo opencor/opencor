@@ -144,7 +144,7 @@ public:
                                                        SingleCellSimulationViewSimulationData *pData);
     ~SingleCellSimulationViewSimulationResults();
 
-    void reset(const bool &pNoData);
+    void reset(const bool &pArrays);
 
     void addPoint(const double &pPoint, const bool &pEmitSignal = true);
 
@@ -173,7 +173,7 @@ private:
     double **mRates;
     double **mAlgebraic;
 
-    void createArrays(const bool &pNoData);
+    void createArrays(const bool &pArrays);
     void deleteArrays();
 
 Q_SIGNALS:
@@ -213,7 +213,7 @@ public:
 
     void setDelay(const int &pDelay);
 
-    void reset(const bool &pNoResultsData = false);
+    void reset(const bool &pResultsArrays = true);
     void recomputeComputedConstantsAndVariables();
 
     double neededMemory() const;

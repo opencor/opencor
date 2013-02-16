@@ -727,7 +727,7 @@ connect(mSimulation->results(), SIGNAL(updated()),
     // initialised in the case of its data)
 
     if (!hasError && newSimulation)
-        mSimulation->reset(true);
+        mSimulation->reset(false);
 
 //---GRY--- THE BELOW IS TEMPORARY, JUST FOR OUR DEMO...
 QMap<QString, QwtPlotCurve *>::const_iterator iter = mTraces.constBegin();
@@ -1266,13 +1266,13 @@ void SingleCellSimulationViewWidget::parameterNeeded(const QString &pFileName,
 
             if (   (pParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::Constant)
                 || (pParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::ComputedConstant))
-                yData = results->constants()[pParameter->index()];
+                yData = results->constants()?results->constants()[pParameter->index()]:0;
             else if (pParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::State)
-                yData = results->states()[pParameter->index()];
+                yData = results->states()?results->states()[pParameter->index()]:0;
             else if (pParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::Rate)
-                yData = results->rates()[pParameter->index()];
+                yData = results->rates()?results->rates()[pParameter->index()]:0;
             else
-                yData = results->algebraic()[pParameter->index()];
+                yData = results->algebraic()?results->algebraic()[pParameter->index()]:0;
 
             trace->setRawSamples(results->points(), yData, results->size());
         }

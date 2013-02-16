@@ -463,43 +463,50 @@ SingleCellSimulationViewSimulationResults::~SingleCellSimulationViewSimulationRe
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulationResults::createArrays(const bool &pNoData)
+void SingleCellSimulationViewSimulationResults::createArrays(const bool &pArrays)
 {
-    // Determine the size of our arrays
+    if (pArrays) {
+        // Create our points array
 
-    int dataSize = pNoData?0:mData->size();
+        mPoints = new double[mData->size()];
 
-    // Create our points array
+        // Create our constants arrays
 
-    mPoints = new double[dataSize];
+        mConstants = new double*[mCellmlFileRuntime->constantsCount()];
 
-    // Create our constants arrays
+        for (int i = 0, iMax = mCellmlFileRuntime->constantsCount(); i < iMax; ++i)
+            mConstants[i] = new double[mData->size()];
 
-    mConstants = new double*[mCellmlFileRuntime->constantsCount()];
+        // Create our states arrays
 
-    for (int i = 0, iMax = mCellmlFileRuntime->constantsCount(); i < iMax; ++i)
-        mConstants[i] = new double[dataSize];
+        mStates = new double*[mCellmlFileRuntime->statesCount()];
 
-    // Create our states arrays
+        for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
+            mStates[i] = new double[mData->size()];
 
-    mStates = new double*[mCellmlFileRuntime->statesCount()];
+        // Create our rates arrays
 
-    for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
-        mStates[i] = new double[dataSize];
+        mRates = new double*[mCellmlFileRuntime->ratesCount()];
 
-    // Create our rates arrays
+        for (int i = 0, iMax = mCellmlFileRuntime->ratesCount(); i < iMax; ++i)
+            mRates[i] = new double[mData->size()];
 
-    mRates = new double*[mCellmlFileRuntime->ratesCount()];
+        // Create our algebraic arrays
 
-    for (int i = 0, iMax = mCellmlFileRuntime->ratesCount(); i < iMax; ++i)
-        mRates[i] = new double[dataSize];
+        mAlgebraic = new double*[mCellmlFileRuntime->algebraicCount()];
 
-    // Create our algebraic arrays
+        for (int i = 0, iMax = mCellmlFileRuntime->algebraicCount(); i < iMax; ++i)
+            mAlgebraic[i] = new double[mData->size()];
+    } else {
+        // We want empty arrays, so...
 
-    mAlgebraic = new double*[mCellmlFileRuntime->algebraicCount()];
+        mPoints = 0;
 
-    for (int i = 0, iMax = mCellmlFileRuntime->algebraicCount(); i < iMax; ++i)
-        mAlgebraic[i] = new double[dataSize];
+        mConstants = 0;
+        mStates    = 0;
+        mRates     = 0;
+        mAlgebraic = 0;
+    }
 }
 
 //==============================================================================
@@ -546,7 +553,7 @@ void SingleCellSimulationViewSimulationResults::deleteArrays()
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulationResults::reset(const bool &pNoData)
+void SingleCellSimulationViewSimulationResults::reset(const bool &pArrays)
 {
     // Reset our size
 
@@ -555,7 +562,7 @@ void SingleCellSimulationViewSimulationResults::reset(const bool &pNoData)
     // Reset our arrays
 
     deleteArrays();
-    createArrays(pNoData);
+    createArrays(pArrays);
 
     // Let people know that our results have been updated
 
@@ -821,12 +828,12 @@ void SingleCellSimulationViewSimulation::setDelay(const int &pDelay)
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulation::reset(const bool &pNoResultsData)
+void SingleCellSimulationViewSimulation::reset(const bool &pResultsArrays)
 {
     // Reset both our data and results
 
     mData->reset();
-    mResults->reset(pNoResultsData);
+    mResults->reset(pResultsArrays);
 }
 
 //==============================================================================
