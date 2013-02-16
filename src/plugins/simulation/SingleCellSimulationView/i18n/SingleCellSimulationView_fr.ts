@@ -207,8 +207,8 @@
         <translation>Système(s) ANL</translation>
     </message>
     <message>
-        <source>Sorry, but we could not allocate the required memory for the simulation.</source>
-        <translation>Désolé, mais nous n&apos;avons pas pu allouer la mémoire nécessaire pour la simulation.</translation>
+        <source>Sorry, but we could not allocate all the memory required for the simulation.</source>
+        <translation>Désolé, mais nous n&apos;avons pas pu allouer toute la mémoire nécessaire pour la simulation.</translation>
     </message>
     <message>
         <source>Run the simulation</source>

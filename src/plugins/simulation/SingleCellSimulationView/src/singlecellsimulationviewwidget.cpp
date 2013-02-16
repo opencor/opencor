@@ -911,7 +911,7 @@ mActiveGraphPanel->plot()->setAxisScale(QwtPlot::xBottom, simulationData->starti
 mSimulationResultsSize = 0;
 if (!mSimulation->reset())
     QMessageBox::warning(qApp->activeWindow(), tr("Run the simulation"),
-                         tr("Sorry, but we could not allocate the required memory for the simulation."));
+                         tr("Sorry, but we could not allocate all the memory required for the simulation."));
 else
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
             mSimulation->run();
