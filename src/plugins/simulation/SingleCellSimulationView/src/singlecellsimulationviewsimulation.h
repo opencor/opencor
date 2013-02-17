@@ -183,15 +183,6 @@ class SingleCellSimulationViewSimulation : public QObject
     friend class SingleCellSimulationViewSimulationWorker;
 
 public:
-    enum WorkerStatus {
-        Unknown,
-        Idling,
-        Running,
-        Pausing,
-        Stopped,
-        Finished
-    };
-
     explicit SingleCellSimulationViewSimulation(const QString &pFileName,
                                                 CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
                                                 const SolverInterfaces &pSolverInterfaces);
@@ -202,8 +193,10 @@ public:
     SingleCellSimulationViewSimulationData * data() const;
     SingleCellSimulationViewSimulationResults * results() const;
 
-    WorkerStatus workerStatus() const;
-    double workerProgress() const;
+    bool isRunning() const;
+    bool isPaused() const;
+
+    double progress() const;
 
     void setDelay(const int &pDelay);
 
@@ -219,7 +212,6 @@ public:
 
 private:
     SingleCellSimulationViewSimulationWorker *mWorker;
-    Core::Thread *mWorkerThread;
 
     QString mFileName;
 
@@ -227,15 +219,12 @@ private:
 
     SolverInterfaces mSolverInterfaces;
 
-    WorkerStatus mWorkerStatus;
-    double mWorkerProgress;
-
     SingleCellSimulationViewSimulationData *mData;
     SingleCellSimulationViewSimulationResults *mResults;
 
 Q_SIGNALS:
     void running();
-    void pausing();
+    void paused();
     void stopped(const int &pElapsedTime);
 
     void error(const QString &pMessage);

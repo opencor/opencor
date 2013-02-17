@@ -818,8 +818,6 @@ SingleCellSimulationViewSimulation::SingleCellSimulationViewSimulation(const QSt
     mFileName(pFileName),
     mCellmlFileRuntime(pCellmlFileRuntime),
     mSolverInterfaces(pSolverInterfaces),
-    mWorkerStatus(Unknown),
-    mWorkerProgress(0.0),
     mData(new SingleCellSimulationViewSimulationData(pCellmlFileRuntime, pSolverInterfaces)),
     mResults(new SingleCellSimulationViewSimulationResults(pCellmlFileRuntime, mData))
 {
@@ -872,20 +870,29 @@ SingleCellSimulationViewSimulationResults * SingleCellSimulationViewSimulation::
 
 //==============================================================================
 
-SingleCellSimulationViewSimulation::WorkerStatus SingleCellSimulationViewSimulation::workerStatus() const
+bool SingleCellSimulationViewSimulation::isRunning() const
 {
-    // Return our worker's status
+    // Return whether we are running
 
-    return mWorkerStatus;
+    return mWorker?mWorker->isRunning():false;
 }
 
 //==============================================================================
 
-double SingleCellSimulationViewSimulation::workerProgress() const
+bool SingleCellSimulationViewSimulation::isPaused() const
 {
-    // Return our worker's progress
+    // Return whether we are paused
 
-    return mWorkerProgress;
+    return mWorker?mWorker->isPaused():false;
+}
+
+//==============================================================================
+
+double SingleCellSimulationViewSimulation::progress() const
+{
+    // Return our progress
+
+    return mWorker?mWorker->progress():0.0;
 }
 
 //==============================================================================
@@ -981,8 +988,8 @@ void SingleCellSimulationViewSimulation::run()
 
         connect(mWorker, SIGNAL(running()),
                 this, SIGNAL(running()));
-        connect(mWorker, SIGNAL(pausing()),
-                this, SIGNAL(pausing()));
+        connect(mWorker, SIGNAL(paused()),
+                this, SIGNAL(paused()));
 
         connect(mWorker, SIGNAL(finished(const int &)),
                 this, SLOT(finished(const int &)));
@@ -991,9 +998,6 @@ void SingleCellSimulationViewSimulation::run()
                 this, SIGNAL(error(const QString &)));
 
         // Start our worker thread
-
-        mWorkerStatus   = Idling;
-        mWorkerProgress = 0.0;
 
         mWorker->run();
     }
@@ -1036,9 +1040,6 @@ void SingleCellSimulationViewSimulation::finished(const int &pElapsedTime)
     // Our worker is done (and it will get deleted and everything), so...
 
     mWorker = 0;
-
-    mWorkerStatus   = Unknown;
-    mWorkerProgress = 0.0;
 
     // Let people know that we have stopped
 

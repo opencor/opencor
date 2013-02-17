@@ -187,14 +187,6 @@
         <translation>Fichier CSV</translation>
     </message>
     <message>
-        <source>CSV Export</source>
-        <translation>Export CSV</translation>
-    </message>
-    <message>
-        <source>Sorry, but there are no simulation results to export to CSV.</source>
-        <translation>Désolé, mais il n&apos;y a pas de résultats de simulation à exporter vers CSV.</translation>
-    </message>
-    <message>
         <source>Sorry, but the simulation requires %1 of memory while you have %2 left.</source>
         <translation>Désolé, mais la simulation requiert %1 de mémoire alors qu&apos;il vous reste %2.</translation>
     </message>

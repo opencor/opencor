@@ -136,14 +136,14 @@ private:
 
 SingleCellSimulationViewGraphPanelWidget *mActiveGraphPanel;
 QMap<QString, QwtPlotCurve *> mTraces;
-int mSimulationResultsSize;
+double mSimulationProgress;
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 
     void setDelayValue(const int &pDelayValue);
 
     void output(const QString &pMessage);
 
-    void setSimulationMode(const bool &pEnabled, const bool &pRunVisible);
+    void updateSimulationMode();
 
     void clearGraphPanels();
     void clearActiveGraphPanel();
@@ -171,7 +171,7 @@ private Q_SLOTS:
     void updateDelayValue(const double &pDelayValue);
 
     void simulationRunning();
-    void simulationPausing();
+    void simulationPaused();
     void simulationStopped(const int &pElapsedTime);
 
     void resetProgressBar();

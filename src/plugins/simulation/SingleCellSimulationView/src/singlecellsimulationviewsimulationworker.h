@@ -50,6 +50,11 @@ public:
                                                       CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
                                                       SingleCellSimulationViewSimulation *pSimulation);
 
+    bool isRunning() const;
+    bool isPaused() const;
+
+    double progress() const;
+
     void run();
     void pause();
     void resume();
@@ -58,23 +63,24 @@ public:
 private:
     Core::Thread *mThread;
 
-    bool mActive;
-    bool mPausing;
-
-    QMutex mStatusMutex;
-    QWaitCondition mStatusCondition;
-
     SolverInterfaces mSolverInterfaces;
 
     CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
 
     SingleCellSimulationViewSimulation *mSimulation;
 
+    double mProgress;
+
+    bool mPaused;
+    bool mStopped;
+
+    QWaitCondition mPausedCondition;
+
     bool mError;
 
 Q_SIGNALS:
     void running();
-    void pausing();
+    void paused();
 
     void finished(const int &pElapsedTime);
 

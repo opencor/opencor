@@ -77,7 +77,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
     mSplitterWidgetSizes(QList<int>()),
     mProgresses(QMap<QString, int>()),
 mTraces(QMap<QString, QwtPlotCurve *>()),
-mSimulationResultsSize(0)
+mSimulationProgress(-1.0)
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 {
     // Set up the GUI
@@ -369,27 +369,28 @@ void SingleCellSimulationViewWidget::output(const QString &pMessage)
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::setSimulationMode(const bool &pEnabled,
-                                                       const bool &pRunVisible)
+void SingleCellSimulationViewWidget::updateSimulationMode()
 {
+    bool simulationModeEnabled = mSimulation->isRunning() || mSimulation->isPaused();
+
     // Show/hide our run and pause actions
 
-    mGui->actionRun->setVisible(pRunVisible);
-    mGui->actionPause->setVisible(!pRunVisible);
+    mGui->actionRun->setVisible(!mSimulation->isRunning() || mSimulation->isPaused());
+    mGui->actionPause->setVisible(!mGui->actionRun->isVisible());
 
     // Enable/disable our stop action
 
-    mGui->actionStop->setEnabled(pEnabled);
+    mGui->actionStop->setEnabled(simulationModeEnabled);
 
     // Enable or disable the simulation and solvers widgets
 
-    mContentsWidget->informationWidget()->simulationWidget()->setEnabled(!pEnabled);
-    mContentsWidget->informationWidget()->solversWidget()->setEnabled(!pEnabled);
+    mContentsWidget->informationWidget()->simulationWidget()->setEnabled(!simulationModeEnabled);
+    mContentsWidget->informationWidget()->solversWidget()->setEnabled(!simulationModeEnabled);
 
     // Give the focus to our focus proxy, in case we leave the simulation mode
     // (so that the user can modify simulation data, etc.)
 
-    if (!pEnabled)
+    if (!simulationModeEnabled)
         focusProxy()->setFocus();
 }
 
@@ -466,8 +467,8 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
         connect(mSimulation, SIGNAL(running()),
                 this, SLOT(simulationRunning()));
-        connect(mSimulation, SIGNAL(pausing()),
-                this, SLOT(simulationPausing()));
+        connect(mSimulation, SIGNAL(paused()),
+                this, SLOT(simulationPaused()));
         connect(mSimulation, SIGNAL(stopped(const int &)),
                 this, SLOT(simulationStopped(const int &)));
 
@@ -482,10 +483,10 @@ connect(mSimulation->results(), SIGNAL(updated()),
         mSimulations.insert(pFileName, mSimulation);
     }
 
-    // Reset our file tab icon and stop tracking its simulation progress (in
-    // case a simulation is running)
+    // Reset our file tab icon and stop tracking our simulation progress, in
+    // case our simulation is running
 
-    if (mSimulation->workerStatus() != SingleCellSimulationViewSimulation::Unknown) {
+    if (mSimulation->isRunning()) {
         mProgresses.remove(mSimulation->fileName());
 
         emit updateFileTabIcon(mSimulation->fileName(), QIcon());
@@ -493,7 +494,7 @@ connect(mSimulation->results(), SIGNAL(updated()),
 
     // Set the initial enabled state of our CSV action
 
-    mGui->actionCsvExport->setEnabled(mSimulation->results()->size());
+    mGui->actionCsvExport->setEnabled(mSimulation->progress());
 
     // Output some information about our CellML file
 
@@ -541,17 +542,14 @@ connect(mSimulation->results(), SIGNAL(updated()),
 
     mGui->actionRun->setEnabled(variableOfIntegration);
 
-    // Set our simulation mode
+    // Update our simulation mode
 
-    setSimulationMode(   (mSimulation->workerStatus() == SingleCellSimulationViewSimulation::Running)
-                      || (mSimulation->workerStatus() == SingleCellSimulationViewSimulation::Pausing),
-                         (mSimulation->workerStatus() == SingleCellSimulationViewSimulation::Unknown)
-                      || (mSimulation->workerStatus() == SingleCellSimulationViewSimulation::Pausing));
+    updateSimulationMode();
 
-    // Update our previous (if any) and current simulation progresses
+    // Update our previous (if any) and current simulation results
 
     if (   previousSimulation
-        && (previousSimulation->workerStatus() != SingleCellSimulationViewSimulation::Unknown))
+        && (previousSimulation->isRunning() || previousSimulation->isPaused()))
         updateResults(previousSimulation);
 
     updateResults();
@@ -831,18 +829,15 @@ QIcon SingleCellSimulationViewWidget::fileTabIcon(const QString &pFileName) cons
 
 void SingleCellSimulationViewWidget::on_actionRun_triggered()
 {
-    // Make sure that we have a simulation
+    // Run or resume our simulation
 
-    if (!mSimulation)
-        return;
+    if (mSimulation->isPaused()) {
+        // Our simulation is paused, so resume it
 
-    // Get ready for the simulation
-    // Note: there are a few things that we need to do before running the
-    //       simulation, but those things don't need to be done again when
-    //       resuming a simulation...
-
-    if (mSimulation->workerStatus() == SingleCellSimulationViewSimulation::Unknown) {
-        // Cancel any editing of our simulation information
+        mSimulation->resume();
+    } else {
+        // Our simulation is not paused, so cancel any editing of our simulation
+        // information
 
         mContentsWidget->informationWidget()->cancelEditing();
 
@@ -903,7 +898,7 @@ mActiveGraphPanel->plot()->setAxisScale(QwtPlot::xBottom, simulationData->starti
 
         if (runSimulation)
 {
-mSimulationResultsSize = 0;
+mSimulationProgress = -1.0;
 if (!mSimulation->reset())
     QMessageBox::warning(qApp->activeWindow(), tr("Run the simulation"),
                          tr("Sorry, but we could not allocate all the memory required for the simulation."));
@@ -911,10 +906,6 @@ else
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
             mSimulation->run();
 }
-    } else if (mSimulation->workerStatus() == SingleCellSimulationViewSimulation::Pausing) {
-        // Our simulation was paused, so resume it
-
-        mSimulation->resume();
     }
 }
 
@@ -922,12 +913,7 @@ else
 
 void SingleCellSimulationViewWidget::on_actionPause_triggered()
 {
-    // Make sure that we have a simulation
-
-    if (!mSimulation)
-        return;
-
-    // Pause the simulation
+    // Pause our simulation
 
     mSimulation->pause();
 }
@@ -936,12 +922,7 @@ void SingleCellSimulationViewWidget::on_actionPause_triggered()
 
 void SingleCellSimulationViewWidget::on_actionStop_triggered()
 {
-    // Make sure that we have a simulation
-
-    if (!mSimulation)
-        return;
-
-    // Stop the simulation
+    // Stop our simulation
 
     mSimulation->stop();
 }
@@ -975,16 +956,6 @@ void SingleCellSimulationViewWidget::on_actionRemove_triggered()
 
 void SingleCellSimulationViewWidget::on_actionCsvExport_triggered()
 {
-    // Make sure that we have simulation data results to export to CSV
-
-    if (   !mSimulation->results()
-        || !mSimulation->results()->size()) {
-        QMessageBox::warning(qApp->activeWindow(), tr("CSV Export"),
-                             tr("Sorry, but there are no simulation results to export to CSV."));
-
-        return;
-    }
-
     // Export our simulation data results to a CSV file
 
     QString fileName = Core::getSaveFileName(tr("Export to a CSV file"),
@@ -1013,22 +984,22 @@ void SingleCellSimulationViewWidget::updateDelayValue(const double &pDelayValue)
 
 void SingleCellSimulationViewWidget::simulationRunning()
 {
-    // Our simulation worker is running, so update our simulation mode, but only
-    // if it is the active simulation
+    // Our simulation is running, so update our simulation mode, but only if it
+    // is the active simulation
 
     if (qobject_cast<SingleCellSimulationViewSimulation *>(sender()) == mSimulation)
-        setSimulationMode(true, false);
+        updateSimulationMode();
 }
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::simulationPausing()
+void SingleCellSimulationViewWidget::simulationPaused()
 {
-    // Our simulation worker is pausing, so update our run/pause mode, but only
-    // if it is the active simulation
+    // Our simulation is paused, so update our simulation mode, but only if it
+    // is the active simulation
 
     if (qobject_cast<SingleCellSimulationViewSimulation *>(sender()) == mSimulation)
-        setSimulationMode(true, true);
+        updateSimulationMode();
 }
 
 //==============================================================================
@@ -1066,7 +1037,7 @@ void SingleCellSimulationViewWidget::simulationStopped(const int &pElapsedTime)
 
         QTimer::singleShot(ResetDelay, this, SLOT(resetProgressBar()));
 
-        setSimulationMode(false, true);
+        updateSimulationMode();
     }
 
     // Remove our tracking of our simulation progress and let people know that
@@ -1282,11 +1253,13 @@ void SingleCellSimulationViewWidget::parameterNeeded(const QString &pFileName,
 void SingleCellSimulationViewWidget::updateResults(SingleCellSimulationViewSimulation *pSimulation)
 {
     // Update our traces, if any and only if actually necessary
+static int counter = 0;
+qDebug(">>> Counter: %d", ++counter);
 
     SingleCellSimulationViewSimulation *simulation = pSimulation?pSimulation:mSimulation;
 
-    if (mSimulationResultsSize != simulation->results()->size()) {
-        mSimulationResultsSize = simulation->results()->size();
+    if (mSimulationProgress != simulation->progress()) {
+        mSimulationProgress = simulation->progress();
 
         QMap<QString, QwtPlotCurve *>::const_iterator iter = mTraces.constBegin();
 
@@ -1344,16 +1317,16 @@ void SingleCellSimulationViewWidget::updateResults(SingleCellSimulationViewSimul
         }
     }
 
-    // Our simulation worker has made some progres, so update our progress bar,
+    // Our simulation worker has made some progress, so update our progress bar,
     // but only if it is the active simulation
 
     if (simulation == mSimulation) {
         // We are dealing with the active simulation, so update our progress bar
 
-        mProgressBarWidget->setValue(simulation->workerProgress());
+        mProgressBarWidget->setValue(simulation->progress());
     } else {
-        // We are dealing with another simulation, so let people know that we
-        // should update the icon of its corresponding file tab
+        // We are dealing with another simulation, so create an icon that shwos
+        // the other simulation's progress and let people know about it
         // Note: we need to retrieve the name of the file associated with the
         //       other simulation since we have only one simulation object at
         //       any given time, and anyone handling the updateFileTabIcon()
@@ -1361,7 +1334,7 @@ void SingleCellSimulationViewWidget::updateResults(SingleCellSimulationViewSimul
         //       simulation the update is...
 
         int oldProgress = mProgresses.value(simulation->fileName(), -1);
-        int newProgress = (tabBarIconSize()-2)*simulation->workerProgress();
+        int newProgress = (tabBarIconSize()-2)*simulation->progress();
         // Note: tabBarIconSize()-2 because we want a one-pixel wide
         //       border...
 
@@ -1382,7 +1355,7 @@ void SingleCellSimulationViewWidget::updateResults(SingleCellSimulationViewSimul
 
     // Enable/disable the export to CSV
 
-    mGui->actionCsvExport->setEnabled(simulation->results()->size());
+    mGui->actionCsvExport->setEnabled(simulation->progress());
 }
 
 //==============================================================================
