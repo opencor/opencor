@@ -83,10 +83,6 @@
         <source>the simulation worker could not be created</source>
         <translation>l&apos;agent de simulation n&apos;a pas pu être créé</translation>
     </message>
-    <message>
-        <source>the thread for the simulation worker could not be created</source>
-        <translation>Le fil de l&apos;agent de simulation n&apos;a pas pu être créé</translation>
-    </message>
 </context>
 <context>
     <name>OpenCOR::SingleCellSimulationView::SingleCellSimulationViewWidget</name>

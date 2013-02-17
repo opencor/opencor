@@ -815,7 +815,6 @@ SingleCellSimulationViewSimulation::SingleCellSimulationViewSimulation(const QSt
                                                                        CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
                                                                        const SolverInterfaces &pSolverInterfaces) :
     mWorker(0),
-    mWorkerThread(0),
     mFileName(pFileName),
     mCellmlFileRuntime(pCellmlFileRuntime),
     mSolverInterfaces(pSolverInterfaces),
@@ -978,28 +977,7 @@ void SingleCellSimulationViewSimulation::run()
             return;
         }
 
-        // Create the thread in which our worker will work
-
-        mWorkerThread = new Core::Thread();
-
-        if (!mWorkerThread) {
-            delete mWorker;
-
-            mWorker = 0;
-
-            emit error(tr("the thread for the simulation worker could not be created"));
-
-            return;
-        }
-
-        // Move our worker to its thread
-
-        mWorker->moveToThread(mWorkerThread);
-
         // Create a few connections
-
-        connect(mWorkerThread, SIGNAL(started()),
-                mWorker, SLOT(run()));
 
         connect(mWorker, SIGNAL(running()),
                 this, SIGNAL(running()));
@@ -1012,20 +990,12 @@ void SingleCellSimulationViewSimulation::run()
         connect(mWorker, SIGNAL(error(const QString &)),
                 this, SIGNAL(error(const QString &)));
 
-        connect(mWorker, SIGNAL(finished(const int &)),
-                mWorkerThread, SLOT(quit()));
-        connect(mWorker, SIGNAL(finished(const int &)),
-                mWorker, SLOT(deleteLater()));
-
-        connect(mWorkerThread, SIGNAL(finished()),
-                mWorkerThread, SLOT(deleteLater()));
-
         // Start our worker thread
 
         mWorkerStatus   = Idling;
         mWorkerProgress = 0.0;
 
-        mWorkerThread->start();
+        mWorker->run();
     }
 }
 
@@ -1065,8 +1035,7 @@ void SingleCellSimulationViewSimulation::finished(const int &pElapsedTime)
 {
     // Our worker is done (and it will get deleted and everything), so...
 
-    mWorker       = 0;
-    mWorkerThread = 0;
+    mWorker = 0;
 
     mWorkerStatus   = Unknown;
     mWorkerProgress = 0.0;

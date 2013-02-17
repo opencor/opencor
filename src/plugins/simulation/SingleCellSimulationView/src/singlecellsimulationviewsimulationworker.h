@@ -27,6 +27,12 @@ namespace CellMLSupport {
 
 //==============================================================================
 
+namespace Core {
+    class Thread;
+}   // namespace Core
+
+//==============================================================================
+
 namespace SingleCellSimulationView {
 
 //==============================================================================
@@ -44,11 +50,14 @@ public:
                                                       CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
                                                       SingleCellSimulationViewSimulation *pSimulation);
 
+    void run();
     void pause();
     void resume();
     void stop();
 
 private:
+    Core::Thread *mThread;
+
     bool mActive;
     bool mPausing;
 
@@ -71,8 +80,8 @@ Q_SIGNALS:
 
     void error(const QString &pMessage);
 
-public Q_SLOTS:
-    void run();
+private Q_SLOTS:
+    void started();
 
     void emitError(const QString &pMessage);
 };

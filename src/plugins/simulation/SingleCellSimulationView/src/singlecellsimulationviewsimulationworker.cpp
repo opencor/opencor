@@ -29,13 +29,42 @@ SingleCellSimulationViewSimulationWorker::SingleCellSimulationViewSimulationWork
     mSimulation(pSimulation),
     mError(false)
 {
+    // Create our thread
+
+    mThread = new Core::Thread();
+
+    // Move ourselves to our thread
+
+    moveToThread(mThread);
+
+    // Create a few connections
+
+    connect(mThread, SIGNAL(started()),
+            this, SLOT(started()));
+
+    connect(this, SIGNAL(finished(const int &)),
+            mThread, SLOT(quit()));
+
+    connect(mThread, SIGNAL(finished()),
+            mThread, SLOT(deleteLater()));
+    connect(mThread, SIGNAL(finished()),
+            this, SLOT(deleteLater()));
 }
 
 //==============================================================================
 
 void SingleCellSimulationViewSimulationWorker::run()
 {
-    // Run ourselves, but only if we are currently idling
+    // Start our thread
+
+    mThread->start();
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewSimulationWorker::started()
+{
+    // Start ourselves, but only if we are currently idling
 
     if (mSimulation->mWorkerStatus == SingleCellSimulationViewSimulation::Idling) {
         // We are now running

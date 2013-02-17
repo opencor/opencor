@@ -25,12 +25,6 @@ namespace OpenCOR {
 
 //==============================================================================
 
-namespace Core {
-    class Thread;
-}   // namespace Core
-
-//==============================================================================
-
 namespace CellMLSupport {
     class CellmlFileRuntime;
 }   // namespace CellMLSupport
