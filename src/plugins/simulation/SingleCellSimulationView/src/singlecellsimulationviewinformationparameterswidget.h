@@ -73,19 +73,22 @@ private:
                        CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
 
 Q_SIGNALS:
-void parameterNeeded(const QString &pFileName,
-                     CellMLSupport::CellmlFileRuntimeModelParameter *pParameter,
-                     const bool &pNeeded);
+void showHideParameterPlot(const QString &pFileName,
+                           CellMLSupport::CellmlFileRuntimeModelParameter *pParameter,
+                           const bool &pShowParameterPlot);
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
+
+public Q_SLOTS:
+    void updateParameters();
 
 private Q_SLOTS:
     void propertyEditorSectionResized(const int &pLogicalIndex,
                                       const int &pOldSize, const int &pNewSize);
 
-    void updateProperties();
     void propertyChanged(Core::Property *pProperty);
 
-void emitParameterNeeded(Core::Property *pProperty, const bool &pNeeded);
+void emitShowHideParameterPlot(Core::Property *pProperty,
+                               const bool &pShowParameterPlot);
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 };
 

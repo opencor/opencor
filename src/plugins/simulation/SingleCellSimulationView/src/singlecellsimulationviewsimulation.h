@@ -131,8 +131,6 @@ Q_SIGNALS:
 
 class SingleCellSimulationViewSimulationResults : public QObject
 {
-    Q_OBJECT
-
 public:
     explicit SingleCellSimulationViewSimulationResults(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
                                                        SingleCellSimulationViewSimulationData *pData);
@@ -140,9 +138,9 @@ public:
 
     bool reset(const bool &pCreateArrays);
 
-    void addPoint(const double &pPoint, const bool &pEmitSignal = true);
+    void addPoint(const double &pPoint);
 
-    int size() const;
+    qulonglong size() const;
 
     double * points() const;
 
@@ -158,7 +156,7 @@ private:
 
     SingleCellSimulationViewSimulationData *mData;
 
-    int mSize;
+    qulonglong mSize;
 
     double *mPoints;
 
@@ -169,9 +167,6 @@ private:
 
     bool createArrays();
     void deleteArrays();
-
-Q_SIGNALS:
-    void updated();
 };
 
 //==============================================================================

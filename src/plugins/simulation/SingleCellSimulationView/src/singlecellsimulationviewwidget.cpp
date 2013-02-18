@@ -77,7 +77,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
     mSplitterWidgetSizes(QList<int>()),
     mProgresses(QMap<QString, int>()),
 mTraces(QMap<QString, QwtPlotCurve *>()),
-mSimulationProgress(-1.0)
+mSimulationResultsSize(0)
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 {
     // Set up the GUI
@@ -164,12 +164,12 @@ mSimulationProgress(-1.0)
 
     connect(mContentsWidget->graphPanelsWidget(), SIGNAL(removeGraphPanelsEnabled(const bool &)),
             mGui->actionRemove, SLOT(setEnabled(bool)));
-connect(mContentsWidget->informationWidget()->parametersWidget(), SIGNAL(parameterNeeded(const QString &,
-                                                                                         CellMLSupport::CellmlFileRuntimeModelParameter *,
-                                                                                         const bool &)),
-        this, SLOT(parameterNeeded(const QString &,
-                                   CellMLSupport::CellmlFileRuntimeModelParameter *,
-                                   const bool &)));
+connect(mContentsWidget->informationWidget()->parametersWidget(), SIGNAL(showHideParameterPlot(const QString &,
+                                                                                               CellMLSupport::CellmlFileRuntimeModelParameter *,
+                                                                                               const bool &)),
+        this, SLOT(showHideParameterPlot(const QString &,
+                                         CellMLSupport::CellmlFileRuntimeModelParameter *,
+                                         const bool &)));
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 
     // Create and add our invalid simulation message widget
@@ -475,9 +475,6 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         connect(mSimulation, SIGNAL(error(const QString &)),
                 this, SLOT(simulationError(const QString &)));
 
-connect(mSimulation->results(), SIGNAL(updated()),
-        this, SLOT(updateResults()));
-//---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
         // Keep track of our simulation object
 
         mSimulations.insert(pFileName, mSimulation);
@@ -550,9 +547,9 @@ connect(mSimulation->results(), SIGNAL(updated()),
 
     if (   previousSimulation
         && (previousSimulation->isRunning() || previousSimulation->isPaused()))
-        updateResults(previousSimulation);
+        updateResults(previousSimulation, previousSimulation->results()->size());
 
-    updateResults();
+    updateResults(mSimulation, mSimulation->results()->size());
 
     // Check that we have a valid runtime
 
@@ -898,13 +895,15 @@ mActiveGraphPanel->plot()->setAxisScale(QwtPlot::xBottom, simulationData->starti
 
         if (runSimulation)
 {
-mSimulationProgress = -1.0;
-if (!mSimulation->reset())
-    QMessageBox::warning(qApp->activeWindow(), tr("Run the simulation"),
-                         tr("Sorry, but we could not allocate all the memory required for the simulation."));
-else
+mSimulationResultsSize = 0;
+runSimulation = mSimulation->reset();
+if (runSimulation) {
+    updateResults();
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
             mSimulation->run();
+} else {
+    QMessageBox::warning(qApp->activeWindow(), tr("Run the simulation"),
+                         tr("Sorry, but we could not allocate all the memory required for the simulation."));
 }
     }
 }
@@ -984,22 +983,31 @@ void SingleCellSimulationViewWidget::updateDelayValue(const double &pDelayValue)
 
 void SingleCellSimulationViewWidget::simulationRunning()
 {
-    // Our simulation is running, so update our simulation mode, but only if it
-    // is the active simulation
+    // Our simulation is running, so update our simulation mode and check for
+    // results, but only we are dealing with the active simulation
 
-    if (qobject_cast<SingleCellSimulationViewSimulation *>(sender()) == mSimulation)
+    if (qobject_cast<SingleCellSimulationViewSimulation *>(sender()) == mSimulation) {
         updateSimulationMode();
+
+        checkResults();
+    }
 }
 
 //==============================================================================
 
 void SingleCellSimulationViewWidget::simulationPaused()
 {
-    // Our simulation is paused, so update our simulation mode, but only if it
-    // is the active simulation
+    // Our simulation is paused, so update our parameters, check for results and
+    // and update our simulation mode, but only if we are dealing with the
+    // active simulation
 
-    if (qobject_cast<SingleCellSimulationViewSimulation *>(sender()) == mSimulation)
+    if (qobject_cast<SingleCellSimulationViewSimulation *>(sender()) == mSimulation) {
+        mContentsWidget->informationWidget()->parametersWidget()->updateParameters();
+
+        checkResults();
+
         updateSimulationMode();
+    }
 }
 
 //==============================================================================
@@ -1012,8 +1020,8 @@ void SingleCellSimulationViewWidget::simulationStopped(const int &pElapsedTime)
     static const int ResetDelay = 169;
 
     // Our simulation worker has stopped, so output the elapsed time, reset our
-    // progress bar (with a bit of a delay) and update our simulation mode, but
-    // only if it is the active simulation
+    // progress bar (with a bit of a delay) and update our parameters and
+    // simulation mode, but only if we are dealingw ith the active simulation
 
     SingleCellSimulationViewSimulation *simulation = qobject_cast<SingleCellSimulationViewSimulation *>(sender());
 
@@ -1036,6 +1044,10 @@ void SingleCellSimulationViewWidget::simulationStopped(const int &pElapsedTime)
         }
 
         QTimer::singleShot(ResetDelay, this, SLOT(resetProgressBar()));
+
+        // Update our parameters and simulation mode
+
+        mContentsWidget->informationWidget()->parametersWidget()->updateParameters();
 
         updateSimulationMode();
     }
@@ -1090,7 +1102,8 @@ void SingleCellSimulationViewWidget::resetFileTabIcon()
 void SingleCellSimulationViewWidget::simulationError(const QString &pMessage,
                                                      const ErrorType &pErrorType)
 {
-    // Output the simulation error, but only if it is for the active simulation
+    // Output the simulation error, but only if we are dealing with the active
+    // simulation
 
     SingleCellSimulationViewSimulation *simulation = qobject_cast<SingleCellSimulationViewSimulation *>(sender());
 
@@ -1199,9 +1212,9 @@ QString SingleCellSimulationViewWidget::parameterKey(const QString &pFileName,
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::parameterNeeded(const QString &pFileName,
-                                                     CellMLSupport::CellmlFileRuntimeModelParameter *pParameter,
-                                                     const bool &pNeeded)
+void SingleCellSimulationViewWidget::showHideParameterPlot(const QString &pFileName,
+                                                           CellMLSupport::CellmlFileRuntimeModelParameter *pParameter,
+                                                           const bool &pShowParameterPlot)
 {
     // Determine the key for the parameter
 
@@ -1213,13 +1226,13 @@ void SingleCellSimulationViewWidget::parameterNeeded(const QString &pFileName,
 
     // Check whether to create/remove the trace
 
-    if (trace && !pNeeded) {
+    if (trace && !pShowParameterPlot) {
         // We have a trace and we want to remove it
 
         mActiveGraphPanel->removeTrace(trace);
 
         mTraces.remove(key);
-    } else if (!trace && pNeeded) {
+    } else if (!trace && pShowParameterPlot) {
         // We don't have a trace and want to create one
 
         QwtPlotCurve *trace = mActiveGraphPanel->addTrace();
@@ -1250,16 +1263,21 @@ void SingleCellSimulationViewWidget::parameterNeeded(const QString &pFileName,
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::updateResults(SingleCellSimulationViewSimulation *pSimulation)
+void SingleCellSimulationViewWidget::updateResults(SingleCellSimulationViewSimulation *pSimulation,
+                                                   const qulonglong &pSize)
 {
     // Update our traces, if any and only if actually necessary
-static int counter = 0;
-qDebug(">>> Counter: %d", ++counter);
 
     SingleCellSimulationViewSimulation *simulation = pSimulation?pSimulation:mSimulation;
 
-    if (mSimulationProgress != simulation->progress()) {
-        mSimulationProgress = simulation->progress();
+    // Our simulation worker has made some progress, so update our progress bar,
+    // but only if we are dealing with the active simulation
+
+    if (simulation == mSimulation) {
+        // We are dealing with the active simulation, so update our traces and
+        // progress bar, and enable/disable the export to CSV
+
+        // Update our traces, if any
 
         QMap<QString, QwtPlotCurve *>::const_iterator iter = mTraces.constBegin();
 
@@ -1308,25 +1326,24 @@ qDebug(">>> Counter: %d", ++counter);
 
                 // Assign the X and Y arrays to our trace
 
-                trace->setRawSamples(simulation->results()->points(), yData, simulation->results()->size());
+                trace->setRawSamples(simulation->results()->points(), yData, (pSize == -1)?mSimulationResultsSize:pSize);
             }
 
             // Go to the next trace
 
             ++iter;
         }
-    }
 
-    // Our simulation worker has made some progress, so update our progress bar,
-    // but only if it is the active simulation
-
-    if (simulation == mSimulation) {
-        // We are dealing with the active simulation, so update our progress bar
+        // Update our progress bar
 
         mProgressBarWidget->setValue(simulation->progress());
+
+        // Enable/disable our export to CSV
+
+        mGui->actionCsvExport->setEnabled(simulation->progress());
     } else {
-        // We are dealing with another simulation, so create an icon that shwos
-        // the other simulation's progress and let people know about it
+        // We are dealing with another simulation, so simply create an icon that
+        // shows the other simulation's progress and let people know about it
         // Note: we need to retrieve the name of the file associated with the
         //       other simulation since we have only one simulation object at
         //       any given time, and anyone handling the updateFileTabIcon()
@@ -1352,10 +1369,27 @@ qDebug(">>> Counter: %d", ++counter);
                                    fileTabIcon(simulation->fileName()));
         }
     }
+}
 
-    // Enable/disable the export to CSV
+//==============================================================================
 
-    mGui->actionCsvExport->setEnabled(simulation->progress());
+void SingleCellSimulationViewWidget::checkResults()
+{
+    // Update our simulation results size
+
+    mSimulationResultsSize = mSimulation->results()->size();
+
+    // Update our results
+
+    updateResults();
+
+    // Determine whether we need to recheck our simulation results, but only if
+    // we haven't got all of our results
+
+    if (   !mSimulationResultsSize
+        || (mSimulationResultsSize != mSimulation->results()->size())
+        || mSimulation->isRunning())
+        QTimer::singleShot(0, this, SLOT(checkResults()));
 }
 
 //==============================================================================

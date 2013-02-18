@@ -136,7 +136,7 @@ private:
 
 SingleCellSimulationViewGraphPanelWidget *mActiveGraphPanel;
 QMap<QString, QwtPlotCurve *> mTraces;
-double mSimulationProgress;
+qulonglong mSimulationResultsSize;
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 
     void setDelayValue(const int &pDelayValue);
@@ -154,6 +154,8 @@ double mSimulationProgress;
 
 QString parameterKey(const QString &pFileName,
                      CellMLSupport::CellmlFileRuntimeModelParameter *pParameter) const;
+void updateResults(SingleCellSimulationViewSimulation *pSimulation = 0,
+                   const qulonglong &pSize = -1);
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 
 private Q_SLOTS:
@@ -185,10 +187,10 @@ private Q_SLOTS:
     void simulationPropertyChanged(Core::Property *pProperty);
     void solversPropertyChanged(Core::Property *pProperty);
 
-void parameterNeeded(const QString &pFileName,
-                     CellMLSupport::CellmlFileRuntimeModelParameter *pParameter,
-                     const bool &pNeeded);
-void updateResults(SingleCellSimulationViewSimulation *pSimulation = 0);
+void showHideParameterPlot(const QString &pFileName,
+                           CellMLSupport::CellmlFileRuntimeModelParameter *pParameter,
+                           const bool &pShowParameterPlot);
+void checkResults();
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 };
 

@@ -631,11 +631,6 @@ bool SingleCellSimulationViewSimulationResults::reset(const bool &pCreateArrays)
 
     bool res = pCreateArrays?createArrays():true;
 
-    // Let people know that our results have been updated
-
-    if (pCreateArrays && res)
-        emit updated();
-
     // We are done, so...
 
     return res;
@@ -643,8 +638,7 @@ bool SingleCellSimulationViewSimulationResults::reset(const bool &pCreateArrays)
 
 //==============================================================================
 
-void SingleCellSimulationViewSimulationResults::addPoint(const double &pPoint,
-                                                         const bool &pEmitSignal)
+void SingleCellSimulationViewSimulationResults::addPoint(const double &pPoint)
 {
     // Add the data to our different arrays
 
@@ -665,16 +659,11 @@ void SingleCellSimulationViewSimulationResults::addPoint(const double &pPoint,
     // Increase our size
 
     ++mSize;
-
-    // Let people know that our results have been updated
-
-    if (pEmitSignal)
-        emit updated();
 }
 
 //==============================================================================
 
-int SingleCellSimulationViewSimulationResults::size() const
+qulonglong SingleCellSimulationViewSimulationResults::size() const
 {
     // Return our size
 
@@ -766,7 +755,7 @@ bool SingleCellSimulationViewSimulationResults::exportToCsv(const QString &pFile
 
     // Data itself
 
-    for (int j = 0; j < mSize; ++j) {
+    for (qulonglong j = 0; j < mSize; ++j) {
         out << mPoints[j];
 
         for (int i = 0, iMax = mCellmlFileRuntime->modelParameters().count(); i < iMax; ++i) {

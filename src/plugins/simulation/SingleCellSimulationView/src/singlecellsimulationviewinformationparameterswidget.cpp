@@ -115,14 +115,14 @@ void SingleCellSimulationViewInformationParametersWidget::initialize(const QStri
         // Keep track of when some of the model's data has changed
 
         connect(pSimulationData, SIGNAL(updated()),
-                this, SLOT(updateProperties()));
+                this, SLOT(updateParameters()));
 
         // Keep track of when the user changes a property value
 
         connect(propertyEditor, SIGNAL(propertyChanged(Core::Property *)),
                 this, SLOT(propertyChanged(Core::Property *)));
 connect(propertyEditor, SIGNAL(propertyChecked(Core::Property *, const bool &)),
-        this, SLOT(emitParameterNeeded(Core::Property *, const bool &)));
+        this, SLOT(emitShowHideParameterPlot(Core::Property *, const bool &)));
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 
         // Add our new property editor to ourselves
@@ -141,7 +141,7 @@ connect(propertyEditor, SIGNAL(propertyChecked(Core::Property *, const bool &)),
 
 //==============================================================================
 
-void SingleCellSimulationViewInformationParametersWidget::updateProperties()
+void SingleCellSimulationViewInformationParametersWidget::updateParameters()
 {
     // Retrieve our current property editor, if any
 
@@ -220,8 +220,8 @@ void SingleCellSimulationViewInformationParametersWidget::propertyChanged(Core::
 
 //==============================================================================
 
-void SingleCellSimulationViewInformationParametersWidget::emitParameterNeeded(Core::Property *pProperty,
-                                                                              const bool &pNeeded)
+void SingleCellSimulationViewInformationParametersWidget::emitShowHideParameterPlot(Core::Property *pProperty,
+                                                                                    const bool &pShowParameterPlot)
 {
     // Retrieve our current property editor, if any
 
@@ -232,8 +232,9 @@ void SingleCellSimulationViewInformationParametersWidget::emitParameterNeeded(Co
 
     // Let people know whether a parameter for the given file name is needed
 
-    emit parameterNeeded(mPropertyEditors.key(propertyEditor),
-                         mModelParameters.value(pProperty), pNeeded);
+    emit showHideParameterPlot(mPropertyEditors.key(propertyEditor),
+                               mModelParameters.value(pProperty),
+                               pShowParameterPlot);
 }
 
 //==============================================================================

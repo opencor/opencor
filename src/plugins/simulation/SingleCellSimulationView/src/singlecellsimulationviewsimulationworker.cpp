@@ -218,11 +218,6 @@ void SingleCellSimulationViewSimulationWorker::started()
     int elapsedTime;
 
     if (!mError) {
-        // Signals timer
-
-        QTime signalsTimer;
-        bool canEmitSignals;
-
         // Start our timer
 
         QTime timer;
@@ -234,38 +229,6 @@ void SingleCellSimulationViewSimulationWorker::started()
         // Our main work loop
 
         while ((currentPoint != endingPoint) && !mStopped && !mError) {
-            // Check whether we came here more than 10 ms ago (i.e. 100 Hz) and,
-            // if so, then allow for signals to be emitted
-            // Note: if a simulation is quick to run, then many signals would
-            //       get emitted and their handling could make OpenCOR
-            //       unresponsive, so by waiting for 10 ms (i.e. 100 Hz which is
-            //       more than what human eyes can handle) we reduce the number
-            //       of signals being emitted while still allowing for their
-            //       smooth handling...
-
-            if (currentPoint == startingPoint) {
-                // This our first point, so start our signals timer and allow
-                // signals to be emitted
-
-                signalsTimer.start();
-
-                canEmitSignals = true;
-            } else if (signalsTimer.elapsed() < 10) {
-                // This is not our first point and it has been less than 10 ms
-                // since we were last here, so prevent signals from being
-                // emitted
-
-                canEmitSignals = false;
-            } else {
-                // This is not our first point and it has been more than 10 ms
-                // since we were last here, so retart our timer and allow
-                // signals to be emitted
-
-                signalsTimer.restart();
-
-                canEmitSignals = true;
-            }
-
             // Update our progress
 
             mProgress = (currentPoint-startingPoint)*oneOverPointsRange;
@@ -273,9 +236,9 @@ void SingleCellSimulationViewSimulationWorker::started()
             // Add our new point after making sure that all the variables have
             // been computed
 
-            mSimulation->data()->recomputeVariables(currentPoint, canEmitSignals);
+            mSimulation->data()->recomputeVariables(currentPoint, false);
 
-            mSimulation->results()->addPoint(currentPoint, canEmitSignals);
+            mSimulation->results()->addPoint(currentPoint);
 
             // Check whether we should be paused
 
@@ -340,7 +303,7 @@ void SingleCellSimulationViewSimulationWorker::started()
             // Add our last point after making sure that all the variables have
             // been computed
 
-            mSimulation->data()->recomputeVariables(currentPoint);
+            mSimulation->data()->recomputeVariables(currentPoint, false);
 
             mSimulation->results()->addPoint(currentPoint);
         }
