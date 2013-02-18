@@ -77,7 +77,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
     mSplitterWidgetSizes(QList<int>()),
     mProgresses(QMap<QString, int>()),
 mTraces(QMap<QString, QwtPlotCurve *>()),
-mSimulationResultsSize(0)
+mOldSimulationResultsSize(0)
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 {
     // Set up the GUI
@@ -895,10 +895,10 @@ mActiveGraphPanel->plot()->setAxisScale(QwtPlot::xBottom, simulationData->starti
 
         if (runSimulation)
 {
-mSimulationResultsSize = 0;
+mOldSimulationResultsSize = 0;
 runSimulation = mSimulation->reset();
 if (runSimulation) {
-    updateResults();
+    updateResults(mSimulation, 0);
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
             mSimulation->run();
 } else
@@ -1326,7 +1326,7 @@ void SingleCellSimulationViewWidget::updateResults(SingleCellSimulationViewSimul
 
                 // Assign the X and Y arrays to our trace
 
-                trace->setRawSamples(simulation->results()->points(), yData, (pSize == -1)?mSimulationResultsSize:pSize);
+                trace->setRawSamples(simulation->results()->points(), yData, pSize);
             }
 
             // Go to the next trace
@@ -1377,18 +1377,20 @@ void SingleCellSimulationViewWidget::checkResults()
 {
     // Update our simulation results size
 
-    mSimulationResultsSize = mSimulation->results()->size();
+    qulonglong simulationResultsSize = mSimulation->results()->size();
 
-    // Update our results
+    // Update our results, but only if needed
 
-    updateResults();
+    if (simulationResultsSize != mOldSimulationResultsSize) {
+        mOldSimulationResultsSize = simulationResultsSize;
+
+        updateResults(mSimulation, simulationResultsSize);
+    }
 
     // Determine whether we need to recheck our simulation results, but only if
-    // we haven't got all of our results
+    // we are still running
 
-    if (   !mSimulationResultsSize
-        || (mSimulationResultsSize != mSimulation->results()->size())
-        || mSimulation->isRunning())
+    if (mSimulation->isRunning())
         QTimer::singleShot(0, this, SLOT(checkResults()));
 }
 
