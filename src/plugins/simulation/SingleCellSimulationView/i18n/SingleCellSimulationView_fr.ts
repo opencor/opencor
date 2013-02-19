@@ -284,5 +284,13 @@
         <source>Remove the current graph panel</source>
         <translation>Supprimer le panneau graphique actuel</translation>
     </message>
+    <message>
+        <source>&amp;Reset</source>
+        <translation>&amp;Réinitialiser</translation>
+    </message>
+    <message>
+        <source>Reset all the model parameters</source>
+        <translation>Réinitialiser tous les paramètres du modèle</translation>
+    </message>
 </context>
 </TS>

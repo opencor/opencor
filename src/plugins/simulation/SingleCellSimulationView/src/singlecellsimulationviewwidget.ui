@@ -14,7 +14,16 @@
    <property name="spacing">
     <number>0</number>
    </property>
-   <property name="margin">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
     <number>0</number>
    </property>
   </layout>
@@ -103,6 +112,18 @@
    </property>
    <property name="statusTip">
     <string>Remove the current graph panel</string>
+   </property>
+  </action>
+  <action name="actionReset">
+   <property name="icon">
+    <iconset resource="../res/SingleCellSimulationView.qrc">
+     <normaloff>:/oxygen/actions/view-refresh.png</normaloff>:/oxygen/actions/view-refresh.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Reset</string>
+   </property>
+   <property name="statusTip">
+    <string>Reset all the model parameters</string>
    </property>
   </action>
   <action name="actionCsvExport">
