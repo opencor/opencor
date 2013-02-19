@@ -77,7 +77,8 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
     mSplitterWidgetSizes(QList<int>()),
     mProgresses(QMap<QString, int>()),
 mTraces(QMap<QString, QwtPlotCurve *>()),
-mOldSimulationResultsSize(0)
+mOldSimulationResultsSizes(QMap<SingleCellSimulationViewSimulation *, qulonglong>()),
+mCheckResultsSimulations(QList<SingleCellSimulationViewSimulation *>())
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 {
     // Set up the GUI
@@ -439,10 +440,6 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         mDelays.insert(previousFileName, mDelayWidget->value());
     }
 
-    // Retrieve the value of our delay widget
-
-    setDelayValue( mDelays.value(pFileName, 0));
-
     // Retrieve our simulation object for the current model, if any
 
     bool newSimulation = false;
@@ -479,6 +476,10 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
         mSimulations.insert(pFileName, mSimulation);
     }
+
+    // Retrieve the value of our delay widget
+
+    setDelayValue( mDelays.value(pFileName, 0));
 
     // Reset our file tab icon and stop tracking our simulation progress, in
     // case our simulation is running
@@ -791,7 +792,7 @@ int SingleCellSimulationViewWidget::tabBarIconSize() const
 
 QIcon SingleCellSimulationViewWidget::fileTabIcon(const QString &pFileName) const
 {
-    // Return the requested file tab icon
+    // Return a file tab icon which shows the given file's simulation progress
 
     SingleCellSimulationViewSimulation *simulation = mSimulations.value(pFileName);
     int progress = simulation?mProgresses.value(simulation->fileName(), -1):-1;
@@ -891,7 +892,7 @@ mActiveGraphPanel->plot()->setAxisScale(QwtPlot::xBottom, simulationData->starti
 
         if (runSimulation)
 {
-mOldSimulationResultsSize = 0;
+mOldSimulationResultsSizes.insert(mSimulation, 0);
 runSimulation = mSimulation->reset();
 if (runSimulation) {
     updateResults(mSimulation, 0);
@@ -985,7 +986,7 @@ void SingleCellSimulationViewWidget::simulationRunning()
     if (qobject_cast<SingleCellSimulationViewSimulation *>(sender()) == mSimulation) {
         updateSimulationMode();
 
-        checkResults();
+        checkResults(mSimulation);
     }
 }
 
@@ -993,16 +994,16 @@ void SingleCellSimulationViewWidget::simulationRunning()
 
 void SingleCellSimulationViewWidget::simulationPaused()
 {
-    // Our simulation is paused, so update our parameters, check for results and
-    // and update our simulation mode, but only if we are dealing with the
-    // active simulation
+    // Our simulation is paused, so update our simulation mode and parameters,
+    // and check for results, but only if we are dealing with the active
+    // simulation
 
     if (qobject_cast<SingleCellSimulationViewSimulation *>(sender()) == mSimulation) {
+        updateSimulationMode();
+
         mContentsWidget->informationWidget()->parametersWidget()->updateParameters();
 
-        checkResults();
-
-        updateSimulationMode();
+        checkResults(mSimulation);
     }
 }
 
@@ -1085,6 +1086,12 @@ void SingleCellSimulationViewWidget::resetProgressBar()
 void SingleCellSimulationViewWidget::resetFileTabIcon()
 {
     // Let people know that we want to reset our file tab icon
+    // Note: we use a mutex in case another call to callCheckResults() was to be
+    //       made between us retrieving and moving the first simulation...
+
+    static QMutex mutex;
+
+    QMutexLocker mutexLocker(&mutex);
 
     SingleCellSimulationViewSimulation *simulation = mStoppedSimulations.first();
 
@@ -1369,25 +1376,54 @@ void SingleCellSimulationViewWidget::updateResults(SingleCellSimulationViewSimul
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::checkResults()
+void SingleCellSimulationViewWidget::checkResults(SingleCellSimulationViewSimulation *pSimulation)
 {
     // Update our simulation results size
 
-    qulonglong simulationResultsSize = mSimulation->results()->size();
+    qulonglong simulationResultsSize = pSimulation->results()->size();
 
     // Update our results, but only if needed
 
-    if (simulationResultsSize != mOldSimulationResultsSize) {
-        mOldSimulationResultsSize = simulationResultsSize;
+    if (simulationResultsSize != mOldSimulationResultsSizes.value(pSimulation)) {
+        mOldSimulationResultsSizes.insert(pSimulation, simulationResultsSize);
 
-        updateResults(mSimulation, simulationResultsSize);
+        updateResults(pSimulation, simulationResultsSize);
     }
 
-    // Determine whether we need to recheck our simulation results, but only if
-    // we are still running
+    // Ask to recheck our simulation's results, but only if our simulation is
+    // still running
 
-    if (mSimulation->isRunning())
-        QTimer::singleShot(0, this, SLOT(checkResults()));
+    if (pSimulation->isRunning()) {
+        // Note: we cannot ask QTimer::singleShot() to call checkResults() since
+        //       it expects a pointer to a simulation as a parameter, so instead
+        //       we call a method with no arguments which will make use of our
+        //       list to know which simulation should be passed as an argument
+        //       to checkResults()...
+
+        mCheckResultsSimulations << pSimulation;
+
+        QTimer::singleShot(0, this, SLOT(callCheckResults()));
+    }
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewWidget::callCheckResults()
+{
+    // Retrieve the simulation for which we want to call checkResults() and then
+    // call checkResults()
+    // Note: we use a mutex in case another call to callCheckResults() was to be
+    //       made between us retrieving and moving the first simulation...
+
+    static QMutex mutex;
+
+    QMutexLocker mutexLocker(&mutex);
+
+    SingleCellSimulationViewSimulation *simulation = mCheckResultsSimulations.first();
+
+    mCheckResultsSimulations.removeFirst();
+
+    checkResults(simulation);
 }
 
 //==============================================================================
