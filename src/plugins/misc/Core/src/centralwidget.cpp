@@ -1062,8 +1062,8 @@ void CentralWidget::updateGui()
 
         if (newView) {
             // We have a view for the current file, so create a connection
-            // (should the view be of the right type) to keep track of any
-            // request for a change in its corresponding file tab icon
+            // (should it be be of the right type) to keep track of any request
+            // for a change in its corresponding file tab icon
             // Note: we pass Qt::UniqueConnection in our call to connect(),
             //       thus ensuring that we don't have several identical
             //       connections (something which could happen if we were to
