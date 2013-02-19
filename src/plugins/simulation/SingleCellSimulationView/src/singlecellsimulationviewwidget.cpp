@@ -489,10 +489,6 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         emit updateFileTabIcon(mSimulation->fileName(), QIcon());
     }
 
-    // Set the initial enabled state of our CSV action
-
-    mGui->actionCsvExport->setEnabled(mSimulation->progress());
-
     // Output some information about our CellML file
 
     QString information = QString();
@@ -1340,7 +1336,7 @@ void SingleCellSimulationViewWidget::updateResults(SingleCellSimulationViewSimul
 
         // Enable/disable our export to CSV
 
-        mGui->actionCsvExport->setEnabled(simulation->progress());
+        mGui->actionCsvExport->setEnabled(pSize);
     } else {
         // We are dealing with another simulation, so simply create an icon that
         // shows the other simulation's progress and let people know about it
