@@ -388,6 +388,11 @@ void SingleCellSimulationViewWidget::updateSimulationMode()
     mContentsWidget->informationWidget()->simulationWidget()->setEnabled(!simulationModeEnabled);
     mContentsWidget->informationWidget()->solversWidget()->setEnabled(!simulationModeEnabled);
 
+    // Enable/disable our export to CSV
+
+    mGui->actionCsvExport->setEnabled(   mSimulation->results()->size()
+                                      && !simulationModeEnabled);
+
     // Give the focus to our focus proxy, in case we leave the simulation mode
     // (so that the user can modify simulation data, etc.)
 
@@ -1340,10 +1345,6 @@ void SingleCellSimulationViewWidget::updateResults(SingleCellSimulationViewSimul
         // Update our progress bar
 
         mProgressBarWidget->setValue(simulation->progress());
-
-        // Enable/disable our export to CSV
-
-        mGui->actionCsvExport->setEnabled(pSize);
     } else {
         // We are dealing with another simulation, so simply create an icon that
         // shows the other simulation's progress and let people know about it
