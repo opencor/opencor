@@ -119,6 +119,10 @@ CellmlFileRuntime::~CellmlFileRuntime()
     // Reset our properties
 
     reset();
+
+    // Delete some internal objects
+
+    delete mCompilerEngine;
 }
 
 //==============================================================================
