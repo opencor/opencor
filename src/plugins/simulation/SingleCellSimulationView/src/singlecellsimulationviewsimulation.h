@@ -95,6 +95,8 @@ public:
     void recomputeVariables(const double &pCurrentPoint,
                             const bool &pEmitSignal = true);
 
+    void checkForModifications();
+
 private:
     CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
 
@@ -121,8 +123,12 @@ private:
     double *mAlgebraic;
     double *mCondVar;
 
+    double *mInitialConstants;
+    double *mInitialStates;
+
 Q_SIGNALS:
     void updated();
+    void modified(const bool &pIsModified);
 
     void error(const QString &pMessage);
 };
@@ -136,7 +142,7 @@ public:
                                                        SingleCellSimulationViewSimulationData *pData);
     ~SingleCellSimulationViewSimulationResults();
 
-    bool reset(const bool &pCreateArrays);
+    bool reset(const bool &pCreateArrays = true);
 
     void addPoint(const double &pPoint);
 
@@ -195,15 +201,14 @@ public:
 
     void setDelay(const int &pDelay);
 
-    bool reset(const bool &pResultsArrays = true);
-    void recomputeComputedConstantsAndVariables();
-
     double requiredMemory() const;
 
     void run();
     void pause();
     void resume();
     void stop();
+
+    void resetWorker();
 
 private:
     SingleCellSimulationViewSimulationWorker *mWorker;

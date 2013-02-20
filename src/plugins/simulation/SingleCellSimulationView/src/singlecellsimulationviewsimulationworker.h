@@ -60,6 +60,8 @@ public:
     void resume();
     void stop();
 
+    void reset();
+
 private:
     Core::Thread *mThread;
 
@@ -73,6 +75,8 @@ private:
 
     bool mPaused;
     bool mStopped;
+
+    bool mReset;
 
     QWaitCondition mPausedCondition;
 

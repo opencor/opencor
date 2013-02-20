@@ -109,7 +109,7 @@ CellmlFileRuntime::CellmlFileRuntime() :
 {
     // Reset (initialise, here) our properties
 
-    reset();
+    reset(true, true);
 }
 
 //==============================================================================
@@ -118,11 +118,7 @@ CellmlFileRuntime::~CellmlFileRuntime()
 {
     // Reset our properties
 
-    reset();
-
-    // Delete some internal objects
-
-    delete mCompilerEngine;
+    reset(false, false);
 }
 
 //==============================================================================
@@ -373,7 +369,8 @@ void CellmlFileRuntime::resetFunctions()
 
 //==============================================================================
 
-void CellmlFileRuntime::reset(const bool &pResetIssues)
+void CellmlFileRuntime::reset(const bool &pRecreateCompilerEngine,
+                              const bool &pResetIssues)
 {
     // Reset all of the runtime's properties
 
@@ -385,7 +382,8 @@ void CellmlFileRuntime::reset(const bool &pResetIssues)
 
     delete mCompilerEngine;
 
-    mCompilerEngine = new Compiler::CompilerEngine();
+    if (pRecreateCompilerEngine)
+        mCompilerEngine = new Compiler::CompilerEngine();
 
     resetFunctions();
 
@@ -596,7 +594,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
 {
     // Reset the runtime's properties
 
-    reset();
+    reset(true, true);
 
     // Check that the model is either a 'simple' ODE model or a DAE model
     // Note #1: we don't check whether a model is valid, since all we want is to
@@ -988,7 +986,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
     if (mIssues.count()) {
         // Some issues were reported, so...
 
-        reset(false);
+        reset(true, false);
     } else {
         // Add the symbol of any required external function, if any
 

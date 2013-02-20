@@ -165,6 +165,8 @@ private Q_SLOTS:
     void on_actionPause_triggered();
     void on_actionStop_triggered();
 
+    void on_actionReset_triggered();
+
     void on_actionDebugMode_triggered();
 
     void on_actionAdd_triggered();
@@ -183,6 +185,8 @@ private Q_SLOTS:
 
     void simulationError(const QString &pMessage,
                          const ErrorType &pErrorType = General);
+
+    void simulationDataModified(const bool &pIsModified);
 
     void splitterWidgetMoved();
 

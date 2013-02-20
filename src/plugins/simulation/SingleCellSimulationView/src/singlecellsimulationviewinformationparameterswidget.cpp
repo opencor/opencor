@@ -180,6 +180,10 @@ void SingleCellSimulationViewInformationParametersWidget::updateParameters()
                 ;
             }
     }
+
+    // Check whether any of our properties has actually been modified
+
+    mSimulationData->checkForModifications();
 }
 
 //==============================================================================
@@ -208,7 +212,7 @@ void SingleCellSimulationViewInformationParametersWidget::propertyChanged(Core::
 
             break;
         default:
-            // Either Voi, Rate, Algebraic or Undefined, so...
+            // Either Voi, ComputedConstant, Rate, Algebraic or Undefined, so...
 
             ;
         }
@@ -216,6 +220,10 @@ void SingleCellSimulationViewInformationParametersWidget::propertyChanged(Core::
     // Recompute our 'computed constants' and 'variables'
 
     mSimulationData->recomputeComputedConstantsAndVariables();
+
+    // Check whether any of our properties has actually been modified
+
+    mSimulationData->checkForModifications();
 }
 
 //==============================================================================

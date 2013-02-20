@@ -55,15 +55,11 @@ SingleCellSimulationViewSimulationData::SingleCellSimulationViewSimulationData(C
     mAlgebraic = new double[pCellmlFileRuntime->algebraicCount()];
     mCondVar   = new double[pCellmlFileRuntime->condVarCount()];
 
-    // Make sure that all our arrays are initialised with zeros
+    // Create the various arrays needed to keep track of our various initial
+    // values
 
-    static const int SizeOfDouble = sizeof(double);
-
-    memset(mConstants, 0, pCellmlFileRuntime->constantsCount()*SizeOfDouble);
-    memset(mStates, 0, pCellmlFileRuntime->statesCount()*SizeOfDouble);
-    memset(mRates, 0, pCellmlFileRuntime->ratesCount()*SizeOfDouble);
-    memset(mAlgebraic, 0, pCellmlFileRuntime->algebraicCount()*SizeOfDouble);
-    memset(mCondVar, 0, pCellmlFileRuntime->condVarCount()*SizeOfDouble);
+    mInitialConstants = new double[pCellmlFileRuntime->constantsCount()];
+    mInitialStates    = new double[pCellmlFileRuntime->statesCount()];
 }
 
 //==============================================================================
@@ -77,6 +73,9 @@ SingleCellSimulationViewSimulationData::~SingleCellSimulationViewSimulationData(
     delete[] mRates;
     delete[] mAlgebraic;
     delete[] mCondVar;
+
+    delete[] mInitialConstants;
+    delete[] mInitialStates;
 }
 
 //==============================================================================
@@ -311,7 +310,7 @@ void SingleCellSimulationViewSimulationData::setNlaSolverName(const QString &pNl
     if (mCellmlFileRuntime->needNlaSolver()) {
         mNlaSolverName = pNlaSolverName;
 
-        // Reset our model parameter values
+        // Reset our model parameter values, if required
         // Note: to only recompute our 'computed constants' and 'variables' is
         //       not sufficient since some constants may also need to be
         //       reinitialised...
@@ -341,7 +340,7 @@ void SingleCellSimulationViewSimulationData::addNlaSolverProperty(const QString 
     if (mCellmlFileRuntime->needNlaSolver()) {
         mNlaSolverProperties.insert(pName, pValue);
 
-        // Reset our model parameter values
+        // Reset our model parameter values, if required
         // Note: to only recompute our 'computed constants' and 'variables' is
         //       not sufficient since some constants may also need to be
         //       reinitialised...
@@ -396,6 +395,14 @@ void SingleCellSimulationViewSimulationData::reset()
 
     // Reset our model parameter values
 
+    static const int SizeOfDouble = sizeof(double);
+
+    memset(mConstants, 0, mCellmlFileRuntime->constantsCount()*SizeOfDouble);
+    memset(mStates, 0, mCellmlFileRuntime->statesCount()*SizeOfDouble);
+    memset(mRates, 0, mCellmlFileRuntime->ratesCount()*SizeOfDouble);
+    memset(mAlgebraic, 0, mCellmlFileRuntime->algebraicCount()*SizeOfDouble);
+    memset(mCondVar, 0, mCellmlFileRuntime->condVarCount()*SizeOfDouble);
+
     mCellmlFileRuntime->initializeConstants()(mConstants, mRates, mStates);
     recomputeComputedConstantsAndVariables();
 
@@ -406,6 +413,15 @@ void SingleCellSimulationViewSimulationData::reset()
 
         CoreSolver::unsetNlaSolver(mCellmlFileRuntime->address());
     }
+
+    // Keep track of our various initial values
+
+    memcpy(mInitialConstants, mConstants, mCellmlFileRuntime->constantsCount()*SizeOfDouble);
+    memcpy(mInitialStates, mStates, mCellmlFileRuntime->statesCount()*SizeOfDouble);
+
+    // Let people know that our data is 'cleaned', i.e. not modified
+
+    emit modified(false);
 }
 
 //==============================================================================
@@ -431,10 +447,49 @@ void SingleCellSimulationViewSimulationData::recomputeVariables(const double &pC
 
     mCellmlFileRuntime->computeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic);
 
-    // Let people know that our data has been updated
+    // Let people know that our data has been updated, if requested
+    // Note: recomputeVariables() will normally be called many times when
+    //       running a simulation to ensure that all of our 'variables' are
+    //       up-to-date and to emit loads of signals wouldn't be a good idea,
+    //       hence the caller can decide whether to emit a signal or not...
 
     if (pEmitSignal)
         emit updated();
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewSimulationData::checkForModifications()
+{
+    // Check whether any of our constants or states has been modified
+
+    foreach (CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter, mCellmlFileRuntime->modelParameters())
+        switch (modelParameter->type()) {
+        case CellMLSupport::CellmlFileRuntimeModelParameter::Constant:
+            if (mConstants[modelParameter->index()] != mInitialConstants[modelParameter->index()]) {
+                emit modified(true);
+
+                return;
+            }
+
+            break;
+        case CellMLSupport::CellmlFileRuntimeModelParameter::State:
+            if (mStates[modelParameter->index()] != mInitialStates[modelParameter->index()]) {
+                emit modified(true);
+
+                return;
+            }
+
+            break;
+        default:
+            // Either Voi, ComputedConstant, Rate, Algebraic or Undefined, so...
+
+            ;
+        }
+
+    // Let people know that no data has been modified
+
+    emit modified(false);
 }
 
 //==============================================================================
@@ -895,26 +950,6 @@ void SingleCellSimulationViewSimulation::setDelay(const int &pDelay)
 
 //==============================================================================
 
-bool SingleCellSimulationViewSimulation::reset(const bool &pResultsArrays)
-{
-    // Reset both our data and results
-
-    mData->reset();
-
-    return mResults->reset(pResultsArrays);
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewSimulation::recomputeComputedConstantsAndVariables()
-{
-    // Recompute our 'computed constants' and 'variables'
-
-    mData->recomputeComputedConstantsAndVariables();
-}
-
-//==============================================================================
-
 double SingleCellSimulationViewSimulation::requiredMemory() const
 {
     // Determine and return the amount of required memory to run our simulation
@@ -1024,9 +1059,20 @@ void SingleCellSimulationViewSimulation::stop()
 
 //==============================================================================
 
+void SingleCellSimulationViewSimulation::resetWorker()
+{
+    // Ask our worker to reset itself
+
+    if (mWorker)
+        mWorker->reset();
+}
+
+//==============================================================================
+
 void SingleCellSimulationViewSimulation::finished(const int &pElapsedTime)
 {
-    // Our worker is done (and it will get deleted and everything), so...
+    // Our worker is done (and it will get automatically deleted and everything
+    // since its constructor moved it from the main thread to its own), so...
 
     mWorker = 0;
 

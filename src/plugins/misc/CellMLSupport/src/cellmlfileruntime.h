@@ -169,7 +169,7 @@ private:
 
     void resetFunctions();
 
-    void reset(const bool &pResetIssues = true);
+    void reset(const bool &pRecreateCompilerEngine, const bool &pResetIssues);
 
     void couldNotGenerateModelCodeIssue();
     void unexpectedProblemDuringModelCompilationIssue();

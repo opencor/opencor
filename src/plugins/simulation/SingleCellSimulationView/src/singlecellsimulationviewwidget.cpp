@@ -118,6 +118,8 @@ mCheckResultsSimulations(QList<SingleCellSimulationViewSimulation *>())
     mToolBarWidget->addAction(mGui->actionPause);
     mToolBarWidget->addAction(mGui->actionStop);
     mToolBarWidget->addSeparator();
+    mToolBarWidget->addAction(mGui->actionReset);
+    mToolBarWidget->addSeparator();
     mToolBarWidget->addWidget(mDelayWidget);
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     mToolBarWidget->addWidget(delaySpaceWidget);
@@ -477,6 +479,9 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         connect(mSimulation, SIGNAL(error(const QString &)),
                 this, SLOT(simulationError(const QString &)));
 
+        connect(mSimulation->data(), SIGNAL(modified(const bool &)),
+                this, SLOT(simulationDataModified(const bool &)));
+
         // Keep track of our simulation object
 
         mSimulations.insert(pFileName, mSimulation);
@@ -722,11 +727,13 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
     }
 
     // If no error occurred and if we are dealing with a new simulation, then
-    // reset our simulation, so that both its data and results get reset (i.e.
-    // initialised in the case of its data)
+    // reset both its data and its results (well, initialise in the case of its
+    // data)
 
-    if (!hasError && newSimulation)
-        mSimulation->reset(false);
+    if (!hasError && newSimulation) {
+        mSimulation->data()->reset();
+        mSimulation->results()->reset(false);
+    }
 
 //---GRY--- THE BELOW IS TEMPORARY, JUST FOR OUR DEMO...
 QMap<QString, QwtPlotCurve *>::const_iterator iter = mTraces.constBegin();
@@ -898,7 +905,7 @@ mActiveGraphPanel->plot()->setAxisScale(QwtPlot::xBottom, simulationData->starti
         if (runSimulation)
 {
 mOldSimulationResultsSizes.insert(mSimulation, 0);
-runSimulation = mSimulation->reset();
+runSimulation = mSimulation->results()->reset();
 if (runSimulation) {
     updateResults(mSimulation, 0);
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
@@ -926,6 +933,21 @@ void SingleCellSimulationViewWidget::on_actionStop_triggered()
     // Stop our simulation
 
     mSimulation->stop();
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewWidget::on_actionReset_triggered()
+{
+    // Reset our simulation parameters
+
+    mSimulation->data()->reset();
+
+    // Reset our worker
+    // Note: indeed, if we are running a simulation then we may need to
+    //       reinitialise our solver (e.g. CVODE)...
+
+    mSimulation->resetWorker();
 }
 
 //==============================================================================
@@ -1126,6 +1148,17 @@ void SingleCellSimulationViewWidget::simulationError(const QString &pMessage,
 
         output(OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+pMessage+".</span>"+OutputBrLn);
     }
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewWidget::simulationDataModified(const bool &pIsModified)
+{
+    // Update our refresh action, but only if we are dealing with the active
+    // simulation
+
+    if (qobject_cast<SingleCellSimulationViewSimulationData *>(sender()) == mSimulation->data())
+        mGui->actionReset->setEnabled(pIsModified);
 }
 
 //==============================================================================

@@ -30,6 +30,7 @@ SingleCellSimulationViewSimulationWorker::SingleCellSimulationViewSimulationWork
     mProgress(0.0),
     mPaused(false),
     mStopped(false),
+    mReset(false),
     mError(false)
 {
     // Create our thread
@@ -240,6 +241,29 @@ void SingleCellSimulationViewSimulationWorker::started()
 
             mSimulation->results()->addPoint(currentPoint);
 
+            // Determine our next point and compute our model up to it
+
+            ++pointCounter;
+
+            voiSolver->solve(currentPoint,
+                             increasingPoints?
+                                 qMin(endingPoint, startingPoint+pointCounter*pointInterval):
+                                 qMax(endingPoint, startingPoint+pointCounter*pointInterval));
+
+            // Check whether some or even all of our data has changed
+
+            mSimulation->data()->checkForModifications();
+
+            // Delay things a bit, if (really) needed
+
+            if (mSimulation->data()->delay() && !mStopped && !mError) {
+                elapsedTime += timer.elapsed();
+
+                static_cast<Core::Thread *>(thread())->msleep(mSimulation->data()->delay());
+
+                timer.restart();
+            }
+
             // Check whether we should be paused
 
             if(mPaused) {
@@ -272,23 +296,32 @@ void SingleCellSimulationViewSimulationWorker::started()
                 timer.restart();
             }
 
-            // Determine our next point and compute our model up to it
+            // Reinitialise our solver, if needed
 
-            ++pointCounter;
+            if (mReset) {
+                if (odeSolver)
+                    odeSolver->initialize(currentPoint,
+                                          mCellmlFileRuntime->statesCount(),
+                                          mSimulation->data()->constants(),
+                                          mSimulation->data()->states(),
+                                          mSimulation->data()->rates(),
+                                          mSimulation->data()->algebraic(),
+                                          mCellmlFileRuntime->computeRates());
+                else
+                    daeSolver->initialize(currentPoint, endingPoint,
+                                          mCellmlFileRuntime->statesCount(),
+                                          mCellmlFileRuntime->condVarCount(),
+                                          mSimulation->data()->constants(),
+                                          mSimulation->data()->states(),
+                                          mSimulation->data()->rates(),
+                                          mSimulation->data()->algebraic(),
+                                          mSimulation->data()->condVar(),
+                                          mCellmlFileRuntime->computeEssentialVariables(),
+                                          mCellmlFileRuntime->computeResiduals(),
+                                          mCellmlFileRuntime->computeRootInformation(),
+                                          mCellmlFileRuntime->computeStateInformation());
 
-            voiSolver->solve(currentPoint,
-                             increasingPoints?
-                                 qMin(endingPoint, startingPoint+pointCounter*pointInterval):
-                                 qMax(endingPoint, startingPoint+pointCounter*pointInterval));
-
-            // Delay things a bit, if (really) needed
-
-            if (mSimulation->data()->delay() && !mStopped && !mError) {
-                elapsedTime += timer.elapsed();
-
-                static_cast<Core::Thread *>(thread())->msleep(mSimulation->data()->delay());
-
-                timer.restart();
+                mReset = false;
             }
         }
 
@@ -378,7 +411,24 @@ void SingleCellSimulationViewSimulationWorker::stop()
         // Ask ourselves to stop
 
         mStopped = true;
+
+        // Ask our thread to quit and wait for it to do so
+
+        mThread->quit();
+        mThread->wait();
     }
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewSimulationWorker::reset()
+{
+    // Check that we are either running or paused
+
+    if (isRunning() || isPaused())
+        // Ask ourselves to reinitialise our solver
+
+        mReset = true;
 }
 
 //==============================================================================
