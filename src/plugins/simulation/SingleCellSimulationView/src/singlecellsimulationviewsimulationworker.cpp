@@ -61,7 +61,9 @@ bool SingleCellSimulationViewSimulationWorker::isRunning() const
 {
     // Return whether our thread is running
 
-    return mThread->isRunning() && !mPaused;
+    return mThread?
+               mThread->isRunning() && !mPaused:
+               false;
 }
 
 //==============================================================================
@@ -70,7 +72,9 @@ bool SingleCellSimulationViewSimulationWorker::isPaused() const
 {
     // Return whether our thread is paused
 
-    return mThread->isRunning() && mPaused;
+    return mThread?
+               mThread->isRunning() && mPaused:
+               false;
 }
 
 //==============================================================================
@@ -79,7 +83,9 @@ double SingleCellSimulationViewSimulationWorker::progress() const
 {
     // Return our progress
 
-    return mThread->isRunning()?mProgress:0.0;
+    return mThread?
+               mThread->isRunning()?mProgress:0.0:
+               false;
 }
 
 //==============================================================================
@@ -88,7 +94,8 @@ void SingleCellSimulationViewSimulationWorker::run()
 {
     // Start our thread
 
-    mThread->start();
+    if (mThread)
+        mThread->start();
 }
 
 //==============================================================================
@@ -407,6 +414,10 @@ void SingleCellSimulationViewSimulationWorker::stop()
 
         mThread->quit();
         mThread->wait();
+
+        mThread = 0;
+        // Note: this is in case we, for example, want to retrieve our
+        //       progress...
     }
 }
 
