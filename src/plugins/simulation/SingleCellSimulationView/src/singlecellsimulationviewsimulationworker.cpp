@@ -227,9 +227,25 @@ void SingleCellSimulationViewSimulationWorker::started()
 
         timer.start();
 
+        // Add our first point after making sure that all the variables have
+        // been computed
+
+        mSimulation->data()->recomputeVariables(currentPoint, false);
+
+        mSimulation->results()->addPoint(currentPoint);
+
         // Our main work loop
 
         while ((currentPoint != endingPoint) && !mStopped && !mError) {
+            // Determine our next point and compute our model up to it
+
+            ++pointCounter;
+
+            voiSolver->solve(currentPoint,
+                             increasingPoints?
+                                 qMin(endingPoint, startingPoint+pointCounter*pointInterval):
+                                 qMax(endingPoint, startingPoint+pointCounter*pointInterval));
+
             // Update our progress
 
             mProgress = (currentPoint-startingPoint)*oneOverPointsRange;
@@ -240,15 +256,6 @@ void SingleCellSimulationViewSimulationWorker::started()
             mSimulation->data()->recomputeVariables(currentPoint, false);
 
             mSimulation->results()->addPoint(currentPoint);
-
-            // Determine our next point and compute our model up to it
-
-            ++pointCounter;
-
-            voiSolver->solve(currentPoint,
-                             increasingPoints?
-                                 qMin(endingPoint, startingPoint+pointCounter*pointInterval):
-                                 qMax(endingPoint, startingPoint+pointCounter*pointInterval));
 
             // Check whether some or even all of our data has changed
 
@@ -266,7 +273,7 @@ void SingleCellSimulationViewSimulationWorker::started()
 
             // Check whether we should be paused
 
-            if(mPaused) {
+            if (mPaused) {
                 // We should be paused, so stop our timer
 
                 elapsedTime += timer.elapsed();
@@ -323,22 +330,6 @@ void SingleCellSimulationViewSimulationWorker::started()
 
                 mReset = false;
             }
-        }
-
-        // Update our progress and add our last point, but only if we didn't
-        // stop the simulation
-
-        if (!mStopped && !mError) {
-            // Update our progress
-
-            mProgress = 1.0;
-
-            // Add our last point after making sure that all the variables have
-            // been computed
-
-            mSimulation->data()->recomputeVariables(currentPoint, false);
-
-            mSimulation->results()->addPoint(currentPoint);
         }
 
         // Retrieve the total elapsed time, should no error have occurred
