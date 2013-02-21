@@ -15,7 +15,6 @@ class QFrame;
 
 //==============================================================================
 
-class QwtPlot;
 class QwtPlotCurve;
 
 //==============================================================================
@@ -28,6 +27,10 @@ namespace Ui {
 
 namespace OpenCOR {
 namespace SingleCellSimulationView {
+
+//==============================================================================
+
+class SingleCellSimulationViewGraphPanelPlotWidget;
 
 //==============================================================================
 
@@ -47,7 +50,7 @@ public:
     bool isActive() const;
     void setActive(const bool &pActive);
 
-    QwtPlot * plot();
+    SingleCellSimulationViewGraphPanelPlotWidget * plot();
 
 protected:
     virtual void changeEvent(QEvent *pEvent);
@@ -57,7 +60,7 @@ private:
     Ui::SingleCellSimulationViewGraphPanelWidget *mGui;
 
     QFrame *mMarker;
-    QwtPlot *mPlot;
+    SingleCellSimulationViewGraphPanelPlotWidget *mPlot;
 
     bool mActive;
 

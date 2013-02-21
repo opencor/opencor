@@ -2,6 +2,7 @@
 // Single cell simulation view graph panel widget
 //==============================================================================
 
+#include "singlecellsimulationviewgraphpanelplotwidget.h"
 #include "singlecellsimulationviewgraphpanelwidget.h"
 
 //==============================================================================
@@ -11,10 +12,7 @@
 
 //==============================================================================
 
-#include "qwt_plot.h"
-#include "qwt_plot_canvas.h"
 #include "qwt_plot_curve.h"
-#include "qwt_plot_grid.h"
 
 //==============================================================================
 
@@ -51,20 +49,9 @@ SingleCellSimulationViewGraphPanelWidget::SingleCellSimulationViewGraphPanelWidg
 
     mGui->layout->addWidget(mMarker);
 
-    // Create, customise and add a QwtPlot widget to our layout
+    // Create and add a plot widget to our layout
 
-    mPlot = new QwtPlot(this);
-
-    mPlot->setAutoReplot(true);
-    mPlot->setCanvasBackground(Qt::white);
-
-    qobject_cast<QwtPlotCanvas *>(mPlot->canvas())->setFrameShape(QFrame::NoFrame);
-
-    QwtPlotGrid *grid = new QwtPlotGrid();
-
-    grid->setMajorPen(Qt::gray, 0, Qt::DotLine);
-
-    grid->attach(mPlot);
+    mPlot = new SingleCellSimulationViewGraphPanelPlotWidget(this);
 
     mGui->layout->addWidget(mPlot);
 
@@ -184,7 +171,7 @@ void SingleCellSimulationViewGraphPanelWidget::removeTraces()
 
 //==============================================================================
 
-QwtPlot * SingleCellSimulationViewGraphPanelWidget::plot()
+SingleCellSimulationViewGraphPanelPlotWidget * SingleCellSimulationViewGraphPanelWidget::plot()
 {
     // Return the pointer to our plot widget
 

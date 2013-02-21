@@ -8,6 +8,7 @@
 #include "progressbarwidget.h"
 #include "propertyeditorwidget.h"
 #include "singlecellsimulationviewcontentswidget.h"
+#include "singlecellsimulationviewgraphpanelplotwidget.h"
 #include "singlecellsimulationviewgraphpanelswidget.h"
 #include "singlecellsimulationviewgraphpanelwidget.h"
 #include "singlecellsimulationviewinformationparameterswidget.h"
