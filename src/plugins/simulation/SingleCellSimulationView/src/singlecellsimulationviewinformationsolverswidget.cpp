@@ -269,7 +269,7 @@ void SingleCellSimulationViewInformationSolversWidget::setPropertiesUnit(SingleC
     foreach (const Core::Properties &properties, pSolverData->solversProperties())
         foreach (Core::Property *property, properties)
             if (!property->unit()->text().isEmpty())
-                property->unit()->setText(pVoiUnit);
+                setStringPropertyItem(property->unit(), pVoiUnit);
 }
 
 //==============================================================================
