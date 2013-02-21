@@ -36,6 +36,7 @@ ADD_PLUGIN(SingleCellSimulationView
         ../../pluginmanager.h
 
         src/singlecellsimulationviewcontentswidget.h
+        src/singlecellsimulationviewgraphpanelplotwidget.h
         src/singlecellsimulationviewgraphpanelswidget.h
         src/singlecellsimulationviewgraphpanelwidget.h
         src/singlecellsimulationviewinformationparameterswidget.h

@@ -156,7 +156,8 @@ QList<SingleCellSimulationViewSimulation *> mCheckResultsSimulations;
 QString parameterKey(const QString &pFileName,
                      CellMLSupport::CellmlFileRuntimeModelParameter *pParameter) const;
 void updateResults(SingleCellSimulationViewSimulation *pSimulation,
-                   const qulonglong &pSize);
+                   const qulonglong &pSize,
+                   const bool &pReplot = false);
 void checkResults(SingleCellSimulationViewSimulation *pSimulation);
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 

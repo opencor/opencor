@@ -85,7 +85,7 @@ double SingleCellSimulationViewSimulationWorker::progress() const
 
     return mThread?
                mThread->isRunning()?mProgress:0.0:
-               false;
+               0.0;
 }
 
 //==============================================================================

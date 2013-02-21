@@ -557,7 +557,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         && (previousSimulation->isRunning() || previousSimulation->isPaused()))
         updateResults(previousSimulation, previousSimulation->results()->size());
 
-    updateResults(mSimulation, mSimulation->results()->size());
+    updateResults(mSimulation, mSimulation->results()->size(), true);
 
     // Check that we have a valid runtime
 
@@ -757,6 +757,7 @@ while (iter != mTraces.constEnd()) {
 }
 
 mActiveGraphPanel->plot()->setAxisScale(QwtPlot::xBottom, mSimulation->data()->startingPoint(), mSimulation->data()->endingPoint());
+mActiveGraphPanel->plot()->replot();
 }
 
 //==============================================================================
@@ -883,6 +884,7 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
 //---GRY--- THE BELOW IS TEMPORARY, JUST FOR OUR DEMO...
 
 mActiveGraphPanel->plot()->setAxisScale(QwtPlot::xBottom, simulationData->startingPoint(), simulationData->endingPoint());
+mActiveGraphPanel->plot()->replot();
 
         // Check how much memory is needed to run our simulation
 
@@ -1306,7 +1308,8 @@ void SingleCellSimulationViewWidget::showHideParameterPlot(const QString &pFileN
 //==============================================================================
 
 void SingleCellSimulationViewWidget::updateResults(SingleCellSimulationViewSimulation *pSimulation,
-                                                   const qulonglong &pSize)
+                                                   const qulonglong &pSize,
+                                                   const bool &pReplot)
 {
     // Update our traces, if any and only if actually necessary
 
@@ -1366,15 +1369,33 @@ void SingleCellSimulationViewWidget::updateResults(SingleCellSimulationViewSimul
                 else
                     yData = simulation->results()->algebraic()?simulation->results()->algebraic()[index]:0;
 
+                // Keep track of our trace's old size
+
+                qulonglong oldSize = trace->dataSize();
+
                 // Assign the X and Y arrays to our trace
 
                 trace->setRawSamples(simulation->results()->points(), yData, pSize);
+
+                // Draw the trace's new segment, but only if there is some data
+                // to plot and that we want to draw a trace segment
+
+                if (!pReplot && (pSize > 1))
+                    qobject_cast<SingleCellSimulationViewGraphPanelPlotWidget *>(trace->plot())->drawTraceSegment(trace, oldSize?oldSize-1:0, pSize-1);
             }
 
             // Go to the next trace
 
             ++iter;
         }
+
+        // Replot our active graph panel, if needed
+
+        if (pReplot || (pSize <= 1))
+            // We want to initialise the plot and/or there is no data to plot,
+            // so replot our active graph panel
+
+            mActiveGraphPanel->plot()->replot();
 
         // Update our progress bar
 

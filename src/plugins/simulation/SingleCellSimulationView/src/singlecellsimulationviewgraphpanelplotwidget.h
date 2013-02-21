@@ -11,6 +11,11 @@
 
 //==============================================================================
 
+class QwtPlotCurve;
+class QwtPlotDirectPainter;
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace SingleCellSimulationView {
 
@@ -18,8 +23,17 @@ namespace SingleCellSimulationView {
 
 class SingleCellSimulationViewGraphPanelPlotWidget : public QwtPlot
 {
+    Q_OBJECT
+
 public:
     explicit SingleCellSimulationViewGraphPanelPlotWidget(QWidget *pParent = 0);
+    ~SingleCellSimulationViewGraphPanelPlotWidget();
+
+    void drawTraceSegment(QwtPlotCurve *pTrace,
+                          const qulonglong &pFrom, const qulonglong &pTo);
+
+private:
+    QwtPlotDirectPainter *mDirectPainter;
 };
 
 //==============================================================================
