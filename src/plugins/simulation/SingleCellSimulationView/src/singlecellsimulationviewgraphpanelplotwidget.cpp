@@ -35,7 +35,7 @@ SingleCellSimulationViewGraphPanelPlotWidget::SingleCellSimulationViewGraphPanel
     // Note: this can only be done on X11 systems...
 
     if (QwtPainter::isX11GraphicsSystem())
-        canvas()->setAttribute( Qt::WA_PaintOnScreen, true );
+        canvas()->setAttribute(Qt::WA_PaintOnScreen, true);
 
     // Customise ourselves a bit
 
@@ -81,22 +81,32 @@ void SingleCellSimulationViewGraphPanelPlotWidget::drawTraceSegment(QwtPlotCurve
         yMax = qMax(yMax, yVal);
     }
 
-    // Check whether our Y axis can handle the Y min/max of our new data
+    // Check which trace segment we are dealing with and whether our Y axis can
+    // handle the Y min/max of our new data
 
-    if (   (yMin < axisScaleDiv(QwtPlot::yLeft).lowerBound())
-        || (yMax > axisScaleDiv(QwtPlot::yLeft).upperBound())) {
-        // Our Y axis cannot handle the Y min/max of our new data, so rescale it
-        // by replot ourselves
+    if (   !pFrom
+        || (yMin < axisScaleDiv(QwtPlot::yLeft).lowerBound())
+        || (yMax > axisScaleDiv(QwtPlot::yLeft).upperBound()))
+        // Either it's our first trace segment and/or our Y axis cannot handle
+        // the Y min/max of our new data, so replot ourselves
 
-        setAutoReplot(true);
-            replot();
-        setAutoReplot(false);
-    } else {
+        replot();
+    else
         // Our Y axis can handle the Y min/max of our new data, so just draw our
         // new trace segment
 
         mDirectPainter->drawSeries(pTrace, pFrom, pTo);
-    }
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewGraphPanelPlotWidget::replot()
+{
+    // Replot ourselves, making sure that our axes get rescaled (if needed)
+
+    setAutoReplot(true);
+        QwtPlot::replot();
+    setAutoReplot(false);
 }
 
 //==============================================================================

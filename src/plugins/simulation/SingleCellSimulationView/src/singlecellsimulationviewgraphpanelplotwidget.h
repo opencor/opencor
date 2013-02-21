@@ -34,6 +34,9 @@ public:
 
 private:
     QwtPlotDirectPainter *mDirectPainter;
+
+public Q_SLOTS:
+    virtual void replot();
 };
 
 //==============================================================================
