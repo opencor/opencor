@@ -69,6 +69,11 @@ void SingleCellSimulationViewGraphPanelPlotWidget::drawTraceSegment(QwtPlotCurve
                                                                     const qulonglong &pFrom,
                                                                     const qulonglong &pTo)
 {
+    // Make sure that we have a trace segment to draw
+
+    if (pFrom == pTo)
+        return;
+
     // Determine the Y min/max of our new data
 
     double yMin =  DBL_MAX;

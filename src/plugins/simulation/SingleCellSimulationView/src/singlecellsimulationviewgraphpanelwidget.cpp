@@ -107,7 +107,7 @@ void SingleCellSimulationViewGraphPanelWidget::mousePressEvent(QMouseEvent *pEve
 
 QwtPlotCurve * SingleCellSimulationViewGraphPanelWidget::addTrace(double *pX,
                                                                   double *pY,
-                                                                  const qulonglong &pSize)
+                                                                  const qulonglong &pOriginalSize)
 {
     // Create a new trace
 
@@ -120,7 +120,7 @@ QwtPlotCurve * SingleCellSimulationViewGraphPanelWidget::addTrace(double *pX,
 
     // Populate our trace
 
-    res->setRawSamples(pX, pY, pSize);
+    res->setRawSamples(pX, pY, pOriginalSize);
 
     // Attach it to ourselves
 
@@ -130,9 +130,17 @@ QwtPlotCurve * SingleCellSimulationViewGraphPanelWidget::addTrace(double *pX,
 
     mPlotTraces << res;
 
-    // Replot ourselves
+    // Replot ourselves, but only if needed
 
-    mPlot->replot();
+    if (pOriginalSize) {
+        mPlot->replot();
+
+        // Make sure that it gets replotted immediately
+        // Note: this is needed when running a simulation since, otherwise,
+        //       replotting won't occur, so...
+
+        qApp->processEvents();
+    }
 
     // Return it to the caller
 
