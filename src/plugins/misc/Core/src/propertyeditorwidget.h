@@ -270,8 +270,8 @@ public:
 
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
-    virtual void mousePressEvent(QMouseEvent *pEvent);
     virtual void mouseMoveEvent(QMouseEvent *pEvent);
+    virtual void mousePressEvent(QMouseEvent *pEvent);
     virtual void resizeEvent(QResizeEvent *pEvent);
 
     Property * property(const QModelIndex &pIndex) const;

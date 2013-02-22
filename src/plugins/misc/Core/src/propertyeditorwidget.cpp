@@ -1114,6 +1114,22 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
+void PropertyEditorWidget::mouseMoveEvent(QMouseEvent *pEvent)
+{
+    // Edit the property, but only if we want to edit a new one
+
+    Property *mouseProperty = property(indexAt(pEvent->pos()));
+
+    if (mouseProperty && (mouseProperty != mProperty))
+        editProperty(mouseProperty);
+
+    // Accept the event
+
+    pEvent->accept();
+}
+
+//==============================================================================
+
 void PropertyEditorWidget::mousePressEvent(QMouseEvent *pEvent)
 {
     // Start/stop the editing of the property
@@ -1138,22 +1154,6 @@ void PropertyEditorWidget::mousePressEvent(QMouseEvent *pEvent)
 
         editProperty(mouseProperty);
     }
-
-    // Accept the event
-
-    pEvent->accept();
-}
-
-//==============================================================================
-
-void PropertyEditorWidget::mouseMoveEvent(QMouseEvent *pEvent)
-{
-    // Edit the property, but only if we want to edit a new one
-
-    Property *mouseProperty = property(indexAt(pEvent->pos()));
-
-    if (mouseProperty && (mouseProperty != mProperty))
-        editProperty(mouseProperty);
 
     // Accept the event
 

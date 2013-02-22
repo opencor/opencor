@@ -439,11 +439,11 @@ void FileBrowserWidget::keyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
-void FileBrowserWidget::mousePressEvent(QMouseEvent *pEvent)
+void FileBrowserWidget::mouseMoveEvent(QMouseEvent *pEvent)
 {
     // Default handling of the event
 
-    TreeViewWidget::mousePressEvent(pEvent);
+    TreeViewWidget::mouseMoveEvent(pEvent);
 
     // Deselect folders, if required
 
@@ -452,11 +452,11 @@ void FileBrowserWidget::mousePressEvent(QMouseEvent *pEvent)
 
 //==============================================================================
 
-void FileBrowserWidget::mouseMoveEvent(QMouseEvent *pEvent)
+void FileBrowserWidget::mousePressEvent(QMouseEvent *pEvent)
 {
     // Default handling of the event
 
-    TreeViewWidget::mouseMoveEvent(pEvent);
+    TreeViewWidget::mousePressEvent(pEvent);
 
     // Deselect folders, if required
 

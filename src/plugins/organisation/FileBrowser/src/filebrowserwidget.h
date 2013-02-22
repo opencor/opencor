@@ -37,8 +37,8 @@ public:
 
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
-    virtual void mousePressEvent(QMouseEvent *pEvent);
     virtual void mouseMoveEvent(QMouseEvent *pEvent);
+    virtual void mousePressEvent(QMouseEvent *pEvent);
     virtual bool viewportEvent(QEvent *pEvent);
 
 private:
