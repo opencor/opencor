@@ -1277,31 +1277,28 @@ void SingleCellSimulationViewWidget::showHideParameterPlot(const QString &pFileN
 
         mTraces.remove(key);
     } else if (!trace && pShowParameterPlot) {
-        // We don't have a trace and want to create one
-
-        QwtPlotCurve *trace = mActiveGraphPanel->addTrace();
-
-        mTraces.insert(key, trace);
-
-        // Populate the trace if some results are available
+        // We don't have a trace, but we want one so first determine what data
+        // it should contain
 
         SingleCellSimulationViewSimulationResults *results = mSimulation->results();
 
-        if (results) {
-            double *yData;
+        double *yData;
 
-            if (   (pParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::Constant)
-                || (pParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::ComputedConstant))
-                yData = results->constants()?results->constants()[pParameter->index()]:0;
-            else if (pParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::State)
-                yData = results->states()?results->states()[pParameter->index()]:0;
-            else if (pParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::Rate)
-                yData = results->rates()?results->rates()[pParameter->index()]:0;
-            else
-                yData = results->algebraic()?results->algebraic()[pParameter->index()]:0;
+        if (   (pParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::Constant)
+            || (pParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::ComputedConstant))
+            yData = results->constants()?results->constants()[pParameter->index()]:0;
+        else if (pParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::State)
+            yData = results->states()?results->states()[pParameter->index()]:0;
+        else if (pParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::Rate)
+            yData = results->rates()?results->rates()[pParameter->index()]:0;
+        else
+            yData = results->algebraic()?results->algebraic()[pParameter->index()]:0;
 
-            trace->setRawSamples(results->points(), yData, results->size());
-        }
+        // Add a trace and keep track of it
+
+        QwtPlotCurve *trace = mActiveGraphPanel->addTrace(results->points(), yData, results->size());
+
+        mTraces.insert(key, trace);
     }
 }
 

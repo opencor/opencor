@@ -105,7 +105,9 @@ void SingleCellSimulationViewGraphPanelWidget::mousePressEvent(QMouseEvent *pEve
 
 //==============================================================================
 
-QwtPlotCurve * SingleCellSimulationViewGraphPanelWidget::addTrace()
+QwtPlotCurve * SingleCellSimulationViewGraphPanelWidget::addTrace(double *pX,
+                                                                  double *pY,
+                                                                  const qulonglong &pSize)
 {
     // Create a new trace
 
@@ -116,6 +118,10 @@ QwtPlotCurve * SingleCellSimulationViewGraphPanelWidget::addTrace()
     res->setRenderHint(QwtPlotItem::RenderAntialiased);
     res->setPen(QPen(Qt::darkBlue));
 
+    // Populate our trace
+
+    res->setRawSamples(pX, pY, pSize);
+
     // Attach it to ourselves
 
     res->attach(mPlot);
@@ -123,6 +129,10 @@ QwtPlotCurve * SingleCellSimulationViewGraphPanelWidget::addTrace()
     // Add it to our list of traces
 
     mPlotTraces << res;
+
+    // Replot ourselves
+
+    mPlot->replot();
 
     // Return it to the caller
 
