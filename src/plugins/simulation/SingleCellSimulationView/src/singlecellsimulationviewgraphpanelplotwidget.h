@@ -32,8 +32,13 @@ public:
     void drawTraceSegment(QwtPlotCurve *pTrace,
                           const qulonglong &pFrom, const qulonglong &pTo);
 
+protected:
+    virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
+
 private:
     QwtPlotDirectPainter *mDirectPainter;
+
+    void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
 
 public Q_SLOTS:
     virtual void replot();

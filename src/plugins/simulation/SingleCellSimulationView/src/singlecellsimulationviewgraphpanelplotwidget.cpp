@@ -6,6 +6,12 @@
 
 //==============================================================================
 
+#include <QApplication>
+#include <QClipboard>
+#include <QMouseEvent>
+
+//==============================================================================
+
 #include <float.h>
 
 //==============================================================================
@@ -15,6 +21,7 @@
 #include "qwt_plot_curve.h"
 #include "qwt_plot_directpainter.h"
 #include "qwt_plot_grid.h"
+#include "qwt_plot_renderer.h"
 #include "qwt_scale_div.h"
 
 //==============================================================================
@@ -61,6 +68,48 @@ SingleCellSimulationViewGraphPanelPlotWidget::~SingleCellSimulationViewGraphPane
     // Delete some internal objects
 
     delete mDirectPainter;
+}
+
+//==============================================================================
+
+bool SingleCellSimulationViewGraphPanelPlotWidget::eventFilter(QObject *pObject,
+                                                               QEvent *pEvent)
+{
+    // Default handling of the event
+
+    bool res = QwtPlot::eventFilter(pObject, pEvent);
+
+    // We want to handle a double mouse click, but for some reasons to override
+    // mouseDoubleClickEvent() doesn't work, so...
+
+    if(pEvent->type() == QEvent::MouseButtonDblClick)
+        handleMouseDoubleClickEvent(static_cast<QMouseEvent *>(pEvent));
+
+    // We are all done, so...
+
+    return res;
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewGraphPanelPlotWidget::handleMouseDoubleClickEvent(QMouseEvent *pEvent)
+{
+    // Copy the contents of the plot to the clipboard, in case we double-clicked
+    // using the left mouse button
+
+    if (pEvent->button() == Qt::LeftButton) {
+        // Render the plot to an image
+
+        QwtPlotRenderer renderer;
+        QImage image = QImage(size(), QImage::Format_ARGB32_Premultiplied);
+        QPainter painter(&image);
+
+        renderer.render(this, &painter, rect());
+
+        // Set the image to the clipboard
+
+        QApplication::clipboard()->setImage(image);
+    }
 }
 
 //==============================================================================
