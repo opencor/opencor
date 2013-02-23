@@ -684,11 +684,7 @@ bool SingleCellSimulationViewSimulationResults::reset(const bool &pCreateArrays)
 
     deleteArrays();
 
-    bool res = pCreateArrays?createArrays():true;
-
-    // We are done, so...
-
-    return res;
+    return pCreateArrays?createArrays():true;
 }
 
 //==============================================================================
