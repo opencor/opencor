@@ -275,6 +275,10 @@ IF(APPLE)
 
     SET(InfoPlistFile ${CMAKE_BINARY_DIR}/Info.plist)
 
+    EXECUTE_PROCESS(COMMAND date "+%Y"
+                    OUTPUT_VARIABLE YEAR
+                    OUTPUT_STRIP_TRAILING_WHITESPACE)
+
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/Info.plist.in ${InfoPlistFile})
 
     SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES

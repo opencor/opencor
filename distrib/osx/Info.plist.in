@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <key>NSPrincipalClass</key>
+    <string>NSApplication</string>
     <key>CFBundleDocumentTypes</key>
     <array>
         <dict>
@@ -18,7 +20,7 @@
         </dict>
     </array>
     <key>NSHumanReadableCopyright</key>
-    <string>(C) 2011-2012</string>
+    <string>(C) 2011-${YEAR}</string>
     <key>CFBundleIconFile</key>
     <string>${PROJECT_NAME}.icns</string>
     <key>CFBundlePackageType</key>
