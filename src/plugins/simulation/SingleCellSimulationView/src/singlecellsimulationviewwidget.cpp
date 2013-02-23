@@ -909,8 +909,8 @@ mActiveGraphPanel->plot()->replot();
 {
 mOldSimulationResultsSizes.insert(mSimulation, 0);
 runSimulation = mSimulation->results()->reset();
+updateResults(mSimulation, 0);
 if (runSimulation) {
-    updateResults(mSimulation, 0);
 //---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
             mSimulation->run();
 } else
