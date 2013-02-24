@@ -33,7 +33,7 @@ namespace SingleCellSimulationView {
 
 SingleCellSimulationViewGraphPanelPlotWidget::SingleCellSimulationViewGraphPanelPlotWidget(QWidget *pParent) :
     QwtPlot(pParent),
-    mPlotTraces(QList<QwtPlotCurve *>()),
+    mTraces(QList<QwtPlotCurve *>()),
     mAction(None),
     mOriginPoint(QPoint())
 {
@@ -119,16 +119,25 @@ void SingleCellSimulationViewGraphPanelPlotWidget::handleMouseDoubleClickEvent(Q
 
 //==============================================================================
 
-void SingleCellSimulationViewGraphPanelPlotWidget::rescaleAxis(const int &pAxisId,
-                                                               const double &pScalingFactor)
+void SingleCellSimulationViewGraphPanelPlotWidget::rescaleAxes(const double &pXScalingFactor,
+                                                               const double &pYScalingFactor)
 {
     // Rescale the given axis using the given scaling factor
 
-    QwtScaleDiv scaleDiv = axisScaleDiv(pAxisId);
-    double center = scaleDiv.lowerBound()+0.5*scaleDiv.range();
-    double rangeOverTwo = 0.5*pScalingFactor*scaleDiv.range();
+    QwtScaleDiv xScaleDiv = axisScaleDiv(QwtPlot::xBottom);
+    double xCenter = xScaleDiv.lowerBound()+0.5*xScaleDiv.range();
+    double xRangeOverTwo = 0.5*pXScalingFactor*xScaleDiv.range();
+    double xAxisMin = xCenter-xRangeOverTwo;
+    double xAxisMax = xCenter+xRangeOverTwo;
 
-    setAxisScale(pAxisId, center-rangeOverTwo, center+rangeOverTwo);
+    QwtScaleDiv yScaleDiv = axisScaleDiv(QwtPlot::yLeft);
+    double yCenter = yScaleDiv.lowerBound()+0.5*yScaleDiv.range();
+    double yRangeOverTwo = 0.5*pYScalingFactor*yScaleDiv.range();
+    double yAxisMin = yCenter-yRangeOverTwo;
+    double yAxisMax = yCenter+yRangeOverTwo;
+
+    setAxisScale(QwtPlot::xBottom, xAxisMin, xAxisMax);
+    setAxisScale(QwtPlot::yLeft, yAxisMin, yAxisMax);
 }
 
 //==============================================================================
@@ -143,37 +152,34 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *p
 
     switch (mAction) {
     case Zoom: {
-        // Rescale our X axis, if needed
+        // Determine the scaling factor for our X axis
 
         static const double ScalingFactor = 0.95;
 
         int deltaX = pEvent->pos().x()-mOriginPoint.x();
+        double xScalingFactor = ScalingFactor;
 
-        if (deltaX) {
-            double scalingFactor = ScalingFactor;
+        if (!deltaX)
+            xScalingFactor = 1.0;
+        else if (deltaX < 0)
+            xScalingFactor = 1.0/xScalingFactor;
 
-            if (deltaX < 0)
-                scalingFactor = 1.0/scalingFactor;
-
-            rescaleAxis(QwtPlot::xBottom, scalingFactor);
-        }
-
-        // Rescale our Y axis, if needed
+        // Determine the scaling factor for our Y axis
 
         int deltaY = pEvent->pos().y()-mOriginPoint.y();
+        double yScalingFactor = ScalingFactor;
 
-        if (deltaY) {
-            double scalingFactor = ScalingFactor;
+        if (!deltaY)
+            yScalingFactor = 1.0;
+        else if (deltaY < 0)
+            yScalingFactor = 1.0/yScalingFactor;
 
-            if (deltaY < 0)
-                scalingFactor = 1.0/scalingFactor;
-
-            rescaleAxis(QwtPlot::yLeft, scalingFactor);
-        }
-
-        // Replot ourselves and reset our point of origin, if needed
+        // Rescale and replot ourselves, as well as reset our point of origin,
+        // if needed
 
         if (deltaX || deltaY) {
+            rescaleAxes(xScalingFactor, yScalingFactor);
+
             replot();
 
             mOriginPoint = pEvent->pos();
@@ -268,8 +274,7 @@ void SingleCellSimulationViewGraphPanelPlotWidget::wheelEvent(QWheelEvent *pEven
 
     // Rescale our two axes
 
-    rescaleAxis(QwtPlot::xBottom, scalingFactor);
-    rescaleAxis(QwtPlot::yLeft, scalingFactor);
+    rescaleAxes(scalingFactor, scalingFactor);
 
     // Replot ourselves
 
@@ -301,7 +306,7 @@ QwtPlotCurve * SingleCellSimulationViewGraphPanelPlotWidget::addTrace(double *pX
 
     // Add it to our list of traces
 
-    mPlotTraces << res;
+    mTraces << res;
 
     // Replot ourselves, but only if needed
 
@@ -338,7 +343,7 @@ void SingleCellSimulationViewGraphPanelPlotWidget::removeTrace(QwtPlotCurve *pTr
 
     // Stop tracking the trace
 
-    mPlotTraces.removeOne(pTrace);
+    mTraces.removeOne(pTrace);
 
     // Replot ourselves, if needed
 
@@ -352,7 +357,7 @@ void SingleCellSimulationViewGraphPanelPlotWidget::removeTraces()
 {
     // Remove any existing trace
 
-    foreach (QwtPlotCurve *trace, mPlotTraces)
+    foreach (QwtPlotCurve *trace, mTraces)
         removeTrace(trace, false);
 
     // Replot ourselves

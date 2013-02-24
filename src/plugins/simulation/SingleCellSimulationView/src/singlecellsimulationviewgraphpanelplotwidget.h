@@ -53,7 +53,7 @@ private:
 
     QwtPlotDirectPainter *mDirectPainter;
 
-    QList<QwtPlotCurve *> mPlotTraces;
+    QList<QwtPlotCurve *> mTraces;
 
     Action mAction;
 
@@ -61,7 +61,8 @@ private:
 
     void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
 
-    void rescaleAxis(const int &pAxisId, const double &pScalingFactor);
+    void rescaleAxes(const double &pXScalingFactor,
+                     const double &pYScalingFactor);
 
 public Q_SLOTS:
     virtual void replot();
