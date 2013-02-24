@@ -122,7 +122,7 @@ void SingleCellSimulationViewGraphPanelPlotWidget::handleMouseDoubleClickEvent(Q
 void SingleCellSimulationViewGraphPanelPlotWidget::rescaleAxes(const double &pXScalingFactor,
                                                                const double &pYScalingFactor)
 {
-    // Rescale the given axis using the given scaling factor
+    // Rescale the axes using the given scaling factors
 
     QwtScaleDiv xScaleDiv = axisScaleDiv(QwtPlot::xBottom);
     double xCenter = xScaleDiv.lowerBound()+0.5*xScaleDiv.range();
