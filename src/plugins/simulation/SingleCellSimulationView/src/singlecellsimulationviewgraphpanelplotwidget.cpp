@@ -32,7 +32,9 @@ namespace SingleCellSimulationView {
 //==============================================================================
 
 SingleCellSimulationViewGraphPanelPlotWidget::SingleCellSimulationViewGraphPanelPlotWidget(QWidget *pParent) :
-    QwtPlot(pParent)
+    QwtPlot(pParent),
+    mAction(None),
+    mOriginPoint(QPoint())
 {
     // Get ourselves a direct painter
 
@@ -114,32 +116,125 @@ void SingleCellSimulationViewGraphPanelPlotWidget::handleMouseDoubleClickEvent(Q
 
 //==============================================================================
 
+void SingleCellSimulationViewGraphPanelPlotWidget::rescaleAxis(const int &pAxisId,
+                                                               const double &pScalingFactor)
+{
+    // Rescale the given axis using the given scaling factor
+
+    QwtScaleDiv scaleDiv = axisScaleDiv(pAxisId);
+    double center = scaleDiv.lowerBound()+0.5*scaleDiv.range();
+    double rangeOverTwo = 0.5*pScalingFactor*scaleDiv.range();
+
+    setAxisScale(pAxisId, center-rangeOverTwo, center+rangeOverTwo);
+}
+
+//==============================================================================
+
 void SingleCellSimulationViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
 {
-qDebug(">>> mouseMoveEvent()...");
     // Default handling of the event
 
     QwtPlot::mouseMoveEvent(pEvent);
+
+    // Carry out the action
+
+    switch (mAction) {
+    case Zoom: {
+        // Rescale our X axis, if needed
+
+        static const double ScalingFactor = 0.95;
+
+        int deltaX = pEvent->pos().x()-mOriginPoint.x();
+
+        if (deltaX) {
+            double scalingFactor = ScalingFactor;
+
+            if (deltaX < 0)
+                scalingFactor = 1.0/scalingFactor;
+
+            rescaleAxis(QwtPlot::xBottom, scalingFactor);
+        }
+
+        // Rescale our Y axis, if needed
+
+        int deltaY = pEvent->pos().y()-mOriginPoint.y();
+
+        if (deltaY) {
+            double scalingFactor = ScalingFactor;
+
+            if (deltaY < 0)
+                scalingFactor = 1.0/scalingFactor;
+
+            rescaleAxis(QwtPlot::yLeft, scalingFactor);
+        }
+
+        // Replot ourselves and reset our point of origin, if needed
+
+        if (deltaX || deltaY) {
+            replot();
+
+            mOriginPoint = pEvent->pos();
+        }
+
+        break;
+    }
+    default:
+        // None
+
+        ;
+    }
 }
 
 //==============================================================================
 
 void SingleCellSimulationViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
 {
-qDebug(">>> mousePressEvent()...");
     // Default handling of the event
 
     QwtPlot::mousePressEvent(pEvent);
+
+    // Check which action we can carry out
+
+    if (   (pEvent->button() == Qt::RightButton)
+        && (pEvent->modifiers() == Qt::NoModifier)) {
+        // We want to zoom in/out
+
+        mAction = Zoom;
+    } else {
+        // None of the actions we can carry out, so...
+
+        mAction = None;
+
+        return;
+    }
+
+    // Keep track of the mouse position and make sure that we track the mouse
+
+    mOriginPoint = pEvent->pos();
+
+    setMouseTracking(true);
 }
 
 //==============================================================================
 
 void SingleCellSimulationViewGraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 {
-qDebug(">>> mouseReleaseEvent()...");
     // Default handling of the event
 
     QwtPlot::mouseReleaseEvent(pEvent);
+
+    // Check whether we need to carry out an action
+
+    if (mAction == None)
+        return;
+
+    // Stop tracking the mouse
+
+    setMouseTracking(false);
+
+    // We are done carrying out an action, so...
+
+    mAction = None;
 }
 
 //==============================================================================
@@ -150,36 +245,30 @@ void SingleCellSimulationViewGraphPanelPlotWidget::wheelEvent(QWheelEvent *pEven
 
     QwtPlot::wheelEvent(pEvent);
 
-    // Make sure that no modifiers are being used
+    // The only action we support using the wheel is zooming in/out, but this
+    // requires no modifiers being used
 
     if (pEvent->modifiers() != Qt::NoModifier)
         return;
 
     // Determine the zoom factor, making sure that it's valid
 
-    static double OneOverOneHundredAndTwenty = 1.0/120.0;
+    static const double OneOverOneHundredAndTwenty = 1.0/120.0;
 
-    double zoomFactor = qPow(0.9, qAbs(pEvent->delta()*OneOverOneHundredAndTwenty));
+    double scalingFactor = qPow(0.9, qAbs(pEvent->delta()*OneOverOneHundredAndTwenty));
 
-    if ((zoomFactor == 0.0) || (zoomFactor == 1.0))
+    if ((scalingFactor == 0.0) || (scalingFactor == 1.0))
         return;
 
     if (pEvent->delta() > 0)
-        zoomFactor = 1.0/zoomFactor;
+        scalingFactor = 1.0/scalingFactor;
 
-    // Zoom in/out ourselves
+    // Rescale our two axes
 
-    QwtScaleDiv xScaleDiv = axisScaleDiv(QwtPlot::xBottom);
-    double xCenter = xScaleDiv.lowerBound()+0.5*xScaleDiv.range();
-    double xRangeOverTwo = 0.5*zoomFactor*xScaleDiv.range();
+    rescaleAxis(QwtPlot::xBottom, scalingFactor);
+    rescaleAxis(QwtPlot::yLeft, scalingFactor);
 
-    setAxisScale(QwtPlot::xBottom, xCenter-xRangeOverTwo, xCenter+xRangeOverTwo);
-
-    QwtScaleDiv yScaleDiv = axisScaleDiv(QwtPlot::yLeft);
-    double yCenter = yScaleDiv.lowerBound()+0.5*yScaleDiv.range();
-    double yRangeOverTwo = 0.5*zoomFactor*yScaleDiv.range();
-
-    setAxisScale(QwtPlot::yLeft, yCenter-yRangeOverTwo, yCenter+yRangeOverTwo);
+    // Replot ourselves
 
     replot();
 }

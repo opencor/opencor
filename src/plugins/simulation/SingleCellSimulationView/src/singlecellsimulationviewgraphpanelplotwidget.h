@@ -40,9 +40,20 @@ protected:
     virtual void wheelEvent(QWheelEvent *pEvent);
 
 private:
+    enum Action {
+        None,
+        Zoom
+    };
+
     QwtPlotDirectPainter *mDirectPainter;
 
+    Action mAction;
+
+    QPoint mOriginPoint;
+
     void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
+
+    void rescaleAxis(const int &pAxisId, const double &pScalingFactor);
 
 public Q_SLOTS:
     virtual void replot();
