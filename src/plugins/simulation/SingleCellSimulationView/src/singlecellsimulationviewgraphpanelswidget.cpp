@@ -2,8 +2,9 @@
 // Single cell simulation view graph panels widget
 //==============================================================================
 
-#include "singlecellsimulationviewgraphpanelwidget.h"
+#include "singlecellsimulationviewgraphpanelplotwidget.h"
 #include "singlecellsimulationviewgraphpanelswidget.h"
+#include "singlecellsimulationviewgraphpanelwidget.h"
 
 //==============================================================================
 
@@ -280,7 +281,7 @@ void SingleCellSimulationViewGraphPanelsWidget::clearGraphPanels()
     // Clear all the graph panels
 
     for (int i = 0, iMax = count(); i < iMax; ++i)
-        qobject_cast<SingleCellSimulationViewGraphPanelWidget *>(widget(i))->removeTraces();
+        qobject_cast<SingleCellSimulationViewGraphPanelWidget *>(widget(i))->plot()->removeTraces();
 }
 
 //==============================================================================
@@ -289,7 +290,7 @@ void SingleCellSimulationViewGraphPanelsWidget::clearActiveGraphPanel()
 {
     // Clear the current graph panel
 
-    activeGraphPanel()->removeTraces();
+    activeGraphPanel()->plot()->removeTraces();
 }
 
 //==============================================================================

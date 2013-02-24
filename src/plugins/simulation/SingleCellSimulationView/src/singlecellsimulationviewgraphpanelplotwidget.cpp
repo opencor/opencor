@@ -33,6 +33,7 @@ namespace SingleCellSimulationView {
 
 SingleCellSimulationViewGraphPanelPlotWidget::SingleCellSimulationViewGraphPanelPlotWidget(QWidget *pParent) :
     QwtPlot(pParent),
+    mPlotTraces(QList<QwtPlotCurve *>()),
     mAction(None),
     mOriginPoint(QPoint())
 {
@@ -68,6 +69,8 @@ SingleCellSimulationViewGraphPanelPlotWidget::SingleCellSimulationViewGraphPanel
 SingleCellSimulationViewGraphPanelPlotWidget::~SingleCellSimulationViewGraphPanelPlotWidget()
 {
     // Delete some internal objects
+
+    removeTraces();
 
     delete mDirectPainter;
 }
@@ -267,6 +270,90 @@ void SingleCellSimulationViewGraphPanelPlotWidget::wheelEvent(QWheelEvent *pEven
 
     rescaleAxis(QwtPlot::xBottom, scalingFactor);
     rescaleAxis(QwtPlot::yLeft, scalingFactor);
+
+    // Replot ourselves
+
+    replot();
+}
+
+//==============================================================================
+
+QwtPlotCurve * SingleCellSimulationViewGraphPanelPlotWidget::addTrace(double *pX,
+                                                                      double *pY,
+                                                                      const qulonglong &pOriginalSize)
+{
+    // Create a new trace
+
+    QwtPlotCurve *res = new QwtPlotCurve();
+
+    // Customise it a bit
+
+    res->setRenderHint(QwtPlotItem::RenderAntialiased);
+    res->setPen(QPen(Qt::darkBlue));
+
+    // Populate our trace
+
+    res->setRawSamples(pX, pY, pOriginalSize);
+
+    // Attach it to ourselves
+
+    res->attach(this);
+
+    // Add it to our list of traces
+
+    mPlotTraces << res;
+
+    // Replot ourselves, but only if needed
+
+    if (pOriginalSize) {
+        replot();
+
+        // Make sure that it gets replotted immediately
+        // Note: this is needed when running a simulation since, otherwise,
+        //       replotting won't occur, so...
+
+        qApp->processEvents();
+    }
+
+    // Return it to the caller
+
+    return res;
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewGraphPanelPlotWidget::removeTrace(QwtPlotCurve *pTrace,
+                                                               const bool &pReplot)
+{
+    // Make sure that we have a trace
+
+    if (!pTrace)
+        return;
+
+    // Detach and then delete the trace
+
+    pTrace->detach();
+
+    delete pTrace;
+
+    // Stop tracking the trace
+
+    mPlotTraces.removeOne(pTrace);
+
+    // Replot ourselves, if needed
+
+    if (pReplot)
+        replot();
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewGraphPanelPlotWidget::removeTraces()
+{
+    // Remove any existing trace
+
+    foreach (QwtPlotCurve *trace, mPlotTraces)
+        removeTrace(trace, false);
 
     // Replot ourselves
 

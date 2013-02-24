@@ -29,6 +29,12 @@ public:
     explicit SingleCellSimulationViewGraphPanelPlotWidget(QWidget *pParent = 0);
     ~SingleCellSimulationViewGraphPanelPlotWidget();
 
+    QwtPlotCurve * addTrace(double *pX, double *pY,
+                            const qulonglong &pOriginalSize);
+
+    void removeTrace(QwtPlotCurve *pTrace, const bool &pReplot = true);
+    void removeTraces();
+
     void drawTraceSegment(QwtPlotCurve *pTrace,
                           const qulonglong &pFrom, const qulonglong &pTo);
 
@@ -46,6 +52,8 @@ private:
     };
 
     QwtPlotDirectPainter *mDirectPainter;
+
+    QList<QwtPlotCurve *> mPlotTraces;
 
     Action mAction;
 

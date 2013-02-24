@@ -1273,7 +1273,7 @@ void SingleCellSimulationViewWidget::showHideParameterPlot(const QString &pFileN
     if (trace && !pShowParameterPlot) {
         // We have a trace and we want to remove it
 
-        mActiveGraphPanel->removeTrace(trace);
+        mActiveGraphPanel->plot()->removeTrace(trace);
 
         mTraces.remove(key);
     } else if (!trace && pShowParameterPlot) {
@@ -1296,7 +1296,7 @@ void SingleCellSimulationViewWidget::showHideParameterPlot(const QString &pFileN
 
         // Add a trace and keep track of it
 
-        QwtPlotCurve *trace = mActiveGraphPanel->addTrace(results->points(), yData, results->size());
+        QwtPlotCurve *trace = mActiveGraphPanel->plot()->addTrace(results->points(), yData, results->size());
 
         mTraces.insert(key, trace);
     }
