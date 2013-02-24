@@ -34,6 +34,10 @@ public:
 
 protected:
     virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
+    virtual void mouseMoveEvent(QMouseEvent *pEvent);
+    virtual void mousePressEvent(QMouseEvent *pEvent);
+    virtual void mouseReleaseEvent(QMouseEvent *pEvent);
+    virtual void wheelEvent(QWheelEvent *pEvent);
 
 private:
     QwtPlotDirectPainter *mDirectPainter;

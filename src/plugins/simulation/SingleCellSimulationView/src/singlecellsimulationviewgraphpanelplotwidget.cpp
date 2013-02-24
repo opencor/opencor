@@ -114,6 +114,78 @@ void SingleCellSimulationViewGraphPanelPlotWidget::handleMouseDoubleClickEvent(Q
 
 //==============================================================================
 
+void SingleCellSimulationViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
+{
+qDebug(">>> mouseMoveEvent()...");
+    // Default handling of the event
+
+    QwtPlot::mouseMoveEvent(pEvent);
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
+{
+qDebug(">>> mousePressEvent()...");
+    // Default handling of the event
+
+    QwtPlot::mousePressEvent(pEvent);
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewGraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
+{
+qDebug(">>> mouseReleaseEvent()...");
+    // Default handling of the event
+
+    QwtPlot::mouseReleaseEvent(pEvent);
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewGraphPanelPlotWidget::wheelEvent(QWheelEvent *pEvent)
+{
+    // Default handling of the event
+
+    QwtPlot::wheelEvent(pEvent);
+
+    // Make sure that no modifiers are being used
+
+    if (pEvent->modifiers() != Qt::NoModifier)
+        return;
+
+    // Determine the zoom factor, making sure that it's valid
+
+    static double OneOverOneHundredAndTwenty = 1.0/120.0;
+
+    double zoomFactor = qPow(0.9, qAbs(pEvent->delta()*OneOverOneHundredAndTwenty));
+
+    if ((zoomFactor == 0.0) || (zoomFactor == 1.0))
+        return;
+
+    if (pEvent->delta() > 0)
+        zoomFactor = 1.0/zoomFactor;
+
+    // Zoom in/out ourselves
+
+    QwtScaleDiv xScaleDiv = axisScaleDiv(QwtPlot::xBottom);
+    double xCenter = xScaleDiv.lowerBound()+0.5*xScaleDiv.range();
+    double xRangeOverTwo = 0.5*zoomFactor*xScaleDiv.range();
+
+    setAxisScale(QwtPlot::xBottom, xCenter-xRangeOverTwo, xCenter+xRangeOverTwo);
+
+    QwtScaleDiv yScaleDiv = axisScaleDiv(QwtPlot::yLeft);
+    double yCenter = yScaleDiv.lowerBound()+0.5*yScaleDiv.range();
+    double yRangeOverTwo = 0.5*zoomFactor*yScaleDiv.range();
+
+    setAxisScale(QwtPlot::yLeft, yCenter-yRangeOverTwo, yCenter+yRangeOverTwo);
+
+    replot();
+}
+
+//==============================================================================
+
 void SingleCellSimulationViewGraphPanelPlotWidget::drawTraceSegment(QwtPlotCurve *pTrace,
                                                                     const qulonglong &pFrom,
                                                                     const qulonglong &pTo)
