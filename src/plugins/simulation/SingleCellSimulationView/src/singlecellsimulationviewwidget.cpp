@@ -756,8 +756,12 @@ while (iter != mTraces.constEnd()) {
     ++iter;
 }
 
-mActiveGraphPanel->plot()->setAxisScale(QwtPlot::xBottom, mSimulation->data()->startingPoint(), mSimulation->data()->endingPoint());
-mActiveGraphPanel->plot()->replot();
+mActiveGraphPanel->plot()->setFixedAxisScale(SingleCellSimulationViewGraphPanelPlotWidget::AxisX,
+                                             mSimulation->data()->startingPoint(), mSimulation->data()->endingPoint());
+if (mSimulation->isRunning() || mSimulation->isPaused())
+    mActiveGraphPanel->plot()->replotNow();
+else
+    mActiveGraphPanel->plot()->unsetFixedAxisScale(SingleCellSimulationViewGraphPanelPlotWidget::AxisX);
 }
 
 //==============================================================================
@@ -882,9 +886,8 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
 
 // Retrieve the active graph panel
 //---GRY--- THE BELOW IS TEMPORARY, JUST FOR OUR DEMO...
-
-mActiveGraphPanel->plot()->setAxisScale(QwtPlot::xBottom, simulationData->startingPoint(), simulationData->endingPoint());
-mActiveGraphPanel->plot()->replot();
+mActiveGraphPanel->plot()->setFixedAxisScale(SingleCellSimulationViewGraphPanelPlotWidget::AxisX,
+                                             simulationData->startingPoint(), simulationData->endingPoint());
 
         // Check how much memory is needed to run our simulation
 
@@ -1100,6 +1103,11 @@ void SingleCellSimulationViewWidget::simulationStopped(const int &pElapsedTime)
             QTimer::singleShot(ResetDelay, this, SLOT(resetFileTabIcon()));
         }
     }
+
+//---GRY--- THE BELOW IS TEMPORARY, JUST FOR OUR DEMO...
+// Stop the X axis scale from being fixed
+
+mActiveGraphPanel->plot()->unsetFixedAxisScale(SingleCellSimulationViewGraphPanelPlotWidget::AxisX);
 }
 
 //==============================================================================
@@ -1116,12 +1124,6 @@ void SingleCellSimulationViewWidget::resetProgressBar()
 void SingleCellSimulationViewWidget::resetFileTabIcon()
 {
     // Let people know that we want to reset our file tab icon
-    // Note: we use a mutex in case another call to callCheckResults() was to be
-    //       made between us retrieving and moving the first simulation...
-
-    static QMutex mutex;
-
-    QMutexLocker mutexLocker(&mutex);
 
     SingleCellSimulationViewSimulation *simulation = mStoppedSimulations.first();
 
@@ -1375,7 +1377,7 @@ void SingleCellSimulationViewWidget::updateResults(SingleCellSimulationViewSimul
                 trace->setRawSamples(simulation->results()->points(), yData, pSize);
 
                 // Draw the trace's new segment, but only if there is some data
-                // to plot and that we want to draw a trace segment
+                // to plot and that we don't want to replot everything
 
                 if (!pReplot && (pSize > 1))
                     qobject_cast<SingleCellSimulationViewGraphPanelPlotWidget *>(trace->plot())->drawTraceSegment(trace, oldSize?oldSize-1:0, pSize-1);
@@ -1392,7 +1394,7 @@ void SingleCellSimulationViewWidget::updateResults(SingleCellSimulationViewSimul
             // We want to initialise the plot and/or there is no data to plot,
             // so replot our active graph panel
 
-            mActiveGraphPanel->plot()->replot();
+            mActiveGraphPanel->plot()->replotNow();
 
         // Update our progress bar
 
@@ -1465,12 +1467,6 @@ void SingleCellSimulationViewWidget::callCheckResults()
 {
     // Retrieve the simulation for which we want to call checkResults() and then
     // call checkResults()
-    // Note: we use a mutex in case another call to callCheckResults() was to be
-    //       made between us retrieving and moving the first simulation...
-
-    static QMutex mutex;
-
-    QMutexLocker mutexLocker(&mutex);
 
     SingleCellSimulationViewSimulation *simulation = mCheckResultsSimulations.first();
 

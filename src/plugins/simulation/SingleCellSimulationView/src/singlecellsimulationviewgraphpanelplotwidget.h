@@ -26,8 +26,15 @@ class SingleCellSimulationViewGraphPanelPlotWidget : public QwtPlot
     Q_OBJECT
 
 public:
+    enum Axis {
+        AxisX,
+        AxisY
+    };
+
     explicit SingleCellSimulationViewGraphPanelPlotWidget(QWidget *pParent = 0);
     ~SingleCellSimulationViewGraphPanelPlotWidget();
+
+    void replotNow();
 
     QwtPlotCurve * addTrace(double *pX, double *pY,
                             const qulonglong &pOriginalSize);
@@ -37,6 +44,10 @@ public:
 
     void drawTraceSegment(QwtPlotCurve *pTrace,
                           const qulonglong &pFrom, const qulonglong &pTo);
+
+    void setFixedAxisScale(const Axis &pAxis,
+                           const double &pMin, const double &pMax);
+    void unsetFixedAxisScale(const Axis &pAxis);
 
 protected:
     virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
@@ -59,13 +70,21 @@ private:
 
     QPoint mOriginPoint;
 
+    double mMinFixedScaleX;
+    double mMaxFixedScaleX;
+
+    double mMinFixedScaleY;
+    double mMaxFixedScaleY;
+
     void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
 
-    void rescaleAxes(const double &pXScalingFactor,
-                     const double &pYScalingFactor);
-
-public Q_SLOTS:
-    virtual void replot();
+    void setAxesScales(const double &pMinX, const double &pMaxX,
+                       const double &pMinY, const double &pMaxY,
+                       const bool &pCanReplot = true);
+    void resetAxesScales();
+    void scaleAxesScales(const double &pScalingFactorX,
+                         const double &pScalingFactorY);
+    void checkAxesScales(const bool &pCanReplot = true);
 };
 
 //==============================================================================

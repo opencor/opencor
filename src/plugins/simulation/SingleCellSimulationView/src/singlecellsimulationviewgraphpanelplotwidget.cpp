@@ -35,7 +35,11 @@ SingleCellSimulationViewGraphPanelPlotWidget::SingleCellSimulationViewGraphPanel
     QwtPlot(pParent),
     mTraces(QList<QwtPlotCurve *>()),
     mAction(None),
-    mOriginPoint(QPoint())
+    mOriginPoint(QPoint()),
+    mMinFixedScaleX(0.0),
+    mMaxFixedScaleX(0.0),
+    mMinFixedScaleY(0.0),
+    mMaxFixedScaleY(0.0)
 {
     // Get ourselves a direct painter
 
@@ -119,25 +123,167 @@ void SingleCellSimulationViewGraphPanelPlotWidget::handleMouseDoubleClickEvent(Q
 
 //==============================================================================
 
-void SingleCellSimulationViewGraphPanelPlotWidget::rescaleAxes(const double &pXScalingFactor,
-                                                               const double &pYScalingFactor)
+void SingleCellSimulationViewGraphPanelPlotWidget::setFixedAxisScale(const Axis &pAxis,
+                                                                     const double &pMin,
+                                                                     const double &pMax)
 {
-    // Rescale the axes using the given scaling factors
+    // Update our fixed scale information and axes scales
+
+    if (pAxis == AxisX) {
+        mMinFixedScaleX = pMin;
+        mMaxFixedScaleX = pMax;
+
+        setAxesScales(pMin, pMax,
+                      axisScaleDiv(QwtPlot::yLeft).lowerBound(), axisScaleDiv(QwtPlot::yLeft).upperBound());
+    } else {
+        mMinFixedScaleY = pMin;
+        mMaxFixedScaleY = pMax;
+
+        setAxesScales(axisScaleDiv(QwtPlot::xBottom).lowerBound(), axisScaleDiv(QwtPlot::xBottom).upperBound(),
+                      pMin, pMax);
+    }
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewGraphPanelPlotWidget::unsetFixedAxisScale(const Axis &pAxis)
+{
+    // Reset our fixed scale information
+
+    if (pAxis == AxisX) {
+        mMinFixedScaleX = 0.0;
+        mMaxFixedScaleX = 0.0;
+    } else {
+        mMinFixedScaleY = 0.0;
+        mMaxFixedScaleY = 0.0;
+    }
+
+    // Make sure that our axes scales are fine
+
+    checkAxesScales();
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewGraphPanelPlotWidget::setAxesScales(const double &pMinX,
+                                                                 const double &pMaxX,
+                                                                 const double &pMinY,
+                                                                 const double &pMaxY,
+                                                                 const bool &pCanReplot)
+{
+    // Update our axes scales
+
+    double oldMinX = axisScaleDiv(QwtPlot::xBottom).lowerBound();
+    double oldMaxX = axisScaleDiv(QwtPlot::xBottom).upperBound();
+    double oldMinY = axisScaleDiv(QwtPlot::yLeft).lowerBound();
+    double oldMaxY = axisScaleDiv(QwtPlot::yLeft).upperBound();
+
+    double newMinX = pMinX;
+    double newMaxX = pMaxX;
+    double newMinY = pMinY;
+    double newMaxY = pMaxY;
+
+    // Check whether our new axes scales should be fixed
+
+    bool axisFixedX = mMinFixedScaleX || mMaxFixedScaleX;
+    bool axisFixedY = mMinFixedScaleY || mMaxFixedScaleY;
+
+    // Determine what our new axes scales really should be
+
+    if ((!axisFixedX || !axisFixedY) && mTraces.count()) {
+        // There is at least one of our axes which is not fixed and there is at
+        // least one trace, so retrieve the bounding rectangle for all our
+        // traces
+
+        QRectF boundingRect = QRectF();
+
+        foreach (QwtPlotCurve *trace, mTraces)
+            if (trace->dataSize())
+                boundingRect |= trace->boundingRect();
+
+        if (boundingRect != QRectF()) {
+            // We have a valid bounding rectangle, so update our new axes scales
+
+            newMinX = qMax(pMinX, boundingRect.left());
+            newMaxX = qMin(pMaxX, boundingRect.right());
+            newMinY = qMax(pMinY, boundingRect.top());
+            newMaxY = qMin(pMaxY, boundingRect.bottom());
+        }
+    }
+
+    // Fix our axes scales, if needed
+
+    if (axisFixedX) {
+        newMinX = mMinFixedScaleX;
+        newMaxX = mMaxFixedScaleX;
+    }
+
+    if (axisFixedY) {
+        newMinY = mMinFixedScaleY;
+        newMaxY = mMaxFixedScaleY;
+    }
+
+    // Update one/both of our axes scales and replot ourselves, if needed
+
+    bool needReplot = false;
+
+    if ((newMinX != oldMinX) || (newMaxX != oldMaxX)) {
+        setAxisScale(QwtPlot::xBottom, newMinX, newMaxX);
+
+        needReplot = true;
+    }
+
+    if ((newMinY != oldMinY) || (newMaxY != oldMaxY)) {
+        setAxisScale(QwtPlot::yLeft, newMinY, newMaxY);
+
+        needReplot = true;
+    }
+
+    if (needReplot && pCanReplot)
+        replotNow();
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewGraphPanelPlotWidget::resetAxesScales()
+{
+    // Reset our axes scales
+
+    setAxesScales(-DBL_MAX, DBL_MAX, -DBL_MAX, DBL_MAX);
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewGraphPanelPlotWidget::scaleAxesScales(const double &pScalingFactorX,
+                                                                   const double &pScalingFactorY)
+{
+    // Determine the min/max values for our two axes
 
     QwtScaleDiv xScaleDiv = axisScaleDiv(QwtPlot::xBottom);
     double xCenter = xScaleDiv.lowerBound()+0.5*xScaleDiv.range();
-    double xRangeOverTwo = 0.5*pXScalingFactor*xScaleDiv.range();
-    double xAxisMin = xCenter-xRangeOverTwo;
-    double xAxisMax = xCenter+xRangeOverTwo;
+    double xRangeOverTwo = 0.5*pScalingFactorX*xScaleDiv.range();
 
     QwtScaleDiv yScaleDiv = axisScaleDiv(QwtPlot::yLeft);
     double yCenter = yScaleDiv.lowerBound()+0.5*yScaleDiv.range();
-    double yRangeOverTwo = 0.5*pYScalingFactor*yScaleDiv.range();
-    double yAxisMin = yCenter-yRangeOverTwo;
-    double yAxisMax = yCenter+yRangeOverTwo;
+    double yRangeOverTwo = 0.5*pScalingFactorY*yScaleDiv.range();
 
-    setAxisScale(QwtPlot::xBottom, xAxisMin, xAxisMax);
-    setAxisScale(QwtPlot::yLeft, yAxisMin, yAxisMax);
+    // Rescale our two axes
+
+    setAxesScales(xCenter-xRangeOverTwo, xCenter+xRangeOverTwo,
+                  yCenter-yRangeOverTwo, yCenter+yRangeOverTwo);
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewGraphPanelPlotWidget::checkAxesScales(const bool &pCanReplot)
+{
+    // Check our axes scales by trying to set them
+
+    setAxesScales(axisScaleDiv(QwtPlot::xBottom).lowerBound(),
+                  axisScaleDiv(QwtPlot::xBottom).upperBound(),
+                  axisScaleDiv(QwtPlot::yLeft).lowerBound(),
+                  axisScaleDiv(QwtPlot::yLeft).upperBound(),
+                  pCanReplot);
 }
 
 //==============================================================================
@@ -178,9 +324,7 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *p
         // if needed
 
         if (deltaX || deltaY) {
-            rescaleAxes(xScalingFactor, yScalingFactor);
-
-            replot();
+            scaleAxesScales(xScalingFactor, yScalingFactor);
 
             mOriginPoint = pEvent->pos();
         }
@@ -272,19 +416,29 @@ void SingleCellSimulationViewGraphPanelPlotWidget::wheelEvent(QWheelEvent *pEven
     if (pEvent->delta() > 0)
         scalingFactor = 1.0/scalingFactor;
 
-    // Rescale our two axes
+    // Scale our two axes
 
-    rescaleAxes(scalingFactor, scalingFactor);
-
-    // Replot ourselves
-
-    replot();
+    scaleAxesScales(scalingFactor, scalingFactor);
 }
 
 //==============================================================================
 
-QwtPlotCurve * SingleCellSimulationViewGraphPanelPlotWidget::addTrace(double *pX,
-                                                                      double *pY,
+void SingleCellSimulationViewGraphPanelPlotWidget::replotNow()
+{
+    // Replot ourselves
+
+    replot();
+
+    // Make sure that the replotting occurs immediately
+    // Note: this is needed when running a simulation since, otherwise,
+    //       replotting won't occur immediately (because of threading)...
+
+    qApp->processEvents();
+}
+
+//==============================================================================
+
+QwtPlotCurve * SingleCellSimulationViewGraphPanelPlotWidget::addTrace(double *pX, double *pY,
                                                                       const qulonglong &pOriginalSize)
 {
     // Create a new trace
@@ -308,16 +462,25 @@ QwtPlotCurve * SingleCellSimulationViewGraphPanelPlotWidget::addTrace(double *pX
 
     mTraces << res;
 
-    // Replot ourselves, but only if needed
+    // Make sure that our axes scales are fine and replot ourselves, but only if
+    // needed
 
     if (pOriginalSize) {
-        replot();
+        // Set our axes scales so that we can see all the traces
+        // Note: we are adding a trace, so we always want to replot, hence our
+        //       passing false to setAxesScales()...
 
-        // Make sure that it gets replotted immediately
-        // Note: this is needed when running a simulation since, otherwise,
-        //       replotting won't occur, so...
+        QRectF boundingRect = QRectF();
 
-        qApp->processEvents();
+        foreach (QwtPlotCurve *trace, mTraces)
+            if (trace->dataSize())
+                boundingRect |= trace->boundingRect();
+
+        setAxesScales(boundingRect.left(), boundingRect.right(),
+                      boundingRect.top(), boundingRect.bottom(),
+                      false);
+
+        replotNow();
     }
 
     // Return it to the caller
@@ -345,10 +508,14 @@ void SingleCellSimulationViewGraphPanelPlotWidget::removeTrace(QwtPlotCurve *pTr
 
     mTraces.removeOne(pTrace);
 
-    // Replot ourselves, if needed
+    // Make sure that our axes scales are fine and replot ourselves, if needed
 
-    if (pReplot)
-        replot();
+    if (pReplot) {
+        if (mTraces.count())
+            checkAxesScales(false);
+
+        replotNow();
+    }
 }
 
 //==============================================================================
@@ -362,7 +529,7 @@ void SingleCellSimulationViewGraphPanelPlotWidget::removeTraces()
 
     // Replot ourselves
 
-    replot();
+    replotNow();
 }
 
 //==============================================================================
@@ -378,42 +545,41 @@ void SingleCellSimulationViewGraphPanelPlotWidget::drawTraceSegment(QwtPlotCurve
 
     // Determine the Y min/max of our new data
 
+    double xMin =  DBL_MAX;
+    double xMax = -DBL_MAX;
     double yMin =  DBL_MAX;
     double yMax = -DBL_MAX;
 
     for (qulonglong i = pFrom; i <= pTo; ++i) {
+        double xVal = pTrace->data()->sample(i).x();
         double yVal = pTrace->data()->sample(i).y();
+
+        xMin = qMin(xMin, xVal);
+        xMax = qMax(xMax, xVal);
 
         yMin = qMin(yMin, yVal);
         yMax = qMax(yMax, yVal);
     }
 
-    // Check which trace segment we are dealing with and whether our Y axis can
-    // handle the Y min/max of our new data
+    // Check which trace segment we are dealing with and whether our X/Y axis
+    // can handle the X/Y min/max of our new data
 
     if (   !pFrom
+        || (xMin < axisScaleDiv(QwtPlot::xBottom).lowerBound())
+        || (xMax > axisScaleDiv(QwtPlot::xBottom).upperBound())
         || (yMin < axisScaleDiv(QwtPlot::yLeft).lowerBound())
-        || (yMax > axisScaleDiv(QwtPlot::yLeft).upperBound()))
-        // Either it's our first trace segment and/or our Y axis cannot handle
-        // the Y min/max of our new data, so replot ourselves
+        || (yMax > axisScaleDiv(QwtPlot::yLeft).upperBound())) {
+        // Either it's our first trace segment and/or our X/Y axis cannot handle
+        // the X/Y min/max of our new data, so check our axes scales and replot
+        // ourselves
 
-        replot();
-    else
-        // Our Y axis can handle the Y min/max of our new data, so just draw our
-        // new trace segment
+        resetAxesScales();
+    } else {
+        // Our X/Y axis can handle the X/Y min/max of our new data, so just draw
+        // our new trace segment
 
         mDirectPainter->drawSeries(pTrace, pFrom, pTo);
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewGraphPanelPlotWidget::replot()
-{
-    // Replot ourselves, making sure that our axes get rescaled (if needed)
-
-    setAutoReplot(true);
-        QwtPlot::replot();
-    setAutoReplot(false);
+    }
 }
 
 //==============================================================================
