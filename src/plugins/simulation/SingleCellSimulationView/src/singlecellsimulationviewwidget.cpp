@@ -386,7 +386,7 @@ void SingleCellSimulationViewWidget::updateSimulationMode()
 
     mGui->actionStop->setEnabled(simulationModeEnabled);
 
-    // Enable or disable the simulation and solvers widgets
+    // Enable or disable our simulation and solvers widgets
 
     mContentsWidget->informationWidget()->simulationWidget()->setEnabled(!simulationModeEnabled);
     mContentsWidget->informationWidget()->solversWidget()->setEnabled(!simulationModeEnabled);
@@ -396,7 +396,7 @@ void SingleCellSimulationViewWidget::updateSimulationMode()
     mGui->actionCsvExport->setEnabled(   mSimulation->results()->size()
                                       && !simulationModeEnabled);
 
-    // Give the focus to our focus proxy, in case we leave the simulation mode
+    // Give the focus to our focus proxy, in case we leave our simulation mode
     // (so that the user can modify simulation data, etc.)
 
     if (!simulationModeEnabled)
@@ -736,32 +736,42 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         mSimulation->results()->reset(false);
     }
 
-//---GRY--- THE BELOW IS TEMPORARY, JUST FOR OUR DEMO...
-QMap<QString, QwtPlotCurve *>::const_iterator iter = mCurves.constBegin();
+    // Show/hide the curves associated with the given file name
 
-while (iter != mCurves.constEnd()) {
-    // Retrieve the file name associated with the curve
+    QMap<QString, QwtPlotCurve *>::const_iterator iter = mCurves.constBegin();
 
-    QString fileName = iter.key();
+    while (iter != mCurves.constEnd()) {
+        // Retrieve the file name associated with the curve
 
-    fileName.chop(fileName.size()-fileName.indexOf('|'));
+        QString fileName = iter.key();
 
-    // Show/hide our curve depending on whether it is associated with the
-    // requested file name
+        fileName.chop(fileName.size()-fileName.indexOf('|'));
 
-    iter.value()->setVisible(!fileName.compare(pFileName));
+        // Show/hide our curve depending on whether it is associated with the
+        // given file name
 
-    // Go to the next curve
+        iter.value()->setVisible(!fileName.compare(pFileName));
 
-    ++iter;
-}
+        // Go to the next curve
 
-mActiveGraphPanel->plot()->setFixedAxisScale(SingleCellSimulationViewGraphPanelPlotWidget::AxisX,
-                                             mSimulation->data()->startingPoint(), mSimulation->data()->endingPoint());
-if (mSimulation->isRunning() || mSimulation->isPaused())
-    mActiveGraphPanel->plot()->replotNow();
-else
-    mActiveGraphPanel->plot()->setFixedAxisScale(SingleCellSimulationViewGraphPanelPlotWidget::AxisX);
+        ++iter;
+    }
+
+    // Fix our X axis (so that it gets the correct scale) and forbid interaction
+
+    mActiveGraphPanel->plot()->setFixedAxisScale(SingleCellSimulationViewGraphPanelPlotWidget::AxisX,
+                                                 mSimulation->data()->startingPoint(), mSimulation->data()->endingPoint());
+    mActiveGraphPanel->plot()->setInteractive(false);
+
+    // Replot ourselves, if we are running/paused, or stop the X axis scale from
+    // being fixed and allow interaction
+
+    if (mSimulation->isRunning() || mSimulation->isPaused()) {
+        mActiveGraphPanel->plot()->replotNow();
+    } else {
+        mActiveGraphPanel->plot()->setFixedAxisScale(SingleCellSimulationViewGraphPanelPlotWidget::AxisX);
+        mActiveGraphPanel->plot()->setInteractive(true);
+    }
 }
 
 //==============================================================================
@@ -777,7 +787,7 @@ bool SingleCellSimulationViewWidget::isManaged(const QString &pFileName) const
 
 void SingleCellSimulationViewWidget::finalize(const QString &pFileName)
 {
-    // Remove the simulation object, should there be one for the given file name
+    // Remove our simulation object, should there be one for the given file name
 
     SingleCellSimulationViewSimulation *simulation = mSimulations.value(pFileName);
 
@@ -892,7 +902,7 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
         double requiredMemory = mSimulation->requiredMemory();
 
         if (requiredMemory > freeMemory) {
-            // More memory is required to run the simulation than is currently
+            // More memory is required to run our simulation than is currently
             // available, so let our user know about it
 
             QMessageBox::warning(qApp->activeWindow(), tr("Run the simulation"),
@@ -901,23 +911,29 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
             runSimulation = false;
         }
 
-        // Run the simulation if possible/wanted
+        // Run our simulation, if possible/wanted
 
-        if (runSimulation)
-{
-mActiveGraphPanel->plot()->setFixedAxisScale(SingleCellSimulationViewGraphPanelPlotWidget::AxisX,
-                                             simulationData->startingPoint(), simulationData->endingPoint());
-mActiveGraphPanel->plot()->setInteractive(false);
-mOldSimulationResultsSizes.insert(mSimulation, 0);
-runSimulation = mSimulation->results()->reset();
-updateResults(mSimulation, 0);
-if (runSimulation) {
-//---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
-            mSimulation->run();
-} else
-    QMessageBox::warning(qApp->activeWindow(), tr("Run the simulation"),
-                         tr("Sorry, but we could not allocate all the memory required for the simulation."));
-}
+        if (runSimulation) {
+            // Fix our X axis and forbid interaction
+
+            mActiveGraphPanel->plot()->setFixedAxisScale(SingleCellSimulationViewGraphPanelPlotWidget::AxisX,
+                                                         simulationData->startingPoint(), simulationData->endingPoint());
+            mActiveGraphPanel->plot()->setInteractive(false);
+
+            // Result our simulation settings
+
+            mOldSimulationResultsSizes.insert(mSimulation, 0);
+            runSimulation = mSimulation->results()->reset();
+            updateResults(mSimulation, 0);
+
+            // Effectively run our simulation, if possible
+
+            if (runSimulation)
+                mSimulation->run();
+            else
+                QMessageBox::warning(qApp->activeWindow(), tr("Run the simulation"),
+                                     tr("Sorry, but we could not allocate all the memory required for the simulation."));
+        }
     }
 }
 
@@ -1043,7 +1059,7 @@ void SingleCellSimulationViewWidget::simulationPaused()
 void SingleCellSimulationViewWidget::simulationStopped(const int &pElapsedTime)
 {
     // We want a short delay before resetting the progress bar and the file tab
-    // icon, so that the user can really see when the simulation has completed
+    // icon, so that the user can really see when our simulation has completed
 
     static const int ResetDelay = 169;
 
@@ -1055,7 +1071,7 @@ void SingleCellSimulationViewWidget::simulationStopped(const int &pElapsedTime)
 
     if (simulation == mSimulation) {
         if (pElapsedTime != -1) {
-            // We have a valid elapsed time, so show the simulation time
+            // We have a valid elapsed time, so show our simulation time
 
             SingleCellSimulationViewSimulationData *simulationData = mSimulation->data();
             QString solversInformation = QString();
@@ -1085,7 +1101,7 @@ void SingleCellSimulationViewWidget::simulationStopped(const int &pElapsedTime)
     // simulation
 
     if (simulation) {
-        // Stop keeping track of the simulation progress
+        // Stop keeping track of our simulation progress
 
         mProgresses.remove(simulation->fileName());
 
@@ -1102,11 +1118,10 @@ void SingleCellSimulationViewWidget::simulationStopped(const int &pElapsedTime)
         }
     }
 
-//---GRY--- THE BELOW IS TEMPORARY, JUST FOR OUR DEMO...
-// Stop the X axis scale from being fixed
+    // Stop the X axis scale from being fixed and allow interaction
 
-mActiveGraphPanel->plot()->setFixedAxisScale(SingleCellSimulationViewGraphPanelPlotWidget::AxisX);
-mActiveGraphPanel->plot()->setInteractive(true);
+    mActiveGraphPanel->plot()->setFixedAxisScale(SingleCellSimulationViewGraphPanelPlotWidget::AxisX);
+    mActiveGraphPanel->plot()->setInteractive(true);
 }
 
 //==============================================================================
@@ -1448,7 +1463,8 @@ void SingleCellSimulationViewWidget::checkResults(SingleCellSimulationViewSimula
     // Ask to recheck our simulation's results, but only if our simulation is
     // still running
 
-    if (pSimulation->isRunning()) {
+    if (   pSimulation->isRunning()
+        || (simulationResultsSize != pSimulation->results()->size())) {
         // Note: we cannot ask QTimer::singleShot() to call checkResults() since
         //       it expects a pointer to a simulation as a parameter, so instead
         //       we call a method with no arguments which will make use of our
