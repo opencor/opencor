@@ -121,9 +121,11 @@ void SingleCellSimulationViewInformationParametersWidget::initialize(const QStri
 
         connect(propertyEditor, SIGNAL(propertyChanged(Core::Property *)),
                 this, SLOT(propertyChanged(Core::Property *)));
-connect(propertyEditor, SIGNAL(propertyChecked(Core::Property *, const bool &)),
-        this, SLOT(emitShowHideParameterPlot(Core::Property *, const bool &)));
-//---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
+
+        // Keep track of when the user wants to show/hide a model parameter
+
+        connect(propertyEditor, SIGNAL(propertyChecked(Core::Property *, const bool &)),
+                this, SLOT(emitShowModelParameter(Core::Property *, const bool &)));
 
         // Add our new property editor to ourselves
 
@@ -228,8 +230,8 @@ void SingleCellSimulationViewInformationParametersWidget::propertyChanged(Core::
 
 //==============================================================================
 
-void SingleCellSimulationViewInformationParametersWidget::emitShowHideParameterPlot(Core::Property *pProperty,
-                                                                                    const bool &pShowParameterPlot)
+void SingleCellSimulationViewInformationParametersWidget::emitShowModelParameter(Core::Property *pProperty,
+                                                                                 const bool &pShow)
 {
     // Retrieve our current property editor, if any
 
@@ -238,11 +240,12 @@ void SingleCellSimulationViewInformationParametersWidget::emitShowHideParameterP
     if (!propertyEditor)
         return;
 
-    // Let people know whether a parameter for the given file name is needed
+    // Let people know whether a model parameter for the given file name is to
+    // be shown
 
-    emit showHideParameterPlot(mPropertyEditors.key(propertyEditor),
-                               mModelParameters.value(pProperty),
-                               pShowParameterPlot);
+    emit showModelParameter(mPropertyEditors.key(propertyEditor),
+                            mModelParameters.value(pProperty),
+                            pShow);
 }
 
 //==============================================================================

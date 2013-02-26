@@ -577,11 +577,11 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
 
     PropertyItemDelegate *propertyItemDelegate = new PropertyItemDelegate();
 
+    connect(mModel, SIGNAL(itemChanged(QStandardItem *)),
+            this, SLOT(emitPropertyChecked(QStandardItem *)));
+
     connect(selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
             this, SLOT(editorClosed()));
-connect(mModel, SIGNAL(itemChanged(QStandardItem *)),
-        this, SLOT(emitPropertyChecked(QStandardItem *)));
-//---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 
     connect(propertyItemDelegate, SIGNAL(openEditor(QWidget *)),
             this, SLOT(editorOpened(QWidget *)));
@@ -1212,6 +1212,18 @@ void PropertyEditorWidget::updateHeight()
 
 //==============================================================================
 
+void PropertyEditorWidget::emitPropertyChecked(QStandardItem *pItem)
+{
+    // Let people know whether our current property is checked
+
+    Property *itemProperty = property(pItem->index());
+
+    emit propertyChecked(itemProperty,
+                         itemProperty->name()->checkState() == Qt::Checked);
+}
+
+//==============================================================================
+
 void PropertyEditorWidget::editorOpened(QWidget *pEditor)
 {
     // Keep track of some information about the property
@@ -1463,18 +1475,6 @@ Property * PropertyEditorWidget::currentProperty() const
     // Return some information about the current property
 
     return property(currentIndex());
-}
-
-//==============================================================================
-
-void PropertyEditorWidget::emitPropertyChecked(QStandardItem *pItem)
-{
-    // Let people know whether our current property is checked
-
-    Property *itemProperty = property(pItem->index());
-
-    emit propertyChecked(itemProperty,
-                         itemProperty->name()->checkState() == Qt::Checked);
 }
 
 //==============================================================================

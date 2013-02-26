@@ -306,20 +306,19 @@ private:
 Q_SIGNALS:
     void propertyChanged(Core::Property *pProperty);
     void listPropertyChanged(const QString &pValue);
-void propertyChecked(Core::Property *pProperty, const bool &pChecked);
-//---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
+
+    void propertyChecked(Core::Property *pProperty, const bool &pChecked);
 
 private Q_SLOTS:
     void updateHeight();
+
+    void emitPropertyChecked(QStandardItem *pItem);
 
     void editorOpened(QWidget *pEditor);
     void editorClosed();
 
     void goToPreviousProperty();
     void goToNextProperty();
-
-void emitPropertyChecked(QStandardItem *pItem);
-//---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
 };
 
 //==============================================================================

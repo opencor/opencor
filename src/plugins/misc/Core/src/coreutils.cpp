@@ -323,6 +323,10 @@ QString CORE_EXPORT getSaveFileName(const QString &pCaption,
                                     const QString &pFileName,
                                     const QString &pFilter)
 {
+#ifdef Q_OS_MAC
+    Q_UNUSED(pFilter);
+#endif
+
     // Retrieve and return a save file name
 
     QString res = QDir::toNativeSeparators(QFileDialog::getSaveFileName(qApp->activeWindow(),

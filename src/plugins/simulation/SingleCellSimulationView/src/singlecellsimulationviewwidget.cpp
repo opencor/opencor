@@ -14,7 +14,6 @@
 #include "singlecellsimulationviewinformationparameterswidget.h"
 #include "singlecellsimulationviewinformationsimulationwidget.h"
 #include "singlecellsimulationviewinformationsolverswidget.h"
-#include "singlecellsimulationviewinformationtraceswidget.h"
 #include "singlecellsimulationviewinformationwidget.h"
 #include "singlecellsimulationviewplugin.h"
 #include "singlecellsimulationviewsimulation.h"
@@ -77,10 +76,9 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
     mDelays(QMap<QString, int>()),
     mSplitterWidgetSizes(QList<int>()),
     mProgresses(QMap<QString, int>()),
-mTraces(QMap<QString, QwtPlotCurve *>()),
-mOldSimulationResultsSizes(QMap<SingleCellSimulationViewSimulation *, qulonglong>()),
-mCheckResultsSimulations(QList<SingleCellSimulationViewSimulation *>())
-//---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
+    mCurves(QMap<QString, QwtPlotCurve *>()),
+    mOldSimulationResultsSizes(QMap<SingleCellSimulationViewSimulation *, qulonglong>()),
+    mCheckResultsSimulations(QList<SingleCellSimulationViewSimulation *>())
 {
     // Set up the GUI
 
@@ -126,7 +124,7 @@ mCheckResultsSimulations(QList<SingleCellSimulationViewSimulation *>())
     mToolBarWidget->addWidget(delaySpaceWidget);
 #endif
     mToolBarWidget->addWidget(mDelayValueWidget);
-/*---GRY--- THE BELOW IS TEMPORARY, JUST FOR OUR DEMO...
+/*---GRY--- THE BELOW SHOULD BE RE-ENABLED AT SOME POINT...
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mGui->actionDebugMode);
     mToolBarWidget->addSeparator();
@@ -168,13 +166,11 @@ mCheckResultsSimulations(QList<SingleCellSimulationViewSimulation *>())
 
     connect(mContentsWidget->graphPanelsWidget(), SIGNAL(removeGraphPanelsEnabled(const bool &)),
             mGui->actionRemove, SLOT(setEnabled(bool)));
-connect(mContentsWidget->informationWidget()->parametersWidget(), SIGNAL(showHideParameterPlot(const QString &,
-                                                                                               CellMLSupport::CellmlFileRuntimeModelParameter *,
-                                                                                               const bool &)),
-        this, SLOT(showHideParameterPlot(const QString &,
-                                         CellMLSupport::CellmlFileRuntimeModelParameter *,
-                                         const bool &)));
-//---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
+
+    // Keep track of which model parameters to show/hide
+
+    connect(mContentsWidget->informationWidget()->parametersWidget(), SIGNAL(showModelParameter(const QString &, CellMLSupport::CellmlFileRuntimeModelParameter *, const bool &)),
+            this, SLOT(showModelParameter(const QString &, CellMLSupport::CellmlFileRuntimeModelParameter *, const bool &)));
 
     // Create and add our invalid simulation message widget
 
@@ -297,8 +293,12 @@ void SingleCellSimulationViewWidget::loadSettings(QSettings *pSettings)
     pSettings->beginGroup(mContentsWidget->objectName());
         mContentsWidget->loadSettings(pSettings);
     pSettings->endGroup();
-mActiveGraphPanel = mContentsWidget->graphPanelsWidget()->activeGraphPanel();
-//---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
+
+    // Retrieve our active graph panel
+//---GRY--- WE SHOULD STOP USING mActiveGraphPanel ONCE WE HAVE RE-ENABLED THE
+//          ADDITION/REMOVAL OF GRAPH PANELS...
+
+    mActiveGraphPanel = mContentsWidget->graphPanelsWidget()->activeGraphPanel();
 }
 
 //==============================================================================
@@ -737,21 +737,21 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
     }
 
 //---GRY--- THE BELOW IS TEMPORARY, JUST FOR OUR DEMO...
-QMap<QString, QwtPlotCurve *>::const_iterator iter = mTraces.constBegin();
+QMap<QString, QwtPlotCurve *>::const_iterator iter = mCurves.constBegin();
 
-while (iter != mTraces.constEnd()) {
-    // Retrieve the file name associated with the trace
+while (iter != mCurves.constEnd()) {
+    // Retrieve the file name associated with the curve
 
     QString fileName = iter.key();
 
     fileName.chop(fileName.size()-fileName.indexOf('|'));
 
-    // Show/hide our trace depending on whether it is associated with the
+    // Show/hide our curve depending on whether it is associated with the
     // requested file name
 
     iter.value()->setVisible(!fileName.compare(pFileName));
 
-    // Go to the next trace
+    // Go to the next curve
 
     ++iter;
 }
@@ -1257,28 +1257,28 @@ QString SingleCellSimulationViewWidget::parameterKey(const QString &pFileName,
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::showHideParameterPlot(const QString &pFileName,
-                                                           CellMLSupport::CellmlFileRuntimeModelParameter *pParameter,
-                                                           const bool &pShowParameterPlot)
+void SingleCellSimulationViewWidget::showModelParameter(const QString &pFileName,
+                                                        CellMLSupport::CellmlFileRuntimeModelParameter *pParameter,
+                                                        const bool &pShow)
 {
     // Determine the key for the parameter
 
     QString key = parameterKey(pFileName, pParameter);
 
-    // Retrieve the trace associated with the key, if any
+    // Retrieve the curve associated with the key, if any
 
-    QwtPlotCurve *trace = mTraces.value(key);
+    QwtPlotCurve *curve = mCurves.value(key);
 
-    // Check whether to create/remove the trace
+    // Check whether to show/hide the curve
 
-    if (trace && !pShowParameterPlot) {
-        // We have a trace and we want to remove it
+    if (curve && !pShow) {
+        // We have a curve and we want to remove it
 
-        mActiveGraphPanel->plot()->removeTrace(trace);
+        mActiveGraphPanel->plot()->removeCurve(curve);
 
-        mTraces.remove(key);
-    } else if (!trace && pShowParameterPlot) {
-        // We don't have a trace, but we want one so first determine what data
+        mCurves.remove(key);
+    } else if (!curve && pShow) {
+        // We don't have a curve, but we want one so first determine what data
         // it should contain
 
         SingleCellSimulationViewSimulationResults *results = mSimulation->results();
@@ -1295,11 +1295,11 @@ void SingleCellSimulationViewWidget::showHideParameterPlot(const QString &pFileN
         else
             yData = results->algebraic()?results->algebraic()[pParameter->index()]:0;
 
-        // Add a trace and keep track of it
+        // Add a curve and keep track of it
 
-        QwtPlotCurve *trace = mActiveGraphPanel->plot()->addTrace(results->points(), yData, results->size());
+        QwtPlotCurve *curve = mActiveGraphPanel->plot()->addCurve(results->points(), yData, results->size());
 
-        mTraces.insert(key, trace);
+        mCurves.insert(key, curve);
     }
 }
 
@@ -1309,7 +1309,7 @@ void SingleCellSimulationViewWidget::updateResults(SingleCellSimulationViewSimul
                                                    const qulonglong &pSize,
                                                    const bool &pReplot)
 {
-    // Update our traces, if any and only if actually necessary
+    // Update our curves, if any and only if actually necessary
 
     SingleCellSimulationViewSimulation *simulation = pSimulation?pSimulation:mSimulation;
 
@@ -1317,28 +1317,29 @@ void SingleCellSimulationViewWidget::updateResults(SingleCellSimulationViewSimul
     // but only if we are dealing with the active simulation
 
     if (simulation == mSimulation) {
-        // We are dealing with the active simulation, so update our traces and
+        // We are dealing with the active simulation, so update our curves and
         // progress bar, and enable/disable the export to CSV
 
-        // Update our traces, if any
+        // Update our curves, if any
 
-        QMap<QString, QwtPlotCurve *>::const_iterator iter = mTraces.constBegin();
+        QMap<QString, QwtPlotCurve *>::const_iterator iter = mCurves.constBegin();
 
-        while (iter != mTraces.constEnd()) {
-            // Retrieve the file name associated with the trace
+        while (iter != mCurves.constEnd()) {
+            // Retrieve the file name associated with the curve
 
             QString fileName = iter.key();
 
             fileName.chop(fileName.size()-fileName.indexOf('|'));
 
-            // Update the trace, should it be associated with the current file name
+            // Update the curve, should it be associated with the current file
+            // name
 
-            QwtPlotCurve *trace = iter.value();
+            QwtPlotCurve *curve = iter.value();
 
             if (!fileName.compare(mSimulation->fileName())) {
                 double *yData;
 
-                // Retrieve the type of the parameter associated with the trace
+                // Retrieve the type of the parameter associated with the curve
 
                 QString typeAsString = iter.key();
 
@@ -1347,7 +1348,7 @@ void SingleCellSimulationViewWidget::updateResults(SingleCellSimulationViewSimul
 
                 CellMLSupport::CellmlFileRuntimeModelParameter::ModelParameterType type = CellMLSupport::CellmlFileRuntimeModelParameter::ModelParameterType(typeAsString.toInt());
 
-                // Retrieve the index of the parameter associated with the trace
+                // Retrieve the index of the parameter associated with the curve
 
                 QString indexAsString = iter.key();
 
@@ -1367,22 +1368,22 @@ void SingleCellSimulationViewWidget::updateResults(SingleCellSimulationViewSimul
                 else
                     yData = simulation->results()->algebraic()?simulation->results()->algebraic()[index]:0;
 
-                // Keep track of our trace's old size
+                // Keep track of our curve's old size
 
-                qulonglong oldSize = trace->dataSize();
+                qulonglong oldSize = curve->dataSize();
 
-                // Assign the X and Y arrays to our trace
+                // Assign the X and Y arrays to our curve
 
-                trace->setRawSamples(simulation->results()->points(), yData, pSize);
+                curve->setRawSamples(simulation->results()->points(), yData, pSize);
 
-                // Draw the trace's new segment, but only if there is some data
+                // Draw the curve's new segment, but only if there is some data
                 // to plot and that we don't want to replot everything
 
                 if (!pReplot && (pSize > 1))
-                    qobject_cast<SingleCellSimulationViewGraphPanelPlotWidget *>(trace->plot())->drawTraceSegment(trace, oldSize?oldSize-1:0, pSize-1);
+                    qobject_cast<SingleCellSimulationViewGraphPanelPlotWidget *>(curve->plot())->drawCurveSegment(curve, oldSize?oldSize-1:0, pSize-1);
             }
 
-            // Go to the next trace
+            // Go to the next curve
 
             ++iter;
         }

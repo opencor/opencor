@@ -33,7 +33,7 @@ namespace SingleCellSimulationView {
 
 SingleCellSimulationViewGraphPanelPlotWidget::SingleCellSimulationViewGraphPanelPlotWidget(QWidget *pParent) :
     QwtPlot(pParent),
-    mTraces(QList<QwtPlotCurve *>()),
+    mCurves(QList<QwtPlotCurve *>()),
     mAction(None),
     mOriginPoint(QPoint()),
     mMinFixedScaleX(0.0),
@@ -75,7 +75,7 @@ SingleCellSimulationViewGraphPanelPlotWidget::~SingleCellSimulationViewGraphPane
 {
     // Delete some internal objects
 
-    removeTraces();
+    removeCurves();
 
     delete mDirectPainter;
 }
@@ -199,16 +199,16 @@ void SingleCellSimulationViewGraphPanelPlotWidget::setAxesScales(const double &p
 
     // Determine what our new axes scales really should be
 
-    if ((!axisFixedX || !axisFixedY) && mTraces.count()) {
+    if ((!axisFixedX || !axisFixedY) && mCurves.count()) {
         // There is at least one of our axes which is not fixed and there is at
-        // least one trace, so retrieve the bounding rectangle for all our
-        // traces
+        // least one curve, so retrieve the bounding rectangle for all our
+        // curves
 
         QRectF boundingRect = QRectF();
 
-        foreach (QwtPlotCurve *trace, mTraces)
-            if (trace->dataSize())
-                boundingRect |= trace->boundingRect();
+        foreach (QwtPlotCurve *curve, mCurves)
+            if (curve->dataSize())
+                boundingRect |= curve->boundingRect();
 
         if (boundingRect != QRectF()) {
             // We have a valid bounding rectangle, so update our new axes scales
@@ -460,10 +460,10 @@ void SingleCellSimulationViewGraphPanelPlotWidget::replotNow()
 
 //==============================================================================
 
-QwtPlotCurve * SingleCellSimulationViewGraphPanelPlotWidget::addTrace(double *pX, double *pY,
+QwtPlotCurve * SingleCellSimulationViewGraphPanelPlotWidget::addCurve(double *pX, double *pY,
                                                                       const qulonglong &pOriginalSize)
 {
-    // Create a new trace
+    // Create a new curve
 
     QwtPlotCurve *res = new QwtPlotCurve();
 
@@ -472,7 +472,7 @@ QwtPlotCurve * SingleCellSimulationViewGraphPanelPlotWidget::addTrace(double *pX
     res->setRenderHint(QwtPlotItem::RenderAntialiased);
     res->setPen(QPen(Qt::darkBlue));
 
-    // Populate our trace
+    // Populate our curve
 
     res->setRawSamples(pX, pY, pOriginalSize);
 
@@ -480,23 +480,23 @@ QwtPlotCurve * SingleCellSimulationViewGraphPanelPlotWidget::addTrace(double *pX
 
     res->attach(this);
 
-    // Add it to our list of traces
+    // Add it to our list of curves
 
-    mTraces << res;
+    mCurves << res;
 
     // Make sure that our axes scales are fine and replot ourselves, but only if
     // needed
 
     if (pOriginalSize) {
-        // Set our axes scales so that we can see all the traces
-        // Note: we are adding a trace, so we always want to replot, hence our
+        // Set our axes scales so that we can see all the curves
+        // Note: we are adding a curve, so we always want to replot, hence our
         //       passing false to setAxesScales()...
 
         QRectF boundingRect = QRectF();
 
-        foreach (QwtPlotCurve *trace, mTraces)
-            if (trace->dataSize())
-                boundingRect |= trace->boundingRect();
+        foreach (QwtPlotCurve *curve, mCurves)
+            if (curve->dataSize())
+                boundingRect |= curve->boundingRect();
 
         setAxesScales(boundingRect.left(), boundingRect.right(),
                       boundingRect.top(), boundingRect.bottom(),
@@ -512,28 +512,28 @@ QwtPlotCurve * SingleCellSimulationViewGraphPanelPlotWidget::addTrace(double *pX
 
 //==============================================================================
 
-void SingleCellSimulationViewGraphPanelPlotWidget::removeTrace(QwtPlotCurve *pTrace,
+void SingleCellSimulationViewGraphPanelPlotWidget::removeCurve(QwtPlotCurve *pCurve,
                                                                const bool &pReplot)
 {
-    // Make sure that we have a trace
+    // Make sure that we have a curve
 
-    if (!pTrace)
+    if (!pCurve)
         return;
 
-    // Detach and then delete the trace
+    // Detach and then delete the curve
 
-    pTrace->detach();
+    pCurve->detach();
 
-    delete pTrace;
+    delete pCurve;
 
-    // Stop tracking the trace
+    // Stop tracking the curve
 
-    mTraces.removeOne(pTrace);
+    mCurves.removeOne(pCurve);
 
     // Make sure that our axes scales are fine and replot ourselves, if needed
 
     if (pReplot) {
-        if (mTraces.count())
+        if (mCurves.count())
             checkAxesScales(false);
 
         replotNow();
@@ -542,12 +542,12 @@ void SingleCellSimulationViewGraphPanelPlotWidget::removeTrace(QwtPlotCurve *pTr
 
 //==============================================================================
 
-void SingleCellSimulationViewGraphPanelPlotWidget::removeTraces()
+void SingleCellSimulationViewGraphPanelPlotWidget::removeCurves()
 {
-    // Remove any existing trace
+    // Remove any existing curve
 
-    foreach (QwtPlotCurve *trace, mTraces)
-        removeTrace(trace, false);
+    foreach (QwtPlotCurve *curve, mCurves)
+        removeCurve(curve, false);
 
     // Replot ourselves
 
@@ -556,11 +556,11 @@ void SingleCellSimulationViewGraphPanelPlotWidget::removeTraces()
 
 //==============================================================================
 
-void SingleCellSimulationViewGraphPanelPlotWidget::drawTraceSegment(QwtPlotCurve *pTrace,
+void SingleCellSimulationViewGraphPanelPlotWidget::drawCurveSegment(QwtPlotCurve *pCurve,
                                                                     const qulonglong &pFrom,
                                                                     const qulonglong &pTo)
 {
-    // Make sure that we have a trace segment to draw
+    // Make sure that we have a curve segment to draw
 
     if (pFrom == pTo)
         return;
@@ -573,8 +573,8 @@ void SingleCellSimulationViewGraphPanelPlotWidget::drawTraceSegment(QwtPlotCurve
     double yMax = -DBL_MAX;
 
     for (qulonglong i = pFrom; i <= pTo; ++i) {
-        double xVal = pTrace->data()->sample(i).x();
-        double yVal = pTrace->data()->sample(i).y();
+        double xVal = pCurve->data()->sample(i).x();
+        double yVal = pCurve->data()->sample(i).y();
 
         xMin = qMin(xMin, xVal);
         xMax = qMax(xMax, xVal);
@@ -583,7 +583,7 @@ void SingleCellSimulationViewGraphPanelPlotWidget::drawTraceSegment(QwtPlotCurve
         yMax = qMax(yMax, yVal);
     }
 
-    // Check which trace segment we are dealing with and whether our X/Y axis
+    // Check which curve segment we are dealing with and whether our X/Y axis
     // can handle the X/Y min/max of our new data
 
     if (   !pFrom
@@ -591,16 +591,16 @@ void SingleCellSimulationViewGraphPanelPlotWidget::drawTraceSegment(QwtPlotCurve
         || (xMax > axisScaleDiv(QwtPlot::xBottom).upperBound())
         || (yMin < axisScaleDiv(QwtPlot::yLeft).lowerBound())
         || (yMax > axisScaleDiv(QwtPlot::yLeft).upperBound())) {
-        // Either it's our first trace segment and/or our X/Y axis cannot handle
+        // Either it's our first curve segment and/or our X/Y axis cannot handle
         // the X/Y min/max of our new data, so check our axes scales and replot
         // ourselves
 
         resetAxesScales();
     } else {
         // Our X/Y axis can handle the X/Y min/max of our new data, so just draw
-        // our new trace segment
+        // our new curve segment
 
-        mDirectPainter->drawSeries(pTrace, pFrom, pTo);
+        mDirectPainter->drawSeries(pCurve, pFrom, pTo);
     }
 }
 

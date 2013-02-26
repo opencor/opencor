@@ -36,13 +36,13 @@ public:
 
     void replotNow();
 
-    QwtPlotCurve * addTrace(double *pX, double *pY,
+    QwtPlotCurve * addCurve(double *pX, double *pY,
                             const qulonglong &pOriginalSize);
 
-    void removeTrace(QwtPlotCurve *pTrace, const bool &pReplot = true);
-    void removeTraces();
+    void removeCurve(QwtPlotCurve *pCurve, const bool &pReplot = true);
+    void removeCurves();
 
-    void drawTraceSegment(QwtPlotCurve *pTrace,
+    void drawCurveSegment(QwtPlotCurve *pCurve,
                           const qulonglong &pFrom, const qulonglong &pTo);
 
     void setFixedAxisScale(const Axis &pAxis,
@@ -65,7 +65,7 @@ private:
 
     QwtPlotDirectPainter *mDirectPainter;
 
-    QList<QwtPlotCurve *> mTraces;
+    QList<QwtPlotCurve *> mCurves;
 
     Action mAction;
 

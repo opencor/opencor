@@ -344,7 +344,7 @@ void CellmlAnnotationViewWidget::updateWebViewerWithResourceDetails(QWebView *pW
         QUrl newUrl = "http://identifiers.org/"+pResource+"/?redirect=true";
         //---GRY--- NOTE THAT redirect=true DOESN'T WORK AT THE MOMENT, SO WE DO
         //          END UP WITH A FRAME, BUT THE identifiers.org GUYS ARE GOING
-        //          TO 'FIX' THAT, SO WE SHOULD BE READY FOR WHEN IT'S DONE...
+        //          TO 'FIX' IT, SO WE SHOULD BE READY FOR WHEN IT'S DONE...
 
         if (newUrl != oldUrl) {
             oldWebViewUrls.insert(pWebView, newUrl);

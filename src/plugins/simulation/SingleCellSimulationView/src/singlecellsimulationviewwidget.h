@@ -134,11 +134,13 @@ private:
 
     ErrorType mErrorType;
 
-SingleCellSimulationViewGraphPanelWidget *mActiveGraphPanel;
-QMap<QString, QwtPlotCurve *> mTraces;
-QMap<SingleCellSimulationViewSimulation *, qulonglong> mOldSimulationResultsSizes;
-QList<SingleCellSimulationViewSimulation *> mCheckResultsSimulations;
-//---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
+    SingleCellSimulationViewGraphPanelWidget *mActiveGraphPanel;
+
+    QMap<QString, QwtPlotCurve *> mCurves;
+
+    QMap<SingleCellSimulationViewSimulation *, qulonglong> mOldSimulationResultsSizes;
+
+    QList<SingleCellSimulationViewSimulation *> mCheckResultsSimulations;
 
     void setDelayValue(const int &pDelayValue);
 
@@ -153,13 +155,13 @@ QList<SingleCellSimulationViewSimulation *> mCheckResultsSimulations;
 
     void updateInvalidModelMessageWidget();
 
-QString parameterKey(const QString &pFileName,
-                     CellMLSupport::CellmlFileRuntimeModelParameter *pParameter) const;
-void updateResults(SingleCellSimulationViewSimulation *pSimulation,
-                   const qulonglong &pSize,
-                   const bool &pReplot = false);
-void checkResults(SingleCellSimulationViewSimulation *pSimulation);
-//---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
+    QString parameterKey(const QString &pFileName,
+                         CellMLSupport::CellmlFileRuntimeModelParameter *pParameter) const;
+
+    void updateResults(SingleCellSimulationViewSimulation *pSimulation,
+                       const qulonglong &pSize,
+                       const bool &pReplot = false);
+    void checkResults(SingleCellSimulationViewSimulation *pSimulation);
 
 private Q_SLOTS:
     void on_actionRun_triggered();
@@ -194,11 +196,11 @@ private Q_SLOTS:
     void simulationPropertyChanged(Core::Property *pProperty);
     void solversPropertyChanged(Core::Property *pProperty);
 
-void showHideParameterPlot(const QString &pFileName,
-                           CellMLSupport::CellmlFileRuntimeModelParameter *pParameter,
-                           const bool &pShowParameterPlot);
-void callCheckResults();
-//---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
+    void showModelParameter(const QString &pFileName,
+                            CellMLSupport::CellmlFileRuntimeModelParameter *pParameter,
+                            const bool &pShow);
+
+    void callCheckResults();
 };
 
 //==============================================================================

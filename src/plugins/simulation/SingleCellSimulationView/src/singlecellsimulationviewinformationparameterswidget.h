@@ -73,10 +73,9 @@ private:
                        CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
 
 Q_SIGNALS:
-void showHideParameterPlot(const QString &pFileName,
-                           CellMLSupport::CellmlFileRuntimeModelParameter *pParameter,
-                           const bool &pShowParameterPlot);
-//---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
+    void showModelParameter(const QString &pFileName,
+                            CellMLSupport::CellmlFileRuntimeModelParameter *pParameter,
+                            const bool &pShow);
 
 public Q_SLOTS:
     void updateParameters();
@@ -87,9 +86,7 @@ private Q_SLOTS:
 
     void propertyChanged(Core::Property *pProperty);
 
-void emitShowHideParameterPlot(Core::Property *pProperty,
-                               const bool &pShowParameterPlot);
-//---GRY--- THE ABOVE IS TEMPORARY, JUST FOR OUR DEMO...
+    void emitShowModelParameter(Core::Property *pProperty, const bool &pShow);
 };
 
 //==============================================================================
