@@ -46,8 +46,9 @@ public:
                           const qulonglong &pFrom, const qulonglong &pTo);
 
     void setFixedAxisScale(const Axis &pAxis,
-                           const double &pMin, const double &pMax);
-    void unsetFixedAxisScale(const Axis &pAxis);
+                           const double &pMin = 0.0, const double &pMax = 0.0);
+
+    void setInteractive(const bool &pInteractive);
 
 protected:
     virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
@@ -75,6 +76,8 @@ private:
 
     double mMinFixedScaleY;
     double mMaxFixedScaleY;
+
+    bool mInteractive;
 
     void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
 

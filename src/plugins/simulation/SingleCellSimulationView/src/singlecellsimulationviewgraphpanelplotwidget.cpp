@@ -39,7 +39,8 @@ SingleCellSimulationViewGraphPanelPlotWidget::SingleCellSimulationViewGraphPanel
     mMinFixedScaleX(0.0),
     mMaxFixedScaleX(0.0),
     mMinFixedScaleY(0.0),
-    mMaxFixedScaleY(0.0)
+    mMaxFixedScaleY(0.0),
+    mInteractive(true)
 {
     // Get ourselves a direct painter
 
@@ -133,34 +134,42 @@ void SingleCellSimulationViewGraphPanelPlotWidget::setFixedAxisScale(const Axis 
         mMinFixedScaleX = pMin;
         mMaxFixedScaleX = pMax;
 
-        setAxesScales(pMin, pMax,
-                      axisScaleDiv(QwtPlot::yLeft).lowerBound(), axisScaleDiv(QwtPlot::yLeft).upperBound());
+        if (pMin || pMax)
+            // We want our X axis to have a fixed scale, so just set our axes
+            // scales
+
+            setAxesScales(pMin, pMax,
+                          axisScaleDiv(QwtPlot::yLeft).lowerBound(), axisScaleDiv(QwtPlot::yLeft).upperBound());
+        else
+            // We want our X axis not to have a fixed scale, so just check that
+            // our axes scales are fine
+
+            checkAxesScales();
     } else {
         mMinFixedScaleY = pMin;
         mMaxFixedScaleY = pMax;
 
-        setAxesScales(axisScaleDiv(QwtPlot::xBottom).lowerBound(), axisScaleDiv(QwtPlot::xBottom).upperBound(),
-                      pMin, pMax);
+        if (pMin || pMax)
+            // We want our X axis to have a fixed scale, so just set our axes
+            // scales
+
+            setAxesScales(axisScaleDiv(QwtPlot::xBottom).lowerBound(), axisScaleDiv(QwtPlot::xBottom).upperBound(),
+                          pMin, pMax);
+        else
+            // We want our X axis not to have a fixed scale, so just check that
+            // our axes scales are fine
+
+            checkAxesScales();
     }
 }
 
 //==============================================================================
 
-void SingleCellSimulationViewGraphPanelPlotWidget::unsetFixedAxisScale(const Axis &pAxis)
+void SingleCellSimulationViewGraphPanelPlotWidget::setInteractive(const bool &pInteractive)
 {
-    // Reset our fixed scale information
+    // Make ourselves interactive or not
 
-    if (pAxis == AxisX) {
-        mMinFixedScaleX = 0.0;
-        mMaxFixedScaleX = 0.0;
-    } else {
-        mMinFixedScaleY = 0.0;
-        mMaxFixedScaleY = 0.0;
-    }
-
-    // Make sure that our axes scales are fine
-
-    checkAxesScales();
+    mInteractive = pInteractive;
 }
 
 //==============================================================================
@@ -294,7 +303,10 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *p
 
     QwtPlot::mouseMoveEvent(pEvent);
 
-    // Carry out the action
+    // Carry out the action, but only if we allow interaction
+
+    if (!mInteractive)
+        return;
 
     switch (mAction) {
     case Zoom: {
@@ -346,7 +358,10 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *
 
     QwtPlot::mousePressEvent(pEvent);
 
-    // Check which action we can carry out
+    // Check which action we can carry out, but only if we allow interaction
+
+    if (!mInteractive)
+        return;
 
     if (   (pEvent->button() == Qt::RightButton)
         && (pEvent->modifiers() == Qt::NoModifier)) {
@@ -376,7 +391,11 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent
 
     QwtPlot::mouseReleaseEvent(pEvent);
 
-    // Check whether we need to carry out an action
+    // Check whether we need to carry out an action, but only if we allow
+    // interaction
+
+    if (!mInteractive)
+        return;
 
     if (mAction == None)
         return;
@@ -399,7 +418,10 @@ void SingleCellSimulationViewGraphPanelPlotWidget::wheelEvent(QWheelEvent *pEven
     QwtPlot::wheelEvent(pEvent);
 
     // The only action we support using the wheel is zooming in/out, but this
-    // requires no modifiers being used
+    // requires no modifiers being used, but only if we allow interaction
+
+    if (!mInteractive)
+        return;
 
     if (pEvent->modifiers() != Qt::NoModifier)
         return;

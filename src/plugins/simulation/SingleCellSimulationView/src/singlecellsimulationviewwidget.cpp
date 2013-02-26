@@ -761,7 +761,7 @@ mActiveGraphPanel->plot()->setFixedAxisScale(SingleCellSimulationViewGraphPanelP
 if (mSimulation->isRunning() || mSimulation->isPaused())
     mActiveGraphPanel->plot()->replotNow();
 else
-    mActiveGraphPanel->plot()->unsetFixedAxisScale(SingleCellSimulationViewGraphPanelPlotWidget::AxisX);
+    mActiveGraphPanel->plot()->setFixedAxisScale(SingleCellSimulationViewGraphPanelPlotWidget::AxisX);
 }
 
 //==============================================================================
@@ -884,11 +884,6 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
                                                      Core::PropertyEditorWidget::integerPropertyItem(property->value()):
                                                      Core::PropertyEditorWidget::doublePropertyItem(property->value()));
 
-// Retrieve the active graph panel
-//---GRY--- THE BELOW IS TEMPORARY, JUST FOR OUR DEMO...
-mActiveGraphPanel->plot()->setFixedAxisScale(SingleCellSimulationViewGraphPanelPlotWidget::AxisX,
-                                             simulationData->startingPoint(), simulationData->endingPoint());
-
         // Check how much memory is needed to run our simulation
 
         bool runSimulation = true;
@@ -910,6 +905,9 @@ mActiveGraphPanel->plot()->setFixedAxisScale(SingleCellSimulationViewGraphPanelP
 
         if (runSimulation)
 {
+mActiveGraphPanel->plot()->setFixedAxisScale(SingleCellSimulationViewGraphPanelPlotWidget::AxisX,
+                                             simulationData->startingPoint(), simulationData->endingPoint());
+mActiveGraphPanel->plot()->setInteractive(false);
 mOldSimulationResultsSizes.insert(mSimulation, 0);
 runSimulation = mSimulation->results()->reset();
 updateResults(mSimulation, 0);
@@ -1107,7 +1105,8 @@ void SingleCellSimulationViewWidget::simulationStopped(const int &pElapsedTime)
 //---GRY--- THE BELOW IS TEMPORARY, JUST FOR OUR DEMO...
 // Stop the X axis scale from being fixed
 
-mActiveGraphPanel->plot()->unsetFixedAxisScale(SingleCellSimulationViewGraphPanelPlotWidget::AxisX);
+mActiveGraphPanel->plot()->setFixedAxisScale(SingleCellSimulationViewGraphPanelPlotWidget::AxisX);
+mActiveGraphPanel->plot()->setInteractive(true);
 }
 
 //==============================================================================
