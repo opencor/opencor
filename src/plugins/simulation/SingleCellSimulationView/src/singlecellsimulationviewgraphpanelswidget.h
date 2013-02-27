@@ -40,9 +40,6 @@ public:
 
     SingleCellSimulationViewGraphPanelWidget * activeGraphPanel();
 
-    void clearGraphPanels();
-    void clearActiveGraphPanel();
-
 protected:
     virtual void wheelEvent(QWheelEvent *pEvent);
 

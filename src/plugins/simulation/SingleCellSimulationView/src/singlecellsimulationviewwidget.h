@@ -22,7 +22,6 @@ class QTextEdit;
 
 //==============================================================================
 
-class QwtPlotCurve;
 class QwtWheel;
 
 //==============================================================================
@@ -57,11 +56,36 @@ namespace SingleCellSimulationView {
 //==============================================================================
 
 class SingleCellSimulationViewContentsWidget;
+class SingleCellSimulationViewGraphPanelPlotCurve;
 class SingleCellSimulationViewGraphPanelWidget;
 class SingleCellSimulationViewPlugin;
 class SingleCellSimulationViewSimulation;
-class SingleCellSimulationViewSimulationData;
-class SingleCellSimulationViewSimulationResults;
+
+//==============================================================================
+
+class SingleCellSimulationViewWidgetCurveData
+{
+public:
+    explicit SingleCellSimulationViewWidgetCurveData(const QString &pFileName,
+                                                     SingleCellSimulationViewSimulation *pSimulation,
+                                                     CellMLSupport::CellmlFileRuntimeModelParameter *pParameter,
+                                                     SingleCellSimulationViewGraphPanelPlotCurve *pCurve);
+
+    QString fileName() const;
+
+    SingleCellSimulationViewGraphPanelPlotCurve * curve() const;
+
+    double * yData() const;
+
+private:
+    QString mFileName;
+
+    SingleCellSimulationViewSimulation *mSimulation;
+
+    CellMLSupport::CellmlFileRuntimeModelParameter *mParameter;
+
+    SingleCellSimulationViewGraphPanelPlotCurve *mCurve;
+};
 
 //==============================================================================
 
@@ -136,7 +160,7 @@ private:
 
     SingleCellSimulationViewGraphPanelWidget *mActiveGraphPanel;
 
-    QMap<QString, QwtPlotCurve *> mCurves;
+    QMap<QString, SingleCellSimulationViewWidgetCurveData *> mCurvesData;
 
     QMap<SingleCellSimulationViewSimulation *, qulonglong> mOldSimulationResultsSizes;
 
@@ -148,15 +172,9 @@ private:
 
     void updateSimulationMode();
 
-    void clearGraphPanels();
-    void clearActiveGraphPanel();
-
     int tabBarIconSize() const;
 
     void updateInvalidModelMessageWidget();
-
-    QString parameterKey(const QString &pFileName,
-                         CellMLSupport::CellmlFileRuntimeModelParameter *pParameter) const;
 
     void updateResults(SingleCellSimulationViewSimulation *pSimulation,
                        const qulonglong &pSize,

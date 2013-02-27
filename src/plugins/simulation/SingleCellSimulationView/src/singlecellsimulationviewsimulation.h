@@ -67,8 +67,6 @@ public:
     double pointInterval() const;
     void setPointInterval(const double &pPointInterval);
 
-    double size() const;
-
     QString odeSolverName() const;
     void setOdeSolverName(const QString &pOdeSolverName);
 
@@ -139,7 +137,7 @@ class SingleCellSimulationViewSimulationResults : public QObject
 {
 public:
     explicit SingleCellSimulationViewSimulationResults(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
-                                                       SingleCellSimulationViewSimulationData *pData);
+                                                       SingleCellSimulationViewSimulation *pSimulation);
     ~SingleCellSimulationViewSimulationResults();
 
     bool reset(const bool &pCreateArrays = true);
@@ -160,7 +158,7 @@ public:
 private:
     CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
 
-    SingleCellSimulationViewSimulationData *mData;
+    SingleCellSimulationViewSimulation *mSimulation;
 
     qulonglong mSize;
 
@@ -201,7 +199,9 @@ public:
 
     void setDelay(const int &pDelay);
 
-    double requiredMemory() const;
+    double requiredMemory();
+
+    double size();
 
     void run();
     void pause();
@@ -221,6 +221,8 @@ private:
 
     SingleCellSimulationViewSimulationData *mData;
     SingleCellSimulationViewSimulationResults *mResults;
+
+    bool simulationSettingsOk(const bool &pEmitError = true);
 
 Q_SIGNALS:
     void running();

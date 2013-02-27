@@ -276,25 +276,6 @@ SingleCellSimulationViewGraphPanelWidget * SingleCellSimulationViewGraphPanelsWi
 
 //==============================================================================
 
-void SingleCellSimulationViewGraphPanelsWidget::clearGraphPanels()
-{
-    // Clear all the graph panels
-
-    for (int i = 0, iMax = count(); i < iMax; ++i)
-        qobject_cast<SingleCellSimulationViewGraphPanelWidget *>(widget(i))->plot()->removeCurves();
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewGraphPanelsWidget::clearActiveGraphPanel()
-{
-    // Clear the current graph panel
-
-    activeGraphPanel()->plot()->removeCurves();
-}
-
-//==============================================================================
-
 void SingleCellSimulationViewGraphPanelsWidget::splitterMoved()
 {
     // Our splitter has been moved, so keep track of its new sizes

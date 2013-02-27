@@ -8,16 +8,41 @@
 //==============================================================================
 
 #include "qwt_plot.h"
+#include "qwt_plot_curve.h"
 
 //==============================================================================
 
-class QwtPlotCurve;
 class QwtPlotDirectPainter;
 
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace CellMLSupport {
+    class CellmlFileRuntimeModelParameter;
+}   // namespace CellMLSupport
+
+//==============================================================================
+
 namespace SingleCellSimulationView {
+
+//==============================================================================
+
+class SingleCellSimulationViewGraphPanelPlotCurve : public QwtPlotCurve
+{
+public:
+    explicit SingleCellSimulationViewGraphPanelPlotCurve();
+
+    bool isValid() const;
+
+    bool isEnabled() const;
+    void setEnabled(const bool &pEnabled);
+
+private:
+    bool mEnabled;
+};
 
 //==============================================================================
 
@@ -36,19 +61,15 @@ public:
 
     void replotNow();
 
-    QwtPlotCurve * addCurve(double *pX, double *pY,
-                            const qulonglong &pOriginalSize);
+    SingleCellSimulationViewGraphPanelPlotCurve * addCurve();
 
-    void removeCurve(QwtPlotCurve *pCurve, const bool &pReplot = true);
-    void removeCurves();
-
-    void drawCurveSegment(QwtPlotCurve *pCurve,
+    void drawCurveSegment(SingleCellSimulationViewGraphPanelPlotCurve *pCurve,
                           const qulonglong &pFrom, const qulonglong &pTo);
+
+    void checkAxesScales(const bool &pCanReplot = true);
 
     void setFixedAxisScale(const Axis &pAxis,
                            const double &pMin = 0.0, const double &pMax = 0.0);
-
-    void setInteractive(const bool &pInteractive);
 
 protected:
     virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
@@ -65,7 +86,7 @@ private:
 
     QwtPlotDirectPainter *mDirectPainter;
 
-    QList<QwtPlotCurve *> mCurves;
+    QList<SingleCellSimulationViewGraphPanelPlotCurve *> mCurves;
 
     Action mAction;
 
@@ -77,8 +98,6 @@ private:
     double mMinFixedScaleY;
     double mMaxFixedScaleY;
 
-    bool mInteractive;
-
     void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
 
     void setAxesScales(const double &pMinX, const double &pMaxX,
@@ -87,7 +106,6 @@ private:
     void resetAxesScales();
     void scaleAxesScales(const double &pScalingFactorX,
                          const double &pScalingFactorY);
-    void checkAxesScales(const bool &pCanReplot = true);
 };
 
 //==============================================================================

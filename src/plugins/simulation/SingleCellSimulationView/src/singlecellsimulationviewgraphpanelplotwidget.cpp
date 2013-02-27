@@ -31,16 +31,54 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
+SingleCellSimulationViewGraphPanelPlotCurve::SingleCellSimulationViewGraphPanelPlotCurve() :
+    QwtPlotCurve(),
+    mEnabled(true)
+{
+    // Customise it a bit
+
+    setPen(QPen(Qt::darkBlue));
+    setRenderHint(QwtPlotItem::RenderAntialiased);
+}
+
+//==============================================================================
+
+bool SingleCellSimulationViewGraphPanelPlotCurve::isValid() const
+{
+    // Return whether we are valid, i.e. enabled and visible
+
+    return mEnabled && isVisible();
+}
+
+//==============================================================================
+
+bool SingleCellSimulationViewGraphPanelPlotCurve::isEnabled() const
+{
+    // Return whether we are enabled
+
+    return mEnabled;
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewGraphPanelPlotCurve::setEnabled(const bool &pEnabled)
+{
+    // Set our enabled status
+
+    mEnabled = pEnabled;
+}
+
+//==============================================================================
+
 SingleCellSimulationViewGraphPanelPlotWidget::SingleCellSimulationViewGraphPanelPlotWidget(QWidget *pParent) :
     QwtPlot(pParent),
-    mCurves(QList<QwtPlotCurve *>()),
+    mCurves(QList<SingleCellSimulationViewGraphPanelPlotCurve *>()),
     mAction(None),
     mOriginPoint(QPoint()),
     mMinFixedScaleX(0.0),
     mMaxFixedScaleX(0.0),
     mMinFixedScaleY(0.0),
-    mMaxFixedScaleY(0.0),
-    mInteractive(true)
+    mMaxFixedScaleY(0.0)
 {
     // Get ourselves a direct painter
 
@@ -75,7 +113,8 @@ SingleCellSimulationViewGraphPanelPlotWidget::~SingleCellSimulationViewGraphPane
 {
     // Delete some internal objects
 
-    removeCurves();
+    foreach (SingleCellSimulationViewGraphPanelPlotCurve *curve, mCurves)
+        delete curve;
 
     delete mDirectPainter;
 }
@@ -165,15 +204,6 @@ void SingleCellSimulationViewGraphPanelPlotWidget::setFixedAxisScale(const Axis 
 
 //==============================================================================
 
-void SingleCellSimulationViewGraphPanelPlotWidget::setInteractive(const bool &pInteractive)
-{
-    // Make ourselves interactive or not
-
-    mInteractive = pInteractive;
-}
-
-//==============================================================================
-
 void SingleCellSimulationViewGraphPanelPlotWidget::setAxesScales(const double &pMinX,
                                                                  const double &pMaxX,
                                                                  const double &pMinY,
@@ -202,12 +232,12 @@ void SingleCellSimulationViewGraphPanelPlotWidget::setAxesScales(const double &p
     if ((!axisFixedX || !axisFixedY) && mCurves.count()) {
         // There is at least one of our axes which is not fixed and there is at
         // least one curve, so retrieve the bounding rectangle for all our
-        // curves
+        // curves, as long as they are valid and have some data
 
         QRectF boundingRect = QRectF();
 
-        foreach (QwtPlotCurve *curve, mCurves)
-            if (curve->dataSize())
+        foreach (SingleCellSimulationViewGraphPanelPlotCurve *curve, mCurves)
+            if (curve->isValid() && curve->dataSize())
                 boundingRect |= curve->boundingRect();
 
         if (boundingRect != QRectF()) {
@@ -297,46 +327,41 @@ void SingleCellSimulationViewGraphPanelPlotWidget::checkAxesScales(const bool &p
 
 //==============================================================================
 
+static const double NoScalingFactor  = 1.0;
+static const double ScalingInFactor  = 0.57;
+static const double ScalingOutFactor = 1.0/ScalingInFactor;
+
+//==============================================================================
+
 void SingleCellSimulationViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
 {
     // Default handling of the event
 
     QwtPlot::mouseMoveEvent(pEvent);
 
-    // Carry out the action, but only if we allow interaction
-
-    if (!mInteractive)
-        return;
+    // Carry out the action
 
     switch (mAction) {
     case Zoom: {
-        // Determine the scaling factor for our X axis
-
-        static const double ScalingFactor = 0.95;
+        // Determine how much we have moved our mouse since last time
 
         int deltaX = pEvent->pos().x()-mOriginPoint.x();
-        double xScalingFactor = ScalingFactor;
-
-        if (!deltaX)
-            xScalingFactor = 1.0;
-        else if (deltaX < 0)
-            xScalingFactor = 1.0/xScalingFactor;
-
-        // Determine the scaling factor for our Y axis
-
         int deltaY = pEvent->pos().y()-mOriginPoint.y();
-        double yScalingFactor = ScalingFactor;
-
-        if (!deltaY)
-            yScalingFactor = 1.0;
-        else if (deltaY < 0)
-            yScalingFactor = 1.0/yScalingFactor;
 
         // Rescale and replot ourselves, as well as reset our point of origin,
         // if needed
 
         if (deltaX || deltaY) {
-            scaleAxesScales(xScalingFactor, yScalingFactor);
+            scaleAxesScales(deltaX?
+                                (deltaX > 0)?
+                                    ScalingInFactor:
+                                    ScalingOutFactor:
+                                NoScalingFactor,
+                            deltaY?
+                                (deltaY > 0)?
+                                    ScalingInFactor:
+                                    ScalingOutFactor:
+                                NoScalingFactor);
 
             mOriginPoint = pEvent->pos();
         }
@@ -358,10 +383,7 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *
 
     QwtPlot::mousePressEvent(pEvent);
 
-    // Check which action we can carry out, but only if we allow interaction
-
-    if (!mInteractive)
-        return;
+    // Check which action we can carry out
 
     if (   (pEvent->button() == Qt::RightButton)
         && (pEvent->modifiers() == Qt::NoModifier)) {
@@ -391,11 +413,7 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent
 
     QwtPlot::mouseReleaseEvent(pEvent);
 
-    // Check whether we need to carry out an action, but only if we allow
-    // interaction
-
-    if (!mInteractive)
-        return;
+    // Check whether we need to carry out an action
 
     if (mAction == None)
         return;
@@ -418,27 +436,19 @@ void SingleCellSimulationViewGraphPanelPlotWidget::wheelEvent(QWheelEvent *pEven
     QwtPlot::wheelEvent(pEvent);
 
     // The only action we support using the wheel is zooming in/out, but this
-    // requires no modifiers being used, but only if we allow interaction
-
-    if (!mInteractive)
-        return;
+    // requires no modifiers being used
 
     if (pEvent->modifiers() != Qt::NoModifier)
         return;
 
-    // Determine the zoom factor, making sure that it's valid
+    // Make sure that there is a need to zoom in/out
 
-    static const double OneOverOneHundredAndTwenty = 1.0/120.0;
-
-    double scalingFactor = qPow(0.9, qAbs(pEvent->delta()*OneOverOneHundredAndTwenty));
-
-    if ((scalingFactor == 0.0) || (scalingFactor == 1.0))
+    if (!pEvent->delta())
         return;
 
-    if (pEvent->delta() > 0)
-        scalingFactor = 1.0/scalingFactor;
+    // Zoom in/out by scaling our two axes
 
-    // Scale our two axes
+    double scalingFactor = (pEvent->delta() > 0)?ScalingInFactor:ScalingOutFactor;
 
     scaleAxesScales(scalingFactor, scalingFactor);
 }
@@ -460,21 +470,11 @@ void SingleCellSimulationViewGraphPanelPlotWidget::replotNow()
 
 //==============================================================================
 
-QwtPlotCurve * SingleCellSimulationViewGraphPanelPlotWidget::addCurve(double *pX, double *pY,
-                                                                      const qulonglong &pOriginalSize)
+SingleCellSimulationViewGraphPanelPlotCurve * SingleCellSimulationViewGraphPanelPlotWidget::addCurve()
 {
     // Create a new curve
 
-    QwtPlotCurve *res = new QwtPlotCurve();
-
-    // Customise it a bit
-
-    res->setRenderHint(QwtPlotItem::RenderAntialiased);
-    res->setPen(QPen(Qt::darkBlue));
-
-    // Populate our curve
-
-    res->setRawSamples(pX, pY, pOriginalSize);
+    SingleCellSimulationViewGraphPanelPlotCurve *res = new SingleCellSimulationViewGraphPanelPlotCurve();
 
     // Attach it to ourselves
 
@@ -484,27 +484,6 @@ QwtPlotCurve * SingleCellSimulationViewGraphPanelPlotWidget::addCurve(double *pX
 
     mCurves << res;
 
-    // Make sure that our axes scales are fine and replot ourselves, but only if
-    // needed
-
-    if (pOriginalSize) {
-        // Set our axes scales so that we can see all the curves
-        // Note: we are adding a curve, so we always want to replot, hence our
-        //       passing false to setAxesScales()...
-
-        QRectF boundingRect = QRectF();
-
-        foreach (QwtPlotCurve *curve, mCurves)
-            if (curve->dataSize())
-                boundingRect |= curve->boundingRect();
-
-        setAxesScales(boundingRect.left(), boundingRect.right(),
-                      boundingRect.top(), boundingRect.bottom(),
-                      false);
-
-        replotNow();
-    }
-
     // Return it to the caller
 
     return res;
@@ -512,51 +491,7 @@ QwtPlotCurve * SingleCellSimulationViewGraphPanelPlotWidget::addCurve(double *pX
 
 //==============================================================================
 
-void SingleCellSimulationViewGraphPanelPlotWidget::removeCurve(QwtPlotCurve *pCurve,
-                                                               const bool &pReplot)
-{
-    // Make sure that we have a curve
-
-    if (!pCurve)
-        return;
-
-    // Detach and then delete the curve
-
-    pCurve->detach();
-
-    delete pCurve;
-
-    // Stop tracking the curve
-
-    mCurves.removeOne(pCurve);
-
-    // Make sure that our axes scales are fine and replot ourselves, if needed
-
-    if (pReplot) {
-        if (mCurves.count())
-            checkAxesScales(false);
-
-        replotNow();
-    }
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewGraphPanelPlotWidget::removeCurves()
-{
-    // Remove any existing curve
-
-    foreach (QwtPlotCurve *curve, mCurves)
-        removeCurve(curve, false);
-
-    // Replot ourselves
-
-    replotNow();
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewGraphPanelPlotWidget::drawCurveSegment(QwtPlotCurve *pCurve,
+void SingleCellSimulationViewGraphPanelPlotWidget::drawCurveSegment(SingleCellSimulationViewGraphPanelPlotCurve *pCurve,
                                                                     const qulonglong &pFrom,
                                                                     const qulonglong &pTo)
 {
@@ -565,7 +500,7 @@ void SingleCellSimulationViewGraphPanelPlotWidget::drawCurveSegment(QwtPlotCurve
     if (pFrom == pTo)
         return;
 
-    // Determine the Y min/max of our new data
+    // Determine the X/Y min/max of our new data
 
     double xMin =  DBL_MAX;
     double xMax = -DBL_MAX;

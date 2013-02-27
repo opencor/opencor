@@ -15,10 +15,6 @@ class QFrame;
 
 //==============================================================================
 
-class QwtPlotCurve;
-
-//==============================================================================
-
 namespace Ui {
     class SingleCellSimulationViewGraphPanelWidget;
 }

@@ -203,18 +203,6 @@ void SingleCellSimulationViewSimulationData::setPointInterval(const double &pPoi
 
 //==============================================================================
 
-double SingleCellSimulationViewSimulationData::size() const
-{
-    // Return the size of our simulation (i.e. the number of data points which
-    // should be generated)
-    // Note: we return a double rather than a qulonglong in case the simulation
-    //       requires an insane amount of memory...
-
-    return ceil((mEndingPoint-mStartingPoint)/mPointInterval)+1;
-}
-
-//==============================================================================
-
 QString SingleCellSimulationViewSimulationData::odeSolverName() const
 {
     // Return our ODE solver name
@@ -495,9 +483,9 @@ void SingleCellSimulationViewSimulationData::checkForModifications()
 //==============================================================================
 
 SingleCellSimulationViewSimulationResults::SingleCellSimulationViewSimulationResults(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
-                                                                                     SingleCellSimulationViewSimulationData *pData) :
+                                                                                     SingleCellSimulationViewSimulation *pSimulation) :
     mCellmlFileRuntime(pCellmlFileRuntime),
-    mData(pData),
+    mSimulation(pSimulation),
     mSize(0),
     mPoints(0),
     mConstants(0),
@@ -522,12 +510,17 @@ bool SingleCellSimulationViewSimulationResults::createArrays()
 {
     static const int SizeOfDoublePointer = sizeof(double *);
 
+    // Retrieve the size of our data and make sure that it is valid
+
+    qulonglong simulationSize = qulonglong(mSimulation->size());
+
+    if (!simulationSize)
+        return true;
+
     // Create our points array
 
-    qulonglong dataSize = qulonglong(mData->size());
-
     try {
-        mPoints = new double[dataSize];
+        mPoints = new double[simulationSize];
     } catch(...) {
         return false;
     }
@@ -546,7 +539,7 @@ bool SingleCellSimulationViewSimulationResults::createArrays()
 
     for (int i = 0, iMax = mCellmlFileRuntime->constantsCount(); i < iMax; ++i)
         try {
-            mConstants[i] = new double[dataSize];
+            mConstants[i] = new double[simulationSize];
         } catch(...) {
             deleteArrays();
 
@@ -567,7 +560,7 @@ bool SingleCellSimulationViewSimulationResults::createArrays()
 
     for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
         try {
-            mStates[i] = new double[dataSize];
+            mStates[i] = new double[simulationSize];
         } catch(...) {
             deleteArrays();
 
@@ -588,7 +581,7 @@ bool SingleCellSimulationViewSimulationResults::createArrays()
 
     for (int i = 0, iMax = mCellmlFileRuntime->ratesCount(); i < iMax; ++i)
         try {
-            mRates[i] = new double[dataSize];
+            mRates[i] = new double[simulationSize];
         } catch(...) {
             deleteArrays();
 
@@ -609,7 +602,7 @@ bool SingleCellSimulationViewSimulationResults::createArrays()
 
     for (int i = 0, iMax = mCellmlFileRuntime->algebraicCount(); i < iMax; ++i)
         try {
-            mAlgebraic[i] = new double[dataSize];
+            mAlgebraic[i] = new double[simulationSize];
         } catch(...) {
             deleteArrays();
 
@@ -696,16 +689,16 @@ void SingleCellSimulationViewSimulationResults::addPoint(const double &pPoint)
     mPoints[mSize] = pPoint;
 
     for (int i = 0, iMax = mCellmlFileRuntime->constantsCount(); i < iMax; ++i)
-        mConstants[i][mSize] = mData->constants()[i];
+        mConstants[i][mSize] = mSimulation->data()->constants()[i];
 
     for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
-        mStates[i][mSize] = mData->states()[i];
+        mStates[i][mSize] = mSimulation->data()->states()[i];
 
     for (int i = 0, iMax = mCellmlFileRuntime->ratesCount(); i < iMax; ++i)
-        mRates[i][mSize] = mData->rates()[i];
+        mRates[i][mSize] = mSimulation->data()->rates()[i];
 
     for (int i = 0, iMax = mCellmlFileRuntime->algebraicCount(); i < iMax; ++i)
-        mAlgebraic[i][mSize] = mData->algebraic()[i];
+        mAlgebraic[i][mSize] = mSimulation->data()->algebraic()[i];
 
     // Increase our size
 
@@ -859,7 +852,7 @@ SingleCellSimulationViewSimulation::SingleCellSimulationViewSimulation(const QSt
     mCellmlFileRuntime(pCellmlFileRuntime),
     mSolverInterfaces(pSolverInterfaces),
     mData(new SingleCellSimulationViewSimulationData(pCellmlFileRuntime, pSolverInterfaces)),
-    mResults(new SingleCellSimulationViewSimulationResults(pCellmlFileRuntime, mData))
+    mResults(new SingleCellSimulationViewSimulationResults(pCellmlFileRuntime, this))
 {
     // Keep track of any error occurring in our data
 
@@ -946,7 +939,7 @@ void SingleCellSimulationViewSimulation::setDelay(const int &pDelay)
 
 //==============================================================================
 
-double SingleCellSimulationViewSimulation::requiredMemory() const
+double SingleCellSimulationViewSimulation::requiredMemory()
 {
     // Determine and return the amount of required memory to run our simulation
     // Note: we return the amount as a double rather than a qulonglong (as we do
@@ -956,13 +949,65 @@ double SingleCellSimulationViewSimulation::requiredMemory() const
 
     static const int SizeOfDouble = sizeof(double);
 
-    return  mData->size()
+    return  size()
            *( 1
              +mCellmlFileRuntime->constantsCount()
              +mCellmlFileRuntime->statesCount()
              +mCellmlFileRuntime->ratesCount()
              +mCellmlFileRuntime->algebraicCount())
            *SizeOfDouble;
+}
+
+//==============================================================================
+
+bool SingleCellSimulationViewSimulation::simulationSettingsOk(const bool &pEmitError)
+{
+    // Check and return whether our simulation settings are sound
+
+    if (mData->startingPoint() == mData->endingPoint()) {
+        if (pEmitError)
+            emit error(tr("the starting and ending points cannot have the same value"));
+
+        return false;
+    } else if (mData->pointInterval() == 0) {
+        if (pEmitError)
+            emit error(tr("the point interval cannot be equal to zero"));
+
+        return false;
+    } else if (   (mData->startingPoint() < mData->endingPoint())
+             && (mData->pointInterval() < 0)) {
+        if (pEmitError)
+            emit error(tr("the ending point is greater than the starting point, so the point interval should be greater than zero"));
+
+        return false;
+    } else if (   (mData->startingPoint() > mData->endingPoint())
+             && (mData->pointInterval() > 0)) {
+        if (pEmitError)
+            emit error(tr("the ending point is smaller than the starting point, so the point interval should be smaller than zero"));
+
+        return false;
+    } else {
+        return true;
+    }
+}
+
+//==============================================================================
+
+double SingleCellSimulationViewSimulation::size()
+{
+    // Return the size of our simulation (i.e. the number of data points which
+    // should be generated)
+    // Note: we return a double rather than a qulonglong in case the simulation
+    //       requires an insane amount of memory...
+
+    if (simulationSettingsOk(false))
+        // Our simulation settings are fine, so...
+
+        return ceil((mData->endingPoint()-mData->startingPoint())/mData->pointInterval())+1.0;
+    else
+        // Something wrong with our simulation settings, so...
+
+        return 0.0;
 }
 
 //==============================================================================
@@ -974,22 +1019,7 @@ void SingleCellSimulationViewSimulation::run()
     if (!mWorker) {
         // First, check that our simulation settings we were given are sound
 
-        bool simulationSettingsOk = false;
-
-        if (mData->startingPoint() == mData->endingPoint())
-            emit error(tr("the starting and ending points cannot have the same value"));
-        else if (mData->pointInterval() == 0)
-            emit error(tr("the point interval cannot be equal to zero"));
-        else if (   (mData->startingPoint() < mData->endingPoint())
-                 && (mData->pointInterval() < 0))
-            emit error(tr("the ending point is greater than the starting point, so the point interval should be greater than zero"));
-        else if (   (mData->startingPoint() > mData->endingPoint())
-                 && (mData->pointInterval() > 0))
-            emit error(tr("the ending point is smaller than the starting point, so the point interval should be smaller than zero"));
-        else
-            simulationSettingsOk = true;
-
-        if (!simulationSettingsOk)
+        if (!simulationSettingsOk())
             // Something wrong with our simulation settings, so...
 
             return;
