@@ -12,6 +12,7 @@
 
 //==============================================================================
 
+#include <QMutex>
 #include <QTime>
 
 //==============================================================================
@@ -23,7 +24,8 @@ namespace SingleCellSimulationView {
 
 SingleCellSimulationViewSimulationWorker::SingleCellSimulationViewSimulationWorker(const SolverInterfaces &pSolverInterfaces,
                                                                                    CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
-                                                                                   SingleCellSimulationViewSimulation *pSimulation) :
+                                                                                   SingleCellSimulationViewSimulation *pSimulation,
+                                                                                   SingleCellSimulationViewSimulationWorker **pSelf) :
     mSolverInterfaces(pSolverInterfaces),
     mCellmlFileRuntime(pCellmlFileRuntime),
     mSimulation(pSimulation),
@@ -31,7 +33,8 @@ SingleCellSimulationViewSimulationWorker::SingleCellSimulationViewSimulationWork
     mPaused(false),
     mStopped(false),
     mReset(false),
-    mError(false)
+    mError(false),
+    mSelf(pSelf)
 {
     // Create our thread
 
@@ -364,6 +367,13 @@ void SingleCellSimulationViewSimulationWorker::started()
 
         CoreSolver::unsetNlaSolver(mCellmlFileRuntime->address());
     }
+
+    // Reset our simulation owner's knowledge of us
+    // Note: if we were to do it the Qt way, our simulation owner would have a
+    //       slot for our finished() signal, but we want it to know as quickly
+    //       as possible that we are done, so...
+
+    *mSelf = 0;
 
     // Let people know that we are done and give them the elapsed time
 

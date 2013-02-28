@@ -230,9 +230,6 @@ Q_SIGNALS:
     void stopped(const int &pElapsedTime);
 
     void error(const QString &pMessage);
-
-private Q_SLOTS:
-    void finished(const int &pElapsedTime);
 };
 
 //==============================================================================

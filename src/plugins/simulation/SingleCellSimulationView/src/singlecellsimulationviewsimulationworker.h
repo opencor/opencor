@@ -11,7 +11,6 @@
 
 //==============================================================================
 
-#include <QMutex>
 #include <QObject>
 #include <QWaitCondition>
 
@@ -48,7 +47,8 @@ class SingleCellSimulationViewSimulationWorker : public QObject
 public:
     explicit SingleCellSimulationViewSimulationWorker(const SolverInterfaces &pSolverInterfaces,
                                                       CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
-                                                      SingleCellSimulationViewSimulation *pSimulation);
+                                                      SingleCellSimulationViewSimulation *pSimulation,
+                                                      SingleCellSimulationViewSimulationWorker **pSelf);
 
     bool isRunning() const;
     bool isPaused() const;
@@ -81,6 +81,8 @@ private:
     QWaitCondition mPausedCondition;
 
     bool mError;
+
+    SingleCellSimulationViewSimulationWorker **mSelf;
 
 Q_SIGNALS:
     void running();

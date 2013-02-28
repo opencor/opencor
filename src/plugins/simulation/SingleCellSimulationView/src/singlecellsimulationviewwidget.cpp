@@ -1484,7 +1484,7 @@ void SingleCellSimulationViewWidget::updateResults(SingleCellSimulationViewSimul
                 // plot and that we don't want to replot everything
 
                 if (!pReplot && (pSize > 1))
-                    qobject_cast<SingleCellSimulationViewGraphPanelPlotWidget *>(curveData->curve()->plot())->drawCurveSegment(curveData->curve(), oldDataSize?oldDataSize-1:0, pSize-1);
+                    mActiveGraphPanel->plot()->drawCurveSegment(curveData->curve(), oldDataSize?oldDataSize-1:0, pSize-1);
             }
 
         // Replot our active graph panel, if needed
@@ -1497,7 +1497,7 @@ void SingleCellSimulationViewWidget::updateResults(SingleCellSimulationViewSimul
 
         // Update our progress bar
 
-        mProgressBarWidget->setValue(simulation->progress());
+        mProgressBarWidget->setValue(mSimulation->progress());
     } else {
         // We are dealing with another simulation, so simply create an icon that
         // shows the other simulation's progress and let people know about it

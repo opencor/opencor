@@ -1026,7 +1026,7 @@ void SingleCellSimulationViewSimulation::run()
 
         // Create our worker
 
-        mWorker = new SingleCellSimulationViewSimulationWorker(mSolverInterfaces, mCellmlFileRuntime, this);
+        mWorker = new SingleCellSimulationViewSimulationWorker(mSolverInterfaces, mCellmlFileRuntime, this, &mWorker);
 
         if (!mWorker) {
             emit error(tr("the simulation worker could not be created"));
@@ -1042,7 +1042,7 @@ void SingleCellSimulationViewSimulation::run()
                 this, SIGNAL(paused()));
 
         connect(mWorker, SIGNAL(finished(const int &)),
-                this, SLOT(finished(const int &)));
+                this, SIGNAL(stopped(const int &)));
 
         connect(mWorker, SIGNAL(error(const QString &)),
                 this, SIGNAL(error(const QString &)));
@@ -1091,20 +1091,6 @@ void SingleCellSimulationViewSimulation::resetWorker()
 
     if (mWorker)
         mWorker->reset();
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewSimulation::finished(const int &pElapsedTime)
-{
-    // Our worker is done (and it will get automatically deleted and everything
-    // since its constructor moved it from the main thread to its own), so...
-
-    mWorker = 0;
-
-    // Let people know that we have stopped
-
-    emit stopped(pElapsedTime);
 }
 
 //==============================================================================
