@@ -45,6 +45,10 @@
 
 //==============================================================================
 
+#include "float.h"
+
+//==============================================================================
+
 #include "qwt_plot.h"
 #include "qwt_plot_curve.h"
 #include "qwt_wheel.h"
@@ -122,6 +126,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
     mSimulations(QMap<QString, SingleCellSimulationViewSimulation *>()),
     mStoppedSimulations(QList<SingleCellSimulationViewSimulation *>()),
     mDelays(QMap<QString, int>()),
+    mAxesSettings(QMap<QString, AxisSettings>()),
     mSplitterWidgetSizes(QList<int>()),
     mProgresses(QMap<QString, int>()),
     mCurvesData(QMap<QString, SingleCellSimulationViewWidgetCurveData *>()),
@@ -481,6 +486,22 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         // Keep track of the value of the delay widget
 
         mDelays.insert(previousFileName, mDelayWidget->value());
+
+        // Keept rack of our graph panel's plot's axes settings
+
+        AxisSettings axisSettings;
+
+        axisSettings.minX = mActiveGraphPanel->plot()->minX();
+        axisSettings.maxX = mActiveGraphPanel->plot()->maxX();
+        axisSettings.minY = mActiveGraphPanel->plot()->minY();
+        axisSettings.maxY = mActiveGraphPanel->plot()->maxY();
+
+        axisSettings.localMinX = mActiveGraphPanel->plot()->localMinX();
+        axisSettings.localMaxX = mActiveGraphPanel->plot()->localMaxX();
+        axisSettings.localMinY = mActiveGraphPanel->plot()->localMinY();
+        axisSettings.localMaxY = mActiveGraphPanel->plot()->localMaxY();
+
+        mAxesSettings.insert(previousFileName, axisSettings);
     }
 
     // Retrieve our simulation object for the current model, if any
@@ -525,7 +546,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
     // Retrieve the value of our delay widget
 
-    setDelayValue( mDelays.value(pFileName, 0));
+    setDelayValue(mDelays.value(pFileName, 0));
 
     // Reset our file tab icon and stop tracking our simulation progress, in
     // case our simulation is running
@@ -776,18 +797,56 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
     foreach (SingleCellSimulationViewWidgetCurveData *curveData, mCurvesData)
         curveData->curve()->setEnabled(!curveData->fileName().compare(pFileName));
 
-    // Fix our X axis (so that it gets the correct scale)
+    // Retrieve our graph panel's plot's axes settings and replot our graph
+    // panel's plot, if available
 
-    mActiveGraphPanel->plot()->setFixedAxisScale(SingleCellSimulationViewGraphPanelPlotWidget::AxisX,
-                                                 mSimulation->data()->startingPoint(), mSimulation->data()->endingPoint());
+    if (mAxesSettings.contains(pFileName)) {
+        // We have some axes settings for the given file name, so retrieve its
+        // graph panel's plot's axes settings
+        // Note: we don't want to waste our time checking our graph panel's
+        //       plot's axes everytime we set something, hence our passing false
+        //       to our various methods...
 
-    // Replot our active graph panel, if we are running/paused, or stop the X
-    // axis scale from being fixed, if we are neither running nor paused
+        AxisSettings axisSettings = mAxesSettings.value(pFileName);
 
-    if (mSimulation->isRunning() || mSimulation->isPaused())
-        mActiveGraphPanel->plot()->replotNow();
-    else
-        mActiveGraphPanel->plot()->setFixedAxisScale(SingleCellSimulationViewGraphPanelPlotWidget::AxisX);
+        mActiveGraphPanel->plot()->setMinX(axisSettings.minX, false);
+        mActiveGraphPanel->plot()->setMaxX(axisSettings.maxX, false);
+        mActiveGraphPanel->plot()->setMinY(axisSettings.minY, false);
+        mActiveGraphPanel->plot()->setMaxY(axisSettings.maxY, false);
+
+        mActiveGraphPanel->plot()->setLocalMinX(axisSettings.localMinX, false);
+        mActiveGraphPanel->plot()->setLocalMaxX(axisSettings.localMaxX, false);
+        mActiveGraphPanel->plot()->setLocalMinY(axisSettings.localMinY, false);
+        mActiveGraphPanel->plot()->setLocalMaxY(axisSettings.localMaxY, false);
+    } else {
+        // We don't have any axes settings for the given file name, so first
+        // initialise our simulation's properties
+
+        simulationPropertyChanged(mContentsWidget->informationWidget()->simulationWidget()->startingPointProperty());
+        simulationPropertyChanged(mContentsWidget->informationWidget()->simulationWidget()->endingPointProperty());
+        simulationPropertyChanged(mContentsWidget->informationWidget()->simulationWidget()->pointIntervalProperty());
+
+        // Now, initialise our graph panel's plot's axes settings
+        // Note: we don't want to waste our time checking our graph panel's
+        //       plot's axes everytime we set something, hence our passing false
+        //       to our various methods...
+
+        mActiveGraphPanel->plot()->setMinY(0.0, false);
+        mActiveGraphPanel->plot()->setMaxY(1000.0, false);
+
+        mActiveGraphPanel->plot()->setLocalMinX(mSimulation->data()->startingPoint(), false);
+        mActiveGraphPanel->plot()->setLocalMaxX(mSimulation->data()->endingPoint(), false);
+        mActiveGraphPanel->plot()->setLocalMinY(mActiveGraphPanel->plot()->minY(), false);
+        mActiveGraphPanel->plot()->setLocalMaxY(mActiveGraphPanel->plot()->maxY(), false);
+    }
+
+    // Check our graph panel's plot's axes and then replot our graph panel's
+    // plot
+    // Note: we always want to replot everything, hence our passing false to
+    //       checkAxes()...
+
+    mActiveGraphPanel->plot()->checkAxes(false);
+    mActiveGraphPanel->plot()->replotNow();
 }
 
 //==============================================================================
@@ -935,11 +994,25 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
 
             // Effectively run our simulation, if possible
 
-            if (runSimulation)
+            if (runSimulation) {
+                // Set our Y axis, so that it will automatically rescale
+                // Note: we definitely don't want to check our axes since this
+                //       will inevitably generate a replot which with the Y axis
+                //       values we are using would really mess things up, so...
+
+                mActiveGraphPanel->plot()->setMinY(DBL_MAX, false);
+                mActiveGraphPanel->plot()->setMaxY(-DBL_MAX, false);
+
+                mActiveGraphPanel->plot()->setLocalMinY(mActiveGraphPanel->plot()->minY(), false);
+                mActiveGraphPanel->plot()->setLocalMaxY(mActiveGraphPanel->plot()->maxY(), false);
+
+                // Now, we really run our simulation
+
                 mSimulation->run();
-            else
+            } else {
                 QMessageBox::warning(qApp->activeWindow(), tr("Run the simulation"),
                                      tr("Sorry, but we could not allocate all the memory required for the simulation."));
+            }
         }
     }
 }
@@ -1124,10 +1197,6 @@ void SingleCellSimulationViewWidget::simulationStopped(const int &pElapsedTime)
             QTimer::singleShot(ResetDelay, this, SLOT(resetFileTabIcon()));
         }
     }
-
-    // Stop the X axis scale from being fixed
-
-    mActiveGraphPanel->plot()->setFixedAxisScale(SingleCellSimulationViewGraphPanelPlotWidget::AxisX);
 }
 
 //==============================================================================
@@ -1228,27 +1297,32 @@ void SingleCellSimulationViewWidget::splitterWidgetMoved()
 
 void SingleCellSimulationViewWidget::simulationPropertyChanged(Core::Property *pProperty)
 {
-    // Update one of our simulation's properties and, if needed, update our
-    // fixed X axis scale
-    // Note: with regards to the starting point property, we need to update it
-    //       because it's can potentially have an effect on the value of our
-    //       'computed constants' and 'variables'...
-
-    bool needUpdateFixedAxisScaleX = true;
+    // Update one of our simulation's properties and, if needed, update the
+    // minimum or maximum value for our X axis
+    // Note #1: with regards to the starting point property, we need to update
+    //          it because it's can potentially have an effect on the value of
+    //          our 'computed constants' and 'variables'...
+    // Note #2: we don't want to waste our time checking our graph panel's
+    //          plot's axes everytime we set something, hence our passing false
+    //          to our various methods...
 
     if (pProperty == mContentsWidget->informationWidget()->simulationWidget()->startingPointProperty()) {
         mSimulation->data()->setStartingPoint(Core::PropertyEditorWidget::doublePropertyItem(pProperty->value()));
+
+        mActiveGraphPanel->plot()->setMinX(mSimulation->data()->startingPoint(), false);
+        mActiveGraphPanel->plot()->setLocalMinX(mActiveGraphPanel->plot()->minX(), false);
+
+        mActiveGraphPanel->plot()->checkAxes();
     } else if (pProperty == mContentsWidget->informationWidget()->simulationWidget()->endingPointProperty()) {
         mSimulation->data()->setEndingPoint(Core::PropertyEditorWidget::doublePropertyItem(pProperty->value()));
+
+        mActiveGraphPanel->plot()->setMaxX(mSimulation->data()->endingPoint(), false);
+        mActiveGraphPanel->plot()->setLocalMaxX(mActiveGraphPanel->plot()->maxX(), false);
+
+        mActiveGraphPanel->plot()->checkAxes();
     } else if (pProperty == mContentsWidget->informationWidget()->simulationWidget()->pointIntervalProperty()) {
         mSimulation->data()->setPointInterval(Core::PropertyEditorWidget::doublePropertyItem(pProperty->value()));
-
-        needUpdateFixedAxisScaleX = false;
     }
-
-    if (needUpdateFixedAxisScaleX)
-        mActiveGraphPanel->plot()->setFixedAxisScale(SingleCellSimulationViewGraphPanelPlotWidget::AxisX,
-                                                     mSimulation->data()->startingPoint(), mSimulation->data()->endingPoint());
 }
 
 //==============================================================================
@@ -1322,11 +1396,11 @@ void SingleCellSimulationViewWidget::showModelParameter(const QString &pFileName
         mCurvesData.insert(key, curveData);
     }
 
-    // Check our graph panel's plot's axes scales before replotting everything
+    // Check our graph panel's plot's axes before replotting everything
     // Note: we always want to replot, hence our passing false as an argument to
-    //       checkAxesScales()...
+    //       checkAxes()...
 
-    mActiveGraphPanel->plot()->checkAxesScales(false);
+    mActiveGraphPanel->plot()->checkAxes(false);
     mActiveGraphPanel->plot()->replotNow();
 }
 

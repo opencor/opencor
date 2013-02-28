@@ -51,11 +51,6 @@ class SingleCellSimulationViewGraphPanelPlotWidget : public QwtPlot
     Q_OBJECT
 
 public:
-    enum Axis {
-        AxisX,
-        AxisY
-    };
-
     explicit SingleCellSimulationViewGraphPanelPlotWidget(QWidget *pParent = 0);
     ~SingleCellSimulationViewGraphPanelPlotWidget();
 
@@ -66,10 +61,32 @@ public:
     void drawCurveSegment(SingleCellSimulationViewGraphPanelPlotCurve *pCurve,
                           const qulonglong &pFrom, const qulonglong &pTo);
 
-    void checkAxesScales(const bool &pCanReplot = true);
+    void checkAxes(const bool &pCanReplot = true,
+                   const bool &pForceMinMaxValues = false);
 
-    void setFixedAxisScale(const Axis &pAxis,
-                           const double &pMin = 0.0, const double &pMax = 0.0);
+    double minX() const;
+    void setMinX(const double &pValue, const bool &pCheckAxes = true);
+
+    double maxX() const;
+    void setMaxX(const double &pValue, const bool &pCheckAxes = true);
+
+    double minY() const;
+    void setMinY(const double &pValue, const bool &pCheckAxes = true);
+
+    double maxY() const;
+    void setMaxY(const double &pValue, const bool &pCheckAxes = true);
+
+    double localMinX() const;
+    void setLocalMinX(const double &pValue, const bool &pCheckAxes = true);
+
+    double localMaxX() const;
+    void setLocalMaxX(const double &pValue, const bool &pCheckAxes = true);
+
+    double localMinY() const;
+    void setLocalMinY(const double &pValue, const bool &pCheckAxes = true);
+
+    double localMaxY() const;
+    void setLocalMaxY(const double &pValue, const bool &pCheckAxes = true);
 
 protected:
     virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
@@ -92,20 +109,20 @@ private:
 
     QPoint mOriginPoint;
 
-    double mMinFixedScaleX;
-    double mMaxFixedScaleX;
-
-    double mMinFixedScaleY;
-    double mMaxFixedScaleY;
+    double mMinX;
+    double mMaxX;
+    double mMinY;
+    double mMaxY;
 
     void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
 
-    void setAxesScales(const double &pMinX, const double &pMaxX,
-                       const double &pMinY, const double &pMaxY,
-                       const bool &pCanReplot = true);
-    void resetAxesScales();
-    void scaleAxesScales(const double &pScalingFactorX,
-                         const double &pScalingFactorY);
+    void setAxes(const double &pMinX, const double &pMaxX,
+                 const double &pMinY, const double &pMaxY,
+                 const bool &pCanReplot = true,
+                 const bool &pForceMinMaxValues = false);
+
+    void scaleAxes(const double &pScalingFactorX,
+                   const double &pScalingFactorY);
 };
 
 //==============================================================================

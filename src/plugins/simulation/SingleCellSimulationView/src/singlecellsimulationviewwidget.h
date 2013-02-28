@@ -135,6 +135,20 @@ private:
 
     QMap<QString, int> mDelays;
 
+    struct AxisSettings {
+        double minX;
+        double maxX;
+        double minY;
+        double maxY;
+
+        double localMinX;
+        double localMaxX;
+        double localMinY;
+        double localMaxY;
+    };
+
+    QMap<QString, AxisSettings> mAxesSettings;
+
     Core::ToolBarWidget *mToolBarWidget;
 
     QFrame *mTopSeparator;
