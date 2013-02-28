@@ -562,6 +562,8 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
     mProperty       = 0;
     mPropertyEditor = 0;
 
+    mPropertiesChecked = QMap<Property *, bool>();
+
     // Customise ourselves
 
     setRootIsDecorated(false);
@@ -1217,9 +1219,19 @@ void PropertyEditorWidget::emitPropertyChecked(QStandardItem *pItem)
     // Let people know whether our current property is checked
 
     Property *itemProperty = property(pItem->index());
+    bool oldPropertyChecked = mPropertiesChecked.value(itemProperty, false);
+    bool newPropertyChecked = itemProperty->name()->checkState() == Qt::Checked;
 
-    emit propertyChecked(itemProperty,
-                         itemProperty->name()->checkState() == Qt::Checked);
+    if (oldPropertyChecked != newPropertyChecked) {
+        // The property's checked status has changed, so let people know about
+        // it
+
+        emit propertyChecked(itemProperty, newPropertyChecked);
+
+        // Keep track of the property's new checked status
+
+        mPropertiesChecked.insert(itemProperty, newPropertyChecked);
+    }
 }
 
 //==============================================================================
