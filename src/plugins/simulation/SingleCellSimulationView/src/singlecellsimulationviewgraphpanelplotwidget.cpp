@@ -32,40 +32,12 @@ namespace SingleCellSimulationView {
 //==============================================================================
 
 SingleCellSimulationViewGraphPanelPlotCurve::SingleCellSimulationViewGraphPanelPlotCurve() :
-    QwtPlotCurve(),
-    mEnabled(true)
+    QwtPlotCurve()
 {
     // Customise it a bit
 
     setPen(QPen(Qt::darkBlue));
     setRenderHint(QwtPlotItem::RenderAntialiased);
-}
-
-//==============================================================================
-
-bool SingleCellSimulationViewGraphPanelPlotCurve::isValid() const
-{
-    // Return whether we are valid, i.e. enabled and visible
-
-    return mEnabled && isVisible();
-}
-
-//==============================================================================
-
-bool SingleCellSimulationViewGraphPanelPlotCurve::isEnabled() const
-{
-    // Return whether we are enabled
-
-    return mEnabled;
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewGraphPanelPlotCurve::setEnabled(const bool &pEnabled)
-{
-    // Set our enabled status
-
-    mEnabled = pEnabled;
 }
 
 //==============================================================================
@@ -119,9 +91,6 @@ SingleCellSimulationViewGraphPanelPlotWidget::SingleCellSimulationViewGraphPanel
 SingleCellSimulationViewGraphPanelPlotWidget::~SingleCellSimulationViewGraphPanelPlotWidget()
 {
     // Delete some internal objects
-
-    foreach (SingleCellSimulationViewGraphPanelPlotCurve *curve, mCurves)
-        delete curve;
 
     delete mDirectPainter;
 }
@@ -382,7 +351,7 @@ void SingleCellSimulationViewGraphPanelPlotWidget::setAxes(const double &pMinX,
                                                            const double &pMinY,
                                                            const double &pMaxY,
                                                            const bool &pCanReplot,
-                                                           const bool &pForceMinMaxValues)
+                                                           const bool &pResetAndForceMinMaxValues)
 {
     // Update our axes
 
@@ -397,28 +366,35 @@ void SingleCellSimulationViewGraphPanelPlotWidget::setAxes(const double &pMinX,
     double newLocalMaxY = pMaxY;
 
     // Retrieve the bounding rectangle for all our curves (that is, as long as
-    // they are valid and have some data)
+    // they have some data)
 
     QRectF boundingRect = QRectF();
 
     foreach (SingleCellSimulationViewGraphPanelPlotCurve *curve, mCurves)
-        if (curve->isValid() && curve->dataSize())
+        if (curve->dataSize())
             boundingRect |= curve->boundingRect();
 
     // Update the minimum/maximum values of our axes, should we have retrieved a
     // valid bounding rectangle
 
     if (boundingRect != QRectF()) {
-        mMinX = qMin(mMinX, boundingRect.left());
-        mMaxX = qMax(mMaxX, boundingRect.right());
-        mMinY = qMin(mMinY, boundingRect.top());
-        mMaxY = qMax(mMaxY, boundingRect.bottom());
+        if (pResetAndForceMinMaxValues) {
+            mMinX = boundingRect.left();
+            mMaxX = boundingRect.right();
+            mMinY = boundingRect.top();
+            mMaxY = boundingRect.bottom();
+        } else {
+            mMinX = qMin(mMinX, boundingRect.left());
+            mMaxX = qMax(mMaxX, boundingRect.right());
+            mMinY = qMin(mMinY, boundingRect.top());
+            mMaxY = qMax(mMaxY, boundingRect.bottom());
+        }
     }
 
     // Make sure that the new local minimum/maximum values of our axes fit
     // within the minimum/maximum values of our axes
 
-    if (pForceMinMaxValues) {
+    if (pResetAndForceMinMaxValues) {
         newLocalMinX = mMinX;
         newLocalMaxX = mMaxX;
         newLocalMinY = mMinY;
@@ -488,12 +464,21 @@ void SingleCellSimulationViewGraphPanelPlotWidget::scaleAxes(const double &pScal
 //==============================================================================
 
 void SingleCellSimulationViewGraphPanelPlotWidget::checkAxes(const bool &pCanReplot,
-                                                             const bool &pForceMinMaxValues)
+                                                             const bool &pResetAndForceMinMaxValues)
 {
     // Check our axes by trying to set them
 
     setAxes(localMinX(), localMaxX(), localMinY(), localMaxY(),
-            pCanReplot, pForceMinMaxValues);
+            pCanReplot, pResetAndForceMinMaxValues);
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewGraphPanelPlotWidget::resetAxes(const bool &pCanReplot)
+{
+    // Reset our axes by trying to set them
+
+    setAxes(0.0, 0.0, 0.0, 0.0, pCanReplot, true);
 }
 
 //==============================================================================
@@ -646,23 +631,38 @@ void SingleCellSimulationViewGraphPanelPlotWidget::replotNow()
 
 //==============================================================================
 
-SingleCellSimulationViewGraphPanelPlotCurve * SingleCellSimulationViewGraphPanelPlotWidget::addCurve()
+void SingleCellSimulationViewGraphPanelPlotWidget::attach(SingleCellSimulationViewGraphPanelPlotCurve *pCurve)
 {
-    // Create a new curve
+    // Make sure that the given curve is not already attached to us
 
-    SingleCellSimulationViewGraphPanelPlotCurve *res = new SingleCellSimulationViewGraphPanelPlotCurve();
+    if (mCurves.contains(pCurve))
+        return;
 
-    // Attach it to ourselves
+    // Attach the given curve to ourselves
 
-    res->attach(this);
+    pCurve->attach(this);
 
-    // Add it to our list of curves
+    // Add the given curve to our list of curves
 
-    mCurves << res;
+    mCurves << pCurve;
+}
 
-    // Return it to the caller
+//==============================================================================
 
-    return res;
+void SingleCellSimulationViewGraphPanelPlotWidget::detach(SingleCellSimulationViewGraphPanelPlotCurve *pCurve)
+{
+    // Check that the given curve is attached to us
+
+    if (!mCurves.contains(pCurve))
+        return;
+
+    // Detach the given curve from ourselves
+
+    pCurve->detach();
+
+    // Remove the given curve from our list of curves
+
+    mCurves.removeOne(pCurve);
 }
 
 //==============================================================================

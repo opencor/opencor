@@ -34,14 +34,6 @@ class SingleCellSimulationViewGraphPanelPlotCurve : public QwtPlotCurve
 {
 public:
     explicit SingleCellSimulationViewGraphPanelPlotCurve();
-
-    bool isValid() const;
-
-    bool isEnabled() const;
-    void setEnabled(const bool &pEnabled);
-
-private:
-    bool mEnabled;
 };
 
 //==============================================================================
@@ -56,13 +48,15 @@ public:
 
     void replotNow();
 
-    SingleCellSimulationViewGraphPanelPlotCurve * addCurve();
+    void attach(SingleCellSimulationViewGraphPanelPlotCurve *pCurve);
+    void detach(SingleCellSimulationViewGraphPanelPlotCurve *pCurve);
 
     void drawCurveSegment(SingleCellSimulationViewGraphPanelPlotCurve *pCurve,
                           const qulonglong &pFrom, const qulonglong &pTo);
 
     void checkAxes(const bool &pCanReplot = true,
-                   const bool &pForceMinMaxValues = false);
+                   const bool &pResetAndForceMinMaxValues = false);
+    void resetAxes(const bool &pCanReplot = true);
 
     double minX() const;
     void setMinX(const double &pValue, const bool &pCheckAxes = true);
@@ -119,7 +113,7 @@ private:
     void setAxes(const double &pMinX, const double &pMaxX,
                  const double &pMinY, const double &pMaxY,
                  const bool &pCanReplot = true,
-                 const bool &pForceMinMaxValues = false);
+                 const bool &pResetAndForceMinMaxValues = false);
 
     void scaleAxes(const double &pScalingFactorX,
                    const double &pScalingFactorY);

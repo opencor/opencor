@@ -77,6 +77,9 @@ public:
 
     double * yData() const;
 
+    bool isAttached() const;
+    void setAttached(const bool &pAttached);
+
 private:
     QString mFileName;
 
@@ -85,6 +88,8 @@ private:
     CellMLSupport::CellmlFileRuntimeModelParameter *mParameter;
 
     SingleCellSimulationViewGraphPanelPlotCurve *mCurve;
+
+    bool mAttached;
 };
 
 //==============================================================================

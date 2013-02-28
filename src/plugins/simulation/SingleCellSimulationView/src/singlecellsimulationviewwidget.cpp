@@ -75,7 +75,8 @@ SingleCellSimulationViewWidgetCurveData::SingleCellSimulationViewWidgetCurveData
     mFileName(pFileName),
     mSimulation(pSimulation),
     mParameter(pParameter),
-    mCurve(pCurve)
+    mCurve(pCurve),
+    mAttached(true)
 {
 }
 
@@ -112,6 +113,24 @@ double * SingleCellSimulationViewWidgetCurveData::yData() const
         return mSimulation->results()->rates()?mSimulation->results()->rates()[mParameter->index()]:0;
     else
         return mSimulation->results()->algebraic()?mSimulation->results()->algebraic()[mParameter->index()]:0;
+}
+
+//==============================================================================
+
+bool SingleCellSimulationViewWidgetCurveData::isAttached() const
+{
+    // Return our attached status
+
+    return mAttached;
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewWidgetCurveData::setAttached(const bool &pAttached)
+{
+    // Set our attached status
+
+    mAttached = pAttached;
 }
 
 //==============================================================================
@@ -291,8 +310,10 @@ SingleCellSimulationViewWidget::~SingleCellSimulationViewWidget()
 
     // Delete our curves' data
 
-    foreach (SingleCellSimulationViewWidgetCurveData *curveData, mCurvesData)
+    foreach (SingleCellSimulationViewWidgetCurveData *curveData, mCurvesData) {
+        delete curveData->curve();
         delete curveData;
+    }
 
     // Delete the GUI
 
@@ -502,6 +523,12 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         axisSettings.localMaxY = mActiveGraphPanel->plot()->localMaxY();
 
         mAxesSettings.insert(previousFileName, axisSettings);
+
+        // Keep track of the attachment status of our curves
+
+        foreach (SingleCellSimulationViewWidgetCurveData *curveData, mCurvesData)
+            if (!curveData->fileName().compare(previousFileName))
+                curveData->setAttached(curveData->curve()->plot());
     }
 
     // Retrieve our simulation object for the current model, if any
@@ -792,10 +819,20 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         mSimulation->results()->reset(false);
     }
 
-    // Enable the curves associated with the given file name
+    // Attach/detach the curves, based on whether they are associated with then
+    // given file name
 
     foreach (SingleCellSimulationViewWidgetCurveData *curveData, mCurvesData)
-        curveData->curve()->setEnabled(!curveData->fileName().compare(pFileName));
+        if (    curveData->isAttached()
+            && !curveData->fileName().compare(pFileName)) {
+            curveData->curve()->setRawSamples(mSimulation->results()->points(),
+                                              curveData->yData(),
+                                              mSimulation->results()->size());
+
+            mActiveGraphPanel->plot()->attach(curveData->curve());
+        } else {
+            mActiveGraphPanel->plot()->detach(curveData->curve());
+        }
 
     // Retrieve our graph panel's plot's axes settings and replot our graph
     // panel's plot, if available
@@ -1368,21 +1405,23 @@ void SingleCellSimulationViewWidget::showModelParameter(const QString &pFileName
     // Check whether to show/hide a curve
 
     if (curveData) {
-        // We already have a curve, so just make it visible/invisible
+        // We already have a curve, so just make it visible/invisible and update
+        // our curve's data, in case we are to make it visible
 
-        curveData->curve()->setVisible(pShow);
-
-        // Update our curve's data in case we are to show the curve
-
-        if (pShow)
+        if (pShow) {
             curveData->curve()->setRawSamples(mSimulation->results()->points(),
                                               curveData->yData(),
                                               mSimulation->results()->size());
+
+            mActiveGraphPanel->plot()->attach(curveData->curve());
+        } else {
+            mActiveGraphPanel->plot()->detach(curveData->curve());
+        }
     } else if (pShow) {
         // We don't have a curve, but we want one so create one, as well as some
         // data for it
 
-        SingleCellSimulationViewGraphPanelPlotCurve *curve = mActiveGraphPanel->plot()->addCurve();
+        SingleCellSimulationViewGraphPanelPlotCurve *curve = new SingleCellSimulationViewGraphPanelPlotCurve();
         SingleCellSimulationViewWidgetCurveData *curveData = new SingleCellSimulationViewWidgetCurveData(pFileName, mSimulation, pParameter, curve);
 
         // Set some data for our curve
@@ -1391,6 +1430,10 @@ void SingleCellSimulationViewWidget::showModelParameter(const QString &pFileName
                              curveData->yData(),
                              mSimulation->results()->size());
 
+        // Attach the curve to our graph panel's plot
+
+        mActiveGraphPanel->plot()->attach(curve);
+
         // Keep track of our curve data
 
         mCurvesData.insert(key, curveData);
@@ -1398,9 +1441,9 @@ void SingleCellSimulationViewWidget::showModelParameter(const QString &pFileName
 
     // Check our graph panel's plot's axes before replotting everything
     // Note: we always want to replot, hence our passing false as an argument to
-    //       checkAxes()...
+    //       resetAxes()...
 
-    mActiveGraphPanel->plot()->checkAxes(false);
+    mActiveGraphPanel->plot()->resetAxes(false);
     mActiveGraphPanel->plot()->replotNow();
 }
 
@@ -1424,9 +1467,9 @@ void SingleCellSimulationViewWidget::updateResults(SingleCellSimulationViewSimul
         // Update our curves, if any
 
         foreach (SingleCellSimulationViewWidgetCurveData *curveData, mCurvesData)
-            // Update the curve, should it be valid
+            // Update the curve, should it be attached
 
-            if (curveData->curve()->isValid()) {
+            if (curveData->curve()->plot()) {
                 // Keep track of our curve's old size
 
                 qulonglong oldDataSize = curveData->curve()->dataSize();
@@ -1437,8 +1480,8 @@ void SingleCellSimulationViewWidget::updateResults(SingleCellSimulationViewSimul
                                                   curveData->yData(),
                                                   pSize);
 
-                // Draw the curve's new segment, but only if there is some data
-                // to plot and that we don't want to replot everything
+                // Draw the curve's new segment, but only if there is some data to
+                // plot and that we don't want to replot everything
 
                 if (!pReplot && (pSize > 1))
                     qobject_cast<SingleCellSimulationViewGraphPanelPlotWidget *>(curveData->curve()->plot())->drawCurveSegment(curveData->curve(), oldDataSize?oldDataSize-1:0, pSize-1);
