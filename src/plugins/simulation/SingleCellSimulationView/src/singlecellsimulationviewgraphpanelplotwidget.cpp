@@ -628,7 +628,12 @@ void SingleCellSimulationViewGraphPanelPlotWidget::wheelEvent(QWheelEvent *pEven
 
 void SingleCellSimulationViewGraphPanelPlotWidget::replotNow()
 {
-    // Replot ourselves
+    // Replot ourselves, but only if the local minimum/maximum values of our
+    // axes are valid
+
+    if (   (qAbs(localMinX()) == DBL_MAX) || (qAbs(localMaxX()) == DBL_MAX)
+        || (qAbs(localMinY()) == DBL_MAX) || (qAbs(localMaxY()) == DBL_MAX))
+        return;
 
     replot();
 
