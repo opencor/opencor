@@ -55,7 +55,7 @@ public:
                           const qulonglong &pFrom, const qulonglong &pTo);
 
     void checkAxes(const bool &pCanReplot = true,
-                   const bool &pResetAndForceMinMaxValues = false);
+                   const bool &pForceMinMaxValues = false);
     void resetAxes(const bool &pCanReplot = true);
 
     double minX() const;
@@ -113,7 +113,8 @@ private:
     void setAxes(const double &pMinX, const double &pMaxX,
                  const double &pMinY, const double &pMaxY,
                  const bool &pCanReplot = true,
-                 const bool &pResetAndForceMinMaxValues = false);
+                 const bool &pForceMinMaxValues = false,
+                 const bool &pResetMinMaxValues = false);
 
     void scaleAxes(const double &pScalingFactorX,
                    const double &pScalingFactorY);

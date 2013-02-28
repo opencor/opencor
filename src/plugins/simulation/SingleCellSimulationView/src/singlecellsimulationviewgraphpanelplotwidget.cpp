@@ -351,7 +351,8 @@ void SingleCellSimulationViewGraphPanelPlotWidget::setAxes(const double &pMinX,
                                                            const double &pMinY,
                                                            const double &pMaxY,
                                                            const bool &pCanReplot,
-                                                           const bool &pResetAndForceMinMaxValues)
+                                                           const bool &pForceMinMaxValues,
+                                                           const bool &pResetMinMaxValues)
 {
     // Update our axes
 
@@ -378,7 +379,7 @@ void SingleCellSimulationViewGraphPanelPlotWidget::setAxes(const double &pMinX,
     // valid bounding rectangle
 
     if (boundingRect != QRectF()) {
-        if (pResetAndForceMinMaxValues) {
+        if (pResetMinMaxValues) {
             mMinX = boundingRect.left();
             mMaxX = boundingRect.right();
             mMinY = boundingRect.top();
@@ -394,7 +395,7 @@ void SingleCellSimulationViewGraphPanelPlotWidget::setAxes(const double &pMinX,
     // Make sure that the new local minimum/maximum values of our axes fit
     // within the minimum/maximum values of our axes
 
-    if (pResetAndForceMinMaxValues) {
+    if (pForceMinMaxValues) {
         newLocalMinX = mMinX;
         newLocalMaxX = mMaxX;
         newLocalMinY = mMinY;
@@ -464,12 +465,12 @@ void SingleCellSimulationViewGraphPanelPlotWidget::scaleAxes(const double &pScal
 //==============================================================================
 
 void SingleCellSimulationViewGraphPanelPlotWidget::checkAxes(const bool &pCanReplot,
-                                                             const bool &pResetAndForceMinMaxValues)
+                                                             const bool &pForceMinMaxValues)
 {
     // Check our axes by trying to set them
 
     setAxes(localMinX(), localMaxX(), localMinY(), localMaxY(),
-            pCanReplot, pResetAndForceMinMaxValues);
+            pCanReplot, pForceMinMaxValues, false);
 }
 
 //==============================================================================
@@ -478,7 +479,7 @@ void SingleCellSimulationViewGraphPanelPlotWidget::resetAxes(const bool &pCanRep
 {
     // Reset our axes by trying to set them
 
-    setAxes(0.0, 0.0, 0.0, 0.0, pCanReplot, true);
+    setAxes(0.0, 0.0, 0.0, 0.0, pCanReplot, true, true);
 }
 
 //==============================================================================
