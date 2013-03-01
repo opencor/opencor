@@ -55,32 +55,36 @@ public:
                           const qulonglong &pFrom, const qulonglong &pTo);
 
     void checkAxes(const bool &pCanReplot = true,
-                   const bool &pForceMinMaxValues = false);
+                   const bool &pForceMinMaxValues = false,
+                   const bool &pUpdateMinMaxValues = false);
     void resetAxes(const bool &pCanReplot = true);
 
     double minX() const;
-    void setMinX(const double &pValue, const bool &pCheckAxes = true);
+    void setMinX(const double &pMinX);
 
     double maxX() const;
-    void setMaxX(const double &pValue, const bool &pCheckAxes = true);
+    void setMaxX(const double &pMaxX);
 
     double minY() const;
-    void setMinY(const double &pValue, const bool &pCheckAxes = true);
+    void setMinY(const double &pMinY);
 
     double maxY() const;
-    void setMaxY(const double &pValue, const bool &pCheckAxes = true);
+    void setMaxY(const double &pMaxY);
 
     double localMinX() const;
-    void setLocalMinX(const double &pValue, const bool &pCheckAxes = true);
+    void setLocalMinX(const double &pLocalMinX);
 
     double localMaxX() const;
-    void setLocalMaxX(const double &pValue, const bool &pCheckAxes = true);
+    void setLocalMaxX(const double &pLocalMaxX);
 
     double localMinY() const;
-    void setLocalMinY(const double &pValue, const bool &pCheckAxes = true);
+    void setLocalMinY(const double &pLocalMinY);
 
     double localMaxY() const;
-    void setLocalMaxY(const double &pValue, const bool &pCheckAxes = true);
+    void setLocalMaxY(const double &pLocalMaxY);
+
+    void setFixedAxisX(const bool &pFixedAxisX);
+    void setFixedAxisY(const bool &pFixedAxisY);
 
 protected:
     virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
@@ -108,12 +112,16 @@ private:
     double mMinY;
     double mMaxY;
 
+    bool mFixedAxisX;
+    bool mFixedAxisY;
+
     void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
 
     void setAxes(const double &pMinX, const double &pMaxX,
                  const double &pMinY, const double &pMaxY,
                  const bool &pCanReplot = true,
                  const bool &pForceMinMaxValues = false,
+                 const bool &pUpdateMinMaxValues = false,
                  const bool &pResetMinMaxValues = false);
 
     void scaleAxes(const double &pScalingFactorX,

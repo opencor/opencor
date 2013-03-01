@@ -387,6 +387,8 @@ void SingleCellSimulationViewWidget::loadSettings(QSettings *pSettings)
 //          ADDITION/REMOVAL OF GRAPH PANELS...
 
     mActiveGraphPanel = mContentsWidget->graphPanelsWidget()->activeGraphPanel();
+
+    mActiveGraphPanel->plot()->setFixedAxisX(true);
 }
 
 //==============================================================================
@@ -849,21 +851,18 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
     if (mAxesSettings.contains(pFileName)) {
         // We have some axes settings for the given file name, so retrieve its
         // graph panel's plot's axes settings
-        // Note: we don't want to waste our time checking our graph panel's
-        //       plot's axes everytime we set something, hence our passing false
-        //       to our various methods...
 
         AxisSettings axisSettings = mAxesSettings.value(pFileName);
 
-        mActiveGraphPanel->plot()->setMinX(axisSettings.minX, false);
-        mActiveGraphPanel->plot()->setMaxX(axisSettings.maxX, false);
-        mActiveGraphPanel->plot()->setMinY(axisSettings.minY, false);
-        mActiveGraphPanel->plot()->setMaxY(axisSettings.maxY, false);
+        mActiveGraphPanel->plot()->setMinX(axisSettings.minX);
+        mActiveGraphPanel->plot()->setMaxX(axisSettings.maxX);
+        mActiveGraphPanel->plot()->setMinY(axisSettings.minY);
+        mActiveGraphPanel->plot()->setMaxY(axisSettings.maxY);
 
-        mActiveGraphPanel->plot()->setLocalMinX(axisSettings.localMinX, false);
-        mActiveGraphPanel->plot()->setLocalMaxX(axisSettings.localMaxX, false);
-        mActiveGraphPanel->plot()->setLocalMinY(axisSettings.localMinY, false);
-        mActiveGraphPanel->plot()->setLocalMaxY(axisSettings.localMaxY, false);
+        mActiveGraphPanel->plot()->setLocalMinX(axisSettings.localMinX);
+        mActiveGraphPanel->plot()->setLocalMaxX(axisSettings.localMaxX);
+        mActiveGraphPanel->plot()->setLocalMinY(axisSettings.localMinY);
+        mActiveGraphPanel->plot()->setLocalMaxY(axisSettings.localMaxY);
     } else {
         // We don't have any axes settings for the given file name, so first
         // initialise our simulation's properties
@@ -877,13 +876,13 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         //       plot's axes everytime we set something, hence our passing false
         //       to our various methods...
 
-        mActiveGraphPanel->plot()->setMinY(0.0, false);
-        mActiveGraphPanel->plot()->setMaxY(1000.0, false);
+        mActiveGraphPanel->plot()->setMinY(0.0);
+        mActiveGraphPanel->plot()->setMaxY(1000.0);
 
-        mActiveGraphPanel->plot()->setLocalMinX(mSimulation->data()->startingPoint(), false);
-        mActiveGraphPanel->plot()->setLocalMaxX(mSimulation->data()->endingPoint(), false);
-        mActiveGraphPanel->plot()->setLocalMinY(mActiveGraphPanel->plot()->minY(), false);
-        mActiveGraphPanel->plot()->setLocalMaxY(mActiveGraphPanel->plot()->maxY(), false);
+        mActiveGraphPanel->plot()->setLocalMinX(mSimulation->data()->startingPoint());
+        mActiveGraphPanel->plot()->setLocalMaxX(mSimulation->data()->endingPoint());
+        mActiveGraphPanel->plot()->setLocalMinY(mActiveGraphPanel->plot()->minY());
+        mActiveGraphPanel->plot()->setLocalMaxY(mActiveGraphPanel->plot()->maxY());
     }
 
     // Check our graph panel's plot's axes and then replot our graph panel's
@@ -1078,11 +1077,11 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
                 //       will inevitably generate a replot which with the Y axis
                 //       values we are using would really mess things up, so...
 
-                mActiveGraphPanel->plot()->setMinY(DBL_MAX, false);
-                mActiveGraphPanel->plot()->setMaxY(-DBL_MAX, false);
+                mActiveGraphPanel->plot()->setMinY(DBL_MAX);
+                mActiveGraphPanel->plot()->setMaxY(-DBL_MAX);
 
-                mActiveGraphPanel->plot()->setLocalMinY(mActiveGraphPanel->plot()->minY(), false);
-                mActiveGraphPanel->plot()->setLocalMaxY(mActiveGraphPanel->plot()->maxY(), false);
+                mActiveGraphPanel->plot()->setLocalMinY(mActiveGraphPanel->plot()->minY());
+                mActiveGraphPanel->plot()->setLocalMaxY(mActiveGraphPanel->plot()->maxY());
 
                 // Now, we really run our simulation
 
@@ -1384,22 +1383,37 @@ void SingleCellSimulationViewWidget::simulationPropertyChanged(Core::Property *p
     //          plot's axes everytime we set something, hence our passing false
     //          to our various methods...
 
+    bool needUpdating = true;
+
     if (pProperty == mContentsWidget->informationWidget()->simulationWidget()->startingPointProperty()) {
         mSimulation->data()->setStartingPoint(Core::PropertyEditorWidget::doublePropertyItem(pProperty->value()));
-
-        mActiveGraphPanel->plot()->setMinX(mSimulation->data()->startingPoint(), false);
-        mActiveGraphPanel->plot()->setLocalMinX(mActiveGraphPanel->plot()->minX(), false);
-
-        mActiveGraphPanel->plot()->checkAxes(true, true);
     } else if (pProperty == mContentsWidget->informationWidget()->simulationWidget()->endingPointProperty()) {
         mSimulation->data()->setEndingPoint(Core::PropertyEditorWidget::doublePropertyItem(pProperty->value()));
-
-        mActiveGraphPanel->plot()->setMaxX(mSimulation->data()->endingPoint(), false);
-        mActiveGraphPanel->plot()->setLocalMaxX(mActiveGraphPanel->plot()->maxX(), false);
-
-        mActiveGraphPanel->plot()->checkAxes(true, true);
     } else if (pProperty == mContentsWidget->informationWidget()->simulationWidget()->pointIntervalProperty()) {
         mSimulation->data()->setPointInterval(Core::PropertyEditorWidget::doublePropertyItem(pProperty->value()));
+
+        needUpdating = false;
+    }
+
+    // Update the minimum/maximum (local) values of our axes and replot
+    // ourselves, if needed
+
+    if (needUpdating) {
+        if (mSimulation->data()->startingPoint() < mSimulation->data()->endingPoint()) {
+            mActiveGraphPanel->plot()->setMinX(mSimulation->data()->startingPoint());
+            mActiveGraphPanel->plot()->setLocalMinX(mActiveGraphPanel->plot()->minX());
+
+            mActiveGraphPanel->plot()->setMaxX(mSimulation->data()->endingPoint());
+            mActiveGraphPanel->plot()->setLocalMaxX(mActiveGraphPanel->plot()->maxX());
+        } else {
+            mActiveGraphPanel->plot()->setMinX(mSimulation->data()->endingPoint());
+            mActiveGraphPanel->plot()->setLocalMinX(mActiveGraphPanel->plot()->minX());
+
+            mActiveGraphPanel->plot()->setMaxX(mSimulation->data()->startingPoint());
+            mActiveGraphPanel->plot()->setLocalMaxX(mActiveGraphPanel->plot()->maxX());
+        }
+
+        mActiveGraphPanel->plot()->replotNow();
     }
 }
 
