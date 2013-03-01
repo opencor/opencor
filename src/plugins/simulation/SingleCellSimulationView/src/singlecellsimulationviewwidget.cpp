@@ -70,11 +70,11 @@ static const QString OutputBrLn = "<br/>\n";
 
 SingleCellSimulationViewWidgetCurveData::SingleCellSimulationViewWidgetCurveData(const QString &pFileName,
                                                                                  SingleCellSimulationViewSimulation *pSimulation,
-                                                                                 CellMLSupport::CellmlFileRuntimeModelParameter *pParameter,
+                                                                                 CellMLSupport::CellmlFileRuntimeModelParameter *pModelParameter,
                                                                                  SingleCellSimulationViewGraphPanelPlotCurve *pCurve) :
     mFileName(pFileName),
     mSimulation(pSimulation),
-    mParameter(pParameter),
+    mModelParameter(pModelParameter),
     mCurve(pCurve),
     mAttached(true)
 {
@@ -87,6 +87,15 @@ QString SingleCellSimulationViewWidgetCurveData::fileName() const
     // Return our file name
 
     return mFileName;
+}
+
+//==============================================================================
+
+CellMLSupport::CellmlFileRuntimeModelParameter * SingleCellSimulationViewWidgetCurveData::modelParameter() const
+{
+    // Return our model parameter
+
+    return mModelParameter;
 }
 
 //==============================================================================
@@ -104,15 +113,15 @@ double * SingleCellSimulationViewWidgetCurveData::yData() const
 {
     // Return our Y data array
 
-    if (   (mParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::Constant)
-        || (mParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::ComputedConstant))
-        return mSimulation->results()->constants()?mSimulation->results()->constants()[mParameter->index()]:0;
-    else if (mParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::State)
-        return mSimulation->results()->states()?mSimulation->results()->states()[mParameter->index()]:0;
-    else if (mParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::Rate)
-        return mSimulation->results()->rates()?mSimulation->results()->rates()[mParameter->index()]:0;
+    if (   (mModelParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::Constant)
+        || (mModelParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::ComputedConstant))
+        return mSimulation->results()->constants()?mSimulation->results()->constants()[mModelParameter->index()]:0;
+    else if (mModelParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::State)
+        return mSimulation->results()->states()?mSimulation->results()->states()[mModelParameter->index()]:0;
+    else if (mModelParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::Rate)
+        return mSimulation->results()->rates()?mSimulation->results()->rates()[mModelParameter->index()]:0;
     else
-        return mSimulation->results()->algebraic()?mSimulation->results()->algebraic()[mParameter->index()]:0;
+        return mSimulation->results()->algebraic()?mSimulation->results()->algebraic()[mModelParameter->index()]:0;
 }
 
 //==============================================================================
@@ -497,12 +506,12 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
     SingleCellSimulationViewInformationParametersWidget *parametersWidget = informationWidget->parametersWidget();
 
     if (previousSimulation) {
-        // There is a previous simulation, so finalise a few things
+        // There is a previous simulation, so backup a few things
 
         QString previousFileName = previousSimulation->fileName();
 
-        simulationWidget->finalize(previousFileName);
-        solversWidget->finalize(previousFileName);
+        simulationWidget->backup(previousFileName);
+        solversWidget->backup(previousFileName);
 
         // Keep track of the value of the delay widget
 
@@ -917,6 +926,38 @@ void SingleCellSimulationViewWidget::finalize(const QString &pFileName)
         if (simulation == mSimulation)
             mSimulation = 0;
     }
+
+    // Remove our curves' data associated with the given file name, if any
+
+    QList<QString> fileNames = QList<QString>();
+    QList<CellMLSupport::CellmlFileRuntimeModelParameter *> modelParameters = QList<CellMLSupport::CellmlFileRuntimeModelParameter *>();
+
+    foreach (SingleCellSimulationViewWidgetCurveData *curveData, mCurvesData)
+        if (!curveData->fileName().compare(pFileName)) {
+            // Keep track of the file name and model parameter of the curve data
+
+            fileNames << curveData->fileName();
+            modelParameters << curveData->modelParameter();
+
+            // Delete the curve and the curve data themselves
+
+            delete curveData->curve();
+            delete curveData;
+        }
+
+    for (int i = 0, iMax = fileNames.count(); i < iMax; ++i)
+        mCurvesData.remove(modelParameterKey(fileNames[i], modelParameters[i]));
+
+    // Remove various information associated with the given file name
+
+    mAxesSettings.remove(pFileName);
+    mDelays.remove(pFileName);
+    mProgresses.remove(pFileName);
+
+    // Finalize a few things in our simulation and solvers widgets
+
+    mContentsWidget->informationWidget()->simulationWidget()->finalize(pFileName);
+    mContentsWidget->informationWidget()->solversWidget()->finalize(pFileName);
 }
 
 //==============================================================================
@@ -1349,14 +1390,14 @@ void SingleCellSimulationViewWidget::simulationPropertyChanged(Core::Property *p
         mActiveGraphPanel->plot()->setMinX(mSimulation->data()->startingPoint(), false);
         mActiveGraphPanel->plot()->setLocalMinX(mActiveGraphPanel->plot()->minX(), false);
 
-        mActiveGraphPanel->plot()->checkAxes();
+        mActiveGraphPanel->plot()->checkAxes(true, true);
     } else if (pProperty == mContentsWidget->informationWidget()->simulationWidget()->endingPointProperty()) {
         mSimulation->data()->setEndingPoint(Core::PropertyEditorWidget::doublePropertyItem(pProperty->value()));
 
         mActiveGraphPanel->plot()->setMaxX(mSimulation->data()->endingPoint(), false);
         mActiveGraphPanel->plot()->setLocalMaxX(mActiveGraphPanel->plot()->maxX(), false);
 
-        mActiveGraphPanel->plot()->checkAxes();
+        mActiveGraphPanel->plot()->checkAxes(true, true);
     } else if (pProperty == mContentsWidget->informationWidget()->simulationWidget()->pointIntervalProperty()) {
         mSimulation->data()->setPointInterval(Core::PropertyEditorWidget::doublePropertyItem(pProperty->value()));
     }
@@ -1390,13 +1431,23 @@ void SingleCellSimulationViewWidget::solversPropertyChanged(Core::Property *pPro
 
 //==============================================================================
 
+QString SingleCellSimulationViewWidget::modelParameterKey(const QString pFileName,
+                                                          CellMLSupport::CellmlFileRuntimeModelParameter *pModelParameter)
+{
+    // Return the for the given model parameter
+
+    return pFileName+"|"+QString::number(pModelParameter->type())+"|"+QString::number(pModelParameter->index());
+}
+
+//==============================================================================
+
 void SingleCellSimulationViewWidget::showModelParameter(const QString &pFileName,
-                                                        CellMLSupport::CellmlFileRuntimeModelParameter *pParameter,
+                                                        CellMLSupport::CellmlFileRuntimeModelParameter *pModelParameter,
                                                         const bool &pShow)
 {
     // Determine the key for the given parameter
 
-    QString key = pFileName+"|"+QString::number(pParameter->type())+"|"+QString::number(pParameter->index());
+    QString key = modelParameterKey(pFileName, pModelParameter);
 
     // Retrieve the curve data associated with the key, if any
 
@@ -1422,7 +1473,7 @@ void SingleCellSimulationViewWidget::showModelParameter(const QString &pFileName
         // data for it
 
         SingleCellSimulationViewGraphPanelPlotCurve *curve = new SingleCellSimulationViewGraphPanelPlotCurve();
-        SingleCellSimulationViewWidgetCurveData *curveData = new SingleCellSimulationViewWidgetCurveData(pFileName, mSimulation, pParameter, curve);
+        SingleCellSimulationViewWidgetCurveData *curveData = new SingleCellSimulationViewWidgetCurveData(pFileName, mSimulation, pModelParameter, curve);
 
         // Set some data for our curve
 

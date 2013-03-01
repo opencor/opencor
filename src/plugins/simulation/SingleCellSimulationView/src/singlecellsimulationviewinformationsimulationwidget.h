@@ -42,6 +42,7 @@ public:
     void initialize(const QString &pFileName,
                     CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
                     SingleCellSimulationViewSimulationData *pSimulationData);
+    void backup(const QString &pFileName);
     void finalize(const QString &pFileName);
 
     Core::Property * startingPointProperty() const;

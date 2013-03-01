@@ -68,10 +68,12 @@ class SingleCellSimulationViewWidgetCurveData
 public:
     explicit SingleCellSimulationViewWidgetCurveData(const QString &pFileName,
                                                      SingleCellSimulationViewSimulation *pSimulation,
-                                                     CellMLSupport::CellmlFileRuntimeModelParameter *pParameter,
+                                                     CellMLSupport::CellmlFileRuntimeModelParameter *pModelParameter,
                                                      SingleCellSimulationViewGraphPanelPlotCurve *pCurve);
 
     QString fileName() const;
+
+    CellMLSupport::CellmlFileRuntimeModelParameter * modelParameter() const;
 
     SingleCellSimulationViewGraphPanelPlotCurve * curve() const;
 
@@ -85,7 +87,7 @@ private:
 
     SingleCellSimulationViewSimulation *mSimulation;
 
-    CellMLSupport::CellmlFileRuntimeModelParameter *mParameter;
+    CellMLSupport::CellmlFileRuntimeModelParameter *mModelParameter;
 
     SingleCellSimulationViewGraphPanelPlotCurve *mCurve;
 
@@ -199,6 +201,9 @@ private:
                        const qulonglong &pSize,
                        const bool &pReplot = false);
     void checkResults(SingleCellSimulationViewSimulation *pSimulation);
+
+    QString modelParameterKey(const QString pFileName,
+                              CellMLSupport::CellmlFileRuntimeModelParameter *pModelParameter);
 
 private Q_SLOTS:
     void on_actionRun_triggered();

@@ -104,11 +104,20 @@ void SingleCellSimulationViewInformationSimulationWidget::initialize(const QStri
 
 //==============================================================================
 
-void SingleCellSimulationViewInformationSimulationWidget::finalize(const QString &pFileName)
+void SingleCellSimulationViewInformationSimulationWidget::backup(const QString &pFileName)
 {
     // Keep track of our GUI state
 
     mGuiStates.insert(pFileName, guiState());
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewInformationSimulationWidget::finalize(const QString &pFileName)
+{
+    // Remove any track of our GUI state
+
+    mGuiStates.remove(pFileName);
 }
 
 //==============================================================================

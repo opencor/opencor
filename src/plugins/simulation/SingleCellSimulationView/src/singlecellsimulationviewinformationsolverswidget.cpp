@@ -329,11 +329,20 @@ void SingleCellSimulationViewInformationSolversWidget::initialize(const QString 
 
 //==============================================================================
 
-void SingleCellSimulationViewInformationSolversWidget::finalize(const QString &pFileName)
+void SingleCellSimulationViewInformationSolversWidget::backup(const QString &pFileName)
 {
     // Keep track of our GUI state
 
     mGuiStates.insert(pFileName, guiState());
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewInformationSolversWidget::finalize(const QString &pFileName)
+{
+    // Remove any track of our GUI state
+
+    mGuiStates.remove(pFileName);
 }
 
 //==============================================================================
