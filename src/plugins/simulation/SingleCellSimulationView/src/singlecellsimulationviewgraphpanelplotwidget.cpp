@@ -446,18 +446,18 @@ void SingleCellSimulationViewGraphPanelPlotWidget::scaleAxes(const double &pScal
 {
     // Determine the local minimum/maximum values of our two axes
 
-    QwtScaleDiv xScaleDiv = axisScaleDiv(QwtPlot::xBottom);
-    double xCenter = xScaleDiv.lowerBound()+0.5*xScaleDiv.range();
-    double xRangeOverTwo = 0.5*pScalingFactorX*xScaleDiv.range();
+    double rangeX = localMaxX()-localMinX();
+    double centerX = localMinX()+0.5*rangeX;
+    double rangeOverTwoX = 0.5*pScalingFactorX*rangeX;
 
-    QwtScaleDiv yScaleDiv = axisScaleDiv(QwtPlot::yLeft);
-    double yCenter = yScaleDiv.lowerBound()+0.5*yScaleDiv.range();
-    double yRangeOverTwo = 0.5*pScalingFactorY*yScaleDiv.range();
+    double rangeY = localMaxY()-localMinY();
+    double centerY = localMinY()+0.5*rangeY;
+    double rangeOverTwoY = 0.5*pScalingFactorY*rangeY;
 
     // Rescale our two axes
 
-    setAxes(xCenter-xRangeOverTwo, xCenter+xRangeOverTwo,
-            yCenter-yRangeOverTwo, yCenter+yRangeOverTwo);
+    setAxes(centerX-rangeOverTwoX, centerX+rangeOverTwoX,
+            centerY-rangeOverTwoY, centerY+rangeOverTwoY);
 }
 
 //==============================================================================
@@ -495,19 +495,61 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *p
 
     QwtPlot::mouseMoveEvent(pEvent);
 
+    // Determine how much we have moved our mouse since last time
+
+    int deltaX = pEvent->pos().x()-mOriginPoint.x();
+    int deltaY = pEvent->pos().y()-mOriginPoint.y();
+
     // Carry out the action
 
     switch (mAction) {
-    case Zoom: {
-        // Determine how much we have moved our mouse since last time
-
-        int deltaX = pEvent->pos().x()-mOriginPoint.x();
-        int deltaY = pEvent->pos().y()-mOriginPoint.y();
-
-        // Rescale and replot ourselves, as well as reset our point of origin,
-        // if needed
+    case Pan: {
+        // Pan ourselves, if needed
 
         if (deltaX || deltaY) {
+            // Compute the shifts in the X and Y directions
+
+            double shiftX = -deltaX*(width()?(localMaxX()-localMinX())/width():0.0);
+            double shiftY =  deltaY*(height()?(localMaxY()-localMinY())/height():0.0);
+
+            // Determine our new local minimum/maximum values for our axes
+
+            double newLocalMinX = localMinX()+shiftX;
+            double newLocalMaxX = localMaxX()+shiftX;
+            double newLocalMinY = localMinY()+shiftY;
+            double newLocalMaxY = localMaxY()+shiftY;
+
+            // Make sure that our new local minimum/maximum values for our axes
+            // are within our local minimum/maximum values
+
+            if (newLocalMinX < minX()) {
+                newLocalMinX = minX();
+                newLocalMaxX = newLocalMinX+localMaxX()-localMinX();
+            } else if (newLocalMaxX > maxX()) {
+                newLocalMaxX = maxX();
+                newLocalMinX = newLocalMaxX-localMaxX()+localMinX();
+            }
+
+            if (newLocalMinY < minY()) {
+                newLocalMinY = minY();
+                newLocalMaxY = newLocalMinY+localMaxY()-localMinY();
+            } else if (newLocalMaxY > maxY()) {
+                newLocalMaxY = maxY();
+                newLocalMinY = newLocalMaxY-localMaxY()+localMinY();
+            }
+
+            // Set our new local minimum/maximum values for our axes which will
+            // replot ourselves as a result
+
+            setAxes(newLocalMinX, newLocalMaxX, newLocalMinY, newLocalMaxY);
+        }
+
+        break;
+    }
+    case Zoom: {
+        // Rescale ourselves (which will replot ourselves as a result)
+
+        if (deltaX || deltaY)
             scaleAxes(deltaX?
                           (deltaX > 0)?
                               ScalingInFactor:
@@ -519,9 +561,6 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *p
                               ScalingOutFactor:
                           NoScalingFactor);
 
-            mOriginPoint = pEvent->pos();
-        }
-
         break;
     }
     default:
@@ -529,6 +568,10 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *p
 
         ;
     }
+
+    // Reset our point of origin
+
+    mOriginPoint = pEvent->pos();
 }
 
 //==============================================================================
@@ -541,8 +584,13 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *
 
     // Check which action we can carry out
 
-    if (   (pEvent->button() == Qt::RightButton)
+    if (   (pEvent->button() == Qt::LeftButton)
         && (pEvent->modifiers() == Qt::NoModifier)) {
+        // We want to pan
+
+        mAction = Pan;
+    } else if (   (pEvent->button() == Qt::RightButton)
+               && (pEvent->modifiers() == Qt::NoModifier)) {
         // We want to zoom in/out
 
         mAction = Zoom;

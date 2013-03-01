@@ -96,6 +96,7 @@ protected:
 private:
     enum Action {
         None,
+        Pan,
         Zoom
     };
 
