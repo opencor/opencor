@@ -21,6 +21,7 @@
 #include "qwt_plot_curve.h"
 #include "qwt_plot_directpainter.h"
 #include "qwt_plot_grid.h"
+#include "qwt_plot_layout.h"
 #include "qwt_plot_renderer.h"
 #include "qwt_scale_div.h"
 
@@ -509,8 +510,8 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *p
         if (deltaX || deltaY) {
             // Compute the shifts in the X and Y directions
 
-            double shiftX = -deltaX*(width()?(localMaxX()-localMinX())/width():0.0);
-            double shiftY =  deltaY*(height()?(localMaxY()-localMinY())/height():0.0);
+            double shiftX = -deltaX*(plotLayout()->canvasRect().width()?(localMaxX()-localMinX())/plotLayout()->canvasRect().width():0.0);
+            double shiftY =  deltaY*(plotLayout()->canvasRect().height()?(localMaxY()-localMinY())/plotLayout()->canvasRect().height():0.0);
 
             // Determine our new local minimum/maximum values for our axes
 
