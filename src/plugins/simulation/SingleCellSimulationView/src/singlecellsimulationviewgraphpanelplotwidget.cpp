@@ -665,7 +665,17 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *
         // action), make sure that we have no action to carry out, replot
         // ourselves if needed, and then leave
 
-        bool needReplotNow = mAction == ZoomRegion;
+        bool needReplotNow;
+
+        switch (mAction) {
+        case ShowCoordinates:
+        case ZoomRegion:
+            needReplotNow = true;
+
+            break;
+        default:
+            needReplotNow = false;
+        }
 
         mAction = None;
 
