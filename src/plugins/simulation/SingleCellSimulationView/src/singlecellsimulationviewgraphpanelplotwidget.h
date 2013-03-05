@@ -99,6 +99,7 @@ private:
     enum Action {
         None,
         Pan,
+        ShowCoordinates,
         Zoom,
         ZoomRegion
     };
@@ -121,6 +122,9 @@ private:
     bool mFixedAxisY;
 
     QPixmap mCanvasPixmap;
+
+    QwtScaleMap mCanvasMapX;
+    QwtScaleMap mCanvasMapY;
 
     void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
 

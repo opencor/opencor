@@ -8,6 +8,7 @@
 
 #include <QApplication>
 #include <QClipboard>
+#include <QDesktopWidget>
 #include <QMouseEvent>
 
 //==============================================================================
@@ -55,7 +56,9 @@ SingleCellSimulationViewGraphPanelPlotWidget::SingleCellSimulationViewGraphPanel
     mMaxY(1000.0),
     mFixedAxisX(false),
     mFixedAxisY(false),
-    mCanvasPixmap(QPixmap())
+    mCanvasPixmap(QPixmap()),
+    mCanvasMapX(QwtScaleMap()),
+    mCanvasMapY(QwtScaleMap())
 {
     // Get ourselves a direct painter
 
@@ -575,6 +578,12 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *p
         }
 
         break;
+    case ShowCoordinates:
+        // Show the coordinates by simply replotting ourselves
+
+        replotNow();
+
+        break;
     case Zoom: {
         // Rescale ourselves (which will replot ourselves as a result)
 
@@ -635,6 +644,11 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *
         // We want to pan
 
         mAction = Pan;
+    } else if (   (pEvent->button() == Qt::LeftButton)
+               && (pEvent->modifiers() == Qt::ShiftModifier)) {
+        // We want to show the coordinates
+
+        mAction = ShowCoordinates;
     } else if (   (pEvent->button() == Qt::RightButton)
                && (pEvent->modifiers() == Qt::NoModifier)) {
         // We want to zoom in/out
@@ -645,11 +659,6 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *
         // We want to zoom a region
 
         mAction = ZoomRegion;
-
-        // Retrieve a pixmap version of our canvas
-
-        mCanvasPixmap = grab(QRect(canvasRect.x(), canvasRect.y(),
-                                   canvasRect.width(), canvasRect.height()));
     } else {
         // We cannot carry out any action, so check whether we need to replot
         // ourselves (in case we were in the middle of carrying out a visual
@@ -666,9 +675,22 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *
         return;
     }
 
-    // Keep track of the mouse position and make sure that we track the mouse
+    // Retrieve a pixmap version of our canvas, as well its mapping information,
+    // all that if needed
+
+    if ((mAction == ShowCoordinates) || (mAction == ZoomRegion)) {
+        mCanvasPixmap = grab(QRect(canvasRect.x(), canvasRect.y(),
+                                   canvasRect.width(), canvasRect.height()));
+
+        mCanvasMapX = canvasMap(QwtPlot::xBottom);
+        mCanvasMapY = canvasMap(QwtPlot::yLeft);
+    }
+
+    // Keep track of the mouse position
 
     mOriginPoint = mousePositionWithinCanvas(pEvent);
+
+    // Make sure that we track the mouse
 
     setMouseTracking(true);
 }
@@ -703,16 +725,19 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent
     // Finish carrying out the action
 
     switch (action) {
+    case ShowCoordinates:
+        // Remove the coordinates by replotting ourselves
+
+        replotNow();
+
+        break;
     case ZoomRegion: {
         // Zoom our region
 
-        QwtScaleMap canvasMapX = canvasMap(QwtPlot::xBottom);
-        QwtScaleMap canvasMapY = canvasMap(QwtPlot::yLeft);
-
-        setAxes(canvasMapX.invTransform(qMin(mOriginPoint.x(), mEndPoint.x())),
-                canvasMapX.invTransform(qMax(mOriginPoint.x(), mEndPoint.x())),
-                canvasMapY.invTransform(qMax(mOriginPoint.y(), mEndPoint.y())),
-                canvasMapY.invTransform(qMin(mOriginPoint.y(), mEndPoint.y())));
+        setAxes(mCanvasMapX.invTransform(qMin(mOriginPoint.x(), mEndPoint.x())),
+                mCanvasMapX.invTransform(qMax(mOriginPoint.x(), mEndPoint.x())),
+                mCanvasMapY.invTransform(qMax(mOriginPoint.y(), mEndPoint.y())),
+                mCanvasMapY.invTransform(qMin(mOriginPoint.y(), mEndPoint.y())));
 
         break;
     }
@@ -773,7 +798,68 @@ void SingleCellSimulationViewGraphPanelPlotWidget::replotNow()
 
 void SingleCellSimulationViewGraphPanelPlotWidget::drawCanvas(QPainter *pPainter)
 {
-    if (mAction == ZoomRegion) {
+    switch (mAction) {
+    case ShowCoordinates: {
+        // We are showing some coordinates, so start by drawing our pixmap
+
+        pPainter->drawPixmap(0, 0, mCanvasPixmap);
+
+        // Draw the two dashed lines that show the coordinates, using a dark
+        // cyan pen
+
+        QPen pen = pPainter->pen();
+        QColor backgroundColor = Qt::darkCyan;
+
+        backgroundColor.setAlphaF(0.69);
+
+        pen.setColor(backgroundColor);
+        pen.setStyle(Qt::DashLine);
+
+        pPainter->setPen(pen);
+
+        pPainter->drawLine(0.0, mOriginPoint.y(),
+                           plotLayout()->canvasRect().width(), mOriginPoint.y());
+        pPainter->drawLine(mOriginPoint.x(), 0.0,
+                           mOriginPoint.x(), plotLayout()->canvasRect().height());
+
+        // Retrieve the size of coordinates as they will appear on the screen,
+        // which means using the same font as the one used for the axes
+
+        pPainter->setFont(axisFont(QwtPlot::xBottom));
+
+        QString coords = QString("(%1, %2)").arg(QString::number(mCanvasMapX.invTransform(mOriginPoint.x())),
+                                                 QString::number(mCanvasMapY.invTransform(mOriginPoint.y())));
+        QRect desktopGeometry = qApp->desktop()->availableGeometry();
+        QRectF coordsRect = pPainter->boundingRect(QRectF(0.0, 0.0, desktopGeometry.width(), desktopGeometry.height()), coords);
+
+        // Determine where the coordinates and its background should be drawn
+
+        coordsRect.moveTo(mOriginPoint-coordsRect.bottomRight().toPoint()-QPoint(1, 1));
+
+        if (coordsRect.top() < 0)
+            coordsRect.moveTop(mOriginPoint.y()+2);
+
+        if (coordsRect.left() < 0)
+            coordsRect.moveLeft(mOriginPoint.x()+2);
+
+        // Draw a filled rectangle to act as the background of the coordinates
+        // we are to show
+
+        pPainter->fillRect(coordsRect, backgroundColor);
+
+        // Draw the text for the coordinates, using a white pen
+
+        pen = pPainter->pen();
+
+        pen.setColor(Qt::white);
+
+        pPainter->setPen(pen);
+
+        pPainter->drawText(coordsRect, coords);
+
+        break;
+    }
+    case ZoomRegion: {
         // We are zooming a region, so start by drawing our pixmap
 
         pPainter->drawPixmap(0, 0, mCanvasPixmap);
@@ -793,7 +879,10 @@ void SingleCellSimulationViewGraphPanelPlotWidget::drawCanvas(QPainter *pPainter
 
         pPainter->fillRect(zoomRegionRect, brushColor);
         pPainter->drawRect(zoomRegionRect);
-    } else {
+
+        break;
+    }
+    default:
         // We aren't doing anything special, so just draw our canvas normally
 
         QwtPlot::drawCanvas(pPainter);
