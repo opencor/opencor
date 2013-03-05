@@ -86,6 +86,8 @@ public:
     void setFixedAxisX(const bool &pFixedAxisX);
     void setFixedAxisY(const bool &pFixedAxisY);
 
+    void setInteractive(const bool &pInteractive);
+
     virtual void drawCanvas(QPainter *pPainter);
 
 protected:
@@ -107,6 +109,8 @@ private:
     QwtPlotDirectPainter *mDirectPainter;
 
     QList<SingleCellSimulationViewGraphPanelPlotCurve *> mCurves;
+
+    bool mInteractive;
 
     Action mAction;
 

@@ -564,8 +564,8 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
         // Create a few connections
 
-        connect(mSimulation, SIGNAL(running()),
-                this, SLOT(simulationRunning()));
+        connect(mSimulation, SIGNAL(running(const bool &)),
+                this, SLOT(simulationRunning(const bool &)));
         connect(mSimulation, SIGNAL(paused()),
                 this, SLOT(simulationPaused()));
         connect(mSimulation, SIGNAL(stopped(const int &)),
@@ -892,6 +892,10 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
     mActiveGraphPanel->plot()->checkAxes(false);
     mActiveGraphPanel->plot()->replotNow();
+
+    // Allow/prevent interaction with our graph panel's plot
+
+    mActiveGraphPanel->plot()->setInteractive(!mSimulation->isRunning());
 }
 
 //==============================================================================
@@ -1182,15 +1186,27 @@ void SingleCellSimulationViewWidget::updateDelayValue(const double &pDelayValue)
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::simulationRunning()
+void SingleCellSimulationViewWidget::simulationRunning(const bool &pIsResuming)
 {
-    // Our simulation is running, so update our simulation mode and check for
-    // results, but only we are dealing with the active simulation
+    // Our simulation is running, so do a few things, but only we are dealing
+    // with the active simulation
 
     if (qobject_cast<SingleCellSimulationViewSimulation *>(sender()) == mSimulation) {
+        // Reset our axes' values, if resuming (since the user might have been
+        // zooming in/out, etc.)
+
+        if (pIsResuming)
+            mActiveGraphPanel->plot()->resetAxes();
+
+        // Update our simulation mode and check for results
+
         updateSimulationMode();
 
         checkResults(mSimulation);
+
+        // Prevent interaction with our graph panel's plot
+
+        mActiveGraphPanel->plot()->setInteractive(false);
     }
 }
 
@@ -1198,16 +1214,21 @@ void SingleCellSimulationViewWidget::simulationRunning()
 
 void SingleCellSimulationViewWidget::simulationPaused()
 {
-    // Our simulation is paused, so update our simulation mode and parameters,
-    // and check for results, but only if we are dealing with the active
-    // simulation
+    // Our simulation is paused, so do a few things, but only we are dealing
+    // with the active simulation
 
     if (qobject_cast<SingleCellSimulationViewSimulation *>(sender()) == mSimulation) {
+        // Update our simulation mode and parameters, and check for results
+
         updateSimulationMode();
 
         mContentsWidget->informationWidget()->parametersWidget()->updateParameters();
 
         checkResults(mSimulation);
+
+        // Allow interaction with our graph panel's plot
+
+        mActiveGraphPanel->plot()->setInteractive(true);
     }
 }
 
@@ -1220,13 +1241,15 @@ void SingleCellSimulationViewWidget::simulationStopped(const int &pElapsedTime)
 
     static const int ResetDelay = 169;
 
-    // Our simulation worker has stopped, so output the elapsed time, reset our
-    // progress bar (with a bit of a delay) and update our parameters and
-    // simulation mode, but only if we are dealingw ith the active simulation
+    // Our simulation worker has stopped, so do a few things, but only we are dealing
+    // with the active simulation
 
     SingleCellSimulationViewSimulation *simulation = qobject_cast<SingleCellSimulationViewSimulation *>(sender());
 
     if (simulation == mSimulation) {
+        // Output the elapsed time, if valid, and reset our progress bar (with a
+        // short delay)
+
         if (pElapsedTime != -1) {
             // We have a valid elapsed time, so show our simulation time
 
@@ -1251,6 +1274,10 @@ void SingleCellSimulationViewWidget::simulationStopped(const int &pElapsedTime)
         mContentsWidget->informationWidget()->parametersWidget()->updateParameters();
 
         updateSimulationMode();
+
+        // Allow interaction with our graph panel's plot
+
+        mActiveGraphPanel->plot()->setInteractive(true);
     }
 
     // Remove our tracking of our simulation progress and let people know that

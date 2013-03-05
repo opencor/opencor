@@ -47,6 +47,7 @@ SingleCellSimulationViewGraphPanelPlotCurve::SingleCellSimulationViewGraphPanelP
 SingleCellSimulationViewGraphPanelPlotWidget::SingleCellSimulationViewGraphPanelPlotWidget(QWidget *pParent) :
     QwtPlot(pParent),
     mCurves(QList<SingleCellSimulationViewGraphPanelPlotCurve *>()),
+    mInteractive(true),
     mAction(None),
     mOriginPoint(QPoint()),
     mEndPoint(QPoint()),
@@ -324,6 +325,15 @@ void SingleCellSimulationViewGraphPanelPlotWidget::setFixedAxisY(const bool &pFi
 
 //==============================================================================
 
+void SingleCellSimulationViewGraphPanelPlotWidget::setInteractive(const bool &pInteractive)
+{
+    // Specify whether interaction is allowed
+
+    mInteractive = pInteractive;
+}
+
+//==============================================================================
+
 void SingleCellSimulationViewGraphPanelPlotWidget::setAxes(const double &pMinX,
                                                            const double &pMaxX,
                                                            const double &pMinY,
@@ -526,6 +536,11 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *p
 
     QwtPlot::mouseMoveEvent(pEvent);
 
+    // Check that interaction is allowed
+
+    if (!mInteractive)
+        return;
+
     // Determine how much we have moved our mouse since last time
 
     QPoint currentPoint = mousePositionWithinCanvas(pEvent);
@@ -630,7 +645,12 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *
 
     QwtPlot::mousePressEvent(pEvent);
 
-    // Make sure that the position of the mouse is over our canvas
+    // Check that interaction is allowed
+
+    if (!mInteractive)
+        return;
+
+    // Check that the position of the mouse is over our canvas
 
     QRectF canvasRect = plotLayout()->canvasRect();
 
@@ -713,6 +733,11 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent
 
     QwtPlot::mouseReleaseEvent(pEvent);
 
+    // Check that interaction is allowed
+
+    if (!mInteractive)
+        return;
+
     // Check whether we need to carry out an action
 
     if (mAction == None)
@@ -765,6 +790,11 @@ void SingleCellSimulationViewGraphPanelPlotWidget::wheelEvent(QWheelEvent *pEven
     // Default handling of the event
 
     QwtPlot::wheelEvent(pEvent);
+
+    // Check that interaction is allowed
+
+    if (!mInteractive)
+        return;
 
     // The only action we support using the wheel is zooming in/out, but this
     // requires no modifiers being used

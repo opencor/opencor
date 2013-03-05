@@ -221,7 +221,7 @@ private Q_SLOTS:
 
     void updateDelayValue(const double &pDelayValue);
 
-    void simulationRunning();
+    void simulationRunning(const bool &pIsResuming);
     void simulationPaused();
     void simulationStopped(const int &pElapsedTime);
 

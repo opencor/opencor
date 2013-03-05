@@ -111,7 +111,7 @@ void SingleCellSimulationViewSimulationWorker::started()
 
     // Let people know that we are running
 
-    emit running();
+    emit running(false);
 
     // Set up our ODE/DAE solver
 
@@ -306,7 +306,7 @@ void SingleCellSimulationViewSimulationWorker::started()
 
                 // Let people know that we are running again
 
-                emit running();
+                emit running(true);
 
                 // Restart our timer
 

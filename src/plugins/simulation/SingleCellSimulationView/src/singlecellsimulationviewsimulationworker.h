@@ -85,7 +85,7 @@ private:
     SingleCellSimulationViewSimulationWorker **mSelf;
 
 Q_SIGNALS:
-    void running();
+    void running(const bool &pIsResuming);
     void paused();
 
     void finished(const int &pElapsedTime);

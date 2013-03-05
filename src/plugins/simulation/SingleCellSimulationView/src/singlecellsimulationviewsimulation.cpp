@@ -1036,8 +1036,8 @@ void SingleCellSimulationViewSimulation::run()
 
         // Create a few connections
 
-        connect(mWorker, SIGNAL(running()),
-                this, SIGNAL(running()));
+        connect(mWorker, SIGNAL(running(const bool &)),
+                this, SIGNAL(running(const bool &)));
         connect(mWorker, SIGNAL(paused()),
                 this, SIGNAL(paused()));
 

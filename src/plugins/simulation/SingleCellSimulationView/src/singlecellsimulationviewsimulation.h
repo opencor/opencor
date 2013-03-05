@@ -225,7 +225,7 @@ private:
     bool simulationSettingsOk(const bool &pEmitError = true);
 
 Q_SIGNALS:
-    void running();
+    void running(const bool &pIsResuming);
     void paused();
     void stopped(const int &pElapsedTime);
 
