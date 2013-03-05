@@ -106,6 +106,13 @@ private:
         ZoomRegion
     };
 
+    enum Location {
+        TopLeft,
+        TopRight,
+        BottomLeft,
+        BottomRight
+    };
+
     QwtPlotDirectPainter *mDirectPainter;
 
     QList<SingleCellSimulationViewGraphPanelPlotCurve *> mCurves;
@@ -143,6 +150,12 @@ private:
                    const double &pScalingFactorY);
 
     QPoint mousePositionWithinCanvas(QMouseEvent *pEvent) const;
+
+    void drawCoordinates(QPainter *pPainter, const QPoint &pCoordinates,
+                         const QColor &pBackgroundColor,
+                         const QColor &pForegroundColor,
+                         const Location &pLocation = TopLeft,
+                         const bool &pCanMoveLocation = true);
 };
 
 //==============================================================================

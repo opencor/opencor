@@ -652,9 +652,7 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *
 
     // Check that the position of the mouse is over our canvas
 
-    QRectF canvasRect = plotLayout()->canvasRect();
-
-    if (!canvasRect.contains(pEvent->pos()))
+    if (!plotLayout()->canvasRect().contains(pEvent->pos()))
         return;
 
     // Check which action we can carry out
@@ -709,8 +707,7 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *
     // all that if needed
 
     if ((mAction == ShowCoordinates) || (mAction == ZoomRegion)) {
-        mCanvasPixmap = grab(QRect(canvasRect.x(), canvasRect.y(),
-                                   canvasRect.width(), canvasRect.height()));
+        mCanvasPixmap = grab(plotLayout()->canvasRect().toRect());
 
         mCanvasMapX = canvasMap(QwtPlot::xBottom);
         mCanvasMapY = canvasMap(QwtPlot::yLeft);
@@ -836,6 +833,80 @@ void SingleCellSimulationViewGraphPanelPlotWidget::replotNow()
 
 //==============================================================================
 
+void SingleCellSimulationViewGraphPanelPlotWidget::drawCoordinates(QPainter *pPainter,
+                                                                   const QPoint &pCoordinates,
+                                                                   const QColor &pBackgroundColor,
+                                                                   const QColor &pForegroundColor,
+                                                                   const Location &pLocation,
+                                                                   const bool &pCanMoveLocation)
+{
+    // Retrieve the size of coordinates as they will appear on the screen,
+    // which means using the same font as the one used for the axes
+
+    pPainter->setFont(axisFont(QwtPlot::xBottom));
+
+    QString coords = QString("(%1, %2)").arg(QString::number(mCanvasMapX.invTransform(pCoordinates.x())),
+                                             QString::number(mCanvasMapY.invTransform(pCoordinates.y())));
+    QRect desktopGeometry = qApp->desktop()->availableGeometry();
+    QRectF coordsRect = pPainter->boundingRect(QRectF(0.0, 0.0, desktopGeometry.width(), desktopGeometry.height()), coords);
+
+    // Determine where the coordinates and its background should be drawn
+
+    switch (pLocation) {
+    case TopLeft:
+        coordsRect.moveTo(pCoordinates.x()-coordsRect.right()-1,
+                          pCoordinates.y()-coordsRect.bottom()-1);
+
+        break;
+    case TopRight:
+        coordsRect.moveTo(pCoordinates.x()+2,
+                          pCoordinates.y()-coordsRect.bottom()-1);
+
+        break;
+    case BottomLeft:
+        coordsRect.moveTo(pCoordinates.x()-coordsRect.right()-1,
+                          pCoordinates.y()+2);
+
+        break;
+    case BottomRight:
+        coordsRect.moveTo(pCoordinates.x()+2,
+                          pCoordinates.y()+2);
+
+        break;
+    }
+
+    if (pCanMoveLocation) {
+        if (coordsRect.top() < 0)
+            coordsRect.moveTop(pCoordinates.y()+2);
+
+        if (coordsRect.left() < 0)
+            coordsRect.moveLeft(pCoordinates.x()+2);
+
+        if (coordsRect.bottom() > plotLayout()->canvasRect().height())
+            coordsRect.moveTop(pCoordinates.y()-coordsRect.height()-1);
+
+        if (coordsRect.right() > plotLayout()->canvasRect().width())
+            coordsRect.moveLeft(pCoordinates.x()-coordsRect.width()-1);
+    }
+
+    // Draw a filled rectangle to act as the background of the coordinates
+    // we are to show
+
+    pPainter->fillRect(coordsRect, pBackgroundColor);
+
+    // Draw the text for the coordinates, using a white pen
+
+    QPen pen = pPainter->pen();
+
+    pen.setColor(pForegroundColor);
+
+    pPainter->setPen(pen);
+
+    pPainter->drawText(coordsRect, coords);
+}
+
+//==============================================================================
+
 void SingleCellSimulationViewGraphPanelPlotWidget::drawCanvas(QPainter *pPainter)
 {
     switch (mAction) {
@@ -862,40 +933,9 @@ void SingleCellSimulationViewGraphPanelPlotWidget::drawCanvas(QPainter *pPainter
         pPainter->drawLine(mOriginPoint.x(), 0.0,
                            mOriginPoint.x(), plotLayout()->canvasRect().height());
 
-        // Retrieve the size of coordinates as they will appear on the screen,
-        // which means using the same font as the one used for the axes
+        // Draw the coordinates
 
-        pPainter->setFont(axisFont(QwtPlot::xBottom));
-
-        QString coords = QString("(%1, %2)").arg(QString::number(mCanvasMapX.invTransform(mOriginPoint.x())),
-                                                 QString::number(mCanvasMapY.invTransform(mOriginPoint.y())));
-        QRect desktopGeometry = qApp->desktop()->availableGeometry();
-        QRectF coordsRect = pPainter->boundingRect(QRectF(0.0, 0.0, desktopGeometry.width(), desktopGeometry.height()), coords);
-
-        // Determine where the coordinates and its background should be drawn
-
-        coordsRect.moveTo(mOriginPoint-coordsRect.bottomRight().toPoint()-QPoint(1, 1));
-
-        if (coordsRect.top() < 0)
-            coordsRect.moveTop(mOriginPoint.y()+2);
-
-        if (coordsRect.left() < 0)
-            coordsRect.moveLeft(mOriginPoint.x()+2);
-
-        // Draw a filled rectangle to act as the background of the coordinates
-        // we are to show
-
-        pPainter->fillRect(coordsRect, backgroundColor);
-
-        // Draw the text for the coordinates, using a white pen
-
-        pen = pPainter->pen();
-
-        pen.setColor(Qt::white);
-
-        pPainter->setPen(pen);
-
-        pPainter->drawText(coordsRect, coords);
+        drawCoordinates(pPainter, mOriginPoint, backgroundColor, Qt::white);
 
         break;
     }
@@ -919,6 +959,32 @@ void SingleCellSimulationViewGraphPanelPlotWidget::drawCanvas(QPainter *pPainter
 
         pPainter->fillRect(zoomRegionRect, brushColor);
         pPainter->drawRect(zoomRegionRect);
+
+        // Draw the two sets of coordinates
+
+        Location originLocation;
+        Location endLocation;
+
+        if (mOriginPoint.x() <= mEndPoint.x()) {
+            if (mOriginPoint.y() <= mEndPoint.y()) {
+                originLocation = BottomRight;
+                endLocation = TopLeft;
+            } else {
+                originLocation = TopRight;
+                endLocation = BottomLeft;
+            }
+        } else {
+            if (mOriginPoint.y() <= mEndPoint.y()) {
+                originLocation = BottomLeft;
+                endLocation = TopRight;
+            } else {
+                originLocation = TopLeft;
+                endLocation = BottomRight;
+            }
+        }
+
+        drawCoordinates(pPainter, mOriginPoint, penColor, Qt::white, originLocation, false);
+        drawCoordinates(pPainter, mEndPoint, penColor, Qt::white, endLocation, false);
 
         break;
     }
