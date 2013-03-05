@@ -48,12 +48,14 @@ SingleCellSimulationViewGraphPanelPlotWidget::SingleCellSimulationViewGraphPanel
     mCurves(QList<SingleCellSimulationViewGraphPanelPlotCurve *>()),
     mAction(None),
     mOriginPoint(QPoint()),
+    mEndPoint(QPoint()),
     mMinX(100.0),
     mMaxX(300.0),
     mMinY(0.0),
     mMaxY(1000.0),
     mFixedAxisX(false),
-    mFixedAxisY(false)
+    mFixedAxisY(false),
+    mCanvasPixmap(QPixmap())
 {
     // Get ourselves a direct painter
 
@@ -490,6 +492,31 @@ static const double ScalingOutFactor = 1.0/ScalingInFactor;
 
 //==============================================================================
 
+QPoint SingleCellSimulationViewGraphPanelPlotWidget::mousePositionWithinCanvas(QMouseEvent *pEvent) const
+{
+    // Return the mouse position relative to our canvas, resetting some of its
+    // values, if needed
+
+    QPoint res = pEvent->pos();
+    QRect canvasRect = plotLayout()->canvasRect().toRect();
+
+    if (res.x() < canvasRect.left())
+        res.setX(canvasRect.left());
+
+    if (res.x() > canvasRect.right())
+        res.setX(canvasRect.right());
+
+    if (res.y() < canvasRect.top())
+        res.setY(canvasRect.top());
+
+    if (res.y() > canvasRect.bottom())
+        res.setY(canvasRect.bottom());
+
+    return res-canvasRect.topLeft();
+}
+
+//==============================================================================
+
 void SingleCellSimulationViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
 {
     // Default handling of the event
@@ -498,13 +525,15 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *p
 
     // Determine how much we have moved our mouse since last time
 
-    int deltaX = pEvent->pos().x()-mOriginPoint.x();
-    int deltaY = pEvent->pos().y()-mOriginPoint.y();
+    QPoint currentPoint = mousePositionWithinCanvas(pEvent);
+
+    int deltaX = currentPoint.x()-mOriginPoint.x();
+    int deltaY = currentPoint.y()-mOriginPoint.y();
 
     // Carry out the action
 
     switch (mAction) {
-    case Pan: {
+    case Pan:
         // Pan ourselves, if needed
 
         if (deltaX || deltaY) {
@@ -546,7 +575,6 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *p
         }
 
         break;
-    }
     case Zoom: {
         // Rescale ourselves (which will replot ourselves as a result)
 
@@ -564,15 +592,25 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *p
 
         break;
     }
+    case ZoomRegion:
+        // Draw our zoom region by updating our end point and then replotting
+        // ourselves
+
+        mEndPoint = mousePositionWithinCanvas(pEvent);
+
+        replotNow();
+
+        break;
     default:
         // None
 
         ;
     }
 
-    // Reset our point of origin
+    // Reset our point of origin, but only if we aren't zooming a region
 
-    mOriginPoint = pEvent->pos();
+    if (mAction != ZoomRegion)
+        mOriginPoint = mousePositionWithinCanvas(pEvent);
 }
 
 //==============================================================================
@@ -582,6 +620,13 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *
     // Default handling of the event
 
     QwtPlot::mousePressEvent(pEvent);
+
+    // Make sure that the position of the mouse is over our canvas
+
+    QRectF canvasRect = plotLayout()->canvasRect();
+
+    if (!canvasRect.contains(pEvent->pos()))
+        return;
 
     // Check which action we can carry out
 
@@ -595,17 +640,35 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *
         // We want to zoom in/out
 
         mAction = Zoom;
+    } else if (   (pEvent->button() == Qt::RightButton)
+               && (pEvent->modifiers() == Qt::ControlModifier)) {
+        // We want to zoom a region
+
+        mAction = ZoomRegion;
+
+        // Retrieve a pixmap version of our canvas
+
+        mCanvasPixmap = grab(QRect(canvasRect.x(), canvasRect.y(),
+                                   canvasRect.width(), canvasRect.height()));
     } else {
-        // None of the actions we can carry out, so...
+        // We cannot carry out any action, so check whether we need to replot
+        // ourselves (in case we were in the middle of carrying out a visual
+        // action), make sure that we have no action to carry out, replot
+        // ourselves if needed, and then leave
+
+        bool needReplotNow = mAction == ZoomRegion;
 
         mAction = None;
+
+        if (needReplotNow)
+            replotNow();
 
         return;
     }
 
     // Keep track of the mouse position and make sure that we track the mouse
 
-    mOriginPoint = pEvent->pos();
+    mOriginPoint = mousePositionWithinCanvas(pEvent);
 
     setMouseTracking(true);
 }
@@ -627,9 +690,37 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent
 
     setMouseTracking(false);
 
+    // Keep track of the action to carry out
+    // Note: this is so that we can reset mAction while still being able to
+    //       finish carrying out the action...
+
+    Action action = mAction;
+
     // We are done carrying out an action, so...
 
     mAction = None;
+
+    // Finish carrying out the action
+
+    switch (action) {
+    case ZoomRegion: {
+        // Zoom our region
+
+        QwtScaleMap canvasMapX = canvasMap(QwtPlot::xBottom);
+        QwtScaleMap canvasMapY = canvasMap(QwtPlot::yLeft);
+
+        setAxes(canvasMapX.invTransform(qMin(mOriginPoint.x(), mEndPoint.x())),
+                canvasMapX.invTransform(qMax(mOriginPoint.x(), mEndPoint.x())),
+                canvasMapY.invTransform(qMax(mOriginPoint.y(), mEndPoint.y())),
+                canvasMapY.invTransform(qMin(mOriginPoint.y(), mEndPoint.y())));
+
+        break;
+    }
+    default:
+        // Other actions which need nothing more to be done
+
+        ;
+    }
 }
 
 //==============================================================================
@@ -676,6 +767,37 @@ void SingleCellSimulationViewGraphPanelPlotWidget::replotNow()
     //       replotting won't occur immediately (because of threading)...
 
     qApp->processEvents();
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewGraphPanelPlotWidget::drawCanvas(QPainter *pPainter)
+{
+    if (mAction == ZoomRegion) {
+        // We are zooming a region, so start by drawing our pixmap
+
+        pPainter->drawPixmap(0, 0, mCanvasPixmap);
+
+        // Now, draw the region to be zoomed
+
+        QRect zoomRegionRect(mOriginPoint.x(), mOriginPoint.y(),
+                             mEndPoint.x()-mOriginPoint.x(), mEndPoint.y()-mOriginPoint.y());
+
+        QColor penColor = Qt::darkRed;
+        QColor brushColor = Qt::yellow;
+
+        penColor.setAlphaF(0.69);
+        brushColor.setAlphaF(0.19);
+
+        pPainter->setPen(penColor);
+
+        pPainter->fillRect(zoomRegionRect, brushColor);
+        pPainter->drawRect(zoomRegionRect);
+    } else {
+        // We aren't doing anything special, so just draw our canvas normally
+
+        QwtPlot::drawCanvas(pPainter);
+    }
 }
 
 //==============================================================================

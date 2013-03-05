@@ -86,6 +86,8 @@ public:
     void setFixedAxisX(const bool &pFixedAxisX);
     void setFixedAxisY(const bool &pFixedAxisY);
 
+    virtual void drawCanvas(QPainter *pPainter);
+
 protected:
     virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
     virtual void mouseMoveEvent(QMouseEvent *pEvent);
@@ -97,7 +99,8 @@ private:
     enum Action {
         None,
         Pan,
-        Zoom
+        Zoom,
+        ZoomRegion
     };
 
     QwtPlotDirectPainter *mDirectPainter;
@@ -107,6 +110,7 @@ private:
     Action mAction;
 
     QPoint mOriginPoint;
+    QPoint mEndPoint;
 
     double mMinX;
     double mMaxX;
@@ -115,6 +119,8 @@ private:
 
     bool mFixedAxisX;
     bool mFixedAxisY;
+
+    QPixmap mCanvasPixmap;
 
     void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
 
@@ -127,6 +133,8 @@ private:
 
     void scaleAxes(const double &pScalingFactorX,
                    const double &pScalingFactorY);
+
+    QPoint mousePositionWithinCanvas(QMouseEvent *pEvent) const;
 };
 
 //==============================================================================
