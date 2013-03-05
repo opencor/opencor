@@ -1044,10 +1044,10 @@ void SingleCellSimulationViewGraphPanelPlotWidget::drawCurveSegment(SingleCellSi
 
     // Determine the minimum/maximum X/Y values of our new data
 
-    double xMin;
-    double xMax;
-    double yMin;
-    double yMax;
+    double xMin = 0.0;
+    double xMax = 0.0;
+    double yMin = 0.0;
+    double yMax = 0.0;
 
     for (qulonglong i = pFrom; i <= pTo; ++i)
         if (i == pFrom) {
