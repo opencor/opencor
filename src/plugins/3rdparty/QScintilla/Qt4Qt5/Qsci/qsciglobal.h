@@ -33,19 +33,14 @@ extern "C++" {
 #include <qglobal.h>
 
 
-#define QSCINTILLA_VERSION      0x020700
-#define QSCINTILLA_VERSION_STR  "2.7"
+#define QSCINTILLA_VERSION      0x020701
+#define QSCINTILLA_VERSION_STR  "2.7.1"
 
 
 // Under Windows, define QSCINTILLA_MAKE_DLL to create a Scintilla DLL, or
 // define QSCINTILLA_DLL to link against a Scintilla DLL, or define neither
 // to either build or link against a static Scintilla library.
-/*---OPENCOR---
-#if defined(Q_WS_WIN)
-*/
-//---OPENCOR--- BEGIN
 #if defined(Q_OS_WIN)
-//---OPENCOR--- END
 
 #if defined(QSCINTILLA_DLL)
 #define QSCINTILLA_EXPORT       __declspec(dllimport)

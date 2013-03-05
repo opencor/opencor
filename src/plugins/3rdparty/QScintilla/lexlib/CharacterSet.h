@@ -80,7 +80,8 @@ public:
 		}
 	}
 	bool Contains(int val) const {
-		assert(val >= 0);
+        // val being -ve is valid (or there is a sign extension bug elsewhere.
+		//assert(val >= 0);
 		if (val < 0) return false;
 		return (val < size) ? bset[val] : valueAfter;
 	}
