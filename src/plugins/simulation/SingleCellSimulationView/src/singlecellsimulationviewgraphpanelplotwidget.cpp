@@ -541,58 +541,52 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *p
     if (!mInteractive)
         return;
 
-    // Determine how much we have moved our mouse since last time
+    // Retrieve the current point
 
     QPoint currentPoint = mousePositionWithinCanvas(pEvent);
-
-    int deltaX = currentPoint.x()-mOriginPoint.x();
-    int deltaY = currentPoint.y()-mOriginPoint.y();
 
     // Carry out the action
 
     switch (mAction) {
-    case Pan:
-        // Pan ourselves, if needed
+    case Pan: {
+        // Determine the X/Y shifts for the panning
 
-        if (deltaX || deltaY) {
-            // Compute the shifts in the X and Y directions
+        double shiftX = mCanvasMapX.invTransform(currentPoint.x())-mCanvasMapX.invTransform(mOriginPoint.x());
+        double shiftY = mCanvasMapY.invTransform(currentPoint.y())-mCanvasMapY.invTransform(mOriginPoint.y());
 
-            double shiftX = -deltaX*(plotLayout()->canvasRect().width()?(localMaxX()-localMinX())/plotLayout()->canvasRect().width():0.0);
-            double shiftY =  deltaY*(plotLayout()->canvasRect().height()?(localMaxY()-localMinY())/plotLayout()->canvasRect().height():0.0);
+        // Determine our new local minimum/maximum values for our axes
 
-            // Determine our new local minimum/maximum values for our axes
+        double newLocalMinX = localMinX()-shiftX;
+        double newLocalMaxX = localMaxX()-shiftX;
+        double newLocalMinY = localMinY()-shiftY;
+        double newLocalMaxY = localMaxY()-shiftY;
 
-            double newLocalMinX = localMinX()+shiftX;
-            double newLocalMaxX = localMaxX()+shiftX;
-            double newLocalMinY = localMinY()+shiftY;
-            double newLocalMaxY = localMaxY()+shiftY;
+        // Make sure that our new local minimum/maximum values for our axes
+        // are within our local minimum/maximum values
 
-            // Make sure that our new local minimum/maximum values for our axes
-            // are within our local minimum/maximum values
-
-            if (newLocalMinX < minX()) {
-                newLocalMinX = minX();
-                newLocalMaxX = newLocalMinX+localMaxX()-localMinX();
-            } else if (newLocalMaxX > maxX()) {
-                newLocalMaxX = maxX();
-                newLocalMinX = newLocalMaxX-localMaxX()+localMinX();
-            }
-
-            if (newLocalMinY < minY()) {
-                newLocalMinY = minY();
-                newLocalMaxY = newLocalMinY+localMaxY()-localMinY();
-            } else if (newLocalMaxY > maxY()) {
-                newLocalMaxY = maxY();
-                newLocalMinY = newLocalMaxY-localMaxY()+localMinY();
-            }
-
-            // Set our new local minimum/maximum values for our axes which will
-            // replot ourselves as a result
-
-            setAxes(newLocalMinX, newLocalMaxX, newLocalMinY, newLocalMaxY);
+        if (newLocalMinX < minX()) {
+            newLocalMinX = minX();
+            newLocalMaxX = newLocalMinX+localMaxX()-localMinX();
+        } else if (newLocalMaxX > maxX()) {
+            newLocalMaxX = maxX();
+            newLocalMinX = newLocalMaxX-localMaxX()+localMinX();
         }
 
+        if (newLocalMinY < minY()) {
+            newLocalMinY = minY();
+            newLocalMaxY = newLocalMinY+localMaxY()-localMinY();
+        } else if (newLocalMaxY > maxY()) {
+            newLocalMaxY = maxY();
+            newLocalMinY = newLocalMaxY-localMaxY()+localMinY();
+        }
+
+        // Set our new local minimum/maximum values for our axes which will
+        // replot ourselves as a result
+
+        setAxes(newLocalMinX, newLocalMaxX, newLocalMinY, newLocalMaxY);
+
         break;
+    }
     case ShowCoordinates:
         // Show the coordinates by simply replotting ourselves
 
@@ -602,17 +596,19 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *p
     case Zoom: {
         // Rescale ourselves (which will replot ourselves as a result)
 
-        if (deltaX || deltaY)
-            scaleAxes(deltaX?
-                          (deltaX > 0)?
-                              ScalingInFactor:
-                              ScalingOutFactor:
-                          NoScalingFactor,
-                      deltaY?
-                          (deltaY > 0)?
-                              ScalingInFactor:
-                              ScalingOutFactor:
-                          NoScalingFactor);
+        int deltaX = currentPoint.x()-mOriginPoint.x();
+        int deltaY = currentPoint.y()-mOriginPoint.y();
+
+        scaleAxes(deltaX?
+                      (deltaX > 0)?
+                          ScalingInFactor:
+                          ScalingOutFactor:
+                      NoScalingFactor,
+                  deltaY?
+                      (deltaY > 0)?
+                          ScalingInFactor:
+                          ScalingOutFactor:
+                      NoScalingFactor);
 
         break;
     }
@@ -703,12 +699,16 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *
         return;
     }
 
-    // Retrieve a pixmap version of our canvas, as well its mapping information,
-    // all that if needed
+    // Retrieve a pixmap version of our canvas, if needed
 
-    if ((mAction == ShowCoordinates) || (mAction == ZoomRegion)) {
+    if ((mAction == ShowCoordinates) || (mAction == ZoomRegion))
         mCanvasPixmap = grab(plotLayout()->canvasRect().toRect());
 
+    // Retrieve our canvas' mapping information, if needed
+
+    if (   (mAction == Pan)
+        || (mAction == ShowCoordinates)
+        || (mAction == ZoomRegion)) {
         mCanvasMapX = canvasMap(QwtPlot::xBottom);
         mCanvasMapY = canvasMap(QwtPlot::yLeft);
     }
