@@ -14,7 +14,7 @@
 
 //==============================================================================
 
-#ifdef Q_OS_MAC
+#if defined(Q_OS_LINUX) || defined(Q_OS_MAC)
     #pragma GCC diagnostic ignored "-Wunused-parameter"
 #endif
 
@@ -42,7 +42,7 @@
 #include "clang/Frontend/CompilerInstance.h"
 #include "clang/Frontend/TextDiagnosticPrinter.h"
 
-#ifdef Q_OS_MAC
+#if defined(Q_OS_LINUX) || defined(Q_OS_MAC)
     #pragma GCC diagnostic warning "-Wunused-parameter"
 #endif
 
