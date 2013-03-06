@@ -980,9 +980,12 @@ void MainWindow::showSelf()
     //       foreground, hence the above code to get the effect we are after...
 #elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
     // We are on Linux or OS X, so we can simply activate the window and raise
+    // ourselves
 //---GRY--- THERE ARE A COUPLE OF ISSUES WITH raise(), SEE
-//          https://bugreports.qt-project.org/browse/QTBUG-29087
-//          https://bugreports.qt-project.org/browse/QTBUG-29107
+//              https://github.com/opencor/opencor/issues/126
+//          AS WELL AS THE CORRESPONDING Qt BUG REPORTS:
+//              https://bugreports.qt-project.org/browse/QTBUG-29087
+//              https://bugreports.qt-project.org/browse/QTBUG-29107
 
     activateWindow();
     raise();
