@@ -16,6 +16,7 @@
 #include <QDesktopServices>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QSettings>
 #include <QStandardItemModel>
 #include <QUrl>
 

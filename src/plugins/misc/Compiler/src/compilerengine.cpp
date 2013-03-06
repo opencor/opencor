@@ -14,6 +14,10 @@
 
 //==============================================================================
 
+#ifdef Q_OS_MAC
+    #pragma GCC diagnostic ignored "-Wunused-parameter"
+#endif
+
 #include "llvm/LLVMContext.h"
 #include "llvm/Module.h"
 #include "llvm/ADT/IntrusiveRefCntPtr.h"
@@ -37,6 +41,10 @@
 #include "clang/Frontend/CompilerInvocation.h"
 #include "clang/Frontend/CompilerInstance.h"
 #include "clang/Frontend/TextDiagnosticPrinter.h"
+
+#ifdef Q_OS_MAC
+    #pragma GCC diagnostic warning "-Wunused-parameter"
+#endif
 
 //==============================================================================
 

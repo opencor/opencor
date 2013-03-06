@@ -14,7 +14,7 @@ MACRO(INITIALISE_PROJECT)
 
         SET(LINK_FLAGS_PROPERTIES "/STACK:10000000 /MACHINE:X86")
     ELSE()
-        SET(CMAKE_CXX_FLAGS "-Wall -Werror")
+        SET(CMAKE_CXX_FLAGS "-Wall -W -Werror")
         SET(LINK_FLAGS_PROPERTIES)
     ENDIF()
 
@@ -199,8 +199,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     FOREACH(PARAMETER ${ARGN})
         IF(${PARAMETER} STREQUAL "THIRD_PARTY")
             # We are dealing with a third-party plugin, so disable all warnings
-            # since it may generate some and this is not something we can or
-            # should have control over
+            # since it may generate some and this is not something we have
+            # control over
             # Note: for some reasons, MSVC eventually uses /W1, so we can't
             #       replace /W3 /WX with /w since this would conflict with
             #       /W1 and generate a warning, so...
@@ -208,7 +208,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             IF(WIN32)
                 STRING(REPLACE "/W3 /WX" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
             ELSE()
-                STRING(REPLACE "-Wall -Werror" "-w" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+                STRING(REPLACE "-Wall -W -Werror" "-w" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
             ENDIF()
 
             # Add a definition in case of compilation from within Qt Creator

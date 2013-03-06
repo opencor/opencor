@@ -12,7 +12,15 @@
 
 //==============================================================================
 
+#ifdef Q_OS_MAC
+    #pragma GCC diagnostic ignored "-Wunused-parameter"
+#endif
+
 #include "llvm/ExecutionEngine/ExecutionEngine.h"
+
+#ifdef Q_OS_MAC
+    #pragma GCC diagnostic warning "-Wunused-parameter"
+#endif
 
 //==============================================================================
 

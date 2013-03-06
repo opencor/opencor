@@ -61,7 +61,7 @@ MainWindow::MainWindow() :
     // Create our plugin manager (which will automatically load our various
     // plugins)
 
-    mPluginManager = new PluginManager(mSettings, PluginInfo::Gui);
+    mPluginManager = new PluginManager(PluginInfo::Gui);
 
     // Specify some general docking settings
 

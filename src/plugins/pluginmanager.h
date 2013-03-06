@@ -13,7 +13,6 @@
 //==============================================================================
 
 #include <QObject>
-#include <QSettings>
 
 //==============================================================================
 
@@ -30,8 +29,7 @@ class PluginManager : public QObject
     Q_OBJECT
 
 public:
-    explicit PluginManager(QSettings *pSettings,
-                           const PluginInfo::Type &pGuiOrConsoleType);
+    explicit PluginManager(const PluginInfo::Type &pGuiOrConsoleType);
     ~PluginManager();
 
     Plugins plugins() const;
