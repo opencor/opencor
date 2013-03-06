@@ -61,6 +61,10 @@ MACRO(INITIALISE_PROJECT)
         ADD_DEFINITIONS(-DQT_NO_DEBUG)
     ENDIF()
 
+    # Ask for Unicode to be used
+
+    ADD_DEFINITIONS(-DUNICODE)
+
     # Required packages
 
     FIND_PACKAGE(Qt5Widgets REQUIRED)
@@ -204,7 +208,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             ENDIF()
 
             # Add a definition in case of compilation from within Qt Creator
-            # using MSVC since JOM overrides some of our settings, so...
+            # using MSVC since JOM overrides some of our settings
 
             IF(WIN32)
                 ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS)

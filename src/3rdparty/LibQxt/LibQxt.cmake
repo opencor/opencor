@@ -18,9 +18,3 @@ INCLUDE_DIRECTORIES(${MAIN_PROJECT_SOURCE_DIR}/src/3rdparty/LibQxt/include/QxtCo
 # Compiler settings specific to LibQxt
 
 ADD_DEFINITIONS(-DQXT_STATIC)
-
-IF(WIN32)
-    ADD_DEFINITIONS(-DUNICODE)
-    # Note: the above is required to get QxtTemporaryDir (well,
-    #       QxtTemporaryDirPrivate) to compile fine on Windows
-ENDIF()
