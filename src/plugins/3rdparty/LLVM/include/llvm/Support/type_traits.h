@@ -118,9 +118,7 @@ template <> struct is_integral_impl<         bool>      : true_type {};
 template <> struct is_integral_impl<         char>      : true_type {};
 template <> struct is_integral_impl<  signed char>      : true_type {};
 template <> struct is_integral_impl<unsigned char>      : true_type {};
-/*---OPENCOR---
 template <> struct is_integral_impl<         wchar_t>   : true_type {};
-*/
 template <> struct is_integral_impl<         short>     : true_type {};
 template <> struct is_integral_impl<unsigned short>     : true_type {};
 template <> struct is_integral_impl<         int>       : true_type {};

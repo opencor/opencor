@@ -1,6 +1,6 @@
 PROJECT(LLVMPlugin)
 
-INCLUDE(common.cmake)
+INCLUDE(cmake/common.cmake)
 
 # Retrieve some include files that were generated on each of our target
 # platforms

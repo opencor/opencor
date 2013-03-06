@@ -1,6 +1,6 @@
 PROJECT(LLVMPlugin)
 
-INCLUDE(common.cmake)
+INCLUDE(cmake/common.cmake)
 
 # Add the plugin as a binary
 # Note: in the case of Windows, LLVM_BINARY_PLUGIN must refer to the
