@@ -384,6 +384,8 @@ void CellmlFileRuntime::reset(const bool &pRecreateCompilerEngine,
 
     if (pRecreateCompilerEngine)
         mCompilerEngine = new Compiler::CompilerEngine();
+    else
+        mCompilerEngine = 0;
 
     resetFunctions();
 
@@ -391,6 +393,8 @@ void CellmlFileRuntime::reset(const bool &pRecreateCompilerEngine,
         mIssues.clear();
 
     delete mVariableOfIntegration;
+
+    mVariableOfIntegration = 0;
 
     foreach (CellmlFileRuntimeModelParameter *modelParameter, mModelParameters)
         delete modelParameter;

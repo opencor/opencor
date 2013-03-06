@@ -416,14 +416,16 @@ void SingleCellSimulationViewSimulationData::reset()
 
 void SingleCellSimulationViewSimulationData::recomputeComputedConstantsAndVariables()
 {
-    // Recompute our 'computed constants' and 'variables'
+    // Recompute our 'computed constants' and 'variables', if possible
 
-    mCellmlFileRuntime->computeComputedConstants()(mConstants, mRates, mStates);
-    mCellmlFileRuntime->computeVariables()(mStartingPoint, mConstants, mRates, mStates, mAlgebraic);
+    if (mCellmlFileRuntime->isValid()) {
+        mCellmlFileRuntime->computeComputedConstants()(mConstants, mRates, mStates);
+        mCellmlFileRuntime->computeVariables()(mStartingPoint, mConstants, mRates, mStates, mAlgebraic);
 
-    // Let people know that our data has been updated
+        // Let people know that our data has been updated
 
-    emit updated();
+        emit updated();
+    }
 }
 
 //==============================================================================
