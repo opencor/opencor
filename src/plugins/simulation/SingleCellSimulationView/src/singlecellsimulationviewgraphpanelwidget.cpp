@@ -46,7 +46,8 @@ SingleCellSimulationViewGraphPanelWidget::SingleCellSimulationViewGraphPanelWidg
 
     setActive(false);
 
-    mGui->layout->addWidget(mMarker);
+//    mGui->layout->addWidget(mMarker);
+//---GRY--- THIS IS TEMPORARY, I.E. WHILE WE SUPPORT ONLY ONE GRAPH PANEL...
 
     // Create and add a plot widget to our layout
 
