@@ -240,7 +240,7 @@ void CorePlugin::initializationsDone(const Plugins &pLoadedPlugins)
                     // its filesOpened signal to trigger our central widget's
                     // openFiles slot
 
-                    connect((OrganisationWidget *) windowSettings->window(), SIGNAL(filesOpened(const QStringList &)),
+                    connect(qobject_cast<OrganisationWidget *>(windowSettings->window()), SIGNAL(filesOpened(const QStringList &)),
                             mCentralWidget, SLOT(openFiles(const QStringList &)));
 
                     break;

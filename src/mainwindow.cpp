@@ -2,7 +2,9 @@
 // Main window
 //==============================================================================
 
+#include "centralwidget.h"
 #include "common.h"
+#include "dockwidget.h"
 #include "fileinterface.h"
 #include "i18ninterface.h"
 #include "mainwindow.h"
@@ -560,14 +562,14 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
 
     if (!pPluginName.compare(CorePlugin))
         if (pGuiSettings->centralWidget())
-            setCentralWidget((QWidget *) pGuiSettings->centralWidget());
+            setCentralWidget(qobject_cast<QWidget *>(pGuiSettings->centralWidget()));
 
     // Add the windows (including to the corresponding menu)
 
     foreach (GuiWindowSettings *windowSettings, pGuiSettings->windows()) {
         // Dock the window to its default docking area
 
-        QDockWidget *dockWidget = (QDockWidget *) windowSettings->window();
+        QDockWidget *dockWidget = qobject_cast<QDockWidget *>(windowSettings->window());
 
         addDockWidget(windowSettings->defaultDockingArea(), dockWidget);
 
