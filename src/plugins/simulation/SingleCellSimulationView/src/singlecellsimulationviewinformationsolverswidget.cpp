@@ -215,7 +215,7 @@ SingleCellSimulationViewInformationSolversWidgetData * SingleCellSimulationViewI
     // Keep track of changes to list properties
 
     connect(this, SIGNAL(listPropertyChanged(const QString &)),
-            this, SLOT(listPropertyChanged(const QString &)));
+            this, SLOT(solverChanged(const QString &)));
 
     // Return our solver data
 
@@ -244,9 +244,14 @@ void SingleCellSimulationViewInformationSolversWidget::setSolverInterfaces(const
 
     // Show/hide the relevant properties
 
-    doListPropertyChanged(mOdeSolverData, mOdeSolverData->solversListProperty()->value()->text(), true);
-    doListPropertyChanged(mDaeSolverData, mDaeSolverData->solversListProperty()->value()->text(), true);
-    doListPropertyChanged(mNlaSolverData, mNlaSolverData->solversListProperty()->value()->text(), true);
+    if (mOdeSolverData)
+        doSolverChanged(mOdeSolverData, mOdeSolverData->solversListProperty()->value()->text(), true);
+
+    if (mDaeSolverData)
+        doSolverChanged(mDaeSolverData, mDaeSolverData->solversListProperty()->value()->text(), true);
+
+    if (mNlaSolverData)
+        doSolverChanged(mNlaSolverData, mNlaSolverData->solversListProperty()->value()->text(), true);
 
     // Expand all our properties
 
@@ -264,6 +269,11 @@ void SingleCellSimulationViewInformationSolversWidget::setSolverInterfaces(const
 void SingleCellSimulationViewInformationSolversWidget::setPropertiesUnit(SingleCellSimulationViewInformationSolversWidgetData *pSolverData,
                                                                          const QString &pVoiUnit)
 {
+    // Make sure that we have some solver's data
+
+    if (!pSolverData)
+        return;
+
     // Go through the solvers' properties and set the unit of the relevant ones
 
     foreach (const Core::Properties &properties, pSolverData->solversProperties())
@@ -294,12 +304,16 @@ void SingleCellSimulationViewInformationSolversWidget::initialize(const QString 
     if (pCellmlFileRuntime->isValid()) {
         // Show/hide the ODE/DAE solver information
 
-        setPropertyVisible(mOdeSolverData->solversProperty(), pCellmlFileRuntime->needOdeSolver());
-        setPropertyVisible(mDaeSolverData->solversProperty(), pCellmlFileRuntime->needDaeSolver());
+        if (mOdeSolverData)
+            setPropertyVisible(mOdeSolverData->solversProperty(), pCellmlFileRuntime->needOdeSolver());
+
+        if (mDaeSolverData)
+            setPropertyVisible(mDaeSolverData->solversProperty(), pCellmlFileRuntime->needDaeSolver());
 
         // Show/hide the NLA solver information
 
-        setPropertyVisible(mNlaSolverData->solversProperty(), pCellmlFileRuntime->needNlaSolver());
+        if (mNlaSolverData)
+            setPropertyVisible(mNlaSolverData->solversProperty(), pCellmlFileRuntime->needNlaSolver());
 
         // Retranslate ourselves so that the property names get properly set
 
@@ -317,14 +331,16 @@ void SingleCellSimulationViewInformationSolversWidget::initialize(const QString 
     // Initialise our simulation's NLA solver's properties, so that we can then
     // properly reset our simulation the first time round
 
-    pSimulationData->setNlaSolverName(mNlaSolverData->solversListProperty()->value()->text(), false);
+    if (mNlaSolverData) {
+        pSimulationData->setNlaSolverName(mNlaSolverData->solversListProperty()->value()->text(), false);
 
-    foreach (Core::Property *property, mNlaSolverData->solversProperties().value(pSimulationData->nlaSolverName()))
-        pSimulationData->addNlaSolverProperty(property->name()->text(),
-                                              (property->value()->type() == Core::PropertyItem::Integer)?
-                                                  Core::PropertyEditorWidget::integerPropertyItem(property->value()):
-                                                  Core::PropertyEditorWidget::doublePropertyItem(property->value()),
-                                              false);
+        foreach (Core::Property *property, mNlaSolverData->solversProperties().value(pSimulationData->nlaSolverName()))
+            pSimulationData->addNlaSolverProperty(property->name()->text(),
+                                                  (property->value()->type() == Core::PropertyItem::Integer)?
+                                                      Core::PropertyEditorWidget::integerPropertyItem(property->value()):
+                                                      Core::PropertyEditorWidget::doublePropertyItem(property->value()),
+                                                  false);
+    }
 }
 
 //==============================================================================
@@ -401,9 +417,9 @@ SingleCellSimulationViewInformationSolversWidgetData * SingleCellSimulationViewI
 
 //==============================================================================
 
-bool SingleCellSimulationViewInformationSolversWidget::doListPropertyChanged(SingleCellSimulationViewInformationSolversWidgetData *pSolverData,
-                                                                             const QString &pSolverName,
-                                                                             const bool &pForceHandling)
+bool SingleCellSimulationViewInformationSolversWidget::doSolverChanged(SingleCellSimulationViewInformationSolversWidgetData *pSolverData,
+                                                                       const QString &pSolverName,
+                                                                       const bool &pForceHandling)
 {
     // By default, we don't handle the change in the list property
 
@@ -440,14 +456,14 @@ bool SingleCellSimulationViewInformationSolversWidget::doListPropertyChanged(Sin
 
 //==============================================================================
 
-void SingleCellSimulationViewInformationSolversWidget::listPropertyChanged(const QString &pValue)
+void SingleCellSimulationViewInformationSolversWidget::solverChanged(const QString &pValue)
 {
     // Try, for the ODE, DAE and NLA solvers list property, to handle the change
     // in the list property
 
-    if (!doListPropertyChanged(mOdeSolverData, pValue))
-        if (!doListPropertyChanged(mDaeSolverData, pValue))
-            doListPropertyChanged(mNlaSolverData, pValue);
+    if (!doSolverChanged(mOdeSolverData, pValue))
+        if (!doSolverChanged(mDaeSolverData, pValue))
+            doSolverChanged(mNlaSolverData, pValue);
 }
 
 //==============================================================================
