@@ -13,6 +13,10 @@
 
 //==============================================================================
 
+#include <QtNumeric>
+
+//==============================================================================
+
 #include <float.h>
 
 //==============================================================================
@@ -425,25 +429,25 @@ void SingleCellSimulationViewGraphPanelPlotWidget::setAxes(const double &pMinX,
 
     bool needReplot = false;
 
-    if (newLocalMinX != oldLocalMinX) {
+    if ((newLocalMinX != oldLocalMinX) && qIsFinite(newLocalMinX)) {
         setLocalMinX(newLocalMinX);
 
         needReplot = true;
     }
 
-    if (newLocalMaxX != oldLocalMaxX) {
+    if ((newLocalMaxX != oldLocalMaxX) && qIsFinite(newLocalMaxX)) {
         setLocalMaxX(newLocalMaxX);
 
         needReplot = true;
     }
 
-    if (newLocalMinY != oldLocalMinY) {
+    if ((newLocalMinY != oldLocalMinY) && qIsFinite(newLocalMinY)) {
         setLocalMinY(newLocalMinY);
 
         needReplot = true;
     }
 
-    if (newLocalMaxY != oldLocalMaxY) {
+    if ((newLocalMaxY != oldLocalMaxY) && qIsFinite(newLocalMaxY)) {
         setLocalMaxY(newLocalMaxY);
 
         needReplot = true;
