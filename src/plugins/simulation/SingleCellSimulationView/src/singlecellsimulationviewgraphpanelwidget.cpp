@@ -36,13 +36,13 @@ SingleCellSimulationViewGraphPanelWidget::SingleCellSimulationViewGraphPanelWidg
 
     // Create, customise and add an inactive marker to our layout
 
-    static const int MarkerWidth = 3;
+//    static const int MarkerWidth = 3;
 
-    mMarker = new QFrame(this);
+//    mMarker = new QFrame(this);
 
-    mMarker->setFrameShape(QFrame::VLine);
-    mMarker->setLineWidth(MarkerWidth);
-    mMarker->setMinimumWidth(MarkerWidth);
+//    mMarker->setFrameShape(QFrame::VLine);
+//    mMarker->setLineWidth(MarkerWidth);
+//    mMarker->setMinimumWidth(MarkerWidth);
 
     setActive(false);
 
@@ -130,7 +130,7 @@ void SingleCellSimulationViewGraphPanelWidget::updateMarkerColor()
                             CommonWidget::highlightColor():
                             CommonWidget::windowColor());
 
-    mMarker->setPalette(newPalette);
+//    mMarker->setPalette(newPalette);
 }
 
 //==============================================================================

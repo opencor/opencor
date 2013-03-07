@@ -50,7 +50,7 @@ protected:
 private:
     Ui::SingleCellSimulationViewGraphPanelWidget *mGui;
 
-    QFrame *mMarker;
+//    QFrame *mMarker;
     SingleCellSimulationViewGraphPanelPlotWidget *mPlot;
 
     bool mActive;
