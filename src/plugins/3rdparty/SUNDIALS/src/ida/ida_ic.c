@@ -433,6 +433,28 @@ static int IDANewtonIC(IDAMem IDA_mem)
   fnorm = IDAWrmsNorm(IDA_mem, delta, ewt, FALSE);
   if(sysindex == 0) fnorm *= tscale*ABS(cj);
   if(fnorm <= epsNewt) return(IDA_SUCCESS);
+//---OPENCOR--- BEGIN
+// Note #1: when trying to retrieve consistent initial conditions, the user may
+//          have provided some (very) bad initial conditions, in which case
+//          fnorm won't have a finite value. This means that we won't be able to
+//          retrieve consistent initial conditions. So, IDA really ought to
+//          check that fnorm has a finite value and, if not, then return with
+//          some error code...
+// Note #2: the code to test whether a value is finite comes from Qt. It's just
+//          that using it directly would require a C++ compiler while we would
+//          rather stick to a C compiler whenever possible since this will avoid
+//          potential warnings because of differences between C and C++...
+unsigned char *uc = (unsigned char *) &fnorm;
+
+#if BYTE_ORDER == BIG_ENDIAN
+  int isFinite = ((uc[0] & 0x7f) != 0x7f) || ((uc[1] & 0xf0) != 0xf0);
+#else
+  int isFinite = ((uc[7] & 0x7f) != 0x7f) || ((uc[6] & 0xf0) != 0xf0);
+#endif
+
+  if (!isFinite)
+      return IC_CONV_FAIL;
+//---OPENCOR--- END
   fnorm0 = fnorm;
 
   /* Initialize rate to avoid compiler warning message */
