@@ -116,7 +116,7 @@ bool SingleCellSimulationViewGraphPanelPlotWidget::eventFilter(QObject *pObject,
     // We want to handle a double mouse click, but for some reasons to override
     // mouseDoubleClickEvent() doesn't work, so...
 
-    if(pEvent->type() == QEvent::MouseButtonDblClick)
+    if (pEvent->type() == QEvent::MouseButtonDblClick)
         handleMouseDoubleClickEvent(static_cast<QMouseEvent *>(pEvent));
 
     // We are all done, so...

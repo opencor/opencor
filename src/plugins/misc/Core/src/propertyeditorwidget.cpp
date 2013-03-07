@@ -292,7 +292,7 @@ bool PropertyItemDelegate::eventFilter(QObject *pObject, QEvent *pEvent)
 {
     // We want to handle key events ourselves, so...
 
-    if(pEvent->type() == QEvent::KeyPress)
+    if (pEvent->type() == QEvent::KeyPress)
         return false;
     else
         return QStyledItemDelegate::eventFilter(pObject, pEvent);
