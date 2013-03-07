@@ -1236,7 +1236,10 @@ void MainWindow::updateGui(Plugin *pPlugin)
 
 //---GRY--- TO BE DONE...
 
-qDebug(">>> The view '%s' has been selected...", qPrintable(qobject_cast<GuiInterface *>(pPlugin->instance())->viewName()));
+if (pPlugin)
+    qDebug(">>> The view '%s' has been selected...", qPrintable(qobject_cast<GuiInterface *>(pPlugin->instance())->viewName()));
+else
+    qDebug(">>> Either there is no file or the view doesn't support this type of file...");
 }
 
 //==============================================================================

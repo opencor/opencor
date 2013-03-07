@@ -1033,6 +1033,10 @@ void CentralWidget::updateGui()
     GuiInterface *guiInterface = qobject_cast<GuiInterface *>(mPlugin->instance());
 
     if (fileTabsCrtIndex == -1) {
+        // Let people know that we are about to update the GUI
+
+        emit guiUpdated(0);
+
         // There is no current file, so show our logo instead
 
         mContents->removeWidget(mContents->currentWidget());
@@ -1067,6 +1071,10 @@ void CentralWidget::updateGui()
             updateNoViewMsg();
         }
 
+        // Let people know that we are about to update the GUI
+
+        emit guiUpdated((newView != mNoViewMsg)?mPlugin:0);
+
         // Replace the current view with the new one
         // Note: the order in which the adding and removing (as well as the
         //       showing/hiding) of view is done ensures that the replacement
@@ -1095,10 +1103,6 @@ void CentralWidget::updateGui()
         // to our new view
 
         mContents->currentWidget()->setFocus();
-
-    // Let people know that we have updated the GUI
-
-    emit guiUpdated(mPlugin);
 
     // Let people know whether we can save as, as well as whether there is/are
     // at least one/two file/s
