@@ -55,7 +55,8 @@ MainWindow::MainWindow() :
     mFileNewMenu(0),
     mViewOrganisationMenu(0),
     mViewSeparator(0),
-    mActions(QMap<Plugin *, QAction *>())
+    mViewActions(QMap<Plugin *, QAction *>()),
+    mViewPlugin(0)
 {
     // Create our settings object
 
@@ -486,7 +487,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
             else
                 action = mGui->menuFile->insertSeparator(mGui->menuFile->actions().first());
 
-            mActions.insertMulti(pPlugin, action);
+            mViewActions.insertMulti(pPlugin, action);
 
             break;
         }
@@ -515,7 +516,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
                 ;
             }
 
-    // Add some actions to some sub-menus
+    // Add some actions to some sub-menus and keep track of them
 
     static QString pluginForFileNewMenu = QString();
 
@@ -554,6 +555,8 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
             }
 
             mFileNewMenu->addAction(menuActionSettings->action());
+
+            mViewActions.insertMulti(pPlugin, menuActionSettings->action());
 
             break;
         default:
@@ -1228,16 +1231,35 @@ void MainWindow::restart(const bool &pSaveSettings) const
 
 //==============================================================================
 
-void MainWindow::updateGui(Plugin *pPlugin)
+void MainWindow::updateGui(Plugin *pViewPlugin)
 {
     // We come here as a result of our central widget having updated its GUI,
     // meaning that a new view has been selected, so we may need to show/hide
     // some actions/menus as a result of it
 
+    // Check whether we are dealing with the current view plugin
+
+    if (pViewPlugin == mViewPlugin)
+        return;
+
+    // Update our view plugin
+
+    mViewPlugin = pViewPlugin;
+
+    // Go through our view actions and check which ones should be
+    // enabled/disabled and then shown/hidden
+
+    for (QMap<Plugin *, QAction *>::ConstIterator iter = mViewActions.constBegin(),
+                                                  iterEnd = mViewActions.constEnd();
+         iter != iterEnd; ++iter)
+        qDebug(">>> View action: %s ---> %s",
+               qPrintable(iter.key()->name()),
+               qPrintable(iter.value()->text()));
+
 //---GRY--- TO BE DONE...
 
-if (pPlugin)
-    qDebug(">>> The view '%s' has been selected...", qPrintable(qobject_cast<GuiInterface *>(pPlugin->instance())->viewName()));
+if (pViewPlugin)
+    qDebug(">>> The view '%s' has been selected...", qPrintable(qobject_cast<GuiInterface *>(pViewPlugin->instance())->viewName()));
 else
     qDebug(">>> Either there is no file or the view doesn't support this type of file...");
 }

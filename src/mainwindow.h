@@ -79,7 +79,9 @@ private:
     QMenu *mViewOrganisationMenu;
     QAction *mViewSeparator;
 
-    QMap<Plugin *, QAction *> mActions;
+    QMap<Plugin *, QAction *> mViewActions;
+
+    Plugin *mViewPlugin;
 
     void initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings);
 
@@ -110,7 +112,7 @@ private Q_SLOTS:
     void on_actionHomePage_triggered();
     void on_actionAbout_triggered();
 
-    void updateGui(Plugin *pPlugin);
+    void updateGui(Plugin *pViewPlugin);
 
     void resetAll();
 };
