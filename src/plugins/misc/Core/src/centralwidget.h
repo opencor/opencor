@@ -42,9 +42,7 @@ namespace Core {
 
 //==============================================================================
 
-typedef QMap<int, QString> CentralWidgetViewNames;
-
-typedef QMap<int, GuiInterface *> CentralWidgetViewInterfaces;
+typedef QMap<int, Plugin *> CentralWidgetViewPlugins;
 typedef QMap<int, GuiViewSettings *> CentralWidgetViewSettings;
 
 //==============================================================================
@@ -64,9 +62,7 @@ public:
 
     QTabBar * views() const;
 
-    CentralWidgetViewNames * viewNames() const;
-
-    CentralWidgetViewInterfaces * viewInterfaces() const;
+    CentralWidgetViewPlugins * viewPlugins() const;
     CentralWidgetViewSettings * viewSettings() const;
 
 private:
@@ -74,10 +70,8 @@ private:
 
     QTabBar *mViews;
 
-    CentralWidgetViewNames * mViewNames;
-
-    CentralWidgetViewInterfaces * mViewInterfaces;
-    CentralWidgetViewSettings * mViewSettings;
+    CentralWidgetViewPlugins *mViewPlugins;
+    CentralWidgetViewSettings *mViewSettings;
 };
 
 //==============================================================================
@@ -145,7 +139,7 @@ private:
 
     QMap<GuiViewSettings::Mode, CentralWidgetMode *> mModes;
 
-    GuiInterface *mGuiInterface;
+    Plugin *mPlugin;
 
     int modeTabIndex(const GuiViewSettings::Mode &pMode) const;
 
@@ -173,6 +167,8 @@ private:
     bool canCloseFile(const int &pIndex);
 
 Q_SIGNALS:
+    void guiUpdated(Plugin *pViewPlugin);
+
     void fileOpened(const QString &pFileName);
     void fileSaved(const QString &pFileName);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);

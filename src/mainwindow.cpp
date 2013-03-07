@@ -54,7 +54,8 @@ MainWindow::MainWindow() :
     mLocale(QString()),
     mFileNewMenu(0),
     mViewOrganisationMenu(0),
-    mViewSeparator(0)
+    mViewSeparator(0),
+    mActions(QMap<Plugin *, QAction *>())
 {
     // Create our settings object
 
@@ -173,7 +174,7 @@ MainWindow::MainWindow() :
             // Initialise the plugin further (i.e. do things which can only be
             // done by OpenCOR itself)
 
-            initializeGuiPlugin(plugin->name(), guiInterface->guiSettings());
+            initializeGuiPlugin(plugin, guiInterface->guiSettings());
     }
 
     // Let our various plugins know that all of them have been initialised
@@ -409,8 +410,7 @@ void MainWindow::showEvent(QShowEvent *pEvent)
 
 //==============================================================================
 
-void MainWindow::initializeGuiPlugin(const QString &pPluginName,
-                                     GuiSettings *pGuiSettings)
+void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
 {
     // Add the menus to our menu bar or merge them to existing menus, if needed
     // Note: we must do that in reverse order since we are inserting menus,
@@ -473,21 +473,25 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
     menuActionIter.toBack();
 
     while (menuActionIter.hasPrevious()) {
-        // Insert the action/separator to the right menu
+        // Insert the action/separator to the right menu and keep track of it
 
         GuiMenuActionSettings *menuActionSettings = menuActionIter.previous();
 
         switch (menuActionSettings->type()) {
-        case GuiMenuActionSettings::File:
-            if(menuActionSettings->action())
-                mGui->menuFile->insertAction(mGui->menuFile->actions().first(),
-                                             menuActionSettings->action());
+        case GuiMenuActionSettings::File: {
+            QAction *action = menuActionSettings->action();
+
+            if (action)
+                mGui->menuFile->insertAction(mGui->menuFile->actions().first(), action);
             else
-                mGui->menuFile->insertSeparator(mGui->menuFile->actions().first());
+                action = mGui->menuFile->insertSeparator(mGui->menuFile->actions().first());
+
+            mActions.insertMulti(pPlugin, action);
 
             break;
+        }
         default:
-            // Not a type of interest, so do nothing...
+            // Not a type in which we are interested, so do nothing...
 
             ;
         }
@@ -506,7 +510,7 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
 
                 break;
             default:
-                // Not a type of interest, so do nothing...
+                // Not a type in which we are interested, so do nothing...
 
                 ;
             }
@@ -538,31 +542,39 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
                                            mFileNewMenu);
                 mGui->menuFile->insertSeparator(mGui->menuFile->actions()[1]);
 
-                pluginForFileNewMenu = pPluginName;
-            } else if (pluginForFileNewMenu.compare(pPluginName)) {
+                pluginForFileNewMenu = pPlugin->name();
+            } else if (pluginForFileNewMenu.compare(pPlugin->name())) {
                 // The File|New menu already exists, so add a separator to it so
                 // that previous menu items (from a different plugin) don't get
                 // mixed up with the new one
 
                 mFileNewMenu->addSeparator();
 
-                pluginForFileNewMenu = pPluginName;
+                pluginForFileNewMenu = pPlugin->name();
             }
 
             mFileNewMenu->addAction(menuActionSettings->action());
 
             break;
         default:
-            // Not a type of interest, so do nothing...
+            // Not a type in which we are interested, so do nothing...
 
             ;
         }
 
-    // Set the central widget, but only if we are dealing with the Core plugin
+    // Set our central widget, but only if we are dealing with the Core plugin
 
-    if (!pPluginName.compare(CorePlugin))
-        if (pGuiSettings->centralWidget())
+    if (!pPlugin->name().compare(CorePlugin))
+        if (pGuiSettings->centralWidget()) {
+            // We are dealing with the Core plugin, so set our central widget
+
             setCentralWidget(qobject_cast<QWidget *>(pGuiSettings->centralWidget()));
+
+            // Also keep track of GUI updates in our central widget
+
+            connect(pGuiSettings->centralWidget(), SIGNAL(guiUpdated(Plugin *)),
+                    this, SLOT(updateGui(Plugin *)));
+        }
 
     // Add the windows (including to the corresponding menu)
 
@@ -587,7 +599,7 @@ void MainWindow::initializeGuiPlugin(const QString &pPluginName,
 
             break;
         case GuiWindowSettings::Help:
-            if (!pPluginName.compare(HelpPlugin)) {
+            if (!pPlugin->name().compare(HelpPlugin)) {
                 // We only want to add the action if we are coming here from the
                 // Help plugin
 
@@ -1212,6 +1224,19 @@ void MainWindow::restart(const bool &pSaveSettings) const
         saveSettings();
 
     qApp->exit(NeedRestart);
+}
+
+//==============================================================================
+
+void MainWindow::updateGui(Plugin *pPlugin)
+{
+    // We come here as a result of our central widget having updated its GUI,
+    // meaning that a new view has been selected, so we may need to show/hide
+    // some actions/menus as a result of it
+
+//---GRY--- TO BE DONE...
+
+qDebug(">>> The view '%s' has been selected...", qPrintable(qobject_cast<GuiInterface *>(pPlugin->instance())->viewName()));
 }
 
 //==============================================================================

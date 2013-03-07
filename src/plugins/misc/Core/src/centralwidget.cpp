@@ -39,10 +39,8 @@ CentralWidgetMode::CentralWidgetMode(CentralWidget *pOwner) :
 
     mViews = pOwner->newTabBar(QTabBar::RoundedEast);
 
-    mViewNames = new CentralWidgetViewNames();
-
-    mViewInterfaces = new CentralWidgetViewInterfaces();
-    mViewSettings   = new CentralWidgetViewSettings();
+    mViewPlugins  = new CentralWidgetViewPlugins();
+    mViewSettings = new CentralWidgetViewSettings();
 }
 
 //==============================================================================
@@ -52,9 +50,7 @@ CentralWidgetMode::~CentralWidgetMode()
     // Delete some internal objects
 
     delete mViewSettings;
-    delete mViewInterfaces;
-
-    delete mViewNames;
+    delete mViewPlugins;
 
     delete mViews;
 }
@@ -88,20 +84,11 @@ QTabBar * CentralWidgetMode::views() const
 
 //==============================================================================
 
-CentralWidgetViewNames * CentralWidgetMode::viewNames() const
+CentralWidgetViewPlugins * CentralWidgetMode::viewPlugins() const
 {
-    // Return the mode's view names
+    // Return the mode's view plugins
 
-    return mViewNames;
-}
-
-//==============================================================================
-
-CentralWidgetViewInterfaces * CentralWidgetMode::viewInterfaces() const
-{
-    // Return the mode's view interfaces
-
-    return mViewInterfaces;
+    return mViewPlugins;
 }
 
 //==============================================================================
@@ -123,7 +110,7 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     mLoadedPlugins(Plugins()),
     mSupportedFileTypes(FileTypes()),
     mFileNames(QStringList()),
-    mGuiInterface(0)
+    mPlugin(0)
 {
     // Set up the GUI
 
@@ -276,7 +263,7 @@ void CentralWidget::retranslateUi()
         QTabBar *modeViews = mode->views();
 
         for (int i = 0, iMax = modeViews->count(); i < iMax; ++i)
-            modeViews->setTabText(i, mode->viewInterfaces()->value(i)->viewName());
+            modeViews->setTabText(i, qobject_cast<GuiInterface *>(mode->viewPlugins()->value(i)->instance())->viewName());
     }
 
     // Retranslate our modified settings, if needed
@@ -323,10 +310,9 @@ void CentralWidget::loadModeSettings(QSettings *pSettings,
     QString modeViewName = pSettings->value(SettingsCurrentViewForMode+QString::number(pMode)).toString();
     CentralWidgetMode *mode = mModes.value(pMode);
     QTabBar *modeViews = mode->views();
-    CentralWidgetViewNames *modeViewNames = mode->viewNames();
 
     for (int i = 0, iMax = modeViews->count(); i < iMax; ++i)
-        if (!modeViewNames->value(i).compare(modeViewName)) {
+        if (!mode->viewPlugins()->value(i)->name().compare(modeViewName)) {
             // A valid current mode view was retrieved, so select it
 
             modeViews->setCurrentIndex(i);
@@ -393,9 +379,11 @@ void CentralWidget::saveModeSettings(QSettings *pSettings,
     // Keep track of the currently active view for the given mode
 
     CentralWidgetMode *mode = mModes.value(pMode);
+    Plugin *plugin = mode->viewPlugins()->value(mode->views()->currentIndex());
 
-    pSettings->setValue(SettingsCurrentViewForMode+QString::number(pMode),
-                        mode->viewNames()->value(mode->views()->currentIndex()));
+    if (plugin)
+        pSettings->setValue(SettingsCurrentViewForMode+QString::number(pMode),
+                            plugin->name());
 }
 
 //==============================================================================
@@ -542,13 +530,14 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
     QString oldFileName = mFileNames[pIndex];
     QString newFileName = oldFileName;
     bool hasNewFileName = false;
+    GuiInterface *guiInterface = qobject_cast<GuiInterface *>(mPlugin->instance());
 
     if (pNeedNewFileName || newFileName.isEmpty()) {
         // Either we want to save the file under a new name or we are dealing
         // with a new file, so we ask the user for a file name based on the MIME
         // types supported by our current view
 
-        QStringList mimeTypes = mGuiInterface->guiSettings()->view()->mimeTypes();
+        QStringList mimeTypes = guiInterface->guiSettings()->view()->mimeTypes();
 
         QString supportedFileTypes = QString();
 
@@ -576,7 +565,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 
     if (   (FileManager::instance()->isModified(oldFileName) && !pNeedNewFileName)
         || hasNewFileName) {
-        if (mGuiInterface->saveFile(oldFileName, newFileName)) {
+        if (guiInterface->saveFile(oldFileName, newFileName)) {
             // Let people know about the file having been saved
 
             emit fileSaved(newFileName);
@@ -898,9 +887,7 @@ void CentralWidget::addModeView(Plugin *pPlugin, GuiViewSettings *pSettings,
     CentralWidgetMode *mode = mModes.value(pMode);
     int modeViewTabIndex = mode->views()->addTab(QString());
 
-    mode->viewNames()->insert(modeViewTabIndex, pPlugin->name());
-    mode->viewInterfaces()->insert(modeViewTabIndex,
-                                   qobject_cast<GuiInterface *>(pPlugin->instance()));
+    mode->viewPlugins()->insert(modeViewTabIndex, pPlugin);
     mode->viewSettings()->insert(modeViewTabIndex, pSettings);
 }
 
@@ -1012,15 +999,10 @@ void CentralWidget::updateModeGui(const GuiViewSettings::Mode &pMode)
 
     mode->views()->setVisible(modeActive);
 
-    // Retrieve the GUI interface for the view we are after, should the mode be
-    // active
+    // Retrieve the view plugin, should the mode be active
 
-    if (modeActive) {
-        int modeViewsCrtIndex = mode->views()->currentIndex();
-
-        if (modeViewsCrtIndex != -1)
-            mGuiInterface = mode->viewInterfaces()->value(modeViewsCrtIndex);
-    }
+    if (modeActive)
+        mPlugin = mode->viewPlugins()->value(mode->views()->currentIndex());
 }
 
 //==============================================================================
@@ -1038,7 +1020,7 @@ void CentralWidget::updateGui()
     mStatus = UpdatingGui;
 
     // Show/hide the editing, simulation and analysis modes' corresponding views
-    // tab, as needed, and retrieve the GUI interface for the view we are after
+    // tab, as needed, and retrieve the corresponding view plugin
 
     updateModeGui(GuiViewSettings::Editing);
     updateModeGui(GuiViewSettings::Simulation);
@@ -1048,6 +1030,7 @@ void CentralWidget::updateGui()
     // there be one)
 
     int fileTabsCrtIndex = mFileTabs->currentIndex();
+    GuiInterface *guiInterface = qobject_cast<GuiInterface *>(mPlugin->instance());
 
     if (fileTabsCrtIndex == -1) {
         // There is no current file, so show our logo instead
@@ -1058,7 +1041,7 @@ void CentralWidget::updateGui()
         // There is a current file, so retrieve its view
 
         QString fileName = mFileNames[fileTabsCrtIndex];
-        QWidget *newView = mGuiInterface->viewWidget(fileName);
+        QWidget *newView = guiInterface->viewWidget(fileName);
 
         if (newView) {
             // We have a view for the current file, so create a connection
@@ -1113,11 +1096,15 @@ void CentralWidget::updateGui()
 
         mContents->currentWidget()->setFocus();
 
+    // Let people know that we have updated the GUI
+
+    emit guiUpdated(mPlugin);
+
     // Let people know whether we can save as, as well as whether there is/are
     // at least one/two file/s
 
-    emit canSaveAs(   mFileTabs->count() && mGuiInterface
-                   && mGuiInterface->guiSettings()->view()->mimeTypes().count());
+    emit canSaveAs(   mFileTabs->count()
+                   && guiInterface->guiSettings()->view()->mimeTypes().count());
 
     emit atLeastOneFile(mFileTabs->count());
     emit atLeastTwoFiles(mFileTabs->count() > 1);
@@ -1162,7 +1149,7 @@ QString CentralWidget::modeViewName(const GuiViewSettings::Mode &pMode)
     CentralWidgetMode *mode = mModes.value(pMode);
     int modeViewsCrtIndex = mode->views()->currentIndex();
 
-    return mode->viewInterfaces()->value(modeViewsCrtIndex)->viewName();
+    return qobject_cast<GuiInterface *>(mode->viewPlugins()->value(modeViewsCrtIndex)->instance())->viewName();
 }
 
 //==============================================================================
@@ -1245,9 +1232,12 @@ void CentralWidget::updateFileTabIcons()
 {
     // Update all the file tab icons
 
-    if (mGuiInterface)
+    if (mPlugin) {
+        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(mPlugin->instance());
+
         for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i)
-            mFileTabs->setTabIcon(i, mGuiInterface->fileTabIcon(mFileNames[i]));
+            mFileTabs->setTabIcon(i, guiInterface->fileTabIcon(mFileNames[i]));
+    }
 }
 
 //==============================================================================
