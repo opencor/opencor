@@ -55,6 +55,7 @@ MainWindow::MainWindow() :
     mFileNewMenu(0),
     mViewOrganisationMenu(0),
     mViewSeparator(0),
+    mViewMenus(QList<QMenu *>()),
     mViewActions(QMap<Plugin *, QAction *>()),
     mViewPlugin(0)
 {
@@ -433,24 +434,32 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
 
         if (oldMenu && !menuSettings->action()) {
             // A menu with the same name already exists, so add the contents of
-            // the new menu to the existing one
+            // the new menu to the existing one and keep track of the separator
+            // and of the menu's contents
 
-            oldMenu->addSeparator();
+            mViewActions.insertMulti(pPlugin, oldMenu->addSeparator());
+
             oldMenu->addActions(newMenu->actions());
 
-            // Delete the new menu, since we don't need it...
-            // Note: it's not critical since the menu never gets shown, but it
-            //       doesn't harm either, so...
+            foreach (QAction *action, oldMenu->actions())
+                mViewActions.insertMulti(pPlugin, action);
+
+            // Delete the new menu since we don't need it anymore
 
             delete newMenu;
         } else {
             // No menu with the same name already exists, so add the new menu to
-            // our menu bar
+            // our menu bar and keep track of it and its contents
 
             switch (menuSettings->type()) {
             case GuiMenuSettings::View:
                 mGui->menuBar->insertAction(mGui->menuView->menuAction(),
                                             newMenu->menuAction());
+
+                mViewMenus << newMenu;
+
+                foreach (QAction *action, newMenu->actions())
+                    mViewActions.insertMulti(pPlugin, action);
 
                 break;
             default:
@@ -501,13 +510,15 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
     // Add some sub-menus before some menu items
 
     foreach (GuiMenuSettings *menuSettings, pGuiSettings->menus())
-        // Insert the menu before a menu item / separator
+        // Insert the menu before a menu item / separator and keep track of it
 
         if (menuSettings->action())
             switch (menuSettings->type()) {
             case GuiMenuActionSettings::File:
                 mGui->menuFile->insertMenu(menuSettings->action(),
                                            menuSettings->menu());
+
+                mViewMenus << menuSettings->menu();
 
                 break;
             default:
@@ -905,7 +916,7 @@ void MainWindow::updateViewMenu(const GuiWindowSettings::GuiWindowSettingsType &
         // None of the menus have already been inserted which means that we need
         // to insert a separator before the Full Screen menu item
 
-        mViewSeparator =  mGui->menuView->insertSeparator(mGui->actionStatusBar);
+        mViewSeparator = mGui->menuView->insertSeparator(mGui->actionStatusBar);
 
     // Determine the menu that is to be inserted, should this be required, and
     // the action before which it is to be inserted
@@ -1231,6 +1242,29 @@ void MainWindow::restart(const bool &pSaveSettings) const
 
 //==============================================================================
 
+void MainWindow::checkViewMenu(QMenu *pViewMenu)
+{
+    // Show/hide a view menu, if it exists, based on whether its menu items are
+    // visible
+
+    if (!pViewMenu)
+        return;
+
+    bool viewMenuVisible = false;
+
+    foreach (QAction *action, pViewMenu->actions())
+        if (action->isVisible()) {
+            viewMenuVisible = true;
+
+            break;
+        }
+
+    pViewMenu->menuAction()->setVisible(viewMenuVisible);
+}
+
+
+//==============================================================================
+
 void MainWindow::updateGui(Plugin *pViewPlugin)
 {
     // We come here as a result of our central widget having updated its GUI,
@@ -1246,22 +1280,29 @@ void MainWindow::updateGui(Plugin *pViewPlugin)
 
     mViewPlugin = pViewPlugin;
 
-    // Go through our view actions and check which ones should be
-    // enabled/disabled and then shown/hidden
+    // Go through our view actions and check whether the view plugin to which
+    // they are attached are our current view plugin or one of its (in)direct
+    // dependencies, and if so then enable it and show it, or disable it and
+    // hide it
 
     for (QMap<Plugin *, QAction *>::ConstIterator iter = mViewActions.constBegin(),
                                                   iterEnd = mViewActions.constEnd();
-         iter != iterEnd; ++iter)
-        qDebug(">>> View action: %s ---> %s",
-               qPrintable(iter.key()->name()),
-               qPrintable(iter.value()->text()));
+         iter != iterEnd; ++iter) {
+        bool validViewAction =    !iter.key()->name().compare(pViewPlugin->name())
+                               ||  pViewPlugin->info().fullDependencies().contains(iter.key()->name());
 
-//---GRY--- TO BE DONE...
+        iter.value()->setEnabled(validViewAction);
+        iter.value()->setVisible(validViewAction);
+    }
 
-if (pViewPlugin)
-    qDebug(">>> The view '%s' has been selected...", qPrintable(qobject_cast<GuiInterface *>(pViewPlugin->instance())->viewName()));
-else
-    qDebug(">>> Either there is no file or the view doesn't support this type of file...");
+    // Update our menus by showing/hiding them
+
+    foreach (QMenu *viewMenu, mViewMenus)
+        checkViewMenu(viewMenu);
+
+    // Also check the File|New menu
+
+    checkViewMenu(mFileNewMenu);
 }
 
 //==============================================================================
