@@ -24,6 +24,9 @@
 /* Macro: loop */
 #define loop for(;;)
 
+//---OPENCOR--- BEGIN
+#include <QtGlobal>
+//---OPENCOR--- END
 /*
  * =================================================================
  * IDA Constants 
@@ -420,6 +423,9 @@ static int IDANewtonIC(IDAMem IDA_mem)
 {
   int retval, mnewt;
   realtype delnorm, fnorm, fnorm0, oldfnrm, rate;
+//---OPENCOR--- BEGIN
+  unsigned char *uc;
+//---OPENCOR--- END
 
   /* Set pointer for vector delnew */
   delnew = phi[2];
@@ -444,16 +450,16 @@ static int IDANewtonIC(IDAMem IDA_mem)
 //          that using it directly would require a C++ compiler while we would
 //          rather stick to a C compiler whenever possible since this will avoid
 //          potential warnings because of differences between C and C++...
-unsigned char *uc = (unsigned char *) &fnorm;
 
-#if BYTE_ORDER == BIG_ENDIAN
-  int isFinite = ((uc[0] & 0x7f) != 0x7f) || ((uc[1] & 0xf0) != 0xf0);
+  uc = (unsigned char *) &fnorm;
+
+#if Q_BYTE_ORDER == Q_BIG_ENDIAN
+  if (((uc[0] & 0x7F) == 0x7F) && ((uc[1] & 0xF0) == 0xF0))
+    return IC_CONV_FAIL;
 #else
-  int isFinite = ((uc[7] & 0x7f) != 0x7f) || ((uc[6] & 0xf0) != 0xf0);
+  if (((uc[7] & 0x7F) == 0x7F) && ((uc[6] & 0xF0) == 0xF0))
+    return IC_CONV_FAIL;
 #endif
-
-  if (!isFinite)
-      return IC_CONV_FAIL;
 //---OPENCOR--- END
   fnorm0 = fnorm;
 
