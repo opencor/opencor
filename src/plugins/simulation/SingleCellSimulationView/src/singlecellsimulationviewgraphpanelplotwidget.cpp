@@ -338,6 +338,28 @@ void SingleCellSimulationViewGraphPanelPlotWidget::setInteractive(const bool &pI
 
 //==============================================================================
 
+void SingleCellSimulationViewGraphPanelPlotWidget::checkAxesValues(double &pMinX,
+                                                                   double &pMaxX,
+                                                                   double &pMinY,
+                                                                   double &pMaxY)
+{
+    // Make sure that the minimum/maximum values of our axes have finite values
+
+    if (!qIsFinite(pMinX))
+        pMinX = -DBL_MAX;
+
+    if (!qIsFinite(pMaxX))
+        pMaxX = DBL_MAX;
+
+    if (!qIsFinite(pMinY))
+        pMinY = -DBL_MAX;
+
+    if (!qIsFinite(pMaxY))
+        pMaxY = DBL_MAX;
+}
+
+//==============================================================================
+
 void SingleCellSimulationViewGraphPanelPlotWidget::setAxes(const double &pMinX,
                                                            const double &pMaxX,
                                                            const double &pMinY,
@@ -372,12 +394,21 @@ void SingleCellSimulationViewGraphPanelPlotWidget::setAxes(const double &pMinX,
     // valid bounding rectangle
 
     if (boundingRect != QRectF()) {
-        // Optimise our bounding rectangle
+        // Optimise our bounding rectangle by first retrieving the
+        // minimum/maximum values of our axes
 
         double minX = boundingRect.left();
         double maxX = boundingRect.right();
         double minY = boundingRect.top();
         double maxY = boundingRect.bottom();
+
+        // Make sure that the minimum/maximum values of our axes havefinite
+        // values
+
+        checkAxesValues(minX, maxX, minY, maxY);
+
+        // Optimise the minimum/maximum values of our axes by rounding them
+        // down/up, respectively
 
         double powerX = qPow(10.0, qMax(minX?qFloor(log10(qAbs(minX))):0, maxX?qFloor(log10(qAbs(maxX))):0));
         double powerY = qPow(10.0, qMax(minY?qFloor(log10(qAbs(minY))):0, maxY?qFloor(log10(qAbs(maxY))):0));
@@ -386,6 +417,11 @@ void SingleCellSimulationViewGraphPanelPlotWidget::setAxes(const double &pMinX,
         maxX = powerX*qCeil(maxX/powerX);
         minY = powerY*qFloor(minY/powerY);
         maxY = powerY*qCeil(maxY/powerY);
+
+        // Make sure that the optimised minimum/maximum values of our axes have
+        // finite values
+
+        checkAxesValues(minX, maxX, minY, maxY);
 
         // Update the minimum/maximum values of our axes, if required
 
@@ -425,29 +461,34 @@ void SingleCellSimulationViewGraphPanelPlotWidget::setAxes(const double &pMinX,
         newLocalMaxY = qMin(newLocalMaxY, mMaxY);
     }
 
+    // Make sure that the new local minimum/maximum values of our axes have
+    // finite values
+
+    checkAxesValues(newLocalMinX, newLocalMaxX, newLocalMinY, newLocalMaxY);
+
     // Update the local minimum/maximum of our axes, if needed
 
     bool needReplot = false;
 
-    if ((newLocalMinX != oldLocalMinX) && qIsFinite(newLocalMinX)) {
+    if (newLocalMinX != oldLocalMinX) {
         setLocalMinX(newLocalMinX);
 
         needReplot = true;
     }
 
-    if ((newLocalMaxX != oldLocalMaxX) && qIsFinite(newLocalMaxX)) {
+    if (newLocalMaxX != oldLocalMaxX) {
         setLocalMaxX(newLocalMaxX);
 
         needReplot = true;
     }
 
-    if ((newLocalMinY != oldLocalMinY) && qIsFinite(newLocalMinY)) {
+    if (newLocalMinY != oldLocalMinY) {
         setLocalMinY(newLocalMinY);
 
         needReplot = true;
     }
 
-    if ((newLocalMaxY != oldLocalMaxY) && qIsFinite(newLocalMaxY)) {
+    if (newLocalMaxY != oldLocalMaxY) {
         setLocalMaxY(newLocalMaxY);
 
         needReplot = true;
@@ -819,12 +860,7 @@ void SingleCellSimulationViewGraphPanelPlotWidget::wheelEvent(QWheelEvent *pEven
 
 void SingleCellSimulationViewGraphPanelPlotWidget::replotNow()
 {
-    // Replot ourselves, but only if the local minimum/maximum values of our
-    // axes are valid
-
-    if (   (qAbs(localMinX()) == DBL_MAX) || (qAbs(localMaxX()) == DBL_MAX)
-        || (qAbs(localMinY()) == DBL_MAX) || (qAbs(localMaxY()) == DBL_MAX))
-        return;
+    // Replot ourselves
 
     replot();
 

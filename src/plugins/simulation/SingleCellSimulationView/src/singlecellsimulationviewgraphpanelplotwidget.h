@@ -139,6 +139,9 @@ private:
 
     void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
 
+    void checkAxesValues(double &pMinX, double &pMaxX,
+                         double &pMinY, double &pMaxY);
+
     void setAxes(const double &pMinX, const double &pMaxX,
                  const double &pMinY, const double &pMaxY,
                  const bool &pCanReplot = true,
