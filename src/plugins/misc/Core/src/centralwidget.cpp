@@ -1035,7 +1035,7 @@ void CentralWidget::updateGui()
     if (fileTabsCrtIndex == -1) {
         // Let people know that we are about to update the GUI
 
-        emit guiUpdated(0);
+        emit guiUpdated(mPlugin);
 
         // There is no current file, so show our logo instead
 
@@ -1073,7 +1073,7 @@ void CentralWidget::updateGui()
 
         // Let people know that we are about to update the GUI
 
-        emit guiUpdated((newView != mNoViewMsg)?mPlugin:0);
+        emit guiUpdated(mPlugin);
 
         // Replace the current view with the new one
         // Note: the order in which the adding and removing (as well as the
@@ -1082,10 +1082,6 @@ void CentralWidget::updateGui()
 
         mContents->removeWidget(mContents->currentWidget());
         mContents->addWidget(newView);
-
-        // Let people know whether the file can be saved
-
-        emit canSave(FileManager::instance()->isModified(fileName));
     }
 
     // Give the focus to the new view after first checking whether it has a
@@ -1104,10 +1100,15 @@ void CentralWidget::updateGui()
 
         mContents->currentWidget()->setFocus();
 
+    // Update our modified settings
+
+    updateModifiedSettings();
+
     // Let people know whether we can save as, as well as whether there is/are
     // at least one/two file/s
 
     emit canSaveAs(   mFileTabs->count()
+                   && (mContents->currentWidget() != mNoViewMsg)
                    && guiInterface->guiSettings()->view()->mimeTypes().count());
 
     emit atLeastOneFile(mFileTabs->count());
