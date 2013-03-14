@@ -39,6 +39,10 @@
 
 //==============================================================================
 
+#include <QtSingleApplication>
+
+//==============================================================================
+
 namespace OpenCOR {
 
 //==============================================================================
@@ -48,7 +52,7 @@ static const QString HelpPlugin = "Help";
 
 //==============================================================================
 
-MainWindow::MainWindow() :
+MainWindow::MainWindow(SharedTools::QtSingleApplication *pApp) :
     QMainWindow(),
     mGui(new Ui::MainWindow),
     mLocale(QString()),
@@ -59,6 +63,15 @@ MainWindow::MainWindow() :
     mViewActions(QMap<Plugin *, QAction *>()),
     mViewPlugin(0)
 {
+    // Make sure that OpenCOR can handle a file opening request (from the
+    // operating system), as well as a message sent by another instance of
+    // itself
+
+    QObject::connect(pApp, SIGNAL(fileOpenRequest(const QString &)),
+                     this, SLOT(fileOpenRequest(const QString &)));
+    QObject::connect(pApp, SIGNAL(messageReceived(const QString &)),
+                     this, SLOT(messageReceived(const QString &)));
+
     // Create our settings object
 
     mSettings = new QSettings(SettingsOrganization, SettingsApplication);

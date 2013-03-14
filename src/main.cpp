@@ -102,21 +102,12 @@ int main(int pArgc, char *pArgv[])
 
     // Create the main window
 
-    OpenCOR::MainWindow *win = new OpenCOR::MainWindow();
+    OpenCOR::MainWindow *win = new OpenCOR::MainWindow(app);
 
     // Keep track of the main window (required by QtSingleApplication so that it
     // can do what it's supposed to be doing)
 
     app->setActivationWindow(win);
-
-    // Make sure that OpenCOR can handle a file opening request (from the
-    // operating system), as well as a message sent by another instance of
-    // itself
-
-    QObject::connect(app, SIGNAL(fileOpenRequest(const QString &)),
-                     win, SLOT(fileOpenRequest(const QString &)));
-    QObject::connect(app, SIGNAL(messageReceived(const QString &)),
-                     win, SLOT(messageReceived(const QString &)));
 
     // Handle the arguments
 

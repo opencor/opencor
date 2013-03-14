@@ -28,6 +28,12 @@ class QSettings;
 
 //==============================================================================
 
+namespace SharedTools {
+    class QtSingleApplication;
+}
+
+//==============================================================================
+
 namespace OpenCOR {
 
 //==============================================================================
@@ -46,7 +52,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow();
+    explicit MainWindow(SharedTools::QtSingleApplication *pApp);
     ~MainWindow();
 
     QString locale() const;
