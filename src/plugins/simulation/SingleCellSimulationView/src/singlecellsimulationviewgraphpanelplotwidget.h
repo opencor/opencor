@@ -142,6 +142,7 @@ private:
     void checkAxesValues(double &pMinX, double &pMaxX,
                          double &pMinY, double &pMaxY);
 
+    void setLocalAxes(const int &pAxis, const double &pMin, const double &pMax);
     void setAxes(const double &pMinX, const double &pMaxX,
                  const double &pMinY, const double &pMaxY,
                  const bool &pCanReplot = true,

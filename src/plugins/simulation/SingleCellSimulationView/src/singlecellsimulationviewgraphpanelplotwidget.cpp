@@ -224,6 +224,26 @@ void SingleCellSimulationViewGraphPanelPlotWidget::setMaxY(const double &pMaxY)
 
 //==============================================================================
 
+void SingleCellSimulationViewGraphPanelPlotWidget::setLocalAxes(const int &pAxis,
+                                                                const double &pMin,
+                                                                const double &pMax)
+{
+    // Set our local axes
+    // Note: to use setAxisScale() on its own is not sufficient unless we were
+    //       to replot ourselves immediately after, but we don't want to do
+    //       that, so instead we also use setAxisScaleDiv() to make sure that
+    //       our local axes are indeed taken into account (i.e. we can retrieve
+    //       them using localMinX(), localMaxX(), localMinY() and localMaxY()).
+    //       Also, we must call setAxisScaleDiv() before setAxisScale() to make
+    //       sure that the axis data is not considered as valid which is
+    //       important when it comes to plotting ourselves...
+
+    setAxisScaleDiv(pAxis, QwtScaleDiv(pMin, pMax));
+    setAxisScale(pAxis, pMin, pMax);
+}
+
+//==============================================================================
+
 double SingleCellSimulationViewGraphPanelPlotWidget::localMinX() const
 {
     // Return our local minimum X value
@@ -236,17 +256,8 @@ double SingleCellSimulationViewGraphPanelPlotWidget::localMinX() const
 void SingleCellSimulationViewGraphPanelPlotWidget::setLocalMinX(const double &pLocalMinX)
 {
     // Set our local minimum X value
-    // Note: to use setAxisScale() on its own is not sufficient unless we were
-    //       to replot ourselves immediately after, but we don't necessarily
-    //       want to do that, so instead we also use setAxisScaleDiv() to make
-    //       sure that our local minimum X value is indeed taken into account
-    //       (i.e. we can retrieve it using localMinX()). Also, we must call
-    //       setAxisScaleDiv() before setAxisScale() to make sure that the axis
-    //       data is not considered as valid which is important when it comes to
-    //       plotting ourselves...
 
-    setAxisScaleDiv(QwtPlot::xBottom, QwtScaleDiv(pLocalMinX, localMaxX()));
-    setAxisScale(QwtPlot::xBottom, pLocalMinX, localMaxX());
+    setLocalAxes(QwtPlot::xBottom, pLocalMinX, localMaxX());
 }
 
 //==============================================================================
@@ -263,10 +274,8 @@ double SingleCellSimulationViewGraphPanelPlotWidget::localMaxX() const
 void SingleCellSimulationViewGraphPanelPlotWidget::setLocalMaxX(const double &pLocalMaxX)
 {
     // Set our local maximum X value
-    // Note: see the corresponding note in setLocalMinX()...
 
-    setAxisScaleDiv(QwtPlot::xBottom, QwtScaleDiv(localMinX(), pLocalMaxX));
-    setAxisScale(QwtPlot::xBottom, localMinX(), pLocalMaxX);
+    setLocalAxes(QwtPlot::xBottom, localMinX(), pLocalMaxX);
 }
 
 //==============================================================================
@@ -283,10 +292,8 @@ double SingleCellSimulationViewGraphPanelPlotWidget::localMinY() const
 void SingleCellSimulationViewGraphPanelPlotWidget::setLocalMinY(const double &pLocalMinY)
 {
     // Set our local minimum Y value
-    // Note: see the corresponding note in setLocalMinX()...
 
-    setAxisScaleDiv(QwtPlot::yLeft, QwtScaleDiv(pLocalMinY, localMaxY()));
-    setAxisScale(QwtPlot::yLeft, pLocalMinY, localMaxY());
+    setLocalAxes(QwtPlot::yLeft, pLocalMinY, localMaxY());
 }
 
 //==============================================================================
@@ -303,10 +310,8 @@ double SingleCellSimulationViewGraphPanelPlotWidget::localMaxY() const
 void SingleCellSimulationViewGraphPanelPlotWidget::setLocalMaxY(const double &pLocalMaxY)
 {
     // Set our local maximum Y value
-    // Note: see the corresponding note in setLocalMinX()...
 
-    setAxisScaleDiv(QwtPlot::yLeft, QwtScaleDiv(localMinY(), pLocalMaxY));
-    setAxisScale(QwtPlot::yLeft, localMinY(), pLocalMaxY);
+    setLocalAxes(QwtPlot::yLeft, localMinY(), pLocalMaxY);
 }
 
 //==============================================================================
