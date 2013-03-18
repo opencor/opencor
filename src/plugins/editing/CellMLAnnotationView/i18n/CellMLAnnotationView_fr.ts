@@ -5,7 +5,7 @@
     <name>CellmlAnnotationViewCellmlListWidget</name>
     <message>
         <source>&amp;Expand All</source>
-        <translation>Tout &amp;Etendre</translation>
+        <translation>Tout &amp;Étendre</translation>
     </message>
     <message>
         <source>Expand all the children nodes</source>
