@@ -885,12 +885,12 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         mActiveGraphPanel->plot()->setLocalMaxY(mActiveGraphPanel->plot()->maxY());
     }
 
-    // Check our graph panel's plot's axes and then replot our graph panel's
-    // plot
+    // Check our graph panel's plot's local axes and then replot our graph
+    // panel's plot
     // Note: we always want to replot everything, hence our passing false to
-    //       checkAxes()...
+    //       checkLocalAxes()...
 
-    mActiveGraphPanel->plot()->checkAxes(false);
+    mActiveGraphPanel->plot()->checkLocalAxes(false);
     mActiveGraphPanel->plot()->replotNow();
 
     // Allow/prevent interaction with our graph panel's plot
@@ -1192,11 +1192,11 @@ void SingleCellSimulationViewWidget::simulationRunning(const bool &pIsResuming)
     // with the active simulation
 
     if (qobject_cast<SingleCellSimulationViewSimulation *>(sender()) == mSimulation) {
-        // Reset our axes' values, if resuming (since the user might have been
-        // zooming in/out, etc.)
+        // Reset our local axes' values, if resuming (since the user might have
+        // been zooming in/out, etc.)
 
         if (pIsResuming)
-            mActiveGraphPanel->plot()->resetAxes();
+            mActiveGraphPanel->plot()->resetLocalAxes();
 
         // Update our simulation mode and check for results
 
@@ -1531,11 +1531,11 @@ void SingleCellSimulationViewWidget::showModelParameter(const QString &pFileName
         mCurvesData.insert(key, curveData);
     }
 
-    // Check our graph panel's plot's axes before replotting everything
+    // Check our graph panel's plot's local axes before replotting everything
     // Note: we always want to replot, hence our passing false as an argument to
-    //       resetAxes()...
+    //       resetLocalAxes()...
 
-    mActiveGraphPanel->plot()->resetAxes(false);
+    mActiveGraphPanel->plot()->resetLocalAxes(false);
     mActiveGraphPanel->plot()->replotNow();
 }
 

@@ -54,10 +54,10 @@ public:
     void drawCurveSegment(SingleCellSimulationViewGraphPanelPlotCurve *pCurve,
                           const qulonglong &pFrom, const qulonglong &pTo);
 
-    void checkAxes(const bool &pCanReplot = true,
-                   const bool &pForceMinMaxValues = false,
-                   const bool &pUpdateMinMaxValues = false);
-    void resetAxes(const bool &pCanReplot = true);
+    void checkLocalAxes(const bool &pCanReplot = true,
+                        const bool &pForceMinMaxValues = false,
+                        const bool &pUpdateMinMaxValues = false);
+    void resetLocalAxes(const bool &pCanReplot = true);
 
     double minX() const;
     void setMinX(const double &pMinX);
@@ -139,19 +139,23 @@ private:
 
     void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
 
-    void checkAxesValues(double &pMinX, double &pMaxX,
-                         double &pMinY, double &pMaxY);
+    void checkLocalAxisValues(const int &pAxis, double &pMin, double &pMax,
+                              const bool &pCanResetMin = true,
+                              const bool &pCanResetMax = true);
+
+    void checkAnyAxesValues(double &pMinX, double &pMaxX,
+                            double &pMinY, double &pMaxY);
 
     void setLocalAxis(const int &pAxis, const double &pMin, const double &pMax);
-    void setAxes(const double &pMinX, const double &pMaxX,
-                 const double &pMinY, const double &pMaxY,
-                 const bool &pCanReplot = true,
-                 const bool &pForceMinMaxValues = false,
-                 const bool &pUpdateMinMaxValues = false,
-                 const bool &pResetMinMaxValues = false);
+    void setLocalAxes(const double &pLocalMinX, const double &pLocalMaxX,
+                      const double &pLocalMinY, const double &pLocalMaxY,
+                      const bool &pCanReplot = true,
+                      const bool &pForceMinMaxValues = false,
+                      const bool &pUpdateMinMaxValues = false,
+                      const bool &pResetMinMaxValues = false);
 
-    void scaleAxes(const double &pScalingFactorX,
-                   const double &pScalingFactorY);
+    void scaleLocalAxes(const double &pScalingFactorX,
+                        const double &pScalingFactorY);
 
     QPoint mousePositionWithinCanvas(QMouseEvent *pEvent) const;
 
