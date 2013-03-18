@@ -756,9 +756,10 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *p
         ;
     }
 
-    // Reset our point of origin, but only if we aren't zooming a region
+    // Reset our point of origin, but only if we are doing something and it's
+    // not zooming a region
 
-    if (mAction != ZoomRegion)
+    if ((mAction != None) && (mAction != ZoomRegion))
         mOriginPoint = mousePositionWithinCanvas(pEvent);
 }
 
@@ -799,9 +800,19 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *
         mAction = Zoom;
     } else if (   (pEvent->button() == Qt::RightButton)
                && (pEvent->modifiers() == Qt::ControlModifier)) {
-        // We want to zoom a region
+        // We want to zoom a region, but we can only do this if we are not
+        // already fully zoomed in
 
-        mAction = ZoomRegion;
+        if (   ((mMaxX-mMinX)/(localMaxX()-localMinX()) < MaxZoomFactor)
+            || ((mMaxY-mMinY)/(localMaxY()-localMinY()) < MaxZoomFactor)) {
+            mAction = ZoomRegion;
+        } else {
+            // We are already fully zoomed in, so...
+
+            mAction = None;
+
+            return;
+        }
     } else {
         // We cannot carry out any action, so check whether we need to replot
         // ourselves (in case we were in the middle of carrying out a visual
@@ -903,7 +914,7 @@ void SingleCellSimulationViewGraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent
         break;
     }
     default:
-        // Other actions which need nothing more to be done
+        // Another action which needs nothing more to be done
 
         ;
     }
