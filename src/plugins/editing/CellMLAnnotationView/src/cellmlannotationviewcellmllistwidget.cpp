@@ -214,11 +214,11 @@ void CellmlAnnotationViewCellmlElementItem::setIcon(const Type &pType)
 
         break;
     case RelationshipReference:
-        QStandardItem::setIcon(QIcon(":CellMLSupport_relationshipReferenceNode"));
+        QStandardItem::setIcon(QIcon(":CellMLSupport_relationshipNode"));
 
         break;
     case ComponentReference:
-        QStandardItem::setIcon(QIcon(":CellMLSupport_componentReferenceNode"));
+        QStandardItem::setIcon(QIcon(":CellMLSupport_componentNode"));
 
         break;
     case Connection:

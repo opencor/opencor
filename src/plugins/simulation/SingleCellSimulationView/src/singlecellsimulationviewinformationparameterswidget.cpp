@@ -307,7 +307,10 @@ void SingleCellSimulationViewInformationParametersWidget::populateModel(Core::Pr
                                || (modelParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::State);
         Core::Property *property = pPropertyEditor->addDoubleProperty(canEditProperty, true, section);
 
-        property->name()->setIcon(QIcon(":CellMLSupport_variableNode"));
+        if (canEditProperty)
+            property->name()->setIcon(QIcon(":CellMLSupport_modifiableVariableNode"));
+        else
+            property->name()->setIcon(QIcon(":CellMLSupport_variableNode"));
 
         pPropertyEditor->setStringPropertyItem(property->name(), modelParameter->name()+QString(modelParameter->degree(), '\''));
         pPropertyEditor->setStringPropertyItem(property->unit(), modelParameter->unit());
