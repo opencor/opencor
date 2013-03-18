@@ -13,9 +13,6 @@
 #include <qalgorithms.h>
 #include <qmath.h>
 #include <float.h>
-//---OPENCOR--- BEGIN
-#include <QtNumeric>
-//---OPENCOR--- END
 
 #if QT_VERSION < 0x040601
 #define qFabs(x) ::fabs(x)
@@ -587,9 +584,6 @@ QwtScaleDiv QwtLinearScaleEngine::divideScale( double x1, double x2,
     if ( stepSize != 0.0 )
     {
         QList<double> ticks[QwtScaleDiv::NTickTypes];
-//---OPENCOR--- BEGIN
-//if (qIsFinite(stepSize))
-//---OPENCOR--- END
         buildTicks( interval, stepSize, maxMinorSteps, ticks );
 
         scaleDiv = QwtScaleDiv( interval, ticks );

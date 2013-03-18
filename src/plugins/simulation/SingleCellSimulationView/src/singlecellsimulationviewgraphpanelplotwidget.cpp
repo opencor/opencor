@@ -229,17 +229,26 @@ void SingleCellSimulationViewGraphPanelPlotWidget::setLocalAxes(const int &pAxis
                                                                 const double &pMax)
 {
     // Set our local axes
-    // Note: to use setAxisScale() on its own is not sufficient unless we were
-    //       to replot ourselves immediately after, but we don't want to do
-    //       that, so instead we also use setAxisScaleDiv() to make sure that
-    //       our local axes are indeed taken into account (i.e. we can retrieve
-    //       them using localMinX(), localMaxX(), localMinY() and localMaxY()).
-    //       Also, we must call setAxisScaleDiv() before setAxisScale() to make
-    //       sure that the axis data is not considered as valid which is
-    //       important when it comes to plotting ourselves...
+    // Note #1: to use setAxisScale() on its own is not sufficient unless we
+    //          were to replot ourselves immediately after, but we don't want to
+    //          do that, so instead we also use setAxisScaleDiv() to make sure
+    //          that our local axes are indeed taken into account (i.e. we can
+    //          retrieve them using localMinX(), localMaxX(), localMinY() and
+    //          localMaxY()). Also, we must call setAxisScaleDiv() before
+    //          setAxisScale() to make sure that the axis data is not considered
+    //          as valid which is important when it comes to plotting
+    //          ourselves...
+    // Note #2: the way QwtPlot create ticks for an axis means that it cannot
+    //          handle an axis that would go from -DBL_MAX to DBL_MAX, even
+    //          though it would be a valid axis, so we check that the axis fits
+    //          within what we know works fine with QwtPlot...
 
-    setAxisScaleDiv(pAxis, QwtScaleDiv(pMin, pMax));
-    setAxisScale(pAxis, pMin, pMax);
+    static const double DBL_MAX_AXIS = 0.3*DBL_MAX;
+
+    setAxisScaleDiv(pAxis, QwtScaleDiv(qMax(-DBL_MAX_AXIS, pMin),
+                                       qMin( DBL_MAX_AXIS, pMax)));
+    setAxisScale(pAxis, qMax(-DBL_MAX_AXIS, pMin),
+                        qMin( DBL_MAX_AXIS, pMax));
 }
 
 //==============================================================================
