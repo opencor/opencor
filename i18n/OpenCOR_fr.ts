@@ -17,7 +17,7 @@
     </message>
     <message>
         <source>&amp;Help</source>
-        <translation>&amp;Aide</translation>
+        <translation>&amp;?</translation>
     </message>
     <message>
         <source>&amp;View</source>
@@ -57,7 +57,7 @@
     </message>
     <message>
         <source>&amp;About...</source>
-        <translation>&amp;A Propos...</translation>
+        <translation>&amp;À Propos...</translation>
     </message>
     <message>
         <source>Some general information about OpenCOR</source>
@@ -124,7 +124,7 @@
     </message>
     <message>
         <source>About</source>
-        <translation>A Propos</translation>
+        <translation>À Propos</translation>
     </message>
     <message>
         <source>is a cross-platform &lt;a href=&quot;http://www.cellml.org/&quot;&gt;CellML&lt;/a&gt;-based modelling environment which can be used to organise, edit, simulate and analyse CellML files.</source>
