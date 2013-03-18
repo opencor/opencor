@@ -103,16 +103,17 @@ QString getOsName()
 
 QString getAppVersion(QCoreApplication *pApp)
 {
+    QString appVersion = pApp->applicationVersion();
     QString bitVersion;
     static const int SizeOfPointer = sizeof(void *);
 
     switch (SizeOfPointer) {
     case 4:
-        bitVersion = " (32-bit)";
+        bitVersion = "32-bit";
 
         break;
     case 8:
-        bitVersion = " (64-bit)";
+        bitVersion = "64-bit";
 
         break;
     default:
@@ -121,7 +122,32 @@ QString getAppVersion(QCoreApplication *pApp)
         bitVersion = "";
     }
 
-    return  pApp->applicationName()+" "+pApp->applicationVersion()+bitVersion;
+    bool snapshot = false;
+    QString res = pApp->applicationName()+" ";
+
+    if (!appVersion.compare("Snapshot")) {
+        // We are dealing with a snapshot version of OpenCOR, so retrieve
+        // the executable's date and use it as our snapshot version
+
+        QDate appDate = QFileInfo(pApp->applicationFilePath()).created().date();
+
+        appVersion.sprintf("%d%02d%02d", appDate.year(), appDate.month(), appDate.day());
+
+        snapshot = true;
+    }
+
+    if (snapshot)
+        res += "[";
+
+    res += appVersion;
+
+    if (snapshot)
+        res += "]";
+
+    if (!bitVersion.isEmpty())
+        res += " ("+bitVersion+")";
+
+    return res;
 }
 
 //==============================================================================
