@@ -224,7 +224,7 @@ void SingleCellSimulationViewGraphPanelPlotWidget::setMaxY(const double &pMaxY)
 
 //==============================================================================
 
-void SingleCellSimulationViewGraphPanelPlotWidget::setLocalAxes(const int &pAxis,
+void SingleCellSimulationViewGraphPanelPlotWidget::setLocalAxis(const int &pAxis,
                                                                 const double &pMin,
                                                                 const double &pMax)
 {
@@ -266,7 +266,7 @@ void SingleCellSimulationViewGraphPanelPlotWidget::setLocalMinX(const double &pL
 {
     // Set our local minimum X value
 
-    setLocalAxes(QwtPlot::xBottom, pLocalMinX, localMaxX());
+    setLocalAxis(QwtPlot::xBottom, pLocalMinX, localMaxX());
 }
 
 //==============================================================================
@@ -284,7 +284,7 @@ void SingleCellSimulationViewGraphPanelPlotWidget::setLocalMaxX(const double &pL
 {
     // Set our local maximum X value
 
-    setLocalAxes(QwtPlot::xBottom, localMinX(), pLocalMaxX);
+    setLocalAxis(QwtPlot::xBottom, localMinX(), pLocalMaxX);
 }
 
 //==============================================================================
@@ -302,7 +302,7 @@ void SingleCellSimulationViewGraphPanelPlotWidget::setLocalMinY(const double &pL
 {
     // Set our local minimum Y value
 
-    setLocalAxes(QwtPlot::yLeft, pLocalMinY, localMaxY());
+    setLocalAxis(QwtPlot::yLeft, pLocalMinY, localMaxY());
 }
 
 //==============================================================================
@@ -320,7 +320,7 @@ void SingleCellSimulationViewGraphPanelPlotWidget::setLocalMaxY(const double &pL
 {
     // Set our local maximum Y value
 
-    setLocalAxes(QwtPlot::yLeft, localMinY(), pLocalMaxY);
+    setLocalAxis(QwtPlot::yLeft, localMinY(), pLocalMaxY);
 }
 
 //==============================================================================
