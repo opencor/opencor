@@ -691,11 +691,16 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
             // constant is a 'proper' constant or a 'computed' constant and this
             // can be determined by checking whether the computed target has an
             // initial value
+            // Note: normally, we would retrieve the corresponding
+            //       CellmlFileVariable object, but it may be that the constant
+            //       was imported and is therefore not defined in the current
+            //       CellML file, in which case there won't be any
+            //       CellmlFileVariable object, so instead we rely on the CellML
+            //       API version of a variable...
 
             ObjRef<iface::cellml_api::CellMLVariable> variable = computationTarget->variable();
-            CellmlFileVariable *cellmlVariable = pCellmlFile->component(QString::fromStdWString(variable->componentName()))->variable(QString::fromStdWString(variable->name()));
 
-            if (cellmlVariable->initialValue().isEmpty())
+            if (QString::fromStdWString(variable->initialValue()).isEmpty())
                 // The computed target doesn't have an initial value, so it must
                 // be a 'computed' constant
 
