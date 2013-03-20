@@ -723,7 +723,6 @@ void MainWindow::loadSettings()
 
     foreach (Plugin *plugin, loadedPlugins) {
         CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
-qDebug(">>> plugin->name(): %s", qPrintable(plugin->name()));
 
         if (coreInterface)
             coreInterface->loadingOfSettingsDone(loadedPlugins);
