@@ -1030,7 +1030,7 @@ void CentralWidget::updateGui()
     // there be one)
 
     int fileTabsCrtIndex = mFileTabs->currentIndex();
-    GuiInterface *guiInterface = qobject_cast<GuiInterface *>(mPlugin->instance());
+    GuiInterface *guiInterface = mPlugin?qobject_cast<GuiInterface *>(mPlugin->instance()):0;
 
     if (fileTabsCrtIndex == -1) {
         // Let people know that we are about to update the GUI
@@ -1109,7 +1109,7 @@ void CentralWidget::updateGui()
 
     emit canSaveAs(   mFileTabs->count()
                    && (mContents->currentWidget() != mNoViewMsg)
-                   && guiInterface->guiSettings()->view()->mimeTypes().count());
+                   && guiInterface && guiInterface->guiSettings()->view()->mimeTypes().count());
 
     emit atLeastOneFile(mFileTabs->count());
     emit atLeastTwoFiles(mFileTabs->count() > 1);

@@ -61,7 +61,8 @@ MainWindow::MainWindow(SharedTools::QtSingleApplication *pApp) :
     mViewSeparator(0),
     mViewMenus(QList<QMenu *>()),
     mViewActions(QMap<Plugin *, QAction *>()),
-    mViewPlugin(0)
+    mViewPlugin(0),
+    mNeedViewPluginInitialisation(true)
 {
     // Make sure that OpenCOR can handle a file opening request (from the
     // operating system), as well as a message sent by another instance of
@@ -722,6 +723,7 @@ void MainWindow::loadSettings()
 
     foreach (Plugin *plugin, loadedPlugins) {
         CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
+qDebug(">>> plugin->name(): %s", qPrintable(plugin->name()));
 
         if (coreInterface)
             coreInterface->loadingOfSettingsDone(loadedPlugins);
@@ -1286,12 +1288,13 @@ void MainWindow::updateGui(Plugin *pViewPlugin)
 
     // Check whether we are dealing with the current view plugin
 
-    if (pViewPlugin == mViewPlugin)
+    if (!mNeedViewPluginInitialisation && (pViewPlugin == mViewPlugin))
         return;
 
     // Update our view plugin
 
     mViewPlugin = pViewPlugin;
+    mNeedViewPluginInitialisation = false;
 
     // Go through our view actions and check whether the view plugin to which
     // they are attached are our current view plugin or one of its (in)direct
@@ -1301,8 +1304,9 @@ void MainWindow::updateGui(Plugin *pViewPlugin)
     for (QMap<Plugin *, QAction *>::ConstIterator iter = mViewActions.constBegin(),
                                                   iterEnd = mViewActions.constEnd();
          iter != iterEnd; ++iter) {
-        bool validViewAction =    !iter.key()->name().compare(pViewPlugin->name())
-                               ||  pViewPlugin->info().fullDependencies().contains(iter.key()->name());
+        bool validViewAction = pViewPlugin
+                               && (   !iter.key()->name().compare(pViewPlugin->name())
+                                   ||  pViewPlugin->info().fullDependencies().contains(iter.key()->name()));
 
         iter.value()->setEnabled(validViewAction);
         iter.value()->setVisible(validViewAction);

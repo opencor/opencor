@@ -89,6 +89,7 @@ private:
     QMap<Plugin *, QAction *> mViewActions;
 
     Plugin *mViewPlugin;
+    bool mNeedViewPluginInitialisation;
 
     void initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings);
 
