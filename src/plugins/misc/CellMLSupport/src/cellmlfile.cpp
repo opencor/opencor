@@ -49,15 +49,9 @@ namespace CellMLSupport {
 
 CellmlFile::CellmlFile(const QString &pFileName) :
     mFileName(pFileName),
-    mCellmlApiModel(0),
-    mCellmlApiRdfApiRepresentation(0),
-    mCellmlApiRdfDataSource(0),
     mModel(0),
-    mImports(CellmlFileImports()),
-    mUnits(CellmlFileUnits()),
-    mComponents(CellmlFileComponents()),
-    mGroups(CellmlFileGroups()),
-    mConnections(CellmlFileConnections()),
+    mRdfApiRepresentation(0),
+    mRdfDataSource(0),
     mRdfTriples(CellmlFileRdfTriples(this))
 {
     // Instantiate our runtime object
@@ -86,29 +80,13 @@ void CellmlFile::reset()
 {
     // Reset all of the file's properties
 
-    mCellmlApiModel = 0;
-    // Note: we don't need to call release_ref() since mModel will do it for us
-    //       since we gave it ownership of mCellmlApiModel...
+    mModel = 0;
 
-    if (mCellmlApiRdfApiRepresentation) {
-        mCellmlApiRdfApiRepresentation->release_ref();
-        mCellmlApiRdfApiRepresentation = 0;
-    }
-
-    if (mCellmlApiRdfDataSource) {
-        mCellmlApiRdfDataSource->release_ref();
-        mCellmlApiRdfDataSource = 0;
-    }
+    mRdfApiRepresentation = 0;
+    mRdfDataSource = 0;
 
     mUriBase = QString();
 
-    delete mModel;
-
-    clearImports();
-    clearUnits();
-    clearComponents();
-    clearGroups();
-    clearConnections();
     clearRdfTriples();
 
     mValid = true;
@@ -122,20 +100,20 @@ void CellmlFile::reset()
 
 //==============================================================================
 
-iface::cellml_api::Model * CellmlFile::cellmlApiModel() const
+iface::cellml_api::Model * CellmlFile::model() const
 {
-    // Return the CellML API model associated with our CellML file
+    // Return the model associated with our CellML file
 
-    return mCellmlApiModel;
+    return mModel;
 }
 
 //==============================================================================
 
-iface::rdf_api::DataSource * CellmlFile::cellmlApiRdfDataSource() const
+iface::rdf_api::DataSource * CellmlFile::rdfDataSource() const
 {
-    // Return the CellML API data source associated with our CellML file
+    // Return the data source associated with our CellML file
 
-    return mCellmlApiRdfDataSource;
+    return mRdfDataSource;
 }
 
 //==============================================================================
@@ -151,12 +129,9 @@ bool CellmlFile::load()
 
     mIssues.clear();
 
-    // Get a bootstrap object
+    // Get a bootstrap object and its model loader
 
     ObjRef<iface::cellml_api::CellMLBootstrap> cellmlBootstrap = CreateCellMLBootstrap();
-
-    // Get its model loader
-
     ObjRef<iface::cellml_api::DOMModelLoader> modelLoader = cellmlBootstrap->modelLoader();
 
     // Try to load the model
@@ -173,7 +148,7 @@ bool CellmlFile::load()
         time.start();
 #endif
 
-        mCellmlApiModel = modelLoader->loadFromURL(QUrl::fromLocalFile(mFileName).toString().toStdWString().c_str());
+        mModel = modelLoader->loadFromURL(QUrl::fromPercentEncoding(QUrl::fromLocalFile(mFileName).toEncoded()).toStdWString());
 
 #ifdef QT_DEBUG
         qDebug(" - CellML Loading time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
@@ -190,7 +165,7 @@ bool CellmlFile::load()
     // In the case of a non CellML 1.0 model, we want all the imports to be
     // fully instantiated
 
-    if (QString::fromStdWString(mCellmlApiModel->cellmlVersion()).compare(Cellml_1_0))
+    if (QString::fromStdWString(mModel->cellmlVersion()).compare(Cellml_1_0))
         try {
 #ifdef QT_DEBUG
             QTime time;
@@ -198,7 +173,7 @@ bool CellmlFile::load()
             time.start();
 #endif
 
-            mCellmlApiModel->fullyInstantiateImports();
+            mModel->fullyInstantiateImports();
 
 #ifdef QT_DEBUG
             qDebug(" - CellML full instantiation time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
@@ -223,109 +198,24 @@ bool CellmlFile::load()
 
     // Retrieve the URI base
 
-    ObjRef<iface::cellml_api::URI> xmlBase = mCellmlApiModel->xmlBase();
+    ObjRef<iface::cellml_api::URI> xmlBase = mModel->xmlBase();
 
     mUriBase = QString::fromStdWString(xmlBase->asText());
 
-    // Extract/retrieve various things from mCellmlApiModel
-    // Note: like for all of our CellmlFileElement-based classes (and
-    //       CellmlFileRdfTriple), mModel is going to take ownership of the
-    //       CellML API element (here mCellmlApiModel), hence it's not declared
-    //       using ObjRef<>, but this also means that ~CellmlFileElement() (and
-    //       (~CellmlFileRdfTriple()) must call the release_ref() method of the
-    //       CellML API element...
-
-    mModel = new CellmlFileModel(this, mCellmlApiModel);
-
-    // Iterate through the imports and add them to our list
-
-    ObjRef<iface::cellml_api::CellMLImportSet> imports = mCellmlApiModel->imports();
-    ObjRef<iface::cellml_api::CellMLImportIterator> importsIterator = imports->iterateImports();
-
-    forever {
-        iface::cellml_api::CellMLImport *import = importsIterator->nextImport();
-
-        if (!import)
-            break;
-
-        mImports << new CellmlFileImport(this, import);
-    }
-
-    // Iterate through the units and add them to our list
-
-    ObjRef<iface::cellml_api::UnitsSet> units = mCellmlApiModel->localUnits();
-    ObjRef<iface::cellml_api::UnitsIterator> unitsIterator = units->iterateUnits();
-
-    forever {
-        iface::cellml_api::Units *unit = unitsIterator->nextUnits();
-
-        if (!unit)
-            break;
-
-        mUnits << new CellmlFileUnit(this, unit);
-    }
-
-    // Iterate through the components and add them to our list
-
-    ObjRef<iface::cellml_api::CellMLComponentSet> components = mCellmlApiModel->localComponents();
-    ObjRef<iface::cellml_api::CellMLComponentIterator> componentsIterator = components->iterateComponents();
-
-    forever {
-        iface::cellml_api::CellMLComponent *component = componentsIterator->nextComponent();
-
-        if (!component)
-            break;
-
-        mComponents << new CellmlFileComponent(this, component);
-    }
-
-    // Iterate through the groups and add them to our list
-
-    ObjRef<iface::cellml_api::GroupSet> groups = mCellmlApiModel->groups();
-    ObjRef<iface::cellml_api::GroupIterator> groupsIterator = groups->iterateGroups();
-
-    forever {
-        iface::cellml_api::Group *group = groupsIterator->nextGroup();
-
-        if (!group)
-            break;
-
-        mGroups << new CellmlFileGroup(this, group);
-    }
-
-    // Iterate through the connections and add them to our list
-
-    ObjRef<iface::cellml_api::ConnectionSet> connections = mCellmlApiModel->connections();
-    ObjRef<iface::cellml_api::ConnectionIterator> connectionsIterator = connections->iterateConnections();
-
-    forever {
-        iface::cellml_api::Connection *connection = connectionsIterator->nextConnection();
-
-        if (!connection)
-            break;
-
-        mConnections << new CellmlFileConnection(this, connection);
-    }
-
     // Retrieve all the RDF triples associated with the model
 
-    ObjRef<iface::cellml_api::RDFRepresentation> rdfRepresentation = mCellmlApiModel->getRDFRepresentation(L"http://www.cellml.org/RDF/API");
+    ObjRef<iface::cellml_api::RDFRepresentation> rdfRepresentation = mModel->getRDFRepresentation(L"http://www.cellml.org/RDF/API");
 
     if (rdfRepresentation) {
-        QUERY_INTERFACE(mCellmlApiRdfApiRepresentation, rdfRepresentation,
-                        rdf_api::RDFAPIRepresentation);
-        // Note: ideally, we would use QueryInterface(), but this cannot be done
-        //       because mCellmlApiRdfApiRepresentation is not an ObjRef<>, so
-        //       we have no choice but retrieve the interface using the (ugly)
-        //       QUERY_INTERFACE() macro...
+        mRdfApiRepresentation = QueryInterface(rdfRepresentation);
 
-        if (mCellmlApiRdfApiRepresentation) {
-            mCellmlApiRdfDataSource = mCellmlApiRdfApiRepresentation->source();
-            ObjRef<iface::rdf_api::TripleSet> rdfTriples = mCellmlApiRdfDataSource->getAllTriples();
+        if (mRdfApiRepresentation) {
+            mRdfDataSource = mRdfApiRepresentation->source();
+            ObjRef<iface::rdf_api::TripleSet> rdfTriples = mRdfDataSource->getAllTriples();
             ObjRef<iface::rdf_api::TripleEnumerator> rdfTriplesEnumerator = rdfTriples->enumerateTriples();
 
             forever {
-                iface::rdf_api::Triple *rdfTriple = rdfTriplesEnumerator->getNextTriple();
+                ObjRef<iface::rdf_api::Triple> rdfTriple = rdfTriplesEnumerator->getNextTriple();
 
                 if (!rdfTriple)
                     break;
@@ -370,7 +260,7 @@ bool CellmlFile::save(const QString &pNewFileName)
     // Make sure that the RDF API representation is up to date by updating its
     // data source
 
-    mCellmlApiRdfApiRepresentation->source(mCellmlApiRdfDataSource);
+    mRdfApiRepresentation->source(mRdfDataSource);
 
     // (Create and) open the file for writing
 
@@ -388,7 +278,7 @@ bool CellmlFile::save(const QString &pNewFileName)
 
     QTextStream out(&file);
 
-    out << QString::fromStdWString(mCellmlApiModel->serialisedText());
+    out << QString::fromStdWString(mModel->serialisedText());
 
     file.close();
 
@@ -442,7 +332,7 @@ bool CellmlFile::isValid()
 #endif
 
         ObjRef<iface::cellml_services::VACSService> vacssService = CreateVACSService();
-        ObjRef<iface::cellml_services::CellMLValidityErrorSet> cellmlValidityErrorSet = vacssService->validateModel(mCellmlApiModel);
+        ObjRef<iface::cellml_services::CellMLValidityErrorSet> cellmlValidityErrorSet = vacssService->validateModel(mModel);
 
 #ifdef QT_DEBUG
         qDebug(" - CellML validation time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
@@ -528,9 +418,9 @@ bool CellmlFile::isValid()
                         if (!importCellmlElement)
                             break;
 
-                        ObjRef<iface::cellml_api::URI> href = importCellmlElement->xlinkHref();
+                        ObjRef<iface::cellml_api::URI> xlinkHref = importCellmlElement->xlinkHref();
 
-                        importedFile = QString::fromStdWString(href->asText());
+                        importedFile = QString::fromStdWString(xlinkHref->asText());
 
                         break;
                     }
@@ -647,60 +537,6 @@ QString CellmlFile::fileName() const
 
 //==============================================================================
 
-CellmlFileModel * CellmlFile::model() const
-{
-    // Return the CellML file's model
-
-    return mModel;
-}
-
-//==============================================================================
-
-CellmlFileImports * CellmlFile::imports()
-{
-    // Return the CellML file's imports
-
-    return &mImports;
-}
-
-//==============================================================================
-
-CellmlFileUnits * CellmlFile::units()
-{
-    // Return the CellML file's units
-
-    return &mUnits;
-}
-
-//==============================================================================
-
-CellmlFileComponents * CellmlFile::components()
-{
-    // Return the CellML file's components
-
-    return &mComponents;
-}
-
-//==============================================================================
-
-CellmlFileGroups * CellmlFile::groups()
-{
-    // Return the CellML file's groups
-
-    return &mGroups;
-}
-
-//==============================================================================
-
-CellmlFileConnections * CellmlFile::connections()
-{
-    // Return the CellML file's connections
-
-    return &mConnections;
-}
-
-//==============================================================================
-
 CellmlFileRdfTriples * CellmlFile::rdfTriples()
 {
     // Return the CellML file's RDF triples
@@ -725,81 +561,6 @@ CellmlFileRdfTriples CellmlFile::rdfTriples(const QString &pCmetaId) const
     // with pCmetaId
 
     return mRdfTriples.contains(pCmetaId);
-}
-
-//==============================================================================
-
-CellmlFileComponent * CellmlFile::component(const QString &pComponentName)
-{
-    foreach (CellmlFileComponent *component, mComponents)
-        if (!component->name().compare(pComponentName))
-            // We have found the component we are after
-
-            return component;
-
-    // The component we are after couldn't be found, so...
-
-    return 0;
-}
-
-//==============================================================================
-
-void CellmlFile::clearImports()
-{
-    // Delete all the imports and clear our list
-
-    foreach (CellmlFileImport *import, mImports)
-        delete import;
-
-    mImports.clear();
-}
-
-//==============================================================================
-
-void CellmlFile::clearUnits()
-{
-    // Delete all the units and clear our list
-
-    foreach (CellmlFileUnit *unit, mUnits)
-        delete unit;
-
-    mUnits.clear();
-}
-
-//==============================================================================
-
-void CellmlFile::clearComponents()
-{
-    // Delete all the components and clear our list
-
-    foreach (CellmlFileComponent *component, mComponents)
-        delete component;
-
-    mComponents.clear();
-}
-
-//==============================================================================
-
-void CellmlFile::clearGroups()
-{
-    // Delete all the groups and clear our list
-
-    foreach (CellmlFileGroup *group, mGroups)
-        delete group;
-
-    mGroups.clear();
-}
-
-//==============================================================================
-
-void CellmlFile::clearConnections()
-{
-    // Delete all the connections and clear our list
-
-    foreach (CellmlFileConnection *connection, mConnections)
-        delete connection;
-
-    mConnections.clear();
 }
 
 //==============================================================================

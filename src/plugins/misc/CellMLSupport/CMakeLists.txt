@@ -16,28 +16,11 @@ ADD_PLUGIN(CellMLSupport
         ../../plugininfo.cpp
 
         src/cellmlfile.cpp
-        src/cellmlfilecomponent.cpp
-        src/cellmlfilecomponentreference.cpp
-        src/cellmlfileconnection.cpp
-        src/cellmlfileelement.cpp
-        src/cellmlfilegroup.cpp
-        src/cellmlfileimport.cpp
-        src/cellmlfileimportcomponent.cpp
-        src/cellmlfileimportunit.cpp
         src/cellmlfileissue.cpp
         src/cellmlfilemanager.cpp
-        src/cellmlfilemapcomponents.cpp
-        src/cellmlfilemapvariables.cpp
-        src/cellmlfilemathmlelement.cpp
-        src/cellmlfilemodel.cpp
-        src/cellmlfilenamedelement.cpp
         src/cellmlfilerdftriple.cpp
         src/cellmlfilerdftripleelement.cpp
-        src/cellmlfilerelationshipreference.cpp
         src/cellmlfileruntime.cpp
-        src/cellmlfileunit.cpp
-        src/cellmlfileunitelement.cpp
-        src/cellmlfilevariable.cpp
         src/cellmlsupportplugin.cpp
     HEADERS_MOC
         src/cellmlfile.h

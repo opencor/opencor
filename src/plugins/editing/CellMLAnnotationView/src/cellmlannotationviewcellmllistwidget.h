@@ -76,21 +76,26 @@ public:
     explicit CellmlAnnotationViewCellmlElementItem(const bool &pError, const QString &pText);
     explicit CellmlAnnotationViewCellmlElementItem(const Type &pType, const QString &pText);
     explicit CellmlAnnotationViewCellmlElementItem(const Type &pType,
-                                                   CellMLSupport::CellmlFileElement *pElement,
+                                                   iface::cellml_api::CellMLElement *pCellmlFileElement,
                                                    const int pNumber = -1);
 
     bool isCategory() const;
     virtual int type() const;
     int number() const;
 
-    CellMLSupport::CellmlFileElement * element() const;
+    iface::cellml_api::CellMLElement * cellmlFileElement() const;
 
 private:
     bool mCategory;
     Type mType;
+
+    ObjRef<iface::cellml_api::CellMLElement> mCellmlFileElement;
+
     int mNumber;
 
-    CellMLSupport::CellmlFileElement *mElement;
+    void constructor(const bool &pCategory, const Type &pType,
+                     iface::cellml_api::CellMLElement *pCellmlFileElement,
+                     const int &pNumber);
 
     void setIcon(const Type &pType);
 };
@@ -126,9 +131,9 @@ private:
 
     void populateModel();
     void populateUnitsModel(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem,
-                            CellMLSupport::CellmlFileUnits *pUnits);
-    void populateComponentReferenceModel(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem,
-                                         CellMLSupport::CellmlFileComponentReference *pComponentReference);
+                            iface::cellml_api::UnitsSet *pUnits);
+    void populateGroupComponentReferenceModel(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem,
+                                              iface::cellml_api::ComponentRef *pGroupComponentReference);
 
     void indexExpandAll(const QModelIndex &pIndex) const;
     void indexCollapseAll(const QModelIndex &pIndex) const;
@@ -136,7 +141,7 @@ private:
     bool indexIsAllExpanded(const QModelIndex &pIndex) const;
 
 Q_SIGNALS:
-    void metadataDetailsRequested(CellMLSupport::CellmlFileElement *pCellFileElement);
+    void metadataDetailsRequested(iface::cellml_api::CellMLElement *pCellFileElement);
 
 private Q_SLOTS:
     void resizeTreeViewToContents();

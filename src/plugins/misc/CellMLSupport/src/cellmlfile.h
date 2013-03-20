@@ -7,12 +7,7 @@
 
 //==============================================================================
 
-#include "cellmlfilecomponent.h"
-#include "cellmlfileconnection.h"
-#include "cellmlfilegroup.h"
-#include "cellmlfileimport.h"
 #include "cellmlfileissue.h"
-#include "cellmlfilemodel.h"
 #include "cellmlfilerdftriple.h"
 #include "cellmlfileruntime.h"
 #include "cellmlsupportglobal.h"
@@ -36,9 +31,9 @@ public:
     explicit CellmlFile(const QString &pFileName);
     ~CellmlFile();
 
-    iface::cellml_api::Model * cellmlApiModel() const;
+    iface::cellml_api::Model * model() const;
 
-    iface::rdf_api::DataSource * cellmlApiRdfDataSource() const;
+    iface::rdf_api::DataSource * rdfDataSource() const;
 
     bool load();
     bool reload();
@@ -56,37 +51,22 @@ public:
 
     QString fileName() const;
 
-    CellmlFileModel * model() const;
-
-    CellmlFileImports * imports();
-    CellmlFileUnits * units();
-    CellmlFileComponents * components();
-    CellmlFileGroups * groups();
-    CellmlFileConnections * connections();
     CellmlFileRdfTriples * rdfTriples();
 
     QString uriBase() const;
 
     CellmlFileRdfTriples rdfTriples(const QString &pCmetaId) const;
 
-    CellmlFileComponent * component(const QString &pComponentName);
-
 private:
     QString mFileName;
 
-    iface::cellml_api::Model *mCellmlApiModel;
+    ObjRef<iface::cellml_api::Model> mModel;
 
-    iface::rdf_api::RDFAPIRepresentation *mCellmlApiRdfApiRepresentation;
-    iface::rdf_api::DataSource *mCellmlApiRdfDataSource;
+    ObjRef<iface::rdf_api::RDFAPIRepresentation> mRdfApiRepresentation;
+    ObjRef<iface::rdf_api::DataSource> mRdfDataSource;
 
     QString mUriBase;
 
-    CellmlFileModel *mModel;
-    CellmlFileImports mImports;
-    CellmlFileUnits mUnits;
-    CellmlFileComponents mComponents;
-    CellmlFileGroups mGroups;
-    CellmlFileConnections mConnections;
     CellmlFileRdfTriples mRdfTriples;
 
     bool mValid;
@@ -101,11 +81,6 @@ private:
 
     void reset();
 
-    void clearImports();
-    void clearUnits();
-    void clearComponents();
-    void clearGroups();
-    void clearConnections();
     void clearRdfTriples();
 };
 

@@ -30,7 +30,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
     Widget(pParent),
     mParent(pParent),
     mGui(new Ui::CellmlAnnotationViewMetadataDetailsWidget),
-    mCellmlElement(0)
+    mCellmlFileElement(0)
 {
     // Set up the GUI
 
@@ -202,15 +202,15 @@ void CellmlAnnotationViewMetadataDetailsWidget::retranslateUi()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataDetailsWidget::updateGui(CellMLSupport::CellmlFileElement *pCellmlElement)
+void CellmlAnnotationViewMetadataDetailsWidget::updateGui(iface::cellml_api::CellMLElement *pCellmlFileElement)
 {
     // Keep track of the CellML element
 
-    mCellmlElement = pCellmlElement;
+    mCellmlFileElement = pCellmlFileElement;
 
     // Show/hide our category message depending, if needed
 
-    bool isCategoryElement = !pCellmlElement;
+    bool isCategoryElement = !pCellmlFileElement;
 
     mBorderedCategoryMessage->setVisible(isCategoryElement);
     mSplitter->setVisible(!isCategoryElement);
@@ -220,7 +220,9 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateGui(CellMLSupport::CellmlF
 
     bool isUnknownMetadata = isCategoryElement?
                                  true:
-                                 pCellmlElement->rdfTriples().type() == CellMLSupport::CellmlFileRdfTriple::Unknown;
+//---GRY---
+//                                 pCellmlFileElement->rdfTriples().type() == CellMLSupport::CellmlFileRdfTriple::Unknown;
+true;
 
     mBorderedUnsupportedMetadataMessage->setVisible(!isCategoryElement && isUnknownMetadata);
 
@@ -236,10 +238,10 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateGui(CellMLSupport::CellmlF
     // Update our metadata edit and view details, if needed
 
     if (!isCategoryElement && !isUnknownMetadata)
-        mMetadataEditDetails->updateGui(pCellmlElement);
+        mMetadataEditDetails->updateGui(pCellmlFileElement);
 
     if (!isCategoryElement)
-        mMetadataViewDetails->updateGui(pCellmlElement);
+        mMetadataViewDetails->updateGui(pCellmlFileElement);
 }
 
 //==============================================================================
@@ -347,9 +349,10 @@ void CellmlAnnotationViewMetadataDetailsWidget::removeAllMetadata()
     // Remove all the metadata from the current CellML element and ask our
     // details widget to update itself
 
-    mCellmlElement->removeAllMetadata();
+//---GRY---
+//    mCellmlFileElement->removeAllMetadata();
 
-    updateGui(mCellmlElement);
+    updateGui(mCellmlFileElement);
 }
 
 //==============================================================================
@@ -358,7 +361,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateMetadataEditDetails()
 {
     // Update our metadata edit details widget
 
-    mMetadataEditDetails->updateGui(mCellmlElement);
+    mMetadataEditDetails->updateGui(mCellmlFileElement);
 }
 
 //==============================================================================

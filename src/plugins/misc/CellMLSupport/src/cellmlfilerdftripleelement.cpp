@@ -15,7 +15,7 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pCellmlApiRdfNode) :
+CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pRdfNode) :
     mId(QString()),
     mUriReference(QString()),
     mLexicalForm(QString()),
@@ -26,7 +26,7 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pCe
     // it supports the rdf_api::URIReference, rdf_api::PlainLiteral or
     // rdf_api::TypedLiteral interface
 
-    ObjRef<iface::rdf_api::URIReference> uriReference = QueryInterface(pCellmlApiRdfNode);
+    ObjRef<iface::rdf_api::URIReference> uriReference = QueryInterface(pRdfNode);
 
     if (uriReference) {
         // The rdf_api::URIReference interface is supported, so initialise the
@@ -36,7 +36,7 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pCe
 
         mUriReference = QString::fromStdWString(uriReference->URI()).trimmed();
     } else {
-        ObjRef<iface::rdf_api::PlainLiteral> plainLiteral = QueryInterface(pCellmlApiRdfNode);
+        ObjRef<iface::rdf_api::PlainLiteral> plainLiteral = QueryInterface(pRdfNode);
 
         if (plainLiteral) {
             // The rdf_api::PlainLiteral interface is supported, so initialise
@@ -47,7 +47,7 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pCe
             mLexicalForm = QString::fromStdWString(plainLiteral->lexicalForm()).trimmed();
             mLanguage    = QString::fromStdWString(plainLiteral->language()).trimmed();
         } else {
-            ObjRef<iface::rdf_api::TypedLiteral> typedLiteral = QueryInterface(pCellmlApiRdfNode);
+            ObjRef<iface::rdf_api::TypedLiteral> typedLiteral = QueryInterface(pRdfNode);
 
             if (typedLiteral) {
                 // The rdf_api::TypedLiteral interface is supported, so
@@ -71,7 +71,7 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pCe
                 static QMap<QString, QString> ids;
                 static int counter = 0;
 
-                QString id = QString::fromStdString(pCellmlApiRdfNode->objid()).trimmed();
+                QString id = QString::fromStdString(pRdfNode->objid()).trimmed();
 
                 mType = Id;
 

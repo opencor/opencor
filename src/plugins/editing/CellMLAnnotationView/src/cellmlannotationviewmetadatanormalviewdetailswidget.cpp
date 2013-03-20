@@ -35,7 +35,7 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
     mGui(new Ui::CellmlAnnotationViewMetadataNormalViewDetailsWidget),
     mGridWidget(0),
     mGridLayout(0),
-    mCellmlElement(0),
+    mCellmlFileElement(0),
     mRdfTripleInformation(QString()),
     mType(No),
     mLookupInformation(First),
@@ -83,20 +83,20 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::retranslateUi()
 
     // For the rest of our GUI, it's easier to just update it, so...
 
-    updateGui(mCellmlElement, mRdfTripleInformation, mType, mLookupInformation,
+    updateGui(mCellmlFileElement, mRdfTripleInformation, mType, mLookupInformation,
               mVerticalScrollBarPosition, true);
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(CellMLSupport::CellmlFileElement *pCellmlElement,
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellml_api::CellMLElement *pCellmlFileElement,
                                                                     const QString &pRdfTripleInformation,
                                                                     const Type &pType,
                                                                     const Information &pLookupInformation,
                                                                     const int &pVerticalScrollBarPosition,
                                                                     const bool &pRetranslate)
 {
-    if (!pCellmlElement)
+    if (!pCellmlFileElement)
         return;
 
     // Note: we are using a grid layout to dislay the contents of our view, but
@@ -109,7 +109,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(CellMLSuppor
 
     // Keep track of the CellML element
 
-    mCellmlElement = pCellmlElement;
+    mCellmlFileElement = pCellmlFileElement;
 
     // Create a new widget and layout
 
@@ -120,7 +120,9 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(CellMLSuppor
 
     // Populate our new layout, but only if there is at least one RDF triple
 
-    CellMLSupport::CellmlFileRdfTriples rdfTriples = pCellmlElement->rdfTriples();
+//---GRY---
+//    CellMLSupport::CellmlFileRdfTriples rdfTriples = pCellmlFileElement->rdfTriples();
+CellMLSupport::CellmlFileRdfTriples rdfTriples = CellMLSupport::CellmlFileRdfTriples(mCellmlFile);
     QString firstRdfTripleInformation = QString();
     QString lastRdfTripleInformation = QString();
 
@@ -345,7 +347,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSup
 
     // Update the GUI to reflect the addition of the given RDF triple
 
-    updateGui(mCellmlElement, QString(), No, mLookupInformation);
+    updateGui(mCellmlFileElement, QString(), No, mLookupInformation);
 }
 
 //==============================================================================
@@ -589,7 +591,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::removeRdfTriple()
 
     // Update the GUI to reflect the removal of the RDF triple
 
-    updateGui(mCellmlElement, mRdfTripleInformation, mType, mLookupInformation);
+    updateGui(mCellmlFileElement, mRdfTripleInformation, mType, mLookupInformation);
 
     // Let people know that an RDF triple has been removed
 

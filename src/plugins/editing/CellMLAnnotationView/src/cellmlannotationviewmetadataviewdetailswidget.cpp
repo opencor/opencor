@@ -46,30 +46,31 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::retranslateUi()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataViewDetailsWidget::updateGui(CellMLSupport::CellmlFileElement *pCellmlElement)
+void CellmlAnnotationViewMetadataViewDetailsWidget::updateGui(iface::cellml_api::CellMLElement *pCellmlFileElement)
 {
-    if (!pCellmlElement)
+    if (!pCellmlFileElement)
         return;
 
     // Decide on which view to use and update it, if needed
 
-    switch (pCellmlElement->rdfTriples().type()) {
-    case CellMLSupport::CellmlFileRdfTriple::BioModelsDotNetQualifier:
-    case CellMLSupport::CellmlFileRdfTriple::Empty:
-        removeWidget(mRawView);
-        addWidget(mNormalView);
+//---GRY---
+//    switch (pCellmlFileElement->rdfTriples().type()) {
+//    case CellMLSupport::CellmlFileRdfTriple::BioModelsDotNetQualifier:
+//    case CellMLSupport::CellmlFileRdfTriple::Empty:
+//        removeWidget(mRawView);
+//        addWidget(mNormalView);
 
-        mNormalView->updateGui(pCellmlElement);
+//        mNormalView->updateGui(pCellmlFileElement);
 
-        break;
-    default:
-        // Unknown type, so...
+//        break;
+//    default:
+//        // Unknown type, so...
 
-        removeWidget(mNormalView);
-        addWidget(mRawView);
+//        removeWidget(mNormalView);
+//        addWidget(mRawView);
 
-        mRawView->updateGui(pCellmlElement);
-    }
+//        mRawView->updateGui(pCellmlFileElement);
+//    }
 }
 
 //==============================================================================

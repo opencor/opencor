@@ -103,8 +103,8 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(CellMLAnnotationViewPlugi
     // A connection to let our details widget know that we want to see the
     // metadata details of some CellML element
 
-    connect(mCellmlList, SIGNAL(metadataDetailsRequested(CellMLSupport::CellmlFileElement *)),
-            mMetadataDetails, SLOT(updateGui(CellMLSupport::CellmlFileElement *)));
+    connect(mCellmlList, SIGNAL(metadataDetailsRequested(iface::cellml_api::CellMLElement *)),
+            mMetadataDetails, SLOT(updateGui(iface::cellml_api::CellMLElement *)));
 
     // A connection to handle the fact that an RDF triple has been added
 

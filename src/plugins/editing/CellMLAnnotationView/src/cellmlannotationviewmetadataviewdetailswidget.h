@@ -44,7 +44,7 @@ public:
 
     virtual void retranslateUi();
 
-    void updateGui(CellMLSupport::CellmlFileElement *pCellmlElement);
+    void updateGui(iface::cellml_api::CellMLElement *pCellmlFileElement);
 
     void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
 

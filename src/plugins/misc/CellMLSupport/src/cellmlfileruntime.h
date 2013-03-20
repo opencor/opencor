@@ -144,8 +144,8 @@ private:
     ModelType mModelType;
     bool mAtLeastOneNlaSystem;
 
-    ObjRef<iface::cellml_services::CodeInformation> mCellmlApiOdeCodeInformation;
-    ObjRef<iface::cellml_services::IDACodeInformation> mCellmlApiDaeCodeInformation;
+    ObjRef<iface::cellml_services::CodeInformation> mOdeCodeInformation;
+    ObjRef<iface::cellml_services::IDACodeInformation> mDaeCodeInformation;
 
     Compiler::CompilerEngine *mCompilerEngine;
 
@@ -174,10 +174,10 @@ private:
     void couldNotGenerateModelCodeIssue();
     void unexpectedProblemDuringModelCompilationIssue();
 
-    void checkCodeInformation(iface::cellml_services::CodeInformation *pCellmlApiCodeInformation);
+    void checkCodeInformation(iface::cellml_services::CodeInformation *pCodeInformation);
 
-    iface::cellml_services::CodeInformation * getOdeCodeInformation(iface::cellml_api::Model *pCellmlApiModel);
-    iface::cellml_services::CodeInformation * getDaeCodeInformation(iface::cellml_api::Model *pCellmlApiModel);
+    void getOdeCodeInformation(iface::cellml_api::Model *pModel);
+    void getDaeCodeInformation(iface::cellml_api::Model *pModel);
 
     QString functionCode(const QString &pFunctionSignature,
                          const QString &pFunctionBody,

@@ -71,7 +71,7 @@ public:
     };
 
     explicit CellmlFileRdfTriple(CellmlFile *pCellmlFile,
-                                 iface::rdf_api::Triple *pCellmlApiRdfTriple);
+                                 iface::rdf_api::Triple *pRdfTriple);
     explicit CellmlFileRdfTriple(CellmlFile *pCellmlFile,
                                  const QString pSubject,
                                  const ModelQualifier &pModelQualifier,
@@ -82,8 +82,8 @@ public:
                                  const QString &pResource, const QString &pId);
     ~CellmlFileRdfTriple();
 
-    iface::rdf_api::Triple * cellmlApiRdfTriple() const;
-    void setCellmlApiRdfTriple(iface::rdf_api::Triple *pCellmlApiRdfTriple);
+    iface::rdf_api::Triple * rdfTriple() const;
+    void setRdfTriple(iface::rdf_api::Triple *pRdfTriple);
 
     CellmlFileRdfTripleElement * subject() const;
     CellmlFileRdfTripleElement * predicate() const;
@@ -113,7 +113,7 @@ public:
 private:
     CellmlFile *mCellmlFile;
 
-    iface::rdf_api::Triple *mCellmlApiRdfTriple;
+    ObjRef<iface::rdf_api::Triple> mRdfTriple;
 
     CellmlFileRdfTripleElement *mSubject;
     CellmlFileRdfTripleElement *mPredicate;
@@ -126,6 +126,12 @@ private:
 
     QString mResource;
     QString mId;
+
+    void constructor(CellmlFile *pCellmlFile,
+                     iface::rdf_api::Triple *pRdfTriple, const Type &pType,
+                     const ModelQualifier &pModelQualifier,
+                     const BioQualifier &pBioQualifier,
+                     const QString &pResource, const QString &pId);
 };
 
 //==============================================================================

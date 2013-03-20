@@ -36,7 +36,7 @@ public:
         TypedLiteral
     };
 
-    explicit CellmlFileRdfTripleElement(iface::rdf_api::Node *pCellmlApiRdfNode);
+    explicit CellmlFileRdfTripleElement(iface::rdf_api::Node *pRdfNode);
     explicit CellmlFileRdfTripleElement(const QString &pUriReference);
 
     Type type() const;

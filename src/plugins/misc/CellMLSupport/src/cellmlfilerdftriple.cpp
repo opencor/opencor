@@ -17,21 +17,42 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
-                                         iface::rdf_api::Triple *pCellmlApiRdfTriple) :
-    mCellmlFile(pCellmlFile),
-    mCellmlApiRdfTriple(pCellmlApiRdfTriple),
-    mType(Unknown),
-    mModelQualifier(ModelUnknown),
-    mBioQualifier(BioUnknown),
-    mResource(QString()),
-    mId(QString())
+void CellmlFileRdfTriple::constructor(CellmlFile *pCellmlFile,
+                                      iface::rdf_api::Triple *pRdfTriple,
+                                      const Type &pType,
+                                      const ModelQualifier &pModelQualifier,
+                                      const BioQualifier &pBioQualifier,
+                                      const QString &pResource,
+                                      const QString &pId)
 {
+    mCellmlFile = pCellmlFile;
+
+    mRdfTriple = pRdfTriple;
+
+    mType = pType;
+
+    mModelQualifier = pModelQualifier;
+    mBioQualifier = pBioQualifier;
+
+    mResource = pResource;
+    mId = pId;
+}
+
+//==============================================================================
+
+CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
+                                         iface::rdf_api::Triple *pRdfTriple)
+{
+    // Construct ourselves
+
+    constructor(pCellmlFile, pRdfTriple, Unknown,
+                ModelUnknown, BioUnknown, QString(), QString());
+
     // Retrieve the RDF triple's subject, predicate and object information
 
-    ObjRef<iface::rdf_api::Resource> subject = pCellmlApiRdfTriple->subject();
-    ObjRef<iface::rdf_api::Resource> predicate = pCellmlApiRdfTriple->predicate();
-    ObjRef<iface::rdf_api::Node> object = pCellmlApiRdfTriple->object();
+    ObjRef<iface::rdf_api::Resource> subject = pRdfTriple->subject();
+    ObjRef<iface::rdf_api::Resource> predicate = pRdfTriple->predicate();
+    ObjRef<iface::rdf_api::Node> object = pRdfTriple->object();
 
     mSubject   = new CellmlFileRdfTripleElement(subject);
     mPredicate = new CellmlFileRdfTripleElement(predicate);
@@ -111,15 +132,13 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
                                          const QString pSubject,
                                          const ModelQualifier &pModelQualifier,
                                          const QString &pResource,
-                                         const QString &pId) :
-    mCellmlFile(pCellmlFile),
-    mCellmlApiRdfTriple(0),
-    mType(BioModelsDotNetQualifier),
-    mModelQualifier(pModelQualifier),
-    mBioQualifier(BioUnknown),
-    mResource(pResource),
-    mId(pId)
+                                         const QString &pId)
 {
+    // Construct ourselves
+
+    constructor(pCellmlFile, 0, BioModelsDotNetQualifier,
+                pModelQualifier, BioUnknown, pResource, pId);
+
     // Create our RDF triple elements
 
     mSubject   = new CellmlFileRdfTripleElement(pSubject);
@@ -133,15 +152,13 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
                                          const QString pSubject,
                                          const BioQualifier &pBioQualifier,
                                          const QString &pResource,
-                                         const QString &pId) :
-    mCellmlFile(pCellmlFile),
-    mCellmlApiRdfTriple(0),
-    mType(BioModelsDotNetQualifier),
-    mModelQualifier(ModelUnknown),
-    mBioQualifier(pBioQualifier),
-    mResource(pResource),
-    mId(pId)
+                                         const QString &pId)
 {
+    // Construct ourselves
+
+    constructor(pCellmlFile, 0, BioModelsDotNetQualifier,
+                ModelUnknown, pBioQualifier, pResource, pId);
+
     // Create our RDF triple elements
 
     mSubject   = new CellmlFileRdfTripleElement(pSubject);
@@ -158,27 +175,25 @@ CellmlFileRdfTriple::~CellmlFileRdfTriple()
     delete mSubject;
     delete mPredicate;
     delete mObject;
-
-    if (mCellmlApiRdfTriple)
-        mCellmlApiRdfTriple->release_ref();
 }
 
 //==============================================================================
 
-iface::rdf_api::Triple * CellmlFileRdfTriple::cellmlApiRdfTriple() const
+iface::rdf_api::Triple * CellmlFileRdfTriple::rdfTriple() const
 {
     // Return the RDF triple's CellML API RDFtriple
 
-    return mCellmlApiRdfTriple;
+    return mRdfTriple;
 }
 
 //==============================================================================
 
-void CellmlFileRdfTriple::setCellmlApiRdfTriple(iface::rdf_api::Triple *pCellmlApiRdfTriple)
+void CellmlFileRdfTriple::setRdfTriple(iface::rdf_api::Triple *pRdfTriple)
 {
     // Set the RDF triple's CellML API RDF triple
 
-    mCellmlApiRdfTriple = pCellmlApiRdfTriple;
+    mRdfTriple = 0;   // This will release the previous one, if any
+    mRdfTriple = pRdfTriple;
 }
 
 //==============================================================================
@@ -534,7 +549,7 @@ CellmlFileRdfTriple * CellmlFileRdfTriples::add(CellmlFileRdfTriple *pRdfTriple)
 
     // Create a CellML API version of the RDF triple
 
-    iface::rdf_api::DataSource *dataSource = mCellmlFile->cellmlApiRdfDataSource();
+    ObjRef<iface::rdf_api::DataSource> dataSource = mCellmlFile->rdfDataSource();
 
     ObjRef<iface::rdf_api::Resource> subject = already_AddRefd<iface::rdf_api::Resource>(dataSource->getURIReference(pRdfTriple->subject()->asString().toStdWString()));
     ObjRef<iface::rdf_api::Resource> predicate = already_AddRefd<iface::rdf_api::Resource>(dataSource->getURIReference(pRdfTriple->predicate()->asString().toStdWString()));
@@ -546,11 +561,11 @@ CellmlFileRdfTriple * CellmlFileRdfTriples::add(CellmlFileRdfTriple *pRdfTriple)
     // Note: in debug mode, we also check that we actually managed to retrieve
     //       the CellML API version of our RDF triple...
 
-    iface::rdf_api::Triple *rdfTriple = subject->getTripleOutOfByPredicateAndObject(predicate, object);
+    ObjRef<iface::rdf_api::Triple> rdfTriple = subject->getTripleOutOfByPredicateAndObject(predicate, object);
 
     Q_ASSERT(rdfTriple);
 
-    pRdfTriple->setCellmlApiRdfTriple(rdfTriple);
+    pRdfTriple->setRdfTriple(rdfTriple);
 
     // An RDF triple has been added, so...
 
@@ -574,7 +589,7 @@ void CellmlFileRdfTriples::removeRdfTriples(const CellmlFileRdfTriples &pRdfTrip
             // Remove the CellML API version of the RDF triple from its data
             // source
 
-            rdfTriple->cellmlApiRdfTriple()->unassert();
+            rdfTriple->rdfTriple()->unassert();
 
             // Delete our RDF triple
 

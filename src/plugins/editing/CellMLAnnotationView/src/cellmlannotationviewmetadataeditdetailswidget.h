@@ -123,7 +123,7 @@ private:
 
     int mItemsVerticalScrollBarPosition;
 
-    CellMLSupport::CellmlFileElement *mCellmlElement;
+    ObjRef<iface::cellml_api::CellMLElement> mCellmlFileElement;
 
     QLabel *mCurrentResourceOrIdLabel;
 
@@ -153,7 +153,7 @@ Q_SIGNALS:
     void rdfTripleAdded(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
 
 public Q_SLOTS:
-    void updateGui(CellMLSupport::CellmlFileElement *pCellmlElement);
+    void updateGui(iface::cellml_api::CellMLElement *pCellmlFileElement);
 
 private Q_SLOTS:
     void on_actionCopy_triggered();
