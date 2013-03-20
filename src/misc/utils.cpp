@@ -122,19 +122,8 @@ QString getAppVersion(QCoreApplication *pApp)
         bitVersion = "";
     }
 
-    bool snapshot = false;
+    bool snapshot = appVersion.contains("-");
     QString res = pApp->applicationName()+" ";
-
-    if (!appVersion.compare("Snapshot")) {
-        // We are dealing with a snapshot version of OpenCOR, so retrieve
-        // the executable's date and use it as our snapshot version
-
-        QDate appDate = QFileInfo(pApp->applicationFilePath()).created().date();
-
-        appVersion.sprintf("%d%02d%02d", appDate.year(), appDate.month(), appDate.day());
-
-        snapshot = true;
-    }
 
     if (snapshot)
         res += "[";
