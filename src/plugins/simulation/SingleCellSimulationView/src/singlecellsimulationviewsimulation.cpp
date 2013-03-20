@@ -47,19 +47,25 @@ SingleCellSimulationViewSimulationData::SingleCellSimulationViewSimulationData(C
     mNlaSolverName(QString()),
     mNlaSolverProperties(CoreSolver::Properties())
 {
-    // Create the various arrays needed to compute our model
+    // Create our various arrays, if possible
 
-    mConstants = new double[pCellmlFileRuntime->constantsCount()];
-    mStates    = new double[pCellmlFileRuntime->statesCount()];
-    mRates     = new double[pCellmlFileRuntime->ratesCount()];
-    mAlgebraic = new double[pCellmlFileRuntime->algebraicCount()];
-    mCondVar   = new double[pCellmlFileRuntime->condVarCount()];
+    if (pCellmlFileRuntime) {
+        // Create our various arrays to compute our model
 
-    // Create the various arrays needed to keep track of our various initial
-    // values
+        mConstants = new double[pCellmlFileRuntime->constantsCount()];
+        mStates    = new double[pCellmlFileRuntime->statesCount()];
+        mRates     = new double[pCellmlFileRuntime->ratesCount()];
+        mAlgebraic = new double[pCellmlFileRuntime->algebraicCount()];
+        mCondVar   = new double[pCellmlFileRuntime->condVarCount()];
 
-    mInitialConstants = new double[pCellmlFileRuntime->constantsCount()];
-    mInitialStates    = new double[pCellmlFileRuntime->statesCount()];
+        // Create our various arrays to keep track of our various initial values
+
+        mInitialConstants = new double[pCellmlFileRuntime->constantsCount()];
+        mInitialStates    = new double[pCellmlFileRuntime->statesCount()];
+    } else {
+        mConstants = mStates = mRates = mAlgebraic = mCondVar = 0;
+        mInitialConstants = mInitialStates = 0;
+    }
 }
 
 //==============================================================================
@@ -418,7 +424,7 @@ void SingleCellSimulationViewSimulationData::recomputeComputedConstantsAndVariab
 {
     // Recompute our 'computed constants' and 'variables', if possible
 
-    if (mCellmlFileRuntime->isValid()) {
+    if (mCellmlFileRuntime && mCellmlFileRuntime->isValid()) {
         mCellmlFileRuntime->computeComputedConstants()(mConstants, mRates, mStates);
         mCellmlFileRuntime->computeVariables()(mStartingPoint, mConstants, mRates, mStates, mAlgebraic);
 

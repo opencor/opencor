@@ -879,8 +879,8 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         mActiveGraphPanel->plot()->setMinY(0.0);
         mActiveGraphPanel->plot()->setMaxY(1000.0);
 
-        mActiveGraphPanel->plot()->setLocalMinX(mSimulation->data()->startingPoint());
-        mActiveGraphPanel->plot()->setLocalMaxX(mSimulation->data()->endingPoint());
+        mActiveGraphPanel->plot()->setLocalMinX(mActiveGraphPanel->plot()->minX());
+        mActiveGraphPanel->plot()->setLocalMaxX(mActiveGraphPanel->plot()->maxX());
         mActiveGraphPanel->plot()->setLocalMinY(mActiveGraphPanel->plot()->minY());
         mActiveGraphPanel->plot()->setLocalMaxY(mActiveGraphPanel->plot()->maxY());
     }
@@ -1065,6 +1065,20 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
         // Run our simulation, if possible/wanted
 
         if (runSimulation) {
+            // Reset our Y axis (as well as our local X axis)
+            // Note: this is in case we tried to run a simulation (and therefore
+            //       set the Y axis so the automatic rescaling could work; see
+            //       below) and the model cannot be run, in which case the the
+            //       Y axis would be completely messed up...
+
+            mActiveGraphPanel->plot()->setMinY(0);
+            mActiveGraphPanel->plot()->setMaxY(1000.0);
+
+            mActiveGraphPanel->plot()->setLocalMinX(mActiveGraphPanel->plot()->minX());
+            mActiveGraphPanel->plot()->setLocalMaxX(mActiveGraphPanel->plot()->maxX());
+            mActiveGraphPanel->plot()->setLocalMinY(mActiveGraphPanel->plot()->minY());
+            mActiveGraphPanel->plot()->setLocalMaxY(mActiveGraphPanel->plot()->maxY());
+
             // Reset our simulation settings
 
             mOldSimulationResultsSizes.insert(mSimulation, 0);
@@ -1428,15 +1442,15 @@ void SingleCellSimulationViewWidget::simulationPropertyChanged(Core::Property *p
     if (needUpdating) {
         if (mSimulation->data()->startingPoint() < mSimulation->data()->endingPoint()) {
             mActiveGraphPanel->plot()->setMinX(mSimulation->data()->startingPoint());
-            mActiveGraphPanel->plot()->setLocalMinX(mActiveGraphPanel->plot()->minX());
-
             mActiveGraphPanel->plot()->setMaxX(mSimulation->data()->endingPoint());
+
+            mActiveGraphPanel->plot()->setLocalMinX(mActiveGraphPanel->plot()->minX());
             mActiveGraphPanel->plot()->setLocalMaxX(mActiveGraphPanel->plot()->maxX());
         } else {
             mActiveGraphPanel->plot()->setMinX(mSimulation->data()->endingPoint());
-            mActiveGraphPanel->plot()->setLocalMinX(mActiveGraphPanel->plot()->minX());
-
             mActiveGraphPanel->plot()->setMaxX(mSimulation->data()->startingPoint());
+
+            mActiveGraphPanel->plot()->setLocalMinX(mActiveGraphPanel->plot()->minX());
             mActiveGraphPanel->plot()->setLocalMaxX(mActiveGraphPanel->plot()->maxX());
         }
 
