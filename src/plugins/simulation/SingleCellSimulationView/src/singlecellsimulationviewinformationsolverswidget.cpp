@@ -3,7 +3,6 @@
 //==============================================================================
 
 #include "cellmlfileruntime.h"
-#include "cellmlfilevariable.h"
 #include "singlecellsimulationviewinformationsolverswidget.h"
 #include "singlecellsimulationviewsimulation.h"
 

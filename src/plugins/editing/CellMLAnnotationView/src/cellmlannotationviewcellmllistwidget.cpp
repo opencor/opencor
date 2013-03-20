@@ -4,7 +4,6 @@
 
 #include "cellmlannotationviewcellmllistwidget.h"
 #include "cellmlannotationviewwidget.h"
-#include "cellmlfilenamedelement.h"
 #include "treeviewwidget.h"
 
 //==============================================================================
