@@ -181,8 +181,9 @@ SET(PLUGINS
 
     simulation/CoreSimulation
 
-    3rdparty/QScintilla
-    3rdparty/QtMmlWidget
+#---GRY--- DISABLED FOR VERSION 0.1...
+#    3rdparty/QScintilla
+#    3rdparty/QtMmlWidget
     3rdparty/Qwt
 
 #---GRY--- DISABLED FOR VERSION 0.1...
