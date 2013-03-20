@@ -185,20 +185,23 @@ SET(PLUGINS
     3rdparty/QtMmlWidget
     3rdparty/Qwt
 
-    misc/QScintillaSupport
+#---GRY--- DISABLED FOR VERSION 0.1...
+#    misc/QScintillaSupport
 
     # Build the remaining plugins
 
     misc/Help
-    misc/Viewer
+#---GRY--- DISABLED FOR VERSION 0.1...
+#    misc/Viewer
 
     organisation/CellMLModelRepository
     organisation/FileBrowser
     organisation/FileOrganiser
 
     editing/CellMLAnnotationView
-    editing/RawCellMLView
-    editing/RawView
+#---GRY--- DISABLED FOR VERSION 0.1...
+#    editing/RawCellMLView
+#    editing/RawView
 
     simulation/SingleCellSimulationView
 )
