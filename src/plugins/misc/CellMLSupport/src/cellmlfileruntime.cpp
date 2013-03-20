@@ -641,11 +641,10 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
 
     ObjRef<iface::cellml_services::CodeInformation> genericCodeInformation;
 
-    if (mModelType == Ode)
+    if (mModelType == Ode) {
         genericCodeInformation = mOdeCodeInformation;
-    else
+    } else {
 #ifdef QT_DEBUG
-    {
         time.restart();
 #endif
 
@@ -655,8 +654,8 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
 
 #ifdef QT_DEBUG
         qDebug(" - CellML DAE code information time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
-    }
 #endif
+    }
 
     // Retrieve all the model parameters and sort them by component/variable
     // name
