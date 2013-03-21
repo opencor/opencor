@@ -36,7 +36,14 @@ namespace SharedTools {
 
 class QtLocalPeer;
 
+/*---OPENCOR---
 class QtSingleApplication : public QApplication
+*/
+//---OPENCOR--- BEGIN
+#include "coreglobal.h"
+
+class CORE_EXPORT QtSingleApplication : public QApplication
+//---OPENCOR--- END
 {
     Q_OBJECT
 
