@@ -143,12 +143,12 @@ public:
 
     CellmlFileRdfTriple::Type type() const;
 
-    CellmlFileRdfTriples contains(const QString &pMetadataId) const;
+    CellmlFileRdfTriples contains(iface::cellml_api::CellMLElement *pElement) const;
 
     CellmlFileRdfTriple * add(CellmlFileRdfTriple *pRdfTriple);
 
     void remove(CellmlFileRdfTriple *pRdfTriple);
-    void remove(const QString &pMetadataId);
+    void remove(iface::cellml_api::CellMLElement *pElement);
     void removeAll();
 
 private:

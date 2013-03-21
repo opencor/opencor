@@ -955,10 +955,8 @@ void CellmlAnnotationViewCellmlListWidget::showCustomContextMenu(const QPoint &p
         }
 
         if (!posItem->isCategory()) {
-//---GRY---
-//            mGui->actionRemoveCurrentMetadata->setEnabled(posItem->element()->rdfTriples().count());
-mGui->actionRemoveCurrentMetadata->setEnabled(false);
-            mGui->actionRemoveAllMetadata->setEnabled(mCellmlFile->rdfTriples()->count());
+            mGui->actionRemoveCurrentMetadata->setEnabled(mCellmlFile->rdfTriples(posItem->element()).count());
+            mGui->actionRemoveAllMetadata->setEnabled(mCellmlFile->rdfTriples().count());
         }
 
         // Create and show the context menu, if it isn't empty
@@ -1018,10 +1016,9 @@ void CellmlAnnotationViewCellmlListWidget::on_actionCollapseAll_triggered()
 
 void CellmlAnnotationViewCellmlListWidget::on_actionRemoveCurrentMetadata_triggered()
 {
-    // Remove the metadata associated with the current node
+    // Remove all the metadata associated with the current node
 
-//---GRY---
-//    currentCellmlElementItem()->element()->removeAllMetadata();
+    mCellmlFile->rdfTriples().remove(currentCellmlElementItem()->element());
 
     // Re-update the metadata details view now that the current node doesn't
     // have any metadata associated with it
@@ -1035,7 +1032,7 @@ void CellmlAnnotationViewCellmlListWidget::on_actionRemoveAllMetadata_triggered(
 {
     // Remove all the metadata associated with the CellML file
 
-    mCellmlFile->rdfTriples()->removeAll();
+    mCellmlFile->rdfTriples().removeAll();
 
     // Re-update the metadata details view now that the CellML file doesn't have
     // any metadata associated with it

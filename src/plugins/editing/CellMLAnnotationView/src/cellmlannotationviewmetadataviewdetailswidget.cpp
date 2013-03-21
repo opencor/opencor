@@ -16,7 +16,8 @@ namespace CellMLAnnotationView {
 
 CellmlAnnotationViewMetadataViewDetailsWidget::CellmlAnnotationViewMetadataViewDetailsWidget(CellmlAnnotationViewWidget *pParent) :
     QStackedWidget(pParent),
-    CommonWidget(pParent)
+    CommonWidget(pParent),
+    mCellmlFile(pParent->cellmlFile())
 {
     // Create our different metadata views
 
@@ -53,24 +54,23 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::updateGui(iface::cellml_api:
 
     // Decide on which view to use and update it, if needed
 
-//---GRY---
-//    switch (pElement->rdfTriples().type()) {
-//    case CellMLSupport::CellmlFileRdfTriple::BioModelsDotNetQualifier:
-//    case CellMLSupport::CellmlFileRdfTriple::Empty:
-//        removeWidget(mRawView);
-//        addWidget(mNormalView);
+    switch (mCellmlFile->rdfTriples(pElement).type()) {
+    case CellMLSupport::CellmlFileRdfTriple::BioModelsDotNetQualifier:
+    case CellMLSupport::CellmlFileRdfTriple::Empty:
+        removeWidget(mRawView);
+        addWidget(mNormalView);
 
-//        mNormalView->updateGui(pElement);
+        mNormalView->updateGui(pElement);
 
-//        break;
-//    default:
-//        // Unknown type, so...
+        break;
+    default:
+        // Unknown type, so...
 
-//        removeWidget(mNormalView);
-//        addWidget(mRawView);
+        removeWidget(mNormalView);
+        addWidget(mRawView);
 
-//        mRawView->updateGui(pElement);
-//    }
+        mRawView->updateGui(pElement);
+    }
 }
 
 //==============================================================================

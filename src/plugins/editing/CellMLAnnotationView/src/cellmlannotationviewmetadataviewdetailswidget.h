@@ -54,6 +54,8 @@ public:
 private:
     CellmlAnnotationViewMetadataRawViewDetailsWidget *mRawView;
     CellmlAnnotationViewMetadataNormalViewDetailsWidget *mNormalView;
+
+    CellMLSupport::CellmlFile *mCellmlFile;
 };
 
 //==============================================================================

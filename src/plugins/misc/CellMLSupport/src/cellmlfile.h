@@ -51,11 +51,26 @@ public:
 
     QString fileName() const;
 
-    CellmlFileRdfTriples * rdfTriples();
+    CellmlFileRdfTriples & rdfTriples();
+    CellmlFileRdfTriples rdfTriples(iface::cellml_api::CellMLElement *pElement) const;
+
+    bool rdfTripleExists(iface::cellml_api::CellMLElement *pElement,
+                         const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
+                         const QString &pResource, const QString &pId) const;
+    bool rdfTripleExists(iface::cellml_api::CellMLElement *pElement,
+                         const CellMLSupport::CellmlFileRdfTriple::BioQualifier &pBioQualifier,
+                         const QString &pResource, const QString &pId) const;
+
+    CellMLSupport::CellmlFileRdfTriple * addRdfTriple(iface::cellml_api::CellMLElement *pElement,
+                                                      const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
+                                                      const QString &pResource,
+                                                      const QString &pId);
+    CellMLSupport::CellmlFileRdfTriple * addRdfTriple(iface::cellml_api::CellMLElement *pElement,
+                                                      const CellMLSupport::CellmlFileRdfTriple::BioQualifier &pBioQualifier,
+                                                      const QString &pResource,
+                                                      const QString &pId);
 
     QString uriBase() const;
-
-    CellmlFileRdfTriples rdfTriples(const QString &pCmetaId) const;
 
 private:
     QString mFileName;
@@ -81,7 +96,11 @@ private:
 
     void reset();
 
-    void clearRdfTriples();
+    bool rdfTripleExists(iface::cellml_api::CellMLElement *pElement,
+                         const QString &pQualifier,
+                         const QString &pResource, const QString &pId) const;
+
+    QString rdfTripleSubject(iface::cellml_api::CellMLElement *pElement) const;
 };
 
 //==============================================================================

@@ -120,9 +120,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
 
     // Populate our new layout, but only if there is at least one RDF triple
 
-//---GRY---
-//    CellMLSupport::CellmlFileRdfTriples rdfTriples = pElement->rdfTriples();
-CellMLSupport::CellmlFileRdfTriples rdfTriples = CellMLSupport::CellmlFileRdfTriples(mCellmlFile);
+    CellMLSupport::CellmlFileRdfTriples rdfTriples = mCellmlFile->rdfTriples(pElement);
     QString firstRdfTripleInformation = QString();
     QString lastRdfTripleInformation = QString();
 
@@ -529,7 +527,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::removeRdfTriple()
     // Remove the RDF triple from the CellML file and from our set of RDF
     // triples this widget uses
 
-    mCellmlFile->rdfTriples()->remove(rdfTriple);
+    mCellmlFile->rdfTriples().remove(rdfTriple);
 
     // Retrieve the number of the row we want to delete, as well as the total
     // number of rows

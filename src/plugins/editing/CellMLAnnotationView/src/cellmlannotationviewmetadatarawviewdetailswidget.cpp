@@ -70,16 +70,15 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(iface::cellml_a
     //       cmeta:id which will speak more to the user than a possibly long URI
     //       reference...
 
-//---GRY---
-//    int rdfTripleCounter = 0;
+    int rdfTripleCounter = 0;
 
-//    foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, pElement->rdfTriples())
-//        mModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << new QStandardItem(QString::number(++rdfTripleCounter))
-//                                                                        << new QStandardItem((rdfTriple->subject()->type() == CellMLSupport::CellmlFileRdfTripleElement::UriReference)?
-//                                                                                                 rdfTriple->metadataId():
-//                                                                                                 rdfTriple->subject()->asString())
-//                                                                        << new QStandardItem(rdfTriple->predicate()->asString())
-//                                                                        << new QStandardItem(rdfTriple->object()->asString()));
+    foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, mCellmlFile->rdfTriples(pElement))
+        mModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << new QStandardItem(QString::number(++rdfTripleCounter))
+                                                                        << new QStandardItem((rdfTriple->subject()->type() == CellMLSupport::CellmlFileRdfTripleElement::UriReference)?
+                                                                                                 rdfTriple->metadataId():
+                                                                                                 rdfTriple->subject()->asString())
+                                                                        << new QStandardItem(rdfTriple->predicate()->asString())
+                                                                        << new QStandardItem(rdfTriple->object()->asString()));
 
     // Make sure that all the columns have their contents fit
 

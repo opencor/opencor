@@ -82,6 +82,8 @@ private:
     CellmlAnnotationViewMetadataViewDetailsWidget *mMetadataViewDetails;
     QWebView *mWebView;
 
+    CellMLSupport::CellmlFile *mCellmlFile;
+
     ObjRef<iface::cellml_api::CellMLElement> mElement;
 
 Q_SIGNALS:

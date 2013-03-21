@@ -8,6 +8,7 @@
 //==============================================================================
 
 #include <QFile>
+#include <QStringList>
 #include <QTextStream>
 #include <QUrl>
 
@@ -87,7 +88,10 @@ void CellmlFile::reset()
 
     mUriBase = QString();
 
-    clearRdfTriples();
+    foreach (CellmlFileRdfTriple *rdfTriple, mRdfTriples)
+        delete rdfTriple;
+
+    mRdfTriples.clear();
 
     mValid = true;
 
@@ -537,11 +541,150 @@ QString CellmlFile::fileName() const
 
 //==============================================================================
 
-CellmlFileRdfTriples * CellmlFile::rdfTriples()
+CellmlFileRdfTriples & CellmlFile::rdfTriples()
 {
-    // Return the CellML file's RDF triples
+    // Return all the RDF triples associated with the CellML file
 
-    return &mRdfTriples;
+    return mRdfTriples;
+}
+
+//==============================================================================
+
+CellmlFileRdfTriples CellmlFile::rdfTriples(iface::cellml_api::CellMLElement *pElement) const
+{
+    // Return all the RDF triples associated with the given element
+
+    return mRdfTriples.contains(pElement);
+}
+
+//==============================================================================
+
+bool CellmlFile::rdfTripleExists(iface::cellml_api::CellMLElement *pElement,
+                                 const QString &pQualifier,
+                                 const QString &pResource,
+                                 const QString &pId) const
+{
+    // Return whether the given RDF triple is associated with the CellML element
+
+    if (QString::fromStdWString(pElement->cmetaId()).isEmpty())
+        // The CellML element doesn't have a 'proper' cmeta:id, so...
+
+        return false;
+
+    // Go through the RDF triples associated with the CellML element and check
+    // whether one of them corresponds to the given RDF triple
+
+    foreach (CellmlFileRdfTriple *rdfTriple, rdfTriples(pElement))
+        if (   !pQualifier.compare(rdfTriple->qualifierAsString())
+            && !pResource.compare(rdfTriple->resource())
+            && !pId.compare(rdfTriple->id()))
+            // This is the RDF triple we are after, so...
+
+            return true;
+
+    // We couldn't find the RDF triple, so...
+
+    return false;
+}
+
+//==============================================================================
+
+bool CellmlFile::rdfTripleExists(iface::cellml_api::CellMLElement *pElement,
+                                 const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
+                                 const QString &pResource, const QString &pId) const
+{
+    // Call our generic rdfTripleExists() function
+
+    return rdfTripleExists(pElement,
+                           CellMLSupport::CellmlFileRdfTriple::modelQualifierAsString(pModelQualifier),
+                           pResource, pId);
+}
+
+//==============================================================================
+
+bool CellmlFile::rdfTripleExists(iface::cellml_api::CellMLElement *pElement,
+                                 const CellMLSupport::CellmlFileRdfTriple::BioQualifier &pBioQualifier,
+                                 const QString &pResource, const QString &pId) const
+{
+    // Call our generic rdfTripleExists() function
+
+    return rdfTripleExists(pElement,
+                           CellMLSupport::CellmlFileRdfTriple::bioQualifierAsString(pBioQualifier),
+                           pResource, pId);
+}
+
+//==============================================================================
+
+QString CellmlFile::rdfTripleSubject(iface::cellml_api::CellMLElement *pElement) const
+{
+    // Make sure that we have a 'proper' cmeta:id or generate one, if needed
+
+    QString cmetaId = QString::fromStdWString(pElement->cmetaId());
+
+    if (cmetaId.isEmpty()) {
+        // We don't have a 'proper' cmeta:id for the element, so we need to
+        // generate one and in order to do so, we need to know what cmeta:ids
+        // are currently in use in the CellML file
+
+        QStringList cmetaIds = QStringList();
+
+        foreach (CellmlFileRdfTriple *rdfTriple, mRdfTriples) {
+            QString cmetaId = rdfTriple->metadataId();
+
+            if (!cmetaIds.contains(cmetaId))
+                cmetaIds << cmetaId;
+        }
+
+        // Now, we try different cmeta:id values until we find one which is not
+        // present in our list
+
+        int counter = 0;
+
+        forever {
+            cmetaId = QString("id_%1").arg(++counter, 5, 10, QChar('0'));
+
+            if (!cmetaIds.contains(cmetaId)) {
+                // We have found a unique cmeta:id, so update our CellML element
+                // and leave
+
+                pElement->cmetaId(cmetaId.toStdWString());
+
+                setModified(true);
+
+                break;
+            }
+        }
+    }
+
+    // Return the subject which should be used for an RDF triple
+
+    return uriBase()+"#"+cmetaId;
+}
+
+//==============================================================================
+
+CellMLSupport::CellmlFileRdfTriple * CellmlFile::addRdfTriple(iface::cellml_api::CellMLElement *pElement,
+                                                              const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
+                                                              const QString &pResource,
+                                                              const QString &pId)
+{
+    // Add an RDF triple to our CellML file
+
+    return mRdfTriples.add(new CellMLSupport::CellmlFileRdfTriple(this, rdfTripleSubject(pElement),
+                                                                  pModelQualifier, pResource, pId));
+}
+
+//==============================================================================
+
+CellMLSupport::CellmlFileRdfTriple * CellmlFile::addRdfTriple(iface::cellml_api::CellMLElement *pElement,
+                                                              const CellMLSupport::CellmlFileRdfTriple::BioQualifier &pBioQualifier,
+                                                              const QString &pResource,
+                                                              const QString &pId)
+{
+    // Add an RDF Triple to our CellML file
+
+    return mRdfTriples.add(new CellMLSupport::CellmlFileRdfTriple(this, rdfTripleSubject(pElement),
+                                                                  pBioQualifier, pResource, pId));
 }
 
 //==============================================================================
@@ -551,28 +694,6 @@ QString CellmlFile::uriBase() const
     // Return the CellML file's URI base
 
     return mUriBase;
-}
-
-//==============================================================================
-
-CellmlFileRdfTriples CellmlFile::rdfTriples(const QString &pCmetaId) const
-{
-    // Return all the RDF triples which are directly or indirectly associated
-    // with pCmetaId
-
-    return mRdfTriples.contains(pCmetaId);
-}
-
-//==============================================================================
-
-void CellmlFile::clearRdfTriples()
-{
-    // Delete all the RDF triples and clear our list
-
-    foreach (CellmlFileRdfTriple *rdfTriple, mRdfTriples)
-        delete rdfTriple;
-
-    mRdfTriples.clear();
 }
 
 //==============================================================================

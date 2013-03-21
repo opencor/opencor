@@ -76,7 +76,6 @@ private:
     };
 
     CellmlAnnotationViewWidget *mParent;
-    CellMLSupport::CellmlFile *mCellmlFile;
 
     Ui::CellmlAnnotationViewMetadataEditDetailsWidget *mGui;
 
@@ -122,6 +121,8 @@ private:
     QMap<QObject *, Item> mItemsMapping;
 
     int mItemsVerticalScrollBarPosition;
+
+    CellMLSupport::CellmlFile *mCellmlFile;
 
     ObjRef<iface::cellml_api::CellMLElement> mElement;
 

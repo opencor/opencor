@@ -30,6 +30,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
     Widget(pParent),
     mParent(pParent),
     mGui(new Ui::CellmlAnnotationViewMetadataDetailsWidget),
+    mCellmlFile(pParent->cellmlFile()),
     mElement(0)
 {
     // Set up the GUI
@@ -220,9 +221,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateGui(iface::cellml_api::Cel
 
     bool isUnknownMetadata = isCategoryElement?
                                  true:
-//---GRY---
-//                                 pElement->rdfTriples().type() == CellMLSupport::CellmlFileRdfTriple::Unknown;
-true;
+                                 mCellmlFile->rdfTriples(pElement).type() == CellMLSupport::CellmlFileRdfTriple::Unknown;
 
     mBorderedUnsupportedMetadataMessage->setVisible(!isCategoryElement && isUnknownMetadata);
 
@@ -349,8 +348,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::removeAllMetadata()
     // Remove all the metadata from the current CellML element and ask our
     // details widget to update itself
 
-//---GRY---
-//    mElement->removeAllMetadata();
+    mCellmlFile->rdfTriples().remove(mElement);
 
     updateGui(mElement);
 }
