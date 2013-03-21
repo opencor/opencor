@@ -155,8 +155,9 @@ bool HelpPage::acceptNavigationRequest(QWebFrame*,
     } else if (!urlScheme.compare("gui")) {
         // This is an action which we want OpenCOR or one of its plugins to
         // execute
+        // Note: a qobject_cast is not good enough on Windows and OS X, so...
 
-        qobject_cast<SharedTools::QtSingleApplication *>(qApp)->handleAction(url);
+        static_cast<SharedTools::QtSingleApplication *>(qApp)->handleAction(url);
 
         return false;
     } else {
