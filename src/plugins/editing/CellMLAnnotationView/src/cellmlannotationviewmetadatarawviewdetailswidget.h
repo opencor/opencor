@@ -34,7 +34,7 @@ public:
 
     virtual void retranslateUi();
 
-    void updateGui(iface::cellml_api::CellMLElement *pCellmlFileElement);
+    void updateGui(iface::cellml_api::CellMLElement *pElement);
 
 private:
     CellMLSupport::CellmlFile *mCellmlFile;

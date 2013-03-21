@@ -55,7 +55,7 @@ public:
     virtual void saveSettings(QSettings *pSettings) const;
 
     void initialize(const QString &pFileName,
-                    CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
+                    CellMLSupport::CellmlFileRuntime *pRuntime,
                     SingleCellSimulationViewSimulationData *pSimulationData);
 
     void cancelPropertyEditing();
@@ -70,7 +70,7 @@ private:
     SingleCellSimulationViewSimulationData *mSimulationData;
 
     void populateModel(Core::PropertyEditorWidget *pPropertyEditor,
-                       CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime);
+                       CellMLSupport::CellmlFileRuntime *pRuntime);
 
 Q_SIGNALS:
     void showModelParameter(const QString &pFileName,

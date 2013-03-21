@@ -75,12 +75,12 @@ void SingleCellSimulationViewInformationParametersWidget::saveSettings(QSettings
 //==============================================================================
 
 void SingleCellSimulationViewInformationParametersWidget::initialize(const QString &pFileName,
-                                                                     CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
+                                                                     CellMLSupport::CellmlFileRuntime *pRuntime,
                                                                      SingleCellSimulationViewSimulationData *pSimulationData)
 {
     // Make sure that we have a CellML file runtime
 
-    if (!pCellmlFileRuntime)
+    if (!pRuntime)
         return;
 
     // Keep track of the simulation data
@@ -104,7 +104,7 @@ void SingleCellSimulationViewInformationParametersWidget::initialize(const QStri
 
         // Populate our property editor
 
-        populateModel(propertyEditor, pCellmlFileRuntime);
+        populateModel(propertyEditor, pRuntime);
 
         // Keep track of changes to columns' width
 
@@ -266,13 +266,13 @@ void SingleCellSimulationViewInformationParametersWidget::cancelPropertyEditing(
 //==============================================================================
 
 void SingleCellSimulationViewInformationParametersWidget::populateModel(Core::PropertyEditorWidget *pPropertyEditor,
-                                                                        CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime)
+                                                                        CellMLSupport::CellmlFileRuntime *pRuntime)
 {
     // Populate our property editor with the model parameters
 
     Core::Property *section = 0;
 
-    foreach (CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter, pCellmlFileRuntime->modelParameters()) {
+    foreach (CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter, pRuntime->modelParameters()) {
         // Check whether the current model parameter is in the same component as
         // the previous one
 

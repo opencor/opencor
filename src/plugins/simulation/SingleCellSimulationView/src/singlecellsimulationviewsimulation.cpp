@@ -32,9 +32,9 @@ namespace SingleCellSimulationView {
 
 //==============================================================================
 
-SingleCellSimulationViewSimulationData::SingleCellSimulationViewSimulationData(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
+SingleCellSimulationViewSimulationData::SingleCellSimulationViewSimulationData(CellMLSupport::CellmlFileRuntime *pRuntime,
                                                                                const SolverInterfaces &pSolverInterfaces) :
-    mCellmlFileRuntime(pCellmlFileRuntime),
+    mRuntime(pRuntime),
     mSolverInterfaces(pSolverInterfaces),
     mDelay(0),
     mStartingPoint(0.0),
@@ -49,19 +49,19 @@ SingleCellSimulationViewSimulationData::SingleCellSimulationViewSimulationData(C
 {
     // Create our various arrays, if possible
 
-    if (pCellmlFileRuntime) {
+    if (pRuntime) {
         // Create our various arrays to compute our model
 
-        mConstants = new double[pCellmlFileRuntime->constantsCount()];
-        mStates    = new double[pCellmlFileRuntime->statesCount()];
-        mRates     = new double[pCellmlFileRuntime->ratesCount()];
-        mAlgebraic = new double[pCellmlFileRuntime->algebraicCount()];
-        mCondVar   = new double[pCellmlFileRuntime->condVarCount()];
+        mConstants = new double[pRuntime->constantsCount()];
+        mStates    = new double[pRuntime->statesCount()];
+        mRates     = new double[pRuntime->ratesCount()];
+        mAlgebraic = new double[pRuntime->algebraicCount()];
+        mCondVar   = new double[pRuntime->condVarCount()];
 
         // Create our various arrays to keep track of our various initial values
 
-        mInitialConstants = new double[pCellmlFileRuntime->constantsCount()];
-        mInitialStates    = new double[pCellmlFileRuntime->statesCount()];
+        mInitialConstants = new double[pRuntime->constantsCount()];
+        mInitialStates    = new double[pRuntime->statesCount()];
     } else {
         mConstants = mStates = mRates = mAlgebraic = mCondVar = 0;
         mInitialConstants = mInitialStates = 0;
@@ -213,7 +213,7 @@ QString SingleCellSimulationViewSimulationData::odeSolverName() const
 {
     // Return our ODE solver name
 
-    return mCellmlFileRuntime->needOdeSolver()?mOdeSolverName:QString();
+    return mRuntime->needOdeSolver()?mOdeSolverName:QString();
 }
 
 //==============================================================================
@@ -222,7 +222,7 @@ void SingleCellSimulationViewSimulationData::setOdeSolverName(const QString &pOd
 {
     // Set our ODE solver name
 
-    if (mCellmlFileRuntime->needOdeSolver())
+    if (mRuntime->needOdeSolver())
         mOdeSolverName = pOdeSolverName;
 }
 
@@ -232,7 +232,7 @@ CoreSolver::Properties SingleCellSimulationViewSimulationData::odeSolverProperti
 {
     // Return our ODE solver's properties
 
-    return mCellmlFileRuntime->needOdeSolver()?mOdeSolverProperties:CoreSolver::Properties();
+    return mRuntime->needOdeSolver()?mOdeSolverProperties:CoreSolver::Properties();
 }
 
 //==============================================================================
@@ -242,7 +242,7 @@ void SingleCellSimulationViewSimulationData::addOdeSolverProperty(const QString 
 {
     // Add an ODE solver property
 
-    if (mCellmlFileRuntime->needOdeSolver())
+    if (mRuntime->needOdeSolver())
         mOdeSolverProperties.insert(pName, pValue);
 }
 
@@ -252,7 +252,7 @@ QString SingleCellSimulationViewSimulationData::daeSolverName() const
 {
     // Return our DAE solver name
 
-    return mCellmlFileRuntime->needDaeSolver()?mDaeSolverName:QString();
+    return mRuntime->needDaeSolver()?mDaeSolverName:QString();
 }
 
 //==============================================================================
@@ -261,7 +261,7 @@ void SingleCellSimulationViewSimulationData::setDaeSolverName(const QString &pDa
 {
     // Set our DAE solver name
 
-    if (mCellmlFileRuntime->needDaeSolver())
+    if (mRuntime->needDaeSolver())
         mDaeSolverName = pDaeSolverName;
 }
 
@@ -271,7 +271,7 @@ CoreSolver::Properties SingleCellSimulationViewSimulationData::daeSolverProperti
 {
     // Return our DAE solver's properties
 
-    return mCellmlFileRuntime->needDaeSolver()?mDaeSolverProperties:CoreSolver::Properties();
+    return mRuntime->needDaeSolver()?mDaeSolverProperties:CoreSolver::Properties();
 }
 
 //==============================================================================
@@ -281,7 +281,7 @@ void SingleCellSimulationViewSimulationData::addDaeSolverProperty(const QString 
 {
     // Add an DAE solver property
 
-    if (mCellmlFileRuntime->needDaeSolver())
+    if (mRuntime->needDaeSolver())
         mDaeSolverProperties.insert(pName, pValue);
 }
 
@@ -291,7 +291,7 @@ QString SingleCellSimulationViewSimulationData::nlaSolverName() const
 {
     // Return our NLA solver name
 
-    return mCellmlFileRuntime->needNlaSolver()?mNlaSolverName:QString();
+    return mRuntime->needNlaSolver()?mNlaSolverName:QString();
 }
 
 //==============================================================================
@@ -301,7 +301,7 @@ void SingleCellSimulationViewSimulationData::setNlaSolverName(const QString &pNl
 {
     // Set our NLA solver name
 
-    if (mCellmlFileRuntime->needNlaSolver()) {
+    if (mRuntime->needNlaSolver()) {
         mNlaSolverName = pNlaSolverName;
 
         // Reset our model parameter values, if required
@@ -320,7 +320,7 @@ CoreSolver::Properties SingleCellSimulationViewSimulationData::nlaSolverProperti
 {
     // Return our NLA solver's properties
 
-    return mCellmlFileRuntime->needNlaSolver()?mNlaSolverProperties:CoreSolver::Properties();
+    return mRuntime->needNlaSolver()?mNlaSolverProperties:CoreSolver::Properties();
 }
 
 //==============================================================================
@@ -331,7 +331,7 @@ void SingleCellSimulationViewSimulationData::addNlaSolverProperty(const QString 
 {
     // Add an NLA solver property
 
-    if (mCellmlFileRuntime->needNlaSolver()) {
+    if (mRuntime->needNlaSolver()) {
         mNlaSolverProperties.insert(pName, pValue);
 
         // Reset our model parameter values, if required
@@ -358,7 +358,7 @@ void SingleCellSimulationViewSimulationData::reset()
 
     CoreSolver::CoreNlaSolver *nlaSolver = 0;
 
-    if (mCellmlFileRuntime->needNlaSolver()) {
+    if (mRuntime->needNlaSolver()) {
         // Retrieve an instance of our NLA solver
 
         foreach (SolverInterface *solverInterface, mSolverInterfaces)
@@ -371,8 +371,7 @@ void SingleCellSimulationViewSimulationData::reset()
                 // Keep track of our NLA solver, so that doNonLinearSolve() can
                 // work as expected
 
-                CoreSolver::setNlaSolver(mCellmlFileRuntime->address(),
-                                         nlaSolver);
+                CoreSolver::setNlaSolver(mRuntime->address(), nlaSolver);
 
                 break;
             }
@@ -391,13 +390,13 @@ void SingleCellSimulationViewSimulationData::reset()
 
     static const int SizeOfDouble = sizeof(double);
 
-    memset(mConstants, 0, mCellmlFileRuntime->constantsCount()*SizeOfDouble);
-    memset(mStates, 0, mCellmlFileRuntime->statesCount()*SizeOfDouble);
-    memset(mRates, 0, mCellmlFileRuntime->ratesCount()*SizeOfDouble);
-    memset(mAlgebraic, 0, mCellmlFileRuntime->algebraicCount()*SizeOfDouble);
-    memset(mCondVar, 0, mCellmlFileRuntime->condVarCount()*SizeOfDouble);
+    memset(mConstants, 0, mRuntime->constantsCount()*SizeOfDouble);
+    memset(mStates, 0, mRuntime->statesCount()*SizeOfDouble);
+    memset(mRates, 0, mRuntime->ratesCount()*SizeOfDouble);
+    memset(mAlgebraic, 0, mRuntime->algebraicCount()*SizeOfDouble);
+    memset(mCondVar, 0, mRuntime->condVarCount()*SizeOfDouble);
 
-    mCellmlFileRuntime->initializeConstants()(mConstants, mRates, mStates);
+    mRuntime->initializeConstants()(mConstants, mRates, mStates);
     recomputeComputedConstantsAndVariables();
 
     // Delete our NLA solver, if any
@@ -405,13 +404,13 @@ void SingleCellSimulationViewSimulationData::reset()
     if (nlaSolver) {
         delete nlaSolver;
 
-        CoreSolver::unsetNlaSolver(mCellmlFileRuntime->address());
+        CoreSolver::unsetNlaSolver(mRuntime->address());
     }
 
     // Keep track of our various initial values
 
-    memcpy(mInitialConstants, mConstants, mCellmlFileRuntime->constantsCount()*SizeOfDouble);
-    memcpy(mInitialStates, mStates, mCellmlFileRuntime->statesCount()*SizeOfDouble);
+    memcpy(mInitialConstants, mConstants, mRuntime->constantsCount()*SizeOfDouble);
+    memcpy(mInitialStates, mStates, mRuntime->statesCount()*SizeOfDouble);
 
     // Let people know that our data is 'cleaned', i.e. not modified
 
@@ -424,9 +423,9 @@ void SingleCellSimulationViewSimulationData::recomputeComputedConstantsAndVariab
 {
     // Recompute our 'computed constants' and 'variables', if possible
 
-    if (mCellmlFileRuntime && mCellmlFileRuntime->isValid()) {
-        mCellmlFileRuntime->computeComputedConstants()(mConstants, mRates, mStates);
-        mCellmlFileRuntime->computeVariables()(mStartingPoint, mConstants, mRates, mStates, mAlgebraic);
+    if (mRuntime && mRuntime->isValid()) {
+        mRuntime->computeComputedConstants()(mConstants, mRates, mStates);
+        mRuntime->computeVariables()(mStartingPoint, mConstants, mRates, mStates, mAlgebraic);
 
         // Let people know that our data has been updated
 
@@ -441,7 +440,7 @@ void SingleCellSimulationViewSimulationData::recomputeVariables(const double &pC
 {
     // Recompute our 'variables'
 
-    mCellmlFileRuntime->computeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic);
+    mRuntime->computeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic);
 
     // Let people know that our data has been updated, if requested
     // Note: recomputeVariables() will normally be called many times when
@@ -459,7 +458,7 @@ void SingleCellSimulationViewSimulationData::checkForModifications()
 {
     // Check whether any of our constants or states has been modified
 
-    foreach (CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter, mCellmlFileRuntime->modelParameters())
+    foreach (CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter, mRuntime->modelParameters())
         switch (modelParameter->type()) {
         case CellMLSupport::CellmlFileRuntimeModelParameter::Constant:
             if (mConstants[modelParameter->index()] != mInitialConstants[modelParameter->index()]) {
@@ -490,9 +489,9 @@ void SingleCellSimulationViewSimulationData::checkForModifications()
 
 //==============================================================================
 
-SingleCellSimulationViewSimulationResults::SingleCellSimulationViewSimulationResults(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
+SingleCellSimulationViewSimulationResults::SingleCellSimulationViewSimulationResults(CellMLSupport::CellmlFileRuntime *pRuntime,
                                                                                      SingleCellSimulationViewSimulation *pSimulation) :
-    mCellmlFileRuntime(pCellmlFileRuntime),
+    mRuntime(pRuntime),
     mSimulation(pSimulation),
     mSize(0),
     mPoints(0),
@@ -536,16 +535,16 @@ bool SingleCellSimulationViewSimulationResults::createArrays()
     // Create our constants arrays
 
     try {
-        mConstants = new double*[mCellmlFileRuntime->constantsCount()];
+        mConstants = new double*[mRuntime->constantsCount()];
 
-        memset(mConstants, 0, mCellmlFileRuntime->constantsCount()*SizeOfDoublePointer);
+        memset(mConstants, 0, mRuntime->constantsCount()*SizeOfDoublePointer);
     } catch(...) {
         deleteArrays();
 
         return false;
     }
 
-    for (int i = 0, iMax = mCellmlFileRuntime->constantsCount(); i < iMax; ++i)
+    for (int i = 0, iMax = mRuntime->constantsCount(); i < iMax; ++i)
         try {
             mConstants[i] = new double[simulationSize];
         } catch(...) {
@@ -557,16 +556,16 @@ bool SingleCellSimulationViewSimulationResults::createArrays()
     // Create our states arrays
 
     try {
-        mStates = new double*[mCellmlFileRuntime->statesCount()];
+        mStates = new double*[mRuntime->statesCount()];
 
-        memset(mStates, 0, mCellmlFileRuntime->statesCount()*SizeOfDoublePointer);
+        memset(mStates, 0, mRuntime->statesCount()*SizeOfDoublePointer);
     } catch(...) {
         deleteArrays();
 
         return false;
     }
 
-    for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
+    for (int i = 0, iMax = mRuntime->statesCount(); i < iMax; ++i)
         try {
             mStates[i] = new double[simulationSize];
         } catch(...) {
@@ -578,16 +577,16 @@ bool SingleCellSimulationViewSimulationResults::createArrays()
     // Create our rates arrays
 
     try {
-        mRates = new double*[mCellmlFileRuntime->ratesCount()];
+        mRates = new double*[mRuntime->ratesCount()];
 
-        memset(mRates, 0, mCellmlFileRuntime->ratesCount()*SizeOfDoublePointer);
+        memset(mRates, 0, mRuntime->ratesCount()*SizeOfDoublePointer);
     } catch(...) {
         deleteArrays();
 
         return false;
     }
 
-    for (int i = 0, iMax = mCellmlFileRuntime->ratesCount(); i < iMax; ++i)
+    for (int i = 0, iMax = mRuntime->ratesCount(); i < iMax; ++i)
         try {
             mRates[i] = new double[simulationSize];
         } catch(...) {
@@ -599,16 +598,16 @@ bool SingleCellSimulationViewSimulationResults::createArrays()
     // Create our algebraic arrays
 
     try {
-        mAlgebraic = new double*[mCellmlFileRuntime->algebraicCount()];
+        mAlgebraic = new double*[mRuntime->algebraicCount()];
 
-        memset(mAlgebraic, 0, mCellmlFileRuntime->algebraicCount()*SizeOfDoublePointer);
+        memset(mAlgebraic, 0, mRuntime->algebraicCount()*SizeOfDoublePointer);
     } catch(...) {
         deleteArrays();
 
         return false;
     }
 
-    for (int i = 0, iMax = mCellmlFileRuntime->algebraicCount(); i < iMax; ++i)
+    for (int i = 0, iMax = mRuntime->algebraicCount(); i < iMax; ++i)
         try {
             mAlgebraic[i] = new double[simulationSize];
         } catch(...) {
@@ -635,7 +634,7 @@ void SingleCellSimulationViewSimulationResults::deleteArrays()
     // Delete our constants arrays
 
     if (mConstants)
-        for (int i = 0, iMax = mCellmlFileRuntime->constantsCount(); i < iMax; ++i)
+        for (int i = 0, iMax = mRuntime->constantsCount(); i < iMax; ++i)
             delete[] mConstants[i];
 
     delete mConstants;
@@ -645,7 +644,7 @@ void SingleCellSimulationViewSimulationResults::deleteArrays()
     // Delete our states arrays
 
     if (mStates)
-        for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
+        for (int i = 0, iMax = mRuntime->statesCount(); i < iMax; ++i)
             delete[] mStates[i];
 
     delete mStates;
@@ -655,7 +654,7 @@ void SingleCellSimulationViewSimulationResults::deleteArrays()
     // Delete our rates arrays
 
     if (mRates)
-        for (int i = 0, iMax = mCellmlFileRuntime->ratesCount(); i < iMax; ++i)
+        for (int i = 0, iMax = mRuntime->ratesCount(); i < iMax; ++i)
             delete[] mRates[i];
 
     delete mRates;
@@ -665,7 +664,7 @@ void SingleCellSimulationViewSimulationResults::deleteArrays()
     // Delete our algebraic arrays
 
     if (mAlgebraic)
-        for (int i = 0, iMax = mCellmlFileRuntime->algebraicCount(); i < iMax; ++i)
+        for (int i = 0, iMax = mRuntime->algebraicCount(); i < iMax; ++i)
             delete[] mAlgebraic[i];
 
     delete mAlgebraic;
@@ -696,16 +695,16 @@ void SingleCellSimulationViewSimulationResults::addPoint(const double &pPoint)
 
     mPoints[mSize] = pPoint;
 
-    for (int i = 0, iMax = mCellmlFileRuntime->constantsCount(); i < iMax; ++i)
+    for (int i = 0, iMax = mRuntime->constantsCount(); i < iMax; ++i)
         mConstants[i][mSize] = mSimulation->data()->constants()[i];
 
-    for (int i = 0, iMax = mCellmlFileRuntime->statesCount(); i < iMax; ++i)
+    for (int i = 0, iMax = mRuntime->statesCount(); i < iMax; ++i)
         mStates[i][mSize] = mSimulation->data()->states()[i];
 
-    for (int i = 0, iMax = mCellmlFileRuntime->ratesCount(); i < iMax; ++i)
+    for (int i = 0, iMax = mRuntime->ratesCount(); i < iMax; ++i)
         mRates[i][mSize] = mSimulation->data()->rates()[i];
 
-    for (int i = 0, iMax = mCellmlFileRuntime->algebraicCount(); i < iMax; ++i)
+    for (int i = 0, iMax = mRuntime->algebraicCount(); i < iMax; ++i)
         mAlgebraic[i][mSize] = mSimulation->data()->algebraic()[i];
 
     // Increase our size
@@ -791,12 +790,12 @@ bool SingleCellSimulationViewSimulationResults::exportToCsv(const QString &pFile
 
     static const QString Header = "%1 | %2 (%3)";
 
-    out << Header.arg(mCellmlFileRuntime->variableOfIntegration()->component(),
-                      mCellmlFileRuntime->variableOfIntegration()->name(),
-                      mCellmlFileRuntime->variableOfIntegration()->unit());
+    out << Header.arg(mRuntime->variableOfIntegration()->component(),
+                      mRuntime->variableOfIntegration()->name(),
+                      mRuntime->variableOfIntegration()->unit());
 
-    for (int i = 0, iMax = mCellmlFileRuntime->modelParameters().count(); i < iMax; ++i) {
-        CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter = mCellmlFileRuntime->modelParameters()[i];
+    for (int i = 0, iMax = mRuntime->modelParameters().count(); i < iMax; ++i) {
+        CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter = mRuntime->modelParameters()[i];
 
         out << "," << Header.arg(modelParameter->component(),
                                  modelParameter->name()+QString(modelParameter->degree(), '\''),
@@ -810,8 +809,8 @@ bool SingleCellSimulationViewSimulationResults::exportToCsv(const QString &pFile
     for (qulonglong j = 0; j < mSize; ++j) {
         out << mPoints[j];
 
-        for (int i = 0, iMax = mCellmlFileRuntime->modelParameters().count(); i < iMax; ++i) {
-            CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter = mCellmlFileRuntime->modelParameters()[i];
+        for (int i = 0, iMax = mRuntime->modelParameters().count(); i < iMax; ++i) {
+            CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter = mRuntime->modelParameters()[i];
 
             switch (modelParameter->type()) {
             case CellMLSupport::CellmlFileRuntimeModelParameter::Constant:
@@ -853,14 +852,14 @@ bool SingleCellSimulationViewSimulationResults::exportToCsv(const QString &pFile
 //==============================================================================
 
 SingleCellSimulationViewSimulation::SingleCellSimulationViewSimulation(const QString &pFileName,
-                                                                       CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
+                                                                       CellMLSupport::CellmlFileRuntime *pRuntime,
                                                                        const SolverInterfaces &pSolverInterfaces) :
     mWorker(0),
     mFileName(pFileName),
-    mCellmlFileRuntime(pCellmlFileRuntime),
+    mRuntime(pRuntime),
     mSolverInterfaces(pSolverInterfaces),
-    mData(new SingleCellSimulationViewSimulationData(pCellmlFileRuntime, pSolverInterfaces)),
-    mResults(new SingleCellSimulationViewSimulationResults(pCellmlFileRuntime, this))
+    mData(new SingleCellSimulationViewSimulationData(pRuntime, pSolverInterfaces)),
+    mResults(new SingleCellSimulationViewSimulationResults(pRuntime, this))
 {
     // Keep track of any error occurring in our data
 
@@ -959,10 +958,10 @@ double SingleCellSimulationViewSimulation::requiredMemory()
 
     return  size()
            *( 1
-             +mCellmlFileRuntime->constantsCount()
-             +mCellmlFileRuntime->statesCount()
-             +mCellmlFileRuntime->ratesCount()
-             +mCellmlFileRuntime->algebraicCount())
+             +mRuntime->constantsCount()
+             +mRuntime->statesCount()
+             +mRuntime->ratesCount()
+             +mRuntime->algebraicCount())
            *SizeOfDouble;
 }
 
@@ -1034,7 +1033,7 @@ void SingleCellSimulationViewSimulation::run()
 
         // Create our worker
 
-        mWorker = new SingleCellSimulationViewSimulationWorker(mSolverInterfaces, mCellmlFileRuntime, this, &mWorker);
+        mWorker = new SingleCellSimulationViewSimulationWorker(mSolverInterfaces, mRuntime, this, &mWorker);
 
         if (!mWorker) {
             emit error(tr("the simulation worker could not be created"));

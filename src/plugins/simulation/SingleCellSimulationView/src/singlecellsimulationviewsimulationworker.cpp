@@ -23,11 +23,11 @@ namespace SingleCellSimulationView {
 //==============================================================================
 
 SingleCellSimulationViewSimulationWorker::SingleCellSimulationViewSimulationWorker(const SolverInterfaces &pSolverInterfaces,
-                                                                                   CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
+                                                                                   CellMLSupport::CellmlFileRuntime *pRuntime,
                                                                                    SingleCellSimulationViewSimulation *pSimulation,
                                                                                    SingleCellSimulationViewSimulationWorker **pSelf) :
     mSolverInterfaces(pSolverInterfaces),
-    mCellmlFileRuntime(pCellmlFileRuntime),
+    mRuntime(pRuntime),
     mSimulation(pSimulation),
     mProgress(0.0),
     mPaused(false),
@@ -119,7 +119,7 @@ void SingleCellSimulationViewSimulationWorker::started()
     CoreSolver::CoreOdeSolver *odeSolver = 0;
     CoreSolver::CoreDaeSolver *daeSolver = 0;
 
-    if (mCellmlFileRuntime->needOdeSolver()) {
+    if (mRuntime->needOdeSolver()) {
         foreach (SolverInterface *solverInterface, mSolverInterfaces)
             if (!solverInterface->name().compare(mSimulation->data()->odeSolverName())) {
                 // The requested ODE solver was found, so retrieve an instance
@@ -145,7 +145,7 @@ void SingleCellSimulationViewSimulationWorker::started()
 
     CoreSolver::CoreNlaSolver *nlaSolver = 0;
 
-    if (mCellmlFileRuntime->needNlaSolver())
+    if (mRuntime->needNlaSolver())
         foreach (SolverInterface *solverInterface, mSolverInterfaces)
             if (!solverInterface->name().compare(mSimulation->data()->nlaSolverName())) {
                 // The requested NLA solver was found, so retrieve an instance
@@ -156,8 +156,7 @@ void SingleCellSimulationViewSimulationWorker::started()
                 // Keep track of our NLA solver, so that doNonLinearSolve() can
                 // work as expected
 
-                CoreSolver::setNlaSolver(mCellmlFileRuntime->address(),
-                                         nlaSolver);
+                CoreSolver::setNlaSolver(mRuntime->address(), nlaSolver);
 
                 break;
             }
@@ -195,27 +194,27 @@ void SingleCellSimulationViewSimulationWorker::started()
         odeSolver->setProperties(mSimulation->data()->odeSolverProperties());
 
         odeSolver->initialize(currentPoint,
-                              mCellmlFileRuntime->statesCount(),
+                              mRuntime->statesCount(),
                               mSimulation->data()->constants(),
                               mSimulation->data()->states(),
                               mSimulation->data()->rates(),
                               mSimulation->data()->algebraic(),
-                              mCellmlFileRuntime->computeRates());
+                              mRuntime->computeRates());
     } else {
         daeSolver->setProperties(mSimulation->data()->daeSolverProperties());
 
         daeSolver->initialize(currentPoint, endingPoint,
-                              mCellmlFileRuntime->statesCount(),
-                              mCellmlFileRuntime->condVarCount(),
+                              mRuntime->statesCount(),
+                              mRuntime->condVarCount(),
                               mSimulation->data()->constants(),
                               mSimulation->data()->states(),
                               mSimulation->data()->rates(),
                               mSimulation->data()->algebraic(),
                               mSimulation->data()->condVar(),
-                              mCellmlFileRuntime->computeEssentialVariables(),
-                              mCellmlFileRuntime->computeResiduals(),
-                              mCellmlFileRuntime->computeRootInformation(),
-                              mCellmlFileRuntime->computeStateInformation());
+                              mRuntime->computeEssentialVariables(),
+                              mRuntime->computeResiduals(),
+                              mRuntime->computeRootInformation(),
+                              mRuntime->computeStateInformation());
     }
 
     // Initialise our NLA solver
@@ -318,25 +317,25 @@ void SingleCellSimulationViewSimulationWorker::started()
             if (mReset) {
                 if (odeSolver)
                     odeSolver->initialize(currentPoint,
-                                          mCellmlFileRuntime->statesCount(),
+                                          mRuntime->statesCount(),
                                           mSimulation->data()->constants(),
                                           mSimulation->data()->states(),
                                           mSimulation->data()->rates(),
                                           mSimulation->data()->algebraic(),
-                                          mCellmlFileRuntime->computeRates());
+                                          mRuntime->computeRates());
                 else
                     daeSolver->initialize(currentPoint, endingPoint,
-                                          mCellmlFileRuntime->statesCount(),
-                                          mCellmlFileRuntime->condVarCount(),
+                                          mRuntime->statesCount(),
+                                          mRuntime->condVarCount(),
                                           mSimulation->data()->constants(),
                                           mSimulation->data()->states(),
                                           mSimulation->data()->rates(),
                                           mSimulation->data()->algebraic(),
                                           mSimulation->data()->condVar(),
-                                          mCellmlFileRuntime->computeEssentialVariables(),
-                                          mCellmlFileRuntime->computeResiduals(),
-                                          mCellmlFileRuntime->computeRootInformation(),
-                                          mCellmlFileRuntime->computeStateInformation());
+                                          mRuntime->computeEssentialVariables(),
+                                          mRuntime->computeResiduals(),
+                                          mRuntime->computeRootInformation(),
+                                          mRuntime->computeStateInformation());
 
                 mReset = false;
             }
@@ -365,7 +364,7 @@ void SingleCellSimulationViewSimulationWorker::started()
     if (nlaSolver) {
         delete nlaSolver;
 
-        CoreSolver::unsetNlaSolver(mCellmlFileRuntime->address());
+        CoreSolver::unsetNlaSolver(mRuntime->address());
     }
 
     // Reset our simulation owner's knowledge of us

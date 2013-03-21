@@ -55,7 +55,7 @@ void CellmlAnnotationViewCellmlElementItemDelegate::paint(QPainter *pPainter,
 
 void CellmlAnnotationViewCellmlElementItem::constructor(const bool &pCategory,
                                                         const Type &pType,
-                                                        iface::cellml_api::CellMLElement *pCellmlFileElement,
+                                                        iface::cellml_api::CellMLElement *pElement,
                                                         const int &pNumber)
 {
     // Some initialisations
@@ -63,7 +63,7 @@ void CellmlAnnotationViewCellmlElementItem::constructor(const bool &pCategory,
     mCategory = pCategory;
     mType = pType;
 
-    mCellmlFileElement = pCellmlFileElement;
+    mElement = pElement;
 
     mNumber = pNumber;
 }
@@ -112,13 +112,13 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
 //==============================================================================
 
 CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(const Type &pType,
-                                                                             iface::cellml_api::CellMLElement *pCellmlFileElement,
+                                                                             iface::cellml_api::CellMLElement *pElement,
                                                                              const int pNumber) :
     QStandardItem()
 {
     // Constructor for a CellML element
 
-    constructor(false, pType, pCellmlFileElement, pNumber);
+    constructor(false, pType, pElement, pNumber);
 
     // Set the text for some types
 
@@ -126,14 +126,14 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
 
     switch (pType) {
     case Import: {
-        ObjRef<iface::cellml_api::URI> xlinkHref = dynamic_cast<iface::cellml_api::CellMLImport *>(pCellmlFileElement)->xlinkHref();
+        ObjRef<iface::cellml_api::URI> xlinkHref = dynamic_cast<iface::cellml_api::CellMLImport *>(pElement)->xlinkHref();
 
         setText(QString::fromStdWString(xlinkHref->asText()));
 
         break;
     }
     case UnitElement:
-        setText(QString::fromStdWString(dynamic_cast<iface::cellml_api::Unit *>(pCellmlFileElement)->units()));
+        setText(QString::fromStdWString(dynamic_cast<iface::cellml_api::Unit *>(pElement)->units()));
 
         break;
     case Group:
@@ -141,11 +141,11 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
 
         break;
     case RelationshipReference:
-        setText(QString::fromStdWString(dynamic_cast<iface::cellml_api::RelationshipRef *>(pCellmlFileElement)->relationship()));
+        setText(QString::fromStdWString(dynamic_cast<iface::cellml_api::RelationshipRef *>(pElement)->relationship()));
 
         break;
     case ComponentReference:
-        setText(QString::fromStdWString(dynamic_cast<iface::cellml_api::ComponentRef *>(pCellmlFileElement)->componentName()));
+        setText(QString::fromStdWString(dynamic_cast<iface::cellml_api::ComponentRef *>(pElement)->componentName()));
 
         break;
     case Connection:
@@ -153,7 +153,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
 
         break;
     case ComponentMapping: {
-        ObjRef<iface::cellml_api::MapComponents> mapComponents = dynamic_cast<iface::cellml_api::MapComponents *>(pCellmlFileElement);
+        ObjRef<iface::cellml_api::MapComponents> mapComponents = dynamic_cast<iface::cellml_api::MapComponents *>(pElement);
 
         setText(QString("%1 %2 %3").arg(QString::fromStdWString(mapComponents->firstComponentName()),
                                         RightArrow,
@@ -162,7 +162,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
         break;
     }
     case VariableMapping: {
-        ObjRef<iface::cellml_api::MapVariables> mapVariables = dynamic_cast<iface::cellml_api::MapVariables *>(pCellmlFileElement);
+        ObjRef<iface::cellml_api::MapVariables> mapVariables = dynamic_cast<iface::cellml_api::MapVariables *>(pElement);
 
         setText(QString("%1 %2 %3").arg(QString::fromStdWString(mapVariables->firstVariableName()),
                                         RightArrow,
@@ -173,7 +173,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
     default:
         // Another type of element which has a name
 
-        setText(QString::fromStdWString(dynamic_cast<iface::cellml_api::NamedCellMLElement *>(pCellmlFileElement)->name()));
+        setText(QString::fromStdWString(dynamic_cast<iface::cellml_api::NamedCellMLElement *>(pElement)->name()));
     }
 
     // Use its text as a tooltip (in case it's too long and doesn't fit within
@@ -281,11 +281,11 @@ int CellmlAnnotationViewCellmlElementItem::number() const
 
 //==============================================================================
 
-iface::cellml_api::CellMLElement * CellmlAnnotationViewCellmlElementItem::cellmlFileElement() const
+iface::cellml_api::CellMLElement * CellmlAnnotationViewCellmlElementItem::element() const
 {
     // Return the CellML element item's element
 
-    return mCellmlFileElement;
+    return mElement;
 }
 
 //==============================================================================
@@ -924,7 +924,7 @@ void CellmlAnnotationViewCellmlListWidget::updateMetadataDetails(const QModelInd
 
         // Let people know that we request to see some metadata details
 
-        emit metadataDetailsRequested(static_cast<CellmlAnnotationViewCellmlElementItem *>(mModel->itemFromIndex(crtIndex))->cellmlFileElement());
+        emit metadataDetailsRequested(static_cast<CellmlAnnotationViewCellmlElementItem *>(mModel->itemFromIndex(crtIndex))->element());
     }
 
     // We are done, so...

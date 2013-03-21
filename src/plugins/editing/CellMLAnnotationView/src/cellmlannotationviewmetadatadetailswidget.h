@@ -82,13 +82,13 @@ private:
     CellmlAnnotationViewMetadataViewDetailsWidget *mMetadataViewDetails;
     QWebView *mWebView;
 
-    ObjRef<iface::cellml_api::CellMLElement> mCellmlFileElement;
+    ObjRef<iface::cellml_api::CellMLElement> mElement;
 
 Q_SIGNALS:
     void splitterMoved(const QList<int> &pSizes);
 
 public Q_SLOTS:
-    void updateGui(iface::cellml_api::CellMLElement *pCellmlFileElement);
+    void updateGui(iface::cellml_api::CellMLElement *pElement);
 
 private Q_SLOTS:
     void updateSizes(const QList<int> &pSizes);

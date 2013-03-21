@@ -46,21 +46,21 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::retranslateUi()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataViewDetailsWidget::updateGui(iface::cellml_api::CellMLElement *pCellmlFileElement)
+void CellmlAnnotationViewMetadataViewDetailsWidget::updateGui(iface::cellml_api::CellMLElement *pElement)
 {
-    if (!pCellmlFileElement)
+    if (!pElement)
         return;
 
     // Decide on which view to use and update it, if needed
 
 //---GRY---
-//    switch (pCellmlFileElement->rdfTriples().type()) {
+//    switch (pElement->rdfTriples().type()) {
 //    case CellMLSupport::CellmlFileRdfTriple::BioModelsDotNetQualifier:
 //    case CellMLSupport::CellmlFileRdfTriple::Empty:
 //        removeWidget(mRawView);
 //        addWidget(mNormalView);
 
-//        mNormalView->updateGui(pCellmlFileElement);
+//        mNormalView->updateGui(pElement);
 
 //        break;
 //    default:
@@ -69,7 +69,7 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::updateGui(iface::cellml_api:
 //        removeWidget(mNormalView);
 //        addWidget(mRawView);
 
-//        mRawView->updateGui(pCellmlFileElement);
+//        mRawView->updateGui(pElement);
 //    }
 }
 

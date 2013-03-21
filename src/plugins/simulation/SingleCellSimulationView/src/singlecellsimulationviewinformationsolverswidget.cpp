@@ -284,12 +284,12 @@ void SingleCellSimulationViewInformationSolversWidget::setPropertiesUnit(SingleC
 //==============================================================================
 
 void SingleCellSimulationViewInformationSolversWidget::initialize(const QString &pFileName,
-                                                                  CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
+                                                                  CellMLSupport::CellmlFileRuntime *pRuntime,
                                                                   SingleCellSimulationViewSimulationData *pSimulationData)
 {
     // Make sure that we have a CellML file runtime
 
-    if (!pCellmlFileRuntime)
+    if (!pRuntime)
         return;
 
     // Retrieve and initialise our GUI state
@@ -300,19 +300,19 @@ void SingleCellSimulationViewInformationSolversWidget::initialize(const QString 
 
     // Make sure that the CellML file runtime is valid
 
-    if (pCellmlFileRuntime->isValid()) {
+    if (pRuntime->isValid()) {
         // Show/hide the ODE/DAE solver information
 
         if (mOdeSolverData)
-            setPropertyVisible(mOdeSolverData->solversProperty(), pCellmlFileRuntime->needOdeSolver());
+            setPropertyVisible(mOdeSolverData->solversProperty(), pRuntime->needOdeSolver());
 
         if (mDaeSolverData)
-            setPropertyVisible(mDaeSolverData->solversProperty(), pCellmlFileRuntime->needDaeSolver());
+            setPropertyVisible(mDaeSolverData->solversProperty(), pRuntime->needDaeSolver());
 
         // Show/hide the NLA solver information
 
         if (mNlaSolverData)
-            setPropertyVisible(mNlaSolverData->solversProperty(), pCellmlFileRuntime->needNlaSolver());
+            setPropertyVisible(mNlaSolverData->solversProperty(), pRuntime->needNlaSolver());
 
         // Retranslate ourselves so that the property names get properly set
 
@@ -321,7 +321,7 @@ void SingleCellSimulationViewInformationSolversWidget::initialize(const QString 
 
     // Set the unit of our different properties, if needed
 
-    QString voiUnit = pCellmlFileRuntime->variableOfIntegration()->unit();
+    QString voiUnit = pRuntime->variableOfIntegration()->unit();
 
     setPropertiesUnit(mOdeSolverData, voiUnit);
     setPropertiesUnit(mDaeSolverData, voiUnit);

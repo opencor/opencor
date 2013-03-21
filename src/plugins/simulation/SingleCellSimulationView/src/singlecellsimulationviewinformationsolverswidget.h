@@ -64,7 +64,7 @@ public:
     void setSolverInterfaces(const SolverInterfaces &pSolverInterfaces);
 
     void initialize(const QString &pFileName,
-                    CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
+                    CellMLSupport::CellmlFileRuntime *pRuntime,
                     SingleCellSimulationViewSimulationData *pSimulationData);
     void backup(const QString &pFileName);
     void finalize(const QString &pFileName);

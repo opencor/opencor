@@ -73,12 +73,12 @@ void SingleCellSimulationViewInformationSimulationWidget::retranslateUi()
 //==============================================================================
 
 void SingleCellSimulationViewInformationSimulationWidget::initialize(const QString &pFileName,
-                                                                     CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
+                                                                     CellMLSupport::CellmlFileRuntime *pRuntime,
                                                                      SingleCellSimulationViewSimulationData *pSimulationData)
 {
     // Make sure that we have a CellML file runtime
 
-    if (!pCellmlFileRuntime)
+    if (!pRuntime)
         return;
 
     // Retrieve and initialise our GUI state
@@ -89,7 +89,7 @@ void SingleCellSimulationViewInformationSimulationWidget::initialize(const QStri
 
     // Iniialise the unit of our different properties
 
-    QString unit = pCellmlFileRuntime->variableOfIntegration()->unit();
+    QString unit = pRuntime->variableOfIntegration()->unit();
 
     setStringPropertyItem(mStartingPointProperty->unit(), unit);
     setStringPropertyItem(mEndingPointProperty->unit(), unit);

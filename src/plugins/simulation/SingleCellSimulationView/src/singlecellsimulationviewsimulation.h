@@ -44,7 +44,7 @@ class SingleCellSimulationViewSimulationData : public QObject
     Q_OBJECT
 
 public:
-    explicit SingleCellSimulationViewSimulationData(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
+    explicit SingleCellSimulationViewSimulationData(CellMLSupport::CellmlFileRuntime *pRuntime,
                                                     const SolverInterfaces &pSolverInterfaces);
     ~SingleCellSimulationViewSimulationData();
 
@@ -96,7 +96,7 @@ public:
     void checkForModifications();
 
 private:
-    CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
+    CellMLSupport::CellmlFileRuntime *mRuntime;
 
     SolverInterfaces mSolverInterfaces;
 
@@ -136,7 +136,7 @@ Q_SIGNALS:
 class SingleCellSimulationViewSimulationResults : public QObject
 {
 public:
-    explicit SingleCellSimulationViewSimulationResults(CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
+    explicit SingleCellSimulationViewSimulationResults(CellMLSupport::CellmlFileRuntime *pRuntime,
                                                        SingleCellSimulationViewSimulation *pSimulation);
     ~SingleCellSimulationViewSimulationResults();
 
@@ -156,7 +156,7 @@ public:
     bool exportToCsv(const QString &pFileName) const;
 
 private:
-    CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
+    CellMLSupport::CellmlFileRuntime *mRuntime;
 
     SingleCellSimulationViewSimulation *mSimulation;
 
@@ -183,7 +183,7 @@ class SingleCellSimulationViewSimulation : public QObject
 
 public:
     explicit SingleCellSimulationViewSimulation(const QString &pFileName,
-                                                CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
+                                                CellMLSupport::CellmlFileRuntime *pRuntime,
                                                 const SolverInterfaces &pSolverInterfaces);
     ~SingleCellSimulationViewSimulation();
 
@@ -215,7 +215,7 @@ private:
 
     QString mFileName;
 
-    CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
+    CellMLSupport::CellmlFileRuntime *mRuntime;
 
     SolverInterfaces mSolverInterfaces;
 

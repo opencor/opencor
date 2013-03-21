@@ -49,9 +49,9 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::retranslateUi()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(iface::cellml_api::CellMLElement *pCellmlFileElement)
+void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(iface::cellml_api::CellMLElement *pElement)
 {
-    if (!pCellmlFileElement)
+    if (!pElement)
         return;
 
     // Prevent ourselves from being updated (to avoid any flickering)
@@ -73,8 +73,7 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(iface::cellml_a
 //---GRY---
 //    int rdfTripleCounter = 0;
 
-//    foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple,
-//             pCellmlFileElement->rdfTriples())
+//    foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, pElement->rdfTriples())
 //        mModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << new QStandardItem(QString::number(++rdfTripleCounter))
 //                                                                        << new QStandardItem((rdfTriple->subject()->type() == CellMLSupport::CellmlFileRdfTripleElement::UriReference)?
 //                                                                                                 rdfTriple->metadataId():

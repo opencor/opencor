@@ -63,7 +63,7 @@ public:
 
     virtual void retranslateUi();
 
-    void updateGui(iface::cellml_api::CellMLElement *pCellmlFileElement,
+    void updateGui(iface::cellml_api::CellMLElement *pElement,
                    const QString &pRdfTripleInformation = QString(),
                    const Type &pType = No,
                    const Information &pLookupInformation = First,
@@ -82,7 +82,7 @@ private:
     QWidget *mGridWidget;
     QGridLayout *mGridLayout;
 
-    ObjRef<iface::cellml_api::CellMLElement> mCellmlFileElement;
+    ObjRef<iface::cellml_api::CellMLElement> mElement;
 
     QString mRdfTripleInformation;
     Type mType;

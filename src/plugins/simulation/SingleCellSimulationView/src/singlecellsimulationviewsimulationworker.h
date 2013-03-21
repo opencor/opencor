@@ -46,7 +46,7 @@ class SingleCellSimulationViewSimulationWorker : public QObject
 
 public:
     explicit SingleCellSimulationViewSimulationWorker(const SolverInterfaces &pSolverInterfaces,
-                                                      CellMLSupport::CellmlFileRuntime *pCellmlFileRuntime,
+                                                      CellMLSupport::CellmlFileRuntime *pRuntime,
                                                       SingleCellSimulationViewSimulation *pSimulation,
                                                       SingleCellSimulationViewSimulationWorker **pSelf);
 
@@ -67,7 +67,7 @@ private:
 
     SolverInterfaces mSolverInterfaces;
 
-    CellMLSupport::CellmlFileRuntime *mCellmlFileRuntime;
+    CellMLSupport::CellmlFileRuntime *mRuntime;
 
     SingleCellSimulationViewSimulation *mSimulation;
 
