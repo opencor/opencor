@@ -59,7 +59,7 @@ MainWindow::MainWindow(SharedTools::QtSingleApplication *pApp) :
     mFileNewMenu(0),
     mViewOrganisationMenu(0),
     mViewSeparator(0),
-    mViewMenus(QList<QMenu *>()),
+    mViewMenus(QMap<Plugin *, QMenu *>()),
     mViewActions(QMap<Plugin *, QAction *>()),
     mViewPlugin(0),
     mNeedViewPluginInitialisation(true)
@@ -470,7 +470,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
                 mGui->menuBar->insertAction(mGui->menuView->menuAction(),
                                             newMenu->menuAction());
 
-                mViewMenus << newMenu;
+                mViewMenus.insertMulti(pPlugin, newMenu);
 
                 foreach (QAction *action, newMenu->actions())
                     mViewActions.insertMulti(pPlugin, action);
@@ -532,7 +532,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
                 mGui->menuFile->insertMenu(menuSettings->action(),
                                            menuSettings->menu());
 
-                mViewMenus << menuSettings->menu();
+                mViewMenus.insertMulti(pPlugin, menuSettings->menu());
 
                 break;
             default:
@@ -1256,29 +1256,6 @@ void MainWindow::restart(const bool &pSaveSettings) const
 
 //==============================================================================
 
-void MainWindow::checkViewMenu(QMenu *pViewMenu)
-{
-    // Show/hide a view menu, if it exists, based on whether its menu items are
-    // visible
-
-    if (!pViewMenu)
-        return;
-
-    bool viewMenuVisible = false;
-
-    foreach (QAction *action, pViewMenu->actions())
-        if (action->isVisible()) {
-            viewMenuVisible = true;
-
-            break;
-        }
-
-    pViewMenu->menuAction()->setVisible(viewMenuVisible);
-}
-
-
-//==============================================================================
-
 void MainWindow::updateGui(Plugin *pViewPlugin)
 {
     // We come here as a result of our central widget having updated its GUI,
@@ -1311,14 +1288,34 @@ void MainWindow::updateGui(Plugin *pViewPlugin)
         iter.value()->setVisible(validViewAction);
     }
 
-    // Update our menus by showing/hiding them
+    // Go through our view menus and do the same as what we did for our view
+    // actions above
 
-    foreach (QMenu *viewMenu, mViewMenus)
-        checkViewMenu(viewMenu);
+    for (QMap<Plugin *, QMenu *>::ConstIterator iter = mViewMenus.constBegin(),
+                                                iterEnd = mViewMenus.constEnd();
+         iter != iterEnd; ++iter) {
+        bool validViewMenu = pViewPlugin
+                             && (   !iter.key()->name().compare(pViewPlugin->name())
+                                 ||  pViewPlugin->info().fullDependencies().contains(iter.key()->name()));
 
-    // Also check the File|New menu
+        iter.value()->menuAction()->setVisible(validViewMenu);
+    }
 
-    checkViewMenu(mFileNewMenu);
+    // Show/hide the File|New menu by checking whether its menu items are
+    // visible
+
+    if (mFileNewMenu) {
+        bool fileNewMenuVisible = false;
+
+        foreach (QAction *action, mFileNewMenu->actions())
+            if (action->isVisible()) {
+                fileNewMenuVisible = true;
+
+                break;
+            }
+
+        mFileNewMenu->menuAction()->setVisible(fileNewMenuVisible);
+    }
 }
 
 //==============================================================================

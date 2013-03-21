@@ -85,7 +85,7 @@ private:
     QMenu *mViewOrganisationMenu;
     QAction *mViewSeparator;
 
-    QList<QMenu *> mViewMenus;
+    QMap<Plugin *, QMenu *> mViewMenus;
     QMap<Plugin *, QAction *> mViewActions;
 
     Plugin *mViewPlugin;
@@ -107,8 +107,6 @@ private:
     void handleAction(const QUrl &pUrl);
 
     void showSelf();
-
-    void checkViewMenu(QMenu *pViewMenu);
 
 private Q_SLOTS:
     void fileOpenRequest(const QString &pFileName);
