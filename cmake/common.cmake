@@ -12,6 +12,19 @@ MACRO(INITIALISE_PROJECT)
         MESSAGE(FATAL_ERROR "Sorry, but OpenCOR can only be built in 32-bit or 64-bit.")
     ENDIF()
 
+    # Required packages
+
+    FIND_PACKAGE(Qt5Widgets REQUIRED)
+
+    # Keep track of some information about Qt
+
+    SET(QT_BINARY_DIR ${_qt5_widgets_install_prefix}/bin)
+    SET(QT_LIBRARY_DIR ${_qt5_widgets_install_prefix}/lib)
+    SET(QT_PLUGINS_DIR ${_qt5_widgets_install_prefix}/plugins)
+    SET(QT_VERSION_MAJOR 5)
+    SET(QT_VERSION_MINOR 0)
+    SET(QT_VERSION_PATCH 1)
+
     # Some settings which depend on whether we want a debug or release version
     # of OpenCOR
 
@@ -78,19 +91,6 @@ MACRO(INITIALISE_PROJECT)
     IF(WIN32)
         ADD_DEFINITIONS(-D_UNICODE)
     ENDIF()
-
-    # Required packages
-
-    FIND_PACKAGE(Qt5Widgets REQUIRED)
-
-    # Keep track of some information about Qt
-
-    SET(QT_BINARY_DIR ${_qt5_widgets_install_prefix}/bin)
-    SET(QT_LIBRARY_DIR ${_qt5_widgets_install_prefix}/lib)
-    SET(QT_PLUGINS_DIR ${_qt5_widgets_install_prefix}/plugins)
-    SET(QT_VERSION_MAJOR 5)
-    SET(QT_VERSION_MINOR 0)
-    SET(QT_VERSION_PATCH 1)
 
     # Default location of third-party libraries
     # Note: this is only required so that we can quickly test third-party
