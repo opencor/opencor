@@ -731,15 +731,60 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
             // Note: we cannot keep track of the model parameter using a pointer
             //       to a CellmlFileVariable object since our CellmlFileVariable
             //       objects are for the current CellML file only. In other
-            //       words, it would only for models that don't have imports
-            //       while we need a solution that works for any model, hence we
-            //       we use CellmlFileRuntimeModelParameter instead...
+            //       words, it would only work for models that don't have
+            //       imports while we need a solution that works for any model,
+            //       hence we we use CellmlFileRuntimeModelParameter instead...
+
+            // Retrieve the variable associated with the computation target
 
             ObjRef<iface::cellml_api::CellMLVariable> variable = computationTarget->variable();
+
+            // Retrieve the component in which the variable was declared
+            // Note: for this, we need to check whether the component was
+            //       imported which means retrieving the parent element of the
+            //       variable (i.e. a component), then the parent of its parent
+            //       (i.e. a model) and, finally, the parent of its parent's
+            //       parent (i.e. an import, should the component have been
+            //       imported)
+
+            QString componentName = QString::fromStdWString(variable->componentName());
+
+            ObjRef<iface::cellml_api::CellMLElement> variableComponent = variable->parentElement();
+            ObjRef<iface::cellml_api::CellMLElement> variableComponentModel = variableComponent->parentElement();
+            ObjRef<iface::cellml_api::CellMLElement> variableComponentModelImport = variableComponentModel->parentElement();
+
+            if (variableComponentModelImport) {
+                // The component has been imported, so retrieve the import's
+                // components, and check which one has the name of variable's
+                // component
+
+                ObjRef<iface::cellml_api::CellMLImport> import = QueryInterface(variableComponentModelImport);
+                ObjRef<iface::cellml_api::ImportComponentSet> importComponents = import->components();
+                ObjRef<iface::cellml_api::ImportComponentIterator> importComponentsIterator = importComponents->iterateImportComponents();
+
+                forever {
+                    ObjRef<iface::cellml_api::ImportComponent> importComponent = importComponentsIterator->nextImportComponent();
+
+                    if (!importComponent)
+                        break;
+
+                    if (!componentName.compare(QString::fromStdWString(importComponent->componentRef()))) {
+                        // This is the imported component we are after, so we
+                        // can get the correct name of the variable's component
+
+                        componentName = QString::fromStdWString(importComponent->name());
+
+                        break;
+                    }
+                }
+            }
+
+            // Keep track of the model parameter
+
             CellmlFileRuntimeModelParameter *modelParameter = new CellmlFileRuntimeModelParameter(QString::fromStdWString(variable->name()),
                                                                                                   computationTarget->degree(),
                                                                                                   QString::fromStdWString(variable->unitsName()),
-                                                                                                  QString::fromStdWString(variable->componentName()),
+                                                                                                  componentName,
                                                                                                   modelParameterType,
                                                                                                   computationTarget->assignedIndex());
 
