@@ -2,6 +2,16 @@ MACRO(INITIALISE_PROJECT)
 #    SET(CMAKE_VERBOSE_MAKEFILE ON)
     SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+    # Check whether we are building in 32-bit or 64-bit
+
+    IF(CMAKE_SIZEOF_VOID_P EQUAL 4)
+        SET(32BIT_MODE ON)
+    ELSEIF(CMAKE_SIZEOF_VOID_P EQUAL 8)
+        SET(32BIT_MODE OFF)
+    ELSE()
+        MESSAGE(FATAL_ERROR "Sorry, but OpenCOR can only be built in 32-bit or 64-bit.")
+    ENDIF()
+
     # Some settings which depend on whether we want a debug or release version
     # of OpenCOR
 
@@ -82,14 +92,6 @@ MACRO(INITIALISE_PROJECT)
     SET(QT_VERSION_MINOR 0)
     SET(QT_VERSION_PATCH 1)
 
-    # Whether we are building for 32-bit or 64-bit
-
-    IF(CMAKE_SIZEOF_VOID_P EQUAL 8)
-        SET(64BIT_MODE ON)
-    ELSE()
-        SET(64BIT_MODE OFF)
-    ENDIF()
-
     # Default location of third-party libraries
     # Note: this is only required so that we can quickly test third-party
     #       libraries without first having to package everything...
@@ -115,10 +117,10 @@ MACRO(INITIALISE_PROJECT)
     ELSEIF(APPLE)
         SET(DISTRIB_DIR osx)
     ELSE()
-        IF(64BIT_MODE)
-            SET(DISTRIB_DIR linux/x64)
-        ELSE()
+        IF(32BIT_MODE)
             SET(DISTRIB_DIR linux/x86)
+        ELSE()
+            SET(DISTRIB_DIR linux/x64)
         ENDIF()
     ENDIF()
 
