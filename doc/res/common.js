@@ -1,3 +1,5 @@
+// Context menu
+
 function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("<div class=\"header\">");
     document.write("    "+pageName);
@@ -123,10 +125,85 @@ $(document).ready(function() {
     });
 });
 
+// Copyright information
+
 function copyright() {
     var date = new Date();
 
     document.write("<div class=\"copyright\">");
     document.write("    Copyright ©2011-"+date.getFullYear());
     document.write("</div>");
+}
+
+// Support for Google Analytics
+
+var _gaq = _gaq || [];
+
+_gaq.push(['_setAccount', 'UA-39516363-1']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+    var ga = document.createElement('script');
+
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = (('https:' == document.location.protocol)?'https://ssl':'http://www')+'.google-analytics.com/ga.js';
+
+    var s = document.getElementsByTagName('script')[0];
+
+    s.parentNode.insertBefore(ga, s);
+})();
+
+// Support for the tracking of emails, downloads and external links in Google
+// Analytics
+
+if (typeof jQuery != 'undefined') {
+    jQuery(document).ready(function($) {
+        var filetypes = /\.(exe|zip|tar\.gz|dmg)$/i
+        var baseHref = '';
+
+        if (jQuery('base').attr('href') != undefined)
+            baseHref = jQuery('base').attr('href');
+
+        jQuery('a').on('click', function(event) {
+            var el = jQuery(this);
+            var track = true;
+            var href = (typeof(el.attr('href')) != 'undefined')?el.attr('href'):"";
+
+            if (!href.match(/^javascript:/i)) {
+                var elEv = [];
+
+                if (href.match(/^mailto\:/i)) {
+                    elEv.category = "Email";
+                    elEv.action = "click";
+                    elEv.label = href.replace(/^mailto\:/i, '');
+                    elEv.loc = href;
+                } else if (href.match(filetypes)) {
+                    var extension = (/[.]/.exec(href))?/[^.]+$/.exec(href):undefined;
+
+                    elEv.category = "Downloads";
+                    elEv.action = "click-"+extension[0];
+                    elEv.label = href.replace(/ /g,"-");
+                    elEv.loc = baseHref+href;
+                } else if (href.match(/^https?\:/i) && !isThisDomain) {
+                    elEv.category = "External links";
+                    elEv.action = "click";
+                    elEv.label = href.replace(/^https?\:\/\//i, '');
+                    elEv.non_i = true;
+                    elEv.loc = href;
+                } else
+                    track = false;
+
+                if (track) {
+                    _gaq.push(['_trackEvent', elEv.category.toLowerCase(), elEv.action.toLowerCase(), elEv.label.toLowerCase(), elEv.value, elEv.non_i]);
+
+                    if ((el.attr('target') == undefined) || (el.attr('target').toLowerCase() != '_blank')) {
+                        setTimeout(function() { location.href = elEv.loc; }, 400);
+
+                        return false;
+                    }
+                }
+            }
+        });
+    });
 }
