@@ -174,7 +174,7 @@ if (typeof jQuery != 'undefined') {
                 var elEv = [];
 
                 if (href.match(/^mailto\:/i)) {
-                    elEv.category = "Email";
+                    elEv.category = "Emails";
                     elEv.action = "click";
                     elEv.label = href.replace(/^mailto\:/i, '');
                     elEv.loc = href;
