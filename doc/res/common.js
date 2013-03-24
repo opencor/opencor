@@ -159,15 +159,12 @@ _gaq.push(['_trackPageview']);
 
 if (typeof jQuery != 'undefined') {
     jQuery(document).ready(function($) {
-        var filetypes = /\.(exe|zip|tar\.gz|dmg)$/i
-
         jQuery('a').on('click', function(event) {
             var el = jQuery(this);
-            var track = true;
             var href = (typeof(el.attr('href')) != 'undefined')?el.attr('href'):"";
+            var track = true;
 
             if (!href.match(/^javascript:/i)) {
-                var isThisDomain = /opencor\.ws/.test($(this).attr('href'));
                 var elEv = [];
 
                 elEv.action = href.replace(/%20/g, ' ');
@@ -177,9 +174,10 @@ if (typeof jQuery != 'undefined') {
                 if (href.match(/^mailto\:/i)) {
                     elEv.category = "Emails";
                     elEv.action = elEv.action.replace(/^mailto\: /, '');
-                } else if (href.match(filetypes)) {
+                } else if (href.match(/\.(exe|zip|tar\.gz|dmg)$/i)) {
                     elEv.category = "Downloads";
-                } else if (href.match(/^https?\:/i) && !isThisDomain) {
+                } else if (    href.match(/^https?\:/i)
+                           && !href.match(/opencor\.ws/i)) {
                     elEv.category = "External links";
                     elEv.nonInter = true;
                 } else
@@ -187,6 +185,7 @@ if (typeof jQuery != 'undefined') {
 
                 if (track) {
                     elEv.label = elEv.action
+alert(elEv.category+" | "+elEv.action);
 
                     _gaq.push(['_trackEvent', elEv.category, elEv.action.toLowerCase(), elEv.label.toLowerCase(), 0, elEv.nonInter]);
 
