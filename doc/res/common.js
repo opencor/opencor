@@ -177,6 +177,7 @@ if (typeof jQuery != 'undefined') {
                     elEv.category = "Emails";
                     elEv.action = "click";
                     elEv.label = href.replace(/^mailto\:/i, '');
+                    elEv.nonInteraction = false;
                     elEv.loc = href;
                 } else if (href.match(filetypes)) {
                     var extension = (/[.]/.exec(href))?/[^.]+$/.exec(href):undefined;
@@ -184,18 +185,19 @@ if (typeof jQuery != 'undefined') {
                     elEv.category = "Downloads";
                     elEv.action = "click-"+extension[0];
                     elEv.label = href.replace(/ /g,"-");
+                    elEv.nonInteraction = false;
                     elEv.loc = baseHref+href;
                 } else if (href.match(/^https?\:/i) && !isThisDomain) {
                     elEv.category = "External links";
                     elEv.action = "click";
                     elEv.label = href.replace(/^https?\:\/\//i, '');
-                    elEv.non_i = true;
+                    elEv.nonInteraction = true;
                     elEv.loc = href;
                 } else
                     track = false;
 
                 if (track) {
-                    _gaq.push(['_trackEvent', elEv.category.toLowerCase(), elEv.action.toLowerCase(), elEv.label.toLowerCase(), elEv.value, elEv.non_i]);
+                    _gaq.push(['_trackEvent', elEv.category, elEv.action.toLowerCase(), elEv.label.toLowerCase(), 0, elEv.nonInteraction]);
 
                     if ((el.attr('target') == undefined) || (el.attr('target').toLowerCase() != '_blank')) {
                         setTimeout(function() { location.href = elEv.loc; }, 400);
