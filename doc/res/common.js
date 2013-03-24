@@ -160,10 +160,6 @@ _gaq.push(['_trackPageview']);
 if (typeof jQuery != 'undefined') {
     jQuery(document).ready(function($) {
         var filetypes = /\.(exe|zip|tar\.gz|dmg)$/i
-        var baseHref = '';
-
-        if (jQuery('base').attr('href') != undefined)
-            baseHref = jQuery('base').attr('href');
 
         jQuery('a').on('click', function(event) {
             var el = jQuery(this);
@@ -171,33 +167,28 @@ if (typeof jQuery != 'undefined') {
             var href = (typeof(el.attr('href')) != 'undefined')?el.attr('href'):"";
 
             if (!href.match(/^javascript:/i)) {
+                var isThisDomain = /opencor\.ws/.test($(this).attr('href'));
                 var elEv = [];
+
+                elEv.action = href.replace(/%20/g, ' ');
+                elEv.nonInter = false;
+                elEv.loc = href;
 
                 if (href.match(/^mailto\:/i)) {
                     elEv.category = "Emails";
-                    elEv.action = "click";
-                    elEv.label = href.replace(/^mailto\:/i, '');
-                    elEv.nonInteraction = false;
-                    elEv.loc = href;
+                    elEv.action = elEv.action.replace(/^mailto\: /, '');
                 } else if (href.match(filetypes)) {
-                    var extension = (/[.]/.exec(href))?/[^.]+$/.exec(href):undefined;
-
                     elEv.category = "Downloads";
-                    elEv.action = "click-"+extension[0];
-                    elEv.label = href.replace(/ /g,"-");
-                    elEv.nonInteraction = false;
-                    elEv.loc = baseHref+href;
                 } else if (href.match(/^https?\:/i) && !isThisDomain) {
                     elEv.category = "External links";
-                    elEv.action = "click";
-                    elEv.label = href.replace(/^https?\:\/\//i, '');
-                    elEv.nonInteraction = true;
-                    elEv.loc = href;
+                    elEv.nonInter = true;
                 } else
                     track = false;
 
                 if (track) {
-                    _gaq.push(['_trackEvent', elEv.category, elEv.action.toLowerCase(), elEv.label.toLowerCase(), 0, elEv.nonInteraction]);
+                    elEv.label = elEv.action
+
+                    _gaq.push(['_trackEvent', elEv.category, elEv.action.toLowerCase(), elEv.label.toLowerCase(), 0, elEv.nonInter]);
 
                     if ((el.attr('target') == undefined) || (el.attr('target').toLowerCase() != '_blank')) {
                         setTimeout(function() { location.href = elEv.loc; }, 400);
