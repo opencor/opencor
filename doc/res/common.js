@@ -117,11 +117,11 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
 
 $(document).ready(function() {
     $("ul.contentsMenu > li").mouseenter(function() {
-        $(this).find('ul').css('visibility', 'visible');
+        $(this).find("ul").css("visibility", "visible");
     });
 
     $("ul.contentsMenu > li").mouseleave(function() {
-        $(this).find('ul').css('visibility', 'hidden');
+        $(this).find("ul").css("visibility", "hidden");
     });
 });
 
@@ -139,17 +139,17 @@ function copyright() {
 
 var _gaq = _gaq || [];
 
-_gaq.push(['_setAccount', 'UA-39516363-1']);
-_gaq.push(['_trackPageview']);
+_gaq.push(["_setAccount", "UA-39516363-1"]);
+_gaq.push(["_trackPageview"]);
 
 (function() {
-    var ga = document.createElement('script');
+    var ga = document.createElement("script");
 
-    ga.type = 'text/javascript';
+    ga.type = "text/javascript";
     ga.async = true;
-    ga.src = (('https:' == document.location.protocol)?'https://ssl':'http://www')+'.google-analytics.com/ga.js';
+    ga.src = ((document.location.protocol == "https:")?"https://ssl":"http://www")+".google-analytics.com/ga.js";
 
-    var s = document.getElementsByTagName('script')[0];
+    var s = document.getElementsByTagName("script")[0];
 
     s.parentNode.insertBefore(ga, s);
 })();
@@ -157,23 +157,23 @@ _gaq.push(['_trackPageview']);
 // Support for the tracking of emails, downloads and external links in Google
 // Analytics
 
-if (typeof jQuery != 'undefined') {
+if (typeof jQuery != "undefined") {
     jQuery(document).ready(function($) {
-        jQuery('a').on('click', function(event) {
+        jQuery("a").on("click", function(event) {
             var el = jQuery(this);
-            var href = (typeof(el.attr('href')) != 'undefined')?el.attr('href'):"";
+            var href = (typeof(el.attr("href")) != "undefined")?el.attr("href"):"";
             var track = true;
 
             if (!href.match(/^javascript:/i)) {
                 var elEv = [];
 
-                elEv.action = href.replace(/%20/g, ' ');
+                elEv.action = href.replace(/%20/g, " ");
                 elEv.nonInter = false;
                 elEv.loc = href;
 
                 if (href.match(/^mailto\:/i)) {
                     elEv.category = "Emails";
-                    elEv.action = elEv.action.replace(/^mailto\: /, '');
+                    elEv.action = elEv.action.replace(/^mailto\: /, "");
                 } else if (href.match(/\.(exe|zip|tar\.gz|dmg)$/i)) {
                     elEv.category = "Downloads";
                 } else if (    href.match(/^https?\:/i)
@@ -185,11 +185,9 @@ if (typeof jQuery != 'undefined') {
 
                 if (track) {
                     elEv.label = elEv.action
-alert(elEv.category+" | "+elEv.action);
+                    _gaq.push(["_trackEvent", elEv.category, elEv.action.toLowerCase(), elEv.label.toLowerCase(), 0, elEv.nonInter]);
 
-                    _gaq.push(['_trackEvent', elEv.category, elEv.action.toLowerCase(), elEv.label.toLowerCase(), 0, elEv.nonInter]);
-
-                    if ((el.attr('target') == undefined) || (el.attr('target').toLowerCase() != '_blank')) {
+                    if ((el.attr("target") == undefined) || (el.attr("target").toLowerCase() != "_blank")) {
                         setTimeout(function() { location.href = elEv.loc; }, 400);
 
                         return false;
