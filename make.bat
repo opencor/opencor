@@ -39,7 +39,7 @@ ECHO Making the console version of OpenCOR
 ECHO -------------------------------------
 ECHO.
 
-CD ..\winConsole\build
+CD ..\windows\build
 
 cmake -G "Visual Studio 10" ..
 msbuild OpenCOR.sln /p:Configuration=Release;OutDir=.\ %*
