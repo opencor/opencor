@@ -84,12 +84,12 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
 
             var currentMenuItem = false;
 
-            if (   (data[i][1].toLowerCase() == pageName.toLowerCase())
-                || ((pageName == "OpenCOR") && (data[i][1] == "Home"))
-                || (pageName == data[i][1]+" Plugin"))
+            if (   (data[i][1].toLowerCase() === pageName.toLowerCase())
+                || ((pageName === "OpenCOR") && (data[i][1] === "Home"))
+                || (pageName === data[i][1]+" Plugin"))
                 currentMenuItem = true;
 
-            if (i != data.length-1) {
+            if (i !== data.length-1) {
                 // A 'normal' menu item
 
                 if (currentMenuItem)
@@ -147,7 +147,7 @@ _gaq.push(["_trackPageview"]);
 
     ga.type = "text/javascript";
     ga.async = true;
-    ga.src = ((document.location.protocol == "https:")?"https://ssl":"http://www")+".google-analytics.com/ga.js";
+    ga.src = ((document.location.protocol === "https:")?"https://ssl":"http://www")+".google-analytics.com/ga.js";
 
     var s = document.getElementsByTagName("script")[0];
 
@@ -157,43 +157,57 @@ _gaq.push(["_trackPageview"]);
 // Support for the tracking of emails, downloads and external links in Google
 // Analytics
 
-if (typeof jQuery != "undefined") {
-    jQuery(document).ready(function($) {
-        jQuery("a").on("click", function(event) {
-            var el = jQuery(this);
-            var href = (typeof(el.attr("href")) != "undefined")?el.attr("href"):"";
-            var track = true;
+if (typeof jQuery !== "undefined") {
+    jQuery(document).ready(function($) {
+        jQuery("a").on("click", function(event) {
+            var el = jQuery(this);
+            var href = (typeof(el.attr("href")) !== "undefined")?el.attr("href"):"";
+            var track = true;
 
-            if (!href.match(/^javascript:/i)) {
-                var elEv = [];
+            if (!href.match(/^javascript:/i)) {
+                var elEv = [];
 
-                elEv.action = href.replace(/%20/g, " ");
-                elEv.nonInter = false;
-                elEv.loc = href;
+                elEv.label = href.replace(/%20/g, " ");
+                elEv.nonInter = false;
+                elEv.loc = href;
 
-                if (href.match(/^mailto\:/i)) {
-                    elEv.category = "Emails";
-                    elEv.action = elEv.action.replace(/^mailto\: /, "");
-                } else if (href.match(/\.(exe|zip|tar\.gz|dmg)$/i)) {
-                    elEv.category = "Downloads";
-                } else if (    href.match(/^https?\:/i)
+                if (href.match(/^mailto\:/i)) {
+                    elEv.category = "Emails";
+                    elEv.action = "Click email address";
+                    elEv.label = elEv.label.replace(/^mailto\: /, "");
+                } else if (href.match(/\.(exe|zip|tar\.gz|dmg)$/i)) {
+                    elEv.category = "Downloads";
+
+                    var fileExtension = "";
+
+                    if (href.match(/\.exe$/i))
+                        fileExtension = ".exe";
+                    else if (href.match(/\.zip$/i))
+                        fileExtension = ".zip";
+                    else if (href.match(/\.tar\.gz$/i))
+                        fileExtension = ".tar.gz";
+                    else
+                        fileExtension = ".dmg";
+
+                    elEv.action = "Click "+fileExtension+" file";
+                } else if (    href.match(/^https?\:/i)
                            && !href.match(/opencor\.ws/i)) {
-                    elEv.category = "External links";
-                    elEv.nonInter = true;
-                } else
+                    elEv.category = "External links";
+                    elEv.action = "Click external link";
+                    elEv.nonInter = true;
+                } else
                     track = false;
 
-                if (track) {
-                    elEv.label = elEv.action
-                    _gaq.push(["_trackEvent", elEv.category, elEv.action.toLowerCase(), elEv.label.toLowerCase(), 0, elEv.nonInter]);
+                if (track) {
+                    _gaq.push(["_trackEvent", elEv.category, elEv.action, elEv.label, 0, elEv.nonInter]);
 
-                    if ((el.attr("target") == undefined) || (el.attr("target").toLowerCase() != "_blank")) {
-                        setTimeout(function() { location.href = elEv.loc; }, 400);
+                    if ((el.attr("target") === undefined) || (el.attr("target").toLowerCase() !== "_blank")) {
+                        setTimeout(function() { location.href = elEv.loc; }, 400);
 
-                        return false;
-                    }
-                }
-            }
-        });
-    });
+                        return false;
+                    }
+                }
+            }
+        });
+    });
 }
