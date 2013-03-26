@@ -153,6 +153,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
     mSimulation(0),
     mSimulations(QMap<QString, SingleCellSimulationViewSimulation *>()),
     mStoppedSimulations(QList<SingleCellSimulationViewSimulation *>()),
+    mResets(QMap<QString, bool>()),
     mDelays(QMap<QString, int>()),
     mAxesSettings(QMap<QString, AxisSettings>()),
     mSplitterWidgetSizes(QList<int>()),
@@ -515,8 +516,10 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         simulationWidget->backup(previousFileName);
         solversWidget->backup(previousFileName);
 
-        // Keep track of the value of the delay widget
+        // Keep track of the status of the reset action and of the value of the
+        // delay widget
 
+        mResets.insert(previousFileName, mGui->actionReset->isEnabled());
         mDelays.insert(previousFileName, mDelayWidget->value());
 
         // Keept rack of our graph panel's plot's axes settings
@@ -582,7 +585,9 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         mSimulations.insert(pFileName, mSimulation);
     }
 
-    // Retrieve the value of our delay widget
+    // Retrieve the status of the reset action and the value of the delay widget
+
+    mGui->actionReset->setEnabled(mResets.value(pFileName, false));
 
     setDelayValue(mDelays.value(pFileName, 0));
 
@@ -954,6 +959,7 @@ void SingleCellSimulationViewWidget::finalize(const QString &pFileName)
     // Remove various information associated with the given file name
 
     mAxesSettings.remove(pFileName);
+    mResets.remove(pFileName);
     mDelays.remove(pFileName);
     mProgresses.remove(pFileName);
 

@@ -140,7 +140,7 @@ private:
 
     QList<SingleCellSimulationViewSimulation *> mStoppedSimulations;
 
-    QMap<QString, int> mDelays;
+    Core::ProgressBarWidget *mProgressBarWidget;
 
     struct AxisSettings {
         double minX;
@@ -153,6 +153,11 @@ private:
         double localMinY;
         double localMaxY;
     };
+
+    QMap<QString, bool> mResets;
+    QMap<QString, int> mDelays;
+
+    QMap<QString, int> mProgresses;
 
     QMap<QString, AxisSettings> mAxesSettings;
 
@@ -172,10 +177,6 @@ private:
     Core::UserMessageWidget *mInvalidModelMessageWidget;
 
     QTextEdit *mOutputWidget;
-
-    Core::ProgressBarWidget *mProgressBarWidget;
-
-    QMap<QString, int> mProgresses;
 
     ErrorType mErrorType;
 
