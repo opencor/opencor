@@ -153,11 +153,11 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
     mSimulation(0),
     mSimulations(QMap<QString, SingleCellSimulationViewSimulation *>()),
     mStoppedSimulations(QList<SingleCellSimulationViewSimulation *>()),
+    mProgresses(QMap<QString, int>()),
     mResets(QMap<QString, bool>()),
     mDelays(QMap<QString, int>()),
     mAxesSettings(QMap<QString, AxisSettings>()),
     mSplitterWidgetSizes(QList<int>()),
-    mProgresses(QMap<QString, int>()),
     mCurvesData(QMap<QString, SingleCellSimulationViewWidgetCurveData *>()),
     mOldSimulationResultsSizes(QMap<SingleCellSimulationViewSimulation *, qulonglong>()),
     mCheckResultsSimulations(QList<SingleCellSimulationViewSimulation *>())
@@ -958,10 +958,12 @@ void SingleCellSimulationViewWidget::finalize(const QString &pFileName)
 
     // Remove various information associated with the given file name
 
-    mAxesSettings.remove(pFileName);
+    mProgresses.remove(pFileName);
+
     mResets.remove(pFileName);
     mDelays.remove(pFileName);
-    mProgresses.remove(pFileName);
+
+    mAxesSettings.remove(pFileName);
 
     // Finalize a few things in our simulation and solvers widgets
 

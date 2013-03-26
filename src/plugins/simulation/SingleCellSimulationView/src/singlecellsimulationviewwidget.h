@@ -142,6 +142,11 @@ private:
 
     Core::ProgressBarWidget *mProgressBarWidget;
 
+    QMap<QString, int> mProgresses;
+
+    QMap<QString, bool> mResets;
+    QMap<QString, int> mDelays;
+
     struct AxisSettings {
         double minX;
         double maxX;
@@ -153,11 +158,6 @@ private:
         double localMinY;
         double localMaxY;
     };
-
-    QMap<QString, bool> mResets;
-    QMap<QString, int> mDelays;
-
-    QMap<QString, int> mProgresses;
 
     QMap<QString, AxisSettings> mAxesSettings;
 
