@@ -206,6 +206,8 @@ private:
     QString modelParameterKey(const QString pFileName,
                               CellMLSupport::CellmlFileRuntimeModelParameter *pModelParameter);
 
+    void checkAxisY();
+
 private Q_SLOTS:
     void on_actionRun_triggered();
     void on_actionPause_triggered();

@@ -877,9 +877,6 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         simulationPropertyChanged(mContentsWidget->informationWidget()->simulationWidget()->pointIntervalProperty());
 
         // Now, initialise our graph panel's plot's axes settings
-        // Note: we don't want to waste our time checking our graph panel's
-        //       plot's axes everytime we set something, hence our passing false
-        //       to our various methods...
 
         mActiveGraphPanel->plot()->setMinY(0.0);
         mActiveGraphPanel->plot()->setMaxY(1000.0);
@@ -1013,6 +1010,27 @@ QIcon SingleCellSimulationViewWidget::fileTabIcon(const QString &pFileName) cons
 
 //==============================================================================
 
+void SingleCellSimulationViewWidget::checkAxisY()
+{
+    // Reset the Y axis, if needed
+
+    if (   (mActiveGraphPanel->plot()->minY() ==  DBL_MAX)
+        && (mActiveGraphPanel->plot()->maxY() == -DBL_MAX)) {
+        // The Y axis still has the values we set up before running a simulation
+        // (so that the automatic rescaling of the Y axis could work) which
+        // means that either the model couldn't be run or no model parameters
+        // were plotted, so we need to reset the Y axis
+
+        mActiveGraphPanel->plot()->setMinY(0);
+        mActiveGraphPanel->plot()->setMaxY(1000.0);
+
+        mActiveGraphPanel->plot()->setLocalMinY(mActiveGraphPanel->plot()->minY());
+        mActiveGraphPanel->plot()->setLocalMaxY(mActiveGraphPanel->plot()->maxY());
+    }
+}
+
+//==============================================================================
+
 void SingleCellSimulationViewWidget::on_actionRun_triggered()
 {
     // Run or resume our simulation
@@ -1073,19 +1091,18 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
         // Run our simulation, if possible/wanted
 
         if (runSimulation) {
-            // Reset our Y axis (as well as our local X axis)
-            // Note: this is in case we tried to run a simulation (and therefore
-            //       set the Y axis so the automatic rescaling could work; see
-            //       below) and the model cannot be run, in which case the the
-            //       Y axis would be completely messed up...
-
-            mActiveGraphPanel->plot()->setMinY(0);
-            mActiveGraphPanel->plot()->setMaxY(1000.0);
+            // Reset our local X axis
 
             mActiveGraphPanel->plot()->setLocalMinX(mActiveGraphPanel->plot()->minX());
             mActiveGraphPanel->plot()->setLocalMaxX(mActiveGraphPanel->plot()->maxX());
-            mActiveGraphPanel->plot()->setLocalMinY(mActiveGraphPanel->plot()->minY());
-            mActiveGraphPanel->plot()->setLocalMaxY(mActiveGraphPanel->plot()->maxY());
+
+            // Check (and reset, if needed) our Y axis
+            // Note: this is in case we tried to run a simulation (and therefore
+            //       set the Y axis so the automatic rescaling could work; see
+            //       below) and the model cannot be run, in which case the Y
+            //       axis would be completely messed up...
+
+            checkAxisY();
 
             // Reset our simulation settings
 
@@ -1461,6 +1478,8 @@ void SingleCellSimulationViewWidget::simulationPropertyChanged(Core::Property *p
             mActiveGraphPanel->plot()->setLocalMinX(mActiveGraphPanel->plot()->minX());
             mActiveGraphPanel->plot()->setLocalMaxX(mActiveGraphPanel->plot()->maxX());
         }
+
+        checkAxisY();
 
         mActiveGraphPanel->plot()->replotNow();
     }
