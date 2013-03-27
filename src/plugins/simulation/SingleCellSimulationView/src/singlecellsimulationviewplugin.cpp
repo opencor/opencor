@@ -30,8 +30,7 @@ PLUGININFO_FUNC SingleCellSimulationViewPluginInfo()
                           PluginInfo::Gui,
                           PluginInfo::Simulation,
                           true,
-                          QStringList() << "CoreSimulation" << "CellMLSupport"
-                                        << "Qwt",
+                          QStringList() << "CellMLSupport" << "Qwt",
                           descriptions);
 }
 

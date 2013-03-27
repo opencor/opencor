@@ -179,8 +179,6 @@ SET(PLUGINS
     simulation/IDASolver
     simulation/KINSOLSolver
 
-    simulation/CoreSimulation
-
 #---GRY--- DISABLED FOR VERSION 0.1...
 #    3rdparty/QScintilla
 #    3rdparty/QtMmlWidget
