@@ -727,6 +727,15 @@ void MainWindow::loadSettings()
         if (coreInterface)
             coreInterface->loadingOfSettingsDone(loadedPlugins);
     }
+
+    // Remove the File menu when on OS X, should no plugins be loaded
+    // Note: our File menu should only contain the Exit menu item, but on OS X
+    //       that menu item gets automatically moved to the application menu,
+    //       so...
+
+#ifdef Q_OS_MAC
+    mGui->menuFile->menuAction()->setVisible(loadedPlugins.count());
+#endif
 }
 
 //==============================================================================
