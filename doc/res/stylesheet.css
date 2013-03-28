@@ -58,14 +58,14 @@ table.downloads td.platform td.logo {
     width: 80px;
 }
 
+table.downloads td.platform div {
+    color: rgb(103, 103, 103);
+    font-size: 12pt;
+    font-style: italic;
+    font-weight: bold;
+}
+
 table.downloads td.platform span.fileSize {
     font-size: 7pt;
     font-style: italic;
-}
-
-table.downloads div {
-    color: rgb(103, 103, 103);
-    font-size: 13pt;
-    font-style: italic;
-    font-weight: bold;
 }
