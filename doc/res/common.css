@@ -42,7 +42,7 @@ div.header {
 }
 
 div.section {
-    margin: 1em 0em 1em 0em;
+    margin: 1.5em 0em 0.5em 0em;
     /* Note: the margin is so that it is rendered like a <p> which is   */
     /*        necessary if we want to use a section at the beginning of */
     /*        a page (because of our fixed header at the top)...        */

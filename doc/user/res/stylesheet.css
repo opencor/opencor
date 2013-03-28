@@ -20,6 +20,7 @@ div.header {
 }
 
 div.section {
+    border-bottom: 1px solid rgba(54, 96, 146, 0.39);
     color: rgb(54, 96, 146);
 }
 
