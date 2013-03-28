@@ -41,8 +41,10 @@ void CoreCellMLEditingPlugin::initialize()
 
     // Set our settings
 
+/*---GRY--- DISABLED FOR VERSION 0.1...
     mGuiSettings->addMenuAction(GuiMenuActionSettings::FileNew, mFileNewCellml1_0Action);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::FileNew, mFileNewCellml1_1Action);
+*/
 }
 
 //==============================================================================
