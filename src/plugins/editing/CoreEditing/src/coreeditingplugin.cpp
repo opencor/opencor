@@ -73,23 +73,6 @@ void CoreEditingPlugin::initialize()
     mEditSelectAllAction = newAction(mMainWindow, false, "",
                                      QKeySequence::SelectAll);
 
-//---GRY--- WE DISABLE THE ABOVE ACTIONS SINCE THEY ARE NOT YET IMPLEMENTED...
-
-mEditUndoAction->setEnabled(false);
-mEditRedoAction->setEnabled(false);
-
-mEditCutAction->setEnabled(false);
-mEditCopyAction->setEnabled(false);
-mEditPasteAction->setEnabled(false);
-mEditDeleteAction->setEnabled(false);
-
-mEditFindAction->setEnabled(false);
-mEditFindNextAction->setEnabled(false);
-mEditPreviousAction->setEnabled(false);
-mEditReplaceAction->setEnabled(false);
-
-mEditSelectAllAction->setEnabled(false);
-
     mEditMenu->addAction(mEditUndoAction);
     mEditMenu->addAction(mEditRedoAction);
     mEditMenu->addSeparator();

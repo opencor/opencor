@@ -39,11 +39,6 @@ void CoreCellMLEditingPlugin::initialize()
     mFileNewCellml1_0Action = newAction(mMainWindow);
     mFileNewCellml1_1Action = newAction(mMainWindow);
 
-//---GRY--- WE DISABLE THE ABOVE ACTIONS SINCE THEY ARE NOT YET IMPLEMENTED...
-
-mFileNewCellml1_0Action->setEnabled(false);
-mFileNewCellml1_1Action->setEnabled(false);
-
     // Set our settings
 
     mGuiSettings->addMenuAction(GuiMenuActionSettings::FileNew, mFileNewCellml1_0Action);
