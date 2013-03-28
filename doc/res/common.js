@@ -177,19 +177,7 @@ if (typeof jQuery !== "undefined") {
                     elEv.label = elEv.label.replace(/^mailto\: /, "");
                 } else if (href.match(/\.(exe|zip|tar\.gz|dmg)$/i)) {
                     elEv.category = "Downloads";
-
-                    var fileExtension = "";
-
-                    if (href.match(/\.exe$/i))
-                        fileExtension = ".exe";
-                    else if (href.match(/\.zip$/i))
-                        fileExtension = ".zip";
-                    else if (href.match(/\.tar\.gz$/i))
-                        fileExtension = ".tar.gz";
-                    else
-                        fileExtension = ".dmg";
-
-                    elEv.action = "Click "+fileExtension+" file";
+                    elEv.action = "Click download file";
                 } else if (    href.match(/^https?\:/i)
                            && !href.match(/opencor\.ws/i)) {
                     elEv.category = "External links";
