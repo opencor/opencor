@@ -9,6 +9,22 @@ div.section {
     color: rgb(103, 103, 103);
 }
 
+div.section table {
+    border-spacing: 0px;
+    width: 100%;
+}
+
+div.section table td {
+    padding: 0px;
+}
+
+div.section table td.date {
+    text-align: right;
+    font-size: 9pt;
+    font-style: italic;
+    font-weight: normal;
+}
+
 img.downloads {
     margin: 0px;
     border: none;
@@ -26,19 +42,25 @@ img.downloads:hover {
     background: rgba(103, 103, 103, 0.05);
 }
 
-p.warning {
-    border: 2px solid rgba(149, 55, 52, 0.69);
-    padding: 3px;
-    background: rgba(149, 55, 52, 0.13);
-    color: rgb(149, 55, 52);
+table.downloads {
+    width: 100%;
 }
 
-table.downloads th {
-    padding: 7px 13px;
+table.downloads td.platform {
+    width: 33%;
 }
 
-table.downloads td {
-    padding: 7px 13px;
+table.downloads td.separator {
+    border-left: 1px solid rgba(103, 103, 103, 0.39);
+}
+
+table.downloads td.platform td.logo {
+    width: 80px;
+}
+
+table.downloads td.platform span.fileSize {
+    font-size: 7pt;
+    font-style: italic;
 }
 
 table.downloads div {
