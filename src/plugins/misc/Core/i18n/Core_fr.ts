@@ -188,5 +188,13 @@
         <source>PB</source>
         <translation>Po</translation>
     </message>
+    <message>
+        <source>ZB</source>
+        <translation>Zo</translation>
+    </message>
+    <message>
+        <source>YB</source>
+        <translation>Yo</translation>
+    </message>
 </context>
 </TS>
