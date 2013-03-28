@@ -5,6 +5,7 @@ div.header {
 }
 
 div.section {
+    border-bottom: 1px solid rgba(103, 103, 103, 0.39);
     color: rgb(103, 103, 103);
 }
 
