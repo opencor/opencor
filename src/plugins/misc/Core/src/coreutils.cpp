@@ -53,8 +53,8 @@ QString sizeAsString(const double &pSize, const int &pPrecision)
                          QObject::tr("GB"), QObject::tr("TB"), QObject::tr("PB"),
                          QObject::tr("EB"), QObject::tr("ZB"), QObject::tr("YB") };
 
-    int i = qFloor(log(pSize)/log(1024));
-    double fileSize = pSize/qPow(1024, i);
+    int i = qFloor(log(pSize)/log(1024.0));
+    double fileSize = pSize/qPow(1024.0, i);
     double scaling = qPow(10.0, pPrecision);
 
     fileSize = ceil(scaling*fileSize)/scaling;
