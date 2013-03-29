@@ -46,6 +46,13 @@ table.downloads {
     width: 100%;
 }
 
+table.recommended {
+    margin: -1px;
+    border: 1px solid rgba(118, 146, 60, 0.39);
+    border-radius: 13px;
+    background: rgba(118, 146, 60, 0.13);
+}
+
 table.downloads td.platform {
     width: 33%;
 }

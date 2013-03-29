@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <?php
-    // Get the size of a file
+    // Retrieve the formatted size of a file
 
     function formattedFileSize($fileName) {
-        $filePath = $_SERVER["DOCUMENT_ROOT"].$fileName;
+        $filePath = $_SERVER["DOCUMENT_ROOT"]."/".$fileName;
 
         if (file_exists($filePath)) {
             $units = array("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB");
-            $fileSize = filesize($_SERVER["DOCUMENT_ROOT"].$fileName);
+            $fileSize = filesize($filePath);
             $i = floor(log($fileSize, 1024));
 
             return ceil($fileSize/pow(1024, $i))." ".$units[$i];
@@ -39,39 +39,59 @@
             Please find below the latest snapshot available.
         </p>
 
+<?php
+    date_default_timezone_set("Europe/Paris");
+
+    $downloads = array(
+                     array("Latest snapshot", 21, 3, 2013, "2013-03-21", false,
+                           array(array("Windows", ".exe"), array("Windows", ".zip"),
+                                 array("Linux", ".tar.gz", 32), array("Linux", ".tar.gz", 64),
+                                 array("OSX", ".dmg"), array("OSX", ".zip"))),
+                 );
+
+    foreach ($downloads as $download) {
+?>
         <div class="section">
             <table>
                 <tbody>
                     <tr>
                         <td>
-                            Latest snapshot
+                            <?php echo $download[0]; ?>
                         </td>
                         <td class="date">
-                            (21 March 2013)
+                            (<?php echo date("j F Y", mktime(0, 0, 0, $download[2], $download[1], $download[3])); ?>)
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
+<?php
+        if ($download[5]) {
+?>
+        <table class="downloads recommended">
+<?php
+        } else {
+?>
         <table class="downloads">
+<?php
+        }
+?>
             <tbody>
                 <tr>
-                    <td class="platform">
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td class="logo">
-                                        <img src="res/pics/windows.png" width=72 height=72 alt="Windows">
-                                    </td>
-                                    <td>
-                                        <div>
-                                            Windows
-                                        </div>
+<?php
+        $platform = "";
 
-                                        <ul>
-                                            <li><a href="http://www.opencor.ws/downloads/OpenCOR-2013-03-21-Windows.exe">Installer</a> <span class="fileSize">(<?php echo formattedFileSize("/downloads/OpenCOR-2013-03-21-Windows.exe"); ?>)</span></li>
-                                            <li><a href="http://www.opencor.ws/downloads/OpenCOR-2013-03-21-Windows.zip">ZIP file</a> <span class="fileSize">(<?php echo formattedFileSize("/downloads/OpenCOR-2013-03-21-Windows.zip"); ?>)</span></li>
+        foreach ($download[6] as $file) {
+            if ($file[0] != $platform) {
+                // We are dealing with a file for a new platform, so check
+                // whether we need to 'close' the previous platform (and add a
+                // separator) before opening the new one
+
+                if ($platform != "") {
+                    // There is a previous platform, so close it and add a
+                    // separator
+?>
                                         </ul>
                                     </td>
                                 </tr>
@@ -79,43 +99,64 @@
                         </table>
                     </td>
                     <td class="separator" />
+<?php
+                }
+
+                // Keep track of the new platform
+
+                $platform = $file[0];
+
+                // Open the new platform
+?>
                     <td class="platform">
                         <table>
                             <tbody>
                                 <tr>
                                     <td class="logo">
-                                        <img src="res/pics/linux.png" width=72 height=72 alt="Linux">
+                                        <img src="res/pics/<?php echo strtolower($platform); ?>.png" width=72 height=72 alt="Windows">
                                     </td>
                                     <td>
                                         <div>
-                                            Linux
+                                            <?php echo $platform; ?>
                                         </div>
 
                                         <ul>
-                                            <li><a href="http://www.opencor.ws/downloads/OpenCOR-2013-03-21-Linux32.tar.gz">Tarball file</a> (32-bit) <span class="fileSize">(<?php echo formattedFileSize("/downloads/OpenCOR-2013-03-21-Linux32.tar.gz"); ?>)</span></li>
-                                            <li><a href="http://www.opencor.ws/downloads/OpenCOR-2013-03-21-Linux64.tar.gz">Tarball file</a> (64-bit) <span class="fileSize">(<?php echo formattedFileSize("/downloads/OpenCOR-2013-03-21-Linux64.tar.gz"); ?>)</span></li>
-                                        </ul>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                    <td class="separator" />
-                    <td class="platform">
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td class="logo">
-                                        <img src="res/pics/osx.png" width=72 height=72 alt="Linux">
-                                    </td>
-                                    <td>
-                                        <div>
-                                            Linux
-                                        </div>
+<?php
+            }
 
-                                        <ul>
-                                            <li><a href="http://www.opencor.ws/downloads/OpenCOR-2013-03-21-OSX.dmg">Installer</a> <span class="fileSize">(<?php echo formattedFileSize("/downloads/OpenCOR-2013-03-21-OSX.dmg"); ?>)</span></li>
-                                            <li><a href="http://www.opencor.ws/downloads/OpenCOR-2013-03-21-OSX.zip">ZIP file</a> <span class="fileSize">(<?php echo formattedFileSize("/downloads/OpenCOR-2013-03-21-OSX.zip"); ?>)</span></li>
+            // Determine the file name
+
+            $fileName = "downloads/OpenCOR-".$download[4]."-".$file[0];
+
+            if (isset($file[2]))
+                $fileName .= $file[2];
+
+            $fileName .= $file[1];
+
+            // Determine the file type
+
+            $fileType = "???";
+
+            if (($file[1] == ".exe") || ($file[1] == ".dmg"))
+                $fileType = "Installer";
+            else if ($file[1] == ".zip")
+                $fileType = "ZIP file";
+            else if ($file[1] == ".tar.gz")
+                $fileType = "Tarball file";
+
+            // Determine the file extra info, if any
+
+            $fileExtraInfo = "";
+
+            if (isset($file[2]))
+                $fileExtraInfo = " (".$file[2]."-bit)";
+
+            // List the file for download
+?>
+                                            <li><a href="http://www.opencor.ws/<?php echo $fileName; ?>"><?php echo $fileType; ?></a><?php echo $fileExtraInfo; ?> <span class="fileSize">(<?php echo formattedFileSize($fileName); ?>)</span></li>
+<?php
+        }
+?>
                                         </ul>
                                     </td>
                                 </tr>
@@ -125,6 +166,9 @@
                 </tr>
             </tbody>
         </table>
+<?php
+    }
+?>
 
         <script type="text/javascript">
             copyright();
