@@ -42,7 +42,7 @@ img.downloads:hover {
     background: rgba(103, 103, 103, 0.05);
 }
 
-table.downloads {
+table.version {
     width: 100%;
 }
 
@@ -53,26 +53,26 @@ table.recommended {
     background: rgba(118, 146, 60, 0.13);
 }
 
-table.downloads td.platform {
-    width: 33%;
+table.version td.topSeparator {
+    border-top: 1px dashed rgba(103, 103, 103, 0.39);
 }
 
-table.downloads td.separator {
-    border-left: 1px solid rgba(103, 103, 103, 0.39);
+table.version td.leftSeparator {
+    border-left: 1px dashed rgba(103, 103, 103, 0.39);
 }
 
-table.downloads td.platform td.logo {
+table.version td.platform td.logo {
     width: 80px;
 }
 
-table.downloads td.platform div {
+table.version td.platform div {
     color: rgb(103, 103, 103);
     font-size: 12pt;
     font-style: italic;
     font-weight: bold;
 }
 
-table.downloads td.platform span.fileSize {
+table.version td.platform span.fileSize {
     font-size: 7pt;
     font-style: italic;
 }
