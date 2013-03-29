@@ -56,7 +56,7 @@
                 <tbody>
                     <tr>
                         <td>
-                            <?php echo $download[0]; ?>
+                            <?php echo $download[0]."\n"; ?>
                         </td>
                         <td class="date">
                             (<?php echo date("j F Y", mktime(0, 0, 0, $download[2], $download[1], $download[3])); ?>)
@@ -113,11 +113,11 @@
                             <tbody>
                                 <tr>
                                     <td class="logo">
-                                        <img src="res/pics/<?php echo strtolower($platform); ?>.png" width=72 height=72 alt="Windows">
+                                        <img src="res/pics/<?php echo strtolower($platform); ?>.png" width=72 height=72 alt="<?php echo $platform; ?>">
                                     </td>
                                     <td>
                                         <div>
-                                            <?php echo $platform; ?>
+                                            <?php echo $platform."\n"; ?>
                                         </div>
 
                                         <ul>
