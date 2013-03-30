@@ -21,14 +21,14 @@
         </script>
 
         <p>
-            As already mentioned, OpenCOR uses a <a href="plugins.html">plugin approach</a>. Tests are therefore created at the plugin level, and every test must respect the following:
+            Tests are created at the plugin level, and every test must:
         </p>
 
         <ul>
-            <li>The test must be located under the <code>test</code> folder of a plugin (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/CellMLSupport/test"><code>[OpenCOR]/src/plugins/misc/CellMLSupport/test</code></a>);</li>
-            <li>The test must consist of both a <code>.cpp</code> and a <code>.h</code> file (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/CellMLSupport/test/test.cpp"><code>[OpenCOR]/src/plugins/misc/CellMLSupport/test/test.cpp</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/CellMLSupport/test/test.h"><code>[OpenCOR]/src/plugins/misc/CellMLSupport/test/test.h</code></a>);</li>
+            <li>Be located under the <code>test</code> folder (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Compiler/test"><code>[OpenCOR]/src/plugins/misc/Compiler/test</code></a>) of a plugin folder (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Compiler"><code>[OpenCOR]/src/plugins/misc/Compiler</code></a>);</li>
+            <li>Consist of at least one set of <code>.cpp</code> and <code>.h</code> files (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Compiler/test/test.cpp"><code>[OpenCOR]/src/plugins/misc/Compiler/test/test.cpp</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Compiler/test/test.h"><code>[OpenCOR]/src/plugins/misc/Compiler/test/test.h</code></a>);</li>
             <li>
-                The test must be listed under the <code>TESTS</code> header in the call to the CMake's <code>ADD_PLUGIN</code> macro (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/CellMLSupport/CMakeLists.txt"><code>[OpenCOR]/src/plugins/misc/CellMLSupport/CMakeLists.txt</code></a>):
+                Be listed under the <code>TESTS</code> header in the call to our CMake's <code>ADD_PLUGIN</code> macro (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Compiler/CMakeLists.txt"><code>[OpenCOR]/src/plugins/misc/Compiler/CMakeLists.txt</code></a>):
                 <pre class="prettyprint">PROJECT(MyPlugin)
 
 # Add the plugin
@@ -42,7 +42,20 @@ ADD_PLUGIN(MyPlugin
         ...
 )</pre>
             </li>
-            <li>The test must be referenced in the <a href="https://github.com/opencor/opencor/blob/master/test/main.cpp"><code>main test program</code></a>.</li>
+            <li>
+                Be referenced in our <a href="https://github.com/opencor/opencor/blob/master/test/main.cpp"><code>main test program</code></a>:
+                <pre class="prettyprint">...
+
+// The different tests that are  to be run
+
+Tests tests;
+
+...
+tests["MyPlugin"] = QStringList() << "test1" << "test2" << "test3" << ...;
+...
+
+...</pre>
+            </li>
         </ul>
 
         <script type="text/javascript">
