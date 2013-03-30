@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>
-            Downloads
+            Download
         </title>
 
         <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
@@ -15,11 +15,11 @@
     </head>
     <body>
         <script type="text/javascript">
-            headerAndContentsMenu("Downloads", ".");
+            headerAndContentsMenu("Download", ".");
         </script>
 
         <p>
-            Please find below the latest snapshot available.
+            Please find below the latest snapshot.
         </p>
 
 <?php
