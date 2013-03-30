@@ -39,10 +39,13 @@ int main(int pArgc, char *pArgv[])
     QStringList failedTests = QStringList();
     int res = 0;
 
-    Tests::const_iterator iter = tests.constBegin();
+    Tests::const_iterator iterBegin = tests.constBegin();
+    Tests::const_iterator iterEnd   = tests.constEnd();
 
-    while (iter != tests.constEnd()) {
-        if (iter != tests.constBegin()) {
+    Tests::const_iterator iter = iterBegin;
+
+    while (iter != iterEnd) {
+        if (iter != iterBegin) {
             std::cout << std::endl;
             std::cout << std::endl;
             std::cout << std::endl;
