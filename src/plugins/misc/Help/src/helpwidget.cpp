@@ -172,8 +172,10 @@ bool HelpPage::acceptNavigationRequest(QWebFrame*,
 
 //==============================================================================
 
-static const int MinimumZoomLevel =  1;
-static const int DefaultZoomLevel = 10;
+enum {
+    MinimumZoomLevel =  1,
+    DefaultZoomLevel = 10
+};
 
 //==============================================================================
 
@@ -320,7 +322,7 @@ void HelpWidget::zoomOut()
 {
     // Zoom out the help document contents
 
-    setZoomLevel(qMax(MinimumZoomLevel, mZoomLevel-1));
+    setZoomLevel(qMax(int(MinimumZoomLevel), mZoomLevel-1));
 }
 
 //==============================================================================

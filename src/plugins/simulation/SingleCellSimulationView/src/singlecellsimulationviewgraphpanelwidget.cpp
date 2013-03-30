@@ -36,7 +36,9 @@ SingleCellSimulationViewGraphPanelWidget::SingleCellSimulationViewGraphPanelWidg
 
     // Create, customise and add an inactive marker to our layout
 
-//    static const int MarkerWidth = 3;
+//    enum {
+//        MarkerWidth = 3
+//    };
 
 //    mMarker = new QFrame(this);
 

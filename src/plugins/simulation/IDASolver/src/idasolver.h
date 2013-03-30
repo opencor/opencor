@@ -34,7 +34,11 @@ static const QString AbsoluteToleranceProperty = "Absolute tolerance";
 //          enough in most cases...
 
 static const double DefaultMaximumStep = 0.0;
-static const int DefaultMaximumNumberOfSteps = 500;
+
+enum {
+    DefaultMaximumNumberOfSteps = 500
+};
+
 static const double DefaultRelativeTolerance = 1.0e-7;
 static const double DefaultAbsoluteTolerance = 1.0e-7;
 

@@ -34,13 +34,19 @@ namespace Core {
 
 #if defined(Q_OS_WIN)
     static const QString DefaultFontFamily = "Courier";
-    static const int DefaultFontSize = 10;
+    enum {
+        DefaultFontSize = 10
+    };
 #elif defined(Q_OS_LINUX)
     static const QString DefaultFontFamily = "Monospace";
-    static const int DefaultFontSize = 9;
+    enum {
+        DefaultFontSize = 9
+    };
 #elif defined(Q_OS_MAC)
     static const QString DefaultFontFamily = "Monaco";
-    static const int DefaultFontSize = 12;
+    enum {
+        DefaultFontSize = 12
+    };
 #else
     #error Unsupported platform
 #endif

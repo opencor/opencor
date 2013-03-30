@@ -1278,7 +1278,9 @@ void SingleCellSimulationViewWidget::simulationStopped(const int &pElapsedTime)
     // We want a short delay before resetting the progress bar and the file tab
     // icon, so that the user can really see when our simulation has completed
 
-    static const int ResetDelay = 169;
+    enum {
+        ResetDelay = 169
+    };
 
     // Our simulation worker has stopped, so do a few things, but only we are dealing
     // with the active simulation

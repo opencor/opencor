@@ -17,9 +17,11 @@ namespace FileOrganiser {
 //==============================================================================
 
 namespace Item {
-    static const int Folder   = Qt::UserRole;
-    static const int Path     = Qt::UserRole+1;
-    static const int Expanded = Qt::UserRole+2;
+    enum {
+        Folder   = Qt::UserRole,
+        Path     = Qt::UserRole+1,
+        Expanded = Qt::UserRole+2
+    };
 }
 
 //==============================================================================
