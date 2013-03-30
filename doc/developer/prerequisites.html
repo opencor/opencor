@@ -21,31 +21,31 @@
         </script>
 
         <p>
-            The following tools are required in order to develop, build, run, test and/or package OpenCOR:
+            The following tools are required in order to develop, build, run, test and package OpenCOR:
         </p>
 
         <ul>
             <li>
-                <a href="http://git-scm.com/">Git</a> (the <a href="http://packages.ubuntu.com/precise/git">git</a> package on Ubuntu): a distributed version control system. You can get a copy of OpenCOR's source code by cloning our <A HREF ="https://github.com/opencor/opencor">Git repository</a> either in <em>read-only</em> mode:
+                <a href="http://git-scm.com/">Git</a> (the <a href="http://packages.ubuntu.com/raring/git">git</a> package on Ubuntu): a distributed version control system. You can get a copy of OpenCOR's source code by cloning our <A HREF ="https://github.com/opencor/opencor">Git repository</a> either in <em>read-only</em> mode:
                 <pre class="prettyprint">$ git clone git://github.com/opencor/opencor.git</pre>
-                or in <em>read-write</em> mode:
+                or in <em>read-write</em> mode (assuming you have read-write access):
                 <pre class="prettyprint">$ git clone git@github.com:opencor/opencor.git</pre>
             </li>
-            <li><a href="http://www.cmake.org/">CMake</a> 2.8.9+ (the <a href="http://packages.ubuntu.com/precise/cmake">cmake</a> package on Ubuntu): a cross-platform build system;</li>
+            <li><a href="http://www.cmake.org/">CMake</a> 2.8.9+ (the <a href="http://packages.ubuntu.com/raring/cmake">cmake</a> package on Ubuntu): a cross-platform build system;</li>
             <li>
                 C++ toolchain: a set of C++ tools. The toolchain is different depending on the platform you are using:
                 <ul>
                     <li>Windows: <a href="http://www.microsoft.com/visualstudio/eng/products/visual-studio-2010-express">Visual C++ 2010 Express SP1</a>;</li>
-                    <li>Linux: the <a href="http://packages.ubuntu.com/precise/g++">g++</a> package on Ubuntu; and</li>
+                    <li>Linux: the <a href="http://packages.ubuntu.com/raring/g++">g++</a> package on Ubuntu; and</li>
                     <li>OS X: <a href="http://developer.apple.com/xcode/">Xcode</a> 4.6.1 (you will also need to get both the command line tools and PackageMaker (from the auxiliary tools), which can be done via the <code>Xcode</code> | <code>Open Developer Tool</code> | <code>More Developer Tools...</code> menu in Xcode).</li>
                 </ul>
             </li>
             <li>
                 <a href="http://qt-project.org/">Qt</a> 5.0: this combines Qt 5.0.1 (a cross-platform application and UI framework) and Qt Creator 2.6.2 (the supporting Qt IDE):
                 <ul>
-                    <li><a href="http://releases.qt-project.org/qt5/5.0.1/qt-windows-opensource-5.0.1-msvc2010_32-x86-offilne.exe">Windows</a>;</li>
-                    <li>Linux <a href="http://releases.qt-project.org/qt5/5.0.1/qt-linux-opensource-5.0.1-x86-offline.run">32-bit</a>/<a href="http://releases.qt-project.org/qt5/5.0.1/qt-linux-opensource-5.0.1-x86_64-offline.run">64-bit</a> (we would recommend sudo installing Qt, so that it gets installed under under <code>/opt</code> rather than under your home directory); and</li>
-                    <li><a href = "http://releases.qt-project.org/qt5/5.0.1/qt-mac-opensource-5.0.1-clang-offline.dmg">OS X</a> (you might want to install Qt under <code>/Applications</code> rather than your home folder as suggested by the installer).</li>
+                    <li><a href="http://releases.qt-project.org/qt5/5.0.1/qt-windows-opensource-5.0.1-msvc2010_32-x86-offline.exe">Windows</a>;</li>
+                    <li>Linux <a href="http://releases.qt-project.org/qt5/5.0.1/qt-linux-opensource-5.0.1-x86-offline.run">32-bit</a>/<a href="http://releases.qt-project.org/qt5/5.0.1/qt-linux-opensource-5.0.1-x86_64-offline.run">64-bit</a> (you might want to sudo install Qt, so that it gets installed under under <code>/opt</code> rather than under your home directory); and</li>
+                    <li><a href = "http://releases.qt-project.org/qt5/5.0.1/qt-mac-opensource-5.0.1-clang-offline.dmg">OS X</a> (you might want to install Qt under <code>/Applications</code> rather than your home folder, as suggested by the installer).</li>
                 </ul>
                 <div>
                     <strong>Note:</strong> please refer to the <a href="http://doc.qt.digia.com/qtcreator/creator-debugging.html">Qt Reference Documentation</a> for information on how to debug using Qt Creator.
