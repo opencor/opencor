@@ -390,7 +390,7 @@ else {
                 <strong>Casting:</strong>
                 <ul>
                     <li>Avoid C casts, prefer C++ casts (<code>static_cast</code>, <code>const_cast</code>, <code>reinterpret_cast</code>) Both <code>reinterpret_cast</code> and C-style casts are dangerous, but at least <code>reinterpret_cast</code> will not remove the const modifier.</li>
-                    <li>Do not use <code>dynamic_cast</code>, use <code>qobject_cast</code> for <code>QObject</code>, or refactor your design, for example by introducing a <code>type()</code> method (see <a href="http://qt-project.org/doc/qt-4.8/qlistwidgetitem.html"><code>QListWidgetItem</code></a>), unless you know what you are doing.</li>
+                    <li>Do not use <code>dynamic_cast</code>, use <code>qobject_cast</code> for <code>QObject</code>, or refactor your design, for example by introducing a <code>type()</code> method (see <code>QListWidgetItem</code>), unless you know what you are doing.</li>
                 </ul>
             </li>
             <li>
