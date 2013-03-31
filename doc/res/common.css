@@ -76,6 +76,13 @@ li {
     list-style-type: square;
 }
 
+p.warning {
+    border: 1px solid rgba(149, 55, 52, 0.69);
+    padding: 3px;
+    background: rgba(149, 55, 52, 0.13);
+    color: rgb(149, 55, 52);
+}
+
 pre {
     margin: 3px 13px 3px 13px;
     border: 1px solid rgba(103, 103, 103, 0.13);
