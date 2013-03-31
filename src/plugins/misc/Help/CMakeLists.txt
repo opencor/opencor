@@ -26,7 +26,7 @@ ADD_PLUGIN(Help
         src/helpwindow.ui
     INCLUDE_DIRS
         src
-    OPENCOR_PLUGIN_DEPENDENCIES
+    PLUGIN_DEPENDENCIES
         Core
     QT_MODULES
         Help

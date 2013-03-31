@@ -15,7 +15,7 @@ ADD_PLUGIN(ForwardEulerSolver
         src/forwardeulersolverplugin.h
     INCLUDE_DIRS
         src
-    OPENCOR_PLUGIN_DEPENDENCIES
+    PLUGIN_DEPENDENCIES
         CoreSolver
     QT_MODULES
         Core

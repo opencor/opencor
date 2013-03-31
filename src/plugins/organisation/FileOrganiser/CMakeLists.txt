@@ -23,7 +23,7 @@ ADD_PLUGIN(FileOrganiser
         src/fileorganiserwindow.ui
     INCLUDE_DIRS
         src
-    OPENCOR_PLUGIN_DEPENDENCIES
+    PLUGIN_DEPENDENCIES
         Core
     QT_MODULES
         Widgets

@@ -31,13 +31,13 @@ ADD_PLUGIN(CellMLSupport
         ${LLVM_DEFINITIONS}
     INCLUDE_DIRS
         src
-    OPENCOR_PLUGIN_DEPENDENCIES
+    PLUGIN_DEPENDENCIES
         CellMLAPI
         Compiler
         Core
         CoreSolver
         ${LLVM_PLUGIN}
-    OPENCOR_PLUGIN_BINARY_DEPENDENCIES
+    PLUGIN_BINARY_DEPENDENCIES
         ${LLVM_BINARY_PLUGIN}
     QT_MODULES
         Widgets

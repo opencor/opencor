@@ -23,7 +23,7 @@ ADD_PLUGIN(FileBrowser
         src/filebrowserwindow.ui
     INCLUDE_DIRS
         src
-    OPENCOR_PLUGIN_DEPENDENCIES
+    PLUGIN_DEPENDENCIES
         Core
     QT_MODULES
         Widgets

@@ -15,7 +15,7 @@ ADD_PLUGIN(IDASolver
         src/idasolverplugin.h
     INCLUDE_DIRS
         src
-    OPENCOR_PLUGIN_DEPENDENCIES
+    PLUGIN_DEPENDENCIES
         CoreSolver
         SUNDIALS
     QT_MODULES
