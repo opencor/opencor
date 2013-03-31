@@ -14,7 +14,7 @@ ADD_PLUGIN(KINSOLSolver
         src/kinsolsolverplugin.h
     INCLUDE_DIRS
         src
-    OPENCOR_DEPENDENCIES
+    OPENCOR_PLUGIN_DEPENDENCIES
         CoreSolver
         SUNDIALS
     QT_MODULES

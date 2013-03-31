@@ -15,7 +15,7 @@ ADD_PLUGIN(CVODESolver
         src/cvodesolverplugin.h
     INCLUDE_DIRS
         src
-    OPENCOR_DEPENDENCIES
+    OPENCOR_PLUGIN_DEPENDENCIES
         CoreSolver
         SUNDIALS
     QT_MODULES

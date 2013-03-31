@@ -186,12 +186,12 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     SET(UIS)
     SET(INCLUDE_DIRS)
     SET(DEFINITIONS)
-    SET(OPENCOR_DEPENDENCIES)
-    SET(OPENCOR_BINARY_DEPENDENCIES)
+    SET(OPENCOR_PLUGIN_DEPENDENCIES)
+    SET(OPENCOR_PLUGIN_BINARY_DEPENDENCIES)
     SET(QT_MODULES)
     SET(QT_DEPENDENCIES)
-    SET(EXTERNAL_DEPENDENCIES_DIR)
-    SET(EXTERNAL_DEPENDENCIES)
+    SET(EXTERNAL_BINARY_DEPENDENCIES_DIR)
+    SET(EXTERNAL_BINARY_DEPENDENCIES)
     SET(TESTS)
 
     # Analyse the extra parameters
@@ -229,17 +229,17 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             SET(TYPE_OF_PARAMETER 4)
         ELSEIF(${PARAMETER} STREQUAL "DEFINITIONS")
             SET(TYPE_OF_PARAMETER 5)
-        ELSEIF(${PARAMETER} STREQUAL "OPENCOR_DEPENDENCIES")
+        ELSEIF(${PARAMETER} STREQUAL "OPENCOR_PLUGIN_DEPENDENCIES")
             SET(TYPE_OF_PARAMETER 6)
-        ELSEIF(${PARAMETER} STREQUAL "OPENCOR_BINARY_DEPENDENCIES")
+        ELSEIF(${PARAMETER} STREQUAL "OPENCOR_PLUGIN_BINARY_DEPENDENCIES")
             SET(TYPE_OF_PARAMETER 7)
         ELSEIF(${PARAMETER} STREQUAL "QT_MODULES")
             SET(TYPE_OF_PARAMETER 8)
         ELSEIF(${PARAMETER} STREQUAL "QT_DEPENDENCIES")
             SET(TYPE_OF_PARAMETER 9)
-        ELSEIF(${PARAMETER} STREQUAL "EXTERNAL_DEPENDENCIES_DIR")
+        ELSEIF(${PARAMETER} STREQUAL "EXTERNAL_BINARY_DEPENDENCIES_DIR")
             SET(TYPE_OF_PARAMETER 10)
-        ELSEIF(${PARAMETER} STREQUAL "EXTERNAL_DEPENDENCIES")
+        ELSEIF(${PARAMETER} STREQUAL "EXTERNAL_BINARY_DEPENDENCIES")
             SET(TYPE_OF_PARAMETER 11)
         ELSEIF(${PARAMETER} STREQUAL "TESTS")
             SET(TYPE_OF_PARAMETER 12)
@@ -258,17 +258,17 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 5)
                 LIST(APPEND DEFINITIONS ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 6)
-                LIST(APPEND OPENCOR_DEPENDENCIES ${PARAMETER})
+                LIST(APPEND OPENCOR_PLUGIN_DEPENDENCIES ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 7)
-                LIST(APPEND OPENCOR_BINARY_DEPENDENCIES ${PARAMETER})
+                LIST(APPEND OPENCOR_PLUGIN_BINARY_DEPENDENCIES ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 8)
                 LIST(APPEND QT_MODULES ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 9)
                 LIST(APPEND QT_DEPENDENCIES ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 10)
-                SET(EXTERNAL_DEPENDENCIES_DIR ${PARAMETER})
+                SET(EXTERNAL_BINARY_DEPENDENCIES_DIR ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 11)
-                LIST(APPEND EXTERNAL_DEPENDENCIES ${PARAMETER})
+                LIST(APPEND EXTERNAL_BINARY_DEPENDENCIES ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 12)
                 LIST(APPEND TESTS ${PARAMETER})
             ENDIF()
@@ -337,17 +337,17 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     # OpenCOR dependencies
 
-    FOREACH(OPENCOR_DEPENDENCY ${OPENCOR_DEPENDENCIES})
+    FOREACH(OPENCOR_PLUGIN_DEPENDENCY ${OPENCOR_PLUGIN_DEPENDENCIES})
         TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-            ${OPENCOR_DEPENDENCY}Plugin
+            ${OPENCOR_PLUGIN_DEPENDENCY}Plugin
         )
     ENDFOREACH()
 
     # OpenCOR binary dependencies
 
-    FOREACH(OPENCOR_BINARY_DEPENDENCY ${OPENCOR_BINARY_DEPENDENCIES})
+    FOREACH(OPENCOR_PLUGIN_BINARY_DEPENDENCY ${OPENCOR_PLUGIN_BINARY_DEPENDENCIES})
         TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-            ${OPENCOR_BINARY_DEPENDENCY}
+            ${OPENCOR_PLUGIN_BINARY_DEPENDENCY}
         )
     ENDFOREACH()
 
@@ -368,10 +368,10 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     # External dependencies
 
-    IF(NOT ${EXTERNAL_DEPENDENCIES_DIR} STREQUAL "")
-        FOREACH(EXTERNAL_DEPENDENCY ${EXTERNAL_DEPENDENCIES})
+    IF(NOT ${EXTERNAL_BINARY_DEPENDENCIES_DIR} STREQUAL "")
+        FOREACH(EXTERNAL_BINARY_DEPENDENCY ${EXTERNAL_BINARY_DEPENDENCIES})
             TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-                ${EXTERNAL_DEPENDENCIES_DIR}/${EXTERNAL_DEPENDENCY}
+                ${EXTERNAL_BINARY_DEPENDENCIES_DIR}/${EXTERNAL_BINARY_DEPENDENCY}
             )
         ENDFOREACH()
     ENDIF()
@@ -418,22 +418,22 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         # Make sure that the plugin refers to our embedded version of the other
         # plugins on which it depends
 
-        FOREACH(OPENCOR_DEPENDENCY ${OPENCOR_DEPENDENCIES})
+        FOREACH(OPENCOR_PLUGIN_DEPENDENCY ${OPENCOR_PLUGIN_DEPENDENCIES})
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change ${PLUGIN_BUILD_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${OPENCOR_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                                                                 @executable_path/../PlugIns/${MAIN_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${OPENCOR_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                               COMMAND install_name_tool -change ${PLUGIN_BUILD_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${OPENCOR_PLUGIN_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                                                                 @executable_path/../PlugIns/${MAIN_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${OPENCOR_PLUGIN_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX}
                                                                  ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
         ENDFOREACH()
 
         # Make sure that the plugin refers to our embedded version of the
         # binary plugins on which it depends
 
-        FOREACH(OPENCOR_BINARY_DEPENDENCY ${OPENCOR_BINARY_DEPENDENCIES})
-            STRING(REPLACE "${PLUGIN_BUILD_DIR}/" "" OPENCOR_BINARY_DEPENDENCY "${OPENCOR_BINARY_DEPENDENCY}")
+        FOREACH(OPENCOR_PLUGIN_BINARY_DEPENDENCY ${OPENCOR_PLUGIN_BINARY_DEPENDENCIES})
+            STRING(REPLACE "${PLUGIN_BUILD_DIR}/" "" OPENCOR_PLUGIN_BINARY_DEPENDENCY "${OPENCOR_PLUGIN_BINARY_DEPENDENCY}")
 
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change ${OPENCOR_BINARY_DEPENDENCY}
-                                                                 @executable_path/../PlugIns/${MAIN_PROJECT_NAME}/${OPENCOR_BINARY_DEPENDENCY}
+                               COMMAND install_name_tool -change ${OPENCOR_PLUGIN_BINARY_DEPENDENCY}
+                                                                 @executable_path/../PlugIns/${MAIN_PROJECT_NAME}/${OPENCOR_PLUGIN_BINARY_DEPENDENCY}
                                                                  ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
         ENDFOREACH()
 
@@ -443,15 +443,15 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         #       use refer to the library itself (e.g. CellML) while others refer
         #       to some @executable_path information (e.g. LLVM), so...
 
-        FOREACH(EXTERNAL_DEPENDENCY ${EXTERNAL_DEPENDENCIES})
+        FOREACH(EXTERNAL_BINARY_DEPENDENCY ${EXTERNAL_BINARY_DEPENDENCIES})
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change ${EXTERNAL_DEPENDENCY}
-                                                                 @executable_path/../Frameworks/${EXTERNAL_DEPENDENCY}
+                               COMMAND install_name_tool -change ${EXTERNAL_BINARY_DEPENDENCY}
+                                                                 @executable_path/../Frameworks/${EXTERNAL_BINARY_DEPENDENCY}
                                                                  ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
 
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change @executable_path/../lib/${EXTERNAL_DEPENDENCY}
-                                                                 @executable_path/../Frameworks/${EXTERNAL_DEPENDENCY}
+                               COMMAND install_name_tool -change @executable_path/../lib/${EXTERNAL_BINARY_DEPENDENCY}
+                                                                 @executable_path/../Frameworks/${EXTERNAL_BINARY_DEPENDENCY}
                                                                  ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
         ENDFOREACH()
     ENDIF()
@@ -523,9 +523,9 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
                 # OpenCOR dependencies
 
-                FOREACH(OPENCOR_DEPENDENCY ${OPENCOR_DEPENDENCIES} ${PLUGIN_NAME})
+                FOREACH(OPENCOR_PLUGIN_DEPENDENCY ${OPENCOR_PLUGIN_DEPENDENCIES} ${PLUGIN_NAME})
                     TARGET_LINK_LIBRARIES(${TEST_NAME}
-                        ${OPENCOR_DEPENDENCY}Plugin
+                        ${OPENCOR_PLUGIN_DEPENDENCY}Plugin
                     )
                 ENDFOREACH()
 
@@ -539,10 +539,10 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
                 # External dependencies
 
-                IF(NOT ${EXTERNAL_DEPENDENCIES_DIR} STREQUAL "")
-                    FOREACH(EXTERNAL_DEPENDENCY ${EXTERNAL_DEPENDENCIES})
+                IF(NOT ${EXTERNAL_BINARY_DEPENDENCIES_DIR} STREQUAL "")
+                    FOREACH(EXTERNAL_BINARY_DEPENDENCY ${EXTERNAL_BINARY_DEPENDENCIES})
                         TARGET_LINK_LIBRARIES(${TEST_NAME}
-                            ${EXTERNAL_DEPENDENCIES_DIR}/${EXTERNAL_DEPENDENCY}
+                            ${EXTERNAL_BINARY_DEPENDENCIES_DIR}/${EXTERNAL_BINARY_DEPENDENCY}
                         )
                     ENDFOREACH()
                 ENDIF()
@@ -564,15 +564,15 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 #       information (e.g. LLVM), so...
 
                 IF(APPLE)
-                    FOREACH(EXTERNAL_DEPENDENCY ${EXTERNAL_DEPENDENCIES})
+                    FOREACH(EXTERNAL_BINARY_DEPENDENCY ${EXTERNAL_BINARY_DEPENDENCIES})
                         ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
-                                           COMMAND install_name_tool -change ${EXTERNAL_DEPENDENCY}
-                                                                             ${CMAKE_BINARY_DIR}/${EXTERNAL_DEPENDENCY}
+                                           COMMAND install_name_tool -change ${EXTERNAL_BINARY_DEPENDENCY}
+                                                                             ${CMAKE_BINARY_DIR}/${EXTERNAL_BINARY_DEPENDENCY}
                                                                              ${DEST_TESTS_DIR}/${TEST_FILENAME})
 
                         ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
-                                           COMMAND install_name_tool -change @executable_path/../lib/${EXTERNAL_DEPENDENCY}
-                                                                             ${CMAKE_BINARY_DIR}/${EXTERNAL_DEPENDENCY}
+                                           COMMAND install_name_tool -change @executable_path/../lib/${EXTERNAL_BINARY_DEPENDENCY}
+                                                                             ${CMAKE_BINARY_DIR}/${EXTERNAL_BINARY_DEPENDENCY}
                                                                              ${DEST_TESTS_DIR}/${TEST_FILENAME})
                     ENDFOREACH()
                 ENDIF()

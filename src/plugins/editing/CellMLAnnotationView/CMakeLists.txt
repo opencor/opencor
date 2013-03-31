@@ -42,14 +42,14 @@ ADD_PLUGIN(CellMLAnnotationView
         ${LLVM_DEFINITIONS}
     INCLUDE_DIRS
         src
-    OPENCOR_DEPENDENCIES
+    OPENCOR_PLUGIN_DEPENDENCIES
         CellMLAPI
         CellMLSupport
         Compiler
         Core
         CoreSolver
         ${LLVM_PLUGIN}
-    OPENCOR_BINARY_DEPENDENCIES
+    OPENCOR_PLUGIN_BINARY_DEPENDENCIES
         ${LLVM_BINARY_PLUGIN}
     QT_MODULES
         WebKitWidgets

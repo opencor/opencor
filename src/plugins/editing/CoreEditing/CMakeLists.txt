@@ -15,7 +15,7 @@ ADD_PLUGIN(CoreEditing
         src/coreeditingplugin.h
     INCLUDE_DIRS
         src
-    OPENCOR_DEPENDENCIES
+    OPENCOR_PLUGIN_DEPENDENCIES
         Core
     QT_MODULES
         Widgets

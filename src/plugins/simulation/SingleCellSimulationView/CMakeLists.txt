@@ -57,7 +57,7 @@ ADD_PLUGIN(SingleCellSimulationView
         ../../3rdparty/Qwt/src
 
         src
-    OPENCOR_DEPENDENCIES
+    OPENCOR_PLUGIN_DEPENDENCIES
         CellMLAPI
         CellMLSupport
         Compiler
@@ -65,7 +65,7 @@ ADD_PLUGIN(SingleCellSimulationView
         CoreSolver
         ${LLVM_PLUGIN}
         Qwt
-    OPENCOR_BINARY_DEPENDENCIES
+    OPENCOR_PLUGIN_BINARY_DEPENDENCIES
         ${LLVM_BINARY_PLUGIN}
     QT_MODULES
         Widgets
