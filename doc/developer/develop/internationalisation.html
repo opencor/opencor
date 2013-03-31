@@ -21,33 +21,42 @@
         </script>
 
         <p>
-            OpenCOR is a multi-lingual application currently supporting both English and French. OpenCOR will, by default, try to use the language used by a user's operating system. If it cannot, then it will revert to English. Otherwise, users can switch to any language supported by OpenCOR, independent of the language used by their operating system.
+            OpenCOR is a multi-lingual application currently supporting both English and French. By default, OpenCOR will try to use the system language. If the system language is not supported, then English will be used instead. Alternatively, any of the languages supported by OpenCOR can be used.
         </p>
 
+        <div class="section">
+            OpenCOR
+        </div>
+
         <p>
-            There are two sets of language files:
+            When it comes to OpenCOR itself, there are two sets of language files to consider:
         </p>
 
         <ol>
             <li>
-                <strong>Qt-specific files:</strong> these files are originally located under <code>[QtCreator]/Desktop/Qt/[QtVersion]/[Compiler]/translations/qt_xx.qm</code> with <code>xx</code> the language code (e.g. <code>fr</code> for French). So, for every language supported by OpenCOR (except for English which is natively supported by Qt), we need to add one such a file to <a href="https://github.com/opencor/opencor/tree/master/res"><code>[OpenCOR]/res</code></a>. Then, an entry for that file must be added to <a href="https://github.com/opencor/opencor/blob/master/res/ui.qrc"><code>[OpenCOR]/res/ui.qrc</code></a>:
+                <strong>Qt-specific translation files:</strong> these files are originally located under <code>[Qt]/[QtVersion]/[Compiler]/translations/qt_xx.qm</code> with <code>xx</code> the language code (e.g. <code>fr</code> for French). So, for every language supported by OpenCOR (except for English which is natively supported by Qt), we need to add the corresponding file to <a href="https://github.com/opencor/opencor/tree/master/res"><code>[OpenCOR]/res</code></a>. Then, an entry for that file must be added to <a href="https://github.com/opencor/opencor/blob/master/res/ui.qrc"><code>[OpenCOR]/res/ui.qrc</code></a>:
                 <pre class="prettyprint">&lt;file alias=&quot;qt_xx&quot;&gt;qt_xx.qm&lt;/file&gt;</pre>
             </li>
             <li>
-                <strong>OpenCOR-specific files:</strong> for each supported language (except for English), a file called <code>[OpenCOR]/i18n/OpenCOR_xx.ts</code> must be created. The best way to go about this is by starting from an existing language file (e.g. <a href="https://github.com/opencor/opencor/blob/master/i18n/OpenCOR_fr.ts"><code>[OpenCOR]/i18n/OpenCOR_fr.ts</code></a>). From there, locate the following line:
+                <strong>OpenCOR-specific translation files:</strong> for each supported language (again, except for English), a file called <code>[OpenCOR]/i18n/OpenCOR_xx.ts</code> must be created. The best way to go about it is by starting from an existing language file (e.g. <a href="https://github.com/opencor/opencor/blob/master/i18n/OpenCOR_fr.ts"><code>[OpenCOR]/i18n/OpenCOR_fr.ts</code></a>). From there, locate the following line:
                 <pre class="prettyprint">&lt;TS version=&quot;2.0&quot; language=&quot;xx_XX&quot; sourcelanguage=&quot;en_GB&quot;&gt;</pre>
                 and replace <code>xx_XX</code> accordingly. Otherwise, as for the Qt-specific file above, an entry for the OpenCOR-specific file must be added to <a href="https://github.com/opencor/opencor/blob/master/res/ui.qrc"><code>[OpenCOR]/res/ui.qrc</code></a>:
                 <pre class="prettyprint">&lt;file alias=&quot;app_xx&quot;&gt;../build/OpenCOR_xx.qm&lt;/file&gt;</pre>
-                The <code>OpenCOR_xx.qm</code> file gets automatically generated from the <code>OpenCOR_xx.ts</code> file when <a href="../buildAndTest.html">building OpenCOR</a>. This does, however, require updating <a href="https://github.com/opencor/opencor/blob/master/CMakeLists.txt"><code>[OpenCOR]/CMakeLists.txt</code></a>:
-                <pre class="prettyprint">SET(LANGUAGE_FILES
-    ${PROJECT_NAME}_fr
-    ${PROJECT_NAME}_xx    # New language file
+                <code>OpenCOR_xx.qm</code> gets automatically generated from <code>OpenCOR_xx.ts</code> when <a href="../buildRunAndTest.html">building OpenCOR</a>. This does, however, require updating <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>[OpenCOR]/cmake/common.cmake</code></a> as follows:
+                <pre class="prettyprint">MACRO(UPDATE_LANGUAGE_FILES TARGET_NAME)
+    ...
+    SET(LANGUAGE_FILES
+        ...
+        ${TARGET_NAME}_xx
+        ...
+    )
+    ...
 )</pre>
             </li>
         </ol>
 
         <p>
-            On the user interface (UI) side, an <a href="http://qt-project.org/doc/qt-4.8/qaction.html">action</a> and a menu item exist for each supported language. The best way to add UI support for a new language is by mimicking what has been done for the <code>actionEnglish</code> action in <a href="https://github.com/opencor/opencor/blob/master/src/mainwindow.ui"><code>[OpenCOR]/src/mainwindow.ui</code></a>. A similar mimicking work then has to be done in <a href="https://github.com/opencor/opencor/blob/master/src/mainwindow.cpp"><code>[OpenCOR]/src/mainwindow.cpp</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/mainwindow.h"><code>[OpenCOR]/src/mainwindow.h</code></a> by looking up both <code>actionEnglish</code> and <code>EnglishLocale</code>.
+            On the user interface (UI) side, both an action and a menu item exist for each supported language. The best way to add UI support for a new language is by mimicking what has been done for <code>actionEnglish</code> in <a href="https://github.com/opencor/opencor/blob/master/src/mainwindow.ui"><code>[OpenCOR]/src/mainwindow.ui</code></a>. Then, a similar mimicking work must be done in <a href="https://github.com/opencor/opencor/blob/master/src/mainwindow.cpp"><code>[OpenCOR]/src/mainwindow.cpp</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/mainwindow.h"><code>[OpenCOR]/src/mainwindow.h</code></a> by looking up both <code>actionEnglish</code> and <code>EnglishLocale</code>.
         </p>
 
         <div class="section">
@@ -55,7 +64,7 @@
         </div>
 
         <p>
-            A <code>[Plugin]_xx.ts</code> file must be created for each plugin that requires internationalisation and that file must be placed in <code>[Plugin]/i18n</code>. A <code>[Plugin].qrc</code> file must also be created and placed in <code>[Plugin]/res</code>. For example, for the <a href="https://github.com/opencor/opencor/tree/master/src/plugins/edit/Viewer"><code>Viewer plugin</code></a> and the French language, we have <a href="https://github.com/opencor/opencor/blob/master/src/plugins/edit/Viewer/i18n/Viewer_fr.ts"><code>[OpenCOR]/src/plugins/edit/Viewer/i18n/Viewer_fr.ts</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/edit/Viewer/res/Viewer.qrc"><code>[OpenCOR]/src/plugins/edit/Viewer/res/Viewer.qrc</code></a>. Then, for language files to be generated and embedded in the plugin, one must pass the parameter <code>TRUE</code> to the <code>INITIALISE_PLUGIN</code> macro, as is done for the Viewer plugin (see <a href="https://github.com/opencor/opencor/blob/master/src/plugins/edit/Viewer/CMakeLists.txt"><code>[OpenCOR]/src/plugins/edit/Viewer/CMakeLists.txt</code></a>).
+            A file called <code>[Plugin]_xx.ts</code> must be created for each plugin that requires internationalisation and it must be located in <code>[Plugin]/i18n</code> (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Core/i18n/Core_fr.ts"><code>[OpenCOR]/src/plugins/misc/Core/i18n/Core_fr.ts</code></a>). A <code>[Plugin].qrc</code> file must also be created and placed in <code>[Plugin]/res</code> (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Core/res/Core.qrc"><code>[OpenCOR]/src/plugins/misc/Core/res/Core.qrc</code></a>).
         </p>
 
         <script type="text/javascript">

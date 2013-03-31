@@ -20,12 +20,6 @@ namespace OpenCOR {
 
 //==============================================================================
 
-static const QString SystemLocale  = "";
-static const QString EnglishLocale = "en";
-static const QString FrenchLocale  = "fr";
-
-//==============================================================================
-
 #define PLUGININFO_FUNC extern "C" Q_DECL_EXPORT void *
 // Note: each have a function called <PLUGIN_NAME>PluginInfo which can be used
 //       to retrieve some information about the plugin itself. This is done by
@@ -94,7 +88,7 @@ public:
     QStringList fullDependencies() const;
     void setFullDependencies(const QStringList &pFullDependencies);
 
-    QString description(const QString &pLocale = EnglishLocale) const;
+    QString description(const QString &pLocale) const;
 
     Descriptions descriptions() const;
     void setDescriptions(const Descriptions &pDescriptions);

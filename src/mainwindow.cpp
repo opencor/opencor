@@ -47,6 +47,12 @@ namespace OpenCOR {
 
 //==============================================================================
 
+static const QString SystemLocale  = "";
+static const QString EnglishLocale = "en";
+static const QString FrenchLocale  = "fr";
+
+//==============================================================================
+
 static const QString CorePlugin = "Core";
 static const QString HelpPlugin = "Help";
 

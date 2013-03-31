@@ -137,24 +137,10 @@ void PluginInfo::setFullDependencies(const QStringList &pFullDependencies)
 
 QString PluginInfo::description(const QString &pLocale) const
 {
-    // Return the plugin's description using the provided locale or the first
-    // description if no description can be found for the provided locale
+    // Return the plugin's description using the provided locale or an empty
+    // string if no description can be found
 
-    // Return the plugin's description using the provided locale or the first
-    // description if no description can be found for the provided locale
-
-    if (mDescriptions.isEmpty()) {
-        // No description is avalable, so...
-
-        return QString();
-    } else {
-        // At least one description is available, so return the one that
-        // matches our locale our the first description if there is no match
-
-        QString res = mDescriptions.value(pLocale);
-
-        return res.isEmpty()?mDescriptions.begin().value():res;
-    }
+    return mDescriptions.value(pLocale);
 }
 
 //==============================================================================
