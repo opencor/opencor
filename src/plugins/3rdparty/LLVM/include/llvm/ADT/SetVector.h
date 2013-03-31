@@ -169,7 +169,7 @@ public:
     set_.erase(back());
     vector_.pop_back();
   }
-  
+
   T pop_back_val() {
     T Ret = back();
     pop_back();

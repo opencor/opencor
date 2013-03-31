@@ -41,7 +41,7 @@ Builtin::Context::Context() {
 
 void Builtin::Context::InitializeTarget(const TargetInfo &Target) {
   assert(NumTSRecords == 0 && "Already initialized target?");
-  Target.getTargetBuiltins(TSRecords, NumTSRecords);  
+  Target.getTargetBuiltins(TSRecords, NumTSRecords);
 }
 
 /// InitializeBuiltins - Mark the identifiers for all the builtins with their
@@ -52,7 +52,7 @@ void Builtin::Context::InitializeBuiltins(IdentifierTable &Table,
   // Step #1: mark all target-independent builtins with their ID's.
   for (unsigned i = Builtin::NotBuiltin+1; i != Builtin::FirstTSBuiltin; ++i)
     if (!LangOpts.NoBuiltin || !strchr(BuiltinInfo[i].Attributes, 'f')) {
-      if (LangOpts.ObjC1 || 
+      if (LangOpts.ObjC1 ||
           BuiltinInfo[i].builtin_lang != clang::OBJC_LANG)
         Table.get(BuiltinInfo[i].Name).setBuiltinID(i);
     }

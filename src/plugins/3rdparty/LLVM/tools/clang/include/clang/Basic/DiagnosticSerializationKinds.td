@@ -36,7 +36,7 @@ def err_pch_langopt_mismatch : Error<"%0 was %select{disabled|enabled}1 in "
     "PCH file but is currently %select{disabled|enabled}2">;
 def err_pch_langopt_value_mismatch : Error<
   "%0 differs in PCH file vs. current file">;
-  
+
 def warn_pch_version_too_old : Error<
     "PCH file uses an older PCH format that is no longer supported">;
 def warn_pch_version_too_new : Error<
@@ -45,8 +45,8 @@ def warn_pch_different_branch : Error<
     "PCH file built from a different branch (%0) than the compiler (%1)">;
 def err_pch_with_compiler_errors : Error<
     "PCH file contains compiler errors">;
-    
-    
+
+
 def err_pch_macro_def_undef : Error<
     "macro '%0' was %select{defined|undef'd}1 in the precompiled header but "
     "%select{undef'd|defined}1 on the command line">;

@@ -29,8 +29,8 @@ PCHGenerator::PCHGenerator(const Preprocessor &PP,
                            clang::Module *Module,
                            StringRef isysroot,
                            raw_ostream *OS)
-  : PP(PP), OutputFile(OutputFile), Module(Module), 
-    isysroot(isysroot.str()), Out(OS), 
+  : PP(PP), OutputFile(OutputFile), Module(Module),
+    isysroot(isysroot.str()), Out(OS),
     SemaPtr(0), Stream(Buffer), Writer(Stream) {
 }
 
@@ -40,7 +40,7 @@ PCHGenerator::~PCHGenerator() {
 void PCHGenerator::HandleTranslationUnit(ASTContext &Ctx) {
   if (PP.getDiagnostics().hasErrorOccurred())
     return;
-  
+
   // Emit the PCH file
   assert(SemaPtr && "No Sema?");
   Writer.WriteAST(*SemaPtr, OutputFile, Module, isysroot);

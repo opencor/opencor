@@ -265,7 +265,7 @@ struct DenseMapInfo<AssertingVH<T> > {
     return LHS == RHS;
   }
 };
-  
+
 template <typename T>
 struct isPodLike<AssertingVH<T> > {
 #ifdef NDEBUG

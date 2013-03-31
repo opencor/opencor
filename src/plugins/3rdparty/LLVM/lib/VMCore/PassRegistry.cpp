@@ -46,16 +46,16 @@ struct PassRegistryImpl {
   /// PassInfoMap - Keep track of the PassInfo object for each registered pass.
   typedef DenseMap<const void*, const PassInfo*> MapType;
   MapType PassInfoMap;
-  
+
   typedef StringMap<const PassInfo*> StringMapType;
   StringMapType PassInfoStringMap;
-  
+
   /// AnalysisGroupInfo - Keep track of information for each analysis group.
   struct AnalysisGroupInfo {
     SmallPtrSet<const PassInfo *, 8> Implementations;
   };
   DenseMap<const PassInfo*, AnalysisGroupInfo> AnalysisGroupInfoMap;
-  
+
   std::vector<const PassInfo*> ToFree;
   std::vector<PassRegistrationListener*> Listeners;
 };
@@ -74,11 +74,11 @@ void *PassRegistry::getImpl() const {
 PassRegistry::~PassRegistry() {
   sys::SmartScopedLock<true> Guard(*Lock);
   PassRegistryImpl *Impl = static_cast<PassRegistryImpl*>(pImpl);
-  
+
   for (std::vector<const PassInfo*>::iterator I = Impl->ToFree.begin(),
        E = Impl->ToFree.end(); I != E; ++I)
     delete *I;
-  
+
   delete Impl;
   pImpl = 0;
 }
@@ -110,22 +110,22 @@ void PassRegistry::registerPass(const PassInfo &PI, bool ShouldFree) {
   assert(Inserted && "Pass registered multiple times!");
   (void)Inserted;
   Impl->PassInfoStringMap[PI.getPassArgument()] = &PI;
-  
+
   // Notify any listeners.
   for (std::vector<PassRegistrationListener*>::iterator
        I = Impl->Listeners.begin(), E = Impl->Listeners.end(); I != E; ++I)
     (*I)->passRegistered(&PI);
-  
+
   if (ShouldFree) Impl->ToFree.push_back(&PI);
 }
 
 void PassRegistry::unregisterPass(const PassInfo &PI) {
   sys::SmartScopedLock<true> Guard(*Lock);
   PassRegistryImpl *Impl = static_cast<PassRegistryImpl*>(getImpl());
-  PassRegistryImpl::MapType::iterator I = 
+  PassRegistryImpl::MapType::iterator I =
     Impl->PassInfoMap.find(PI.getTypeInfo());
   assert(I != Impl->PassInfoMap.end() && "Pass registered but not in map!");
-  
+
   // Remove pass from the map.
   Impl->PassInfoMap.erase(I);
   Impl->PassInfoStringMap.erase(PI.getPassArgument());
@@ -141,7 +141,7 @@ void PassRegistry::enumerateWith(PassRegistrationListener *L) {
 
 
 /// Analysis Group Mechanisms.
-void PassRegistry::registerAnalysisGroup(const void *InterfaceID, 
+void PassRegistry::registerAnalysisGroup(const void *InterfaceID,
                                          const void *PassID,
                                          PassInfo& Registeree,
                                          bool isDefault,
@@ -152,7 +152,7 @@ void PassRegistry::registerAnalysisGroup(const void *InterfaceID,
     registerPass(Registeree);
     InterfaceInfo = &Registeree;
   }
-  assert(Registeree.isAnalysisGroup() && 
+  assert(Registeree.isAnalysisGroup() &&
          "Trying to join an analysis group that is a normal pass!");
 
   if (PassID) {
@@ -161,7 +161,7 @@ void PassRegistry::registerAnalysisGroup(const void *InterfaceID,
            "Must register pass before adding to AnalysisGroup!");
 
     sys::SmartScopedLock<true> Guard(*Lock);
-    
+
     // Make sure we keep track of the fact that the implementation implements
     // the interface.
     ImplementationInfo->addInterfaceImplemented(InterfaceInfo);
@@ -180,7 +180,7 @@ void PassRegistry::registerAnalysisGroup(const void *InterfaceID,
       InterfaceInfo->setNormalCtor(ImplementationInfo->getNormalCtor());
     }
   }
-  
+
   PassRegistryImpl *Impl = static_cast<PassRegistryImpl*>(getImpl());
   if (ShouldFree) Impl->ToFree.push_back(&Registeree);
 }
@@ -193,13 +193,13 @@ void PassRegistry::addRegistrationListener(PassRegistrationListener *L) {
 
 void PassRegistry::removeRegistrationListener(PassRegistrationListener *L) {
   sys::SmartScopedLock<true> Guard(*Lock);
-  
+
   // NOTE: This is necessary, because removeRegistrationListener() can be called
   // as part of the llvm_shutdown sequence.  Since we have no control over the
   // order of that sequence, we need to gracefully handle the case where the
   // PassRegistry is destructed before the object that triggers this call.
   if (!pImpl) return;
-  
+
   PassRegistryImpl *Impl = static_cast<PassRegistryImpl*>(getImpl());
   std::vector<PassRegistrationListener*>::iterator I =
     std::find(Impl->Listeners.begin(), Impl->Listeners.end(), L);

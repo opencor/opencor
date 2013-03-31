@@ -12,10 +12,10 @@
 // specified in a function's 'gc' attribute. Algorithms are enabled by setting
 // flags in a subclass's constructor, and some virtual methods can be
 // overridden.
-// 
+//
 // When requested, the GCStrategy will be populated with data about each
 // function which uses it. Specifically:
-// 
+//
 // - Safe points
 //   Garbage collection is generally only possible at certain points in code.
 //   GCStrategy can request that the collector insert such points:
@@ -23,7 +23,7 @@
 //     - At and after any call to a subroutine
 //     - Before returning from the current function
 //     - Before backwards branches (loops)
-// 
+//
 // - Roots
 //   When a reference to a GC-allocated object exists on the stack, it must be
 //   stored in an alloca registered with llvm.gcoot.
@@ -42,13 +42,13 @@
 #include <string>
 
 namespace llvm {
-  
+
   class GCStrategy;
-  
+
   /// The GC strategy registry uses all the defaults from Registry.
-  /// 
+  ///
   typedef Registry<GCStrategy> GCRegistry;
-  
+
   /// GCStrategy describes a garbage collector algorithm's code generation
   /// requirements, and provides overridable hooks for those needs which cannot
   /// be abstractly described.
@@ -56,14 +56,14 @@ namespace llvm {
   public:
     typedef std::vector<GCFunctionInfo*> list_type;
     typedef list_type::iterator iterator;
-    
+
   private:
     friend class GCModuleInfo;
     const Module *M;
     std::string Name;
-    
+
     list_type Functions;
-    
+
   protected:
     unsigned NeededSafePoints; ///< Bitmask of required safe points.
     bool CustomReadBarriers;   ///< Default is to insert loads.
@@ -73,19 +73,19 @@ namespace llvm {
                                ///< to find safe points.
     bool InitRoots;            ///< If set, roots are nulled during lowering.
     bool UsesMetadata;         ///< If set, backend must emit metadata tables.
-    
+
   public:
     GCStrategy();
-    
+
     virtual ~GCStrategy();
-    
-    
+
+
     /// getName - The name of the GC strategy, for debugging.
-    /// 
+    ///
     const std::string &getName() const { return Name; }
 
     /// getModule - The module within which the GC strategy is operating.
-    /// 
+    ///
     const Module &getModule() const { return *M; }
 
     /// needsSafePoitns - True if safe points of any kind are required. By
@@ -93,23 +93,23 @@ namespace llvm {
     bool needsSafePoints() const {
       return CustomSafePoints || NeededSafePoints != 0;
     }
-    
+
     /// needsSafePoint(Kind) - True if the given kind of safe point is
     //                          required. By default, none are recorded.
     bool needsSafePoint(GC::PointKind Kind) const {
       return (NeededSafePoints & 1 << Kind) != 0;
     }
-    
+
     /// customWriteBarrier - By default, write barriers are replaced with simple
     ///                      store instructions. If true, then
     ///                      performCustomLowering must instead lower them.
     bool customWriteBarrier() const { return CustomWriteBarriers; }
-    
+
     /// customReadBarrier - By default, read barriers are replaced with simple
     ///                     load instructions. If true, then
     ///                     performCustomLowering must instead lower them.
     bool customReadBarrier() const { return CustomReadBarriers; }
-    
+
     /// customRoots - By default, roots are left for the code generator so it
     ///               can generate a stack map. If true, then
     //                performCustomLowering must delete them.
@@ -119,23 +119,23 @@ namespace llvm {
     ///                    points according to NeededSafePoints. If true,
     ///                    then findCustomSafePoints must create them.
     bool customSafePoints() const { return CustomSafePoints; }
-    
+
     /// initializeRoots - If set, gcroot intrinsics should initialize their
     //                    allocas to null before the first use. This is
     //                    necessary for most GCs and is enabled by default.
     bool initializeRoots() const { return InitRoots; }
-    
+
     /// usesMetadata - If set, appropriate metadata tables must be emitted by
     ///                the back-end (assembler, JIT, or otherwise).
     bool usesMetadata() const { return UsesMetadata; }
-    
+
     /// begin/end - Iterators for function metadata.
-    /// 
+    ///
     iterator begin() { return Functions.begin(); }
     iterator end()   { return Functions.end();   }
 
     /// insertFunctionMetadata - Creates metadata for a function.
-    /// 
+    ///
     GCFunctionInfo *insertFunctionInfo(const Function &F);
 
     /// initializeCustomLowering/performCustomLowering - If any of the actions
@@ -147,7 +147,7 @@ namespace llvm {
     virtual bool performCustomLowering(Function &F);
     virtual bool findCustomSafePoints(GCFunctionInfo& FI, MachineFunction& MF);
   };
-  
+
 }
 
 #endif

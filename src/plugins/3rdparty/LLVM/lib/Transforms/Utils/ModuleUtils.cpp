@@ -19,7 +19,7 @@
 
 using namespace llvm;
 
-static void appendToGlobalArray(const char *Array, 
+static void appendToGlobalArray(const char *Array,
                                 Module &M, Function *F, int Priority) {
   IRBuilder<> IRB(M.getContext());
   FunctionType *FnTy = FunctionType::get(IRB.getVoidTy(), false);

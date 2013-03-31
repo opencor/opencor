@@ -22,7 +22,7 @@
 using namespace clang;
 using namespace llvm;
 
-TemplateArgument 
+TemplateArgument
 SubstTemplateTemplateParmPackStorage::getArgumentPack() const {
   return TemplateArgument(Arguments, size());
 }
@@ -31,7 +31,7 @@ void SubstTemplateTemplateParmStorage::Profile(llvm::FoldingSetNodeID &ID) {
   Profile(ID, Parameter, Replacement);
 }
 
-void SubstTemplateTemplateParmStorage::Profile(llvm::FoldingSetNodeID &ID, 
+void SubstTemplateTemplateParmStorage::Profile(llvm::FoldingSetNodeID &ID,
                                            TemplateTemplateParmDecl *parameter,
                                                TemplateName replacement) {
   ID.AddPointer(parameter);
@@ -43,7 +43,7 @@ void SubstTemplateTemplateParmPackStorage::Profile(llvm::FoldingSetNodeID &ID,
   Profile(ID, Context, Parameter, TemplateArgument(Arguments, size()));
 }
 
-void SubstTemplateTemplateParmPackStorage::Profile(llvm::FoldingSetNodeID &ID, 
+void SubstTemplateTemplateParmPackStorage::Profile(llvm::FoldingSetNodeID &ID,
                                                    ASTContext &Context,
                                            TemplateTemplateParmDecl *Parameter,
                                              const TemplateArgument &ArgPack) {
@@ -104,13 +104,13 @@ bool TemplateName::isInstantiationDependent() const {
     if (QTN->getQualifier()->isInstantiationDependent())
       return true;
   }
-  
+
   return isDependent();
 }
 
 bool TemplateName::containsUnexpandedParameterPack() const {
   if (TemplateDecl *Template = getAsTemplateDecl()) {
-    if (TemplateTemplateParmDecl *TTP 
+    if (TemplateTemplateParmDecl *TTP
                                   = dyn_cast<TemplateTemplateParmDecl>(Template))
       return TTP->isParameterPack();
 
@@ -118,7 +118,7 @@ bool TemplateName::containsUnexpandedParameterPack() const {
   }
 
   if (DependentTemplateName *DTN = getAsDependentTemplateName())
-    return DTN->getQualifier() && 
+    return DTN->getQualifier() &&
       DTN->getQualifier()->containsUnexpandedParameterPack();
 
   return getAsSubstTemplateTemplateParmPack() != 0;
@@ -139,7 +139,7 @@ TemplateName::print(raw_ostream &OS, const PrintingPolicy &Policy,
     if (!SuppressNNS && DTN->getQualifier())
       DTN->getQualifier()->print(OS, Policy);
     OS << "template ";
-    
+
     if (DTN->isIdentifier())
       OS << DTN->getIdentifier()->getName();
     else

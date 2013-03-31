@@ -37,7 +37,7 @@ namespace {
     static char ID; // Pass identification, replacement for typeid
     unsigned NumLoops;
 
-    explicit LoopExtractor(unsigned numLoops = ~0) 
+    explicit LoopExtractor(unsigned numLoops = ~0)
       : LoopPass(ID), NumLoops(numLoops) {
         initializeLoopExtractorPass(*PassRegistry::getPassRegistry());
       }

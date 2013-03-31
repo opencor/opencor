@@ -690,7 +690,7 @@ Instruction *InstCombiner::visitCallInst(CallInst &CI) {
         if (Splat->isOne()) {
           if (Zext)
             return CastInst::CreateZExtOrBitCast(Arg0, II->getType());
-          // else    
+          // else
           return CastInst::CreateSExtOrBitCast(Arg0, II->getType());
         }
       }

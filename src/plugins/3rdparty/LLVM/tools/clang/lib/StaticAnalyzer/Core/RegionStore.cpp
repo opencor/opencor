@@ -282,16 +282,16 @@ public: // Part of public interface to class.
   StoreRef killBinding(Store ST, Loc L);
 
   void incrementReferenceCount(Store store) {
-    GetRegionBindings(store).manualRetain();    
+    GetRegionBindings(store).manualRetain();
   }
-  
+
   /// If the StoreManager supports it, decrement the reference count of
   /// the specified Store object.  If the reference count hits 0, the memory
   /// associated with the object is recycled.
   void decrementReferenceCount(Store store) {
     GetRegionBindings(store).manualRelease();
   }
-  
+
   bool includedInBindings(Store store, const MemRegion *region) const;
 
   /// \brief Return the value bound to specified location in a given state.
@@ -321,7 +321,7 @@ public: // Part of public interface to class.
 
   SVal getBindingForFieldOrElementCommon(Store store, const TypedValueRegion *R,
                                          QualType Ty, const MemRegion *superR);
-  
+
   SVal getLazyBinding(const MemRegion *lazyBindingRegion,
                       Store lazyBindingStore);
 
@@ -355,7 +355,7 @@ public: // Part of public interface to class.
   ///  It returns a new Store with these values removed.
   StoreRef removeDeadBindings(Store store, const StackFrameContext *LCtx,
                               SymbolReaper& SymReaper);
-  
+
   //===------------------------------------------------------------------===//
   // Region "extents".
   //===------------------------------------------------------------------===//
@@ -433,7 +433,7 @@ protected:
   SValBuilder &svalBuilder;
 
   RegionBindings B;
-  
+
   const bool includeGlobals;
 
   const ClusterBindings *getCluster(const MemRegion *R) {
@@ -625,7 +625,7 @@ RegionBindings RegionStoreManager::removeSubRegionBindings(RegionBindings B,
         if (NextKey.isDirect())
           Result = CBFactory.remove(Result, NextKey);
       }
-      
+
     } else if (NextKey.hasSymbolicOffset()) {
       const MemRegion *Base = NextKey.getConcreteOffsetRegion();
       if (R->isSubRegionOf(Base)) {
@@ -798,8 +798,8 @@ void invalidateRegionsWorker::VisitBaseRegion(const MemRegion *baseR) {
     B = RM.addBinding(B, baseR, BindingKey::Default, V);
     return;
   }
-  
-  if (includeGlobals && 
+
+  if (includeGlobals &&
       isa<NonStaticGlobalSpaceRegion>(baseR->getMemorySpace())) {
     // If the region is a global and we are invalidating all globals,
     // just erase the entry.  This causes all globals to be lazily
@@ -807,7 +807,7 @@ void invalidateRegionsWorker::VisitBaseRegion(const MemRegion *baseR) {
     B = RM.removeBinding(B, baseR);
     return;
   }
-  
+
 
   DefinedOrUnknownSVal V = svalBuilder.conjureSymbolVal(baseR, Ex, LCtx,
                                                         T,Count);
@@ -1090,7 +1090,7 @@ std::pair<Store, const MemRegion *>
 RegionStoreManager::GetLazyBinding(RegionBindings B, const MemRegion *R,
                                    const MemRegion *originalRegion,
                                    bool includeSuffix) {
-  
+
   if (originalRegion != R) {
     if (Optional<SVal> OV = getDefaultBinding(B, R)) {
       if (const nonloc::LazyCompoundVal *V =
@@ -1098,7 +1098,7 @@ RegionStoreManager::GetLazyBinding(RegionBindings B, const MemRegion *R,
         return std::make_pair(V->getStore(), V->getRegion());
     }
   }
-  
+
   if (const ElementRegion *ER = dyn_cast<ElementRegion>(R)) {
     const std::pair<Store, const MemRegion *> &X =
       GetLazyBinding(B, ER->getSuperRegion(), originalRegion);
@@ -1117,15 +1117,15 @@ RegionStoreManager::GetLazyBinding(RegionBindings B, const MemRegion *R,
                               MRMgr.getFieldRegionWithSuper(FR, X.second));
       return X;
     }
-        
+
   }
   // C++ base object region is another kind of region that we should blast
   // through to look for lazy compound value. It is like a field region.
-  else if (const CXXBaseObjectRegion *baseReg = 
+  else if (const CXXBaseObjectRegion *baseReg =
                             dyn_cast<CXXBaseObjectRegion>(R)) {
     const std::pair<Store, const MemRegion *> &X =
       GetLazyBinding(B, baseReg->getSuperRegion(), originalRegion);
-    
+
     if (X.second) {
       if (includeSuffix)
         return std::make_pair(X.first,
@@ -1178,7 +1178,7 @@ SVal RegionStoreManager::getBindingForElement(Store store,
       return svalBuilder.makeIntVal(c, T);
     }
   }
-  
+
   // Check for loads from a code text region.  For such loads, just give up.
   if (isa<CodeTextRegion>(superR))
     return UnknownVal();
@@ -1190,12 +1190,12 @@ SVal RegionStoreManager::getBindingForElement(Store store,
   //   return *y;
   // FIXME: This is a hack, and doesn't do anything really intelligent yet.
   const RegionRawOffset &O = R->getAsArrayOffset();
-  
+
   // If we cannot reason about the offset, return an unknown value.
   if (!O.getRegion())
     return UnknownVal();
-  
-  if (const TypedValueRegion *baseR = 
+
+  if (const TypedValueRegion *baseR =
         dyn_cast_or_null<TypedValueRegion>(O.getRegion())) {
     QualType baseT = baseR->getValueType();
     if (baseT->isScalarType()) {
@@ -1263,11 +1263,11 @@ SVal RegionStoreManager::getLazyBinding(const MemRegion *lazyBindingRegion,
                                              Store lazyBindingStore) {
   if (const ElementRegion *ER = dyn_cast<ElementRegion>(lazyBindingRegion))
     return getBindingForElement(lazyBindingStore, ER);
-  
+
   return getBindingForField(lazyBindingStore,
                             cast<FieldRegion>(lazyBindingRegion));
 }
-                                        
+
 SVal RegionStoreManager::getBindingForFieldOrElementCommon(Store store,
                                                       const TypedValueRegion *R,
                                                       QualType Ty,
@@ -1282,7 +1282,7 @@ SVal RegionStoreManager::getBindingForFieldOrElementCommon(Store store,
   const MemRegion *lazyBindingRegion = NULL;
   llvm::tie(lazyBindingStore, lazyBindingRegion) = GetLazyBinding(B, R, R,
                                                                   true);
-  
+
   if (lazyBindingRegion)
     return getLazyBinding(lazyBindingRegion, lazyBindingStore);
 
@@ -1300,7 +1300,7 @@ SVal RegionStoreManager::getBindingForFieldOrElementCommon(Store store,
       if (!index.isConstant())
         hasSymbolicIndex = true;
     }
-    
+
     // If our super region is a field or element itself, walk up the region
     // hierarchy to see if there is a default value installed in an ancestor.
     if (const SubRegion *SR = dyn_cast<SubRegion>(superR)) {
@@ -1314,7 +1314,7 @@ SVal RegionStoreManager::getBindingForFieldOrElementCommon(Store store,
     if (isa<ElementRegion>(R)) {
       // Currently we don't reason specially about Clang-style vectors.  Check
       // if superR is a vector and if so return Unknown.
-      if (const TypedValueRegion *typedSuperR = 
+      if (const TypedValueRegion *typedSuperR =
             dyn_cast<TypedValueRegion>(superR)) {
         if (typedSuperR->getValueType()->isVectorType())
           return UnknownVal();
@@ -1327,7 +1327,7 @@ SVal RegionStoreManager::getBindingForFieldOrElementCommon(Store store,
     // a symbolic offset.
     if (hasSymbolicIndex)
       return UnknownVal();
-    
+
     return UndefinedVal();
   }
 
@@ -1417,7 +1417,7 @@ static bool mayHaveLazyBinding(QualType Ty) {
   return Ty->isArrayType() || Ty->isStructureOrClassType();
 }
 
-SVal RegionStoreManager::getBindingForStruct(Store store, 
+SVal RegionStoreManager::getBindingForStruct(Store store,
                                         const TypedValueRegion* R) {
   const RecordDecl *RD = R->getValueType()->castAs<RecordType>()->getDecl();
   if (RD->field_empty())
@@ -1443,7 +1443,7 @@ SVal RegionStoreManager::getBindingForArray(Store store,
                                        const TypedValueRegion * R) {
   const ConstantArrayType *Ty = Ctx.getAsConstantArrayType(R->getValueType());
   assert(Ty && "Only constant array types can have compound bindings.");
-  
+
   // If we already have a lazy binding, don't create a new one,
   // unless the first element might have a lazy binding of its own.
   // (Right now we can't tell the difference.)
@@ -1634,11 +1634,11 @@ StoreRef RegionStoreManager::BindVector(Store store, const TypedValueRegion* R,
   QualType T = R->getValueType();
   assert(T->isVectorType());
   const VectorType *VT = T->getAs<VectorType>(); // Use getAs for typedefs.
- 
+
   // Handle lazy compound values and symbolic values.
   if (isa<nonloc::LazyCompoundVal>(V) || isa<nonloc::SymbolVal>(V))
     return BindAggregate(store, R, V);
-  
+
   // We may get non-CompoundVal accidentally due to imprecise cast logic or
   // that we are binding symbolic struct value. Kill the field values, and if
   // the value is symbolic go and bind it as a "default" binding.
@@ -1651,14 +1651,14 @@ StoreRef RegionStoreManager::BindVector(Store store, const TypedValueRegion* R,
   nonloc::CompoundVal::iterator VI = CV.begin(), VE = CV.end();
   unsigned index = 0, numElements = VT->getNumElements();
   StoreRef newStore(store, *this);
-  
+
   for ( ; index != numElements ; ++index) {
     if (VI == VE)
       break;
-    
+
     NonLoc Idx = svalBuilder.makeArrayIndex(index);
     const ElementRegion *ER = MRMgr.getElementRegion(ElemType, Idx, R, Ctx);
-    
+
     if (ElemType->isArrayType())
       newStore = BindArray(newStore.getStore(), ER, *VI);
     else if (ElemType->isStructureOrClassType())
@@ -1699,7 +1699,7 @@ StoreRef RegionStoreManager::BindStruct(Store store, const TypedValueRegion* R,
 
   RecordDecl::field_iterator FI, FE;
   StoreRef newStore(store, *this);
-  
+
   for (FI = RD->field_begin(), FE = RD->field_end(); FI != FE; ++FI) {
 
     if (VI == VE)
@@ -1751,7 +1751,7 @@ StoreRef RegionStoreManager::BindAggregate(Store store, const TypedRegion *R,
 RegionBindings RegionStoreManager::addBinding(RegionBindings B, BindingKey K,
                                               SVal V) {
   const MemRegion *Base = K.getBaseRegion();
-  
+
   const ClusterBindings *ExistingCluster = B.lookup(Base);
   ClusterBindings Cluster = (ExistingCluster ? *ExistingCluster
                                              : CBFactory.getEmptyMap());
@@ -1908,7 +1908,7 @@ void removeDeadBindingsWorker::VisitBinding(SVal V) {
   // If V is a region, then add it to the worklist.
   if (const MemRegion *R = V.getAsRegion()) {
     AddToWorkList(R);
-    
+
     // All regions captured by a block are also live.
     if (const BlockDataRegion *BR = dyn_cast<BlockDataRegion>(R)) {
       BlockDataRegion::referenced_vars_iterator I = BR->referenced_vars_begin(),
@@ -1917,7 +1917,7 @@ void removeDeadBindingsWorker::VisitBinding(SVal V) {
         AddToWorkList(I.getCapturedRegion());
     }
   }
-    
+
 
   // Update the set of live symbols.
   for (SymExpr::symbol_iterator SI = V.symbol_begin(), SE = V.symbol_end();

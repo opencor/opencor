@@ -69,7 +69,7 @@ void AttributeFactory::reclaimPool(AttributeList *cur) {
     // Add 'cur' to the appropriate free-list.
     cur->NextInPool = FreeLists[freeListIndex];
     FreeLists[freeListIndex] = cur;
-    
+
     cur = next;
   } while (cur);
 }

@@ -1165,7 +1165,7 @@ _mm256_loadu2_m128d(double const *addr_hi, double const *addr_lo)
   struct __loadu_pd {
     __m128d v;
   } __attribute__((__packed__, __may_alias__));
-  
+
   __m256d v256 = _mm256_castpd128_pd256(((struct __loadu_pd*)addr_lo)->v);
   return _mm256_insertf128_pd(v256, ((struct __loadu_pd*)addr_hi)->v, 1);
 }

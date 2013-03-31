@@ -198,7 +198,7 @@ static bool HandleCallsInBlockInlinedThroughInvoke(BasicBlock *BB,
                                         InvokeArgs, CI->getName(), BB);
     II->setCallingConv(CI->getCallingConv());
     II->setAttributes(CI->getAttributes());
-    
+
     // Make sure that anything using the call now uses the invoke!  This also
     // updates the CallGraph if present, because it uses a WeakVH.
     CI->replaceAllUsesWith(II);
@@ -241,7 +241,7 @@ static void HandleInlinedInvoke(InvokeInst *II, BasicBlock *FirstNewBlock,
   }
 
   InvokeInliningInfo Invoke(II);
-  
+
   for (Function::iterator BB = FirstNewBlock, E = Caller->end(); BB != E; ++BB){
     if (InlinedCodeInfo.ContainsCalls)
       if (HandleCallsInBlockInlinedThroughInvoke(BB, Invoke)) {
@@ -294,7 +294,7 @@ static void UpdateCallGraphAfterInlining(CallSite CS,
     // Only copy the edge if the call was inlined!
     if (VMI == VMap.end() || VMI->second == 0)
       continue;
-    
+
     // If the call was inlined, but then constant folded, there is no edge to
     // add.  Check for this case.
     Instruction *NewCall = dyn_cast<Instruction>(VMI->second);
@@ -319,7 +319,7 @@ static void UpdateCallGraphAfterInlining(CallSite CS,
 
     CallerNode->addCalledFunction(CallSite(NewCall), I->second);
   }
-  
+
   // Update the call graph by deleting the edge from Callee to Caller.  We must
   // do this after the loop above in case Caller and Callee are the same.
   CallerNode->removeCallEdgeFor(CS);
@@ -348,44 +348,44 @@ static Value *HandleByValArgument(Value *Arg, Instruction *TheCall,
     if (getOrEnforceKnownAlignment(Arg, ByValAlignment,
                                    IFI.TD) >= ByValAlignment)
       return Arg;
-    
+
     // Otherwise, we have to make a memcpy to get a safe alignment.  This is bad
     // for code quality, but rarely happens and is required for correctness.
   }
-  
+
   LLVMContext &Context = Arg->getContext();
 
   Type *VoidPtrTy = Type::getInt8PtrTy(Context);
-  
+
   // Create the alloca.  If we have DataLayout, use nice alignment.
   unsigned Align = 1;
   if (IFI.TD)
     Align = IFI.TD->getPrefTypeAlignment(AggTy);
-  
+
   // If the byval had an alignment specified, we *must* use at least that
   // alignment, as it is required by the byval argument (and uses of the
   // pointer inside the callee).
   Align = std::max(Align, ByValAlignment);
-  
-  Function *Caller = TheCall->getParent()->getParent(); 
-  
-  Value *NewAlloca = new AllocaInst(AggTy, 0, Align, Arg->getName(), 
+
+  Function *Caller = TheCall->getParent()->getParent();
+
+  Value *NewAlloca = new AllocaInst(AggTy, 0, Align, Arg->getName(),
                                     &*Caller->begin()->begin());
   // Emit a memcpy.
   Type *Tys[3] = {VoidPtrTy, VoidPtrTy, Type::getInt64Ty(Context)};
   Function *MemCpyFn = Intrinsic::getDeclaration(Caller->getParent(),
-                                                 Intrinsic::memcpy, 
+                                                 Intrinsic::memcpy,
                                                  Tys);
   Value *DestCast = new BitCastInst(NewAlloca, VoidPtrTy, "tmp", TheCall);
   Value *SrcCast = new BitCastInst(Arg, VoidPtrTy, "tmp", TheCall);
-  
+
   Value *Size;
   if (IFI.TD == 0)
     Size = ConstantExpr::getSizeOf(AggTy);
   else
     Size = ConstantInt::get(Type::getInt64Ty(Context),
                             IFI.TD->getTypeStoreSize(AggTy));
-  
+
   // Always generate a memcpy of alignment 1 here because we don't know
   // the alignment of the src pointer.  Other optimizations can infer
   // better alignment.
@@ -395,7 +395,7 @@ static Value *HandleByValArgument(Value *Arg, Instruction *TheCall,
     ConstantInt::getFalse(Context) // isVolatile
   };
   IRBuilder<>(TheCall).CreateCall(MemCpyFn, CallArgs);
-  
+
   // Uses of the argument in the function should use our new alloca
   // instead.
   return NewAlloca;
@@ -438,11 +438,11 @@ static bool hasLifetimeMarkers(AllocaInst *AI) {
 
 /// updateInlinedAtInfo - Helper function used by fixupLineNumbers to
 /// recursively update InlinedAtEntry of a DebugLoc.
-static DebugLoc updateInlinedAtInfo(const DebugLoc &DL, 
+static DebugLoc updateInlinedAtInfo(const DebugLoc &DL,
                                     const DebugLoc &InlinedAtDL,
                                     LLVMContext &Ctx) {
   if (MDNode *IA = DL.getInlinedAt(Ctx)) {
-    DebugLoc NewInlinedAtDL 
+    DebugLoc NewInlinedAtDL
       = updateInlinedAtInfo(DebugLoc::getFromDILocation(IA), InlinedAtDL, Ctx);
     return DebugLoc::get(DL.getLine(), DL.getCol(), DL.getScope(Ctx),
                          NewInlinedAtDL.getAsMDNode(Ctx));
@@ -452,7 +452,7 @@ static DebugLoc updateInlinedAtInfo(const DebugLoc &DL,
                        InlinedAtDL.getAsMDNode(Ctx));
 }
 
-/// fixupLineNumbers - Update inlined instructions' line numbers to 
+/// fixupLineNumbers - Update inlined instructions' line numbers to
 /// to encode location where these instructions are inlined.
 static void fixupLineNumbers(Function *Fn, Function::iterator FI,
                              Instruction *TheCall) {
@@ -469,7 +469,7 @@ static void fixupLineNumbers(Function *Fn, Function::iterator FI,
         if (DbgValueInst *DVI = dyn_cast<DbgValueInst>(BI)) {
           LLVMContext &Ctx = BI->getContext();
           MDNode *InlinedAt = BI->getDebugLoc().getInlinedAt(Ctx);
-          DVI->setOperand(2, createInlinedVariable(DVI->getVariable(), 
+          DVI->setOperand(2, createInlinedVariable(DVI->getVariable(),
                                                    InlinedAt, Ctx));
         }
       }
@@ -494,7 +494,7 @@ bool llvm::InlineFunction(CallSite CS, InlineFunctionInfo &IFI,
 
   // If IFI has any state in it, zap it before we fill it in.
   IFI.reset();
-  
+
   const Function *CalledFunc = CS.getCalledFunction();
   if (CalledFunc == 0 ||          // Can't inline external function or indirect
       CalledFunc->isDeclaration() || // call, or call to a vararg function!
@@ -586,7 +586,7 @@ bool llvm::InlineFunction(CallSite CS, InlineFunctionInfo &IFI,
       if (CS.isByValArgument(ArgNo)) {
         ActualArg = HandleByValArgument(ActualArg, TheCall, CalledFunc, IFI,
                                         CalledFunc->getParamAlignment(ArgNo+1));
- 
+
         // Calls that we inline may use the new alloca, so we need to clear
         // their 'tail' flags if HandleByValArgument introduced a new alloca and
         // the callee has calls.
@@ -600,7 +600,7 @@ bool llvm::InlineFunction(CallSite CS, InlineFunctionInfo &IFI,
     // have no dead or constant instructions leftover after inlining occurs
     // (which can happen, e.g., because an argument was constant), but we'll be
     // happy with whatever the cloner can do.
-    CloneAndPruneFunctionInto(Caller, CalledFunc, VMap, 
+    CloneAndPruneFunctionInto(Caller, CalledFunc, VMap,
                               /*ModuleLevelChanges=*/false, Returns, ".i",
                               &InlinedFunctionInfo, IFI.TD, TheCall);
 
@@ -625,7 +625,7 @@ bool llvm::InlineFunction(CallSite CS, InlineFunctionInfo &IFI,
          E = FirstNewBlock->end(); I != E; ) {
       AllocaInst *AI = dyn_cast<AllocaInst>(I++);
       if (AI == 0) continue;
-      
+
       // If the alloca is now dead, remove it.  This often occurs due to code
       // specialization.
       if (AI->use_empty()) {
@@ -635,10 +635,10 @@ bool llvm::InlineFunction(CallSite CS, InlineFunctionInfo &IFI,
 
       if (!isa<Constant>(AI->getArraySize()))
         continue;
-      
+
       // Keep track of the static allocas that we inline into the caller.
       IFI.StaticAllocas.push_back(AI);
-      
+
       // Scan for the block of allocas that we can move over, and move them
       // all at once.
       while (isa<AllocaInst>(I) &&

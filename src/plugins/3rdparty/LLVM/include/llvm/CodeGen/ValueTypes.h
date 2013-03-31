@@ -345,7 +345,7 @@ namespace llvm {
       case i32 :
       case v4i8:
       case v2i16:
-      case v2f16: 
+      case v2f16:
       case v1i32: return 32;
       case x86mmx:
       case f64 :

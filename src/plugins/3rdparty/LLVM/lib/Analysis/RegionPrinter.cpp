@@ -176,7 +176,7 @@ INITIALIZE_PASS(RegionPrinter, "dot-regions",
 
 INITIALIZE_PASS(RegionViewer, "view-regions", "View regions of function",
                 true, true)
-                
+
 INITIALIZE_PASS(RegionOnlyViewer, "view-regions-only",
                 "View regions of function (with no function bodies)",
                 true, true)

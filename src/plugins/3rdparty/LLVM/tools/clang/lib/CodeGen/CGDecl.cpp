@@ -686,7 +686,7 @@ static bool canEmitInitWithFewStoresAfterMemset(llvm::Constant *Init,
     }
     return true;
   }
-  
+
   if (llvm::ConstantDataSequential *CDS =
         dyn_cast<llvm::ConstantDataSequential>(Init)) {
     for (unsigned i = 0, e = CDS->getNumElements(); i != e; ++i) {
@@ -715,8 +715,8 @@ static void emitStoresForInitAfterMemset(llvm::Constant *Init, llvm::Value *Loc,
     Builder.CreateStore(Init, Loc, isVolatile);
     return;
   }
-  
-  if (llvm::ConstantDataSequential *CDS = 
+
+  if (llvm::ConstantDataSequential *CDS =
         dyn_cast<llvm::ConstantDataSequential>(Init)) {
     for (unsigned i = 0, e = CDS->getNumElements(); i != e; ++i) {
       llvm::Constant *Elt = CDS->getElementAsConstant(i);

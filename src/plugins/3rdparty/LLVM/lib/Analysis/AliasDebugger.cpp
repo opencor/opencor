@@ -11,7 +11,7 @@
 // create a new value, they do not query AA without informing it of the value.
 // It acts as a shim over any other AA pass you want.
 //
-// Yes keeping track of every value in the program is expensive, but this is 
+// Yes keeping track of every value in the program is expensive, but this is
 // a debugging pass.
 //
 //===----------------------------------------------------------------------===//
@@ -27,7 +27,7 @@
 using namespace llvm;
 
 namespace {
-  
+
   class AliasDebugger : public ModulePass, public AliasAnalysis {
 
     //What we do is simple.  Keep track of every value the AA could
@@ -36,7 +36,7 @@ namespace {
     //means someone forgot to update the AA when creating new values
 
     std::set<const Value*> Vals;
-    
+
   public:
     static char ID; // Class identification, replacement for typeinfo
     AliasDebugger() : ModulePass(ID) {
@@ -59,10 +59,10 @@ namespace {
         Vals.insert(&*I);
         if(!I->isDeclaration()) {
           for (Function::arg_iterator AI = I->arg_begin(), AE = I->arg_end();
-               AI != AE; ++AI) 
-            Vals.insert(&*AI);     
+               AI != AE; ++AI)
+            Vals.insert(&*AI);
           for (Function::const_iterator FI = I->begin(), FE = I->end();
-               FI != FE; ++FI) 
+               FI != FE; ++FI)
             for (BasicBlock::const_iterator BI = FI->begin(), BE = FI->end();
                  BI != BE; ++BI) {
               Vals.insert(&*BI);
@@ -71,7 +71,7 @@ namespace {
                 Vals.insert(*OI);
             }
         }
-        
+
       }
       return false;
     }
@@ -90,7 +90,7 @@ namespace {
         return (AliasAnalysis*)this;
       return this;
     }
-    
+
     //------------------------------------------------
     // Implement the AliasAnalysis API
     //
@@ -112,7 +112,7 @@ namespace {
                                ImmutableCallSite CS2) {
       return AliasAnalysis::getModRefInfo(CS1,CS2);
     }
-    
+
     bool pointsToConstantMemory(const Location &Loc, bool OrLocal) {
       assert(Vals.find(Loc.Ptr) != Vals.end() && "Never seen value in AA before");
       return AliasAnalysis::pointsToConstantMemory(Loc, OrLocal);

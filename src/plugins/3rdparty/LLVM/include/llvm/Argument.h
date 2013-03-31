@@ -7,7 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 //
-// This file declares the Argument class. 
+// This file declares the Argument class.
 //
 //===----------------------------------------------------------------------===//
 
@@ -28,7 +28,7 @@ template<typename ValueSubClass, typename ItemParentClass>
 /// is a very simple Value. It is essentially a named (optional) type. When used
 /// in the body of a function, it represents the value of the actual argument
 /// the function was called with.
-/// @brief LLVM Argument representation  
+/// @brief LLVM Argument representation
 class Argument : public Value, public ilist_node<Argument> {
   virtual void anchor();
   Function *Parent;
@@ -46,13 +46,13 @@ public:
   inline       Function *getParent()       { return Parent; }
 
   /// getArgNo - Return the index of this formal argument in its containing
-  /// function.  For example in "void foo(int a, float b)" a is 0 and b is 1. 
+  /// function.  For example in "void foo(int a, float b)" a is 0 and b is 1.
   unsigned getArgNo() const;
-  
+
   /// hasByValAttr - Return true if this argument has the byval attribute on it
   /// in its containing function.
   bool hasByValAttr() const;
-  
+
   /// getParamAlignment - If this is a byval argument, return its alignment.
   unsigned getParamAlignment() const;
 
@@ -63,18 +63,18 @@ public:
   /// hasNoAliasAttr - Return true if this argument has the noalias attribute on
   /// it in its containing function.
   bool hasNoAliasAttr() const;
-  
+
   /// hasNoCaptureAttr - Return true if this argument has the nocapture
   /// attribute on it in its containing function.
   bool hasNoCaptureAttr() const;
-  
+
   /// hasStructRetAttr - Return true if this argument has the sret attribute on
   /// it in its containing function.
   bool hasStructRetAttr() const;
 
   /// addAttr - Add a Attribute to an argument
   void addAttr(Attributes);
-  
+
   /// removeAttr - Remove a Attribute from an argument
   void removeAttr(Attributes);
 

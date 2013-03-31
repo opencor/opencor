@@ -45,7 +45,7 @@ void formatted_raw_ostream::ComputeColumn(const char *Ptr, size_t Size) {
   if (Ptr <= Scanned && Scanned <= Ptr + Size) {
     // Scan all characters added since our last scan to determine the new
     // column.
-    ColumnScanned = CountColumns(ColumnScanned, Scanned, 
+    ColumnScanned = CountColumns(ColumnScanned, Scanned,
                                  Size - (Scanned - Ptr));
   } else
     ColumnScanned = CountColumns(ColumnScanned, Ptr, Size);
@@ -58,7 +58,7 @@ void formatted_raw_ostream::ComputeColumn(const char *Ptr, size_t Size) {
 ///
 /// \param NewCol - The column to move to.
 ///
-formatted_raw_ostream &formatted_raw_ostream::PadToColumn(unsigned NewCol) { 
+formatted_raw_ostream &formatted_raw_ostream::PadToColumn(unsigned NewCol) {
   // Figure out what's in the buffer and add it to the column count.
   ComputeColumn(getBufferStart(), GetNumBytesInBuffer());
 

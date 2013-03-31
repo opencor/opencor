@@ -42,7 +42,7 @@ VerifyDiagnosticConsumer::~VerifyDiagnosticConsumer() {
   assert(!ActiveSourceFiles && "Incomplete parsing of source files!");
   assert(!CurrentPreprocessor && "CurrentPreprocessor should be invalid!");
   SrcManager = 0;
-  CheckDiagnostics();  
+  CheckDiagnostics();
   Diags.takeClient();
   if (OwnsPrimaryClient)
     delete PrimaryClient;
@@ -768,7 +768,7 @@ DiagnosticConsumer *
 VerifyDiagnosticConsumer::clone(DiagnosticsEngine &Diags) const {
   if (!Diags.getClient())
     Diags.setClient(PrimaryClient->clone(Diags));
-  
+
   return new VerifyDiagnosticConsumer(Diags);
 }
 

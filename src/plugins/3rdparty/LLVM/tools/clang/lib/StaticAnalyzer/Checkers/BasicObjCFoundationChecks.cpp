@@ -108,7 +108,7 @@ void NilArgChecker::WarnNilArg(CheckerContext &C,
 {
   if (!BT)
     BT.reset(new APIMisuse("nil argument"));
-  
+
   if (ExplodedNode *N = C.generateSink()) {
     SmallString<128> sbuf;
     llvm::raw_svector_ostream os(sbuf);
@@ -126,20 +126,20 @@ void NilArgChecker::checkPreObjCMessage(const ObjCMethodCall &msg,
   const ObjCInterfaceDecl *ID = msg.getReceiverInterface();
   if (!ID)
     return;
-  
+
   if (findKnownClass(ID) == FC_NSString) {
     Selector S = msg.getSelector();
-    
+
     if (S.isUnarySelector())
       return;
-    
+
     // FIXME: This is going to be really slow doing these checks with
     //  lexical comparisons.
-    
+
     std::string NameStr = S.getAsString();
     StringRef Name(NameStr);
     assert(!Name.empty());
-    
+
     // FIXME: Checking for initWithFormat: will not work in most cases
     //  yet because [NSString alloc] returns id, not NSString*.  We will
     //  need support for tracking expected-type information in the analyzer
@@ -275,7 +275,7 @@ void CFNumberCreateChecker::checkPreStmt(const CallExpr *CE,
   const FunctionDecl *FD = C.getCalleeDecl(CE);
   if (!FD)
     return;
-  
+
   ASTContext &Ctx = C.getASTContext();
   if (!II)
     II = &Ctx.Idents.get("CFNumberCreate");
@@ -335,17 +335,17 @@ void CFNumberCreateChecker::checkPreStmt(const CallExpr *CE,
   // FIXME: We can actually create an abstract "CFNumber" object that has
   //  the bits initialized to the provided values.
   //
-  if (ExplodedNode *N = SourceSize < TargetSize ? C.generateSink() 
+  if (ExplodedNode *N = SourceSize < TargetSize ? C.generateSink()
                                                 : C.addTransition()) {
     SmallString<128> sbuf;
     llvm::raw_svector_ostream os(sbuf);
-    
+
     os << (SourceSize == 8 ? "An " : "A ")
        << SourceSize << " bit integer is used to initialize a CFNumber "
                         "object that represents "
        << (TargetSize == 8 ? "an " : "a ")
        << TargetSize << " bit integer. ";
-    
+
     if (SourceSize < TargetSize)
       os << (TargetSize - SourceSize)
       << " bits of the CFNumber value will be garbage." ;
@@ -355,7 +355,7 @@ void CFNumberCreateChecker::checkPreStmt(const CallExpr *CE,
 
     if (!BT)
       BT.reset(new APIMisuse("Bad use of CFNumberCreate"));
-    
+
     BugReport *report = new BugReport(*BT, os.str(), N);
     report->addRange(CE->getArg(2)->getSourceRange());
     C.emitReport(report);
@@ -387,7 +387,7 @@ void CFRetainReleaseChecker::checkPreStmt(const CallExpr *CE,
   const FunctionDecl *FD = C.getCalleeDecl(CE);
   if (!FD)
     return;
-  
+
   if (!BT) {
     ASTContext &Ctx = C.getASTContext();
     Retain = &Ctx.Idents.get("CFRetain");
@@ -468,18 +468,18 @@ public:
 
 void ClassReleaseChecker::checkPreObjCMessage(const ObjCMethodCall &msg,
                                               CheckerContext &C) const {
-  
+
   if (!BT) {
     BT.reset(new APIMisuse("message incorrectly sent to class instead of class "
                            "instance"));
-  
+
     ASTContext &Ctx = C.getASTContext();
     releaseS = GetNullarySelector("release", Ctx);
     retainS = GetNullarySelector("retain", Ctx);
     autoreleaseS = GetNullarySelector("autorelease", Ctx);
     drainS = GetNullarySelector("drain", Ctx);
   }
-  
+
   if (msg.isInstanceMessage())
     return;
   const ObjCInterfaceDecl *Class = msg.getReceiverInterface();
@@ -488,7 +488,7 @@ void ClassReleaseChecker::checkPreObjCMessage(const ObjCMethodCall &msg,
   Selector S = msg.getSelector();
   if (!(S == releaseS || S == retainS || S == autoreleaseS || S == drainS))
     return;
-  
+
   if (ExplodedNode *N = C.addTransition()) {
     SmallString<200> buf;
     llvm::raw_svector_ostream os(buf);
@@ -496,7 +496,7 @@ void ClassReleaseChecker::checkPreObjCMessage(const ObjCMethodCall &msg,
     os << "The '" << S.getAsString() << "' message should be sent to instances "
           "of class '" << Class->getName()
        << "' and not the class directly";
-  
+
     BugReport *report = new BugReport(*BT, os.str(), N);
     report->addRange(msg.getSourceRange());
     C.emitReport(report);
@@ -530,12 +530,12 @@ public:
 bool
 VariadicMethodTypeChecker::isVariadicMessage(const ObjCMethodCall &msg) const {
   const ObjCMethodDecl *MD = msg.getDecl();
-  
+
   if (!MD || !MD->isVariadic() || isa<ObjCProtocolDecl>(MD->getDeclContext()))
     return false;
-  
+
   Selector S = msg.getSelector();
-  
+
   if (msg.isInstanceMessage()) {
     // FIXME: Ideally we'd look at the receiver interface here, but that's not
     // useful for init, because alloc returns 'id'. In theory, this could lead
@@ -581,7 +581,7 @@ void VariadicMethodTypeChecker::checkPreObjCMessage(const ObjCMethodCall &msg,
 
     ASTContext &Ctx = C.getASTContext();
     arrayWithObjectsS = GetUnarySelector("arrayWithObjects", Ctx);
-    dictionaryWithObjectsAndKeysS = 
+    dictionaryWithObjectsAndKeysS =
       GetUnarySelector("dictionaryWithObjectsAndKeys", Ctx);
     setWithObjectsS = GetUnarySelector("setWithObjects", Ctx);
     orderedSetWithObjectsS = GetUnarySelector("orderedSetWithObjects", Ctx);
@@ -607,7 +607,7 @@ void VariadicMethodTypeChecker::checkPreObjCMessage(const ObjCMethodCall &msg,
   // Verify that all arguments have Objective-C types.
   llvm::Optional<ExplodedNode*> errorNode;
   ProgramStateRef state = C.getState();
-  
+
   for (unsigned I = variadicArgsBegin; I != variadicArgsEnd; ++I) {
     QualType ArgTy = msg.getArgExpr(I)->getType();
     if (ArgTy->isObjCObjectPointerType())
@@ -620,11 +620,11 @@ void VariadicMethodTypeChecker::checkPreObjCMessage(const ObjCMethodCall &msg,
     // Ignore pointer constants.
     if (isa<loc::ConcreteInt>(msg.getArgSVal(I)))
       continue;
-    
+
     // Ignore pointer types annotated with 'NSObject' attribute.
     if (C.getASTContext().isObjCNSObjectType(ArgTy))
       continue;
-    
+
     // Ignore CF references, which can be toll-free bridged.
     if (coreFoundation::isCFObjectRef(ArgTy))
       continue;
@@ -645,7 +645,7 @@ void VariadicMethodTypeChecker::checkPreObjCMessage(const ObjCMethodCall &msg,
     else
       os << "Argument to method '";
 
-    os << msg.getSelector().getAsString() 
+    os << msg.getSelector().getAsString()
        << "' should be an Objective-C pointer type, not '";
     ArgTy.print(os, C.getLangOpts());
     os << "'";
@@ -663,7 +663,7 @@ void VariadicMethodTypeChecker::checkPreObjCMessage(const ObjCMethodCall &msg,
 namespace {
 class ObjCLoopChecker
   : public Checker<check::PostStmt<ObjCForCollectionStmt> > {
-  
+
 public:
   void checkPostStmt(const ObjCForCollectionStmt *FCS, CheckerContext &C) const;
 };
@@ -673,7 +673,7 @@ static bool isKnownNonNilCollectionType(QualType T) {
   const ObjCObjectPointerType *PT = T->getAs<ObjCObjectPointerType>();
   if (!PT)
     return false;
-  
+
   const ObjCInterfaceDecl *ID = PT->getInterfaceDecl();
   if (!ID)
     return false;
@@ -693,17 +693,17 @@ static bool isKnownNonNilCollectionType(QualType T) {
 void ObjCLoopChecker::checkPostStmt(const ObjCForCollectionStmt *FCS,
                                     CheckerContext &C) const {
   ProgramStateRef State = C.getState();
-  
+
   // Check if this is the branch for the end of the loop.
   SVal CollectionSentinel = State->getSVal(FCS, C.getLocationContext());
   if (CollectionSentinel.isZeroConstant())
     return;
-  
+
   // See if the collection is one where we /know/ the elements are non-nil.
   const Expr *Collection = FCS->getCollection();
   if (!isKnownNonNilCollectionType(Collection->getType()))
     return;
-  
+
   // FIXME: Copied from ExprEngineObjC.
   const Stmt *Element = FCS->getElement();
   SVal ElementVar;

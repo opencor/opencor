@@ -165,8 +165,8 @@ void QwtPlotLayout::LayoutData::init( const QwtPlot *plot, const QRectF &rect )
 
     // canvas
 
-    plot->canvas()->getContentsMargins( 
-        &canvas.contentsMargins[ QwtPlot::yLeft ], 
+    plot->canvas()->getContentsMargins(
+        &canvas.contentsMargins[ QwtPlot::yLeft ],
         &canvas.contentsMargins[ QwtPlot::xTop ],
         &canvas.contentsMargins[ QwtPlot::yRight ],
         &canvas.contentsMargins[ QwtPlot::xBottom ] );
@@ -1011,7 +1011,7 @@ void QwtPlotLayout::alignScales( Options options,
 
         if ( !( options & IgnoreFrames ) )
         {
-            backboneOffset[axis] += 
+            backboneOffset[axis] +=
                 d_data->layoutData.canvas.contentsMargins[axis];
         }
     }
@@ -1080,7 +1080,7 @@ void QwtPlotLayout::alignScales( Options options,
                      */
                     const double cRight = canvasRect.right(); // qreal -> double
                     canvasRect.setRight( qMin( cRight, axisRect.right() + dx ) );
-                }   
+                }
 
                 const double maxRight = rightScaleRect.right();
                 const double right = axisRect.right() - rightOffset;

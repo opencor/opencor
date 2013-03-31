@@ -135,14 +135,14 @@ namespace {
     Expr *NewBase;
     Expr *NewKeyExpr;
     ObjCSubscriptRefRebuilder(Sema &S, Expr *newBase, Expr *newKeyExpr)
-    : Rebuilder<ObjCSubscriptRefRebuilder>(S), 
+    : Rebuilder<ObjCSubscriptRefRebuilder>(S),
       NewBase(newBase), NewKeyExpr(newKeyExpr) {}
-    
+
     typedef ObjCSubscriptRefExpr specific_type;
     Expr *rebuildSpecific(ObjCSubscriptRefExpr *refExpr) {
       assert(refExpr->getBaseExpr());
       assert(refExpr->getKeyExpr());
-      
+
       return new (S.Context)
         ObjCSubscriptRefExpr(NewBase,
                              NewKeyExpr,
@@ -152,7 +152,7 @@ namespace {
                              refExpr->getRBracket());
     }
   };
-  
+
   class PseudoOpBuilder {
   public:
     Sema &S;
@@ -258,27 +258,27 @@ namespace {
    OpaqueValueExpr *InstanceKey;
    ObjCMethodDecl *AtIndexGetter;
    Selector AtIndexGetterSelector;
-  
+
    ObjCMethodDecl *AtIndexSetter;
    Selector AtIndexSetterSelector;
-  
+
  public:
     ObjCSubscriptOpBuilder(Sema &S, ObjCSubscriptRefExpr *refExpr) :
-      PseudoOpBuilder(S, refExpr->getSourceRange().getBegin()), 
+      PseudoOpBuilder(S, refExpr->getSourceRange().getBegin()),
       RefExpr(refExpr),
-    InstanceBase(0), InstanceKey(0), 
+    InstanceBase(0), InstanceKey(0),
     AtIndexGetter(0), AtIndexSetter(0) { }
-  
+
    ExprResult buildRValueOperation(Expr *op);
    ExprResult buildAssignmentOperation(Scope *Sc,
                                        SourceLocation opLoc,
                                        BinaryOperatorKind opcode,
                                        Expr *LHS, Expr *RHS);
    Expr *rebuildAndCaptureObject(Expr *syntacticBase);
-   
+
    bool findAtIndexGetter();
    bool findAtIndexSetter();
-  
+
    ExprResult buildGet();
    ExprResult buildSet(Expr *op, SourceLocation, bool);
  };
@@ -288,11 +288,11 @@ namespace {
 /// Capture the given expression in an OpaqueValueExpr.
 OpaqueValueExpr *PseudoOpBuilder::capture(Expr *e) {
   // Make a new OVE whose source is the given expression.
-  OpaqueValueExpr *captured = 
+  OpaqueValueExpr *captured =
     new (S.Context) OpaqueValueExpr(GenericLoc, e->getType(),
                                     e->getValueKind(), e->getObjectKind(),
                                     e);
-  
+
   // Make sure we bind that in the semantics.
   addSemanticExpr(captured);
   return captured;
@@ -308,7 +308,7 @@ OpaqueValueExpr *PseudoOpBuilder::captureValueAsResult(Expr *e) {
   assert(ResultIndex == PseudoObjectExpr::NoResult);
 
   // If the expression hasn't already been captured, just capture it
-  // and set the new semantic 
+  // and set the new semantic
   if (!isa<OpaqueValueExpr>(e)) {
     OpaqueValueExpr *cap = capture(e);
     setResultToLastSemantic();
@@ -511,12 +511,12 @@ bool ObjCPropertyOpBuilder::findGetter() {
       // Must build the getter selector the hard way.
       ObjCMethodDecl *setter = RefExpr->getImplicitPropertySetter();
       assert(setter && "both setter and getter are null - cannot happen");
-      IdentifierInfo *setterName = 
+      IdentifierInfo *setterName =
         setter->getSelector().getIdentifierInfoForSlot(0);
       const char *compStr = setterName->getNameStart();
       compStr += 3;
       IdentifierInfo *getterName = &S.Context.Idents.get(compStr);
-      GetterSelector = 
+      GetterSelector =
         S.PP.getSelectorTable().getNullarySelector(getterName);
       return false;
 
@@ -531,7 +531,7 @@ bool ObjCPropertyOpBuilder::findGetter() {
 /// Try to find the most accurate setter declaration for the property
 /// reference.
 ///
-/// \return true if a setter was found, in which case Setter 
+/// \return true if a setter was found, in which case Setter
 bool ObjCPropertyOpBuilder::findSetter(bool warn) {
   // For implicit properties, just trust the lookup we already did.
   if (RefExpr->isImplicitProperty()) {
@@ -862,9 +862,9 @@ ExprResult ObjCPropertyOpBuilder::complete(Expr *SyntacticForm) {
 // ObjCSubscript build stuff.
 //
 
-/// objective-c subscripting-specific behavior for doing lvalue-to-rvalue 
+/// objective-c subscripting-specific behavior for doing lvalue-to-rvalue
 /// conversion.
-/// FIXME. Remove this routine if it is proven that no additional 
+/// FIXME. Remove this routine if it is proven that no additional
 /// specifity is needed.
 ExprResult ObjCSubscriptOpBuilder::buildRValueOperation(Expr *op) {
   ExprResult result = PseudoOpBuilder::buildRValueOperation(op);
@@ -882,49 +882,49 @@ ObjCSubscriptOpBuilder::buildAssignmentOperation(Scope *Sc,
   // There must be a method to do the Index'ed assignment.
   if (!findAtIndexSetter())
     return ExprError();
-  
+
   // Verify that we can do a compound assignment.
   if (opcode != BO_Assign && !findAtIndexGetter())
     return ExprError();
-  
+
   ExprResult result =
   PseudoOpBuilder::buildAssignmentOperation(Sc, opcLoc, opcode, LHS, RHS);
   if (result.isInvalid()) return ExprError();
-  
+
   // Various warnings about objc Index'ed assignments in ARC.
   if (S.getLangOpts().ObjCAutoRefCount && InstanceBase) {
     S.checkRetainCycles(InstanceBase->getSourceExpr(), RHS);
     S.checkUnsafeExprAssigns(opcLoc, LHS, RHS);
   }
-  
+
   return result;
 }
 
 /// Capture the base object of an Objective-C Index'ed expression.
 Expr *ObjCSubscriptOpBuilder::rebuildAndCaptureObject(Expr *syntacticBase) {
   assert(InstanceBase == 0);
-  
+
   // Capture base expression in an OVE and rebuild the syntactic
   // form to use the OVE as its base expression.
   InstanceBase = capture(RefExpr->getBaseExpr());
   InstanceKey = capture(RefExpr->getKeyExpr());
-    
+
   syntacticBase =
-    ObjCSubscriptRefRebuilder(S, InstanceBase, 
+    ObjCSubscriptRefRebuilder(S, InstanceBase,
                               InstanceKey).rebuild(syntacticBase);
-  
+
   return syntacticBase;
 }
 
-/// CheckSubscriptingKind - This routine decide what type 
+/// CheckSubscriptingKind - This routine decide what type
 /// of indexing represented by "FromE" is being done.
-Sema::ObjCSubscriptKind 
+Sema::ObjCSubscriptKind
   Sema::CheckSubscriptingKind(Expr *FromE) {
   // If the expression already has integral or enumeration type, we're golden.
   QualType T = FromE->getType();
   if (T->isIntegralOrEnumerationType())
     return OS_Array;
-  
+
   // If we don't have a class type in C++, there's no way we can get an
   // expression of integral or enumeration type.
   const RecordType *RecordTy = T->getAs<RecordType>();
@@ -932,7 +932,7 @@ Sema::ObjCSubscriptKind
     // All other scalar cases are assumed to be dictionary indexing which
     // caller handles, with diagnostics if needed.
     return OS_Dictionary;
-  if (!getLangOpts().CPlusPlus || 
+  if (!getLangOpts().CPlusPlus ||
       !RecordTy || RecordTy->isIncompleteType()) {
     // No indexing can be done. Issue diagnostics and quit.
     const Expr *IndexExpr = FromE->IgnoreParenImpCasts();
@@ -944,22 +944,22 @@ Sema::ObjCSubscriptKind
         << T;
     return OS_Error;
   }
-  
+
   // We must have a complete class type.
-  if (RequireCompleteType(FromE->getExprLoc(), T, 
+  if (RequireCompleteType(FromE->getExprLoc(), T,
                           diag::err_objc_index_incomplete_class_type, FromE))
     return OS_Error;
-  
+
   // Look for a conversion to an integral, enumeration type, or
   // objective-C pointer type.
   UnresolvedSet<4> ViableConversions;
   UnresolvedSet<4> ExplicitConversions;
   const UnresolvedSetImpl *Conversions
     = cast<CXXRecordDecl>(RecordTy->getDecl())->getVisibleConversionFunctions();
-  
+
   int NoIntegrals=0, NoObjCIdPointers=0;
   SmallVector<CXXConversionDecl *, 4> ConversionDecls;
-    
+
   for (UnresolvedSetImpl::iterator I = Conversions->begin(),
        E = Conversions->end();
        I != E;
@@ -991,56 +991,56 @@ Sema::ObjCSubscriptKind
       << FromE->getType();
   for (unsigned int i = 0; i < ConversionDecls.size(); i++)
     Diag(ConversionDecls[i]->getLocation(), diag::not_conv_function_declared_at);
-    
+
   return OS_Error;
 }
 
 /// CheckKeyForObjCARCConversion - This routine suggests bridge casting of CF
 /// objects used as dictionary subscript key objects.
-static void CheckKeyForObjCARCConversion(Sema &S, QualType ContainerT, 
+static void CheckKeyForObjCARCConversion(Sema &S, QualType ContainerT,
                                          Expr *Key) {
   if (ContainerT.isNull())
     return;
   // dictionary subscripting.
   // - (id)objectForKeyedSubscript:(id)key;
   IdentifierInfo *KeyIdents[] = {
-    &S.Context.Idents.get("objectForKeyedSubscript")  
+    &S.Context.Idents.get("objectForKeyedSubscript")
   };
   Selector GetterSelector = S.Context.Selectors.getSelector(1, KeyIdents);
-  ObjCMethodDecl *Getter = S.LookupMethodInObjectType(GetterSelector, ContainerT, 
+  ObjCMethodDecl *Getter = S.LookupMethodInObjectType(GetterSelector, ContainerT,
                                                       true /*instance*/);
   if (!Getter)
     return;
   QualType T = Getter->param_begin()[0]->getType();
-  S.CheckObjCARCConversion(Key->getSourceRange(), 
+  S.CheckObjCARCConversion(Key->getSourceRange(),
                          T, Key, Sema::CCK_ImplicitConversion);
 }
 
 bool ObjCSubscriptOpBuilder::findAtIndexGetter() {
   if (AtIndexGetter)
     return true;
-  
+
   Expr *BaseExpr = RefExpr->getBaseExpr();
   QualType BaseT = BaseExpr->getType();
-  
+
   QualType ResultType;
   if (const ObjCObjectPointerType *PTy =
       BaseT->getAs<ObjCObjectPointerType>()) {
     ResultType = PTy->getPointeeType();
-    if (const ObjCObjectType *iQFaceTy = 
+    if (const ObjCObjectType *iQFaceTy =
         ResultType->getAsObjCQualifiedInterfaceType())
       ResultType = iQFaceTy->getBaseType();
   }
-  Sema::ObjCSubscriptKind Res = 
+  Sema::ObjCSubscriptKind Res =
     S.CheckSubscriptingKind(RefExpr->getKeyExpr());
   if (Res == Sema::OS_Error) {
     if (S.getLangOpts().ObjCAutoRefCount)
-      CheckKeyForObjCARCConversion(S, ResultType, 
+      CheckKeyForObjCARCConversion(S, ResultType,
                                    RefExpr->getKeyExpr());
     return false;
   }
   bool arrayRef = (Res == Sema::OS_Array);
-  
+
   if (ResultType.isNull()) {
     S.Diag(BaseExpr->getExprLoc(), diag::err_objc_subscript_base_type)
       << BaseExpr->getType() << arrayRef;
@@ -1050,26 +1050,26 @@ bool ObjCSubscriptOpBuilder::findAtIndexGetter() {
     // dictionary subscripting.
     // - (id)objectForKeyedSubscript:(id)key;
     IdentifierInfo *KeyIdents[] = {
-      &S.Context.Idents.get("objectForKeyedSubscript")  
+      &S.Context.Idents.get("objectForKeyedSubscript")
     };
     AtIndexGetterSelector = S.Context.Selectors.getSelector(1, KeyIdents);
   }
   else {
     // - (id)objectAtIndexedSubscript:(size_t)index;
     IdentifierInfo *KeyIdents[] = {
-      &S.Context.Idents.get("objectAtIndexedSubscript")  
+      &S.Context.Idents.get("objectAtIndexedSubscript")
     };
-  
+
     AtIndexGetterSelector = S.Context.Selectors.getSelector(1, KeyIdents);
   }
-  
-  AtIndexGetter = S.LookupMethodInObjectType(AtIndexGetterSelector, ResultType, 
+
+  AtIndexGetter = S.LookupMethodInObjectType(AtIndexGetterSelector, ResultType,
                                              true /*instance*/);
   bool receiverIdType = (BaseT->isObjCIdType() ||
                          BaseT->isObjCQualifiedIdType());
-  
+
   if (!AtIndexGetter && S.getLangOpts().DebuggerObjCLiteral) {
-    AtIndexGetter = ObjCMethodDecl::Create(S.Context, SourceLocation(), 
+    AtIndexGetter = ObjCMethodDecl::Create(S.Context, SourceLocation(),
                            SourceLocation(), AtIndexGetterSelector,
                            S.Context.getObjCIdType() /*ReturnType*/,
                            0 /*TypeSourceInfo */,
@@ -1089,7 +1089,7 @@ bool ObjCSubscriptOpBuilder::findAtIndexGetter() {
                                                 SC_None,
                                                 SC_None,
                                                 0);
-    AtIndexGetter->setMethodParams(S.Context, Argument, 
+    AtIndexGetter->setMethodParams(S.Context, Argument,
                                    ArrayRef<SourceLocation>());
   }
 
@@ -1099,20 +1099,20 @@ bool ObjCSubscriptOpBuilder::findAtIndexGetter() {
       << BaseExpr->getType() << 0 << arrayRef;
       return false;
     }
-    AtIndexGetter = 
-      S.LookupInstanceMethodInGlobalPool(AtIndexGetterSelector, 
-                                         RefExpr->getSourceRange(), 
+    AtIndexGetter =
+      S.LookupInstanceMethodInGlobalPool(AtIndexGetterSelector,
+                                         RefExpr->getSourceRange(),
                                          true, false);
   }
-  
+
   if (AtIndexGetter) {
     QualType T = AtIndexGetter->param_begin()[0]->getType();
     if ((arrayRef && !T->isIntegralOrEnumerationType()) ||
         (!arrayRef && !T->isObjCObjectPointerType())) {
-      S.Diag(RefExpr->getKeyExpr()->getExprLoc(), 
+      S.Diag(RefExpr->getKeyExpr()->getExprLoc(),
              arrayRef ? diag::err_objc_subscript_index_type
                       : diag::err_objc_subscript_key_type) << T;
-      S.Diag(AtIndexGetter->param_begin()[0]->getLocation(), 
+      S.Diag(AtIndexGetter->param_begin()[0]->getLocation(),
              diag::note_parameter_type) << T;
       return false;
     }
@@ -1130,35 +1130,35 @@ bool ObjCSubscriptOpBuilder::findAtIndexGetter() {
 bool ObjCSubscriptOpBuilder::findAtIndexSetter() {
   if (AtIndexSetter)
     return true;
-  
+
   Expr *BaseExpr = RefExpr->getBaseExpr();
   QualType BaseT = BaseExpr->getType();
-  
+
   QualType ResultType;
   if (const ObjCObjectPointerType *PTy =
       BaseT->getAs<ObjCObjectPointerType>()) {
     ResultType = PTy->getPointeeType();
-    if (const ObjCObjectType *iQFaceTy = 
+    if (const ObjCObjectType *iQFaceTy =
         ResultType->getAsObjCQualifiedInterfaceType())
       ResultType = iQFaceTy->getBaseType();
   }
-  
-  Sema::ObjCSubscriptKind Res = 
+
+  Sema::ObjCSubscriptKind Res =
     S.CheckSubscriptingKind(RefExpr->getKeyExpr());
   if (Res == Sema::OS_Error) {
     if (S.getLangOpts().ObjCAutoRefCount)
-      CheckKeyForObjCARCConversion(S, ResultType, 
+      CheckKeyForObjCARCConversion(S, ResultType,
                                    RefExpr->getKeyExpr());
     return false;
   }
   bool arrayRef = (Res == Sema::OS_Array);
-  
+
   if (ResultType.isNull()) {
     S.Diag(BaseExpr->getExprLoc(), diag::err_objc_subscript_base_type)
       << BaseExpr->getType() << arrayRef;
     return false;
   }
-  
+
   if (!arrayRef) {
     // dictionary subscripting.
     // - (void)setObject:(id)object forKeyedSubscript:(id)key;
@@ -1176,9 +1176,9 @@ bool ObjCSubscriptOpBuilder::findAtIndexSetter() {
     };
     AtIndexSetterSelector = S.Context.Selectors.getSelector(2, KeyIdents);
   }
-  AtIndexSetter = S.LookupMethodInObjectType(AtIndexSetterSelector, ResultType, 
+  AtIndexSetter = S.LookupMethodInObjectType(AtIndexSetterSelector, ResultType,
                                              true /*instance*/);
-  
+
   bool receiverIdType = (BaseT->isObjCIdType() ||
                          BaseT->isObjCQualifiedIdType());
 
@@ -1194,7 +1194,7 @@ bool ObjCSubscriptOpBuilder::findAtIndexSetter() {
                            /*isPropertyAccessor=*/false,
                            /*isImplicitlyDeclared=*/true, /*isDefined=*/false,
                            ObjCMethodDecl::Required,
-                           false); 
+                           false);
     SmallVector<ParmVarDecl *, 2> Params;
     ParmVarDecl *object = ParmVarDecl::Create(S.Context, AtIndexSetter,
                                                 SourceLocation(), SourceLocation(),
@@ -1218,35 +1218,35 @@ bool ObjCSubscriptOpBuilder::findAtIndexSetter() {
     Params.push_back(key);
     AtIndexSetter->setMethodParams(S.Context, Params, ArrayRef<SourceLocation>());
   }
-  
+
   if (!AtIndexSetter) {
     if (!receiverIdType) {
-      S.Diag(BaseExpr->getExprLoc(), 
+      S.Diag(BaseExpr->getExprLoc(),
              diag::err_objc_subscript_method_not_found)
       << BaseExpr->getType() << 1 << arrayRef;
       return false;
     }
-    AtIndexSetter = 
-      S.LookupInstanceMethodInGlobalPool(AtIndexSetterSelector, 
-                                         RefExpr->getSourceRange(), 
+    AtIndexSetter =
+      S.LookupInstanceMethodInGlobalPool(AtIndexSetterSelector,
+                                         RefExpr->getSourceRange(),
                                          true, false);
   }
-  
+
   bool err = false;
   if (AtIndexSetter && arrayRef) {
     QualType T = AtIndexSetter->param_begin()[1]->getType();
     if (!T->isIntegralOrEnumerationType()) {
-      S.Diag(RefExpr->getKeyExpr()->getExprLoc(), 
+      S.Diag(RefExpr->getKeyExpr()->getExprLoc(),
              diag::err_objc_subscript_index_type) << T;
-      S.Diag(AtIndexSetter->param_begin()[1]->getLocation(), 
+      S.Diag(AtIndexSetter->param_begin()[1]->getLocation(),
              diag::note_parameter_type) << T;
       err = true;
     }
     T = AtIndexSetter->param_begin()[0]->getType();
     if (!T->isObjCObjectPointerType()) {
-      S.Diag(RefExpr->getBaseExpr()->getExprLoc(), 
+      S.Diag(RefExpr->getBaseExpr()->getExprLoc(),
              diag::err_objc_subscript_object_type) << T << arrayRef;
-      S.Diag(AtIndexSetter->param_begin()[0]->getLocation(), 
+      S.Diag(AtIndexSetter->param_begin()[0]->getLocation(),
              diag::note_parameter_type) << T;
       err = true;
     }
@@ -1261,7 +1261,7 @@ bool ObjCSubscriptOpBuilder::findAtIndexSetter() {
         else
           S.Diag(RefExpr->getBaseExpr()->getExprLoc(),
                  diag::err_objc_subscript_dic_object_type) << T;
-        S.Diag(AtIndexSetter->param_begin()[i]->getLocation(), 
+        S.Diag(AtIndexSetter->param_begin()[i]->getLocation(),
                diag::note_parameter_type) << T;
         err = true;
       }
@@ -1275,13 +1275,13 @@ bool ObjCSubscriptOpBuilder::findAtIndexSetter() {
 ExprResult ObjCSubscriptOpBuilder::buildGet() {
   if (!findAtIndexGetter())
     return ExprError();
-  
+
   QualType receiverType = InstanceBase->getType();
-    
+
   // Build a message-send.
   ExprResult msg;
   Expr *Index = InstanceKey;
-  
+
   // Arguments.
   Expr *args[] = { Index };
   assert(InstanceBase);
@@ -1301,20 +1301,20 @@ ExprResult ObjCSubscriptOpBuilder::buildSet(Expr *op, SourceLocation opcLoc,
                                            bool captureSetValueAsResult) {
   if (!findAtIndexSetter())
     return ExprError();
-  
+
   QualType receiverType = InstanceBase->getType();
   Expr *Index = InstanceKey;
-  
+
   // Arguments.
   Expr *args[] = { op, Index };
-  
+
   // Build a message-send.
   ExprResult msg = S.BuildInstanceMessageImplicit(InstanceBase, receiverType,
                                                   GenericLoc,
                                                   AtIndexSetterSelector,
                                                   AtIndexSetter,
                                                   MultiExprArg(args, 2));
-  
+
   if (!msg.isInvalid() && captureSetValueAsResult) {
     ObjCMessageExpr *msgExpr =
       cast<ObjCMessageExpr>(msg.get()->IgnoreImplicit());
@@ -1322,7 +1322,7 @@ ExprResult ObjCSubscriptOpBuilder::buildSet(Expr *op, SourceLocation opcLoc,
     if (CanCaptureValueOfType(arg->getType()))
       msgExpr->setArg(0, captureValueAsResult(arg));
   }
-  
+
   return msg;
 }
 
@@ -1407,7 +1407,7 @@ static Expr *stripOpaqueValuesFromPseudoObjectRef(Sema &S, Expr *E) {
     // Class and super property references don't have opaque values in them.
     if (refExpr->isClassReceiver() || refExpr->isSuperReceiver())
       return E;
-    
+
     assert(refExpr->isObjectReceiver() && "Unknown receiver kind?");
     OpaqueValueExpr *baseOVE = cast<OpaqueValueExpr>(refExpr->getBase());
     return ObjCPropertyRefRebuilder(S, baseOVE->getSourceExpr()).rebuild(E);
@@ -1415,7 +1415,7 @@ static Expr *stripOpaqueValuesFromPseudoObjectRef(Sema &S, Expr *E) {
                = dyn_cast<ObjCSubscriptRefExpr>(opaqueRef)) {
     OpaqueValueExpr *baseOVE = cast<OpaqueValueExpr>(refExpr->getBaseExpr());
     OpaqueValueExpr *keyOVE = cast<OpaqueValueExpr>(refExpr->getKeyExpr());
-    return ObjCSubscriptRefRebuilder(S, baseOVE->getSourceExpr(), 
+    return ObjCSubscriptRefRebuilder(S, baseOVE->getSourceExpr(),
                                      keyOVE->getSourceExpr()).rebuild(E);
   } else {
     llvm_unreachable("unknown pseudo-object kind!");

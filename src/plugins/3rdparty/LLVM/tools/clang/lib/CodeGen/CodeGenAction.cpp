@@ -65,7 +65,7 @@ namespace clang {
       TargetOpts(targetopts),
       LangOpts(langopts),
       AsmOutStream(OS),
-      Context(), 
+      Context(),
       LLVMIRGeneration("LLVM IR Generation Time"),
       Gen(CreateLLVMCodeGen(Diags, infile, compopts, C)),
       LinkModule(LinkModule)
@@ -160,7 +160,7 @@ namespace clang {
 
       EmitBackendOutput(Diags, CodeGenOpts, TargetOpts, LangOpts,
                         TheModule.get(), Action, AsmOutStream);
-      
+
       Ctx.setInlineAsmDiagnosticHandler(OldHandler, OldContext);
     }
 
@@ -188,7 +188,7 @@ namespace clang {
     void InlineAsmDiagHandler2(const llvm::SMDiagnostic &,
                                SourceLocation LocCookie);
   };
-  
+
   void BackendConsumer::anchor() {}
 }
 
@@ -237,14 +237,14 @@ void BackendConsumer::InlineAsmDiagHandler2(const llvm::SMDiagnostic &D,
   FullSourceLoc Loc;
   if (D.getLoc() != SMLoc())
     Loc = ConvertBackendLocation(D, Context->getSourceManager());
-  
+
 
   // If this problem has clang-level source location information, report the
   // issue as being an error in the source with a note showing the instantiated
   // code.
   if (LocCookie.isValid()) {
     Diags.Report(LocCookie, diag::err_fe_inline_asm).AddString(Message);
-    
+
     if (D.getLoc().isValid()) {
       DiagnosticBuilder B = Diags.Report(Loc, diag::note_fe_inline_asm_here);
       // Convert the SMDiagnostic ranges into SourceRange and attach them
@@ -258,7 +258,7 @@ void BackendConsumer::InlineAsmDiagHandler2(const llvm::SMDiagnostic &D,
     }
     return;
   }
-  
+
   // Otherwise, report the backend error as occurring in the generated .s file.
   // If Loc is invalid, we still need to report the error, it just gets no
   // location info.
@@ -353,7 +353,7 @@ ASTConsumer *CodeGenAction::CreateASTConsumer(CompilerInstance &CI,
     }
   }
 
-  BEConsumer = 
+  BEConsumer =
       new BackendConsumer(BA, CI.getDiagnostics(),
                           CI.getCodeGenOpts(), CI.getTargetOpts(),
                           CI.getLangOpts(),

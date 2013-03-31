@@ -43,7 +43,7 @@ public:
   /// getKnownValue - evaluates a given SVal. If the SVal has only one possible
   ///  (integer) value, that value is returned. Otherwise, returns NULL.
   virtual const llvm::APSInt *getKnownValue(ProgramStateRef state, SVal V);
-  
+
   SVal MakeSymIntVal(const SymExpr *LHS, BinaryOperator::Opcode op,
                      const llvm::APSInt &RHS, QualType resultTy);
 };
@@ -584,7 +584,7 @@ SVal SimpleSValBuilder::evalBinOpLL(ProgramStateRef state,
     // on the ABI).
     // FIXME: we can probably do a comparison against other MemRegions, though.
     // FIXME: is there a way to tell if two labels refer to the same location?
-    return UnknownVal(); 
+    return UnknownVal();
 
   case loc::ConcreteIntKind: {
     // If one of the operands is a symbol and the other is a constant,
@@ -845,11 +845,11 @@ SVal SimpleSValBuilder::evalBinOpLL(ProgramStateRef state,
 SVal SimpleSValBuilder::evalBinOpLN(ProgramStateRef state,
                                   BinaryOperator::Opcode op,
                                   Loc lhs, NonLoc rhs, QualType resultTy) {
-  
+
   // Special case: rhs is a zero constant.
   if (rhs.isZeroConstant())
     return lhs;
-  
+
   // Special case: 'rhs' is an integer that has the same width as a pointer and
   // we are using the integer location in a comparison.  Normally this cannot be
   // triggered, but transfer functions like those for OSCommpareAndSwapBarrier32
@@ -869,7 +869,7 @@ SVal SimpleSValBuilder::evalBinOpLN(ProgramStateRef state,
     }
     return UnknownVal();
   }
-  
+
   // We are dealing with pointer arithmetic.
 
   // Handle pointer arithmetic on constant values.
@@ -886,7 +886,7 @@ SVal SimpleSValBuilder::evalBinOpLN(ProgramStateRef state,
       // Offset the increment by the pointer size.
       llvm::APSInt Multiplicand(rightI.getBitWidth(), /* isUnsigned */ true);
       rightI *= Multiplicand;
-      
+
       // Compute the adjusted pointer.
       switch (op) {
         case BO_Add:
@@ -928,7 +928,7 @@ SVal SimpleSValBuilder::evalBinOpLN(ProgramStateRef state,
                                                        superR, getContext()));
     }
   }
-  return UnknownVal();  
+  return UnknownVal();
 }
 
 const llvm::APSInt *SimpleSValBuilder::getKnownValue(ProgramStateRef state,

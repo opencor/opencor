@@ -121,7 +121,7 @@ namespace {
 }
 
 char MetaRenamer::ID = 0;
-INITIALIZE_PASS(MetaRenamer, "metarenamer", 
+INITIALIZE_PASS(MetaRenamer, "metarenamer",
                 "Assign new names to everything", false, false)
 //===----------------------------------------------------------------------===//
 //

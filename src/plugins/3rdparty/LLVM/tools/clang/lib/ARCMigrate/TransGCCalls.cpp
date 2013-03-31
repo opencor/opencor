@@ -42,7 +42,7 @@ public:
         TA.reportWarning("call returns pointer to GC managed memory; "
                        "it will become unmanaged in ARC",
                        E->getLocStart(), E->getSourceRange());
-      else 
+      else
         TA.reportError("call returns pointer to GC managed memory; "
                        "it will become unmanaged in ARC",
                        E->getLocStart(), E->getSourceRange());

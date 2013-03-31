@@ -34,11 +34,11 @@ public:
 
   RegisterRegAlloc(const char *N, const char *D, FunctionPassCtor C)
   : MachinePassRegistryNode(N, D, (MachinePassCtor)C)
-  { 
-     Registry.Add(this); 
+  {
+     Registry.Add(this);
   }
   ~RegisterRegAlloc() { Registry.Remove(this); }
-  
+
 
   // Accessors.
   //
@@ -57,7 +57,7 @@ public:
   static void setListener(MachinePassRegistryListener *L) {
     Registry.setListener(L);
   }
-  
+
 };
 
 } // end namespace llvm

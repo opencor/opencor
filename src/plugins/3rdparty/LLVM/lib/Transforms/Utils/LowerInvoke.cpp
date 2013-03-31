@@ -219,7 +219,7 @@ void LowerInvoke::rewriteExpensiveInvoke(InvokeInst *II, unsigned InvokeNo,
   // Insert a store of the invoke num before the invoke and store zero into the
   // location afterward.
   new StoreInst(InvokeNoC, InvokeNum, true, II);  // volatile
-  
+
   // Insert a store of the stack ptr before the invoke, so we can restore it
   // later in the exception case.
   CallInst* StackSaveRet = CallInst::Create(StackSaveFn, "ssret", II);
@@ -227,14 +227,14 @@ void LowerInvoke::rewriteExpensiveInvoke(InvokeInst *II, unsigned InvokeNo,
 
   BasicBlock::iterator NI = II->getNormalDest()->getFirstInsertionPt();
   // nonvolatile.
-  new StoreInst(Constant::getNullValue(Type::getInt32Ty(II->getContext())), 
+  new StoreInst(Constant::getNullValue(Type::getInt32Ty(II->getContext())),
                 InvokeNum, false, NI);
 
   Instruction* StackPtrLoad =
     new LoadInst(StackPtr, "stackptr.restore", true,
                  II->getUnwindDest()->getFirstInsertionPt());
   CallInst::Create(StackRestoreFn, StackPtrLoad, "")->insertAfter(StackPtrLoad);
-    
+
   // Add a switch case to our unwind block.
   CatchSwitch->addCase(InvokeNoC, II->getUnwindDest());
 
@@ -463,7 +463,7 @@ bool LowerInvoke::insertExpensiveEHSupport(Function &F) {
     // executing.  For normal calls it contains zero.
     AllocaInst *InvokeNum = new AllocaInst(Type::getInt32Ty(F.getContext()), 0,
                                            "invokenum",EntryBB->begin());
-    new StoreInst(ConstantInt::get(Type::getInt32Ty(F.getContext()), 0), 
+    new StoreInst(ConstantInt::get(Type::getInt32Ty(F.getContext()), 0),
                   InvokeNum, true, EntryBB->getTerminator());
 
     // Insert a load in the Catch block, and a switch on its value.  By default,

@@ -7,7 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef LLVM_CODEGEN_PBQP_MATH_H 
+#ifndef LLVM_CODEGEN_PBQP_MATH_H
 #define LLVM_CODEGEN_PBQP_MATH_H
 
 #include <cassert>
@@ -71,14 +71,14 @@ class Vector {
     /// \brief Add another vector to this one.
     Vector& operator+=(const Vector &v) {
       assert(length == v.length && "Vector length mismatch.");
-      std::transform(data, data + length, v.data, data, std::plus<PBQPNum>()); 
+      std::transform(data, data + length, v.data, data, std::plus<PBQPNum>());
       return *this;
     }
 
     /// \brief Subtract another vector from this one.
     Vector& operator-=(const Vector &v) {
       assert(length == v.length && "Vector length mismatch.");
-      std::transform(data, data + length, v.data, data, std::minus<PBQPNum>()); 
+      std::transform(data, data + length, v.data, data, std::minus<PBQPNum>());
       return *this;
     }
 
@@ -105,7 +105,7 @@ OStream& operator<<(OStream &os, const Vector &v) {
   os << " ]";
 
   return os;
-} 
+}
 
 
 /// \brief PBQP Matrix class
@@ -127,7 +127,7 @@ class Matrix {
     /// \brief Copy construct a PBQP matrix.
     Matrix(const Matrix &m) :
       rows(m.rows), cols(m.cols), data(new PBQPNum[rows * cols]) {
-        std::copy(m.data, m.data + (rows * cols), data);  
+        std::copy(m.data, m.data + (rows * cols), data);
     }
 
     /// \brief Destroy this matrix, return its memory.
@@ -165,7 +165,7 @@ class Matrix {
       Vector v(cols);
       for (unsigned c = 0; c < cols; ++c)
         v[c] = (*this)[r][c];
-      return v; 
+      return v;
     }
 
     /// \brief Returns the given column as a vector.
@@ -216,7 +216,7 @@ class Matrix {
       for (unsigned r = 0; r < rows; ++r)
         v[r] = (*this)[r][r];
       return v;
-    } 
+    }
 
     /// \brief Add the given matrix to this one.
     Matrix& operator+=(const Matrix &m) {

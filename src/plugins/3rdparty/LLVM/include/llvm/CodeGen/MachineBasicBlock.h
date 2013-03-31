@@ -559,7 +559,7 @@ public:
 
   /// computeRegisterLiveness - Return whether (physical) register \c Reg
   /// has been <def>ined and not <kill>ed as of just before \c MI.
-  /// 
+  ///
   /// Search is localised to a neighborhood of
   /// \c Neighborhood instructions before (searching for defs or kills) and
   /// Neighborhood instructions after (searching just for defs) MI.

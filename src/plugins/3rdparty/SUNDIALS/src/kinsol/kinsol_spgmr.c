@@ -44,7 +44,7 @@
 
 static int KINSpgmrInit(KINMem kin_mem);
 static int KINSpgmrSetup(KINMem kin_mem);
-static int KINSpgmrSolve(KINMem kin_mem, N_Vector xx, 
+static int KINSpgmrSolve(KINMem kin_mem, N_Vector xx,
                          N_Vector bb, realtype *res_norm);
 static void KINSpgmrFree(KINMem kin_mem);
 
@@ -124,13 +124,13 @@ int KINSpgmr(void *kinmem, int maxl)
 
   if (kinmem == NULL){
     KINProcessError(NULL, KINSPILS_MEM_NULL, "KINSPILS", "KINSpgmr", MSGS_KINMEM_NULL);
-    return(KINSPILS_MEM_NULL);  
+    return(KINSPILS_MEM_NULL);
   }
   kin_mem = (KINMem) kinmem;
 
   /* check for required vector operations */
 
-  /* Note: do NOT need to check for N_VLinearSum, N_VProd, N_VScale, N_VDiv, 
+  /* Note: do NOT need to check for N_VLinearSum, N_VProd, N_VScale, N_VDiv,
      or N_VWL2Norm because they are required by KINSOL */
 
   if ((vec_tmpl->ops->nvconst == NULL) ||
@@ -144,7 +144,7 @@ int KINSpgmr(void *kinmem, int maxl)
 
   /* set four main function fields in kin_mem */
 
-  linit  = KINSpgmrInit; 
+  linit  = KINSpgmrInit;
   lsetup = KINSpgmrSetup;
   lsolve = KINSpgmrSolve;
   lfree  = KINSpgmrFree;
@@ -154,7 +154,7 @@ int KINSpgmr(void *kinmem, int maxl)
   kinspils_mem = (KINSpilsMem) malloc(sizeof(struct KINSpilsMemRec));
   if (kinspils_mem == NULL){
     KINProcessError(NULL, KINSPILS_MEM_FAIL, "KINSPILS", "KINSpgmr", MSGS_MEM_FAIL);
-    return(KINSPILS_MEM_FAIL);  
+    return(KINSPILS_MEM_FAIL);
   }
 
   /* Set ILS type */
@@ -163,7 +163,7 @@ int KINSpgmr(void *kinmem, int maxl)
   /* set SPGMR parameters that were passed in call sequence */
 
   maxl1 = (maxl <= 0) ? KINSPILS_MAXL : maxl;
-  kinspils_mem->s_maxl = maxl1;  
+  kinspils_mem->s_maxl = maxl1;
 
   /* Set defaults for Jacobian-related fileds */
 
@@ -249,7 +249,7 @@ static int KINSpgmrInit(KINMem kin_mem)
   } else {
     pretype = PREC_NONE;
   }
-  
+
   /* set setupNonNull to TRUE iff there is preconditioning with setup */
 
   setupNonNull = (psolve != NULL) && (pset != NULL);
@@ -286,12 +286,12 @@ static int KINSpgmrSetup(KINMem kin_mem)
 
   /* call pset routine */
 
-  ret = pset(uu, uscale, fval, fscale, P_data, vtemp1, vtemp2); 
+  ret = pset(uu, uscale, fval, fscale, P_data, vtemp1, vtemp2);
 
   last_flag = ret;
 
   npe++;
-  nnilset = nni; 
+  nnilset = nni;
 
   /* return the same value ret that pset returned */
 
@@ -315,38 +315,38 @@ static int KINSpgmrSetup(KINMem kin_mem)
  * -----------------------------------------------------------------
  */
 
-static int KINSpgmrSolve(KINMem kin_mem, N_Vector xx, N_Vector bb, 
+static int KINSpgmrSolve(KINMem kin_mem, N_Vector xx, N_Vector bb,
                          realtype *res_norm)
 {
   KINSpilsMem kinspils_mem;
   SpgmrMem spgmr_mem;
   int ret, nli_inc, nps_inc;
-  
+
   kinspils_mem = (KINSpilsMem) lmem;
 
   spgmr_mem = (SpgmrMem) spils_mem;
 
   /* Set initial guess to xx = 0. bb is set, by the routine
      calling KINSpgmrSolve, to the RHS vector for the system
-     to be solved. */ 
- 
+     to be solved. */
+
   N_VConst(ZERO, xx);
 
   new_uu = TRUE;  /* set flag required for user Jacobian routine */
 
   /* call SpgmrSolve */
 
-  ret = SpgmrSolve(spgmr_mem, kin_mem, xx, bb, pretype, gstype, eps, 
+  ret = SpgmrSolve(spgmr_mem, kin_mem, xx, bb, pretype, gstype, eps,
                    maxlrst, kin_mem, fscale, fscale, KINSpilsAtimes,
                    KINSpilsPSolve, res_norm, &nli_inc, &nps_inc);
 
-  /* increment counters nli, nps, and ncfl 
+  /* increment counters nli, nps, and ncfl
      (nni is updated in the KINSol main iteration loop) */
 
   nli = nli + (long int) nli_inc;
   nps = nps + (long int) nps_inc;
 
-  if (printfl > 2) 
+  if (printfl > 2)
     KINPrintInfo(kin_mem, PRNT_NLI, "KINSPGMR", "KINSpgmrSolve", INFO_NLI, nli_inc);
 
   if (ret != 0) ncfl++;

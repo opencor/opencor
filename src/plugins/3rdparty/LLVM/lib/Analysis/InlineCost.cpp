@@ -944,7 +944,7 @@ bool CallAnalyzer::analyzeCall(CallSite CS) {
     // We never want to inline functions that contain an indirectbr.  This is
     // incorrect because all the blockaddress's (in static global initializers
     // for example) would be referring to the original function, and this
-    // indirect jump would jump from the inlined copy of the function into the 
+    // indirect jump would jump from the inlined copy of the function into the
     // original function which is extremely undefined behavior.
     // FIXME: This logic isn't really right; we can safely inline functions
     // with indirectbr's as long as no other function or global references the

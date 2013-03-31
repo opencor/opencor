@@ -47,7 +47,7 @@ public:
       ++It;
     } while (It != End &&
              It->first == DeclarationName::getUsingDirectiveName());
-             
+
     return *this;
   }
 

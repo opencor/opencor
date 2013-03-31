@@ -135,7 +135,7 @@ public:
 
   /// Generate a constant string object.
   virtual llvm::Constant *GenerateConstantString(const StringLiteral *) = 0;
-  
+
   /// Generate a category.  A category contains a list of methods (and
   /// accompanying metadata) and a list of protocols.
   virtual void GenerateCategory(const ObjCCategoryImplDecl *OCD) = 0;
@@ -203,7 +203,7 @@ public:
   virtual llvm::Constant *GetPropertySetFunction() = 0;
 
   /// Return the runtime function for optimized setting properties.
-  virtual llvm::Constant *GetOptimizedPropertySetFunction(bool atomic, 
+  virtual llvm::Constant *GetOptimizedPropertySetFunction(bool atomic,
                                                           bool copy) = 0;
 
   // API for atomic copying of qualified aggregates in getter.
@@ -213,17 +213,17 @@ public:
   // API for atomic copying of qualified aggregates with non-trivial copy
   // assignment (c++) in setter/getter.
   virtual llvm::Constant *GetCppAtomicObjectFunction() = 0;
-  
+
   /// GetClass - Return a reference to the class for the given
   /// interface decl.
   virtual llvm::Value *GetClass(CGBuilderTy &Builder,
                                 const ObjCInterfaceDecl *OID) = 0;
-  
-  
+
+
   virtual llvm::Value *EmitNSAutoreleasePoolClassRef(CGBuilderTy &Builder) {
     llvm_unreachable("autoreleasepool unsupported in this ABI");
   }
-  
+
   /// EnumerationMutationFunction - Return the function that's called by the
   /// compiler when a mutation is detected during foreach iteration.
   virtual llvm::Constant *EnumerationMutationFunction() = 0;

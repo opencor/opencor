@@ -2,7 +2,7 @@
  * -----------------------------------------------------------------
  * $Revision: 1.13 $
  * $Date: 2011/03/23 20:44:01 $
- * ----------------------------------------------------------------- 
+ * -----------------------------------------------------------------
  * Programmer(s): Alan C. Hindmarsh and Radu Serban @ LLNL
  * -----------------------------------------------------------------
  * Copyright (c) 2002, The Regents of the University of California.
@@ -35,7 +35,7 @@
 #define TWO          RCONST(2.0)
 
 /* IDABAND linit, lsetup, lsolve, and lfree routines */
- 
+
 static int IDABandInit(IDAMem IDA_mem);
 
 static int IDABandSetup(IDAMem IDA_mem, N_Vector yyp, N_Vector ypp,
@@ -78,7 +78,7 @@ static int IDABandFree(IDAMem IDA_mem);
 #define nreDQ       (idadls_mem->d_nreDQ)
 #define jacdata     (idadls_mem->d_J_data)
 #define last_flag   (idadls_mem->d_last_flag)
-                  
+
 /*
  * -----------------------------------------------------------------
  * IDABand
@@ -101,7 +101,7 @@ static int IDABandFree(IDAMem IDA_mem);
  * or IDADLS_ILL_INPUT = -2.
  *
  * NOTE: The band linear solver assumes a serial implementation
- *       of the NVECTOR package. Therefore, IDABand will first 
+ *       of the NVECTOR package. Therefore, IDABand will first
  *       test for a compatible N_Vector internal representation by
  *       checking that the N_VGetArrayPointer function exists
  * -----------------------------------------------------------------
@@ -166,7 +166,7 @@ int IDABand(void *ida_mem, long int Neq, long int mupper, long int mlower)
 
   idadls_mem->d_ml = mlower;
   idadls_mem->d_mu = mupper;
-    
+
   /* Set extended upper half-bandwidth for JJ (required for pivoting). */
   smu = MIN(Neq-1, mupper + mlower);
 
@@ -186,8 +186,8 @@ int IDABand(void *ida_mem, long int Neq, long int mupper, long int mlower)
     DestroyMat(JJ);
     free(idadls_mem); idadls_mem = NULL;
     return(IDADLS_MEM_FAIL);
-  }  
-  
+  }
+
   /* Attach linear solver memory to the integrator memory */
   lmem = idadls_mem;
 
@@ -228,7 +228,7 @@ static int IDABandInit(IDAMem IDA_mem)
 
 
 /*
-  This routine does the setup operations for the IDABAND linear 
+  This routine does the setup operations for the IDABAND linear
   solver module.  It calls the Jacobian evaluation routine,
   updates counters, and calls the band LU factorization routine.
   The return value is either
@@ -245,7 +245,7 @@ static int IDABandSetup(IDAMem IDA_mem, N_Vector yyp, N_Vector ypp,
   int retval;
   long int retfac;
   IDADlsMem idadls_mem;
-  
+
   idadls_mem = (IDADlsMem) lmem;
 
   /* Increment nje counter. */
@@ -267,7 +267,7 @@ static int IDABandSetup(IDAMem IDA_mem, N_Vector yyp, N_Vector ypp,
 
   /* Do LU factorization of JJ; return success or fail flag. */
   retfac = BandGBTRF(JJ, lpivots);
-  
+
   if (retfac != 0) {
     last_flag = retfac;
     return(+1);
@@ -288,13 +288,13 @@ static int IDABandSolve(IDAMem IDA_mem, N_Vector b, N_Vector weight,
   realtype *bd;
 
   idadls_mem = (IDADlsMem) lmem;
-  
+
   bd = N_VGetArrayPointer(b);
   BandGBTRS(JJ, lpivots, bd);
 
   /* Scale the correction to account for change in cj. */
   if (cjratio != ONE) N_VScale(TWO/(ONE + cjratio), b, b);
-  
+
   last_flag = 0;
   return(0);
 }
@@ -308,7 +308,7 @@ static int IDABandFree(IDAMem IDA_mem)
   IDADlsMem idadls_mem;
 
   idadls_mem = (IDADlsMem) lmem;
-  
+
   DestroyMat(JJ);
   DestroyArray(lpivots);
   free(lmem); lmem = NULL;

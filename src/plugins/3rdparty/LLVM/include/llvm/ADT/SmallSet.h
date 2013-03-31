@@ -81,7 +81,7 @@ public:
     for (; I != E; ++I)
       insert(*I);
   }
-  
+
   bool erase(const T &V) {
     if (!isSmall())
       return Set.erase(V);

@@ -125,14 +125,14 @@ SVal Environment::getSVal(const EnvironmentEntry &Entry,
     const ReturnStmt *RS = cast<ReturnStmt>(S);
     if (const Expr *RE = RS->getRetValue())
       return getSVal(EnvironmentEntry(RE, LCtx), svalBuilder);
-    return UndefinedVal();        
+    return UndefinedVal();
   }
-    
+
   // Handle all other Stmt* using a lookup.
   default:
     break;
   }
-  
+
   return lookupExpr(EnvironmentEntry(S, LCtx));
 }
 
@@ -202,7 +202,7 @@ EnvironmentManager::removeDeadBindings(Environment Env,
   // individually removing all the subexpression bindings (which will greatly
   // outnumber block-level expression bindings).
   Environment NewEnv = getInitialEnvironment();
-  
+
   SmallVector<std::pair<EnvironmentEntry, SVal>, 10> deferredLocations;
 
   MarkLiveCallback CB(SymReaper);
@@ -243,7 +243,7 @@ EnvironmentManager::removeDeadBindings(Environment Env,
       continue;
     }
   }
-  
+
   // Go through he deferred locations and add them to the new environment if
   // the correspond Stmt* is in the map as well.
   for (SmallVectorImpl<std::pair<EnvironmentEntry, SVal> >::iterator
@@ -263,7 +263,7 @@ void Environment::print(raw_ostream &Out, const char *NL,
   printAux(Out, false, NL, Sep);
   printAux(Out, true, NL, Sep);
 }
-  
+
 void Environment::printAux(raw_ostream &Out, bool printLocations,
                            const char *NL,
                            const char *Sep) const{
@@ -280,21 +280,21 @@ void Environment::printAux(raw_ostream &Out, bool printLocations,
       if (printLocations)
         continue;
     }
-    
+
     if (isFirst) {
       Out << NL << NL
           << (printLocations ? "Load/Store locations:" : "Expressions:")
-          << NL;      
+          << NL;
       isFirst = false;
     } else {
       Out << NL;
     }
-    
+
     const Stmt *S = En.getStmt();
     if (printLocations) {
       S = (Stmt*) (((uintptr_t) S) & ((uintptr_t) ~0x1));
     }
-    
+
     Out << " (" << (const void*) En.getLocationContext() << ','
       << (const void*) S << ") ";
     LangOptions LO; // FIXME.

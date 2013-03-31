@@ -37,11 +37,11 @@ class QwtSymbol;
   are valid. The interpretation of the alignment depends on the marker's
   line style. The alignment refers to the center point of
   the marker, which means, for example, that the label would be printed
-  left above the center point if the alignment was set to 
+  left above the center point if the alignment was set to
   Qt::AlignLeft | Qt::AlignTop.
 
   \note QwtPlotTextLabel is intended to align a text label
-        according to the geometry of canvas 
+        according to the geometry of canvas
         ( unrelated to plot coordinates )
 */
 
@@ -115,10 +115,10 @@ public:
     virtual QwtGraphic legendIcon( int index, const QSizeF & ) const;
 
 protected:
-    virtual void drawLines( QPainter *, 
+    virtual void drawLines( QPainter *,
         const QRectF &, const QPointF & ) const;
 
-    virtual void drawLabel( QPainter *, 
+    virtual void drawLabel( QPainter *,
         const QRectF &, const QPointF & ) const;
 
 private:

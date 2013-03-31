@@ -100,7 +100,7 @@ static FrontendAction *CreateFrontendAction(CompilerInstance &CI) {
   if (FEOpts.FixAndRecompile) {
     Act = new FixItRecompile(Act);
   }
-  
+
   // Potentially wrap the base FE action in an ARC Migrate Tool action.
   switch (FEOpts.ARCMTAction) {
   case FrontendOptions::ARCMT_None:

@@ -83,7 +83,7 @@ bool llvm::ConstantFoldTerminator(BasicBlock *BB, bool DeleteDeadConditions,
       BI->eraseFromParent();
       return true;
     }
-    
+
     if (Dest2 == Dest1) {       // Conditional branch to same location?
       // This branch matches something like this:
       //     br bool %cond, label %Dest, label %Dest
@@ -103,7 +103,7 @@ bool llvm::ConstantFoldTerminator(BasicBlock *BB, bool DeleteDeadConditions,
     }
     return false;
   }
-  
+
   if (SwitchInst *SI = dyn_cast<SwitchInst>(T)) {
     // If we are switching on a constant, we can convert the switch into a
     // single branch instruction!
@@ -187,7 +187,7 @@ bool llvm::ConstantFoldTerminator(BasicBlock *BB, bool DeleteDeadConditions,
         RecursivelyDeleteTriviallyDeadInstructions(Cond, TLI);
       return true;
     }
-    
+
     if (SI->getNumCases() == 1) {
       // Otherwise, we can fold this switch into a conditional branch
       // instruction if it has only one non-default destination.
@@ -230,7 +230,7 @@ bool llvm::ConstantFoldTerminator(BasicBlock *BB, bool DeleteDeadConditions,
       BasicBlock *TheOnlyDest = BA->getBasicBlock();
       // Insert the new branch.
       Builder.CreateBr(TheOnlyDest);
-      
+
       for (unsigned i = 0, e = IBI->getNumDestinations(); i != e; ++i) {
         if (IBI->getDestination(i) == TheOnlyDest)
           TheOnlyDest = 0;
@@ -241,7 +241,7 @@ bool llvm::ConstantFoldTerminator(BasicBlock *BB, bool DeleteDeadConditions,
       IBI->eraseFromParent();
       if (DeleteDeadConditions)
         RecursivelyDeleteTriviallyDeadInstructions(Address, TLI);
-      
+
       // If we didn't find our destination in the IBI successor list, then we
       // have undefined behavior.  Replace the unconditional branch with an
       // 'unreachable' instruction.
@@ -249,11 +249,11 @@ bool llvm::ConstantFoldTerminator(BasicBlock *BB, bool DeleteDeadConditions,
         BB->getTerminator()->eraseFromParent();
         new UnreachableInst(BB->getContext(), BB);
       }
-      
+
       return true;
     }
   }
-  
+
   return false;
 }
 
@@ -320,10 +320,10 @@ llvm::RecursivelyDeleteTriviallyDeadInstructions(Value *V,
   Instruction *I = dyn_cast<Instruction>(V);
   if (!I || !I->use_empty() || !isInstructionTriviallyDead(I, TLI))
     return false;
-  
+
   SmallVector<Instruction*, 16> DeadInsts;
   DeadInsts.push_back(I);
-  
+
   do {
     I = DeadInsts.pop_back_val();
 
@@ -332,9 +332,9 @@ llvm::RecursivelyDeleteTriviallyDeadInstructions(Value *V,
     for (unsigned i = 0, e = I->getNumOperands(); i != e; ++i) {
       Value *OpV = I->getOperand(i);
       I->setOperand(i, 0);
-      
+
       if (!OpV->use_empty()) continue;
-    
+
       // If the operand is an instruction that became dead as we nulled out the
       // operand, and if it is 'trivially' dead, delete it in a future loop
       // iteration.
@@ -342,7 +342,7 @@ llvm::RecursivelyDeleteTriviallyDeadInstructions(Value *V,
         if (isInstructionTriviallyDead(OpI, TLI))
           DeadInsts.push_back(OpI);
     }
-    
+
     I->eraseFromParent();
   } while (!DeadInsts.empty());
 
@@ -449,12 +449,12 @@ void llvm::RemovePredecessorAndSimplify(BasicBlock *BB, BasicBlock *Pred,
   // This only adjusts blocks with PHI nodes.
   if (!isa<PHINode>(BB->begin()))
     return;
-  
+
   // Remove the entries for Pred from the PHI nodes in BB, but do not simplify
   // them down.  This will leave us with single entry phi nodes and other phis
   // that can be removed.
   BB->removePredecessor(Pred, true);
-  
+
   WeakVH PhiIt = &BB->front();
   while (PHINode *PN = dyn_cast<PHINode>(PhiIt)) {
     PhiIt = &*++BasicBlock::iterator(cast<Instruction>(PhiIt));
@@ -485,10 +485,10 @@ void llvm::MergeBasicBlockIntoOnlyPred(BasicBlock *DestBB, Pass *P) {
     PN->replaceAllUsesWith(NewVal);
     PN->eraseFromParent();
   }
-  
+
   BasicBlock *PredBB = DestBB->getSinglePredecessor();
   assert(PredBB && "Block doesn't have a single predecessor!");
-  
+
   // Zap anything that took the address of DestBB.  Not doing this will give the
   // address an invalid value.
   if (DestBB->hasAddressTaken()) {
@@ -499,10 +499,10 @@ void llvm::MergeBasicBlockIntoOnlyPred(BasicBlock *DestBB, Pass *P) {
                                                      BA->getType()));
     BA->destroyConstant();
   }
-  
+
   // Anything that branched to PredBB now branches to DestBB.
   PredBB->replaceAllUsesWith(DestBB);
-  
+
   // Splice all the instructions from PredBB to DestBB.
   PredBB->getTerminator()->eraseFromParent();
   DestBB->getInstList().splice(DestBB->begin(), PredBB->getInstList());
@@ -532,7 +532,7 @@ void llvm::MergeBasicBlockIntoOnlyPred(BasicBlock *DestBB, Pass *P) {
 static bool CanPropagatePredecessorsForPHIs(BasicBlock *BB, BasicBlock *Succ) {
   assert(*succ_begin(BB) == Succ && "Succ is not successor of BB!");
 
-  DEBUG(dbgs() << "Looking to fold " << BB->getName() << " into " 
+  DEBUG(dbgs() << "Looking to fold " << BB->getName() << " into "
         << Succ->getName() << "\n");
   // Shortcut, if there is only a single predecessor it must be BB and merging
   // is always safe
@@ -555,8 +555,8 @@ static bool CanPropagatePredecessorsForPHIs(BasicBlock *BB, BasicBlock *Succ) {
         BasicBlock *IBB = PN->getIncomingBlock(PI);
         if (BBPreds.count(IBB) &&
             BBPN->getIncomingValueForBlock(IBB) != PN->getIncomingValue(PI)) {
-          DEBUG(dbgs() << "Can't fold, phi node " << PN->getName() << " in " 
-                << Succ->getName() << " is conflicting with " 
+          DEBUG(dbgs() << "Can't fold, phi node " << PN->getName() << " in "
+                << Succ->getName() << " is conflicting with "
                 << BBPN->getName() << " with regard to common predecessor "
                 << IBB->getName() << "\n");
           return false;
@@ -570,7 +570,7 @@ static bool CanPropagatePredecessorsForPHIs(BasicBlock *BB, BasicBlock *Succ) {
         // of the block.
         BasicBlock *IBB = PN->getIncomingBlock(PI);
         if (BBPreds.count(IBB) && Val != PN->getIncomingValue(PI)) {
-          DEBUG(dbgs() << "Can't fold, phi node " << PN->getName() << " in " 
+          DEBUG(dbgs() << "Can't fold, phi node " << PN->getName() << " in "
                 << Succ->getName() << " is conflicting with regard to common "
                 << "predecessor " << IBB->getName() << "\n");
           return false;
@@ -594,7 +594,7 @@ bool llvm::TryToSimplifyUncondBranchFromEmptyBlock(BasicBlock *BB) {
   // We can't eliminate infinite loops.
   BasicBlock *Succ = cast<BranchInst>(BB->getTerminator())->getSuccessor(0);
   if (BB == Succ) return false;
-  
+
   // Check to see if merging these blocks would cause conflicts for any of the
   // phi nodes in BB or Succ. If not, we can safely merge.
   if (!CanPropagatePredecessorsForPHIs(BB, Succ)) return false;
@@ -628,19 +628,19 @@ bool llvm::TryToSimplifyUncondBranchFromEmptyBlock(BasicBlock *BB) {
   }
 
   DEBUG(dbgs() << "Killing Trivial BB: \n" << *BB);
-  
+
   if (isa<PHINode>(Succ->begin())) {
     // If there is more than one pred of succ, and there are PHI nodes in
     // the successor, then we need to add incoming edges for the PHI nodes
     //
     const SmallVector<BasicBlock*, 16> BBPreds(pred_begin(BB), pred_end(BB));
-    
+
     // Loop over all of the PHI nodes in the successor of BB.
     for (BasicBlock::iterator I = Succ->begin(); isa<PHINode>(I); ++I) {
       PHINode *PN = cast<PHINode>(I);
       Value *OldVal = PN->removeIncomingValue(BB, false);
       assert(OldVal && "No entry in PHI for Pred BB!");
-      
+
       // If this incoming value is one of the PHI nodes in BB, the new entries
       // in the PHI node are the entries from the old PHI.
       if (isa<PHINode>(OldVal) && cast<PHINode>(OldVal)->getParent() == BB) {
@@ -660,7 +660,7 @@ bool llvm::TryToSimplifyUncondBranchFromEmptyBlock(BasicBlock *BB) {
       }
     }
   }
-  
+
   if (Succ->getSinglePredecessor()) {
     // BB is the only predecessor of Succ, so Succ will end up with exactly
     // the same predecessors BB had.
@@ -675,7 +675,7 @@ bool llvm::TryToSimplifyUncondBranchFromEmptyBlock(BasicBlock *BB) {
       PN->eraseFromParent();
     }
   }
-    
+
   // Everything that jumped to BB now goes to Succ.
   BB->replaceAllUsesWith(Succ);
   if (!Succ->hasName()) Succ->takeName(BB);
@@ -783,7 +783,7 @@ static unsigned enforceKnownAlignment(Value *V, unsigned Align,
     // the final program then it is impossible for us to reliably enforce the
     // preferred alignment.
     if (GV->isWeakForLinker()) return Align;
-    
+
     if (GV->getAlignment() >= PrefAlign)
       return GV->getAlignment();
     // We can only increase the alignment of the global if it has no alignment
@@ -810,19 +810,19 @@ unsigned llvm::getOrEnforceKnownAlignment(Value *V, unsigned PrefAlign,
   APInt KnownZero(BitWidth, 0), KnownOne(BitWidth, 0);
   ComputeMaskedBits(V, KnownZero, KnownOne, TD);
   unsigned TrailZ = KnownZero.countTrailingOnes();
-  
+
   // Avoid trouble with rediculously large TrailZ values, such as
   // those computed from a null pointer.
   TrailZ = std::min(TrailZ, unsigned(sizeof(unsigned) * CHAR_BIT - 1));
-  
+
   unsigned Align = 1u << std::min(BitWidth - 1, TrailZ);
-  
+
   // LLVM doesn't support alignments larger than this currently.
   Align = std::min(Align, +Value::MaximumAlignment);
-  
+
   if (PrefAlign > Align)
     Align = enforceKnownAlignment(V, Align, PrefAlign, TD);
-    
+
   // We don't need to make any adjustment.
   return Align;
 }
@@ -870,10 +870,10 @@ bool llvm::ConvertDebugDeclareToDebugValue(DbgDeclareInst *DDI,
   if (!DIVar.Verify())
     return false;
 
-  Instruction *DbgVal = 
+  Instruction *DbgVal =
     Builder.insertDbgValueIntrinsic(LI->getOperand(0), 0,
                                     DIVar, LI);
-  
+
   // Propagate any debug metadata from the store onto the dbg.value.
   DebugLoc LIDL = LI->getDebugLoc();
   if (!LIDL.isUnknown())

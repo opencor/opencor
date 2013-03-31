@@ -402,7 +402,7 @@ lltok::Kind LLLexer::LexExclaim() {
   }
   return lltok::exclaim;
 }
-  
+
 /// LexIdentifier: Handle several related productions:
 ///    Label           [-a-zA-Z$._0-9]+:
 ///    IntegerType     i[0-9]+

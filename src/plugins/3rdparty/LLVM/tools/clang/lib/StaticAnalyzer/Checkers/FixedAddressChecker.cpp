@@ -23,7 +23,7 @@ using namespace clang;
 using namespace ento;
 
 namespace {
-class FixedAddressChecker 
+class FixedAddressChecker
   : public Checker< check::PreStmt<BinaryOperator> > {
   mutable OwningPtr<BuiltinBug> BT;
 
@@ -52,7 +52,7 @@ void FixedAddressChecker::checkPreStmt(const BinaryOperator *B,
 
   if (ExplodedNode *N = C.addTransition()) {
     if (!BT)
-      BT.reset(new BuiltinBug("Use fixed address", 
+      BT.reset(new BuiltinBug("Use fixed address",
                           "Using a fixed address is not portable because that "
                           "address will probably not be valid in all "
                           "environments or platforms."));

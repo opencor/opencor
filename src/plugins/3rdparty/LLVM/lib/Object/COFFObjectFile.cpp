@@ -637,7 +637,7 @@ error_code COFFObjectFile::getSymbolName(const coff_symbol *symbol,
 ArrayRef<uint8_t> COFFObjectFile::getSymbolAuxData(
                                   const coff_symbol *symbol) const {
   const uint8_t *aux = NULL;
-  
+
   if ( symbol->NumberOfAuxSymbols > 0 ) {
   // AUX data comes immediately after the symbol in COFF
     aux = reinterpret_cast<const uint8_t *>(symbol + 1);

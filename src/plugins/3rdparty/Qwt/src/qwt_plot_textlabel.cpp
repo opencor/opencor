@@ -14,7 +14,7 @@
 #include <qpixmap.h>
 
 static QRect qwtItemRect( int renderFlags,
-    const QRect &rect, const QSize &itemSize ) 
+    const QRect &rect, const QSize &itemSize )
 {
     int x;
     if ( renderFlags & Qt::AlignLeft )
@@ -31,7 +31,7 @@ static QRect qwtItemRect( int renderFlags,
     }
 
     int y;
-    if ( renderFlags & Qt::AlignTop ) 
+    if ( renderFlags & Qt::AlignTop )
     {
         y = rect.top();
     }
@@ -48,7 +48,7 @@ static QRect qwtItemRect( int renderFlags,
 }
 
 class QwtPlotTextLabel::PrivateData
-{   
+{
 public:
     PrivateData():
         margin( 5 )
@@ -59,7 +59,7 @@ public:
     int margin;
 
     QPixmap pixmap;
-};  
+};
 
 /*!
    \brief Constructor
@@ -100,7 +100,7 @@ int QwtPlotTextLabel::rtti() const
 }
 
 /*!
-  Set the text 
+  Set the text
 
   The label will be aligned to the plot canvas according to
   the alignment flags of text.

@@ -123,27 +123,27 @@ void DiagnosticRenderer::emitDiagnostic(SourceLocation Loc,
                                         const SourceManager *SM,
                                         DiagOrStoredDiag D) {
   assert(SM || Loc.isInvalid());
-  
+
   beginDiagnostic(D, Level);
-  
+
   PresumedLoc PLoc;
   if (Loc.isValid()) {
     PLoc = SM->getPresumedLocForDisplay(Loc);
-  
+
     // First, if this diagnostic is not in the main file, print out the
     // "included from" lines.
     emitIncludeStack(PLoc.getIncludeLoc(), Level, *SM);
   }
-  
+
   // Next, emit the actual diagnostic message.
   emitDiagnosticMessage(Loc, PLoc, Level, Message, Ranges, SM, D);
-  
+
   // Only recurse if we have a valid location.
   if (Loc.isValid()) {
     // Get the ranges into a local array we can hack on.
     SmallVector<CharSourceRange, 20> MutableRanges(Ranges.begin(),
                                                    Ranges.end());
-    
+
     llvm::SmallVector<FixItHint, 8> MergedFixits;
     if (!FixItHints.empty()) {
       mergeFixits(FixItHints, *SM, LangOpts, MergedFixits);
@@ -155,15 +155,15 @@ void DiagnosticRenderer::emitDiagnostic(SourceLocation Loc,
          I != E; ++I)
       if (I->RemoveRange.isValid())
         MutableRanges.push_back(I->RemoveRange);
-    
+
     unsigned MacroDepth = 0;
     emitMacroExpansionsAndCarets(Loc, Level, MutableRanges, FixItHints, *SM,
                                  MacroDepth);
   }
-  
+
   LastLoc = Loc;
   LastLevel = Level;
-  
+
   endDiagnostic(D, Level);
 }
 
@@ -194,10 +194,10 @@ void DiagnosticRenderer::emitIncludeStack(SourceLocation Loc,
   if (LastIncludeLoc == Loc)
     return;
   LastIncludeLoc = Loc;
-  
+
   if (!DiagOpts->ShowNoteIncludeStack && Level == DiagnosticsEngine::Note)
     return;
-  
+
   emitIncludeStackRecursively(Loc, SM);
 }
 
@@ -207,14 +207,14 @@ void DiagnosticRenderer::emitIncludeStackRecursively(SourceLocation Loc,
                                                      const SourceManager &SM) {
   if (Loc.isInvalid())
     return;
-  
+
   PresumedLoc PLoc = SM.getPresumedLoc(Loc);
   if (PLoc.isInvalid())
     return;
-  
+
   // Emit the other include frames first.
   emitIncludeStackRecursively(PLoc.getIncludeLoc(), SM);
-  
+
   // Emit the inclusion text/note.
   emitIncludeLocation(Loc, PLoc, SM);
 }
@@ -289,7 +289,7 @@ void DiagnosticRenderer::emitMacroExpansionsAndCarets(
        unsigned OnMacroInst)
 {
   assert(!Loc.isInvalid() && "must have a valid source location here");
-  
+
   // If this is a file source location, directly emit the source snippet and
   // caret line. Also record the macro depth reached.
   if (Loc.isFileID()) {
@@ -303,22 +303,22 @@ void DiagnosticRenderer::emitMacroExpansionsAndCarets(
     return;
   }
   // Otherwise recurse through each macro expansion layer.
-  
+
   // When processing macros, skip over the expansions leading up to
   // a macro argument, and trace the argument's expansion stack instead.
   Loc = SM.skipToMacroArgExpansion(Loc);
-  
+
   SourceLocation OneLevelUp = SM.getImmediateMacroCallerLoc(Loc);
 
   emitMacroExpansionsAndCarets(OneLevelUp, Level, Ranges, Hints, SM, MacroDepth,
                                OnMacroInst + 1);
-  
+
   // Save the original location so we can find the spelling of the macro call.
   SourceLocation MacroLoc = Loc;
-  
+
   // Map the location.
   Loc = SM.getImmediateMacroCalleeLoc(Loc);
-  
+
   unsigned MacroSkipStart = 0, MacroSkipEnd = 0;
   if (MacroDepth > DiagOpts->MacroBacktraceLimit &&
       DiagOpts->MacroBacktraceLimit != 0) {
@@ -326,11 +326,11 @@ void DiagnosticRenderer::emitMacroExpansionsAndCarets(
     DiagOpts->MacroBacktraceLimit % 2;
     MacroSkipEnd = MacroDepth - DiagOpts->MacroBacktraceLimit / 2;
   }
-  
+
   // Whether to suppress printing this macro expansion.
   bool Suppressed = (OnMacroInst >= MacroSkipStart &&
                      OnMacroInst < MacroSkipEnd);
-  
+
   if (Suppressed) {
     // Tell the user that we've skipped contexts.
     if (OnMacroInst == MacroSkipStart) {
@@ -339,7 +339,7 @@ void DiagnosticRenderer::emitMacroExpansionsAndCarets(
       Message << "(skipping " << (MacroSkipEnd - MacroSkipStart)
               << " expansions in backtrace; use -fmacro-backtrace-limit=0 to "
                  "see all)";
-      emitBasicNote(Message.str());      
+      emitBasicNote(Message.str());
     }
     return;
   }
@@ -371,5 +371,5 @@ void DiagnosticNoteRenderer::emitIncludeLocation(SourceLocation Loc,
 }
 
 void DiagnosticNoteRenderer::emitBasicNote(StringRef Message) {
-  emitNote(SourceLocation(), Message, 0);  
+  emitNote(SourceLocation(), Message, 0);
 }

@@ -234,7 +234,7 @@ public:
 ///  SubRegion::getExtent instead -- the value returned may not be a symbol.
 class SymbolExtent : public SymbolData {
   const SubRegion *R;
-  
+
 public:
   SymbolExtent(SymbolID sym, const SubRegion *r)
   : SymbolData(ExtentKind, sym), R(r) {}
@@ -567,7 +567,7 @@ class SymbolReaper {
   SymbolSetTy TheDead;
 
   RegionSetTy RegionRoots;
-  
+
   const StackFrameContext *LCtx;
   const Stmt *Loc;
   SymbolManager& SymMgr;
@@ -625,7 +625,7 @@ public:
   bool hasDeadSymbols() const {
     return !TheDead.empty();
   }
-  
+
   typedef RegionSetTy::const_iterator region_iterator;
   region_iterator region_begin() const { return RegionRoots.begin(); }
   region_iterator region_end() const { return RegionRoots.end(); }
@@ -637,9 +637,9 @@ public:
   bool isDead(SymbolRef sym) const {
     return TheDead.count(sym);
   }
-  
+
   void markLive(const MemRegion *region);
-  
+
   /// \brief Set to the value of the symbolic store after
   /// StoreManager::removeDeadBindings has been called.
   void setReapedStore(StoreRef st) { reapedStore = st; }

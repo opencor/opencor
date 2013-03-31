@@ -51,7 +51,7 @@ namespace clang {
   using llvm::dyn_cast;
   using llvm::dyn_cast_or_null;
   using llvm::cast_or_null;
-  
+
   // ADT's.
   using llvm::StringRef;
   using llvm::Twine;

@@ -38,7 +38,7 @@ static void DummyArgToStringFn(DiagnosticsEngine::ArgumentKind AK, intptr_t QT,
 
 DiagnosticsEngine::DiagnosticsEngine(
                        const IntrusiveRefCntPtr<DiagnosticIDs> &diags,
-                       DiagnosticOptions *DiagOpts,       
+                       DiagnosticOptions *DiagOpts,
                        DiagnosticConsumer *client, bool ShouldOwnClient)
   : Diags(diags), DiagOpts(DiagOpts), Client(client),
     OwnsDiagClient(ShouldOwnClient), SourceMgr(0) {
@@ -74,7 +74,7 @@ void DiagnosticsEngine::setClient(DiagnosticConsumer *client,
                                   bool ShouldOwnClient) {
   if (OwnsDiagClient && Client)
     delete Client;
-  
+
   Client = client;
   OwnsDiagClient = ShouldOwnClient;
 }
@@ -99,13 +99,13 @@ void DiagnosticsEngine::Reset() {
   ErrorOccurred = false;
   FatalErrorOccurred = false;
   UnrecoverableErrorOccurred = false;
-  
+
   NumWarnings = 0;
   NumErrors = 0;
   NumErrorsSuppressed = 0;
   TrapNumErrorsOccurred = 0;
   TrapNumUnrecoverableErrorsOccurred = 0;
-  
+
   CurDiagID = ~0U;
   // Set LastDiagLevel to an "unset" state. If we set it to 'Ignored', notes
   // using a DiagnosticsEngine associated to a translation unit that follow
@@ -252,7 +252,7 @@ void DiagnosticsEngine::setDiagnosticWarningAsError(diag::kind Diag,
                                                     bool Enabled) {
   // If we are enabling this feature, just set the diagnostic mappings to map to
   // errors.
-  if (Enabled) 
+  if (Enabled)
     setDiagnosticMapping(Diag, diag::MAP_ERROR, SourceLocation());
 
   // Otherwise, we want to set the diagnostic mapping's "no Werror" bit, and
@@ -302,14 +302,14 @@ void DiagnosticsEngine::setDiagnosticErrorAsFatal(diag::kind Diag,
   // errors.
   if (Enabled)
     setDiagnosticMapping(Diag, diag::MAP_FATAL, SourceLocation());
-  
+
   // Otherwise, we want to set the diagnostic mapping's "no Werror" bit, and
   // potentially downgrade anything already mapped to be a warning.
   DiagnosticMappingInfo &Info = GetCurDiagState()->getOrAddMappingInfo(Diag);
-  
+
   if (Info.getMapping() == diag::MAP_FATAL)
     Info.setMapping(diag::MAP_ERROR);
-  
+
   Info.setNoErrorAsFatal(true);
 }
 
@@ -653,7 +653,7 @@ FormatDiagnostic(SmallVectorImpl<char> &OutStr) const {
     return;
   }
 
-  StringRef Diag = 
+  StringRef Diag =
     getDiags()->getDiagnosticIDs()->getDescription(getID());
 
   FormatDiagnostic(Diag.begin(), Diag.end(), OutStr);
@@ -739,7 +739,7 @@ FormatDiagnostic(const char *DiagStr, const char *DiagEnd,
       assert(getArgKind(ArgNo2) == DiagnosticsEngine::ak_qualtype &&
              "Second value of type diff must be a qualtype");
     }
-    
+
     switch (Kind) {
     // ---- STRINGS ----
     case DiagnosticsEngine::ak_std_string: {
@@ -892,7 +892,7 @@ FormatDiagnostic(const char *DiagStr, const char *DiagEnd,
       FormatDiagnostic(SecondDollar + 1, Pipe, OutStr);
       break;
     }
-    
+
     // Remember this argument info for subsequent formatting operations.  Turn
     // std::strings into a null terminated string to make it be the same case as
     // all the other ones.
@@ -903,7 +903,7 @@ FormatDiagnostic(const char *DiagStr, const char *DiagEnd,
     else
       FormattedArgs.push_back(std::make_pair(DiagnosticsEngine::ak_c_string,
                                         (intptr_t)getArgStdStr(ArgNo).c_str()));
-    
+
   }
 
   // Append the type tree to the end of the diagnostics.
@@ -916,9 +916,9 @@ StoredDiagnostic::StoredDiagnostic(DiagnosticsEngine::Level Level, unsigned ID,
                                    StringRef Message)
   : ID(ID), Level(Level), Loc(), Message(Message) { }
 
-StoredDiagnostic::StoredDiagnostic(DiagnosticsEngine::Level Level, 
+StoredDiagnostic::StoredDiagnostic(DiagnosticsEngine::Level Level,
                                    const Diagnostic &Info)
-  : ID(Info.getID()), Level(Level) 
+  : ID(Info.getID()), Level(Level)
 {
   assert((Info.getLocation().isInvalid() || Info.hasSourceManager()) &&
        "Valid source location without setting a source manager for diagnostic");
@@ -941,7 +941,7 @@ StoredDiagnostic::StoredDiagnostic(DiagnosticsEngine::Level Level, unsigned ID,
                                    StringRef Message, FullSourceLoc Loc,
                                    ArrayRef<CharSourceRange> Ranges,
                                    ArrayRef<FixItHint> Fixits)
-  : ID(ID), Level(Level), Loc(Loc), Message(Message) 
+  : ID(ID), Level(Level), Loc(Loc), Message(Message)
 {
   this->Ranges.assign(Ranges.begin(), Ranges.end());
   this->FixIts.assign(FixIts.begin(), FixIts.end());
@@ -966,7 +966,7 @@ PartialDiagnostic::StorageAllocator::StorageAllocator() {
 PartialDiagnostic::StorageAllocator::~StorageAllocator() {
   // Don't assert if we are in a CrashRecovery context, as this invariant may
   // be invalidated during a crash.
-  assert((NumFreeListEntries == NumCached || 
-          llvm::CrashRecoveryContext::isRecoveringFromCrash()) && 
+  assert((NumFreeListEntries == NumCached ||
+          llvm::CrashRecoveryContext::isRecoveringFromCrash()) &&
          "A partial is on the lamb");
 }

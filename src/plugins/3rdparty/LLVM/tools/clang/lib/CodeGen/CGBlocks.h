@@ -177,7 +177,7 @@ public:
       Capture v;
       v.Data = reinterpret_cast<uintptr_t>(value);
       return v;
-    }    
+    }
   };
 
   /// CanBeGlobal - True if the block can be global, i.e. it has
@@ -194,13 +194,13 @@ public:
   /// UsesStret : True if the block uses an stret return.  Mutable
   /// because it gets set later in the block-creation process.
   mutable bool UsesStret : 1;
-  
+
   /// HasCapturedVariableLayout : True if block has captured variables
   /// and their layout meta-data has been generated.
   bool HasCapturedVariableLayout : 1;
 
   /// The mapping of allocated indexes within the block.
-  llvm::DenseMap<const VarDecl*, Capture> Captures;  
+  llvm::DenseMap<const VarDecl*, Capture> Captures;
 
   llvm::AllocaInst *Address;
   llvm::StructType *StructureType;

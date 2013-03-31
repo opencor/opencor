@@ -94,7 +94,7 @@ public:
   ComplexPairTy Visit(Expr *E) {
     return StmtVisitor<ComplexExprEmitter, ComplexPairTy>::Visit(E);
   }
-    
+
   ComplexPairTy VisitStmt(Stmt *S) {
     S->dump(CGF.getContext().getSourceManager());
     llvm_unreachable("Stmt can't have complex result type!");
@@ -366,7 +366,7 @@ ComplexPairTy ComplexExprEmitter::EmitComplexToComplexCast(ComplexPairTy Val,
   return Val;
 }
 
-ComplexPairTy ComplexExprEmitter::EmitCast(CastExpr::CastKind CK, Expr *Op, 
+ComplexPairTy ComplexExprEmitter::EmitCast(CastExpr::CastKind CK, Expr *Op,
                                            QualType DestTy) {
   switch (CK) {
   case CK_Dependent: llvm_unreachable("dependent cast kind in IR gen!");
@@ -382,7 +382,7 @@ ComplexPairTy ComplexExprEmitter::EmitCast(CastExpr::CastKind CK, Expr *Op,
 
   case CK_LValueBitCast: {
     llvm::Value *V = CGF.EmitLValue(Op).getAddress();
-    V = Builder.CreateBitCast(V, 
+    V = Builder.CreateBitCast(V,
                     CGF.ConvertType(CGF.getContext().getPointerType(DestTy)));
     // FIXME: Are the qualifiers correct here?
     return EmitLoadOfComplex(V, DestTy.isVolatileQualified());
@@ -612,12 +612,12 @@ EmitCompoundAssignLValue(const CompoundAssignOperator *E,
   assert(CGF.getContext().hasSameUnqualifiedType(OpInfo.Ty,
                                                  E->getRHS()->getType()));
   OpInfo.RHS = Visit(E->getRHS());
-  
+
   LValue LHS = CGF.EmitLValue(E->getLHS());
 
   // Load from the l-value.
   ComplexPairTy LHSComplexPair = EmitLoadOfLValue(LHS);
-  
+
   OpInfo.LHS = EmitComplexToComplexCast(LHSComplexPair, LHSTy, OpInfo.Ty);
 
   // Expand the binary operator.
@@ -653,7 +653,7 @@ EmitCompoundAssign(const CompoundAssignOperator *E,
 
 LValue ComplexExprEmitter::EmitBinAssignLValue(const BinaryOperator *E,
                                                ComplexPairTy &Val) {
-  assert(CGF.getContext().hasSameUnqualifiedType(E->getLHS()->getType(), 
+  assert(CGF.getContext().hasSameUnqualifiedType(E->getLHS()->getType(),
                                                  E->getRHS()->getType()) &&
          "Invalid assignment");
   TestAndClearIgnoreReal();

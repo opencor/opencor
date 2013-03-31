@@ -514,7 +514,7 @@ class X86_32ABIInfo : public ABIInfo {
     return (Size == 8 || Size == 16 || Size == 32 || Size == 64);
   }
 
-  static bool shouldReturnTypeInRegister(QualType Ty, ASTContext &Context, 
+  static bool shouldReturnTypeInRegister(QualType Ty, ASTContext &Context,
                                           unsigned callingConvention);
 
   /// getIndirectResult - Give a source type \arg Ty, return a suitable result
@@ -615,7 +615,7 @@ bool X86_32ABIInfo::shouldReturnTypeInRegister(QualType Ty,
 
   // For thiscall conventions, structures will never be returned in
   // a register.  This is for compatibility with the MSVC ABI
-  if (callingConvention == llvm::CallingConv::X86_ThisCall && 
+  if (callingConvention == llvm::CallingConv::X86_ThisCall &&
       RT->isStructureType()) {
     return false;
   }
@@ -631,14 +631,14 @@ bool X86_32ABIInfo::shouldReturnTypeInRegister(QualType Ty,
       continue;
 
     // Check fields recursively.
-    if (!shouldReturnTypeInRegister(FD->getType(), Context, 
+    if (!shouldReturnTypeInRegister(FD->getType(), Context,
                                     callingConvention))
       return false;
   }
   return true;
 }
 
-ABIArgInfo X86_32ABIInfo::classifyReturnType(QualType RetTy, 
+ABIArgInfo X86_32ABIInfo::classifyReturnType(QualType RetTy,
                                             unsigned callingConvention) const {
   if (RetTy->isVoidType())
     return ABIArgInfo::getIgnore();
@@ -686,7 +686,7 @@ ABIArgInfo X86_32ABIInfo::classifyReturnType(QualType RetTy,
 
     // Small structures which are register sized are generally returned
     // in a register.
-    if (X86_32ABIInfo::shouldReturnTypeInRegister(RetTy, getContext(), 
+    if (X86_32ABIInfo::shouldReturnTypeInRegister(RetTy, getContext(),
                                                   callingConvention)) {
       uint64_t Size = getContext().getTypeSize(RetTy);
 
@@ -2715,7 +2715,7 @@ public:
     }
   }
 
-  virtual llvm::Value *EmitVAArg(llvm::Value *VAListAddr, 
+  virtual llvm::Value *EmitVAArg(llvm::Value *VAListAddr,
                                  QualType Ty,
                                  CodeGenFunction &CGF) const;
 };
@@ -2973,7 +2973,7 @@ void ARMABIInfo::computeInfo(CGFunctionInfo &FI) const {
   // VFP registers of the appropriate type unallocated then the argument is
   // allocated to the lowest-numbered sequence of such registers.
   // C.2.vfp If the argument is a VFP CPRC then any VFP registers that are
-  // unallocated are marked as unavailable. 
+  // unallocated are marked as unavailable.
   unsigned AllocatedVFP = 0;
   int VFPRegs[16] = { 0 };
   FI.getReturnInfo() = classifyReturnType(FI.getReturnType());
@@ -3065,7 +3065,7 @@ static bool isHomogeneousAggregate(QualType Ty, const Type *&Base,
     // Homogeneous aggregates for AAPCS-VFP must have base types of float,
     // double, or 64-bit or 128-bit vectors.
     if (const BuiltinType *BT = Ty->getAs<BuiltinType>()) {
-      if (BT->getKind() != BuiltinType::Float && 
+      if (BT->getKind() != BuiltinType::Float &&
           BT->getKind() != BuiltinType::Double &&
           BT->getKind() != BuiltinType::LongDouble)
         return false;
@@ -3560,7 +3560,7 @@ class NVPTXTargetCodeGenInfo : public TargetCodeGenInfo {
 public:
   NVPTXTargetCodeGenInfo(CodeGenTypes &CGT)
     : TargetCodeGenInfo(new NVPTXABIInfo(CGT)) {}
-    
+
   virtual void SetTargetAttributes(const Decl *D, llvm::GlobalValue *GV,
                                    CodeGen::CodeGenModule &M) const;
 };
@@ -3600,7 +3600,7 @@ void NVPTXABIInfo::computeInfo(CGFunctionInfo &FI) const {
     DefaultCC = llvm::CallingConv::PTX_Device;
   } else {
     // If we are in standard C/C++ mode, use the triple to decide on the default
-    StringRef Env = 
+    StringRef Env =
       getContext().getTargetInfo().getTriple().getEnvironmentName();
     if (Env == "device")
       DefaultCC = llvm::CallingConv::PTX_Device;
@@ -3608,7 +3608,7 @@ void NVPTXABIInfo::computeInfo(CGFunctionInfo &FI) const {
       DefaultCC = llvm::CallingConv::PTX_Kernel;
   }
   FI.setEffectiveCallingConvention(DefaultCC);
-   
+
 }
 
 llvm::Value *NVPTXABIInfo::EmitVAArg(llvm::Value *VAListAddr, QualType Ty,
@@ -3883,7 +3883,7 @@ llvm::Type* MipsABIInfo::HandleAggregates(QualType Ty, uint64_t TySize) const {
   const RecordDecl *RD = RT->getDecl();
   const ASTRecordLayout &Layout = getContext().getASTRecordLayout(RD);
   assert(!(TySize % 8) && "Size of structure must be multiple of 8.");
-  
+
   uint64_t LastOffset = 0;
   unsigned idx = 0;
   llvm::IntegerType *I64 = llvm::IntegerType::get(getVMContext(), 64);
@@ -3981,7 +3981,7 @@ MipsABIInfo::returnAggregateInRegs(QualType RetTy, uint64_t Size) const {
     // 1. The size of the struct/class is no larger than 128-bit.
     // 2. The struct/class has one or two fields all of which are floating
     //    point types.
-    // 3. The offset of the first field is zero (this follows what gcc does). 
+    // 3. The offset of the first field is zero (this follows what gcc does).
     //
     // Any other composite results are returned in integer registers.
     //
@@ -4042,7 +4042,7 @@ void MipsABIInfo::computeInfo(CGFunctionInfo &FI) const {
   ABIArgInfo &RetInfo = FI.getReturnInfo();
   RetInfo = classifyReturnType(FI.getReturnType());
 
-  // Check if a pointer to an aggregate is passed as a hidden argument.  
+  // Check if a pointer to an aggregate is passed as a hidden argument.
   uint64_t Offset = RetInfo.isIndirect() ? MinABIStackAlignInBytes : 0;
 
   for (CGFunctionInfo::arg_iterator it = FI.arg_begin(), ie = FI.arg_end();
@@ -4054,7 +4054,7 @@ llvm::Value* MipsABIInfo::EmitVAArg(llvm::Value *VAListAddr, QualType Ty,
                                     CodeGenFunction &CGF) const {
   llvm::Type *BP = CGF.Int8PtrTy;
   llvm::Type *BPP = CGF.Int8PtrPtrTy;
- 
+
   CGBuilderTy &Builder = CGF.Builder;
   llvm::Value *VAListAddrAsBPP = Builder.CreateBitCast(VAListAddr, BPP, "ap");
   llvm::Value *Addr = Builder.CreateLoad(VAListAddrAsBPP, "ap.cur");
@@ -4073,7 +4073,7 @@ llvm::Value* MipsABIInfo::EmitVAArg(llvm::Value *VAListAddr, QualType Ty,
     AddrTyped = CGF.Builder.CreateIntToPtr(And, PTy);
   }
   else
-    AddrTyped = Builder.CreateBitCast(Addr, PTy);  
+    AddrTyped = Builder.CreateBitCast(Addr, PTy);
 
   llvm::Value *AlignedAddr = Builder.CreateBitCast(AddrTyped, BP);
   TypeAlign = std::max((unsigned)TypeAlign, MinABIStackAlignInBytes);
@@ -4083,7 +4083,7 @@ llvm::Value* MipsABIInfo::EmitVAArg(llvm::Value *VAListAddr, QualType Ty,
     Builder.CreateGEP(AlignedAddr, llvm::ConstantInt::get(IntTy, Offset),
                       "ap.next");
   Builder.CreateStore(NextAddr, VAListAddrAsBPP);
-  
+
   return AddrTyped;
 }
 
@@ -4117,7 +4117,7 @@ MIPSTargetCodeGenInfo::initDwarfEHRegSizeTable(CodeGen::CodeGenFunction &CGF,
 
 //===----------------------------------------------------------------------===//
 // TCE ABI Implementation (see http://tce.cs.tut.fi). Uses mostly the defaults.
-// Currently subclassed only to implement custom OpenCL C function attribute 
+// Currently subclassed only to implement custom OpenCL C function attribute
 // handling.
 //===----------------------------------------------------------------------===//
 
@@ -4139,34 +4139,34 @@ void TCETargetCodeGenInfo::SetTargetAttributes(const Decl *D,
   if (!FD) return;
 
   llvm::Function *F = cast<llvm::Function>(GV);
-  
+
   if (M.getLangOpts().OpenCL) {
     if (FD->hasAttr<OpenCLKernelAttr>()) {
       // OpenCL C Kernel functions are not subject to inlining
       F->addFnAttr(llvm::Attributes::NoInline);
-          
+
       if (FD->hasAttr<ReqdWorkGroupSizeAttr>()) {
 
         // Convert the reqd_work_group_size() attributes to metadata.
         llvm::LLVMContext &Context = F->getContext();
-        llvm::NamedMDNode *OpenCLMetadata = 
+        llvm::NamedMDNode *OpenCLMetadata =
             M.getModule().getOrInsertNamedMetadata("opencl.kernel_wg_size_info");
 
         SmallVector<llvm::Value*, 5> Operands;
         Operands.push_back(F);
 
-        Operands.push_back(llvm::Constant::getIntegerValue(M.Int32Ty, 
-                             llvm::APInt(32, 
+        Operands.push_back(llvm::Constant::getIntegerValue(M.Int32Ty,
+                             llvm::APInt(32,
                              FD->getAttr<ReqdWorkGroupSizeAttr>()->getXDim())));
         Operands.push_back(llvm::Constant::getIntegerValue(M.Int32Ty,
                              llvm::APInt(32,
                                FD->getAttr<ReqdWorkGroupSizeAttr>()->getYDim())));
-        Operands.push_back(llvm::Constant::getIntegerValue(M.Int32Ty, 
-                             llvm::APInt(32, 
+        Operands.push_back(llvm::Constant::getIntegerValue(M.Int32Ty,
+                             llvm::APInt(32,
                                FD->getAttr<ReqdWorkGroupSizeAttr>()->getZDim())));
 
         // Add a boolean constant operand for "required" (true) or "hint" (false)
-        // for implementing the work_group_size_hint attr later. Currently 
+        // for implementing the work_group_size_hint attr later. Currently
         // always true as the hint is not yet implemented.
         Operands.push_back(llvm::ConstantInt::getTrue(Context));
         OpenCLMetadata->addOperand(llvm::MDNode::get(Context, Operands));

@@ -27,24 +27,24 @@
 #include <string>
 
 namespace clang {
-  
+
 class DirectoryEntry;
 class FileEntry;
 class FileManager;
 class DiagnosticConsumer;
 class DiagnosticsEngine;
 class ModuleMapParser;
-  
+
 class ModuleMap {
   SourceManager *SourceMgr;
   IntrusiveRefCntPtr<DiagnosticsEngine> Diags;
   const LangOptions &LangOpts;
   const TargetInfo *Target;
-  
+
   /// \brief The directory used for Clang-supplied, builtin include headers,
   /// such as "stdint.h".
   const DirectoryEntry *BuiltinIncludeDir;
-  
+
   /// \brief Language options used to parse the module map itself.
   ///
   /// These are always simple C language options.
@@ -69,8 +69,8 @@ class ModuleMap {
     bool isExcluded() const { return Storage.getInt(); }
 
     /// \brief Whether this header is available in the module.
-    bool isAvailable() const { 
-      return !isExcluded() && getModule()->isAvailable(); 
+    bool isAvailable() const {
+      return !isExcluded() && getModule()->isAvailable();
     }
 
     // \brief Whether this known header is valid (i.e., it has an
@@ -83,7 +83,7 @@ class ModuleMap {
   /// \brief Mapping from each header to the module that owns the contents of the
   /// that header.
   HeadersMap Headers;
-  
+
   /// \brief Mapping from directories with umbrella headers to the module
   /// that is generated from the umbrella header.
   ///
@@ -112,7 +112,7 @@ class ModuleMap {
   llvm::DenseMap<const DirectoryEntry *, InferredDirectory> InferredDirectories;
 
   friend class ModuleMapParser;
-  
+
   /// \brief Resolve the given export declaration into an actual export
   /// declaration.
   ///
@@ -125,10 +125,10 @@ class ModuleMap {
   ///
   /// \returns The resolved export declaration, which will have a NULL pointer
   /// if the export could not be resolved.
-  Module::ExportDecl 
+  Module::ExportDecl
   resolveExport(Module *Mod, const Module::UnresolvedExportDecl &Unresolved,
                 bool Complain);
-  
+
 public:
   /// \brief Construct a new module map.
   ///
@@ -192,13 +192,13 @@ public:
   /// using direct (qualified) name lookup.
   ///
   /// \param Name The name of the module to look up.
-  /// 
+  ///
   /// \param Context The module for which we will look for a submodule. If
   /// null, we will look for a top-level module.
   ///
   /// \returns The named submodule, if known; otherwose, returns null.
   Module *lookupModuleQualified(StringRef Name, Module *Context);
-  
+
   /// \brief Find a new module or submodule, or create it if it does not already
   /// exist.
   ///
@@ -213,7 +213,7 @@ public:
   ///
   /// \returns The found or newly-created module, along with a boolean value
   /// that will be true if the module is newly-created.
-  std::pair<Module *, bool> findOrCreateModule(StringRef Name, Module *Parent, 
+  std::pair<Module *, bool> findOrCreateModule(StringRef Name, Module *Parent,
                                                bool IsFramework,
                                                bool IsExplicit);
 
@@ -235,10 +235,10 @@ public:
 
   /// \brief Infer the contents of a framework module map from the given
   /// framework directory.
-  Module *inferFrameworkModule(StringRef ModuleName, 
+  Module *inferFrameworkModule(StringRef ModuleName,
                                const DirectoryEntry *FrameworkDir,
                                bool IsSystem, Module *Parent);
-  
+
   /// \brief Retrieve the module map file containing the definition of the given
   /// module.
   ///
@@ -258,7 +258,7 @@ public:
   /// false otherwise.
   bool resolveExports(Module *Mod, bool Complain);
 
-  /// \brief Infers the (sub)module based on the given source location and 
+  /// \brief Infers the (sub)module based on the given source location and
   /// source manager.
   ///
   /// \param Loc The location within the source that we are querying, along
@@ -267,7 +267,7 @@ public:
   /// \returns The module that owns this source location, or null if no
   /// module owns this source location.
   Module *inferModuleFromLocation(FullSourceLoc Loc);
-  
+
   /// \brief Sets the umbrella header of the given module to the given
   /// header.
   void setUmbrellaHeader(Module *Mod, const FileEntry *UmbrellaHeader);
@@ -281,21 +281,21 @@ public:
   /// module; otherwise, it's included in the module.
   void addHeader(Module *Mod, const FileEntry *Header, bool Excluded);
 
-  /// \brief Parse the given module map file, and record any modules we 
+  /// \brief Parse the given module map file, and record any modules we
   /// encounter.
   ///
   /// \param File The file to be parsed.
   ///
   /// \returns true if an error occurred, false otherwise.
   bool parseModuleMapFile(const FileEntry *File);
-    
+
   /// \brief Dump the contents of the module map, for debugging purposes.
   void dump();
-  
+
   typedef llvm::StringMap<Module *>::const_iterator module_iterator;
   module_iterator module_begin() const { return Modules.begin(); }
   module_iterator module_end()   const { return Modules.end(); }
 };
-  
+
 }
 #endif

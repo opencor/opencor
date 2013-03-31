@@ -68,10 +68,10 @@ namespace llvm {
   /// where V is a vector, the mask, known zero, and known one values are the
   /// same width as the vector element, and the bit is set only if it is true
   /// for all of the elements in the vector.
-  bool MaskedValueIsZero(Value *V, const APInt &Mask, 
+  bool MaskedValueIsZero(Value *V, const APInt &Mask,
                          const DataLayout *TD = 0, unsigned Depth = 0);
 
-  
+
   /// ComputeNumSignBits - Return the number of times the sign bit of the
   /// register is replicated into the other bits.  We know that at least 1 bit
   /// is always equal to the sign bit (itself), but other cases can give us
@@ -92,7 +92,7 @@ namespace llvm {
                        bool LookThroughSExt = false,
                        unsigned Depth = 0);
 
-  /// CannotBeNegativeZero - Return true if we can prove that the specified FP 
+  /// CannotBeNegativeZero - Return true if we can prove that the specified FP
   /// value is never equal to -0.0.
   ///
   bool CannotBeNegativeZero(const Value *V, unsigned Depth = 0);
@@ -103,7 +103,7 @@ namespace llvm {
   /// i16 0xF0F0, double 0.0 etc.  If the value can't be handled with a repeated
   /// byte store (e.g. i16 0x1234), return null.
   Value *isBytewiseValue(Value *V);
-    
+
   /// FindInsertedValue - Given an aggregrate and an sequence of indices, see if
   /// the scalar value indexed is already around as a register, for example if
   /// it were inserted directly into the aggregrate.
@@ -124,7 +124,7 @@ namespace llvm {
                                    const DataLayout &TD) {
     return GetPointerBaseWithConstantOffset(const_cast<Value*>(Ptr), Offset,TD);
   }
-  
+
   /// getConstantStringInfo - This function computes the length of a
   /// null-terminated C string pointed to by V.  If successful, it returns true
   /// and returns the string in Str.  If unsuccessful, it returns false.  This

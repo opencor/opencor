@@ -2,7 +2,7 @@
  * -----------------------------------------------------------------
  * $Revision: 1.7 $
  * $Date: 2010/12/01 22:19:48 $
- * ----------------------------------------------------------------- 
+ * -----------------------------------------------------------------
  * Programmer(s): Alan C. Hindmarsh and Radu Serban @ LLNL
  * -----------------------------------------------------------------
  * Copyright (c) 2005, The Regents of the University of California.
@@ -57,7 +57,7 @@ typedef struct CVSpilsMemRec {
   long int s_nps;       /* nps = total number of psolve calls           */
   long int s_ncfl;      /* ncfl = total number of convergence failures  */
   long int s_njtimes;   /* njtimes = total number of calls to jtimes    */
-  long int s_nfes;      /* nfeSG = total number of calls to f for     
+  long int s_nfes;      /* nfeSG = total number of calls to f for
                            difference quotient Jacobian-vector products */
 
   N_Vector s_ytemp;     /* temp vector passed to jtimes and psolve      */

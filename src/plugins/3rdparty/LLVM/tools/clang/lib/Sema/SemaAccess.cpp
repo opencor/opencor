@@ -151,8 +151,8 @@ struct AccessTarget : public AccessedEntity {
     : AccessedEntity(Entity) {
     initialize();
   }
-    
-  AccessTarget(ASTContext &Context, 
+
+  AccessTarget(ASTContext &Context,
                MemberNonce _,
                CXXRecordDecl *NamingClass,
                DeclAccessPair FoundDecl,
@@ -162,7 +162,7 @@ struct AccessTarget : public AccessedEntity {
     initialize();
   }
 
-  AccessTarget(ASTContext &Context, 
+  AccessTarget(ASTContext &Context,
                BaseNonce _,
                CXXRecordDecl *BaseClass,
                CXXRecordDecl *DerivedClass,
@@ -278,7 +278,7 @@ static AccessResult IsDerivedFromInclusive(const CXXRecordDecl *Derived,
   while (true) {
     if (Derived->isDependentContext() && !Derived->hasDefinition())
       return AR_dependent;
-    
+
     for (CXXRecordDecl::base_class_const_iterator
            I = Derived->bases_begin(), E = Derived->bases_end(); I != E; ++I) {
 
@@ -776,7 +776,7 @@ static AccessResult HasAccess(Sema &S,
       // We interpret this as a restriction on [M3].
 
       // In this part of the code, 'C' is just our context class ECRecord.
-      
+
       // These rules are different if we don't have an instance context.
       if (!Target.hasInstanceContext()) {
         // If it's not an instance member, these restrictions don't apply.
@@ -1137,7 +1137,7 @@ static void DiagnoseAccessPath(Sema &S,
           DC = DC->getParent();
         ImmediateChild = cast<Decl>(DC);
       }
-      
+
       // Check whether there's an AccessSpecDecl preceding this in the
       // chain of the DeclContext.
       bool Implicit = true;
@@ -1203,10 +1203,10 @@ static void DiagnoseAccessPath(Sema &S,
         << BS->getSourceRange()
         << (BaseAccess == AS_protected)
         << (BS->getAccessSpecifierAsWritten() == AS_none);
-      
+
       if (D)
         S.Diag(D->getLocation(), diag::note_field_decl);
-      
+
       return;
     }
   }
@@ -1229,8 +1229,8 @@ static void DiagnoseBadAccess(Sema &S, SourceLocation Loc,
   DiagnoseAccessPath(S, EC, Entity);
 }
 
-/// MSVC has a bug where if during an using declaration name lookup, 
-/// the declaration found is unaccessible (private) and that declaration 
+/// MSVC has a bug where if during an using declaration name lookup,
+/// the declaration found is unaccessible (private) and that declaration
 /// was bring into scope via another using declaration whose target
 /// declaration is accessible (public) then no error is generated.
 /// Example:
@@ -1247,15 +1247,15 @@ static void DiagnoseBadAccess(Sema &S, SourceLocation Loc,
 ///     using B::f;
 ///   };
 ///
-/// Here, B::f is private so this should fail in Standard C++, but 
+/// Here, B::f is private so this should fail in Standard C++, but
 /// because B::f refers to A::f which is public MSVC accepts it.
-static bool IsMicrosoftUsingDeclarationAccessBug(Sema& S, 
+static bool IsMicrosoftUsingDeclarationAccessBug(Sema& S,
                                                  SourceLocation AccessLoc,
                                                  AccessTarget &Entity) {
   if (UsingShadowDecl *Shadow =
                          dyn_cast<UsingShadowDecl>(Entity.getTargetDecl())) {
     const NamedDecl *OrigDecl = Entity.getTargetDecl()->getUnderlyingDecl();
-    if (Entity.getTargetDecl()->getAccess() == AS_private && 
+    if (Entity.getTargetDecl()->getAccess() == AS_private &&
         (OrigDecl->getAccess() == AS_public ||
          OrigDecl->getAccess() == AS_protected)) {
       S.Diag(AccessLoc, diag::ext_ms_using_declaration_inaccessible)
@@ -1492,7 +1492,7 @@ Sema::AccessResult Sema::CheckUnresolvedLookupAccess(UnresolvedLookupExpr *E,
       Found.getAccess() == AS_public)
     return AR_accessible;
 
-  AccessTarget Entity(Context, AccessTarget::Member, E->getNamingClass(), 
+  AccessTarget Entity(Context, AccessTarget::Member, E->getNamingClass(),
                       Found, QualType());
   Entity.setDiag(diag::err_access) << E->getSourceRange();
 
@@ -1635,7 +1635,7 @@ Sema::AccessResult Sema::CheckConstructorAccess(SourceLocation UseLoc,
   AccessEntity.setDiag(PD);
 
   return CheckAccess(*this, UseLoc, AccessEntity);
-} 
+}
 
 /// Checks access to an overloaded operator new or delete.
 Sema::AccessResult Sema::CheckAllocationAccess(SourceLocation OpLoc,
@@ -1758,7 +1758,7 @@ Sema::AccessResult Sema::CheckBaseClassAccess(SourceLocation AccessLoc,
   BaseD = cast<CXXRecordDecl>(Base->getAs<RecordType>()->getDecl());
   DerivedD = cast<CXXRecordDecl>(Derived->getAs<RecordType>()->getDecl());
 
-  AccessTarget Entity(Context, AccessTarget::Base, BaseD, DerivedD, 
+  AccessTarget Entity(Context, AccessTarget::Base, BaseD, DerivedD,
                       Path.Access);
   if (DiagID)
     Entity.setDiag(DiagID) << Derived << Base;
@@ -1813,22 +1813,22 @@ bool Sema::IsSimplyAccessible(NamedDecl *Decl, DeclContext *Ctx) {
     EffectiveContext EC(CurContext);
     return ::IsAccessible(*this, EC, Entity) != ::AR_inaccessible;
   }
-  
+
   if (ObjCIvarDecl *Ivar = dyn_cast<ObjCIvarDecl>(Decl)) {
     // @public and @package ivars are always accessible.
     if (Ivar->getCanonicalAccessControl() == ObjCIvarDecl::Public ||
         Ivar->getCanonicalAccessControl() == ObjCIvarDecl::Package)
       return true;
-    
-    
-    
+
+
+
     // If we are inside a class or category implementation, determine the
     // interface we're in.
     ObjCInterfaceDecl *ClassOfMethodDecl = 0;
     if (ObjCMethodDecl *MD = getCurMethodDecl())
       ClassOfMethodDecl =  MD->getClassInterface();
     else if (FunctionDecl *FD = getCurFunctionDecl()) {
-      if (ObjCImplDecl *Impl 
+      if (ObjCImplDecl *Impl
             = dyn_cast<ObjCImplDecl>(FD->getLexicalDeclContext())) {
         if (ObjCImplementationDecl *IMPD
               = dyn_cast<ObjCImplementationDecl>(Impl))
@@ -1838,21 +1838,21 @@ bool Sema::IsSimplyAccessible(NamedDecl *Decl, DeclContext *Ctx) {
           ClassOfMethodDecl = CatImplClass->getClassInterface();
       }
     }
-    
+
     // If we're not in an interface, this ivar is inaccessible.
     if (!ClassOfMethodDecl)
       return false;
-    
+
     // If we're inside the same interface that owns the ivar, we're fine.
     if (declaresSameEntity(ClassOfMethodDecl, Ivar->getContainingInterface()))
       return true;
-    
+
     // If the ivar is private, it's inaccessible.
     if (Ivar->getCanonicalAccessControl() == ObjCIvarDecl::Private)
       return false;
-    
+
     return Ivar->getContainingInterface()->isSuperClassOf(ClassOfMethodDecl);
   }
-  
+
   return true;
 }

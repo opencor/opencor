@@ -200,7 +200,7 @@ public:
   void addVirtualRegisterKilled(unsigned IncomingReg, MachineInstr *MI,
                                 bool AddIfNotFound = false) {
     if (MI->addRegisterKilled(IncomingReg, TRI, AddIfNotFound))
-      getVarInfo(IncomingReg).Kills.push_back(MI); 
+      getVarInfo(IncomingReg).Kills.push_back(MI);
   }
 
   /// removeVirtualRegisterKilled - Remove the specified kill of the virtual
@@ -260,7 +260,7 @@ public:
     (void)Removed;
     return true;
   }
-  
+
   void getAnalysisUsage(AnalysisUsage &AU) const;
 
   virtual void releaseMemory() {

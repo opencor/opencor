@@ -28,7 +28,7 @@ namespace clang {
 class Preprocessor;
 class LangOptions;
 
-/// \brief Enumerate the kinds of standard library that 
+/// \brief Enumerate the kinds of standard library that
 enum ObjCXXARCStandardLibraryKind {
   ARCXX_nolib,
   /// \brief libc++
@@ -36,7 +36,7 @@ enum ObjCXXARCStandardLibraryKind {
   /// \brief libstdc++
   ARCXX_libstdcxx
 };
-  
+
 /// PreprocessorOptions - This class is used for passing the various options
 /// used in preprocessor initialization to InitializePreprocessor().
 class PreprocessorOptions : public llvm::RefCountedBase<PreprocessorOptions> {
@@ -55,7 +55,7 @@ public:
                                /// preprocessing record we should also keep
                                /// track of locations of conditional directives
                                /// in non-system files.
-  
+
   /// The implicit PCH included at the start of the translation unit, or empty.
   std::string ImplicitPCHInclude;
 
@@ -82,7 +82,7 @@ public:
   /// The boolean indicates whether the preamble ends at the start of a new
   /// line.
   std::pair<unsigned, bool> PrecompiledPreambleBytes;
-  
+
   /// The implicit PTH input included at the start of the translation unit, or
   /// empty.
   std::string ImplicitPTHInclude;
@@ -103,22 +103,22 @@ public:
   /// \brief The set of file-to-buffer remappings, which take existing files
   /// on the system (the first part of each pair) and gives them the contents
   /// of the specified memory buffer (the second part of each pair).
-  std::vector<std::pair<std::string, const llvm::MemoryBuffer *> > 
+  std::vector<std::pair<std::string, const llvm::MemoryBuffer *> >
     RemappedFileBuffers;
-  
+
   /// \brief Whether the compiler instance should retain (i.e., not free)
   /// the buffers associated with remapped files.
   ///
   /// This flag defaults to false; it can be set true only through direct
-  /// manipulation of the compiler invocation object, in cases where the 
+  /// manipulation of the compiler invocation object, in cases where the
   /// compiler invocation and its buffers will be reused.
   bool RetainRemappedFileBuffers;
-  
+
   /// \brief The Objective-C++ ARC standard library that we should support,
   /// by providing appropriate definitions to retrofit the standard library
   /// with support for lifetime-qualified pointers.
   ObjCXXARCStandardLibraryKind ObjCXXARCStandardLibrary;
-    
+
   /// \brief The path of modules being build, which is used to detect
   /// cycles in the module dependency graph as modules are being built.
   ///
@@ -126,21 +126,21 @@ public:
   /// to do so (e.g., if on-demand module construction moves out-of-process),
   /// we can add a cc1-level option to do so.
   SmallVector<std::string, 2> ModuleBuildPath;
-  
+
   typedef std::vector<std::pair<std::string, std::string> >::iterator
     remapped_file_iterator;
   typedef std::vector<std::pair<std::string, std::string> >::const_iterator
     const_remapped_file_iterator;
-  remapped_file_iterator remapped_file_begin() { 
+  remapped_file_iterator remapped_file_begin() {
     return RemappedFiles.begin();
   }
   const_remapped_file_iterator remapped_file_begin() const {
     return RemappedFiles.begin();
   }
-  remapped_file_iterator remapped_file_end() { 
+  remapped_file_iterator remapped_file_end() {
     return RemappedFiles.end();
   }
-  const_remapped_file_iterator remapped_file_end() const { 
+  const_remapped_file_iterator remapped_file_end() const {
     return RemappedFiles.end();
   }
 
@@ -160,7 +160,7 @@ public:
   const_remapped_file_buffer_iterator remapped_file_buffer_end() const {
     return RemappedFileBuffers.end();
   }
-  
+
 public:
   PreprocessorOptions() : UsePredefines(true), DetailedRecord(false),
                           DetailedRecordConditionalDirectives(false),
@@ -181,25 +181,25 @@ public:
   void addRemappedFile(StringRef From, StringRef To) {
     RemappedFiles.push_back(std::make_pair(From, To));
   }
-  
+
   remapped_file_iterator eraseRemappedFile(remapped_file_iterator Remapped) {
     return RemappedFiles.erase(Remapped);
   }
-  
+
   void addRemappedFile(StringRef From, const llvm::MemoryBuffer * To) {
     RemappedFileBuffers.push_back(std::make_pair(From, To));
   }
-  
+
   remapped_file_buffer_iterator
   eraseRemappedFile(remapped_file_buffer_iterator Remapped) {
     return RemappedFileBuffers.erase(Remapped);
   }
-  
+
   void clearRemappedFiles() {
     RemappedFiles.clear();
     RemappedFileBuffers.clear();
   }
-  
+
   /// \brief Reset any options that are not considered when building a
   /// module.
   void resetNonModularOptions() {

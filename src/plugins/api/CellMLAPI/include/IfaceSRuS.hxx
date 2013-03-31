@@ -24,13 +24,13 @@ namespace iface
     class GeneratedData;
     class GeneratedDataSet;
     class GeneratedDataMonitor;
-    PUBLIC_SRuS_PRE 
+    PUBLIC_SRuS_PRE
     class  PUBLIC_SRuS_POST SRuSException : public std::exception
     {
     public:
       SRuSException(){}
     };
-    PUBLIC_SRuS_PRE 
+    PUBLIC_SRuS_PRE
     class  PUBLIC_SRuS_POST SEDMLProcessor
      : public virtual iface::XPCOM::IObject
     {
@@ -42,7 +42,7 @@ namespace iface
       virtual already_AddRefd<iface::SRuS::TransformedModelSet>  buildAllModels(iface::SProS::SEDMLElement* aElement) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual void generateData(iface::SRuS::TransformedModelSet* aSet, iface::SProS::SEDMLElement* aElement, iface::SRuS::GeneratedDataMonitor* aMonitor) throw(std::exception&) = 0;
     };
-    PUBLIC_SRuS_PRE 
+    PUBLIC_SRuS_PRE
     class  PUBLIC_SRuS_POST TransformedModel
      : public virtual iface::XPCOM::IObject
     {
@@ -53,7 +53,7 @@ namespace iface
       virtual already_AddRefd<iface::XPCOM::IObject>  modelDocument() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::SProS::Model>  sedmlModel() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SRuS_PRE 
+    PUBLIC_SRuS_PRE
     class  PUBLIC_SRuS_POST TransformedModelSet
      : public virtual iface::XPCOM::IObject
     {
@@ -64,7 +64,7 @@ namespace iface
       virtual already_AddRefd<iface::SRuS::TransformedModel>  item(uint32_t idx) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::SRuS::TransformedModel>  getItemByID(const std::wstring& matchId) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SRuS_PRE 
+    PUBLIC_SRuS_PRE
     class  PUBLIC_SRuS_POST GeneratedDataMonitor
      : public virtual iface::XPCOM::IObject
     {
@@ -75,7 +75,7 @@ namespace iface
       virtual void failure(const std::string& aErrMsg) throw(std::exception&) = 0;
       virtual void done() throw(std::exception&) = 0;
     };
-    PUBLIC_SRuS_PRE 
+    PUBLIC_SRuS_PRE
     class  PUBLIC_SRuS_POST GeneratedData
      : public virtual iface::XPCOM::IObject
     {
@@ -86,7 +86,7 @@ namespace iface
       virtual uint32_t length() throw(std::exception&)  = 0;
       virtual double dataPoint(uint32_t idx) throw(std::exception&) = 0;
     };
-    PUBLIC_SRuS_PRE 
+    PUBLIC_SRuS_PRE
     class  PUBLIC_SRuS_POST GeneratedDataSet
      : public virtual iface::XPCOM::IObject
     {
@@ -96,7 +96,7 @@ namespace iface
       virtual uint32_t length() throw(std::exception&)  = 0;
       virtual already_AddRefd<iface::SRuS::GeneratedData>  item(uint32_t idx) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SRuS_PRE 
+    PUBLIC_SRuS_PRE
     class  PUBLIC_SRuS_POST Bootstrap
      : public virtual iface::XPCOM::IObject
     {

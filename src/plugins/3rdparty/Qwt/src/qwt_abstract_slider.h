@@ -17,14 +17,14 @@
   \brief An abstract base class for slider widgets with a scale
 
   A slider widget displays a value according to a scale.
-  The class is designed as a common super class for widgets like 
+  The class is designed as a common super class for widgets like
   QwtKnob, QwtDial and QwtSlider.
 
-  When the slider is nor readOnly() its value can be modified 
-  by keyboard, mouse and wheel inputs. 
+  When the slider is nor readOnly() its value can be modified
+  by keyboard, mouse and wheel inputs.
 
   The range of the slider is divided into a number of steps from
-  which the value increments according to user inputs depend. 
+  which the value increments according to user inputs depend.
   Only for linear scales the number of steps correspond with
   a fixed step size.
 */
@@ -67,7 +67,7 @@ public:
     void setPageSteps( uint );
     uint pageSteps() const;
 
-    void setStepAlignment( bool ); 
+    void setStepAlignment( bool );
     bool stepAlignment() const;
 
     void setTracking( bool );
@@ -87,8 +87,8 @@ Q_SIGNALS:
     /*!
       \brief Notify a change of value.
 
-      When tracking is enabled (default setting), 
-      this signal will be emitted every time the value changes. 
+      When tracking is enabled (default setting),
+      this signal will be emitted every time the value changes.
 
       \param value New value
 
@@ -153,7 +153,7 @@ protected:
 protected:
     virtual void sliderChange();
 
-    double incrementedValue( 
+    double incrementedValue(
         double value, int stepCount ) const;
 
 private:

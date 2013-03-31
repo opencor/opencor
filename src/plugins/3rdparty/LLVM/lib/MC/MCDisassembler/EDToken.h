@@ -4,11 +4,11 @@
 //
 // This file is distributed under the University of Illinois Open Source
 // License. See LICENSE.TXT for details.
-// 
+//
 //===----------------------------------------------------------------------===//
 //
 // This file defines the interface for the Enhanced Disassembly library's token
-// class.  The token is responsible for vending information about the token, 
+// class.  The token is responsible for vending information about the token,
 // such as its type and logical value.
 //
 //===----------------------------------------------------------------------===//
@@ -22,7 +22,7 @@
 #include <vector>
 
 namespace llvm {
-  
+
 struct EDDisassembler;
 
 /// EDToken - Encapsulates a single token, which can provide a string
@@ -36,7 +36,7 @@ struct EDToken {
     kTokenRegister,
     kTokenPunctuation
   };
-  
+
   /// The parent disassembler
   EDDisassembler &Disassembler;
 
@@ -51,14 +51,14 @@ struct EDToken {
   /// The operand corresponding to the token, or (unsigned int)-1 if not
   ///   part of an operand.
   int OperandID;
-  
+
   /// The sign if the token is a literal (1 if negative, 0 otherwise)
   bool LiteralSign;
   /// The absolute value if the token is a literal
   uint64_t LiteralAbsoluteValue;
   /// The LLVM register ID if the token is a register name
   unsigned RegisterID;
-  
+
   /// Constructor - Initializes an EDToken with the information common to all
   ///   tokens
   ///
@@ -70,9 +70,9 @@ struct EDToken {
           enum tokenType type,
           uint64_t localType,
           EDDisassembler &disassembler);
-  
+
   /// makeLiteral - Adds the information specific to a literal
-  /// @arg sign           - The sign of the literal (1 if negative, 0 
+  /// @arg sign           - The sign of the literal (1 if negative, 0
   ///                       otherwise)
   ///
   /// @arg absoluteValue  - The absolute value of the literal
@@ -81,14 +81,14 @@ struct EDToken {
   ///
   /// @arg registerID - The LLVM register ID
   void makeRegister(unsigned registerID);
-  
+
   /// setOperandID - Links the token to a numbered operand
   ///
   /// @arg operandID  - The operand ID to link to
   void setOperandID(int operandID);
-  
+
   ~EDToken();
-  
+
   /// type - Returns the public type of the token
   enum tokenType type() const;
   /// localType - Returns the tokenizer-specific type of the token
@@ -97,8 +97,8 @@ struct EDToken {
   llvm::StringRef string() const;
   /// operandID - Returns the operand ID of the token
   int operandID() const;
-  
-  /// literalSign - Returns the sign of the token 
+
+  /// literalSign - Returns the sign of the token
   ///   (1 if negative, 0 if positive or unsigned, -1 if it is not a literal)
   int literalSign() const;
   /// literalAbsoluteValue - Retrieves the absolute value of the token, and
@@ -109,10 +109,10 @@ struct EDToken {
   /// registerID - Retrieves the register ID of the token, and returns -1 if the
   ///   token is not a register
   ///
-  /// @arg registerID - A reference to a value that is filled in with the 
+  /// @arg registerID - A reference to a value that is filled in with the
   ///                   register ID, if it is valid
   int registerID(unsigned &registerID) const;
-  
+
   /// tokenize - Tokenizes a string using the platform- and syntax-specific
   ///   tokenizer, and returns 0 on success (-1 on failure)
   ///
@@ -127,7 +127,7 @@ struct EDToken {
                       std::string &str,
                       const signed char *operandOrder,
                       EDDisassembler &disassembler);
-  
+
   /// getString - Directs a character pointer to the string, returning 0 on
   ///   success (-1 on failure)
   /// @arg buf  - A reference to a pointer that is set to point to the string.

@@ -114,7 +114,7 @@ static void CheckStringInit(Expr *Str, QualType &DeclT, const ArrayType *AT,
       if (SL->isPascal())
         StrLength--;
     }
-  
+
     // [dcl.init.string]p2
     if (StrLength > CAT->getSize().getZExtValue())
       S.Diag(Str->getLocStart(),
@@ -837,7 +837,7 @@ void InitListChecker::CheckSubElementType(const InitializedEntity &Entity,
   //   subaggregate, brace elision is assumed and the initializer is
   //   considered for the initialization of the first member of
   //   the subaggregate.
-  if (!SemaRef.getLangOpts().OpenCL && 
+  if (!SemaRef.getLangOpts().OpenCL &&
       (ElemType->isAggregateType() || ElemType->isVectorType())) {
     CheckImplicitInitList(Entity, IList, ElemType, Index, StructuredList,
                           StructuredIndex);
@@ -1510,7 +1510,7 @@ static IndirectFieldDecl *FindIndirectFieldDesignator(FieldDecl *AnonField,
 
   assert(AnonField->isAnonymousStructOrUnion());
   Decl *NextDecl = AnonField->getNextDeclInContext();
-  while (IndirectFieldDecl *IF = 
+  while (IndirectFieldDecl *IF =
           dyn_cast_or_null<IndirectFieldDecl>(NextDecl)) {
     if (FieldName == IF->getAnonField()->getIdentifier())
       return IF;
@@ -2325,7 +2325,7 @@ DeclarationName InitializedEntity::getName() const {
 
   case EK_LambdaCapture:
     return Capture.Var->getDeclName();
-      
+
   case EK_Result:
   case EK_Exception:
   case EK_New:
@@ -2783,12 +2783,12 @@ ResolveConstructorOverload(Sema &S, SourceLocation DeclLoc,
                                        CandidateSet, SuppressUserConversions);
       else {
         // C++ [over.match.copy]p1:
-        //   - When initializing a temporary to be bound to the first parameter 
-        //     of a constructor that takes a reference to possibly cv-qualified 
-        //     T as its first argument, called with a single argument in the 
+        //   - When initializing a temporary to be bound to the first parameter
+        //     of a constructor that takes a reference to possibly cv-qualified
+        //     T as its first argument, called with a single argument in the
         //     context of direct-initialization, explicit conversion functions
         //     are also considered.
-        bool AllowExplicitConv = AllowExplicit && !CopyInitializing && 
+        bool AllowExplicitConv = AllowExplicit && !CopyInitializing &&
                                  NumArgs == 1 &&
                                  Constructor->isCopyOrMoveConstructor();
         S.AddOverloadCandidate(Constructor, FoundDecl,
@@ -3134,7 +3134,7 @@ static OverloadingResult TryRefInitWithConversionFunction(Sema &S,
   (void)DerivedToBase;
   (void)ObjCConversion;
   (void)ObjCLifetimeConversion;
-  
+
   // Build the candidate set directly in the initialization sequence
   // structure, so that it will persist if we fail.
   OverloadCandidateSet &CandidateSet = Sequence.getFailedCandidateSet();
@@ -3144,7 +3144,7 @@ static OverloadingResult TryRefInitWithConversionFunction(Sema &S,
   // explicit conversion operators.
   bool AllowExplicit = Kind.AllowExplicit();
   bool AllowExplicitConvs = Kind.allowExplicitConversionFunctions();
-  
+
   const RecordType *T1RecordType = 0;
   if (AllowRValues && (T1RecordType = T1->getAs<RecordType>()) &&
       !S.RequireCompleteType(Kind.getLocation(), T1, 0)) {
@@ -3516,7 +3516,7 @@ static void TryReferenceInitializationCore(Sema &S,
                               /*FIXME:InOverloadResolution=*/false,
                               /*CStyle=*/Kind.isCStyleOrFunctionalCast(),
                               /*AllowObjCWritebackConversion=*/false);
-  
+
   if (ICS.isBad()) {
     // FIXME: Use the conversion function set stored in ICS to turn
     // this into an overloading ambiguity diagnostic. However, we need
@@ -3643,7 +3643,7 @@ static void TryDefaultInitialization(Sema &S,
   //   To default-initialize an object of type T means:
   //     - if T is an array type, each element is default-initialized;
   QualType DestType = S.Context.getBaseElementType(Entity.getType());
-         
+
   //     - if T is a (possibly cv-qualified) class type (Clause 9), the default
   //       constructor for T is called (and the initialization is ill-formed if
   //       T has no accessible default constructor);
@@ -3910,7 +3910,7 @@ static void checkIndirectCopyRestoreSource(Sema &S, Expr *src) {
 /// \brief Determine whether we have compatible array types for the
 /// purposes of GNU by-copy array initialization.
 static bool hasCompatibleArrayTypes(ASTContext &Context,
-                                    const ArrayType *Dest, 
+                                    const ArrayType *Dest,
                                     const ArrayType *Source) {
   // If the source and destination array types are equivalent, we're
   // done.
@@ -3938,7 +3938,7 @@ static bool tryObjCWritebackConversion(Sema &S,
     ArgPointee = ArgArrayType->getElementType();
     ArgType = S.Context.getPointerType(ArgPointee);
   }
-      
+
   // Handle write-back conversion.
   QualType ConvertedArgType;
   if (!S.isObjCWritebackConversion(ArgType, Entity.getType(),
@@ -3965,10 +3965,10 @@ static bool tryObjCWritebackConversion(Sema &S,
       ICS.Standard.First = ICK_Lvalue_To_Rvalue;
       ResultType = Initializer->getType().getNonLValueExprType(S.Context);
     }
-          
+
     Sequence.AddConversionSequenceStep(ICS, ResultType);
   }
-        
+
   Sequence.AddPassByIndirectCopyRestoreStep(Entity.getType(), ShouldCopy);
   return true;
 }
@@ -4102,7 +4102,7 @@ InitializationSequence::InitializationSequence(Sema &S,
     return;
   }
 
-  // Determine whether we should consider writeback conversions for 
+  // Determine whether we should consider writeback conversions for
   // Objective-C ARC.
   bool allowObjCWritebackConversion = S.getLangOpts().ObjCAutoRefCount &&
     Entity.getKind() == InitializedEntity::EK_Parameter;
@@ -4115,7 +4115,7 @@ InitializationSequence::InitializationSequence(Sema &S,
         tryObjCWritebackConversion(S, *this, Entity, Initializer)) {
       return;
     }
-    
+
     // Handle initialization in C
     AddCAssignmentStep(DestType);
     MaybeProduceObjCObject(S, *this, Entity);
@@ -4123,7 +4123,7 @@ InitializationSequence::InitializationSequence(Sema &S,
   }
 
   assert(S.getLangOpts().CPlusPlus);
-      
+
   //     - If the destination type is a (possibly cv-qualified) class type:
   if (DestType->isRecordType()) {
     //     - If the initialization is direct-initialization, or if it is
@@ -4166,7 +4166,7 @@ InitializationSequence::InitializationSequence(Sema &S,
   //      conversions (Clause 4) will be used, if necessary, to convert the
   //      initializer expression to the cv-unqualified version of the
   //      destination type; no user-defined conversions are considered.
-      
+
   ImplicitConversionSequence ICS
     = S.TryImplicitConversion(Initializer, Entity.getType(),
                               /*SuppressUserConversions*/true,
@@ -4174,17 +4174,17 @@ InitializationSequence::InitializationSequence(Sema &S,
                               /*InOverloadResolution*/ false,
                               /*CStyle=*/Kind.isCStyleOrFunctionalCast(),
                               allowObjCWritebackConversion);
-      
-  if (ICS.isStandard() && 
+
+  if (ICS.isStandard() &&
       ICS.Standard.Second == ICK_Writeback_Conversion) {
     // Objective-C ARC writeback conversion.
-    
+
     // We should copy unless we're passing to an argument explicitly
     // marked 'out'.
     bool ShouldCopy = true;
     if (ParmVarDecl *Param = cast_or_null<ParmVarDecl>(Entity.getDecl()))
       ShouldCopy = (Param->getObjCDeclQualifier() != ParmVarDecl::OBJC_TQ_Out);
-    
+
     // If there was an lvalue adjustment, add it as a separate conversion.
     if (ICS.Standard.First == ICK_Array_To_Pointer ||
         ICS.Standard.First == ICK_Lvalue_To_Rvalue) {
@@ -4195,11 +4195,11 @@ InitializationSequence::InitializationSequence(Sema &S,
       LvalueICS.Standard.First = ICS.Standard.First;
       AddConversionSequenceStep(LvalueICS, ICS.Standard.getToType(0));
     }
-    
+
     AddPassByIndirectCopyRestoreStep(Entity.getType(), ShouldCopy);
   } else if (ICS.isBad()) {
     DeclAccessPair dap;
-    if (Initializer->getType() == Context.OverloadTy && 
+    if (Initializer->getType() == Context.OverloadTy &&
           !S.ResolveAddressOfOverloadedFunction(Initializer
                       , DestType, false, dap))
       SetFailed(InitializationSequence::FK_AddressOfOverloadFailed);
@@ -4369,7 +4369,7 @@ static SourceLocation getInitializationLoc(const InitializedEntity &Entity,
 
   case InitializedEntity::EK_LambdaCapture:
     return Entity.getCaptureLoc();
-      
+
   case InitializedEntity::EK_ArrayElement:
   case InitializedEntity::EK_Member:
   case InitializedEntity::EK_Parameter:
@@ -4640,13 +4640,13 @@ PerformConstructorInitialization(Sema &S,
   ExprResult CurInit = S.Owned((Expr *)0);
 
   // C++ [over.match.copy]p1:
-  //   - When initializing a temporary to be bound to the first parameter 
-  //     of a constructor that takes a reference to possibly cv-qualified 
-  //     T as its first argument, called with a single argument in the 
+  //   - When initializing a temporary to be bound to the first parameter
+  //     of a constructor that takes a reference to possibly cv-qualified
+  //     T as its first argument, called with a single argument in the
   //     context of direct-initialization, explicit conversion functions
   //     are also considered.
   bool AllowExplicitConv = Kind.AllowExplicit() && !Kind.isCopyInit() &&
-                           Args.size() == 1 && 
+                           Args.size() == 1 &&
                            Constructor->isCopyOrMoveConstructor();
 
   // Determine the arguments required to actually perform the constructor
@@ -4826,7 +4826,7 @@ InitializationSequence::Perform(Sema &S,
                                   Args);
     }
     assert(Kind.getKind() == InitializationKind::IK_Copy ||
-           Kind.isExplicitCast() || 
+           Kind.isExplicitCast() ||
            Kind.getKind() == InitializationKind::IK_DirectList);
     return ExprResult(Args[0]);
   }
@@ -5012,7 +5012,7 @@ InitializationSequence::Perform(Sema &S,
       if (S.getLangOpts().ObjCAutoRefCount &&
           CurInit.get()->getType()->isObjCLifetimeType())
         S.ExprNeedsCleanups = true;
-            
+
       break;
 
     case SK_ExtraneousCopyToTemporary:
@@ -5134,7 +5134,7 @@ InitializationSequence::Perform(Sema &S,
     }
 
     case SK_ConversionSequence: {
-      Sema::CheckedConversionKind CCK 
+      Sema::CheckedConversionKind CCK
         = Kind.isCStyleCast()? Sema::CCK_CStyleCast
         : Kind.isFunctionalCast()? Sema::CCK_FunctionalCast
         : Kind.isExplicitCast()? Sema::CCK_OtherCast
@@ -5448,7 +5448,7 @@ bool InitializationSequence::Diagnose(Sema &S,
 
   case FK_ArrayTypeMismatch:
   case FK_NonConstantArrayInit:
-    S.Diag(Kind.getLocation(), 
+    S.Diag(Kind.getLocation(),
            (Failure == FK_ArrayTypeMismatch
               ? diag::err_array_init_different_type
               : diag::err_array_init_non_constant_array))
@@ -5692,7 +5692,7 @@ bool InitializationSequence::Diagnose(Sema &S,
           llvm_unreachable("Inconsistent overload resolution?");
           break;
         }
-       
+
         // If this is a defaulted or implicitly-declared function, then
         // it was implicitly deleted. Make it clear that the deletion was
         // implicit.
@@ -6104,7 +6104,7 @@ static void DiagnoseNarrowingInInitList(Sema &S, InitializationSequence &Seq,
     // narrowing conversion even if the value is a constant and can be
     // represented exactly as an integer.
     S.Diag(PostInit->getLocStart(),
-           S.getLangOpts().MicrosoftExt || !S.getLangOpts().CPlusPlus0x? 
+           S.getLangOpts().MicrosoftExt || !S.getLangOpts().CPlusPlus0x?
              diag::warn_init_list_type_narrowing
            : S.isSFINAEContext()?
              diag::err_init_list_type_narrowing_sfinae
@@ -6117,7 +6117,7 @@ static void DiagnoseNarrowingInInitList(Sema &S, InitializationSequence &Seq,
   case NK_Constant_Narrowing:
     // A constant value was narrowed.
     S.Diag(PostInit->getLocStart(),
-           S.getLangOpts().MicrosoftExt || !S.getLangOpts().CPlusPlus0x? 
+           S.getLangOpts().MicrosoftExt || !S.getLangOpts().CPlusPlus0x?
              diag::warn_init_list_constant_narrowing
            : S.isSFINAEContext()?
              diag::err_init_list_constant_narrowing_sfinae
@@ -6130,7 +6130,7 @@ static void DiagnoseNarrowingInInitList(Sema &S, InitializationSequence &Seq,
   case NK_Variable_Narrowing:
     // A variable's value may have been narrowed.
     S.Diag(PostInit->getLocStart(),
-           S.getLangOpts().MicrosoftExt || !S.getLangOpts().CPlusPlus0x? 
+           S.getLangOpts().MicrosoftExt || !S.getLangOpts().CPlusPlus0x?
              diag::warn_init_list_variable_narrowing
            : S.isSFINAEContext()?
              diag::err_init_list_variable_narrowing_sfinae

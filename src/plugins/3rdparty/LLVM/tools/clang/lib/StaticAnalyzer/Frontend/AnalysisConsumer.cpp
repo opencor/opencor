@@ -145,7 +145,7 @@ public:
   /// The local declaration to all declarations ratio might be very small when
   /// working with a PCH file.
   SetOfDecls LocalTUDecls;
-                           
+
   // Set of PathDiagnosticConsumers.  Owned by AnalysisManager.
   PathDiagnosticConsumers PathConsumers;
 
@@ -396,9 +396,9 @@ void AnalysisConsumer::HandleDeclsCallGraph(const unsigned LocalTUDeclsSize) {
     NumFunctionTopLevel++;
   }
 
-  // Make sure the nodes are sorted in order reverse of their definition in the 
-  // translation unit. This step is very important for performance. It ensures 
-  // that we analyze the root functions before the externally available 
+  // Make sure the nodes are sorted in order reverse of their definition in the
+  // translation unit. This step is very important for performance. It ensures
+  // that we analyze the root functions before the externally available
   // subroutines.
   std::deque<CallGraphNode*> BFSQueue;
   for (llvm::SmallVector<CallGraphNode*, 24>::reverse_iterator
@@ -631,11 +631,11 @@ void AnalysisConsumer::RunPathSensitiveChecks(Decl *D,
   case LangOptions::NonGC:
     ActionExprEngine(D, false, Visited);
     break;
-  
+
   case LangOptions::GCOnly:
     ActionExprEngine(D, true, Visited);
     break;
-  
+
   case LangOptions::HybridGC:
     ActionExprEngine(D, false, Visited);
     ActionExprEngine(D, true, Visited);

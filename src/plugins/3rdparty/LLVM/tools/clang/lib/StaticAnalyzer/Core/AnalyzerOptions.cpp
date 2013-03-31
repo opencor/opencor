@@ -27,7 +27,7 @@ AnalyzerOptions::mayInlineCXXMemberFunction(CXXInlineableMemberKind K) {
 
   if (!CXXMemberInliningMode) {
     static const char *ModeKey = "c++-inlining";
-    
+
     StringRef ModeStr(Config.GetOrCreateValue(ModeKey,
                                               "methods").getValue());
 
@@ -112,7 +112,7 @@ int AnalyzerOptions::getOptionAsInteger(StringRef Name, int DefaultVal) {
   llvm::SmallString<10> StrBuf;
   llvm::raw_svector_ostream OS(StrBuf);
   OS << DefaultVal;
-  
+
   StringRef V(Config.GetOrCreateValue(Name, OS.str()).getValue());
   int Res = DefaultVal;
   bool b = V.getAsInteger(10, Res);

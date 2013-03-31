@@ -48,7 +48,7 @@ class QWT_EXPORT QwtSlider: public QwtAbstractSlider
 public:
 
     /*!
-      Scale position. 
+      Scale position.
 
       \sa QwtSlider(), setOrientation()
      */

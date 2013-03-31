@@ -2,7 +2,7 @@
  * -----------------------------------------------------------------
  * $Revision: 1.6 $
  * $Date: 2010/12/01 22:19:48 $
- * ----------------------------------------------------------------- 
+ * -----------------------------------------------------------------
  * Programmer: Radu Serban @ LLNL
  * -----------------------------------------------------------------
  * Copyright (c) 2006, The Regents of the University of California.
@@ -37,7 +37,7 @@ extern "C" {
 
 /*
  * -----------------------------------------------------------------
- * Types : CVDlsMemRec, CVDlsMem                             
+ * Types : CVDlsMemRec, CVDlsMem
  * -----------------------------------------------------------------
  * CVDlsMem is pointer to a CVDlsMemRec structure.
  * -----------------------------------------------------------------
@@ -50,7 +50,7 @@ typedef struct CVDlsMemRec {
   long int d_n;           /* problem dimension                            */
 
   long int d_ml;          /* lower bandwidth of Jacobian                  */
-  long int d_mu;          /* upper bandwidth of Jacobian                  */ 
+  long int d_mu;          /* upper bandwidth of Jacobian                  */
   long int d_smu;         /* upper bandwith of M = MIN(N-1,d_mu+d_ml)     */
 
   booleantype d_jacDQ;    /* TRUE if using internal DQ Jacobian approx.   */
@@ -71,7 +71,7 @@ typedef struct CVDlsMemRec {
   long int d_nfeDQ;       /* no. of calls to f due to DQ Jacobian approx. */
 
   long int d_last_flag;   /* last error return flag                       */
-  
+
 } *CVDlsMem;
 
 /*
@@ -81,12 +81,12 @@ typedef struct CVDlsMemRec {
  */
 
 int cvDlsDenseDQJac(long int N, realtype t,
-		    N_Vector y, N_Vector fy, 
+		    N_Vector y, N_Vector fy,
 		    DlsMat Jac, void *data,
 		    N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
-  
+
 int cvDlsBandDQJac(long int N, long int mupper, long int mlower,
-		   realtype t, N_Vector y, N_Vector fy, 
+		   realtype t, N_Vector y, N_Vector fy,
 		   DlsMat Jac, void *data,
 		   N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
 

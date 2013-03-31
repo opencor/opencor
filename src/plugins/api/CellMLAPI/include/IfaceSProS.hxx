@@ -71,7 +71,7 @@ namespace iface
     class DataSetSet;
     class DataSetIterator;
     class RepeatedAnalysis;
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST Bootstrap
      : public virtual iface::XPCOM::IObject
     {
@@ -84,7 +84,7 @@ namespace iface
       virtual already_AddRefd<iface::SProS::SEDMLElement>  makeSEDMLFromElement(iface::dom::Element* el) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual std::wstring sedmlToText(iface::SProS::SEDMLElement* el) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST Base
      : public virtual iface::XPCOM::IObject
     {
@@ -96,13 +96,13 @@ namespace iface
       virtual already_AddRefd<iface::dom::NodeList>  annotations() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::SProS::Base>  parent() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST SProSException : public std::exception
     {
     public:
       SProSException(){}
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST BaseSet
      : public virtual iface::XPCOM::IObject
     {
@@ -113,7 +113,7 @@ namespace iface
       virtual void insert(iface::SProS::Base* b) throw(std::exception&) = 0;
       virtual void remove(iface::SProS::Base* b) throw(std::exception&) = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST BaseIterator
      : public virtual iface::XPCOM::IObject
     {
@@ -122,7 +122,7 @@ namespace iface
       virtual ~BaseIterator() {}
       virtual already_AddRefd<iface::SProS::Base>  nextElement() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST SEDMLElement
      : public virtual iface::SProS::Base
     {
@@ -159,7 +159,7 @@ namespace iface
       virtual std::wstring originalURL() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void originalURL(const std::wstring& attr) throw(std::exception&) = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST NamedElement
      : public virtual iface::SProS::Base
     {
@@ -169,7 +169,7 @@ namespace iface
       virtual std::wstring name() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void name(const std::wstring& attr) throw(std::exception&) = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST NamedElementSet
      : public virtual iface::SProS::BaseSet
     {
@@ -178,7 +178,7 @@ namespace iface
       virtual ~NamedElementSet() {}
       virtual already_AddRefd<iface::SProS::NamedElementIterator>  iterateNamedElement() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST NamedElementIterator
      : public virtual iface::SProS::BaseIterator
     {
@@ -187,7 +187,7 @@ namespace iface
       virtual ~NamedElementIterator() {}
       virtual already_AddRefd<iface::SProS::NamedElement>  nextNamedElement() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST NamedIdentifiedElement
      : public virtual iface::SProS::NamedElement
     {
@@ -197,7 +197,7 @@ namespace iface
       virtual std::wstring id() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void id(const std::wstring& attr) throw(std::exception&) = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST NamedIdentifiedElementSet
      : public virtual iface::SProS::NamedElementSet
     {
@@ -207,7 +207,7 @@ namespace iface
       virtual already_AddRefd<iface::SProS::NamedIdentifiedElementIterator>  iterateNamedIdentifiedElements() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::SProS::NamedIdentifiedElement>  getNamedIdentifiedElementByIdentifier(const std::wstring& idMatch) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST NamedIdentifiedElementIterator
      : public virtual iface::SProS::NamedElementIterator
     {
@@ -216,7 +216,7 @@ namespace iface
       virtual ~NamedIdentifiedElementIterator() {}
       virtual already_AddRefd<iface::SProS::NamedIdentifiedElement>  nextNamedIdentifiedElement() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST Model
      : public virtual iface::SProS::NamedIdentifiedElement
     {
@@ -229,7 +229,7 @@ namespace iface
       virtual void source(const std::wstring& attr) throw(std::exception&) = 0;
       virtual already_AddRefd<iface::SProS::ChangeSet>  changes() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST ModelSet
      : public virtual iface::SProS::NamedIdentifiedElementSet
     {
@@ -239,7 +239,7 @@ namespace iface
       virtual already_AddRefd<iface::SProS::ModelIterator>  iterateModels() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::SProS::Model>  getModelByIdentifier(const std::wstring& idMatch) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST ModelIterator
      : public virtual iface::SProS::NamedIdentifiedElementIterator
     {
@@ -248,7 +248,7 @@ namespace iface
       virtual ~ModelIterator() {}
       virtual already_AddRefd<iface::SProS::Model>  nextModel() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST Simulation
      : public virtual iface::SProS::NamedIdentifiedElement
     {
@@ -258,7 +258,7 @@ namespace iface
       virtual std::wstring algorithmKisaoID() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void algorithmKisaoID(const std::wstring& attr) throw(std::exception&) = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST SimulationSet
      : public virtual iface::SProS::NamedIdentifiedElementSet
     {
@@ -268,7 +268,7 @@ namespace iface
       virtual already_AddRefd<iface::SProS::SimulationIterator>  iterateSimulations() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::SProS::Simulation>  getSimulationByIdentifier(const std::wstring& idMatch) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST SimulationIterator
      : public virtual iface::SProS::NamedIdentifiedElementIterator
     {
@@ -277,7 +277,7 @@ namespace iface
       virtual ~SimulationIterator() {}
       virtual already_AddRefd<iface::SProS::Simulation>  nextSimulation() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST UniformTimeCourse
      : public virtual iface::SProS::Simulation
     {
@@ -293,7 +293,7 @@ namespace iface
       virtual uint32_t numberOfPoints() throw(std::exception&)  = 0;
       virtual void numberOfPoints(uint32_t attr) throw(std::exception&) = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST RepeatedAnalysis
      : public virtual iface::SProS::UniformTimeCourse
     {
@@ -303,7 +303,7 @@ namespace iface
       virtual uint32_t numberOfSamples() throw(std::exception&)  = 0;
       virtual void numberOfSamples(uint32_t attr) throw(std::exception&) = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST Task
      : public virtual iface::SProS::NamedIdentifiedElement
     {
@@ -319,7 +319,7 @@ namespace iface
       virtual already_AddRefd<iface::SProS::Model>  modelReference() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void modelReference(iface::SProS::Model* attr) throw(std::exception&) = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST TaskSet
      : public virtual iface::SProS::NamedIdentifiedElementSet
     {
@@ -329,7 +329,7 @@ namespace iface
       virtual already_AddRefd<iface::SProS::TaskIterator>  iterateTasks() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::SProS::Task>  getTaskByIdentifier(const std::wstring& idMatch) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST TaskIterator
      : public virtual iface::SProS::NamedIdentifiedElementIterator
     {
@@ -338,7 +338,7 @@ namespace iface
       virtual ~TaskIterator() {}
       virtual already_AddRefd<iface::SProS::Task>  nextTask() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST DataGenerator
      : public virtual iface::SProS::NamedIdentifiedElement
     {
@@ -350,7 +350,7 @@ namespace iface
       virtual already_AddRefd<iface::mathml_dom::MathMLMathElement>  math() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void math(iface::mathml_dom::MathMLMathElement* attr) throw(std::exception&) = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST DataGeneratorSet
      : public virtual iface::SProS::NamedIdentifiedElementSet
     {
@@ -360,7 +360,7 @@ namespace iface
       virtual already_AddRefd<iface::SProS::DataGeneratorIterator>  iterateDataGenerators() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::SProS::DataGenerator>  getDataGeneratorByIdentifier(const std::wstring& idMatch) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST DataGeneratorIterator
      : public virtual iface::SProS::NamedIdentifiedElementIterator
     {
@@ -369,7 +369,7 @@ namespace iface
       virtual ~DataGeneratorIterator() {}
       virtual already_AddRefd<iface::SProS::DataGenerator>  nextDataGenerator() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST Output
      : public virtual iface::SProS::NamedIdentifiedElement
     {
@@ -377,7 +377,7 @@ namespace iface
       static const char* INTERFACE_NAME() { return "SProS::Output"; }
       virtual ~Output() {}
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST OutputSet
      : public virtual iface::SProS::NamedIdentifiedElementSet
     {
@@ -387,7 +387,7 @@ namespace iface
       virtual already_AddRefd<iface::SProS::OutputIterator>  iterateOutputs() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::SProS::Output>  getOutputByIdentifier(const std::wstring& idMatch) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST OutputIterator
      : public virtual iface::SProS::NamedIdentifiedElementIterator
     {
@@ -396,7 +396,7 @@ namespace iface
       virtual ~OutputIterator() {}
       virtual already_AddRefd<iface::SProS::Output>  nextOutput() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST Plot2D
      : public virtual iface::SProS::Output
     {
@@ -405,7 +405,7 @@ namespace iface
       virtual ~Plot2D() {}
       virtual already_AddRefd<iface::SProS::CurveSet>  curves() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST Plot3D
      : public virtual iface::SProS::Output
     {
@@ -414,7 +414,7 @@ namespace iface
       virtual ~Plot3D() {}
       virtual already_AddRefd<iface::SProS::SurfaceSet>  surfaces() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST Report
      : public virtual iface::SProS::Output
     {
@@ -423,7 +423,7 @@ namespace iface
       virtual ~Report() {}
       virtual already_AddRefd<iface::SProS::DataSetSet>  datasets() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST Change
      : public virtual iface::SProS::Base
     {
@@ -433,7 +433,7 @@ namespace iface
       virtual std::wstring target() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void target(const std::wstring& attr) throw(std::exception&) = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST ChangeSet
      : public virtual iface::SProS::BaseSet
     {
@@ -442,7 +442,7 @@ namespace iface
       virtual ~ChangeSet() {}
       virtual already_AddRefd<iface::SProS::ChangeIterator>  iterateChanges() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST ChangeIterator
      : public virtual iface::SProS::BaseIterator
     {
@@ -451,7 +451,7 @@ namespace iface
       virtual ~ChangeIterator() {}
       virtual already_AddRefd<iface::SProS::Change>  nextChange() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST ComputeChange
      : public virtual iface::SProS::Change
     {
@@ -463,7 +463,7 @@ namespace iface
       virtual already_AddRefd<iface::mathml_dom::MathMLMathElement>  math() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void math(iface::mathml_dom::MathMLMathElement* attr) throw(std::exception&) = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST ChangeAttribute
      : public virtual iface::SProS::Change
     {
@@ -472,7 +472,7 @@ namespace iface
       virtual ~ChangeAttribute() {}
       virtual std::wstring newValue() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST AddXML
      : public virtual iface::SProS::Change
     {
@@ -481,7 +481,7 @@ namespace iface
       virtual ~AddXML() {}
       virtual already_AddRefd<iface::dom::NodeList>  anyXML() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST ChangeXML
      : public virtual iface::SProS::AddXML
     {
@@ -489,7 +489,7 @@ namespace iface
       static const char* INTERFACE_NAME() { return "SProS::ChangeXML"; }
       virtual ~ChangeXML() {}
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST RemoveXML
      : public virtual iface::SProS::Change
     {
@@ -497,7 +497,7 @@ namespace iface
       static const char* INTERFACE_NAME() { return "SProS::RemoveXML"; }
       virtual ~RemoveXML() {}
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST Variable
      : public virtual iface::SProS::NamedIdentifiedElement
     {
@@ -513,7 +513,7 @@ namespace iface
       virtual already_AddRefd<iface::SProS::Task>  taskReference() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void taskReference(iface::SProS::Task* attr) throw(std::exception&) = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST VariableSet
      : public virtual iface::SProS::NamedIdentifiedElementSet
     {
@@ -523,7 +523,7 @@ namespace iface
       virtual already_AddRefd<iface::SProS::VariableIterator>  iterateVariables() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::SProS::Variable>  getVariableByIdentifier(const std::wstring& idMatch) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST VariableIterator
      : public virtual iface::SProS::NamedIdentifiedElementIterator
     {
@@ -532,7 +532,7 @@ namespace iface
       virtual ~VariableIterator() {}
       virtual already_AddRefd<iface::SProS::Variable>  nextVariable() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST Parameter
      : public virtual iface::SProS::NamedIdentifiedElement
     {
@@ -542,7 +542,7 @@ namespace iface
       virtual double value() throw(std::exception&)  = 0;
       virtual void value(double attr) throw(std::exception&) = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST ParameterSet
      : public virtual iface::SProS::NamedIdentifiedElementSet
     {
@@ -552,7 +552,7 @@ namespace iface
       virtual already_AddRefd<iface::SProS::ParameterIterator>  iterateParameters() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::SProS::Parameter>  getParameterByIdentifier(const std::wstring& idMatch) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST ParameterIterator
      : public virtual iface::SProS::NamedIdentifiedElementIterator
     {
@@ -561,7 +561,7 @@ namespace iface
       virtual ~ParameterIterator() {}
       virtual already_AddRefd<iface::SProS::Parameter>  nextParameter() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST Curve
      : public virtual iface::SProS::NamedElement
     {
@@ -581,7 +581,7 @@ namespace iface
       virtual already_AddRefd<iface::SProS::DataGenerator>  yDataGenerator() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void yDataGenerator(iface::SProS::DataGenerator* attr) throw(std::exception&) = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST CurveSet
      : public virtual iface::SProS::NamedElementSet
     {
@@ -590,7 +590,7 @@ namespace iface
       virtual ~CurveSet() {}
       virtual already_AddRefd<iface::SProS::CurveIterator>  iterateCurves() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST CurveIterator
      : public virtual iface::SProS::NamedElementIterator
     {
@@ -599,7 +599,7 @@ namespace iface
       virtual ~CurveIterator() {}
       virtual already_AddRefd<iface::SProS::Curve>  nextCurve() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST Surface
      : public virtual iface::SProS::Curve
     {
@@ -613,7 +613,7 @@ namespace iface
       virtual already_AddRefd<iface::SProS::DataGenerator>  zDataGenerator() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void zDataGenerator(iface::SProS::DataGenerator* attr) throw(std::exception&) = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST SurfaceSet
      : public virtual iface::SProS::CurveSet
     {
@@ -622,7 +622,7 @@ namespace iface
       virtual ~SurfaceSet() {}
       virtual already_AddRefd<iface::SProS::SurfaceIterator>  iterateSurfaces() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST SurfaceIterator
      : public virtual iface::SProS::CurveIterator
     {
@@ -631,7 +631,7 @@ namespace iface
       virtual ~SurfaceIterator() {}
       virtual already_AddRefd<iface::SProS::Surface>  nextSurface() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST DataSet
      : public virtual iface::SProS::NamedElement
     {
@@ -643,7 +643,7 @@ namespace iface
       virtual already_AddRefd<iface::SProS::DataGenerator>  dataGen() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void dataGen(iface::SProS::DataGenerator* attr) throw(std::exception&) = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST DataSetSet
      : public virtual iface::SProS::NamedElementSet
     {
@@ -652,7 +652,7 @@ namespace iface
       virtual ~DataSetSet() {}
       virtual already_AddRefd<iface::SProS::DataSetIterator>  iterateDataSets() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_SProS_PRE 
+    PUBLIC_SProS_PRE
     class  PUBLIC_SProS_POST DataSetIterator
      : public virtual iface::SProS::NamedElementIterator
     {

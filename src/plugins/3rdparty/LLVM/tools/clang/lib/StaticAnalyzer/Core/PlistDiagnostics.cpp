@@ -40,7 +40,7 @@ namespace {
 
     void FlushDiagnosticsImpl(std::vector<const PathDiagnostic *> &Diags,
                               FilesMade *filesMade);
-    
+
     virtual StringRef getName() const {
       return "PlistDiagnostics";
     }
@@ -233,7 +233,7 @@ static void ReportEvent(raw_ostream &o, const PathDiagnosticPiece& P,
     --indent;
     Indent(o, indent) << "</array>\n";
   }
-  
+
   // Output the call depth.
   Indent(o, indent) << "<key>depth</key>"
                     << "<integer>" << depth << "</integer>\n";
@@ -249,7 +249,7 @@ static void ReportEvent(raw_ostream &o, const PathDiagnosticPiece& P,
   Indent(o, indent) << "<key>message</key>\n";
   Indent(o, indent);
   EmitString(o, P.getString()) << '\n';
-  
+
   // Finish up.
   --indent;
   Indent(o, indent); o << "</dict>\n";
@@ -269,25 +269,25 @@ static void ReportCall(raw_ostream &o,
                        const LangOptions &LangOpts,
                        unsigned indent,
                        unsigned depth) {
-  
+
   IntrusiveRefCntPtr<PathDiagnosticEventPiece> callEnter =
-    P.getCallEnterEvent();  
+    P.getCallEnterEvent();
 
   if (callEnter)
     ReportPiece(o, *callEnter, FM, SM, LangOpts, indent, depth, true);
 
   IntrusiveRefCntPtr<PathDiagnosticEventPiece> callEnterWithinCaller =
     P.getCallEnterWithinCallerEvent();
-  
+
   ++depth;
-  
+
   if (callEnterWithinCaller)
     ReportPiece(o, *callEnterWithinCaller, FM, SM, LangOpts,
                 indent, depth, true);
-  
+
   for (PathPieces::const_iterator I = P.path.begin(), E = P.path.end();I!=E;++I)
     ReportPiece(o, **I, FM, SM, LangOpts, indent, depth, true);
-  
+
   IntrusiveRefCntPtr<PathDiagnosticEventPiece> callExit =
     P.getCallExitEvent();
 
@@ -354,7 +354,7 @@ void PlistDiagnostics::FlushDiagnosticsImpl(
   if (!Diags.empty())
     SM = &(*(*Diags.begin())->path.begin())->getLocation().getManager();
 
-  
+
   for (std::vector<const PathDiagnostic*>::iterator DI = Diags.begin(),
        DE = Diags.end(); DI != DE; ++DI) {
 
@@ -366,7 +366,7 @@ void PlistDiagnostics::FlushDiagnosticsImpl(
     while (!WorkList.empty()) {
       const PathPieces &path = *WorkList.back();
       WorkList.pop_back();
-    
+
       for (PathPieces::const_iterator I = path.begin(), E = path.end();
            I!=E; ++I) {
         const PathDiagnosticPiece *piece = I->getPtr();
@@ -439,7 +439,7 @@ void PlistDiagnostics::FlushDiagnosticsImpl(
 
     o << "   <array>\n";
 
-    for (PathPieces::const_iterator I = D->path.begin(), E = D->path.end(); 
+    for (PathPieces::const_iterator I = D->path.begin(), E = D->path.end();
          I != E; ++I)
       ReportDiag(o, **I, FM, *SM, LangOpts);
 
@@ -452,7 +452,7 @@ void PlistDiagnostics::FlushDiagnosticsImpl(
     EmitString(o, D->getCategory()) << '\n';
     o << "   <key>type</key>";
     EmitString(o, D->getBugType()) << '\n';
-    
+
     // Output information about the semantic context where
     // the issue occurred.
     if (const Decl *DeclWithIssue = D->getDeclWithIssue()) {
@@ -529,5 +529,5 @@ void PlistDiagnostics::FlushDiagnosticsImpl(
   o << " </array>\n";
 
   // Finish.
-  o << "</dict>\n</plist>";  
+  o << "</dict>\n</plist>";
 }

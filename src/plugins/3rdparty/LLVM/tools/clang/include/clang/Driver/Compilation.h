@@ -149,8 +149,8 @@ public:
   void PrintJob(raw_ostream &OS, const Job &J,
                 const char *Terminator, bool Quote) const;
 
-  /// PrintDiagnosticJob - Print one job in -### format, but with the 
-  /// superfluous options removed, which are not necessary for 
+  /// PrintDiagnosticJob - Print one job in -### format, but with the
+  /// superfluous options removed, which are not necessary for
   /// reproducing the crash.
   ///
   /// \param OS - The stream to print on.

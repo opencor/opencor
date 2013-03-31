@@ -75,7 +75,7 @@ inline bool operator<(unsigned Offset, const LineEntry &E) {
 
 /// \brief Used to hold and unique data used to represent \#line information.
 class LineTableInfo {
-  /// \brief Map used to assign unique IDs to filenames in \#line directives. 
+  /// \brief Map used to assign unique IDs to filenames in \#line directives.
   ///
   /// This allows us to unique the filenames that
   /// frequently reoccur and reference them with indices.  FilenameIDs holds

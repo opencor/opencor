@@ -162,7 +162,7 @@ private:
   SDValue MakeLibCall(RTLIB::Libcall LC, EVT RetVT,
                       const SDValue *Ops, unsigned NumOps, bool isSigned,
                       DebugLoc dl);
-  
+
   std::pair<SDValue, SDValue> ExpandChainLibCall(RTLIB::Libcall LC,
                                                  SDNode *Node, bool isSigned);
   std::pair<SDValue, SDValue> ExpandAtomic(SDNode *Node);

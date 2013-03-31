@@ -2,7 +2,7 @@
  * -----------------------------------------------------------------
  * $Revision: 1.7 $
  * $Date: 2011/06/23 00:19:54 $
- * ----------------------------------------------------------------- 
+ * -----------------------------------------------------------------
  * Programmer(s): Alan C. Hindmarsh and Radu Serban @ LLNL
  * -----------------------------------------------------------------
  * Copyright (c) 2005, The Regents of the University of California.
@@ -45,7 +45,7 @@
 #define lmem      (cv_mem->cv_lmem)
 
 #define ils_type  (cvspils_mem->s_type)
-#define sqrtN     (cvspils_mem->s_sqrtN)   
+#define sqrtN     (cvspils_mem->s_sqrtN)
 #define ytemp     (cvspils_mem->s_ytemp)
 #define x         (cvspils_mem->s_x)
 #define ycur      (cvspils_mem->s_ycur)
@@ -95,7 +95,7 @@ int CVSpilsSetPrecType(void *cvode_mem, int pretype)
   }
   cvspils_mem = (CVSpilsMem) lmem;
 
-  /* Check for legal pretype */ 
+  /* Check for legal pretype */
   if ((pretype != PREC_NONE) && (pretype != PREC_LEFT) &&
       (pretype != PREC_RIGHT) && (pretype != PREC_BOTH)) {
     CVProcessError(cv_mem, CVSPILS_ILL_INPUT, "CVSPILS", "CVSpilsSetPrecType", MSGS_BAD_PRETYPE);
@@ -225,7 +225,7 @@ int CVSpilsSetEpsLin(void *cvode_mem, realtype eplifac)
  * -----------------------------------------------------------------
  */
 
-int CVSpilsSetPreconditioner(void *cvode_mem, 
+int CVSpilsSetPreconditioner(void *cvode_mem,
                              CVSpilsPrecSetupFn pset, CVSpilsPrecSolveFn psolve)
 {
   CVodeMem cv_mem;
@@ -309,7 +309,7 @@ int CVSpilsGetWorkSpace(void *cvode_mem, long int *lenrwLS, long int *leniwLS)
   }
   cvspils_mem = (CVSpilsMem) lmem;
 
-  
+
   switch(ils_type) {
   case SPILS_SPGMR:
     maxl = cvspils_mem->s_maxl;
@@ -548,7 +548,7 @@ char *CVSpilsGetReturnFlagName(long int flag)
   switch(flag) {
   case CVSPILS_SUCCESS:
     sprintf(name,"CVSPILS_SUCCESS");
-    break; 
+    break;
   case CVSPILS_MEM_NULL:
     sprintf(name,"CVSPILS_MEM_NULL");
     break;
@@ -591,7 +591,7 @@ char *CVSpilsGetReturnFlagName(long int flag)
  * CVSpilsAtimes
  * -----------------------------------------------------------------
  * This routine generates the matrix-vector product z = Mv, where
- * M = I - gamma*J. The product J*v is obtained by calling the jtimes 
+ * M = I - gamma*J. The product J*v is obtained by calling the jtimes
  * routine. It is then scaled by -gamma and added to v to obtain M*v.
  * The return value is the same as the value returned by jtimes --
  * 0 if successful, nonzero otherwise.
@@ -622,7 +622,7 @@ int CVSpilsAtimes(void *cvode_mem, N_Vector v, N_Vector z)
  * -----------------------------------------------------------------
  * This routine interfaces between the generic Sp***Solve routine
  * (within the SPGMR, SPBCG, or SPTFQMR solver) and the
- * user's psolve routine.  It passes to psolve all required state 
+ * user's psolve routine.  It passes to psolve all required state
  * information from cvode_mem.  Its return value is the same as that
  * returned by psolve. Note that the generic SP*** solver guarantees
  * that CVSpilsPSolve will not be called in the case in which
@@ -643,7 +643,7 @@ int CVSpilsPSolve(void *cvode_mem, N_Vector r, N_Vector z, int lr)
   /* This call is counted in nps within the CVSp***Solve routine */
   retval = psolve(tn, ycur, fcur, r, z, gamma, delta, lr, P_data, ytemp);
 
-  return(retval);     
+  return(retval);
 }
 
 /*
@@ -651,13 +651,13 @@ int CVSpilsPSolve(void *cvode_mem, N_Vector r, N_Vector z, int lr)
  * CVSpilsDQJtimes
  * -----------------------------------------------------------------
  * This routine generates a difference quotient approximation to
- * the Jacobian times vector f_y(t,y) * v. The approximation is 
+ * the Jacobian times vector f_y(t,y) * v. The approximation is
  * Jv = vnrm[f(y + v/vnrm) - f(y)], where vnrm = (WRMS norm of v) is
  * input, i.e. the WRMS norm of v/vnrm is 1.
  * -----------------------------------------------------------------
  */
 
-int CVSpilsDQJtimes(N_Vector v, N_Vector Jv, realtype t, 
+int CVSpilsDQJtimes(N_Vector v, N_Vector Jv, realtype t,
                     N_Vector y, N_Vector fy,
                     void *data, N_Vector work)
 {
@@ -679,7 +679,7 @@ int CVSpilsDQJtimes(N_Vector v, N_Vector Jv, realtype t,
     N_VLinearSum(sig, v, ONE, y, work);
 
     /* Set Jv = f(tn, y+sig*v) */
-    retval = f(t, work, Jv, user_data); 
+    retval = f(t, work, Jv, user_data);
     nfes++;
     if (retval == 0) break;
     if (retval < 0)  return(-1);

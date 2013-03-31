@@ -21,7 +21,7 @@ class QwtColorMap;
     \brief Curve that displays 3D points as dots, where the z coordinate is
            mapped to a color.
 */
-class QWT_EXPORT QwtPlotSpectroCurve: 
+class QWT_EXPORT QwtPlotSpectroCurve:
     public QwtPlotSeriesItem, QwtSeriesStore<QwtPoint3D>
 {
 public:

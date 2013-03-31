@@ -27,7 +27,7 @@ class QWT_EXPORT QwtInterval
 {
 public:
     /*!
-      Flag indicating if a border is included or excluded 
+      Flag indicating if a border is included or excluded
       \sa setBorderFlags(), borderFlags()
     */
     enum BorderFlag

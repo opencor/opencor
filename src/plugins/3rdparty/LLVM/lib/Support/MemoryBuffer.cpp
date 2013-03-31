@@ -204,7 +204,7 @@ public:
 };
 }
 
-static error_code getMemoryBufferForStream(int FD, 
+static error_code getMemoryBufferForStream(int FD,
                                            StringRef BufferName,
                                            OwningPtr<MemoryBuffer> &result) {
   const ssize_t ChunkSize = 4096*4;

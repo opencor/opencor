@@ -79,7 +79,7 @@ IdentifierTable::IdentifierTable(const LangOptions &LangOpts,
   // Populate the identifier table with info about keywords for the current
   // language.
   AddKeywords(LangOpts);
-      
+
 
   // Add the '_experimental_modules_import' contextual keyword.
   get("__experimental_modules_import").setModulesImport(true);
@@ -229,7 +229,7 @@ tok::PPKeywordKind IdentifierInfo::getPPKeywordID() const {
   CASE( 6, 'i', 'n', ifndef);
   CASE( 6, 'i', 'p', import);
   CASE( 6, 'p', 'a', pragma);
-      
+
   CASE( 7, 'd', 'f', defined);
   CASE( 7, 'i', 'c', include);
   CASE( 7, 'w', 'r', warning);
@@ -238,7 +238,7 @@ tok::PPKeywordKind IdentifierInfo::getPPKeywordID() const {
   CASE(12, 'i', 'c', include_next);
 
   CASE(14, '_', 'p', __public_macro);
-      
+
   CASE(15, '_', 'p', __private_macro);
 
   CASE(16, '_', 'i', __include_macros);
@@ -423,7 +423,7 @@ ObjCMethodFamily Selector::getMethodFamilyImpl(Selector sel) {
     if (name == "retainCount") return OMF_retainCount;
     if (name == "self") return OMF_self;
   }
- 
+
   if (name == "performSelector") return OMF_performSelector;
 
   // The other method families may begin with a prefix of underscores.

@@ -2,7 +2,7 @@
  * -----------------------------------------------------------------
  * $Revision: 1.7 $
  * $Date: 2011/05/25 20:20:25 $
- * ----------------------------------------------------------------- 
+ * -----------------------------------------------------------------
  * Programmer(s): Aaron Collier and Radu Serban @ LLNL
  * -----------------------------------------------------------------
  * Copyright (c) 2004, The Regents of the University of California.
@@ -36,8 +36,8 @@
 
 static int IDASpbcgInit(IDAMem IDA_mem);
 
-static int IDASpbcgSetup(IDAMem IDA_mem, 
-                         N_Vector yy_p, N_Vector yp_p, N_Vector rr_p, 
+static int IDASpbcgSetup(IDAMem IDA_mem,
+                         N_Vector yy_p, N_Vector yp_p, N_Vector rr_p,
                          N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
 
 static int IDASpbcgSolve(IDAMem IDA_mem, N_Vector bb, N_Vector weight,
@@ -284,8 +284,8 @@ static int IDASpbcgInit(IDAMem IDA_mem)
   return(0);
 }
 
-static int IDASpbcgSetup(IDAMem IDA_mem, 
-                         N_Vector yy_p, N_Vector yp_p, N_Vector rr_p, 
+static int IDASpbcgSetup(IDAMem IDA_mem,
+                         N_Vector yy_p, N_Vector yp_p, N_Vector rr_p,
                          N_Vector tmp1, N_Vector tmp2, N_Vector tmp3)
 {
   int retval;
@@ -351,10 +351,10 @@ static int IDASpbcgSolve(IDAMem IDA_mem, N_Vector bb, N_Vector weight,
   ypcur = yp_now;
   rcur = rr_now;
 
-  /* Set SpbcgSolve inputs pretype and initial guess xx = 0 */  
+  /* Set SpbcgSolve inputs pretype and initial guess xx = 0 */
   pretype = (psolve == NULL) ? PREC_NONE : PREC_LEFT;
   N_VConst(ZERO, xx);
-  
+
   /* Call SpbcgSolve and copy xx to bb */
   retval = SpbcgSolve(spbcg_mem, IDA_mem, xx, bb, pretype, epslin,
                       IDA_mem, weight, weight, IDASpilsAtimes,
@@ -362,7 +362,7 @@ static int IDASpbcgSolve(IDAMem IDA_mem, N_Vector bb, N_Vector weight,
 
   if (nli_inc == 0) N_VScale(ONE, SPBCG_VTEMP(spbcg_mem), bb);
   else N_VScale(ONE, xx, bb);
-  
+
   /* Increment counters nli, nps, and return if successful */
   nli += nli_inc;
   nps += nps_inc;
@@ -393,7 +393,7 @@ static int IDASpbcgSolve(IDAMem IDA_mem, N_Vector bb, N_Vector weight,
     return(-1);
     break;
   case SPBCG_ATIMES_FAIL_UNREC:
-    IDAProcessError(IDA_mem, SPBCG_ATIMES_FAIL_UNREC, "IDaSPBCG", "IDASpbcgSolve", MSGS_JTIMES_FAILED);    
+    IDAProcessError(IDA_mem, SPBCG_ATIMES_FAIL_UNREC, "IDaSPBCG", "IDASpbcgSolve", MSGS_JTIMES_FAILED);
     return(-1);
     break;
   case SPBCG_PSOLVE_FAIL_UNREC:
@@ -429,7 +429,7 @@ static int IDASpbcgPerf(IDAMem IDA_mem, int perftask)
 
   if (perftask == 0) {
     nst0 = nst;  nni0 = nni;  nli0 = nli;
-    ncfn0 = ncfn;  ncfl0 = ncfl;  
+    ncfn0 = ncfn;  ncfl0 = ncfl;
     nwarn = 0;
     return(0);
   }
@@ -445,11 +445,11 @@ static int IDASpbcgPerf(IDAMem IDA_mem, int perftask)
   if (!(lavd || lcfn || lcfl)) return(0);
   nwarn++;
   if (nwarn > 10) return(1);
-  if (lavd) 
+  if (lavd)
     IDAProcessError(IDA_mem, IDA_WARNING, "IDASPBCG", "IDASpbcgPerf", MSGS_AVD_WARN, tn, avdim);
-  if (lcfn) 
+  if (lcfn)
     IDAProcessError(IDA_mem, IDA_WARNING, "IDASPBCG", "IDASpbcgPerf", MSGS_CFN_WARN, tn, rcfn);
-  if (lcfl) 
+  if (lcfl)
     IDAProcessError(IDA_mem, IDA_WARNING, "IDASPBCG", "IDASpbcgPerf", MSGS_CFL_WARN, tn, rcfl);
 
   return(0);

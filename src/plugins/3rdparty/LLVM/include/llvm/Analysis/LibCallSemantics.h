@@ -38,7 +38,7 @@ namespace llvm {
   ///
   struct LibCallLocationInfo {
     // TODO: Flags: isContextSensitive etc.
-    
+
     /// isLocation - Return a LocResult if the specified pointer refers to this
     /// location for the specified call site.  This returns "Yes" if we can tell
     /// that the pointer *does definitely* refer to the location, "No" if we can
@@ -50,7 +50,7 @@ namespace llvm {
     LocResult (*isLocation)(ImmutableCallSite CS,
                             const AliasAnalysis::Location &Loc);
   };
-  
+
   /// LibCallFunctionInfo - Each record in the array of FunctionInfo structs
   /// records the behavior of one libcall that is known by the optimizer.  This
   /// captures things like the side effects of the call.  Side effects are
@@ -64,15 +64,15 @@ namespace llvm {
   struct LibCallFunctionInfo {
     /// Name - This is the name of the libcall this describes.
     const char *Name;
-    
+
     /// TODO: Constant folding function: Constant* vector -> Constant*.
-    
+
     /// UniversalBehavior - This captures the absolute mod/ref behavior without
     /// any specific context knowledge.  For example, if the function is known
     /// to be readonly, this would be set to 'ref'.  If known to be readnone,
     /// this is set to NoModRef.
     AliasAnalysis::ModRefResult UniversalBehavior;
-    
+
     /// LocationMRInfo - This pair captures info about whether a specific
     /// location is modified or referenced by a libcall.
     struct LocationMRInfo {
@@ -81,7 +81,7 @@ namespace llvm {
       /// MRInfo - Mod/Ref info for this location.
       AliasAnalysis::ModRefResult MRInfo;
     };
-    
+
     /// DetailsType - Indicate the sense of the LocationDetails array.  This
     /// controls how the LocationDetails array is interpreted.
     enum {
@@ -91,7 +91,7 @@ namespace llvm {
       /// modify errno, we'd have the {errnoloc,mod} in the LocationDetails
       /// array and have DetailsType set to DoesOnly.
       DoesOnly,
-      
+
       /// DoesNot - If DetailsType is set to DoesNot, then the sense of the
       /// LocationDetails array is completely inverted.  This means that we *do
       /// not* know everything about the side effects of this libcall, but we do
@@ -103,7 +103,7 @@ namespace llvm {
       /// errno location.
       DoesNot
     } DetailsType;
-    
+
     /// LocationDetails - This is a pointer to an array of LocationMRInfo
     /// structs which indicates the behavior of the libcall w.r.t. specific
     /// locations.  For example, if this libcall is known to only modify
@@ -118,12 +118,12 @@ namespace llvm {
     ///
     const LocationMRInfo *LocationDetails;
   };
-  
-  
+
+
   /// LibCallInfo - Abstract interface to query about library call information.
   /// Instances of this class return known information about some set of
   /// libcalls.
-  /// 
+  ///
   class LibCallInfo {
     // Implementation details of this object, private.
     mutable void *Impl;
@@ -132,30 +132,30 @@ namespace llvm {
   public:
     LibCallInfo() : Impl(0), Locations(0), NumLocations(0) {}
     virtual ~LibCallInfo();
-    
+
     //===------------------------------------------------------------------===//
     //  Accessor Methods: Efficient access to contained data.
     //===------------------------------------------------------------------===//
-    
+
     /// getLocationInfo - Return information about the specified LocationID.
     const LibCallLocationInfo &getLocationInfo(unsigned LocID) const;
-    
-    
+
+
     /// getFunctionInfo - Return the LibCallFunctionInfo object corresponding to
     /// the specified function if we have it.  If not, return null.
     const LibCallFunctionInfo *getFunctionInfo(const Function *F) const;
-    
-    
+
+
     //===------------------------------------------------------------------===//
     //  Implementation Methods: Subclasses should implement these.
     //===------------------------------------------------------------------===//
-    
+
     /// getLocationInfo - Return descriptors for the locations referenced by
     /// this set of libcalls.
     virtual unsigned getLocationInfo(const LibCallLocationInfo *&Array) const {
       return 0;
     }
-    
+
     /// getFunctionInfoArray - Return an array of descriptors that describe the
     /// set of libcalls represented by this LibCallInfo object.  This array is
     /// terminated by an entry with a NULL name.

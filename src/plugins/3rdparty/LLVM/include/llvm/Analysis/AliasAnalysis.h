@@ -193,12 +193,12 @@ public:
                  const Value *V2, uint64_t V2Size) {
     return isNoAlias(Location(V1, V1Size), Location(V2, V2Size));
   }
-  
+
   /// isNoAlias - A convenience wrapper.
   bool isNoAlias(const Value *V1, const Value *V2) {
     return isNoAlias(Location(V1), Location(V2));
   }
-  
+
   /// isMustAlias - A convenience wrapper.
   bool isMustAlias(const Location &LocA, const Location &LocB) {
     return alias(LocA, LocB) == MustAlias;
@@ -208,7 +208,7 @@ public:
   bool isMustAlias(const Value *V1, const Value *V2) {
     return alias(V1, 1, V2, 1) == MustAlias;
   }
-  
+
   /// pointsToConstantMemory - If the specified memory location is
   /// known to be constant, return true. If OrLocal is true and the
   /// specified memory location is known to be "local" (derived from
@@ -469,13 +469,13 @@ public:
   }
 
   /// getModRefInfo - Return information about whether two call sites may refer
-  /// to the same set of memory locations.  See 
+  /// to the same set of memory locations.  See
   ///   http://llvm.org/docs/AliasAnalysis.html#ModRefInfo
   /// for details.
   virtual ModRefResult getModRefInfo(ImmutableCallSite CS1,
                                      ImmutableCallSite CS2);
 
-  /// callCapturesBefore - Return information about whether a particular call 
+  /// callCapturesBefore - Return information about whether a particular call
   /// site modifies or reads the specified memory location.
   ModRefResult callCapturesBefore(const Instruction *I,
                                   const AliasAnalysis::Location &MemLoc,

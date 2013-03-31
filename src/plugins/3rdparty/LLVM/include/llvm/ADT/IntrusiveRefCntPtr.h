@@ -83,12 +83,12 @@ namespace llvm {
     friend struct IntrusiveRefCntPtrInfo;
   };
 
-  
+
   template <typename T> struct IntrusiveRefCntPtrInfo {
     static void retain(T *obj) { obj->Retain(); }
     static void release(T *obj) { obj->Release(); }
   };
-  
+
 //===----------------------------------------------------------------------===//
 /// IntrusiveRefCntPtr - A template class that implements a "smart pointer"
 ///  that assumes the wrapped object has a reference count associated

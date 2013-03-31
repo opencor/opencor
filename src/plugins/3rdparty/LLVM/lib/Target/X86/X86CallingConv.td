@@ -230,10 +230,10 @@ def CC_X86_Win64_C : CallingConv<[
   // The first 4 integer arguments are passed in integer registers.
   CCIfType<[i32], CCAssignToRegWithShadow<[ECX , EDX , R8D , R9D ],
                                           [XMM0, XMM1, XMM2, XMM3]>>,
-  
+
   // Do not pass the sret argument in RCX, the Win64 thiscall calling
-  // convention requires "this" to be passed in RCX.                                        
-  CCIfCC<"CallingConv::X86_ThisCall", 
+  // convention requires "this" to be passed in RCX.
+  CCIfCC<"CallingConv::X86_ThisCall",
     CCIfSRet<CCIfType<[i64], CCAssignToRegWithShadow<[RDX , R8  , R9  ],
                                                      [XMM1, XMM2, XMM3]>>>>,
 
@@ -267,11 +267,11 @@ def CC_Intel_OCL_BI : CallingConv<[
  // The SSE vector arguments are passed in XMM registers.
   CCIfType<[f32, f64, v4i32, v2i64, v4f32, v2f64],
            CCAssignToReg<[XMM0, XMM1, XMM2, XMM3]>>,
-  
+
   // The 256-bit vector arguments are passed in YMM registers.
   CCIfType<[v8f32, v4f64, v8i32, v4i64],
                 CCAssignToReg<[YMM0, YMM1, YMM2, YMM3]>>,
-  
+
   CCIfSubtarget<"isTargetWin64()", CCDelegateTo<CC_X86_Win64_C>>,
   CCDelegateTo<CC_X86_64_C>
 ]>;
@@ -316,7 +316,7 @@ def CC_X86_32_Common : CallingConv<[
   // Integer/Float values get stored in stack slots that are 4 bytes in
   // size and 4-byte aligned.
   CCIfType<[i32, f32], CCAssignToStack<4, 4>>,
-  
+
   // Doubles get 8-byte slots that are 4-byte aligned.
   CCIfType<[f64], CCAssignToStack<8, 4>>,
 
@@ -473,7 +473,7 @@ def CSR_Win64 : CalleeSavedRegs<(add RBX, RBP, RDI, RSI, R12, R13, R14, R15,
 
 // Standard C + YMM6-15
 def CSR_Win64_Intel_OCL_BI_AVX : CalleeSavedRegs<(add RBX, RBP, RDI, RSI, R12,
-                                                  R13, R14, R15, 
+                                                  R13, R14, R15,
                                                   (sequence "YMM%u", 6, 15))>;
 
 //Standard C + XMM 8-15

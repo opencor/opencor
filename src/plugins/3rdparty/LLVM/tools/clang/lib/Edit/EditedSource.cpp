@@ -43,7 +43,7 @@ bool EditedSource::canInsertInOffset(SourceLocation OrigLoc, FileOffset Offs) {
       I = ExpansionToArgMap.find(ExpLoc.getRawEncoding());
     if (I != ExpansionToArgMap.end() && I->second != DefArgLoc)
       return false; // Trying to write in a macro argument input that has
-                 // already been written for another argument of the same macro. 
+                 // already been written for another argument of the same macro.
   }
 
   return true;
@@ -64,7 +64,7 @@ bool EditedSource::commitInsert(SourceLocation OrigLoc,
       ExpLoc = SourceMgr.getImmediateExpansionRange(DefArgLoc).first;
     ExpansionToArgMap[ExpLoc.getRawEncoding()] = DefArgLoc;
   }
-  
+
   FileEdit &FA = FileEdits[Offs];
   if (FA.Text.empty()) {
     FA.Text = copyString(text);

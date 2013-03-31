@@ -115,7 +115,7 @@ public:
   std::pair<iterator, bool> insert(const ValueT &V) {
     return TheMap.insert(std::make_pair(V, 0));
   }
-  
+
   // Range insertion of values.
   template<typename InputIt>
   void insert(InputIt I, InputIt E) {

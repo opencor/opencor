@@ -666,7 +666,7 @@ void QxtCommandOptionsPrivate::parse(const QStringList& params)
                     }
                     else if ((paramStyle & QxtCommandOptions::Space)
                             && (option->paramType & QxtCommandOptions::ValueOptional)
-                            && !hasEquals) 
+                            && !hasEquals)
                     {
                         if (pos < params.count())
                         {

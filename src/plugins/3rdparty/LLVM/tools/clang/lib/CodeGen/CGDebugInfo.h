@@ -53,7 +53,7 @@ class CGDebugInfo {
   llvm::DIType ClassTy;
   llvm::DIType ObjTy;
   llvm::DIType SelTy;
-  
+
   /// TypeCache - Cache of previously constructed Types.
   llvm::DenseMap<void *, llvm::WeakVH> TypeCache;
 
@@ -117,11 +117,11 @@ class CGDebugInfo {
   llvm::DIType CreatePointerLikeType(unsigned Tag,
                                      const Type *Ty, QualType PointeeTy,
                                      llvm::DIFile F);
-  
+
   llvm::DISubprogram CreateCXXMemberFunction(const CXXMethodDecl *Method,
                                              llvm::DIFile F,
                                              llvm::DIType RecordTy);
-  
+
   void CollectCXXMemberFunctions(const CXXRecordDecl *Decl,
                                  llvm::DIFile F,
                                  SmallVectorImpl<llvm::Value *> &E,
@@ -136,14 +136,14 @@ class CGDebugInfo {
                        llvm::DIFile F,
                        SmallVectorImpl<llvm::Value *> &EltTys,
                        llvm::DIType RecordTy);
-  
+
   llvm::DIArray
   CollectTemplateParams(const TemplateParameterList *TPList,
                         const TemplateArgumentList &TAList,
                         llvm::DIFile Unit);
   llvm::DIArray
   CollectFunctionTemplateParams(const FunctionDecl *FD, llvm::DIFile Unit);
-  llvm::DIArray 
+  llvm::DIArray
   CollectCXXTemplateParams(const ClassTemplateSpecializationDecl *TS,
                            llvm::DIFile F);
 
@@ -164,7 +164,7 @@ class CGDebugInfo {
   // CreateLexicalBlock - Create a new lexical block node and push it on
   // the stack.
   void CreateLexicalBlock(SourceLocation Loc);
-  
+
 public:
   CGDebugInfo(CodeGenModule &CGM);
   ~CGDebugInfo();
@@ -228,7 +228,7 @@ public:
   /// EmitGlobalVariable - Emit global variable's debug info.
   void EmitGlobalVariable(const ValueDecl *VD, llvm::Constant *Init);
 
-  /// getOrCreateRecordType - Emit record type's standalone debug info. 
+  /// getOrCreateRecordType - Emit record type's standalone debug info.
   llvm::DIType getOrCreateRecordType(QualType Ty, SourceLocation L);
 
   /// getOrCreateInterfaceType - Emit an objective c interface type standalone
@@ -241,9 +241,9 @@ private:
   void EmitDeclare(const VarDecl *decl, unsigned Tag, llvm::Value *AI,
                    unsigned ArgNo, CGBuilderTy &Builder);
 
-  // EmitTypeForVarWithBlocksAttr - Build up structure info for the byref.  
+  // EmitTypeForVarWithBlocksAttr - Build up structure info for the byref.
   // See BuildByRefType.
-  llvm::DIType EmitTypeForVarWithBlocksAttr(const ValueDecl *VD, 
+  llvm::DIType EmitTypeForVarWithBlocksAttr(const ValueDecl *VD,
                                             uint64_t *OffSet);
 
   /// getContextDescriptor - Get context info for the decl.
@@ -252,7 +252,7 @@ private:
   /// createRecordFwdDecl - Create a forward decl for a RecordType in a given
   /// context.
   llvm::DIType createRecordFwdDecl(const RecordDecl *, llvm::DIDescriptor);
-  
+
   /// createContextChain - Create a set of decls for the context chain.
   llvm::DIDescriptor createContextChain(const Decl *Decl);
 
@@ -262,7 +262,7 @@ private:
   /// CreateCompileUnit - Create new compile unit.
   void CreateCompileUnit();
 
-  /// getOrCreateFile - Get the file debug info descriptor for the input 
+  /// getOrCreateFile - Get the file debug info descriptor for the input
   /// location.
   llvm::DIFile getOrCreateFile(SourceLocation Loc);
 
@@ -298,7 +298,7 @@ private:
   StringRef getFunctionName(const FunctionDecl *FD);
 
   /// getObjCMethodName - Returns the unmangled name of an Objective-C method.
-  /// This is the display name for the debugging info.  
+  /// This is the display name for the debugging info.
   StringRef getObjCMethodName(const ObjCMethodDecl *FD);
 
   /// getSelectorName - Return selector name. This is used for debugging
@@ -315,7 +315,7 @@ private:
   /// then use current location.
   unsigned getLineNumber(SourceLocation Loc);
 
-  /// getColumnNumber - Get column number for the location. If location is 
+  /// getColumnNumber - Get column number for the location. If location is
   /// invalid then use current location.
   unsigned getColumnNumber(SourceLocation Loc);
 };

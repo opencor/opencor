@@ -33,7 +33,7 @@ class SValBuilder {
   virtual void anchor();
 protected:
   ASTContext &Context;
-  
+
   /// Manager of APSInt values.
   BasicValueFactory BasicVals;
 
@@ -47,7 +47,7 @@ protected:
 
   /// The scalar type to use for array indices.
   const QualType ArrayIndexTy;
-  
+
   /// The width of the scalar type used for array indices.
   const unsigned ArrayIndexWidth;
 
@@ -83,7 +83,7 @@ public:
   }
 
   SVal evalCast(SVal val, QualType castTy, QualType originalType);
-  
+
   virtual SVal evalMinus(NonLoc val) = 0;
 
   virtual SVal evalComplement(NonLoc val) = 0;
@@ -107,14 +107,14 @@ public:
   /// Evaluates a given SVal. If the SVal has only one possible (integer) value,
   /// that value is returned. Otherwise, returns NULL.
   virtual const llvm::APSInt *getKnownValue(ProgramStateRef state, SVal val) = 0;
-  
+
   /// Constructs a symbolic expression for two non-location values.
   SVal makeSymExprValNN(ProgramStateRef state, BinaryOperator::Opcode op,
                       NonLoc lhs, NonLoc rhs, QualType resultTy);
 
   SVal evalBinOp(ProgramStateRef state, BinaryOperator::Opcode op,
                  SVal lhs, SVal rhs, QualType type);
-  
+
   DefinedOrUnknownSVal evalEQ(ProgramStateRef state, DefinedOrUnknownSVal lhs,
                               DefinedOrUnknownSVal rhs);
 
@@ -122,11 +122,11 @@ public:
   const ASTContext &getContext() const { return Context; }
 
   ProgramStateManager &getStateManager() { return StateMgr; }
-  
+
   QualType getConditionType() const {
     return  getContext().IntTy;
   }
-  
+
   QualType getArrayIndexType() const {
     return ArrayIndexTy;
   }
@@ -178,7 +178,7 @@ public:
                                         const LocationContext *LCtx,
                                         QualType type,
                                         unsigned count);
-  
+
   DefinedOrUnknownSVal conjureSymbolVal(const Stmt *stmt,
                                         const LocationContext *LCtx,
                                         QualType type,
@@ -198,7 +198,7 @@ public:
       const Expr *expr, QualType type, unsigned count);
 
   DefinedSVal getFunctionPointer(const FunctionDecl *func);
-  
+
   DefinedSVal getBlockPointer(const BlockDecl *block, CanQualType locTy,
                               const LocationContext *locContext);
 
@@ -206,7 +206,7 @@ public:
     return nonloc::CompoundVal(BasicVals.getCompoundValData(type, vals));
   }
 
-  NonLoc makeLazyCompoundVal(const StoreRef &store, 
+  NonLoc makeLazyCompoundVal(const StoreRef &store,
                              const TypedValueRegion *region) {
     return nonloc::LazyCompoundVal(
         BasicVals.getLazyCompoundValData(store, region));

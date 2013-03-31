@@ -23,7 +23,7 @@ using namespace clang;
 using namespace ento;
 
 namespace {
-class ReturnPointerRangeChecker : 
+class ReturnPointerRangeChecker :
     public Checker< check::PreStmt<ReturnStmt> > {
   mutable OwningPtr<BuiltinBug> BT;
 public:
@@ -38,7 +38,7 @@ void ReturnPointerRangeChecker::checkPreStmt(const ReturnStmt *RS,
   const Expr *RetE = RS->getRetValue();
   if (!RetE)
     return;
- 
+
   SVal V = state->getSVal(RetE, C.getLocationContext());
   const MemRegion *R = V.getAsRegion();
 
@@ -65,7 +65,7 @@ void ReturnPointerRangeChecker::checkPreStmt(const ReturnStmt *RS,
 
     if (!N)
       return;
-  
+
     // FIXME: This bug correspond to CWE-466.  Eventually we should have bug
     // types explicitly reference such exploit categories (when applicable).
     if (!BT)
@@ -78,7 +78,7 @@ void ReturnPointerRangeChecker::checkPreStmt(const ReturnStmt *RS,
     // reference is outside the range.
 
     // Generate a report for this bug.
-    BugReport *report = 
+    BugReport *report =
       new BugReport(*BT, BT->getDescription(), N);
 
     report->addRange(RetE->getSourceRange());

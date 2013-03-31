@@ -38,7 +38,7 @@ namespace llvm {
 
     /// S2RCMap - Stack slot indices to register class mapping.
     std::map<int, const TargetRegisterClass*> S2RCMap;
-    
+
   public:
     static char ID; // Pass identification, replacement for typeid
     LiveStacks() : MachineFunctionPass(ID) {

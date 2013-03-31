@@ -154,7 +154,7 @@ void Parser::HandlePragmaOpenCLExtension() {
 // #pragma GCC visibility comes in two variants:
 //   'push' '(' [visibility] ')'
 //   'pop'
-void PragmaGCCVisibilityHandler::HandlePragma(Preprocessor &PP, 
+void PragmaGCCVisibilityHandler::HandlePragma(Preprocessor &PP,
                                               PragmaIntroducerKind Introducer,
                                               Token &VisTok) {
   SourceLocation VisLoc = VisTok.getLocation();
@@ -213,7 +213,7 @@ void PragmaGCCVisibilityHandler::HandlePragma(Preprocessor &PP,
 //   pack '(' [integer] ')'
 //   pack '(' 'show' ')'
 //   pack '(' ('push' | 'pop') [',' identifier] [, integer] ')'
-void PragmaPackHandler::HandlePragma(Preprocessor &PP, 
+void PragmaPackHandler::HandlePragma(Preprocessor &PP,
                                      PragmaIntroducerKind Introducer,
                                      Token &PackTok) {
   SourceLocation PackLoc = PackTok.getLocation();
@@ -305,7 +305,7 @@ void PragmaPackHandler::HandlePragma(Preprocessor &PP,
     return;
   }
 
-  PragmaPackInfo *Info = 
+  PragmaPackInfo *Info =
     (PragmaPackInfo*) PP.getPreprocessorAllocator().Allocate(
       sizeof(PragmaPackInfo), llvm::alignOf<PragmaPackInfo>());
   new (Info) PragmaPackInfo();
@@ -315,7 +315,7 @@ void PragmaPackHandler::HandlePragma(Preprocessor &PP,
   Info->LParenLoc = LParenLoc;
   Info->RParenLoc = RParenLoc;
 
-  Token *Toks = 
+  Token *Toks =
     (Token*) PP.getPreprocessorAllocator().Allocate(
       sizeof(Token) * 1, llvm::alignOf<Token>());
   new (Toks) Token();
@@ -329,11 +329,11 @@ void PragmaPackHandler::HandlePragma(Preprocessor &PP,
 
 // #pragma ms_struct on
 // #pragma ms_struct off
-void PragmaMSStructHandler::HandlePragma(Preprocessor &PP, 
+void PragmaMSStructHandler::HandlePragma(Preprocessor &PP,
                                          PragmaIntroducerKind Introducer,
                                          Token &MSStructTok) {
   Sema::PragmaMSStructKind Kind = Sema::PMSST_OFF;
-  
+
   Token Tok;
   PP.Lex(Tok);
   if (Tok.isNot(tok::identifier)) {
@@ -351,7 +351,7 @@ void PragmaMSStructHandler::HandlePragma(Preprocessor &PP,
     PP.Diag(Tok.getLocation(), diag::warn_pragma_ms_struct);
     return;
   }
-  
+
   if (Tok.isNot(tok::eod)) {
     PP.Diag(Tok.getLocation(), diag::warn_pragma_extra_tokens_at_eol)
       << "ms_struct";
@@ -440,20 +440,20 @@ static void ParseAlignPragma(Preprocessor &PP, Token &FirstTok,
                       /*OwnsTokens=*/false);
 }
 
-void PragmaAlignHandler::HandlePragma(Preprocessor &PP, 
+void PragmaAlignHandler::HandlePragma(Preprocessor &PP,
                                       PragmaIntroducerKind Introducer,
                                       Token &AlignTok) {
   ParseAlignPragma(PP, AlignTok, /*IsOptions=*/false);
 }
 
-void PragmaOptionsHandler::HandlePragma(Preprocessor &PP, 
+void PragmaOptionsHandler::HandlePragma(Preprocessor &PP,
                                         PragmaIntroducerKind Introducer,
                                         Token &OptionsTok) {
   ParseAlignPragma(PP, OptionsTok, /*IsOptions=*/true);
 }
 
 // #pragma unused(identifier)
-void PragmaUnusedHandler::HandlePragma(Preprocessor &PP, 
+void PragmaUnusedHandler::HandlePragma(Preprocessor &PP,
                                        PragmaIntroducerKind Introducer,
                                        Token &UnusedTok) {
   // FIXME: Should we be expanding macros here? My guess is no.
@@ -519,7 +519,7 @@ void PragmaUnusedHandler::HandlePragma(Preprocessor &PP,
   // This allows us to cache a "#pragma unused" that occurs inside an inline
   // C++ member function.
 
-  Token *Toks = 
+  Token *Toks =
     (Token*) PP.getPreprocessorAllocator().Allocate(
       sizeof(Token) * 2 * Identifiers.size(), llvm::alignOf<Token>());
   for (unsigned i=0; i != Identifiers.size(); i++) {
@@ -535,7 +535,7 @@ void PragmaUnusedHandler::HandlePragma(Preprocessor &PP,
 
 // #pragma weak identifier
 // #pragma weak identifier '=' identifier
-void PragmaWeakHandler::HandlePragma(Preprocessor &PP, 
+void PragmaWeakHandler::HandlePragma(Preprocessor &PP,
                                      PragmaIntroducerKind Introducer,
                                      Token &WeakTok) {
   SourceLocation WeakLoc = WeakTok.getLocation();
@@ -570,7 +570,7 @@ void PragmaWeakHandler::HandlePragma(Preprocessor &PP,
   }
 
   if (HasAlias) {
-    Token *Toks = 
+    Token *Toks =
       (Token*) PP.getPreprocessorAllocator().Allocate(
         sizeof(Token) * 3, llvm::alignOf<Token>());
     Token &pragmaUnusedTok = Toks[0];
@@ -582,7 +582,7 @@ void PragmaWeakHandler::HandlePragma(Preprocessor &PP,
     PP.EnterTokenStream(Toks, 3,
                         /*DisableMacroExpansion=*/true, /*OwnsTokens=*/false);
   } else {
-    Token *Toks = 
+    Token *Toks =
       (Token*) PP.getPreprocessorAllocator().Allocate(
         sizeof(Token) * 2, llvm::alignOf<Token>());
     Token &pragmaUnusedTok = Toks[0];
@@ -596,7 +596,7 @@ void PragmaWeakHandler::HandlePragma(Preprocessor &PP,
 }
 
 // #pragma redefine_extname identifier identifier
-void PragmaRedefineExtnameHandler::HandlePragma(Preprocessor &PP, 
+void PragmaRedefineExtnameHandler::HandlePragma(Preprocessor &PP,
                                                PragmaIntroducerKind Introducer,
                                                 Token &RedefToken) {
   SourceLocation RedefLoc = RedefToken.getLocation();
@@ -627,7 +627,7 @@ void PragmaRedefineExtnameHandler::HandlePragma(Preprocessor &PP,
     return;
   }
 
-  Token *Toks = 
+  Token *Toks =
     (Token*) PP.getPreprocessorAllocator().Allocate(
       sizeof(Token) * 3, llvm::alignOf<Token>());
   Token &pragmaRedefTok = Toks[0];
@@ -642,7 +642,7 @@ void PragmaRedefineExtnameHandler::HandlePragma(Preprocessor &PP,
 
 
 void
-PragmaFPContractHandler::HandlePragma(Preprocessor &PP, 
+PragmaFPContractHandler::HandlePragma(Preprocessor &PP,
                                       PragmaIntroducerKind Introducer,
                                       Token &Tok) {
   tok::OnOffSwitch OOS;
@@ -662,8 +662,8 @@ PragmaFPContractHandler::HandlePragma(Preprocessor &PP,
                       /*OwnsTokens=*/false);
 }
 
-void 
-PragmaOpenCLExtensionHandler::HandlePragma(Preprocessor &PP, 
+void
+PragmaOpenCLExtensionHandler::HandlePragma(Preprocessor &PP,
                                            PragmaIntroducerKind Introducer,
                                            Token &Tok) {
   PP.LexUnexpandedToken(Tok);

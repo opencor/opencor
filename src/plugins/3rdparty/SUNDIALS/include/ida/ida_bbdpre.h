@@ -2,7 +2,7 @@
  * -----------------------------------------------------------------
  * $Revision: 1.8 $
  * $Date: 2010/12/01 22:14:08 $
- * ----------------------------------------------------------------- 
+ * -----------------------------------------------------------------
  * Programmer(s): Alan C. Hindmarsh, Radu Serban and
  *                Aaron Collier @ LLNL
  * -----------------------------------------------------------------
@@ -84,7 +84,7 @@
  *
  * 3) The actual name of the user's res function is passed to
  *    IDAInit, and the names of the user's Gres and Gcomm
- *    functions are passed to IDABBDPrecInit.        
+ *    functions are passed to IDABBDPrecInit.
  *
  * 4) The pointer to the user-defined data block user_data, which
  *    is set through IDASetUserData is also available to the user
@@ -255,7 +255,7 @@ SUNDIALS_EXPORT int IDABBDPrecReInit(void *ida_mem,
  *                        for IDABBDPRE.
  * IDABBDPrecGetNumGfnEvals returns the number of calls to the
  *                          user Gres function.
- * 
+ *
  * The return value of IDABBDPrecGet* is one of:
  *   IDASPILS_SUCCESS if no errors occurred
  *   IDASPILS_MEM_NULL if the integrator memory is NULL
@@ -264,7 +264,7 @@ SUNDIALS_EXPORT int IDABBDPrecReInit(void *ida_mem,
  * -----------------------------------------------------------------
  */
 
-SUNDIALS_EXPORT int IDABBDPrecGetWorkSpace(void *ida_mem, 
+SUNDIALS_EXPORT int IDABBDPrecGetWorkSpace(void *ida_mem,
                                            long int *lenrwBBDP, long int *leniwBBDP);
 SUNDIALS_EXPORT int IDABBDPrecGetNumGfnEvals(void *ida_mem, long int *ngevalsBBDP);
 

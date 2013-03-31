@@ -17,16 +17,16 @@
 namespace llvm {
   class GCStrategy;
   class GCMetadataPrinter;
-  
+
   /// FIXME: Collector instances are not useful on their own. These no longer
   ///        serve any purpose except to link in the plugins.
-  
+
   /// Creates an ocaml-compatible garbage collector.
   void linkOcamlGC();
-  
+
   /// Creates an ocaml-compatible metadata printer.
   void linkOcamlGCPrinter();
-  
+
   /// Creates a shadow stack garbage collector. This collector requires no code
   /// generator support.
   void linkShadowStackGC();

@@ -38,7 +38,7 @@ public:
   // FIXME: Should these be made strings as well?
   StringRef getName() const { return Name; }
   StringRef getCategory() const { return Category; }
-  
+
   /// isSuppressOnSink - Returns true if bug reports associated with this bug
   ///  type should be suppressed if the end node of the report is post-dominated
   ///  by a sink node.
@@ -54,10 +54,10 @@ class BuiltinBug : public BugType {
 public:
   BuiltinBug(const char *name, const char *description)
     : BugType(name, "Logic error"), desc(description) {}
-  
+
   BuiltinBug(const char *name)
     : BugType(name, "Logic error"), desc(name) {}
-  
+
   StringRef getDescription() const { return desc; }
 };
 

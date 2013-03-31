@@ -49,7 +49,7 @@ class MCSymbol;
 /// CurBufferPtr will saturate to BufferEnd and ignore stores.  Once the entire
 /// function has been emitted, the overflow condition is checked, and if it has
 /// occurred, more memory is allocated, and we reemit the code into it.
-/// 
+///
 class MachineCodeEmitter {
   virtual void anchor();
 protected:
@@ -140,7 +140,7 @@ public:
       CurBufferPtr = BufferEnd;
     }
   }
-  
+
   /// emitDWordBE - This callback is invoked when a 64-bit word needs to be
   /// written to the output stream in big-endian format.
   ///
@@ -173,7 +173,7 @@ public:
       CurBufferPtr = BufferEnd;
     }
   }
-  
+
 
   /// emitULEB128Bytes - This callback is invoked when a ULEB128 needs to be
   /// written to the output stream.
@@ -185,13 +185,13 @@ public:
       emitByte(Byte);
     } while (Value);
   }
-  
+
   /// emitSLEB128Bytes - This callback is invoked when a SLEB128 needs to be
   /// written to the output stream.
   void emitSLEB128Bytes(uint64_t Value) {
     uint64_t Sign = Value >> (8 * sizeof(Value) - 1);
     bool IsMore;
-  
+
     do {
       uint8_t Byte = Value & 0x7f;
       Value >>= 7;
@@ -211,7 +211,7 @@ public:
     }
     emitByte(0);
   }
-  
+
   /// emitInt32 - Emit a int32 directive.
   void emitInt32(int32_t Value) {
     if (4 <= BufferEnd-CurBufferPtr) {
@@ -231,19 +231,19 @@ public:
       CurBufferPtr = BufferEnd;
     }
   }
-  
+
   /// emitInt32At - Emit the Int32 Value in Addr.
   void emitInt32At(uintptr_t *Addr, uintptr_t Value) {
     if (Addr >= (uintptr_t*)BufferBegin && Addr < (uintptr_t*)BufferEnd)
       (*(uint32_t*)Addr) = (uint32_t)Value;
   }
-  
+
   /// emitInt64At - Emit the Int64 Value in Addr.
   void emitInt64At(uintptr_t *Addr, uintptr_t Value) {
     if (Addr >= (uintptr_t*)BufferBegin && Addr < (uintptr_t*)BufferEnd)
       (*(uint64_t*)Addr) = (uint64_t)Value;
   }
-  
+
   /// processDebugLoc - Records debug location information about a
   /// MachineInstruction.  This is called before emitting any bytes associated
   /// with the instruction.  Even if successive instructions have the same debug
@@ -259,7 +259,7 @@ public:
   virtual void *allocateSpace(uintptr_t Size, unsigned Alignment) {
     emitAlignment(Alignment);
     void *Result;
-    
+
     // Check for buffer overflow.
     if (Size >= (uintptr_t)(BufferEnd-CurBufferPtr)) {
       CurBufferPtr = BufferEnd;
@@ -269,7 +269,7 @@ public:
       Result = CurBufferPtr;
       CurBufferPtr += Size;
     }
-    
+
     return Result;
   }
 
@@ -277,7 +277,7 @@ public:
   /// basic block is about to be emitted.  This way the MCE knows where the
   /// start of the block is, and can implement getMachineBasicBlockAddress.
   virtual void StartMachineBasicBlock(MachineBasicBlock *MBB) = 0;
-  
+
   /// getCurrentPCValue - This returns the address that the next emitted byte
   /// will be output to.
   ///
@@ -291,7 +291,7 @@ public:
     return CurBufferPtr-BufferBegin;
   }
 
-  /// earlyResolveAddresses - True if the code emitter can use symbol addresses 
+  /// earlyResolveAddresses - True if the code emitter can use symbol addresses
   /// during code emission time. The JIT is capable of doing this because it
   /// creates jump tables or constant pools in memory on the fly while the
   /// object code emitters rely on a linker to have real addresses and should
@@ -301,9 +301,9 @@ public:
   /// addRelocation - Whenever a relocatable address is needed, it should be
   /// noted with this interface.
   virtual void addRelocation(const MachineRelocation &MR) = 0;
-  
+
   /// FIXME: These should all be handled with relocations!
-  
+
   /// getConstantPoolEntryAddress - Return the address of the 'Index' entry in
   /// the constant pool that was last emitted with the emitConstantPool method.
   ///
@@ -313,7 +313,7 @@ public:
   /// 'Index' in the function that last called initJumpTableInfo.
   ///
   virtual uintptr_t getJumpTableEntryAddress(unsigned Index) const = 0;
-  
+
   /// getMachineBasicBlockAddress - Return the address of the specified
   /// MachineBasicBlock, only usable after the label for the MBB has been
   /// emitted.
@@ -324,7 +324,7 @@ public:
   /// after the LabelID has been emitted.
   ///
   virtual uintptr_t getLabelAddress(MCSymbol *Label) const = 0;
-  
+
   /// Specifies the MachineModuleInfo object. This is used for exception handling
   /// purposes.
   virtual void setModuleInfo(MachineModuleInfo* Info) = 0;

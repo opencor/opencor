@@ -41,7 +41,7 @@ vec_perm(vector signed char a, vector signed char b, vector unsigned char c);
 
 static vector unsigned char __ATTRS_o_ai
 vec_perm(vector unsigned char a,
-         vector unsigned char b, 
+         vector unsigned char b,
          vector unsigned char c);
 
 static vector bool char __ATTRS_o_ai
@@ -52,7 +52,7 @@ vec_perm(vector short a, vector short b, vector unsigned char c);
 
 static vector unsigned short __ATTRS_o_ai
 vec_perm(vector unsigned short a,
-         vector unsigned short b, 
+         vector unsigned short b,
          vector unsigned char c);
 
 static vector bool short __ATTRS_o_ai
@@ -100,7 +100,7 @@ vec_abs(vector signed int a)
 static vector float __ATTRS_o_ai
 vec_abs(vector float a)
 {
-  vector unsigned int res = (vector unsigned int)a 
+  vector unsigned int res = (vector unsigned int)a
                             & (vector unsigned int)(0x7FFFFFFF);
   return (vector float)res;
 }
@@ -2363,7 +2363,7 @@ vec_madds(vector signed short a, vector signed short b, vector signed short c)
 /* vec_vmhaddshs */
 static vector signed short __attribute__((__always_inline__))
 vec_vmhaddshs(vector signed short a,
-              vector signed short b, 
+              vector signed short b,
               vector signed short c)
 {
   return __builtin_altivec_vmhaddshs(a, b, c);
@@ -2619,7 +2619,7 @@ static vector signed char __ATTRS_o_ai
 vec_mergeh(vector signed char a, vector signed char b)
 {
   return vec_perm(a, b, (vector unsigned char)
-    (0x00, 0x10, 0x01, 0x11, 0x02, 0x12, 0x03, 0x13, 
+    (0x00, 0x10, 0x01, 0x11, 0x02, 0x12, 0x03, 0x13,
      0x04, 0x14, 0x05, 0x15, 0x06, 0x16, 0x07, 0x17));
 }
 
@@ -2627,7 +2627,7 @@ static vector unsigned char __ATTRS_o_ai
 vec_mergeh(vector unsigned char a, vector unsigned char b)
 {
   return vec_perm(a, b, (vector unsigned char)
-    (0x00, 0x10, 0x01, 0x11, 0x02, 0x12, 0x03, 0x13, 
+    (0x00, 0x10, 0x01, 0x11, 0x02, 0x12, 0x03, 0x13,
      0x04, 0x14, 0x05, 0x15, 0x06, 0x16, 0x07, 0x17));
 }
 
@@ -2635,7 +2635,7 @@ static vector bool char __ATTRS_o_ai
 vec_mergeh(vector bool char a, vector bool char b)
 {
   return vec_perm(a, b, (vector unsigned char)
-    (0x00, 0x10, 0x01, 0x11, 0x02, 0x12, 0x03, 0x13, 
+    (0x00, 0x10, 0x01, 0x11, 0x02, 0x12, 0x03, 0x13,
      0x04, 0x14, 0x05, 0x15, 0x06, 0x16, 0x07, 0x17));
 }
 
@@ -2711,7 +2711,7 @@ static vector signed char __ATTRS_o_ai
 vec_vmrghb(vector signed char a, vector signed char b)
 {
   return vec_perm(a, b, (vector unsigned char)
-    (0x00, 0x10, 0x01, 0x11, 0x02, 0x12, 0x03, 0x13, 
+    (0x00, 0x10, 0x01, 0x11, 0x02, 0x12, 0x03, 0x13,
      0x04, 0x14, 0x05, 0x15, 0x06, 0x16, 0x07, 0x17));
 }
 
@@ -2719,7 +2719,7 @@ static vector unsigned char __ATTRS_o_ai
 vec_vmrghb(vector unsigned char a, vector unsigned char b)
 {
   return vec_perm(a, b, (vector unsigned char)
-    (0x00, 0x10, 0x01, 0x11, 0x02, 0x12, 0x03, 0x13, 
+    (0x00, 0x10, 0x01, 0x11, 0x02, 0x12, 0x03, 0x13,
      0x04, 0x14, 0x05, 0x15, 0x06, 0x16, 0x07, 0x17));
 }
 
@@ -2727,7 +2727,7 @@ static vector bool char __ATTRS_o_ai
 vec_vmrghb(vector bool char a, vector bool char b)
 {
   return vec_perm(a, b, (vector unsigned char)
-    (0x00, 0x10, 0x01, 0x11, 0x02, 0x12, 0x03, 0x13, 
+    (0x00, 0x10, 0x01, 0x11, 0x02, 0x12, 0x03, 0x13,
      0x04, 0x14, 0x05, 0x15, 0x06, 0x16, 0x07, 0x17));
 }
 
@@ -2809,7 +2809,7 @@ static vector signed char __ATTRS_o_ai
 vec_mergel(vector signed char a, vector signed char b)
 {
   return vec_perm(a, b, (vector unsigned char)
-    (0x08, 0x18, 0x09, 0x19, 0x0A, 0x1A, 0x0B, 0x1B, 
+    (0x08, 0x18, 0x09, 0x19, 0x0A, 0x1A, 0x0B, 0x1B,
      0x0C, 0x1C, 0x0D, 0x1D, 0x0E, 0x1E, 0x0F, 0x1F));
 }
 
@@ -2817,7 +2817,7 @@ static vector unsigned char __ATTRS_o_ai
 vec_mergel(vector unsigned char a, vector unsigned char b)
 {
   return vec_perm(a, b, (vector unsigned char)
-    (0x08, 0x18, 0x09, 0x19, 0x0A, 0x1A, 0x0B, 0x1B, 
+    (0x08, 0x18, 0x09, 0x19, 0x0A, 0x1A, 0x0B, 0x1B,
      0x0C, 0x1C, 0x0D, 0x1D, 0x0E, 0x1E, 0x0F, 0x1F));
 }
 
@@ -2825,7 +2825,7 @@ static vector bool char __ATTRS_o_ai
 vec_mergel(vector bool char a, vector bool char b)
 {
   return vec_perm(a, b, (vector unsigned char)
-    (0x08, 0x18, 0x09, 0x19, 0x0A, 0x1A, 0x0B, 0x1B, 
+    (0x08, 0x18, 0x09, 0x19, 0x0A, 0x1A, 0x0B, 0x1B,
      0x0C, 0x1C, 0x0D, 0x1D, 0x0E, 0x1E, 0x0F, 0x1F));
 }
 
@@ -2901,7 +2901,7 @@ static vector signed char __ATTRS_o_ai
 vec_vmrglb(vector signed char a, vector signed char b)
 {
   return vec_perm(a, b, (vector unsigned char)
-    (0x08, 0x18, 0x09, 0x19, 0x0A, 0x1A, 0x0B, 0x1B, 
+    (0x08, 0x18, 0x09, 0x19, 0x0A, 0x1A, 0x0B, 0x1B,
      0x0C, 0x1C, 0x0D, 0x1D, 0x0E, 0x1E, 0x0F, 0x1F));
 }
 
@@ -2909,7 +2909,7 @@ static vector unsigned char __ATTRS_o_ai
 vec_vmrglb(vector unsigned char a, vector unsigned char b)
 {
   return vec_perm(a, b, (vector unsigned char)
-    (0x08, 0x18, 0x09, 0x19, 0x0A, 0x1A, 0x0B, 0x1B, 
+    (0x08, 0x18, 0x09, 0x19, 0x0A, 0x1A, 0x0B, 0x1B,
      0x0C, 0x1C, 0x0D, 0x1D, 0x0E, 0x1E, 0x0F, 0x1F));
 }
 
@@ -2917,7 +2917,7 @@ static vector bool char __ATTRS_o_ai
 vec_vmrglb(vector bool char a, vector bool char b)
 {
   return vec_perm(a, b, (vector unsigned char)
-    (0x08, 0x18, 0x09, 0x19, 0x0A, 0x1A, 0x0B, 0x1B, 
+    (0x08, 0x18, 0x09, 0x19, 0x0A, 0x1A, 0x0B, 0x1B,
      0x0C, 0x1C, 0x0D, 0x1D, 0x0E, 0x1E, 0x0F, 0x1F));
 }
 
@@ -3269,7 +3269,7 @@ vec_mladd(vector unsigned short a, vector short b, vector short c)
 
 static vector unsigned short __ATTRS_o_ai
 vec_mladd(vector unsigned short a,
-          vector unsigned short b, 
+          vector unsigned short b,
           vector unsigned short c)
 {
   return a * b + c;
@@ -4688,7 +4688,7 @@ vec_sel(vector bool int a, vector bool int b, vector bool int c)
 static vector float __ATTRS_o_ai
 vec_sel(vector float a, vector float b, vector unsigned int c)
 {
-  vector int res = ((vector int)a & ~(vector int)c) 
+  vector int res = ((vector int)a & ~(vector int)c)
                    | ((vector int)b & (vector int)c);
   return (vector float)res;
 }
@@ -4923,7 +4923,7 @@ static vector signed char __ATTRS_o_ai
 vec_sld(vector signed char a, vector signed char b, unsigned char c)
 {
   return vec_perm(a, b, (vector unsigned char)
-    (c,   c+1, c+2,  c+3,  c+4,  c+5,  c+6,  c+7, 
+    (c,   c+1, c+2,  c+3,  c+4,  c+5,  c+6,  c+7,
      c+8, c+9, c+10, c+11, c+12, c+13, c+14, c+15));
 }
 
@@ -4931,7 +4931,7 @@ static vector unsigned char __ATTRS_o_ai
 vec_sld(vector unsigned char a, vector unsigned char b, unsigned char c)
 {
   return vec_perm(a, b, (vector unsigned char)
-    (c,   c+1, c+2,  c+3,  c+4,  c+5,  c+6,  c+7, 
+    (c,   c+1, c+2,  c+3,  c+4,  c+5,  c+6,  c+7,
      c+8, c+9, c+10, c+11, c+12, c+13, c+14, c+15));
 }
 
@@ -4939,7 +4939,7 @@ static vector short __ATTRS_o_ai
 vec_sld(vector short a, vector short b, unsigned char c)
 {
   return vec_perm(a, b, (vector unsigned char)
-    (c,   c+1, c+2,  c+3,  c+4,  c+5,  c+6,  c+7, 
+    (c,   c+1, c+2,  c+3,  c+4,  c+5,  c+6,  c+7,
      c+8, c+9, c+10, c+11, c+12, c+13, c+14, c+15));
 }
 
@@ -4947,7 +4947,7 @@ static vector unsigned short __ATTRS_o_ai
 vec_sld(vector unsigned short a, vector unsigned short b, unsigned char c)
 {
   return vec_perm(a, b, (vector unsigned char)
-    (c,   c+1, c+2,  c+3,  c+4,  c+5,  c+6,  c+7, 
+    (c,   c+1, c+2,  c+3,  c+4,  c+5,  c+6,  c+7,
      c+8, c+9, c+10, c+11, c+12, c+13, c+14, c+15));
 }
 
@@ -4955,7 +4955,7 @@ static vector pixel __ATTRS_o_ai
 vec_sld(vector pixel a, vector pixel b, unsigned char c)
 {
   return vec_perm(a, b, (vector unsigned char)
-    (c,   c+1, c+2,  c+3,  c+4,  c+5,  c+6,  c+7, 
+    (c,   c+1, c+2,  c+3,  c+4,  c+5,  c+6,  c+7,
      c+8, c+9, c+10, c+11, c+12, c+13, c+14, c+15));
 }
 
@@ -4963,7 +4963,7 @@ static vector int __ATTRS_o_ai
 vec_sld(vector int a, vector int b, unsigned char c)
 {
   return vec_perm(a, b, (vector unsigned char)
-    (c,   c+1, c+2,  c+3,  c+4,  c+5,  c+6,  c+7, 
+    (c,   c+1, c+2,  c+3,  c+4,  c+5,  c+6,  c+7,
      c+8, c+9, c+10, c+11, c+12, c+13, c+14, c+15));
 }
 
@@ -4971,7 +4971,7 @@ static vector unsigned int __ATTRS_o_ai
 vec_sld(vector unsigned int a, vector unsigned int b, unsigned char c)
 {
   return vec_perm(a, b, (vector unsigned char)
-    (c,   c+1, c+2,  c+3,  c+4,  c+5,  c+6,  c+7, 
+    (c,   c+1, c+2,  c+3,  c+4,  c+5,  c+6,  c+7,
      c+8, c+9, c+10, c+11, c+12, c+13, c+14, c+15));
 }
 
@@ -4979,7 +4979,7 @@ static vector float __ATTRS_o_ai
 vec_sld(vector float a, vector float b, unsigned char c)
 {
   return vec_perm(a, b, (vector unsigned char)
-    (c,   c+1, c+2,  c+3,  c+4,  c+5,  c+6,  c+7, 
+    (c,   c+1, c+2,  c+3,  c+4,  c+5,  c+6,  c+7,
      c+8, c+9, c+10, c+11, c+12, c+13, c+14, c+15));
 }
 
@@ -4989,7 +4989,7 @@ static vector signed char __ATTRS_o_ai
 vec_vsldoi(vector signed char a, vector signed char b, unsigned char c)
 {
   return vec_perm(a, b, (vector unsigned char)
-    (c,   c+1, c+2,  c+3,  c+4,  c+5,  c+6,  c+7, 
+    (c,   c+1, c+2,  c+3,  c+4,  c+5,  c+6,  c+7,
      c+8, c+9, c+10, c+11, c+12, c+13, c+14, c+15));
 }
 
@@ -4997,7 +4997,7 @@ static vector unsigned char __ATTRS_o_ai
 vec_vsldoi(vector unsigned char a, vector unsigned char b, unsigned char c)
 {
   return vec_perm(a, b, (vector unsigned char)
-    (c,   c+1, c+2,  c+3,  c+4,  c+5,  c+6,  c+7, 
+    (c,   c+1, c+2,  c+3,  c+4,  c+5,  c+6,  c+7,
      c+8, c+9, c+10, c+11, c+12, c+13, c+14, c+15));
 }
 
@@ -5005,7 +5005,7 @@ static vector short __ATTRS_o_ai
 vec_vsldoi(vector short a, vector short b, unsigned char c)
 {
   return vec_perm(a, b, (vector unsigned char)
-    (c,   c+1, c+2,  c+3,  c+4,  c+5,  c+6,  c+7, 
+    (c,   c+1, c+2,  c+3,  c+4,  c+5,  c+6,  c+7,
      c+8, c+9, c+10, c+11, c+12, c+13, c+14, c+15));
 }
 
@@ -5013,7 +5013,7 @@ static vector unsigned short __ATTRS_o_ai
 vec_vsldoi(vector unsigned short a, vector unsigned short b, unsigned char c)
 {
   return vec_perm(a, b, (vector unsigned char)
-    (c,   c+1, c+2,  c+3,  c+4,  c+5,  c+6,  c+7, 
+    (c,   c+1, c+2,  c+3,  c+4,  c+5,  c+6,  c+7,
      c+8, c+9, c+10, c+11, c+12, c+13, c+14, c+15));
 }
 
@@ -5021,7 +5021,7 @@ static vector pixel __ATTRS_o_ai
 vec_vsldoi(vector pixel a, vector pixel b, unsigned char c)
 {
   return vec_perm(a, b, (vector unsigned char)
-    (c,   c+1, c+2,  c+3,  c+4,  c+5,  c+6,  c+7, 
+    (c,   c+1, c+2,  c+3,  c+4,  c+5,  c+6,  c+7,
      c+8, c+9, c+10, c+11, c+12, c+13, c+14, c+15));
 }
 
@@ -5029,7 +5029,7 @@ static vector int __ATTRS_o_ai
 vec_vsldoi(vector int a, vector int b, unsigned char c)
 {
   return vec_perm(a, b, (vector unsigned char)
-    (c,   c+1, c+2,  c+3,  c+4,  c+5,  c+6,  c+7, 
+    (c,   c+1, c+2,  c+3,  c+4,  c+5,  c+6,  c+7,
      c+8, c+9, c+10, c+11, c+12, c+13, c+14, c+15));
 }
 
@@ -5037,7 +5037,7 @@ static vector unsigned int __ATTRS_o_ai
 vec_vsldoi(vector unsigned int a, vector unsigned int b, unsigned char c)
 {
   return vec_perm(a, b, (vector unsigned char)
-    (c,   c+1, c+2,  c+3,  c+4,  c+5,  c+6,  c+7, 
+    (c,   c+1, c+2,  c+3,  c+4,  c+5,  c+6,  c+7,
      c+8, c+9, c+10, c+11, c+12, c+13, c+14, c+15));
 }
 
@@ -5045,7 +5045,7 @@ static vector float __ATTRS_o_ai
 vec_vsldoi(vector float a, vector float b, unsigned char c)
 {
   return vec_perm(a, b, (vector unsigned char)
-    (c,   c+1, c+2,  c+3,  c+4,  c+5,  c+6,  c+7, 
+    (c,   c+1, c+2,  c+3,  c+4,  c+5,  c+6,  c+7,
      c+8, c+9, c+10, c+11, c+12, c+13, c+14, c+15));
 }
 
@@ -5671,7 +5671,7 @@ vec_splat(vector bool char a, unsigned char b)
 
 static vector short __ATTRS_o_ai
 vec_splat(vector short a, unsigned char b)
-{ 
+{
   b *= 2;
   unsigned char b1=b+1;
   return vec_perm(a, a, (vector unsigned char)
@@ -5680,7 +5680,7 @@ vec_splat(vector short a, unsigned char b)
 
 static vector unsigned short __ATTRS_o_ai
 vec_splat(vector unsigned short a, unsigned char b)
-{ 
+{
   b *= 2;
   unsigned char b1=b+1;
   return vec_perm(a, a, (vector unsigned char)
@@ -5689,7 +5689,7 @@ vec_splat(vector unsigned short a, unsigned char b)
 
 static vector bool short __ATTRS_o_ai
 vec_splat(vector bool short a, unsigned char b)
-{ 
+{
   b *= 2;
   unsigned char b1=b+1;
   return vec_perm(a, a, (vector unsigned char)
@@ -5698,7 +5698,7 @@ vec_splat(vector bool short a, unsigned char b)
 
 static vector pixel __ATTRS_o_ai
 vec_splat(vector pixel a, unsigned char b)
-{ 
+{
   b *= 2;
   unsigned char b1=b+1;
   return vec_perm(a, a, (vector unsigned char)
@@ -5707,7 +5707,7 @@ vec_splat(vector pixel a, unsigned char b)
 
 static vector int __ATTRS_o_ai
 vec_splat(vector int a, unsigned char b)
-{ 
+{
   b *= 4;
   unsigned char b1=b+1, b2=b+2, b3=b+3;
   return vec_perm(a, a, (vector unsigned char)
@@ -5716,7 +5716,7 @@ vec_splat(vector int a, unsigned char b)
 
 static vector unsigned int __ATTRS_o_ai
 vec_splat(vector unsigned int a, unsigned char b)
-{ 
+{
   b *= 4;
   unsigned char b1=b+1, b2=b+2, b3=b+3;
   return vec_perm(a, a, (vector unsigned char)
@@ -5725,7 +5725,7 @@ vec_splat(vector unsigned int a, unsigned char b)
 
 static vector bool int __ATTRS_o_ai
 vec_splat(vector bool int a, unsigned char b)
-{ 
+{
   b *= 4;
   unsigned char b1=b+1, b2=b+2, b3=b+3;
   return vec_perm(a, a, (vector unsigned char)
@@ -5734,7 +5734,7 @@ vec_splat(vector bool int a, unsigned char b)
 
 static vector float __ATTRS_o_ai
 vec_splat(vector float a, unsigned char b)
-{ 
+{
   b *= 4;
   unsigned char b1=b+1, b2=b+2, b3=b+3;
   return vec_perm(a, a, (vector unsigned char)
@@ -8642,7 +8642,7 @@ vec_lvlx(int a, const signed char *b)
 static vector signed char __ATTRS_o_ai
 vec_lvlx(int a, const vector signed char *b)
 {
-  return vec_perm(vec_ld(a, b), 
+  return vec_perm(vec_ld(a, b),
                   (vector signed char)(0),
                   vec_lvsl(a, (unsigned char *)b));
 }
@@ -8658,7 +8658,7 @@ vec_lvlx(int a, const unsigned char *b)
 static vector unsigned char __ATTRS_o_ai
 vec_lvlx(int a, const vector unsigned char *b)
 {
-  return vec_perm(vec_ld(a, b), 
+  return vec_perm(vec_ld(a, b),
                   (vector unsigned char)(0),
                   vec_lvsl(a, (unsigned char *)b));
 }
@@ -8666,7 +8666,7 @@ vec_lvlx(int a, const vector unsigned char *b)
 static vector bool char __ATTRS_o_ai
 vec_lvlx(int a, const vector bool char *b)
 {
-  return vec_perm(vec_ld(a, b), 
+  return vec_perm(vec_ld(a, b),
                   (vector bool char)(0),
                   vec_lvsl(a, (unsigned char *)b));
 }
@@ -8698,7 +8698,7 @@ vec_lvlx(int a, const unsigned short *b)
 static vector unsigned short __ATTRS_o_ai
 vec_lvlx(int a, const vector unsigned short *b)
 {
-  return vec_perm(vec_ld(a, b), 
+  return vec_perm(vec_ld(a, b),
                   (vector unsigned short)(0),
                   vec_lvsl(a, (unsigned char *)b));
 }
@@ -8706,7 +8706,7 @@ vec_lvlx(int a, const vector unsigned short *b)
 static vector bool short __ATTRS_o_ai
 vec_lvlx(int a, const vector bool short *b)
 {
-  return vec_perm(vec_ld(a, b), 
+  return vec_perm(vec_ld(a, b),
                   (vector bool short)(0),
                   vec_lvsl(a, (unsigned char *)b));
 }
@@ -8714,7 +8714,7 @@ vec_lvlx(int a, const vector bool short *b)
 static vector pixel __ATTRS_o_ai
 vec_lvlx(int a, const vector pixel *b)
 {
-  return vec_perm(vec_ld(a, b), 
+  return vec_perm(vec_ld(a, b),
                   (vector pixel)(0),
                   vec_lvsl(a, (unsigned char *)b));
 }
@@ -8746,7 +8746,7 @@ vec_lvlx(int a, const unsigned int *b)
 static vector unsigned int __ATTRS_o_ai
 vec_lvlx(int a, const vector unsigned int *b)
 {
-  return vec_perm(vec_ld(a, b), 
+  return vec_perm(vec_ld(a, b),
                   (vector unsigned int)(0),
                   vec_lvsl(a, (unsigned char *)b));
 }
@@ -8754,7 +8754,7 @@ vec_lvlx(int a, const vector unsigned int *b)
 static vector bool int __ATTRS_o_ai
 vec_lvlx(int a, const vector bool int *b)
 {
-  return vec_perm(vec_ld(a, b), 
+  return vec_perm(vec_ld(a, b),
                   (vector bool int)(0),
                   vec_lvsl(a, (unsigned char *)b));
 }
@@ -8788,7 +8788,7 @@ vec_lvlxl(int a, const signed char *b)
 static vector signed char __ATTRS_o_ai
 vec_lvlxl(int a, const vector signed char *b)
 {
-  return vec_perm(vec_ldl(a, b), 
+  return vec_perm(vec_ldl(a, b),
                   (vector signed char)(0),
                   vec_lvsl(a, (unsigned char *)b));
 }
@@ -8804,7 +8804,7 @@ vec_lvlxl(int a, const unsigned char *b)
 static vector unsigned char __ATTRS_o_ai
 vec_lvlxl(int a, const vector unsigned char *b)
 {
-  return vec_perm(vec_ldl(a, b), 
+  return vec_perm(vec_ldl(a, b),
                   (vector unsigned char)(0),
                   vec_lvsl(a, (unsigned char *)b));
 }
@@ -8812,7 +8812,7 @@ vec_lvlxl(int a, const vector unsigned char *b)
 static vector bool char __ATTRS_o_ai
 vec_lvlxl(int a, const vector bool char *b)
 {
-  return vec_perm(vec_ldl(a, b), 
+  return vec_perm(vec_ldl(a, b),
                   (vector bool char)(0),
                   vec_lvsl(a, (unsigned char *)b));
 }
@@ -8844,7 +8844,7 @@ vec_lvlxl(int a, const unsigned short *b)
 static vector unsigned short __ATTRS_o_ai
 vec_lvlxl(int a, const vector unsigned short *b)
 {
-  return vec_perm(vec_ldl(a, b), 
+  return vec_perm(vec_ldl(a, b),
                   (vector unsigned short)(0),
                   vec_lvsl(a, (unsigned char *)b));
 }
@@ -8852,7 +8852,7 @@ vec_lvlxl(int a, const vector unsigned short *b)
 static vector bool short __ATTRS_o_ai
 vec_lvlxl(int a, const vector bool short *b)
 {
-  return vec_perm(vec_ldl(a, b), 
+  return vec_perm(vec_ldl(a, b),
                   (vector bool short)(0),
                   vec_lvsl(a, (unsigned char *)b));
 }
@@ -8860,7 +8860,7 @@ vec_lvlxl(int a, const vector bool short *b)
 static vector pixel __ATTRS_o_ai
 vec_lvlxl(int a, const vector pixel *b)
 {
-  return vec_perm(vec_ldl(a, b), 
+  return vec_perm(vec_ldl(a, b),
                   (vector pixel)(0),
                   vec_lvsl(a, (unsigned char *)b));
 }
@@ -8892,7 +8892,7 @@ vec_lvlxl(int a, const unsigned int *b)
 static vector unsigned int __ATTRS_o_ai
 vec_lvlxl(int a, const vector unsigned int *b)
 {
-  return vec_perm(vec_ldl(a, b), 
+  return vec_perm(vec_ldl(a, b),
                   (vector unsigned int)(0),
                   vec_lvsl(a, (unsigned char *)b));
 }
@@ -8900,7 +8900,7 @@ vec_lvlxl(int a, const vector unsigned int *b)
 static vector bool int __ATTRS_o_ai
 vec_lvlxl(int a, const vector bool int *b)
 {
-  return vec_perm(vec_ldl(a, b), 
+  return vec_perm(vec_ldl(a, b),
                   (vector bool int)(0),
                   vec_lvsl(a, (unsigned char *)b));
 }
@@ -8935,7 +8935,7 @@ static vector signed char __ATTRS_o_ai
 vec_lvrx(int a, const vector signed char *b)
 {
   return vec_perm((vector signed char)(0),
-                  vec_ld(a, b), 
+                  vec_ld(a, b),
                   vec_lvsl(a, (unsigned char *)b));
 }
 
@@ -8951,7 +8951,7 @@ static vector unsigned char __ATTRS_o_ai
 vec_lvrx(int a, const vector unsigned char *b)
 {
   return vec_perm((vector unsigned char)(0),
-                  vec_ld(a, b), 
+                  vec_ld(a, b),
                   vec_lvsl(a, (unsigned char *)b));
 }
 
@@ -8959,7 +8959,7 @@ static vector bool char __ATTRS_o_ai
 vec_lvrx(int a, const vector bool char *b)
 {
   return vec_perm((vector bool char)(0),
-                  vec_ld(a, b), 
+                  vec_ld(a, b),
                   vec_lvsl(a, (unsigned char *)b));
 }
 
@@ -8991,7 +8991,7 @@ static vector unsigned short __ATTRS_o_ai
 vec_lvrx(int a, const vector unsigned short *b)
 {
   return vec_perm((vector unsigned short)(0),
-                  vec_ld(a, b), 
+                  vec_ld(a, b),
                   vec_lvsl(a, (unsigned char *)b));
 }
 
@@ -8999,7 +8999,7 @@ static vector bool short __ATTRS_o_ai
 vec_lvrx(int a, const vector bool short *b)
 {
   return vec_perm((vector bool short)(0),
-                  vec_ld(a, b), 
+                  vec_ld(a, b),
                   vec_lvsl(a, (unsigned char *)b));
 }
 
@@ -9007,7 +9007,7 @@ static vector pixel __ATTRS_o_ai
 vec_lvrx(int a, const vector pixel *b)
 {
   return vec_perm((vector pixel)(0),
-                  vec_ld(a, b), 
+                  vec_ld(a, b),
                   vec_lvsl(a, (unsigned char *)b));
 }
 
@@ -9039,7 +9039,7 @@ static vector unsigned int __ATTRS_o_ai
 vec_lvrx(int a, const vector unsigned int *b)
 {
   return vec_perm((vector unsigned int)(0),
-                  vec_ld(a, b), 
+                  vec_ld(a, b),
                   vec_lvsl(a, (unsigned char *)b));
 }
 
@@ -9047,7 +9047,7 @@ static vector bool int __ATTRS_o_ai
 vec_lvrx(int a, const vector bool int *b)
 {
   return vec_perm((vector bool int)(0),
-                  vec_ld(a, b), 
+                  vec_ld(a, b),
                   vec_lvsl(a, (unsigned char *)b));
 }
 
@@ -9081,7 +9081,7 @@ static vector signed char __ATTRS_o_ai
 vec_lvrxl(int a, const vector signed char *b)
 {
   return vec_perm((vector signed char)(0),
-                  vec_ldl(a, b), 
+                  vec_ldl(a, b),
                   vec_lvsl(a, (unsigned char *)b));
 }
 
@@ -9097,7 +9097,7 @@ static vector unsigned char __ATTRS_o_ai
 vec_lvrxl(int a, const vector unsigned char *b)
 {
   return vec_perm((vector unsigned char)(0),
-                  vec_ldl(a, b), 
+                  vec_ldl(a, b),
                   vec_lvsl(a, (unsigned char *)b));
 }
 
@@ -9105,7 +9105,7 @@ static vector bool char __ATTRS_o_ai
 vec_lvrxl(int a, const vector bool char *b)
 {
   return vec_perm((vector bool char)(0),
-                  vec_ldl(a, b), 
+                  vec_ldl(a, b),
                   vec_lvsl(a, (unsigned char *)b));
 }
 
@@ -9137,7 +9137,7 @@ static vector unsigned short __ATTRS_o_ai
 vec_lvrxl(int a, const vector unsigned short *b)
 {
   return vec_perm((vector unsigned short)(0),
-                  vec_ldl(a, b), 
+                  vec_ldl(a, b),
                   vec_lvsl(a, (unsigned char *)b));
 }
 
@@ -9145,7 +9145,7 @@ static vector bool short __ATTRS_o_ai
 vec_lvrxl(int a, const vector bool short *b)
 {
   return vec_perm((vector bool short)(0),
-                  vec_ldl(a, b), 
+                  vec_ldl(a, b),
                   vec_lvsl(a, (unsigned char *)b));
 }
 
@@ -9153,7 +9153,7 @@ static vector pixel __ATTRS_o_ai
 vec_lvrxl(int a, const vector pixel *b)
 {
   return vec_perm((vector pixel)(0),
-                  vec_ldl(a, b), 
+                  vec_ldl(a, b),
                   vec_lvsl(a, (unsigned char *)b));
 }
 
@@ -9185,7 +9185,7 @@ static vector unsigned int __ATTRS_o_ai
 vec_lvrxl(int a, const vector unsigned int *b)
 {
   return vec_perm((vector unsigned int)(0),
-                  vec_ldl(a, b), 
+                  vec_ldl(a, b),
                   vec_lvsl(a, (unsigned char *)b));
 }
 
@@ -9193,7 +9193,7 @@ static vector bool int __ATTRS_o_ai
 vec_lvrxl(int a, const vector bool int *b)
 {
   return vec_perm((vector bool int)(0),
-                  vec_ldl(a, b), 
+                  vec_ldl(a, b),
                   vec_lvsl(a, (unsigned char *)b));
 }
 
@@ -10935,7 +10935,7 @@ vec_any_eq(vector short a, vector bool short b)
 static int __ATTRS_o_ai
 vec_any_eq(vector unsigned short a, vector unsigned short b)
 {
-  return __builtin_altivec_vcmpequh_p(__CR6_EQ_REV, 
+  return __builtin_altivec_vcmpequh_p(__CR6_EQ_REV,
                                       (vector short)a,
                                       (vector short)b);
 }
@@ -10943,7 +10943,7 @@ vec_any_eq(vector unsigned short a, vector unsigned short b)
 static int __ATTRS_o_ai
 vec_any_eq(vector unsigned short a, vector bool short b)
 {
-  return __builtin_altivec_vcmpequh_p(__CR6_EQ_REV, 
+  return __builtin_altivec_vcmpequh_p(__CR6_EQ_REV,
                                       (vector short)a,
                                       (vector short)b);
 }
@@ -10975,7 +10975,7 @@ vec_any_eq(vector bool short a, vector bool short b)
 static int __ATTRS_o_ai
 vec_any_eq(vector pixel a, vector pixel b)
 {
-  return __builtin_altivec_vcmpequh_p(__CR6_EQ_REV, 
+  return __builtin_altivec_vcmpequh_p(__CR6_EQ_REV,
                                       (vector short)a,
                                       (vector short)b);
 }
@@ -11117,7 +11117,7 @@ vec_any_ge(vector bool short a, vector short b)
 static int __ATTRS_o_ai
 vec_any_ge(vector bool short a, vector unsigned short b)
 {
-  return 
+  return
     __builtin_altivec_vcmpgtuh_p(__CR6_LT_REV, b, (vector unsigned short)a);
 }
 
@@ -11204,7 +11204,7 @@ vec_any_gt(vector unsigned char a, vector unsigned char b)
 static int __ATTRS_o_ai
 vec_any_gt(vector unsigned char a, vector bool char b)
 {
-  return 
+  return
     __builtin_altivec_vcmpgtub_p(__CR6_EQ_REV, a, (vector unsigned char)b);
 }
 
@@ -11219,7 +11219,7 @@ vec_any_gt(vector bool char a, vector signed char b)
 static int __ATTRS_o_ai
 vec_any_gt(vector bool char a, vector unsigned char b)
 {
-  return 
+  return
     __builtin_altivec_vcmpgtub_p(__CR6_EQ_REV, (vector unsigned char)a, b);
 }
 
@@ -11252,7 +11252,7 @@ vec_any_gt(vector unsigned short a, vector unsigned short b)
 static int __ATTRS_o_ai
 vec_any_gt(vector unsigned short a, vector bool short b)
 {
-  return 
+  return
     __builtin_altivec_vcmpgtuh_p(__CR6_EQ_REV, a, (vector unsigned short)b);
 }
 
@@ -11354,7 +11354,7 @@ vec_any_le(vector unsigned char a, vector unsigned char b)
 static int __ATTRS_o_ai
 vec_any_le(vector unsigned char a, vector bool char b)
 {
-  return 
+  return
     __builtin_altivec_vcmpgtub_p(__CR6_LT_REV, a, (vector unsigned char)b);
 }
 
@@ -11369,7 +11369,7 @@ vec_any_le(vector bool char a, vector signed char b)
 static int __ATTRS_o_ai
 vec_any_le(vector bool char a, vector unsigned char b)
 {
-  return 
+  return
     __builtin_altivec_vcmpgtub_p(__CR6_LT_REV, (vector unsigned char)a, b);
 }
 
@@ -11402,7 +11402,7 @@ vec_any_le(vector unsigned short a, vector unsigned short b)
 static int __ATTRS_o_ai
 vec_any_le(vector unsigned short a, vector bool short b)
 {
-  return 
+  return
     __builtin_altivec_vcmpgtuh_p(__CR6_LT_REV, a, (vector unsigned short)b);
 }
 
@@ -11417,7 +11417,7 @@ vec_any_le(vector bool short a, vector short b)
 static int __ATTRS_o_ai
 vec_any_le(vector bool short a, vector unsigned short b)
 {
-  return 
+  return
     __builtin_altivec_vcmpgtuh_p(__CR6_LT_REV, (vector unsigned short)a, b);
 }
 
@@ -11504,7 +11504,7 @@ vec_any_lt(vector unsigned char a, vector unsigned char b)
 static int __ATTRS_o_ai
 vec_any_lt(vector unsigned char a, vector bool char b)
 {
-  return 
+  return
     __builtin_altivec_vcmpgtub_p(__CR6_EQ_REV, (vector unsigned char)b, a);
 }
 
@@ -11519,7 +11519,7 @@ vec_any_lt(vector bool char a, vector signed char b)
 static int __ATTRS_o_ai
 vec_any_lt(vector bool char a, vector unsigned char b)
 {
-  return 
+  return
     __builtin_altivec_vcmpgtub_p(__CR6_EQ_REV, b, (vector unsigned char)a);
 }
 
@@ -11552,7 +11552,7 @@ vec_any_lt(vector unsigned short a, vector unsigned short b)
 static int __ATTRS_o_ai
 vec_any_lt(vector unsigned short a, vector bool short b)
 {
-  return 
+  return
     __builtin_altivec_vcmpgtuh_p(__CR6_EQ_REV, (vector unsigned short)b, a);
 }
 
@@ -11567,7 +11567,7 @@ vec_any_lt(vector bool short a, vector short b)
 static int __ATTRS_o_ai
 vec_any_lt(vector bool short a, vector unsigned short b)
 {
-  return 
+  return
     __builtin_altivec_vcmpgtuh_p(__CR6_EQ_REV, b, (vector unsigned short)a);
 }
 
@@ -11705,7 +11705,7 @@ vec_any_ne(vector short a, vector bool short b)
 static int __ATTRS_o_ai
 vec_any_ne(vector unsigned short a, vector unsigned short b)
 {
-  return __builtin_altivec_vcmpequh_p(__CR6_LT_REV, 
+  return __builtin_altivec_vcmpequh_p(__CR6_LT_REV,
                                       (vector short)a,
                                       (vector short)b);
 }

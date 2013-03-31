@@ -7,7 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 //
-// This file implements a pass that checks profiling information for 
+// This file implements a pass that checks profiling information for
 // plausibility.
 //
 //===----------------------------------------------------------------------===//
@@ -63,7 +63,7 @@ namespace {
       initializeProfileVerifierPassPass(*PassRegistry::getPassRegistry());
       DisableAssertions = ProfileVerifierDisableAssertions;
     }
-    explicit ProfileVerifierPassT (bool da) : FunctionPass(ID), 
+    explicit ProfileVerifierPassT (bool da) : FunctionPass(ID),
                                               DisableAssertions(da) {
       initializeProfileVerifierPassPass(*PassRegistry::getPassRegistry());
     }
@@ -104,7 +104,7 @@ namespace {
         typename ProfileInfoT<FType, BType>::Edge E = PI->getEdge(*bbi,BB);
         double EdgeWeight = PI->getEdgeWeight(E);
         if (EdgeWeight == ProfileInfoT<FType, BType>::MissingValue) { EdgeWeight = 0; }
-        dbgs() << "calculated in-edge " << E << ": " 
+        dbgs() << "calculated in-edge " << E << ": "
                << format("%20.20g",EdgeWeight) << "\n";
         inWeight += EdgeWeight;
         inCount++;
@@ -119,7 +119,7 @@ namespace {
         typename ProfileInfoT<FType, BType>::Edge E = PI->getEdge(BB,*bbi);
         double EdgeWeight = PI->getEdgeWeight(E);
         if (EdgeWeight == ProfileInfoT<FType, BType>::MissingValue) { EdgeWeight = 0; }
-        dbgs() << "calculated out-edge " << E << ": " 
+        dbgs() << "calculated out-edge " << E << ": "
                << format("%20.20g",EdgeWeight) << "\n";
         outWeight += EdgeWeight;
         outCount++;
@@ -135,7 +135,7 @@ namespace {
 
     // mark as visited and recurse into subnodes
     BBisPrinted.insert(BB);
-    for ( succ_const_iterator bbi = succ_begin(BB), bbe = succ_end(BB); 
+    for ( succ_const_iterator bbi = succ_begin(BB), bbe = succ_end(BB);
           bbi != bbe; ++bbi ) {
       printDebugInfo(*bbi);
     }
@@ -200,13 +200,13 @@ namespace {
   double ProfileVerifierPassT<FType, BType>::ReadOrAssert(typename ProfileInfoT<FType, BType>::Edge E) {
     double EdgeWeight = PI->getEdgeWeight(E);
     if (EdgeWeight == ProfileInfoT<FType, BType>::MissingValue) {
-      dbgs() << "Edge " << E << " in Function " 
+      dbgs() << "Edge " << E << " in Function "
              << ProfileInfoT<FType, BType>::getFunction(E)->getName() << ": ";
       ASSERTMESSAGE("Edge has missing value");
       return 0;
     } else {
       if (EdgeWeight < 0) {
-        dbgs() << "Edge " << E << " in Function " 
+        dbgs() << "Edge " << E << " in Function "
                << ProfileInfoT<FType, BType>::getFunction(E)->getName() << ": ";
         ASSERTMESSAGE("Edge has negative value");
       }
@@ -215,7 +215,7 @@ namespace {
   }
 
   template<class FType, class BType>
-  void ProfileVerifierPassT<FType, BType>::CheckValue(bool Error, 
+  void ProfileVerifierPassT<FType, BType>::CheckValue(bool Error,
                                                       const char *Message,
                                                       DetailedBlockInfo *DI) {
     if (Error) {
@@ -317,28 +317,28 @@ namespace {
     if (DI.inCount > 0 && DI.outCount == 0) {
        // If this is a block with no successors.
       if (!isSetJmpTarget) {
-        CheckValue(!Equals(DI.inWeight,DI.BBWeight), 
+        CheckValue(!Equals(DI.inWeight,DI.BBWeight),
                    "inWeight and BBWeight do not match", &DI);
       }
     } else if (DI.inCount == 0 && DI.outCount > 0) {
       // If this is a block with no predecessors.
       if (!isExitReachable)
-        CheckValue(!Equals(DI.BBWeight,DI.outWeight), 
+        CheckValue(!Equals(DI.BBWeight,DI.outWeight),
                    "BBWeight and outWeight do not match", &DI);
     } else {
       // If this block has successors and predecessors.
       if (DI.inWeight > DI.outWeight && !isExitReachable)
-        CheckValue(!Equals(DI.inWeight,DI.outWeight), 
+        CheckValue(!Equals(DI.inWeight,DI.outWeight),
                    "inWeight and outWeight do not match", &DI);
       if (DI.inWeight < DI.outWeight && !isSetJmpTarget)
-        CheckValue(!Equals(DI.inWeight,DI.outWeight), 
+        CheckValue(!Equals(DI.inWeight,DI.outWeight),
                    "inWeight and outWeight do not match", &DI);
     }
 
 
     // Mark this block as visited, rescurse into successors.
     BBisVisited.insert(BB);
-    for ( succ_const_iterator bbi = succ_begin(BB), bbe = succ_end(BB); 
+    for ( succ_const_iterator bbi = succ_begin(BB), bbe = succ_end(BB);
           bbi != bbe; ++bbi ) {
       recurseBasicBlock(*bbi);
     }
@@ -376,7 +376,7 @@ INITIALIZE_PASS_END(ProfileVerifierPass, "profile-verifier",
 
 namespace llvm {
   FunctionPass *createProfileVerifierPass() {
-    return new ProfileVerifierPass(ProfileVerifierDisableAssertions); 
+    return new ProfileVerifierPass(ProfileVerifierDisableAssertions);
   }
 }
 

@@ -57,7 +57,7 @@ public:
     Stack.pop_back(); // This technically "invalidates" U, but we are fine.
     return U;
   }
-  
+
   virtual bool visitItemsInWorkList(Visitor &V) {
     for (SmallVectorImpl<WorkListUnit>::iterator
          I = Stack.begin(), E = Stack.end(); I != E; ++I) {
@@ -84,7 +84,7 @@ public:
     Queue.pop_front();
     return U;
   }
-  
+
   virtual bool visitItemsInWorkList(Visitor &V) {
     for (std::deque<WorkListUnit>::iterator
          I = Queue.begin(), E = Queue.end(); I != E; ++I) {
@@ -270,10 +270,10 @@ void CoreEngine::dispatchWorkItem(ExplodedNode* Pred, ProgramPoint Loc,
 
 bool CoreEngine::ExecuteWorkListWithInitialState(const LocationContext *L,
                                                  unsigned Steps,
-                                                 ProgramStateRef InitState, 
+                                                 ProgramStateRef InitState,
                                                  ExplodedNodeSet &Dst) {
   bool DidNotFinish = ExecuteWorkList(L, Steps, InitState);
-  for (ExplodedGraph::eop_iterator I = G->eop_begin(), 
+  for (ExplodedGraph::eop_iterator I = G->eop_begin(),
                                    E = G->eop_end(); I != E; ++I) {
     Dst.Add(*I);
   }
@@ -375,7 +375,7 @@ void CoreEngine::HandleBlockExit(const CFGBlock * B, ExplodedNode *Pred) {
         }
         return;
       }
-        
+
       case Stmt::DoStmtClass:
         HandleBranch(cast<DoStmt>(Term)->getCond(), Term, B, Pred);
         return;
@@ -445,7 +445,7 @@ void CoreEngine::HandleBlockExit(const CFGBlock * B, ExplodedNode *Pred) {
                Pred->State, Pred);
 }
 
-void CoreEngine::HandleBranch(const Stmt *Cond, const Stmt *Term, 
+void CoreEngine::HandleBranch(const Stmt *Cond, const Stmt *Term,
                                 const CFGBlock * B, ExplodedNode *Pred) {
   assert(B->succ_size() == 2);
   NodeBuilderContext Ctx(*this, B, Pred);
@@ -456,7 +456,7 @@ void CoreEngine::HandleBranch(const Stmt *Cond, const Stmt *Term,
   enqueue(Dst);
 }
 
-void CoreEngine::HandlePostStmt(const CFGBlock *B, unsigned StmtIdx, 
+void CoreEngine::HandlePostStmt(const CFGBlock *B, unsigned StmtIdx,
                                   ExplodedNode *Pred) {
   assert(B);
   assert(!B->empty());
@@ -673,7 +673,7 @@ SwitchNodeBuilder::generateDefaultCaseNode(ProgramStateRef St,
   // by earlier stages.
   if (!DefaultBlock)
     return NULL;
-  
+
   bool IsNew;
   ExplodedNode *Succ = Eng.G->getNode(BlockEdge(Src, DefaultBlock,
                                       Pred->getLocationContext()), St,

@@ -32,7 +32,7 @@ private:
   std::vector<CompilerInstance *> CIs;
   OwningPtr<ExternalSemaSource> FinalReader;
 
-  
+
 protected:
 
 //===----------------------------------------------------------------------===//

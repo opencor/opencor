@@ -2,7 +2,7 @@
  * -----------------------------------------------------------------
  * $Revision: 1.6 $
  * $Date: 2010/12/01 22:43:33 $
- * ----------------------------------------------------------------- 
+ * -----------------------------------------------------------------
  * Programmer: Radu Serban @ LLNL
  * -----------------------------------------------------------------
  * Copyright (c) 2006, The Regents of the University of California.
@@ -14,7 +14,7 @@
  * -----------------------------------------------------------------
  */
 
-/* 
+/*
  * =================================================================
  * IMPORTED HEADER FILES
  * =================================================================
@@ -27,7 +27,7 @@
 #include "kinsol_direct_impl.h"
 #include <sundials/sundials_math.h>
 
-/* 
+/*
  * =================================================================
  * FUNCTION SPECIFIC CONSTANTS
  * =================================================================
@@ -87,12 +87,12 @@
 #define J_data         (kindls_mem->d_J_data)
 #define last_flag      (kindls_mem->d_last_flag)
 
-/* 
+/*
  * =================================================================
  * EXPORTED FUNCTIONS
  * =================================================================
  */
-              
+
 /*
  * -----------------------------------------------------------------
  * KINDlsSetJacFn
@@ -312,7 +312,7 @@ char *KINDlsGetReturnFlagName(long int flag)
   return(name);
 }
 
-/* 
+/*
  * =================================================================
  * DQ JACOBIAN APPROXIMATIONS
  * =================================================================
@@ -322,15 +322,15 @@ char *KINDlsGetReturnFlagName(long int flag)
 
 /*
  * -----------------------------------------------------------------
- * kinDlsDenseDQJac 
+ * kinDlsDenseDQJac
  * -----------------------------------------------------------------
  * This routine generates a dense difference quotient approximation to
  * the Jacobian of F(u). It assumes that a dense matrix of type
  * DlsMat is stored column-wise, and that elements within each column
  * are contiguous. The address of the jth column of J is obtained via
  * the macro DENSE_COL and this pointer is associated with an N_Vector
- * using the N_VGetArrayPointer/N_VSetArrayPointer functions. 
- * Finally, the actual computation of the jth column of the Jacobian is 
+ * using the N_VGetArrayPointer/N_VSetArrayPointer functions.
+ * Finally, the actual computation of the jth column of the Jacobian is
  * done with a call to N_VLinearSum.
  *
  * The increment used in the finite-difference approximation
@@ -368,7 +368,7 @@ int kinDlsDenseDQJac(long int N,
   tmp2_data = N_VGetArrayPointer(tmp2);
 
   /* Rename work vectors for readibility */
-  ftemp = tmp1; 
+  ftemp = tmp1;
   jthCol = tmp2;
 
   /* Obtain pointers to the data for u and uscale */
@@ -391,7 +391,7 @@ int kinDlsDenseDQJac(long int N,
 
     retval = func(u, ftemp, user_data);
     nfeDQ++;
-    if (retval != 0) break; 
+    if (retval != 0) break;
 
     u_data[j] = ujsaved;
 
@@ -458,9 +458,9 @@ int kinDlsBandDQJac(long int N, long int mupper, long int mlower,
   /* Set bandwidth and number of column groups for band differencing */
   width = mlower + mupper + 1;
   ngroups = MIN(width, N);
-  
+
   for (group=1; group <= ngroups; group++) {
-    
+
     /* Increment all utemp components in group */
     for(j=group-1; j < N; j+=width) {
       inc = sqrt_relfunc*MAX(ABS(u_data[j]), ABS(uscale_data[j]));
@@ -469,7 +469,7 @@ int kinDlsBandDQJac(long int N, long int mupper, long int mlower,
 
     /* Evaluate f with incremented u */
     retval = func(utemp, futemp, user_data);
-    if (retval != 0) return(-1); 
+    if (retval != 0) return(-1);
 
     /* Restore utemp components, then form and load difference quotients */
     for (j=group-1; j < N; j+=width) {
@@ -483,7 +483,7 @@ int kinDlsBandDQJac(long int N, long int mupper, long int mlower,
         BAND_COL_ELEM(col_j,i,j) = inc_inv * (futemp_data[i] - fu_data[i]);
     }
   }
-  
+
   /* Increment counter nfeDQ */
   nfeDQ += ngroups;
 

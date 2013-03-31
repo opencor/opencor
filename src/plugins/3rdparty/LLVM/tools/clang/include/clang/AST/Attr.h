@@ -64,7 +64,7 @@ protected:
   bool Inherited : 1;
 
   virtual ~Attr();
-  
+
   void* operator new(size_t bytes) throw() {
     llvm_unreachable("Attrs cannot be allocated with regular 'new'.");
   }
@@ -200,7 +200,7 @@ public:
   friend bool operator==(specific_attr_iterator Left,
                          specific_attr_iterator Right) {
     if (Left.Current < Right.Current)
-      Left.AdvanceToNext(Right.Current); 
+      Left.AdvanceToNext(Right.Current);
     else
       Right.AdvanceToNext(Left.Current);
     return Left.Current == Right.Current;

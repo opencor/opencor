@@ -109,7 +109,7 @@ bool MarkerHandleSet::RemoveNumber(int markerNum, bool all) {
 			delete mhn;
 			performedDeletion = true;
 			if (!all)
-				break; 
+				break;
 		} else {
 			pmhn = &((*pmhn)->next);
 		}

@@ -29,7 +29,7 @@
 using namespace clang;
 using namespace ento;
 
-static bool isUIViewControllerSubclass(ASTContext &Ctx, 
+static bool isUIViewControllerSubclass(ASTContext &Ctx,
                                        const ObjCImplementationDecl *D) {
   IdentifierInfo *ViewControllerII = &Ctx.Idents.get("UIViewController");
   const ObjCInterfaceDecl *ID = D->getClassInterface();
@@ -37,7 +37,7 @@ static bool isUIViewControllerSubclass(ASTContext &Ctx,
   for ( ; ID; ID = ID->getSuperClass())
     if (ID->getIdentifier() == ViewControllerII)
       return true;
-  return false;  
+  return false;
 }
 
 //===----------------------------------------------------------------------===//
@@ -54,7 +54,7 @@ public:
         DoesCallSuper = true;
 
     // Recurse if we didn't find the super call yet.
-    return !DoesCallSuper; 
+    return !DoesCallSuper;
   }
 
   bool DoesCallSuper;
@@ -64,7 +64,7 @@ private:
 };
 
 //===----------------------------------------------------------------------===//
-// ObjCSuperCallChecker 
+// ObjCSuperCallChecker
 //===----------------------------------------------------------------------===//
 
 namespace {
@@ -84,8 +84,8 @@ void ObjCSuperCallChecker::checkASTDecl(const ObjCImplementationDecl *D,
   if (!isUIViewControllerSubclass(Ctx, D))
     return;
 
-  const char *SelectorNames[] = 
-    {"addChildViewController", "viewDidAppear", "viewDidDisappear", 
+  const char *SelectorNames[] =
+    {"addChildViewController", "viewDidAppear", "viewDidDisappear",
      "viewWillAppear", "viewWillDisappear", "removeFromParentViewController",
      "didReceiveMemoryWarning", "viewDidUnload", "viewWillUnload",
      "viewDidLoad"};
@@ -96,7 +96,7 @@ void ObjCSuperCallChecker::checkASTDecl(const ObjCImplementationDecl *D,
 
   // Fill the Selectors SmallSet with all selectors we want to check.
   llvm::SmallSet<Selector, 16> Selectors;
-  for (size_t i = 0; i < SelectorCount; i++) { 
+  for (size_t i = 0; i < SelectorCount; i++) {
     unsigned ArgumentCount = SelectorArgumentCounts[i];
     const char *SelectorCString = SelectorNames[i];
 
@@ -133,7 +133,7 @@ void ObjCSuperCallChecker::checkASTDecl(const ObjCImplementationDecl *D,
         SmallString<256> Buf;
         llvm::raw_svector_ostream os(Buf);
 
-        os << "The '" << S.getAsString() 
+        os << "The '" << S.getAsString()
            << "' instance method in UIViewController subclass '" << *D
            << "' is missing a [super " << S.getAsString() << "] call";
 

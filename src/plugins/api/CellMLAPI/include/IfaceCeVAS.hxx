@@ -19,7 +19,7 @@ namespace iface
 {
   namespace cellml_services
   {
-    PUBLIC_CeVAS_PRE 
+    PUBLIC_CeVAS_PRE
     class  PUBLIC_CeVAS_POST ConnectedVariableSet
      : public virtual iface::XPCOM::IObject
     {
@@ -30,7 +30,7 @@ namespace iface
       virtual uint32_t length() throw(std::exception&)  = 0;
       virtual already_AddRefd<iface::cellml_api::CellMLVariable>  getVariable(uint32_t index) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CeVAS_PRE 
+    PUBLIC_CeVAS_PRE
     class  PUBLIC_CeVAS_POST CeVAS
      : public virtual iface::XPCOM::IObject
     {
@@ -43,7 +43,7 @@ namespace iface
       virtual uint32_t length() throw(std::exception&)  = 0;
       virtual already_AddRefd<iface::cellml_services::ConnectedVariableSet>  getVariableSet(uint32_t index) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CeVAS_PRE 
+    PUBLIC_CeVAS_PRE
     class  PUBLIC_CeVAS_POST CeVASBootstrap
      : public virtual iface::XPCOM::IObject
     {

@@ -574,7 +574,7 @@ bool FunctionAttrs::AddNoAliasAttrs(const CallGraphSCC &SCC) {
     if (F->isDeclaration() || F->mayBeOverridden())
       return false;
 
-    // We annotate noalias return values, which are only applicable to 
+    // We annotate noalias return values, which are only applicable to
     // pointer types.
     if (!F->getReturnType()->isPointerTy())
       continue;

@@ -174,7 +174,7 @@ static const Function *assertLocalFunction(const MDNode *N) {
     }
     if (F == 0)
       F = NewF;
-    else 
+    else
       assert((NewF == 0 || F == NewF) &&"inconsistent function-local metadata");
   }
   return F;
@@ -184,7 +184,7 @@ static const Function *assertLocalFunction(const MDNode *N) {
 // getFunction - If this metadata is function-local and recursively has a
 // function-local operand, return the first such operand's parent function.
 // Otherwise, return null. getFunction() should not be used for performance-
-// critical code because it recursively visits all the MDNode's operands.  
+// critical code because it recursively visits all the MDNode's operands.
 const Function *MDNode::getFunction() const {
 #ifndef NDEBUG
   return assertLocalFunction(this);
@@ -342,7 +342,7 @@ void MDNode::replaceOperand(MDNodeOperand *Op, Value *To) {
         To = 0;
     }
   }
-  
+
   if (From == To)
     return;
 
@@ -627,7 +627,7 @@ void Instruction::setMetadata(unsigned KindID, MDNode *Node) {
     DbgLoc = DebugLoc::getFromDILocation(Node);
     return;
   }
-  
+
   // Handle the case when we're adding/updating metadata on an instruction.
   if (Node) {
     LLVMContextImpl::MDMapTy &Info = getContext().pImpl->MetadataStore[this];
@@ -679,9 +679,9 @@ MDNode *Instruction::getMetadataImpl(unsigned KindID) const {
   // Handle 'dbg' as a special case since it is not stored in the hash table.
   if (KindID == LLVMContext::MD_dbg)
     return DbgLoc.getAsMDNode(getContext());
-  
+
   if (!hasMetadataHashEntry()) return 0;
-  
+
   LLVMContextImpl::MDMapTy &Info = getContext().pImpl->MetadataStore[this];
   assert(!Info.empty() && "bit out of sync with hash table");
 
@@ -695,14 +695,14 @@ MDNode *Instruction::getMetadataImpl(unsigned KindID) const {
 void Instruction::getAllMetadataImpl(SmallVectorImpl<std::pair<unsigned,
                                        MDNode*> > &Result) const {
   Result.clear();
-  
+
   // Handle 'dbg' as a special case since it is not stored in the hash table.
   if (!DbgLoc.isUnknown()) {
     Result.push_back(std::make_pair((unsigned)LLVMContext::MD_dbg,
                                     DbgLoc.getAsMDNode(getContext())));
     if (!hasMetadataHashEntry()) return;
   }
-  
+
   assert(hasMetadataHashEntry() &&
          getContext().pImpl->MetadataStore.count(this) &&
          "Shouldn't have called this");

@@ -147,7 +147,7 @@ namespace {
 void ASTViewer::HandleTopLevelSingleDecl(Decl *D) {
   if (isa<FunctionDecl>(D) || isa<ObjCMethodDecl>(D)) {
     D->print(llvm::errs());
-  
+
     if (Stmt *Body = D->getBody()) {
       llvm::errs() << '\n';
       Body->viewAST();
@@ -481,7 +481,7 @@ public:
 
   void HandleTranslationUnit(ASTContext &C) {
     C.getTranslationUnitDecl()->dumpXML(OS);
-  }  
+  }
 };
 }
 

@@ -63,7 +63,7 @@ namespace {
     Constant *GetFrameMap(Function &F);
     Type* GetConcreteStackEntryType(Function &F);
     void CollectRoots(Function &F);
-    static GetElementPtrInst *CreateGEP(LLVMContext &Context, 
+    static GetElementPtrInst *CreateGEP(LLVMContext &Context,
                                         IRBuilder<> &B, Value *BasePtr,
                                         int Idx1, const char *Name);
     static GetElementPtrInst *CreateGEP(LLVMContext &Context,
@@ -215,7 +215,7 @@ Constant *ShadowStackGC::GetFrameMap(Function &F) {
   Metadata.resize(NumMeta);
 
   Type *Int32Ty = Type::getInt32Ty(F.getContext());
-  
+
   Constant *BaseElts[] = {
     ConstantInt::get(Int32Ty, Roots.size(), false),
     ConstantInt::get(Int32Ty, NumMeta, false),
@@ -228,7 +228,7 @@ Constant *ShadowStackGC::GetFrameMap(Function &F) {
 
   Type *EltTys[] = { DescriptorElts[0]->getType(),DescriptorElts[1]->getType()};
   StructType *STy = StructType::create(EltTys, "gc_map."+utostr(NumMeta));
-  
+
   Constant *FrameMap = ConstantStruct::get(STy, DescriptorElts);
 
   // FIXME: Is this actually dangerous as WritingAnLLVMPass.html claims? Seems
@@ -261,7 +261,7 @@ Type* ShadowStackGC::GetConcreteStackEntryType(Function &F) {
   EltTys.push_back(StackEntryTy);
   for (size_t I = 0; I != Roots.size(); I++)
     EltTys.push_back(Roots[I].second->getAllocatedType());
-  
+
   return StructType::create(EltTys, "gc_stackentry."+F.getName().str());
 }
 
@@ -276,7 +276,7 @@ bool ShadowStackGC::initializeCustomLowering(Module &M) {
   std::vector<Type*> EltTys;
   // 32 bits is ok up to a 32GB stack frame. :)
   EltTys.push_back(Type::getInt32Ty(M.getContext()));
-  // Specifies length of variable length array. 
+  // Specifies length of variable length array.
   EltTys.push_back(Type::getInt32Ty(M.getContext()));
   FrameMapTy = StructType::create(EltTys, "gc_map");
   PointerType *FrameMapPtrTy = PointerType::getUnqual(FrameMapTy);
@@ -286,9 +286,9 @@ bool ShadowStackGC::initializeCustomLowering(Module &M) {
   //   FrameMap *Map;          // Pointer to constant FrameMap.
   //   void *Roots[];          // Stack roots (in-place array, so we pretend).
   // };
-  
+
   StackEntryTy = StructType::create(M.getContext(), "gc_stackentry");
-  
+
   EltTys.clear();
   EltTys.push_back(PointerType::getUnqual(StackEntryTy));
   EltTys.push_back(FrameMapPtrTy);
@@ -373,7 +373,7 @@ ShadowStackGC::CreateGEP(LLVMContext &Context, IRBuilder<> &B, Value *BasePtr,
 /// runOnFunction - Insert code to maintain the shadow stack.
 bool ShadowStackGC::performCustomLowering(Function &F) {
   LLVMContext &Context = F.getContext();
-  
+
   // Find calls to llvm.gcroot.
   CollectRoots(F);
 
@@ -423,7 +423,7 @@ bool ShadowStackGC::performCustomLowering(Function &F) {
   // Push the entry onto the shadow stack.
   Instruction *EntryNextPtr = CreateGEP(Context, AtEntry,
                                         StackEntry,0,0,"gc_frame.next");
-  Instruction *NewHeadVal   = CreateGEP(Context, AtEntry, 
+  Instruction *NewHeadVal   = CreateGEP(Context, AtEntry,
                                         StackEntry, 0, "gc_newhead");
   AtEntry.CreateStore(CurrentHead, EntryNextPtr);
   AtEntry.CreateStore(NewHeadVal, Head);

@@ -78,7 +78,7 @@ bool ExplodedGraph::shouldCollect(const ExplodedNode *node) {
   const ExplodedNode *pred = *(node->pred_begin());
   if (pred->succ_size() != 1)
     return false;
-  
+
   const ExplodedNode *succ = *(node->succ_begin());
   if (succ->pred_size() != 1)
     return false;
@@ -95,24 +95,24 @@ bool ExplodedGraph::shouldCollect(const ExplodedNode *node) {
 
   // Conditions 5, 6, and 7.
   ProgramStateRef state = node->getState();
-  ProgramStateRef pred_state = pred->getState();    
+  ProgramStateRef pred_state = pred->getState();
   if (state->store != pred_state->store || state->GDM != pred_state->GDM ||
       progPoint.getLocationContext() != pred->getLocationContext())
     return false;
-  
+
   // Condition 8.
   // Do not collect nodes for non-consumed Stmt or Expr to ensure precise
   // diagnostic generation; specifically, so that we could anchor arrows
   // pointing to the beginning of statements (as written in code).
   if (!isa<Expr>(ps.getStmt()))
     return false;
-  
+
   if (const Expr *Ex = dyn_cast<Expr>(ps.getStmt())) {
     ParentMap &PM = progPoint.getLocationContext()->getParentMap();
     if (!PM.isConsumedExpr(Ex))
       return false;
   }
-  
+
   // Condition 9.
   const ProgramPoint SuccLoc = succ->getLocation();
   if (const StmtPoint *SP = dyn_cast<StmtPoint>(&SuccLoc))
@@ -135,7 +135,7 @@ void ExplodedGraph::collectNode(ExplodedNode *node) {
   FreeNodes.push_back(node);
   Nodes.RemoveNode(node);
   --NumNodes;
-  node->~ExplodedNode();  
+  node->~ExplodedNode();
 }
 
 void ExplodedGraph::reclaimRecentlyAllocatedNodes() {

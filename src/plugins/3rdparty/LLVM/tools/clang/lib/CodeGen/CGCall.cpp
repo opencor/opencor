@@ -420,7 +420,7 @@ CodeGenTypes::arrangeLLVMFunctionInfo(CanQualType resultType,
 
   bool inserted = FunctionsBeingProcessed.insert(FI); (void)inserted;
   assert(inserted && "Recursively being processed?");
-  
+
   // Compute ABI information.
   getABIInfo().computeInfo(*FI);
 
@@ -438,7 +438,7 @@ CodeGenTypes::arrangeLLVMFunctionInfo(CanQualType resultType,
 
   bool erased = FunctionsBeingProcessed.erase(FI); (void)erased;
   assert(erased && "Not in set?");
-  
+
   return *FI;
 }
 
@@ -830,10 +830,10 @@ llvm::FunctionType *CodeGenTypes::GetFunctionType(GlobalDecl GD) {
 
 llvm::FunctionType *
 CodeGenTypes::GetFunctionType(const CGFunctionInfo &FI) {
-  
+
   bool Inserted = FunctionsBeingProcessed.insert(&FI); (void)Inserted;
   assert(Inserted && "Recursively being processed?");
-  
+
   SmallVector<llvm::Type*, 8> argTypes;
   llvm::Type *resultType = 0;
 
@@ -905,7 +905,7 @@ CodeGenTypes::GetFunctionType(const CGFunctionInfo &FI) {
 
   bool Erased = FunctionsBeingProcessed.erase(&FI); (void)Erased;
   assert(Erased && "Not in set?");
-  
+
   return llvm::FunctionType::get(resultType, argTypes, FI.isVariadic());
 }
 
@@ -915,7 +915,7 @@ llvm::Type *CodeGenTypes::GetFunctionTypeForVTable(GlobalDecl GD) {
 
   if (!isFuncTypeConvertible(FPT))
     return llvm::StructType::get(getLLVMContext());
-    
+
   const CGFunctionInfo *Info;
   if (isa<CXXDestructorDecl>(MD))
     Info = &arrangeCXXDestructor(cast<CXXDestructorDecl>(MD), GD.getDtorType());
@@ -1158,7 +1158,7 @@ void CodeGenFunction::EmitFunctionProlog(const CGFunctionInfo &FI,
          "Mismatch between function signature & arguments.");
   unsigned ArgNo = 1;
   CGFunctionInfo::const_arg_iterator info_it = FI.arg_begin();
-  for (FunctionArgList::const_iterator i = Args.begin(), e = Args.end(); 
+  for (FunctionArgList::const_iterator i = Args.begin(), e = Args.end();
        i != e; ++i, ++info_it, ++ArgNo) {
     const VarDecl *Arg = *i;
     QualType Ty = info_it->type;
@@ -1192,7 +1192,7 @@ void CodeGenFunction::EmitFunctionProlog(const CGFunctionInfo &FI,
           llvm::Value *Src = Builder.CreateBitCast(V, I8PtrTy);
           Builder.CreateMemCpy(Dst,
                                Src,
-                               llvm::ConstantInt::get(IntPtrTy, 
+                               llvm::ConstantInt::get(IntPtrTy,
                                                       Size.getQuantity()),
                                ArgI.getIndirectAlign(),
                                false);
@@ -1230,7 +1230,7 @@ void CodeGenFunction::EmitFunctionProlog(const CGFunctionInfo &FI,
 
         if (isPromoted)
           V = emitArgumentDemotion(*this, Arg, V);
-        
+
         EmitParmDecl(*Arg, V, ArgNo);
         break;
       }
@@ -1464,7 +1464,7 @@ static llvm::Value *tryRemoveRetainOfSelf(CodeGenFunction &CGF,
   llvm::Value *retainedValue = retainCall->getArgOperand(0);
   llvm::LoadInst *load =
     dyn_cast<llvm::LoadInst>(retainedValue->stripPointerCasts());
-  if (!load || load->isAtomic() || load->isVolatile() || 
+  if (!load || load->isAtomic() || load->isVolatile() ||
       load->getPointerOperand() != CGF.GetAddrOfLocalVar(self))
     return 0;
 
@@ -1697,7 +1697,7 @@ static void emitWriteback(CodeGenFunction &CGF,
   value = CGF.Builder.CreateBitCast(value,
                cast<llvm::PointerType>(srcAddr->getType())->getElementType(),
                             "icr.writeback-cast");
-  
+
   // Perform the writeback.
   QualType srcAddrType = writeback.AddressType;
   CGF.EmitStoreThroughLValue(RValue::get(value),
@@ -1716,7 +1716,7 @@ static void emitWritebacks(CodeGenFunction &CGF,
 }
 
 /// Emit an argument that's being passed call-by-writeback.  That is,
-/// we are passing the address of 
+/// we are passing the address of
 static void emitWritebackArg(CodeGenFunction &CGF, CallArgList &args,
                              const ObjCIndirectCopyRestoreExpr *CRE) {
   llvm::Value *srcAddr = CGF.EmitScalarExpr(CRE->getSubExpr());
@@ -1761,7 +1761,7 @@ static void emitWritebackArg(CodeGenFunction &CGF, CallArgList &args,
   } else {
     llvm::Value *isNull = CGF.Builder.CreateIsNull(srcAddr, "icr.isnull");
 
-    finalArgument = CGF.Builder.CreateSelect(isNull, 
+    finalArgument = CGF.Builder.CreateSelect(isNull,
                                    llvm::ConstantPointerNull::get(destType),
                                              temp, "icr.argument");
 
@@ -2004,13 +2004,13 @@ RValue CodeGenFunction::EmitCall(const CGFunctionInfo &CallInfo,
         if (ArgInfo.getIndirectAlign() > AI->getAlignment())
           AI->setAlignment(ArgInfo.getIndirectAlign());
         Args.push_back(AI);
-        
+
         if (RV.isScalar())
           EmitStoreOfScalar(RV.getScalarVal(), Args.back(), false,
                             TypeAlign, I->Ty);
         else
           StoreComplexToAddr(RV.getComplexVal(), Args.back(), false);
-        
+
         // Validate argument match.
         checkArgMatches(AI, IRArgNo, IRFuncTy);
       } else {
@@ -2032,13 +2032,13 @@ RValue CodeGenFunction::EmitCall(const CGFunctionInfo &CallInfo,
             AI->setAlignment(Align);
           Args.push_back(AI);
           EmitAggregateCopy(AI, Addr, I->Ty, RV.isVolatileQualified());
-              
+
           // Validate argument match.
           checkArgMatches(AI, IRArgNo, IRFuncTy);
         } else {
           // Skip the extra memcpy call.
           Args.push_back(Addr);
-          
+
           // Validate argument match.
           checkArgMatches(Addr, IRArgNo, IRFuncTy);
         }
@@ -2059,14 +2059,14 @@ RValue CodeGenFunction::EmitCall(const CGFunctionInfo &CallInfo,
           V = RV.getScalarVal();
         else
           V = Builder.CreateLoad(RV.getAggregateAddr());
-        
+
         // If the argument doesn't match, perform a bitcast to coerce it.  This
         // can happen due to trivial type mismatches.
         if (IRArgNo < IRFuncTy->getNumParams() &&
             V->getType() != IRFuncTy->getParamType(IRArgNo))
           V = Builder.CreateBitCast(V, IRFuncTy->getParamType(IRArgNo));
         Args.push_back(V);
-        
+
         checkArgMatches(V, IRArgNo, IRFuncTy);
         break;
       }
@@ -2121,7 +2121,7 @@ RValue CodeGenFunction::EmitCall(const CGFunctionInfo &CallInfo,
           // We don't know what we're loading from.
           LI->setAlignment(1);
           Args.push_back(LI);
-          
+
           // Validate argument match.
           checkArgMatches(LI, IRArgNo, IRFuncTy);
         }
@@ -2129,7 +2129,7 @@ RValue CodeGenFunction::EmitCall(const CGFunctionInfo &CallInfo,
         // In the simple case, just pass the coerced loaded value.
         Args.push_back(CreateCoercedLoad(SrcPtr, ArgInfo.getCoerceToType(),
                                          *this));
-        
+
         // Validate argument match.
         checkArgMatches(Args.back(), IRArgNo, IRFuncTy);
       }
@@ -2263,7 +2263,7 @@ RValue CodeGenFunction::EmitCall(const CGFunctionInfo &CallInfo,
         BuildAggStore(*this, CI, DestPtr, DestIsVolatile, false);
         return RValue::getAggregate(DestPtr);
       }
-      
+
       // If the argument doesn't match, perform a bitcast to coerce it.  This
       // can happen due to trivial type mismatches.
       llvm::Value *V = CI;

@@ -32,7 +32,7 @@ void RuntimeDyldMachO::resolveRelocation(const SectionEntry &Section,
   unsigned MachoType = (Type >> 28) & 0xf;
   unsigned Size = 1 << ((Type >> 25) & 3);
 
-  DEBUG(dbgs() << "resolveRelocation LocalAddress: " 
+  DEBUG(dbgs() << "resolveRelocation LocalAddress: "
         << format("%p", LocalAddress)
         << " FinalAddress: " << format("%p", FinalAddress)
         << " Value: " << format("%p", Value)

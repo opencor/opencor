@@ -22,14 +22,14 @@ namespace iface
     typedef iface::dom::Node* Node;
     class EventListener;
     class Event;
-    PUBLIC_DOMevents_PRE 
+    PUBLIC_DOMevents_PRE
     class  PUBLIC_DOMevents_POST EventException : public std::exception
     {
     public:
       EventException(){}
     };
     static const uint16_t UNSPECIFIED_EVENT_TYPE_ERR = 0;
-    PUBLIC_DOMevents_PRE 
+    PUBLIC_DOMevents_PRE
     class  PUBLIC_DOMevents_POST EventTarget
      : public virtual iface::XPCOM::IObject
     {
@@ -40,7 +40,7 @@ namespace iface
       virtual void removeEventListener(const std::wstring& type, iface::events::EventListener* listener, bool useCapture) throw(std::exception&) = 0;
       virtual bool dispatchEvent(iface::events::Event* evt) throw(std::exception&) = 0;
     };
-    PUBLIC_DOMevents_PRE 
+    PUBLIC_DOMevents_PRE
     class  PUBLIC_DOMevents_POST EventListener
      : public virtual iface::XPCOM::IObject
     {
@@ -49,7 +49,7 @@ namespace iface
       virtual ~EventListener() {}
       virtual void handleEvent(iface::events::Event* evt) throw(std::exception&) = 0;
     };
-    PUBLIC_DOMevents_PRE 
+    PUBLIC_DOMevents_PRE
     class  PUBLIC_DOMevents_POST Event
      : public virtual iface::XPCOM::IObject
     {
@@ -70,7 +70,7 @@ namespace iface
       virtual void preventDefault() throw(std::exception&) = 0;
       virtual void initEvent(const std::wstring& eventTypeArg, bool canBubbleArg, bool cancelableArg) throw(std::exception&) = 0;
     };
-    PUBLIC_DOMevents_PRE 
+    PUBLIC_DOMevents_PRE
     class  PUBLIC_DOMevents_POST DocumentEvent
      : public virtual iface::XPCOM::IObject
     {
@@ -79,7 +79,7 @@ namespace iface
       virtual ~DocumentEvent() {}
       virtual already_AddRefd<iface::events::Event>  createEvent(const std::wstring& domEventType) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_DOMevents_PRE 
+    PUBLIC_DOMevents_PRE
     class  PUBLIC_DOMevents_POST MutationEvent
      : public virtual iface::events::Event
     {

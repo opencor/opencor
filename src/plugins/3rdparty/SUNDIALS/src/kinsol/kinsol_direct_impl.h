@@ -2,7 +2,7 @@
  * -----------------------------------------------------------------
  * $Revision: 1.6 $
  * $Date: 2010/12/01 22:43:33 $
- * ----------------------------------------------------------------- 
+ * -----------------------------------------------------------------
  * Programmer: Radu Serban @ LLNL
  * -----------------------------------------------------------------
  * Copyright (c) 2006, The Regents of the University of California.
@@ -26,10 +26,10 @@ extern "C" {
 
 /*
  * -----------------------------------------------------------------
- * Types: KINDlsMemRec, KINDlsMem                             
+ * Types: KINDlsMemRec, KINDlsMem
  * -----------------------------------------------------------------
  * The type KINDlsMem is pointer to a KINDlsMemRec.
- * This structure contains KINDLS solver-specific data. 
+ * This structure contains KINDLS solver-specific data.
  * -----------------------------------------------------------------
  */
 
@@ -40,25 +40,25 @@ typedef struct KINDlsMemRec {
   long int d_n;            /* problem dimension                            */
 
   long int d_ml;           /* lower bandwidth of Jacobian                  */
-  long int d_mu;           /* upper bandwidth of Jacobian                  */ 
+  long int d_mu;           /* upper bandwidth of Jacobian                  */
   long int d_smu;          /* upper bandwith of M = MIN(N-1,d_mu+d_ml)     */
 
   booleantype d_jacDQ;     /* TRUE if using internal DQ Jacobian approx.   */
   KINDlsDenseJacFn d_djac; /* dense Jacobian routine to be called          */
   KINDlsBandJacFn d_bjac;  /* band Jacobian routine to be called           */
   void *d_J_data;          /* J_data is passed to djac or bjac             */
-    
+
   DlsMat d_J;              /* problem Jacobian                             */
-    
+
   int *d_pivots;           /* int pivot array for PM = LU                  */
   long int *d_lpivots;     /* long int pivot array for PM = LU             */
-    
+
   long int d_nje;          /* no. of calls to jac                          */
-    
+
   long int d_nfeDQ;        /* no. of calls to F due to DQ Jacobian approx. */
-    
+
   long int d_last_flag;    /* last error return flag                       */
-    
+
 } *KINDlsMem;
 
 

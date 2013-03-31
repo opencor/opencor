@@ -292,7 +292,7 @@ bool Constant::isConstantUsed() const {
 /// whether or not it may generate a relocation entry.  This must be
 /// conservative, so if it might codegen to a relocatable entry, it should say
 /// so.  The return values are:
-/// 
+///
 ///  NoRelocation: This constant pool entry is guaranteed to never have a
 ///     relocation applied to it (because it holds a simple constant like
 ///     '4').
@@ -308,10 +308,10 @@ Constant::PossibleRelocationsTy Constant::getRelocationInfo() const {
       return LocalRelocation;  // Local to this file/library.
     return GlobalRelocations;    // Global reference.
   }
-  
+
   if (const BlockAddress *BA = dyn_cast<BlockAddress>(this))
     return BA->getFunction()->getRelocationInfo();
-  
+
   // While raw uses of blockaddress need to be relocated, differences between
   // two of them don't when they are for labels in the same function.  This is a
   // common idiom when creating a table for the indirect goto extension, so we
@@ -442,7 +442,7 @@ Constant *ConstantInt::getFalse(Type *Ty) {
 }
 
 
-// Get a ConstantInt from an APInt. Note that the value stored in the DenseMap 
+// Get a ConstantInt from an APInt. Note that the value stored in the DenseMap
 // as the key, is a DenseMapAPIntKeyInfo::KeyTy which has provided the
 // operator== and operator!= to ensure that the DenseMap doesn't attempt to
 // compare APInt's of different widths, which would violate an APInt class
@@ -452,7 +452,7 @@ ConstantInt *ConstantInt::get(LLVMContext &Context, const APInt &V) {
   IntegerType *ITy = IntegerType::get(Context, V.getBitWidth());
   // get an existing value or the insertion position
   DenseMapAPIntKeyInfo::KeyTy Key(V, ITy);
-  ConstantInt *&Slot = Context.pImpl->IntConstants[Key]; 
+  ConstantInt *&Slot = Context.pImpl->IntConstants[Key];
   if (!Slot) Slot = new ConstantInt(ITy, V);
   return Slot;
 }
@@ -467,7 +467,7 @@ Constant *ConstantInt::get(Type *Ty, uint64_t V, bool isSigned) {
   return C;
 }
 
-ConstantInt *ConstantInt::get(IntegerType *Ty, uint64_t V, 
+ConstantInt *ConstantInt::get(IntegerType *Ty, uint64_t V,
                               bool isSigned) {
   return get(Ty->getContext(), APInt(Ty->getBitWidth(), V, isSigned));
 }
@@ -549,7 +549,7 @@ Constant *ConstantFP::get(Type *Ty, StringRef Str) {
   if (VectorType *VTy = dyn_cast<VectorType>(Ty))
     return ConstantVector::getSplat(VTy->getNumElements(), C);
 
-  return C; 
+  return C;
 }
 
 
@@ -595,7 +595,7 @@ ConstantFP* ConstantFP::get(LLVMContext &Context, const APFloat& V) {
     else if (&V.getSemantics() == &APFloat::IEEEquad)
       Ty = Type::getFP128Ty(Context);
     else {
-      assert(&V.getSemantics() == &APFloat::PPCDoubleDouble && 
+      assert(&V.getSemantics() == &APFloat::PPCDoubleDouble &&
              "Unknown FP format");
       Ty = Type::getPPC_FP128Ty(Context);
     }
@@ -848,7 +848,7 @@ Constant *ConstantStruct::get(StructType *ST, ArrayRef<Constant*> V) {
   // Create a ConstantAggregateZero value if all elements are zeros.
   bool isZero = true;
   bool isUndef = false;
-  
+
   if (!V.empty()) {
     isUndef = isa<UndefValue>(V[0]);
     isZero = V[0]->isNullValue();
@@ -1177,17 +1177,17 @@ bool ConstantFP::isValueValidForType(Type *Ty, const APFloat& Val) {
   }
   case Type::X86_FP80TyID:
     return &Val2.getSemantics() == &APFloat::IEEEhalf ||
-           &Val2.getSemantics() == &APFloat::IEEEsingle || 
+           &Val2.getSemantics() == &APFloat::IEEEsingle ||
            &Val2.getSemantics() == &APFloat::IEEEdouble ||
            &Val2.getSemantics() == &APFloat::x87DoubleExtended;
   case Type::FP128TyID:
     return &Val2.getSemantics() == &APFloat::IEEEhalf ||
-           &Val2.getSemantics() == &APFloat::IEEEsingle || 
+           &Val2.getSemantics() == &APFloat::IEEEsingle ||
            &Val2.getSemantics() == &APFloat::IEEEdouble ||
            &Val2.getSemantics() == &APFloat::IEEEquad;
   case Type::PPC_FP128TyID:
     return &Val2.getSemantics() == &APFloat::IEEEhalf ||
-           &Val2.getSemantics() == &APFloat::IEEEsingle || 
+           &Val2.getSemantics() == &APFloat::IEEEsingle ||
            &Val2.getSemantics() == &APFloat::IEEEdouble ||
            &Val2.getSemantics() == &APFloat::PPCDoubleDouble;
   }
@@ -1200,7 +1200,7 @@ bool ConstantFP::isValueValidForType(Type *Ty, const APFloat& Val) {
 ConstantAggregateZero *ConstantAggregateZero::get(Type *Ty) {
   assert((Ty->isStructTy() || Ty->isArrayTy() || Ty->isVectorTy()) &&
          "Cannot create an aggregate zero of non-aggregate type!");
-  
+
   ConstantAggregateZero *&Entry = Ty->getContext().pImpl->CAZConstants[Ty];
   if (Entry == 0)
     Entry = new ConstantAggregateZero(Ty);
@@ -1437,7 +1437,7 @@ Constant *ConstantExpr::getPointerCast(Constant *S, Type *Ty) {
   return getBitCast(S, Ty);
 }
 
-Constant *ConstantExpr::getIntegerCast(Constant *C, Type *Ty, 
+Constant *ConstantExpr::getIntegerCast(Constant *C, Type *Ty,
                                        bool isSigned) {
   assert(C->getType()->isIntOrIntVectorTy() &&
          Ty->isIntOrIntVectorTy() && "Invalid cast");
@@ -1575,7 +1575,7 @@ Constant *ConstantExpr::getFPToSI(Constant *C, Type *Ty) {
 Constant *ConstantExpr::getPtrToInt(Constant *C, Type *DstTy) {
   assert(C->getType()->getScalarType()->isPointerTy() &&
          "PtrToInt source must be pointer or pointer vector");
-  assert(DstTy->getScalarType()->isIntegerTy() && 
+  assert(DstTy->getScalarType()->isIntegerTy() &&
          "PtrToInt destination must be integer or integer vector");
   assert(isa<VectorType>(C->getType()) == isa<VectorType>(DstTy));
   if (isa<VectorType>(C->getType()))
@@ -1633,8 +1633,8 @@ Constant *ConstantExpr::get(unsigned Opcode, Constant *C1, Constant *C2,
            "Tried to create a floating-point operation on a "
            "non-floating-point type!");
     break;
-  case Instruction::UDiv: 
-  case Instruction::SDiv: 
+  case Instruction::UDiv:
+  case Instruction::SDiv:
     assert(C1->getType() == C2->getType() && "Op types should be identical!");
     assert(C1->getType()->isIntOrIntVectorTy() &&
            "Tried to create an arithmetic operation on a non-arithmetic type!");
@@ -1644,8 +1644,8 @@ Constant *ConstantExpr::get(unsigned Opcode, Constant *C1, Constant *C2,
     assert(C1->getType()->isFPOrFPVectorTy() &&
            "Tried to create an arithmetic operation on a non-arithmetic type!");
     break;
-  case Instruction::URem: 
-  case Instruction::SRem: 
+  case Instruction::URem:
+  case Instruction::SRem:
     assert(C1->getType() == C2->getType() && "Op types should be identical!");
     assert(C1->getType()->isIntOrIntVectorTy() &&
            "Tried to create an arithmetic operation on a non-arithmetic type!");
@@ -1691,14 +1691,14 @@ Constant *ConstantExpr::getSizeOf(Type* Ty) {
   Constant *GEPIdx = ConstantInt::get(Type::getInt32Ty(Ty->getContext()), 1);
   Constant *GEP = getGetElementPtr(
                  Constant::getNullValue(PointerType::getUnqual(Ty)), GEPIdx);
-  return getPtrToInt(GEP, 
+  return getPtrToInt(GEP,
                      Type::getInt64Ty(Ty->getContext()));
 }
 
 Constant *ConstantExpr::getAlignOf(Type* Ty) {
   // alignof is implemented as: (i64) gep ({i1,Ty}*)null, 0, 1
   // Note that a non-inbounds gep is used, as null isn't within any object.
-  Type *AligningTy = 
+  Type *AligningTy =
     StructType::get(Type::getInt1Ty(Ty->getContext()), Ty, NULL);
   Constant *NullPtr = Constant::getNullValue(AligningTy->getPointerTo());
   Constant *Zero = ConstantInt::get(Type::getInt64Ty(Ty->getContext()), 0);
@@ -1727,7 +1727,7 @@ Constant *ConstantExpr::getOffsetOf(Type* Ty, Constant *FieldNo) {
                      Type::getInt64Ty(Ty->getContext()));
 }
 
-Constant *ConstantExpr::getCompare(unsigned short Predicate, 
+Constant *ConstantExpr::getCompare(unsigned short Predicate,
                                    Constant *C1, Constant *C2) {
   assert(C1->getType() == C2->getType() && "Op types should be identical!");
 
@@ -1793,7 +1793,7 @@ Constant *ConstantExpr::getGetElementPtr(Constant *C, ArrayRef<Value *> Idxs,
 Constant *
 ConstantExpr::getICmp(unsigned short pred, Constant *LHS, Constant *RHS) {
   assert(LHS->getType() == RHS->getType());
-  assert(pred >= ICmpInst::FIRST_ICMP_PREDICATE && 
+  assert(pred >= ICmpInst::FIRST_ICMP_PREDICATE &&
          pred <= ICmpInst::LAST_ICMP_PREDICATE && "Invalid ICmp Predicate");
 
   if (Constant *FC = ConstantFoldCompareInstruction(pred, LHS, RHS))
@@ -1856,7 +1856,7 @@ Constant *ConstantExpr::getExtractElement(Constant *Val, Constant *Idx) {
   return pImpl->ExprConstants.getOrCreate(ReqTy, Key);
 }
 
-Constant *ConstantExpr::getInsertElement(Constant *Val, Constant *Elt, 
+Constant *ConstantExpr::getInsertElement(Constant *Val, Constant *Elt,
                                          Constant *Idx) {
   assert(Val->getType()->isVectorTy() &&
          "Tried to create insertelement operation on non-vector type!");
@@ -1877,7 +1877,7 @@ Constant *ConstantExpr::getInsertElement(Constant *Val, Constant *Elt,
   return pImpl->ExprConstants.getOrCreate(Val->getType(), Key);
 }
 
-Constant *ConstantExpr::getShuffleVector(Constant *V1, Constant *V2, 
+Constant *ConstantExpr::getShuffleVector(Constant *V1, Constant *V2,
                                          Constant *Mask) {
   assert(ShuffleVectorInst::isValidOperands(V1, V2, Mask) &&
          "Invalid shuffle vector constant expr operands!");
@@ -2197,7 +2197,7 @@ Constant *ConstantDataSequential::getImpl(StringRef Elements, Type *Ty) {
 
 void ConstantDataSequential::destroyConstant() {
   // Remove the constant from the StringMap.
-  StringMap<ConstantDataSequential*> &CDSConstants = 
+  StringMap<ConstantDataSequential*> &CDSConstants =
     getType()->getContext().pImpl->CDSConstants;
 
   StringMap<ConstantDataSequential*>::iterator Slot =
@@ -2214,7 +2214,7 @@ void ConstantDataSequential::destroyConstant() {
     assert((*Entry) == this && "Hash mismatch in ConstantDataSequential");
     getContext().pImpl->CDSConstants.erase(Slot);
   } else {
-    // Otherwise, there are multiple entries linked off the bucket, unlink the 
+    // Otherwise, there are multiple entries linked off the bucket, unlink the
     // node we care about but keep the bucket around.
     for (ConstantDataSequential *Node = *Entry; ;
          Entry = &Node->Next, Node = *Entry) {

@@ -30,7 +30,7 @@ namespace llvm {
 /// anti-dependencies.
 class AntiDepBreaker {
 public:
-  typedef std::vector<std::pair<MachineInstr *, MachineInstr *> > 
+  typedef std::vector<std::pair<MachineInstr *, MachineInstr *> >
     DbgValueVector;
 
   virtual ~AntiDepBreaker();
@@ -47,13 +47,13 @@ public:
                                          MachineBasicBlock::iterator End,
                                          unsigned InsertPosIndex,
                                          DbgValueVector &DbgValues) = 0;
-  
+
   /// Observe - Update liveness information to account for the current
   /// instruction, which will not be scheduled.
   ///
   virtual void Observe(MachineInstr *MI, unsigned Count,
                        unsigned InsertPosIndex) =0;
-  
+
   /// Finish - Finish anti-dep breaking for a basic block.
   virtual void FinishBlock() =0;
 

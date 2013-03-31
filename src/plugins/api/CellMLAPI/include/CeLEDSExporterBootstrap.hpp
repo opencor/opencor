@@ -13,6 +13,6 @@
  * implementation.
  */
 CELEDSEXPORT_PUBLIC_PRE
-  iface::cellml_services::CeLEDSExporterBootstrap* 
+  iface::cellml_services::CeLEDSExporterBootstrap*
   CreateCeLEDSExporterBootstrap(void)
 CELEDSEXPORT_PUBLIC_POST;

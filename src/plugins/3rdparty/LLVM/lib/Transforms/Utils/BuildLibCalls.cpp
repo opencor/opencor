@@ -472,7 +472,7 @@ bool SimplifyFortifiedLibCalls::fold(CallInst *CI, const DataLayout *TD,
                                      const TargetLibraryInfo *TLI) {
   // We really need DataLayout for later.
   if (!TD) return false;
-  
+
   this->CI = CI;
   Function *Callee = CI->getCalledFunction();
   StringRef Name = Callee->getName();
@@ -548,8 +548,8 @@ bool SimplifyFortifiedLibCalls::fold(CallInst *CI, const DataLayout *TD,
         FT->getParamType(0) != Type::getInt8PtrTy(Context) ||
         FT->getParamType(2) != TD->getIntPtrType(Context))
       return 0;
-    
-    
+
+
     // If a) we don't have any length information, or b) we know this will
     // fit then just lower to a plain st[rp]cpy. Otherwise we'll keep our
     // st[rp]cpy_chk call which may fail at runtime if the size is too long.

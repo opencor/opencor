@@ -203,29 +203,29 @@ void FileManager::addStatCache(FileSystemStatCache *statCache,
     StatCache.reset(statCache);
     return;
   }
-  
+
   FileSystemStatCache *LastCache = StatCache.get();
   while (LastCache->getNextStatCache())
     LastCache = LastCache->getNextStatCache();
-  
+
   LastCache->setNextStatCache(statCache);
 }
 
 void FileManager::removeStatCache(FileSystemStatCache *statCache) {
   if (!statCache)
     return;
-  
+
   if (StatCache.get() == statCache) {
     // This is the first stat cache.
     StatCache.reset(StatCache->takeNextStatCache());
     return;
   }
-  
+
   // Find the stat cache in the list.
   FileSystemStatCache *PrevCache = StatCache.get();
   while (PrevCache && PrevCache->getNextStatCache() != statCache)
     PrevCache = PrevCache->getNextStatCache();
-  
+
   assert(PrevCache && "Stat cache not found for removal");
   PrevCache->setNextStatCache(statCache->getNextStatCache());
 }
@@ -366,10 +366,10 @@ const FileEntry *FileManager::getFile(StringRef Filename, bool openFile,
   if (DirInfo == 0) {  // Directory doesn't exist, file can't exist.
     if (!CacheFailure)
       SeenFileEntries.erase(Filename);
-    
+
     return 0;
   }
-  
+
   // FIXME: Use the directory info to prune this, before doing the stat syscall.
   // FIXME: This will reduce the # syscalls.
 
@@ -380,7 +380,7 @@ const FileEntry *FileManager::getFile(StringRef Filename, bool openFile,
     // There's no real file at the given path.
     if (!CacheFailure)
       SeenFileEntries.erase(Filename);
-    
+
     return 0;
   }
 
@@ -489,7 +489,7 @@ FileManager::getVirtualFile(StringRef Filename, off_t Size,
 void FileManager::FixupRelativePath(SmallVectorImpl<char> &path) const {
   StringRef pathRef(path.data(), path.size());
 
-  if (FileSystemOpts.WorkingDir.empty() 
+  if (FileSystemOpts.WorkingDir.empty()
       || llvm::sys::path::is_absolute(pathRef))
     return;
 
@@ -578,7 +578,7 @@ bool FileManager::getStatValue(const char *Path, struct stat &StatBuf,
                                   StatCache.get());
 }
 
-bool FileManager::getNoncachedStatValue(StringRef Path, 
+bool FileManager::getNoncachedStatValue(StringRef Path,
                                         struct stat &StatBuf) {
   SmallString<128> FilePath(Path);
   FixupRelativePath(FilePath);
@@ -602,16 +602,16 @@ void FileManager::GetUniqueIDMapping(
                    SmallVectorImpl<const FileEntry *> &UIDToFiles) const {
   UIDToFiles.clear();
   UIDToFiles.resize(NextFileUID);
-  
+
   // Map file entries
   for (llvm::StringMap<FileEntry*, llvm::BumpPtrAllocator>::const_iterator
          FE = SeenFileEntries.begin(), FEEnd = SeenFileEntries.end();
        FE != FEEnd; ++FE)
     if (FE->getValue() && FE->getValue() != NON_EXISTENT_FILE)
       UIDToFiles[FE->getValue()->getUID()] = FE->getValue();
-  
+
   // Map virtual file entries
-  for (SmallVector<FileEntry*, 4>::const_iterator 
+  for (SmallVector<FileEntry*, 4>::const_iterator
          VFE = VirtualFileEntries.begin(), VFEEnd = VirtualFileEntries.end();
        VFE != VFEEnd; ++VFE)
     if (*VFE && *VFE != NON_EXISTENT_FILE)

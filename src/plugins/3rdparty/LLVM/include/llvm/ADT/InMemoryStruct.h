@@ -43,7 +43,7 @@ public:
   InMemoryStruct(reference Value) : Target(&Contents), Contents(Value) {}
   InMemoryStruct(pointer Value) : Target(Value) {}
   InMemoryStruct(const InMemoryStruct<T> &Value) { *this = Value; }
-  
+
   void operator=(const InMemoryStruct<T> &Value) {
     if (Value.Target != &Value.Contents) {
       Target = Value.Target;
@@ -52,7 +52,7 @@ public:
       Contents = Value.Contents;
     }
   }
-  
+
   const_reference operator*() const {
     assert(Target && "Cannot dereference null pointer");
     return *Target;

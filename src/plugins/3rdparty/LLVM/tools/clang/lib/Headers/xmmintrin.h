@@ -20,10 +20,10 @@
  *
  *===-----------------------------------------------------------------------===
  */
- 
+
 #ifndef __XMMINTRIN_H
 #define __XMMINTRIN_H
- 
+
 #ifndef __SSE__
 #error "SSE instruction set not enabled"
 #else
@@ -735,7 +735,7 @@ _mm_movemask_pi8(__m64 a)
 static __inline__ __m64 __attribute__((__always_inline__, __nodebug__))
 _mm_mulhi_pu16(__m64 a, __m64 b)
 {
-  return (__m64)__builtin_ia32_pmulhuw((__v4hi)a, (__v4hi)b);  
+  return (__m64)__builtin_ia32_pmulhuw((__v4hi)a, (__v4hi)b);
 }
 
 #define _mm_shuffle_pi16(a, n) __extension__ ({ \
@@ -824,11 +824,11 @@ _mm_cvtpi16_ps(__m64 a)
 
   b = _mm_setzero_si64();
   b = _mm_cmpgt_pi16(b, a);
-  c = _mm_unpackhi_pi16(a, b);  
+  c = _mm_unpackhi_pi16(a, b);
   r = _mm_setzero_ps();
   r = _mm_cvtpi32_ps(r, c);
   r = _mm_movelh_ps(r, r);
-  c = _mm_unpacklo_pi16(a, b);  
+  c = _mm_unpacklo_pi16(a, b);
   r = _mm_cvtpi32_ps(r, c);
 
   return r;
@@ -841,11 +841,11 @@ _mm_cvtpu16_ps(__m64 a)
   __m128 r;
 
   b = _mm_setzero_si64();
-  c = _mm_unpackhi_pi16(a, b);  
+  c = _mm_unpackhi_pi16(a, b);
   r = _mm_setzero_ps();
   r = _mm_cvtpi32_ps(r, c);
   r = _mm_movelh_ps(r, r);
-  c = _mm_unpacklo_pi16(a, b);  
+  c = _mm_unpacklo_pi16(a, b);
   r = _mm_cvtpi32_ps(r, c);
 
   return r;
@@ -855,7 +855,7 @@ static __inline__ __m128 __attribute__((__always_inline__, __nodebug__))
 _mm_cvtpi8_ps(__m64 a)
 {
   __m64 b;
-  
+
   b = _mm_setzero_si64();
   b = _mm_cmpgt_pi8(b, a);
   b = _mm_unpacklo_pi8(a, b);
@@ -867,7 +867,7 @@ static __inline__ __m128 __attribute__((__always_inline__, __nodebug__))
 _mm_cvtpu8_ps(__m64 a)
 {
   __m64 b;
-  
+
   b = _mm_setzero_si64();
   b = _mm_unpacklo_pi8(a, b);
 
@@ -878,8 +878,8 @@ static __inline__ __m128 __attribute__((__always_inline__, __nodebug__))
 _mm_cvtpi32x2_ps(__m64 a, __m64 b)
 {
   __m128 c;
-  
-  c = _mm_setzero_ps();  
+
+  c = _mm_setzero_ps();
   c = _mm_cvtpi32_ps(c, b);
   c = _mm_movelh_ps(c, c);
 
@@ -890,11 +890,11 @@ static __inline__ __m64 __attribute__((__always_inline__, __nodebug__))
 _mm_cvtps_pi16(__m128 a)
 {
   __m64 b, c;
-  
+
   b = _mm_cvtps_pi32(a);
   a = _mm_movehl_ps(a, a);
   c = _mm_cvtps_pi32(a);
-  
+
   return _mm_packs_pi16(b, c);
 }
 
@@ -902,10 +902,10 @@ static __inline__ __m64 __attribute__((__always_inline__, __nodebug__))
 _mm_cvtps_pi8(__m128 a)
 {
   __m64 b, c;
-  
+
   b = _mm_cvtps_pi16(a);
   c = _mm_setzero_si64();
-  
+
   return _mm_packs_pi16(b, c);
 }
 

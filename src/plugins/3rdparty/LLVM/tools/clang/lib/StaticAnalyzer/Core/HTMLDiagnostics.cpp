@@ -97,7 +97,7 @@ void HTMLDiagnostics::FlushDiagnosticsImpl(
 
 void HTMLDiagnostics::ReportDiag(const PathDiagnostic& D,
                                  FilesMade *filesMade) {
-    
+
   // Create the HTML directory if it is missing.
   if (!createdDir) {
     createdDir = true;
@@ -138,7 +138,7 @@ void HTMLDiagnostics::ReportDiag(const PathDiagnostic& D,
   unsigned n = path.size();
   unsigned max = n;
 
-  for (PathPieces::const_reverse_iterator I = path.rbegin(), 
+  for (PathPieces::const_reverse_iterator I = path.rbegin(),
        E = path.rend();
         I != E; ++I, --n)
     HandlePiece(R, FID, **I, n, max);
@@ -466,7 +466,7 @@ void HTMLDiagnostics::HandlePiece(Rewriter& R, FileID BugFileID,
            << (num + 1)
            << ")\">&#x2192;</a></div></td>";
       }
-      
+
       os << "</tr></table>";
     }
   }

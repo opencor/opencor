@@ -199,7 +199,7 @@ TypeBasedAliasAnalysis::Aliases(const MDNode *A,
   }
 
   // Neither node is an ancestor of the other.
-  
+
   // If they have different roots, they're part of different potentially
   // unrelated type systems, so we must be conservative.
   if (RootA.getNode() != RootB.getNode())

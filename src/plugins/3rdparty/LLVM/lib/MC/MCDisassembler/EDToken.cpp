@@ -4,7 +4,7 @@
 //
 // This file is distributed under the University of Illinois Open Source
 // License. See LICENSE.TXT for details.
-// 
+//
 //===----------------------------------------------------------------------===//
 //
 // This file implements the Enhanced Disassembler library's token class.  The
@@ -91,54 +91,54 @@ int EDToken::tokenize(std::vector<EDToken*> &tokens,
                       EDDisassembler &disassembler) {
   SmallVector<MCParsedAsmOperand*, 5> parsedOperands;
   SmallVector<AsmToken, 10> asmTokens;
-  
+
   if (disassembler.parseInst(parsedOperands, asmTokens, str))
   {
     for (unsigned i = 0, e = parsedOperands.size(); i != e; ++i)
       delete parsedOperands[i];
     return -1;
   }
-      
+
   SmallVectorImpl<MCParsedAsmOperand*>::iterator operandIterator;
   unsigned int operandIndex;
   SmallVectorImpl<AsmToken>::iterator tokenIterator;
-  
+
   operandIterator = parsedOperands.begin();
   operandIndex = 0;
-  
+
   bool readOpcode = false;
-  
+
   const char *wsPointer = asmTokens.begin()->getLoc().getPointer();
-  
+
   for (tokenIterator = asmTokens.begin();
        tokenIterator != asmTokens.end();
        ++tokenIterator) {
     SMLoc tokenLoc = tokenIterator->getLoc();
-    
+
     const char *tokenPointer = tokenLoc.getPointer();
-    
+
     if (tokenPointer > wsPointer) {
       unsigned long wsLength = tokenPointer - wsPointer;
-      
+
       EDToken *whitespaceToken = new EDToken(StringRef(wsPointer, wsLength),
                                              EDToken::kTokenWhitespace,
                                              0,
                                              disassembler);
-      
+
       tokens.push_back(whitespaceToken);
     }
-    
+
     wsPointer = tokenPointer + tokenIterator->getString().size();
-    
+
     while (operandIterator != parsedOperands.end() &&
-           tokenLoc.getPointer() > 
+           tokenLoc.getPointer() >
            (*operandIterator)->getEndLoc().getPointer()) {
       ++operandIterator;
       ++operandIndex;
     }
-    
+
     EDToken *token;
-    
+
     switch (tokenIterator->getKind()) {
     case AsmToken::Identifier:
       if (!readOpcode) {
@@ -163,10 +163,10 @@ int EDToken::tokenize(std::vector<EDToken*> &tokens,
                           EDToken::kTokenLiteral,
                           (uint64_t)tokenIterator->getKind(),
                           disassembler);
-        
+
       int64_t intVal = tokenIterator->getIntVal();
-      
-      if (intVal < 0)  
+
+      if (intVal < 0)
         token->makeLiteral(true, -intVal);
       else
         token->makeLiteral(false, intVal);
@@ -178,26 +178,26 @@ int EDToken::tokenize(std::vector<EDToken*> &tokens,
                           EDToken::kTokenLiteral,
                           (uint64_t)tokenIterator->getKind(),
                           disassembler);
-      
+
       token->makeRegister((unsigned)tokenIterator->getRegVal());
       break;
     }
     }
-    
+
     if (operandIterator != parsedOperands.end() &&
-       tokenLoc.getPointer() >= 
+       tokenLoc.getPointer() >=
        (*operandIterator)->getStartLoc().getPointer()) {
       /// operandIndex == 0 means the operand is the instruction (which the
       /// AsmParser treats as an operand but edis does not).  We therefore skip
       /// operandIndex == 0 and subtract 1 from all other operand indices.
-      
+
       if (operandIndex > 0)
         token->setOperandID(operandOrder[operandIndex - 1]);
     }
-    
+
     tokens.push_back(token);
   }
-  
+
   // Free any parsed operands.
   for (unsigned i = 0, e = parsedOperands.size(); i != e; ++i)
     delete parsedOperands[i];

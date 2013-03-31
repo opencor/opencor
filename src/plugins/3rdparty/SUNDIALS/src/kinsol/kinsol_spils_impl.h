@@ -57,7 +57,7 @@ typedef struct KINSpilsMemRec {
 
   /* problem specification data */
 
-  int  s_maxl;          /* maximum allowable dimension of Krylov subspace      */     
+  int  s_maxl;          /* maximum allowable dimension of Krylov subspace      */
   int  s_pretype;       /* preconditioning type: PREC_NONE, PREC_RIGHT,
 			   PREC_LEFT or PREC_BOTH (used by SPGMR module and
 			   defined in sundials_iterative.h)                    */
@@ -77,7 +77,7 @@ typedef struct KINSpilsMemRec {
   long int s_nps;     /* number of calls to preconditioner solve fun.          */
   long int s_ncfl;    /* number of linear convergence failures                 */
   long int s_nfes;    /* number of evaluations of the system function F(u) or
-			 number of calls made to func routine                  */    
+			 number of calls made to func routine                  */
   long int s_njtimes; /* number of times the matrix-vector product J(u)*v
 			 was computed or number of calls made to jtimes
 			 routine                                               */
@@ -97,9 +97,9 @@ typedef struct KINSpilsMemRec {
    *     - P_data == kinsol_mem
    *     - pfree == set by the prec. module and called in KINSpilsFree
    */
- 
-  KINSpilsPrecSetupFn s_pset;     
-  KINSpilsPrecSolveFn s_psolve; 
+
+  KINSpilsPrecSetupFn s_pset;
+  KINSpilsPrecSolveFn s_psolve;
   void (*s_pfree)(KINMem kin_mem);
   void *s_P_data;
 
@@ -133,7 +133,7 @@ int KINSpilsPSolve(void *kinsol_mem, N_Vector r, N_Vector z, int lr);
 /* difference quotient approximation for jacobian times vector */
 
 int KINSpilsDQJtimes(N_Vector v, N_Vector Jv,
-                     N_Vector u, booleantype *new_u, 
+                     N_Vector u, booleantype *new_u,
                      void *data);
 
 /*

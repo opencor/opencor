@@ -259,10 +259,10 @@ private:
       isInitialized = false;
       BI = D.getBlockDataMap().insert( std::make_pair(B,ValTy()) ).first;
     }
-    // If no edges have been found, it means this is the first time the solver 
+    // If no edges have been found, it means this is the first time the solver
     // has been called on block B, we copy the initialization values (if any)
     // as current value for V (which will be used as edge data)
-    if(noEdges && isInitialized) 
+    if(noEdges && isInitialized)
       Merge(V, BI->second);
 
     // Set the data for the block.
@@ -274,7 +274,7 @@ private:
                     dataflow::forward_analysis_tag) {
 
     TF.setCurrentBlock(B);
-    
+
     for (StmtItr I=ItrTraits::StmtBegin(B), E=ItrTraits::StmtEnd(B); I!=E;++I) {
       CFGElement El = *I;
       if (const CFGStmt *S = El.getAs<CFGStmt>())
@@ -288,7 +288,7 @@ private:
                     dataflow::backward_analysis_tag) {
 
     TF.setCurrentBlock(B);
-    
+
     TF.VisitTerminator(const_cast<CFGBlock*>(B));
 
     for (StmtItr I=ItrTraits::StmtBegin(B), E=ItrTraits::StmtEnd(B); I!=E;++I) {

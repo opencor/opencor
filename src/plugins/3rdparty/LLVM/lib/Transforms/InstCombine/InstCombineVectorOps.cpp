@@ -295,12 +295,12 @@ static Value *CollectShuffleElements(Value *V, SmallVectorImpl<Constant*> &Mask,
     Mask.assign(NumElts, UndefValue::get(Type::getInt32Ty(V->getContext())));
     return V;
   }
-  
+
   if (isa<ConstantAggregateZero>(V)) {
     Mask.assign(NumElts, ConstantInt::get(Type::getInt32Ty(V->getContext()),0));
     return V;
   }
-  
+
   if (InsertElementInst *IEI = dyn_cast<InsertElementInst>(V)) {
     // If this is an insert of an extract from some other vector, include it.
     Value *VecOp    = IEI->getOperand(0);
@@ -600,7 +600,7 @@ Instruction *InstCombiner::visitShuffleVectorInst(ShuffleVectorInst &SVI) {
       eltMask = -1;
     } else if (Mask[i] < (int)LHSWidth) {
       // This element is from left hand side vector operand.
-      // 
+      //
       // If LHS is going to be replaced (case 1, 2, or 4), calculate the
       // new mask value for the element.
       if (newLHS != LHS) {

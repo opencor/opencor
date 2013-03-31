@@ -522,7 +522,7 @@ protected:
     // Solaris headers require _XOPEN_SOURCE to be set to 600 for C99 and
     // newer, but to 500 for everything else.  feature_test.h has a check to
     // ensure that you are not using C99 with an old version of X/Open or C89
-    // with a new version.  
+    // with a new version.
     if (Opts.C99 || Opts.C11)
       Builder.defineMacro("_XOPEN_SOURCE", "600");
     else
@@ -712,7 +712,7 @@ public:
                                 MacroBuilder &Builder) const;
 
   virtual bool hasFeature(StringRef Feature) const;
-  
+
   virtual void getGCCRegNames(const char * const *&Names,
                               unsigned &NumNames) const;
   virtual void getGCCRegAliases(const GCCRegAlias *&Aliases,
@@ -909,7 +909,7 @@ bool PPCTargetInfo::hasFeature(StringRef Feature) const {
   return Feature == "powerpc";
 }
 
-  
+
 const char * const PPCTargetInfo::GCCRegNames[] = {
   "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7",
   "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15",
@@ -1146,7 +1146,7 @@ namespace {
     virtual bool hasFeature(StringRef Feature) const {
       return Feature == "ptx" || Feature == "nvptx";
     }
-    
+
     virtual void getGCCRegNames(const char * const *&Names,
                                 unsigned &NumNames) const;
     virtual void getGCCRegAliases(const GCCRegAlias *&Aliases,
@@ -1319,7 +1319,7 @@ public:
   virtual bool hasFeature(StringRef Feature) const {
     return Feature == "mblaze";
   }
-  
+
   virtual BuiltinVaListKind getBuiltinVaListKind() const {
     return TargetInfo::CharPtrBuiltinVaList;
   }
@@ -1801,8 +1801,8 @@ public:
     // We accept all non-ARM calling conventions
     return (CC == CC_X86ThisCall ||
             CC == CC_X86FastCall ||
-            CC == CC_X86StdCall || 
-            CC == CC_C || 
+            CC == CC_X86StdCall ||
+            CC == CC_C ||
             CC == CC_X86Pascal) ? CCCR_OK : CCCR_Warning;
   }
 
@@ -3063,8 +3063,8 @@ public:
     MaxAtomicPromoteWidth = 64;
 
     // Do force alignment of members that follow zero length bitfields.  If
-    // the alignment of the zero-length bitfield is greater than the member 
-    // that follows it, `bar', `bar' will be aligned as the  type of the 
+    // the alignment of the zero-length bitfield is greater than the member
+    // that follows it, `bar', `bar' will be aligned as the  type of the
     // zero length bitfield.
     UseZeroLengthBitfieldAlignment = true;
   }
@@ -3176,8 +3176,8 @@ public:
         .Case("arm", true)
         .Case("softfloat", SoftFloat)
         .Case("thumb", IsThumb)
-        .Case("neon", FPU == NeonFPU && !SoftFloat && 
-              StringRef(getCPUDefineSuffix(CPU)).startswith("7"))    
+        .Case("neon", FPU == NeonFPU && !SoftFloat &&
+              StringRef(getCPUDefineSuffix(CPU)).startswith("7"))
         .Default(false);
   }
   // FIXME: Should we actually have some table instead of these switches?
@@ -3234,7 +3234,7 @@ public:
     StringRef CPUProfile = getCPUProfile(CPU);
     if (!CPUProfile.empty())
       Builder.defineMacro("__ARM_ARCH_PROFILE", CPUProfile);
-    
+
     // Subtarget options.
 
     // FIXME: It's more complicated than this and we don't really support
@@ -3278,7 +3278,7 @@ public:
       if (FPU & VFP4FPU)
         Builder.defineMacro("__ARM_VFPV4__");
     }
-    
+
     // This only gets set when Neon instructions are actually available, unlike
     // the VFP define, hence the soft float and arch check. This is subtly
     // different from gcc, we follow the intent which was that it should be set
@@ -3499,7 +3499,7 @@ public:
   virtual bool hasFeature(StringRef Feature) const {
     return Feature == "hexagon";
   }
-  
+
   virtual BuiltinVaListKind getBuiltinVaListKind() const {
     return TargetInfo::CharPtrBuiltinVaList;
   }
@@ -3655,14 +3655,14 @@ public:
     if (SoftFloat)
       Builder.defineMacro("SOFT_FLOAT", "1");
   }
-  
+
   virtual bool hasFeature(StringRef Feature) const {
     return llvm::StringSwitch<bool>(Feature)
              .Case("softfloat", SoftFloat)
              .Case("sparc", true)
              .Default(false);
   }
-  
+
   virtual void getTargetBuiltins(const Builtin::Info *&Records,
                                  unsigned &NumRecords) const {
     // FIXME: Implement!
@@ -3889,7 +3889,7 @@ namespace {
     virtual bool hasFeature(StringRef Feature) const {
       return Feature == "tce";
     }
-    
+
     virtual void getTargetBuiltins(const Builtin::Info *&Records,
                                    unsigned &NumRecords) const {}
     virtual const char *getClobbers() const {
@@ -4030,7 +4030,7 @@ public:
     switch (*Name) {
     default:
       return false;
-        
+
     case 'r': // CPU registers.
     case 'd': // Equivalent to "r" unless generating MIPS16 code.
     case 'y': // Equivalent to "r", backwards compatibility only.
@@ -4281,15 +4281,15 @@ public:
 
 class Mips64EBTargetInfo : public Mips64TargetInfoBase {
   virtual void SetDescriptionString(const std::string &Name) {
-    // Change DescriptionString only if ABI is n32.  
+    // Change DescriptionString only if ABI is n32.
     if (Name == "n32")
       DescriptionString = "E-p:32:32:32-i1:8:8-i8:8:32-i16:16:32-i32:32:32-"
                           "i64:64:64-f32:32:32-f64:64:64-f128:128:128-"
-                          "v64:64:64-n32";      
+                          "v64:64:64-n32";
   }
 public:
   Mips64EBTargetInfo(const std::string& triple) : Mips64TargetInfoBase(triple) {
-    // Default ABI is n64.  
+    // Default ABI is n64.
     DescriptionString = "E-p:64:64:64-i1:8:8-i8:8:32-i16:16:32-i32:32:32-"
                         "i64:64:64-f32:32:32-f64:64:64-f128:128:128-"
                         "v64:64:64-n32";
@@ -4304,11 +4304,11 @@ public:
 
 class Mips64ELTargetInfo : public Mips64TargetInfoBase {
   virtual void SetDescriptionString(const std::string &Name) {
-    // Change DescriptionString only if ABI is n32.  
+    // Change DescriptionString only if ABI is n32.
     if (Name == "n32")
       DescriptionString = "e-p:32:32:32-i1:8:8-i8:8:32-i16:16:32-i32:32:32-"
                           "i64:64:64-f32:32:32-f64:64:64-f128:128:128"
-                          "-v64:64:64-n32";      
+                          "-v64:64:64-n32";
   }
 public:
   Mips64ELTargetInfo(const std::string& triple) : Mips64TargetInfoBase(triple) {
@@ -4691,9 +4691,9 @@ TargetInfo *TargetInfo::CreateTargetInfo(DiagnosticsEngine &Diags,
 
   // Apply the user specified deltas.
   // First the enables.
-  for (std::vector<std::string>::const_iterator 
+  for (std::vector<std::string>::const_iterator
          it = Opts.FeaturesAsWritten.begin(),
-         ie = Opts.FeaturesAsWritten.end(); 
+         ie = Opts.FeaturesAsWritten.end();
        it != ie; ++it) {
     const char *Name = it->c_str();
 
@@ -4708,9 +4708,9 @@ TargetInfo *TargetInfo::CreateTargetInfo(DiagnosticsEngine &Diags,
   }
 
   // Then the disables.
-  for (std::vector<std::string>::const_iterator 
+  for (std::vector<std::string>::const_iterator
          it = Opts.FeaturesAsWritten.begin(),
-         ie = Opts.FeaturesAsWritten.end(); 
+         ie = Opts.FeaturesAsWritten.end();
        it != ie; ++it) {
     const char *Name = it->c_str();
 

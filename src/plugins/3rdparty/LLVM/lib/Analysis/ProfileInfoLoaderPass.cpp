@@ -73,7 +73,7 @@ namespace {
         return (ProfileInfo*)this;
       return this;
     }
-    
+
     /// run - Load the profile information from the specified file.
     virtual bool runOnModule(Module &M);
   };
@@ -94,7 +94,7 @@ Pass *llvm::createProfileLoaderPass(const std::string &Filename) {
   return new LoaderPass(Filename);
 }
 
-void LoaderPass::readEdgeOrRemember(Edge edge, Edge &tocalc, 
+void LoaderPass::readEdgeOrRemember(Edge edge, Edge &tocalc,
                                     unsigned &uncalc, double &count) {
   double w;
   if ((w = getEdgeWeight(edge)) == MissingValue) {

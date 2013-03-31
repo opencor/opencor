@@ -207,7 +207,7 @@ void RuntimeDyldELF::resolveX86_64Relocation(const SectionEntry &Section,
   case ELF::R_X86_64_32S: {
     Value += Addend;
     assert((Type == ELF::R_X86_64_32 && (Value <= UINT32_MAX)) ||
-           (Type == ELF::R_X86_64_32S && 
+           (Type == ELF::R_X86_64_32S &&
              ((int64_t)Value <= INT32_MAX && (int64_t)Value >= INT32_MIN)));
     uint32_t TruncatedAddr = (Value & 0xFFFFFFFF);
     uint32_t *Target = reinterpret_cast<uint32_t*>(Section.Address + Offset);
@@ -288,7 +288,7 @@ void RuntimeDyldELF::resolveARMRelocation(const SectionEntry &Section,
   default:
     llvm_unreachable("Not implemented relocation type!");
 
-  // Write a 32bit value to relocation address, taking into account the 
+  // Write a 32bit value to relocation address, taking into account the
   // implicit addend encoded in the target.
   case ELF::R_ARM_ABS32 :
     *TargetPtr += Value;
@@ -298,7 +298,7 @@ void RuntimeDyldELF::resolveARMRelocation(const SectionEntry &Section,
   // Last 4 bit should be shifted.
   case ELF::R_ARM_MOVW_ABS_NC :
     // We are not expecting any other addend in the relocation address.
-    // Using 0x000F0FFF because MOVW has its 16 bit immediate split into 2 
+    // Using 0x000F0FFF because MOVW has its 16 bit immediate split into 2
     // non-contiguous fields.
     assert((*TargetPtr & 0x000F0FFF) == 0);
     Value = Value & 0xFFFF;
@@ -623,9 +623,9 @@ void RuntimeDyldELF::processRelocationRef(const ObjRelocationInfo &Rel,
           // Default to 'true' in case isText fails (though it never does).
           bool isCode = true;
           si->isText(isCode);
-          Value.SectionID = findOrEmitSection(Obj, 
-                                              (*si), 
-                                              isCode, 
+          Value.SectionID = findOrEmitSection(Obj,
+                                              (*si),
+                                              isCode,
                                               ObjSectionToID);
           Value.Addend = Addend;
           break;

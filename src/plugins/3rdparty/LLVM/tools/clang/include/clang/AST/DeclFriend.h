@@ -200,7 +200,7 @@ inline void CXXRecordDecl::pushFriendDecl(FriendDecl *FD) {
   FD->NextFriend = data().FirstFriend;
   data().FirstFriend = FD;
 }
-  
+
 }
 
 #endif

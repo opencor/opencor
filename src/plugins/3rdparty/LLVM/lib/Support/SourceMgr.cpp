@@ -119,7 +119,7 @@ SourceMgr::getLineAndColumn(SMLoc Loc, int BufferID) const {
   Cache.LastQueryBufferID = BufferID;
   Cache.LastQuery = Ptr;
   Cache.LineNoOfQuery = LineNo;
-  
+
   size_t NewlineOffs = StringRef(BufStart, Ptr-BufStart).find_last_of("\n\r");
   if (NewlineOffs == StringRef::npos) NewlineOffs = ~(size_t)0;
   return std::make_pair(LineNo, Ptr-BufStart-NewlineOffs);
@@ -154,14 +154,14 @@ SMDiagnostic SourceMgr::GetMessage(SMLoc Loc, SourceMgr::DiagKind Kind,
   std::pair<unsigned, unsigned> LineAndCol;
   const char *BufferID = "<unknown>";
   std::string LineStr;
-  
+
   if (Loc.isValid()) {
     int CurBuf = FindBufferContainingLoc(Loc);
     assert(CurBuf != -1 && "Invalid or unspecified location!");
 
     MemoryBuffer *CurMB = getBufferInfo(CurBuf).Buffer;
     BufferID = CurMB->getBufferIdentifier();
-    
+
     // Scan backward to find the start of the line.
     const char *LineStart = Loc.getPointer();
     const char *BufStart = CurMB->getBufferStart();
@@ -181,17 +181,17 @@ SMDiagnostic SourceMgr::GetMessage(SMLoc Loc, SourceMgr::DiagKind Kind,
     for (unsigned i = 0, e = Ranges.size(); i != e; ++i) {
       SMRange R = Ranges[i];
       if (!R.isValid()) continue;
-      
+
       // If the line doesn't contain any part of the range, then ignore it.
       if (R.Start.getPointer() > LineEnd || R.End.getPointer() < LineStart)
         continue;
-     
+
       // Ignore pieces of the range that go onto other lines.
       if (R.Start.getPointer() < LineStart)
         R.Start = SMLoc::getFromPointer(LineStart);
       if (R.End.getPointer() > LineEnd)
         R.End = SMLoc::getFromPointer(LineEnd);
-      
+
       // Translate from SMLoc ranges to column ranges.
       ColRanges.push_back(std::make_pair(R.Start.getPointer()-LineStart,
                                          R.End.getPointer()-LineStart));
@@ -199,7 +199,7 @@ SMDiagnostic SourceMgr::GetMessage(SMLoc Loc, SourceMgr::DiagKind Kind,
 
     LineAndCol = getLineAndColumn(Loc, CurBuf);
   }
-    
+
   return SMDiagnostic(*this, Loc, BufferID, LineAndCol.first,
                       LineAndCol.second-1, Kind, Msg.str(),
                       LineStr, ColRanges);
@@ -209,7 +209,7 @@ void SourceMgr::PrintMessage(SMLoc Loc, SourceMgr::DiagKind Kind,
                              const Twine &Msg, ArrayRef<SMRange> Ranges,
                              bool ShowColors) const {
   SMDiagnostic Diagnostic = GetMessage(Loc, Kind, Msg, Ranges);
-  
+
   // Report the message with the diagnostic handler if present.
   if (DiagHandler) {
     DiagHandler(Diagnostic, DiagContext);
@@ -299,7 +299,7 @@ void SMDiagnostic::print(const char *ProgName, raw_ostream &S,
 
   // Build the line with the caret and ranges.
   std::string CaretLine(LineContents.size()+1, ' ');
-  
+
   // Expand any ranges.
   for (unsigned r = 0, e = Ranges.size(); r != e; ++r) {
     std::pair<unsigned, unsigned> R = Ranges[r];
@@ -307,18 +307,18 @@ void SMDiagnostic::print(const char *ProgName, raw_ostream &S,
          e = std::min(R.second, (unsigned)LineContents.size())+1; i != e; ++i)
       CaretLine[i] = '~';
   }
-    
+
   // Finally, plop on the caret.
   if (unsigned(ColumnNo) <= LineContents.size())
     CaretLine[ColumnNo] = '^';
-  else 
+  else
     CaretLine[LineContents.size()] = '^';
-  
+
   // ... and remove trailing whitespace so the output doesn't wrap for it.  We
   // know that the line isn't completely empty because it has the caret in it at
   // least.
   CaretLine.erase(CaretLine.find_last_not_of(' ')+1);
-  
+
   // Print out the source line one character at a time, so we can expand tabs.
   for (unsigned i = 0, e = LineContents.size(), OutCol = 0; i != e; ++i) {
     if (LineContents[i] != '\t') {
@@ -326,7 +326,7 @@ void SMDiagnostic::print(const char *ProgName, raw_ostream &S,
       ++OutCol;
       continue;
     }
-    
+
     // If we have a tab, emit at least one space, then round up to 8 columns.
     do {
       S << ' ';
@@ -345,7 +345,7 @@ void SMDiagnostic::print(const char *ProgName, raw_ostream &S,
       ++OutCol;
       continue;
     }
-    
+
     // Okay, we have a tab.  Insert the appropriate number of characters.
     do {
       S << CaretLine[i];
@@ -355,6 +355,6 @@ void SMDiagnostic::print(const char *ProgName, raw_ostream &S,
 
   if (ShowColors)
     S.resetColor();
-  
+
   S << '\n';
 }

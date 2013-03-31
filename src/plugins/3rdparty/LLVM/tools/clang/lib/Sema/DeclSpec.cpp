@@ -51,7 +51,7 @@ void UnqualifiedId::setConstructorTemplateId(TemplateIdAnnotation *TemplateId) {
   EndLocation = TemplateId->RAngleLoc;
 }
 
-void CXXScopeSpec::Extend(ASTContext &Context, SourceLocation TemplateKWLoc, 
+void CXXScopeSpec::Extend(ASTContext &Context, SourceLocation TemplateKWLoc,
                           TypeLoc TL, SourceLocation ColonColonLoc) {
   Builder.Extend(Context, TemplateKWLoc, TL, ColonColonLoc);
   if (Range.getBegin().isInvalid())
@@ -63,23 +63,23 @@ void CXXScopeSpec::Extend(ASTContext &Context, SourceLocation TemplateKWLoc,
 }
 
 void CXXScopeSpec::Extend(ASTContext &Context, IdentifierInfo *Identifier,
-                          SourceLocation IdentifierLoc, 
+                          SourceLocation IdentifierLoc,
                           SourceLocation ColonColonLoc) {
   Builder.Extend(Context, Identifier, IdentifierLoc, ColonColonLoc);
-  
+
   if (Range.getBegin().isInvalid())
     Range.setBegin(IdentifierLoc);
   Range.setEnd(ColonColonLoc);
-  
+
   assert(Range == Builder.getSourceRange() &&
          "NestedNameSpecifierLoc range computation incorrect");
 }
 
 void CXXScopeSpec::Extend(ASTContext &Context, NamespaceDecl *Namespace,
-                          SourceLocation NamespaceLoc, 
+                          SourceLocation NamespaceLoc,
                           SourceLocation ColonColonLoc) {
   Builder.Extend(Context, Namespace, NamespaceLoc, ColonColonLoc);
-  
+
   if (Range.getBegin().isInvalid())
     Range.setBegin(NamespaceLoc);
   Range.setEnd(ColonColonLoc);
@@ -89,10 +89,10 @@ void CXXScopeSpec::Extend(ASTContext &Context, NamespaceDecl *Namespace,
 }
 
 void CXXScopeSpec::Extend(ASTContext &Context, NamespaceAliasDecl *Alias,
-                          SourceLocation AliasLoc, 
+                          SourceLocation AliasLoc,
                           SourceLocation ColonColonLoc) {
   Builder.Extend(Context, Alias, AliasLoc, ColonColonLoc);
-  
+
   if (Range.getBegin().isInvalid())
     Range.setBegin(AliasLoc);
   Range.setEnd(ColonColonLoc);
@@ -101,17 +101,17 @@ void CXXScopeSpec::Extend(ASTContext &Context, NamespaceAliasDecl *Alias,
          "NestedNameSpecifierLoc range computation incorrect");
 }
 
-void CXXScopeSpec::MakeGlobal(ASTContext &Context, 
+void CXXScopeSpec::MakeGlobal(ASTContext &Context,
                               SourceLocation ColonColonLoc) {
   Builder.MakeGlobal(Context, ColonColonLoc);
-  
+
   Range = SourceRange(ColonColonLoc);
-  
+
   assert(Range == Builder.getSourceRange() &&
          "NestedNameSpecifierLoc range computation incorrect");
 }
 
-void CXXScopeSpec::MakeTrivial(ASTContext &Context, 
+void CXXScopeSpec::MakeTrivial(ASTContext &Context,
                                NestedNameSpecifier *Qualifier, SourceRange R) {
   Builder.MakeTrivial(Context, Qualifier, R);
   Range = R;
@@ -134,11 +134,11 @@ SourceLocation CXXScopeSpec::getLastQualifierNameLoc() const {
   return Builder.getTemporary().getLocalBeginLoc();
 }
 
-NestedNameSpecifierLoc 
+NestedNameSpecifierLoc
 CXXScopeSpec::getWithLocInContext(ASTContext &Context) const {
   if (!Builder.getRepresentation())
     return NestedNameSpecifierLoc();
-  
+
   return Builder.getWithLocInContext(Context);
 }
 
@@ -254,7 +254,7 @@ bool Declarator::isDeclarationOfFunction() const {
     }
     llvm_unreachable("Invalid type chunk");
   }
-  
+
   switch (DS.getTypeSpecType()) {
     case TST_atomic:
     case TST_auto:
@@ -287,20 +287,20 @@ bool Declarator::isDeclarationOfFunction() const {
       if (Expr *E = DS.getRepAsExpr())
         return E->getType()->isFunctionType();
       return false;
-     
+
     case TST_underlyingType:
     case TST_typename:
     case TST_typeofType: {
       QualType QT = DS.getRepAsType().get();
       if (QT.isNull())
         return false;
-      
+
       if (const LocInfoType *LIT = dyn_cast<LocInfoType>(QT))
         QT = LIT->getType();
 
       if (QT.isNull())
         return false;
-        
+
       return QT->isFunctionType();
     }
   }
@@ -336,8 +336,8 @@ template <class T> static bool BadSpecifier(T TNew, T TPrev,
   if (TNew != TPrev)
     DiagID = diag::err_invalid_decl_spec_combination;
   else
-    DiagID = IsExtension ? diag::ext_duplicate_declspec : 
-                           diag::warn_duplicate_declspec;    
+    DiagID = IsExtension ? diag::ext_duplicate_declspec :
+                           diag::warn_duplicate_declspec;
   return true;
 }
 
@@ -745,7 +745,7 @@ bool DeclSpec::setModulePrivateSpec(SourceLocation Loc, const char *&PrevSpec,
     DiagID = diag::ext_duplicate_declspec;
     return true;
   }
-  
+
   ModulePrivateLoc = Loc;
   return false;
 }
@@ -949,7 +949,7 @@ void DeclSpec::Finish(DiagnosticsEngine &D, Preprocessor &PP) {
   }
 
   assert(!TypeSpecOwned || isDeclRep((TST) TypeSpecType));
- 
+
   // Okay, now we can infer the real type.
 
   // TODO: return "auto function" and other bad things based on the real type.
@@ -963,7 +963,7 @@ bool DeclSpec::isMissingDeclaratorOk() {
     StorageClassSpec != DeclSpec::SCS_typedef;
 }
 
-void UnqualifiedId::setOperatorFunctionId(SourceLocation OperatorLoc, 
+void UnqualifiedId::setOperatorFunctionId(SourceLocation OperatorLoc,
                                           OverloadedOperatorKind Op,
                                           SourceLocation SymbolLocations[3]) {
   Kind = IK_OperatorFunctionId;
@@ -972,7 +972,7 @@ void UnqualifiedId::setOperatorFunctionId(SourceLocation OperatorLoc,
   OperatorFunctionId.Operator = Op;
   for (unsigned I = 0; I != 3; ++I) {
     OperatorFunctionId.SymbolLocations[I] = SymbolLocations[I].getRawEncoding();
-    
+
     if (SymbolLocations[I].isValid())
       EndLocation = SymbolLocations[I];
   }
@@ -981,7 +981,7 @@ void UnqualifiedId::setOperatorFunctionId(SourceLocation OperatorLoc,
 bool VirtSpecifiers::SetSpecifier(Specifier VS, SourceLocation Loc,
                                   const char *&PrevSpec) {
   LastLocation = Loc;
-  
+
   if (Specifiers & VS) {
     PrevSpec = getSpecifierName(VS);
     return true;

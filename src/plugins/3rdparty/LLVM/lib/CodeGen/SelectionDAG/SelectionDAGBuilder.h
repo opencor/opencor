@@ -84,7 +84,7 @@ class SelectionDAGBuilder {
   DebugLoc CurDebugLoc;
 
   DenseMap<const Value*, SDValue> NodeMap;
-  
+
   /// UnusedArgNodeMap - Maps argument value for unused arguments. This is used
   /// to preserve debug information for incoming arguments.
   DenseMap<const Value*, SDValue> UnusedArgNodeMap;
@@ -224,7 +224,7 @@ private:
   struct JumpTable {
     JumpTable(unsigned R, unsigned J, MachineBasicBlock *M,
               MachineBasicBlock *D): Reg(R), JTI(J), MBB(M), Default(D) {}
-  
+
     /// Reg - the virtual register containing the index of the jump table entry
     //. to jump to.
     unsigned Reg;
@@ -308,9 +308,9 @@ public:
   FunctionLoweringInfo &FuncInfo;
 
   /// OptLevel - What optimization level we're generating code for.
-  /// 
+  ///
   CodeGenOpt::Level OptLevel;
-  
+
   /// GFI - Garbage collection metadata for the function.
   GCFunctionInfo *GFI;
 
@@ -391,7 +391,7 @@ public:
     assert(N.getNode() == 0 && "Already set a value for this node!");
     N = NewN;
   }
-  
+
   void setUnusedArgValue(const Value *V, SDValue NewN) {
     SDValue &N = UnusedArgNodeMap[V];
     assert(N.getNode() == 0 && "Already set a value for this node!");
@@ -463,7 +463,7 @@ public:
   void visitJumpTable(JumpTable &JT);
   void visitJumpTableHeader(JumpTable &JT, JumpTableHeader &JTH,
                             MachineBasicBlock *SwitchBB);
-  
+
 private:
   // These all get lowered before this pass.
   void visitInvoke(const InvokeInst &I);
@@ -555,7 +555,7 @@ private:
   void HandlePHINodesInSuccessorBlocks(const BasicBlock *LLVMBB);
 
   /// EmitFuncArgumentDbgValue - If V is an function argument then create
-  /// corresponding DBG_VALUE machine instruction for it now. At the end of 
+  /// corresponding DBG_VALUE machine instruction for it now. At the end of
   /// instruction selection, they will be inserted to the entry BB.
   bool EmitFuncArgumentDbgValue(const Value *V, MDNode *Variable,
                                 int64_t Offset, const SDValue &N);

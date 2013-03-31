@@ -9,7 +9,7 @@
 
 // FastEmit Immediate Predicate functions.
 static bool Predicate_i64immSExt32(int64_t Imm) {
- return Imm == (int32_t)Imm; 
+ return Imm == (int32_t)Imm;
 }
 
 

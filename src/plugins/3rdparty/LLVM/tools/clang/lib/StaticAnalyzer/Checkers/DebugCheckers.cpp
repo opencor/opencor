@@ -164,7 +164,7 @@ public:
     std::vector<StringRef> Keys;
     for (; I != E ; ++I) { Keys.push_back(I->getKey()); }
     sort(Keys.begin(), Keys.end());
-    
+
     llvm::errs() << "[config]\n";
     for (unsigned i = 0, n = Keys.size(); i < n ; ++i) {
       StringRef Key = Keys[i];

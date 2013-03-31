@@ -24,34 +24,34 @@
 using namespace llvm;
 
 namespace {
-  
+
   class Printer : public FunctionPass {
     static char ID;
     raw_ostream &OS;
-    
+
   public:
     explicit Printer(raw_ostream &OS) : FunctionPass(ID), OS(OS) {}
 
-    
+
     const char *getPassName() const;
     void getAnalysisUsage(AnalysisUsage &AU) const;
-    
+
     bool runOnFunction(Function &F);
   };
-  
+
   class Deleter : public FunctionPass {
     static char ID;
-    
+
   public:
     Deleter();
-    
+
     const char *getPassName() const;
     void getAnalysisUsage(AnalysisUsage &AU) const;
-    
+
     bool runOnFunction(Function &F);
     bool doFinalization(Module &M);
   };
-  
+
 }
 
 INITIALIZE_PASS(GCModuleInfo, "collector-metadata",
@@ -82,7 +82,7 @@ GCStrategy *GCModuleInfo::getOrCreateStrategy(const Module *M,
   strategy_map_type::iterator NMI = StrategyMap.find(Name);
   if (NMI != StrategyMap.end())
     return NMI->getValue();
-  
+
   for (GCRegistry::iterator I = GCRegistry::begin(),
                             E = GCRegistry::end(); I != E; ++I) {
     if (Name == I->getName()) {
@@ -94,7 +94,7 @@ GCStrategy *GCModuleInfo::getOrCreateStrategy(const Module *M,
       return S;
     }
   }
- 
+
   dbgs() << "unsupported GC: " << Name << "\n";
   llvm_unreachable(0);
 }
@@ -102,11 +102,11 @@ GCStrategy *GCModuleInfo::getOrCreateStrategy(const Module *M,
 GCFunctionInfo &GCModuleInfo::getFunctionInfo(const Function &F) {
   assert(!F.isDeclaration() && "Can only get GCFunctionInfo for a definition!");
   assert(F.hasGC());
-  
+
   finfo_map_type::iterator I = FInfoMap.find(&F);
   if (I != FInfoMap.end())
     return *I->second;
-  
+
   GCStrategy *S = getOrCreateStrategy(F.getParent(), F.getGC());
   GCFunctionInfo *GFI = S->insertFunctionInfo(F);
   FInfoMap[&F] = GFI;
@@ -116,7 +116,7 @@ GCFunctionInfo &GCModuleInfo::getFunctionInfo(const Function &F) {
 void GCModuleInfo::clear() {
   FInfoMap.clear();
   StrategyMap.clear();
-  
+
   for (iterator I = begin(), E = end(); I != E; ++I)
     delete *I;
   StrategyList.clear();
@@ -153,21 +153,21 @@ static const char *DescKind(GC::PointKind Kind) {
 
 bool Printer::runOnFunction(Function &F) {
   if (F.hasGC()) return false;
-  
+
   GCFunctionInfo *FD = &getAnalysis<GCModuleInfo>().getFunctionInfo(F);
-  
+
   OS << "GC roots for " << FD->getFunction().getName() << ":\n";
   for (GCFunctionInfo::roots_iterator RI = FD->roots_begin(),
                                       RE = FD->roots_end(); RI != RE; ++RI)
     OS << "\t" << RI->Num << "\t" << RI->StackOffset << "[sp]\n";
-  
+
   OS << "GC safe points for " << FD->getFunction().getName() << ":\n";
   for (GCFunctionInfo::iterator PI = FD->begin(),
                                 PE = FD->end(); PI != PE; ++PI) {
-    
+
     OS << "\t" << PI->Label->getName() << ": "
        << DescKind(PI->Kind) << ", live = {";
-    
+
     for (GCFunctionInfo::live_iterator RI = FD->live_begin(PI),
                                        RE = FD->live_end(PI);;) {
       OS << " " << RI->Num;
@@ -175,10 +175,10 @@ bool Printer::runOnFunction(Function &F) {
         break;
       OS << ",";
     }
-    
+
     OS << " }\n";
   }
-  
+
   return false;
 }
 

@@ -66,7 +66,7 @@ namespace {
     virtual void deleteValue(Value *V) {}
     virtual void copyValue(Value *From, Value *To) {}
     virtual void addEscapingUse(Use &U) {}
-    
+
     /// getAdjustedAnalysisPointer - This method is used when a pass implements
     /// an analysis interface through multiple inheritance.  If needed, it
     /// should override this to adjust the this pointer as needed for the

@@ -46,7 +46,7 @@ AnalysisDeclContext::AnalysisDeclContext(AnalysisDeclContextManager *Mgr,
     builtCompleteCFG(false),
     ReferencedBlockVars(0),
     ManagedAnalyses(0)
-{  
+{
   cfgBuildOptions.forcedBlkExprs = &forcedBlkExprs;
 }
 
@@ -59,7 +59,7 @@ AnalysisDeclContext::AnalysisDeclContext(AnalysisDeclContextManager *Mgr,
   builtCompleteCFG(false),
   ReferencedBlockVars(0),
   ManagedAnalyses(0)
-{  
+{
   cfgBuildOptions.forcedBlkExprs = &forcedBlkExprs;
 }
 
@@ -115,7 +115,7 @@ const ImplicitParamDecl *AnalysisDeclContext::getSelfDecl() const {
       const VarDecl *VD = it->getVariable();
       if (VD->getName() == "self")
         return dyn_cast<ImplicitParamDecl>(VD);
-    }    
+    }
   }
 
   return NULL;
@@ -135,7 +135,7 @@ AnalysisDeclContext::getBlockForRegisteredExpression(const Stmt *stmt) {
   assert(forcedBlkExprs);
   if (const Expr *e = dyn_cast<Expr>(stmt))
     stmt = e->IgnoreParens();
-  CFG::BuildOptions::ForcedBlkExprs::const_iterator itr = 
+  CFG::BuildOptions::ForcedBlkExprs::const_iterator itr =
     forcedBlkExprs->find(stmt);
   assert(itr != forcedBlkExprs->end());
   return itr->second;
@@ -171,24 +171,24 @@ CFG *AnalysisDeclContext::getUnoptimizedCFG() {
 CFGStmtMap *AnalysisDeclContext::getCFGStmtMap() {
   if (cfgStmtMap)
     return cfgStmtMap.get();
-  
+
   if (CFG *c = getCFG()) {
     cfgStmtMap.reset(CFGStmtMap::Build(c, &getParentMap()));
     return cfgStmtMap.get();
   }
-    
+
   return 0;
 }
 
 CFGReverseBlockReachabilityAnalysis *AnalysisDeclContext::getCFGReachablityAnalysis() {
   if (CFA)
     return CFA.get();
-  
+
   if (CFG *c = getCFG()) {
     CFA.reset(new CFGReverseBlockReachabilityAnalysis(*c));
     return CFA.get();
   }
-  
+
   return 0;
 }
 
@@ -247,7 +247,7 @@ AnalysisDeclContext::getBlockInvocationContext(const LocationContext *parent,
 LocationContextManager & AnalysisDeclContext::getLocationContextManager() {
   assert(Manager &&
          "Cannot create LocationContexts without an AnalysisDeclContextManager!");
-  return Manager->getLocationContextManager();  
+  return Manager->getLocationContextManager();
 }
 
 //===----------------------------------------------------------------------===//
@@ -415,9 +415,9 @@ public:
     IgnoredContexts.insert(BR->getBlockDecl());
     Visit(BR->getBlockDecl()->getBody());
   }
-  
+
   void VisitPseudoObjectExpr(PseudoObjectExpr *PE) {
-    for (PseudoObjectExpr::semantics_iterator it = PE->semantics_begin(), 
+    for (PseudoObjectExpr::semantics_iterator it = PE->semantics_begin(),
          et = PE->semantics_end(); it != et; ++it) {
       Expr *Semantic = *it;
       if (OpaqueValueExpr *OVE = dyn_cast<OpaqueValueExpr>(Semantic))
@@ -478,7 +478,7 @@ AnalysisDeclContext::~AnalysisDeclContext() {
   if (ManagedAnalyses) {
     ManagedAnalysisMap *M = (ManagedAnalysisMap*) ManagedAnalyses;
     for (ManagedAnalysisMap::iterator I = M->begin(), E = M->end(); I!=E; ++I)
-      delete I->second;  
+      delete I->second;
     delete M;
   }
 }

@@ -27,7 +27,7 @@ public:
 
     static double divideEps( double interval, double steps );
 
-    static double divideInterval( double interval, 
+    static double divideInterval( double interval,
         int numSteps, uint base );
 };
 
@@ -39,13 +39,13 @@ public:
 
   The layout of the scale can be varied with setAttribute().
 
-  Qwt offers implementations for logarithmic and linear scales. 
+  Qwt offers implementations for logarithmic and linear scales.
 */
 
 class QWT_EXPORT QwtScaleEngine
 {
 public:
-    /*! 
+    /*!
        Layout attributes
        \sa setAttribute(), testAttribute(), reference(),
            lowerMargin(), upperMargin()
@@ -64,7 +64,7 @@ public:
 
         /*!
            The endpoints of the scale are supposed to be equal the
-           outmost included values plus the specified margins 
+           outmost included values plus the specified margins
            (see setMargins()).
            If this attribute is *not* set, the endpoints of the scale will
            be integer multiples of the step size.

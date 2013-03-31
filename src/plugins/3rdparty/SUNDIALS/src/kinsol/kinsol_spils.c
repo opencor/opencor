@@ -513,7 +513,7 @@ int KINSpilsAtimes(void *kinsol_mem, N_Vector v, N_Vector z)
  * -----------------------------------------------------------------
  * This routine interfaces between the generic Sp***Solve routine
  * (within the SPGMR, SPBCG, or SPTFQMR solver) and the
- * user's psolve routine.  It passes to psolve all required state 
+ * user's psolve routine.  It passes to psolve all required state
  * information from kinsol_mem.  Its return value is the same as that
  * returned by psolve. Note that the generic SP*** solver guarantees
  * that KINSpilsPSolve will not be called in the case in which
@@ -531,7 +531,7 @@ int KINSpilsPSolve(void *kinsol_mem, N_Vector r, N_Vector z, int lrdummy)
   kin_mem = (KINMem) kinsol_mem;
   kinspils_mem = (KINSpilsMem) lmem;
 
-  /* copy the rhs into z before the psolve call */   
+  /* copy the rhs into z before the psolve call */
   /* Note: z returns with the solution */
 
   N_VScale(ONE, r, z);
@@ -540,7 +540,7 @@ int KINSpilsPSolve(void *kinsol_mem, N_Vector r, N_Vector z, int lrdummy)
 
   ret = psolve(uu, uscale, fval, fscale, z, P_data, vtemp1);
 
-  return(ret);     
+  return(ret);
 }
 
 /*
@@ -548,7 +548,7 @@ int KINSpilsPSolve(void *kinsol_mem, N_Vector r, N_Vector z, int lrdummy)
  * Function : KINSpilsDQJtimes
  * -----------------------------------------------------------------
  * This routine generates the matrix-vector product z = J*v using a
- * difference quotient approximation. The approximation is 
+ * difference quotient approximation. The approximation is
  * J*v = [func(uu + sigma*v) - func(uu)]/sigma. Here sigma is based
  * on the dot products (uscale*uu, uscale*v) and
  * (uscale*v, uscale*v), the L1Norm(uscale*v), and on sqrt_relfunc
@@ -565,7 +565,7 @@ int KINSpilsPSolve(void *kinsol_mem, N_Vector r, N_Vector z, int lrdummy)
  */
 
 int KINSpilsDQJtimes(N_Vector v, N_Vector Jv,
-                     N_Vector u, booleantype *new_u, 
+                     N_Vector u, booleantype *new_u,
                      void *data)
 {
   realtype sigma, sigma_inv, sutsv, sq1norm, sign, vtv;
@@ -597,20 +597,20 @@ int KINSpilsDQJtimes(N_Vector v, N_Vector Jv,
   sq1norm = N_VL1Norm(vtemp1);
 
   sign = (sutsv >= ZERO) ? ONE : -ONE ;
- 
+
   /*  this expression for sigma is from p. 469, Brown and Saad paper */
 
-  sigma = sign*sqrt_relfunc*MAX(ABS(sutsv),sq1norm)/vtv; 
+  sigma = sign*sqrt_relfunc*MAX(ABS(sutsv),sq1norm)/vtv;
 
   sigma_inv = ONE/sigma;
 
   /* compute the u-prime at which to evaluate the function func */
 
   N_VLinearSum(ONE, u, sigma, v, vtemp1);
- 
+
   /* call the system function to calculate func(u+sigma*v) */
 
-  retval = func(vtemp1, vtemp2, user_data);    
+  retval = func(vtemp1, vtemp2, user_data);
   nfes++;
   if (retval != 0) return(retval);
 

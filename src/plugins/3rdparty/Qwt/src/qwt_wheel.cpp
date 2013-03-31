@@ -113,8 +113,8 @@ QwtWheel::~QwtWheel()
 /*!
   \brief En/Disable tracking
 
-  If tracking is enabled (the default), the wheel emits the valueChanged() 
-  signal while the wheel is moving. If tracking is disabled, the wheel 
+  If tracking is enabled (the default), the wheel emits the valueChanged()
+  signal while the wheel is moving. If tracking is disabled, the wheel
   emits the valueChanged() signal only when the wheel movement is terminated.
 
   The wheelMoved() signal is emitted regardless id tracking is enabled or not.
@@ -160,7 +160,7 @@ int QwtWheel::updateInterval() const
 /*!
    \brief Mouse press event handler
 
-   Start movement of the wheel. 
+   Start movement of the wheel.
 
    \param event Mouse event
 */
@@ -207,13 +207,13 @@ void QwtWheel::mouseMoveEvent( QMouseEvent *event )
 
         d_data->speed = ( mouseValue - d_data->mouseValue ) / ms;
     }
-    
-    d_data->mouseValue = mouseValue; 
+
+    d_data->mouseValue = mouseValue;
 
     double value = boundedValue( mouseValue - d_data->mouseOffset );
     if ( d_data->stepAlignment )
         value = alignedValue( value );
-        
+
     if ( value != d_data->value )
     {
         d_data->value = value;
@@ -236,7 +236,7 @@ void QwtWheel::mouseMoveEvent( QMouseEvent *event )
    it starts flying.
 
    \param event Mouse event
-*/  
+*/
 
 void QwtWheel::mouseReleaseEvent( QMouseEvent *event )
 {
@@ -258,7 +258,7 @@ void QwtWheel::mouseReleaseEvent( QMouseEvent *event )
 
     if ( startFlying )
     {
-        d_data->flyingValue = 
+        d_data->flyingValue =
             boundedValue( d_data->mouseValue - d_data->mouseOffset );
 
         d_data->timerId = startTimer( d_data->updateInterval );
@@ -279,7 +279,7 @@ void QwtWheel::mouseReleaseEvent( QMouseEvent *event )
   \brief Qt timer event
 
   The flying wheel effect is implemented using a timer
-   
+
   \param event Timer event
 
   \sa updateInterval()
@@ -321,7 +321,7 @@ void QwtWheel::timerEvent( QTimerEvent *event )
 /*!
   \brief Handle wheel events
 
-  In/Decrement the value 
+  In/Decrement the value
 
   \param event Wheel event
 */
@@ -340,7 +340,7 @@ void QwtWheel::wheelEvent( QWheelEvent *event )
 
     double increment = 0.0;
 
-    if ( ( event->modifiers() & Qt::ControlModifier) || 
+    if ( ( event->modifiers() & Qt::ControlModifier) ||
         ( event->modifiers() & Qt::ShiftModifier ) )
     {
         // one page regardless of delta
@@ -382,12 +382,12 @@ void QwtWheel::wheelEvent( QWheelEvent *event )
     Step to maximum()
 
   - Qt::Key_Up\n
-    In case of a horizontal or not inverted vertical wheel the value 
+    In case of a horizontal or not inverted vertical wheel the value
     will be incremented by the step size. For an inverted vertical wheel
     the value will be decremented by the step size.
 
   - Qt::Key_Down\n
-    In case of a horizontal or not inverted vertical wheel the value 
+    In case of a horizontal or not inverted vertical wheel the value
     will be decremented by the step size. For an inverted vertical wheel
     the value will be incremented by the step size.
 
@@ -480,7 +480,7 @@ void QwtWheel::keyPressEvent( QKeyEvent *event )
 
     if ( event->isAccepted() )
         stopFlying();
-    
+
     if ( increment != 0.0 )
     {
         value = boundedValue( d_data->value + increment );
@@ -550,7 +550,7 @@ void QwtWheel::setWheelBorderWidth( int borderWidth )
 }
 
 /*!
-   \return Wheel border width 
+   \return Wheel border width
    \sa setWheelBorderWidth()
 */
 int QwtWheel::wheelBorderWidth() const
@@ -559,7 +559,7 @@ int QwtWheel::wheelBorderWidth() const
 }
 
 /*!
-  \brief Set the border width 
+  \brief Set the border width
 
   The border defaults to 2.
 
@@ -573,7 +573,7 @@ void QwtWheel::setBorderWidth( int width )
 }
 
 /*!
-   \return Border width 
+   \return Border width
    \sa setBorderWidth()
 */
 int QwtWheel::borderWidth() const
@@ -681,7 +681,7 @@ double QwtWheel::viewAngle() const
     return d_data->viewAngle;
 }
 
-/*! 
+/*!
   Determine the value corresponding to a specified point
 
   \param pos Position
@@ -722,7 +722,7 @@ double QwtWheel::valueAt( const QPoint &pos ) const
     return val;
 }
 
-/*! 
+/*!
    \brief Qt Paint Event
    \param event Paint event
 */
@@ -735,7 +735,7 @@ void QwtWheel::paintEvent( QPaintEvent *event )
     opt.init(this);
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &painter, this);
 
-    qDrawShadePanel( &painter, 
+    qDrawShadePanel( &painter,
         contentsRect(), palette(), true, d_data->borderWidth );
 
     drawWheelBackground( &painter, wheelRect() );
@@ -751,7 +751,7 @@ void QwtWheel::paintEvent( QPaintEvent *event )
    \param painter Painter
    \param rect Geometry for the wheel
 */
-void QwtWheel::drawWheelBackground( 
+void QwtWheel::drawWheelBackground(
     QPainter *painter, const QRectF &rect )
 {
     painter->save();
@@ -759,7 +759,7 @@ void QwtWheel::drawWheelBackground(
     QPalette pal = palette();
 
     //  draw shaded background
-    QLinearGradient gradient( rect.topLeft(), 
+    QLinearGradient gradient( rect.topLeft(),
         ( d_data->orientation == Qt::Horizontal ) ? rect.topRight() : rect.bottomLeft() );
     gradient.setColorAt( 0.0, pal.color( QPalette::Button ) );
     gradient.setColorAt( 0.2, pal.color( QPalette::Midlight ) );
@@ -770,9 +770,9 @@ void QwtWheel::drawWheelBackground(
 
     // draw internal border
 
-    const QPen lightPen( palette().color( QPalette::Light ), 
+    const QPen lightPen( palette().color( QPalette::Light ),
         d_data->wheelBorderWidth, Qt::SolidLine, Qt::FlatCap );
-    const QPen darkPen( pal.color( QPalette::Dark ), 
+    const QPen darkPen( pal.color( QPalette::Dark ),
         d_data->wheelBorderWidth, Qt::SolidLine, Qt::FlatCap );
 
     const double bw2 = 0.5 * d_data->wheelBorderWidth;
@@ -780,21 +780,21 @@ void QwtWheel::drawWheelBackground(
     if ( d_data->orientation == Qt::Horizontal )
     {
         painter->setPen( lightPen );
-        painter->drawLine( QPointF( rect.left(), rect.top() + bw2 ), 
+        painter->drawLine( QPointF( rect.left(), rect.top() + bw2 ),
             QPointF( rect.right(), rect.top() + bw2 ) );
 
         painter->setPen( darkPen );
-        painter->drawLine( QPointF( rect.left(), rect.bottom() - bw2 ), 
+        painter->drawLine( QPointF( rect.left(), rect.bottom() - bw2 ),
             QPointF( rect.right(), rect.bottom() - bw2 ) );
     }
     else // Qt::Vertical
     {
         painter->setPen( lightPen );
-        painter->drawLine( QPointF( rect.left() + bw2, rect.top() ), 
+        painter->drawLine( QPointF( rect.left() + bw2, rect.top() ),
             QPointF( rect.left() + bw2, rect.bottom() ) );
 
         painter->setPen( darkPen );
-        painter->drawLine( QPointF( rect.right() - bw2, rect.top() ), 
+        painter->drawLine( QPointF( rect.right() - bw2, rect.top() ),
             QPointF( rect.right() - bw2, rect.bottom() ) );
     }
 
@@ -816,9 +816,9 @@ void QwtWheel::drawTicks( QPainter *painter, const QRectF &rect )
         return;
     }
 
-    const QPen lightPen( palette().color( QPalette::Light ), 
+    const QPen lightPen( palette().color( QPalette::Light ),
         0, Qt::SolidLine, Qt::FlatCap );
-    const QPen darkPen( palette().color( QPalette::Dark ), 
+    const QPen darkPen( palette().color( QPalette::Dark ),
         0, Qt::SolidLine, Qt::FlatCap );
 
     const double cnvFactor = qAbs( d_data->totalAngle / range );
@@ -855,7 +855,7 @@ void QwtWheel::drawTicks( QPainter *painter, const QRectF &rect )
             const double off = radius * ( sinArc + s ) / sinArc;
 
             double tickPos;
-            if ( d_data->inverted ) 
+            if ( d_data->inverted )
                 tickPos = rect.left() + off;
             else
                 tickPos = rect.right() - off;
@@ -863,10 +863,10 @@ void QwtWheel::drawTicks( QPainter *painter, const QRectF &rect )
             if ( ( tickPos <= maxpos ) && ( tickPos > minpos ) )
             {
                 painter->setPen( darkPen );
-                painter->drawLine( QPointF( tickPos - 1 , l1 ), 
+                painter->drawLine( QPointF( tickPos - 1 , l1 ),
                     QPointF( tickPos - 1,  l2 ) );
                 painter->setPen( lightPen );
-                painter->drawLine( QPointF( tickPos, l1 ), 
+                painter->drawLine( QPointF( tickPos, l1 ),
                     QPointF( tickPos, l2 ) );
             }
         }
@@ -905,10 +905,10 @@ void QwtWheel::drawTicks( QPainter *painter, const QRectF &rect )
             if ( ( tickPos <= maxpos ) && ( tickPos > minpos ) )
             {
                 painter->setPen( darkPen );
-                painter->drawLine( QPointF( l1, tickPos - 1 ), 
+                painter->drawLine( QPointF( l1, tickPos - 1 ),
                     QPointF( l2, tickPos - 1 ) );
                 painter->setPen( lightPen );
-                painter->drawLine( QPointF( l1, tickPos ), 
+                painter->drawLine( QPointF( l1, tickPos ),
                     QPointF( l2, tickPos ) );
             }
         }
@@ -1011,12 +1011,12 @@ bool QwtWheel::stepAlignment() const
 }
 
 /*!
-  \brief Set the page step count  
-    
+  \brief Set the page step count
+
   pageStepCount is a multiplicator for the single step size
   that typically corresponds to the user pressing PageUp or PageDown.
-    
-  A value of 0 disables page stepping. 
+
+  A value of 0 disables page stepping.
 
   The default value is 1.
 
@@ -1028,7 +1028,7 @@ void QwtWheel::setPageStepCount( int count )
     d_data->pageStepCount = qMax( 0, count );
 }
 
-/*! 
+/*!
   \return Page step count
   \sa setPageStepCount(), singleStep()
  */
@@ -1147,10 +1147,10 @@ double QwtWheel::value() const
   An inverted wheel increases its values in the opposite direction.
   The direction of an inverted horizontal wheel will be from right to left
   an inverted vertical wheel will increase from bottom to top.
-  
+
   \param on En/Disable inverted appearance
   \sa isInverted()
- 
+
  */
 void QwtWheel::setInverted( bool on )
 {
@@ -1173,8 +1173,8 @@ bool QwtWheel::isInverted() const
 /*!
   \brief En/Disable wrapping
 
-  If wrapping is true stepping up from maximum() value will take 
-  you to the minimum() value and vice versa. 
+  If wrapping is true stepping up from maximum() value will take
+  you to the minimum() value and vice versa.
 
   \param on En/Disable wrapping
   \sa wrapping()
@@ -1248,13 +1248,13 @@ void QwtWheel::stopFlying()
 double QwtWheel::boundedValue( double value ) const
 {
     const double range = d_data->maximum - d_data->minimum;
-    
+
     if ( d_data->wrapping && range >= 0.0 )
     {
         if ( value < d_data->minimum )
         {
             value += ::ceil( ( d_data->minimum - value ) / range ) * range;
-        }       
+        }
         else if ( value > d_data->maximum )
         {
             value -= ::ceil( ( value - d_data->maximum ) / range ) * range;
@@ -1280,11 +1280,11 @@ double QwtWheel::alignedValue( double value ) const
         // correct rounding error at the border
         if ( qFuzzyCompare( value, d_data->maximum ) )
             value = d_data->maximum;
-            
+
         // correct rounding error if value = 0
         if ( qFuzzyCompare( value + 1.0, 1.0 ) )
             value = 0.0;
-    }       
+    }
 
     return value;
 }

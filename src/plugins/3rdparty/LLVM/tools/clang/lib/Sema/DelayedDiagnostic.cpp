@@ -44,11 +44,11 @@ DelayedDiagnostic DelayedDiagnostic::makeDeprecation(SourceLocation Loc,
 
 void DelayedDiagnostic::Destroy() {
   switch (Kind) {
-  case Access: 
-    getAccessData().~AccessedEntity(); 
+  case Access:
+    getAccessData().~AccessedEntity();
     break;
 
-  case Deprecation: 
+  case Deprecation:
     delete [] DeprecationData.Message;
     break;
 

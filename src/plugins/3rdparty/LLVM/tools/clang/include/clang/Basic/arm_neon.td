@@ -326,7 +326,7 @@ def VTBX4 : WInst<"vtbx4", "dd4t", "UccPc">;
 // E.3.25 Operations with a scalar value
 def VMLA_LANE    : Inst<"vmla_lane", "dddgi", "siUsUifQsQiQUsQUiQf", OP_MLA_LN>;
 def VMLAL_LANE   : Inst<"vmlal_lane", "wwddi", "siUsUi", OP_MLAL_LN>;
-def VQDMLAL_LANE : Inst<"vqdmlal_lane", "wwddi", "si", OP_QDMLAL_LN>; 
+def VQDMLAL_LANE : Inst<"vqdmlal_lane", "wwddi", "si", OP_QDMLAL_LN>;
 def VMLS_LANE    : Inst<"vmls_lane", "dddgi", "siUsUifQsQiQUsQUiQf", OP_MLS_LN>;
 def VMLSL_LANE   : Inst<"vmlsl_lane", "wwddi", "siUsUi", OP_MLSL_LN>;
 def VQDMLSL_LANE : Inst<"vqdmlsl_lane", "wwddi", "si", OP_QDMLSL_LN>;

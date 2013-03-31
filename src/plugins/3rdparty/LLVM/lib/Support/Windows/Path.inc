@@ -191,7 +191,7 @@ Path::GetTemporaryDirectory(std::string* ErrMsg) {
   if (TempDirectory) {
 #if defined(_MSC_VER)
     // Visual Studio gets confused and emits a diagnostic about calling exists,
-    // even though this is the implementation for PathV1.  Temporarily 
+    // even though this is the implementation for PathV1.  Temporarily
     // disable the deprecated warning message
     #pragma warning(push)
     #pragma warning(disable:4996)

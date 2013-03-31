@@ -52,7 +52,7 @@ GetAllUndefinedSymbols(Module *M, std::set<std::string> &UndefinedSymbols) {
         assert(!I->hasDLLImportLinkage()
                && "Found dllimported non-external symbol!");
         DefinedSymbols.insert(I->getName());
-      }      
+      }
     }
 
   for (Module::global_iterator I = M->global_begin(), E = M->global_end();
@@ -64,7 +64,7 @@ GetAllUndefinedSymbols(Module *M, std::set<std::string> &UndefinedSymbols) {
         assert(!I->hasDLLImportLinkage()
                && "Found dllimported non-external symbol!");
         DefinedSymbols.insert(I->getName());
-      }      
+      }
     }
 
   for (Module::alias_iterator I = M->alias_begin(), E = M->alias_end();
@@ -142,7 +142,7 @@ Linker::LinkInArchive(const sys::Path &Filename, bool &is_native) {
     // subsequent call.
     SmallVector<Module*, 16> Modules;
     if (!arch->findModulesDefiningSymbols(UndefinedSymbols, Modules, &ErrMsg))
-      return error("Cannot find symbols in '" + Filename.str() + 
+      return error("Cannot find symbols in '" + Filename.str() +
                    "': " + ErrMsg);
 
     // If we didn't find any more modules to link this time, we are done
@@ -173,9 +173,9 @@ Linker::LinkInArchive(const sys::Path &Filename, bool &is_native) {
         if (LinkInModule(aModule, &moduleErrorMsg))
           return error("Cannot link in module '" +
                        aModule->getModuleIdentifier() + "': " + moduleErrorMsg);
-      } 
+      }
     }
-    
+
     // Get the undefined symbols from the aggregate module. This recomputes the
     // symbols we still need after the new modules have been linked in.
     GetAllUndefinedSymbols(Composite, UndefinedSymbols);

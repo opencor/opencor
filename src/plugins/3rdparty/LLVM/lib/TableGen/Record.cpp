@@ -426,7 +426,7 @@ ProfileBitsInit(FoldingSetNodeID &ID, ArrayRef<Init *> Range) {
 
 BitsInit *BitsInit::get(ArrayRef<Init *> Range) {
   typedef FoldingSet<BitsInit> Pool;
-  static Pool ThePool;  
+  static Pool ThePool;
 
   FoldingSetNodeID ID;
   ProfileBitsInit(ID, Range);
@@ -697,7 +697,7 @@ UnOpInit *UnOpInit::get(UnaryOp opc, Init *lhs, RecTy *Type) {
   typedef std::pair<std::pair<unsigned, Init *>, RecTy *> Key;
 
   typedef DenseMap<Key, UnOpInit *> Pool;
-  static Pool ThePool;  
+  static Pool ThePool;
 
   Key TheKey(std::make_pair(std::make_pair(opc, lhs), Type));
 
@@ -732,7 +732,7 @@ Init *UnOpInit::Fold(Record *CurRec, MultiClass *CurMultiClass) const {
 
           Init *TemplateArgName = QualifyName(*CurRec, CurMultiClass, Name,
                                               ":");
-      
+
           if (CurRec->isTemplateArg(TemplateArgName)) {
             const RecordVal *RV = CurRec->getValue(TemplateArgName);
             assert(RV && "Template arg doesn't exist??");
@@ -843,7 +843,7 @@ BinOpInit *BinOpInit::get(BinaryOp opc, Init *lhs,
     > Key;
 
   typedef DenseMap<Key, BinOpInit *> Pool;
-  static Pool ThePool;  
+  static Pool ThePool;
 
   Key TheKey(std::make_pair(std::make_pair(std::make_pair(opc, lhs), rhs),
                             Type));
@@ -1409,7 +1409,7 @@ Init *VarListElementInit:: resolveListElementReference(Record &R,
                                                        const RecordVal *RV,
                                                        unsigned Elt) const {
   Init *Result = TI->resolveListElementReference(R, RV, Element);
-  
+
   if (Result) {
     if (TypedInit *TInit = dyn_cast<TypedInit>(Result)) {
       Init *Result2 = TInit->resolveListElementReference(R, RV, Elt);
@@ -1418,7 +1418,7 @@ Init *VarListElementInit:: resolveListElementReference(Record &R,
     }
     return Result;
   }
- 
+
   return 0;
 }
 
@@ -1445,7 +1445,7 @@ std::string DefInit::getAsString() const {
 FieldInit *FieldInit::get(Init *R, const std::string &FN) {
   typedef std::pair<Init *, TableGenStringKey> Key;
   typedef DenseMap<Key, FieldInit *> Pool;
-  static Pool ThePool;  
+  static Pool ThePool;
 
   Key TheKey(std::make_pair(R, FN));
 
@@ -1514,7 +1514,7 @@ DagInit::get(Init *V, const std::string &VN,
              ArrayRef<Init *> ArgRange,
              ArrayRef<std::string> NameRange) {
   typedef FoldingSet<DagInit> Pool;
-  static Pool ThePool;  
+  static Pool ThePool;
 
   FoldingSetNodeID ID;
   ProfileDagInit(ID, V, VN, ArgRange, NameRange);
@@ -1994,7 +1994,7 @@ Init *llvm::QualifyName(Record &CurRec, MultiClass *CurMultiClass,
   RecTy *Type = dyn_cast<TypedInit>(Name)->getType();
 
   BinOpInit *NewName =
-    BinOpInit::get(BinOpInit::STRCONCAT, 
+    BinOpInit::get(BinOpInit::STRCONCAT,
                       BinOpInit::get(BinOpInit::STRCONCAT,
                                         CurRec.getNameInit(),
                                         StringInit::get(Scoper),
@@ -2004,7 +2004,7 @@ Init *llvm::QualifyName(Record &CurRec, MultiClass *CurMultiClass,
 
   if (CurMultiClass && Scoper != "::") {
     NewName =
-      BinOpInit::get(BinOpInit::STRCONCAT, 
+      BinOpInit::get(BinOpInit::STRCONCAT,
                         BinOpInit::get(BinOpInit::STRCONCAT,
                                           CurMultiClass->Rec.getNameInit(),
                                           StringInit::get("::"),

@@ -24,14 +24,14 @@ namespace clang {
     TSW_long,
     TSW_longlong
   };
-  
+
   /// \brief Specifies the signedness of a type, e.g., signed or unsigned.
   enum TypeSpecifierSign {
     TSS_unspecified,
     TSS_signed,
     TSS_unsigned
   };
-  
+
   /// \brief Specifies the kind of type.
   enum TypeSpecifierType {
     TST_unspecified,
@@ -64,7 +64,7 @@ namespace clang {
     TST_atomic,       // C11 _Atomic
     TST_error         // erroneous type
   };
-  
+
   /// \brief Structure that packs information about the type specifiers that
   /// were written in a particular type specifier sequence.
   struct WrittenBuiltinSpecs {
@@ -72,7 +72,7 @@ namespace clang {
     /*DeclSpec::TSS*/ unsigned Sign  : 2;
     /*DeclSpec::TSW*/ unsigned Width : 2;
     bool ModeAttr : 1;
-  };  
+  };
 
   /// \brief A C++ access specifier (public, private, protected), plus the
   /// special value "none" which means different things in different contexts.
@@ -115,7 +115,7 @@ namespace clang {
     /// An Objective-C property is a logical field of an Objective-C
     /// object which is read and written via Objective-C method calls.
     OK_ObjCProperty,
-    
+
     /// An Objective-C array/dictionary subscripting which reads an
     /// object or writes at the subscripted array/dictionary element via
     /// Objective-C method calls.

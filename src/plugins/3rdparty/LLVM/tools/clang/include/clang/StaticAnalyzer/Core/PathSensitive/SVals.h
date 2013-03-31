@@ -151,7 +151,7 @@ public:
       return SymExpr::symbol_iterator();
   }
 
-  SymExpr::symbol_iterator symbol_end() const { 
+  SymExpr::symbol_iterator symbol_end() const {
     return SymExpr::symbol_end();
   }
 };
@@ -172,25 +172,25 @@ private:
   // error since they are tautologically false.
   bool isUndef() const;
   bool isValid() const;
-  
+
 protected:
   explicit DefinedOrUnknownSVal(const void *d, bool isLoc, unsigned ValKind)
     : SVal(d, isLoc, ValKind) {}
-  
+
   explicit DefinedOrUnknownSVal(BaseKind k, void *D = NULL)
     : SVal(k, D) {}
-  
+
 public:
     // Implement isa<T> support.
   static inline bool classof(const SVal *V) {
     return !V->isUndef();
   }
 };
-  
+
 class UnknownVal : public DefinedOrUnknownSVal {
 public:
   explicit UnknownVal() : DefinedOrUnknownSVal(UnknownKind) {}
-  
+
   static inline bool classof(const SVal *V) {
     return V->getBaseKind() == UnknownKind;
   }
@@ -202,7 +202,7 @@ private:
   // error since they are tautologically true/false.
   bool isUnknown() const;
   bool isUnknownOrUndef() const;
-  bool isValid() const;  
+  bool isValid() const;
 protected:
   explicit DefinedSVal(const void *d, bool isLoc, unsigned ValKind)
     : DefinedOrUnknownSVal(d, isLoc, ValKind) {}
@@ -243,7 +243,7 @@ public:
   }
 
   static inline bool isLocType(QualType T) {
-    return T->isAnyPointerType() || T->isBlockPointerType() || 
+    return T->isAnyPointerType() || T->isBlockPointerType() ||
            T->isReferenceType();
   }
 };

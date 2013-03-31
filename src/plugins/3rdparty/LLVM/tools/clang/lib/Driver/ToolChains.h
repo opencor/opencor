@@ -266,12 +266,12 @@ public:
   /// AddLinkARCArgs - Add the linker arguments to link the ARC runtime library.
   virtual void AddLinkARCArgs(const ArgList &Args,
                               ArgStringList &CmdArgs) const = 0;
-  
+
   /// AddLinkRuntimeLibArgs - Add the linker arguments to link the compiler
   /// runtime library.
   virtual void AddLinkRuntimeLibArgs(const ArgList &Args,
                                      ArgStringList &CmdArgs) const = 0;
-  
+
   /// }
   /// @name ToolChain Implementation
   /// {
@@ -321,7 +321,7 @@ public:
   virtual bool IsEncodeExtendedBlockSignatureDefault() const {
     return true;
   }
-  
+
   virtual bool IsObjCNonFragileABIDefault() const {
     // Non-fragile ABI is default for everything but i386.
     return getTriple().getArch() != llvm::Triple::x86;
@@ -370,9 +370,9 @@ public:
 
   virtual void AddLinkRuntimeLibArgs(const ArgList &Args,
                                      ArgStringList &CmdArgs) const;
-  void AddLinkRuntimeLib(const ArgList &Args, ArgStringList &CmdArgs, 
+  void AddLinkRuntimeLib(const ArgList &Args, ArgStringList &CmdArgs,
                          const char *DarwinStaticLib) const;
-  
+
   virtual void AddCXXStdlibLibArgs(const ArgList &Args,
                                    ArgStringList &CmdArgs) const;
 

@@ -1,10 +1,10 @@
 //===- IntrinsicsPowerPC.td - Defines PowerPC intrinsics ---*- tablegen -*-===//
-// 
+//
 //                     The LLVM Compiler Infrastructure
 //
 // This file is distributed under the University of Illinois Open Source
 // License. See LICENSE.TXT for details.
-// 
+//
 //===----------------------------------------------------------------------===//
 //
 // This file defines all of the PowerPC-specific intrinsics.
@@ -60,21 +60,21 @@ class PowerPC_Vec_FFF_Intrinsic<string GCCIntSuffix>
 
 /// PowerPC_Vec_BBB_Intrinsic - A PowerPC intrinsic that takes two v16f8
 /// vectors and returns one.  These intrinsics have no side effects.
-class PowerPC_Vec_BBB_Intrinsic<string GCCIntSuffix> 
+class PowerPC_Vec_BBB_Intrinsic<string GCCIntSuffix>
   : PowerPC_Vec_Intrinsic<GCCIntSuffix,
                           [llvm_v16i8_ty], [llvm_v16i8_ty, llvm_v16i8_ty],
                           [IntrNoMem]>;
 
 /// PowerPC_Vec_HHH_Intrinsic - A PowerPC intrinsic that takes two v8i16
 /// vectors and returns one.  These intrinsics have no side effects.
-class PowerPC_Vec_HHH_Intrinsic<string GCCIntSuffix> 
+class PowerPC_Vec_HHH_Intrinsic<string GCCIntSuffix>
   : PowerPC_Vec_Intrinsic<GCCIntSuffix,
                           [llvm_v8i16_ty], [llvm_v8i16_ty, llvm_v8i16_ty],
                           [IntrNoMem]>;
 
 /// PowerPC_Vec_WWW_Intrinsic - A PowerPC intrinsic that takes two v4i32
 /// vectors and returns one.  These intrinsics have no side effects.
-class PowerPC_Vec_WWW_Intrinsic<string GCCIntSuffix> 
+class PowerPC_Vec_WWW_Intrinsic<string GCCIntSuffix>
   : PowerPC_Vec_Intrinsic<GCCIntSuffix,
                           [llvm_v4i32_ty], [llvm_v4i32_ty, llvm_v4i32_ty],
                           [IntrNoMem]>;
@@ -152,7 +152,7 @@ let TargetPrefix = "ppc" in {  // All intrinsics start with "llvm.ppc.".
   def int_ppc_altivec_vcmpgtfp : GCCBuiltin<"__builtin_altivec_vcmpgtfp">,
               Intrinsic<[llvm_v4i32_ty], [llvm_v4f32_ty, llvm_v4f32_ty],
                         [IntrNoMem]>;
-                        
+
   def int_ppc_altivec_vcmpequw : GCCBuiltin<"__builtin_altivec_vcmpequw">,
               Intrinsic<[llvm_v4i32_ty], [llvm_v4i32_ty, llvm_v4i32_ty],
                         [IntrNoMem]>;
@@ -162,7 +162,7 @@ let TargetPrefix = "ppc" in {  // All intrinsics start with "llvm.ppc.".
   def int_ppc_altivec_vcmpgtuw : GCCBuiltin<"__builtin_altivec_vcmpgtuw">,
               Intrinsic<[llvm_v4i32_ty], [llvm_v4i32_ty, llvm_v4i32_ty],
                         [IntrNoMem]>;
-                        
+
   def int_ppc_altivec_vcmpequh : GCCBuiltin<"__builtin_altivec_vcmpequh">,
               Intrinsic<[llvm_v8i16_ty], [llvm_v8i16_ty, llvm_v8i16_ty],
                         [IntrNoMem]>;
@@ -196,7 +196,7 @@ let TargetPrefix = "ppc" in {  // All intrinsics start with "llvm.ppc.".
   def int_ppc_altivec_vcmpgtfp_p : GCCBuiltin<"__builtin_altivec_vcmpgtfp_p">,
               Intrinsic<[llvm_i32_ty],[llvm_i32_ty,llvm_v4f32_ty,llvm_v4f32_ty],
                         [IntrNoMem]>;
-                        
+
   def int_ppc_altivec_vcmpequw_p : GCCBuiltin<"__builtin_altivec_vcmpequw_p">,
               Intrinsic<[llvm_i32_ty],[llvm_i32_ty,llvm_v4i32_ty,llvm_v4i32_ty],
                         [IntrNoMem]>;
@@ -206,7 +206,7 @@ let TargetPrefix = "ppc" in {  // All intrinsics start with "llvm.ppc.".
   def int_ppc_altivec_vcmpgtuw_p : GCCBuiltin<"__builtin_altivec_vcmpgtuw_p">,
               Intrinsic<[llvm_i32_ty],[llvm_i32_ty,llvm_v4i32_ty,llvm_v4i32_ty],
                         [IntrNoMem]>;
-                        
+
   def int_ppc_altivec_vcmpequh_p : GCCBuiltin<"__builtin_altivec_vcmpequh_p">,
               Intrinsic<[llvm_i32_ty],[llvm_i32_ty,llvm_v8i16_ty,llvm_v8i16_ty],
                         [IntrNoMem]>;
@@ -296,10 +296,10 @@ let TargetPrefix = "ppc" in {  // All PPC intrinsics start with "llvm.ppc.".
             Intrinsic<[llvm_v4i32_ty], [llvm_v8i16_ty, llvm_v8i16_ty,
                        llvm_v4i32_ty], [IntrNoMem]>;
   def int_ppc_altivec_vmsumshs : GCCBuiltin<"__builtin_altivec_vmsumshs">,
-            Intrinsic<[llvm_v4i32_ty], [llvm_v8i16_ty, llvm_v8i16_ty, 
+            Intrinsic<[llvm_v4i32_ty], [llvm_v8i16_ty, llvm_v8i16_ty,
                        llvm_v4i32_ty], [IntrNoMem]>;
   def int_ppc_altivec_vmsumubm : GCCBuiltin<"__builtin_altivec_vmsumubm">,
-            Intrinsic<[llvm_v4i32_ty], [llvm_v16i8_ty, llvm_v16i8_ty, 
+            Intrinsic<[llvm_v4i32_ty], [llvm_v16i8_ty, llvm_v16i8_ty,
                        llvm_v4i32_ty], [IntrNoMem]>;
   def int_ppc_altivec_vmsumuhm : GCCBuiltin<"__builtin_altivec_vmsumuhm">,
             Intrinsic<[llvm_v4i32_ty], [llvm_v8i16_ty, llvm_v8i16_ty,
@@ -354,7 +354,7 @@ let TargetPrefix = "ppc" in {  // All PPC intrinsics start with "llvm.ppc.".
 
   // Other multiplies.
   def int_ppc_altivec_vmladduhm : GCCBuiltin<"__builtin_altivec_vmladduhm">,
-            Intrinsic<[llvm_v8i16_ty], [llvm_v8i16_ty, llvm_v8i16_ty, 
+            Intrinsic<[llvm_v8i16_ty], [llvm_v8i16_ty, llvm_v8i16_ty,
                        llvm_v8i16_ty], [IntrNoMem]>;
 
   // Packs.
@@ -431,7 +431,7 @@ def int_ppc_altivec_vslw  : PowerPC_Vec_WWW_Intrinsic<"vslw">;
 // Right Shifts.
 def int_ppc_altivec_vsr   : PowerPC_Vec_WWW_Intrinsic<"vsr">;
 def int_ppc_altivec_vsro  : PowerPC_Vec_WWW_Intrinsic<"vsro">;
-  
+
 def int_ppc_altivec_vsrb  : PowerPC_Vec_BBB_Intrinsic<"vsrb">;
 def int_ppc_altivec_vsrh  : PowerPC_Vec_HHH_Intrinsic<"vsrh">;
 def int_ppc_altivec_vsrw  : PowerPC_Vec_WWW_Intrinsic<"vsrw">;
@@ -452,10 +452,10 @@ let TargetPrefix = "ppc" in {  // All PPC intrinsics start with "llvm.ppc.".
               Intrinsic<[llvm_v16i8_ty], [llvm_ptr_ty], [IntrNoMem]>;
 
   def int_ppc_altivec_vperm : GCCBuiltin<"__builtin_altivec_vperm_4si">,
-              Intrinsic<[llvm_v4i32_ty], [llvm_v4i32_ty, 
+              Intrinsic<[llvm_v4i32_ty], [llvm_v4i32_ty,
                          llvm_v4i32_ty, llvm_v16i8_ty], [IntrNoMem]>;
   def int_ppc_altivec_vsel : GCCBuiltin<"__builtin_altivec_vsel_4si">,
-              Intrinsic<[llvm_v4i32_ty], [llvm_v4i32_ty, 
+              Intrinsic<[llvm_v4i32_ty], [llvm_v4i32_ty,
                          llvm_v4i32_ty, llvm_v4i32_ty], [IntrNoMem]>;
 }
 

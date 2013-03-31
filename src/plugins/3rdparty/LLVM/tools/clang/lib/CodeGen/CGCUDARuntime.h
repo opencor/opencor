@@ -39,7 +39,7 @@ public:
   virtual RValue EmitCUDAKernelCallExpr(CodeGenFunction &CGF,
                                         const CUDAKernelCallExpr *E,
                                         ReturnValueSlot ReturnValue);
-  
+
   virtual void EmitDeviceStubBody(CodeGenFunction &CGF,
                                   FunctionArgList &Args) = 0;
 

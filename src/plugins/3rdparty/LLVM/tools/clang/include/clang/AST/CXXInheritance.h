@@ -27,15 +27,15 @@
 #include <cassert>
 
 namespace clang {
-  
+
 class CXXBaseSpecifier;
 class CXXMethodDecl;
 class CXXRecordDecl;
 class NamedDecl;
-  
+
 /// \brief Represents an element in a path from a derived class to a
-/// base class. 
-/// 
+/// base class.
+///
 /// Each step in the path references the link from a
 /// derived class to one of its direct base classes, along with a
 /// base "number" that identifies which base subobject of the
@@ -45,12 +45,12 @@ struct CXXBasePathElement {
   /// class to a base class, which will be followed by this base
   /// path element.
   const CXXBaseSpecifier *Base;
-  
+
   /// \brief The record decl of the class that the base is a base of.
   const CXXRecordDecl *Class;
-  
+
   /// \brief Identifies which base class subobject (of type
-  /// \c Base->getType()) this base path element refers to. 
+  /// \c Base->getType()) this base path element refers to.
   ///
   /// This value is only valid if \c !Base->isVirtual(), because there
   /// is no base numbering for the zero or one virtual bases of a
@@ -62,7 +62,7 @@ struct CXXBasePathElement {
 /// (which is not represented as part of the path) to a particular
 /// (direct or indirect) base class subobject.
 ///
-/// Individual elements in the path are described by the \c CXXBasePathElement 
+/// Individual elements in the path are described by the \c CXXBasePathElement
 /// structure, which captures both the link from a derived class to one of its
 /// direct bases and identification describing which base class
 /// subobject is being used.
@@ -117,11 +117,11 @@ public:
 class CXXBasePaths {
   /// \brief The type from which this search originated.
   CXXRecordDecl *Origin;
-  
+
   /// Paths - The actual set of paths that can be taken from the
   /// derived class to the same base class.
   std::list<CXXBasePath> Paths;
-  
+
   /// ClassSubobjects - Records the class subobjects for each class
   /// type that we've seen. The first element in the pair says
   /// whether we found a path to a virtual base for that class type,
@@ -129,48 +129,48 @@ class CXXBasePaths {
   /// class subobjects for that class type. The key of the map is
   /// the cv-unqualified canonical type of the base class subobject.
   llvm::SmallDenseMap<QualType, std::pair<bool, unsigned>, 8> ClassSubobjects;
-  
+
   /// FindAmbiguities - Whether Sema::IsDerivedFrom should try find
   /// ambiguous paths while it is looking for a path from a derived
   /// type to a base type.
   bool FindAmbiguities;
-  
+
   /// RecordPaths - Whether Sema::IsDerivedFrom should record paths
   /// while it is determining whether there are paths from a derived
   /// type to a base type.
   bool RecordPaths;
-  
+
   /// DetectVirtual - Whether Sema::IsDerivedFrom should abort the search
   /// if it finds a path that goes across a virtual base. The virtual class
   /// is also recorded.
   bool DetectVirtual;
-  
+
   /// ScratchPath - A BasePath that is used by Sema::lookupInBases
   /// to help build the set of paths.
   CXXBasePath ScratchPath;
 
   /// DetectedVirtual - The base class that is virtual.
   const RecordType *DetectedVirtual;
-  
+
   /// \brief Array of the declarations that have been found. This
   /// array is constructed only if needed, e.g., to iterate over the
   /// results within LookupResult.
   NamedDecl **DeclsFound;
   unsigned NumDeclsFound;
-  
+
   friend class CXXRecordDecl;
-  
+
   void ComputeDeclsFound();
 
-  bool lookupInBases(ASTContext &Context, 
+  bool lookupInBases(ASTContext &Context,
                      const CXXRecordDecl *Record,
-                     CXXRecordDecl::BaseMatchesCallback *BaseMatches, 
+                     CXXRecordDecl::BaseMatchesCallback *BaseMatches,
                      void *UserData);
 public:
   typedef std::list<CXXBasePath>::iterator paths_iterator;
   typedef std::list<CXXBasePath>::const_iterator const_paths_iterator;
   typedef NamedDecl **decl_iterator;
-  
+
   /// BasePaths - Construct a new BasePaths structure to record the
   /// paths for a derived-to-base search.
   explicit CXXBasePaths(bool FindAmbiguities = true,
@@ -179,37 +179,37 @@ public:
     : FindAmbiguities(FindAmbiguities), RecordPaths(RecordPaths),
       DetectVirtual(DetectVirtual), DetectedVirtual(0), DeclsFound(0),
       NumDeclsFound(0) { }
-  
+
   ~CXXBasePaths() { delete [] DeclsFound; }
-  
+
   paths_iterator begin() { return Paths.begin(); }
   paths_iterator end()   { return Paths.end(); }
   const_paths_iterator begin() const { return Paths.begin(); }
   const_paths_iterator end()   const { return Paths.end(); }
-  
+
   CXXBasePath&       front()       { return Paths.front(); }
   const CXXBasePath& front() const { return Paths.front(); }
-  
+
   decl_iterator found_decls_begin();
   decl_iterator found_decls_end();
-  
+
   /// \brief Determine whether the path from the most-derived type to the
   /// given base type is ambiguous (i.e., it refers to multiple subobjects of
   /// the same base type).
   bool isAmbiguous(CanQualType BaseType);
-  
+
   /// \brief Whether we are finding multiple paths to detect ambiguities.
   bool isFindingAmbiguities() const { return FindAmbiguities; }
-  
+
   /// \brief Whether we are recording paths.
   bool isRecordingPaths() const { return RecordPaths; }
-  
+
   /// \brief Specify whether we should be recording paths or not.
   void setRecordingPaths(bool RP) { RecordPaths = RP; }
-  
+
   /// \brief Whether we are detecting virtual bases.
   bool isDetectingVirtual() const { return DetectVirtual; }
-  
+
   /// \brief The virtual base discovered on the path (if we are merely
   /// detecting virtuals).
   const RecordType* getDetectedVirtual() const {
@@ -220,11 +220,11 @@ public:
   /// began
   CXXRecordDecl *getOrigin() const { return Origin; }
   void setOrigin(CXXRecordDecl *Rec) { Origin = Rec; }
-  
+
   /// \brief Clear the base-paths results.
   void clear();
-  
-  /// \brief Swap this data structure's contents with another CXXBasePaths 
+
+  /// \brief Swap this data structure's contents with another CXXBasePaths
   /// object.
   void swap(CXXBasePaths &Other);
 };
@@ -236,7 +236,7 @@ struct UniqueVirtualMethod {
 
   UniqueVirtualMethod(CXXMethodDecl *Method, unsigned Subobject,
                       const CXXRecordDecl *InVirtualSubobject)
-    : Method(Method), Subobject(Subobject), 
+    : Method(Method), Subobject(Subobject),
       InVirtualSubobject(InVirtualSubobject) { }
 
   /// \brief The overriding virtual method.
@@ -287,7 +287,7 @@ public:
 
   // Iterate over the set of overriding virtual methods in a given
   // subobject.
-  typedef SmallVector<UniqueVirtualMethod, 4>::iterator 
+  typedef SmallVector<UniqueVirtualMethod, 4>::iterator
     overriding_iterator;
   typedef SmallVector<UniqueVirtualMethod, 4>::const_iterator
     overriding_const_iterator;

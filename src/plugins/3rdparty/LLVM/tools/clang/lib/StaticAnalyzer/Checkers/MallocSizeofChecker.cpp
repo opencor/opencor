@@ -140,20 +140,20 @@ static bool typesCompatible(ASTContext &C, QualType A, QualType B) {
   while (true) {
     A = A.getCanonicalType();
     B = B.getCanonicalType();
-  
+
     if (A.getTypePtr() == B.getTypePtr())
       return true;
-    
+
     if (const PointerType *ptrA = A->getAs<PointerType>())
       if (const PointerType *ptrB = B->getAs<PointerType>()) {
         A = ptrA->getPointeeType();
         B = ptrB->getPointeeType();
         continue;
       }
-      
+
     break;
   }
-  
+
   return false;
 }
 

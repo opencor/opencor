@@ -40,7 +40,7 @@ struct ExtAddrMode : public AddrMode {
   ExtAddrMode() : BaseReg(0), ScaledReg(0) {}
   void print(raw_ostream &OS) const;
   void dump() const;
-  
+
   bool operator==(const ExtAddrMode& O) const {
     return (BaseReg == O.BaseReg) && (ScaledReg == O.ScaledReg) &&
            (BaseGV == O.BaseGV) && (BaseOffs == O.BaseOffs) &&
@@ -61,16 +61,16 @@ class AddressingModeMatcher {
   /// the memory instruction that we're computing this address for.
   Type *AccessTy;
   Instruction *MemoryInst;
-  
+
   /// AddrMode - This is the addressing mode that we're building up.  This is
   /// part of the return value of this addressing mode matching stuff.
   ExtAddrMode &AddrMode;
-  
+
   /// IgnoreProfitability - This is set to true when we should not do
   /// profitability checks.  When true, IsProfitableToFoldIntoAddressingMode
   /// always returns true.
   bool IgnoreProfitability;
-  
+
   AddressingModeMatcher(SmallVectorImpl<Instruction*> &AMI,
                         const TargetLowering &T, Type *AT,
                         Instruction *MI, ExtAddrMode &AM)
@@ -78,7 +78,7 @@ class AddressingModeMatcher {
     IgnoreProfitability = false;
   }
 public:
-  
+
   /// Match - Find the maximal addressing mode that a load/store of V can fold,
   /// give an access type of AccessTy.  This returns a list of involved
   /// instructions in AddrModeInsts.
@@ -88,7 +88,7 @@ public:
                            const TargetLowering &TLI) {
     ExtAddrMode Result;
 
-    bool Success = 
+    bool Success =
       AddressingModeMatcher(AddrModeInsts, TLI, AccessTy,
                             MemoryInst, Result).MatchAddr(V, 0);
     (void)Success; assert(Success && "Couldn't select *anything*?");

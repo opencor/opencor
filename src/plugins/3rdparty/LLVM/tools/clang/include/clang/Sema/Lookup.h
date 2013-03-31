@@ -33,11 +33,11 @@ public:
     /// @brief No entity found met the criteria.
     NotFound = 0,
 
-    /// @brief No entity found met the criteria within the current 
-    /// instantiation,, but there were dependent base classes of the 
+    /// @brief No entity found met the criteria within the current
+    /// instantiation,, but there were dependent base classes of the
     /// current instantiation that could not be searched.
     NotFoundInCurrentInstantiation,
-    
+
     /// @brief Name lookup found a single declaration that met the
     /// criteria.  getFoundDecl() will return this declaration.
     Found,
@@ -219,7 +219,7 @@ public:
   bool isHiddenDeclarationVisible() const {
     return Redecl || LookupKind == Sema::LookupTagName;
   }
-  
+
   /// Sets whether tag declarations should be hidden by non-tag
   /// declarations during resolution.  The default is true.
   void setHideTags(bool Hide) {
@@ -278,29 +278,29 @@ public:
     // If this declaration is not hidden, it's visible.
     if (!D->isHidden())
       return true;
-    
-    // FIXME: We should be allowed to refer to a module-private name from 
+
+    // FIXME: We should be allowed to refer to a module-private name from
     // within the same module, e.g., during template instantiation.
     // This requires us know which module a particular declaration came from.
     return false;
   }
-  
+
   /// \brief Retrieve the accepted (re)declaration of the given declaration,
   /// if there is one.
   NamedDecl *getAcceptableDecl(NamedDecl *D) const {
     if (!D->isInIdentifierNamespace(IDNS))
       return 0;
-    
+
     if (isHiddenDeclarationVisible() || isVisible(D))
       return D;
-    
+
     return getAcceptableDeclSlow(D);
   }
-  
+
 private:
   NamedDecl *getAcceptableDeclSlow(NamedDecl *D) const;
 public:
-  
+
   /// \brief Returns the identifier namespace mask for this lookup.
   unsigned getIdentifierNamespace() const {
     return IDNS;
@@ -374,14 +374,14 @@ public:
   bool wasNotFoundInCurrentInstantiation() const {
     return ResultKind == NotFoundInCurrentInstantiation;
   }
-  
+
   /// \brief Note that while no result was found in the current instantiation,
   /// there were dependent base classes that could not be searched.
   void setNotFoundInCurrentInstantiation() {
     assert(ResultKind == NotFound && Decls.empty());
     ResultKind = NotFoundInCurrentInstantiation;
   }
-  
+
   /// \brief Resolves the result kind of the lookup, possibly hiding
   /// decls.
   ///
@@ -529,7 +529,7 @@ public:
     LookupResult::iterator I;
     bool Changed;
     bool CalledDone;
-    
+
     friend class LookupResult;
     Filter(LookupResult &Results)
       : Results(Results), I(Results.begin()), Changed(false), CalledDone(false)

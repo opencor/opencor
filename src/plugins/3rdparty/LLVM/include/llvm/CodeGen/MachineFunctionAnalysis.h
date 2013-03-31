@@ -34,7 +34,7 @@ public:
   ~MachineFunctionAnalysis();
 
   MachineFunction &getMF() const { return *MF; }
-  
+
   virtual const char* getPassName() const {
     return "Machine Function Analysis";
   }

@@ -32,7 +32,7 @@ const LibCallLocationInfo &LibCallInfo::getLocationInfo(unsigned LocID) const {
   // Get location info on the first call.
   if (NumLocations == 0)
     NumLocations = getLocationInfo(Locations);
-  
+
   assert(LocID < NumLocations && "Invalid location ID!");
   return Locations[LocID];
 }
@@ -43,20 +43,20 @@ const LibCallLocationInfo &LibCallInfo::getLocationInfo(unsigned LocID) const {
 const LibCallFunctionInfo *
 LibCallInfo::getFunctionInfo(const Function *F) const {
   StringMap<const LibCallFunctionInfo*> *Map = getMap(Impl);
-  
+
   /// If this is the first time we are querying for this info, lazily construct
   /// the StringMap to index it.
   if (Map == 0) {
     Impl = Map = new StringMap<const LibCallFunctionInfo*>();
-    
+
     const LibCallFunctionInfo *Array = getFunctionInfoArray();
     if (Array == 0) return 0;
-    
+
     // We now have the array of entries.  Populate the StringMap.
     for (unsigned i = 0; Array[i].Name; ++i)
       (*Map)[Array[i].Name] = Array+i;
   }
-  
+
   // Look up this function in the string map.
   return Map->lookup(F->getName());
 }

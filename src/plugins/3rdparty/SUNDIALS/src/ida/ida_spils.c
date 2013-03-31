@@ -2,15 +2,15 @@
  * -----------------------------------------------------------------
  * $Revision: 1.5 $
  * $Date: 2010/12/01 22:35:26 $
- * ----------------------------------------------------------------- 
+ * -----------------------------------------------------------------
  * Programmers: Alan C. Hindmarsh and Radu Serban @ LLNL
  * -----------------------------------------------------------------
- * Copyright (c) 2002, The Regents of the University of California  
+ * Copyright (c) 2002, The Regents of the University of California
  * Produced at the Lawrence Livermore National Laboratory
  * All rights reserved
  * For details, see the LICENSE file
  * -----------------------------------------------------------------
- * This is the common implementation file for the IDA Scaled              
+ * This is the common implementation file for the IDA Scaled
  * Preconditioned Linear Solver modules.
  * -----------------------------------------------------------------
  */
@@ -489,7 +489,7 @@ char *IDASpilsGetReturnFlagName(long int flag)
   switch(flag) {
   case IDASPILS_SUCCESS:
     sprintf(name,"IDASPILS_SUCCESS");
-    break; 
+    break;
   case IDASPILS_MEM_NULL:
     sprintf(name,"IDASPILS_MEM_NULL");
     break;
@@ -545,7 +545,7 @@ int IDASpilsAtimes(void *ida_mem, N_Vector v, N_Vector z)
 
 /*
  * This routine interfaces between the generic Solve routine and
- * the user's psolve routine.  It passes to psolve all required state 
+ * the user's psolve routine.  It passes to psolve all required state
  * information from ida_mem.  Its return value is the same as that
  * returned by psolve.  Note that the generic solver guarantees
  * that IDASilsPSolve will not be called in the case psolve = NULL.
@@ -571,7 +571,7 @@ int IDASpilsPSolve(void *ida_mem, N_Vector r, N_Vector z, int lr)
 /*
  * This routine generates the matrix-vector product z = Jv, where
  * J is the system Jacobian, by using a difference quotient approximation.
- * The approximation is 
+ * The approximation is
  *      Jv = [F(t,y1,yp1) - F(t,y,yp)]/sigma,  where
  *        y1 = y + sigma*v,  yp1 = yp + cj*sigma*v,
  *        sigma = sqrt(Neq)*dqincfac.
@@ -581,8 +581,8 @@ int IDASpilsPSolve(void *ida_mem, N_Vector r, N_Vector z, int lr)
 
 int IDASpilsDQJtimes(realtype tt,
                      N_Vector yy, N_Vector yp, N_Vector rr,
-                     N_Vector v, N_Vector Jv, 
-                     realtype c_j, void *data, 
+                     N_Vector v, N_Vector Jv,
+                     realtype c_j, void *data,
                      N_Vector work1, N_Vector work2)
 {
   IDAMem IDA_mem;
@@ -616,9 +616,9 @@ int IDASpilsDQJtimes(realtype tt,
     /* Set y_tmp = yy + sig*v, yp_tmp = yp + cj*sig*v. */
     N_VLinearSum(sig, v, ONE, yy, y_tmp);
     N_VLinearSum(c_j*sig, v, ONE, yp, yp_tmp);
-    
+
     /* Call res for Jv = F(t, y_tmp, yp_tmp), and return if it failed. */
-    retval = res(tt, y_tmp, yp_tmp, Jv, user_data); 
+    retval = res(tt, y_tmp, yp_tmp, Jv, user_data);
     nres++;
     if (retval == 0) break;
     if (retval < 0)  return(-1);

@@ -41,7 +41,7 @@
 bool QwtPainter::d_polylineSplitting = true;
 bool QwtPainter::d_roundingAlignment = true;
 
-static inline bool qwtIsClippingNeeded( 
+static inline bool qwtIsClippingNeeded(
     const QPainter *painter, QRectF &clipRect )
 {
     bool doClipping = false;
@@ -183,10 +183,10 @@ bool QwtPainter::isAligning( QPainter *painter )
   Enable whether coordinates should be rounded, before they are painted
   to a paint engine that floors to integer values. For other paint engines
   this ( PDF, SVG ), this flag has no effect.
-  QwtPainter stores this flag only, the rounding itself is done in 
+  QwtPainter stores this flag only, the rounding itself is done in
   the painting code ( f.e the plot items ).
 
-  The default setting is true. 
+  The default setting is true.
 
   \sa roundingAlignment(), isAligning()
 */
@@ -533,7 +533,7 @@ void QwtPainter::drawPoint( QPainter *painter, const QPoint &pos )
         const int minY = qCeil( clipRect.top() );
         const int maxY = qFloor( clipRect.bottom() );
 
-        if ( pos.x() < minX || pos.x() > maxX 
+        if ( pos.x() < minX || pos.x() > maxX
             || pos.y() < minY || pos.y() > maxY )
         {
             return;
@@ -544,7 +544,7 @@ void QwtPainter::drawPoint( QPainter *painter, const QPoint &pos )
 }
 
 //! Wrapper for QPainter::drawPoints()
-void QwtPainter::drawPoints( QPainter *painter, 
+void QwtPainter::drawPoints( QPainter *painter,
     const QPoint *points, int pointCount )
 {
     QRectF clipRect;
@@ -577,7 +577,7 @@ void QwtPainter::drawPoints( QPainter *painter,
 }
 
 //! Wrapper for QPainter::drawPoints()
-void QwtPainter::drawPoints( QPainter *painter, 
+void QwtPainter::drawPoints( QPainter *painter,
     const QPointF *points, int pointCount )
 {
     QRectF clipRect;
@@ -664,7 +664,7 @@ void QwtPainter::drawFocusRect( QPainter *painter, const QWidget *widget,
 }
 
 /*!
-  Draw a round frame 
+  Draw a round frame
 
   \param painter Painter
   \param rect Frame rectangle
@@ -675,7 +675,7 @@ void QwtPainter::drawFocusRect( QPainter *painter, const QWidget *widget,
   \param frameStyle bitwise OR´ed value of QFrame::Shape and QFrame::Shadow
 */
 void QwtPainter::drawRoundFrame( QPainter *painter,
-    const QRectF &rect, const QPalette &palette, 
+    const QRectF &rect, const QPalette &palette,
     int lineWidth, int frameStyle )
 {
     enum Style
@@ -754,7 +754,7 @@ void QwtPainter::drawFrame( QPainter *painter, const QRectF &rect,
     if ( shadow == QFrame::Plain )
     {
         const QRectF outerRect = rect.adjusted( 0.0, 0.0, -1.0, -1.0 );
-        const QRectF innerRect = outerRect.adjusted( 
+        const QRectF innerRect = outerRect.adjusted(
             frameWidth, frameWidth, -frameWidth, -frameWidth );
 
         QPainterPath path;
@@ -773,12 +773,12 @@ void QwtPainter::drawFrame( QPainter *painter, const QRectF &rect,
         if ( shape == QFrame::Box )
         {
             const QRectF outerRect = rect.adjusted( 0.0, 0.0, -1.0, -1.0 );
-            const QRectF midRect1 = outerRect.adjusted( 
+            const QRectF midRect1 = outerRect.adjusted(
                 frameWidth, frameWidth, -frameWidth, -frameWidth );
-            const QRectF midRect2 = midRect1.adjusted( 
+            const QRectF midRect2 = midRect1.adjusted(
                 midLineWidth, midLineWidth, -midLineWidth, -midLineWidth );
 
-            const QRectF innerRect = midRect2.adjusted( 
+            const QRectF innerRect = midRect2.adjusted(
                 frameWidth, frameWidth, -frameWidth, -frameWidth );
 
             QPainterPath path1;
@@ -854,8 +854,8 @@ void QwtPainter::drawFrame( QPainter *painter, const QRectF &rect,
         else
         {
             const QRectF outerRect = rect.adjusted( 0.0, 0.0, -1.0, -1.0 );
-            const QRectF innerRect = outerRect.adjusted( 
-                frameWidth - 1.0, frameWidth - 1.0, 
+            const QRectF innerRect = outerRect.adjusted(
+                frameWidth - 1.0, frameWidth - 1.0,
                 -( frameWidth - 1.0 ), -( frameWidth - 1.0 ) );
 
             QPainterPath path1;
@@ -909,8 +909,8 @@ void QwtPainter::drawFrame( QPainter *painter, const QRectF &rect,
   \param frameStyle bitwise OR´ed value of QFrame::Shape and QFrame::Shadow
 */
 
-void QwtPainter::drawRoundedFrame( QPainter *painter, 
-    const QRectF &rect, double xRadius, double yRadius, 
+void QwtPainter::drawRoundedFrame( QPainter *painter,
+    const QRectF &rect, double xRadius, double yRadius,
     const QPalette &palette, int lineWidth, int frameStyle )
 {
     painter->save();
@@ -940,27 +940,27 @@ void QwtPainter::drawRoundedFrame( QPainter *painter,
     {
         // move + 4 * ( cubicTo + lineTo )
         QPainterPath pathList[8];
-        
+
         for ( int i = 0; i < 4; i++ )
         {
             const int j = i * 4 + 1;
-            
+
             pathList[ 2 * i ].moveTo(
                 path.elementAt(j - 1).x, path.elementAt( j - 1 ).y
-            );  
-            
+            );
+
             pathList[ 2 * i ].cubicTo(
                 path.elementAt(j + 0).x, path.elementAt(j + 0).y,
                 path.elementAt(j + 1).x, path.elementAt(j + 1).y,
                 path.elementAt(j + 2).x, path.elementAt(j + 2).y );
-                
+
             pathList[ 2 * i + 1 ].moveTo(
                 path.elementAt(j + 2).x, path.elementAt(j + 2).y
-            );  
+            );
             pathList[ 2 * i + 1 ].lineTo(
                 path.elementAt(j + 3).x, path.elementAt(j + 3).y
-            );  
-        }   
+            );
+        }
 
         QColor c1( palette.color( QPalette::Dark ) );
         QColor c2( palette.color( QPalette::Light ) );
@@ -1112,10 +1112,10 @@ void QwtPainter::drawColorBar( QPainter *painter,
     drawPixmap( painter, rect, pixmap );
 }
 
-static inline void qwtFillRect( const QWidget *widget, QPainter *painter, 
+static inline void qwtFillRect( const QWidget *widget, QPainter *painter,
     const QRect &rect, const QBrush &brush)
 {
-    if ( brush.style() == Qt::TexturePattern ) 
+    if ( brush.style() == Qt::TexturePattern )
     {
         painter->save();
 
@@ -1123,18 +1123,18 @@ static inline void qwtFillRect( const QWidget *widget, QPainter *painter,
         painter->drawTiledPixmap(rect, brush.texture(), rect.topLeft());
 
         painter->restore();
-    } 
+    }
     else if ( brush.gradient() )
     {
         painter->save();
 
         painter->setClipRect( rect );
-        painter->fillRect(0, 0, widget->width(), 
+        painter->fillRect(0, 0, widget->width(),
             widget->height(), brush);
 
         painter->restore();
-    } 
-    else 
+    }
+    else
     {
         painter->fillRect(rect, brush);
     }
@@ -1144,16 +1144,16 @@ static inline void qwtFillRect( const QWidget *widget, QPainter *painter,
   Fill a pixmap with the content of a widget
 
   In Qt >= 5.0 QPixmap::fill() is a nop, in Qt 4.x it is buggy
-  for backgrounds with gradients. Thus fillPixmap() offers 
+  for backgrounds with gradients. Thus fillPixmap() offers
   an alternative implementation.
 
   \param widget Widget
   \param pixmap Pixmap to be filled
-  \param offset Offset 
+  \param offset Offset
 
   \sa QPixmap::fill()
  */
-void QwtPainter::fillPixmap( const QWidget *widget, 
+void QwtPainter::fillPixmap( const QWidget *widget,
     QPixmap &pixmap, const QPoint &offset )
 {
     const QRect rect( offset, pixmap.size() );
@@ -1161,10 +1161,10 @@ void QwtPainter::fillPixmap( const QWidget *widget,
     QPainter painter( &pixmap );
     painter.translate( -offset );
 
-    const QBrush autoFillBrush = 
+    const QBrush autoFillBrush =
         widget->palette().brush( widget->backgroundRole() );
 
-    if ( !( widget->autoFillBackground() && autoFillBrush.isOpaque() ) ) 
+    if ( !( widget->autoFillBackground() && autoFillBrush.isOpaque() ) )
     {
         const QBrush bg = widget->palette().brush( QPalette::Window );
         qwtFillRect( widget, &painter, rect, bg);
@@ -1173,13 +1173,13 @@ void QwtPainter::fillPixmap( const QWidget *widget,
     if ( widget->autoFillBackground() )
         qwtFillRect( widget, &painter, rect, autoFillBrush);
 
-    if ( widget->testAttribute(Qt::WA_StyledBackground) ) 
+    if ( widget->testAttribute(Qt::WA_StyledBackground) )
     {
         painter.setClipRegion( rect );
 
         QStyleOption opt;
         opt.initFrom( widget );
-        widget->style()->drawPrimitive( QStyle::PE_Widget, 
+        widget->style()->drawPrimitive( QStyle::PE_Widget,
             &opt, &painter, widget );
     }
 }

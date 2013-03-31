@@ -70,7 +70,7 @@ namespace sys {
     /// If the address following \p NearBlock is not so aligned, it will be
     /// rounded up to the next allocation granularity boundary.
     ///
-    /// \r a non-null MemoryBlock if the function was successful, 
+    /// \r a non-null MemoryBlock if the function was successful,
     /// otherwise a null MemoryBlock is with \p EC describing the error.
     ///
     /// @brief Allocate mapped memory.
@@ -86,7 +86,7 @@ namespace sys {
     ///
     /// \r error_success if the function was successful, or an error_code
     /// describing the failure if an error occurred.
-    /// 
+    ///
     /// @brief Release mapped memory.
     static error_code releaseMappedMemory(MemoryBlock &Block);
 

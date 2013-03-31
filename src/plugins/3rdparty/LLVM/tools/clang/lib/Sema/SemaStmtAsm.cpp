@@ -593,7 +593,7 @@ StmtResult Sema::ActOnMSAsmStmt(SourceLocation AsmLoc, SourceLocation LBraceLoc,
     TargetParser(TheTarget->createMCAsmParser(*STI, *Parser));
 
   // Get the instruction descriptor.
-  const llvm::MCInstrInfo *MII = TheTarget->createMCInstrInfo(); 
+  const llvm::MCInstrInfo *MII = TheTarget->createMCInstrInfo();
   llvm::MCInstPrinter *IP =
     TheTarget->createMCInstPrinter(1, *MAI, *MII, *MRI, *STI);
 

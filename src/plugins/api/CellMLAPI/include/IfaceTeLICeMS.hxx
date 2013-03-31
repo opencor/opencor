@@ -19,7 +19,7 @@ namespace iface
 {
   namespace cellml_services
   {
-    PUBLIC_TeLICeMS_PRE 
+    PUBLIC_TeLICeMS_PRE
     class  PUBLIC_TeLICeMS_POST TeLICeMResult
      : public virtual iface::XPCOM::IObject
     {
@@ -28,7 +28,7 @@ namespace iface
       virtual ~TeLICeMResult() {}
       virtual std::wstring errorMessage() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_TeLICeMS_PRE 
+    PUBLIC_TeLICeMS_PRE
     class  PUBLIC_TeLICeMS_POST TeLICeMModelResult
      : public virtual iface::cellml_services::TeLICeMResult
     {
@@ -37,7 +37,7 @@ namespace iface
       virtual ~TeLICeMModelResult() {}
       virtual already_AddRefd<iface::cellml_api::Model>  modelResult() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_TeLICeMS_PRE 
+    PUBLIC_TeLICeMS_PRE
     class  PUBLIC_TeLICeMS_POST TeLICeMMathResult
      : public virtual iface::cellml_services::TeLICeMResult
     {
@@ -46,7 +46,7 @@ namespace iface
       virtual ~TeLICeMMathResult() {}
       virtual already_AddRefd<iface::mathml_dom::MathMLElement>  mathResult() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_TeLICeMS_PRE 
+    PUBLIC_TeLICeMS_PRE
     class  PUBLIC_TeLICeMS_POST TeLICeMService
      : public virtual iface::XPCOM::IObject
     {

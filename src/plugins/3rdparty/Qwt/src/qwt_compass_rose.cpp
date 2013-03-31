@@ -12,7 +12,7 @@
 #include "qwt_painter.h"
 #include <qpainter.h>
 
-static QPointF qwtIntersection( 
+static QPointF qwtIntersection(
     QPointF p11, QPointF p12, QPointF p21, QPointF p22 )
 {
     const QLineF line1( p11, p12 );

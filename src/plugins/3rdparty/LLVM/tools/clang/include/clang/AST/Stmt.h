@@ -261,12 +261,12 @@ protected:
     friend class TypeTraitExpr;
     friend class ASTStmtReader;
     friend class ASTStmtWriter;
-    
+
     unsigned : NumExprBits;
-    
+
     /// \brief The kind of type trait, which is a value of a TypeTrait enumerator.
     unsigned Kind : 8;
-    
+
     /// \brief If this expression is not value-dependent, this indicates whether
     /// the trait evaluated true or false.
     unsigned Value : 1;
@@ -274,7 +274,7 @@ protected:
     /// \brief The number of arguments to this type trait.
     unsigned NumArgs : 32 - 8 - 1 - NumExprBits;
   };
-  
+
   union {
     // FIXME: this is wasteful on 64-bit platforms.
     void *Aligner;
@@ -1439,7 +1439,7 @@ public:
   /// getInputConstraint - Return the specified input constraint.  Unlike output
   /// constraints, these can be empty.
   StringRef getInputConstraint(unsigned i) const;
-  
+
   const Expr *getInputExpr(unsigned i) const;
 
   //===--- Other ---===//

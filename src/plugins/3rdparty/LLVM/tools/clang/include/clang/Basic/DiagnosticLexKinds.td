@@ -46,7 +46,7 @@ def ext_multi_line_line_comment : Extension<"multi-line // comment">,
 def ext_line_comment : Extension<
   "// comments are not allowed in this language">,
   InGroup<Comment>;
-def ext_no_newline_eof : Extension<"no newline at end of file">, 
+def ext_no_newline_eof : Extension<"no newline at end of file">,
   InGroup<DiagGroup<"newline-eof">>;
 
 def warn_cxx98_compat_no_newline_eof : Warning<
@@ -93,7 +93,7 @@ def ext_multichar_character_literal : ExtWarn<
   "multi-character character constant">, InGroup<MultiChar>;
 def ext_four_char_character_literal : Extension<
   "multi-character character constant">, InGroup<FourByteMultiChar>;
-  
+
 
 // Literal
 def ext_nonstandard_escape : Extension<
@@ -211,7 +211,7 @@ def ext_missing_whitespace_after_macro_name : ExtWarn<
   "whitespace required after macro name">;
 def warn_missing_whitespace_after_macro_name : Warning<
   "whitespace recommended after macro name">;
-  
+
 def pp_pragma_once_in_main_file : Warning<"#pragma once in main file">;
 def pp_pragma_sysheader_in_main_file : Warning<
   "#pragma system_header ignored in main file">;
@@ -257,7 +257,7 @@ def ext_pp_warning_directive : Extension<"#warning is a language extension">;
 
 def ext_pp_extra_tokens_at_eol : ExtWarn<
   "extra tokens at end of #%0 directive">, InGroup<ExtraTokens>;
-  
+
 def ext_pp_comma_expr : Extension<"comma operator in operand of #if">;
 def ext_pp_bad_vaargs_use : Extension<
   "__VA_ARGS__ can only appear in the expansion of a C99 variadic macro">;
@@ -427,7 +427,7 @@ def err_pp_illegal_floating_literal : Error<
 def err_pp_line_requires_integer : Error<
   "#line directive requires a positive integer argument">;
 def ext_pp_line_zero : Extension<
-  "#line directive with zero argument is a GNU extension">, 
+  "#line directive with zero argument is a GNU extension">,
   InGroup<GNU>;
 def err_pp_line_invalid_filename : Error<
   "invalid filename for #line directive">;
@@ -524,5 +524,5 @@ def warn_uncovered_module_header : Warning<
   "umbrella header does not include header '%0'">, InGroup<IncompleteUmbrella>;
 def err_expected_id_building_module : Error<
   "expected a module name in '__building_module' expression">;
-  
+
 }

@@ -29,14 +29,14 @@ namespace clang {
   class ASTContext;
   class QualType;
   class LangOptions;
-  
+
   enum LanguageID {
     C_LANG = 0x1,     // builtin for c only.
     CXX_LANG = 0x2,   // builtin for cplusplus only.
     OBJC_LANG = 0x4,  // builtin for objective-c and objective-c++
     ALL_LANGUAGES = (C_LANG|CXX_LANG|OBJC_LANG) //builtin is for all languages.
   };
-  
+
 namespace Builtin {
 enum ID {
   NotBuiltin  = 0,      // This is not a builtin function.
@@ -67,7 +67,7 @@ public:
 
   /// \brief Perform target-specific initialization
   void InitializeTarget(const TargetInfo &Target);
-  
+
   /// \brief Mark the identifiers for all the builtins with their
   /// appropriate builtin ID # and mark any non-portable builtin identifiers as
   /// such.
@@ -130,7 +130,7 @@ public:
   /// \brief Completely forget that the given ID was ever considered a builtin,
   /// e.g., because the user provided a conflicting signature.
   void ForgetBuiltin(unsigned ID, IdentifierTable &Table);
-  
+
   /// \brief If this is a library function that comes from a specific
   /// header, retrieve that header name.
   const char *getHeaderName(unsigned ID) const {

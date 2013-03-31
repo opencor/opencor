@@ -39,18 +39,18 @@ struct ReturnAdjustment {
   /// \brief The non-virtual adjustment from the derived object to its
   /// nearest virtual base.
   int64_t NonVirtual;
-  
-  /// \brief The offset (in bytes), relative to the address point 
+
+  /// \brief The offset (in bytes), relative to the address point
   /// of the virtual base class offset.
   int64_t VBaseOffsetOffset;
-  
+
   ReturnAdjustment() : NonVirtual(0), VBaseOffsetOffset(0) { }
-  
+
   bool isEmpty() const { return !NonVirtual && !VBaseOffsetOffset; }
 
-  friend bool operator==(const ReturnAdjustment &LHS, 
+  friend bool operator==(const ReturnAdjustment &LHS,
                          const ReturnAdjustment &RHS) {
-    return LHS.NonVirtual == RHS.NonVirtual && 
+    return LHS.NonVirtual == RHS.NonVirtual &&
       LHS.VBaseOffsetOffset == RHS.VBaseOffsetOffset;
   }
 
@@ -58,12 +58,12 @@ struct ReturnAdjustment {
                         const ReturnAdjustment &RHS) {
     if (LHS.NonVirtual < RHS.NonVirtual)
       return true;
-    
-    return LHS.NonVirtual == RHS.NonVirtual && 
+
+    return LHS.NonVirtual == RHS.NonVirtual &&
       LHS.VBaseOffsetOffset < RHS.VBaseOffsetOffset;
   }
 };
-  
+
 /// \brief A \c this pointer adjustment.
 struct ThisAdjustment {
   /// \brief The non-virtual adjustment from the derived object to its
@@ -73,23 +73,23 @@ struct ThisAdjustment {
   /// \brief The offset (in bytes), relative to the address point,
   /// of the virtual call offset.
   int64_t VCallOffsetOffset;
-  
+
   ThisAdjustment() : NonVirtual(0), VCallOffsetOffset(0) { }
 
   bool isEmpty() const { return !NonVirtual && !VCallOffsetOffset; }
 
-  friend bool operator==(const ThisAdjustment &LHS, 
+  friend bool operator==(const ThisAdjustment &LHS,
                          const ThisAdjustment &RHS) {
-    return LHS.NonVirtual == RHS.NonVirtual && 
+    return LHS.NonVirtual == RHS.NonVirtual &&
       LHS.VCallOffsetOffset == RHS.VCallOffsetOffset;
   }
-  
+
   friend bool operator<(const ThisAdjustment &LHS,
                         const ThisAdjustment &RHS) {
     if (LHS.NonVirtual < RHS.NonVirtual)
       return true;
-    
-    return LHS.NonVirtual == RHS.NonVirtual && 
+
+    return LHS.NonVirtual == RHS.NonVirtual &&
       LHS.VCallOffsetOffset < RHS.VCallOffsetOffset;
   }
 };
@@ -99,7 +99,7 @@ struct ThisAdjustment {
 struct ThunkInfo {
   /// \brief The \c this pointer adjustment.
   ThisAdjustment This;
-    
+
   /// \brief The return adjustment.
   ReturnAdjustment Return;
 
@@ -115,12 +115,12 @@ struct ThunkInfo {
   friend bool operator<(const ThunkInfo &LHS, const ThunkInfo &RHS) {
     if (LHS.This < RHS.This)
       return true;
-      
+
     return LHS.This == RHS.This && LHS.Return < RHS.Return;
   }
 
   bool isEmpty() const { return This.isEmpty() && Return.isEmpty(); }
-};  
+};
 
 } // end namespace clang
 

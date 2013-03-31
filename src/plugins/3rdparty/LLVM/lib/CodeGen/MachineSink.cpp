@@ -99,7 +99,7 @@ namespace {
                                          MachineBasicBlock *MBB);
   };
 
-  // SuccessorSorter - Sort Successors according to their loop depth. 
+  // SuccessorSorter - Sort Successors according to their loop depth.
   struct SuccessorSorter {
     SuccessorSorter(MachineLoopInfo *LoopInfo) : LI(LoopInfo) {}
     bool operator()(const MachineBasicBlock *LHS,

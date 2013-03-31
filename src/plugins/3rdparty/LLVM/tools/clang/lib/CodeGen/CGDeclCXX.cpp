@@ -24,9 +24,9 @@ using namespace CodeGen;
 static void EmitDeclInit(CodeGenFunction &CGF, const VarDecl &D,
                          llvm::Constant *DeclPtr) {
   assert(D.hasGlobalStorage() && "VarDecl must have global storage!");
-  assert(!D.getType()->isReferenceType() && 
+  assert(!D.getType()->isReferenceType() &&
          "Should not call EmitDeclInit on a reference!");
-  
+
   ASTContext &Context = CGF.getContext();
 
   CharUnits alignment = Context.getDeclAlign(&D);
@@ -60,7 +60,7 @@ static void EmitDeclDestroy(CodeGenFunction &CGF, const VarDecl &D,
   CodeGenModule &CGM = CGF.CGM;
 
   // FIXME:  __attribute__((cleanup)) ?
-  
+
   QualType type = D.getType();
   QualType::DestructionKind dtorKind = type.isDestructedType();
 
@@ -172,7 +172,7 @@ static llvm::Constant *createAtExitStub(CodeGenModule &CGM,
                     FunctionArgList(), SourceLocation());
 
   llvm::CallInst *call = CGF.Builder.CreateCall(dtor, addr);
- 
+
  // Make sure the call and the callee agree on calling convention.
   if (llvm::Function *dtorFn =
         dyn_cast<llvm::Function>(dtor->stripPointerCasts()))
@@ -224,7 +224,7 @@ CreateGlobalInitOrDestructFunction(CodeGenModule &CGM,
                            Name, &CGM.getModule());
   if (!CGM.getLangOpts().AppleKext) {
     // Set the section if needed.
-    if (const char *Section = 
+    if (const char *Section =
           CGM.getContext().getTargetInfo().getStaticInitSectionSpecifier())
       Fn->setSection(Section);
   }
@@ -283,7 +283,7 @@ CodeGenModule::EmitCXXGlobalInitFunc() {
   // Create our global initialization function.
   if (!PrioritizedCXXGlobalInits.empty()) {
     SmallVector<llvm::Constant*, 8> LocalCXXGlobalInits;
-    llvm::array_pod_sort(PrioritizedCXXGlobalInits.begin(), 
+    llvm::array_pod_sort(PrioritizedCXXGlobalInits.begin(),
                          PrioritizedCXXGlobalInits.end());
     // Iterate over "chunks" of ctors with same priority and emit each chunk
     // into separate function. Note - everything is sorted first by priority,
@@ -301,10 +301,10 @@ CodeGenModule::EmitCXXGlobalInitFunc() {
       std::string PrioritySuffix = llvm::utostr(Priority);
       // Priority is always <= 65535 (enforced by sema)..
       PrioritySuffix = std::string(6-PrioritySuffix.size(), '0')+PrioritySuffix;
-      llvm::Function *Fn = 
+      llvm::Function *Fn =
         CreateGlobalInitOrDestructFunction(*this, FTy,
                                            "_GLOBAL__I_" + PrioritySuffix);
-      
+
       for (; I < PrioE; ++I)
         LocalCXXGlobalInits.push_back(I->second);
 
@@ -314,8 +314,8 @@ CodeGenModule::EmitCXXGlobalInitFunc() {
       AddGlobalCtor(Fn, Priority);
     }
   }
-  
-  llvm::Function *Fn = 
+
+  llvm::Function *Fn =
     CreateGlobalInitOrDestructFunction(*this, FTy, "_GLOBAL__I_a");
 
   CodeGenFunction(*this).GenerateCXXGlobalInitFunc(Fn,
@@ -381,17 +381,17 @@ void CodeGenFunction::GenerateCXXGlobalInitFunc(llvm::Function *Fn,
 
   // When building in Objective-C++ ARC mode, create an autorelease pool
   // around the global initializers.
-  if (getLangOpts().ObjCAutoRefCount && getLangOpts().CPlusPlus) {    
+  if (getLangOpts().ObjCAutoRefCount && getLangOpts().CPlusPlus) {
     llvm::Value *token = EmitObjCAutoreleasePoolPush();
     EmitObjCAutoreleasePoolCleanup(token);
   }
-  
+
   for (unsigned i = 0; i != NumDecls; ++i)
     if (Decls[i])
-      Builder.CreateCall(Decls[i]);    
+      Builder.CreateCall(Decls[i]);
 
   Scope.ForceCleanup();
-  
+
   FinishFunction();
 }
 
@@ -420,7 +420,7 @@ void CodeGenFunction::GenerateCXXGlobalDtorsFunc(llvm::Function *Fn,
 
 /// generateDestroyHelper - Generates a helper function which, when
 /// invoked, destroys the given object.
-llvm::Function * 
+llvm::Function *
 CodeGenFunction::generateDestroyHelper(llvm::Constant *addr,
                                        QualType type,
                                        Destroyer *destroyer,
@@ -428,13 +428,13 @@ CodeGenFunction::generateDestroyHelper(llvm::Constant *addr,
   FunctionArgList args;
   ImplicitParamDecl dst(0, SourceLocation(), 0, getContext().VoidPtrTy);
   args.push_back(&dst);
-  
-  const CGFunctionInfo &FI = 
+
+  const CGFunctionInfo &FI =
     CGM.getTypes().arrangeFunctionDeclaration(getContext().VoidTy, args,
                                               FunctionType::ExtInfo(),
                                               /*variadic*/ false);
   llvm::FunctionType *FTy = CGM.getTypes().GetFunctionType(FI);
-  llvm::Function *fn = 
+  llvm::Function *fn =
     CreateGlobalInitOrDestructFunction(CGM, FTy, "__cxx_global_array_dtor");
 
   // Initialize debug info if needed.
@@ -444,8 +444,8 @@ CodeGenFunction::generateDestroyHelper(llvm::Constant *addr,
                 SourceLocation());
 
   emitDestroy(addr, type, destroyer, useEHCleanupForArray);
-  
+
   FinishFunction();
-  
+
   return fn;
 }

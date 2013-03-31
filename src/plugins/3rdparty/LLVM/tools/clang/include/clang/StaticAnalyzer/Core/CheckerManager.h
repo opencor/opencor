@@ -67,9 +67,9 @@ class CheckerFn<RET(P1, P2, P3, P4)> {
 public:
   CheckerBase *Checker;
   CheckerFn(CheckerBase *checker, Func fn) : Fn(fn), Checker(checker) { }
-  RET operator()(P1 p1, P2 p2, P3 p3, P4 p4) const { 
+  RET operator()(P1 p1, P2 p2, P3 p3, P4 p4) const {
     return Fn(Checker, p1, p2, p3, p4);
-  } 
+  }
 };
 
 template <typename RET, typename P1, typename P2, typename P3>
@@ -79,7 +79,7 @@ class CheckerFn<RET(P1, P2, P3)> {
 public:
   CheckerBase *Checker;
   CheckerFn(CheckerBase *checker, Func fn) : Fn(fn), Checker(checker) { }
-  RET operator()(P1 p1, P2 p2, P3 p3) const { return Fn(Checker, p1, p2, p3); } 
+  RET operator()(P1 p1, P2 p2, P3 p3) const { return Fn(Checker, p1, p2, p3); }
 };
 
 template <typename RET, typename P1, typename P2>
@@ -89,7 +89,7 @@ class CheckerFn<RET(P1, P2)> {
 public:
   CheckerBase *Checker;
   CheckerFn(CheckerBase *checker, Func fn) : Fn(fn), Checker(checker) { }
-  RET operator()(P1 p1, P2 p2) const { return Fn(Checker, p1, p2); } 
+  RET operator()(P1 p1, P2 p2) const { return Fn(Checker, p1, p2); }
 };
 
 template <typename RET, typename P1>
@@ -99,7 +99,7 @@ class CheckerFn<RET(P1)> {
 public:
   CheckerBase *Checker;
   CheckerFn(CheckerBase *checker, Func fn) : Fn(fn), Checker(checker) { }
-  RET operator()(P1 p1) const { return Fn(Checker, p1); } 
+  RET operator()(P1 p1) const { return Fn(Checker, p1); }
 };
 
 template <typename RET>
@@ -109,7 +109,7 @@ class CheckerFn<RET()> {
 public:
   CheckerBase *Checker;
   CheckerFn(CheckerBase *checker, Func fn) : Fn(fn), Checker(checker) { }
-  RET operator()() const { return Fn(Checker); } 
+  RET operator()() const { return Fn(Checker); }
 };
 
 class CheckerManager {
@@ -325,7 +325,7 @@ public:
   void runCheckersForEvalCall(ExplodedNodeSet &Dst,
                               const ExplodedNodeSet &Src,
                               const CallEvent &CE, ExprEngine &Eng);
-  
+
   /// \brief Run checkers for the entire Translation Unit.
   void runCheckersOnEndOfTranslationUnit(const TranslationUnitDecl *TU,
                                          AnalysisManager &mgr,
@@ -362,49 +362,49 @@ public:
 //===----------------------------------------------------------------------===//
 
   typedef CheckerFn<void (const Stmt *, CheckerContext &)> CheckStmtFunc;
-  
+
   typedef CheckerFn<void (const ObjCMethodCall &, CheckerContext &)>
       CheckObjCMessageFunc;
 
   typedef CheckerFn<void (const CallEvent &, CheckerContext &)>
       CheckCallFunc;
-  
+
   typedef CheckerFn<void (const SVal &location, bool isLoad,
                           const Stmt *S,
                           CheckerContext &)>
       CheckLocationFunc;
-  
-  typedef CheckerFn<void (const SVal &location, const SVal &val, 
-                          const Stmt *S, CheckerContext &)> 
+
+  typedef CheckerFn<void (const SVal &location, const SVal &val,
+                          const Stmt *S, CheckerContext &)>
       CheckBindFunc;
-  
+
   typedef CheckerFn<void (ExplodedGraph &, BugReporter &, ExprEngine &)>
       CheckEndAnalysisFunc;
-  
+
   typedef CheckerFn<void (CheckerContext &)>
       CheckEndPathFunc;
-  
+
   typedef CheckerFn<void (const Stmt *, CheckerContext &)>
       CheckBranchConditionFunc;
-  
+
   typedef CheckerFn<void (SymbolReaper &, CheckerContext &)>
       CheckDeadSymbolsFunc;
-  
+
   typedef CheckerFn<void (ProgramStateRef,SymbolReaper &)> CheckLiveSymbolsFunc;
-  
+
   typedef CheckerFn<ProgramStateRef (ProgramStateRef,
                                 const StoreManager::InvalidatedSymbols *symbols,
                                 ArrayRef<const MemRegion *> ExplicitRegions,
                                 ArrayRef<const MemRegion *> Regions,
                                 const CallEvent *Call)>
       CheckRegionChangesFunc;
-  
+
   typedef CheckerFn<bool (ProgramStateRef)> WantsRegionChangeUpdateFunc;
-  
+
   typedef CheckerFn<ProgramStateRef (ProgramStateRef,
                                           const SVal &cond, bool assumption)>
       EvalAssumeFunc;
-  
+
   typedef CheckerFn<bool (const CallExpr *, CheckerContext &)>
       EvalCallFunc;
 
@@ -457,7 +457,7 @@ public:
   template <typename EVENT>
   void _registerListenerForEvent(CheckEventFunc checkfn) {
     EventInfo &info = Events[getTag<EVENT>()];
-    info.Checkers.push_back(checkfn);    
+    info.Checkers.push_back(checkfn);
   }
 
   template <typename EVENT>
@@ -577,7 +577,7 @@ private:
     bool HasDispatcher;
     EventInfo() : HasDispatcher(false) { }
   };
-  
+
   typedef llvm::DenseMap<EventTag, EventInfo> EventsTy;
   EventsTy Events;
 };

@@ -31,7 +31,7 @@ public:
 };
 } // end anonymous namespace
 
-void 
+void
 UndefinedArraySubscriptChecker::checkPreStmt(const ArraySubscriptExpr *A,
                                              CheckerContext &C) const {
   if (C.getState()->getSVal(A->getIdx(), C.getLocationContext()).isUndef()) {

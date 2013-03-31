@@ -23,7 +23,7 @@
 namespace llvm {
 
 
-FileOutputBuffer::FileOutputBuffer(uint8_t *Start, uint8_t *End, 
+FileOutputBuffer::FileOutputBuffer(uint8_t *Start, uint8_t *End,
                                   StringRef Path, StringRef TmpPath)
   : BufferStart(Start), BufferEnd(End) {
   FinalPath.assign(Path);
@@ -40,9 +40,9 @@ FileOutputBuffer::~FileOutputBuffer() {
   }
 }
 
- 
-error_code FileOutputBuffer::create(StringRef FilePath, 
-                                    size_t Size,  
+
+error_code FileOutputBuffer::create(StringRef FilePath,
+                                    size_t Size,
                                     OwningPtr<FileOutputBuffer> &Result,
                                     unsigned Flags) {
   // If file already exists, it must be a regular file (to be mappable).
@@ -70,34 +70,34 @@ error_code FileOutputBuffer::create(StringRef FilePath,
   EC = sys::fs::remove(FilePath, Existed);
   if (EC)
     return EC;
-  
+
   // Create new file in same directory but with random name.
   SmallString<128> TempFilePath;
   int FD;
-  EC = sys::fs::unique_file(Twine(FilePath) + ".tmp%%%%%%%",  
+  EC = sys::fs::unique_file(Twine(FilePath) + ".tmp%%%%%%%",
                                                 FD, TempFilePath, false, 0644);
   if (EC)
     return EC;
-  
-  // The unique_file() interface leaks lower layers and returns a file 
+
+  // The unique_file() interface leaks lower layers and returns a file
   // descriptor.  There is no way to directly close it, so use this hack
   // to hand it off to raw_fd_ostream to close for us.
   {
     raw_fd_ostream Dummy(FD, /*shouldClose=*/true);
   }
-  
+
   // Resize file to requested initial size
   EC = sys::fs::resize_file(Twine(TempFilePath), Size);
   if (EC)
     return EC;
-  
+
   // If requested, make the output file executable.
   if ( Flags & F_executable ) {
     sys::fs::file_status Stat2;
     EC = sys::fs::status(Twine(TempFilePath), Stat2);
     if (EC)
       return EC;
-    
+
     sys::fs::perms new_perms = Stat2.permissions();
     if ( new_perms & sys::fs::owner_read )
       new_perms |= sys::fs::owner_exe;
@@ -116,13 +116,13 @@ error_code FileOutputBuffer::create(StringRef FilePath,
   EC = sys::fs::map_file_pages(Twine(TempFilePath), 0, Size, true, Base);
   if (EC)
     return EC;
-  
+
   // Create FileOutputBuffer object to own mapped range.
   uint8_t *Start = reinterpret_cast<uint8_t*>(Base);
   Result.reset(new FileOutputBuffer(Start, Start+Size, FilePath, TempFilePath));
-                     
+
   return error_code::success();
-}                    
+}
 
 
 error_code FileOutputBuffer::commit(int64_t NewSmallerSize) {
@@ -131,14 +131,14 @@ error_code FileOutputBuffer::commit(int64_t NewSmallerSize) {
   error_code EC = sys::fs::unmap_file_pages(Start, getBufferSize());
   if (EC)
     return EC;
-  
+
   // If requested, resize file as part of commit.
   if ( NewSmallerSize != -1 ) {
     EC = sys::fs::resize_file(Twine(TempPath), NewSmallerSize);
     if (EC)
       return EC;
   }
-  
+
   // Rename file to final name.
   return sys::fs::rename(Twine(TempPath), Twine(FinalPath));
 }

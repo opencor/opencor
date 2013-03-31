@@ -137,9 +137,9 @@ public:
   }
 
   unsigned CreateReg(EVT VT);
-  
+
   unsigned CreateRegs(Type *Ty);
-  
+
   unsigned InitializeRegForValue(const Value *V) {
     unsigned &R = ValueMap[V];
     assert(R == 0 && "Already initialized this value register!");

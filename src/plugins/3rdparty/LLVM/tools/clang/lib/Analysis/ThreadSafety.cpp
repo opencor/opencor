@@ -776,7 +776,7 @@ struct LockData {
 
 /// \brief A FactEntry stores a single fact that is known at a particular point
 /// in the program execution.  Currently, this is information regarding a lock
-/// that is held at that point.  
+/// that is held at that point.
 struct FactEntry {
   SExpr    MutID;
   LockData LDat;
@@ -789,7 +789,7 @@ struct FactEntry {
 
 typedef unsigned short FactID;
 
-/// \brief FactManager manages the memory for all facts that are created during 
+/// \brief FactManager manages the memory for all facts that are created during
 /// the analysis of a single routine.
 class FactManager {
 private:
@@ -807,9 +807,9 @@ public:
 
 
 /// \brief A FactSet is the set of facts that are known to be true at a
-/// particular program point.  FactSets must be small, because they are 
+/// particular program point.  FactSets must be small, because they are
 /// frequently copied, and are thus implemented as a set of indices into a
-/// table maintained by a FactManager.  A typical FactSet only holds 1 or 2 
+/// table maintained by a FactManager.  A typical FactSet only holds 1 or 2
 /// locks, so we can get away with doing a linear search for lookup.  Note
 /// that a hashtable or map is inappropriate in this case, because lookups
 /// may involve partial pattern matches, rather than exact matches.

@@ -116,7 +116,7 @@ public:
   const FrontendInputFile &getCurrentInput() const {
     return CurrentInput;
   }
-  
+
   const StringRef getCurrentFile() const {
     assert(!CurrentInput.isEmpty() && "No current file!");
     return CurrentInput.getFile();

@@ -19,7 +19,7 @@ namespace iface
 {
   namespace cellml_services
   {
-    PUBLIC_VACSS_PRE 
+    PUBLIC_VACSS_PRE
     class  PUBLIC_VACSS_POST CellMLValidityError
      : public virtual iface::XPCOM::IObject
     {
@@ -31,7 +31,7 @@ namespace iface
       virtual already_AddRefd<iface::cellml_services::CellMLValidityError>  getSupplement(uint32_t index) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual bool isWarningOnly() throw(std::exception&)  = 0;
     };
-    PUBLIC_VACSS_PRE 
+    PUBLIC_VACSS_PRE
     class  PUBLIC_VACSS_POST CellMLRepresentationValidityError
      : public virtual iface::cellml_services::CellMLValidityError
     {
@@ -41,7 +41,7 @@ namespace iface
       virtual already_AddRefd<iface::dom::Node>  errorNode() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual uint32_t errorNodalOffset() throw(std::exception&)  = 0;
     };
-    PUBLIC_VACSS_PRE 
+    PUBLIC_VACSS_PRE
     class  PUBLIC_VACSS_POST CellMLSemanticValidityError
      : public virtual iface::cellml_services::CellMLValidityError
     {
@@ -50,7 +50,7 @@ namespace iface
       virtual ~CellMLSemanticValidityError() {}
       virtual already_AddRefd<iface::cellml_api::CellMLElement>  errorElement() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_VACSS_PRE 
+    PUBLIC_VACSS_PRE
     class  PUBLIC_VACSS_POST CellMLValidityErrorSet
      : public virtual iface::XPCOM::IObject
     {
@@ -60,7 +60,7 @@ namespace iface
       virtual uint32_t nValidityErrors() throw(std::exception&)  = 0;
       virtual already_AddRefd<iface::cellml_services::CellMLValidityError>  getValidityError(uint32_t index) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_VACSS_PRE 
+    PUBLIC_VACSS_PRE
     class  PUBLIC_VACSS_POST VACSService
      : public virtual iface::XPCOM::IObject
     {

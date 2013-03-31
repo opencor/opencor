@@ -65,7 +65,7 @@ namespace {
         return (ProfileInfo*)this;
       return this;
     }
-    
+
     virtual void recurseBasicBlock(BasicBlock *BB);
 
     void inline printEdgeWeight(Edge);
@@ -163,7 +163,7 @@ void ProfileEstimatorPass::recurseBasicBlock(BasicBlock *BB) {
 
   // If this is a loop header, consider the following:
   // Exactly the flow that is entering this block, must exit this block too. So
-  // do the following: 
+  // do the following:
   // *) get all the exit edges, read the flow that is already leaving this
   // loop, remember the edges that do not have any flow on them right now.
   // (The edges that have already flow on them are most likely exiting edges of
@@ -187,7 +187,7 @@ void ProfileEstimatorPass::recurseBasicBlock(BasicBlock *BB) {
         double w = getEdgeWeight(*ei);
         if (w == MissingValue) {
           Edges.push_back(*ei);
-          // Check if there is a necessary minimal weight, if yes, subtract it 
+          // Check if there is a necessary minimal weight, if yes, subtract it
           // from weight.
           if (MinimalWeight.find(*ei) != MinimalWeight.end()) {
             incoming -= MinimalWeight[*ei];
@@ -232,7 +232,7 @@ void ProfileEstimatorPass::recurseBasicBlock(BasicBlock *BB) {
         DEBUG(dbgs() << "Additionally " << format("%.20g",MinimalWeight[*ei]) << " at " << (*ei) << "\n");
       }
       printEdgeWeight(*ei);
-      
+
       // Add minimal weight to paths to all exit edges, this is used to ensure
       // that enough flow is reaching this edges.
       Path p;
@@ -363,7 +363,7 @@ bool ProfileEstimatorPass::runOnFunction(Function &F) {
     // If there was not a single block resolved, make some assumptions.
     if (BBToVisit.size() == size) {
       bool found = false;
-      for (std::set<BasicBlock*>::iterator BBI = BBToVisit.begin(), BBE = BBToVisit.end(); 
+      for (std::set<BasicBlock*>::iterator BBI = BBToVisit.begin(), BBE = BBToVisit.end();
            (BBI != BBE) && (!found); ++BBI) {
         BasicBlock *BB = *BBI;
         // Try each predecessor if it can be assumend.
@@ -392,7 +392,7 @@ bool ProfileEstimatorPass::runOnFunction(Function &F) {
       }
     }
   }
-  // In case there was no safe way to assume edges, set as a last measure, 
+  // In case there was no safe way to assume edges, set as a last measure,
   // set _everything_ to zero.
   if (cleanup) {
     FunctionInformation[&F] = 0;

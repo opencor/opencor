@@ -189,12 +189,12 @@ protected:
     /// global variable, etc.) that is lexically inside an objc container
     /// definition.
     TopLevelDeclInObjCContainerFlag = 0x01,
-    
+
     /// \brief Whether this declaration is private to the module in which it was
     /// defined.
     ModulePrivateFlag = 0x02
   };
-  
+
   /// \brief The next declaration within the same lexical
   /// DeclContext. These pointers form the linked list that is
   /// traversed via DeclContext's decls_begin()/decls_end().
@@ -278,7 +278,7 @@ protected:
   /// because it is was loaded from an AST file is either module-private or
   /// because its submodule has not been made visible.
   unsigned Hidden : 1;
-  
+
   /// IdentifierNamespace - This specifies what IDNS_* namespace this lives in.
   unsigned IdentifierNamespace : 12;
 
@@ -335,7 +335,7 @@ protected:
   static void *AllocateDeserializedDecl(const ASTContext &Context,
                                         unsigned ID,
                                         unsigned Size);
-  
+
 public:
 
   /// \brief Source range that this declaration covers.
@@ -504,10 +504,10 @@ public:
 protected:
   /// \brief Whether this declaration was marked as being private to the
   /// module in which it was defined.
-  bool isModulePrivate() const { 
+  bool isModulePrivate() const {
     return NextInContextAndBits.getInt() & ModulePrivateFlag;
   }
-  
+
   /// \brief Specify whether this declaration was marked as being private
   /// to the module in which it was defined.
   void setModulePrivate(bool MP = true) {
@@ -524,9 +524,9 @@ protected:
     assert(isFromASTFile() && "Only works on a deserialized declaration");
     *((unsigned*)this - 2) = ID;
   }
-  
+
 public:
-  
+
   /// \brief Determine the availability of the given declaration.
   ///
   /// This routine will determine the most restrictive availability of
@@ -577,23 +577,23 @@ public:
   /// a precompiled header or module) rather than having been parsed.
   bool isFromASTFile() const { return FromASTFile; }
 
-  /// \brief Retrieve the global declaration ID associated with this 
-  /// declaration, which specifies where in the 
-  unsigned getGlobalID() const { 
+  /// \brief Retrieve the global declaration ID associated with this
+  /// declaration, which specifies where in the
+  unsigned getGlobalID() const {
     if (isFromASTFile())
       return *((const unsigned*)this - 1);
     return 0;
   }
-  
+
   /// \brief Retrieve the global ID of the module that owns this particular
   /// declaration.
   unsigned getOwningModuleID() const {
     if (isFromASTFile())
       return *((const unsigned*)this - 2);
-    
+
     return 0;
   }
-  
+
   unsigned getIdentifierNamespace() const {
     return IdentifierNamespace;
   }
@@ -663,7 +663,7 @@ public:
 
   /// \brief Whether this particular Decl is a canonical one.
   bool isCanonicalDecl() const { return getCanonicalDecl() == this; }
-  
+
 protected:
   /// \brief Returns the next redeclaration or itself if this is the only decl.
   ///
@@ -674,11 +674,11 @@ protected:
   /// \brief Implementation of getPreviousDecl(), to be overridden by any
   /// subclass that has a redeclaration chain.
   virtual Decl *getPreviousDeclImpl() { return 0; }
-  
+
   /// \brief Implementation of getMostRecentDecl(), to be overridden by any
-  /// subclass that has a redeclaration chain.  
+  /// subclass that has a redeclaration chain.
   virtual Decl *getMostRecentDeclImpl() { return this; }
-  
+
 public:
   /// \brief Iterates through all the redeclarations of the same decl.
   class redecl_iterator {
@@ -732,20 +732,20 @@ public:
   /// \brief Retrieve the previous declaration that declares the same entity
   /// as this declaration, or NULL if there is no previous declaration.
   Decl *getPreviousDecl() { return getPreviousDeclImpl(); }
-  
+
   /// \brief Retrieve the most recent declaration that declares the same entity
   /// as this declaration, or NULL if there is no previous declaration.
-  const Decl *getPreviousDecl() const { 
+  const Decl *getPreviousDecl() const {
     return const_cast<Decl *>(this)->getPreviousDeclImpl();
   }
-  
+
   /// \brief Retrieve the most recent declaration that declares the same entity
   /// as this declaration (which may be this declaration).
   Decl *getMostRecentDecl() { return getMostRecentDeclImpl(); }
 
   /// \brief Retrieve the most recent declaration that declares the same entity
   /// as this declaration (which may be this declaration).
-  const Decl *getMostRecentDecl() const { 
+  const Decl *getMostRecentDecl() const {
     return const_cast<Decl *>(this)->getMostRecentDeclImpl();
   }
 
@@ -869,13 +869,13 @@ protected:
 inline bool declaresSameEntity(const Decl *D1, const Decl *D2) {
   if (!D1 || !D2)
     return false;
-  
+
   if (D1 == D2)
     return true;
-  
+
   return D1->getCanonicalDecl() == D2->getCanonicalDecl();
 }
-  
+
 /// PrettyStackTraceDecl - If a crash occurs, indicate that it happened when
 /// doing something to a specific decl.
 class PrettyStackTraceDecl : public llvm::PrettyStackTraceEntry {
@@ -1141,7 +1141,7 @@ public:
   /// connected to this declaration context.
   ///
   /// For declaration contexts that have multiple semantically connected but
-  /// syntactically distinct contexts, such as C++ namespaces, this routine 
+  /// syntactically distinct contexts, such as C++ namespaces, this routine
   /// retrieves the complete set of such declaration contexts in source order.
   /// For example, given:
   ///
@@ -1471,7 +1471,7 @@ public:
   inline ddiag_iterator ddiag_end() const;
 
   // Low-level accessors
-    
+
   /// \brief Mark the lookup table as needing to be built.  This should be
   /// used only if setHasExternalLexicalStorage() has been called.
   void setMustBuildLookupTable() {
@@ -1509,7 +1509,7 @@ public:
   /// \brief Determine whether the given declaration is stored in the list of
   /// declarations lexically within this context.
   bool isDeclInLexicalTraversal(const Decl *D) const {
-    return D && (D->NextInContextAndBits.getPointer() || D == FirstDecl || 
+    return D && (D->NextInContextAndBits.getPointer() || D == FirstDecl ||
                  D == LastDecl);
   }
 

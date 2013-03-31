@@ -53,7 +53,7 @@ static uint64_t LookupFieldBitOffset(CodeGen::CodeGenModule &CGM,
   // directly.
   unsigned Index = 0;
 
-  for (const ObjCIvarDecl *IVD = Container->all_declared_ivar_begin(); 
+  for (const ObjCIvarDecl *IVD = Container->all_declared_ivar_begin();
        IVD; IVD = IVD->getNextIvar()) {
     if (Ivar == IVD)
       break;
@@ -67,14 +67,14 @@ static uint64_t LookupFieldBitOffset(CodeGen::CodeGenModule &CGM,
 uint64_t CGObjCRuntime::ComputeIvarBaseOffset(CodeGen::CodeGenModule &CGM,
                                               const ObjCInterfaceDecl *OID,
                                               const ObjCIvarDecl *Ivar) {
-  return LookupFieldBitOffset(CGM, OID, 0, Ivar) / 
+  return LookupFieldBitOffset(CGM, OID, 0, Ivar) /
     CGM.getContext().getCharWidth();
 }
 
 uint64_t CGObjCRuntime::ComputeIvarBaseOffset(CodeGen::CodeGenModule &CGM,
                                               const ObjCImplementationDecl *OID,
                                               const ObjCIvarDecl *Ivar) {
-  return LookupFieldBitOffset(CGM, OID->getClassInterface(), OID, Ivar) / 
+  return LookupFieldBitOffset(CGM, OID->getClassInterface(), OID, Ivar) /
     CGM.getContext().getCharWidth();
 }
 
@@ -127,7 +127,7 @@ LValue CGObjCRuntime::EmitValueForIvarAtOffset(CodeGen::CodeGenFunction &CGF,
   uint64_t ContainingTypeAlign = CGF.CGM.getContext().getTargetInfo().getCharAlign();
   uint64_t ContainingTypeSize = TypeSizeInBits - (FieldBitOffset - BitOffset);
   uint64_t BitFieldSize = Ivar->getBitWidthValue(CGF.getContext());
-  CharUnits ContainingTypeAlignCharUnits = 
+  CharUnits ContainingTypeAlignCharUnits =
     CGF.CGM.getContext().toCharUnitsFromBits(ContainingTypeAlign);
 
   // Allocate a new CGBitFieldInfo object to describe this access.
@@ -214,7 +214,7 @@ void CGObjCRuntime::EmitTryCatchStmt(CodeGenFunction &CGF,
     for (unsigned I = 0, E = Handlers.size(); I != E; ++I)
       Catch->setHandler(I, Handlers[I].TypeInfo, Handlers[I].Block);
   }
-  
+
   // Emit the try body.
   CGF.EmitStmt(S.getTryBody());
 
@@ -284,7 +284,7 @@ void CGObjCRuntime::EmitTryCatchStmt(CodeGenFunction &CGF,
     cleanups.ForceCleanup();
 
     CGF.EmitBranchThroughCleanup(Cont);
-  }  
+  }
 
   // Go back to the try-statement fallthrough.
   CGF.Builder.restoreIP(SavedIP);
@@ -373,7 +373,7 @@ CGObjCRuntime::getMessageSendInfo(const ObjCMethodDecl *method,
 
   // There's no method;  just use a default CC.
   const CGFunctionInfo &argsInfo =
-    CGM.getTypes().arrangeFreeFunctionCall(resultType, callArgs, 
+    CGM.getTypes().arrangeFreeFunctionCall(resultType, callArgs,
                                            FunctionType::ExtInfo(),
                                            RequiredArgs::All);
 

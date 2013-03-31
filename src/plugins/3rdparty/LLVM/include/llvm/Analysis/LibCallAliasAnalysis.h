@@ -20,13 +20,13 @@
 namespace llvm {
   class LibCallInfo;
   struct LibCallFunctionInfo;
-  
+
   /// LibCallAliasAnalysis - Alias analysis driven from LibCallInfo.
   struct LibCallAliasAnalysis : public FunctionPass, public AliasAnalysis {
     static char ID; // Class identification
-    
+
     LibCallInfo *LCI;
-    
+
     explicit LibCallAliasAnalysis(LibCallInfo *LC = 0)
         : FunctionPass(ID), LCI(LC) {
       initializeLibCallAliasAnalysisPass(*PassRegistry::getPassRegistry());
@@ -36,23 +36,23 @@ namespace llvm {
       initializeLibCallAliasAnalysisPass(*PassRegistry::getPassRegistry());
     }
     ~LibCallAliasAnalysis();
-    
+
     ModRefResult getModRefInfo(ImmutableCallSite CS,
                                const Location &Loc);
-    
+
     ModRefResult getModRefInfo(ImmutableCallSite CS1,
                                ImmutableCallSite CS2) {
       // TODO: Could compare two direct calls against each other if we cared to.
       return AliasAnalysis::getModRefInfo(CS1, CS2);
     }
-    
+
     virtual void getAnalysisUsage(AnalysisUsage &AU) const;
-    
+
     virtual bool runOnFunction(Function &F) {
       InitializeAliasAnalysis(this);                 // set up super class
       return false;
     }
-    
+
     /// getAdjustedAnalysisPointer - This method is used when a pass implements
     /// an analysis interface through multiple inheritance.  If needed, it
     /// should override this to adjust the this pointer as needed for the
@@ -62,7 +62,7 @@ namespace llvm {
         return (AliasAnalysis*)this;
       return this;
     }
-    
+
   private:
     ModRefResult AnalyzeLibCallDetails(const LibCallFunctionInfo *FI,
                                        ImmutableCallSite CS,

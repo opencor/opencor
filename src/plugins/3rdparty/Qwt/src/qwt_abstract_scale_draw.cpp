@@ -25,8 +25,8 @@ public:
         penWidth( 0 ),
         minExtent( 0.0 )
     {
-        components = QwtAbstractScaleDraw::Backbone 
-            | QwtAbstractScaleDraw::Ticks 
+        components = QwtAbstractScaleDraw::Backbone
+            | QwtAbstractScaleDraw::Ticks
             | QwtAbstractScaleDraw::Labels;
 
         tickLength[QwtScaleDiv::MinorTick] = 4.0;
@@ -366,7 +366,7 @@ double QwtAbstractScaleDraw::maxTickLength() const
 QwtText QwtAbstractScaleDraw::label( double value ) const
 {
     if ( qFuzzyCompare( value + 1.0, 1.0 ) )
-        value = 0.0; 
+        value = 0.0;
 
     return QLocale().toString( value );
 }

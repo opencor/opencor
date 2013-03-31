@@ -82,5 +82,5 @@ void CastSizeChecker::checkPreStmt(const CastExpr *CE,CheckerContext &C) const {
 
 
 void ento::registerCastSizeChecker(CheckerManager &mgr) {
-  mgr.registerChecker<CastSizeChecker>();  
+  mgr.registerChecker<CastSizeChecker>();
 }

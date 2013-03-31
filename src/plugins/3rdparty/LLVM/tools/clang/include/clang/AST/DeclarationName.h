@@ -195,14 +195,14 @@ public:
   /// getNameKind - Determine what kind of name this is.
   NameKind getNameKind() const;
 
-  /// \brief Determines whether the name itself is dependent, e.g., because it 
+  /// \brief Determines whether the name itself is dependent, e.g., because it
   /// involves a C++ type that is itself dependent.
   ///
   /// Note that this does not capture all of the notions of "dependent name",
-  /// because an identifier can be a dependent name if it is used as the 
+  /// because an identifier can be a dependent name if it is used as the
   /// callee in a call expression with dependent arguments.
   bool isDependentName() const;
-  
+
   /// getNameAsString - Retrieve the human-readable string for this name.
   std::string getAsString() const;
 
@@ -294,7 +294,7 @@ public:
   }
 
   static int compare(DeclarationName LHS, DeclarationName RHS);
-  
+
   void dump() const;
 };
 
@@ -350,14 +350,14 @@ public:
   /// getCXXConstructorName - Returns the name of a C++ constructor
   /// for the given Type.
   DeclarationName getCXXConstructorName(CanQualType Ty) {
-    return getCXXSpecialName(DeclarationName::CXXConstructorName, 
+    return getCXXSpecialName(DeclarationName::CXXConstructorName,
                              Ty.getUnqualifiedType());
   }
 
   /// getCXXDestructorName - Returns the name of a C++ destructor
   /// for the given Type.
   DeclarationName getCXXDestructorName(CanQualType Ty) {
-    return getCXXSpecialName(DeclarationName::CXXDestructorName, 
+    return getCXXSpecialName(DeclarationName::CXXDestructorName,
                              Ty.getUnqualifiedType());
   }
 
@@ -508,7 +508,7 @@ public:
 
   /// \brief Determine whether this name involves a template parameter.
   bool isInstantiationDependent() const;
-  
+
   /// \brief Determine whether this name contains an unexpanded
   /// parameter pack.
   bool containsUnexpandedParameterPack() const;

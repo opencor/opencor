@@ -45,7 +45,7 @@ public:
         \param north Position
         \param colorGroup Color group
      */
-    virtual void draw( QPainter *painter, 
+    virtual void draw( QPainter *painter,
         const QPointF &center, double radius, double north,
         QPalette::ColorGroup colorGroup = QPalette::Active ) const = 0;
 
@@ -86,4 +86,4 @@ private:
     PrivateData *d_data;
 };
 
-#endif 
+#endif

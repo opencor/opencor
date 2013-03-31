@@ -25,7 +25,7 @@ class LocationContext;
 class Stmt;
 
 namespace ento {
-  
+
 struct NodeBuilderContext;
 class AnalysisManager;
 class ExplodedNodeSet;
@@ -102,7 +102,7 @@ public:
 
   /// processRegionChanges - Called by ProgramStateManager whenever a change is
   /// made to the store. Used to update checkers that track region values.
-  virtual ProgramStateRef 
+  virtual ProgramStateRef
   processRegionChanges(ProgramStateRef state,
                        const StoreManager::InvalidatedSymbols *invalidated,
                        ArrayRef<const MemRegion *> ExplicitRegions,
@@ -110,7 +110,7 @@ public:
                        const CallEvent *Call) = 0;
 
 
-  inline ProgramStateRef 
+  inline ProgramStateRef
   processRegionChange(ProgramStateRef state,
                       const MemRegion* MR) {
     return processRegionChanges(state, 0, MR, MR, 0);

@@ -477,7 +477,7 @@ static llvm::StringRef getPrettyPlatformName(llvm::StringRef Platform) {
              .Case("ios", "iOS")
              .Case("macosx", "OS X")
              .Default(llvm::StringRef());
-} 
+}
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Availability; }
   virtual bool isLateParsed() const { return 0; }
@@ -1932,7 +1932,7 @@ bool isNonNull(unsigned idx) const {
       if (*i == idx)
         return true;
     return false;
-  } 
+  }
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NonNull; }
   virtual bool isLateParsed() const { return 0; }

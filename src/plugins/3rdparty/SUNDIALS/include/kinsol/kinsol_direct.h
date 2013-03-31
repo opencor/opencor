@@ -2,7 +2,7 @@
  * -----------------------------------------------------------------
  * $Revision: 1.6 $
  * $Date: 2010/12/01 22:16:17 $
- * ----------------------------------------------------------------- 
+ * -----------------------------------------------------------------
  * Programmer: Radu Serban @ LLNL
  * -----------------------------------------------------------------
  * Copyright (c) 2006, The Regents of the University of California.
@@ -30,9 +30,9 @@ extern "C" {
  * =================================================================
  */
 
-/* 
+/*
  * -----------------------------------------------------------------
- * KINDLS return values 
+ * KINDLS return values
  * -----------------------------------------------------------------
  */
 
@@ -58,7 +58,7 @@ extern "C" {
  * Type: KINDlsDenseJacFn
  * -----------------------------------------------------------------
  *
- * A dense Jacobian approximation function Jac must be of type 
+ * A dense Jacobian approximation function Jac must be of type
  * KINDlsDenseJacFn. Its parameters are:
  *
  * N        - problem size.
@@ -78,42 +78,42 @@ extern "C" {
  *
  * tmp1, tmp2 - available scratch vectors (volatile storage)
  *
- * A KINDlsDenseJacFn should return 0 if successful, a positive 
- * value if a recoverable error occurred, and a negative value if 
+ * A KINDlsDenseJacFn should return 0 if successful, a positive
+ * value if a recoverable error occurred, and a negative value if
  * an unrecoverable error occurred.
  *
  * -----------------------------------------------------------------
  *
- * NOTE: The following are two efficient ways to load a dense Jac:         
- * (1) (with macros - no explicit data structure references)      
- *     for (j=0; j < Neq; j++) {                                  
- *       col_j = DENSE_COL(Jac,j);                                 
- *       for (i=0; i < Neq; i++) {                                
- *         generate J_ij = the (i,j)th Jacobian element           
- *         col_j[i] = J_ij;                                       
- *       }                                                        
- *     }                                                          
- * (2) (without macros - explicit data structure references)      
- *     for (j=0; j < Neq; j++) {                                  
- *       col_j = (Jac->data)[j];                                   
- *       for (i=0; i < Neq; i++) {                                
- *         generate J_ij = the (i,j)th Jacobian element           
- *         col_j[i] = J_ij;                                       
- *       }                                                        
- *     }                                                          
- * A third way, using the DENSE_ELEM(A,i,j) macro, is much less   
- * efficient in general.  It is only appropriate for use in small 
- * problems in which efficiency of access is NOT a major concern. 
- *                                                                
+ * NOTE: The following are two efficient ways to load a dense Jac:
+ * (1) (with macros - no explicit data structure references)
+ *     for (j=0; j < Neq; j++) {
+ *       col_j = DENSE_COL(Jac,j);
+ *       for (i=0; i < Neq; i++) {
+ *         generate J_ij = the (i,j)th Jacobian element
+ *         col_j[i] = J_ij;
+ *       }
+ *     }
+ * (2) (without macros - explicit data structure references)
+ *     for (j=0; j < Neq; j++) {
+ *       col_j = (Jac->data)[j];
+ *       for (i=0; i < Neq; i++) {
+ *         generate J_ij = the (i,j)th Jacobian element
+ *         col_j[i] = J_ij;
+ *       }
+ *     }
+ * A third way, using the DENSE_ELEM(A,i,j) macro, is much less
+ * efficient in general.  It is only appropriate for use in small
+ * problems in which efficiency of access is NOT a major concern.
+ *
  * -----------------------------------------------------------------
  */
-  
-  
+
+
 typedef int (*KINDlsDenseJacFn)(long int N,
-				N_Vector u, N_Vector fu, 
+				N_Vector u, N_Vector fu,
 				DlsMat J, void *user_data,
 				N_Vector tmp1, N_Vector tmp2);
-  
+
 /*
  * -----------------------------------------------------------------
  * Type: KINDlsBandJacFn
@@ -148,7 +148,7 @@ typedef int (*KINDlsDenseJacFn)(long int N,
  * tmp1, tmp2 - available scratch vectors (volatile storage)
  *
  * A KINDlsBandJacFn should return 0 if successful, a positive value
- * if a recoverable error occurred, and a negative value if an 
+ * if a recoverable error occurred, and a negative value if an
  * unrecoverable error occurred.
  *
  * -----------------------------------------------------------------
@@ -191,13 +191,13 @@ typedef int (*KINDlsDenseJacFn)(long int N,
  */
 
 typedef int (*KINDlsBandJacFn)(long int N, long int mupper, long int mlower,
-			       N_Vector u, N_Vector fu, 
+			       N_Vector u, N_Vector fu,
 			       DlsMat J, void *user_data,
 			       N_Vector tmp1, N_Vector tmp2);
 
 /*
  * =================================================================
- *            E X P O R T E D    F U N C T I O N S 
+ *            E X P O R T E D    F U N C T I O N S
  * =================================================================
  */
 

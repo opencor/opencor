@@ -167,14 +167,14 @@ public:
 
   /// \brief Iterator that traverses the current stack of preprocessor
   /// conditional directives (\#if/\#ifdef/\#ifndef).
-  typedef SmallVectorImpl<PPConditionalInfo>::const_iterator 
+  typedef SmallVectorImpl<PPConditionalInfo>::const_iterator
     conditional_iterator;
 
-  conditional_iterator conditional_begin() const { 
-    return ConditionalStack.begin(); 
+  conditional_iterator conditional_begin() const {
+    return ConditionalStack.begin();
   }
-  conditional_iterator conditional_end() const { 
-    return ConditionalStack.end(); 
+  conditional_iterator conditional_end() const {
+    return ConditionalStack.end();
   }
 };
 

@@ -390,7 +390,7 @@ DIType DIBuilder::createObjCIVar(StringRef Name,
 DIObjCProperty DIBuilder::createObjCProperty(StringRef Name,
                                              DIFile File, unsigned LineNumber,
                                              StringRef GetterName,
-                                             StringRef SetterName, 
+                                             StringRef SetterName,
                                              unsigned PropertyAttributes,
                                              DIType Ty) {
   Value *Elts[] = {

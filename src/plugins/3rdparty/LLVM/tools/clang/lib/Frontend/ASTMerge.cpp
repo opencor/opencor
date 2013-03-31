@@ -49,14 +49,14 @@ void ASTMergeAction::ExecuteAction() {
     if (!Unit)
       continue;
 
-    ASTImporter Importer(CI.getASTContext(), 
+    ASTImporter Importer(CI.getASTContext(),
                          CI.getFileManager(),
-                         Unit->getASTContext(), 
+                         Unit->getASTContext(),
                          Unit->getFileManager(),
                          /*MinimalImport=*/false);
 
     TranslationUnitDecl *TU = Unit->getASTContext().getTranslationUnitDecl();
-    for (DeclContext::decl_iterator D = TU->decls_begin(), 
+    for (DeclContext::decl_iterator D = TU->decls_begin(),
                                  DEnd = TU->decls_end();
          D != DEnd; ++D) {
       // Don't re-import __va_list_tag, __builtin_va_list.
@@ -64,7 +64,7 @@ void ASTMergeAction::ExecuteAction() {
         if (IdentifierInfo *II = ND->getIdentifier())
           if (II->isStr("__va_list_tag") || II->isStr("__builtin_va_list"))
             continue;
-      
+
       Importer.Import(*D);
     }
 
@@ -85,7 +85,7 @@ ASTMergeAction::ASTMergeAction(FrontendAction *AdaptedAction,
   assert(AdaptedAction && "ASTMergeAction needs an action to adapt");
 }
 
-ASTMergeAction::~ASTMergeAction() { 
+ASTMergeAction::~ASTMergeAction() {
   delete AdaptedAction;
 }
 

@@ -29,7 +29,7 @@ MacroArgs *MacroArgs::create(const MacroInfo *MI,
          "Can't have args for an object-like macro!");
   MacroArgs **ResultEnt = 0;
   unsigned ClosestMatch = ~0U;
-  
+
   // See if we have an entry with a big enough argument list to reuse on the
   // free list.  If so, reuse it.
   for (MacroArgs **Entry = &PP.MacroArgCache; *Entry;
@@ -37,18 +37,18 @@ MacroArgs *MacroArgs::create(const MacroInfo *MI,
     if ((*Entry)->NumUnexpArgTokens >= UnexpArgTokens.size() &&
         (*Entry)->NumUnexpArgTokens < ClosestMatch) {
       ResultEnt = Entry;
-      
+
       // If we have an exact match, use it.
       if ((*Entry)->NumUnexpArgTokens == UnexpArgTokens.size())
         break;
       // Otherwise, use the best fit.
       ClosestMatch = (*Entry)->NumUnexpArgTokens;
     }
-  
+
   MacroArgs *Result;
   if (ResultEnt == 0) {
     // Allocate memory for a MacroArgs object with the lexer tokens at the end.
-    Result = (MacroArgs*)malloc(sizeof(MacroArgs) + 
+    Result = (MacroArgs*)malloc(sizeof(MacroArgs) +
                                 UnexpArgTokens.size() * sizeof(Token));
     // Construct the MacroArgs object.
     new (Result) MacroArgs(UnexpArgTokens.size(), VarargsElided);
@@ -62,7 +62,7 @@ MacroArgs *MacroArgs::create(const MacroInfo *MI,
 
   // Copy the actual unexpanded tokens to immediately after the result ptr.
   if (!UnexpArgTokens.empty())
-    std::copy(UnexpArgTokens.begin(), UnexpArgTokens.end(), 
+    std::copy(UnexpArgTokens.begin(), UnexpArgTokens.end(),
               const_cast<Token*>(Result->getUnexpArgument(0)));
 
   return Result;
@@ -77,7 +77,7 @@ void MacroArgs::destroy(Preprocessor &PP) {
   // would deallocate the element vectors.
   for (unsigned i = 0, e = PreExpArgTokens.size(); i != e; ++i)
     PreExpArgTokens[i].clear();
-  
+
   // Add this to the preprocessor's free list.
   ArgCache = PP.MacroArgCache;
   PP.MacroArgCache = this;
@@ -87,12 +87,12 @@ void MacroArgs::destroy(Preprocessor &PP) {
 /// its freelist.
 MacroArgs *MacroArgs::deallocate() {
   MacroArgs *Next = ArgCache;
-  
+
   // Run the dtor to deallocate the vectors.
   this->~MacroArgs();
   // Release the memory for the object.
   free(this);
-  
+
   return Next;
 }
 
@@ -145,14 +145,14 @@ bool MacroArgs::ArgNeedsPreexpansion(const Token *ArgTok,
 /// getPreExpArgument - Return the pre-expanded form of the specified
 /// argument.
 const std::vector<Token> &
-MacroArgs::getPreExpArgument(unsigned Arg, const MacroInfo *MI, 
+MacroArgs::getPreExpArgument(unsigned Arg, const MacroInfo *MI,
                              Preprocessor &PP) {
   assert(Arg < MI->getNumArgs() && "Invalid argument number!");
 
   // If we have already computed this, return it.
   if (PreExpArgTokens.size() < MI->getNumArgs())
     PreExpArgTokens.resize(MI->getNumArgs());
-  
+
   std::vector<Token> &Result = PreExpArgTokens[Arg];
   if (!Result.empty()) return Result;
 

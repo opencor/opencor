@@ -130,7 +130,7 @@ break; \
   return QC.apply(Context, QT);
 }
 
-/// \brief Convert the given type to a string suitable for printing as part of 
+/// \brief Convert the given type to a string suitable for printing as part of
 /// a diagnostic.
 ///
 /// There are four main criteria when determining whether we should have an
@@ -185,7 +185,7 @@ ConvertTypeToDiagnosticString(ASTContext &Context, QualType Ty,
                  // and the desugared comparison string.
     std::string CompareCanS =
         CompareCanTy.getAsString(Context.getPrintingPolicy());
-    
+
     if (CompareCanS == CanS)
       continue;  // No new info from canonical type
 
@@ -247,10 +247,10 @@ void clang::FormatASTNodeDiagnosticArgument(
     void *Cookie,
     ArrayRef<intptr_t> QualTypeVals) {
   ASTContext &Context = *static_cast<ASTContext*>(Cookie);
-  
+
   std::string S;
   bool NeedQuotes = true;
-  
+
   switch (Kind) {
     default: llvm_unreachable("unknown ArgumentKind");
     case DiagnosticsEngine::ak_qualtype_pair: {
@@ -283,7 +283,7 @@ void clang::FormatASTNodeDiagnosticArgument(
     case DiagnosticsEngine::ak_qualtype: {
       assert(ModLen == 0 && ArgLen == 0 &&
              "Invalid modifier for QualType argument");
-      
+
       QualType Ty(QualType::getFromOpaquePtr(reinterpret_cast<void*>(Val)));
       S = ConvertTypeToDiagnosticString(Context, Ty, PrevArgs, NumPrevArgs,
                                         QualTypeVals);
@@ -293,7 +293,7 @@ void clang::FormatASTNodeDiagnosticArgument(
     case DiagnosticsEngine::ak_declarationname: {
       DeclarationName N = DeclarationName::getFromOpaqueInteger(Val);
       S = N.getAsString();
-      
+
       if (ModLen == 9 && !memcmp(Modifier, "objcclass", 9) && ArgLen == 0)
         S = '+' + S;
       else if (ModLen == 12 && !memcmp(Modifier, "objcinstance", 12)
@@ -327,7 +327,7 @@ void clang::FormatASTNodeDiagnosticArgument(
     case DiagnosticsEngine::ak_declcontext: {
       DeclContext *DC = reinterpret_cast<DeclContext *> (Val);
       assert(DC && "Should never have a null declaration context");
-      
+
       if (DC->isTranslationUnit()) {
         // FIXME: Get these strings from some localized place
         if (Context.getLangOpts().CPlusPlus)
@@ -335,7 +335,7 @@ void clang::FormatASTNodeDiagnosticArgument(
         else
           S = "the global scope";
       } else if (TypeDecl *Type = dyn_cast<TypeDecl>(DC)) {
-        S = ConvertTypeToDiagnosticString(Context, 
+        S = ConvertTypeToDiagnosticString(Context,
                                           Context.getTypeDeclType(Type),
                                           PrevArgs, NumPrevArgs, QualTypeVals);
       } else {
@@ -347,7 +347,7 @@ void clang::FormatASTNodeDiagnosticArgument(
           S += "method ";
         else if (isa<FunctionDecl>(ND))
           S += "function ";
-        
+
         S += "'";
         ND->getNameForDiagnostic(S, Context.getPrintingPolicy(), true);
         S += "'";
@@ -356,12 +356,12 @@ void clang::FormatASTNodeDiagnosticArgument(
       break;
     }
   }
-  
+
   if (NeedQuotes)
     Output.push_back('\'');
-  
+
   Output.append(S.begin(), S.end());
-  
+
   if (NeedQuotes)
     Output.push_back('\'');
 }
@@ -463,7 +463,7 @@ class TemplateDiff {
 
     /// ReadNode - The index of the current node being read.
     unsigned ReadNode;
-  
+
   public:
     DiffTree() :
         CurrentNode(0), NextFreeNode(1) {
@@ -764,7 +764,7 @@ class TemplateDiff {
   };
 
   // These functions build up the template diff tree, including functions to
-  // retrieve and compare template arguments. 
+  // retrieve and compare template arguments.
 
   static const TemplateSpecializationType * GetTemplateSpecializationType(
       ASTContext &Context, QualType Ty) {
@@ -1119,7 +1119,7 @@ class TemplateDiff {
     Tree.GetNode(FromQual, ToQual);
     PrintQualifiers(FromQual, ToQual);
 
-    OS << FromTD->getNameAsString() << '<'; 
+    OS << FromTD->getNameAsString() << '<';
     Tree.MoveToChild();
     unsigned NumElideArgs = 0;
     do {
@@ -1453,7 +1453,7 @@ public:
 /// is successful.
 static bool FormatTemplateTypeDiff(ASTContext &Context, QualType FromType,
                                    QualType ToType, bool PrintTree,
-                                   bool PrintFromType, bool ElideType, 
+                                   bool PrintFromType, bool ElideType,
                                    bool ShowColors, std::string &S) {
   if (PrintTree)
     PrintFromType = true;

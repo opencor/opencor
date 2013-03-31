@@ -30,7 +30,7 @@ class VersionTuple {
   unsigned HasSubminor : 1;
 
 public:
-  VersionTuple() 
+  VersionTuple()
     : Major(0), Minor(0), Subminor(0), HasMinor(false), HasSubminor(false) { }
 
   explicit VersionTuple(unsigned Major)
@@ -38,12 +38,12 @@ public:
   { }
 
   explicit VersionTuple(unsigned Major, unsigned Minor)
-    : Major(Major), Minor(Minor), Subminor(0), HasMinor(true), 
+    : Major(Major), Minor(Minor), Subminor(0), HasMinor(true),
       HasSubminor(false)
   { }
 
   explicit VersionTuple(unsigned Major, unsigned Minor, unsigned Subminor)
-    : Major(Major), Minor(Minor), Subminor(Subminor), HasMinor(true), 
+    : Major(Major), Minor(Minor), Subminor(Subminor), HasMinor(true),
       HasSubminor(true)
   { }
 
@@ -55,14 +55,14 @@ public:
   unsigned getMajor() const { return Major; }
 
   /// \brief Retrieve the minor version number, if provided.
-  llvm::Optional<unsigned> getMinor() const { 
+  llvm::Optional<unsigned> getMinor() const {
     if (!HasMinor)
       return llvm::Optional<unsigned>();
     return Minor;
   }
 
   /// \brief Retrieve the subminor version number, if provided.
-  llvm::Optional<unsigned> getSubminor() const { 
+  llvm::Optional<unsigned> getSubminor() const {
     if (!HasSubminor)
       return llvm::Optional<unsigned>();
     return Subminor;
@@ -76,7 +76,7 @@ public:
 
   /// \brief Determine if two version numbers are not equivalent.
   ///
-  /// If not provided, minor and subminor version numbers are considered to be 
+  /// If not provided, minor and subminor version numbers are considered to be
   /// zero.
   friend bool operator!=(const VersionTuple &X, const VersionTuple &Y) {
     return !(X == Y);
@@ -105,7 +105,7 @@ public:
   }
 
   /// \brief Determine whether one version number precedes or is
-  /// equivalent to another. 
+  /// equivalent to another.
   ///
   /// If not provided, minor and subminor version numbers are considered to be
   /// zero.

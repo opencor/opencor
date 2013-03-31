@@ -98,52 +98,52 @@ struct space_info {
 
 enum perms {
   no_perms     = 0,
-  owner_read   = 0400, 
-  owner_write  = 0200, 
-  owner_exe    = 0100, 
+  owner_read   = 0400,
+  owner_write  = 0200,
+  owner_exe    = 0100,
   owner_all    = owner_read | owner_write | owner_exe,
-  group_read   =  040, 
-  group_write  =  020, 
-  group_exe    =  010, 
+  group_read   =  040,
+  group_write  =  020,
+  group_exe    =  010,
   group_all    = group_read | group_write | group_exe,
-  others_read  =   04, 
-  others_write =   02, 
-  others_exe   =   01, 
-  others_all   = others_read | others_write | others_exe, 
+  others_read  =   04,
+  others_write =   02,
+  others_exe   =   01,
+  others_all   = others_read | others_write | others_exe,
   all_all      = owner_all | group_all | others_all,
-  set_uid_on_exe  = 04000, 
-  set_gid_on_exe  = 02000, 
+  set_uid_on_exe  = 04000,
+  set_gid_on_exe  = 02000,
   sticky_bit      = 01000,
-  perms_mask      = all_all | set_uid_on_exe | set_gid_on_exe | sticky_bit, 
+  perms_mask      = all_all | set_uid_on_exe | set_gid_on_exe | sticky_bit,
   perms_not_known = 0xFFFF,
   add_perms       = 0x1000,
-  remove_perms    = 0x2000, 
+  remove_perms    = 0x2000,
   symlink_perms   = 0x4000
 };
 
 // Helper functions so that you can use & and | to manipulate perms bits:
 inline perms operator|(perms l , perms r) {
   return static_cast<perms>(
-             static_cast<unsigned short>(l) | static_cast<unsigned short>(r)); 
+             static_cast<unsigned short>(l) | static_cast<unsigned short>(r));
 }
 inline perms operator&(perms l , perms r) {
   return static_cast<perms>(
-             static_cast<unsigned short>(l) & static_cast<unsigned short>(r)); 
+             static_cast<unsigned short>(l) & static_cast<unsigned short>(r));
 }
 inline perms &operator|=(perms &l, perms r) {
-  l = l | r; 
-  return l; 
+  l = l | r;
+  return l;
 }
 inline perms &operator&=(perms &l, perms r) {
-  l = l & r; 
-  return l; 
+  l = l & r;
+  return l;
 }
 inline perms operator~(perms x) {
   return static_cast<perms>(~static_cast<unsigned short>(x));
 }
 
 
- 
+
 /// file_status - Represents the result of a call to stat and friends. It has
 ///               a platform specific member to store the result.
 class file_status
@@ -165,14 +165,14 @@ class file_status
   file_type Type;
   perms Perms;
 public:
-  explicit file_status(file_type v=file_type::status_error, 
+  explicit file_status(file_type v=file_type::status_error,
                       perms prms=perms_not_known)
     : Type(v), Perms(prms) {}
 
   // getters
   file_type type() const { return Type; }
   perms permissions() const { return Perms; }
-  
+
   // setters
   void type(file_type v) { Type = v; }
   void permissions(perms p) { Perms = p; }
@@ -666,7 +666,7 @@ public:
 /// @param result Set to the start address of the mapped buffer.
 /// @returns errc::success if result has been successfully set, otherwise a
 ///          platform specific error_code.
-error_code map_file_pages(const Twine &path, off_t file_offset, size_t size,  
+error_code map_file_pages(const Twine &path, off_t file_offset, size_t size,
                           bool map_writable, void *&result);
 
 

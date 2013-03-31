@@ -133,12 +133,12 @@ class ASTContext : public RefCountedBase<ASTContext> {
 
   mutable llvm::FoldingSet<QualifiedTemplateName> QualifiedTemplateNames;
   mutable llvm::FoldingSet<DependentTemplateName> DependentTemplateNames;
-  mutable llvm::FoldingSet<SubstTemplateTemplateParmStorage> 
+  mutable llvm::FoldingSet<SubstTemplateTemplateParmStorage>
     SubstTemplateTemplateParms;
   mutable llvm::ContextualFoldingSet<SubstTemplateTemplateParmPackStorage,
-                                     ASTContext&> 
+                                     ASTContext&>
     SubstTemplateTemplateParmPacks;
-  
+
   /// \brief The set of nested name specifiers.
   ///
   /// This set is managed by the NestedNameSpecifier class.
@@ -161,17 +161,17 @@ class ASTContext : public RefCountedBase<ASTContext> {
 
   /// \brief A cache mapping from CXXRecordDecls to key functions.
   llvm::DenseMap<const CXXRecordDecl*, const CXXMethodDecl*> KeyFunctions;
-  
+
   /// \brief Mapping from ObjCContainers to their ObjCImplementations.
   llvm::DenseMap<ObjCContainerDecl*, ObjCImplDecl*> ObjCImpls;
-  
+
   /// \brief Mapping from ObjCMethod to its duplicate declaration in the same
   /// interface.
   llvm::DenseMap<const ObjCMethodDecl*,const ObjCMethodDecl*> ObjCMethodRedecls;
 
   /// \brief Mapping from __block VarDecls to their copy initialization expr.
   llvm::DenseMap<const VarDecl*, Expr*> BlockVarCopyInits;
-    
+
   /// \brief Mapping from class scope functions specialization to their
   /// template patterns.
   llvm::DenseMap<const FunctionDecl*, FunctionDecl*>
@@ -181,21 +181,21 @@ class ASTContext : public RefCountedBase<ASTContext> {
   /// is used in canonical template names.
   class CanonicalTemplateTemplateParm : public llvm::FoldingSetNode {
     TemplateTemplateParmDecl *Parm;
-    
+
   public:
-    CanonicalTemplateTemplateParm(TemplateTemplateParmDecl *Parm) 
+    CanonicalTemplateTemplateParm(TemplateTemplateParmDecl *Parm)
       : Parm(Parm) { }
-    
+
     TemplateTemplateParmDecl *getParam() const { return Parm; }
-    
+
     void Profile(llvm::FoldingSetNodeID &ID) { Profile(ID, Parm); }
-    
-    static void Profile(llvm::FoldingSetNodeID &ID, 
+
+    static void Profile(llvm::FoldingSetNodeID &ID,
                         TemplateTemplateParmDecl *Parm);
   };
   mutable llvm::FoldingSet<CanonicalTemplateTemplateParm>
     CanonTemplateTemplateParms;
-  
+
   TemplateTemplateParmDecl *
     getCanonicalTemplateTemplateParmDecl(TemplateTemplateParmDecl *TTP) const;
 
@@ -204,14 +204,14 @@ class ASTContext : public RefCountedBase<ASTContext> {
 
   /// \brief The typedef for the __uint128_t type.
   mutable TypedefDecl *UInt128Decl;
-  
+
   /// \brief The typedef for the target specific predefined
   /// __builtin_va_list type.
   mutable TypedefDecl *BuiltinVaListDecl;
 
   /// \brief The typedef for the predefined \c id type.
   mutable TypedefDecl *ObjCIdDecl;
-  
+
   /// \brief The typedef for the predefined \c SEL type.
   mutable TypedefDecl *ObjCSelDecl;
 
@@ -220,7 +220,7 @@ class ASTContext : public RefCountedBase<ASTContext> {
 
   /// \brief The typedef for the predefined \c Protocol class in Objective-C.
   mutable ObjCInterfaceDecl *ObjCProtocolClassDecl;
-  
+
   /// \brief The typedef for the predefined 'BOOL' type.
   mutable TypedefDecl *BOOLDecl;
 
@@ -232,12 +232,12 @@ class ASTContext : public RefCountedBase<ASTContext> {
 
   QualType ObjCConstantStringType;
   mutable RecordDecl *CFConstantStringTypeDecl;
-  
+
   QualType ObjCNSStringType;
 
   /// \brief The typedef declaration for the Objective-C "instancetype" type.
   TypedefDecl *ObjCInstanceTypeDecl;
-  
+
   /// \brief The type for the C FILE type.
   TypeDecl *FILEDecl;
 
@@ -298,7 +298,7 @@ class ASTContext : public RefCountedBase<ASTContext> {
   /// This mapping will contain an entry that maps from the VarDecl for
   /// X<int>::value to the corresponding VarDecl for X<T>::value (within the
   /// class template X) and will be marked TSK_ImplicitInstantiation.
-  llvm::DenseMap<const VarDecl *, MemberSpecializationInfo *> 
+  llvm::DenseMap<const VarDecl *, MemberSpecializationInfo *>
     InstantiatedFromStaticDataMember;
 
   /// \brief Keeps track of the declaration from which a UsingDecl was
@@ -340,18 +340,18 @@ class ASTContext : public RefCountedBase<ASTContext> {
   typedef llvm::TinyPtrVector<const CXXMethodDecl*> CXXMethodVector;
   llvm::DenseMap<const CXXMethodDecl *, CXXMethodVector> OverriddenMethods;
 
-  /// \brief Mapping from each declaration context to its corresponding lambda 
+  /// \brief Mapping from each declaration context to its corresponding lambda
   /// mangling context.
   llvm::DenseMap<const DeclContext *, LambdaMangleContext> LambdaMangleContexts;
-  
+
   /// \brief Mapping that stores parameterIndex values for ParmVarDecls when
   /// that value exceeds the bitfield size of ParmVarDeclBits.ParameterIndex.
   typedef llvm::DenseMap<const VarDecl *, unsigned> ParameterIndexTable;
-  ParameterIndexTable ParamIndices;  
-  
+  ParameterIndexTable ParamIndices;
+
   ImportDecl *FirstLocalImport;
   ImportDecl *LastLocalImport;
-  
+
   TranslationUnitDecl *TUDecl;
 
   /// \brief The associated SourceManager object.a
@@ -384,7 +384,7 @@ class ASTContext : public RefCountedBase<ASTContext> {
 
   const TargetInfo *Target;
   clang::PrintingPolicy PrintingPolicy;
-  
+
 public:
   IdentifierTable &Idents;
   SelectorTable &Selectors;
@@ -400,7 +400,7 @@ public:
   void setPrintingPolicy(const clang::PrintingPolicy &Policy) {
     PrintingPolicy = Policy;
   }
-  
+
   SourceManager& getSourceManager() { return SourceMgr; }
   const SourceManager& getSourceManager() const { return SourceMgr; }
 
@@ -412,7 +412,7 @@ public:
     return BumpAlloc.Allocate(Size, Align);
   }
   void Deallocate(void *Ptr) const { }
-  
+
   /// Return the total amount of physical memory allocated for representing
   /// AST nodes and type information.
   size_t getASTAllocatedMemory() const {
@@ -420,13 +420,13 @@ public:
   }
   /// Return the total memory used for various side tables.
   size_t getSideTableAllocatedMemory() const;
-  
+
   PartialDiagnostic::StorageAllocator &getDiagAllocator() {
     return DiagAllocator;
   }
 
   const TargetInfo &getTargetInfo() const { return *Target; }
-  
+
   const LangOptions& getLangOpts() const { return LangOpts; }
 
   DiagnosticsEngine &getDiagnostics() const;
@@ -537,7 +537,7 @@ public:
   /// preprocessor is not available.
   comments::FullComment *getCommentForDecl(const Decl *D,
                                            const Preprocessor *PP) const;
-  
+
   comments::FullComment *cloneFullComment(comments::FullComment *FC,
                                          const Decl *D) const;
 
@@ -588,27 +588,27 @@ public:
   FieldDecl *getInstantiatedFromUnnamedFieldDecl(FieldDecl *Field);
 
   void setInstantiatedFromUnnamedFieldDecl(FieldDecl *Inst, FieldDecl *Tmpl);
-  
+
   /// \brief Return \c true if \p FD is a zero-length bitfield which follows
   /// the non-bitfield \p LastFD.
-  bool ZeroBitfieldFollowsNonBitfield(const FieldDecl *FD, 
+  bool ZeroBitfieldFollowsNonBitfield(const FieldDecl *FD,
                                       const FieldDecl *LastFD) const;
 
   /// \brief Return \c true if \p FD is a zero-length bitfield which follows
   /// the bitfield \p LastFD.
   bool ZeroBitfieldFollowsBitfield(const FieldDecl *FD,
                                    const FieldDecl *LastFD) const;
-  
+
   /// \brief Return \c true if \p FD is a bitfield which follows the bitfield
   /// \p LastFD.
   bool BitfieldFollowsBitfield(const FieldDecl *FD,
                                const FieldDecl *LastFD) const;
-  
+
   /// \brief Return \c true if \p FD is not a bitfield which follows the
   /// bitfield \p LastFD.
   bool NonBitfieldFollowsBitfield(const FieldDecl *FD,
                                   const FieldDecl *LastFD) const;
-  
+
   /// \brief Return \c true if \p FD is a bitfield which follows the
   /// non-bitfield \p LastFD.
   bool BitfieldFollowsNonBitfield(const FieldDecl *FD,
@@ -626,7 +626,7 @@ public:
 
   /// \brief Note that the given C++ \p Method overrides the given \p
   /// Overridden method.
-  void addOverriddenMethod(const CXXMethodDecl *Method, 
+  void addOverriddenMethod(const CXXMethodDecl *Method,
                            const CXXMethodDecl *Overridden);
 
   /// \brief Return C++ or ObjC overridden methods for the given \p Method.
@@ -639,7 +639,7 @@ public:
   void getOverriddenMethods(
                         const NamedDecl *Method,
                         SmallVectorImpl<const NamedDecl *> &Overridden) const;
-  
+
   /// \brief Notify the AST context that a new import declaration has been
   /// parsed or implicitly created within this translation unit.
   void addedLocalImportDecl(ImportDecl *Import);
@@ -647,24 +647,24 @@ public:
   static ImportDecl *getNextLocalImport(ImportDecl *Import) {
     return Import->NextLocalImport;
   }
-  
+
   /// \brief Iterator that visits import declarations.
   class import_iterator {
     ImportDecl *Import;
-    
+
   public:
     typedef ImportDecl               *value_type;
     typedef ImportDecl               *reference;
     typedef ImportDecl               *pointer;
     typedef int                       difference_type;
     typedef std::forward_iterator_tag iterator_category;
-    
+
     import_iterator() : Import() { }
     explicit import_iterator(ImportDecl *Import) : Import(Import) { }
-    
+
     reference operator*() const { return Import; }
     pointer operator->() const { return Import; }
-    
+
     import_iterator &operator++() {
       Import = ASTContext::getNextLocalImport(Import);
       return *this;
@@ -675,7 +675,7 @@ public:
       ++(*this);
       return Other;
     }
-    
+
     friend bool operator==(import_iterator X, import_iterator Y) {
       return X.Import == Y.Import;
     }
@@ -684,12 +684,12 @@ public:
       return X.Import != Y.Import;
     }
   };
-  
-  import_iterator local_import_begin() const { 
-    return import_iterator(FirstLocalImport); 
+
+  import_iterator local_import_begin() const {
+    return import_iterator(FirstLocalImport);
   }
   import_iterator local_import_end() const { return import_iterator(); }
-  
+
   TranslationUnitDecl *getTranslationUnitDecl() const { return TUDecl; }
 
 
@@ -762,7 +762,7 @@ public:
 
   /// \brief Retrieve the declaration for the 128-bit unsigned integer type.
   TypedefDecl *getUInt128Decl() const;
-  
+
   //===--------------------------------------------------------------------===//
   //                           Type Constructors
   //===--------------------------------------------------------------------===//
@@ -906,7 +906,7 @@ public:
   QualType getConstantArrayType(QualType EltTy, const llvm::APInt &ArySize,
                                 ArrayType::ArraySizeModifier ASM,
                                 unsigned IndexTypeQuals) const;
-  
+
   /// \brief Returns a vla type where known sizes are replaced with [*].
   QualType getVariableArrayDecayedType(QualType Ty) const;
 
@@ -1123,11 +1123,11 @@ public:
   QualType getObjCNSStringType() const {
     return ObjCNSStringType;
   }
-  
+
   void setObjCNSStringType(QualType T) {
     ObjCNSStringType = T;
   }
-  
+
   /// \brief Retrieve the type that \c id has been defined to, which may be
   /// different from the built-in \c id if \c id has been typedef'd.
   QualType getObjCIdRedefinitionType() const {
@@ -1135,7 +1135,7 @@ public:
       return getObjCIdType();
     return ObjCIdRedefinitionType;
   }
-  
+
   /// \brief Set the user-written type that redefines \c id.
   void setObjCIdRedefinitionType(QualType RedefType) {
     ObjCIdRedefinitionType = RedefType;
@@ -1148,7 +1148,7 @@ public:
       return getObjCClassType();
     return ObjCClassRedefinitionType;
   }
-  
+
   /// \brief Set the user-written type that redefines 'SEL'.
   void setObjCClassRedefinitionType(QualType RedefType) {
     ObjCClassRedefinitionType = RedefType;
@@ -1162,7 +1162,7 @@ public:
     return ObjCSelRedefinitionType;
   }
 
-  
+
   /// \brief Set the user-written type that redefines 'SEL'.
   void setObjCSelRedefinitionType(QualType RedefType) {
     ObjCSelRedefinitionType = RedefType;
@@ -1177,7 +1177,7 @@ public:
   /// \brief Retrieve the typedef declaration corresponding to the Objective-C
   /// "instancetype" type.
   TypedefDecl *getObjCInstanceTypeDecl();
-  
+
   /// \brief Set the type for the C FILE type.
   void setFILEDecl(TypeDecl *FILEDecl) { this->FILEDecl = FILEDecl; }
 
@@ -1261,7 +1261,7 @@ public:
 
   /// \brief Return the encoded type for this block declaration.
   std::string getObjCEncodingForBlock(const BlockExpr *blockExpr) const;
-  
+
   /// getObjCEncodingForPropertyDecl - Return the encoded type for
   /// this method declaration. If non-NULL, Container must be either
   /// an ObjCCategoryImplDecl or ObjCImplementationDecl; it should
@@ -1280,7 +1280,7 @@ public:
   /// \brief Retrieve the typedef corresponding to the predefined \c id type
   /// in Objective-C.
   TypedefDecl *getObjCIdDecl() const;
-  
+
   /// \brief Represents the Objective-CC \c id type.
   ///
   /// This is set up lazily, by Sema.  \c id is always a (typedef for a)
@@ -1292,26 +1292,26 @@ public:
   /// \brief Retrieve the typedef corresponding to the predefined 'SEL' type
   /// in Objective-C.
   TypedefDecl *getObjCSelDecl() const;
-  
+
   /// \brief Retrieve the type that corresponds to the predefined Objective-C
   /// 'SEL' type.
-  QualType getObjCSelType() const { 
+  QualType getObjCSelType() const {
     return getTypeDeclType(getObjCSelDecl());
   }
 
   /// \brief Retrieve the typedef declaration corresponding to the predefined
   /// Objective-C 'Class' type.
   TypedefDecl *getObjCClassDecl() const;
-  
+
   /// \brief Represents the Objective-C \c Class type.
   ///
   /// This is set up lazily, by Sema.  \c Class is always a (typedef for a)
   /// pointer type, a pointer to a struct.
-  QualType getObjCClassType() const { 
+  QualType getObjCClassType() const {
     return getTypeDeclType(getObjCClassDecl());
   }
 
-  /// \brief Retrieve the Objective-C class declaration corresponding to 
+  /// \brief Retrieve the Objective-C class declaration corresponding to
   /// the predefined \c Protocol class.
   ObjCInterfaceDecl *getObjCProtocolDecl() const;
 
@@ -1329,12 +1329,12 @@ public:
   QualType getBOOLType() const {
     return getTypeDeclType(getBOOLDecl());
   }
-  
+
   /// \brief Retrieve the type of the Objective-C \c Protocol class.
   QualType getObjCProtoType() const {
     return getObjCInterfaceType(getObjCProtocolDecl());
   }
-  
+
   /// \brief Retrieve the C type declaration corresponding to the predefined
   /// \c __builtin_va_list type.
   TypedefDecl *getBuiltinVaListDecl() const;
@@ -1407,7 +1407,7 @@ public:
                                             TemplateName replacement) const;
   TemplateName getSubstTemplateTemplateParmPack(TemplateTemplateParmDecl *Param,
                                         const TemplateArgument &ArgPack) const;
-  
+
   enum GetBuiltinTypeError {
     GE_None,              ///< No error
     GE_Missing_stdio,     ///< Missing a type from <stdio.h>
@@ -1475,7 +1475,7 @@ public:
   uint64_t getCharWidth() const {
     return getTypeSize(CharTy);
   }
-  
+
   /// \brief Convert a size in bits to a size in characters.
   CharUnits toCharUnitsFromBits(int64_t BitSize) const;
 
@@ -1496,11 +1496,11 @@ public:
     return getTypeInfo(T).second;
   }
 
-  /// \brief Return the ABI-specified alignment of a (complete) type \p T, in 
+  /// \brief Return the ABI-specified alignment of a (complete) type \p T, in
   /// characters.
   CharUnits getTypeAlignInChars(QualType T) const;
   CharUnits getTypeAlignInChars(const Type *T) const;
-  
+
   // getTypeInfoDataSizeInChars - Return the size of a type, in chars. If the
   // type is a record, its data size is returned.
   std::pair<CharUnits, CharUnits> getTypeInfoDataSizeInChars(QualType T) const;
@@ -1560,10 +1560,10 @@ public:
   bool isNearlyEmpty(const CXXRecordDecl *RD) const;
 
   MangleContext *createMangleContext();
-  
+
   void DeepCollectObjCIvars(const ObjCInterfaceDecl *OI, bool leafClass,
                             SmallVectorImpl<const ObjCIvarDecl*> &Ivars) const;
-  
+
   unsigned CountNonClassIvars(const ObjCInterfaceDecl *OI) const;
   void CollectInheritedProtocols(const Decl *CDecl,
                           llvm::SmallPtrSet<ObjCProtocolDecl*, 8> &Protocols);
@@ -1623,7 +1623,7 @@ public:
   }
 
   bool UnwrapSimilarPointerTypes(QualType &T1, QualType &T2);
-  
+
   /// \brief Retrieves the "canonical" nested name specifier for a
   /// given nested name specifier.
   ///
@@ -1687,7 +1687,7 @@ public:
   /// \brief Determine whether the given template names refer to the same
   /// template.
   bool hasSameTemplateName(TemplateName X, TemplateName Y);
-  
+
   /// \brief Retrieve the "canonical" template argument.
   ///
   /// The canonical template argument is the simplest template argument
@@ -1714,7 +1714,7 @@ public:
     const {
     return dyn_cast_or_null<DependentSizedArrayType>(getAsArrayType(T));
   }
-  
+
   /// \brief Return the innermost element type of an array type.
   ///
   /// For example, will return "int" for int[m][n]
@@ -1733,12 +1733,12 @@ public:
   /// parameter type used by semantic analysis (C99 6.7.5.3p[7,8],
   /// C++ [dcl.fct]p3). The adjusted parameter type is returned.
   QualType getAdjustedParameterType(QualType T) const;
-  
+
   /// \brief Retrieve the parameter type as adjusted for use in the signature
   /// of a function, decaying array and function types and removing top-level
   /// cv-qualifiers.
   QualType getSignatureParameterType(QualType T) const;
-  
+
   /// \brief Return the properly qualified result of decaying the specified
   /// array type to a pointer.
   ///
@@ -1764,7 +1764,7 @@ public:
   /// promotion occurs.
   QualType isPromotableBitField(Expr *E) const;
 
-  /// \brief Return the highest ranked integer type, see C99 6.3.1.8p1. 
+  /// \brief Return the highest ranked integer type, see C99 6.3.1.8p1.
   ///
   /// If \p LHS > \p RHS, returns 1.  If \p LHS == \p RHS, returns 0.  If
   /// \p LHS < \p RHS, return -1.
@@ -1811,11 +1811,11 @@ public:
   //===--------------------------------------------------------------------===//
 
   /// Compatibility predicates used to check assignment expressions.
-  bool typesAreCompatible(QualType T1, QualType T2, 
+  bool typesAreCompatible(QualType T1, QualType T2,
                           bool CompareUnqualified = false); // C99 6.2.7p1
 
-  bool propertyTypesAreCompatible(QualType, QualType); 
-  bool typesAreBlockPointerCompatible(QualType, QualType); 
+  bool propertyTypesAreCompatible(QualType, QualType);
+  bool typesAreBlockPointerCompatible(QualType, QualType);
 
   bool isObjCIdType(QualType T) const {
     return T == getObjCIdType();
@@ -1831,7 +1831,7 @@ public:
                                          bool ForCompare);
 
   bool ObjCQualifiedClassTypesAreCompatible(QualType LHS, QualType RHS);
-  
+
   // Check the safety of assignment from LHS to RHS
   bool canAssignObjCInterfaces(const ObjCObjectPointerType *LHSOPT,
                                const ObjCObjectPointerType *RHSOPT);
@@ -1857,9 +1857,9 @@ public:
   QualType mergeTransparentUnionType(QualType, QualType,
                                      bool OfBlockPointer=false,
                                      bool Unqualified = false);
-  
+
   QualType mergeObjCGCQualifiers(QualType, QualType);
-    
+
   bool FunctionTypesMatchOnNSConsumedAttrs(
          const FunctionProtoType *FromFunctionType,
          const FunctionProtoType *ToFunctionType);
@@ -1900,7 +1900,7 @@ public:
   /// \brief Make an APSInt of the appropriate width and signedness for the
   /// given \p Value and integer \p Type.
   llvm::APSInt MakeIntValue(uint64_t Value, QualType Type) const {
-    llvm::APSInt Res(getIntWidth(Type), 
+    llvm::APSInt Res(getIntWidth(Type),
                      !Type->isSignedIntegerOrEnumerationType());
     Res = Value;
     return Res;
@@ -1944,7 +1944,7 @@ public:
   /// an Objective-C method/property/ivar etc. that is part of an interface,
   /// otherwise returns null.
   ObjCInterfaceDecl *getObjContainingInterface(NamedDecl *ND) const;
-  
+
   /// \brief Set the copy inialization expression of a block var decl.
   void setBlockVarCopyInits(VarDecl*VD, Expr* Init);
   /// \brief Get the copy initialization expression of the VarDecl \p VD, or
@@ -1968,12 +1968,12 @@ public:
   /// initialized to a given location, which defaults to the empty
   /// location.
   TypeSourceInfo *
-  getTrivialTypeSourceInfo(QualType T, 
+  getTrivialTypeSourceInfo(QualType T,
                            SourceLocation Loc = SourceLocation()) const;
 
   TypeSourceInfo *getNullTypeSourceInfo() { return &NullTypeSourceInfo; }
 
-  /// \brief Add a deallocation callback that will be invoked when the 
+  /// \brief Add a deallocation callback that will be invoked when the
   /// ASTContext is destroyed.
   ///
   /// \param Callback A callback function that will be invoked on destruction.
@@ -1995,7 +1995,7 @@ public:
 
   /// \brief Retrieve the lambda mangling number for a lambda expression.
   unsigned getLambdaManglingNumber(CXXMethodDecl *CallOperator);
-  
+
   /// \brief Used by ParmVarDecl to store on the side the
   /// index of the parameter when it exceeds the size of the normal bitfield.
   void setParameterIndex(const ParmVarDecl *D, unsigned index);
@@ -2003,22 +2003,22 @@ public:
   /// \brief Used by ParmVarDecl to retrieve on the side the
   /// index of the parameter when it exceeds the size of the normal bitfield.
   unsigned getParameterIndex(const ParmVarDecl *D) const;
-  
+
   //===--------------------------------------------------------------------===//
   //                    Statistics
   //===--------------------------------------------------------------------===//
 
   /// \brief The number of implicitly-declared default constructors.
   static unsigned NumImplicitDefaultConstructors;
-  
-  /// \brief The number of implicitly-declared default constructors for 
+
+  /// \brief The number of implicitly-declared default constructors for
   /// which declarations were built.
   static unsigned NumImplicitDefaultConstructorsDeclared;
 
   /// \brief The number of implicitly-declared copy constructors.
   static unsigned NumImplicitCopyConstructors;
-  
-  /// \brief The number of implicitly-declared copy constructors for 
+
+  /// \brief The number of implicitly-declared copy constructors for
   /// which declarations were built.
   static unsigned NumImplicitCopyConstructorsDeclared;
 
@@ -2031,25 +2031,25 @@ public:
 
   /// \brief The number of implicitly-declared copy assignment operators.
   static unsigned NumImplicitCopyAssignmentOperators;
-  
-  /// \brief The number of implicitly-declared copy assignment operators for 
+
+  /// \brief The number of implicitly-declared copy assignment operators for
   /// which declarations were built.
   static unsigned NumImplicitCopyAssignmentOperatorsDeclared;
 
   /// \brief The number of implicitly-declared move assignment operators.
   static unsigned NumImplicitMoveAssignmentOperators;
-  
-  /// \brief The number of implicitly-declared move assignment operators for 
+
+  /// \brief The number of implicitly-declared move assignment operators for
   /// which declarations were built.
   static unsigned NumImplicitMoveAssignmentOperatorsDeclared;
 
   /// \brief The number of implicitly-declared destructors.
   static unsigned NumImplicitDestructors;
-  
-  /// \brief The number of implicitly-declared destructors for which 
+
+  /// \brief The number of implicitly-declared destructors for which
   /// declarations were built.
   static unsigned NumImplicitDestructorsDeclared;
-  
+
 private:
   ASTContext(const ASTContext &) LLVM_DELETED_FUNCTION;
   void operator=(const ASTContext &) LLVM_DELETED_FUNCTION;
@@ -2062,9 +2062,9 @@ public:
   /// constructor can be asked to delay initialization, which places the burden
   /// of calling this function on the user of that object.
   ///
-  /// \param Target The target 
+  /// \param Target The target
   void InitBuiltinTypes(const TargetInfo &Target);
-  
+
 private:
   void InitBuiltinType(CanQualType &R, BuiltinType::Kind K);
 
@@ -2094,10 +2094,10 @@ private:
                 const ObjCImplementationDecl *Impl) const;
 
 private:
-  /// \brief A set of deallocations that should be performed when the 
+  /// \brief A set of deallocations that should be performed when the
   /// ASTContext is destroyed.
   SmallVector<std::pair<void (*)(void*), void *>, 16> Deallocations;
-                                       
+
   // FIXME: This currently contains the set of StoredDeclMaps used
   // by DeclContext objects.  This probably should not be in ASTContext,
   // but we include it here so that ASTContext can quickly deallocate them.
@@ -2105,12 +2105,12 @@ private:
 
   /// \brief A counter used to uniquely identify "blocks".
   mutable unsigned int UniqueBlockByRefTypeID;
-  
+
   friend class DeclContext;
   friend class DeclarationNameTable;
   void ReleaseDeclContextMaps();
 };
-  
+
 /// \brief Utility function for constructing a nullary selector.
 static inline Selector GetNullarySelector(StringRef name, ASTContext& Ctx) {
   IdentifierInfo* II = &Ctx.Idents.get(name);

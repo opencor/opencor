@@ -363,16 +363,16 @@ static void DumpBasePath(raw_ostream &OS, CastExpr *Node) {
     const CXXBaseSpecifier *Base = *I;
     if (!First)
       OS << " -> ";
-    
+
     const CXXRecordDecl *RD =
     cast<CXXRecordDecl>(Base->getType()->getAs<RecordType>()->getDecl());
-    
+
     if (Base->isVirtual())
       OS << "virtual ";
     OS << RD->getName();
     First = false;
   }
-    
+
   OS << ')';
 }
 
@@ -555,7 +555,7 @@ void StmtDumper::VisitAddrLabelExpr(AddrLabelExpr *Node) {
 
 void StmtDumper::VisitCXXNamedCastExpr(CXXNamedCastExpr *Node) {
   DumpExpr(Node);
-  OS << " " << Node->getCastName() 
+  OS << " " << Node->getCastName()
      << "<" << Node->getTypeAsWritten().getAsString() << ">"
      << " <" << Node->getCastKindName();
   DumpBasePath(OS, Node);
@@ -707,7 +707,7 @@ void StmtDumper::VisitObjCSubscriptRefExpr(ObjCSubscriptRefExpr *Node) {
     OS << Node->getAtIndexMethodDecl()->getSelector().getAsString();
   else
     OS << "(null)";
-  
+
   if (Node->isArraySubscriptRefExpr())
     OS << "\" SetterForArray=\"";
   else

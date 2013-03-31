@@ -111,7 +111,7 @@ namespace clang {
     }
 
     virtual llvm::Type* adjustInlineAsmType(CodeGen::CodeGenFunction &CGF,
-                                            StringRef Constraint, 
+                                            StringRef Constraint,
                                             llvm::Type* Ty) const {
       return Ty;
     }

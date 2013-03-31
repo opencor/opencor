@@ -4,10 +4,10 @@
 //
 // This file is distributed under the University of Illinois Open Source
 // License. See LICENSE.TXT for details.
-// 
+//
 //===----------------------------------------------------------------------===//
 //
-// This file defines the interface for the Enhanced Disassembly library's 
+// This file defines the interface for the Enhanced Disassembly library's
 // operand class.  The operand is responsible for allowing evaluation given a
 // particular register context.
 //
@@ -22,8 +22,8 @@ namespace llvm {
 
 struct EDDisassembler;
 struct EDInst;
-  
-typedef int (*EDRegisterReaderCallback)(uint64_t *value, unsigned regID, 
+
+typedef int (*EDRegisterReaderCallback)(uint64_t *value, unsigned regID,
                                         void* arg);
 
 
@@ -34,12 +34,12 @@ struct EDOperand {
   const EDDisassembler &Disassembler;
   /// The parent instruction
   const EDInst &Inst;
-  
+
   /// The index of the operand in the EDInst
   unsigned int OpIndex;
   /// The index of the first component of the operand in the MCInst
   unsigned int MCOpIndex;
-  
+
   /// Constructor - Initializes an EDOperand
   ///
   /// @arg disassembler - The disassembler responsible for the operand
@@ -51,9 +51,9 @@ struct EDOperand {
             unsigned int opIndex,
             unsigned int &mcOpIndex);
   ~EDOperand();
-  
+
   /// evaluate - Returns the numeric value of an operand to the extent possible,
-  ///   returning 0 on success or -1 if there was some problem (such as a 
+  ///   returning 0 on success or -1 if there was some problem (such as a
   ///   register not being readable)
   ///
   /// @arg result   - A reference whose target is filled in with the value of
@@ -68,15 +68,15 @@ struct EDOperand {
   int isRegister();
   /// regVal - Returns the register value.
   unsigned regVal();
-  
+
   /// isImmediate - Returns 1 if the operand is an immediate or 0 otherwise
   int isImmediate();
   /// immediateVal - Returns the immediate value.
   uint64_t immediateVal();
-  
+
   /// isMemory - Returns 1 if the operand is a memory location or 0 otherwise
   int isMemory();
-  
+
 #ifdef __BLOCKS__
   typedef int (^EDRegisterBlock_t)(uint64_t *value, unsigned regID);
 

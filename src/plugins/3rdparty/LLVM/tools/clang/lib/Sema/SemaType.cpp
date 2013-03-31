@@ -4630,7 +4630,7 @@ static QualType getDecltypeForExpr(Sema &S, Expr *E) {
     if (PR->isExplicitProperty())
       return PR->getExplicitProperty()->getType();
   }
-  
+
   // C++11 [expr.lambda.prim]p18:
   //   Every occurrence of decltype((x)) where x is a possibly
   //   parenthesized id-expression that names an entity of automatic

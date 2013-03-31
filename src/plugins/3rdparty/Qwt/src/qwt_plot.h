@@ -40,7 +40,7 @@ class QwtTextLabel;
   are calculated from the plot items, using algorithms (QwtScaleEngine) which
   can be configured separately for each axis.
 
-  The simpleplot example is a good starting point to see how to set up a 
+  The simpleplot example is a good starting point to see how to set up a
   plot widget.
 
   \image html plot.png
@@ -75,7 +75,7 @@ class QWT_EXPORT QwtPlot: public QFrame, public QwtPlotDict
 {
     Q_OBJECT
 
-    Q_PROPERTY( QBrush canvasBackground 
+    Q_PROPERTY( QBrush canvasBackground
         READ canvasBackground WRITE setCanvasBackground )
     Q_PROPERTY( bool autoReplot READ autoReplot WRITE setAutoReplot )
 
@@ -121,7 +121,7 @@ public:
         //! The legend will be right from the QwtPlot::yRight axis.
         RightLegend,
 
-        //! The legend will be below the footer 
+        //! The legend will be below the footer
         BottomLegend,
 
         //! The legend will be above the title
@@ -224,7 +224,7 @@ public:
 
     // Legend
 
-    void insertLegend( QwtAbstractLegend *, 
+    void insertLegend( QwtAbstractLegend *,
         LegendPosition = QwtPlot::RightLegend, double ratio = -1.0 );
 
     QwtAbstractLegend *legend();
@@ -244,7 +244,7 @@ public:
     void updateAxes();
     void updateCanvasMargins();
 
-    virtual void getCanvasMarginsHint( 
+    virtual void getCanvasMarginsHint(
         const QwtScaleMap maps[], const QRectF &canvasRect,
         double &left, double &top, double &right, double &bottom) const;
 
@@ -267,7 +267,7 @@ Q_SIGNALS:
     void itemAttached( QwtPlotItem *plotItem, bool on );
 
     /*!
-      A signal with the attributes how to update 
+      A signal with the attributes how to update
       the legend entries for a plot item.
 
       \param itemInfo Info about a plot item, build from itemToInfo()
@@ -276,7 +276,7 @@ Q_SIGNALS:
 
       \sa itemToInfo(), infoToItem(), QwtAbstractLegend::updateLegend()
      */
-    void legendDataChanged( const QVariant &itemInfo, 
+    void legendDataChanged( const QVariant &itemInfo,
         const QList<QwtLegendData> &data );
 
 public Q_SLOTS:

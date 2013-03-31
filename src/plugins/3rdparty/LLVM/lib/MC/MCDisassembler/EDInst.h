@@ -4,7 +4,7 @@
 //
 // This file is distributed under the University of Illinois Open Source
 // License. See LICENSE.TXT for details.
-// 
+//
 //===----------------------------------------------------------------------===//
 //
 // This file defines the interface for the Enhanced Disassembly library's
@@ -39,7 +39,7 @@ struct CachedResult {
   bool Valid;
   /// The result last obtained from the function
   int Result;
-  
+
   /// Constructor - Initializes an invalid result
   CachedResult() : Valid(false) { }
   /// valid - Returns true if the result has been obtained by executing the
@@ -66,7 +66,7 @@ struct EDInst {
   const llvm::EDInstInfo *ThisInstInfo;
   /// The number of bytes for the machine code representation of the instruction
   uint64_t ByteSize;
-  
+
   /// The result of the stringify() function
   CachedResult StringifyResult;
   /// The string representation of the instruction
@@ -74,7 +74,7 @@ struct EDInst {
   /// The order in which operands from the InstInfo's operand information appear
   /// in String
   const signed char* OperandOrder;
-  
+
   /// The result of the parseOperands() function
   CachedResult ParseResult;
   typedef llvm::SmallVector<EDOperand*, 5> opvec_t;
@@ -86,13 +86,13 @@ struct EDInst {
   int MoveSource;
   /// The operand corresponding to the target, if the instruction is a move
   int MoveTarget;
-  
+
   /// The result of the tokenize() function
   CachedResult TokenizeResult;
   typedef std::vector<EDToken*> tokvec_t;
   /// The instruction's tokens
   tokvec_t Tokens;
-  
+
   /// Constructor - initializes an instruction given the output of the LLVM
   ///   C++ disassembler
   ///
@@ -106,13 +106,13 @@ struct EDInst {
          EDDisassembler &disassembler,
          const llvm::EDInstInfo *instInfo);
   ~EDInst();
-  
+
   /// byteSize - returns the number of bytes consumed by the machine code
   ///   representation of the instruction
   uint64_t byteSize();
   /// instID - returns the LLVM instruction ID of the instruction
   unsigned instID();
-  
+
   /// stringify - populates the String and AsmString members of the instruction,
   ///   returning 0 on success or -1 otherwise
   int stringify();
@@ -123,16 +123,16 @@ struct EDInst {
   ///   the string representation of the instruction; this string is still owned
   ///   by the instruction and will be deleted when it is
   int getString(const char *&str);
-  
+
   /// isBranch - Returns true if the instruction is a branch
   bool isBranch();
   /// isMove - Returns true if the instruction is a move
   bool isMove();
-  
+
   /// parseOperands - populates the Operands member of the instruction,
   ///   returning 0 on success or -1 otherwise
   int parseOperands();
-  /// branchTargetID - returns the ID (suitable for use with getOperand()) of 
+  /// branchTargetID - returns the ID (suitable for use with getOperand()) of
   ///   the target operand if the instruction is a branch, or -1 otherwise
   int branchTargetID();
   /// moveSourceID - returns the ID of the source operand if the instruction
@@ -141,7 +141,7 @@ struct EDInst {
   /// moveTargetID - returns the ID of the target operand if the instruction
   ///   is a move, or -1 otherwise
   int moveTargetID();
-  
+
   /// numOperands - returns the number of operands available to retrieve, or -1
   ///   on error
   int numOperands();

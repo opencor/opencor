@@ -52,7 +52,7 @@ public:
 
     virtual QRectF boundingRect() const;
 
-    virtual void updateScaleDiv( 
+    virtual void updateScaleDiv(
         const QwtScaleDiv &, const QwtScaleDiv & );
 
 protected:

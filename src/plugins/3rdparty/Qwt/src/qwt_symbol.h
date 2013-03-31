@@ -85,7 +85,7 @@ public:
         Hexagon,
 
         /*!
-          The symbol is represented by a painter path, where the 
+          The symbol is represented by a painter path, where the
           origin ( 0, 0 ) of the path coordinate system is mapped to
           the position of the symbol.
 
@@ -131,7 +131,7 @@ public:
       to a pixmap and to paint this pixmap.
 
       F.e. the raster paint engine is a pure software renderer
-      where in cache mode a draw operation usually ends in 
+      where in cache mode a draw operation usually ends in
       raster operation with the the backing store, that are usually
       faster, than the algorithms for rendering polygons.
       But the opposite can be expected for graphic pipelines
@@ -141,7 +141,7 @@ public:
 
       \sa setCachePolicy(), cachePolicy()
 
-      \note The policy has no effect, when the symbol is painted 
+      \note The policy has no effect, when the symbol is painted
             to a vector graphics format ( PDF, SVG ).
       \warning Since Qt 4.8 raster is the default backend on X11
      */
@@ -154,10 +154,10 @@ public:
         //! Always use a pixmap cache
         Cache,
 
-        /*! 
+        /*!
            Use a cache when one of the following conditions is true:
 
-           - The symbol is rendered with the software 
+           - The symbol is rendered with the software
              renderer ( QPaintEngine::Raster )
          */
         AutoCache

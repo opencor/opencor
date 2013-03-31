@@ -26,10 +26,10 @@
 
 #ifdef QWT_DLL
 
-#if defined(QWT_MAKEDLL)     // create a Qwt DLL library 
+#if defined(QWT_MAKEDLL)     // create a Qwt DLL library
 #define QWT_EXPORT Q_DECL_EXPORT
 #else                        // use a Qwt DLL library
-#define QWT_EXPORT Q_DECL_IMPORT 
+#define QWT_EXPORT Q_DECL_IMPORT
 #endif
 
 #endif // QWT_DLL
@@ -38,4 +38,4 @@
 #define QWT_EXPORT
 #endif
 
-#endif 
+#endif

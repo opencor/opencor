@@ -86,7 +86,7 @@ void ExprEngine::VisitCXXConstructExpr(const CXXConstructExpr *CE,
           }
         }
       }
-      
+
       // Is this a constructor for a member?
       if (const CFGInitializer *InitElem = dyn_cast<CFGInitializer>(&Next)) {
         const CXXCtorInitializer *Init = InitElem->getInitializer();
@@ -164,7 +164,7 @@ void ExprEngine::VisitCXXDestructor(QualType ObjectType,
                                     const MemRegion *Dest,
                                     const Stmt *S,
                                     bool IsBaseDtor,
-                                    ExplodedNode *Pred, 
+                                    ExplodedNode *Pred,
                                     ExplodedNodeSet &Dst) {
   const LocationContext *LCtx = Pred->getLocationContext();
   ProgramStateRef State = Pred->getState();
@@ -212,7 +212,7 @@ void ExprEngine::VisitCXXNewExpr(const CXXNewExpr *CNE, ExplodedNode *Pred,
   // really part of the CXXNewExpr because they happen BEFORE the
   // CXXConstructExpr subexpression. See PR12014 for some discussion.
   StmtNodeBuilder Bldr(Pred, Dst, *currBldrCtx);
-  
+
   unsigned blockCount = currBldrCtx->blockCount();
   const LocationContext *LCtx = Pred->getLocationContext();
   DefinedOrUnknownSVal symVal = svalBuilder.conjureSymbolVal(0, CNE, LCtx,
@@ -284,7 +284,7 @@ void ExprEngine::VisitCXXNewExpr(const CXXNewExpr *CNE, ExplodedNode *Pred,
   Bldr.generateNode(CNE, Pred, State);
 }
 
-void ExprEngine::VisitCXXDeleteExpr(const CXXDeleteExpr *CDE, 
+void ExprEngine::VisitCXXDeleteExpr(const CXXDeleteExpr *CDE,
                                     ExplodedNode *Pred, ExplodedNodeSet &Dst) {
   StmtNodeBuilder Bldr(Pred, Dst, *currBldrCtx);
   ProgramStateRef state = Pred->getState();

@@ -60,7 +60,7 @@ ValueEnumerator::ValueEnumerator(const Module *M) {
        I != E; ++I)
     EnumerateValue(I->getAliasee());
 
-  // Insert constants and metadata that are named at module level into the slot 
+  // Insert constants and metadata that are named at module level into the slot
   // pool so that the module symbol table can refer to them...
   EnumerateValueSymbolTable(M->getValueSymbolTable());
   EnumerateNamedMetadata(M);
@@ -95,7 +95,7 @@ ValueEnumerator::ValueEnumerator(const Module *M) {
         I->getAllMetadataOtherThanDebugLoc(MDs);
         for (unsigned i = 0, e = MDs.size(); i != e; ++i)
           EnumerateMetadata(MDs[i].second);
-        
+
         if (!I->getDebugLoc().isUnknown()) {
           MDNode *Scope, *IA;
           I->getDebugLoc().getScopeAndInlinedAt(Scope, IA, I->getContext());
@@ -362,16 +362,16 @@ void ValueEnumerator::EnumerateType(Type *Ty) {
   if (StructType *STy = dyn_cast<StructType>(Ty))
     if (!STy->isLiteral())
       *TypeID = ~0U;
-  
+
   // Enumerate all of the subtypes before we enumerate this type.  This ensures
   // that the type will be enumerated in an order that can be directly built.
   for (Type::subtype_iterator I = Ty->subtype_begin(), E = Ty->subtype_end();
        I != E; ++I)
     EnumerateType(*I);
-  
+
   // Refresh the TypeID pointer in case the table rehashed.
   TypeID = &TypeMap[Ty];
-  
+
   // Check to see if we got the pointer another way.  This can happen when
   // enumerating recursive types that hit the base case deeper than they start.
   //
@@ -379,10 +379,10 @@ void ValueEnumerator::EnumerateType(Type *Ty) {
   // then emit the definition now that all of its contents are available.
   if (*TypeID && *TypeID != ~0U)
     return;
-  
+
   // Add this type now that its contents are all happily enumerated.
   Types.push_back(Ty);
-  
+
   *TypeID = Types.size();
 }
 
@@ -390,7 +390,7 @@ void ValueEnumerator::EnumerateType(Type *Ty) {
 // walk through it, enumerating the types of the constant.
 void ValueEnumerator::EnumerateOperandType(const Value *V) {
   EnumerateType(V->getType());
-  
+
   if (const Constant *C = dyn_cast<Constant>(V)) {
     // If this constant is already enumerated, ignore it, we know its type must
     // be enumerated.
@@ -400,11 +400,11 @@ void ValueEnumerator::EnumerateOperandType(const Value *V) {
     // them.
     for (unsigned i = 0, e = C->getNumOperands(); i != e; ++i) {
       const Value *Op = C->getOperand(i);
-      
+
       // Don't enumerate basic blocks here, this happens as operands to
       // blockaddress.
       if (isa<BasicBlock>(Op)) continue;
-      
+
       EnumerateOperandType(Op);
     }
 
@@ -481,7 +481,7 @@ void ValueEnumerator::incorporateFunction(const Function &F) {
         if (N->isFunctionLocal() && N->getFunction())
           FnLocalMDVector.push_back(N);
       }
-        
+
       if (!I->getType()->isVoidTy())
         EnumerateValue(I);
     }

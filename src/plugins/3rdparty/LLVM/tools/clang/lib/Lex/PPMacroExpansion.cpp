@@ -60,7 +60,7 @@ void Preprocessor::addLoadedMacroInfo(IdentifierInfo *II, MacroInfo *MI,
   assert(MI && "Missing macro?");
   assert(MI->isFromAST() && "Macro is not from an AST?");
   assert(!MI->getPreviousDefinition() && "Macro already in chain?");
-  
+
   MacroInfo *&StoredMI = Macros[II];
 
   // Easy case: this is the first macro definition for this macro.
@@ -212,9 +212,9 @@ void Preprocessor::RegisterBuiltinMacros() {
     Ident__building_module = 0;
     Ident__MODULE__ = 0;
   }
-  
+
   // Microsoft Extensions.
-  if (LangOpts.MicrosoftExt) 
+  if (LangOpts.MicrosoftExt)
     Ident__pragma = RegisterBuiltinMacro(*this, "__pragma");
   else
     Ident__pragma = 0;
@@ -671,7 +671,7 @@ Token *Preprocessor::cacheMacroExpandedTokens(TokenLexer *tokLexer,
 
   size_t newIndex = MacroExpandedTokens.size();
   bool cacheNeedsToGrow = tokens.size() >
-                      MacroExpandedTokens.capacity()-MacroExpandedTokens.size(); 
+                      MacroExpandedTokens.capacity()-MacroExpandedTokens.size();
   MacroExpandedTokens.append(tokens.begin(), tokens.end());
 
   if (cacheNeedsToGrow) {
@@ -954,7 +954,7 @@ static bool EvaluateHasIncludeCommon(Token &Tok,
   SmallString<128> FilenameBuffer;
   StringRef Filename;
   SourceLocation EndLoc;
-  
+
   switch (Tok.getKind()) {
   case tok::eod:
     // If the token kind is EOD, the error has already been diagnosed.
@@ -1139,7 +1139,7 @@ void Preprocessor::ExpandBuiltinMacro(Token &Tok) {
         PLoc = SourceMgr.getPresumedLoc(NextLoc);
         if (PLoc.isInvalid())
           break;
-        
+
         NextLoc = PLoc.getIncludeLoc();
       }
     }
@@ -1271,16 +1271,16 @@ void Preprocessor::ExpandBuiltinMacro(Token &Tok) {
   } else if (II == Ident__has_warning) {
     // The argument should be a parenthesized string literal.
     // The argument to these builtins should be a parenthesized identifier.
-    SourceLocation StartLoc = Tok.getLocation();    
+    SourceLocation StartLoc = Tok.getLocation();
     bool IsValid = false;
     bool Value = false;
     // Read the '('.
     Lex(Tok);
     do {
-      if (Tok.is(tok::l_paren)) {      
+      if (Tok.is(tok::l_paren)) {
         // Read the string.
         Lex(Tok);
-      
+
         // We need at least one string literal.
         if (!Tok.is(tok::string_literal)) {
           StartLoc = Tok.getLocation();
@@ -1289,7 +1289,7 @@ void Preprocessor::ExpandBuiltinMacro(Token &Tok) {
           do Lex(Tok); while (!(Tok.is(tok::r_paren) || Tok.is(tok::eod)));
           break;
         }
-        
+
         // String concatenation allows multiple strings, which can even come
         // from macro expansion.
         SmallVector<Token, 4> StrToks;
@@ -1300,11 +1300,11 @@ void Preprocessor::ExpandBuiltinMacro(Token &Tok) {
           StrToks.push_back(Tok);
           LexUnexpandedToken(Tok);
         }
-        
+
         // Is the end a ')'?
         if (!(IsValid = Tok.is(tok::r_paren)))
           break;
-        
+
         // Concatenate and parse the strings.
         StringLiteralParser Literal(&StrToks[0], StrToks.size(), *this);
         assert(Literal.isAscii() && "Didn't allow wide strings in");
@@ -1314,15 +1314,15 @@ void Preprocessor::ExpandBuiltinMacro(Token &Tok) {
           Diag(Tok, diag::warn_pragma_diagnostic_invalid);
           break;
         }
-        
+
         StringRef WarningName(Literal.GetString());
-        
+
         if (WarningName.size() < 3 || WarningName[0] != '-' ||
             WarningName[1] != 'W') {
           Diag(StrToks[0].getLocation(), diag::warn_has_warning_invalid_option);
           break;
         }
-        
+
         // Finally, check if the warning flags maps to a diagnostic group.
         // We construct a SmallVector here to talk to getDiagnosticIDs().
         // Although we don't use the result, this isn't a hot path, and not
@@ -1332,7 +1332,7 @@ void Preprocessor::ExpandBuiltinMacro(Token &Tok) {
           getDiagnosticsInGroup(WarningName.substr(2), Diags);
       }
     } while (false);
-    
+
     if (!IsValid)
       Diag(StartLoc, diag::err_warning_check_malformed);
 

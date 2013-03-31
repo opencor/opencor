@@ -63,7 +63,7 @@ bool FileSystemStatCache::get(const char *Path, struct stat &StatBuf,
     OpenFlags |= O_BINARY;  // Open input file in binary mode on win32.
 #endif
     *FileDescriptor = ::open(Path, OpenFlags);
-    
+
     if (*FileDescriptor == -1) {
       // If the open fails, our "stat" fails.
       R = CacheMissing;
@@ -85,7 +85,7 @@ bool FileSystemStatCache::get(const char *Path, struct stat &StatBuf,
 
   // If the path doesn't exist, return failure.
   if (R == CacheMissing) return true;
-  
+
   // If the path exists, make sure that its "directoryness" matches the clients
   // demands.
   if (S_ISDIR(StatBuf.st_mode) != isForDir) {
@@ -94,10 +94,10 @@ bool FileSystemStatCache::get(const char *Path, struct stat &StatBuf,
       ::close(*FileDescriptor);
       *FileDescriptor = -1;
     }
-    
+
     return true;
   }
-  
+
   return false;
 }
 
@@ -106,17 +106,17 @@ MemorizeStatCalls::LookupResult
 MemorizeStatCalls::getStat(const char *Path, struct stat &StatBuf,
                            int *FileDescriptor) {
   LookupResult Result = statChained(Path, StatBuf, FileDescriptor);
-  
+
   // Do not cache failed stats, it is easy to construct common inconsistent
   // situations if we do, and they are not important for PCH performance (which
   // currently only needs the stats to construct the initial FileManager
   // entries).
   if (Result == CacheMissing)
     return Result;
-  
+
   // Cache file 'stat' results and directories with absolutely paths.
   if (!S_ISDIR(StatBuf.st_mode) || llvm::sys::path::is_absolute(Path))
     StatCalls[Path] = StatBuf;
-  
+
   return Result;
 }

@@ -49,13 +49,13 @@ class DeclToIndex {
   llvm::DenseMap<const VarDecl *, unsigned> map;
 public:
   DeclToIndex() {}
-  
+
   /// Compute the actual mapping from declarations to bits.
   void computeMap(const DeclContext &dc);
-  
+
   /// Return the number of declarations in the map.
   unsigned size() const { return map.size(); }
-  
+
   /// Returns the bit vector index for a given declaration.
   llvm::Optional<unsigned> getValueIndex(const VarDecl *d) const;
 };
@@ -110,8 +110,8 @@ public:
   CFGBlockValues(const CFG &cfg);
 
   unsigned getNumEntries() const { return declToIndex.size(); }
-  
-  void computeSetOfDeclarations(const DeclContext &dc);  
+
+  void computeSetOfDeclarations(const DeclContext &dc);
   ValueVector &getValueVector(const CFGBlock *block) {
     return vals[block->getBlockID()];
   }
@@ -119,13 +119,13 @@ public:
   void setAllScratchValues(Value V);
   void mergeIntoScratch(ValueVector const &source, bool isFirst);
   bool updateValueVectorWithScratch(const CFGBlock *block);
-  
+
   bool hasNoDeclarations() const {
     return declToIndex.size() == 0;
   }
 
   void resetScratch();
-  
+
   ValueVector::reference operator[](const VarDecl *vd);
 
   Value getValue(const CFGBlock *block, const CFGBlock *dstBlock,
@@ -134,7 +134,7 @@ public:
     assert(idx.hasValue());
     return getValueVector(block)[idx.getValue()];
   }
-};  
+};
 } // end anonymous namespace
 
 CFGBlockValues::CFGBlockValues(const CFG &c) : cfg(c), vals(0) {}
@@ -206,7 +206,7 @@ class DataflowWorklist {
   llvm::BitVector enqueuedBlocks;
 public:
   DataflowWorklist(const CFG &cfg) : enqueuedBlocks(cfg.getNumBlockIDs()) {}
-  
+
   void enqueueSuccessors(const CFGBlock *block);
   const CFGBlock *dequeue();
 };
@@ -718,7 +718,7 @@ static bool runOnBlock(const CFGBlock *block, const CFG &cfg,
   }
   // Apply the transfer function.
   TransferFunctions tf(vals, cfg, block, ac, classification, handler);
-  for (CFGBlock::const_iterator I = block->begin(), E = block->end(); 
+  for (CFGBlock::const_iterator I = block->begin(), E = block->end();
        I != E; ++I) {
     if (const CFGStmt *cs = dyn_cast<CFGStmt>(&*I)) {
       tf.Visit(const_cast<Stmt*>(cs->getStmt()));
@@ -765,10 +765,10 @@ void clang::runUninitializedVariablesAnalysis(
                               classification, wasAnalyzed);
     ++stats.NumBlockVisits;
     if (changed || !previouslyVisited[block->getBlockID()])
-      worklist.enqueueSuccessors(block);    
+      worklist.enqueueSuccessors(block);
     previouslyVisited[block->getBlockID()] = true;
   }
-  
+
   // Run through the blocks one more time, and report uninitialized variabes.
   for (CFG::const_iterator BI = cfg.begin(), BE = cfg.end(); BI != BE; ++BI) {
     const CFGBlock *block = *BI;

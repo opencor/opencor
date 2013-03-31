@@ -2,7 +2,7 @@
  * -----------------------------------------------------------------
  * $Revision: 1.6 $
  * $Date: 2007/11/26 16:20:00 $
- * ----------------------------------------------------------------- 
+ * -----------------------------------------------------------------
  * Programmer(s): Aaron Collier and Radu Serban @ LLNL
  * -----------------------------------------------------------------
  * Copyright (c) 2005, The Regents of the University of California.
@@ -36,8 +36,8 @@
 
 static int IDASptfqmrInit(IDAMem IDA_mem);
 
-static int IDASptfqmrSetup(IDAMem IDA_mem, 
-			   N_Vector yy_p, N_Vector yp_p, N_Vector rr_p, 
+static int IDASptfqmrSetup(IDAMem IDA_mem,
+			   N_Vector yy_p, N_Vector yp_p, N_Vector rr_p,
 			   N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
 
 static int IDASptfqmrSolve(IDAMem IDA_mem, N_Vector bb, N_Vector weight,
@@ -110,8 +110,8 @@ static int IDASptfqmrFree(IDAMem IDA_mem);
  * It allocates memory for a structure of type IDASpilsMemRec and sets
  * the ida_lmem field in (*IDA_mem) to the address of this structure.
  * It sets setupNonNull in (*IDA_mem). It then sets various fields
- * in the IDASpilsMemRec structure. Finally, IDASptfqmr allocates 
- * memory for ytemp, yptemp, and xx, and calls SptfqmrMalloc to 
+ * in the IDASpilsMemRec structure. Finally, IDASptfqmr allocates
+ * memory for ytemp, yptemp, and xx, and calls SptfqmrMalloc to
  * allocate memory for the Sptfqmr solver.
  *
  * The return value of IDASptfqmr is:
@@ -283,8 +283,8 @@ static int IDASptfqmrInit(IDAMem IDA_mem)
   return(0);
 }
 
-static int IDASptfqmrSetup(IDAMem IDA_mem, 
-			   N_Vector yy_p, N_Vector yp_p, N_Vector rr_p, 
+static int IDASptfqmrSetup(IDAMem IDA_mem,
+			   N_Vector yy_p, N_Vector yp_p, N_Vector rr_p,
 			   N_Vector tmp1, N_Vector tmp2, N_Vector tmp3)
 {
   int retval;
@@ -350,10 +350,10 @@ static int IDASptfqmrSolve(IDAMem IDA_mem, N_Vector bb, N_Vector weight,
   ypcur = yp_now;
   rcur = rr_now;
 
-  /* Set SptfqmrSolve inputs pretype and initial guess xx = 0 */  
+  /* Set SptfqmrSolve inputs pretype and initial guess xx = 0 */
   pretype = (psolve == NULL) ? PREC_NONE : PREC_LEFT;
   N_VConst(ZERO, xx);
-  
+
   /* Call SptfqmrSolve and copy xx to bb */
   retval = SptfqmrSolve(sptfqmr_mem, IDA_mem, xx, bb, pretype, epslin,
                       IDA_mem, weight, weight, IDASpilsAtimes,
@@ -361,7 +361,7 @@ static int IDASptfqmrSolve(IDAMem IDA_mem, N_Vector bb, N_Vector weight,
 
   if (nli_inc == 0) N_VScale(ONE, SPTFQMR_VTEMP(sptfqmr_mem), bb);
   else N_VScale(ONE, xx, bb);
-  
+
   /* Increment counters nli, nps, and return if successful */
   nli += nli_inc;
   nps += nps_inc;
@@ -392,7 +392,7 @@ static int IDASptfqmrSolve(IDAMem IDA_mem, N_Vector bb, N_Vector weight,
     return(-1);
     break;
   case SPTFQMR_ATIMES_FAIL_UNREC:
-    IDAProcessError(IDA_mem, SPTFQMR_ATIMES_FAIL_UNREC, "IDASPTFQMR", "IDASptfqmrSolve", MSGS_JTIMES_FAILED);    
+    IDAProcessError(IDA_mem, SPTFQMR_ATIMES_FAIL_UNREC, "IDASPTFQMR", "IDASptfqmrSolve", MSGS_JTIMES_FAILED);
     return(-1);
     break;
   case SPTFQMR_PSOLVE_FAIL_UNREC:
@@ -428,7 +428,7 @@ static int IDASptfqmrPerf(IDAMem IDA_mem, int perftask)
 
   if (perftask == 0) {
     nst0 = nst;  nni0 = nni;  nli0 = nli;
-    ncfn0 = ncfn;  ncfl0 = ncfl;  
+    ncfn0 = ncfn;  ncfl0 = ncfl;
     nwarn = 0;
     return(0);
   }
@@ -444,11 +444,11 @@ static int IDASptfqmrPerf(IDAMem IDA_mem, int perftask)
   if (!(lavd || lcfn || lcfl)) return(0);
   nwarn++;
   if (nwarn > 10) return(1);
-  if (lavd) 
+  if (lavd)
     IDAProcessError(IDA_mem, IDA_WARNING, "IDASPTFQMR", "IDASptfqmrPerf", MSGS_AVD_WARN, tn, avdim);
-  if (lcfn) 
+  if (lcfn)
     IDAProcessError(IDA_mem, IDA_WARNING, "IDASPTFQMR", "IDASptfqmrPerf", MSGS_CFN_WARN, tn, rcfn);
-  if (lcfl) 
+  if (lcfl)
     IDAProcessError(IDA_mem, IDA_WARNING, "IDASPTFQMR", "IDASptfqmrPerf", MSGS_CFL_WARN, tn, rcfl);
 
   return(0);
@@ -464,7 +464,7 @@ static int IDASptfqmrFree(IDAMem IDA_mem)
   N_VDestroy(ytemp);
   N_VDestroy(yptemp);
   N_VDestroy(xx);
-  
+
   sptfqmr_mem = (SptfqmrMem)spils_mem;
   SptfqmrFree(sptfqmr_mem);
 

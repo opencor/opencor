@@ -99,7 +99,7 @@ public:
     return User::operator new(s, 2);
   }
   ExtractElementConstantExpr(Constant *C1, Constant *C2)
-    : ConstantExpr(cast<VectorType>(C1->getType())->getElementType(), 
+    : ConstantExpr(cast<VectorType>(C1->getType())->getElementType(),
                    Instruction::ExtractElement, &Op<0>(), 2) {
     Op<0>() = C1;
     Op<1>() = C2;
@@ -120,7 +120,7 @@ public:
     return User::operator new(s, 3);
   }
   InsertElementConstantExpr(Constant *C1, Constant *C2, Constant *C3)
-    : ConstantExpr(C1->getType(), Instruction::InsertElement, 
+    : ConstantExpr(C1->getType(), Instruction::InsertElement,
                    &Op<0>(), 3) {
     Op<0>() = C1;
     Op<1>() = C2;
@@ -145,7 +145,7 @@ public:
   : ConstantExpr(VectorType::get(
                    cast<VectorType>(C1->getType())->getElementType(),
                    cast<VectorType>(C3->getType())->getNumElements()),
-                 Instruction::ShuffleVector, 
+                 Instruction::ShuffleVector,
                  &Op<0>(), 3) {
     Op<0>() = C1;
     Op<1>() = C2;
@@ -441,7 +441,7 @@ struct ConstantCreator<ConstantExpr, Type, ExprMapKeyType> {
       return new BinaryConstantExpr(V.opcode, V.operands[0], V.operands[1],
                                     V.subclassoptionaldata);
     if (V.opcode == Instruction::Select)
-      return new SelectConstantExpr(V.operands[0], V.operands[1], 
+      return new SelectConstantExpr(V.operands[0], V.operands[1],
                                     V.operands[2]);
     if (V.opcode == Instruction::ExtractElement)
       return new ExtractElementConstantExpr(V.operands[0], V.operands[1]);
@@ -468,7 +468,7 @@ struct ConstantCreator<ConstantExpr, Type, ExprMapKeyType> {
     if (V.opcode == Instruction::ICmp)
       return new CompareConstantExpr(Ty, Instruction::ICmp, V.subclassdata,
                                      V.operands[0], V.operands[1]);
-    if (V.opcode == Instruction::FCmp) 
+    if (V.opcode == Instruction::FCmp)
       return new CompareConstantExpr(Ty, Instruction::FCmp, V.subclassdata,
                                      V.operands[0], V.operands[1]);
     llvm_unreachable("Invalid ConstantExpr!");
@@ -522,7 +522,7 @@ private:
   /// This is the primary way we avoid creating two of the same shape
   /// constant.
   MapTy Map;
-    
+
   /// InverseMap - If "HasLargeKey" is true, this contains an inverse mapping
   /// from the constants to their element in Map.  This is important for
   /// removal of constants from the array, which would otherwise have to scan
@@ -540,7 +540,7 @@ public:
       delete I->second;
     }
   }
-    
+
   /// InsertOrGetItem - Return an iterator for the specified element.
   /// If the element exists in the map, the returned iterator points to the
   /// entry and Exists=true.  If not, the iterator points to the newly
@@ -553,7 +553,7 @@ public:
     Exists = !IP.second;
     return IP.first;
   }
-    
+
 private:
   typename MapTy::iterator FindExistingElement(ConstantClass *CP) {
     if (HasLargeKey) {
@@ -563,7 +563,7 @@ private:
              "InverseMap corrupt!");
       return IMI->second;
     }
-      
+
     typename MapTy::iterator I =
       Map.find(MapKey(static_cast<TypeClass*>(CP->getType()),
                       ConstantKeyData<ConstantClass>::getValType(CP)));
@@ -590,23 +590,23 @@ private:
     return Result;
   }
 public:
-    
+
   /// getOrCreate - Return the specified constant from the map, creating it if
   /// necessary.
   ConstantClass *getOrCreate(TypeClass *Ty, ValRefType V) {
     MapKey Lookup(Ty, V);
     ConstantClass* Result = 0;
-    
+
     typename MapTy::iterator I = Map.find(Lookup);
-    // Is it in the map?  
+    // Is it in the map?
     if (I != Map.end())
       Result = I->second;
-        
+
     if (!Result) {
       // If no preexisting value, create one now...
       Result = Create(Ty, V, I);
     }
-        
+
     return Result;
   }
 
@@ -629,10 +629,10 @@ public:
     typename MapTy::iterator OldI = FindExistingElement(C);
     assert(OldI != Map.end() && "Constant not found in constant table!");
     assert(OldI->second == C && "Didn't find correct element?");
-      
+
      // Remove the old entry from the map.
     Map.erase(OldI);
-    
+
     // Update the inverse map so that we know that this constant is now
     // located at descriptor I.
     if (HasLargeKey) {

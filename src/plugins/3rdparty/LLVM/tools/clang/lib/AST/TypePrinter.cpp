@@ -32,13 +32,13 @@ namespace {
   class IncludeStrongLifetimeRAII {
     PrintingPolicy &Policy;
     bool Old;
-    
+
   public:
-    explicit IncludeStrongLifetimeRAII(PrintingPolicy &Policy) 
+    explicit IncludeStrongLifetimeRAII(PrintingPolicy &Policy)
       : Policy(Policy), Old(Policy.SuppressStrongLifetime) {
       Policy.SuppressStrongLifetime = false;
     }
-    
+
     ~IncludeStrongLifetimeRAII() {
       Policy.SuppressStrongLifetime = Old;
     }
@@ -47,13 +47,13 @@ namespace {
   class ParamPolicyRAII {
     PrintingPolicy &Policy;
     bool Old;
-    
+
   public:
-    explicit ParamPolicyRAII(PrintingPolicy &Policy) 
+    explicit ParamPolicyRAII(PrintingPolicy &Policy)
       : Policy(Policy), Old(Policy.SuppressSpecifiers) {
       Policy.SuppressSpecifiers = false;
     }
-    
+
     ~ParamPolicyRAII() {
       Policy.SuppressSpecifiers = Old;
     }
@@ -63,7 +63,7 @@ namespace {
     PrintingPolicy &Policy;
     bool SuppressTagKeyword;
     bool SuppressScope;
-    
+
   public:
     explicit ElaboratedTypePolicyRAII(PrintingPolicy &Policy) : Policy(Policy) {
       SuppressTagKeyword = Policy.SuppressTagKeyword;
@@ -71,13 +71,13 @@ namespace {
       Policy.SuppressTagKeyword = true;
       Policy.SuppressScope = true;
     }
-    
+
     ~ElaboratedTypePolicyRAII() {
       Policy.SuppressTagKeyword = SuppressTagKeyword;
       Policy.SuppressScope = SuppressScope;
     }
   };
-  
+
   class TypePrinter {
     PrintingPolicy Policy;
     bool HasEmptyPlaceHolder;
@@ -164,7 +164,7 @@ bool TypePrinter::canPrefixQualifiers(const Type *T,
   if (const SubstTemplateTypeParmType *Subst
                                       = dyn_cast<SubstTemplateTypeParmType>(T))
     TC = Subst->getReplacementType()->getTypeClass();
-  
+
   switch (TC) {
     case Type::Builtin:
     case Type::Complex:
@@ -188,19 +188,19 @@ bool TypePrinter::canPrefixQualifiers(const Type *T,
     case Type::Atomic:
       CanPrefixQualifiers = true;
       break;
-      
+
     case Type::ObjCObjectPointer:
       CanPrefixQualifiers = T->isObjCIdType() || T->isObjCClassType() ||
         T->isObjCQualifiedIdType() || T->isObjCQualifiedClassType();
       break;
-      
+
     case Type::ConstantArray:
     case Type::IncompleteArray:
     case Type::VariableArray:
     case Type::DependentSizedArray:
       NeedARCStrongQualifier = true;
       // Fall through
-      
+
     case Type::Pointer:
     case Type::BlockPointer:
     case Type::LValueReference:
@@ -391,8 +391,8 @@ void TypePrinter::printRValueReferenceAfter(const RValueReferenceType *T,
   printAfter(T->getPointeeTypeAsWritten(), OS);
 }
 
-void TypePrinter::printMemberPointerBefore(const MemberPointerType *T, 
-                                           raw_ostream &OS) { 
+void TypePrinter::printMemberPointerBefore(const MemberPointerType *T,
+                                           raw_ostream &OS) {
   IncludeStrongLifetimeRAII Strong(Policy);
   SaveAndRestore<bool> NonEmptyPH(HasEmptyPlaceHolder, false);
   printBefore(T->getPointeeType(), OS);
@@ -407,8 +407,8 @@ void TypePrinter::printMemberPointerBefore(const MemberPointerType *T,
 
   OS << "::*";
 }
-void TypePrinter::printMemberPointerAfter(const MemberPointerType *T, 
-                                          raw_ostream &OS) { 
+void TypePrinter::printMemberPointerAfter(const MemberPointerType *T,
+                                          raw_ostream &OS) {
   IncludeStrongLifetimeRAII Strong(Policy);
   SaveAndRestore<bool> NonEmptyPH(HasEmptyPlaceHolder, false);
   // Handle things like 'int (Cls::*A)[4];' correctly.
@@ -418,37 +418,37 @@ void TypePrinter::printMemberPointerAfter(const MemberPointerType *T,
   printAfter(T->getPointeeType(), OS);
 }
 
-void TypePrinter::printConstantArrayBefore(const ConstantArrayType *T, 
+void TypePrinter::printConstantArrayBefore(const ConstantArrayType *T,
                                            raw_ostream &OS) {
   IncludeStrongLifetimeRAII Strong(Policy);
   SaveAndRestore<bool> NonEmptyPH(HasEmptyPlaceHolder, false);
   printBefore(T->getElementType(), OS);
 }
-void TypePrinter::printConstantArrayAfter(const ConstantArrayType *T, 
+void TypePrinter::printConstantArrayAfter(const ConstantArrayType *T,
                                           raw_ostream &OS) {
   OS << '[' << T->getSize().getZExtValue() << ']';
   printAfter(T->getElementType(), OS);
 }
 
-void TypePrinter::printIncompleteArrayBefore(const IncompleteArrayType *T, 
+void TypePrinter::printIncompleteArrayBefore(const IncompleteArrayType *T,
                                              raw_ostream &OS) {
   IncludeStrongLifetimeRAII Strong(Policy);
   SaveAndRestore<bool> NonEmptyPH(HasEmptyPlaceHolder, false);
   printBefore(T->getElementType(), OS);
 }
-void TypePrinter::printIncompleteArrayAfter(const IncompleteArrayType *T, 
+void TypePrinter::printIncompleteArrayAfter(const IncompleteArrayType *T,
                                             raw_ostream &OS) {
   OS << "[]";
   printAfter(T->getElementType(), OS);
 }
 
-void TypePrinter::printVariableArrayBefore(const VariableArrayType *T, 
+void TypePrinter::printVariableArrayBefore(const VariableArrayType *T,
                                            raw_ostream &OS) {
   IncludeStrongLifetimeRAII Strong(Policy);
   SaveAndRestore<bool> NonEmptyPH(HasEmptyPlaceHolder, false);
   printBefore(T->getElementType(), OS);
 }
-void TypePrinter::printVariableArrayAfter(const VariableArrayType *T, 
+void TypePrinter::printVariableArrayAfter(const VariableArrayType *T,
                                           raw_ostream &OS) {
   OS << '[';
   if (T->getIndexTypeQualifiers().hasQualifiers()) {
@@ -469,14 +469,14 @@ void TypePrinter::printVariableArrayAfter(const VariableArrayType *T,
 }
 
 void TypePrinter::printDependentSizedArrayBefore(
-                                               const DependentSizedArrayType *T, 
+                                               const DependentSizedArrayType *T,
                                                raw_ostream &OS) {
   IncludeStrongLifetimeRAII Strong(Policy);
   SaveAndRestore<bool> NonEmptyPH(HasEmptyPlaceHolder, false);
   printBefore(T->getElementType(), OS);
 }
 void TypePrinter::printDependentSizedArrayAfter(
-                                               const DependentSizedArrayType *T, 
+                                               const DependentSizedArrayType *T,
                                                raw_ostream &OS) {
   OS << '[';
   if (T->getSizeExpr())
@@ -486,21 +486,21 @@ void TypePrinter::printDependentSizedArrayAfter(
 }
 
 void TypePrinter::printDependentSizedExtVectorBefore(
-                                          const DependentSizedExtVectorType *T, 
-                                          raw_ostream &OS) { 
+                                          const DependentSizedExtVectorType *T,
+                                          raw_ostream &OS) {
   printBefore(T->getElementType(), OS);
 }
 void TypePrinter::printDependentSizedExtVectorAfter(
-                                          const DependentSizedExtVectorType *T, 
-                                          raw_ostream &OS) { 
+                                          const DependentSizedExtVectorType *T,
+                                          raw_ostream &OS) {
   OS << " __attribute__((ext_vector_type(";
   if (T->getSizeExpr())
     T->getSizeExpr()->printPretty(OS, 0, Policy);
-  OS << ")))";  
+  OS << ")))";
   printAfter(T->getElementType(), OS);
 }
 
-void TypePrinter::printVectorBefore(const VectorType *T, raw_ostream &OS) { 
+void TypePrinter::printVectorBefore(const VectorType *T, raw_ostream &OS) {
   switch (T->getVectorKind()) {
   case VectorType::AltiVecPixel:
     OS << "__vector __pixel ";
@@ -530,7 +530,7 @@ void TypePrinter::printVectorBefore(const VectorType *T, raw_ostream &OS) {
        << T->getNumElements()
        << " * sizeof(";
     print(T->getElementType(), OS, StringRef());
-    OS << ")))) "; 
+    OS << ")))) ";
     printBefore(T->getElementType(), OS);
     break;
   }
@@ -538,24 +538,24 @@ void TypePrinter::printVectorBefore(const VectorType *T, raw_ostream &OS) {
 }
 void TypePrinter::printVectorAfter(const VectorType *T, raw_ostream &OS) {
   printAfter(T->getElementType(), OS);
-} 
+}
 
 void TypePrinter::printExtVectorBefore(const ExtVectorType *T,
-                                       raw_ostream &OS) { 
+                                       raw_ostream &OS) {
   printBefore(T->getElementType(), OS);
 }
-void TypePrinter::printExtVectorAfter(const ExtVectorType *T, raw_ostream &OS) { 
+void TypePrinter::printExtVectorAfter(const ExtVectorType *T, raw_ostream &OS) {
   printAfter(T->getElementType(), OS);
   OS << " __attribute__((ext_vector_type(";
   OS << T->getNumElements();
   OS << ")))";
 }
 
-void 
-FunctionProtoType::printExceptionSpecification(raw_ostream &OS, 
+void
+FunctionProtoType::printExceptionSpecification(raw_ostream &OS,
                                                const PrintingPolicy &Policy)
                                                                          const {
-  
+
   if (hasDynamicExceptionSpec()) {
     OS << " throw(";
     if (getExceptionSpecType() == EST_MSAny)
@@ -564,7 +564,7 @@ FunctionProtoType::printExceptionSpecification(raw_ostream &OS,
       for (unsigned I = 0, N = getNumExceptions(); I != N; ++I) {
         if (I)
           OS << ", ";
-        
+
         OS << getExceptionType(I).stream(Policy);
       }
     OS << ')';
@@ -578,7 +578,7 @@ FunctionProtoType::printExceptionSpecification(raw_ostream &OS,
   }
 }
 
-void TypePrinter::printFunctionProtoBefore(const FunctionProtoType *T, 
+void TypePrinter::printFunctionProtoBefore(const FunctionProtoType *T,
                                            raw_ostream &OS) {
   if (T->hasTrailingReturn()) {
     OS << "auto ";
@@ -593,8 +593,8 @@ void TypePrinter::printFunctionProtoBefore(const FunctionProtoType *T,
   }
 }
 
-void TypePrinter::printFunctionProtoAfter(const FunctionProtoType *T, 
-                                          raw_ostream &OS) { 
+void TypePrinter::printFunctionProtoAfter(const FunctionProtoType *T,
+                                          raw_ostream &OS) {
   // If needed for precedence reasons, wrap the inner part in grouping parens.
   if (!HasEmptyPlaceHolder)
     OS << ')';
@@ -608,7 +608,7 @@ void TypePrinter::printFunctionProtoAfter(const FunctionProtoType *T,
       print(T->getArgType(i), OS, StringRef());
     }
   }
-  
+
   if (T->isVariadic()) {
     if (T->getNumArgs())
       OS << ", ";
@@ -617,7 +617,7 @@ void TypePrinter::printFunctionProtoAfter(const FunctionProtoType *T,
     // Do not emit int() if we have a proto, emit 'int(void)'.
     OS << "void";
   }
-  
+
   OS << ')';
 
   FunctionType::ExtInfo Info = T->getExtInfo();
@@ -662,11 +662,11 @@ void TypePrinter::printFunctionProtoAfter(const FunctionProtoType *T,
   switch (T->getRefQualifier()) {
   case RQ_None:
     break;
-    
+
   case RQ_LValue:
     OS << " &";
     break;
-    
+
   case RQ_RValue:
     OS << " &&";
     break;
@@ -674,27 +674,27 @@ void TypePrinter::printFunctionProtoAfter(const FunctionProtoType *T,
   T->printExceptionSpecification(OS, Policy);
 
   if (T->hasTrailingReturn()) {
-    OS << " -> "; 
+    OS << " -> ";
     print(T->getResultType(), OS, StringRef());
   } else
     printAfter(T->getResultType(), OS);
 }
 
-void TypePrinter::printFunctionNoProtoBefore(const FunctionNoProtoType *T, 
-                                             raw_ostream &OS) { 
+void TypePrinter::printFunctionNoProtoBefore(const FunctionNoProtoType *T,
+                                             raw_ostream &OS) {
   // If needed for precedence reasons, wrap the inner part in grouping parens.
   SaveAndRestore<bool> PrevPHIsEmpty(HasEmptyPlaceHolder, false);
   printBefore(T->getResultType(), OS);
   if (!PrevPHIsEmpty.get())
     OS << '(';
 }
-void TypePrinter::printFunctionNoProtoAfter(const FunctionNoProtoType *T, 
+void TypePrinter::printFunctionNoProtoAfter(const FunctionNoProtoType *T,
                                             raw_ostream &OS) {
   // If needed for precedence reasons, wrap the inner part in grouping parens.
   if (!HasEmptyPlaceHolder)
     OS << ')';
   SaveAndRestore<bool> NonEmptyPH(HasEmptyPlaceHolder, false);
-  
+
   OS << "()";
   if (T->getNoReturnAttr())
     OS << " __attribute__((noreturn))";
@@ -714,10 +714,10 @@ void TypePrinter::printUnresolvedUsingBefore(const UnresolvedUsingType *T,
 void TypePrinter::printUnresolvedUsingAfter(const UnresolvedUsingType *T,
                                              raw_ostream &OS) { }
 
-void TypePrinter::printTypedefBefore(const TypedefType *T, raw_ostream &OS) { 
+void TypePrinter::printTypedefBefore(const TypedefType *T, raw_ostream &OS) {
   printTypeSpec(T->getDecl(), OS);
 }
-void TypePrinter::printTypedefAfter(const TypedefType *T, raw_ostream &OS) { } 
+void TypePrinter::printTypedefAfter(const TypedefType *T, raw_ostream &OS) { }
 
 void TypePrinter::printTypeOfExprBefore(const TypeOfExprType *T,
                                         raw_ostream &OS) {
@@ -728,21 +728,21 @@ void TypePrinter::printTypeOfExprBefore(const TypeOfExprType *T,
 void TypePrinter::printTypeOfExprAfter(const TypeOfExprType *T,
                                        raw_ostream &OS) { }
 
-void TypePrinter::printTypeOfBefore(const TypeOfType *T, raw_ostream &OS) { 
+void TypePrinter::printTypeOfBefore(const TypeOfType *T, raw_ostream &OS) {
   OS << "typeof(";
   print(T->getUnderlyingType(), OS, StringRef());
   OS << ')';
   spaceBeforePlaceHolder(OS);
 }
-void TypePrinter::printTypeOfAfter(const TypeOfType *T, raw_ostream &OS) { } 
+void TypePrinter::printTypeOfAfter(const TypeOfType *T, raw_ostream &OS) { }
 
-void TypePrinter::printDecltypeBefore(const DecltypeType *T, raw_ostream &OS) { 
+void TypePrinter::printDecltypeBefore(const DecltypeType *T, raw_ostream &OS) {
   OS << "decltype(";
   T->getUnderlyingExpr()->printPretty(OS, 0, Policy);
   OS << ')';
   spaceBeforePlaceHolder(OS);
 }
-void TypePrinter::printDecltypeAfter(const DecltypeType *T, raw_ostream &OS) { } 
+void TypePrinter::printDecltypeAfter(const DecltypeType *T, raw_ostream &OS) { }
 
 void TypePrinter::printUnaryTransformBefore(const UnaryTransformType *T,
                                             raw_ostream &OS) {
@@ -771,7 +771,7 @@ void TypePrinter::printUnaryTransformAfter(const UnaryTransformType *T,
   printAfter(T->getBaseType(), OS);
 }
 
-void TypePrinter::printAutoBefore(const AutoType *T, raw_ostream &OS) { 
+void TypePrinter::printAutoBefore(const AutoType *T, raw_ostream &OS) {
   // If the type has been deduced, do not print 'auto'.
   if (T->isDeduced()) {
     printBefore(T->getDeducedType(), OS);
@@ -780,7 +780,7 @@ void TypePrinter::printAutoBefore(const AutoType *T, raw_ostream &OS) {
     spaceBeforePlaceHolder(OS);
   }
 }
-void TypePrinter::printAutoAfter(const AutoType *T, raw_ostream &OS) { 
+void TypePrinter::printAutoAfter(const AutoType *T, raw_ostream &OS) {
   // If the type has been deduced, do not print 'auto'.
   if (T->isDeduced())
     printAfter(T->getDeducedType(), OS);
@@ -803,7 +803,7 @@ void TypePrinter::AppendScope(DeclContext *DC, raw_ostream &OS) {
   AppendScope(DC->getParent(), OS);
 
   if (NamespaceDecl *NS = dyn_cast<NamespaceDecl>(DC)) {
-    if (Policy.SuppressUnwrittenScope && 
+    if (Policy.SuppressUnwrittenScope &&
         (NS->isAnonymousNamespace() || NS->isInline()))
       return;
     if (NS->getIdentifier())
@@ -862,14 +862,14 @@ void TypePrinter::printTag(TagDecl *D, raw_ostream &OS) {
   } else {
     // Make an unambiguous representation for anonymous types, e.g.
     //   <anonymous enum at /usr/include/string.h:120:9>
-    
+
     if (isa<CXXRecordDecl>(D) && cast<CXXRecordDecl>(D)->isLambda()) {
       OS << "<lambda";
       HasKindDecoration = true;
     } else {
       OS << "<anonymous";
     }
-    
+
     if (Policy.AnonymousTagLocations) {
       // Suppress the redundant tag keyword if we just printed one.
       // We don't have to worry about ElaboratedTypes here because you can't
@@ -885,7 +885,7 @@ void TypePrinter::printTag(TagDecl *D, raw_ostream &OS) {
            << ':' << PLoc.getColumn();
       }
     }
-    
+
     OS << '>';
   }
 
@@ -919,63 +919,63 @@ void TypePrinter::printRecordBefore(const RecordType *T, raw_ostream &OS) {
 }
 void TypePrinter::printRecordAfter(const RecordType *T, raw_ostream &OS) { }
 
-void TypePrinter::printEnumBefore(const EnumType *T, raw_ostream &OS) { 
+void TypePrinter::printEnumBefore(const EnumType *T, raw_ostream &OS) {
   printTag(T->getDecl(), OS);
 }
 void TypePrinter::printEnumAfter(const EnumType *T, raw_ostream &OS) { }
 
-void TypePrinter::printTemplateTypeParmBefore(const TemplateTypeParmType *T, 
-                                              raw_ostream &OS) { 
+void TypePrinter::printTemplateTypeParmBefore(const TemplateTypeParmType *T,
+                                              raw_ostream &OS) {
   if (IdentifierInfo *Id = T->getIdentifier())
     OS << Id->getName();
   else
     OS << "type-parameter-" << T->getDepth() << '-' << T->getIndex();
   spaceBeforePlaceHolder(OS);
 }
-void TypePrinter::printTemplateTypeParmAfter(const TemplateTypeParmType *T, 
-                                             raw_ostream &OS) { } 
+void TypePrinter::printTemplateTypeParmAfter(const TemplateTypeParmType *T,
+                                             raw_ostream &OS) { }
 
 void TypePrinter::printSubstTemplateTypeParmBefore(
-                                             const SubstTemplateTypeParmType *T, 
-                                             raw_ostream &OS) { 
+                                             const SubstTemplateTypeParmType *T,
+                                             raw_ostream &OS) {
   IncludeStrongLifetimeRAII Strong(Policy);
   printBefore(T->getReplacementType(), OS);
 }
 void TypePrinter::printSubstTemplateTypeParmAfter(
-                                             const SubstTemplateTypeParmType *T, 
-                                             raw_ostream &OS) { 
+                                             const SubstTemplateTypeParmType *T,
+                                             raw_ostream &OS) {
   IncludeStrongLifetimeRAII Strong(Policy);
   printAfter(T->getReplacementType(), OS);
 }
 
 void TypePrinter::printSubstTemplateTypeParmPackBefore(
-                                        const SubstTemplateTypeParmPackType *T, 
-                                        raw_ostream &OS) { 
+                                        const SubstTemplateTypeParmPackType *T,
+                                        raw_ostream &OS) {
   IncludeStrongLifetimeRAII Strong(Policy);
   printTemplateTypeParmBefore(T->getReplacedParameter(), OS);
 }
 void TypePrinter::printSubstTemplateTypeParmPackAfter(
-                                        const SubstTemplateTypeParmPackType *T, 
-                                        raw_ostream &OS) { 
+                                        const SubstTemplateTypeParmPackType *T,
+                                        raw_ostream &OS) {
   IncludeStrongLifetimeRAII Strong(Policy);
   printTemplateTypeParmAfter(T->getReplacedParameter(), OS);
 }
 
 void TypePrinter::printTemplateSpecializationBefore(
-                                            const TemplateSpecializationType *T, 
-                                            raw_ostream &OS) { 
+                                            const TemplateSpecializationType *T,
+                                            raw_ostream &OS) {
   IncludeStrongLifetimeRAII Strong(Policy);
   T->getTemplateName().print(OS, Policy);
-  
+
   TemplateSpecializationType::PrintTemplateArgumentList(OS,
-                                                        T->getArgs(), 
-                                                        T->getNumArgs(), 
+                                                        T->getArgs(),
+                                                        T->getNumArgs(),
                                                         Policy);
   spaceBeforePlaceHolder(OS);
 }
 void TypePrinter::printTemplateSpecializationAfter(
-                                            const TemplateSpecializationType *T, 
-                                            raw_ostream &OS) { } 
+                                            const TemplateSpecializationType *T,
+                                            raw_ostream &OS) { }
 
 void TypePrinter::printInjectedClassNameBefore(const InjectedClassNameType *T,
                                                raw_ostream &OS) {
@@ -992,7 +992,7 @@ void TypePrinter::printElaboratedBefore(const ElaboratedType *T,
   NestedNameSpecifier* Qualifier = T->getQualifier();
   if (Qualifier)
     Qualifier->print(OS, Policy);
-  
+
   ElaboratedTypePolicyRAII PolicyRAII(Policy);
   printBefore(T->getNamedType(), OS);
 }
@@ -1018,29 +1018,29 @@ void TypePrinter::printParenAfter(const ParenType *T, raw_ostream &OS) {
 }
 
 void TypePrinter::printDependentNameBefore(const DependentNameType *T,
-                                           raw_ostream &OS) { 
+                                           raw_ostream &OS) {
   OS << TypeWithKeyword::getKeywordName(T->getKeyword());
   if (T->getKeyword() != ETK_None)
     OS << " ";
-  
+
   T->getQualifier()->print(OS, Policy);
-  
+
   OS << T->getIdentifier()->getName();
   spaceBeforePlaceHolder(OS);
 }
 void TypePrinter::printDependentNameAfter(const DependentNameType *T,
-                                          raw_ostream &OS) { } 
+                                          raw_ostream &OS) { }
 
 void TypePrinter::printDependentTemplateSpecializationBefore(
-        const DependentTemplateSpecializationType *T, raw_ostream &OS) { 
+        const DependentTemplateSpecializationType *T, raw_ostream &OS) {
   IncludeStrongLifetimeRAII Strong(Policy);
-  
+
   OS << TypeWithKeyword::getKeywordName(T->getKeyword());
   if (T->getKeyword() != ETK_None)
     OS << " ";
-  
+
   if (T->getQualifier())
-    T->getQualifier()->print(OS, Policy);    
+    T->getQualifier()->print(OS, Policy);
   OS << T->getIdentifier()->getName();
   TemplateSpecializationType::PrintTemplateArgumentList(OS,
                                                         T->getArgs(),
@@ -1049,13 +1049,13 @@ void TypePrinter::printDependentTemplateSpecializationBefore(
   spaceBeforePlaceHolder(OS);
 }
 void TypePrinter::printDependentTemplateSpecializationAfter(
-        const DependentTemplateSpecializationType *T, raw_ostream &OS) { } 
+        const DependentTemplateSpecializationType *T, raw_ostream &OS) { }
 
-void TypePrinter::printPackExpansionBefore(const PackExpansionType *T, 
+void TypePrinter::printPackExpansionBefore(const PackExpansionType *T,
                                            raw_ostream &OS) {
   printBefore(T->getPattern(), OS);
 }
-void TypePrinter::printPackExpansionAfter(const PackExpansionType *T, 
+void TypePrinter::printPackExpansionAfter(const PackExpansionType *T,
                                           raw_ostream &OS) {
   printAfter(T->getPattern(), OS);
   OS << "...";
@@ -1172,13 +1172,13 @@ void TypePrinter::printAttributedAfter(const AttributedType *T,
   OS << "))";
 }
 
-void TypePrinter::printObjCInterfaceBefore(const ObjCInterfaceType *T, 
-                                           raw_ostream &OS) { 
+void TypePrinter::printObjCInterfaceBefore(const ObjCInterfaceType *T,
+                                           raw_ostream &OS) {
   OS << T->getDecl()->getName();
   spaceBeforePlaceHolder(OS);
 }
-void TypePrinter::printObjCInterfaceAfter(const ObjCInterfaceType *T, 
-                                          raw_ostream &OS) { } 
+void TypePrinter::printObjCInterfaceAfter(const ObjCInterfaceType *T,
+                                          raw_ostream &OS) { }
 
 void TypePrinter::printObjCObjectBefore(const ObjCObjectType *T,
                                         raw_ostream &OS) {
@@ -1205,7 +1205,7 @@ void TypePrinter::printObjCObjectAfter(const ObjCObjectType *T,
     return printAfter(T->getBaseType(), OS);
 }
 
-void TypePrinter::printObjCObjectPointerBefore(const ObjCObjectPointerType *T, 
+void TypePrinter::printObjCObjectPointerBefore(const ObjCObjectPointerType *T,
                                                raw_ostream &OS) {
   T->getPointeeType().getLocalQualifiers().print(OS, Policy,
                                                 /*appendSpaceIfNonEmpty=*/true);
@@ -1218,10 +1218,10 @@ void TypePrinter::printObjCObjectPointerBefore(const ObjCObjectPointerType *T,
     OS << "SEL";
   else
     OS << T->getInterfaceDecl()->getName();
-  
+
   if (!T->qual_empty()) {
     OS << '<';
-    for (ObjCObjectPointerType::qual_iterator I = T->qual_begin(), 
+    for (ObjCObjectPointerType::qual_iterator I = T->qual_begin(),
                                               E = T->qual_end();
          I != E; ++I) {
       OS << (*I)->getName();
@@ -1230,14 +1230,14 @@ void TypePrinter::printObjCObjectPointerBefore(const ObjCObjectPointerType *T,
     }
     OS << '>';
   }
-  
+
   if (!T->isObjCIdType() && !T->isObjCQualifiedIdType()) {
     OS << " *"; // Don't forget the implicit pointer.
   } else {
     spaceBeforePlaceHolder(OS);
   }
 }
-void TypePrinter::printObjCObjectPointerAfter(const ObjCObjectPointerType *T, 
+void TypePrinter::printObjCObjectPointerAfter(const ObjCObjectPointerType *T,
                                               raw_ostream &OS) { }
 
 void TemplateSpecializationType::
@@ -1259,19 +1259,19 @@ TemplateSpecializationType::PrintTemplateArgumentList(
                                                       bool SkipBrackets) {
   if (!SkipBrackets)
     OS << '<';
-  
+
   bool needSpace = false;
   for (unsigned Arg = 0; Arg < NumArgs; ++Arg) {
     if (Arg > 0)
       OS << ", ";
-    
+
     // Print the argument into a string.
     SmallString<128> Buf;
     llvm::raw_svector_ostream ArgOS(Buf);
     if (Args[Arg].getKind() == TemplateArgument::Pack) {
       PrintTemplateArgumentList(ArgOS,
-                                Args[Arg].pack_begin(), 
-                                Args[Arg].pack_size(), 
+                                Args[Arg].pack_begin(),
+                                Args[Arg].pack_size(),
                                 Policy, true);
     } else {
       Args[Arg].print(Policy, ArgOS);
@@ -1310,20 +1310,20 @@ PrintTemplateArgumentList(raw_ostream &OS,
   for (unsigned Arg = 0; Arg < NumArgs; ++Arg) {
     if (Arg > 0)
       OS << ", ";
-    
+
     // Print the argument into a string.
     SmallString<128> Buf;
     llvm::raw_svector_ostream ArgOS(Buf);
     if (Args[Arg].getArgument().getKind() == TemplateArgument::Pack) {
       PrintTemplateArgumentList(ArgOS,
-                                Args[Arg].getArgument().pack_begin(), 
-                                Args[Arg].getArgument().pack_size(), 
+                                Args[Arg].getArgument().pack_begin(),
+                                Args[Arg].getArgument().pack_size(),
                                 Policy, true);
     } else {
       Args[Arg].getArgument().print(Policy, ArgOS);
     }
     StringRef ArgString = ArgOS.str();
-    
+
     // If this is the first argument and its string representation
     // begins with the global scope specifier ('::foo'), add a space
     // to avoid printing the diagraph '<:'.
@@ -1334,7 +1334,7 @@ PrintTemplateArgumentList(raw_ostream &OS,
 
     needSpace = (!ArgString.empty() && ArgString.back() == '>');
   }
-  
+
   // If the last character of our string is '>', add another space to
   // keep the two '>''s separate tokens. We don't *have* to do this in
   // C++0x, but it's still good hygiene.
@@ -1344,11 +1344,11 @@ PrintTemplateArgumentList(raw_ostream &OS,
   OS << '>';
 }
 
-void 
-FunctionProtoType::printExceptionSpecification(std::string &S, 
+void
+FunctionProtoType::printExceptionSpecification(std::string &S,
                                                const PrintingPolicy &Policy)
                                                                          const {
-  
+
   if (hasDynamicExceptionSpec()) {
     S += " throw(";
     if (getExceptionSpecType() == EST_MSAny)
@@ -1357,7 +1357,7 @@ FunctionProtoType::printExceptionSpecification(std::string &S,
       for (unsigned I = 0, N = getNumExceptions(); I != N; ++I) {
         if (I)
           S += ", ";
-        
+
         S += getExceptionType(I).getAsString(Policy);
       }
     S += ")";
@@ -1391,40 +1391,40 @@ TemplateSpecializationType::PrintTemplateArgumentList(
   std::string SpecString;
   if (!SkipBrackets)
     SpecString += '<';
-  
+
   for (unsigned Arg = 0; Arg < NumArgs; ++Arg) {
     if (SpecString.size() > unsigned(!SkipBrackets))
       SpecString += ", ";
-    
+
     // Print the argument into a string.
     std::string ArgString;
     if (Args[Arg].getKind() == TemplateArgument::Pack) {
-      ArgString = PrintTemplateArgumentList(Args[Arg].pack_begin(), 
-                                            Args[Arg].pack_size(), 
+      ArgString = PrintTemplateArgumentList(Args[Arg].pack_begin(),
+                                            Args[Arg].pack_size(),
                                             Policy, true);
     } else {
       llvm::raw_string_ostream ArgOut(ArgString);
       Args[Arg].print(Policy, ArgOut);
     }
-   
+
     // If this is the first argument and its string representation
     // begins with the global scope specifier ('::foo'), add a space
     // to avoid printing the diagraph '<:'.
     if (!Arg && !ArgString.empty() && ArgString[0] == ':')
       SpecString += ' ';
-    
+
     SpecString += ArgString;
   }
-  
+
   // If the last character of our string is '>', add another space to
   // keep the two '>''s separate tokens. We don't *have* to do this in
   // C++0x, but it's still good hygiene.
   if (!SpecString.empty() && SpecString[SpecString.size() - 1] == '>')
     SpecString += ' ';
-  
+
   if (!SkipBrackets)
     SpecString += '>';
-  
+
   return SpecString;
 }
 
@@ -1437,36 +1437,36 @@ PrintTemplateArgumentList(const TemplateArgumentLoc *Args, unsigned NumArgs,
   for (unsigned Arg = 0; Arg < NumArgs; ++Arg) {
     if (SpecString.size() > 1)
       SpecString += ", ";
-    
+
     // Print the argument into a string.
     std::string ArgString;
     if (Args[Arg].getArgument().getKind() == TemplateArgument::Pack) {
       ArgString = PrintTemplateArgumentList(
-                                           Args[Arg].getArgument().pack_begin(), 
-                                            Args[Arg].getArgument().pack_size(), 
+                                           Args[Arg].getArgument().pack_begin(),
+                                            Args[Arg].getArgument().pack_size(),
                                             Policy, true);
     } else {
       llvm::raw_string_ostream ArgOut(ArgString);
       Args[Arg].getArgument().print(Policy, ArgOut);
     }
-    
+
     // If this is the first argument and its string representation
     // begins with the global scope specifier ('::foo'), add a space
     // to avoid printing the diagraph '<:'.
     if (!Arg && !ArgString.empty() && ArgString[0] == ':')
       SpecString += ' ';
-    
+
     SpecString += ArgString;
   }
-  
+
   // If the last character of our string is '>', add another space to
   // keep the two '>''s separate tokens. We don't *have* to do this in
   // C++0x, but it's still good hygiene.
   if (SpecString[SpecString.size() - 1] == '>')
     SpecString += ' ';
-  
+
   SpecString += '>';
-  
+
   return SpecString;
 }
 
@@ -1568,11 +1568,11 @@ void Qualifiers::print(raw_ostream &OS, const PrintingPolicy& Policy,
     switch (lifetime) {
     case Qualifiers::OCL_None: llvm_unreachable("none but true");
     case Qualifiers::OCL_ExplicitNone: OS << "__unsafe_unretained"; break;
-    case Qualifiers::OCL_Strong: 
+    case Qualifiers::OCL_Strong:
       if (!Policy.SuppressStrongLifetime)
-        OS << "__strong"; 
+        OS << "__strong";
       break;
-        
+
     case Qualifiers::OCL_Weak: OS << "__weak"; break;
     case Qualifiers::OCL_Autoreleasing: OS << "__autoreleasing"; break;
     }

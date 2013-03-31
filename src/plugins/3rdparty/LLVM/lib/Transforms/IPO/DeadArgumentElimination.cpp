@@ -42,7 +42,7 @@ using namespace llvm;
 
 STATISTIC(NumArgumentsEliminated, "Number of unread args removed");
 STATISTIC(NumRetValsEliminated  , "Number of unused return values removed");
-STATISTIC(NumArgumentsReplacedWithUndef, 
+STATISTIC(NumArgumentsReplacedWithUndef,
           "Number of unread args replaced with undef");
 namespace {
   /// DAE - The dead argument elimination pass.
@@ -183,7 +183,7 @@ namespace {
 }
 
 char DAH::ID = 0;
-INITIALIZE_PASS(DAH, "deadarghaX0r", 
+INITIALIZE_PASS(DAH, "deadarghaX0r",
                 "Dead Argument Hacking (BUGPOINT USE ONLY; DO NOT USE)",
                 false, false)
 
@@ -336,7 +336,7 @@ bool DAE::DeleteDeadVarargs(Function &Fn) {
   return true;
 }
 
-/// RemoveDeadArgumentsFromCallers - Checks if the given function has any 
+/// RemoveDeadArgumentsFromCallers - Checks if the given function has any
 /// arguments that are unused, and changes the caller parameters to be undefined
 /// instead.
 bool DAE::RemoveDeadArgumentsFromCallers(Function &Fn)
@@ -352,7 +352,7 @@ bool DAE::RemoveDeadArgumentsFromCallers(Function &Fn)
     return false;
 
   llvm::SmallVector<unsigned, 8> UnusedArgs;
-  for (Function::arg_iterator I = Fn.arg_begin(), E = Fn.arg_end(); 
+  for (Function::arg_iterator I = Fn.arg_begin(), E = Fn.arg_end();
        I != E; ++I) {
     Argument *Arg = I;
 
@@ -365,7 +365,7 @@ bool DAE::RemoveDeadArgumentsFromCallers(Function &Fn)
 
   bool Changed = false;
 
-  for (Function::use_iterator I = Fn.use_begin(), E = Fn.use_end(); 
+  for (Function::use_iterator I = Fn.use_begin(), E = Fn.use_end();
        I != E; ++I) {
     CallSite CS(*I);
     if (!CS || !CS.isCallee(I))

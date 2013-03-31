@@ -42,7 +42,7 @@ class BasicCallGraph : public ModulePass, public CallGraph {
 
 public:
   static char ID; // Class identification, replacement for typeinfo
-  BasicCallGraph() : ModulePass(ID), Root(0), 
+  BasicCallGraph() : ModulePass(ID), Root(0),
     ExternalCallingNode(0), CallsExternalNode(0) {
       initializeBasicCallGraphPass(*PassRegistry::getPassRegistry());
     }
@@ -50,18 +50,18 @@ public:
   // runOnModule - Compute the call graph for the specified module.
   virtual bool runOnModule(Module &M) {
     CallGraph::initialize(M);
-    
+
     ExternalCallingNode = getOrInsertFunction(0);
     CallsExternalNode = new CallGraphNode(0);
     Root = 0;
-  
+
     // Add every function to the call graph.
     for (Module::iterator I = M.begin(), E = M.end(); I != E; ++I)
       addToCallGraph(I);
-  
+
     // If we didn't find a main function, use the external call graph node
     if (Root == 0) Root = ExternalCallingNode;
-    
+
     return false;
   }
 
@@ -76,14 +76,14 @@ public:
     else {
       OS << "<<null function: 0x" << getRoot() << ">>\n";
     }
-    
+
     CallGraph::print(OS, 0);
   }
 
   virtual void releaseMemory() {
     destroy();
   }
-  
+
   /// getAdjustedAnalysisPointer - This method is used when a pass implements
   /// an analysis interface through multiple inheritance.  If needed, it should
   /// override this to adjust the this pointer as needed for the specified pass
@@ -93,7 +93,7 @@ public:
       return (CallGraph*)this;
     return this;
   }
-  
+
   CallGraphNode* getExternalCallingNode() const { return ExternalCallingNode; }
   CallGraphNode* getCallsExternalNode()   const { return CallsExternalNode; }
 
@@ -180,7 +180,7 @@ void CallGraph::initialize(Module &M) {
 
 void CallGraph::destroy() {
   if (FunctionMap.empty()) return;
-  
+
   // Reset all node's use counts to zero before deleting them to prevent an
   // assertion from firing.
 #ifndef NDEBUG
@@ -188,7 +188,7 @@ void CallGraph::destroy() {
        I != E; ++I)
     I->second->allReferencesDropped();
 #endif
-  
+
   for (FunctionMapTy::iterator I = FunctionMap.begin(), E = FunctionMap.end();
       I != E; ++I)
     delete I->second;
@@ -247,7 +247,7 @@ void CallGraph::spliceFunction(const Function *From, const Function *To) {
 CallGraphNode *CallGraph::getOrInsertFunction(const Function *F) {
   CallGraphNode *&CGN = FunctionMap[F];
   if (CGN) return CGN;
-  
+
   assert((!F || F->getParent() == Mod) && "Function not in current module!");
   return CGN = new CallGraphNode(const_cast<Function*>(F));
 }
@@ -257,7 +257,7 @@ void CallGraphNode::print(raw_ostream &OS) const {
     OS << "Call graph node for function: '" << F->getName() << "'";
   else
     OS << "Call graph node <<null function>>";
-  
+
   OS << "<<" << this << ">>  #uses=" << getNumReferences() << '\n';
 
   for (const_iterator I = begin(), E = end(); I != E; ++I) {

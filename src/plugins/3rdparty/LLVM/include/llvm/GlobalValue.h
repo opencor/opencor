@@ -91,11 +91,11 @@ public:
     return Visibility == ProtectedVisibility;
   }
   void setVisibility(VisibilityTypes V) { Visibility = V; }
-  
+
   bool hasSection() const { return !Section.empty(); }
   const std::string &getSection() const { return Section; }
   void setSection(StringRef S) { Section = S; }
-  
+
   /// If the usage is empty (except transitively dead constants), then this
   /// global value can be safely deleted since the destructor will
   /// delete the dead constants as well.
@@ -269,7 +269,7 @@ public:
   /// Override from Constant class.
   virtual void destroyConstant();
 
-  /// isDeclaration - Return true if the primary definition of this global 
+  /// isDeclaration - Return true if the primary definition of this global
   /// value is outside of the current translation unit.
   bool isDeclaration() const;
 

@@ -244,7 +244,7 @@ bool ConstantRange::contains(const ConstantRange &Other) const {
 ConstantRange ConstantRange::subtract(const APInt &Val) const {
   assert(Val.getBitWidth() == getBitWidth() && "Wrong bit width");
   // If the set is empty or full, don't modify the endpoints.
-  if (Lower == Upper) 
+  if (Lower == Upper)
     return *this;
   return ConstantRange(Lower - Val, Upper - Val);
 }
@@ -261,7 +261,7 @@ ConstantRange ConstantRange::difference(const ConstantRange &CR) const {
 /// set size that does so.  Because there may be two intersections with the
 /// same set size, A.intersectWith(B) might not be equal to B.intersectWith(A).
 ConstantRange ConstantRange::intersectWith(const ConstantRange &CR) const {
-  assert(getBitWidth() == CR.getBitWidth() && 
+  assert(getBitWidth() == CR.getBitWidth() &&
          "ConstantRange types don't agree!");
 
   // Handle common cases.
@@ -342,7 +342,7 @@ ConstantRange ConstantRange::intersectWith(const ConstantRange &CR) const {
 /// set before.
 ///
 ConstantRange ConstantRange::unionWith(const ConstantRange &CR) const {
-  assert(getBitWidth() == CR.getBitWidth() && 
+  assert(getBitWidth() == CR.getBitWidth() &&
          "ConstantRange types don't agree!");
 
   if (   isFullSet() || CR.isEmptySet()) return *this;
@@ -696,7 +696,7 @@ ConstantRange
 ConstantRange::lshr(const ConstantRange &Other) const {
   if (isEmptySet() || Other.isEmptySet())
     return ConstantRange(getBitWidth(), /*isFullSet=*/false);
-  
+
   APInt max = getUnsignedMax().lshr(Other.getUnsignedMin());
   APInt min = getUnsignedMin().lshr(Other.getUnsignedMax());
   if (min == max + 1)

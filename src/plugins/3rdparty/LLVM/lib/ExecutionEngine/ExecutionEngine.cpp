@@ -958,7 +958,7 @@ void ExecutionEngine::InitializeMemory(const Constant *Init, void *Addr) {
   DEBUG(Init->dump());
   if (isa<UndefValue>(Init))
     return;
-  
+
   if (const ConstantVector *CP = dyn_cast<ConstantVector>(Init)) {
     unsigned ElementSize =
       getDataLayout()->getTypeAllocSize(CP->getType()->getElementType());
@@ -966,12 +966,12 @@ void ExecutionEngine::InitializeMemory(const Constant *Init, void *Addr) {
       InitializeMemory(CP->getOperand(i), (char*)Addr+i*ElementSize);
     return;
   }
-  
+
   if (isa<ConstantAggregateZero>(Init)) {
     memset(Addr, 0, (size_t)getDataLayout()->getTypeAllocSize(Init->getType()));
     return;
   }
-  
+
   if (const ConstantArray *CPA = dyn_cast<ConstantArray>(Init)) {
     unsigned ElementSize =
       getDataLayout()->getTypeAllocSize(CPA->getType()->getElementType());
@@ -979,7 +979,7 @@ void ExecutionEngine::InitializeMemory(const Constant *Init, void *Addr) {
       InitializeMemory(CPA->getOperand(i), (char*)Addr+i*ElementSize);
     return;
   }
-  
+
   if (const ConstantStruct *CPS = dyn_cast<ConstantStruct>(Init)) {
     const StructLayout *SL =
       getDataLayout()->getStructLayout(cast<StructType>(CPS->getType()));

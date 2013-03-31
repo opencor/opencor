@@ -124,7 +124,7 @@ private:
 
 public:
   explicit AnalysisResolver(PMDataManager &P) : PM(P) { }
-  
+
   inline PMDataManager &getPMDataManager() { return PM; }
 
   // Find pass that is implementing PI.
@@ -209,7 +209,7 @@ AnalysisType &Pass::getAnalysisID(AnalysisID PI) const {
   // should be a small number, we just do a linear search over a (dense)
   // vector.
   Pass *ResultPass = Resolver->findImplPass(PI);
-  assert (ResultPass && 
+  assert (ResultPass &&
           "getAnalysis*() called on an analysis that was not "
           "'required' by pass!");
 
@@ -240,7 +240,7 @@ AnalysisType &Pass::getAnalysisID(AnalysisID PI, Function &F) {
   // vector.
   Pass *ResultPass = Resolver->findImplPass(this, PI, F);
   assert(ResultPass && "Unable to find requested analysis info");
-  
+
   // Because the AnalysisType may not be a subclass of pass (for
   // AnalysisGroups), we use getAdjustedAnalysisPointer here to potentially
   // adjust the return pointer (because the class may multiply inherit, once

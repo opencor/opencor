@@ -710,14 +710,14 @@ enum {
 };
 
 // Hexagon specific Section indexes for common small data
-// Release 5 ABI 
+// Release 5 ABI
 enum {
   SHN_HEXAGON_SCOMMON     = 0xff00,       // Other access sizes
   SHN_HEXAGON_SCOMMON_1   = 0xff01,       // Byte-sized access
   SHN_HEXAGON_SCOMMON_2   = 0xff02,       // Half-word-sized access
   SHN_HEXAGON_SCOMMON_4   = 0xff03,       // Word-sized access
   SHN_HEXAGON_SCOMMON_8   = 0xff04        // Double-word-size access
-};   
+};
 
 // ELF Relocation types for Hexagon
 // Release 5 ABI

@@ -33,7 +33,7 @@ public:
 
   void FlushDiagnosticsImpl(std::vector<const PathDiagnostic *> &Diags,
                             FilesMade *filesMade);
-  
+
   virtual StringRef getName() const {
     return "TextPathDiagnostics";
   }
@@ -60,7 +60,7 @@ void TextPathDiagnostics::FlushDiagnosticsImpl(
     const PathDiagnostic *D = *it;
 
     PathPieces FlatPath = D->path.flatten(/*ShouldFlattenMacros=*/true);
-    for (PathPieces::const_iterator I = FlatPath.begin(), E = FlatPath.end(); 
+    for (PathPieces::const_iterator I = FlatPath.begin(), E = FlatPath.end();
          I != E; ++I) {
       unsigned diagID =
         Diag.getDiagnosticIDs()->getCustomDiagID(DiagnosticIDs::Note,

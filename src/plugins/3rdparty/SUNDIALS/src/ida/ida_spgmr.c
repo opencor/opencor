@@ -2,16 +2,16 @@
  * -----------------------------------------------------------------
  * $Revision: 1.7 $
  * $Date: 2011/05/25 20:20:25 $
- * ----------------------------------------------------------------- 
+ * -----------------------------------------------------------------
  * Programmers: Alan C. Hindmarsh, and Radu Serban @ LLNL
  * -----------------------------------------------------------------
- * Copyright (c) 2002, The Regents of the University of California  
+ * Copyright (c) 2002, The Regents of the University of California
  * Produced at the Lawrence Livermore National Laboratory
  * All rights reserved
  * For details, see the LICENSE file
  * -----------------------------------------------------------------
- * This is the implementation file for the IDA Scaled              
- * Preconditioned GMRES linear solver module, IDASPGMR.            
+ * This is the implementation file for the IDA Scaled
+ * Preconditioned GMRES linear solver module, IDASPGMR.
  * -----------------------------------------------------------------
  */
 
@@ -36,8 +36,8 @@
 
 static int IDASpgmrInit(IDAMem IDA_mem);
 
-static int IDASpgmrSetup(IDAMem IDA_mem, 
-                         N_Vector yy_p, N_Vector yp_p, N_Vector rr_p, 
+static int IDASpgmrSetup(IDAMem IDA_mem,
+                         N_Vector yy_p, N_Vector yp_p, N_Vector rr_p,
                          N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
 
 static int IDASpgmrSolve(IDAMem IDA_mem, N_Vector bb, N_Vector weight,
@@ -103,7 +103,7 @@ static int IDASpgmrFree(IDAMem IDA_mem);
  * -----------------------------------------------------------------
  *
  * This routine initializes the memory record and sets various function
- * fields specific to the IDASPGMR linear solver module.  
+ * fields specific to the IDASPGMR linear solver module.
  *
  * IDASpgmr first calls the existing lfree routine if this is not NULL.
  * It then sets the ida_linit, ida_lsetup, ida_lsolve, ida_lperf, and
@@ -112,7 +112,7 @@ static int IDASpgmrFree(IDAMem IDA_mem);
  * It allocates memory for a structure of type IDASpilsMemRec and sets
  * the ida_lmem field in (*IDA_mem) to the address of this structure.
  * It sets setupNonNull in (*IDA_mem).  It then various fields in the
- * IDASpilsMemRec structure. Finally, IDASpgmr allocates memory for 
+ * IDASpilsMemRec structure. Finally, IDASpgmr allocates memory for
  * ytemp, yptemp, and xx, and calls SpgmrMalloc to allocate memory
  * for the Spgmr solver.
  *
@@ -282,8 +282,8 @@ static int IDASpgmrInit(IDAMem IDA_mem)
   return(0);
 }
 
-static int IDASpgmrSetup(IDAMem IDA_mem, 
-                         N_Vector yy_p, N_Vector yp_p, N_Vector rr_p, 
+static int IDASpgmrSetup(IDAMem IDA_mem,
+                         N_Vector yy_p, N_Vector yp_p, N_Vector rr_p,
                          N_Vector tmp1, N_Vector tmp2, N_Vector tmp3)
 {
   int retval;
@@ -314,8 +314,8 @@ static int IDASpgmrSetup(IDAMem IDA_mem,
 
 /*
  * The x-scaling and b-scaling arrays are both equal to weight.
- *  
- * We set the initial guess, x = 0, then call SpgmrSolve.  
+ *
+ * We set the initial guess, x = 0, then call SpgmrSolve.
  * We copy the solution x into b, and update the counters nli, nps, ncfl.
  * If SpgmrSolve returned nli_inc = 0 (hence x = 0), we take the SPGMR
  * vtemp vector (= P_inverse F) as the correction vector instead.
@@ -335,7 +335,7 @@ static int IDASpgmrSolve(IDAMem IDA_mem, N_Vector bb, N_Vector weight,
   spgmr_mem = (SpgmrMem) spils_mem;
 
   /* Set SpgmrSolve convergence test constant epslin, in terms of the
-    Newton convergence test constant epsNewt and safety factors.  The factor 
+    Newton convergence test constant epsNewt and safety factors.  The factor
     sqrt(Neq) assures that the GMRES convergence test is applied to the
     WRMS norm of the residual vector, rather than the weighted L2 norm. */
   epslin = sqrtN*eplifac*epsNewt;
@@ -345,10 +345,10 @@ static int IDASpgmrSolve(IDAMem IDA_mem, N_Vector bb, N_Vector weight,
   ypcur = yp_now;
   rcur = rr_now;
 
-  /* Set SpgmrSolve inputs pretype and initial guess xx = 0. */  
+  /* Set SpgmrSolve inputs pretype and initial guess xx = 0. */
   pretype = (psolve == NULL) ? PREC_NONE : PREC_LEFT;
   N_VConst(ZERO, xx);
-  
+
   /* Call SpgmrSolve and copy xx to bb. */
   retval = SpgmrSolve(spgmr_mem, IDA_mem, xx, bb, pretype, gstype, epslin,
                       maxrs, IDA_mem, weight, weight, IDASpilsAtimes,
@@ -356,7 +356,7 @@ static int IDASpgmrSolve(IDAMem IDA_mem, N_Vector bb, N_Vector weight,
 
   if (nli_inc == 0) N_VScale(ONE, SPGMR_VTEMP(spgmr_mem), bb);
   else N_VScale(ONE, xx, bb);
-  
+
   /* Increment counters nli, nps, and return if successful. */
   nli += nli_inc;
   nps += nps_inc;
@@ -390,7 +390,7 @@ static int IDASpgmrSolve(IDAMem IDA_mem, N_Vector bb, N_Vector weight,
     return(-1);
     break;
   case SPGMR_ATIMES_FAIL_UNREC:
-    IDAProcessError(IDA_mem, SPGMR_ATIMES_FAIL_UNREC, "IDASPGMR", "IDASpgmrSolve", MSGS_JTIMES_FAILED);    
+    IDAProcessError(IDA_mem, SPGMR_ATIMES_FAIL_UNREC, "IDASPGMR", "IDASpgmrSolve", MSGS_JTIMES_FAILED);
     return(-1);
     break;
   case SPGMR_PSOLVE_FAIL_UNREC:
@@ -427,7 +427,7 @@ static int IDASpgmrPerf(IDAMem IDA_mem, int perftask)
 
   if (perftask == 0) {
     nst0 = nst;  nni0 = nni;  nli0 = nli;
-    ncfn0 = ncfn;  ncfl0 = ncfl;  
+    ncfn0 = ncfn;  ncfl0 = ncfl;
     nwarn = 0;
     return(0);
   }
@@ -443,11 +443,11 @@ static int IDASpgmrPerf(IDAMem IDA_mem, int perftask)
   if (!(lavd || lcfn || lcfl)) return(0);
   nwarn++;
   if (nwarn > 10) return(1);
-  if (lavd) 
+  if (lavd)
     IDAProcessError(IDA_mem, IDA_WARNING, "IDASPGMR", "IDASpgmrPerf", MSGS_AVD_WARN, tn, avdim);
-  if (lcfn) 
+  if (lcfn)
     IDAProcessError(IDA_mem, IDA_WARNING, "IDASPGMR", "IDASpgmrPerf", MSGS_CFN_WARN, tn, rcfn);
-  if (lcfl) 
+  if (lcfl)
     IDAProcessError(IDA_mem, IDA_WARNING, "IDASPGMR", "IDASpgmrPerf", MSGS_CFL_WARN, tn, rcfl);
 
   return(0);
@@ -459,7 +459,7 @@ static int IDASpgmrFree(IDAMem IDA_mem)
   SpgmrMem spgmr_mem;
 
   idaspils_mem = (IDASpilsMem) lmem;
-  
+
   N_VDestroy(ytemp);
   N_VDestroy(yptemp);
   N_VDestroy(xx);

@@ -244,18 +244,18 @@ struct CheckFallThroughDiagnostics {
     bool isVirtualMethod = false;
     if (const CXXMethodDecl *Method = dyn_cast<CXXMethodDecl>(Func))
       isVirtualMethod = Method->isVirtual();
-    
+
     // Don't suggest that template instantiations be marked "noreturn"
     bool isTemplateInstantiation = false;
     if (const FunctionDecl *Function = dyn_cast<FunctionDecl>(Func))
       isTemplateInstantiation = Function->isTemplateInstantiation();
-        
+
     if (!isVirtualMethod && !isTemplateInstantiation)
       D.diag_NeverFallThroughOrReturn =
         diag::warn_suggest_noreturn_function;
     else
       D.diag_NeverFallThroughOrReturn = 0;
-    
+
     D.funMode = Function;
     return D;
   }
@@ -438,11 +438,11 @@ static bool SuggestInitializationFixit(Sema &S, const VarDecl *VD) {
     << FixItHint::CreateInsertion(VD->getLocation(), "__block ");
     return true;
   }
-  
+
   // Don't issue a fixit if there is already an initializer.
   if (VD->getInit())
     return false;
-  
+
   // Suggest possible initialization (if any).
   std::string Init = S.getFixItZeroInitializerForType(VariableTy);
   if (Init.empty())
@@ -453,7 +453,7 @@ static bool SuggestInitializationFixit(Sema &S, const VarDecl *VD) {
     return false;
 
   SourceLocation Loc = S.PP.getLocForEndOfToken(VD->getLocEnd());
-  
+
   S.Diag(Loc, diag::note_var_fixit_add_initialization) << VD->getDeclName()
     << FixItHint::CreateInsertion(Loc, Init);
   return true;
@@ -1108,10 +1108,10 @@ class UninitValsDiagReporter : public UninitVariablesHandler {
   typedef SmallVector<UninitUse, 2> UsesVec;
   typedef llvm::DenseMap<const VarDecl *, std::pair<UsesVec*, bool> > UsesMap;
   UsesMap *uses;
-  
+
 public:
   UninitValsDiagReporter(Sema &S) : S(S), uses(0) {}
-  ~UninitValsDiagReporter() { 
+  ~UninitValsDiagReporter() {
     flushDiagnostics();
   }
 
@@ -1123,22 +1123,22 @@ public:
     UsesVec *&vec = V.first;
     if (!vec)
       vec = new UsesVec();
-    
+
     return V;
   }
-  
+
   void handleUseOfUninitVariable(const VarDecl *vd, const UninitUse &use) {
     getUses(vd).first->push_back(use);
   }
-  
+
   void handleSelfInit(const VarDecl *vd) {
-    getUses(vd).second = true;    
+    getUses(vd).second = true;
   }
-  
+
   void flushDiagnostics() {
     if (!uses)
       return;
-    
+
     // FIXME: This iteration order, and thus the resulting diagnostic order,
     //        is nondeterministic.
     for (UsesMap::iterator i = uses->begin(), e = uses->end(); i != e; ++i) {
@@ -1148,7 +1148,7 @@ public:
       UsesVec *vec = V.first;
       bool hasSelfInit = V.second;
 
-      // Specially handle the case where we have uses of an uninitialized 
+      // Specially handle the case where we have uses of an uninitialized
       // variable, but the root cause is an idiomatic self-init.  We want
       // to report the diagnostic at the self-init since that is the root cause.
       if (!vec->empty() && hasSelfInit && hasAlwaysUninitializedUse(vec))
@@ -1161,7 +1161,7 @@ public:
         // guaranteed to produce them in line/column order, this will provide
         // a stable ordering.
         std::sort(vec->begin(), vec->end(), SLocSort());
-        
+
         for (UsesVec::iterator vi = vec->begin(), ve = vec->end(); vi != ve;
              ++vi) {
           // If we have self-init, downgrade all uses to 'may be uninitialized'.
@@ -1173,7 +1173,7 @@ public:
             break;
         }
       }
-      
+
       // Release the uses vector.
       delete vec;
     }
@@ -1428,7 +1428,7 @@ AnalysisBasedWarnings::IssueWarnings(sema::AnalysisBasedWarnings::Policy P,
     flushDiagnostics(S, fscope);
     return;
   }
-  
+
   const Stmt *Body = D->getBody();
   assert(Body);
 
@@ -1465,7 +1465,7 @@ AnalysisBasedWarnings::IssueWarnings(sema::AnalysisBasedWarnings::Policy P,
   }
 
   // Construct the analysis context with the specified CFG build options.
-  
+
   // Emit delayed diagnostics.
   if (!fscope->PossiblyUnreachableDiags.empty()) {
     bool analyzed = false;
@@ -1512,8 +1512,8 @@ AnalysisBasedWarnings::IssueWarnings(sema::AnalysisBasedWarnings::Policy P,
     if (!analyzed)
       flushDiagnostics(S, fscope);
   }
-  
-  
+
+
   // Warning: check missing 'return'
   if (P.enableCheckFallThrough) {
     const CheckFallThroughDiagnostics &CD =

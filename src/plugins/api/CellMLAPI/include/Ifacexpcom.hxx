@@ -18,7 +18,7 @@ namespace iface
     typedef std::string& utf8string;
     typedef std::wstring& utf8wstring;
     typedef std::vector<std::string>& interface_list;
-    PUBLIC_xpcom_PRE 
+    PUBLIC_xpcom_PRE
     class  PUBLIC_xpcom_POST IObject
     {
     public:

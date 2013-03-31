@@ -203,9 +203,9 @@ void AliasSetTracker::clear() {
   for (PointerMapType::iterator I = PointerMap.begin(), E = PointerMap.end();
        I != E; ++I)
     I->second->eraseFromList();
-  
+
   PointerMap.clear();
-  
+
   // The alias sets should all be clear now.
   AliasSets.clear();
 }
@@ -221,7 +221,7 @@ AliasSet *AliasSetTracker::findAliasSetForPointer(const Value *Ptr,
   AliasSet *FoundSet = 0;
   for (iterator I = begin(), E = end(); I != E; ++I) {
     if (I->Forward || !I->aliasesPointer(Ptr, Size, TBAAInfo, AA)) continue;
-    
+
     if (FoundSet == 0) {  // If this is the first alias set ptr can go into.
       FoundSet = I;       // Remember it.
     } else {              // Otherwise, we must merge the sets.
@@ -250,7 +250,7 @@ AliasSet *AliasSetTracker::findAliasSetForUnknownInst(Instruction *Inst) {
   for (iterator I = begin(), E = end(); I != E; ++I) {
     if (I->Forward || !I->aliasesUnknownInst(Inst, AA))
       continue;
-    
+
     if (FoundSet == 0)        // If this is the first alias set ptr can go into.
       FoundSet = I;           // Remember it.
     else if (!I->Forward)     // Otherwise, we must merge the sets.
@@ -275,13 +275,13 @@ AliasSet &AliasSetTracker::getAliasSetForPointer(Value *Pointer, uint64_t Size,
     // Return the set!
     return *Entry.getAliasSet(*this)->getForwardedTarget(*this);
   }
-  
+
   if (AliasSet *AS = findAliasSetForPointer(Pointer, Size, TBAAInfo)) {
     // Add it to the alias set it aliases.
     AS->addPointer(*this, Entry, Size, TBAAInfo);
     return *AS;
   }
-  
+
   if (New) *New = true;
   // Otherwise create a new alias set to hold the loaded pointer.
   AliasSets.push_back(new AliasSet());
@@ -325,7 +325,7 @@ bool AliasSetTracker::add(StoreInst *SI) {
 
 bool AliasSetTracker::add(VAArgInst *VAAI) {
   bool NewPtr;
-  addPointer(VAAI->getOperand(0), AliasAnalysis::UnknownSize, 
+  addPointer(VAAI->getOperand(0), AliasAnalysis::UnknownSize,
              VAAI->getMetadata(LLVMContext::MD_tbaa),
              AliasSet::ModRef, NewPtr);
   return NewPtr;
@@ -333,7 +333,7 @@ bool AliasSetTracker::add(VAArgInst *VAAI) {
 
 
 bool AliasSetTracker::addUnknown(Instruction *Inst) {
-  if (isa<DbgInfoIntrinsic>(Inst)) 
+  if (isa<DbgInfoIntrinsic>(Inst))
     return true; // Ignore DbgInfo Intrinsics.
   if (!Inst->mayReadOrWriteMemory())
     return true; // doesn't alias anything
@@ -374,7 +374,7 @@ void AliasSetTracker::add(const AliasSetTracker &AST) {
   // merged together in the current AST.
   for (const_iterator I = AST.begin(), E = AST.end(); I != E; ++I) {
     if (I->Forward) continue;   // Ignore forwarding alias sets
-    
+
     AliasSet &AS = const_cast<AliasSet&>(*I);
 
     // If there are any call sites in the alias set, add them to this AST.
@@ -397,24 +397,24 @@ void AliasSetTracker::add(const AliasSetTracker &AST) {
 void AliasSetTracker::remove(AliasSet &AS) {
   // Drop all call sites.
   AS.UnknownInsts.clear();
-  
+
   // Clear the alias set.
   unsigned NumRefs = 0;
   while (!AS.empty()) {
     AliasSet::PointerRec *P = AS.PtrList;
 
     Value *ValToRemove = P->getValue();
-    
+
     // Unlink and delete entry from the list of values.
     P->eraseFromList();
-    
+
     // Remember how many references need to be dropped.
     ++NumRefs;
 
     // Finally, remove the entry.
     PointerMap.erase(ValToRemove);
   }
-  
+
   // Stop using the alias set, removing it.
   AS.RefCount -= NumRefs;
   if (AS.RefCount == 0)
@@ -494,7 +494,7 @@ void AliasSetTracker::deleteValue(Value *PtrVal) {
       // Scan all the alias sets to see if this call site is contained.
       for (iterator I = begin(), E = end(); I != E; ++I) {
         if (I->Forward) continue;
-        
+
         I->removeUnknownInst(Inst);
       }
     }
@@ -510,10 +510,10 @@ void AliasSetTracker::deleteValue(Value *PtrVal) {
 
   // Unlink and delete from the list of values.
   PtrValEnt->eraseFromList();
-  
+
   // Stop using the alias set.
   AS->dropRef(*this);
-  
+
   PointerMap.erase(I);
 }
 

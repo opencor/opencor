@@ -73,7 +73,7 @@ protected:
     /// The number of fixups required by enclosing scopes (not including
     /// this one).  If this is the top cleanup scope, all the fixups
     /// from this index onwards belong to this scope.
-    unsigned FixupDepth : 32 - 17 - NumCommonBits; // currently 13    
+    unsigned FixupDepth : 32 - 17 - NumCommonBits; // currently 13
   };
 
   class FilterBitFields {
@@ -446,7 +446,7 @@ class EHScopeStack::iterator {
 public:
   iterator() : Ptr(0) {}
 
-  EHScope *get() const { 
+  EHScope *get() const {
     return reinterpret_cast<EHScope*>(Ptr);
   }
 

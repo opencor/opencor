@@ -253,7 +253,7 @@ uint QwtDynGridLayout::columnsForWidth( int width ) const
         return 0;
 
     uint maxColumns = itemCount();
-    if ( d_data->maxColumns > 0 ) 
+    if ( d_data->maxColumns > 0 )
         maxColumns = qMin( d_data->maxColumns, maxColumns );
 
     if ( maxRowWidth( maxColumns ) <= width )

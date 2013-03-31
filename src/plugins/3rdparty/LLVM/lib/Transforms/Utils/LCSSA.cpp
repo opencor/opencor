@@ -10,7 +10,7 @@
 // This pass transforms loops by placing phi nodes at the end of the loops for
 // all values that are live across the loop boundary.  For example, it turns
 // the left into the right code:
-// 
+//
 // for (...)                for (...)
 //   if (c)                   if (c)
 //     X1 = ...                 X1 = ...
@@ -21,8 +21,8 @@
 //                          ... = X4 + 4
 //
 // This is still valid LLVM; the extra phi nodes are purely redundant, and will
-// be trivially eliminated by InstCombine.  The major benefit of this 
-// transformation is that it makes many other loop optimizations, such as 
+// be trivially eliminated by InstCombine.  The major benefit of this
+// transformation is that it makes many other loop optimizations, such as
 // LoopUnswitching, simpler.
 //
 //===----------------------------------------------------------------------===//
@@ -58,7 +58,7 @@ namespace {
     std::vector<BasicBlock*> LoopBlocks;
     PredIteratorCache PredCache;
     Loop *L;
-    
+
     virtual bool runOnLoop(Loop *L, LPPassManager &LPM);
 
     /// This transformation requires natural loop information & requires that
@@ -76,7 +76,7 @@ namespace {
   private:
     bool ProcessInstruction(Instruction *Inst,
                             const SmallVectorImpl<BasicBlock*> &ExitBlocks);
-    
+
     /// verifyAnalysis() - Verify loop nest.
     virtual void verifyAnalysis() const {
       // Check the special guarantees that LCSSA makes.
@@ -89,7 +89,7 @@ namespace {
     }
   };
 }
-  
+
 char LCSSA::ID = 0;
 INITIALIZE_PASS_BEGIN(LCSSA, "lcssa", "Loop-Closed SSA Form Pass", false, false)
 INITIALIZE_PASS_DEPENDENCY(DominatorTree)
@@ -117,7 +117,7 @@ static bool BlockDominatesAnExit(BasicBlock *BB,
 /// runOnFunction - Process all loops in the function, inner-most out.
 bool LCSSA::runOnLoop(Loop *TheLoop, LPPassManager &LPM) {
   L = TheLoop;
-  
+
   DT = &getAnalysis<DominatorTree>();
   LI = &getAnalysis<LoopInfo>();
   SE = getAnalysisIfAvailable<ScalarEvolution>();
@@ -125,29 +125,29 @@ bool LCSSA::runOnLoop(Loop *TheLoop, LPPassManager &LPM) {
   // Get the set of exiting blocks.
   SmallVector<BasicBlock*, 8> ExitBlocks;
   L->getExitBlocks(ExitBlocks);
-  
+
   if (ExitBlocks.empty())
     return false;
-  
+
   // Speed up queries by creating a sorted vector of blocks.
   LoopBlocks.clear();
   LoopBlocks.insert(LoopBlocks.end(), L->block_begin(), L->block_end());
   array_pod_sort(LoopBlocks.begin(), LoopBlocks.end());
-  
+
   // Look at all the instructions in the loop, checking to see if they have uses
   // outside the loop.  If so, rewrite those uses.
   bool MadeChange = false;
-  
+
   for (Loop::block_iterator BBI = L->block_begin(), E = L->block_end();
        BBI != E; ++BBI) {
     BasicBlock *BB = *BBI;
-    
+
     // For large loops, avoid use-scanning by using dominance information:  In
     // particular, if a block does not dominate any of the loop exits, then none
     // of the values defined in the block could be used outside the loop.
     if (!BlockDominatesAnExit(BB, ExitBlocks, DT))
       continue;
-    
+
     for (BasicBlock::iterator I = BB->begin(), E = BB->end();
          I != E; ++I) {
       // Reject two common cases fast: instructions with no uses (like stores)
@@ -156,7 +156,7 @@ bool LCSSA::runOnLoop(Loop *TheLoop, LPPassManager &LPM) {
           (I->hasOneUse() && I->use_back()->getParent() == BB &&
            !isa<PHINode>(I->use_back())))
         continue;
-      
+
       MadeChange |= ProcessInstruction(I, ExitBlocks);
     }
   }
@@ -166,7 +166,7 @@ bool LCSSA::runOnLoop(Loop *TheLoop, LPPassManager &LPM) {
   // FIXME: This is a big hammer, can we clear the cache more selectively?
   if (SE && MadeChange)
     SE->forgetLoop(L);
-  
+
   assert(L->isLCSSAForm(*DT));
   PredCache.clear();
 
@@ -188,23 +188,23 @@ static bool isExitBlock(BasicBlock *BB,
 bool LCSSA::ProcessInstruction(Instruction *Inst,
                                const SmallVectorImpl<BasicBlock*> &ExitBlocks) {
   SmallVector<Use*, 16> UsesToRewrite;
-  
+
   BasicBlock *InstBB = Inst->getParent();
-  
+
   for (Value::use_iterator UI = Inst->use_begin(), E = Inst->use_end();
        UI != E; ++UI) {
     User *U = *UI;
     BasicBlock *UserBB = cast<Instruction>(U)->getParent();
     if (PHINode *PN = dyn_cast<PHINode>(U))
       UserBB = PN->getIncomingBlock(UI);
-    
+
     if (InstBB != UserBB && !inLoop(UserBB))
       UsesToRewrite.push_back(&UI.getUse());
   }
 
   // If there are no uses outside the loop, exit with no change.
   if (UsesToRewrite.empty()) return false;
-  
+
   ++NumLCSSA; // We are applying the transformation
 
   // Invoke instructions are special in that their result value is not available
@@ -221,17 +221,17 @@ bool LCSSA::ProcessInstruction(Instruction *Inst,
 
   SSAUpdater SSAUpdate;
   SSAUpdate.Initialize(Inst->getType(), Inst->getName());
-  
+
   // Insert the LCSSA phi's into all of the exit blocks dominated by the
   // value, and add them to the Phi's map.
   for (SmallVectorImpl<BasicBlock*>::const_iterator BBI = ExitBlocks.begin(),
       BBE = ExitBlocks.end(); BBI != BBE; ++BBI) {
     BasicBlock *ExitBB = *BBI;
     if (!DT->dominates(DomNode, DT->getNode(ExitBB))) continue;
-    
+
     // If we already inserted something for this BB, don't reprocess it.
     if (SSAUpdate.HasValueForBlock(ExitBB)) continue;
-    
+
     PHINode *PN = PHINode::Create(Inst->getType(),
                                   PredCache.GetNumPreds(ExitBB),
                                   Inst->getName()+".lcssa",
@@ -251,7 +251,7 @@ bool LCSSA::ProcessInstruction(Instruction *Inst,
     }
 
     AddedPHIs.push_back(PN);
-    
+
     // Remember that this phi makes the value alive in this block.
     SSAUpdate.AddAvailableValue(ExitBB, PN);
   }
@@ -276,7 +276,7 @@ bool LCSSA::ProcessInstruction(Instruction *Inst,
       UsesToRewrite[i]->set(UserBB->begin());
       continue;
     }
-    
+
     // Otherwise, do full PHI insertion.
     SSAUpdate.RewriteUse(*UsesToRewrite[i]);
   }
@@ -286,7 +286,7 @@ bool LCSSA::ProcessInstruction(Instruction *Inst,
     if (AddedPHIs[i]->use_empty())
       AddedPHIs[i]->eraseFromParent();
   }
-  
+
   return true;
 }
 

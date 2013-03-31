@@ -2,7 +2,7 @@
  * -----------------------------------------------------------------
  * $Revision: 1.11 $
  * $Date: 2010/12/01 22:43:33 $
- * ----------------------------------------------------------------- 
+ * -----------------------------------------------------------------
  * Programmer(s): Radu Serban @ LLNL
  * -----------------------------------------------------------------
  * Copyright (c) 2002, The Regents of the University of California.
@@ -29,13 +29,13 @@
 #define ONE          RCONST(1.0)
 #define TWO          RCONST(2.0)
 
-/* 
+/*
  * =================================================================
  * PROTOTYPES FOR PRIVATE FUNCTIONS
  * =================================================================
  */
 
-/* KINDENSE linit, lsetup, lsolve, and lfree routines */ 
+/* KINDENSE linit, lsetup, lsolve, and lfree routines */
 static int kinDenseInit(KINMem kin_mem);
 static int kinDenseSetup(KINMem kin_mem);
 static int kinDenseSolve(KINMem kin_mem, N_Vector x, N_Vector b,
@@ -86,29 +86,29 @@ static void kinDenseFree(KINMem kin_mem);
 #define J_data         (kindls_mem->d_J_data)
 #define last_flag      (kindls_mem->d_last_flag)
 
-/* 
+/*
  * =================================================================
  * EXPORTED FUNCTIONS
  * =================================================================
  */
-             
+
 /*
  * -----------------------------------------------------------------
  * KINDense
  * -----------------------------------------------------------------
  * This routine initializes the memory record and sets various function
- * fields specific to the dense linear solver module. 
- * KINDense sets the kin_linit, kin_lsetup, kin_lsolve, kin_lfree fields 
- * in *kinmem to be kinDenseInit, kinDenseSetup, kinDenseSolve, and 
- * kinDenseFree, respectively.  
- * It allocates memory for a structure of type KINDlsMemRec and sets 
- * the kin_lmem field in *kinmem to the address of this structure.  
- * It sets setupNonNull in *kinmem to TRUE, and the djac field to the 
+ * fields specific to the dense linear solver module.
+ * KINDense sets the kin_linit, kin_lsetup, kin_lsolve, kin_lfree fields
+ * in *kinmem to be kinDenseInit, kinDenseSetup, kinDenseSolve, and
+ * kinDenseFree, respectively.
+ * It allocates memory for a structure of type KINDlsMemRec and sets
+ * the kin_lmem field in *kinmem to the address of this structure.
+ * It sets setupNonNull in *kinmem to TRUE, and the djac field to the
  * default kinDlsDenseDQJac.
  * Finally, it allocates memory for J and lpivots.
  *
  * NOTE: The dense linear solver assumes a serial implementation
- *       of the NVECTOR package. Therefore, KINDense will first 
+ *       of the NVECTOR package. Therefore, KINDense will first
  *       test for compatible a compatible N_Vector internal
  *       representation by checking that N_VGetArrayPointer and
  *       N_VSetArrayPointer exist.
@@ -151,7 +151,7 @@ int KINDense(void *kinmem, long int N)
   }
 
   /* Set matrix type */
-  mtype = SUNDIALS_DENSE;  
+  mtype = SUNDIALS_DENSE;
 
   /* Set default Jacobian routine and Jacobian data */
   jacDQ  = TRUE;
@@ -165,7 +165,7 @@ int KINDense(void *kinmem, long int N)
   n = N;
 
   /* Allocate memory for J and pivot array */
-  
+
   J = NULL;
   J = NewDenseMat(N, N);
   if (J == NULL) {
@@ -192,7 +192,7 @@ int KINDense(void *kinmem, long int N)
   return(KINDLS_SUCCESS);
 }
 
-/* 
+/*
  * =================================================================
  *  PRIVATE FUNCTIONS
  * =================================================================
@@ -212,10 +212,10 @@ static int kinDenseInit(KINMem kin_mem)
   KINDlsMem kindls_mem;
 
   kindls_mem = (KINDlsMem) lmem;
-  
+
   nje   = 0;
   nfeDQ = 0;
-  
+
   if (jacDQ) {
     djac = kinDlsDenseDQJac;
     J_data = kin_mem;
@@ -243,9 +243,9 @@ static int kinDenseSetup(KINMem kin_mem)
   long int ier;
 
   kindls_mem = (KINDlsMem) lmem;
- 
+
   nje++;
-  SetToZero(J); 
+  SetToZero(J);
   retval = djac(n, uu, fval, J, J_data, vtemp1, vtemp2);
   if (retval != 0) {
     last_flag = -1;
@@ -253,7 +253,7 @@ static int kinDenseSetup(KINMem kin_mem)
   }
 
   /* Do LU factorization of J */
-  ier = DenseGETRF(J, lpivots); 
+  ier = DenseGETRF(J, lpivots);
 
   /* Return 0 if the LU was complete; otherwise return -1 */
   last_flag = ier;
@@ -281,11 +281,11 @@ static int kinDenseSolve(KINMem kin_mem, N_Vector x, N_Vector b, realtype *res_n
   /* Copy the right-hand side into x */
 
   N_VScale(ONE, b, x);
-  
+
   xd = N_VGetArrayPointer(x);
 
   /* Back-solve and get solution in x */
-  
+
   DenseGETRS(J, lpivots, xd);
 
   /* Compute the terms Jpnorm and sfdotJp for use in the global strategy
@@ -321,7 +321,7 @@ static void kinDenseFree(KINMem kin_mem)
   KINDlsMem  kindls_mem;
 
   kindls_mem = (KINDlsMem) lmem;
-  
+
   DestroyMat(J);
   DestroyArray(lpivots);
   free(kindls_mem); kindls_mem = NULL;

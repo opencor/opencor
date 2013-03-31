@@ -46,7 +46,7 @@ ExecutionEngine *Interpreter::create(Module *M, std::string* ErrStr) {
 //
 Interpreter::Interpreter(Module *M)
   : ExecutionEngine(M), TD(M) {
-      
+
   memset(&ExitValue.Untyped, 0, sizeof(ExitValue.Untyped));
   setDataLayout(&TD);
   // Initialize the "backend"

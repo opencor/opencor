@@ -307,7 +307,7 @@ void InitHeaderSearch::AddDefaultCIncludePaths(const llvm::Triple &triple,
   case llvm::Triple::Cygwin:
     AddPath("/usr/include/w32api", System, true, false, false);
     break;
-  case llvm::Triple::MinGW32: { 
+  case llvm::Triple::MinGW32: {
       // mingw-w64 crt include paths
       llvm::sys::Path P(HSOpts.ResourceDir);
       P.appendComponent("../../../i686-w64-mingw32/include"); // <sysroot>/i686-w64-mingw32/include
@@ -321,11 +321,11 @@ void InitHeaderSearch::AddDefaultCIncludePaths(const llvm::Triple &triple,
       AddPath(P.str(), System, true, false, false);
       AddPath("/mingw/include", System, true, false, false);
 #if defined(_WIN32)
-      AddPath("c:/mingw/include", System, true, false, false); 
+      AddPath("c:/mingw/include", System, true, false, false);
 #endif
     }
     break;
-      
+
   default:
     break;
   }
@@ -470,7 +470,7 @@ void InitHeaderSearch::AddDefaultIncludePaths(const LangOptions &Lang,
         if (!P.isEmpty()) {
           P.eraseComponent();  // Remove version from foo/lib/clang/version
           P.eraseComponent();  // Remove clang from foo/lib/clang
-          
+
           // Get foo/lib/c++/v1
           P.appendComponent("c++");
           P.appendComponent("v1");
@@ -479,10 +479,10 @@ void InitHeaderSearch::AddDefaultIncludePaths(const LangOptions &Lang,
       }
       // On Solaris, include the support directory for things like xlocale and
       // fudged system headers.
-      if (triple.getOS() == llvm::Triple::Solaris) 
+      if (triple.getOS() == llvm::Triple::Solaris)
         AddPath("/usr/include/c++/v1/support/solaris", CXXSystem, true, false,
             false);
-      
+
       AddPath("/usr/include/c++/v1", CXXSystem, true, false, false);
     } else {
       AddDefaultCPlusPlusIncludePaths(triple, HSOpts);

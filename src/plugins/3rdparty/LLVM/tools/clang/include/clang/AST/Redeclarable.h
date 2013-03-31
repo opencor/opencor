@@ -105,7 +105,7 @@ public:
   const decl_type *getMostRecentDecl() const {
     return getFirstDeclaration()->RedeclLink.getNext();
   }
-  
+
   /// \brief Set the previous declaration. If PrevDecl is NULL, set this as the
   /// first and only declaration.
   void setPreviousDeclaration(decl_type *PrevDecl);

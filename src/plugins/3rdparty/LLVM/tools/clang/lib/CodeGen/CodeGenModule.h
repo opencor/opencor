@@ -79,22 +79,22 @@ namespace CodeGen {
   class CGCUDARuntime;
   class BlockFieldFlags;
   class FunctionArgList;
-  
+
   struct OrderGlobalInits {
     unsigned int priority;
     unsigned int lex_order;
-    OrderGlobalInits(unsigned int p, unsigned int l) 
+    OrderGlobalInits(unsigned int p, unsigned int l)
       : priority(p), lex_order(l) {}
-    
+
     bool operator==(const OrderGlobalInits &RHS) const {
       return priority == RHS.priority &&
              lex_order == RHS.lex_order;
     }
-    
+
     bool operator<(const OrderGlobalInits &RHS) const {
       if (priority < RHS.priority)
         return true;
-      
+
       return priority == RHS.priority && lex_order < RHS.lex_order;
     }
   };
@@ -206,7 +206,7 @@ struct ARCEntrypoints {
   /// a call will be immediately retain.
   llvm::InlineAsm *retainAutoreleasedReturnValueMarker;
 };
-  
+
 /// CodeGenModule - This class organizes the cross-function state that is used
 /// while generating LLVM code.
 class CodeGenModule : public CodeGenTypeCache {
@@ -271,7 +271,7 @@ class CodeGenModule : public CodeGenTypeCache {
   /// MangledDeclNames - A map of canonical GlobalDecls to their mangled names.
   llvm::DenseMap<GlobalDecl, StringRef> MangledDeclNames;
   llvm::BumpPtrAllocator MangledNamesAllocator;
-  
+
   /// Global annotations.
   std::vector<llvm::Constant*> Annotations;
 
@@ -282,7 +282,7 @@ class CodeGenModule : public CodeGenTypeCache {
   llvm::StringMap<llvm::GlobalVariable*> ConstantStringMap;
   llvm::DenseMap<const Decl*, llvm::Constant *> StaticLocalDeclMap;
   llvm::DenseMap<const Decl*, llvm::GlobalVariable*> StaticLocalDeclGuardMap;
-  
+
   llvm::DenseMap<QualType, llvm::Constant *> AtomicSetterHelperFnMap;
   llvm::DenseMap<QualType, llvm::Constant *> AtomicGetterHelperFnMap;
 
@@ -295,7 +295,7 @@ class CodeGenModule : public CodeGenTypeCache {
   /// here so that the initializer will be performed in the correct
   /// order.
   llvm::DenseMap<const Decl*, unsigned> DelayedCXXInitPosition;
-  
+
   typedef std::pair<OrderGlobalInits, llvm::Function*> GlobalInitData;
 
   struct GlobalInitPriorityCmp {
@@ -326,11 +326,11 @@ class CodeGenModule : public CodeGenTypeCache {
 
   /// \brief The LLVM type corresponding to NSConstantString.
   llvm::StructType *NSConstantStringType;
-  
+
   /// \brief The type used to describe the state of a fast enumeration in
   /// Objective-C's for..in loop.
   QualType ObjCFastEnumerationStateType;
-  
+
   /// @}
 
   /// Lazily create the Objective-C runtime
@@ -358,7 +358,7 @@ class CodeGenModule : public CodeGenTypeCache {
   struct {
     int GlobalUniqueCount;
   } Block;
-  
+
   GlobalDecl initializedGlobalDecl;
 
   /// @}
@@ -411,7 +411,7 @@ public:
   llvm::Constant *getStaticLocalDeclAddress(const VarDecl *D) {
     return StaticLocalDeclMap[D];
   }
-  void setStaticLocalDeclAddress(const VarDecl *D, 
+  void setStaticLocalDeclAddress(const VarDecl *D,
                                  llvm::Constant *C) {
     StaticLocalDeclMap[D] = C;
   }
@@ -419,7 +419,7 @@ public:
   llvm::GlobalVariable *getStaticLocalDeclGuardAddress(const VarDecl *D) {
     return StaticLocalDeclGuardMap[D];
   }
-  void setStaticLocalDeclGuardAddress(const VarDecl *D, 
+  void setStaticLocalDeclGuardAddress(const VarDecl *D,
                                       llvm::GlobalVariable *C) {
     StaticLocalDeclGuardMap[D] = C;
   }
@@ -486,7 +486,7 @@ public:
   /// for the thread-local variable declaration D.
   void setTLSMode(llvm::GlobalVariable *GV, const VarDecl &D) const;
 
-  /// TypeVisibilityKind - The kind of global variable that is passed to 
+  /// TypeVisibilityKind - The kind of global variable that is passed to
   /// setTypeVisibility
   enum TypeVisibilityKind {
     TVK_ForVTT,
@@ -524,7 +524,7 @@ public:
   }
 
   /// CreateOrReplaceCXXRuntimeVariable - Will return a global variable of the given
-  /// type. If a variable with a different type already exists then a new 
+  /// type. If a variable with a different type already exists then a new
   /// variable with the right type will be created and all uses of the old
   /// variable will be replaced with a bitcast to the new variable.
   llvm::GlobalVariable *
@@ -552,7 +552,7 @@ public:
                                     llvm::Type *Ty = 0,
                                     bool ForVTable = false);
 
-  /// GetAddrOfRTTIDescriptor - Get the address of the RTTI descriptor 
+  /// GetAddrOfRTTIDescriptor - Get the address of the RTTI descriptor
   /// for the given type.
   llvm::Constant *GetAddrOfRTTIDescriptor(QualType Ty, bool ForEH = false);
 
@@ -565,8 +565,8 @@ public:
   /// GetWeakRefReference - Get a reference to the target of VD.
   llvm::Constant *GetWeakRefReference(const ValueDecl *VD);
 
-  /// GetNonVirtualBaseClassOffset - Returns the offset from a derived class to 
-  /// a class. Returns null if the offset is 0. 
+  /// GetNonVirtualBaseClassOffset - Returns the offset from a derived class to
+  /// a class. Returns null if the offset is 0.
   llvm::Constant *
   GetNonVirtualBaseClassOffset(const CXXRecordDecl *ClassDecl,
                                CastExpr::path_const_iterator PathBegin,
@@ -604,7 +604,7 @@ public:
 
   /// getUniqueBlockCount - Fetches the global unique block count.
   int getUniqueBlockCount() { return ++Block.GlobalUniqueCount; }
-  
+
   /// getBlockDescriptorType - Fetches the type of a generic block
   /// descriptor.
   llvm::Type *getBlockDescriptorType();
@@ -615,11 +615,11 @@ public:
   /// GetAddrOfGlobalBlock - Gets the address of a block which
   /// requires no captures.
   llvm::Constant *GetAddrOfGlobalBlock(const BlockExpr *BE, const char *);
-  
+
   /// GetAddrOfConstantCFString - Return a pointer to a constant CFString object
   /// for the given string.
   llvm::Constant *GetAddrOfConstantCFString(const StringLiteral *Literal);
-  
+
   /// GetAddrOfConstantString - Return a pointer to a constant NSString object
   /// for the given string. Or a user defined String object as defined via
   /// -fconstant-string-class=class_name option.
@@ -664,11 +664,11 @@ public:
   /// GetAddrOfConstantCompoundLiteral - Returns a pointer to a constant global
   /// variable for the given file-scope compound literal expression.
   llvm::Constant *GetAddrOfConstantCompoundLiteral(const CompoundLiteralExpr*E);
-  
+
   /// \brief Retrieve the record type that describes the state of an
   /// Objective-C fast enumeration loop (for..in).
   QualType getObjCFastEnumerationStateType();
-  
+
   /// GetAddrOfCXXConstructor - Return the address of the constructor of the
   /// given type.
   llvm::GlobalValue *GetAddrOfCXXConstructor(const CXXConstructorDecl *ctor,
@@ -760,7 +760,7 @@ public:
   /// but not always, an LLVM null constant.
   llvm::Constant *EmitNullConstant(QualType T);
 
-  /// EmitNullConstantForBase - Return a null constant appropriate for 
+  /// EmitNullConstantForBase - Return a null constant appropriate for
   /// zero-initializing a base class with the given type.  This is usually,
   /// but not always, an LLVM null constant.
   llvm::Constant *EmitNullConstantForBase(const CXXRecordDecl *Record);
@@ -847,13 +847,13 @@ public:
   /// GetTargetTypeStoreSize - Return the store size, in character units, of
   /// the given LLVM type.
   CharUnits GetTargetTypeStoreSize(llvm::Type *Ty) const;
-  
-  /// GetLLVMLinkageVarDefinition - Returns LLVM linkage for a global 
+
+  /// GetLLVMLinkageVarDefinition - Returns LLVM linkage for a global
   /// variable.
-  llvm::GlobalValue::LinkageTypes 
+  llvm::GlobalValue::LinkageTypes
   GetLLVMLinkageVarDefinition(const VarDecl *D,
                               llvm::GlobalVariable *GV);
-  
+
   std::vector<const CXXRecordDecl*> DeferredVTables;
 
   /// Emit all the global annotations.
@@ -927,7 +927,7 @@ private:
   void EmitAliasDefinition(GlobalDecl GD);
   void EmitObjCPropertyImplementations(const ObjCImplementationDecl *D);
   void EmitObjCIvarInitializations(ObjCImplementationDecl *D);
-  
+
   // C++ related functions.
 
   bool TryEmitDefinitionAsAlias(GlobalDecl Alias, GlobalDecl Target);

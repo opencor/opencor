@@ -331,9 +331,9 @@ void IdempotentOperationChecker::checkPostStmt(const BinaryOperator *B,
   // Add the ExplodedNode we just visited
   BinaryOperatorData &Data = hash[B];
 
-  const Stmt *predStmt 
+  const Stmt *predStmt
     = cast<StmtPoint>(C.getPredecessor()->getLocation()).getStmt();
-  
+
   // Ignore implicit calls to setters.
   if (!isa<BinaryOperator>(predStmt))
     return;
@@ -540,7 +540,7 @@ IdempotentOperationChecker::pathWasCompletelyAnalyzed(AnalysisDeclContext *AC,
                                                       const CoreEngine &CE) {
 
   CFGReverseBlockReachabilityAnalysis *CRA = AC->getCFGReachablityAnalysis();
-  
+
   // Test for reachability from any aborted blocks to this block
   typedef CoreEngine::BlocksExhausted::const_iterator ExhaustedIterator;
   for (ExhaustedIterator I = CE.blocks_exhausted_begin(),
@@ -567,7 +567,7 @@ IdempotentOperationChecker::pathWasCompletelyAnalyzed(AnalysisDeclContext *AC,
     if (destBlock == CB || CRA->isReachable(destBlock, CB))
       return false;
   }
-  
+
   // For the items still on the worklist, see if they are in blocks that
   // can eventually reach 'CB'.
   class VisitWL : public WorkList::Visitor {
@@ -595,7 +595,7 @@ IdempotentOperationChecker::pathWasCompletelyAnalyzed(AnalysisDeclContext *AC,
       }
       if (!B)
         return true;
-      
+
       return B == TargetBlock || CRA.isReachable(B, TargetBlock);
     }
   };
@@ -657,7 +657,7 @@ bool IdempotentOperationChecker::CanVary(const Expr *Ex,
 
   // Cases requiring custom logic
   case Stmt::UnaryExprOrTypeTraitExprClass: {
-    const UnaryExprOrTypeTraitExpr *SE = 
+    const UnaryExprOrTypeTraitExpr *SE =
                        cast<const UnaryExprOrTypeTraitExpr>(Ex);
     if (SE->getKind() != UETT_SizeOf)
       return false;

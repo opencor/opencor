@@ -711,7 +711,7 @@ public:
   QualType withVolatile() const {
     return withFastQualifiers(Qualifiers::Volatile);
   }
-  
+
   /// Add the restrict qualifier to this QualType.
   void addRestrict() {
     addFastQualifiers(Qualifiers::Restrict);
@@ -3006,9 +3006,9 @@ public:
   QualType desugar() const { return QualType(this, 0); }
 
   // FIXME: Remove the string version.
-  void printExceptionSpecification(std::string &S, 
+  void printExceptionSpecification(std::string &S,
                                    const PrintingPolicy &Policy) const;
-  void printExceptionSpecification(raw_ostream &OS, 
+  void printExceptionSpecification(raw_ostream &OS,
                                    const PrintingPolicy &Policy) const;
 
   static bool classof(const Type *T) {
@@ -3221,7 +3221,7 @@ class TagType : public Type {
   TagDecl * decl;
 
   friend class ASTReader;
-  
+
 protected:
   TagType(TypeClass TC, const TagDecl *D, QualType can);
 
@@ -3624,7 +3624,7 @@ class TemplateSpecializationType
   /// \brief Whether this template specialization type is a substituted
   /// type alias.
   bool TypeAlias : 1;
-    
+
   TemplateSpecializationType(TemplateName T,
                              const TemplateArgument *Args,
                              unsigned NumArgs, QualType Canon,
@@ -3700,7 +3700,7 @@ public:
   /// };
   /// \endcode
   bool isTypeAlias() const { return TypeAlias; }
-    
+
   /// Get the aliased type, if this is a specialization of a type alias
   /// template.
   QualType getAliasedType() const {
@@ -4984,7 +4984,7 @@ inline bool Type::isIntegralOrEnumerationType() const {
   if (const EnumType *ET = dyn_cast<EnumType>(CanonicalType))
     return IsEnumDeclComplete(ET->getDecl());
 
-  return false;  
+  return false;
 }
 
 inline bool Type::isBooleanType() const {

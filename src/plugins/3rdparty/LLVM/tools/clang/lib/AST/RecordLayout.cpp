@@ -85,5 +85,5 @@ ASTRecordLayout::ASTRecordLayout(const ASTContext &Ctx,
                "Primary base must be at offset 0!");
       }
     }
-#endif        
+#endif
 }

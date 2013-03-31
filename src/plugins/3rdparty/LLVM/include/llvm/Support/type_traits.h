@@ -32,7 +32,7 @@
 // works with VC7.0, but other interactions seem to fail when we use it.
 
 namespace llvm {
-  
+
 namespace dont_use
 {
     // These two functions should never be used. They are helpers to
@@ -58,8 +58,8 @@ public:
   static const bool value =
       sizeof(char) == sizeof(dont_use::is_class_helper<T>(0));
 };
-  
-  
+
+
 /// isPodLike - This is a type trait that is used to determine whether a given
 /// type can be copied around with memcpy instead of running ctors etc.
 template <typename T>
@@ -80,7 +80,7 @@ template<typename T, typename U>
 struct isPodLike<std::pair<T, U> > {
   static const bool value = isPodLike<T>::value && isPodLike<U>::value;
 };
-  
+
 
 template <class T, T v>
 struct integral_constant {
@@ -93,7 +93,7 @@ struct integral_constant {
 typedef integral_constant<bool, true> true_type;
 typedef integral_constant<bool, false> false_type;
 
-/// \brief Metafunction that determines whether the two given types are 
+/// \brief Metafunction that determines whether the two given types are
 /// equivalent.
 template<typename T, typename U> struct is_same       : public false_type {};
 template<typename T>             struct is_same<T, T> : public true_type {};
@@ -177,7 +177,7 @@ struct enable_if_c {
 };
 
 template<typename T> struct enable_if_c<false, T> { };
-  
+
 // enable_if - Enable/disable a template based on a metafunction
 template<typename Cond, typename T = void>
 struct enable_if : public enable_if_c<Cond::value, T> { };
@@ -191,7 +191,7 @@ namespace dont_use {
 /// (or identical to) another type.
 template<typename Base, typename Derived>
 struct is_base_of {
-  static const bool value 
+  static const bool value
     = is_class<Base>::value && is_class<Derived>::value &&
       sizeof(char) == sizeof(dont_use::base_of_helper<Base>((Derived*)0));
 };

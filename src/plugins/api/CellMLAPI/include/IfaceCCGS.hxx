@@ -41,7 +41,7 @@ namespace iface
       OVERCONSTRAINED = 2,
       CORRECTLY_CONSTRAINED = 3
     } ModelConstraintLevel;
-    PUBLIC_CCGS_PRE 
+    PUBLIC_CCGS_PRE
     class  PUBLIC_CCGS_POST ComputationTarget
      : public virtual iface::XPCOM::IObject
     {
@@ -54,7 +54,7 @@ namespace iface
       virtual std::wstring name() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual uint32_t assignedIndex() throw(std::exception&)  = 0;
     };
-    PUBLIC_CCGS_PRE 
+    PUBLIC_CCGS_PRE
     class  PUBLIC_CCGS_POST ComputationTargetIterator
      : public virtual iface::XPCOM::IObject
     {
@@ -63,7 +63,7 @@ namespace iface
       virtual ~ComputationTargetIterator() {}
       virtual already_AddRefd<iface::cellml_services::ComputationTarget>  nextComputationTarget() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CCGS_PRE 
+    PUBLIC_CCGS_PRE
     class  PUBLIC_CCGS_POST CodeInformation
      : public virtual iface::XPCOM::IObject
     {
@@ -83,7 +83,7 @@ namespace iface
       virtual already_AddRefd<iface::mathml_dom::MathMLNodeList>  flaggedEquations() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_services::ComputationTarget>  missingInitial() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CCGS_PRE 
+    PUBLIC_CCGS_PRE
     class  PUBLIC_CCGS_POST CodeGenerator
      : public virtual iface::XPCOM::IObject
     {
@@ -133,7 +133,7 @@ namespace iface
       virtual bool allowPassthrough() throw(std::exception&)  = 0;
       virtual void allowPassthrough(bool attr) throw(std::exception&) = 0;
     };
-    PUBLIC_CCGS_PRE 
+    PUBLIC_CCGS_PRE
     class  PUBLIC_CCGS_POST CustomCodeInformation
      : public virtual iface::XPCOM::IObject
     {
@@ -146,7 +146,7 @@ namespace iface
       virtual std::wstring generatedCode() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual std::wstring functionsString() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CCGS_PRE 
+    PUBLIC_CCGS_PRE
     class  PUBLIC_CCGS_POST CustomGenerator
      : public virtual iface::XPCOM::IObject
     {
@@ -159,7 +159,7 @@ namespace iface
       virtual void markAsUnwanted(iface::cellml_services::ComputationTarget* unwanted) throw(std::exception&) = 0;
       virtual already_AddRefd<iface::cellml_services::CustomCodeInformation>  generateCode() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CCGS_PRE 
+    PUBLIC_CCGS_PRE
     class  PUBLIC_CCGS_POST IDACodeInformation
      : public virtual iface::cellml_services::CodeInformation
     {
@@ -171,7 +171,7 @@ namespace iface
       virtual uint32_t conditionVariableCount() throw(std::exception&)  = 0;
       virtual std::wstring rootInformationString() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CCGS_PRE 
+    PUBLIC_CCGS_PRE
     class  PUBLIC_CCGS_POST IDACodeGenerator
      : public virtual iface::cellml_services::CodeGenerator
     {
@@ -194,7 +194,7 @@ namespace iface
       virtual std::wstring conditionVariablePattern() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void conditionVariablePattern(const std::wstring& attr) throw(std::exception&) = 0;
     };
-    PUBLIC_CCGS_PRE 
+    PUBLIC_CCGS_PRE
     class  PUBLIC_CCGS_POST CodeGeneratorBootstrap
      : public virtual iface::XPCOM::IObject
     {

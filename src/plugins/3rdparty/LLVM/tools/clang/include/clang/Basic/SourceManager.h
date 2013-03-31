@@ -131,19 +131,19 @@ namespace SrcMgr {
     /// \brief True if this content cache was initially created for a source
     /// file considered as a system one.
     unsigned IsSystemFile : 1;
-    
+
     ContentCache(const FileEntry *Ent = 0)
       : Buffer(0, false), OrigEntry(Ent), ContentsEntry(Ent),
         SourceLineCache(0), NumLines(0), BufferOverridden(false),
         IsSystemFile(false) {}
-    
+
     ContentCache(const FileEntry *Ent, const FileEntry *contentEnt)
       : Buffer(0, false), OrigEntry(Ent), ContentsEntry(contentEnt),
         SourceLineCache(0), NumLines(0), BufferOverridden(false),
         IsSystemFile(false) {}
-    
+
     ~ContentCache();
-    
+
     /// The copy ctor does not allow copies where source object has either
     /// a non-NULL Buffer or SourceLineCache.  Ownership of allocated memory
     /// is not transferred, so this is a logical error.
@@ -153,10 +153,10 @@ namespace SrcMgr {
     {
       OrigEntry = RHS.OrigEntry;
       ContentsEntry = RHS.ContentsEntry;
-      
+
       assert (RHS.Buffer.getPointer() == 0 && RHS.SourceLineCache == 0 &&
               "Passed ContentCache object cannot own a buffer.");
-      
+
       NumLines = RHS.NumLines;
     }
 
@@ -689,7 +689,7 @@ public:
   FileID getMainFileID() const { return MainFileID; }
 
   /// \brief Create the FileID for the main source file.
-  FileID createMainFileID(const FileEntry *SourceFile, 
+  FileID createMainFileID(const FileEntry *SourceFile,
                           SrcMgr::CharacteristicKind Kind = SrcMgr::C_User) {
     assert(MainFileID.isInvalid() && "MainFileID already set!");
     MainFileID = createFileID(SourceFile, SourceLocation(), Kind);
@@ -935,7 +935,7 @@ public:
     unsigned FileOffset = Entry.getOffset();
     return SourceLocation::getFileLoc(FileOffset);
   }
-  
+
   /// \brief Return the source location corresponding to the last byte of the
   /// specified file.
   SourceLocation getLocForEndOfFile(FileID FID) const {
@@ -943,7 +943,7 @@ public:
     const SrcMgr::SLocEntry &Entry = getSLocEntry(FID, &Invalid);
     if (Invalid || !Entry.isFile())
       return SourceLocation();
-    
+
     unsigned FileOffset = Entry.getOffset();
     return SourceLocation::getFileLoc(FileOffset + getFileIDSize(FID) - 1);
   }

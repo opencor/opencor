@@ -184,7 +184,7 @@ private:
     while (OuterS && (isa<ParenExpr>(OuterS) ||
                       isa<CastExpr>(OuterS) ||
                       isa<ExprWithCleanups>(OuterS)));
-    
+
     if (!OuterS)
       return false;
 
@@ -208,7 +208,7 @@ private:
     nextStmt = nextStmt->IgnoreImplicit();
 
     // Check for "RefD = [+1 retained object];".
-    
+
     if (BinaryOperator *Bop = dyn_cast<BinaryOperator>(nextStmt)) {
       if (RefD != getReferencedDecl(Bop->getLHS()))
         return false;
@@ -343,7 +343,7 @@ private:
   bool isRemovable(Expr *E) const {
     return Removables.count(E);
   }
-  
+
   bool tryRemoving(Expr *E) const {
     if (isRemovable(E)) {
       Pass.TA.removeStmt(E);

@@ -19,9 +19,9 @@
 #include <qstyleoption.h>
 #include <qmath.h>
 
-static inline void qwtDrawLine( 
-    QPainter *painter, int pos, 
-    const QColor &color, const QRect pipeRect, 
+static inline void qwtDrawLine(
+    QPainter *painter, int pos,
+    const QColor &color, const QRect pipeRect,
     Qt::Orientation orientation )
 {
     painter->setPen( color );
@@ -59,11 +59,11 @@ QVector<double> qwtTickList( const QwtScaleDiv &scaleDiv, double value )
             const double v = ticks[i];
             if ( v > lowerLimit && v < upperLimit )
                 values += v;
-        }       
-    }   
+        }
+    }
 
     values += upperLimit;
-    
+
     return values;
 }
 
@@ -243,15 +243,15 @@ void QwtThermo::paintEvent( QPaintEvent *event )
     const int bw = d_data->borderWidth;
 
     const QBrush brush = palette().brush( QPalette::Base );
-    qDrawShadePanel( &painter, 
+    qDrawShadePanel( &painter,
         tRect.adjusted( -bw, -bw, bw, bw ),
-        palette(), true, bw, 
+        palette(), true, bw,
         d_data->autoFillPipe ? &brush : NULL );
 
     drawLiquid( &painter, tRect );
 }
 
-/*! 
+/*!
   Resize event handler
   \param event Resize event
 */
@@ -261,7 +261,7 @@ void QwtThermo::resizeEvent( QResizeEvent *event )
     layoutThermo( false );
 }
 
-/*! 
+/*!
   Qt change event handler
   \param event Event
 */
@@ -326,7 +326,7 @@ void QwtThermo::layoutThermo( bool update_geometry )
             }
 
             case BottomScale:
-            case NoScale: 
+            case NoScale:
             default:
             {
                 scaleDraw()->setAlignment( QwtScaleDraw::BottomScale );
@@ -367,7 +367,7 @@ void QwtThermo::layoutThermo( bool update_geometry )
             }
 
             case LeftScale:
-            case NoScale: 
+            case NoScale:
             default:
             {
                 scaleDraw()->setAlignment( QwtScaleDraw::LeftScale );
@@ -413,20 +413,20 @@ QRect QwtThermo::pipeRect() const
                     cr.x() + mbd + bw,
                     cr.y() + cr.height() - d_data->pipeWidth - bw,
                     cr.width() - 2 * ( bw + mbd ),
-                    d_data->pipeWidth 
+                    d_data->pipeWidth
                 );
                 break;
             }
 
             case BottomScale:
-            case NoScale: 
-            default:   
+            case NoScale:
+            default:
             {
                 tRect.setRect(
                     cr.x() + mbd + bw,
                     cr.y() + bw,
                     cr.width() - 2 * ( bw + mbd ),
-                    d_data->pipeWidth 
+                    d_data->pipeWidth
                 );
                 break;
             }
@@ -442,13 +442,13 @@ QRect QwtThermo::pipeRect() const
                     cr.x() + bw,
                     cr.y() + mbd + bw,
                     d_data->pipeWidth,
-                    cr.height() - 2 * ( bw + mbd ) 
+                    cr.height() - 2 * ( bw + mbd )
                 );
                 break;
             }
             case LeftScale:
-            case NoScale: 
-            default:   
+            case NoScale:
+            default:
             {
                 tRect.setRect(
                     cr.x() + cr.width() - bw - d_data->pipeWidth,
@@ -532,7 +532,7 @@ void QwtThermo::setOrientation( Qt::Orientation o, ScalePos s )
     scale orientation will become Qt::Vertical;
   - if the new scale position is BottomScale or TopScale, the scale
     orientation will become Qt::Horizontal;
-  - if the new scale position is NoScale, the scale orientation 
+  - if the new scale position is NoScale, the scale orientation
     will not change.
 
   \sa setOrientation(), scalePosition()
@@ -567,7 +567,7 @@ void QwtThermo::scaleChange()
    \param painter Painter
    \param pipeRect Bounding rectangle of the pipe without borders
 */
-void QwtThermo::drawLiquid( 
+void QwtThermo::drawLiquid(
     QPainter *painter, const QRect &pipeRect ) const
 {
     painter->save();
@@ -609,7 +609,7 @@ void QwtThermo::drawLiquid(
             {
                 const double v = scaleMap.invTransform( pos );
 
-                qwtDrawLine( painter, pos, 
+                qwtDrawLine( painter, pos,
                     d_data->colorMap->color( interval, v ),
                     pipeRect, d_data->orientation );
             }
@@ -768,10 +768,10 @@ const QwtColorMap *QwtThermo::colorMap() const
 
 /*!
   \brief Change the brush of the liquid.
- 
+
   Changes the QPalette::ButtonText brush of the palette.
 
-  \param brush New brush. 
+  \param brush New brush.
   \sa fillBrush(), QWidget::setPalette()
 */
 void QwtThermo::setFillBrush( const QBrush& brush )
@@ -782,7 +782,7 @@ void QwtThermo::setFillBrush( const QBrush& brush )
 }
 
 /*!
-  Return the liquid ( QPalette::ButtonText ) brush. 
+  Return the liquid ( QPalette::ButtonText ) brush.
   \sa setFillBrush(), QWidget::palette()
 */
 const QBrush& QwtThermo::fillBrush() const
@@ -795,7 +795,7 @@ const QBrush& QwtThermo::fillBrush() const
 
   Changes the QPalette::Highlight brush of the palette.
 
-  \param brush New brush. 
+  \param brush New brush.
   \sa alarmBrush(), QWidget::setPalette()
 
   \warning The alarm threshold has no effect, when
@@ -885,7 +885,7 @@ void QwtThermo::setAlarmEnabled( bool on )
     update();
 }
 
-/*! 
+/*!
   \return True, when the alarm threshold is enabled.
 
   \warning The alarm threshold has no effect, when

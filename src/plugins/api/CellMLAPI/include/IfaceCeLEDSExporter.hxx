@@ -25,7 +25,7 @@ namespace iface
 {
   namespace cellml_services
   {
-    PUBLIC_CeLEDSExporter_PRE 
+    PUBLIC_CeLEDSExporter_PRE
     class  PUBLIC_CeLEDSExporter_POST CodeExporter
      : public virtual iface::XPCOM::IObject
     {
@@ -44,7 +44,7 @@ namespace iface
       virtual void maxStep(double attr) throw(std::exception&) = 0;
       virtual std::wstring generateCode(iface::cellml_api::Model* model) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CeLEDSExporter_PRE 
+    PUBLIC_CeLEDSExporter_PRE
     class  PUBLIC_CeLEDSExporter_POST CeLEDSExporterBootstrap
      : public virtual iface::XPCOM::IObject
     {

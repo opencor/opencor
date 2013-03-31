@@ -2,7 +2,7 @@
  * -----------------------------------------------------------------
  * $Revision: 1.5 $
  * $Date: 2010/12/01 22:16:17 $
- * ----------------------------------------------------------------- 
+ * -----------------------------------------------------------------
  * Programmer(s): Radu Serban @ LLNL
  * -----------------------------------------------------------------
  * Copyright (c) 2002, The Regents of the University of California.
@@ -28,7 +28,7 @@ extern "C" {
  * -----------------------------------------------------------------
  * Function : KINBand
  * -----------------------------------------------------------------
- * A call to the KINBand function links the main solver with the 
+ * A call to the KINBand function links the main solver with the
  * KINBAND linear solver. Its arguments are as follows:
  *
  * kinmem - pointer to the integrator memory returned by KINCreate.

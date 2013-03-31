@@ -2,7 +2,7 @@
  * -----------------------------------------------------------------
  * $Revision: 1.6 $
  * $Date: 2010/12/01 22:35:26 $
- * ----------------------------------------------------------------- 
+ * -----------------------------------------------------------------
  * Programmer: Radu Serban @ LLNL
  * -----------------------------------------------------------------
  * Copyright (c) 2006, The Regents of the University of California.
@@ -14,7 +14,7 @@
  * -----------------------------------------------------------------
  */
 
-/* 
+/*
  * =================================================================
  * IMPORTED HEADER FILES
  * =================================================================
@@ -27,7 +27,7 @@
 #include "ida_direct_impl.h"
 #include <sundials/sundials_math.h>
 
-/* 
+/*
  * =================================================================
  * FUNCTION SPECIFIC CONSTANTS
  * =================================================================
@@ -77,12 +77,12 @@
 #define nreDQ          (idadls_mem->d_nreDQ)
 #define last_flag      (idadls_mem->d_last_flag)
 
-/* 
+/*
  * =================================================================
  * EXPORTED FUNCTIONS FOR IMPLICIT INTEGRATION
  * =================================================================
  */
-              
+
 /*
  * IDADlsSetDenseJacFn specifies the dense Jacobian function.
  */
@@ -174,7 +174,7 @@ int IDADlsGetWorkSpace(void *ida_mem, long int *lenrwLS, long int *leniwLS)
     *lenrwLS = n*(smu + ml + 1);
     *leniwLS = n;
   }
-    
+
   return(IDADLS_SUCCESS);
 }
 
@@ -244,7 +244,7 @@ char *IDADlsGetReturnFlagName(long int flag)
   switch(flag) {
   case IDADLS_SUCCESS:
     sprintf(name,"IDADLS_SUCCESS");
-    break;   
+    break;
   case IDADLS_MEM_NULL:
     sprintf(name,"IDADLS_MEM_NULL");
     break;
@@ -296,7 +296,7 @@ int IDADlsGetLastFlag(void *ida_mem, long int *flag)
   return(IDADLS_SUCCESS);
 }
 
-/* 
+/*
  * =================================================================
  * DQ JACOBIAN APPROXIMATIONS
  * =================================================================
@@ -304,20 +304,20 @@ int IDADlsGetLastFlag(void *ida_mem, long int *flag)
 
 /*
  * -----------------------------------------------------------------
- * idaDlsDenseDQJac 
+ * idaDlsDenseDQJac
  * -----------------------------------------------------------------
  * This routine generates a dense difference quotient approximation to
  * the Jacobian F_y + c_j*F_y'. It assumes that a dense matrix of type
  * DlsMat is stored column-wise, and that elements within each column
  * are contiguous. The address of the jth column of J is obtained via
  * the macro LAPACK_DENSE_COL and this pointer is associated with an N_Vector
- * using the N_VGetArrayPointer/N_VSetArrayPointer functions. 
- * Finally, the actual computation of the jth column of the Jacobian is 
+ * using the N_VGetArrayPointer/N_VSetArrayPointer functions.
+ * Finally, the actual computation of the jth column of the Jacobian is
  * done with a call to N_VLinearSum.
  * -----------------------------------------------------------------
- */ 
+ */
 int idaDlsDenseDQJac(long int N, realtype tt, realtype c_j,
-                     N_Vector yy, N_Vector yp, N_Vector rr, 
+                     N_Vector yy, N_Vector yp, N_Vector rr,
                      DlsMat Jac, void *data,
                      N_Vector tmp1, N_Vector tmp2, N_Vector tmp3)
 {
@@ -388,7 +388,7 @@ int idaDlsDenseDQJac(long int N, realtype tt, realtype c_j,
 
     DENSE_COL(Jac,j) = N_VGetArrayPointer(jthCol);
 
-    /*  reset y_j, yp_j */     
+    /*  reset y_j, yp_j */
     y_data[j] = yj;
     yp_data[j] = ypj;
   }
@@ -402,13 +402,13 @@ int idaDlsDenseDQJac(long int N, realtype tt, realtype c_j,
 
 /*
  * -----------------------------------------------------------------
- * idaDlsBandDQJac 
+ * idaDlsBandDQJac
  * -----------------------------------------------------------------
  * This routine generates a banded difference quotient approximation JJ
  * to the DAE system Jacobian J.  It assumes that a band matrix of type
  * BandMat is stored column-wise, and that elements within each column
  * are contiguous.  The address of the jth column of JJ is obtained via
- * the macros BAND_COL and BAND_COL_ELEM. The columns of the Jacobian are 
+ * the macros BAND_COL and BAND_COL_ELEM. The columns of the Jacobian are
  * constructed using mupper + mlower + 1 calls to the res routine, and
  * appropriate differencing.
  * The return value is either IDABAND_SUCCESS = 0, or the nonzero value returned
@@ -416,7 +416,7 @@ int idaDlsDenseDQJac(long int N, realtype tt, realtype c_j,
  */
 
 int idaDlsBandDQJac(long int N, long int mupper, long int mlower,
-                    realtype tt, realtype c_j, 
+                    realtype tt, realtype c_j,
                     N_Vector yy, N_Vector yp, N_Vector rr,
                     DlsMat Jac, void *data,
                     N_Vector tmp1, N_Vector tmp2, N_Vector tmp3)
@@ -515,7 +515,7 @@ int idaDlsBandDQJac(long int N, long int mupper, long int mlower,
       ypj = yptemp_data[j] = yp_data[j];
       col_j = BAND_COL(Jac, j);
       ewtj = ewt_data[j];
-      
+
       /* Set increment inc exactly as above. */
 
       inc = MAX( srur * MAX( ABS(yj), ABS(hh*ypj) ) , ONE/ewtj );
@@ -526,19 +526,19 @@ int idaDlsBandDQJac(long int N, long int mupper, long int mlower,
         if (ABS(conj) == ONE)      {if((yj+inc)*conj <  ZERO) inc = -inc;}
         else if (ABS(conj) == TWO) {if((yj+inc)*conj <= ZERO) inc = -inc;}
       }
-      
+
       /* Load the difference quotient Jacobian elements for column j. */
 
       inc_inv = ONE/inc;
       i1 = MAX(0, j-mupper);
       i2 = MIN(j+mlower,N-1);
-      
-      for (i=i1; i<=i2; i++) 
+
+      for (i=i1; i<=i2; i++)
             BAND_COL_ELEM(col_j,i,j) = inc_inv*(rtemp_data[i]-r_data[i]);
     }
-    
+
   }
-  
+
   return(retval);
-  
+
 }

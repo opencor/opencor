@@ -43,8 +43,8 @@ struct StreamState {
 
   static StreamState getOpened(const Stmt *s) { return StreamState(Opened, s); }
   static StreamState getClosed(const Stmt *s) { return StreamState(Closed, s); }
-  static StreamState getOpenFailed(const Stmt *s) { 
-    return StreamState(OpenFailed, s); 
+  static StreamState getOpenFailed(const Stmt *s) {
+    return StreamState(OpenFailed, s);
   }
   static StreamState getEscaped(const Stmt *s) {
     return StreamState(Escaped, s);
@@ -61,16 +61,16 @@ class StreamChecker : public Checker<eval::Call,
                                        check::EndPath,
                                        check::PreStmt<ReturnStmt> > {
   mutable IdentifierInfo *II_fopen, *II_tmpfile, *II_fclose, *II_fread,
-                 *II_fwrite, 
-                 *II_fseek, *II_ftell, *II_rewind, *II_fgetpos, *II_fsetpos,  
+                 *II_fwrite,
+                 *II_fseek, *II_ftell, *II_rewind, *II_fgetpos, *II_fsetpos,
                  *II_clearerr, *II_feof, *II_ferror, *II_fileno;
   mutable OwningPtr<BuiltinBug> BT_nullfp, BT_illegalwhence,
                                       BT_doubleclose, BT_ResourceLeak;
 
 public:
-  StreamChecker() 
-    : II_fopen(0), II_tmpfile(0) ,II_fclose(0), II_fread(0), II_fwrite(0), 
-      II_fseek(0), II_ftell(0), II_rewind(0), II_fgetpos(0), II_fsetpos(0), 
+  StreamChecker()
+    : II_fopen(0), II_tmpfile(0) ,II_fclose(0), II_fread(0), II_fwrite(0),
+      II_fseek(0), II_ftell(0), II_rewind(0), II_fgetpos(0), II_fsetpos(0),
       II_clearerr(0), II_feof(0), II_ferror(0), II_fileno(0) {}
 
   bool evalCall(const CallExpr *CE, CheckerContext &C) const;
@@ -95,10 +95,10 @@ private:
   void Fileno(CheckerContext &C, const CallExpr *CE) const;
 
   void OpenFileAux(CheckerContext &C, const CallExpr *CE) const;
-  
-  ProgramStateRef CheckNullStream(SVal SV, ProgramStateRef state, 
+
+  ProgramStateRef CheckNullStream(SVal SV, ProgramStateRef state,
                                  CheckerContext &C) const;
-  ProgramStateRef CheckDoubleClose(const CallExpr *CE, ProgramStateRef state, 
+  ProgramStateRef CheckDoubleClose(const CallExpr *CE, ProgramStateRef state,
                                  CheckerContext &C) const;
 };
 
@@ -218,13 +218,13 @@ void StreamChecker::OpenFileAux(CheckerContext &C, const CallExpr *CE) const {
     cast<DefinedSVal>(svalBuilder.conjureSymbolVal(0, CE, LCtx,
                                                    C.blockCount()));
   state = state->BindExpr(CE, C.getLocationContext(), RetVal);
-  
+
   ConstraintManager &CM = C.getConstraintManager();
   // Bifurcate the state into two: one with a valid FILE* pointer, the other
   // with a NULL.
   ProgramStateRef stateNotNull, stateNull;
   llvm::tie(stateNotNull, stateNull) = CM.assumeDual(state, RetVal);
-  
+
   if (SymbolRef Sym = RetVal.getAsSymbol()) {
     // if RetVal is not NULL, set the symbol's state to Opened.
     stateNotNull =
@@ -278,7 +278,7 @@ void StreamChecker::Fseek(CheckerContext &C, const CallExpr *CE) const {
       BT_illegalwhence.reset(new BuiltinBug("Illegal whence argument",
 					"The whence argument to fseek() should be "
 					"SEEK_SET, SEEK_END, or SEEK_CUR."));
-    BugReport *R = new BugReport(*BT_illegalwhence, 
+    BugReport *R = new BugReport(*BT_illegalwhence,
 				 BT_illegalwhence->getDescription(), N);
     C.emitReport(R);
   }
@@ -370,13 +370,13 @@ ProgramStateRef StreamChecker::CheckDoubleClose(const CallExpr *CE,
     state->getSVal(CE->getArg(0), C.getLocationContext()).getAsSymbol();
   if (!Sym)
     return state;
-  
+
   const StreamState *SS = state->get<StreamMap>(Sym);
 
   // If the file stream is not tracked, return.
   if (!SS)
     return state;
-  
+
   // Check: Double close a File Descriptor could cause undefined behaviour.
   // Conforming to man-pages
   if (SS->isClosed()) {
@@ -392,7 +392,7 @@ ProgramStateRef StreamChecker::CheckDoubleClose(const CallExpr *CE,
     }
     return NULL;
   }
-  
+
   // Close the File Descriptor.
   return state->set<StreamMap>(Sym, StreamState::getClosed(CE));
 }
@@ -413,9 +413,9 @@ void StreamChecker::checkDeadSymbols(SymbolReaper &SymReaper,
       ExplodedNode *N = C.generateSink();
       if (N) {
         if (!BT_ResourceLeak)
-          BT_ResourceLeak.reset(new BuiltinBug("Resource Leak", 
+          BT_ResourceLeak.reset(new BuiltinBug("Resource Leak",
                          "Opened File never closed. Potential Resource leak."));
-        BugReport *R = new BugReport(*BT_ResourceLeak, 
+        BugReport *R = new BugReport(*BT_ResourceLeak,
                                      BT_ResourceLeak->getDescription(), N);
         C.emitReport(R);
       }
@@ -426,16 +426,16 @@ void StreamChecker::checkDeadSymbols(SymbolReaper &SymReaper,
 void StreamChecker::checkEndPath(CheckerContext &Ctx) const {
   ProgramStateRef state = Ctx.getState();
   StreamMapTy M = state->get<StreamMap>();
-  
+
   for (StreamMapTy::iterator I = M.begin(), E = M.end(); I != E; ++I) {
     StreamState SS = I->second;
     if (SS.isOpened()) {
       ExplodedNode *N = Ctx.addTransition(state);
       if (N) {
         if (!BT_ResourceLeak)
-          BT_ResourceLeak.reset(new BuiltinBug("Resource Leak", 
+          BT_ResourceLeak.reset(new BuiltinBug("Resource Leak",
                          "Opened File never closed. Potential Resource leak."));
-        BugReport *R = new BugReport(*BT_ResourceLeak, 
+        BugReport *R = new BugReport(*BT_ResourceLeak,
                                      BT_ResourceLeak->getDescription(), N);
         Ctx.emitReport(R);
       }
@@ -447,13 +447,13 @@ void StreamChecker::checkPreStmt(const ReturnStmt *S, CheckerContext &C) const {
   const Expr *RetE = S->getRetValue();
   if (!RetE)
     return;
-  
+
   ProgramStateRef state = C.getState();
   SymbolRef Sym = state->getSVal(RetE, C.getLocationContext()).getAsSymbol();
-  
+
   if (!Sym)
     return;
-  
+
   const StreamState *SS = state->get<StreamMap>(Sym);
   if(!SS)
     return;

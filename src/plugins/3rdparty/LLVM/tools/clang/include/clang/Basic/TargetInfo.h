@@ -114,9 +114,9 @@ public:
   virtual ~TargetInfo();
 
   /// \brief Retrieve the target options.
-  TargetOptions &getTargetOpts() const { 
+  TargetOptions &getTargetOpts() const {
     assert(TargetOpts && "Missing target options");
-    return *TargetOpts; 
+    return *TargetOpts;
   }
 
   void setTargetOpts(TargetOptions &TargetOpts) {
@@ -340,7 +340,7 @@ public:
     // Currently we assume the register width on the target matches the pointer
     // width, we can introduce a new variable for this if/when some target wants
     // it.
-    return LongWidth; 
+    return LongWidth;
   }
 
   /// \brief Returns the default value of the __USER_LABEL_PREFIX__ macro,
@@ -500,7 +500,7 @@ public:
     void setHasMatchingInput() { Flags |= CI_HasMatchingInput; }
 
     /// \brief Indicate that this is an input operand that is tied to
-    /// the specified output operand. 
+    /// the specified output operand.
     ///
     /// Copy over the various constraint information from the output.
     void setTiedOperand(unsigned N, ConstraintInfo &Output) {
@@ -688,7 +688,7 @@ public:
   virtual bool hasFeature(StringRef Feature) const {
     return false;
   }
-  
+
   // \brief Returns maximal number of args passed in registers.
   unsigned getRegParmMax() const {
     assert(RegParmMax < 7 && "RegParmMax value is larger than AST can handle");
@@ -750,7 +750,7 @@ public:
   };
 
   /// \brief Determines whether a given calling convention is valid for the
-  /// target. A calling convention can either be accepted, produce a warning 
+  /// target. A calling convention can either be accepted, produce a warning
   /// and be substituted with the default calling convention, or (someday)
   /// produce an error (such as using thiscall on a non-instance function).
   virtual CallingConvCheckResult checkCallingConvention(CallingConv CC) const {

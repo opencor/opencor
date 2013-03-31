@@ -33,7 +33,7 @@ class AnalysisDeclContext;
 class FunctionDecl;
 class LocationContext;
 class ProgramPointTag;
-  
+
 class ProgramPoint {
 public:
   enum Kind { BlockEdgeKind,
@@ -72,7 +72,7 @@ private:
   llvm::PointerIntPair<const ProgramPointTag *, 2, unsigned> Tag;
 
   ProgramPoint();
-  
+
 protected:
   ProgramPoint(const void *P,
                Kind k,
@@ -86,7 +86,7 @@ protected:
         assert(getLocationContext() == l);
         assert(getData1() == P);
       }
-        
+
   ProgramPoint(const void *P1,
                const void *P2,
                Kind k,
@@ -171,7 +171,7 @@ class BlockEntrance : public ProgramPoint {
 public:
   BlockEntrance(const CFGBlock *B, const LocationContext *L,
                 const ProgramPointTag *tag = 0)
-    : ProgramPoint(B, BlockEntranceKind, L, tag) {    
+    : ProgramPoint(B, BlockEntranceKind, L, tag) {
     assert(B && "BlockEntrance requires non-null block");
   }
 
@@ -183,7 +183,7 @@ public:
     const CFGBlock *B = getBlock();
     return B->empty() ? CFGElement() : B->front();
   }
-  
+
   static bool classof(const ProgramPoint* Location) {
     return Location->getKind() == BlockEntranceKind;
   }
@@ -247,7 +247,7 @@ protected:
     : StmtPoint(S, data, k, L, tag) {}
 
 public:
-  explicit PostStmt(const Stmt *S, Kind k, 
+  explicit PostStmt(const Stmt *S, Kind k,
                     const LocationContext *L, const ProgramPointTag *tag = 0)
     : StmtPoint(S, NULL, k, L, tag) {}
 
@@ -278,19 +278,19 @@ protected:
   LocationCheck(const Stmt *S, const LocationContext *L,
                 ProgramPoint::Kind K, const ProgramPointTag *tag)
     : StmtPoint(S, NULL, K, L, tag) {}
-    
+
   static bool classof(const ProgramPoint *location) {
     unsigned k = location->getKind();
     return k == PreLoadKind || k == PreStoreKind;
   }
 };
-  
+
 class PreLoad : public LocationCheck {
 public:
   PreLoad(const Stmt *S, const LocationContext *L,
           const ProgramPointTag *tag = 0)
     : LocationCheck(S, L, PreLoadKind, tag) {}
-  
+
   static bool classof(const ProgramPoint *location) {
     return location->getKind() == PreLoadKind;
   }
@@ -301,7 +301,7 @@ public:
   PreStore(const Stmt *S, const LocationContext *L,
            const ProgramPointTag *tag = 0)
   : LocationCheck(S, L, PreStoreKind, tag) {}
-  
+
   static bool classof(const ProgramPoint *location) {
     return location->getKind() == PreStoreKind;
   }
@@ -322,7 +322,7 @@ public:
 class PostStore : public PostStmt {
 public:
   /// Construct the post store point.
-  /// \param Loc can be used to store the information about the location 
+  /// \param Loc can be used to store the information about the location
   /// used in the form it was uttered in the code.
   PostStore(const Stmt *S, const LocationContext *L, const void *Loc,
             const ProgramPointTag *tag = 0)
@@ -334,7 +334,7 @@ public:
   static bool classof(const ProgramPoint* Location) {
     return Location->getKind() == PostStoreKind;
   }
-  
+
   /// \brief Returns the information about the location used in the store,
   /// how it was uttered in the code.
   const void *getLocationValue() const {
@@ -385,7 +385,7 @@ public:
   BlockEdge(const CFGBlock *B1, const CFGBlock *B2, const LocationContext *L)
     : ProgramPoint(B1, B2, BlockEdgeKind, L) {
     assert(B1 && "BlockEdge: source block must be non-null");
-    assert(B2 && "BlockEdge: destination block must be non-null");    
+    assert(B2 && "BlockEdge: destination block must be non-null");
   }
 
   const CFGBlock *getSrc() const {
@@ -403,7 +403,7 @@ public:
 
 class PostInitializer : public ProgramPoint {
 public:
-  PostInitializer(const CXXCtorInitializer *I, 
+  PostInitializer(const CXXCtorInitializer *I,
                   const LocationContext *L)
     : ProgramPoint(I, PostInitializerKind, L) {}
 
@@ -464,7 +464,7 @@ public:
 /// CallEnter uses the caller's location context.
 class CallEnter : public ProgramPoint {
 public:
-  CallEnter(const Stmt *stmt, const StackFrameContext *calleeCtx, 
+  CallEnter(const Stmt *stmt, const StackFrameContext *calleeCtx,
             const LocationContext *callerCtx)
     : ProgramPoint(stmt, calleeCtx, CallEnterKind, callerCtx, 0) {}
 
@@ -541,16 +541,16 @@ class ProgramPointTag {
 public:
   ProgramPointTag(void *tagKind = 0) : TagKind(tagKind) {}
   virtual ~ProgramPointTag();
-  virtual StringRef getTagDescription() const = 0;    
+  virtual StringRef getTagDescription() const = 0;
 
 protected:
   /// Used to implement 'classof' in subclasses.
   const void *getTagKind() { return TagKind; }
-  
+
 private:
   const void *TagKind;
 };
-  
+
 class SimpleProgramPointTag : public ProgramPointTag {
   std::string desc;
 public:
@@ -587,7 +587,7 @@ static bool isEqual(const clang::ProgramPoint &L,
 }
 
 };
-  
+
 template <>
 struct isPodLike<clang::ProgramPoint> { static const bool value = true; };
 

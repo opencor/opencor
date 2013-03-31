@@ -7,7 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 //
-//  This file defines the ModuleLoader interface, which is responsible for 
+//  This file defines the ModuleLoader interface, which is responsible for
 //  loading named modules.
 //
 //===----------------------------------------------------------------------===//
@@ -21,12 +21,12 @@
 namespace clang {
 
 class IdentifierInfo;
-  
+
 /// \brief A sequence of identifier/location pairs used to describe a particular
 /// module or submodule, e.g., std.vector.
-typedef llvm::ArrayRef<std::pair<IdentifierInfo*, SourceLocation> > 
+typedef llvm::ArrayRef<std::pair<IdentifierInfo*, SourceLocation> >
   ModuleIdPath;
-  
+
 /// \brief Abstract interface for a module loader.
 ///
 /// This abstract interface describes a module loader, which is responsible
@@ -35,17 +35,17 @@ typedef llvm::ArrayRef<std::pair<IdentifierInfo*, SourceLocation> >
 class ModuleLoader {
 public:
   virtual ~ModuleLoader();
-  
+
   /// \brief Attempt to load the given module.
   ///
-  /// This routine attempts to load the module described by the given 
+  /// This routine attempts to load the module described by the given
   /// parameters.
   ///
   /// \param ImportLoc The location of the 'import' keyword.
   ///
   /// \param Path The identifiers (and their locations) of the module
   /// "path", e.g., "std.vector" would be split into "std" and "vector".
-  /// 
+  ///
   /// \param Visibility The visibility provided for the names in the loaded
   /// module.
   ///
@@ -53,13 +53,13 @@ public:
   /// implicitly, due to the presence of an inclusion directive. Otherwise,
   /// it is being loaded due to an import declaration.
   ///
-  /// \returns If successful, returns the loaded module. Otherwise, returns 
+  /// \returns If successful, returns the loaded module. Otherwise, returns
   /// NULL to indicate that the module could not be loaded.
   virtual Module *loadModule(SourceLocation ImportLoc, ModuleIdPath Path,
                              Module::NameVisibilityKind Visibility,
                              bool IsInclusionDirective) = 0;
 };
-  
+
 }
 
 #endif

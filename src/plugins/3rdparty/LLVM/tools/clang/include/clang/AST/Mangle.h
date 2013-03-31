@@ -71,7 +71,7 @@ class MangleContext {
 
   llvm::DenseMap<const BlockDecl*, unsigned> GlobalBlockIds;
   llvm::DenseMap<const BlockDecl*, unsigned> LocalBlockIds;
-  
+
 public:
   explicit MangleContext(ASTContext &Context,
                          DiagnosticsEngine &Diags)
@@ -84,7 +84,7 @@ public:
   DiagnosticsEngine &getDiags() const { return Diags; }
 
   virtual void startNewFunction() { LocalBlockIds.clear(); }
-  
+
   unsigned getBlockId(const BlockDecl *BD, bool Local) {
     llvm::DenseMap<const BlockDecl *, unsigned> &BlockIds
       = Local? LocalBlockIds : GlobalBlockIds;
@@ -92,7 +92,7 @@ public:
       Result = BlockIds.insert(std::make_pair(BD, BlockIds.size()));
     return Result.first->second;
   }
-  
+
   /// @name Mangler Entry Points
   /// @{
 

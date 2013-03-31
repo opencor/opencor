@@ -243,7 +243,7 @@ public:
   ///
   /// \returns false if the visitation was terminated early, true otherwise.
   bool TraverseLambdaCapture(LambdaExpr::Capture C);
-  
+
   // ---- Methods on Stmts ----
 
   // Declare Traverse*() for all concrete Stmt classes.
@@ -1843,7 +1843,7 @@ DEF_TRAVERSE_STMT(GCCAsmStmt, {
     // children() iterates over inputExpr and outputExpr.
   })
 
-DEF_TRAVERSE_STMT(MSAsmStmt, { 
+DEF_TRAVERSE_STMT(MSAsmStmt, {
     // FIXME: MS Asm doesn't currently parse Constraints, Clobbers, etc.  Once
     // added this needs to be implemented.
   })
@@ -2092,7 +2092,7 @@ DEF_TRAVERSE_STMT(CXXTemporaryObjectExpr, {
     TRY_TO(TraverseTypeLoc(S->getTypeSourceInfo()->getTypeLoc()));
   })
 
-// Walk only the visible parts of lambda expressions.  
+// Walk only the visible parts of lambda expressions.
 template<typename Derived>
 bool RecursiveASTVisitor<Derived>::TraverseLambdaExpr(LambdaExpr *S) {
   for (LambdaExpr::capture_iterator C = S->explicit_capture_begin(),
@@ -2115,7 +2115,7 @@ bool RecursiveASTVisitor<Derived>::TraverseLambdaExpr(LambdaExpr *S) {
         }
       } else {
         TRY_TO(TraverseTypeLoc(Proto.getResultLoc()));
-      }        
+      }
     }
   }
 
@@ -2237,7 +2237,7 @@ DEF_TRAVERSE_STMT(ObjCStringLiteral, { })
 DEF_TRAVERSE_STMT(ObjCBoxedExpr, { })
 DEF_TRAVERSE_STMT(ObjCArrayLiteral, { })
 DEF_TRAVERSE_STMT(ObjCDictionaryLiteral, { })
-  
+
 // Traverse OpenCL: AsType, Convert.
 DEF_TRAVERSE_STMT(AsTypeExpr, { })
 

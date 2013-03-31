@@ -794,7 +794,7 @@ Init *TGParser::ParseIDValue(Record *CurRec,
     Error(NameLoc, "Variable not defined: '" + Name + "'");
     return 0;
   }
-  
+
   return StringInit::get(Name);
 }
 
@@ -1502,7 +1502,7 @@ Init *TGParser::ParseValue(Record *CurRec, RecTy *ItemType, IDParseMode Mode) {
         Error(PasteLoc, "LHS of paste is not typed!");
         return 0;
       }
-  
+
       if (LHS->getType() != StringRecTy::get()) {
         LHS = UnOpInit::get(UnOpInit::CAST, LHS, StringRecTy::get());
       }
@@ -1510,14 +1510,14 @@ Init *TGParser::ParseValue(Record *CurRec, RecTy *ItemType, IDParseMode Mode) {
       TypedInit *RHS = 0;
 
       Lex.Lex();  // Eat the '#'.
-      switch (Lex.getCode()) { 
+      switch (Lex.getCode()) {
       case tgtok::colon:
       case tgtok::semi:
       case tgtok::l_brace:
         // These are all of the tokens that can begin an object body.
         // Some of these can also begin values but we disallow those cases
         // because they are unlikely to be useful.
-       
+
         // Trailing paste, concat with an empty string.
         RHS = StringInit::get("");
         break;
@@ -1533,7 +1533,7 @@ Init *TGParser::ParseValue(Record *CurRec, RecTy *ItemType, IDParseMode Mode) {
         if (RHS->getType() != StringRecTy::get()) {
           RHS = UnOpInit::get(UnOpInit::CAST, RHS, StringRecTy::get());
         }
-  
+
         break;
       }
 
@@ -2173,7 +2173,7 @@ bool TGParser::ParseMultiClass() {
   if (MultiClasses.count(Name))
     return TokError("multiclass '" + Name + "' already defined");
 
-  CurMultiClass = MultiClasses[Name] = new MultiClass(Name, 
+  CurMultiClass = MultiClasses[Name] = new MultiClass(Name,
                                                       Lex.getLoc(), Records);
   Lex.Lex();  // Eat the identifier.
 
@@ -2314,8 +2314,8 @@ InstantiateMulticlassDef(MultiClass &MC,
 
     // Ensure redefinition doesn't happen.
     if (Records.getDef(CurRec->getNameInitAsString())) {
-      Error(DefmPrefixLoc, "def '" + CurRec->getNameInitAsString() + 
-            "' already defined, instantiating defm with subdef '" + 
+      Error(DefmPrefixLoc, "def '" + CurRec->getNameInitAsString() +
+            "' already defined, instantiating defm with subdef '" +
             DefProto->getNameInitAsString() + "'");
       return 0;
     }
@@ -2342,14 +2342,14 @@ bool TGParser::ResolveMulticlassDefArgs(MultiClass &MC,
       if (SetValue(CurRec, DefmPrefixLoc, TArgs[i], std::vector<unsigned>(),
                    TemplateVals[i]))
         return true;
-        
+
       // Resolve it next.
       CurRec->resolveReferencesTo(CurRec->getValue(TArgs[i]));
 
       if (DeleteArgs)
         // Now remove it.
         CurRec->removeValue(TArgs[i]);
-        
+
     } else if (!CurRec->getValue(TArgs[i])->getValue()->isComplete()) {
       return Error(SubClassLoc, "value not specified for template argument #"+
                    utostr(i) + " (" + TArgs[i]->getAsUnquotedString()

@@ -43,7 +43,7 @@ CODEGENOPT(DisableLLVMOpts   , 1, 0) ///< Don't run any optimizations, for use i
 CODEGENOPT(DisableRedZone    , 1, 0) ///< Set when -mno-red-zone is enabled.
 CODEGENOPT(DisableTailCalls  , 1, 0) ///< Do not emit tail calls.
 CODEGENOPT(EmitDeclMetadata  , 1, 0) ///< Emit special metadata indicating what
-                                     ///< Decl* various IR entities came from. 
+                                     ///< Decl* various IR entities came from.
                                      ///< Only useful when running CodeGen as a
                                      ///< subroutine.
 CODEGENOPT(EmitGcovArcs      , 1, 0) ///< Emit coverage data files, aka. GCDA.
@@ -68,12 +68,12 @@ CODEGENOPT(NoExecStack       , 1, 0) ///< Set when -Wa,--noexecstack is enabled.
 CODEGENOPT(NoGlobalMerge     , 1, 0) ///< Set when -mno-global-merge is enabled.
 CODEGENOPT(NoImplicitFloat   , 1, 0) ///< Set when -mno-implicit-float is enabled.
 CODEGENOPT(NoInfsFPMath      , 1, 0) ///< Assume FP arguments, results not +-Inf.
-CODEGENOPT(NoInline          , 1, 0) ///< Set when -fno-inline is enabled. 
+CODEGENOPT(NoInline          , 1, 0) ///< Set when -fno-inline is enabled.
                                      ///< Disables use of the inline keyword.
 CODEGENOPT(NoNaNsFPMath      , 1, 0) ///< Assume FP arguments, results not NaN.
 CODEGENOPT(NoZeroInitializedInBSS , 1, 0) ///< -fno-zero-initialized-in-bss.
 /// \brief Method of Objective-C dispatch to use.
-ENUM_CODEGENOPT(ObjCDispatchMethod, ObjCDispatchMethodKind, 2, Legacy) 
+ENUM_CODEGENOPT(ObjCDispatchMethod, ObjCDispatchMethodKind, 2, Legacy)
 CODEGENOPT(OmitLeafFramePointer , 1, 0) ///< Set when -momit-leaf-frame-pointer is
                                         ///< enabled.
 VALUE_CODEGENOPT(OptimizationLevel, 3, 0) ///< The -O[0-4] option specified.
@@ -102,7 +102,7 @@ CODEGENOPT(StackRealignment  , 1, 0) ///< Control whether to permit stack
                                      ///< realignment.
 CODEGENOPT(UseInitArray      , 1, 0) ///< Control whether to use .init_array or
                                      ///< .ctors.
-VALUE_CODEGENOPT(StackAlignment    , 32, 0) ///< Overrides default stack 
+VALUE_CODEGENOPT(StackAlignment    , 32, 0) ///< Overrides default stack
                                             ///< alignment, if not 0.
 CODEGENOPT(DebugColumnInfo, 1, 0) ///< Whether or not to use column information
                                   ///< in debug info.

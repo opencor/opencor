@@ -244,7 +244,7 @@ public:
     /// \brief The AST file has errors.
     HadErrors
   };
-  
+
   /// \brief Types of AST files.
   friend class PCHValidator;
   friend class ASTDeclReader;
@@ -380,8 +380,8 @@ private:
   /// \brief Updates to the visible declarations of declaration contexts that
   /// haven't been loaded yet.
   DeclContextVisibleUpdatesPending PendingVisibleUpdates;
-  
-  /// \brief The set of C++ or Objective-C classes that have forward 
+
+  /// \brief The set of C++ or Objective-C classes that have forward
   /// declarations that have not yet been linked to their definitions.
   llvm::SmallPtrSet<Decl *, 4> PendingDefinitions;
 
@@ -445,10 +445,10 @@ private:
   /// This vector is indexed by the Submodule ID (-1). NULL submodule entries
   /// indicate that the particular submodule ID has not yet been loaded.
   SmallVector<Module *, 2> SubmodulesLoaded;
-  
+
   typedef ContinuousRangeMap<serialization::SubmoduleID, ModuleFile *, 4>
     GlobalSubmoduleMapType;
-  
+
   /// \brief Mapping from global submodule IDs to the module file in which the
   /// submodule resides along with the offset that should be added to the
   /// global submodule ID to produce a local ID.
@@ -504,37 +504,37 @@ private:
   /// \brief A set of hidden declarations.
   typedef llvm::SmallVector<HiddenName, 2>
     HiddenNames;
-  
+
   typedef llvm::DenseMap<Module *, HiddenNames> HiddenNamesMapType;
 
   /// \brief A mapping from each of the hidden submodules to the deserialized
   /// declarations in that submodule that could be made visible.
   HiddenNamesMapType HiddenNamesMap;
-  
-  
+
+
   /// \brief A module import or export that hasn't yet been resolved.
   struct UnresolvedModuleImportExport {
     /// \brief The file in which this module resides.
     ModuleFile *File;
-    
+
     /// \brief The module that is importing or exporting.
     Module *Mod;
-    
+
     /// \brief The local ID of the module that is being exported.
     unsigned ID;
-    
+
     /// \brief Whether this is an import (vs. an export).
     unsigned IsImport : 1;
-    
+
     /// \brief Whether this is a wildcard export.
     unsigned IsWildcard : 1;
   };
-  
-  /// \brief The set of module imports and exports that still need to be 
+
+  /// \brief The set of module imports and exports that still need to be
   /// resolved.
-  llvm::SmallVector<UnresolvedModuleImportExport, 2> 
+  llvm::SmallVector<UnresolvedModuleImportExport, 2>
     UnresolvedModuleImportExports;
-  
+
   /// \brief A vector containing selectors that have already been loaded.
   ///
   /// This vector is indexed by the Selector ID (-1). NULL selector
@@ -693,7 +693,7 @@ private:
   /// \brief Whether to accept an AST file with compiler errors.
   bool AllowASTWithCompilerErrors;
 
-  /// \brief The current "generation" of the module file import stack, which 
+  /// \brief The current "generation" of the module file import stack, which
   /// indicates how many separate module file load operations have occurred.
   unsigned CurrentGeneration;
 
@@ -778,7 +778,7 @@ private:
   /// \brief The generation number of each identifier, which keeps track of
   /// the last time we loaded information about this identifier.
   llvm::DenseMap<IdentifierInfo *, unsigned> IdentifierGeneration;
-  
+
   /// \brief Contains declarations and definitions that will be
   /// "interesting" to the ASTConsumer, when we get that AST consumer.
   ///
@@ -790,12 +790,12 @@ private:
   /// \brief The set of redeclarable declarations that have been deserialized
   /// since the last time the declaration chains were linked.
   llvm::SmallPtrSet<Decl *, 16> RedeclsDeserialized;
-  
-  /// \brief The list of redeclaration chains that still need to be 
+
+  /// \brief The list of redeclaration chains that still need to be
   /// reconstructed.
   ///
   /// Each element is the global declaration ID of the first declaration in
-  /// the chain. Elements in this vector should be unique; use 
+  /// the chain. Elements in this vector should be unique; use
   /// PendingDeclChainsKnown to ensure uniqueness.
   llvm::SmallVector<serialization::DeclID, 16> PendingDeclChains;
 
@@ -810,19 +810,19 @@ private:
   /// loaded, for which we will need to check for categories whenever a new
   /// module is loaded.
   llvm::SmallVector<ObjCInterfaceDecl *, 16> ObjCClassesLoaded;
-  
+
   typedef llvm::DenseMap<Decl *, llvm::SmallVector<serialization::DeclID, 2> >
     MergedDeclsMap;
-    
+
   /// \brief A mapping from canonical declarations to the set of additional
   /// (global, previously-canonical) declaration IDs that have been merged with
   /// that canonical declaration.
   MergedDeclsMap MergedDecls;
-  
-  typedef llvm::DenseMap<serialization::GlobalDeclID, 
+
+  typedef llvm::DenseMap<serialization::GlobalDeclID,
                          llvm::SmallVector<serialization::DeclID, 2> >
     StoredMergedDeclsMap;
-  
+
   /// \brief A mapping from canonical declaration IDs to the set of additional
   /// declaration IDs that have been merged with that canonical declaration.
   ///
@@ -830,7 +830,7 @@ private:
   /// When we query entries in MergedDecls, they will be augmented with entries
   /// from StoredMergedDecls.
   StoredMergedDeclsMap StoredMergedDecls;
-  
+
   /// \brief Combine the stored merged declarations for the given canonical
   /// declaration into the set of merged declarations.
   ///
@@ -838,7 +838,7 @@ private:
   /// the given canonical declaration.
   MergedDeclsMap::iterator
   combineStoredMergedDecls(Decl *Canon, serialization::GlobalDeclID CanonID);
-  
+
   /// \brief Ready to load the previous declaration of the given Decl.
   void loadAndAttachPreviousDecl(Decl *D, serialization::DeclID ID);
 
@@ -1113,12 +1113,12 @@ public:
   ///
   /// \param NameVisibility The level of visibility to give the names in the
   /// module.  Visibility can only be increased over time.
-  void makeModuleVisible(Module *Mod, 
+  void makeModuleVisible(Module *Mod,
                          Module::NameVisibilityKind NameVisibility);
-  
+
   /// \brief Make the names within this set of hidden names visible.
   void makeNamesVisible(const HiddenNames &Names);
-  
+
   /// \brief Set the AST callbacks listener.
   void setListener(ASTReaderListener *listener) {
     Listener.reset(listener);
@@ -1151,7 +1151,7 @@ public:
   /// \brief Retrieve the name of the original source file name for the primary
   /// module file.
   StringRef getOriginalSourceFile() {
-    return ModuleMgr.getPrimaryModule().OriginalSourceFileName; 
+    return ModuleMgr.getPrimaryModule().OriginalSourceFileName;
   }
 
   /// \brief Retrieve the name of the original source file name directly from
@@ -1230,7 +1230,7 @@ public:
   unsigned getTotalNumSubmodules() const {
     return static_cast<unsigned>(SubmodulesLoaded.size());
   }
-  
+
   /// \brief Returns the number of selectors found in the chain.
   unsigned getTotalNumSelectors() const {
     return static_cast<unsigned>(SelectorsLoaded.size());
@@ -1298,7 +1298,7 @@ public:
   /// \brief Retrieve the module file that owns the given declaration, or NULL
   /// if the declaration is not from a module file.
   ModuleFile *getOwningModuleFile(Decl *D);
-  
+
   /// \brief Returns the source location for the decl \p ID.
   SourceLocation getSourceLocationForDeclID(serialization::GlobalDeclID ID);
 
@@ -1320,15 +1320,15 @@ public:
     return cast_or_null<T>(GetLocalDecl(F, LocalID));
   }
 
-  /// \brief Map a global declaration ID into the declaration ID used to 
+  /// \brief Map a global declaration ID into the declaration ID used to
   /// refer to this declaration within the given module fule.
   ///
   /// \returns the global ID of the given declaration as known in the given
   /// module file.
-  serialization::DeclID 
+  serialization::DeclID
   mapGlobalIDToModuleFileGlobalID(ModuleFile &M,
                                   serialization::DeclID GlobalID);
-  
+
   /// \brief Reads a declaration ID from the given position in a record in the
   /// given module.
   ///
@@ -1532,13 +1532,13 @@ public:
 
   /// \brief Retrieve the global submodule ID given a module and its local ID
   /// number.
-  serialization::SubmoduleID 
+  serialization::SubmoduleID
   getGlobalSubmoduleID(ModuleFile &M, unsigned LocalID);
-  
+
   /// \brief Retrieve the submodule that corresponds to a global submodule ID.
   ///
   Module *getSubmodule(serialization::SubmoduleID GlobalID);
-  
+
   /// \brief Retrieve a selector from the given module with its local ID
   /// number.
   Selector getLocalSelector(ModuleFile &M, unsigned LocalID);

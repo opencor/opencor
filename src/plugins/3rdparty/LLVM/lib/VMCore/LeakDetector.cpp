@@ -49,14 +49,14 @@ void LeakDetector::removeGarbageObjectImpl(const Value *Object) {
   pImpl->LLVMObjects.removeGarbage(Object);
 }
 
-void LeakDetector::checkForGarbageImpl(LLVMContext &Context, 
+void LeakDetector::checkForGarbageImpl(LLVMContext &Context,
                                        const std::string &Message) {
   LLVMContextImpl *pImpl = Context.pImpl;
   sys::SmartScopedLock<true> Lock(*ObjectsLock);
-  
+
   Objects->setName("GENERIC");
   pImpl->LLVMObjects.setName("LLVM");
-  
+
   // use non-short-circuit version so that both checks are performed
   if (Objects->hasGarbage(Message) |
       pImpl->LLVMObjects.hasGarbage(Message))

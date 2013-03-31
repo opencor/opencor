@@ -26,7 +26,7 @@ Decl *Parser::ParseCXXInlineMethodDef(AccessSpecifier AS,
                                       AttributeList *AccessAttrs,
                                       ParsingDeclarator &D,
                                       const ParsedTemplateInfo &TemplateInfo,
-                                      const VirtSpecifiers& VS, 
+                                      const VirtSpecifiers& VS,
                                       FunctionDefinitionKind DefinitionKind,
                                       ExprResult& Init) {
   assert(D.isFunctionDeclarator() && "This isn't a function declarator!");
@@ -53,7 +53,7 @@ Decl *Parser::ParseCXXInlineMethodDef(AccessSpecifier AS,
       bool TypeSpecContainsAuto
         = D.getDeclSpec().getTypeSpecType() == DeclSpec::TST_auto;
       if (Init.isUsable())
-        Actions.AddInitializerToDecl(FnD, Init.get(), false, 
+        Actions.AddInitializerToDecl(FnD, Init.get(), false,
                                      TypeSpecContainsAuto);
       else
         Actions.ActOnUninitializedDecl(FnD, TypeSpecContainsAuto);
@@ -108,10 +108,10 @@ Decl *Parser::ParseCXXInlineMethodDef(AccessSpecifier AS,
   // In delayed template parsing mode, if we are within a class template
   // or if we are about to parse function member template then consume
   // the tokens and store them for parsing at the end of the translation unit.
-  if (getLangOpts().DelayedTemplateParsing && 
-      DefinitionKind == FDK_Definition && 
+  if (getLangOpts().DelayedTemplateParsing &&
+      DefinitionKind == FDK_Definition &&
       ((Actions.CurContext->isDependentContext() ||
-        TemplateInfo.Kind != ParsedTemplateInfo::NonTemplate) && 
+        TemplateInfo.Kind != ParsedTemplateInfo::NonTemplate) &&
         !Actions.IsInsideALocalClassWithinATemplateFunction())) {
 
     if (FnD) {
@@ -297,7 +297,7 @@ void Parser::ParseLexedMethodDeclaration(LateParsedMethodDeclaration &LM) {
                             Scope::FunctionPrototypeScope|Scope::DeclScope);
   for (unsigned I = 0, N = LM.DefaultArgs.size(); I != N; ++I) {
     // Introduce the parameter into scope.
-    Actions.ActOnDelayedCXXMethodParameter(getCurScope(), 
+    Actions.ActOnDelayedCXXMethodParameter(getCurScope(),
                                            LM.DefaultArgs[I].Param);
 
     if (CachedTokens *Toks = LM.DefaultArgs[I].Toks) {
@@ -462,9 +462,9 @@ void Parser::ParseLexedMemberInitializers(ParsingClass &Class) {
 
   if (!Class.LateParsedDeclarations.empty()) {
     // C++11 [expr.prim.general]p4:
-    //   Otherwise, if a member-declarator declares a non-static data member 
+    //   Otherwise, if a member-declarator declares a non-static data member
     //  (9.2) of a class X, the expression this is a prvalue of type "pointer
-    //  to X" within the optional brace-or-equal-initializer. It shall not 
+    //  to X" within the optional brace-or-equal-initializer. It shall not
     //  appear elsewhere in the member-declarator.
     Sema::CXXThisScopeRAII ThisScope(Actions, Class.TagOrTemplate,
                                      /*TypeQuals=*/(unsigned)0);
@@ -473,7 +473,7 @@ void Parser::ParseLexedMemberInitializers(ParsingClass &Class) {
       Class.LateParsedDeclarations[i]->ParseLexedMemberInitializers();
     }
   }
-  
+
   if (!AlreadyHasClassScope)
     Actions.ActOnFinishDelayedMemberDeclarations(getCurScope(),
                                                  Class.TagOrTemplate);
@@ -495,7 +495,7 @@ void Parser::ParseLexedMemberInitializer(LateParsedMemberInitializer &MI) {
 
   SourceLocation EqualLoc;
 
-  ExprResult Init = ParseCXXMemberInitializer(MI.Field, /*IsFunction=*/false, 
+  ExprResult Init = ParseCXXMemberInitializer(MI.Field, /*IsFunction=*/false,
                                               EqualLoc);
 
   Actions.ActOnCXXInClassMemberInitializer(MI.Field, EqualLoc, Init.release());
@@ -617,7 +617,7 @@ bool Parser::ConsumeAndStoreUntil(tok::TokenKind T1, tok::TokenKind T2,
 /// the opening brace of the function body. The opening brace will be consumed
 /// if and only if there was no error.
 ///
-/// \return True on error. 
+/// \return True on error.
 bool Parser::ConsumeAndStoreFunctionPrologue(CachedTokens &Toks) {
   if (Tok.is(tok::kw_try)) {
     Toks.push_back(Tok);

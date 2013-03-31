@@ -60,7 +60,7 @@ public:
         //! Don't render the footer of the plot
         DiscardFooter           = 0x10,
 
-        /*! 
+        /*!
             Don't render the frame of the canvas
 
             \note This flag has no effect when using
@@ -146,7 +146,7 @@ public:
         QPainter *, const QRectF &canvasRect,
         const QwtScaleMap* maps ) const;
 
-    virtual void renderLegend( 
+    virtual void renderLegend(
         const QwtPlot *, QPainter *, const QRectF & ) const;
 
     bool exportTo( QwtPlot *, const QString &documentName,

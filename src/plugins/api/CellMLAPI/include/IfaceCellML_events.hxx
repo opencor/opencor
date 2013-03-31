@@ -20,7 +20,7 @@ namespace iface
 {
   namespace cellml_events
   {
-    PUBLIC_CellMLevents_PRE 
+    PUBLIC_CellMLevents_PRE
     class  PUBLIC_CellMLevents_POST MutationEvent
      : public virtual iface::events::Event
     {

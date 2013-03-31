@@ -179,7 +179,7 @@ int LLVMRunFunctionAsMain(LLVMExecutionEngineRef EE, LLVMValueRef F,
   std::vector<std::string> ArgVec;
   for (unsigned I = 0; I != ArgC; ++I)
     ArgVec.push_back(ArgV[I]);
-  
+
   return unwrap(EE)->runFunctionAsMain(unwrap<Function>(F), ArgVec, EnvP);
 }
 
@@ -190,7 +190,7 @@ LLVMGenericValueRef LLVMRunFunction(LLVMExecutionEngineRef EE, LLVMValueRef F,
   ArgVec.reserve(NumArgs);
   for (unsigned I = 0; I != NumArgs; ++I)
     ArgVec.push_back(*unwrap(Args[I]));
-  
+
   GenericValue *Result = new GenericValue();
   *Result = unwrap(EE)->runFunction(unwrap<Function>(F), ArgVec);
   return wrap(Result);

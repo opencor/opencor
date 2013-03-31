@@ -29,7 +29,7 @@ class SourceManager;
 
 typedef llvm::PointerUnion<const Diagnostic *,
                            const StoredDiagnostic *> DiagOrStoredDiag;
-  
+
 /// \brief Class to encapsulate the logic for formatting a diagnostic message.
 ///  Actual "printing" logic is implemented by subclasses.
 ///
@@ -45,20 +45,20 @@ class DiagnosticRenderer {
 protected:
   const LangOptions &LangOpts;
   IntrusiveRefCntPtr<DiagnosticOptions> DiagOpts;
-  
+
   /// \brief The location of the previous diagnostic if known.
   ///
   /// This will be invalid in cases where there is no (known) previous
   /// diagnostic location, or that location itself is invalid or comes from
   /// a different source manager than SM.
   SourceLocation LastLoc;
-  
+
   /// \brief The location of the last include whose stack was printed if known.
   ///
   /// Same restriction as \see LastLoc essentially, but tracking include stack
   /// root locations rather than diagnostic locations.
   SourceLocation LastIncludeLoc;
-  
+
   /// \brief The level of the last diagnostic emitted.
   ///
   /// The level of the last diagnostic emitted. Used to detect level changes
@@ -67,38 +67,38 @@ protected:
 
   DiagnosticRenderer(const LangOptions &LangOpts,
                      DiagnosticOptions *DiagOpts);
-  
+
   virtual ~DiagnosticRenderer();
-  
+
   virtual void emitDiagnosticMessage(SourceLocation Loc, PresumedLoc PLoc,
                                      DiagnosticsEngine::Level Level,
                                      StringRef Message,
                                      ArrayRef<CharSourceRange> Ranges,
                                      const SourceManager *SM,
                                      DiagOrStoredDiag Info) = 0;
-  
+
   virtual void emitDiagnosticLoc(SourceLocation Loc, PresumedLoc PLoc,
                                  DiagnosticsEngine::Level Level,
                                  ArrayRef<CharSourceRange> Ranges,
                                  const SourceManager &SM) = 0;
-  
+
   virtual void emitBasicNote(StringRef Message) = 0;
-  
+
   virtual void emitCodeContext(SourceLocation Loc,
                                DiagnosticsEngine::Level Level,
                                SmallVectorImpl<CharSourceRange>& Ranges,
                                ArrayRef<FixItHint> Hints,
                                const SourceManager &SM) = 0;
-  
+
   virtual void emitIncludeLocation(SourceLocation Loc, PresumedLoc PLoc,
                                    const SourceManager &SM) = 0;
-  
+
   virtual void beginDiagnostic(DiagOrStoredDiag D,
                                DiagnosticsEngine::Level Level) {}
   virtual void endDiagnostic(DiagOrStoredDiag D,
                              DiagnosticsEngine::Level Level) {}
 
-  
+
 private:
   void emitIncludeStack(SourceLocation Loc, DiagnosticsEngine::Level Level,
                         const SourceManager &SM);
@@ -133,7 +133,7 @@ public:
 
   void emitStoredDiagnostic(StoredDiagnostic &Diag);
 };
-  
+
 /// Subclass of DiagnosticRender that turns all subdiagostics into explicit
 /// notes.  It is up to subclasses to further define the behavior.
 class DiagnosticNoteRenderer : public DiagnosticRenderer {
@@ -141,15 +141,15 @@ public:
   DiagnosticNoteRenderer(const LangOptions &LangOpts,
                          DiagnosticOptions *DiagOpts)
     : DiagnosticRenderer(LangOpts, DiagOpts) {}
-  
+
   virtual ~DiagnosticNoteRenderer();
-  
+
   virtual void emitBasicNote(StringRef Message);
-    
+
   virtual void emitIncludeLocation(SourceLocation Loc,
                                    PresumedLoc PLoc,
                                    const SourceManager &SM);
-  
+
   virtual void emitNote(SourceLocation Loc, StringRef Message,
                         const SourceManager *SM) = 0;
 };

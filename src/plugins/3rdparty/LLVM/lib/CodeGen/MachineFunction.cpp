@@ -419,7 +419,7 @@ unsigned MachineFunction::addLiveIn(unsigned PReg,
 /// getJTISymbol - Return the MCSymbol for the specified non-empty jump table.
 /// If isLinkerPrivate is specified, an 'l' label is returned, otherwise a
 /// normal 'L' label is returned.
-MCSymbol *MachineFunction::getJTISymbol(unsigned JTI, MCContext &Ctx, 
+MCSymbol *MachineFunction::getJTISymbol(unsigned JTI, MCContext &Ctx,
                                         bool isLinkerPrivate) const {
   assert(JumpTableInfo && "No jump tables");
   assert(JTI < JumpTableInfo->getJumpTables().size() && "Invalid JTI!");
@@ -682,10 +682,10 @@ static bool CanShareConstantPoolEntry(const Constant *A, const Constant *B,
   if (isa<StructType>(A->getType()) || isa<ArrayType>(A->getType()) ||
       isa<StructType>(B->getType()) || isa<ArrayType>(B->getType()))
     return false;
-  
+
   // For now, only support constants with the same size.
   uint64_t StoreSize = TD->getTypeStoreSize(A->getType());
-  if (StoreSize != TD->getTypeStoreSize(B->getType()) || 
+  if (StoreSize != TD->getTypeStoreSize(B->getType()) ||
       StoreSize > 128)
     return false;
 
@@ -715,7 +715,7 @@ static bool CanShareConstantPoolEntry(const Constant *A, const Constant *B,
 /// an existing one.  User must specify the log2 of the minimum required
 /// alignment for the object.
 ///
-unsigned MachineConstantPool::getConstantPoolIndex(const Constant *C, 
+unsigned MachineConstantPool::getConstantPoolIndex(const Constant *C,
                                                    unsigned Alignment) {
   assert(Alignment && "Alignment must be specified!");
   if (Alignment > PoolAlignment) PoolAlignment = Alignment;

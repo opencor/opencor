@@ -122,7 +122,7 @@ public:
 	int CountBytes() const;
 #endif
 	const unsigned char *Pixels() const;
-	void SetPixel(int x, int y, ColourDesired colour, int alpha=0xff); 
+	void SetPixel(int x, int y, ColourDesired colour, int alpha=0xff);
 };
 
 #if !defined(PLAT_QT)

@@ -30,10 +30,10 @@ class FileSystemStatCache {
   virtual void anchor();
 protected:
   OwningPtr<FileSystemStatCache> NextStatCache;
-  
+
 public:
   virtual ~FileSystemStatCache() {}
-  
+
   enum LookupResult {
     CacheExists,   ///< We know the file exists and its cached stat data.
     CacheMissing   ///< We know that the file doesn't exist.
@@ -51,22 +51,22 @@ public:
   /// descriptor and the client guarantees that it will close it.
   static bool get(const char *Path, struct stat &StatBuf, int *FileDescriptor,
                   FileSystemStatCache *Cache);
-  
-  
+
+
   /// \brief Sets the next stat call cache in the chain of stat caches.
   /// Takes ownership of the given stat cache.
   void setNextStatCache(FileSystemStatCache *Cache) {
     NextStatCache.reset(Cache);
   }
-  
+
   /// \brief Retrieve the next stat call cache in the chain.
   FileSystemStatCache *getNextStatCache() { return NextStatCache.get(); }
-  
+
   /// \brief Retrieve the next stat call cache in the chain, transferring
   /// ownership of this cache (and, transitively, all of the remaining caches)
   /// to the caller.
   FileSystemStatCache *takeNextStatCache() { return NextStatCache.take(); }
-  
+
 protected:
   virtual LookupResult getStat(const char *Path, struct stat &StatBuf,
                                int *FileDescriptor) = 0;
@@ -75,7 +75,7 @@ protected:
                            int *FileDescriptor) {
     if (FileSystemStatCache *Next = getNextStatCache())
       return Next->getStat(Path, StatBuf, FileDescriptor);
-    
+
     // If we hit the end of the list of stat caches to try, just compute and
     // return it without a cache.
     return get(Path, StatBuf, FileDescriptor, 0) ? CacheMissing : CacheExists;
@@ -89,13 +89,13 @@ class MemorizeStatCalls : public FileSystemStatCache {
 public:
   /// \brief The set of stat() calls that have been seen.
   llvm::StringMap<struct stat, llvm::BumpPtrAllocator> StatCalls;
-  
+
   typedef llvm::StringMap<struct stat, llvm::BumpPtrAllocator>::const_iterator
   iterator;
-  
+
   iterator begin() const { return StatCalls.begin(); }
   iterator end() const { return StatCalls.end(); }
-  
+
   virtual LookupResult getStat(const char *Path, struct stat &StatBuf,
                                int *FileDescriptor);
 };

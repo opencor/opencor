@@ -36,7 +36,7 @@ class StringRef;
 /// @brief Integer representation type
 class IntegerType : public Type {
   friend class LLVMContextImpl;
-  
+
 protected:
   explicit IntegerType(LLVMContext &C, unsigned NumBits) : Type(C, IntegerTyID){
     setSubclassData(NumBits);
@@ -108,7 +108,7 @@ public:
   /// FunctionType::get - Create a FunctionType taking no parameters.
   ///
   static FunctionType *get(Type *Result, bool isVarArg);
-  
+
   /// isValidReturnType - Return true if the specified type is valid as a return
   /// type.
   static bool isValidReturnType(Type *RetTy);
@@ -170,7 +170,7 @@ public:
 /// Literal struct types (e.g. { i32, i32 }) are uniqued structurally, and must
 /// always have a body when created.  You can get one of these by using one of
 /// the StructType::get() forms.
-///  
+///
 /// Identified structs (e.g. %foo or %42) may optionally have a name and are not
 /// uniqued.  The names for identified structs are managed at the LLVMContext
 /// level, so there can only be a single identified struct with a given name in
@@ -201,7 +201,7 @@ class StructType : public CompositeType {
   /// pointer to the symbol table entry (maintained by LLVMContext) for the
   /// struct.  This is null if the type is an literal struct or if it is
   /// a identified type that has an empty name.
-  /// 
+  ///
   void *SymbolTableEntry;
 public:
   ~StructType() {
@@ -211,7 +211,7 @@ public:
   /// StructType::create - This creates an identified struct.
   static StructType *create(LLVMContext &Context, StringRef Name);
   static StructType *create(LLVMContext &Context);
-  
+
   static StructType *create(ArrayRef<Type*> Elements,
                             StringRef Name,
                             bool isPacked = false);
@@ -231,7 +231,7 @@ public:
   /// StructType::get - Create an empty structure type.
   ///
   static StructType *get(LLVMContext &Context, bool isPacked = false);
-  
+
   /// StructType::get - This static method is a convenience method for creating
   /// structure types by specifying the elements as arguments.  Note that this
   /// method always returns a non-packed struct, and requires at least one
@@ -239,26 +239,26 @@ public:
   static StructType *get(Type *elt1, ...) END_WITH_NULL;
 
   bool isPacked() const { return (getSubclassData() & SCDB_Packed) != 0; }
-  
+
   /// isLiteral - Return true if this type is uniqued by structural
   /// equivalence, false if it is a struct definition.
   bool isLiteral() const { return (getSubclassData() & SCDB_IsLiteral) != 0; }
-  
+
   /// isOpaque - Return true if this is a type with an identity that has no body
   /// specified yet.  These prints as 'opaque' in .ll files.
   bool isOpaque() const { return (getSubclassData() & SCDB_HasBody) == 0; }
 
   /// isSized - Return true if this is a sized type.
   bool isSized() const;
-  
+
   /// hasName - Return true if this is a named struct that has a non-empty name.
   bool hasName() const { return SymbolTableEntry != 0; }
-  
+
   /// getName - Return the name for this struct type if it has an identity.
   /// This may return an empty string for an unnamed struct type.  Do not call
   /// this on an literal type.
   StringRef getName() const;
-  
+
   /// setName - Change the name of this type to the specified name, or to a name
   /// with a suffix if there is a collision.  Do not call this on an literal
   /// type.
@@ -267,11 +267,11 @@ public:
   /// setBody - Specify a body for an opaque identified type.
   void setBody(ArrayRef<Type*> Elements, bool isPacked = false);
   void setBody(Type *elt1, ...) END_WITH_NULL;
-  
+
   /// isValidElementType - Return true if the specified type is valid as a
   /// element type.
   static bool isValidElementType(Type *ElemTy);
-  
+
 
   // Iterator access to the elements.
   typedef Type::subtype_iterator element_iterator;
@@ -280,8 +280,8 @@ public:
 
   /// isLayoutIdentical - Return true if this is layout identical to the
   /// specified struct.
-  bool isLayoutIdentical(StructType *Other) const;  
-  
+  bool isLayoutIdentical(StructType *Other) const;
+
   // Random access to the elements
   unsigned getNumElements() const { return NumContainedTys; }
   Type *getElementType(unsigned N) const {

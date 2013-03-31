@@ -30,7 +30,7 @@ CGBlockInfo::CGBlockInfo(const BlockDecl *block, StringRef name)
     HasCXXObject(false), UsesStret(false), HasCapturedVariableLayout(false),
     StructureType(0), Block(block),
     DominatingIP(0) {
-    
+
   // Skip asm prefix, if any.  'name' is usually taken directly from
   // the mangled name of the enclosing function.
   if (!name.empty() && name[0] == '\01')
@@ -102,7 +102,7 @@ static llvm::Constant *buildBlockDescriptor(CodeGenModule &CGM,
     CGM.getContext().getObjCEncodingForBlock(blockInfo.getBlockExpr());
   elements.push_back(llvm::ConstantExpr::getBitCast(
                           CGM.GetAddrOfConstantCString(typeAtEncoding), i8p));
-  
+
   // GC layout.
   if (C.getLangOpts().ObjC1) {
     if (CGM.getLangOpts().getGC() != LangOptions::NonGC)
@@ -312,7 +312,7 @@ static void computeBlockInfo(CodeGenModule &CGM, CodeGenFunction *CGF,
   else if (C.getLangOpts().ObjC1 &&
            CGM.getLangOpts().getGC() == LangOptions::NonGC)
     info.HasCapturedVariableLayout = true;
-  
+
   // Collect the layout chunks.
   SmallVector<BlockLayoutChunk, 16> layout;
   layout.reserve(block->capturesCXXThis() +
@@ -370,7 +370,7 @@ static void computeBlockInfo(CodeGenModule &CGM, CodeGenFunction *CGF,
 
     // If we have a lifetime qualifier, honor it for capture purposes.
     // That includes *not* copying it if it's __unsafe_unretained.
-    if (Qualifiers::ObjCLifetime lifetime 
+    if (Qualifiers::ObjCLifetime lifetime
           = variable->getType().getObjCLifetime()) {
       switch (lifetime) {
       case Qualifiers::OCL_None: llvm_unreachable("impossible");
@@ -406,12 +406,12 @@ static void computeBlockInfo(CodeGenModule &CGM, CodeGenFunction *CGF,
     QualType VT = variable->getType();
     CharUnits size = C.getTypeSizeInChars(VT);
     CharUnits align = C.getDeclAlign(variable);
-    
+
     maxFieldAlign = std::max(maxFieldAlign, align);
 
     llvm::Type *llvmType =
       CGM.getTypes().ConvertTypeForMem(VT);
-    
+
     layout.push_back(BlockLayoutChunk(align, size, &*ci, llvmType));
   }
 
@@ -575,7 +575,7 @@ static void enterBlockScope(CodeGenFunction &CGF, BlockDecl *block) {
 
     CleanupKind cleanupKind = InactiveNormalCleanup;
     bool useArrayEHCleanup = CGF.needsEHCleanup(dtorKind);
-    if (useArrayEHCleanup) 
+    if (useArrayEHCleanup)
       cleanupKind = InactiveNormalAndEHCleanup;
 
     CGF.pushDestroy(cleanupKind, addr, variable->getType(),
@@ -861,7 +861,7 @@ llvm::Type *CodeGenModule::getGenericBlockLiteralType() {
 }
 
 
-RValue CodeGenFunction::EmitBlockCallExpr(const CallExpr* E, 
+RValue CodeGenFunction::EmitBlockCallExpr(const CallExpr* E,
                                           ReturnValueSlot ReturnValue) {
   const BlockPointerType *BPT =
     E->getCallee()->getType()->getAs<BlockPointerType>();
@@ -936,7 +936,7 @@ llvm::Value *CodeGenFunction::GetAddrOfBlockDecl(const VarDecl *variable,
 
     // Cast back to byref* and GEP over to the actual object.
     addr = Builder.CreateBitCast(addr, byrefPointerType);
-    addr = Builder.CreateStructGEP(addr, getByRefValueLLVMField(variable), 
+    addr = Builder.CreateStructGEP(addr, getByRefValueLLVMField(variable),
                                    variable->getNameAsString());
   }
 
@@ -983,7 +983,7 @@ static llvm::Constant *buildGlobalBlock(CodeGenModule &CGM,
   // __flags
   BlockFlags flags = BLOCK_IS_GLOBAL | BLOCK_HAS_SIGNATURE;
   if (blockInfo.UsesStret) flags |= BLOCK_USE_STRET;
-                                      
+
   fields[1] = llvm::ConstantInt::get(CGM.IntTy, flags.getBitMask());
 
   // Reserved
@@ -1023,7 +1023,7 @@ CodeGenFunction::GenerateBlockFunction(GlobalDecl GD,
   // Check if we should generate debug info for this block function.
   maybeInitializeDebugInfo();
   CurGD = GD;
-  
+
   BlockInfo = &blockInfo;
 
   // Arrange for local static and local extern declarations to appear
@@ -1068,7 +1068,7 @@ CodeGenFunction::GenerateBlockFunction(GlobalDecl GD,
   MangleBuffer name;
   CGM.getBlockMangledName(GD, name, blockDecl);
   llvm::Function *fn =
-    llvm::Function::Create(fnLLVMType, llvm::GlobalValue::InternalLinkage, 
+    llvm::Function::Create(fnLLVMType, llvm::GlobalValue::InternalLinkage,
                            name.getString(), &CGM.getModule());
   CGM.SetInternalFunctionAttributes(blockDecl, fn, fnInfo);
 
@@ -1078,7 +1078,7 @@ CodeGenFunction::GenerateBlockFunction(GlobalDecl GD,
   CurFuncDecl = outerFnDecl; // StartFunction sets this to blockDecl
 
   // Okay.  Undo some of what StartFunction did.
-  
+
   // Pull the 'self' reference out of the local decl map.
   llvm::Value *blockAddr = LocalDeclMap[&selfDecl];
   LocalDeclMap.erase(&selfDecl);
@@ -1549,7 +1549,7 @@ public:
 
     llvm::LoadInst *value = CGF.Builder.CreateLoad(srcField);
     value->setAlignment(Alignment.getQuantity());
-    
+
     llvm::Value *null =
       llvm::ConstantPointerNull::get(cast<llvm::PointerType>(value->getType()));
 
@@ -1690,7 +1690,7 @@ generateByrefCopyHelper(CodeGenFunction &CGF,
     srcField = CGF.Builder.CreateStructGEP(srcField, 6, "x");
 
     byrefInfo.emitCopy(CGF, destField, srcField);
-  }  
+  }
 
   CGF.FinishFunction();
 
@@ -1768,7 +1768,7 @@ static llvm::Constant *buildByrefDisposeHelper(CodeGenModule &CGM,
   return generateByrefDisposeHelper(CGF, byrefType, info);
 }
 
-/// 
+///
 template <class T> static T *buildByrefHelpers(CodeGenModule &CGM,
                                                llvm::StructType &byrefTy,
                                                T &byrefInfo) {
@@ -1853,7 +1853,7 @@ CodeGenFunction::buildByrefHelpers(llvm::StructType &byrefType,
   BlockFieldFlags flags;
   if (type->isBlockPointerType()) {
     flags |= BLOCK_FIELD_IS_BLOCK;
-  } else if (CGM.getContext().isObjCNSObjectType(type) || 
+  } else if (CGM.getContext().isObjCNSObjectType(type) ||
              type->isObjCObjectPointerType()) {
     flags |= BLOCK_FIELD_IS_OBJECT;
   } else {
@@ -1869,7 +1869,7 @@ CodeGenFunction::buildByrefHelpers(llvm::StructType &byrefType,
 
 unsigned CodeGenFunction::getByRefValueLLVMField(const ValueDecl *VD) const {
   assert(ByRefValueInfo.count(VD) && "Did not find value!");
-  
+
   return ByRefValueInfo.find(VD)->second.second;
 }
 
@@ -1900,24 +1900,24 @@ llvm::Type *CodeGenFunction::BuildByRefType(const VarDecl *D) {
   std::pair<llvm::Type *, unsigned> &Info = ByRefValueInfo[D];
   if (Info.first)
     return Info.first;
-  
+
   QualType Ty = D->getType();
 
   SmallVector<llvm::Type *, 8> types;
-  
+
   llvm::StructType *ByRefType =
     llvm::StructType::create(getLLVMContext(),
                              "struct.__block_byref_" + D->getNameAsString());
-  
+
   // void *__isa;
   types.push_back(Int8PtrTy);
-  
+
   // void *__forwarding;
   types.push_back(llvm::PointerType::getUnqual(ByRefType));
-  
+
   // int32_t __flags;
   types.push_back(Int32Ty);
-    
+
   // int32_t __size;
   types.push_back(Int32Ty);
 
@@ -1926,7 +1926,7 @@ llvm::Type *CodeGenFunction::BuildByRefType(const VarDecl *D) {
   if (HasCopyAndDispose) {
     /// void *__copy_helper;
     types.push_back(Int8PtrTy);
-    
+
     /// void *__destroy_helper;
     types.push_back(Int8PtrTy);
   }
@@ -1935,18 +1935,18 @@ llvm::Type *CodeGenFunction::BuildByRefType(const VarDecl *D) {
   CharUnits Align = getContext().getDeclAlign(D);
   if (Align > getContext().toCharUnitsFromBits(Target.getPointerAlign(0))) {
     // We have to insert padding.
-    
+
     // The struct above has 2 32-bit integers.
     unsigned CurrentOffsetInBytes = 4 * 2;
-    
+
     // And either 2 or 4 pointers.
     CurrentOffsetInBytes += (HasCopyAndDispose ? 4 : 2) *
       CGM.getDataLayout().getTypeAllocSize(Int8PtrTy);
-    
+
     // Align the offset.
-    unsigned AlignedOffsetInBytes = 
+    unsigned AlignedOffsetInBytes =
       llvm::RoundUpToAlignment(CurrentOffsetInBytes, Align.getQuantity());
-    
+
     unsigned NumPaddingBytes = AlignedOffsetInBytes - CurrentOffsetInBytes;
     if (NumPaddingBytes > 0) {
       llvm::Type *Ty = Int8Ty;
@@ -1954,7 +1954,7 @@ llvm::Type *CodeGenFunction::BuildByRefType(const VarDecl *D) {
       // the maximal stack alignment and the alignment of malloc on the system.
       if (NumPaddingBytes > 1)
         Ty = llvm::ArrayType::get(Ty, NumPaddingBytes);
-    
+
       types.push_back(Ty);
 
       // We want a packed struct.
@@ -1964,13 +1964,13 @@ llvm::Type *CodeGenFunction::BuildByRefType(const VarDecl *D) {
 
   // T x;
   types.push_back(ConvertTypeForMem(Ty));
-  
+
   ByRefType->setBody(types, Packed);
-  
+
   Info.first = ByRefType;
-  
+
   Info.second = types.size() - 1;
-  
+
   return Info.first;
 }
 
@@ -2109,5 +2109,5 @@ llvm::Constant *CodeGenModule::getNSConcreteStackBlock() {
   NSConcreteStackBlock = GetOrCreateLLVMGlobal("_NSConcreteStackBlock",
                                                Int8PtrTy->getPointerTo(), 0);
   configureBlocksRuntimeObject(*this, NSConcreteStackBlock);
-  return NSConcreteStackBlock;  
+  return NSConcreteStackBlock;
 }

@@ -2,7 +2,7 @@
  * -----------------------------------------------------------------
  * $Revision: 1.2 $
  * $Date: 2010/12/01 22:19:48 $
- * ----------------------------------------------------------------- 
+ * -----------------------------------------------------------------
  * Programmer(s): Scott D. Cohen, Alan C. Hindmarsh and
  *                Radu Serban @ LLNL
  * -----------------------------------------------------------------
@@ -44,7 +44,7 @@ typedef struct {
 
   N_Vector di_bitcomp; /* temporary storage vector                  */
 
-  long int di_nfeDI;   /* no. of calls to f due to difference 
+  long int di_nfeDI;   /* no. of calls to f due to difference
                           quotient diagonal Jacobian approximation  */
 
   long int di_last_flag;    /* last error return flag                    */

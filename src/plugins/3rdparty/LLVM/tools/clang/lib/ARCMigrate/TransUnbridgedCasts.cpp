@@ -80,7 +80,7 @@ public:
     if (!castType->isObjCObjectPointerType() &&
         !castExprType->isObjCObjectPointerType())
       return true;
-    
+
     bool exprRetainable = castExprType->isObjCIndirectLifetimeType();
     bool castRetainable = castType->isObjCIndirectLifetimeType();
     if (exprRetainable == castRetainable) return true;
@@ -136,7 +136,7 @@ private:
             // Do not migrate to couple of bridge transfer casts which
             // cancel each other out. Leave it unchanged so error gets user
             // attention instead.
-            if (FD->getName() == "CFRetain" && 
+            if (FD->getName() == "CFRetain" &&
                 FD->getNumParams() == 1 &&
                 FD->getParent()->isTranslationUnit() &&
                 FD->getLinkage() == ExternalLinkage) {

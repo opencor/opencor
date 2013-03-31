@@ -60,7 +60,7 @@ extern unsigned char TailCallEliminationID;
 extern unsigned char TypeBasedAliasAnalysisID;
 }
 
-/// StandardPass - The class responsible for maintaining the lists of standard 
+/// StandardPass - The class responsible for maintaining the lists of standard
 class StandardPass {
   friend class RegisterStandardPassLists;
   public:

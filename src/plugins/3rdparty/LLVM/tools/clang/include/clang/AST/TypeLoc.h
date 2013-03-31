@@ -840,11 +840,11 @@ public:
   void setNameLoc(SourceLocation Loc) {
     getLocalData()->NameLoc = Loc;
   }
-                                                    
+
   SourceRange getLocalSourceRange() const {
     return SourceRange(getNameLoc(), getNameEndLoc());
   }
-  
+
   SourceLocation getNameEndLoc() const {
     return getLocalData()->NameEndLoc;
   }

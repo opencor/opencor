@@ -83,7 +83,7 @@ static void executeFMulInst(GenericValue &Dest, GenericValue Src1,
   }
 }
 
-static void executeFDivInst(GenericValue &Dest, GenericValue Src1, 
+static void executeFDivInst(GenericValue &Dest, GenericValue Src1,
                             GenericValue Src2, Type *Ty) {
   switch (Ty->getTypeID()) {
     IMPLEMENT_BINARY_OPERATOR(/, Float);
@@ -94,7 +94,7 @@ static void executeFDivInst(GenericValue &Dest, GenericValue Src1,
   }
 }
 
-static void executeFRemInst(GenericValue &Dest, GenericValue Src1, 
+static void executeFRemInst(GenericValue &Dest, GenericValue Src1,
                             GenericValue Src2, Type *Ty) {
   switch (Ty->getTypeID()) {
   case Type::FloatTyID:
@@ -260,7 +260,7 @@ void Interpreter::visitICmpInst(ICmpInst &I) {
   GenericValue Src1 = getOperandValue(I.getOperand(0), SF);
   GenericValue Src2 = getOperandValue(I.getOperand(1), SF);
   GenericValue R;   // Result
-  
+
   switch (I.getPredicate()) {
   case ICmpInst::ICMP_EQ:  R = executeICMP_EQ(Src1,  Src2, Ty); break;
   case ICmpInst::ICMP_NE:  R = executeICMP_NE(Src1,  Src2, Ty); break;
@@ -276,7 +276,7 @@ void Interpreter::visitICmpInst(ICmpInst &I) {
     dbgs() << "Don't know how to handle this ICmp predicate!\n-->" << I;
     llvm_unreachable(0);
   }
- 
+
   SetValue(&I, R, SF);
 }
 
@@ -422,10 +422,10 @@ static GenericValue executeFCMP_ORD(GenericValue Src1, GenericValue Src2,
                                      Type *Ty) {
   GenericValue Dest;
   if (Ty->isFloatTy())
-    Dest.IntVal = APInt(1,(Src1.FloatVal == Src1.FloatVal && 
+    Dest.IntVal = APInt(1,(Src1.FloatVal == Src1.FloatVal &&
                            Src2.FloatVal == Src2.FloatVal));
   else
-    Dest.IntVal = APInt(1,(Src1.DoubleVal == Src1.DoubleVal && 
+    Dest.IntVal = APInt(1,(Src1.DoubleVal == Src1.DoubleVal &&
                            Src2.DoubleVal == Src2.DoubleVal));
   return Dest;
 }
@@ -434,10 +434,10 @@ static GenericValue executeFCMP_UNO(GenericValue Src1, GenericValue Src2,
                                      Type *Ty) {
   GenericValue Dest;
   if (Ty->isFloatTy())
-    Dest.IntVal = APInt(1,(Src1.FloatVal != Src1.FloatVal || 
+    Dest.IntVal = APInt(1,(Src1.FloatVal != Src1.FloatVal ||
                            Src2.FloatVal != Src2.FloatVal));
   else
-    Dest.IntVal = APInt(1,(Src1.DoubleVal != Src1.DoubleVal || 
+    Dest.IntVal = APInt(1,(Src1.DoubleVal != Src1.DoubleVal ||
                            Src2.DoubleVal != Src2.DoubleVal));
   return Dest;
 }
@@ -448,7 +448,7 @@ void Interpreter::visitFCmpInst(FCmpInst &I) {
   GenericValue Src1 = getOperandValue(I.getOperand(0), SF);
   GenericValue Src2 = getOperandValue(I.getOperand(1), SF);
   GenericValue R;   // Result
-  
+
   switch (I.getPredicate()) {
   case FCmpInst::FCMP_FALSE: R.IntVal = APInt(1,false); break;
   case FCmpInst::FCMP_TRUE:  R.IntVal = APInt(1,true); break;
@@ -470,11 +470,11 @@ void Interpreter::visitFCmpInst(FCmpInst &I) {
     dbgs() << "Don't know how to handle this FCmp predicate!\n-->" << I;
     llvm_unreachable(0);
   }
- 
+
   SetValue(&I, R, SF);
 }
 
-static GenericValue executeCmpInst(unsigned predicate, GenericValue Src1, 
+static GenericValue executeCmpInst(unsigned predicate, GenericValue Src1,
                                    GenericValue Src2, Type *Ty) {
   GenericValue Result;
   switch (predicate) {
@@ -502,7 +502,7 @@ static GenericValue executeCmpInst(unsigned predicate, GenericValue Src1,
   case FCmpInst::FCMP_ULE:   return executeFCMP_ULE(Src1, Src2, Ty);
   case FCmpInst::FCMP_OGE:   return executeFCMP_OGE(Src1, Src2, Ty);
   case FCmpInst::FCMP_UGE:   return executeFCMP_UGE(Src1, Src2, Ty);
-  case FCmpInst::FCMP_FALSE: { 
+  case FCmpInst::FCMP_FALSE: {
     GenericValue Result;
     Result.IntVal = APInt(1, false);
     return Result;
@@ -658,7 +658,7 @@ void Interpreter::visitSwitchInst(SwitchInst &I) {
       GenericValue Val = getOperandValue(const_cast<ConstantInt*>(CI), SF);
       if (executeICMP_EQ(Val, CondVal, ElTy).IntVal != 0) {
         Dest = cast<BasicBlock>(i.getCaseSuccessor());
-        break;        
+        break;
       }
     }
     if (Case.isSingleNumbersOnly()) {
@@ -668,9 +668,9 @@ void Interpreter::visitSwitchInst(SwitchInst &I) {
         GenericValue Val = getOperandValue(const_cast<ConstantInt*>(CI), SF);
         if (executeICMP_EQ(Val, CondVal, ElTy).IntVal != 0) {
           Dest = cast<BasicBlock>(i.getCaseSuccessor());
-          break;        
+          break;
         }
-      }      
+      }
     } else
       for (unsigned n = 0, en = Case.getNumItems(); n != en; ++n) {
         IntegersSubset::Range r = Case.getItem(n);
@@ -682,7 +682,7 @@ void Interpreter::visitSwitchInst(SwitchInst &I) {
         if (executeICMP_ULE(Low, CondVal, ElTy).IntVal != 0 &&
             executeICMP_ULE(CondVal, High, ElTy).IntVal != 0) {
           Dest = cast<BasicBlock>(i.getCaseSuccessor());
-          break;        
+          break;
         }
       }
   }
@@ -745,7 +745,7 @@ void Interpreter::visitAllocaInst(AllocaInst &I) {
   Type *Ty = I.getType()->getElementType();  // Type to be allocated
 
   // Get the number of elements being allocated by the array...
-  unsigned NumElements = 
+  unsigned NumElements =
     getOperandValue(I.getOperand(0), SF).IntVal.getZExtValue();
 
   unsigned TypeSize = (size_t)TD.getTypeAllocSize(Ty);
@@ -756,7 +756,7 @@ void Interpreter::visitAllocaInst(AllocaInst &I) {
   // Allocate enough memory to hold the type...
   void *Memory = malloc(MemToAlloc);
 
-  DEBUG(dbgs() << "Allocated Type: " << *Ty << " (" << TypeSize << " bytes) x " 
+  DEBUG(dbgs() << "Allocated Type: " << *Ty << " (" << TypeSize << " bytes) x "
                << NumElements << " (Total: " << MemToAlloc << ") at "
                << uintptr_t(Memory) << '\n');
 
@@ -792,7 +792,7 @@ GenericValue Interpreter::executeGEPOperation(Value *Ptr, gep_type_iterator I,
       GenericValue IdxGV = getOperandValue(I.getOperand(), SF);
 
       int64_t Idx;
-      unsigned BitWidth = 
+      unsigned BitWidth =
         cast<IntegerType>(I.getOperand()->getType())->getBitWidth();
       if (BitWidth == 32)
         Idx = (int64_t)(int32_t)IdxGV.IntVal.getZExtValue();
@@ -911,7 +911,7 @@ void Interpreter::visitShl(BinaryOperator &I) {
     Dest.IntVal = Src1.IntVal.shl(Src2.IntVal.getZExtValue());
   else
     Dest.IntVal = Src1.IntVal;
-  
+
   SetValue(&I, Dest, SF);
 }
 
@@ -924,7 +924,7 @@ void Interpreter::visitLShr(BinaryOperator &I) {
     Dest.IntVal = Src1.IntVal.lshr(Src2.IntVal.getZExtValue());
   else
     Dest.IntVal = Src1.IntVal;
-  
+
   SetValue(&I, Dest, SF);
 }
 
@@ -937,7 +937,7 @@ void Interpreter::visitAShr(BinaryOperator &I) {
     Dest.IntVal = Src1.IntVal.ashr(Src2.IntVal.getZExtValue());
   else
     Dest.IntVal = Src1.IntVal;
-  
+
   SetValue(&I, Dest, SF);
 }
 
@@ -1064,7 +1064,7 @@ GenericValue Interpreter::executeIntToPtrInst(Value *SrcVal, Type *DstTy,
 
 GenericValue Interpreter::executeBitCastInst(Value *SrcVal, Type *DstTy,
                                              ExecutionContext &SF) {
-  
+
   Type *SrcTy = SrcVal->getType();
   GenericValue Dest, Src = getOperandValue(SrcVal, SF);
   if (DstTy->isPointerTy()) {
@@ -1077,7 +1077,7 @@ GenericValue Interpreter::executeBitCastInst(Value *SrcVal, Type *DstTy,
       Dest.IntVal = APInt::doubleToBits(Src.DoubleVal);
     } else if (SrcTy->isIntegerTy()) {
       Dest.IntVal = Src.IntVal;
-    } else 
+    } else
       llvm_unreachable("Invalid BitCast");
   } else if (DstTy->isFloatTy()) {
     if (SrcTy->isIntegerTy())
@@ -1188,7 +1188,7 @@ void Interpreter::visitVAArgInst(VAArgInst &I) {
 GenericValue Interpreter::getConstantExprValue (ConstantExpr *CE,
                                                 ExecutionContext &SF) {
   switch (CE->getOpcode()) {
-  case Instruction::Trunc:   
+  case Instruction::Trunc:
       return executeTruncInst(CE->getOperand(0), CE->getType(), SF);
   case Instruction::ZExt:
       return executeZExtInst(CE->getOperand(0), CE->getType(), SF);
@@ -1251,13 +1251,13 @@ GenericValue Interpreter::getConstantExprValue (ConstantExpr *CE,
   case Instruction::And:  Dest.IntVal = Op0.IntVal & Op1.IntVal; break;
   case Instruction::Or:   Dest.IntVal = Op0.IntVal | Op1.IntVal; break;
   case Instruction::Xor:  Dest.IntVal = Op0.IntVal ^ Op1.IntVal; break;
-  case Instruction::Shl:  
+  case Instruction::Shl:
     Dest.IntVal = Op0.IntVal.shl(Op1.IntVal.getZExtValue());
     break;
-  case Instruction::LShr: 
+  case Instruction::LShr:
     Dest.IntVal = Op0.IntVal.lshr(Op1.IntVal.getZExtValue());
     break;
-  case Instruction::AShr: 
+  case Instruction::AShr:
     Dest.IntVal = Op0.IntVal.ashr(Op1.IntVal.getZExtValue());
     break;
   default:
@@ -1315,7 +1315,7 @@ void Interpreter::callFunction(Function *F,
 
   // Handle non-varargs arguments...
   unsigned i = 0;
-  for (Function::arg_iterator AI = F->arg_begin(), E = F->arg_end(); 
+  for (Function::arg_iterator AI = F->arg_begin(), E = F->arg_end();
        AI != E; ++AI, ++i)
     SetValue(AI, ArgVals[i], StackFrame);
 
@@ -1338,7 +1338,7 @@ void Interpreter::run() {
 #if 0
     // This is not safe, as visiting the instruction could lower it and free I.
 DEBUG(
-    if (!isa<CallInst>(I) && !isa<InvokeInst>(I) && 
+    if (!isa<CallInst>(I) && !isa<InvokeInst>(I) &&
         I.getType() != Type::VoidTy) {
       dbgs() << "  --> ";
       const GenericValue &Val = SF.Values[&I];
@@ -1349,7 +1349,7 @@ DEBUG(
       case Type::DoubleTyID:  dbgs() << "double " << Val.DoubleVal; break;
       case Type::PointerTyID: dbgs() << "void* " << intptr_t(Val.PointerVal);
         break;
-      case Type::IntegerTyID: 
+      case Type::IntegerTyID:
         dbgs() << "i" << Val.IntVal.getBitWidth() << " "
                << Val.IntVal.toStringUnsigned(10)
                << " (0x" << Val.IntVal.toStringUnsigned(16) << ")\n";

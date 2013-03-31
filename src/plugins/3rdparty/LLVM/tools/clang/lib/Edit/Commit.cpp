@@ -141,7 +141,7 @@ bool Commit::replaceWithInner(CharSourceRange range,
   }
 
   FileOffset OuterEnd = OuterBegin.getWithOffset(OuterLen);
-  FileOffset InnerEnd = InnerBegin.getWithOffset(InnerLen); 
+  FileOffset InnerEnd = InnerBegin.getWithOffset(InnerLen);
   if (OuterBegin.getFID() != InnerBegin.getFID() ||
       InnerBegin < OuterBegin ||
       InnerBegin > OuterEnd ||
@@ -298,7 +298,7 @@ bool Commit::canRemoveRange(CharSourceRange range,
   range = Lexer::makeFileCharRange(range, SM, LangOpts);
   if (range.isInvalid())
     return false;
-  
+
   if (range.getBegin().isMacroID() || range.getEnd().isMacroID())
     return false;
   if (SM.isInSystemHeader(range.getBegin()) ||

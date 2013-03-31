@@ -2,7 +2,7 @@
  * -----------------------------------------------------------------
  * $Revision: 1.7 $
  * $Date: 2010/12/01 22:16:17 $
- * ----------------------------------------------------------------- 
+ * -----------------------------------------------------------------
  * Programmer(s): Scott Cohen, Alan Hindmarsh, Radu Serban, and
  *                Aaron Collier @ LLNL
  * -----------------------------------------------------------------
@@ -134,15 +134,15 @@ typedef int (*KINSpilsPrecSetupFn)(N_Vector uu, N_Vector uscale,
  * If successful, the function should return 0 (zero). If a
  * recoverable error occurs, then the subroutine should return
  * a positive integer value (in this case, KINSOL attempts to
- * correct by calling the preconditioner setup function if the 
- * preconditioner information is out of date). If an unrecoverable 
- * error occurs, then the preconditioner solve function should return 
+ * correct by calling the preconditioner setup function if the
+ * preconditioner information is out of date). If an unrecoverable
+ * error occurs, then the preconditioner solve function should return
  * a negative integer value.
  * -----------------------------------------------------------------
  */
 
-typedef int (*KINSpilsPrecSolveFn)(N_Vector uu, N_Vector uscale, 
-                                   N_Vector fval, N_Vector fscale, 
+typedef int (*KINSpilsPrecSolveFn)(N_Vector uu, N_Vector uscale,
+                                   N_Vector fval, N_Vector fscale,
                                    N_Vector vv, void *user_data,
                                    N_Vector vtemp);
 
@@ -177,7 +177,7 @@ typedef int (*KINSpilsPrecSolveFn)(N_Vector uu, N_Vector uscale,
  */
 
 typedef int (*KINSpilsJacTimesVecFn)(N_Vector v, N_Vector Jv,
-                                     N_Vector uu, booleantype *new_uu, 
+                                     N_Vector uu, booleantype *new_uu,
                                      void *J_data);
 
 
@@ -211,7 +211,7 @@ typedef int (*KINSpilsJacTimesVecFn)(N_Vector v, N_Vector Jv,
  *                           |       [NULL]
  *                           |
  * KINSpilsSetJacTimesVecFn  | used to set the following the name
- *                           | of user-supplied subroutine used to 
+ *                           | of user-supplied subroutine used to
  *                           | compute the matrix-vector product J(u)*v,
  *                           | where J denotes the system Jacobian.
  *                           | [KINSpilsDQJtimes]
@@ -242,7 +242,7 @@ SUNDIALS_EXPORT int KINSpilsSetJacTimesVecFn(void *kinmem,
  *                     was given [-1]
  *
  * KINSPILS_LMEM_NULL : means system memory has not yet been
- *                      allocated for the linear solver 
+ *                      allocated for the linear solver
  *                      (lmem == NULL) [-2]
  * -----------------------------------------------------------------
  */
@@ -307,7 +307,7 @@ SUNDIALS_EXPORT int KINSpilsGetNumPrecSolves(void *kinmem, long int *npsolves);
 SUNDIALS_EXPORT int KINSpilsGetNumLinIters(void *kinmem, long int *nliters);
 SUNDIALS_EXPORT int KINSpilsGetNumConvFails(void *kinmem, long int *nlcfails);
 SUNDIALS_EXPORT int KINSpilsGetNumJtimesEvals(void *kinmem, long int *njvevals);
-SUNDIALS_EXPORT int KINSpilsGetNumFuncEvals(void *kinmem, long int *nfevalsS); 
+SUNDIALS_EXPORT int KINSpilsGetNumFuncEvals(void *kinmem, long int *nfevalsS);
 SUNDIALS_EXPORT int KINSpilsGetLastFlag(void *kinmem, long int *flag);
 SUNDIALS_EXPORT char *KINSpilsGetReturnFlagName(long int flag);
 

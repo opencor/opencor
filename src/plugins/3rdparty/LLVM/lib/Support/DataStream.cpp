@@ -69,7 +69,7 @@ public:
       sys::Program::ChangeStdinToBinary();
       return error_code::success();
     }
-  
+
     int OpenFlags = O_RDONLY;
 #ifdef O_BINARY
     OpenFlags |= O_BINARY;  // Open input file in binary mode on win32.

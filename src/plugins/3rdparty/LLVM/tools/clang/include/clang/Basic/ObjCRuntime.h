@@ -139,7 +139,7 @@ public:
     llvm_unreachable("bad kind");
   }
 
-  /// \brief Does this runtime natively provide the ARC entrypoints? 
+  /// \brief Does this runtime natively provide the ARC entrypoints?
   ///
   /// ARC cannot be directly supported on a platform that does not provide
   /// these entrypoints, although it may be supportable via a stub
@@ -164,7 +164,7 @@ public:
         return getVersion() >= VersionTuple(10, 8);
       case iOS:
         return (getVersion() >= VersionTuple(6));
-    
+
       default:
       return false;
     }

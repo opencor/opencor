@@ -335,7 +335,7 @@ error_code status(const Twine &path, file_status &result) {
   }
 
   perms prms = static_cast<perms>(status.st_mode & perms_mask);
-  
+
   if (S_ISDIR(status.st_mode))
     result = file_status(file_type::directory_file, prms);
   else if (S_ISREG(status.st_mode))
@@ -367,7 +367,7 @@ error_code permissions(const Twine &path, perms prms) {
   if (error_code ec = status(path, info)) {
     return ec;
   }
-  
+
   // Set updated permissions.
   SmallString<128> path_storage;
   StringRef p = path.toNullTerminatedStringRef(path_storage);
@@ -380,7 +380,7 @@ error_code permissions(const Twine &path, perms prms) {
     permsToSet = prms & perms_mask;
   }
   if (::chmod(p.begin(), static_cast<mode_t>(permsToSet))) {
-    return error_code(errno, system_category()); 
+    return error_code(errno, system_category());
   }
 
   return error_code::success();
@@ -647,7 +647,7 @@ error_code get_magic(const Twine &path, uint32_t len,
   return error_code::success();
 }
 
-error_code map_file_pages(const Twine &path, off_t file_offset, size_t size,  
+error_code map_file_pages(const Twine &path, off_t file_offset, size_t size,
                                             bool map_writable, void *&result) {
   SmallString<128> path_storage;
   StringRef name = path.toNullTerminatedStringRef(path_storage);
@@ -665,14 +665,14 @@ error_code map_file_pages(const Twine &path, off_t file_offset, size_t size,
   if (result == MAP_FAILED) {
     return error_code(errno, system_category());
   }
-  
+
   return error_code::success();
 }
 
 error_code unmap_file_pages(void *base, size_t size) {
   if ( ::munmap(base, size) == -1 )
     return error_code(errno, system_category());
-   
+
   return error_code::success();
 }
 

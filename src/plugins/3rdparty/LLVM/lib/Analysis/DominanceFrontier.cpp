@@ -24,7 +24,7 @@ INITIALIZE_PASS_END(DominanceFrontier, "domfrontier",
 namespace {
   class DFCalculateWorkObject {
   public:
-    DFCalculateWorkObject(BasicBlock *B, BasicBlock *P, 
+    DFCalculateWorkObject(BasicBlock *B, BasicBlock *P,
                           const DomTreeNode *N,
                           const DomTreeNode *PN)
     : currentBB(B), parentBB(P), Node(N), parentNode(PN) {}
@@ -76,7 +76,7 @@ DominanceFrontier::calculate(const DominatorTree &DT,
     // Loop through and visit the nodes that Node immediately dominates (Node's
     // children in the IDomTree)
     bool visitChild = false;
-    for (DomTreeNode::const_iterator NI = currentNode->begin(), 
+    for (DomTreeNode::const_iterator NI = currentNode->begin(),
            NE = currentNode->end(); NI != NE; ++NI) {
       DomTreeNode *IDominee = *NI;
       BasicBlock *childBB = IDominee->getBlock();
@@ -118,9 +118,9 @@ void DominanceFrontierBase::print(raw_ostream &OS, const Module* ) const {
     else
       OS << " <<exit node>>";
     OS << " is:\t";
-    
+
     const std::set<BasicBlock*> &BBs = I->second;
-    
+
     for (std::set<BasicBlock*>::const_iterator I = BBs.begin(), E = BBs.end();
          I != E; ++I) {
       OS << ' ';

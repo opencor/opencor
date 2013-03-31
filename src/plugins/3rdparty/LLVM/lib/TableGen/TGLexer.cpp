@@ -55,7 +55,7 @@ int TGLexer::getNextChar() {
     // a random nul in the file.  Disambiguate that here.
     if (CurPtr-1 != CurBuf->getBufferEnd())
       return 0;  // Just whitespace.
-    
+
     // If this is the end of an included file, pop the parent file off the
     // include stack.
     SMLoc ParentIncludeLoc = SrcMgr.getParentIncludeLoc(CurBuffer);
@@ -65,9 +65,9 @@ int TGLexer::getNextChar() {
       CurPtr = ParentIncludeLoc.getPointer();
       return getNextChar();
     }
-    
+
     // Otherwise, return end of file.
-    --CurPtr;  // Another call to lex will return EOF again.  
+    --CurPtr;  // Another call to lex will return EOF again.
     return EOF;
   }
   case '\n':
@@ -79,7 +79,7 @@ int TGLexer::getNextChar() {
         *CurPtr != CurChar)
       ++CurPtr;  // Eat the two char newline sequence.
     return '\n';
-  }  
+  }
 }
 
 int TGLexer::peekNextChar(int Index) {
@@ -114,7 +114,7 @@ tgtok::TokKind TGLexer::LexToken() {
   case '=': return tgtok::equal;
   case '?': return tgtok::question;
   case '#': return tgtok::paste;
-      
+
   case 0:
   case ' ':
   case '\t':
@@ -153,7 +153,7 @@ tgtok::TokKind TGLexer::LexToken() {
         switch (NextNextChar) {
         default:
           break;
-        case '0': case '1': 
+        case '0': case '1':
           if (NextChar == 'b')
             return LexNumber();
           // Fallthrough
@@ -183,24 +183,24 @@ tgtok::TokKind TGLexer::LexToken() {
 /// LexString - Lex "[^"]*"
 tgtok::TokKind TGLexer::LexString() {
   const char *StrStart = CurPtr;
-  
+
   CurStrVal = "";
-  
+
   while (*CurPtr != '"') {
     // If we hit the end of the buffer, report an error.
     if (*CurPtr == 0 && CurPtr == CurBuf->getBufferEnd())
       return ReturnError(StrStart, "End of file in string literal");
-    
+
     if (*CurPtr == '\n' || *CurPtr == '\r')
       return ReturnError(StrStart, "End of line in string literal");
-    
+
     if (*CurPtr != '\\') {
       CurStrVal += *CurPtr++;
       continue;
     }
 
     ++CurPtr;
-    
+
     switch (*CurPtr) {
     case '\\': case '\'': case '"':
       // These turn into their literal character.
@@ -214,7 +214,7 @@ tgtok::TokKind TGLexer::LexString() {
       CurStrVal += '\n';
       ++CurPtr;
       break;
-        
+
     case '\n':
     case '\r':
       return ReturnError(CurPtr, "escaped newlines not supported in tblgen");
@@ -228,7 +228,7 @@ tgtok::TokKind TGLexer::LexString() {
       return ReturnError(CurPtr, "invalid escape in string literal");
     }
   }
-  
+
   ++CurPtr;
   return tgtok::StrVal;
 }
@@ -236,10 +236,10 @@ tgtok::TokKind TGLexer::LexString() {
 tgtok::TokKind TGLexer::LexVarName() {
   if (!isalpha(CurPtr[0]) && CurPtr[0] != '_')
     return ReturnError(TokStart, "Invalid variable name");
-  
+
   // Otherwise, we're ok, consume the rest of the characters.
   const char *VarNameStart = CurPtr++;
-  
+
   while (isalpha(*CurPtr) || isdigit(*CurPtr) || *CurPtr == '_')
     ++CurPtr;
 
@@ -302,14 +302,14 @@ bool TGLexer::LexInclude() {
   std::string Filename = CurStrVal;
   std::string IncludedFile;
 
-  
+
   CurBuffer = SrcMgr.AddIncludeFile(Filename, SMLoc::getFromPointer(CurPtr),
                                     IncludedFile);
   if (CurBuffer == -1) {
     PrintError(getLoc(), "Could not find include file '" + Filename + "'");
     return true;
   }
-  
+
   Dependencies.push_back(IncludedFile);
   // Save the line number and lex buffer of the includer.
   CurBuf = SrcMgr.getMemoryBuffer(CurBuffer);
@@ -340,7 +340,7 @@ void TGLexer::SkipBCPLComment() {
 bool TGLexer::SkipCComment() {
   ++CurPtr;  // skip the star.
   unsigned CommentDepth = 1;
-  
+
   while (1) {
     int CurChar = getNextChar();
     switch (CurChar) {
@@ -350,7 +350,7 @@ bool TGLexer::SkipCComment() {
     case '*':
       // End of the comment?
       if (CurPtr[0] != '/') break;
-      
+
       ++CurPtr;   // End the */.
       if (--CommentDepth == 0)
         return false;
@@ -376,7 +376,7 @@ tgtok::TokKind TGLexer::LexNumber() {
       const char *NumStart = CurPtr;
       while (isxdigit(CurPtr[0]))
         ++CurPtr;
-      
+
       // Requires at least one hex digit.
       if (CurPtr == NumStart)
         return ReturnError(TokStart, "Invalid hexadecimal number");
@@ -415,7 +415,7 @@ tgtok::TokKind TGLexer::LexNumber() {
     else if (CurPtr[-1] == '+')
       return tgtok::plus;
   }
-  
+
   while (isdigit(CurPtr[0]))
     ++CurPtr;
   CurIntVal = strtoll(TokStart, 0, 10);
@@ -432,9 +432,9 @@ tgtok::TokKind TGLexer::LexBracket() {
   while (1) {
     int Char = getNextChar();
     if (Char == EOF) break;
-    
+
     if (Char != '}') continue;
-    
+
     Char = getNextChar();
     if (Char == EOF) break;
     if (Char == ']') {
@@ -442,7 +442,7 @@ tgtok::TokKind TGLexer::LexBracket() {
       return tgtok::CodeFragment;
     }
   }
-  
+
   return ReturnError(CodeStart-2, "Unterminated Code Block");
 }
 
@@ -450,11 +450,11 @@ tgtok::TokKind TGLexer::LexBracket() {
 tgtok::TokKind TGLexer::LexExclaim() {
   if (!isalpha(*CurPtr))
     return ReturnError(CurPtr - 1, "Invalid \"!operator\"");
-  
+
   const char *Start = CurPtr++;
   while (isalpha(*CurPtr))
     ++CurPtr;
-  
+
   // Check to see which operator this is.
   tgtok::TokKind Kind =
     StringSwitch<tgtok::TokKind>(StringRef(Start, CurPtr - Start))

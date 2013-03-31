@@ -269,14 +269,14 @@ public:
     A0_saved a0_saved;
     A1_saved a1_saved;
     A2_saved a2_saved;
-    
+
     void Emit(CodeGenFunction &CGF, Flags flags) {
       A0 a0 = DominatingValue<A0>::restore(CGF, a0_saved);
       A1 a1 = DominatingValue<A1>::restore(CGF, a1_saved);
       A2 a2 = DominatingValue<A2>::restore(CGF, a2_saved);
       T(a0, a1, a2).Emit(CGF, flags);
     }
-    
+
   public:
     ConditionalCleanup3(A0_saved a0, A1_saved a1, A2_saved a2)
       : a0_saved(a0), a1_saved(a1), a2_saved(a2) {}
@@ -292,7 +292,7 @@ public:
     A1_saved a1_saved;
     A2_saved a2_saved;
     A3_saved a3_saved;
-    
+
     void Emit(CodeGenFunction &CGF, Flags flags) {
       A0 a0 = DominatingValue<A0>::restore(CGF, a0_saved);
       A1 a1 = DominatingValue<A1>::restore(CGF, a1_saved);
@@ -300,7 +300,7 @@ public:
       A3 a3 = DominatingValue<A3>::restore(CGF, a3_saved);
       T(a0, a1, a2, a3).Emit(CGF, flags);
     }
-    
+
   public:
     ConditionalCleanup4(A0_saved a0, A1_saved a1, A2_saved a2, A3_saved a3)
       : a0_saved(a0), a1_saved(a1), a2_saved(a2), a3_saved(a3) {}
@@ -715,11 +715,11 @@ public:
     if (!isInConditionalBranch()) {
       return EHStack.pushCleanup<T>(kind, a0, a1, a2);
     }
-    
+
     typename DominatingValue<A0>::saved_type a0_saved = saveValueInCond(a0);
     typename DominatingValue<A1>::saved_type a1_saved = saveValueInCond(a1);
     typename DominatingValue<A2>::saved_type a2_saved = saveValueInCond(a2);
-    
+
     typedef EHScopeStack::ConditionalCleanup3<T, A0, A1, A2> CleanupType;
     EHStack.pushCleanup<CleanupType>(kind, a0_saved, a1_saved, a2_saved);
     initFullExprCleanup();
@@ -735,12 +735,12 @@ public:
     if (!isInConditionalBranch()) {
       return EHStack.pushCleanup<T>(kind, a0, a1, a2, a3);
     }
-    
+
     typename DominatingValue<A0>::saved_type a0_saved = saveValueInCond(a0);
     typename DominatingValue<A1>::saved_type a1_saved = saveValueInCond(a1);
     typename DominatingValue<A2>::saved_type a2_saved = saveValueInCond(a2);
     typename DominatingValue<A3>::saved_type a3_saved = saveValueInCond(a3);
-    
+
     typedef EHScopeStack::ConditionalCleanup4<T, A0, A1, A2, A3> CleanupType;
     EHStack.pushCleanup<CleanupType>(kind, a0_saved, a1_saved,
                                      a2_saved, a3_saved);
@@ -800,7 +800,7 @@ public:
 
   protected:
     CodeGenFunction& CGF;
-    
+
   public:
     /// \brief Enter a new cleanup scope.
     explicit RunCleanupsScope(CodeGenFunction &CGF)
@@ -897,7 +897,7 @@ public:
   /// block through the normal cleanup handling code (if any) and then
   /// on to \arg Dest.
   void EmitBranchThroughCleanup(JumpDest Dest);
-  
+
   /// isObviouslyBranchWithoutCleanups - Return true if a branch to the
   /// specified destination obviously has no cleanups to run.  'false' is always
   /// a conservatively correct answer for this method.
@@ -945,7 +945,7 @@ public:
   void setBeforeOutermostConditional(llvm::Value *value, llvm::Value *addr) {
     assert(isInConditionalBranch());
     llvm::BasicBlock *block = OutermostConditional->getStartingBlock();
-    new llvm::StoreInst(value, addr, &block->back());    
+    new llvm::StoreInst(value, addr, &block->back());
   }
 
   /// An RAII object to record that we're evaluating a statement
@@ -1103,7 +1103,7 @@ public:
       if (Data.isValid()) Data.unbind(CGF);
     }
   };
-  
+
   /// getByrefValueFieldNumber - Given a declaration, returns the LLVM field
   /// number that holds the value.
   unsigned getByRefValueLLVMField(const ValueDecl *VD) const;
@@ -1198,13 +1198,13 @@ private:
   llvm::BasicBlock *TrapBB;
 
   /// Add a kernel metadata node to the named metadata node 'opencl.kernels'.
-  /// In the kernel metadata node, reference the kernel function and metadata 
+  /// In the kernel metadata node, reference the kernel function and metadata
   /// nodes for its optional attribute qualifiers (OpenCL 1.1 6.7.2):
-  /// - A node for the work_group_size_hint(X,Y,Z) qualifier contains string 
+  /// - A node for the work_group_size_hint(X,Y,Z) qualifier contains string
   ///   "work_group_size_hint", and three 32-bit integers X, Y and Z.
-  /// - A node for the reqd_work_group_size(X,Y,Z) qualifier contains string 
+  /// - A node for the reqd_work_group_size(X,Y,Z) qualifier contains string
   ///   "reqd_work_group_size", and three 32-bit integers X, Y and Z.
-  void EmitOpenCLKernelMetadata(const FunctionDecl *FD, 
+  void EmitOpenCLKernelMetadata(const FunctionDecl *FD,
                                 llvm::Function *Fn);
 
 public:
@@ -1221,10 +1221,10 @@ public:
     }
     return false;
   }
-  CGDebugInfo *getDebugInfo() { 
-    if (DisableDebugInfo) 
+  CGDebugInfo *getDebugInfo() {
+    if (DisableDebugInfo)
       return NULL;
-    return DebugInfo; 
+    return DebugInfo;
   }
   void disableDebugInfo() { DisableDebugInfo = true; }
   void enableDebugInfo() { DisableDebugInfo = false; }
@@ -1811,7 +1811,7 @@ public:
                               bool ForVirtualBase, llvm::Value *This,
                               CallExpr::const_arg_iterator ArgBeg,
                               CallExpr::const_arg_iterator ArgEnd);
-  
+
   void EmitSynthesizedCXXCopyCtorCall(const CXXConstructorDecl *D,
                               llvm::Value *This, llvm::Value *Src,
                               CallExpr::const_arg_iterator ArgBeg,
@@ -1958,7 +1958,7 @@ public:
   };
   AutoVarEmission EmitAutoVarAlloca(const VarDecl &var);
   void EmitAutoVarInit(const AutoVarEmission &emission);
-  void EmitAutoVarCleanups(const AutoVarEmission &emission);  
+  void EmitAutoVarCleanups(const AutoVarEmission &emission);
   void emitAutoVarTypeCleanup(const AutoVarEmission &emission,
                               QualType::DestructionKind dtorKind);
 
@@ -2266,12 +2266,12 @@ public:
                                 llvm::Type *Ty);
   llvm::Value *BuildVirtualCall(const CXXDestructorDecl *DD, CXXDtorType Type,
                                 llvm::Value *This, llvm::Type *Ty);
-  llvm::Value *BuildAppleKextVirtualCall(const CXXMethodDecl *MD, 
+  llvm::Value *BuildAppleKextVirtualCall(const CXXMethodDecl *MD,
                                          NestedNameSpecifier *Qual,
                                          llvm::Type *Ty);
-  
+
   llvm::Value *BuildAppleKextVirtualDestructorCall(const CXXDestructorDecl *DD,
-                                                   CXXDtorType Type, 
+                                                   CXXDtorType Type,
                                                    const CXXRecordDecl *RD);
 
   RValue EmitCXXMemberCall(const CXXMethodDecl *MD,
@@ -2382,11 +2382,11 @@ public:
   static Destroyer destroyARCStrongPrecise;
   static Destroyer destroyARCWeak;
 
-  void EmitObjCAutoreleasePoolPop(llvm::Value *Ptr); 
+  void EmitObjCAutoreleasePoolPop(llvm::Value *Ptr);
   llvm::Value *EmitObjCAutoreleasePoolPush();
   llvm::Value *EmitObjCMRRAutoreleasePoolPush();
   void EmitObjCAutoreleasePoolCleanup(llvm::Value *Ptr);
-  void EmitObjCMRRAutoreleasePoolPop(llvm::Value *Ptr); 
+  void EmitObjCMRRAutoreleasePoolPop(llvm::Value *Ptr);
 
   /// EmitReferenceBindingToExpr - Emits a reference binding to the passed in
   /// expression. Will emit a temporary variable if E is not an LValue.
@@ -2500,7 +2500,7 @@ public:
                                         bool PerformInit);
 
   void EmitCXXConstructExpr(const CXXConstructExpr *E, AggValueSlot Dest);
-  
+
   void EmitSynthesizedCXXCopyCtor(llvm::Value *Dest, llvm::Value *Src,
                                   const Expr *Exp);
 
@@ -2546,7 +2546,7 @@ public:
   /// If the statement (recursively) contains a switch or loop with a break
   /// inside of it, this is fine.
   static bool containsBreak(const Stmt *S);
-  
+
   /// ConstantFoldsToSimpleInteger - If the specified expression does not fold
   /// to a constant, or if it does but contains a label, return false.  If it
   /// constant folds return true and set the boolean result in Result.
@@ -2556,7 +2556,7 @@ public:
   /// to a constant, or if it does but contains a label, return false.  If it
   /// constant folds return true and set the folded value.
   bool ConstantFoldsToSimpleInteger(const Expr *Cond, llvm::APSInt &Result);
-  
+
   /// EmitBranchOnBoolExpr - Emit a branch on a boolean condition (e.g. for an
   /// if statement) to the specified blocks.  Based on the condition, this might
   /// try to simplify the codegen of the conditional based on the branch.

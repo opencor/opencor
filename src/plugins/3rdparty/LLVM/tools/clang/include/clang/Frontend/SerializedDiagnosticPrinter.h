@@ -22,7 +22,7 @@ class DiagnosticsEngine;
 class DiagnosticOptions;
 
 namespace serialized_diags {
-  
+
 enum BlockIDs {
   /// \brief A top-level block which represents any meta data associated
   /// with the diagostics, including versioning of the format.

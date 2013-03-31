@@ -163,7 +163,7 @@ def BlockExpr : DStmt<Expr>;
 def OpaqueValueExpr : DStmt<Expr>;
 
 // Microsoft Extensions.
-def CXXUuidofExpr : DStmt<Expr>; 
+def CXXUuidofExpr : DStmt<Expr>;
 def SEHTryStmt : Stmt;
 def SEHExceptStmt : Stmt;
 def SEHFinallyStmt : Stmt;

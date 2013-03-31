@@ -328,7 +328,7 @@ void CodeGenModule::SimplifyPersonality() {
 
   // Nothing to do if it's unused.
   if (!Fn || Fn->use_empty()) return;
-  
+
   // Can't do the optimization if it has non-C++ uses.
   if (!PersonalityHasOnlyCXXUses(Fn)) return;
 
@@ -386,7 +386,7 @@ static void EmitAnyExprToExn(CodeGenFunction &CGF, const Expr *e,
   // evaluated but before the exception is caught.  But the best way
   // to handle that is to teach EmitAggExpr to do the final copy
   // differently if it can't be elided.
-  CGF.EmitAnyExprToMem(e, typedAddr, e->getType().getQualifiers(), 
+  CGF.EmitAnyExprToMem(e, typedAddr, e->getType().getQualifiers(),
                        /*IsInit*/ true);
 
   // Deactivate the cleanup block.
@@ -444,11 +444,11 @@ void CodeGenFunction::EmitCXXThrowExpr(const CXXThrowExpr *E) {
                        llvm::ConstantInt::get(SizeTy, TypeSize),
                        "exception");
   ExceptionPtr->setDoesNotThrow();
-  
+
   EmitAnyExprToExn(*this, E->getSubExpr(), ExceptionPtr);
 
   // Now throw the exception.
-  llvm::Constant *TypeInfo = CGM.GetAddrOfRTTIDescriptor(ThrowType, 
+  llvm::Constant *TypeInfo = CGM.GetAddrOfRTTIDescriptor(ThrowType,
                                                          /*ForEH=*/true);
 
   // The address of the destructor.  If the exception type has a
@@ -485,7 +485,7 @@ void CodeGenFunction::EmitCXXThrowExpr(const CXXThrowExpr *E) {
 void CodeGenFunction::EmitStartEHSpec(const Decl *D) {
   if (!CGM.getLangOpts().CXXExceptions)
     return;
-  
+
   const FunctionDecl* FD = dyn_cast_or_null<FunctionDecl>(D);
   if (FD == 0)
     return;
@@ -553,7 +553,7 @@ static void emitFilterDispatchBlock(CodeGenFunction &CGF,
 void CodeGenFunction::EmitEndEHSpec(const Decl *D) {
   if (!CGM.getLangOpts().CXXExceptions)
     return;
-  
+
   const FunctionDecl* FD = dyn_cast_or_null<FunctionDecl>(D);
   if (FD == 0)
     return;
@@ -1008,7 +1008,7 @@ static void InitCatchParam(CodeGenFunction &CGF,
   if (!CGF.hasAggregateLLVMType(CatchType) ||
       (IsComplex = CatchType->isAnyComplexType())) {
     llvm::Value *AdjustedExn = CallBeginCatch(CGF, Exn, false);
-    
+
     // If the catch type is a pointer type, __cxa_begin_catch returns
     // the pointer by value.
     if (CatchType->hasPointerRepresentation()) {
@@ -1390,7 +1390,7 @@ namespace {
         CGF.PopCleanupBlock();
         CGF.Builder.restoreIP(SavedIP);
       }
-    
+
       // Now make sure we actually have an insertion point or the
       // cleanup gods will hate us.
       CGF.EnsureInsertPoint();

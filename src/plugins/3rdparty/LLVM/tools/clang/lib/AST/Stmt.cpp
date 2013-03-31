@@ -700,7 +700,7 @@ MSAsmStmt::MSAsmStmt(ASTContext &C, SourceLocation asmloc,
   for (unsigned i = 0, e = NumExprs; i != e; ++i) {
     size_t size = constraints[i].size();
     char *dest = new (C) char[size];
-    std::strncpy(dest, constraints[i].data(), size); 
+    std::strncpy(dest, constraints[i].data(), size);
     Constraints[i] = StringRef(dest, size);
   }
 
@@ -709,7 +709,7 @@ MSAsmStmt::MSAsmStmt(ASTContext &C, SourceLocation asmloc,
     // FIXME: Avoid the allocation/copy if at all possible.
     size_t size = clobbers[i].size();
     char *dest = new (C) char[size];
-    std::strncpy(dest, clobbers[i].data(), size); 
+    std::strncpy(dest, clobbers[i].data(), size);
     Clobbers[i] = StringRef(dest, size);
   }
 }

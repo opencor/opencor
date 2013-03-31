@@ -19,7 +19,7 @@ namespace iface
 {
   namespace cellml_services
   {
-    PUBLIC_AnnoTools_PRE 
+    PUBLIC_AnnoTools_PRE
     class  PUBLIC_AnnoTools_POST StringAnnotation
      : public virtual iface::cellml_api::UserData
     {
@@ -29,7 +29,7 @@ namespace iface
       virtual std::wstring value() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void value(const std::wstring& attr) throw(std::exception&) = 0;
     };
-    PUBLIC_AnnoTools_PRE 
+    PUBLIC_AnnoTools_PRE
     class  PUBLIC_AnnoTools_POST ObjectAnnotation
      : public virtual iface::cellml_api::UserData
     {
@@ -39,7 +39,7 @@ namespace iface
       virtual already_AddRefd<iface::XPCOM::IObject>  value() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void value(iface::XPCOM::IObject* attr) throw(std::exception&) = 0;
     };
-    PUBLIC_AnnoTools_PRE 
+    PUBLIC_AnnoTools_PRE
     class  PUBLIC_AnnoTools_POST AnnotationSet
      : public virtual iface::XPCOM::IObject
     {
@@ -54,7 +54,7 @@ namespace iface
       virtual already_AddRefd<iface::XPCOM::IObject>  getObjectAnnotation(iface::cellml_api::CellMLElement* element, const std::wstring& key) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::XPCOM::IObject>  getObjectAnnotationWithDefault(iface::cellml_api::CellMLElement* element, const std::wstring& key, iface::XPCOM::IObject* defval) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_AnnoTools_PRE 
+    PUBLIC_AnnoTools_PRE
     class  PUBLIC_AnnoTools_POST AnnotationToolService
      : public virtual iface::XPCOM::IObject
     {

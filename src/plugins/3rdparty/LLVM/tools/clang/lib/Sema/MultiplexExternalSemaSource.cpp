@@ -79,7 +79,7 @@ CXXBaseSpecifier *MultiplexExternalSemaSource::GetExternalCXXBaseSpecifiers(
   for(size_t i = 0; i < Sources.size(); ++i)
     if (CXXBaseSpecifier *R = Sources[i]->GetExternalCXXBaseSpecifiers(Offset))
       return R;
-  return 0; 
+  return 0;
 }
 
 DeclContextLookupResult MultiplexExternalSemaSource::
@@ -94,7 +94,7 @@ FindExternalVisibleDeclsByName(const DeclContext *DC, DeclarationName Name) {
       lookup.first++;
     }
   }
-  return DeclsFound.getLookupResult(); 
+  return DeclsFound.getLookupResult();
 }
 
 void MultiplexExternalSemaSource::completeVisibleDeclsMap(const DeclContext *DC){
@@ -113,7 +113,7 @@ FindExternalLexicalDecls(const DeclContext *DC,
   return ELR_Success;
 }
 
-void MultiplexExternalSemaSource::FindFileRegionDecls(FileID File, 
+void MultiplexExternalSemaSource::FindFileRegionDecls(FileID File,
                                                       unsigned Offset,
                                                       unsigned Length,
                                                 SmallVectorImpl<Decl *> &Decls){
@@ -157,13 +157,13 @@ void MultiplexExternalSemaSource::PrintStats() {
 }
 
 bool MultiplexExternalSemaSource::layoutRecordType(const RecordDecl *Record,
-                                                   uint64_t &Size, 
+                                                   uint64_t &Size,
                                                    uint64_t &Alignment,
                       llvm::DenseMap<const FieldDecl *, uint64_t> &FieldOffsets,
                   llvm::DenseMap<const CXXRecordDecl *, CharUnits> &BaseOffsets,
           llvm::DenseMap<const CXXRecordDecl *, CharUnits> &VirtualBaseOffsets){
   for(size_t i = 0; i < Sources.size(); ++i)
-    if (Sources[i]->layoutRecordType(Record, Size, Alignment, FieldOffsets, 
+    if (Sources[i]->layoutRecordType(Record, Size, Alignment, FieldOffsets,
                                      BaseOffsets, VirtualBaseOffsets))
       return true;
   return false;
@@ -201,11 +201,11 @@ void MultiplexExternalSemaSource::ReadKnownNamespaces(
   for(size_t i = 0; i < Sources.size(); ++i)
     Sources[i]->ReadKnownNamespaces(Namespaces);
 }
-  
-bool MultiplexExternalSemaSource::LookupUnqualified(LookupResult &R, Scope *S){ 
+
+bool MultiplexExternalSemaSource::LookupUnqualified(LookupResult &R, Scope *S){
   for(size_t i = 0; i < Sources.size(); ++i)
     Sources[i]->LookupUnqualified(R, S);
-  
+
   return !R.empty();
 }
 
@@ -214,13 +214,13 @@ void MultiplexExternalSemaSource::ReadTentativeDefinitions(
   for(size_t i = 0; i < Sources.size(); ++i)
     Sources[i]->ReadTentativeDefinitions(TentativeDefs);
 }
-  
+
 void MultiplexExternalSemaSource::ReadUnusedFileScopedDecls(
                                 SmallVectorImpl<const DeclaratorDecl*> &Decls) {
   for(size_t i = 0; i < Sources.size(); ++i)
     Sources[i]->ReadUnusedFileScopedDecls(Decls);
 }
-  
+
 void MultiplexExternalSemaSource::ReadDelegatingConstructors(
                                   SmallVectorImpl<CXXConstructorDecl*> &Decls) {
   for(size_t i = 0; i < Sources.size(); ++i)

@@ -507,7 +507,7 @@ error_code permissions(const Twine &path, perms prms) {
   // "write" permissions, there is nothing to do.
   if (!(prms & (owner_write|group_write|others_write)))
     return error_code::success();
-  
+
   SmallString<128> path_storage;
   SmallVector<wchar_t, 128> path_utf16;
 
@@ -529,7 +529,7 @@ error_code permissions(const Twine &path, perms prms) {
 
   if ( ! ::SetFileAttributesW(path_utf16.begin(), attributes))
     return windows_error(::GetLastError());
-#endif    
+#endif
   return error_code::success();
 }
 
@@ -783,7 +783,7 @@ mapped_file_region::mapped_file_region(const Twine &path,
                                        mapmode mode,
                                        uint64_t length,
                                        uint64_t offset,
-                                       error_code &ec) 
+                                       error_code &ec)
   : Mode(mode)
   , Size(length)
   , Mapping()
@@ -989,7 +989,7 @@ error_code detail::directory_iterator_increment(detail::DirIterState &it) {
   return error_code::success();
 }
 
-error_code map_file_pages(const Twine &path, off_t file_offset, size_t size,  
+error_code map_file_pages(const Twine &path, off_t file_offset, size_t size,
                                             bool map_writable, void *&result) {
   assert(0 && "NOT IMPLEMENTED");
   return windows_error::invalid_function;

@@ -17,7 +17,7 @@
 
 #include "llvm/Support/raw_ostream.h"
 
-namespace llvm 
+namespace llvm
 {
   /// formatted_raw_ostream - Formatted raw_fd_ostream to handle
   /// asm-specific constructs.
@@ -82,7 +82,7 @@ namespace llvm
     /// so it doesn't want another layer of buffering to be happening
     /// underneath it.
     ///
-    formatted_raw_ostream(raw_ostream &Stream, bool Delete = false) 
+    formatted_raw_ostream(raw_ostream &Stream, bool Delete = false)
       : raw_ostream(), TheStream(0), DeleteStream(false), ColumnScanned(0) {
       setStream(Stream, Delete);
     }

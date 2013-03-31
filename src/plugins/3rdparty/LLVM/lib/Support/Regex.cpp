@@ -23,7 +23,7 @@ Regex::Regex(StringRef regex, unsigned Flags) {
   unsigned flags = 0;
   preg = new llvm_regex();
   preg->re_endp = regex.end();
-  if (Flags & IgnoreCase) 
+  if (Flags & IgnoreCase)
     flags |= REG_ICASE;
   if (Flags & Newline)
     flags |= REG_NEWLINE;
@@ -38,9 +38,9 @@ Regex::~Regex() {
 bool Regex::isValid(std::string &Error) {
   if (!error)
     return true;
-  
+
   size_t len = llvm_regerror(error, preg, NULL, 0);
-  
+
   Error.resize(len);
   llvm_regerror(error, preg, &Error[0], len);
   return false;
@@ -75,7 +75,7 @@ bool Regex::match(StringRef String, SmallVectorImpl<StringRef> *Matches){
 
   if (Matches) { // match position requested
     Matches->clear();
-    
+
     for (unsigned i = 0; i != nmatch; ++i) {
       if (pm[i].rm_so == -1) {
         // this group didn't match

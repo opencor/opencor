@@ -49,7 +49,7 @@ void clang::ParseAST(Preprocessor &PP, ASTConsumer *Consumer,
 
   // Recover resources if we crash before exiting this method.
   llvm::CrashRecoveryContextCleanupRegistrar<Sema> CleanupSema(S.get());
-  
+
   ParseAST(*S.get(), PrintStats, SkipFunctionBodies);
 }
 
@@ -106,7 +106,7 @@ void clang::ParseAST(Sema &S, bool PrintStats, bool SkipFunctionBodies) {
        I = S.WeakTopLevelDecls().begin(),
        E = S.WeakTopLevelDecls().end(); I != E; ++I)
     Consumer->HandleTopLevelDecl(DeclGroupRef(*I));
-  
+
   Consumer->HandleTranslationUnit(S.getASTContext());
 
   std::swap(OldCollectStats, S.CollectStats);

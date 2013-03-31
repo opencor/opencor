@@ -30,12 +30,12 @@ class StmtIteratorBase {
 protected:
   enum { DeclMode = 0x1, SizeOfTypeVAMode = 0x2, DeclGroupMode = 0x3,
          Flags = 0x3 };
-  
+
   Stmt **stmt;
   union { Decl *decl; Decl **DGI; };
   uintptr_t RawVAPtr;
   Decl **DGE;
-  
+
   bool inDecl() const {
     return (RawVAPtr & Flags) == DeclMode;
   }

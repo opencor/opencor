@@ -399,12 +399,12 @@ def Most : DiagGroup<"most", [
     SelTypeCast
  ]>;
 
-// Thread Safety warnings 
+// Thread Safety warnings
 def ThreadSafetyAttributes : DiagGroup<"thread-safety-attributes">;
 def ThreadSafetyAnalysis   : DiagGroup<"thread-safety-analysis">;
 def ThreadSafetyPrecise    : DiagGroup<"thread-safety-precise">;
 def ThreadSafety : DiagGroup<"thread-safety",
-                             [ThreadSafetyAttributes, 
+                             [ThreadSafetyAttributes,
                               ThreadSafetyAnalysis,
                               ThreadSafetyPrecise]>;
 

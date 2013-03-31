@@ -7,7 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 //
-// This file defines stack address leak checker, which checks if an invalid 
+// This file defines stack address leak checker, which checks if an invalid
 // stack address is stored into a global or heap location. See CERT DCL30-C.
 //
 //===----------------------------------------------------------------------===//
@@ -47,20 +47,20 @@ SourceRange StackAddrEscapeChecker::GenName(raw_ostream &os,
   R = R->getBaseRegion();
   SourceRange range;
   os << "Address of ";
-  
+
   // Check if the region is a compound literal.
-  if (const CompoundLiteralRegion* CR = dyn_cast<CompoundLiteralRegion>(R)) { 
+  if (const CompoundLiteralRegion* CR = dyn_cast<CompoundLiteralRegion>(R)) {
     const CompoundLiteralExpr *CL = CR->getLiteralExpr();
     os << "stack memory associated with a compound literal "
           "declared on line "
         << SM.getExpansionLineNumber(CL->getLocStart())
-        << " returned to caller";    
+        << " returned to caller";
     range = CL->getSourceRange();
   }
   else if (const AllocaRegion* AR = dyn_cast<AllocaRegion>(R)) {
     const Expr *ARE = AR->getExpr();
     SourceLocation L = ARE->getLocStart();
-    range = ARE->getSourceRange();    
+    range = ARE->getSourceRange();
     os << "stack memory allocated by call to alloca() on line "
        << SM.getExpansionLineNumber(L);
   }
@@ -83,8 +83,8 @@ SourceRange StackAddrEscapeChecker::GenName(raw_ostream &os,
   }
   else {
     llvm_unreachable("Invalid region in ReturnStackAddressChecker.");
-  } 
-  
+  }
+
   return range;
 }
 
@@ -114,7 +114,7 @@ void StackAddrEscapeChecker::EmitStackError(CheckerContext &C, const MemRegion *
 
 void StackAddrEscapeChecker::checkPreStmt(const ReturnStmt *RS,
                                           CheckerContext &C) const {
-  
+
   const Expr *RetE = RS->getRetValue();
   if (!RetE)
     return;
@@ -126,10 +126,10 @@ void StackAddrEscapeChecker::checkPreStmt(const ReturnStmt *RS,
 
   if (!R)
     return;
-  
+
   const StackSpaceRegion *SS =
     dyn_cast_or_null<StackSpaceRegion>(R->getMemorySpace());
-    
+
   if (!SS)
     return;
 
@@ -171,35 +171,35 @@ void StackAddrEscapeChecker::checkEndPath(CheckerContext &Ctx) const {
       Ctx(CC),
       CurSFC(CC.getLocationContext()->getCurrentStackFrame())
     {}
-    
+
     bool HandleBinding(StoreManager &SMgr, Store store,
                        const MemRegion *region, SVal val) {
-      
+
       if (!isa<GlobalsSpaceRegion>(region->getMemorySpace()))
         return true;
-      
+
       const MemRegion *vR = val.getAsRegion();
       if (!vR)
         return true;
-        
+
       // Under automated retain release, it is okay to assign a block
       // directly to a global variable.
       if (Ctx.getASTContext().getLangOpts().ObjCAutoRefCount &&
           isa<BlockDataRegion>(vR))
         return true;
 
-      if (const StackSpaceRegion *SSR = 
+      if (const StackSpaceRegion *SSR =
           dyn_cast<StackSpaceRegion>(vR->getMemorySpace())) {
         // If the global variable holds a location in the current stack frame,
         // record the binding to emit a warning.
         if (SSR->getStackFrame() == CurSFC)
           V.push_back(std::make_pair(region, vR));
       }
-      
+
       return true;
     }
   };
-    
+
   CallBack cb(Ctx);
   state->getStateManager().getStoreManager().iterBindings(state->getStore(),cb);
 
@@ -217,7 +217,7 @@ void StackAddrEscapeChecker::checkEndPath(CheckerContext &Ctx) const {
                      "Stack address was saved into a global variable. "
                      "This is dangerous because the address will become "
                      "invalid after returning from the function"));
-  
+
   for (unsigned i = 0, e = cb.V.size(); i != e; ++i) {
     // Generate a report for this bug.
     SmallString<512> buf;

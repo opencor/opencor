@@ -113,22 +113,22 @@ void IntrinsicLowering::AddPrototypes(Module &M) {
       case Intrinsic::memcpy:
         M.getOrInsertFunction("memcpy",
           Type::getInt8PtrTy(Context),
-                              Type::getInt8PtrTy(Context), 
-                              Type::getInt8PtrTy(Context), 
+                              Type::getInt8PtrTy(Context),
+                              Type::getInt8PtrTy(Context),
                               TD.getIntPtrType(Context), (Type *)0);
         break;
       case Intrinsic::memmove:
         M.getOrInsertFunction("memmove",
           Type::getInt8PtrTy(Context),
-                              Type::getInt8PtrTy(Context), 
-                              Type::getInt8PtrTy(Context), 
+                              Type::getInt8PtrTy(Context),
+                              Type::getInt8PtrTy(Context),
                               TD.getIntPtrType(Context), (Type *)0);
         break;
       case Intrinsic::memset:
         M.getOrInsertFunction("memset",
           Type::getInt8PtrTy(Context),
-                              Type::getInt8PtrTy(Context), 
-                              Type::getInt32Ty(M.getContext()), 
+                              Type::getInt8PtrTy(Context),
+                              Type::getInt32Ty(M.getContext()),
                               TD.getIntPtrType(Context), (Type *)0);
         break;
       case Intrinsic::sqrt:
@@ -167,7 +167,7 @@ static Value *LowerBSWAP(LLVMContext &Context, Value *V, Instruction *IP) {
   assert(V->getType()->isIntegerTy() && "Can't bswap a non-integer type!");
 
   unsigned BitSize = V->getType()->getPrimitiveSizeInBits();
-  
+
   IRBuilder<> Builder(IP->getParent(), IP);
 
   switch(BitSize) {
@@ -211,13 +211,13 @@ static Value *LowerBSWAP(LLVMContext &Context, Value *V, Instruction *IP) {
                                     "bswap.5");
     Value* Tmp4 = Builder.CreateLShr(V, ConstantInt::get(V->getType(), 8),
                                      "bswap.4");
-    Value* Tmp3 = Builder.CreateLShr(V, 
+    Value* Tmp3 = Builder.CreateLShr(V,
                                      ConstantInt::get(V->getType(), 24),
                                      "bswap.3");
-    Value* Tmp2 = Builder.CreateLShr(V, 
+    Value* Tmp2 = Builder.CreateLShr(V,
                                      ConstantInt::get(V->getType(), 40),
                                      "bswap.2");
-    Value* Tmp1 = Builder.CreateLShr(V, 
+    Value* Tmp1 = Builder.CreateLShr(V,
                                      ConstantInt::get(V->getType(), 56),
                                      "bswap.1");
     Tmp7 = Builder.CreateAnd(Tmp7,
@@ -276,7 +276,7 @@ static Value *LowerCTPOP(LLVMContext &Context, Value *V, Instruction *IP) {
 
   for (unsigned n = 0; n < WordSize; ++n) {
     Value *PartValue = V;
-    for (unsigned i = 1, ct = 0; i < (BitSize>64 ? 64 : BitSize); 
+    for (unsigned i = 1, ct = 0; i < (BitSize>64 ? 64 : BitSize);
          i <<= 1, ++ct) {
       Value *MaskCst = ConstantInt::get(V->getType(), MaskValues[ct]);
       Value *LHS = Builder.CreateAnd(PartValue, MaskCst, "cppop.and1");
@@ -384,7 +384,7 @@ void IntrinsicLowering::LowerIntrinsicCall(CallInst *CI) {
 
   case Intrinsic::siglongjmp: {
     // Insert the call to abort
-    ReplaceCallWith("abort", CI, CS.arg_end(), CS.arg_end(), 
+    ReplaceCallWith("abort", CI, CS.arg_end(), CS.arg_end(),
                     Type::getVoidTy(Context));
     break;
   }
@@ -395,7 +395,7 @@ void IntrinsicLowering::LowerIntrinsicCall(CallInst *CI) {
   case Intrinsic::bswap:
     CI->replaceAllUsesWith(LowerBSWAP(Context, CI->getArgOperand(0), CI));
     break;
-    
+
   case Intrinsic::ctlz:
     CI->replaceAllUsesWith(LowerCTLZ(Context, CI->getArgOperand(0), CI));
     break;
@@ -423,7 +423,7 @@ void IntrinsicLowering::LowerIntrinsicCall(CallInst *CI) {
       CI->replaceAllUsesWith(Constant::getNullValue(CI->getType()));
     break;
   }
-    
+
   case Intrinsic::returnaddress:
   case Intrinsic::frameaddress:
     errs() << "WARNING: this target does not support the llvm."
@@ -455,7 +455,7 @@ void IntrinsicLowering::LowerIntrinsicCall(CallInst *CI) {
 
   case Intrinsic::var_annotation:
     break;   // Strip out annotate intrinsic
-    
+
   case Intrinsic::memcpy: {
     Type *IntPtr = TD.getIntPtrType(Context);
     Value *Size = Builder.CreateIntCast(CI->getArgOperand(2), IntPtr,

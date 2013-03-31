@@ -47,7 +47,7 @@ bool Sema::CheckSpecifiedExceptionType(QualType T, const SourceRange &Range) {
   // constructor ctor-initializers (including such things in nested classes).
   if (T->isRecordType() && T->getAs<RecordType>()->isBeingDefined())
     return false;
-    
+
   // C++ 15.4p2: A type denoted in an exception-specification shall not denote
   //   an incomplete type.
   if (RequireCompleteType(Range.getBegin(), T,
@@ -71,7 +71,7 @@ bool Sema::CheckSpecifiedExceptionType(QualType T, const SourceRange &Range) {
   // Again as before
   if (T->isRecordType() && T->getAs<RecordType>()->isBeingDefined())
     return false;
-    
+
   if (!T->isVoidType() &&
       RequireCompleteType(Range.getBegin(), T,
                           diag::err_incomplete_in_exception_spec, kind, Range))
@@ -145,7 +145,7 @@ bool Sema::CheckEquivalentExceptionSpec(FunctionDecl *Old, FunctionDecl *New) {
   bool MissingEmptyExceptionSpecification = false;
   unsigned DiagID = diag::err_mismatched_exception_spec;
   if (getLangOpts().MicrosoftExt)
-    DiagID = diag::warn_mismatched_exception_spec; 
+    DiagID = diag::warn_mismatched_exception_spec;
 
   // Check the types as written: they must match before any exception
   // specification adjustment is applied.
@@ -236,7 +236,7 @@ bool Sema::CheckEquivalentExceptionSpec(FunctionDecl *Old, FunctionDecl *New) {
       default:
         break;
       }
-    } 
+    }
 
     // Warn about the lack of exception specification.
     SmallString<128> ExceptionSpecString;
@@ -257,7 +257,7 @@ bool Sema::CheckEquivalentExceptionSpec(FunctionDecl *Old, FunctionDecl *New) {
           OnFirstException = false;
         else
           OS << ", ";
-        
+
         OS << E->getAsString(getPrintingPolicy());
       }
       OS << ")";
@@ -300,7 +300,7 @@ bool Sema::CheckEquivalentExceptionSpec(FunctionDecl *Old, FunctionDecl *New) {
     if (!Old->getLocation().isInvalid())
       Diag(Old->getLocation(), diag::note_previous_declaration);
 
-    return false;    
+    return false;
   }
 
   Diag(New->getLocation(), DiagID);
@@ -317,7 +317,7 @@ bool Sema::CheckEquivalentExceptionSpec(
     const FunctionProtoType *New, SourceLocation NewLoc) {
   unsigned DiagID = diag::err_mismatched_exception_spec;
   if (getLangOpts().MicrosoftExt)
-    DiagID = diag::warn_mismatched_exception_spec; 
+    DiagID = diag::warn_mismatched_exception_spec;
   return CheckEquivalentExceptionSpec(PDiag(DiagID),
                                       PDiag(diag::note_previous_declaration),
                                       Old, OldLoc, New, NewLoc);
@@ -727,7 +727,7 @@ bool Sema::CheckParamExceptionSpec(const PartialDiagnostic & NoteID,
     const FunctionProtoType *Source, SourceLocation SourceLoc)
 {
   if (CheckSpecForTypesEquivalent(*this,
-                           PDiag(diag::err_deep_exception_specs_differ) << 0, 
+                           PDiag(diag::err_deep_exception_specs_differ) << 0,
                                   PDiag(),
                                   Target->getResultType(), TargetLoc,
                                   Source->getResultType(), SourceLoc))
@@ -739,7 +739,7 @@ bool Sema::CheckParamExceptionSpec(const PartialDiagnostic & NoteID,
          "Functions have different argument counts.");
   for (unsigned i = 0, E = Target->getNumArgs(); i != E; ++i) {
     if (CheckSpecForTypesEquivalent(*this,
-                           PDiag(diag::err_deep_exception_specs_differ) << 1, 
+                           PDiag(diag::err_deep_exception_specs_differ) << 1,
                                     PDiag(),
                                     Target->getArgType(i), TargetLoc,
                                     Source->getArgType(i), SourceLoc))
@@ -766,7 +766,7 @@ bool Sema::CheckExceptionSpecCompatibility(Expr *From, QualType ToType)
   // the exceptions of the target, and any exception specs on arguments or
   // return types must be equivalent.
   return CheckExceptionSpecSubset(PDiag(diag::err_incompatible_exception_specs),
-                                  PDiag(), ToFunc, 
+                                  PDiag(), ToFunc,
                                   From->getSourceRange().getBegin(),
                                   FromFunc, SourceLocation());
 }

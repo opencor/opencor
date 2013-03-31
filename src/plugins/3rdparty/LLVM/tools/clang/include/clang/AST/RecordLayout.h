@@ -94,13 +94,13 @@ private:
     /// (vtable in Itanium, vftbl in Microsoft) that is independent from
     /// its base classes?
     bool HasOwnVFPtr; // TODO: stash this somewhere more efficient
-    
+
     /// PrimaryBase - The primary base info for this record.
     llvm::PointerIntPair<const CXXRecordDecl *, 1, bool> PrimaryBase;
-    
+
     /// FIXME: This should really use a SmallPtrMap, once we have one in LLVM :)
     typedef llvm::DenseMap<const CXXRecordDecl *, CharUnits> BaseOffsetsMapTy;
-    
+
     /// BaseOffsets - Contains a map from base classes to their offset.
     BaseOffsetsMapTy BaseOffsets;
 
@@ -135,7 +135,7 @@ private:
   ~ASTRecordLayout() {}
 
   void Destroy(ASTContext &Ctx);
-  
+
   ASTRecordLayout(const ASTRecordLayout &) LLVM_DELETED_FUNCTION;
   void operator=(const ASTRecordLayout &) LLVM_DELETED_FUNCTION;
 public:

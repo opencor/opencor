@@ -58,7 +58,7 @@ public:
 static sys::Mutex gCrashRecoveryContexMutex;
 static bool gCrashRecoveryEnabled = false;
 
-static sys::ThreadLocal<const CrashRecoveryContextCleanup> 
+static sys::ThreadLocal<const CrashRecoveryContextCleanup>
        tlIsRecoveringFromCrash;
 
 CrashRecoveryContextCleanup::~CrashRecoveryContextCleanup() {}
@@ -75,7 +75,7 @@ CrashRecoveryContext::~CrashRecoveryContext() {
     delete tmp;
   }
   tlIsRecoveringFromCrash.erase();
-  
+
   CrashRecoveryContextImpl *CRCI = (CrashRecoveryContextImpl *) Impl;
   delete CRCI;
 }

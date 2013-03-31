@@ -121,7 +121,7 @@ def MOV32rd : I<0x21, MRMDestReg, (outs GR32:$dst), (ins DEBUG_REG:$src),
                 "mov{l}\t{$src, $dst|$dst, $src}", [], IIC_MOV_REG_DR>, TB;
 def MOV64rd : I<0x21, MRMDestReg, (outs GR64:$dst), (ins DEBUG_REG:$src),
                 "mov{q}\t{$src, $dst|$dst, $src}", [], IIC_MOV_REG_DR>, TB;
-                
+
 def MOV32dr : I<0x23, MRMSrcReg, (outs DEBUG_REG:$dst), (ins GR32:$src),
                 "mov{l}\t{$src, $dst|$dst, $src}", [], IIC_MOV_DR_REG>, TB;
 def MOV64dr : I<0x23, MRMSrcReg, (outs DEBUG_REG:$dst), (ins GR64:$src),
@@ -134,7 +134,7 @@ def MOV32rc : I<0x20, MRMDestReg, (outs GR32:$dst), (ins CONTROL_REG:$src),
                 "mov{l}\t{$src, $dst|$dst, $src}", [], IIC_MOV_REG_CR>, TB;
 def MOV64rc : I<0x20, MRMDestReg, (outs GR64:$dst), (ins CONTROL_REG:$src),
                 "mov{q}\t{$src, $dst|$dst, $src}", [], IIC_MOV_REG_CR>, TB;
-                
+
 def MOV32cr : I<0x22, MRMSrcReg, (outs CONTROL_REG:$dst), (ins GR32:$src),
                 "mov{l}\t{$src, $dst|$dst, $src}", [], IIC_MOV_CR_REG>, TB;
 def MOV64cr : I<0x22, MRMSrcReg, (outs CONTROL_REG:$dst), (ins GR64:$src),
@@ -188,32 +188,32 @@ def MOV64sm : RI<0x8E, MRMSrcMem, (outs SEGMENT_REG:$dst), (ins i64mem:$src),
 
 def SWAPGS : I<0x01, MRM_F8, (outs), (ins), "swapgs", [], IIC_SWAPGS>, TB;
 
-def LAR16rm : I<0x02, MRMSrcMem, (outs GR16:$dst), (ins i16mem:$src), 
+def LAR16rm : I<0x02, MRMSrcMem, (outs GR16:$dst), (ins i16mem:$src),
                 "lar{w}\t{$src, $dst|$dst, $src}", [], IIC_LAR_RM>, TB, OpSize;
 def LAR16rr : I<0x02, MRMSrcReg, (outs GR16:$dst), (ins GR16:$src),
                 "lar{w}\t{$src, $dst|$dst, $src}", [], IIC_LAR_RR>, TB, OpSize;
 
 // i16mem operand in LAR32rm and GR32 operand in LAR32rr is not a typo.
-def LAR32rm : I<0x02, MRMSrcMem, (outs GR32:$dst), (ins i16mem:$src), 
+def LAR32rm : I<0x02, MRMSrcMem, (outs GR32:$dst), (ins i16mem:$src),
                 "lar{l}\t{$src, $dst|$dst, $src}", [], IIC_LAR_RM>, TB;
 def LAR32rr : I<0x02, MRMSrcReg, (outs GR32:$dst), (ins GR32:$src),
                 "lar{l}\t{$src, $dst|$dst, $src}", [], IIC_LAR_RR>, TB;
 // i16mem operand in LAR64rm and GR32 operand in LAR32rr is not a typo.
-def LAR64rm : RI<0x02, MRMSrcMem, (outs GR64:$dst), (ins i16mem:$src), 
+def LAR64rm : RI<0x02, MRMSrcMem, (outs GR64:$dst), (ins i16mem:$src),
                  "lar{q}\t{$src, $dst|$dst, $src}", [], IIC_LAR_RM>, TB;
 def LAR64rr : RI<0x02, MRMSrcReg, (outs GR64:$dst), (ins GR32:$src),
                  "lar{q}\t{$src, $dst|$dst, $src}", [], IIC_LAR_RR>, TB;
 
 def LSL16rm : I<0x03, MRMSrcMem, (outs GR16:$dst), (ins i16mem:$src),
-                "lsl{w}\t{$src, $dst|$dst, $src}", [], IIC_LSL_RM>, TB, OpSize; 
+                "lsl{w}\t{$src, $dst|$dst, $src}", [], IIC_LSL_RM>, TB, OpSize;
 def LSL16rr : I<0x03, MRMSrcReg, (outs GR16:$dst), (ins GR16:$src),
                 "lsl{w}\t{$src, $dst|$dst, $src}", [], IIC_LSL_RR>, TB, OpSize;
 def LSL32rm : I<0x03, MRMSrcMem, (outs GR32:$dst), (ins i32mem:$src),
-                "lsl{l}\t{$src, $dst|$dst, $src}", [], IIC_LSL_RM>, TB; 
+                "lsl{l}\t{$src, $dst|$dst, $src}", [], IIC_LSL_RM>, TB;
 def LSL32rr : I<0x03, MRMSrcReg, (outs GR32:$dst), (ins GR32:$src),
                 "lsl{l}\t{$src, $dst|$dst, $src}", [], IIC_LSL_RR>, TB;
 def LSL64rm : RI<0x03, MRMSrcMem, (outs GR64:$dst), (ins i64mem:$src),
-                 "lsl{q}\t{$src, $dst|$dst, $src}", [], IIC_LSL_RM>, TB; 
+                 "lsl{q}\t{$src, $dst|$dst, $src}", [], IIC_LSL_RM>, TB;
 def LSL64rr : RI<0x03, MRMSrcReg, (outs GR64:$dst), (ins GR64:$src),
                  "lsl{q}\t{$src, $dst|$dst, $src}", [], IIC_LSL_RR>, TB;
 
@@ -233,7 +233,7 @@ def LTRr : I<0x00, MRM3r, (outs), (ins GR16:$src),
              "ltr{w}\t$src", [], IIC_LTR>, TB;
 def LTRm : I<0x00, MRM3m, (outs), (ins i16mem:$src),
              "ltr{w}\t$src", [], IIC_LTR>, TB;
-             
+
 def PUSHCS16 : I<0x0E, RawFrm, (outs), (ins),
                  "push{w}\t{%cs|CS}", [], IIC_PUSH_SR>, Requires<[In32BitMode]>,
                OpSize;
@@ -254,7 +254,7 @@ def PUSHES16 : I<0x06, RawFrm, (outs), (ins),
                OpSize;
 def PUSHES32 : I<0x06, RawFrm, (outs), (ins),
                  "push{l}\t{%es|ES}", [], IIC_PUSH_SR>, Requires<[In32BitMode]>;
-                 
+
 def PUSHFS16 : I<0xa0, RawFrm, (outs), (ins),
                  "push{w}\t{%fs|FS}", [], IIC_PUSH_SR>, OpSize, TB;
 def PUSHFS32 : I<0xa0, RawFrm, (outs), (ins),
@@ -276,65 +276,65 @@ def POPSS16 : I<0x17, RawFrm, (outs), (ins),
 def POPSS32 : I<0x17, RawFrm, (outs), (ins),
                 "pop{l}\t{%ss|SS}", [], IIC_POP_SR_SS>,
                       Requires<[In32BitMode]>;
-                
+
 def POPDS16 : I<0x1F, RawFrm, (outs), (ins),
                 "pop{w}\t{%ds|DS}", [], IIC_POP_SR>,
               OpSize, Requires<[In32BitMode]>;
 def POPDS32 : I<0x1F, RawFrm, (outs), (ins),
                 "pop{l}\t{%ds|DS}", [], IIC_POP_SR>,
                       Requires<[In32BitMode]>;
-                
+
 def POPES16 : I<0x07, RawFrm, (outs), (ins),
                 "pop{w}\t{%es|ES}", [], IIC_POP_SR>,
               OpSize, Requires<[In32BitMode]>;
 def POPES32 : I<0x07, RawFrm, (outs), (ins),
                 "pop{l}\t{%es|ES}", [], IIC_POP_SR>,
                       Requires<[In32BitMode]>;
-                
+
 def POPFS16 : I<0xa1, RawFrm, (outs), (ins),
                 "pop{w}\t{%fs|FS}", [], IIC_POP_SR>, OpSize, TB;
 def POPFS32 : I<0xa1, RawFrm, (outs), (ins),
                 "pop{l}\t{%fs|FS}", [], IIC_POP_SR>, TB, Requires<[In32BitMode]>;
 def POPFS64 : I<0xa1, RawFrm, (outs), (ins),
                 "pop{q}\t{%fs|FS}", [], IIC_POP_SR>, TB;
-                
+
 def POPGS16 : I<0xa9, RawFrm, (outs), (ins),
                 "pop{w}\t{%gs|GS}", [], IIC_POP_SR>, OpSize, TB;
 def POPGS32 : I<0xa9, RawFrm, (outs), (ins),
                 "pop{l}\t{%gs|GS}", [], IIC_POP_SR>, TB, Requires<[In32BitMode]>;
 def POPGS64 : I<0xa9, RawFrm, (outs), (ins),
                 "pop{q}\t{%gs|GS}", [], IIC_POP_SR>, TB;
-                 
+
 
 def LDS16rm : I<0xc5, MRMSrcMem, (outs GR16:$dst), (ins opaque32mem:$src),
                 "lds{w}\t{$src, $dst|$dst, $src}", [], IIC_LXS>, OpSize;
 def LDS32rm : I<0xc5, MRMSrcMem, (outs GR32:$dst), (ins opaque48mem:$src),
                 "lds{l}\t{$src, $dst|$dst, $src}", [], IIC_LXS>;
-                
+
 def LSS16rm : I<0xb2, MRMSrcMem, (outs GR16:$dst), (ins opaque32mem:$src),
                 "lss{w}\t{$src, $dst|$dst, $src}", [], IIC_LXS>, TB, OpSize;
 def LSS32rm : I<0xb2, MRMSrcMem, (outs GR32:$dst), (ins opaque48mem:$src),
                 "lss{l}\t{$src, $dst|$dst, $src}", [], IIC_LXS>, TB;
 def LSS64rm : RI<0xb2, MRMSrcMem, (outs GR64:$dst), (ins opaque80mem:$src),
                  "lss{q}\t{$src, $dst|$dst, $src}", [], IIC_LXS>, TB;
-                
+
 def LES16rm : I<0xc4, MRMSrcMem, (outs GR16:$dst), (ins opaque32mem:$src),
                 "les{w}\t{$src, $dst|$dst, $src}", [], IIC_LXS>, OpSize;
 def LES32rm : I<0xc4, MRMSrcMem, (outs GR32:$dst), (ins opaque48mem:$src),
                 "les{l}\t{$src, $dst|$dst, $src}", [], IIC_LXS>;
-                
+
 def LFS16rm : I<0xb4, MRMSrcMem, (outs GR16:$dst), (ins opaque32mem:$src),
                 "lfs{w}\t{$src, $dst|$dst, $src}", [], IIC_LXS>, TB, OpSize;
 def LFS32rm : I<0xb4, MRMSrcMem, (outs GR32:$dst), (ins opaque48mem:$src),
                 "lfs{l}\t{$src, $dst|$dst, $src}", [], IIC_LXS>, TB;
 def LFS64rm : RI<0xb4, MRMSrcMem, (outs GR64:$dst), (ins opaque80mem:$src),
                  "lfs{q}\t{$src, $dst|$dst, $src}", [], IIC_LXS>, TB;
-                
+
 def LGS16rm : I<0xb5, MRMSrcMem, (outs GR16:$dst), (ins opaque32mem:$src),
                 "lgs{w}\t{$src, $dst|$dst, $src}", [], IIC_LXS>, TB, OpSize;
 def LGS32rm : I<0xb5, MRMSrcMem, (outs GR32:$dst), (ins opaque48mem:$src),
                 "lgs{l}\t{$src, $dst|$dst, $src}", [], IIC_LXS>, TB;
-                
+
 def LGS64rm : RI<0xb5, MRMSrcMem, (outs GR64:$dst), (ins opaque80mem:$src),
                  "lgs{q}\t{$src, $dst|$dst, $src}", [], IIC_LXS>, TB;
 
@@ -365,7 +365,7 @@ def SLDT16m : I<0x00, MRM0m, (outs i16mem:$dst), (ins),
                 "sldt{w}\t$dst", [], IIC_SLDT>, TB;
 def SLDT32r : I<0x00, MRM0r, (outs GR32:$dst), (ins),
                 "sldt{l}\t$dst", [], IIC_SLDT>, TB;
-                
+
 // LLDT is not interpreted specially in 64-bit mode because there is no sign
 //   extension.
 def SLDT64r : RI<0x00, MRM0r, (outs GR64:$dst), (ins),
@@ -385,19 +385,19 @@ def LLDT16r : I<0x00, MRM2r, (outs), (ins GR16:$src),
                 "lldt{w}\t$src", [], IIC_LLDT_REG>, TB;
 def LLDT16m : I<0x00, MRM2m, (outs), (ins i16mem:$src),
                 "lldt{w}\t$src", [], IIC_LLDT_MEM>, TB;
-                
+
 //===----------------------------------------------------------------------===//
 // Specialized register support
 def WRMSR : I<0x30, RawFrm, (outs), (ins), "wrmsr", [], IIC_WRMSR>, TB;
 def RDMSR : I<0x32, RawFrm, (outs), (ins), "rdmsr", [], IIC_RDMSR>, TB;
 def RDPMC : I<0x33, RawFrm, (outs), (ins), "rdpmc", [], IIC_RDPMC>, TB;
 
-def SMSW16r : I<0x01, MRM4r, (outs GR16:$dst), (ins), 
+def SMSW16r : I<0x01, MRM4r, (outs GR16:$dst), (ins),
                 "smsw{w}\t$dst", [], IIC_SMSW>, OpSize, TB;
-def SMSW32r : I<0x01, MRM4r, (outs GR32:$dst), (ins), 
+def SMSW32r : I<0x01, MRM4r, (outs GR32:$dst), (ins),
                 "smsw{l}\t$dst", [], IIC_SMSW>, TB;
 // no m form encodable; use SMSW16m
-def SMSW64r : RI<0x01, MRM4r, (outs GR64:$dst), (ins), 
+def SMSW64r : RI<0x01, MRM4r, (outs GR64:$dst), (ins),
                  "smsw{q}\t$dst", [], IIC_SMSW>, TB;
 
 // For memory operands, there is only a 16-bit form
@@ -408,7 +408,7 @@ def LMSW16r : I<0x01, MRM6r, (outs), (ins GR16:$src),
                 "lmsw{w}\t$src", [], IIC_LMSW_MEM>, TB;
 def LMSW16m : I<0x01, MRM6m, (outs), (ins i16mem:$src),
                 "lmsw{w}\t$src", [], IIC_LMSW_REG>, TB;
-                
+
 def CPUID : I<0xA2, RawFrm, (outs), (ins), "cpuid", [], IIC_CPUID>, TB;
 
 //===----------------------------------------------------------------------===//

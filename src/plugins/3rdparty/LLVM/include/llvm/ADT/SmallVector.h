@@ -234,7 +234,7 @@ protected:
   /// Guarantees space for at least one more element, or MinSize more
   /// elements if specified.
   void grow(size_t MinSize = 0);
-  
+
 public:
   void push_back(const T &Elt) {
     if (this->EndX < this->CapacityX) {
@@ -259,7 +259,7 @@ public:
     goto Retry;
   }
 #endif
-  
+
   void pop_back() {
     this->setEnd(this->end()-1);
     this->end()->~T();
@@ -359,7 +359,7 @@ public:
     this->grow();
     goto Retry;
   }
-  
+
   void pop_back() {
     this->setEnd(this->end()-1);
   }

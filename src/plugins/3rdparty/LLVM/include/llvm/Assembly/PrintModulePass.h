@@ -24,18 +24,18 @@ namespace llvm {
   class FunctionPass;
   class ModulePass;
   class raw_ostream;
-  
+
   /// createPrintModulePass - Create and return a pass that writes the
   /// module to the specified raw_ostream.
   ModulePass *createPrintModulePass(raw_ostream *OS,
                                     bool DeleteStream=false,
                                     const std::string &Banner = "");
-  
+
   /// createPrintFunctionPass - Create and return a pass that prints
   /// functions to the specified raw_ostream as they are processed.
   FunctionPass *createPrintFunctionPass(const std::string &Banner,
-                                        raw_ostream *OS, 
-                                        bool DeleteStream=false);  
+                                        raw_ostream *OS,
+                                        bool DeleteStream=false);
 
 } // End llvm namespace
 

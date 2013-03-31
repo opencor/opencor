@@ -26,15 +26,15 @@ void ValueMapTypeRemapper::anchor() {}
 Value *llvm::MapValue(const Value *V, ValueToValueMapTy &VM, RemapFlags Flags,
                       ValueMapTypeRemapper *TypeMapper) {
   ValueToValueMapTy::iterator I = VM.find(V);
-  
+
   // If the value already exists in the map, use it.
   if (I != VM.end() && I->second) return I->second;
-  
+
   // Global values do not need to be seeded into the VM if they
   // are using the identity mapping.
   if (isa<GlobalValue>(V) || isa<MDString>(V))
     return VM[V] = const_cast<Value*>(V);
-  
+
   if (const InlineAsm *IA = dyn_cast<InlineAsm>(V)) {
     // Inline asm may need *type* remapping.
     FunctionType *NewTy = IA->getFunctionType();
@@ -45,27 +45,27 @@ Value *llvm::MapValue(const Value *V, ValueToValueMapTy &VM, RemapFlags Flags,
         V = InlineAsm::get(NewTy, IA->getAsmString(), IA->getConstraintString(),
                            IA->hasSideEffects(), IA->isAlignStack());
     }
-    
+
     return VM[V] = const_cast<Value*>(V);
   }
-  
+
 
   if (const MDNode *MD = dyn_cast<MDNode>(V)) {
     // If this is a module-level metadata and we know that nothing at the module
     // level is changing, then use an identity mapping.
     if (!MD->isFunctionLocal() && (Flags & RF_NoModuleLevelChanges))
       return VM[V] = const_cast<Value*>(V);
-    
+
     // Create a dummy node in case we have a metadata cycle.
     MDNode *Dummy = MDNode::getTemporary(V->getContext(), ArrayRef<Value*>());
     VM[V] = Dummy;
-    
+
     // Check all operands to see if any need to be remapped.
     for (unsigned i = 0, e = MD->getNumOperands(); i != e; ++i) {
       Value *OP = MD->getOperand(i);
       if (OP == 0 || MapValue(OP, VM, Flags, TypeMapper) == OP) continue;
 
-      // Ok, at least one operand needs remapping.  
+      // Ok, at least one operand needs remapping.
       SmallVector<Value*, 4> Elts;
       Elts.reserve(MD->getNumOperands());
       for (i = 0; i != e; ++i) {
@@ -91,15 +91,15 @@ Value *llvm::MapValue(const Value *V, ValueToValueMapTy &VM, RemapFlags Flags,
   Constant *C = const_cast<Constant*>(dyn_cast<Constant>(V));
   if (C == 0)
     return 0;
-  
+
   if (BlockAddress *BA = dyn_cast<BlockAddress>(C)) {
-    Function *F = 
+    Function *F =
       cast<Function>(MapValue(BA->getFunction(), VM, Flags, TypeMapper));
     BasicBlock *BB = cast_or_null<BasicBlock>(MapValue(BA->getBasicBlock(), VM,
                                                        Flags, TypeMapper));
     return VM[V] = BlockAddress::get(F, BB ? BB : BA->getBasicBlock());
   }
-  
+
   // Otherwise, we have some other constant to remap.  Start by checking to see
   // if all operands have an identity remapping.
   unsigned OpNo = 0, NumOperands = C->getNumOperands();
@@ -109,7 +109,7 @@ Value *llvm::MapValue(const Value *V, ValueToValueMapTy &VM, RemapFlags Flags,
     Mapped = MapValue(Op, VM, Flags, TypeMapper);
     if (Mapped != C) break;
   }
-  
+
   // See if the type mapper wants to remap the type as well.
   Type *NewTy = C->getType();
   if (TypeMapper)
@@ -119,24 +119,24 @@ Value *llvm::MapValue(const Value *V, ValueToValueMapTy &VM, RemapFlags Flags,
   // mapping.
   if (OpNo == NumOperands && NewTy == C->getType())
     return VM[V] = C;
-  
+
   // Okay, we need to create a new constant.  We've already processed some or
   // all of the operands, set them all up now.
   SmallVector<Constant*, 8> Ops;
   Ops.reserve(NumOperands);
   for (unsigned j = 0; j != OpNo; ++j)
     Ops.push_back(cast<Constant>(C->getOperand(j)));
-  
+
   // If one of the operands mismatch, push it and the other mapped operands.
   if (OpNo != NumOperands) {
     Ops.push_back(cast<Constant>(Mapped));
-  
+
     // Map the rest of the operands that aren't processed yet.
     for (++OpNo; OpNo != NumOperands; ++OpNo)
       Ops.push_back(MapValue(cast<Constant>(C->getOperand(OpNo)), VM,
                              Flags, TypeMapper));
   }
-  
+
   if (ConstantExpr *CE = dyn_cast<ConstantExpr>(C))
     return VM[V] = CE->getWithOperands(Ops, NewTy);
   if (isa<ConstantArray>(C))
@@ -193,7 +193,7 @@ void llvm::RemapInstruction(Instruction *I, ValueToValueMapTy &VMap,
     if (New != Old)
       I->setMetadata(MI->first, New);
   }
-  
+
   // If the instruction's type is being remapped, do so now.
   if (TypeMapper)
     I->mutateType(TypeMapper->remapType(I->getType()));

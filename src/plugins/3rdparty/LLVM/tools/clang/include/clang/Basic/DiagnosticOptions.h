@@ -55,7 +55,7 @@ public:
 
   /// The file to log diagnostic output to.
   std::string DiagnosticLogFile;
-  
+
   /// The file to serialize diagnostics to (non-appending).
   std::string DiagnosticSerializationFile;
 

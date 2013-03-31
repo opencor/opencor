@@ -80,7 +80,7 @@ struct LandingPadInfo {
 /// to hold private target-specific information for each Module.  Objects of
 /// type are accessed/created with MMI::getInfo and destroyed when the
 /// MachineModuleInfo is destroyed.
-/// 
+///
 class MachineModuleInfoImpl {
 public:
   typedef PointerIntPair<MCSymbol*, 1, bool> StubValueTy;

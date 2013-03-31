@@ -303,7 +303,7 @@ void Value::replaceAllUsesWith(Value *New) {
   // Notify all ValueHandles (if present) that this value is going away.
   if (HasValueHandle)
     ValueHandleBase::ValueIsRAUWd(this, New);
-  
+
   while (!use_empty()) {
     Use &U = *UseList;
     // Must handle Constants specially, we cannot call replaceUsesOfWith on a
@@ -314,10 +314,10 @@ void Value::replaceAllUsesWith(Value *New) {
         continue;
       }
     }
-    
+
     U.set(New);
   }
-  
+
   if (BasicBlock *BB = dyn_cast<BasicBlock>(this))
     BB->replaceSuccessorsPhiUsesWith(cast<BasicBlock>(New));
 }

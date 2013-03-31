@@ -112,7 +112,7 @@ template <class Impl> struct XMLDeclVisitor {
   }
   void visitDeclAsContext(Decl *D) {}
 
-#undef DISPATCH  
+#undef DISPATCH
 };
 
 template <class Impl> struct XMLTypeVisitor {
@@ -155,7 +155,7 @@ template <class Impl> struct XMLTypeVisitor {
   }
   void visitTypeChildren(Type *T) {}
 
-#undef DISPATCH  
+#undef DISPATCH
 };
 
 static StringRef getTypeKindName(Type *T) {
@@ -321,7 +321,7 @@ struct XMLDumper : public XMLDeclVisitor<XMLDumper>,
     case TemplateArgument::NullPtr:
       // FIXME: Implement!
       break;
-        
+
     case TemplateArgument::Declaration: {
       visitDeclRef(A.getAsDecl());
       break;
@@ -338,7 +338,7 @@ struct XMLDumper : public XMLDeclVisitor<XMLDumper>,
       break;
     }
     case TemplateArgument::Pack: {
-      for (TemplateArgument::pack_iterator P = A.pack_begin(), 
+      for (TemplateArgument::pack_iterator P = A.pack_begin(),
                                         PEnd = A.pack_end();
            P != PEnd; ++P)
         dispatch(*P);
@@ -821,7 +821,7 @@ struct XMLDumper : public XMLDeclVisitor<XMLDumper>,
   void visitObjCProtocolDeclChildren(ObjCProtocolDecl *D) {
     if (!D->isThisDeclarationADefinition())
       return;
-    
+
     if (D->protocol_begin() != D->protocol_end()) {
       TemporaryContainer C(*this, "protocols");
       for (ObjCInterfaceDecl::protocol_iterator
@@ -832,7 +832,7 @@ struct XMLDumper : public XMLDeclVisitor<XMLDumper>,
   void visitObjCProtocolDeclAsContext(ObjCProtocolDecl *D) {
     if (!D->isThisDeclarationADefinition())
       return;
-    
+
     visitDeclContext(D);
   }
 
@@ -899,7 +899,7 @@ struct XMLDumper : public XMLDeclVisitor<XMLDumper>,
         case Qualifiers::GCNone: llvm_unreachable("explicit none");
         }
       }
-      
+
       completeAttrs();
       dispatch(QualType(T.getTypePtr(), 0));
       pop();

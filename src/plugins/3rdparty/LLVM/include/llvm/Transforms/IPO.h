@@ -34,7 +34,7 @@ ModulePass *createStripSymbolsPass(bool OnlyDebugInfo = false);
 
 //===----------------------------------------------------------------------===//
 //
-// These functions strips symbols from functions and modules.  
+// These functions strips symbols from functions and modules.
 // Only debugging information is not stripped.
 //
 ModulePass *createStripNonDebugSymbolsPass();
@@ -78,7 +78,7 @@ ModulePass *createGlobalDCEPass();
 /// the specified global values. Otherwise, it deletes as much of the module as
 /// possible, except for the global values specified.
 ///
-ModulePass *createGVExtractionPass(std::vector<GlobalValue*>& GVs, bool 
+ModulePass *createGVExtractionPass(std::vector<GlobalValue*>& GVs, bool
                                    deleteFn = false);
 
 //===----------------------------------------------------------------------===//
@@ -91,7 +91,7 @@ Pass *createFunctionInliningPass();
 Pass *createFunctionInliningPass(int Threshold);
 
 //===----------------------------------------------------------------------===//
-/// createAlwaysInlinerPass - Return a new pass object that inlines only 
+/// createAlwaysInlinerPass - Return a new pass object that inlines only
 /// functions that are marked as "always_inline".
 Pass *createAlwaysInlinerPass();
 Pass *createAlwaysInlinerPass(bool InsertLifetime);
@@ -183,7 +183,7 @@ ModulePass *createMergeFunctionsPass();
 /// createPartialInliningPass - This pass inlines parts of functions.
 ///
 ModulePass *createPartialInliningPass();
-  
+
 //===----------------------------------------------------------------------===//
 // createMetaRenamerPass - Rename everything with metasyntatic names.
 //

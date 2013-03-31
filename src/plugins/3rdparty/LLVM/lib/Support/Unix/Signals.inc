@@ -140,7 +140,7 @@ static void RemoveFilesToRemove() {
     // super-user permissions.
     if (!S_ISREG(buf.st_mode))
       continue;
-  
+
     // Otherwise, remove the file. We ignore any errors here as there is nothing
     // else we can do.
     unlink(path);

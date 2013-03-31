@@ -523,7 +523,7 @@ bool TokenLexer::PasteTokens(Token &Tok) {
       memcpy(&Buffer[0], BufPtr, LHSLen);
     if (Invalid)
       return true;
-    
+
     BufPtr = &Buffer[LHSLen];
     unsigned RHSLen = PP.getSpelling(RHS, BufPtr, &Invalid);
     if (Invalid)
@@ -611,7 +611,7 @@ bool TokenLexer::PasteTokens(Token &Tok) {
           // error to a warning that defaults to an error.  This allows
           // disabling it.
           PP.Diag(Loc,
-                  PP.getLangOpts().MicrosoftExt ? diag::err_pp_bad_paste_ms 
+                  PP.getLangOpts().MicrosoftExt ? diag::err_pp_bad_paste_ms
                                                    : diag::err_pp_bad_paste)
             << Buffer.str();
         }
@@ -629,7 +629,7 @@ bool TokenLexer::PasteTokens(Token &Tok) {
     // Transfer properties of the LHS over the Result.
     Result.setFlagValue(Token::StartOfLine , Tok.isAtStartOfLine());
     Result.setFlagValue(Token::LeadingSpace, Tok.hasLeadingSpace());
-    
+
     // Finally, replace LHS with the result, consume the RHS, and iterate.
     ++CurToken;
     Tok = Result;
@@ -703,7 +703,7 @@ TokenLexer::getExpansionLocForMacroDefLoc(SourceLocation loc) const {
   assert(ExpandLocStart.isValid() && MacroExpansionStart.isValid() &&
          "Not appropriate for token streams");
   assert(loc.isValid() && loc.isFileID());
-  
+
   SourceManager &SM = PP.getSourceManager();
   assert(SM.isInSLocAddrSpace(loc, MacroDefStart, MacroDefLength) &&
          "Expected loc to come from the macro definition");
@@ -788,7 +788,7 @@ void TokenLexer::updateLocForMacroArgTokens(SourceLocation ArgIdSpellLoc,
 
   SourceLocation InstLoc =
       getExpansionLocForMacroDefLoc(ArgIdSpellLoc);
-  
+
   while (begin_tokens < end_tokens) {
     // If there's only one token just create a SLocEntry for it.
     if (end_tokens - begin_tokens == 1) {

@@ -43,7 +43,7 @@ public:
                  DiagnosticOptions *DiagOpts);
 
   virtual ~TextDiagnostic();
-  
+
   /// \brief Print the diagonstic level to a raw_ostream.
   ///
   /// This is a static helper that handles colorizing the level and formatting
@@ -89,7 +89,7 @@ protected:
                                  DiagnosticsEngine::Level Level,
                                  ArrayRef<CharSourceRange> Ranges,
                                  const SourceManager &SM);
-  
+
   virtual void emitCodeContext(SourceLocation Loc,
                                DiagnosticsEngine::Level Level,
                                SmallVectorImpl<CharSourceRange>& Ranges,
@@ -97,9 +97,9 @@ protected:
                                const SourceManager &SM) {
     emitSnippetAndCaret(Loc, Level, Ranges, Hints, SM);
   }
-  
+
   virtual void emitBasicNote(StringRef Message);
-  
+
   virtual void emitIncludeLocation(SourceLocation Loc, PresumedLoc PLoc,
                                    const SourceManager &SM);
 

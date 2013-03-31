@@ -95,7 +95,7 @@ static void PrintResults(const char *Msg, bool P, const Value *V1,
       WriteAsOperand(os1, V1, true, M);
       WriteAsOperand(os2, V2, true, M);
     }
-    
+
     if (o2 < o1)
       std::swap(o1, o2);
     errs() << "  " << Msg << ":\t"

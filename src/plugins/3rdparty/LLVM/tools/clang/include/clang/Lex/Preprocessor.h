@@ -187,7 +187,7 @@ class Preprocessor : public RefCountedBase<Preprocessor> {
   /// with this preprocessor.
   std::vector<CommentHandler *> CommentHandlers;
 
-  /// \brief True if we want to ignore EOF token and continue later on (thus 
+  /// \brief True if we want to ignore EOF token and continue later on (thus
   /// avoid tearing the Lexer and etc. down).
   bool IncrementalProcessing;
 
@@ -210,18 +210,18 @@ class Preprocessor : public RefCountedBase<Preprocessor> {
   /// for preprocessing.
   SourceLocation CodeCompletionFileLoc;
 
-  /// \brief The source location of the 'import' contextual keyword we just 
+  /// \brief The source location of the 'import' contextual keyword we just
   /// lexed, if any.
   SourceLocation ModuleImportLoc;
 
   /// \brief The module import path that we're currently processing.
-  llvm::SmallVector<std::pair<IdentifierInfo *, SourceLocation>, 2> 
+  llvm::SmallVector<std::pair<IdentifierInfo *, SourceLocation>, 2>
     ModuleImportPath;
-  
+
   /// \brief Whether the module import expectes an identifier next. Otherwise,
   /// it expects a '.' or ';'.
   bool ModuleImportExpectsIdentifier;
-  
+
   /// \brief The source location of the currently-active
   /// #pragma clang arc_cf_code_audited begin.
   SourceLocation PragmaARCCFCodeAuditedLoc;
@@ -310,7 +310,7 @@ class Preprocessor : public RefCountedBase<Preprocessor> {
   /// the reverse order (the latest one is in the head of the list).
   llvm::DenseMap<IdentifierInfo*, MacroInfo*> Macros;
   friend class ASTReader;
-  
+
   /// \brief Macros that we want to warn because they are not used at the end
   /// of the translation unit; we store just their SourceLocations instead
   /// something like MacroInfo*. The benefit of this is that when we are
@@ -417,7 +417,7 @@ public:
   /// \brief Retrieve the preprocessor options used to initialize this
   /// preprocessor.
   PreprocessorOptions &getPreprocessorOpts() const { return *PPOpts; }
-  
+
   DiagnosticsEngine &getDiagnostics() const { return *Diags; }
   void setDiagnostics(DiagnosticsEngine &D) { Diags = &D; }
 
@@ -813,7 +813,7 @@ public:
   void enableIncrementalProcessing(bool value = true) {
     IncrementalProcessing = value;
   }
-  
+
   /// \brief Specify the point at which code-completion will be performed.
   ///
   /// \param File the file in which code completion should occur. If
@@ -1139,7 +1139,7 @@ public:
 
   /// \brief Retrieves the module that we're currently building, if any.
   Module *getCurrentModule();
-  
+
   /// \brief Allocate a new MacroInfo object with the provided SourceLocation.
   MacroInfo *AllocateMacroInfo(SourceLocation L);
 
@@ -1147,7 +1147,7 @@ public:
   MacroInfo *CloneMacroInfo(const MacroInfo &MI);
 
   /// \brief Turn the specified lexer token into a fully checked and spelled
-  /// filename, e.g. as an operand of \#include. 
+  /// filename, e.g. as an operand of \#include.
   ///
   /// The caller is expected to provide a buffer that is large enough to hold
   /// the spelling of the filename, but is also expected to handle the case

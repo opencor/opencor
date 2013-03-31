@@ -67,7 +67,7 @@ void QwtPlot::initAxesData()
 
         d.scaleEngine = new QwtLinearScaleEngine;
 
-        d.scaleWidget->setTransformation( 
+        d.scaleWidget->setTransformation(
             d.scaleEngine->transformation() );
 
         d.scaleWidget->setFont( fscl );
@@ -147,7 +147,7 @@ void QwtPlot::setAxisScaleEngine( int axisId, QwtScaleEngine *scaleEngine )
         delete d.scaleEngine;
         d.scaleEngine = scaleEngine;
 
-        d_axisData[axisId]->scaleWidget->setTransformation( 
+        d_axisData[axisId]->scaleWidget->setTransformation(
             scaleEngine->transformation() );
 
         d.isValid = false;
@@ -309,7 +309,7 @@ double QwtPlot::axisStepSize( int axisId ) const
   \brief Return the current interval of the specified axis
 
   This is only a convenience function for axisScaleDiv( axisId )->interval();
-  
+
   \param axisId axis index
   \return Scale interval
 

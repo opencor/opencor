@@ -14,7 +14,7 @@
 // proven interferences, using dominators to only perform a linear number of
 // interference tests instead of the quadratic number of interference tests
 // that this would naively require. This is a technique derived from:
-// 
+//
 //    Budimlic, et al. Fast copy coalescing and live-range identification.
 //    In Proceedings of the ACM SIGPLAN 2002 Conference on Programming Language
 //    Design and Implementation (Berlin, Germany, June 17 - 19, 2002).
@@ -509,7 +509,7 @@ void StrongPHIElimination::isolatePHI(MachineInstr *PHI) {
 /// we need to use a stack of past choices of the current dominating variable
 /// and pop from this stack until we find a variable whose definition actually
 /// dominates the current block.
-/// 
+///
 /// There will be one push on this stack for each variable that has become the
 /// current dominating variable, so instead of using an explicit stack we can
 /// simply associate the previous choice for a current dominating variable with
@@ -745,7 +745,7 @@ void StrongPHIElimination::InsertCopiesForPHI(MachineInstr *PHI,
     SlotIndex PHIIndex = LI->getInstructionIndex(PHI);
     VNInfo *DestVNI = DestLI.getVNInfoAt(PHIIndex.getRegSlot());
     assert(DestVNI);
-  
+
     // Prior to PHI elimination, the live ranges of PHIs begin at their defining
     // instruction. After PHI elimination, PHI instructions are replaced by VNs
     // with the phi-def flag set, and the live ranges of these VNs start at the

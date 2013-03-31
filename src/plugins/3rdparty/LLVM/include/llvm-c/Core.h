@@ -19,7 +19,7 @@
 
 #ifdef __cplusplus
 
-/* Need these includes to support the LLVM 'cast' template for the C++ 'wrap' 
+/* Need these includes to support the LLVM 'cast' template for the C++ 'wrap'
    and 'unwrap' conversion functions. */
 #include "llvm/IRBuilder.h"
 #include "llvm/Module.h"
@@ -2632,7 +2632,7 @@ void LLVMDisposePassManager(LLVMPassManagerRef PM);
 namespace llvm {
   class MemoryBuffer;
   class PassManagerBase;
-  
+
   #define DEFINE_SIMPLE_CONVERSION_FUNCTIONS(ty, ref)   \
     inline ty *unwrap(ref P) {                          \
       return reinterpret_cast<ty*>(P);                  \
@@ -2641,7 +2641,7 @@ namespace llvm {
     inline ref wrap(const ty *P) {                      \
       return reinterpret_cast<ref>(const_cast<ty*>(P)); \
     }
-  
+
   #define DEFINE_ISA_CONVERSION_FUNCTIONS(ty, ref)  \
     DEFINE_SIMPLE_CONVERSION_FUNCTIONS(ty, ref)         \
                                                         \
@@ -2649,7 +2649,7 @@ namespace llvm {
     inline T *unwrap(ref P) {                           \
       return cast<T>(unwrap(P));                        \
     }
-  
+
   #define DEFINE_STDCXX_CONVERSION_FUNCTIONS(ty, ref)   \
     DEFINE_SIMPLE_CONVERSION_FUNCTIONS(ty, ref)         \
                                                         \
@@ -2659,7 +2659,7 @@ namespace llvm {
       assert(Q && "Invalid cast!");                     \
       return Q;                                         \
     }
-  
+
   DEFINE_ISA_CONVERSION_FUNCTIONS   (Type,               LLVMTypeRef          )
   DEFINE_ISA_CONVERSION_FUNCTIONS   (Value,              LLVMValueRef         )
   DEFINE_SIMPLE_CONVERSION_FUNCTIONS(Module,             LLVMModuleRef        )
@@ -2676,7 +2676,7 @@ namespace llvm {
   inline Module *unwrap(LLVMModuleProviderRef MP) {
     return reinterpret_cast<Module*>(MP);
   }
-  
+
   #undef DEFINE_STDCXX_CONVERSION_FUNCTIONS
   #undef DEFINE_ISA_CONVERSION_FUNCTIONS
   #undef DEFINE_SIMPLE_CONVERSION_FUNCTIONS
@@ -2686,27 +2686,27 @@ namespace llvm {
   inline LLVMContext **unwrap(LLVMContextRef* Tys) {
     return reinterpret_cast<LLVMContext**>(Tys);
   }
-  
+
   inline LLVMContextRef *wrap(const LLVMContext **Tys) {
     return reinterpret_cast<LLVMContextRef*>(const_cast<LLVMContext**>(Tys));
   }
-  
+
   /* Specialized opaque type conversions.
    */
   inline Type **unwrap(LLVMTypeRef* Tys) {
     return reinterpret_cast<Type**>(Tys);
   }
-  
+
   inline LLVMTypeRef *wrap(Type **Tys) {
     return reinterpret_cast<LLVMTypeRef*>(const_cast<Type**>(Tys));
   }
-  
+
   /* Specialized opaque value conversions.
-   */ 
+   */
   inline Value **unwrap(LLVMValueRef *Vals) {
     return reinterpret_cast<Value**>(Vals);
   }
-  
+
   template<typename T>
   inline T **unwrap(LLVMValueRef *Vals, unsigned Length) {
     #ifdef DEBUG
@@ -2716,7 +2716,7 @@ namespace llvm {
     (void)Length;
     return reinterpret_cast<T**>(Vals);
   }
-  
+
   inline LLVMValueRef *wrap(const Value **Vals) {
     return reinterpret_cast<LLVMValueRef*>(const_cast<Value**>(Vals));
   }

@@ -35,9 +35,9 @@ private:
   explicit UnresolvedSetIterator(DeclsTy::iterator ir) : ir(ir) {}
   explicit UnresolvedSetIterator(DeclsTy::const_iterator ir) :
     ir(const_cast<DeclsTy::iterator>(ir)) {}
-  
+
   IteratorTy getIterator() const { return ir; }
-  
+
 public:
   UnresolvedSetIterator() {}
 
@@ -53,7 +53,7 @@ public:
   DeclAccessPair getPair() const { return *ir; }
 
   NamedDecl *operator*() const { return getDecl(); }
-  
+
   UnresolvedSetIterator &operator++() { ++ir; return *this; }
   UnresolvedSetIterator operator++(int) { return UnresolvedSetIterator(ir++); }
   UnresolvedSetIterator &operator--() { --ir; return *this; }
@@ -174,13 +174,13 @@ private:
   }
 };
 
-/// A set of unresolved declarations 
+/// A set of unresolved declarations
 template <unsigned InlineCapacity> class UnresolvedSet :
     public UnresolvedSetImpl {
   SmallVector<DeclAccessPair, InlineCapacity> Decls;
 };
 
-  
+
 } // namespace clang
 
 #endif

@@ -126,10 +126,10 @@ PathDiagnosticConsumer::~PathDiagnosticConsumer() {
 
 void PathDiagnosticConsumer::HandlePathDiagnostic(PathDiagnostic *D) {
   llvm::OwningPtr<PathDiagnostic> OwningD(D);
-  
+
   if (!D || D->path.empty())
     return;
-  
+
   // We need to flatten the locations (convert Stmt* to locations) because
   // the referenced statements may be freed by the time the diagnostics
   // are emitted.
@@ -152,12 +152,12 @@ void PathDiagnosticConsumer::HandlePathDiagnostic(PathDiagnostic *D) {
            I != E; ++I) {
         const PathDiagnosticPiece *piece = I->getPtr();
         FullSourceLoc L = piece->getLocation().asLocation().getExpansionLoc();
-      
+
         if (FID.isInvalid()) {
           FID = SMgr.getFileID(L);
         } else if (SMgr.getFileID(L) != FID)
           return; // FIXME: Emit a warning?
-      
+
         // Check the source ranges.
         ArrayRef<SourceRange> Ranges = piece->getRanges();
         for (ArrayRef<SourceRange>::iterator I = Ranges.begin(),
@@ -169,7 +169,7 @@ void PathDiagnosticConsumer::HandlePathDiagnostic(PathDiagnostic *D) {
           if (!L.isFileID() || SMgr.getFileID(L) != FID)
             return; // FIXME: Emit a warning?
         }
-        
+
         if (const PathDiagnosticCallPiece *call =
             dyn_cast<PathDiagnosticCallPiece>(piece)) {
           WorkList.push_back(&call->path);
@@ -180,10 +180,10 @@ void PathDiagnosticConsumer::HandlePathDiagnostic(PathDiagnostic *D) {
         }
       }
     }
-    
+
     if (FID.isInvalid())
       return; // FIXME: Emit a warning?
-  }  
+  }
 
   // Profile the node to see if we already have something matching it
   llvm::FoldingSetNodeID profile;
@@ -204,7 +204,7 @@ void PathDiagnosticConsumer::HandlePathDiagnostic(PathDiagnostic *D) {
     Diags.RemoveNode(orig);
     delete orig;
   }
-  
+
   Diags.InsertNode(OwningD.take());
 }
 
@@ -252,7 +252,7 @@ static llvm::Optional<bool> comparePiece(const PathDiagnosticPiece &X,
                                          const PathDiagnosticPiece &Y) {
   if (X.getKind() != Y.getKind())
     return X.getKind() < Y.getKind();
-  
+
   FullSourceLoc XL = X.getLocation().asLocation();
   FullSourceLoc YL = Y.getLocation().asLocation();
   if (XL != YL)
@@ -265,7 +265,7 @@ static llvm::Optional<bool> comparePiece(const PathDiagnosticPiece &X,
     return X.getRanges().size() < Y.getRanges().size();
 
   const SourceManager &SM = XL.getManager();
-  
+
   for (unsigned i = 0, n = X.getRanges().size(); i < n; ++i) {
     SourceRange XR = X.getRanges()[i];
     SourceRange YR = Y.getRanges()[i];
@@ -275,7 +275,7 @@ static llvm::Optional<bool> comparePiece(const PathDiagnosticPiece &X,
       return SM.isBeforeInTranslationUnit(XR.getEnd(), YR.getEnd());
     }
   }
-  
+
   switch (X.getKind()) {
     case clang::ento::PathDiagnosticPiece::ControlFlow:
       return compareControlFlow(cast<PathDiagnosticControlFlowPiece>(X),
@@ -359,9 +359,9 @@ void PathDiagnosticConsumer::FlushDiagnostics(
                                      PathDiagnosticConsumer::FilesMade *Files) {
   if (flushed)
     return;
-  
+
   flushed = true;
-  
+
   std::vector<const PathDiagnostic *> BatchDiags;
   for (llvm::FoldingSet<PathDiagnostic>::iterator it = Diags.begin(),
        et = Diags.end(); it != et; ++it) {
@@ -373,7 +373,7 @@ void PathDiagnosticConsumer::FlushDiagnostics(
   // order.
   if (!BatchDiags.empty())
     std::sort(BatchDiags.begin(), BatchDiags.end(), CompareDiagnostics());
-  
+
   FlushDiagnosticsImpl(BatchDiags, Files);
 
   // Delete the flushed diagnostics.
@@ -382,7 +382,7 @@ void PathDiagnosticConsumer::FlushDiagnostics(
     const PathDiagnostic *D = *it;
     delete D;
   }
-  
+
   // Clear out the FoldingSet.
   Diags.clear();
 }
@@ -399,7 +399,7 @@ void PathDiagnosticConsumer::FilesMade::addDiagnostic(const PathDiagnostic &PD,
     Entry = new (Entry) PDFileEntry(NodeID);
     InsertNode(Entry, InsertPos);
   }
-  
+
   // Allocate persistent storage for the file name.
   char *FileName_cstr = (char*) Alloc.Allocate(FileName.size(), 1);
   memcpy(FileName_cstr, FileName.data(), FileName.size());
@@ -713,7 +713,7 @@ PathDiagnosticRange
       SourceRange R = S->getSourceRange();
       if (R.isValid())
         return R;
-      break;  
+      break;
     }
     case DeclK:
       if (const ObjCMethodDecl *MD = dyn_cast<ObjCMethodDecl>(D))
@@ -780,7 +780,7 @@ void PathDiagnosticCallPiece::setCallee(const CallEnter &CE,
 IntrusiveRefCntPtr<PathDiagnosticEventPiece>
 PathDiagnosticCallPiece::getCallEnterEvent() const {
   if (!Callee)
-    return 0;  
+    return 0;
   SmallString<256> buf;
   llvm::raw_svector_ostream Out(buf);
   if (isa<BlockDecl>(Callee))
@@ -826,7 +826,7 @@ static void compute_path_size(const PathPieces &pieces, unsigned &size) {
   for (PathPieces::const_iterator it = pieces.begin(),
                                   et = pieces.end(); it != et; ++it) {
     const PathDiagnosticPiece *piece = it->getPtr();
-    if (const PathDiagnosticCallPiece *cp = 
+    if (const PathDiagnosticCallPiece *cp =
         dyn_cast<PathDiagnosticCallPiece>(piece)) {
       compute_path_size(cp->path, size);
     }
@@ -862,12 +862,12 @@ void PathDiagnosticPiece::Profile(llvm::FoldingSetNodeID &ID) const {
                                         I != E; ++I) {
     ID.AddInteger(I->getBegin().getRawEncoding());
     ID.AddInteger(I->getEnd().getRawEncoding());
-  }  
+  }
 }
 
 void PathDiagnosticCallPiece::Profile(llvm::FoldingSetNodeID &ID) const {
   PathDiagnosticPiece::Profile(ID);
-  for (PathPieces::const_iterator it = path.begin(), 
+  for (PathPieces::const_iterator it = path.begin(),
        et = path.end(); it != et; ++it) {
     ID.Add(**it);
   }

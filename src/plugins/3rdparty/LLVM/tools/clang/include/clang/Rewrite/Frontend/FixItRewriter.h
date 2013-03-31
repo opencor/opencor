@@ -121,7 +121,7 @@ public:
 
   /// \brief Emit a diagnostic via the adapted diagnostic client.
   void Diag(SourceLocation Loc, unsigned DiagID);
-  
+
   DiagnosticConsumer *clone(DiagnosticsEngine &Diags) const;
 };
 

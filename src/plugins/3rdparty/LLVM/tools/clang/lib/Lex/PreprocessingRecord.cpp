@@ -23,15 +23,15 @@ ExternalPreprocessingRecordSource::~ExternalPreprocessingRecordSource() { }
 
 
 InclusionDirective::InclusionDirective(PreprocessingRecord &PPRec,
-                                       InclusionKind Kind, 
-                                       StringRef FileName, 
+                                       InclusionKind Kind,
+                                       StringRef FileName,
                                        bool InQuotes, bool ImportedModule,
                                        const FileEntry *File,
                                        SourceRange Range)
-  : PreprocessingDirective(InclusionDirectiveKind, Range), 
+  : PreprocessingDirective(InclusionDirectiveKind, Range),
     InQuotes(InQuotes), Kind(Kind), ImportedModule(ImportedModule), File(File)
-{ 
-  char *Memory 
+{
+  char *Memory
     = (char*)PPRec.Allocate(FileName.size() + 1, llvm::alignOf<char>());
   memcpy(Memory, FileName.data(), FileName.size());
   Memory[FileName.size()] = 0;
@@ -61,10 +61,10 @@ PreprocessingRecord::getPreprocessedEntitiesInRange(SourceRange Range) {
   }
 
   std::pair<int, int> Res = getPreprocessedEntitiesInRangeSlow(Range);
-  
+
   CachedRangeQuery.Range = Range;
   CachedRangeQuery.Result = Res;
-  
+
   return std::make_pair(iterator(this, Res.first), iterator(this, Res.second));
 }
 
@@ -77,7 +77,7 @@ static bool isPreprocessedEntityIfInFileID(PreprocessedEntity *PPE, FileID FID,
   SourceLocation Loc = PPE->getSourceRange().getBegin();
   if (Loc.isInvalid())
     return false;
-  
+
   if (SM.isInFileID(SM.getFileLoc(Loc), FID))
     return true;
   else
@@ -130,28 +130,28 @@ std::pair<int, int>
 PreprocessingRecord::getPreprocessedEntitiesInRangeSlow(SourceRange Range) {
   assert(Range.isValid());
   assert(!SourceMgr.isBeforeInTranslationUnit(Range.getEnd(),Range.getBegin()));
-  
+
   std::pair<unsigned, unsigned>
     Local = findLocalPreprocessedEntitiesInRange(Range);
-  
+
   // Check if range spans local entities.
   if (!ExternalSource || SourceMgr.isLocalSourceLocation(Range.getBegin()))
     return std::make_pair(Local.first, Local.second);
-  
+
   std::pair<unsigned, unsigned>
     Loaded = ExternalSource->findPreprocessedEntitiesInRange(Range);
-  
+
   // Check if range spans local entities.
   if (Loaded.first == Loaded.second)
     return std::make_pair(Local.first, Local.second);
-  
+
   unsigned TotalLoaded = LoadedPreprocessedEntities.size();
-  
+
   // Check if range spans loaded entities.
   if (Local.first == Local.second)
     return std::make_pair(int(Loaded.first)-TotalLoaded,
                           int(Loaded.second)-TotalLoaded);
-  
+
   // Range spands loaded and local entities.
   return std::make_pair(int(Loaded.first)-TotalLoaded, Local.second);
 }
@@ -307,7 +307,7 @@ void PreprocessingRecord::SetExternalSource(
 
 unsigned PreprocessingRecord::allocateLoadedEntities(unsigned NumEntities) {
   unsigned Result = LoadedPreprocessedEntities.size();
-  LoadedPreprocessedEntities.resize(LoadedPreprocessedEntities.size() 
+  LoadedPreprocessedEntities.resize(LoadedPreprocessedEntities.size()
                                     + NumEntities);
   return Result;
 }
@@ -337,7 +337,7 @@ PreprocessedEntity *PreprocessingRecord::getPreprocessedEntity(PPEntityID PPID){
 /// \brief Retrieve the loaded preprocessed entity at the given index.
 PreprocessedEntity *
 PreprocessingRecord::getLoadedPreprocessedEntity(unsigned Index) {
-  assert(Index < LoadedPreprocessedEntities.size() && 
+  assert(Index < LoadedPreprocessedEntities.size() &&
          "Out-of bounds loaded preprocessed entity");
   assert(ExternalSource && "No external source to load from");
   PreprocessedEntity *&Entity = LoadedPreprocessedEntities[Index];
@@ -355,7 +355,7 @@ MacroDefinition *PreprocessingRecord::findMacroDefinition(const MacroInfo *MI) {
     = MacroDefinitions.find(MI);
   if (Pos == MacroDefinitions.end())
     return 0;
-  
+
   PreprocessedEntity *Entity = getPreprocessedEntity(Pos->second);
   if (Entity->isInvalid())
     return 0;
@@ -400,24 +400,24 @@ void PreprocessingRecord::InclusionDirective(
     StringRef RelativePath,
     const Module *Imported) {
   InclusionDirective::InclusionKind Kind = InclusionDirective::Include;
-  
+
   switch (IncludeTok.getIdentifierInfo()->getPPKeywordID()) {
-  case tok::pp_include: 
-    Kind = InclusionDirective::Include; 
+  case tok::pp_include:
+    Kind = InclusionDirective::Include;
     break;
-    
-  case tok::pp_import: 
-    Kind = InclusionDirective::Import; 
+
+  case tok::pp_import:
+    Kind = InclusionDirective::Import;
     break;
-    
-  case tok::pp_include_next: 
-    Kind = InclusionDirective::IncludeNext; 
+
+  case tok::pp_include_next:
+    Kind = InclusionDirective::IncludeNext;
     break;
-    
-  case tok::pp___include_macros: 
+
+  case tok::pp___include_macros:
     Kind = InclusionDirective::IncludeMacros;
     break;
-    
+
   default:
     llvm_unreachable("Unknown include directive kind");
   }

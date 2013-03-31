@@ -67,7 +67,7 @@ public:
     return EdgeCounts;
   }
 
-  // getEdgeOptimalCounts - This method is used by consumers of optimal edge 
+  // getEdgeOptimalCounts - This method is used by consumers of optimal edge
   // counting information.
   //
   const std::vector<unsigned> &getRawOptimalEdgeCounts() const {

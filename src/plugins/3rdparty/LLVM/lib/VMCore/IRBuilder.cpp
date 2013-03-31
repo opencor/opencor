@@ -43,7 +43,7 @@ Value *IRBuilderBase::getCastedInt8PtrValue(Value *Ptr) {
   PointerType *PT = cast<PointerType>(Ptr->getType());
   if (PT->getElementType()->isIntegerTy(8))
     return Ptr;
-  
+
   // Otherwise, we need to insert a bitcast.
   PT = getInt8PtrTy(PT->getAddressSpace());
   BitCastInst *BCI = new BitCastInst(Ptr, PT, "");
@@ -57,7 +57,7 @@ static CallInst *createCallHelper(Value *Callee, ArrayRef<Value *> Ops,
   CallInst *CI = CallInst::Create(Callee, Ops, "");
   Builder->GetInsertBlock()->getInstList().insert(Builder->GetInsertPoint(),CI);
   Builder->SetInstDebugLocation(CI);
-  return CI;  
+  return CI;
 }
 
 CallInst *IRBuilderBase::
@@ -68,13 +68,13 @@ CreateMemSet(Value *Ptr, Value *Val, Value *Size, unsigned Align,
   Type *Tys[] = { Ptr->getType(), Size->getType() };
   Module *M = BB->getParent()->getParent();
   Value *TheFn = Intrinsic::getDeclaration(M, Intrinsic::memset, Tys);
-  
+
   CallInst *CI = createCallHelper(TheFn, Ops, this);
-  
+
   // Set the TBAA info if present.
   if (TBAATag)
     CI->setMetadata(LLVMContext::MD_tbaa, TBAATag);
-  
+
   return CI;
 }
 
@@ -88,9 +88,9 @@ CreateMemCpy(Value *Dst, Value *Src, Value *Size, unsigned Align,
   Type *Tys[] = { Dst->getType(), Src->getType(), Size->getType() };
   Module *M = BB->getParent()->getParent();
   Value *TheFn = Intrinsic::getDeclaration(M, Intrinsic::memcpy, Tys);
-  
+
   CallInst *CI = createCallHelper(TheFn, Ops, this);
-  
+
   // Set the TBAA info if present.
   if (TBAATag)
     CI->setMetadata(LLVMContext::MD_tbaa, TBAATag);
@@ -98,8 +98,8 @@ CreateMemCpy(Value *Dst, Value *Src, Value *Size, unsigned Align,
   // Set the TBAA Struct info if present.
   if (TBAAStructTag)
     CI->setMetadata(LLVMContext::MD_tbaa_struct, TBAAStructTag);
-  
-  return CI;  
+
+  return CI;
 }
 
 CallInst *IRBuilderBase::
@@ -107,19 +107,19 @@ CreateMemMove(Value *Dst, Value *Src, Value *Size, unsigned Align,
               bool isVolatile, MDNode *TBAATag) {
   Dst = getCastedInt8PtrValue(Dst);
   Src = getCastedInt8PtrValue(Src);
-  
+
   Value *Ops[] = { Dst, Src, Size, getInt32(Align), getInt1(isVolatile) };
   Type *Tys[] = { Dst->getType(), Src->getType(), Size->getType() };
   Module *M = BB->getParent()->getParent();
   Value *TheFn = Intrinsic::getDeclaration(M, Intrinsic::memmove, Tys);
-  
+
   CallInst *CI = createCallHelper(TheFn, Ops, this);
-  
+
   // Set the TBAA info if present.
   if (TBAATag)
     CI->setMetadata(LLVMContext::MD_tbaa, TBAATag);
-  
-  return CI;  
+
+  return CI;
 }
 
 CallInst *IRBuilderBase::CreateLifetimeStart(Value *Ptr, ConstantInt *Size) {

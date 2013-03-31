@@ -471,15 +471,15 @@ public:
   class SynthesizedFunctionScope {
     Sema &S;
     Sema::ContextRAII SavedContext;
-    
+
   public:
     SynthesizedFunctionScope(Sema &S, DeclContext *DC)
-      : S(S), SavedContext(S, DC) 
+      : S(S), SavedContext(S, DC)
     {
       S.PushFunctionScope();
       S.PushExpressionEvaluationContext(Sema::PotentiallyEvaluated);
     }
-    
+
     ~SynthesizedFunctionScope() {
       S.PopExpressionEvaluationContext();
       S.PopFunctionScopeInfo();
@@ -2338,7 +2338,7 @@ public:
   void CollectImmediateProperties(ObjCContainerDecl *CDecl,
             llvm::DenseMap<IdentifierInfo *, ObjCPropertyDecl*>& PropMap,
             llvm::DenseMap<IdentifierInfo *, ObjCPropertyDecl*>& SuperPropMap);
-  
+
   /// Called by ActOnProperty to handle \@property declarations in
   /// class extensions.
   Decl *HandlePropertyInClassExtension(Scope *S,
@@ -7314,7 +7314,7 @@ public:
   }
 
   AvailabilityResult getCurContextAvailability() const;
-  
+
   const DeclContext *getCurObjCLexicalContext() const {
     const DeclContext *DC = getCurLexicalContext();
     // A category implicitly has the attribute of the interface.
@@ -7342,7 +7342,7 @@ public:
                                    Sema::ReuseLambdaContextDecl_t,
                                    bool IsDecltype = false)
     : Actions(Actions) {
-    Actions.PushExpressionEvaluationContext(NewContext, 
+    Actions.PushExpressionEvaluationContext(NewContext,
                                             Sema::ReuseLambdaContextDecl,
                                             IsDecltype);
   }

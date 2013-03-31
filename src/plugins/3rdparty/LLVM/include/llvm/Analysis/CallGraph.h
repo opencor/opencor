@@ -171,7 +171,7 @@ protected:
 //
 class CallGraphNode {
   friend class CallGraph;
-  
+
   AssertingVH<Function> F;
 
   // CallRecord - This is a pair of the calling instruction (a call or invoke)
@@ -180,26 +180,26 @@ public:
   typedef std::pair<WeakVH, CallGraphNode*> CallRecord;
 private:
   std::vector<CallRecord> CalledFunctions;
-  
+
   /// NumReferences - This is the number of times that this CallGraphNode occurs
   /// in the CalledFunctions array of this or other CallGraphNodes.
   unsigned NumReferences;
 
   CallGraphNode(const CallGraphNode &) LLVM_DELETED_FUNCTION;
   void operator=(const CallGraphNode &) LLVM_DELETED_FUNCTION;
- 
+
   void DropRef() { --NumReferences; }
   void AddRef() { ++NumReferences; }
 public:
   typedef std::vector<CallRecord> CalledFunctionsVector;
 
-  
+
   // CallGraphNode ctor - Create a node for the specified function.
   inline CallGraphNode(Function *f) : F(f), NumReferences(0) {}
   ~CallGraphNode() {
     assert(NumReferences == 0 && "Node deleted while references remain");
   }
-  
+
   //===---------------------------------------------------------------------
   // Accessor methods.
   //
@@ -220,7 +220,7 @@ public:
   /// getNumReferences - Return the number of other CallGraphNodes in this
   /// CallGraph that reference this node in their callee list.
   unsigned getNumReferences() const { return NumReferences; }
-  
+
   // Subscripting operator - Return the i'th called function.
   //
   CallGraphNode *operator[](unsigned i) const {
@@ -246,7 +246,7 @@ public:
       CalledFunctions.pop_back();
     }
   }
-  
+
   /// stealCalledFunctionsFrom - Move all the callee information from N to this
   /// node.
   void stealCalledFunctionsFrom(CallGraphNode *N) {
@@ -254,7 +254,7 @@ public:
            "Cannot steal callsite information if I already have some");
     std::swap(CalledFunctions, N->CalledFunctions);
   }
-  
+
 
   /// addCalledFunction - Add a function to the list of functions called by this
   /// one.
@@ -271,8 +271,8 @@ public:
     *I = CalledFunctions.back();
     CalledFunctions.pop_back();
   }
-  
-  
+
+
   /// removeCallEdgeFor - This method removes the edge in the node for the
   /// specified call site.  Note that this method takes linear time, so it
   /// should be used sparingly.
@@ -286,12 +286,12 @@ public:
   /// removeOneAbstractEdgeTo - Remove one edge associated with a null callsite
   /// from this node to the specified callee function.
   void removeOneAbstractEdgeTo(CallGraphNode *Callee);
-  
+
   /// replaceCallEdge - This method replaces the edge in the node for the
   /// specified call site with a new one.  Note that this method takes linear
   /// time, so it should be used sparingly.
   void replaceCallEdge(CallSite CS, CallSite NewCS, CallGraphNode *NewNode);
-  
+
   /// allReferencesDropped - This is a special function that should only be
   /// used by the CallGraph class.
   void allReferencesDropped() {

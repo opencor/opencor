@@ -264,7 +264,7 @@ public:
                        LiveIntervals &LIS, const TargetInstrInfo &TRI);
 
   /// findDebugLoc - Return DebugLoc used for this DBG_VALUE instruction. A
-  /// variable may have more than one corresponding DBG_VALUE instructions. 
+  /// variable may have more than one corresponding DBG_VALUE instructions.
   /// Only first one needs DebugLoc to identify variable's lexical scope
   /// in source file.
   DebugLoc findDebugLoc();
@@ -349,7 +349,7 @@ public:
 
 void UserValue::print(raw_ostream &OS, const TargetMachine *TM) {
   DIVariable DV(variable);
-  OS << "!\""; 
+  OS << "!\"";
   DV.printExtendedName(OS);
   OS << "\"\t";
   if (offset)
@@ -958,7 +958,7 @@ void UserValue::insertDebugValue(MachineBasicBlock *MBB, SlotIndex Idx,
   // Frame index locations may require a target callback.
   if (Loc.isFI()) {
     MachineInstr *MI = TII.emitFrameIndexDebugValue(*MBB->getParent(),
-                                          Loc.getIndex(), offset, variable, 
+                                          Loc.getIndex(), offset, variable,
                                                     findDebugLoc());
     if (MI) {
       MBB->insert(I, MI);

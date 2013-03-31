@@ -2,7 +2,7 @@
  * -----------------------------------------------------------------
  * $Revision: 1.10 $
  * $Date: 2011/03/23 20:44:01 $
- * ----------------------------------------------------------------- 
+ * -----------------------------------------------------------------
  * Programmer(s): Alan C. Hindmarsh and Radu Serban @ LLNL
  * -----------------------------------------------------------------
  * Copyright (c) 2002, The Regents of the University of California.
@@ -44,7 +44,7 @@ static int IDABBDPrecSetup(realtype tt,
                            N_Vector yy, N_Vector yp, N_Vector rr,
                            realtype c_j, void *prec_data,
                            N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
- 
+
 static int IDABBDPrecSolve(realtype tt,
                            N_Vector yy, N_Vector yp, N_Vector rr,
                            N_Vector rvec, N_Vector zvec,
@@ -58,10 +58,10 @@ static void IDABBDPrecFree(IDAMem ida_mem);
 /* Prototype for difference quotient Jacobian calculation routine */
 
 static int IBBDDQJac(IBBDPrecData pdata, realtype tt, realtype cj,
-                     N_Vector yy, N_Vector yp, N_Vector gref, 
+                     N_Vector yy, N_Vector yp, N_Vector gref,
                      N_Vector ytemp, N_Vector yptemp, N_Vector gtemp);
 
-/* 
+/*
  * ================================================================
  * User-Callable Functions: initialization, reinit and free
  * ================================================================
@@ -78,10 +78,10 @@ static int IBBDDQJac(IBBDPrecData pdata, realtype tt, realtype cj,
  * -----------------------------------------------------------------
  */
 
-int IDABBDPrecInit(void *ida_mem, long int Nlocal, 
-                   long int mudq, long int mldq, 
-                   long int mukeep, long int mlkeep, 
-                   realtype dq_rel_yy, 
+int IDABBDPrecInit(void *ida_mem, long int Nlocal,
+                   long int mudq, long int mldq,
+                   long int mukeep, long int mlkeep,
+                   realtype dq_rel_yy,
                    IDABBDLocalFn Gres, IDABBDCommFn Gcomm)
 {
   IDAMem IDA_mem;
@@ -135,10 +135,10 @@ int IDABBDPrecInit(void *ida_mem, long int Nlocal,
   /* Allocate memory for preconditioner matrix. */
   pdata->PP = NULL;
   pdata->PP = NewBandMat(Nlocal, muk, mlk, storage_mu);
-  if (pdata->PP == NULL) { 
+  if (pdata->PP == NULL) {
     free(pdata); pdata = NULL;
     IDAProcessError(IDA_mem, IDASPILS_MEM_FAIL, "IDABBDPRE", "IDABBDPrecInit", MSGBBD_MEM_FAIL);
-    return(IDASPILS_MEM_FAIL); 
+    return(IDASPILS_MEM_FAIL);
   }
 
   /* Allocate memory for lpivots. */
@@ -153,7 +153,7 @@ int IDABBDPrecInit(void *ida_mem, long int Nlocal,
 
   /* Allocate tempv4 for use by IBBDDQJac */
   tempv4 = NULL;
-  tempv4 = N_VClone(vec_tmpl); 
+  tempv4 = N_VClone(vec_tmpl);
   if (tempv4 == NULL){
     DestroyMat(pdata->PP);
     DestroyArray(pdata->lpivots);
@@ -162,13 +162,13 @@ int IDABBDPrecInit(void *ida_mem, long int Nlocal,
     return(IDASPILS_MEM_FAIL);
   }
   pdata->tempv4 = tempv4;
-  
+
   /* Set rel_yy based on input value dq_rel_yy (0 implies default). */
-  pdata->rel_yy = (dq_rel_yy > ZERO) ? dq_rel_yy : RSqrt(uround); 
+  pdata->rel_yy = (dq_rel_yy > ZERO) ? dq_rel_yy : RSqrt(uround);
 
   /* Store Nlocal to be used in IDABBDPrecSetup */
   pdata->n_local = Nlocal;
-  
+
   /* Set work space sizes and initialize nge. */
   pdata->rpwsize = Nlocal*(mlk + storage_mu + 1);
   pdata->ipwsize = Nlocal;
@@ -187,7 +187,7 @@ int IDABBDPrecInit(void *ida_mem, long int Nlocal,
 }
 
 int IDABBDPrecReInit(void *ida_mem,
-		     long int mudq, long int mldq, 
+		     long int mudq, long int mldq,
 		     realtype dq_rel_yy)
 {
   IDAMem IDA_mem;
@@ -213,7 +213,7 @@ int IDABBDPrecReInit(void *ida_mem,
   if (idaspils_mem->s_pdata == NULL) {
     IDAProcessError(IDA_mem, IDASPILS_PMEM_NULL, "IDABBDPRE", "IDABBDPrecReInit", MSGBBD_PMEM_NULL);
     return(IDASPILS_PMEM_NULL);
-  } 
+  }
   pdata = (IBBDPrecData) idaspils_mem->s_pdata;
 
   /* Load half-bandwidths. */
@@ -222,7 +222,7 @@ int IDABBDPrecReInit(void *ida_mem,
   pdata->mldq = MIN(Nlocal-1, MAX(0, mldq));
 
   /* Set rel_yy based on input value dq_rel_yy (0 implies default). */
-  pdata->rel_yy = (dq_rel_yy > ZERO) ? dq_rel_yy : RSqrt(uround); 
+  pdata->rel_yy = (dq_rel_yy > ZERO) ? dq_rel_yy : RSqrt(uround);
 
   /* Re-initialize nge */
   pdata->nge = 0;
@@ -251,7 +251,7 @@ int IDABBDPrecGetWorkSpace(void *ida_mem, long int *lenrwBBDP, long int *leniwBB
   if (idaspils_mem->s_pdata == NULL) {
     IDAProcessError(IDA_mem, IDASPILS_PMEM_NULL, "IDABBDPRE", "IDABBDPrecGetWorkSpace", MSGBBD_PMEM_NULL);
     return(IDASPILS_PMEM_NULL);
-  } 
+  }
   pdata = (IBBDPrecData) idaspils_mem->s_pdata;
 
   *lenrwBBDP = pdata->rpwsize;
@@ -281,7 +281,7 @@ int IDABBDPrecGetNumGfnEvals(void *ida_mem, long int *ngevalsBBDP)
   if (idaspils_mem->s_pdata == NULL) {
     IDAProcessError(IDA_mem, IDASPILS_PMEM_NULL, "IDABBDPRE", "IDABBDPrecGetNumGfnEvals", MSGBBD_PMEM_NULL);
     return(IDASPILS_PMEM_NULL);
-  } 
+  }
   pdata = (IBBDPrecData) idaspils_mem->s_pdata;
 
   *ngevalsBBDP = pdata->nge;
@@ -307,7 +307,7 @@ int IDABBDPrecGetNumGfnEvals(void *ida_mem, long int *ngevalsBBDP)
 
 /*
  * -----------------------------------------------------------------
- * Function : IDABBDPrecSetup                                     
+ * Function : IDABBDPrecSetup
  * -----------------------------------------------------------------
  * IDABBDPrecSetup generates a band-block-diagonal preconditioner
  * matrix, where the local block (on this processor) is a band
@@ -369,8 +369,8 @@ static int IDABBDPrecSetup(realtype tt,
   }
   if (retval > 0) {
     return(+1);
-  } 
- 
+  }
+
   /* Do LU factorization of preconditioner block in place (in PP). */
   ier = BandGBTRF(PP, lpivots);
 
@@ -428,10 +428,10 @@ static void IDABBDPrecFree(IDAMem IDA_mem)
 {
   IDASpilsMem idaspils_mem;
   IBBDPrecData pdata;
-  
+
   if (IDA_mem->ida_lmem == NULL) return;
   idaspils_mem = (IDASpilsMem) IDA_mem->ida_lmem;
-  
+
   if (idaspils_mem->s_pdata == NULL) return;
   pdata = (IBBDPrecData) idaspils_mem->s_pdata;
 
@@ -471,7 +471,7 @@ static void IDABBDPrecFree(IDAMem IDA_mem)
  */
 
 static int IBBDDQJac(IBBDPrecData pdata, realtype tt, realtype cj,
-                     N_Vector yy, N_Vector yp, N_Vector gref, 
+                     N_Vector yy, N_Vector yp, N_Vector gref,
                      N_Vector ytemp, N_Vector yptemp, N_Vector gtemp)
 {
   IDAMem IDA_mem;
@@ -495,7 +495,7 @@ static int IBBDDQJac(IBBDPrecData pdata, realtype tt, realtype cj,
   ypdata    = N_VGetArrayPointer(yp);
   gtempdata = N_VGetArrayPointer(gtemp);
   ewtdata   = N_VGetArrayPointer(ewt);
-  if (constraints != NULL) 
+  if (constraints != NULL)
     cnsdata = N_VGetArrayPointer(constraints);
   ytempdata = N_VGetArrayPointer(ytemp);
   yptempdata= N_VGetArrayPointer(yptemp);
@@ -508,7 +508,7 @@ static int IBBDDQJac(IBBDPrecData pdata, realtype tt, realtype cj,
     if (retval != 0) return(retval);
   }
 
-  retval = glocal(Nlocal, tt, yy, yp, gref, user_data); 
+  retval = glocal(Nlocal, tt, yy, yp, gref, user_data);
   nge++;
   if (retval != 0) return(retval);
 
@@ -520,20 +520,20 @@ static int IBBDDQJac(IBBDPrecData pdata, realtype tt, realtype cj,
 
   /* Loop over groups. */
   for(group = 1; group <= ngroups; group++) {
-    
+
     /* Loop over the components in this group. */
     for(j = group-1; j < Nlocal; j += width) {
       yj = ydata[j];
       ypj = ypdata[j];
       ewtj = ewtdata[j];
-      
+
       /* Set increment inc to yj based on rel_yy*abs(yj), with
          adjustments using ypj and ewtj if this is small, and a further
          adjustment to give it the same sign as hh*ypj. */
       inc = rel_yy*MAX(ABS(yj), MAX( ABS(hh*ypj), ONE/ewtj));
       if (hh*ypj < ZERO) inc = -inc;
       inc = (yj + inc) - yj;
-      
+
       /* Adjust sign(inc) again if yj has an inequality constraint. */
       if (constraints != NULL) {
         conj = cnsdata[j];
@@ -544,12 +544,12 @@ static int IBBDDQJac(IBBDPrecData pdata, realtype tt, realtype cj,
       /* Increment yj and ypj. */
       ytempdata[j] += inc;
       yptempdata[j] += cj*inc;
-      
+
     }
 
     /* Evaluate G with incremented y and yp arguments. */
 
-    retval = glocal(Nlocal, tt, ytemp, yptemp, gtemp, user_data); 
+    retval = glocal(Nlocal, tt, ytemp, yptemp, gtemp, user_data);
     nge++;
     if (retval != 0) return(retval);
 
@@ -578,7 +578,7 @@ static int IBBDDQJac(IBBDPrecData pdata, realtype tt, realtype cj,
                                   inc_inv * (gtempdata[i] - grefdata[i]);
     }
   }
-  
+
   return(0);
 }
 

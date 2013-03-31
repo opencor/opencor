@@ -107,7 +107,7 @@ LexNextToken:
 
     assert(!ParsingPreprocessorDirective);
     assert(!LexingRawMode);
-    
+
     if (LexEndOfFile(Tok))
       return;
 
@@ -142,7 +142,7 @@ bool PTHLexer::LexEndOfFile(Token &Result) {
     ParsingPreprocessorDirective = false; // Done parsing the "line".
     return true;  // Have a token.
   }
-  
+
   assert(!LexingRawMode);
 
   // If we are in a #if directive, emit an error.

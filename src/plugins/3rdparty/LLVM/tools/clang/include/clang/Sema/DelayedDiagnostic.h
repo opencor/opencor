@@ -189,7 +189,7 @@ public:
     assert(Kind == ForbiddenType && "not a forbidden-type diagnostic");
     return QualType::getFromOpaquePtr(ForbiddenTypeData.OperandType);
   }
-  
+
   const ObjCInterfaceDecl *getUnknownObjCClass() const {
     return DeprecationData.UnknownObjCClass;
   }
@@ -197,7 +197,7 @@ public:
   const ObjCPropertyDecl *getObjCProperty() const {
     return DeprecationData.ObjCProperty;
   }
-  
+
 private:
   union {
     /// Deprecation.

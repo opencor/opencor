@@ -73,8 +73,8 @@ public:
   /// \brief Retrieve the underlying type pointer, which refers to a
   /// canonical type, or NULL.
   ///
-  const T *getTypePtrOrNull() const { 
-    return cast_or_null<T>(Stored.getTypePtrOrNull()); 
+  const T *getTypePtrOrNull() const {
+    return cast_or_null<T>(Stored.getTypePtrOrNull());
   }
 
   /// \brief Implicit conversion to a qualified type.
@@ -82,7 +82,7 @@ public:
 
   /// \brief Implicit conversion to bool.
   operator bool() const { return !isNull(); }
-  
+
   bool isNull() const {
     return Stored.isNull();
   }

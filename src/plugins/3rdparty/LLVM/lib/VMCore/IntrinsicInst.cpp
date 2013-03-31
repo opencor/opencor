@@ -14,10 +14,10 @@
 // are all subclasses of the CallInst class.  Note that none of these classes
 // has state or virtual methods, which is an important part of this gross/neat
 // hack working.
-// 
+//
 // In some cases, arguments to intrinsics need to be generic and are defined as
 // type pointer to empty struct { }*.  To access the real item of interest the
-// cast instruction needs to be stripped away. 
+// cast instruction needs to be stripped away.
 //
 //===----------------------------------------------------------------------===//
 

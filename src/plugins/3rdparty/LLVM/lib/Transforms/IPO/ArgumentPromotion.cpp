@@ -110,7 +110,7 @@ bool ArgPromotion::runOnSCC(CallGraphSCC &SCC) {
     }
     Changed |= LocalChange;               // Remember that we changed something.
   } while (LocalChange);
-  
+
   return Changed;
 }
 
@@ -143,11 +143,11 @@ CallGraphNode *ArgPromotion::PromoteArguments(CallGraphNode *CGN) {
     CallSite CS(*UI);
     // Must be a direct call.
     if (CS.getInstruction() == 0 || !CS.isCallee(UI)) return 0;
-    
+
     if (CS.getInstruction()->getParent()->getParent() == F)
       isSelfRecursive = true;
   }
-  
+
   // Check to see which arguments are promotable.  If an argument is promotable,
   // add it to ArgsToPromote.
   SmallPtrSet<Argument*, 8> ArgsToPromote;
@@ -168,7 +168,7 @@ CallGraphNode *ArgPromotion::PromoteArguments(CallGraphNode *CGN) {
                 << " than " << maxElements << " arguments to the function.\n");
           continue;
         }
-        
+
         // If all the elements are single-value types, we can promote it.
         bool AllSimple = true;
         for (unsigned i = 0, e = STy->getNumElements(); i != e; ++i) {
@@ -203,14 +203,14 @@ CallGraphNode *ArgPromotion::PromoteArguments(CallGraphNode *CGN) {
           continue;
       }
     }
-    
+
     // Otherwise, see if we can promote the pointer to its value.
     if (isSafeToPromoteArgument(PtrArg, isByVal))
       ArgsToPromote.insert(PtrArg);
   }
 
   // No promotable pointer arguments.
-  if (ArgsToPromote.empty() && ByValArgsToTransform.empty()) 
+  if (ArgsToPromote.empty() && ByValArgsToTransform.empty())
     return 0;
 
   return DoPromotion(F, ArgsToPromote, ByValArgsToTransform);
@@ -605,10 +605,10 @@ CallGraphNode *ArgPromotion::DoPromotion(Function *F,
   Function *NF = Function::Create(NFTy, F->getLinkage(), F->getName());
   NF->copyAttributesFrom(F);
 
-  
+
   DEBUG(dbgs() << "ARG PROMOTION:  Promoting to:" << *NF << "\n"
         << "From: " << *F);
-  
+
   // Recompute the parameter attributes list based on the new arguments for
   // the function.
   NF->setAttributes(AttrListPtr::get(F->getContext(), AttributesVec));
@@ -624,7 +624,7 @@ CallGraphNode *ArgPromotion::DoPromotion(Function *F,
   // Get the callgraph information that we need to update to reflect our
   // changes.
   CallGraph &CG = getAnalysis<CallGraph>();
-  
+
   // Get a new callgraph node for NF.
   CallGraphNode *NF_CGN = CG.getOrInsertFunction(NF);
 
@@ -689,7 +689,7 @@ CallGraphNode *ArgPromotion::DoPromotion(Function *F,
               // Use i32 to index structs, and i64 for others (pointers/arrays).
               // This satisfies GEP constraints.
               Type *IdxTy = (ElTy->isStructTy() ?
-                    Type::getInt32Ty(F->getContext()) : 
+                    Type::getInt32Ty(F->getContext()) :
                     Type::getInt64Ty(F->getContext()));
               Ops.push_back(ConstantInt::get(IdxTy, *II));
               // Keep track of the type we're currently indexing.
@@ -796,9 +796,9 @@ CallGraphNode *ArgPromotion::DoPromotion(Function *F,
 
       for (unsigned i = 0, e = STy->getNumElements(); i != e; ++i) {
         Idxs[1] = ConstantInt::get(Type::getInt32Ty(F->getContext()), i);
-        Value *Idx = 
+        Value *Idx =
           GetElementPtrInst::Create(TheAlloca, Idxs,
-                                    TheAlloca->getName()+"."+Twine(i), 
+                                    TheAlloca->getName()+"."+Twine(i),
                                     InsertPt);
         I2->setName(I->getName()+"."+Twine(i));
         new StoreInst(I2++, Idx, InsertPt);
@@ -879,9 +879,9 @@ CallGraphNode *ArgPromotion::DoPromotion(Function *F,
   // Tell the alias analysis that the old function is about to disappear.
   AA.replaceWithNewValue(F, NF);
 
-  
+
   NF_CGN->stealCalledFunctionsFrom(CG[F]);
-  
+
   // Now that the old function is dead, delete it.  If there is a dangling
   // reference to the CallgraphNode, just leave the dead function around for
   // someone else to nuke.
@@ -890,6 +890,6 @@ CallGraphNode *ArgPromotion::DoPromotion(Function *F,
     delete CG.removeFunctionFromModule(CGN);
   else
     F->setLinkage(Function::ExternalLinkage);
-  
+
   return NF_CGN;
 }

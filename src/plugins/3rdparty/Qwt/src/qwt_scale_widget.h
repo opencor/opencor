@@ -39,7 +39,7 @@ public:
     enum LayoutFlag
     {
         /*!
-          The title of vertical scales is painted from top to bottom. 
+          The title of vertical scales is painted from top to bottom.
           Otherwise it is painted from bottom to top.
          */
         TitleInverted = 1

@@ -79,7 +79,7 @@ namespace {
     virtual bool runOnFunction(Function &F) {
       std::string Filename = "cfg." + F.getName().str() + ".dot";
       errs() << "Writing '" << Filename << "'...";
-      
+
       std::string ErrorInfo;
       raw_fd_ostream File(Filename.c_str(), ErrorInfo);
 
@@ -100,7 +100,7 @@ namespace {
 }
 
 char CFGPrinter::ID = 0;
-INITIALIZE_PASS(CFGPrinter, "dot-cfg", "Print CFG of function to 'dot' file", 
+INITIALIZE_PASS(CFGPrinter, "dot-cfg", "Print CFG of function to 'dot' file",
                 false, true)
 
 namespace {
@@ -109,14 +109,14 @@ namespace {
     CFGOnlyPrinter() : FunctionPass(ID) {
       initializeCFGOnlyPrinterPass(*PassRegistry::getPassRegistry());
     }
-    
+
     virtual bool runOnFunction(Function &F) {
       std::string Filename = "cfg." + F.getName().str() + ".dot";
       errs() << "Writing '" << Filename << "'...";
 
       std::string ErrorInfo;
       raw_fd_ostream File(Filename.c_str(), ErrorInfo);
-      
+
       if (ErrorInfo.empty())
         WriteGraph(File, (const Function*)&F, true);
       else

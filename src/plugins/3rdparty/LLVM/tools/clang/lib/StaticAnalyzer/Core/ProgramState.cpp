@@ -36,7 +36,7 @@ void ProgramStateRelease(const ProgramState *state) {
   if (--s->refCount == 0) {
     ProgramStateManager &Mgr = s->getStateManager();
     Mgr.StateSet.RemoveNode(s);
-    s->~ProgramState();    
+    s->~ProgramState();
     Mgr.freeStates.push_back(s);
   }
 }
@@ -86,7 +86,7 @@ ProgramStateManager::~ProgramStateManager() {
     I->second.second(I->second.first);
 }
 
-ProgramStateRef 
+ProgramStateRef
 ProgramStateManager::removeDeadBindings(ProgramStateRef state,
                                    const StackFrameContext *LCtx,
                                    SymbolReaper& SymReaper) {
@@ -114,14 +114,14 @@ ProgramStateManager::removeDeadBindings(ProgramStateRef state,
 ProgramStateRef ProgramState::bindCompoundLiteral(const CompoundLiteralExpr *CL,
                                             const LocationContext *LC,
                                             SVal V) const {
-  const StoreRef &newStore = 
+  const StoreRef &newStore =
     getStateManager().StoreMgr->bindCompoundLiteral(getStore(), CL, LC, V);
   return makeWithStore(newStore);
 }
 
 ProgramStateRef ProgramState::bindLoc(Loc LV, SVal V, bool notifyChanges) const {
   ProgramStateManager &Mgr = getStateManager();
-  ProgramStateRef newState = makeWithStore(Mgr.StoreMgr->Bind(getStore(), 
+  ProgramStateRef newState = makeWithStore(Mgr.StoreMgr->Bind(getStore(),
                                                              LV, V));
   const MemRegion *MR = LV.getAsRegion();
   if (MR && Mgr.getOwningEngine() && notifyChanges)
@@ -135,12 +135,12 @@ ProgramStateRef ProgramState::bindDefault(SVal loc, SVal V) const {
   const MemRegion *R = cast<loc::MemRegionVal>(loc).getRegion();
   const StoreRef &newStore = Mgr.StoreMgr->BindDefault(getStore(), R, V);
   ProgramStateRef new_state = makeWithStore(newStore);
-  return Mgr.getOwningEngine() ? 
-           Mgr.getOwningEngine()->processRegionChange(new_state, R) : 
+  return Mgr.getOwningEngine() ?
+           Mgr.getOwningEngine()->processRegionChange(new_state, R) :
            new_state;
 }
 
-ProgramStateRef 
+ProgramStateRef
 ProgramState::invalidateRegions(ArrayRef<const MemRegion *> Regions,
                                 const Expr *E, unsigned Count,
                                 const LocationContext *LCtx,
@@ -154,7 +154,7 @@ ProgramState::invalidateRegions(ArrayRef<const MemRegion *> Regions,
   return invalidateRegionsImpl(Regions, E, Count, LCtx, *IS, Call);
 }
 
-ProgramStateRef 
+ProgramStateRef
 ProgramState::invalidateRegionsImpl(ArrayRef<const MemRegion *> Regions,
                                     const Expr *E, unsigned Count,
                                     const LocationContext *LCtx,
@@ -162,7 +162,7 @@ ProgramState::invalidateRegionsImpl(ArrayRef<const MemRegion *> Regions,
                                     const CallEvent *Call) const {
   ProgramStateManager &Mgr = getStateManager();
   SubEngine* Eng = Mgr.getOwningEngine();
- 
+
   if (Eng && Eng->wantsRegionChangeUpdate(this)) {
     StoreManager::InvalidatedRegions Invalidated;
     const StoreRef &newStore
@@ -191,7 +191,7 @@ ProgramStateRef ProgramState::killBinding(Loc LV) const {
   return makeWithStore(newStore);
 }
 
-ProgramStateRef 
+ProgramStateRef
 ProgramState::enterStackFrame(const CallEvent &Call,
                               const StackFrameContext *CalleeCtx) const {
   const StoreRef &NewStore =
@@ -242,7 +242,7 @@ SVal ProgramState::getSVal(Loc location, QualType T) const {
         //  symbol for the call to foo(); the type of that symbol is 'char',
         //  not unsigned.
         const llvm::APSInt &NewV = getBasicVals().Convert(T, *Int);
-        
+
         if (isa<Loc>(V))
           return loc::ConcreteInt(NewV);
         else
@@ -250,7 +250,7 @@ SVal ProgramState::getSVal(Loc location, QualType T) const {
       }
     }
   }
-  
+
   return V;
 }
 
@@ -268,7 +268,7 @@ ProgramStateRef ProgramState::BindExpr(const Stmt *S,
   return getStateManager().getPersistentState(NewSt);
 }
 
-ProgramStateRef 
+ProgramStateRef
 ProgramState::bindExprAndLocation(const Stmt *S, const LocationContext *LCtx,
                                   SVal location,
                                   SVal V) const {
@@ -279,7 +279,7 @@ ProgramState::bindExprAndLocation(const Stmt *S, const LocationContext *LCtx,
 
   if (NewEnv == Env)
     return this;
-  
+
   ProgramState NewSt = *this;
   NewSt.Env = NewEnv;
   return getStateManager().getPersistentState(NewSt);
@@ -361,7 +361,7 @@ ProgramStateRef ProgramStateManager::getPersistentState(ProgramState &State) {
   ProgramState *newState = 0;
   if (!freeStates.empty()) {
     newState = freeStates.back();
-    freeStates.pop_back();    
+    freeStates.pop_back();
   }
   else {
     newState = (ProgramState*) Alloc.Allocate<ProgramState>();
@@ -489,10 +489,10 @@ bool ScanReachableSymbols::scan(const SymExpr *sym) {
   if (isVisited)
     return true;
   isVisited = 1;
-  
+
   if (!visitor.VisitSymbol(sym))
     return false;
-  
+
   // TODO: should be rewritten using SymExpr::symbol_iterator.
   switch (sym->getKind()) {
     case SymExpr::RegionValueKind:
@@ -540,13 +540,13 @@ bool ScanReachableSymbols::scan(SVal val) {
 bool ScanReachableSymbols::scan(const MemRegion *R) {
   if (isa<MemSpaceRegion>(R))
     return true;
-  
+
   unsigned &isVisited = visited[R];
   if (isVisited)
     return true;
   isVisited = 1;
-  
-  
+
+
   if (!visitor.VisitMemRegion(R))
     return false;
 
@@ -682,14 +682,14 @@ bool ProgramState::isTainted(const MemRegion *Reg, TaintTagType K) const {
 bool ProgramState::isTainted(SymbolRef Sym, TaintTagType Kind) const {
   if (!Sym)
     return false;
-  
+
   // Traverse all the symbols this symbol depends on to see if any are tainted.
   bool Tainted = false;
   for (SymExpr::symbol_iterator SI = Sym->symbol_begin(), SE =Sym->symbol_end();
        SI != SE; ++SI) {
     if (!isa<SymbolData>(*SI))
       continue;
-    
+
     const TaintTagType *Tag = get<TaintMap>(*SI);
     Tainted = (Tag && *Tag == Kind);
 
@@ -708,7 +708,7 @@ bool ProgramState::isTainted(SymbolRef Sym, TaintTagType Kind) const {
     if (Tainted)
       return true;
   }
-  
+
   return Tainted;
 }
 

@@ -71,7 +71,7 @@ namespace llvm {
   ///
   /// If no error handler is installed the default is to print the message to
   /// standard error, followed by a newline.
-  /// After the error handler is called this function will call exit(1), it 
+  /// After the error handler is called this function will call exit(1), it
   /// does not return.
   LLVM_ATTRIBUTE_NORETURN void report_fatal_error(const char *reason);
   LLVM_ATTRIBUTE_NORETURN void report_fatal_error(const std::string &reason);

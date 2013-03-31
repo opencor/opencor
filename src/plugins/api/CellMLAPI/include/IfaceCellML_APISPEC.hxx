@@ -58,7 +58,7 @@ namespace iface
     typedef iface::dom::Element* ExtensionElement;
     typedef std::wstring& CellMLAttributeString;
     typedef iface::mathml_dom::MathMLElement* MathMLElement;
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST RDFRepresentation
      : public virtual iface::XPCOM::IObject
     {
@@ -67,7 +67,7 @@ namespace iface
       virtual ~RDFRepresentation() {}
       virtual std::wstring type() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST RDFXMLDOMRepresentation
      : public virtual iface::cellml_api::RDFRepresentation
     {
@@ -77,7 +77,7 @@ namespace iface
       virtual already_AddRefd<iface::dom::Document>  data() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void data(iface::dom::Document* attr) throw(std::exception&) = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST RDFXMLStringRepresentation
      : public virtual iface::cellml_api::RDFRepresentation
     {
@@ -87,7 +87,7 @@ namespace iface
       virtual std::wstring serialisedData() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void serialisedData(const std::wstring& attr) throw(std::exception&) = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST UserData
      : public virtual iface::XPCOM::IObject
     {
@@ -95,7 +95,7 @@ namespace iface
       static const char* INTERFACE_NAME() { return "cellml_api::UserData"; }
       virtual ~UserData() {}
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST ImportInstantiationListener
      : public virtual iface::XPCOM::IObject
     {
@@ -104,13 +104,13 @@ namespace iface
       virtual ~ImportInstantiationListener() {}
       virtual void loadCompleted(bool wasStale) throw(std::exception&) = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST CellMLException : public std::exception
     {
     public:
       CellMLException(){}
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST URI
      : public virtual iface::XPCOM::IObject
     {
@@ -120,7 +120,7 @@ namespace iface
       virtual std::wstring asText() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void asText(const std::wstring& attr) throw(std::exception&) = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST CellMLElement
      : public virtual iface::XPCOM::IObject
     {
@@ -153,7 +153,7 @@ namespace iface
       virtual void removeExtensionAttributeNS(const std::wstring& ns, const std::wstring& localName) throw(std::exception&) = 0;
       virtual already_AddRefd<iface::cellml_api::ExtensionAttributeSet>  extensionAttributes() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST CellMLDOMElement
      : public virtual iface::XPCOM::IObject
     {
@@ -163,7 +163,7 @@ namespace iface
       virtual already_AddRefd<iface::dom::Element>  domElement() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_api::CellMLElement>  findCellMLElementFromDOMElement(iface::dom::Element* x) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST NamedCellMLElement
      : public virtual iface::cellml_api::CellMLElement
     {
@@ -173,7 +173,7 @@ namespace iface
       virtual std::wstring name() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void name(const std::wstring& attr) throw(std::exception&) = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST Model
      : public virtual iface::cellml_api::NamedCellMLElement
     {
@@ -217,7 +217,7 @@ namespace iface
       virtual already_AddRefd<iface::cellml_api::URI>  xmlBase() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void clearXMLBase() throw(std::exception&) = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST MathContainer
      : public virtual iface::XPCOM::IObject
     {
@@ -230,7 +230,7 @@ namespace iface
       virtual void replaceMath(iface::mathml_dom::MathMLElement* x, iface::mathml_dom::MathMLElement* y) throw(std::exception&) = 0;
       virtual void clearMath() throw(std::exception&) = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST CellMLComponent
      : public virtual iface::cellml_api::NamedCellMLElement , public virtual iface::cellml_api::MathContainer
     {
@@ -247,7 +247,7 @@ namespace iface
       virtual already_AddRefd<iface::cellml_api::ReactionSet>  reactions() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual uint32_t importNumber() throw(std::exception&)  = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST Units
      : public virtual iface::cellml_api::NamedCellMLElement
     {
@@ -258,7 +258,7 @@ namespace iface
       virtual void isBaseUnits(bool attr) throw(std::exception&) = 0;
       virtual already_AddRefd<iface::cellml_api::UnitSet>  unitCollection() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST Unit
      : public virtual iface::cellml_api::CellMLElement
     {
@@ -276,7 +276,7 @@ namespace iface
       virtual std::wstring units() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void units(const std::wstring& attr) throw(std::exception&) = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST CellMLImport
      : public virtual iface::cellml_api::CellMLElement
     {
@@ -295,7 +295,7 @@ namespace iface
       virtual already_AddRefd<iface::cellml_api::Model>  importedModel() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void uninstantiate() throw(std::exception&) = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST ImportComponent
      : public virtual iface::cellml_api::CellMLComponent
     {
@@ -305,7 +305,7 @@ namespace iface
       virtual std::wstring componentRef() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void componentRef(const std::wstring& attr) throw(std::exception&) = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST ImportUnits
      : public virtual iface::cellml_api::Units
     {
@@ -321,7 +321,7 @@ namespace iface
       INTERFACE_OUT = 1,
       INTERFACE_NONE = 2
     } VariableInterface;
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST CellMLVariable
      : public virtual iface::cellml_api::NamedCellMLElement
     {
@@ -347,7 +347,7 @@ namespace iface
       virtual already_AddRefd<iface::cellml_api::Units>  unitsElement() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void unitsElement(iface::cellml_api::Units* attr) throw(std::exception&) = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST ComponentRef
      : public virtual iface::cellml_api::CellMLElement
     {
@@ -360,7 +360,7 @@ namespace iface
       virtual already_AddRefd<iface::cellml_api::ComponentRef>  parentComponentRef() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_api::Group>  parentGroup() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST RelationshipRef
      : public virtual iface::cellml_api::CellMLElement
     {
@@ -373,7 +373,7 @@ namespace iface
       virtual std::wstring relationshipNamespace() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void setRelationshipName(const std::wstring& namespaceURI, const std::wstring& name) throw(std::exception&) = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST Group
      : public virtual iface::cellml_api::CellMLElement
     {
@@ -385,7 +385,7 @@ namespace iface
       virtual bool isEncapsulation() throw(std::exception&)  = 0;
       virtual bool isContainment() throw(std::exception&)  = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST Connection
      : public virtual iface::cellml_api::CellMLElement
     {
@@ -395,7 +395,7 @@ namespace iface
       virtual already_AddRefd<iface::cellml_api::MapComponents>  componentMapping() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_api::MapVariablesSet>  variableMappings() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST MapComponents
      : public virtual iface::cellml_api::CellMLElement
     {
@@ -411,7 +411,7 @@ namespace iface
       virtual already_AddRefd<iface::cellml_api::CellMLComponent>  secondComponent() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void secondComponent(iface::cellml_api::CellMLComponent* attr) throw(std::exception&) = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST MapVariables
      : public virtual iface::cellml_api::CellMLElement
     {
@@ -429,7 +429,7 @@ namespace iface
     };
     class VariableRef;
     class Role;
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST Reaction
      : public virtual iface::cellml_api::CellMLElement
     {
@@ -442,7 +442,7 @@ namespace iface
       virtual already_AddRefd<iface::cellml_api::VariableRef>  getVariableRef(const std::wstring& varName, bool create) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_api::Role>  getRoleByDeltaVariable(const std::wstring& varName) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST VariableRef
      : public virtual iface::cellml_api::CellMLElement
     {
@@ -455,7 +455,7 @@ namespace iface
       virtual void variableName(const std::wstring& attr) throw(std::exception&) = 0;
       virtual already_AddRefd<iface::cellml_api::RoleSet>  roles() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST Role
      : public virtual iface::cellml_api::CellMLElement , public virtual iface::cellml_api::MathContainer
     {
@@ -489,7 +489,7 @@ namespace iface
       virtual std::wstring deltaVariableName() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void deltaVariableName(const std::wstring& attr) throw(std::exception&) = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST CellMLElementIterator
      : public virtual iface::XPCOM::IObject
     {
@@ -498,7 +498,7 @@ namespace iface
       virtual ~CellMLElementIterator() {}
       virtual already_AddRefd<iface::cellml_api::CellMLElement>  next() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST MathMLElementIterator
      : public virtual iface::XPCOM::IObject
     {
@@ -507,7 +507,7 @@ namespace iface
       virtual ~MathMLElementIterator() {}
       virtual already_AddRefd<iface::mathml_dom::MathMLElement>  next() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST ExtensionElementList
      : public virtual iface::XPCOM::IObject
     {
@@ -519,7 +519,7 @@ namespace iface
       virtual int32_t getIndexOf(iface::dom::Element* x) throw(std::exception&) = 0;
       virtual already_AddRefd<iface::dom::Element>  getAt(uint32_t index) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST MathList
      : public virtual iface::XPCOM::IObject
     {
@@ -530,7 +530,7 @@ namespace iface
       virtual bool contains(iface::mathml_dom::MathMLElement* x) throw(std::exception&) = 0;
       virtual already_AddRefd<iface::cellml_api::MathMLElementIterator>  iterate() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST ExtensionAttributeIterator
      : public virtual iface::XPCOM::IObject
     {
@@ -539,7 +539,7 @@ namespace iface
       virtual ~ExtensionAttributeIterator() {}
       virtual already_AddRefd<iface::dom::Attr>  nextAttribute() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST ExtensionAttributeSet
      : public virtual iface::XPCOM::IObject
     {
@@ -548,7 +548,7 @@ namespace iface
       virtual ~ExtensionAttributeSet() {}
       virtual already_AddRefd<iface::cellml_api::ExtensionAttributeIterator>  iterate() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST CellMLElementSet
      : public virtual iface::XPCOM::IObject
     {
@@ -559,7 +559,7 @@ namespace iface
       virtual bool contains(iface::cellml_api::CellMLElement* x) throw(std::exception&) = 0;
       virtual already_AddRefd<iface::cellml_api::CellMLElementIterator>  iterate() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST NamedCellMLElementSet
      : public virtual iface::cellml_api::CellMLElementSet
     {
@@ -568,7 +568,7 @@ namespace iface
       virtual ~NamedCellMLElementSet() {}
       virtual already_AddRefd<iface::cellml_api::NamedCellMLElement>  get(const std::wstring& name) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST ModelIterator
      : public virtual iface::cellml_api::CellMLElementIterator
     {
@@ -577,7 +577,7 @@ namespace iface
       virtual ~ModelIterator() {}
       virtual already_AddRefd<iface::cellml_api::Model>  nextModel() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST ModelSet
      : public virtual iface::cellml_api::NamedCellMLElementSet
     {
@@ -587,7 +587,7 @@ namespace iface
       virtual already_AddRefd<iface::cellml_api::ModelIterator>  iterateModels() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_api::Model>  getModel(const std::wstring& name) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST CellMLComponentIterator
      : public virtual iface::cellml_api::CellMLElementIterator
     {
@@ -596,7 +596,7 @@ namespace iface
       virtual ~CellMLComponentIterator() {}
       virtual already_AddRefd<iface::cellml_api::CellMLComponent>  nextComponent() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST CellMLComponentSet
      : public virtual iface::cellml_api::NamedCellMLElementSet
     {
@@ -606,7 +606,7 @@ namespace iface
       virtual already_AddRefd<iface::cellml_api::CellMLComponentIterator>  iterateComponents() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_api::CellMLComponent>  getComponent(const std::wstring& name) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST ImportComponentIterator
      : public virtual iface::cellml_api::CellMLComponentIterator
     {
@@ -615,7 +615,7 @@ namespace iface
       virtual ~ImportComponentIterator() {}
       virtual already_AddRefd<iface::cellml_api::ImportComponent>  nextImportComponent() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST ImportComponentSet
      : public virtual iface::cellml_api::CellMLComponentSet
     {
@@ -625,7 +625,7 @@ namespace iface
       virtual already_AddRefd<iface::cellml_api::ImportComponentIterator>  iterateImportComponents() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_api::ImportComponent>  getImportComponent(const std::wstring& name) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST CellMLVariableIterator
      : public virtual iface::cellml_api::CellMLElementIterator
     {
@@ -634,7 +634,7 @@ namespace iface
       virtual ~CellMLVariableIterator() {}
       virtual already_AddRefd<iface::cellml_api::CellMLVariable>  nextVariable() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST CellMLVariableSet
      : public virtual iface::cellml_api::NamedCellMLElementSet
     {
@@ -644,7 +644,7 @@ namespace iface
       virtual already_AddRefd<iface::cellml_api::CellMLVariableIterator>  iterateVariables() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_api::CellMLVariable>  getVariable(const std::wstring& name) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST UnitsIterator
      : public virtual iface::cellml_api::CellMLElementIterator
     {
@@ -653,7 +653,7 @@ namespace iface
       virtual ~UnitsIterator() {}
       virtual already_AddRefd<iface::cellml_api::Units>  nextUnits() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST UnitsSet
      : public virtual iface::cellml_api::NamedCellMLElementSet
     {
@@ -663,7 +663,7 @@ namespace iface
       virtual already_AddRefd<iface::cellml_api::UnitsIterator>  iterateUnits() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_api::Units>  getUnits(const std::wstring& name) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST ImportUnitsIterator
      : public virtual iface::cellml_api::UnitsIterator
     {
@@ -672,7 +672,7 @@ namespace iface
       virtual ~ImportUnitsIterator() {}
       virtual already_AddRefd<iface::cellml_api::ImportUnits>  nextImportUnits() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST ImportUnitsSet
      : public virtual iface::cellml_api::UnitsSet
     {
@@ -682,7 +682,7 @@ namespace iface
       virtual already_AddRefd<iface::cellml_api::ImportUnitsIterator>  iterateImportUnits() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_api::ImportUnits>  getImportUnits(const std::wstring& name) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST CellMLImportIterator
      : public virtual iface::cellml_api::CellMLElementIterator
     {
@@ -691,7 +691,7 @@ namespace iface
       virtual ~CellMLImportIterator() {}
       virtual already_AddRefd<iface::cellml_api::CellMLImport>  nextImport() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST CellMLImportSet
      : public virtual iface::cellml_api::CellMLElementSet
     {
@@ -700,7 +700,7 @@ namespace iface
       virtual ~CellMLImportSet() {}
       virtual already_AddRefd<iface::cellml_api::CellMLImportIterator>  iterateImports() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST UnitIterator
      : public virtual iface::cellml_api::CellMLElementIterator
     {
@@ -709,7 +709,7 @@ namespace iface
       virtual ~UnitIterator() {}
       virtual already_AddRefd<iface::cellml_api::Unit>  nextUnit() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST UnitSet
      : public virtual iface::cellml_api::CellMLElementSet
     {
@@ -718,7 +718,7 @@ namespace iface
       virtual ~UnitSet() {}
       virtual already_AddRefd<iface::cellml_api::UnitIterator>  iterateUnits() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST ConnectionIterator
      : public virtual iface::cellml_api::CellMLElementIterator
     {
@@ -727,7 +727,7 @@ namespace iface
       virtual ~ConnectionIterator() {}
       virtual already_AddRefd<iface::cellml_api::Connection>  nextConnection() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST ConnectionSet
      : public virtual iface::cellml_api::CellMLElementSet
     {
@@ -736,7 +736,7 @@ namespace iface
       virtual ~ConnectionSet() {}
       virtual already_AddRefd<iface::cellml_api::ConnectionIterator>  iterateConnections() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST GroupIterator
      : public virtual iface::cellml_api::CellMLElementIterator
     {
@@ -745,7 +745,7 @@ namespace iface
       virtual ~GroupIterator() {}
       virtual already_AddRefd<iface::cellml_api::Group>  nextGroup() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST GroupSet
      : public virtual iface::cellml_api::CellMLElementSet
     {
@@ -757,7 +757,7 @@ namespace iface
       virtual already_AddRefd<iface::cellml_api::GroupSet>  subsetInvolvingEncapsulation() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_api::GroupSet>  subsetInvolvingContainment() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST RelationshipRefIterator
      : public virtual iface::cellml_api::CellMLElementIterator
     {
@@ -766,7 +766,7 @@ namespace iface
       virtual ~RelationshipRefIterator() {}
       virtual already_AddRefd<iface::cellml_api::RelationshipRef>  nextRelationshipRef() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST RelationshipRefSet
      : public virtual iface::cellml_api::CellMLElementSet
     {
@@ -775,7 +775,7 @@ namespace iface
       virtual ~RelationshipRefSet() {}
       virtual already_AddRefd<iface::cellml_api::RelationshipRefIterator>  iterateRelationshipRefs() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST ComponentRefIterator
      : public virtual iface::cellml_api::CellMLElementIterator
     {
@@ -784,7 +784,7 @@ namespace iface
       virtual ~ComponentRefIterator() {}
       virtual already_AddRefd<iface::cellml_api::ComponentRef>  nextComponentRef() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST ComponentRefSet
      : public virtual iface::cellml_api::CellMLElementSet
     {
@@ -793,7 +793,7 @@ namespace iface
       virtual ~ComponentRefSet() {}
       virtual already_AddRefd<iface::cellml_api::ComponentRefIterator>  iterateComponentRefs() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST MapVariablesIterator
      : public virtual iface::cellml_api::CellMLElementIterator
     {
@@ -803,7 +803,7 @@ namespace iface
       virtual already_AddRefd<iface::cellml_api::MapVariables>  nextMapVariable() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_api::MapVariables>  nextMapVariables() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST MapVariablesSet
      : public virtual iface::cellml_api::CellMLElementSet
     {
@@ -812,7 +812,7 @@ namespace iface
       virtual ~MapVariablesSet() {}
       virtual already_AddRefd<iface::cellml_api::MapVariablesIterator>  iterateMapVariables() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST ReactionIterator
      : public virtual iface::cellml_api::CellMLElementIterator
     {
@@ -821,7 +821,7 @@ namespace iface
       virtual ~ReactionIterator() {}
       virtual already_AddRefd<iface::cellml_api::Reaction>  nextReaction() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST ReactionSet
      : public virtual iface::cellml_api::CellMLElementSet
     {
@@ -830,7 +830,7 @@ namespace iface
       virtual ~ReactionSet() {}
       virtual already_AddRefd<iface::cellml_api::ReactionIterator>  iterateReactions() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST VariableRefIterator
      : public virtual iface::cellml_api::CellMLElementIterator
     {
@@ -839,7 +839,7 @@ namespace iface
       virtual ~VariableRefIterator() {}
       virtual already_AddRefd<iface::cellml_api::VariableRef>  nextVariableRef() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST VariableRefSet
      : public virtual iface::cellml_api::CellMLElementSet
     {
@@ -848,7 +848,7 @@ namespace iface
       virtual ~VariableRefSet() {}
       virtual already_AddRefd<iface::cellml_api::VariableRefIterator>  iterateVariableRefs() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST RoleIterator
      : public virtual iface::cellml_api::CellMLElementIterator
     {
@@ -857,7 +857,7 @@ namespace iface
       virtual ~RoleIterator() {}
       virtual already_AddRefd<iface::cellml_api::Role>  nextRole() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST RoleSet
      : public virtual iface::cellml_api::CellMLElementSet
     {
@@ -866,7 +866,7 @@ namespace iface
       virtual ~RoleSet() {}
       virtual already_AddRefd<iface::cellml_api::RoleIterator>  iterateRoles() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST ModelLoadedListener
      : public virtual iface::XPCOM::IObject
     {
@@ -875,7 +875,7 @@ namespace iface
       virtual ~ModelLoadedListener() {}
       virtual void loadCompleted(iface::cellml_api::Model* m) throw(std::exception&) = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST DocumentLoadedListener
      : public virtual iface::XPCOM::IObject
     {
@@ -884,7 +884,7 @@ namespace iface
       virtual ~DocumentLoadedListener() {}
       virtual void loadCompleted(iface::dom::Document* doc) throw(std::exception&) = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST ModelLoader
      : public virtual iface::XPCOM::IObject
     {
@@ -896,7 +896,7 @@ namespace iface
       virtual already_AddRefd<iface::cellml_api::Model>  createFromText(const std::wstring& xmlText) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual std::wstring lastErrorMessage() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST DOMURLLoader
      : public virtual iface::XPCOM::IObject
     {
@@ -908,7 +908,7 @@ namespace iface
       virtual void asyncLoadDocument(const std::wstring& URL, iface::cellml_api::DocumentLoadedListener* listener) throw(std::exception&) = 0;
       virtual std::wstring lastErrorMessage() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST DOMModelLoader
      : public virtual iface::cellml_api::ModelLoader
     {
@@ -919,7 +919,7 @@ namespace iface
       virtual already_AddRefd<iface::cellml_api::Model>  createFromDOMDocument(iface::dom::Document* doc) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual void asyncCreateFromDOM(const std::wstring& url, iface::cellml_api::DOMURLLoader* loader, iface::cellml_api::ModelLoadedListener* listener) throw(std::exception&) = 0;
     };
-    PUBLIC_CellMLAPISPEC_PRE 
+    PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST CellMLBootstrap
      : public virtual iface::XPCOM::IObject
     {

@@ -24,9 +24,9 @@
   A counter has a range from a minimum value to a maximum value
   and a step size. When the wrapping property is set
   the counter is circular.
- 
-  The number of steps by which a button increments or decrements the value 
-  can be specified using setIncSteps(). The number of buttons can be 
+
+  The number of steps by which a button increments or decrements the value
+  can be specified using setIncSteps(). The number of buttons can be
   changed with setNumButtons().
 
   Example:
@@ -103,7 +103,7 @@ public:
     void setSingleStep( double s );
 
     void setRange( double min, double max );
-    
+
     double minimum() const;
     void setMinimum( double min );
 

@@ -90,12 +90,12 @@ bool IPCP::PropagateConstantsIntoArguments(Function &F) {
     User *U = *UI;
     // Ignore blockaddress uses.
     if (isa<BlockAddress>(U)) continue;
-    
+
     // Used by a non-instruction, or not the callee of a function, do not
     // transform.
     if (!isa<CallInst>(U) && !isa<InvokeInst>(U))
       return false;
-    
+
     CallSite CS(cast<Instruction>(U));
     if (!CS.isCallee(UI))
       return false;
@@ -106,11 +106,11 @@ bool IPCP::PropagateConstantsIntoArguments(Function &F) {
     Function::arg_iterator Arg = F.arg_begin();
     for (unsigned i = 0, e = ArgumentConstants.size(); i != e;
          ++i, ++AI, ++Arg) {
-      
+
       // If this argument is known non-constant, ignore it.
       if (ArgumentConstants[i].second)
         continue;
-      
+
       Constant *C = dyn_cast<Constant>(*AI);
       if (C && ArgumentConstants[i].first == 0) {
         ArgumentConstants[i].first = C;   // First constant seen.
@@ -137,7 +137,7 @@ bool IPCP::PropagateConstantsIntoArguments(Function &F) {
     if (ArgumentConstants[i].second || AI->use_empty() ||
         (AI->hasByValAttr() && !F.onlyReadsMemory()))
       continue;
-  
+
     Value *V = ArgumentConstants[i].first;
     if (V == 0) V = UndefValue::get(AI->getType());
     AI->replaceAllUsesWith(V);
@@ -164,12 +164,12 @@ bool IPCP::PropagateConstantReturn(Function &F) {
   // propagate information about its results into callers.
   if (F.mayBeOverridden())
     return false;
-    
+
   // Check to see if this function returns a constant.
   SmallVector<Value *,4> RetVals;
   StructType *STy = dyn_cast<StructType>(F.getReturnType());
   if (STy)
-    for (unsigned i = 0, e = STy->getNumElements(); i < e; ++i) 
+    for (unsigned i = 0, e = STy->getNumElements(); i < e; ++i)
       RetVals.push_back(UndefValue::get(STy->getElementType(i)));
   else
     RetVals.push_back(UndefValue::get(F.getReturnType()));
@@ -194,7 +194,7 @@ bool IPCP::PropagateConstantReturn(Function &F) {
           // Ignore undefs, we can change them into anything
           if (isa<UndefValue>(V))
             continue;
-          
+
           // Try to see if all the rets return the same constant or argument.
           if (isa<Constant>(V) || isa<Argument>(V)) {
             if (isa<UndefValue>(RV)) {
@@ -228,7 +228,7 @@ bool IPCP::PropagateConstantReturn(Function &F) {
     // directly?
     if (!Call || !CS.isCallee(UI))
       continue;
-    
+
     // Call result not used?
     if (Call->use_empty())
       continue;
@@ -244,7 +244,7 @@ bool IPCP::PropagateConstantReturn(Function &F) {
       Call->replaceAllUsesWith(New);
       continue;
     }
-   
+
     for (Value::use_iterator I = Call->use_begin(), E = Call->use_end();
          I != E;) {
       Instruction *Ins = cast<Instruction>(*I);

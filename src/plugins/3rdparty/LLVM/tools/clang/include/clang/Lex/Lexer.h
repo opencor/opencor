@@ -53,7 +53,7 @@ class Lexer : public PreprocessorLexer {
   SourceLocation FileLoc;        // Location for start of file.
   LangOptions LangOpts;          // LangOpts enabled by this language (cache).
   bool Is_PragmaLexer;           // True if lexer for _Pragma handling.
-  
+
   //===--------------------------------------------------------------------===//
   // Context-specific lexing flags set by the preprocessor.
   //
@@ -215,7 +215,7 @@ public:
 
   /// \brief Return the current location in the buffer.
   const char *getBufferLocation() const { return BufferPtr; }
-  
+
   /// Stringify - Convert the specified string into a C string by escaping '\'
   /// and " characters.  This does not add surrounding ""'s to the string.
   /// If Charify is true, this escapes the ' character instead of ".
@@ -225,7 +225,7 @@ public:
   /// and " characters.  This does not add surrounding ""'s to the string.
   static void Stringify(SmallVectorImpl<char> &Str);
 
-  
+
   /// getSpelling - This method is used to get the spelling of a token into a
   /// preallocated buffer, instead of as an std::string.  The caller is required
   /// to allocate enough space for the token, which is guaranteed to be at least
@@ -236,11 +236,11 @@ public:
   /// to point to a constant buffer with the data already in it (avoiding a
   /// copy).  The caller is not allowed to modify the returned buffer pointer
   /// if an internal buffer is returned.
-  static unsigned getSpelling(const Token &Tok, const char *&Buffer, 
+  static unsigned getSpelling(const Token &Tok, const char *&Buffer,
                               const SourceManager &SourceMgr,
                               const LangOptions &LangOpts,
                               bool *Invalid = 0);
-  
+
   /// getSpelling() - Return the 'spelling' of the Tok token.  The spelling of a
   /// token is the characters used to represent the token in the source file
   /// after trigraph expansion and escaped-newline folding.  In particular, this
@@ -248,7 +248,7 @@ public:
   /// UCNs, etc.
   static std::string getSpelling(const Token &Tok,
                                  const SourceManager &SourceMgr,
-                                 const LangOptions &LangOpts, 
+                                 const LangOptions &LangOpts,
                                  bool *Invalid = 0);
 
   /// getSpelling - This method is used to get the spelling of the
@@ -264,7 +264,7 @@ public:
                                      const SourceManager &SourceMgr,
                                      const LangOptions &LangOpts,
                                      bool *invalid = 0);
-  
+
   /// MeasureTokenLength - Relex the token at the specified location and return
   /// its length in bytes in the input file.  If the token needs cleaning (e.g.
   /// includes a trigraph or an escaped newline) then this count includes bytes
@@ -279,7 +279,7 @@ public:
   static SourceLocation GetBeginningOfToken(SourceLocation Loc,
                                             const SourceManager &SM,
                                             const LangOptions &LangOpts);
-  
+
   /// AdvanceToTokenCharacter - If the current SourceLocation specifies a
   /// location at the start of a token, return a new location that specifies a
   /// character within the token.  This handles trigraphs and escaped newlines.
@@ -287,7 +287,7 @@ public:
                                                 unsigned Character,
                                                 const SourceManager &SM,
                                                 const LangOptions &LangOpts);
-  
+
   /// \brief Computes the source location just past the end of the
   /// token at this source location.
   ///
@@ -387,7 +387,7 @@ public:
   /// to fewer than this number of lines.
   ///
   /// \returns The offset into the file where the preamble ends and the rest
-  /// of the file begins along with a boolean value indicating whether 
+  /// of the file begins along with a boolean value indicating whether
   /// the preamble ends at the beginning of a new line.
   static std::pair<unsigned, bool>
   ComputePreamble(const llvm::MemoryBuffer *Buffer, const LangOptions &LangOpts,
@@ -548,7 +548,7 @@ private:
   void SkipBytes(unsigned Bytes, bool StartOfLine);
 
   const char *LexUDSuffix(Token &Result, const char *CurPtr);
-  
+
   // Helper functions to lex the remainder of a token of the specific type.
   void LexIdentifier         (Token &Result, const char *CurPtr);
   void LexNumericConstant    (Token &Result, const char *CurPtr);
@@ -565,7 +565,7 @@ private:
   bool SkipLineComment       (Token &Result, const char *CurPtr);
   bool SkipBlockComment      (Token &Result, const char *CurPtr);
   bool SaveLineComment       (Token &Result, const char *CurPtr);
-  
+
   bool IsStartOfConflictMarker(const char *CurPtr);
   bool HandleEndOfConflictMarker(const char *CurPtr);
 

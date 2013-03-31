@@ -52,13 +52,13 @@ namespace clang {
 
       /// \brief A macro expansion.
       MacroExpansionKind,
-      
+
       /// \defgroup Preprocessing directives
       /// @{
-      
+
       /// \brief A macro definition.
       MacroDefinitionKind,
-      
+
       /// \brief An inclusion directive, such as \c \#include, \c
       /// \#import, or \c \#include_next.
       InclusionDirectiveKind,
@@ -72,10 +72,10 @@ namespace clang {
   private:
     /// \brief The kind of preprocessed entity that this object describes.
     EntityKind Kind;
-    
+
     /// \brief The source range that covers this preprocessed entity.
     SourceRange Range;
-    
+
   protected:
     PreprocessedEntity(EntityKind Kind, SourceRange Range)
       : Kind(Kind), Range(Range) { }
@@ -85,8 +85,8 @@ namespace clang {
   public:
     /// \brief Retrieve the kind of preprocessed entity stored in this object.
     EntityKind getKind() const { return Kind; }
-    
-    /// \brief Retrieve the source range that covers this entire preprocessed 
+
+    /// \brief Retrieve the source range that covers this entire preprocessed
     /// entity.
     SourceRange getSourceRange() const LLVM_READONLY { return Range; }
 
@@ -94,44 +94,44 @@ namespace clang {
     /// entity.
     bool isInvalid() const { return Kind == InvalidKind; }
 
-    // Only allow allocation of preprocessed entities using the allocator 
+    // Only allow allocation of preprocessed entities using the allocator
     // in PreprocessingRecord or by doing a placement new.
     void* operator new(size_t bytes, PreprocessingRecord& PR,
                        unsigned alignment = 8) throw() {
       return ::operator new(bytes, PR, alignment);
     }
-    
+
     void* operator new(size_t bytes, void* mem) throw() {
       return mem;
     }
-    
-    void operator delete(void* ptr, PreprocessingRecord& PR, 
+
+    void operator delete(void* ptr, PreprocessingRecord& PR,
                          unsigned alignment) throw() {
       return ::operator delete(ptr, PR, alignment);
     }
-    
+
     void operator delete(void*, std::size_t) throw() { }
     void operator delete(void*, void*) throw() { }
-    
+
   private:
     // Make vanilla 'new' and 'delete' illegal for preprocessed entities.
     void* operator new(size_t bytes) throw();
     void operator delete(void* data) throw();
   };
-  
+
   /// \brief Records the presence of a preprocessor directive.
   class PreprocessingDirective : public PreprocessedEntity {
   public:
-    PreprocessingDirective(EntityKind Kind, SourceRange Range) 
+    PreprocessingDirective(EntityKind Kind, SourceRange Range)
       : PreprocessedEntity(Kind, Range) { }
-    
+
     // Implement isa/cast/dyncast/etc.
-    static bool classof(const PreprocessedEntity *PD) { 
+    static bool classof(const PreprocessedEntity *PD) {
       return PD->getKind() >= FirstPreprocessingDirective &&
              PD->getKind() <= LastPreprocessingDirective;
     }
   };
-  
+
   /// \brief Record the location of a macro definition.
   class MacroDefinition : public PreprocessingDirective {
     /// \brief The name of the macro being defined.
@@ -140,24 +140,24 @@ namespace clang {
   public:
     explicit MacroDefinition(const IdentifierInfo *Name, SourceRange Range)
       : PreprocessingDirective(MacroDefinitionKind, Range), Name(Name) { }
-    
+
     /// \brief Retrieve the name of the macro being defined.
     const IdentifierInfo *getName() const { return Name; }
-    
+
     /// \brief Retrieve the location of the macro name in the definition.
     SourceLocation getLocation() const { return getSourceRange().getBegin(); }
-    
+
     // Implement isa/cast/dyncast/etc.
     static bool classof(const PreprocessedEntity *PE) {
       return PE->getKind() == MacroDefinitionKind;
     }
   };
-  
+
   /// \brief Records the location of a macro expansion.
   class MacroExpansion : public PreprocessedEntity {
     /// \brief The definition of this macro or the name of the macro if it is
     /// a builtin macro.
-    llvm::PointerUnion<IdentifierInfo *, MacroDefinition *> NameOrDef; 
+    llvm::PointerUnion<IdentifierInfo *, MacroDefinition *> NameOrDef;
 
   public:
     MacroExpansion(IdentifierInfo *BuiltinName, SourceRange Range)
@@ -170,14 +170,14 @@ namespace clang {
 
     /// \brief True if it is a builtin macro.
     bool isBuiltinMacro() const { return NameOrDef.is<IdentifierInfo *>(); }
-    
+
     /// \brief The name of the macro being expanded.
     const IdentifierInfo *getName() const {
       if (MacroDefinition *Def = getDefinition())
         return Def->getName();
       return NameOrDef.get<IdentifierInfo*>();
     }
-    
+
     /// \brief The definition of the macro being expanded. May return null if
     /// this is a builtin macro.
     MacroDefinition *getDefinition() const {
@@ -230,16 +230,16 @@ namespace clang {
 
   public:
     InclusionDirective(PreprocessingRecord &PPRec,
-                       InclusionKind Kind, StringRef FileName, 
+                       InclusionKind Kind, StringRef FileName,
                        bool InQuotes, bool ImportedModule,
                        const FileEntry *File, SourceRange Range);
-    
+
     /// \brief Determine what kind of inclusion directive this is.
     InclusionKind getKind() const { return static_cast<InclusionKind>(Kind); }
-    
+
     /// \brief Retrieve the included file name as it was written in the source.
     StringRef getFileName() const { return FileName; }
-    
+
     /// \brief Determine whether the included file name was written in quotes;
     /// otherwise, it was written in angle brackets.
     bool wasInQuotes() const { return InQuotes; }
@@ -247,23 +247,23 @@ namespace clang {
     /// \brief Determine whether the inclusion directive was automatically
     /// turned into a module import.
     bool importedModule() const { return ImportedModule; }
-    
+
     /// \brief Retrieve the file entry for the actual file that was included
     /// by this directive.
     const FileEntry *getFile() const { return File; }
-        
+
     // Implement isa/cast/dyncast/etc.
     static bool classof(const PreprocessedEntity *PE) {
       return PE->getKind() == InclusionDirectiveKind;
     }
   };
-  
+
   /// \brief An abstract class that should be subclassed by any external source
   /// of preprocessing record entries.
   class ExternalPreprocessingRecordSource {
   public:
     virtual ~ExternalPreprocessingRecordSource();
-    
+
     /// \brief Read a preallocated preprocessed entity from the external source.
     ///
     /// \returns null if an error occurred that prevented the preprocessed
@@ -282,20 +282,20 @@ namespace clang {
       return llvm::Optional<bool>();
     }
   };
-  
+
   /// \brief A record of the steps taken while preprocessing a source file,
-  /// including the various preprocessing directives processed, macros 
+  /// including the various preprocessing directives processed, macros
   /// expanded, etc.
   class PreprocessingRecord : public PPCallbacks {
     SourceManager &SourceMgr;
-    
+
     /// \brief Allocator used to store preprocessing objects.
     llvm::BumpPtrAllocator BumpAlloc;
 
     /// \brief The set of preprocessed entities in this record, in order they
     /// were seen.
     std::vector<PreprocessedEntity *> PreprocessedEntities;
-    
+
     /// \brief The set of preprocessed entities in this record that have been
     /// loaded from external sources.
     ///
@@ -305,7 +305,7 @@ namespace clang {
 
     bool RecordCondDirectives;
     unsigned CondDirectiveNextIdx;
-    SmallVector<unsigned, 6> CondDirectiveStack; 
+    SmallVector<unsigned, 6> CondDirectiveStack;
 
     class CondDirectiveLoc {
       SourceLocation Loc;
@@ -334,7 +334,7 @@ namespace clang {
       };
     };
 
-    typedef std::vector<CondDirectiveLoc> CondDirectiveLocsTy; 
+    typedef std::vector<CondDirectiveLoc> CondDirectiveLocsTy;
     /// \brief The locations of conditional directives in source order.
     CondDirectiveLocsTy CondDirectiveLocs;
 
@@ -373,7 +373,7 @@ namespace clang {
 
     /// \brief Retrieve the loaded preprocessed entity at the given index.
     PreprocessedEntity *getLoadedPreprocessedEntity(unsigned Index);
-    
+
     /// \brief Determine the number of preprocessed entities that were
     /// loaded (or can be loaded) from an external source.
     unsigned getNumLoadedPreprocessedEntities() const {
@@ -395,16 +395,16 @@ namespace clang {
 
     /// \brief Register a new macro definition.
     void RegisterMacroDefinition(MacroInfo *Macro, PPEntityID PPID);
-    
+
   public:
     /// \brief Construct a new preprocessing record.
     PreprocessingRecord(SourceManager &SM, bool RecordConditionalDirectives);
-    
+
     /// \brief Allocate memory in the preprocessing record.
     void *Allocate(unsigned Size, unsigned Align = 8) {
       return BumpAlloc.Allocate(Size, Align);
     }
-    
+
     /// \brief Deallocate memory in the preprocessing record.
     void Deallocate(void *Ptr) { }
 
@@ -415,7 +415,7 @@ namespace clang {
     // Iteration over the preprocessed entities.
     class iterator {
       PreprocessingRecord *Self;
-      
+
       /// \brief Position within the preprocessed entity sequence.
       ///
       /// In a complete iteration, the Position field walks the range [-M, N),
@@ -424,24 +424,24 @@ namespace clang {
       /// indicate preprocessed entities introduced by the current preprocessor.
       /// However, to provide iteration in source order (for, e.g., chained
       /// precompiled headers), dereferencing the iterator flips the negative
-      /// values (corresponding to loaded entities), so that position -M 
+      /// values (corresponding to loaded entities), so that position -M
       /// corresponds to element 0 in the loaded entities vector, position -M+1
       /// corresponds to element 1 in the loaded entities vector, etc. This
       /// gives us a reasonably efficient, source-order walk.
       int Position;
-      
+
     public:
       typedef PreprocessedEntity *value_type;
       typedef value_type&         reference;
       typedef value_type*         pointer;
       typedef std::random_access_iterator_tag iterator_category;
       typedef int                 difference_type;
-      
+
       iterator() : Self(0), Position(0) { }
-      
+
       iterator(PreprocessingRecord *Self, int Position)
         : Self(Self), Position(Position) { }
-      
+
       value_type operator*() const {
         bool isLoaded = Position < 0;
         unsigned Index = isLoaded ?
@@ -449,16 +449,16 @@ namespace clang {
         PPEntityID ID = Self->getPPEntityID(Index, isLoaded);
         return Self->getPreprocessedEntity(ID);
       }
-      
+
       value_type operator[](difference_type D) {
         return *(*this + D);
       }
-      
+
       iterator &operator++() {
         ++Position;
         return *this;
       }
-      
+
       iterator operator++(int) {
         iterator Prev(*this);
         ++Position;
@@ -469,7 +469,7 @@ namespace clang {
         --Position;
         return *this;
       }
-      
+
       iterator operator--(int) {
         iterator Prev(*this);
         --Position;
@@ -483,7 +483,7 @@ namespace clang {
       friend bool operator!=(const iterator &X, const iterator &Y) {
         return X.Position != Y.Position;
       }
-      
+
       friend bool operator<(const iterator &X, const iterator &Y) {
         return X.Position < Y.Position;
       }
@@ -495,7 +495,7 @@ namespace clang {
       friend bool operator<=(const iterator &X, const iterator &Y) {
         return X.Position < Y.Position;
       }
-      
+
       friend bool operator>=(const iterator &X, const iterator &Y) {
         return X.Position > Y.Position;
       }
@@ -607,11 +607,11 @@ namespace clang {
     ExternalPreprocessingRecordSource *getExternalSource() const {
       return ExternalSource;
     }
-    
+
     /// \brief Retrieve the macro definition that corresponds to the given
     /// \c MacroInfo.
     MacroDefinition *findMacroDefinition(const MacroInfo *MI);
-        
+
   private:
     virtual void MacroExpands(const Token &Id, const MacroInfo* MI,
                               SourceRange Range);

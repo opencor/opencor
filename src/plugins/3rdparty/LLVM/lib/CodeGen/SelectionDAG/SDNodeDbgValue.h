@@ -61,14 +61,14 @@ public:
 
   // Constructor for constants.
   SDDbgValue(MDNode *mdP, const Value *C, uint64_t off, DebugLoc dl,
-             unsigned O) : 
+             unsigned O) :
     mdPtr(mdP), Offset(off), DL(dl), Order(O), Invalid(false) {
     kind = CONST;
     u.Const = C;
   }
 
   // Constructor for frame indices.
-  SDDbgValue(MDNode *mdP, unsigned FI, uint64_t off, DebugLoc dl, unsigned O) : 
+  SDDbgValue(MDNode *mdP, unsigned FI, uint64_t off, DebugLoc dl, unsigned O) :
     mdPtr(mdP), Offset(off), DL(dl), Order(O), Invalid(false) {
     kind = FRAMEIX;
     u.FrameIx = FI;

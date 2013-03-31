@@ -7,7 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 //
-// This header provides the interface to read and write coverage files that 
+// This header provides the interface to read and write coverage files that
 // use 'gcov' format.
 //
 //===----------------------------------------------------------------------===//
@@ -42,7 +42,7 @@ namespace GCOV {
 class GCOVBuffer {
 public:
   GCOVBuffer(MemoryBuffer *B) : Buffer(B), Cursor(0) {}
-  
+
   /// readGCOVFormat - Read GCOV signature at the beginning of buffer.
   GCOV::GCOVFormat readGCOVFormat() {
     StringRef Magic = Buffer->getBuffer().slice(0, 12);
@@ -55,7 +55,7 @@ public:
       return GCOV::GCDA_404;
     else if (Magic == "adcg*204MVLL")
       return GCOV::GCDA_402;
-    
+
     Cursor = 0;
     return GCOV::InvalidGCOV;
   }
@@ -64,7 +64,7 @@ public:
   /// cursor and return true otherwise return false.
   bool readFunctionTag() {
     StringRef Tag = Buffer->getBuffer().slice(Cursor, Cursor+4);
-    if (Tag.empty() || 
+    if (Tag.empty() ||
         Tag[0] != '\0' || Tag[1] != '\0' ||
         Tag[2] != '\0' || Tag[3] != '\1') {
       return false;
@@ -77,7 +77,7 @@ public:
   /// cursor and return true otherwise return false.
   bool readBlockTag() {
     StringRef Tag = Buffer->getBuffer().slice(Cursor, Cursor+4);
-    if (Tag.empty() || 
+    if (Tag.empty() ||
         Tag[0] != '\0' || Tag[1] != '\0' ||
         Tag[2] != '\x41' || Tag[3] != '\x01') {
       return false;
@@ -90,7 +90,7 @@ public:
   /// cursor and return true otherwise return false.
   bool readEdgeTag() {
     StringRef Tag = Buffer->getBuffer().slice(Cursor, Cursor+4);
-    if (Tag.empty() || 
+    if (Tag.empty() ||
         Tag[0] != '\0' || Tag[1] != '\0' ||
         Tag[2] != '\x43' || Tag[3] != '\x01') {
       return false;
@@ -103,7 +103,7 @@ public:
   /// cursor and return true otherwise return false.
   bool readLineTag() {
     StringRef Tag = Buffer->getBuffer().slice(Cursor, Cursor+4);
-    if (Tag.empty() || 
+    if (Tag.empty() ||
         Tag[0] != '\0' || Tag[1] != '\0' ||
         Tag[2] != '\x45' || Tag[3] != '\x01') {
       return false;
@@ -116,7 +116,7 @@ public:
   /// cursor and return true otherwise return false.
   bool readArcTag() {
     StringRef Tag = Buffer->getBuffer().slice(Cursor, Cursor+4);
-    if (Tag.empty() || 
+    if (Tag.empty() ||
         Tag[0] != '\0' || Tag[1] != '\0' ||
         Tag[2] != '\xa1' || Tag[3] != '\1') {
       return false;

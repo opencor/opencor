@@ -25,12 +25,12 @@ class FunctionProtoType;
 /// particular context.
 class LambdaMangleContext {
   llvm::DenseMap<const FunctionProtoType *, unsigned> ManglingNumbers;
-  
+
 public:
   /// \brief Retrieve the mangling number of a new lambda expression with the
   /// given call operator within this lambda context.
   unsigned getManglingNumber(CXXMethodDecl *CallOperator);
 };
-  
+
 } // end namespace clang
 #endif

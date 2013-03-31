@@ -56,10 +56,10 @@ public:
     QScrollBar *horizontalScrollBar() const;
     QScrollBar *verticalScrollBar() const;
 
-    virtual void renderLegend( QPainter *, 
+    virtual void renderLegend( QPainter *,
         const QRectF &, bool fillBackground ) const;
 
-    virtual void renderItem( QPainter *, 
+    virtual void renderItem( QPainter *,
         const QWidget *, const QRectF &, bool fillBackground ) const;
 
     virtual bool isEmpty() const;
@@ -114,4 +114,4 @@ private:
     PrivateData *d_data;
 };
 
-#endif 
+#endif

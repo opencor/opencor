@@ -37,7 +37,7 @@ void ManagedStaticBase::RegisterManagedStatic(void *(*Creator)(),
       Ptr = tmp;
       TsanIgnoreWritesEnd();
       DeleterFn = Deleter;
-      
+
       // Add to list of managed statics.
       Next = StaticList;
       StaticList = this;
@@ -49,7 +49,7 @@ void ManagedStaticBase::RegisterManagedStatic(void *(*Creator)(),
            "Partially initialized ManagedStatic!?");
     Ptr = Creator ? Creator() : 0;
     DeleterFn = Deleter;
-  
+
     // Add to list of managed statics.
     Next = StaticList;
     StaticList = this;
@@ -66,7 +66,7 @@ void ManagedStaticBase::destroy() const {
 
   // Destroy memory.
   DeleterFn(Ptr);
-  
+
   // Cleanup.
   Ptr = 0;
   DeleterFn = 0;

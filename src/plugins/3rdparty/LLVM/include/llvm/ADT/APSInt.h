@@ -264,7 +264,7 @@ public:
   }
 
   /// \brief Determine if two APSInts have the same value, zero- or
-  /// sign-extending as needed.  
+  /// sign-extending as needed.
   static bool isSameValue(const APSInt &I1, const APSInt &I2) {
     if (I1.getBitWidth() == I2.getBitWidth() && I1.isSigned() == I2.isSigned())
       return I1 == I2;

@@ -34,10 +34,10 @@ class PthreadLockChecker : public Checker< check::PostStmt<CallExpr> > {
   };
 public:
   void checkPostStmt(const CallExpr *CE, CheckerContext &C) const;
-    
+
   void AcquireLock(CheckerContext &C, const CallExpr *CE, SVal lock,
                    bool isTryLock, enum LockingSemantics semantics) const;
-    
+
   void ReleaseLock(CheckerContext &C, const CallExpr *CE, SVal lock) const;
 };
 } // end anonymous namespace
@@ -64,7 +64,7 @@ void PthreadLockChecker::checkPostStmt(const CallExpr *CE,
                 false, PthreadSemantics);
   else if (FName == "lck_mtx_lock" ||
            FName == "lck_rw_lock_exclusive" ||
-           FName == "lck_rw_lock_shared") 
+           FName == "lck_rw_lock_shared")
     AcquireLock(C, CE, state->getSVal(CE->getArg(0), LCtx),
                 false, XNUSemantics);
   else if (FName == "pthread_mutex_trylock" ||
@@ -87,17 +87,17 @@ void PthreadLockChecker::checkPostStmt(const CallExpr *CE,
 void PthreadLockChecker::AcquireLock(CheckerContext &C, const CallExpr *CE,
                                      SVal lock, bool isTryLock,
                                      enum LockingSemantics semantics) const {
-  
+
   const MemRegion *lockR = lock.getAsRegion();
   if (!lockR)
     return;
-  
+
   ProgramStateRef state = C.getState();
-  
+
   SVal X = state->getSVal(CE, C.getLocationContext());
   if (X.isUnknownOrUndef())
     return;
-  
+
   DefinedSVal retVal = cast<DefinedSVal>(X);
 
   if (state->contains<LockSet>(lockR)) {
@@ -120,10 +120,10 @@ void PthreadLockChecker::AcquireLock(CheckerContext &C, const CallExpr *CE,
     ProgramStateRef lockFail;
     switch (semantics) {
     case PthreadSemantics:
-      llvm::tie(lockFail, lockSucc) = state->assume(retVal);    
+      llvm::tie(lockFail, lockSucc) = state->assume(retVal);
       break;
     case XNUSemantics:
-      llvm::tie(lockSucc, lockFail) = state->assume(retVal);    
+      llvm::tie(lockSucc, lockFail) = state->assume(retVal);
       break;
     default:
       llvm_unreachable("Unknown tryLock locking semantics");
@@ -141,8 +141,8 @@ void PthreadLockChecker::AcquireLock(CheckerContext &C, const CallExpr *CE,
     assert((semantics == XNUSemantics) && "Unknown locking semantics");
     lockSucc = state;
   }
-  
-  // Record that the lock was acquired.  
+
+  // Record that the lock was acquired.
   lockSucc = lockSucc->add<LockSet>(lockR);
   C.addTransition(lockSucc);
 }
@@ -153,7 +153,7 @@ void PthreadLockChecker::ReleaseLock(CheckerContext &C, const CallExpr *CE,
   const MemRegion *lockR = lock.getAsRegion();
   if (!lockR)
     return;
-  
+
   ProgramStateRef state = C.getState();
   LockSetTy LS = state->get<LockSet>();
 
@@ -161,7 +161,7 @@ void PthreadLockChecker::ReleaseLock(CheckerContext &C, const CallExpr *CE,
   // FIXME: check for double unlocks
   if (LS.isEmpty())
     return;
-  
+
   const MemRegion *firstLockR = LS.getHead();
   if (firstLockR != lockR) {
     if (!BT_lor)
@@ -179,7 +179,7 @@ void PthreadLockChecker::ReleaseLock(CheckerContext &C, const CallExpr *CE,
     return;
   }
 
-  // Record that the lock was released. 
+  // Record that the lock was released.
   state = state->set<LockSet>(LS.getTail());
   C.addTransition(state);
 }

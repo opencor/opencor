@@ -137,7 +137,7 @@ _mm_add_pi32(__m64 __m1, __m64 __m2)
 }
 
 static __inline__ __m64 __attribute__((__always_inline__, __nodebug__))
-_mm_adds_pi8(__m64 __m1, __m64 __m2) 
+_mm_adds_pi8(__m64 __m1, __m64 __m2)
 {
     return (__m64)__builtin_ia32_paddsb((__v8qi)__m1, (__v8qi)__m2);
 }
@@ -145,17 +145,17 @@ _mm_adds_pi8(__m64 __m1, __m64 __m2)
 static __inline__ __m64 __attribute__((__always_inline__, __nodebug__))
 _mm_adds_pi16(__m64 __m1, __m64 __m2)
 {
-    return (__m64)__builtin_ia32_paddsw((__v4hi)__m1, (__v4hi)__m2);    
+    return (__m64)__builtin_ia32_paddsw((__v4hi)__m1, (__v4hi)__m2);
 }
 
 static __inline__ __m64 __attribute__((__always_inline__, __nodebug__))
-_mm_adds_pu8(__m64 __m1, __m64 __m2) 
+_mm_adds_pu8(__m64 __m1, __m64 __m2)
 {
     return (__m64)__builtin_ia32_paddusb((__v8qi)__m1, (__v8qi)__m2);
 }
- 
+
 static __inline__ __m64 __attribute__((__always_inline__, __nodebug__))
-_mm_adds_pu16(__m64 __m1, __m64 __m2) 
+_mm_adds_pu16(__m64 __m1, __m64 __m2)
 {
     return (__m64)__builtin_ia32_paddusw((__v4hi)__m1, (__v4hi)__m2);
 }
@@ -165,13 +165,13 @@ _mm_sub_pi8(__m64 __m1, __m64 __m2)
 {
     return (__m64)__builtin_ia32_psubb((__v8qi)__m1, (__v8qi)__m2);
 }
- 
+
 static __inline__ __m64 __attribute__((__always_inline__, __nodebug__))
 _mm_sub_pi16(__m64 __m1, __m64 __m2)
 {
     return (__m64)__builtin_ia32_psubw((__v4hi)__m1, (__v4hi)__m2);
 }
- 
+
 static __inline__ __m64 __attribute__((__always_inline__, __nodebug__))
 _mm_sub_pi32(__m64 __m1, __m64 __m2)
 {
@@ -195,7 +195,7 @@ _mm_subs_pu8(__m64 __m1, __m64 __m2)
 {
     return (__m64)__builtin_ia32_psubusb((__v8qi)__m1, (__v8qi)__m2);
 }
- 
+
 static __inline__ __m64 __attribute__((__always_inline__, __nodebug__))
 _mm_subs_pu16(__m64 __m1, __m64 __m2)
 {
@@ -213,9 +213,9 @@ _mm_mulhi_pi16(__m64 __m1, __m64 __m2)
 {
     return (__m64)__builtin_ia32_pmulhw((__v4hi)__m1, (__v4hi)__m2);
 }
- 
+
 static __inline__ __m64 __attribute__((__always_inline__, __nodebug__))
-_mm_mullo_pi16(__m64 __m1, __m64 __m2) 
+_mm_mullo_pi16(__m64 __m1, __m64 __m2)
 {
     return (__m64)__builtin_ia32_pmullw((__v4hi)__m1, (__v4hi)__m2);
 }
@@ -229,7 +229,7 @@ _mm_sll_pi16(__m64 __m, __m64 __count)
 static __inline__ __m64 __attribute__((__always_inline__, __nodebug__))
 _mm_slli_pi16(__m64 __m, int __count)
 {
-    return (__m64)__builtin_ia32_psllwi((__v4hi)__m, __count);    
+    return (__m64)__builtin_ia32_psllwi((__v4hi)__m, __count);
 }
 
 static __inline__ __m64 __attribute__((__always_inline__, __nodebug__))
@@ -253,13 +253,13 @@ _mm_sll_si64(__m64 __m, __m64 __count)
 static __inline__ __m64 __attribute__((__always_inline__, __nodebug__))
 _mm_slli_si64(__m64 __m, int __count)
 {
-    return (__m64)__builtin_ia32_psllqi(__m, __count);    
+    return (__m64)__builtin_ia32_psllqi(__m, __count);
 }
 
 static __inline__ __m64 __attribute__((__always_inline__, __nodebug__))
 _mm_sra_pi16(__m64 __m, __m64 __count)
 {
-    return (__m64)__builtin_ia32_psraw((__v4hi)__m, __count);    
+    return (__m64)__builtin_ia32_psraw((__v4hi)__m, __count);
 }
 
 static __inline__ __m64 __attribute__((__always_inline__, __nodebug__))
@@ -271,7 +271,7 @@ _mm_srai_pi16(__m64 __m, int __count)
 static __inline__ __m64 __attribute__((__always_inline__, __nodebug__))
 _mm_sra_pi32(__m64 __m, __m64 __count)
 {
-    return (__m64)__builtin_ia32_psrad((__v2si)__m, __count);    
+    return (__m64)__builtin_ia32_psrad((__v2si)__m, __count);
 }
 
 static __inline__ __m64 __attribute__((__always_inline__, __nodebug__))
@@ -283,19 +283,19 @@ _mm_srai_pi32(__m64 __m, int __count)
 static __inline__ __m64 __attribute__((__always_inline__, __nodebug__))
 _mm_srl_pi16(__m64 __m, __m64 __count)
 {
-    return (__m64)__builtin_ia32_psrlw((__v4hi)__m, __count);    
+    return (__m64)__builtin_ia32_psrlw((__v4hi)__m, __count);
 }
 
 static __inline__ __m64 __attribute__((__always_inline__, __nodebug__))
 _mm_srli_pi16(__m64 __m, int __count)
 {
-    return (__m64)__builtin_ia32_psrlwi((__v4hi)__m, __count);    
+    return (__m64)__builtin_ia32_psrlwi((__v4hi)__m, __count);
 }
 
 static __inline__ __m64 __attribute__((__always_inline__, __nodebug__))
 _mm_srl_pi32(__m64 __m, __m64 __count)
 {
-    return (__m64)__builtin_ia32_psrld((__v2si)__m, __count);       
+    return (__m64)__builtin_ia32_psrld((__v2si)__m, __count);
 }
 
 static __inline__ __m64 __attribute__((__always_inline__, __nodebug__))
@@ -307,13 +307,13 @@ _mm_srli_pi32(__m64 __m, int __count)
 static __inline__ __m64 __attribute__((__always_inline__, __nodebug__))
 _mm_srl_si64(__m64 __m, __m64 __count)
 {
-    return (__m64)__builtin_ia32_psrlq(__m, __count);    
+    return (__m64)__builtin_ia32_psrlq(__m, __count);
 }
 
 static __inline__ __m64 __attribute__((__always_inline__, __nodebug__))
 _mm_srli_si64(__m64 __m, int __count)
 {
-    return (__m64)__builtin_ia32_psrlqi(__m, __count);    
+    return (__m64)__builtin_ia32_psrlqi(__m, __count);
 }
 
 static __inline__ __m64 __attribute__((__always_inline__, __nodebug__))

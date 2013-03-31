@@ -61,7 +61,7 @@ public:
   void checkDeadSymbols(SymbolReaper &SR, CheckerContext &C) const;
   bool wantsRegionChangeUpdate(ProgramStateRef state) const;
 
-  ProgramStateRef 
+  ProgramStateRef
     checkRegionChanges(ProgramStateRef state,
                        const StoreManager::InvalidatedSymbols *,
                        ArrayRef<const MemRegion *> ExplicitRegions,
@@ -88,7 +88,7 @@ public:
   void evalstrLength(CheckerContext &C, const CallExpr *CE) const;
   void evalstrnLength(CheckerContext &C, const CallExpr *CE) const;
   void evalstrLengthCommon(CheckerContext &C,
-                           const CallExpr *CE, 
+                           const CallExpr *CE,
                            bool IsStrnlen = false) const;
 
   void evalStrcpy(CheckerContext &C, const CallExpr *CE) const;
@@ -131,9 +131,9 @@ public:
                         SVal Buf,
                         bool hypothetical = false) const;
 
-  const StringLiteral *getCStringLiteral(CheckerContext &C, 
+  const StringLiteral *getCStringLiteral(CheckerContext &C,
                                          ProgramStateRef &state,
-                                         const Expr *expr,  
+                                         const Expr *expr,
                                          SVal val) const;
 
   static ProgramStateRef InvalidateBuffer(CheckerContext &C,
@@ -274,7 +274,7 @@ ProgramStateRef CStringChecker::CheckLocation(CheckerContext &C,
   // Get the size of the array.
   const SubRegion *superReg = cast<SubRegion>(ER->getSuperRegion());
   SValBuilder &svalBuilder = C.getSValBuilder();
-  SVal Extent = 
+  SVal Extent =
     svalBuilder.convertToArrayIndex(superReg->getExtent(svalBuilder));
   DefinedOrUnknownSVal Size = cast<DefinedOrUnknownSVal>(Extent);
 
@@ -307,7 +307,7 @@ ProgramStateRef CStringChecker::CheckLocation(CheckerContext &C,
       os << (char)toupper(CurrentFunctionDescription[0])
          << &CurrentFunctionDescription[1]
          << " accesses out-of-bound array element";
-      report = new BugReport(*BT, os.str(), N);      
+      report = new BugReport(*BT, os.str(), N);
     }
 
     // FIXME: It would be nice to eventually make this diagnostic more clear,
@@ -318,7 +318,7 @@ ProgramStateRef CStringChecker::CheckLocation(CheckerContext &C,
     C.emitReport(report);
     return NULL;
   }
-  
+
   // Array bound check succeeded.  From this point forward the array bound
   // should always succeed.
   return StInBound;
@@ -433,7 +433,7 @@ ProgramStateRef CStringChecker::CheckOverlap(CheckerContext &C,
     return state;
 
   // Are the two values the same?
-  SValBuilder &svalBuilder = C.getSValBuilder();  
+  SValBuilder &svalBuilder = C.getSValBuilder();
   llvm::tie(stateTrue, stateFalse) =
     state->assume(svalBuilder.evalEQ(state, *firstLoc, *secondLoc));
 
@@ -483,7 +483,7 @@ ProgramStateRef CStringChecker::CheckOverlap(CheckerContext &C,
   // Bail out if the cast fails.
   ASTContext &Ctx = svalBuilder.getContext();
   QualType CharPtrTy = Ctx.getPointerType(Ctx.CharTy);
-  SVal FirstStart = svalBuilder.evalCast(*firstLoc, CharPtrTy, 
+  SVal FirstStart = svalBuilder.evalCast(*firstLoc, CharPtrTy,
                                          First->getType());
   Loc *FirstStartLoc = dyn_cast<Loc>(&FirstStart);
   if (!FirstStartLoc)
@@ -526,7 +526,7 @@ void CStringChecker::emitOverlapBug(CheckerContext &C, ProgramStateRef state,
     BT_Overlap.reset(new BugType("Unix API", "Improper arguments"));
 
   // Generate a report for this bug.
-  BugReport *report = 
+  BugReport *report =
     new BugReport(*BT_Overlap,
       "Arguments must not be overlapping buffers", N);
   report->addRange(First->getSourceRange());
@@ -561,7 +561,7 @@ ProgramStateRef CStringChecker::checkAdditionOverflow(CheckerContext &C,
   } else {
     // Try switching the operands. (The order of these two assignments is
     // important!)
-    maxMinusRight = svalBuilder.evalBinOpNN(state, BO_Sub, maxVal, left, 
+    maxMinusRight = svalBuilder.evalBinOpNN(state, BO_Sub, maxVal, left,
                                             sizeTy);
     left = right;
   }
@@ -595,7 +595,7 @@ ProgramStateRef CStringChecker::checkAdditionOverflow(CheckerContext &C,
 
       // Generate a report for this bug.
       BugReport *report = new BugReport(*BT_AdditionOverflow, warning, N);
-      C.emitReport(report);        
+      C.emitReport(report);
 
       return NULL;
     }
@@ -659,7 +659,7 @@ SVal CStringChecker::getCStringLengthForRegion(CheckerContext &C,
     if (Recorded)
       return *Recorded;
   }
-  
+
   // Otherwise, get a new symbol and update the state.
   SValBuilder &svalBuilder = C.getSValBuilder();
   QualType sizeTy = svalBuilder.getContext().getSizeType();
@@ -702,7 +702,7 @@ SVal CStringChecker::getCStringLength(CheckerContext &C, ProgramStateRef &state,
                                                           os.str(), N);
 
         report->addRange(Ex->getSourceRange());
-        C.emitReport(report);        
+        C.emitReport(report);
       }
       return UndefinedVal();
 
@@ -766,7 +766,7 @@ SVal CStringChecker::getCStringLength(CheckerContext &C, ProgramStateRef &state,
                                                         os.str(), N);
 
       report->addRange(Ex->getSourceRange());
-      C.emitReport(report);        
+      C.emitReport(report);
     }
 
     return UndefinedVal();
@@ -779,7 +779,7 @@ const StringLiteral *CStringChecker::getCStringLiteral(CheckerContext &C,
   // Get the memory region pointed to by the val.
   const MemRegion *bufRegion = val.getAsRegion();
   if (!bufRegion)
-    return NULL; 
+    return NULL;
 
   // Strip casts off the memory region.
   bufRegion = bufRegion->StripCasts();
@@ -787,7 +787,7 @@ const StringLiteral *CStringChecker::getCStringLiteral(CheckerContext &C,
   // Cast the memory region to a string region.
   const StringRegion *strRegion= dyn_cast<StringRegion>(bufRegion);
   if (!strRegion)
-    return NULL; 
+    return NULL;
 
   // Return the actual string in the string region.
   return strRegion->getStringLiteral();
@@ -865,7 +865,7 @@ bool CStringChecker::SummarizeRegion(raw_ostream &os, ASTContext &Ctx,
 // evaluation of individual function calls.
 //===----------------------------------------------------------------------===//
 
-void CStringChecker::evalCopyCommon(CheckerContext &C, 
+void CStringChecker::evalCopyCommon(CheckerContext &C,
                                     const CallExpr *CE,
                                     ProgramStateRef state,
                                     const Expr *Size, const Expr *Dest,
@@ -905,7 +905,7 @@ void CStringChecker::evalCopyCommon(CheckerContext &C,
 
     // Get the value of the Src.
     SVal srcVal = state->getSVal(Source, LCtx);
-    
+
     // Ensure the source is not null. If it is NULL there will be a
     // NULL pointer dereference.
     state = checkNonNull(C, state, Source, srcVal);
@@ -923,22 +923,22 @@ void CStringChecker::evalCopyCommon(CheckerContext &C,
     if (!state)
       return;
 
-    // If this is mempcpy, get the byte after the last byte copied and 
+    // If this is mempcpy, get the byte after the last byte copied and
     // bind the expr.
     if (IsMempcpy) {
       loc::MemRegionVal *destRegVal = dyn_cast<loc::MemRegionVal>(&destVal);
       assert(destRegVal && "Destination should be a known MemRegionVal here");
-      
+
       // Get the length to copy.
       NonLoc *lenValNonLoc = dyn_cast<NonLoc>(&sizeVal);
-      
+
       if (lenValNonLoc) {
         // Get the byte after the last byte copied.
-        SVal lastElement = C.getSValBuilder().evalBinOpLN(state, BO_Add, 
+        SVal lastElement = C.getSValBuilder().evalBinOpLN(state, BO_Add,
                                                           *destRegVal,
-                                                          *lenValNonLoc, 
+                                                          *lenValNonLoc,
                                                           Dest->getType());
-      
+
         // The byte after the last byte copied is the return value.
         state = state->BindExpr(CE, LCtx, lastElement);
       } else {
@@ -987,7 +987,7 @@ void CStringChecker::evalMempcpy(CheckerContext &C, const CallExpr *CE) const {
   // The return value is a pointer to the byte following the last written byte.
   const Expr *Dest = CE->getArg(0);
   ProgramStateRef state = C.getState();
-  
+
   evalCopyCommon(C, CE, state, CE->getArg(2), Dest, CE->getArg(1), true, true);
 }
 
@@ -1008,7 +1008,7 @@ void CStringChecker::evalBcopy(CheckerContext &C, const CallExpr *CE) const {
     return;
 
   // void bcopy(const void *src, void *dst, size_t n);
-  evalCopyCommon(C, CE, C.getState(), 
+  evalCopyCommon(C, CE, C.getState(),
                  CE->getArg(2), CE->getArg(1), CE->getArg(0));
 }
 
@@ -1172,7 +1172,7 @@ void CStringChecker::evalstrLengthCommon(CheckerContext &C, const CallExpr *CE,
       // Check if the strLength is greater than the maxlen.
       llvm::tie(stateStringTooLong, stateStringNotTooLong) =
         state->assume(cast<DefinedOrUnknownSVal>
-                      (C.getSValBuilder().evalBinOpNN(state, BO_GT, 
+                      (C.getSValBuilder().evalBinOpNN(state, BO_GT,
                                                       *strLengthNL,
                                                       *maxlenValNL,
                                                       cmpTy)));
@@ -1196,15 +1196,15 @@ void CStringChecker::evalstrLengthCommon(CheckerContext &C, const CallExpr *CE,
 
       if (strLengthNL) {
         state = state->assume(cast<DefinedOrUnknownSVal>
-                              (C.getSValBuilder().evalBinOpNN(state, BO_LE, 
+                              (C.getSValBuilder().evalBinOpNN(state, BO_LE,
                                                               *resultNL,
                                                               *strLengthNL,
                                                               cmpTy)), true);
       }
-      
+
       if (maxlenValNL) {
         state = state->assume(cast<DefinedOrUnknownSVal>
-                              (C.getSValBuilder().evalBinOpNN(state, BO_LE, 
+                              (C.getSValBuilder().evalBinOpNN(state, BO_LE,
                                                               *resultNL,
                                                               *maxlenValNL,
                                                               cmpTy)), true);
@@ -1233,8 +1233,8 @@ void CStringChecker::evalStrcpy(CheckerContext &C, const CallExpr *CE) const {
     return;
 
   // char *strcpy(char *restrict dst, const char *restrict src);
-  evalStrcpyCommon(C, CE, 
-                   /* returnEnd = */ false, 
+  evalStrcpyCommon(C, CE,
+                   /* returnEnd = */ false,
                    /* isBounded = */ false,
                    /* isAppending = */ false);
 }
@@ -1244,8 +1244,8 @@ void CStringChecker::evalStrncpy(CheckerContext &C, const CallExpr *CE) const {
     return;
 
   // char *strncpy(char *restrict dst, const char *restrict src, size_t n);
-  evalStrcpyCommon(C, CE, 
-                   /* returnEnd = */ false, 
+  evalStrcpyCommon(C, CE,
+                   /* returnEnd = */ false,
                    /* isBounded = */ true,
                    /* isAppending = */ false);
 }
@@ -1255,8 +1255,8 @@ void CStringChecker::evalStpcpy(CheckerContext &C, const CallExpr *CE) const {
     return;
 
   // char *stpcpy(char *restrict dst, const char *restrict src);
-  evalStrcpyCommon(C, CE, 
-                   /* returnEnd = */ true, 
+  evalStrcpyCommon(C, CE,
+                   /* returnEnd = */ true,
                    /* isBounded = */ false,
                    /* isAppending = */ false);
 }
@@ -1266,8 +1266,8 @@ void CStringChecker::evalStrcat(CheckerContext &C, const CallExpr *CE) const {
     return;
 
   //char *strcat(char *restrict s1, const char *restrict s2);
-  evalStrcpyCommon(C, CE, 
-                   /* returnEnd = */ false, 
+  evalStrcpyCommon(C, CE,
+                   /* returnEnd = */ false,
                    /* isBounded = */ false,
                    /* isAppending = */ true);
 }
@@ -1277,8 +1277,8 @@ void CStringChecker::evalStrncat(CheckerContext &C, const CallExpr *CE) const {
     return;
 
   //char *strncat(char *restrict s1, const char *restrict s2, size_t n);
-  evalStrcpyCommon(C, CE, 
-                   /* returnEnd = */ false, 
+  evalStrcpyCommon(C, CE,
+                   /* returnEnd = */ false,
                    /* isBounded = */ true,
                    /* isAppending = */ true);
 }
@@ -1474,7 +1474,7 @@ void CStringChecker::evalStrcpyCommon(CheckerContext &C, const CallExpr *CE,
 
     NonLoc *srcStrLengthNL = dyn_cast<NonLoc>(&amountCopied);
     NonLoc *dstStrLengthNL = dyn_cast<NonLoc>(&dstStrLength);
-    
+
     // If we know both string lengths, we might know the final string length.
     if (srcStrLengthNL && dstStrLengthNL) {
       // Make sure the two lengths together don't overflow a size_t.
@@ -1482,7 +1482,7 @@ void CStringChecker::evalStrcpyCommon(CheckerContext &C, const CallExpr *CE,
       if (!state)
         return;
 
-      finalStrLength = svalBuilder.evalBinOpNN(state, BO_Add, *srcStrLengthNL, 
+      finalStrLength = svalBuilder.evalBinOpNN(state, BO_Add, *srcStrLengthNL,
                                                *dstStrLengthNL, sizeTy);
     }
 
@@ -1544,7 +1544,7 @@ void CStringChecker::evalStrcpyCommon(CheckerContext &C, const CallExpr *CE,
       if (NonLoc *maxLastNL = dyn_cast<NonLoc>(&maxLastElementIndex)) {
         SVal maxLastElement = svalBuilder.evalBinOpLN(state, BO_Add, *dstRegVal,
                                                       *maxLastNL, ptrTy);
-        state = CheckLocation(C, state, CE->getArg(2), maxLastElement, 
+        state = CheckLocation(C, state, CE->getArg(2), maxLastElement,
                               boundWarning);
         if (!state)
           return;
@@ -1619,7 +1619,7 @@ void CStringChecker::evalStrncmp(CheckerContext &C, const CallExpr *CE) const {
   evalStrcmpCommon(C, CE, /* isBounded = */ true, /* ignoreCase = */ false);
 }
 
-void CStringChecker::evalStrcasecmp(CheckerContext &C, 
+void CStringChecker::evalStrcasecmp(CheckerContext &C,
                                     const CallExpr *CE) const {
   if (CE->getNumArgs() < 2)
     return;
@@ -1628,7 +1628,7 @@ void CStringChecker::evalStrcasecmp(CheckerContext &C,
   evalStrcmpCommon(C, CE, /* isBounded = */ false, /* ignoreCase = */ true);
 }
 
-void CStringChecker::evalStrncasecmp(CheckerContext &C, 
+void CStringChecker::evalStrncasecmp(CheckerContext &C,
                                      const CallExpr *CE) const {
   if (CE->getNumArgs() < 3)
     return;
@@ -1805,7 +1805,7 @@ bool CStringChecker::evalCall(const CallExpr *CE, CheckerContext &C) const {
     evalFunction =  &CStringChecker::evalBcopy;
   else if (C.isCLibraryFunction(FDecl, "bcmp"))
     evalFunction =  &CStringChecker::evalMemcmp;
-  
+
   // If the callee isn't a string function, let another checker handle it.
   if (!evalFunction)
     return false;
@@ -1870,7 +1870,7 @@ bool CStringChecker::wantsRegionChangeUpdate(ProgramStateRef state) const {
   return !Entries.isEmpty();
 }
 
-ProgramStateRef 
+ProgramStateRef
 CStringChecker::checkRegionChanges(ProgramStateRef state,
                                    const StoreManager::InvalidatedSymbols *,
                                    ArrayRef<const MemRegion *> ExplicitRegions,

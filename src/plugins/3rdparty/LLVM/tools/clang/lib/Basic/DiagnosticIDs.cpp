@@ -204,22 +204,22 @@ StringRef DiagnosticIDs::getCategoryNameFromID(unsigned CategoryID) {
 
 
 
-DiagnosticIDs::SFINAEResponse 
+DiagnosticIDs::SFINAEResponse
 DiagnosticIDs::getDiagnosticSFINAEResponse(unsigned DiagID) {
   if (const StaticDiagInfoRec *Info = GetDiagInfo(DiagID)) {
     if (Info->AccessControl)
       return SFINAE_AccessControl;
-    
+
     if (!Info->SFINAE)
       return SFINAE_Report;
 
     if (Info->Class == CLASS_ERROR)
       return SFINAE_SubstitutionFailure;
-    
+
     // Suppress notes, warnings, and extensions;
     return SFINAE_Suppress;
   }
-  
+
   return SFINAE_Report;
 }
 
@@ -326,7 +326,7 @@ bool DiagnosticIDs::isBuiltinExtensionDiag(unsigned DiagID,
   if (DiagID >= diag::DIAG_UPPER_LIMIT ||
       getBuiltinDiagClass(DiagID) != CLASS_EXTENSION)
     return false;
-  
+
   EnabledByDefault =
     GetDefaultDiagMappingInfo(DiagID).getMapping() != diag::MAP_IGNORE;
   return true;
@@ -417,7 +417,7 @@ DiagnosticIDs::getDiagnosticLevel(unsigned DiagID, unsigned DiagClass,
   if (IsExtensionDiag && !MappingInfo.isUser()) {
     switch (Diag.ExtBehavior) {
     case DiagnosticsEngine::Ext_Ignore:
-      break; 
+      break;
     case DiagnosticsEngine::Ext_Warn:
       // Upgrade ignored diagnostics to warnings.
       if (Result == DiagnosticIDs::Ignored)
@@ -634,7 +634,7 @@ bool DiagnosticIDs::ProcessDiag(DiagnosticsEngine &Diag) const {
       ++Diag.NumErrors;
     }
 
-    // If we've emitted a lot of errors, emit a fatal error instead of it to 
+    // If we've emitted a lot of errors, emit a fatal error instead of it to
     // stop a flood of bogus errors.
     if (Diag.ErrorLimit && Diag.NumErrors > Diag.ErrorLimit &&
         DiagLevel == DiagnosticIDs::Error) {

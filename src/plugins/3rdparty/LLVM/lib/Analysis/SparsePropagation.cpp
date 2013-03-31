@@ -52,7 +52,7 @@ void AbstractLatticeFunction::PrintValue(LatticeVal V, raw_ostream &OS) {
 SparseSolver::LatticeVal SparseSolver::getOrInitValueState(Value *V) {
   DenseMap<Value*, LatticeVal>::iterator I = ValueState.find(V);
   if (I != ValueState.end()) return I->second;  // Common case, in the map
-  
+
   LatticeVal LV;
   if (LatticeFunc->IsUntrackedValue(V))
     return LatticeFunc->getUntrackedVal();
@@ -66,7 +66,7 @@ SparseSolver::LatticeVal SparseSolver::getOrInitValueState(Value *V) {
   else
     // All instructions are underdefined by default.
     LV = LatticeFunc->getUndefVal();
-  
+
   // If this value is untracked, don't add it to the map.
   if (LV == LatticeFunc->getUntrackedVal())
     return LV;
@@ -79,7 +79,7 @@ void SparseSolver::UpdateState(Instruction &Inst, LatticeVal V) {
   DenseMap<Value*, LatticeVal>::iterator I = ValueState.find(&Inst);
   if (I != ValueState.end() && I->second == V)
     return;  // No change.
-  
+
   // An update.  Visit uses of I.
   ValueState[&Inst] = V;
   InstWorkList.push_back(&Inst);
@@ -98,7 +98,7 @@ void SparseSolver::MarkBlockExecutable(BasicBlock *BB) {
 void SparseSolver::markEdgeExecutable(BasicBlock *Source, BasicBlock *Dest) {
   if (!KnownFeasibleEdges.insert(Edge(Source, Dest)).second)
     return;  // This edge is already known to be executable!
-  
+
   DEBUG(dbgs() << "Marking Edge Executable: " << Source->getName()
         << " -> " << Dest->getName() << "\n");
 
@@ -108,7 +108,7 @@ void SparseSolver::markEdgeExecutable(BasicBlock *Source, BasicBlock *Dest) {
     // because they have potentially new operands.
     for (BasicBlock::iterator I = Dest->begin(); isa<PHINode>(I); ++I)
       visitPHINode(*cast<PHINode>(I));
-    
+
   } else {
     MarkBlockExecutable(Dest);
   }
@@ -122,19 +122,19 @@ void SparseSolver::getFeasibleSuccessors(TerminatorInst &TI,
                                          bool AggressiveUndef) {
   Succs.resize(TI.getNumSuccessors());
   if (TI.getNumSuccessors() == 0) return;
-  
+
   if (BranchInst *BI = dyn_cast<BranchInst>(&TI)) {
     if (BI->isUnconditional()) {
       Succs[0] = true;
       return;
     }
-    
+
     LatticeVal BCValue;
     if (AggressiveUndef)
       BCValue = getOrInitValueState(BI->getCondition());
     else
       BCValue = getLatticeState(BI->getCondition());
-    
+
     if (BCValue == LatticeFunc->getOverdefinedVal() ||
         BCValue == LatticeFunc->getUntrackedVal()) {
       // Overdefined condition variables can branch either way.
@@ -157,37 +157,37 @@ void SparseSolver::getFeasibleSuccessors(TerminatorInst &TI,
     Succs[C->isNullValue()] = true;
     return;
   }
-  
+
   if (isa<InvokeInst>(TI)) {
     // Invoke instructions successors are always executable.
     // TODO: Could ask the lattice function if the value can throw.
     Succs[0] = Succs[1] = true;
     return;
   }
-  
+
   if (isa<IndirectBrInst>(TI)) {
     Succs.assign(Succs.size(), true);
     return;
   }
-  
+
   SwitchInst &SI = cast<SwitchInst>(TI);
   LatticeVal SCValue;
   if (AggressiveUndef)
     SCValue = getOrInitValueState(SI.getCondition());
   else
     SCValue = getLatticeState(SI.getCondition());
-  
+
   if (SCValue == LatticeFunc->getOverdefinedVal() ||
       SCValue == LatticeFunc->getUntrackedVal()) {
     // All destinations are executable!
     Succs.assign(TI.getNumSuccessors(), true);
     return;
   }
-  
+
   // If undefined, neither is feasible yet.
   if (SCValue == LatticeFunc->getUndefVal())
     return;
-  
+
   Constant *C = LatticeFunc->GetConstant(SCValue, SI.getCondition(), *this);
   if (C == 0 || !isa<ConstantInt>(C)) {
     // All destinations are executable!
@@ -206,20 +206,20 @@ bool SparseSolver::isEdgeFeasible(BasicBlock *From, BasicBlock *To,
   SmallVector<bool, 16> SuccFeasible;
   TerminatorInst *TI = From->getTerminator();
   getFeasibleSuccessors(*TI, SuccFeasible, AggressiveUndef);
-  
+
   for (unsigned i = 0, e = TI->getNumSuccessors(); i != e; ++i)
     if (TI->getSuccessor(i) == To && SuccFeasible[i])
       return true;
-  
+
   return false;
 }
 
 void SparseSolver::visitTerminatorInst(TerminatorInst &TI) {
   SmallVector<bool, 16> SuccFeasible;
   getFeasibleSuccessors(TI, SuccFeasible, true);
-  
+
   BasicBlock *BB = TI.getParent();
-  
+
   // Mark all feasible successors executable...
   for (unsigned i = 0, e = SuccFeasible.size(); i != e; ++i)
     if (SuccFeasible[i])
@@ -239,18 +239,18 @@ void SparseSolver::visitPHINode(PHINode &PN) {
 
   LatticeVal PNIV = getOrInitValueState(&PN);
   LatticeVal Overdefined = LatticeFunc->getOverdefinedVal();
-  
+
   // If this value is already overdefined (common) just return.
   if (PNIV == Overdefined || PNIV == LatticeFunc->getUntrackedVal())
     return;  // Quick exit
-  
+
   // Super-extra-high-degree PHI nodes are unlikely to ever be interesting,
   // and slow us down a lot.  Just mark them overdefined.
   if (PN.getNumIncomingValues() > 64) {
     UpdateState(PN, Overdefined);
     return;
   }
-  
+
   // Look at all of the executable operands of the PHI node.  If any of them
   // are overdefined, the PHI becomes overdefined as well.  Otherwise, ask the
   // transfer function to give us the merge of the incoming values.
@@ -258,12 +258,12 @@ void SparseSolver::visitPHINode(PHINode &PN) {
     // If the edge is not yet known to be feasible, it doesn't impact the PHI.
     if (!isEdgeFeasible(PN.getIncomingBlock(i), PN.getParent(), true))
       continue;
-    
+
     // Merge in this value.
     LatticeVal OpVal = getOrInitValueState(PN.getIncomingValue(i));
     if (OpVal != PNIV)
       PNIV = LatticeFunc->MergeValues(PNIV, OpVal);
-    
+
     if (PNIV == Overdefined)
       break;  // Rest of input values don't matter.
   }
@@ -278,20 +278,20 @@ void SparseSolver::visitInst(Instruction &I) {
   // transfer functions.
   if (PHINode *PN = dyn_cast<PHINode>(&I))
     return visitPHINode(*PN);
-  
+
   // Otherwise, ask the transfer function what the result is.  If this is
   // something that we care about, remember it.
   LatticeVal IV = LatticeFunc->ComputeInstructionState(I, *this);
   if (IV != LatticeFunc->getUntrackedVal())
     UpdateState(I, IV);
-  
+
   if (TerminatorInst *TI = dyn_cast<TerminatorInst>(&I))
     visitTerminatorInst(*TI);
 }
 
 void SparseSolver::Solve(Function &F) {
   MarkBlockExecutable(&F.getEntryBlock());
-  
+
   // Process the work lists until they are empty!
   while (!BBWorkList.empty() || !InstWorkList.empty()) {
     // Process the instruction work list.
@@ -340,7 +340,7 @@ void SparseSolver::Print(Function &F, raw_ostream &OS) const {
       LatticeFunc->PrintValue(getLatticeState(I), OS);
       OS << *I << "\n";
     }
-    
+
     OS << "\n";
   }
 }

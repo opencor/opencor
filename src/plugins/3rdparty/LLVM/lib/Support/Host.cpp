@@ -343,9 +343,9 @@ std::string sys::getHostCPUName() {
   mach_msg_type_number_t infoCount;
 
   infoCount = HOST_BASIC_INFO_COUNT;
-  host_info(mach_host_self(), HOST_BASIC_INFO, (host_info_t)&hostInfo, 
+  host_info(mach_host_self(), HOST_BASIC_INFO, (host_info_t)&hostInfo,
             &infoCount);
-            
+
   if (hostInfo.cpu_type != CPU_TYPE_POWERPC) return "generic";
 
   switch(hostInfo.cpu_subtype) {
@@ -363,7 +363,7 @@ std::string sys::getHostCPUName() {
   case CPU_SUBTYPE_POWERPC_970:   return "970";
   default: ;
   }
-  
+
   return "generic";
 }
 #elif defined(__linux__) && (defined(__ppc__) || defined(__powerpc__))
@@ -412,12 +412,12 @@ std::string sys::getHostCPUName() {
           ++CIP;
           while (CIP < CPUInfoEnd && (*CIP == ' ' || *CIP == '\t'))
             ++CIP;
-  
+
           if (CIP < CPUInfoEnd && *CIP == ':') {
             ++CIP;
             while (CIP < CPUInfoEnd && (*CIP == ' ' || *CIP == '\t'))
               ++CIP;
-  
+
             if (CIP < CPUInfoEnd) {
               CPUStart = CIP;
               while (CIP < CPUInfoEnd && (*CIP != ' ' && *CIP != '\t' &&

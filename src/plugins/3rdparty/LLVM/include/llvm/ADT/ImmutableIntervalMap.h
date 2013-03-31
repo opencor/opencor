@@ -94,7 +94,7 @@ class ImutIntervalAVLFactory : public ImutAVLFactory<ImutInfo> {
   typedef typename ImutInfo::data_type_ref  data_type_ref;
 
 public:
-  ImutIntervalAVLFactory(BumpPtrAllocator &Alloc) 
+  ImutIntervalAVLFactory(BumpPtrAllocator &Alloc)
     : ImutAVLFactory<ImutInfo>(Alloc) {}
 
   TreeTy *Add(TreeTy *T, value_type_ref V) {
@@ -129,10 +129,10 @@ private:
     key_type_ref KCurrent = ImutInfo::KeyOfValue(this->Value(T));
 
     if (ImutInfo::isLess(K, KCurrent))
-      return this->Balance(add_internal(V, this->Left(T)), this->Value(T), 
+      return this->Balance(add_internal(V, this->Left(T)), this->Value(T),
                                         this->Right(T));
     else
-      return this->Balance(this->Left(T), this->Value(T), 
+      return this->Balance(this->Left(T), this->Value(T),
                            add_internal(V, this->Right(T)));
   }
 
@@ -159,7 +159,7 @@ private:
       return this->Balance(removeOverlap(this->Left(T), K, Changed),
                            this->Value(T), this->Right(T));
     else if (CurrentK.getEnd() < K.getStart())
-      return this->Balance(this->Left(T), this->Value(T), 
+      return this->Balance(this->Left(T), this->Value(T),
                            removeOverlap(this->Right(T), K, Changed));
 
     // Current key overlaps with the inserted key.
@@ -174,7 +174,7 @@ private:
         return add_internal(std::make_pair(NewK, OldData), T);
       } else {
         Interval NewK1(CurrentK.getStart(), K.getStart()-1);
-        T = add_internal(std::make_pair(NewK1, OldData), T); 
+        T = add_internal(std::make_pair(NewK1, OldData), T);
 
         Interval NewK2(K.getEnd()+1, CurrentK.getEnd());
         return add_internal(std::make_pair(NewK2, OldData), T);
@@ -192,7 +192,7 @@ private:
 /// ImmutableIntervalMap maps an interval [start, end] to a value. The intervals
 /// in the map are guaranteed to be disjoint.
 template <typename ValT>
-class ImmutableIntervalMap 
+class ImmutableIntervalMap
   : public ImmutableMap<Interval, ValT, ImutIntervalInfo<ValT> > {
 
   typedef typename ImutIntervalInfo<ValT>::value_type      value_type;
@@ -204,7 +204,7 @@ class ImmutableIntervalMap
   typedef ImutAVLTree<ImutIntervalInfo<ValT> > TreeTy;
 
 public:
-  explicit ImmutableIntervalMap(TreeTy *R) 
+  explicit ImmutableIntervalMap(TreeTy *R)
     : ImmutableMap<Interval, ValT, ImutIntervalInfo<ValT> >(R) {}
 
   class Factory {
@@ -213,11 +213,11 @@ public:
   public:
     Factory(BumpPtrAllocator& Alloc) : F(Alloc) {}
 
-    ImmutableIntervalMap getEmptyMap() { 
-      return ImmutableIntervalMap(F.getEmptyTree()); 
+    ImmutableIntervalMap getEmptyMap() {
+      return ImmutableIntervalMap(F.getEmptyTree());
     }
 
-    ImmutableIntervalMap add(ImmutableIntervalMap Old, 
+    ImmutableIntervalMap add(ImmutableIntervalMap Old,
                              key_type_ref K, data_type_ref D) {
       TreeTy *T = F.add(Old.Root, std::pair<key_type, data_type>(K, D));
       return ImmutableIntervalMap(F.getCanonicalTree(T));
@@ -238,7 +238,7 @@ public:
   };
 
 private:
-  // For ImmutableIntervalMap, the lookup operation has to be done by the 
+  // For ImmutableIntervalMap, the lookup operation has to be done by the
   // factory.
   data_type* lookup(key_type_ref K) const;
 };

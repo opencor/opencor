@@ -41,7 +41,7 @@ namespace X86 {
     AddrNumOperands = 5
   };
 } // end namespace X86;
- 
+
 
 /// X86II - This namespace holds all of the target specific flags that
 /// instruction info tracks.
@@ -612,7 +612,7 @@ namespace X86II {
     }
     return false;
   }
-  
+
   inline bool isX86_64NonExtLowByteReg(unsigned reg) {
     return (reg == X86::SPL || reg == X86::BPL ||
             reg == X86::SIL || reg == X86::DIL);

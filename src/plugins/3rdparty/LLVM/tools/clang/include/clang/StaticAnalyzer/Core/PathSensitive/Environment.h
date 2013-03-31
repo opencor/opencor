@@ -41,14 +41,14 @@ public:
 
   const Stmt *getStmt() const { return first; }
   const LocationContext *getLocationContext() const { return second; }
-  
+
   /// Profile an EnvironmentEntry for inclusion in a FoldingSet.
   static void Profile(llvm::FoldingSetNodeID &ID,
                       const EnvironmentEntry &E) {
     ID.AddPointer(E.getStmt());
     ID.AddPointer(E.getLocationContext());
   }
-  
+
   void Profile(llvm::FoldingSetNodeID &ID) const {
     Profile(ID, *this);
   }
@@ -94,9 +94,9 @@ public:
   bool operator==(const Environment& RHS) const {
     return ExprBindings == RHS.ExprBindings;
   }
-  
+
   void print(raw_ostream &Out, const char *NL, const char *Sep) const;
-  
+
 private:
   void printAux(raw_ostream &Out, bool printLocations,
                 const char *NL, const char *Sep) const;
@@ -118,7 +118,7 @@ public:
   /// Bind a symbolic value to the given environment entry.
   Environment bindExpr(Environment Env, const EnvironmentEntry &E, SVal V,
                        bool Invalidate);
-  
+
   /// Bind the location 'location' and value 'V' to the specified
   /// environment entry.
   Environment bindExprAndLocation(Environment Env,

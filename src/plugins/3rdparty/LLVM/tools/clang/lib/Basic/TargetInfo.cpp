@@ -420,7 +420,7 @@ bool TargetInfo::validateInputConstraint(ConstraintInfo *OutputConstraints,
         if (OutputConstraints[i].isReadWrite())
           return false;
 
-        // If the constraint is already tied, it must be tied to the 
+        // If the constraint is already tied, it must be tied to the
         // same operand referenced to by the number.
         if (Info.hasTiedOperand() && Info.getTiedOperand() != i)
           return false;
@@ -440,7 +440,7 @@ bool TargetInfo::validateInputConstraint(ConstraintInfo *OutputConstraints,
       if (!resolveSymbolicName(Name, OutputConstraints, NumOutputs, Index))
         return false;
 
-      // If the constraint is already tied, it must be tied to the 
+      // If the constraint is already tied, it must be tied to the
       // same operand referenced to by the number.
       if (Info.hasTiedOperand() && Info.getTiedOperand() != Index)
         return false;

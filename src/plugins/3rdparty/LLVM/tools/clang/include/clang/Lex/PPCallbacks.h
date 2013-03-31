@@ -64,10 +64,10 @@ public:
   /// \brief Callback invoked whenever an inclusion directive results in a
   /// file-not-found error.
   ///
-  /// \param FileName The name of the file being included, as written in the 
+  /// \param FileName The name of the file being included, as written in the
   /// source code.
   ///
-  /// \param RecoveryPath If this client indicates that it can recover from 
+  /// \param RecoveryPath If this client indicates that it can recover from
   /// this missing file, the client should set this as an additional header
   /// search patch.
   ///
@@ -82,13 +82,13 @@ public:
   /// any kind (\c \#include, \c \#import, etc.) has been processed, regardless
   /// of whether the inclusion will actually result in an inclusion.
   ///
-  /// \param HashLoc The location of the '#' that starts the inclusion 
+  /// \param HashLoc The location of the '#' that starts the inclusion
   /// directive.
   ///
-  /// \param IncludeTok The token that indicates the kind of inclusion 
+  /// \param IncludeTok The token that indicates the kind of inclusion
   /// directive, e.g., 'include' or 'import'.
   ///
-  /// \param FileName The name of the file being included, as written in the 
+  /// \param FileName The name of the file being included, as written in the
   /// source code.
   ///
   /// \param IsAngled Whether the file name was enclosed in angle brackets;
@@ -97,7 +97,7 @@ public:
   /// \param FilenameRange The character range of the quotes or angle brackets
   /// for the written file name.
   ///
-  /// \param File The actual file that may be included by this inclusion 
+  /// \param File The actual file that may be included by this inclusion
   /// directive.
   ///
   /// \param SearchPath Contains the search path which was used to find the file
@@ -197,11 +197,11 @@ public:
   /// MI is released immediately following this callback.
   virtual void MacroUndefined(const Token &MacroNameTok, const MacroInfo *MI) {
   }
-  
+
   /// \brief Hook called whenever the 'defined' operator is seen.
   virtual void Defined(const Token &MacroNameTok) {
   }
-  
+
   /// \brief Hook called when a source range is skipped.
   /// \param Range The SourceRange that was skipped. The range begins at the
   /// \#if/\#else directive and ends after the \#endif/\#else directive.

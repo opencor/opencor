@@ -61,7 +61,7 @@ public:
     AS_Declspec,
     // eg) __w64, __ptr32, etc.  It is implied that an MSTypespec is also
     // a declspec.
-    AS_MSTypespec   
+    AS_MSTypespec
   };
 private:
   IdentifierInfo *AttrName;
@@ -97,7 +97,7 @@ private:
   /// \brief The location of the 'unavailable' keyword in an
   /// availability attribute.
   SourceLocation UnavailableLoc;
-  
+
   const Expr *MessageExpr;
 
   /// The next attribute in the current position.
@@ -169,7 +169,7 @@ private:
                 const AvailabilityChange &introduced,
                 const AvailabilityChange &deprecated,
                 const AvailabilityChange &obsoleted,
-                SourceLocation unavailable, 
+                SourceLocation unavailable,
                 const Expr *messageExpr,
                 Syntax syntaxUsed)
     : AttrName(attrName), ScopeName(scopeName), ParmName(parmName),
@@ -208,7 +208,7 @@ private:
   friend class AttributeFactory;
 
 public:
-  enum Kind {           
+  enum Kind {
     #define PARSED_ATTR(NAME) AT_##NAME,
     #include "clang/Sema/AttrParsedAttrList.inc"
     #undef PARSED_ATTR
@@ -219,11 +219,11 @@ public:
   IdentifierInfo *getName() const { return AttrName; }
   SourceLocation getLoc() const { return AttrRange.getBegin(); }
   SourceRange getRange() const { return AttrRange; }
-  
+
   bool hasScope() const { return ScopeName; }
   IdentifierInfo *getScopeName() const { return ScopeName; }
   SourceLocation getScopeLoc() const { return ScopeLoc; }
-  
+
   IdentifierInfo *getParameterName() const { return ParmName; }
   SourceLocation getParameterLoc() const { return ParmLoc; }
 
@@ -317,7 +317,7 @@ public:
     assert(getKind() == AT_Availability && "Not an availability attribute");
     return UnavailableLoc;
   }
-  
+
   const Expr * getMessageExpr() const {
     assert(getKind() == AT_Availability && "Not an availability attribute");
     return MessageExpr;
@@ -515,7 +515,7 @@ inline AttributeList *addAttributeLists(AttributeList *Left,
 /// Stores, in addition to the list proper, whether or not an actual list was
 /// (as opposed to an empty list, which may be ill-formed in some places) and
 /// the source range of the list.
-struct CXX0XAttributeList { 
+struct CXX0XAttributeList {
   AttributeList *AttrList;
   SourceRange Range;
   bool HasAttr;

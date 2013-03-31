@@ -23,7 +23,7 @@ namespace iface
     class NodeList;
     class NamedNodeMap;
     class Element;
-    PUBLIC_DOMAPISPEC_PRE 
+    PUBLIC_DOMAPISPEC_PRE
     class  PUBLIC_DOMAPISPEC_POST DOMException : public std::exception
     {
     public:
@@ -44,7 +44,7 @@ namespace iface
     static const uint16_t INVALID_MODIFICATION_ERR = 13;
     static const uint16_t NAMESPACE_ERR = 14;
     static const uint16_t INVALID_ACCESS_ERR = 15;
-    PUBLIC_DOMAPISPEC_PRE 
+    PUBLIC_DOMAPISPEC_PRE
     class  PUBLIC_DOMAPISPEC_POST DOMImplementation
      : public virtual iface::XPCOM::IObject
     {
@@ -55,7 +55,7 @@ namespace iface
       virtual already_AddRefd<iface::dom::DocumentType>  createDocumentType(const std::wstring& qualifiedName, const std::wstring& publicId, const std::wstring& systemId) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::dom::Document>  createDocument(const std::wstring& namespaceURI, const std::wstring& qualifiedName, iface::dom::DocumentType* doctype) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_DOMAPISPEC_PRE 
+    PUBLIC_DOMAPISPEC_PRE
     class  PUBLIC_DOMAPISPEC_POST Node
      : public virtual iface::XPCOM::IObject
     {
@@ -100,7 +100,7 @@ namespace iface
       virtual std::wstring localName() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual bool hasAttributes() throw(std::exception&) = 0;
     };
-    PUBLIC_DOMAPISPEC_PRE 
+    PUBLIC_DOMAPISPEC_PRE
     class  PUBLIC_DOMAPISPEC_POST NodeList
      : public virtual iface::XPCOM::IObject
     {
@@ -110,7 +110,7 @@ namespace iface
       virtual already_AddRefd<iface::dom::Node>  item(uint32_t index) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual uint32_t length() throw(std::exception&)  = 0;
     };
-    PUBLIC_DOMAPISPEC_PRE 
+    PUBLIC_DOMAPISPEC_PRE
     class  PUBLIC_DOMAPISPEC_POST NamedNodeMap
      : public virtual iface::XPCOM::IObject
     {
@@ -126,7 +126,7 @@ namespace iface
       virtual already_AddRefd<iface::dom::Node>  setNamedItemNS(iface::dom::Node* arg) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::dom::Node>  removeNamedItemNS(const std::wstring& namespaceURI, const std::wstring& localName) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_DOMAPISPEC_PRE 
+    PUBLIC_DOMAPISPEC_PRE
     class  PUBLIC_DOMAPISPEC_POST CharacterData
      : public virtual iface::dom::Node
     {
@@ -142,7 +142,7 @@ namespace iface
       virtual void deleteData(uint32_t offset, uint32_t count) throw(std::exception&) = 0;
       virtual void replaceData(uint32_t offset, uint32_t count, const std::wstring& arg) throw(std::exception&) = 0;
     };
-    PUBLIC_DOMAPISPEC_PRE 
+    PUBLIC_DOMAPISPEC_PRE
     class  PUBLIC_DOMAPISPEC_POST Attr
      : public virtual iface::dom::Node
     {
@@ -155,7 +155,7 @@ namespace iface
       virtual void value(const std::wstring& attr) throw(std::exception&) = 0;
       virtual already_AddRefd<iface::dom::Element>  ownerElement() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_DOMAPISPEC_PRE 
+    PUBLIC_DOMAPISPEC_PRE
     class  PUBLIC_DOMAPISPEC_POST Element
      : public virtual iface::dom::Node
     {
@@ -179,7 +179,7 @@ namespace iface
       virtual bool hasAttribute(const std::wstring& name) throw(std::exception&) = 0;
       virtual bool hasAttributeNS(const std::wstring& namespaceURI, const std::wstring& localName) throw(std::exception&) = 0;
     };
-    PUBLIC_DOMAPISPEC_PRE 
+    PUBLIC_DOMAPISPEC_PRE
     class  PUBLIC_DOMAPISPEC_POST Text
      : public virtual iface::dom::CharacterData
     {
@@ -188,7 +188,7 @@ namespace iface
       virtual ~Text() {}
       virtual already_AddRefd<iface::dom::Text>  splitText(uint32_t offset) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_DOMAPISPEC_PRE 
+    PUBLIC_DOMAPISPEC_PRE
     class  PUBLIC_DOMAPISPEC_POST Comment
      : public virtual iface::dom::CharacterData
     {
@@ -196,7 +196,7 @@ namespace iface
       static const char* INTERFACE_NAME() { return "dom::Comment"; }
       virtual ~Comment() {}
     };
-    PUBLIC_DOMAPISPEC_PRE 
+    PUBLIC_DOMAPISPEC_PRE
     class  PUBLIC_DOMAPISPEC_POST CDATASection
      : public virtual iface::dom::Text
     {
@@ -204,7 +204,7 @@ namespace iface
       static const char* INTERFACE_NAME() { return "dom::CDATASection"; }
       virtual ~CDATASection() {}
     };
-    PUBLIC_DOMAPISPEC_PRE 
+    PUBLIC_DOMAPISPEC_PRE
     class  PUBLIC_DOMAPISPEC_POST DocumentType
      : public virtual iface::dom::Node
     {
@@ -218,7 +218,7 @@ namespace iface
       virtual std::wstring systemId() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual std::wstring internalSubset() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_DOMAPISPEC_PRE 
+    PUBLIC_DOMAPISPEC_PRE
     class  PUBLIC_DOMAPISPEC_POST Notation
      : public virtual iface::dom::Node
     {
@@ -228,7 +228,7 @@ namespace iface
       virtual std::wstring publicId() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual std::wstring systemId() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_DOMAPISPEC_PRE 
+    PUBLIC_DOMAPISPEC_PRE
     class  PUBLIC_DOMAPISPEC_POST Entity
      : public virtual iface::dom::Node
     {
@@ -239,7 +239,7 @@ namespace iface
       virtual std::wstring systemId() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual std::wstring notationName() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_DOMAPISPEC_PRE 
+    PUBLIC_DOMAPISPEC_PRE
     class  PUBLIC_DOMAPISPEC_POST EntityReference
      : public virtual iface::dom::Node
     {
@@ -247,7 +247,7 @@ namespace iface
       static const char* INTERFACE_NAME() { return "dom::EntityReference"; }
       virtual ~EntityReference() {}
     };
-    PUBLIC_DOMAPISPEC_PRE 
+    PUBLIC_DOMAPISPEC_PRE
     class  PUBLIC_DOMAPISPEC_POST ProcessingInstruction
      : public virtual iface::dom::Node
     {
@@ -258,7 +258,7 @@ namespace iface
       virtual std::wstring data() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void data(const std::wstring& attr) throw(std::exception&) = 0;
     };
-    PUBLIC_DOMAPISPEC_PRE 
+    PUBLIC_DOMAPISPEC_PRE
     class  PUBLIC_DOMAPISPEC_POST DocumentFragment
      : public virtual iface::dom::Node
     {
@@ -266,7 +266,7 @@ namespace iface
       static const char* INTERFACE_NAME() { return "dom::DocumentFragment"; }
       virtual ~DocumentFragment() {}
     };
-    PUBLIC_DOMAPISPEC_PRE 
+    PUBLIC_DOMAPISPEC_PRE
     class  PUBLIC_DOMAPISPEC_POST Document
      : public virtual iface::dom::Node
     {

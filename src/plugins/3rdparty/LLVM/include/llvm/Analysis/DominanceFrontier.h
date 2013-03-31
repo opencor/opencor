@@ -23,7 +23,7 @@
 #include <set>
 
 namespace llvm {
-  
+
 //===----------------------------------------------------------------------===//
 /// DominanceFrontierBase - Common base class for computing forward and inverse
 /// dominance frontiers for a function.

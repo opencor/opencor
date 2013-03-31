@@ -60,12 +60,12 @@ public:
   PartialDiagnostic PD;
   SourceLocation Loc;
   const Stmt *stmt;
-  
+
   PossiblyUnreachableDiag(const PartialDiagnostic &PD, SourceLocation Loc,
                           const Stmt *stmt)
     : PD(PD), Loc(Loc), stmt(stmt) {}
 };
-    
+
 /// \brief Retains information about a function, method, or block that is
 /// currently being parsed.
 class FunctionScopeInfo {
@@ -75,7 +75,7 @@ protected:
     SK_Block,
     SK_Lambda
   };
-  
+
 public:
   /// \brief What kind of scope we are describing.
   ///
@@ -291,7 +291,7 @@ public:
     return HasIndirectGoto ||
           (HasBranchProtectedScope && HasBranchIntoScope);
   }
-  
+
   FunctionScopeInfo(DiagnosticsEngine &Diag)
     : Kind(SK_Function),
       HasBranchProtectedScope(false),
@@ -339,24 +339,24 @@ public:
 
     /// \brief The source location at which the first capture occurred..
     SourceLocation Loc;
-    
+
     /// \brief The location of the ellipsis that expands a parameter pack.
     SourceLocation EllipsisLoc;
-    
+
     /// \brief The type as it was captured, which is in effect the type of the
     /// non-static data member that would hold the capture.
     QualType CaptureType;
-    
+
   public:
-    Capture(VarDecl *Var, bool block, bool byRef, bool isNested, 
-            SourceLocation Loc, SourceLocation EllipsisLoc, 
+    Capture(VarDecl *Var, bool block, bool byRef, bool isNested,
+            SourceLocation Loc, SourceLocation EllipsisLoc,
             QualType CaptureType, Expr *Cpy)
       : VarAndKind(Var, block ? Cap_Block : byRef ? Cap_ByRef : Cap_ByCopy),
         CopyExprAndNested(Cpy, isNested), Loc(Loc), EllipsisLoc(EllipsisLoc),
         CaptureType(CaptureType){}
 
     enum IsThisCapture { ThisCapture };
-    Capture(IsThisCapture, bool isNested, SourceLocation Loc, 
+    Capture(IsThisCapture, bool isNested, SourceLocation Loc,
             QualType CaptureType, Expr *Cpy)
       : VarAndKind(0, Cap_This), CopyExprAndNested(Cpy, isNested), Loc(Loc),
         EllipsisLoc(), CaptureType(CaptureType) { }
@@ -371,19 +371,19 @@ public:
     VarDecl *getVariable() const {
       return VarAndKind.getPointer();
     }
-    
+
     /// \brief Retrieve the location at which this variable was captured.
     SourceLocation getLocation() const { return Loc; }
-    
+
     /// \brief Retrieve the source location of the ellipsis, whose presence
     /// indicates that the capture is a pack expansion.
     SourceLocation getEllipsisLoc() const { return EllipsisLoc; }
-    
+
     /// \brief Retrieve the capture type for this capture, which is effectively
     /// the type of the non-static data member in the lambda/block structure
     /// that would store this capture.
     QualType getCaptureType() const { return CaptureType; }
-    
+
     Expr *getCopyExpr() const {
       return CopyExprAndNested.getPointer();
     }
@@ -413,9 +413,9 @@ public:
   QualType ReturnType;
 
   void addCapture(VarDecl *Var, bool isBlock, bool isByref, bool isNested,
-                  SourceLocation Loc, SourceLocation EllipsisLoc, 
+                  SourceLocation Loc, SourceLocation EllipsisLoc,
                   QualType CaptureType, Expr *Cpy) {
-    Captures.push_back(Capture(Var, isBlock, isByref, isNested, Loc, 
+    Captures.push_back(Capture(Var, isBlock, isByref, isNested, Loc,
                                EllipsisLoc, CaptureType, Cpy));
     CaptureMap[Var] = Captures.size();
   }
@@ -425,18 +425,18 @@ public:
 
   /// \brief Determine whether the C++ 'this' is captured.
   bool isCXXThisCaptured() const { return CXXThisCaptureIndex != 0; }
-  
+
   /// \brief Retrieve the capture of C++ 'this', if it has been captured.
   Capture &getCXXThisCapture() {
     assert(isCXXThisCaptured() && "this has not been captured");
     return Captures[CXXThisCaptureIndex - 1];
   }
-  
+
   /// \brief Determine whether the given variable has been captured.
   bool isCaptured(VarDecl *Var) const {
     return CaptureMap.count(Var);
   }
-  
+
   /// \brief Retrieve the capture of the given variable, if it has been
   /// captured already.
   Capture &getCapture(VarDecl *Var) {
@@ -451,8 +451,8 @@ public:
     return Captures[Known->second - 1];
   }
 
-  static bool classof(const FunctionScopeInfo *FSI) { 
-    return FSI->Kind == SK_Block || FSI->Kind == SK_Lambda; 
+  static bool classof(const FunctionScopeInfo *FSI) {
+    return FSI->Kind == SK_Block || FSI->Kind == SK_Lambda;
   }
 };
 
@@ -460,7 +460,7 @@ public:
 class BlockScopeInfo : public CapturingScopeInfo {
 public:
   BlockDecl *TheDecl;
-  
+
   /// TheScope - This is the scope for the block itself, which contains
   /// arguments etc.
   Scope *TheScope;
@@ -478,8 +478,8 @@ public:
 
   virtual ~BlockScopeInfo();
 
-  static bool classof(const FunctionScopeInfo *FSI) { 
-    return FSI->Kind == SK_Block; 
+  static bool classof(const FunctionScopeInfo *FSI) {
+    return FSI->Kind == SK_Block;
   }
 };
 
@@ -494,13 +494,13 @@ public:
   /// \brief Source range covering the lambda introducer [...].
   SourceRange IntroducerRange;
 
-  /// \brief The number of captures in the \c Captures list that are 
+  /// \brief The number of captures in the \c Captures list that are
   /// explicit captures.
   unsigned NumExplicitCaptures;
 
   /// \brief Whether this is a mutable lambda.
   bool Mutable;
-  
+
   /// \brief Whether the (empty) parameter list is explicit.
   bool ExplicitParams;
 
@@ -516,7 +516,7 @@ public:
   /// \brief Offsets into the ArrayIndexVars array at which each capture starts
   /// its list of array index variables.
   llvm::SmallVector<unsigned, 4> ArrayIndexStarts;
-  
+
   LambdaScopeInfo(DiagnosticsEngine &Diag, CXXRecordDecl *Lambda,
                   CXXMethodDecl *CallOperator)
     : CapturingScopeInfo(Diag, ImpCap_None), Lambda(Lambda),
@@ -528,13 +528,13 @@ public:
 
   virtual ~LambdaScopeInfo();
 
-  /// \brief Note when 
+  /// \brief Note when
   void finishedExplicitCaptures() {
     NumExplicitCaptures = Captures.size();
   }
 
   static bool classof(const FunctionScopeInfo *FSI) {
-    return FSI->Kind == SK_Lambda; 
+    return FSI->Kind == SK_Lambda;
   }
 };
 

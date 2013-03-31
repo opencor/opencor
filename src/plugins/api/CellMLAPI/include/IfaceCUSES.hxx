@@ -19,7 +19,7 @@ namespace iface
 {
   namespace cellml_services
   {
-    PUBLIC_CUSES_PRE 
+    PUBLIC_CUSES_PRE
     class  PUBLIC_CUSES_POST BaseUnit
      : public virtual iface::XPCOM::IObject
     {
@@ -28,7 +28,7 @@ namespace iface
       virtual ~BaseUnit() {}
       virtual std::wstring name() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CUSES_PRE 
+    PUBLIC_CUSES_PRE
     class  PUBLIC_CUSES_POST UserBaseUnit
      : public virtual iface::cellml_services::BaseUnit
     {
@@ -37,7 +37,7 @@ namespace iface
       virtual ~UserBaseUnit() {}
       virtual already_AddRefd<iface::cellml_api::Units>  cellmlUnits() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CUSES_PRE 
+    PUBLIC_CUSES_PRE
     class  PUBLIC_CUSES_POST BaseUnitInstance
      : public virtual iface::XPCOM::IObject
     {
@@ -49,7 +49,7 @@ namespace iface
       virtual double offset() throw(std::exception&)  = 0;
       virtual double exponent() throw(std::exception&)  = 0;
     };
-    PUBLIC_CUSES_PRE 
+    PUBLIC_CUSES_PRE
     class  PUBLIC_CUSES_POST CanonicalUnitRepresentation
      : public virtual iface::XPCOM::IObject
     {
@@ -64,7 +64,7 @@ namespace iface
       virtual void addBaseUnit(iface::cellml_services::BaseUnitInstance* baseUnit) throw(std::exception&) = 0;
       virtual already_AddRefd<iface::cellml_services::CanonicalUnitRepresentation>  mergeWith(double thisExponent, iface::cellml_services::CanonicalUnitRepresentation* other, double otherExponent) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CUSES_PRE 
+    PUBLIC_CUSES_PRE
     class  PUBLIC_CUSES_POST CUSES
      : public virtual iface::XPCOM::IObject
     {
@@ -75,7 +75,7 @@ namespace iface
       virtual already_AddRefd<iface::cellml_services::CanonicalUnitRepresentation>  getUnitsByName(iface::cellml_api::CellMLElement* aContext, const std::wstring& aName) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_services::CanonicalUnitRepresentation>  createEmptyUnits() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CUSES_PRE 
+    PUBLIC_CUSES_PRE
     class  PUBLIC_CUSES_POST CUSESBootstrap
      : public virtual iface::XPCOM::IObject
     {

@@ -7,7 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 //
-//  This file provides the default implementation of the ExternalASTSource 
+//  This file provides the default implementation of the ExternalASTSource
 //  interface, which enables construction of AST nodes from some external
 //  source.
 //
@@ -43,7 +43,7 @@ ExternalASTSource::GetExternalCXXBaseSpecifiers(uint64_t Offset) {
   return 0;
 }
 
-DeclContextLookupResult 
+DeclContextLookupResult
 ExternalASTSource::FindExternalVisibleDeclsByName(const DeclContext *DC,
                                                   DeclarationName Name) {
   return DeclContext::lookup_result();

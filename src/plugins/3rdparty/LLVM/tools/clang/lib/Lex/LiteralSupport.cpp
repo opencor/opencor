@@ -224,7 +224,7 @@ static unsigned ProcessCharEscape(const char *ThisTokBegin,
 static bool ProcessUCNEscape(const char *ThisTokBegin, const char *&ThisTokBuf,
                              const char *ThisTokEnd,
                              uint32_t &UcnVal, unsigned short &UcnLen,
-                             FullSourceLoc Loc, DiagnosticsEngine *Diags, 
+                             FullSourceLoc Loc, DiagnosticsEngine *Diags,
                              const LangOptions &Features,
                              bool in_char_string_literal = false) {
   const char *UcnBegin = ThisTokBuf;
@@ -958,8 +958,8 @@ CharLiteralParser::CharLiteralParser(const char *begin, const char *end,
                          reinterpret_cast<UTF8 const *>(begin),
                          &buffer_begin,buffer_end,strictConversion);
       if (res!=conversionOK) {
-        // If we see bad encoding for unprefixed character literals, warn and 
-        // simply copy the byte values, for compatibility with gcc and 
+        // If we see bad encoding for unprefixed character literals, warn and
+        // simply copy the byte values, for compatibility with gcc and
         // older versions of clang.
         bool NoErrorOnBadEncoding = isAscii();
         unsigned Msg = diag::err_bad_character_encoding;
@@ -1205,7 +1205,7 @@ void StringLiteralParser::init(const Token *StringToks, unsigned NumStringToks){
     // that ThisTokBuf points to a buffer that is big enough for the whole token
     // and 'spelled' tokens can only shrink.
     bool StringInvalid = false;
-    unsigned ThisTokLen = 
+    unsigned ThisTokLen =
       Lexer::getSpelling(StringToks[i], ThisTokBuf, SM, Features,
                          &StringInvalid);
     if (StringInvalid)

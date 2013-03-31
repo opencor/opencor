@@ -87,11 +87,11 @@ private:
 public:
   /// Normally Use will just implicitly convert to a Value* that it holds.
   operator Value*() const { return Val; }
-  
+
   /// If implicit conversion to Value* doesn't work, the get() method returns
   /// the Value*.
   Value *get() const { return Val; }
-  
+
   /// getUser - This returns the User that contains this Use.  For an
   /// instruction operand, for example, this will return the instruction.
   User *getUser() const;
@@ -112,7 +112,7 @@ public:
 
   Use *getNext() const { return Next; }
 
-  
+
   /// initTags - initialize the waymarking tags on an array of Uses, so that
   /// getUser() can find the User from any of those Uses.
   static Use *initTags(Use *Start, Use *Stop);
@@ -123,7 +123,7 @@ public:
 
 private:
   const Use* getImpliedUser() const;
-  
+
   Value *Val;
   Use *Next;
   PointerIntPair<Use**, 2, PrevPtrTag> Prev;
@@ -208,7 +208,7 @@ public:
   UserTy *operator->() const { return operator*(); }
 
   Use &getUse() const { return *U; }
-  
+
   /// getOperandNo - Return the operand # of this use in its User.  Defined in
   /// User.h
   ///

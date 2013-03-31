@@ -35,19 +35,19 @@ public:
         Alignment of the scale draw
         \sa setAlignment(), alignment()
      */
-    enum Alignment 
-    { 
+    enum Alignment
+    {
         //! The scale is below
-        BottomScale, 
+        BottomScale,
 
         //! The scale is above
-        TopScale, 
+        TopScale,
 
         //! The scale is left
-        LeftScale, 
+        LeftScale,
 
         //! The scale is right
-        RightScale 
+        RightScale
     };
 
     QwtScaleDraw();

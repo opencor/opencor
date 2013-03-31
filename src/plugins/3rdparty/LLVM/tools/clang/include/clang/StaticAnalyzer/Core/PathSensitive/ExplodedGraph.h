@@ -75,7 +75,7 @@ class ExplodedNode : public llvm::FoldingSetNode {
     // for the nodes in the group.
     // This is not a PointerIntPair in order to keep the storage type opaque.
     uintptr_t P;
-    
+
   public:
     NodeGroup(bool Flag = false) : P(Flag) {
       assert(getFlag() == Flag);
@@ -127,7 +127,7 @@ public:
     : Location(loc), State(state), Succs(IsSink) {
     assert(isSink() == IsSink);
   }
-  
+
   ~ExplodedNode() {}
 
   /// getLocation - Returns the edge associated with the given node.
@@ -230,7 +230,7 @@ public:
   };
 
   static void SetAuditor(Auditor* A);
-  
+
 private:
   void replaceSuccessor(ExplodedNode *node) { Succs.replaceNode(node); }
   void replacePredecessor(ExplodedNode *node) { Preds.replaceNode(node); }
@@ -275,18 +275,18 @@ protected:
 
   /// NumNodes - The number of nodes in the graph.
   unsigned NumNodes;
-  
+
   /// A list of recently allocated nodes that can potentially be recycled.
   NodeVector ChangedNodes;
-  
+
   /// A list of nodes that can be reused.
   NodeVector FreeNodes;
-  
+
   /// Determines how often nodes are reclaimed.
   ///
   /// If this is 0, nodes will never be reclaimed.
   unsigned ReclaimNodeInterval;
-  
+
   /// Counter to determine when to reclaim nodes.
   unsigned ReclaimCounter;
 
@@ -319,7 +319,7 @@ public:
   ExplodedGraph();
 
   ~ExplodedGraph();
-  
+
   unsigned num_roots() const { return Roots.size(); }
   unsigned num_eops() const { return EndNodes.size(); }
 

@@ -490,8 +490,8 @@ public:
 };
 
 /// Declaration of a redeclarable template.
-class RedeclarableTemplateDecl : public TemplateDecl, 
-                                 public Redeclarable<RedeclarableTemplateDecl> 
+class RedeclarableTemplateDecl : public TemplateDecl,
+                                 public Redeclarable<RedeclarableTemplateDecl>
 {
   typedef Redeclarable<RedeclarableTemplateDecl> redeclarable_base;
   virtual RedeclarableTemplateDecl *getNextRedeclaration() {
@@ -577,7 +577,7 @@ protected:
   /// \brief Pointer to the common data shared by all declarations of this
   /// template.
   CommonBase *Common;
-  
+
   /// \brief Retrieves the "common" pointer shared by all (re-)declarations of
   /// the same template. Calling this routine may implicitly allocate memory
   /// for the common pointer.
@@ -596,8 +596,8 @@ public:
 
   /// \brief Retrieves the canonical declaration of this template.
   RedeclarableTemplateDecl *getCanonicalDecl() { return getFirstDeclaration(); }
-  const RedeclarableTemplateDecl *getCanonicalDecl() const { 
-    return getFirstDeclaration(); 
+  const RedeclarableTemplateDecl *getCanonicalDecl() const {
+    return getFirstDeclaration();
   }
 
   /// \brief Determines whether this template was a specialization of a
@@ -630,10 +630,10 @@ public:
   }
 
   /// \brief Retrieve the member template from which this template was
-  /// instantiated, or NULL if this template was not instantiated from a 
+  /// instantiated, or NULL if this template was not instantiated from a
   /// member template.
   ///
-  /// A template is instantiated from a member template when the member 
+  /// A template is instantiated from a member template when the member
   /// template itself is part of a class template (or member thereof). For
   /// example, given
   ///
@@ -911,7 +911,7 @@ public:
                                       unsigned D, unsigned P,
                                       IdentifierInfo *Id, bool Typename,
                                       bool ParameterPack);
-  static TemplateTypeParmDecl *CreateDeserialized(const ASTContext &C, 
+  static TemplateTypeParmDecl *CreateDeserialized(const ASTContext &C,
                                                   unsigned ID);
 
   /// \brief Whether this template type parameter was declared with
@@ -1029,12 +1029,12 @@ public:
          const QualType *ExpandedTypes, unsigned NumExpandedTypes,
          TypeSourceInfo **ExpandedTInfos);
 
-  static NonTypeTemplateParmDecl *CreateDeserialized(ASTContext &C, 
+  static NonTypeTemplateParmDecl *CreateDeserialized(ASTContext &C,
                                                      unsigned ID);
-  static NonTypeTemplateParmDecl *CreateDeserialized(ASTContext &C, 
+  static NonTypeTemplateParmDecl *CreateDeserialized(ASTContext &C,
                                                      unsigned ID,
                                                      unsigned NumExpandedTypes);
-    
+
   using TemplateParmPosition::getDepth;
   using TemplateParmPosition::setDepth;
   using TemplateParmPosition::getPosition;
@@ -1158,8 +1158,8 @@ public:
 /// @endcode
 /// A template template parameter is a TemplateDecl because it defines the
 /// name of a template and the template parameters allowable for substitution.
-class TemplateTemplateParmDecl : public TemplateDecl, 
-                                 protected TemplateParmPosition 
+class TemplateTemplateParmDecl : public TemplateDecl,
+                                 protected TemplateParmPosition
 {
   virtual void anchor();
 
@@ -1212,7 +1212,7 @@ public:
   static TemplateTemplateParmDecl *CreateDeserialized(ASTContext &C,
                                                       unsigned ID,
                                                       unsigned NumExpansions);
-  
+
   using TemplateParmPosition::getDepth;
   using TemplateParmPosition::getPosition;
   using TemplateParmPosition::getIndex;
@@ -2174,7 +2174,7 @@ public:
 
   static ClassScopeFunctionSpecializationDecl *
   CreateDeserialized(ASTContext &Context, unsigned ID);
-  
+
   // Implement isa/cast/dyncast/etc.
   static bool classof(const Decl *D) { return classofKind(D->getKind()); }
   static bool classofKind(Kind K) {

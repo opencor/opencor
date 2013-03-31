@@ -104,7 +104,7 @@ public:
 
   /// \brief The generation of which this module file is a part.
   unsigned Generation;
-  
+
   /// \brief The memory buffer that stores the data associated with
   /// this AST file.
   OwningPtr<llvm::MemoryBuffer> Buffer;
@@ -137,7 +137,7 @@ public:
 
   /// \brief The input files that have been loaded from this AST file, along
   /// with a bool indicating whether this was an overridden buffer.
-  std::vector<llvm::PointerIntPair<const FileEntry *, 1, bool> > 
+  std::vector<llvm::PointerIntPair<const FileEntry *, 1, bool> >
     InputFilesLoaded;
 
   // === Source Locations ===
@@ -256,16 +256,16 @@ public:
   /// search information.
   const char *HeaderFileFrameworkStrings;
 
-  // === Submodule information ===  
+  // === Submodule information ===
   /// \brief The number of submodules in this module.
   unsigned LocalNumSubmodules;
-  
+
   /// \brief Base submodule ID for submodules local to this module.
   serialization::SubmoduleID BaseSubmoduleID;
-  
+
   /// \brief Remapping table for submodule IDs in this module.
   ContinuousRangeMap<uint32_t, int, 2> SubmoduleRemap;
-  
+
   // === Selectors ===
 
   /// \brief The number of selectors new to this file.
@@ -342,24 +342,24 @@ public:
   const serialization::DeclID *FileSortedDecls;
   unsigned NumFileSortedDecls;
 
-  /// \brief Array of redeclaration chain location information within this 
+  /// \brief Array of redeclaration chain location information within this
   /// module file, sorted by the first declaration ID.
   const serialization::LocalRedeclarationsInfo *RedeclarationsMap;
 
   /// \brief The number of redeclaration info entries in RedeclarationsMap.
   unsigned LocalNumRedeclarationsInMap;
-  
+
   /// \brief The redeclaration chains for declarations local to this
   /// module file.
   SmallVector<uint64_t, 1> RedeclarationChains;
-  
-  /// \brief Array of category list location information within this 
+
+  /// \brief Array of category list location information within this
   /// module file, sorted by the definition ID.
   const serialization::ObjCCategoriesInfo *ObjCCategoriesMap;
-  
+
   /// \brief The number of redeclaration info entries in ObjCCategoriesMap.
   unsigned LocalNumObjCCategoriesInMap;
-  
+
   /// \brief The Objective-C category lists for categories known to this
   /// module.
   SmallVector<uint64_t, 1> ObjCCategories;

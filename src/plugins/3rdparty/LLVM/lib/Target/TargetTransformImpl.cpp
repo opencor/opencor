@@ -271,7 +271,7 @@ unsigned VectorTargetTransformImpl::getCastInstrCost(unsigned Opcode, Type *Dst,
     return getScalarizationOverhead(Dst, true, true) + Num * Cost;
   }
 
-  // We already handled vector-to-vector and scalar-to-scalar conversions. This 
+  // We already handled vector-to-vector and scalar-to-scalar conversions. This
   // is where we handle bitcast between vectors and scalars. We need to assume
   //  that the conversion is scalarized in one way or another.
   if (Opcode == Instruction::BitCast)

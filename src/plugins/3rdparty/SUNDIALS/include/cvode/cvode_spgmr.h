@@ -2,7 +2,7 @@
  * -----------------------------------------------------------------
  * $Revision: 1.3 $
  * $Date: 2006/11/29 00:05:06 $
- * ----------------------------------------------------------------- 
+ * -----------------------------------------------------------------
  * Programmer(s): Scott D. Cohen, Alan C. Hindmarsh and
  *                Radu Serban @ LLNL
  * -----------------------------------------------------------------
@@ -11,7 +11,7 @@
  * All rights reserved.
  * For details, see the LICENSE file.
  * -----------------------------------------------------------------
- * This is the header file for the CVODE scaled preconditioned GMRES 
+ * This is the header file for the CVODE scaled preconditioned GMRES
  * linear solver, CVSPGMR.
  * -----------------------------------------------------------------
  */
@@ -38,7 +38,7 @@ extern "C" {
  *
  * pretype   is the type of user preconditioning to be done.
  *           This must be one of the four enumeration constants
- *           PREC_NONE, PREC_LEFT, PREC_RIGHT, or PREC_BOTH defined 
+ *           PREC_NONE, PREC_LEFT, PREC_RIGHT, or PREC_BOTH defined
  *           in sundials_iterative.h.
  *           These correspond to no preconditioning,
  *           left preconditioning only, right preconditioning

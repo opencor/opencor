@@ -121,7 +121,7 @@ public:
   }
 
   bool startNewLineIfNeeded(bool ShouldUpdateCurrentLine = true);
-  
+
   virtual void FileChanged(SourceLocation Loc, FileChangeReason Reason,
                            SrcMgr::CharacteristicKind FileType,
                            FileID PrevFID);
@@ -145,7 +145,7 @@ public:
   }
   bool MoveToLine(unsigned LineNo);
 
-  bool AvoidConcat(const Token &PrevPrevTok, const Token &PrevTok, 
+  bool AvoidConcat(const Token &PrevPrevTok, const Token &PrevTok,
                    const Token &Tok) {
     return ConcatInfo.AvoidConcat(PrevPrevTok, PrevTok, Tok);
   }
@@ -226,7 +226,7 @@ PrintPPOutputPPCallbacks::startNewLineIfNeeded(bool ShouldUpdateCurrentLine) {
       ++CurLine;
     return true;
   }
-  
+
   return false;
 }
 
@@ -240,11 +240,11 @@ void PrintPPOutputPPCallbacks::FileChanged(SourceLocation Loc,
   // Unless we are exiting a #include, make sure to skip ahead to the line the
   // #include directive was at.
   SourceManager &SourceMgr = SM;
-  
+
   PresumedLoc UserLoc = SourceMgr.getPresumedLoc(Loc);
   if (UserLoc.isInvalid())
     return;
-  
+
   unsigned NewLine = UserLoc.getLine();
 
   if (Reason == PPCallbacks::EnterFile) {
@@ -258,7 +258,7 @@ void PrintPPOutputPPCallbacks::FileChanged(SourceLocation Loc,
     // directive and emits a bunch of spaces that aren't needed.  Emulate this
     // strange behavior.
   }
-  
+
   CurLine = NewLine;
 
   CurFilename.clear();
@@ -267,7 +267,7 @@ void PrintPPOutputPPCallbacks::FileChanged(SourceLocation Loc,
   FileType = NewFileType;
 
   if (DisableLineMarkers) return;
-  
+
   if (!Initialized) {
     WriteLineInfo(CurLine);
     Initialized = true;

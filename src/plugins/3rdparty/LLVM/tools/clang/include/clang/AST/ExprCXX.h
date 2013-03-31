@@ -1137,7 +1137,7 @@ class LambdaExpr : public Expr {
 
   /// \brief The number of captures.
   unsigned NumCaptures : 16;
-  
+
   /// \brief The default capture kind, which is a value of type
   /// LambdaCaptureDefault.
   unsigned CaptureDefault : 2;
@@ -1148,14 +1148,14 @@ class LambdaExpr : public Expr {
 
   /// \brief Whether this lambda had the result type explicitly specified.
   unsigned ExplicitResultType : 1;
-  
+
   /// \brief Whether there are any array index variables stored at the end of
   /// this lambda expression.
   unsigned HasArrayIndexVars : 1;
-  
+
   /// \brief The location of the closing brace ('}') that completes
   /// the lambda.
-  /// 
+  ///
   /// The location of the brace is also available by looking up the
   /// function call operator in the lambda class. However, it is
   /// stored here to improve the performance of getSourceRange(), and
@@ -1173,10 +1173,10 @@ public:
     llvm::PointerIntPair<VarDecl *, 2> VarAndBits;
     SourceLocation Loc;
     SourceLocation EllipsisLoc;
-    
+
     friend class ASTStmtReader;
     friend class ASTStmtWriter;
-    
+
   public:
     /// \brief Create a new capture.
     ///
@@ -1210,7 +1210,7 @@ public:
     ///
     /// This operation is only valid if this capture does not capture
     /// 'this'.
-    VarDecl *getCapturedVar() const { 
+    VarDecl *getCapturedVar() const {
       assert(!capturesThis() && "No variable available for 'this' capture");
       return VarAndBits.getPointer();
     }
@@ -1260,20 +1260,20 @@ private:
   LambdaExpr(EmptyShell Empty, unsigned NumCaptures, bool HasArrayIndexVars)
     : Expr(LambdaExprClass, Empty),
       NumCaptures(NumCaptures), CaptureDefault(LCD_None), ExplicitParams(false),
-      ExplicitResultType(false), HasArrayIndexVars(true) { 
+      ExplicitResultType(false), HasArrayIndexVars(true) {
     getStoredStmts()[NumCaptures] = 0;
   }
-  
+
   Stmt **getStoredStmts() const {
     return reinterpret_cast<Stmt **>(const_cast<LambdaExpr *>(this) + 1);
   }
-  
+
   /// \brief Retrieve the mapping from captures to the first array index
   /// variable.
   unsigned *getArrayIndexStarts() const {
     return reinterpret_cast<unsigned *>(getStoredStmts() + NumCaptures + 1);
   }
-  
+
   /// \brief Retrieve the complete set of array-index variables.
   VarDecl **getArrayIndexVars() const {
     unsigned ArrayIndexSize =
@@ -1285,7 +1285,7 @@ private:
 
 public:
   /// \brief Construct a new lambda expression.
-  static LambdaExpr *Create(ASTContext &C, 
+  static LambdaExpr *Create(ASTContext &C,
                             CXXRecordDecl *Class,
                             SourceRange IntroducerRange,
                             LambdaCaptureDefault CaptureDefault,
@@ -1302,7 +1302,7 @@ public:
   /// an external source.
   static LambdaExpr *CreateDeserialized(ASTContext &C, unsigned NumCaptures,
                                         unsigned NumArrayIndexVars);
-  
+
   /// \brief Determine the default capture kind for this lambda.
   LambdaCaptureDefault getCaptureDefault() const {
     return static_cast<LambdaCaptureDefault>(CaptureDefault);
@@ -1321,7 +1321,7 @@ public:
 
   /// \brief Determine the number of captures in this lambda.
   unsigned capture_size() const { return NumCaptures; }
-  
+
   /// \brief Retrieve an iterator pointing to the first explicit
   /// lambda capture.
   capture_iterator explicit_capture_begin() const;
@@ -1351,16 +1351,16 @@ public:
   /// \brief Retrieve the iterator pointing one past the last
   /// initialization argument for this lambda expression.
   capture_init_iterator capture_init_end() const {
-    return capture_init_begin() + NumCaptures;    
+    return capture_init_begin() + NumCaptures;
   }
 
-  /// \brief Retrieve the set of index variables used in the capture 
+  /// \brief Retrieve the set of index variables used in the capture
   /// initializer of an array captured by copy.
   ///
-  /// \param Iter The iterator that points at the capture initializer for 
+  /// \param Iter The iterator that points at the capture initializer for
   /// which we are extracting the corresponding index variables.
   ArrayRef<VarDecl *> getCaptureInitIndexVars(capture_init_iterator Iter) const;
-  
+
   /// \brief Retrieve the source range covering the lambda introducer,
   /// which contains the explicit capture list surrounded by square
   /// brackets ([...]).
@@ -1372,7 +1372,7 @@ public:
   CXXRecordDecl *getLambdaClass() const;
 
   /// \brief Retrieve the function call operator associated with this
-  /// lambda expression. 
+  /// lambda expression.
   CXXMethodDecl *getCallOperator() const;
 
   /// \brief Retrieve the body of the lambda.
@@ -1388,7 +1388,7 @@ public:
 
   /// \brief Whether this lambda had its result type explicitly specified.
   bool hasExplicitResultType() const { return ExplicitResultType; }
-    
+
   static bool classof(const Stmt *T) {
     return T->getStmtClass() == LambdaExprClass;
   }
@@ -2025,13 +2025,13 @@ public:
 class TypeTraitExpr : public Expr {
   /// \brief The location of the type trait keyword.
   SourceLocation Loc;
-  
+
   /// \brief  The location of the closing parenthesis.
   SourceLocation RParenLoc;
-  
+
   // Note: The TypeSourceInfos for the arguments are allocated after the
   // TypeTraitExpr.
-  
+
   TypeTraitExpr(QualType T, SourceLocation Loc, TypeTrait Kind,
                 ArrayRef<TypeSourceInfo *> Args,
                 SourceLocation RParenLoc,
@@ -2043,74 +2043,74 @@ class TypeTraitExpr : public Expr {
   TypeSourceInfo **getTypeSourceInfos() {
     return reinterpret_cast<TypeSourceInfo **>(this+1);
   }
-  
+
   /// \brief Retrieve the argument types.
   TypeSourceInfo * const *getTypeSourceInfos() const {
     return reinterpret_cast<TypeSourceInfo * const*>(this+1);
   }
-  
+
 public:
   /// \brief Create a new type trait expression.
-  static TypeTraitExpr *Create(ASTContext &C, QualType T, SourceLocation Loc, 
+  static TypeTraitExpr *Create(ASTContext &C, QualType T, SourceLocation Loc,
                                TypeTrait Kind,
                                ArrayRef<TypeSourceInfo *> Args,
                                SourceLocation RParenLoc,
                                bool Value);
 
   static TypeTraitExpr *CreateDeserialized(ASTContext &C, unsigned NumArgs);
-  
+
   /// \brief Determine which type trait this expression uses.
   TypeTrait getTrait() const {
     return static_cast<TypeTrait>(TypeTraitExprBits.Kind);
   }
 
-  bool getValue() const { 
-    assert(!isValueDependent()); 
-    return TypeTraitExprBits.Value; 
+  bool getValue() const {
+    assert(!isValueDependent());
+    return TypeTraitExprBits.Value;
   }
-  
+
   /// \brief Determine the number of arguments to this type trait.
   unsigned getNumArgs() const { return TypeTraitExprBits.NumArgs; }
-  
+
   /// \brief Retrieve the Ith argument.
   TypeSourceInfo *getArg(unsigned I) const {
     assert(I < getNumArgs() && "Argument out-of-range");
     return getArgs()[I];
   }
-  
+
   /// \brief Retrieve the argument types.
-  ArrayRef<TypeSourceInfo *> getArgs() const { 
+  ArrayRef<TypeSourceInfo *> getArgs() const {
     return ArrayRef<TypeSourceInfo *>(getTypeSourceInfos(), getNumArgs());
   }
-  
+
   typedef TypeSourceInfo **arg_iterator;
-  arg_iterator arg_begin() { 
-    return getTypeSourceInfos(); 
+  arg_iterator arg_begin() {
+    return getTypeSourceInfos();
   }
-  arg_iterator arg_end() { 
-    return getTypeSourceInfos() + getNumArgs(); 
+  arg_iterator arg_end() {
+    return getTypeSourceInfos() + getNumArgs();
   }
 
   typedef TypeSourceInfo const * const *arg_const_iterator;
   arg_const_iterator arg_begin() const { return getTypeSourceInfos(); }
-  arg_const_iterator arg_end() const { 
-    return getTypeSourceInfos() + getNumArgs(); 
+  arg_const_iterator arg_end() const {
+    return getTypeSourceInfos() + getNumArgs();
   }
 
   SourceRange getSourceRange() const LLVM_READONLY { return SourceRange(Loc, RParenLoc); }
-  
+
   static bool classof(const Stmt *T) {
     return T->getStmtClass() == TypeTraitExprClass;
   }
-  
+
   // Iterators
   child_range children() { return child_range(); }
-  
+
   friend class ASTStmtReader;
   friend class ASTStmtWriter;
 
 };
-  
+
 /// \brief An Embarcadero array type trait, as used in the implementation of
 /// __array_rank and __array_extent.
 ///

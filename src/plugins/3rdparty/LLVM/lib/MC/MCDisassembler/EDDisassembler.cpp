@@ -4,7 +4,7 @@
 //
 // This file is distributed under the University of Illinois Open Source
 // License. See LICENSE.TXT for details.
-// 
+//
 //===----------------------------------------------------------------------===//
 //
 // This file implements the Enhanced Disassembly library's  disassembler class.
@@ -57,17 +57,17 @@ static const struct TripleMap triplemap[] = {
 /// @arg arch - The Triple::ArchType for the desired architecture
 static const char *tripleFromArch(Triple::ArchType arch) {
   unsigned int infoIndex;
-  
+
   for (infoIndex = 0; triplemap[infoIndex].String != NULL; ++infoIndex) {
     if (arch == triplemap[infoIndex].Arch)
       return triplemap[infoIndex].String;
   }
-  
+
   return NULL;
 }
 
 /// getLLVMSyntaxVariant - gets the constant to use to get an assembly printer
-///   for the desired assembly syntax, suitable for passing to 
+///   for the desired assembly syntax, suitable for passing to
 ///   Target::createMCInstPrinter()
 ///
 /// @arg arch   - The target architecture
@@ -108,7 +108,7 @@ EDDisassembler *EDDisassembler::getDisassembler(StringRef str,
   EDDisassembler::DisassemblerMap_t::iterator i = sDisassemblers.find(key);
 
   if (i != sDisassemblers.end()) {
-    return i->second;  
+    return i->second;
   }
 
   EDDisassembler *sdd = new EDDisassembler(key);
@@ -122,49 +122,49 @@ EDDisassembler *EDDisassembler::getDisassembler(StringRef str,
   return sdd;
 }
 
-EDDisassembler::EDDisassembler(CPUKey &key) : 
-  Valid(false), 
-  HasSemantics(false), 
-  ErrorStream(nulls()), 
+EDDisassembler::EDDisassembler(CPUKey &key) :
+  Valid(false),
+  HasSemantics(false),
+  ErrorStream(nulls()),
   Key(key),
-  TgtTriple(key.Triple.c_str()) {        
-  
+  TgtTriple(key.Triple.c_str()) {
+
   LLVMSyntaxVariant = getLLVMSyntaxVariant(TgtTriple.getArch(), key.Syntax);
-  
+
   if (LLVMSyntaxVariant < 0)
     return;
-  
+
   std::string tripleString(key.Triple);
   std::string errorString;
-  
-  Tgt = TargetRegistry::lookupTarget(key.Triple, 
+
+  Tgt = TargetRegistry::lookupTarget(key.Triple,
                                      errorString);
-  
+
   if (!Tgt)
     return;
-  
+
   MRI.reset(Tgt->createMCRegInfo(tripleString));
 
   if (!MRI)
     return;
 
   initMaps(*MRI);
-  
+
   AsmInfo.reset(Tgt->createMCAsmInfo(tripleString));
-  
+
   if (!AsmInfo)
     return;
 
   STI.reset(Tgt->createMCSubtargetInfo(tripleString, "", ""));
-  
+
   if (!STI)
     return;
 
   Disassembler.reset(Tgt->createMCDisassembler(*STI));
-  
+
   if (!Disassembler)
     return;
-    
+
   InstInfos = Disassembler->getEDInfo();
 
   MII.reset(Tgt->createMCInstrInfo());
@@ -176,16 +176,16 @@ EDDisassembler::EDDisassembler(CPUKey &key) :
   InstStream.reset(new raw_string_ostream(*InstString));
   InstPrinter.reset(Tgt->createMCInstPrinter(LLVMSyntaxVariant, *AsmInfo,
                                              *MII, *MRI, *STI));
-  
+
   if (!InstPrinter)
     return;
-    
+
   GenericAsmLexer.reset(new AsmLexer(*AsmInfo));
   SpecificAsmLexer.reset(Tgt->createMCAsmLexer(*MRI, *AsmInfo));
   SpecificAsmLexer->InstallLexer(*GenericAsmLexer);
-  
+
   initMaps(*MRI);
-    
+
   Valid = true;
 }
 
@@ -210,23 +210,23 @@ namespace {
     int readByte(uint64_t address, uint8_t *ptr) const {
       if (!Callback)
         return -1;
-      
+
       if (Callback(ptr, address, Arg))
         return -1;
-      
+
       return 0;
     }
   };
 }
 
-EDInst *EDDisassembler::createInst(EDByteReaderCallback byteReader, 
-                                   uint64_t address, 
+EDInst *EDDisassembler::createInst(EDByteReaderCallback byteReader,
+                                   uint64_t address,
                                    void *arg) {
   EDMemoryObject memoryObject(byteReader, arg);
-  
+
   MCInst* inst = new MCInst;
   uint64_t byteSize;
-  
+
   MCDisassembler::DecodeStatus S;
   S = Disassembler->getInstruction(*inst, byteSize, memoryObject, address,
                                    ErrorStream, nulls());
@@ -236,14 +236,14 @@ EDInst *EDDisassembler::createInst(EDByteReaderCallback byteReader,
     // FIXME: Do something different on soft failure mode?
     delete inst;
     return NULL;
-    
+
   case MCDisassembler::Success: {
     const llvm::EDInstInfo *thisInstInfo = NULL;
 
     if (InstInfos) {
       thisInstInfo = &InstInfos[inst->getOpcode()];
     }
-    
+
     EDInst* sdInst = new EDInst(inst, byteSize, *this, thisInstInfo);
     return sdInst;
   }
@@ -254,14 +254,14 @@ EDInst *EDDisassembler::createInst(EDByteReaderCallback byteReader,
 void EDDisassembler::initMaps(const MCRegisterInfo &registerInfo) {
   unsigned numRegisters = registerInfo.getNumRegs();
   unsigned registerIndex;
-  
+
   for (registerIndex = 0; registerIndex < numRegisters; ++registerIndex) {
     const char* registerName = registerInfo.getName(registerIndex);
-    
+
     RegVec.push_back(registerName);
     RegRMap[registerName] = registerIndex;
   }
-  
+
   switch (TgtTriple.getArch()) {
   default:
     break;
@@ -270,7 +270,7 @@ void EDDisassembler::initMaps(const MCRegisterInfo &registerInfo) {
     stackPointers.insert(registerIDWithName("SP"));
     stackPointers.insert(registerIDWithName("ESP"));
     stackPointers.insert(registerIDWithName("RSP"));
-    
+
     programCounters.insert(registerIDWithName("IP"));
     programCounters.insert(registerIDWithName("EIP"));
     programCounters.insert(registerIDWithName("RIP"));
@@ -278,9 +278,9 @@ void EDDisassembler::initMaps(const MCRegisterInfo &registerInfo) {
   case Triple::arm:
   case Triple::thumb:
     stackPointers.insert(registerIDWithName("SP"));
-    
+
     programCounters.insert(registerIDWithName("PC"));
-    break;  
+    break;
   }
 }
 
@@ -309,14 +309,14 @@ bool EDDisassembler::registerIsProgramCounter(unsigned registerID) {
 
 int EDDisassembler::printInst(std::string &str, MCInst &inst) {
   PrinterMutex.acquire();
-  
+
   InstPrinter->printInst(&inst, *InstStream, "");
   InstStream->flush();
   str = *InstString;
   InstString->clear();
-  
+
   PrinterMutex.release();
-  
+
   return 0;
 }
 
@@ -329,7 +329,7 @@ int EDDisassembler::parseInst(SmallVectorImpl<MCParsedAsmOperand*> &operands,
                               SmallVectorImpl<AsmToken> &tokens,
                               const std::string &str) {
   int ret = 0;
-  
+
   switch (TgtTriple.getArch()) {
   default:
     return -1;
@@ -339,13 +339,13 @@ int EDDisassembler::parseInst(SmallVectorImpl<MCParsedAsmOperand*> &operands,
   case Triple::thumb:
     break;
   }
-  
+
   const char *cStr = str.c_str();
   MemoryBuffer *buf = MemoryBuffer::getMemBuffer(cStr, cStr + strlen(cStr));
-  
+
   StringRef instName;
   SMLoc instLoc;
-  
+
   SourceMgr sourceMgr;
   sourceMgr.setDiagHandler(diag_handler, static_cast<void*>(this));
   sourceMgr.AddNewSourceBuffer(buf, SMLoc()); // ownership of buf handed over
@@ -358,14 +358,14 @@ int EDDisassembler::parseInst(SmallVectorImpl<MCParsedAsmOperand*> &operands,
   OwningPtr<MCSubtargetInfo> STI(Tgt->createMCSubtargetInfo(Key.Triple.c_str(), "", ""));
   OwningPtr<MCTargetAsmParser>
     TargetParser(Tgt->createMCAsmParser(*STI, *genericParser));
-  
+
   AsmToken OpcodeToken = genericParser->Lex();
   AsmToken NextToken = genericParser->Lex();  // consume next token, because specificParser expects us to
-    
+
   if (OpcodeToken.is(AsmToken::Identifier)) {
     instName = OpcodeToken.getString();
     instLoc = OpcodeToken.getLoc();
-    
+
     ParseInstructionInfo Info;
     if (NextToken.isNot(AsmToken::Eof) &&
         TargetParser->ParseInstruction(Info, instName, instLoc, operands))
@@ -373,12 +373,12 @@ int EDDisassembler::parseInst(SmallVectorImpl<MCParsedAsmOperand*> &operands,
   } else {
     ret = -1;
   }
-  
+
   ParserMutex.acquire();
-  
+
   if (!ret) {
     GenericAsmLexer->setBuffer(buf);
-  
+
     while (SpecificAsmLexer->Lex(),
            SpecificAsmLexer->isNot(AsmToken::Eof) &&
            SpecificAsmLexer->isNot(AsmToken::EndOfStatement)) {
@@ -391,7 +391,7 @@ int EDDisassembler::parseInst(SmallVectorImpl<MCParsedAsmOperand*> &operands,
   }
 
   ParserMutex.release();
-  
+
   return ret;
 }
 

@@ -2,7 +2,7 @@
  * -----------------------------------------------------------------
  * $Revision: 1.4 $
  * $Date: 2010/12/01 22:10:38 $
- * ----------------------------------------------------------------- 
+ * -----------------------------------------------------------------
  * Programmer(s): Scott D. Cohen, Alan C. Hindmarsh and
  *                Radu Serban @ LLNL
  * -----------------------------------------------------------------
@@ -74,11 +74,11 @@ SUNDIALS_EXPORT int CVDiagGetLastFlag(void *cvode_mem, long int *flag);
 
 /*
  * -----------------------------------------------------------------
- * The following function returns the name of the constant 
+ * The following function returns the name of the constant
  * associated with a CVDIAG return flag
  * -----------------------------------------------------------------
  */
-  
+
 SUNDIALS_EXPORT char *CVDiagGetReturnFlagName(long int flag);
 
 /*

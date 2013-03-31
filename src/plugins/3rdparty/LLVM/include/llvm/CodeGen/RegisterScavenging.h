@@ -36,7 +36,7 @@ class RegScavenger {
   MachineBasicBlock::iterator MBBI;
   unsigned NumPhysRegs;
 
-  /// Tracking - True if RegScavenger is currently tracking the liveness of 
+  /// Tracking - True if RegScavenger is currently tracking the liveness of
   /// registers.
   bool Tracking;
 

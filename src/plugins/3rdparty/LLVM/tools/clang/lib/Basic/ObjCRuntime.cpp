@@ -22,7 +22,7 @@ std::string ObjCRuntime::getAsString() const {
     llvm::raw_string_ostream Out(Result);
     Out << *this;
   }
-  return Result;  
+  return Result;
 }
 
 raw_ostream &clang::operator<<(raw_ostream &out, const ObjCRuntime &value) {
@@ -75,10 +75,10 @@ bool ObjCRuntime::tryParse(StringRef input) {
     return true;
   }
   TheKind = kind;
-  
+
   if (dash != StringRef::npos) {
     StringRef verString = input.substr(dash + 1);
-    if (Version.tryParse(verString)) 
+    if (Version.tryParse(verString))
       return true;
   }
 

@@ -691,7 +691,7 @@ static void fixupObjcLikeName(StringRef Str, SmallVectorImpl<char> &Out) {
   }
 }
 
-/// getFnSpecificMDNode - Return a NameMDNode, if available, that is 
+/// getFnSpecificMDNode - Return a NameMDNode, if available, that is
 /// suitable to hold function specific information.
 NamedMDNode *llvm::getFnSpecificMDNode(const Module &M, DISubprogram Fn) {
   SmallString<32> Name = StringRef("llvm.dbg.lv.");
@@ -720,7 +720,7 @@ NamedMDNode *llvm::getOrInsertFnSpecificMDNode(Module &M, DISubprogram Fn) {
   if (FName.startswith(StringRef(&One, 1)))
     FName = FName.substr(1);
   fixupObjcLikeName(FName, Name);
-  
+
   return M.getOrInsertNamedMetadata(Name.str());
 }
 
@@ -743,7 +743,7 @@ DIVariable llvm::cleanseInlinedVariable(MDNode *DV, LLVMContext &VMContext) {
   SmallVector<Value *, 16> Elts;
   // Insert inlined scope as 7th element.
   for (unsigned i = 0, e = DV->getNumOperands(); i != e; ++i)
-    i == 7 ? 
+    i == 7 ?
       Elts.push_back(Constant::getNullValue(Type::getInt32Ty(VMContext))):
       Elts.push_back(DV->getOperand(i));
   return DIVariable(MDNode::get(VMContext, Elts));
@@ -757,7 +757,7 @@ DISubprogram llvm::getDISubprogram(const MDNode *Scope) {
 
   if (D.isLexicalBlockFile())
     return getDISubprogram(DILexicalBlockFile(Scope).getContext());
-  
+
   if (D.isLexicalBlock())
     return getDISubprogram(DILexicalBlock(Scope).getContext());
 
@@ -1065,7 +1065,7 @@ void DIType::printInternal(raw_ostream &OS) const {
      << ", align " << getAlignInBits()
      << ", offset " << getOffsetInBits();
   if (isBasicType())
-    if (const char *Enc = 
+    if (const char *Enc =
         dwarf::AttributeEncodingString(DIBasicType(DbgNode).getEncoding()))
       OS << ", enc " << Enc;
   OS << "]";

@@ -113,7 +113,7 @@ void TargetRegistry::RegisterTarget(Target &T,
   // convenience to some clients.
   if (T.Name)
     return;
-         
+
   // Add to the list of targets.
   T.Next = FirstTarget;
   FirstTarget = &T;

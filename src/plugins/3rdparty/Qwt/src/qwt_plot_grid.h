@@ -72,7 +72,7 @@ public:
         const QwtScaleMap &xMap, const QwtScaleMap &yMap,
         const QRectF &rect ) const;
 
-    virtual void updateScaleDiv( 
+    virtual void updateScaleDiv(
         const QwtScaleDiv &xMap, const QwtScaleDiv &yMap );
 
 private:

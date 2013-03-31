@@ -439,14 +439,14 @@ private:
 
   /// \brief The availability of this code-completion result.
   unsigned Availability : 2;
-  
+
   /// \brief The name of the parent context.
   StringRef ParentName;
 
   /// \brief A brief documentation comment attached to the declaration of
   /// entity being completed by this result.
   const char *BriefComment;
-  
+
   CodeCompletionString(const CodeCompletionString &) LLVM_DELETED_FUNCTION;
   void operator=(const CodeCompletionString &) LLVM_DELETED_FUNCTION;
 
@@ -486,7 +486,7 @@ public:
 
   /// \brief Retrieve the annotation string specified by \c AnnotationNr.
   const char *getAnnotation(unsigned AnnotationNr) const;
-  
+
   /// \brief Retrieve the name of the parent context.
   StringRef getParentContextName() const {
     return ParentName;
@@ -495,7 +495,7 @@ public:
   const char *getBriefComment() const {
     return BriefComment;
   }
-  
+
   /// \brief Retrieve a string representation of the code completion string,
   /// which is mainly useful for debugging.
   std::string getAsString() const;
@@ -522,7 +522,7 @@ public:
 };
 
 /// \brief Allocator for a cached set of global code completions.
-class GlobalCodeCompletionAllocator 
+class GlobalCodeCompletionAllocator
   : public CodeCompletionAllocator,
     public RefCountedBase<GlobalCodeCompletionAllocator>
 {
@@ -571,7 +571,7 @@ private:
   CXAvailabilityKind Availability;
   StringRef ParentName;
   const char *BriefComment;
-  
+
   /// \brief The chunks stored in this string.
   SmallVector<Chunk, 4> Chunks;
 
@@ -632,7 +632,7 @@ public:
   void addParentContext(DeclContext *DC);
 
   void addBriefComment(StringRef Comment);
-  
+
   StringRef getParentName() const { return ParentName; }
 };
 
@@ -760,8 +760,8 @@ public:
       QualifierIsInformative(false), StartsNestedNameSpecifier(false),
       AllParametersAreInformative(false), DeclaringEntity(false), Qualifier(0) {
     computeCursorKindAndAvailability();
-  }  
-  
+  }
+
   /// \brief Retrieve the declaration stored in this result.
   NamedDecl *getDeclaration() const {
     assert(Kind == RK_Declaration && "Not a declaration result");

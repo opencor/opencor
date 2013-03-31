@@ -41,7 +41,7 @@ namespace iface
       ADAMS_MOULTON_1_12 = 11,
       BDF_IMPLICIT_1_5_SOLVE = 12
     } ODEIntegrationStepType;
-    PUBLIC_CIS_PRE 
+    PUBLIC_CIS_PRE
     class  PUBLIC_CIS_POST IntegrationProgressObserver
      : public virtual iface::XPCOM::IObject
     {
@@ -53,7 +53,7 @@ namespace iface
       virtual void done() throw(std::exception&) = 0;
       virtual void failed(const std::string& errorMessage) throw(std::exception&) = 0;
     };
-    PUBLIC_CIS_PRE 
+    PUBLIC_CIS_PRE
     class  PUBLIC_CIS_POST CellMLIntegrationRun
      : public virtual iface::XPCOM::IObject
     {
@@ -68,7 +68,7 @@ namespace iface
       virtual void start() throw(std::exception&) = 0;
       virtual void stop() throw(std::exception&) = 0;
     };
-    PUBLIC_CIS_PRE 
+    PUBLIC_CIS_PRE
     class  PUBLIC_CIS_POST ODESolverRun
      : public virtual iface::cellml_services::CellMLIntegrationRun
     {
@@ -78,7 +78,7 @@ namespace iface
       virtual iface::cellml_services::ODEIntegrationStepType stepType() throw(std::exception&)  = 0;
       virtual void stepType(iface::cellml_services::ODEIntegrationStepType attr) throw(std::exception&) = 0;
     };
-    PUBLIC_CIS_PRE 
+    PUBLIC_CIS_PRE
     class  PUBLIC_CIS_POST DAESolverRun
      : public virtual iface::cellml_services::CellMLIntegrationRun
     {
@@ -86,7 +86,7 @@ namespace iface
       static const char* INTERFACE_NAME() { return "cellml_services::DAESolverRun"; }
       virtual ~DAESolverRun() {}
     };
-    PUBLIC_CIS_PRE 
+    PUBLIC_CIS_PRE
     class  PUBLIC_CIS_POST CellMLCompiledModel
      : public virtual iface::XPCOM::IObject
     {
@@ -96,7 +96,7 @@ namespace iface
       virtual already_AddRefd<iface::cellml_api::Model>  model() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_services::CodeInformation>  codeInformation() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CIS_PRE 
+    PUBLIC_CIS_PRE
     class  PUBLIC_CIS_POST ODESolverCompiledModel
      : public virtual iface::cellml_services::CellMLCompiledModel
     {
@@ -104,7 +104,7 @@ namespace iface
       static const char* INTERFACE_NAME() { return "cellml_services::ODESolverCompiledModel"; }
       virtual ~ODESolverCompiledModel() {}
     };
-    PUBLIC_CIS_PRE 
+    PUBLIC_CIS_PRE
     class  PUBLIC_CIS_POST DAESolverCompiledModel
      : public virtual iface::cellml_services::CellMLCompiledModel
     {
@@ -112,7 +112,7 @@ namespace iface
       static const char* INTERFACE_NAME() { return "cellml_services::DAESolverCompiledModel"; }
       virtual ~DAESolverCompiledModel() {}
     };
-    PUBLIC_CIS_PRE 
+    PUBLIC_CIS_PRE
     class  PUBLIC_CIS_POST CellMLIntegrationService
      : public virtual iface::XPCOM::IObject
     {

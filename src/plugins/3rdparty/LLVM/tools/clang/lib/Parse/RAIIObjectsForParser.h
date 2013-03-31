@@ -48,7 +48,7 @@ namespace clang {
     bool Active;
 
   public:
-    /// Begin suppressing access-like checks 
+    /// Begin suppressing access-like checks
     SuppressAccessChecks(Parser &P, bool activate = true)
         : S(P.getActions()), DiagnosticPool(NULL) {
       if (activate) {
@@ -257,7 +257,7 @@ namespace clang {
       Diags.DecrementAllExtensionsSilenced();
     }
   };
-  
+
   /// ColonProtectionRAIIObject - This sets the Parser::ColonIsSacred bool and
   /// restores it when destroyed.  This says that "foo:" should not be
   /// considered a possible typo for "foo::" for error recovery purposes.
@@ -269,18 +269,18 @@ namespace clang {
       : P(p), OldVal(P.ColonIsSacred) {
       P.ColonIsSacred = Value;
     }
-    
+
     /// restore - This can be used to restore the state early, before the dtor
     /// is run.
     void restore() {
       P.ColonIsSacred = OldVal;
     }
-    
+
     ~ColonProtectionRAIIObject() {
       restore();
     }
   };
-  
+
   /// \brief RAII object that makes '>' behave either as an operator
   /// or as the closing angle bracket for a template argument list.
   class GreaterThanIsOperatorScope {
@@ -291,28 +291,28 @@ namespace clang {
     : GreaterThanIsOperator(GTIO), OldGreaterThanIsOperator(GTIO) {
       GreaterThanIsOperator = Val;
     }
-    
+
     ~GreaterThanIsOperatorScope() {
       GreaterThanIsOperator = OldGreaterThanIsOperator;
     }
   };
-  
+
   class InMessageExpressionRAIIObject {
     bool &InMessageExpression;
     bool OldValue;
-    
+
   public:
     InMessageExpressionRAIIObject(Parser &P, bool Value)
-      : InMessageExpression(P.InMessageExpression), 
+      : InMessageExpression(P.InMessageExpression),
         OldValue(P.InMessageExpression) {
       InMessageExpression = Value;
     }
-    
+
     ~InMessageExpressionRAIIObject() {
       InMessageExpression = OldValue;
     }
   };
-  
+
   /// \brief RAII object that makes sure paren/bracket/brace count is correct
   /// after declaration/statement parsing, even when there's a parsing error.
   class ParenBraceBracketBalancer {
@@ -322,7 +322,7 @@ namespace clang {
     ParenBraceBracketBalancer(Parser &p)
       : P(p), ParenCount(p.ParenCount), BracketCount(p.BracketCount),
         BraceCount(p.BraceCount) { }
-    
+
     ~ParenBraceBracketBalancer() {
       P.ParenCount = ParenCount;
       P.BracketCount = BracketCount;
@@ -361,7 +361,7 @@ namespace clang {
     tok::TokenKind Kind, Close;
     SourceLocation (Parser::*Consumer)();
     SourceLocation LOpen, LClose;
-    
+
     unsigned short &getDepth() {
       switch (Kind) {
         case tok::l_brace: return P.BraceCount;
@@ -370,12 +370,12 @@ namespace clang {
         default: llvm_unreachable("Wrong token kind");
       }
     }
-    
+
     enum { MaxDepth = 256 };
-    
+
     bool diagnoseOverflow();
     bool diagnoseMissingClose();
-    
+
   public:
     BalancedDelimiterTracker(Parser& p, tok::TokenKind k)
       : GreaterThanIsOperatorScope(p.GreaterThanIsOperator, true),
@@ -384,37 +384,37 @@ namespace clang {
       switch (Kind) {
         default: llvm_unreachable("Unexpected balanced token");
         case tok::l_brace:
-          Close = tok::r_brace; 
+          Close = tok::r_brace;
           Consumer = &Parser::ConsumeBrace;
           break;
         case tok::l_paren:
-          Close = tok::r_paren; 
+          Close = tok::r_paren;
           Consumer = &Parser::ConsumeParen;
           break;
-          
+
         case tok::l_square:
-          Close = tok::r_square; 
+          Close = tok::r_square;
           Consumer = &Parser::ConsumeBracket;
           break;
-      }      
+      }
     }
-    
+
     SourceLocation getOpenLocation() const { return LOpen; }
     SourceLocation getCloseLocation() const { return LClose; }
     SourceRange getRange() const { return SourceRange(LOpen, LClose); }
-    
+
     bool consumeOpen() {
       if (!P.Tok.is(Kind))
         return true;
-      
+
       if (getDepth() < MaxDepth) {
         LOpen = (P.*Consumer)();
         return false;
       }
-      
+
       return diagnoseOverflow();
     }
-    
+
     bool expectAndConsume(unsigned DiagID,
                           const char *Msg = "",
                           tok::TokenKind SkipToTok = tok::unknown);
@@ -422,8 +422,8 @@ namespace clang {
       if (P.Tok.is(Close)) {
         LClose = (P.*Consumer)();
         return false;
-      } 
-      
+      }
+
       return diagnoseMissingClose();
     }
     void skipToEnd();

@@ -36,7 +36,7 @@ public:
     DK_Warning,
     DK_Note
   };
-  
+
   /// DiagHandlerTy - Clients that want to handle their own diagnostics in a
   /// custom way can register a function pointer+context as a diagnostic
   /// handler.  It gets called each time PrintMessage is invoked.
@@ -147,7 +147,7 @@ public:
   ///
   /// @param Msg If non-null, the kind of message (e.g., "error") which is
   /// prefixed to the message.
-  SMDiagnostic GetMessage(SMLoc Loc, DiagKind Kind, const Twine &Msg, 
+  SMDiagnostic GetMessage(SMLoc Loc, DiagKind Kind, const Twine &Msg,
                           ArrayRef<SMRange> Ranges = ArrayRef<SMRange>()) const;
 
   /// PrintIncludeStack - Prints the names of included files and the line of the
@@ -180,7 +180,7 @@ public:
                const std::string &Msg)
     : SM(0), Filename(filename), LineNo(-1), ColumnNo(-1), Kind(Knd),
       Message(Msg) {}
-  
+
   // Diagnostic with a location.
   SMDiagnostic(const SourceMgr &sm, SMLoc L, const std::string &FN,
                int Line, int Col, SourceMgr::DiagKind Kind,

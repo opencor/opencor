@@ -2,7 +2,7 @@
  * -----------------------------------------------------------------
  * $Revision: 1.10 $
  * $Date: 2011/03/23 22:27:43 $
- * ----------------------------------------------------------------- 
+ * -----------------------------------------------------------------
  * Programmer(s): Scott D. Cohen, Alan C. Hindmarsh and
  *                Radu Serban @ LLNL
  * -----------------------------------------------------------------
@@ -50,7 +50,7 @@ static void CVSpgmrFree(CVodeMem cv_mem);
 #define tn           (cv_mem->cv_tn)
 #define h            (cv_mem->cv_h)
 #define gamma        (cv_mem->cv_gamma)
-#define gammap       (cv_mem->cv_gammap)   
+#define gammap       (cv_mem->cv_gammap)
 #define f            (cv_mem->cv_f)
 #define user_data    (cv_mem->cv_user_data)
 #define ewt          (cv_mem->cv_ewt)
@@ -64,7 +64,7 @@ static void CVSpgmrFree(CVodeMem cv_mem);
 #define vec_tmpl     (cv_mem->cv_tempv)
 #define setupNonNull (cv_mem->cv_setupNonNull)
 
-#define sqrtN   (cvspils_mem->s_sqrtN)   
+#define sqrtN   (cvspils_mem->s_sqrtN)
 #define ytemp   (cvspils_mem->s_ytemp)
 #define x       (cvspils_mem->s_x)
 #define ycur    (cvspils_mem->s_ycur)
@@ -166,7 +166,7 @@ int CVSpgmr(void *cvode_mem, int pretype, int maxl)
 
   setupNonNull = FALSE;
 
-  /* Check for legal pretype */ 
+  /* Check for legal pretype */
   if ((pretype != PREC_NONE) && (pretype != PREC_LEFT) &&
       (pretype != PREC_RIGHT) && (pretype != PREC_BOTH)) {
     CVProcessError(cv_mem, CVSPILS_ILL_INPUT, "CVSPGMR", "CVSpgmr", MSGS_BAD_PRETYPE);
@@ -205,7 +205,7 @@ int CVSpgmr(void *cvode_mem, int pretype, int maxl)
     free(cvspils_mem); cvspils_mem = NULL;
     return(CVSPILS_MEM_FAIL);
   }
-  
+
   /* Attach SPGMR memory to spils memory structure */
   spils_mem = (void *) spgmr_mem;
 
@@ -230,7 +230,7 @@ int CVSpgmr(void *cvode_mem, int pretype, int maxl)
  * -----------------------------------------------------------------
  * CVSpgmrInit
  * -----------------------------------------------------------------
- * This routine does remaining initializations specific to the Spgmr 
+ * This routine does remaining initializations specific to the Spgmr
  * linear solver.
  * -----------------------------------------------------------------
  */
@@ -300,7 +300,7 @@ static int CVSpgmrSetup(CVodeMem cv_mem, int convfail, N_Vector ypred,
   jok = !jbad;
 
   /* Call pset routine and possibly reset jcur */
-  retval = pset(tn, ypred, fpred, jok, jcurPtr, gamma, P_data, 
+  retval = pset(tn, ypred, fpred, jok, jcurPtr, gamma, P_data,
                 vtemp1, vtemp2, vtemp3);
   if (retval < 0) {
     CVProcessError(cv_mem, SPGMR_PSET_FAIL_UNREC, "CVSPGMR", "CVSpgmrSetup", MSGS_PSET_FAILED);
@@ -353,17 +353,17 @@ static int CVSpgmrSolve(CVodeMem cv_mem, N_Vector b, N_Vector weight,
   CVSpilsMem cvspils_mem;
   SpgmrMem spgmr_mem;
   int nli_inc, nps_inc, retval;
-  
+
   cvspils_mem = (CVSpilsMem) lmem;
 
   spgmr_mem = (SpgmrMem) spils_mem;
 
   /* Test norm(b); if small, return x = 0 or x = b */
-  deltar = eplifac * tq[4]; 
+  deltar = eplifac * tq[4];
 
   bnorm = N_VWrmsNorm(b, weight);
   if (bnorm <= deltar) {
-    if (mnewt > 0) N_VConst(ZERO, b); 
+    if (mnewt > 0) N_VConst(ZERO, b);
     return(0);
   }
 
@@ -371,17 +371,17 @@ static int CVSpgmrSolve(CVodeMem cv_mem, N_Vector b, N_Vector weight,
   ycur = ynow;
   fcur = fnow;
 
-  /* Set inputs delta and initial guess x = 0 to SpgmrSolve */  
+  /* Set inputs delta and initial guess x = 0 to SpgmrSolve */
   delta = deltar * sqrtN;
   N_VConst(ZERO, x);
-  
+
   /* Call SpgmrSolve and copy x to b */
   retval = SpgmrSolve(spgmr_mem, cv_mem, x, b, pretype, gstype, delta, 0,
                       cv_mem, weight, weight, CVSpilsAtimes, CVSpilsPSolve,
                       &res_norm, &nli_inc, &nps_inc);
 
   N_VScale(ONE, x, b);
-  
+
   /* Increment counters nli, nps, and ncfl */
   nli += nli_inc;
   nps += nps_inc;
@@ -416,7 +416,7 @@ static int CVSpgmrSolve(CVodeMem cv_mem, N_Vector b, N_Vector weight,
     return(-1);
     break;
   case SPGMR_ATIMES_FAIL_UNREC:
-    CVProcessError(cv_mem, SPGMR_ATIMES_FAIL_UNREC, "CVSPGMR", "CVSpgmrSolve", MSGS_JTIMES_FAILED);    
+    CVProcessError(cv_mem, SPGMR_ATIMES_FAIL_UNREC, "CVSPGMR", "CVSpgmrSolve", MSGS_JTIMES_FAILED);
     return(-1);
     break;
   case SPGMR_PSOLVE_FAIL_UNREC:
@@ -448,7 +448,7 @@ static void CVSpgmrFree(CVodeMem cv_mem)
   SpgmrMem spgmr_mem;
 
   cvspils_mem = (CVSpilsMem) lmem;
-  
+
   N_VDestroy(ytemp);
   N_VDestroy(x);
 

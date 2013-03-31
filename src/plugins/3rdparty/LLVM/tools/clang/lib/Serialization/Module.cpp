@@ -31,7 +31,7 @@ ModuleFile::ModuleFile(ModuleKind Kind, unsigned Generation)
     LocalNumMacros(0), MacroOffsets(0),
     BasePreprocessedEntityID(0),
     PreprocessedEntityOffsets(0), NumPreprocessedEntities(0),
-    LocalNumHeaderFileInfos(0), 
+    LocalNumHeaderFileInfos(0),
     HeaderFileInfoTableData(0), HeaderFileInfoTable(0),
     HeaderFileFrameworkStrings(0), LocalNumSubmodules(0), BaseSubmoduleID(0),
     LocalNumSelectors(0), SelectorOffsets(0), BaseSelectorID(0),
@@ -51,22 +51,22 @@ ModuleFile::~ModuleFile() {
     if (I->second.NameLookupTableData)
       delete I->second.NameLookupTableData;
   }
-  
+
   delete static_cast<ASTIdentifierLookupTable *>(IdentifierLookupTable);
   delete static_cast<HeaderFileInfoLookupTable *>(HeaderFileInfoTable);
   delete static_cast<ASTSelectorLookupTable *>(SelectorLookupTable);
 }
 
 template<typename Key, typename Offset, unsigned InitialCapacity>
-static void 
+static void
 dumpLocalRemap(StringRef Name,
                const ContinuousRangeMap<Key, Offset, InitialCapacity> &Map) {
   if (Map.begin() == Map.end())
     return;
-  
+
   typedef ContinuousRangeMap<Key, Offset, InitialCapacity> MapType;
   llvm::errs() << "  " << Name << ":\n";
-  for (typename MapType::const_iterator I = Map.begin(), IEnd = Map.end(); 
+  for (typename MapType::const_iterator I = Map.begin(), IEnd = Map.end();
        I != IEnd; ++I) {
     llvm::errs() << "    " << I->first << " -> " << I->second << "\n";
   }
@@ -83,12 +83,12 @@ void ModuleFile::dump() {
     }
     llvm::errs() << "\n";
   }
-  
+
   // Remapping tables.
-  llvm::errs() << "  Base source location offset: " << SLocEntryBaseOffset 
+  llvm::errs() << "  Base source location offset: " << SLocEntryBaseOffset
                << '\n';
   dumpLocalRemap("Source location offset local -> global map", SLocRemap);
-  
+
   llvm::errs() << "  Base identifier ID: " << BaseIdentifierID << '\n'
                << "  Number of identifiers: " << LocalNumIdentifiers << '\n';
   dumpLocalRemap("Identifier ID local -> global map", IdentifierRemap);
@@ -104,18 +104,18 @@ void ModuleFile::dump() {
   llvm::errs() << "  Base selector ID: " << BaseSelectorID << '\n'
                << "  Number of selectors: " << LocalNumSelectors << '\n';
   dumpLocalRemap("Selector ID local -> global map", SelectorRemap);
-  
+
   llvm::errs() << "  Base preprocessed entity ID: " << BasePreprocessedEntityID
-               << '\n'  
-               << "  Number of preprocessed entities: " 
+               << '\n'
+               << "  Number of preprocessed entities: "
                << NumPreprocessedEntities << '\n';
-  dumpLocalRemap("Preprocessed entity ID local -> global map", 
+  dumpLocalRemap("Preprocessed entity ID local -> global map",
                  PreprocessedEntityRemap);
-  
+
   llvm::errs() << "  Base type index: " << BaseTypeIndex << '\n'
                << "  Number of types: " << LocalNumTypes << '\n';
   dumpLocalRemap("Type index local -> global map", TypeRemap);
-  
+
   llvm::errs() << "  Base decl ID: " << BaseDeclID << '\n'
                << "  Number of decls: " << LocalNumDecls << '\n';
   dumpLocalRemap("Decl ID local -> global map", DeclRemap);

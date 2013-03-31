@@ -39,22 +39,22 @@ using namespace clang;
 #define ABSTRACT_DECL(DECL)
 #include "clang/AST/DeclNodes.inc"
 
-void *Decl::AllocateDeserializedDecl(const ASTContext &Context, 
+void *Decl::AllocateDeserializedDecl(const ASTContext &Context,
                                      unsigned ID,
                                      unsigned Size) {
   // Allocate an extra 8 bytes worth of storage, which ensures that the
-  // resulting pointer will still be 8-byte aligned. 
+  // resulting pointer will still be 8-byte aligned.
   void *Start = Context.Allocate(Size + 8);
   void *Result = (char*)Start + 8;
-  
+
   unsigned *PrefixPtr = (unsigned *)Result - 2;
-  
+
   // Zero out the first 4 bytes; this is used to store the owning module ID.
   PrefixPtr[0] = 0;
-  
+
   // Store the global declaration ID in the second 4 bytes.
   PrefixPtr[1] = ID;
-  
+
   return Result;
 }
 
@@ -72,7 +72,7 @@ void Decl::setInvalidDecl(bool Invalid) {
   if (Invalid && !isa<ParmVarDecl>(this)) {
     // Defensive maneuver for ill-formed code: we're likely not to make it to
     // a point where we set the access specifier, so default it to "public"
-    // to avoid triggering asserts elsewhere in the front end. 
+    // to avoid triggering asserts elsewhere in the front end.
     setAccess(AS_public);
   }
 }
@@ -138,7 +138,7 @@ bool Decl::isTemplateParameterPack() const {
 bool Decl::isParameterPack() const {
   if (const ParmVarDecl *Parm = dyn_cast<ParmVarDecl>(this))
     return Parm->isParameterPack();
-  
+
   return isTemplateParameterPack();
 }
 
@@ -155,7 +155,7 @@ bool Decl::isTemplateDecl() const {
 
 const DeclContext *Decl::getParentFunctionOrMethod() const {
   for (const DeclContext *DC = getDeclContext();
-       DC && !DC->isTranslationUnit() && !DC->isNamespace(); 
+       DC && !DC->isTranslationUnit() && !DC->isNamespace();
        DC = DC->getParent())
     if (DC->isFunctionOrMethod())
       return DC;
@@ -253,24 +253,24 @@ ASTMutationListener *Decl::getASTMutationListener() const {
   return getASTContext().getASTMutationListener();
 }
 
-bool Decl::isUsed(bool CheckUsedAttr) const { 
+bool Decl::isUsed(bool CheckUsedAttr) const {
   if (Used)
     return true;
-  
+
   // Check for used attribute.
   if (CheckUsedAttr && hasAttr<UsedAttr>())
     return true;
-  
+
   // Check redeclarations for used attribute.
   for (redecl_iterator I = redecls_begin(), E = redecls_end(); I != E; ++I) {
     if ((CheckUsedAttr && I->hasAttr<UsedAttr>()) || I->Used)
       return true;
   }
-  
-  return false; 
+
+  return false;
 }
 
-bool Decl::isReferenced() const { 
+bool Decl::isReferenced() const {
   if (Referenced)
     return true;
 
@@ -279,7 +279,7 @@ bool Decl::isReferenced() const {
     if (I->Referenced)
       return true;
 
-  return false; 
+  return false;
 }
 
 /// \brief Determine the availability of the given declaration based on
@@ -307,19 +307,19 @@ static AvailabilityResult CheckAvailability(ASTContext &Context,
   // Match the platform name.
   if (A->getPlatform()->getName() != TargetPlatform)
     return AR_Available;
-  
+
   std::string HintMessage;
   if (!A->getMessage().empty()) {
     HintMessage = " - ";
     HintMessage += A->getMessage();
   }
-  
+
   // Make sure that this declaration has not been marked 'unavailable'.
   if (A->getUnavailable()) {
     if (Message) {
       Message->clear();
       llvm::raw_string_ostream Out(*Message);
-      Out << "not available on " << PrettyPlatformName 
+      Out << "not available on " << PrettyPlatformName
           << HintMessage;
     }
 
@@ -327,12 +327,12 @@ static AvailabilityResult CheckAvailability(ASTContext &Context,
   }
 
   // Make sure that this declaration has already been introduced.
-  if (!A->getIntroduced().empty() && 
+  if (!A->getIntroduced().empty() &&
       TargetMinVersion < A->getIntroduced()) {
     if (Message) {
       Message->clear();
       llvm::raw_string_ostream Out(*Message);
-      Out << "introduced in " << PrettyPlatformName << ' ' 
+      Out << "introduced in " << PrettyPlatformName << ' '
           << A->getIntroduced() << HintMessage;
     }
 
@@ -344,10 +344,10 @@ static AvailabilityResult CheckAvailability(ASTContext &Context,
     if (Message) {
       Message->clear();
       llvm::raw_string_ostream Out(*Message);
-      Out << "obsoleted in " << PrettyPlatformName << ' ' 
+      Out << "obsoleted in " << PrettyPlatformName << ' '
           << A->getObsoleted() << HintMessage;
     }
-    
+
     return AR_Unavailable;
   }
 
@@ -359,7 +359,7 @@ static AvailabilityResult CheckAvailability(ASTContext &Context,
       Out << "first deprecated in " << PrettyPlatformName << ' '
           << A->getDeprecated() << HintMessage;
     }
-    
+
     return AR_Deprecated;
   }
 
@@ -449,7 +449,7 @@ bool Decl::isWeakImported() const {
       return true;
 
     if (AvailabilityAttr *Availability = dyn_cast<AvailabilityAttr>(*A)) {
-      if (CheckAvailability(getASTContext(), Availability, 0) 
+      if (CheckAvailability(getASTContext(), Availability, 0)
                                                          == AR_NotYetIntroduced)
         return true;
     }
@@ -732,7 +732,7 @@ DeclContext *DeclContext::getLookupParent() {
     if (getParent()->getRedeclContext()->isFileContext() &&
         getLexicalParent()->getRedeclContext()->isRecord())
       return getLexicalParent();
-  
+
   return getParent();
 }
 
@@ -751,11 +751,11 @@ bool DeclContext::isDependentContext() const {
   if (const CXXRecordDecl *Record = dyn_cast<CXXRecordDecl>(this)) {
     if (Record->getDescribedClassTemplate())
       return true;
-    
+
     if (Record->isDependentLambda())
       return true;
   }
-  
+
   if (const FunctionDecl *Function = dyn_cast<FunctionDecl>(this)) {
     if (Function->getDescribedFunctionTemplate())
       return true;
@@ -817,15 +817,15 @@ DeclContext *DeclContext::getPrimaryContext() {
   case Decl::ObjCInterface:
     if (ObjCInterfaceDecl *Def = cast<ObjCInterfaceDecl>(this)->getDefinition())
       return Def;
-      
+
     return this;
-      
+
   case Decl::ObjCProtocol:
     if (ObjCProtocolDecl *Def = cast<ObjCProtocolDecl>(this)->getDefinition())
       return Def;
-    
+
     return this;
-      
+
   case Decl::ObjCCategory:
     return this;
 
@@ -861,20 +861,20 @@ DeclContext *DeclContext::getPrimaryContext() {
   }
 }
 
-void 
+void
 DeclContext::collectAllContexts(llvm::SmallVectorImpl<DeclContext *> &Contexts){
   Contexts.clear();
-  
+
   if (DeclKind != Decl::Namespace) {
     Contexts.push_back(this);
     return;
   }
-  
+
   NamespaceDecl *Self = static_cast<NamespaceDecl *>(this);
   for (NamespaceDecl *N = Self->getMostRecentDecl(); N;
        N = N->getPreviousDecl())
     Contexts.push_back(N);
-  
+
   std::reverse(Contexts.begin(), Contexts.end());
 }
 
@@ -909,14 +909,14 @@ DeclContext::LoadLexicalDeclsFromExternalStorage() const {
 
   // Notify that we have a DeclContext that is initializing.
   ExternalASTSource::Deserializing ADeclContext(Source);
-  
+
   // Load the external declarations, if any.
   SmallVector<Decl*, 64> Decls;
   ExternalLexicalStorage = false;
   switch (Source->FindExternalLexicalDecls(this, Decls)) {
   case ELR_Success:
     break;
-    
+
   case ELR_Failure:
   case ELR_AlreadyLoaded:
     return;
@@ -930,7 +930,7 @@ DeclContext::LoadLexicalDeclsFromExternalStorage() const {
   bool FieldsAlreadyLoaded = false;
   if (const RecordDecl *RD = dyn_cast<RecordDecl>(this))
     FieldsAlreadyLoaded = RD->LoadedFieldsFromExternalStorage;
-  
+
   // Splice the newly-read declarations into the beginning of the list
   // of declarations.
   Decl *ExternalFirst, *ExternalLast;
@@ -1019,7 +1019,7 @@ void DeclContext::removeDecl(Decl *D) {
       }
     }
   }
-  
+
   // Mark that D is no longer in the decl chain.
   D->NextInContextAndBits.setPointer(0);
 
@@ -1190,10 +1190,10 @@ DeclContext::lookup(DeclarationName Name) {
   return I->second.getLookupResult();
 }
 
-void DeclContext::localUncachedLookup(DeclarationName Name, 
+void DeclContext::localUncachedLookup(DeclarationName Name,
                                   llvm::SmallVectorImpl<NamedDecl *> &Results) {
   Results.clear();
-  
+
   // If there's no external storage, just perform a normal lookup and copy
   // the results.
   if (!hasExternalVisibleStorage() && !hasExternalLexicalStorage() && Name) {
@@ -1215,7 +1215,7 @@ void DeclContext::localUncachedLookup(DeclarationName Name,
     }
   }
 
-  // Slow case: grovel through the declarations in our chain looking for 
+  // Slow case: grovel through the declarations in our chain looking for
   // matches.
   for (Decl *D = FirstDecl; D; D = D->getNextDeclInContext()) {
     if (NamedDecl *ND = dyn_cast<NamedDecl>(D))
@@ -1425,7 +1425,7 @@ DependentDiagnostic *DependentDiagnostic::Create(ASTContext &C,
   PartialDiagnostic::Storage *DiagStorage = 0;
   if (PDiag.hasStorage())
     DiagStorage = new (C) PartialDiagnostic::Storage;
-  
+
   DependentDiagnostic *DD = new (C) DependentDiagnostic(PDiag, DiagStorage);
 
   // TODO: Maybe we shouldn't reverse the order during insertion.

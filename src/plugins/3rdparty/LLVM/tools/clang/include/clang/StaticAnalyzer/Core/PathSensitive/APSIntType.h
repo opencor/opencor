@@ -84,7 +84,7 @@ public:
   /// Note that signedness conversions will be rejected, even with the same bit
   /// pattern. For example, -1s8 is not in range for 'unsigned char' (u8).
   RangeTestResultKind testInRange(const llvm::APSInt &Val) const LLVM_READONLY;
-  
+
   bool operator==(const APSIntType &Other) const {
     return BitWidth == Other.BitWidth && IsUnsigned == Other.IsUnsigned;
   }
@@ -103,7 +103,7 @@ public:
     return false;
   }
 };
-    
+
 } // end ento namespace
 } // end clang namespace
 

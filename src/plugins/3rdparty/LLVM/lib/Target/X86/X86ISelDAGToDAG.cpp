@@ -1716,7 +1716,7 @@ SDNode *X86DAGToDAGISel::SelectAtomicLoadArith(SDNode *Node, EVT NVT) {
       Op = ADD;
       break;
   }
-  
+
   Val = getAtomicLoadArithTargetConstant(CurDAG, dl, Op, NVT, Val);
   bool isUnOp = !Val.getNode();
   bool isCN = Val.getNode() && (Val.getOpcode() == ISD::TargetConstant);

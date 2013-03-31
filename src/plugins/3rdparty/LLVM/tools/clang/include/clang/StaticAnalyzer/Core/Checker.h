@@ -67,7 +67,7 @@ public:
 class EndOfTranslationUnit {
   template <typename CHECKER>
   static void _checkEndOfTranslationUnit(void *checker,
-                                         const TranslationUnitDecl *TU, 
+                                         const TranslationUnitDecl *TU,
                                          AnalysisManager& mgr,
                                          BugReporter &BR) {
     ((const CHECKER *)checker)->checkEndOfTranslationUnit(TU, mgr, BR);
@@ -290,7 +290,7 @@ public:
 
 class RegionChanges {
   template <typename CHECKER>
-  static ProgramStateRef 
+  static ProgramStateRef
   _checkRegionChanges(void *checker,
                       ProgramStateRef state,
                       const StoreManager::InvalidatedSymbols *invalidated,
@@ -376,7 +376,7 @@ public:
   virtual void printState(raw_ostream &Out, ProgramStateRef State,
                           const char *NL, const char *Sep) const { }
 };
-  
+
 template <typename CHECK1, typename CHECK2=check::_VoidCheck,
           typename CHECK3=check::_VoidCheck, typename CHECK4=check::_VoidCheck,
           typename CHECK5=check::_VoidCheck, typename CHECK6=check::_VoidCheck,
@@ -393,7 +393,7 @@ class Checker;
 
 template <>
 class Checker<check::_VoidCheck>
-  : public CheckerBase 
+  : public CheckerBase
 {
   virtual void anchor();
 public:

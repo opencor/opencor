@@ -1768,7 +1768,7 @@ bool X86FastISel::DoSelectCall(const Instruction *I, const char *MemIntName) {
       ArgVT = VA.getLocVT();
       break;
     }
-    case CCValAssign::VExt: 
+    case CCValAssign::VExt:
       // VExt has not been implemented, so this should be impossible to reach
       // for now.  However, fallback to Selection DAG isel once implemented.
       return false;

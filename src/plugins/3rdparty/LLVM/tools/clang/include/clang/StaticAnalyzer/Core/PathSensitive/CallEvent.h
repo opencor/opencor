@@ -69,12 +69,12 @@ public:
   }
 };
 
-/// \class RuntimeDefinition 
+/// \class RuntimeDefinition
 /// \brief Defines the runtime definition of the called function.
-/// 
-/// Encapsulates the information we have about which Decl will be used 
+///
+/// Encapsulates the information we have about which Decl will be used
 /// when the call is executed on the given path. When dealing with dynamic
-/// dispatch, the information is based on DynamicTypeInfo and might not be 
+/// dispatch, the information is based on DynamicTypeInfo and might not be
 /// precise.
 class RuntimeDefinition {
   /// The Declaration of the function which could be called at runtime.
@@ -92,13 +92,13 @@ public:
   RuntimeDefinition(const Decl *InD): D(InD), R(0) {}
   RuntimeDefinition(const Decl *InD, const MemRegion *InR): D(InD), R(InR) {}
   const Decl *getDecl() { return D; }
-    
-  /// \brief Check if the definition we have is precise. 
-  /// If not, it is possible that the call dispatches to another definition at 
+
+  /// \brief Check if the definition we have is precise.
+  /// If not, it is possible that the call dispatches to another definition at
   /// execution time.
   bool mayHaveOtherDefinitions() { return R != 0; }
-  
-  /// When other definitions are possible, returns the region whose runtime type 
+
+  /// When other definitions are possible, returns the region whose runtime type
   /// determines the method definition.
   const MemRegion *getDispatchRegion() { return R; }
 };
@@ -337,7 +337,7 @@ public:
   // Iterator access to formal parameters and their types.
 private:
   typedef std::const_mem_fun_t<QualType, ParmVarDecl> get_type_fun;
-  
+
 public:
   typedef const ParmVarDecl * const *param_iterator;
 
@@ -595,7 +595,7 @@ public:
   }
 
   virtual const Expr *getCXXThisExpr() const;
-  
+
   virtual RuntimeDefinition getRuntimeDefinition() const;
 
   virtual Kind getKind() const { return CE_CXXMember; }

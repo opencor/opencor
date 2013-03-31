@@ -26,7 +26,7 @@ namespace llvm {
   class IntrinsicLowering {
     const DataLayout& TD;
 
-    
+
     bool Warned;
   public:
     explicit IntrinsicLowering(const DataLayout &td) :
@@ -39,7 +39,7 @@ namespace llvm {
 
     /// LowerIntrinsicCall - This method replaces a call with the LLVM function
     /// which should be used to implement the specified intrinsic function call.
-    /// If an intrinsic function must be implemented by the code generator 
+    /// If an intrinsic function must be implemented by the code generator
     /// (such as va_start), this function should print a message and abort.
     ///
     /// Otherwise, if an intrinsic function call can be lowered, the code to

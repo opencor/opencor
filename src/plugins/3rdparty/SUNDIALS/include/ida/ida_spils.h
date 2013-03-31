@@ -2,10 +2,10 @@
  * -----------------------------------------------------------------
  * $Revision: 1.9 $
  * $Date: 2010/12/01 22:14:09 $
- * ----------------------------------------------------------------- 
+ * -----------------------------------------------------------------
  * Programmers: Alan Hindmarsh, Radu Serban and Aaron Collier @ LLNL
  * -----------------------------------------------------------------
- * Copyright (c) 2002, The Regents of the University of California  
+ * Copyright (c) 2002, The Regents of the University of California
  * Produced at the Lawrence Livermore National Laboratory
  * All rights reserved
  * For details, see the LICENSE file
@@ -25,15 +25,15 @@ extern "C" {
 #include <sundials/sundials_iterative.h>
 #include <sundials/sundials_nvector.h>
 
-/* 
+/*
  * -----------------------------------------------------------------
- * IDASPILS return values 
+ * IDASPILS return values
  * -----------------------------------------------------------------
  */
 
 #define IDASPILS_SUCCESS     0
-#define IDASPILS_MEM_NULL   -1 
-#define IDASPILS_LMEM_NULL  -2 
+#define IDASPILS_MEM_NULL   -1
+#define IDASPILS_LMEM_NULL  -2
 #define IDASPILS_ILL_INPUT  -3
 #define IDASPILS_MEM_FAIL   -4
 #define IDASPILS_PMEM_NULL  -5
@@ -214,39 +214,39 @@ typedef int (*IDASpilsJacTimesVecFn)(realtype tt,
 
 /*
  * -----------------------------------------------------------------
- * Optional inputs to the IDASPILS linear solver                  
+ * Optional inputs to the IDASPILS linear solver
  * -----------------------------------------------------------------
- *                                                                
- * IDASpilsSetPreconditioner specifies the PrecSetup and PrecSolve 
+ *
+ * IDASpilsSetPreconditioner specifies the PrecSetup and PrecSolve
  *           functions.
  *           Default is NULL for both arguments.
- * IDASpilsSetJacTimesVecFn specifies the jtimes function.        
- *           Default is to use an internal finite difference      
- *           approximation routine.                           
- * IDASpilsSetGSType specifies the type of Gram-Schmidt           
- *           orthogonalization to be used. This must be one of    
- *           the two enumeration constants MODIFIED_GS or         
- *           CLASSICAL_GS defined in iterativ.h. These correspond 
- *           to using modified Gram-Schmidt and classical         
- *           Gram-Schmidt, respectively.                          
- *           Default value is MODIFIED_GS.                        
+ * IDASpilsSetJacTimesVecFn specifies the jtimes function.
+ *           Default is to use an internal finite difference
+ *           approximation routine.
+ * IDASpilsSetGSType specifies the type of Gram-Schmidt
+ *           orthogonalization to be used. This must be one of
+ *           the two enumeration constants MODIFIED_GS or
+ *           CLASSICAL_GS defined in iterativ.h. These correspond
+ *           to using modified Gram-Schmidt and classical
+ *           Gram-Schmidt, respectively.
+ *           Default value is MODIFIED_GS.
  *           Only for IDASPGMR.
  * IDASpilsSetMaxRestarts specifies the maximum number of restarts
- *           to be used in the GMRES algorithm.  maxrs must be a  
+ *           to be used in the GMRES algorithm.  maxrs must be a
  *           non-negative integer.  Pass 0 to specify no restarts.
- *           Default is 5.                                        
+ *           Default is 5.
  *           Only for IDASPGMR.
- * IDASpbcgSetMaxl specifies the maximum Krylov subspace size. 
+ * IDASpbcgSetMaxl specifies the maximum Krylov subspace size.
  *           Default is 5.
  *           Only for IDASPBCG and IDASPTFQMR.
- * IDASpilsSetEpsLin specifies the factor in the linear iteration 
- *           convergence test constant.                           
- *           Default is 0.05                                      
+ * IDASpilsSetEpsLin specifies the factor in the linear iteration
+ *           convergence test constant.
+ *           Default is 0.05
  * IDASpilsSetIncrementFactor specifies a factor in the increments
- *           to yy used in the difference quotient approximations 
- *           to matrix-vector products Jv.                        
- *           Default is 1.0                                       
- *                                                                
+ *           to yy used in the difference quotient approximations
+ *           to matrix-vector products Jv.
+ *           Default is 1.0
+ *
  * The return value of IDASpilsSet* is one of:
  *    IDASPILS_SUCCESS   if successful
  *    IDASPILS_MEM_NULL  if the ida memory was NULL
@@ -255,7 +255,7 @@ typedef int (*IDASpilsJacTimesVecFn)(realtype tt,
  */
 
 SUNDIALS_EXPORT int IDASpilsSetPreconditioner(void *ida_mem,
-                                              IDASpilsPrecSetupFn pset, 
+                                              IDASpilsPrecSetupFn pset,
 					      IDASpilsPrecSolveFn psolve);
 SUNDIALS_EXPORT int IDASpilsSetJacTimesVecFn(void *ida_mem,
                                              IDASpilsJacTimesVecFn jtv);
@@ -268,32 +268,32 @@ SUNDIALS_EXPORT int IDASpilsSetIncrementFactor(void *ida_mem, realtype dqincfac)
 
 /*
  * -----------------------------------------------------------------
- * Optional outputs from the IDASPILS linear solver               
+ * Optional outputs from the IDASPILS linear solver
  *----------------------------------------------------------------
- *                                                                
- * IDASpilsGetWorkSpace returns the real and integer workspace used 
- *     by IDASPILS.                                                  
- * IDASpilsGetNumPrecEvals returns the number of preconditioner   
- *     evaluations, i.e. the number of calls made to PrecSetup    
- *     with jok==FALSE.                                           
- * IDASpilsGetNumPrecSolves returns the number of calls made to   
- *     PrecSolve.                                                 
+ *
+ * IDASpilsGetWorkSpace returns the real and integer workspace used
+ *     by IDASPILS.
+ * IDASpilsGetNumPrecEvals returns the number of preconditioner
+ *     evaluations, i.e. the number of calls made to PrecSetup
+ *     with jok==FALSE.
+ * IDASpilsGetNumPrecSolves returns the number of calls made to
+ *     PrecSolve.
  * IDASpilsGetNumLinIters returns the number of linear iterations.
- * IDASpilsGetNumConvFails returns the number of linear           
- *     convergence failures.                                      
+ * IDASpilsGetNumConvFails returns the number of linear
+ *     convergence failures.
  * IDASpilsGetNumJtimesEvals returns the number of calls to jtimes
- * IDASpilsGetNumResEvals returns the number of calls to the user 
- *     res routine due to finite difference Jacobian times vector 
- *     evaluation.                                                
+ * IDASpilsGetNumResEvals returns the number of calls to the user
+ *     res routine due to finite difference Jacobian times vector
+ *     evaluation.
  * IDASpilsGetLastFlag returns the last error flag set by any of
  *     the IDASPILS interface functions.
- *                                                                
+ *
  * The return value of IDASpilsGet* is one of:
  *    IDASPILS_SUCCESS   if successful
  *    IDASPILS_MEM_NULL  if the ida memory was NULL
  *    IDASPILS_LMEM_NULL if the linear solver memory was NULL
  * -----------------------------------------------------------------
- */                                                                
+ */
 
 SUNDIALS_EXPORT int IDASpilsGetWorkSpace(void *ida_mem, long int *lenrwLS, long int *leniwLS);
 SUNDIALS_EXPORT int IDASpilsGetNumPrecEvals(void *ida_mem, long int *npevals);
@@ -301,12 +301,12 @@ SUNDIALS_EXPORT int IDASpilsGetNumPrecSolves(void *ida_mem, long int *npsolves);
 SUNDIALS_EXPORT int IDASpilsGetNumLinIters(void *ida_mem, long int *nliters);
 SUNDIALS_EXPORT int IDASpilsGetNumConvFails(void *ida_mem, long int *nlcfails);
 SUNDIALS_EXPORT int IDASpilsGetNumJtimesEvals(void *ida_mem, long int *njvevals);
-SUNDIALS_EXPORT int IDASpilsGetNumResEvals(void *ida_mem, long int *nrevalsLS); 
+SUNDIALS_EXPORT int IDASpilsGetNumResEvals(void *ida_mem, long int *nrevalsLS);
 SUNDIALS_EXPORT int IDASpilsGetLastFlag(void *ida_mem, long int *flag);
 
 /*
  * -----------------------------------------------------------------
- * The following function returns the name of the constant 
+ * The following function returns the name of the constant
  * associated with an IDASPILS return flag
  * -----------------------------------------------------------------
  */

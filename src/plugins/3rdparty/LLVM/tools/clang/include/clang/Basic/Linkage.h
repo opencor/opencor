@@ -16,7 +16,7 @@
 
 namespace clang {
 
-/// \brief Describes the different kinds of linkage 
+/// \brief Describes the different kinds of linkage
 /// (C++ [basic.link], C99 6.2.2) that an entity may have.
 enum Linkage {
   /// \brief No linkage, which means that the entity is unique and
@@ -28,7 +28,7 @@ enum Linkage {
   /// translation units).
   InternalLinkage,
 
-  /// \brief External linkage within a unique namespace. 
+  /// \brief External linkage within a unique namespace.
   ///
   /// From the language perspective, these entities have external
   /// linkage. However, since they reside in an anonymous namespace,

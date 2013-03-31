@@ -33,9 +33,9 @@ namespace {
     PartialInliner() : ModulePass(ID) {
       initializePartialInlinerPass(*PassRegistry::getPassRegistry());
     }
-    
+
     bool runOnModule(Module& M);
-    
+
   private:
     Function* unswitchFunction(Function* F);
   };
@@ -53,7 +53,7 @@ Function* PartialInliner::unswitchFunction(Function* F) {
   BranchInst *BR = dyn_cast<BranchInst>(entryBlock->getTerminator());
   if (!BR || BR->isUnconditional())
     return 0;
-  
+
   BasicBlock* returnBlock = 0;
   BasicBlock* nonReturnBlock = 0;
   unsigned returnCount = 0;
@@ -64,10 +64,10 @@ Function* PartialInliner::unswitchFunction(Function* F) {
       returnCount++;
     } else
       nonReturnBlock = *SI;
-  
+
   if (returnCount != 1)
     return 0;
-  
+
   // Clone the function, so that we can hack away on it.
   ValueToValueMapTy VMap;
   Function* duplicateFunction = CloneFunction(F, VMap,
@@ -77,11 +77,11 @@ Function* PartialInliner::unswitchFunction(Function* F) {
   BasicBlock* newEntryBlock = cast<BasicBlock>(VMap[entryBlock]);
   BasicBlock* newReturnBlock = cast<BasicBlock>(VMap[returnBlock]);
   BasicBlock* newNonReturnBlock = cast<BasicBlock>(VMap[nonReturnBlock]);
-  
+
   // Go ahead and update all uses to the duplicate, so that we can just
   // use the inliner functionality when we're done hacking.
   F->replaceAllUsesWith(duplicateFunction);
-  
+
   // Special hackery is needed with PHI nodes that have inputs from more than
   // one extracted block.  For simplicity, just split the PHIs into a two-level
   // sequence of PHIs, some of which will go in the extracted region, and some
@@ -94,20 +94,20 @@ Function* PartialInliner::unswitchFunction(Function* F) {
   while (I != preReturn->end()) {
     PHINode* OldPhi = dyn_cast<PHINode>(I);
     if (!OldPhi) break;
-    
+
     PHINode* retPhi = PHINode::Create(OldPhi->getType(), 2, "", Ins);
     OldPhi->replaceAllUsesWith(retPhi);
     Ins = newReturnBlock->getFirstNonPHI();
-    
+
     retPhi->addIncoming(I, preReturn);
     retPhi->addIncoming(OldPhi->getIncomingValueForBlock(newEntryBlock),
                         newEntryBlock);
     OldPhi->removeIncomingValue(newEntryBlock);
-    
+
     ++I;
   }
   newEntryBlock->getTerminator()->replaceUsesOfWith(preReturn, newReturnBlock);
-  
+
   // Gather up the blocks that we're going to extract.
   std::vector<BasicBlock*> toExtract;
   toExtract.push_back(newNonReturnBlock);
@@ -116,19 +116,19 @@ Function* PartialInliner::unswitchFunction(Function* F) {
     if (&*FI != newEntryBlock && &*FI != newReturnBlock &&
         &*FI != newNonReturnBlock)
       toExtract.push_back(FI);
-      
+
   // The CodeExtractor needs a dominator tree.
   DominatorTree DT;
   DT.runOnFunction(*duplicateFunction);
-  
+
   // Extract the body of the if.
   Function* extractedFunction
     = CodeExtractor(toExtract, &DT).extractCodeRegion();
-  
+
   InlineFunctionInfo IFI;
-  
+
   // Inline the top-level if test into all callers.
-  std::vector<User*> Users(duplicateFunction->use_begin(), 
+  std::vector<User*> Users(duplicateFunction->use_begin(),
                            duplicateFunction->use_end());
   for (std::vector<User*>::iterator UI = Users.begin(), UE = Users.end();
        UI != UE; ++UI)
@@ -136,14 +136,14 @@ Function* PartialInliner::unswitchFunction(Function* F) {
       InlineFunction(CI, IFI);
     else if (InvokeInst *II = dyn_cast<InvokeInst>(*UI))
       InlineFunction(II, IFI);
-  
+
   // Ditch the duplicate, since we're done with it, and rewrite all remaining
   // users (function pointers, etc.) back to the original function.
   duplicateFunction->replaceAllUsesWith(F);
   duplicateFunction->eraseFromParent();
-  
+
   ++NumPartialInlined;
-  
+
   return extractedFunction;
 }
 
@@ -153,14 +153,14 @@ bool PartialInliner::runOnModule(Module& M) {
   for (Module::iterator FI = M.begin(), FE = M.end(); FI != FE; ++FI)
     if (!FI->use_empty() && !FI->isDeclaration())
       worklist.push_back(&*FI);
-    
+
   bool changed = false;
   while (!worklist.empty()) {
     Function* currFunc = worklist.back();
     worklist.pop_back();
-  
+
     if (currFunc->use_empty()) continue;
-    
+
     bool recursive = false;
     for (Function::use_iterator UI = currFunc->use_begin(),
          UE = currFunc->use_end(); UI != UE; ++UI)
@@ -170,14 +170,14 @@ bool PartialInliner::runOnModule(Module& M) {
           break;
         }
     if (recursive) continue;
-          
-    
+
+
     if (Function* newFunc = unswitchFunction(currFunc)) {
       worklist.push_back(newFunc);
       changed = true;
     }
-    
+
   }
-  
+
   return changed;
 }

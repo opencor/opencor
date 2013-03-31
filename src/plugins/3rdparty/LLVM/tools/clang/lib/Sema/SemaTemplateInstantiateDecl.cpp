@@ -79,7 +79,7 @@ void Sema::InstantiateAttrs(const MultiLevelTemplateArgumentList &TemplateArgs,
           ExprResult Result = SubstExpr(Aligned->getAlignmentExpr(),
                                         TemplateArgs);
           if (!Result.isInvalid())
-            AddAlignedAttr(Aligned->getLocation(), New, Result.takeAs<Expr>(), 
+            AddAlignedAttr(Aligned->getLocation(), New, Result.takeAs<Expr>(),
                            Aligned->getIsMSDeclSpec());
         } else {
           TypeSourceInfo *Result = SubstType(Aligned->getAlignmentType(),
@@ -87,7 +87,7 @@ void Sema::InstantiateAttrs(const MultiLevelTemplateArgumentList &TemplateArgs,
                                              Aligned->getLocation(),
                                              DeclarationName());
           if (Result)
-            AddAlignedAttr(Aligned->getLocation(), New, Result, 
+            AddAlignedAttr(Aligned->getLocation(), New, Result,
                            Aligned->getIsMSDeclSpec());
         }
         continue;
@@ -329,9 +329,9 @@ Decl *TemplateDeclInstantiator::VisitVarDecl(VarDecl *D) {
                         Sema::LookupOrdinaryName, Sema::ForRedeclaration);
   if (D->isStaticDataMember())
     SemaRef.LookupQualifiedName(Previous, Owner, false);
-  
+
   // In ARC, infer 'retaining' for variables of retainable type.
-  if (SemaRef.getLangOpts().ObjCAutoRefCount && 
+  if (SemaRef.getLangOpts().ObjCAutoRefCount &&
       SemaRef.inferObjCARCLifetime(Var))
     Var->setInvalidDecl();
 
@@ -1573,7 +1573,7 @@ TemplateDeclInstantiator::VisitCXXMethodDecl(CXXMethodDecl *D,
   // previous declaration we just found.
   if (isFriend && Method->getPreviousDecl())
     Method->setAccess(Method->getPreviousDecl()->getAccess());
-  else 
+  else
     Method->setAccess(D->getAccess());
   if (FunctionTemplate)
     FunctionTemplate->setAccess(Method->getAccess());
@@ -2311,14 +2311,14 @@ TemplateDeclInstantiator::SubstFunctionType(FunctionDecl *D,
   TypeSourceInfo *OldTInfo = D->getTypeSourceInfo();
   assert(OldTInfo && "substituting function without type source info");
   assert(Params.empty() && "parameter vector is non-empty at start");
-  
+
   CXXRecordDecl *ThisContext = 0;
   unsigned ThisTypeQuals = 0;
   if (CXXMethodDecl *Method = dyn_cast<CXXMethodDecl>(D)) {
     ThisContext = Method->getParent();
     ThisTypeQuals = Method->getTypeQualifiers();
   }
-  
+
   TypeSourceInfo *NewTInfo
     = SemaRef.SubstFunctionDeclType(OldTInfo, TemplateArgs,
                                     D->getTypeSpecStartLoc(),
@@ -2422,11 +2422,11 @@ static void InstantiateExceptionSpec(Sema &SemaRef, FunctionDecl *New,
   assert(Proto->getExceptionSpecType() != EST_Uninstantiated);
 
   // C++11 [expr.prim.general]p3:
-  //   If a declaration declares a member function or member function 
-  //   template of a class X, the expression this is a prvalue of type 
+  //   If a declaration declares a member function or member function
+  //   template of a class X, the expression this is a prvalue of type
   //   "pointer to cv-qualifier-seq X" between the optional cv-qualifer-seq
-  //   and the end of the function-definition, member-declarator, or 
-  //   declarator.    
+  //   and the end of the function-definition, member-declarator, or
+  //   declarator.
   CXXRecordDecl *ThisContext = 0;
   unsigned ThisTypeQuals = 0;
   if (CXXMethodDecl *Method = dyn_cast<CXXMethodDecl>(New)) {
@@ -2957,7 +2957,7 @@ void Sema::InstantiateStaticDataMemberDefinition(
   // PushDeclContext because we don't have a scope.
   ContextRAII previousContext(*this, Var->getDeclContext());
   LocalInstantiationScope Local(*this);
-  
+
   VarDecl *OldVar = Var;
   Var = cast_or_null<VarDecl>(SubstDecl(Def, Var->getDeclContext(),
                                         getTemplateInstantiationArgs(Var)));
@@ -2973,7 +2973,7 @@ void Sema::InstantiateStaticDataMemberDefinition(
     Consumer.HandleTopLevelDecl(DG);
   }
   Local.Exit();
-  
+
   if (Recursive) {
     // Define any newly required vtables.
     DefineUsedVTables();
@@ -3465,7 +3465,7 @@ NamedDecl *Sema::FindInstantiatedDecl(SourceLocation Loc, NamedDecl *D,
     else if (ClassTemplatePartialSpecializationDecl *PartialSpec
                = dyn_cast<ClassTemplatePartialSpecializationDecl>(Record))
       ClassTemplate = PartialSpec->getSpecializedTemplate()->getCanonicalDecl();
-    
+
     // Walk the current context to find either the record or an instantiation of
     // it.
     DeclContext *DC = CurContext;
@@ -3474,7 +3474,7 @@ NamedDecl *Sema::FindInstantiatedDecl(SourceLocation Loc, NamedDecl *D,
       // definition, we'll find our own context. We're done.
       if (DC->Equals(Record))
         return Record;
-      
+
       if (CXXRecordDecl *InstRecord = dyn_cast<CXXRecordDecl>(DC)) {
         // Check whether we're in the process of instantiating a class template
         // specialization of the template we're mapping.
@@ -3484,13 +3484,13 @@ NamedDecl *Sema::FindInstantiatedDecl(SourceLocation Loc, NamedDecl *D,
           if (ClassTemplate && isInstantiationOf(ClassTemplate, SpecTemplate))
             return InstRecord;
         }
-      
+
         // Check whether we're in the process of instantiating a member class.
         if (isInstantiationOf(Record, InstRecord))
           return InstRecord;
       }
-      
-      
+
+
       // Move to the outer template scope.
       if (FunctionDecl *FD = dyn_cast<FunctionDecl>(DC)) {
         if (FD->getFriendObjectKind() && FD->getDeclContext()->isFileContext()){
@@ -3498,7 +3498,7 @@ NamedDecl *Sema::FindInstantiatedDecl(SourceLocation Loc, NamedDecl *D,
           continue;
         }
       }
-      
+
       DC = DC->getParent();
     }
 

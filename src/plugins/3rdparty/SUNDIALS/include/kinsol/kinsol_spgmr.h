@@ -11,8 +11,8 @@
  * All rights reserved.
  * For details, see the LICENSE file.
  * -----------------------------------------------------------------
- * This is the header file for the KINSOL Scaled Preconditioned GMRES     
- * linear solver module, KINSPGMR.    
+ * This is the header file for the KINSOL Scaled Preconditioned GMRES
+ * linear solver module, KINSPGMR.
  * -----------------------------------------------------------------
  */
 

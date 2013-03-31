@@ -17,11 +17,11 @@
 /*!
   \brief A null paint device doing nothing
 
-  Sometimes important layout/rendering geometries are not 
-  available or changeable from the public Qt class interface. 
+  Sometimes important layout/rendering geometries are not
+  available or changeable from the public Qt class interface.
   ( f.e hidden in the style implementation ).
 
-  QwtNullPaintDevice can be used to manipulate or filter out 
+  QwtNullPaintDevice can be used to manipulate or filter out
   this information by analyzing the stream of paint primitives.
 
   F.e. QwtNullPaintDevice is used by QwtPlotCanvas to identify
@@ -42,7 +42,7 @@ public:
            All vector graphic primitives are painted by
            the corresponding draw methods
          */
-        NormalMode, 
+        NormalMode,
 
         /*!
            Vector graphic primitives ( beside polygons ) are mapped to a QPainterPath

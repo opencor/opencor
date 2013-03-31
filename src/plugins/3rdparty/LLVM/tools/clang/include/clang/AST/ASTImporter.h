@@ -32,27 +32,27 @@ namespace clang {
   class NestedNameSpecifier;
   class Stmt;
   class TypeSourceInfo;
-  
+
   /// \brief Imports selected nodes from one AST context into another context,
   /// merging AST nodes where appropriate.
   class ASTImporter {
   public:
     typedef llvm::DenseSet<std::pair<Decl *, Decl *> > NonEquivalentDeclSet;
-    
+
   private:
     /// \brief The contexts we're importing to and from.
     ASTContext &ToContext, &FromContext;
-    
+
     /// \brief The file managers we're importing to and from.
     FileManager &ToFileManager, &FromFileManager;
 
     /// \brief Whether to perform a minimal import.
     bool Minimal;
-    
+
     /// \brief Mapping from the already-imported types in the "from" context
     /// to the corresponding types in the "to" context.
     llvm::DenseMap<const Type *, const Type *> ImportedTypes;
-    
+
     /// \brief Mapping from the already-imported declarations in the "from"
     /// context to the corresponding declarations in the "to" context.
     llvm::DenseMap<Decl *, Decl *> ImportedDecls;
@@ -64,15 +64,15 @@ namespace clang {
     /// \brief Mapping from the already-imported FileIDs in the "from" source
     /// manager to the corresponding FileIDs in the "to" source manager.
     llvm::DenseMap<FileID, FileID> ImportedFileIDs;
-    
-    /// \brief Imported, anonymous tag declarations that are missing their 
+
+    /// \brief Imported, anonymous tag declarations that are missing their
     /// corresponding typedefs.
     SmallVector<TagDecl *, 4> AnonTagsWithPendingTypedefs;
-    
+
     /// \brief Declaration (from, to) pairs that are known not to be equivalent
     /// (which we have already complained about).
     NonEquivalentDeclSet NonEquivalentDecls;
-    
+
   public:
     /// \brief Create a new AST importer.
     ///
@@ -90,13 +90,13 @@ namespace clang {
     ASTImporter(ASTContext &ToContext, FileManager &ToFileManager,
                 ASTContext &FromContext, FileManager &FromFileManager,
                 bool MinimalImport);
-    
+
     virtual ~ASTImporter();
-    
+
     /// \brief Whether the importer will perform a minimal import, creating
     /// to-be-completed forward declarations when possible.
     bool isMinimalImport() const { return Minimal; }
-    
+
     /// \brief Import the given type from the "from" context into the "to"
     /// context.
     ///
@@ -111,10 +111,10 @@ namespace clang {
     /// context, or NULL if an error occurred.
     TypeSourceInfo *Import(TypeSourceInfo *FromTSI);
 
-    /// \brief Import the given declaration from the "from" context into the 
+    /// \brief Import the given declaration from the "from" context into the
     /// "to" context.
     ///
-    /// \returns the equivalent declaration in the "to" context, or a NULL type 
+    /// \returns the equivalent declaration in the "to" context, or a NULL type
     /// if an error occurred.
     Decl *Import(Decl *FromD);
 
@@ -124,7 +124,7 @@ namespace clang {
     /// \returns the equivalent declaration context in the "to"
     /// context, or a NULL type if an error occurred.
     DeclContext *ImportContext(DeclContext *FromDC);
-    
+
     /// \brief Import the given expression from the "from" context into the
     /// "to" context.
     ///
@@ -156,7 +156,7 @@ namespace clang {
     /// \brief Import the goven template name from the "from" context into the
     /// "to" context.
     TemplateName Import(TemplateName From);
-    
+
     /// \brief Import the given source location from the "from" context into
     /// the "to" context.
     ///
@@ -190,23 +190,23 @@ namespace clang {
     /// \returns the equivalent selector in the "to" context.
     Selector Import(Selector FromSel);
 
-    /// \brief Import the given file ID from the "from" context into the 
+    /// \brief Import the given file ID from the "from" context into the
     /// "to" context.
     ///
     /// \returns the equivalent file ID in the source manager of the "to"
     /// context.
     FileID Import(FileID);
-    
+
     /// \brief Import the definition of the given declaration, including all of
     /// the declarations it contains.
     ///
-    /// This routine is intended to be used 
+    /// This routine is intended to be used
     void ImportDefinition(Decl *From);
 
     /// \brief Cope with a name conflict when importing a declaration into the
     /// given context.
     ///
-    /// This routine is invoked whenever there is a name conflict while 
+    /// This routine is invoked whenever there is a name conflict while
     /// importing a declaration. The returned name will become the name of the
     /// imported declaration. By default, the returned name is the same as the
     /// original name, leaving the conflict unresolve such that name lookup
@@ -218,7 +218,7 @@ namespace clang {
     /// \param Name the name of the declaration being imported, which conflicts
     /// with other declarations.
     ///
-    /// \param DC the declaration context (in the "to" AST context) in which 
+    /// \param DC the declaration context (in the "to" AST context) in which
     /// the name is being imported.
     ///
     /// \param IDNS the identifier namespace in which the name will be found.
@@ -234,25 +234,25 @@ namespace clang {
                                                unsigned IDNS,
                                                NamedDecl **Decls,
                                                unsigned NumDecls);
-    
+
     /// \brief Retrieve the context that AST nodes are being imported into.
     ASTContext &getToContext() const { return ToContext; }
-    
+
     /// \brief Retrieve the context that AST nodes are being imported from.
     ASTContext &getFromContext() const { return FromContext; }
-    
+
     /// \brief Retrieve the file manager that AST nodes are being imported into.
     FileManager &getToFileManager() const { return ToFileManager; }
 
     /// \brief Retrieve the file manager that AST nodes are being imported from.
     FileManager &getFromFileManager() const { return FromFileManager; }
-    
+
     /// \brief Report a diagnostic in the "to" context.
     DiagnosticBuilder ToDiag(SourceLocation Loc, unsigned DiagID);
-    
+
     /// \brief Report a diagnostic in the "from" context.
     DiagnosticBuilder FromDiag(SourceLocation Loc, unsigned DiagID);
-    
+
     /// \brief Return the set of declarations that we know are not equivalent.
     NonEquivalentDeclSet &getNonEquivalentDecls() { return NonEquivalentDecls; }
 
@@ -261,14 +261,14 @@ namespace clang {
     ///
     /// \param D A declaration in the "to" context.
     virtual void CompleteDecl(Decl* D);
-    
+
     /// \brief Note that we have imported the "from" declaration by mapping it
     /// to the (potentially-newly-created) "to" declaration.
     ///
     /// Subclasses can override this function to observe all of the \c From ->
     /// \c To declaration mappings as they are imported.
     virtual Decl *Imported(Decl *From, Decl *To);
-    
+
     /// \brief Determine whether the given types are structurally
     /// equivalent.
     bool IsStructurallyEquivalent(QualType From, QualType To,

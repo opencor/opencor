@@ -82,10 +82,10 @@ void Preprocessor::EnterSourceFile(FileID FID, const DirectoryLookup *CurDir,
       return;
     }
   }
-  
+
   // Get the MemoryBuffer for this FID, if it fails, we fail.
   bool Invalid = false;
-  const llvm::MemoryBuffer *InputFile = 
+  const llvm::MemoryBuffer *InputFile =
     getSourceManager().getBuffer(FID, Loc, &Invalid);
   if (Invalid) {
     SourceLocation FileStart = SourceMgr.getLocForStartOfFile(FID);
@@ -119,7 +119,7 @@ void Preprocessor::EnterSourceFileWithLexer(Lexer *TheLexer,
   CurDirLookup = CurDir;
   if (CurLexerKind != CLK_LexAfterModuleImport)
     CurLexerKind = CLK_Lexer;
-  
+
   // Notify the client, if desired, that we are in a new source file.
   if (Callbacks && !CurLexer->Is_PragmaLexer) {
     SrcMgr::CharacteristicKind FileType =
@@ -143,7 +143,7 @@ void Preprocessor::EnterSourceFileWithPTH(PTHLexer *PL,
   CurPPLexer = CurPTHLexer.get();
   if (CurLexerKind != CLK_LexAfterModuleImport)
     CurLexerKind = CLK_PTHLexer;
-  
+
   // Notify the client, if desired, that we are in a new source file.
   if (Callbacks) {
     FileID FID = CurPPLexer->getFileID();
@@ -215,15 +215,15 @@ static void computeRelativePath(FileManager &FM, const DirectoryEntry *Dir,
     if (const DirectoryEntry *CurDir = FM.getDirectory(Path)) {
       if (CurDir == Dir) {
         Result = FilePath.substr(Path.size());
-        llvm::sys::path::append(Result, 
+        llvm::sys::path::append(Result,
                                 llvm::sys::path::filename(File->getName()));
         return;
       }
     }
-    
+
     Path = llvm::sys::path::parent_path(Path);
   }
-  
+
   Result = File->getName();
 }
 
@@ -291,7 +291,7 @@ bool Preprocessor::HandleEndOfFile(Token &Result, bool isEndOfMacro) {
     FileID ExitedFID;
     if (Callbacks && !isEndOfMacro && CurPPLexer)
       ExitedFID = CurPPLexer->getFileID();
-    
+
     // We're done with the #included file.
     RemoveTopOfLexerStack();
 
@@ -336,7 +336,7 @@ bool Preprocessor::HandleEndOfFile(Token &Result, bool isEndOfMacro) {
     CurPTHLexer->getEOF(Result);
     CurPTHLexer.reset();
   }
-  
+
   if (!isIncrementalProcessingEnabled())
     CurPPLexer = 0;
 
@@ -355,7 +355,7 @@ bool Preprocessor::HandleEndOfFile(Token &Result, bool isEndOfMacro) {
         = SourceMgr.getLocForStartOfFile(SourceMgr.getMainFileID());
 
       if (getDiagnostics().getDiagnosticLevel(
-            diag::warn_uncovered_module_header, 
+            diag::warn_uncovered_module_header,
             StartLoc) != DiagnosticsEngine::Ignored) {
         ModuleMap &ModMap = getHeaderSearchInfo().getModuleMap();
         typedef llvm::sys::fs::recursive_directory_iterator
@@ -365,7 +365,7 @@ bool Preprocessor::HandleEndOfFile(Token &Result, bool isEndOfMacro) {
         for (recursive_directory_iterator Entry(Dir->getName(), EC), End;
              Entry != End && !EC; Entry.increment(EC)) {
           using llvm::StringSwitch;
-          
+
           // Check whether this entry has an extension typically associated with
           // headers.
           if (!StringSwitch<bool>(llvm::sys::path::extension(Entry->path()))
@@ -378,7 +378,7 @@ bool Preprocessor::HandleEndOfFile(Token &Result, bool isEndOfMacro) {
               if (!ModMap.isHeaderInUnavailableModule(Header)) {
                 // Find the relative path that would access this header.
                 SmallString<128> RelativePath;
-                computeRelativePath(FileMgr, Dir, Header, RelativePath);              
+                computeRelativePath(FileMgr, Dir, Header, RelativePath);
                 Diag(StartLoc, diag::warn_uncovered_module_header)
                   << RelativePath;
               }
@@ -387,7 +387,7 @@ bool Preprocessor::HandleEndOfFile(Token &Result, bool isEndOfMacro) {
       }
     }
   }
-  
+
   return true;
 }
 

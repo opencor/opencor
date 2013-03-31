@@ -42,7 +42,7 @@ public:
 
 static void qwtRenderDots(
     const QwtScaleMap &xMap, const QwtScaleMap &yMap,
-    const QwtDotsCommand command, const QPoint &pos, QImage *image ) 
+    const QwtDotsCommand command, const QPoint &pos, QImage *image )
 {
     const QRgb rgb = command.rgb;
     QRgb *bits = reinterpret_cast<QRgb *>( image->bits() );
@@ -72,8 +72,8 @@ static inline int qwtRoundValue( double value )
 #else
     // A little bit faster, but differs from qRound()
     // for negative values. Should be no problem as we are
-    // rounding widgets coordinates, where negative values 
-    // are clipped off anyway ( at least when there is no 
+    // rounding widgets coordinates, where negative values
+    // are clipped off anyway ( at least when there is no
     // painter transformation )
 
     return static_cast<int>( value + 0.5 );
@@ -98,7 +98,7 @@ struct QwtRoundF
 };
 
 struct QwtNoRoundF
-{   
+{
     inline double operator()( double value )
     {
         return value;
@@ -109,10 +109,10 @@ struct QwtNoRoundF
 // the bounding rectangle
 
 template<class Polygon, class Point, class Round>
-static inline Polygon qwtToPoints( 
+static inline Polygon qwtToPoints(
     const QRectF &boundingRect,
     const QwtScaleMap &xMap, const QwtScaleMap &yMap,
-    const QwtSeriesData<QPointF> *series, 
+    const QwtSeriesData<QPointF> *series,
     int from, int to, Round round )
 {
     Polygon polyline( to - from + 1 );
@@ -172,7 +172,7 @@ static inline QPolygon qwtToPointsI(
     const QwtSeriesData<QPointF> *series,
     int from, int to )
 {
-    return qwtToPoints<QPolygon, QPoint>( 
+    return qwtToPoints<QPolygon, QPoint>(
         boundingRect, xMap, yMap, series, from, to, QwtRoundI() );
 }
 
@@ -183,7 +183,7 @@ static inline QPolygonF qwtToPointsF(
     const QwtSeriesData<QPointF> *series,
     int from, int to, Round round )
 {
-    return qwtToPoints<QPolygonF, QPointF>( 
+    return qwtToPoints<QPolygonF, QPointF>(
         boundingRect, xMap, yMap, series, from, to, round );
 }
 
@@ -191,9 +191,9 @@ static inline QPolygonF qwtToPointsF(
 // points mapped to the same position
 
 template<class Polygon, class Point, class Round>
-static inline Polygon qwtToPolylineFiltered( 
+static inline Polygon qwtToPolylineFiltered(
     const QwtScaleMap &xMap, const QwtScaleMap &yMap,
-    const QwtSeriesData<QPointF> *series, 
+    const QwtSeriesData<QPointF> *series,
     int from, int to, Round round )
 {
     // in curves with many points consecutive points
@@ -242,7 +242,7 @@ static inline QPolygonF qwtToPolylineFilteredF(
 {
     return qwtToPolylineFiltered<QPolygonF, QPointF>(
         xMap, yMap, series, from, to, round );
-} 
+}
 
 template<class Polygon, class Point>
 static inline Polygon qwtToPointsFiltered(
@@ -286,7 +286,7 @@ static inline QPolygon qwtToPointsFilteredI(
 {
     return qwtToPointsFiltered<QPolygon, QPoint>(
         boundingRect, xMap, yMap, series, from, to );
-} 
+}
 
 static inline QPolygonF qwtToPointsFilteredF(
     const QRectF &boundingRect,
@@ -393,7 +393,7 @@ QRectF QwtPointMapper::boundingRect() const
   \brief Translate a series of points into a QPolygonF
 
   When the WeedOutPoints flag is enabled consecutive points,
-  that are mapped to the same position will be one point. 
+  that are mapped to the same position will be one point.
 
   When RoundPoints is set all points are rounded to integers
   but returned as PolygonF - what only makes sense
@@ -415,12 +415,12 @@ QPolygonF QwtPointMapper::toPolygonF(
     {
         if ( d_data->flags & RoundPoints )
         {
-            polyline = qwtToPolylineFilteredF( 
+            polyline = qwtToPolylineFilteredF(
                 xMap, yMap, series, from, to, QwtRoundF() );
         }
         else
         {
-            polyline = qwtToPolylineFilteredF( 
+            polyline = qwtToPolylineFilteredF(
                 xMap, yMap, series, from, to, QwtNoRoundF() );
         }
     }
@@ -428,12 +428,12 @@ QPolygonF QwtPointMapper::toPolygonF(
     {
         if ( d_data->flags & RoundPoints )
         {
-            polyline = qwtToPointsF( qwtInvalidRect, 
+            polyline = qwtToPointsF( qwtInvalidRect,
                 xMap, yMap, series, from, to, QwtRoundF() );
         }
         else
         {
-            polyline = qwtToPointsF( qwtInvalidRect, 
+            polyline = qwtToPointsF( qwtInvalidRect,
                 xMap, yMap, series, from, to, QwtNoRoundF() );
         }
     }
@@ -445,7 +445,7 @@ QPolygonF QwtPointMapper::toPolygonF(
   \brief Translate a series of points into a QPolygon
 
   When the WeedOutPoints flag is enabled consecutive points,
-  that are mapped to the same position will be one point. 
+  that are mapped to the same position will be one point.
 
   \param xMap x map
   \param yMap y map
@@ -461,12 +461,12 @@ QPolygon QwtPointMapper::toPolygon(
 
     if ( d_data->flags & WeedOutPoints )
     {
-        polyline = qwtToPolylineFilteredI( 
+        polyline = qwtToPolylineFilteredI(
             xMap, yMap, series, from, to );
     }
     else
     {
-        polyline = qwtToPointsI( 
+        polyline = qwtToPointsI(
             qwtInvalidRect, xMap, yMap, series, from, to );
     }
 
@@ -477,16 +477,16 @@ QPolygon QwtPointMapper::toPolygon(
   \brief Translate a series into a QPolygonF
 
   - WeedOutPoints & RoundPoints & boundingRect().isValid()
-    All points that are mapped to the same position 
+    All points that are mapped to the same position
     will be one point. Points outside of the bounding
     rectangle are ignored.
- 
+
   - WeedOutPoints & RoundPoints & !boundingRect().isValid()
-    All consecutive points that are mapped to the same position 
+    All consecutive points that are mapped to the same position
     will one point
 
-  - WeedOutPoints & !RoundPoints 
-    All consecutive points that are mapped to the same position 
+  - WeedOutPoints & !RoundPoints
+    All consecutive points that are mapped to the same position
     will one point
 
   - !WeedOutPoints & boundingRect().isValid()
@@ -513,17 +513,17 @@ QPolygonF QwtPointMapper::toPointsF(
         if ( d_data->flags & RoundPoints )
         {
             if ( d_data->boundingRect.isValid() )
-            {   
+            {
                 points = qwtToPointsFilteredF( d_data->boundingRect,
                     xMap, yMap, series, from, to );
             }
             else
-            {   
+            {
                 // without a bounding rectangle all we can
                 // do is to filter out duplicates of
                 // consecutive points
 
-                points = qwtToPolylineFilteredF( 
+                points = qwtToPolylineFilteredF(
                     xMap, yMap, series, from, to, QwtRoundF() );
             }
         }
@@ -532,7 +532,7 @@ QPolygonF QwtPointMapper::toPointsF(
             // when rounding is not allowed we can't use
             // qwtToPointsFilteredF
 
-            points = qwtToPolylineFilteredF( 
+            points = qwtToPolylineFilteredF(
                 xMap, yMap, series, from, to, QwtNoRoundF() );
         }
     }
@@ -557,12 +557,12 @@ QPolygonF QwtPointMapper::toPointsF(
   \brief Translate a series of points into a QPolygon
 
   - WeedOutPoints & boundingRect().isValid()
-    All points that are mapped to the same position 
+    All points that are mapped to the same position
     will be one point. Points outside of the bounding
     rectangle are ignored.
- 
+
   - WeedOutPoints & !boundingRect().isValid()
-    All consecutive points that are mapped to the same position 
+    All consecutive points that are mapped to the same position
     will one point
 
   - !WeedOutPoints & boundingRect().isValid()
@@ -592,13 +592,13 @@ QPolygon QwtPointMapper::toPoints(
             // when we don't have the bounding rectangle all
             // we can do is to filter out consecutive duplicates
 
-            points = qwtToPolylineFilteredI( 
+            points = qwtToPolylineFilteredI(
                 xMap, yMap, series, from, to );
         }
     }
     else
     {
-        points = qwtToPointsI( 
+        points = qwtToPointsI(
             d_data->boundingRect, xMap, yMap, series, from, to );
     }
 
@@ -625,7 +625,7 @@ QPolygon QwtPointMapper::toPoints(
 */
 QImage QwtPointMapper::toImage(
     const QwtScaleMap &xMap, const QwtScaleMap &yMap,
-    const QwtSeriesData<QPointF> *series, int from, int to, 
+    const QwtSeriesData<QPointF> *series, int from, int to,
     const QPen &pen, bool antialiased, uint numThreads ) const
 {
     Q_UNUSED( antialiased )
@@ -675,7 +675,7 @@ QImage QwtPointMapper::toImage(
                 command.from = index0;
                 command.to = index0 + numPoints - 1;
 
-                futures += QtConcurrent::run( &qwtRenderDots, 
+                futures += QtConcurrent::run( &qwtRenderDots,
                     xMap, yMap, command, pos, &image );
             }
         }

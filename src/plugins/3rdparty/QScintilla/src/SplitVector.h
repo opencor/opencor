@@ -277,7 +277,7 @@ public:
 	}
 
 	int GapPosition() const {
-		return part1Length; 
+		return part1Length;
 	}
 };
 

@@ -200,7 +200,7 @@ public:
   const char *toString() const;
 
   bool isPrintfKind() const { return IsPrintf; }
-  
+
   llvm::Optional<ConversionSpecifier> getStandardSpecifier() const;
 
 protected:

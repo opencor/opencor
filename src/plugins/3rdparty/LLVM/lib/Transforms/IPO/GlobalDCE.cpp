@@ -60,7 +60,7 @@ ModulePass *llvm::createGlobalDCEPass() { return new GlobalDCE(); }
 
 bool GlobalDCE::runOnModule(Module &M) {
   bool Changed = false;
-  
+
   // Loop over the module, adding globals which are obviously necessary.
   for (Module::iterator I = M.begin(), E = M.end(); I != E; ++I) {
     Changed |= RemoveUnusedGlobalValue(*I);
@@ -161,7 +161,7 @@ void GlobalDCE::GlobalIsNeeded(GlobalValue *G) {
   // If the global is already in the set, no need to reprocess it.
   if (!AliveGlobals.insert(G))
     return;
-  
+
   if (GlobalVariable *GV = dyn_cast<GlobalVariable>(G)) {
     // If this is a global variable, we must make sure to add any global values
     // referenced by the initializer to the alive set.
@@ -190,7 +190,7 @@ void GlobalDCE::GlobalIsNeeded(GlobalValue *G) {
 void GlobalDCE::MarkUsedGlobalsAsNeeded(Constant *C) {
   if (GlobalValue *GV = dyn_cast<GlobalValue>(C))
     return GlobalIsNeeded(GV);
-  
+
   // Loop over all of the operands of the constant, adding any globals they
   // use to the list of needed globals.
   for (User::op_iterator I = C->op_begin(), E = C->op_end(); I != E; ++I)

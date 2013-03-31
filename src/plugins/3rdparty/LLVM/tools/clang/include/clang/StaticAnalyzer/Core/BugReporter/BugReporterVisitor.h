@@ -177,7 +177,7 @@ public:
   /// Return the tag associated with this visitor.  This tag will be used
   /// to make all PathDiagnosticPieces created by this visitor.
   static const char *getTag();
-  
+
   virtual PathDiagnosticPiece *VisitNode(const ExplodedNode *N,
                                          const ExplodedNode *Prev,
                                          BugReporterContext &BRC,
@@ -187,7 +187,7 @@ public:
                                      const ExplodedNode *Prev,
                                      BugReporterContext &BRC,
                                      BugReport &BR);
-  
+
   PathDiagnosticPiece *VisitTerminator(const Stmt *Term,
                                        const ExplodedNode *N,
                                        const CFGBlock *srcBlk,
@@ -214,7 +214,7 @@ public:
                                      BugReporterContext &BRC,
                                      BugReport &R,
                                      const ExplodedNode *N);
-  
+
   PathDiagnosticPiece *VisitConditionVariable(StringRef LhsString,
                                               const Expr *CondVarExpr,
                                               const bool tookTrue,
@@ -230,7 +230,7 @@ public:
                     llvm::Optional<bool> &prunable);
 };
 
-/// \brief When a region containing undefined value or '0' value is passed 
+/// \brief When a region containing undefined value or '0' value is passed
 /// as an argument in a call, marks the call as interesting.
 ///
 /// As a result, BugReporter will not prune the path through the function even

@@ -52,13 +52,13 @@ public:
 
   /// releaseMemory - release memory.
   virtual void releaseMemory();
-  
+
   /// empty - Return true if there is any lexical scope information available.
   bool empty() { return CurrentFnLexicalScope == NULL; }
 
-  /// isCurrentFunctionScope - Return true if given lexical scope represents 
+  /// isCurrentFunctionScope - Return true if given lexical scope represents
   /// current function.
-  bool isCurrentFunctionScope(const LexicalScope *LS) { 
+  bool isCurrentFunctionScope(const LexicalScope *LS) {
     return LS == CurrentFnLexicalScope;
   }
 
@@ -136,12 +136,12 @@ private:
   /// InlinedLexicalScopeMap - Tracks inlined function scopes in current function.
   DenseMap<DebugLoc, LexicalScope *> InlinedLexicalScopeMap;
 
-  /// AbstractScopeMap - These scopes are  not included LexicalScopeMap.  
+  /// AbstractScopeMap - These scopes are  not included LexicalScopeMap.
   /// AbstractScopes owns its LexicalScope*s.
   DenseMap<const MDNode *, LexicalScope *> AbstractScopeMap;
 
   /// AbstractScopesList - Tracks abstract scopes constructed while processing
-  /// a function. 
+  /// a function.
   SmallVector<LexicalScope *, 4>AbstractScopesList;
 
   /// CurrentFnLexicalScope - Top level scope for the current function.
@@ -233,10 +233,10 @@ public:
 private:
   LexicalScope *Parent;                          // Parent to this scope.
   AssertingVH<const MDNode> Desc;                // Debug info descriptor.
-  AssertingVH<const MDNode> InlinedAtLocation;   // Location at which this 
+  AssertingVH<const MDNode> InlinedAtLocation;   // Location at which this
                                                  // scope is inlined.
   bool AbstractScope;                            // Abstract Scope
-  SmallVector<LexicalScope *, 4> Children;       // Scopes defined in scope.  
+  SmallVector<LexicalScope *, 4> Children;       // Scopes defined in scope.
                                                  // Contents not owned.
   SmallVector<InsnRange, 4> Ranges;
 

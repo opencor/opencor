@@ -10,7 +10,7 @@
  * All rights reserved.
  * For details, see the LICENSE file.
  * -----------------------------------------------------------------
- * This is the header file for the KINSOL dense linear solver module, 
+ * This is the header file for the KINSOL dense linear solver module,
  * KINDENSE.
  * -----------------------------------------------------------------
  */

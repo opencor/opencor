@@ -20,7 +20,7 @@
  *
  *===-----------------------------------------------------------------------===
  */
- 
+
 #ifndef __TMMINTRIN_H
 #define __TMMINTRIN_H
 
@@ -205,13 +205,13 @@ _mm_sign_epi32(__m128i a, __m128i b)
 static __inline__ __m64 __attribute__((__always_inline__, __nodebug__))
 _mm_sign_pi8(__m64 a, __m64 b)
 {
-    return (__m64)__builtin_ia32_psignb((__v8qi)a, (__v8qi)b);  
+    return (__m64)__builtin_ia32_psignb((__v8qi)a, (__v8qi)b);
 }
 
 static __inline__ __m64 __attribute__((__always_inline__, __nodebug__))
 _mm_sign_pi16(__m64 a, __m64 b)
 {
-    return (__m64)__builtin_ia32_psignw((__v4hi)a, (__v4hi)b);  
+    return (__m64)__builtin_ia32_psignw((__v4hi)a, (__v4hi)b);
 }
 
 static __inline__ __m64 __attribute__((__always_inline__, __nodebug__))

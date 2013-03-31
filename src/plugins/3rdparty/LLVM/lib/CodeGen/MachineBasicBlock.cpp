@@ -974,7 +974,7 @@ getWeightIterator(MachineBasicBlock::const_succ_iterator I) const {
 
 /// Return whether (physical) register "Reg" has been <def>ined and not <kill>ed
 /// as of just before "MI".
-/// 
+///
 /// Search is localised to a neighborhood of
 /// Neighborhood instructions before (searching for defs or kills) and N
 /// instructions after (searching just for defs) MI.
@@ -982,7 +982,7 @@ MachineBasicBlock::LivenessQueryResult
 MachineBasicBlock::computeRegisterLiveness(const TargetRegisterInfo *TRI,
                                            unsigned Reg, MachineInstr *MI,
                                            unsigned Neighborhood) {
-  
+
   unsigned N = Neighborhood;
   MachineBasicBlock *MBB = MI->getParent();
 
@@ -1003,7 +1003,7 @@ MachineBasicBlock::computeRegisterLiveness(const TargetRegisterInfo *TRI,
 
       else if (Analysis.DefinesOverlap || Analysis.ReadsOverlap)
         // Defined or read without a previous kill - live.
-        return (Analysis.Defines || Analysis.Reads) ? 
+        return (Analysis.Defines || Analysis.Reads) ?
           LQR_Live : LQR_OverlappingLive;
 
     } while (I != MBB->begin() && --N > 0);

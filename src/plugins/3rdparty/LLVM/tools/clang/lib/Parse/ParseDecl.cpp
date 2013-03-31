@@ -1146,7 +1146,7 @@ void Parser::ProhibitCXX11Attributes(ParsedAttributesWithRange &attrs) {
   AttributeList *AttrList = attrs.getList();
   while (AttrList) {
     if (AttrList->isCXX0XAttribute()) {
-      Diag(AttrList->getLoc(), diag::warn_attribute_no_decl) 
+      Diag(AttrList->getLoc(), diag::warn_attribute_no_decl)
         << AttrList->getName();
       AttrList->setInvalid();
     }
@@ -1493,7 +1493,7 @@ Parser::DeclGroupPtrTy Parser::ParseDeclGroup(ParsingDeclSpec &DS,
     DeclsInGroup.push_back(FirstDecl);
 
   bool ExpectSemi = Context != Declarator::ForContext;
-  
+
   // If we don't have a comma, it is either the end of the list (a ';') or an
   // error, bail out.
   while (Tok.is(tok::comma)) {

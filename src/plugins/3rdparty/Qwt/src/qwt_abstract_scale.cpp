@@ -69,7 +69,7 @@ QwtAbstractScale::~QwtAbstractScale()
   \param value Lower bound
 
   \sa lowerBound(), setScale(), setUpperBound()
-  \note For inverted scales the lower bound 
+  \note For inverted scales the lower bound
         is greater than the upper bound
 */
 void QwtAbstractScale::setLowerBound( double value )
@@ -92,7 +92,7 @@ double QwtAbstractScale::lowerBound() const
   \param value Upper bound
 
   \sa upperBound(), setScale(), setLowerBound()
-  \note For inverted scales the lower bound 
+  \note For inverted scales the lower bound
         is greater than the upper bound
 */
 void QwtAbstractScale::setUpperBound( double value )
@@ -112,15 +112,15 @@ double QwtAbstractScale::upperBound() const
 /*!
   \brief Specify a scale.
 
-  Define a scale by an interval 
+  Define a scale by an interval
 
-  The ticks are calculated using scaleMaxMinor(), 
+  The ticks are calculated using scaleMaxMinor(),
   scaleMaxMajor() and scaleStepSize().
 
   \param lowerBound lower limit of the scale interval
   \param upperBound upper limit of the scale interval
 
-  \note For inverted scales the lower bound 
+  \note For inverted scales the lower bound
         is greater than the upper bound
 */
 void QwtAbstractScale::setScale( double lowerBound, double upperBound )
@@ -133,7 +133,7 @@ void QwtAbstractScale::setScale( double lowerBound, double upperBound )
 
   Define a scale by an interval
 
-  The ticks are calculated using scaleMaxMinor(), 
+  The ticks are calculated using scaleMaxMinor(),
   scaleMaxMajor() and scaleStepSize().
 
   \param interval Interval
@@ -340,7 +340,7 @@ QwtScaleEngine *QwtAbstractScale::scaleEngine()
   \return Scale boundaries and positions of the ticks
 
   The scale division might have been assigned explicitly
-  or calculated implicitly by rescale(). 
+  or calculated implicitly by rescale().
  */
 const QwtScaleDiv &QwtAbstractScale::scaleDiv() const
 {
@@ -420,7 +420,7 @@ void QwtAbstractScale::scaleChange()
 
   \sa scaleChange()
 */
-void QwtAbstractScale::rescale( 
+void QwtAbstractScale::rescale(
     double lowerBound, double upperBound, double stepSize )
 {
     const QwtScaleDiv scaleDiv = d_data->scaleEngine->divideScale(

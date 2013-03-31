@@ -22,7 +22,7 @@ namespace iface
 {
   namespace cellml_services
   {
-    PUBLIC_MaLaES_PRE 
+    PUBLIC_MaLaES_PRE
     class  PUBLIC_MaLaES_POST DegreeVariable
      : public virtual iface::XPCOM::IObject
     {
@@ -34,7 +34,7 @@ namespace iface
       virtual bool appearedUndelayed() throw(std::exception&)  = 0;
       virtual bool appearedInfinitesimallyDelayed() throw(std::exception&)  = 0;
     };
-    PUBLIC_MaLaES_PRE 
+    PUBLIC_MaLaES_PRE
     class  PUBLIC_MaLaES_POST DegreeVariableIterator
      : public virtual iface::XPCOM::IObject
     {
@@ -43,7 +43,7 @@ namespace iface
       virtual ~DegreeVariableIterator() {}
       virtual already_AddRefd<iface::cellml_services::DegreeVariable>  nextDegreeVariable() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_MaLaES_PRE 
+    PUBLIC_MaLaES_PRE
     class  PUBLIC_MaLaES_POST MaLaESResult
      : public virtual iface::XPCOM::IObject
     {
@@ -61,7 +61,7 @@ namespace iface
       virtual uint32_t getDiffDegree(iface::cellml_api::CellMLVariable* aVar) throw(std::exception&) = 0;
       virtual bool involvesExternalCode() throw(std::exception&)  = 0;
     };
-    PUBLIC_MaLaES_PRE 
+    PUBLIC_MaLaES_PRE
     class  PUBLIC_MaLaES_POST MaLaESTransform
      : public virtual iface::XPCOM::IObject
     {
@@ -72,7 +72,7 @@ namespace iface
       virtual already_AddRefd<iface::cellml_services::MaLaESResult>  transform(iface::cellml_services::CeVAS* aCeVAS, iface::cellml_services::CUSES* aCUSES, iface::cellml_services::AnnotationSet* aAnnos, iface::mathml_dom::MathMLElement* aMathML, iface::cellml_api::CellMLElement* aContext, iface::cellml_api::CellMLVariable* aUnitsOf, iface::cellml_api::CellMLVariable* aBoundUnitsOf, uint32_t aUnitsDiffDegree) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual void stripPassthrough(iface::cellml_api::Model* aModel) throw(std::exception&) = 0;
     };
-    PUBLIC_MaLaES_PRE 
+    PUBLIC_MaLaES_PRE
     class  PUBLIC_MaLaES_POST MaLaESBootstrap
      : public virtual iface::XPCOM::IObject
     {

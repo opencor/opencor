@@ -99,8 +99,8 @@ class Attr {
   list<AttrSubject> Subjects;
   // The arguments allowed on an attribute
   list<Argument> Args = [];
-  // Set to true for attributes with arguments which require delayed parsing. 
-  bit LateParsed = 0;  
+  // Set to true for attributes with arguments which require delayed parsing.
+  bit LateParsed = 0;
   // Set to false to prevent an attribute from being propagated from a template
   // to the instantiation.
   bit Clone = 1;
@@ -114,7 +114,7 @@ class Attr {
   bit Ignored = 0;
   // Set to true if each of the spellings is a distinct attribute.
   bit DistinctSpellings = 0;
-  // Any additional text that should be included verbatim in the class.  
+  // Any additional text that should be included verbatim in the class.
   code AdditionalMembers = [{}];
 }
 
@@ -132,7 +132,7 @@ class InheritableParamAttr : InheritableAttr;
 def AddressSpace : Attr {
   let Spellings = [GNU<"address_space">];
   let Args = [IntArgument<"AddressSpace">];
-  let ASTNode = 0;  
+  let ASTNode = 0;
 }
 
 def Alias : InheritableAttr {
@@ -547,7 +547,7 @@ def Overloadable : Attr {
   let Spellings = [GNU<"overloadable">];
 }
 
-def Override : InheritableAttr { 
+def Override : InheritableAttr {
   let Spellings = [];
   let SemaHandler = 0;
 }
@@ -594,7 +594,7 @@ def ReqdWorkGroupSize : InheritableAttr {
 
 def WorkGroupSizeHint :  InheritableAttr {
   let Spellings = [GNU<"work_group_size_hint">];
-  let Args = [UnsignedArgument<"XDim">, 
+  let Args = [UnsignedArgument<"XDim">,
               UnsignedArgument<"YDim">,
               UnsignedArgument<"ZDim">];
 }

@@ -44,7 +44,7 @@ class SanitizerArgs {
   bool needsUbsanRt() const { return Kind & NeedsUbsanRt; }
 
   bool sanitizesVptr() const { return Kind & Vptr; }
-  
+
   void addArgs(const ArgList &Args, ArgStringList &CmdArgs) const {
     if (!Kind)
       return;

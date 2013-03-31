@@ -283,8 +283,8 @@ namespace CodeGen {
       }
     }
   };
-  
-  /// ReturnValueSlot - Contains the address where the return value of a 
+
+  /// ReturnValueSlot - Contains the address where the return value of a
   /// function can be stored, and whether the address is volatile or not.
   class ReturnValueSlot {
     llvm::PointerIntPair<llvm::Value *, 1, bool> Value;
@@ -295,11 +295,11 @@ namespace CodeGen {
       : Value(Value, IsVolatile) {}
 
     bool isNull() const { return !getValue(); }
-    
+
     bool isVolatile() const { return Value.getInt(); }
     llvm::Value *getValue() const { return Value.getPointer(); }
   };
-  
+
 }  // end namespace CodeGen
 }  // end namespace clang
 

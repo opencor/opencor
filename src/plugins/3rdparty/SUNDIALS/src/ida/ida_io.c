@@ -2,17 +2,17 @@
  * -----------------------------------------------------------------
  * $Revision: 1.15 $
  * $Date: 2010/12/01 22:35:26 $
- * ----------------------------------------------------------------- 
+ * -----------------------------------------------------------------
  * Programmer(s): Alan Hindmarsh, Radu Serban and
  *                Aaron Collier @ LLNL
  * -----------------------------------------------------------------
- * Copyright (c) 2002, The Regents of the University of California  
+ * Copyright (c) 2002, The Regents of the University of California
  * Produced at the Lawrence Livermore National Laboratory
  * All rights reserved
  * For details, see the LICENSE file
  * -----------------------------------------------------------------
- * This is the implementation file for the optional inputs and     
- * outputs for the IDA solver.                                    
+ * This is the implementation file for the optional inputs and
+ * outputs for the IDA solver.
  * -----------------------------------------------------------------
  */
 
@@ -28,13 +28,13 @@
 #define ONE     RCONST(1.0)
 #define TWOPT5  RCONST(2.5)
 
-/* 
+/*
  * =================================================================
  * IDA optional input functions
  * =================================================================
  */
 
-/* 
+/*
  * Readability constants
  */
 
@@ -121,7 +121,7 @@ int IDASetMaxOrd(void *ida_mem, int maxord)
   if (maxord > maxord_alloc) {
     IDAProcessError(IDA_mem, IDA_ILL_INPUT, "IDA", "IDASetMaxOrd", MSG_BAD_MAXORD);
     return(IDA_ILL_INPUT);
-  }  
+  }
 
   IDA_mem->ida_maxord = MIN(maxord,MAXORD_DEFAULT);
 
@@ -344,7 +344,7 @@ int IDASetId(void *ida_mem, N_Vector id)
       lrw -= lrw1;
       liw -= liw1;
     }
-    IDA_mem->ida_idMallocDone = FALSE;    
+    IDA_mem->ida_idMallocDone = FALSE;
     return(IDA_SUCCESS);
   }
 
@@ -401,9 +401,9 @@ int IDASetConstraints(void *ida_mem, N_Vector constraints)
   /*  Check the constraints vector */
 
   temptest = N_VMaxNorm(constraints);
-  if((temptest > TWOPT5) || (temptest < HALF)){ 
+  if((temptest > TWOPT5) || (temptest < HALF)){
     IDAProcessError(IDA_mem, IDA_ILL_INPUT, "IDA", "IDASetConstraints", MSG_BAD_CONSTR);
-    return(IDA_ILL_INPUT); 
+    return(IDA_ILL_INPUT);
   }
 
   if ( !(IDA_mem->ida_constraintsMallocDone) ) {
@@ -422,7 +422,7 @@ int IDASetConstraints(void *ida_mem, N_Vector constraints)
   return(IDA_SUCCESS);
 }
 
-/* 
+/*
  * IDASetRootDirection
  *
  * Specifies the direction of zero-crossings to be monitored.
@@ -444,7 +444,7 @@ int IDASetRootDirection(void *ida_mem, int *rootdir)
   nrt = IDA_mem->ida_nrtfn;
   if (nrt==0) {
     IDAProcessError(NULL, IDA_ILL_INPUT, "IDA", "IDASetRootDirection", MSG_NO_ROOT);
-    return(IDA_ILL_INPUT);    
+    return(IDA_ILL_INPUT);
   }
 
   for(i=0; i<nrt; i++) IDA_mem->ida_rootdir[i] = rootdir[i];
@@ -471,12 +471,12 @@ int IDASetNoInactiveRootWarn(void *ida_mem)
   IDA_mem = (IDAMem) ida_mem;
 
   IDA_mem->ida_mxgnull = 0;
-  
+
   return(IDA_SUCCESS);
 }
 
 
-/* 
+/*
  * =================================================================
  * IDA IC optional input functions
  * =================================================================
@@ -542,7 +542,7 @@ int IDASetMaxNumJacsIC(void *ida_mem, int maxnj)
    if (maxnj <= 0) {
     IDAProcessError(IDA_mem, IDA_ILL_INPUT, "IDA", "IDASetMaxNumJacsIC", MSG_BAD_MAXNJ);
     return(IDA_ILL_INPUT);
-  } 
+  }
 
   IDA_mem->ida_maxnj = maxnj;
 
@@ -613,7 +613,7 @@ int IDASetStepToleranceIC(void *ida_mem, realtype steptol)
   return(IDA_SUCCESS);
 }
 
-/* 
+/*
  * =================================================================
  * Readability constants
  * =================================================================
@@ -633,16 +633,16 @@ int IDASetStepToleranceIC(void *ida_mem, realtype steptol)
 #define nsetups     (IDA_mem->ida_nsetups)
 #define lrw         (IDA_mem->ida_lrw)
 #define liw         (IDA_mem->ida_liw)
-#define kused       (IDA_mem->ida_kused)          
-#define hused       (IDA_mem->ida_hused)         
-#define tolsf       (IDA_mem->ida_tolsf) 
+#define kused       (IDA_mem->ida_kused)
+#define hused       (IDA_mem->ida_hused)
+#define tolsf       (IDA_mem->ida_tolsf)
 #define efun        (IDA_mem->ida_efun)
 #define edata       (IDA_mem->ida_edata)
 #define nge         (IDA_mem->ida_nge)
 #define iroots      (IDA_mem->ida_iroots)
 #define ee          (IDA_mem->ida_ee)
 
-/* 
+/*
  * =================================================================
  * IDA optional input functions
  * =================================================================
@@ -741,13 +741,13 @@ int IDAGetNumBacktrackOps(void *ida_mem, long int *nbacktracks)
 int IDAGetConsistentIC(void *ida_mem, N_Vector yy0, N_Vector yp0)
 {
   IDAMem IDA_mem;
-  
+
   if (ida_mem == NULL) {
     IDAProcessError(NULL, IDA_MEM_NULL, "IDA", "IDAGetConsistentIC", MSG_NO_MEM);
     return (IDA_MEM_NULL);
   }
 
-  IDA_mem = (IDAMem) ida_mem; 
+  IDA_mem = (IDAMem) ida_mem;
 
   if (IDA_mem->ida_kused != 0) {
     IDAProcessError(IDA_mem, IDA_ILL_INPUT, "IDA", "IDAGetConsistentIC", MSG_TOO_LATE);
@@ -891,13 +891,13 @@ int IDAGetTolScaleFactor(void *ida_mem, realtype *tolsfact)
 int IDAGetErrWeights(void *ida_mem, N_Vector eweight)
 {
   IDAMem IDA_mem;
-  
+
   if (ida_mem == NULL) {
     IDAProcessError(NULL, IDA_MEM_NULL, "IDA", "IDAGetErrWeights", MSG_NO_MEM);
     return (IDA_MEM_NULL);
   }
 
-  IDA_mem = (IDAMem) ida_mem; 
+  IDA_mem = (IDAMem) ida_mem;
 
   N_VScale(ONE, ewt, eweight);
 
@@ -942,9 +942,9 @@ int IDAGetWorkSpace(void *ida_mem, long int *lenrw, long int *leniw)
 
 /*-----------------------------------------------------------------*/
 
-int IDAGetIntegratorStats(void *ida_mem, long int *nsteps, long int *nrevals, 
+int IDAGetIntegratorStats(void *ida_mem, long int *nsteps, long int *nrevals,
                           long int *nlinsetups, long int *netfails,
-                          int *klast, int *kcur, realtype *hinused, realtype *hlast, 
+                          int *klast, int *kcur, realtype *hinused, realtype *hlast,
                           realtype *hcur, realtype *tcur)
 {
   IDAMem IDA_mem;
@@ -964,7 +964,7 @@ int IDAGetIntegratorStats(void *ida_mem, long int *nsteps, long int *nrevals,
   *kcur       = kk;
   *hinused    = h0u;
   *hlast      = hused;
-  *hcur       = hh;  
+  *hcur       = hh;
   *tcur       = tn;
 
   return(IDA_SUCCESS);

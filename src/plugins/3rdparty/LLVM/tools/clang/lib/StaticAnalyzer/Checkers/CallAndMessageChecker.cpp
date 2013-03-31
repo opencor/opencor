@@ -130,7 +130,7 @@ bool CallAndMessageChecker::PreVisitProcessArg(CheckerContext &C,
 
   if (!checkUninitFields)
     return false;
-  
+
   if (const nonloc::LazyCompoundVal *LV =
         dyn_cast<nonloc::LazyCompoundVal>(&V)) {
 

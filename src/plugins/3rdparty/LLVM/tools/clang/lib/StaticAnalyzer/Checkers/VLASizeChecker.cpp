@@ -7,7 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 //
-// This defines VLASizeChecker, a builtin check in ExprEngine that 
+// This defines VLASizeChecker, a builtin check in ExprEngine that
 // performs checks for declaration of VLA of undefined or zero size.
 // In addition, VLASizeChecker is responsible for defining the extent
 // of the MemRegion that represents a VLA.
@@ -77,7 +77,7 @@ void VLASizeChecker::reportBug(VLASize_Kind Kind,
 void VLASizeChecker::checkPreStmt(const DeclStmt *DS, CheckerContext &C) const {
   if (!DS->isSingleDecl())
     return;
-  
+
   const VarDecl *VD = dyn_cast<VarDecl>(DS->getSingleDecl());
   if (!VD)
     return;
@@ -101,7 +101,7 @@ void VLASizeChecker::checkPreStmt(const DeclStmt *DS, CheckerContext &C) const {
   // warned about that already.
   if (sizeV.isUnknown())
     return;
-  
+
   // Check if the size is tainted.
   if (state->isTainted(sizeV)) {
     reportBug(VLA_Tainted, SE, 0, C);
@@ -118,7 +118,7 @@ void VLASizeChecker::checkPreStmt(const DeclStmt *DS, CheckerContext &C) const {
     reportBug(VLA_Zero, SE, stateZero, C);
     return;
   }
- 
+
   // From this point on, assume that the size is not zero.
   state = stateNotZero;
 
@@ -129,7 +129,7 @@ void VLASizeChecker::checkPreStmt(const DeclStmt *DS, CheckerContext &C) const {
   // Convert the array length to size_t.
   SValBuilder &svalBuilder = C.getSValBuilder();
   QualType SizeTy = Ctx.getSizeType();
-  NonLoc ArrayLength = cast<NonLoc>(svalBuilder.evalCast(sizeD, SizeTy, 
+  NonLoc ArrayLength = cast<NonLoc>(svalBuilder.evalCast(sizeD, SizeTy,
                                                          SE->getType()));
 
   // Get the element size.

@@ -673,7 +673,7 @@ static unsigned getIntelMemOperandSize(StringRef OpStr) {
   return Size;
 }
 
-X86Operand *X86AsmParser::ParseIntelBracExpression(unsigned SegReg, 
+X86Operand *X86AsmParser::ParseIntelBracExpression(unsigned SegReg,
                                                    unsigned Size) {
   unsigned BaseReg = 0, IndexReg = 0, Scale = 1;
   const AsmToken &Tok = Parser.getTok();
@@ -735,7 +735,7 @@ X86Operand *X86AsmParser::ParseIntelBracExpression(unsigned SegReg,
     ExpectRBrac = true;
     bool isPlus = getLexer().is(AsmToken::Plus) ||
       getLexer().is(AsmToken::LBrac);
-    Parser.Lex(); 
+    Parser.Lex();
     SMLoc PlusLoc = Tok.getLoc();
     if (getLexer().is(AsmToken::Integer)) {
       int64_t Val = Tok.getIntVal();
@@ -759,7 +759,7 @@ X86Operand *X86AsmParser::ParseIntelBracExpression(unsigned SegReg,
       else if (getParser().ParseExpression(Disp, End)) return 0;
     }
   }
-  
+
   // Parse ][ as a plus.
   if (getLexer().is(AsmToken::RBrac)) {
     ExpectRBrac = false;
@@ -789,7 +789,7 @@ X86Operand *X86AsmParser::ParseIntelBracExpression(unsigned SegReg,
     const MCExpr *NewDisp;
     if (ParseIntelDotOperator(Disp, &NewDisp, Err))
       return ErrorOperand(Tok.getLoc(), Err);
-    
+
     Parser.Lex();  // Eat the field.
     Disp = NewDisp;
   }

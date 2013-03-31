@@ -38,19 +38,19 @@ void ExprEngine::processCallEnter(CallEnter CE, ExplodedNode *Pred) {
   const StackFrameContext *calleeCtx = CE.getCalleeContext();
   const CFG *CalleeCFG = calleeCtx->getCFG();
   const CFGBlock *Entry = &(CalleeCFG->getEntry());
-  
+
   // Validate the CFG.
   assert(Entry->empty());
   assert(Entry->succ_size() == 1);
-  
+
   // Get the solitary sucessor.
   const CFGBlock *Succ = *(Entry->succ_begin());
-  
+
   // Construct an edge representing the starting location in the callee.
   BlockEdge Loc(Entry, Succ, calleeCtx);
 
   ProgramStateRef state = Pred->getState();
-  
+
   // Construct a new node and add it to the worklist.
   bool isNew;
   ExplodedNode *Node = G.getNode(Loc, state, false, &isNew);
@@ -177,13 +177,13 @@ void ExprEngine::removeDeadOnEndOfFunction(NodeBuilderContext& BC,
   if (!Blk || !LastSt) {
     return;
   }
-  
+
   // If the last statement is return, everything it references should stay live.
   if (isa<ReturnStmt>(LastSt))
     return;
 
   // Here, we call the Symbol Reaper with 0 stack context telling it to clean up
-  // everything on the stack. We use LastStmt as a diagnostic statement, with 
+  // everything on the stack. We use LastStmt as a diagnostic statement, with
   // which the PreStmtPurgeDead point will be associated.
   currBldrCtx = &BC;
   removeDead(Pred, Dst, 0, 0, LastSt,
@@ -201,8 +201,8 @@ static bool wasDifferentDeclUsedForInlining(CallEventRef<> Call,
   return RuntimeCallee->getCanonicalDecl() != StaticDecl->getCanonicalDecl();
 }
 
-/// The call exit is simulated with a sequence of nodes, which occur between 
-/// CallExitBegin and CallExitEnd. The following operations occur between the 
+/// The call exit is simulated with a sequence of nodes, which occur between
+/// CallExitBegin and CallExitEnd. The following operations occur between the
 /// two program points:
 /// 1. CallExitBegin (triggers the start of call exit sequence)
 /// 2. Bind the return value
@@ -214,12 +214,12 @@ void ExprEngine::processCallExit(ExplodedNode *CEBNode) {
 
   const StackFrameContext *calleeCtx =
       CEBNode->getLocationContext()->getCurrentStackFrame();
-  
+
   // The parent context might not be a stack frame, so make sure we
   // look up the first enclosing stack frame.
   const StackFrameContext *callerCtx =
     calleeCtx->getParent()->getCurrentStackFrame();
-  
+
   const Stmt *CE = calleeCtx->getCallSite();
   ProgramStateRef state = CEBNode->getState();
   // Find the last statement in the function and the corresponding basic block.
@@ -384,7 +384,7 @@ static bool IsInStdNamespace(const FunctionDecl *FD) {
   const NamespaceDecl *ND = dyn_cast<NamespaceDecl>(DC);
   if (!ND)
     return false;
-  
+
   while (const DeclContext *Parent = ND->getParent()) {
     if (!isa<NamespaceDecl>(Parent))
       break;
@@ -515,7 +515,7 @@ bool ExprEngine::inlineCall(const CallEvent &Call, const Decl *D,
     // If the destructor is trivial, it's always safe to inline the constructor.
     if (Ctor.getDecl()->getParent()->hasTrivialDestructor())
       break;
-    
+
     // For other types, only inline constructors if destructor inlining is
     // also enabled.
     if (!Opts.mayInlineCXXMemberFunction(CIMK_Destructors))
@@ -571,7 +571,7 @@ bool ExprEngine::inlineCall(const CallEvent &Call, const Decl *D,
 
   if (!shouldInlineDecl(D, Pred))
     return false;
-  
+
   if (!ParentOfCallee)
     ParentOfCallee = CallerSFC;
 
@@ -584,7 +584,7 @@ bool ExprEngine::inlineCall(const CallEvent &Call, const Decl *D,
     CalleeADC->getStackFrame(ParentOfCallee, CallE,
                              currBldrCtx->getBlock(),
                              currStmtIdx);
-  
+
   CallEnter Loc(CallE, CalleeSFC, CurLC);
 
   // Construct a new state which contains the mapping from actual to
@@ -807,12 +807,12 @@ void ExprEngine::BifurcateCall(const MemRegion *BifurReg,
 
 void ExprEngine::VisitReturnStmt(const ReturnStmt *RS, ExplodedNode *Pred,
                                  ExplodedNodeSet &Dst) {
-  
+
   ExplodedNodeSet dstPreVisit;
   getCheckerManager().runCheckersForPreStmt(dstPreVisit, Pred, RS, *this);
 
   StmtNodeBuilder B(dstPreVisit, Dst, *currBldrCtx);
-  
+
   if (RS->getRetValue()) {
     for (ExplodedNodeSet::iterator it = dstPreVisit.begin(),
                                   ei = dstPreVisit.end(); it != ei; ++it) {

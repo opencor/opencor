@@ -35,13 +35,13 @@ class CodeGenVTables {
 
   /// VTables - All the vtables which have been defined.
   llvm::DenseMap<const CXXRecordDecl *, llvm::GlobalVariable *> VTables;
-  
+
   /// VTableAddressPointsMapTy - Address points for a single vtable.
   typedef llvm::DenseMap<BaseSubobject, uint64_t> VTableAddressPointsMapTy;
 
   typedef std::pair<const CXXRecordDecl *, BaseSubobject> BaseSubobjectPairTy;
   typedef llvm::DenseMap<BaseSubobjectPairTy, uint64_t> SubVTTIndiciesMapTy;
-  
+
   /// SubVTTIndicies - Contains indices into the various sub-VTTs.
   SubVTTIndiciesMapTy SubVTTIndicies;
 
@@ -53,7 +53,7 @@ class CodeGenVTables {
   SecondaryVirtualPointerIndicesMapTy SecondaryVirtualPointerIndices;
 
   /// EmitThunk - Emit a single thunk.
-  void EmitThunk(GlobalDecl GD, const ThunkInfo &Thunk, 
+  void EmitThunk(GlobalDecl GD, const ThunkInfo &Thunk,
                  bool UseAvailableExternallyLinkage);
 
   /// MaybeEmitThunkAvailableExternally - Try to emit the given thunk with
@@ -67,7 +67,7 @@ class CodeGenVTables {
   /// \param Components - The vtable components; this is really an array of
   /// VTableComponents.
   llvm::Constant *CreateVTableInitializer(const CXXRecordDecl *RD,
-                                          const VTableComponent *Components, 
+                                          const VTableComponent *Components,
                                           unsigned NumComponents,
                                 const VTableLayout::VTableThunkTy *VTableThunks,
                                           unsigned NumVTableThunks);
@@ -89,7 +89,7 @@ public:
   /// getSubVTTIndex - Return the index of the sub-VTT for the base class of the
   /// given record decl.
   uint64_t getSubVTTIndex(const CXXRecordDecl *RD, BaseSubobject Base);
-  
+
   /// getSecondaryVirtualPointerIndex - Return the index in the VTT where the
   /// virtual pointer for the given subobject is located.
   uint64_t getSecondaryVirtualPointerIndex(const CXXRecordDecl *RD,
@@ -98,7 +98,7 @@ public:
   /// getAddressPoint - Get the address point of the given subobject in the
   /// class decl.
   uint64_t getAddressPoint(BaseSubobject Base, const CXXRecordDecl *RD);
-  
+
   /// GetAddrOfVTable - Get the address of the vtable for the given record decl.
   llvm::GlobalVariable *GetAddrOfVTable(const CXXRecordDecl *RD);
 
@@ -106,16 +106,16 @@ public:
   void EmitVTableDefinition(llvm::GlobalVariable *VTable,
                             llvm::GlobalVariable::LinkageTypes Linkage,
                             const CXXRecordDecl *RD);
-  
-  /// GenerateConstructionVTable - Generate a construction vtable for the given 
+
+  /// GenerateConstructionVTable - Generate a construction vtable for the given
   /// base subobject.
   llvm::GlobalVariable *
-  GenerateConstructionVTable(const CXXRecordDecl *RD, const BaseSubobject &Base, 
-                             bool BaseIsVirtual, 
+  GenerateConstructionVTable(const CXXRecordDecl *RD, const BaseSubobject &Base,
+                             bool BaseIsVirtual,
                              llvm::GlobalVariable::LinkageTypes Linkage,
                              VTableAddressPointsMapTy& AddressPoints);
 
-    
+
   /// GetAddrOfVTable - Get the address of the VTT for the given record decl.
   llvm::GlobalVariable *GetAddrOfVTT(const CXXRecordDecl *RD);
 
@@ -126,7 +126,7 @@ public:
 
   /// EmitThunks - Emit the associated thunks for the given global decl.
   void EmitThunks(GlobalDecl GD);
-    
+
   /// GenerateClassData - Generate all the class data required to be generated
   /// upon definition of a KeyFunction.  This includes the vtable, the
   /// rtti data structure and the VTT.

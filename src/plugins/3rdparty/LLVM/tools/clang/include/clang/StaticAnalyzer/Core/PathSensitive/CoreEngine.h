@@ -26,7 +26,7 @@
 namespace clang {
 
 class ProgramPointTag;
-  
+
 namespace ento {
 
 class NodeBuilder;
@@ -51,7 +51,7 @@ class CoreEngine {
 public:
   typedef std::vector<std::pair<BlockEdge, const ExplodedNode*> >
             BlocksExhausted;
-  
+
   typedef std::vector<std::pair<const CFGBlock*, const ExplodedNode*> >
             BlocksAborted;
 
@@ -75,7 +75,7 @@ private:
   /// The locations where we stopped doing work because we visited a location
   ///  too many times.
   BlocksExhausted blocksExhausted;
-  
+
   /// The locations where we stopped because the engine aborted analysis,
   /// usually because it could not reason about something.
   BlocksAborted blocksAborted;
@@ -125,7 +125,7 @@ public:
   /// Returns true if there is still simulation state on the worklist.
   bool ExecuteWorkListWithInitialState(const LocationContext *L,
                                        unsigned Steps,
-                                       ProgramStateRef InitState, 
+                                       ProgramStateRef InitState,
                                        ExplodedNodeSet &Dst);
 
   /// Dispatch the work list item based on the given location information.
@@ -136,8 +136,8 @@ public:
   // Functions for external checking of whether we have unfinished work
   bool wasBlockAborted() const { return !blocksAborted.empty(); }
   bool wasBlocksExhausted() const { return !blocksExhausted.empty(); }
-  bool hasWorkRemaining() const { return wasBlocksExhausted() || 
-                                         WList->hasWork() || 
+  bool hasWorkRemaining() const { return wasBlocksExhausted() ||
+                                         WList->hasWork() ||
                                          wasBlockAborted(); }
 
   /// Inform the CoreEngine that a basic block was aborted because
@@ -145,7 +145,7 @@ public:
   void addAbortedBlock(const ExplodedNode *node, const CFGBlock *block) {
     blocksAborted.push_back(std::make_pair(block, node));
   }
-  
+
   WorkList *getWorkList() const { return WList.get(); }
 
   BlocksExhausted::const_iterator blocks_exhausted_begin() const {
@@ -235,7 +235,7 @@ protected:
 
   /// Allow subclasses to finalize results before result_begin() is executed.
   virtual void finalizeResults() {}
-  
+
   ExplodedNode *generateNodeImpl(const ProgramPoint &PP,
                                  ProgramStateRef State,
                                  ExplodedNode *Pred,
@@ -448,7 +448,7 @@ class IndirectGotoNodeBuilder {
   ExplodedNode *Pred;
 
 public:
-  IndirectGotoNodeBuilder(ExplodedNode *pred, const CFGBlock *src, 
+  IndirectGotoNodeBuilder(ExplodedNode *pred, const CFGBlock *src,
                     const Expr *e, const CFGBlock *dispatch, CoreEngine* eng)
     : Eng(*eng), Src(src), DispatchBlock(*dispatch), E(e), Pred(pred) {}
 
@@ -481,7 +481,7 @@ public:
   const Expr *getTarget() const { return E; }
 
   ProgramStateRef getState() const { return Pred->State; }
-  
+
   const LocationContext *getLocationContext() const {
     return Pred->getLocationContext();
   }
@@ -534,7 +534,7 @@ public:
   const Expr *getCondition() const { return Condition; }
 
   ProgramStateRef getState() const { return Pred->State; }
-  
+
   const LocationContext *getLocationContext() const {
     return Pred->getLocationContext();
   }

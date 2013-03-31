@@ -87,7 +87,7 @@ UndefCapturedBlockVarChecker::checkPostStmt(const BlockExpr *BE,
         SmallString<128> buf;
         llvm::raw_svector_ostream os(buf);
 
-        os << "Variable '" << VD->getName() 
+        os << "Variable '" << VD->getName()
            << "' is uninitialized when captured by block";
 
         BugReport *R = new BugReport(*BT, os.str(), N);

@@ -109,31 +109,31 @@ public:
 
   /// \brief Pair of checker name and enable/disable.
   std::vector<std::pair<std::string, bool> > CheckersControlList;
-  
+
   /// \brief A key-value table of use-specified configuration values.
   ConfigTable Config;
   AnalysisStores AnalysisStoreOpt;
   AnalysisConstraints AnalysisConstraintsOpt;
   AnalysisDiagClients AnalysisDiagOpt;
   AnalysisPurgeMode AnalysisPurgeOpt;
-  
+
   // \brief The interprocedural analysis mode.
   AnalysisIPAMode IPAMode;
-  
+
   std::string AnalyzeSpecificFunction;
-  
+
   /// \brief The maximum number of exploded nodes the analyzer will generate.
   unsigned MaxNodes;
-  
+
   /// \brief The maximum number of times the analyzer visits a block.
   unsigned maxBlockVisitOnPath;
-  
-  
+
+
   unsigned ShowCheckerHelp : 1;
   unsigned AnalyzeAll : 1;
   unsigned AnalyzerDisplayProgress : 1;
   unsigned AnalyzeNestedBlocks : 1;
-  
+
   /// \brief The flag regulates if we should eagerly assume evaluations of
   /// conditionals, thus, bifurcating the path.
   ///
@@ -144,20 +144,20 @@ public:
   /// precision until we have a better way to lazily evaluate such logic.  The
   /// downside is that it eagerly bifurcates paths.
   unsigned eagerlyAssumeBinOpBifurcation : 1;
-  
+
   unsigned TrimGraph : 1;
   unsigned visualizeExplodedGraphWithGraphViz : 1;
   unsigned visualizeExplodedGraphWithUbiGraph : 1;
   unsigned UnoptimizedCFG : 1;
   unsigned PrintStats : 1;
-  
+
   /// \brief Do not re-analyze paths leading to exhausted nodes with a different
   /// strategy. We get better code coverage when retry is enabled.
   unsigned NoRetryExhausted : 1;
-  
+
   /// \brief The inlining stack depth limit.
   unsigned InlineMaxStackDepth;
-  
+
   /// \brief The mode of function selection used during inlining.
   unsigned InlineMaxFunctionSize;
 
@@ -167,13 +167,13 @@ public:
 private:
   /// Controls which C++ member functions will be considered for inlining.
   CXXInlineableMemberKind CXXMemberInliningMode;
-  
+
   /// \sa includeTemporaryDtorsInCFG
   llvm::Optional<bool> IncludeTemporaryDtorsInCFG;
-  
+
   /// \sa mayInlineCXXStandardLibrary
   llvm::Optional<bool> InlineCXXStandardLibrary;
-  
+
   /// \sa mayInlineTemplateFunctions
   llvm::Optional<bool> InlineTemplateFunctions;
 
@@ -189,7 +189,7 @@ private:
 
   /// \sa shouldAvoidSuppressingNullArgumentPaths
   llvm::Optional<bool> AvoidSuppressingNullArgumentPaths;
-  
+
   /// \sa getGraphTrimInterval
   llvm::Optional<unsigned> GraphTrimInterval;
 
@@ -202,7 +202,7 @@ private:
   /// Variant that accepts a Optional value to cache the result.
   bool getBooleanOption(llvm::Optional<bool> &V, StringRef Name,
                         bool DefaultVal);
-  
+
   /// Interprets an option's string value as an integer value.
   int getOptionAsInteger(llvm::StringRef Name, int DefaultVal);
 
@@ -264,7 +264,7 @@ public:
   //
   // This is controlled by "ipa-always-inline-size" analyzer-config option.
   unsigned getAlwaysInlineSize();
-  
+
   /// Returns true if the analyzer engine should synthesize fake bodies
   /// for well-known functions.
   bool shouldSynthesizeBodies();
@@ -300,9 +300,9 @@ public:
     InliningMode = NoRedundancy;
   }
 };
-  
+
 typedef llvm::IntrusiveRefCntPtr<AnalyzerOptions> AnalyzerOptionsRef;
-  
+
 }
 
 #endif

@@ -41,13 +41,13 @@ void ValueSymbolTable::reinsertValue(Value* V) {
     //DEBUG(dbgs() << " Inserted value: " << V->Name << ": " << *V << "\n");
     return;
   }
-  
+
   // Otherwise, there is a naming conflict.  Rename this value.
   SmallString<256> UniqueName(V->getName().begin(), V->getName().end());
 
   // The name is too already used, just free it so we can allocate a new name.
   V->Name->Destroy();
-  
+
   unsigned BaseSize = UniqueName.size();
   while (1) {
     // Trim any suffix off and append the next number.
@@ -84,15 +84,15 @@ ValueName *ValueSymbolTable::createValueName(StringRef Name, Value *V) {
     //           << *V << "\n");
     return &Entry;
   }
-  
+
   // Otherwise, there is a naming conflict.  Rename this value.
   SmallString<256> UniqueName(Name.begin(), Name.end());
-  
+
   while (1) {
     // Trim any suffix off and append the next number.
     UniqueName.resize(Name.size());
     raw_svector_ostream(UniqueName) << ++LastUnique;
-    
+
     // Try insert the vmap entry with this suffix.
     ValueName &NewName = vmap.GetOrCreateValue(UniqueName);
     if (NewName.getValue() == 0) {

@@ -84,15 +84,15 @@ private:
   /// \brief The AST consumer that received information about the translation
   /// unit as it was parsed or loaded.
   OwningPtr<ASTConsumer> Consumer;
-  
+
   /// \brief The semantic analysis object used to type-check the translation
   /// unit.
   OwningPtr<Sema> TheSema;
-  
+
   /// Optional owned invocation, just used to make the invocation used in
   /// LoadFromCommandLine available.
   IntrusiveRefCntPtr<CompilerInvocation> Invocation;
-  
+
   // OnlyLocalDecls - when true, walking this AST should only visit declarations
   // that come from the AST itself, not from included precompiled headers.
   // FIXME: This is temporary; eventually, CIndex will always do this.
@@ -112,7 +112,7 @@ private:
 
   /// \brief Whether the ASTUnit should delete the remapped buffers.
   bool OwnsRemappedFileBuffers;
-  
+
   /// Track the top-level decls which appeared in an ASTUnit which was loaded
   /// from a source file.
   //
@@ -129,7 +129,7 @@ private:
   /// \brief Map from FileID to the file-level declarations that it contains.
   /// The files and decls are only local (and non-preamble) ones.
   FileDeclsTy FileDecls;
-  
+
   /// The name of the original source file used to generate this ASTUnit.
   std::string OriginalSourceFile;
 
@@ -150,7 +150,7 @@ private:
   /// Diagnostics that come from the driver are retained from one parse to
   /// the next.
   unsigned NumStoredDiagnosticsFromDriver;
-  
+
   /// \brief Counter that determines when we want to try building a
   /// precompiled preamble.
   ///
@@ -167,10 +167,10 @@ public:
     const FileEntry *File;
     std::vector<char> Buffer;
     mutable unsigned NumLines;
-    
+
   public:
     PreambleData() : File(0), NumLines(0) { }
-    
+
     void assign(const FileEntry *F, const char *begin, const char *end) {
       File = F;
       Buffer.assign(begin, end);
@@ -211,16 +211,16 @@ private:
   PreambleData Preamble;
 
   /// \brief Whether the preamble ends at the start of a new line.
-  /// 
+  ///
   /// Used to inform the lexer as to whether it's starting at the beginning of
   /// a line after skipping the preamble.
   bool PreambleEndsAtStartOfLine;
-  
-  /// \brief The size of the source buffer that we've reserved for the main 
+
+  /// \brief The size of the source buffer that we've reserved for the main
   /// file within the precompiled preamble.
   unsigned PreambleReservedSize;
 
-  /// \brief Keeps track of the files that were used when computing the 
+  /// \brief Keeps track of the files that were used when computing the
   /// preamble, with both their buffer size and their modification time.
   ///
   /// If any of the files have changed from one compile to the next,
@@ -248,7 +248,7 @@ private:
   /// \brief A list of the serialization ID numbers for each of the top-level
   /// declarations parsed within the precompiled preamble.
   std::vector<serialization::DeclID> TopLevelDeclsInPreamble;
-  
+
   /// \brief Whether we should be caching code-completion results.
   bool ShouldCacheCodeCompletionResults : 1;
 
@@ -259,7 +259,7 @@ private:
   /// \brief True if non-system source files should be treated as volatile
   /// (likely to change while trying to use them).
   bool UserFilesAreVolatile : 1;
- 
+
   /// \brief The language options used when we load an AST file.
   LangOptions ASTFileLangOpts;
 
@@ -281,7 +281,7 @@ public:
     /// \brief The code-completion string corresponding to this completion
     /// result.
     CodeCompletionString *Completion;
-    
+
     /// \brief A bitmask that indicates which code-completion contexts should
     /// contain this completion result.
     ///
@@ -290,20 +290,20 @@ public:
     /// bit, shift 1 by that number of bits. Many completions can occur in
     /// several different contexts.
     uint64_t ShowInContexts;
-    
+
     /// \brief The priority given to this code-completion result.
     unsigned Priority;
-    
-    /// \brief The libclang cursor kind corresponding to this code-completion 
+
+    /// \brief The libclang cursor kind corresponding to this code-completion
     /// result.
     CXCursorKind Kind;
-    
+
     /// \brief The availability of this code-completion result.
     CXAvailabilityKind Availability;
-    
+
     /// \brief The simplified type class for a non-macro completion result.
     SimplifiedTypeClass TypeClass;
-    
+
     /// \brief The type of a non-macro completion result, stored as a unique
     /// integer used by the string map of cached completion types.
     ///
@@ -312,13 +312,13 @@ public:
     /// for more information.
     unsigned Type;
   };
-  
+
   /// \brief Retrieve the mapping from formatted type names to unique type
   /// identifiers.
-  llvm::StringMap<unsigned> &getCachedCompletionTypes() { 
-    return CachedCompletionTypes; 
+  llvm::StringMap<unsigned> &getCachedCompletionTypes() {
+    return CachedCompletionTypes;
   }
-  
+
   /// \brief Retrieve the allocator used to cache global code completions.
   IntrusiveRefCntPtr<GlobalCodeCompletionAllocator>
   getCachedCompletionAllocator() {
@@ -336,34 +336,34 @@ private:
   /// \brief Allocator used to store cached code completions.
   IntrusiveRefCntPtr<GlobalCodeCompletionAllocator>
     CachedCompletionAllocator;
-  
+
   OwningPtr<CodeCompletionTUInfo> CCTUInfo;
 
   /// \brief The set of cached code-completion results.
   std::vector<CachedCodeCompletionResult> CachedCompletionResults;
-  
+
   /// \brief A mapping from the formatted type name to a unique number for that
   /// type, which is used for type equality comparisons.
   llvm::StringMap<unsigned> CachedCompletionTypes;
-  
-  /// \brief A string hash of the top-level declaration and macro definition 
+
+  /// \brief A string hash of the top-level declaration and macro definition
   /// names processed the last time that we reparsed the file.
   ///
-  /// This hash value is used to determine when we need to refresh the 
+  /// This hash value is used to determine when we need to refresh the
   /// global code-completion cache.
   unsigned CompletionCacheTopLevelHashValue;
 
-  /// \brief A string hash of the top-level declaration and macro definition 
+  /// \brief A string hash of the top-level declaration and macro definition
   /// names processed the last time that we reparsed the precompiled preamble.
   ///
-  /// This hash value is used to determine when we need to refresh the 
+  /// This hash value is used to determine when we need to refresh the
   /// global code-completion cache after a rebuild of the precompiled preamble.
   unsigned PreambleTopLevelHashValue;
 
   /// \brief The current hash value for the top-level declaration and macro
   /// definition names
   unsigned CurrentTopLevelHashValue;
-  
+
   /// \brief Bit used by CIndex to mark when a translation unit may be in an
   /// inconsistent state, and is not safe to free.
   unsigned UnsafeToFree : 1;
@@ -371,22 +371,22 @@ private:
   /// \brief Cache any "global" code-completion results, so that we can avoid
   /// recomputing them with each completion.
   void CacheCodeCompletionResults();
-  
-  /// \brief Clear out and deallocate 
+
+  /// \brief Clear out and deallocate
   void ClearCachedCompletionResults();
-  
+
   ASTUnit(const ASTUnit &) LLVM_DELETED_FUNCTION;
   void operator=(const ASTUnit &) LLVM_DELETED_FUNCTION;
-  
+
   explicit ASTUnit(bool MainFileIsAST);
 
   void CleanTemporaryFiles();
   bool Parse(llvm::MemoryBuffer *OverrideMainBuffer);
-  
+
   std::pair<llvm::MemoryBuffer *, std::pair<unsigned, bool> >
-  ComputePreamble(CompilerInvocation &Invocation, 
+  ComputePreamble(CompilerInvocation &Invocation,
                   unsigned MaxLines, bool &CreatedBuffer);
-  
+
   llvm::MemoryBuffer *getMainBufferWithPrecompiledPreamble(
                                const CompilerInvocation &PreambleInvocationIn,
                                                      bool AllowRebuild = true,
@@ -421,11 +421,11 @@ private:
 public:
   class ConcurrencyCheck {
     ASTUnit &Self;
-    
+
   public:
     explicit ConcurrencyCheck(ASTUnit &Self)
-      : Self(Self) 
-    { 
+      : Self(Self)
+    {
       Self.ConcurrencyCheckValue.start();
     }
     ~ConcurrencyCheck() {
@@ -433,7 +433,7 @@ public:
     }
   };
   friend class ConcurrencyCheck;
-  
+
   ~ASTUnit();
 
   bool isMainFileAST() const { return MainFileIsAST; }
@@ -443,7 +443,7 @@ public:
 
   const DiagnosticsEngine &getDiagnostics() const { return *Diagnostics; }
   DiagnosticsEngine &getDiagnostics()             { return *Diagnostics; }
-  
+
   const SourceManager &getSourceManager() const { return *SourceMgr; }
         SourceManager &getSourceManager()       { return *SourceMgr; }
 
@@ -457,11 +457,11 @@ public:
   void setPreprocessor(Preprocessor *pp);
 
   bool hasSema() const { return TheSema; }
-  Sema &getSema() const { 
+  Sema &getSema() const {
     assert(TheSema && "ASTUnit does not have a Sema object!");
-    return *TheSema; 
+    return *TheSema;
   }
-  
+
   const FileManager &getFileManager() const { return *FileMgr; }
         FileManager &getFileManager()       { return *FileMgr; }
 
@@ -477,7 +477,7 @@ public:
   ///
   /// This file will be erased when the ASTUnit is destroyed.
   void addTemporaryFile(const llvm::sys::Path &TempFile);
-                        
+
   bool getOnlyLocalDecls() const { return OnlyLocalDecls; }
 
   bool getOwnsRemappedFileBuffers() const { return OwnsRemappedFileBuffers; }
@@ -521,7 +521,7 @@ public:
 
   /// \brief Get the decls that are contained in a file in the Offset/Length
   /// range. \p Length can be 0 to indicate a point at \p Offset instead of
-  /// a range. 
+  /// a range.
   void findFileRegionDecls(FileID File, unsigned Offset, unsigned Length,
                            SmallVectorImpl<Decl *> &Decls);
 
@@ -573,33 +573,33 @@ public:
     return SourceRange(mapLocationToPreamble(R.getBegin()),
                        mapLocationToPreamble(R.getEnd()));
   }
-  
+
   // Retrieve the diagnostics associated with this AST
   typedef StoredDiagnostic *stored_diag_iterator;
   typedef const StoredDiagnostic *stored_diag_const_iterator;
-  stored_diag_const_iterator stored_diag_begin() const { 
-    return StoredDiagnostics.begin(); 
+  stored_diag_const_iterator stored_diag_begin() const {
+    return StoredDiagnostics.begin();
   }
-  stored_diag_iterator stored_diag_begin() { 
-    return StoredDiagnostics.begin(); 
+  stored_diag_iterator stored_diag_begin() {
+    return StoredDiagnostics.begin();
   }
-  stored_diag_const_iterator stored_diag_end() const { 
-    return StoredDiagnostics.end(); 
+  stored_diag_const_iterator stored_diag_end() const {
+    return StoredDiagnostics.end();
   }
-  stored_diag_iterator stored_diag_end() { 
-    return StoredDiagnostics.end(); 
+  stored_diag_iterator stored_diag_end() {
+    return StoredDiagnostics.end();
   }
   unsigned stored_diag_size() const { return StoredDiagnostics.size(); }
 
   stored_diag_iterator stored_diag_afterDriver_begin() {
     if (NumStoredDiagnosticsFromDriver > StoredDiagnostics.size())
       NumStoredDiagnosticsFromDriver = 0;
-    return StoredDiagnostics.begin() + NumStoredDiagnosticsFromDriver; 
+    return StoredDiagnostics.begin() + NumStoredDiagnosticsFromDriver;
   }
 
   typedef std::vector<CachedCodeCompletionResult>::iterator
     cached_completion_iterator;
-  
+
   cached_completion_iterator cached_completion_begin() {
     return CachedCompletionResults.begin();
   }
@@ -608,8 +608,8 @@ public:
     return CachedCompletionResults.end();
   }
 
-  unsigned cached_completion_size() const { 
-    return CachedCompletionResults.size(); 
+  unsigned cached_completion_size() const {
+    return CachedCompletionResults.size();
   }
 
   /// \brief Returns an iterator range for the local preprocessing entities
@@ -647,7 +647,7 @@ public:
   /// remapped contents of that file.
   typedef std::pair<std::string, FilenameOrMemBuf> RemappedFile;
 
-  /// \brief Create a ASTUnit. Gets ownership of the passed CompilerInvocation. 
+  /// \brief Create a ASTUnit. Gets ownership of the passed CompilerInvocation.
   static ASTUnit *create(CompilerInvocation *CI,
                          IntrusiveRefCntPtr<DiagnosticsEngine> Diags,
                          bool CaptureDiagnostics,
@@ -681,11 +681,11 @@ private:
   /// \returns \c true if a catastrophic failure occurred (which means that the
   /// \c ASTUnit itself is invalid), or \c false otherwise.
   bool LoadFromCompilerInvocation(bool PrecompilePreamble);
-  
+
 public:
-  
+
   /// \brief Create an ASTUnit from a source file, via a CompilerInvocation
-  /// object, by invoking the optionally provided ASTFrontendAction. 
+  /// object, by invoking the optionally provided ASTFrontendAction.
   ///
   /// \param CI - The compiler invocation to use; it must have exactly one input
   /// source file. The ASTUnit takes ownership of the CompilerInvocation object.
@@ -780,12 +780,12 @@ public:
                                       bool UserFilesAreVolatile = false,
                                       bool ForSerialization = false,
                                       OwningPtr<ASTUnit> *ErrAST = 0);
-  
+
   /// \brief Reparse the source files using the same command-line options that
   /// were originally used to produce this translation unit.
   ///
   /// \returns True if a failure occurred that causes the ASTUnit not to
-  /// contain any translation-unit information, false otherwise.  
+  /// contain any translation-unit information, false otherwise.
   bool Reparse(RemappedFile *RemappedFiles = 0,
                unsigned NumRemappedFiles = 0);
 
@@ -798,10 +798,10 @@ public:
   ///
   /// \param Column The column at which code completion will occur.
   ///
-  /// \param IncludeMacros Whether to include macros in the code-completion 
+  /// \param IncludeMacros Whether to include macros in the code-completion
   /// results.
   ///
-  /// \param IncludeCodePatterns Whether to include code patterns (such as a 
+  /// \param IncludeCodePatterns Whether to include code patterns (such as a
   /// for loop) in the code-completion results.
   ///
   /// \param IncludeBriefComments Whether to include brief documentation within
@@ -829,7 +829,7 @@ public:
   ///
   /// \returns True if an error occurred, false otherwise.
   bool serialize(raw_ostream &OS);
-  
+
   virtual Module *loadModule(SourceLocation ImportLoc, ModuleIdPath Path,
                              Module::NameVisibilityKind Visibility,
                              bool IsInclusionDirective) {

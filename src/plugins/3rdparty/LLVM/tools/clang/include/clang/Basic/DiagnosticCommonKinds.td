@@ -16,7 +16,7 @@ let Component = "Common" in {
 // Basic.
 
 def fatal_too_many_errors
-  : Error<"too many errors emitted, stopping now">, DefaultFatal; 
+  : Error<"too many errors emitted, stopping now">, DefaultFatal;
 
 def note_declared_at : Note<"declared here">;
 def note_previous_definition : Note<"previous definition is here">;
@@ -69,11 +69,11 @@ def err_deleted_non_function : Error<
   "only functions can have deleted definitions">;
 def err_module_not_found : Error<"module '%0' not found">, DefaultFatal;
 def err_module_not_built : Error<"could not build module '%0'">, DefaultFatal;
-def err_module_cycle : Error<"cyclic dependency in module '%0': %1">, 
+def err_module_cycle : Error<"cyclic dependency in module '%0': %1">,
   DefaultFatal;
-def warn_module_build : Warning<"building module '%0' from source">, 
+def warn_module_build : Warning<"building module '%0' from source">,
   InGroup<ModuleBuild>, DefaultIgnore;
-def note_pragma_entered_here : Note<"#pragma entered here">;  
+def note_pragma_entered_here : Note<"#pragma entered here">;
 def note_decl_hiding_tag_type : Note<
   "%1 %0 is hidden by a non-type declaration of %0 here">;
 

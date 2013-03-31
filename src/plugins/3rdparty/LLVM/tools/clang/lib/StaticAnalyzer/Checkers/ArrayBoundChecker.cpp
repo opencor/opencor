@@ -23,7 +23,7 @@ using namespace clang;
 using namespace ento;
 
 namespace {
-class ArrayBoundChecker : 
+class ArrayBoundChecker :
     public Checker<check::Location> {
   mutable OwningPtr<BuiltinBug> BT;
 public:
@@ -54,8 +54,8 @@ void ArrayBoundChecker::checkLocation(SVal l, bool isLoad, const Stmt* LoadS,
   ProgramStateRef state = C.getState();
 
   // Get the size of the array.
-  DefinedOrUnknownSVal NumElements 
-    = C.getStoreManager().getSizeInElements(state, ER->getSuperRegion(), 
+  DefinedOrUnknownSVal NumElements
+    = C.getStoreManager().getSizeInElements(state, ER->getSuperRegion(),
                                             ER->getValueType());
 
   ProgramStateRef StInBound = state->assumeInBound(Idx, NumElements, true);
@@ -64,7 +64,7 @@ void ArrayBoundChecker::checkLocation(SVal l, bool isLoad, const Stmt* LoadS,
     ExplodedNode *N = C.generateSink(StOutBound);
     if (!N)
       return;
-  
+
     if (!BT)
       BT.reset(new BuiltinBug("Out-of-bound array access",
                        "Access out-of-bound array element (buffer overflow)"));
@@ -74,14 +74,14 @@ void ArrayBoundChecker::checkLocation(SVal l, bool isLoad, const Stmt* LoadS,
     // reference is outside the range.
 
     // Generate a report for this bug.
-    BugReport *report = 
+    BugReport *report =
       new BugReport(*BT, BT->getDescription(), N);
 
     report->addRange(LoadS->getSourceRange());
     C.emitReport(report);
     return;
   }
-  
+
   // Array bound check succeeded.  From this point forward the array bound
   // should always succeed.
   C.addTransition(StInBound);

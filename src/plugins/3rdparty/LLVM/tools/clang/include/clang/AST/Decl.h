@@ -42,7 +42,7 @@ class TypeLoc;
 class UnresolvedSetImpl;
 class LabelStmt;
 class Module;
-  
+
 /// \brief A container of type source information.
 ///
 /// A client can read the relevant info using TypeLoc wrappers, e.g:
@@ -190,10 +190,10 @@ public:
 
   using Decl::isModulePrivate;
   using Decl::setModulePrivate;
-  
+
   /// \brief Determine whether this declaration is hidden from name lookup.
   bool isHidden() const { return Hidden; }
-  
+
   /// \brief Determine whether this declaration is a C++ class member.
   bool isCXXClassMember() const {
     const DeclContext *DC = getDeclContext();
@@ -371,7 +371,7 @@ public:
                            SourceLocation IdentL, IdentifierInfo *II,
                            SourceLocation GnuLabelL);
   static LabelDecl *CreateDeserialized(ASTContext &C, unsigned ID);
-  
+
   LabelStmt *getStmt() const { return TheStmt; }
   void setStmt(LabelStmt *T) { TheStmt = T; }
 
@@ -388,8 +388,8 @@ public:
 };
 
 /// NamespaceDecl - Represent a C++ namespace.
-class NamespaceDecl : public NamedDecl, public DeclContext, 
-                      public Redeclarable<NamespaceDecl> 
+class NamespaceDecl : public NamedDecl, public DeclContext,
+                      public Redeclarable<NamespaceDecl>
 {
   virtual void anchor();
 
@@ -401,14 +401,14 @@ class NamespaceDecl : public NamedDecl, public DeclContext,
 
   /// \brief A pointer to either the anonymous namespace that lives just inside
   /// this namespace or to the first namespace in the chain (the latter case
-  /// only when this is not the first in the chain), along with a 
+  /// only when this is not the first in the chain), along with a
   /// boolean value indicating whether this is an inline namespace.
   llvm::PointerIntPair<NamespaceDecl *, 1, bool> AnonOrFirstNamespaceAndInline;
 
   NamespaceDecl(DeclContext *DC, bool Inline, SourceLocation StartLoc,
                 SourceLocation IdLoc, IdentifierInfo *Id,
                 NamespaceDecl *PrevDecl);
-  
+
   typedef Redeclarable<NamespaceDecl> redeclarable_base;
   virtual NamespaceDecl *getNextRedeclaration() {
     return RedeclLink.getNext();
@@ -419,7 +419,7 @@ class NamespaceDecl : public NamedDecl, public DeclContext,
   virtual NamespaceDecl *getMostRecentDeclImpl() {
     return getMostRecentDecl();
   }
-  
+
 public:
   static NamespaceDecl *Create(ASTContext &C, DeclContext *DC,
                                bool Inline, SourceLocation StartLoc,
@@ -497,7 +497,7 @@ public:
   const NamespaceDecl *getCanonicalDecl() const {
     return getOriginalNamespace();
   }
-  
+
   virtual SourceRange getSourceRange() const LLVM_READONLY {
     return SourceRange(LocStart, RBraceLoc);
   }
@@ -844,7 +844,7 @@ public:
                          StorageClass S, StorageClass SCAsWritten);
 
   static VarDecl *CreateDeserialized(ASTContext &C, unsigned ID);
-  
+
   virtual SourceRange getSourceRange() const LLVM_READONLY;
 
   StorageClass getStorageClass() const {
@@ -1216,7 +1216,7 @@ public:
                                    QualType T);
 
   static ImplicitParamDecl *CreateDeserialized(ASTContext &C, unsigned ID);
-  
+
   ImplicitParamDecl(DeclContext *DC, SourceLocation IdLoc,
                     IdentifierInfo *Id, QualType Type)
     : VarDecl(ImplicitParam, DC, IdLoc, IdLoc, Id, Type,
@@ -1256,7 +1256,7 @@ public:
                              Expr *DefArg);
 
   static ParmVarDecl *CreateDeserialized(ASTContext &C, unsigned ID);
-  
+
   virtual SourceRange getSourceRange() const LLVM_READONLY;
 
   void setObjCMethodScopeInfo(unsigned parameterIndex) {
@@ -1603,7 +1603,7 @@ public:
                               bool isConstexprSpecified = false);
 
   static FunctionDecl *CreateDeserialized(ASTContext &C, unsigned ID);
-                       
+
   DeclarationNameInfo getNameInfo() const {
     return DeclarationNameInfo(getDeclName(), getLocation(), DNLoc);
   }
@@ -2116,7 +2116,7 @@ public:
                            InClassInitStyle InitStyle);
 
   static FieldDecl *CreateDeserialized(ASTContext &C, unsigned ID);
-  
+
   /// getFieldIndex - Returns the index of this field within its record,
   /// as appropriate for passing to ASTRecordLayout::getFieldOffset.
   unsigned getFieldIndex() const;
@@ -2223,7 +2223,7 @@ public:
                                   QualType T, Expr *E,
                                   const llvm::APSInt &V);
   static EnumConstantDecl *CreateDeserialized(ASTContext &C, unsigned ID);
-  
+
   const Expr *getInitExpr() const { return (const Expr*) Init; }
   Expr *getInitExpr() { return (Expr*) Init; }
   const llvm::APSInt &getInitVal() const { return Val; }
@@ -2259,7 +2259,7 @@ public:
                                    QualType T, NamedDecl **CH, unsigned CHS);
 
   static IndirectFieldDecl *CreateDeserialized(ASTContext &C, unsigned ID);
-  
+
   typedef NamedDecl * const *chain_iterator;
   chain_iterator chain_begin() const { return Chaining; }
   chain_iterator chain_end() const  { return Chaining+ChainingSize; }
@@ -2396,7 +2396,7 @@ public:
                              SourceLocation StartLoc, SourceLocation IdLoc,
                              IdentifierInfo *Id, TypeSourceInfo *TInfo);
   static TypedefDecl *CreateDeserialized(ASTContext &C, unsigned ID);
-  
+
   SourceRange getSourceRange() const LLVM_READONLY;
 
   // Implement isa/cast/dyncast/etc.
@@ -3038,7 +3038,7 @@ public:
                                   SourceLocation RParenLoc);
 
   static FileScopeAsmDecl *CreateDeserialized(ASTContext &C, unsigned ID);
-  
+
   SourceLocation getAsmLoc() const { return getLocation(); }
   SourceLocation getRParenLoc() const { return RParenLoc; }
   void setRParenLoc(SourceLocation L) { RParenLoc = L; }
@@ -3125,9 +3125,9 @@ protected:
       SignatureAsWritten(0), Captures(0), NumCaptures(0) {}
 
 public:
-  static BlockDecl *Create(ASTContext &C, DeclContext *DC, SourceLocation L); 
+  static BlockDecl *Create(ASTContext &C, DeclContext *DC, SourceLocation L);
   static BlockDecl *CreateDeserialized(ASTContext &C, unsigned ID);
-  
+
   SourceLocation getCaretLocation() const { return getLocation(); }
 
   bool isVariadic() const { return IsVariadic; }
@@ -3218,20 +3218,20 @@ public:
 class ImportDecl : public Decl {
   /// \brief The imported module, along with a bit that indicates whether
   /// we have source-location information for each identifier in the module
-  /// name. 
+  /// name.
   ///
   /// When the bit is false, we only have a single source location for the
   /// end of the import declaration.
   llvm::PointerIntPair<Module *, 1, bool> ImportedAndComplete;
-  
+
   /// \brief The next import in the list of imports local to the translation
   /// unit being parsed (not loaded from an AST file).
   ImportDecl *NextLocalImport;
-  
+
   friend class ASTReader;
   friend class ASTDeclReader;
   friend class ASTContext;
-  
+
   ImportDecl(DeclContext *DC, SourceLocation StartLoc, Module *Imported,
              ArrayRef<SourceLocation> IdentifierLocs);
 
@@ -3239,39 +3239,39 @@ class ImportDecl : public Decl {
              SourceLocation EndLoc);
 
   ImportDecl(EmptyShell Empty) : Decl(Import, Empty), NextLocalImport() { }
-  
+
 public:
   /// \brief Create a new module import declaration.
-  static ImportDecl *Create(ASTContext &C, DeclContext *DC, 
+  static ImportDecl *Create(ASTContext &C, DeclContext *DC,
                             SourceLocation StartLoc, Module *Imported,
                             ArrayRef<SourceLocation> IdentifierLocs);
-  
+
   /// \brief Create a new module import declaration for an implicitly-generated
   /// import.
-  static ImportDecl *CreateImplicit(ASTContext &C, DeclContext *DC, 
-                                    SourceLocation StartLoc, Module *Imported, 
+  static ImportDecl *CreateImplicit(ASTContext &C, DeclContext *DC,
+                                    SourceLocation StartLoc, Module *Imported,
                                     SourceLocation EndLoc);
-  
+
   /// \brief Create a new, deserialized module import declaration.
-  static ImportDecl *CreateDeserialized(ASTContext &C, unsigned ID, 
+  static ImportDecl *CreateDeserialized(ASTContext &C, unsigned ID,
                                         unsigned NumLocations);
-  
+
   /// \brief Retrieve the module that was imported by the import declaration.
   Module *getImportedModule() const { return ImportedAndComplete.getPointer(); }
-  
+
   /// \brief Retrieves the locations of each of the identifiers that make up
   /// the complete module name in the import declaration.
   ///
   /// This will return an empty array if the locations of the individual
   /// identifiers aren't available.
   ArrayRef<SourceLocation> getIdentifierLocs() const;
-  
+
   virtual SourceRange getSourceRange() const LLVM_READONLY;
-  
+
   static bool classof(const Decl *D) { return classofKind(D->getKind()); }
   static bool classofKind(Kind K) { return K == Import; }
 };
-  
+
 
 /// Insertion operator for diagnostics.  This allows sending NamedDecl's
 /// into a diagnostic with <<.

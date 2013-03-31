@@ -165,7 +165,7 @@ void MyTestPrivate::doQuux() {
 \endcode
 */
 
-/*! 
+/*!
  * \macro QXT_DECLARE_PRIVATE(PUB)
  * \relates <QxtPimpl>
  * Declares that a public class has a related private class.

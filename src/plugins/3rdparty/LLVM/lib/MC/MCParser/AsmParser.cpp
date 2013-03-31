@@ -46,7 +46,7 @@ static cl::opt<bool>
 FatalAssemblerWarnings("fatal-assembler-warnings",
                        cl::desc("Consider warnings as error"));
 
-MCAsmParserSemaCallback::~MCAsmParserSemaCallback() {} 
+MCAsmParserSemaCallback::~MCAsmParserSemaCallback() {}
 
 namespace {
 
@@ -186,9 +186,9 @@ public:
   virtual MCAsmLexer &getLexer() { return Lexer; }
   virtual MCContext &getContext() { return Ctx; }
   virtual MCStreamer &getStreamer() { return Out; }
-  virtual unsigned getAssemblerDialect() { 
+  virtual unsigned getAssemblerDialect() {
     if (AssemblerDialect == ~0U)
-      return MAI.getAssemblerDialect(); 
+      return MAI.getAssemblerDialect();
     else
       return AssemblerDialect;
   }
@@ -1492,7 +1492,7 @@ void AsmParser::DiagHandler(const SMDiagnostic &Diag, void *Context) {
      DiagSrcMgr.PrintIncludeStack(ParentIncludeLoc, OS);
   }
 
-  // If we have not parsed a cpp hash line filename comment or the source 
+  // If we have not parsed a cpp hash line filename comment or the source
   // manager changed or buffer changed (like in a nested include) then just
   // print the normal diagnostic using its Filename and LineNo.
   if (!Parser->CppHashLineNumber ||
@@ -1505,7 +1505,7 @@ void AsmParser::DiagHandler(const SMDiagnostic &Diag, void *Context) {
     return;
   }
 
-  // Use the CppHashFilename and calculate a line number based on the 
+  // Use the CppHashFilename and calculate a line number based on the
   // CppHashLoc and CppHashLineNumber relative to this Diag's SMLoc for
   // the diagnostic.
   const std::string Filename = Parser->CppHashFilename;

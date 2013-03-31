@@ -48,7 +48,7 @@ class AliasSet : public ilist_node<AliasSet> {
         TBAAInfo(DenseMapInfo<const MDNode *>::getEmptyKey()) {}
 
     Value *getValue() const { return Val; }
-    
+
     PointerRec *getNext() const { return NextInList; }
     bool hasAliasSet() const { return AS != 0; }
 
@@ -150,7 +150,7 @@ class AliasSet : public ilist_node<AliasSet> {
     assert(i < UnknownInsts.size());
     return UnknownInsts[i];
   }
-  
+
 public:
   /// Accessors...
   bool isRef() const { return AccessTy & Refs; }
@@ -342,7 +342,7 @@ public:
   bool remove(Instruction *I);
   void remove(AliasSet &AS);
   bool removeUnknown(Instruction *I);
-  
+
   void clear();
 
   /// getAliasSets - Return the alias sets that are active.

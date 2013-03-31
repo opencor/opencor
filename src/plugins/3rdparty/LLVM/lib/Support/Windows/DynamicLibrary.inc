@@ -83,7 +83,7 @@ DynamicLibrary DynamicLibrary::getPermanentLibrary(const char *filename,
     // This is mostly to ensure that the return value still shows up as "valid".
     return DynamicLibrary(&OpenedHandles);
   }
-  
+
   HMODULE a_handle = LoadLibrary(filename);
 
   if (a_handle == 0) {

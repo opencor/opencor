@@ -19,7 +19,7 @@
 namespace llvm {
 
 class MCOperand;
-  
+
 class X86ATTInstPrinter : public MCInstPrinter {
 public:
   X86ATTInstPrinter(const MCAsmInfo &MAI, const MCInstrInfo &MII,
@@ -42,11 +42,11 @@ public:
   void printSSECC(const MCInst *MI, unsigned Op, raw_ostream &OS);
   void printAVXCC(const MCInst *MI, unsigned Op, raw_ostream &OS);
   void printPCRelImm(const MCInst *MI, unsigned OpNo, raw_ostream &OS);
-  
+
   void printopaquemem(const MCInst *MI, unsigned OpNo, raw_ostream &O) {
     printMemReference(MI, OpNo, O);
   }
-  
+
   void printi8mem(const MCInst *MI, unsigned OpNo, raw_ostream &O) {
     printMemReference(MI, OpNo, O);
   }
@@ -81,7 +81,7 @@ public:
     printMemReference(MI, OpNo, O);
   }
 };
-  
+
 }
 
 #endif

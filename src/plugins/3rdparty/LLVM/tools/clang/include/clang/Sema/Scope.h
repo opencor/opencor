@@ -73,7 +73,7 @@ public:
     /// AtCatchScope - This is a scope that corresponds to the Objective-C
     /// \@catch statement.
     AtCatchScope = 0x200,
-    
+
     /// ObjCMethodScope - This scope corresponds to an Objective-C method body.
     /// It always has FnScope and DeclScope set as well.
     ObjCMethodScope = 0x400,
@@ -158,7 +158,7 @@ private:
 
   /// \brief Used to determine if errors occurred in this scope.
   DiagnosticErrorTrap ErrorTrap;
-  
+
 public:
   Scope(Scope *Parent, unsigned ScopeFlags, DiagnosticsEngine &Diag)
     : ErrorTrap(Diag) {
@@ -244,7 +244,7 @@ public:
   void setEntity(void *E) { Entity = E; }
 
   bool hasErrorOccurred() const { return ErrorTrap.hasErrorOccurred(); }
-                           
+
   /// isClassScope - Return true if this scope is a class/struct/union scope.
   bool isClassScope() const {
     return (getFlags() & Scope::ClassScope);
@@ -259,7 +259,7 @@ public:
     }
     return false;
   }
-  
+
   /// isInObjcMethodScope - Return true if this scope is, or is contained in, an
   /// Objective-C method body.  Note that this method is not constant time.
   bool isInObjcMethodScope() const {
@@ -301,7 +301,7 @@ public:
     }
     return false;
   }
-  
+
   /// \brief Determine whether this scope is a C++ 'try' block.
   bool isTryScope() const { return getFlags() & Scope::TryScope; }
 

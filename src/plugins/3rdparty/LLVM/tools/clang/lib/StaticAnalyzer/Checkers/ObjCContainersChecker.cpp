@@ -126,7 +126,7 @@ void ObjCContainersChecker::checkPreStmt(const CallExpr *CE,
     if (IdxVal.isUnknownOrUndef())
       return;
     DefinedSVal Idx = cast<DefinedSVal>(IdxVal);
-    
+
     // Now, check if 'Idx in [0, Size-1]'.
     const QualType T = IdxExpr->getType();
     ProgramStateRef StInBound = State->assumeInBound(Idx, *Size, true, T);

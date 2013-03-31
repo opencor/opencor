@@ -78,7 +78,7 @@ TemplateArgument TemplateArgument::CreatePackCopy(ASTContext &Context,
                                                   unsigned NumArgs) {
   if (NumArgs == 0)
     return getEmptyPack();
-  
+
   TemplateArgument *Storage = new (Context) TemplateArgument [NumArgs];
   std::copy(Args, Args + NumArgs, Storage);
   return TemplateArgument(Storage, NumArgs);
@@ -129,16 +129,16 @@ bool TemplateArgument::isInstantiationDependent() const {
   switch (getKind()) {
   case Null:
     llvm_unreachable("Should not have a NULL template argument");
-    
+
   case Type:
     return getAsType()->isInstantiationDependentType();
-    
+
   case Template:
     return getAsTemplate().isInstantiationDependent();
-    
+
   case TemplateExpansion:
     return true;
-    
+
   case Declaration:
     if (DeclContext *DC = dyn_cast<DeclContext>(getAsDecl()))
       return DC->isDependentContext();
@@ -146,20 +146,20 @@ bool TemplateArgument::isInstantiationDependent() const {
 
   case NullPtr:
     return false;
-      
+
   case Integral:
     // Never dependent
     return false;
-    
+
   case Expression:
     return getAsExpr()->isInstantiationDependent();
-    
+
   case Pack:
     for (pack_iterator P = pack_begin(), PEnd = pack_end(); P != PEnd; ++P) {
       if (P->isInstantiationDependent())
         return true;
     }
-    
+
     return false;
   }
 
@@ -171,17 +171,17 @@ bool TemplateArgument::isPackExpansion() const {
   case Null:
   case Declaration:
   case Integral:
-  case Pack:    
+  case Pack:
   case Template:
   case NullPtr:
     return false;
-      
+
   case TemplateExpansion:
     return true;
-      
+
   case Type:
     return isa<PackExpansionType>(getAsType());
-          
+
   case Expression:
     return isa<PackExpansionExpr>(getAsExpr());
   }
@@ -207,7 +207,7 @@ bool TemplateArgument::containsUnexpandedParameterPack() const {
     if (getAsTemplate().containsUnexpandedParameterPack())
       return true;
     break;
-        
+
   case Expression:
     if (getAsExpr()->containsUnexpandedParameterPack())
       return true;
@@ -228,7 +228,7 @@ llvm::Optional<unsigned> TemplateArgument::getNumTemplateExpansions() const {
   assert(Kind == TemplateExpansion);
   if (TemplateArg.NumExpansions)
     return TemplateArg.NumExpansions - 1;
-  
+
   return llvm::Optional<unsigned>();
 }
 
@@ -264,7 +264,7 @@ void TemplateArgument::Profile(llvm::FoldingSetNodeID &ID,
     }
     break;
   }
-      
+
   case Integral:
     getAsIntegral().Profile(ID);
     getIntegralType().Profile(ID);
@@ -287,14 +287,14 @@ bool TemplateArgument::structurallyEquals(const TemplateArgument &Other) const {
   switch (getKind()) {
   case Null:
   case Type:
-  case Expression:      
+  case Expression:
   case Template:
   case TemplateExpansion:
   case NullPtr:
     return TypeOrValue == Other.TypeOrValue;
 
   case Declaration:
-    return getAsDecl() == Other.getAsDecl() && 
+    return getAsDecl() == Other.getAsDecl() &&
            isDeclForReferenceParam() && Other.isDeclForReferenceParam();
 
   case Integral:
@@ -314,14 +314,14 @@ bool TemplateArgument::structurallyEquals(const TemplateArgument &Other) const {
 
 TemplateArgument TemplateArgument::getPackExpansionPattern() const {
   assert(isPackExpansion());
-  
+
   switch (getKind()) {
   case Type:
     return getAsType()->getAs<PackExpansionType>()->getPattern();
-    
+
   case Expression:
     return cast<PackExpansionExpr>(getAsExpr())->getPattern();
-    
+
   case TemplateExpansion:
     return TemplateArgument(getAsTemplateOrTemplatePattern());
 
@@ -337,13 +337,13 @@ TemplateArgument TemplateArgument::getPackExpansionPattern() const {
   llvm_unreachable("Invalid TemplateArgument Kind!");
 }
 
-void TemplateArgument::print(const PrintingPolicy &Policy, 
+void TemplateArgument::print(const PrintingPolicy &Policy,
                              raw_ostream &Out) const {
   switch (getKind()) {
   case Null:
     Out << "<no value>";
     break;
-    
+
   case Type: {
     PrintingPolicy SubPolicy(Policy);
     SubPolicy.SuppressStrongLifetime = true;
@@ -352,7 +352,7 @@ void TemplateArgument::print(const PrintingPolicy &Policy,
     Out << TypeStr;
     break;
   }
-    
+
   case Declaration: {
     NamedDecl *ND = cast<NamedDecl>(getAsDecl());
     if (ND->getDeclName()) {
@@ -376,16 +376,16 @@ void TemplateArgument::print(const PrintingPolicy &Policy,
     getAsTemplateOrTemplatePattern().print(Out, Policy);
     Out << "...";
     break;
-      
+
   case Integral: {
     printIntegral(*this, Out);
     break;
   }
-    
+
   case Expression:
     getAsExpr()->printPretty(Out, 0, Policy);
     break;
-    
+
   case Pack:
     Out << "<";
     bool First = true;
@@ -395,11 +395,11 @@ void TemplateArgument::print(const PrintingPolicy &Policy,
         First = false;
       else
         Out << ", ";
-      
+
       P->print(Policy, Out);
     }
     Out << ">";
-    break;        
+    break;
   }
 }
 
@@ -430,13 +430,13 @@ SourceRange TemplateArgumentLoc::getSourceRange() const {
 
   case TemplateArgument::Template:
     if (getTemplateQualifierLoc())
-      return SourceRange(getTemplateQualifierLoc().getBeginLoc(), 
+      return SourceRange(getTemplateQualifierLoc().getBeginLoc(),
                          getTemplateNameLoc());
     return SourceRange(getTemplateNameLoc());
 
   case TemplateArgument::TemplateExpansion:
     if (getTemplateQualifierLoc())
-      return SourceRange(getTemplateQualifierLoc().getBeginLoc(), 
+      return SourceRange(getTemplateQualifierLoc().getBeginLoc(),
                          getTemplateEllipsisLoc());
     return SourceRange(getTemplateNameLoc(), getTemplateEllipsisLoc());
 
@@ -451,12 +451,12 @@ SourceRange TemplateArgumentLoc::getSourceRange() const {
   llvm_unreachable("Invalid TemplateArgument Kind!");
 }
 
-TemplateArgumentLoc 
+TemplateArgumentLoc
 TemplateArgumentLoc::getPackExpansionPattern(SourceLocation &Ellipsis,
                                        llvm::Optional<unsigned> &NumExpansions,
                                              ASTContext &Context) const {
   assert(Argument.isPackExpansion());
-  
+
   switch (Argument.getKind()) {
   case TemplateArgument::Type: {
     // FIXME: We shouldn't ever have to worry about missing
@@ -469,10 +469,10 @@ TemplateArgumentLoc::getPackExpansionPattern(SourceLocation &Ellipsis,
     PackExpansionTypeLoc Expansion
       = cast<PackExpansionTypeLoc>(ExpansionTSInfo->getTypeLoc());
     Ellipsis = Expansion.getEllipsisLoc();
-    
+
     TypeLoc Pattern = Expansion.getPatternLoc();
     NumExpansions = Expansion.getTypePtr()->getNumExpansions();
-    
+
     // FIXME: This is horrible. We know where the source location data is for
     // the pattern, and we have the pattern's type, but we are forced to copy
     // them into an ASTContext because TypeSourceInfo bundles them together
@@ -480,12 +480,12 @@ TemplateArgumentLoc::getPackExpansionPattern(SourceLocation &Ellipsis,
     TypeSourceInfo *PatternTSInfo
       = Context.CreateTypeSourceInfo(Pattern.getType(),
                                      Pattern.getFullDataSize());
-    memcpy(PatternTSInfo->getTypeLoc().getOpaqueData(), 
+    memcpy(PatternTSInfo->getTypeLoc().getOpaqueData(),
            Pattern.getOpaqueData(), Pattern.getFullDataSize());
     return TemplateArgumentLoc(TemplateArgument(Pattern.getType()),
                                PatternTSInfo);
   }
-      
+
   case TemplateArgument::Expression: {
     PackExpansionExpr *Expansion
       = cast<PackExpansionExpr>(Argument.getAsExpr());
@@ -501,7 +501,7 @@ TemplateArgumentLoc::getPackExpansionPattern(SourceLocation &Ellipsis,
     return TemplateArgumentLoc(Argument.getPackExpansionPattern(),
                                getTemplateQualifierLoc(),
                                getTemplateNameLoc());
-    
+
   case TemplateArgument::Declaration:
   case TemplateArgument::NullPtr:
   case TemplateArgument::Template:
@@ -521,19 +521,19 @@ const DiagnosticBuilder &clang::operator<<(const DiagnosticBuilder &DB,
     // This is bad, but not as bad as crashing because of argument
     // count mismatches.
     return DB << "(null template argument)";
-      
+
   case TemplateArgument::Type:
     return DB << Arg.getAsType();
-      
+
   case TemplateArgument::Declaration:
     return DB << Arg.getAsDecl();
 
   case TemplateArgument::NullPtr:
     return DB << "nullptr";
-      
+
   case TemplateArgument::Integral:
     return DB << Arg.getAsIntegral().toString(10);
-      
+
   case TemplateArgument::Template:
     return DB << Arg.getAsTemplate();
 
@@ -552,7 +552,7 @@ const DiagnosticBuilder &clang::operator<<(const DiagnosticBuilder &DB,
     Arg.getAsExpr()->printPretty(OS, 0, Policy);
     return DB << OS.str();
   }
-      
+
   case TemplateArgument::Pack: {
     // FIXME: We're guessing at LangOptions!
     SmallString<32> Str;
@@ -591,7 +591,7 @@ void ASTTemplateArgumentListInfo::initializeFrom(
 
 void ASTTemplateArgumentListInfo::initializeFrom(
                                           const TemplateArgumentListInfo &Info,
-                                                  bool &Dependent, 
+                                                  bool &Dependent,
                                                   bool &InstantiationDependent,
                                        bool &ContainsUnexpandedParameterPack) {
   LAngleLoc = Info.getLAngleLoc();
@@ -601,10 +601,10 @@ void ASTTemplateArgumentListInfo::initializeFrom(
   TemplateArgumentLoc *ArgBuffer = getTemplateArgs();
   for (unsigned i = 0; i != NumTemplateArgs; ++i) {
     Dependent = Dependent || Info[i].getArgument().isDependent();
-    InstantiationDependent = InstantiationDependent || 
+    InstantiationDependent = InstantiationDependent ||
                              Info[i].getArgument().isInstantiationDependent();
-    ContainsUnexpandedParameterPack 
-      = ContainsUnexpandedParameterPack || 
+    ContainsUnexpandedParameterPack
+      = ContainsUnexpandedParameterPack ||
         Info[i].getArgument().containsUnexpandedParameterPack();
 
     new (&ArgBuffer[i]) TemplateArgumentLoc(Info[i]);

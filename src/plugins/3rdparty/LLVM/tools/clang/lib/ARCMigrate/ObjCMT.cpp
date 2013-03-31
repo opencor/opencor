@@ -100,7 +100,7 @@ ASTConsumer *ObjCMigrateAction::CreateASTConsumer(CompilerInstance &CI,
                                                        MigrateSubscripting,
                                                        Remapper,
                                                     CompInst->getFileManager(),
-                          CompInst->getPreprocessor().getPreprocessingRecord()); 
+                          CompInst->getPreprocessor().getPreprocessingRecord());
   ASTConsumer *Consumers[] = { MTConsumer, WrappedConsumer };
   return new MultiplexConsumer(Consumers);
 }
@@ -224,5 +224,5 @@ ASTConsumer *MigrateSourceAction::CreateASTConsumer(CompilerInstance &CI,
                                     Remapper,
                                     CI.getFileManager(),
                                   CI.getPreprocessor().getPreprocessingRecord(),
-                                    /*isOutputFile=*/true); 
+                                    /*isOutputFile=*/true);
 }

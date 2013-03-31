@@ -178,7 +178,7 @@ void EmitAssemblyHelper::CreatePasses(TargetMachine *TM) {
     OptLevel = 0;
     Inlining = CodeGenOpts.NoInlining;
   }
-  
+
   PassManagerBuilder PMBuilder;
   PMBuilder.OptLevel = OptLevel;
   PMBuilder.SizeLevel = CodeGenOpts.OptimizeSize;
@@ -224,7 +224,7 @@ void EmitAssemblyHelper::CreatePasses(TargetMachine *TM) {
   PMBuilder.LibraryInfo = new TargetLibraryInfo(TargetTriple);
   if (!CodeGenOpts.SimplifyLibCalls)
     PMBuilder.LibraryInfo->disableAllFunctions();
-  
+
   switch (Inlining) {
   case CodeGenOptions::NoInlining: break;
   case CodeGenOptions::NormalInlining: {

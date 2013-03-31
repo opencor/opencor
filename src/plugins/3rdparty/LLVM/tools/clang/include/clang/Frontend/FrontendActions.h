@@ -17,7 +17,7 @@
 namespace clang {
 
 class Module;
-  
+
 //===----------------------------------------------------------------------===//
 // Custom Consumer Actions
 //===----------------------------------------------------------------------===//
@@ -99,20 +99,20 @@ public:
 
 class GenerateModuleAction : public ASTFrontendAction {
   clang::Module *Module;
-  
+
 protected:
   virtual ASTConsumer *CreateASTConsumer(CompilerInstance &CI,
                                          StringRef InFile);
-  
-  virtual TranslationUnitKind getTranslationUnitKind() { 
+
+  virtual TranslationUnitKind getTranslationUnitKind() {
     return TU_Module;
   }
-  
+
   virtual bool hasASTFileSupport() const { return false; }
-  
+
 public:
   virtual bool BeginSourceFileAction(CompilerInstance &CI, StringRef Filename);
-  
+
   /// \brief Compute the AST consumer arguments that will be used to
   /// create the PCHGenerator instance returned by CreateASTConsumer.
   ///
@@ -123,7 +123,7 @@ public:
                                           std::string &OutputFile,
                                           raw_ostream *&OS);
 };
-  
+
 class SyntaxOnlyAction : public ASTFrontendAction {
 protected:
   virtual ASTConsumer *CreateASTConsumer(CompilerInstance &CI,
@@ -144,7 +144,7 @@ public:
 class ASTMergeAction : public FrontendAction {
   /// \brief The action that the merge action adapts.
   FrontendAction *AdaptedAction;
-  
+
   /// \brief The set of AST files to merge.
   std::vector<std::string> ASTFiles;
 
@@ -172,13 +172,13 @@ public:
 class PrintPreambleAction : public FrontendAction {
 protected:
   void ExecuteAction();
-  virtual ASTConsumer *CreateASTConsumer(CompilerInstance &, StringRef) { 
-    return 0; 
+  virtual ASTConsumer *CreateASTConsumer(CompilerInstance &, StringRef) {
+    return 0;
   }
-  
+
   virtual bool usesPreprocessorOnly() const { return true; }
 };
-  
+
 //===----------------------------------------------------------------------===//
 // Preprocessor Actions
 //===----------------------------------------------------------------------===//
@@ -209,7 +209,7 @@ protected:
 
   virtual bool hasPCHSupport() const { return true; }
 };
-  
+
 }  // end namespace clang
 
 #endif

@@ -212,14 +212,14 @@ static const Value *getNoopInput(const Value *V, const TargetLowering &TLI) {
   // If V is not an instruction, it can't be looked through.
   const Instruction *I = dyn_cast<Instruction>(V);
   if (I == 0 || !I->hasOneUse() || I->getNumOperands() == 0) return V;
-  
+
   Value *Op = I->getOperand(0);
 
   // Look through truly no-op truncates.
   if (isa<TruncInst>(I) &&
       TLI.isTruncateFree(I->getOperand(0)->getType(), I->getType()))
     return getNoopInput(I->getOperand(0), TLI);
-  
+
   // Look through truly no-op bitcasts.
   if (isa<BitCastInst>(I)) {
     // No type change at all.
@@ -229,18 +229,18 @@ static const Value *getNoopInput(const Value *V, const TargetLowering &TLI) {
     // Pointer to pointer cast.
     if (Op->getType()->isPointerTy() && I->getType()->isPointerTy())
       return getNoopInput(Op, TLI);
-    
+
     if (isa<VectorType>(Op->getType()) && isa<VectorType>(I->getType()) &&
         TLI.isTypeLegal(EVT::getEVT(Op->getType())) &&
         TLI.isTypeLegal(EVT::getEVT(I->getType())))
       return getNoopInput(Op, TLI);
   }
-  
+
   // Look through inttoptr.
   if (isa<IntToPtrInst>(I) && !isa<VectorType>(I->getType())) {
     // Make sure this isn't a truncating or extending cast.  We could support
     // this eventually, but don't bother for now.
-    if (TLI.getPointerTy().getSizeInBits() == 
+    if (TLI.getPointerTy().getSizeInBits() ==
           cast<IntegerType>(Op->getType())->getBitWidth())
       return getNoopInput(Op, TLI);
   }
@@ -249,7 +249,7 @@ static const Value *getNoopInput(const Value *V, const TargetLowering &TLI) {
   if (isa<PtrToIntInst>(I) && !isa<VectorType>(I->getType())) {
     // Make sure this isn't a truncating or extending cast.  We could support
     // this eventually, but don't bother for now.
-    if (TLI.getPointerTy().getSizeInBits() == 
+    if (TLI.getPointerTy().getSizeInBits() ==
         cast<IntegerType>(I->getType())->getBitWidth())
       return getNoopInput(Op, TLI);
   }
@@ -329,7 +329,7 @@ bool llvm::isInTailCallPosition(ImmutableCallSite CS, Attributes CalleeRetAttr,
   if (!isa<InsertValueInst>(RetVal) || !isa<StructType>(RetVal->getType()))
     // Handle scalars first.
     return getNoopInput(Ret->getOperand(0), TLI) == I;
-  
+
   // If this is an aggregate return, look through the insert/extract values and
   // see if each is transparent.
   for (unsigned i = 0, e =cast<StructType>(RetVal->getType())->getNumElements();
@@ -337,7 +337,7 @@ bool llvm::isInTailCallPosition(ImmutableCallSite CS, Attributes CalleeRetAttr,
     const Value *InScalar = FindInsertedValue(RetVal, i);
     if (InScalar == 0) return false;
     InScalar = getNoopInput(InScalar, TLI);
-    
+
     // If the scalar value being inserted is an extractvalue of the right index
     // from the call, then everything is good.
     const ExtractValueInst *EVI = dyn_cast<ExtractValueInst>(InScalar);
@@ -345,7 +345,7 @@ bool llvm::isInTailCallPosition(ImmutableCallSite CS, Attributes CalleeRetAttr,
         EVI->getIndices()[0] != i)
       return false;
   }
-  
+
   return true;
 }
 

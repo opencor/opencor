@@ -2,7 +2,7 @@
  * -----------------------------------------------------------------
  * $Revision: 1.10 $
  * $Date: 2010/12/01 22:10:38 $
- * ----------------------------------------------------------------- 
+ * -----------------------------------------------------------------
  * Programmer(s): Scott D. Cohen, Alan C. Hindmarsh and
  *                Radu Serban @ LLNL
  * -----------------------------------------------------------------
@@ -29,7 +29,7 @@ extern "C" {
 
 /*
  * -----------------------------------------------------------------
- * CVSPILS return values 
+ * CVSPILS return values
  * -----------------------------------------------------------------
  */
 
@@ -223,7 +223,7 @@ typedef int (*CVSpilsPrecSolveFn)(realtype t, N_Vector y, N_Vector fy,
  * The user-supplied function jtimes is to generate the product
  * J*v for given v, where J is the Jacobian df/dy, or an
  * approximation to it, and v is a given vector. It should return
- * 0 if successful a positive value for a recoverable error or 
+ * 0 if successful a positive value for a recoverable error or
  * a negative value for an unrecoverable failure.
  *
  * A function jtimes must have the prototype given below. Its
@@ -261,7 +261,7 @@ typedef int (*CVSpilsJacTimesVecFn)(N_Vector v, N_Vector Jv, realtype t,
  *
  * CVSpilsSetPrecType resets the type of preconditioner, pretype,
  *                from the value previously set.
- *                This must be one of PREC_NONE, PREC_LEFT, 
+ *                This must be one of PREC_NONE, PREC_LEFT,
  *                PREC_RIGHT, or PREC_BOTH.
  *
  * CVSpilsSetGSType specifies the type of Gram-Schmidt
@@ -284,7 +284,7 @@ typedef int (*CVSpilsJacTimesVecFn)(N_Vector v, N_Vector Jv, realtype t,
  * CVSpilsSetPreconditioner specifies the PrecSetup and PrecSolve functions.
  *                Default is NULL for both arguments (no preconditioning)
  *
- * CVSpilsSetJacTimesVecFn specifies the jtimes function. Default is to 
+ * CVSpilsSetJacTimesVecFn specifies the jtimes function. Default is to
  *                use an internal finite difference approximation routine.
  *
  * The return value of CVSpilsSet* is one of:
@@ -299,10 +299,10 @@ SUNDIALS_EXPORT int CVSpilsSetPrecType(void *cvode_mem, int pretype);
 SUNDIALS_EXPORT int CVSpilsSetGSType(void *cvode_mem, int gstype);
 SUNDIALS_EXPORT int CVSpilsSetMaxl(void *cvode_mem, int maxl);
 SUNDIALS_EXPORT int CVSpilsSetEpsLin(void *cvode_mem, realtype eplifac);
-SUNDIALS_EXPORT int CVSpilsSetPreconditioner(void *cvode_mem, 
+SUNDIALS_EXPORT int CVSpilsSetPreconditioner(void *cvode_mem,
                                              CVSpilsPrecSetupFn pset,
                                              CVSpilsPrecSolveFn psolve);
-SUNDIALS_EXPORT int CVSpilsSetJacTimesVecFn(void *cvode_mem, 
+SUNDIALS_EXPORT int CVSpilsSetJacTimesVecFn(void *cvode_mem,
                                             CVSpilsJacTimesVecFn jtv);
 
 /*
@@ -346,12 +346,12 @@ SUNDIALS_EXPORT int CVSpilsGetNumPrecSolves(void *cvode_mem, long int *npsolves)
 SUNDIALS_EXPORT int CVSpilsGetNumLinIters(void *cvode_mem, long int *nliters);
 SUNDIALS_EXPORT int CVSpilsGetNumConvFails(void *cvode_mem, long int *nlcfails);
 SUNDIALS_EXPORT int CVSpilsGetNumJtimesEvals(void *cvode_mem, long int *njvevals);
-SUNDIALS_EXPORT int CVSpilsGetNumRhsEvals(void *cvode_mem, long int *nfevalsLS); 
+SUNDIALS_EXPORT int CVSpilsGetNumRhsEvals(void *cvode_mem, long int *nfevalsLS);
 SUNDIALS_EXPORT int CVSpilsGetLastFlag(void *cvode_mem, long int *flag);
 
 /*
  * -----------------------------------------------------------------
- * The following function returns the name of the constant 
+ * The following function returns the name of the constant
  * associated with a CVSPILS return flag
  * -----------------------------------------------------------------
  */

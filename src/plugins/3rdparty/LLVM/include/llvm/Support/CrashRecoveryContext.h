@@ -16,7 +16,7 @@ namespace llvm {
 class StringRef;
 
 class CrashRecoveryContextCleanup;
-  
+
 /// \brief Crash recovery helper object.
 ///
 /// This class implements support for running operations in a safe context so
@@ -49,7 +49,7 @@ class CrashRecoveryContext {
 public:
   CrashRecoveryContext() : Impl(0), head(0) {}
   ~CrashRecoveryContext();
-  
+
   void registerCleanup(CrashRecoveryContextCleanup *cleanup);
   void unregisterCleanup(CrashRecoveryContextCleanup *cleanup);
 
@@ -104,7 +104,7 @@ protected:
     : context(context), cleanupFired(false) {}
 public:
   bool cleanupFired;
-  
+
   virtual ~CrashRecoveryContextCleanup();
   virtual void recoverResources() = 0;
 
@@ -138,7 +138,7 @@ class CrashRecoveryContextDestructorCleanup : public
   CrashRecoveryContextCleanupBase<CrashRecoveryContextDestructorCleanup<T>, T> {
 public:
   CrashRecoveryContextDestructorCleanup(CrashRecoveryContext *context,
-                                        T *resource) 
+                                        T *resource)
     : CrashRecoveryContextCleanupBase<
         CrashRecoveryContextDestructorCleanup<T>, T>(context, resource) {}
 
@@ -157,7 +157,7 @@ public:
 
   virtual void recoverResources() {
     delete this->resource;
-  }  
+  }
 };
 
 template <typename T>
@@ -165,7 +165,7 @@ class CrashRecoveryContextReleaseRefCleanup : public
   CrashRecoveryContextCleanupBase<CrashRecoveryContextReleaseRefCleanup<T>, T>
 {
 public:
-  CrashRecoveryContextReleaseRefCleanup(CrashRecoveryContext *context, 
+  CrashRecoveryContextReleaseRefCleanup(CrashRecoveryContext *context,
                                         T *resource)
     : CrashRecoveryContextCleanupBase<CrashRecoveryContextReleaseRefCleanup<T>,
           T>(context, resource) {}
@@ -188,7 +188,7 @@ public:
   ~CrashRecoveryContextCleanupRegistrar() {
     unregister();
   }
-  
+
   void unregister() {
     if (cleanup && !cleanup->cleanupFired)
       cleanup->getContext()->unregisterCleanup(cleanup);

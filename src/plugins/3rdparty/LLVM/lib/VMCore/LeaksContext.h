@@ -29,18 +29,18 @@ struct PrinterTrait<Value> {
 
 template <typename T>
 struct LeakDetectorImpl {
-  explicit LeakDetectorImpl(const char* const name = "") : 
+  explicit LeakDetectorImpl(const char* const name = "") :
     Cache(0), Name(name) { }
 
   void clear() {
     Cache = 0;
     Ts.clear();
   }
-    
-  void setName(const char* n) { 
+
+  void setName(const char* n) {
     Name = n;
   }
-    
+
   // Because the most common usage pattern, by far, is to add a
   // garbage object, then remove it immediately, we optimize this
   // case.  When an object is added, it is not added to the set
@@ -79,7 +79,7 @@ struct LeakDetectorImpl {
 
       return true;
     }
-    
+
     return false;
   }
 

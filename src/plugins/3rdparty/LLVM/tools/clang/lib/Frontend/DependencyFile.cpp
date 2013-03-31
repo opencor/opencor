@@ -125,7 +125,7 @@ void DependencyFileCallback::FileChanged(SourceLocation Loc,
     while (llvm::sys::path::is_separator(Filename[0]))
       Filename = Filename.substr(1);
   }
-    
+
   AddFilename(Filename);
 }
 

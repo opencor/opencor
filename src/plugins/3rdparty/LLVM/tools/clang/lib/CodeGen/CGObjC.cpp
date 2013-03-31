@@ -45,7 +45,7 @@ static llvm::Constant *getNullForVariable(llvm::Value *addr) {
 /// Emits an instance of NSConstantString representing the object.
 llvm::Value *CodeGenFunction::EmitObjCStringLiteral(const ObjCStringLiteral *E)
 {
-  llvm::Constant *C = 
+  llvm::Constant *C =
       CGM.getObjCRuntime().GenerateConstantString(E->getString());
   // FIXME: This bitcast should just be made an invariant on the Runtime.
   return llvm::ConstantExpr::getBitCast(C, ConvertType(E->getType()));
@@ -64,24 +64,24 @@ CodeGenFunction::EmitObjCBoxedExpr(const ObjCBoxedExpr *E) {
   assert(BoxingMethod && "BoxingMethod is null");
   assert(BoxingMethod->isClassMethod() && "BoxingMethod must be a class method");
   Selector Sel = BoxingMethod->getSelector();
-  
+
   // Generate a reference to the class pointer, which will be the receiver.
   // Assumes that the method was introduced in the class that should be
   // messaged (avoids pulling it out of the result type).
   CGObjCRuntime &Runtime = CGM.getObjCRuntime();
   const ObjCInterfaceDecl *ClassDecl = BoxingMethod->getClassInterface();
   llvm::Value *Receiver = Runtime.GetClass(Builder, ClassDecl);
-  
+
   const ParmVarDecl *argDecl = *BoxingMethod->param_begin();
   QualType ArgQT = argDecl->getType().getUnqualifiedType();
   RValue RV = EmitAnyExpr(SubExpr);
   CallArgList Args;
   Args.add(RV, ArgQT);
-  
-  RValue result = Runtime.GenerateMessageSend(*this, ReturnValueSlot(), 
-                                              BoxingMethod->getResultType(), Sel, Receiver, Args, 
+
+  RValue result = Runtime.GenerateMessageSend(*this, ReturnValueSlot(),
+                                              BoxingMethod->getResultType(), Sel, Receiver, Args,
                                               ClassDecl, BoxingMethod);
-  return Builder.CreateBitCast(result.getScalarVal(), 
+  return Builder.CreateBitCast(result.getScalarVal(),
                                ConvertType(E->getType()));
 }
 
@@ -92,23 +92,23 @@ llvm::Value *CodeGenFunction::EmitObjCCollectionLiteral(const Expr *E,
   const ObjCArrayLiteral *ALE = dyn_cast<ObjCArrayLiteral>(E);
   if (!ALE)
     DLE = cast<ObjCDictionaryLiteral>(E);
-  
+
   // Compute the type of the array we're initializing.
-  uint64_t NumElements = 
+  uint64_t NumElements =
     ALE ? ALE->getNumElements() : DLE->getNumElements();
   llvm::APInt APNumElements(Context.getTypeSize(Context.getSizeType()),
                             NumElements);
   QualType ElementType = Context.getObjCIdType().withConst();
-  QualType ElementArrayType 
-    = Context.getConstantArrayType(ElementType, APNumElements, 
+  QualType ElementArrayType
+    = Context.getConstantArrayType(ElementType, APNumElements,
                                    ArrayType::Normal, /*IndexTypeQuals=*/0);
 
   // Allocate the temporary array(s).
-  llvm::Value *Objects = CreateMemTemp(ElementArrayType, "objects");  
+  llvm::Value *Objects = CreateMemTemp(ElementArrayType, "objects");
   llvm::Value *Keys = 0;
   if (DLE)
     Keys = CreateMemTemp(ElementArrayType, "keys");
-  
+
   // Perform the actual initialialization of the array(s).
   for (uint64_t i = 0; i < NumElements; i++) {
     if (ALE) {
@@ -119,7 +119,7 @@ llvm::Value *CodeGenFunction::EmitObjCCollectionLiteral(const Expr *E,
                                    Context.getTypeAlignInChars(Rhs->getType()),
                                    Context);
       EmitScalarInit(Rhs, /*D=*/0, LV, /*capturedByInit=*/false);
-    } else {      
+    } else {
       // Emit the key initializer.
       const Expr *Key = DLE->getKeyValueElement(i).Key;
       LValue KeyLV = LValue::MakeAddr(Builder.CreateStructGEP(Keys, i),
@@ -129,17 +129,17 @@ llvm::Value *CodeGenFunction::EmitObjCCollectionLiteral(const Expr *E,
       EmitScalarInit(Key, /*D=*/0, KeyLV, /*capturedByInit=*/false);
 
       // Emit the value initializer.
-      const Expr *Value = DLE->getKeyValueElement(i).Value;  
-      LValue ValueLV = LValue::MakeAddr(Builder.CreateStructGEP(Objects, i), 
+      const Expr *Value = DLE->getKeyValueElement(i).Value;
+      LValue ValueLV = LValue::MakeAddr(Builder.CreateStructGEP(Objects, i),
                                         ElementType,
                                   Context.getTypeAlignInChars(Value->getType()),
                                         Context);
       EmitScalarInit(Value, /*D=*/0, ValueLV, /*capturedByInit=*/false);
     }
   }
-  
+
   // Generate the argument list.
-  CallArgList Args;  
+  CallArgList Args;
   ObjCMethodDecl::param_const_iterator PI = MethodWithObjects->param_begin();
   const ParmVarDecl *argDecl = *PI++;
   QualType ArgQT = argDecl->getType().getUnqualifiedType();
@@ -151,7 +151,7 @@ llvm::Value *CodeGenFunction::EmitObjCCollectionLiteral(const Expr *E,
   }
   argDecl = *PI;
   ArgQT = argDecl->getType().getUnqualifiedType();
-  llvm::Value *Count = 
+  llvm::Value *Count =
     llvm::ConstantInt::get(CGM.getTypes().ConvertType(ArgQT), NumElements);
   Args.add(RValue::get(Count), ArgQT);
 
@@ -160,19 +160,19 @@ llvm::Value *CodeGenFunction::EmitObjCCollectionLiteral(const Expr *E,
   QualType ResultType = E->getType();
   const ObjCObjectPointerType *InterfacePointerType
     = ResultType->getAsObjCInterfacePointerType();
-  ObjCInterfaceDecl *Class 
+  ObjCInterfaceDecl *Class
     = InterfacePointerType->getObjectType()->getInterface();
   CGObjCRuntime &Runtime = CGM.getObjCRuntime();
   llvm::Value *Receiver = Runtime.GetClass(Builder, Class);
 
   // Generate the message send.
   RValue result
-    = Runtime.GenerateMessageSend(*this, ReturnValueSlot(), 
+    = Runtime.GenerateMessageSend(*this, ReturnValueSlot(),
                                   MethodWithObjects->getResultType(),
                                   Sel,
                                   Receiver, Args, Class,
                                   MethodWithObjects);
-  return Builder.CreateBitCast(result.getScalarVal(), 
+  return Builder.CreateBitCast(result.getScalarVal(),
                                ConvertType(E->getType()));
 }
 
@@ -199,7 +199,7 @@ llvm::Value *CodeGenFunction::EmitObjCProtocolExpr(const ObjCProtocolExpr *E) {
   return CGM.getObjCRuntime().GenerateProtocolRef(Builder, E->getProtocol());
 }
 
-/// \brief Adjust the type of the result of an Objective-C message send 
+/// \brief Adjust the type of the result of an Objective-C message send
 /// expression when the method has a related result type.
 static RValue AdjustRelatedResultType(CodeGenFunction &CGF,
                                       QualType ExpT,
@@ -212,7 +212,7 @@ static RValue AdjustRelatedResultType(CodeGenFunction &CGF,
       CGF.getContext().hasSameType(ExpT, Method->getResultType()) ||
       !Result.isScalar())
     return Result;
-  
+
   // We have applied a related result type. Cast the rvalue appropriately.
   return RValue::get(CGF.Builder.CreateBitCast(Result.getScalarVal(),
                                                CGF.ConvertType(ExpT)));
@@ -463,7 +463,7 @@ void CodeGenFunction::StartObjCMethod(const ObjCMethodDecl *OMD,
   if (CGM.getLangOpts().ObjCAutoRefCount &&
       OMD->isInstanceMethod() &&
       OMD->getSelector().isUnarySelector()) {
-    const IdentifierInfo *ident = 
+    const IdentifierInfo *ident =
       OMD->getSelector().getIdentifierInfoForSlot(0);
     if (ident->isStr("dealloc"))
       EHStack.pushCleanup<FinishARCDealloc>(getARCCleanupKind());
@@ -483,7 +483,7 @@ void CodeGenFunction::GenerateObjCMethod(const ObjCMethodDecl *OMD) {
 
 /// emitStructGetterCall - Call the runtime function to load a property
 /// into the return value slot.
-static void emitStructGetterCall(CodeGenFunction &CGF, ObjCIvarDecl *ivar, 
+static void emitStructGetterCall(CodeGenFunction &CGF, ObjCIvarDecl *ivar,
                                  bool isAtomic, bool hasStrong) {
   ASTContext &Context = CGF.getContext();
 
@@ -491,7 +491,7 @@ static void emitStructGetterCall(CodeGenFunction &CGF, ObjCIvarDecl *ivar,
     CGF.EmitLValueForIvar(CGF.TypeOfSelfObject(), CGF.LoadObjCSelf(),
                           ivar, 0).getAddress();
 
-  // objc_copyStruct (ReturnValue, &structIvar, 
+  // objc_copyStruct (ReturnValue, &structIvar,
   //                  sizeof (Type of Ivar), isAtomic, false);
   CallArgList args;
 
@@ -713,7 +713,7 @@ PropertyImplStrategy::PropertyImplStrategy(CodeGenModule &CGM,
 /// is illegal within a category.
 void CodeGenFunction::GenerateObjCGetter(ObjCImplementationDecl *IMP,
                                          const ObjCPropertyImplDecl *PID) {
-  llvm::Constant *AtomicHelperFn = 
+  llvm::Constant *AtomicHelperFn =
     GenerateObjCAtomicGetterCopyHelperFunction(PID);
   const ObjCPropertyDecl *PD = PID->getPropertyDecl();
   ObjCMethodDecl *OMD = PD->getGetterMethodDecl();
@@ -748,30 +748,30 @@ static bool hasTrivialGetExpr(const ObjCPropertyImplDecl *propImpl) {
   return false;
 }
 
-/// emitCPPObjectAtomicGetterCall - Call the runtime function to 
+/// emitCPPObjectAtomicGetterCall - Call the runtime function to
 /// copy the ivar into the resturn slot.
-static void emitCPPObjectAtomicGetterCall(CodeGenFunction &CGF, 
+static void emitCPPObjectAtomicGetterCall(CodeGenFunction &CGF,
                                           llvm::Value *returnAddr,
                                           ObjCIvarDecl *ivar,
                                           llvm::Constant *AtomicHelperFn) {
   // objc_copyCppObjectAtomic (&returnSlot, &CppObjectIvar,
   //                           AtomicHelperFn);
   CallArgList args;
-  
+
   // The 1st argument is the return Slot.
   args.add(RValue::get(returnAddr), CGF.getContext().VoidPtrTy);
-  
+
   // The 2nd argument is the address of the ivar.
-  llvm::Value *ivarAddr = 
-  CGF.EmitLValueForIvar(CGF.TypeOfSelfObject(), 
+  llvm::Value *ivarAddr =
+  CGF.EmitLValueForIvar(CGF.TypeOfSelfObject(),
                         CGF.LoadObjCSelf(), ivar, 0).getAddress();
   ivarAddr = CGF.Builder.CreateBitCast(ivarAddr, CGF.Int8PtrTy);
   args.add(RValue::get(ivarAddr), CGF.getContext().VoidPtrTy);
-  
+
   // Third argument is the helper function.
   args.add(RValue::get(AtomicHelperFn), CGF.getContext().VoidPtrTy);
-  
-  llvm::Value *copyCppAtomicObjectFn = 
+
+  llvm::Value *copyCppAtomicObjectFn =
   CGF.CGM.getObjCRuntime().GetCppAtomicObjectFunction();
   CGF.EmitCall(CGF.getTypes().arrangeFreeFunctionCall(CGF.getContext().VoidTy,
                                                       args,
@@ -794,7 +794,7 @@ CodeGenFunction::generateObjCGetterBody(const ObjCImplementationDecl *classImpl,
     }
     else {
       ObjCIvarDecl *ivar = propImpl->getPropertyIvarDecl();
-      emitCPPObjectAtomicGetterCall(*this, ReturnValue, 
+      emitCPPObjectAtomicGetterCall(*this, ReturnValue,
                                     ivar, AtomicHelperFn);
     }
     return;
@@ -804,7 +804,7 @@ CodeGenFunction::generateObjCGetterBody(const ObjCImplementationDecl *classImpl,
   QualType propType = prop->getType();
   ObjCMethodDecl *getterMethod = prop->getGetterMethodDecl();
 
-  ObjCIvarDecl *ivar = propImpl->getPropertyIvarDecl();  
+  ObjCIvarDecl *ivar = propImpl->getPropertyIvarDecl();
 
   // Pick an implementation strategy.
   PropertyImplStrategy strategy(CGM, propImpl);
@@ -921,10 +921,10 @@ CodeGenFunction::generateObjCGetterBody(const ObjCImplementationDecl *classImpl,
         }
 
         value = Builder.CreateBitCast(value, ConvertType(propType));
-        value = Builder.CreateBitCast(value, 
+        value = Builder.CreateBitCast(value,
                   ConvertType(GetterMethodDecl->getResultType()));
       }
-      
+
       EmitReturnOfRValue(RValue::get(value), propType);
     }
     return;
@@ -938,7 +938,7 @@ CodeGenFunction::generateObjCGetterBody(const ObjCImplementationDecl *classImpl,
 /// from the first formal parameter into the given ivar.
 static void emitStructSetterCall(CodeGenFunction &CGF, ObjCMethodDecl *OMD,
                                  ObjCIvarDecl *ivar) {
-  // objc_copyStruct (&structIvar, &Arg, 
+  // objc_copyStruct (&structIvar, &Arg,
   //                  sizeof (struct something), true, false);
   CallArgList args;
 
@@ -951,7 +951,7 @@ static void emitStructSetterCall(CodeGenFunction &CGF, ObjCMethodDecl *OMD,
 
   // The second argument is the address of the parameter variable.
   ParmVarDecl *argVar = *OMD->param_begin();
-  DeclRefExpr argRef(argVar, false, argVar->getType().getNonReferenceType(), 
+  DeclRefExpr argRef(argVar, false, argVar->getType().getNonReferenceType(),
                      VK_LValue, SourceLocation());
   llvm::Value *argAddr = CGF.EmitLValue(&argRef).getAddress();
   argAddr = CGF.Builder.CreateBitCast(argAddr, CGF.Int8PtrTy);
@@ -977,43 +977,43 @@ static void emitStructSetterCall(CodeGenFunction &CGF, ObjCMethodDecl *OMD,
                copyStructFn, ReturnValueSlot(), args);
 }
 
-/// emitCPPObjectAtomicSetterCall - Call the runtime function to store 
-/// the value from the first formal parameter into the given ivar, using 
+/// emitCPPObjectAtomicSetterCall - Call the runtime function to store
+/// the value from the first formal parameter into the given ivar, using
 /// the Cpp API for atomic Cpp objects with non-trivial copy assignment.
-static void emitCPPObjectAtomicSetterCall(CodeGenFunction &CGF, 
+static void emitCPPObjectAtomicSetterCall(CodeGenFunction &CGF,
                                           ObjCMethodDecl *OMD,
                                           ObjCIvarDecl *ivar,
                                           llvm::Constant *AtomicHelperFn) {
-  // objc_copyCppObjectAtomic (&CppObjectIvar, &Arg, 
+  // objc_copyCppObjectAtomic (&CppObjectIvar, &Arg,
   //                           AtomicHelperFn);
   CallArgList args;
-  
+
   // The first argument is the address of the ivar.
-  llvm::Value *ivarAddr = 
-    CGF.EmitLValueForIvar(CGF.TypeOfSelfObject(), 
+  llvm::Value *ivarAddr =
+    CGF.EmitLValueForIvar(CGF.TypeOfSelfObject(),
                           CGF.LoadObjCSelf(), ivar, 0).getAddress();
   ivarAddr = CGF.Builder.CreateBitCast(ivarAddr, CGF.Int8PtrTy);
   args.add(RValue::get(ivarAddr), CGF.getContext().VoidPtrTy);
-  
+
   // The second argument is the address of the parameter variable.
   ParmVarDecl *argVar = *OMD->param_begin();
-  DeclRefExpr argRef(argVar, false, argVar->getType().getNonReferenceType(), 
+  DeclRefExpr argRef(argVar, false, argVar->getType().getNonReferenceType(),
                      VK_LValue, SourceLocation());
   llvm::Value *argAddr = CGF.EmitLValue(&argRef).getAddress();
   argAddr = CGF.Builder.CreateBitCast(argAddr, CGF.Int8PtrTy);
   args.add(RValue::get(argAddr), CGF.getContext().VoidPtrTy);
-  
+
   // Third argument is the helper function.
   args.add(RValue::get(AtomicHelperFn), CGF.getContext().VoidPtrTy);
-  
-  llvm::Value *copyCppAtomicObjectFn = 
+
+  llvm::Value *copyCppAtomicObjectFn =
     CGF.CGM.getObjCRuntime().GetCppAtomicObjectFunction();
   CGF.EmitCall(CGF.getTypes().arrangeFreeFunctionCall(CGF.getContext().VoidTy,
                                                       args,
                                                       FunctionType::ExtInfo(),
                                                       RequiredArgs::All),
                copyCppAtomicObjectFn, ReturnValueSlot(), args);
-  
+
 
 }
 
@@ -1055,7 +1055,7 @@ CodeGenFunction::generateObjCSetterBody(const ObjCImplementationDecl *classImpl,
   const ObjCPropertyDecl *prop = propImpl->getPropertyDecl();
   ObjCIvarDecl *ivar = propImpl->getPropertyIvarDecl();
   ObjCMethodDecl *setterMethod = prop->getSetterMethodDecl();
-  
+
   // Just use the setter expression if Sema gave us one and it's
   // non-trivial.
   if (!hasTrivialSetExpr(propImpl)) {
@@ -1105,12 +1105,12 @@ CodeGenFunction::generateObjCSetterBody(const ObjCImplementationDecl *classImpl,
 
   case PropertyImplStrategy::GetSetProperty:
   case PropertyImplStrategy::SetPropertyAndExpressionGet: {
-  
+
     llvm::Value *setOptimizedPropertyFn = 0;
     llvm::Value *setPropertyFn = 0;
     if (UseOptimizedSetter(CGM)) {
       // 10.8 and iOS 6.0 code and GC is off
-      setOptimizedPropertyFn = 
+      setOptimizedPropertyFn =
         CGM.getObjCRuntime()
            .GetOptimizedPropertySetFunction(strategy.isAtomic(),
                                             strategy.isCopy());
@@ -1126,7 +1126,7 @@ CodeGenFunction::generateObjCSetterBody(const ObjCImplementationDecl *classImpl,
         return;
       }
     }
-   
+
     // Emit objc_setProperty((id) self, _cmd, offset, arg,
     //                       <is-atomic>, <is-copy>).
     llvm::Value *cmd =
@@ -1162,7 +1162,7 @@ CodeGenFunction::generateObjCSetterBody(const ObjCImplementationDecl *classImpl,
                                                   RequiredArgs::All),
                setPropertyFn, ReturnValueSlot(), args);
     }
-    
+
     return;
   }
 
@@ -1190,7 +1190,7 @@ CodeGenFunction::generateObjCSetterBody(const ObjCImplementationDecl *classImpl,
   ImplicitCastExpr argLoad(ImplicitCastExpr::OnStack,
                            argType.getUnqualifiedType(), CK_LValueToRValue,
                            &arg, VK_RValue);
-    
+
   // The property type can differ from the ivar type in some situations with
   // Objective-C pointer types, we can always bit cast the RHS in these cases.
   // The following absurdity is just to ensure well-formed IR.
@@ -1231,7 +1231,7 @@ CodeGenFunction::generateObjCSetterBody(const ObjCImplementationDecl *classImpl,
 /// is illegal within a category.
 void CodeGenFunction::GenerateObjCSetter(ObjCImplementationDecl *IMP,
                                          const ObjCPropertyImplDecl *PID) {
-  llvm::Constant *AtomicHelperFn = 
+  llvm::Constant *AtomicHelperFn =
     GenerateObjCAtomicSetterCopyHelperFunction(PID);
   const ObjCPropertyDecl *PD = PID->getPropertyDecl();
   ObjCMethodDecl *OMD = PD->getSetterMethodDecl();
@@ -1327,7 +1327,7 @@ void CodeGenFunction::GenerateObjCCtorDtorMethod(ObjCImplementationDecl *IMP,
       CXXCtorInitializer *IvarInit = (*B);
       FieldDecl *Field = IvarInit->getAnyMember();
       ObjCIvarDecl  *Ivar = cast<ObjCIvarDecl>(Field);
-      LValue LV = EmitLValueForIvar(TypeOfSelfObject(), 
+      LValue LV = EmitLValueForIvar(TypeOfSelfObject(),
                                     LoadObjCSelf(), Ivar, 0);
       EmitAggExpr(IvarInit->getInit(),
                   AggValueSlot::forLValue(LV, AggValueSlot::IsDestructed,
@@ -1800,7 +1800,7 @@ static llvm::Value *emitARCStoreOperation(CodeGenFunction &CGF,
 
   addr = CGF.Builder.CreateBitCast(addr, CGF.Int8PtrPtrTy);
   value = CGF.Builder.CreateBitCast(value, CGF.Int8PtrTy);
-    
+
   llvm::CallInst *result = CGF.Builder.CreateCall2(fn, addr, value);
   result->setDoesNotThrow();
 
@@ -1827,7 +1827,7 @@ static void emitARCCopyOperation(CodeGenFunction &CGF,
 
   dst = CGF.Builder.CreateBitCast(dst, CGF.Int8PtrPtrTy);
   src = CGF.Builder.CreateBitCast(src, CGF.Int8PtrPtrTy);
-    
+
   llvm::CallInst *result = CGF.Builder.CreateCall2(fn, dst, src);
   result->setDoesNotThrow();
 }
@@ -1904,7 +1904,7 @@ CodeGenFunction::EmitARCRetainAutoreleasedReturnValue(llvm::Value *value) {
     } else if (CGM.getCodeGenOpts().OptimizationLevel == 0) {
       llvm::FunctionType *type =
         llvm::FunctionType::get(VoidTy, /*variadic*/false);
-      
+
       marker = llvm::InlineAsm::get(type, assembly, "", /*sideeffects*/ true);
 
     // If we're at -O1 and above, we don't want to litter the code
@@ -1997,7 +1997,7 @@ llvm::Value *CodeGenFunction::EmitARCStoreStrongCall(llvm::Value *addr,
 
   addr = Builder.CreateBitCast(addr, Int8PtrPtrTy);
   llvm::Value *castValue = Builder.CreateBitCast(value, Int8PtrTy);
-  
+
   Builder.CreateCall2(fn, addr, castValue)->setDoesNotThrow();
 
   if (ignored) return 0;
@@ -2223,10 +2223,10 @@ llvm::Value *CodeGenFunction::EmitObjCMRRAutoreleasePoolPush() {
   IdentifierInfo *II = &CGM.getContext().Idents.get("alloc");
   Selector AllocSel = getContext().Selectors.getSelector(0, &II);
   CallArgList Args;
-  RValue AllocRV =  
-    Runtime.GenerateMessageSend(*this, ReturnValueSlot(), 
+  RValue AllocRV =
+    Runtime.GenerateMessageSend(*this, ReturnValueSlot(),
                                 getContext().getObjCIdType(),
-                                AllocSel, Receiver, Args); 
+                                AllocSel, Receiver, Args);
 
   // [Receiver init]
   Receiver = AllocRV.getScalarVal();
@@ -2235,7 +2235,7 @@ llvm::Value *CodeGenFunction::EmitObjCMRRAutoreleasePoolPush() {
   RValue InitRV =
     Runtime.GenerateMessageSend(*this, ReturnValueSlot(),
                                 getContext().getObjCIdType(),
-                                InitSel, Receiver, Args); 
+                                InitSel, Receiver, Args);
   return InitRV.getScalarVal();
 }
 
@@ -2246,7 +2246,7 @@ void CodeGenFunction::EmitObjCMRRAutoreleasePoolPop(llvm::Value *Arg) {
   Selector DrainSel = getContext().Selectors.getSelector(0, &II);
   CallArgList Args;
   CGM.getObjCRuntime().GenerateMessageSend(*this, ReturnValueSlot(),
-                              getContext().VoidTy, DrainSel, Arg, Args); 
+                              getContext().VoidTy, DrainSel, Arg, Args);
 }
 
 void CodeGenFunction::destroyARCStrongPrecise(CodeGenFunction &CGF,
@@ -2319,7 +2319,7 @@ static TryEmitResult tryEmitARCRetainLoadOfScalar(CodeGenFunction &CGF,
   e = e->IgnoreParens();
   QualType type = e->getType();
 
-  // If we're loading retained from a __strong xvalue, we can avoid 
+  // If we're loading retained from a __strong xvalue, we can avoid
   // an extra retain/release pair by zeroing out the source of this
   // "move" operation.
   if (e->isXValue() &&
@@ -2327,13 +2327,13 @@ static TryEmitResult tryEmitARCRetainLoadOfScalar(CodeGenFunction &CGF,
       type.getObjCLifetime() == Qualifiers::OCL_Strong) {
     // Emit the lvalue.
     LValue lv = CGF.EmitLValue(e);
-    
+
     // Load the object pointer.
     llvm::Value *result = CGF.EmitLoadOfLValue(lv).getScalarVal();
-    
+
     // Set the source pointer to NULL.
     CGF.EmitStoreOfScalar(getNullForVariable(lv.getAddress()), lv);
-    
+
     return TryEmitResult(result, true);
   }
 
@@ -2822,7 +2822,7 @@ CodeGenFunction::GenerateObjCAtomicSetterCopyHelperFunction(
   assert(PID->getSetterCXXAssignment() && "SetterCXXAssignment - null");
   if ((HelperFn = CGM.getAtomicSetterHelperFnMap(Ty)))
     return HelperFn;
-  
+
   ASTContext &C = getContext();
   IdentifierInfo *II
     = &CGM.getContext().Idents.get("__assign_helper_atomic_property_");
@@ -2834,51 +2834,51 @@ CodeGenFunction::GenerateObjCAtomicSetterCopyHelperFunction(
                                           SC_None,
                                           false,
                                           false);
-  
+
   QualType DestTy = C.getPointerType(Ty);
   QualType SrcTy = Ty;
   SrcTy.addConst();
   SrcTy = C.getPointerType(SrcTy);
-  
+
   FunctionArgList args;
   ImplicitParamDecl dstDecl(FD, SourceLocation(), 0, DestTy);
   args.push_back(&dstDecl);
   ImplicitParamDecl srcDecl(FD, SourceLocation(), 0, SrcTy);
   args.push_back(&srcDecl);
-  
+
   const CGFunctionInfo &FI =
     CGM.getTypes().arrangeFunctionDeclaration(C.VoidTy, args,
                                               FunctionType::ExtInfo(),
                                               RequiredArgs::All);
-  
+
   llvm::FunctionType *LTy = CGM.getTypes().GetFunctionType(FI);
-  
+
   llvm::Function *Fn =
     llvm::Function::Create(LTy, llvm::GlobalValue::InternalLinkage,
                            "__assign_helper_atomic_property_",
                            &CGM.getModule());
-  
+
   // Initialize debug info if needed.
   maybeInitializeDebugInfo();
-  
+
   StartFunction(FD, C.VoidTy, Fn, FI, args, SourceLocation());
-  
+
   DeclRefExpr DstExpr(&dstDecl, false, DestTy,
                       VK_RValue, SourceLocation());
   UnaryOperator DST(&DstExpr, UO_Deref, DestTy->getPointeeType(),
                     VK_LValue, OK_Ordinary, SourceLocation());
-  
+
   DeclRefExpr SrcExpr(&srcDecl, false, SrcTy,
                       VK_RValue, SourceLocation());
   UnaryOperator SRC(&SrcExpr, UO_Deref, SrcTy->getPointeeType(),
                     VK_LValue, OK_Ordinary, SourceLocation());
-  
+
   Expr *Args[2] = { &DST, &SRC };
   CallExpr *CalleeExp = cast<CallExpr>(PID->getSetterCXXAssignment());
   CXXOperatorCallExpr TheCall(C, OO_Equal, CalleeExp->getCallee(),
                               Args, DestTy->getPointeeType(),
                               VK_LValue, SourceLocation(), false);
-  
+
   EmitStmt(&TheCall);
 
   FinishFunction();
@@ -2901,14 +2901,14 @@ CodeGenFunction::GenerateObjCAtomicGetterCopyHelperFunction(
   if ((!(PD->getPropertyAttributes() & ObjCPropertyDecl::OBJC_PR_atomic)))
     return 0;
   llvm::Constant * HelperFn = 0;
-  
+
   if (hasTrivialGetExpr(PID))
     return 0;
   assert(PID->getGetterCXXConstructor() && "getGetterCXXConstructor - null");
   if ((HelperFn = CGM.getAtomicGetterHelperFnMap(Ty)))
     return HelperFn;
-  
-  
+
+
   ASTContext &C = getContext();
   IdentifierInfo *II
   = &CGM.getContext().Idents.get("__copy_helper_atomic_property_");
@@ -2920,52 +2920,52 @@ CodeGenFunction::GenerateObjCAtomicGetterCopyHelperFunction(
                                           SC_None,
                                           false,
                                           false);
-  
+
   QualType DestTy = C.getPointerType(Ty);
   QualType SrcTy = Ty;
   SrcTy.addConst();
   SrcTy = C.getPointerType(SrcTy);
-  
+
   FunctionArgList args;
   ImplicitParamDecl dstDecl(FD, SourceLocation(), 0, DestTy);
   args.push_back(&dstDecl);
   ImplicitParamDecl srcDecl(FD, SourceLocation(), 0, SrcTy);
   args.push_back(&srcDecl);
-  
+
   const CGFunctionInfo &FI =
   CGM.getTypes().arrangeFunctionDeclaration(C.VoidTy, args,
                                             FunctionType::ExtInfo(),
                                             RequiredArgs::All);
-  
+
   llvm::FunctionType *LTy = CGM.getTypes().GetFunctionType(FI);
-  
+
   llvm::Function *Fn =
   llvm::Function::Create(LTy, llvm::GlobalValue::InternalLinkage,
                          "__copy_helper_atomic_property_", &CGM.getModule());
-  
+
   // Initialize debug info if needed.
   maybeInitializeDebugInfo();
-  
+
   StartFunction(FD, C.VoidTy, Fn, FI, args, SourceLocation());
-  
+
   DeclRefExpr SrcExpr(&srcDecl, false, SrcTy,
                       VK_RValue, SourceLocation());
-  
+
   UnaryOperator SRC(&SrcExpr, UO_Deref, SrcTy->getPointeeType(),
                     VK_LValue, OK_Ordinary, SourceLocation());
-  
-  CXXConstructExpr *CXXConstExpr = 
+
+  CXXConstructExpr *CXXConstExpr =
     cast<CXXConstructExpr>(PID->getGetterCXXConstructor());
-  
+
   SmallVector<Expr*, 4> ConstructorArgs;
   ConstructorArgs.push_back(&SRC);
   CXXConstructExpr::arg_iterator A = CXXConstExpr->arg_begin();
   ++A;
-  
+
   for (CXXConstructExpr::arg_iterator AEnd = CXXConstExpr->arg_end();
        A != AEnd; ++A)
     ConstructorArgs.push_back(*A);
-  
+
   CXXConstructExpr *TheCXXConstructExpr =
     CXXConstructExpr::Create(C, Ty, SourceLocation(),
                              CXXConstExpr->getConstructor(),
@@ -2976,19 +2976,19 @@ CodeGenFunction::GenerateObjCAtomicGetterCopyHelperFunction(
                              CXXConstExpr->requiresZeroInitialization(),
                              CXXConstExpr->getConstructionKind(),
                              SourceRange());
-  
+
   DeclRefExpr DstExpr(&dstDecl, false, DestTy,
                       VK_RValue, SourceLocation());
-  
+
   RValue DV = EmitAnyExpr(&DstExpr);
   CharUnits Alignment
     = getContext().getTypeAlignInChars(TheCXXConstructExpr->getType());
-  EmitAggExpr(TheCXXConstructExpr, 
+  EmitAggExpr(TheCXXConstructExpr,
               AggValueSlot::forAddr(DV.getScalarVal(), Alignment, Qualifiers(),
                                     AggValueSlot::IsDestructed,
                                     AggValueSlot::DoesNotNeedGCBarriers,
                                     AggValueSlot::IsNotAliased));
-  
+
   FinishFunction();
   HelperFn = llvm::ConstantExpr::getBitCast(Fn, VoidPtrTy);
   CGM.setAtomicGetterHelperFnMap(Ty, HelperFn);

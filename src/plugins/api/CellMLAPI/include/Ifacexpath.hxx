@@ -23,7 +23,7 @@ namespace iface
     class XPathNSResolver;
     class XPathExpression;
     class XPathResult;
-    PUBLIC_xpath_PRE 
+    PUBLIC_xpath_PRE
     class  PUBLIC_xpath_POST XPathException : public std::exception
     {
     public:
@@ -31,7 +31,7 @@ namespace iface
     };
     static const uint16_t INVALID_EXPRESSION_ERR = 51;
     static const uint16_t TYPE_ERR = 52;
-    PUBLIC_xpath_PRE 
+    PUBLIC_xpath_PRE
     class  PUBLIC_xpath_POST XPathEvaluator
      : public virtual iface::XPCOM::IObject
     {
@@ -42,7 +42,7 @@ namespace iface
       virtual already_AddRefd<iface::xpath::XPathNSResolver>  createNSResolver(iface::dom::Node* nodeResolver) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::xpath::XPathResult>  evaluate(const std::wstring& expression, iface::dom::Node* contextNode, iface::xpath::XPathNSResolver* resolver, uint16_t type, iface::xpath::XPathResult* result) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_xpath_PRE 
+    PUBLIC_xpath_PRE
     class  PUBLIC_xpath_POST XPathExpression
      : public virtual iface::XPCOM::IObject
     {
@@ -51,7 +51,7 @@ namespace iface
       virtual ~XPathExpression() {}
       virtual already_AddRefd<iface::xpath::XPathResult>  evaluate(iface::dom::Node* contextNode, uint16_t type, iface::xpath::XPathResult* result) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_xpath_PRE 
+    PUBLIC_xpath_PRE
     class  PUBLIC_xpath_POST XPathNSResolver
      : public virtual iface::XPCOM::IObject
     {
@@ -60,7 +60,7 @@ namespace iface
       virtual ~XPathNSResolver() {}
       virtual std::wstring lookupNamespaceURI(const std::wstring& prefix) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_xpath_PRE 
+    PUBLIC_xpath_PRE
     class  PUBLIC_xpath_POST XPathResult
      : public virtual iface::XPCOM::IObject
     {
@@ -87,7 +87,7 @@ namespace iface
       virtual already_AddRefd<iface::dom::Node>  iterateNext() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::dom::Node>  snapshotItem(uint32_t index) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_xpath_PRE 
+    PUBLIC_xpath_PRE
     class  PUBLIC_xpath_POST XPathNamespace
      : public virtual iface::dom::Node
     {

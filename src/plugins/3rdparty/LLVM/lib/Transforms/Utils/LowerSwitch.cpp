@@ -35,10 +35,10 @@ namespace {
     static char ID; // Pass identification, replacement for typeid
     LowerSwitch() : FunctionPass(ID) {
       initializeLowerSwitchPass(*PassRegistry::getPassRegistry());
-    } 
+    }
 
     virtual bool runOnFunction(Function &F);
-    
+
     virtual void getAnalysisUsage(AnalysisUsage &AU) const {
       // This is a cluster of orthogonal Transforms
       AU.addPreserved<UnifyFunctionExitNodes>();
@@ -131,7 +131,7 @@ BasicBlock* LowerSwitch::switchConvert(CaseItr Begin, CaseItr End,
   DEBUG(dbgs() << "RHS: " << RHS << "\n");
 
   CaseRange& Pivot = *(Begin + Mid);
-  DEBUG(dbgs() << "Pivot ==> " 
+  DEBUG(dbgs() << "Pivot ==> "
                << cast<ConstantInt>(Pivot.Low)->getValue() << " -"
                << cast<ConstantInt>(Pivot.High)->getValue() << "\n");
 
@@ -184,7 +184,7 @@ BasicBlock* LowerSwitch::newLeafBlock(CaseRange& Leaf, Value* Val,
     } else if (cast<ConstantInt>(Leaf.Low)->isZero()) {
       // Val >= 0 && Val <= Hi --> Val <=u Hi
       Comp = new ICmpInst(*NewLeaf, ICmpInst::ICMP_ULE, Val, Leaf.High,
-                          "SwitchLeaf");      
+                          "SwitchLeaf");
     } else {
       // Emit V-Lo <=u Hi-Lo
       Constant* NegLo = ConstantExpr::getNeg(Leaf.Low);
@@ -207,11 +207,11 @@ BasicBlock* LowerSwitch::newLeafBlock(CaseRange& Leaf, Value* Val,
     PHINode* PN = cast<PHINode>(I);
     // Remove all but one incoming entries from the cluster
     uint64_t Range = cast<ConstantInt>(Leaf.High)->getSExtValue() -
-                     cast<ConstantInt>(Leaf.Low)->getSExtValue();    
+                     cast<ConstantInt>(Leaf.Low)->getSExtValue();
     for (uint64_t j = 0; j < Range; ++j) {
       PN->removeIncomingValue(OrigBlock);
     }
-    
+
     int BlockIdx = PN->getBasicBlockIndex(OrigBlock);
     assert(BlockIdx != -1 && "Switch didn't go to this successor??");
     PN->setIncomingBlock((unsigned)BlockIdx, NewLeaf);
@@ -232,14 +232,14 @@ unsigned LowerSwitch::Clusterify(CaseVector& Cases, SwitchInst *SI) {
     IntegersSubset CaseRanges = i.getCaseValueEx();
     TheClusterifier.add(CaseRanges, SuccBB);
   }
-  
+
   TheClusterifier.optimize();
-  
+
   size_t numCmps = 0;
   for (IntegersSubsetToBB::RangeIterator i = TheClusterifier.begin(),
        e = TheClusterifier.end(); i != e; ++i, ++numCmps) {
     IntegersSubsetToBB::Cluster &C = *i;
-    
+
     // FIXME: Currently work with ConstantInt based numbers.
     // Changing it to APInt based is a pretty heavy for this commit.
     Cases.push_back(CaseRange(C.first.getLow().toConstantInt(),
@@ -249,7 +249,7 @@ unsigned LowerSwitch::Clusterify(CaseVector& Cases, SwitchInst *SI) {
       ++numCmps;
   }
 
-  return numCmps;  
+  return numCmps;
 }
 
 // processSwitchInst - Replace the specified switch instruction with a sequence
@@ -293,7 +293,7 @@ void LowerSwitch::processSwitchInst(SwitchInst *SI) {
                << ". Total compares: " << numCmps << "\n");
   DEBUG(dbgs() << "Cases: " << Cases << "\n");
   (void)numCmps;
-  
+
   BasicBlock* SwitchBlock = switchConvert(Cases.begin(), Cases.end(), Val,
                                           OrigBlock, NewDefault);
 

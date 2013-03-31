@@ -564,7 +564,7 @@ public:
   /// \brief Determine whether this expression involves a call to any function
   /// that is not trivial.
   bool hasNonTrivialCall(ASTContext &Ctx);
-  
+
   /// EvaluateKnownConstInt - Call EvaluateAsRValue and return the folded
   /// integer. This must be called on an expression that constant folds to an
   /// integer.
@@ -777,8 +777,8 @@ public:
                   ExprObjectKind OK = OK_Ordinary,
                   Expr *SourceExpr = 0)
     : Expr(OpaqueValueExprClass, T, VK, OK,
-           T->isDependentType(), 
-           T->isDependentType() || 
+           T->isDependentType(),
+           T->isDependentType() ||
            (SourceExpr && SourceExpr->isValueDependent()),
            T->isInstantiationDependentType(),
            false),

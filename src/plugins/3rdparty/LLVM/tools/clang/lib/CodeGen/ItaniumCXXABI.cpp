@@ -217,12 +217,12 @@ ItaniumCXXABI::EmitLoadOfMemberFunctionPointer(CodeGenFunction &CGF,
                                                const MemberPointerType *MPT) {
   CGBuilderTy &Builder = CGF.Builder;
 
-  const FunctionProtoType *FPT = 
+  const FunctionProtoType *FPT =
     MPT->getPointeeType()->getAs<FunctionProtoType>();
-  const CXXRecordDecl *RD = 
+  const CXXRecordDecl *RD =
     cast<CXXRecordDecl>(MPT->getClass()->getAs<RecordType>()->getDecl());
 
-  llvm::FunctionType *FTy = 
+  llvm::FunctionType *FTy =
     CGM.getTypes().GetFunctionType(
       CGM.getTypes().arrangeCXXMethodType(RD, FPT));
 
@@ -246,10 +246,10 @@ ItaniumCXXABI::EmitLoadOfMemberFunctionPointer(CodeGenFunction &CGF,
   llvm::Value *Ptr = Builder.CreateBitCast(This, Builder.getInt8PtrTy());
   Ptr = Builder.CreateInBoundsGEP(Ptr, Adj);
   This = Builder.CreateBitCast(Ptr, This->getType(), "this.adjusted");
-  
+
   // Load the function pointer.
   llvm::Value *FnAsInt = Builder.CreateExtractValue(MemFnPtr, 0, "memptr.ptr");
-  
+
   // If the LSB in the function pointer is 1, the function pointer points to
   // a virtual function.
   llvm::Value *IsVirtual;
@@ -285,7 +285,7 @@ ItaniumCXXABI::EmitLoadOfMemberFunctionPointer(CodeGenFunction &CGF,
   CGF.EmitBlock(FnNonVirtual);
   llvm::Value *NonVirtualFn =
     Builder.CreateIntToPtr(FnAsInt, FTy->getPointerTo(), "memptr.nonvirtualfn");
-  
+
   // We're done.
   CGF.EmitBlock(FnEnd);
   llvm::PHINode *Callee = Builder.CreatePHI(FTy->getPointerTo(), 2);
@@ -452,7 +452,7 @@ ItaniumCXXABI::EmitNullMemberPointer(const MemberPointerType *MPT) {
 
   // Itanium C++ ABI 2.3:
   //   A NULL pointer is represented as -1.
-  if (MPT->isMemberDataPointer()) 
+  if (MPT->isMemberDataPointer())
     return llvm::ConstantInt::get(ptrdiff_t, -1ULL, /*isSigned=*/true);
 
   llvm::Constant *Zero = llvm::ConstantInt::get(ptrdiff_t, 0);
@@ -528,7 +528,7 @@ llvm::Constant *ItaniumCXXABI::BuildMemberPointer(const CXXMethodDecl *MD,
     MemPtr[1] = llvm::ConstantInt::get(ptrdiff_t, (IsARM ? 2 : 1) *
                                        ThisAdjustment.getQuantity());
   }
-  
+
   return llvm::ConstantStruct::getAnon(MemPtr);
 }
 
@@ -602,7 +602,7 @@ ItaniumCXXABI::EmitMemberPointerComparison(CodeGenFunction &CGF,
   //                   (L.ptr == 0 && ((L.adj|R.adj) & 1) == 0)))
   // The inequality tautologies have exactly the same structure, except
   // applying De Morgan's laws.
-  
+
   llvm::Value *LPtr = Builder.CreateExtractValue(L, 0, "lhs.memptr.ptr");
   llvm::Value *RPtr = Builder.CreateExtractValue(R, 0, "rhs.memptr.ptr");
 
@@ -655,7 +655,7 @@ ItaniumCXXABI::EmitMemberPointerIsNotNull(CodeGenFunction &CGF,
       llvm::Constant::getAllOnesValue(MemPtr->getType());
     return Builder.CreateICmpNE(MemPtr, NegativeOne, "memptr.tobool");
   }
-  
+
   // In Itanium, a member function pointer is not null if 'ptr' is not null.
   llvm::Value *Ptr = Builder.CreateExtractValue(MemPtr, 0, "memptr.ptr");
 
@@ -691,7 +691,7 @@ llvm::Value *ItaniumCXXABI::adjustToCompleteObject(CodeGenFunction &CGF,
   llvm::Value *vtable = CGF.GetVTablePtr(ptr, CGF.IntPtrTy->getPointerTo());
 
   // Track back to entry -2 and pull out the offset there.
-  llvm::Value *offsetPtr = 
+  llvm::Value *offsetPtr =
     CGF.Builder.CreateConstInBoundsGEP1_64(vtable, -2, "complete-offset.ptr");
   llvm::LoadInst *offset = CGF.Builder.CreateLoad(offsetPtr);
   offset->setAlignment(CGF.PointerAlignInBytes);
@@ -861,7 +861,7 @@ llvm::Value *ItaniumCXXABI::InitializeArrayCookie(CodeGenFunction &CGF,
   // Finally, compute a pointer to the actual data buffer by skipping
   // over the cookie completely.
   return CGF.Builder.CreateConstInBoundsGEP1_64(NewPtr,
-                                                CookieSize.getQuantity());  
+                                                CookieSize.getQuantity());
 }
 
 llvm::Value *ItaniumCXXABI::readArrayCookieImpl(CodeGenFunction &CGF,
@@ -877,7 +877,7 @@ llvm::Value *ItaniumCXXABI::readArrayCookieImpl(CodeGenFunction &CGF,
                                              numElementsOffset.getQuantity());
 
   unsigned AS = allocPtr->getType()->getPointerAddressSpace();
-  numElementsPtr = 
+  numElementsPtr =
     CGF.Builder.CreateBitCast(numElementsPtr, CGF.SizeTy->getPointerTo(AS));
   return CGF.Builder.CreateLoad(numElementsPtr);
 }
@@ -938,7 +938,7 @@ llvm::Value *ARMCXXABI::readArrayCookieImpl(CodeGenFunction &CGF,
     = CGF.Builder.CreateConstInBoundsGEP1_64(allocPtr, CGF.SizeSizeInBytes);
 
   unsigned AS = allocPtr->getType()->getPointerAddressSpace();
-  numElementsPtr = 
+  numElementsPtr =
     CGF.Builder.CreateBitCast(numElementsPtr, CGF.SizeTy->getPointerTo(AS));
   return CGF.Builder.CreateLoad(numElementsPtr);
 }
@@ -1072,7 +1072,7 @@ void ItaniumCXXABI::EmitGuardedInit(CodeGenFunction &CGF,
   //     }
   } else {
     // Load the first byte of the guard variable.
-    llvm::LoadInst *LI = 
+    llvm::LoadInst *LI =
       Builder.CreateLoad(Builder.CreateBitCast(guard, CGM.Int8PtrTy));
     LI->setAlignment(1);
 
@@ -1097,19 +1097,19 @@ void ItaniumCXXABI::EmitGuardedInit(CodeGenFunction &CGF,
   CGF.EmitBlock(InitCheckBlock);
 
   // Variables used when coping with thread-safe statics and exceptions.
-  if (threadsafe) {    
+  if (threadsafe) {
     // Call __cxa_guard_acquire.
     llvm::Value *V
       = Builder.CreateCall(getGuardAcquireFn(CGM, guardPtrTy), guard);
-               
+
     llvm::BasicBlock *InitBlock = CGF.createBasicBlock("init");
-  
+
     Builder.CreateCondBr(Builder.CreateIsNotNull(V, "tobool"),
                          InitBlock, EndBlock);
-  
+
     // Call __cxa_guard_abort along the exceptional edge.
     CGF.EHStack.pushCleanup<CallGuardAbort>(EHCleanup, guard);
-    
+
     CGF.EmitBlock(InitBlock);
   }
 

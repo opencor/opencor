@@ -27,7 +27,7 @@ class NullablePtr {
   T *Ptr;
 public:
   NullablePtr(T *P = 0) : Ptr(P) {}
-  
+
   bool isNull() const { return Ptr == 0; }
   bool isNonNull() const { return Ptr != 0; }
 
@@ -42,11 +42,11 @@ public:
     assert(Ptr && "Pointer wasn't checked for null!");
     return Ptr;
   }
-  
+
   T *getPtrOrNull() { return Ptr; }
   const T *getPtrOrNull() const { return Ptr; }
 };
-  
+
 } // end namespace llvm
 
 #endif

@@ -549,7 +549,7 @@ void ExeDepsFix::visitSoftInstr(MachineInstr *mi, unsigned mask) {
         // Is it possible to use this collapsed register for free?
         if (dv->isCollapsed()) {
           // Restrict available domains to the ones in common with the operand.
-          // If there are no common domains, we must pay the cross-domain 
+          // If there are no common domains, we must pay the cross-domain
           // penalty for this operand.
           if (common) available = common;
         } else if (common)

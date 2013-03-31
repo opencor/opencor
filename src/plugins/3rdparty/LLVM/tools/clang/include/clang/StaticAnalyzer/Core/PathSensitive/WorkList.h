@@ -19,7 +19,7 @@
 #include <cstddef>
 
 namespace clang {
-  
+
 class CFGBlock;
 
 namespace ento {
@@ -49,13 +49,13 @@ public:
 
   /// Returns the node associated with the worklist unit.
   ExplodedNode *getNode() const { return node; }
-  
+
   /// Returns the block counter map associated with the worklist unit.
   BlockCounter getBlockCounter() const { return counter; }
 
   /// Returns the CFGblock associated with the worklist unit.
   const CFGBlock *getBlock() const { return block; }
-  
+
   /// Return the index within the CFGBlock for the worklist unit.
   unsigned getIndex() const { return blockIdx; }
 };
@@ -89,7 +89,7 @@ public:
     virtual bool visit(const WorkListUnit &U) = 0;
   };
   virtual bool visitItemsInWorkList(Visitor &V) = 0;
-  
+
   static WorkList *makeDFS();
   static WorkList *makeBFS();
   static WorkList *makeBFSBlockDFSContents();

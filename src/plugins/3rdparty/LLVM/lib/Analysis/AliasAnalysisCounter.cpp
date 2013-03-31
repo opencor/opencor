@@ -96,7 +96,7 @@ namespace {
         return (AliasAnalysis*)this;
       return this;
     }
-    
+
     // FIXME: We could count these too...
     bool pointsToConstantMemory(const Location &Loc, bool OrLocal) {
       return getAnalysis<AliasAnalysis>().pointsToConstantMemory(Loc, OrLocal);

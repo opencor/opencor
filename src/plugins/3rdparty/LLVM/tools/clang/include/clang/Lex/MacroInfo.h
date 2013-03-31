@@ -50,7 +50,7 @@ class MacroInfo {
   ///
   /// If invalid, this macro has not been explicitly given any visibility.
   SourceLocation VisibilityLocation;
-  
+
   /// \brief This is the list of tokens that the macro is defined to.
   SmallVector<Token, 8> ReplacementTokens;
 
@@ -81,7 +81,7 @@ class MacroInfo {
 
   /// \brief Whether this macro changed after it was loaded from an AST file.
   bool ChangedAfterLoad : 1;
-  
+
 private:
   //===--------------------------------------------------------------------===//
   // State that changes as the macro is used.
@@ -102,7 +102,7 @@ private:
 
   /// \brief Must warn if the macro is unused at the end of translation unit.
   bool IsWarnIfUnused : 1;
-   
+
   /// \brief Whether the macro has public (when described in a module).
   bool IsPublic : 1;
 
@@ -122,7 +122,7 @@ private:
 public:
   MacroInfo(SourceLocation DefLoc);
   MacroInfo(const MacroInfo &MI, llvm::BumpPtrAllocator &PPAllocator);
-  
+
   /// FreeArgumentList - Free the argument list of the macro, restoring it to a
   /// state where it can be reused for other devious purposes.
   void FreeArgumentList() {
@@ -195,7 +195,7 @@ public:
     IsUsed = Val;
   }
 
-  /// setIsAllowRedefinitionsWithoutWarning - Set the value of the 
+  /// setIsAllowRedefinitionsWithoutWarning - Set the value of the
   /// IsAllowRedefinitionsWithoutWarning flag.
   void setIsAllowRedefinitionsWithoutWarning(bool Val) {
     IsAllowRedefinitionsWithoutWarning = Val;
@@ -262,11 +262,11 @@ public:
   /// \brief Determine whether this macro has changed since it was loaded from
   /// an AST file.
   bool hasChangedAfterLoad() const { return ChangedAfterLoad; }
-  
+
   /// \brief Note whether this macro has changed after it was loaded from an
   /// AST file.
   void setChangedAfterLoad(bool CAL = true) { ChangedAfterLoad = CAL; }
-  
+
   /// isUsed - Return false if this macro is defined in the main file and has
   /// not yet been used.
   bool isUsed() const { return IsUsed; }
@@ -329,7 +329,7 @@ public:
   /// \brief Determine whether this macro is part of the public API of its
   /// module.
   bool isPublic() const { return IsPublic; }
-  
+
   /// \brief Determine the location where this macro was explicitly made
   /// public or private within its module.
   SourceLocation getVisibilityLocation() { return VisibilityLocation; }
@@ -350,7 +350,7 @@ public:
 
   /// \brief Set whether this macro definition is ambiguous.
   void setAmbiguous(bool Val) { IsAmbiguous = Val; }
-  
+
 private:
   unsigned getDefinitionLengthSlow(SourceManager &SM) const;
 };

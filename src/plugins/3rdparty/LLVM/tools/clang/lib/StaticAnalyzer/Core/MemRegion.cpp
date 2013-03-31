@@ -692,7 +692,7 @@ getStackOrCaptureRegionForDeclContext(const LocationContext *LC,
             return cast<VarRegion>(I.getCapturedRegion());
       }
     }
-    
+
     LC = LC->getParent();
   }
   return (const StackFrameContext*)0;
@@ -724,18 +724,18 @@ const VarRegion* MemRegionManager::getVarRegion(const VarDecl *D,
       else
         sReg = getGlobalsRegion();
     }
-  
-  // Finally handle static locals.  
+
+  // Finally handle static locals.
   } else {
     // FIXME: Once we implement scope handling, we will need to properly lookup
     // 'D' to the proper LocationContext.
     const DeclContext *DC = D->getDeclContext();
     llvm::PointerUnion<const StackFrameContext *, const VarRegion *> V =
       getStackOrCaptureRegionForDeclContext(LC, DC, D);
-    
+
     if (V.is<const VarRegion*>())
       return V.get<const VarRegion*>();
-    
+
     const StackFrameContext *STC = V.get<const StackFrameContext*>();
 
     if (!STC)
@@ -1111,7 +1111,7 @@ RegionOffset MemRegion::getAsOffset() const {
         // (This will at least be self-consistent for the life of the symbol.)
         Ty = SR->getSymbol()->getType()->getPointeeType();
       }
-      
+
       const CXXRecordDecl *Child = Ty->getAsCXXRecordDecl();
       if (!Child) {
         // We cannot compute the offset of the base class.
@@ -1150,7 +1150,7 @@ RegionOffset MemRegion::getAsOffset() const {
       SVal Index = ER->getIndex();
       if (const nonloc::ConcreteInt *CI=dyn_cast<nonloc::ConcreteInt>(&Index)) {
         // Don't bother calculating precise offsets if we already have a
-        // symbolic offset somewhere in the chain. 
+        // symbolic offset somewhere in the chain.
         if (SymbolicOffsetBase)
           continue;
 
@@ -1184,7 +1184,7 @@ RegionOffset MemRegion::getAsOffset() const {
 
       // Get the field number.
       unsigned idx = 0;
-      for (RecordDecl::field_iterator FI = RD->field_begin(), 
+      for (RecordDecl::field_iterator FI = RD->field_begin(),
              FE = RD->field_end(); FI != FE; ++FI, ++idx)
         if (FR->getDecl() == *FI)
           break;
@@ -1269,10 +1269,10 @@ BlockDataRegion::referenced_vars_begin() const {
 
   if (Vec == (void*) 0x1)
     return BlockDataRegion::referenced_vars_iterator(0, 0);
-  
+
   BumpVector<const MemRegion*> *VecOriginal =
     static_cast<BumpVector<const MemRegion*>*>(OriginalVars);
-  
+
   return BlockDataRegion::referenced_vars_iterator(Vec->begin(),
                                                    VecOriginal->begin());
 }
@@ -1286,7 +1286,7 @@ BlockDataRegion::referenced_vars_end() const {
 
   if (Vec == (void*) 0x1)
     return BlockDataRegion::referenced_vars_iterator(0, 0);
-  
+
   BumpVector<const MemRegion*> *VecOriginal =
     static_cast<BumpVector<const MemRegion*>*>(OriginalVars);
 

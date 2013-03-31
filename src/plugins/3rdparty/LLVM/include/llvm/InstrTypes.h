@@ -209,7 +209,7 @@ public:
     BO->setHasNoSignedWrap(true);
     return BO;
   }
-  
+
   static BinaryOperator *CreateNUW(BinaryOps Opc, Value *V1, Value *V2,
                                    const Twine &Name = "") {
     BinaryOperator *BO = Create(Opc, V1, V2, Name);
@@ -228,7 +228,7 @@ public:
     BO->setHasNoUnsignedWrap(true);
     return BO;
   }
-  
+
   static BinaryOperator *CreateExact(BinaryOps Opc, Value *V1, Value *V2,
                                      const Twine &Name = "") {
     BinaryOperator *BO = Create(Opc, V1, V2, Name);
@@ -247,7 +247,7 @@ public:
     BO->setIsExact(true);
     return BO;
   }
-  
+
 #define DEFINE_HELPERS(OPC, NUWNSWEXACT)                                     \
   static BinaryOperator *Create ## NUWNSWEXACT ## OPC                        \
            (Value *V1, Value *V2, const Twine &Name = "") {                  \
@@ -261,7 +261,7 @@ public:
            (Value *V1, Value *V2, const Twine &Name, Instruction *I) {       \
     return Create ## NUWNSWEXACT(Instruction::OPC, V1, V2, Name, I);         \
   }
-  
+
   DEFINE_HELPERS(Add, NSW)  // CreateNSWAdd
   DEFINE_HELPERS(Add, NUW)  // CreateNUWAdd
   DEFINE_HELPERS(Sub, NSW)  // CreateNSWSub
@@ -277,7 +277,7 @@ public:
   DEFINE_HELPERS(LShr, Exact)  // CreateExactLShr
 
 #undef DEFINE_HELPERS
-  
+
   /// Helper functions to construct and inspect unary operations (NEG and NOT)
   /// via binary operators SUB and XOR:
   ///
@@ -698,7 +698,7 @@ public:
   /// @brief Create a CmpInst
   static CmpInst *Create(OtherOps Op, unsigned short predicate, Value *S1,
                          Value *S2, const Twine &Name, BasicBlock *InsertAtEnd);
-  
+
   /// @brief Get the opcode casted to the right type
   OtherOps getOpcode() const {
     return static_cast<OtherOps>(Instruction::getOpcode());
@@ -715,15 +715,15 @@ public:
   static bool isFPPredicate(Predicate P) {
     return P >= FIRST_FCMP_PREDICATE && P <= LAST_FCMP_PREDICATE;
   }
-  
+
   static bool isIntPredicate(Predicate P) {
     return P >= FIRST_ICMP_PREDICATE && P <= LAST_ICMP_PREDICATE;
   }
-  
+
   bool isFPPredicate() const { return isFPPredicate(getPredicate()); }
   bool isIntPredicate() const { return isIntPredicate(getPredicate()); }
-  
-  
+
+
   /// For example, EQ -> NE, UGT -> ULE, SLT -> SGE,
   ///              OEQ -> UNE, UGT -> OLE, OLT -> UGE, etc.
   /// @returns the inverse predicate for the instruction's current predicate.
@@ -821,7 +821,7 @@ public:
   static inline bool classof(const Value *V) {
     return isa<Instruction>(V) && classof(cast<Instruction>(V));
   }
-  
+
   /// @brief Create a result type for fcmp/icmp
   static Type* makeCmpResultType(Type* opnd_type) {
     if (VectorType* vt = dyn_cast<VectorType>(opnd_type)) {

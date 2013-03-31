@@ -95,9 +95,9 @@ public:
 
 private:
   DependentDiagnostic(const PartialDiagnostic &PDiag,
-                      PartialDiagnostic::Storage *Storage) 
+                      PartialDiagnostic::Storage *Storage)
     : Diag(PDiag, Storage) {}
-  
+
   static DependentDiagnostic *Create(ASTContext &Context,
                                      DeclContext *Parent,
                                      const PartialDiagnostic &PDiag);
@@ -120,7 +120,7 @@ private:
   };
 };
 
-/// 
+///
 
 /// An iterator over the dependent diagnostics in a dependent context.
 class DeclContext::ddiag_iterator {

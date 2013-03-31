@@ -348,7 +348,7 @@ class CFGBlock {
 
 public:
   explicit CFGBlock(unsigned blockid, BumpVectorContext &C, CFG *parent)
-    : Elements(C), Label(NULL), Terminator(NULL), LoopTarget(NULL), 
+    : Elements(C), Label(NULL), Terminator(NULL), LoopTarget(NULL),
       BlockID(blockid), Preds(C, 1), Succs(C, 1), HasNoReturnElement(false),
       Parent(parent) {}
   ~CFGBlock() {}
@@ -747,7 +747,7 @@ public:
   unsigned getNumBlockIDs() const { return NumBlockIDs; }
 
   /// size - Return the total number of CFGBlocks within the CFG
-  /// This is simply a renaming of the getNumBlockIDs(). This is necessary 
+  /// This is simply a renaming of the getNumBlockIDs(). This is necessary
   /// because the dominator implementation needs such an interface.
   unsigned size() const { return NumBlockIDs; }
 

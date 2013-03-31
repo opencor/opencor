@@ -174,7 +174,7 @@ void FixItRewriter::HandleDiagnostic(DiagnosticsEngine::Level DiagLevel,
     }
     return;
   }
-  
+
   if (!Editor.commit(commit)) {
     ++NumFailures;
     Diag(Info.getLocation(), diag::note_fixit_failed);
@@ -198,7 +198,7 @@ void FixItRewriter::Diag(SourceLocation Loc, unsigned DiagID) {
 }
 
 DiagnosticConsumer *FixItRewriter::clone(DiagnosticsEngine &Diags) const {
-  return new FixItRewriter(Diags, Diags.getSourceManager(), 
+  return new FixItRewriter(Diags, Diags.getSourceManager(),
                            Rewrite.getLangOpts(), FixItOpts);
 }
 

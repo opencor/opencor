@@ -42,7 +42,7 @@ BasicBlock *llvm::CloneBasicBlock(const BasicBlock *BB,
   if (BB->hasName()) NewBB->setName(BB->getName()+NameSuffix);
 
   bool hasCalls = false, hasDynamicAllocas = false, hasStaticAllocas = false;
-  
+
   // Loop over all instructions, and copy them over.
   for (BasicBlock::const_iterator II = BB->begin(), IE = BB->end();
        II != IE; ++II) {
@@ -51,7 +51,7 @@ BasicBlock *llvm::CloneBasicBlock(const BasicBlock *BB,
       NewInst->setName(II->getName()+NameSuffix);
     NewBB->getInstList().push_back(NewInst);
     VMap[II] = NewInst;                // Add instruction map to value.
-    
+
     hasCalls |= (isa<CallInst>(II) && !isa<DbgInfoIntrinsic>(II));
     if (const AllocaInst *AI = dyn_cast<AllocaInst>(II)) {
       if (isa<ConstantInt>(AI->getArraySize()))
@@ -60,11 +60,11 @@ BasicBlock *llvm::CloneBasicBlock(const BasicBlock *BB,
         hasDynamicAllocas = true;
     }
   }
-  
+
   if (CodeInfo) {
     CodeInfo->ContainsCalls          |= hasCalls;
     CodeInfo->ContainsDynamicAllocas |= hasDynamicAllocas;
-    CodeInfo->ContainsDynamicAllocas |= hasStaticAllocas && 
+    CodeInfo->ContainsDynamicAllocas |= hasStaticAllocas &&
                                         BB != &BB->getParent()->getEntryBlock();
   }
   return NewBB;
@@ -82,7 +82,7 @@ void llvm::CloneFunctionInto(Function *NewFunc, const Function *OldFunc,
   assert(NameSuffix && "NameSuffix cannot be null!");
 
 #ifndef NDEBUG
-  for (Function::const_arg_iterator I = OldFunc->arg_begin(), 
+  for (Function::const_arg_iterator I = OldFunc->arg_begin(),
        E = OldFunc->arg_end(); I != E; ++I)
     assert(VMap.count(I) && "No mapping from source argument specified!");
 #endif
@@ -92,7 +92,7 @@ void llvm::CloneFunctionInto(Function *NewFunc, const Function *OldFunc,
     NewFunc->copyAttributesFrom(OldFunc);
   else {
     //Some arguments were deleted with the VMap. Copy arguments one by one
-    for (Function::const_arg_iterator I = OldFunc->arg_begin(), 
+    for (Function::const_arg_iterator I = OldFunc->arg_begin(),
            E = OldFunc->arg_end(); I != E; ++I)
       if (Argument* Anew = dyn_cast<Argument>(VMap[I]))
         Anew->addAttr( OldFunc->getAttributes()
@@ -133,7 +133,7 @@ void llvm::CloneFunctionInto(Function *NewFunc, const Function *OldFunc,
     if (BB.hasAddressTaken()) {
       Constant *OldBBAddr = BlockAddress::get(const_cast<Function*>(OldFunc),
                                               const_cast<BasicBlock*>(&BB));
-      VMap[OldBBAddr] = BlockAddress::get(NewFunc, CBB);                                         
+      VMap[OldBBAddr] = BlockAddress::get(NewFunc, CBB);
     }
 
     // Note return instructions for the caller.
@@ -211,7 +211,7 @@ namespace {
     PruningFunctionCloner(Function *newFunc, const Function *oldFunc,
                           ValueToValueMapTy &valueMap,
                           bool moduleLevelChanges,
-                          const char *nameSuffix, 
+                          const char *nameSuffix,
                           ClonedCodeInfo *codeInfo,
                           const DataLayout *td)
     : NewFunc(newFunc), OldFunc(oldFunc),
@@ -234,7 +234,7 @@ void PruningFunctionCloner::CloneBlock(const BasicBlock *BB,
 
   // Have we already cloned this block?
   if (BBEntry) return;
-  
+
   // Nope, clone it now.
   BasicBlock *NewBB;
   BBEntry = NewBB = BasicBlock::Create(BB->getContext());
@@ -254,10 +254,10 @@ void PruningFunctionCloner::CloneBlock(const BasicBlock *BB,
                                             const_cast<BasicBlock*>(BB));
     VMap[OldBBAddr] = BlockAddress::get(NewFunc, NewBB);
   }
-    
+
 
   bool hasCalls = false, hasDynamicAllocas = false, hasStaticAllocas = false;
-  
+
   // Loop over all instructions, and copy them over, DCE'ing as we go.  This
   // loop doesn't include the terminator.
   for (BasicBlock::const_iterator II = BB->begin(), IE = --BB->end();
@@ -297,7 +297,7 @@ void PruningFunctionCloner::CloneBlock(const BasicBlock *BB,
         hasDynamicAllocas = true;
     }
   }
-  
+
   // Finally, clone over the terminator.
   const TerminatorInst *OldTI = BB->getTerminator();
   bool TerminatorDone = false;
@@ -334,24 +334,24 @@ void PruningFunctionCloner::CloneBlock(const BasicBlock *BB,
       TerminatorDone = true;
     }
   }
-  
+
   if (!TerminatorDone) {
     Instruction *NewInst = OldTI->clone();
     if (OldTI->hasName())
       NewInst->setName(OldTI->getName()+NameSuffix);
     NewBB->getInstList().push_back(NewInst);
     VMap[OldTI] = NewInst;             // Add instruction map to value.
-    
+
     // Recursively clone any reachable successor blocks.
     const TerminatorInst *TI = BB->getTerminator();
     for (unsigned i = 0, e = TI->getNumSuccessors(); i != e; ++i)
       ToClone.push_back(TI->getSuccessor(i));
   }
-  
+
   if (CodeInfo) {
     CodeInfo->ContainsCalls          |= hasCalls;
     CodeInfo->ContainsDynamicAllocas |= hasDynamicAllocas;
-    CodeInfo->ContainsDynamicAllocas |= hasStaticAllocas && 
+    CodeInfo->ContainsDynamicAllocas |= hasStaticAllocas &&
       BB != &BB->getParent()->front();
   }
 }
@@ -367,14 +367,14 @@ void llvm::CloneAndPruneFunctionInto(Function *NewFunc, const Function *OldFunc,
                                      ValueToValueMapTy &VMap,
                                      bool ModuleLevelChanges,
                                      SmallVectorImpl<ReturnInst*> &Returns,
-                                     const char *NameSuffix, 
+                                     const char *NameSuffix,
                                      ClonedCodeInfo *CodeInfo,
                                      const DataLayout *TD,
                                      Instruction *TheCall) {
   assert(NameSuffix && "NameSuffix cannot be null!");
-  
+
 #ifndef NDEBUG
-  for (Function::const_arg_iterator II = OldFunc->arg_begin(), 
+  for (Function::const_arg_iterator II = OldFunc->arg_begin(),
        E = OldFunc->arg_end(); II != E; ++II)
     assert(VMap.count(II) && "No mapping from source argument specified!");
 #endif
@@ -390,7 +390,7 @@ void llvm::CloneAndPruneFunctionInto(Function *NewFunc, const Function *OldFunc,
     CloneWorklist.pop_back();
     PFC.CloneBlock(BB, CloneWorklist);
   }
-  
+
   // Loop over all of the basic blocks in the old function.  If the block was
   // reachable, we have cloned it and the old block is now in the value map:
   // insert it into the new function in the right order.  If not, ignore it.
@@ -419,7 +419,7 @@ void llvm::CloneAndPruneFunctionInto(Function *NewFunc, const Function *OldFunc,
     RemapInstruction(NewBB->getTerminator(), VMap,
                      ModuleLevelChanges ? RF_None : RF_NoModuleLevelChanges);
   }
-  
+
   // Defer PHI resolution until rest of function is resolved, PHI resolution
   // requires the CFG to be up-to-date.
   for (unsigned phino = 0, e = PHIToResolve.size(); phino != e; ) {
@@ -438,7 +438,7 @@ void llvm::CloneAndPruneFunctionInto(Function *NewFunc, const Function *OldFunc,
         Value *V = VMap[PN->getIncomingBlock(pred)];
         if (BasicBlock *MappedBlock = cast_or_null<BasicBlock>(V)) {
           Value *InVal = MapValue(PN->getIncomingValue(pred),
-                                  VMap, 
+                                  VMap,
                         ModuleLevelChanges ? RF_None : RF_NoModuleLevelChanges);
           assert(InVal && "Unknown input value?");
           PN->setIncomingValue(pred, InVal);
@@ -447,9 +447,9 @@ void llvm::CloneAndPruneFunctionInto(Function *NewFunc, const Function *OldFunc,
           PN->removeIncomingValue(pred, false);
           --pred, --e;  // Revisit the next entry.
         }
-      } 
+      }
     }
-    
+
     // The loop above has removed PHI entries for those blocks that are dead
     // and has updated others.  However, if a block is live (i.e. copied over)
     // but its terminator has been changed to not go to this block, then our
@@ -464,11 +464,11 @@ void llvm::CloneAndPruneFunctionInto(Function *NewFunc, const Function *OldFunc,
       for (pred_iterator PI = pred_begin(NewBB), E = pred_end(NewBB);
            PI != E; ++PI)
         --PredCount[*PI];
-      
+
       // Figure out how many entries to remove from each PHI.
       for (unsigned i = 0, e = PN->getNumIncomingValues(); i != e; ++i)
         ++PredCount[PN->getIncomingBlock(i)];
-      
+
       // At this point, the excess predecessor entries are positive in the
       // map.  Loop over all of the PHIs and remove excess predecessor
       // entries.
@@ -482,7 +482,7 @@ void llvm::CloneAndPruneFunctionInto(Function *NewFunc, const Function *OldFunc,
         }
       }
     }
-    
+
     // If the loops above have made these phi nodes have 0 or 1 operand,
     // replace them with undef or the input value.  We must do this for
     // correctness, because 0-operand phis are not valid.
@@ -538,7 +538,7 @@ void llvm::CloneAndPruneFunctionInto(Function *NewFunc, const Function *OldFunc,
 
     BranchInst *BI = dyn_cast<BranchInst>(I->getTerminator());
     if (!BI || BI->isConditional()) { ++I; continue; }
-    
+
     BasicBlock *Dest = BI->getSuccessor(0);
     if (!Dest->getSinglePredecessor()) {
       ++I; continue;
@@ -551,16 +551,16 @@ void llvm::CloneAndPruneFunctionInto(Function *NewFunc, const Function *OldFunc,
     // We know all single-entry PHI nodes in the inlined function have been
     // removed, so we just need to splice the blocks.
     BI->eraseFromParent();
-    
+
     // Make all PHI nodes that referred to Dest now refer to I as their source.
     Dest->replaceAllUsesWith(I);
 
     // Move all the instructions in the succ to the pred.
     I->getInstList().splice(I->end(), Dest->getInstList());
-    
+
     // Remove the dest block.
     Dest->eraseFromParent();
-    
+
     // Do not increment I, iteratively merge all things this block branches to.
   }
 

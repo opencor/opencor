@@ -566,14 +566,14 @@ public:
       VectorType *VTy = cast<VectorType>(Ty);
       Type *Elm = VTy->getElementType();
       // Lower vectors of pointers to native pointer types.
-      if (Elm->isPointerTy()) 
+      if (Elm->isPointerTy())
         Elm = EVT(PointerTy).getTypeForEVT(Ty->getContext());
       return EVT::getVectorVT(Ty->getContext(), EVT::getEVT(Elm, false),
                        VTy->getNumElements());
     }
     return EVT::getEVT(Ty, AllowUnknown);
   }
-  
+
 
   /// getByValTypeAlignment - Return the desired alignment for ByVal aggregate
   /// function arguments in the caller parameter area.  This is the actual

@@ -100,7 +100,7 @@ static bool EvaluateDefined(PPValue &Result, Token &PeekTok, DefinedTracker &DT,
     PP.setCodeCompletionReached();
     PP.LexUnexpandedNonComment(PeekTok);
   }
-  
+
   // If we don't have a pp-identifier now, this is an error.
   if ((II = PeekTok.getIdentifierInfo()) == 0) {
     PP.Diag(PeekTok, diag::err_pp_defined_requires_identifier);
@@ -165,7 +165,7 @@ static bool EvaluateValue(PPValue &Result, Token &PeekTok, DefinedTracker &DT,
     PP.setCodeCompletionReached();
     PP.LexNonComment(PeekTok);
   }
-      
+
   // If this token's spelling is a pp-identifier, check to see if it is
   // 'defined' or if it is a macro.  Note that we check here because many
   // keywords are pp-identifiers, so we can't check the kind.
@@ -173,7 +173,7 @@ static bool EvaluateValue(PPValue &Result, Token &PeekTok, DefinedTracker &DT,
     // Handle "defined X" and "defined(X)".
     if (II->isStr("defined"))
       return(EvaluateDefined(Result, PeekTok, DT, ValueLive, PP));
-    
+
     // If this identifier isn't 'defined' or one of the special
     // preprocessor keywords and it wasn't macro expanded, it turns
     // into a simple 0, unless it is the C++ keyword "true", in which case it
@@ -201,7 +201,7 @@ static bool EvaluateValue(PPValue &Result, Token &PeekTok, DefinedTracker &DT,
   case tok::numeric_constant: {
     SmallString<64> IntegerBuffer;
     bool NumberInvalid = false;
-    StringRef Spelling = PP.getSpelling(PeekTok, IntegerBuffer, 
+    StringRef Spelling = PP.getSpelling(PeekTok, IntegerBuffer,
                                               &NumberInvalid);
     if (NumberInvalid)
       return true; // a diagnostic was already reported
@@ -732,11 +732,11 @@ EvaluateDirectiveExpression(IdentifierInfo *&IfNDefMacro) {
   // expression.
   bool DisableMacroExpansionAtStartOfDirective = DisableMacroExpansion;
   DisableMacroExpansion = false;
-  
+
   // Peek ahead one token.
   Token Tok;
   LexNonComment(Tok);
-  
+
   // C99 6.10.1p3 - All expressions are evaluated as intmax_t or uintmax_t.
   unsigned BitWidth = getTargetInfo().getIntMaxTWidth();
 
@@ -746,7 +746,7 @@ EvaluateDirectiveExpression(IdentifierInfo *&IfNDefMacro) {
     // Parse error, skip the rest of the macro line.
     if (Tok.isNot(tok::eod))
       DiscardUntilEndOfDirective();
-    
+
     // Restore 'DisableMacroExpansion'.
     DisableMacroExpansion = DisableMacroExpansionAtStartOfDirective;
     return false;
@@ -773,7 +773,7 @@ EvaluateDirectiveExpression(IdentifierInfo *&IfNDefMacro) {
     // Parse error, skip the rest of the macro line.
     if (Tok.isNot(tok::eod))
       DiscardUntilEndOfDirective();
-    
+
     // Restore 'DisableMacroExpansion'.
     DisableMacroExpansion = DisableMacroExpansionAtStartOfDirective;
     return false;

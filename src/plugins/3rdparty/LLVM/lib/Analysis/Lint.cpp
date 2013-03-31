@@ -16,7 +16,7 @@
 // those aren't comprehensive either. Second, many conditions cannot be
 // checked statically. This pass does no dynamic instrumentation, so it
 // can't check for all possible problems.
-// 
+//
 // Another limitation is that it assumes all code will be executed. A store
 // through a null pointer in a basic block which is never reached is harmless,
 // but this pass will warn about it anyway. This is the main reason why most
@@ -26,12 +26,12 @@
 // less obvious. If an optimization pass appears to be introducing a warning,
 // it may be that the optimization pass is merely exposing an existing
 // condition in the code.
-// 
+//
 // This code may be run before instcombine. In many cases, instcombine checks
 // for the same kinds of things and turns instructions with undefined behavior
 // into unreachable (or equivalent). Because of this, this pass makes some
 // effort to look through bitcasts and so on.
-// 
+//
 //===----------------------------------------------------------------------===//
 
 #include "llvm/Analysis/Passes.h"

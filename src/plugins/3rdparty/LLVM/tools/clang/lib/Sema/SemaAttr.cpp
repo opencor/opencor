@@ -259,7 +259,7 @@ void Sema::ActOnPragmaPack(PragmaPackKind Kind, IdentifierInfo *Name,
   }
 }
 
-void Sema::ActOnPragmaMSStruct(PragmaMSStructKind Kind) { 
+void Sema::ActOnPragmaMSStruct(PragmaMSStructKind Kind) {
   MSStructPragmaOn = (Kind == PMSST_ON);
 }
 
@@ -368,7 +368,7 @@ void Sema::ActOnPragmaFPContract(tok::OnOffSwitch OOS) {
     FPFeatures.fp_contract = 1;
     break;
   case tok::OOS_OFF:
-    FPFeatures.fp_contract = 0; 
+    FPFeatures.fp_contract = 0;
     break;
   case tok::OOS_DEFAULT:
     FPFeatures.fp_contract = getLangOpts().DefaultFPContract;

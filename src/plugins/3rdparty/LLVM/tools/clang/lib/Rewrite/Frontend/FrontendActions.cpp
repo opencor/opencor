@@ -125,9 +125,9 @@ bool FixItRecompile::BeginInvocation(CompilerInstance &CI) {
       FixItRewriter Rewriter(CI.getDiagnostics(), CI.getSourceManager(),
                              CI.getLangOpts(), FixItOpts.get());
       FixAction->Execute();
-  
+
       err = Rewriter.WriteFixedFiles(&RewrittenFiles);
-    
+
       FixAction->EndSourceFile();
       CI.setSourceManager(0);
       CI.setFileManager(0);

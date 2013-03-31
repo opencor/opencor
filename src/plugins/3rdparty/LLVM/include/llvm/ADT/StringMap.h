@@ -231,7 +231,7 @@ class StringMap : public StringMapImpl {
   AllocatorTy Allocator;
 public:
   typedef StringMapEntry<ValueTy> MapEntryTy;
-  
+
   StringMap() : StringMapImpl(static_cast<unsigned>(sizeof(MapEntryTy))) {}
   explicit StringMap(unsigned InitialSize)
     : StringMapImpl(InitialSize, static_cast<unsigned>(sizeof(MapEntryTy))) {}

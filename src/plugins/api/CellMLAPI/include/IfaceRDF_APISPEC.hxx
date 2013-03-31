@@ -27,13 +27,13 @@ namespace iface
     class PlainLiteral;
     class TypedLiteral;
     class Container;
-    PUBLIC_RDFAPISPEC_PRE 
+    PUBLIC_RDFAPISPEC_PRE
     class  PUBLIC_RDFAPISPEC_POST RDFProcessingError : public std::exception
     {
     public:
       RDFProcessingError(){}
     };
-    PUBLIC_RDFAPISPEC_PRE 
+    PUBLIC_RDFAPISPEC_PRE
     class  PUBLIC_RDFAPISPEC_POST DataSource
      : public virtual iface::XPCOM::IObject
     {
@@ -46,7 +46,7 @@ namespace iface
       virtual already_AddRefd<iface::rdf_api::TypedLiteral>  getTypedLiteral(const std::wstring& aForm, const std::wstring& datatypeURI) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::rdf_api::TripleSet>  getAllTriples() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_RDFAPISPEC_PRE 
+    PUBLIC_RDFAPISPEC_PRE
     class  PUBLIC_RDFAPISPEC_POST Node
      : public virtual iface::XPCOM::IObject
     {
@@ -56,7 +56,7 @@ namespace iface
       virtual already_AddRefd<iface::rdf_api::TripleSet>  getTriplesInto() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::rdf_api::TripleSet>  getTriplesIntoByPredicate(iface::rdf_api::Resource* aPredicate) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_RDFAPISPEC_PRE 
+    PUBLIC_RDFAPISPEC_PRE
     class  PUBLIC_RDFAPISPEC_POST Resource
      : public virtual iface::rdf_api::Node
     {
@@ -75,7 +75,7 @@ namespace iface
       virtual bool hasTripleOutOfWithPredicateAndObject(iface::rdf_api::Resource* aPredicate, iface::rdf_api::Node* aObject) throw(std::exception&) = 0;
       virtual already_AddRefd<iface::rdf_api::Triple>  getTripleOutOfByPredicateAndObject(iface::rdf_api::Resource* aPredicate, iface::rdf_api::Node* aObject) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_RDFAPISPEC_PRE 
+    PUBLIC_RDFAPISPEC_PRE
     class  PUBLIC_RDFAPISPEC_POST NodeIterator
      : public virtual iface::XPCOM::IObject
     {
@@ -84,7 +84,7 @@ namespace iface
       virtual ~NodeIterator() {}
       virtual already_AddRefd<iface::rdf_api::Node>  getNextNode() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_RDFAPISPEC_PRE 
+    PUBLIC_RDFAPISPEC_PRE
     class  PUBLIC_RDFAPISPEC_POST Container
      : public virtual iface::XPCOM::IObject
     {
@@ -100,7 +100,7 @@ namespace iface
       virtual void renumberContainer() throw(std::exception&) = 0;
       virtual already_AddRefd<iface::rdf_api::Container>  mergeWith(iface::rdf_api::Container* aContainer) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_RDFAPISPEC_PRE 
+    PUBLIC_RDFAPISPEC_PRE
     class  PUBLIC_RDFAPISPEC_POST BlankNode
      : public virtual iface::rdf_api::Resource
     {
@@ -108,7 +108,7 @@ namespace iface
       static const char* INTERFACE_NAME() { return "rdf_api::BlankNode"; }
       virtual ~BlankNode() {}
     };
-    PUBLIC_RDFAPISPEC_PRE 
+    PUBLIC_RDFAPISPEC_PRE
     class  PUBLIC_RDFAPISPEC_POST URIReference
      : public virtual iface::rdf_api::Resource
     {
@@ -117,7 +117,7 @@ namespace iface
       virtual ~URIReference() {}
       virtual std::wstring URI() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_RDFAPISPEC_PRE 
+    PUBLIC_RDFAPISPEC_PRE
     class  PUBLIC_RDFAPISPEC_POST Literal
      : public virtual iface::rdf_api::Node
     {
@@ -126,7 +126,7 @@ namespace iface
       virtual ~Literal() {}
       virtual std::wstring lexicalForm() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_RDFAPISPEC_PRE 
+    PUBLIC_RDFAPISPEC_PRE
     class  PUBLIC_RDFAPISPEC_POST PlainLiteral
      : public virtual iface::rdf_api::Literal
     {
@@ -135,7 +135,7 @@ namespace iface
       virtual ~PlainLiteral() {}
       virtual std::wstring language() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_RDFAPISPEC_PRE 
+    PUBLIC_RDFAPISPEC_PRE
     class  PUBLIC_RDFAPISPEC_POST TypedLiteral
      : public virtual iface::rdf_api::Literal
     {
@@ -144,7 +144,7 @@ namespace iface
       virtual ~TypedLiteral() {}
       virtual std::wstring datatypeURI() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_RDFAPISPEC_PRE 
+    PUBLIC_RDFAPISPEC_PRE
     class  PUBLIC_RDFAPISPEC_POST Triple
      : public virtual iface::XPCOM::IObject
     {
@@ -156,7 +156,7 @@ namespace iface
       virtual already_AddRefd<iface::rdf_api::Node>  object() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void unassert() throw(std::exception&) = 0;
     };
-    PUBLIC_RDFAPISPEC_PRE 
+    PUBLIC_RDFAPISPEC_PRE
     class  PUBLIC_RDFAPISPEC_POST TripleEnumerator
      : public virtual iface::XPCOM::IObject
     {
@@ -165,7 +165,7 @@ namespace iface
       virtual ~TripleEnumerator() {}
       virtual already_AddRefd<iface::rdf_api::Triple>  getNextTriple() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_RDFAPISPEC_PRE 
+    PUBLIC_RDFAPISPEC_PRE
     class  PUBLIC_RDFAPISPEC_POST TripleSet
      : public virtual iface::XPCOM::IObject
     {
@@ -174,7 +174,7 @@ namespace iface
       virtual ~TripleSet() {}
       virtual already_AddRefd<iface::rdf_api::TripleEnumerator>  enumerateTriples() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_RDFAPISPEC_PRE 
+    PUBLIC_RDFAPISPEC_PRE
     class  PUBLIC_RDFAPISPEC_POST Bootstrap
      : public virtual iface::XPCOM::IObject
     {
@@ -186,7 +186,7 @@ namespace iface
       virtual already_AddRefd<iface::dom::Document>  getDOMForDataSource(iface::rdf_api::DataSource* ds, const std::wstring& baseURI) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual std::wstring serialiseDataSource(iface::rdf_api::DataSource* ds, const std::wstring& baseURI) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_RDFAPISPEC_PRE 
+    PUBLIC_RDFAPISPEC_PRE
     class  PUBLIC_RDFAPISPEC_POST RDFAPIRepresentation
      : public virtual iface::cellml_api::RDFRepresentation
     {

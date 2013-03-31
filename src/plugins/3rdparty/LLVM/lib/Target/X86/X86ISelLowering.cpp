@@ -16570,8 +16570,8 @@ static SDValue PerformISDSETCCCombine(SDNode *N, SelectionDAG &DAG) {
   return SDValue();
 }
 
-// Helper function of PerformSETCCCombine. It is to materialize "setb reg" 
-// as "sbb reg,reg", since it can be extended without zext and produces 
+// Helper function of PerformSETCCCombine. It is to materialize "setb reg"
+// as "sbb reg,reg", since it can be extended without zext and produces
 // an all-ones bit which is more useful than 0/1 in some cases.
 static SDValue MaterializeSETB(DebugLoc DL, SDValue EFLAGS, SelectionDAG &DAG) {
   return DAG.getNode(ISD::AND, DL, MVT::i8,
@@ -16589,13 +16589,13 @@ static SDValue PerformSETCCCombine(SDNode *N, SelectionDAG &DAG,
   SDValue EFLAGS = N->getOperand(1);
 
   if (CC == X86::COND_A) {
-    // Try to convert COND_A into COND_B in an attempt to facilitate 
+    // Try to convert COND_A into COND_B in an attempt to facilitate
     // materializing "setb reg".
     //
     // Do not flip "e > c", where "c" is a constant, because Cmp instruction
     // cannot take an immediate as its first operand.
     //
-    if (EFLAGS.getOpcode() == X86ISD::SUB && EFLAGS.hasOneUse() && 
+    if (EFLAGS.getOpcode() == X86ISD::SUB && EFLAGS.hasOneUse() &&
         EFLAGS.getValueType().isInteger() &&
         !isa<ConstantSDNode>(EFLAGS.getOperand(1))) {
       SDValue NewSub = DAG.getNode(X86ISD::SUB, EFLAGS.getDebugLoc(),

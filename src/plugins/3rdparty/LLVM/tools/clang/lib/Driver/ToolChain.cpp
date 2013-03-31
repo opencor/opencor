@@ -150,7 +150,7 @@ static const char *getLLVMArchSuffixForARM(StringRef CPU) {
     .Default("");
 }
 
-std::string ToolChain::ComputeLLVMTriple(const ArgList &Args, 
+std::string ToolChain::ComputeLLVMTriple(const ArgList &Args,
                                          types::ID InputType) const {
   switch (getTriple().getArch()) {
   default:
@@ -180,7 +180,7 @@ std::string ToolChain::ComputeLLVMTriple(const ArgList &Args,
   }
 }
 
-std::string ToolChain::ComputeEffectiveClangTriple(const ArgList &Args, 
+std::string ToolChain::ComputeEffectiveClangTriple(const ArgList &Args,
                                                    types::ID InputType) const {
   // Diagnose use of Darwin OS deployment target arguments on non-Darwin.
   if (Arg *A = Args.getLastArg(options::OPT_mmacosx_version_min_EQ,

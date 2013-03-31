@@ -37,7 +37,7 @@ Module *llvm::CloneModule(const Module *M, ValueToValueMapTy &VMap) {
   New->setDataLayout(M->getDataLayout());
   New->setTargetTriple(M->getTargetTriple());
   New->setModuleInlineAsm(M->getModuleInlineAsm());
-   
+
   // Copy all of the dependent libraries over.
   for (Module::lib_iterator I = M->lib_begin(), E = M->lib_end(); I != E; ++I)
     New->addLibrary(*I);
@@ -48,7 +48,7 @@ Module *llvm::CloneModule(const Module *M, ValueToValueMapTy &VMap) {
   //
   for (Module::const_global_iterator I = M->global_begin(), E = M->global_end();
        I != E; ++I) {
-    GlobalVariable *GV = new GlobalVariable(*New, 
+    GlobalVariable *GV = new GlobalVariable(*New,
                                             I->getType()->getElementType(),
                                             I->isConstant(), I->getLinkage(),
                                             (Constant*) 0, I->getName(),
@@ -76,7 +76,7 @@ Module *llvm::CloneModule(const Module *M, ValueToValueMapTy &VMap) {
     GA->copyAttributesFrom(I);
     VMap[I] = GA;
   }
-  
+
   // Now that all of the things that global variable initializer can refer to
   // have been created, loop through and copy the global variable referrers
   // over...  We also set the attributes on the global now.

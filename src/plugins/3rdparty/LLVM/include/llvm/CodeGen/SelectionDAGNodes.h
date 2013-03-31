@@ -49,7 +49,7 @@ template <typename T> struct simplify_type;
 template <typename T> struct ilist_traits;
 
 void checkForCycles(const SDNode *N);
-  
+
 /// SDVTList - This represents a list of ValueType's that has been intern'd by
 /// a SelectionDAG.  Instances of this simple value class are returned by
 /// SelectionDAG::getVTList(...).
@@ -108,7 +108,7 @@ public:
   void setNode(SDNode *N) { Node = N; }
 
   inline SDNode *operator->() const { return Node; }
-  
+
   bool operator==(const SDValue &O) const {
     return Node == O.Node && ResNo == O.ResNo;
   }
@@ -366,7 +366,7 @@ public:
   /// \<target\>ISD namespace).
   bool isTargetOpcode() const { return NodeType >= ISD::BUILTIN_OP_END; }
 
-  /// isTargetMemoryOpcode - Test if this node has a target-specific 
+  /// isTargetMemoryOpcode - Test if this node has a target-specific
   /// memory-referencing opcode (in the \<target\>ISD namespace and
   /// greater than FIRST_TARGET_MEMORY_OPCODE).
   bool isTargetMemoryOpcode() const {
@@ -525,7 +525,7 @@ public:
   /// NOTE: This is still very expensive. Use carefully.
   bool hasPredecessorHelper(const SDNode *N,
                             SmallPtrSet<const SDNode *, 32> &Visited,
-                            SmallVector<const SDNode *, 16> &Worklist) const; 
+                            SmallVector<const SDNode *, 16> &Worklist) const;
 
   /// getNumOperands - Return the number of values used by this operation.
   ///
@@ -906,7 +906,7 @@ public:
   bool writeMem() const { return MMO->isStore(); }
 
   /// Returns alignment and volatility of the memory access
-  unsigned getOriginalAlignment() const { 
+  unsigned getOriginalAlignment() const {
     return MMO->getBaseAlignment();
   }
   unsigned getAlignment() const {
@@ -1114,7 +1114,7 @@ class ShuffleVectorSDNode : public SDNode {
   const int *Mask;
 protected:
   friend class SelectionDAG;
-  ShuffleVectorSDNode(EVT VT, DebugLoc dl, SDValue N1, SDValue N2, 
+  ShuffleVectorSDNode(EVT VT, DebugLoc dl, SDValue N1, SDValue N2,
                       const int *M)
     : SDNode(ISD::VECTOR_SHUFFLE, dl, getSDVTList(VT)), Mask(M) {
     InitOperands(Ops, N1, N2);
@@ -1129,9 +1129,9 @@ public:
     assert(Idx < getValueType(0).getVectorNumElements() && "Idx out of range!");
     return Mask[Idx];
   }
-  
+
   bool isSplat() const { return isSplatMask(Mask, getValueType(0)); }
-  int  getSplatIndex() const { 
+  int  getSplatIndex() const {
     assert(isSplat() && "Cannot get splat index for non-splat!");
     EVT VT = getValueType(0);
     for (unsigned i = 0, e = VT.getVectorNumElements(); i != e; ++i) {
@@ -1146,7 +1146,7 @@ public:
     return N->getOpcode() == ISD::VECTOR_SHUFFLE;
   }
 };
-  
+
 class ConstantSDNode : public SDNode {
   const ConstantInt *Value;
   friend class SelectionDAG;
@@ -1300,7 +1300,7 @@ class ConstantPoolSDNode : public SDNode {
     Offset |= 1 << (sizeof(unsigned)*CHAR_BIT-1);
   }
 public:
-  
+
 
   bool isMachineConstantPoolEntry() const {
     return (int)Offset < 0;
@@ -1416,16 +1416,16 @@ public:
     return N->getOpcode() == ISD::SRCVALUE;
   }
 };
-  
+
 class MDNodeSDNode : public SDNode {
   const MDNode *MD;
   friend class SelectionDAG;
   explicit MDNodeSDNode(const MDNode *md)
   : SDNode(ISD::MDNODE_SDNODE, DebugLoc(), getSDVTList(MVT::Other)), MD(md) {}
 public:
-  
+
   const MDNode *getMD() const { return MD; }
-  
+
   static bool classof(const SDNode *N) {
     return N->getOpcode() == ISD::MDNODE_SDNODE;
   }
@@ -1503,7 +1503,7 @@ public:
 class ExternalSymbolSDNode : public SDNode {
   const char *Symbol;
   unsigned char TargetFlags;
-  
+
   friend class SelectionDAG;
   ExternalSymbolSDNode(bool isTarget, const char *Sym, unsigned char TF, EVT VT)
     : SDNode(isTarget ? ISD::TargetExternalSymbol : ISD::ExternalSymbol,
@@ -1535,7 +1535,7 @@ public:
     return N->getOpcode() == ISD::CONDCODE;
   }
 };
-  
+
 /// CvtRndSatSDNode - NOTE: avoid using this node as this may disappear in the
 /// future and most targets don't support it.
 class CvtRndSatSDNode : public SDNode {

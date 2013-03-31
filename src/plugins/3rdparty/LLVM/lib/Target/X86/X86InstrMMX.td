@@ -151,7 +151,7 @@ multiclass SS3I_binop_rm_int_mm<bits<8> opc, string OpcodeStr,
 multiclass ssse3_palign_mm<string asm, Intrinsic IntId> {
   def R64irr  : MMXSS3AI<0x0F, MRMSrcReg, (outs VR64:$dst),
       (ins VR64:$src1, VR64:$src2, i8imm:$src3),
-      !strconcat(asm, "\t{$src3, $src2, $dst|$dst, $src2, $src3}"), 
+      !strconcat(asm, "\t{$src3, $src2, $dst|$dst, $src2, $src3}"),
       [(set VR64:$dst, (IntId VR64:$src1, VR64:$src2, (i8 imm:$src3)))]>;
   def R64irm  : MMXSS3AI<0x0F, MRMSrcMem, (outs VR64:$dst),
       (ins VR64:$src1, i64mem:$src2, i8imm:$src3),
@@ -173,11 +173,11 @@ multiclass sse12_cvt_pint_3addr<bits<8> opc, RegisterClass SrcRC,
                     RegisterClass DstRC, Intrinsic Int, X86MemOperand x86memop,
                     PatFrag ld_frag, string asm, Domain d> {
   def irr : PI<opc, MRMSrcReg, (outs DstRC:$dst),(ins DstRC:$src1, SrcRC:$src2),
-              asm, [(set DstRC:$dst, (Int DstRC:$src1, SrcRC:$src2))], 
+              asm, [(set DstRC:$dst, (Int DstRC:$src1, SrcRC:$src2))],
               IIC_DEFAULT, d>;
   def irm : PI<opc, MRMSrcMem, (outs DstRC:$dst),
                    (ins DstRC:$src1, x86memop:$src2), asm,
-              [(set DstRC:$dst, (Int DstRC:$src1, (ld_frag addr:$src2)))], 
+              [(set DstRC:$dst, (Int DstRC:$src1, (ld_frag addr:$src2)))],
               IIC_DEFAULT, d>;
 }
 
@@ -195,7 +195,7 @@ def MMX_EMMS  : MMXI<0x77, RawFrm, (outs), (ins), "emms",
 // Data Transfer Instructions
 def MMX_MOVD64rr : MMXI<0x6E, MRMSrcReg, (outs VR64:$dst), (ins GR32:$src),
                         "movd\t{$src, $dst|$dst, $src}",
-                        [(set VR64:$dst, 
+                        [(set VR64:$dst,
                          (x86mmx (scalar_to_vector GR32:$src)))],
                         IIC_MMX_MOV_MM_RM>;
 let canFoldAsLoad = 1 in
@@ -226,7 +226,7 @@ def MMX_MOVD64to64rr : MMXRI<0x6E, MRMSrcReg, (outs VR64:$dst), (ins GR64:$src),
 // movd.
 def MMX_MOVD64from64rr : MMXRI<0x7E, MRMDestReg,
                                (outs GR64:$dst), (ins VR64:$src),
-                               "movd\t{$src, $dst|$dst, $src}", 
+                               "movd\t{$src, $dst|$dst, $src}",
                              [(set GR64:$dst,
                               (bitconvert VR64:$src))], IIC_MMX_MOV_REG_MM>;
 def MMX_MOVD64rrv164 : MMXRI<0x6E, MRMSrcReg, (outs VR64:$dst), (ins GR64:$src),
@@ -455,19 +455,19 @@ defm MMX_PCMPGTD : MMXI_binop_rm_int<0x66, "pcmpgtd", int_x86_mmx_pcmpgt_d,
                                      MMX_INTALU_ITINS>;
 
 // -- Unpack Instructions
-defm MMX_PUNPCKHBW : MMXI_binop_rm_int<0x68, "punpckhbw", 
+defm MMX_PUNPCKHBW : MMXI_binop_rm_int<0x68, "punpckhbw",
                                        int_x86_mmx_punpckhbw,
                                        MMX_UNPCK_H_ITINS>;
-defm MMX_PUNPCKHWD : MMXI_binop_rm_int<0x69, "punpckhwd", 
+defm MMX_PUNPCKHWD : MMXI_binop_rm_int<0x69, "punpckhwd",
                                        int_x86_mmx_punpckhwd,
                                        MMX_UNPCK_H_ITINS>;
-defm MMX_PUNPCKHDQ : MMXI_binop_rm_int<0x6A, "punpckhdq", 
+defm MMX_PUNPCKHDQ : MMXI_binop_rm_int<0x6A, "punpckhdq",
                                        int_x86_mmx_punpckhdq,
                                        MMX_UNPCK_H_ITINS>;
-defm MMX_PUNPCKLBW : MMXI_binop_rm_int<0x60, "punpcklbw", 
+defm MMX_PUNPCKLBW : MMXI_binop_rm_int<0x60, "punpcklbw",
                                        int_x86_mmx_punpcklbw,
                                        MMX_UNPCK_L_ITINS>;
-defm MMX_PUNPCKLWD : MMXI_binop_rm_int<0x61, "punpcklwd", 
+defm MMX_PUNPCKLWD : MMXI_binop_rm_int<0x61, "punpcklwd",
                                        int_x86_mmx_punpcklwd,
                                        MMX_UNPCK_L_ITINS>;
 defm MMX_PUNPCKLDQ : MMXI_binop_rm_int<0x62, "punpckldq",
@@ -535,7 +535,7 @@ def MMX_PEXTRWirri: MMXIi8<0xC5, MRMSrcReg,
                            IIC_MMX_PEXTR>;
 let Constraints = "$src1 = $dst" in {
   def MMX_PINSRWirri : MMXIi8<0xC4, MRMSrcReg,
-                      (outs VR64:$dst), 
+                      (outs VR64:$dst),
                       (ins VR64:$src1, GR32:$src2, i32i8imm:$src3),
                       "pinsrw\t{$src3, $src2, $dst|$dst, $src2, $src3}",
                       [(set VR64:$dst, (int_x86_mmx_pinsr_w VR64:$src1,
@@ -555,7 +555,7 @@ let Constraints = "$src1 = $dst" in {
 // Mask creation
 def MMX_PMOVMSKBrr : MMXI<0xD7, MRMSrcReg, (outs GR32:$dst), (ins VR64:$src),
                           "pmovmskb\t{$src, $dst|$dst, $src}",
-                          [(set GR32:$dst, 
+                          [(set GR32:$dst,
                                 (int_x86_mmx_pmovmskb VR64:$src))]>;
 
 

@@ -97,18 +97,18 @@ public:
   /// This ctor is used when creating the first ProgramState object.
   ProgramState(ProgramStateManager *mgr, const Environment& env,
           StoreRef st, GenericDataMap gdm);
-    
+
   /// Copy ctor - We must explicitly define this or else the "Next" ptr
   ///  in FoldingSetNode will also get copied.
   ProgramState(const ProgramState &RHS);
-  
+
   ~ProgramState();
 
   /// Return the ProgramStateManager associated with this state.
   ProgramStateManager &getStateManager() const {
     return *stateMgr;
   }
-  
+
   /// Return the ConstraintManager.
   ConstraintManager &getConstraintManager() const;
 
@@ -120,7 +120,7 @@ public:
   ///  is a mapping from locations to values.
   Store getStore() const { return store; }
 
-  
+
   /// getGDM - Return the generic data map associated with this state.
   GenericDataMap getGDM() const { return GDM; }
 
@@ -236,7 +236,7 @@ public:
   /// Get the lvalue for a variable reference.
   Loc getLValue(const VarDecl *D, const LocationContext *LC) const;
 
-  Loc getLValue(const CompoundLiteralExpr *literal, 
+  Loc getLValue(const CompoundLiteralExpr *literal,
                 const LocationContext *LC) const;
 
   /// Get the lvalue for an ivar reference.
@@ -253,7 +253,7 @@ public:
 
   /// Returns the SVal bound to the statement 'S' in the state's environment.
   SVal getSVal(const Stmt *S, const LocationContext *LCtx) const;
-  
+
   SVal getSValAsScalarOrLoc(const Stmt *Ex, const LocationContext *LCtx) const;
 
   /// \brief Return the value bound to the specified location.
@@ -268,7 +268,7 @@ public:
   SVal getSVal(const MemRegion* R) const;
 
   SVal getSValAsScalarOrLoc(const MemRegion *R) const;
-  
+
   /// \brief Visits the symbols reachable from the given SVal using the provided
   /// SymbolVisitor.
   ///
@@ -277,22 +277,22 @@ public:
   /// visitor to avoid repeated initialization cost.
   /// \sa ScanReachableSymbols
   bool scanReachableSymbols(SVal val, SymbolVisitor& visitor) const;
-  
+
   /// \brief Visits the symbols reachable from the SVals in the given range
   /// using the provided SymbolVisitor.
   bool scanReachableSymbols(const SVal *I, const SVal *E,
                             SymbolVisitor &visitor) const;
-  
+
   /// \brief Visits the symbols reachable from the regions in the given
   /// MemRegions range using the provided SymbolVisitor.
-  bool scanReachableSymbols(const MemRegion * const *I, 
+  bool scanReachableSymbols(const MemRegion * const *I,
                             const MemRegion * const *E,
                             SymbolVisitor &visitor) const;
 
   template <typename CB> CB scanReachableSymbols(SVal val) const;
   template <typename CB> CB scanReachableSymbols(const SVal *beg,
                                                  const SVal *end) const;
-  
+
   template <typename CB> CB
   scanReachableSymbols(const MemRegion * const *beg,
                        const MemRegion * const *end) const;
@@ -396,8 +396,8 @@ public:
 private:
   friend void ProgramStateRetain(const ProgramState *state);
   friend void ProgramStateRelease(const ProgramState *state);
-  
-  ProgramStateRef 
+
+  ProgramStateRef
   invalidateRegionsImpl(ArrayRef<const MemRegion *> Regions,
                         const Expr *E, unsigned BlockCount,
                         const LocationContext *LCtx,
@@ -437,7 +437,7 @@ private:
 
   /// A BumpPtrAllocator to allocate states.
   llvm::BumpPtrAllocator &Alloc;
-  
+
   /// A vector of ProgramStates that we can reuse.
   std::vector<ProgramState *> freeStates;
 
@@ -600,9 +600,9 @@ public:
 inline ConstraintManager &ProgramState::getConstraintManager() const {
   return stateMgr->getConstraintManager();
 }
-  
+
 inline const VarRegion* ProgramState::getRegion(const VarDecl *D,
-                                                const LocationContext *LC) const 
+                                                const LocationContext *LC) const
 {
   return getStateManager().getRegionManager().getVarRegion(D, LC);
 }
@@ -611,16 +611,16 @@ inline ProgramStateRef ProgramState::assume(DefinedOrUnknownSVal Cond,
                                       bool Assumption) const {
   if (Cond.isUnknown())
     return this;
-  
+
   return getStateManager().ConstraintMgr->assume(this, cast<DefinedSVal>(Cond),
                                                  Assumption);
 }
-  
+
 inline std::pair<ProgramStateRef , ProgramStateRef >
 ProgramState::assume(DefinedOrUnknownSVal Cond) const {
   if (Cond.isUnknown())
     return std::make_pair(this, this);
-  
+
   return getStateManager().ConstraintMgr->assumeDual(this,
                                                      cast<DefinedSVal>(Cond));
 }
@@ -750,7 +750,7 @@ CB ProgramState::scanReachableSymbols(SVal val) const {
   scanReachableSymbols(val, cb);
   return cb;
 }
-  
+
 template <typename CB>
 CB ProgramState::scanReachableSymbols(const SVal *beg, const SVal *end) const {
   CB cb(this);

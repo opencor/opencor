@@ -470,13 +470,13 @@ namespace {
       if (isa<StoreInst>(I)) {
         // For stores, it is the value type, not the pointer type that matters
         // because the value is what will come from a vector register.
-  
+
         Value *IVal = cast<StoreInst>(I)->getValueOperand();
         T1 = IVal->getType();
       } else {
         T1 = I->getType();
       }
-  
+
       if (I->isCast())
         T2 = cast<CastInst>(I)->getSrcTy();
       else
@@ -2248,7 +2248,7 @@ namespace {
         if (I2 == I1 || isa<UndefValue>(I2))
           I2 = 0;
       }
-  
+
       if (HEE) {
         Value *I3 = HEE->getOperand(0);
         if (!I2 && I3 != I1)
@@ -2441,14 +2441,14 @@ namespace {
         // so extend the smaller vector to be the same length as the larger one.
         Instruction *NLOp;
         if (numElemL > 1) {
-  
+
           std::vector<Constant *> Mask(numElemH);
           unsigned v = 0;
           for (; v < numElemL; ++v)
             Mask[v] = ConstantInt::get(Type::getInt32Ty(Context), v);
           for (; v < numElemH; ++v)
             Mask[v] = UndefValue::get(Type::getInt32Ty(Context));
-    
+
           NLOp = new ShuffleVectorInst(LOp, UndefValue::get(ArgTypeL),
                                        ConstantVector::get(Mask),
                                        getReplacementName(IBeforeJ ? I : J,
@@ -2458,7 +2458,7 @@ namespace {
                                            getReplacementName(IBeforeJ ? I : J,
                                                               true, o, 1));
         }
-  
+
         NLOp->insertBefore(IBeforeJ ? J : I);
         LOp = NLOp;
       }
@@ -2468,7 +2468,7 @@ namespace {
       if (numElemH == 1 && expandIEChain(Context, I, J, o, LOp, numElemL,
                                          ArgTypeH, VArgType, IBeforeJ)) {
         Instruction *S =
-          InsertElementInst::Create(LOp, HOp, 
+          InsertElementInst::Create(LOp, HOp,
                                     ConstantInt::get(Type::getInt32Ty(Context),
                                                      numElemL),
                                     getReplacementName(IBeforeJ ? I : J,
@@ -2485,7 +2485,7 @@ namespace {
             Mask[v] = ConstantInt::get(Type::getInt32Ty(Context), v);
           for (; v < numElemL; ++v)
             Mask[v] = UndefValue::get(Type::getInt32Ty(Context));
-    
+
           NHOp = new ShuffleVectorInst(HOp, UndefValue::get(ArgTypeH),
                                        ConstantVector::get(Mask),
                                        getReplacementName(IBeforeJ ? I : J,
@@ -2495,7 +2495,7 @@ namespace {
                                            getReplacementName(IBeforeJ ? I : J,
                                                               true, o, 1));
         }
-  
+
         NHOp->insertBefore(IBeforeJ ? J : I);
         HOp = NHOp;
       }

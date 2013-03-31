@@ -43,7 +43,7 @@ public:
 private:
   const char      *const PassName;     // Nice name for Pass
   const char      *const PassArgument; // Command Line argument to run this pass
-  const void *PassID;      
+  const void *PassID;
   const bool IsCFGOnlyPass;            // Pass only looks at the CFG.
   const bool IsAnalysis;               // True if an analysis pass.
   const bool IsAnalysisGroup;          // True if an analysis group.
@@ -56,15 +56,15 @@ public:
   /// through RegisterPass.
   PassInfo(const char *name, const char *arg, const void *pi,
            NormalCtor_t normal, bool isCFGOnly, bool is_analysis)
-    : PassName(name), PassArgument(arg), PassID(pi), 
-      IsCFGOnlyPass(isCFGOnly), 
+    : PassName(name), PassArgument(arg), PassID(pi),
+      IsCFGOnlyPass(isCFGOnly),
       IsAnalysis(is_analysis), IsAnalysisGroup(false), NormalCtor(normal) { }
   /// PassInfo ctor - Do not call this directly, this should only be invoked
   /// through RegisterPass. This version is for use by analysis groups; it
   /// does not auto-register the pass.
   PassInfo(const char *name, const void *pi)
-    : PassName(name), PassArgument(""), PassID(pi), 
-      IsCFGOnlyPass(false), 
+    : PassName(name), PassArgument(""), PassID(pi),
+      IsCFGOnlyPass(false),
       IsAnalysis(false), IsAnalysisGroup(true), NormalCtor(0) { }
 
   /// getPassName - Return the friendly name for the pass, never returns null
@@ -85,7 +85,7 @@ public:
   bool isPassID(const void *IDPtr) const {
     return PassID == IDPtr;
   }
-  
+
   /// isAnalysisGroup - Return true if this is an analysis group, not a normal
   /// pass.
   ///
@@ -95,7 +95,7 @@ public:
   /// isCFGOnlyPass - return true if this pass only looks at the CFG for the
   /// function.
   bool isCFGOnlyPass() const { return IsCFGOnlyPass; }
-  
+
   /// getNormalCtor - Return a pointer to a function, that when called, creates
   /// an instance of the pass and returns it.  This pointer may be null if there
   /// is no default constructor for the pass.

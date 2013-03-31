@@ -112,7 +112,7 @@ private:
   void operator=(const SSAUpdater&) LLVM_DELETED_FUNCTION;
   SSAUpdater(const SSAUpdater&) LLVM_DELETED_FUNCTION;
 };
-  
+
 /// LoadAndStorePromoter - This little helper class provides a convenient way to
 /// promote a collection of loads and stores into SSA Form using the SSAUpdater.
 /// This handles complexities that SSAUpdater doesn't, such as multiple loads
@@ -128,24 +128,24 @@ public:
   LoadAndStorePromoter(const SmallVectorImpl<Instruction*> &Insts,
                        SSAUpdater &S, StringRef Name = StringRef());
   virtual ~LoadAndStorePromoter() {}
-  
+
   /// run - This does the promotion.  Insts is a list of loads and stores to
   /// promote, and Name is the basename for the PHIs to insert.  After this is
   /// complete, the loads and stores are removed from the code.
   void run(const SmallVectorImpl<Instruction*> &Insts) const;
-  
-  
+
+
   /// Return true if the specified instruction is in the Inst list (which was
   /// passed into the run method).  Clients should implement this with a more
   /// efficient version if possible.
   virtual bool isInstInList(Instruction *I,
                             const SmallVectorImpl<Instruction*> &Insts) const;
-  
+
   /// doExtraRewritesBeforeFinalDeletion - This hook is invoked after all the
-  /// stores are found and inserted as available values, but 
+  /// stores are found and inserted as available values, but
   virtual void doExtraRewritesBeforeFinalDeletion() const {
   }
-  
+
   /// replaceLoadWithValue - Clients can choose to implement this to get
   /// notified right before a load is RAUW'd another value.
   virtual void replaceLoadWithValue(LoadInst *LI, Value *V) const {

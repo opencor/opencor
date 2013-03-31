@@ -41,7 +41,7 @@ class TargetTransformInfo;
 class DIBuilder;
 
 template<typename T> class SmallVectorImpl;
-  
+
 //===----------------------------------------------------------------------===//
 //  Local constant propagation.
 //
@@ -79,7 +79,7 @@ bool RecursivelyDeleteTriviallyDeadInstructions(Value *V,
 /// too, recursively.  Return true if a change was made.
 bool RecursivelyDeleteDeadPHINode(PHINode *PN, const TargetLibraryInfo *TLI=0);
 
-  
+
 /// SimplifyInstructionsInBlock - Scan the specified basic block and try to
 /// simplify any instructions in it and recursively delete dead instructions.
 ///
@@ -87,7 +87,7 @@ bool RecursivelyDeleteDeadPHINode(PHINode *PN, const TargetLibraryInfo *TLI=0);
 /// instructions in other blocks as well in this block.
 bool SimplifyInstructionsInBlock(BasicBlock *BB, const DataLayout *TD = 0,
                                  const TargetLibraryInfo *TLI = 0);
-    
+
 //===----------------------------------------------------------------------===//
 //  Control Flow Graph Restructuring.
 //
@@ -105,15 +105,15 @@ bool SimplifyInstructionsInBlock(BasicBlock *BB, const DataLayout *TD = 0,
 /// recursively fold the 'and' to 0.
 void RemovePredecessorAndSimplify(BasicBlock *BB, BasicBlock *Pred,
                                   DataLayout *TD = 0);
-    
-  
+
+
 /// MergeBasicBlockIntoOnlyPred - BB is a block with one predecessor and its
 /// predecessor is known to have one successor (BB!).  Eliminate the edge
 /// between them, moving the instructions in the predecessor into BB.  This
 /// deletes the predecessor block.
 ///
 void MergeBasicBlockIntoOnlyPred(BasicBlock *BB, Pass *P = 0);
-    
+
 
 /// TryToSimplifyUncondBranchFromEmptyBlock - BB is known to contain an
 /// unconditional branch, and contains no instructions other than PHI nodes,
@@ -156,7 +156,7 @@ AllocaInst *DemoteRegToStack(Instruction &X,
 
 /// DemotePHIToStack - This function takes a virtual register computed by a phi
 /// node and replaces it with a slot in the stack frame, allocated via alloca.
-/// The phi node is deleted and it returns the pointer to the alloca inserted. 
+/// The phi node is deleted and it returns the pointer to the alloca inserted.
 AllocaInst *DemotePHIToStack(PHINode *P, Instruction *AllocaPoint = 0);
 
 /// getOrEnforceKnownAlignment - If the specified pointer has an alignment that

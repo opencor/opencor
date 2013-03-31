@@ -68,7 +68,7 @@ public:
                         StringRef Constraints, bool hasSideEffects,
                         bool isAlignStack = false,
                         AsmDialect asmDialect = AD_ATT);
-  
+
   bool hasSideEffects() const { return HasSideEffects; }
   bool isAlignStack() const { return IsAlignStack; }
   AsmDialect getDialect() const { return Dialect; }
@@ -78,11 +78,11 @@ public:
   PointerType *getType() const {
     return reinterpret_cast<PointerType*>(Value::getType());
   }
-  
+
   /// getFunctionType - InlineAsm's are always pointers to functions.
   ///
   FunctionType *getFunctionType() const;
-  
+
   const std::string &getAsmString() const { return AsmString; }
   const std::string &getConstraintString() const { return Constraints; }
 
@@ -92,15 +92,15 @@ public:
   ///
   static bool Verify(FunctionType *Ty, StringRef Constraints);
 
-  // Constraint String Parsing 
+  // Constraint String Parsing
   enum ConstraintPrefix {
     isInput,            // 'x'
     isOutput,           // '=x'
     isClobber           // '~x'
   };
-  
+
   typedef std::vector<std::string> ConstraintCodeVector;
-  
+
   struct SubConstraintInfo {
     /// MatchingInput - If this is not -1, this is an output constraint where an
     /// input constraint is required to match it (e.g. "0").  The value is the
@@ -117,86 +117,86 @@ public:
   typedef std::vector<SubConstraintInfo> SubConstraintInfoVector;
   struct ConstraintInfo;
   typedef std::vector<ConstraintInfo> ConstraintInfoVector;
-  
+
   struct ConstraintInfo {
     /// Type - The basic type of the constraint: input/output/clobber
     ///
     ConstraintPrefix Type;
-    
+
     /// isEarlyClobber - "&": output operand writes result before inputs are all
     /// read.  This is only ever set for an output operand.
-    bool isEarlyClobber; 
-    
+    bool isEarlyClobber;
+
     /// MatchingInput - If this is not -1, this is an output constraint where an
     /// input constraint is required to match it (e.g. "0").  The value is the
     /// constraint number that matches this one (for example, if this is
     /// constraint #0 and constraint #4 has the value "0", this will be 4).
     signed char MatchingInput;
-    
+
     /// hasMatchingInput - Return true if this is an output constraint that has
     /// a matching input constraint.
     bool hasMatchingInput() const { return MatchingInput != -1; }
-    
+
     /// isCommutative - This is set to true for a constraint that is commutative
     /// with the next operand.
     bool isCommutative;
-    
+
     /// isIndirect - True if this operand is an indirect operand.  This means
     /// that the address of the source or destination is present in the call
     /// instruction, instead of it being returned or passed in explicitly.  This
     /// is represented with a '*' in the asm string.
     bool isIndirect;
-    
+
     /// Code - The constraint code, either the register name (in braces) or the
     /// constraint letter/number.
     ConstraintCodeVector Codes;
-    
+
     /// isMultipleAlternative - '|': has multiple-alternative constraints.
     bool isMultipleAlternative;
-    
+
     /// multipleAlternatives - If there are multiple alternative constraints,
     /// this array will contain them.  Otherwise it will be empty.
     SubConstraintInfoVector multipleAlternatives;
-    
+
     /// The currently selected alternative constraint index.
     unsigned currentAlternativeIndex;
-    
+
     ///Default constructor.
     ConstraintInfo();
-    
+
     /// Copy constructor.
     ConstraintInfo(const ConstraintInfo &other);
-    
+
     /// Parse - Analyze the specified string (e.g. "=*&{eax}") and fill in the
     /// fields in this structure.  If the constraint string is not understood,
     /// return true, otherwise return false.
     bool Parse(StringRef Str, ConstraintInfoVector &ConstraintsSoFar);
-               
+
     /// selectAlternative - Point this constraint to the alternative constraint
     /// indicated by the index.
     void selectAlternative(unsigned index);
   };
-  
+
   /// ParseConstraints - Split up the constraint string into the specific
   /// constraints and their prefixes.  If this returns an empty vector, and if
   /// the constraint string itself isn't empty, there was an error parsing.
   static ConstraintInfoVector ParseConstraints(StringRef ConstraintString);
-  
-  /// ParseConstraints - Parse the constraints of this inlineasm object, 
+
+  /// ParseConstraints - Parse the constraints of this inlineasm object,
   /// returning them the same way that ParseConstraints(str) does.
   ConstraintInfoVector ParseConstraints() const {
     return ParseConstraints(Constraints);
   }
-  
+
   // Methods for support type inquiry through isa, cast, and dyn_cast:
   static inline bool classof(const Value *V) {
     return V->getValueID() == Value::InlineAsmVal;
   }
 
-  
+
   // These are helper methods for dealing with flags in the INLINEASM SDNode
   // in the backend.
-  
+
   enum {
     // Fixed operands on an INLINEASM SDNode.
     Op_InputChain = 0,
@@ -229,15 +229,15 @@ public:
 
     Flag_MatchingOperand = 0x80000000
   };
-  
+
   static unsigned getFlagWord(unsigned Kind, unsigned NumOps) {
     assert(((NumOps << 3) & ~0xffff) == 0 && "Too many inline asm operands!");
     assert(Kind >= Kind_RegUse && Kind <= Kind_Mem && "Invalid Kind");
     return Kind | (NumOps << 3);
   }
-  
+
   /// getFlagWordForMatchingOp - Augment an existing flag word returned by
-  /// getFlagWord with information indicating that this input operand is tied 
+  /// getFlagWord with information indicating that this input operand is tied
   /// to a previous output operand.
   static unsigned getFlagWordForMatchingOp(unsigned InputFlag,
                                            unsigned MatchedOperandNo) {

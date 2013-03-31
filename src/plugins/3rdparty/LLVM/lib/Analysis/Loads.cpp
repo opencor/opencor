@@ -153,10 +153,10 @@ bool llvm::isSafeToLoadUnconditionally(Value *V, Instruction *ScanFrom,
 /// memory address *Ptr locally available within a small number of instructions.
 /// If the value is available, return it.
 ///
-/// If not, return the iterator for the last validated instruction that the 
+/// If not, return the iterator for the last validated instruction that the
 /// value would be live through.  If we scanned the entire block and didn't find
 /// something that invalidates *Ptr or provides it, ScanFrom would be left at
-/// begin() and this returns null.  ScanFrom could also be left 
+/// begin() and this returns null.  ScanFrom could also be left
 ///
 /// MaxInstsToScan specifies the maximum instructions to scan in the block.  If
 /// it is set to 0, it will scan the whole block. You can also optionally
@@ -178,7 +178,7 @@ Value *llvm::FindAvailableLoadedValue(Value *Ptr, BasicBlock *ScanBB,
     Type *AccessTy = cast<PointerType>(Ptr->getType())->getElementType();
     AccessSize = AA->getTypeStoreSize(AccessTy);
   }
-  
+
   while (ScanFrom != ScanBB->begin()) {
     // We must ignore debug info directives when counting (otherwise they
     // would affect codegen).
@@ -188,10 +188,10 @@ Value *llvm::FindAvailableLoadedValue(Value *Ptr, BasicBlock *ScanBB,
 
     // Restore ScanFrom to expected value in case next test succeeds
     ScanFrom++;
-   
+
     // Don't scan huge blocks.
     if (MaxInstsToScan-- == 0) return 0;
-    
+
     --ScanFrom;
     // If this is a load of Ptr, the loaded value is available.
     // (This is true even if the load is volatile or atomic, although
@@ -201,7 +201,7 @@ Value *llvm::FindAvailableLoadedValue(Value *Ptr, BasicBlock *ScanBB,
         if (TBAATag) *TBAATag = LI->getMetadata(LLVMContext::MD_tbaa);
         return LI;
       }
-    
+
     if (StoreInst *SI = dyn_cast<StoreInst>(Inst)) {
       // If this is a store through Ptr, the value is available!
       // (This is true even if the store is volatile or atomic, although
@@ -210,7 +210,7 @@ Value *llvm::FindAvailableLoadedValue(Value *Ptr, BasicBlock *ScanBB,
         if (TBAATag) *TBAATag = SI->getMetadata(LLVMContext::MD_tbaa);
         return SI->getOperand(0);
       }
-      
+
       // If Ptr is an alloca and this is a store to a different alloca, ignore
       // the store.  This is a trivial form of alias analysis that is important
       // for reg2mem'd code.
@@ -218,18 +218,18 @@ Value *llvm::FindAvailableLoadedValue(Value *Ptr, BasicBlock *ScanBB,
           (isa<AllocaInst>(SI->getOperand(1)) ||
            isa<GlobalVariable>(SI->getOperand(1))))
         continue;
-      
+
       // If we have alias analysis and it says the store won't modify the loaded
       // value, ignore the store.
       if (AA &&
           (AA->getModRefInfo(SI, Ptr, AccessSize) & AliasAnalysis::Mod) == 0)
         continue;
-      
+
       // Otherwise the store that may or may not alias the pointer, bail out.
       ++ScanFrom;
       return 0;
     }
-    
+
     // If this is some other instruction that may clobber Ptr, bail out.
     if (Inst->mayWriteToMemory()) {
       // If alias analysis claims that it really won't modify the load,
@@ -237,13 +237,13 @@ Value *llvm::FindAvailableLoadedValue(Value *Ptr, BasicBlock *ScanBB,
       if (AA &&
           (AA->getModRefInfo(Inst, Ptr, AccessSize) & AliasAnalysis::Mod) == 0)
         continue;
-      
+
       // May modify the pointer, bail out.
       ++ScanFrom;
       return 0;
     }
   }
-  
+
   // Got to the start of the block, we didn't find it, but are done for this
   // block.
   return 0;

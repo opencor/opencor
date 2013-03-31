@@ -470,7 +470,7 @@ def vector_insert : SDNode<"ISD::INSERT_VECTOR_ELT",
 // This operator does not do subvector type checking.  The ARM
 // backend, at least, needs it.
 def vector_extract_subvec : SDNode<"ISD::EXTRACT_SUBVECTOR",
-    SDTypeProfile<1, 2, [SDTCisInt<2>, SDTCisVec<1>, SDTCisVec<0>]>, 
+    SDTypeProfile<1, 2, [SDTCisInt<2>, SDTCisVec<1>, SDTCisVec<0>]>,
     []>;
 
 // This operator does subvector type checking.

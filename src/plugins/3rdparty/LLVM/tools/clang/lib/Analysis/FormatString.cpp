@@ -253,7 +253,7 @@ bool ArgType::matchesType(ASTContext &C, QualType argTy) const {
 
     case UnknownTy:
       return true;
-      
+
     case AnyCharTy: {
       if (const EnumType *ETy = argTy->getAs<EnumType>())
         argTy = ETy->getDecl()->getIntegerType();
@@ -266,11 +266,11 @@ bool ArgType::matchesType(ASTContext &C, QualType argTy) const {
           case BuiltinType::SChar:
           case BuiltinType::UChar:
           case BuiltinType::Char_U:
-            return true;            
+            return true;
         }
       return false;
     }
-      
+
     case SpecificTy: {
       if (const EnumType *ETy = argTy->getAs<EnumType>())
         argTy = ETy->getDecl()->getIntegerType();
@@ -286,7 +286,7 @@ bool ArgType::matchesType(ASTContext &C, QualType argTy) const {
           case BuiltinType::Char_S:
           case BuiltinType::SChar:
           case BuiltinType::Char_U:
-          case BuiltinType::UChar:                    
+          case BuiltinType::UChar:
             return T == C.UnsignedCharTy || T == C.SignedCharTy;
           case BuiltinType::Short:
             return T == C.UnsignedShortTy;
@@ -336,16 +336,16 @@ bool ArgType::matchesType(ASTContext &C, QualType argTy) const {
         C.getCanonicalType(PT->getPointeeType()).getUnqualifiedType();
       return pointeeTy == C.getWCharType();
     }
-    
+
     case WIntTy: {
-      
-      QualType PromoArg = 
+
+      QualType PromoArg =
         argTy->isPromotableIntegerType()
           ? C.getPromotedIntegerType(argTy) : argTy;
-      
+
       QualType WInt = C.getCanonicalType(C.getWIntType()).getUnqualifiedType();
       PromoArg = C.getCanonicalType(PromoArg).getUnqualifiedType();
-      
+
       // If the promoted argument is the corresponding signed type of the
       // wint_t type, then it should match.
       if (PromoArg->hasSignedIntegerRepresentation() &&
@@ -363,7 +363,7 @@ bool ArgType::matchesType(ASTContext &C, QualType argTy) const {
       if (argTy->getAs<ObjCObjectPointerType>() ||
           argTy->getAs<BlockPointerType>())
         return true;
-      
+
       // Handle implicit toll-free bridging.
       if (const PointerType *PT = argTy->getAs<PointerType>()) {
         // Things such as CFTypeRef are really just opaque pointers
@@ -374,7 +374,7 @@ bool ArgType::matchesType(ASTContext &C, QualType argTy) const {
         if (pointee->getAsStructureType() || pointee->isVoidType())
           return true;
       }
-      return false;      
+      return false;
     }
   }
 
@@ -530,7 +530,7 @@ const char *ConversionSpecifier::toString() const {
 llvm::Optional<ConversionSpecifier>
 ConversionSpecifier::getStandardSpecifier() const {
   ConversionSpecifier::Kind NewKind;
-  
+
   switch (getKind()) {
   default:
     return llvm::Optional<ConversionSpecifier>();
@@ -579,7 +579,7 @@ bool FormatSpecifier::hasValidLengthModifier(const TargetInfo &Target) const {
   switch (LM.getKind()) {
     case LengthModifier::None:
       return true;
-      
+
     // Handle most integer flags
     case LengthModifier::AsChar:
     case LengthModifier::AsShort:
@@ -603,7 +603,7 @@ bool FormatSpecifier::hasValidLengthModifier(const TargetInfo &Target) const {
         default:
           return false;
       }
-      
+
     // Handle 'l' flag
     case LengthModifier::AsLong:
       switch (CS.getKind()) {
@@ -632,7 +632,7 @@ bool FormatSpecifier::hasValidLengthModifier(const TargetInfo &Target) const {
         default:
           return false;
       }
-      
+
     case LengthModifier::AsLongDouble:
       switch (CS.getKind()) {
         case ConversionSpecifier::aArg:

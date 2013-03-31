@@ -25,7 +25,7 @@ using namespace llvm;
 // list of LinkItem which indicates the order the files should be linked and
 // how each file should be treated (plain file or with library search). The
 // function only links bitcode and produces a result list of items that are
-// native objects. 
+// native objects.
 bool
 Linker::LinkInItems(const ItemList& Items, ItemList& NativeItems) {
   // Clear the NativeItems just in case
@@ -157,7 +157,7 @@ bool Linker::LinkInLibraries(const std::vector<std::string> &Libraries) {
 ///
 bool Linker::LinkInFile(const sys::Path &File, bool &is_native) {
   is_native = false;
-  
+
   // Check for a file of name "-", which means "read standard input"
   if (File.str() == "-") {
     std::auto_ptr<Module> M;
@@ -184,7 +184,7 @@ bool Linker::LinkInFile(const sys::Path &File, bool &is_native) {
   switch (sys::IdentifyFileType(Magic.c_str(), 64)) {
     default: llvm_unreachable("Bad file type identification");
     case sys::Unknown_FileType:
-      return warning("Ignoring file '" + File.str() + 
+      return warning("Ignoring file '" + File.str() +
                    "' because does not contain bitcode.");
 
     case sys::Archive_FileType:

@@ -46,38 +46,38 @@ namespace {
 class ASTMaker {
 public:
   ASTMaker(ASTContext &C) : C(C) {}
-  
+
   /// Create a new BinaryOperator representing a simple assignment.
   BinaryOperator *makeAssignment(const Expr *LHS, const Expr *RHS, QualType Ty);
-  
+
   /// Create a new BinaryOperator representing a comparison.
   BinaryOperator *makeComparison(const Expr *LHS, const Expr *RHS,
                                  BinaryOperator::Opcode Op);
-  
+
   /// Create a new compound stmt using the provided statements.
   CompoundStmt *makeCompound(ArrayRef<Stmt*>);
-  
+
   /// Create a new DeclRefExpr for the referenced variable.
   DeclRefExpr *makeDeclRefExpr(const VarDecl *D);
-  
+
   /// Create a new UnaryOperator representing a dereference.
   UnaryOperator *makeDereference(const Expr *Arg, QualType Ty);
-  
+
   /// Create an implicit cast for an integer conversion.
   Expr *makeIntegralCast(const Expr *Arg, QualType Ty);
-  
+
   /// Create an implicit cast to a builtin boolean type.
   ImplicitCastExpr *makeIntegralCastToBoolean(const Expr *Arg);
-  
+
   // Create an implicit cast for lvalue-to-rvaluate conversions.
   ImplicitCastExpr *makeLvalueToRvalue(const Expr *Arg, QualType Ty);
-  
+
   /// Create an Objective-C bool literal.
   ObjCBoolLiteralExpr *makeObjCBool(bool Val);
-  
+
   /// Create a Return statement.
   ReturnStmt *makeReturn(const Expr *RetVal);
-  
+
 private:
   ASTContext &C;
 };
@@ -134,7 +134,7 @@ ImplicitCastExpr *ASTMaker::makeLvalueToRvalue(const Expr *Arg, QualType Ty) {
 Expr *ASTMaker::makeIntegralCast(const Expr *Arg, QualType Ty) {
   if (Arg->getType() == Ty)
     return const_cast<Expr*>(Arg);
-  
+
   return ImplicitCastExpr::Create(C, Ty, CK_IntegralCast,
                                   const_cast<Expr*>(Arg), 0, VK_RValue);
 }
@@ -174,13 +174,13 @@ static Stmt *create_dispatch_once(ASTContext &C, const FunctionDecl *D) {
   QualType PredicateTy = PredicatePtrTy->getPointeeType();
   if (!PredicateTy->isIntegerType())
     return 0;
-  
+
   // Check if the second parameter is the proper block type.
   const ParmVarDecl *Block = D->getParamDecl(1);
   QualType Ty = Block->getType();
   if (!isDispatchBlock(Ty))
     return 0;
-  
+
   // Everything checks out.  Create a fakse body that checks the predicate,
   // sets it, and calls the block.  Basically, an AST dump of:
   //
@@ -190,9 +190,9 @@ static Stmt *create_dispatch_once(ASTContext &C, const FunctionDecl *D) {
   //    block();
   //  }
   // }
-  
+
   ASTMaker M(C);
-  
+
   // (1) Create the call.
   DeclRefExpr *DR = M.makeDeclRefExpr(Block);
   ImplicitCastExpr *ICE = M.makeLvalueToRvalue(DR, Ty);
@@ -211,13 +211,13 @@ static Stmt *create_dispatch_once(ASTContext &C, const FunctionDecl *D) {
             PredicateTy),
        M.makeIntegralCast(IL, PredicateTy),
        PredicateTy);
-  
+
   // (3) Create the compound statement.
   Stmt *Stmts[2];
   Stmts[0] = B;
   Stmts[1] = CE;
   CompoundStmt *CS = M.makeCompound(ArrayRef<Stmt*>(Stmts, 2));
-  
+
   // (4) Create the 'if' condition.
   ImplicitCastExpr *LValToRval =
     M.makeLvalueToRvalue(
@@ -227,11 +227,11 @@ static Stmt *create_dispatch_once(ASTContext &C, const FunctionDecl *D) {
           PredicateQPtrTy),
         PredicateTy),
     PredicateTy);
-  
+
   UnaryOperator *UO = new (C) UnaryOperator(LValToRval, UO_LNot, C.IntTy,
                                            VK_RValue, OK_Ordinary,
                                            SourceLocation());
-  
+
   // (5) Create the 'if' statement.
   IfStmt *If = new (C) IfStmt(C, SourceLocation(), 0, UO, CS);
   return If;
@@ -242,20 +242,20 @@ static Stmt *create_dispatch_sync(ASTContext &C, const FunctionDecl *D) {
   // Check if we have at least two parameters.
   if (D->param_size() != 2)
     return 0;
-  
+
   // Check if the second parameter is a block.
   const ParmVarDecl *PV = D->getParamDecl(1);
   QualType Ty = PV->getType();
   if (!isDispatchBlock(Ty))
     return 0;
-  
+
   // Everything checks out.  Create a fake body that just calls the block.
   // This is basically just an AST dump of:
   //
   // void dispatch_sync(dispatch_queue_t queue, void (^block)(void)) {
   //   block();
   // }
-  //  
+  //
   ASTMaker M(C);
   DeclRefExpr *DR = M.makeDeclRefExpr(PV);
   ImplicitCastExpr *ICE = M.makeLvalueToRvalue(DR, Ty);
@@ -269,34 +269,34 @@ static Stmt *create_OSAtomicCompareAndSwap(ASTContext &C, const FunctionDecl *D)
   // There are exactly 3 arguments.
   if (D->param_size() != 3)
     return 0;
-  
+
   // Body for:
   //   if (oldValue == *theValue) {
   //    *theValue = newValue;
   //    return YES;
   //   }
   //   else return NO;
-  
+
   QualType ResultTy = D->getResultType();
   bool isBoolean = ResultTy->isBooleanType();
   if (!isBoolean && !ResultTy->isIntegralType(C))
     return 0;
-  
+
   const ParmVarDecl *OldValue = D->getParamDecl(0);
   QualType OldValueTy = OldValue->getType();
 
   const ParmVarDecl *NewValue = D->getParamDecl(1);
   QualType NewValueTy = NewValue->getType();
-  
+
   assert(OldValueTy == NewValueTy);
-  
+
   const ParmVarDecl *TheValue = D->getParamDecl(2);
   QualType TheValueTy = TheValue->getType();
   const PointerType *PT = TheValueTy->getAs<PointerType>();
   if (!PT)
     return 0;
   QualType PointeeTy = PT->getPointeeType();
-  
+
   ASTMaker M(C);
   // Construct the comparison.
   Expr *Comparison =
@@ -318,36 +318,36 @@ static Stmt *create_OSAtomicCompareAndSwap(ASTContext &C, const FunctionDecl *D)
         PointeeTy),
       M.makeLvalueToRvalue(M.makeDeclRefExpr(NewValue), NewValueTy),
       NewValueTy);
-  
+
   Expr *BoolVal = M.makeObjCBool(true);
   Expr *RetVal = isBoolean ? M.makeIntegralCastToBoolean(BoolVal)
                            : M.makeIntegralCast(BoolVal, ResultTy);
   Stmts[1] = M.makeReturn(RetVal);
   CompoundStmt *Body = M.makeCompound(ArrayRef<Stmt*>(Stmts, 2));
-  
+
   // Construct the else clause.
   BoolVal = M.makeObjCBool(false);
   RetVal = isBoolean ? M.makeIntegralCastToBoolean(BoolVal)
                      : M.makeIntegralCast(BoolVal, ResultTy);
   Stmt *Else = M.makeReturn(RetVal);
-  
+
   /// Construct the If.
   Stmt *If =
     new (C) IfStmt(C, SourceLocation(), 0, Comparison, Body,
                    SourceLocation(), Else);
-  
-  return If;  
+
+  return If;
 }
 
 Stmt *BodyFarm::getBody(const FunctionDecl *D) {
   D = D->getCanonicalDecl();
-  
+
   llvm::Optional<Stmt *> &Val = Bodies[D];
   if (Val.hasValue())
     return Val.getValue();
-  
+
   Val = 0;
-  
+
   if (D->getIdentifier() == 0)
     return 0;
 
@@ -367,7 +367,7 @@ Stmt *BodyFarm::getBody(const FunctionDecl *D) {
           .Case("dispatch_once", create_dispatch_once)
         .Default(NULL);
   }
-  
+
   if (FF) { Val = FF(C, D); }
   return Val.getValue();
 }

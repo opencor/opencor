@@ -51,11 +51,11 @@ public:
   virtual void HandlePragma(Preprocessor &PP, PragmaIntroducerKind Introducer,
                             Token &FirstToken);
 };
-  
+
 class PragmaMSStructHandler : public PragmaHandler {
 public:
   explicit PragmaMSStructHandler() : PragmaHandler("ms_struct") {}
-    
+
   virtual void HandlePragma(Preprocessor &PP, PragmaIntroducerKind Introducer,
                             Token &FirstToken);
 };
@@ -90,7 +90,7 @@ public:
   virtual void HandlePragma(Preprocessor &PP, PragmaIntroducerKind Introducer,
                             Token &FirstToken);
 };
-  
+
 
 class PragmaFPContractHandler : public PragmaHandler {
 public:
@@ -98,7 +98,7 @@ public:
   virtual void HandlePragma(Preprocessor &PP, PragmaIntroducerKind Introducer,
                             Token &FirstToken);
 };
-  
+
 
 }  // end namespace clang
 

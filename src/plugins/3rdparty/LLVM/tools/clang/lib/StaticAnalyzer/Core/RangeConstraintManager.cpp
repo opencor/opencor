@@ -363,7 +363,7 @@ ConditionTruthVal RangeConstraintManager::checkNull(ProgramStateRef State,
 
 /// Scan all symbols referenced by the constraints. If the symbol is not alive
 /// as marked in LSymbols, mark it as dead in DSymbols.
-ProgramStateRef 
+ProgramStateRef
 RangeConstraintManager::removeDeadBindings(ProgramStateRef state,
                                            SymbolReaper& SymReaper) {
 
@@ -413,7 +413,7 @@ RangeConstraintManager::GetRange(ProgramStateRef state, SymbolRef sym) {
 // As an example, the range [UINT_MAX-1, 3) contains five values: UINT_MAX-1,
 // UINT_MAX, 0, 1, and 2.
 
-ProgramStateRef 
+ProgramStateRef
 RangeConstraintManager::assumeSymNE(ProgramStateRef St, SymbolRef Sym,
                                     const llvm::APSInt &Int,
                                     const llvm::APSInt &Adjustment) {
@@ -433,7 +433,7 @@ RangeConstraintManager::assumeSymNE(ProgramStateRef St, SymbolRef Sym,
   return New.isEmpty() ? NULL : St->set<ConstraintRange>(Sym, New);
 }
 
-ProgramStateRef 
+ProgramStateRef
 RangeConstraintManager::assumeSymEQ(ProgramStateRef St, SymbolRef Sym,
                                     const llvm::APSInt &Int,
                                     const llvm::APSInt &Adjustment) {
@@ -448,7 +448,7 @@ RangeConstraintManager::assumeSymEQ(ProgramStateRef St, SymbolRef Sym,
   return New.isEmpty() ? NULL : St->set<ConstraintRange>(Sym, New);
 }
 
-ProgramStateRef 
+ProgramStateRef
 RangeConstraintManager::assumeSymLT(ProgramStateRef St, SymbolRef Sym,
                                     const llvm::APSInt &Int,
                                     const llvm::APSInt &Adjustment) {
@@ -477,7 +477,7 @@ RangeConstraintManager::assumeSymLT(ProgramStateRef St, SymbolRef Sym,
   return New.isEmpty() ? NULL : St->set<ConstraintRange>(Sym, New);
 }
 
-ProgramStateRef 
+ProgramStateRef
 RangeConstraintManager::assumeSymGT(ProgramStateRef St, SymbolRef Sym,
                                     const llvm::APSInt &Int,
                                     const llvm::APSInt &Adjustment) {
@@ -506,7 +506,7 @@ RangeConstraintManager::assumeSymGT(ProgramStateRef St, SymbolRef Sym,
   return New.isEmpty() ? NULL : St->set<ConstraintRange>(Sym, New);
 }
 
-ProgramStateRef 
+ProgramStateRef
 RangeConstraintManager::assumeSymGE(ProgramStateRef St, SymbolRef Sym,
                                     const llvm::APSInt &Int,
                                     const llvm::APSInt &Adjustment) {
@@ -535,7 +535,7 @@ RangeConstraintManager::assumeSymGE(ProgramStateRef St, SymbolRef Sym,
   return New.isEmpty() ? NULL : St->set<ConstraintRange>(Sym, New);
 }
 
-ProgramStateRef 
+ProgramStateRef
 RangeConstraintManager::assumeSymLE(ProgramStateRef St, SymbolRef Sym,
                                     const llvm::APSInt &Int,
                                     const llvm::APSInt &Adjustment) {

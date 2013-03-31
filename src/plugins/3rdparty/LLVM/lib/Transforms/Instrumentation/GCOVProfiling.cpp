@@ -183,7 +183,7 @@ namespace {
         write(Lines[i]);
     }
 
-    GCOVLines(StringRef F, raw_ostream *os) 
+    GCOVLines(StringRef F, raw_ostream *os)
       : Filename(F) {
       this->os = os;
     }
@@ -221,7 +221,7 @@ namespace {
       write(Len);
       write(Number);
       for (StringMap<GCOVLines *>::iterator I = LinesByFile.begin(),
-               E = LinesByFile.end(); I != E; ++I) 
+               E = LinesByFile.end(); I != E; ++I)
         I->second->writeOut();
       write(0);
       write(0);
@@ -421,7 +421,7 @@ bool GCOVProfiler::emitProfileArcs() {
   NamedMDNode *CU_Nodes = M->getNamedMetadata("llvm.dbg.cu");
   if (!CU_Nodes) return false;
 
-  bool Result = false;  
+  bool Result = false;
   bool InsertIndCounterIncrCode = false;
   for (unsigned i = 0, e = CU_Nodes->getNumOperands(); i != e; ++i) {
     DICompileUnit CU(CU_Nodes->getOperand(i));
@@ -441,7 +441,7 @@ bool GCOVProfiler::emitProfileArcs() {
         else
           Edges += TI->getNumSuccessors();
       }
-      
+
       ArrayType *CounterTy =
         ArrayType::get(Type::getInt64Ty(*Ctx), Edges);
       GlobalVariable *Counters =
@@ -450,17 +450,17 @@ bool GCOVProfiler::emitProfileArcs() {
                            Constant::getNullValue(CounterTy),
                            "__llvm_gcov_ctr");
       CountersBySP.push_back(std::make_pair(Counters, (MDNode*)SP));
-      
+
       UniqueVector<BasicBlock *> ComplexEdgePreds;
       UniqueVector<BasicBlock *> ComplexEdgeSuccs;
-      
+
       unsigned Edge = 0;
       for (Function::iterator BB = F->begin(), E = F->end(); BB != E; ++BB) {
         TerminatorInst *TI = BB->getTerminator();
         int Successors = isa<ReturnInst>(TI) ? 1 : TI->getNumSuccessors();
         if (Successors) {
           IRBuilder<> Builder(TI);
-          
+
           if (Successors == 1) {
             Value *Counter = Builder.CreateConstInBoundsGEP2_64(Counters, 0,
                                                                 Edge);
@@ -489,13 +489,13 @@ bool GCOVProfiler::emitProfileArcs() {
           Edge += Successors;
         }
       }
-      
+
       if (!ComplexEdgePreds.empty()) {
         GlobalVariable *EdgeTable =
           buildEdgeLookupTable(F, Counters,
                                ComplexEdgePreds, ComplexEdgeSuccs);
         GlobalVariable *EdgeState = getEdgeStateValue();
-        
+
         Type *Int32Ty = Type::getInt32Ty(*Ctx);
         for (int i = 0, e = ComplexEdgePreds.size(); i != e; ++i) {
           IRBuilder<> Builder(ComplexEdgePreds[i+1]->getTerminator());
@@ -662,7 +662,7 @@ void GCOVProfiler::insertCounterWriteout(
         Builder.CreateCall2(EmitFunction,
                             ConstantInt::get(Type::getInt32Ty(*Ctx), ident),
                             Builder.CreateGlobalStringPtr(SP.getName()));
-        
+
         GlobalVariable *GV = I->first;
         unsigned Arcs =
           cast<ArrayType>(GV->getType()->getElementType())->getNumElements();

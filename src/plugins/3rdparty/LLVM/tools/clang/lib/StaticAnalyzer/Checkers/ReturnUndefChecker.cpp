@@ -24,7 +24,7 @@ using namespace clang;
 using namespace ento;
 
 namespace {
-class ReturnUndefChecker : 
+class ReturnUndefChecker :
     public Checker< check::PreStmt<ReturnStmt> > {
   mutable OwningPtr<BuiltinBug> BT;
 public:
@@ -34,14 +34,14 @@ public:
 
 void ReturnUndefChecker::checkPreStmt(const ReturnStmt *RS,
                                       CheckerContext &C) const {
- 
+
   const Expr *RetE = RS->getRetValue();
   if (!RetE)
     return;
-  
+
   if (!C.getState()->getSVal(RetE, C.getLocationContext()).isUndef())
     return;
-  
+
   // "return;" is modeled to evaluate to an UndefinedValue. Allow UndefinedValue
   // to be returned in functions returning void to support the following pattern:
   // void foo() {
@@ -59,12 +59,12 @@ void ReturnUndefChecker::checkPreStmt(const ReturnStmt *RS,
 
   if (!N)
     return;
-  
+
   if (!BT)
     BT.reset(new BuiltinBug("Garbage return value",
                             "Undefined or garbage value returned to caller"));
-    
-  BugReport *report = 
+
+  BugReport *report =
     new BugReport(*BT, BT->getDescription(), N);
 
   report->addRange(RetE->getSourceRange());

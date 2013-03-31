@@ -1026,7 +1026,7 @@ static void handleIBOutlet(Sema &S, Decl *D, const AttributeList &Attr) {
   // check the attribute arguments.
   if (!checkAttributeNumArgs(S, Attr, 0))
     return;
-  
+
   if (!checkIBOutletCommon(S, D, Attr))
     return;
 
@@ -1048,8 +1048,8 @@ static void handleIBOutletCollection(Sema &S, Decl *D,
   IdentifierInfo *II = Attr.getParameterName();
   if (!II)
     II = &S.Context.Idents.get("NSObject");
-  
-  ParsedType TypeRep = S.getTypeName(*II, Attr.getLoc(), 
+
+  ParsedType TypeRep = S.getTypeName(*II, Attr.getLoc(),
                         S.getScopeForContext(D->getDeclContext()->getParent()));
   if (!TypeRep) {
     S.Diag(Attr.getLoc(), diag::err_iboutletcollection_type) << II;
@@ -1205,7 +1205,7 @@ static void handleNonNullAttr(Sema &S, Decl *D, const AttributeList &Attr) {
     // Is the function argument a pointer type?
     QualType T = getFunctionOrMethodArgType(D, x).getNonReferenceType();
     possibleTransparentUnionPointerType(T);
-    
+
     if (!T->isAnyPointerType() && !T->isBlockPointerType()) {
       // FIXME: Should also highlight argument in decl.
       S.Diag(Attr.getLoc(), diag::warn_nonnull_pointers_only)
@@ -1715,13 +1715,13 @@ bool Sema::CheckNoReturnAttr(const AttributeList &attr) {
 
 static void handleAnalyzerNoReturnAttr(Sema &S, Decl *D,
                                        const AttributeList &Attr) {
-  
+
   // The checking path for 'noreturn' and 'analyzer_noreturn' are different
   // because 'analyzer_noreturn' does not impact the type.
-  
+
   if(!checkAttributeNumArgs(S, Attr, 0))
       return;
-  
+
   if (!isFunctionOrMethod(D) && !isa<BlockDecl>(D)) {
     ValueDecl *VD = dyn_cast<ValueDecl>(D);
     if (VD == 0 || (!VD->getType()->isBlockPointerType()
@@ -1733,7 +1733,7 @@ static void handleAnalyzerNoReturnAttr(Sema &S, Decl *D,
       return;
     }
   }
-  
+
   D->addAttr(::new (S.Context) AnalyzerNoReturnAttr(Attr.getRange(), S.Context));
 }
 
@@ -1741,20 +1741,20 @@ static void handleAnalyzerNoReturnAttr(Sema &S, Decl *D,
 static void handleVecReturnAttr(Sema &S, Decl *D, const AttributeList &Attr) {
 /*
   Returning a Vector Class in Registers
-  
-  According to the PPU ABI specifications, a class with a single member of 
+
+  According to the PPU ABI specifications, a class with a single member of
   vector type is returned in memory when used as the return value of a function.
   This results in inefficient code when implementing vector classes. To return
   the value in a single vector register, add the vecreturn attribute to the
   class definition. This attribute is also applicable to struct types.
-  
+
   Example:
-  
+
   struct Vector
   {
     __vector float xyzw;
   } __attribute__((vecreturn));
-  
+
   Vector Add(Vector lhs, Vector rhs)
   {
     Vector result;
@@ -1946,47 +1946,47 @@ static void handleAttrWithMessage(Sema &S, Decl *D, const AttributeList &Attr,
   D->addAttr(::new (S.Context) AttrTy(Attr.getRange(), S.Context, Str));
 }
 
-static void handleArcWeakrefUnavailableAttr(Sema &S, Decl *D, 
+static void handleArcWeakrefUnavailableAttr(Sema &S, Decl *D,
                                             const AttributeList &Attr) {
   unsigned NumArgs = Attr.getNumArgs();
   if (NumArgs > 0) {
     S.Diag(Attr.getLoc(), diag::err_attribute_too_many_arguments) << 0;
     return;
   }
-  
+
   D->addAttr(::new (S.Context) ArcWeakrefUnavailableAttr(
                                           Attr.getRange(), S.Context));
 }
 
-static void handleObjCRootClassAttr(Sema &S, Decl *D, 
+static void handleObjCRootClassAttr(Sema &S, Decl *D,
                                     const AttributeList &Attr) {
   if (!isa<ObjCInterfaceDecl>(D)) {
     S.Diag(Attr.getLoc(), diag::err_attribute_requires_objc_interface);
     return;
   }
-  
+
   unsigned NumArgs = Attr.getNumArgs();
   if (NumArgs > 0) {
     S.Diag(Attr.getLoc(), diag::err_attribute_too_many_arguments) << 0;
     return;
   }
-  
+
   D->addAttr(::new (S.Context) ObjCRootClassAttr(Attr.getRange(), S.Context));
 }
 
-static void handleObjCRequiresPropertyDefsAttr(Sema &S, Decl *D, 
+static void handleObjCRequiresPropertyDefsAttr(Sema &S, Decl *D,
                                             const AttributeList &Attr) {
   if (!isa<ObjCInterfaceDecl>(D)) {
     S.Diag(Attr.getLoc(), diag::err_suppress_autosynthesis);
     return;
   }
-  
+
   unsigned NumArgs = Attr.getNumArgs();
   if (NumArgs > 0) {
     S.Diag(Attr.getLoc(), diag::err_attribute_too_many_arguments) << 0;
     return;
   }
-  
+
   D->addAttr(::new (S.Context) ObjCRequiresPropertyDefsAttr(
                                  Attr.getRange(), S.Context));
 }
@@ -2134,7 +2134,7 @@ static void handleAvailabilityAttr(Sema &S, Decl *D,
   AvailabilityChange Obsoleted = Attr.getAvailabilityObsoleted();
   bool IsUnavailable = Attr.getUnavailableLoc().isValid();
   StringRef Str;
-  const StringLiteral *SE = 
+  const StringLiteral *SE =
     dyn_cast_or_null<const StringLiteral>(Attr.getMessageExpr());
   if (SE)
     Str = SE->getString();
@@ -2251,7 +2251,7 @@ static void handleObjCMethodFamilyAttr(Sema &S, Decl *decl,
     return;
   }
 
-  if (family == ObjCMethodFamilyAttr::OMF_init && 
+  if (family == ObjCMethodFamilyAttr::OMF_init &&
       !method->getResultType()->isObjCObjectPointerType()) {
     S.Diag(method->getLocation(), diag::err_init_method_bad_return_type)
       << method->getResultType();
@@ -2302,7 +2302,7 @@ static void handleObjCNSObject(Sema &S, Decl *D, const AttributeList &Attr) {
     //  @property (retain, nonatomic) struct Bork *Q __attribute__((NSObject));
     //
     // In this case it follows tradition and suppresses an error in the above
-    // case.    
+    // case.
     S.Diag(D->getLocation(), diag::warn_nsobject_attribute);
   }
   D->addAttr(::new (S.Context) ObjCNSObjectAttr(Attr.getRange(), S.Context));
@@ -2462,7 +2462,7 @@ static void handleWarnUnusedResult(Sema &S, Decl *D, const AttributeList &Attr) 
       << Attr.getName() << 1;
       return;
     }
-  
+
   D->addAttr(::new (S.Context) WarnUnusedResultAttr(Attr.getRange(), S.Context));
 }
 
@@ -2524,7 +2524,7 @@ static void handleWeakImportAttr(Sema &S, Decl *D, const AttributeList &Attr) {
 // Handles reqd_work_group_size and work_group_size_hint.
 static void handleWorkGroupSize(Sema &S, Decl *D,
                                 const AttributeList &Attr) {
-  assert(Attr.getKind() == AttributeList::AT_ReqdWorkGroupSize 
+  assert(Attr.getKind() == AttributeList::AT_ReqdWorkGroupSize
       || Attr.getKind() == AttributeList::AT_WorkGroupSizeHint);
 
   // Attribute has 3 arguments.
@@ -2627,7 +2627,7 @@ static void handleNothrowAttr(Sema &S, Decl *D, const AttributeList &Attr) {
     S.Diag(Attr.getLoc(), diag::err_attribute_wrong_number_arguments) << 0;
     return;
   }
-  
+
   if (NoThrowAttr *Existing = D->getAttr<NoThrowAttr>()) {
     if (Existing->getLocation().isInvalid())
       Existing->setRange(Attr.getRange());
@@ -2829,7 +2829,7 @@ static void handleInitPriorityAttr(Sema &S, Decl *D,
     S.Diag(Attr.getLoc(), diag::warn_attribute_ignored) << Attr.getName();
     return;
   }
-  
+
   if (!isa<VarDecl>(D) || S.getCurFunctionOrMethodDecl()) {
     S.Diag(Attr.getLoc(), diag::err_init_priority_object_attr);
     Attr.setInvalid();
@@ -2843,14 +2843,14 @@ static void handleInitPriorityAttr(Sema &S, Decl *D,
     Attr.setInvalid();
     return;
   }
-  
+
   if (Attr.getNumArgs() != 1) {
     S.Diag(Attr.getLoc(), diag::err_attribute_wrong_number_arguments) << 1;
     Attr.setInvalid();
     return;
   }
   Expr *priorityExpr = Attr.getArg(0);
-  
+
   llvm::APSInt priority(32);
   if (priorityExpr->isTypeDependent() || priorityExpr->isValueDependent() ||
       !priorityExpr->isIntegerConstantExpr(priority, S.Context)) {
@@ -2928,10 +2928,10 @@ static void handleFormatAttr(Sema &S, Decl *D, const AttributeList &Attr) {
 
   // Check for supported formats.
   FormatAttrKind Kind = getFormatAttrKind(Format);
-  
+
   if (Kind == IgnoredFormat)
     return;
-  
+
   if (Kind == InvalidFormat) {
     S.Diag(Attr.getLoc(), diag::warn_attribute_type_not_supported)
       << "format" << Attr.getParameterName()->getName();
@@ -3140,16 +3140,16 @@ static void handleAlignedAttr(Sema &S, Decl *D, const AttributeList &Attr) {
   //       weaker alignment, rather than being silently ignored.
 
   if (Attr.getNumArgs() == 0) {
-    D->addAttr(::new (S.Context) AlignedAttr(Attr.getRange(), S.Context, 
+    D->addAttr(::new (S.Context) AlignedAttr(Attr.getRange(), S.Context,
                true, 0, Attr.isDeclspecAttribute()));
     return;
   }
 
-  S.AddAlignedAttr(Attr.getRange(), D, Attr.getArg(0), 
+  S.AddAlignedAttr(Attr.getRange(), D, Attr.getArg(0),
                    Attr.isDeclspecAttribute());
 }
 
-void Sema::AddAlignedAttr(SourceRange AttrRange, Decl *D, Expr *E, 
+void Sema::AddAlignedAttr(SourceRange AttrRange, Decl *D, Expr *E,
                           bool isDeclSpec) {
   // FIXME: Handle pack-expansions here.
   if (DiagnoseUnexpandedParameterPack(E))
@@ -3157,11 +3157,11 @@ void Sema::AddAlignedAttr(SourceRange AttrRange, Decl *D, Expr *E,
 
   if (E->isTypeDependent() || E->isValueDependent()) {
     // Save dependent expressions in the AST to be instantiated.
-    D->addAttr(::new (Context) AlignedAttr(AttrRange, Context, true, E, 
+    D->addAttr(::new (Context) AlignedAttr(AttrRange, Context, true, E,
                                            isDeclSpec));
     return;
   }
-  
+
   SourceLocation AttrLoc = AttrRange.getBegin();
   // FIXME: Cache the number on the Attr object?
   llvm::APSInt Alignment(32);
@@ -3180,21 +3180,21 @@ void Sema::AddAlignedAttr(SourceRange AttrRange, Decl *D, Expr *E,
     // We've already verified it's a power of 2, now let's make sure it's
     // 8192 or less.
     if (Alignment.getZExtValue() > 8192) {
-      Diag(AttrLoc, diag::err_attribute_aligned_greater_than_8192) 
+      Diag(AttrLoc, diag::err_attribute_aligned_greater_than_8192)
         << E->getSourceRange();
       return;
     }
   }
 
-  D->addAttr(::new (Context) AlignedAttr(AttrRange, Context, true, ICE.take(), 
+  D->addAttr(::new (Context) AlignedAttr(AttrRange, Context, true, ICE.take(),
                                          isDeclSpec));
 }
 
-void Sema::AddAlignedAttr(SourceRange AttrRange, Decl *D, TypeSourceInfo *TS, 
+void Sema::AddAlignedAttr(SourceRange AttrRange, Decl *D, TypeSourceInfo *TS,
                           bool isDeclSpec) {
   // FIXME: Cache the number on the Attr object if non-dependent?
   // FIXME: Perform checking of type validity
-  D->addAttr(::new (Context) AlignedAttr(AttrRange, Context, false, TS, 
+  D->addAttr(::new (Context) AlignedAttr(AttrRange, Context, false, TS,
                                          isDeclSpec));
   return;
 }
@@ -3848,13 +3848,13 @@ static void handleTypeTagForDatatypeAttr(Sema &S, Decl *D,
 //===----------------------------------------------------------------------===//
 
 static bool isValidSubjectOfNSAttribute(Sema &S, QualType type) {
-  return type->isDependentType() || 
-         type->isObjCObjectPointerType() || 
+  return type->isDependentType() ||
+         type->isObjCObjectPointerType() ||
          S.Context.isObjCNSObjectType(type);
 }
 static bool isValidSubjectOfCFAttribute(Sema &S, QualType type) {
-  return type->isDependentType() || 
-         type->isPointerType() || 
+  return type->isDependentType() ||
+         type->isPointerType() ||
          isValidSubjectOfNSAttribute(S, type);
 }
 
@@ -3983,7 +3983,7 @@ static void handleObjCReturnsInnerPointerAttr(Sema &S, Decl *D,
 
   // Check that the method returns a normal pointer.
   QualType resultType = method->getResultType();
-    
+
   if (!resultType->isReferenceType() &&
       (!resultType->isPointerType() || resultType->isObjCRetainableType())) {
     S.Diag(method->getLocStart(), diag::warn_ns_attribute_wrong_return_type)
@@ -4002,7 +4002,7 @@ static void handleObjCRequiresSuperAttr(Sema &S, Decl *D,
                                         const AttributeList &attr) {
   SourceLocation loc = attr.getLoc();
   ObjCMethodDecl *method = dyn_cast<ObjCMethodDecl>(D);
-  
+
   if (!method) {
    S.Diag(D->getLocStart(), diag::err_attribute_wrong_decl_type)
    << SourceRange(loc, loc) << attr.getName() << ExpectedMethod;
@@ -4020,7 +4020,7 @@ static void handleObjCRequiresSuperAttr(Sema &S, Decl *D,
     << attr.getName() << 1;
     return;
   }
-  
+
   method->addAttr(
     ::new (S.Context) ObjCRequiresSuperAttr(attr.getRange(), S.Context));
 }
@@ -4339,7 +4339,7 @@ static void ProcessInheritableDeclAttr(Sema &S, Scope *scope, Decl *D,
 
   case AttributeList::AT_ObjCRequiresSuper:
       handleObjCRequiresSuperAttr(S, D, Attr); break;
-      
+
   case AttributeList::AT_NSBridged:
     handleNSBridgedAttr(S, scope, D, Attr); break;
 
@@ -4364,22 +4364,22 @@ static void ProcessInheritableDeclAttr(Sema &S, Scope *scope, Decl *D,
   case AttributeList::AT_ReqdWorkGroupSize:
     handleWorkGroupSize(S, D, Attr); break;
 
-  case AttributeList::AT_InitPriority: 
+  case AttributeList::AT_InitPriority:
       handleInitPriorityAttr(S, D, Attr); break;
-      
+
   case AttributeList::AT_Packed:      handlePackedAttr      (S, D, Attr); break;
   case AttributeList::AT_Section:     handleSectionAttr     (S, D, Attr); break;
   case AttributeList::AT_Unavailable:
     handleAttrWithMessage<UnavailableAttr>(S, D, Attr, "unavailable");
     break;
-  case AttributeList::AT_ArcWeakrefUnavailable: 
-    handleArcWeakrefUnavailableAttr (S, D, Attr); 
+  case AttributeList::AT_ArcWeakrefUnavailable:
+    handleArcWeakrefUnavailableAttr (S, D, Attr);
     break;
   case AttributeList::AT_ObjCRootClass:
     handleObjCRootClassAttr(S, D, Attr);
     break;
-  case AttributeList::AT_ObjCRequiresPropertyDefs: 
-    handleObjCRequiresPropertyDefsAttr (S, D, Attr); 
+  case AttributeList::AT_ObjCRequiresPropertyDefs:
+    handleObjCRequiresPropertyDefsAttr (S, D, Attr);
     break;
   case AttributeList::AT_Unused:      handleUnusedAttr      (S, D, Attr); break;
   case AttributeList::AT_ReturnsTwice:
@@ -4521,8 +4521,8 @@ static void ProcessInheritableDeclAttr(Sema &S, Scope *scope, Decl *D,
     // Ask target about the attribute.
     const TargetAttributesSema &TargetAttrs = S.getTargetAttributesSema();
     if (!TargetAttrs.ProcessDeclAttribute(scope, D, Attr, S))
-      S.Diag(Attr.getLoc(), Attr.isDeclspecAttribute() ? 
-             diag::warn_unhandled_ms_attribute_ignored : 
+      S.Diag(Attr.getLoc(), Attr.isDeclspecAttribute() ?
+             diag::warn_unhandled_ms_attribute_ignored :
              diag::warn_unknown_attribute_ignored) << Attr.getName();
     break;
   }
@@ -4538,9 +4538,9 @@ static void ProcessDeclAttribute(Sema &S, Scope *scope, Decl *D,
   if (Attr.isInvalid())
     return;
 
-  // Type attributes are still treated as declaration attributes by 
-  // ParseMicrosoftTypeAttributes and ParseBorlandTypeAttributes.  We don't 
-  // want to process them, however, because we will simply warn about ignoring 
+  // Type attributes are still treated as declaration attributes by
+  // ParseMicrosoftTypeAttributes and ParseBorlandTypeAttributes.  We don't
+  // want to process them, however, because we will simply warn about ignoring
   // them.  So instead, we will bail out early.
   if (Attr.isMSTypespecAttribute())
     return;
@@ -4755,9 +4755,9 @@ static void handleDelayedForbiddenType(Sema &S, DelayedDiagnostic &diag,
   if (S.getLangOpts().ObjCAutoRefCount)
     if (const FunctionDecl *FD = dyn_cast<FunctionDecl>(decl)) {
       // FIXME: we may want to suppress diagnostics for all
-      // kind of forbidden type messages on unavailable functions. 
+      // kind of forbidden type messages on unavailable functions.
       if (FD->hasAttr<UnavailableAttr>() &&
-          diag.getForbiddenTypeDiagnostic() == 
+          diag.getForbiddenTypeDiagnostic() ==
           diag::err_arc_array_param_no_ownership) {
         diag.Triggered = true;
         return;
@@ -4880,7 +4880,7 @@ void Sema::EmitDeprecationWarning(NamedDecl *D, StringRef Message,
                                   const ObjCPropertyDecl  *ObjCProperty) {
   // Delay if we're currently parsing a declaration.
   if (DelayedDiagnostics.shouldDelayDiagnostics()) {
-    DelayedDiagnostics.add(DelayedDiagnostic::makeDeprecation(Loc, D, 
+    DelayedDiagnostics.add(DelayedDiagnostic::makeDeprecation(Loc, D,
                                                               UnknownObjCClass,
                                                               ObjCProperty,
                                                               Message));

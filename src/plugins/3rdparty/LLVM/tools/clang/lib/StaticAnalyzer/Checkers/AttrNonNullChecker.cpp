@@ -7,7 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 //
-// This defines AttrNonNullChecker, a builtin check in ExprEngine that 
+// This defines AttrNonNullChecker, a builtin check in ExprEngine that
 // performs checks for arguments declared to have nonnull attribute.
 //
 //===----------------------------------------------------------------------===//
@@ -75,7 +75,7 @@ void AttrNonNullChecker::checkPreCall(const CallEvent &Call,
         DV = dyn_cast<DefinedSVal>(&V);
         assert(++CSV_I == CSV->end());
         if (!DV)
-          continue;        
+          continue;
       } else {
         // FIXME: Handle LazyCompoundVals?
         continue;

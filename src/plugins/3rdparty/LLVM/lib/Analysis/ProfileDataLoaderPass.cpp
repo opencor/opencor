@@ -82,7 +82,7 @@ char &llvm::ProfileMetadataLoaderPassID = ProfileMetadataLoaderPass::ID;
 /// createProfileMetadataLoaderPass - This function returns a Pass that loads
 /// the profiling information for the module from the specified filename,
 /// making it available to the optimizers.
-ModulePass *llvm::createProfileMetadataLoaderPass() { 
+ModulePass *llvm::createProfileMetadataLoaderPass() {
     return new ProfileMetadataLoaderPass();
 }
 ModulePass *llvm::createProfileMetadataLoaderPass(const std::string &Filename) {

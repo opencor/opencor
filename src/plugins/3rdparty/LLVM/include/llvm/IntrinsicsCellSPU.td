@@ -1,11 +1,11 @@
 //==- IntrinsicsCellSPU.td - Cell SDK intrinsics           -*- tablegen -*-==//
-// 
+//
 //                     The LLVM Compiler Infrastructure
 //
 // This file is distributed under the University of Illinois Open Source
 // Department at The Aerospace Corporation and is distributed under the
 // License. See LICENSE.TXT for details.
-// 
+//
 //===----------------------------------------------------------------------===//
 // Cell SPU Instructions:
 //===----------------------------------------------------------------------===//
@@ -173,7 +173,7 @@ let TargetPrefix = "spu" in {
     Intrinsic<[llvm_v8i16_ty], [llvm_v8i16_ty, llvm_i32_ty],
               [IntrNoMem]>;
   def int_spu_si_shlqbyi:       v16i8_u7imm<"shlqbyi">;
-  
+
   def int_spu_si_ceq:           v4i32_rr<"ceq">;
   def int_spu_si_ceqi:          v4i32_s10imm<"ceqi">;
   def int_spu_si_ceqb:          v16i8_rr<"ceqb">;
@@ -192,19 +192,19 @@ let TargetPrefix = "spu" in {
   def int_spu_si_clgthi:        v8i16_s10imm<"clgthi">;
   def int_spu_si_clgt:          v4i32_rr<"clgt">;
   def int_spu_si_clgti:         v4i32_s10imm<"clgti">;
-  
+
   def int_spu_si_and:           v4i32_rr<"and">;
   def int_spu_si_andbi:         v16i8_u8imm<"andbi">;
   def int_spu_si_andc:          v4i32_rr<"andc">;
   def int_spu_si_andhi:         v8i16_s10imm<"andhi">;
   def int_spu_si_andi:          v4i32_s10imm<"andi">;
-  
+
   def int_spu_si_or:            v4i32_rr<"or">;
   def int_spu_si_orbi:          v16i8_u8imm<"orbi">;
   def int_spu_si_orc:           v4i32_rr<"orc">;
   def int_spu_si_orhi:          v8i16_s10imm<"orhi">;
   def int_spu_si_ori:           v4i32_s10imm<"ori">;
-  
+
   def int_spu_si_xor:           v4i32_rr<"xor">;
   def int_spu_si_xorbi:         v16i8_u8imm<"xorbi">;
   def int_spu_si_xorhi:         v8i16_s10imm<"xorhi">;
@@ -212,16 +212,16 @@ let TargetPrefix = "spu" in {
 
   def int_spu_si_nor:           v4i32_rr<"nor">;
   def int_spu_si_nand:          v4i32_rr<"nand">;
-  
+
   def int_spu_si_fa:            v4f32_rr<"fa">;
   def int_spu_si_fs:            v4f32_rr<"fs">;
   def int_spu_si_fm:            v4f32_rr<"fm">;
-  
+
   def int_spu_si_fceq:          v4f32_rr<"fceq">;
   def int_spu_si_fcmeq:         v4f32_rr<"fcmeq">;
   def int_spu_si_fcgt:          v4f32_rr<"fcgt">;
   def int_spu_si_fcmgt:         v4f32_rr<"fcmgt">;
-  
+
   def int_spu_si_fma:           v4f32_rrr<"fma">;
   def int_spu_si_fnms:          v4f32_rrr<"fnms">;
   def int_spu_si_fms:           v4f32_rrr<"fms">;
@@ -229,12 +229,12 @@ let TargetPrefix = "spu" in {
   def int_spu_si_dfa:           v2f64_rr<"dfa">;
   def int_spu_si_dfs:           v2f64_rr<"dfs">;
   def int_spu_si_dfm:           v2f64_rr<"dfm">;
-  
+
 //def int_spu_si_dfceq:         v2f64_rr<"dfceq">;
 //def int_spu_si_dfcmeq:        v2f64_rr<"dfcmeq">;
 //def int_spu_si_dfcgt:         v2f64_rr<"dfcgt">;
 //def int_spu_si_dfcmgt:        v2f64_rr<"dfcmgt">;
-  
+
   def int_spu_si_dfnma:         v2f64_rr<"dfnma">;
   def int_spu_si_dfma:          v2f64_rr<"dfma">;
   def int_spu_si_dfnms:         v2f64_rr<"dfnms">;

@@ -516,7 +516,7 @@ _mm_loadl_pd(__m128d a, double const *dp)
     double u;
   } __attribute__((__packed__, __may_alias__));
   double u = ((struct __mm_loadl_pd_struct*)dp)->u;
-  return (__m128d){ u, a[1] }; 
+  return (__m128d){ u, a[1] };
 }
 
 static __inline__ __m128d __attribute__((__always_inline__, __nodebug__))

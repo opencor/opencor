@@ -71,7 +71,7 @@ public:
     virtual QwtInterval interval(Qt::Axis) const;
     virtual QRectF pixelHint( const QRectF & ) const;
 
-    void setDefaultContourPen( const QColor &, 
+    void setDefaultContourPen( const QColor &,
         qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
     void setDefaultContourPen( const QPen & );
     QPen defaultContourPen() const;

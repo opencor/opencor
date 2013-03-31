@@ -37,7 +37,7 @@ public:
   virtual void TypeRead(serialization::TypeIdx Idx, QualType T);
   virtual void DeclRead(serialization::DeclID ID, const Decl *D);
   virtual void SelectorRead(serialization::SelectorID iD, Selector Sel);
-  virtual void MacroDefinitionRead(serialization::PreprocessedEntityID, 
+  virtual void MacroDefinitionRead(serialization::PreprocessedEntityID,
                                    MacroDefinition *MD);
 private:
   std::vector<ASTDeserializationListener*> Listeners;

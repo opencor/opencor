@@ -9,7 +9,7 @@
 //
 // This file implements a pass that prints instructions, and associated debug
 // info:
-// 
+//
 //   - source/line/col information
 //   - original variable name
 //   - original type name
@@ -178,7 +178,7 @@ void PrintDbgInfo::printVariableDeclaration(const Value *V) {
 
   Out << "; ";
   WriteAsOperand(Out, V, false, 0);
-  if (isa<Function>(V)) 
+  if (isa<Function>(V))
     Out << " is function " << DisplayName
         << " of type " << Type << " declared at ";
   else

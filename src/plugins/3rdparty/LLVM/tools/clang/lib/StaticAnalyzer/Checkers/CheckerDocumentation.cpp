@@ -220,7 +220,7 @@ public:
   /// changed, this allows the analyzer core to skip the more expensive
   /// #checkRegionChanges when no checkers are tracking any state.
   bool wantsRegionChangeUpdate(ProgramStateRef St) const { return true; }
-  
+
   /// \brief Called when the contents of one or more regions change.
   ///
   /// This can occur in many different ways: an explicit bind, a blanket
@@ -244,7 +244,7 @@ public:
   /// #wantsRegionChangeUpdate returns \c true.
   ///
   /// check::RegionChanges
-  ProgramStateRef 
+  ProgramStateRef
     checkRegionChanges(ProgramStateRef State,
                        const StoreManager::InvalidatedSymbols *Invalidated,
                        ArrayRef<const MemRegion *> ExplicitRegions,

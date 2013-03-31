@@ -34,15 +34,15 @@ class TagDecl;
 enum ExternalLoadResult {
   /// \brief Loading the external information has succeeded.
   ELR_Success,
-  
+
   /// \brief Loading the external information has failed.
   ELR_Failure,
-  
+
   /// \brief The external information has already been loaded, and therefore
   /// no additional processing is required.
   ELR_AlreadyLoaded
 };
-  
+
 /// \brief Abstract interface for external sources of AST nodes.
 ///
 /// External AST sources provide AST nodes constructed from some
@@ -163,7 +163,7 @@ public:
 
   /// \brief Get the decls that are contained in a file in the Offset/Length
   /// range. \p Length can be 0 to indicate a point at \p Offset instead of
-  /// a range. 
+  /// a range.
   virtual void FindFileRegionDecls(FileID File, unsigned Offset,unsigned Length,
                                    SmallVectorImpl<Decl *> &Decls) {}
 
@@ -175,7 +175,7 @@ public:
   /// incomplete Objective-C class.
   ///
   /// This routine will only be invoked if the "externally completed" bit is
-  /// set on the ObjCInterfaceDecl via the function 
+  /// set on the ObjCInterfaceDecl via the function
   /// \c ObjCInterfaceDecl::setExternallyCompleted().
   virtual void CompleteType(ObjCInterfaceDecl *Class) { }
 
@@ -206,11 +206,11 @@ public:
   ///
   /// The default implementation of this method is a no-op.
   virtual void PrintStats();
-  
-  
+
+
   /// \brief Perform layout on the given record.
   ///
-  /// This routine allows the external AST source to provide an specific 
+  /// This routine allows the external AST source to provide an specific
   /// layout for a record, overriding the layout that would normally be
   /// constructed. It is intended for clients who receive specific layout
   /// details rather than source code (such as LLDB). The client is expected
@@ -227,36 +227,36 @@ public:
   /// expressed in bits. All of the fields must be provided with offsets.
   ///
   /// \param BaseOffsets The offset of each of the direct, non-virtual base
-  /// classes. If any bases are not given offsets, the bases will be laid 
+  /// classes. If any bases are not given offsets, the bases will be laid
   /// out according to the ABI.
   ///
   /// \param VirtualBaseOffsets The offset of each of the virtual base classes
-  /// (either direct or not). If any bases are not given offsets, the bases will be laid 
+  /// (either direct or not). If any bases are not given offsets, the bases will be laid
   /// out according to the ABI.
-  /// 
+  ///
   /// \returns true if the record layout was provided, false otherwise.
-  virtual bool 
+  virtual bool
   layoutRecordType(const RecordDecl *Record,
                    uint64_t &Size, uint64_t &Alignment,
                    llvm::DenseMap<const FieldDecl *, uint64_t> &FieldOffsets,
                  llvm::DenseMap<const CXXRecordDecl *, CharUnits> &BaseOffsets,
           llvm::DenseMap<const CXXRecordDecl *, CharUnits> &VirtualBaseOffsets)
-  { 
+  {
     return false;
   }
-  
+
   //===--------------------------------------------------------------------===//
   // Queries for performance analysis.
   //===--------------------------------------------------------------------===//
-  
+
   struct MemoryBufferSizes {
     size_t malloc_bytes;
     size_t mmap_bytes;
-    
+
     MemoryBufferSizes(size_t malloc_bytes, size_t mmap_bytes)
     : malloc_bytes(malloc_bytes), mmap_bytes(mmap_bytes) {}
   };
-  
+
   /// Return the amount of memory used by memory buffers, breaking down
   /// by heap-backed versus mmap'ed memory.
   MemoryBufferSizes getMemoryBufferSizes() const {
@@ -344,10 +344,10 @@ public:
 /// \brief Represents a lazily-loaded vector of data.
 ///
 /// The lazily-loaded vector of data contains data that is partially loaded
-/// from an external source and partially added by local translation. The 
+/// from an external source and partially added by local translation. The
 /// items loaded from the external source are loaded lazily, when needed for
 /// iteration over the complete vector.
-template<typename T, typename Source, 
+template<typename T, typename Source,
          void (Source::*Loader)(SmallVectorImpl<T>&),
          unsigned LoadedStorage = 2, unsigned LocalStorage = 4>
 class LazyVector {
@@ -358,7 +358,7 @@ public:
   // Iteration over the elements in the vector.
   class iterator {
     LazyVector *Self;
-    
+
     /// \brief Position within the vector..
     ///
     /// In a complete iteration, the Position field walks the range [-M, N),
@@ -367,148 +367,148 @@ public:
     /// indicate elements added via \c push_back().
     /// However, to provide iteration in source order (for, e.g., chained
     /// precompiled headers), dereferencing the iterator flips the negative
-    /// values (corresponding to loaded entities), so that position -M 
+    /// values (corresponding to loaded entities), so that position -M
     /// corresponds to element 0 in the loaded entities vector, position -M+1
     /// corresponds to element 1 in the loaded entities vector, etc. This
     /// gives us a reasonably efficient, source-order walk.
     int Position;
-    
+
     friend class LazyVector;
-    
+
   public:
     typedef T                   value_type;
     typedef value_type&         reference;
     typedef value_type*         pointer;
     typedef std::random_access_iterator_tag iterator_category;
     typedef int                 difference_type;
-    
+
     iterator() : Self(0), Position(0) { }
-    
-    iterator(LazyVector *Self, int Position) 
+
+    iterator(LazyVector *Self, int Position)
       : Self(Self), Position(Position) { }
-    
+
     reference operator*() const {
       if (Position < 0)
         return Self->Loaded.end()[Position];
       return Self->Local[Position];
     }
-    
+
     pointer operator->() const {
       if (Position < 0)
         return &Self->Loaded.end()[Position];
-      
-      return &Self->Local[Position];        
+
+      return &Self->Local[Position];
     }
-    
+
     reference operator[](difference_type D) {
       return *(*this + D);
     }
-    
+
     iterator &operator++() {
       ++Position;
       return *this;
     }
-    
+
     iterator operator++(int) {
       iterator Prev(*this);
       ++Position;
       return Prev;
     }
-    
+
     iterator &operator--() {
       --Position;
       return *this;
     }
-    
+
     iterator operator--(int) {
       iterator Prev(*this);
       --Position;
       return Prev;
     }
-    
+
     friend bool operator==(const iterator &X, const iterator &Y) {
       return X.Position == Y.Position;
     }
-    
+
     friend bool operator!=(const iterator &X, const iterator &Y) {
       return X.Position != Y.Position;
     }
-    
+
     friend bool operator<(const iterator &X, const iterator &Y) {
       return X.Position < Y.Position;
     }
-    
+
     friend bool operator>(const iterator &X, const iterator &Y) {
       return X.Position > Y.Position;
     }
-    
+
     friend bool operator<=(const iterator &X, const iterator &Y) {
       return X.Position < Y.Position;
     }
-    
+
     friend bool operator>=(const iterator &X, const iterator &Y) {
       return X.Position > Y.Position;
     }
-    
+
     friend iterator& operator+=(iterator &X, difference_type D) {
       X.Position += D;
       return X;
     }
-    
+
     friend iterator& operator-=(iterator &X, difference_type D) {
       X.Position -= D;
       return X;
     }
-    
+
     friend iterator operator+(iterator X, difference_type D) {
       X.Position += D;
       return X;
     }
-    
+
     friend iterator operator+(difference_type D, iterator X) {
       X.Position += D;
       return X;
     }
-    
+
     friend difference_type operator-(const iterator &X, const iterator &Y) {
       return X.Position - Y.Position;
     }
-    
+
     friend iterator operator-(iterator X, difference_type D) {
       X.Position -= D;
       return X;
     }
   };
   friend class iterator;
-  
+
   iterator begin(Source *source, bool LocalOnly = false) {
     if (LocalOnly)
       return iterator(this, 0);
-    
+
     if (source)
       (source->*Loader)(Loaded);
     return iterator(this, -(int)Loaded.size());
   }
-  
+
   iterator end() {
     return iterator(this, Local.size());
   }
-  
+
   void push_back(const T& LocalValue) {
     Local.push_back(LocalValue);
   }
-  
+
   void erase(iterator From, iterator To) {
     if (From.Position < 0 && To.Position < 0) {
       Loaded.erase(Loaded.end() + From.Position, Loaded.end() + To.Position);
       return;
     }
-    
+
     if (From.Position < 0) {
       Loaded.erase(Loaded.end() + From.Position, Loaded.end());
       From = begin(0, true);
     }
-    
+
     Local.erase(Local.begin() + From.Position, Local.begin() + To.Position);
   }
 };
@@ -522,7 +522,7 @@ typedef LazyOffsetPtr<Decl, uint32_t, &ExternalASTSource::GetExternalDecl>
   LazyDeclPtr;
 
 /// \brief A lazy pointer to a set of CXXBaseSpecifiers.
-typedef LazyOffsetPtr<CXXBaseSpecifier, uint64_t, 
+typedef LazyOffsetPtr<CXXBaseSpecifier, uint64_t,
                       &ExternalASTSource::GetExternalCXXBaseSpecifiers>
   LazyCXXBaseSpecifiersPtr;
 

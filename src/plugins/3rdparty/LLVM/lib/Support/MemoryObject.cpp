@@ -9,7 +9,7 @@
 
 #include "llvm/Support/MemoryObject.h"
 using namespace llvm;
-  
+
 MemoryObject::~MemoryObject() {
 }
 
@@ -26,12 +26,12 @@ int MemoryObject::readBytes(uint64_t address,
   while (current - address < size) {
     if (readByte(current, &buf[(current - address)]))
       return -1;
-    
+
     current++;
   }
-  
+
   if (copied)
     *copied = current - address;
-  
+
   return 0;
 }

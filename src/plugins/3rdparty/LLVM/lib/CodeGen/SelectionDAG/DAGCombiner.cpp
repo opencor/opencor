@@ -2469,7 +2469,7 @@ SDValue DAGCombiner::visitAND(SDNode *N) {
       return SDValue(N, 0);   // Return N so it doesn't get rechecked!
     }
   }
-  // similarly fold (and (X (load ([non_ext|any_ext|zero_ext] V))), c) -> 
+  // similarly fold (and (X (load ([non_ext|any_ext|zero_ext] V))), c) ->
   // (X (load ([non_ext|zero_ext] V))) if 'and' only clears top bits which must
   // already be zero by virtue of the width of the base type of the load.
   //
@@ -2766,7 +2766,7 @@ SDValue DAGCombiner::visitAND(SDNode *N) {
       }
     }
   }
-      
+
 
   return SDValue();
 }
@@ -5963,7 +5963,7 @@ SDValue DAGCombiner::visitFSUB(SDNode *N) {
     }
 
     // fold (fsub (-(fmul, x, y)), z) -> (fma (fneg x), y, (fneg z))
-    if (N0.getOpcode() == ISD::FNEG && 
+    if (N0.getOpcode() == ISD::FNEG &&
         N0.getOperand(0).getOpcode() == ISD::FMUL &&
         N0->hasOneUse() && N0.getOperand(0).hasOneUse()) {
       SDValue N00 = N0.getOperand(0).getOperand(0);
@@ -6019,7 +6019,7 @@ SDValue DAGCombiner::visitFMUL(SDNode *N) {
   // fold (fmul (fneg X), (fneg Y)) -> (fmul X, Y)
   if (char LHSNeg = isNegatibleForFree(N0, LegalOperations, TLI,
                                        &DAG.getTarget().Options)) {
-    if (char RHSNeg = isNegatibleForFree(N1, LegalOperations, TLI, 
+    if (char RHSNeg = isNegatibleForFree(N1, LegalOperations, TLI,
                                          &DAG.getTarget().Options)) {
       // Both can be negated for free, check to see if at least one is cheaper
       // negated.
@@ -6564,7 +6564,7 @@ SDValue DAGCombiner::visitFABS(SDNode *N) {
 
   // Transform fabs(bitconvert(x)) -> bitconvert(x&~sign) to avoid loading
   // constant pool values.
-  if (!TLI.isFAbsFree(VT) && 
+  if (!TLI.isFAbsFree(VT) &&
       N0.getOpcode() == ISD::BITCAST && N0.getNode()->hasOneUse() &&
       N0.getOperand(0).getValueType().isInteger() &&
       !N0.getOperand(0).getValueType().isVector()) {
@@ -7000,7 +7000,7 @@ bool DAGCombiner::CombineToPostIndexedLoadStore(SDNode *N) {
           for (SDNode::use_iterator III = Use->use_begin(),
                  EEE = Use->use_end(); III != EEE; ++III) {
             SDNode *UseUse = *III;
-            if (!canFoldInAddressingMode(Use, UseUse, DAG, TLI)) 
+            if (!canFoldInAddressingMode(Use, UseUse, DAG, TLI))
               RealUse = true;
           }
 
@@ -7815,7 +7815,7 @@ bool DAGCombiner::MergeConsecutiveStores(StoreSDNode* St) {
     // All loads much share the same chain.
     if (LoadNodes[i].MemNode->getChain() != FirstChain)
       break;
-    
+
     int64_t CurrAddress = LoadNodes[i].OffsetFromBase;
     if (CurrAddress - StartAddress != (ElementSizeBytes * i))
       break;
@@ -8359,7 +8359,7 @@ SDValue DAGCombiner::visitEXTRACT_VECTOR_ELT(SDNode *N) {
     } else {
       Load = DAG.getLoad(LVT, N->getDebugLoc(), LN0->getChain(), NewPtr,
                          LN0->getPointerInfo().getWithOffset(PtrOff),
-                         LN0->isVolatile(), LN0->isNonTemporal(), 
+                         LN0->isVolatile(), LN0->isNonTemporal(),
                          LN0->isInvariant(), Align);
       Chain = Load.getValue(1);
       if (NVT.bitsLT(LVT))

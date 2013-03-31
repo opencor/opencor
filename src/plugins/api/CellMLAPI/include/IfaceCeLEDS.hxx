@@ -23,7 +23,7 @@ namespace iface
 {
   namespace cellml_services
   {
-    PUBLIC_CeLEDS_PRE 
+    PUBLIC_CeLEDS_PRE
     class  PUBLIC_CeLEDS_POST LanguageDictionary
      : public virtual iface::XPCOM::IObject
     {
@@ -33,7 +33,7 @@ namespace iface
       virtual std::wstring getValue(const std::wstring& keyName) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::dom::NodeList>  getMappings() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CeLEDS_PRE 
+    PUBLIC_CeLEDS_PRE
     class  PUBLIC_CeLEDS_POST DictionaryGenerator
      : public virtual iface::XPCOM::IObject
     {
@@ -44,7 +44,7 @@ namespace iface
       virtual already_AddRefd<iface::dom::Element>  getElementNS(const std::wstring& nameSpace, const std::wstring& elementName) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_services::MaLaESTransform>  getMalTransform() throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
-    PUBLIC_CeLEDS_PRE 
+    PUBLIC_CeLEDS_PRE
     class  PUBLIC_CeLEDS_POST CeLEDSBootstrap
      : public virtual iface::XPCOM::IObject
     {

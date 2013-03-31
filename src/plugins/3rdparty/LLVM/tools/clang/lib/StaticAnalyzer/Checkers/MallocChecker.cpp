@@ -162,7 +162,7 @@ public:
 private:
   void initIdentifierInfo(ASTContext &C) const;
 
-  /// Check if this is one of the functions which can allocate/reallocate memory 
+  /// Check if this is one of the functions which can allocate/reallocate memory
   /// pointed to by one of its arguments.
   bool isMemFunction(const FunctionDecl *FD, ASTContext &C) const;
   bool isFreeFunction(const FunctionDecl *FD, ASTContext &C) const;
@@ -205,7 +205,7 @@ private:
   ProgramStateRef ReallocMem(CheckerContext &C, const CallExpr *CE,
                              bool FreesMemOnFailure) const;
   static ProgramStateRef CallocMem(CheckerContext &C, const CallExpr *CE);
-  
+
   ///\brief Check if the memory associated with this symbol was released.
   bool isReleased(SymbolRef Sym, CheckerContext &C) const;
 
@@ -343,7 +343,7 @@ private:
 REGISTER_MAP_WITH_PROGRAMSTATE(RegionState, SymbolRef, RefState)
 REGISTER_MAP_WITH_PROGRAMSTATE(ReallocPairs, SymbolRef, ReallocPair)
 
-// A map from the freed symbol to the symbol representing the return value of 
+// A map from the freed symbol to the symbol representing the return value of
 // the free function.
 REGISTER_MAP_WITH_PROGRAMSTATE(FreeReturnValue, SymbolRef, SymbolRef)
 
@@ -435,7 +435,7 @@ bool MallocChecker::isFreeFunction(const FunctionDecl *FD, ASTContext &C) const 
 void MallocChecker::checkPostStmt(const CallExpr *CE, CheckerContext &C) const {
   if (C.wasInlined)
     return;
-  
+
   const FunctionDecl *FD = C.getCalleeDecl(CE);
   if (!FD)
     return;
@@ -571,7 +571,7 @@ ProgramStateRef MallocChecker::MallocMemAux(CheckerContext &C,
     state = state->assume(extentMatchesSize, true);
     assert(state);
   }
-  
+
   return MallocUpdateRefState(C, CE, state);
 }
 
@@ -671,24 +671,24 @@ ProgramStateRef MallocChecker::FreeMemAux(CheckerContext &C,
     return 0;
 
   const MemRegion *R = ArgVal.getAsRegion();
-  
+
   // Nonlocs can't be freed, of course.
   // Non-region locations (labels and fixed addresses) also shouldn't be freed.
   if (!R) {
     ReportBadFree(C, ArgVal, ArgExpr->getSourceRange());
     return 0;
   }
-  
+
   R = R->StripCasts();
-  
+
   // Blocks might show up as heap data, but should not be free()d
   if (isa<BlockDataRegion>(R)) {
     ReportBadFree(C, ArgVal, ArgExpr->getSourceRange());
     return 0;
   }
-  
+
   const MemSpaceRegion *MS = R->getMemorySpace();
-  
+
   // Parameters, locals, statics, and globals shouldn't be freed.
   if (!(isa<UnknownSpaceRegion>(MS) || isa<HeapSpaceRegion>(MS))) {
     // FIXME: at the time this code was written, malloc() regions were
@@ -698,11 +698,11 @@ ProgramStateRef MallocChecker::FreeMemAux(CheckerContext &C,
     // Of course, free() can work on memory allocated outside the current
     // function, so UnknownSpaceRegion is always a possibility.
     // False negatives are better than false positives.
-    
+
     ReportBadFree(C, ArgVal, ArgExpr->getSourceRange());
     return 0;
   }
-  
+
   const SymbolicRegion *SR = dyn_cast<SymbolicRegion>(R);
   // Various cases could lead to non-symbol values here.
   // For now, ignore them.
@@ -722,8 +722,8 @@ ProgramStateRef MallocChecker::FreeMemAux(CheckerContext &C,
       if (!BT_DoubleFree)
         BT_DoubleFree.reset(
           new BugType("Double free", "Memory Error"));
-      BugReport *R = new BugReport(*BT_DoubleFree, 
-        (RS->isReleased() ? "Attempt to free released memory" : 
+      BugReport *R = new BugReport(*BT_DoubleFree,
+        (RS->isReleased() ? "Attempt to free released memory" :
                             "Attempt to free non-owned memory"), N);
       R->addRange(ArgExpr->getSourceRange());
       R->markInteresting(Sym);
@@ -740,7 +740,7 @@ ProgramStateRef MallocChecker::FreeMemAux(CheckerContext &C,
   // Clean out the info on previous call to free return info.
   State = State->remove<FreeReturnValue>(Sym);
 
-  // Keep track of the return value. If it is NULL, we will know that free 
+  // Keep track of the return value. If it is NULL, we will know that free
   // failed.
   if (ReturnsNullOnFailure) {
     SVal RetVal = C.getSVal(ParentExpr);
@@ -766,7 +766,7 @@ bool MallocChecker::SummarizeValue(raw_ostream &os, SVal V) {
     os << "the address of the label '" << Label->getLabel()->getName() << "'";
   else
     return false;
-  
+
   return true;
 }
 
@@ -790,7 +790,7 @@ bool MallocChecker::SummarizeRegion(raw_ostream &os,
     return true;
   default: {
     const MemSpaceRegion *MS = MR->getMemorySpace();
-    
+
     if (isa<StackLocalsSpaceRegion>(MS)) {
       const VarRegion *VR = dyn_cast<VarRegion>(MR);
       const VarDecl *VD;
@@ -798,7 +798,7 @@ bool MallocChecker::SummarizeRegion(raw_ostream &os,
         VD = VR->getDecl();
       else
         VD = NULL;
-      
+
       if (VD)
         os << "the address of the local variable '" << VD->getName() << "'";
       else
@@ -813,7 +813,7 @@ bool MallocChecker::SummarizeRegion(raw_ostream &os,
         VD = VR->getDecl();
       else
         VD = NULL;
-      
+
       if (VD)
         os << "the address of the parameter '" << VD->getName() << "'";
       else
@@ -828,7 +828,7 @@ bool MallocChecker::SummarizeRegion(raw_ostream &os,
         VD = VR->getDecl();
       else
         VD = NULL;
-      
+
       if (VD) {
         if (VD->isStaticLocal())
           os << "the address of the static variable '" << VD->getName() << "'";
@@ -849,15 +849,15 @@ void MallocChecker::ReportBadFree(CheckerContext &C, SVal ArgVal,
   if (ExplodedNode *N = C.generateSink()) {
     if (!BT_BadFree)
       BT_BadFree.reset(new BugType("Bad free", "Memory Error"));
-    
+
     SmallString<100> buf;
     llvm::raw_svector_ostream os(buf);
-    
+
     const MemRegion *MR = ArgVal.getAsRegion();
     if (MR) {
       while (const ElementRegion *ER = dyn_cast<ElementRegion>(MR))
         MR = ER->getSuperRegion();
-      
+
       // Special case for alloca()
       if (isa<AllocaRegion>(MR))
         os << "Argument to free() was allocated by alloca(), not malloc()";
@@ -875,7 +875,7 @@ void MallocChecker::ReportBadFree(CheckerContext &C, SVal ArgVal,
       else
         os << "not memory allocated by malloc()";
     }
-    
+
     BugReport *R = new BugReport(*BT_BadFree, os.str(), N);
     R->markInteresting(MR);
     R->addRange(range);
@@ -927,7 +927,7 @@ ProgramStateRef MallocChecker::ReallocMem(CheckerContext &C,
   bool PrtIsNull = StatePtrIsNull && !StatePtrNotNull;
   bool SizeIsZero = StateSizeIsZero && !StateSizeNotZero;
 
-  // If the ptr is NULL and the size is not 0, the call is equivalent to 
+  // If the ptr is NULL and the size is not 0, the call is equivalent to
   // malloc(size).
   if ( PrtIsNull && !SizeIsZero) {
     ProgramStateRef stateMalloc = MallocMemAux(C, CE, CE->getArg(1),
@@ -995,7 +995,7 @@ ProgramStateRef MallocChecker::CallocMem(CheckerContext &C, const CallExpr *CE){
   SVal count = state->getSVal(CE->getArg(0), LCtx);
   SVal elementSize = state->getSVal(CE->getArg(1), LCtx);
   SVal TotalSize = svalBuilder.evalBinOp(state, BO_Mul, count, elementSize,
-                                        svalBuilder.getContext().getSizeType());  
+                                        svalBuilder.getContext().getSizeType());
   SVal zeroVal = svalBuilder.makeZeroVal(svalBuilder.getContext().CharTy);
 
   return MallocMemAux(C, CE, TotalSize, zeroVal, state);
@@ -1101,7 +1101,7 @@ void MallocChecker::checkDeadSymbols(SymbolReaper &SymReaper,
 
     }
   }
-  
+
   // Cleanup the Realloc Pairs Map.
   ReallocPairsTy RP = state->get<ReallocPairs>();
   for (ReallocPairsTy::iterator I = RP.begin(), E = RP.end(); I != E; ++I) {
@@ -1205,7 +1205,7 @@ void MallocChecker::checkPreStmt(const ReturnStmt *S, CheckerContext &C) const {
 }
 
 // TODO: Blocks should be either inlined or should call invalidate regions
-// upon invocation. After that's in place, special casing here will not be 
+// upon invocation. After that's in place, special casing here will not be
 // needed.
 void MallocChecker::checkPostStmt(const BlockExpr *BE,
                                   CheckerContext &C) const {
@@ -1446,7 +1446,7 @@ bool MallocChecker::doesNotFreeMemory(const CallEvent *Call,
   StringRef FName = II->getName();
 
   // White list the 'XXXNoCopy' CoreFoundation functions.
-  // We specifically check these before 
+  // We specifically check these before
   if (FName.endswith("NoCopy")) {
     // Look for the deallocator argument. We know that the memory ownership
     // is not transferred only if the deallocator argument is

@@ -157,7 +157,7 @@ void DeclInfo::fill() {
     return;
   }
   CurrentDecl = CommentDecl;
-  
+
   Decl::Kind K = CommentDecl->getKind();
   switch (K) {
   default:

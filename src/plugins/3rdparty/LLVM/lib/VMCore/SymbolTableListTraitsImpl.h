@@ -33,17 +33,17 @@ void SymbolTableListTraits<ValueSubClass,ItemParentClass>
 
   // Do it.
   *Dest = Src;
-  
+
   // Get the new SymTab object.
   ValueSymbolTable *NewST = TraitsClass::getSymTab(getListOwner());
-  
+
   // If there is nothing to do, quick exit.
   if (OldST == NewST) return;
-  
+
   // Move all the elements from the old symtab to the new one.
   iplist<ValueSubClass> &ItemList = TraitsClass::getList(getListOwner());
   if (ItemList.empty()) return;
-  
+
   if (OldST) {
     // Remove all entries from the previous symtab.
     for (typename iplist<ValueSubClass>::iterator I = ItemList.begin();
@@ -59,7 +59,7 @@ void SymbolTableListTraits<ValueSubClass,ItemParentClass>
       if (I->hasName())
         NewST->reinsertValue(I);
   }
-  
+
 }
 
 template<typename ValueSubClass, typename ItemParentClass>

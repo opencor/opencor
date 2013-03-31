@@ -174,14 +174,14 @@ protected:
 template<typename PtrTy>
 class SmallPtrSetIterator : public SmallPtrSetIteratorImpl {
   typedef PointerLikeTypeTraits<PtrTy> PtrTraits;
-  
+
 public:
   typedef PtrTy                     value_type;
   typedef PtrTy                     reference;
   typedef PtrTy                     pointer;
   typedef std::ptrdiff_t            difference_type;
   typedef std::forward_iterator_tag iterator_category;
-  
+
   explicit SmallPtrSetIterator(const void *const *BP)
     : SmallPtrSetIteratorImpl(BP) {}
 
@@ -226,7 +226,7 @@ template<unsigned N>
 struct RoundUpToPowerOfTwo {
   enum { Val = RoundUpToPowerOfTwoH<N, (N&(N-1)) == 0>::Val };
 };
-  
+
 
 /// SmallPtrSet - This class implements a set which is optimized for holding
 /// SmallSize or less elements.  This internally rounds up SmallSize to the next

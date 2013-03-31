@@ -199,7 +199,7 @@ namespace llvm {
              FI != FE; ++FI) {
           typename std::map<const FType*, EdgeWeights>::iterator ei = EdgeInformation.find(*FI);
           dbgs() << "Edges for Function " << ei->first << ":\n";
-          for (typename EdgeWeights::iterator ewi = ei->second.begin(), ewe = ei->second.end(); 
+          for (typename EdgeWeights::iterator ewi = ei->second.begin(), ewe = ei->second.end();
                ewi != ewe; ++ewi) {
             dbgs() << ewi->first << ": " << format("%.20g",ewi->second) << "\n";
           }

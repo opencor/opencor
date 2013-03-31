@@ -2,7 +2,7 @@
  * -----------------------------------------------------------------
  * $Revision: 1.5 $
  * $Date: 2010/12/01 22:21:04 $
- * ----------------------------------------------------------------- 
+ * -----------------------------------------------------------------
  * Programmer: Radu Serban @ LLNL
  * -----------------------------------------------------------------
  * Copyright (c) 2006, The Regents of the University of California.
@@ -14,7 +14,7 @@
  * -----------------------------------------------------------------
  */
 
-/* 
+/*
  * =================================================================
  * IMPORTED HEADER FILES
  * =================================================================
@@ -27,7 +27,7 @@
 #include "cvode_direct_impl.h"
 #include <sundials/sundials_math.h>
 
-/* 
+/*
  * =================================================================
  * FUNCTION SPECIFIC CONSTANTS
  * =================================================================
@@ -72,12 +72,12 @@
 #define nfeDQ     (cvdls_mem->d_nfeDQ)
 #define last_flag (cvdls_mem->d_last_flag)
 
-/* 
+/*
  * =================================================================
  * EXPORTED FUNCTIONS
  * =================================================================
  */
-              
+
 /*
  * CVDlsSetDenseJacFn specifies the dense Jacobian function.
  */
@@ -239,7 +239,7 @@ char *CVDlsGetReturnFlagName(long int flag)
   switch(flag) {
   case CVDLS_SUCCESS:
     sprintf(name,"CVDLS_SUCCESS");
-    break;   
+    break;
   case CVDLS_MEM_NULL:
     sprintf(name,"CVDLS_MEM_NULL");
     break;
@@ -291,7 +291,7 @@ int CVDlsGetLastFlag(void *cvode_mem, long int *flag)
   return(CVDLS_SUCCESS);
 }
 
-/* 
+/*
  * =================================================================
  * DQ JACOBIAN APPROXIMATIONS
  * =================================================================
@@ -299,21 +299,21 @@ int CVDlsGetLastFlag(void *cvode_mem, long int *flag)
 
 /*
  * -----------------------------------------------------------------
- * cvDlsDenseDQJac 
+ * cvDlsDenseDQJac
  * -----------------------------------------------------------------
  * This routine generates a dense difference quotient approximation to
  * the Jacobian of f(t,y). It assumes that a dense matrix of type
  * DlsMat is stored column-wise, and that elements within each column
  * are contiguous. The address of the jth column of J is obtained via
  * the macro DENSE_COL and this pointer is associated with an N_Vector
- * using the N_VGetArrayPointer/N_VSetArrayPointer functions. 
- * Finally, the actual computation of the jth column of the Jacobian is 
+ * using the N_VGetArrayPointer/N_VSetArrayPointer functions.
+ * Finally, the actual computation of the jth column of the Jacobian is
  * done with a call to N_VLinearSum.
  * -----------------------------------------------------------------
- */ 
+ */
 
 int cvDlsDenseDQJac(long int N, realtype t,
-                    N_Vector y, N_Vector fy, 
+                    N_Vector y, N_Vector fy,
                     DlsMat Jac, void *data,
                     N_Vector tmp1, N_Vector tmp2, N_Vector tmp3)
 {
@@ -334,7 +334,7 @@ int cvDlsDenseDQJac(long int N, realtype t,
   tmp2_data = N_VGetArrayPointer(tmp2);
 
   /* Rename work vectors for readibility */
-  ftemp = tmp1; 
+  ftemp = tmp1;
   jthCol = tmp2;
 
   /* Obtain pointers to the data for ewt, y */
@@ -360,7 +360,7 @@ int cvDlsDenseDQJac(long int N, realtype t,
     retval = f(t, y, ftemp, user_data);
     nfeDQ++;
     if (retval != 0) break;
-    
+
     y_data[j] = yjsaved;
 
     inc_inv = ONE/inc;
@@ -389,7 +389,7 @@ int cvDlsDenseDQJac(long int N, realtype t,
  */
 
 int cvDlsBandDQJac(long int N, long int mupper, long int mlower,
-                   realtype t, N_Vector y, N_Vector fy, 
+                   realtype t, N_Vector y, N_Vector fy,
                    DlsMat Jac, void *data,
                    N_Vector tmp1, N_Vector tmp2, N_Vector tmp3)
 {
@@ -432,7 +432,7 @@ int cvDlsBandDQJac(long int N, long int mupper, long int mlower,
 
   /* Loop over column groups. */
   for (group=1; group <= ngroups; group++) {
-    
+
     /* Increment all y_j in group */
     for(j=group-1; j < N; j+=width) {
       inc = MAX(srur*ABS(y_data[j]), minInc/ewt_data[j]);
@@ -457,7 +457,7 @@ int cvDlsBandDQJac(long int N, long int mupper, long int mlower,
         BAND_COL_ELEM(col_j,i,j) = inc_inv * (ftemp_data[i] - fy_data[i]);
     }
   }
-  
+
   return(retval);
 }
 

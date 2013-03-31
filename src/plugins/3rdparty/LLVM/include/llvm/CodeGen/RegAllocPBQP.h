@@ -49,7 +49,7 @@ namespace llvm {
     ///
     /// If you are extending
     /// PBQPBuilder you are unlikely to need this: Nodes and options for all
-    /// vregs will already have been set up for you by the base class. 
+    /// vregs will already have been set up for you by the base class.
     template <typename AllowedRegsItr>
     void recordVReg(unsigned vreg, PBQP::Graph::NodeItr node,
                     AllowedRegsItr arBegin, AllowedRegsItr arEnd) {
@@ -101,7 +101,7 @@ namespace llvm {
     VReg2Node vreg2Node;
 
     AllowedSetMap allowedSets;
-    
+
   };
 
   /// Builds PBQP instances to represent register allocation problems. Includes
@@ -114,7 +114,7 @@ namespace llvm {
   public:
 
     typedef std::set<unsigned> RegSet;
- 
+
     /// Default constructor.
     PBQPBuilder() {}
 
@@ -141,14 +141,14 @@ namespace llvm {
   /// Extended builder which adds coalescing constraints to a problem.
   class PBQPBuilderWithCoalescing : public PBQPBuilder {
   public:
- 
+
     /// Build a PBQP instance to represent the register allocation problem for
     /// the given MachineFunction.
     virtual std::auto_ptr<PBQPRAProblem> build(
                                               MachineFunction *mf,
                                               const LiveIntervals *lis,
                                               const MachineLoopInfo *loopInfo,
-                                              const RegSet &vregs);   
+                                              const RegSet &vregs);
 
   private:
 

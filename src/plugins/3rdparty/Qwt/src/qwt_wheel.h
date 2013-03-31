@@ -120,7 +120,7 @@ Q_SIGNALS:
       \brief Notify a change of value.
 
       When tracking is enabled this signal will be emitted every
-      time the value changes. 
+      time the value changes.
 
       \param value new value
       \sa setTracking()

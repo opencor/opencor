@@ -122,7 +122,7 @@ public:
   DeclClass *getCorrectionDeclAs() const {
     return dyn_cast_or_null<DeclClass>(getCorrectionDecl());
   }
-  
+
   /// \brief Clears the list of NamedDecls before adding the new one.
   void setCorrectionDecl(NamedDecl *CDecl) {
     CorrectionDecls.clear();

@@ -49,7 +49,7 @@ public:
   ///                   You should override this function if there is a quicker
   ///                   way than going back and forth with individual bytes.
   ///
-  /// @param address  - The address of the first byte, in the same space as 
+  /// @param address  - The address of the first byte, in the same space as
   ///                   getBase().
   /// @param size     - The maximum number of bytes to copy.
   /// @param buf      - A pointer to a buffer to be filled in.  Must be non-NULL

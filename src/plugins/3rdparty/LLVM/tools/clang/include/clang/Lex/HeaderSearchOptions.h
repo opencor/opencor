@@ -44,7 +44,7 @@ public:
     frontend::IncludeDirGroup Group;
     unsigned IsUserSupplied : 1;
     unsigned IsFramework : 1;
-    
+
     /// IgnoreSysRoot - This is false if an absolute path should be treated
     /// relative to the sysroot, or true if it should always be the absolute
     /// path.
@@ -98,13 +98,13 @@ public:
 
   /// \brief The directory used for the module cache.
   std::string ModuleCachePath;
-  
+
   /// \brief Whether we should disable the use of the hash string within the
   /// module cache.
   ///
   /// Note: Only used for testing!
   unsigned DisableModuleHash : 1;
-  
+
   /// Include the compiler builtin includes.
   unsigned UseBuiltinIncludes : 1;
 

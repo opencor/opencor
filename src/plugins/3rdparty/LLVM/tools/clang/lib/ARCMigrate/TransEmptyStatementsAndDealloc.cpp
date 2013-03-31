@@ -216,7 +216,7 @@ static void cleanupDeallocOrFinalize(MigrationPass &pass) {
       ObjCMethodDecl *MD = *MI;
       if (!MD->hasBody())
         continue;
-  
+
       if (MD->getMethodFamily() == OMF_dealloc) {
         DeallocM = MD;
       } else if (MD->isInstanceMethod() && MD->getSelector() == FinalizeSel) {

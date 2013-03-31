@@ -38,7 +38,7 @@ class LangOptions;
 /// specifier. Nested name specifiers are made up of a sequence of
 /// specifiers, each of which can be a namespace, type, identifier
 /// (for dependent names), decltype specifier, or the global specifier ('::').
-/// The last two specifiers can only appear at the start of a 
+/// The last two specifiers can only appear at the start of a
 /// nested-namespace-specifier.
 class NestedNameSpecifier : public llvm::FoldingSetNode {
 

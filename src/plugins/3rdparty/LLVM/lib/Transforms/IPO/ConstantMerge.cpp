@@ -68,9 +68,9 @@ static void FindUsedValues(GlobalVariable *LLVMUsed,
   if (LLVMUsed == 0) return;
   ConstantArray *Inits = dyn_cast<ConstantArray>(LLVMUsed->getInitializer());
   if (Inits == 0) return;
-  
+
   for (unsigned i = 0, e = Inits->getNumOperands(); i != e; ++i)
-    if (GlobalValue *GV = 
+    if (GlobalValue *GV =
         dyn_cast<GlobalValue>(Inits->getOperand(i)->stripPointerCasts()))
       UsedValues.insert(GV);
 }
@@ -104,7 +104,7 @@ bool ConstantMerge::runOnModule(Module &M) {
   SmallPtrSet<const GlobalValue*, 8> UsedGlobals;
   FindUsedValues(M.getGlobalVariable("llvm.used"), UsedGlobals);
   FindUsedValues(M.getGlobalVariable("llvm.compiler.used"), UsedGlobals);
-  
+
   // Map unique <constants, has-unknown-alignment> pairs to globals.  We don't
   // want to merge globals of unknown alignment with those of explicit
   // alignment.  If we have DataLayout, we always know the alignment.

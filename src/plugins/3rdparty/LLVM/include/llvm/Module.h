@@ -305,7 +305,7 @@ public:
   /// custom metadata IDs registered in this LLVMContext.
   void getMDKindNames(SmallVectorImpl<StringRef> &Result) const;
 
-  
+
   typedef DenseMap<StructType*, unsigned, DenseMapInfo<StructType*> >
                    NumeredTypesMapTy;
 
@@ -591,7 +591,7 @@ public:
 
   /// Dump the module to stderr (for debugging).
   void dump() const;
-  
+
   /// This function causes all the subinstructions to "let go" of all references
   /// that they are maintaining.  This allows one to 'delete' a whole class at
   /// a time, even though there may be circular references... first all

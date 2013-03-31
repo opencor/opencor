@@ -44,7 +44,7 @@ static void mangleFunctionBlock(MangleContext &Context,
   if (discriminator == 0)
     Out << "__" << Outer << "_block_invoke";
   else
-    Out << "__" << Outer << "_block_invoke_" << discriminator+1; 
+    Out << "__" << Outer << "_block_invoke_" << discriminator+1;
 }
 
 static void checkMangleDC(const DeclContext *DC, const BlockDecl *BD) {
@@ -134,7 +134,7 @@ void MangleContext::mangleObjCMethodName(const ObjCMethodDecl *MD,
                                          raw_ostream &Out) {
   SmallString<64> Name;
   llvm::raw_svector_ostream OS(Name);
-  
+
   const ObjCContainerDecl *CD =
   dyn_cast<ObjCContainerDecl>(MD->getDeclContext());
   assert (CD && "Missing container decl in GetNameForMethod");
@@ -142,7 +142,7 @@ void MangleContext::mangleObjCMethodName(const ObjCMethodDecl *MD,
   if (const ObjCCategoryImplDecl *CID = dyn_cast<ObjCCategoryImplDecl>(CD))
     OS << '(' << *CID << ')';
   OS << ' ' << MD->getSelector().getAsString() << ']';
-  
+
   Out << OS.str().size() << OS.str();
 }
 

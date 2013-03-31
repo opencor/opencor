@@ -2,7 +2,7 @@
  * -----------------------------------------------------------------
  * $Revision: 1.6 $
  * $Date: 2010/12/01 22:10:38 $
- * ----------------------------------------------------------------- 
+ * -----------------------------------------------------------------
  * Programmer: Radu Serban @ LLNL
  * -----------------------------------------------------------------
  * Copyright (c) 2006, The Regents of the University of California.
@@ -30,9 +30,9 @@ extern "C" {
  * =================================================================
  */
 
-/* 
+/*
  * -----------------------------------------------------------------
- * CVDLS return values 
+ * CVDLS return values
  * -----------------------------------------------------------------
  */
 
@@ -58,14 +58,14 @@ extern "C" {
  * Type: CVDlsDenseJacFn
  * -----------------------------------------------------------------
  *
- * A dense Jacobian approximation function Jac must be of type 
+ * A dense Jacobian approximation function Jac must be of type
  * CVDlsDenseJacFn. Its parameters are:
  *
  * N   is the problem size.
  *
  * Jac is the dense matrix (of type DlsMat) that will be loaded
- *     by a CVDlsDenseJacFn with an approximation to the Jacobian 
- *     matrix J = (df_i/dy_j) at the point (t,y). 
+ *     by a CVDlsDenseJacFn with an approximation to the Jacobian
+ *     matrix J = (df_i/dy_j) at the point (t,y).
  *
  * t   is the current value of the independent variable.
  *
@@ -81,49 +81,49 @@ extern "C" {
  * vectors of length N which can be used by a CVDlsDenseJacFn
  * as temporary storage or work space.
  *
- * A CVDlsDenseJacFn should return 0 if successful, a positive 
- * value if a recoverable error occurred, and a negative value if 
+ * A CVDlsDenseJacFn should return 0 if successful, a positive
+ * value if a recoverable error occurred, and a negative value if
  * an unrecoverable error occurred.
  *
  * -----------------------------------------------------------------
  *
- * NOTE: The following are two efficient ways to load a dense Jac:         
- * (1) (with macros - no explicit data structure references)      
- *     for (j=0; j < Neq; j++) {                                  
- *       col_j = DENSE_COL(Jac,j);                                 
- *       for (i=0; i < Neq; i++) {                                
- *         generate J_ij = the (i,j)th Jacobian element           
- *         col_j[i] = J_ij;                                       
- *       }                                                        
- *     }                                                          
- * (2) (without macros - explicit data structure references)      
- *     for (j=0; j < Neq; j++) {                                  
- *       col_j = (Jac->data)[j];                                   
- *       for (i=0; i < Neq; i++) {                                
- *         generate J_ij = the (i,j)th Jacobian element           
- *         col_j[i] = J_ij;                                       
- *       }                                                        
- *     }                                                          
- * A third way, using the DENSE_ELEM(A,i,j) macro, is much less   
- * efficient in general.  It is only appropriate for use in small 
- * problems in which efficiency of access is NOT a major concern. 
- *                                                                
- * NOTE: If the user's Jacobian routine needs other quantities,   
+ * NOTE: The following are two efficient ways to load a dense Jac:
+ * (1) (with macros - no explicit data structure references)
+ *     for (j=0; j < Neq; j++) {
+ *       col_j = DENSE_COL(Jac,j);
+ *       for (i=0; i < Neq; i++) {
+ *         generate J_ij = the (i,j)th Jacobian element
+ *         col_j[i] = J_ij;
+ *       }
+ *     }
+ * (2) (without macros - explicit data structure references)
+ *     for (j=0; j < Neq; j++) {
+ *       col_j = (Jac->data)[j];
+ *       for (i=0; i < Neq; i++) {
+ *         generate J_ij = the (i,j)th Jacobian element
+ *         col_j[i] = J_ij;
+ *       }
+ *     }
+ * A third way, using the DENSE_ELEM(A,i,j) macro, is much less
+ * efficient in general.  It is only appropriate for use in small
+ * problems in which efficiency of access is NOT a major concern.
+ *
+ * NOTE: If the user's Jacobian routine needs other quantities,
  *     they are accessible as follows: hcur (the current stepsize)
- *     and ewt (the error weight vector) are accessible through   
- *     CVodeGetCurrentStep and CVodeGetErrWeights, respectively 
- *     (see cvode.h). The unit roundoff is available as 
+ *     and ewt (the error weight vector) are accessible through
+ *     CVodeGetCurrentStep and CVodeGetErrWeights, respectively
+ *     (see cvode.h). The unit roundoff is available as
  *     UNIT_ROUNDOFF defined in sundials_types.h.
  *
  * -----------------------------------------------------------------
  */
-  
-  
+
+
 typedef int (*CVDlsDenseJacFn)(long int N, realtype t,
-			       N_Vector y, N_Vector fy, 
+			       N_Vector y, N_Vector fy,
 			       DlsMat Jac, void *user_data,
 			       N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
-  
+
 /*
  * -----------------------------------------------------------------
  * Type: CVDlsBandJacFn
@@ -201,19 +201,19 @@ typedef int (*CVDlsDenseJacFn)(long int N, realtype t,
  * as temporary storage or work space.
  *
  * A CVDlsBandJacFn should return 0 if successful, a positive value
- * if a recoverable error occurred, and a negative value if an 
+ * if a recoverable error occurred, and a negative value if an
  * unrecoverable error occurred.
  * -----------------------------------------------------------------
  */
 
 typedef int (*CVDlsBandJacFn)(long int N, long int mupper, long int mlower,
-			      realtype t, N_Vector y, N_Vector fy, 
+			      realtype t, N_Vector y, N_Vector fy,
 			      DlsMat Jac, void *user_data,
 			      N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
 
 /*
  * =================================================================
- *            E X P O R T E D    F U N C T I O N S 
+ *            E X P O R T E D    F U N C T I O N S
  * =================================================================
  */
 
@@ -270,7 +270,7 @@ SUNDIALS_EXPORT int CVDlsGetLastFlag(void *cvode_mem, long int *flag);
 
 /*
  * -----------------------------------------------------------------
- * The following function returns the name of the constant 
+ * The following function returns the name of the constant
  * associated with a CVDLS return flag
  * -----------------------------------------------------------------
  */

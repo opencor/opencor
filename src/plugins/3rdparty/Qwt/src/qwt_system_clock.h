@@ -23,7 +23,7 @@
   Precision and time intervals are multiples of milliseconds (ms).
 
   \note The implementation uses high-resolution performance counter on Windows,
-        mach_absolute_time() on the Mac or POSIX timers on other systems. 
+        mach_absolute_time() on the Mac or POSIX timers on other systems.
         If none is available it falls back on QTimer.
 */
 

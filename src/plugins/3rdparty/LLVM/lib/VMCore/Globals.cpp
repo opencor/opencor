@@ -75,7 +75,7 @@ bool GlobalValue::isDeclaration() const {
   assert(isa<GlobalAlias>(this));
   return false;
 }
-  
+
 //===----------------------------------------------------------------------===//
 // GlobalVariable Implementation
 //===----------------------------------------------------------------------===//
@@ -112,9 +112,9 @@ GlobalVariable::GlobalVariable(Module &M, Type *Ty, bool constant,
            "Initializer should be the same type as the GlobalVariable!");
     Op<0>() = InitVal;
   }
-  
+
   LeakDetector::addGarbageObject(this);
-  
+
   if (Before)
     Before->getParent()->getGlobalList().insert(Before, this);
   else
@@ -219,22 +219,22 @@ void GlobalAlias::eraseFromParent() {
 void GlobalAlias::setAliasee(Constant *Aliasee) {
   assert((!Aliasee || Aliasee->getType() == getType()) &&
          "Alias and aliasee types should match!");
-  
+
   setOperand(0, Aliasee);
 }
 
 const GlobalValue *GlobalAlias::getAliasedGlobal() const {
   const Constant *C = getAliasee();
   if (C == 0) return 0;
-  
+
   if (const GlobalValue *GV = dyn_cast<GlobalValue>(C))
     return GV;
 
   const ConstantExpr *CE = cast<ConstantExpr>(C);
-  assert((CE->getOpcode() == Instruction::BitCast || 
+  assert((CE->getOpcode() == Instruction::BitCast ||
           CE->getOpcode() == Instruction::GetElementPtr) &&
          "Unsupported aliasee");
-  
+
   return cast<GlobalValue>(CE->getOperand(0));
 }
 

@@ -46,11 +46,11 @@ class MachineRelocation {
     isJumpTable,      // Relocation of jump table address.
     isGOTIndex        // The Target.GOTIndex field is valid.
   };
-  
+
   /// Offset - This is the offset from the start of the code buffer of the
   /// relocation to perform.
   uintptr_t Offset;
-  
+
   /// ConstantVal - A field that may be used by the target relocation type.
   intptr_t ConstantVal;
 
@@ -76,10 +76,10 @@ public:
   enum RelocationType {
     VANILLA
   };
-  
+
   /// MachineRelocation::getGV - Return a relocation entry for a GlobalValue.
   ///
-  static MachineRelocation getGV(uintptr_t offset, unsigned RelocationType, 
+  static MachineRelocation getGV(uintptr_t offset, unsigned RelocationType,
                                  GlobalValue *GV, intptr_t cst = 0,
                                  bool MayNeedFarStub = 0,
                                  bool GOTrelative = 0) {
@@ -99,7 +99,7 @@ public:
   /// MachineRelocation::getIndirectSymbol - Return a relocation entry for an
   /// indirect symbol.
   static MachineRelocation getIndirectSymbol(uintptr_t offset,
-                                             unsigned RelocationType, 
+                                             unsigned RelocationType,
                                              GlobalValue *GV, intptr_t cst = 0,
                                              bool MayNeedFarStub = 0,
                                              bool GOTrelative = 0) {
@@ -136,7 +136,7 @@ public:
   /// MachineRelocation::getExtSym - Return a relocation entry for an external
   /// symbol, like "free".
   ///
-  static MachineRelocation getExtSym(uintptr_t offset, unsigned RelocationType, 
+  static MachineRelocation getExtSym(uintptr_t offset, unsigned RelocationType,
                                      const char *ES, intptr_t cst = 0,
                                      bool GOTrelative = 0,
                                      bool NeedStub = true) {

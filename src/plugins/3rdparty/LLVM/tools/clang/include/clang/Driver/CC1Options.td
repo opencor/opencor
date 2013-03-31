@@ -78,25 +78,25 @@ def analyzer_viz_egraph_ubigraph : Flag<["-"], "analyzer-viz-egraph-ubigraph">,
 
 def analyzer_inline_max_stack_depth : Separate<["-"], "analyzer-inline-max-stack-depth">,
   HelpText<"Bound on stack depth while inlining (4 by default)">;
-def analyzer_inline_max_stack_depth_EQ : Joined<["-"], "analyzer-inline-max-stack-depth=">, 
+def analyzer_inline_max_stack_depth_EQ : Joined<["-"], "analyzer-inline-max-stack-depth=">,
   Alias<analyzer_inline_max_stack_depth>;
-  
+
 def analyzer_inline_max_function_size : Separate<["-"], "analyzer-inline-max-function-size">,
   HelpText<"Bound on the number of basic blocks in an inlined function (200 by default)">;
-def analyzer_inline_max_function_size_EQ : Joined<["-"], "analyzer-inline-max-function-size=">, 
+def analyzer_inline_max_function_size_EQ : Joined<["-"], "analyzer-inline-max-function-size=">,
   Alias<analyzer_inline_max_function_size>;
 
 def analyzer_ipa : Separate<["-"], "analyzer-ipa">,
   HelpText<"Specify the inter-procedural analysis mode">;
 def analyzer_ipa_EQ : Joined<["-"], "analyzer-ipa=">, Alias<analyzer_ipa>;
-  
+
 def analyzer_inlining_mode : Separate<["-"], "analyzer-inlining-mode">,
   HelpText<"Specify the function selection heuristic used during inlining">;
 def analyzer_inlining_mode_EQ : Joined<["-"], "analyzer-inlining-mode=">, Alias<analyzer_inlining_mode>;
 
 def analyzer_disable_retry_exhausted : Flag<["-"], "analyzer-disable-retry-exhausted">,
   HelpText<"Do not re-analyze paths leading to exhausted nodes with a different strategy (may decrease code coverage)">;
-  
+
 def analyzer_max_nodes : Separate<["-"], "analyzer-max-nodes">,
   HelpText<"The maximum number of nodes the analyzer can generate (150000 default, 0 = no limit)">;
 def analyzer_max_loop : Separate<["-"], "analyzer-max-loop">,
@@ -376,7 +376,7 @@ def fixit_to_temp : Flag<["-"], "fixit-to-temporary">,
 
 def foverride_record_layout_EQ : Joined<["-"], "foverride-record-layout=">,
   HelpText<"Override record layouts with those in the given file">;
-  
+
 //===----------------------------------------------------------------------===//
 // Language Options
 //===----------------------------------------------------------------------===//
@@ -457,9 +457,9 @@ def fno_deprecated_macro : Flag<["-"], "fno-deprecated-macro">,
 
 def nostdsysteminc : Flag<["-"], "nostdsysteminc">,
   HelpText<"Disable standard system #include directories">;
-def fmodule_name : Joined<["-"], "fmodule-name=">, 
+def fmodule_name : Joined<["-"], "fmodule-name=">,
   MetaVarName<"<name>">,
-  HelpText<"Specify the name of the module to build">;           
+  HelpText<"Specify the name of the module to build">;
 def fdisable_module_hash : Flag<["-"], "fdisable-module-hash">,
   HelpText<"Disable the module hash">;
 def c_isystem : JoinedOrSeparate<["-"], "c-isystem">, MetaVarName<"<directory>">,

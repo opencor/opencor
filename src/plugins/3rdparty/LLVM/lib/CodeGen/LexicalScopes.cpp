@@ -124,7 +124,7 @@ LexicalScope *LexicalScopes::findLexicalScope(DebugLoc DL) {
   DIDescriptor D = DIDescriptor(Scope);
   if (D.isLexicalBlockFile())
     Scope = DILexicalBlockFile(Scope).getScope();
-  
+
   if (IA)
     return InlinedLexicalScopeMap.lookup(DebugLoc::getFromDILocation(IA));
   return LexicalScopeMap.lookup(Scope);
@@ -143,7 +143,7 @@ LexicalScope *LexicalScopes::getOrCreateLexicalScope(DebugLoc DL) {
     // Create an inlined scope for inlined function.
     return getOrCreateInlinedScope(Scope, InlinedAt);
   }
-   
+
   return getOrCreateRegularScope(Scope);
 }
 
@@ -154,7 +154,7 @@ LexicalScope *LexicalScopes::getOrCreateRegularScope(MDNode *Scope) {
     Scope = DILexicalBlockFile(Scope).getScope();
     D = DIDescriptor(Scope);
   }
- 
+
   LexicalScope *WScope = LexicalScopeMap.lookup(Scope);
   if (WScope)
     return WScope;
@@ -167,12 +167,12 @@ LexicalScope *LexicalScopes::getOrCreateRegularScope(MDNode *Scope) {
   if (!Parent && DIDescriptor(Scope).isSubprogram()
       && DISubprogram(Scope).describes(MF->getFunction()))
     CurrentFnLexicalScope = WScope;
-  
+
   return WScope;
 }
 
 /// getOrCreateInlinedScope - Find or create an inlined lexical scope.
-LexicalScope *LexicalScopes::getOrCreateInlinedScope(MDNode *Scope, 
+LexicalScope *LexicalScopes::getOrCreateInlinedScope(MDNode *Scope,
                                                      MDNode *InlinedAt) {
   LexicalScope *InlinedScope = LexicalScopeMap.lookup(InlinedAt);
   if (InlinedScope)
@@ -243,7 +243,7 @@ void LexicalScopes::
 assignInstructionRanges(SmallVectorImpl<InsnRange> &MIRanges,
                     DenseMap<const MachineInstr *, LexicalScope *> &MI2ScopeMap)
 {
-  
+
   LexicalScope *PrevLexicalScope = NULL;
   for (SmallVectorImpl<InsnRange>::const_iterator RI = MIRanges.begin(),
          RE = MIRanges.end(); RI != RE; ++RI) {
@@ -262,16 +262,16 @@ assignInstructionRanges(SmallVectorImpl<InsnRange> &MIRanges,
 }
 
 /// getMachineBasicBlocks - Populate given set using machine basic blocks which
-/// have machine instructions that belong to lexical scope identified by 
+/// have machine instructions that belong to lexical scope identified by
 /// DebugLoc.
 void LexicalScopes::
-getMachineBasicBlocks(DebugLoc DL, 
+getMachineBasicBlocks(DebugLoc DL,
                       SmallPtrSet<const MachineBasicBlock*, 4> &MBBs) {
   MBBs.clear();
   LexicalScope *Scope = getOrCreateLexicalScope(DL);
   if (!Scope)
     return;
-  
+
   if (Scope == CurrentFnLexicalScope) {
     for (MachineFunction::const_iterator I = MF->begin(), E = MF->end();
          I != E; ++I)

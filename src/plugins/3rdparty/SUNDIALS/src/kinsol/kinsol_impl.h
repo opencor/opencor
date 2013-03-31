@@ -33,7 +33,7 @@ extern "C" {
  */
 
 /* KINSOL default constants */
- 
+
 #define PRINTFL_DEFAULT    0
 #define MXITER_DEFAULT     200
 #define MXNBCF_DEFAULT     10
@@ -56,7 +56,7 @@ extern "C" {
 
 typedef struct KINMemRec {
 
-  realtype kin_uround;        /* machine epsilon (or unit roundoff error) 
+  realtype kin_uround;        /* machine epsilon (or unit roundoff error)
 				 (defined in sundials_types.h)                */
 
   /* problem specification data */
@@ -82,7 +82,7 @@ typedef struct KINMemRec {
 				     routine is non-null and if setup is used  */
   booleantype kin_constraintsSet; /* flag indicating if constraints are being
 				     used                                      */
-  booleantype kin_jacCurrent;     /* flag indicating if the Jacobian info. 
+  booleantype kin_jacCurrent;     /* flag indicating if the Jacobian info.
 				     used by the linear solver is current      */
   booleantype kin_callForcingTerm; /* flag set if using either KIN_ETACHOICE1
 				      or KIN_ETACHOICE2                        */
@@ -110,7 +110,7 @@ typedef struct KINMemRec {
   booleantype kin_noInitSetup; /* flag controlling whether or not the KINSol
 				  routine makes an initial call to the
 				  linear solver setup routine (lsetup)         */
-  realtype kin_sthrsh;         /* threshold value for calling the linear   
+  realtype kin_sthrsh;         /* threshold value for calling the linear
 				  solver setup routine                         */
 
   /* counters */
@@ -121,7 +121,7 @@ typedef struct KINMemRec {
 				  setup was last called                        */
   long int kin_nnilset_sub;    /* value of nni counter when the linear solver
 				  setup was last called (subinterval)          */
-  long int kin_nbcf;           /* number of times the beta-condition could not 
+  long int kin_nbcf;           /* number of times the beta-condition could not
 				  be met in KINLineSearch                      */
   long int kin_nbktrk;         /* number of backtracks performed by
 				  KINLineSearch                                */
@@ -140,30 +140,30 @@ typedef struct KINMemRec {
   N_Vector kin_uscale;      /* iterate scaling vector                          */
   N_Vector kin_fscale;      /* fval scaling vector                             */
   N_Vector kin_pp;          /* incremental change vector (pp = unew-uu)        */
-  N_Vector kin_constraints; /* constraints vector                              */ 
+  N_Vector kin_constraints; /* constraints vector                              */
   N_Vector kin_vtemp1;      /* scratch vector #1                               */
   N_Vector kin_vtemp2;      /* scratch vector #2                               */
 
-  /* space requirements for vector storage */ 
+  /* space requirements for vector storage */
 
   long int kin_lrw1;        /* number of realtype-sized memory blocks needed
-			       for a single N_Vector                           */ 
+			       for a single N_Vector                           */
   long int kin_liw1;        /* number of int-sized memory blocks needed for
-			       a single N_Vecotr                               */ 
+			       a single N_Vecotr                               */
   long int kin_lrw;         /* total number of realtype-sized memory blocks
 			       needed for all KINSOL work vectors              */
   long int kin_liw;         /* total number of int-sized memory blocks needed
 			       for all KINSOL work vectors                     */
 
   /* linear solver data */
- 
+
   /* function prototypes (pointers) */
 
   int (*kin_linit)(struct KINMemRec *kin_mem);
 
   int (*kin_lsetup)(struct KINMemRec *kin_mem);
 
-  int (*kin_lsolve)(struct KINMemRec *kin_mem, N_Vector xx, N_Vector bb, 
+  int (*kin_lsolve)(struct KINMemRec *kin_mem, N_Vector xx, N_Vector bb,
 		    realtype *res_norm );
 
   void (*kin_lfree)(struct KINMemRec *kin_mem);
@@ -187,12 +187,12 @@ typedef struct KINMemRec {
   booleantype kin_eval_omega; /* flag indicating that omega must be evaluated. */
   realtype kin_omega;     /* constant value for real scalar used in test to
 			     determine if reduction of norm of nonlinear
-			     residual is sufficient. Unless a valid constant 
+			     residual is sufficient. Unless a valid constant
                              value is specified by the user, omega is estimated
                              from omega_min and omega_max at each iteration.    */
   realtype kin_omega_min; /* lower bound on omega                               */
   realtype kin_omega_max; /* upper bound on omega                               */
-  
+
   /*
    * -----------------------------------------------------------------
    * Note: The KINLineSearch subroutine scales the values of the
@@ -215,7 +215,7 @@ typedef struct KINMemRec {
 
   /* message files */
   /*-------------------------------------------
-    Error handler function and error ouput file 
+    Error handler function and error ouput file
     -------------------------------------------*/
 
   KINErrHandlerFn kin_ehfun;   /* Error messages are handled by ehfun          */
@@ -331,25 +331,25 @@ typedef struct KINMemRec {
 
 /* High level error handler */
 
-void KINProcessError(KINMem kin_mem, 
-		     int error_code, const char *module, const char *fname, 
+void KINProcessError(KINMem kin_mem,
+		     int error_code, const char *module, const char *fname,
 		     const char *msgfmt, ...);
 
 /* Prototype of internal errHandler function */
 
-void KINErrHandler(int error_code, const char *module, const char *function, 
+void KINErrHandler(int error_code, const char *module, const char *function,
 		   char *msg, void *user_data);
 
 
 /* High level info handler */
 
-void KINPrintInfo(KINMem kin_mem, 
-		  int info_code, const char *module, const char *fname, 
+void KINPrintInfo(KINMem kin_mem,
+		  int info_code, const char *module, const char *fname,
 		  const char *msgfmt, ...);
 
 /* Prototype of internal infoHandler function */
 
-void KINInfoHandler(const char *module, const char *function, 
+void KINInfoHandler(const char *module, const char *function,
 		    char *msg, void *user_data);
 
 /*

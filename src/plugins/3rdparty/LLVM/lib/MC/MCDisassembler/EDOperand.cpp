@@ -4,11 +4,11 @@
 //
 // This file is distributed under the University of Illinois Open Source
 // License. See LICENSE.TXT for details.
-// 
+//
 //===----------------------------------------------------------------------===//
 //
 // This file implements the Enhanced Disassembly library's operand class.  The
-// operand is responsible for allowing evaluation given a particular register 
+// operand is responsible for allowing evaluation given a particular register
 // context.
 //
 //===----------------------------------------------------------------------===//
@@ -29,13 +29,13 @@ EDOperand::EDOperand(const EDDisassembler &disassembler,
   OpIndex(opIndex),
   MCOpIndex(mcOpIndex) {
   unsigned int numMCOperands = 0;
-    
+
   Triple::ArchType arch = Disassembler.TgtTriple.getArch();
-    
+
   if (arch == Triple::x86 ||
       arch == Triple::x86_64) {
     uint8_t operandType = inst.ThisInstInfo->operandTypes[opIndex];
-    
+
     switch (operandType) {
     default:
       break;
@@ -59,7 +59,7 @@ EDOperand::EDOperand(const EDDisassembler &disassembler,
   else if (arch == Triple::arm ||
            arch == Triple::thumb) {
     uint8_t operandType = inst.ThisInstInfo->operandTypes[opIndex];
-    
+
     switch (operandType) {
     default:
     case kOperandTypeARMRegisterList:
@@ -116,7 +116,7 @@ EDOperand::EDOperand(const EDDisassembler &disassembler,
       break;
     }
   }
-    
+
   mcOpIndex += numMCOperands;
 }
 
@@ -127,14 +127,14 @@ int EDOperand::evaluate(uint64_t &result,
                         EDRegisterReaderCallback callback,
                         void *arg) {
   uint8_t operandType = Inst.ThisInstInfo->operandTypes[OpIndex];
-  
+
   Triple::ArchType arch = Disassembler.TgtTriple.getArch();
-  
+
   switch (arch) {
   default:
-    return -1;  
+    return -1;
   case Triple::x86:
-  case Triple::x86_64:    
+  case Triple::x86_64:
     switch (operandType) {
     default:
       return -1;
@@ -149,57 +149,57 @@ int EDOperand::evaluate(uint64_t &result,
     case kOperandTypeX86PCRelative:
     {
       int64_t displacement = Inst.Inst->getOperand(MCOpIndex).getImm();
-        
+
       uint64_t ripVal;
-        
+
       // TODO fix how we do this
-        
+
       if (callback(&ripVal, Disassembler.registerIDWithName("RIP"), arg))
         return -1;
-        
+
       result = ripVal + displacement;
       return 0;
     }
     case kOperandTypeX86Memory:
-    case kOperandTypeX86EffectiveAddress:  
+    case kOperandTypeX86EffectiveAddress:
     {
       unsigned baseReg = Inst.Inst->getOperand(MCOpIndex).getReg();
       uint64_t scaleAmount = Inst.Inst->getOperand(MCOpIndex+1).getImm();
       unsigned indexReg = Inst.Inst->getOperand(MCOpIndex+2).getReg();
       int64_t displacement = Inst.Inst->getOperand(MCOpIndex+3).getImm();
-    
+
       uint64_t addr = 0;
-        
+
       unsigned segmentReg = Inst.Inst->getOperand(MCOpIndex+4).getReg();
-        
+
       if (segmentReg != 0 && arch == Triple::x86_64) {
         unsigned fsID = Disassembler.registerIDWithName("FS");
         unsigned gsID = Disassembler.registerIDWithName("GS");
-        
+
         if (segmentReg == fsID ||
             segmentReg == gsID) {
           uint64_t segmentBase;
           if (!callback(&segmentBase, segmentReg, arg))
-            addr += segmentBase;        
+            addr += segmentBase;
         }
       }
-        
+
       if (baseReg) {
         uint64_t baseVal;
         if (callback(&baseVal, baseReg, arg))
           return -1;
         addr += baseVal;
       }
-        
+
       if (indexReg) {
         uint64_t indexVal;
         if (callback(&indexVal, indexReg, arg))
           return -1;
         addr += (scaleAmount * indexVal);
       }
-       
+
       addr += displacement;
-       
+
       result = addr;
       return 0;
     }
@@ -212,14 +212,14 @@ int EDOperand::evaluate(uint64_t &result,
     case kOperandTypeImmediate:
       if (!Inst.Inst->getOperand(MCOpIndex).isImm())
         return -1;
-            
+
       result = Inst.Inst->getOperand(MCOpIndex).getImm();
       return 0;
     case kOperandTypeRegister:
     {
       if (!Inst.Inst->getOperand(MCOpIndex).isReg())
         return -1;
-        
+
       unsigned reg = Inst.Inst->getOperand(MCOpIndex).getReg();
       return callback(&result, reg, arg);
     }
@@ -227,14 +227,14 @@ int EDOperand::evaluate(uint64_t &result,
     {
       if (!Inst.Inst->getOperand(MCOpIndex).isImm())
         return -1;
-        
+
       int64_t displacement = Inst.Inst->getOperand(MCOpIndex).getImm();
-      
+
       uint64_t pcVal;
-      
+
       if (callback(&pcVal, Disassembler.registerIDWithName("PC"), arg))
         return -1;
-      
+
       result = pcVal + displacement;
       return 0;
     }
@@ -247,7 +247,7 @@ int EDOperand::isRegister() {
 }
 
 unsigned EDOperand::regVal() {
-  return Inst.Inst->getOperand(MCOpIndex).getReg(); 
+  return Inst.Inst->getOperand(MCOpIndex).getReg();
 }
 
 int EDOperand::isImmediate() {
@@ -260,7 +260,7 @@ uint64_t EDOperand::immediateVal() {
 
 int EDOperand::isMemory() {
   uint8_t operandType = Inst.ThisInstInfo->operandTypes[OpIndex];
-    
+
   switch (operandType) {
   default:
     return 0;

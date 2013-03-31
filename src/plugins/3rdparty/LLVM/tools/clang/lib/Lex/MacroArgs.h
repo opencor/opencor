@@ -39,7 +39,7 @@ class MacroArgs {
   /// if in strict mode and the C99 varargs macro had only a ... argument, this
   /// is false.
   bool VarargsElided;
-  
+
   /// PreExpArgTokens - Pre-expanded tokens for arguments that need them.  Empty
   /// if not yet computed.  This includes the EOF marker at the end of the
   /// stream.
@@ -52,7 +52,7 @@ class MacroArgs {
   /// ArgCache - This is a linked list of MacroArgs objects that the
   /// Preprocessor owns which we use to avoid thrashing malloc/free.
   MacroArgs *ArgCache;
-  
+
   MacroArgs(unsigned NumToks, bool varargsElided)
     : NumUnexpArgTokens(NumToks), VarargsElided(varargsElided), ArgCache(0) {}
   ~MacroArgs() {}
@@ -113,8 +113,8 @@ public:
                                  Preprocessor &PP, bool Charify,
                                  SourceLocation ExpansionLocStart,
                                  SourceLocation ExpansionLocEnd);
-  
-  
+
+
   /// deallocate - This should only be called by the Preprocessor when managing
   /// its freelist.
   MacroArgs *deallocate();

@@ -776,8 +776,8 @@ class FastFoldingSetNode : public FoldingSetNode {
 protected:
   explicit FastFoldingSetNode(const FoldingSetNodeID &ID) : FastID(ID) {}
 public:
-  void Profile(FoldingSetNodeID &ID) const { 
-    ID.AddNodeID(FastID); 
+  void Profile(FoldingSetNodeID &ID) const {
+    ID.AddNodeID(FastID);
   }
 };
 

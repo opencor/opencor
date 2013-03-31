@@ -38,7 +38,7 @@ class CXXThisExpr;
 class MaterializeTemporaryExpr;
 class ObjCAtSynchronizedStmt;
 class ObjCForCollectionStmt;
-  
+
 namespace ento {
 
 class AnalysisManager;
@@ -47,7 +47,7 @@ class SimpleCall;
 
 class ExprEngine : public SubEngine {
   AnalysisManager &AMgr;
-  
+
   AnalysisDeclContextManager &AnalysisDeclContexts;
 
   CoreEngine Engine;
@@ -75,11 +75,11 @@ class ExprEngine : public SubEngine {
   const Stmt *currStmt;
   unsigned int currStmtIdx;
   const NodeBuilderContext *currBldrCtx;
-  
+
   /// Helper object to determine if an Objective-C message expression
   /// implicitly never returns.
   ObjCNoReturn ObjCNoRet;
-  
+
   /// Whether or not GC is enabled in this analysis.
   bool ObjCGCEnabled;
 
@@ -109,7 +109,7 @@ public:
   /// state of the function call. Returns true if there is still simulation
   /// state on the worklist.
   bool ExecuteWorkListWithInitialState(const LocationContext *L, unsigned Steps,
-                                       ProgramStateRef InitState, 
+                                       ProgramStateRef InitState,
                                        ExplodedNodeSet &Dst) {
     return Engine.ExecuteWorkListWithInitialState(L, Steps, InitState, Dst);
   }
@@ -156,17 +156,17 @@ public:
   /// \brief Run the analyzer's garbage collection - remove dead symbols and
   /// bindings.
   ///
-  /// \param Node - The predecessor node, from which the processing should 
+  /// \param Node - The predecessor node, from which the processing should
   /// start.
   /// \param Out - The returned set of output nodes.
-  /// \param ReferenceStmt - Run garbage collection using the symbols, 
+  /// \param ReferenceStmt - Run garbage collection using the symbols,
   /// which are live before the given statement.
   /// \param LC - The location context of the ReferenceStmt.
-  /// \param DiagnosticStmt - the statement used to associate the diagnostic 
-  /// message, if any warnings should occur while removing the dead (leaks 
+  /// \param DiagnosticStmt - the statement used to associate the diagnostic
+  /// message, if any warnings should occur while removing the dead (leaks
   /// are usually reported here).
-  /// \param K - In some cases it is possible to use PreStmt kind. (Do 
-  /// not use it unless you know what you are doing.) 
+  /// \param K - In some cases it is possible to use PreStmt kind. (Do
+  /// not use it unless you know what you are doing.)
   /// If the ReferenceStmt is NULL, everything is this and parent contexts is
   /// considered live.
   /// If the stack frame context is NULL, everything on stack is considered
@@ -187,23 +187,23 @@ public:
 
   void ProcessImplicitDtor(const CFGImplicitDtor D, ExplodedNode *Pred);
 
-  void ProcessAutomaticObjDtor(const CFGAutomaticObjDtor D, 
+  void ProcessAutomaticObjDtor(const CFGAutomaticObjDtor D,
                                ExplodedNode *Pred, ExplodedNodeSet &Dst);
   void ProcessBaseDtor(const CFGBaseDtor D,
                        ExplodedNode *Pred, ExplodedNodeSet &Dst);
   void ProcessMemberDtor(const CFGMemberDtor D,
                          ExplodedNode *Pred, ExplodedNodeSet &Dst);
-  void ProcessTemporaryDtor(const CFGTemporaryDtor D, 
+  void ProcessTemporaryDtor(const CFGTemporaryDtor D,
                             ExplodedNode *Pred, ExplodedNodeSet &Dst);
 
   /// Called by CoreEngine when processing the entrance of a CFGBlock.
   virtual void processCFGBlockEntrance(const BlockEdge &L,
                                        NodeBuilderWithSinks &nodeBuilder,
                                        ExplodedNode *Pred);
-  
+
   /// ProcessBranch - Called by CoreEngine.  Used to generate successor
   ///  nodes by processing the 'effects' of a branch condition.
-  void processBranch(const Stmt *Condition, const Stmt *Term, 
+  void processBranch(const Stmt *Condition, const Stmt *Term,
                      NodeBuilderContext& BuilderCtx,
                      ExplodedNode *Pred,
                      ExplodedNodeSet &Dst,
@@ -248,7 +248,7 @@ public:
 
   /// processRegionChanges - Called by ProgramStateManager whenever a change is made
   ///  to the store. Used to update checkers that track region values.
-  ProgramStateRef 
+  ProgramStateRef
   processRegionChanges(ProgramStateRef state,
                        const StoreManager::InvalidatedSymbols *invalidated,
                        ArrayRef<const MemRegion *> ExplicitRegions,
@@ -302,11 +302,11 @@ public:
                       ExplodedNodeSet &Dst);
 
   /// VisitBlockExpr - Transfer function logic for BlockExprs.
-  void VisitBlockExpr(const BlockExpr *BE, ExplodedNode *Pred, 
+  void VisitBlockExpr(const BlockExpr *BE, ExplodedNode *Pred,
                       ExplodedNodeSet &Dst);
 
   /// VisitBinaryOperator - Transfer function logic for binary operators.
-  void VisitBinaryOperator(const BinaryOperator* B, ExplodedNode *Pred, 
+  void VisitBinaryOperator(const BinaryOperator* B, ExplodedNode *Pred,
                            ExplodedNodeSet &Dst);
 
 
@@ -319,21 +319,21 @@ public:
                 ExplodedNodeSet &Dst);
 
   /// VisitCompoundLiteralExpr - Transfer function logic for compound literals.
-  void VisitCompoundLiteralExpr(const CompoundLiteralExpr *CL, 
+  void VisitCompoundLiteralExpr(const CompoundLiteralExpr *CL,
                                 ExplodedNode *Pred, ExplodedNodeSet &Dst);
 
   /// Transfer function logic for DeclRefExprs and BlockDeclRefExprs.
   void VisitCommonDeclRefExpr(const Expr *DR, const NamedDecl *D,
                               ExplodedNode *Pred, ExplodedNodeSet &Dst);
-  
+
   /// VisitDeclStmt - Transfer function logic for DeclStmts.
-  void VisitDeclStmt(const DeclStmt *DS, ExplodedNode *Pred, 
+  void VisitDeclStmt(const DeclStmt *DS, ExplodedNode *Pred,
                      ExplodedNodeSet &Dst);
 
   /// VisitGuardedExpr - Transfer function logic for ?, __builtin_choose
-  void VisitGuardedExpr(const Expr *Ex, const Expr *L, const Expr *R, 
+  void VisitGuardedExpr(const Expr *Ex, const Expr *L, const Expr *R,
                         ExplodedNode *Pred, ExplodedNodeSet &Dst);
-  
+
   void VisitInitListExpr(const InitListExpr *E, ExplodedNode *Pred,
                          ExplodedNodeSet &Dst);
 
@@ -342,7 +342,7 @@ public:
                         ExplodedNodeSet &Dst);
 
   /// VisitMemberExpr - Transfer function for member expressions.
-  void VisitMemberExpr(const MemberExpr *M, ExplodedNode *Pred, 
+  void VisitMemberExpr(const MemberExpr *M, ExplodedNode *Pred,
                            ExplodedNodeSet &Dst);
 
   /// Transfer function logic for ObjCAtSynchronizedStmts.
@@ -355,16 +355,16 @@ public:
 
   /// VisitObjCForCollectionStmt - Transfer function logic for
   ///  ObjCForCollectionStmt.
-  void VisitObjCForCollectionStmt(const ObjCForCollectionStmt *S, 
+  void VisitObjCForCollectionStmt(const ObjCForCollectionStmt *S,
                                   ExplodedNode *Pred, ExplodedNodeSet &Dst);
 
   void VisitObjCMessage(const ObjCMessageExpr *ME, ExplodedNode *Pred,
                         ExplodedNodeSet &Dst);
 
   /// VisitReturnStmt - Transfer function logic for return statements.
-  void VisitReturnStmt(const ReturnStmt *R, ExplodedNode *Pred, 
+  void VisitReturnStmt(const ReturnStmt *R, ExplodedNode *Pred,
                        ExplodedNodeSet &Dst);
-  
+
   /// VisitOffsetOfExpr - Transfer function for offsetof.
   void VisitOffsetOfExpr(const OffsetOfExpr *Ex, ExplodedNode *Pred,
                          ExplodedNodeSet &Dst);
@@ -374,18 +374,18 @@ public:
                               ExplodedNode *Pred, ExplodedNodeSet &Dst);
 
   /// VisitUnaryOperator - Transfer function logic for unary operators.
-  void VisitUnaryOperator(const UnaryOperator* B, ExplodedNode *Pred, 
+  void VisitUnaryOperator(const UnaryOperator* B, ExplodedNode *Pred,
                           ExplodedNodeSet &Dst);
 
   /// Handle ++ and -- (both pre- and post-increment).
   void VisitIncrementDecrementOperator(const UnaryOperator* U,
                                        ExplodedNode *Pred,
                                        ExplodedNodeSet &Dst);
-  
+
   void VisitCXXCatchStmt(const CXXCatchStmt *CS, ExplodedNode *Pred,
                          ExplodedNodeSet &Dst);
 
-  void VisitCXXThisExpr(const CXXThisExpr *TE, ExplodedNode *Pred, 
+  void VisitCXXThisExpr(const CXXThisExpr *TE, ExplodedNode *Pred,
                         ExplodedNodeSet & Dst);
 
   void VisitCXXConstructExpr(const CXXConstructExpr *E, ExplodedNode *Pred,
@@ -403,15 +403,15 @@ public:
 
   /// Create a C++ temporary object for an rvalue.
   void CreateCXXTemporaryObject(const MaterializeTemporaryExpr *ME,
-                                ExplodedNode *Pred, 
+                                ExplodedNode *Pred,
                                 ExplodedNodeSet &Dst);
-  
+
   /// evalEagerlyAssumeBinOpBifurcation - Given the nodes in 'Src', eagerly assume symbolic
   ///  expressions of the form 'x != 0' and generate new nodes (stored in Dst)
   ///  with those assumptions.
-  void evalEagerlyAssumeBinOpBifurcation(ExplodedNodeSet &Dst, ExplodedNodeSet &Src, 
+  void evalEagerlyAssumeBinOpBifurcation(ExplodedNodeSet &Dst, ExplodedNodeSet &Src,
                          const Expr *Ex);
-  
+
   std::pair<const ProgramPointTag *, const ProgramPointTag*>
     geteagerlyAssumeBinOpBifurcationTags();
 
@@ -439,7 +439,7 @@ public:
                  SVal LHS, SVal RHS, QualType T) {
     return svalBuilder.evalBinOp(ST, Op, LHS, RHS, T);
   }
-  
+
 protected:
   /// evalBind - Handle the semantics of binding a value to a specific location.
   ///  This method is used by evalStore, VisitDeclStmt, and others.

@@ -133,7 +133,7 @@ namespace {
 
       return ModRefBehavior(AliasAnalysis::getModRefBehavior(F) & Min);
     }
-    
+
     /// getModRefBehavior - Return the behavior of the specified function if
     /// called from the specified call site.  The call site may be null in which
     /// case the most generic behavior of this function should be returned.
@@ -164,7 +164,7 @@ namespace {
         return (AliasAnalysis*)this;
       return this;
     }
-    
+
   private:
     /// getFunctionInfo - Return the function info for the function, or null if
     /// we don't have anything useful to say about it.
@@ -187,11 +187,11 @@ namespace {
 
 char GlobalsModRef::ID = 0;
 INITIALIZE_AG_PASS_BEGIN(GlobalsModRef, AliasAnalysis,
-                "globalsmodref-aa", "Simple mod/ref analysis for globals",    
+                "globalsmodref-aa", "Simple mod/ref analysis for globals",
                 false, true, false)
 INITIALIZE_AG_DEPENDENCY(CallGraph)
 INITIALIZE_AG_PASS_END(GlobalsModRef, AliasAnalysis,
-                "globalsmodref-aa", "Simple mod/ref analysis for globals",    
+                "globalsmodref-aa", "Simple mod/ref analysis for globals",
                 false, true, false)
 
 Pass *llvm::createGlobalsModRefPass() { return new GlobalsModRef(); }
@@ -602,6 +602,6 @@ void GlobalsModRef::addEscapingUse(Use &U) {
   // be more precise by processing the new use and attempting to update our
   // saved analysis results to accommodate it.
   deleteValue(U);
-  
+
   AliasAnalysis::addEscapingUse(U);
 }

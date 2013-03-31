@@ -48,12 +48,12 @@ static void MangleLetter(SmallVectorImpl<char> &OutName, unsigned char C) {
 /// for this assembler.
 static bool NameNeedsEscaping(StringRef Str, const MCAsmInfo &MAI) {
   assert(!Str.empty() && "Cannot create an empty MCSymbol");
-  
+
   // If the first character is a number and the target does not allow this, we
   // need quotes.
   if (!MAI.doesAllowNameToStartWithDigit() && Str[0] >= '0' && Str[0] <= '9')
     return true;
-  
+
   // If any of the characters in the string is an unacceptable character, force
   // quotes.
   bool AllowPeriod = MAI.doesAllowPeriodsInName();
@@ -108,9 +108,9 @@ void Mangler::getNameWithPrefix(SmallVectorImpl<char> &OutName,
   SmallString<256> TmpData;
   StringRef Name = GVName.toStringRef(TmpData);
   assert(!Name.empty() && "getNameWithPrefix requires non-empty name");
-  
+
   const MCAsmInfo &MAI = Context.getAsmInfo();
-  
+
   // If the global name is not led with \1, add the appropriate prefixes.
   if (Name[0] == '\1') {
     Name = Name.substr(1);
@@ -131,7 +131,7 @@ void Mangler::getNameWithPrefix(SmallVectorImpl<char> &OutName,
     else
       OutName.append(Prefix, Prefix+strlen(Prefix)); // Arbitrary length prefix.
   }
-  
+
   // If this is a simple string that doesn't need escaping, just append it.
   if (!NameNeedsEscaping(Name, MAI) ||
       // If quotes are supported, they can be used unless the string contains
@@ -141,12 +141,12 @@ void Mangler::getNameWithPrefix(SmallVectorImpl<char> &OutName,
     OutName.append(Name.begin(), Name.end());
     return;
   }
-  
+
   // On systems that do not allow quoted names, we need to mangle most
   // strange characters.
   if (!MAI.doesAllowQuotesInName())
     return appendMangledName(OutName, Name, MAI);
-  
+
   // Okay, the system allows quoted strings.  We can quote most anything, the
   // only characters that need escaping are " and \n.
   assert(Name.find_first_of("\n\"") != StringRef::npos);
@@ -169,7 +169,7 @@ static void AddFastCallStdCallSuffix(SmallVectorImpl<char> &OutName,
     // Size should be aligned to DWORD boundary
     ArgWords += ((TD.getTypeAllocSize(Ty) + 3)/4)*4;
   }
-  
+
   raw_svector_ostream(OutName) << '@' << ArgWords;
 }
 
@@ -185,7 +185,7 @@ void Mangler::getNameWithPrefix(SmallVectorImpl<char> &OutName,
     PrefixTy = Mangler::Private;
   else if (GV->hasLinkerPrivateLinkage() || GV->hasLinkerPrivateWeakLinkage())
     PrefixTy = Mangler::LinkerPrivate;
-  
+
   // If this global has a name, handle it simply.
   if (GV->hasName()) {
     getNameWithPrefix(OutName, GV->getName(), PrefixTy);
@@ -194,17 +194,17 @@ void Mangler::getNameWithPrefix(SmallVectorImpl<char> &OutName,
     // already.
     unsigned &ID = AnonGlobalIDs[GV];
     if (ID == 0) ID = NextAnonGlobalID++;
-  
+
     // Must mangle the global into a unique ID.
     getNameWithPrefix(OutName, "__unnamed_" + Twine(ID), PrefixTy);
   }
-  
+
   // If we are supposed to add a microsoft-style suffix for stdcall/fastcall,
   // add it.
   if (Context.getAsmInfo().hasMicrosoftFastStdCallMangling()) {
     if (const Function *F = dyn_cast<Function>(GV)) {
       CallingConv::ID CC = F->getCallingConv();
-    
+
       // fastcall functions need to start with @.
       // FIXME: This logic seems unlikely to be right.
       if (CC == CallingConv::X86_FastCall) {
@@ -213,7 +213,7 @@ void Mangler::getNameWithPrefix(SmallVectorImpl<char> &OutName,
         else
           OutName.insert(OutName.begin(), '@');
       }
-    
+
       // fastcall and stdcall functions usually need @42 at the end to specify
       // the argument info.
       FunctionType *FT = F->getFunctionType();

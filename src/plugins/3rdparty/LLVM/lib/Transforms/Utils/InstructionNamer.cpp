@@ -26,7 +26,7 @@ namespace {
     InstNamer() : FunctionPass(ID) {
       initializeInstNamerPass(*PassRegistry::getPassRegistry());
     }
-    
+
     void getAnalysisUsage(AnalysisUsage &Info) const {
       Info.setPreservesAll();
     }
@@ -40,7 +40,7 @@ namespace {
       for (Function::iterator BB = F.begin(), E = F.end(); BB != E; ++BB) {
         if (!BB->hasName())
           BB->setName("bb");
-        
+
         for (BasicBlock::iterator I = BB->begin(), E = BB->end(); I != E; ++I)
           if (!I->hasName() && !I->getType()->isVoidTy())
             I->setName("tmp");
@@ -48,11 +48,11 @@ namespace {
       return true;
     }
   };
-  
+
   char InstNamer::ID = 0;
 }
 
-INITIALIZE_PASS(InstNamer, "instnamer", 
+INITIALIZE_PASS(InstNamer, "instnamer",
                 "Assign names to anonymous instructions", false, false)
 char &llvm::InstructionNamerID = InstNamer::ID;
 //===----------------------------------------------------------------------===//

@@ -115,7 +115,7 @@ Stmt *ParentMap::getParentIgnoreParenCasts(Stmt *S) const {
   }
   while (S && (isa<ParenExpr>(S) || isa<CastExpr>(S)));
 
-  return S;  
+  return S;
 }
 
 Stmt *ParentMap::getParentIgnoreParenImpCasts(Stmt *S) const {

@@ -59,7 +59,7 @@ class IdentifierInfo {
   bool IsPoisoned             : 1; // True if identifier is poisoned.
   bool IsCPPOperatorKeyword   : 1; // True if ident is a C++ operator keyword.
   bool NeedsHandleIdentifier  : 1; // See "RecomputeNeedsHandleIdentifier".
-  bool IsFromAST              : 1; // True if identifier was loaded (at least 
+  bool IsFromAST              : 1; // True if identifier was loaded (at least
                                    // partially) from an AST file.
   bool ChangedAfterLoad       : 1; // True if identifier has changed from the
                                    // definition loaded from an AST file.
@@ -79,7 +79,7 @@ class IdentifierInfo {
   void operator=(const IdentifierInfo&) LLVM_DELETED_FUNCTION;
 
   friend class IdentifierTable;
-  
+
 public:
   IdentifierInfo();
 
@@ -275,7 +275,7 @@ public:
   bool hasChangedSinceDeserialization() const {
     return ChangedAfterLoad;
   }
-  
+
   /// \brief Note that this identifier has changed since it was loaded from
   /// an AST file.
   void setChangedSinceDeserialization() {
@@ -285,7 +285,7 @@ public:
   /// \brief Determine whether the information for this identifier is out of
   /// date with respect to the external source.
   bool isOutOfDate() const { return OutOfDate; }
-  
+
   /// \brief Set whether the information for this identifier is out of
   /// date with respect to the external source.
   void setOutOfDate(bool OOD) {
@@ -295,12 +295,12 @@ public:
     else
       RecomputeNeedsHandleIdentifier();
   }
-  
+
   /// \brief Determine whether this is the contextual keyword
   /// '__experimental_modules_import'.
   bool isModulesImport() const { return IsModulesImport; }
-  
-  /// \brief Set whether this identifier is the contextual keyword 
+
+  /// \brief Set whether this identifier is the contextual keyword
   /// '__experimental_modules_import'.
   void setModulesImport(bool I) {
     IsModulesImport = I;
@@ -309,7 +309,7 @@ public:
     else
       RecomputeNeedsHandleIdentifier();
   }
-  
+
 private:
   /// RecomputeNeedsHandleIdentifier - The Preprocessor::HandleIdentifier does
   /// several special (but rare) things to identifiers of various sorts.  For
@@ -362,7 +362,7 @@ private:
 
 protected:
   IdentifierIterator() { }
-  
+
 public:
   virtual ~IdentifierIterator();
 
@@ -441,7 +441,7 @@ public:
   IdentifierInfoLookup *getExternalIdentifierLookup() const {
     return ExternalLookup;
   }
-  
+
   llvm::BumpPtrAllocator& getAllocator() {
     return HashTable.getAllocator();
   }
@@ -505,7 +505,7 @@ public:
       // Make sure getName() knows how to find the IdentifierInfo
       // contents.
       II->Entry = &Entry;
-      
+
       // If this is the 'import' contextual keyword, mark it as such.
       if (Name.equals("import"))
         II->setModulesImport(true);
@@ -528,7 +528,7 @@ public:
   void AddKeywords(const LangOptions &LangOpts);
 };
 
-/// \brief A family of Objective-C methods. 
+/// \brief A family of Objective-C methods.
 ///
 /// These families have no inherent meaning in the language, but are
 /// nonetheless central enough in the existing implementations to
@@ -619,7 +619,7 @@ class Selector {
   MultiKeywordSelector *getMultiKeywordSelector() const {
     return reinterpret_cast<MultiKeywordSelector *>(InfoPtr & ~ArgFlags);
   }
-  
+
   unsigned getIdentifierInfoFlag() const {
     return InfoPtr & ArgFlags;
   }
@@ -657,12 +657,12 @@ public:
     return getIdentifierInfoFlag() == ZeroArg;
   }
   unsigned getNumArgs() const;
-  
-  
+
+
   /// \brief Retrieve the identifier at a given position in the selector.
   ///
   /// Note that the identifier pointer returned may be NULL. Clients that only
-  /// care about the text of the identifier string, and not the specific, 
+  /// care about the text of the identifier string, and not the specific,
   /// uniqued identifier pointer, should use \c getNameForSlot(), which returns
   /// an empty string when the identifier pointer would be NULL.
   ///
@@ -673,7 +673,7 @@ public:
   /// \returns the uniqued identifier for this slot, or NULL if this slot has
   /// no corresponding identifier.
   IdentifierInfo *getIdentifierInfoForSlot(unsigned argIndex) const;
-  
+
   /// \brief Retrieve the name at a given position in the selector.
   ///
   /// \param argIndex The index for which we want to retrieve the name.
@@ -683,7 +683,7 @@ public:
   /// \returns the name for this slot, which may be the empty string if no
   /// name was supplied.
   StringRef getNameForSlot(unsigned argIndex) const;
-  
+
   /// \brief Derive the full selector name (e.g. "foo:bar:") and return
   /// it as an std::string.
   // FIXME: Add a print method that uses a raw_ostream.
@@ -802,7 +802,7 @@ public:
   static inline clang::Selector getFromVoidPointer(const void *P) {
     return clang::Selector(reinterpret_cast<uintptr_t>(P));
   }
-  enum { NumLowBitsAvailable = 0 };  
+  enum { NumLowBitsAvailable = 0 };
 };
 
 // Provide PointerLikeTypeTraits for IdentifierInfo pointers, which

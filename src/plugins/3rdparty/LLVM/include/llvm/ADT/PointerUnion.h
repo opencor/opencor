@@ -59,7 +59,7 @@ namespace llvm {
       NumLowBitsAvailable = PT1BitsAv < PT2BitsAv ? PT1BitsAv : PT2BitsAv
     };
   };
-  
+
   /// PointerUnion - This implements a discriminated union of two pointer types,
   /// and keeps the discriminator bit-mangled into the low bits of the pointer.
   /// This allows the implementation to be extremely efficient in space, but
@@ -78,7 +78,7 @@ namespace llvm {
   template <typename PT1, typename PT2>
   class PointerUnion {
   public:
-    typedef PointerIntPair<void*, 1, bool, 
+    typedef PointerIntPair<void*, 1, bool,
                            PointerUnionUIntTraits<PT1,PT2> > ValTy;
   private:
     ValTy Val;
@@ -94,7 +94,7 @@ namespace llvm {
 
   public:
     PointerUnion() {}
-    
+
     PointerUnion(PT1 V) {
       Val.setPointer(
          const_cast<void *>(PointerLikeTypeTraits<PT1>::getAsVoidPointer(V)));
@@ -105,7 +105,7 @@ namespace llvm {
          const_cast<void *>(PointerLikeTypeTraits<PT2>::getAsVoidPointer(V)));
       Val.setInt(1);
     }
-    
+
     /// isNull - Return true if the pointer held in the union is null,
     /// regardless of which type it is.
     bool isNull() const {
@@ -125,7 +125,7 @@ namespace llvm {
       int TyNo = Ty::Num;
       return static_cast<int>(Val.getInt()) == TyNo;
     }
-    
+
     /// get<T>() - Return the value of the specified pointer type. If the
     /// specified pointer type is incorrect, assert.
     template<typename T>
@@ -133,7 +133,7 @@ namespace llvm {
       assert(is<T>() && "Invalid accessor called");
       return PointerLikeTypeTraits<T>::getFromVoidPointer(Val.getPointer());
     }
-    
+
     /// dyn_cast<T>() - If the current value is of the specified pointer type,
     /// return it, otherwise return null.
     template<typename T>
@@ -156,7 +156,7 @@ namespace llvm {
          "Can't get the address because PointerLikeTypeTraits changes the ptr");
       return (PT1 *)Val.getAddrOfPointer();
     }
-    
+
     /// Assignment operators - Allow assigning into this union from either
     /// pointer type, setting the discriminator to remember what it came from.
     const PointerUnion &operator=(const PT1 &RHS) {
@@ -171,7 +171,7 @@ namespace llvm {
       Val.setInt(1);
       return *this;
     }
-    
+
     void *getOpaqueValue() const { return Val.getOpaqueValue(); }
     static inline PointerUnion getFromOpaqueValue(void *VP) {
       PointerUnion V;
@@ -179,7 +179,7 @@ namespace llvm {
       return V;
     }
   };
-  
+
   // Teach SmallPtrSet that PointerUnion is "basically a pointer", that has
   // # low bits available = min(PT1bits,PT2bits)-1.
   template<typename PT1, typename PT2>
@@ -193,16 +193,16 @@ namespace llvm {
     getFromVoidPointer(void *P) {
       return PointerUnion<PT1, PT2>::getFromOpaqueValue(P);
     }
-    
+
     // The number of bits available are the min of the two pointer types.
     enum {
-      NumLowBitsAvailable = 
+      NumLowBitsAvailable =
         PointerLikeTypeTraits<typename PointerUnion<PT1,PT2>::ValTy>
           ::NumLowBitsAvailable
     };
   };
-  
-  
+
+
   /// PointerUnion3 - This is a pointer union of three pointer types.  See
   /// documentation for PointerUnion for usage.
   template <typename PT1, typename PT2, typename PT3>
@@ -218,7 +218,7 @@ namespace llvm {
       IsInnerUnion(ValTy val) : Val(val) { }
       template<typename T>
       int is() const {
-        return Val.template is<InnerUnion>() && 
+        return Val.template is<InnerUnion>() &&
                Val.template get<InnerUnion>().template is<T>();
       }
       template<typename T>
@@ -242,7 +242,7 @@ namespace llvm {
 
   public:
     PointerUnion3() {}
-    
+
     PointerUnion3(PT1 V) {
       Val = InnerUnion(V);
     }
@@ -252,12 +252,12 @@ namespace llvm {
     PointerUnion3(PT3 V) {
       Val = V;
     }
-    
+
     /// isNull - Return true if the pointer held in the union is null,
     /// regardless of which type it is.
     bool isNull() const { return Val.isNull(); }
     operator bool() const { return !isNull(); }
-    
+
     /// is<T>() return true if the Union currently holds the type matching T.
     template<typename T>
     int is() const {
@@ -268,7 +268,7 @@ namespace llvm {
                                                                    >::Return Ty;
       return Ty(Val).template is<T>();
     }
-    
+
     /// get<T>() - Return the value of the specified pointer type. If the
     /// specified pointer type is incorrect, assert.
     template<typename T>
@@ -281,7 +281,7 @@ namespace llvm {
                                                                    >::Return Ty;
       return Ty(Val).template get<T>();
     }
-    
+
     /// dyn_cast<T>() - If the current value is of the specified pointer type,
     /// return it, otherwise return null.
     template<typename T>
@@ -289,7 +289,7 @@ namespace llvm {
       if (is<T>()) return get<T>();
       return T();
     }
-    
+
     /// Assignment operators - Allow assigning into this union from either
     /// pointer type, setting the discriminator to remember what it came from.
     const PointerUnion3 &operator=(const PT1 &RHS) {
@@ -304,7 +304,7 @@ namespace llvm {
       Val = RHS;
       return *this;
     }
-    
+
     void *getOpaqueValue() const { return Val.getOpaqueValue(); }
     static inline PointerUnion3 getFromOpaqueValue(void *VP) {
       PointerUnion3 V;
@@ -312,7 +312,7 @@ namespace llvm {
       return V;
     }
   };
- 
+
   // Teach SmallPtrSet that PointerUnion3 is "basically a pointer", that has
   // # low bits available = min(PT1bits,PT2bits,PT2bits)-2.
   template<typename PT1, typename PT2, typename PT3>
@@ -326,10 +326,10 @@ namespace llvm {
     getFromVoidPointer(void *P) {
       return PointerUnion3<PT1, PT2, PT3>::getFromOpaqueValue(P);
     }
-    
+
     // The number of bits available are the min of the two pointer types.
     enum {
-      NumLowBitsAvailable = 
+      NumLowBitsAvailable =
         PointerLikeTypeTraits<typename PointerUnion3<PT1, PT2, PT3>::ValTy>
           ::NumLowBitsAvailable
     };
@@ -347,7 +347,7 @@ namespace llvm {
     ValTy Val;
   public:
     PointerUnion4() {}
-    
+
     PointerUnion4(PT1 V) {
       Val = InnerUnion1(V);
     }
@@ -360,12 +360,12 @@ namespace llvm {
     PointerUnion4(PT4 V) {
       Val = InnerUnion2(V);
     }
-    
+
     /// isNull - Return true if the pointer held in the union is null,
     /// regardless of which type it is.
     bool isNull() const { return Val.isNull(); }
     operator bool() const { return !isNull(); }
-    
+
     /// is<T>() return true if the Union currently holds the type matching T.
     template<typename T>
     int is() const {
@@ -374,10 +374,10 @@ namespace llvm {
         ::llvm::PointerUnionTypeSelector<PT1, T, InnerUnion1,
           ::llvm::PointerUnionTypeSelector<PT2, T, InnerUnion1, InnerUnion2 >
                                                                    >::Return Ty;
-      return Val.template is<Ty>() && 
+      return Val.template is<Ty>() &&
              Val.template get<Ty>().template is<T>();
     }
-    
+
     /// get<T>() - Return the value of the specified pointer type. If the
     /// specified pointer type is incorrect, assert.
     template<typename T>
@@ -390,7 +390,7 @@ namespace llvm {
                                                                    >::Return Ty;
       return Val.template get<Ty>().template get<T>();
     }
-    
+
     /// dyn_cast<T>() - If the current value is of the specified pointer type,
     /// return it, otherwise return null.
     template<typename T>
@@ -398,7 +398,7 @@ namespace llvm {
       if (is<T>()) return get<T>();
       return T();
     }
-    
+
     /// Assignment operators - Allow assigning into this union from either
     /// pointer type, setting the discriminator to remember what it came from.
     const PointerUnion4 &operator=(const PT1 &RHS) {
@@ -417,7 +417,7 @@ namespace llvm {
       Val = InnerUnion2(RHS);
       return *this;
     }
-    
+
     void *getOpaqueValue() const { return Val.getOpaqueValue(); }
     static inline PointerUnion4 getFromOpaqueValue(void *VP) {
       PointerUnion4 V;
@@ -425,7 +425,7 @@ namespace llvm {
       return V;
     }
   };
-  
+
   // Teach SmallPtrSet that PointerUnion4 is "basically a pointer", that has
   // # low bits available = min(PT1bits,PT2bits,PT2bits)-2.
   template<typename PT1, typename PT2, typename PT3, typename PT4>
@@ -439,10 +439,10 @@ namespace llvm {
     getFromVoidPointer(void *P) {
       return PointerUnion4<PT1, PT2, PT3, PT4>::getFromOpaqueValue(P);
     }
-    
+
     // The number of bits available are the min of the two pointer types.
     enum {
-      NumLowBitsAvailable = 
+      NumLowBitsAvailable =
         PointerLikeTypeTraits<typename PointerUnion4<PT1, PT2, PT3, PT4>::ValTy>
           ::NumLowBitsAvailable
     };

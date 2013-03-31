@@ -54,7 +54,7 @@ public:
     else
       return RetTy();
   }
-  
+
   /// VisitConditionVariableInit - Handle the initialization of condition
   ///  variables at branches.  Valid statements include IfStmt, ForStmt,
   ///  WhileStmt, and SwitchStmt.

@@ -116,7 +116,7 @@ public:
 
   // FIXME: This should soon be eliminated altogether; clients should deal with
   // region extents directly.
-  virtual DefinedOrUnknownSVal getSizeInElements(ProgramStateRef state, 
+  virtual DefinedOrUnknownSVal getSizeInElements(ProgramStateRef state,
                                                  const MemRegion *region,
                                                  QualType EleTy) {
     return UnknownVal();
@@ -140,7 +140,7 @@ public:
   /// The callback may result in the following 3 scenarios:
   ///  - Successful cast (ex: derived is subclass of base).
   ///  - Failed cast (ex: derived is definitely not a subclass of base).
-  ///  - We don't know (base is a symbolic region and we don't have 
+  ///  - We don't know (base is a symbolic region and we don't have
   ///    enough info to determine if the cast will succeed at run time).
   /// The function returns an SVal representing the derived class; it's
   /// valid only if Failed flag is set to false.
@@ -158,7 +158,7 @@ public:
 
   virtual bool includedInBindings(Store store,
                                   const MemRegion *region) const = 0;
-  
+
   /// If the StoreManager supports it, increment the reference count of
   /// the specified Store object.
   virtual void incrementReferenceCount(Store store) {}
@@ -244,7 +244,7 @@ protected:
   /// CastRetrievedVal - Used by subclasses of StoreManager to implement
   ///  implicit casts that arise from loads from regions that are reinterpreted
   ///  as another region.
-  SVal CastRetrievedVal(SVal val, const TypedValueRegion *region, 
+  SVal CastRetrievedVal(SVal val, const TypedValueRegion *region,
                         QualType castTy, bool performTestOnly = true);
 
 private:
@@ -258,18 +258,18 @@ inline StoreRef::StoreRef(Store store, StoreManager & smgr)
     mgr.incrementReferenceCount(store);
 }
 
-inline StoreRef::StoreRef(const StoreRef &sr) 
+inline StoreRef::StoreRef(const StoreRef &sr)
   : store(sr.store), mgr(sr.mgr)
-{ 
+{
   if (store)
     mgr.incrementReferenceCount(store);
 }
-  
+
 inline StoreRef::~StoreRef() {
   if (store)
     mgr.decrementReferenceCount(store);
 }
-  
+
 inline StoreRef &StoreRef::operator=(StoreRef const &newStore) {
   assert(&newStore.mgr == &mgr);
   if (store != newStore.store) {

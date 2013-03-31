@@ -806,7 +806,7 @@ bool DSE::handleEndBlock(BasicBlock &BB) {
     }
 
     if (CallSite CS = cast<Value>(BBI)) {
-      // Remove allocation function calls from the list of dead stack objects; 
+      // Remove allocation function calls from the list of dead stack objects;
       // there can't be any references before the definition.
       if (isAllocLikeFn(BBI, TLI))
         DeadStackObjects.remove(BBI);

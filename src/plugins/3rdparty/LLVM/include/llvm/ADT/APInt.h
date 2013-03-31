@@ -254,12 +254,12 @@ public:
   /// This constructor interprets the string \p str in the given radix. The
   /// interpretation stops when the first character that is not suitable for the
   /// radix is encountered, or the end of the string. Acceptable radix values
-  /// are 2, 8, 10, 16, and 36. It is an error for the value implied by the 
+  /// are 2, 8, 10, 16, and 36. It is an error for the value implied by the
   /// string to require more bits than numBits.
   ///
   /// @param numBits the bit width of the constructed APInt
   /// @param str the string to be interpreted
-  /// @param radix the radix to use for the conversion 
+  /// @param radix the radix to use for the conversion
   /// @brief Construct an APInt from a string representation.
   APInt(unsigned numBits, StringRef str, uint8_t radix);
 
@@ -452,7 +452,7 @@ public:
     Res.setBit(BitNo);
     return Res;
   }
-  
+
   /// Constructs an APInt value that has a contiguous range of bits set. The
   /// bits from loBit (inclusive) to hiBit (exclusive) will be set. All other
   /// bits will be zero. For example, with parameters(32, 0, 16) you would get
@@ -516,7 +516,7 @@ public:
 
     return I1.zext(I2.getBitWidth()) == I2;
   }
-  
+
   /// \brief Overload to compute a hash_code for an APInt value.
   friend hash_code hash_value(const APInt &Arg);
 
@@ -638,7 +638,7 @@ public:
   /// Performs a bitwise OR operation on this APInt and RHS. RHS is
   /// logically zero-extended or truncated to match the bit-width of
   /// the LHS.
-  /// 
+  ///
   /// @brief Bitwise OR assignment operator.
   APInt& operator|=(uint64_t RHS) {
     if (isSingleWord()) {
@@ -858,8 +858,8 @@ public:
       APInt::udivrem(LHS, RHS, Quotient, Remainder);
     }
   }
-  
-  
+
+
   // Operations that return overflow indicators.
   APInt sadd_ov(const APInt &RHS, bool &Overflow) const;
   APInt uadd_ov(const APInt &RHS, bool &Overflow) const;
@@ -1057,9 +1057,9 @@ public:
     return sge(APInt(getBitWidth(), RHS));
   }
 
-  
-  
-  
+
+
+
   /// This operation tests if there are any pairs of corresponding bits
   /// between this APInt and RHS that are both set.
   bool intersects(const APInt &RHS) const {

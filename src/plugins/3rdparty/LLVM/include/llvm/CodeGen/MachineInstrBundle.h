@@ -28,7 +28,7 @@ namespace llvm {
 void finalizeBundle(MachineBasicBlock &MBB,
                     MachineBasicBlock::instr_iterator FirstMI,
                     MachineBasicBlock::instr_iterator LastMI);
-  
+
 /// finalizeBundle - Same functionality as the previous finalizeBundle except
 /// the last instruction in the bundle is not provided as an input. This is
 /// used in cases where bundles are pre-determined by marking instructions
@@ -149,7 +149,7 @@ public:
   /// PhysRegInfo - Information about a physical register used by a set of
   /// operands.
   struct PhysRegInfo {
-    /// Clobbers - Reg or an overlapping register is defined, or a regmask 
+    /// Clobbers - Reg or an overlapping register is defined, or a regmask
     /// clobbers Reg.
     bool Clobbers;
 

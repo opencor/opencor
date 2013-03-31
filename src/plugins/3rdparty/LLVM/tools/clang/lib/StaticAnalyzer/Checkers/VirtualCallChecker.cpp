@@ -7,7 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 //
-//  This file defines a checker that checks virtual function calls during 
+//  This file defines a checker that checks virtual function calls during
 //  construction or destruction of C++ objects.
 //
 //===----------------------------------------------------------------------===//
@@ -35,13 +35,13 @@ class WalkAST : public StmtVisitor<WalkAST> {
 
   /// A vector representing the worklist which has a chain of CallExprs.
   DFSWorkList WList;
-  
+
   // PreVisited : A CallExpr to this FunctionDecl is in the worklist, but the
   // body has not been visited yet.
   // PostVisited : A CallExpr to this FunctionDecl is in the worklist, and the
   // body has been visited.
   enum Kind { NotVisited,
-              PreVisited,  /**< A CallExpr to this FunctionDecl is in the 
+              PreVisited,  /**< A CallExpr to this FunctionDecl is in the
                                 worklist, but the body has not yet been
                                 visited. */
               PostVisited  /**< A CallExpr to this FunctionDecl is in the
@@ -55,13 +55,13 @@ class WalkAST : public StmtVisitor<WalkAST> {
   /// generating bug reports.  This is null while visiting the body of a
   /// constructor or destructor.
   const CallExpr *visitingCallExpr;
-  
+
 public:
   WalkAST(BugReporter &br, AnalysisDeclContext *ac)
     : BR(br),
       AC(ac),
       visitingCallExpr(0) {}
-  
+
   bool hasWork() const { return !WList.empty(); }
 
   /// This method adds a CallExpr to the worklist and marks the callee as
@@ -69,7 +69,7 @@ public:
   void Enqueue(WorkListUnit WLUnit) {
     const FunctionDecl *FD = WLUnit->getDirectCallee();
     if (!FD || !FD->getBody())
-      return;    
+      return;
     Kind &K = VisitedFunctions[FD];
     if (K != NotVisited)
       return;
@@ -80,9 +80,9 @@ public:
   /// This method returns an item from the worklist without removing it.
   WorkListUnit Dequeue() {
     assert(!WList.empty());
-    return WList.back();    
+    return WList.back();
   }
-  
+
   void Execute() {
     while (hasWork()) {
       WorkListUnit WLUnit = Dequeue();
@@ -94,7 +94,7 @@ public:
         // Visit the body.
         SaveAndRestore<const CallExpr *> SaveCall(visitingCallExpr, WLUnit);
         Visit(FD->getBody());
-        
+
         // Mark the function as being PostVisited to indicate we have
         // scanned the body.
         VisitedFunctions[FD] = PostVisited;
@@ -113,7 +113,7 @@ public:
   void VisitCXXMemberCallExpr(CallExpr *CE);
   void VisitStmt(Stmt *S) { VisitChildren(S); }
   void VisitChildren(Stmt *S);
-  
+
   void ReportVirtualCall(const CallExpr *CE, bool isPure);
 
 };
@@ -137,7 +137,7 @@ void WalkAST::VisitCallExpr(CallExpr *CE) {
 void WalkAST::VisitCXXMemberCallExpr(CallExpr *CE) {
   VisitChildren(CE);
   bool callIsNonVirtual = false;
-  
+
   // Several situations to elide for checking.
   if (MemberExpr *CME = dyn_cast<MemberExpr>(CE->getCallee())) {
     // If the member access is fully qualified (i.e., X::F), then treat
@@ -162,7 +162,7 @@ void WalkAST::VisitCXXMemberCallExpr(CallExpr *CE) {
 void WalkAST::ReportVirtualCall(const CallExpr *CE, bool isPure) {
   SmallString<100> buf;
   llvm::raw_svector_ostream os(buf);
-  
+
   os << "Call Path : ";
   // Name of current visiting CallExpr.
   os << *CE->getDirectCallee();
@@ -182,7 +182,7 @@ void WalkAST::ReportVirtualCall(const CallExpr *CE, bool isPure) {
   PathDiagnosticLocation CELoc =
     PathDiagnosticLocation::createBegin(CE, BR.getSourceManager(), AC);
   SourceRange R = CE->getCallee()->getSourceRange();
-  
+
   if (isPure) {
     os << "\n" <<  "Call pure virtual functions during construction or "
        << "destruction may leads undefined behaviour";
