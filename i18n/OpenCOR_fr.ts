@@ -242,10 +242,6 @@
         <translation>Le statut de l&apos;extension %1 est indéfini</translation>
     </message>
     <message>
-        <source>The version of the format used by the plugin (%1) is not valid (%2 is expected)</source>
-        <translation>La version du format utilisé par l&apos;extension (%1) n&apos;est pas valide (%2 est espérée)</translation>
-    </message>
-    <message>
         <source>Miscellaneous</source>
         <translation>Divers</translation>
     </message>
@@ -300,6 +296,10 @@
     <message>
         <source>Third-party plugins are used to provide access to third-party libraries.</source>
         <translation>Les extensions Externe sont utilisées pour donner accès à des librairies externes.</translation>
+    </message>
+    <message>
+        <source>The version of the interface used by the plugin (%1) is not valid (%2 is expected)</source>
+        <translation>La version de l&apos;interface utilisée par l&apos;extension (%1) n&apos;est pas valide (%2 est espérée)</translation>
     </message>
 </context>
 <context>

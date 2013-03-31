@@ -23,7 +23,7 @@ PLUGININFO_FUNC CellMLModelRepositoryPluginInfo()
     descriptions.insert("en", QString::fromUtf8("A plugin to access the <a href=\"http://models.cellml.org/\">CellML Model Repository</a>"));
     descriptions.insert("fr", QString::fromUtf8("Une extension pour accéder au <a href=\"http://models.cellml.org/\">Répertoire de Modèles CellML</a>"));
 
-    return new PluginInfo(PluginInfo::FormatVersion001,
+    return new PluginInfo(PluginInfo::InterfaceVersion001,
                           PluginInfo::Gui,
                           PluginInfo::Organisation,
                           true,

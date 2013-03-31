@@ -57,7 +57,7 @@ public:
     enum Status {
         UndefinedStatus,
         NotFound,
-        InvalidFormatVersion,
+        InvalidInterfaceVersion,
         NotSuitable,
         NotWanted,
         NotNeeded,
@@ -70,7 +70,7 @@ public:
     explicit Plugin(const QString &pFileName,
                     const PluginInfo::Type &pGuiOrConsoleType,
                     const bool &pForceLoading,
-                    const PluginInfo::FormatVersion &pExpectedFormatVersion,
+                    const PluginInfo::InterfaceVersion &pExpectedInterfaceVersion,
                     const QString &pPluginsDir, PluginManager *pPluginManager
                    );
 

@@ -78,7 +78,7 @@ private:
     void newPluginCategory(const PluginInfo::Category &pCategory,
                            const QString &pName);
 
-    QString formatVersionAsString(const PluginInfo::FormatVersion &pFormatVersion) const;
+    QString interfaceVersionAsString(const PluginInfo::InterfaceVersion &pInterfaceVersion) const;
     QString statusDescription(Plugin *pPlugin) const;
 
     void selectFirstVisibleCategory();

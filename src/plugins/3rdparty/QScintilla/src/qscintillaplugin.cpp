@@ -18,7 +18,7 @@ PLUGININFO_FUNC QScintillaPluginInfo()
     descriptions.insert("en", QString::fromUtf8("A plugin to access <a href=\"http://www.riverbankcomputing.co.uk/software/qscintilla/\">QScintilla</a>"));
     descriptions.insert("fr", QString::fromUtf8("Une extension pour accéder à <a href=\"http://www.riverbankcomputing.co.uk/software/qscintilla/\">QScintilla</a>"));
 
-    return new PluginInfo(PluginInfo::FormatVersion001,
+    return new PluginInfo(PluginInfo::InterfaceVersion001,
                           PluginInfo::Gui,
                           PluginInfo::ThirdParty,
                           false,

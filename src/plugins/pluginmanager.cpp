@@ -18,7 +18,7 @@ namespace OpenCOR {
 //==============================================================================
 
 PluginManager::PluginManager(const PluginInfo::Type &pGuiOrConsoleType) :
-    mFormatVersion(PluginInfo::FormatVersion001),
+    mInterfaceVersion(PluginInfo::InterfaceVersion001),
     mGuiOrConsoleType(pGuiOrConsoleType),
     mPlugins(Plugins())
 {
@@ -101,7 +101,7 @@ PluginManager::PluginManager(const PluginInfo::Type &pGuiOrConsoleType) :
     foreach (const QString &fileName, orderedFileNames)
         mPlugins << new Plugin(fileName, mGuiOrConsoleType,
                                plugins.contains(Plugin::name(fileName)),
-                               formatVersion(), pluginsDir(), this);
+                               interfaceVersion(), pluginsDir(), this);
 }
 
 //==============================================================================
@@ -166,11 +166,11 @@ Plugin * PluginManager::plugin(const QString &pName) const
 
 //==============================================================================
 
-PluginInfo::FormatVersion PluginManager::formatVersion() const
+PluginInfo::InterfaceVersion PluginManager::interfaceVersion() const
 {
-    // Return the format version used by the plugin manager
+    // Return the interface version used by the plugin manager
 
-    return mFormatVersion;
+    return mInterfaceVersion;
 }
 
 //==============================================================================

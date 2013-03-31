@@ -263,17 +263,17 @@ void PluginsWindow::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-QString PluginsWindow::formatVersionAsString(const PluginInfo::FormatVersion &pFormatVersion) const
+QString PluginsWindow::interfaceVersionAsString(const PluginInfo::InterfaceVersion &pInterfaceVersion) const
 {
-    // Return the given format version as a string
+    // Return the given interface version as a string
     // Note: ideally, this function would be part of the CoreInterface class,
     //       but this class is used by all the plugins and because this method
     //       requires a translation, well... we can't have it there since a
     //       translation will otherwise be required for each plugin, so...
     //       another solution is to have it here...
 
-    switch (pFormatVersion) {
-    case PluginInfo::FormatVersion001:
+    switch (pInterfaceVersion) {
+    case PluginInfo::InterfaceVersion001:
         return tr("001");
     default:
         return tr("unknown");
@@ -289,9 +289,9 @@ QString PluginsWindow::statusDescription(Plugin *pPlugin) const
     switch (pPlugin->status()) {
     case Plugin::NotFound:
         return tr("The %1 plugin could not be found").arg(pPlugin->name());
-    case Plugin::InvalidFormatVersion:
-        return tr("The version of the format used by the plugin (%1) is not valid (%2 is expected)").arg(formatVersionAsString(pPlugin->info().formatVersion()),
-                                                                                                         formatVersionAsString(mPluginManager->formatVersion()));
+    case Plugin::InvalidInterfaceVersion:
+        return tr("The version of the interface used by the plugin (%1) is not valid (%2 is expected)").arg(interfaceVersionAsString(pPlugin->info().interfaceVersion()),
+                                                                                                            interfaceVersionAsString(mPluginManager->interfaceVersion()));
     case Plugin::NotSuitable:
         return tr("The %1 plugin is not of the right type").arg(pPlugin->name());
     case Plugin::NotWanted:

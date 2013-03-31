@@ -38,10 +38,10 @@ public:
     QString pluginsDir() const;
     Plugin * plugin(const QString &pName) const;
 
-    PluginInfo::FormatVersion formatVersion() const;
+    PluginInfo::InterfaceVersion interfaceVersion() const;
 
 private:
-    PluginInfo::FormatVersion mFormatVersion;
+    PluginInfo::InterfaceVersion mInterfaceVersion;
     PluginInfo::Type mGuiOrConsoleType;
 
     QString mPluginsDir;

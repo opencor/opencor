@@ -23,7 +23,7 @@ PLUGININFO_FUNC RawViewPluginInfo()
     descriptions.insert("en", QString::fromUtf8("A plugin to edit files using a text editor"));
     descriptions.insert("fr", QString::fromUtf8("Une extension pour éditer des fichiers à l'aide d'un éditeur de texte"));
 
-    return new PluginInfo(PluginInfo::FormatVersion001,
+    return new PluginInfo(PluginInfo::InterfaceVersion001,
                           PluginInfo::Gui,
                           PluginInfo::Editing,
                           true,
