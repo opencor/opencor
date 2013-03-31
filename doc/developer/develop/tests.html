@@ -28,7 +28,7 @@
             <li>Be located under the <code>test</code> folder (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Compiler/test"><code>[OpenCOR]/src/plugins/misc/Compiler/test</code></a>) of a plugin folder (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Compiler"><code>[OpenCOR]/src/plugins/misc/Compiler</code></a>);</li>
             <li>Consist of at least one set of <code>.cpp</code> and <code>.h</code> files (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Compiler/test/test.cpp"><code>[OpenCOR]/src/plugins/misc/Compiler/test/test.cpp</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Compiler/test/test.h"><code>[OpenCOR]/src/plugins/misc/Compiler/test/test.h</code></a>);</li>
             <li>
-                Be listed under the <code>TESTS</code> header in the call to our CMake's <code>ADD_PLUGIN</code> macro of the plugin's <code>CMakeLists.txt</code> file (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Compiler/CMakeLists.txt"><code>[OpenCOR]/src/plugins/misc/Compiler/CMakeLists.txt</code></a>):
+                Be listed under the <code>TESTS</code> header in the call to our CMake <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>ADD_PLUGIN</code></a> macro of the plugin's <code>CMakeLists.txt</code> file (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Compiler/CMakeLists.txt"><code>[OpenCOR]/src/plugins/misc/Compiler/CMakeLists.txt</code></a>):
                 <pre class="prettyprint">PROJECT(MyPlugin)
 
 # Add the plugin
