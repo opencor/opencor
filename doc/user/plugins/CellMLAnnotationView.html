@@ -18,10 +18,86 @@
             headerAndContentsMenu("CellMLAnnotationView Plugin", "../..");
         </script>
 
+        <div class="section">
+            Annotate a CellML model
+        </div>
+
         <p>
-            To be done...
+            The CellMLAnnotationView plugin can be used to annotate CellML models. If you open a CellML model which does not contain any metadata, then it will look something like this:
         </p>
 
+        <p class="center">
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/CellMLAnnotationViewScreenshot01.png&caption=CellMLAnnotationView plugin: default view"><img class="link" src="res/pics/CellMLAnnotationViewScreenshot01Small.png" width=360 height=270 alt="CellMLAnnotationView plugin: default view"></a>
+        </p>
+
+        <p>
+            To the left of the view are listed all the CellML elements which can be annotated. If you right click on any CellML element, you will get a popup menu which you can use to expand/collapse all the child nodes, as well as remove the metadata associated with the current CellML element or all the metadata contained in the CellML file:
+        </p>
+
+        <p class="center">
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/CellMLAnnotationViewScreenshot02.png&caption=CellMLAnnotationView plugin: context menu"><img class="link" src="res/pics/CellMLAnnotationViewScreenshot02Small.png" width=360 height=270 alt="CellMLAnnotationView plugin: context menu"></a>
+        </p>
+
+        <p>
+            Say that you want to annotate the <code>sodium_channel</code> component. First, you need to select it:
+        </p>
+
+        <p class="center">
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/CellMLAnnotationViewScreenshot03.png&caption=CellMLAnnotationView plugin: select CellML element"><img class="link" src="res/pics/CellMLAnnotationViewScreenshot03Small.png" width=360 height=270 alt="CellMLAnnotationView plugin: select CellML element"></a>
+        </p>
+
+        <p>
+            Next, you need to specify a <a href="http://biomodels.net/qualifiers/">BioModels.net qualifier</a>. If you do not know which one to use, click on the <img src="res/pics/oxygen/categories/applications-internet.png" width=24 height=24 alt="New" align=absmiddle> icon to get some information about the selected BioModels.net qualifier:
+        </p>
+
+        <p class="center">
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/CellMLAnnotationViewScreenshot04.png&caption=CellMLAnnotationView plugin: select BioModels.net qualifier"><img class="link" src="res/pics/CellMLAnnotationViewScreenshot04Small.png" width=360 height=270 alt="CellMLAnnotationView plugin: select BioModels.net qualifier"></a>
+        </p>
+
+        <p>
+            From there, go through the list of BioModels.net qualifiers until you find the one which suits best the type of annotation you want to make. Here, we will use:
+        </p>
+
+        <p class="center">
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/CellMLAnnotationViewScreenshot05.png&caption=CellMLAnnotationView plugin: select bio:isVersionOf as a qualifier"><img class="link" src="res/pics/CellMLAnnotationViewScreenshot05Small.png" width=360 height=270 alt="CellMLAnnotationView plugin: select bio:isVersionOf as a qualifier"></a>
+        </p>
+
+        <p>
+            A quick look through the list tells us that we probably want to use the ChEBI term which is ID is 29101. If you want to know more about the ChEBI resource, you can click on its link:
+        </p>
+
+        <p class="center">
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/CellMLAnnotationViewScreenshot07.png&caption=CellMLAnnotationView plugin: lookup resource information"><img class="link" src="res/pics/CellMLAnnotationViewScreenshot07Small.png" width=360 height=270 alt="CellMLAnnotationView plugin: lookup resource information"></a>
+        </p>
+
+        <p>
+            Similarly, if you want to know more about the ChEBI ID, you can click on its link:
+        </p>
+
+        <p class="center">
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/CellMLAnnotationViewScreenshot08.png&caption=CellMLAnnotationView plugin: lookup ID information"><img class="link" src="res/pics/CellMLAnnotationViewScreenshot08Small.png" width=360 height=270 alt="CellMLAnnotationView plugin: lookup ID information"></a>
+        </p>
+
+        <p>
+            Now that you are happy with this choice of ontological term, you can add associate it with the <code>sodium_channel</code> component:
+        </p>
+
+        <p class="center">
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/CellMLAnnotationViewScreenshot09.png&caption=CellMLAnnotationView plugin: associate ontological term with CellML element"><img class="link" src="res/pics/CellMLAnnotationViewScreenshot09Small.png" width=360 height=270 alt="CellMLAnnotationView plugin: associate ontological term with CellML element"></a>
+        </p>
+
+        <p>
+            As you will have seen, the ontological term you have just added cannot be added anymore, but it  can be removed by clicking on the delete button or using the context menu (see above).
+        </p>
+
+        <p>
+            Now, say that you also want to add the next ontological term. Then, you can obviously do so by clicking on the add button, but you could also enter <code>pubchem.substance/4541</code> in term field (i.e. <code>&lt;resource&gt;/&lt;id&gt;</code>). Indeed, OpenCOR will recognise this 'term' as being a valid ontological term and will offer you to add it directly:
+        </p>
+
+        <p class="center">
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/CellMLAnnotationViewScreenshot10.png&caption=CellMLAnnotationView plugin: associate ontological term with CellML element"><img class="link" src="res/pics/CellMLAnnotationViewScreenshot10Small.png" width=360 height=270 alt="CellMLAnnotationView plugin: associate ontological term with CellML element"></a>
+        </p>
+        
         <script type="text/javascript">
             copyright();
         </script>
