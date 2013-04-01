@@ -19,7 +19,7 @@
         </script>
 
         <p>
-            The CellMLAnnotationView plugin can be used to annotate CellML models. If you open a CellML model which does not contain any metadata, then it will look something like this:
+            The CellMLAnnotationView plugin can be used to annotate CellML files. If you open a CellML file which does not contain any annotation, then it will look something like this:
         </p>
 
         <p class="center">
@@ -27,7 +27,7 @@
         </p>
 
         <p>
-            To the left of the view are listed all the CellML elements which can be annotated. If you right click on any CellML element, you will get a popup menu which you can use to expand/collapse all the child nodes, as well as remove the metadata associated with the current CellML element or all the metadata contained in the CellML file:
+            To the left of the view are listed all the CellML elements which can be annotated. If you right click on any of them, you will get a popup menu which you can use to expand/collapse all the child nodes, as well as remove the metadata associated with the current CellML element or the whole CellML file:
         </p>
 
         <p class="center">
@@ -47,7 +47,7 @@
         </p>
 
         <p>
-            Next, you need to specify a <a href="http://biomodels.net/qualifiers/">BioModels.net qualifier</a>. If you do not know which one to use, click on the <img src="res/pics/oxygen/categories/applications-internet.png" width=24 height=24 alt="New" align=absmiddle> icon to get some information about the selected BioModels.net qualifier:
+            Next, you need to specify a <a href="http://biomodels.net/qualifiers/">BioModels.net qualifier</a>. If you do not know which one to use, click on the <img src="res/pics/oxygen/categories/applications-internet.png" width=24 height=24 alt="New" align=absmiddle> icon to get some information about the currently selected BioModels.net qualifier:
         </p>
 
         <p class="center">
@@ -55,7 +55,7 @@
         </p>
 
         <p>
-            From there, go through the list of BioModels.net qualifiers until you find the one which suits best the type of annotation you want to make. Here, we will use:
+            From there, go through the list of BioModels.net qualifiers until you find the one which suits the type of annotation you want to make. Here, we will use <code>bio:isVersionOf</code>:
         </p>
 
         <p class="center">
@@ -63,7 +63,15 @@
         </p>
 
         <p>
-            A quick look through the list tells us that we probably want to use the ChEBI term which is ID is 29101. If you want to know more about the ChEBI resource, you can click on its link:
+            Now, we need to retrieve some possible ontological terms to describe our <code>sodium_channel</code> component. For this, we must enter a search term which in our case is going to be <code>sodium</code>. Then, using the <a href="http://semanticsbml.org/semanticSBML/plugin_restapidoc/index">RESTful service</a> provided by <a href="http://www.semanticsbml.org/">SemanticSBML</a>, OpenCOR returns a list of 25 possible ontological terms:
+        </p>
+
+        <p class="center">
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/CellMLAnnotationViewScreenshot06.png&caption=CellMLAnnotationView plugin: select bio:isVersionOf as a qualifier"><img class="link" src="res/pics/CellMLAnnotationViewScreenshot06Small.png" width=360 height=270 alt="CellMLAnnotationView plugin: select bio:isVersionOf as a qualifier"></a>
+        </p>
+
+        <p>
+            A quick look through the list tells us that we probably want to use the ChEBI term which identifier is 29101. If you want to know more about the ChEBI resource, you can click on the corresponding link:
         </p>
 
         <p class="center">
@@ -71,7 +79,7 @@
         </p>
 
         <p>
-            Similarly, if you want to know more about the ChEBI ID, you can click on its link:
+            Similarly, if you want to know more about the ChEBI identifier:
         </p>
 
         <p class="center">
@@ -79,7 +87,7 @@
         </p>
 
         <p>
-            Now that you are happy with this choice of ontological term, you can add associate it with the <code>sodium_channel</code> component:
+            Now that you are happy with your choice of ontological term, you can add associate it with the <code>sodium_channel</code> component by clicking on the add button:
         </p>
 
         <p class="center">
@@ -91,7 +99,7 @@
         </p>
 
         <p>
-            Now, say that you also want to add the next ontological term. Then, you can obviously do so by clicking on the add button, but you could also enter <code>pubchem.substance/4541</code> in term field (i.e. <code>&lt;resource&gt;/&lt;id&gt;</code>). Indeed, OpenCOR will recognise this 'term' as being a valid ontological term and will offer you to add it directly:
+            Now, say that you also want to add the next ontological term. You can obviously do so by clicking on the corresponding add button, but you could also enter <code>pubchem.substance/4541</code> (i.e. <code>&lt;resource&gt;/&lt;id&gt;</code>) in the term field. Indeed, OpenCOR will recognise this 'term' as being a valid ontological term and will offer you to add it directly:
         </p>
 
         <p class="center">
@@ -99,7 +107,7 @@
         </p>
 
         <p>
-            If you were to decide that the last ontological term is not suitable, you can remove it by simply clicking on the delete button:
+            If you were to decide that the last ontological term is not suitable, then you can remove it by clicking on the delete button:
         </p>
 
         <p class="center">
@@ -115,15 +123,19 @@
         </p>
 
         <p>
-            Ontological terms used to be identified using MIRIAM URNs, but these have been deprecated in favour of <a href="http://www.identifiers.org/">identifiers.org</a> URIs. OpenCOR does, however, recognise both even though it will only serialise annotations using identifiers.org URIs.
+            Ontological terms used to be identified using MIRIAM URNs, but these have now been deprecated in favour of <a href="http://www.identifiers.org/">identifiers.org</a> URIs. OpenCOR does, however, recognise both even though it will only serialise annotations using identifiers.org URIs.
         </p>
 
         <p>
-            Now, it may happen that a file contains some annotations which do not fit OpenCOR's current requirements. In this case, OpenCOR will simply display the annotations as a list of RDF triples:
+            Now, it may happen that a file contains annotations which do not fit OpenCOR's current requirements. In this case, OpenCOR will display the annotations as a simple list of RDF triples:
         </p>
 
         <p class="center">
             <a class="image" href="../res/image.html?image=../plugins/res/pics/CellMLAnnotationViewScreenshot12.png&caption=CellMLAnnotationView plugin: unrecognised annotations"><img class="link" src="res/pics/CellMLAnnotationViewScreenshot12Small.png" width=360 height=270 alt="CellMLAnnotationView plugin: unrecognised annotations"></a>
+        </p>
+
+        <p>
+            If you ever come across a type of annotations which OpenCOR ought to recognise, but does not, then please do not hesitate to <a href="../contactUs.html">contact us</a>.
         </p>
 
         <script type="text/javascript">
