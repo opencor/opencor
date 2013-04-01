@@ -19,8 +19,173 @@
         </script>
 
         <p>
-            To be done...
+            The SingleCellSimulationView plugin can be used to run CellML models which consists of either a system of <a href = "http://en.wikipedia.org/wiki/Ordinary_differential_equation">ordinary differential equations</a> (ODEs) or <a href="http://en.wikipedia.org/wiki/Differential_algebraic_equation">differential algebraic equations</a> (DAEs). The system may be <a href="https://en.wikipedia.org/wiki/Nonlinear_system">non-linear</a>.
         </p>
+
+        <p>
+            Upon opening a CellML file, OpenCOR will check whether it can be used for simulation. If it cannot, then a message will describe the issue with the file:
+        </p>
+
+        <p class="center">
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/SingleCellSimulationViewScreenshot01.png&caption=SingleCellSimulationView plugin: invalid CellML file"><img class="link" src="res/pics/SingleCellSimulationViewScreenshot01Small.png" width=360 height=270 alt="SingleCellSimulationView plugin: invalid CellML file"></a>
+        </p>
+
+        <p>
+            Alternatively, if the CellML file is valid, then the view will look something like:
+        </p>
+
+        <p class="center">
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/SingleCellSimulationViewScreenshot02.png&caption=SingleCellSimulationView plugin: valid CellML file"><img class="link" src="res/pics/SingleCellSimulationViewScreenshot02Small.png" width=360 height=270 alt="SingleCellSimulationView plugin: valid CellML file"></a>
+        </p>
+
+        <div class="section">
+            Simulate an ODE model
+        </div>
+
+        <p>
+            To simulate the model, you will need to provide some information about the simulation itself, i.e. its starting point, ending point and point interval. Next, you will need to specify the solver that you want to use. The solvers available to you will depend on which solver <a href="index.html">plugins</a> you have selected, as well as on the type of your model (i.e. ODE or DAE). In the present case, we are dealing with an ODE model and all the solver plugins are selected, so OpenCOR offers both <a href="https://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode">CVODE</a> and <a href="http://en.wikipedia.org/wiki/Euler_method">Forward Euler</a>.
+        </p>
+
+        <p class="center">
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/SingleCellSimulationViewScreenshot03.png&caption=SingleCellSimulationView plugin: ODE solvers"><img class="link" src="res/pics/SingleCellSimulationViewScreenshot03Small.png" width=360 height=270 alt="SingleCellSimulationView plugin: ODE solvers"></a>
+        </p>
+
+        <p>
+            Depending on the solver you select, different properties will be available to customise it. For example, if we select Forward Euler as our solver, we get only one property:
+        </p>
+
+        <p class="center">
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/SingleCellSimulationViewScreenshot04.png&caption=SingleCellSimulationView plugin: Forward Euler solver"><img class="link" src="res/pics/SingleCellSimulationViewScreenshot04Small.png" width=360 height=270 alt="SingleCellSimulationView plugin: Forward Euler solver"></a>
+        </p>
+
+        <p>
+            At this stage, we can run our model by pressing the F9 key or by clicking on the <img src="res/pics/oxygen/actions/media-playback-start.png" width=24 height=24 alt="Run" align=absmiddle> button. Then, we can decide on a model parameter to be plotted against the variable of integration (which, here, is time since the simulation properties are expressed in milliseconds). All the model parameters are listed to the left of the view, grouped by components in which they are originally defined. To select a model parameter, click on its corresponding check box:
+        </p>
+
+        <p class="center">
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/SingleCellSimulationViewScreenshot05.png&caption=SingleCellSimulationView plugin: failed simulation"><img class="link" src="res/pics/SingleCellSimulationViewScreenshot05Small.png" width=360 height=270 alt="SingleCellSimulationView plugin: failed simulation"></a>
+        </p>
+
+        <p>
+            As can be seen, the simulation failed. Several model parameters, including the one we selected, have a <code>nan</code> value (i.e. not a number). In this case, it is because the solver was not properly set up. Its step property is too big. If we set it to <code>0.01 milliseconds</code>, reset the model parameters (by clicking on the <img src="res/pics/oxygen/actions/view-refresh.png" width=24 height=24 alt="Reset" align=absmiddle> button), and restart the simulation, then we get the following trace:
+        </p>
+
+        <p class="center">
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/SingleCellSimulationViewScreenshot06.png&caption=SingleCellSimulationView plugin: successful simulation"><img class="link" src="res/pics/SingleCellSimulationViewScreenshot06Small.png" width=360 height=270 alt="SingleCellSimulationView plugin: successful simulation"></a>
+        </p>
+
+        <p>
+            The (roughly) same trace can be obtained using CVODE as our solver:
+        </p>
+
+        <p class="center">
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/SingleCellSimulationViewScreenshot07.png&caption=SingleCellSimulationView plugin: CVODE solver"><img class="link" src="res/pics/SingleCellSimulationViewScreenshot07Small.png" width=360 height=270 alt="SingleCellSimulationView plugin: CVODE solver"></a>
+        </p>
+
+        <p>
+            However, the simulation is so quick to run that we do not get a chance to see anything, but the final trace. Betwee the <img src="res/pics/oxygen/actions/view-refresh.png" width=24 height=24 alt="Reset" align=absmiddle> and <img src="res/pics/oxygen/mimetypes/text-csv.png" width=24 height=24 alt="Reset" align=absmiddle> buttons, there is a wheel which we can use to add a short delay between the output of two data points. Here, we set the delay to <code>13 ms</code>, reran the simulation after having reset the model parameters and paused it at a point of interest:
+        </p>
+
+        <p class="center">
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/SingleCellSimulationViewScreenshot08.png&caption=SingleCellSimulationView plugin: pausing a simulation"><img class="link" src="res/pics/SingleCellSimulationViewScreenshot08Small.png" width=360 height=270 alt="SingleCellSimulationView plugin: pausing a simulation"></a>
+        </p>
+
+        <p>
+            Now, we can modify any of the model parameters identified by the <img src="res/pics/modifiableVariableNode.png" width=24 height=24 alt="Modifiable Parameter" align=absmiddle> icon. Let us modify the <code>g_Na_max</code> parameter (under the <code>sodium_channel</code> component) by setting its value to <code>0 milliS_per_cm2</code>. Then, we resume the simulation and can see the effect of modifying the parameter on the model:
+        </p>
+
+        <p class="center">
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/SingleCellSimulationViewScreenshot09.png&caption=SingleCellSimulationView plugin: resuming a simulation"><img class="link" src="res/pics/SingleCellSimulationViewScreenshot09Small.png" width=360 height=270 alt="SingleCellSimulationView plugin: resuming a simulation"></a>
+        </p>
+
+        <p>
+            If we want, we could export <em>all</em> the simulation data to a comma-separated values file. To do so, we need to click on the <img src="res/pics/oxygen/mimetypes/text-csv.png" width=24 height=24 alt="Reset" align=absmiddle> button.
+        </p>
+
+        <div class="section">
+            Simulate a DAE model
+        </div>
+
+        <p>
+            To simulate a DAE model is similar to simulating an ODE model, except that OpenCOR only offers one solver (<a href="https://computation.llnl.gov/casc/sundials/description/description.html#descr_ida">IDA</a>) at this stage:
+        </p>
+
+        <p class="center">
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/SingleCellSimulationViewScreenshot10.png&caption=SingleCellSimulationView plugin: simulate a DAE model"><img class="link" src="res/pics/SingleCellSimulationViewScreenshot10Small.png" width=360 height=270 alt="SingleCellSimulationView plugin: simulate a DAE model"></a>
+        </p>
+
+        <div class="section">
+            Simulate a CellML 1.1 model
+        </div>
+
+        <p>
+            So far, we have only simulated CellML 1.0 models, but we can also simulate CellML 1.1 models, i.e. models which import units/components from other models:
+        </p>
+
+        <p class="center">
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/SingleCellSimulationViewScreenshot11.png&caption=SingleCellSimulationView plugin: simulate a CellML 1.1 model"><img class="link" src="res/pics/SingleCellSimulationViewScreenshot11Small.png" width=360 height=270 alt="SingleCellSimulationView plugin: simulate a CellML 1.1 model"></a>
+        </p>
+
+        <div class="section">
+            Simulate several models at once
+        </div>
+
+        <p>
+            Each simulation is run in its own thread which means that several simulations can be run at once. Simulations running in the 'background' display a small progress bar in the top tab bar while the simulation in the 'foreground' uses the main progress bar at the bottom of the view:
+        </p>
+
+        <p class="center">
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/SingleCellSimulationViewScreenshot12.png&caption=SingleCellSimulationView plugin: simulate several models at once"><img class="link" src="res/pics/SingleCellSimulationViewScreenshot12Small.png" width=360 height=270 alt="SingleCellSimulationView plugin: simulate several models at once"></a>
+        </p>
+
+        <div class="section">
+            Tool bar
+        </div>
+
+        <table class="toolBarButtons">
+            <tbody>
+                <tr>
+                    <th>
+                        <img src="res/pics/oxygen/actions/media-playback-start.png" width=24 height=24 alt="Run">
+                    </th>
+                    <td>
+                        Run the simulation
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <img src="res/pics/oxygen/actions/media-playback-pause.png" width=24 height=24 alt="Pause">
+                    </th>
+                    <td>
+                        Pause the simulation
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <img src="res/pics/oxygen/actions/media-playback-stop.png" width=24 height=24 alt="Stop">
+                    </th>
+                    <td>
+                        Stop the simulation
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <img src="res/pics/oxygen/actions/view-refresh.png" width=24 height=24 alt="Reset">
+                    </th>
+                    <td>
+                        Reset all the model parameters
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <img src="res/pics/oxygen/mimetypes/text-csv.png" width=24 height=24 alt="CSV Export">
+                    </th>
+                    <td>
+                        Export the simulation data to CSV
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
         <script type="text/javascript">
             copyright();

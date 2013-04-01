@@ -29,9 +29,19 @@
             <file>user/plugins/res/pics/oxygen/actions/go-next.png</file>
             <file>user/plugins/res/pics/oxygen/actions/go-previous.png</file>
             <file>user/plugins/res/pics/oxygen/actions/go-up.png</file>
+            <file>user/plugins/res/pics/oxygen/actions/list-add.png</file>
+            <file>user/plugins/res/pics/oxygen/actions/list-remove.png</file>
+            <file>user/plugins/res/pics/oxygen/actions/media-playback-pause.png</file>
+            <file>user/plugins/res/pics/oxygen/actions/media-playback-start.png</file>
+            <file>user/plugins/res/pics/oxygen/actions/media-playback-stop.png</file>
+            <file>user/plugins/res/pics/oxygen/actions/view-refresh.png</file>
             <file>user/plugins/res/pics/oxygen/actions/zoom-in.png</file>
             <file>user/plugins/res/pics/oxygen/actions/zoom-original.png</file>
             <file>user/plugins/res/pics/oxygen/actions/zoom-out.png</file>
+
+            <file>user/plugins/res/pics/oxygen/categories/applications-internet.png</file>
+
+            <file>user/plugins/res/pics/oxygen/mimetypes/text-csv.png</file>
 
             <file>user/plugins/res/pics/oxygen/places/user-home.png</file>
 
@@ -89,6 +99,33 @@
             <file>user/plugins/res/pics/HelpScreenshot01Small.png</file>
             <file>user/plugins/res/pics/HelpScreenshot02.png</file>
             <file>user/plugins/res/pics/HelpScreenshot02Small.png</file>
+
+            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot01.png</file>
+            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot01Small.png</file>
+            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot02.png</file>
+            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot02Small.png</file>
+            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot03.png</file>
+            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot03Small.png</file>
+            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot04.png</file>
+            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot04Small.png</file>
+            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot05.png</file>
+            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot05Small.png</file>
+            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot06.png</file>
+            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot06Small.png</file>
+            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot07.png</file>
+            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot07Small.png</file>
+            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot08.png</file>
+            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot08Small.png</file>
+            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot09.png</file>
+            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot09Small.png</file>
+            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot10.png</file>
+            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot10Small.png</file>
+            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot11.png</file>
+            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot11Small.png</file>
+            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot12.png</file>
+            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot12Small.png</file>
+
+            <file>user/plugins/res/pics/modifiableVariableNode.png</file>
 
             <file>user/plugins/res/pics/screenshot01.png</file>
             <file>user/plugins/res/pics/screenshot01Small.png</file>
