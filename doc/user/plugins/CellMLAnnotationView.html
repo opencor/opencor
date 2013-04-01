@@ -27,7 +27,7 @@
         </p>
 
         <p>
-            To the left of the view are listed all the CellML elements which can be annotated. If you right click on any of them, you will get a popup menu which you can use to expand/collapse all the child nodes, as well as remove the metadata associated with the current CellML element or the whole CellML file:
+            All the CellML elements which can be annotated are listed to the left of the view. If you right click on any of them, you will get a popup menu which you can use to expand/collapse all the child nodes, as well as remove the metadata associated with the current CellML element or the whole CellML file:
         </p>
 
         <p class="center">
@@ -47,7 +47,7 @@
         </p>
 
         <p>
-            Next, you need to specify a <a href="http://biomodels.net/qualifiers/">BioModels.net qualifier</a>. If you do not know which one to use, click on the <img src="res/pics/oxygen/categories/applications-internet.png" width=24 height=24 alt="Look Up" align=absmiddle> button to get some information about the currently selected BioModels.net qualifier:
+            Next, you need to specify a <a href="http://biomodels.net/qualifiers/">BioModels.net qualifier</a>. If you do not know which one to use, click on the <img src="res/pics/oxygen/categories/applications-internet.png" width=24 height=24 alt="Look Up" align=absmiddle> button to get some information about the current BioModels.net qualifier:
         </p>
 
         <p class="center">
@@ -55,7 +55,7 @@
         </p>
 
         <p>
-            From there, go through the list of BioModels.net qualifiers until you find the one which suits the type of annotation you want to make. Here, we will use <code>bio:isVersionOf</code>:
+            From there, go through the list of BioModels.net qualifiers until you find the one you are happy with. Here, we will use <code>bio:isVersionOf</code>:
         </p>
 
         <p class="center">
@@ -63,7 +63,7 @@
         </p>
 
         <p>
-            Now, we need to retrieve some possible ontological terms to describe our <code>sodium_channel</code> component. For this, we must enter a search term which in our case is going to be <code>sodium</code>. Then, using the <a href="http://semanticsbml.org/semanticSBML/plugin_restapidoc/index">RESTful service</a> provided by <a href="http://www.semanticsbml.org/">SemanticSBML</a>, OpenCOR returns a list of 25 possible ontological terms:
+            Now, we need to retrieve some possible ontological terms to describe our <code>sodium_channel</code> component. For this, we must enter a search term which in our case is going to be <code>sodium</code>. OpenCOR is then going to use the <a href="http://semanticsbml.org/semanticSBML/plugin_restapidoc/index">RESTful service</a> from <a href="http://www.semanticsbml.org/">SemanticSBML</a> to provide us with a list of, here, 25 possible ontological terms:
         </p>
 
         <p class="center">
@@ -71,7 +71,7 @@
         </p>
 
         <p>
-            A quick look through the list tells us that we probably want to use the ChEBI term which identifier is 29101. If you want to know more about the ChEBI resource, you can click on the corresponding link:
+            A quick look through the list tells us that we probably want to use the ChEBI term which identifier is 29101. If you want to know more about the ChEBI resource, you can click on its corresponding link:
         </p>
 
         <p class="center">
@@ -87,7 +87,7 @@
         </p>
 
         <p>
-            Now that you are happy with your choice of ontological term, you can associate it with the <code>sodium_channel</code> component by clicking on its <img src="res/pics/oxygen/actions/list-add.png" width=24 height=24 alt="Add" align=absmiddle> button:
+            Now that you are happy with your choice of ontological term, you can associate it with the <code>sodium_channel</code> component by clicking on its corresponding <img src="res/pics/oxygen/actions/list-add.png" width=24 height=24 alt="Add" align=absmiddle> button:
         </p>
 
         <p class="center">
@@ -95,7 +95,7 @@
         </p>
 
         <p>
-            As you will have seen, the ontological term you have just added cannot be added anymore, but it  can be removed by clicking on its <img src="res/pics/oxygen/actions/list-remove.png" width=24 height=24 alt="Delete" align=absmiddle> button or using the context menu (see above).
+            As you will have seen, the ontological term you have just added cannot be added anymore, but it  can be removed by clicking on its corresponding <img src="res/pics/oxygen/actions/list-remove.png" width=24 height=24 alt="Delete" align=absmiddle> button or by using the context menu (see above).
         </p>
 
         <p>
@@ -107,7 +107,7 @@
         </p>
 
         <p>
-            If you were to decide that the last ontological term is not suitable, then you can remove it by clicking on its <img src="res/pics/oxygen/actions/list-remove.png" width=24 height=24 alt="Delete" align=absmiddle> button:
+            From there, if you were to decide that the last ontological term is not suitable, then you can remove it by clicking on its corresponding <img src="res/pics/oxygen/actions/list-remove.png" width=24 height=24 alt="Delete" align=absmiddle> button:
         </p>
 
         <p class="center">
@@ -123,7 +123,7 @@
         </p>
 
         <p>
-            Ontological terms used to be identified using MIRIAM URNs, but these have now been deprecated in favour of <a href="http://www.identifiers.org/">identifiers.org</a> URIs. OpenCOR does, however, recognise both even though it will only serialise annotations using identifiers.org URIs.
+            Ontological terms used to be identified using <a href="http://www.ebi.ac.uk/miriam/main/mdb?section=use">MIRIAM</a> URNs, but these have now been deprecated in favour of <a href="http://www.identifiers.org/">identifiers.org</a> URIs. OpenCOR recognises both, but it will only serialise annotations using identifiers.org URIs.
         </p>
 
         <p>
@@ -135,7 +135,7 @@
         </p>
 
         <p>
-            If you ever come across a type of annotations which OpenCOR ought to recognise, but does not, then please do not hesitate to <a href="../contactUs.html">contact us</a>.
+            If you ever come across a type of annotations which you think OpenCOR ought to recognise, but does not, then please do <a href="../contactUs.html">contact us</a>.
         </p>
 
         <script type="text/javascript">
