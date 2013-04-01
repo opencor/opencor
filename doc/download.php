@@ -19,7 +19,7 @@
         </script>
 
         <p>
-            Please find below the latest snapshot.
+            Please find below the official release of OpenCOR, as well as its latest snapshot.
         </p>
 
 <?php
@@ -43,7 +43,11 @@
 
     date_default_timezone_set("Europe/London");
 
-    $versions = array(array("Latest snapshot", 21, 3, 2013, "2013-03-21", false,
+    $versions = array(array("Version 0.1", 1, 4, 2013, "0-1-0", true,
+                            array(array("Windows", array(".exe"), array(".zip")),
+                                  array("Linux", array(".tar.gz", 32), array(".tar.gz", 64)),
+                                  array("OS X", array(".dmg"), array(".zip")))),
+                      array("Latest snapshot", 21, 3, 2013, "2013-03-21", false,
                             array(array("Windows", array(".exe"), array(".zip")),
                                   array("Linux", array(".tar.gz", 32), array(".tar.gz", 64)),
                                   array("OS X", array(".dmg"), array(".zip")))));
@@ -249,6 +253,10 @@
         ++$versionIndex;
     }
 ?>
+
+        <p class="warning">
+            Please keep in mind that OpenCOR is <em>only</em> at version 0.1...
+        </p>
 
         <script type="text/javascript">
             copyright();
