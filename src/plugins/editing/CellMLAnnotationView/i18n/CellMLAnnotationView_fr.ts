@@ -194,8 +194,8 @@
         <translation>&lt;strong&gt;Information :&lt;/strong&gt; vous pouvez directement ajouter le terme &lt;strong&gt;%1&lt;/strong&gt;...</translation>
     </message>
     <message>
-        <source>&lt;strong&gt;Information:&lt;/strong&gt; the term &lt;strong&gt;%1&lt;/strong&gt; has, using the above qualifier, already been added...</source>
-        <translation>&lt;strong&gt;Information :&lt;/strong&gt; le terme &lt;strong&gt;%1&lt;/strong&gt; a, avec le qualificatif ci-dessus, déjà été ajouté...</translation>
+        <source>&lt;strong&gt;Information:&lt;/strong&gt; the term &lt;strong&gt;%1&lt;/strong&gt; has already been added using the above qualifier...</source>
+        <translation>&lt;strong&gt;Information :&lt;/strong&gt; le terme &lt;strong&gt;%1&lt;/strong&gt; a déjà été ajouté avec le qualificatif ci-dessus...</translation>
     </message>
 </context>
 <context>

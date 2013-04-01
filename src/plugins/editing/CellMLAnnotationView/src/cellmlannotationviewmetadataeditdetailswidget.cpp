@@ -145,12 +145,13 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
 
     // Update the enabled state of our various add buttons
 
-    updateGui(mElement);
+    updateGui(mElement, false);
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api::CellMLElement *pElement)
+void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api::CellMLElement *pElement,
+                                                              const bool &pUpdateItemsGui)
 {
     // Keep track of the CellML element
 
@@ -173,6 +174,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
     } else {
         mAddTermButton->setEnabled(false);
     }
+
+    // Update our items' GUI, if required
+
+    if (pUpdateItemsGui)
+        updateItemsGui(Items(), QString(), !mTermIsDirect);
 
     // Enable or disable the add buttons for our retrieved terms, depending on
     // whether they are already associated with the CellML element
@@ -596,7 +602,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
                 if (mAddTermButton->isEnabled())
                     labelText = tr("<strong>Information:</strong> you can directly add the term <strong>%1</strong>...").arg(mTerm);
                 else
-                    labelText = tr("<strong>Information:</strong> the term <strong>%1</strong> has, using the above qualifier, already been added...").arg(mTerm);
+                    labelText = tr("<strong>Information:</strong> the term <strong>%1</strong> has already been added using the above qualifier...").arg(mTerm);
             } else {
                 labelText = tr("Sorry, but no terms were found for <strong>%1</strong>...").arg(mTerm);
             }
@@ -778,7 +784,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::qualifierChanged(const QStri
 
     // Update the enabled state of our various add buttons
 
-    updateGui(mElement);
+    updateGui(mElement, false);
 }
 
 //==============================================================================
@@ -848,10 +854,6 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termChanged(const QString &p
     // button being enabled/disabled, depending on the case
 
     mTermIsDirect = QRegularExpression("^"+CellMLSupport::ResourceRegExp+"/"+CellMLSupport::IdRegExp+"$").match(pTerm).hasMatch();
-
-    // Update our items' GUI
-
-    updateItemsGui(Items(), QString(), !mTermIsDirect);
 
     // Update the enabled state of our various add buttons
 
@@ -985,7 +987,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
 
         // Update the enabled state of our various add buttons
 
-        updateGui(mElement);
+        updateGui(mElement, false);
     }
 
     // Delete (later) the network reply
@@ -1014,6 +1016,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addTerm()
     // Disable the add term buton, now that we have added the term
 
     mAddTermButton->setEnabled(false);
+
+    // Update our items' GUI
+
+    updateItemsGui(Items(), QString(), !mTermIsDirect);
 
     // Let people know that we have added an RDF triple
 

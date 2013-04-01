@@ -154,7 +154,8 @@ Q_SIGNALS:
     void rdfTripleAdded(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
 
 public Q_SLOTS:
-    void updateGui(iface::cellml_api::CellMLElement *pElement);
+    void updateGui(iface::cellml_api::CellMLElement *pElement,
+                   const bool &pUpdateItemsGui = true);
 
 private Q_SLOTS:
     void on_actionCopy_triggered();
