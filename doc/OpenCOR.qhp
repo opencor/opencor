@@ -68,7 +68,8 @@
 
             <file>user/contactUs.html</file>
             <file>user/index.html</file>
-            <file>user/knownIssuesLimitations.html</file>
+            <file>user/knownIssues.html</file>
+            <file>user/knownLimitations.html</file>
             <file>user/licensing.html</file>
             <file>user/supportedPlatforms.html</file>
             <file>user/team.html</file>
