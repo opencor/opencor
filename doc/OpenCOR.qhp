@@ -23,6 +23,8 @@
 
             <file>user/plugins/res/pics/oxygen/actions/document-print.png</file>
             <file>user/plugins/res/pics/oxygen/actions/edit-copy.png</file>
+            <file>user/plugins/res/pics/oxygen/actions/edit-delete.png</file>
+            <file>user/plugins/res/pics/oxygen/actions/folder-new.png</file>
             <file>user/plugins/res/pics/oxygen/actions/go-home.png</file>
             <file>user/plugins/res/pics/oxygen/actions/go-next.png</file>
             <file>user/plugins/res/pics/oxygen/actions/go-previous.png</file>
@@ -44,6 +46,19 @@
             <file>user/plugins/res/pics/FileBrowserScreenshot02Small.png</file>
             <file>user/plugins/res/pics/FileBrowserScreenshot03.png</file>
             <file>user/plugins/res/pics/FileBrowserScreenshot03Small.png</file>
+
+            <file>user/plugins/res/pics/FileOrganiserScreenshot01.png</file>
+            <file>user/plugins/res/pics/FileOrganiserScreenshot01Small.png</file>
+            <file>user/plugins/res/pics/FileOrganiserScreenshot02.png</file>
+            <file>user/plugins/res/pics/FileOrganiserScreenshot02Small.png</file>
+            <file>user/plugins/res/pics/FileOrganiserScreenshot03.png</file>
+            <file>user/plugins/res/pics/FileOrganiserScreenshot03Small.png</file>
+            <file>user/plugins/res/pics/FileOrganiserScreenshot04.png</file>
+            <file>user/plugins/res/pics/FileOrganiserScreenshot04Small.png</file>
+            <file>user/plugins/res/pics/FileOrganiserScreenshot05.png</file>
+            <file>user/plugins/res/pics/FileOrganiserScreenshot05Small.png</file>
+            <file>user/plugins/res/pics/FileOrganiserScreenshot06.png</file>
+            <file>user/plugins/res/pics/FileOrganiserScreenshot06Small.png</file>
 
             <file>user/plugins/res/pics/HelpScreenshot01.png</file>
             <file>user/plugins/res/pics/HelpScreenshot01Small.png</file>
