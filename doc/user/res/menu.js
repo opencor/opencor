@@ -18,7 +18,7 @@ function headerAndContentsMenu(pageName, relativePath) {
                              [0, "Known issues/limitations", "user/knownIssuesLimitations.html"],
                              [],
                              [0, "Licensing", "user/licensing.html"],
-                             [0, "Authors", "user/authors.html"],
+                             [0, "Team", "user/team.html"],
                              [],
                              [0, "Contact us", "user/contactUs.html"]]);
 }
