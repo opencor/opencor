@@ -31,15 +31,15 @@
         </p>
 
         <p>
-            You can select which plugins you want to use. However, there are plugins which are needed by other plugins (e.g. the Core plugin is needed by the <a href="CellMLModelRepository.html">CellMLModelRepository</a> plugin) and therefore cannot be directly selected. Instead, it will be automatically selected if and only if it is needed by another plugin.
+            You can select which plugins you want to use. However, plugins which are needed by other plugins (e.g. the Core plugin is needed by the <a href="CellMLModelRepository.html">CellMLModelRepository</a> plugin) cannot be directly selected. Instead, they will be automatically selected if and only if they are needed by at least one other plugin.
         </p>
 
         <p>
-            Most of the selectable plugins come with some kind of a <a href="../userInterfaces/graphicalUserInterface.html">graphical user interface</a> (GUI):
+            Most of the selectable plugins come with some kind of a <a href="../userInterfaces/graphicalUserInterface.html">GUI</a>:
         </p>
 
         <ul>
-            <li><strong>Dockable window:</strong> such a plugin (e.g. the <a href="CellMLModelRepository.html">CellMLModelRepository</a> and <a href="Help.html">Help</a> plugins) can be docked around the central area, undocked or even hidden, as illustrated <a href="../userInterfaces/graphicalUserInterface.html">here</a>.</li>
+            <li><strong>Dockable window:</strong> such a plugin (e.g. the <a href="CellMLModelRepository.html">CellMLModelRepository</a> and <a href="Help.html">Help</a> plugins) can be docked around the central area, undocked or hidden, as illustrated <a href="../userInterfaces/graphicalUserInterface.html">here</a>.</li>
             <li><strong>View window:</strong> such a plugin (e.g. the <a href="CellMLAnnotationView.html">CellMLAnnotationView</a> and <a href="SingleCellSimulationView.html">SingleCellSimulationView</a> plugins) is used to interact with a file, be it to edit it, simulate it or analyse it.</li>
         </ul>
 
@@ -67,8 +67,6 @@
 
         <ul>
             <li><strong><a href="CellMLAnnotationView.html">CellMLAnnotationView</a>:</strong> a plugin to annotate <a href="http://www.cellml.org/">CellML</a> files.</li>
-            <li><strong><a href="RawCellMLView.html">RawCellMLView</a>:</strong> a plugin to edit <a href="http://www.cellml.org/">CellML</a> files using an XML editor.</li>
-            <li><strong><a href="RawView.html">RawView</a>:</strong> a plugin to edit files using a text editor.</li>
         </ul>
 
         <p>
@@ -97,12 +95,11 @@
         </ul>
 
         <p>
-            There are also some non-selectable Simulation plugins:
+            There is also a non-selectable Simulation plugin:
         </p>
 
         <ul>
             <li><strong>CoreSolver:</strong> the core solver plugin.</li>
-            <li><strong>CoreSimulation:</strong> the core simulation plugin.</li>
         </ul>
 
         <div class="section">
@@ -125,8 +122,6 @@
             <li><strong>Core:</strong> the core plugin.</li>
             <li><strong>Compiler:</strong> a plugin to support code compilation.</li>
             <li><strong>CellMLSupport:</strong> a plugin to support <a href="http://www.cellml.org/">CellML</a>.</li>
-            <li><strong>QScintillaSupport:</strong> a plugin to support <a href="http://www.riverbankcomputing.co.uk/software/qscintilla/">QScintilla</a>.</li>
-            <li><strong>Viewer:</strong> a plugin to graphically visualise various modelling concepts (e.g. mathematical equations).</li>
         </ul>
 
         <div class="section">
@@ -152,8 +147,6 @@
         <ul>
             <li><strong>LLVM:</strong> a plugin to access <a href="http://www.llvm.org/">LLVM</a> (as well as <a href="http://clang.llvm.org/">Clang</a>).</li>
             <li><strong>SUNDIALS:</strong> a plugin to access CVODE, IDA and KINSOL from the <a href="https://computation.llnl.gov/casc/sundials/description/description.html">SUNDIALS</a> library.</li>
-            <li><strong>QScintilla:</strong> a plugin to access <a href="http://www.riverbankcomputing.co.uk/software/qscintilla/">QScintilla</a>.</li>
-            <li><strong>QtMmlWidget:</strong> a plugin to access <a href="http://doc.qt.digia.com/solutions/qtmmlwidget/qtmmlwidget.html">QtMmlWidget</a>.</li>
             <li><strong>Qwt:</strong> a plugin to access <a href="http://qwt.sourceforge.net/">Qwt</a>.</li>
         </ul>
 
