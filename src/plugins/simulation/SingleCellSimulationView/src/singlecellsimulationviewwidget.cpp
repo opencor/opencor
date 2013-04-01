@@ -600,6 +600,14 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         emit updateFileTabIcon(mSimulation->fileName(), QIcon());
     }
 
+    // Determine whether the CellML file has a valid runtime
+
+    bool validCellmlFileRuntime = cellmlFileRuntime && cellmlFileRuntime->isValid();
+
+    // Retrieve our variable of integration, if any
+
+    CellMLSupport::CellmlFileRuntimeModelParameter *variableOfIntegration = validCellmlFileRuntime?cellmlFileRuntime->variableOfIntegration():0;
+
     // Output some information about our CellML file
 
     QString information = QString();
@@ -610,10 +618,9 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
     information += "<strong>"+pFileName+"</strong>"+OutputBrLn;
     information += OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
 
-    bool validCellmlFileRuntime = cellmlFileRuntime && cellmlFileRuntime->isValid();
-
-    if (validCellmlFileRuntime) {
-        // A valid runtime could be retrieved for the CellML file
+    if (validCellmlFileRuntime && variableOfIntegration) {
+        // A valid runtime could be retrieved for the CellML file and we have a
+        // variable of integration
 
         QString additionalInformation = QString();
 
@@ -624,22 +631,29 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         information += QString(OutputTab+"<strong>"+tr("Model type:")+"</strong> <span"+OutputInfo+">%1%2</span>."+OutputBrLn).arg((cellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?tr("ODE"):tr("DAE"),
                                                                                                                                    additionalInformation);
     } else {
-        // We couldn't retrieve a runtime for the CellML file or we could, but
-        // it's not valid
+        // Either we couldn't retrieve a runtime for the CellML file or we
+        // could, but it's not valid or it's valid but then we don't have a
+        // variable of integration
+        // Note: in the case of a valid runtime and no variable of integration,
+        //       we really shouldn't consider the runtime to be valid, hence we
+        //       handle the no variable of integration case here...
+
+        mErrorType = InvalidCellmlFile;
+
+        updateInvalidModelMessageWidget();
 
         information += "<span"+OutputBad+">"+(cellmlFileRuntime?tr("invalid"):tr("none"))+"</span>."+OutputBrLn;
 
-        foreach (const CellMLSupport::CellmlFileIssue &issue,
-                 cellmlFileRuntime?cellmlFileRuntime->issues():cellmlFile->issues())
-            information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2</span>."+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
-                                                                                                                 issue.message());
+        if (validCellmlFileRuntime)
+            information += OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+tr("the model must have at least one ODE or DAE")+".</span>"+OutputBrLn;
+        else
+            foreach (const CellMLSupport::CellmlFileIssue &issue,
+                     cellmlFileRuntime?cellmlFileRuntime->issues():cellmlFile->issues())
+                information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2</span>."+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
+                                                                                                                     issue.message());
     }
 
     output(information);
-
-    // Retrieve our variable of integration, if any
-
-    CellMLSupport::CellmlFileRuntimeModelParameter *variableOfIntegration = validCellmlFileRuntime?cellmlFileRuntime->variableOfIntegration():0;
 
     // Enable/disable our run action depending on whether we have a variable of
     // integration
@@ -662,143 +676,136 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
     bool hasError = true;
 
-    if (validCellmlFileRuntime) {
-        // We have a valid runtime
+    if (validCellmlFileRuntime && variableOfIntegration) {
+        // We have both a valid runtime and a variable of integration
         // Note: if we didn't have a valid runtime, then there would be no need
         //       to output an error message since one would have already been
         //       generated while trying to get the runtime (see above)...
 
-        // Retrieve the unit of the variable of integration, if any
+        // Retrieve the unit of the variable of integration
 
-        if (!variableOfIntegration) {
-            // We don't have a variable of integration, so...
+        // Show our contents widget in case it got previously hidden
+        // Note: indeed, if it was to remain hidden then some initialisations
+        //       wouldn't work (e.g. the solvers widget has property editor
+        //       which all properties need to be removed and if the contents
+        //       widget is not visible, then upon repopulating the property
+        //       editor, scrollbars will be shown even though they are not
+        //       needed), so...
 
-            simulationError(tr("the model must have at least one ODE or DAE"),
-                            InvalidCellmlFile);
-        } else {
-            // Show our contents widget in case it got previously hidden
-            // Note: indeed, if it was to remain hidden then some
-            //       initialisations wouldn't work (e.g. the solvers widget has
-            //       property editor which all properties need to be removed and
-            //       if the contents widget is not visible, then upon
-            //       repopulating the property editor, scrollbars will be shown
-            //       even though they are not needed), so...
+        mContentsWidget->setVisible(true);
 
-            mContentsWidget->setVisible(true);
+        // Initialise our GUI's simulation, solvers and parameters widgets
+        // Note: this will also initialise some of our simulation data (i.e. our
+        //       simulation's starting point and simulation's NLA solver's
+        //       properties) which is needed since we want to be able to reset
+        //       our simulation below...
 
-            // Initialise our GUI's simulation, solvers and parameters widgets
-            // Note: this will also initialise some of our simulation data (i.e.
-            //       our simulation's starting point and simulation's NLA
-            //       solver's properties) which is needed since we want to be
-            //       able to reset our simulation below...
-
-            simulationWidget->initialize(pFileName, cellmlFileRuntime, mSimulation->data());
-            solversWidget->initialize(pFileName, cellmlFileRuntime, mSimulation->data());
-            parametersWidget->initialize(pFileName, cellmlFileRuntime, mSimulation->data());
+        simulationWidget->initialize(pFileName, cellmlFileRuntime, mSimulation->data());
+        solversWidget->initialize(pFileName, cellmlFileRuntime, mSimulation->data());
+        parametersWidget->initialize(pFileName, cellmlFileRuntime, mSimulation->data());
 
 #ifdef QT_DEBUG
-            // Output the type of solvers that are available to run the model
+        // Output the type of solvers that are available to run the model
 
-            qDebug("---------------------------------------");
-            qDebug("%s", qPrintable(pFileName));
+        qDebug("---------------------------------------");
+        qDebug("%s", qPrintable(pFileName));
 
-            information = QString();
+        information = QString();
 
-            if (cellmlFileRuntime->needOdeSolver()) {
-                information += "\n - ODE solver(s): ";
+        if (cellmlFileRuntime->needOdeSolver()) {
+            information += "\n - ODE solver(s): ";
 
-                int solverCounter = 0;
+            int solverCounter = 0;
 
-                foreach (const QString &odeSolver, solversWidget->odeSolvers())
-                    if (++solverCounter == 1)
-                        information += odeSolver;
-                    else
-                        information += " | "+odeSolver;
+            foreach (const QString &odeSolver, solversWidget->odeSolvers())
+                if (++solverCounter == 1)
+                    information += odeSolver;
+                else
+                    information += " | "+odeSolver;
 
-                if (!solverCounter)
-                    information += "none available";
-            }
+            if (!solverCounter)
+                information += "none available";
+        }
 
-            if (cellmlFileRuntime->needDaeSolver()) {
-                information += "\n - DAE solver(s): ";
+        if (cellmlFileRuntime->needDaeSolver()) {
+            information += "\n - DAE solver(s): ";
 
-                int solverCounter = 0;
+            int solverCounter = 0;
 
-                foreach (const QString &daeSolver, solversWidget->daeSolvers())
-                    if (++solverCounter == 1)
-                        information += daeSolver;
-                    else
-                        information += " | "+daeSolver;
+            foreach (const QString &daeSolver, solversWidget->daeSolvers())
+                if (++solverCounter == 1)
+                    information += daeSolver;
+                else
+                    information += " | "+daeSolver;
 
-                if (!solverCounter)
-                    information += "none available";
-            }
+            if (!solverCounter)
+                information += "none available";
+        }
 
-            if (cellmlFileRuntime->needNlaSolver()) {
-                information += "\n - NLA solver(s): ";
+        if (cellmlFileRuntime->needNlaSolver()) {
+            information += "\n - NLA solver(s): ";
 
-                int solverCounter = 0;
+            int solverCounter = 0;
 
-                foreach (const QString &nlaSolver, solversWidget->nlaSolvers())
-                    if (++solverCounter == 1)
-                        information += nlaSolver;
-                    else
-                        information += " | "+nlaSolver;
+            foreach (const QString &nlaSolver, solversWidget->nlaSolvers())
+                if (++solverCounter == 1)
+                    information += nlaSolver;
+                else
+                    information += " | "+nlaSolver;
 
-                if (!solverCounter)
-                    information += "none available";
-            }
+            if (!solverCounter)
+                information += "none available";
+        }
 
-            qDebug("%s", qPrintable(information.remove(0, 1)));
-            // Note: we must remove the leading '\n'...
+        qDebug("%s", qPrintable(information.remove(0, 1)));
+        // Note: we must remove the leading '\n'...
 #endif
 
-            // Check whether we have at least one ODE or DAE solver and, if
-            // needed, at least one NLA solver
+        // Check whether we have at least one ODE or DAE solver and, if needed,
+        // at least one NLA solver
 
-            if (cellmlFileRuntime->needNlaSolver()) {
-                if (solversWidget->nlaSolvers().isEmpty()) {
-                    if (cellmlFileRuntime->needOdeSolver()) {
-                        if (solversWidget->odeSolvers().isEmpty())
-                            simulationError(tr("the model needs both an ODE and an NLA solver, but none are available"),
-                                            InvalidSimulationEnvironment);
-                        else
-                            simulationError(tr("the model needs both an ODE and an NLA solver, but no NLA solver is available"),
-                                            InvalidSimulationEnvironment);
-                    } else {
-                        if (solversWidget->daeSolvers().isEmpty())
-                            simulationError(tr("the model needs both a DAE and an NLA solver, but none are available"),
-                                            InvalidSimulationEnvironment);
-                        else
-                            simulationError(tr("the model needs both a DAE and an NLA solver, but no NLA solver is available"),
-                                            InvalidSimulationEnvironment);
-                    }
-                } else if (   cellmlFileRuntime->needOdeSolver()
-                           && solversWidget->odeSolvers().isEmpty()) {
-                    simulationError(tr("the model needs both an ODE and an NLA solver, but no ODE solver is available"),
-                                    InvalidSimulationEnvironment);
-                } else if (   cellmlFileRuntime->needDaeSolver()
-                           && solversWidget->daeSolvers().isEmpty()) {
-                        simulationError(tr("the model needs both a DAE and an NLA solver, but no DAE solver is available"),
+        if (cellmlFileRuntime->needNlaSolver()) {
+            if (solversWidget->nlaSolvers().isEmpty()) {
+                if (cellmlFileRuntime->needOdeSolver()) {
+                    if (solversWidget->odeSolvers().isEmpty())
+                        simulationError(tr("the model needs both an ODE and an NLA solver, but none are available"),
+                                        InvalidSimulationEnvironment);
+                    else
+                        simulationError(tr("the model needs both an ODE and an NLA solver, but no NLA solver is available"),
                                         InvalidSimulationEnvironment);
                 } else {
-                    // We have the solver(s) we need, so...
-
-                    hasError = false;
+                    if (solversWidget->daeSolvers().isEmpty())
+                        simulationError(tr("the model needs both a DAE and an NLA solver, but none are available"),
+                                        InvalidSimulationEnvironment);
+                    else
+                        simulationError(tr("the model needs both a DAE and an NLA solver, but no NLA solver is available"),
+                                        InvalidSimulationEnvironment);
                 }
             } else if (   cellmlFileRuntime->needOdeSolver()
                        && solversWidget->odeSolvers().isEmpty()) {
-                simulationError(tr("the model needs an ODE solver, but none is available"),
+                simulationError(tr("the model needs both an ODE and an NLA solver, but no ODE solver is available"),
                                 InvalidSimulationEnvironment);
             } else if (   cellmlFileRuntime->needDaeSolver()
                        && solversWidget->daeSolvers().isEmpty()) {
-                simulationError(tr("the model needs a DAE solver, but none is available"),
-                                InvalidSimulationEnvironment);
+                    simulationError(tr("the model needs both a DAE and an NLA solver, but no DAE solver is available"),
+                                    InvalidSimulationEnvironment);
             } else {
                 // We have the solver(s) we need, so...
 
                 hasError = false;
             }
+        } else if (   cellmlFileRuntime->needOdeSolver()
+                   && solversWidget->odeSolvers().isEmpty()) {
+            simulationError(tr("the model needs an ODE solver, but none is available"),
+                            InvalidSimulationEnvironment);
+        } else if (   cellmlFileRuntime->needDaeSolver()
+                   && solversWidget->daeSolvers().isEmpty()) {
+            simulationError(tr("the model needs a DAE solver, but none is available"),
+                            InvalidSimulationEnvironment);
+        } else {
+            // We have the solver(s) we need, so...
+
+            hasError = false;
         }
     }
 
