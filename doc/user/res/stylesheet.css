@@ -37,12 +37,18 @@ code {
     color: rgb(54, 96, 146);
 }
 
-img.centerLink {
+img.link {
+    margin-left: auto;
+    margin-right: auto;
     border: none;
+    padding: 7px;
 }
 
-img.centerLink:hover {
+img.link:hover {
+    margin-top: -1px;
+    margin-bottom: -1px;
     border: 1px solid rgba(54, 96, 146, 0.13);
+    border-radius: 7px;
     background: rgba(54, 96, 146, 0.05);
 }
 
