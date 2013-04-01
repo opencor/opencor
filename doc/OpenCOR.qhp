@@ -14,6 +14,8 @@
             <file>res/common.css</file>
             <file>res/common.js</file>
 
+            <file>user/res/pics/alanGarny.jpg</file>
+            <file>user/res/pics/peterHunter.jpg</file>
             <file>user/res/pics/pluginsScreenshot01.png</file>
 
             <file>user/res/image.html</file>
@@ -64,12 +66,12 @@
             <file>user/userInterfaces/graphicalUserInterface.html</file>
             <file>user/userInterfaces/index.html</file>
 
-            <file>user/authors.html</file>
             <file>user/contactUs.html</file>
             <file>user/index.html</file>
             <file>user/knownIssuesLimitations.html</file>
             <file>user/licensing.html</file>
             <file>user/supportedPlatforms.html</file>
+            <file>user/team.html</file>
         </files>
     </filterSection>
 </QtHelpProject>

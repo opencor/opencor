@@ -49,3 +49,15 @@ img.centerLink:hover {
 table.toolbarButtons th {
     padding: 0px 13px 0px 13px;
 }
+
+table.team {
+    margin-left: 2.5em;
+}
+
+table.team td div {
+    padding-bottom: 0.5em;
+    color: rgb(54, 96, 146);
+    font-size: 12pt;
+    font-style: italic;
+    font-weight: bold;
+}
