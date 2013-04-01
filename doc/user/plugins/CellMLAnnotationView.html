@@ -18,10 +18,6 @@
             headerAndContentsMenu("CellMLAnnotationView Plugin", "../..");
         </script>
 
-        <div class="section">
-            Annotate a CellML model
-        </div>
-
         <p>
             The CellMLAnnotationView plugin can be used to annotate CellML models. If you open a CellML model which does not contain any metadata, then it will look something like this:
         </p>
@@ -37,6 +33,10 @@
         <p class="center">
             <a class="image" href="../res/image.html?image=../plugins/res/pics/CellMLAnnotationViewScreenshot02.png&caption=CellMLAnnotationView plugin: context menu"><img class="link" src="res/pics/CellMLAnnotationViewScreenshot02Small.png" width=360 height=270 alt="CellMLAnnotationView plugin: context menu"></a>
         </p>
+
+        <div class="section">
+            Annotate a CellML element
+        </div>
 
         <p>
             Say that you want to annotate the <code>sodium_channel</code> component. First, you need to select it:
@@ -97,7 +97,35 @@
         <p class="center">
             <a class="image" href="../res/image.html?image=../plugins/res/pics/CellMLAnnotationViewScreenshot10.png&caption=CellMLAnnotationView plugin: associate ontological term with CellML element"><img class="link" src="res/pics/CellMLAnnotationViewScreenshot10Small.png" width=360 height=270 alt="CellMLAnnotationView plugin: associate ontological term with CellML element"></a>
         </p>
-        
+
+        <p>
+            If you were to decide that the last ontological term is not suitable, you can remove it by simply clicking on the delete button:
+        </p>
+
+        <p class="center">
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/CellMLAnnotationViewScreenshot11.png&caption=CellMLAnnotationView plugin: remove ontological term from CellML element"><img class="link" src="res/pics/CellMLAnnotationViewScreenshot11Small.png" width=360 height=270 alt="CellMLAnnotationView plugin: remove ontological term from CellML element"></a>
+        </p>
+
+        <div class="section">
+            Unrecognised annotations
+        </div>
+
+        <p>
+            Annotations consist of <a href="http://www.w3.org/TR/rdf-concepts/#section-triples">RDF triples</a> which are made of a subject, a predicate and an object. OpenCOR recognises RDF triples which subject identifies a CellML element while it expects the predicate to be a <a href="http://biomodels.net/qualifiers/">BioModels.net qualifier</a> and the object an ontological term.
+        </p>
+
+        <p>
+            Ontological terms used to be identified using MIRIAM URNs, but these have been deprecated in favour of <a href="http://www.identifiers.org/">identifiers.org</a> URIs. OpenCOR does, however, recognise both even though it will only serialise annotations using identifiers.org URIs.
+        </p>
+
+        <p>
+            Now, it may happen that a file contains some annotations which do not fit OpenCOR's current requirements. In this case, OpenCOR will simply display the annotations as a list of RDF triples:
+        </p>
+
+        <p class="center">
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/CellMLAnnotationViewScreenshot12.png&caption=CellMLAnnotationView plugin: unrecognised annotations"><img class="link" src="res/pics/CellMLAnnotationViewScreenshot12Small.png" width=360 height=270 alt="CellMLAnnotationView plugin: unrecognised annotations"></a>
+        </p>
+
         <script type="text/javascript">
             copyright();
         </script>
