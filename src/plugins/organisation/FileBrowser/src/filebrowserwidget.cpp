@@ -64,11 +64,6 @@ static const QString SettingsSortOrder   = "SortOrder";
 
 void FileBrowserWidget::loadSettings(QSettings *pSettings)
 {
-    // Let the user know of a few default things about ourselves by emitting a
-    // few signals
-
-    emitItemChangedRelatedSignals();
-
     // We are about to begin loading the settings, so we don't want to keep
     // track of the change of item
 
@@ -171,6 +166,11 @@ void FileBrowserWidget::loadSettings(QSettings *pSettings)
 
     if (!isExpanded(currentIndex()))
         setExpanded(currentIndex(), true);
+
+    // Let the user know of a few default things about ourselves by emitting a
+    // few signals
+
+    emitItemChangedRelatedSignals();
 }
 
 //==============================================================================
