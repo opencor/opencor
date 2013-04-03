@@ -1312,7 +1312,7 @@ void SingleCellSimulationViewWidget::simulationStopped(const int &pElapsedTime)
             if (!simulationData->nlaSolverName().isEmpty())
                 solversInformation += "+"+simulationData->nlaSolverName();
 
-            output(QString(OutputTab+"<strong>Simulation time:</strong> <span"+OutputInfo+">"+QString::number(0.001*pElapsedTime, 'g', 3)+" s (using "+solversInformation+")</span>."+OutputBrLn));
+            output(QString(OutputTab+"<strong>"+tr("Simulation time:")+"</strong> <span"+OutputInfo+">"+tr("%1 s using %2").arg(QString::number(0.001*pElapsedTime, 'g', 3), solversInformation)+"</span>."+OutputBrLn));
         }
 
         QTimer::singleShot(ResetDelay, this, SLOT(resetProgressBar()));

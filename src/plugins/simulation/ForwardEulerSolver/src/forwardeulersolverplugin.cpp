@@ -42,7 +42,7 @@ QString ForwardEulerSolverPlugin::name() const
 {
     // Return the name of the solver
 
-    return "Forward Euler";
+    return "Euler (forward)";
 }
 
 //==============================================================================

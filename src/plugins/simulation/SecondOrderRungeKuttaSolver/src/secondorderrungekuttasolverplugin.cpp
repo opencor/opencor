@@ -42,7 +42,7 @@ QString SecondOrderRungeKuttaSolverPlugin::name() const
 {
     // Return the name of the solver
 
-    return "Second-order Runge Kutta";
+    return "Runge-Kutta (2nd order)";
 }
 
 //==============================================================================
