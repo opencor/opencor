@@ -178,6 +178,7 @@ SET(PLUGINS
     simulation/ForwardEulerSolver
     simulation/IDASolver
     simulation/KINSOLSolver
+    simulation/SecondOrderRungeKuttaSolver
 
 #---GRY--- DISABLED FOR VERSION 0.1...
 #    3rdparty/QScintilla
