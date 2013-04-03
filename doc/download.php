@@ -47,7 +47,7 @@
                             array(array("Windows", array(".exe"), array(".zip")),
                                   array("Linux", array(".tar.gz", 32), array(".tar.gz", 64)),
                                   array("OS X", array(".dmg"), array(".zip")))),
-                      array("Latest snapshot", 21, 3, 2013, "2013-03-21", false,
+                      array("Latest snapshot", 3, 4, 2013, "2013-04-03", false,
                             array(array("Windows", array(".exe"), array(".zip")),
                                   array("Linux", array(".tar.gz", 32), array(".tar.gz", 64)),
                                   array("OS X", array(".dmg"), array(".zip")))));
