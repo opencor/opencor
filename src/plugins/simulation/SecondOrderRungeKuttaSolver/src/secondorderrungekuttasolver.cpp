@@ -97,7 +97,7 @@ void SecondOrderRungeKuttaSolver::solve(double &pVoi,
         // Compute k1 and therefore Yk2
 
         for (int i = 0; i < mStatesCount; ++i)
-           mYk2[i] = mStates[i]+realHalfStep*mRates[i];
+            mYk2[i] = mStates[i]+realHalfStep*mRates[i];
 
         // Compute f(t_n + h / 2, Y_n + k1 / 2)
 
@@ -106,7 +106,7 @@ void SecondOrderRungeKuttaSolver::solve(double &pVoi,
         // Compute Y_n+1
 
         for (int i = 0; i < mStatesCount; ++i)
-           mStates[i] += realStep*mRates[i];
+            mStates[i] += realStep*mRates[i];
 
         // Advance through time
 
