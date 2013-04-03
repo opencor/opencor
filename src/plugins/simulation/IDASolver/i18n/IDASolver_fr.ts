@@ -5,15 +5,15 @@
     <name>QObject</name>
     <message>
         <source>ODE</source>
-        <translation></translation>
+        <translation>EDO</translation>
     </message>
     <message>
         <source>DAE</source>
-        <translation></translation>
+        <translation>EAD</translation>
     </message>
     <message>
         <source>NLA</source>
-        <translation></translation>
+        <translation>ANL</translation>
     </message>
     <message>
         <source>the &apos;maximum step&apos; property value could not be retrieved</source>
