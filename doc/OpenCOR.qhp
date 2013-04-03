@@ -159,6 +159,7 @@
             <file>user/licensing.html</file>
             <file>user/supportedPlatforms.html</file>
             <file>user/team.html</file>
+            <file>user/whatIsNew.html</file>
         </files>
     </filterSection>
 </QtHelpProject>
