@@ -13,7 +13,7 @@ namespace SecondOrderRungeKuttaSolver {
 
 SecondOrderRungeKuttaSolver::SecondOrderRungeKuttaSolver() :
     mStep(DefaultStep),
-    mYk2(0)
+    mYk1(0)
 {
 }
 
@@ -23,7 +23,7 @@ SecondOrderRungeKuttaSolver::~SecondOrderRungeKuttaSolver()
 {
     // Delete some internal objects
 
-    delete[] mYk2;
+    delete[] mYk1;
 }
 
 //==============================================================================
@@ -57,11 +57,11 @@ void SecondOrderRungeKuttaSolver::initialize(const double &pVoiStart,
         return;
     }
 
-    // (Re-)create our mYk2 array
+    // (Re-)create our mYk1 array
 
-    delete[] mYk2;
+    delete[] mYk1;
 
-    mYk2 = new double[pStatesCount];
+    mYk1 = new double[pStatesCount];
 }
 
 //==============================================================================
@@ -94,14 +94,14 @@ void SecondOrderRungeKuttaSolver::solve(double &pVoi,
 
         mComputeRates(pVoi, mConstants, mRates, mStates, mAlgebraic);
 
-        // Compute k1 and therefore Yk2
+        // Compute k1 and therefore Yk1
 
         for (int i = 0; i < mStatesCount; ++i)
-            mYk2[i] = mStates[i]+realHalfStep*mRates[i];
+            mYk1[i] = mStates[i]+realHalfStep*mRates[i];
 
         // Compute f(t_n + h / 2, Y_n + k1 / 2)
 
-        mComputeRates(pVoi+realHalfStep, mConstants, mRates, mYk2, mAlgebraic);
+        mComputeRates(pVoi+realHalfStep, mConstants, mRates, mYk1, mAlgebraic);
 
         // Compute Y_n+1
 

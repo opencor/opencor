@@ -15,7 +15,7 @@ FourthOrderRungeKuttaSolver::FourthOrderRungeKuttaSolver() :
     mStep(DefaultStep),
     mK1(0),
     mK23(0),
-    mYk234(0)
+    mYk123(0)
 {
 }
 
@@ -27,7 +27,7 @@ FourthOrderRungeKuttaSolver::~FourthOrderRungeKuttaSolver()
 
     delete[] mK1;
     delete[] mK23;
-    delete[] mYk234;
+    delete[] mYk123;
 }
 
 //==============================================================================
@@ -65,11 +65,11 @@ void FourthOrderRungeKuttaSolver::initialize(const double &pVoiStart,
 
     delete[] mK1;
     delete[] mK23;
-    delete[] mYk234;
+    delete[] mYk123;
 
     mK1    = new double[pStatesCount];
     mK23   = new double[pStatesCount];
-    mYk234 = new double[pStatesCount];
+    mYk123 = new double[pStatesCount];
 }
 
 //==============================================================================
@@ -107,38 +107,38 @@ void FourthOrderRungeKuttaSolver::solve(double &pVoi,
 
         mComputeRates(pVoi, mConstants, mRates, mStates, mAlgebraic);
 
-        // Compute k1 and Yk2
+        // Compute k1 and Yk1
 
         for (int i = 0; i < mStatesCount; ++i) {
             mK1[i]    = mRates[i];
-            mYk234[i] = mStates[i]+realHalfStep*mK1[i];
+            mYk123[i] = mStates[i]+realHalfStep*mK1[i];
         }
 
         // Compute f(t_n + h / 2, Y_n + k1 / 2)
 
-        mComputeRates(pVoi+realHalfStep, mConstants, mRates, mYk234, mAlgebraic);
+        mComputeRates(pVoi+realHalfStep, mConstants, mRates, mYk123, mAlgebraic);
 
-        // Compute k2 and Yk3
+        // Compute k2 and Yk2
 
         for (int i = 0; i < mStatesCount; ++i) {
             mK23[i]   = mRates[i];
-            mYk234[i] = mStates[i]+realHalfStep*mK23[i];
+            mYk123[i] = mStates[i]+realHalfStep*mK23[i];
         }
 
         // Compute f(t_n + h / 2, Y_n + k2 / 2)
 
-        mComputeRates(pVoi+realHalfStep, mConstants, mRates, mYk234, mAlgebraic);
+        mComputeRates(pVoi+realHalfStep, mConstants, mRates, mYk123, mAlgebraic);
 
-        // Compute k3 and Yk4
+        // Compute k3 and Yk3
 
         for (int i = 0; i < mStatesCount; ++i) {
             mK23[i]   += mRates[i];
-            mYk234[i]  = mStates[i]+realStep*mK23[i];
+            mYk123[i]  = mStates[i]+realStep*mK23[i];
         }
 
         // Compute f(t_n + h, Y_n + k3)
 
-        mComputeRates(pVoi+realStep, mConstants, mRates, mYk234, mAlgebraic);
+        mComputeRates(pVoi+realStep, mConstants, mRates, mYk123, mAlgebraic);
 
         // Compute k4 and therefore Y_n+1
 
