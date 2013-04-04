@@ -1047,10 +1047,10 @@ void SingleCellSimulationViewWidget::on_actionRun_triggered()
 
         mSimulation->resume();
     } else {
-        // Our simulation is not paused, so cancel any editing of our simulation
+        // Our simulation is not paused, so finish any editing of our simulation
         // information
 
-        mContentsWidget->informationWidget()->cancelEditing();
+        mContentsWidget->informationWidget()->finishEditing();;
 
         // Now, we would normally retrieve our simulation properties, but there
         // is no need for it since they have already been retrieved (see

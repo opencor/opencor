@@ -249,7 +249,7 @@ void SingleCellSimulationViewInformationParametersWidget::emitShowModelParameter
 
 //==============================================================================
 
-void SingleCellSimulationViewInformationParametersWidget::cancelPropertyEditing()
+void SingleCellSimulationViewInformationParametersWidget::finishPropertyEditing()
 {
     // Retrieve our current property editor, if any
 
@@ -258,9 +258,9 @@ void SingleCellSimulationViewInformationParametersWidget::cancelPropertyEditing(
     if (!propertyEditor)
         return;
 
-    // Cancel the editing of our current property editor
+    // Finish the editing of our current property editor
 
-    propertyEditor->cancelPropertyEditing();
+    propertyEditor->finishPropertyEditing();
 }
 
 //==============================================================================

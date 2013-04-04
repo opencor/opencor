@@ -811,9 +811,9 @@ void PropertyEditorWidget::selectFirstProperty()
 
 PropertyEditorWidgetGuiState * PropertyEditorWidget::guiState()
 {
-    // Cancel any property editing, if any
+    // Finish the property editing, if any
 
-    cancelPropertyEditing();
+    finishPropertyEditing();
 
     // Retrieve our GUI state
 
@@ -1075,7 +1075,7 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
     } else if (pEvent->key() == Qt::Key_Escape) {
         // The user wants to cancel the editing of the property
 
-        cancelPropertyEditing();
+        finishPropertyEditing(false);
 
         // Accept the event
 
@@ -1379,11 +1379,11 @@ Properties PropertyEditorWidget::properties() const
 
 //==============================================================================
 
-void PropertyEditorWidget::cancelPropertyEditing()
+void PropertyEditorWidget::finishPropertyEditing(const bool &pCommitData)
 {
-    // The user wants to cancel the editing of the property
+    // The user wants to finish the editing of the property
 
-    editProperty(0, false);
+    editProperty(0, pCommitData);
 }
 
 //==============================================================================

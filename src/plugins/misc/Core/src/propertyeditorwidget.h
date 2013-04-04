@@ -261,7 +261,7 @@ public:
 
     Properties properties() const;
 
-    void cancelPropertyEditing();
+    void finishPropertyEditing(const bool &pCommitData = true);
 
     void removeAllProperties();
 
