@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="HeunSolver_fr">../../../../../build/HeunSolver_fr.qm</file>
+    </qresource>
+</RCC>

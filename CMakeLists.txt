@@ -177,6 +177,7 @@ SET(PLUGINS
     simulation/CVODESolver
     simulation/ForwardEulerSolver
     simulation/FourthOrderRungeKuttaSolver
+    simulation/HeunSolver
     simulation/IDASolver
     simulation/KINSOLSolver
     simulation/SecondOrderRungeKuttaSolver
