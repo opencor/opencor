@@ -1297,7 +1297,7 @@ void MainWindow::updateGui(Plugin *pViewPlugin)
          iter != iterEnd; ++iter) {
         bool validViewAction = pViewPlugin
                                && (   !iter.key()->name().compare(pViewPlugin->name())
-                                   ||  pViewPlugin->info().fullDependencies().contains(iter.key()->name()));
+                                   ||  pViewPlugin->info()->fullDependencies().contains(iter.key()->name()));
 
         iter.value()->setEnabled(validViewAction);
         iter.value()->setVisible(validViewAction);
@@ -1311,7 +1311,7 @@ void MainWindow::updateGui(Plugin *pViewPlugin)
          iter != iterEnd; ++iter) {
         bool validViewMenu = pViewPlugin
                              && (   !iter.key()->name().compare(pViewPlugin->name())
-                                 ||  pViewPlugin->info().fullDependencies().contains(iter.key()->name()));
+                                 ||  pViewPlugin->info()->fullDependencies().contains(iter.key()->name()));
 
         iter.value()->menuAction()->setVisible(validViewMenu);
     }

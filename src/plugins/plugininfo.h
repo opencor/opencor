@@ -29,8 +29,7 @@ namespace OpenCOR {
 //       "C" which ensures that the function name remains intact. Now, because
 //       it's C and not C++, MSVC will generate a warning if we return a
 //       PluginInfo object, so we return a void pointer which means that we must
-//       free it once we have used it and this is done by our Plugin::info()
-//       which is our way to retrieve some information about a plugin...
+//       free it once we have used...
 
 //==============================================================================
 
@@ -71,35 +70,28 @@ public:
                         const Descriptions &pDescriptions = Descriptions());
 
     InterfaceVersion interfaceVersion() const;
-    void setInterfaceVersion(const InterfaceVersion &pInterfaceVersion);
 
     Type type() const;
-    void setType(const Type &pType);
-
     Category category() const;
-    void setCategory(const Category &pCategory);
-
     bool manageable() const;
-    void setManageable(const bool &pManageable);
 
     QStringList dependencies() const;
-    void setDependencies(const QStringList &pDependencies);
-
     QStringList fullDependencies() const;
     void setFullDependencies(const QStringList &pFullDependencies);
 
     QString description(const QString &pLocale) const;
-
     Descriptions descriptions() const;
-    void setDescriptions(const Descriptions &pDescriptions);
 
 private:
     InterfaceVersion mInterfaceVersion;
+
     Type mType;
     Category mCategory;
     bool mManageable;
+
     QStringList mDependencies;
     QStringList mFullDependencies;
+
     Descriptions mDescriptions;
 };
 

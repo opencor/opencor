@@ -71,11 +71,11 @@ public:
                     const PluginInfo::Type &pGuiOrConsoleType,
                     const bool &pForceLoading,
                     const PluginInfo::InterfaceVersion &pExpectedInterfaceVersion,
-                    const QString &pPluginsDir, PluginManager *pPluginManager
-                   );
+                    const QString &pPluginsDir, PluginManager *pPluginManager);
+    ~Plugin();
 
     QString name() const;
-    PluginInfo info() const;
+    PluginInfo * info() const;
     QObject * instance() const;
     Status status() const;
     QString statusErrors() const;
@@ -83,7 +83,7 @@ public:
 
     static QString name(const QString &pFileName);
     static QString fileName(const QString &pPluginsDir, const QString &pName);
-    static PluginInfo info(const QString &pFileName);
+    static PluginInfo * info(const QString &pFileName);
 
     static bool load(const QString &pName);
     static void setLoad(const QString &pName, const bool &pToBeLoaded);
@@ -94,7 +94,7 @@ public:
 
 private:
     QString mName;
-    PluginInfo mInfo;
+    PluginInfo *mInfo;
     QObject *mInstance;
     Status mStatus;
     QString mStatusErrors;

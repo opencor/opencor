@@ -118,10 +118,10 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager, QWidget *pParent) :
         // Only manageable plugins and plugins that are of the right type are
         // checkable
 
-        PluginInfo pluginInfo = plugin->info();
+        PluginInfo *pluginInfo = plugin->info();
 
-        pluginItem->setCheckable(   pluginInfo.manageable()
-                                 && (pluginInfo.type() != PluginInfo::Console));
+        pluginItem->setCheckable(   pluginInfo->manageable()
+                                 && (pluginInfo->type() != PluginInfo::Console));
 
         if (pluginItem->isCheckable()) {
             // Retrieve the loading state of the plugin
@@ -143,7 +143,7 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager, QWidget *pParent) :
 
         // Add the plugin to the right category
 
-        mPluginCategories.value(pluginInfo.category())->appendRow(pluginItem);
+        mPluginCategories.value(pluginInfo->category())->appendRow(pluginItem);
     }
 
     // Hide any category which doesn't have any plugin
@@ -290,7 +290,7 @@ QString PluginsWindow::statusDescription(Plugin *pPlugin) const
     case Plugin::NotFound:
         return tr("The %1 plugin could not be found").arg(pPlugin->name());
     case Plugin::InvalidInterfaceVersion:
-        return tr("The version of the interface used by the plugin (%1) is not valid (%2 is expected)").arg(interfaceVersionAsString(pPlugin->info().interfaceVersion()),
+        return tr("The version of the interface used by the plugin (%1) is not valid (%2 is expected)").arg(interfaceVersionAsString(pPlugin->info()->interfaceVersion()),
                                                                                                             interfaceVersionAsString(mPluginManager->interfaceVersion()));
     case Plugin::NotSuitable:
         return tr("The %1 plugin is not of the right type").arg(pPlugin->name());
@@ -343,7 +343,7 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
 
             pluginItem = true;
 
-            PluginInfo pluginInfo = plugin->info();
+            PluginInfo *pluginInfo = plugin->info();
 
             // The plugin's name
 
@@ -354,7 +354,7 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
 
             mGui->fieldTwoLabel->setText(tr("Type:"));
 
-            switch (pluginInfo.type()) {
+            switch (pluginInfo->type()) {
             case PluginInfo::General:
                 mGui->fieldTwoValue->setText(tr("General"));
 
@@ -373,7 +373,7 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
 
             // The plugin's dependencies
 
-            QStringList dependencies = pluginInfo.dependencies();
+            QStringList dependencies = pluginInfo->dependencies();
 
             mGui->fieldThreeLabel->setText(tr("Dependencies:"));
 
@@ -384,7 +384,7 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
 
             // The plugin's description
 
-            QString description = pluginInfo.description(mMainWindow->locale());
+            QString description = pluginInfo->description(mMainWindow->locale());
 
             mGui->fieldFourLabel->setText(tr("Description:"));
             mGui->fieldFourValue->setText(description.isEmpty()?
@@ -465,7 +465,7 @@ void PluginsWindow::updatePluginsLoadingState(QStandardItem *pChangedPluginItem,
     if (   pChangedPluginItem
         && (pChangedPluginItem->checkState() == Qt::Checked))
         foreach (const QString &requiredPlugin,
-                 mPluginManager->plugin(pChangedPluginItem->text())->info().fullDependencies())
+                 mPluginManager->plugin(pChangedPluginItem->text())->info()->fullDependencies())
             foreach (QStandardItem *pluginItem, mManageablePlugins)
                 if (!pluginItem->text().compare(requiredPlugin))
                     // We are dealing with one of the plugin's dependencies, so
@@ -484,7 +484,7 @@ void PluginsWindow::updatePluginsLoadingState(QStandardItem *pChangedPluginItem,
     foreach (QStandardItem *pluginItem, mManageablePlugins)
         if (pluginItem->checkState() == Qt::Checked)
             foreach (const QString &requiredPlugin,
-                     mPluginManager->plugin(pluginItem->text())->info().fullDependencies())
+                     mPluginManager->plugin(pluginItem->text())->info()->fullDependencies())
                 foreach (QStandardItem *otherPluginItem, mManageablePlugins)
                     if (!otherPluginItem->text().compare(requiredPlugin)) {
                         // We have found the plugin's dependency
@@ -513,7 +513,7 @@ void PluginsWindow::updatePluginsLoadingState(QStandardItem *pChangedPluginItem,
                 // The manageable plugin is checked, so carry on...
 
                 foreach (const QString &requiredPlugin,
-                         mPluginManager->plugin(otherPluginItem->text())->info().fullDependencies())
+                         mPluginManager->plugin(otherPluginItem->text())->info()->fullDependencies())
                     if (!requiredPlugin.compare(pluginItem->text())) {
                         // The manageable plugin does require the unamanageable
                         // plugin, so...

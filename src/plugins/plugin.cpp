@@ -27,7 +27,6 @@ Plugin::Plugin(const QString &pFileName,
     mName(name(pFileName)),
     // Note: to get the name of the plugin from its file name, we must remove
     //       the plugin prefix part from it...
-    mInfo(),
     mInstance(0),
     mStatus(UndefinedStatus)
 {
@@ -41,16 +40,16 @@ Plugin::Plugin(const QString &pFileName,
         // Now, retrieve the plugin's full dependencies (i.e. both its direct
         // and indirect dependencies)
 
-        mInfo.setFullDependencies(requiredPlugins(pPluginsDir, mName));
+        mInfo->setFullDependencies(requiredPlugins(pPluginsDir, mName));
 
         // Try to load the plugin, but only if it uses the right interface
         // version, if it is either a general plugin or one of the type we are
         // happy with, and if it is manageable or is required by another plugin
 
-        if (    (mInfo.interfaceVersion() == pExpectedInterfaceVersion)
-            && (   (mInfo.type() == PluginInfo::General)
-                || (mInfo.type() == pGuiOrConsoleType))
-            && (   (mInfo.manageable() && load(mName))
+        if (    (mInfo->interfaceVersion() == pExpectedInterfaceVersion)
+            && (   (mInfo->type() == PluginInfo::General)
+                || (mInfo->type() == pGuiOrConsoleType))
+            && (   (mInfo->manageable() && load(mName))
                 || pForceLoading)) {
             // We are dealing with the right kind of plugin, so check that all
             // of its dependencies, if any, are loaded
@@ -69,7 +68,7 @@ Plugin::Plugin(const QString &pFileName,
 
             mStatusErrors = "";
 
-            foreach (const QString &dependency, mInfo.dependencies()) {
+            foreach (const QString &dependency, mInfo->dependencies()) {
                 Plugin *pluginDependency = pPluginManager->plugin(dependency);
 
                 if (   !pluginDependency
@@ -117,19 +116,19 @@ Plugin::Plugin(const QString &pFileName,
                     mStatusErrors = pluginLoader.errorString();
                 }
             }
-        } else if (mInfo.type() == PluginInfo::UndefinedType) {
+        } else if (mInfo->type() == PluginInfo::UndefinedType) {
             // We couldn't retrieve the plugin information which means that we
             // are not dealing with an OpenCOR plugin or that one or several of
             // the plugin's dependencies weren't loaded, so...
 
             mStatus = NotPlugin;
-        } else if (mInfo.interfaceVersion() != pExpectedInterfaceVersion) {
+        } else if (mInfo->interfaceVersion() != pExpectedInterfaceVersion) {
             // We are dealing with a plugin which relies on a different
             // interface version, so...
 
             mStatus = InvalidInterfaceVersion;
-        } else if (   (mInfo.type() != PluginInfo::General)
-                   && (mInfo.type() != pGuiOrConsoleType)) {
+        } else if (   (mInfo->type() != PluginInfo::General)
+                   && (mInfo->type() != pGuiOrConsoleType)) {
             // We are dealing with a plugin which is not of the type we are
             // happy with (i.e. it's a console plugin but we are running the GUI
             // version of OpenCOR, or it's a GUI plugin but we are running the
@@ -141,7 +140,7 @@ Plugin::Plugin(const QString &pFileName,
             // plugin which is either not wanted or not needed, depending on
             // whether it is manageable
 
-            if (mInfo.manageable())
+            if (mInfo->manageable())
                 mStatus = NotWanted;
             else
                 mStatus = NotNeeded;
@@ -149,8 +148,18 @@ Plugin::Plugin(const QString &pFileName,
     } else {
         // The plugin doesn't exist, so...
 
+        mInfo = 0;
         mStatus = NotFound;
     }
+}
+
+//==============================================================================
+
+Plugin::~Plugin()
+{
+    // Delete some internal objects
+
+    delete mInfo;
 }
 
 //==============================================================================
@@ -164,7 +173,7 @@ QString Plugin::name() const
 
 //==============================================================================
 
-PluginInfo Plugin::info() const
+PluginInfo * Plugin::info() const
 {
     // Return the plugin's information
 
@@ -229,7 +238,7 @@ QString Plugin::fileName(const QString &pPluginsDir, const QString &pName)
 
 //==============================================================================
 
-PluginInfo Plugin::info(const QString &pFileName)
+PluginInfo * Plugin::info(const QString &pFileName)
 {
     // Return the plugin's information
     // Note: to retrieve a plugin's information, we must, on both Windows and
@@ -256,32 +265,15 @@ PluginInfo Plugin::info(const QString &pFileName)
 
     // Check whether the plugin information function was found
 
-    if (pluginInfoFunc) {
+    if (pluginInfoFunc)
         // The plugin information function was found, so we can extract the
         // information we are after
-        // Note: see the definition for PLUGININFO_FUNC in pluginfo.h for an
-        //       explanation of the code below (i.e. retrieving a pointer to a
-        //       PluginInfo object and then deleting it)...
 
-        PluginInfo *pluginInfo = static_cast<PluginInfo *>(pluginInfoFunc());
-        PluginInfo res;
-
-        res.setInterfaceVersion(pluginInfo->interfaceVersion());
-        res.setType(pluginInfo->type());
-        res.setCategory(pluginInfo->category());
-        res.setManageable(pluginInfo->manageable());
-        res.setDependencies(pluginInfo->dependencies());
-        res.setFullDependencies(QStringList());
-        res.setDescriptions(pluginInfo->descriptions());
-
-        delete pluginInfo;
-
-        return res;
-    } else {
+        return static_cast<PluginInfo *>(pluginInfoFunc());
+    else
         // The plugin information couldn't be found, so...
 
-        return PluginInfo();
-    }
+        return 0;
 }
 
 //==============================================================================
@@ -340,9 +332,12 @@ QStringList Plugin::requiredPlugins(const QString &pPluginsDir,
 
     // Recursively look for the plugins required by the current plugin
 
-    foreach (const QString &plugin,
-             Plugin::info(Plugin::fileName(pPluginsDir, pName)).dependencies())
+    PluginInfo *pluginInfo = Plugin::info(Plugin::fileName(pPluginsDir, pName));
+
+    foreach (const QString &plugin, pluginInfo->dependencies())
         res << requiredPlugins(pPluginsDir, plugin, pLevel+1);
+
+    delete pluginInfo;
 
     // Add the current plugin to the list, but only if it is not the original
     // plugin for which we want to know what its requirements are

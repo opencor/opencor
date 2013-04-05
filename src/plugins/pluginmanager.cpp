@@ -69,14 +69,18 @@ PluginManager::PluginManager(const PluginInfo::Type &pGuiOrConsoleType) :
 
     QStringList plugins;
 
-    foreach (const QString &fileName, fileNames)
-        if (   Plugin::info(fileName).manageable()
-            && Plugin::load(Plugin::name(fileName)))
+    foreach (const QString &fileName, fileNames) {
+        PluginInfo *pluginInfo = Plugin::info(fileName);
+
+        if (pluginInfo->manageable() && Plugin::load(Plugin::name(fileName)))
             // The plugin is manageable and to be loaded, so retrieve its
             // dependencies
 
             plugins << Plugin::requiredPlugins(mPluginsDir,
                                                Plugin::name(fileName));
+
+        delete pluginInfo;
+    }
 
     plugins.removeDuplicates();
 
