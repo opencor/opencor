@@ -1118,22 +1118,26 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 
 void PropertyEditorWidget::mouseMoveEvent(QMouseEvent *pEvent)
 {
+    // Default handling of the event
+
+    TreeViewWidget::mouseMoveEvent(pEvent);
+
     // Edit the property, but only if we want to edit a new one
 
     Property *mouseProperty = property(indexAt(pEvent->pos()));
 
     if (mouseProperty && (mouseProperty != mProperty))
         editProperty(mouseProperty);
-
-    // Accept the event
-
-    pEvent->accept();
 }
 
 //==============================================================================
 
 void PropertyEditorWidget::mousePressEvent(QMouseEvent *pEvent)
 {
+    // Default handling of the event
+
+    TreeViewWidget::mousePressEvent(pEvent);
+
     // Start/stop the editing of the property
 
     Property *mouseProperty = property(indexAt(pEvent->pos()));
@@ -1156,10 +1160,6 @@ void PropertyEditorWidget::mousePressEvent(QMouseEvent *pEvent)
 
         editProperty(mouseProperty);
     }
-
-    // Accept the event
-
-    pEvent->accept();
 }
 
 //==============================================================================
