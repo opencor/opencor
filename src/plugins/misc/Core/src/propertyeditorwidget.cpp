@@ -1119,47 +1119,34 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 void PropertyEditorWidget::mouseMoveEvent(QMouseEvent *pEvent)
 {
     // Default handling of the event
+    // Note: this will finish the editing of our 'old' property, if any
 
     TreeViewWidget::mouseMoveEvent(pEvent);
 
-    // Edit the property, but only if we want to edit a new one
+    // Edit our 'new' property
 
-    Property *mouseProperty = property(indexAt(pEvent->pos()));
-
-    if (mouseProperty && (mouseProperty != mProperty))
-        editProperty(mouseProperty);
+    editProperty(property(indexAt(pEvent->pos())));
 }
 
 //==============================================================================
 
 void PropertyEditorWidget::mousePressEvent(QMouseEvent *pEvent)
 {
+    // Keep track of our 'old' property, if any
+
+    Property *oldProperty = mProperty;
+
     // Default handling of the event
+    // Note: this will finish the editing of our 'old' property, if any
 
     TreeViewWidget::mousePressEvent(pEvent);
 
-    // Start/stop the editing of the property
+    // Edit our 'new' property, if any and different from our 'old' property
 
-    Property *mouseProperty = property(indexAt(pEvent->pos()));
+    Property *newProperty = property(indexAt(pEvent->pos()));
 
-    if (mPropertyEditor) {
-        // We are already editing a property, so either stop its editing or
-        // start editing anoher property
-
-        if (mouseProperty != mProperty)
-            // We want to edit another property
-
-            editProperty(mouseProperty);
-        else
-            // We want to stop editing the property
-
-            editProperty(0);
-    } else {
-        // We are not currently editing a property, so start editing the current
-        // one
-
-        editProperty(mouseProperty);
-    }
+    if (newProperty && (newProperty != oldProperty))
+        editProperty(newProperty);
 }
 
 //==============================================================================
@@ -1275,7 +1262,7 @@ void PropertyEditorWidget::editorOpened(QWidget *pEditor)
 
 void PropertyEditorWidget::editorClosed()
 {
-    // Make sure that we were editing a property
+    // Make sure that we are editing a property
 
     if (!mPropertyEditor)
         return;
