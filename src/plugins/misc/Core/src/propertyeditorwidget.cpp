@@ -221,10 +221,10 @@ void ListEditorWidget::mousePressEvent(QMouseEvent *pEvent)
         // It is the arrow we are after, so...
 
         QComboBox::mousePressEvent(pEvent);
+    else
+        // Accept the event
 
-    // Accept the event
-
-    pEvent->accept();
+        pEvent->accept();
 }
 
 //==============================================================================
