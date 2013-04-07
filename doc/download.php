@@ -43,11 +43,11 @@
 
     date_default_timezone_set("Europe/London");
 
-    $versions = array(array("Version 0.1", 1, 4, 2013, "0-1-0", true,
+    $versions = array(array(0, 1, 0, 1, 4, 2013, true,
                             array(array("Windows", array(".exe"), array(".zip")),
                                   array("Linux", array(".tar.gz", 32), array(".tar.gz", 64)),
                                   array("OS X", array(".dmg"), array(".zip")))),
-                      array("Latest snapshot", 7, 4, 2013, "2013-04-07", false,
+                      array(0, 0, 0, 7, 4, 2013, false,
                             array(array("Windows", array(".exe"), array(".zip")),
                                   array("Linux", array(".tar.gz", 32), array(".tar.gz", 64)),
                                   array("OS X", array(".dmg"), array(".zip")))));
@@ -61,13 +61,25 @@
 
         // Retrieve some information about the version
 
-        $versionTitle = $version[0];
-        $versionDay = $version[1];
-        $versionMonth = $version[2];
-        $versionYear = $version[3];
-        $versionVersion = $version[4];
-        $versionRecommended = $version[5];
-        $versionFiles = $version[6];
+        $versionMajor = $version[0];
+        $versionMinor = $version[1];
+        $versionPatch = $version[2];
+        $versionDay = $version[3];
+        $versionMonth = $version[4];
+        $versionYear = $version[5];
+        $versionRecommended = $version[6];
+        $versionFiles = $version[7];
+
+        if ($versionMajor || $versionMinor || $versionPatch) {
+            $versionTitle = "Version ".$versionMajor.".".$versionMinor;
+            $versionVersion = $versionMajor."-".$versionMinor."-".$versionPatch;
+
+            if ($versionPatch)
+                $versionTitle .= ".".$versionPatch;
+        } else {
+            $versionTitle = "Latest snapshot";
+            $versionVersion = date("Y-m-d", mktime(0, 0, 0, $versionMonth, $versionDay, $versionYear));
+        }
 
         // Output an empty line to separate the different versions, if needed
 
