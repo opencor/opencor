@@ -1177,6 +1177,18 @@ void SingleCellSimulationViewGraphPanelPlotWidget::drawCurveSegment(SingleCellSi
     if (pFrom == pTo)
         return;
 
+    // Initialise our Y axis, in case we are to draw our first curve segment
+    // Note: this is done, so that the Y axis range can get optimised to the
+    //       parameter values that are to be displayed...
+
+    if (!pFrom) {
+        setMinY(DBL_MAX);
+        setMaxY(-DBL_MAX);
+
+        setLocalMinY(minY());
+        setLocalMaxY(maxY());
+    }
+
     // Determine the minimum/maximum X/Y values of our new data
 
     double xMin = 0.0;
