@@ -1405,12 +1405,9 @@ void SingleCellSimulationViewWidget::simulationPropertyChanged(Core::Property *p
 {
     // Update one of our simulation's properties and, if needed, update the
     // minimum or maximum value for our X axis
-    // Note #1: with regards to the starting point property, we need to update
-    //          it because it's can potentially have an effect on the value of
-    //          our 'computed constants' and 'variables'...
-    // Note #2: we don't want to waste our time checking our graph panel's
-    //          plot's axes everytime we set something, hence our passing false
-    //          to our various methods...
+    // Note: with regards to the starting point property, we need to update it
+    //       because it's can potentially have an effect on the value of our
+    //       'computed constants' and 'variables'...
 
     bool needUpdating = true;
 
