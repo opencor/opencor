@@ -18,12 +18,12 @@ MACRO(INITIALISE_PROJECT)
 
     # Keep track of some information about Qt
 
-    SET(QT_BINARY_DIR ${_qt5_widgets_install_prefix}/bin)
-    SET(QT_LIBRARY_DIR ${_qt5_widgets_install_prefix}/lib)
-    SET(QT_PLUGINS_DIR ${_qt5_widgets_install_prefix}/plugins)
-    SET(QT_VERSION_MAJOR 5)
-    SET(QT_VERSION_MINOR 0)
-    SET(QT_VERSION_PATCH 1)
+    SET(QT_BINARY_DIR ${_qt5Widgets_install_prefix}/bin)
+    SET(QT_LIBRARY_DIR ${_qt5Widgets_install_prefix}/lib)
+    SET(QT_PLUGINS_DIR ${_qt5Widgets_install_prefix}/plugins)
+    SET(QT_VERSION_MAJOR ${Qt5Widgets_VERSION_MAJOR})
+    SET(QT_VERSION_MINOR ${Qt5Widgets_VERSION_MINOR})
+    SET(QT_VERSION_PATCH ${Qt5Widgets_VERSION_PATCH})
 
     # Some settings which depend on whether we want a debug or release version
     # of OpenCOR
