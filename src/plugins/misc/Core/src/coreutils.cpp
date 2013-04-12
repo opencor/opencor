@@ -300,10 +300,6 @@ QString CORE_EXPORT getSaveFileName(const QString &pCaption,
                                     const QString &pFileName,
                                     const QString &pFilter)
 {
-#ifdef Q_OS_MAC
-    Q_UNUSED(pFilter);
-#endif
-
     // Retrieve and return a save file name
 
     QString res = QDir::toNativeSeparators(QFileDialog::getSaveFileName(qApp->activeWindow(),
@@ -311,15 +307,7 @@ QString CORE_EXPORT getSaveFileName(const QString &pCaption,
                                                                         pFileName.isEmpty()?
                                                                             activeDirectory():
                                                                             QFileInfo(pFileName).canonicalPath(),
-#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
                                                                         pFilter, 0,
-#elif defined(Q_OS_MAC)
-//---GRY--- FOR SOME REASONS, OS X / Qt DOESN'T LIKE US SPECIFYING SUPPORTED
-//          FILE TYPES...!? (SEE https://github.com/opencor/opencor/issues/110)
-                                                                        QString(), 0,
-#else
-    #error Unsupported platform
-#endif
                                                                         QFileDialog::DontConfirmOverwrite));
 
     // Make sure that we got a save file name
