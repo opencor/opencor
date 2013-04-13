@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="MidpointSolver_fr">../../../../../build/MidpointSolver_fr.qm</file>
+    </qresource>
+</RCC>
