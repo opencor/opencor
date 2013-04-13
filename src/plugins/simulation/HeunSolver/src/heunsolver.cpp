@@ -66,7 +66,7 @@ void HeunSolver::initialize(const double &pVoiStart, const int &pStatesCount,
 void HeunSolver::solve(double &pVoi, const double &pVoiEnd) const
 {
     // k = h * f(t_n, Y_n)
-    // Y_n+1 = Y_n + h / 2 * (f(t_n, Y_n) + f(t_n + h, Y_n + k))
+    // Y_n+1 = Y_n + h / 2 * ( f(t_n, Y_n) + f(t_n + h, Y_n + k) )
 
     double voiStart = pVoi;
 
