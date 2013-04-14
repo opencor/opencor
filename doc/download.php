@@ -19,7 +19,7 @@
         </script>
 
         <p>
-            Please find below the official release of OpenCOR, as well as its latest snapshot (you might want to check <a href="user/whatIsNew.html">what is new</a>).
+            Please find below the official releases of OpenCOR, as well as its latest snapshot (you might want to check the <a href="user/supportedPlatforms.html">supported platforms</a>, as well as <a href="user/whatIsNew.html">what is new</a>).
         </p>
 
 <?php
