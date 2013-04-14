@@ -90,7 +90,7 @@ void HeunSolver::solve(double &pVoi, const double &pVoiEnd) const
 
         for (int i = 0; i < mStatesCount; ++i) {
             mK[i]  = mRates[i];
-            mYk[i] = mStates[i]+realStep*mK[i];
+            mYk[i] = mStates[i]+realStep*mRates[i];
         }
 
         // Compute f(t_n + h, Y_n + k)
