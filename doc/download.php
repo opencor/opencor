@@ -19,7 +19,7 @@
         </script>
 
         <p>
-            Please find below the official release of OpenCOR, as well as its latest snapshot (you might want to check what is new <a href="user/whatIsNew.html">here</a>).
+            Please find below the official release of OpenCOR, as well as its latest snapshot (you might want to check <a href="user/whatIsNew.html">what is new</a>).
         </p>
 
 <?php
@@ -43,11 +43,15 @@
 
     date_default_timezone_set("Europe/London");
 
-    $versions = array(array(0, 1, 0, 1, 4, 2013, true,
+    $versions = array(array(0, 1, 1, 15, 4, 2013, true,
                             array(array("Windows", array(".exe"), array(".zip")),
                                   array("Linux", array(".tar.gz", 32), array(".tar.gz", 64)),
                                   array("OS X", array(".dmg"), array(".zip")))),
-                      array(0, 0, 0, 7, 4, 2013, false,
+                      array(0, 1, 0, 1, 4, 2013, false,
+                            array(array("Windows", array(".exe"), array(".zip")),
+                                  array("Linux", array(".tar.gz", 32), array(".tar.gz", 64)),
+                                  array("OS X", array(".dmg"), array(".zip")))),
+                      array(0, 0, 0, 15, 4, 2013, false,
                             array(array("Windows", array(".exe"), array(".zip")),
                                   array("Linux", array(".tar.gz", 32), array(".tar.gz", 64)),
                                   array("OS X", array(".dmg"), array(".zip")))));
@@ -265,10 +269,6 @@
         ++$versionIndex;
     }
 ?>
-
-        <p class="warning">
-            Please keep in mind that OpenCOR is <em>only</em> at version 0.1...
-        </p>
 
         <script type="text/javascript">
             copyright();
