@@ -109,14 +109,19 @@ void TreeViewWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
     QModelIndex currIndex = indexAt(pEvent->pos());
     QModelIndex index = model()->index(currIndex.row(), 0, currIndex.parent());
 
-    if (model()->hasChildren(index))
+    if (model()->hasChildren(index)) {
         // The item has some children, so expand/collapse it
 
         setExpanded(index, !isExpanded(index));
-    else
+
+        // Accept the event
+
+        pEvent->accept();
+    } else {
         // Default handling of the event
 
         QTreeView::mouseDoubleClickEvent(pEvent);
+    }
 }
 
 //==============================================================================

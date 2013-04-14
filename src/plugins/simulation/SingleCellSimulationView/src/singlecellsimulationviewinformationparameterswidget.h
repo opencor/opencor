@@ -58,7 +58,7 @@ public:
                     CellMLSupport::CellmlFileRuntime *pRuntime,
                     SingleCellSimulationViewSimulationData *pSimulationData);
 
-    void cancelPropertyEditing();
+    void finishPropertyEditing();
 
 private:
     QMap<QString, Core::PropertyEditorWidget *> mPropertyEditors;

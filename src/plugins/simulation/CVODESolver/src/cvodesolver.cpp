@@ -131,25 +131,37 @@ void CvodeSolver::initialize(const double &pVoiStart, const int &pStatesCount,
 
         // Retrieve some of the CVODE properties
 
-        if (mProperties.contains(MaximumStepProperty))
+        if (mProperties.contains(MaximumStepProperty)) {
             mMaximumStep = mProperties.value(MaximumStepProperty).toDouble();
-        else
+        } else {
             emit error(QObject::tr("the 'maximum step' property value could not be retrieved"));
 
-        if (mProperties.contains(MaximumNumberOfStepsProperty))
+            return;
+        }
+
+        if (mProperties.contains(MaximumNumberOfStepsProperty)) {
             mMaximumNumberOfSteps = mProperties.value(MaximumNumberOfStepsProperty).toInt();
-        else
+        } else {
             emit error(QObject::tr("the 'maximum number of steps' property value could not be retrieved"));
 
-        if (mProperties.contains(RelativeToleranceProperty))
+            return;
+        }
+
+        if (mProperties.contains(RelativeToleranceProperty)) {
             mRelativeTolerance = mProperties.value(RelativeToleranceProperty).toDouble();
-        else
+        } else {
             emit error(QObject::tr("the 'relative tolerance' property value could not be retrieved"));
 
-        if (mProperties.contains(AbsoluteToleranceProperty))
+            return;
+        }
+
+        if (mProperties.contains(AbsoluteToleranceProperty)) {
             mAbsoluteTolerance = mProperties.value(AbsoluteToleranceProperty).toDouble();
-        else
+        } else {
             emit error(QObject::tr("the 'absolute tolerance' property value could not be retrieved"));
+
+            return;
+        }
 
         // Create the states vector
 

@@ -1177,44 +1177,55 @@ void SingleCellSimulationViewGraphPanelPlotWidget::drawCurveSegment(SingleCellSi
     if (pFrom == pTo)
         return;
 
-    // Determine the minimum/maximum X/Y values of our new data
+    // Reset our local axes and replot ourselves, if it is our first curve
+    // segment, or carry on as normal
 
-    double xMin = 0.0;
-    double xMax = 0.0;
-    double yMin = 0.0;
-    double yMax = 0.0;
+    if (!pFrom) {
+        // It is our first curve segment, so check our local axes
+        // Note: we always want to replot, hence our passing false as an
+        //       argument to resetLocalAxes()...
 
-    for (qulonglong i = pFrom; i <= pTo; ++i)
-        if (i == pFrom) {
-            xMin = xMax = pCurve->data()->sample(i).x();
-            yMin = yMax = pCurve->data()->sample(i).y();
-        } else {
-            double xVal = pCurve->data()->sample(i).x();
-            double yVal = pCurve->data()->sample(i).y();
+        resetLocalAxes(false);
+        replotNow();
+    } else {
+        // It's not our first curve segment, so determine the minimum/maximum
+        // X/Y values of our new data
 
-            xMin = qMin(xMin, xVal);
-            xMax = qMax(xMax, xVal);
+        double xMin = 0.0;
+        double xMax = 0.0;
+        double yMin = 0.0;
+        double yMax = 0.0;
 
-            yMin = qMin(yMin, yVal);
-            yMax = qMax(yMax, yVal);
-        }
+        for (qulonglong i = pFrom; i <= pTo; ++i)
+            if (i == pFrom) {
+                xMin = xMax = pCurve->data()->sample(i).x();
+                yMin = yMax = pCurve->data()->sample(i).y();
+            } else {
+                double xVal = pCurve->data()->sample(i).x();
+                double yVal = pCurve->data()->sample(i).y();
 
-    // Check which curve segment we are dealing with and whether our X/Y axis
-    // can handle the minimum/maximum X/Y values of our new data
+                xMin = qMin(xMin, xVal);
+                xMax = qMax(xMax, xVal);
 
-    if (   !pFrom
-        || (xMin < minX()) || (xMax > maxX())
-        || (yMin < minY()) || (yMax > maxY()))
-        // Either it's our first curve segment and/or our X/Y axis cannot handle
-        // the minimum/maximum X/Y values of our new data, so check our local
-        // axes
+                yMin = qMin(yMin, yVal);
+                yMax = qMax(yMax, yVal);
+            }
 
-        checkLocalAxes(true, true, true);
-    else
-        // Our X/Y axis can handle the X/Y min/max of our new data, so just draw
-        // our new curve segment
+        // Check whether our X/Y axis can handle the minimum/maximum X/Y values
+        // of our new data
 
-        mDirectPainter->drawSeries(pCurve, pFrom, pTo);
+        if (   (xMin < minX()) || (xMax > maxX())
+            || (yMin < minY()) || (yMax > maxY()))
+            // Our X/Y axis cannot handle the minimum/maximum X/Y values of our
+            // new data, so check our local axes
+
+            checkLocalAxes(true, true, true);
+        else
+            // Our X/Y axis can handle the X/Y min/max of our new data, so just
+            // draw our new curve segment
+
+            mDirectPainter->drawSeries(pCurve, pFrom, pTo);
+    }
 }
 
 //==============================================================================

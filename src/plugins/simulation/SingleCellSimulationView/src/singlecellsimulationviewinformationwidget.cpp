@@ -195,13 +195,13 @@ SingleCellSimulationViewInformationParametersWidget * SingleCellSimulationViewIn
 
 //==============================================================================
 
-void SingleCellSimulationViewInformationWidget::cancelEditing()
+void SingleCellSimulationViewInformationWidget::finishEditing()
 {
-    // Cancel the editing of any of the information we support
+    // Finish the editing of any of the information we support
 
-    mSimulationWidget->cancelPropertyEditing();
-    mSolversWidget->cancelPropertyEditing();
-    mParametersWidget->cancelPropertyEditing();
+    mSimulationWidget->finishPropertyEditing();
+    mSolversWidget->finishPropertyEditing();
+    mParametersWidget->finishPropertyEditing();
 }
 
 //==============================================================================

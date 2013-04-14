@@ -154,7 +154,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     tempFile.close();
 
-    // Get a driver to compile our function
+    // Get a driver to compile our code
 
 #ifdef QT_DEBUG
     llvm::raw_ostream &outputStream = llvm::outs();

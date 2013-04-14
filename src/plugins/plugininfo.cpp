@@ -36,29 +36,11 @@ PluginInfo::InterfaceVersion PluginInfo::interfaceVersion() const
 
 //==============================================================================
 
-void PluginInfo::setInterfaceVersion(const InterfaceVersion &pInterfaceVersion)
-{
-    // Set the plugin's interface version
-
-    mInterfaceVersion = pInterfaceVersion;
-}
-
-//==============================================================================
-
 PluginInfo::Type PluginInfo::type() const
 {
     // Return the plugin's type
 
     return mType;
-}
-
-//==============================================================================
-
-void PluginInfo::setType(const Type &pType)
-{
-    // Set the plugin's type
-
-    mType = pType;
 }
 
 //==============================================================================
@@ -72,15 +54,6 @@ PluginInfo::Category PluginInfo::category() const
 
 //==============================================================================
 
-void PluginInfo::setCategory(const Category &pCategory)
-{
-    // Set the plugin's category
-
-    mCategory = pCategory;
-}
-
-//==============================================================================
-
 bool PluginInfo::manageable() const
 {
     // Return the plugin's manageability
@@ -90,29 +63,11 @@ bool PluginInfo::manageable() const
 
 //==============================================================================
 
-void PluginInfo::setManageable(const bool &pManageable)
-{
-    // Set the plugin's manageability
-
-    mManageable = pManageable;
-}
-
-//==============================================================================
-
 QStringList PluginInfo::dependencies() const
 {
     // Return the plugin's (direct) dependencies
 
     return mDependencies;
-}
-
-//==============================================================================
-
-void PluginInfo::setDependencies(const QStringList &pDependencies)
-{
-    // Set the plugin's dependencies
-
-    mDependencies = pDependencies;
 }
 
 //==============================================================================
@@ -151,15 +106,6 @@ Descriptions PluginInfo::descriptions() const
     // Return the plugin's descriptions
 
     return mDescriptions;
-}
-
-//==============================================================================
-
-void PluginInfo::setDescriptions(const Descriptions &pDescriptions)
-{
-    // Set the plugin's descriptions
-
-    mDescriptions = pDescriptions;
 }
 
 //==============================================================================

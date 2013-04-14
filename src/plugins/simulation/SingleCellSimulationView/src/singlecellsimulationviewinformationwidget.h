@@ -59,7 +59,7 @@ public:
     SingleCellSimulationViewInformationSolversWidget * solversWidget();
     SingleCellSimulationViewInformationParametersWidget * parametersWidget();
 
-    void cancelEditing();
+    void finishEditing();
 
 private:
     Ui::SingleCellSimulationViewInformationWidget *mGui;

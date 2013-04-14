@@ -202,6 +202,14 @@
         <source>Run the simulation</source>
         <translation>Lancer la simulation</translation>
     </message>
+    <message>
+        <source>Simulation time:</source>
+        <translation>Temps de simulation :</translation>
+    </message>
+    <message>
+        <source>%1 s using %2</source>
+        <translation>%1 s avec %2</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>

@@ -18,12 +18,12 @@ MACRO(INITIALISE_PROJECT)
 
     # Keep track of some information about Qt
 
-    SET(QT_BINARY_DIR ${_qt5_widgets_install_prefix}/bin)
-    SET(QT_LIBRARY_DIR ${_qt5_widgets_install_prefix}/lib)
-    SET(QT_PLUGINS_DIR ${_qt5_widgets_install_prefix}/plugins)
-    SET(QT_VERSION_MAJOR 5)
-    SET(QT_VERSION_MINOR 0)
-    SET(QT_VERSION_PATCH 1)
+    SET(QT_BINARY_DIR ${_qt5Widgets_install_prefix}/bin)
+    SET(QT_LIBRARY_DIR ${_qt5Widgets_install_prefix}/lib)
+    SET(QT_PLUGINS_DIR ${_qt5Widgets_install_prefix}/plugins)
+    SET(QT_VERSION_MAJOR ${Qt5Widgets_VERSION_MAJOR})
+    SET(QT_VERSION_MINOR ${Qt5Widgets_VERSION_MINOR})
+    SET(QT_VERSION_PATCH ${Qt5Widgets_VERSION_PATCH})
 
     # Some settings which depend on whether we want a debug or release version
     # of OpenCOR
@@ -650,6 +650,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
 
         FOREACH(QT_DEPENDENCY ${QT_DEPENDENCIES})
             ADD_CUSTOM_TARGET(${PLUGIN_NAME}_UPDATE_OS_X_QT_REFERENCE ALL
+                              DEPENDS ${PLUGIN_NAME}_COPY_PLUGIN_TO_BUILD_DIRECTORY
                               COMMAND install_name_tool -change @executable_path/../Frameworks/${QT_DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_DEPENDENCY}
                                                                 ${QT_LIBRARY_DIR}/${QT_DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_DEPENDENCY}
                                                                 ${LIBRARY_OUTPUT_PATH}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})

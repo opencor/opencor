@@ -221,10 +221,10 @@ void ListEditorWidget::mousePressEvent(QMouseEvent *pEvent)
         // It is the arrow we are after, so...
 
         QComboBox::mousePressEvent(pEvent);
+    else
+        // Accept the event
 
-    // Accept the event
-
-    pEvent->accept();
+        pEvent->accept();
 }
 
 //==============================================================================
@@ -811,9 +811,9 @@ void PropertyEditorWidget::selectFirstProperty()
 
 PropertyEditorWidgetGuiState * PropertyEditorWidget::guiState()
 {
-    // Cancel any property editing, if any
+    // Finish the property editing, if any
 
-    cancelPropertyEditing();
+    finishPropertyEditing();
 
     // Retrieve our GUI state
 
@@ -1075,7 +1075,7 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
     } else if (pEvent->key() == Qt::Key_Escape) {
         // The user wants to cancel the editing of the property
 
-        cancelPropertyEditing();
+        finishPropertyEditing(false);
 
         // Accept the event
 
@@ -1118,48 +1118,35 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 
 void PropertyEditorWidget::mouseMoveEvent(QMouseEvent *pEvent)
 {
-    // Edit the property, but only if we want to edit a new one
+    // Default handling of the event
+    // Note: this will finish the editing of our 'old' property, if any
 
-    Property *mouseProperty = property(indexAt(pEvent->pos()));
+    TreeViewWidget::mouseMoveEvent(pEvent);
 
-    if (mouseProperty && (mouseProperty != mProperty))
-        editProperty(mouseProperty);
+    // Edit our 'new' property
 
-    // Accept the event
-
-    pEvent->accept();
+    editProperty(property(indexAt(pEvent->pos())));
 }
 
 //==============================================================================
 
 void PropertyEditorWidget::mousePressEvent(QMouseEvent *pEvent)
 {
-    // Start/stop the editing of the property
+    // Keep track of our 'old' property, if any
 
-    Property *mouseProperty = property(indexAt(pEvent->pos()));
+    Property *oldProperty = mProperty;
 
-    if (mPropertyEditor) {
-        // We are already editing a property, so either stop its editing or
-        // start editing anoher property
+    // Default handling of the event
+    // Note: this will finish the editing of our 'old' property, if any
 
-        if (mouseProperty != mProperty)
-            // We want to edit another property
+    TreeViewWidget::mousePressEvent(pEvent);
 
-            editProperty(mouseProperty);
-        else
-            // We want to stop editing the property
+    // Edit our 'new' property, if any and different from our 'old' property
 
-            editProperty(0);
-    } else {
-        // We are not currently editing a property, so start editing the current
-        // one
+    Property *newProperty = property(indexAt(pEvent->pos()));
 
-        editProperty(mouseProperty);
-    }
-
-    // Accept the event
-
-    pEvent->accept();
+    if (newProperty && (newProperty != oldProperty))
+        editProperty(newProperty);
 }
 
 //==============================================================================
@@ -1275,7 +1262,7 @@ void PropertyEditorWidget::editorOpened(QWidget *pEditor)
 
 void PropertyEditorWidget::editorClosed()
 {
-    // Make sure that we were editing a property
+    // Make sure that we are editing a property
 
     if (!mPropertyEditor)
         return;
@@ -1379,11 +1366,11 @@ Properties PropertyEditorWidget::properties() const
 
 //==============================================================================
 
-void PropertyEditorWidget::cancelPropertyEditing()
+void PropertyEditorWidget::finishPropertyEditing(const bool &pCommitData)
 {
-    // The user wants to cancel the editing of the property
+    // The user wants to finish the editing of the property
 
-    editProperty(0, false);
+    editProperty(0, pCommitData);
 }
 
 //==============================================================================

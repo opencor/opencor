@@ -207,6 +207,10 @@ SingleCellSimulationViewInformationSolversWidgetData * SingleCellSimulationViewI
             solversProperties.insert(solverInterface->name(), properties);
         }
 
+    // Sort our list of solvers
+
+    solvers.sort();
+
     // Add the list of solvers to our list property value item
 
     solversListProperty->value()->setList(solvers);

@@ -15,6 +15,7 @@ function headerAndContentsMenu(pageName, relativePath) {
                              [1, "SingleCellSimulationView", "user/plugins/SingleCellSimulationView.html"],
                              [0, "Known issues", "user/knownIssues.html"],
                              [0, "Known limitations", "user/knownLimitations.html"],
+                             [0, "What is new?", "user/whatIsNew.html"],
                              [],
                              [0, "Licensing", "user/licensing.html"],
                              [0, "Team", "user/team.html"],

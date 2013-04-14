@@ -50,11 +50,10 @@ void ForwardEulerSolver::solve(double &pVoi, const double &pVoiEnd) const
 
     double voiStart = pVoi;
 
-    int nbOfSteps = 0;
+    int stepNumber = 0;
     double realStep = mStep;
 
-    while (pVoi != pVoiEnd)
-    {
+    while (pVoi != pVoiEnd) {
         // Check that the time step is correct
 
         if (pVoi+realStep > pVoiEnd)
@@ -74,7 +73,7 @@ void ForwardEulerSolver::solve(double &pVoi, const double &pVoiEnd) const
         if (realStep != mStep)
             pVoi = pVoiEnd;
         else
-            pVoi = voiStart+(++nbOfSteps)*mStep;
+            pVoi = voiStart+(++stepNumber)*mStep;
     }
 }
 

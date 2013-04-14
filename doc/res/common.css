@@ -50,6 +50,22 @@ div.section {
     font-weight: bold;
 }
 
+div.section table {
+    border-spacing: 0px;
+    width: 100%;
+}
+
+div.section table td {
+    padding: 0px;
+}
+
+div.section table td.date {
+    text-align: right;
+    font-size: 9pt;
+    font-style: italic;
+    font-weight: normal;
+}
+
 img.center {
     display: block;
     margin-left: auto;
