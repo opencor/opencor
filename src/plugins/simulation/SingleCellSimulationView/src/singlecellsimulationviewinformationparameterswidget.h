@@ -57,6 +57,7 @@ public:
     void initialize(const QString &pFileName,
                     CellMLSupport::CellmlFileRuntime *pRuntime,
                     SingleCellSimulationViewSimulationData *pSimulationData);
+    void finalize(const QString &pFileName);
 
     void finishPropertyEditing();
 
