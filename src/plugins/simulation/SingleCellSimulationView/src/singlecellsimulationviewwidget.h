@@ -174,6 +174,8 @@ private:
 
     SingleCellSimulationViewContentsWidget *mContentsWidget;
 
+    bool mRunActionEnabled;
+
     Core::UserMessageWidget *mInvalidModelMessageWidget;
 
     QTextEdit *mOutputWidget;
@@ -196,6 +198,8 @@ private:
 
     int tabBarIconSize() const;
 
+    void updateRunPauseAction(const bool &pRunActionEnabled);
+
     void updateInvalidModelMessageWidget();
 
     void updateResults(SingleCellSimulationViewSimulation *pSimulation,
@@ -207,8 +211,7 @@ private:
                               CellMLSupport::CellmlFileRuntimeModelParameter *pModelParameter);
 
 private Q_SLOTS:
-    void on_actionRun_triggered();
-    void on_actionPause_triggered();
+    void on_actionRunPause_triggered();
     void on_actionStop_triggered();
 
     void on_actionReset_triggered();

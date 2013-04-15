@@ -27,7 +27,7 @@
     <number>0</number>
    </property>
   </layout>
-  <action name="actionRun">
+  <action name="actionRunPause">
    <property name="icon">
     <iconset resource="../res/SingleCellSimulationView.qrc">
      <normaloff>:/oxygen/actions/media-playback-start.png</normaloff>:/oxygen/actions/media-playback-start.png</iconset>
@@ -40,24 +40,6 @@
    </property>
    <property name="shortcut">
     <string>F9</string>
-   </property>
-  </action>
-  <action name="actionPause">
-   <property name="icon">
-    <iconset resource="../res/SingleCellSimulationView.qrc">
-     <normaloff>:/oxygen/actions/media-playback-pause.png</normaloff>:/oxygen/actions/media-playback-pause.png</iconset>
-   </property>
-   <property name="text">
-    <string>&amp;Pause</string>
-   </property>
-   <property name="statusTip">
-    <string>Pause the simulation</string>
-   </property>
-   <property name="shortcut">
-    <string>F9</string>
-   </property>
-   <property name="visible">
-    <bool>false</bool>
    </property>
   </action>
   <action name="actionStop">

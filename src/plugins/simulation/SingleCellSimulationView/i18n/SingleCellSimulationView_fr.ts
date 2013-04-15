@@ -210,6 +210,26 @@
         <source>%1 s using %2</source>
         <translation>%1 s avec %2</translation>
     </message>
+    <message>
+        <source>Run</source>
+        <translation>Lancer</translation>
+    </message>
+    <message>
+        <source>Pause</source>
+        <translation>Pauser</translation>
+    </message>
+    <message>
+        <source>Pause the simulation</source>
+        <translation>Pauser la simulation</translation>
+    </message>
+    <message>
+        <source>&amp;Run</source>
+        <translation>&amp;Lancer</translation>
+    </message>
+    <message>
+        <source>&amp;Pause</source>
+        <translation>&amp;Pauser</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -239,14 +259,6 @@
     <message>
         <source>F9</source>
         <translation></translation>
-    </message>
-    <message>
-        <source>&amp;Pause</source>
-        <translation>&amp;Pauser</translation>
-    </message>
-    <message>
-        <source>Pause the simulation</source>
-        <translation>Pauser la simulation</translation>
     </message>
     <message>
         <source>&amp;Stop</source>
