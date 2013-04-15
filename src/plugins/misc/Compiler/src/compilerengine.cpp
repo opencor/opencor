@@ -132,7 +132,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
     // Note: the temporary file will automatically get deleted when going out of
     //       scope...
 
-    QByteArray appByteArray = qApp->applicationFilePath().toLatin1();
+    QByteArray appByteArray = qApp->applicationFilePath().toUtf8();
     const char *appFileName = appByteArray.constData();
 
     QTemporaryFile tempFile(QDir::tempPath()+QDir::separator()+QFileInfo(appFileName).baseName()+"_XXXXXX.c");
@@ -143,7 +143,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
         return false;
     }
 
-    QByteArray tempFileByteArray = tempFile.fileName().toLatin1();
+    QByteArray tempFileByteArray = tempFile.fileName().toUtf8();
     const char *tempFileName = tempFileByteArray.constData();
 
     // Save the model code in our temporary file
