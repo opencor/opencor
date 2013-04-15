@@ -87,7 +87,7 @@ QString File::sha1() const
 
         file.open(QIODevice::ReadOnly);
 
-        QString res = QCryptographicHash::hash(QTextStream(&file).readAll().toLatin1(),
+        QString res = QCryptographicHash::hash(QTextStream(&file).readAll().toUtf8(),
                                                QCryptographicHash::Sha1).toHex();
 
         file.close();
