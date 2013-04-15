@@ -158,6 +158,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
     mDelays(QMap<QString, int>()),
     mAxesSettings(QMap<QString, AxisSettings>()),
     mSplitterWidgetSizes(QList<int>()),
+    mRunActionEnabled(true),
     mCurvesData(QMap<QString, SingleCellSimulationViewWidgetCurveData *>()),
     mOldSimulationResultsSizes(QMap<SingleCellSimulationViewSimulation *, qulonglong>()),
     mCheckResultsSimulations(QList<SingleCellSimulationViewSimulation *>())
@@ -195,8 +196,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
 
     mToolBarWidget = new Core::ToolBarWidget(this);
 
-    mToolBarWidget->addAction(mGui->actionRun);
-    mToolBarWidget->addAction(mGui->actionPause);
+    mToolBarWidget->addAction(mGui->actionRunPause);
     mToolBarWidget->addAction(mGui->actionStop);
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mGui->actionReset);
@@ -346,6 +346,10 @@ void SingleCellSimulationViewWidget::retranslateUi()
     mDelayWidget->setStatusTip(tr("Delay in milliseconds between two data points"));
     mDelayValueWidget->setStatusTip(mDelayWidget->statusTip());
 
+    // Retranslate our run/pause action
+
+    updateRunPauseAction(mRunActionEnabled);
+
     // Retranslate our invalid model message
 
     updateInvalidModelMessageWidget();
@@ -450,10 +454,9 @@ void SingleCellSimulationViewWidget::updateSimulationMode()
 {
     bool simulationModeEnabled = mSimulation->isRunning() || mSimulation->isPaused();
 
-    // Show/hide our run and pause actions
+    // Update our run/pause action
 
-    mGui->actionRun->setVisible(!mSimulation->isRunning() || mSimulation->isPaused());
-    mGui->actionPause->setVisible(!mGui->actionRun->isVisible());
+    updateRunPauseAction(!mSimulation->isRunning() || mSimulation->isPaused());
 
     // Enable/disable our stop action
 
@@ -466,7 +469,7 @@ void SingleCellSimulationViewWidget::updateSimulationMode()
 
     // Enable/disable our export to CSV
 
-    mGui->actionCsvExport->setEnabled(   mSimulation->results()->size()
+    mGui->actionCsvExport->setEnabled(    mSimulation->results()->size()
                                       && !simulationModeEnabled);
 
     // Give the focus to our focus proxy, in case we leave our simulation mode
@@ -474,6 +477,30 @@ void SingleCellSimulationViewWidget::updateSimulationMode()
 
     if (!simulationModeEnabled)
         focusProxy()->setFocus();
+}
+
+//==============================================================================
+
+void SingleCellSimulationViewWidget::updateRunPauseAction(const bool &pRunActionEnabled)
+{
+    mRunActionEnabled = pRunActionEnabled;
+
+    mGui->actionRunPause->setIcon(pRunActionEnabled?
+                                      QIcon(":/oxygen/actions/media-playback-start.png"):
+                                      QIcon(":/oxygen/actions/media-playback-pause.png"));
+
+    mGui->actionRunPause->setIconText(pRunActionEnabled?
+                                          tr("Run"):
+                                          tr("Pause"));
+    mGui->actionRunPause->setStatusTip(pRunActionEnabled?
+                                           tr("Run the simulation"):
+                                           tr("Pause the simulation"));
+    mGui->actionRunPause->setText(pRunActionEnabled?
+                                      tr("&Run"):
+                                      tr("&Pause"));
+    mGui->actionRunPause->setToolTip(pRunActionEnabled?
+                                         tr("Run"):
+                                         tr("Pause"));
 }
 
 //==============================================================================
@@ -655,10 +682,10 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
 
     output(information);
 
-    // Enable/disable our run action depending on whether we have a variable of
-    // integration
+    // Enable/disable our run/pause action depending on whether we have a
+    // variable of integration
 
-    mGui->actionRun->setEnabled(variableOfIntegration);
+    mGui->actionRunPause->setEnabled(variableOfIntegration);
 
     // Update our simulation mode
 
@@ -1016,99 +1043,96 @@ QIcon SingleCellSimulationViewWidget::fileTabIcon(const QString &pFileName) cons
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::on_actionRun_triggered()
+void SingleCellSimulationViewWidget::on_actionRunPause_triggered()
 {
-    // Run or resume our simulation
+    // Run or resume our simulation, or pause it
 
-    if (mSimulation->isPaused()) {
-        // Our simulation is paused, so resume it
+    if (mRunActionEnabled) {
+        if (mSimulation->isPaused()) {
+            // Our simulation is paused, so resume it
 
-        mSimulation->resume();
-    } else {
-        // Our simulation is not paused, so finish any editing of our simulation
-        // information
+            mSimulation->resume();
+        } else {
+            // Our simulation is not paused, so finish any editing of our
+            // simulation information
 
-        mContentsWidget->informationWidget()->finishEditing();;
+            mContentsWidget->informationWidget()->finishEditing();;
 
-        // Now, we would normally retrieve our simulation properties, but there
-        // is no need for it since they have already been retrieved (see
-        // simulationPropertyChanged())...
+            // Now, we would normally retrieve our simulation properties, but
+            // there is no need for it since they have already been retrieved
+            // (see simulationPropertyChanged())...
 
-        // Retrieve our solvers' properties
-        // Note: we don't need to retrieve the NLA solver's properties since we
-        //       already have them (see solversPropertyChanged())...
+            // Retrieve our solvers' properties
+            // Note: we don't need to retrieve the NLA solver's properties since
+            //       we already have them (see solversPropertyChanged())...
 
-        SingleCellSimulationViewSimulationData *simulationData = mSimulation->data();
-        SingleCellSimulationViewInformationSolversWidget *solversWidget = mContentsWidget->informationWidget()->solversWidget();
+            SingleCellSimulationViewSimulationData *simulationData = mSimulation->data();
+            SingleCellSimulationViewInformationSolversWidget *solversWidget = mContentsWidget->informationWidget()->solversWidget();
 
-        simulationData->setOdeSolverName(solversWidget->odeSolverData()->solversListProperty()->value()->text());
-        simulationData->setDaeSolverName(solversWidget->daeSolverData()->solversListProperty()->value()->text());
+            simulationData->setOdeSolverName(solversWidget->odeSolverData()->solversListProperty()->value()->text());
+            simulationData->setDaeSolverName(solversWidget->daeSolverData()->solversListProperty()->value()->text());
 
-        foreach (Core::Property *property, solversWidget->odeSolverData()->solversProperties().value(simulationData->odeSolverName()))
-            simulationData->addOdeSolverProperty(property->name()->text(),
-                                                 (property->value()->type() == Core::PropertyItem::Integer)?
-                                                     Core::PropertyEditorWidget::integerPropertyItem(property->value()):
-                                                     Core::PropertyEditorWidget::doublePropertyItem(property->value()));
+            foreach (Core::Property *property, solversWidget->odeSolverData()->solversProperties().value(simulationData->odeSolverName()))
+                simulationData->addOdeSolverProperty(property->name()->text(),
+                                                     (property->value()->type() == Core::PropertyItem::Integer)?
+                                                         Core::PropertyEditorWidget::integerPropertyItem(property->value()):
+                                                         Core::PropertyEditorWidget::doublePropertyItem(property->value()));
 
-        foreach (Core::Property *property, solversWidget->daeSolverData()->solversProperties().value(simulationData->daeSolverName()))
-            simulationData->addDaeSolverProperty(property->name()->text(),
-                                                 (property->value()->type() == Core::PropertyItem::Integer)?
-                                                     Core::PropertyEditorWidget::integerPropertyItem(property->value()):
-                                                     Core::PropertyEditorWidget::doublePropertyItem(property->value()));
+            foreach (Core::Property *property, solversWidget->daeSolverData()->solversProperties().value(simulationData->daeSolverName()))
+                simulationData->addDaeSolverProperty(property->name()->text(),
+                                                     (property->value()->type() == Core::PropertyItem::Integer)?
+                                                         Core::PropertyEditorWidget::integerPropertyItem(property->value()):
+                                                         Core::PropertyEditorWidget::doublePropertyItem(property->value()));
 
-        // Check how much memory is needed to run our simulation
+            // Check how much memory is needed to run our simulation
 
-        bool runSimulation = true;
+            bool runSimulation = true;
 
-        double freeMemory = Core::freeMemory();
-        double requiredMemory = mSimulation->requiredMemory();
+            double freeMemory = Core::freeMemory();
+            double requiredMemory = mSimulation->requiredMemory();
 
-        if (requiredMemory > freeMemory) {
-            // More memory is required to run our simulation than is currently
-            // available, so let our user know about it
+            if (requiredMemory > freeMemory) {
+                // More memory is required to run our simulation than is
+                // currently available, so let our user know about it
 
-            QMessageBox::warning(qApp->activeWindow(), tr("Run the simulation"),
-                                 tr("Sorry, but the simulation requires %1 of memory while you have %2 left.").arg(Core::sizeAsString(requiredMemory), Core::sizeAsString(freeMemory)));
-
-            runSimulation = false;
-        }
-
-        // Run our simulation, if possible/wanted
-
-        if (runSimulation) {
-            // Reset our local X axis
-
-            mActiveGraphPanel->plot()->setLocalMinX(mActiveGraphPanel->plot()->minX());
-            mActiveGraphPanel->plot()->setLocalMaxX(mActiveGraphPanel->plot()->maxX());
-
-            // Reset our simulation settings
-
-            mOldSimulationResultsSizes.insert(mSimulation, 0);
-
-            runSimulation = mSimulation->results()->reset();
-
-            updateResults(mSimulation, 0);
-
-            // Effectively run our simulation, if possible
-
-            if (runSimulation)
-                // Now, we really run our simulation
-
-                mSimulation->run();
-            else
                 QMessageBox::warning(qApp->activeWindow(), tr("Run the simulation"),
-                                     tr("Sorry, but we could not allocate all the memory required for the simulation."));
+                                     tr("Sorry, but the simulation requires %1 of memory while you have %2 left.").arg(Core::sizeAsString(requiredMemory), Core::sizeAsString(freeMemory)));
+
+                runSimulation = false;
+            }
+
+            // Run our simulation, if possible/wanted
+
+            if (runSimulation) {
+                // Reset our local X axis
+
+                mActiveGraphPanel->plot()->setLocalMinX(mActiveGraphPanel->plot()->minX());
+                mActiveGraphPanel->plot()->setLocalMaxX(mActiveGraphPanel->plot()->maxX());
+
+                // Reset our simulation settings
+
+                mOldSimulationResultsSizes.insert(mSimulation, 0);
+
+                runSimulation = mSimulation->results()->reset();
+
+                updateResults(mSimulation, 0);
+
+                // Effectively run our simulation, if possible
+
+                if (runSimulation)
+                    // Now, we really run our simulation
+
+                    mSimulation->run();
+                else
+                    QMessageBox::warning(qApp->activeWindow(), tr("Run the simulation"),
+                                         tr("Sorry, but we could not allocate all the memory required for the simulation."));
+            }
         }
+    } else {
+        // Pause our simulation
+
+        mSimulation->pause();
     }
-}
-
-//==============================================================================
-
-void SingleCellSimulationViewWidget::on_actionPause_triggered()
-{
-    // Pause our simulation
-
-    mSimulation->pause();
 }
 
 //==============================================================================
