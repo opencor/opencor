@@ -142,6 +142,15 @@ void SingleCellSimulationViewInformationParametersWidget::initialize(const QStri
 
 //==============================================================================
 
+void SingleCellSimulationViewInformationParametersWidget::finalize(const QString &pFileName)
+{
+    // Remove any track of our property editor
+
+    mPropertyEditors.remove(pFileName);
+}
+
+//==============================================================================
+
 void SingleCellSimulationViewInformationParametersWidget::updateParameters()
 {
     // Retrieve our current property editor, if any

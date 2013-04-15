@@ -879,9 +879,9 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         // We don't have any X axis settings for the given file name, so first
         // initialise our simulation's properties
 
-        simulationPropertyChanged(mContentsWidget->informationWidget()->simulationWidget()->startingPointProperty());
-        simulationPropertyChanged(mContentsWidget->informationWidget()->simulationWidget()->endingPointProperty());
-        simulationPropertyChanged(mContentsWidget->informationWidget()->simulationWidget()->pointIntervalProperty());
+        simulationPropertyChanged(simulationWidget->startingPointProperty());
+        simulationPropertyChanged(simulationWidget->endingPointProperty());
+        simulationPropertyChanged(simulationWidget->pointIntervalProperty());
 
         // Now, initialise our graph panel's plot's X axis settings
 
@@ -964,10 +964,14 @@ void SingleCellSimulationViewWidget::finalize(const QString &pFileName)
 
     mAxesSettings.remove(pFileName);
 
-    // Finalize a few things in our simulation and solvers widgets
+    // Finalize a few things in our GUI's simulation, solvers and parameters
+    // widgets
 
-    mContentsWidget->informationWidget()->simulationWidget()->finalize(pFileName);
-    mContentsWidget->informationWidget()->solversWidget()->finalize(pFileName);
+    SingleCellSimulationViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
+
+    informationWidget->simulationWidget()->finalize(pFileName);
+    informationWidget->solversWidget()->finalize(pFileName);
+    informationWidget->parametersWidget()->finalize(pFileName);
 }
 
 //==============================================================================
