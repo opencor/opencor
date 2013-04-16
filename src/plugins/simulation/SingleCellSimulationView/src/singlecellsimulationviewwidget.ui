@@ -27,7 +27,7 @@
     <number>0</number>
    </property>
   </layout>
-  <action name="actionRunPause">
+  <action name="actionRunPauseResume">
    <property name="icon">
     <iconset resource="../res/SingleCellSimulationView.qrc">
      <normaloff>:/oxygen/actions/media-playback-start.png</normaloff>:/oxygen/actions/media-playback-start.png</iconset>

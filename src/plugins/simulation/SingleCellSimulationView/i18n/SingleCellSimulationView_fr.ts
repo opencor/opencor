@@ -230,6 +230,18 @@
         <source>&amp;Pause</source>
         <translation>&amp;Pauser</translation>
     </message>
+    <message>
+        <source>Resume the simulation</source>
+        <translation>Résumer la simulation</translation>
+    </message>
+    <message>
+        <source>&amp;Resume</source>
+        <translation>&amp;Résumer</translation>
+    </message>
+    <message>
+        <source>Resume</source>
+        <translation>Résumer</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>

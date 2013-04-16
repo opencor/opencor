@@ -196,7 +196,7 @@ SingleCellSimulationViewWidget::SingleCellSimulationViewWidget(SingleCellSimulat
 
     mToolBarWidget = new Core::ToolBarWidget(this);
 
-    mToolBarWidget->addAction(mGui->actionRunPause);
+    mToolBarWidget->addAction(mGui->actionRunPauseResume);
     mToolBarWidget->addAction(mGui->actionStop);
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mGui->actionReset);
@@ -485,22 +485,32 @@ void SingleCellSimulationViewWidget::updateRunPauseAction(const bool &pRunAction
 {
     mRunActionEnabled = pRunActionEnabled;
 
-    mGui->actionRunPause->setIcon(pRunActionEnabled?
-                                      QIcon(":/oxygen/actions/media-playback-start.png"):
-                                      QIcon(":/oxygen/actions/media-playback-pause.png"));
+    mGui->actionRunPauseResume->setIcon(pRunActionEnabled?
+                                            QIcon(":/oxygen/actions/media-playback-start.png"):
+                                            QIcon(":/oxygen/actions/media-playback-pause.png"));
 
-    mGui->actionRunPause->setIconText(pRunActionEnabled?
-                                          tr("Run"):
-                                          tr("Pause"));
-    mGui->actionRunPause->setStatusTip(pRunActionEnabled?
-                                           tr("Run the simulation"):
-                                           tr("Pause the simulation"));
-    mGui->actionRunPause->setText(pRunActionEnabled?
-                                      tr("&Run"):
-                                      tr("&Pause"));
-    mGui->actionRunPause->setToolTip(pRunActionEnabled?
-                                         tr("Run"):
-                                         tr("Pause"));
+    bool simulationPaused = mSimulation && mSimulation->isPaused();
+
+    mGui->actionRunPauseResume->setIconText(pRunActionEnabled?
+                                                simulationPaused?
+                                                    tr("Resume"):
+                                                    tr("Run"):
+                                                tr("Pause"));
+    mGui->actionRunPauseResume->setStatusTip(pRunActionEnabled?
+                                                 simulationPaused?
+                                                     tr("Resume the simulation"):
+                                                     tr("Run the simulation"):
+                                                 tr("Pause the simulation"));
+    mGui->actionRunPauseResume->setText(pRunActionEnabled?
+                                            simulationPaused?
+                                                tr("&Resume"):
+                                                tr("&Run"):
+                                            tr("&Pause"));
+    mGui->actionRunPauseResume->setToolTip(pRunActionEnabled?
+                                               simulationPaused?
+                                                   tr("Resume"):
+                                                   tr("Run"):
+                                               tr("Pause"));
 }
 
 //==============================================================================
@@ -685,7 +695,7 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
     // Enable/disable our run/pause action depending on whether we have a
     // variable of integration
 
-    mGui->actionRunPause->setEnabled(variableOfIntegration);
+    mGui->actionRunPauseResume->setEnabled(variableOfIntegration);
 
     // Update our simulation mode
 
@@ -1043,7 +1053,7 @@ QIcon SingleCellSimulationViewWidget::fileTabIcon(const QString &pFileName) cons
 
 //==============================================================================
 
-void SingleCellSimulationViewWidget::on_actionRunPause_triggered()
+void SingleCellSimulationViewWidget::on_actionRunPauseResume_triggered()
 {
     // Run or resume our simulation, or pause it
 

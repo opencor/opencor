@@ -211,7 +211,7 @@ private:
                               CellMLSupport::CellmlFileRuntimeModelParameter *pModelParameter);
 
 private Q_SLOTS:
-    void on_actionRunPause_triggered();
+    void on_actionRunPauseResume_triggered();
     void on_actionStop_triggered();
 
     void on_actionReset_triggered();
