@@ -1053,6 +1053,16 @@ void SingleCellSimulationViewWidget::on_actionRunPause_triggered()
 
             mSimulation->resume();
         } else {
+            // Protect ourselves against two successive (very) quick attempts at
+            // trying to run a simulation
+
+            static bool handlingAction = false;
+
+            if (handlingAction || mSimulation->isRunning())
+                return;
+
+            handlingAction = true;
+
             // Our simulation is not paused, so finish any editing of our
             // simulation information
 
@@ -1127,6 +1137,10 @@ void SingleCellSimulationViewWidget::on_actionRunPause_triggered()
                     QMessageBox::warning(qApp->activeWindow(), tr("Run the simulation"),
                                          tr("Sorry, but we could not allocate all the memory required for the simulation."));
             }
+
+            // We are done handline the action, so...
+
+            handlingAction = false;
         }
     } else {
         // Pause our simulation
