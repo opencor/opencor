@@ -60,6 +60,7 @@ public:
     bool event(QEvent *event);
 
     QString applicationId() const;
+    void setBlock(bool value);
 
 //---OPENCOR--- BEGIN
     void handleAction(const QUrl &pUrl) { emit messageReceived(pUrl.toString()); }
@@ -74,7 +75,7 @@ public:
 // end obsolete methods
 
 Q_SIGNALS:
-    void messageReceived(const QString &message);
+    void messageReceived(const QString &message, QObject *socket);
     void fileOpenRequest(const QString &file);
 
 private:
@@ -83,6 +84,7 @@ private:
     QtLocalPeer *pidPeer;
     QWidget *actWin;
     QString appId;
+    bool block;
 };
 
 } // namespace SharedTools
