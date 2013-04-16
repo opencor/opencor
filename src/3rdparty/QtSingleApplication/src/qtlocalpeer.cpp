@@ -62,7 +62,7 @@ QtLocalPeer::QtLocalPeer(QObject *parent, const QString &appId)
                  + QString::number(idNum, 16);
 #if defined(Q_OS_WIN)
     if (!pProcessIdToSessionId) {
-        QLibrary lib("kernel32");
+        QLibrary lib(QLatin1String("kernel32"));
         pProcessIdToSessionId = (PProcessIdToSessionId)lib.resolve("ProcessIdToSessionId");
     }
     if (pProcessIdToSessionId) {
@@ -99,7 +99,7 @@ bool QtLocalPeer::isClient()
     return false;
 }
 
-bool QtLocalPeer::sendMessage(const QString &message, int timeout)
+bool QtLocalPeer::sendMessage(const QString &message, int timeout, bool block)
 {
     if (!isClient())
         return false;
@@ -129,6 +129,8 @@ bool QtLocalPeer::sendMessage(const QString &message, int timeout)
     bool res = socket.waitForBytesWritten(timeout);
     res &= socket.waitForReadyRead(timeout); // wait for ack
     res &= (socket.read(qstrlen(ack)) == ack);
+    if (block) // block until peer disconnects
+        socket.waitForDisconnected(-1);
     return res;
 }
 
@@ -139,8 +141,11 @@ void QtLocalPeer::receiveConnection()
         return;
 
     // Why doesn't Qt have a blocking stream that takes care of this shait???
-    while (socket->bytesAvailable() < static_cast<int>(sizeof(quint32)))
-        socket->waitForReadyRead();
+    while (socket->bytesAvailable() < static_cast<int>(sizeof(quint32))) {
+        if (!socket->isValid()) // stale request
+            return;
+        socket->waitForReadyRead(1000);
+    }
     QDataStream ds(socket);
     QByteArray uMsg;
     quint32 remaining;
@@ -165,8 +170,7 @@ void QtLocalPeer::receiveConnection()
     QString message = QString::fromUtf8(uMsg.constData(), uMsg.size());
     socket->write(ack, qstrlen(ack));
     socket->waitForBytesWritten(1000);
-    delete socket;
-    emit messageReceived(message); // ##(might take a long time to return)
+    emit messageReceived(message, socket); // ##(might take a long time to return)
 }
 
 } // namespace SharedTools
