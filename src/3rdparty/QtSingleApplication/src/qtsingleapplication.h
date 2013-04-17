@@ -63,7 +63,7 @@ public:
     void setBlock(bool value);
 
 //---OPENCOR--- BEGIN
-    void handleAction(const QUrl &pUrl) { emit messageReceived(pUrl.toString()); }
+    void handleAction(const QUrl &pUrl) { emit messageReceived(pUrl.toString(), 0); }
 //---OPENCOR--- END
 public Q_SLOTS:
     bool sendMessage(const QString &message, int timeout = 5000, qint64 pid = -1);
