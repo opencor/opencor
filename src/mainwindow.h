@@ -112,7 +112,7 @@ private:
 
 private Q_SLOTS:
     void fileOpenRequest(const QString &pFileName);
-    void messageReceived(const QString &pMessage);
+    void messageReceived(const QString &pMessage, QObject *pSocket);
 
     void on_actionFullScreen_triggered();
     void on_actionSystem_triggered();

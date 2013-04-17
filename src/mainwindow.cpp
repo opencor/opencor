@@ -76,8 +76,8 @@ MainWindow::MainWindow(SharedTools::QtSingleApplication *pApp) :
 
     QObject::connect(pApp, SIGNAL(fileOpenRequest(const QString &)),
                      this, SLOT(fileOpenRequest(const QString &)));
-    QObject::connect(pApp, SIGNAL(messageReceived(const QString &)),
-                     this, SLOT(messageReceived(const QString &)));
+    QObject::connect(pApp, SIGNAL(messageReceived(const QString &, QObject *)),
+                     this, SLOT(messageReceived(const QString &, QObject *)));
 
     // Create our settings object
 
@@ -1121,8 +1121,10 @@ void MainWindow::handleAction(const QUrl &pUrl)
 
 //==============================================================================
 
-void MainWindow::messageReceived(const QString &pMessage)
+void MainWindow::messageReceived(const QString &pMessage, QObject *pSocket)
 {
+    Q_UNUSED(pSocket);
+
     // We have just received a message which can be one of two things:
     //  1) The user tried to run another instance of OpenCOR which sent a
     //     message to this instance, asking it to bring itself to the foreground
