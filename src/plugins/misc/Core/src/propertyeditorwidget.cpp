@@ -562,6 +562,8 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
     mProperty       = 0;
     mPropertyEditor = 0;
 
+    mOldPropertyValue = QString();
+
     mPropertiesChecked = QMap<Property *, bool>();
 
     // Customise ourselves
@@ -1037,7 +1039,9 @@ void PropertyEditorWidget::setDoublePropertyItem(PropertyItem *pPropertyItem,
     // type
 
     if (pPropertyItem && (pPropertyItem->type() == PropertyItem::Double))
-        setPropertyItem(pPropertyItem, QString::number(pValue));
+        setPropertyItem(pPropertyItem, QString::number(pValue, 'g', 15));
+        // Note: we want as much precision as possible, hence we use 15 (see
+        //       http://en.wikipedia.org/wiki/Double_precision)...
 }
 
 //==============================================================================
@@ -1230,11 +1234,13 @@ void PropertyEditorWidget::editorOpened(QWidget *pEditor)
     mProperty       = currentProperty();
     mPropertyEditor = pEditor;
 
+    PropertyItem *propertyValue = mProperty->value();
+
+    mOldPropertyValue = propertyValue->text();
+
     // We are starting the editing of a property, so make sure that if we are to
     // edit a list item, then its original value gets properly set
     // Note: indeed, by default the first list item will be selected...
-
-    PropertyItem *propertyValue = mProperty->value();
 
     if (propertyValue->type() == PropertyItem::List) {
         ListEditorWidget *propertyEditor = static_cast<ListEditorWidget *>(mPropertyEditor);
@@ -1290,9 +1296,10 @@ void PropertyEditorWidget::editorClosed()
 
     setFocus();
 
-    // Let people know that the property value has changed
+    // Let people know that the property value has changed, if that's the case
 
-    emit propertyChanged(mProperty);
+    if (propertyValue->text().compare(mOldPropertyValue))
+        emit propertyChanged(mProperty);
 
     // Reset some information about the property
 

@@ -288,6 +288,8 @@ private:
     Property *mProperty;
     QWidget *mPropertyEditor;
 
+    QString mOldPropertyValue;
+
     QMap<Property *, bool> mPropertiesChecked;
 
     void constructor(const bool &pShowUnits = true,
