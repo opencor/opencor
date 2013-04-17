@@ -1039,7 +1039,9 @@ void PropertyEditorWidget::setDoublePropertyItem(PropertyItem *pPropertyItem,
     // type
 
     if (pPropertyItem && (pPropertyItem->type() == PropertyItem::Double))
-        setPropertyItem(pPropertyItem, QString::number(pValue));
+        setPropertyItem(pPropertyItem, QString::number(pValue, 'g', 15));
+        // Note: we want as much precision as possible, hence we use 15 (see
+        //       http://en.wikipedia.org/wiki/Double_precision)...
 }
 
 //==============================================================================
