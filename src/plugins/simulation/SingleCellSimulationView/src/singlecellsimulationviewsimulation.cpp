@@ -1053,7 +1053,7 @@ void SingleCellSimulationViewSimulation::run()
         connect(mWorker, SIGNAL(error(const QString &)),
                 this, SIGNAL(error(const QString &)));
 
-        // Start our worker thread
+        // Start our worker
 
         mWorker->run();
     }
