@@ -106,13 +106,6 @@ bool CompilerEngine::hasError() const
 
 //==============================================================================
 
-llvm::sys::Path getExecutablePath(const char *pArg) {
-    return llvm::sys::Path::GetMainExecutable(pArg,
-                                              (void *) (intptr_t) getExecutablePath);
-}
-
-//==============================================================================
-
 bool CompilerEngine::compileCode(const QString &pCode)
 {
     // Reset our compiler engine
@@ -129,13 +122,8 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     // Retrieve the application file name and determine the name of the
     // temporary file which will contain our model code
-    // Note: the temporary file will automatically get deleted when going out of
-    //       scope...
 
-    QByteArray appByteArray = qApp->applicationFilePath().toUtf8();
-    const char *appFileName = appByteArray.constData();
-
-    QTemporaryFile tempFile(QDir::tempPath()+QDir::separator()+QFileInfo(appFileName).baseName()+"_XXXXXX.c");
+    QTemporaryFile tempFile(QDir::tempPath()+QDir::separator()+QFileInfo(qApp->applicationFilePath()).baseName()+"_XXXXXX.c");
 
     if (!tempFile.open()) {
         mError = tr("<strong>%1</strong> could not be created").arg(tempFile.fileName());
@@ -166,9 +154,8 @@ bool CompilerEngine::compileCode(const QString &pCode)
     clang::DiagnosticsEngine diagnosticsEngine(llvm::IntrusiveRefCntPtr<clang::DiagnosticIDs>(new clang::DiagnosticIDs()),
                                                &*diagnosticOptions,
                                                new clang::TextDiagnosticPrinter(outputStream, &*diagnosticOptions));
-    clang::driver::Driver driver(getExecutablePath(appFileName).str(),
-                                 llvm::sys::getDefaultTargetTriple(),
-                                 "a.out", true, diagnosticsEngine);
+    clang::driver::Driver driver("clang", llvm::sys::getDefaultTargetTriple(),
+                                 "", true, diagnosticsEngine);
 
     // Get a compilation object to which we pass some arguments
     // Note: in gcc, the -O3 option comes with a warning: "Under some
@@ -179,7 +166,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     llvm::SmallVector<const char *, 16> compilationArguments;
 
-    compilationArguments.push_back(appFileName);
+    compilationArguments.push_back("clang");
     compilationArguments.push_back("-fsyntax-only");
     compilationArguments.push_back("-O3");
     compilationArguments.push_back("-Werror");
