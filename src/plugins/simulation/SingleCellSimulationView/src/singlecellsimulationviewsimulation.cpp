@@ -10,7 +10,6 @@
 #include "singlecellsimulationviewsimulation.h"
 #include "singlecellsimulationviewwidget.h"
 #include "solverinterface.h"
-#include "thread.h"
 
 //==============================================================================
 
