@@ -8,11 +8,11 @@
 #include "coreodesolver.h"
 #include "singlecellsimulationviewsimulation.h"
 #include "singlecellsimulationviewsimulationworker.h"
-#include "thread.h"
 
 //==============================================================================
 
 #include <QMutex>
+#include <QThread>
 #include <QTime>
 
 //==============================================================================
@@ -38,7 +38,7 @@ SingleCellSimulationViewSimulationWorker::SingleCellSimulationViewSimulationWork
 {
     // Create our thread
 
-    mThread = new Core::Thread();
+    mThread = new QThread();
 
     // Move ourselves to our thread
 
@@ -245,6 +245,11 @@ void SingleCellSimulationViewSimulationWorker::started()
 
         // Our main work loop
 
+        QMutex pausedMutex;
+
+        QMutex delayMutex;
+        QWaitCondition delayCondition;
+
         while ((currentPoint != endingPoint) && !mStopped && !mError) {
             // Determine our next point and compute our model up to it
 
@@ -275,7 +280,9 @@ void SingleCellSimulationViewSimulationWorker::started()
             if (mSimulation->data()->delay() && !mStopped && !mError) {
                 elapsedTime += timer.elapsed();
 
-                static_cast<Core::Thread *>(thread())->msleep(mSimulation->data()->delay());
+                delayMutex.lock();
+                    delayCondition.wait(&delayMutex, mSimulation->data()->delay());
+                delayMutex.unlock();
 
                 timer.restart();
             }
@@ -292,8 +299,6 @@ void SingleCellSimulationViewSimulationWorker::started()
                 emit paused();
 
                 // Actually pause ourselves
-
-                QMutex pausedMutex;
 
                 pausedMutex.lock();
                     mPausedCondition.wait(&pausedMutex);
