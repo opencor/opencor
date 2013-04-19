@@ -12,10 +12,6 @@
 #include <QTextStream>
 #include <QUrl>
 
-#ifdef QT_DEBUG
-    #include <QTime>
-#endif
-
 //==============================================================================
 
 #ifdef Q_OS_LINUX
@@ -140,23 +136,8 @@ bool CellmlFile::load()
 
     // Try to load the model
 
-#ifdef QT_DEBUG
-    qDebug("---------------------------------------");
-    qDebug("%s:", qPrintable(mFileName));
-#endif
-
     try {
-#ifdef QT_DEBUG
-        QTime time;
-
-        time.start();
-#endif
-
         mModel = modelLoader->loadFromURL(QUrl::fromPercentEncoding(QUrl::fromLocalFile(mFileName).toEncoded()).toStdWString());
-
-#ifdef QT_DEBUG
-        qDebug(" - CellML Loading time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
-#endif
     } catch (iface::cellml_api::CellMLException &) {
         // Something went wrong with the loading of the model, so...
 
@@ -171,17 +152,7 @@ bool CellmlFile::load()
 
     if (QString::fromStdWString(mModel->cellmlVersion()).compare(Cellml_1_0))
         try {
-#ifdef QT_DEBUG
-            QTime time;
-
-            time.start();
-#endif
-
             mModel->fullyInstantiateImports();
-
-#ifdef QT_DEBUG
-            qDebug(" - CellML full instantiation time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
-#endif
         } catch (...) {
             // Something went wrong with the full instantiation of the imports,
             // so...
@@ -191,14 +162,6 @@ bool CellmlFile::load()
 
             return false;
         }
-
-    // Analyse our CellML file
-
-#ifdef QT_DEBUG
-    QTime time;
-
-    time.start();
-#endif
 
     // Retrieve the URI base
 
@@ -228,10 +191,6 @@ bool CellmlFile::load()
             }
         }
     }
-
-#ifdef QT_DEBUG
-    qDebug(" - CellML analysis time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
-#endif
 
     // All done, so...
 
@@ -329,18 +288,8 @@ bool CellmlFile::isValid()
         //       time it takes to fully validate a model that has many
         //       warnings/errors)...
 
-#ifdef QT_DEBUG
-        QTime time;
-
-        time.start();
-#endif
-
         ObjRef<iface::cellml_services::VACSService> vacssService = CreateVACSService();
         ObjRef<iface::cellml_services::CellMLValidityErrorSet> cellmlValidityErrorSet = vacssService->validateModel(mModel);
-
-#ifdef QT_DEBUG
-        qDebug(" - CellML validation time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
-#endif
 
         // Determine the number of errors and warnings
         // Note: CellMLValidityErrorSet::nValidityErrors() returns any type of
@@ -348,10 +297,6 @@ bool CellmlFile::isValid()
         //       determine the number of true errors
 
         int cellmlErrorsCount = 0;
-
-#ifdef QT_DEBUG
-        time.restart();
-#endif
 
         for (int i = 0, iMax = cellmlValidityErrorSet->nValidityErrors(); i < iMax; ++i) {
             ObjRef<iface::cellml_services::CellMLValidityError> cellmlValidityIssue = cellmlValidityErrorSet->getValidityError(i);
@@ -453,10 +398,6 @@ bool CellmlFile::isValid()
                                        QString::fromStdWString(cellmlValidityIssue->description()),
                                        line, column, importedFile);
         }
-
-#ifdef QT_DEBUG
-        qDebug(" - CellML warnings vs. errors time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
-#endif
 
         if (cellmlErrorsCount)
             // There are CellML errors, so...

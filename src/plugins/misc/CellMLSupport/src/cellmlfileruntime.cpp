@@ -11,7 +11,6 @@
 
 #include <QRegularExpression>
 #include <QStringList>
-#include <QTime>
 
 //==============================================================================
 
@@ -616,17 +615,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
     // Note: this can be done by checking whether some equations were flagged
     //       as needing a Newton-Raphson evaluation...
 
-#ifdef QT_DEBUG
-    QTime time;
-
-    time.start();
-#endif
-
     getOdeCodeInformation(model);
-
-#ifdef QT_DEBUG
-    qDebug(" - CellML ODE code information time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
-#endif
 
     if (!mOdeCodeInformation)
         return this;
@@ -644,17 +633,9 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
     if (mModelType == Ode) {
         genericCodeInformation = mOdeCodeInformation;
     } else {
-#ifdef QT_DEBUG
-        time.restart();
-#endif
-
         getDaeCodeInformation(model);
 
         genericCodeInformation = mDaeCodeInformation;
-
-#ifdef QT_DEBUG
-        qDebug(" - CellML DAE code information time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
-#endif
     }
 
     // Retrieve all the model parameters and sort them by component/variable
@@ -797,71 +778,6 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
 
     qSort(mModelParameters.begin(), mModelParameters.end(), sortModelParameters);
 
-#ifdef QT_DEBUG
-    if (mVariableOfIntegration)
-        qDebug(" - Variable of integration: %s [unit: %s] [component: %s]",
-               qPrintable(mVariableOfIntegration->name()),
-               qPrintable(mVariableOfIntegration->unit()),
-               qPrintable(mVariableOfIntegration->component()));
-    else
-        qDebug(" - Variable of integration: none");
-
-    if (mModelParameters.isEmpty()) {
-        qDebug(" - Model parameters: none");
-    } else {
-        qDebug(" - Model parameters:");
-
-        QString component = QString();
-
-        foreach (CellmlFileRuntimeModelParameter *modelParameter, mModelParameters)
-            if (   (modelParameter->type() != CellmlFileRuntimeModelParameter::Voi)
-                && (modelParameter->type() != CellmlFileRuntimeModelParameter::Undefined)) {
-                QString crtComponent = modelParameter->component();
-
-                if (modelParameter->component().compare(component)) {
-                    qDebug("    - %s:", qPrintable(crtComponent));
-
-                    component = crtComponent;
-                }
-
-                QString modelParameterType = QString();
-
-                switch (modelParameter->type()) {
-                case CellmlFileRuntimeModelParameter::Constant:
-                    modelParameterType = "constant";
-
-                    break;
-                case CellmlFileRuntimeModelParameter::ComputedConstant:
-                    modelParameterType = "computed constant";
-
-                    break;
-                case CellmlFileRuntimeModelParameter::State:
-                    modelParameterType = "state";
-
-                    break;
-                case CellmlFileRuntimeModelParameter::Rate:
-                    modelParameterType = "rate";
-
-                    break;
-                case CellmlFileRuntimeModelParameter::Algebraic:
-                    modelParameterType = "algebraic";
-
-                    break;
-                default:
-                    modelParameterType = "???";
-                }
-
-                qDebug("       - %s [degree: %d] [unit: %s] [component: %s] [type: %s] [index: %d]",
-                       qPrintable(modelParameter->name()),
-                       modelParameter->degree(),
-                       qPrintable(modelParameter->unit()),
-                       qPrintable(modelParameter->component()),
-                       qPrintable(modelParameterType),
-                       modelParameter->index());
-            }
-    }
-#endif
-
     // Generate the model code, after having prepended to it all the external
     // functions which may, or not, be needed
     // Note: indeed, we cannot include header files since we don't (and don't
@@ -1000,27 +916,17 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
     // Note: this is only so that it looks better on Windows when we need to
     //       debug things...
 
-#ifdef Q_OS_WIN
-    #ifdef QT_DEBUG
-        modelCode.remove('\r');
-    #endif
+#if defined(Q_OS_WIN) && defined(QT_DEBUG)
+    modelCode.remove('\r');
 #endif
 
     // Compile the model code and check that everything went fine
-
-#ifdef QT_DEBUG
-    time.restart();
-#endif
 
     if (!mCompilerEngine->compileCode(modelCode))
         // Something went wrong, so output the error that was found
 
         mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                    QString("%1").arg(mCompilerEngine->error()));
-
-#ifdef QT_DEBUG
-    qDebug(" - CellML code compilation time: %s s", qPrintable(QString::number(0.001*time.elapsed(), 'g', 3)));
-#endif
 
     // Keep track of the ODE/DAE functions, but only if no issues were reported
 
