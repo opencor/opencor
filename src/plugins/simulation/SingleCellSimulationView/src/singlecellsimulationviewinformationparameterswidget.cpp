@@ -277,6 +277,10 @@ void SingleCellSimulationViewInformationParametersWidget::finishPropertyEditing(
 void SingleCellSimulationViewInformationParametersWidget::populateModel(Core::PropertyEditorWidget *pPropertyEditor,
                                                                         CellMLSupport::CellmlFileRuntime *pRuntime)
 {
+    // Prevent ourselves from being updated (to avoid any flickering)
+
+    pPropertyEditor->setUpdatesEnabled(false);
+
     // Populate our property editor with the model parameters
 
     Core::Property *section = 0;
@@ -315,10 +319,9 @@ void SingleCellSimulationViewInformationParametersWidget::populateModel(Core::Pr
                                || (modelParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::State);
         Core::Property *property = pPropertyEditor->addDoubleProperty(canEditProperty, true, section);
 
-        if (canEditProperty)
-            property->name()->setIcon(QIcon(":CellMLSupport_modifiableVariableNode"));
-        else
-            property->name()->setIcon(QIcon(":CellMLSupport_variableNode"));
+        property->name()->setIcon(canEditProperty?
+                                      QIcon(":CellMLSupport_modifiableVariableNode"):
+                                      QIcon(":CellMLSupport_variableNode"));
 
         pPropertyEditor->setStringPropertyItem(property->name(), modelParameter->name()+QString(modelParameter->degree(), '\''));
         pPropertyEditor->setStringPropertyItem(property->unit(), modelParameter->unit());
@@ -327,10 +330,6 @@ void SingleCellSimulationViewInformationParametersWidget::populateModel(Core::Pr
 
         mModelParameters.insert(property, modelParameter);
     }
-
-    // Prevent ourselves from being updated (to avoid any flickering)
-
-    pPropertyEditor->setUpdatesEnabled(false);
 
     // Expand all our properties
 
