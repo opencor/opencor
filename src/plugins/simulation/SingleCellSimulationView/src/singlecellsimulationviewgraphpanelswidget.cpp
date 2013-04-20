@@ -268,8 +268,8 @@ SingleCellSimulationViewGraphPanelWidget * SingleCellSimulationViewGraphPanelsWi
     }
 
     // There are no graph panels, so...
-    // Note: we should never reached this point since there should always be at
-    //       one graph panel...
+    // Note: we should never reach this point since there should always be at
+    //       least one graph panel...
 
     return 0;
 }
