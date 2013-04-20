@@ -297,8 +297,6 @@ void SingleCellSimulationViewInformationParametersWidget::populateModel(Core::Pr
 
             section = pPropertyEditor->addSectionProperty();
 
-            section->name()->setIcon(QIcon(":CellMLSupport_componentNode"));
-
             pPropertyEditor->setStringPropertyItem(section->name(), crtComponent);
         }
 
@@ -315,13 +313,45 @@ void SingleCellSimulationViewInformationParametersWidget::populateModel(Core::Pr
         //       variables of degree 1, 2 and 3 will be V', V'' and V''',
         //       respectively)...
 
-        bool canEditProperty =    (modelParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::Constant)
-                               || (modelParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::State);
-        Core::Property *property = pPropertyEditor->addDoubleProperty(canEditProperty, true, section);
+        bool parameterEditable = false;
+        QIcon parameterIcon = QIcon(":CellMLSupport_errorNode");
 
-        property->name()->setIcon(canEditProperty?
-                                      QIcon(":CellMLSupport_modifiableVariableNode"):
-                                      QIcon(":CellMLSupport_variableNode"));
+        switch (modelParameter->type()) {
+        case CellMLSupport::CellmlFileRuntimeModelParameter::Constant:
+            parameterEditable = true;
+
+            parameterIcon = QIcon(":SingleCellSimulationView_constant");
+
+            break;
+        case CellMLSupport::CellmlFileRuntimeModelParameter::ComputedConstant:
+            parameterIcon = QIcon(":SingleCellSimulationView_computedConstant");
+
+            break;
+        case CellMLSupport::CellmlFileRuntimeModelParameter::State:
+            parameterEditable = true;
+
+            parameterIcon = QIcon(":SingleCellSimulationView_state");
+
+            break;
+        case CellMLSupport::CellmlFileRuntimeModelParameter::Rate:
+            parameterIcon = QIcon(":SingleCellSimulationView_rate");
+
+            break;
+        case CellMLSupport::CellmlFileRuntimeModelParameter::Algebraic:
+            parameterIcon = QIcon(":SingleCellSimulationView_algebraic");
+
+            break;
+        default:
+            // We are dealing with a type of model parameter which is of no
+            // interest to us, so do nothing...
+            // Note: we should never reach this point...
+
+            ;
+        }
+
+        Core::Property *property = pPropertyEditor->addDoubleProperty(parameterEditable, true, section);
+
+        property->name()->setIcon(parameterIcon);
 
         pPropertyEditor->setStringPropertyItem(property->name(), modelParameter->name()+QString(modelParameter->degree(), '\''));
         pPropertyEditor->setStringPropertyItem(property->unit(), modelParameter->unit());

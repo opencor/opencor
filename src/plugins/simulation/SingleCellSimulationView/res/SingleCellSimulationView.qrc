@@ -1,5 +1,10 @@
 <RCC>
     <qresource prefix="/">
+        <file alias="SingleCellSimulationView_algebraic">algebraic.png</file>
+        <file alias="SingleCellSimulationView_computedConstant">computedConstant.png</file>
+        <file alias="SingleCellSimulationView_constant">constant.png</file>
+        <file alias="SingleCellSimulationView_rate">rate.png</file>
+        <file alias="SingleCellSimulationView_state">state.png</file>
         <file>oxygen/actions/list-add.png</file>
         <file>oxygen/actions/list-remove.png</file>
         <file>oxygen/actions/media-playback-pause.png</file>
