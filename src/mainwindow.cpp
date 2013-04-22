@@ -1045,12 +1045,12 @@ void MainWindow::handleAction(const QUrl &pUrl)
 
     QString authority = pUrl.authority();
 
-    if (!authority.compare("actionplugins")) {
+    if (!authority.compare("openPluginsDialogBox", Qt::CaseInsensitive)) {
         // We want to open the Plugins dialog box
 
         on_actionPlugins_triggered();
-    } else if (!authority.compare("actionabout")) {
-        // We want to open the About box
+    } else if (!authority.compare("openAboutDialogBox", Qt::CaseInsensitive)) {
+        // We want to open the About dialog box
 
         on_actionAbout_triggered();
     } else {
