@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SingleCellViewWidget</class>
+ <widget class="QWidget" name="SingleCellViewWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>320</width>
+    <height>240</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout" name="layout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+  </layout>
+  <action name="actionRunPauseResume">
+   <property name="icon">
+    <iconset resource="../res/SingleCellView.qrc">
+     <normaloff>:/oxygen/actions/media-playback-start.png</normaloff>:/oxygen/actions/media-playback-start.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Run</string>
+   </property>
+   <property name="statusTip">
+    <string>Run the simulation</string>
+   </property>
+   <property name="shortcut">
+    <string>F9</string>
+   </property>
+  </action>
+  <action name="actionStop">
+   <property name="icon">
+    <iconset resource="../res/SingleCellView.qrc">
+     <normaloff>:/oxygen/actions/media-playback-stop.png</normaloff>:/oxygen/actions/media-playback-stop.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Stop</string>
+   </property>
+   <property name="statusTip">
+    <string>Stop the simulation</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F2</string>
+   </property>
+  </action>
+  <action name="actionDebugMode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../res/SingleCellView.qrc">
+     <normaloff>:/oxygen/actions/tools-report-bug.png</normaloff>:/oxygen/actions/tools-report-bug.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Debug Mode</string>
+   </property>
+   <property name="statusTip">
+    <string>Enable the debug mode</string>
+   </property>
+  </action>
+  <action name="actionAdd">
+   <property name="icon">
+    <iconset resource="../../../editing/CellMLAnnotationView/res/CellMLAnnotationView.qrc">
+     <normaloff>:/oxygen/actions/list-add.png</normaloff>:/oxygen/actions/list-add.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Add</string>
+   </property>
+   <property name="statusTip">
+    <string>Add a graph panel</string>
+   </property>
+  </action>
+  <action name="actionRemove">
+   <property name="icon">
+    <iconset resource="../../../editing/CellMLAnnotationView/res/CellMLAnnotationView.qrc">
+     <normaloff>:/oxygen/actions/list-remove.png</normaloff>:/oxygen/actions/list-remove.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Remove</string>
+   </property>
+   <property name="statusTip">
+    <string>Remove the current graph panel</string>
+   </property>
+  </action>
+  <action name="actionReset">
+   <property name="icon">
+    <iconset resource="../res/SingleCellView.qrc">
+
+     <normaloff>:/oxygen/actions/view-refresh.png</normaloff>:/oxygen/actions/view-refresh.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Reset</string>
+   </property>
+   <property name="statusTip">
+    <string>Reset all the model parameters</string>
+   </property>
+  </action>
+  <action name="actionCsvExport">
+   <property name="icon">
+    <iconset resource="../res/SingleCellView.qrc">
+     <normaloff>:/oxygen/mimetypes/text-csv.png</normaloff>:/oxygen/mimetypes/text-csv.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;CSV Export</string>
+   </property>
+   <property name="statusTip">
+    <string>Export the simulation data to CSV</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="../../../editing/CellMLAnnotationView/res/CellMLAnnotationView.qrc"/>
+  <include location="../res/SingleCellView.qrc"/>
+ </resources>
+ <connections/>
+</ui>

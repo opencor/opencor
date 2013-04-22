@@ -206,7 +206,7 @@ SET(PLUGINS
 #    editing/RawCellMLView
 #    editing/RawView
 
-    simulation/SingleCellSimulationView
+    simulation/SingleCellView
 )
 
 FOREACH(PLUGIN ${PLUGINS})

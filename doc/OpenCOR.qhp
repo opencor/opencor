@@ -100,30 +100,30 @@
             <file>user/plugins/res/pics/HelpScreenshot02.png</file>
             <file>user/plugins/res/pics/HelpScreenshot02Small.png</file>
 
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot01.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot01Small.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot02.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot02Small.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot03.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot03Small.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot04.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot04Small.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot05.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot05Small.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot06.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot06Small.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot07.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot07Small.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot08.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot08Small.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot09.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot09Small.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot10.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot10Small.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot11.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot11Small.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot12.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot12Small.png</file>
+            <file>user/plugins/res/pics/SingleCellViewScreenshot01.png</file>
+            <file>user/plugins/res/pics/SingleCellViewScreenshot01Small.png</file>
+            <file>user/plugins/res/pics/SingleCellViewScreenshot02.png</file>
+            <file>user/plugins/res/pics/SingleCellViewScreenshot02Small.png</file>
+            <file>user/plugins/res/pics/SingleCellViewScreenshot03.png</file>
+            <file>user/plugins/res/pics/SingleCellViewScreenshot03Small.png</file>
+            <file>user/plugins/res/pics/SingleCellViewScreenshot04.png</file>
+            <file>user/plugins/res/pics/SingleCellViewScreenshot04Small.png</file>
+            <file>user/plugins/res/pics/SingleCellViewScreenshot05.png</file>
+            <file>user/plugins/res/pics/SingleCellViewScreenshot05Small.png</file>
+            <file>user/plugins/res/pics/SingleCellViewScreenshot06.png</file>
+            <file>user/plugins/res/pics/SingleCellViewScreenshot06Small.png</file>
+            <file>user/plugins/res/pics/SingleCellViewScreenshot07.png</file>
+            <file>user/plugins/res/pics/SingleCellViewScreenshot07Small.png</file>
+            <file>user/plugins/res/pics/SingleCellViewScreenshot08.png</file>
+            <file>user/plugins/res/pics/SingleCellViewScreenshot08Small.png</file>
+            <file>user/plugins/res/pics/SingleCellViewScreenshot09.png</file>
+            <file>user/plugins/res/pics/SingleCellViewScreenshot09Small.png</file>
+            <file>user/plugins/res/pics/SingleCellViewScreenshot10.png</file>
+            <file>user/plugins/res/pics/SingleCellViewScreenshot10Small.png</file>
+            <file>user/plugins/res/pics/SingleCellViewScreenshot11.png</file>
+            <file>user/plugins/res/pics/SingleCellViewScreenshot11Small.png</file>
+            <file>user/plugins/res/pics/SingleCellViewScreenshot12.png</file>
+            <file>user/plugins/res/pics/SingleCellViewScreenshot12Small.png</file>
 
             <file>user/plugins/res/pics/modifiableVariableNode.png</file>
 
@@ -136,7 +136,7 @@
             <file>user/plugins/FileOrganiser.html</file>
             <file>user/plugins/Help.html</file>
             <file>user/plugins/index.html</file>
-            <file>user/plugins/SingleCellSimulationView.html</file>
+            <file>user/plugins/SingleCellView.html</file>
 
             <file>user/userInterfaces/res/pics/screenshot01.png</file>
             <file>user/userInterfaces/res/pics/screenshot01Small.png</file>
