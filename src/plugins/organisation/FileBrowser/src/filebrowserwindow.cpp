@@ -62,8 +62,8 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
             this, SLOT(showCustomContextMenu(const QPoint &)));
     connect(mFileBrowserWidget, SIGNAL(doubleClicked(const QModelIndex &)),
             this, SLOT(itemDoubleClicked(const QModelIndex &)));
-    connect(mFileBrowserWidget, SIGNAL(filesOpened(const QStringList &)),
-            this, SIGNAL(filesOpened(const QStringList &)));
+    connect(mFileBrowserWidget, SIGNAL(filesOpenRequested(const QStringList &)),
+            this, SLOT(openFiles(const QStringList &)));
 
     // Some connections to update the enabled state of our various actions
 
@@ -178,31 +178,15 @@ void FileBrowserWindow::showCustomContextMenu(const QPoint &) const
 void FileBrowserWindow::itemDoubleClicked(const QModelIndex &)
 {
     // Check what kind of item has been double clicked and if it is a file, then
-    // let people know about it being double clicked
+    // open it
 
     QString fileName = mFileBrowserWidget->currentPath();
     QFileInfo fileInfo = fileName;
 
-    if (fileInfo.isFile()) {
-        // We are dealing with a file (as opposed to a folder), so let's see
-        // whether we can let people know about it having been double clicked
+    if (fileInfo.isFile())
+        // We are dealing with a file (as opposed to a folder), so just open it
 
-        if (fileInfo.isSymLink()) {
-            // The file is actually a symbolic link, so retrieve its target and
-            // check that it exists, and if it does then let people know about
-            // it having been double clicked
-
-            fileName = fileInfo.symLinkTarget();
-
-            if (QFileInfo(fileName).exists())
-                emit filesOpened(QStringList() << fileName);
-        } else {
-            // This is a 'normal' file, so just go ahead and let people know
-            // about it having been double clicked
-
-            emit filesOpened(QStringList() << fileName);
-        }
-    }
+        openFile(fileName);
 }
 
 //==============================================================================

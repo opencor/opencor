@@ -57,8 +57,8 @@ FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
             this, SLOT(showCustomContextMenu(const QPoint &)));
     connect(mFileOrganiserWidget, SIGNAL(doubleClicked(const QModelIndex &)),
             this, SLOT(itemDoubleClicked(const QModelIndex &)));
-    connect(mFileOrganiserWidget, SIGNAL(filesOpened(const QStringList &)),
-            this, SIGNAL(filesOpened(const QStringList &)));
+    connect(mFileOrganiserWidget, SIGNAL(filesOpenRequested(const QStringList &)),
+            this, SLOT(openFiles(const QStringList &)));
 
     // Some connections to update the enabled state of our various actions
 
@@ -152,15 +152,14 @@ void FileOrganiserWindow::showCustomContextMenu(const QPoint &pPosition) const
 void FileOrganiserWindow::itemDoubleClicked(const QModelIndex &itemIndex)
 {
     // Check what kind of item has been double clicked and if it is a file, then
-    // let people know about it being double clicked
+    // open it
 
     QString fileName = mFileOrganiserWidget->filePath(itemIndex);
 
     if (!fileName.isEmpty())
-        // We are dealing with a file (as opposed to a folder), so let people
-        // know about it having been double clicked
+        // We are dealing with a file (as opposed to a folder), so just open it
 
-        emit filesOpened(QStringList() << fileName);
+        openFile(fileName);
 }
 
 //==============================================================================

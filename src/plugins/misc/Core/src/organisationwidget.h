@@ -28,8 +28,11 @@ class CORE_EXPORT OrganisationWidget : public DockWidget
 public:
     explicit OrganisationWidget(QWidget *pParent = 0);
 
-Q_SIGNALS:
-    void filesOpened(const QStringList &pFiles);
+protected:
+    void openFile(const QString &pFileName) const;
+
+protected Q_SLOTS:
+    void openFiles(const QStringList &pFileNames) const;
 };
 
 //==============================================================================

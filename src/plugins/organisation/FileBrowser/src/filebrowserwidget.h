@@ -69,7 +69,7 @@ private:
     void goToOtherItem(QStringList &pItems, QStringList &pOtherItems);
 
 Q_SIGNALS:
-    void filesOpened(const QStringList &pFileNames);
+    void filesOpenRequested(const QStringList &pFileNames);
 
     void notHomeFolder(const bool &pNotHomeFolder);
     void goToParentFolderEnabled(const bool &pEnabled);

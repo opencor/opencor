@@ -471,7 +471,7 @@ void FileOrganiserWidget::keyPressEvent(QKeyEvent *pEvent)
         // There are some files that are selected and we want to open them, so
         // let people know about it
 
-        emit filesOpened(crtSelectedFiles);
+        emit filesOpenRequested(crtSelectedFiles);
 }
 
 //==============================================================================

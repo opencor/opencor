@@ -225,32 +225,6 @@ void CorePlugin::initializationsDone(const Plugins &pLoadedPlugins)
             mCentralWidget->addView(loadedPlugin,
                                     guiInterface->guiSettings()->view());
     }
-
-    // Some connections to handle certain plugin's windows
-
-    foreach (Plugin *loadedPlugin, pLoadedPlugins) {
-        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(loadedPlugin->instance());
-
-        if (guiInterface) {
-            foreach (GuiWindowSettings *windowSettings,
-                     guiInterface->guiSettings()->windows())
-                switch (windowSettings->type()) {
-                case GuiWindowSettings::Organisation:
-                    // The plugin's window is of organisation type, so we want
-                    // its filesOpened signal to trigger our central widget's
-                    // openFiles slot
-
-                    connect(static_cast<OrganisationWidget *>(windowSettings->window()), SIGNAL(filesOpened(const QStringList &)),
-                            mCentralWidget, SLOT(openFiles(const QStringList &)));
-
-                    break;
-                default:
-                    // Uninteresting type, so...
-
-                    ;
-                }
-        }
-    }
 }
 
 //==============================================================================
@@ -306,14 +280,9 @@ void CorePlugin::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
 
 void CorePlugin::handleArguments(const QStringList &pArguments)
 {
-    // Check the arguments and if any of them is an existing file, then open it
+    // All the arguments are currently assumed to be files to open, so...
 
-    foreach (const QString &argument, pArguments)
-        if (QFileInfo(argument).exists())
-            // The argument corresponds to the name of an existing file, so open
-            // it
-
-            mCentralWidget->openFile(argument);
+    mCentralWidget->openFiles(pArguments);
 }
 
 //==============================================================================

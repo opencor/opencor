@@ -100,6 +100,7 @@ public:
                         const bool &pTabsClosable = false);
 
     void openFile(const QString &pFileName);
+    void openFiles(const QStringList &pFileNames);
 
     bool canClose();
 
@@ -185,7 +186,6 @@ private Q_SLOTS:
     void updateGui();
 
     void openFile();
-    void openFiles(const QStringList &pFileNames);
 
     void updateModifiedSettings();
 

@@ -1054,12 +1054,23 @@ void MainWindow::handleAction(const QUrl &pUrl)
 
         on_actionAbout_triggered();
     } else if (!authority.compare("openFile", Qt::CaseInsensitive)) {
-        // We want to open a file, so make an open request
-        // Note: the file name to open is contained in the path of the URL minus
-        //       the leading forward slash. Indeed, an open file request will
-        //       look like http://gui/openFile//home/user/file, so...
+        // We want to open a file, so handle it as an argument that is passed to
+        // OpenCOR
+        // Note: the file name is contained in the path of the URL minus the
+        //       leading forward slash. Indeed, an open file request will look
+        //       something like http://gui/openFiles//home/user/file, so...
 
-        fileOpenRequest(pUrl.path().remove(0, 1));
+        handleArguments(pUrl.path().remove(0, 1));
+    } else if (!authority.compare("openFiles", Qt::CaseInsensitive)) {
+        // We want to open some files, so handle them as a series of arguments
+        // that were passed to OpenCOR
+        // Note: the file names are contained in the path of the URL minus the
+        //       leading forward slash. Indeed, an open files request  will look
+        //       something like
+        //           http://gui/openFiles//home/user/file1|/home/user/file2
+        //       so...
+
+        handleArguments(pUrl.path().remove(0, 1));
     } else {
         // We are dealing with an action which OpenCOR itself can't handle, but
         // maybe one of its loaded plugins can

@@ -90,7 +90,7 @@ private:
     bool canCreateNewFolder() const;
 
 Q_SIGNALS:
-    void filesOpened(const QStringList &pFileNames);
+    void filesOpenRequested(const QStringList &pFileNames);
 
     void newFolderEnabled(const bool &pEnabled);
     void deleteItemsEnabled(const bool &pEnabled);
