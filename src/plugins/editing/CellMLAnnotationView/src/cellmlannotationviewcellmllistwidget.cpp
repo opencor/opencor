@@ -12,8 +12,14 @@
 
 //==============================================================================
 
+#include <QDir>
+#include <QFileInfo>
 #include <QMenu>
 #include <QStandardItemModel>
+
+//==============================================================================
+
+#include <QtSingleApplication>
 
 //==============================================================================
 
@@ -936,28 +942,24 @@ void CellmlAnnotationViewCellmlListWidget::updateMetadataDetails(const QModelInd
 
 void CellmlAnnotationViewCellmlListWidget::showCustomContextMenu(const QPoint &pPosition) const
 {
-    Q_UNUSED(pPosition);
-
     // Determine whether to show the context menu based on whether we are over
     // an item
 
-    CellmlAnnotationViewCellmlElementItem *posItem = static_cast<CellmlAnnotationViewCellmlElementItem *>(mModel->itemFromIndex(mTreeViewWidget->indexAt(mTreeViewWidget->mapFromGlobal(QCursor::pos()-mTreeViewWidget->pos()))));
+    CellmlAnnotationViewCellmlElementItem *posItem = static_cast<CellmlAnnotationViewCellmlElementItem *>(mModel->itemFromIndex(mTreeViewWidget->indexAt(pPosition)));
 
     if (posItem) {
-        // We are over an item, so create a custom context menu which items
-        // match the contents of our tool bar widget
+        // We are over an item, so create a custom context menu for our current
+        // item
 
         // Update the enabled status of our actions
 
-        if (posItem->hasChildren()) {
-            mGui->actionExpandAll->setEnabled(!indexIsAllExpanded(mTreeViewWidget->currentIndex()));
-            mGui->actionCollapseAll->setEnabled(mTreeViewWidget->isExpanded(mTreeViewWidget->currentIndex()));
-        }
+        mGui->actionExpandAll->setEnabled(posItem->hasChildren() && !indexIsAllExpanded(mTreeViewWidget->currentIndex()));
+        mGui->actionCollapseAll->setEnabled(posItem->hasChildren() && mTreeViewWidget->isExpanded(mTreeViewWidget->currentIndex()));
 
-        if (!posItem->isCategory()) {
-            mGui->actionRemoveCurrentMetadata->setEnabled(mCellmlFile->rdfTriples(posItem->element()).count());
-            mGui->actionRemoveAllMetadata->setEnabled(mCellmlFile->rdfTriples().count());
-        }
+        mGui->actionRemoveCurrentMetadata->setEnabled(!posItem->isCategory() && mCellmlFile->rdfTriples(posItem->element()).count());
+        mGui->actionRemoveAllMetadata->setEnabled(!posItem->isCategory() && mCellmlFile->rdfTriples().count());
+
+        mGui->actionOpenImport->setEnabled(posItem->type() == CellmlAnnotationViewCellmlElementItem::Import);
 
         // Create and show the context menu, if it isn't empty
 
@@ -972,6 +974,11 @@ void CellmlAnnotationViewCellmlListWidget::showCustomContextMenu(const QPoint &p
         if (!posItem->isCategory()) {
             menu.addAction(mGui->actionRemoveCurrentMetadata);
             menu.addAction(mGui->actionRemoveAllMetadata);
+        }
+
+        if (posItem->type() == CellmlAnnotationViewCellmlElementItem::Import) {
+            menu.addSeparator();
+            menu.addAction(mGui->actionOpenImport);
         }
 
         if (!menu.isEmpty())
@@ -1114,6 +1121,15 @@ CellmlAnnotationViewCellmlElementItem * CellmlAnnotationViewCellmlListWidget::cu
     // Return the current CellML element item
 
     return static_cast<CellmlAnnotationViewCellmlElementItem *>(mModel->itemFromIndex(mTreeViewWidget->currentIndex()));
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewCellmlListWidget::on_actionOpenImport_triggered()
+{
+    // Ask OpenCOR to open the imported file
+
+    static_cast<SharedTools::QtSingleApplication *>(qApp)->handleAction("gui://openFile/"+QFileInfo(QFileInfo(mCellmlFile->fileName()).canonicalPath()+QDir::separator()+currentCellmlElementItem()->text()).canonicalFilePath());
 }
 
 //==============================================================================

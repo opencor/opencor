@@ -35,6 +35,18 @@
         <source>Remove all the metadata associated with the different nodes</source>
         <translation>Supprimer toutes les métadonnées associées aux différents noeuds</translation>
     </message>
+    <message>
+        <source>Open &amp;Import</source>
+        <translation>Ouvrir &amp;Import</translation>
+    </message>
+    <message>
+        <source>Open Import</source>
+        <translation>Ouvrir Import</translation>
+    </message>
+    <message>
+        <source>Open the imported file</source>
+        <translation>Ouvrir le fichier importé</translation>
+    </message>
 </context>
 <context>
     <name>CellmlAnnotationViewMetadataEditDetailsWidget</name>

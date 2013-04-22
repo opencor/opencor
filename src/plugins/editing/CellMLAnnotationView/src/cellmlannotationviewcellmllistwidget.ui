@@ -14,7 +14,16 @@
    <property name="spacing">
     <number>0</number>
    </property>
-   <property name="margin">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
     <number>0</number>
    </property>
   </layout>
@@ -56,6 +65,17 @@
    </property>
    <property name="statusTip">
     <string>Remove all the metadata associated with the different nodes</string>
+   </property>
+  </action>
+  <action name="actionOpenImport">
+   <property name="text">
+    <string>Open &amp;Import</string>
+   </property>
+   <property name="toolTip">
+    <string>Open Import</string>
+   </property>
+   <property name="statusTip">
+    <string>Open the imported file</string>
    </property>
   </action>
  </widget>

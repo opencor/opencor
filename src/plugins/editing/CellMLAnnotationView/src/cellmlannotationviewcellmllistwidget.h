@@ -156,6 +156,8 @@ private Q_SLOTS:
 
     void on_actionRemoveCurrentMetadata_triggered();
     void on_actionRemoveAllMetadata_triggered();
+
+    void on_actionOpenImport_triggered();
 };
 
 //==============================================================================

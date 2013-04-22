@@ -1053,6 +1053,13 @@ void MainWindow::handleAction(const QUrl &pUrl)
         // We want to open the About dialog box
 
         on_actionAbout_triggered();
+    } else if (!authority.compare("openFile", Qt::CaseInsensitive)) {
+        // We want to open a file, so make an open request
+        // Note: the file name to open is contained in the path of the URL minus
+        //       the leading forward slash. Indeed, an open file request will
+        //       look like http://gui/openFile//home/user/file, so...
+
+        fileOpenRequest(pUrl.path().remove(0, 1));
     } else {
         // We are dealing with an action which OpenCOR itself can't handle, but
         // maybe one of its loaded plugins can
