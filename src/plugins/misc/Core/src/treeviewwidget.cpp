@@ -97,6 +97,92 @@ QSize TreeViewWidget::sizeHint() const
 
 //==============================================================================
 
+void TreeViewWidget::keyPressEvent(QKeyEvent *pEvent)
+{
+    // Check some key combinations
+
+    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
+        && !(pEvent->modifiers() & Qt::ControlModifier)
+        && !(pEvent->modifiers() & Qt::AltModifier)
+        && !(pEvent->modifiers() & Qt::MetaModifier)) {
+        // None of the modifiers is selected
+
+        if (pEvent->key() == Qt::Key_Left) {
+            // The user wants to collapse the current item or go to its parent,
+            // depending on the collapsed state of the current item
+
+            QModelIndex currIndex = currentIndex();
+
+            if (isExpanded(currIndex)) {
+                // The current item is expanded, so collapse it
+
+                setExpanded(currIndex, false);
+
+                // Accept the event
+
+                pEvent->accept();
+            } else {
+                // The current item is collapsed, so select its parent, but
+                // only if it has a parent
+
+                if (currIndex.parent() != QModelIndex()) {
+                    setCurrentIndex(currIndex.parent());
+
+                    // Accept the event
+
+                    pEvent->accept();
+                } else {
+                    // Default handling of the event
+
+                    QTreeView::keyPressEvent(pEvent);
+                }
+            }
+        } else if (pEvent->key() == Qt::Key_Right) {
+            // The user wants to expand the current item or go to its first
+            // child, should it have children
+
+            QModelIndex currIndex = currentIndex();
+
+            if (model()->hasChildren(currIndex)) {
+                if (!isExpanded(currIndex)) {
+                    // The current item is collapsed, so expand it
+
+                    setExpanded(currIndex, true);
+
+                    // Accept the event
+
+                    pEvent->accept();
+                } else {
+                    // The current item is expanded, so select its first child
+
+                    setCurrentIndex(currIndex.child(0, 0));
+
+                    // Accept the event
+
+                    pEvent->accept();
+                }
+            } else {
+                // The current item doesn't have any children, so do nothing
+                // Note: normally, we would do the default handling of the
+                //       event, but this will potentially shift the whole tree
+                //       view contents to the right, so do nothing indeed...
+
+                ;
+            }
+        } else {
+            // Default handling of the event
+
+            QTreeView::keyPressEvent(pEvent);
+        }
+    } else {
+        // Default handling of the event
+
+        QTreeView::keyPressEvent(pEvent);
+    }
+}
+
+//==============================================================================
+
 void TreeViewWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
 {
     // Retrieve the index of the item which row is the same as our current item,
