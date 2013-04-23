@@ -37,6 +37,13 @@ table.recommended {
     background: rgba(118, 146, 60, 0.13);
 }
 
+table.risky {
+    margin: -1px;
+    border: 1px solid rgba(227, 108, 9, 0.39);
+    border-radius: 13px;
+    background: rgba(227, 108, 9, 0.13);
+}
+
 table.version td.topSeparator {
     border-top: 1px dashed rgba(103, 103, 103, 0.39);
 }
