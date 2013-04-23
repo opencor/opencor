@@ -8,6 +8,7 @@
 //==============================================================================
 
 #include "interface.h"
+#include "plugininfo.h"
 
 //==============================================================================
 
@@ -40,18 +41,21 @@ enum PropertyType {
 class Property
 {
 public:
-    explicit Property(const PropertyType &pType, const QString &pName,
+    explicit Property(const PropertyType &pType, const QString &pId,
+                      const Descriptions &pDescriptions,
                       const QVariant &pDefaultValue,
                       const bool &pHasVoiUnit = false);
 
     PropertyType type() const;
-    QString name() const;
+    QString id() const;
+    Descriptions descriptions() const;
     QVariant defaultValue() const;
     bool hasVoiUnit() const;
 
 private:
     PropertyType mType;
-    QString mName;
+    QString mId;
+    Descriptions mDescriptions;
     QVariant mDefaultValue;
     bool mHasVoiUnit;
 };

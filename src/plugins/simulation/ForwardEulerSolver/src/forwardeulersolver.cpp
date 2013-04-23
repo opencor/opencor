@@ -12,7 +12,7 @@ namespace ForwardEulerSolver {
 //==============================================================================
 
 ForwardEulerSolver::ForwardEulerSolver() :
-    mStep(DefaultStep)
+    mStep(StepDefaultValue)
 {
 }
 
@@ -32,8 +32,8 @@ void ForwardEulerSolver::initialize(const double &pVoiStart,
 
     // Retrieve the solver's properties
 
-    if (mProperties.contains(StepProperty)) {
-        mStep = mProperties.value(StepProperty).toDouble();
+    if (mProperties.contains(StepId)) {
+        mStep = mProperties.value(StepId).toDouble();
 
         if (!mStep)
             emit error(QObject::tr("the 'step' property value cannot be equal to zero"));

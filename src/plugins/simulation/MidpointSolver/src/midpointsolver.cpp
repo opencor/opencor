@@ -12,7 +12,7 @@ namespace MidpointSolver {
 //==============================================================================
 
 MidpointSolver::MidpointSolver() :
-    mStep(DefaultStep),
+    mStep(StepDefaultValue),
     mYk(0)
 {
 }
@@ -42,8 +42,8 @@ void MidpointSolver::initialize(const double &pVoiStart,
 
     // Retrieve the solver's properties
 
-    if (mProperties.contains(StepProperty)) {
-        mStep = mProperties.value(StepProperty).toDouble();
+    if (mProperties.contains(StepId)) {
+        mStep = mProperties.value(StepId).toDouble();
 
         if (!mStep)
             emit error(QObject::tr("the 'step' property value cannot be equal to zero"));

@@ -3,6 +3,7 @@
 //==============================================================================
 
 #include "cellmlfileruntime.h"
+#include "coreutils.h"
 #include "singlecellviewinformationsolverswidget.h"
 #include "singlecellviewsimulation.h"
 
@@ -57,7 +58,8 @@ SingleCellViewInformationSolversWidget::SingleCellViewInformationSolversWidget(Q
     mDaeSolverData(0),
     mNlaSolverData(0),
     mGuiStates(QMap<QString, Core::PropertyEditorWidgetGuiState *>()),
-    mDefaultGuiState(0)
+    mDefaultGuiState(0),
+    mDescriptions(QMap<Core::Property *, Descriptions>())
 {
 }
 
@@ -101,6 +103,30 @@ void SingleCellViewInformationSolversWidget::retranslateUi()
         mNlaSolverData->solversListProperty()->value()->setEmptyListValue(tr("None available"));
     }
 
+    // Update the name of our various properties, should they have a description
+    // associated with them
+    // Note: this is effectively to have the description of our solvers'
+    //       properties properly updated...
+
+    foreach (Core::Property *property, properties())
+        if (mDescriptions.contains(property)) {
+            // The property has a description associated with it, so retrieve
+            // the version, if any, which corresponds to our current locale
+
+            Descriptions descriptions = mDescriptions.value(property);
+            QString description = descriptions.value(Core::locale());
+
+            if (description.isEmpty())
+                // No description exists for the current locale, so  retrieve
+                // the english description (which, hopefully, should exist)
+
+                description = descriptions.value("en");
+
+            // Set the name of the property to the description
+
+            setStringPropertyItem(property->name(), description);
+        }
+
     // Default retranslation
     // Note: we must do it last since we set the empty list value of some
     //       properties above...
@@ -125,7 +151,7 @@ void SingleCellViewInformationSolversWidget::resetAllGuiStates()
 //==============================================================================
 
 SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWidget::addSolverProperties(const SolverInterfaces &pSolverInterfaces,
-                                                                                                                             const Solver::Type &pSolverType)
+                                                                                                         const Solver::Type &pSolverType)
 {
     // Make sure that we have at least one solver interface
 
@@ -138,7 +164,7 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
 
     // Add our list property for the solvers
 
-    Core::Property *solversListProperty = addListProperty(solversProperty);
+    Core::Property *solversListProperty = addListProperty(QString(), solversProperty);
 
     // Retrieve the name of the solvers which type is the one in whhich we are
     // interested
@@ -159,32 +185,19 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
 
             foreach (const Solver::Property &solverInterfaceProperty,
                      solverInterface->properties()) {
-                // Add the solver's property
+                // Add the solver's property and set its default value
 
                 switch (solverInterfaceProperty.type()) {
                 case Solver::Double:
-                    property = addDoubleProperty(true, false, solversProperty);
+                    property = addDoubleProperty(solverInterfaceProperty.id(), true, false, solversProperty);
 
-                    break;
-                default:
-                    // Solver::Integer
-
-                    property = addIntegerProperty(true, solversProperty);
-                }
-
-                // Set the solver's property's name
-
-                setStringPropertyItem(property->name(), solverInterfaceProperty.name());
-
-                // Set the solver's property's default value
-
-                switch (solverInterfaceProperty.type()) {
-                case Solver::Double:
                     setDoublePropertyItem(property->value(), solverInterfaceProperty.defaultValue().toDouble());
 
                     break;
                 default:
                     // Solver::Integer
+
+                    property = addIntegerProperty(solverInterfaceProperty.id(), true, solversProperty);
 
                     setIntegerPropertyItem(property->value(), solverInterfaceProperty.defaultValue().toInt());
                 }
@@ -200,6 +213,10 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
                 // Keep track of the solver's property
 
                 properties << property;
+
+                // Keep track of the solver's property's descriptions
+
+                mDescriptions.insert(property, solverInterfaceProperty.descriptions());
             }
 
             // Keep track of the solver's properties
@@ -240,6 +257,8 @@ void SingleCellViewInformationSolversWidget::setSolverInterfaces(const SolverInt
     delete mOdeSolverData;
     delete mDaeSolverData;
     delete mNlaSolverData;
+
+    mDescriptions.clear();
 
     mOdeSolverData = addSolverProperties(pSolverInterfaces, Solver::Ode);
     mDaeSolverData = addSolverProperties(pSolverInterfaces, Solver::Dae);
@@ -317,10 +336,6 @@ void SingleCellViewInformationSolversWidget::initialize(const QString &pFileName
 
         if (mNlaSolverData)
             setPropertyVisible(mNlaSolverData->solversProperty(), pRuntime->needNlaSolver());
-
-        // Retranslate ourselves so that the property names get properly set
-
-        retranslateUi();
     }
 
     // Set the unit of our different properties, if needed
@@ -338,7 +353,7 @@ void SingleCellViewInformationSolversWidget::initialize(const QString &pFileName
         pSimulationData->setNlaSolverName(mNlaSolverData->solversListProperty()->value()->text(), false);
 
         foreach (Core::Property *property, mNlaSolverData->solversProperties().value(pSimulationData->nlaSolverName()))
-            pSimulationData->addNlaSolverProperty(property->name()->text(),
+            pSimulationData->addNlaSolverProperty(property->id(),
                                                   (property->value()->type() == Core::PropertyItem::Integer)?
                                                       Core::PropertyEditorWidget::integerPropertyItem(property->value()):
                                                       Core::PropertyEditorWidget::doublePropertyItem(property->value()),

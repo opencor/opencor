@@ -1036,13 +1036,13 @@ void SingleCellViewWidget::on_actionRunPauseResume_triggered()
             simulationData->setDaeSolverName(solversWidget->daeSolverData()->solversListProperty()->value()->text());
 
             foreach (Core::Property *property, solversWidget->odeSolverData()->solversProperties().value(simulationData->odeSolverName()))
-                simulationData->addOdeSolverProperty(property->name()->text(),
+                simulationData->addOdeSolverProperty(property->id(),
                                                      (property->value()->type() == Core::PropertyItem::Integer)?
                                                          Core::PropertyEditorWidget::integerPropertyItem(property->value()):
                                                          Core::PropertyEditorWidget::doublePropertyItem(property->value()));
 
             foreach (Core::Property *property, solversWidget->daeSolverData()->solversProperties().value(simulationData->daeSolverName()))
-                simulationData->addDaeSolverProperty(property->name()->text(),
+                simulationData->addDaeSolverProperty(property->id(),
                                                      (property->value()->type() == Core::PropertyItem::Integer)?
                                                          Core::PropertyEditorWidget::integerPropertyItem(property->value()):
                                                          Core::PropertyEditorWidget::doublePropertyItem(property->value()));
@@ -1455,7 +1455,7 @@ void SingleCellViewWidget::solversPropertyChanged(Core::Property *pProperty)
     else
         foreach (Core::Property *property, solversWidget->nlaSolverData()->solversProperties().value(mSimulation->data()->nlaSolverName()))
             if (pProperty == property) {
-                mSimulation->data()->addNlaSolverProperty(pProperty->name()->text(),
+                mSimulation->data()->addNlaSolverProperty(pProperty->id(),
                                                           (pProperty->value()->type() == Core::PropertyItem::Integer)?
                                                               Core::PropertyEditorWidget::integerPropertyItem(pProperty->value()):
                                                               Core::PropertyEditorWidget::doublePropertyItem(pProperty->value()));

@@ -52,11 +52,27 @@ Solver::Properties IDASolverPlugin::properties() const
     // Return the properties supported by the solver
 
     Solver::Properties res = Solver::Properties();
+    Descriptions MaximumStepPropertyDescriptions;
+    Descriptions MaximumNumberOfStepsPropertyDescriptions;
+    Descriptions RelativeTolerancePropertyDescriptions;
+    Descriptions AbsoluteTolerancePropertyDescriptions;
 
-    res.append(Solver::Property(Solver::Double, MaximumStepProperty, DefaultMaximumStep, true));
-    res.append(Solver::Property(Solver::Integer, MaximumNumberOfStepsProperty, DefaultMaximumNumberOfSteps));
-    res.append(Solver::Property(Solver::Double, RelativeToleranceProperty, DefaultRelativeTolerance));
-    res.append(Solver::Property(Solver::Double, AbsoluteToleranceProperty, DefaultAbsoluteTolerance));
+    MaximumStepPropertyDescriptions.insert("en", QString::fromUtf8("Maximum step"));
+    MaximumStepPropertyDescriptions.insert("fr", QString::fromUtf8("Pas maximum"));
+
+    MaximumNumberOfStepsPropertyDescriptions.insert("en", QString::fromUtf8("Maximum number of steps"));
+    MaximumNumberOfStepsPropertyDescriptions.insert("fr", QString::fromUtf8("Nombre maximum de pas"));
+
+    RelativeTolerancePropertyDescriptions.insert("en", QString::fromUtf8("Relative tolerance"));
+    RelativeTolerancePropertyDescriptions.insert("fr", QString::fromUtf8("Tolérance relative"));
+
+    AbsoluteTolerancePropertyDescriptions.insert("en", QString::fromUtf8("Absolute tolerance"));
+    AbsoluteTolerancePropertyDescriptions.insert("fr", QString::fromUtf8("Tolérance absolue"));
+
+    res.append(Solver::Property(Solver::Double, MaximumStepId, MaximumStepPropertyDescriptions, MaximumStepDefaultValue, true));
+    res.append(Solver::Property(Solver::Integer, MaximumNumberOfStepsId, MaximumNumberOfStepsPropertyDescriptions, MaximumNumberOfStepsDefaultValue));
+    res.append(Solver::Property(Solver::Double, RelativeToleranceId, RelativeTolerancePropertyDescriptions, RelativeToleranceDefaultValue));
+    res.append(Solver::Property(Solver::Double, AbsoluteToleranceId, AbsoluteTolerancePropertyDescriptions, AbsoluteToleranceDefaultValue));
 
     return res;
 }

@@ -85,6 +85,8 @@ private:
     QMap<QString, Core::PropertyEditorWidgetGuiState *> mGuiStates;
     Core::PropertyEditorWidgetGuiState *mDefaultGuiState;
 
+    QMap<Core::Property *, Descriptions> mDescriptions;
+
     void resetAllGuiStates();
 
     SingleCellViewInformationSolversWidgetData * addSolverProperties(const SolverInterfaces &pSolverInterfaces,

@@ -15,10 +15,13 @@ namespace Solver {
 
 //==============================================================================
 
-Property::Property(const PropertyType &pType, const QString &pName,
-                   const QVariant &pDefaultValue, const bool &pHasVoiUnit) :
+Property::Property(const PropertyType &pType, const QString &pId,
+                   const Descriptions &pDescriptions,
+                   const QVariant &pDefaultValue,
+                   const bool &pHasVoiUnit) :
     mType(pType),
-    mName(pName),
+    mId(pId),
+    mDescriptions(pDescriptions),
     mDefaultValue(pDefaultValue),
     mHasVoiUnit(pHasVoiUnit)
 {
@@ -35,11 +38,20 @@ PropertyType Property::type() const
 
 //==============================================================================
 
-QString Property::name() const
+QString Property::id() const
 {
-    // Return our name
+    // Return our id
 
-    return mName;
+    return mId;
+}
+
+//==============================================================================
+
+Descriptions Property::descriptions() const
+{
+    // Return our descriptions
+
+    return mDescriptions;
 }
 
 //==============================================================================

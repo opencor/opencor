@@ -20,10 +20,10 @@ namespace CVODESolver {
 
 //==============================================================================
 
-static const QString MaximumStepProperty = "Maximum step";
-static const QString MaximumNumberOfStepsProperty = "Maximum number of steps";
-static const QString RelativeToleranceProperty = "Relative tolerance";
-static const QString AbsoluteToleranceProperty = "Absolute tolerance";
+static const QString MaximumStepId = "MaximumStep";
+static const QString MaximumNumberOfStepsId = "MaximumNumberOfSteps";
+static const QString RelativeToleranceId = "RelativeTolerance";
+static const QString AbsoluteToleranceId = "AbsoluteTolerance";
 
 //==============================================================================
 
@@ -33,14 +33,14 @@ static const QString AbsoluteToleranceProperty = "Absolute tolerance";
 // Note #2: CVODE's default maximum number of steps is 500 which ought to be big
 //          enough in most cases...
 
-static const double DefaultMaximumStep = 0.0;
+static const double MaximumStepDefaultValue = 0.0;
 
 enum {
-    DefaultMaximumNumberOfSteps = 500
+    MaximumNumberOfStepsDefaultValue = 500
 };
 
-static const double DefaultRelativeTolerance = 1.0e-7;
-static const double DefaultAbsoluteTolerance = 1.0e-7;
+static const double RelativeToleranceDefaultValue = 1.0e-7;
+static const double AbsoluteToleranceDefaultValue = 1.0e-7;
 
 //==============================================================================
 

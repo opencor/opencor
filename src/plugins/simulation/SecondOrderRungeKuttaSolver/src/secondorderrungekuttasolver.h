@@ -16,11 +16,11 @@ namespace SecondOrderRungeKuttaSolver {
 
 //==============================================================================
 
-static const QString StepProperty = "Step";
+static const QString StepId = "Step";
 
 //==============================================================================
 
-static const double DefaultStep = 1.0;
+static const double StepDefaultValue = 1.0;
 
 //==============================================================================
 

@@ -12,7 +12,7 @@ namespace HeunSolver {
 //==============================================================================
 
 HeunSolver::HeunSolver() :
-    mStep(DefaultStep),
+    mStep(StepDefaultValue),
     mK(0),
     mYk(0)
 {
@@ -43,8 +43,8 @@ void HeunSolver::initialize(const double &pVoiStart, const int &pStatesCount,
 
     // Retrieve the solver's properties
 
-    if (mProperties.contains(StepProperty)) {
-        mStep = mProperties.value(StepProperty).toDouble();
+    if (mProperties.contains(StepId)) {
+        mStep = mProperties.value(StepId).toDouble();
 
         if (!mStep)
             emit error(QObject::tr("the 'step' property value cannot be equal to zero"));

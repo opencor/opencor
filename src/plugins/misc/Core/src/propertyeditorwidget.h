@@ -145,10 +145,12 @@ typedef QList<PropertyItem *> PropertyItems;
 class CORE_EXPORT Property
 {
 public:
-    explicit Property(const PropertyItem::Type &pType, const bool &pEditable,
-                      const bool &pCheckable);
-    explicit Property(PropertyItem *pName, PropertyItem *pValue,
-                      PropertyItem *pUnit);
+    explicit Property(const PropertyItem::Type &pType, const QString &pId,
+                      const bool &pEditable, const bool &pCheckable);
+    explicit Property(const QString &pId, PropertyItem *pName,
+                      PropertyItem *pValue, PropertyItem *pUnit);
+
+    QString id() const;
 
     PropertyItem * name() const;
     PropertyItem * value() const;
@@ -157,6 +159,8 @@ public:
     QList<QStandardItem *> items() const;
 
 private:
+    QString mId;
+
     PropertyItem *mName;
     PropertyItem *mValue;
     PropertyItem *mUnit;
@@ -241,10 +245,12 @@ public:
     void setGuiState(PropertyEditorWidgetGuiState *pGuiState);
 
     Property * addSectionProperty(Property *pParent = 0);
-    Property * addIntegerProperty(const bool &pEditable, Property *pParent = 0);
-    Property * addDoubleProperty(const bool &pEditable, const bool &pCheckable,
+    Property * addIntegerProperty(const QString &pId, const bool &pEditable,
+                                  Property *pParent = 0);
+    Property * addDoubleProperty(const QString &pId, const bool &pEditable,
+                                 const bool &pCheckable,
                                  Property *pParent = 0);
-    Property * addListProperty(Property *pParent = 0);
+    Property * addListProperty(const QString &pId, Property *pParent = 0);
 
     void setStringPropertyItem(QStandardItem *pPropertyItem,
                                const QString &pValue);
@@ -295,7 +301,7 @@ private:
 
     void retranslateEmptyListProperties(QStandardItem *pItem);
 
-    Property * addProperty(const PropertyItem::Type &pType,
+    Property * addProperty(const PropertyItem::Type &pType, const QString &pId,
                            const bool &pEditable, const bool &pCheckable,
                            Property *pParent);
 

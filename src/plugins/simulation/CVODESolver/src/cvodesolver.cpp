@@ -89,10 +89,10 @@ CvodeSolver::CvodeSolver() :
     mSolver(0),
     mStatesVector(0),
     mUserData(0),
-    mMaximumStep(DefaultMaximumStep),
-    mMaximumNumberOfSteps(DefaultMaximumNumberOfSteps),
-    mRelativeTolerance(DefaultRelativeTolerance),
-    mAbsoluteTolerance(DefaultAbsoluteTolerance)
+    mMaximumStep(MaximumStepDefaultValue),
+    mMaximumNumberOfSteps(MaximumNumberOfStepsDefaultValue),
+    mRelativeTolerance(RelativeToleranceDefaultValue),
+    mAbsoluteTolerance(AbsoluteToleranceDefaultValue)
 {
 }
 
@@ -131,32 +131,32 @@ void CvodeSolver::initialize(const double &pVoiStart, const int &pStatesCount,
 
         // Retrieve some of the CVODE properties
 
-        if (mProperties.contains(MaximumStepProperty)) {
-            mMaximumStep = mProperties.value(MaximumStepProperty).toDouble();
+        if (mProperties.contains(MaximumStepId)) {
+            mMaximumStep = mProperties.value(MaximumStepId).toDouble();
         } else {
             emit error(QObject::tr("the 'maximum step' property value could not be retrieved"));
 
             return;
         }
 
-        if (mProperties.contains(MaximumNumberOfStepsProperty)) {
-            mMaximumNumberOfSteps = mProperties.value(MaximumNumberOfStepsProperty).toInt();
+        if (mProperties.contains(MaximumNumberOfStepsId)) {
+            mMaximumNumberOfSteps = mProperties.value(MaximumNumberOfStepsId).toInt();
         } else {
             emit error(QObject::tr("the 'maximum number of steps' property value could not be retrieved"));
 
             return;
         }
 
-        if (mProperties.contains(RelativeToleranceProperty)) {
-            mRelativeTolerance = mProperties.value(RelativeToleranceProperty).toDouble();
+        if (mProperties.contains(RelativeToleranceId)) {
+            mRelativeTolerance = mProperties.value(RelativeToleranceId).toDouble();
         } else {
             emit error(QObject::tr("the 'relative tolerance' property value could not be retrieved"));
 
             return;
         }
 
-        if (mProperties.contains(AbsoluteToleranceProperty)) {
-            mAbsoluteTolerance = mProperties.value(AbsoluteToleranceProperty).toDouble();
+        if (mProperties.contains(AbsoluteToleranceId)) {
+            mAbsoluteTolerance = mProperties.value(AbsoluteToleranceId).toDouble();
         } else {
             emit error(QObject::tr("the 'absolute tolerance' property value could not be retrieved"));
 

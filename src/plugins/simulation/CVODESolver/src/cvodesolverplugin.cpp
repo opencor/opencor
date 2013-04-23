@@ -52,11 +52,27 @@ Solver::Properties CVODESolverPlugin::properties() const
     // Return the properties supported by the solver
 
     Solver::Properties res = Solver::Properties();
+    Descriptions MaximumStepDescriptions;
+    Descriptions MaximumNumberOfStepsDescriptions;
+    Descriptions RelativeToleranceDescriptions;
+    Descriptions AbsoluteToleranceDescriptions;
 
-    res.append(Solver::Property(Solver::Double, MaximumStepProperty, DefaultMaximumStep, true));
-    res.append(Solver::Property(Solver::Integer, MaximumNumberOfStepsProperty, DefaultMaximumNumberOfSteps));
-    res.append(Solver::Property(Solver::Double, RelativeToleranceProperty, DefaultRelativeTolerance));
-    res.append(Solver::Property(Solver::Double, AbsoluteToleranceProperty, DefaultAbsoluteTolerance));
+    MaximumStepDescriptions.insert("en", QString::fromUtf8("Maximum step"));
+    MaximumStepDescriptions.insert("fr", QString::fromUtf8("Pas maximum"));
+
+    MaximumNumberOfStepsDescriptions.insert("en", QString::fromUtf8("Maximum number of steps"));
+    MaximumNumberOfStepsDescriptions.insert("fr", QString::fromUtf8("Nombre maximum de pas"));
+
+    RelativeToleranceDescriptions.insert("en", QString::fromUtf8("Relative tolerance"));
+    RelativeToleranceDescriptions.insert("fr", QString::fromUtf8("Tolérance relative"));
+
+    AbsoluteToleranceDescriptions.insert("en", QString::fromUtf8("Absolute tolerance"));
+    AbsoluteToleranceDescriptions.insert("fr", QString::fromUtf8("Tolérance absolue"));
+
+    res.append(Solver::Property(Solver::Double, MaximumStepId, MaximumStepDescriptions, MaximumStepDefaultValue, true));
+    res.append(Solver::Property(Solver::Integer, MaximumNumberOfStepsId, MaximumNumberOfStepsDescriptions, MaximumNumberOfStepsDefaultValue));
+    res.append(Solver::Property(Solver::Double, RelativeToleranceId, RelativeToleranceDescriptions, RelativeToleranceDefaultValue));
+    res.append(Solver::Property(Solver::Double, AbsoluteToleranceId, AbsoluteToleranceDescriptions, AbsoluteToleranceDefaultValue));
 
     return res;
 }

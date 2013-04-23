@@ -396,8 +396,9 @@ void PropertyItem::setEmptyListValue(const QString &pEmptyListValue)
 
 //==============================================================================
 
-Property::Property(const PropertyItem::Type &pType, const bool &pEditable,
-                   const bool &pCheckable) :
+Property::Property(const PropertyItem::Type &pType, const QString &pId,
+                   const bool &pEditable, const bool &pCheckable) :
+    mId(pId),
     mName(new PropertyItem((pType == PropertyItem::Section)?pType:PropertyItem::String, false)),
     mValue(new PropertyItem(pType, pEditable)),
     mUnit(new PropertyItem(PropertyItem::String, false))
@@ -412,12 +413,22 @@ Property::Property(const PropertyItem::Type &pType, const bool &pEditable,
 
 //==============================================================================
 
-Property::Property(PropertyItem *pName, PropertyItem *pValue,
-                   PropertyItem *pUnit) :
+Property::Property(const QString &pId, PropertyItem *pName,
+                   PropertyItem *pValue, PropertyItem *pUnit) :
+    mId(pId),
     mName(pName),
     mValue(pValue),
     mUnit(pUnit)
 {
+}
+
+//==============================================================================
+
+QString Property::id() const
+{
+    // Return our id
+
+    return mId;
 }
 
 //==============================================================================
@@ -877,13 +888,14 @@ void PropertyEditorWidget::setGuiState(PropertyEditorWidgetGuiState *pGuiState)
 //==============================================================================
 
 Property * PropertyEditorWidget::addProperty(const PropertyItem::Type &pType,
+                                             const QString &pId,
                                              const bool &pEditable,
                                              const bool &pCheckable,
                                              Property *pParent)
 {
     // Determine our new property's information
 
-    Property *res = new Property(pType, pEditable, pCheckable);
+    Property *res = new Property(pType, pId, pEditable, pCheckable);
 
     // Populate our data model with our new property
 
@@ -923,37 +935,40 @@ Property * PropertyEditorWidget::addSectionProperty(Property *pParent)
 {
     // Add a section property and return its information
 
-    return addProperty(PropertyItem::Section, false, false, pParent);
+    return addProperty(PropertyItem::Section, QString(), false, false, pParent);
 }
 
 //==============================================================================
 
-Property * PropertyEditorWidget::addIntegerProperty(const bool &pEditable,
+Property * PropertyEditorWidget::addIntegerProperty(const QString &pId,
+                                                    const bool &pEditable,
                                                     Property *pParent)
 {
     // Add an integer property and return its information
 
-    return addProperty(PropertyItem::Integer, pEditable, false, pParent);
+    return addProperty(PropertyItem::Integer, pId, pEditable, false, pParent);
 }
 
 //==============================================================================
 
-Property * PropertyEditorWidget::addDoubleProperty(const bool &pEditable,
+Property * PropertyEditorWidget::addDoubleProperty(const QString &pId,
+                                                   const bool &pEditable,
                                                    const bool &pCheckable,
                                                    Property *pParent)
 {
     // Add a double property and return its information
 
-    return addProperty(PropertyItem::Double, pEditable, pCheckable, pParent);
+    return addProperty(PropertyItem::Double, pId, pEditable, pCheckable, pParent);
 }
 
 //==============================================================================
 
-Property * PropertyEditorWidget::addListProperty(Property *pParent)
+Property * PropertyEditorWidget::addListProperty(const QString &pId,
+                                                 Property *pParent)
 {
     // Add a list property and return its information
 
-    return addProperty(PropertyItem::List, true, false, pParent);
+    return addProperty(PropertyItem::List, pId, true, false, pParent);
 }
 
 //==============================================================================

@@ -363,7 +363,7 @@ void SingleCellViewInformationParametersWidget::populateModel(Core::PropertyEdit
             ;
         }
 
-        Core::Property *property = pPropertyEditor->addDoubleProperty(modelParameterEditable, true, section);
+        Core::Property *property = pPropertyEditor->addDoubleProperty(QString(), modelParameterEditable, true, section);
 
         property->name()->setIcon(modelParameterIcon);
 

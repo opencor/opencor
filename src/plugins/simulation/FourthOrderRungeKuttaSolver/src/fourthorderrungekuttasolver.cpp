@@ -12,7 +12,7 @@ namespace FourthOrderRungeKuttaSolver {
 //==============================================================================
 
 FourthOrderRungeKuttaSolver::FourthOrderRungeKuttaSolver() :
-    mStep(DefaultStep),
+    mStep(StepDefaultValue),
     mK1(0),
     mK23(0),
     mYk123(0)
@@ -47,8 +47,8 @@ void FourthOrderRungeKuttaSolver::initialize(const double &pVoiStart,
 
     // Retrieve the solver's properties
 
-    if (mProperties.contains(StepProperty)) {
-        mStep = mProperties.value(StepProperty).toDouble();
+    if (mProperties.contains(StepId)) {
+        mStep = mProperties.value(StepId).toDouble();
 
         if (!mStep) {
             emit error(QObject::tr("the 'step' property value cannot be equal to zero"));
