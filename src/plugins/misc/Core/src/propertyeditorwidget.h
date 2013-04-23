@@ -241,10 +241,8 @@ public:
     void setGuiState(PropertyEditorWidgetGuiState *pGuiState);
 
     Property * addSectionProperty(Property *pParent = 0);
-    Property * addIntegerProperty(const bool &pEditable,
-                                  Property *pParent = 0);
-    Property * addDoubleProperty(const bool &pEditable,
-                                 const bool &pCheckable,
+    Property * addIntegerProperty(const bool &pEditable, Property *pParent = 0);
+    Property * addDoubleProperty(const bool &pEditable, const bool &pCheckable,
                                  Property *pParent = 0);
     Property * addListProperty(Property *pParent = 0);
 

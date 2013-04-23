@@ -402,6 +402,9 @@ Property::Property(const PropertyItem::Type &pType, const bool &pEditable,
     mValue(new PropertyItem(pType, pEditable)),
     mUnit(new PropertyItem(PropertyItem::String, false))
 {
+    // Note: mName, mValue and mUnit get owned by our property editor widget, so
+    //       no need to delete them afterwards...
+
     // Make the property checkable, if needed
 
     mName->setCheckable(pCheckable);
@@ -918,13 +921,9 @@ Property * PropertyEditorWidget::addProperty(const PropertyItem::Type &pType,
 
 Property * PropertyEditorWidget::addSectionProperty(Property *pParent)
 {
-    // Add a section property
+    // Add a section property and return its information
 
-    Property *res = addProperty(PropertyItem::Section, false, false, pParent);
-
-    // Return our section property information
-
-    return res;
+    return addProperty(PropertyItem::Section, false, false, pParent);
 }
 
 //==============================================================================
