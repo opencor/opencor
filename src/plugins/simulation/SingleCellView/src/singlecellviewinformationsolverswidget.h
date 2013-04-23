@@ -101,6 +101,8 @@ private:
 
 private Q_SLOTS:
     void solverChanged(const QString &pValue);
+
+    void updatePropertiesToolTips();
 };
 
 //==============================================================================

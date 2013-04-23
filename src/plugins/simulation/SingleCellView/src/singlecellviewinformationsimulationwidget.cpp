@@ -33,6 +33,12 @@ SingleCellViewInformationSimulationWidget::SingleCellViewInformationSimulationWi
     setDoublePropertyItem(mEndingPointProperty->value(), 1000.0);
     setDoublePropertyItem(mPointIntervalProperty->value(), 1.0);
 
+    // Update the tool tip of all our properties whenever the user changes a
+    // property value
+
+    connect(this, SIGNAL(propertyChanged(Core::Property *)),
+            this, SLOT(updatePropertiesToolTips()));
+
     // Some further initialisations which are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
 
@@ -68,6 +74,32 @@ void SingleCellViewInformationSimulationWidget::retranslateUi()
     setStringPropertyItem(mStartingPointProperty->name(), tr("Starting point"));
     setStringPropertyItem(mEndingPointProperty->name(), tr("Ending point"));
     setStringPropertyItem(mPointIntervalProperty->name(), tr("Point interval"));
+
+    // Retranslate the tool tip of all our properties
+
+    updatePropertiesToolTips();
+}
+
+//==============================================================================
+
+void SingleCellViewInformationSimulationWidget::updatePropertiesToolTips()
+{
+    // Update the tool tip of all our properties
+
+    foreach (Core::Property *property, properties()) {
+        QString propertyToolTip = property->name()->text()+tr(": ");
+
+        if (property->value()->text().isEmpty())
+            propertyToolTip += "???";
+        else
+            propertyToolTip += property->value()->text();
+
+        propertyToolTip += " "+property->unit()->text();
+
+        property->name()->setToolTip(propertyToolTip);
+        property->value()->setToolTip(propertyToolTip);
+        property->unit()->setToolTip(propertyToolTip);
+    }
 }
 
 //==============================================================================
@@ -99,6 +131,10 @@ void SingleCellViewInformationSimulationWidget::initialize(const QString &pFileN
     // reset our simulation the first time round
 
     pSimulationData->setStartingPoint(Core::PropertyEditorWidget::doublePropertyItem(mStartingPointProperty->value()), false);
+
+    // Update the tool tip of all our properties
+
+    updatePropertiesToolTips();
 }
 
 //==============================================================================

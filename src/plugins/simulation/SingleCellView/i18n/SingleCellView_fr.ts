@@ -42,6 +42,10 @@
         <source>Point interval</source>
         <translation>Interval de point</translation>
     </message>
+    <message>
+        <source>: </source>
+        <translation> : </translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::SingleCellView::SingleCellViewInformationSolversWidget</name>
@@ -64,6 +68,10 @@
     <message>
         <source>Name</source>
         <translation>Nom</translation>
+    </message>
+    <message>
+        <source>: </source>
+        <translation> : </translation>
     </message>
 </context>
 <context>
