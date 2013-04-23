@@ -1292,16 +1292,27 @@ void PropertyEditorWidget::editorClosed()
 
     PropertyItem *propertyValue = mProperty->value();
 
-    if (propertyValue->type() == PropertyItem::List)
+    if (propertyValue->type() == PropertyItem::List) {
         setPropertyItem(propertyValue,
                         propertyValue->list().isEmpty()?
                             propertyValue->emptyListValue():
                             static_cast<ListEditorWidget *>(mPropertyEditor)->currentText());
-    else
+    } else {
         // Not a list item, but still need to call setPropertyItem() so that the
         // item's tool tip gets updated
 
-        setPropertyItem(propertyValue, propertyValue->text());
+        QString value = propertyValue->text();
+
+        if (value.isEmpty()
+            && (   (propertyValue->type() == PropertyItem::Integer)
+                || (propertyValue->type() == PropertyItem::Double)))
+            // The value is empty and we are dealing with either an integer or
+            // a double property, so set the value to zero
+
+            value = "0";
+
+        setPropertyItem(propertyValue, value);
+    }
 
     // Reset our focus proxy and make sure that we get the focus (see
     // editorOpened() above for the reason)
