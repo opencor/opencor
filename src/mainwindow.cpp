@@ -623,6 +623,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
 
 //==============================================================================
 
+static const QString SettingsGlobal              = "Global";
 static const QString SettingsLocale              = "Locale";
 static const QString SettingsGeometry            = "Geometry";
 static const QString SettingsState               = "State";
@@ -760,8 +761,18 @@ void MainWindow::setLocale(const QString &pLocale, const bool &pForceSetting)
 
     // Keep track of the new locale, if needed
 
-    if (pLocale.compare(mLocale))
+    if (pLocale.compare(mLocale) || pForceSetting) {
         mLocale = pLocale;
+
+        // Also keep a copy of the new locale in our global settings (so that it
+        // can be retrieved from any plugin)
+
+        QSettings settings(SettingsOrganization, SettingsApplication);
+
+        settings.beginGroup(SettingsGlobal);
+            settings.setValue(SettingsLocale, locale());
+        settings.endGroup();
+    }
 
     // Check whether the new locale is different from the old one and if so,
     // then retranslate everything

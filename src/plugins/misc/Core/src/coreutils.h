@@ -29,6 +29,8 @@ namespace Core {
 
 static const QString SettingsGlobal = "Global";
 
+static const QString SettingsLocale = "Locale";
+
 static const QString SettingsActiveDirectory = "ActiveDirectory";
 
 static const QString SettingsBorderColor    = "BorderColor";
@@ -37,6 +39,8 @@ static const QString SettingsWindowColor    = "WindowColor";
 static const QString SettingsHighlightColor = "HighlightColor";
 
 //==============================================================================
+
+QString CORE_EXPORT locale();
 
 QString CORE_EXPORT sizeAsString(const double &pSize,
                                  const int &pPrecision = 1);

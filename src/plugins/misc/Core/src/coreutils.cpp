@@ -43,6 +43,23 @@ namespace Core {
 
 //==============================================================================
 
+QString locale()
+{
+    // Return our current locale
+    // Note: this gets set in MainWindow::setLocale()...
+
+    QString res;
+    QSettings settings(SettingsOrganization, SettingsApplication);
+
+    settings.beginGroup(SettingsGlobal);
+        res = settings.value(SettingsLocale).toString();
+    settings.endGroup();
+
+    return res;
+}
+
+//==============================================================================
+
 QString sizeAsString(const double &pSize, const int &pPrecision)
 {
     // Note: pSize is a double rather than a qulonglong (as is the case when we
