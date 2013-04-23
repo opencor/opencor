@@ -33,11 +33,10 @@ SingleCellViewInformationSimulationWidget::SingleCellViewInformationSimulationWi
     setDoublePropertyItem(mEndingPointProperty->value(), 1000.0);
     setDoublePropertyItem(mPointIntervalProperty->value(), 1.0);
 
-    // Update the tool tip of all our properties whenever the user changes a
-    // property value
+    // Update the tool tip of any property which value gets changed by the user
 
     connect(this, SIGNAL(propertyChanged(Core::Property *)),
-            this, SLOT(updatePropertiesToolTips()));
+            this, SLOT(updatePropertyToolTip(Core::Property *)));
 
     // Some further initialisations which are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
@@ -77,29 +76,37 @@ void SingleCellViewInformationSimulationWidget::retranslateUi()
 
     // Retranslate the tool tip of all our properties
 
-    updatePropertiesToolTips();
+    updatePropertiesToolTip();
 }
 
 //==============================================================================
 
-void SingleCellViewInformationSimulationWidget::updatePropertiesToolTips()
+void SingleCellViewInformationSimulationWidget::updatePropertyToolTip(Core::Property *pProperty)
+{
+    // Update the tool tip of the given property
+
+    QString propertyToolTip = pProperty->name()->text()+tr(": ");
+
+    if (pProperty->value()->text().isEmpty())
+        propertyToolTip += "???";
+    else
+        propertyToolTip += pProperty->value()->text();
+
+    propertyToolTip += " "+pProperty->unit()->text();
+
+    pProperty->name()->setToolTip(propertyToolTip);
+    pProperty->value()->setToolTip(propertyToolTip);
+    pProperty->unit()->setToolTip(propertyToolTip);
+}
+
+//==============================================================================
+
+void SingleCellViewInformationSimulationWidget::updatePropertiesToolTip()
 {
     // Update the tool tip of all our properties
 
-    foreach (Core::Property *property, properties()) {
-        QString propertyToolTip = property->name()->text()+tr(": ");
-
-        if (property->value()->text().isEmpty())
-            propertyToolTip += "???";
-        else
-            propertyToolTip += property->value()->text();
-
-        propertyToolTip += " "+property->unit()->text();
-
-        property->name()->setToolTip(propertyToolTip);
-        property->value()->setToolTip(propertyToolTip);
-        property->unit()->setToolTip(propertyToolTip);
-    }
+    foreach (Core::Property *property, properties())
+        updatePropertyToolTip(property);
 }
 
 //==============================================================================
@@ -134,7 +141,7 @@ void SingleCellViewInformationSimulationWidget::initialize(const QString &pFileN
 
     // Update the tool tip of all our properties
 
-    updatePropertiesToolTips();
+    updatePropertiesToolTip();
 }
 
 //==============================================================================

@@ -61,11 +61,10 @@ SingleCellViewInformationSolversWidget::SingleCellViewInformationSolversWidget(Q
     mDefaultGuiState(0),
     mDescriptions(QMap<Core::Property *, Descriptions>())
 {
-    // Update the tool tip of all our properties whenever the user changes a
-    // property value
+    // Update the tool tip of any property which value gets changed by the user
 
     connect(this, SIGNAL(propertyChanged(Core::Property *)),
-            this, SLOT(updatePropertiesToolTips()));
+            this, SLOT(updatePropertyToolTip(Core::Property *)));
 }
 
 //==============================================================================
@@ -134,7 +133,7 @@ void SingleCellViewInformationSolversWidget::retranslateUi()
 
     // Retranslate the tool tip of all our solvers' properties
 
-    updatePropertiesToolTips();
+    updatePropertiesToolTip();
 
     // Default retranslation
     // Note: we must do it last since we set the empty list value of some
@@ -145,29 +144,38 @@ void SingleCellViewInformationSolversWidget::retranslateUi()
 
 //==============================================================================
 
-void SingleCellViewInformationSolversWidget::updatePropertiesToolTips()
+void SingleCellViewInformationSolversWidget::updatePropertyToolTip(Core::Property *pProperty)
+{
+    // Update the tool tip of the given property
+
+    if (pProperty->name()->type() != Core::PropertyItem::Section) {
+        // We are dealing with a property (as opposed to a section), so we can
+        // update its tool tip
+
+        QString propertyToolTip = pProperty->name()->text()+tr(": ");
+
+        if (pProperty->value()->text().isEmpty())
+            propertyToolTip += "???";
+        else
+            propertyToolTip += pProperty->value()->text();
+
+        if (!pProperty->unit()->text().isEmpty())
+            propertyToolTip += " "+pProperty->unit()->text();
+
+        pProperty->name()->setToolTip(propertyToolTip);
+        pProperty->value()->setToolTip(propertyToolTip);
+        pProperty->unit()->setToolTip(propertyToolTip);
+    }
+}
+
+//==============================================================================
+
+void SingleCellViewInformationSolversWidget::updatePropertiesToolTip()
 {
     // Update the tool tip of all our solvers' properties
 
     foreach (Core::Property *property, properties())
-        if (property->name()->type() != Core::PropertyItem::Section) {
-            // We are dealing with a property (as opposed to a section), so we
-            // can update its tool tip
-
-            QString propertyToolTip = property->name()->text()+tr(": ");
-
-            if (property->value()->text().isEmpty())
-                propertyToolTip += "???";
-            else
-                propertyToolTip += property->value()->text();
-
-            if (!property->unit()->text().isEmpty())
-                propertyToolTip += " "+property->unit()->text();
-
-            property->name()->setToolTip(propertyToolTip);
-            property->value()->setToolTip(propertyToolTip);
-            property->unit()->setToolTip(propertyToolTip);
-        }
+        updatePropertyToolTip(property);
 }
 
 //==============================================================================
@@ -384,7 +392,7 @@ void SingleCellViewInformationSolversWidget::initialize(const QString &pFileName
 
     // Update the tool tip of all our solvers' properties
 
-    updatePropertiesToolTips();
+    updatePropertiesToolTip();
 
     // Initialise our simulation's NLA solver's properties, so that we can then
     // properly reset our simulation the first time round

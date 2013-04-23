@@ -99,10 +99,12 @@ private:
     void setPropertiesUnit(SingleCellViewInformationSolversWidgetData *pSolverData,
                            const QString &pVoiUnit);
 
+    void updatePropertiesToolTip();
+
 private Q_SLOTS:
     void solverChanged(const QString &pValue);
 
-    void updatePropertiesToolTips();
+    void updatePropertyToolTip(Core::Property *pProperty);
 };
 
 //==============================================================================

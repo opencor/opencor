@@ -61,8 +61,10 @@ private:
     QMap<QString, Core::PropertyEditorWidgetGuiState *> mGuiStates;
     Core::PropertyEditorWidgetGuiState *mDefaultGuiState;
 
+    void updatePropertiesToolTip();
+
 private Q_SLOTS:
-    void updatePropertiesToolTips();
+    void updatePropertyToolTip(Core::Property *pProperty);
 };
 
 //==============================================================================
