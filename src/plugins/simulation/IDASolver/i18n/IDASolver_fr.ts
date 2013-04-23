@@ -17,19 +17,19 @@
     </message>
     <message>
         <source>the &apos;maximum step&apos; property value could not be retrieved</source>
-        <translation></translation>
+        <translation>la valeur de la propriété &apos;pas maximum&apos; n&apos;a pas pu être retrouvée</translation>
     </message>
     <message>
         <source>the &apos;maximum number of steps&apos; property value could not be retrieved</source>
-        <translation></translation>
+        <translation>la valeur de la propriété &apos;nombre maximum de pas&apos; n&apos;a pas pu être retrouvée</translation>
     </message>
     <message>
         <source>the &apos;relative tolerance&apos; property value could not be retrieved</source>
-        <translation></translation>
+        <translation>la valeur de la propriété &apos;tolérance relative&apos; n&apos;a pas pu être retrouvée</translation>
     </message>
     <message>
         <source>the &apos;absolute tolerance&apos; property value could not be retrieved</source>
-        <translation></translation>
+        <translation>la valeur de la propriété &apos;tolérance absolue&apos; n&apos;a pas pu être retrouvée</translation>
     </message>
 </context>
 </TS>
