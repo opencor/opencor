@@ -2,6 +2,33 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR" sourcelanguage="en_GB">
 <context>
+    <name>OpenCOR::SingleCellView::SingleCellViewInformationParametersWidget</name>
+    <message>
+        <source>: </source>
+        <translation> : </translation>
+    </message>
+    <message>
+        <source>constant</source>
+        <translation>constante</translation>
+    </message>
+    <message>
+        <source>computed constant</source>
+        <translation>constante calculée</translation>
+    </message>
+    <message>
+        <source>state</source>
+        <translation>état</translation>
+    </message>
+    <message>
+        <source>rate</source>
+        <translation>taux</translation>
+    </message>
+    <message>
+        <source>algebraic</source>
+        <translation>algébrique</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::SingleCellView::SingleCellViewInformationSimulationWidget</name>
     <message>
         <source>Starting point</source>

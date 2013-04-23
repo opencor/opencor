@@ -73,6 +73,8 @@ private:
     void populateModel(Core::PropertyEditorWidget *pPropertyEditor,
                        CellMLSupport::CellmlFileRuntime *pRuntime);
 
+    void updateModelParametersToolTips();
+
 Q_SIGNALS:
     void showModelParameter(const QString &pFileName,
                             CellMLSupport::CellmlFileRuntimeModelParameter *pParameter,
