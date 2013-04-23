@@ -409,7 +409,7 @@ void SingleCellViewInformationParametersWidget::updateModelParametersToolTips()
     if (!propertyEditor)
         return;
 
-    // Update our property editor's tool tips
+    // Update the tool tip of all our property editor's properties
 
     foreach (Core::Property *property, propertyEditor->properties()) {
         CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter = mModelParameters.value(property);
