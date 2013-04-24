@@ -16,8 +16,8 @@ PLUGININFO_FUNC HeunSolverPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("A plugin which implements the <a href=\"http://en.wikipedia.org/wiki/Heun%27s_method\">Heun's method</a> to solve ODEs"));
-    descriptions.insert("fr", QString::fromUtf8("Une extension qui implémente la <a href=\"http://en.wikipedia.org/wiki/Heun%27s_method\">méthode de Heun</a> pour résoudre des EDOs"));
+    descriptions.insert("en", QString::fromUtf8("A plugin which implements the <a href=\"http://en.wikipedia.org/wiki/Heun's_method\">Heun's method</a> to solve ODEs"));
+    descriptions.insert("fr", QString::fromUtf8("Une extension qui implémente la <a href=\"http://en.wikipedia.org/wiki/Heun's_method\">méthode de Heun</a> pour résoudre des EDOs"));
 
     return new PluginInfo(PluginInfo::InterfaceVersion001,
                           PluginInfo::General,
