@@ -1324,15 +1324,13 @@ void PropertyEditorWidget::editorClosed()
     setFocus();
 
     // Let people know that the property value has changed, if that's the case
+    // or reset the tool tip to what it used to be
+    // Note: the latter is needed since a user may have overridden the tool tip
+    //       (which is originally set in setPropertyItem())...
 
     if (propertyValue->text().compare(mOldPropertyValue))
         emit propertyChanged(mProperty);
     else
-        // The property value hasn't changed, so reset the tool tip to what it
-        // used to be
-        // Note: indeed, a property editor widget user may override the tool tip
-        //       which we set in setPropertyItem(), so...
-
         propertyValue->setToolTip(mOldPropertyToolTip);
 
     // Reset some information about the property
