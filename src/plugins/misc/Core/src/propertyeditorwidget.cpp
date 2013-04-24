@@ -573,10 +573,11 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
 
     mProperties = Properties();
 
-    mProperty       = 0;
+    mProperty = 0;
     mPropertyEditor = 0;
 
     mOldPropertyValue = QString();
+    mOldPropertyToolTip = QString();
 
     mPropertiesChecked = QMap<Property *, bool>();
 
@@ -767,7 +768,7 @@ int PropertyEditorWidget::childrenRowHeight(const QStandardItem *pItem) const
     if (pItem->hasChildren())
         for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i) {
             QStandardItem *childItem = pItem->child(i, 0);
-            int childIndexHeight     = rowHeight(childItem->index());
+            int childIndexHeight = rowHeight(childItem->index());
 
             if (childIndexHeight)
                 res += childIndexHeight+childrenRowHeight(childItem);
@@ -795,7 +796,7 @@ QSize PropertyEditorWidget::sizeHint() const
 
         for (int i = 0, iMax = mModel->rowCount(); i < iMax; ++i) {
             QStandardItem *rowItem = mModel->item(i, 0);
-            int rowItemHeight      = rowHeight(rowItem->index());
+            int rowItemHeight = rowHeight(rowItem->index());
 
             if (rowItemHeight)
                 // Our current row has some height, meaning that it is visible,
@@ -1245,12 +1246,13 @@ void PropertyEditorWidget::editorOpened(QWidget *pEditor)
 {
     // Keep track of some information about the property
 
-    mProperty       = currentProperty();
+    mProperty = currentProperty();
     mPropertyEditor = pEditor;
 
     PropertyItem *propertyValue = mProperty->value();
 
     mOldPropertyValue = propertyValue->text();
+    mOldPropertyToolTip = propertyValue->toolTip();
 
     // We are starting the editing of a property, so make sure that if we are to
     // edit a list item, then its original value gets properly set
@@ -1325,10 +1327,17 @@ void PropertyEditorWidget::editorClosed()
 
     if (propertyValue->text().compare(mOldPropertyValue))
         emit propertyChanged(mProperty);
+    else
+        // The property value hasn't changed, so reset the tool tip to what it
+        // used to be
+        // Note: indeed, a property editor widget user may override the tool tip
+        //       which we set in setPropertyItem(), so...
+
+        propertyValue->setToolTip(mOldPropertyToolTip);
 
     // Reset some information about the property
 
-    mProperty       = 0;
+    mProperty = 0;
     mPropertyEditor = 0;
 }
 

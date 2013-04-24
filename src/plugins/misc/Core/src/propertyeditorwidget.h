@@ -293,6 +293,7 @@ private:
     QWidget *mPropertyEditor;
 
     QString mOldPropertyValue;
+    QString mOldPropertyToolTip;
 
     QMap<Property *, bool> mPropertiesChecked;
 
