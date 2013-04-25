@@ -42,12 +42,61 @@
             <a class="image" href="../res/image.html?image=../plugins/res/pics/SingleCellViewScreenshot02.png&caption=SingleCellView plugin: valid CellML file"><img class="link" src="res/pics/SingleCellViewScreenshot02Small.png" width=360 height=270 alt="SingleCellView plugin: valid CellML file"></a>
         </p>
 
+        <p>
+            The view consists of two main parts, the first of which allows you to customise the simulation, the solver and the model parameters. The second part is used to plot simulation data. In the parameters section, each model parameter has an icon associated with it to highlight its type:
+        </p>
+
+        <table class="toolBarButtons">
+            <tbody>
+                <tr>
+                    <th>
+                        <img src="res/pics/constant.png" width=16 height=16 alt="(Editable) constant">
+                    </th>
+                    <td>
+                        (Editable) constant
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <img src="res/pics/computedConstant.png" width=16 height=16 alt="Computed constant">
+                    </th>
+                    <td>
+                        Computed constant
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <img src="res/pics/state.png" width=16 height=16 alt="(Editable) state">
+                    </th>
+                    <td>
+                        (Editable) state
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <img src="res/pics/rate.png" width=16 height=16 alt="Rate">
+                    </th>
+                    <td>
+                        Rate
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <img src="res/pics/algebraic.png" width=16 height=16 alt="Algebraic">
+                    </th>
+                    <td>
+                        Algebraic
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
         <div class="section">
             Simulate an ODE model
         </div>
 
         <p>
-            To simulate a model, you need to provide some information about the simulation itself, i.e. its starting point, ending point and point interval. Then, you need to specify the solver that you want to use. The solvers available to you will depend on which solver <a href="index.html">plugins</a> you selected, as well as on the type of your model (i.e. ODE or DAE). In the present case, we are dealing with an ODE model and all the solver plugins are selected, so OpenCOR offers <a href="https://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode">CVODE</a>, forward <a href="http://en.wikipedia.org/wiki/Euler_method">Euler</a>, <a href="http://en.wikipedia.org/wiki/Midpoint_method">Midpoint</a>, and second- and fourth-order <a href="http://en.wikipedia.org/wiki/Runge–Kutta_methods">Runge-Kutta</a> as possible solvers for our model.
+            To simulate a model, you need to provide some information about the simulation itself, i.e. its starting point, ending point and point interval. Then, you need to specify the solver that you want to use. The solvers available to you will depend on which solver <a href="index.html">plugins</a> you selected, as well as on the type of your model (i.e. ODE or DAE). In the present case, we are dealing with an ODE model and all the solver plugins are selected, so OpenCOR offers <a href="https://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode">CVODE</a>, forward <a href="http://en.wikipedia.org/wiki/Euler_method">Euler</a>, <a href="http://en.wikipedia.org/wiki/Heun's_method">Heun</a>, <a href="http://en.wikipedia.org/wiki/Midpoint_method">Midpoint</a>, and second- and fourth-order <a href="http://en.wikipedia.org/wiki/Runge–Kutta_methods">Runge-Kutta</a> as possible solvers for our model.
         </p>
 
         <p class="center">
@@ -95,7 +144,7 @@
         </p>
 
         <p>
-            Now, we can modify any of the model parameters identified by the <img src="res/pics/modifiableVariableNode.png" width=24 height=24 alt="Modifiable Parameter" align=absmiddle> icon, but let us just modify <code>g_Na_max</code> (under the <code>sodium_channel</code> component) by setting its value to <code>0 milliS_per_cm2</code>. Then, we resume the simulation and we can see the effect on the model:
+            Now, we can modify any of the model parameters identified by either the <img src="res/pics/state.png" width=16 height=16 alt="(Editable) state" align=absmiddle> or <img src="res/pics/constant.png" width=16 height=16 alt="(Editable) constant" align=absmiddle> icon, but let us just modify <code>g_Na_max</code> (under the <code>sodium_channel</code> component) by setting its value to <code>0 milliS_per_cm2</code>. Then, we resume the simulation and we can see the effect on the model:
         </p>
 
         <p class="center">
