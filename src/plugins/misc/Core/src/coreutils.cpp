@@ -30,6 +30,8 @@
 
 #if defined(Q_OS_WIN)
     #include <Windows.h>
+#elif defined(Q_OS_LINUX)
+    #include <unistd.h>
 #elif defined(Q_OS_MAC)
     #include <mach/host_info.h>
     #include <mach/mach_host.h>
