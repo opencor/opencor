@@ -14,12 +14,14 @@
 
 #include <QList>
 #include <QObject>
+#include <QExplicitlySharedDataPointer>
 
 //==============================================================================
 
 #include "cellml-api-cxx-support.hpp"
 
 #include "IfaceCCGS.hxx"
+#include "IfaceCIS.hxx"
 #include "IfaceCellML_APISPEC.hxx"
 
 //==============================================================================
@@ -40,7 +42,7 @@ class CellmlFile;
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFileRuntimeModelParameter
+class CELLMLSUPPORT_EXPORT CellMLFileRuntimeCompiledModelParameter : public QSharedData
 {
 public:
     enum ModelParameterType {
@@ -53,32 +55,46 @@ public:
         Undefined
     };
 
-    explicit CellmlFileRuntimeModelParameter(const QString &pName,
-                                             const int &pDegree,
-                                             const QString &pUnit,
-                                             const QString &pComponent,
-                                             const ModelParameterType &pType,
-                                             const int &pIndex);
+    explicit CellMLFileRuntimeCompiledModelParameter
+        (const ModelParameterType &pType, const int &pIndex);
+    void update(const ModelParameterType &pType, const int &pIndex);
 
-    QString name() const;
-    int degree() const;
-    QString unit() const;
-    QString component() const;
-    ModelParameterType type() const;
-    int index() const;
+    ModelParameterType type() const { return mType; }
+    int index() const { return mIndex; }
 
 private:
-    QString mName;
-    int mDegree;
-    QString mUnit;
-    QString mComponent;
     ModelParameterType mType;
     int mIndex;
 };
 
+class CELLMLSUPPORT_EXPORT CellMLFileRuntimeModelParameter : public QSharedData
+{
+public:
+    explicit CellMLFileRuntimeModelParameter(iface::cellml_api::CellMLVariable* pVariable,
+                                             int );
+    void DAEData(const CellMLFileRuntimeCompiledModelParameter::ModelParameterType &pType, const int &pIndex);
+    void ODEData(const CellMLFileRuntimeCompiledModelParameter::ModelParameterType &pType, const int &pIndex);
+    QExplicitlySharedDataPointer<CellMLFileRuntimeCompiledModelParameter> DAEData() {
+        return mDAEData;
+    }
+    QExplicitlySharedDataPointer<CellMLFileRuntimeCompiledModelParameter> ODEData() {
+        return mODEData;
+    }
+
+    QString name() const;
+    int degree() const { return mDegree; }
+    QString unit() const;
+    QString component() const;
+
+private:
+    ObjRef<iface::cellml_api::CellMLVariable> mVariable;
+    int mDegree;
+    QExplicitlySharedDataPointer<CellMLFileRuntimeCompiledModelParameter> mDAEData, mODEData;
+};
+
 //==============================================================================
 
-typedef QList<CellmlFileRuntimeModelParameter *> CellmlFileRuntimeModelParameters;
+typedef QList<QExplicitlySharedDataPointer<CellMLFileRuntimeModelParameter> > CellMLFileRuntimeModelParameters;
 
 //==============================================================================
 
@@ -87,97 +103,42 @@ class CELLMLSUPPORT_EXPORT CellmlFileRuntime : public QObject
     Q_OBJECT
 
 public:
-    enum ModelType {
-        Ode,
-        Dae,
-        Undefined
-    };
-
-    typedef int (*InitializeConstantsFunction)(double *CONSTANTS, double *RATES, double *STATES);
-
-    typedef int (*ComputeComputedConstantsFunction)(double *CONSTANTS, double *RATES, double *STATES);
-    typedef int (*ComputeEssentialVariablesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR);
-    typedef int (*ComputeRatesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
-    typedef int (*ComputeResidualsFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR, double *resid);
-    typedef int (*ComputeRootInformationFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR);
-    typedef int (*ComputeStateInformationFunction)(double *SI);
-    typedef int (*ComputeVariablesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
-
     explicit CellmlFileRuntime();
     ~CellmlFileRuntime();
 
     QString address() const;
-
     bool isValid() const;
-
-    ModelType modelType() const;
-
-    bool needOdeSolver() const;
-    bool needDaeSolver() const;
-    bool needNlaSolver() const;
-
-    int constantsCount() const;
-    int statesCount() const;
-    int ratesCount() const;
-    int algebraicCount() const;
-    int condVarCount() const;
-
-    InitializeConstantsFunction initializeConstants() const;
-
-    ComputeComputedConstantsFunction computeComputedConstants() const;
-    ComputeEssentialVariablesFunction computeEssentialVariables() const;
-    ComputeRatesFunction computeRates() const;
-    ComputeResidualsFunction computeResiduals() const;
-    ComputeRootInformationFunction computeRootInformation() const;
-    ComputeStateInformationFunction computeStateInformation() const;
-    ComputeVariablesFunction computeVariables() const;
-
     CellmlFileIssues issues() const;
-
-    CellmlFileRuntimeModelParameters modelParameters() const;
-
+    CellMLFileRuntimeModelParameters modelParameters() const;
     CellmlFileRuntime * update(CellmlFile *pCellmlFile);
-
-    CellmlFileRuntimeModelParameter * variableOfIntegration() const;
+    QExplicitlySharedDataPointer<CellMLFileRuntimeModelParameter> variableOfIntegration() const;
 
 private:
-    ModelType mModelType;
-    bool mAtLeastOneNlaSystem;
-
-    ObjRef<iface::cellml_services::CodeInformation> mOdeCodeInformation;
-    ObjRef<iface::cellml_services::IDACodeInformation> mDaeCodeInformation;
-
-    Compiler::CompilerEngine *mCompilerEngine;
+    ObjRef<iface::cellml_api::Model> mModel;
+    bool mODECompiledForDebug; // Only valid if mODEModel != null
+    ObjRef<iface::cellml_services::ODESolverCompiledModel> mODEModel;
+    bool mDAECompiledForDebug; // Only valid if mDAEModel != null
+    ObjRef<iface::cellml_services::DAESolverCompiledModel> mDAEModel;
 
     CellmlFileIssues mIssues;
 
-    CellmlFileRuntimeModelParameter *mVariableOfIntegration;
-    CellmlFileRuntimeModelParameters mModelParameters;
+    QExplicitlySharedDataPointer<CellMLFileRuntimeModelParameter> mVariableOfIntegration;
+    CellMLFileRuntimeModelParameters mModelParameters;
 
-    InitializeConstantsFunction mInitializeConstants;
-
-    ComputeComputedConstantsFunction mComputeComputedConstants;
-    ComputeEssentialVariablesFunction mComputeEssentialVariables;
-    ComputeRatesFunction mComputeRates;
-    ComputeResidualsFunction mComputeResiduals;
-    ComputeRootInformationFunction mComputeRootInformation;
-    ComputeStateInformationFunction mComputeStateInformation;
-    ComputeVariablesFunction mComputeVariables;
-
-    void resetOdeCodeInformation();
-    void resetDaeCodeInformation();
+    void resetODECodeInformation();
+    void resetDAECodeInformation();
 
     void resetFunctions();
 
-    void reset(const bool &pRecreateCompilerEngine, const bool &pResetIssues);
+    void reset(const bool &pResetIssues);
 
     void couldNotGenerateModelCodeIssue();
     void unexpectedProblemDuringModelCompilationIssue();
 
     void checkCodeInformation(iface::cellml_services::CodeInformation *pCodeInformation);
 
-    void getOdeCodeInformation(iface::cellml_api::Model *pModel);
-    void getDaeCodeInformation(iface::cellml_api::Model *pModel);
+    void ensureODECompiledModel(iface::cellml_api::Model *pModel, bool pDebug = false);
+    void ensureDAECompiledModel(iface::cellml_api::Model *pModel, bool pDebug = false);
 
     QString functionCode(const QString &pFunctionSignature,
                          const QString &pFunctionBody,

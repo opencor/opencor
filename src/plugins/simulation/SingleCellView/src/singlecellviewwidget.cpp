@@ -416,19 +416,6 @@ void SingleCellViewWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void SingleCellViewWidget::setSolverInterfaces(const SolverInterfaces &pSolverInterfaces)
-{
-    // Let our solvers widget know about the solver interfaces
-
-    mContentsWidget->informationWidget()->solversWidget()->setSolverInterfaces(pSolverInterfaces);
-
-    // Keep track of the solver interfaces
-
-    mSolverInterfaces = pSolverInterfaces;
-}
-
-//==============================================================================
-
 void SingleCellViewWidget::output(const QString &pMessage)
 {
     // Move to the end of the output (just in case...)

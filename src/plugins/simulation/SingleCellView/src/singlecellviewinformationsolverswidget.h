@@ -8,7 +8,6 @@
 //==============================================================================
 
 #include "propertyeditorwidget.h"
-#include "solverinterface.h"
 
 //==============================================================================
 
@@ -61,7 +60,7 @@ public:
 
     virtual void retranslateUi();
 
-    void setSolverInterfaces(const SolverInterfaces &pSolverInterfaces);
+    void setupBuiltInSolvers();
 
     void initialize(const QString &pFileName,
                     CellMLSupport::CellmlFileRuntime *pRuntime,

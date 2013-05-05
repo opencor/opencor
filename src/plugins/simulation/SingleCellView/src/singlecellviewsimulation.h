@@ -7,9 +7,7 @@
 
 //==============================================================================
 
-#include "coresolver.h"
 #include "singlecellviewsimulationworker.h"
-#include "solverinterface.h"
 
 //==============================================================================
 
@@ -32,6 +30,8 @@ namespace CellMLSupport {
 //==============================================================================
 
 namespace SingleCellView {
+
+typedef QMap<QString, QVariant> Properties;
 
 //==============================================================================
 
@@ -70,20 +70,20 @@ public:
     QString odeSolverName() const;
     void setOdeSolverName(const QString &pOdeSolverName);
 
-    CoreSolver::Properties odeSolverProperties() const;
+    Properties odeSolverProperties() const;
     void addOdeSolverProperty(const QString &pName, const QVariant &pValue);
 
     QString daeSolverName() const;
     void setDaeSolverName(const QString &pDaeSolverName);
 
-    CoreSolver::Properties daeSolverProperties() const;
+    Properties daeSolverProperties() const;
     void addDaeSolverProperty(const QString &pName, const QVariant &pValue);
 
     QString nlaSolverName() const;
     void setNlaSolverName(const QString &pNlaSolverName,
                           const bool &pReset = true);
 
-    CoreSolver::Properties nlaSolverProperties() const;
+    Properties nlaSolverProperties() const;
     void addNlaSolverProperty(const QString &pName, const QVariant &pValue,
                               const bool &pReset = true);
 
@@ -107,13 +107,13 @@ private:
     double mPointInterval;
 
     QString mOdeSolverName;
-    CoreSolver::Properties mOdeSolverProperties;
+    Properties mOdeSolverProperties;
 
     QString mDaeSolverName;
-    CoreSolver::Properties mDaeSolverProperties;
+    Properties mDaeSolverProperties;
 
     QString mNlaSolverName;
-    CoreSolver::Properties mNlaSolverProperties;
+    Properties mNlaSolverProperties;
 
     double *mConstants;
     double *mStates;

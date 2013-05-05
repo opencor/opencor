@@ -107,8 +107,6 @@ public:
 
     virtual void retranslateUi();
 
-    void setSolverInterfaces(const SolverInterfaces &pSolverInterfaces);
-
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 

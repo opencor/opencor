@@ -73,6 +73,26 @@
         <source>: </source>
         <translation> : </translation>
     </message>
+    <message>
+        <source>Solver</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Relative Error Tolerance</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Absolute Error Tolerance</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum Integrator Step</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum Number of Steps</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::SingleCellView::SingleCellViewInformationWidget</name>

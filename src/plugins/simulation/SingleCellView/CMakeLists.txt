@@ -3,7 +3,7 @@ PROJECT(SingleCellViewPlugin)
 # Retrieve some CellML API and LLVM settings
 
 RETRIEVE_CELLML_API_SETTINGS()
-RETRIEVE_LLVM_SETTINGS()
+# RETRIEVE_LLVM_SETTINGS()
 
 # Add the plugin
 
@@ -51,7 +51,7 @@ ADD_PLUGIN(SingleCellView
         src/singlecellviewinformationwidget.ui
         src/singlecellviewwidget.ui
     DEFINITIONS
-        ${LLVM_DEFINITIONS}
+        # ${LLVM_DEFINITIONS}
         QWT_DLL
     INCLUDE_DIRS
         ../../3rdparty/Qwt/src
@@ -60,13 +60,13 @@ ADD_PLUGIN(SingleCellView
     PLUGIN_DEPENDENCIES
         CellMLAPI
         CellMLSupport
-        Compiler
+        # Compiler
         Core
-        CoreSolver
-        ${LLVM_PLUGIN}
+        # CoreSolver
+        # ${LLVM_PLUGIN}
         Qwt
-    PLUGIN_BINARY_DEPENDENCIES
-        ${LLVM_BINARY_PLUGIN}
+    # PLUGIN_BINARY_DEPENDENCIES
+    #     ${LLVM_BINARY_PLUGIN}
     QT_MODULES
         Widgets
     QT_DEPENDENCIES

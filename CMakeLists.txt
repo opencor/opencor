@@ -158,30 +158,30 @@ SET(PLUGINS
 
     misc/Core
 
-    3rdparty/LLVM
+ #   3rdparty/LLVM
 
     api/CellMLAPI
 
     editing/CoreEditing
 
-    simulation/CoreSolver
+#    simulation/CoreSolver
 
-    misc/Compiler
+#    misc/Compiler
 
     misc/CellMLSupport
 
     editing/CoreCellMLEditing
 
-    3rdparty/SUNDIALS
+#    3rdparty/SUNDIALS
 
-    simulation/CVODESolver
-    simulation/ForwardEulerSolver
-    simulation/FourthOrderRungeKuttaSolver
-    simulation/HeunSolver
-    simulation/IDASolver
-    simulation/KINSOLSolver
-    simulation/MidpointSolver
-    simulation/SecondOrderRungeKuttaSolver
+#    simulation/CVODESolver
+#    simulation/ForwardEulerSolver
+#    simulation/FourthOrderRungeKuttaSolver
+#    simulation/HeunSolver
+#    simulation/IDASolver
+#    simulation/KINSOLSolver
+#    simulation/MidpointSolver
+#    simulation/SecondOrderRungeKuttaSolver
 
 #---GRY--- DISABLED FOR VERSION 0.1...
 #    3rdparty/QScintilla

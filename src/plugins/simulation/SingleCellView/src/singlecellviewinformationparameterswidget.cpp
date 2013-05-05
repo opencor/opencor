@@ -170,6 +170,8 @@ void SingleCellViewInformationParametersWidget::updateParameters()
     if (!propertyEditor)
         return;
 
+    
+
     // Update our property editor's data
 
     foreach (Core::Property *property, propertyEditor->properties()) {
