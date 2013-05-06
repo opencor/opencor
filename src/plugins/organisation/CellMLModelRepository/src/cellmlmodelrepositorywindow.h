@@ -12,7 +12,7 @@
 //==============================================================================
 
 namespace Ui {
-    class CellmlModelRepositoryWindow;
+    class CellMLModelRepositoryWindow;
 }
 
 //==============================================================================
@@ -27,27 +27,27 @@ namespace CellMLModelRepository {
 
 //==============================================================================
 
-class CellmlModelRepositoryWidget;
+class CellMLModelRepositoryWidget;
 
 //==============================================================================
 
-class CellmlModelRepositoryWindow : public Core::OrganisationWidget
+class CellMLModelRepositoryWindow : public Core::OrganisationWidget
 {
     Q_OBJECT
 
 public:
-    explicit CellmlModelRepositoryWindow(QWidget *pParent = 0);
-    ~CellmlModelRepositoryWindow();
+    explicit CellMLModelRepositoryWindow(QWidget *pParent = 0);
+    ~CellMLModelRepositoryWindow();
 
     virtual void retranslateUi();
 
 private:
-    Ui::CellmlModelRepositoryWindow *mGui;
+    Ui::CellMLModelRepositoryWindow *mGui;
 
     QStringList mModelNames;
     QStringList mModelUrls;
 
-    CellmlModelRepositoryWidget *mCellmlModelRepositoryWidget;
+    CellMLModelRepositoryWidget *mCellMLModelRepositoryWidget;
 
     QStringList mModelList;
 

@@ -54,14 +54,6 @@
         <translation>Solveur EDO</translation>
     </message>
     <message>
-        <source>DAE solver</source>
-        <translation>Solveur EAD</translation>
-    </message>
-    <message>
-        <source>NLA solver</source>
-        <translation>Solveur ANL</translation>
-    </message>
-    <message>
         <source>None available</source>
         <translation>Aucun disponible</translation>
     </message>

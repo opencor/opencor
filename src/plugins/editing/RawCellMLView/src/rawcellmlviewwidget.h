@@ -16,7 +16,7 @@
 //==============================================================================
 
 namespace Ui {
-    class RawCellmlViewWidget;
+    class RawCellMLViewWidget;
 }
 
 //==============================================================================
@@ -47,13 +47,13 @@ namespace RawCellMLView {
 
 //==============================================================================
 
-class RawCellmlViewWidget : public QSplitter, public Core::CommonWidget
+class RawCellMLViewWidget : public QSplitter, public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
-    explicit RawCellmlViewWidget(QWidget *pParent = 0);
-    ~RawCellmlViewWidget();
+    explicit RawCellMLViewWidget(QWidget *pParent = 0);
+    ~RawCellMLViewWidget();
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
@@ -63,7 +63,7 @@ public:
     void finalize(const QString &pFileName);
 
 private:
-    Ui::RawCellmlViewWidget *mGui;
+    Ui::RawCellMLViewWidget *mGui;
 
     Core::BorderedWidget *mBorderedViewer;
     Viewer::ViewerWidget *mViewer;

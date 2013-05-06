@@ -41,7 +41,7 @@ void CellMLSupportPlugin::initializationsDone(const Plugins &pLoadedPlugins)
     // Make a call to the instance of the CellML file manager so that it gets
     // set up and can then do its job
 
-    CellmlFileManager::instance();
+    CellMLFileManager::instance();
 }
 
 //==============================================================================
@@ -51,7 +51,7 @@ FileTypes CellMLSupportPlugin::fileTypes() const
     // Return the CellML file type that the CellMLSupport plugin supports
 
     return FileTypes() << FileType(qobject_cast<FileInterface *>(this),
-                                   CellmlMimeType, CellmlFileExtension);
+                                   CellMLMimeType, CellMLFileExtension);
 }
 
 //==============================================================================
@@ -61,7 +61,7 @@ QString CellMLSupportPlugin::fileTypeDescription(const QString &pMimeType) const
     // Return the description for the requested MIME type, that is as long as it
     // is for the CellML MIME type
 
-    if (!pMimeType.compare(CellmlMimeType))
+    if (!pMimeType.compare(CellMLMimeType))
         return tr("CellML File");
     else
         // Not a MIME type that we can recognise, so...
@@ -71,11 +71,11 @@ QString CellMLSupportPlugin::fileTypeDescription(const QString &pMimeType) const
 
 //==============================================================================
 
-bool isCellmlFile(const QString &pFileName)
+bool isCellMLFile(const QString &pFileName)
 {
     // Return whether the file is a CellML file
 
-    if (!QFileInfo(pFileName).suffix().compare(CellMLSupport::CellmlFileExtension))
+    if (!QFileInfo(pFileName).suffix().compare(CellMLSupport::CellMLFileExtension))
         // We are dealing with a file which file extension is that of a CellML
         // file, so...
 

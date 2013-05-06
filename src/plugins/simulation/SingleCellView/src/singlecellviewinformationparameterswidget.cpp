@@ -22,7 +22,7 @@ namespace SingleCellView {
 SingleCellViewInformationParametersWidget::SingleCellViewInformationParametersWidget(QWidget *pParent) :
     QStackedWidget(pParent),
     mPropertyEditors(QMap<QString, Core::PropertyEditorWidget *>()),
-    mModelParameters(QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeModelParameter *>()),
+    mModelParameters(QMap<Core::Property *, QExplicitlySharedDataPointer<CellMLSupport::CellMLFileRuntimeModelParameter> >()),
     mColumnWidths(QList<int>()),
     mSimulationData(0)
 {
@@ -79,7 +79,7 @@ void SingleCellViewInformationParametersWidget::saveSettings(QSettings *pSetting
 //==============================================================================
 
 void SingleCellViewInformationParametersWidget::initialize(const QString &pFileName,
-                                                           CellMLSupport::CellmlFileRuntime *pRuntime,
+                                                           CellMLSupport::CellMLFileRuntime *pRuntime,
                                                            SingleCellViewSimulationData *pSimulationData)
 {
     // Make sure that we have a CellML file runtime
@@ -175,25 +175,31 @@ void SingleCellViewInformationParametersWidget::updateParameters()
     // Update our property editor's data
 
     foreach (Core::Property *property, propertyEditor->properties()) {
-        CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter = mModelParameters.value(property);
+        QExplicitlySharedDataPointer<CellMLSupport::CellMLFileRuntimeModelParameter> modelParameter = mModelParameters.value(property);
 
-        if (modelParameter)
-            switch (modelParameter->type()) {
-            case CellMLSupport::CellmlFileRuntimeModelParameter::Constant:
-            case CellMLSupport::CellmlFileRuntimeModelParameter::ComputedConstant:
-                propertyEditor->setDoublePropertyItem(property->value(), mSimulationData->constants()[modelParameter->index()]);
+        QExplicitlySharedDataPointer<CellMLSupport::CellMLFileRuntimeCompiledModelParameter> compiledParameter;
+        if (modelParameter && mSimulationData) {
+          compiledParameter = mSimulationData->isDAETypeSolver() ?
+            modelParameter->DAEData() : modelParameter->ODEData();
+        }
 
-                break;
-            case CellMLSupport::CellmlFileRuntimeModelParameter::State:
-                propertyEditor->setDoublePropertyItem(property->value(), mSimulationData->states()[modelParameter->index()]);
-
-                break;
-            case CellMLSupport::CellmlFileRuntimeModelParameter::Rate:
-                propertyEditor->setDoublePropertyItem(property->value(), mSimulationData->rates()[modelParameter->index()]);
+        if (compiledParameter)
+            switch (compiledParameter->type()) {
+            case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::Constant:
+            case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::ComputedConstant:
+                propertyEditor->setDoublePropertyItem(property->value(), mSimulationData->constants()[compiledParameter->index()]);
 
                 break;
-            case CellMLSupport::CellmlFileRuntimeModelParameter::Algebraic:
-                propertyEditor->setDoublePropertyItem(property->value(), mSimulationData->algebraic()[modelParameter->index()]);
+            case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::State:
+                propertyEditor->setDoublePropertyItem(property->value(), mSimulationData->states()[compiledParameter->index()]);
+
+                break;
+            case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::Rate:
+                propertyEditor->setDoublePropertyItem(property->value(), mSimulationData->rates()[compiledParameter->index()]);
+
+                break;
+            case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::Algebraic:
+                propertyEditor->setDoublePropertyItem(property->value(), mSimulationData->algebraic()[compiledParameter->index()]);
 
                 break;
             default:
@@ -225,16 +231,22 @@ void SingleCellViewInformationParametersWidget::propertyChanged(Core::Property *
 
     // Update our simulation data
 
-    CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter = mModelParameters.value(pProperty);
+    QExplicitlySharedDataPointer<CellMLSupport::CellMLFileRuntimeModelParameter> modelParameter = mModelParameters.value(pProperty);
 
-    if (modelParameter)
-        switch (modelParameter->type()) {
-        case CellMLSupport::CellmlFileRuntimeModelParameter::Constant:
-            mSimulationData->constants()[modelParameter->index()] = propertyEditor->doublePropertyItem(pProperty->value());
+    QExplicitlySharedDataPointer<CellMLSupport::CellMLFileRuntimeCompiledModelParameter> compiledParameter;
+    if (modelParameter && mSimulationData) {
+        compiledParameter = mSimulationData->isDAETypeSolver() ?
+            modelParameter->DAEData() : modelParameter->ODEData();
+    }
+
+    if (compiledParameter)
+        switch (compiledParameter->type()) {
+        case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::Constant:
+            mSimulationData->constants()[compiledParameter->index()] = propertyEditor->doublePropertyItem(pProperty->value());
 
             break;
-        case CellMLSupport::CellmlFileRuntimeModelParameter::State:
-            mSimulationData->states()[modelParameter->index()] = propertyEditor->doublePropertyItem(pProperty->value());
+        case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::State:
+            mSimulationData->states()[compiledParameter->index()] = propertyEditor->doublePropertyItem(pProperty->value());
 
             break;
         default:
@@ -291,7 +303,7 @@ void SingleCellViewInformationParametersWidget::finishPropertyEditing()
 //==============================================================================
 
 void SingleCellViewInformationParametersWidget::populateModel(Core::PropertyEditorWidget *pPropertyEditor,
-                                                              CellMLSupport::CellmlFileRuntime *pRuntime)
+                                                              CellMLSupport::CellMLFileRuntime *pRuntime)
 {
     // Prevent ourselves from being updated (to avoid any flickering)
 
@@ -301,9 +313,17 @@ void SingleCellViewInformationParametersWidget::populateModel(Core::PropertyEdit
 
     Core::Property *section = 0;
 
-    foreach (CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter, pRuntime->modelParameters()) {
+    foreach (QExplicitlySharedDataPointer<CellMLSupport::CellMLFileRuntimeModelParameter> modelParameter, pRuntime->modelParameters()) {
         // Check whether the current model parameter is in the same component as
         // the previous one
+
+        QExplicitlySharedDataPointer<CellMLSupport::CellMLFileRuntimeCompiledModelParameter> compiledParameter;
+        if (modelParameter && mSimulationData) {
+          compiledParameter = mSimulationData->isDAETypeSolver() ?
+            modelParameter->DAEData() : modelParameter->ODEData();
+        }
+        if (!compiledParameter)
+            continue;
 
         QString crtComponent = modelParameter->component();
 
@@ -332,28 +352,27 @@ void SingleCellViewInformationParametersWidget::populateModel(Core::PropertyEdit
         bool modelParameterEditable = false;
         QIcon modelParameterIcon = QIcon(":CellMLSupport_errorNode");
 
-        switch (modelParameter->type()) {
-        case CellMLSupport::CellmlFileRuntimeModelParameter::Constant:
+        switch (compiledParameter->type()) {
+        case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::Constant:
             modelParameterEditable = true;
-
             modelParameterIcon = QIcon(":SingleCellView_constant");
 
             break;
-        case CellMLSupport::CellmlFileRuntimeModelParameter::ComputedConstant:
+        case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::ComputedConstant:
             modelParameterIcon = QIcon(":SingleCellView_computedConstant");
 
             break;
-        case CellMLSupport::CellmlFileRuntimeModelParameter::State:
+        case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::State:
             modelParameterEditable = true;
 
             modelParameterIcon = QIcon(":SingleCellView_state");
 
             break;
-        case CellMLSupport::CellmlFileRuntimeModelParameter::Rate:
+        case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::Rate:
             modelParameterIcon = QIcon(":SingleCellView_rate");
 
             break;
-        case CellMLSupport::CellmlFileRuntimeModelParameter::Algebraic:
+        case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::Algebraic:
             modelParameterIcon = QIcon(":SingleCellView_algebraic");
 
             break;
@@ -414,29 +433,34 @@ void SingleCellViewInformationParametersWidget::updateModelParametersToolTips()
     // Update the tool tip of all our property editor's properties
 
     foreach (Core::Property *property, propertyEditor->properties()) {
-        CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter = mModelParameters.value(property);
+        QExplicitlySharedDataPointer<CellMLSupport::CellMLFileRuntimeModelParameter> modelParameter = mModelParameters.value(property);
 
-        if (modelParameter) {
+        QExplicitlySharedDataPointer<CellMLSupport::CellMLFileRuntimeCompiledModelParameter> compiledParameter;
+        if (modelParameter && mSimulationData) {
+          compiledParameter = mSimulationData->isDAETypeSolver() ?
+            modelParameter->DAEData() : modelParameter->ODEData();
+        }
+        if (compiledParameter) {
             QString modelParameterType = QString();
 
-            switch (modelParameter->type()) {
-            case CellMLSupport::CellmlFileRuntimeModelParameter::Constant:
+            switch (compiledParameter->type()) {
+            case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::Constant:
                 modelParameterType = tr("constant");
 
                 break;
-            case CellMLSupport::CellmlFileRuntimeModelParameter::ComputedConstant:
+            case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::ComputedConstant:
                 modelParameterType = tr("computed constant");
 
                 break;
-            case CellMLSupport::CellmlFileRuntimeModelParameter::State:
+            case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::State:
                 modelParameterType = tr("state");
 
                 break;
-            case CellMLSupport::CellmlFileRuntimeModelParameter::Rate:
+            case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::Rate:
                 modelParameterType = tr("rate");
 
                 break;
-            case CellMLSupport::CellmlFileRuntimeModelParameter::Algebraic:
+            case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::Algebraic:
                 modelParameterType = tr("algebraic");
 
                 break;

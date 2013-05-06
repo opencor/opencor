@@ -24,7 +24,7 @@ namespace OpenCOR {
 //==============================================================================
 
 namespace CellMLSupport {
-    class CellmlFileRuntime;
+    class CellMLFileRuntime;
 }   // namespace CellMLSupport
 
 //==============================================================================
@@ -44,8 +44,7 @@ class SingleCellViewSimulationData : public QObject
     Q_OBJECT
 
 public:
-    explicit SingleCellViewSimulationData(CellMLSupport::CellmlFileRuntime *pRuntime,
-                                          const SolverInterfaces &pSolverInterfaces);
+    explicit SingleCellViewSimulationData(CellMLSupport::CellMLFileRuntime *pRuntime);
     ~SingleCellViewSimulationData();
 
     double * constants() const;
@@ -67,25 +66,13 @@ public:
     double pointInterval() const;
     void setPointInterval(const double &pPointInterval);
 
-    QString odeSolverName() const;
-    void setOdeSolverName(const QString &pOdeSolverName);
+    QString solverName() const;
+    void setSolverName(const QString &pSolverName);
 
-    Properties odeSolverProperties() const;
-    void addOdeSolverProperty(const QString &pName, const QVariant &pValue);
+    bool isDAETypeSolver() const;
 
-    QString daeSolverName() const;
-    void setDaeSolverName(const QString &pDaeSolverName);
-
-    Properties daeSolverProperties() const;
-    void addDaeSolverProperty(const QString &pName, const QVariant &pValue);
-
-    QString nlaSolverName() const;
-    void setNlaSolverName(const QString &pNlaSolverName,
-                          const bool &pReset = true);
-
-    Properties nlaSolverProperties() const;
-    void addNlaSolverProperty(const QString &pName, const QVariant &pValue,
-                              const bool &pReset = true);
+    Properties solverProperties() const;
+    void addSolverProperty(const QString &pName, const QVariant &pValue);
 
     void reset();
 
@@ -96,9 +83,7 @@ public:
     void checkForModifications();
 
 private:
-    CellMLSupport::CellmlFileRuntime *mRuntime;
-
-    SolverInterfaces mSolverInterfaces;
+    CellMLSupport::CellMLFileRuntime *mRuntime;
 
     int mDelay;
 
@@ -106,14 +91,8 @@ private:
     double mEndingPoint;
     double mPointInterval;
 
-    QString mOdeSolverName;
-    Properties mOdeSolverProperties;
-
-    QString mDaeSolverName;
-    Properties mDaeSolverProperties;
-
-    QString mNlaSolverName;
-    Properties mNlaSolverProperties;
+    QString mSolverName;
+    Properties mSolverProperties;
 
     double *mConstants;
     double *mStates;
@@ -123,6 +102,9 @@ private:
 
     double *mInitialConstants;
     double *mInitialStates;
+
+    void allocateStorageArrays();
+    void freeStorageArrays();
 
 Q_SIGNALS:
     void updated();
@@ -136,7 +118,7 @@ Q_SIGNALS:
 class SingleCellViewSimulationResults : public QObject
 {
 public:
-    explicit SingleCellViewSimulationResults(CellMLSupport::CellmlFileRuntime *pRuntime,
+    explicit SingleCellViewSimulationResults(CellMLSupport::CellMLFileRuntime *pRuntime,
                                              SingleCellViewSimulation *pSimulation);
     ~SingleCellViewSimulationResults();
 
@@ -156,7 +138,7 @@ public:
     bool exportToCsv(const QString &pFileName) const;
 
 private:
-    CellMLSupport::CellmlFileRuntime *mRuntime;
+    CellMLSupport::CellMLFileRuntime *mRuntime;
 
     SingleCellViewSimulation *mSimulation;
 
@@ -183,8 +165,7 @@ class SingleCellViewSimulation : public QObject
 
 public:
     explicit SingleCellViewSimulation(const QString &pFileName,
-                                                CellMLSupport::CellmlFileRuntime *pRuntime,
-                                                const SolverInterfaces &pSolverInterfaces);
+                                                CellMLSupport::CellMLFileRuntime *pRuntime);
     ~SingleCellViewSimulation();
 
     QString fileName() const;
@@ -215,9 +196,7 @@ private:
 
     QString mFileName;
 
-    CellMLSupport::CellmlFileRuntime *mRuntime;
-
-    SolverInterfaces mSolverInterfaces;
+    CellMLSupport::CellMLFileRuntime *mRuntime;
 
     SingleCellViewSimulationData *mData;
     SingleCellViewSimulationResults *mResults;

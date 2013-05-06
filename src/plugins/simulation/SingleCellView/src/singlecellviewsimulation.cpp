@@ -3,13 +3,11 @@
 //==============================================================================
 
 #include "cellmlfileruntime.h"
-#include "corenlasolver.h"
 #include "singlecellviewcontentswidget.h"
 #include "singlecellviewinformationsimulationwidget.h"
 #include "singlecellviewinformationwidget.h"
 #include "singlecellviewsimulation.h"
 #include "singlecellviewwidget.h"
-#include "solverinterface.h"
 
 //==============================================================================
 
@@ -31,40 +29,19 @@ namespace SingleCellView {
 
 //==============================================================================
 
-SingleCellViewSimulationData::SingleCellViewSimulationData(CellMLSupport::CellmlFileRuntime *pRuntime,
-                                                           const SolverInterfaces &pSolverInterfaces) :
+SingleCellViewSimulationData::SingleCellViewSimulationData(CellMLSupport::CellMLFileRuntime *pRuntime) :
     mRuntime(pRuntime),
-    mSolverInterfaces(pSolverInterfaces),
     mDelay(0),
     mStartingPoint(0.0),
     mEndingPoint(1000.0),
     mPointInterval(1.0),
-    mOdeSolverName(QString()),
-    mOdeSolverProperties(CoreSolver::Properties()),
-    mDaeSolverName(QString()),
-    mDaeSolverProperties(CoreSolver::Properties()),
-    mNlaSolverName(QString()),
-    mNlaSolverProperties(CoreSolver::Properties())
+    mSolverName(QString()),
+    mSolverProperties(Properties())
 {
     // Create our various arrays, if possible
-
-    if (pRuntime) {
-        // Create our various arrays to compute our model
-
-        mConstants = new double[pRuntime->constantsCount()];
-        mStates    = new double[pRuntime->statesCount()];
-        mRates     = new double[pRuntime->ratesCount()];
-        mAlgebraic = new double[pRuntime->algebraicCount()];
-        mCondVar   = new double[pRuntime->condVarCount()];
-
-        // Create our various arrays to keep track of our various initial values
-
-        mInitialConstants = new double[pRuntime->constantsCount()];
-        mInitialStates    = new double[pRuntime->statesCount()];
-    } else {
-        mConstants = mStates = mRates = mAlgebraic = mCondVar = 0;
-        mInitialConstants = mInitialStates = 0;
-    }
+    mConstants = mStates = mRates = mAlgebraic = mCondVar =
+        mInitialConstants = mInitialStates = NULL;
+    allocateStorageArrays();
 }
 
 //==============================================================================
@@ -81,6 +58,51 @@ SingleCellViewSimulationData::~SingleCellViewSimulationData()
 
     delete[] mInitialConstants;
     delete[] mInitialStates;
+}
+
+//==============================================================================
+
+void SingleCellViewSimulationData::allocateStorageArrays()
+{
+    if (mRuntime) {
+        bool isDAEType = isDAETypeSolver();
+        iface::cellml_services::CellMLCompiledModel*
+            compModel(isDAEType ?
+                      static_cast<iface::cellml_services::CellMLCompiledModel*>
+                      (mRuntime->daeCompiledModel()) :
+                      static_cast<iface::cellml_services::CellMLCompiledModel*>
+                      (mRuntime->odeCompiledModel()));
+        ObjRef<iface::cellml_services::CodeInformation> codeInfo
+            (compModel->codeInformation());
+        mConstants = new double[codeInfo->constantIndexCount()];
+        mRates = new double[codeInfo->rateIndexCount()];
+        mStates = new double[codeInfo->rateIndexCount()];
+        mAlgebraic = new double[codeInfo->algebraicIndexCount()];
+        ObjRef<iface::cellml_services::IDACodeInformation> idaCodeInfo
+            (QueryInterface(codeInfo));
+        if (idaCodeInfo)
+            mCondVar = new double[idaCodeInfo->conditionVariableCount()];
+        mInitialConstants = new double[codeInfo->constantIndexCount()];
+        mInitialStates = new double[codeInfo->rateIndexCount()];
+    }
+}
+
+void SingleCellViewSimulationData::freeStorageArrays()
+{
+    if (mConstants)
+        delete[] mConstants;
+    if (mStates)
+        delete[] mStates;
+    if (mRates)
+        delete[] mRates;
+    if (mAlgebraic)
+        delete[] mAlgebraic;
+    if (mCondVar)
+        delete[] mCondVar;
+    if (mInitialConstants)
+        delete[] mInitialConstants;
+    if (mInitialStates)
+        delete[] mInitialStates;
 }
 
 //==============================================================================
@@ -208,142 +230,62 @@ void SingleCellViewSimulationData::setPointInterval(const double &pPointInterval
 
 //==============================================================================
 
-QString SingleCellViewSimulationData::odeSolverName() const
+QString SingleCellViewSimulationData::solverName() const
 {
     // Return our ODE solver name
 
-    return mRuntime->needOdeSolver()?mOdeSolverName:QString();
+    return mSolverName;
 }
 
 //==============================================================================
 
-void SingleCellViewSimulationData::setOdeSolverName(const QString &pOdeSolverName)
+void SingleCellViewSimulationData::setSolverName(const QString &pSolverName)
 {
     // Set our ODE solver name
+    mSolverName = pSolverName;
 
-    if (mRuntime->needOdeSolver())
-        mOdeSolverName = pOdeSolverName;
+    // Reallocate the arrays in case we changed their sizes.
+    freeStorageArrays();
+    allocateStorageArrays();
 }
 
 //==============================================================================
 
-CoreSolver::Properties SingleCellViewSimulationData::odeSolverProperties() const
+bool SingleCellViewSimulationData::isDAETypeSolver() const
+{
+    return (mSolverName == "IDA");
+}
+
+//==============================================================================
+
+Properties SingleCellViewSimulationData::solverProperties() const
 {
     // Return our ODE solver's properties
 
-    return mRuntime->needOdeSolver()?mOdeSolverProperties:CoreSolver::Properties();
+    return mSolverProperties;
 }
 
 //==============================================================================
 
-void SingleCellViewSimulationData::addOdeSolverProperty(const QString &pName,
-                                                        const QVariant &pValue)
+void SingleCellViewSimulationData::addSolverProperty(const QString &pName,
+                                                     const QVariant &pValue)
 {
     // Add an ODE solver property
-
-    if (mRuntime->needOdeSolver())
-        mOdeSolverProperties.insert(pName, pValue);
+    mSolverProperties.insert(pName, pValue);
 }
 
 //==============================================================================
 
-QString SingleCellViewSimulationData::daeSolverName() const
-{
-    // Return our DAE solver name
-
-    return mRuntime->needDaeSolver()?mDaeSolverName:QString();
-}
-
-//==============================================================================
-
-void SingleCellViewSimulationData::setDaeSolverName(const QString &pDaeSolverName)
-{
-    // Set our DAE solver name
-
-    if (mRuntime->needDaeSolver())
-        mDaeSolverName = pDaeSolverName;
-}
-
-//==============================================================================
-
-CoreSolver::Properties SingleCellViewSimulationData::daeSolverProperties() const
-{
-    // Return our DAE solver's properties
-
-    return mRuntime->needDaeSolver()?mDaeSolverProperties:CoreSolver::Properties();
-}
-
-//==============================================================================
-
-void SingleCellViewSimulationData::addDaeSolverProperty(const QString &pName,
-                                                        const QVariant &pValue)
-{
-    // Add an DAE solver property
-
-    if (mRuntime->needDaeSolver())
-        mDaeSolverProperties.insert(pName, pValue);
-}
-
-//==============================================================================
-
-QString SingleCellViewSimulationData::nlaSolverName() const
-{
-    // Return our NLA solver name
-
-    return mRuntime->needNlaSolver()?mNlaSolverName:QString();
-}
-
-//==============================================================================
-
-void SingleCellViewSimulationData::setNlaSolverName(const QString &pNlaSolverName,
-                                                    const bool &pReset)
-{
-    // Set our NLA solver name
-
-    if (mRuntime->needNlaSolver()) {
-        mNlaSolverName = pNlaSolverName;
-
-        // Reset our model parameter values, if required
-        // Note: to only recompute our 'computed constants' and 'variables' is
-        //       not sufficient since some constants may also need to be
-        //       reinitialised...
-
-        if (pReset)
-            reset();
+static class GrabInitialValueListener 
+    : public iface::cellml_services::IntegrationProgressObserver {
+    
+    void computedConstants(const std::vector<double>& constValues) throw() {
     }
-}
-
-//==============================================================================
-
-CoreSolver::Properties SingleCellViewSimulationData::nlaSolverProperties() const
-{
-    // Return our NLA solver's properties
-
-    return mRuntime->needNlaSolver()?mNlaSolverProperties:CoreSolver::Properties();
-}
-
-//==============================================================================
-
-void SingleCellViewSimulationData::addNlaSolverProperty(const QString &pName,
-                                                        const QVariant &pValue,
-                                                        const bool &pReset)
-{
-    // Add an NLA solver property
-
-    if (mRuntime->needNlaSolver()) {
-        mNlaSolverProperties.insert(pName, pValue);
-
-        // Reset our model parameter values, if required
-        // Note: to only recompute our 'computed constants' and 'variables' is
-        //       not sufficient since some constants may also need to be
-        //       reinitialised...
-
-        if (pReset)
-            reset();
+    void results(const std::vector<double>& aState) throw(std::exception&) {
     }
-}
-
-//==============================================================================
+    void done() throw() {}
+    void failed() throw() {}
+};
 
 void SingleCellViewSimulationData::reset()
 {
@@ -355,64 +297,37 @@ void SingleCellViewSimulationData::reset()
     // Note #2: recomputeComputedConstantsAndVariables() will let people know
     //          that our data has changed...
 
-    CoreSolver::CoreNlaSolver *nlaSolver = 0;
-
-    if (mRuntime->needNlaSolver()) {
-        // Retrieve an instance of our NLA solver
-
-        foreach (SolverInterface *solverInterface, mSolverInterfaces)
-            if (!solverInterface->name().compare(mNlaSolverName)) {
-                // The requested NLA solver was found, so retrieve an instance
-                // of it
-
-                nlaSolver = static_cast<CoreSolver::CoreNlaSolver *>(solverInterface->instance());
-
-                // Keep track of our NLA solver, so that doNonLinearSolve() can
-                // work as expected
-
-                CoreSolver::setNlaSolver(mRuntime->address(), nlaSolver);
-
-                break;
-            }
-
-        // Keep track of any error that might be reported by our NLA solver
-
-        connect(nlaSolver, SIGNAL(error(const QString &)),
-                this, SIGNAL(error(const QString &)));
-
-        // Initialise our NLA solver
-
-        nlaSolver->setProperties(mNlaSolverProperties);
-    }
-
     // Reset our model parameter values
 
     static const int SizeOfDouble = sizeof(double);
 
-    memset(mConstants, 0, mRuntime->constantsCount()*SizeOfDouble);
-    memset(mStates, 0, mRuntime->statesCount()*SizeOfDouble);
-    memset(mRates, 0, mRuntime->ratesCount()*SizeOfDouble);
-    memset(mAlgebraic, 0, mRuntime->algebraicCount()*SizeOfDouble);
-    memset(mCondVar, 0, mRuntime->condVarCount()*SizeOfDouble);
+    bool isDAEType = isDAETypeSolver();
+    iface::cellml_services::CellMLCompiledModel*
+        compModel(isDAEType ?
+                  static_cast<iface::cellml_services::CellMLCompiledModel*>
+                  (mRuntime->daeCompiledModel()) :
+                  static_cast<iface::cellml_services::CellMLCompiledModel*>
+                  (mRuntime->odeCompiledModel()));
+    ObjRef<iface::cellml_services::CodeInformation> codeInfo
+        (compModel->codeInformation());
+
+    memset(mConstants, 0, codeInfo->constantIndexCount()*SizeOfDouble);
+    memset(mStates, 0, codeInfo->rateIndexCount()*SizeOfDouble);
+    memset(mRates, 0, codeInfo->rateIndexCount()*SizeOfDouble);
+    memset(mAlgebraic, 0, codeInfo->algebraicIndexCount()*SizeOfDouble);
+    ObjRef<iface::cellml_services::IDACodeInformation> idaCodeInfo
+        (QueryInterface(codeInfo));
+    if (idaCodeInfo)
+        memset(mCondVar, 0, idaCodeInfo->conditionVariableCount()*SizeOfDouble);
 
     mRuntime->initializeConstants()(mConstants, mRates, mStates);
     recomputeComputedConstantsAndVariables();
 
-    // Delete our NLA solver, if any
-
-    if (nlaSolver) {
-        delete nlaSolver;
-
-        CoreSolver::unsetNlaSolver(mRuntime->address());
-    }
-
     // Keep track of our various initial values
-
     memcpy(mInitialConstants, mConstants, mRuntime->constantsCount()*SizeOfDouble);
     memcpy(mInitialStates, mStates, mRuntime->statesCount()*SizeOfDouble);
 
     // Let people know that our data is 'cleaned', i.e. not modified
-
     emit modified(false);
 }
 
@@ -457,9 +372,9 @@ void SingleCellViewSimulationData::checkForModifications()
 {
     // Check whether any of our constants or states has been modified
 
-    foreach (CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter, mRuntime->modelParameters())
+    foreach (CellMLSupport::CellMLFileRuntimeModelParameter *modelParameter, mRuntime->modelParameters())
         switch (modelParameter->type()) {
-        case CellMLSupport::CellmlFileRuntimeModelParameter::Constant:
+        case CellMLSupport::CellMLFileRuntimeModelParameter::Constant:
             if (mConstants[modelParameter->index()] != mInitialConstants[modelParameter->index()]) {
                 emit modified(true);
 
@@ -467,7 +382,7 @@ void SingleCellViewSimulationData::checkForModifications()
             }
 
             break;
-        case CellMLSupport::CellmlFileRuntimeModelParameter::State:
+        case CellMLSupport::CellMLFileRuntimeModelParameter::State:
             if (mStates[modelParameter->index()] != mInitialStates[modelParameter->index()]) {
                 emit modified(true);
 
@@ -488,7 +403,7 @@ void SingleCellViewSimulationData::checkForModifications()
 
 //==============================================================================
 
-SingleCellViewSimulationResults::SingleCellViewSimulationResults(CellMLSupport::CellmlFileRuntime *pRuntime,
+SingleCellViewSimulationResults::SingleCellViewSimulationResults(CellMLSupport::CellMLFileRuntime *pRuntime,
                                                                  SingleCellViewSimulation *pSimulation) :
     mRuntime(pRuntime),
     mSimulation(pSimulation),
@@ -794,7 +709,7 @@ bool SingleCellViewSimulationResults::exportToCsv(const QString &pFileName) cons
                       mRuntime->variableOfIntegration()->unit());
 
     for (int i = 0, iMax = mRuntime->modelParameters().count(); i < iMax; ++i) {
-        CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter = mRuntime->modelParameters()[i];
+        CellMLSupport::CellMLFileRuntimeModelParameter *modelParameter = mRuntime->modelParameters()[i];
 
         out << "," << Header.arg(modelParameter->component(),
                                  modelParameter->name()+QString(modelParameter->degree(), '\''),
@@ -809,23 +724,23 @@ bool SingleCellViewSimulationResults::exportToCsv(const QString &pFileName) cons
         out << mPoints[j];
 
         for (int i = 0, iMax = mRuntime->modelParameters().count(); i < iMax; ++i) {
-            CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter = mRuntime->modelParameters()[i];
+            CellMLSupport::CellMLFileRuntimeModelParameter *modelParameter = mRuntime->modelParameters()[i];
 
             switch (modelParameter->type()) {
-            case CellMLSupport::CellmlFileRuntimeModelParameter::Constant:
-            case CellMLSupport::CellmlFileRuntimeModelParameter::ComputedConstant:
+            case CellMLSupport::CellMLFileRuntimeModelParameter::Constant:
+            case CellMLSupport::CellMLFileRuntimeModelParameter::ComputedConstant:
                 out << "," << mConstants[modelParameter->index()][j];
 
                 break;
-            case CellMLSupport::CellmlFileRuntimeModelParameter::State:
+            case CellMLSupport::CellMLFileRuntimeModelParameter::State:
                 out << "," << mStates[modelParameter->index()][j];
 
                 break;
-            case CellMLSupport::CellmlFileRuntimeModelParameter::Rate:
+            case CellMLSupport::CellMLFileRuntimeModelParameter::Rate:
                 out << "," << mRates[modelParameter->index()][j];
 
                 break;
-            case CellMLSupport::CellmlFileRuntimeModelParameter::Algebraic:
+            case CellMLSupport::CellMLFileRuntimeModelParameter::Algebraic:
                 out << "," << mAlgebraic[modelParameter->index()][j];
 
                 break;
@@ -851,13 +766,11 @@ bool SingleCellViewSimulationResults::exportToCsv(const QString &pFileName) cons
 //==============================================================================
 
 SingleCellViewSimulation::SingleCellViewSimulation(const QString &pFileName,
-                                                   CellMLSupport::CellmlFileRuntime *pRuntime,
-                                                   const SolverInterfaces &pSolverInterfaces) :
+                                                   CellMLSupport::CellMLFileRuntime *pRuntime) :
     mWorker(0),
     mFileName(pFileName),
     mRuntime(pRuntime),
-    mSolverInterfaces(pSolverInterfaces),
-    mData(new SingleCellViewSimulationData(pRuntime, pSolverInterfaces)),
+    mData(new SingleCellViewSimulationData(pRuntime)),
     mResults(new SingleCellViewSimulationResults(pRuntime, this))
 {
     // Keep track of any error occurring in our data

@@ -14,15 +14,15 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataViewDetailsWidget::CellmlAnnotationViewMetadataViewDetailsWidget(CellmlAnnotationViewWidget *pParent) :
+CellMLAnnotationViewMetadataViewDetailsWidget::CellMLAnnotationViewMetadataViewDetailsWidget(CellMLAnnotationViewWidget *pParent) :
     QStackedWidget(pParent),
     CommonWidget(pParent),
-    mCellmlFile(pParent->cellmlFile())
+    mCellMLFile(pParent->cellmlFile())
 {
     // Create our different metadata views
 
-    mRawView    = new CellmlAnnotationViewMetadataRawViewDetailsWidget(pParent);
-    mNormalView = new CellmlAnnotationViewMetadataNormalViewDetailsWidget(pParent);
+    mRawView    = new CellMLAnnotationViewMetadataRawViewDetailsWidget(pParent);
+    mNormalView = new CellMLAnnotationViewMetadataNormalViewDetailsWidget(pParent);
 
     // Make our raw view the default widget
     // Note: for the GUI to be properly initialised, we must add and immediately
@@ -37,7 +37,7 @@ CellmlAnnotationViewMetadataViewDetailsWidget::CellmlAnnotationViewMetadataViewD
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataViewDetailsWidget::retranslateUi()
+void CellMLAnnotationViewMetadataViewDetailsWidget::retranslateUi()
 {
     // Retranslate our GUI
 
@@ -47,16 +47,16 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::retranslateUi()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataViewDetailsWidget::updateGui(iface::cellml_api::CellMLElement *pElement)
+void CellMLAnnotationViewMetadataViewDetailsWidget::updateGui(iface::cellml_api::CellMLElement *pElement)
 {
     if (!pElement)
         return;
 
     // Decide on which view to use and update it, if needed
 
-    switch (mCellmlFile->rdfTriples(pElement).type()) {
-    case CellMLSupport::CellmlFileRdfTriple::BioModelsDotNetQualifier:
-    case CellMLSupport::CellmlFileRdfTriple::Empty:
+    switch (mCellMLFile->rdfTriples(pElement).type()) {
+    case CellMLSupport::CellMLFileRdfTriple::BioModelsDotNetQualifier:
+    case CellMLSupport::CellMLFileRdfTriple::Empty:
         removeWidget(mRawView);
         addWidget(mNormalView);
 
@@ -75,7 +75,7 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::updateGui(iface::cellml_api:
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataViewDetailsWidget::addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple)
+void CellMLAnnotationViewMetadataViewDetailsWidget::addRdfTriple(CellMLSupport::CellMLFileRdfTriple *pRdfTriple)
 {
     if (!pRdfTriple)
         return;
@@ -87,7 +87,7 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::addRdfTriple(CellMLSupport::
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataRawViewDetailsWidget * CellmlAnnotationViewMetadataViewDetailsWidget::rawView() const
+CellMLAnnotationViewMetadataRawViewDetailsWidget * CellMLAnnotationViewMetadataViewDetailsWidget::rawView() const
 {
     // Return our raw view
 
@@ -96,7 +96,7 @@ CellmlAnnotationViewMetadataRawViewDetailsWidget * CellmlAnnotationViewMetadataV
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataNormalViewDetailsWidget * CellmlAnnotationViewMetadataViewDetailsWidget::normalView() const
+CellMLAnnotationViewMetadataNormalViewDetailsWidget * CellMLAnnotationViewMetadataViewDetailsWidget::normalView() const
 {
     // Return our normal view
 

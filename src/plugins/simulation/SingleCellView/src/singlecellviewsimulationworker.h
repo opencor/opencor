@@ -7,10 +7,6 @@
 
 //==============================================================================
 
-#include "solverinterface.h"
-
-//==============================================================================
-
 #include <QObject>
 #include <QWaitCondition>
 
@@ -21,7 +17,7 @@ namespace OpenCOR {
 //==============================================================================
 
 namespace CellMLSupport {
-    class CellmlFileRuntime;
+    class CellMLFileRuntime;
 }   // namespace CellMLSupport
 
 //==============================================================================
@@ -39,8 +35,7 @@ class SingleCellViewSimulationWorker : public QObject
     Q_OBJECT
 
 public:
-    explicit SingleCellViewSimulationWorker(const SolverInterfaces &pSolverInterfaces,
-                                            CellMLSupport::CellmlFileRuntime *pRuntime,
+    explicit SingleCellViewSimulationWorker(CellMLSupport::CellMLFileRuntime *pRuntime,
                                             SingleCellViewSimulation *pSimulation,
                                             SingleCellViewSimulationWorker **pSelf);
 
@@ -59,9 +54,7 @@ public:
 private:
     QThread *mThread;
 
-    SolverInterfaces mSolverInterfaces;
-
-    CellMLSupport::CellmlFileRuntime *mRuntime;
+    CellMLSupport::CellMLFileRuntime *mRuntime;
 
     SingleCellViewSimulation *mSimulation;
 

@@ -21,24 +21,24 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-typedef QMap<QString, CellmlFile *> CellmlFiles;
+typedef QMap<QString, CellMLFile *> CellMLFiles;
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFileManager : public QObject
+class CELLMLSUPPORT_EXPORT CellMLFileManager : public QObject
 {
     Q_OBJECT
 
 public:
-    static CellmlFileManager * instance();
+    static CellMLFileManager * instance();
 
-    CellmlFile * cellmlFile(const QString &pFileName);
+    CellMLFile * cellmlFile(const QString &pFileName);
 
 private:
-    CellmlFiles mCellmlFiles;
+    CellMLFiles mCellMLFiles;
 
-    explicit CellmlFileManager();
-    ~CellmlFileManager();
+    explicit CellMLFileManager();
+    ~CellMLFileManager();
 
 private Q_SLOTS:
     void manageFile(const QString &pFileName);

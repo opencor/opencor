@@ -70,7 +70,7 @@ static const QString OutputBrLn = "<br/>\n";
 
 SingleCellViewWidgetCurveData::SingleCellViewWidgetCurveData(const QString &pFileName,
                                                              SingleCellViewSimulation *pSimulation,
-                                                             CellMLSupport::CellmlFileRuntimeModelParameter *pModelParameter,
+                                                             CellMLSupport::CellMLFileRuntimeModelParameter *pModelParameter,
                                                              SingleCellViewGraphPanelPlotCurve *pCurve) :
     mFileName(pFileName),
     mSimulation(pSimulation),
@@ -91,7 +91,7 @@ QString SingleCellViewWidgetCurveData::fileName() const
 
 //==============================================================================
 
-CellMLSupport::CellmlFileRuntimeModelParameter * SingleCellViewWidgetCurveData::modelParameter() const
+CellMLSupport::CellMLFileRuntimeModelParameter * SingleCellViewWidgetCurveData::modelParameter() const
 {
     // Return our model parameter
 
@@ -113,12 +113,12 @@ double * SingleCellViewWidgetCurveData::yData() const
 {
     // Return our Y data array
 
-    if (   (mModelParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::Constant)
-        || (mModelParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::ComputedConstant))
+    if (   (mModelParameter->type() == CellMLSupport::CellMLFileRuntimeModelParameter::Constant)
+        || (mModelParameter->type() == CellMLSupport::CellMLFileRuntimeModelParameter::ComputedConstant))
         return mSimulation->results()->constants()?mSimulation->results()->constants()[mModelParameter->index()]:0;
-    else if (mModelParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::State)
+    else if (mModelParameter->type() == CellMLSupport::CellMLFileRuntimeModelParameter::State)
         return mSimulation->results()->states()?mSimulation->results()->states()[mModelParameter->index()]:0;
-    else if (mModelParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::Rate)
+    else if (mModelParameter->type() == CellMLSupport::CellMLFileRuntimeModelParameter::Rate)
         return mSimulation->results()->rates()?mSimulation->results()->rates()[mModelParameter->index()]:0;
     else
         return mSimulation->results()->algebraic()?mSimulation->results()->algebraic()[mModelParameter->index()]:0;
@@ -251,8 +251,8 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
 
     // Keep track of which model parameters to show/hide
 
-    connect(mContentsWidget->informationWidget()->parametersWidget(), SIGNAL(showModelParameter(const QString &, CellMLSupport::CellmlFileRuntimeModelParameter *, const bool &)),
-            this, SLOT(showModelParameter(const QString &, CellMLSupport::CellmlFileRuntimeModelParameter *, const bool &)));
+    connect(mContentsWidget->informationWidget()->parametersWidget(), SIGNAL(showModelParameter(const QString &, CellMLSupport::CellMLFileRuntimeModelParameter *, const bool &)),
+            this, SLOT(showModelParameter(const QString &, CellMLSupport::CellMLFileRuntimeModelParameter *, const bool &)));
 
     // Create and add our invalid simulation message widget
 
@@ -508,7 +508,7 @@ void SingleCellViewWidget::updateInvalidModelMessageWidget()
 
     mInvalidModelMessageWidget->setMessage("<div align=center>"
                                            "    <p>"
-                                          +((mErrorType == InvalidCellmlFile)?
+                                          +((mErrorType == InvalidCellMLFile)?
                                                 "        "+tr("Sorry, but the <strong>%1</strong> view requires a valid CellML file to work...").arg(mPluginParent->viewName()):
                                                 "        "+tr("Sorry, but the <strong>%1</strong> view requires a valid simulation environment to work...").arg(mPluginParent->viewName())
                                            )
@@ -573,8 +573,8 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
     bool newSimulation = false;
 
-    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
-    CellMLSupport::CellmlFileRuntime *cellmlFileRuntime = cellmlFile->runtime();
+    CellMLSupport::CellMLFile *cellmlFile = CellMLSupport::CellMLFileManager::instance()->cellmlFile(pFileName);
+    CellMLSupport::CellMLFileRuntime *cellmlFileRuntime = cellmlFile->runtime();
 
     mSimulation = mSimulations.value(pFileName);
 
@@ -626,11 +626,11 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
     // Determine whether the CellML file has a valid runtime
 
-    bool validCellmlFileRuntime = cellmlFileRuntime && cellmlFileRuntime->isValid();
+    bool validCellMLFileRuntime = cellmlFileRuntime && cellmlFileRuntime->isValid();
 
     // Retrieve our variable of integration, if any
 
-    CellMLSupport::CellmlFileRuntimeModelParameter *variableOfIntegration = validCellmlFileRuntime?cellmlFileRuntime->variableOfIntegration():0;
+    CellMLSupport::CellMLFileRuntimeModelParameter *variableOfIntegration = validCellMLFileRuntime?cellmlFileRuntime->variableOfIntegration():0;
 
     // Output some information about our CellML file
 
@@ -642,7 +642,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
     information += "<strong>"+pFileName+"</strong>"+OutputBrLn;
     information += OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
 
-    if (validCellmlFileRuntime && variableOfIntegration) {
+    if (validCellMLFileRuntime && variableOfIntegration) {
         // A valid runtime could be retrieved for the CellML file and we have a
         // variable of integration
 
@@ -652,7 +652,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
             additionalInformation = " + "+tr("NLA system(s)");
 
         information += "<span"+OutputGood+">"+tr("valid")+"</span>."+OutputBrLn;
-        information += QString(OutputTab+"<strong>"+tr("Model type:")+"</strong> <span"+OutputInfo+">%1%2</span>."+OutputBrLn).arg((cellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?tr("ODE"):tr("DAE"),
+        information += QString(OutputTab+"<strong>"+tr("Model type:")+"</strong> <span"+OutputInfo+">%1%2</span>."+OutputBrLn).arg((cellmlFileRuntime->modelType() == CellMLSupport::CellMLFileRuntime::Ode)?tr("ODE"):tr("DAE"),
                                                                                                                                    additionalInformation);
     } else {
         // Either we couldn't retrieve a runtime for the CellML file or we
@@ -662,18 +662,18 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         //       we really shouldn't consider the runtime to be valid, hence we
         //       handle the no variable of integration case here...
 
-        mErrorType = InvalidCellmlFile;
+        mErrorType = InvalidCellMLFile;
 
         updateInvalidModelMessageWidget();
 
         information += "<span"+OutputBad+">"+(cellmlFileRuntime?tr("invalid"):tr("none"))+"</span>."+OutputBrLn;
 
-        if (validCellmlFileRuntime)
+        if (validCellMLFileRuntime)
             information += OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+tr("the model must have at least one ODE or DAE")+".</span>"+OutputBrLn;
         else
-            foreach (const CellMLSupport::CellmlFileIssue &issue,
+            foreach (const CellMLSupport::CellMLFileIssue &issue,
                      cellmlFileRuntime?cellmlFileRuntime->issues():cellmlFile->issues())
-                information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2</span>."+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
+                information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2</span>."+OutputBrLn).arg((issue.type() == CellMLSupport::CellMLFileIssue::Error)?tr("Error:"):tr("Warning:"),
                                                                                                                      issue.message());
     }
 
@@ -700,7 +700,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
     bool hasError = true;
 
-    if (validCellmlFileRuntime && variableOfIntegration) {
+    if (validCellMLFileRuntime && variableOfIntegration) {
         // We have both a valid runtime and a variable of integration
         // Note: if we didn't have a valid runtime, then there would be no need
         //       to output an error message since one would have already been
@@ -904,7 +904,7 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
     // Remove our curves' data associated with the given file name, if any
 
     QList<QString> fileNames = QList<QString>();
-    QList<CellMLSupport::CellmlFileRuntimeModelParameter *> modelParameters = QList<CellMLSupport::CellmlFileRuntimeModelParameter *>();
+    QList<CellMLSupport::CellMLFileRuntimeModelParameter *> modelParameters = QList<CellMLSupport::CellMLFileRuntimeModelParameter *>();
 
     foreach (SingleCellViewWidgetCurveData *curveData, mCurvesData)
         if (!curveData->fileName().compare(pFileName)) {
@@ -1454,7 +1454,7 @@ void SingleCellViewWidget::solversPropertyChanged(Core::Property *pProperty)
 //==============================================================================
 
 QString SingleCellViewWidget::modelParameterKey(const QString pFileName,
-                                                CellMLSupport::CellmlFileRuntimeModelParameter *pModelParameter)
+                                                CellMLSupport::CellMLFileRuntimeModelParameter *pModelParameter)
 {
     // Return the for the given model parameter
 
@@ -1464,7 +1464,7 @@ QString SingleCellViewWidget::modelParameterKey(const QString pFileName,
 //==============================================================================
 
 void SingleCellViewWidget::showModelParameter(const QString &pFileName,
-                                              CellMLSupport::CellmlFileRuntimeModelParameter *pModelParameter,
+                                              CellMLSupport::CellMLFileRuntimeModelParameter *pModelParameter,
                                               const bool &pShow)
 {
     // Determine the key for the given parameter

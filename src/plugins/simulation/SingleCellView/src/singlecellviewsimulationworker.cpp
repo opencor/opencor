@@ -22,11 +22,9 @@ namespace SingleCellView {
 
 //==============================================================================
 
-SingleCellViewSimulationWorker::SingleCellViewSimulationWorker(const SolverInterfaces &pSolverInterfaces,
-                                                               CellMLSupport::CellmlFileRuntime *pRuntime,
+SingleCellViewSimulationWorker::SingleCellViewSimulationWorker(CellMLSupport::CellMLFileRuntime *pRuntime,
                                                                SingleCellViewSimulation *pSimulation,
                                                                SingleCellViewSimulationWorker **pSelf) :
-    mSolverInterfaces(pSolverInterfaces),
     mRuntime(pRuntime),
     mSimulation(pSimulation),
     mProgress(0.0),

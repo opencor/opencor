@@ -41,7 +41,7 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-bool CellmlAnnotationViewMetadataEditDetailsWidget::Item::operator<(const Item &pItem) const
+bool CellMLAnnotationViewMetadataEditDetailsWidget::Item::operator<(const Item &pItem) const
 {
     // Return whether the current item is lower than the given one
 
@@ -64,11 +64,11 @@ bool CellmlAnnotationViewMetadataEditDetailsWidget::Item::operator<(const Item &
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditDetailsWidget(CellmlAnnotationViewWidget *pParent) :
+CellMLAnnotationViewMetadataEditDetailsWidget::CellMLAnnotationViewMetadataEditDetailsWidget(CellMLAnnotationViewWidget *pParent) :
     QScrollArea(pParent),
     CommonWidget(pParent),
     mParent(pParent),
-    mGui(new Ui::CellmlAnnotationViewMetadataEditDetailsWidget),
+    mGui(new Ui::CellMLAnnotationViewMetadataEditDetailsWidget),
     mMainWidget(0),
     mMainLayout(0),
     mFormWidget(0),
@@ -94,7 +94,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mLookupInformation(false),
     mItemsMapping(QMap<QObject *, Item>()),
     mItemsVerticalScrollBarPosition(0),
-    mCellmlFile(pParent->cellmlFile()),
+    mCellMLFile(pParent->cellmlFile()),
     mElement(0),
     mCurrentResourceOrIdLabel(0)
 {
@@ -124,7 +124,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataEditDetailsWidget::~CellmlAnnotationViewMetadataEditDetailsWidget()
+CellMLAnnotationViewMetadataEditDetailsWidget::~CellMLAnnotationViewMetadataEditDetailsWidget()
 {
     // Delete the GUI
 
@@ -133,7 +133,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::~CellmlAnnotationViewMetadataEdit
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
+void CellMLAnnotationViewMetadataEditDetailsWidget::retranslateUi()
 {
     // Retranslate our GUI
 
@@ -150,7 +150,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api::CellMLElement *pElement,
+void CellMLAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api::CellMLElement *pElement,
                                                               const bool &pUpdateItemsGui)
 {
     // Keep track of the CellML element
@@ -163,13 +163,13 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
     if (mTermIsDirect) {
         QStringList termInformation = mTerm.split("/");
 
-        if (mQualifierIndex < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
-            mAddTermButton->setEnabled(!mCellmlFile->rdfTripleExists(mElement,
-                                                                     CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierIndex+1),
+        if (mQualifierIndex < CellMLSupport::CellMLFileRdfTriple::LastBioQualifier)
+            mAddTermButton->setEnabled(!mCellMLFile->rdfTripleExists(mElement,
+                                                                     CellMLSupport::CellMLFileRdfTriple::BioQualifier(mQualifierIndex+1),
                                                                      termInformation[0], termInformation[1]));
         else
-            mAddTermButton->setEnabled(!mCellmlFile->rdfTripleExists(mElement,
-                                                                     CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierIndex-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
+            mAddTermButton->setEnabled(!mCellMLFile->rdfTripleExists(mElement,
+                                                                     CellMLSupport::CellMLFileRdfTriple::ModelQualifier(mQualifierIndex-CellMLSupport::CellMLFileRdfTriple::LastBioQualifier+1),
                                                                      termInformation[0], termInformation[1]));
     } else {
         mAddTermButton->setEnabled(false);
@@ -193,20 +193,20 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
 
         Item item = mItemsMapping.value(addButton);
 
-        if (mQualifierIndex < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
-            addButton->setEnabled(!mCellmlFile->rdfTripleExists(mElement,
-                                                                CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierIndex+1),
+        if (mQualifierIndex < CellMLSupport::CellMLFileRdfTriple::LastBioQualifier)
+            addButton->setEnabled(!mCellMLFile->rdfTripleExists(mElement,
+                                                                CellMLSupport::CellMLFileRdfTriple::BioQualifier(mQualifierIndex+1),
                                                                 item.resource, item.id));
         else
-            addButton->setEnabled(!mCellmlFile->rdfTripleExists(mElement,
-                                                                CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierIndex-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
+            addButton->setEnabled(!mCellMLFile->rdfTripleExists(mElement,
+                                                                CellMLSupport::CellMLFileRdfTriple::ModelQualifier(mQualifierIndex-CellMLSupport::CellMLFileRdfTriple::LastBioQualifier+1),
                                                                 item.resource, item.id));
     }
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItems,
+void CellMLAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItems,
                                                               const QString &pErrorMsg,
                                                               const bool &pLookupTerm,
                                                               const int &pItemsVerticalScrollBarPosition,
@@ -253,7 +253,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
 
     mQualifierValue = new QComboBox(qualifierWidget);
 
-    mQualifierValue->addItems(CellMLSupport::CellmlFileRdfTriple::qualifiersAsStringList());
+    mQualifierValue->addItems(CellMLSupport::CellMLFileRdfTriple::qualifiersAsStringList());
 
     mQualifierValue->setCurrentIndex(mQualifierIndex);
 
@@ -451,7 +451,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &pItems,
+void CellMLAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &pItems,
                                                                    const QString &pErrorMsg,
                                                                    const bool &pLookupTerm)
 {
@@ -644,7 +644,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataEditDetailsWidget::Item CellmlAnnotationViewMetadataEditDetailsWidget::item(const QString &pName,
+CellMLAnnotationViewMetadataEditDetailsWidget::Item CellMLAnnotationViewMetadataEditDetailsWidget::item(const QString &pName,
                                                                                                         const QString &pResource,
                                                                                                         const QString &pId)
 {
@@ -661,7 +661,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::Item CellmlAnnotationViewMetadata
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookup(const QString &pItemInformation,
+void CellMLAnnotationViewMetadataEditDetailsWidget::genericLookup(const QString &pItemInformation,
                                                                   const Type &pType,
                                                                   const bool &pRetranslate)
 {
@@ -746,7 +746,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookup(const QString 
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::disableLookupInformation()
+void CellMLAnnotationViewMetadataEditDetailsWidget::disableLookupInformation()
 {
     // Disable the looking up of information
 
@@ -759,7 +759,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::disableLookupInformation()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::qualifierChanged(const int &pQualifierIndex)
+void CellMLAnnotationViewMetadataEditDetailsWidget::qualifierChanged(const int &pQualifierIndex)
 {
     // Keep track of the qualifier index
 
@@ -768,7 +768,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::qualifierChanged(const int &
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::qualifierChanged(const QString &pQualifier)
+void CellMLAnnotationViewMetadataEditDetailsWidget::qualifierChanged(const QString &pQualifier)
 {
     // Lookup the qualifier, if requested
 
@@ -789,7 +789,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::qualifierChanged(const QStri
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::lookupQualifier()
+void CellMLAnnotationViewMetadataEditDetailsWidget::lookupQualifier()
 {
     // Enable the looking up of information
 
@@ -813,7 +813,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookupQualifier()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::lookupResource(const QString &pItemInformation)
+void CellMLAnnotationViewMetadataEditDetailsWidget::lookupResource(const QString &pItemInformation)
 {
     // Enable the looking up of information
 
@@ -826,7 +826,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookupResource(const QString
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::lookupId(const QString &pItemInformation)
+void CellMLAnnotationViewMetadataEditDetailsWidget::lookupId(const QString &pItemInformation)
 {
     // Enable the looking up of information
 
@@ -844,7 +844,7 @@ static const QString SemanticSbmlUrlEnd   = "&full_info=1";
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::termChanged(const QString &pTerm)
+void CellMLAnnotationViewMetadataEditDetailsWidget::termChanged(const QString &pTerm)
 {
     // Keep track of the term to look up
 
@@ -886,7 +886,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termChanged(const QString &p
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *pNetworkReply)
+void CellMLAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *pNetworkReply)
 {
     // We are done looking up the term, so...
 
@@ -948,7 +948,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
                         QString resource = QString();
                         QString id = QString();
 
-                        if (!CellMLSupport::CellmlFileRdfTriple::decodeTerm(termMap["uri"].toString(),
+                        if (!CellMLSupport::CellMLFileRdfTriple::decodeTerm(termMap["uri"].toString(),
                                                                             resource, id)) {
                             // The term couldn't be decoded, so...
 
@@ -997,20 +997,20 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::addTerm()
+void CellMLAnnotationViewMetadataEditDetailsWidget::addTerm()
 {
     // Add the term to our CellML element as an RDF triple
 
-    CellMLSupport::CellmlFileRdfTriple *rdfTriple;
+    CellMLSupport::CellMLFileRdfTriple *rdfTriple;
     QStringList termInformation = mTerm.replace("%3A", ":").split("/");
 
-    if (mQualifierIndex < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
-        rdfTriple = mCellmlFile->addRdfTriple(mElement,
-                                              CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierIndex+1),
+    if (mQualifierIndex < CellMLSupport::CellMLFileRdfTriple::LastBioQualifier)
+        rdfTriple = mCellMLFile->addRdfTriple(mElement,
+                                              CellMLSupport::CellMLFileRdfTriple::BioQualifier(mQualifierIndex+1),
                                               termInformation[0], termInformation[1]);
     else
-        rdfTriple = mCellmlFile->addRdfTriple(mElement,
-                                              CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierIndex-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
+        rdfTriple = mCellMLFile->addRdfTriple(mElement,
+                                              CellMLSupport::CellMLFileRdfTriple::ModelQualifier(mQualifierIndex-CellMLSupport::CellMLFileRdfTriple::LastBioQualifier+1),
                                               termInformation[0], termInformation[1]);
 
     // Disable the add term buton, now that we have added the term
@@ -1028,7 +1028,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addTerm()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::addRetrievedTerm()
+void CellMLAnnotationViewMetadataEditDetailsWidget::addRetrievedTerm()
 {
     // Retrieve the add button
 
@@ -1040,15 +1040,15 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addRetrievedTerm()
 
     // Add the retrieved term to our CellML element as an RDF triple
 
-    CellMLSupport::CellmlFileRdfTriple *rdfTriple;
+    CellMLSupport::CellMLFileRdfTriple *rdfTriple;
 
-    if (mQualifierIndex < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
-        rdfTriple = mCellmlFile->addRdfTriple(mElement,
-                                              CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierIndex+1),
+    if (mQualifierIndex < CellMLSupport::CellMLFileRdfTriple::LastBioQualifier)
+        rdfTriple = mCellMLFile->addRdfTriple(mElement,
+                                              CellMLSupport::CellMLFileRdfTriple::BioQualifier(mQualifierIndex+1),
                                               item.resource, item.id);
     else
-        rdfTriple = mCellmlFile->addRdfTriple(mElement,
-                                              CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierIndex-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
+        rdfTriple = mCellMLFile->addRdfTriple(mElement,
+                                              CellMLSupport::CellMLFileRdfTriple::ModelQualifier(mQualifierIndex-CellMLSupport::CellMLFileRdfTriple::LastBioQualifier+1),
                                               item.resource, item.id);
 
     // Disable the add button, now that we have added the retrieved term
@@ -1062,7 +1062,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addRetrievedTerm()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::trackItemsVerticalScrollBarPosition(const int &pPosition)
+void CellMLAnnotationViewMetadataEditDetailsWidget::trackItemsVerticalScrollBarPosition(const int &pPosition)
 {
     // Keep track of the new position of our vertical scroll bar
 
@@ -1071,7 +1071,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::trackItemsVerticalScrollBarP
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::showCustomContextMenu(const QPoint &pPosition)
+void CellMLAnnotationViewMetadataEditDetailsWidget::showCustomContextMenu(const QPoint &pPosition)
 {
     Q_UNUSED(pPosition);
 
@@ -1091,7 +1091,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::showCustomContextMenu(const 
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::on_actionCopy_triggered()
+void CellMLAnnotationViewMetadataEditDetailsWidget::on_actionCopy_triggered()
 {
     // Copy the URL of the resource or id to the clipboard
 

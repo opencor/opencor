@@ -31,10 +31,10 @@ namespace RawCellMLView {
 
 //==============================================================================
 
-RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
+RawCellMLViewWidget::RawCellMLViewWidget(QWidget *pParent) :
     QSplitter(pParent),
     CommonWidget(pParent),
-    mGui(new Ui::RawCellmlViewWidget),
+    mGui(new Ui::RawCellMLViewWidget),
     mBorderedEditor(0),
     mBorderedEditors(QMap<QString, Core::BorderedWidget *>()),
     mBorderedViewerHeight(0),
@@ -62,7 +62,7 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
 
 //==============================================================================
 
-RawCellmlViewWidget::~RawCellmlViewWidget()
+RawCellMLViewWidget::~RawCellMLViewWidget()
 {
     // Delete the GUI
 
@@ -76,7 +76,7 @@ static const QString SettingsEditorHeight = "EditorHeight";
 
 //==============================================================================
 
-void RawCellmlViewWidget::loadSettings(QSettings *pSettings)
+void RawCellMLViewWidget::loadSettings(QSettings *pSettings)
 {
     // Retrieve the viewer's and editor's height
     // Note #1: the viewer's default height is 19% of the desktop's height while
@@ -94,7 +94,7 @@ void RawCellmlViewWidget::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void RawCellmlViewWidget::saveSettings(QSettings *pSettings) const
+void RawCellMLViewWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the viewer's and editor's height
     // Note #1: we must also keep track of the editor's height because when
@@ -116,7 +116,7 @@ void RawCellmlViewWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void RawCellmlViewWidget::initialize(const QString &pFileName)
+void RawCellMLViewWidget::initialize(const QString &pFileName)
 {
     // Retrieve the editor associated with the file name, if any
 
@@ -194,7 +194,7 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
 
 //==============================================================================
 
-bool RawCellmlViewWidget::isManaged(const QString &pFileName) const
+bool RawCellMLViewWidget::isManaged(const QString &pFileName) const
 {
     // Return whether the given file name is managed
 
@@ -203,7 +203,7 @@ bool RawCellmlViewWidget::isManaged(const QString &pFileName) const
 
 //==============================================================================
 
-void RawCellmlViewWidget::finalize(const QString &pFileName)
+void RawCellMLViewWidget::finalize(const QString &pFileName)
 {
     // Remove the bordered editor, should there be one for the given file name
 
@@ -225,7 +225,7 @@ void RawCellmlViewWidget::finalize(const QString &pFileName)
 
 //==============================================================================
 
-void RawCellmlViewWidget::splitterMoved()
+void RawCellMLViewWidget::splitterMoved()
 {
     // The splitter has moved, so keep track of the viewer and editor's new
     // height

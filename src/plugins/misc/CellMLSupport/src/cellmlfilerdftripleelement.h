@@ -26,7 +26,7 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFileRdfTripleElement
+class CELLMLSUPPORT_EXPORT CellMLFileRdfTripleElement
 {
 public:
     enum Type {
@@ -36,8 +36,8 @@ public:
         TypedLiteral
     };
 
-    explicit CellmlFileRdfTripleElement(iface::rdf_api::Node *pRdfNode);
-    explicit CellmlFileRdfTripleElement(const QString &pUriReference);
+    explicit CellMLFileRdfTripleElement(iface::rdf_api::Node *pRdfNode);
+    explicit CellMLFileRdfTripleElement(const QString &pUriReference);
 
     Type type() const;
 

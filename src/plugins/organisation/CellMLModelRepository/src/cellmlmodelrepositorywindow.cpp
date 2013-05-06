@@ -28,9 +28,9 @@ namespace CellMLModelRepository {
 
 //==============================================================================
 
-CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
+CellMLModelRepositoryWindow::CellMLModelRepositoryWindow(QWidget *pParent) :
     OrganisationWidget(pParent),
-    mGui(new Ui::CellmlModelRepositoryWindow)
+    mGui(new Ui::CellMLModelRepositoryWindow)
 {
     // Set up the GUI
 
@@ -42,17 +42,17 @@ CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
 
     // Create and add the CellML Model Repository widget
 
-    mCellmlModelRepositoryWidget = new CellmlModelRepositoryWidget(this);
+    mCellMLModelRepositoryWidget = new CellMLModelRepositoryWidget(this);
 
-    mGui->dockWidgetContents->layout()->addWidget(mCellmlModelRepositoryWidget);
+    mGui->dockWidgetContents->layout()->addWidget(mCellMLModelRepositoryWidget);
 
     // We want our own context menu for the help widget (indeed, we don't want
     // the default one which has the reload menu item and not the other actions
     // that we have in our tool bar widget, so...)
 
-    mCellmlModelRepositoryWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+    mCellMLModelRepositoryWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    connect(mCellmlModelRepositoryWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
+    connect(mCellMLModelRepositoryWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(showCustomContextMenu(const QPoint &)));
 
     // Create a network access manager so that we can then retrieve a list of
@@ -73,7 +73,7 @@ CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
 
 //==============================================================================
 
-CellmlModelRepositoryWindow::~CellmlModelRepositoryWindow()
+CellMLModelRepositoryWindow::~CellMLModelRepositoryWindow()
 {
     // Delete the GUI
 
@@ -82,7 +82,7 @@ CellmlModelRepositoryWindow::~CellmlModelRepositoryWindow()
 
 //==============================================================================
 
-void CellmlModelRepositoryWindow::retranslateUi()
+void CellMLModelRepositoryWindow::retranslateUi()
 {
     // Retranslate the whole window
 
@@ -95,7 +95,7 @@ void CellmlModelRepositoryWindow::retranslateUi()
 
 //==============================================================================
 
-void CellmlModelRepositoryWindow::outputModelList(const QStringList &pModelList)
+void CellMLModelRepositoryWindow::outputModelList(const QStringList &pModelList)
 {
     // Output a given list of models
 
@@ -141,12 +141,12 @@ void CellmlModelRepositoryWindow::outputModelList(const QStringList &pModelList)
     // Output the list matching the search criteria, or a message telling the
     // user what went wrong, if anything
 
-    mCellmlModelRepositoryWidget->output(contents);
+    mCellMLModelRepositoryWidget->output(contents);
 }
 
 //==============================================================================
 
-void CellmlModelRepositoryWindow::on_filterValue_textChanged(const QString &text)
+void CellMLModelRepositoryWindow::on_filterValue_textChanged(const QString &text)
 {
     // Generate a Web page that contains all the models which match our search
     // criteria
@@ -156,16 +156,16 @@ void CellmlModelRepositoryWindow::on_filterValue_textChanged(const QString &text
 
 //==============================================================================
 
-void CellmlModelRepositoryWindow::on_actionCopy_triggered()
+void CellMLModelRepositoryWindow::on_actionCopy_triggered()
 {
     // Copy the current slection to the clipboard
 
-    QApplication::clipboard()->setText(mCellmlModelRepositoryWidget->selectedText());
+    QApplication::clipboard()->setText(mCellMLModelRepositoryWidget->selectedText());
 }
 
 //==============================================================================
 
-void CellmlModelRepositoryWindow::on_refreshButton_clicked()
+void CellMLModelRepositoryWindow::on_refreshButton_clicked()
 {
     // Output the message telling the user that the list is being downloaded
     // Note: to clear mModelNames ensures that we get the correct message from
@@ -187,7 +187,7 @@ void CellmlModelRepositoryWindow::on_refreshButton_clicked()
 
 //==============================================================================
 
-void CellmlModelRepositoryWindow::finished(QNetworkReply *pNetworkReply)
+void CellMLModelRepositoryWindow::finished(QNetworkReply *pNetworkReply)
 {
     // Clear some properties
 
@@ -249,7 +249,7 @@ void CellmlModelRepositoryWindow::finished(QNetworkReply *pNetworkReply)
 
 //==============================================================================
 
-void CellmlModelRepositoryWindow::showCustomContextMenu(const QPoint &) const
+void CellMLModelRepositoryWindow::showCustomContextMenu(const QPoint &) const
 {
     // Create a custom context menu for our CellML Models Repository widget
 

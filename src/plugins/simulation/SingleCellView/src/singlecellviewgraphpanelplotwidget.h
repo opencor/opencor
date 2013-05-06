@@ -21,7 +21,7 @@ namespace OpenCOR {
 //==============================================================================
 
 namespace CellMLSupport {
-    class CellmlFileRuntimeModelParameter;
+    class CellMLFileRuntimeModelParameter;
 }   // namespace CellMLSupport
 
 //==============================================================================

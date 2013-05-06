@@ -140,7 +140,7 @@ CellMLFileRuntimeModelParameter::ODEData
 
 //==============================================================================
 
-CellmlFileRuntime::CellmlFileRuntime() :
+CellMLFileRuntime::CellMLFileRuntime() :
     mVariableOfIntegration(0),
     mModelParameters(CellMLFileRuntimeModelParameters())
 {
@@ -150,7 +150,7 @@ CellmlFileRuntime::CellmlFileRuntime() :
 
 //==============================================================================
 
-CellmlFileRuntime::~CellmlFileRuntime()
+CellMLFileRuntime::~CellMLFileRuntime()
 {
     // Reset our properties
     reset(false);
@@ -158,7 +158,7 @@ CellmlFileRuntime::~CellmlFileRuntime()
 
 //==============================================================================
 
-QString CellmlFileRuntime::address() const
+QString CellMLFileRuntime::address() const
 {
     // Return our address as a string
 
@@ -171,7 +171,7 @@ QString CellmlFileRuntime::address() const
 
 //==============================================================================
 
-bool CellmlFileRuntime::isValid() const
+bool CellMLFileRuntime::isValid() const
 {
     // The runtime is valid if no issues were found
 
@@ -182,7 +182,7 @@ bool CellmlFileRuntime::isValid() const
 
 //==============================================================================
 
-CellmlFileIssues CellmlFileRuntime::issues() const
+CellMLFileIssues CellMLFileRuntime::issues() const
 {
     // Return the issue(s)
 
@@ -191,7 +191,7 @@ CellmlFileIssues CellmlFileRuntime::issues() const
 
 //==============================================================================
 
-CellMLFileRuntimeModelParameters CellmlFileRuntime::modelParameters() const
+CellMLFileRuntimeModelParameters CellMLFileRuntime::modelParameters() const
 {
     // Return the model parameter(s)
 
@@ -200,21 +200,21 @@ CellMLFileRuntimeModelParameters CellmlFileRuntime::modelParameters() const
 
 //==============================================================================
 
-void CellmlFileRuntime::resetODECodeInformation()
+void CellMLFileRuntime::resetODECodeInformation()
 {
   mODEModel = NULL;
 }
 
 //==============================================================================
 
-void CellmlFileRuntime::resetDAECodeInformation()
+void CellMLFileRuntime::resetDAECodeInformation()
 {
     mDAEModel = NULL;
 }
 
 //==============================================================================
 
-void CellmlFileRuntime::reset(const bool &pResetIssues)
+void CellMLFileRuntime::reset(const bool &pResetIssues)
 {
     // Reset all of the runtime's properties
     resetODECodeInformation();
@@ -229,23 +229,23 @@ void CellmlFileRuntime::reset(const bool &pResetIssues)
 
 //==============================================================================
 
-void CellmlFileRuntime::couldNotGenerateModelCodeIssue()
+void CellMLFileRuntime::couldNotGenerateModelCodeIssue()
 {
-    mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+    mIssues << CellMLFileIssue(CellMLFileIssue::Error,
                                tr("the model code could not be generated"));
 }
 
 //==============================================================================
 
-void CellmlFileRuntime::unexpectedProblemDuringModelCompilationIssue()
+void CellMLFileRuntime::unexpectedProblemDuringModelCompilationIssue()
 {
-    mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+    mIssues << CellMLFileIssue(CellMLFileIssue::Error,
                                tr("an unexpected problem occurred while trying to compile the model"));
 }
 
 //==============================================================================
 
-void CellmlFileRuntime::ensureODECompiledModel(iface::cellml_api::Model *pModel, bool pDebug)
+void CellMLFileRuntime::ensureODECompiledModel(iface::cellml_api::Model *pModel, bool pDebug)
 {
     if (mODEModel && pDebug == mODECompiledForDebug)
         return;
@@ -259,7 +259,7 @@ void CellmlFileRuntime::ensureODECompiledModel(iface::cellml_api::Model *pModel,
             intService->compileDebugModelODE(pModel) :
             intService->compileModelODE(pModel);
     } catch (iface::cellml_api::CellMLException &) {
-        mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+        mIssues << CellMLFileIssue(CellMLFileIssue::Error,
                                    QString::fromStdWString(intService->lastError()));
     } catch (...) {
         unexpectedProblemDuringModelCompilationIssue();
@@ -272,7 +272,7 @@ void CellmlFileRuntime::ensureODECompiledModel(iface::cellml_api::Model *pModel,
 
 //==============================================================================
 
-void CellmlFileRuntime::ensureDAECompiledModel(iface::cellml_api::Model *pModel, bool pDebug)
+void CellMLFileRuntime::ensureDAECompiledModel(iface::cellml_api::Model *pModel, bool pDebug)
 {
     if (mODEModel && pDebug == mDAECompiledForDebug)
         return;
@@ -286,7 +286,7 @@ void CellmlFileRuntime::ensureDAECompiledModel(iface::cellml_api::Model *pModel,
             intService->compileDebugModelDAE(pModel) :
             intService->compileModelDAE(pModel);
     } catch (iface::cellml_api::CellMLException &) {
-        mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+        mIssues << CellMLFileIssue(CellMLFileIssue::Error,
                                    QString::fromStdWString(intService->lastError()));
     } catch (...) {
         unexpectedProblemDuringModelCompilationIssue();
@@ -299,7 +299,7 @@ void CellmlFileRuntime::ensureDAECompiledModel(iface::cellml_api::Model *pModel,
 
 //==============================================================================
 
-QString CellmlFileRuntime::functionCode(const QString &pFunctionSignature,
+QString CellMLFileRuntime::functionCode(const QString &pFunctionSignature,
                                         const QString &pFunctionBody,
                                         const bool &pHasDefines)
 {
@@ -368,27 +368,27 @@ bool sortModelParameters(QExplicitlySharedDataPointer<CellMLFileRuntimeModelPara
 
     /*
         // Determine the type of the model parameter
-        CellmlFileRuntimeCompiledModelParameter::ModelParameterType modelParameterType;
+        CellMLFileRuntimeCompiledModelParameter::ModelParameterType modelParameterType;
 
         switch (computationTarget->type()) {
         case iface::cellml_services::VARIABLE_OF_INTEGRATION:
-            modelParameterType = CellmlFileRuntimeCompiledModelParameter::Voi;
+            modelParameterType = CellMLFileRuntimeCompiledModelParameter::Voi;
             break;
         case iface::cellml_services::CONSTANT: {
             ObjRef<iface::cellml_api::CellMLVariable> variable = computationTarget->variable();
             if (variable->initialValue().empty())
                 // The computed target doesn't have an initial value, so it must
                 // be a 'computed' constant
-                modelParameterType = CellmlFileRuntimeCompiledModelParameter::ComputedConstant;
+                modelParameterType = CellMLFileRuntimeCompiledModelParameter::ComputedConstant;
             else
                 // The computed target has an initial value, so it must be a
                 // 'proper' constant
-                modelParameterType = CellmlFileRuntimeCompiledModelParameter::Constant;
+                modelParameterType = CellMLFileRuntimeCompiledModelParameter::Constant;
             break;
         }
         case iface::cellml_services::STATE_VARIABLE:
         case iface::cellml_services::PSEUDOSTATE_VARIABLE:
-            modelParameterType = CellmlFileRuntimeCompiledModelParameter::State;
+            modelParameterType = CellMLFileRuntimeCompiledModelParameter::State;
             break;
         case iface::cellml_services::ALGEBRAIC:
             // We are dealing with either a 'proper' algebraic variable or a
@@ -397,14 +397,14 @@ bool sortModelParameters(QExplicitlySharedDataPointer<CellMLFileRuntimeModelPara
             //       dealing with a 'proper' algebraic variable otherwise we
             //       are dealing with a rate variable...
             if (computationTarget->degree())
-                modelParameterType = CellmlFileRuntimeCompiledModelParameter::Rate;
+                modelParameterType = CellMLFileRuntimeCompiledModelParameter::Rate;
             else
-                modelParameterType = CellmlFileRuntimeCompiledModelParameter::Algebraic;
+                modelParameterType = CellMLFileRuntimeCompiledModelParameter::Algebraic;
             break;
         default:
             // We are dealing with a type of computed target which is of no
             // interest to us, so...
-            modelParameterType = CellmlFileRuntimeCompiledModelParameter::Undefined;
+            modelParameterType = CellMLFileRuntimeCompiledModelParameter::Undefined;
         }
      */
 
@@ -415,7 +415,7 @@ bool sortModelParameters(QExplicitlySharedDataPointer<CellMLFileRuntimeModelPara
 //          update its runtime (which has nothing to do with editing or even
 //          validating a model), so if it can be done then great otherwise
 //          tough luck (so to speak)...
-CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellMLFile)
+CellMLFileRuntime * CellMLFileRuntime::update(CellMLFile *pCellMLFile)
 {
     // Reset the runtime's properties
     reset(true);
@@ -460,7 +460,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellMLFile)
 
 //==============================================================================
 
-QExplicitlySharedDataPointer<CellMLFileRuntimeModelParameter> CellmlFileRuntime::variableOfIntegration() const
+QExplicitlySharedDataPointer<CellMLFileRuntimeModelParameter> CellMLFileRuntime::variableOfIntegration() const
 {
     // Return our variable of integration, if any
     return mVariableOfIntegration;

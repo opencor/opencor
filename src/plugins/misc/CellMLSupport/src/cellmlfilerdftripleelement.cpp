@@ -15,7 +15,7 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pRdfNode) :
+CellMLFileRdfTripleElement::CellMLFileRdfTripleElement(iface::rdf_api::Node *pRdfNode) :
     mId(QString()),
     mUriReference(QString()),
     mLexicalForm(QString()),
@@ -92,7 +92,7 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pRd
 
 //==============================================================================
 
-CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(const QString &pUriReference) :
+CellMLFileRdfTripleElement::CellMLFileRdfTripleElement(const QString &pUriReference) :
     mType(UriReference),
     mId(QString()),
     mUriReference(pUriReference),
@@ -104,7 +104,7 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(const QString &pUriRefere
 
 //==============================================================================
 
-CellmlFileRdfTripleElement::Type CellmlFileRdfTripleElement::type() const
+CellMLFileRdfTripleElement::Type CellMLFileRdfTripleElement::type() const
 {
     // Return the RDF triple element's type
 
@@ -113,7 +113,7 @@ CellmlFileRdfTripleElement::Type CellmlFileRdfTripleElement::type() const
 
 //==============================================================================
 
-QString CellmlFileRdfTripleElement::id() const
+QString CellMLFileRdfTripleElement::id() const
 {
     // Return the RDF triple element's id
 
@@ -122,7 +122,7 @@ QString CellmlFileRdfTripleElement::id() const
 
 //==============================================================================
 
-QString CellmlFileRdfTripleElement::uriReference() const
+QString CellMLFileRdfTripleElement::uriReference() const
 {
     // Return the RDF triple element's URI reference
 
@@ -131,7 +131,7 @@ QString CellmlFileRdfTripleElement::uriReference() const
 
 //==============================================================================
 
-QString CellmlFileRdfTripleElement::lexicalForm() const
+QString CellMLFileRdfTripleElement::lexicalForm() const
 {
     // Return the RDF triple element's lexical form
 
@@ -140,7 +140,7 @@ QString CellmlFileRdfTripleElement::lexicalForm() const
 
 //==============================================================================
 
-QString CellmlFileRdfTripleElement::language() const
+QString CellMLFileRdfTripleElement::language() const
 {
     // Return the RDF triple element's language
 
@@ -149,7 +149,7 @@ QString CellmlFileRdfTripleElement::language() const
 
 //==============================================================================
 
-QString CellmlFileRdfTripleElement::dataTypeUri() const
+QString CellMLFileRdfTripleElement::dataTypeUri() const
 {
     // Return the RDF triple element's data type URI
 
@@ -158,7 +158,7 @@ QString CellmlFileRdfTripleElement::dataTypeUri() const
 
 //==============================================================================
 
-QString CellmlFileRdfTripleElement::asString() const
+QString CellMLFileRdfTripleElement::asString() const
 {
     // Return the RDF triple element's value as a string, based on its type
 

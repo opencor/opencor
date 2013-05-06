@@ -33,12 +33,12 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(CellMLAnnotationViewPlugin *pPluginParent,
+CellMLAnnotationViewWidget::CellMLAnnotationViewWidget(CellMLAnnotationViewPlugin *pPluginParent,
                                                        const QString &pFileName,
                                                        QWidget *pParent) :
     QSplitter(pParent),
     CommonWidget(pParent),
-    mGui(new Ui::CellmlAnnotationViewWidget),
+    mGui(new Ui::CellMLAnnotationViewWidget),
     mPluginParent(pPluginParent),
     oldWebViewUrls(QMap<QWebView *, QUrl>())
 {
@@ -72,9 +72,9 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(CellMLAnnotationViewPlugi
 
     // Retrieve and load, in case it's necessary, the requested CellML file
 
-    mCellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
+    mCellMLFile = CellMLSupport::CellMLFileManager::instance()->cellmlFile(pFileName);
 
-    mCellmlFile->load();
+    mCellMLFile->load();
 
     // Customise our GUI which consists of two main parts:
     //
@@ -86,12 +86,12 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(CellMLAnnotationViewPlugi
 
     // Create our two main parts
 
-    mCellmlList      = new CellmlAnnotationViewCellmlListWidget(this);
-    mMetadataDetails = new CellmlAnnotationViewMetadataDetailsWidget(this);
+    mCellMLList      = new CellMLAnnotationViewCellMLListWidget(this);
+    mMetadataDetails = new CellMLAnnotationViewMetadataDetailsWidget(this);
 
     // Populate ourselves
 
-    addWidget(new Core::BorderedWidget(mCellmlList,
+    addWidget(new Core::BorderedWidget(mCellMLList,
                                        false, false, false, true));
     addWidget(mMetadataDetails);
 
@@ -103,29 +103,29 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(CellMLAnnotationViewPlugi
     // A connection to let our details widget know that we want to see the
     // metadata details of some CellML element
 
-    connect(mCellmlList, SIGNAL(metadataDetailsRequested(iface::cellml_api::CellMLElement *)),
+    connect(mCellMLList, SIGNAL(metadataDetailsRequested(iface::cellml_api::CellMLElement *)),
             mMetadataDetails, SLOT(updateGui(iface::cellml_api::CellMLElement *)));
 
     // A connection to handle the fact that an RDF triple has been added
 
-    connect(mMetadataDetails->metadataEditDetails(), SIGNAL(rdfTripleAdded(CellMLSupport::CellmlFileRdfTriple *)),
-            this, SLOT(addRdfTriple(CellMLSupport::CellmlFileRdfTriple *)));
+    connect(mMetadataDetails->metadataEditDetails(), SIGNAL(rdfTripleAdded(CellMLSupport::CellMLFileRdfTriple *)),
+            this, SLOT(addRdfTriple(CellMLSupport::CellMLFileRdfTriple *)));
 
     // Make our CellML list widget our focus proxy
 
-    setFocusProxy(mCellmlList);
+    setFocusProxy(mCellMLList);
 
     // Select the first item from our lists
     // Note: our CellML list is our primary list, so we must select the first
     //       item of our lists in a reverse order, i.e. finish with our CellML
     //       list...
 
-    mCellmlList->treeViewWidget()->selectFirstItem();
+    mCellMLList->treeViewWidget()->selectFirstItem();
 }
 
 //==============================================================================
 
-CellmlAnnotationViewWidget::~CellmlAnnotationViewWidget()
+CellMLAnnotationViewWidget::~CellMLAnnotationViewWidget()
 {
     // Delete the GUI
 
@@ -134,17 +134,17 @@ CellmlAnnotationViewWidget::~CellmlAnnotationViewWidget()
 
 //==============================================================================
 
-void CellmlAnnotationViewWidget::retranslateUi()
+void CellMLAnnotationViewWidget::retranslateUi()
 {
     // Retranslate our lists and details widgets
 
-    mCellmlList->retranslateUi();
+    mCellMLList->retranslateUi();
     mMetadataDetails->retranslateUi();
 }
 
 //==============================================================================
 
-QString CellmlAnnotationViewWidget::pluginViewName() const
+QString CellMLAnnotationViewWidget::pluginViewName() const
 {
     // Return our pointer to the plugin parent
 
@@ -153,18 +153,18 @@ QString CellmlAnnotationViewWidget::pluginViewName() const
 
 //==============================================================================
 
-CellMLSupport::CellmlFile * CellmlAnnotationViewWidget::cellmlFile() const
+CellMLSupport::CellMLFile * CellMLAnnotationViewWidget::cellmlFile() const
 {
     // Return the CellML file
 
-    return mCellmlFile;
+    return mCellMLFile;
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewWidget::updateSizes(const QList<int> &pSizes)
+void CellMLAnnotationViewWidget::updateSizes(const QList<int> &pSizes)
 {
-    // The splitter of another CellmlAnnotationViewWidget object has been moved,
+    // The splitter of another CellMLAnnotationViewWidget object has been moved,
     // so update our sizes
 
     setSizes(pSizes);
@@ -172,7 +172,7 @@ void CellmlAnnotationViewWidget::updateSizes(const QList<int> &pSizes)
 
 //==============================================================================
 
-void CellmlAnnotationViewWidget::emitSplitterMoved()
+void CellMLAnnotationViewWidget::emitSplitterMoved()
 {
     // Let people know that our splitter has been moved
 
@@ -181,16 +181,16 @@ void CellmlAnnotationViewWidget::emitSplitterMoved()
 
 //==============================================================================
 
-CellmlAnnotationViewCellmlListWidget * CellmlAnnotationViewWidget::cellmlList() const
+CellMLAnnotationViewCellMLListWidget * CellMLAnnotationViewWidget::cellmlList() const
 {
     // Return our CellML list widget
 
-    return mCellmlList;
+    return mCellMLList;
 }
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataDetailsWidget * CellmlAnnotationViewWidget::metadataDetails() const
+CellMLAnnotationViewMetadataDetailsWidget * CellMLAnnotationViewWidget::metadataDetails() const
 {
     // Return our metadata details widget
 
@@ -199,7 +199,7 @@ CellmlAnnotationViewMetadataDetailsWidget * CellmlAnnotationViewWidget::metadata
 
 //==============================================================================
 
-void CellmlAnnotationViewWidget::updateWebViewerWithQualifierDetails(QWebView *pWebView,
+void CellMLAnnotationViewWidget::updateWebViewerWithQualifierDetails(QWebView *pWebView,
                                                                      const QString &pQualifier,
                                                                      const bool &pRetranslate)
 {
@@ -322,7 +322,7 @@ void CellmlAnnotationViewWidget::updateWebViewerWithQualifierDetails(QWebView *p
 
 //==============================================================================
 
-void CellmlAnnotationViewWidget::updateWebViewerWithResourceDetails(QWebView *pWebView,
+void CellMLAnnotationViewWidget::updateWebViewerWithResourceDetails(QWebView *pWebView,
                                                                     const QString &pResource,
                                                                     const bool &pRetranslate)
 {
@@ -356,7 +356,7 @@ void CellmlAnnotationViewWidget::updateWebViewerWithResourceDetails(QWebView *pW
 
 //==============================================================================
 
-void CellmlAnnotationViewWidget::updateWebViewerWithIdDetails(QWebView *pWebView,
+void CellMLAnnotationViewWidget::updateWebViewerWithIdDetails(QWebView *pWebView,
                                                               const QString &pResource,
                                                               const QString &pId,
                                                               const bool &pRetranslate)
@@ -381,7 +381,7 @@ void CellmlAnnotationViewWidget::updateWebViewerWithIdDetails(QWebView *pWebView
 
 //==============================================================================
 
-void CellmlAnnotationViewWidget::addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple) const
+void CellMLAnnotationViewWidget::addRdfTriple(CellMLSupport::CellMLFileRdfTriple *pRdfTriple) const
 {
     // Add the given RDF triple to our details widget
 

@@ -4,7 +4,7 @@ echo "\033[44;37;1mMaking OpenCOR...\033[0m"
 
 cd build
 
-cmake ..
+cmake -DCMAKE_PREFIX_PATH=/data/andrew/Qt5.0.2/5.0.2/gcc_64/ ..
 
 exitCode=$?
 

@@ -17,7 +17,7 @@ namespace CellMLModelRepository {
 
 //==============================================================================
 
-CellmlModelRepositoryWidget::CellmlModelRepositoryWidget(QWidget *pParent) :
+CellMLModelRepositoryWidget::CellMLModelRepositoryWidget(QWidget *pParent) :
     QWebView(pParent),
     CommonWidget(pParent)
 {
@@ -55,7 +55,7 @@ CellmlModelRepositoryWidget::CellmlModelRepositoryWidget(QWidget *pParent) :
 
 //==============================================================================
 
-QSize CellmlModelRepositoryWidget::sizeHint() const
+QSize CellMLModelRepositoryWidget::sizeHint() const
 {
     // Suggest a default size for the CellML Model Repository widget
     // Note: this is critical if we want a docked widget, with a CellML Model
@@ -67,7 +67,7 @@ QSize CellmlModelRepositoryWidget::sizeHint() const
 
 //==============================================================================
 
-void CellmlModelRepositoryWidget::paintEvent(QPaintEvent *pEvent)
+void CellMLModelRepositoryWidget::paintEvent(QPaintEvent *pEvent)
 {
     // Default handling of the event
 
@@ -89,7 +89,7 @@ void CellmlModelRepositoryWidget::paintEvent(QPaintEvent *pEvent)
 
 //==============================================================================
 
-void CellmlModelRepositoryWidget::output(const QString &pOutput)
+void CellMLModelRepositoryWidget::output(const QString &pOutput)
 {
     // Set the page to contain pOutput using our output template
 
@@ -98,7 +98,7 @@ void CellmlModelRepositoryWidget::output(const QString &pOutput)
 
 //==============================================================================
 
-void CellmlModelRepositoryWidget::openLink(const QUrl &pUrl)
+void CellMLModelRepositoryWidget::openLink(const QUrl &pUrl)
 {
     // Open the link in the user's browser
 

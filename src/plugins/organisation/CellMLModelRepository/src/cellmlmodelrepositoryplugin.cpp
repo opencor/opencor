@@ -37,18 +37,18 @@ void CellMLModelRepositoryPlugin::initialize()
 {
     // Create an action to show/hide our CellML Model Repository window
 
-    mCellmlModelRepositoryAction = newAction(mMainWindow, true);
+    mCellMLModelRepositoryAction = newAction(mMainWindow, true);
 
     // Create our CellML Model Repository window
 
-    mCellmlModelRepositoryWindow = new CellmlModelRepositoryWindow(mMainWindow);
+    mCellMLModelRepositoryWindow = new CellMLModelRepositoryWindow(mMainWindow);
 
     // Set our settings
 
     mGuiSettings->addWindow(Qt::LeftDockWidgetArea,
-                            mCellmlModelRepositoryWindow,
+                            mCellMLModelRepositoryWindow,
                             GuiWindowSettings::Organisation,
-                            mCellmlModelRepositoryAction);
+                            mCellMLModelRepositoryAction);
 }
 
 //==============================================================================
@@ -57,7 +57,7 @@ void CellMLModelRepositoryPlugin::loadSettings(QSettings *pSettings)
 {
     // Retrieve our CellML Model Repository window settings
 
-    loadWindowSettings(pSettings, mCellmlModelRepositoryWindow);
+    loadWindowSettings(pSettings, mCellMLModelRepositoryWindow);
 }
 
 //==============================================================================
@@ -66,7 +66,7 @@ void CellMLModelRepositoryPlugin::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our CellML Model Repository window settings
 
-    saveWindowSettings(pSettings, mCellmlModelRepositoryWindow);
+    saveWindowSettings(pSettings, mCellMLModelRepositoryWindow);
 }
 
 //==============================================================================
@@ -75,13 +75,13 @@ void CellMLModelRepositoryPlugin::retranslateUi()
 {
     // Retranslate our CellML Model Repository action
 
-    retranslateAction(mCellmlModelRepositoryAction,
+    retranslateAction(mCellMLModelRepositoryAction,
                       tr("CellML Model Repository"),
                       tr("Show/hide the CellML Model Repository window"));
 
     // Retranslate our CellML Model Repository window
 
-    mCellmlModelRepositoryWindow->retranslateUi();
+    mCellMLModelRepositoryWindow->retranslateUi();
 }
 
 //==============================================================================

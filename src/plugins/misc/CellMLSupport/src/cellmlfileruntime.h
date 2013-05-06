@@ -38,7 +38,7 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-class CellmlFile;
+class CellMLFile;
 
 //==============================================================================
 
@@ -98,20 +98,26 @@ typedef QList<QExplicitlySharedDataPointer<CellMLFileRuntimeModelParameter> > Ce
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFileRuntime : public QObject
+class CELLMLSUPPORT_EXPORT CellMLFileRuntime : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit CellmlFileRuntime();
-    ~CellmlFileRuntime();
+    explicit CellMLFileRuntime();
+    ~CellMLFileRuntime();
 
     QString address() const;
     bool isValid() const;
-    CellmlFileIssues issues() const;
+    CellMLFileIssues issues() const;
     CellMLFileRuntimeModelParameters modelParameters() const;
-    CellmlFileRuntime * update(CellmlFile *pCellmlFile);
+    CellMLFileRuntime * update(CellMLFile *pCellMLFile);
     QExplicitlySharedDataPointer<CellMLFileRuntimeModelParameter> variableOfIntegration() const;
+    iface::cellml_services::ODESolverCompiledModel* odeCompiledModel() {
+      return mODEModel;
+    }
+    iface::cellml_services::DAESolverCompiledModel* daeCompiledModel() {
+      return mDAEModel;
+    }
 
 private:
     ObjRef<iface::cellml_api::Model> mModel;
@@ -120,7 +126,7 @@ private:
     bool mDAECompiledForDebug; // Only valid if mDAEModel != null
     ObjRef<iface::cellml_services::DAESolverCompiledModel> mDAEModel;
 
-    CellmlFileIssues mIssues;
+    CellMLFileIssues mIssues;
 
     QExplicitlySharedDataPointer<CellMLFileRuntimeModelParameter> mVariableOfIntegration;
     CellMLFileRuntimeModelParameters mModelParameters;

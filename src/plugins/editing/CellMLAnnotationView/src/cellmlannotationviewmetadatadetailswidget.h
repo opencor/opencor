@@ -18,7 +18,7 @@ class QWebView;
 //==============================================================================
 
 namespace Ui {
-    class CellmlAnnotationViewMetadataDetailsWidget;
+    class CellMLAnnotationViewMetadataDetailsWidget;
 }
 
 //==============================================================================
@@ -38,33 +38,33 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-class CellmlAnnotationViewMetadataEditDetailsWidget;
-class CellmlAnnotationViewMetadataViewDetailsWidget;
-class CellmlAnnotationViewWidget;
+class CellMLAnnotationViewMetadataEditDetailsWidget;
+class CellMLAnnotationViewMetadataViewDetailsWidget;
+class CellMLAnnotationViewWidget;
 
 //==============================================================================
 
-class CellmlAnnotationViewMetadataDetailsWidget : public Core::Widget
+class CellMLAnnotationViewMetadataDetailsWidget : public Core::Widget
 {
     Q_OBJECT
 
 public:
-    explicit CellmlAnnotationViewMetadataDetailsWidget(CellmlAnnotationViewWidget *pParent);
-    ~CellmlAnnotationViewMetadataDetailsWidget();
+    explicit CellMLAnnotationViewMetadataDetailsWidget(CellMLAnnotationViewWidget *pParent);
+    ~CellMLAnnotationViewMetadataDetailsWidget();
 
     virtual void retranslateUi();
 
-    void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
+    void addRdfTriple(CellMLSupport::CellMLFileRdfTriple *pRdfTriple);
 
     QSplitter * splitter() const;
 
-    CellmlAnnotationViewMetadataEditDetailsWidget * metadataEditDetails() const;
-    CellmlAnnotationViewMetadataViewDetailsWidget * metadataViewDetails() const;
+    CellMLAnnotationViewMetadataEditDetailsWidget * metadataEditDetails() const;
+    CellMLAnnotationViewMetadataViewDetailsWidget * metadataViewDetails() const;
 
 private:
-    CellmlAnnotationViewWidget *mParent;
+    CellMLAnnotationViewWidget *mParent;
 
-    Ui::CellmlAnnotationViewMetadataDetailsWidget *mGui;
+    Ui::CellMLAnnotationViewMetadataDetailsWidget *mGui;
 
     Core::BorderedWidget *mBorderedCategoryMessage;
     Core::UserMessageWidget *mCategoryMessage;
@@ -78,11 +78,11 @@ private:
     Core::BorderedWidget *mBorderedMetadataViewDetails;
     Core::BorderedWidget *mBorderedWebView;
 
-    CellmlAnnotationViewMetadataEditDetailsWidget *mMetadataEditDetails;
-    CellmlAnnotationViewMetadataViewDetailsWidget *mMetadataViewDetails;
+    CellMLAnnotationViewMetadataEditDetailsWidget *mMetadataEditDetails;
+    CellMLAnnotationViewMetadataViewDetailsWidget *mMetadataViewDetails;
     QWebView *mWebView;
 
-    CellMLSupport::CellmlFile *mCellmlFile;
+    CellMLSupport::CellMLFile *mCellMLFile;
 
     ObjRef<iface::cellml_api::CellMLElement> mElement;
 

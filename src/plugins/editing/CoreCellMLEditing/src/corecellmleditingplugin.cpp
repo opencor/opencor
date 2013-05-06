@@ -36,14 +36,14 @@ void CoreCellMLEditingPlugin::initialize()
 {
     // Create our different File|New actions
 
-    mFileNewCellml1_0Action = newAction(mMainWindow);
-    mFileNewCellml1_1Action = newAction(mMainWindow);
+    mFileNewCellML1_0Action = newAction(mMainWindow);
+    mFileNewCellML1_1Action = newAction(mMainWindow);
 
     // Set our settings
 
 /*---GRY--- DISABLED FOR VERSION 0.1...
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::FileNew, mFileNewCellml1_0Action);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::FileNew, mFileNewCellml1_1Action);
+    mGuiSettings->addMenuAction(GuiMenuActionSettings::FileNew, mFileNewCellML1_0Action);
+    mGuiSettings->addMenuAction(GuiMenuActionSettings::FileNew, mFileNewCellML1_1Action);
 */
 }
 
@@ -53,9 +53,9 @@ void CoreCellMLEditingPlugin::retranslateUi()
 {
     // Retranslate our different File|New actions
 
-    retranslateAction(mFileNewCellml1_0Action, tr("CellML 1.0 File"),
+    retranslateAction(mFileNewCellML1_0Action, tr("CellML 1.0 File"),
                       tr("Create a new CellML 1.0 file"));
-    retranslateAction(mFileNewCellml1_1Action, tr("CellML 1.1 File"),
+    retranslateAction(mFileNewCellML1_1Action, tr("CellML 1.1 File"),
                       tr("Create a new CellML 1.1 file"));
 }
 

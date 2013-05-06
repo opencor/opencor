@@ -17,7 +17,7 @@
 //==============================================================================
 
 namespace Ui {
-    class CellmlAnnotationViewWidget;
+    class CellMLAnnotationViewWidget;
 }
 
 //==============================================================================
@@ -35,30 +35,30 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-class CellmlAnnotationViewCellmlListWidget;
-class CellmlAnnotationViewMetadataDetailsWidget;
+class CellMLAnnotationViewCellMLListWidget;
+class CellMLAnnotationViewMetadataDetailsWidget;
 class CellMLAnnotationViewPlugin;
 
 //==============================================================================
 
-class CellmlAnnotationViewWidget : public QSplitter, public Core::CommonWidget
+class CellMLAnnotationViewWidget : public QSplitter, public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
-    explicit CellmlAnnotationViewWidget(CellMLAnnotationViewPlugin *pPluginParent,
+    explicit CellMLAnnotationViewWidget(CellMLAnnotationViewPlugin *pPluginParent,
                                         const QString &pFileName,
                                         QWidget *pParent = 0);
-    ~CellmlAnnotationViewWidget();
+    ~CellMLAnnotationViewWidget();
 
     virtual void retranslateUi();
 
     QString pluginViewName() const;
 
-    CellMLSupport::CellmlFile * cellmlFile() const;
+    CellMLSupport::CellMLFile * cellmlFile() const;
 
-    CellmlAnnotationViewCellmlListWidget * cellmlList() const;
-    CellmlAnnotationViewMetadataDetailsWidget * metadataDetails() const;
+    CellMLAnnotationViewCellMLListWidget * cellmlList() const;
+    CellMLAnnotationViewMetadataDetailsWidget * metadataDetails() const;
 
     void updateWebViewerWithQualifierDetails(QWebView *pWebView,
                                              const QString &pQualifier,
@@ -72,14 +72,14 @@ public:
                                       const bool &pRetranslate);
 
 private:
-    Ui::CellmlAnnotationViewWidget *mGui;
+    Ui::CellMLAnnotationViewWidget *mGui;
 
     CellMLAnnotationViewPlugin *mPluginParent;
 
-    CellMLSupport::CellmlFile *mCellmlFile;
+    CellMLSupport::CellMLFile *mCellMLFile;
 
-    CellmlAnnotationViewCellmlListWidget *mCellmlList;
-    CellmlAnnotationViewMetadataDetailsWidget *mMetadataDetails;
+    CellMLAnnotationViewCellMLListWidget *mCellMLList;
+    CellMLAnnotationViewMetadataDetailsWidget *mMetadataDetails;
 
     QString mModelQualifierSvg;
     QString mBiologyQualifierSvg;
@@ -95,7 +95,7 @@ private Q_SLOTS:
     void updateSizes(const QList<int> &pSizes);
     void emitSplitterMoved();
 
-    void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple) const;
+    void addRdfTriple(CellMLSupport::CellMLFileRdfTriple *pRdfTriple) const;
 };
 
 //==============================================================================

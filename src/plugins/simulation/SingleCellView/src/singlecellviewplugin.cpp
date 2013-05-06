@@ -41,7 +41,7 @@ SingleCellViewPlugin::SingleCellViewPlugin()
     // Set our settings
 
     mGuiSettings->setView(GuiViewSettings::Simulation,
-                          QStringList() << CellMLSupport::CellmlMimeType);
+                          QStringList() << CellMLSupport::CellMLMimeType);
 }
 
 //==============================================================================
@@ -60,7 +60,7 @@ void SingleCellViewPlugin::initialize()
 
 //==============================================================================
 
-void SingleCellViewPlugin::initializationsDone(const Plugins &pLoadedPlugins)
+void SingleCellViewPlugin::initializationsDone(const Plugins&)
 {
 }
 
@@ -89,7 +89,7 @@ QWidget * SingleCellViewPlugin::viewWidget(const QString &pFileName)
     // Check that we are dealing with a CellML file and, if so, return our
     // generic simulation view widget after having initialised it
 
-    if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
+    if (!CellMLSupport::CellMLFileManager::instance()->cellmlFile(pFileName))
         // We are not dealing with a CellML file, so...
 
         return 0;

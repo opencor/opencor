@@ -40,8 +40,8 @@ public:
     virtual void retranslateUi();
 
 private:
-    QAction *mFileNewCellml1_0Action;
-    QAction *mFileNewCellml1_1Action;
+    QAction *mFileNewCellML1_0Action;
+    QAction *mFileNewCellML1_1Action;
 };
 
 //==============================================================================
