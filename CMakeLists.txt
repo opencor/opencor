@@ -357,10 +357,13 @@ IF(WIN32)
 
     # MSVC files required by OpenCOR
 
-    FOREACH(MSVC_LIBRARY msvcp100 msvcr100)
-        INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/windows/x86/${CMAKE_SHARED_LIBRARY_PREFIX}${MSVC_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                DESTINATION bin)
-    ENDFOREACH()
+    RETRIEVE_BINARY_FILE(distrib/windows/x86 msvcp100.dll 2ada702a0c143a7ae39b7de16a4b5cc994d2548b)
+    RETRIEVE_BINARY_FILE(distrib/windows/x86 msvcr100.dll 0b51fb415ec89848f339f8989d323bea722bfd70)
+
+    INSTALL(FILES distrib/windows/x86/msvcp100.dll
+            DESTINATION bin)
+    INSTALL(FILES distrib/windows/x86/msvcr100.dll
+            DESTINATION bin)
 
     # Qt libraries required by OpenCOR
 
