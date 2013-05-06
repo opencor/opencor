@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>RawCellmlViewWidget</class>
- <widget class="QSplitter" name="RawCellmlViewWidget">
+ <class>RawCellMLViewWidget</class>
+ <widget class="QSplitter" name="RawCellMLViewWidget">
   <property name="geometry">
    <rect>
     <x>0</x>

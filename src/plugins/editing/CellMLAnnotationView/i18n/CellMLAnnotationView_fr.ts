@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>CellmlAnnotationViewCellmlListWidget</name>
+    <name>CellMLAnnotationViewCellMLListWidget</name>
     <message>
         <source>&amp;Expand All</source>
         <translation>Tout &amp;Étendre</translation>
@@ -49,7 +49,7 @@
     </message>
 </context>
 <context>
-    <name>CellmlAnnotationViewMetadataEditDetailsWidget</name>
+    <name>CellMLAnnotationViewMetadataEditDetailsWidget</name>
     <message>
         <source>&amp;Copy</source>
         <translation>&amp;Copier</translation>
@@ -60,7 +60,7 @@
     </message>
 </context>
 <context>
-    <name>CellmlAnnotationViewMetadataNormalViewDetailsWidget</name>
+    <name>CellMLAnnotationViewMetadataNormalViewDetailsWidget</name>
     <message>
         <source>&amp;Copy</source>
         <translation>&amp;Copier</translation>

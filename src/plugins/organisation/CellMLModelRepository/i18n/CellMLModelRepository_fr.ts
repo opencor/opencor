@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>CellmlModelRepositoryWindow</name>
+    <name>CellMLModelRepositoryWindow</name>
     <message>
         <source>CellML Model Repository</source>
         <translation>Répertoire de Modèles CellML</translation>
