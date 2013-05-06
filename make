@@ -1,10 +1,21 @@
-#!/bin/sh
+#!/bin/bash
 
 echo "\033[44;37;1mMaking OpenCOR...\033[0m"
 
 cd build
 
-cmake -DCMAKE_PREFIX_PATH=/data/andrew/Qt5.0.2/5.0.2/gcc_64/ ..
+CMAKEARGS=""
+MAKEARGS=""
+for ARG; do
+  if [[ ${ARG:0:2} == "-D" ]];
+  then
+      CMAKEARGS="$CMAKEARGS $ARG";
+  else
+      MAKEARGS="$MAKEARGS $ARG";
+  fi
+done
+
+cmake $CMAKEARGS ..
 
 exitCode=$?
 
@@ -14,7 +25,7 @@ if [ $exitCode -ne 0 ]; then
     exit $exitCode
 fi
 
-make $*
+make $MAKEARGS
 
 exitCode=$?
 
