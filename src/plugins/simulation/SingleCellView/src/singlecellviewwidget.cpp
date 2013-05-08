@@ -68,13 +68,17 @@ static const QString OutputBrLn = "<br/>\n";
 
 //==============================================================================
 
-SingleCellViewWidgetCurveData::SingleCellViewWidgetCurveData(const QString &pFileName,
-                                                             SingleCellViewSimulation *pSimulation,
-                                                             CellMLSupport::CellMLFileRuntimeModelParameter *pModelParameter,
-                                                             SingleCellViewGraphPanelPlotCurve *pCurve) :
+SingleCellViewWidgetCurveData::SingleCellViewWidgetCurveData
+(
+ const QString &pFileName,
+ SingleCellViewSimulation *pSimulation,
+ CellMLSupport::CellMLFileRuntimeModelParameter* pModelParameter,
+ SingleCellViewGraphPanelPlotCurve *pCurve
+) :
     mFileName(pFileName),
     mSimulation(pSimulation),
-    mModelParameter(pModelParameter),
+    mModelParameterY(pSimulation->data()->isDAETypeSolver() ?
+                     pModelParameter->DAEData() : pModelParameter->ODEData()),
     mCurve(pCurve),
     mAttached(true)
 {
@@ -91,11 +95,12 @@ QString SingleCellViewWidgetCurveData::fileName() const
 
 //==============================================================================
 
-CellMLSupport::CellMLFileRuntimeModelParameter * SingleCellViewWidgetCurveData::modelParameter() const
+QSharedPointer<CellMLSupport::CellMLFileRuntimeCompiledModelParameter>
+SingleCellViewWidgetCurveData::modelParameter() const
 {
     // Return our model parameter
 
-    return mModelParameter;
+    return mModelParameterY;
 }
 
 //==============================================================================
@@ -105,23 +110,6 @@ SingleCellViewGraphPanelPlotCurve * SingleCellViewWidgetCurveData::curve() const
     // Return our curve
 
     return mCurve;
-}
-
-//==============================================================================
-
-double * SingleCellViewWidgetCurveData::yData() const
-{
-    // Return our Y data array
-
-    if (   (mModelParameter->type() == CellMLSupport::CellMLFileRuntimeModelParameter::Constant)
-        || (mModelParameter->type() == CellMLSupport::CellMLFileRuntimeModelParameter::ComputedConstant))
-        return mSimulation->results()->constants()?mSimulation->results()->constants()[mModelParameter->index()]:0;
-    else if (mModelParameter->type() == CellMLSupport::CellMLFileRuntimeModelParameter::State)
-        return mSimulation->results()->states()?mSimulation->results()->states()[mModelParameter->index()]:0;
-    else if (mModelParameter->type() == CellMLSupport::CellMLFileRuntimeModelParameter::Rate)
-        return mSimulation->results()->rates()?mSimulation->results()->rates()[mModelParameter->index()]:0;
-    else
-        return mSimulation->results()->algebraic()?mSimulation->results()->algebraic()[mModelParameter->index()]:0;
 }
 
 //==============================================================================
@@ -142,6 +130,86 @@ void SingleCellViewWidgetCurveData::setAttached(const bool &pAttached)
     mAttached = pAttached;
 }
 
+SingleCellViewQwtCurveDataAdaptor::SingleCellViewQwtCurveDataAdaptor
+(
+ SingleCellViewSimulation* pSimulation,
+ SingleCellViewWidgetCurveData* pCurveData
+)
+    : mSimulationResults(pSimulation->results())
+{
+    d_boundingRect = qwtBoundingRect(*this);
+    mSize = mSimulationResults->points().size();
+
+    QSharedPointer<CellMLSupport::CellMLFileRuntimeCompiledModelParameter> pY = 
+        pCurveData->modelParameterY();
+    switch (pY->type()) {
+    case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::Voi:
+        mSampleY = &SingleCellViewQwtCurveDataAdaptor::sampleBvar;
+        break;
+    case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::Constant:
+    case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::ComputedConstant:
+        mConstantYValue = pSimulation->data()->constants()[pY->index()];
+        mSampleY = &SingleCellViewQwtCurveDataAdaptor::sampleConstantY;
+        break;
+    case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::State:
+        mSampleYIndex = pY->index();
+        mSampleY = &SingleCellViewQwtCurveDataAdaptor::sampleStateY;
+        break;
+    case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::Rate:
+        mSampleYIndex = pY->index();
+        mSampleY = &SingleCellViewQwtCurveDataAdaptor::sampleRateY;
+        break;
+    case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::Algebraic:
+        mSampleYIndex = pY->index();
+        mSampleY = &SingleCellViewQwtCurveDataAdaptor::sampleAlgebraicY;
+        break;
+    default:
+        mConstantYValue = 0.0;
+        mSampleY = &SingleCellViewQwtCurveDataAdaptor::sampleConstantY;
+    }
+}
+
+QRectF SingleCellViewQwtCurveDataAdaptor::boundingRect() const
+{
+    return d_boundingRect;
+}
+
+size_t SingleCellViewQwtCurveDataAdaptor::size() const
+{
+    return mSize;
+}
+
+QPointF SingleCellViewQwtCurveDataAdaptor::sample(size_t i) const
+{
+    return QPointF(sampleBvar(i), (this->*mSampleY)(i));
+}
+
+double SingleCellViewQwtCurveDataAdaptor::sampleBvar(size_t i) const
+{
+    return mSimulationResults->points()[i];
+}
+
+double SingleCellViewQwtCurveDataAdaptor::sampleStateY(size_t i) const
+{
+    return mSimulationResults->states()[i][mSampleYIndex];
+}
+
+double SingleCellViewQwtCurveDataAdaptor::sampleRateY(size_t i) const
+{
+    return mSimulationResults->rates()[i][mSampleYIndex];
+}
+
+double SingleCellViewQwtCurveDataAdaptor::sampleAlgebraicY(size_t i) const
+{
+    return mSimulationResults->algebraic()[i][mSampleYIndex];
+}
+
+double SingleCellViewQwtCurveDataAdaptor::sampleConstantY(size_t) const
+{
+    return mConstantYValue;
+}
+
+
 //==============================================================================
 
 SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
@@ -149,7 +217,6 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     ViewWidget(pParent),
     mGui(new Ui::SingleCellViewWidget),
     mPluginParent(pPluginParent),
-    mSolverInterfaces(SolverInterfaces()),
     mSimulation(0),
     mSimulations(QMap<QString, SingleCellViewSimulation *>()),
     mStoppedSimulations(QList<SingleCellViewSimulation *>()),
@@ -581,7 +648,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
     if (!mSimulation) {
         // No simulation object currently exists for the model, so create one
 
-        mSimulation = new SingleCellViewSimulation(pFileName, cellmlFileRuntime, mSolverInterfaces);
+        mSimulation = new SingleCellViewSimulation(pFileName, cellmlFileRuntime);
 
         newSimulation = true;
 
@@ -630,7 +697,9 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
     // Retrieve our variable of integration, if any
 
-    CellMLSupport::CellMLFileRuntimeModelParameter *variableOfIntegration = validCellMLFileRuntime?cellmlFileRuntime->variableOfIntegration():0;
+    QSharedPointer<CellMLSupport::CellMLFileRuntimeModelParameter> variableOfIntegration;
+    if (validCellMLFileRuntime)
+        variableOfIntegration = cellmlFileRuntime->variableOfIntegration();
 
     // Output some information about our CellML file
 
@@ -648,12 +717,10 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
         QString additionalInformation = QString();
 
-        if (cellmlFileRuntime->needNlaSolver())
-            additionalInformation = " + "+tr("NLA system(s)");
-
         information += "<span"+OutputGood+">"+tr("valid")+"</span>."+OutputBrLn;
-        information += QString(OutputTab+"<strong>"+tr("Model type:")+"</strong> <span"+OutputInfo+">%1%2</span>."+OutputBrLn).arg((cellmlFileRuntime->modelType() == CellMLSupport::CellMLFileRuntime::Ode)?tr("ODE"):tr("DAE"),
-                                                                                                                                   additionalInformation);
+        // TODO: Replace this with something useful.
+        // information += QString(OutputTab+"<strong>"+tr("Model type:")+"</strong> <span"+OutputInfo+">%1%2</span>."+OutputBrLn).arg((cellmlFileRuntime->modelType() == CellMLSupport::CellMLFileRuntime::Ode)?tr("ODE"):tr("DAE"),
+        //        additionalInformation);
     } else {
         // Either we couldn't retrieve a runtime for the CellML file or we
         // could, but it's not valid or it's valid but then we don't have a
@@ -728,52 +795,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         solversWidget->initialize(pFileName, cellmlFileRuntime, mSimulation->data());
         parametersWidget->initialize(pFileName, cellmlFileRuntime, mSimulation->data());
 
-        // Check whether we have at least one ODE or DAE solver and, if needed,
-        // at least one NLA solver
-
-        if (cellmlFileRuntime->needNlaSolver()) {
-            if (solversWidget->nlaSolvers().isEmpty()) {
-                if (cellmlFileRuntime->needOdeSolver()) {
-                    if (solversWidget->odeSolvers().isEmpty())
-                        simulationError(tr("the model needs both an ODE and an NLA solver, but none are available"),
-                                        InvalidSimulationEnvironment);
-                    else
-                        simulationError(tr("the model needs both an ODE and an NLA solver, but no NLA solver is available"),
-                                        InvalidSimulationEnvironment);
-                } else {
-                    if (solversWidget->daeSolvers().isEmpty())
-                        simulationError(tr("the model needs both a DAE and an NLA solver, but none are available"),
-                                        InvalidSimulationEnvironment);
-                    else
-                        simulationError(tr("the model needs both a DAE and an NLA solver, but no NLA solver is available"),
-                                        InvalidSimulationEnvironment);
-                }
-            } else if (   cellmlFileRuntime->needOdeSolver()
-                       && solversWidget->odeSolvers().isEmpty()) {
-                simulationError(tr("the model needs both an ODE and an NLA solver, but no ODE solver is available"),
-                                InvalidSimulationEnvironment);
-            } else if (   cellmlFileRuntime->needDaeSolver()
-                       && solversWidget->daeSolvers().isEmpty()) {
-                    simulationError(tr("the model needs both a DAE and an NLA solver, but no DAE solver is available"),
-                                    InvalidSimulationEnvironment);
-            } else {
-                // We have the solver(s) we need, so...
-
-                hasError = false;
-            }
-        } else if (   cellmlFileRuntime->needOdeSolver()
-                   && solversWidget->odeSolvers().isEmpty()) {
-            simulationError(tr("the model needs an ODE solver, but none is available"),
-                            InvalidSimulationEnvironment);
-        } else if (   cellmlFileRuntime->needDaeSolver()
-                   && solversWidget->daeSolvers().isEmpty()) {
-            simulationError(tr("the model needs a DAE solver, but none is available"),
-                            InvalidSimulationEnvironment);
-        } else {
-            // We have the solver(s) we need, so...
-
-            hasError = false;
-        }
+        hasError = false;
     }
 
     // Check if an error occurred and, if so, show/hide some widgets
@@ -806,7 +828,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
     if (!hasError && newSimulation) {
         mSimulation->data()->reset();
-        mSimulation->results()->reset(false);
+        mSimulation->results()->reset();
     }
 
     // Attach/detach the curves, based on whether they are associated with then
@@ -815,10 +837,8 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
     foreach (SingleCellViewWidgetCurveData *curveData, mCurvesData)
         if (    curveData->isAttached()
             && !curveData->fileName().compare(pFileName)) {
-            curveData->curve()->setRawSamples(mSimulation->results()->points(),
-                                              curveData->yData(),
-                                              mSimulation->results()->size());
-
+            curveData->curve()->setData(new SingleCellViewQwtCurveDataAdaptor
+                                        (mSimulation, curveData));
             mActiveGraphPanel->plot()->attach(curveData->curve());
         } else {
             mActiveGraphPanel->plot()->detach(curveData->curve());
@@ -904,7 +924,8 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
     // Remove our curves' data associated with the given file name, if any
 
     QList<QString> fileNames = QList<QString>();
-    QList<CellMLSupport::CellMLFileRuntimeModelParameter *> modelParameters = QList<CellMLSupport::CellMLFileRuntimeModelParameter *>();
+    QList<QSharedPointer<CellMLSupport::CellMLFileRuntimeCompiledModelParameter> > modelParameters =
+        QList<QSharedPointer<CellMLSupport::CellMLFileRuntimeCompiledModelParameter> >();
 
     foreach (SingleCellViewWidgetCurveData *curveData, mCurvesData)
         if (!curveData->fileName().compare(pFileName)) {
@@ -1019,20 +1040,15 @@ void SingleCellViewWidget::on_actionRunPauseResume_triggered()
             SingleCellViewSimulationData *simulationData = mSimulation->data();
             SingleCellViewInformationSolversWidget *solversWidget = mContentsWidget->informationWidget()->solversWidget();
 
-            simulationData->setOdeSolverName(solversWidget->odeSolverData()->solversListProperty()->value()->text());
-            simulationData->setDaeSolverName(solversWidget->daeSolverData()->solversListProperty()->value()->text());
+            simulationData->setSolverName(solversWidget->solverData()->solversListProperty()->value()->text());
 
-            foreach (Core::Property *property, solversWidget->odeSolverData()->solversProperties().value(simulationData->odeSolverName()))
-                simulationData->addOdeSolverProperty(property->id(),
-                                                     (property->value()->type() == Core::PropertyItem::Integer)?
-                                                         Core::PropertyEditorWidget::integerPropertyItem(property->value()):
-                                                         Core::PropertyEditorWidget::doublePropertyItem(property->value()));
-
-            foreach (Core::Property *property, solversWidget->daeSolverData()->solversProperties().value(simulationData->daeSolverName()))
-                simulationData->addDaeSolverProperty(property->id(),
-                                                     (property->value()->type() == Core::PropertyItem::Integer)?
-                                                         Core::PropertyEditorWidget::integerPropertyItem(property->value()):
-                                                         Core::PropertyEditorWidget::doublePropertyItem(property->value()));
+            foreach (Core::Property *property, solversWidget->solverData()->solversProperties().value(simulationData->solverName()))
+                simulationData->addSolverProperty
+                (
+                 property->id(),
+                 (property->value()->type() == Core::PropertyItem::Integer)?
+                 Core::PropertyEditorWidget::integerPropertyItem(property->value()):
+                 Core::PropertyEditorWidget::doublePropertyItem(property->value()));
 
             // Check how much memory is needed to run our simulation
 
@@ -1063,19 +1079,16 @@ void SingleCellViewWidget::on_actionRunPauseResume_triggered()
 
                 mOldSimulationResultsSizes.insert(mSimulation, 0);
 
-                runSimulation = mSimulation->results()->reset();
+                mSimulation->results()->reset();
 
                 updateResults(mSimulation, 0);
 
                 // Effectively run our simulation, if possible
 
-                if (runSimulation)
-                    // Now, we really run our simulation
-
-                    mSimulation->run();
-                else
-                    QMessageBox::warning(qApp->activeWindow(), tr("Run the simulation"),
-                                         tr("Sorry, but we could not allocate all the memory required for the simulation."));
+                mSimulation->run();
+                // else
+                //     QMessageBox::warning(qApp->activeWindow(), tr("Run the simulation"),
+                //                          tr("Sorry, but we could not allocate all the memory required for the simulation."));
             }
 
             // We are done handline the action, so...
@@ -1103,14 +1116,7 @@ void SingleCellViewWidget::on_actionStop_triggered()
 void SingleCellViewWidget::on_actionReset_triggered()
 {
     // Reset our simulation parameters
-
     mSimulation->data()->reset();
-
-    // Reset our worker
-    // Note: indeed, if we are running a simulation then we may need to
-    //       reinitialise our solver (e.g. CVODE)...
-
-    mSimulation->resetWorker();
 }
 
 //==============================================================================
@@ -1240,13 +1246,7 @@ void SingleCellViewWidget::simulationStopped(const int &pElapsedTime)
             SingleCellViewSimulationData *simulationData = mSimulation->data();
             QString solversInformation = QString();
 
-            if (!simulationData->odeSolverName().isEmpty())
-                solversInformation += simulationData->odeSolverName();
-            else
-                solversInformation += simulationData->daeSolverName();
-
-            if (!simulationData->nlaSolverName().isEmpty())
-                solversInformation += "+"+simulationData->nlaSolverName();
+            solversInformation += simulationData->solverName();
 
             output(QString(OutputTab+"<strong>"+tr("Simulation time:")+"</strong> <span"+OutputInfo+">"+tr("%1 s using %2").arg(QString::number(0.001*pElapsedTime, 'g', 3), solversInformation)+"</span>."+OutputBrLn));
         }
@@ -1427,49 +1427,46 @@ void SingleCellViewWidget::simulationPropertyChanged(Core::Property *pProperty)
 
 //==============================================================================
 
+// Called when a solver property changes. We update the corresponding property
+// on the solver.
 void SingleCellViewWidget::solversPropertyChanged(Core::Property *pProperty)
 {
-    // Check whether any of our NLA solver's properties has been modified and,
-    // if so, then update our simulation data object accordingly
-    // Note: these are the only solvers propeties property we need to check
-    //       because they are the only ones that can potentially have an effect
-    //       on the value of 'computed constants' and 'variables'...
-
     SingleCellViewInformationSolversWidget *solversWidget = mContentsWidget->informationWidget()->solversWidget();
 
-    if (pProperty == solversWidget->nlaSolverData()->solversListProperty())
-        mSimulation->data()->setNlaSolverName(pProperty->value()->text());
+    if (pProperty == solversWidget->solverData()->solversListProperty())
+        mSimulation->data()->setSolverName(pProperty->value()->text());
     else
-        foreach (Core::Property *property, solversWidget->nlaSolverData()->solversProperties().value(mSimulation->data()->nlaSolverName()))
-            if (pProperty == property) {
-                mSimulation->data()->addNlaSolverProperty(pProperty->id(),
-                                                          (pProperty->value()->type() == Core::PropertyItem::Integer)?
-                                                              Core::PropertyEditorWidget::integerPropertyItem(pProperty->value()):
-                                                              Core::PropertyEditorWidget::doublePropertyItem(pProperty->value()));
-
-                break;
-            }
+      mSimulation->data()->addSolverProperty
+        (pProperty->id(),
+         (pProperty->value()->type() == Core::PropertyItem::Integer)?
+         Core::PropertyEditorWidget::integerPropertyItem(pProperty->value()):
+         Core::PropertyEditorWidget::doublePropertyItem(pProperty->value()));
 }
 
 //==============================================================================
 
 QString SingleCellViewWidget::modelParameterKey(const QString pFileName,
-                                                CellMLSupport::CellMLFileRuntimeModelParameter *pModelParameter)
+                                                QSharedPointer<CellMLSupport::CellMLFileRuntimeCompiledModelParameter>
+                                                pModelParameter)
 {
     // Return the for the given model parameter
-
     return pFileName+"|"+QString::number(pModelParameter->type())+"|"+QString::number(pModelParameter->index());
 }
 
 //==============================================================================
 
-void SingleCellViewWidget::showModelParameter(const QString &pFileName,
-                                              CellMLSupport::CellMLFileRuntimeModelParameter *pModelParameter,
-                                              const bool &pShow)
+void SingleCellViewWidget::showModelParameter
+(
+ const QString &pFileName,
+ CellMLSupport::CellMLFileRuntimeModelParameter* pModelParameter,
+ const bool &pShow
+)
 {
     // Determine the key for the given parameter
 
-    QString key = modelParameterKey(pFileName, pModelParameter);
+    QString key = modelParameterKey(pFileName,
+                                    mSimulation->data()->isDAETypeSolver() ? 
+                                      pModelParameter->DAEData() : pModelParameter->ODEData());
 
     // Retrieve the curve data associated with the key, if any
 
@@ -1482,9 +1479,8 @@ void SingleCellViewWidget::showModelParameter(const QString &pFileName,
         // our curve's data, in case we are to make it visible
 
         if (pShow) {
-            curveData->curve()->setRawSamples(mSimulation->results()->points(),
-                                              curveData->yData(),
-                                              mSimulation->results()->size());
+            curveData->curve()->setData(new SingleCellViewQwtCurveDataAdaptor
+                                        (mSimulation, curveData));
 
             mActiveGraphPanel->plot()->attach(curveData->curve());
         } else {
@@ -1499,9 +1495,8 @@ void SingleCellViewWidget::showModelParameter(const QString &pFileName,
 
         // Set some data for our curve
 
-        curve->setRawSamples(mSimulation->results()->points(),
-                             curveData->yData(),
-                             mSimulation->results()->size());
+        curve->setData(new SingleCellViewQwtCurveDataAdaptor
+                                        (mSimulation, curveData));
 
         // Attach the curve to our graph panel's plot
 
@@ -1549,9 +1544,8 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
 
                 // Update our curve's data
 
-                curveData->curve()->setRawSamples(mSimulation->results()->points(),
-                                                  curveData->yData(),
-                                                  pSize);
+                curveData->curve()->setData(new SingleCellViewQwtCurveDataAdaptor
+                                            (mSimulation, curveData));
 
                 // Draw the curve's new segment, but only if there is some data to
                 // plot and that we don't want to replot everything

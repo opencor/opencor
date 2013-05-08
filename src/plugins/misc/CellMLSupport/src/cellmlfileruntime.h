@@ -14,7 +14,7 @@
 
 #include <QList>
 #include <QObject>
-#include <QExplicitlySharedDataPointer>
+#include <QSharedPointer>
 
 //==============================================================================
 
@@ -74,10 +74,10 @@ public:
                                              int );
     void DAEData(const CellMLFileRuntimeCompiledModelParameter::ModelParameterType &pType, const int &pIndex);
     void ODEData(const CellMLFileRuntimeCompiledModelParameter::ModelParameterType &pType, const int &pIndex);
-    QExplicitlySharedDataPointer<CellMLFileRuntimeCompiledModelParameter> DAEData() {
+    QSharedPointer<CellMLFileRuntimeCompiledModelParameter> DAEData() {
         return mDAEData;
     }
-    QExplicitlySharedDataPointer<CellMLFileRuntimeCompiledModelParameter> ODEData() {
+    QSharedPointer<CellMLFileRuntimeCompiledModelParameter> ODEData() {
         return mODEData;
     }
 
@@ -89,12 +89,12 @@ public:
 private:
     ObjRef<iface::cellml_api::CellMLVariable> mVariable;
     int mDegree;
-    QExplicitlySharedDataPointer<CellMLFileRuntimeCompiledModelParameter> mDAEData, mODEData;
+    QSharedPointer<CellMLFileRuntimeCompiledModelParameter> mDAEData, mODEData;
 };
 
 //==============================================================================
 
-typedef QList<QExplicitlySharedDataPointer<CellMLFileRuntimeModelParameter> > CellMLFileRuntimeModelParameters;
+typedef QList<QSharedPointer<CellMLFileRuntimeModelParameter> > CellMLFileRuntimeModelParameters;
 
 //==============================================================================
 
@@ -111,13 +111,16 @@ public:
     CellMLFileIssues issues() const;
     CellMLFileRuntimeModelParameters modelParameters() const;
     CellMLFileRuntime * update(CellMLFile *pCellMLFile);
-    QExplicitlySharedDataPointer<CellMLFileRuntimeModelParameter> variableOfIntegration() const;
+    QSharedPointer<CellMLFileRuntimeModelParameter> variableOfIntegration() const;
     iface::cellml_services::ODESolverCompiledModel* odeCompiledModel() {
       return mODEModel;
     }
     iface::cellml_services::DAESolverCompiledModel* daeCompiledModel() {
       return mDAEModel;
     }
+
+    void ensureODECompiledModel(bool pDebug = false);
+    void ensureDAECompiledModel(bool pDebug = false);
 
 private:
     ObjRef<iface::cellml_api::Model> mModel;
@@ -128,7 +131,7 @@ private:
 
     CellMLFileIssues mIssues;
 
-    QExplicitlySharedDataPointer<CellMLFileRuntimeModelParameter> mVariableOfIntegration;
+    QSharedPointer<CellMLFileRuntimeModelParameter> mVariableOfIntegration;
     CellMLFileRuntimeModelParameters mModelParameters;
 
     void resetODECodeInformation();
@@ -142,9 +145,6 @@ private:
     void unexpectedProblemDuringModelCompilationIssue();
 
     void checkCodeInformation(iface::cellml_services::CodeInformation *pCodeInformation);
-
-    void ensureODECompiledModel(iface::cellml_api::Model *pModel, bool pDebug = false);
-    void ensureDAECompiledModel(iface::cellml_api::Model *pModel, bool pDebug = false);
 
     QString functionCode(const QString &pFunctionSignature,
                          const QString &pFunctionBody,

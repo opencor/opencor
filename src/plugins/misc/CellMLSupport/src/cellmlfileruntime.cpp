@@ -119,7 +119,8 @@ CellMLFileRuntimeModelParameter::DAEData
 {
     if (!mDAEData)
         mDAEData =
-            new CellMLFileRuntimeCompiledModelParameter(pType, pIndex);
+          QSharedPointer<CellMLFileRuntimeCompiledModelParameter>
+          (new CellMLFileRuntimeCompiledModelParameter(pType, pIndex));
     else
         mDAEData->update(pType, pIndex);
 }
@@ -133,7 +134,8 @@ CellMLFileRuntimeModelParameter::ODEData
 {
     if (!mODEData)
         mODEData =
-            new CellMLFileRuntimeCompiledModelParameter(pType, pIndex);
+          QSharedPointer<CellMLFileRuntimeCompiledModelParameter>
+          (new CellMLFileRuntimeCompiledModelParameter(pType, pIndex));
     else
         mODEData->update(pType, pIndex);
 }
@@ -223,7 +225,7 @@ void CellMLFileRuntime::reset(const bool &pResetIssues)
     if (pResetIssues)
         mIssues.clear();
 
-    mVariableOfIntegration = NULL;
+    mVariableOfIntegration.clear();
     mModelParameters.clear();
 }
 
@@ -245,7 +247,7 @@ void CellMLFileRuntime::unexpectedProblemDuringModelCompilationIssue()
 
 //==============================================================================
 
-void CellMLFileRuntime::ensureODECompiledModel(iface::cellml_api::Model *pModel, bool pDebug)
+void CellMLFileRuntime::ensureODECompiledModel(bool pDebug)
 {
     if (mODEModel && pDebug == mODECompiledForDebug)
         return;
@@ -256,8 +258,8 @@ void CellMLFileRuntime::ensureODECompiledModel(iface::cellml_api::Model *pModel,
 
     try {
         mODEModel = mODECompiledForDebug ?
-            intService->compileDebugModelODE(pModel) :
-            intService->compileModelODE(pModel);
+            intService->compileDebugModelODE(mModel) :
+            intService->compileModelODE(mModel);
     } catch (iface::cellml_api::CellMLException &) {
         mIssues << CellMLFileIssue(CellMLFileIssue::Error,
                                    QString::fromStdWString(intService->lastError()));
@@ -272,7 +274,7 @@ void CellMLFileRuntime::ensureODECompiledModel(iface::cellml_api::Model *pModel,
 
 //==============================================================================
 
-void CellMLFileRuntime::ensureDAECompiledModel(iface::cellml_api::Model *pModel, bool pDebug)
+void CellMLFileRuntime::ensureDAECompiledModel(bool pDebug)
 {
     if (mODEModel && pDebug == mDAECompiledForDebug)
         return;
@@ -283,8 +285,8 @@ void CellMLFileRuntime::ensureDAECompiledModel(iface::cellml_api::Model *pModel,
 
     try {
         mDAEModel = mODECompiledForDebug ?
-            intService->compileDebugModelDAE(pModel) :
-            intService->compileModelDAE(pModel);
+            intService->compileDebugModelDAE(mModel) :
+            intService->compileModelDAE(mModel);
     } catch (iface::cellml_api::CellMLException &) {
         mIssues << CellMLFileIssue(CellMLFileIssue::Error,
                                    QString::fromStdWString(intService->lastError()));
@@ -339,8 +341,8 @@ QString CellMLFileRuntime::functionCode(const QString &pFunctionSignature,
 
 //==============================================================================
 
-bool sortModelParameters(QExplicitlySharedDataPointer<CellMLFileRuntimeModelParameter> pModelParameter1,
-                         QExplicitlySharedDataPointer<CellMLFileRuntimeModelParameter> pModelParameter2)
+bool sortModelParameters(QSharedPointer<CellMLFileRuntimeModelParameter> pModelParameter1,
+                         QSharedPointer<CellMLFileRuntimeModelParameter> pModelParameter2)
 {
     // Determine which of the two model parameters should be first
     // Note: the two comparisons which result we return are case insensitive,
@@ -442,8 +444,8 @@ CellMLFileRuntime * CellMLFileRuntime::update(CellMLFile *pCellMLFile)
 
         // Keep track of the model parameter
 
-        QExplicitlySharedDataPointer<CellMLFileRuntimeModelParameter> modelParameter =
-            QExplicitlySharedDataPointer<CellMLFileRuntimeModelParameter>
+        QSharedPointer<CellMLFileRuntimeModelParameter> modelParameter =
+            QSharedPointer<CellMLFileRuntimeModelParameter>
             (new CellMLFileRuntimeModelParameter(variable, computationTarget->degree()));
 
         if (computationTarget->type() == iface::cellml_services::VARIABLE_OF_INTEGRATION)
@@ -460,9 +462,9 @@ CellMLFileRuntime * CellMLFileRuntime::update(CellMLFile *pCellMLFile)
 
 //==============================================================================
 
-QExplicitlySharedDataPointer<CellMLFileRuntimeModelParameter> CellMLFileRuntime::variableOfIntegration() const
+QSharedPointer<CellMLFileRuntimeModelParameter> CellMLFileRuntime::variableOfIntegration() const
 {
-    // Return our variable of integration, if any
+    // Return our variable of integration, if any.
     return mVariableOfIntegration;
 }
 

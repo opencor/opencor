@@ -126,10 +126,6 @@
         <source>the ending point is smaller than the starting point, so the point interval should be smaller than zero</source>
         <translation>le point d&apos;arrivée est plus petit que le point de départ, donc l&apos;interval de point devrait être plus petit que zéro</translation>
     </message>
-    <message>
-        <source>the simulation worker could not be created</source>
-        <translation>l&apos;agent de simulation n&apos;a pas pu être créé</translation>
-    </message>
 </context>
 <context>
     <name>OpenCOR::SingleCellView::SingleCellViewWidget</name>
@@ -158,18 +154,6 @@
         <translation>valide</translation>
     </message>
     <message>
-        <source>Model type:</source>
-        <translation>Type de modèle :</translation>
-    </message>
-    <message>
-        <source>ODE</source>
-        <translation>EDO</translation>
-    </message>
-    <message>
-        <source>DAE</source>
-        <translation>EAD</translation>
-    </message>
-    <message>
         <source>invalid</source>
         <translation>invalide</translation>
     </message>
@@ -184,38 +168,6 @@
     <message>
         <source>the model must have at least one ODE or DAE</source>
         <translation>le modèle doit avoir au moins une EDO ou EAD</translation>
-    </message>
-    <message>
-        <source>the model needs both an ODE and an NLA solver, but none are available</source>
-        <translation>le modèle a besoin à la fois d&apos;un solveur EDO et d&apos;un solveur ALN, mais aucun n&apos;est disponible</translation>
-    </message>
-    <message>
-        <source>the model needs both a DAE and an NLA solver, but none are available</source>
-        <translation>le modèle a besoin à la fois d&apos;un solveur EAD et d&apos;un solveur ALN, mais aucun n&apos;est disponible</translation>
-    </message>
-    <message>
-        <source>the model needs both an ODE and an NLA solver, but no NLA solver is available</source>
-        <translation>le modèle a besoin à la fois d&apos;un solveur EDO et d&apos;un solveur ALN, mais aucun solveur ALN n&apos;est disponible</translation>
-    </message>
-    <message>
-        <source>the model needs both a DAE and an NLA solver, but no NLA solver is available</source>
-        <translation>le modèle a besoin à la fois d&apos;un solveur EAD et d&apos;un solveur ALN, mais aucun solveur ALN n&apos;est disponible</translation>
-    </message>
-    <message>
-        <source>the model needs both an ODE and an NLA solver, but no ODE solver is available</source>
-        <translation>le modèle a besoin à la fois d&apos;un solveur EDO et d&apos;un solveur ALN, mais aucun solveur EDO n&apos;est disponible</translation>
-    </message>
-    <message>
-        <source>the model needs both a DAE and an NLA solver, but no DAE solver is available</source>
-        <translation>le modèle a besoin à la fois d&apos;un solveur EAD et d&apos;un solveur ALN, mais aucun solveur EAD n&apos;est disponible</translation>
-    </message>
-    <message>
-        <source>the model needs an ODE solver, but none is available</source>
-        <translation>le modèle a besoin d&apos;un solveur EDO, mais aucun n&apos;est disponible</translation>
-    </message>
-    <message>
-        <source>the model needs a DAE solver, but none is available</source>
-        <translation>le modèle a besoin d&apos;un solveur EAD, mais aucun n&apos;est disponible</translation>
     </message>
     <message>
         <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; view requires a valid simulation environment to work...</source>
@@ -236,14 +188,6 @@
     <message>
         <source>Sorry, but the simulation requires %1 of memory while you have %2 left.</source>
         <translation>Désolé, mais la simulation requiert %1 de mémoire alors qu&apos;il vous reste %2.</translation>
-    </message>
-    <message>
-        <source>NLA system(s)</source>
-        <translation>Système(s) ANL</translation>
-    </message>
-    <message>
-        <source>Sorry, but we could not allocate all the memory required for the simulation.</source>
-        <translation>Désolé, mais nous n&apos;avons pas pu allouer toute la mémoire nécessaire pour la simulation.</translation>
     </message>
     <message>
         <source>Run the simulation</source>

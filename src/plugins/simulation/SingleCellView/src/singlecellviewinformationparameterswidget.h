@@ -65,7 +65,7 @@ public:
 private:
     QMap<QString, Core::PropertyEditorWidget *> mPropertyEditors;
 
-    QMap<Core::Property *, QExplicitlySharedDataPointer<CellMLSupport::CellMLFileRuntimeModelParameter> > mModelParameters;
+    QMap<Core::Property *, QSharedPointer<CellMLSupport::CellMLFileRuntimeModelParameter> > mModelParameters;
 
     QList<int> mColumnWidths;
 
@@ -78,7 +78,7 @@ private:
 
 Q_SIGNALS:
     void showModelParameter(const QString &pFileName,
-                            QExplicitlySharedDataPointer<CellMLSupport::CellMLFileRuntimeModelParameter> pParameter,
+                            QSharedPointer<CellMLSupport::CellMLFileRuntimeModelParameter> pParameter,
                             const bool &pShow);
 
 public Q_SLOTS:

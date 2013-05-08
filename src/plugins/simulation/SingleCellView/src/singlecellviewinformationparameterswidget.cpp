@@ -22,7 +22,7 @@ namespace SingleCellView {
 SingleCellViewInformationParametersWidget::SingleCellViewInformationParametersWidget(QWidget *pParent) :
     QStackedWidget(pParent),
     mPropertyEditors(QMap<QString, Core::PropertyEditorWidget *>()),
-    mModelParameters(QMap<Core::Property *, QExplicitlySharedDataPointer<CellMLSupport::CellMLFileRuntimeModelParameter> >()),
+    mModelParameters(QMap<Core::Property *, QSharedPointer<CellMLSupport::CellMLFileRuntimeModelParameter> >()),
     mColumnWidths(QList<int>()),
     mSimulationData(0)
 {
@@ -175,9 +175,9 @@ void SingleCellViewInformationParametersWidget::updateParameters()
     // Update our property editor's data
 
     foreach (Core::Property *property, propertyEditor->properties()) {
-        QExplicitlySharedDataPointer<CellMLSupport::CellMLFileRuntimeModelParameter> modelParameter = mModelParameters.value(property);
+        QSharedPointer<CellMLSupport::CellMLFileRuntimeModelParameter> modelParameter = mModelParameters.value(property);
 
-        QExplicitlySharedDataPointer<CellMLSupport::CellMLFileRuntimeCompiledModelParameter> compiledParameter;
+        QSharedPointer<CellMLSupport::CellMLFileRuntimeCompiledModelParameter> compiledParameter;
         if (modelParameter && mSimulationData) {
           compiledParameter = mSimulationData->isDAETypeSolver() ?
             modelParameter->DAEData() : modelParameter->ODEData();
@@ -231,9 +231,9 @@ void SingleCellViewInformationParametersWidget::propertyChanged(Core::Property *
 
     // Update our simulation data
 
-    QExplicitlySharedDataPointer<CellMLSupport::CellMLFileRuntimeModelParameter> modelParameter = mModelParameters.value(pProperty);
+    QSharedPointer<CellMLSupport::CellMLFileRuntimeModelParameter> modelParameter = mModelParameters.value(pProperty);
 
-    QExplicitlySharedDataPointer<CellMLSupport::CellMLFileRuntimeCompiledModelParameter> compiledParameter;
+    QSharedPointer<CellMLSupport::CellMLFileRuntimeCompiledModelParameter> compiledParameter;
     if (modelParameter && mSimulationData) {
         compiledParameter = mSimulationData->isDAETypeSolver() ?
             modelParameter->DAEData() : modelParameter->ODEData();
@@ -313,11 +313,11 @@ void SingleCellViewInformationParametersWidget::populateModel(Core::PropertyEdit
 
     Core::Property *section = 0;
 
-    foreach (QExplicitlySharedDataPointer<CellMLSupport::CellMLFileRuntimeModelParameter> modelParameter, pRuntime->modelParameters()) {
+    foreach (QSharedPointer<CellMLSupport::CellMLFileRuntimeModelParameter> modelParameter, pRuntime->modelParameters()) {
         // Check whether the current model parameter is in the same component as
         // the previous one
 
-        QExplicitlySharedDataPointer<CellMLSupport::CellMLFileRuntimeCompiledModelParameter> compiledParameter;
+        QSharedPointer<CellMLSupport::CellMLFileRuntimeCompiledModelParameter> compiledParameter;
         if (modelParameter && mSimulationData) {
           compiledParameter = mSimulationData->isDAETypeSolver() ?
             modelParameter->DAEData() : modelParameter->ODEData();
@@ -433,9 +433,9 @@ void SingleCellViewInformationParametersWidget::updateModelParametersToolTips()
     // Update the tool tip of all our property editor's properties
 
     foreach (Core::Property *property, propertyEditor->properties()) {
-        QExplicitlySharedDataPointer<CellMLSupport::CellMLFileRuntimeModelParameter> modelParameter = mModelParameters.value(property);
+        QSharedPointer<CellMLSupport::CellMLFileRuntimeModelParameter> modelParameter = mModelParameters.value(property);
 
-        QExplicitlySharedDataPointer<CellMLSupport::CellMLFileRuntimeCompiledModelParameter> compiledParameter;
+        QSharedPointer<CellMLSupport::CellMLFileRuntimeCompiledModelParameter> compiledParameter;
         if (modelParameter && mSimulationData) {
           compiledParameter = mSimulationData->isDAETypeSolver() ?
             modelParameter->DAEData() : modelParameter->ODEData();

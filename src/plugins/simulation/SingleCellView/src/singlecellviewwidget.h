@@ -9,6 +9,7 @@
 
 #include "solverinterface.h"
 #include "viewwidget.h"
+#include "qwt_series_data.h"
 
 //==============================================================================
 
@@ -47,6 +48,7 @@ namespace Core {
 
 namespace CellMLSupport {
     class CellMLFileRuntimeModelParameter;
+    class CellMLFileRuntimeCompiledModelParameter;
 }   // namespace CellMLSupport
 
 //==============================================================================
@@ -60,6 +62,9 @@ class SingleCellViewGraphPanelPlotCurve;
 class SingleCellViewGraphPanelWidget;
 class SingleCellViewPlugin;
 class SingleCellViewSimulation;
+class SingleCellViewSimulationResults;
+
+//==============================================================================
 
 //==============================================================================
 
@@ -68,30 +73,60 @@ class SingleCellViewWidgetCurveData
 public:
     explicit SingleCellViewWidgetCurveData(const QString &pFileName,
                                            SingleCellViewSimulation *pSimulation,
-                                           CellMLSupport::CellMLFileRuntimeModelParameter *pModelParameter,
+                                           CellMLSupport::CellMLFileRuntimeModelParameter*
+                                             pModelParameter,
                                            SingleCellViewGraphPanelPlotCurve *pCurve);
 
     QString fileName() const;
 
-    CellMLSupport::CellMLFileRuntimeModelParameter * modelParameter() const;
+    QSharedPointer<CellMLSupport::CellMLFileRuntimeCompiledModelParameter> modelParameter() const;
 
     SingleCellViewGraphPanelPlotCurve * curve() const;
 
-    double * yData() const;
-
     bool isAttached() const;
     void setAttached(const bool &pAttached);
+
+    QSharedPointer<CellMLSupport::CellMLFileRuntimeCompiledModelParameter> modelParameterY()
+    {
+        return mModelParameterY;
+    }
 
 private:
     QString mFileName;
 
     SingleCellViewSimulation *mSimulation;
 
-    CellMLSupport::CellMLFileRuntimeModelParameter *mModelParameter;
+    QSharedPointer<CellMLSupport::CellMLFileRuntimeCompiledModelParameter> mModelParameterY;
 
     SingleCellViewGraphPanelPlotCurve *mCurve;
 
     bool mAttached;
+};
+
+class SingleCellViewQwtCurveDataAdaptor
+    : public QwtSeriesData<QPointF>
+{
+public:
+    SingleCellViewQwtCurveDataAdaptor(SingleCellViewSimulation* pSimulation,
+                                      SingleCellViewWidgetCurveData* pCurveData);
+
+    virtual QRectF boundingRect() const;
+    virtual size_t size() const;
+    virtual QPointF sample(size_t i) const;
+
+private:
+    double sampleBvar(size_t i) const;
+    double sampleStateY(size_t i) const;
+    double sampleRateY(size_t i) const;
+    double sampleAlgebraicY(size_t i) const;
+    double sampleConstantY(size_t i) const;
+
+    double mConstantYValue;
+    int mSampleYIndex;
+
+    SingleCellViewSimulationResults* mSimulationResults;
+    double (SingleCellViewQwtCurveDataAdaptor::* mSampleY)(size_t i) const;
+    size_t mSize;
 };
 
 //==============================================================================
@@ -130,8 +165,6 @@ private:
     Ui::SingleCellViewWidget *mGui;
 
     SingleCellViewPlugin *mPluginParent;
-
-    SolverInterfaces mSolverInterfaces;
 
     SingleCellViewSimulation *mSimulation;
     QMap<QString, SingleCellViewSimulation *> mSimulations;
@@ -206,7 +239,8 @@ private:
     void checkResults(SingleCellViewSimulation *pSimulation);
 
     QString modelParameterKey(const QString pFileName,
-                              CellMLSupport::CellMLFileRuntimeModelParameter *pModelParameter);
+                              QSharedPointer<CellMLSupport::CellMLFileRuntimeCompiledModelParameter>
+                              pModelParameter);
 
 private Q_SLOTS:
     void on_actionRunPauseResume_triggered();
@@ -241,7 +275,7 @@ private Q_SLOTS:
     void solversPropertyChanged(Core::Property *pProperty);
 
     void showModelParameter(const QString &pFileName,
-                            CellMLSupport::CellMLFileRuntimeModelParameter *pParameter,
+                            CellMLSupport::CellMLFileRuntimeModelParameter* pParameter,
                             const bool &pShow);
 
     void callCheckResults();

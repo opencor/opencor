@@ -7,11 +7,10 @@
 
 //==============================================================================
 
-#include "singlecellviewsimulationworker.h"
-
-//==============================================================================
-
 #include <QObject>
+#include <QMap>
+#include "cellml-api-cxx-support.hpp"
+#include "IfaceCIS.hxx"
 
 //==============================================================================
 
@@ -39,6 +38,79 @@ class SingleCellViewWidget;
 
 //==============================================================================
 
+class GrabInitialValueListener 
+    : public QObject, public iface::cellml_services::IntegrationProgressObserver
+{
+public:
+    Q_OBJECT
+
+    CDA_IMPL_REFCOUNT;
+    CDA_IMPL_QI1(cellml_services::IntegrationProgressObserver);
+
+    GrabInitialValueListener(iface::cellml_services::CellMLIntegrationRun* pRun);
+
+    std::string objid() throw() {
+        return "initialvaluelistener";
+    }
+
+    void computedConstants(const std::vector<double>& pConstValues) throw() {
+        mConstValues = pConstValues;
+    }
+    void results(const std::vector<double>& pState) throw();
+
+    void done() throw() {}
+    void failed(const std::string& pFailWhy) throw();
+
+    std::vector<double>& consts() { return mConstValues; }
+    std::vector<double>& states() { return mState; }
+
+private:
+    bool mHadResults;
+    ObjRef<iface::cellml_services::CellMLIntegrationRun> mRun;
+    std::vector<double> mConstValues;
+    std::vector<double> mState;
+
+Q_SIGNALS:
+    void resultsReady();
+    void solveFailure(QString pFailWhy);
+};
+
+class ResultListener
+    : public QObject, public iface::cellml_services::IntegrationProgressObserver
+{
+public:
+    Q_OBJECT
+    CDA_IMPL_REFCOUNT;
+    CDA_IMPL_QI1(cellml_services::IntegrationProgressObserver);
+
+    ResultListener(iface::cellml_services::CellMLIntegrationRun* pRun,
+                   int pNStates, int pNAlgebraic);
+
+    std::string objid() throw() {
+        return "resultlistener";
+    }
+
+    void computedConstants(const std::vector<double>&) throw() {
+    }
+    void results(const std::vector<double>& pState) throw();
+
+    void done() throw();
+    void failed(const std::string& pFailWhy) throw();
+
+private:
+    ObjRef<iface::cellml_services::CellMLIntegrationRun> mRun;
+    int mNStates, mNAlgebraic;
+
+Q_SIGNALS:
+    void solveDone();
+    void solveFailure(QString pFailWhy);
+    void solvePointAvailable(double bvar, QList<double> states,
+                             QList<double> rates, QList<double> algebraic);
+};
+
+
+class SingleCellViewSimulation;
+
 class SingleCellViewSimulationData : public QObject
 {
     Q_OBJECT
@@ -47,11 +119,22 @@ public:
     explicit SingleCellViewSimulationData(CellMLSupport::CellMLFileRuntime *pRuntime);
     ~SingleCellViewSimulationData();
 
-    double * constants() const;
-    double * states() const;
-    double * rates() const;
-    double * algebraic() const;
-    double * condVar() const;
+    enum SimulatorState {
+      SIMSTATE_INITIAL,
+      SIMSTATE_WAITING_IV,
+      SIMSTATE_GOT_IV,
+      SIMSTATE_WAITING_RESULTS,
+      SIMSTATE_PAUSED
+    };
+
+    QList<double> constants() const;
+    QList<double> states() const;
+    QList<double> rates() const;
+    QList<double> algebraic() const;
+    QList<double> condVar() const;
+
+    void pause();
+    void resume();
 
     int delay() const;
     void setDelay(const int &pDelay);
@@ -77,14 +160,22 @@ public:
     void reset();
 
     void recomputeComputedConstantsAndVariables();
-    void recomputeVariables(const double &pCurrentPoint,
-                            const bool &pEmitSignal = true);
 
     void checkForModifications();
+
+    SimulatorState state() { return mState; }
+    void startMainSimulation(SingleCellViewSimulation* pSignalsTo);
+    void stopAllSimulations();
 
 private:
     CellMLSupport::CellMLFileRuntime *mRuntime;
 
+    SimulatorState mState;
+    ObjRef<GrabInitialValueListener> mIVGrabber;
+    ObjRef<ResultListener> mResultReceiver;
+    ObjRef<iface::cellml_services::CellMLIntegrationRun> mIntegrationRun;
+
+    bool mDidReset;
     int mDelay;
 
     double mStartingPoint;
@@ -94,23 +185,28 @@ private:
     QString mSolverName;
     Properties mSolverProperties;
 
-    double *mConstants;
-    double *mStates;
-    double *mRates;
-    double *mAlgebraic;
-    double *mCondVar;
+    QList<double> mConstants;
+    QList<double> mStates;
+    QList<double> mRates;
+    QList<double> mAlgebraic;
+    QList<double> mCondVar;
 
-    double *mInitialConstants;
-    double *mInitialStates;
+    QList<double> mInitialConstants;
+    QList<double> mInitialStates;
 
-    void allocateStorageArrays();
-    void freeStorageArrays();
+    void ensureCodeCompiled();
+    void newIntegrationRun();
+    void setupOverrides();
 
 Q_SIGNALS:
     void updated();
     void modified(const bool &pIsModified);
 
     void error(const QString &pMessage);
+
+private Q_SLOTS:
+    void initialValuesIn();
+    void initialValuesFailed(QString pFailWhy);
 };
 
 //==============================================================================
@@ -118,41 +214,34 @@ Q_SIGNALS:
 class SingleCellViewSimulationResults : public QObject
 {
 public:
+    typedef QList<QList<double> > Matrix;
+
     explicit SingleCellViewSimulationResults(CellMLSupport::CellMLFileRuntime *pRuntime,
                                              SingleCellViewSimulation *pSimulation);
     ~SingleCellViewSimulationResults();
 
-    bool reset(const bool &pCreateArrays = true);
+    void reset();
 
     void addPoint(const double &pPoint);
 
     qulonglong size() const;
 
-    double * points() const;
-
-    double **constants() const;
-    double **states() const;
-    double **rates() const;
-    double **algebraic() const;
+    QList<double> points() const;
+    
+    Matrix states() const;
+    Matrix rates() const;
+    Matrix algebraic() const;
 
     bool exportToCsv(const QString &pFileName) const;
 
 private:
     CellMLSupport::CellMLFileRuntime *mRuntime;
-
     SingleCellViewSimulation *mSimulation;
-
-    qulonglong mSize;
-
-    double *mPoints;
-
-    double **mConstants;
-    double **mStates;
-    double **mRates;
-    double **mAlgebraic;
-
-    bool createArrays();
-    void deleteArrays();
+    QList<double> mPoints;
+    // Note that the outer list index is timestep, the inner is variable offset.
+    // Doing it this way allows us to leverage the implicit COW sharing supported
+    // by QList to avoid unneeded data copying.
+    Matrix mStates, mRates, mAlgebraic;
 };
 
 //==============================================================================
@@ -165,7 +254,7 @@ class SingleCellViewSimulation : public QObject
 
 public:
     explicit SingleCellViewSimulation(const QString &pFileName,
-                                                CellMLSupport::CellMLFileRuntime *pRuntime);
+                                      CellMLSupport::CellMLFileRuntime *pRuntime);
     ~SingleCellViewSimulation();
 
     QString fileName() const;
@@ -189,11 +278,7 @@ public:
     void resume();
     void stop();
 
-    void resetWorker();
-
 private:
-    SingleCellViewSimulationWorker *mWorker;
-
     QString mFileName;
 
     CellMLSupport::CellMLFileRuntime *mRuntime;
@@ -202,6 +287,12 @@ private:
     SingleCellViewSimulationResults *mResults;
 
     bool simulationSettingsOk(const bool &pEmitError = true);
+
+public Q_SLOTS:
+    void simulationComplete();
+    void simulationFailed(const std::string& pError);
+    void simulationDataAvailable(double pPoint, QList<double> pStates,
+                                 QList<double> pRates, QList<double> pAlgebraic);
 
 Q_SIGNALS:
     void running(const bool &pIsResuming);
