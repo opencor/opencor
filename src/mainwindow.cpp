@@ -88,13 +88,6 @@ MainWindow::MainWindow(SharedTools::QtSingleApplication *pApp) :
 
     mPluginManager = new PluginManager(PluginInfo::Gui);
 
-    // Specify some general docking settings
-
-    setCorner(Qt::TopLeftCorner, Qt::LeftDockWidgetArea);
-    setCorner(Qt::TopRightCorner, Qt::RightDockWidgetArea);
-    setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
-    setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
-
     // Set up the GUI
     // Note: the application icon (which needs to be set for Linux, but not for
     //       Windows or OS X, since it's set through CMake in those cases (see
