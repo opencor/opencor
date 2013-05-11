@@ -182,12 +182,12 @@ void SingleCellViewInformationParametersWidget::updateParameters()
                 propertyEditor->setDoublePropertyItem(property->value(), mSimulationData->constants()[modelParameter->index()]);
 
                 break;
-            case CellMLSupport::CellmlFileRuntimeModelParameter::State:
-                propertyEditor->setDoublePropertyItem(property->value(), mSimulationData->states()[modelParameter->index()]);
-
-                break;
             case CellMLSupport::CellmlFileRuntimeModelParameter::Rate:
                 propertyEditor->setDoublePropertyItem(property->value(), mSimulationData->rates()[modelParameter->index()]);
+
+                break;
+            case CellMLSupport::CellmlFileRuntimeModelParameter::State:
+                propertyEditor->setDoublePropertyItem(property->value(), mSimulationData->states()[modelParameter->index()]);
 
                 break;
             case CellMLSupport::CellmlFileRuntimeModelParameter::Algebraic:
@@ -341,14 +341,14 @@ void SingleCellViewInformationParametersWidget::populateModel(Core::PropertyEdit
             modelParameterIcon = QIcon(":SingleCellView_computedConstant");
 
             break;
+        case CellMLSupport::CellmlFileRuntimeModelParameter::Rate:
+            modelParameterIcon = QIcon(":SingleCellView_rate");
+
+            break;
         case CellMLSupport::CellmlFileRuntimeModelParameter::State:
             modelParameterEditable = true;
 
             modelParameterIcon = QIcon(":SingleCellView_state");
-
-            break;
-        case CellMLSupport::CellmlFileRuntimeModelParameter::Rate:
-            modelParameterIcon = QIcon(":SingleCellView_rate");
 
             break;
         case CellMLSupport::CellmlFileRuntimeModelParameter::Algebraic:
@@ -426,12 +426,12 @@ void SingleCellViewInformationParametersWidget::updateModelParametersToolTips()
                 modelParameterType = tr("computed constant");
 
                 break;
-            case CellMLSupport::CellmlFileRuntimeModelParameter::State:
-                modelParameterType = tr("state");
-
-                break;
             case CellMLSupport::CellmlFileRuntimeModelParameter::Rate:
                 modelParameterType = tr("rate");
+
+                break;
+            case CellMLSupport::CellmlFileRuntimeModelParameter::State:
+                modelParameterType = tr("state");
 
                 break;
             case CellMLSupport::CellmlFileRuntimeModelParameter::Algebraic:

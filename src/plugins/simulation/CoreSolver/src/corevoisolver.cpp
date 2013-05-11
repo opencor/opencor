@@ -13,7 +13,7 @@ namespace CoreSolver {
 
 CoreVoiSolver::CoreVoiSolver() :
     CoreSolver(),
-    mStatesCount(0),
+    mRatesStatesCount(0),
     mConstants(0),
     mStates(0),
     mRates(0),

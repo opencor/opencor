@@ -17,10 +17,6 @@ namespace IDASolver {
 
 //==============================================================================
 
-static const int SizeOfDouble = sizeof(double);
-
-//==============================================================================
-
 int residualFunction(double pVoi, N_Vector pStates, N_Vector pRates,
                      N_Vector pResiduals, void *pUserData)
 {
@@ -28,17 +24,20 @@ int residualFunction(double pVoi, N_Vector pStates, N_Vector pRates,
 
     IdaSolverUserData *userData = static_cast<IdaSolverUserData *>(pUserData);
 
-    double *states    = N_VGetArrayPointer(pStates);
     double *rates     = N_VGetArrayPointer(pRates);
+    double *states    = N_VGetArrayPointer(pStates);
     double *residuals = N_VGetArrayPointer(pResiduals);
 
     userData->computeEssentialVariables()(pVoi, userData->constants(), rates,
-                                          states, userData->algebraic(),
+                                          userData->oldRates(), states,
+                                          userData->oldStates(),
+                                          userData->algebraic(),
                                           userData->condVar());
 
-    userData->computeResiduals()(pVoi, userData->constants(), rates, states,
-                                 userData->algebraic(), userData->condVar(),
-                                 residuals);
+    userData->computeResiduals()(pVoi, userData->constants(), rates,
+                                 userData->oldRates(), states,
+                                 userData->oldStates(), userData->algebraic(),
+                                 userData->condVar(), residuals);
 
     // Everything went fine, so...
 
@@ -56,7 +55,9 @@ int rootFindingFunction(double pVoi, N_Vector pStates, N_Vector pRates,
 
     userData->computeRootInformation()(pVoi, userData->constants(),
                                        N_VGetArrayPointer(pRates),
+                                       userData->oldRates(),
                                        N_VGetArrayPointer(pStates),
+                                       userData->oldStates(),
                                        userData->algebraic(), pRoots);
 
     // Everything went fine, so...
@@ -80,11 +81,15 @@ void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
 
 //==============================================================================
 
-IdaSolverUserData::IdaSolverUserData(double *pConstants, double *pAlgebraic, double *pCondVar,
+IdaSolverUserData::IdaSolverUserData(double *pConstants, double *pOldRates,
+                                     double *pOldStates, double *pAlgebraic,
+                                     double *pCondVar,
                                      CoreSolver::CoreDaeSolver::ComputeEssentialVariablesFunction pComputeEssentialVariables,
                                      CoreSolver::CoreDaeSolver::ComputeResidualsFunction pComputeResiduals,
                                      CoreSolver::CoreDaeSolver::ComputeRootInformationFunction pComputeRootInformation) :
     mConstants(pConstants),
+    mOldRates(pOldRates),
+    mOldStates(pOldStates),
     mAlgebraic(pAlgebraic),
     mCondVar(pCondVar),
     mComputeEssentialVariables(pComputeEssentialVariables),
@@ -100,6 +105,24 @@ double * IdaSolverUserData::constants() const
     // Return our constants array
 
     return mConstants;
+}
+
+//==============================================================================
+
+double * IdaSolverUserData::oldRates() const
+{
+    // Return our old rates array
+
+    return mOldRates;
+}
+
+//==============================================================================
+
+double * IdaSolverUserData::oldStates() const
+{
+    // Return our old states array
+
+    return mOldStates;
 }
 
 //==============================================================================
@@ -151,8 +174,8 @@ CoreSolver::CoreDaeSolver::ComputeRootInformationFunction IdaSolverUserData::com
 
 IdaSolver::IdaSolver() :
     mSolver(0),
-    mStatesVector(0),
     mRatesVector(0),
+    mStatesVector(0),
     mUserData(0),
     mMaximumStep(MaximumStepDefaultValue),
     mMaximumNumberOfSteps(MaximumNumberOfStepsDefaultValue),
@@ -172,8 +195,8 @@ IdaSolver::~IdaSolver()
 
     // Delete some internal objects
 
-    N_VDestroy_Serial(mStatesVector);
     N_VDestroy_Serial(mRatesVector);
+    N_VDestroy_Serial(mStatesVector);
 
     IDAFree(&mSolver);
 
@@ -183,9 +206,10 @@ IdaSolver::~IdaSolver()
 //==============================================================================
 
 void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
-                           const int &pStatesCount, const int &pCondVarCount,
-                           double *pConstants, double *pRates, double *pStates,
-                           double *pAlgebraic, double *pCondVar,
+                           const int &pRatesStatesCount,
+                           const int &pCondVarCount, double *pConstants,
+                           double *pRates, double *pStates, double *pAlgebraic,
+                           double *pCondVar,
                            ComputeEssentialVariablesFunction pComputeEssentialVariables,
                            ComputeResidualsFunction pComputeResiduals,
                            ComputeRootInformationFunction pComputeRootInformation,
@@ -194,19 +218,6 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
     static const double VoiEpsilon = 1.0e-9;
 
     if (!mSolver) {
-        // Initialise the ODE solver itself
-
-        OpenCOR::CoreSolver::CoreDaeSolver::initialize(pVoiStart, pVoiEnd,
-                                                       pStatesCount,
-                                                       pCondVarCount,
-                                                       pConstants, pRates,
-                                                       pStates, pAlgebraic,
-                                                       pCondVar,
-                                                       pComputeEssentialVariables,
-                                                       pComputeResiduals,
-                                                       pComputeRootInformation,
-                                                       pComputeStateInformation);
-
         // Retrieve some of the IDA properties
 
         if (mProperties.contains(MaximumStepId)) {
@@ -241,10 +252,23 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
             return;
         }
 
+        // Initialise the ODE solver itself
+
+        OpenCOR::CoreSolver::CoreDaeSolver::initialize(pVoiStart, pVoiEnd,
+                                                       pRatesStatesCount,
+                                                       pCondVarCount,
+                                                       pConstants, pRates,
+                                                       pStates, pAlgebraic,
+                                                       pCondVar,
+                                                       pComputeEssentialVariables,
+                                                       pComputeResiduals,
+                                                       pComputeRootInformation,
+                                                       pComputeStateInformation);
+
         // Create the states vector
 
-        mStatesVector = N_VMake_Serial(pStatesCount, pStates);
-        mRatesVector  = N_VMake_Serial(pStatesCount, pRates);
+        mRatesVector  = N_VMake_Serial(pRatesStatesCount, pRates);
+        mStatesVector = N_VMake_Serial(pRatesStatesCount, pStates);
 
         // Create the IDA solver
 
@@ -268,7 +292,8 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
 
         delete mUserData;   // Just in case the solver got initialised before
 
-        mUserData = new IdaSolverUserData(pConstants, pAlgebraic, pCondVar,
+        mUserData = new IdaSolverUserData(pConstants, mOldRates, mOldStates,
+                                          pAlgebraic, pCondVar,
                                           pComputeEssentialVariables,
                                           pComputeResiduals,
                                           pComputeRootInformation);
@@ -277,7 +302,7 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
 
         // Set the linear solver
 
-        IDADense(mSolver, pStatesCount);
+        IDADense(mSolver, pRatesStatesCount);
 
         // Set the maximum step
 
@@ -295,11 +320,11 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
         // Note: this requires retrieving the model's state information, setting
         //       the IDA object's id vector and then calling IDACalcIC()...
 
-        double *id = new double[pStatesCount];
+        double *id = new double[pRatesStatesCount];
 
         pComputeStateInformation(id);
 
-        N_Vector idVector = N_VMake_Serial(pStatesCount, id);
+        N_Vector idVector = N_VMake_Serial(pRatesStatesCount, id);
 
         IDASetId(mSolver, idVector);
         IDACalcIC(mSolver, IDA_YA_YDP_INIT,

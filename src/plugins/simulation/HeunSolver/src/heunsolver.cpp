@@ -30,35 +30,40 @@ HeunSolver::~HeunSolver()
 
 //==============================================================================
 
-void HeunSolver::initialize(const double &pVoiStart, const int &pStatesCount,
-                            double *pConstants, double *pStates, double *pRates,
-                            double *pAlgebraic,
+void HeunSolver::initialize(const double &pVoiStart,
+                            const int &pRatesStatesCount, double *pConstants,
+                            double *pRates, double *pStates, double *pAlgebraic,
                             ComputeRatesFunction pComputeRates)
 {
-    // Initialise the ODE solver itself
-
-    OpenCOR::CoreSolver::CoreOdeSolver::initialize(pVoiStart, pStatesCount,
-                                                   pConstants, pStates, pRates,
-                                                   pAlgebraic, pComputeRates);
-
     // Retrieve the solver's properties
 
     if (mProperties.contains(StepId)) {
         mStep = mProperties.value(StepId).toDouble();
 
-        if (!mStep)
+        if (!mStep) {
             emit error(QObject::tr("the 'step' property value cannot be equal to zero"));
+
+            return;
+        }
     } else {
         emit error(QObject::tr("the 'step' property value could not be retrieved"));
+
+        return;
     }
+
+    // Initialise the ODE solver itself
+
+    OpenCOR::CoreSolver::CoreOdeSolver::initialize(pVoiStart, pRatesStatesCount,
+                                                   pConstants, pRates, pStates,
+                                                   pAlgebraic, pComputeRates);
 
     // (Re-)create our various arrays
 
     delete[] mK;
     delete[] mYk;
 
-    mK  = new double[pStatesCount];
-    mYk = new double[pStatesCount];
+    mK  = new double[pRatesStatesCount];
+    mYk = new double[pRatesStatesCount];
 }
 
 //==============================================================================
@@ -88,7 +93,7 @@ void HeunSolver::solve(double &pVoi, const double &pVoiEnd) const
 
         // Compute k and Yk
 
-        for (int i = 0; i < mStatesCount; ++i) {
+        for (int i = 0; i < mRatesStatesCount; ++i) {
             mK[i]  = mRates[i];
             mYk[i] = mStates[i]+realStep*mRates[i];
         }
@@ -99,7 +104,7 @@ void HeunSolver::solve(double &pVoi, const double &pVoiEnd) const
 
         // Compute Y_n+1
 
-        for (int i = 0; i < mStatesCount; ++i)
+        for (int i = 0; i < mRatesStatesCount; ++i)
             mStates[i] += realHalfStep*(mK[i]+mRates[i]);
 
         // Advance through time

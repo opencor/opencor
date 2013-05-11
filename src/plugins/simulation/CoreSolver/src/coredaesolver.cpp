@@ -14,16 +14,32 @@ namespace CoreSolver {
 CoreDaeSolver::CoreDaeSolver() :
     CoreVoiSolver(),
     mCondVarCount(0),
+    mOldRates(0),
+    mOldStates(0),
     mCondVar(0)
 {
 }
 
 //==============================================================================
 
+CoreDaeSolver::~CoreDaeSolver()
+{
+    // Delete some internal objects
+
+    delete[] mOldRates;
+    delete[] mOldStates;
+}
+
+//==============================================================================
+
+static const int SizeOfDouble = sizeof(double);
+
+//==============================================================================
+
 void CoreDaeSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
-                               const int &pStatesCount,
+                               const int &pRatesStatesCount,
                                const int &pCondVarCount, double *pConstants,
-                               double *pStates, double *pRates,
+                               double *pRates, double *pStates,
                                double *pAlgebraic, double *pCondVar,
                                ComputeEssentialVariablesFunction pComputeEssentialVariables,
                                ComputeResidualsFunction pComputeResiduals,
@@ -39,14 +55,23 @@ void CoreDaeSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
 
     // Initialise the DAE solver
 
-    mStatesCount  = pStatesCount;
-    mCondVarCount = pCondVarCount;
+    mRatesStatesCount = pRatesStatesCount;
+    mCondVarCount     = pCondVarCount;
 
     mConstants = pConstants;
-    mStates    = pStates;
     mRates     = pRates;
+    mStates    = pStates;
     mAlgebraic = pAlgebraic;
     mCondVar   = pCondVar;
+
+    delete[] mOldRates;
+    delete[] mOldStates;
+
+    mOldRates  = new double[pRatesStatesCount];
+    mOldStates = new double[pRatesStatesCount];
+
+    memcpy(mOldRates, pRates, pRatesStatesCount*SizeOfDouble);
+    memcpy(mOldStates, pStates, pRatesStatesCount*SizeOfDouble);
 }
 
 //==============================================================================
