@@ -215,8 +215,6 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
                            ComputeRootInformationFunction pComputeRootInformation,
                            ComputeStateInformationFunction pComputeStateInformation)
 {
-    static const double VoiEpsilon = 1.0e-9;
-
     if (!mSolver) {
         // Retrieve some of the IDA properties
 
@@ -315,34 +313,28 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
         // Set the relative and absolute tolerances
 
         IDASStolerances(mSolver, mRelativeTolerance, mAbsoluteTolerance);
-
-        // Compute the model's initial conditions
-        // Note: this requires retrieving the model's state information, setting
-        //       the IDA object's id vector and then calling IDACalcIC()...
-
-        double *id = new double[pRatesStatesCount];
-
-        pComputeStateInformation(id);
-
-        N_Vector idVector = N_VMake_Serial(pRatesStatesCount, id);
-
-        IDASetId(mSolver, idVector);
-        IDACalcIC(mSolver, IDA_YA_YDP_INIT,
-                  pVoiStart+((pVoiEnd-pVoiStart > 0)?VoiEpsilon:-VoiEpsilon));
-
-        N_VDestroy_Serial(idVector);
-
-        delete[] id;
     } else {
         // Reinitialise the IDA object
 
         IDAReInit(mSolver, pVoiStart, mStatesVector, mRatesVector);
-
-        // Compute the model's new initial conditions
-
-        IDACalcIC(mSolver, IDA_YA_YDP_INIT,
-                  pVoiStart+((pVoiEnd-pVoiStart > 0)?VoiEpsilon:-VoiEpsilon));
     }
+
+    // Compute the model's (new) initial conditions
+
+    double *id = new double[pRatesStatesCount];
+
+    pComputeStateInformation(id);
+
+    N_Vector idVector = N_VMake_Serial(pRatesStatesCount, id);
+
+    IDASetId(mSolver, idVector);
+
+    IDACalcIC(mSolver, IDA_YA_YDP_INIT, pVoiEnd);
+    IDAGetConsistentIC(mSolver, mStatesVector, mRatesVector);
+
+    N_VDestroy_Serial(idVector);
+
+    delete[] id;
 }
 
 //==============================================================================
