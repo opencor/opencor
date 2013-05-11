@@ -387,13 +387,11 @@ void SingleCellViewSimulationData::reset()
 
     // Reset our model parameter values
 
-    static const int SizeOfDouble = sizeof(double);
-
-    memset(mConstants, 0, mRuntime->constantsCount()*SizeOfDouble);
-    memset(mRates, 0, mRuntime->ratesCount()*SizeOfDouble);
-    memset(mStates, 0, mRuntime->statesCount()*SizeOfDouble);
-    memset(mAlgebraic, 0, mRuntime->algebraicCount()*SizeOfDouble);
-    memset(mCondVar, 0, mRuntime->condVarCount()*SizeOfDouble);
+    memset(mConstants, 0, mRuntime->constantsCount()*OpenCOR::CoreSolver::SizeOfDouble);
+    memset(mRates, 0, mRuntime->ratesCount()*OpenCOR::CoreSolver::SizeOfDouble);
+    memset(mStates, 0, mRuntime->statesCount()*OpenCOR::CoreSolver::SizeOfDouble);
+    memset(mAlgebraic, 0, mRuntime->algebraicCount()*OpenCOR::CoreSolver::SizeOfDouble);
+    memset(mCondVar, 0, mRuntime->condVarCount()*OpenCOR::CoreSolver::SizeOfDouble);
 
     mRuntime->initializeConstants()(mConstants, mRates, mStates);
     recomputeComputedConstantsAndVariables();
@@ -408,8 +406,8 @@ void SingleCellViewSimulationData::reset()
 
     // Keep track of our various initial values
 
-    memcpy(mInitialConstants, mConstants, mRuntime->constantsCount()*SizeOfDouble);
-    memcpy(mInitialStates, mStates, mRuntime->statesCount()*SizeOfDouble);
+    memcpy(mInitialConstants, mConstants, mRuntime->constantsCount()*OpenCOR::CoreSolver::SizeOfDouble);
+    memcpy(mInitialStates, mStates, mRuntime->statesCount()*OpenCOR::CoreSolver::SizeOfDouble);
 
     // Let people know that our data is 'cleaned', i.e. not modified
 
@@ -521,8 +519,6 @@ SingleCellViewSimulationResults::~SingleCellViewSimulationResults()
 
 bool SingleCellViewSimulationResults::createArrays()
 {
-    static const int SizeOfDoublePointer = sizeof(double *);
-
     // Retrieve the size of our data and make sure that it is valid
 
     qulonglong simulationSize = qulonglong(mSimulation->size());
@@ -543,7 +539,7 @@ bool SingleCellViewSimulationResults::createArrays()
     try {
         mConstants = new double*[mRuntime->constantsCount()];
 
-        memset(mConstants, 0, mRuntime->constantsCount()*SizeOfDoublePointer);
+        memset(mConstants, 0, mRuntime->constantsCount()*OpenCOR::CoreSolver::SizeOfDoublePointer);
     } catch(...) {
         deleteArrays();
 
@@ -564,7 +560,7 @@ bool SingleCellViewSimulationResults::createArrays()
     try {
         mRates = new double*[mRuntime->ratesCount()];
 
-        memset(mRates, 0, mRuntime->ratesCount()*SizeOfDoublePointer);
+        memset(mRates, 0, mRuntime->ratesCount()*OpenCOR::CoreSolver::SizeOfDoublePointer);
     } catch(...) {
         deleteArrays();
 
@@ -585,7 +581,7 @@ bool SingleCellViewSimulationResults::createArrays()
     try {
         mStates = new double*[mRuntime->statesCount()];
 
-        memset(mStates, 0, mRuntime->statesCount()*SizeOfDoublePointer);
+        memset(mStates, 0, mRuntime->statesCount()*OpenCOR::CoreSolver::SizeOfDoublePointer);
     } catch(...) {
         deleteArrays();
 
@@ -606,7 +602,7 @@ bool SingleCellViewSimulationResults::createArrays()
     try {
         mAlgebraic = new double*[mRuntime->algebraicCount()];
 
-        memset(mAlgebraic, 0, mRuntime->algebraicCount()*SizeOfDoublePointer);
+        memset(mAlgebraic, 0, mRuntime->algebraicCount()*OpenCOR::CoreSolver::SizeOfDoublePointer);
     } catch(...) {
         deleteArrays();
 
@@ -955,12 +951,11 @@ void SingleCellViewSimulation::setDelay(const int &pDelay)
 double SingleCellViewSimulation::requiredMemory()
 {
     // Determine and return the amount of required memory to run our simulation
-    // Note: we return the amount as a double rather than a qulonglong (as we do
-    //       when retrieving the total/free amount of memory available; see
-    //       [OpenCOR]/src/plugins/misc/Core/src/coreutils.cpp) in case a
-    //       simulation requires an insane amount of memory...
-
-    static const int SizeOfDouble = sizeof(double);
+    // Note #1: we return the amount as a double rather than a qulonglong (as we
+    //          do when retrieving the total/free amount of memory available;
+    //          see [OpenCOR]/src/plugins/misc/Core/src/coreutils.cpp) in case a
+    //          simulation requires an insane amount of memory...
+    // Note #2: the 1 is for mPoints in SingleCellViewSimulationResults...
 
     return  size()
            *( 1
@@ -968,7 +963,7 @@ double SingleCellViewSimulation::requiredMemory()
              +mRuntime->ratesCount()
              +mRuntime->statesCount()
              +mRuntime->algebraicCount())
-           *SizeOfDouble;
+           *OpenCOR::CoreSolver::SizeOfDouble;
 }
 
 //==============================================================================

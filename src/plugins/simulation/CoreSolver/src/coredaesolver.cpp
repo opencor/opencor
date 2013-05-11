@@ -32,10 +32,6 @@ CoreDaeSolver::~CoreDaeSolver()
 
 //==============================================================================
 
-static const int SizeOfDouble = sizeof(double);
-
-//==============================================================================
-
 void CoreDaeSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
                                const int &pRatesStatesCount,
                                const int &pCondVarCount, double *pConstants,

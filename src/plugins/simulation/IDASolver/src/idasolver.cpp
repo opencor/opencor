@@ -352,6 +352,9 @@ void IdaSolver::solve(double &pVoi, const double &pVoiEnd) const
     // Solve the model
 
     IDASolve(mSolver, pVoiEnd, &pVoi, mStatesVector, mRatesVector, IDA_NORMAL);
+
+    memcpy(mOldRates, N_VGetArrayPointer(mRatesVector), mRatesStatesCount*OpenCOR::CoreSolver::SizeOfDouble);
+    memcpy(mOldStates, N_VGetArrayPointer(mStatesVector), mRatesStatesCount*OpenCOR::CoreSolver::SizeOfDouble);
 }
 
 //==============================================================================
