@@ -86,6 +86,8 @@ public:
     QString unit() const;
     QString component() const;
 
+    iface::cellml_api::CellMLVariable* variable() const { return mVariable; }
+
 private:
     ObjRef<iface::cellml_api::CellMLVariable> mVariable;
     int mDegree;
@@ -149,6 +151,8 @@ private:
     QString functionCode(const QString &pFunctionSignature,
                          const QString &pFunctionBody,
                          const bool &pHasDefines = false);
+
+    void compiledParamsFromCodeInformation(void (CellMLFileRuntimeModelParameter::*setter)(const CellMLFileRuntimeCompiledModelParameter::ModelParameterType &pType, const int &pIndex), iface::cellml_services::CodeInformation*);
 };
 
 //==============================================================================

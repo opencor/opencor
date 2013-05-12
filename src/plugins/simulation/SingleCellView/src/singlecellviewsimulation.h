@@ -163,9 +163,12 @@ public:
 
     void checkForModifications();
 
-    SimulatorState state() { return mState; }
+    SimulatorState state() const { return mState; }
+    void state(SimulatorState pState) { mState = pState; }
     void startMainSimulation(SingleCellViewSimulation* pSignalsTo);
     void stopAllSimulations();
+
+    void ensureCodeCompiled();
 
 private:
     CellMLSupport::CellMLFileRuntime *mRuntime;
@@ -194,7 +197,6 @@ private:
     QList<double> mInitialConstants;
     QList<double> mInitialStates;
 
-    void ensureCodeCompiled();
     void newIntegrationRun();
     void setupOverrides();
 
@@ -222,7 +224,8 @@ public:
 
     void reset();
 
-    void addPoint(const double &pPoint);
+    void addPoint(const double &pPoint,
+                  QList<double>& pStates, QList<double>& pRates, QList<double>& pAlgebraic);
 
     qulonglong size() const;
 
@@ -290,7 +293,7 @@ private:
 
 public Q_SLOTS:
     void simulationComplete();
-    void simulationFailed(const std::string& pError);
+    void simulationFailed(QString pError);
     void simulationDataAvailable(double pPoint, QList<double> pStates,
                                  QList<double> pRates, QList<double> pAlgebraic);
 

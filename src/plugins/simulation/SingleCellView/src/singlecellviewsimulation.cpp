@@ -63,18 +63,20 @@ ResultListener::results(const std::vector<double>& pState)
     throw()
 {
     std::vector<double>::const_iterator i = pState.begin();
-    double bvar = *i++;
-    QList<double> states, rates, algebraic;
-    states.reserve(mNStates);
-    rates.reserve(mNStates);
-    algebraic.reserve(mNAlgebraic);
-    for (int j = 0; j < mNStates; j++)
-        states << *i++;
-    for (int j = 0; j < mNStates; j++)
-        rates << *i++;
-    for (int j = 0; j < mNAlgebraic; j++)
-        algebraic << *i++;
-    solvePointAvailable(bvar, states, rates, algebraic);
+    while (i != pState.end()) {
+        double bvar = *i++;
+        QList<double> states, rates, algebraic;
+        states.reserve(mNStates);
+        rates.reserve(mNStates);
+        algebraic.reserve(mNAlgebraic);
+        for (int j = 0; j < mNStates; j++)
+            states << *i++;
+        for (int j = 0; j < mNStates; j++)
+            rates << *i++;
+        for (int j = 0; j < mNAlgebraic; j++)
+            algebraic << *i++;
+        solvePointAvailable(bvar, states, rates, algebraic);
+    }
 }
 
 void
@@ -309,7 +311,11 @@ void SingleCellViewSimulationData::stopAllSimulations()
         mIntegrationRun = NULL;
     }
 
-    mState = SIMSTATE_INITIAL;
+    if (mState == SIMSTATE_WAITING_IV)
+        mState = SIMSTATE_INITIAL;
+    else if (mState == SIMSTATE_WAITING_RESULTS ||
+             mState == SIMSTATE_PAUSED)
+        mState = SIMSTATE_GOT_IV;
 }
 
 void SingleCellViewSimulationData::newIntegrationRun()
@@ -324,7 +330,15 @@ void SingleCellViewSimulationData::newIntegrationRun()
     if (isDAETypeSolver())
         mIntegrationRun = cis->createDAEIntegrationRun(mRuntime->daeCompiledModel());
     else
+    {
         mIntegrationRun = cis->createODEIntegrationRun(mRuntime->odeCompiledModel());
+        ObjRef<iface::cellml_services::ODESolverRun>
+            odeRun(QueryInterface(mIntegrationRun));
+
+        // TODO have more options than just 'CVODE', allowing user to specify
+        // which CVODE solver.
+        odeRun->stepType(iface::cellml_services::BDF_IMPLICIT_1_5_SOLVE);
+    }
 }
 
 void SingleCellViewSimulationData::reset()
@@ -346,8 +360,8 @@ void SingleCellViewSimulationData::reset()
     mState = SingleCellViewSimulationData::SIMSTATE_WAITING_IV;
     mIVGrabber = new GrabInitialValueListener(mIntegrationRun);
     mDidReset = true;
-    QObject::connect(mIVGrabber, SIGNAL(resultsReady), this, SLOT(initialValuesIn));
-    QObject::connect(mIVGrabber, SIGNAL(solveFailure), this, SLOT(initialValuesFailed));
+    QObject::connect(mIVGrabber, SIGNAL(resultsReady()), this, SLOT(initialValuesIn()));
+    QObject::connect(mIVGrabber, SIGNAL(solveFailure(QString)), this, SLOT(initialValuesFailed(QString)));
     mIntegrationRun->setProgressObserver(mIVGrabber);
     mIntegrationRun->setResultRange(mStartingPoint, mStartingPoint, 1);
     
@@ -377,6 +391,11 @@ void SingleCellViewSimulationData::initialValuesIn()
 
     mConstants.clear();
     mConstants.reserve(codeInfo->constantIndexCount());
+
+    std::cout << "Computed " << mIVGrabber->consts().size() << " constants and "
+              << mIVGrabber->states().size() << " initial values." << std::endl;
+        
+
     for (std::vector<double>::iterator i = mIVGrabber->consts().begin();
          i != mIVGrabber->consts().end(); i++) {
         if (mDidReset)
@@ -435,8 +454,8 @@ void SingleCellViewSimulationData::recomputeComputedConstantsAndVariables()
     mState = SingleCellViewSimulationData::SIMSTATE_WAITING_IV;
     mIVGrabber = new GrabInitialValueListener(mIntegrationRun);
     mDidReset = false;
-    QObject::connect(mIVGrabber, SIGNAL(resultsReady), this, SLOT(initialValuesIn));
-    QObject::connect(mIVGrabber, SIGNAL(resultsReady), this, SLOT(initialValuesFailed));
+    QObject::connect(mIVGrabber, SIGNAL(resultsReady()), this, SLOT(initialValuesIn()));
+    QObject::connect(mIVGrabber, SIGNAL(solveFailure(QString)), this, SLOT(initialValuesFailed(QString)));
     mIntegrationRun->setProgressObserver(mIVGrabber);
     mIntegrationRun->setResultRange(mStartingPoint, mStartingPoint, 1);
     setupOverrides();
@@ -533,9 +552,9 @@ void SingleCellViewSimulationData::startMainSimulation(SingleCellViewSimulation*
                                    );
     mIntegrationRun->setProgressObserver(mResultReceiver);
 
-    QObject::connect(mResultReceiver, SIGNAL(solveDone), pSignalsTo, SLOT(simulationComplete));
-    QObject::connect(mResultReceiver, SIGNAL(solveFailure), pSignalsTo, SLOT(simulationFailed));
-    QObject::connect(mResultReceiver, SIGNAL(solvePointAvailable), pSignalsTo, SLOT(simulationDataAvailable));
+    QObject::connect(mResultReceiver, SIGNAL(solveDone()), pSignalsTo, SLOT(simulationComplete()));
+    QObject::connect(mResultReceiver, SIGNAL(solveFailure(QString)), pSignalsTo, SLOT(simulationFailed(QString)));
+    QObject::connect(mResultReceiver, SIGNAL(solvePointAvailable(double,QList<double>,QList<double>,QList<double>)), pSignalsTo, SLOT(simulationDataAvailable(double,QList<double>,QList<double>,QList<double>)));
 
     setupOverrides();
     mIntegrationRun->start();
@@ -571,15 +590,18 @@ void SingleCellViewSimulationResults::reset()
 
 //==============================================================================
 
-void SingleCellViewSimulationResults::addPoint(const double &pPoint)
+void SingleCellViewSimulationResults::addPoint
+(
+ const double &pPoint,
+ QList<double>& pStates, QList<double>& pRates, QList<double>& pAlgebraic
+)
 {
     // Add the data to our different arrays
 
     mPoints    << pPoint;
-    SingleCellViewSimulationData* dat = mSimulation->data();
-    mStates    << dat->states();
-    mRates     << dat->rates();
-    mAlgebraic << dat->algebraic();
+    mStates    << pStates;
+    mRates     << pRates;
+    mAlgebraic << pAlgebraic;
 }
 
 //==============================================================================
@@ -924,6 +946,28 @@ void SingleCellViewSimulation::resume()
 void SingleCellViewSimulation::stop()
 {
     data()->stopAllSimulations();
+}
+
+void SingleCellViewSimulation::simulationComplete()
+{
+    mData->state(SingleCellViewSimulationData::SIMSTATE_GOT_IV);
+}
+
+void SingleCellViewSimulation::simulationFailed(QString pError)
+{
+    mData->state(SingleCellViewSimulationData::SIMSTATE_GOT_IV);
+    emit error("Problem solving model: " + pError);
+}
+
+void SingleCellViewSimulation::simulationDataAvailable
+(
+ double pPoint,
+ QList<double> pStates,
+ QList<double> pRates,
+ QList<double> pAlgebraic
+)
+{
+    mResults->addPoint(pPoint, pStates, pRates, pAlgebraic);
 }
 
 //==============================================================================

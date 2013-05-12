@@ -267,9 +267,78 @@ void CellMLFileRuntime::ensureODECompiledModel(bool pDebug)
         unexpectedProblemDuringModelCompilationIssue();
     }
 
+    if (mODEModel) {
+        ObjRef<iface::cellml_services::CodeInformation> codeInfo(mODEModel->codeInformation());
+        compiledParamsFromCodeInformation(&CellMLFileRuntimeModelParameter::ODEData, codeInfo.getPointer());
+    }
+
     // If mIssues is non-empty, there was a problem generating / compiling code.
     if (!mIssues.empty())
         resetODECodeInformation();
+}
+
+
+
+//==============================================================================
+
+void CellMLFileRuntime::compiledParamsFromCodeInformation
+(
+ void (CellMLFileRuntimeModelParameter::*setter)(const CellMLFileRuntimeCompiledModelParameter::
+                                                 ModelParameterType &pType, const int &pIndex),
+ iface::cellml_services::CodeInformation* codeInfo
+)
+{
+    if (codeInfo) {
+        ObjRef<iface::cellml_services::ComputationTargetIterator> cti(codeInfo->iterateTargets());
+        for (ObjRef<iface::cellml_services::ComputationTarget> ct = cti->nextComputationTarget();
+             ct; ct = cti->nextComputationTarget()) {
+            // TODO index these so we don't have to search them all.
+            ObjRef<iface::cellml_api::CellMLVariable> vwant = ct->variable();
+            foreach (QSharedPointer<CellMLFileRuntimeModelParameter> p, mModelParameters) {
+                if (p->variable() == vwant && p->degree() == static_cast<int>(ct->degree())) {
+                    CellMLFileRuntimeCompiledModelParameter::ModelParameterType modelParameterType;
+                    switch (ct->type()) {
+                    case iface::cellml_services::VARIABLE_OF_INTEGRATION:
+                        modelParameterType = CellMLFileRuntimeCompiledModelParameter::Voi;
+                        break;
+                    case iface::cellml_services::CONSTANT: {
+                        if (vwant->initialValue().empty())
+                            // The computed target doesn't have an initial value, so it must
+                            // be a 'computed' constant
+                            modelParameterType = CellMLFileRuntimeCompiledModelParameter::ComputedConstant;
+                        else
+                            // The computed target has an initial value, so it must be a
+                            // 'proper' constant
+                            modelParameterType = CellMLFileRuntimeCompiledModelParameter::Constant;
+                        break;
+                    }
+                    case iface::cellml_services::STATE_VARIABLE:
+                    case iface::cellml_services::PSEUDOSTATE_VARIABLE:
+                        modelParameterType = CellMLFileRuntimeCompiledModelParameter::State;
+                        break;
+                    case iface::cellml_services::ALGEBRAIC:
+                        // We are dealing with either a 'proper' algebraic variable or a
+                        // rate variable
+                        // Note: if the variable's degree is equal to zero, then we are
+                        //       dealing with a 'proper' algebraic variable otherwise we
+                        //       are dealing with a rate variable...
+                        if (ct->degree())
+                            modelParameterType = CellMLFileRuntimeCompiledModelParameter::Rate;
+                        else
+                            modelParameterType = CellMLFileRuntimeCompiledModelParameter::Algebraic;
+                        break;
+                    default:
+                        // We are dealing with a type of computed target which is of no
+                        // interest to us, so...
+                        modelParameterType = CellMLFileRuntimeCompiledModelParameter::Undefined;
+                    }
+                    
+                    (p.data() ->* setter)(modelParameterType, ct->assignedIndex());
+                    break;
+                }
+            }
+        } 
+    }
 }
 
 //==============================================================================
@@ -292,6 +361,11 @@ void CellMLFileRuntime::ensureDAECompiledModel(bool pDebug)
                                    QString::fromStdWString(intService->lastError()));
     } catch (...) {
         unexpectedProblemDuringModelCompilationIssue();
+    }
+
+    if (mDAEModel) {
+        ObjRef<iface::cellml_services::CodeInformation> codeInfo(mDAEModel->codeInformation());
+        compiledParamsFromCodeInformation(&CellMLFileRuntimeModelParameter::DAEData, codeInfo);
     }
 
     // If mIssues is non-empty, there was a problem generating / compiling code.

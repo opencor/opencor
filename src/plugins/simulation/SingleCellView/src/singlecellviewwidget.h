@@ -73,7 +73,7 @@ class SingleCellViewWidgetCurveData
 public:
     explicit SingleCellViewWidgetCurveData(const QString &pFileName,
                                            SingleCellViewSimulation *pSimulation,
-                                           CellMLSupport::CellMLFileRuntimeModelParameter*
+                                           QSharedPointer<CellMLSupport::CellMLFileRuntimeModelParameter>
                                              pModelParameter,
                                            SingleCellViewGraphPanelPlotCurve *pCurve);
 
@@ -271,11 +271,11 @@ private Q_SLOTS:
 
     void splitterWidgetMoved();
 
-    void simulationPropertyChanged(Core::Property *pProperty);
+    void simulationPropertyChanged(Core::Property *pProperty, bool pNeedReset = true);
     void solversPropertyChanged(Core::Property *pProperty);
 
     void showModelParameter(const QString &pFileName,
-                            CellMLSupport::CellMLFileRuntimeModelParameter* pParameter,
+                            QSharedPointer<CellMLSupport::CellMLFileRuntimeModelParameter> pParameter,
                             const bool &pShow);
 
     void callCheckResults();

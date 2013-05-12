@@ -63,6 +63,8 @@ public:
     void finishPropertyEditing();
 
 private:
+    QString mCellMLFileName;
+
     QMap<QString, Core::PropertyEditorWidget *> mPropertyEditors;
 
     QMap<Core::Property *, QSharedPointer<CellMLSupport::CellMLFileRuntimeModelParameter> > mModelParameters;

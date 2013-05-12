@@ -83,18 +83,22 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
                                                            SingleCellViewSimulationData *pSimulationData)
 {
     // Make sure that we have a CellML file runtime
-
     if (!pRuntime)
         return;
 
     // Keep track of the simulation data
-
     mSimulationData = pSimulationData;
 
-    // Retrieve the property editor for the given file name or create one, if
-    // none exists
+    // Set the active model name:
+    mCellMLFileName = pFileName;
 
-    Core::PropertyEditorWidget *propertyEditor = mPropertyEditors.value(pFileName);
+
+    // If this code is called before we get the initial parameter values from
+    // 
+    
+    // Retrieve the property editor for the given file name or create one, if
+    // none exists.
+    Core::PropertyEditorWidget *propertyEditor = mPropertyEditors.value(mCellMLFileName);
 
     if (!propertyEditor) {
         // No property editor exists for the given file name, so create one
@@ -117,9 +121,6 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
 
         // Keep track of when some of the model's data has changed
 
-        connect(pSimulationData, SIGNAL(updated()),
-                this, SLOT(updateParameters()));
-
         // Keep track of when the user changes a property value
 
         connect(propertyEditor, SIGNAL(propertyChanged(Core::Property *)),
@@ -129,6 +130,9 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
 
         connect(propertyEditor, SIGNAL(propertyChecked(Core::Property *, const bool &)),
                 this, SLOT(emitShowModelParameter(Core::Property *, const bool &)));
+
+        connect(pSimulationData, SIGNAL(updated()),
+                this, SLOT(updateParameters()));
 
         // Add our new property editor to ourselves
 
@@ -312,6 +316,8 @@ void SingleCellViewInformationParametersWidget::populateModel(Core::PropertyEdit
     // Populate our property editor with the model parameters
 
     Core::Property *section = 0;
+
+    mSimulationData->ensureCodeCompiled();
 
     foreach (QSharedPointer<CellMLSupport::CellMLFileRuntimeModelParameter> modelParameter, pRuntime->modelParameters()) {
         // Check whether the current model parameter is in the same component as

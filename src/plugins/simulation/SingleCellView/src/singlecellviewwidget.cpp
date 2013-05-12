@@ -72,7 +72,7 @@ SingleCellViewWidgetCurveData::SingleCellViewWidgetCurveData
 (
  const QString &pFileName,
  SingleCellViewSimulation *pSimulation,
- CellMLSupport::CellMLFileRuntimeModelParameter* pModelParameter,
+ QSharedPointer<CellMLSupport::CellMLFileRuntimeModelParameter> pModelParameter,
  SingleCellViewGraphPanelPlotCurve *pCurve
 ) :
     mFileName(pFileName),
@@ -137,7 +137,6 @@ SingleCellViewQwtCurveDataAdaptor::SingleCellViewQwtCurveDataAdaptor
 )
     : mSimulationResults(pSimulation->results())
 {
-    d_boundingRect = qwtBoundingRect(*this);
     mSize = mSimulationResults->points().size();
 
     QSharedPointer<CellMLSupport::CellMLFileRuntimeCompiledModelParameter> pY = 
@@ -167,6 +166,8 @@ SingleCellViewQwtCurveDataAdaptor::SingleCellViewQwtCurveDataAdaptor
         mConstantYValue = 0.0;
         mSampleY = &SingleCellViewQwtCurveDataAdaptor::sampleConstantY;
     }
+
+    d_boundingRect = qwtBoundingRect(*this);
 }
 
 QRectF SingleCellViewQwtCurveDataAdaptor::boundingRect() const
@@ -318,8 +319,8 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
 
     // Keep track of which model parameters to show/hide
 
-    connect(mContentsWidget->informationWidget()->parametersWidget(), SIGNAL(showModelParameter(const QString &, CellMLSupport::CellMLFileRuntimeModelParameter *, const bool &)),
-            this, SLOT(showModelParameter(const QString &, CellMLSupport::CellMLFileRuntimeModelParameter *, const bool &)));
+    connect(mContentsWidget->informationWidget()->parametersWidget(), SIGNAL(showModelParameter(const QString &, QSharedPointer<CellMLSupport::CellMLFileRuntimeModelParameter>, const bool &)),
+            this, SLOT(showModelParameter(const QString &, QSharedPointer<CellMLSupport::CellMLFileRuntimeModelParameter>, const bool &)));
 
     // Create and add our invalid simulation message widget
 
@@ -822,15 +823,6 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         mOutputWidget->ensureCursorVisible();
     }
 
-    // If no error occurred and if we are dealing with a new simulation, then
-    // reset both its data and its results (well, initialise in the case of its
-    // data)
-
-    if (!hasError && newSimulation) {
-        mSimulation->data()->reset();
-        mSimulation->results()->reset();
-    }
-
     // Attach/detach the curves, based on whether they are associated with then
     // given file name
 
@@ -866,14 +858,23 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         // We don't have any X axis settings for the given file name, so first
         // initialise our simulation's properties
 
-        simulationPropertyChanged(simulationWidget->startingPointProperty());
-        simulationPropertyChanged(simulationWidget->endingPointProperty());
-        simulationPropertyChanged(simulationWidget->pointIntervalProperty());
+        simulationPropertyChanged(simulationWidget->startingPointProperty(), false);
+        simulationPropertyChanged(simulationWidget->endingPointProperty(), false);
+        simulationPropertyChanged(simulationWidget->pointIntervalProperty(), false);
 
         // Now, initialise our graph panel's plot's X axis settings
 
         mActiveGraphPanel->plot()->setLocalMinX(mActiveGraphPanel->plot()->minX());
         mActiveGraphPanel->plot()->setLocalMaxX(mActiveGraphPanel->plot()->maxX());
+    }
+
+    // If no error occurred and if we are dealing with a new simulation, then
+    // reset both its data and its results (well, initialise in the case of its
+    // data)
+
+    if (!hasError && newSimulation) {
+        mSimulation->data()->reset();
+        mSimulation->results()->reset();
     }
 
     // Check our graph panel's plot's local axes and then replot our graph
@@ -1383,7 +1384,7 @@ void SingleCellViewWidget::splitterWidgetMoved()
 
 //==============================================================================
 
-void SingleCellViewWidget::simulationPropertyChanged(Core::Property *pProperty)
+void SingleCellViewWidget::simulationPropertyChanged(Core::Property *pProperty, bool pNeedReset)
 {
     // Update one of our simulation's properties and, if needed, update the
     // minimum or maximum value for our X axis
@@ -1394,7 +1395,8 @@ void SingleCellViewWidget::simulationPropertyChanged(Core::Property *pProperty)
     bool needUpdating = true;
 
     if (pProperty == mContentsWidget->informationWidget()->simulationWidget()->startingPointProperty()) {
-        mSimulation->data()->setStartingPoint(Core::PropertyEditorWidget::doublePropertyItem(pProperty->value()));
+        mSimulation->data()->setStartingPoint(Core::PropertyEditorWidget::doublePropertyItem(pProperty->value()),
+                                              pNeedReset);
     } else if (pProperty == mContentsWidget->informationWidget()->simulationWidget()->endingPointProperty()) {
         mSimulation->data()->setEndingPoint(Core::PropertyEditorWidget::doublePropertyItem(pProperty->value()));
     } else if (pProperty == mContentsWidget->informationWidget()->simulationWidget()->pointIntervalProperty()) {
@@ -1458,7 +1460,7 @@ QString SingleCellViewWidget::modelParameterKey(const QString pFileName,
 void SingleCellViewWidget::showModelParameter
 (
  const QString &pFileName,
- CellMLSupport::CellMLFileRuntimeModelParameter* pModelParameter,
+ QSharedPointer<CellMLSupport::CellMLFileRuntimeModelParameter> pModelParameter,
  const bool &pShow
 )
 {
