@@ -62,6 +62,8 @@ SingleCellViewInformationSolversWidget::SingleCellViewInformationSolversWidget(Q
 {
     setupBuiltInSolvers();
 
+    mDefaultGuiState = guiState();
+
     // Update the tool tip of any property which value gets changed by the user
     connect(this, SIGNAL(propertyChanged(Core::Property *)),
             this, SLOT(updatePropertyToolTip(Core::Property *)));
