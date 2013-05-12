@@ -24,9 +24,6 @@
 /* Macro: loop */
 #define loop for(;;)
 
-//---OPENCOR--- BEGIN
-#include <QtGlobal>
-//---OPENCOR--- END
 /*
  * =================================================================
  * IDA Constants
