@@ -20,7 +20,7 @@ namespace CellMLSupport {
 PLUGININFO_FUNC CellMLSupportPluginInfo()
 {
     Descriptions descriptions;
-
+ 
     descriptions.insert("en", QString::fromUtf8("A plugin to support <a href=\"http://www.cellml.org/\">CellML</a>"));
     descriptions.insert("fr", QString::fromUtf8("Une extension pour supporter <a href=\"http://www.cellml.org/\">CellML</a>"));
 
@@ -28,7 +28,7 @@ PLUGININFO_FUNC CellMLSupportPluginInfo()
                           PluginInfo::General,
                           PluginInfo::Miscellaneous,
                           false,
-                          QStringList() << "Core" << "CellMLAPI" << "Compiler",
+                          QStringList() << "Core" << "CellMLAPI",
                           descriptions);
 }
 
