@@ -18,6 +18,10 @@
 
 //==============================================================================
 
+#include <QtNumeric>
+
+//==============================================================================
+
 #include <qmath.h>
 
 //==============================================================================
@@ -465,7 +469,8 @@ void SingleCellViewSimulationData::checkForModifications()
     foreach (CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter, mRuntime->modelParameters())
         switch (modelParameter->type()) {
         case CellMLSupport::CellmlFileRuntimeModelParameter::Constant:
-            if (mConstants[modelParameter->index()] != mInitialConstants[modelParameter->index()]) {
+            if (   !qIsFinite(mConstants[modelParameter->index()])
+                || (mConstants[modelParameter->index()] != mInitialConstants[modelParameter->index()])) {
                 emit modified(true);
 
                 return;
@@ -473,7 +478,8 @@ void SingleCellViewSimulationData::checkForModifications()
 
             break;
         case CellMLSupport::CellmlFileRuntimeModelParameter::State:
-            if (mStates[modelParameter->index()] != mInitialStates[modelParameter->index()]) {
+            if (   !qIsFinite(mStates[modelParameter->index()])
+                || (mStates[modelParameter->index()] != mInitialStates[modelParameter->index()])) {
                 emit modified(true);
 
                 return;
