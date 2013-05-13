@@ -282,9 +282,9 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
                 mStatesVector, mRatesVector);
 
         IDARootInit(mSolver, pCondVarCount, rootFindingFunction);
-        //---GRY--- NEED TO CHECK THAT OUR IDA CODE WORKS AS EXPECTED BY TRYING
-        //          IT OUT ON A MODEL WHICH NEEDS ROOT FINDING (E.G. THE
-        //          SAUCERMAN MODEL)...
+        //---GRY--- NEED TO CHECK THAT THINGS WORK AS EXPECTED BY TRYING IT OUT
+        //          ON A MODEL WHICH NEEDS ROOT FINDING (E.G. THE SAUCERMAN
+        //          MODEL)...
 
         // Set some user data
 
