@@ -100,7 +100,7 @@ public:
 
     void delay(int pDelay) { mDelay = pDelay; }
 private:
-    int mDelay;
+    QAtomicInt mDelay;
     ObjRef<iface::cellml_services::CellMLIntegrationRun> mRun;
     int mNStates, mNAlgebraic;
 
