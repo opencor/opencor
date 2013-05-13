@@ -25,6 +25,13 @@
 
 //==============================================================================
 
+#ifdef Q_OS_WIN
+#include <windows.h>
+#else
+#include <unistd.h>
+#endif
+
+
 namespace OpenCOR {
 namespace SingleCellView {
 
@@ -76,6 +83,14 @@ ResultListener::results(const std::vector<double>& pState)
         for (int j = 0; j < mNAlgebraic; j++)
             algebraic << *i++;
         solvePointAvailable(bvar, states, rates, algebraic);
+
+        if (mDelay) {
+#ifdef Q_OS_WIN
+            Sleep(uint(mDelay));
+#else
+            usleep(mDelay * 1000);
+#endif
+        }
     }
 }
 
@@ -130,35 +145,49 @@ void SingleCellViewSimulationData::ensureCodeCompiled()
 
 //==============================================================================
 
-QList<double> SingleCellViewSimulationData::constants() const
+void SingleCellViewSimulationData::setPoint
+(
+ const QList<double>& pStates,
+ const QList<double>& pRates,
+ const QList<double>& pAlgebraic
+)
+{
+    mStates = pStates;
+    mRates = pRates;
+    mAlgebraic = pAlgebraic;
+}
+
+//==============================================================================
+
+QList<double>& SingleCellViewSimulationData::constants()
 {
     return mConstants;
 }
 
 //==============================================================================
 
-QList<double> SingleCellViewSimulationData::states() const
+QList<double>& SingleCellViewSimulationData::states()
 {
     return mStates;
 }
 
 //==============================================================================
 
-QList<double> SingleCellViewSimulationData::rates() const
+QList<double>& SingleCellViewSimulationData::rates()
 {
     return mRates;
 }
 
 //==============================================================================
 
-QList<double> SingleCellViewSimulationData::algebraic() const
+QList<double>& SingleCellViewSimulationData::algebraic()
 {
     return mAlgebraic;
 }
 
 //==============================================================================
 
-QList<double> SingleCellViewSimulationData::condVar() const
+QList<double>& SingleCellViewSimulationData::condVar()
 {
     return mCondVar;
 }
@@ -188,6 +217,8 @@ int SingleCellViewSimulationData::delay() const
 void SingleCellViewSimulationData::setDelay(const int &pDelay)
 {
     mDelay = pDelay;
+    if (mResultReceiver)
+        mResultReceiver->delay(mDelay);
 }
 
 //==============================================================================
@@ -427,8 +458,6 @@ void SingleCellViewSimulationData::initialValuesIn()
       mAlgebraic << computedData[algebraicOffset + i];
     }
 
-    // Let people know that our data is 'cleaned', i.e. not modified
-    emit modified(false);
     emit updated();
 }
 
@@ -540,6 +569,7 @@ void SingleCellViewSimulationData::startMainSimulation(SingleCellViewSimulation*
 
     mResultReceiver = new ResultListener(mIntegrationRun, codeInfo->rateIndexCount(),
                                          codeInfo->algebraicIndexCount());
+    mResultReceiver->delay(mDelay);
 
     mIntegrationRun->setStepSizeControl(mSolverProperties["absTol"].toDouble(),
                                         mSolverProperties["relTol"].toDouble(),
@@ -625,7 +655,7 @@ SingleCellViewSimulationResults::Matrix SingleCellViewSimulationResults::states(
 {
     // Return our rates array
 
-    return mRates;
+    return mStates;
 }
 
 //==============================================================================
@@ -634,7 +664,7 @@ SingleCellViewSimulationResults::Matrix SingleCellViewSimulationResults::rates()
 {
     // Return our states array
 
-    return mStates;
+    return mRates;
 }
 
 //==============================================================================
@@ -923,6 +953,9 @@ void SingleCellViewSimulation::run()
         data()->state() != SingleCellViewSimulationData::SIMSTATE_GOT_IV)
         return;
 
+    mLastUpdate = QTime::currentTime();
+    mRunTime = QTime::currentTime();
+
     data()->startMainSimulation(this);
 }
 
@@ -931,6 +964,8 @@ void SingleCellViewSimulation::run()
 void SingleCellViewSimulation::pause()
 {
     data()->pause();
+    emit paused();
+    mData->checkForModifications();
 }
 
 //==============================================================================
@@ -938,6 +973,7 @@ void SingleCellViewSimulation::pause()
 void SingleCellViewSimulation::resume()
 {
     data()->resume();
+    emit running(true);
 }
 
 //==============================================================================
@@ -945,11 +981,16 @@ void SingleCellViewSimulation::resume()
 void SingleCellViewSimulation::stop()
 {
     data()->stopAllSimulations();
+    emit stopped(mRunTime.elapsed());
+    emit mData->updated();
 }
 
 void SingleCellViewSimulation::simulationComplete()
 {
     mData->state(SingleCellViewSimulationData::SIMSTATE_GOT_IV);
+    emit running(false);
+    emit stopped(mRunTime.elapsed());
+    emit mData->updated();
 }
 
 void SingleCellViewSimulation::simulationFailed(QString pError)
@@ -966,7 +1007,14 @@ void SingleCellViewSimulation::simulationDataAvailable
  QList<double> pAlgebraic
 )
 {
+    mData->setPoint(pStates, pRates, pAlgebraic);
     mResults->addPoint(pPoint, pStates, pRates, pAlgebraic);
+    // Things seem to run slowly if we send every point this way, so rate limit
+    // it a bit.
+    if (mLastUpdate.elapsed() > 500) {
+        mLastUpdate = QTime::currentTime();
+        emit running(false);
+    }
 }
 
 //==============================================================================

@@ -9,6 +9,7 @@
 
 #include <QObject>
 #include <QMap>
+#include <QTime>
 #include "cellml-api-cxx-support.hpp"
 #include "IfaceCIS.hxx"
 
@@ -97,7 +98,9 @@ public:
     void done() throw();
     void failed(const std::string& pFailWhy) throw();
 
+    void delay(int pDelay) { mDelay = pDelay; }
 private:
+    int mDelay;
     ObjRef<iface::cellml_services::CellMLIntegrationRun> mRun;
     int mNStates, mNAlgebraic;
 
@@ -127,11 +130,11 @@ public:
       SIMSTATE_PAUSED
     };
 
-    QList<double> constants() const;
-    QList<double> states() const;
-    QList<double> rates() const;
-    QList<double> algebraic() const;
-    QList<double> condVar() const;
+    QList<double>& constants();
+    QList<double>& states();
+    QList<double>& rates();
+    QList<double>& algebraic();
+    QList<double>& condVar();
 
     void pause();
     void resume();
@@ -169,6 +172,10 @@ public:
     void stopAllSimulations();
 
     void ensureCodeCompiled();
+
+    void setPoint(const QList<double>& pStates,
+                  const QList<double>& pRates,
+                  const QList<double>& pAlgebraic);
 
 private:
     CellMLSupport::CellMLFileRuntime *mRuntime;
@@ -283,6 +290,8 @@ public:
 
 private:
     QString mFileName;
+    QTime mRunTime;
+    QTime mLastUpdate;
 
     CellMLSupport::CellMLFileRuntime *mRuntime;
 
