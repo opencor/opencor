@@ -123,13 +123,11 @@ void SingleCellViewGraphPanelsWidget::wheelEvent(QWheelEvent *pEvent)
 
             int shift = 1;
 
-#ifdef Q_OS_MAC
-    #ifdef AVAILABLE_MAC_OS_X_VERSION_10_7_AND_LATER
+#if defined(Q_OS_MAC) && defined(AVAILABLE_MAC_OS_X_VERSION_10_7_AND_LATER)
             // From version 10.7 of OS X, the scrolling works the other way
             // round, so...
 
             shift = -1;
-    #endif
 #endif
 
             i += (pEvent->delta() < 0)?shift:-shift;
