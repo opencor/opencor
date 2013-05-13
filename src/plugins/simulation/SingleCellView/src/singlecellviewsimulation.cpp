@@ -623,18 +623,18 @@ QList<double> SingleCellViewSimulationResults::points() const
 
 SingleCellViewSimulationResults::Matrix SingleCellViewSimulationResults::states() const
 {
-    // Return our states array
+    // Return our rates array
 
-    return mStates;
+    return mRates;
 }
 
 //==============================================================================
 
 SingleCellViewSimulationResults::Matrix SingleCellViewSimulationResults::rates() const
 {
-    // Return our rates array
+    // Return our states array
 
-    return mRates;
+    return mStates;
 }
 
 //==============================================================================
@@ -834,12 +834,11 @@ void SingleCellViewSimulation::setDelay(const int &pDelay)
 double SingleCellViewSimulation::requiredMemory()
 {
     // Determine and return the amount of required memory to run our simulation
-    // Note: we return the amount as a double rather than a qulonglong (as we do
-    //       when retrieving the total/free amount of memory available; see
-    //       [OpenCOR]/src/plugins/misc/Core/src/coreutils.cpp) in case a
-    //       simulation requires an insane amount of memory...
-
-    static const int SizeOfDouble = sizeof(double);
+    // Note #1: we return the amount as a double rather than a qulonglong (as we
+    //          do when retrieving the total/free amount of memory available;
+    //          see [OpenCOR]/src/plugins/misc/Core/src/coreutils.cpp) in case a
+    //          simulation requires an insane amount of memory...
+    // Note #2: the 1 is for mPoints in SingleCellViewSimulationResults...
 
     iface::cellml_services::CellMLCompiledModel*
         compModel(mData->isDAETypeSolver() ?
@@ -858,7 +857,7 @@ double SingleCellViewSimulation::requiredMemory()
         size() *
         (1 + codeInfo->constantIndexCount() + codeInfo->rateIndexCount() * 3 +
          codeInfo->algebraicIndexCount())
-           *SizeOfDouble;
+        * sizeof(double);
 }
 
 //==============================================================================

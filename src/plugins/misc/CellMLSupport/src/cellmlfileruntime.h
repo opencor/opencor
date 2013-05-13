@@ -49,8 +49,8 @@ public:
         Voi,
         Constant,
         ComputedConstant,
-        State,
         Rate,
+        State,
         Algebraic,
         Undefined
     };
@@ -110,6 +110,7 @@ public:
 
     QString address() const;
     bool isValid() const;
+
     CellMLFileIssues issues() const;
     CellMLFileRuntimeModelParameters modelParameters() const;
     CellMLFileRuntime * update(CellMLFile *pCellMLFile);
@@ -123,7 +124,6 @@ public:
 
     void ensureODECompiledModel(bool pDebug = false);
     void ensureDAECompiledModel(bool pDebug = false);
-
 private:
     ObjRef<iface::cellml_api::Model> mModel;
     bool mODECompiledForDebug; // Only valid if mODEModel != null
@@ -136,12 +136,9 @@ private:
     QSharedPointer<CellMLFileRuntimeModelParameter> mVariableOfIntegration;
     CellMLFileRuntimeModelParameters mModelParameters;
 
+    void reset(const bool &pResetIssues);
     void resetODECodeInformation();
     void resetDAECodeInformation();
-
-    void resetFunctions();
-
-    void reset(const bool &pResetIssues);
 
     void couldNotGenerateModelCodeIssue();
     void unexpectedProblemDuringModelCompilationIssue();

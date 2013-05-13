@@ -30,9 +30,10 @@ public:
     explicit FourthOrderRungeKuttaSolver();
     ~FourthOrderRungeKuttaSolver();
 
-    virtual void initialize(const double &pVoiStart, const int &pStatesCount,
-                            double *pConstants, double *pStates, double *pRates,
-                            double *pAlgebraic, ComputeRatesFunction pComputeRates);
+    virtual void initialize(const double &pVoiStart,
+                            const int &pRatesStatesCount, double *pConstants,
+                            double *pRates, double *pStates, double *pAlgebraic,
+                            ComputeRatesFunction pComputeRates);
 
     virtual void solve(double &pVoi, const double &pVoiEnd) const;
 

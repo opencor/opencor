@@ -368,14 +368,14 @@ void SingleCellViewInformationParametersWidget::populateModel(Core::PropertyEdit
             modelParameterIcon = QIcon(":SingleCellView_computedConstant");
 
             break;
+        case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::Rate:
+            modelParameterIcon = QIcon(":SingleCellView_rate");
+
+            break;
         case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::State:
             modelParameterEditable = true;
 
             modelParameterIcon = QIcon(":SingleCellView_state");
-
-            break;
-        case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::Rate:
-            modelParameterIcon = QIcon(":SingleCellView_rate");
 
             break;
         case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::Algebraic:
@@ -458,12 +458,12 @@ void SingleCellViewInformationParametersWidget::updateModelParametersToolTips()
                 modelParameterType = tr("computed constant");
 
                 break;
-            case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::State:
-                modelParameterType = tr("state");
-
-                break;
             case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::Rate:
                 modelParameterType = tr("rate");
+
+                break;
+            case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::State:
+                modelParameterType = tr("state");
 
                 break;
             case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::Algebraic:

@@ -24,7 +24,7 @@ public:
     virtual void solve(double &pVoi, const double &pVoiEnd) const = 0;
 
 protected:
-    int mStatesCount;
+    int mRatesStatesCount;
 
     double *mConstants;
     double *mStates;

@@ -50,17 +50,13 @@
 
         <ul>
             <li>
-                If you run Linux as a virtual machine within <a href="https://www.virtualbox.org/">VirtualBox</a>, then please be aware that there are known issues with 3D support (e.g. see <a href="https://www.virtualbox.org/ticket/6848">https://www.virtualbox.org/ticket/6848</a>). So, to get OpenCOR to work in your virtual machine, you might have to use indirect rendering which can be done either every time you want to run OpenCOR:
+                Depending on which <a href="plugins/index.html">plugins</a> you select, OpenCOR may need <a href="http://www.llvm.org/">LLVM</a>. If so, and in case your video card uses a driver which relies on LLVM (e.g. <a href="http://en.wikipedia.org/wiki/Gallium3D">Gallium3D</a> and <a href="http://www.mesa3d.org/">Mesa 3D</a>), then there may be a conflict between the version of LLVM used by OpenCOR and the version used by your video card. To address this issue, you should either use a different driver or use indirect rendering. The latter can be done either every time you run OpenCOR:
 
                 <pre class="prettyprint">$ LIBGL_ALWAYS_INDIRECT=1 ./OpenCOR</pre>
 
                 or once and for all by exporting <code>LIBGL_ALWAYS_INDIRECT</code> (e.g. in your <code>~/.bashrc</code> file):
 
                 <pre class="prettyprint">export LIBGL_ALWAYS_INDIRECT=1</pre>
-
-                <div>
-                    <strong>Note:</strong> to disable 3D hardware acceleration in your virtual machine will not be enough.
-                </div>
             </li>
         </ul>
 

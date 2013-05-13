@@ -32,7 +32,12 @@ void CoreSolver::emitError(const QString &pErrorMsg)
     // Let people know that an error occured, but first reformat the error a
     // bit, if needed
 
-    QString errorMsg = pErrorMsg[0].toLower()+pErrorMsg.right(pErrorMsg.size()-1);
+    QString errorMsg;
+
+    if (pErrorMsg.startsWith("Newton"))
+        errorMsg = pErrorMsg;
+    else
+        errorMsg = pErrorMsg[0].toLower()+pErrorMsg.right(pErrorMsg.size()-1);
 
     if (!pErrorMsg.right(3).compare("..."))
         emit error(errorMsg.left(errorMsg.size()-3));

@@ -182,8 +182,6 @@ bool CellMLFileRuntime::isValid() const
 
 //==============================================================================
 
-//==============================================================================
-
 CellMLFileIssues CellMLFileRuntime::issues() const
 {
     // Return the issue(s)
