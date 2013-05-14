@@ -756,6 +756,13 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
     updateSimulationMode();
 
+    // We need to initially detach curves with non-matching file names now because
+    // updateResults can lead to graph data being accessed.
+    foreach (SingleCellViewWidgetCurveData *curveData, mCurvesData)
+        if ( !curveData->isAttached()
+             || curveData->fileName().compare(pFileName))
+            mActiveGraphPanel->plot()->detach(curveData->curve());
+
     // Update our previous (if any) and current simulation results
 
     if (   previousSimulation

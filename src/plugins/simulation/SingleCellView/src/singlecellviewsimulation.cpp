@@ -14,6 +14,7 @@
 
 #include <QFile>
 #include <QTextStream>
+#include <QAtomicInt>
 
 //==============================================================================
 
@@ -84,11 +85,12 @@ ResultListener::results(const std::vector<double>& pState)
             algebraic << *i++;
         solvePointAvailable(bvar, states, rates, algebraic);
 
-        if (mDelay) {
+        int delay = mDelay.load();
+        if (delay) {
 #ifdef Q_OS_WIN
-            Sleep(uint(mDelay));
+            Sleep(uint(delay));
 #else
-            usleep(mDelay * 1000);
+            usleep(delay * 1000);
 #endif
         }
     }
