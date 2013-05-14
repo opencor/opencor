@@ -879,7 +879,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
         // 'computed' constants
 
         if (QRegularExpression("^(CONSTANTS|RATES|STATES)\\[[0-9]*\\] = [+-]?[0-9]*\\.?[0-9]+([eE][+-]?[0-9]+)?;$").match(initConst).hasMatch()) {
-            // We are dealing with a 'proper' constant (or rate or state)
+            // We are dealing with a 'proper' constant (or a rate or a state)
 
             if (!initConsts.isEmpty())
                 initConsts += "\n";
