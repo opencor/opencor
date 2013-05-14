@@ -1,0 +1,176 @@
+{
+   qxcb cond destroy
+   Helgrind:Misc
+   fun:pthread_cond_destroy_WRK
+   fun:pthread_cond_destroy@*
+   obj:/usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0
+   fun:xcb_wait_for_reply
+}
+{
+   qtmutexraceunlock
+   Helgrind:Race
+   fun:_ZN11QBasicMutex14unlockInternalEv
+   fun:QMutex_unlock_WRK
+}
+{
+   qmutexraceunlock2
+   Helgrind:Race
+   fun:_ZN6QMutex6unlockEv
+   fun:QMutex_unlock_WRK
+   fun:_ZN6QMutex6unlockEv
+}
+{
+   qmutexracelock
+   Helgrind:Race
+   fun:_ZN11QBasicMutex12lockInternalEv
+   fun:QMutex_lock_WRK
+}
+{
+   qmutexracelock2
+   Helgrind:Race
+   fun:_ZN6QMutex4lockEv
+   fun:QMutex_lock_WRK
+}
+{
+   qmutexracetrylock
+   Helgrind:LockOrder
+   fun:QMutex_tryLock_int_WRK
+   fun:_ZN6QMutex7tryLockEi
+}
+{
+   coreappinit
+   Helgrind:Race
+   fun:_ZN16QCoreApplication4initEv
+}
+{
+   coreapppostevent
+   Helgrind:Race
+   fun:_ZN16QCoreApplication9postEventEP7QObjectP6QEventi
+}
+{
+   gvariantunref
+   Helgrind:Race
+   fun:g_variant_unref
+   obj:/usr/lib/x86_64-linux-gnu/libgio-2.0.so.0.3200.3
+}
+{
+   giofreeinstance
+   Helgrind:Race
+   fun:g_type_free_instance
+   obj:/usr/lib/x86_64-linux-gnu/libgio-2.0.so.0.3200.3
+}
+{
+   gslicefree
+   Helgrind:Race
+   fun:g_slice_free1
+}
+{
+   gslicealloc
+   Helgrind:Race
+   fun:g_slice_alloc
+}
+{
+   giolockorder
+   Helgrind:LockOrder
+   fun:pthread_mutex_lock
+   obj:/usr/lib/x86_64-linux-gnu/libgio-2.0.so.0.3200.3
+}
+{
+   qsingleapprace
+   Helgrind:Race
+   fun:_ZN11SharedTools19QtSingleApplicationC1ERK7QStringRiPPc
+}
+{
+   qobjectdestrlockorder
+   Helgrind:LockOrder
+   fun:QMutex_lock_WRK
+   fun:_ZN6QMutex4lockEv
+   fun:_ZN7QObjectD1Ev
+}
+{
+   gonceinitleaverace
+   Helgrind:Race
+   fun:g_once_init_leave
+   obj:/usr/lib/x86_64-linux-gnu/libgio-2.0.so.0.3200.3
+}
+{
+   gvariantrace
+   Helgrind:Race
+   obj:/lib/x86_64-linux-gnu/libglib-2.0.so.0.3200.3
+   obj:/lib/x86_64-linux-gnu/libglib-2.0.so.0.3200.3
+   fun:g_variant_new_variant
+}
+{
+   gvariantunrefrace
+   Helgrind:Race
+   fun:g_variant_unref
+}
+{
+   giofilelock
+   Helgrind:LockOrder
+   fun:pthread_mutex_lock
+   fun:g_mutex_lock
+   obj:/usr/lib/x86_64-linux-gnu/libgio-2.0.so.0.3200.3
+   obj:/usr/lib/x86_64-linux-gnu/libgio-2.0.so.0.3200.3
+   fun:g_file_new_for_path
+}
+{
+   disconnectorder
+   Helgrind:LockOrder
+   fun:QMutex_lock_WRK
+   fun:_ZN6QMutex4lockEv
+   obj:/data/andrew/Qt5.0.2/5.0.2/gcc_64/lib/libQt5Core.so.5.0.2
+   fun:_ZN11QMetaObject10disconnectEPK7QObjectiS2_i
+}
+{
+   disconnectorder2
+   Helgrind:LockOrder
+   fun:QMutex_lock_WRK
+   fun:_ZN6QMutex4lockEv
+   obj:/data/andrew/Qt5.0.2/5.0.2/gcc_64/lib/libQt5Core.so.5.0.2
+   fun:_ZN7QObject10disconnectEPKS_PKcS1_S3_
+}
+{
+   connectimpl
+   Helgrind:LockOrder
+   fun:QMutex_lock_WRK
+   fun:_ZN6QMutex4lockEv
+   fun:_ZN7QObject11connectImplEPKS_PPvS1_S3_PN9QtPrivate15QSlotObjectBaseEN2Qt14ConnectionTypeEPKiPK11QMetaObject
+}
+{
+   connectorder
+   Helgrind:LockOrder
+   fun:QMutex_lock_WRK
+   fun:_ZN6QMutex4lockEv
+   obj:/data/andrew/Qt5.0.2/5.0.2/gcc_64/lib/libQt5Core.so.5.0.2
+   fun:_ZN11QMetaObject7connectEPK7QObjectiS2_iiPi
+}
+{
+   gonceimpllockorder
+   Helgrind:LockOrder
+   fun:pthread_mutex_lock
+   fun:g_mutex_lock
+   obj:/usr/lib/x86_64-linux-gnu/libgio-2.0.so.0.3200.3
+   obj:/usr/lib/x86_64-linux-gnu/libgio-2.0.so.0.3200.3
+   fun:g_once_impl
+}
+{
+   connectlockorder
+   Helgrind:LockOrder
+   fun:QMutex_lock_WRK
+   fun:_ZN6QMutex4lockEv
+   obj:/data/andrew/Qt5.0.2/5.0.2/gcc_64/lib/libQt5Core.so.5.0.2
+   fun:_ZN7QObject7connectEPKS_PKcS1_S3_N2Qt14ConnectionTypeE
+}
+{
+   gmaincontextcheckrace
+   Helgrind:Race
+   obj:/data/andrew/Qt5.0.2/5.0.2/gcc_64/lib/libQt5Core.so.5.0.2
+   fun:g_main_context_check
+}
+{
+   gmaincontextpreparerace
+   Helgrind:Race
+   obj:/data/andrew/Qt5.0.2/5.0.2/gcc_64/lib/libQt5Core.so.5.0.2
+   fun:g_main_context_prepare
+}
