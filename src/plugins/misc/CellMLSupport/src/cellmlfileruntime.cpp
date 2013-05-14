@@ -878,18 +878,20 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
         // Add the statement either to our list of 'proper' constants or
         // 'computed' constants
 
-        if (QRegularExpression("^CONSTANTS\\[(0|[1-9][0-9]*)\\] = [^0-9]").match(initConst).hasMatch()) {
-            // We are dealing with a statement for a computed constant, so...
+        if (QRegularExpression("^(CONSTANTS|RATES|STATES)\\[[0-9]*\\] = [+-]?[0-9]*\\.?[0-9]+([eE][+-]?[0-9]+)?;$").match(initConst).hasMatch()) {
+            // We are dealing with a 'proper' constant (or rate or state)
+
+            if (!initConsts.isEmpty())
+                initConsts += "\n";
+
+            initConsts += initConst;
+        } else {
+            // We are dealing with a 'computed' constant
 
             if (!compCompConsts.isEmpty())
                 compCompConsts += "\n";
 
             compCompConsts += initConst;
-        } else {
-            if (!initConsts.isEmpty())
-                initConsts += "\n";
-
-            initConsts += initConst;
         }
 
     modelCode += functionCode("int initializeConstants(double *CONSTANTS, double *RATES, double *STATES)",
