@@ -324,7 +324,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
             this, SLOT(showModelParameter(const QString &, QSharedPointer<CellMLSupport::CellMLFileRuntimeModelParameter>, const bool &)));
 
     // Create and add our invalid simulation message widget
-
+    mErrorType = SingleCellViewWidget::General; // To avoid undefined memory usage.
     mInvalidModelMessageWidget = new Core::UserMessageWidget(":/oxygen/actions/help-about.png",
                                                              pParent);
 

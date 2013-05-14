@@ -66,16 +66,38 @@ GrabInitialValueListener::failed(const std::string& aFailWhy) throw() {
 
 ResultListener::ResultListener(iface::cellml_services::CellMLIntegrationRun* pRun,
                                int pNStates, int pNAlgebraic)
-    : mRun(pRun), mNStates(pNStates), mNAlgebraic(pNAlgebraic)
+    : mRun(pRun), mNStates(pNStates), mNAlgebraic(pNAlgebraic), mSuspended(false)
 {
 }
-    
+
+void
+ResultListener::suspend()
+{
+    if (mSuspended)
+        return;
+    mSuspended = true;
+    mResultMutex.lock();
+}
+
+void
+ResultListener::unsuspend()
+{
+    if (!mSuspended)
+        return;
+    mSuspended = false;
+    mResultMutex.unlock();
+}
+
 void
 ResultListener::results(const std::vector<double>& pState)
     throw()
 {
     std::vector<double>::const_iterator i = pState.begin();
     while (i != pState.end()) {
+        // Briefly acquire the result mutex. This will block while we are
+        // suspended due to a pause.
+        mResultMutex.lock();
+        mResultMutex.unlock();
         double bvar = *i++;
         QList<double> states, rates, algebraic;
         states.reserve(mNStates);
@@ -170,6 +192,9 @@ void SingleCellViewSimulationData::pause()
     if (mState != SingleCellViewSimulationData::SIMSTATE_WAITING_RESULTS)
         return;
 
+    if (mResultReceiver)
+        mResultReceiver->suspend();
+
     mState = SingleCellViewSimulationData::SIMSTATE_PAUSED;
     if (mIntegrationRun)
         mIntegrationRun->pause();
@@ -177,6 +202,9 @@ void SingleCellViewSimulationData::pause()
 
 void SingleCellViewSimulationData::resume()
 {
+    if (mResultReceiver)
+        mResultReceiver->unsuspend();
+
     if (mIntegrationRun &&
         mState == SingleCellViewSimulationData::SIMSTATE_PAUSED)
     {
@@ -308,13 +336,14 @@ void SingleCellViewSimulationData::addSolverProperty(const QString &pName,
 void SingleCellViewSimulationData::stopAllSimulations()
 {
     if (mIVGrabber) {
-        disconnect(mIVGrabber);
+        mIVGrabber->disconnect();
         mIVGrabber = NULL;
     }
 
     if (mResultReceiver)
     {
-        disconnect(mResultReceiver);
+        mResultReceiver->disconnect();
+        mResultReceiver->unsuspend();
         mResultReceiver = NULL;
     }
 
@@ -440,6 +469,7 @@ void SingleCellViewSimulationData::initialValuesIn()
     }
 
     emit updated();
+    emit modified(this, !mDidReset);
 }
 
 void SingleCellViewSimulationData::initialValuesFailed(QString pError)
@@ -730,10 +760,6 @@ SingleCellViewSimulation::SingleCellViewSimulation(const QString &pFileName,
 
 SingleCellViewSimulation::~SingleCellViewSimulation()
 {
-    // Stop our worker (just in case...)
-
-    stop();
-
     // Delete some internal objects
 
     delete mResults;
@@ -945,8 +971,15 @@ void SingleCellViewSimulation::stop()
 
 void SingleCellViewSimulation::simulationComplete()
 {
-    mData->state(SingleCellViewSimulationData::SIMSTATE_GOT_IV);
+    // This catches what would otherwise be a race condition if the simulation
+    // is paused before the simulation thread sends a complete.
+    mData->resume();
+
+    // Ensure graphs are up to date by informing them there might be more data.
     emit running(this, false);
+
+    mData->state(SingleCellViewSimulationData::SIMSTATE_GOT_IV);
+
     emit stopped(this,
                  mRunTime.elapsed());
     emit mData->updated();
@@ -954,6 +987,10 @@ void SingleCellViewSimulation::simulationComplete()
 
 void SingleCellViewSimulation::simulationFailed(QString pError)
 {
+    // This catches what would otherwise be a race condition if the simulation
+    // is paused before the simulation thread sends a failed.
+    mData->resume();
+
     mData->state(SingleCellViewSimulationData::SIMSTATE_GOT_IV);
     emit error(this,
                "Problem solving model: " + pError);

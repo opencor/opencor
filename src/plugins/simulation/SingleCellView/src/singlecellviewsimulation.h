@@ -11,6 +11,7 @@
 #include <QMap>
 #include <QTime>
 #include <QPointer>
+#include <QMutex>
 #include "cellml-api-cxx-support.hpp"
 #include "IfaceCIS.hxx"
 
@@ -100,10 +101,14 @@ public:
     void failed(const std::string& pFailWhy) throw();
 
     void delay(int pDelay) { mDelay = pDelay; }
+    void suspend();
+    void unsuspend();
 private:
     QAtomicInt mDelay;
     ObjRef<iface::cellml_services::CellMLIntegrationRun> mRun;
     int mNStates, mNAlgebraic;
+    bool mSuspended;
+    QMutex mResultMutex;
 
 Q_SIGNALS:
     void solveDone();
@@ -187,6 +192,8 @@ public:
     void setPoint(const QList<double>& pStates,
                   const QList<double>& pRates,
                   const QList<double>& pAlgebraic);
+    void didReset(bool pDid) { mDidReset = pDid; }
+    bool didReset() const { return mDidReset; }
 
 private:
     CellMLSupport::CellMLFileRuntime *mRuntime;

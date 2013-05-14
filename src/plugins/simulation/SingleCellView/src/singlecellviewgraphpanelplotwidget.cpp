@@ -962,8 +962,9 @@ void SingleCellViewGraphPanelPlotWidget::replotNow()
     // Make sure that the replotting occurs immediately
     // Note: this is needed when running a simulation since, otherwise,
     //       replotting won't occur immediately (because of threading)...
-
-    qApp->processEvents();
+    // Since the change to use CellML Integration Service, this doesn't seem
+    // to be needed, and it seems to cause crashes, so disabling it.
+    // qApp->processEvents();
 }
 
 //==============================================================================
