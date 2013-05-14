@@ -220,7 +220,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mPluginParent(pPluginParent),
     mSimulation(0),
     mSimulations(QMap<QString, SingleCellViewSimulation *>()),
-    mStoppedSimulations(QList<SingleCellViewSimulation *>()),
+    mStoppedSimulations(QList<QPointer<SingleCellViewSimulation> >()),
     mProgresses(QMap<QString, int>()),
     mResets(QMap<QString, bool>()),
     mDelays(QMap<QString, int>()),
@@ -663,8 +663,10 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
                 this, SLOT(simulationRunning(const bool &)));
         connect(mSimulation, SIGNAL(paused()),
                 this, SLOT(simulationPaused()));
-        connect(mSimulation, SIGNAL(stopped(const int &)),
-                this, SLOT(simulationStopped(const int &)));
+        connect(mSimulation, SIGNAL(stopped(QPointer<SingleCellViewSimulation>,
+                                            const int &)),
+                this, SLOT(simulationStopped(QPointer<SingleCellViewSimulation>,
+                                             const int &)));
 
         connect(mSimulation, SIGNAL(error(const QString &)),
                 this, SLOT(simulationError(const QString &)));
@@ -1230,7 +1232,11 @@ void SingleCellViewWidget::simulationPaused()
 
 //==============================================================================
 
-void SingleCellViewWidget::simulationStopped(const int &pElapsedTime)
+void SingleCellViewWidget::simulationStopped
+(
+ QPointer<SingleCellViewSimulation> pSimulation,
+ const int &pElapsedTime
+)
 {
     // We want a short delay before resetting the progress bar and the file tab
     // icon, so that the user can really see when our simulation has completed
@@ -1241,8 +1247,12 @@ void SingleCellViewWidget::simulationStopped(const int &pElapsedTime)
 
     // Our simulation worker has stopped, so do a few things, but only we are dealing
     // with the active simulation
+    if (pSimulation.isNull())
+      return;
 
-    SingleCellViewSimulation *simulation = qobject_cast<SingleCellViewSimulation *>(sender());
+    // This code runs in the main thread, which is the only place that simulations
+    // are ever deleted, so pSimulation.data() is good for the rest of this call.
+    SingleCellViewSimulation* simulation = pSimulation.data();
 
     if (simulation == mSimulation) {
         // Output the elapsed time, if valid, and reset our progress bar (with a
@@ -1276,22 +1286,19 @@ void SingleCellViewWidget::simulationStopped(const int &pElapsedTime)
     // we should reset our file tab icon, but only if we are the active
     // simulation
 
-    if (simulation) {
-        // Stop keeping track of our simulation progress
+    // Stop keeping track of our simulation progress
+    mProgresses.remove(simulation->fileName());
 
-        mProgresses.remove(simulation->fileName());
-
-        // Reset our file tab icon (with a bit of a delay)
-        // Note: we can't directly pass simulation to resetFileTabIcon(), so
-        //       instead we use mStoppedSimulations which is a list of
-        //       simulations in case several simulations were to stop at around
-        //       the same time...
-
-        if (simulation != mSimulation) {
-            mStoppedSimulations << simulation;
-
-            QTimer::singleShot(ResetDelay, this, SLOT(resetFileTabIcon()));
-        }
+    // Reset our file tab icon (with a bit of a delay)
+    // Note: we can't directly pass simulation to resetFileTabIcon(), so
+    //       instead we use mStoppedSimulations which is a list of
+    //       simulations in case several simulations were to stop at around
+    //       the same time...
+    
+    if (simulation != mSimulation) {
+        mStoppedSimulations << pSimulation;
+        
+        QTimer::singleShot(ResetDelay, this, SLOT(resetFileTabIcon()));
     }
 }
 
@@ -1310,9 +1317,13 @@ void SingleCellViewWidget::resetFileTabIcon()
 {
     // Let people know that we want to reset our file tab icon
 
-    SingleCellViewSimulation *simulation = mStoppedSimulations.first();
-
+    QPointer<SingleCellViewSimulation> simulation = mStoppedSimulations.first();
     mStoppedSimulations.removeFirst();
+
+    if (simulation.isNull())
+        return;
+    // If it isn't null, it is safe for the remainder of this call since this runs
+    // on the main thread, which is the only place simulation is deleted.
 
     emit updateFileTabIcon(simulation->fileName(), QIcon());
 }

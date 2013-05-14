@@ -983,7 +983,8 @@ void SingleCellViewSimulation::resume()
 void SingleCellViewSimulation::stop()
 {
     data()->stopAllSimulations();
-    emit stopped(mRunTime.elapsed());
+    emit stopped(QPointer<SingleCellViewSimulation>(this),
+                 mRunTime.elapsed());
     emit mData->updated();
 }
 
@@ -991,7 +992,8 @@ void SingleCellViewSimulation::simulationComplete()
 {
     mData->state(SingleCellViewSimulationData::SIMSTATE_GOT_IV);
     emit running(false);
-    emit stopped(mRunTime.elapsed());
+    emit stopped(QPointer<SingleCellViewSimulation>(this),
+                 mRunTime.elapsed());
     emit mData->updated();
 }
 

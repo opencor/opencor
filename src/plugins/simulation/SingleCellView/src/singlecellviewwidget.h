@@ -169,7 +169,7 @@ private:
     SingleCellViewSimulation *mSimulation;
     QMap<QString, SingleCellViewSimulation *> mSimulations;
 
-    QList<SingleCellViewSimulation *> mStoppedSimulations;
+    QList<QPointer<SingleCellViewSimulation> > mStoppedSimulations;
 
     Core::ProgressBarWidget *mProgressBarWidget;
 
@@ -259,7 +259,8 @@ private Q_SLOTS:
 
     void simulationRunning(const bool &pIsResuming);
     void simulationPaused();
-    void simulationStopped(const int &pElapsedTime);
+    void simulationStopped(QPointer<SingleCellViewSimulation>,
+                           const int &pElapsedTime);
 
     void resetProgressBar();
     void resetFileTabIcon();

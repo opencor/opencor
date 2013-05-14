@@ -309,7 +309,8 @@ public Q_SLOTS:
 Q_SIGNALS:
     void running(const bool &pIsResuming);
     void paused();
-    void stopped(const int &pElapsedTime);
+    void stopped(QPointer<SingleCellViewSimulation>,
+                 const int &pElapsedTime);
 
     void error(const QString &pMessage);
 };
