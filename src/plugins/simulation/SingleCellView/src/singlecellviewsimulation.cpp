@@ -18,6 +18,10 @@
 
 //==============================================================================
 
+#include <QtNumeric>
+
+//==============================================================================
+
 #include <qmath.h>
 
 //==============================================================================
@@ -534,13 +538,15 @@ void SingleCellViewSimulationData::checkForModifications()
     
     bool foundChange = false;
     for (unsigned int i = 0; i < codeInfo->constantIndexCount(); i++)
-        if (mInitialConstants[i] != mConstants[i]) {
+        if (!qIsFinite(mInitialConstants[i]) ||
+            mInitialConstants[i] != mConstants[i]) {
             foundChange = true;
             break;
         }
     if (!foundChange)
         for (unsigned int i = 0; i < codeInfo->rateIndexCount(); i++)
-            if (mInitialStates[i] != mStates[i]) {
+            if (!qIsFinite(mInitialStates[i]) ||
+                mInitialStates[i] != mStates[i]) {
                 foundChange = true;
                 break;
             }

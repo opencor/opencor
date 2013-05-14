@@ -90,7 +90,7 @@ void initApplication(QCoreApplication *pApp)
     if (version.endsWith(".0"))
         // There is no actual patch information, so trim it
 
-        version.truncate(version.length()-2);
+        version.chop(2);
 
     versionFile.close();
 

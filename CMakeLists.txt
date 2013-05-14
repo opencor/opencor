@@ -103,8 +103,8 @@ UPDATE_LANGUAGE_FILES(${PROJECT_NAME} FALSE)
 # Third-party libraries which must be directly embedded in the GUI version of
 # OpenCOR
 
-INCLUDE_THIRD_PARTY_LIBRARY(LibQxt)
-INCLUDE_THIRD_PARTY_LIBRARY(QtSingleApplication)
+INCLUDE_THIRD_PARTY_LIBRARY(. LibQxt)
+INCLUDE_THIRD_PARTY_LIBRARY(. QtSingleApplication)
 
 # Set the application icon, but only for Windows and OS X, since in the case of
 # Linux, it's done through res/OpenCOR.qrc
@@ -183,18 +183,18 @@ SET(PLUGINS
 #    simulation/MidpointSolver
 #    simulation/SecondOrderRungeKuttaSolver
 
-#---GRY--- DISABLED FOR VERSION 0.1...
+#---GRY--- DISABLED FOR VERSION 0.1.x...
 #    3rdparty/QScintilla
 #    3rdparty/QtMmlWidget
     3rdparty/Qwt
 
-#---GRY--- DISABLED FOR VERSION 0.1...
+#---GRY--- DISABLED FOR VERSION 0.1.x...
 #    misc/QScintillaSupport
 
     # Build the remaining plugins
 
     misc/Help
-#---GRY--- DISABLED FOR VERSION 0.1...
+#---GRY--- DISABLED FOR VERSION 0.1.x...
 #    misc/Viewer
 
     organisation/CellMLModelRepository
@@ -202,7 +202,7 @@ SET(PLUGINS
     organisation/FileOrganiser
 
     editing/CellMLAnnotationView
-#---GRY--- DISABLED FOR VERSION 0.1...
+#---GRY--- DISABLED FOR VERSION 0.1.x...
 #    editing/RawCellMLView
 #    editing/RawView
 
