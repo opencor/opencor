@@ -165,39 +165,6 @@ void SingleCellViewSimulationData::setPoint
 
 //==============================================================================
 
-QList<double>& SingleCellViewSimulationData::constants()
-{
-    return mConstants;
-}
-
-//==============================================================================
-
-QList<double>& SingleCellViewSimulationData::states()
-{
-    return mStates;
-}
-
-//==============================================================================
-
-QList<double>& SingleCellViewSimulationData::rates()
-{
-    return mRates;
-}
-
-//==============================================================================
-
-QList<double>& SingleCellViewSimulationData::algebraic()
-{
-    return mAlgebraic;
-}
-
-//==============================================================================
-
-QList<double>& SingleCellViewSimulationData::condVar()
-{
-    return mCondVar;
-}
-
 void SingleCellViewSimulationData::pause()
 {
     if (mIntegrationRun)
@@ -333,14 +300,14 @@ void SingleCellViewSimulationData::addSolverProperty(const QString &pName,
 void SingleCellViewSimulationData::stopAllSimulations()
 {
     if (mIVGrabber) {
-        mIVGrabber->disconnect(this);
+        disconnect(mIVGrabber);
         mIVGrabber = NULL;
     }
 
     if (mResultReceiver)
     {
-         mResultReceiver->disconnect(this);
-         mResultReceiver = NULL;
+        disconnect(mResultReceiver);
+        mResultReceiver = NULL;
     }
 
     if (mIntegrationRun) {
@@ -470,7 +437,7 @@ void SingleCellViewSimulationData::initialValuesIn()
 void SingleCellViewSimulationData::initialValuesFailed(QString pError)
 {
     // Let people know that our data is 'cleaned', i.e. not modified
-    emit modified(false);
+    emit modified(this, false);
 
     emit error("Problem computing initial values: " + pError);
 }
@@ -551,7 +518,7 @@ void SingleCellViewSimulationData::checkForModifications()
                 break;
             }
     if (foundChange) {
-        emit modified(true);
+        emit modified(this, true);
         return;
     }
 }
@@ -631,7 +598,9 @@ void SingleCellViewSimulationResults::reset()
 void SingleCellViewSimulationResults::addPoint
 (
  const double &pPoint,
- QList<double>& pStates, QList<double>& pRates, QList<double>& pAlgebraic
+ const QList<double>& pStates,
+ const QList<double>& pRates,
+ const QList<double>& pAlgebraic
 )
 {
     // Add the data to our different arrays
@@ -648,40 +617,6 @@ qulonglong SingleCellViewSimulationResults::size() const
 {
     // Return our size
     return mPoints.size();
-}
-
-//==============================================================================
-
-QList<double> SingleCellViewSimulationResults::points() const
-{
-    return mPoints;
-}
-
-//==============================================================================
-
-SingleCellViewSimulationResults::Matrix SingleCellViewSimulationResults::states() const
-{
-    // Return our rates array
-
-    return mStates;
-}
-
-//==============================================================================
-
-SingleCellViewSimulationResults::Matrix SingleCellViewSimulationResults::rates() const
-{
-    // Return our states array
-
-    return mRates;
-}
-
-//==============================================================================
-
-SingleCellViewSimulationResults::Matrix SingleCellViewSimulationResults::algebraic() const
-{
-    // Return our algebraic array
-
-    return mAlgebraic;
 }
 
 //==============================================================================
@@ -780,7 +715,7 @@ SingleCellViewSimulation::SingleCellViewSimulation(const QString &pFileName,
     // Keep track of any error occurring in our data
 
     connect(mData, SIGNAL(error(const QString &)),
-            this, SIGNAL(error(const QString &)));
+            this, SLOT(reemitError(const QString &)));
 }
 
 //==============================================================================
@@ -906,24 +841,28 @@ bool SingleCellViewSimulation::simulationSettingsOk(const bool &pEmitError)
 
     if (mData->startingPoint() == mData->endingPoint()) {
         if (pEmitError)
-            emit error(tr("the starting and ending points cannot have the same value"));
+            emit error(this,
+                       tr("the starting and ending points cannot have the same value"));
 
         return false;
     } else if (mData->pointInterval() == 0) {
         if (pEmitError)
-            emit error(tr("the point interval cannot be equal to zero"));
+            emit error(this,
+                       tr("the point interval cannot be equal to zero"));
 
         return false;
     } else if (   (mData->startingPoint() < mData->endingPoint())
              && (mData->pointInterval() < 0)) {
         if (pEmitError)
-            emit error(tr("the ending point is greater than the starting point, so the point interval should be greater than zero"));
+            emit error(this,
+                       tr("the ending point is greater than the starting point, so the point interval should be greater than zero"));
 
         return false;
     } else if (   (mData->startingPoint() > mData->endingPoint())
              && (mData->pointInterval() > 0)) {
         if (pEmitError)
-            emit error(tr("the ending point is smaller than the starting point, so the point interval should be smaller than zero"));
+            emit error(this,
+                       tr("the ending point is smaller than the starting point, so the point interval should be smaller than zero"));
 
         return false;
     } else {
@@ -964,6 +903,8 @@ void SingleCellViewSimulation::run()
     mLastUpdate = QTime::currentTime();
     mRunTime = QTime::currentTime();
 
+    emit running(this, true);
+
     data()->startMainSimulation(this);
 }
 
@@ -972,7 +913,7 @@ void SingleCellViewSimulation::run()
 void SingleCellViewSimulation::pause()
 {
     data()->pause();
-    emit paused();
+    emit paused(this);
     mData->checkForModifications();
 }
 
@@ -981,7 +922,7 @@ void SingleCellViewSimulation::pause()
 void SingleCellViewSimulation::resume()
 {
     data()->resume();
-    emit running(true);
+    emit running(this, true);
 }
 
 //==============================================================================
@@ -989,7 +930,7 @@ void SingleCellViewSimulation::resume()
 void SingleCellViewSimulation::stop()
 {
     data()->stopAllSimulations();
-    emit stopped(QPointer<SingleCellViewSimulation>(this),
+    emit stopped(this,
                  mRunTime.elapsed());
     emit mData->updated();
 }
@@ -997,8 +938,8 @@ void SingleCellViewSimulation::stop()
 void SingleCellViewSimulation::simulationComplete()
 {
     mData->state(SingleCellViewSimulationData::SIMSTATE_GOT_IV);
-    emit running(false);
-    emit stopped(QPointer<SingleCellViewSimulation>(this),
+    emit running(this, false);
+    emit stopped(this,
                  mRunTime.elapsed());
     emit mData->updated();
 }
@@ -1006,7 +947,8 @@ void SingleCellViewSimulation::simulationComplete()
 void SingleCellViewSimulation::simulationFailed(QString pError)
 {
     mData->state(SingleCellViewSimulationData::SIMSTATE_GOT_IV);
-    emit error("Problem solving model: " + pError);
+    emit error(this,
+               "Problem solving model: " + pError);
 }
 
 void SingleCellViewSimulation::simulationDataAvailable
@@ -1023,8 +965,15 @@ void SingleCellViewSimulation::simulationDataAvailable
     // it a bit.
     if (mLastUpdate.elapsed() > 500) {
         mLastUpdate = QTime::currentTime();
-        emit running(false);
+        emit running(this, false);
     }
+}
+
+//==============================================================================
+
+void SingleCellViewSimulation::reemitError(const QString& pMsg)
+{
+    emit error(this, pMsg);
 }
 
 //==============================================================================

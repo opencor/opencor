@@ -42,6 +42,7 @@
 #include <QTextEdit>
 #include <QTimer>
 #include <QVariant>
+#include <QPointer>
 
 //==============================================================================
 
@@ -229,7 +230,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mRunActionEnabled(true),
     mCurvesData(QMap<QString, SingleCellViewWidgetCurveData *>()),
     mOldSimulationResultsSizes(QMap<SingleCellViewSimulation *, qulonglong>()),
-    mCheckResultsSimulations(QList<SingleCellViewSimulation *>())
+    mCheckResultsSimulations(QList<QPointer<SingleCellViewSimulation> >())
 {
     // Set up the GUI
 
@@ -659,20 +660,24 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
         // Create a few connections
 
-        connect(mSimulation, SIGNAL(running(const bool &)),
-                this, SLOT(simulationRunning(const bool &)));
-        connect(mSimulation, SIGNAL(paused()),
-                this, SLOT(simulationPaused()));
-        connect(mSimulation, SIGNAL(stopped(QPointer<SingleCellViewSimulation>,
-                                            const int &)),
-                this, SLOT(simulationStopped(QPointer<SingleCellViewSimulation>,
-                                             const int &)));
+        connect(mSimulation, SIGNAL(running(QPointer<OpenCOR::SingleCellView::SingleCellViewSimulation>, bool)),
+                this, SLOT(simulationRunning(QPointer<OpenCOR::SingleCellView::SingleCellViewSimulation>,
+                                             bool)));
+        connect(mSimulation, SIGNAL(paused(QPointer<OpenCOR::SingleCellView::SingleCellViewSimulation>)),
+                this, SLOT(simulationPaused(QPointer<OpenCOR::SingleCellView::SingleCellViewSimulation>)));
+        connect(mSimulation, SIGNAL(stopped(QPointer<OpenCOR::SingleCellView::SingleCellViewSimulation>,int)),
+                this, SLOT(simulationStopped(QPointer<OpenCOR::SingleCellView::SingleCellViewSimulation>,
+                                             int)));
 
-        connect(mSimulation, SIGNAL(error(const QString &)),
-                this, SLOT(simulationError(const QString &)));
+        connect(mSimulation, SIGNAL(error(QPointer<OpenCOR::SingleCellView::SingleCellViewSimulation>,
+                                          const QString &)),
+                this, SLOT(simulationError(QPointer<OpenCOR::SingleCellView::SingleCellViewSimulation>,
+                                           const QString &)));
 
-        connect(mSimulation->data(), SIGNAL(modified(const bool &)),
-                this, SLOT(simulationDataModified(const bool &)));
+        connect(mSimulation->data(), SIGNAL(modified(QPointer<OpenCOR::SingleCellView::SingleCellViewSimulationData>,
+                                                     const bool &)),
+                this, SLOT(simulationDataModified(QPointer<OpenCOR::SingleCellView::SingleCellViewSimulationData>,
+                                                  const bool &)));
 
         // Keep track of our simulation object
 
@@ -1184,12 +1189,16 @@ void SingleCellViewWidget::updateDelayValue(const double &pDelayValue)
 
 //==============================================================================
 
-void SingleCellViewWidget::simulationRunning(const bool &pIsResuming)
+void SingleCellViewWidget::simulationRunning
+(
+ QPointer<SingleCellViewSimulation> pSimulation,
+ bool pIsResuming
+)
 {
     // Our simulation is running, so do a few things, but only we are dealing
     // with the active simulation
 
-    if (qobject_cast<SingleCellViewSimulation *>(sender()) == mSimulation) {
+    if (pSimulation == mSimulation) {
         // Reset our local axes' values, if resuming (since the user might have
         // been zooming in/out, etc.)
 
@@ -1210,12 +1219,12 @@ void SingleCellViewWidget::simulationRunning(const bool &pIsResuming)
 
 //==============================================================================
 
-void SingleCellViewWidget::simulationPaused()
+void SingleCellViewWidget::simulationPaused(QPointer<SingleCellViewSimulation> pSimulation)
 {
     // Our simulation is paused, so do a few things, but only we are dealing
     // with the active simulation
 
-    if (qobject_cast<SingleCellViewSimulation *>(sender()) == mSimulation) {
+    if (pSimulation == mSimulation) {
         // Update our simulation mode and parameters, and check for results
 
         updateSimulationMode();
@@ -1235,7 +1244,7 @@ void SingleCellViewWidget::simulationPaused()
 void SingleCellViewWidget::simulationStopped
 (
  QPointer<SingleCellViewSimulation> pSimulation,
- const int &pElapsedTime
+ int pElapsedTime
 )
 {
     // We want a short delay before resetting the progress bar and the file tab
@@ -1330,15 +1339,17 @@ void SingleCellViewWidget::resetFileTabIcon()
 
 //==============================================================================
 
-void SingleCellViewWidget::simulationError(const QString &pMessage,
-                                           const ErrorType &pErrorType)
+void SingleCellViewWidget::simulationError
+(
+ QPointer<SingleCellViewSimulation> pSimulation,
+ const QString &pMessage,
+ const ErrorType &pErrorType
+)
 {
     // Output the simulation error, but only if we are dealing with the active
     // simulation
 
-    SingleCellViewSimulation *simulation = qobject_cast<SingleCellViewSimulation *>(sender());
-
-    if (!simulation || (simulation == mSimulation)) {
+    if (pSimulation.isNull() || pSimulation == mSimulation) {
         // Note: we test for simulation to be valid since simulationError() can
         //       also be called directly (as opposed to being called as a
         //       response to a signal) as is done in initialize() above...
@@ -1353,12 +1364,16 @@ void SingleCellViewWidget::simulationError(const QString &pMessage,
 
 //==============================================================================
 
-void SingleCellViewWidget::simulationDataModified(const bool &pIsModified)
+void SingleCellViewWidget::simulationDataModified
+(
+ QPointer<SingleCellViewSimulationData> pSimulationData,
+ const bool &pIsModified
+)
 {
     // Update our refresh action, but only if we are dealing with the active
     // simulation
 
-    if (qobject_cast<SingleCellViewSimulationData *>(sender()) == mSimulation->data())
+    if (pSimulationData == mSimulation->data())
         mGui->actionReset->setEnabled(pIsModified);
 }
 
@@ -1655,11 +1670,15 @@ void SingleCellViewWidget::callCheckResults()
     // Retrieve the simulation for which we want to call checkResults() and then
     // call checkResults()
 
-    SingleCellViewSimulation *simulation = mCheckResultsSimulations.first();
+    if (mCheckResultsSimulations.empty())
+        return;
+
+    QPointer<SingleCellViewSimulation> simulation = mCheckResultsSimulations.first();
 
     mCheckResultsSimulations.removeFirst();
 
-    checkResults(simulation);
+    if (!simulation.isNull())
+        checkResults(simulation.data());
 }
 
 //==============================================================================

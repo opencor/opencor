@@ -62,6 +62,7 @@ class SingleCellViewGraphPanelPlotCurve;
 class SingleCellViewGraphPanelWidget;
 class SingleCellViewPlugin;
 class SingleCellViewSimulation;
+class SingleCellViewSimulationData;
 class SingleCellViewSimulationResults;
 
 //==============================================================================
@@ -219,7 +220,7 @@ private:
 
     QMap<SingleCellViewSimulation *, qulonglong> mOldSimulationResultsSizes;
 
-    QList<SingleCellViewSimulation *> mCheckResultsSimulations;
+    QList<QPointer<SingleCellViewSimulation> > mCheckResultsSimulations;
 
     void setDelayValue(const int &pDelayValue);
 
@@ -257,18 +258,21 @@ private Q_SLOTS:
 
     void updateDelayValue(const double &pDelayValue);
 
-    void simulationRunning(const bool &pIsResuming);
-    void simulationPaused();
-    void simulationStopped(QPointer<SingleCellViewSimulation>,
-                           const int &pElapsedTime);
+    void simulationRunning(QPointer<OpenCOR::SingleCellView::SingleCellViewSimulation> pSimulation,
+                           bool pIsResuming);
+    void simulationPaused(QPointer<OpenCOR::SingleCellView::SingleCellViewSimulation> pSimulation);
+    void simulationStopped(QPointer<OpenCOR::SingleCellView::SingleCellViewSimulation>,
+                           int pElapsedTime);
 
     void resetProgressBar();
     void resetFileTabIcon();
 
-    void simulationError(const QString &pMessage,
+    void simulationError(QPointer<OpenCOR::SingleCellView::SingleCellViewSimulation> pSimulation,
+                         const QString &pMessage,
                          const ErrorType &pErrorType = General);
 
-    void simulationDataModified(const bool &pIsModified);
+    void simulationDataModified(QPointer<OpenCOR::SingleCellView::SingleCellViewSimulationData> pSimulationData,
+                                const bool& pIsModified);
 
     void splitterWidgetMoved();
 

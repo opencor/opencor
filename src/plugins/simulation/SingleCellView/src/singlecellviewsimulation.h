@@ -10,6 +10,7 @@
 #include <QObject>
 #include <QMap>
 #include <QTime>
+#include <QPointer>
 #include "cellml-api-cxx-support.hpp"
 #include "IfaceCIS.hxx"
 
@@ -107,8 +108,9 @@ private:
 Q_SIGNALS:
     void solveDone();
     void solveFailure(QString pFailWhy);
-    void solvePointAvailable(double bvar, QList<double> states,
-                             QList<double> rates, QList<double> algebraic);
+    void solvePointAvailable(double bvar, const QList<double> states,
+                             const QList<double> rates,
+                             const QList<double> algebraic);
 };
 
 
@@ -130,11 +132,20 @@ public:
       SIMSTATE_PAUSED
     };
 
-    QList<double>& constants();
-    QList<double>& states();
-    QList<double>& rates();
-    QList<double>& algebraic();
-    QList<double>& condVar();
+    QList<double>& constants() { return mConstants; }
+    const QList<double>& constants() const { return mConstants; }
+
+    QList<double>& states() { return mStates; }
+    const QList<double>& states() const { return mStates; }
+
+    QList<double>& rates() { return mRates; }
+    const QList<double>& rates() const { return mRates; }
+
+    QList<double>& algebraic() { return mAlgebraic; }
+    const QList<double>& algebraic() const { return mAlgebraic; }
+
+    QList<double>& condVar() { return mCondVar; }
+    const QList<double>& condVar() const { return mCondVar; }
 
     void pause();
     void resume();
@@ -209,7 +220,8 @@ private:
 
 Q_SIGNALS:
     void updated();
-    void modified(const bool &pIsModified);
+    void modified(QPointer<OpenCOR::SingleCellView::SingleCellViewSimulationData> pSimulationData,
+                  const bool &pIsModified);
 
     void error(const QString &pMessage);
 
@@ -232,15 +244,20 @@ public:
     void reset();
 
     void addPoint(const double &pPoint,
-                  QList<double>& pStates, QList<double>& pRates, QList<double>& pAlgebraic);
+                  const QList<double>& pStates, const QList<double>& pRates,
+                  const QList<double>& pAlgebraic);
 
     qulonglong size() const;
 
-    QList<double> points() const;
-    
-    Matrix states() const;
-    Matrix rates() const;
-    Matrix algebraic() const;
+    QList<double>& points() { return mPoints; }
+    const QList<double>& points() const { return mPoints; }
+
+    Matrix& states() { return mStates; };
+    const Matrix& states() const { return mStates; };
+    Matrix& rates() { return mRates; };
+    const Matrix& rates() const { return mRates; };
+    Matrix& algebraic() { return mAlgebraic; };
+    const Matrix& algebraic() const { return mAlgebraic; };
 
     bool exportToCsv(const QString &pFileName) const;
 
@@ -305,14 +322,16 @@ public Q_SLOTS:
     void simulationFailed(QString pError);
     void simulationDataAvailable(double pPoint, QList<double> pStates,
                                  QList<double> pRates, QList<double> pAlgebraic);
+    void reemitError(const QString& pMsg);
 
 Q_SIGNALS:
-    void running(const bool &pIsResuming);
-    void paused();
-    void stopped(QPointer<SingleCellViewSimulation>,
+    void running(QPointer<OpenCOR::SingleCellView::SingleCellViewSimulation> pSimulation, bool pIsResuming);
+    void paused(QPointer<OpenCOR::SingleCellView::SingleCellViewSimulation> pSimulation);
+    void stopped(QPointer<OpenCOR::SingleCellView::SingleCellViewSimulation>,
                  const int &pElapsedTime);
 
-    void error(const QString &pMessage);
+    void error(QPointer<OpenCOR::SingleCellView::SingleCellViewSimulation> pSimulation,
+               const QString &pMessage);
 };
 
 //==============================================================================
