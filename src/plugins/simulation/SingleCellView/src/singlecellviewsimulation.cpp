@@ -167,14 +167,22 @@ void SingleCellViewSimulationData::setPoint
 
 void SingleCellViewSimulationData::pause()
 {
+    if (mState != SingleCellViewSimulationData::SIMSTATE_WAITING_RESULTS)
+        return;
+
+    mState = SingleCellViewSimulationData::SIMSTATE_PAUSED;
     if (mIntegrationRun)
         mIntegrationRun->pause();
 }
 
 void SingleCellViewSimulationData::resume()
 {
-    if (mIntegrationRun)
+    if (mIntegrationRun &&
+        mState == SingleCellViewSimulationData::SIMSTATE_PAUSED)
+    {
+        mState = SingleCellViewSimulationData::SIMSTATE_WAITING_RESULTS;
         mIntegrationRun->resume();
+    }
 }
 
 
