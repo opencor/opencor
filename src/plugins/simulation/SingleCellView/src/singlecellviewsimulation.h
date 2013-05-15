@@ -195,6 +195,9 @@ public:
     void didReset(bool pDid) { mDidReset = pDid; }
     bool didReset() const { return mDidReset; }
 
+    void setDebug(bool pDebug);
+    bool debug() const { return mDebug; }
+
 private:
     CellMLSupport::CellMLFileRuntime *mRuntime;
 
@@ -204,6 +207,7 @@ private:
     ObjRef<iface::cellml_services::CellMLIntegrationRun> mIntegrationRun;
 
     bool mDidReset;
+    bool mDebug;
     int mDelay;
 
     double mStartingPoint;

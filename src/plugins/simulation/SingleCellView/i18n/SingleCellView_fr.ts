@@ -85,6 +85,10 @@
         <source>Maximum Number of Steps</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Debug Numerical Problems Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::SingleCellView::SingleCellViewInformationWidget</name>

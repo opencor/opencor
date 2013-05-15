@@ -141,6 +141,7 @@ ResultListener::failed(const std::string& pFailWhy)
 SingleCellViewSimulationData::SingleCellViewSimulationData(CellMLSupport::CellMLFileRuntime *pRuntime) :
     mRuntime(pRuntime),
     mState(SIMSTATE_INITIAL),
+    mDebug(false),
     mDelay(0),
     mStartingPoint(0.0),
     mEndingPoint(1000.0),
@@ -165,10 +166,27 @@ void SingleCellViewSimulationData::ensureCodeCompiled()
     if (mRuntime) {
         bool isDAEType = isDAETypeSolver();
         if (isDAEType)
-            mRuntime->ensureDAECompiledModel();
+            mRuntime->ensureDAECompiledModel(mDebug);
         else
-            mRuntime->ensureODECompiledModel();
+            mRuntime->ensureODECompiledModel(mDebug);
     }
+}
+
+void SingleCellViewSimulationData::setDebug(bool pDebug)
+{
+    if (mDebug == pDebug)
+        return;
+
+    mDebug = pDebug;
+    stopAllSimulations();
+
+    // Debug mode uses a completely different compiled model.
+    if (mRuntime)
+        ensureCodeCompiled();
+
+    // We need to recalculate everything, as debug mode might pick up problems
+    // during the recalculation.
+    reset();
 }
 
 //==============================================================================
@@ -296,6 +314,9 @@ QString SingleCellViewSimulationData::solverName() const
 
 void SingleCellViewSimulationData::setSolverName(const QString &pSolverName)
 {
+    if (mSolverName == pSolverName)
+        return;
+
     // Set our ODE solver name
     mSolverName = pSolverName;
 
@@ -335,6 +356,11 @@ void SingleCellViewSimulationData::addSolverProperty(const QString &pName,
 // disconnected, so no new data will be received after this is called.
 void SingleCellViewSimulationData::stopAllSimulations()
 {
+    if (mIntegrationRun) {
+        mIntegrationRun->stop();
+        mIntegrationRun = NULL;
+    }
+
     if (mIVGrabber) {
         mIVGrabber->disconnect();
         mIVGrabber = NULL;
@@ -343,13 +369,11 @@ void SingleCellViewSimulationData::stopAllSimulations()
     if (mResultReceiver)
     {
         mResultReceiver->disconnect();
+        // So it doesn't hang around for a long time processing cached data from
+        // before the stop takes effect.
+        mResultReceiver->delay(0);
         mResultReceiver->unsuspend();
         mResultReceiver = NULL;
-    }
-
-    if (mIntegrationRun) {
-        mIntegrationRun->stop();
-        mIntegrationRun = NULL;
     }
 
     if (mState == SIMSTATE_WAITING_IV)

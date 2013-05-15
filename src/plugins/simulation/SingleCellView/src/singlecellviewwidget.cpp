@@ -1470,6 +1470,9 @@ void SingleCellViewWidget::solversPropertyChanged(Core::Property *pProperty)
 
     if (pProperty == solversWidget->solverData()->solversListProperty())
         mSimulation->data()->setSolverName(pProperty->value()->text());
+    else if (pProperty->id() == "debug")
+        mSimulation->data()->setDebug(Core::PropertyEditorWidget::booleanPropertyItem
+                                      (pProperty->value()));
     else
       mSimulation->data()->addSolverProperty
         (pProperty->id(),

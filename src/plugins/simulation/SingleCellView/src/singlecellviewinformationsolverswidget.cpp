@@ -174,10 +174,16 @@ void SingleCellViewInformationSolversWidget::setupBuiltInSolvers()
     // Add the list of solvers to our list property value item
     selectSolverProperty->value()->setList(solverNames);
 
-    Core::Property * relTol, * absTol, * maxStep, * maxSteps;
+    Core::Property * debugMode, * relTol, * absTol, * maxStep, * maxSteps;
 
     // Note: These properties are owned by the PropertyEditorWidget parent class
     // so we don't need to delete them.
+    {
+        debugMode = addBooleanProperty("debug", true,
+                                       solverSectionProperty);
+        setStringPropertyItem(debugMode->name(), tr("Debug Numerical Problems Mode"));
+        setBooleanPropertyItem(debugMode->value(), false);
+    }
     {
         relTol = addDoubleProperty("relTol", true, false,
                                    solverSectionProperty);
@@ -216,12 +222,12 @@ void SingleCellViewInformationSolversWidget::setupBuiltInSolvers()
     QMap<QString, Core::Properties> solversProperties = QMap<QString, Core::Properties>();
     {
         Core::Properties properties;
-        properties << relTol << absTol << maxStep << maxSteps;
+        properties << debugMode << relTol << absTol << maxStep << maxSteps;
         solversProperties.insert("IDA", properties);
     }
     {
         Core::Properties properties;
-        properties << relTol << absTol << maxStep << maxSteps;
+        properties << debugMode << relTol << absTol << maxStep << maxSteps;
         solversProperties.insert("CVODE", properties);
     }
 
