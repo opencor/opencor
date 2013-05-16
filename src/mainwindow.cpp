@@ -471,6 +471,18 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
 
             break;
         }
+        case GuiMenuActionSettings::View: {
+            QAction *action = menuActionSettings->action();
+
+            if (action)
+                mGui->menuView->insertAction(mGui->menuView->actions().first(), action);
+            else
+                action = mGui->menuView->insertSeparator(mGui->menuView->actions().first());
+
+            mViewActions.insertMulti(pPlugin, action);
+
+            break;
+        }
         default:
             // Not a type in which we are interested, so do nothing...
 
@@ -564,11 +576,11 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
     // Add the windows (including to the corresponding menu)
 
     foreach (GuiWindowSettings *windowSettings, pGuiSettings->windows()) {
-        // Dock the window to its default docking area
+        // Dock the window to its default dock area
 
         QDockWidget *dockWidget = qobject_cast<QDockWidget *>(windowSettings->window());
 
-        addDockWidget(windowSettings->defaultDockingArea(), dockWidget);
+        addDockWidget(windowSettings->defaultDockArea(), dockWidget);
 
         // Add an action to our menu to show/hide the menu
 
@@ -616,11 +628,11 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
 
 //==============================================================================
 
-static const QString SettingsGlobal              = "Global";
-static const QString SettingsLocale              = "Locale";
-static const QString SettingsGeometry            = "Geometry";
-static const QString SettingsState               = "State";
-static const QString SettingsStatusBarVisibility = "StatusBarVisibility";
+static const QString SettingsGlobal           = "Global";
+static const QString SettingsLocale           = "Locale";
+static const QString SettingsGeometry         = "Geometry";
+static const QString SettingsState            = "State";
+static const QString SettingsStatusBarVisible = "StatusBarVisible";
 
 //==============================================================================
 
@@ -656,7 +668,7 @@ void MainWindow::loadSettings()
 
         // Retrieve whether the status bar is to be shown
 
-        mGui->statusBar->setVisible(mSettings->value(SettingsStatusBarVisibility,
+        mGui->statusBar->setVisible(mSettings->value(SettingsStatusBarVisible,
                                                      true).toBool());
     }
 
@@ -704,17 +716,14 @@ void MainWindow::saveSettings() const
 
     mSettings->setValue(SettingsLocale, mLocale);
 
-    // Keep track of the geometry of the main window
+    // Keep track of the geometry and state of the main window
 
     mSettings->setValue(SettingsGeometry, saveGeometry());
-
-    // Keep track of the state of the main window
-
     mSettings->setValue(SettingsState, saveState());
 
     // Keep track of whether the status bar is to be shown
 
-    mSettings->setValue(SettingsStatusBarVisibility,
+    mSettings->setValue(SettingsStatusBarVisible,
                         mGui->statusBar->isVisible());
 
     // Keep track of the settings of our various plugins

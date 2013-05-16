@@ -134,6 +134,14 @@
         <source>Sorry, but &lt;strong&gt;%1&lt;/strong&gt; does not exist anymore.</source>
         <translation>Désolé, mais &lt;strong&gt;%1&lt;/strong&gt; n&apos;existe plus.</translation>
     </message>
+    <message>
+        <source>&amp;Docked Widgets</source>
+        <translation>&amp;Gadgets Ancrés</translation>
+    </message>
+    <message>
+        <source>Show/hide all the recent/current docked widgets</source>
+        <translation>Montrer/cacher tous les gadgets ancrés récents/actuels</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::Core::PropertyEditorWidget</name>

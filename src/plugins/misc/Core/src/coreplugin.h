@@ -77,6 +77,8 @@ private:
     QAction *mFileReopenSubMenuSeparator;
     QAction *mFileClearReopenSubMenuAction;
 
+    QAction *mViewDockedWidgetsAction;
+
     QStringList mRecentFileNames;
 
     void updateFileReopenMenu();
