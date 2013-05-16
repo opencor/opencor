@@ -103,6 +103,18 @@
         <source>Un/select plugins</source>
         <translation>Dé/sélectionner des extensions</translation>
     </message>
+    <message>
+        <source>&amp;Docked Widgets</source>
+        <translation>&amp;Gadgets Ancrés</translation>
+    </message>
+    <message>
+        <source>Docked Widgets</source>
+        <translation>Gadgets Ancrés</translation>
+    </message>
+    <message>
+        <source>Show/hide all the recent/current docked widgets</source>
+        <translation>Montrer/cacher tous les gadgets ancrés récents/actuels</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::MainWindow</name>

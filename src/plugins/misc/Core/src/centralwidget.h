@@ -142,10 +142,6 @@ private:
 
     Plugin *mPlugin;
 
-    bool mDockedWidgetsVisible;
-
-    QByteArray mDockedWidgetsState;
-
     int modeTabIndex(const GuiViewSettings::Mode &pMode) const;
 
     void addMode(const GuiViewSettings::Mode &pMode);
@@ -186,8 +182,6 @@ Q_SIGNALS:
     void atLeastOneFile(const bool &pAtLeastOneFile);
     void atLeastTwoFiles(const bool &pAtLeastTwoFiles);
 
-    void dockedWidgetsVisible(const bool &pVisible);
-
 private Q_SLOTS:
     void updateGui();
 
@@ -209,11 +203,6 @@ private Q_SLOTS:
 
     void updateFileTabIcons();
     void updateFileTabIcon(const QString &pFileName, const QIcon &pIcon);
-
-    void showDockedWidgets(const bool &pShow,
-                           const bool &pInitialisation = false);
-
-    void updateDockWidgetsVisibility();
 };
 
 //==============================================================================

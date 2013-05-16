@@ -74,7 +74,7 @@ void CorePlugin::initialize()
     //       Ctrl+Shift+Backtab and though it works on Linux (but not on
     //       Windows), it doesn't look good, so...
 
-                                    QList<QKeySequence>() << QKeySequence(Qt::CTRL|Qt::SHIFT|Qt::Key_Tab)
+                                    QKeySequence(Qt::CTRL|Qt::SHIFT|Qt::Key_Tab)
 #elif defined(Q_OS_MAC)
                                     QKeySequence::PreviousChild
 #else
@@ -109,15 +109,6 @@ void CorePlugin::initialize()
 
     mFileReopenSubMenu->addAction(mFileReopenSubMenuSeparator);
     mFileReopenSubMenu->addAction(mFileClearReopenSubMenuAction);
-
-    // Create our show/hide docked widgets action
-
-    mViewDockedWidgetsAction = newAction(mMainWindow, true, QString(),
-#ifdef Q_OS_MAC
-                                         QList<QKeySequence>() << QKeySequence(Qt::CTRL|Qt::META|Qt::Key_Space));
-#else
-                                         QList<QKeySequence>() << QKeySequence(Qt::CTRL|Qt::Key_Space));
-#endif
 
     // Some connections to handle our different File actions
 
@@ -172,14 +163,6 @@ void CorePlugin::initialize()
     connect(mFileClearReopenSubMenuAction, SIGNAL(triggered()),
             this, SLOT(clearReopenSubMenu()));
 
-    // Some connections related to our different View actions
-
-    connect(mViewDockedWidgetsAction, SIGNAL(triggered(bool)),
-            mCentralWidget, SLOT(showDockedWidgets(const bool &)));
-
-    connect(mCentralWidget, SIGNAL(dockedWidgetsVisible(const bool &)),
-            mViewDockedWidgetsAction, SLOT(setChecked(bool)));
-
     // Set our settings
 
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileOpenAction);
@@ -196,9 +179,6 @@ void CorePlugin::initialize()
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
 
     mGuiSettings->addMenu(GuiMenuSettings::File, openSaveSeparator, mFileReopenSubMenu);
-
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::View, mViewDockedWidgetsAction);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::View);
 
     mGuiSettings->setCentralWidget(mCentralWidget);
 
@@ -410,11 +390,6 @@ void CorePlugin::retranslateUi()
 
     retranslateAction(mFileClearReopenSubMenuAction, tr("Clear Menu"),
                       tr("Clear the menu"));
-
-    // Retranslate our different View actions
-
-    retranslateAction(mViewDockedWidgetsAction, tr("&Docked Widgets"),
-                      tr("Show/hide all the recent/current docked widgets"));
 
     // Retranslate our central widget
 

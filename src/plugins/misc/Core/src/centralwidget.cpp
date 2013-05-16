@@ -15,7 +15,6 @@
 
 //==============================================================================
 
-#include <QDockWidget>
 #include <QDragEnterEvent>
 #include <QFileInfo>
 #include <QLabel>
@@ -111,9 +110,7 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     mLoadedPlugins(Plugins()),
     mSupportedFileTypes(FileTypes()),
     mFileNames(QStringList()),
-    mPlugin(0),
-    mDockedWidgetsVisible(true),
-    mDockedWidgetsState(QByteArray())
+    mPlugin(0)
 {
     // Set up the GUI
 
@@ -280,11 +277,10 @@ void CentralWidget::retranslateUi()
 
 //==============================================================================
 
-static const QString SettingsFileNames            = "FileNames";
-static const QString SettingsCurrentFileName      = "CurrentFileName";
-static const QString SettingsCurrentMode          = "CurrentMode";
-static const QString SettingsCurrentViewForMode   = "CurrentViewForMode";
-static const QString SettingsDockedWidgetsVisible = "DockedWidgetsVisible";
+static const QString SettingsFileNames          = "FileNames";
+static const QString SettingsCurrentFileName    = "CurrentFileName";
+static const QString SettingsCurrentMode        = "CurrentMode";
+static const QString SettingsCurrentViewForMode = "CurrentViewForMode";
 
 //==============================================================================
 
@@ -364,10 +360,6 @@ void CentralWidget::loadSettings(QSettings *pSettings)
     loadModeSettings(pSettings, currentMode, GuiViewSettings::Simulation);
     loadModeSettings(pSettings, currentMode, GuiViewSettings::Analysis);
 
-    // Retrieve whether the docked widgets are to be shown
-
-    showDockedWidgets(pSettings->value(SettingsDockedWidgetsVisible, true).toBool(), true);
-
     // Retrieve the active directory
 
     setActiveDirectory(pSettings->value(SettingsActiveDirectory,
@@ -412,10 +404,6 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
     saveModeSettings(pSettings, GuiViewSettings::Simulation);
     saveModeSettings(pSettings, GuiViewSettings::Analysis);
 
-    // Keep track of whether the docked widgets are to be shown
-
-    pSettings->setValue(SettingsDockedWidgetsVisible, mDockedWidgetsVisible);
-
     // Keep track of the active directory
 
     pSettings->setValue(SettingsActiveDirectory, activeDirectory());
@@ -432,12 +420,6 @@ void CentralWidget::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
     // Update our status now that all the plugins  are fully ready
 
     mStatus = Idling;
-
-    // Keep track of the showing/hiding of the different docked widgets
-
-    foreach (QDockWidget *dockWidget, mMainWindow->findChildren<QDockWidget *>())
-        connect(dockWidget, SIGNAL(visibilityChanged(bool)),
-                this, SLOT(updateDockWidgetsVisibility()));
 
     // Update the GUI
 
@@ -1288,54 +1270,6 @@ void CentralWidget::updateFileTabIcon(const QString &pFileName,
 
                 return;
             }
-}
-
-//==============================================================================
-
-void CentralWidget::showDockedWidgets(const bool &pShow,
-                                      const bool &pInitialisation)
-{
-    // Show/hide the docked widgets
-
-    if (!pInitialisation) {
-        if (!pShow)
-            mDockedWidgetsState = mMainWindow->saveState();
-
-        foreach (QDockWidget *dockWidget, mMainWindow->findChildren<QDockWidget *>())
-            if (!dockWidget->isFloating())
-                dockWidget->setVisible(pShow);
-
-        if (pShow && !mDockedWidgetsState.isEmpty())
-            mMainWindow->restoreState(mDockedWidgetsState);
-    }
-
-    // Keep track of the docked widgets visible state
-
-    mDockedWidgetsVisible = pShow;
-
-    // Let people know about the visible state of our docked widgets
-
-    emit dockedWidgetsVisible(pShow);
-}
-
-//==============================================================================
-
-void CentralWidget::updateDockWidgetsVisibility()
-{
-    // Check whether at least one dock widget is visible
-
-    mDockedWidgetsVisible = false;
-
-    foreach (QDockWidget *dockWidget, mMainWindow->findChildren<QDockWidget *>())
-        if (!dockWidget->isFloating() && dockWidget->isVisible()) {
-            mDockedWidgetsVisible = true;
-
-            break;
-        }
-
-    // Let people know about the visible state of our docked widgets
-
-    emit dockedWidgetsVisible(mDockedWidgetsVisible);
 }
 
 //==============================================================================
