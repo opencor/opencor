@@ -24,7 +24,7 @@
 /src/plugins/3rdparty/LLVM/lib/Target/X86/X86GenRegisterInfo.inc
 
 /src/plugins/api/CellMLAPI/bin/linux/x64/libannotools.so.2
-/src/plugins/api/CellMLAPI/bin/linux/x64/libccgs.so.2
+/src/plugins/api/CellMLAPI/bin/linux/x64/libccgs.so.3
 /src/plugins/api/CellMLAPI/bin/linux/x64/libceleds.so.1
 /src/plugins/api/CellMLAPI/bin/linux/x64/libceledsexporter.so.1
 /src/plugins/api/CellMLAPI/bin/linux/x64/libcellml.so.2
@@ -39,7 +39,7 @@
 /src/plugins/api/CellMLAPI/bin/linux/x64/libxpath.so.1
 
 /src/plugins/api/CellMLAPI/bin/linux/x86/libannotools.so.2
-/src/plugins/api/CellMLAPI/bin/linux/x86/libccgs.so.2
+/src/plugins/api/CellMLAPI/bin/linux/x86/libccgs.so.3
 /src/plugins/api/CellMLAPI/bin/linux/x86/libceleds.so.1
 /src/plugins/api/CellMLAPI/bin/linux/x86/libceledsexporter.so.1
 /src/plugins/api/CellMLAPI/bin/linux/x86/libcellml.so.2
@@ -54,7 +54,7 @@
 /src/plugins/api/CellMLAPI/bin/linux/x86/libxpath.so.1
 
 /src/plugins/api/CellMLAPI/bin/osx/libannotools.2.dylib
-/src/plugins/api/CellMLAPI/bin/osx/libccgs.2.dylib
+/src/plugins/api/CellMLAPI/bin/osx/libccgs.3.dylib
 /src/plugins/api/CellMLAPI/bin/osx/libceleds.1.dylib
 /src/plugins/api/CellMLAPI/bin/osx/libceledsexporter.1.dylib
 /src/plugins/api/CellMLAPI/bin/osx/libcellml.2.dylib

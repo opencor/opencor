@@ -110,6 +110,8 @@ namespace iface
       virtual void arrayOffset(uint32_t attr) throw(std::exception&) = 0;
       virtual std::wstring assignPattern() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void assignPattern(const std::wstring& attr) throw(std::exception&) = 0;
+      virtual std::wstring assignConstantPattern() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
+      virtual void assignConstantPattern(const std::wstring& attr) throw(std::exception&) = 0;
       virtual std::wstring solvePattern() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual void solvePattern(const std::wstring& attr) throw(std::exception&) = 0;
       virtual std::wstring solveNLSystemPattern() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;

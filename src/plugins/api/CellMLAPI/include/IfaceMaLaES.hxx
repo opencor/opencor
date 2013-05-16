@@ -71,6 +71,7 @@ namespace iface
       virtual std::wstring compileErrors() throw(std::exception&)  WARN_IF_RETURN_UNUSED = 0;
       virtual already_AddRefd<iface::cellml_services::MaLaESResult>  transform(iface::cellml_services::CeVAS* aCeVAS, iface::cellml_services::CUSES* aCUSES, iface::cellml_services::AnnotationSet* aAnnos, iface::mathml_dom::MathMLElement* aMathML, iface::cellml_api::CellMLElement* aContext, iface::cellml_api::CellMLVariable* aUnitsOf, iface::cellml_api::CellMLVariable* aBoundUnitsOf, uint32_t aUnitsDiffDegree) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
       virtual void stripPassthrough(iface::cellml_api::Model* aModel) throw(std::exception&) = 0;
+      virtual std::wstring wrapNumber(const std::wstring& rawExpression) throw(std::exception&) WARN_IF_RETURN_UNUSED = 0;
     };
     PUBLIC_MaLaES_PRE
     class  PUBLIC_MaLaES_POST MaLaESBootstrap

@@ -930,7 +930,7 @@ MACRO(RETRIEVE_BINARY_FILE DIRNAME FILENAME SHA1_VALUE)
             MESSAGE(FATAL_ERROR "The compressed version of the file could not be retrieved...")
         ENDIF()
 
-        # Check that the file, if we managed to retrieve it, as the expected
+        # Check that the file, if we managed to retrieve it, has the expected
         # SHA-1 value
 
         IF(EXISTS ${REAL_FILENAME})
@@ -938,13 +938,11 @@ MACRO(RETRIEVE_BINARY_FILE DIRNAME FILENAME SHA1_VALUE)
 
             IF(NOT "${REAL_SHA1_VALUE}" STREQUAL "${SHA1_VALUE}")
                 FILE(REMOVE ${REAL_FILENAME})
+
+                MESSAGE(FATAL_ERROR "The file does not have the expected SHA-1 value...")
             ENDIF()
-        ENDIF()
-
-        # At this stage, if the file exists, then it's the one we are after
-
-        IF(NOT EXISTS ${REAL_FILENAME})
-            MESSAGE(FATAL_ERROR "The file could not be retrieved...")
+        ELSE()
+            MESSAGE(FATAL_ERROR "The file could not be uncompressed...")
         ENDIF()
     ENDIF()
 ENDMACRO()
