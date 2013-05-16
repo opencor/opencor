@@ -490,7 +490,7 @@ bool CellmlFileRdfTriple::decodeTerm(const QString &pTerm, QString &pResource,
         res = false;
 
 #ifdef QT_DEBUG
-        qWarning("WARNING | %s:%d: '%s' is not a valid RDF term", __FILE__, __LINE__, "COUCOU");
+        qWarning("WARNING | %s:%d: '%s' is not a valid RDF term", __FILE__, __LINE__, qPrintable(pTerm));
 #endif
     }
 
