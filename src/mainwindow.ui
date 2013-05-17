@@ -49,9 +49,9 @@
     </widget>
     <addaction name="menuLanguage"/>
     <addaction name="separator"/>
-    <addaction name="actionPreferences"/>
-    <addaction name="separator"/>
     <addaction name="actionPlugins"/>
+    <addaction name="separator"/>
+    <addaction name="actionPreferences"/>
     <addaction name="separator"/>
     <addaction name="actionResetAll"/>
    </widget>
