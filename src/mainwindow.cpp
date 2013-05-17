@@ -11,6 +11,7 @@
 #include "plugin.h"
 #include "pluginmanager.h"
 #include "pluginswindow.h"
+#include "preferenceswindow.h"
 #include "solverinterface.h"
 #include "utils.h"
 
@@ -1228,8 +1229,6 @@ void MainWindow::on_actionFrench_triggered()
 
 void MainWindow::on_actionPlugins_triggered()
 {
-    // Plugins preferences
-
     if (mPluginManager->plugins().count()) {
         // There are some plugins, so we can show the plugins window
 
@@ -1253,6 +1252,17 @@ void MainWindow::on_actionPlugins_triggered()
         QMessageBox::warning(this, tr("Plugins"),
                              tr("Sorry, but no plugin could be found."));
     }
+}
+
+//==============================================================================
+
+void MainWindow::on_actionPreferences_triggered()
+{
+    // Show the preferences window
+
+    PreferencesWindow preferencesWindow(this);
+
+    preferencesWindow.exec();
 }
 
 //==============================================================================

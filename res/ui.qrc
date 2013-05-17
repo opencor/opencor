@@ -12,6 +12,7 @@
         <file>oxygen/apps/preferences-plugin.png</file>
         <file>oxygen/categories/applications-education-language.png</file>
         <file>oxygen/categories/applications-internet.png</file>
+        <file>oxygen/categories/preferences-system.png</file>
         <file>oxygen/mimetypes/application-x-zerosize.png</file>
         <file>oxygen/status/task-complete.png</file>
         <file>oxygen/status/task-reject.png</file>

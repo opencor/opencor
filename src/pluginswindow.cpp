@@ -59,12 +59,13 @@ void PluginItemDelegate::paint(QPainter *pPainter,
 
 //==============================================================================
 
-PluginsWindow::PluginsWindow(PluginManager *pPluginManager, QWidget *pParent) :
-    QDialog(pParent),
-    CommonWidget(pParent),
+PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
+                             MainWindow *pMainWindow) :
+    QDialog(pMainWindow),
+    CommonWidget(pMainWindow),
     mGui(new Ui::PluginsWindow),
     mPluginManager(pPluginManager),
-    mMainWindow(qobject_cast<MainWindow *>(pParent))
+    mMainWindow(pMainWindow)
 {
     // Set up the GUI
 

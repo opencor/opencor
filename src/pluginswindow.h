@@ -52,7 +52,8 @@ class PluginsWindow : public QDialog, public Core::CommonWidget
     Q_OBJECT
 
 public:
-    explicit PluginsWindow(PluginManager *pPluginManager, QWidget *pParent = 0);
+    explicit PluginsWindow(PluginManager *pPluginManager,
+                           MainWindow *pMainWindow = 0);
     ~PluginsWindow();
 
     virtual void loadSettings(QSettings *pSettings);
