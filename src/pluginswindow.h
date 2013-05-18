@@ -62,15 +62,15 @@ public:
 private:
     Ui::PluginsWindow *mGui;
 
+    MainWindow *mMainWindow;
+
     PluginManager *mPluginManager;
 
     QStandardItemModel *mModel;
     PluginItemDelegate *mPluginItemDelegate;
 
-    QList<QStandardItem *> mManageablePlugins;
-    QList<QStandardItem *> mUnmanageablePlugins;
-
-    MainWindow *mMainWindow;
+    QList<QStandardItem *> mManageablePluginItems;
+    QList<QStandardItem *> mUnmanageablePluginItems;
 
     QMap<QString, bool> mInitialLoadingStates;
 
@@ -92,7 +92,7 @@ private Q_SLOTS:
 
     void updateInformation(const QModelIndex &pNewIndex,
                            const QModelIndex &pOldIndex) const;
-    void updatePluginsLoadingState(QStandardItem *pChangedPluginItem = 0,
+    void updatePluginsLoadingState(QStandardItem *pItem = 0,
                                    const bool &pInitializing = false);
 
     void openLink(const QString &pLink) const;
