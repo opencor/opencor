@@ -93,6 +93,10 @@ private:
     Plugin *mViewPlugin;
     bool mNeedViewPluginInitialisation;
 
+    bool mDockedWidgetsVisible;
+
+    QByteArray mDockedWidgetsState;
+
     void initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings);
 
     void loadSettings();
@@ -119,10 +123,16 @@ private Q_SLOTS:
     void on_actionEnglish_triggered();
     void on_actionFrench_triggered();
     void on_actionPlugins_triggered();
+    void on_actionPreferences_triggered();
     void on_actionHomePage_triggered();
     void on_actionAbout_triggered();
 
     void updateGui(Plugin *pViewPlugin);
+
+    void showDockedWidgets(const bool &pShow,
+                           const bool &pInitialisation = false);
+
+    void updateDockWidgetsVisibility();
 
     void resetAll();
 };

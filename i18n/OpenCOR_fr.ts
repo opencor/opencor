@@ -103,6 +103,30 @@
         <source>Un/select plugins</source>
         <translation>Dé/sélectionner des extensions</translation>
     </message>
+    <message>
+        <source>&amp;Docked Widgets</source>
+        <translation>&amp;Gadgets Ancrés</translation>
+    </message>
+    <message>
+        <source>Docked Widgets</source>
+        <translation>Gadgets Ancrés</translation>
+    </message>
+    <message>
+        <source>Show/hide all the recent/current docked widgets</source>
+        <translation>Montrer/cacher tous les gadgets ancrés récents/actuels</translation>
+    </message>
+    <message>
+        <source>&amp;Preferences...</source>
+        <translation>&amp;Préférences...</translation>
+    </message>
+    <message>
+        <source>Preferences</source>
+        <translation>Préférences</translation>
+    </message>
+    <message>
+        <source>Preferences for OpenCOR and its plugins</source>
+        <translation>Préférences pour OpenCOR et ses extensions</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::MainWindow</name>
@@ -315,6 +339,13 @@
     <message>
         <source>&lt;b&gt;&lt;u&gt;Note:&lt;/u&gt;&lt;/b&gt; %1 will need to be restarted for your changes to be effective.</source>
         <translation>&lt;b&gt;&lt;u&gt;Note :&lt;/u&gt;&lt;/b&gt; %1 devra être relancé pour que vos changements puissent être effectifs.</translation>
+    </message>
+</context>
+<context>
+    <name>PreferencesWindow</name>
+    <message>
+        <source>Preferences</source>
+        <translation>Préférences</translation>
     </message>
 </context>
 <context>

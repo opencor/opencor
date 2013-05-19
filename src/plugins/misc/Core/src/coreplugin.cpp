@@ -74,7 +74,7 @@ void CorePlugin::initialize()
     //       Ctrl+Shift+Backtab and though it works on Linux (but not on
     //       Windows), it doesn't look good, so...
 
-                                    QList<QKeySequence>() << QKeySequence(Qt::CTRL|Qt::SHIFT|Qt::Key_Tab)
+                                    QKeySequence(Qt::CTRL|Qt::SHIFT|Qt::Key_Tab)
 #elif defined(Q_OS_MAC)
                                     QKeySequence::PreviousChild
 #else
@@ -110,7 +110,7 @@ void CorePlugin::initialize()
     mFileReopenSubMenu->addAction(mFileReopenSubMenuSeparator);
     mFileReopenSubMenu->addAction(mFileClearReopenSubMenuAction);
 
-    // Some connections to handle our various actions
+    // Some connections to handle our different File actions
 
     connect(mFileOpenAction, SIGNAL(triggered(bool)),
             mCentralWidget, SLOT(openFile()));
@@ -151,7 +151,7 @@ void CorePlugin::initialize()
     connect(mCentralWidget, SIGNAL(atLeastOneFile(const bool &)),
             mFileCloseAllAction, SLOT(setEnabled(bool)));
 
-    // Some connections related to our reopen sub-menu
+    // Some connections related to our Reopen sub-menu
 
     connect(mCentralWidget, SIGNAL(fileOpened(const QString &)),
             this, SLOT(fileOpened(const QString &)));

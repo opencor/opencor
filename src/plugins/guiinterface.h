@@ -74,7 +74,8 @@ class GuiMenuActionSettings
 public:
     enum GuiMenuActionSettingsType {
         File,
-        FileNew
+        FileNew,
+        View
     };
 
     explicit GuiMenuActionSettings(const GuiMenuActionSettingsType &pType,
@@ -120,18 +121,18 @@ public:
         Help
     };
 
-    explicit GuiWindowSettings(const Qt::DockWidgetArea &pDefaultDockingArea,
+    explicit GuiWindowSettings(const Qt::DockWidgetArea &pDefaultDockArea,
                                Core::DockWidget *pWindow,
                                const GuiWindowSettingsType &pType,
                                QAction *pAction);
 
-    Qt::DockWidgetArea defaultDockingArea() const;
+    Qt::DockWidgetArea defaultDockArea() const;
     Core::DockWidget * window() const;
     GuiWindowSettingsType type() const;
     QAction * action() const;
 
 private:
-    Qt::DockWidgetArea mDefaultDockingArea;
+    Qt::DockWidgetArea mDefaultDockArea;
     Core::DockWidget *mWindow;
     GuiWindowSettingsType mType;
     QAction *mAction;
@@ -152,7 +153,7 @@ public:
     void addMenuAction(const GuiMenuActionSettings::GuiMenuActionSettingsType &pType,
                        QAction *pAction = 0);
     void setCentralWidget(Core::CentralWidget *pCentralWidget);
-    void addWindow(const Qt::DockWidgetArea &pDefaultDockingArea,
+    void addWindow(const Qt::DockWidgetArea &pDefaultDockArea,
                    Core::DockWidget *pWindow,
                    const GuiWindowSettings::GuiWindowSettingsType &pType,
                    QAction *pAction);

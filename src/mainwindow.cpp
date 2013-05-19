@@ -11,6 +11,7 @@
 #include "plugin.h"
 #include "pluginmanager.h"
 #include "pluginswindow.h"
+#include "preferenceswindow.h"
 #include "solverinterface.h"
 #include "utils.h"
 
@@ -68,7 +69,9 @@ MainWindow::MainWindow(SharedTools::QtSingleApplication *pApp) :
     mViewMenus(QMap<Plugin *, QMenu *>()),
     mViewActions(QMap<Plugin *, QAction *>()),
     mViewPlugin(0),
-    mNeedViewPluginInitialisation(true)
+    mNeedViewPluginInitialisation(true),
+    mDockedWidgetsVisible(true),
+    mDockedWidgetsState(QByteArray())
 {
     // Make sure that OpenCOR can handle a file opening request (from the
     // operating system), as well as a message sent by another instance of
@@ -102,6 +105,17 @@ MainWindow::MainWindow(SharedTools::QtSingleApplication *pApp) :
     //       'translating' it in other languages...
 
     setWindowTitle(qApp->applicationName());
+
+    // Customise our docked widgets action and handle it through a connection
+
+#ifdef Q_OS_MAC
+    mGui->actionDockedWidgets->setShortcut(QKeySequence(Qt::CTRL|Qt::META|Qt::Key_Space));
+#else
+    mGui->actionDockedWidgets->setShortcut(QKeySequence(Qt::CTRL|Qt::Key_Space));
+#endif
+
+    connect(mGui->actionDockedWidgets, SIGNAL(triggered(bool)),
+            this, SLOT(showDockedWidgets(const bool &)));
 
     // A connection to handle the status bar
 
@@ -193,7 +207,7 @@ MainWindow::MainWindow(SharedTools::QtSingleApplication *pApp) :
     }
 
     // Let our various plugins know that all of them have been initialised
-    // Note: this is important to do, since the initialisation of a plugin is
+    // Note: this is important to do since the initialisation of a plugin is
     //       something which is done without knowing anything about other
     //       plugins. However, there may be things that require knowledge of
     //       what one or several other plugins are about, and this is something
@@ -207,6 +221,20 @@ MainWindow::MainWindow(SharedTools::QtSingleApplication *pApp) :
         if (coreInterface)
             coreInterface->initializationsDone(loadedPlugins);
     }
+
+    // Keep track of the showing/hiding of the different dock widgets
+
+    QList<QDockWidget *> dockWidgets = findChildren<QDockWidget *>();
+
+    foreach (QDockWidget *dockWidget, dockWidgets)
+        connect(dockWidget, SIGNAL(visibilityChanged(bool)),
+                this, SLOT(updateDockWidgetsVisibility()));
+
+    // Show/hide and en/disable the docked widgets action depending on whether
+    // there are dock widgets
+
+    mGui->actionDockedWidgets->setEnabled(dockWidgets.size());
+    mGui->actionDockedWidgets->setVisible(dockWidgets.size());
 
     // Retrieve the user settings from the previous session, if any
 
@@ -471,6 +499,18 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
 
             break;
         }
+        case GuiMenuActionSettings::View: {
+            QAction *action = menuActionSettings->action();
+
+            if (action)
+                mGui->menuView->insertAction(mGui->menuView->actions().first(), action);
+            else
+                action = mGui->menuView->insertSeparator(mGui->menuView->actions().first());
+
+            mViewActions.insertMulti(pPlugin, action);
+
+            break;
+        }
         default:
             // Not a type in which we are interested, so do nothing...
 
@@ -564,11 +604,11 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
     // Add the windows (including to the corresponding menu)
 
     foreach (GuiWindowSettings *windowSettings, pGuiSettings->windows()) {
-        // Dock the window to its default docking area
+        // Dock the window to its default dock area
 
         QDockWidget *dockWidget = qobject_cast<QDockWidget *>(windowSettings->window());
 
-        addDockWidget(windowSettings->defaultDockingArea(), dockWidget);
+        addDockWidget(windowSettings->defaultDockArea(), dockWidget);
 
         // Add an action to our menu to show/hide the menu
 
@@ -616,11 +656,12 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
 
 //==============================================================================
 
-static const QString SettingsGlobal              = "Global";
-static const QString SettingsLocale              = "Locale";
-static const QString SettingsGeometry            = "Geometry";
-static const QString SettingsState               = "State";
-static const QString SettingsStatusBarVisibility = "StatusBarVisibility";
+static const QString SettingsGlobal               = "Global";
+static const QString SettingsLocale               = "Locale";
+static const QString SettingsGeometry             = "Geometry";
+static const QString SettingsState                = "State";
+static const QString SettingsDockedWidgetsVisible = "DockedWidgetsVisible";
+static const QString SettingsStatusBarVisible     = "StatusBarVisible";
 
 //==============================================================================
 
@@ -650,15 +691,15 @@ void MainWindow::loadSettings()
                     desktopGeometry.top()+vertSpace,
                     desktopGeometry.width()-2*horizSpace,
                     desktopGeometry.height()-2*vertSpace);
-    } else {
-        // The geometry and state of the main window could be retrieved, so
-        // carry on with the loading of the settings
-
-        // Retrieve whether the status bar is to be shown
-
-        mGui->statusBar->setVisible(mSettings->value(SettingsStatusBarVisibility,
-                                                     true).toBool());
     }
+
+    // Retrieve whether the docked widgets are to be shown
+
+    showDockedWidgets(mSettings->value(SettingsDockedWidgetsVisible, true).toBool(), true);
+
+    // Retrieve whether the status bar is to be shown
+
+    mGui->statusBar->setVisible(mSettings->value(SettingsStatusBarVisible, true).toBool());
 
     // Retrieve the settings of our various plugins
 
@@ -704,17 +745,18 @@ void MainWindow::saveSettings() const
 
     mSettings->setValue(SettingsLocale, mLocale);
 
-    // Keep track of the geometry of the main window
+    // Keep track of the geometry and state of the main window
 
     mSettings->setValue(SettingsGeometry, saveGeometry());
-
-    // Keep track of the state of the main window
-
     mSettings->setValue(SettingsState, saveState());
+
+    // Keep track of whether the docked widgets are to be shown
+
+    mSettings->setValue(SettingsDockedWidgetsVisible, mDockedWidgetsVisible);
 
     // Keep track of whether the status bar is to be shown
 
-    mSettings->setValue(SettingsStatusBarVisibility,
+    mSettings->setValue(SettingsStatusBarVisible,
                         mGui->statusBar->isVisible());
 
     // Keep track of the settings of our various plugins
@@ -900,14 +942,14 @@ void MainWindow::reorderViewMenus()
 void MainWindow::updateViewMenu(const GuiWindowSettings::GuiWindowSettingsType &pMenuType,
                                 QAction *pAction)
 {
-    // Check whether we need to insert a separator before the status bar menu
-    // item
+    // Check whether we need to insert a separator before the docked widgets
+    // menu item
 
     if ((pMenuType != GuiWindowSettings::Help) && !mViewSeparator)
         // None of the menus have already been inserted which means that we need
         // to insert a separator before the Full Screen menu item
 
-        mViewSeparator = mGui->menuView->insertSeparator(mGui->actionStatusBar);
+        mViewSeparator = mGui->menuView->insertSeparator(mGui->actionDockedWidgets);
 
     // Determine the menu that is to be inserted, should this be required, and
     // the action before which it is to be inserted
@@ -1187,8 +1229,6 @@ void MainWindow::on_actionFrench_triggered()
 
 void MainWindow::on_actionPlugins_triggered()
 {
-    // Plugins preferences
-
     if (mPluginManager->plugins().count()) {
         // There are some plugins, so we can show the plugins window
 
@@ -1212,6 +1252,17 @@ void MainWindow::on_actionPlugins_triggered()
         QMessageBox::warning(this, tr("Plugins"),
                              tr("Sorry, but no plugin could be found."));
     }
+}
+
+//==============================================================================
+
+void MainWindow::on_actionPreferences_triggered()
+{
+    // Show the preferences window
+
+    PreferencesWindow preferencesWindow(this);
+
+    preferencesWindow.exec();
 }
 
 //==============================================================================
@@ -1313,6 +1364,54 @@ void MainWindow::updateGui(Plugin *pViewPlugin)
 
         mFileNewMenu->menuAction()->setVisible(fileNewMenuVisible);
     }
+}
+
+//==============================================================================
+
+void MainWindow::showDockedWidgets(const bool &pShow,
+                                   const bool &pInitialisation)
+{
+    // Show/hide the docked widgets
+
+    if (!pInitialisation) {
+        if (!pShow)
+            mDockedWidgetsState = saveState();
+
+        foreach (QDockWidget *dockWidget, findChildren<QDockWidget *>())
+            if (!dockWidget->isFloating())
+                dockWidget->setVisible(pShow);
+
+        if (pShow && !mDockedWidgetsState.isEmpty())
+            restoreState(mDockedWidgetsState);
+    }
+
+    // Keep track of the docked widgets visible state
+
+    mDockedWidgetsVisible = pShow;
+
+    // Update the checked state of our docked widgets action
+
+    mGui->actionDockedWidgets->setChecked(pShow);
+}
+
+//==============================================================================
+
+void MainWindow::updateDockWidgetsVisibility()
+{
+    // Check whether at least one dock widget is visible
+
+    mDockedWidgetsVisible = false;
+
+    foreach (QDockWidget *dockWidget, findChildren<QDockWidget *>())
+        if (!dockWidget->isFloating() && dockWidget->isVisible()) {
+            mDockedWidgetsVisible = true;
+
+            break;
+        }
+
+    // Update the checked state of our docked widgets action
+
+    mGui->actionDockedWidgets->setChecked(mDockedWidgetsVisible);
 }
 
 //==============================================================================
