@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>CellmlModelRepositoryWindow</name>
+    <name>CellMLModelRepositoryWindow</name>
     <message>
         <source>CellML Model Repository</source>
         <translation>Répertoire de Modèles CellML</translation>
@@ -40,26 +40,26 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::CellMLModelRepository::CellmlModelRepositoryWindow</name>
+    <name>OpenCOR::CellMLModelRepository::CellMLModelRepositoryWindow</name>
     <message>
         <source>&lt;strong&gt;1&lt;/strong&gt; CellML model was found:</source>
-        <translation>&lt;strong&gt;1&lt;/strong&gt; modèle CellML a été trouvé :</translation>
+        <translation type="unfinished">&lt;strong&gt;1&lt;/strong&gt; modèle CellML a été trouvé :</translation>
     </message>
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; CellML models were found:</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; modèles CellML ont été trouvés :</translation>
-    </message>
-    <message>
-        <source>No CellML model matches your criteria</source>
-        <translation>Aucun modèle CellML ne correspond à votre critère</translation>
-    </message>
-    <message>
-        <source>Please wait while the list of CellML models is being loaded...</source>
-        <translation>Veuillez patienter pendant que la liste de modèles CellML se charge...</translation>
+        <translation type="unfinished">&lt;strong&gt;%1&lt;/strong&gt; modèles CellML ont été trouvés :</translation>
     </message>
     <message>
         <source>&lt;strong&gt;Error:&lt;/strong&gt; </source>
-        <translation>&lt;strong&gt;Erreur :&lt;/strong&gt; </translation>
+        <translation type="unfinished">&lt;strong&gt;Erreur :&lt;/strong&gt; </translation>
+    </message>
+    <message>
+        <source>Please wait while the list of CellML models is being loaded...</source>
+        <translation type="unfinished">Veuillez patienter pendant que la liste de modèles CellML se charge...</translation>
+    </message>
+    <message>
+        <source>No CellML model matches your criteria</source>
+        <translation type="unfinished">Aucun modèle CellML ne correspond à votre critère</translation>
     </message>
 </context>
 </TS>

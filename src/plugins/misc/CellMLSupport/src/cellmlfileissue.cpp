@@ -11,7 +11,7 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileIssue::CellmlFileIssue(const Type &pType, const QString &pMessage,
+CellMLFileIssue::CellMLFileIssue(const Type &pType, const QString &pMessage,
                                  const int &pLine, const int &pColumn,
                                  const QString &pImportedFile) :
     mType(pType),
@@ -24,7 +24,7 @@ CellmlFileIssue::CellmlFileIssue(const Type &pType, const QString &pMessage,
 
 //==============================================================================
 
-CellmlFileIssue::Type CellmlFileIssue::type() const
+CellMLFileIssue::Type CellMLFileIssue::type() const
 {
     // Return the issue's type
 
@@ -33,7 +33,7 @@ CellmlFileIssue::Type CellmlFileIssue::type() const
 
 //==============================================================================
 
-QString CellmlFileIssue::message() const
+QString CellMLFileIssue::message() const
 {
     // Return the issue's message
 
@@ -42,7 +42,7 @@ QString CellmlFileIssue::message() const
 
 //==============================================================================
 
-QString CellmlFileIssue::formattedMessage() const
+QString CellMLFileIssue::formattedMessage() const
 {
     // Return the issue's message fully formatted (i.e. the beginning of the
     // message is capitalised and its end consists of a full stop)
@@ -52,7 +52,7 @@ QString CellmlFileIssue::formattedMessage() const
 
 //==============================================================================
 
-int CellmlFileIssue::line() const
+int CellMLFileIssue::line() const
 {
     // Return the issue's line
 
@@ -61,7 +61,7 @@ int CellmlFileIssue::line() const
 
 //==============================================================================
 
-int CellmlFileIssue::column() const
+int CellMLFileIssue::column() const
 {
     // Return the issue's column
 
@@ -70,7 +70,7 @@ int CellmlFileIssue::column() const
 
 //==============================================================================
 
-QString CellmlFileIssue::importedFile() const
+QString CellMLFileIssue::importedFile() const
 {
     // Return the issue's imported file
 

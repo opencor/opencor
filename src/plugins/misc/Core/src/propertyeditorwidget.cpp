@@ -16,6 +16,7 @@
 #include <QSettings>
 #include <QStandardItem>
 #include <QVariant>
+#include <QApplication>
 
 //==============================================================================
 
@@ -229,6 +230,44 @@ void ListEditorWidget::mousePressEvent(QMouseEvent *pEvent)
 
 //==============================================================================
 
+BooleanEditorWidget::BooleanEditorWidget(QWidget *pParent)
+    : QCheckBox(pParent)
+{
+}
+
+void
+BooleanEditorWidget::keyPressEvent(QKeyEvent *pEvent)
+{
+    // Check some key combinations
+    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
+        && !(pEvent->modifiers() & Qt::ControlModifier)
+        && !(pEvent->modifiers() & Qt::AltModifier)
+        && !(pEvent->modifiers() & Qt::MetaModifier)) {
+        // None of the modifiers is selected
+        if (pEvent->key() == Qt::Key_Up) {
+            // The user wants to go to the previous property
+            emit goToPreviousPropertyRequested();
+
+            // Accept the event
+            pEvent->accept();
+        } else if (pEvent->key() == Qt::Key_Down) {
+            // The user wants to go to the next property
+            emit goToNextPropertyRequested();
+
+            // Accept the event
+            pEvent->accept();
+        } else {
+            // Default handling of the event
+            QCheckBox::keyPressEvent(pEvent);
+        }
+    } else {
+        // Default handling of the event
+        QCheckBox::keyPressEvent(pEvent);
+    }
+}
+
+//==============================================================================
+
 QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
                                              const QStyleOptionViewItem &pOption,
                                              const QModelIndex &pIndex) const
@@ -264,6 +303,10 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
 
         break;
     }
+    case PropertyItem::Boolean: {
+        editor = new BooleanEditorWidget(pParent);
+        break;
+    }
     default:
         // PropertyItem::Section
 
@@ -284,6 +327,34 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
     // Return the editor
 
     return editor;
+}
+
+// We have to do this because otherwise the boolean checkbox is off by a few
+// pixels.
+void PropertyItemDelegate::updateEditorGeometry(QWidget * editor,
+                                         const QStyleOptionViewItem &option,
+                                         const QModelIndex &pIndex) const
+{
+    PropertyItem *propertyItem = static_cast<PropertyItem *>(qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex));
+    
+    if (propertyItem->type() != PropertyItem::Boolean) {
+        QStyledItemDelegate::updateEditorGeometry(editor, option, pIndex);
+        return;
+    }
+
+    const QWidget *widget = option.widget;
+
+    QStyleOptionViewItem opt = option;
+    initStyleOption(&opt, pIndex);
+
+    QStyle *style = widget->style();
+    opt.showDecorationSelected = true;
+    opt.features |= QStyleOptionViewItem::HasCheckIndicator;
+    QRect geom = style->subElementRect(QStyle::SE_ItemViewItemCheckIndicator,
+                                       &opt, widget);
+
+    editor->setGeometry(geom);
+    // QStyledItemDelegate::updateEditorGeometry(editor, option, pIndex);
 }
 
 //==============================================================================
@@ -314,11 +385,18 @@ void PropertyItemDelegate::paint(QPainter *pPainter,
 
     if (propertyItem->type() == PropertyItem::Section) {
         // Make our section item bold
-
         option.font.setBold(true);
+    } else if (propertyItem->type() == PropertyItem::Boolean) {
+        // Don't show true / false.
+        option.text = "";
+
+        option.checkState = propertyItem->text() == "true" ? Qt::Checked : Qt::Unchecked;
+        option.features |= QStyleOptionViewItem::HasCheckIndicator;
     }
 
-    QStyledItemDelegate::paint(pPainter, option, pIndex);
+    const QWidget *widget = option.widget;
+    QStyle *style = widget->style();
+    style->drawControl(QStyle::CE_ItemViewItem, &option, pPainter, widget);
 }
 
 //==============================================================================
@@ -964,6 +1042,17 @@ Property * PropertyEditorWidget::addDoubleProperty(const QString &pId,
 
 //==============================================================================
 
+Property * PropertyEditorWidget::addBooleanProperty(const QString &pId,
+                                                    const bool &pEditable,
+                                                    Property *pParent)
+{
+    // Add a double property and return its information
+
+    return addProperty(PropertyItem::Boolean, pId, pEditable, false, pParent);
+}
+
+//==============================================================================
+
 Property * PropertyEditorWidget::addListProperty(const QString &pId,
                                                  Property *pParent)
 {
@@ -1057,6 +1146,34 @@ void PropertyEditorWidget::setDoublePropertyItem(PropertyItem *pPropertyItem,
         setPropertyItem(pPropertyItem, QString::number(pValue, 'g', 15));
         // Note: we want as much precision as possible, hence we use 15 (see
         //       http://en.wikipedia.org/wiki/Double_precision)...
+}
+
+//==============================================================================
+
+bool PropertyEditorWidget::booleanPropertyItem(PropertyItem *pPropertyItem)
+{
+    // Return the value of the given double property item, if it exists and is
+    // valid
+
+    if (pPropertyItem && (pPropertyItem->type() == PropertyItem::Boolean))
+        return pPropertyItem->text() == "true";
+    else
+        // The property item is either not valid or not of double type, so...
+
+        return 0.0;
+}
+
+//==============================================================================
+
+void PropertyEditorWidget::setBooleanPropertyItem(PropertyItem *pPropertyItem,
+                                                  const bool &pValue)
+{
+    // Set the value of the given property item, if it exists and is of boolean
+    // type
+
+    if (pPropertyItem && (pPropertyItem->type() == PropertyItem::Boolean))
+        setPropertyItem(pPropertyItem,
+                        pValue ? "true" : "false");
 }
 
 //==============================================================================

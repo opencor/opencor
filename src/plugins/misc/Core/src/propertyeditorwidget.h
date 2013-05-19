@@ -13,6 +13,7 @@
 //==============================================================================
 
 #include <QComboBox>
+#include <QCheckBox>
 #include <QLineEdit>
 #include <QStandardItem>
 #include <QStyledItemDelegate>
@@ -82,6 +83,20 @@ Q_SIGNALS:
     void goToNextPropertyRequested();
 };
 
+class BooleanEditorWidget : public QCheckBox
+{
+    Q_OBJECT
+
+public:
+    explicit BooleanEditorWidget(QWidget *pParent = 0);
+
+protected:
+    virtual void keyPressEvent(QKeyEvent *pEvent);
+Q_SIGNALS:
+    void goToPreviousPropertyRequested();
+    void goToNextPropertyRequested();
+};
+
 //==============================================================================
 
 class PropertyItemDelegate : public QStyledItemDelegate
@@ -92,6 +107,9 @@ public:
     virtual QWidget *createEditor(QWidget *pParent,
                                   const QStyleOptionViewItem &pOption,
                                   const QModelIndex &pIndex) const;
+    virtual void updateEditorGeometry(QWidget *editor,
+                                      const QStyleOptionViewItem &option,
+                                      const QModelIndex &index) const;
 
 protected:
     virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
@@ -117,7 +135,8 @@ public:
         String   = QStandardItem::UserType+1,
         Integer  = QStandardItem::UserType+2,
         Double   = QStandardItem::UserType+3,
-        List     = QStandardItem::UserType+4
+        List     = QStandardItem::UserType+4,
+        Boolean  = QStandardItem::UserType+5
     };
 
     explicit PropertyItem(const Type &pType, const bool &pEditable);
@@ -250,6 +269,8 @@ public:
     Property * addDoubleProperty(const QString &pId, const bool &pEditable,
                                  const bool &pCheckable,
                                  Property *pParent = 0);
+    Property * addBooleanProperty(const QString &pId, const bool &pEditable,
+                                  Property *pParent = 0);
     Property * addListProperty(const QString &pId, Property *pParent = 0);
 
     void setStringPropertyItem(QStandardItem *pPropertyItem,
@@ -262,6 +283,10 @@ public:
     static double doublePropertyItem(PropertyItem *pPropertyItem);
     void setDoublePropertyItem(PropertyItem *pPropertyItem,
                                const double &pValue);
+
+    static bool booleanPropertyItem(PropertyItem *pPropertyItem);
+    void setBooleanPropertyItem(PropertyItem *pPropertyItem,
+                                const bool &pValue);
 
     Properties properties() const;
 

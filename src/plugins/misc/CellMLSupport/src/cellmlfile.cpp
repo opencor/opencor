@@ -44,16 +44,16 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFile::CellmlFile(const QString &pFileName) :
+CellMLFile::CellMLFile(const QString &pFileName) :
     mFileName(pFileName),
     mModel(0),
     mRdfApiRepresentation(0),
     mRdfDataSource(0),
-    mRdfTriples(CellmlFileRdfTriples(this))
+    mRdfTriples(CellMLFileRdfTriples(this))
 {
     // Instantiate our runtime object
 
-    mRuntime = new CellmlFileRuntime();
+    mRuntime = new CellMLFileRuntime();
 
     // Reset ourselves
 
@@ -62,7 +62,7 @@ CellmlFile::CellmlFile(const QString &pFileName) :
 
 //==============================================================================
 
-CellmlFile::~CellmlFile()
+CellMLFile::~CellMLFile()
 {
     // Delete some internal objects
 
@@ -73,7 +73,7 @@ CellmlFile::~CellmlFile()
 
 //==============================================================================
 
-void CellmlFile::reset()
+void CellMLFile::reset()
 {
     // Reset all of the file's properties
 
@@ -84,7 +84,7 @@ void CellmlFile::reset()
 
     mUriBase = QString();
 
-    foreach (CellmlFileRdfTriple *rdfTriple, mRdfTriples)
+    foreach (CellMLFileRdfTriple *rdfTriple, mRdfTriples)
         delete rdfTriple;
 
     mRdfTriples.clear();
@@ -100,7 +100,7 @@ void CellmlFile::reset()
 
 //==============================================================================
 
-iface::cellml_api::Model * CellmlFile::model() const
+iface::cellml_api::Model * CellMLFile::model() const
 {
     // Return the model associated with our CellML file
 
@@ -109,7 +109,7 @@ iface::cellml_api::Model * CellmlFile::model() const
 
 //==============================================================================
 
-iface::rdf_api::DataSource * CellmlFile::rdfDataSource() const
+iface::rdf_api::DataSource * CellMLFile::rdfDataSource() const
 {
     // Return the data source associated with our CellML file
 
@@ -118,7 +118,7 @@ iface::rdf_api::DataSource * CellmlFile::rdfDataSource() const
 
 //==============================================================================
 
-bool CellmlFile::load()
+bool CellMLFile::load()
 {
     if (!mLoadingNeeded)
         // The file is already loaded, so...
@@ -141,7 +141,7 @@ bool CellmlFile::load()
     } catch (iface::cellml_api::CellMLException &) {
         // Something went wrong with the loading of the model, so...
 
-        mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+        mIssues << CellMLFileIssue(CellMLFileIssue::Error,
                                    tr("the model could not be loaded (%1)").arg(QString::fromStdWString(modelLoader->lastErrorMessage())));
 
         return false;
@@ -150,14 +150,14 @@ bool CellmlFile::load()
     // In the case of a non CellML 1.0 model, we want all the imports to be
     // fully instantiated
 
-    if (QString::fromStdWString(mModel->cellmlVersion()).compare(Cellml_1_0))
+    if (QString::fromStdWString(mModel->cellmlVersion()).compare(CellML_1_0))
         try {
             mModel->fullyInstantiateImports();
         } catch (...) {
             // Something went wrong with the full instantiation of the imports,
             // so...
 
-            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+            mIssues << CellMLFileIssue(CellMLFileIssue::Error,
                                        tr("the model's imports could not be fully instantiated"));
 
             return false;
@@ -187,7 +187,7 @@ bool CellmlFile::load()
                 if (!rdfTriple)
                     break;
 
-                mRdfTriples << new CellmlFileRdfTriple(this, rdfTriple);
+                mRdfTriples << new CellMLFileRdfTriple(this, rdfTriple);
             }
         }
     }
@@ -201,7 +201,7 @@ bool CellmlFile::load()
 
 //==============================================================================
 
-bool CellmlFile::reload()
+bool CellMLFile::reload()
 {
     // We want to reload the file, so we must first reset it
 
@@ -214,7 +214,7 @@ bool CellmlFile::reload()
 
 //==============================================================================
 
-bool CellmlFile::save(const QString &pNewFileName)
+bool CellMLFile::save(const QString &pNewFileName)
 {
     // Determine the file name to use for the CellML file
 
@@ -264,7 +264,7 @@ bool CellmlFile::save(const QString &pNewFileName)
 
 //==============================================================================
 
-bool CellmlFile::isValid()
+bool CellMLFile::isValid()
 {
     if (!mValidNeeded)
         // The file has already been validated, so...
@@ -347,27 +347,27 @@ bool CellmlFile::isValid()
 
                         // Check whether the parent is an imported file
 
-                        ObjRef<iface::cellml_api::Model> importedCellmlFile = QueryInterface(cellmlElementParent);
+                        ObjRef<iface::cellml_api::Model> importedCellMLFile = QueryInterface(cellmlElementParent);
 
-                        if (!importedCellmlFile)
+                        if (!importedCellMLFile)
                             break;
 
                         // Retrieve the imported CellML element
 
-                        ObjRef<iface::cellml_api::CellMLElement> importedCellmlElement = importedCellmlFile->parentElement();
+                        ObjRef<iface::cellml_api::CellMLElement> importedCellMLElement = importedCellMLFile->parentElement();
 
-                        if (!importedCellmlElement)
+                        if (!importedCellMLElement)
                             break;
 
                         // Check whether the imported CellML element is an
                         // import CellML element
 
-                        ObjRef<iface::cellml_api::CellMLImport> importCellmlElement = QueryInterface(importedCellmlElement);
+                        ObjRef<iface::cellml_api::CellMLImport> importCellMLElement = QueryInterface(importedCellMLElement);
 
-                        if (!importCellmlElement)
+                        if (!importCellMLElement)
                             break;
 
-                        ObjRef<iface::cellml_api::URI> xlinkHref = importCellmlElement->xlinkHref();
+                        ObjRef<iface::cellml_api::URI> xlinkHref = importCellMLElement->xlinkHref();
 
                         importedFile = QString::fromStdWString(xlinkHref->asText());
 
@@ -378,23 +378,23 @@ bool CellmlFile::isValid()
 
             // Determine the issue's type
 
-            CellmlFileIssue::Type issueType;
+            CellMLFileIssue::Type issueType;
 
             if (cellmlValidityIssue->isWarningOnly()) {
                 // We are dealing with a warning
 
-                issueType = CellmlFileIssue::Warning;
+                issueType = CellMLFileIssue::Warning;
             } else {
                 // We are dealing with an error
 
                 ++cellmlErrorsCount;
 
-                issueType = CellmlFileIssue::Error;
+                issueType = CellMLFileIssue::Error;
             }
 
             // Append the issue to our list
 
-            mIssues << CellmlFileIssue(issueType,
+            mIssues << CellMLFileIssue(issueType,
                                        QString::fromStdWString(cellmlValidityIssue->description()),
                                        line, column, importedFile);
         }
@@ -420,7 +420,7 @@ bool CellmlFile::isValid()
 
 //==============================================================================
 
-bool CellmlFile::isModified() const
+bool CellMLFile::isModified() const
 {
     // Return whether the file has been modified
 
@@ -429,7 +429,7 @@ bool CellmlFile::isModified() const
 
 //==============================================================================
 
-void CellmlFile::setModified(const bool &pModified) const
+void CellMLFile::setModified(const bool &pModified) const
 {
     // Set the modified status of the file
 
@@ -438,7 +438,7 @@ void CellmlFile::setModified(const bool &pModified) const
 
 //==============================================================================
 
-CellmlFileIssues CellmlFile::issues() const
+CellMLFileIssues CellMLFile::issues() const
 {
     // Return the file's issue(s)
 
@@ -447,7 +447,7 @@ CellmlFileIssues CellmlFile::issues() const
 
 //==============================================================================
 
-CellmlFileRuntime * CellmlFile::runtime()
+CellMLFileRuntime * CellMLFile::runtime()
 {
     if (!mRuntimeUpdateNeeded)
         // There is no need for the runtime to be updated, so...
@@ -473,7 +473,7 @@ CellmlFileRuntime * CellmlFile::runtime()
 
 //==============================================================================
 
-QString CellmlFile::fileName() const
+QString CellMLFile::fileName() const
 {
     // Return the CellML file's file name
 
@@ -482,7 +482,7 @@ QString CellmlFile::fileName() const
 
 //==============================================================================
 
-CellmlFileRdfTriples & CellmlFile::rdfTriples()
+CellMLFileRdfTriples & CellMLFile::rdfTriples()
 {
     // Return all the RDF triples associated with the CellML file
 
@@ -491,7 +491,7 @@ CellmlFileRdfTriples & CellmlFile::rdfTriples()
 
 //==============================================================================
 
-CellmlFileRdfTriples CellmlFile::rdfTriples(iface::cellml_api::CellMLElement *pElement) const
+CellMLFileRdfTriples CellMLFile::rdfTriples(iface::cellml_api::CellMLElement *pElement) const
 {
     // Return all the RDF triples associated with the given element
 
@@ -500,7 +500,7 @@ CellmlFileRdfTriples CellmlFile::rdfTriples(iface::cellml_api::CellMLElement *pE
 
 //==============================================================================
 
-bool CellmlFile::rdfTripleExists(iface::cellml_api::CellMLElement *pElement,
+bool CellMLFile::rdfTripleExists(iface::cellml_api::CellMLElement *pElement,
                                  const QString &pQualifier,
                                  const QString &pResource,
                                  const QString &pId) const
@@ -515,7 +515,7 @@ bool CellmlFile::rdfTripleExists(iface::cellml_api::CellMLElement *pElement,
     // Go through the RDF triples associated with the CellML element and check
     // whether one of them corresponds to the given RDF triple
 
-    foreach (CellmlFileRdfTriple *rdfTriple, rdfTriples(pElement))
+    foreach (CellMLFileRdfTriple *rdfTriple, rdfTriples(pElement))
         if (   !pQualifier.compare(rdfTriple->qualifierAsString())
             && !pResource.compare(rdfTriple->resource())
             && !pId.compare(rdfTriple->id()))
@@ -530,33 +530,33 @@ bool CellmlFile::rdfTripleExists(iface::cellml_api::CellMLElement *pElement,
 
 //==============================================================================
 
-bool CellmlFile::rdfTripleExists(iface::cellml_api::CellMLElement *pElement,
-                                 const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
+bool CellMLFile::rdfTripleExists(iface::cellml_api::CellMLElement *pElement,
+                                 const CellMLSupport::CellMLFileRdfTriple::ModelQualifier &pModelQualifier,
                                  const QString &pResource, const QString &pId) const
 {
     // Call our generic rdfTripleExists() function
 
     return rdfTripleExists(pElement,
-                           CellMLSupport::CellmlFileRdfTriple::modelQualifierAsString(pModelQualifier),
+                           CellMLSupport::CellMLFileRdfTriple::modelQualifierAsString(pModelQualifier),
                            pResource, pId);
 }
 
 //==============================================================================
 
-bool CellmlFile::rdfTripleExists(iface::cellml_api::CellMLElement *pElement,
-                                 const CellMLSupport::CellmlFileRdfTriple::BioQualifier &pBioQualifier,
+bool CellMLFile::rdfTripleExists(iface::cellml_api::CellMLElement *pElement,
+                                 const CellMLSupport::CellMLFileRdfTriple::BioQualifier &pBioQualifier,
                                  const QString &pResource, const QString &pId) const
 {
     // Call our generic rdfTripleExists() function
 
     return rdfTripleExists(pElement,
-                           CellMLSupport::CellmlFileRdfTriple::bioQualifierAsString(pBioQualifier),
+                           CellMLSupport::CellMLFileRdfTriple::bioQualifierAsString(pBioQualifier),
                            pResource, pId);
 }
 
 //==============================================================================
 
-QString CellmlFile::rdfTripleSubject(iface::cellml_api::CellMLElement *pElement) const
+QString CellMLFile::rdfTripleSubject(iface::cellml_api::CellMLElement *pElement) const
 {
     // Make sure that we have a 'proper' cmeta:id or generate one, if needed
 
@@ -569,7 +569,7 @@ QString CellmlFile::rdfTripleSubject(iface::cellml_api::CellMLElement *pElement)
 
         QStringList cmetaIds = QStringList();
 
-        foreach (CellmlFileRdfTriple *rdfTriple, mRdfTriples) {
+        foreach (CellMLFileRdfTriple *rdfTriple, mRdfTriples) {
             QString cmetaId = rdfTriple->metadataId();
 
             if (!cmetaIds.contains(cmetaId))
@@ -604,33 +604,33 @@ QString CellmlFile::rdfTripleSubject(iface::cellml_api::CellMLElement *pElement)
 
 //==============================================================================
 
-CellMLSupport::CellmlFileRdfTriple * CellmlFile::addRdfTriple(iface::cellml_api::CellMLElement *pElement,
-                                                              const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
+CellMLSupport::CellMLFileRdfTriple * CellMLFile::addRdfTriple(iface::cellml_api::CellMLElement *pElement,
+                                                              const CellMLSupport::CellMLFileRdfTriple::ModelQualifier &pModelQualifier,
                                                               const QString &pResource,
                                                               const QString &pId)
 {
     // Add an RDF triple to our CellML file
 
-    return mRdfTriples.add(new CellMLSupport::CellmlFileRdfTriple(this, rdfTripleSubject(pElement),
+    return mRdfTriples.add(new CellMLSupport::CellMLFileRdfTriple(this, rdfTripleSubject(pElement),
                                                                   pModelQualifier, pResource, pId));
 }
 
 //==============================================================================
 
-CellMLSupport::CellmlFileRdfTriple * CellmlFile::addRdfTriple(iface::cellml_api::CellMLElement *pElement,
-                                                              const CellMLSupport::CellmlFileRdfTriple::BioQualifier &pBioQualifier,
+CellMLSupport::CellMLFileRdfTriple * CellMLFile::addRdfTriple(iface::cellml_api::CellMLElement *pElement,
+                                                              const CellMLSupport::CellMLFileRdfTriple::BioQualifier &pBioQualifier,
                                                               const QString &pResource,
                                                               const QString &pId)
 {
     // Add an RDF Triple to our CellML file
 
-    return mRdfTriples.add(new CellMLSupport::CellmlFileRdfTriple(this, rdfTripleSubject(pElement),
+    return mRdfTriples.add(new CellMLSupport::CellMLFileRdfTriple(this, rdfTripleSubject(pElement),
                                                                   pBioQualifier, pResource, pId));
 }
 
 //==============================================================================
 
-QString CellmlFile::uriBase() const
+QString CellMLFile::uriBase() const
 {
     // Return the CellML file's URI base
 

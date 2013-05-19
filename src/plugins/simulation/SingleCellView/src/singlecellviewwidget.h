@@ -9,6 +9,7 @@
 
 #include "solverinterface.h"
 #include "viewwidget.h"
+#include "qwt_series_data.h"
 
 //==============================================================================
 
@@ -46,7 +47,8 @@ namespace Core {
 //==============================================================================
 
 namespace CellMLSupport {
-    class CellmlFileRuntimeModelParameter;
+    class CellMLFileRuntimeModelParameter;
+    class CellMLFileRuntimeCompiledModelParameter;
 }   // namespace CellMLSupport
 
 //==============================================================================
@@ -60,6 +62,10 @@ class SingleCellViewGraphPanelPlotCurve;
 class SingleCellViewGraphPanelWidget;
 class SingleCellViewPlugin;
 class SingleCellViewSimulation;
+class SingleCellViewSimulationData;
+class SingleCellViewSimulationResults;
+
+//==============================================================================
 
 //==============================================================================
 
@@ -68,30 +74,60 @@ class SingleCellViewWidgetCurveData
 public:
     explicit SingleCellViewWidgetCurveData(const QString &pFileName,
                                            SingleCellViewSimulation *pSimulation,
-                                           CellMLSupport::CellmlFileRuntimeModelParameter *pModelParameter,
+                                           QSharedPointer<CellMLSupport::CellMLFileRuntimeModelParameter>
+                                             pModelParameter,
                                            SingleCellViewGraphPanelPlotCurve *pCurve);
 
     QString fileName() const;
 
-    CellMLSupport::CellmlFileRuntimeModelParameter * modelParameter() const;
+    QSharedPointer<CellMLSupport::CellMLFileRuntimeCompiledModelParameter> modelParameter() const;
 
     SingleCellViewGraphPanelPlotCurve * curve() const;
 
-    double * yData() const;
-
     bool isAttached() const;
     void setAttached(const bool &pAttached);
+
+    QSharedPointer<CellMLSupport::CellMLFileRuntimeCompiledModelParameter> modelParameterY()
+    {
+        return mModelParameterY;
+    }
 
 private:
     QString mFileName;
 
     SingleCellViewSimulation *mSimulation;
 
-    CellMLSupport::CellmlFileRuntimeModelParameter *mModelParameter;
+    QSharedPointer<CellMLSupport::CellMLFileRuntimeCompiledModelParameter> mModelParameterY;
 
     SingleCellViewGraphPanelPlotCurve *mCurve;
 
     bool mAttached;
+};
+
+class SingleCellViewQwtCurveDataAdaptor
+    : public QwtSeriesData<QPointF>
+{
+public:
+    SingleCellViewQwtCurveDataAdaptor(SingleCellViewSimulation* pSimulation,
+                                      SingleCellViewWidgetCurveData* pCurveData);
+
+    virtual QRectF boundingRect() const;
+    virtual size_t size() const;
+    virtual QPointF sample(size_t i) const;
+
+private:
+    double sampleBvar(size_t i) const;
+    double sampleStateY(size_t i) const;
+    double sampleRateY(size_t i) const;
+    double sampleAlgebraicY(size_t i) const;
+    double sampleConstantY(size_t i) const;
+
+    double mConstantYValue;
+    int mSampleYIndex;
+
+    SingleCellViewSimulationResults* mSimulationResults;
+    double (SingleCellViewQwtCurveDataAdaptor::* mSampleY)(size_t i) const;
+    size_t mSize;
 };
 
 //==============================================================================
@@ -106,8 +142,6 @@ public:
     ~SingleCellViewWidget();
 
     virtual void retranslateUi();
-
-    void setSolverInterfaces(const SolverInterfaces &pSolverInterfaces);
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
@@ -125,7 +159,7 @@ public:
 private:
     enum ErrorType {
         General,
-        InvalidCellmlFile,
+        InvalidCellMLFile,
         InvalidSimulationEnvironment
     };
 
@@ -133,12 +167,10 @@ private:
 
     SingleCellViewPlugin *mPluginParent;
 
-    SolverInterfaces mSolverInterfaces;
-
     SingleCellViewSimulation *mSimulation;
     QMap<QString, SingleCellViewSimulation *> mSimulations;
 
-    QList<SingleCellViewSimulation *> mStoppedSimulations;
+    QList<QPointer<SingleCellViewSimulation> > mStoppedSimulations;
 
     Core::ProgressBarWidget *mProgressBarWidget;
 
@@ -188,7 +220,7 @@ private:
 
     QMap<SingleCellViewSimulation *, qulonglong> mOldSimulationResultsSizes;
 
-    QList<SingleCellViewSimulation *> mCheckResultsSimulations;
+    QList<QPointer<SingleCellViewSimulation> > mCheckResultsSimulations;
 
     void setDelayValue(const int &pDelayValue);
 
@@ -208,7 +240,8 @@ private:
     void checkResults(SingleCellViewSimulation *pSimulation);
 
     QString modelParameterKey(const QString pFileName,
-                              CellMLSupport::CellmlFileRuntimeModelParameter *pModelParameter);
+                              QSharedPointer<CellMLSupport::CellMLFileRuntimeCompiledModelParameter>
+                              pModelParameter);
 
 private Q_SLOTS:
     void on_actionRunPauseResume_triggered();
@@ -225,25 +258,29 @@ private Q_SLOTS:
 
     void updateDelayValue(const double &pDelayValue);
 
-    void simulationRunning(const bool &pIsResuming);
-    void simulationPaused();
-    void simulationStopped(const int &pElapsedTime);
+    void simulationRunning(QPointer<OpenCOR::SingleCellView::SingleCellViewSimulation> pSimulation,
+                           bool pIsResuming);
+    void simulationPaused(QPointer<OpenCOR::SingleCellView::SingleCellViewSimulation> pSimulation);
+    void simulationStopped(QPointer<OpenCOR::SingleCellView::SingleCellViewSimulation>,
+                           int pElapsedTime);
 
     void resetProgressBar();
     void resetFileTabIcon();
 
-    void simulationError(const QString &pMessage,
+    void simulationError(QPointer<OpenCOR::SingleCellView::SingleCellViewSimulation> pSimulation,
+                         const QString &pMessage,
                          const ErrorType &pErrorType = General);
 
-    void simulationDataModified(const bool &pIsModified);
+    void simulationDataModified(QPointer<OpenCOR::SingleCellView::SingleCellViewSimulationData> pSimulationData,
+                                const bool& pIsModified);
 
     void splitterWidgetMoved();
 
-    void simulationPropertyChanged(Core::Property *pProperty);
+    void simulationPropertyChanged(Core::Property *pProperty, bool pNeedReset = true);
     void solversPropertyChanged(Core::Property *pProperty);
 
     void showModelParameter(const QString &pFileName,
-                            CellMLSupport::CellmlFileRuntimeModelParameter *pParameter,
+                            QSharedPointer<CellMLSupport::CellMLFileRuntimeModelParameter> pParameter,
                             const bool &pShow);
 
     void callCheckResults();

@@ -17,7 +17,7 @@
 //==============================================================================
 
 namespace Ui {
-    class CellmlAnnotationViewMetadataEditDetailsWidget;
+    class CellMLAnnotationViewMetadataEditDetailsWidget;
 }
 
 //==============================================================================
@@ -40,11 +40,11 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-class CellmlAnnotationViewWidget;
+class CellMLAnnotationViewWidget;
 
 //==============================================================================
 
-class CellmlAnnotationViewMetadataEditDetailsWidget : public QScrollArea,
+class CellMLAnnotationViewMetadataEditDetailsWidget : public QScrollArea,
                                                       public Core::CommonWidget
 {
     Q_OBJECT
@@ -62,8 +62,8 @@ private:
     typedef QList<Item> Items;
 
 public:
-    explicit CellmlAnnotationViewMetadataEditDetailsWidget(CellmlAnnotationViewWidget *pParent);
-    ~CellmlAnnotationViewMetadataEditDetailsWidget();
+    explicit CellMLAnnotationViewMetadataEditDetailsWidget(CellMLAnnotationViewWidget *pParent);
+    ~CellMLAnnotationViewMetadataEditDetailsWidget();
 
     virtual void retranslateUi();
 
@@ -75,9 +75,9 @@ private:
         Id
     };
 
-    CellmlAnnotationViewWidget *mParent;
+    CellMLAnnotationViewWidget *mParent;
 
-    Ui::CellmlAnnotationViewMetadataEditDetailsWidget *mGui;
+    Ui::CellMLAnnotationViewMetadataEditDetailsWidget *mGui;
 
     QStackedWidget *mWidget;
 
@@ -122,7 +122,7 @@ private:
 
     int mItemsVerticalScrollBarPosition;
 
-    CellMLSupport::CellmlFile *mCellmlFile;
+    CellMLSupport::CellMLFile *mCellMLFile;
 
     ObjRef<iface::cellml_api::CellMLElement> mElement;
 
@@ -151,7 +151,7 @@ Q_SIGNALS:
                            const bool &pRetranslate);
     void noLookupRequested();
 
-    void rdfTripleAdded(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
+    void rdfTripleAdded(CellMLSupport::CellMLFileRdfTriple *pRdfTriple);
 
 public Q_SLOTS:
     void updateGui(iface::cellml_api::CellMLElement *pElement,

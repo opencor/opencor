@@ -26,11 +26,11 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWidget(CellmlAnnotationViewWidget *pParent) :
+CellMLAnnotationViewMetadataDetailsWidget::CellMLAnnotationViewMetadataDetailsWidget(CellMLAnnotationViewWidget *pParent) :
     Widget(pParent),
     mParent(pParent),
-    mGui(new Ui::CellmlAnnotationViewMetadataDetailsWidget),
-    mCellmlFile(pParent->cellmlFile()),
+    mGui(new Ui::CellMLAnnotationViewMetadataDetailsWidget),
+    mCellMLFile(pParent->cellmlFile()),
     mElement(0)
 {
     // Set up the GUI
@@ -63,8 +63,8 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     // Create our details widgets
 
-    mMetadataEditDetails = new CellmlAnnotationViewMetadataEditDetailsWidget(pParent);
-    mMetadataViewDetails = new CellmlAnnotationViewMetadataViewDetailsWidget(pParent);
+    mMetadataEditDetails = new CellMLAnnotationViewMetadataEditDetailsWidget(pParent);
+    mMetadataViewDetails = new CellMLAnnotationViewMetadataViewDetailsWidget(pParent);
     mWebView             = new QWebView(pParent);
 
     mWebView->setAcceptDrops(false);
@@ -128,7 +128,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
     // and to have our metadata edit details widget update itself with regards
     // to possible terms (i.e. enable/disable add buttons)
 
-    connect(mMetadataViewDetails->normalView(), SIGNAL(rdfTripleRemoved(CellMLSupport::CellmlFileRdfTriple *)),
+    connect(mMetadataViewDetails->normalView(), SIGNAL(rdfTripleRemoved(CellMLSupport::CellMLFileRdfTriple *)),
             this, SLOT(updateMetadataEditDetails()));
 
     // A connection to handle the clicking of the link in the unsupported
@@ -163,7 +163,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataDetailsWidget::~CellmlAnnotationViewMetadataDetailsWidget()
+CellMLAnnotationViewMetadataDetailsWidget::~CellMLAnnotationViewMetadataDetailsWidget()
 {
     // Delete the GUI
 
@@ -172,7 +172,7 @@ CellmlAnnotationViewMetadataDetailsWidget::~CellmlAnnotationViewMetadataDetailsW
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataDetailsWidget::retranslateUi()
+void CellMLAnnotationViewMetadataDetailsWidget::retranslateUi()
 {
     // Retranslate our GUI
 
@@ -203,7 +203,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::retranslateUi()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataDetailsWidget::updateGui(iface::cellml_api::CellMLElement *pElement)
+void CellMLAnnotationViewMetadataDetailsWidget::updateGui(iface::cellml_api::CellMLElement *pElement)
 {
     // Keep track of the CellML element
 
@@ -221,7 +221,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateGui(iface::cellml_api::Cel
 
     bool isUnknownMetadata = isCategoryElement?
                                  true:
-                                 mCellmlFile->rdfTriples(pElement).type() == CellMLSupport::CellmlFileRdfTriple::Unknown;
+                                 mCellMLFile->rdfTriples(pElement).type() == CellMLSupport::CellMLFileRdfTriple::Unknown;
 
     mBorderedUnsupportedMetadataMessage->setVisible(!isCategoryElement && isUnknownMetadata);
 
@@ -245,7 +245,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateGui(iface::cellml_api::Cel
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataDetailsWidget::addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple)
+void CellMLAnnotationViewMetadataDetailsWidget::addRdfTriple(CellMLSupport::CellMLFileRdfTriple *pRdfTriple)
 {
     if (!pRdfTriple)
         return;
@@ -257,9 +257,9 @@ void CellmlAnnotationViewMetadataDetailsWidget::addRdfTriple(CellMLSupport::Cell
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataDetailsWidget::updateSizes(const QList<int> &pSizes)
+void CellMLAnnotationViewMetadataDetailsWidget::updateSizes(const QList<int> &pSizes)
 {
-    // The splitter of another CellmlAnnotationViewMetadataDetailsWidget object
+    // The splitter of another CellMLAnnotationViewMetadataDetailsWidget object
     // has been moved, so update our sizes
 
     mSplitter->setSizes(pSizes);
@@ -267,7 +267,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateSizes(const QList<int> &pS
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataDetailsWidget::emitSplitterMoved()
+void CellMLAnnotationViewMetadataDetailsWidget::emitSplitterMoved()
 {
     // Let people know that our splitter has been moved
 
@@ -276,7 +276,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::emitSplitterMoved()
 
 //==============================================================================
 
-QSplitter * CellmlAnnotationViewMetadataDetailsWidget::splitter() const
+QSplitter * CellMLAnnotationViewMetadataDetailsWidget::splitter() const
 {
     // Return our splitter widget
 
@@ -285,7 +285,7 @@ QSplitter * CellmlAnnotationViewMetadataDetailsWidget::splitter() const
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataEditDetailsWidget * CellmlAnnotationViewMetadataDetailsWidget::metadataEditDetails() const
+CellMLAnnotationViewMetadataEditDetailsWidget * CellMLAnnotationViewMetadataDetailsWidget::metadataEditDetails() const
 {
     // Return our metadata edit details widget
 
@@ -294,7 +294,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget * CellmlAnnotationViewMetadataDeta
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataViewDetailsWidget * CellmlAnnotationViewMetadataDetailsWidget::metadataViewDetails() const
+CellMLAnnotationViewMetadataViewDetailsWidget * CellMLAnnotationViewMetadataDetailsWidget::metadataViewDetails() const
 {
     // Return our metadata view details widget
 
@@ -303,7 +303,7 @@ CellmlAnnotationViewMetadataViewDetailsWidget * CellmlAnnotationViewMetadataDeta
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataDetailsWidget::lookupQualifier(const QString &pQualifier,
+void CellMLAnnotationViewMetadataDetailsWidget::lookupQualifier(const QString &pQualifier,
                                                                 const bool &pRetranslate)
 {
     // Ask our parent to update our web viewer for us
@@ -313,7 +313,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::lookupQualifier(const QString &p
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataDetailsWidget::lookupResource(const QString &pResource,
+void CellMLAnnotationViewMetadataDetailsWidget::lookupResource(const QString &pResource,
                                                                const bool &pRetranslate)
 {
     // Ask our parent to update our web viewer for us
@@ -323,7 +323,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::lookupResource(const QString &pR
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataDetailsWidget::lookupId(const QString &pResource,
+void CellMLAnnotationViewMetadataDetailsWidget::lookupId(const QString &pResource,
                                                          const QString &pId,
                                                          const bool &pRetranslate)
 {
@@ -334,7 +334,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::lookupId(const QString &pResourc
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataDetailsWidget::lookupNothing()
+void CellMLAnnotationViewMetadataDetailsWidget::lookupNothing()
 {
     // We are 'asked' to look nothing up, so 'clean up' our web view
 
@@ -343,19 +343,19 @@ void CellmlAnnotationViewMetadataDetailsWidget::lookupNothing()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataDetailsWidget::removeAllMetadata()
+void CellMLAnnotationViewMetadataDetailsWidget::removeAllMetadata()
 {
     // Remove all the metadata from the current CellML element and ask our
     // details widget to update itself
 
-    mCellmlFile->rdfTriples().remove(mElement);
+    mCellMLFile->rdfTriples().remove(mElement);
 
     updateGui(mElement);
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataDetailsWidget::updateMetadataEditDetails()
+void CellMLAnnotationViewMetadataDetailsWidget::updateMetadataEditDetails()
 {
     // Update our metadata edit details widget
 

@@ -16,7 +16,7 @@ namespace OpenCOR {
 //==============================================================================
 
 namespace CellMLSupport {
-    class CellmlFileRuntime;
+    class CellMLFileRuntime;
 }   // namespace CellMLSupport
 
 //==============================================================================
@@ -40,7 +40,7 @@ public:
     virtual void retranslateUi();
 
     void initialize(const QString &pFileName,
-                    CellMLSupport::CellmlFileRuntime *pRuntime,
+                    CellMLSupport::CellMLFileRuntime *pRuntime,
                     SingleCellViewSimulationData *pSimulationData);
     void backup(const QString &pFileName);
     void finalize(const QString &pFileName);

@@ -25,8 +25,8 @@ PLUGININFO_FUNC CellMLSupportPluginInfo();
 
 //==============================================================================
 
-static const QString CellmlMimeType = "application/cellml+xml";
-static const QString CellmlFileExtension = "cellml";
+static const QString CellMLMimeType = "application/cellml+xml";
+static const QString CellMLFileExtension = "cellml";
 
 //==============================================================================
 
@@ -50,7 +50,7 @@ public:
 
 //==============================================================================
 
-bool CELLMLSUPPORT_EXPORT isCellmlFile(const QString &pFileName);
+bool CELLMLSUPPORT_EXPORT isCellMLFile(const QString &pFileName);
 
 //==============================================================================
 

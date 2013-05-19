@@ -29,11 +29,11 @@ static const QString IdRegExp = "[0-9A-Za-z\\.%-_:]+(:[0-9A-Za-z\\.%-_:]+)?";
 
 //==============================================================================
 
-class CellmlFile;
+class CellMLFile;
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFileRdfTriple
+class CELLMLSUPPORT_EXPORT CellMLFileRdfTriple
 {
 public:
     enum Type {
@@ -70,24 +70,24 @@ public:
         LastBioQualifier = BioHasTaxon
     };
 
-    explicit CellmlFileRdfTriple(CellmlFile *pCellmlFile,
+    explicit CellMLFileRdfTriple(CellMLFile *pCellMLFile,
                                  iface::rdf_api::Triple *pRdfTriple);
-    explicit CellmlFileRdfTriple(CellmlFile *pCellmlFile,
+    explicit CellMLFileRdfTriple(CellMLFile *pCellMLFile,
                                  const QString pSubject,
                                  const ModelQualifier &pModelQualifier,
                                  const QString &pResource, const QString &pId);
-    explicit CellmlFileRdfTriple(CellmlFile *pCellmlFile,
+    explicit CellMLFileRdfTriple(CellMLFile *pCellMLFile,
                                  const QString pSubject,
                                  const BioQualifier &pBioQualifier,
                                  const QString &pResource, const QString &pId);
-    ~CellmlFileRdfTriple();
+    ~CellMLFileRdfTriple();
 
     iface::rdf_api::Triple * rdfTriple() const;
     void setRdfTriple(iface::rdf_api::Triple *pRdfTriple);
 
-    CellmlFileRdfTripleElement * subject() const;
-    CellmlFileRdfTripleElement * predicate() const;
-    CellmlFileRdfTripleElement * object() const;
+    CellMLFileRdfTripleElement * subject() const;
+    CellMLFileRdfTripleElement * predicate() const;
+    CellMLFileRdfTripleElement * object() const;
 
     Type type() const;
 
@@ -111,13 +111,13 @@ public:
     static bool decodeTerm(const QString &pTerm, QString &pResource, QString &pId);
 
 private:
-    CellmlFile *mCellmlFile;
+    CellMLFile *mCellMLFile;
 
     ObjRef<iface::rdf_api::Triple> mRdfTriple;
 
-    CellmlFileRdfTripleElement *mSubject;
-    CellmlFileRdfTripleElement *mPredicate;
-    CellmlFileRdfTripleElement *mObject;
+    CellMLFileRdfTripleElement *mSubject;
+    CellMLFileRdfTripleElement *mPredicate;
+    CellMLFileRdfTripleElement *mObject;
 
     Type mType;
 
@@ -127,7 +127,7 @@ private:
     QString mResource;
     QString mId;
 
-    void constructor(CellmlFile *pCellmlFile,
+    void constructor(CellMLFile *pCellMLFile,
                      iface::rdf_api::Triple *pRdfTriple, const Type &pType,
                      const ModelQualifier &pModelQualifier,
                      const BioQualifier &pBioQualifier,
@@ -136,28 +136,28 @@ private:
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFileRdfTriples: public QList<CellmlFileRdfTriple *>
+class CELLMLSUPPORT_EXPORT CellMLFileRdfTriples: public QList<CellMLFileRdfTriple *>
 {
 public:
-    explicit CellmlFileRdfTriples(CellmlFile *pCellmlFile);
+    explicit CellMLFileRdfTriples(CellMLFile *pCellMLFile);
 
-    CellmlFileRdfTriple::Type type() const;
+    CellMLFileRdfTriple::Type type() const;
 
-    CellmlFileRdfTriples contains(iface::cellml_api::CellMLElement *pElement) const;
+    CellMLFileRdfTriples contains(iface::cellml_api::CellMLElement *pElement) const;
 
-    CellmlFileRdfTriple * add(CellmlFileRdfTriple *pRdfTriple);
+    CellMLFileRdfTriple * add(CellMLFileRdfTriple *pRdfTriple);
 
-    void remove(CellmlFileRdfTriple *pRdfTriple);
+    void remove(CellMLFileRdfTriple *pRdfTriple);
     void remove(iface::cellml_api::CellMLElement *pElement);
     void removeAll();
 
 private:
-    CellmlFile *mCellmlFile;
+    CellMLFile *mCellMLFile;
 
-    void recursiveContains(CellmlFileRdfTriples &pRdfTriples,
-                           CellmlFileRdfTriple *pRdfTriple) const;
+    void recursiveContains(CellMLFileRdfTriples &pRdfTriples,
+                           CellMLFileRdfTriple *pRdfTriple) const;
 
-    void removeRdfTriples(const CellmlFileRdfTriples &pRdfTriples);
+    void removeRdfTriples(const CellMLFileRdfTriples &pRdfTriples);
 };
 
 //==============================================================================

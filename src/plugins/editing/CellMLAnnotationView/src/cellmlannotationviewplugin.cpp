@@ -42,12 +42,12 @@ PLUGININFO_FUNC CellMLAnnotationViewPluginInfo()
 CellMLAnnotationViewPlugin::CellMLAnnotationViewPlugin() :
     mSizes(QList<int>()),
     mMetadataDetailsWidgetSizes(QList<int>()),
-    mViewWidgets(QMap<QString, CellmlAnnotationViewWidget *>())
+    mViewWidgets(QMap<QString, CellMLAnnotationViewWidget *>())
 {
     // Set our settings
 
     mGuiSettings->setView(GuiViewSettings::Editing,
-                          QStringList() << CellMLSupport::CellmlMimeType);
+                          QStringList() << CellMLSupport::CellMLMimeType);
 }
 
 //==============================================================================
@@ -62,26 +62,26 @@ CellMLAnnotationViewPlugin::~CellMLAnnotationViewPlugin()
 
 //==============================================================================
 
-static const QString SettingsCellmlAnnotationWidget                                = "CellmlAnnotationWidget";
-static const QString SettingsCellmlAnnotationWidgetSizesCount                      = "SizesCount";
-static const QString SettingsCellmlAnnotationWidgetSizes                           = "Sizes%1";
-static const QString SettingsCellmlAnnotationWidgetMetadataDetailsWidgetSizesCount = "MetadataDetailsWidgetSizesCount";
-static const QString SettingsCellmlAnnotationWidgetMetadataDetailsWidgetSizes      = "MetadataDetailsWidgetSizes%1";
+static const QString SettingsCellMLAnnotationWidget                                = "CellMLAnnotationWidget";
+static const QString SettingsCellMLAnnotationWidgetSizesCount                      = "SizesCount";
+static const QString SettingsCellMLAnnotationWidgetSizes                           = "Sizes%1";
+static const QString SettingsCellMLAnnotationWidgetMetadataDetailsWidgetSizesCount = "MetadataDetailsWidgetSizesCount";
+static const QString SettingsCellMLAnnotationWidgetMetadataDetailsWidgetSizes      = "MetadataDetailsWidgetSizes%1";
 
 //==============================================================================
 
 void CellMLAnnotationViewPlugin::loadSettings(QSettings *pSettings)
 {
     // Retrieve the size of the different items that make up our splitters
-    // Note: we would normally do this in CellmlAnnotationViewWidget, but we
+    // Note: we would normally do this in CellMLAnnotationViewWidget, but we
     //       have one instance of it per CellML file and we want to share some
     //       information between the different instances, so we have to do it
     //       here instead...
 
-    pSettings->beginGroup(SettingsCellmlAnnotationWidget);
+    pSettings->beginGroup(SettingsCellMLAnnotationWidget);
         // Sizes
 
-        int sizesCount = pSettings->value(SettingsCellmlAnnotationWidgetSizesCount, 0).toInt();
+        int sizesCount = pSettings->value(SettingsCellMLAnnotationWidgetSizesCount, 0).toInt();
 
         if (!sizesCount) {
             // There are no previous sizes, so get some default ones
@@ -92,12 +92,12 @@ void CellMLAnnotationViewPlugin::loadSettings(QSettings *pSettings)
             // There are previous sizes, so use them to initialise mSizes
 
             for (int i = 0; i < sizesCount; ++i)
-                mSizes << pSettings->value(SettingsCellmlAnnotationWidgetSizes.arg(i)).toInt();
+                mSizes << pSettings->value(SettingsCellMLAnnotationWidgetSizes.arg(i)).toInt();
         }
 
         // Metadata details view widget sizes
 
-        int metadataDetailsWidgetSizesCount = pSettings->value(SettingsCellmlAnnotationWidgetMetadataDetailsWidgetSizesCount, 0).toInt();
+        int metadataDetailsWidgetSizesCount = pSettings->value(SettingsCellMLAnnotationWidgetMetadataDetailsWidgetSizesCount, 0).toInt();
 
         if (!metadataDetailsWidgetSizesCount) {
             // There are no previous view widget sizes, so get some default ones
@@ -110,7 +110,7 @@ void CellMLAnnotationViewPlugin::loadSettings(QSettings *pSettings)
             // mMetadataDetailsWidgetSizes
 
             for (int i = 0; i < metadataDetailsWidgetSizesCount; ++i)
-                mMetadataDetailsWidgetSizes << pSettings->value(SettingsCellmlAnnotationWidgetMetadataDetailsWidgetSizes.arg(i)).toInt();
+                mMetadataDetailsWidgetSizes << pSettings->value(SettingsCellMLAnnotationWidgetMetadataDetailsWidgetSizes.arg(i)).toInt();
         }
     pSettings->endGroup();
 }
@@ -122,24 +122,24 @@ void CellMLAnnotationViewPlugin::saveSettings(QSettings *pSettings) const
     // Keep track of the tree view widget's and CellML annotation's width
     // Note: we must also keep track of the CellML annotation's width because
     //       when loading our settings (see above), the view widget doesn't yet
-    //       have a 'proper' width, so we couldn't simply assume that the Cellml
+    //       have a 'proper' width, so we couldn't simply assume that the CellML
     //       annotation's initial width is this view widget's width minus the
     //       tree view widget's initial width, so...
 
-    pSettings->beginGroup(SettingsCellmlAnnotationWidget);
+    pSettings->beginGroup(SettingsCellMLAnnotationWidget);
         // Sizes
 
-        pSettings->setValue(SettingsCellmlAnnotationWidgetSizesCount, mSizes.count());
+        pSettings->setValue(SettingsCellMLAnnotationWidgetSizesCount, mSizes.count());
 
         for (int i = 0, iMax = mSizes.count(); i < iMax; ++i)
-            pSettings->setValue(SettingsCellmlAnnotationWidgetSizes.arg(i), mSizes[i]);
+            pSettings->setValue(SettingsCellMLAnnotationWidgetSizes.arg(i), mSizes[i]);
 
         // Metadata details view widget sizes
 
-        pSettings->setValue(SettingsCellmlAnnotationWidgetMetadataDetailsWidgetSizesCount, mMetadataDetailsWidgetSizes.count());
+        pSettings->setValue(SettingsCellMLAnnotationWidgetMetadataDetailsWidgetSizesCount, mMetadataDetailsWidgetSizes.count());
 
         for (int i = 0, iMax = mMetadataDetailsWidgetSizes.count(); i < iMax; ++i)
-            pSettings->setValue(SettingsCellmlAnnotationWidgetMetadataDetailsWidgetSizes.arg(i), mMetadataDetailsWidgetSizes[i]);
+            pSettings->setValue(SettingsCellMLAnnotationWidgetMetadataDetailsWidgetSizes.arg(i), mMetadataDetailsWidgetSizes[i]);
     pSettings->endGroup();
 }
 
@@ -149,19 +149,19 @@ QWidget * CellMLAnnotationViewPlugin::viewWidget(const QString &pFileName)
 {
     // Check that we are dealing with a CellML file
 
-    if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
+    if (!CellMLSupport::CellMLFileManager::instance()->cellmlFile(pFileName))
         // We are not dealing with a CellML file, so...
 
         return 0;
 
     // Retrieve the view widget associated with the file name
 
-    CellmlAnnotationViewWidget *res = mViewWidgets.value(pFileName);
+    CellMLAnnotationViewWidget *res = mViewWidgets.value(pFileName);
 
     // Create a new view widget, if none could be retrieved
 
     if (!res) {
-        res = new CellmlAnnotationViewWidget(this, pFileName, mMainWindow);
+        res = new CellMLAnnotationViewWidget(this, pFileName, mMainWindow);
 
         // Initialise our new view widget's sizes
 
@@ -178,7 +178,7 @@ QWidget * CellMLAnnotationViewPlugin::viewWidget(const QString &pFileName)
         // Some other connections to handle splitter moves between our view
         // widgets
 
-        foreach (CellmlAnnotationViewWidget *viewWidget, mViewWidgets) {
+        foreach (CellMLAnnotationViewWidget *viewWidget, mViewWidgets) {
             // Make sur that our new view widget is aware of any splitter move
             // occuring in the other view widget
 
@@ -213,7 +213,7 @@ QWidget * CellMLAnnotationViewPlugin::removeViewWidget(const QString &pFileName)
     // Remove the view widget from our list, should there be one for the given
     // file name
 
-    CellmlAnnotationViewWidget *res = mViewWidgets.value(pFileName);
+    CellMLAnnotationViewWidget *res = mViewWidgets.value(pFileName);
 
     if (res) {
         // There is a view widget for the given file name, so delete it and
@@ -242,7 +242,7 @@ void CellMLAnnotationViewPlugin::retranslateUi()
 {
     // Retranslate all of our CellML annotation view widgets
 
-    foreach (CellmlAnnotationViewWidget *viewWidget, mViewWidgets)
+    foreach (CellMLAnnotationViewWidget *viewWidget, mViewWidgets)
         viewWidget->retranslateUi();
 }
 
@@ -253,7 +253,7 @@ bool CellMLAnnotationViewPlugin::saveFile(const QString &pOldFileName,
 {
     // Retrieve the view widget associated with the 'old' file name
 
-    CellmlAnnotationViewWidget *viewWidget = mViewWidgets.value(pOldFileName);
+    CellMLAnnotationViewWidget *viewWidget = mViewWidgets.value(pOldFileName);
 
     // Save the CellML file, should we have a valid view widget
 

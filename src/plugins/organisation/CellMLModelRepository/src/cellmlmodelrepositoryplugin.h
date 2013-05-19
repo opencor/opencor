@@ -23,7 +23,7 @@ PLUGININFO_FUNC CellMLModelRepositoryPluginInfo();
 
 //==============================================================================
 
-class CellmlModelRepositoryWindow;
+class CellMLModelRepositoryWindow;
 
 //==============================================================================
 
@@ -47,9 +47,9 @@ public:
     virtual void retranslateUi();
 
 private:
-    QAction *mCellmlModelRepositoryAction;
+    QAction *mCellMLModelRepositoryAction;
 
-    CellmlModelRepositoryWindow *mCellmlModelRepositoryWindow;
+    CellMLModelRepositoryWindow *mCellMLModelRepositoryWindow;
 };
 
 //==============================================================================

@@ -18,8 +18,8 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileManager::CellmlFileManager() :
-    mCellmlFiles(CellmlFiles())
+CellMLFileManager::CellMLFileManager() :
+    mCellMLFiles(CellMLFiles())
 {
     // Create some connections to keep track of some events related to our
     // 'global' file manager
@@ -37,69 +37,69 @@ CellmlFileManager::CellmlFileManager() :
 
 //==============================================================================
 
-CellmlFileManager::~CellmlFileManager()
+CellMLFileManager::~CellMLFileManager()
 {
     // Remove all the managed files
 
-    foreach (CellmlFile *cellmlFile, mCellmlFiles)
+    foreach (CellMLFile *cellmlFile, mCellMLFiles)
         delete cellmlFile;
 }
 
 //==============================================================================
 
-CellmlFileManager * CellmlFileManager::instance()
+CellMLFileManager * CellMLFileManager::instance()
 {
     // Return the 'global' instance of our CellML file manager class
 
-    static CellmlFileManager instance;
+    static CellMLFileManager instance;
 
-    return static_cast<CellmlFileManager *>(Core::globalInstance("OpenCOR::CellMLSupport::CellmlFileManager",
+    return static_cast<CellMLFileManager *>(Core::globalInstance("OpenCOR::CellMLSupport::CellMLFileManager",
                                                                  &instance));
 }
 
 //==============================================================================
 
-CellmlFile * CellmlFileManager::cellmlFile(const QString &pFileName)
+CellMLFile * CellMLFileManager::cellmlFile(const QString &pFileName)
 {
-    // Return the CellmlFile object, if any, associated with the requested file
+    // Return the CellMLFile object, if any, associated with the requested file
 
-    return mCellmlFiles.value(Core::nativeCanonicalFileName(pFileName));
+    return mCellMLFiles.value(Core::nativeCanonicalFileName(pFileName));
 }
 
 //==============================================================================
 
-void CellmlFileManager::manageFile(const QString &pFileName)
+void CellMLFileManager::manageFile(const QString &pFileName)
 {
-    if (isCellmlFile(pFileName))
+    if (isCellMLFile(pFileName))
         // We are dealing with a CellML file, so we can add it to our list of
         // managed CellML files
 
-        mCellmlFiles.insert(pFileName, new CellmlFile(pFileName));
+        mCellMLFiles.insert(pFileName, new CellMLFile(pFileName));
 }
 
 //==============================================================================
 
-void CellmlFileManager::unmanageFile(const QString &pFileName)
+void CellMLFileManager::unmanageFile(const QString &pFileName)
 {
-    if (isCellmlFile(pFileName)) {
+    if (isCellMLFile(pFileName)) {
         // We are dealing with a CellML file, so we can remove it from our list
         // of managed CellML files after having deleted it
 
         delete cellmlFile(pFileName);
 
-        mCellmlFiles.remove(pFileName);
+        mCellMLFiles.remove(pFileName);
     }
 }
 
 //==============================================================================
 
-void CellmlFileManager::renameFile(const QString &pOldFileName,
+void CellMLFileManager::renameFile(const QString &pOldFileName,
                                    const QString &pNewFileName)
 {
     // The file has been renamed, so we need to update our CellML files mapping
 
-    mCellmlFiles.insert(pNewFileName, mCellmlFiles.value(pOldFileName));
-    mCellmlFiles.remove(pOldFileName);
+    mCellMLFiles.insert(pNewFileName, mCellMLFiles.value(pOldFileName));
+    mCellMLFiles.remove(pOldFileName);
 }
 
 //==============================================================================

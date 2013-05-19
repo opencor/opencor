@@ -102,16 +102,19 @@ Plugin::Plugin(const QString &pFileName,
 
                 QPluginLoader pluginLoader(pFileName);
 
+                // These flags mean that on platforms like Linux, plugins like
+                // SingleCellLoader can make use of symbols exported by other
+                // plugins (for example, allowing LLVM generated code to reference
+                // symbols defined by the CellML Integration Service).
+                pluginLoader.setLoadHints(QLibrary::ResolveAllSymbolsHint | QLibrary::ExportExternalSymbolsHint);
+
                 if (pluginLoader.load()) {
                     // The plugin has been properly loaded, so...
-
                     mInstance = pluginLoader.instance();
-
                     mStatus = Loaded;
                 } else {
                     // The plugin couldn't be loaded for some reason (surely,
                     // this should never happen...?!), so...
-
                     mStatus = NotLoaded;
                     mStatusErrors = pluginLoader.errorString();
                 }

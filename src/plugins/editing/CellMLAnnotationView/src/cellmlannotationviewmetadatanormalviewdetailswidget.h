@@ -17,7 +17,7 @@
 //==============================================================================
 
 namespace Ui {
-    class CellmlAnnotationViewMetadataNormalViewDetailsWidget;
+    class CellMLAnnotationViewMetadataNormalViewDetailsWidget;
 }
 
 //==============================================================================
@@ -33,11 +33,11 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-class CellmlAnnotationViewWidget;
+class CellMLAnnotationViewWidget;
 
 //==============================================================================
 
-class CellmlAnnotationViewMetadataNormalViewDetailsWidget : public QScrollArea,
+class CellMLAnnotationViewMetadataNormalViewDetailsWidget : public QScrollArea,
                                                             public Core::CommonWidget
 {
     Q_OBJECT
@@ -58,8 +58,8 @@ private:
     };
 
 public:
-    explicit CellmlAnnotationViewMetadataNormalViewDetailsWidget(CellmlAnnotationViewWidget *pParent);
-    ~CellmlAnnotationViewMetadataNormalViewDetailsWidget();
+    explicit CellMLAnnotationViewMetadataNormalViewDetailsWidget(CellMLAnnotationViewWidget *pParent);
+    ~CellMLAnnotationViewMetadataNormalViewDetailsWidget();
 
     virtual void retranslateUi();
 
@@ -70,12 +70,12 @@ public:
                    const int &pVerticalScrollBarPosition = 0,
                    const bool &pRetranslate = false);
 
-    void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
+    void addRdfTriple(CellMLSupport::CellMLFileRdfTriple *pRdfTriple);
 
 private:
-    CellMLSupport::CellmlFile *mCellmlFile;
+    CellMLSupport::CellMLFile *mCellMLFile;
 
-    Ui::CellmlAnnotationViewMetadataNormalViewDetailsWidget *mGui;
+    Ui::CellMLAnnotationViewMetadataNormalViewDetailsWidget *mGui;
 
     QStackedWidget *mWidget;
 
@@ -92,7 +92,7 @@ private:
     int mVerticalScrollBarPosition;
     int mNeighbourRow;
 
-    QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *> mRdfTriplesMapping;
+    QMap<QObject *, CellMLSupport::CellMLFileRdfTriple *> mRdfTriplesMapping;
 
     QLabel *mCurrentResourceOrIdLabel;
 
@@ -111,7 +111,7 @@ Q_SIGNALS:
                            const bool &pRetranslate);
     void noLookupRequested();
 
-    void rdfTripleRemoved(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
+    void rdfTripleRemoved(CellMLSupport::CellMLFileRdfTriple *pRdfTriple);
 
 private Q_SLOTS:
     void on_actionCopy_triggered();

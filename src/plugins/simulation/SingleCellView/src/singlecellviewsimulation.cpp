@@ -3,18 +3,18 @@
 //==============================================================================
 
 #include "cellmlfileruntime.h"
-#include "corenlasolver.h"
 #include "singlecellviewcontentswidget.h"
 #include "singlecellviewinformationsimulationwidget.h"
 #include "singlecellviewinformationwidget.h"
 #include "singlecellviewsimulation.h"
 #include "singlecellviewwidget.h"
-#include "solverinterface.h"
+#include "CISBootstrap.hpp"
 
 //==============================================================================
 
 #include <QFile>
 #include <QTextStream>
+#include <QAtomicInt>
 
 //==============================================================================
 
@@ -30,114 +30,212 @@
 
 //==============================================================================
 
+#ifdef Q_OS_WIN
+#include <windows.h>
+#else
+#include <unistd.h>
+#endif
+
+
 namespace OpenCOR {
 namespace SingleCellView {
 
 //==============================================================================
 
-SingleCellViewSimulationData::SingleCellViewSimulationData(CellMLSupport::CellmlFileRuntime *pRuntime,
-                                                           const SolverInterfaces &pSolverInterfaces) :
+GrabInitialValueListener::GrabInitialValueListener(iface::cellml_services::CellMLIntegrationRun* pRun)
+    : mHadResults(false), mRun(pRun)
+{
+}
+
+void
+GrabInitialValueListener::results(const std::vector<double>& pState) throw() {
+    if (mHadResults)
+        return;
+    mHadResults = true;
+    mRun->stop();
+    mState = pState;
+    emit resultsReady();
+}
+
+void
+GrabInitialValueListener::failed(const std::string& aFailWhy) throw() {
+    solveFailure(QString::fromStdString(aFailWhy));
+}
+
+//==============================================================================
+
+ResultListener::ResultListener(iface::cellml_services::CellMLIntegrationRun* pRun,
+                               int pNStates, int pNAlgebraic)
+    : mRun(pRun), mNStates(pNStates), mNAlgebraic(pNAlgebraic), mSuspended(false)
+{
+}
+
+void
+ResultListener::suspend()
+{
+    if (mSuspended)
+        return;
+    mSuspended = true;
+    mResultMutex.lock();
+}
+
+void
+ResultListener::unsuspend()
+{
+    if (!mSuspended)
+        return;
+    mSuspended = false;
+    mResultMutex.unlock();
+}
+
+void
+ResultListener::results(const std::vector<double>& pState)
+    throw()
+{
+    std::vector<double>::const_iterator i = pState.begin();
+    while (i != pState.end()) {
+        // Briefly acquire the result mutex. This will block while we are
+        // suspended due to a pause.
+        mResultMutex.lock();
+        mResultMutex.unlock();
+        double bvar = *i++;
+        QList<double> states, rates, algebraic;
+        states.reserve(mNStates);
+        rates.reserve(mNStates);
+        algebraic.reserve(mNAlgebraic);
+        for (int j = 0; j < mNStates; j++)
+            states << *i++;
+        for (int j = 0; j < mNStates; j++)
+            rates << *i++;
+        for (int j = 0; j < mNAlgebraic; j++)
+            algebraic << *i++;
+        solvePointAvailable(bvar, states, rates, algebraic);
+
+        int delay = mDelay.load();
+        if (delay) {
+#ifdef Q_OS_WIN
+            Sleep(uint(delay));
+#else
+            usleep(delay * 1000);
+#endif
+        }
+    }
+}
+
+void
+ResultListener::done()
+    throw()
+{
+    solveDone();
+}
+
+void
+ResultListener::failed(const std::string& pFailWhy)
+    throw()
+{
+    solveFailure(QString::fromStdString(pFailWhy));
+}
+
+//==============================================================================
+
+SingleCellViewSimulationData::SingleCellViewSimulationData(CellMLSupport::CellMLFileRuntime *pRuntime) :
     mRuntime(pRuntime),
-    mSolverInterfaces(pSolverInterfaces),
+    mState(SIMSTATE_INITIAL),
+    mDebug(false),
     mDelay(0),
     mStartingPoint(0.0),
     mEndingPoint(1000.0),
     mPointInterval(1.0),
-    mOdeSolverName(QString()),
-    mOdeSolverProperties(CoreSolver::Properties()),
-    mDaeSolverName(QString()),
-    mDaeSolverProperties(CoreSolver::Properties()),
-    mNlaSolverName(QString()),
-    mNlaSolverProperties(CoreSolver::Properties())
+    mSolverName(QString()),
+    mSolverProperties(Properties())
 {
-    // Create our various arrays, if possible
-
-    if (pRuntime) {
-        // Create our various arrays to compute our model
-
-        mConstants = new double[pRuntime->constantsCount()];
-        mRates     = new double[pRuntime->ratesCount()];
-        mStates    = new double[pRuntime->statesCount()];
-        mAlgebraic = new double[pRuntime->algebraicCount()];
-        mCondVar   = new double[pRuntime->condVarCount()];
-
-        // Create our various arrays to keep track of our various initial values
-
-        mInitialConstants = new double[pRuntime->constantsCount()];
-        mInitialStates    = new double[pRuntime->statesCount()];
-    } else {
-        mConstants = mRates = mStates = mAlgebraic = mCondVar = 0;
-        mInitialConstants = mInitialStates = 0;
-    }
+    ensureCodeCompiled();
 }
 
 //==============================================================================
 
 SingleCellViewSimulationData::~SingleCellViewSimulationData()
 {
-    // Delete some internal objects
-
-    delete[] mConstants;
-    delete[] mRates;
-    delete[] mStates;
-    delete[] mAlgebraic;
-    delete[] mCondVar;
-
-    delete[] mInitialConstants;
-    delete[] mInitialStates;
+    stopAllSimulations();
 }
 
 //==============================================================================
 
-double * SingleCellViewSimulationData::constants() const
+void SingleCellViewSimulationData::ensureCodeCompiled()
 {
-    // Return our constants array
+    if (mRuntime) {
+        bool isDAEType = isDAETypeSolver();
+        if (isDAEType)
+            mRuntime->ensureDAECompiledModel(mDebug);
+        else
+            mRuntime->ensureODECompiledModel(mDebug);
+    }
+}
 
-    return mConstants;
+void SingleCellViewSimulationData::setDebug(bool pDebug)
+{
+    if (mDebug == pDebug)
+        return;
+
+    mDebug = pDebug;
+    stopAllSimulations();
+
+    // Debug mode uses a completely different compiled model.
+    if (mRuntime)
+        ensureCodeCompiled();
+
+    // We need to recalculate everything, as debug mode might pick up problems
+    // during the recalculation.
+    reset();
 }
 
 //==============================================================================
 
-double * SingleCellViewSimulationData::rates() const
+void SingleCellViewSimulationData::setPoint
+(
+ const QList<double>& pStates,
+ const QList<double>& pRates,
+ const QList<double>& pAlgebraic
+)
 {
-    // Return our rates array
-
-    return mRates;
+    mStates = pStates;
+    mRates = pRates;
+    mAlgebraic = pAlgebraic;
 }
 
 //==============================================================================
 
-double * SingleCellViewSimulationData::states() const
+void SingleCellViewSimulationData::pause()
 {
-    // Return our states array
+    if (mState != SingleCellViewSimulationData::SIMSTATE_WAITING_RESULTS)
+        return;
 
-    return mStates;
+    if (mResultReceiver)
+        mResultReceiver->suspend();
+
+    mState = SingleCellViewSimulationData::SIMSTATE_PAUSED;
+    if (mIntegrationRun)
+        mIntegrationRun->pause();
 }
 
-//==============================================================================
-
-double * SingleCellViewSimulationData::algebraic() const
+void SingleCellViewSimulationData::resume()
 {
-    // Return our algebraic array
+    if (mResultReceiver)
+        mResultReceiver->unsuspend();
 
-    return mAlgebraic;
+    if (mIntegrationRun &&
+        mState == SingleCellViewSimulationData::SIMSTATE_PAUSED)
+    {
+        mState = SingleCellViewSimulationData::SIMSTATE_WAITING_RESULTS;
+        mIntegrationRun->resume();
+    }
 }
 
-//==============================================================================
-
-double * SingleCellViewSimulationData::condVar() const
-{
-    // Return our condVar array
-
-    return mCondVar;
-}
 
 //==============================================================================
 
 int SingleCellViewSimulationData::delay() const
 {
-    // Return our delay
-
     return mDelay;
 }
 
@@ -145,9 +243,9 @@ int SingleCellViewSimulationData::delay() const
 
 void SingleCellViewSimulationData::setDelay(const int &pDelay)
 {
-    // Set our delay
-
     mDelay = pDelay;
+    if (mResultReceiver)
+        mResultReceiver->delay(mDelay);
 }
 
 //==============================================================================
@@ -165,11 +263,9 @@ void SingleCellViewSimulationData::setStartingPoint(const double &pStartingPoint
                                                     const bool &pRecompute)
 {
     // Set our starting point
-
     mStartingPoint = pStartingPoint;
 
     // Recompute our 'computed constants' and 'variables'
-
     if (pRecompute)
         recomputeComputedConstantsAndVariables();
 }
@@ -179,7 +275,6 @@ void SingleCellViewSimulationData::setStartingPoint(const double &pStartingPoint
 double SingleCellViewSimulationData::endingPoint() const
 {
     // Return our ending point
-
     return mEndingPoint;
 }
 
@@ -188,7 +283,6 @@ double SingleCellViewSimulationData::endingPoint() const
 void SingleCellViewSimulationData::setEndingPoint(const double &pEndingPoint)
 {
     // Set our ending point
-
     mEndingPoint = pEndingPoint;
 }
 
@@ -197,7 +291,6 @@ void SingleCellViewSimulationData::setEndingPoint(const double &pEndingPoint)
 double SingleCellViewSimulationData::pointInterval() const
 {
     // Return our point interval
-
     return mPointInterval;
 }
 
@@ -206,309 +299,343 @@ double SingleCellViewSimulationData::pointInterval() const
 void SingleCellViewSimulationData::setPointInterval(const double &pPointInterval)
 {
     // Set our point interval
-
     mPointInterval = pPointInterval;
 }
 
 //==============================================================================
 
-QString SingleCellViewSimulationData::odeSolverName() const
+QString SingleCellViewSimulationData::solverName() const
 {
     // Return our ODE solver name
-
-    return mRuntime->needOdeSolver()?mOdeSolverName:QString();
+    return mSolverName;
 }
 
 //==============================================================================
 
-void SingleCellViewSimulationData::setOdeSolverName(const QString &pOdeSolverName)
+void SingleCellViewSimulationData::setSolverName(const QString &pSolverName)
 {
-    // Set our ODE solver name
+    if (mSolverName == pSolverName)
+        return;
 
-    if (mRuntime->needOdeSolver())
-        mOdeSolverName = pOdeSolverName;
+    // Set our ODE solver name
+    mSolverName = pSolverName;
+
+    stopAllSimulations();
+
+    ensureCodeCompiled();
 }
 
 //==============================================================================
 
-CoreSolver::Properties SingleCellViewSimulationData::odeSolverProperties() const
+bool SingleCellViewSimulationData::isDAETypeSolver() const
+{
+    return (mSolverName == "IDA");
+}
+
+//==============================================================================
+
+Properties SingleCellViewSimulationData::solverProperties() const
 {
     // Return our ODE solver's properties
-
-    return mRuntime->needOdeSolver()?mOdeSolverProperties:CoreSolver::Properties();
+    return mSolverProperties;
 }
 
 //==============================================================================
 
-void SingleCellViewSimulationData::addOdeSolverProperty(const QString &pName,
-                                                        const QVariant &pValue)
+void SingleCellViewSimulationData::addSolverProperty(const QString &pName,
+                                                     const QVariant &pValue)
 {
     // Add an ODE solver property
-
-    if (mRuntime->needOdeSolver())
-        mOdeSolverProperties.insert(pName, pValue);
+    mSolverProperties.insert(pName, pValue);
 }
 
 //==============================================================================
 
-QString SingleCellViewSimulationData::daeSolverName() const
+// Asks all solver threads that might be returning data to stop. It is possible
+// that solvers will not immediately notice the change. All signals are also
+// disconnected, so no new data will be received after this is called.
+void SingleCellViewSimulationData::stopAllSimulations()
 {
-    // Return our DAE solver name
+    if (mIntegrationRun) {
+        mIntegrationRun->stop();
+        mIntegrationRun = NULL;
+    }
 
-    return mRuntime->needDaeSolver()?mDaeSolverName:QString();
+    if (mIVGrabber) {
+        mIVGrabber->disconnect();
+        mIVGrabber = NULL;
+    }
+
+    if (mResultReceiver)
+    {
+        mResultReceiver->disconnect();
+        // So it doesn't hang around for a long time processing cached data from
+        // before the stop takes effect.
+        mResultReceiver->delay(0);
+        mResultReceiver->unsuspend();
+        mResultReceiver = NULL;
+    }
+
+    if (mState == SIMSTATE_WAITING_IV)
+        mState = SIMSTATE_INITIAL;
+    else if (mState == SIMSTATE_WAITING_RESULTS ||
+             mState == SIMSTATE_PAUSED)
+        mState = SIMSTATE_GOT_IV;
 }
 
-//==============================================================================
-
-void SingleCellViewSimulationData::setDaeSolverName(const QString &pDaeSolverName)
+void SingleCellViewSimulationData::newIntegrationRun()
 {
-    // Set our DAE solver name
+    if (!mRuntime || !mRuntime->isValid())
+        return;
+    if (isDAETypeSolver() ? !mRuntime->daeCompiledModel() :
+        !mRuntime->odeCompiledModel())
+        return;
 
-    if (mRuntime->needDaeSolver())
-        mDaeSolverName = pDaeSolverName;
-}
+    ObjRef<iface::cellml_services::CellMLIntegrationService> cis(CreateIntegrationService());
+    if (isDAETypeSolver())
+        mIntegrationRun = cis->createDAEIntegrationRun(mRuntime->daeCompiledModel());
+    else
+    {
+        mIntegrationRun = cis->createODEIntegrationRun(mRuntime->odeCompiledModel());
+        ObjRef<iface::cellml_services::ODESolverRun>
+            odeRun(QueryInterface(mIntegrationRun));
 
-//==============================================================================
-
-CoreSolver::Properties SingleCellViewSimulationData::daeSolverProperties() const
-{
-    // Return our DAE solver's properties
-
-    return mRuntime->needDaeSolver()?mDaeSolverProperties:CoreSolver::Properties();
-}
-
-//==============================================================================
-
-void SingleCellViewSimulationData::addDaeSolverProperty(const QString &pName,
-                                                        const QVariant &pValue)
-{
-    // Add an DAE solver property
-
-    if (mRuntime->needDaeSolver())
-        mDaeSolverProperties.insert(pName, pValue);
-}
-
-//==============================================================================
-
-QString SingleCellViewSimulationData::nlaSolverName() const
-{
-    // Return our NLA solver name
-
-    return mRuntime->needNlaSolver()?mNlaSolverName:QString();
-}
-
-//==============================================================================
-
-void SingleCellViewSimulationData::setNlaSolverName(const QString &pNlaSolverName,
-                                                    const bool &pReset)
-{
-    // Set our NLA solver name
-
-    if (mRuntime->needNlaSolver()) {
-        mNlaSolverName = pNlaSolverName;
-
-        // Reset our model parameter values, if required
-        // Note: to only recompute our 'computed constants' and 'variables' is
-        //       not sufficient since some constants may also need to be
-        //       reinitialised...
-
-        if (pReset)
-            reset();
+        // TODO have more options than just 'CVODE', allowing user to specify
+        // which CVODE solver.
+        odeRun->stepType(iface::cellml_services::BDF_IMPLICIT_1_5_SOLVE);
     }
 }
-
-//==============================================================================
-
-CoreSolver::Properties SingleCellViewSimulationData::nlaSolverProperties() const
-{
-    // Return our NLA solver's properties
-
-    return mRuntime->needNlaSolver()?mNlaSolverProperties:CoreSolver::Properties();
-}
-
-//==============================================================================
-
-void SingleCellViewSimulationData::addNlaSolverProperty(const QString &pName,
-                                                        const QVariant &pValue,
-                                                        const bool &pReset)
-{
-    // Add an NLA solver property
-
-    if (mRuntime->needNlaSolver()) {
-        mNlaSolverProperties.insert(pName, pValue);
-
-        // Reset our model parameter values, if required
-        // Note: to only recompute our 'computed constants' and 'variables' is
-        //       not sufficient since some constants may also need to be
-        //       reinitialised...
-
-        if (pReset)
-            reset();
-    }
-}
-
-//==============================================================================
 
 void SingleCellViewSimulationData::reset()
 {
+    stopAllSimulations();
+    newIntegrationRun();
+
+    if (!mIntegrationRun)
+        return;
+
     // Reset our model parameter values which means both initialising our
     // 'constants' and computing our 'computed constants' and 'variables'
-    // Note #1: we must check whether our runtime needs NLA solver and, if so,
-    //          then retrieve an instance of our NLA solver since some of the
-    //          resetting may require solving one or several NLA systems...
-    // Note #2: recomputeComputedConstantsAndVariables() will let people know
-    //          that our data has changed...
+    mConstants.clear();
+    mStates.clear();
+    mRates.clear();
+    mAlgebraic.clear();
+    mCondVar.clear();
 
-    CoreSolver::CoreNlaSolver *nlaSolver = 0;
+    mState = SingleCellViewSimulationData::SIMSTATE_WAITING_IV;
+    mIVGrabber = new GrabInitialValueListener(mIntegrationRun);
+    mDidReset = true;
+    QObject::connect(mIVGrabber, SIGNAL(resultsReady()), this, SLOT(initialValuesIn()));
+    QObject::connect(mIVGrabber, SIGNAL(solveFailure(QString)), this, SLOT(initialValuesFailed(QString)));
+    mIntegrationRun->setProgressObserver(mIVGrabber);
+    mIntegrationRun->setResultRange(mStartingPoint, mStartingPoint, 1);
+    
+    mIntegrationRun->start();
+}
 
-    if (mRuntime->needNlaSolver()) {
-        // Retrieve an instance of our NLA solver
+void SingleCellViewSimulationData::initialValuesIn()
+{
+    iface::cellml_services::CellMLCompiledModel*
+        compModel(isDAETypeSolver() ?
+                  static_cast<iface::cellml_services::CellMLCompiledModel*>
+                  (mRuntime->daeCompiledModel()) :
+                  static_cast<iface::cellml_services::CellMLCompiledModel*>
+                  (mRuntime->odeCompiledModel()));
+    ObjRef<iface::cellml_services::CodeInformation> codeInfo
+        (compModel->codeInformation());
 
-        foreach (SolverInterface *solverInterface, mSolverInterfaces)
-            if (!solverInterface->name().compare(mNlaSolverName)) {
-                // The requested NLA solver was found, so retrieve an instance
-                // of it
+    mState = SingleCellViewSimulationData::SIMSTATE_GOT_IV;
 
-                nlaSolver = static_cast<CoreSolver::CoreNlaSolver *>(solverInterface->instance());
-
-                // Keep track of our NLA solver, so that doNonLinearSolve() can
-                // work as expected
-
-                CoreSolver::setNlaSolver(mRuntime->address(), nlaSolver);
-
-                break;
-            }
-
-        // Keep track of any error that might be reported by our NLA solver
-
-        connect(nlaSolver, SIGNAL(error(const QString &)),
-                this, SIGNAL(error(const QString &)));
-
-        // Initialise our NLA solver
-
-        nlaSolver->setProperties(mNlaSolverProperties);
+    if (mDidReset)
+    {
+      mInitialConstants.clear();
+      mInitialConstants.reserve(codeInfo->constantIndexCount());
+      mInitialStates.clear();
+      mInitialStates.reserve(codeInfo->rateIndexCount());
     }
 
-    // Reset our model parameter values
+    mConstants.clear();
+    mConstants.reserve(codeInfo->constantIndexCount());
 
-    memset(mConstants, 0, mRuntime->constantsCount()*OpenCOR::CoreSolver::SizeOfDouble);
-    memset(mRates, 0, mRuntime->ratesCount()*OpenCOR::CoreSolver::SizeOfDouble);
-    memset(mStates, 0, mRuntime->statesCount()*OpenCOR::CoreSolver::SizeOfDouble);
-    memset(mAlgebraic, 0, mRuntime->algebraicCount()*OpenCOR::CoreSolver::SizeOfDouble);
-    memset(mCondVar, 0, mRuntime->condVarCount()*OpenCOR::CoreSolver::SizeOfDouble);
+    std::cout << "Computed " << mIVGrabber->consts().size() << " constants and "
+              << mIVGrabber->states().size() << " initial values." << std::endl;
+        
 
-    mRuntime->initializeConstants()(mConstants, mRates, mStates);
-    recomputeComputedConstantsAndVariables();
-
-    // Delete our NLA solver, if any
-
-    if (nlaSolver) {
-        delete nlaSolver;
-
-        CoreSolver::unsetNlaSolver(mRuntime->address());
+    for (std::vector<double>::iterator i = mIVGrabber->consts().begin();
+         i != mIVGrabber->consts().end(); i++) {
+        if (mDidReset)
+            mInitialConstants << *i;
+        mConstants << *i;
     }
 
-    // Keep track of our various initial values
+    std::vector<double>& computedData = mIVGrabber->states();
+    mStates.clear();
+    mStates.reserve(codeInfo->rateIndexCount());
+    for (unsigned int i = 0; i < codeInfo->rateIndexCount(); i++) {
+        double v = computedData[1 + i];
+        if (mDidReset)
+            mInitialStates << v;
+        mStates << v;
+    }
 
-    memcpy(mInitialConstants, mConstants, mRuntime->constantsCount()*OpenCOR::CoreSolver::SizeOfDouble);
-    memcpy(mInitialStates, mStates, mRuntime->statesCount()*OpenCOR::CoreSolver::SizeOfDouble);
+    mRates.clear();
+    mRates.reserve(codeInfo->rateIndexCount());
+    const unsigned int rateOffset = codeInfo->rateIndexCount() + 1;
+    for (unsigned int i = 0; i < codeInfo->rateIndexCount(); i++) {
+      mRates << computedData[rateOffset + i];
+    }
+    
+    mAlgebraic.clear();
+    mAlgebraic.reserve(codeInfo->algebraicIndexCount());
+    const unsigned int algebraicOffset = codeInfo->rateIndexCount() * 2 + 1;
+    for (unsigned int i = 0; i < codeInfo->algebraicIndexCount(); i++) {
+      mAlgebraic << computedData[algebraicOffset + i];
+    }
 
+    emit updated();
+    emit modified(this, !mDidReset);
+}
+
+void SingleCellViewSimulationData::initialValuesFailed(QString pError)
+{
     // Let people know that our data is 'cleaned', i.e. not modified
+    emit modified(this, false);
 
-    emit modified(false);
+    emit error("Problem computing initial values: " + pError);
 }
 
 //==============================================================================
 
+// Recompute our 'computed constants' and 'variables', if possible
 void SingleCellViewSimulationData::recomputeComputedConstantsAndVariables()
 {
-    // Recompute our 'computed constants' and 'variables', if possible
+    stopAllSimulations();
+    newIntegrationRun();
+    
+    if (!mIntegrationRun)
+        return;
 
-    if (mRuntime && mRuntime->isValid()) {
-        mRuntime->computeComputedConstants()(mConstants, mRates, mStates);
+    mState = SingleCellViewSimulationData::SIMSTATE_WAITING_IV;
+    mIVGrabber = new GrabInitialValueListener(mIntegrationRun);
+    mDidReset = false;
+    QObject::connect(mIVGrabber, SIGNAL(resultsReady()), this, SLOT(initialValuesIn()));
+    QObject::connect(mIVGrabber, SIGNAL(solveFailure(QString)), this, SLOT(initialValuesFailed(QString)));
+    mIntegrationRun->setProgressObserver(mIVGrabber);
+    mIntegrationRun->setResultRange(mStartingPoint, mStartingPoint, 1);
+    setupOverrides();
 
-        if (mRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)
-            mRuntime->computeOdeVariables()(mStartingPoint, mConstants, mRates, mStates, mAlgebraic);
-        else
-            mRuntime->computeDaeVariables()(mStartingPoint, mConstants, mRates, mStates, mAlgebraic, mCondVar);
+    mIntegrationRun->start();
+}
 
-        // Let people know that our data has been updated
+void SingleCellViewSimulationData::setupOverrides()
+{
+    iface::cellml_services::CellMLCompiledModel*
+        compModel(isDAETypeSolver() ?
+                  static_cast<iface::cellml_services::CellMLCompiledModel*>
+                  (mRuntime->daeCompiledModel()) :
+                  static_cast<iface::cellml_services::CellMLCompiledModel*>
+                  (mRuntime->odeCompiledModel()));
+    ObjRef<iface::cellml_services::CodeInformation> codeInfo
+        (compModel->codeInformation());
+    
+    for (unsigned int i = 0; i < codeInfo->constantIndexCount(); i++)
+        if (mInitialConstants[i] != mConstants[i])
+            mIntegrationRun->setOverride(iface::cellml_services::CONSTANT,
+                                         i, mConstants[i]);
+    for (unsigned int i = 0; i < codeInfo->rateIndexCount(); i++)
+        if (mInitialStates[i] != mStates[i])
+            mIntegrationRun->setOverride(iface::cellml_services::STATE_VARIABLE,
+                                         i, mStates[i]);
+}
 
-        emit updated();
+//==============================================================================
+
+/**
+ * Sends a modified signal if and only if any data has been changed since the
+ * last time reset() was called.
+ */
+void SingleCellViewSimulationData::checkForModifications()
+{
+    iface::cellml_services::CellMLCompiledModel*
+        compModel(isDAETypeSolver() ?
+                  static_cast<iface::cellml_services::CellMLCompiledModel*>
+                  (mRuntime->daeCompiledModel()) :
+                  static_cast<iface::cellml_services::CellMLCompiledModel*>
+                  (mRuntime->odeCompiledModel()));
+    ObjRef<iface::cellml_services::CodeInformation> codeInfo
+        (compModel->codeInformation());
+    
+    bool foundChange = false;
+    for (unsigned int i = 0; i < codeInfo->constantIndexCount(); i++)
+        if (!qIsFinite(mInitialConstants[i]) ||
+            mInitialConstants[i] != mConstants[i]) {
+            foundChange = true;
+            break;
+        }
+    if (!foundChange)
+        for (unsigned int i = 0; i < codeInfo->rateIndexCount(); i++)
+            if (!qIsFinite(mInitialStates[i]) ||
+                mInitialStates[i] != mStates[i]) {
+                foundChange = true;
+                break;
+            }
+    if (foundChange) {
+        emit modified(this, true);
+        return;
     }
 }
 
-//==============================================================================
-
-void SingleCellViewSimulationData::recomputeVariables(const double &pCurrentPoint,
-                                                      const bool &pEmitSignal)
+void SingleCellViewSimulationData::startMainSimulation(SingleCellViewSimulation* pSignalsTo)
 {
-    // Recompute our 'variables'
+    stopAllSimulations();
+    newIntegrationRun();
 
-    if (mRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)
-        mRuntime->computeOdeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic);
-    else
-        mRuntime->computeDaeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic, mCondVar);
+    if (!mIntegrationRun)
+        return;
 
-    // Let people know that our data has been updated, if requested
-    // Note: recomputeVariables() will normally be called many times when
-    //       running a simulation to ensure that all of our 'variables' are
-    //       up-to-date and to emit loads of signals wouldn't be a good idea,
-    //       hence the caller can decide whether to emit a signal or not...
+    mState = SingleCellViewSimulationData::SIMSTATE_WAITING_RESULTS;
 
-    if (pEmitSignal)
-        emit updated();
+    iface::cellml_services::CellMLCompiledModel*
+        compModel(isDAETypeSolver() ?
+                  static_cast<iface::cellml_services::CellMLCompiledModel*>
+                  (mRuntime->daeCompiledModel()) :
+                  static_cast<iface::cellml_services::CellMLCompiledModel*>
+                  (mRuntime->odeCompiledModel()));
+    ObjRef<iface::cellml_services::CodeInformation> codeInfo
+        (compModel->codeInformation());
+
+    mResultReceiver = new ResultListener(mIntegrationRun, codeInfo->rateIndexCount(),
+                                         codeInfo->algebraicIndexCount());
+    mResultReceiver->delay(mDelay);
+
+    mIntegrationRun->setStepSizeControl(mSolverProperties["absTol"].toDouble(),
+                                        mSolverProperties["relTol"].toDouble(),
+                                        1.0, // Scaling factor: states
+                                        1.0, // Scaling factor: rates
+                                        mSolverProperties["maxStep"].toDouble());
+    mIntegrationRun->setResultRange(mStartingPoint, mEndingPoint,
+                                    10000.0 // Maximum density of points in bvar, as an upper bound on the number
+                                            // of points returned.
+                                   );
+    mIntegrationRun->setProgressObserver(mResultReceiver);
+
+    QObject::connect(mResultReceiver, SIGNAL(solveDone()), pSignalsTo, SLOT(simulationComplete()));
+    QObject::connect(mResultReceiver, SIGNAL(solveFailure(QString)), pSignalsTo, SLOT(simulationFailed(QString)));
+    QObject::connect(mResultReceiver, SIGNAL(solvePointAvailable(double,QList<double>,QList<double>,QList<double>)), pSignalsTo, SLOT(simulationDataAvailable(double,QList<double>,QList<double>,QList<double>)));
+
+    setupOverrides();
+    mIntegrationRun->start();
 }
 
 //==============================================================================
 
-void SingleCellViewSimulationData::checkForModifications()
-{
-    // Check whether any of our constants or states has been modified
-
-    foreach (CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter, mRuntime->modelParameters())
-        switch (modelParameter->type()) {
-        case CellMLSupport::CellmlFileRuntimeModelParameter::Constant:
-            if (   !qIsFinite(mConstants[modelParameter->index()])
-                || (mConstants[modelParameter->index()] != mInitialConstants[modelParameter->index()])) {
-                emit modified(true);
-
-                return;
-            }
-
-            break;
-        case CellMLSupport::CellmlFileRuntimeModelParameter::State:
-            if (   !qIsFinite(mStates[modelParameter->index()])
-                || (mStates[modelParameter->index()] != mInitialStates[modelParameter->index()])) {
-                emit modified(true);
-
-                return;
-            }
-
-            break;
-        default:
-            // Either Voi, ComputedConstant, Rate, Algebraic or Undefined, so...
-
-            ;
-        }
-
-    // Let people know that no data has been modified
-
-    emit modified(false);
-}
-
-//==============================================================================
-
-SingleCellViewSimulationResults::SingleCellViewSimulationResults(CellMLSupport::CellmlFileRuntime *pRuntime,
-                                                                 SingleCellViewSimulation *pSimulation) :
+SingleCellViewSimulationResults::SingleCellViewSimulationResults
+(
+ CellMLSupport::CellMLFileRuntime *pRuntime,
+ SingleCellViewSimulation *pSimulation
+) :
     mRuntime(pRuntime),
-    mSimulation(pSimulation),
-    mSize(0),
-    mPoints(0),
-    mConstants(0),
-    mRates(0),
-    mStates(0),
-    mAlgebraic(0)
+    mSimulation(pSimulation)
 {
 }
 
@@ -516,208 +643,34 @@ SingleCellViewSimulationResults::SingleCellViewSimulationResults(CellMLSupport::
 
 SingleCellViewSimulationResults::~SingleCellViewSimulationResults()
 {
-    // Delete some internal objects
-
-    deleteArrays();
 }
 
 //==============================================================================
 
-bool SingleCellViewSimulationResults::createArrays()
+void SingleCellViewSimulationResults::reset()
 {
-    // Retrieve the size of our data and make sure that it is valid
-
-    qulonglong simulationSize = qulonglong(mSimulation->size());
-
-    if (!simulationSize)
-        return true;
-
-    // Create our points array
-
-    try {
-        mPoints = new double[simulationSize];
-    } catch(...) {
-        return false;
-    }
-
-    // Create our constants arrays
-
-    try {
-        mConstants = new double*[mRuntime->constantsCount()];
-
-        memset(mConstants, 0, mRuntime->constantsCount()*OpenCOR::CoreSolver::SizeOfDoublePointer);
-    } catch(...) {
-        deleteArrays();
-
-        return false;
-    }
-
-    for (int i = 0, iMax = mRuntime->constantsCount(); i < iMax; ++i)
-        try {
-            mConstants[i] = new double[simulationSize];
-        } catch(...) {
-            deleteArrays();
-
-            return false;
-        }
-
-    // Create our rates arrays
-
-    try {
-        mRates = new double*[mRuntime->ratesCount()];
-
-        memset(mRates, 0, mRuntime->ratesCount()*OpenCOR::CoreSolver::SizeOfDoublePointer);
-    } catch(...) {
-        deleteArrays();
-
-        return false;
-    }
-
-    for (int i = 0, iMax = mRuntime->ratesCount(); i < iMax; ++i)
-        try {
-            mRates[i] = new double[simulationSize];
-        } catch(...) {
-            deleteArrays();
-
-            return false;
-        }
-
-    // Create our states arrays
-
-    try {
-        mStates = new double*[mRuntime->statesCount()];
-
-        memset(mStates, 0, mRuntime->statesCount()*OpenCOR::CoreSolver::SizeOfDoublePointer);
-    } catch(...) {
-        deleteArrays();
-
-        return false;
-    }
-
-    for (int i = 0, iMax = mRuntime->statesCount(); i < iMax; ++i)
-        try {
-            mStates[i] = new double[simulationSize];
-        } catch(...) {
-            deleteArrays();
-
-            return false;
-        }
-
-    // Create our algebraic arrays
-
-    try {
-        mAlgebraic = new double*[mRuntime->algebraicCount()];
-
-        memset(mAlgebraic, 0, mRuntime->algebraicCount()*OpenCOR::CoreSolver::SizeOfDoublePointer);
-    } catch(...) {
-        deleteArrays();
-
-        return false;
-    }
-
-    for (int i = 0, iMax = mRuntime->algebraicCount(); i < iMax; ++i)
-        try {
-            mAlgebraic[i] = new double[simulationSize];
-        } catch(...) {
-            deleteArrays();
-
-            return false;
-        }
-
-    // We could allocate all of our required memory, so...
-
-    return true;
+    mPoints.clear();
+    mStates.clear();
+    mRates.clear();
+    mAlgebraic.clear();
 }
 
 //==============================================================================
 
-void SingleCellViewSimulationResults::deleteArrays()
-{
-    // Delete our points array
-
-    delete[] mPoints;
-
-    mPoints = 0;
-
-    // Delete our constants arrays
-
-    if (mConstants)
-        for (int i = 0, iMax = mRuntime->constantsCount(); i < iMax; ++i)
-            delete[] mConstants[i];
-
-    delete mConstants;
-
-    mConstants = 0;
-
-    // Delete our rates arrays
-
-    if (mRates)
-        for (int i = 0, iMax = mRuntime->ratesCount(); i < iMax; ++i)
-            delete[] mRates[i];
-
-    delete mRates;
-
-    mRates = 0;
-
-    // Delete our states arrays
-
-    if (mStates)
-        for (int i = 0, iMax = mRuntime->statesCount(); i < iMax; ++i)
-            delete[] mStates[i];
-
-    delete mStates;
-
-    mStates = 0;
-
-    // Delete our algebraic arrays
-
-    if (mAlgebraic)
-        for (int i = 0, iMax = mRuntime->algebraicCount(); i < iMax; ++i)
-            delete[] mAlgebraic[i];
-
-    delete mAlgebraic;
-
-    mAlgebraic = 0;
-}
-
-//==============================================================================
-
-bool SingleCellViewSimulationResults::reset(const bool &pCreateArrays)
-{
-    // Reset our size
-
-    mSize = 0;
-
-    // Reset our arrays
-
-    deleteArrays();
-
-    return pCreateArrays?createArrays():true;
-}
-
-//==============================================================================
-
-void SingleCellViewSimulationResults::addPoint(const double &pPoint)
+void SingleCellViewSimulationResults::addPoint
+(
+ const double &pPoint,
+ const QList<double>& pStates,
+ const QList<double>& pRates,
+ const QList<double>& pAlgebraic
+)
 {
     // Add the data to our different arrays
 
-    mPoints[mSize] = pPoint;
-
-    for (int i = 0, iMax = mRuntime->constantsCount(); i < iMax; ++i)
-        mConstants[i][mSize] = mSimulation->data()->constants()[i];
-
-    for (int i = 0, iMax = mRuntime->ratesCount(); i < iMax; ++i)
-        mRates[i][mSize] = mSimulation->data()->rates()[i];
-
-    for (int i = 0, iMax = mRuntime->statesCount(); i < iMax; ++i)
-        mStates[i][mSize] = mSimulation->data()->states()[i];
-
-    for (int i = 0, iMax = mRuntime->algebraicCount(); i < iMax; ++i)
-        mAlgebraic[i][mSize] = mSimulation->data()->algebraic()[i];
-
-    // Increase our size
-
-    ++mSize;
+    mPoints    << pPoint;
+    mStates    << pStates;
+    mRates     << pRates;
+    mAlgebraic << pAlgebraic;
 }
 
 //==============================================================================
@@ -725,53 +678,7 @@ void SingleCellViewSimulationResults::addPoint(const double &pPoint)
 qulonglong SingleCellViewSimulationResults::size() const
 {
     // Return our size
-
-    return mSize;
-}
-
-//==============================================================================
-
-double * SingleCellViewSimulationResults::points() const
-{
-    // Return our points
-
-    return mPoints;
-}
-
-//==============================================================================
-
-double ** SingleCellViewSimulationResults::constants() const
-{
-    // Return our constants array
-
-    return mConstants;
-}
-
-//==============================================================================
-
-double ** SingleCellViewSimulationResults::rates() const
-{
-    // Return our rates array
-
-    return mRates;
-}
-
-//==============================================================================
-
-double ** SingleCellViewSimulationResults::states() const
-{
-    // Return our states array
-
-    return mStates;
-}
-
-//==============================================================================
-
-double ** SingleCellViewSimulationResults::algebraic() const
-{
-    // Return our algebraic array
-
-    return mAlgebraic;
+    return mPoints.size();
 }
 
 //==============================================================================
@@ -779,23 +686,20 @@ double ** SingleCellViewSimulationResults::algebraic() const
 bool SingleCellViewSimulationResults::exportToCsv(const QString &pFileName) const
 {
     // Export of all of our data to a CSV file
-
     QFile file(pFileName);
+
+    bool isDAEType = mSimulation->data()->isDAETypeSolver();
 
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         // The file can't be opened, so...
-
         file.remove();
-
         return false;
     }
 
     // Write out the contents of the CellML file to the file
-
     QTextStream out(&file);
 
     // Header
-
     static const QString Header = "%1 | %2 (%3)";
 
     out << Header.arg(mRuntime->variableOfIntegration()->component(),
@@ -803,7 +707,8 @@ bool SingleCellViewSimulationResults::exportToCsv(const QString &pFileName) cons
                       mRuntime->variableOfIntegration()->unit());
 
     for (int i = 0, iMax = mRuntime->modelParameters().count(); i < iMax; ++i) {
-        CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter = mRuntime->modelParameters()[i];
+        QSharedPointer<CellMLSupport::CellMLFileRuntimeModelParameter> modelParameter
+            (mRuntime->modelParameters()[i]);
 
         out << "," << Header.arg(modelParameter->component(),
                                  modelParameter->name()+QString(modelParameter->degree(), '\''),
@@ -814,28 +719,31 @@ bool SingleCellViewSimulationResults::exportToCsv(const QString &pFileName) cons
 
     // Data itself
 
-    for (qulonglong j = 0; j < mSize; ++j) {
+    for (int j = 0; j < mPoints.size(); ++j) {
         out << mPoints[j];
 
         for (int i = 0, iMax = mRuntime->modelParameters().count(); i < iMax; ++i) {
-            CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter = mRuntime->modelParameters()[i];
+            QSharedPointer<CellMLSupport::CellMLFileRuntimeModelParameter> modelParameter =
+                mRuntime->modelParameters()[i];
+            QSharedPointer<CellMLSupport::CellMLFileRuntimeCompiledModelParameter> compiledParameter =
+                isDAEType ? modelParameter->DAEData() : modelParameter->ODEData();
 
-            switch (modelParameter->type()) {
-            case CellMLSupport::CellmlFileRuntimeModelParameter::Constant:
-            case CellMLSupport::CellmlFileRuntimeModelParameter::ComputedConstant:
-                out << "," << mConstants[modelParameter->index()][j];
-
-                break;
-            case CellMLSupport::CellmlFileRuntimeModelParameter::Rate:
-                out << "," << mRates[modelParameter->index()][j];
-
-                break;
-            case CellMLSupport::CellmlFileRuntimeModelParameter::State:
-                out << "," << mStates[modelParameter->index()][j];
+            switch (compiledParameter->type()) {
+            case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::Constant:
+            case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::ComputedConstant:
+                out << "," << mSimulation->data()->constants()[compiledParameter->index()];
 
                 break;
-            case CellMLSupport::CellmlFileRuntimeModelParameter::Algebraic:
-                out << "," << mAlgebraic[modelParameter->index()][j];
+            case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::State:
+                out << "," << mStates[j][compiledParameter->index()];
+
+                break;
+            case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::Rate:
+                out << "," << mRates[j][compiledParameter->index()];
+
+                break;
+            case CellMLSupport::CellMLFileRuntimeCompiledModelParameter::Algebraic:
+                out << "," << mAlgebraic[j][compiledParameter->index()];
 
                 break;
             default:
@@ -860,29 +768,22 @@ bool SingleCellViewSimulationResults::exportToCsv(const QString &pFileName) cons
 //==============================================================================
 
 SingleCellViewSimulation::SingleCellViewSimulation(const QString &pFileName,
-                                                   CellMLSupport::CellmlFileRuntime *pRuntime,
-                                                   const SolverInterfaces &pSolverInterfaces) :
-    mWorker(0),
+                                                   CellMLSupport::CellMLFileRuntime *pRuntime) :
     mFileName(pFileName),
     mRuntime(pRuntime),
-    mSolverInterfaces(pSolverInterfaces),
-    mData(new SingleCellViewSimulationData(pRuntime, pSolverInterfaces)),
+    mData(new SingleCellViewSimulationData(pRuntime)),
     mResults(new SingleCellViewSimulationResults(pRuntime, this))
 {
     // Keep track of any error occurring in our data
 
     connect(mData, SIGNAL(error(const QString &)),
-            this, SIGNAL(error(const QString &)));
+            this, SLOT(reemitError(const QString &)));
 }
 
 //==============================================================================
 
 SingleCellViewSimulation::~SingleCellViewSimulation()
 {
-    // Stop our worker (just in case...)
-
-    stop();
-
     // Delete some internal objects
 
     delete mResults;
@@ -921,8 +822,7 @@ SingleCellViewSimulationResults * SingleCellViewSimulation::results() const
 bool SingleCellViewSimulation::isRunning() const
 {
     // Return whether we are running
-
-    return mWorker?mWorker->isRunning():false;
+    return (mData->state() == SingleCellViewSimulationData::SIMSTATE_WAITING_RESULTS);
 }
 
 //==============================================================================
@@ -930,17 +830,25 @@ bool SingleCellViewSimulation::isRunning() const
 bool SingleCellViewSimulation::isPaused() const
 {
     // Return whether we are paused
-
-    return mWorker?mWorker->isPaused():false;
+    return (mData->state() == SingleCellViewSimulationData::SIMSTATE_PAUSED);
 }
 
 //==============================================================================
 
 double SingleCellViewSimulation::progress() const
 {
-    // Return our progress
+    double p0 = mData->startingPoint(), pn = mData->endingPoint();
+    if (p0 == pn)
+        return 1.0;
+    double m = pn - p0;
 
-    return mWorker?mWorker->progress():0.0;
+    QList<double> p = mResults->points();
+    if (p.isEmpty())
+        return 0.0;
+
+    double pLastSoFar = p.last();
+
+    return (pLastSoFar - p0) / m;
 }
 
 //==============================================================================
@@ -963,13 +871,24 @@ double SingleCellViewSimulation::requiredMemory()
     //          simulation requires an insane amount of memory...
     // Note #2: the 1 is for mPoints in SingleCellViewSimulationResults...
 
-    return  size()
-           *( 1
-             +mRuntime->constantsCount()
-             +mRuntime->ratesCount()
-             +mRuntime->statesCount()
-             +mRuntime->algebraicCount())
-           *OpenCOR::CoreSolver::SizeOfDouble;
+    iface::cellml_services::CellMLCompiledModel*
+        compModel(mData->isDAETypeSolver() ?
+                  static_cast<iface::cellml_services::CellMLCompiledModel*>
+                  (mRuntime->daeCompiledModel()) :
+                  static_cast<iface::cellml_services::CellMLCompiledModel*>
+                  (mRuntime->odeCompiledModel()));
+    ObjRef<iface::cellml_services::CodeInformation> codeInfo
+        (compModel->codeInformation());
+
+    // This is not very accurate at all, because the solver caches a lot more
+    // information about the problem being solved, some of it bigger than any
+    // of the below (e.g. Jacobian matricies. Given the solver dependence of
+    // this size, I'm not sure this function is that useful.
+    return 
+        size() *
+        (1 + codeInfo->constantIndexCount() + codeInfo->rateIndexCount() * 3 +
+         codeInfo->algebraicIndexCount())
+        * sizeof(double);
 }
 
 //==============================================================================
@@ -980,24 +899,28 @@ bool SingleCellViewSimulation::simulationSettingsOk(const bool &pEmitError)
 
     if (mData->startingPoint() == mData->endingPoint()) {
         if (pEmitError)
-            emit error(tr("the starting and ending points cannot have the same value"));
+            emit error(this,
+                       tr("the starting and ending points cannot have the same value"));
 
         return false;
     } else if (mData->pointInterval() == 0) {
         if (pEmitError)
-            emit error(tr("the point interval cannot be equal to zero"));
+            emit error(this,
+                       tr("the point interval cannot be equal to zero"));
 
         return false;
     } else if (   (mData->startingPoint() < mData->endingPoint())
              && (mData->pointInterval() < 0)) {
         if (pEmitError)
-            emit error(tr("the ending point is greater than the starting point, so the point interval should be greater than zero"));
+            emit error(this,
+                       tr("the ending point is greater than the starting point, so the point interval should be greater than zero"));
 
         return false;
     } else if (   (mData->startingPoint() > mData->endingPoint())
              && (mData->pointInterval() > 0)) {
         if (pEmitError)
-            emit error(tr("the ending point is smaller than the starting point, so the point interval should be smaller than zero"));
+            emit error(this,
+                       tr("the ending point is smaller than the starting point, so the point interval should be smaller than zero"));
 
         return false;
     } else {
@@ -1028,83 +951,98 @@ double SingleCellViewSimulation::size()
 
 void SingleCellViewSimulation::run()
 {
-    // Initialise our worker, if not active
+    // It is only valid to run a simulation is the simulation is ready, and we
+    // are in the 'got initial value' state (i.e. we are ready to simulate, but
+    // no simulation is already running).
+    if (!simulationSettingsOk() ||
+        data()->state() != SingleCellViewSimulationData::SIMSTATE_GOT_IV)
+        return;
 
-    if (!mWorker) {
-        // First, check that our simulation settings we were given are sound
+    mLastUpdate = QTime::currentTime();
+    mRunTime = QTime::currentTime();
 
-        if (!simulationSettingsOk())
-            // Something wrong with our simulation settings, so...
+    emit running(this, true);
 
-            return;
-
-        // Create our worker
-
-        mWorker = new SingleCellViewSimulationWorker(mSolverInterfaces, mRuntime, this, &mWorker);
-
-        if (!mWorker) {
-            emit error(tr("the simulation worker could not be created"));
-
-            return;
-        }
-
-        // Create a few connections
-
-        connect(mWorker, SIGNAL(running(const bool &)),
-                this, SIGNAL(running(const bool &)));
-        connect(mWorker, SIGNAL(paused()),
-                this, SIGNAL(paused()));
-
-        connect(mWorker, SIGNAL(finished(const int &)),
-                this, SIGNAL(stopped(const int &)));
-
-        connect(mWorker, SIGNAL(error(const QString &)),
-                this, SIGNAL(error(const QString &)));
-
-        // Start our worker
-
-        mWorker->run();
-    }
+    data()->startMainSimulation(this);
 }
 
 //==============================================================================
 
 void SingleCellViewSimulation::pause()
 {
-    // Ask our worker to pause, if active
-
-    if (mWorker)
-        mWorker->pause();
+    data()->pause();
+    emit paused(this);
+    mData->checkForModifications();
 }
 
 //==============================================================================
 
 void SingleCellViewSimulation::resume()
 {
-    // Ask our worker to resume, if active
-
-    if (mWorker)
-        mWorker->resume();
+    data()->resume();
+    emit running(this, true);
 }
 
 //==============================================================================
 
 void SingleCellViewSimulation::stop()
 {
-    // Ask our worker to stop, if active
+    data()->stopAllSimulations();
+    emit stopped(this,
+                 mRunTime.elapsed());
+    emit mData->updated();
+}
 
-    if (mWorker)
-        mWorker->stop();
+void SingleCellViewSimulation::simulationComplete()
+{
+    // This catches what would otherwise be a race condition if the simulation
+    // is paused before the simulation thread sends a complete.
+    mData->resume();
+
+    // Ensure graphs are up to date by informing them there might be more data.
+    emit running(this, false);
+
+    mData->state(SingleCellViewSimulationData::SIMSTATE_GOT_IV);
+
+    emit stopped(this,
+                 mRunTime.elapsed());
+    emit mData->updated();
+}
+
+void SingleCellViewSimulation::simulationFailed(QString pError)
+{
+    // This catches what would otherwise be a race condition if the simulation
+    // is paused before the simulation thread sends a failed.
+    mData->resume();
+
+    mData->state(SingleCellViewSimulationData::SIMSTATE_GOT_IV);
+    emit error(this,
+               "Problem solving model: " + pError);
+}
+
+void SingleCellViewSimulation::simulationDataAvailable
+(
+ double pPoint,
+ QList<double> pStates,
+ QList<double> pRates,
+ QList<double> pAlgebraic
+)
+{
+    mData->setPoint(pStates, pRates, pAlgebraic);
+    mResults->addPoint(pPoint, pStates, pRates, pAlgebraic);
+    // Things seem to run slowly if we send every point this way, so rate limit
+    // it a bit.
+    if (mLastUpdate.elapsed() > 500) {
+        mLastUpdate = QTime::currentTime();
+        emit running(this, false);
+    }
 }
 
 //==============================================================================
 
-void SingleCellViewSimulation::resetWorker()
+void SingleCellViewSimulation::reemitError(const QString& pMsg)
 {
-    // Ask our worker to reset itself
-
-    if (mWorker)
-        mWorker->reset();
+    emit error(this, pMsg);
 }
 
 //==============================================================================

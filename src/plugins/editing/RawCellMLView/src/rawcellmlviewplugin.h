@@ -23,7 +23,7 @@ PLUGININFO_FUNC RawCellMLViewPluginInfo();
 
 //==============================================================================
 
-class RawCellmlViewWidget;
+class RawCellMLViewWidget;
 
 //==============================================================================
 
@@ -51,7 +51,7 @@ public:
     virtual QString viewName() const;
 
 private:
-    RawCellmlViewWidget *mViewWidget;
+    RawCellMLViewWidget *mViewWidget;
 };
 
 //==============================================================================

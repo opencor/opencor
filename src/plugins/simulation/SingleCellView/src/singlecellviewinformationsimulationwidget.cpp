@@ -112,7 +112,7 @@ void SingleCellViewInformationSimulationWidget::updatePropertiesToolTip()
 //==============================================================================
 
 void SingleCellViewInformationSimulationWidget::initialize(const QString &pFileName,
-                                                           CellMLSupport::CellmlFileRuntime *pRuntime,
+                                                           CellMLSupport::CellMLFileRuntime *pRuntime,
                                                            SingleCellViewSimulationData *pSimulationData)
 {
     // Make sure that we have a CellML file runtime

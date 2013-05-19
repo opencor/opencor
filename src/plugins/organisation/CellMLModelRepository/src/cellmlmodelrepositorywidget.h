@@ -20,12 +20,12 @@ namespace CellMLModelRepository {
 
 //==============================================================================
 
-class CellmlModelRepositoryWidget : public QWebView, public Core::CommonWidget
+class CellMLModelRepositoryWidget : public QWebView, public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
-    explicit CellmlModelRepositoryWidget(QWidget *pParent = 0);
+    explicit CellMLModelRepositoryWidget(QWidget *pParent = 0);
 
     void output(const QString &pOutput);
 

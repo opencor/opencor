@@ -27,7 +27,7 @@ PLUGININFO_FUNC CellMLAnnotationViewPluginInfo();
 
 //==============================================================================
 
-class CellmlAnnotationViewWidget;
+class CellMLAnnotationViewWidget;
 
 //==============================================================================
 
@@ -62,7 +62,7 @@ private:
     QList<int> mSizes;
     QList<int> mMetadataDetailsWidgetSizes;
 
-    QMap<QString, CellmlAnnotationViewWidget *> mViewWidgets;
+    QMap<QString, CellMLAnnotationViewWidget *> mViewWidgets;
 
 private Q_SLOTS:
     void splitterMoved(const QList<int> &pSizes);
