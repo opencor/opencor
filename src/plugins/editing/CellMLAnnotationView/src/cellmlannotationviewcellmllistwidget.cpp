@@ -28,20 +28,20 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlElementItemDelegate::paint(QPainter *pPainter,
+void CellMLAnnotationViewCellMLElementItemDelegate::paint(QPainter *pPainter,
                                                           const QStyleOptionViewItem &pOption,
                                                           const QModelIndex &pIndex) const
 {
     // Paint the item as normal, except for error/warning/category items
 
-    CellmlAnnotationViewCellmlElementItem *cellmlElementItem = static_cast<CellmlAnnotationViewCellmlElementItem *>(qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex));
+    CellMLAnnotationViewCellMLElementItem *cellmlElementItem = static_cast<CellMLAnnotationViewCellMLElementItem *>(qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex));
 
     QStyleOptionViewItemV4 option(pOption);
 
     initStyleOption(&option, pIndex);
 
-    if (   (cellmlElementItem->type() == CellmlAnnotationViewCellmlElementItem::Error)
-        || (cellmlElementItem->type() == CellmlAnnotationViewCellmlElementItem::Warning)) {
+    if (   (cellmlElementItem->type() == CellMLAnnotationViewCellMLElementItem::Error)
+        || (cellmlElementItem->type() == CellMLAnnotationViewCellMLElementItem::Warning)) {
         // This is an error/warning item, so prevent it from hoverable and make
         // it look enabled since it's actually disabled (so we can't select it),
         // yet we want to see as if it was enabled, so...
@@ -59,7 +59,7 @@ void CellmlAnnotationViewCellmlElementItemDelegate::paint(QPainter *pPainter,
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlElementItem::constructor(const bool &pCategory,
+void CellMLAnnotationViewCellMLElementItem::constructor(const bool &pCategory,
                                                         const Type &pType,
                                                         iface::cellml_api::CellMLElement *pElement,
                                                         const int &pNumber)
@@ -76,7 +76,7 @@ void CellmlAnnotationViewCellmlElementItem::constructor(const bool &pCategory,
 
 //==============================================================================
 
-CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(const bool &pError, const QString &pText) :
+CellMLAnnotationViewCellMLElementItem::CellMLAnnotationViewCellMLElementItem(const bool &pError, const QString &pText) :
     QStandardItem(pText)
 {
     // Constructor for either an error or a warning
@@ -97,7 +97,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
 
 //==============================================================================
 
-CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(const Type &pType,
+CellMLAnnotationViewCellMLElementItem::CellMLAnnotationViewCellMLElementItem(const Type &pType,
                                                                              const QString &pText) :
     QStandardItem(pText)
 {
@@ -117,7 +117,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
 
 //==============================================================================
 
-CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(const Type &pType,
+CellMLAnnotationViewCellMLElementItem::CellMLAnnotationViewCellMLElementItem(const Type &pType,
                                                                              iface::cellml_api::CellMLElement *pElement,
                                                                              const int pNumber) :
     QStandardItem()
@@ -194,7 +194,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlElementItem::setIcon(const Type &pType)
+void CellMLAnnotationViewCellMLElementItem::setIcon(const Type &pType)
 {
     // Determine the icon to be used for the item
 
@@ -260,7 +260,7 @@ void CellmlAnnotationViewCellmlElementItem::setIcon(const Type &pType)
 
 //==============================================================================
 
-bool CellmlAnnotationViewCellmlElementItem::isCategory() const
+bool CellMLAnnotationViewCellMLElementItem::isCategory() const
 {
     // Return whether the CellML element item is a category
 
@@ -269,7 +269,7 @@ bool CellmlAnnotationViewCellmlElementItem::isCategory() const
 
 //==============================================================================
 
-int CellmlAnnotationViewCellmlElementItem::type() const
+int CellMLAnnotationViewCellMLElementItem::type() const
 {
     // Return the CellML element item's type
 
@@ -278,7 +278,7 @@ int CellmlAnnotationViewCellmlElementItem::type() const
 
 //==============================================================================
 
-int CellmlAnnotationViewCellmlElementItem::number() const
+int CellMLAnnotationViewCellMLElementItem::number() const
 {
     // Return the CellML element item's number
 
@@ -287,7 +287,7 @@ int CellmlAnnotationViewCellmlElementItem::number() const
 
 //==============================================================================
 
-iface::cellml_api::CellMLElement * CellmlAnnotationViewCellmlElementItem::element() const
+iface::cellml_api::CellMLElement * CellMLAnnotationViewCellMLElementItem::element() const
 {
     // Return the CellML element item's element
 
@@ -296,10 +296,10 @@ iface::cellml_api::CellMLElement * CellmlAnnotationViewCellmlElementItem::elemen
 
 //==============================================================================
 
-CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(CellmlAnnotationViewWidget *pParent) :
+CellMLAnnotationViewCellMLListWidget::CellMLAnnotationViewCellMLListWidget(CellMLAnnotationViewWidget *pParent) :
     Widget(pParent),
-    mCellmlFile(pParent->cellmlFile()),
-    mGui(new Ui::CellmlAnnotationViewCellmlListWidget),
+    mCellMLFile(pParent->cellmlFile()),
+    mGui(new Ui::CellMLAnnotationViewCellMLListWidget),
     mIndexes(QList<QModelIndex>())
 {
     // Set up the GUI
@@ -311,7 +311,7 @@ CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(Cellm
 
     mTreeViewWidget = new Core::TreeViewWidget(pParent);
     mModel          = new QStandardItemModel(mTreeViewWidget);
-    mItemDelegate   = new CellmlAnnotationViewCellmlElementItemDelegate();
+    mItemDelegate   = new CellMLAnnotationViewCellMLElementItemDelegate();
 
     mTreeViewWidget->setModel(mModel);
     mTreeViewWidget->setItemDelegate(mItemDelegate);
@@ -367,7 +367,7 @@ CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(Cellm
 
 //==============================================================================
 
-CellmlAnnotationViewCellmlListWidget::~CellmlAnnotationViewCellmlListWidget()
+CellMLAnnotationViewCellMLListWidget::~CellMLAnnotationViewCellMLListWidget()
 {
     // Delete the GUI
 
@@ -376,7 +376,7 @@ CellmlAnnotationViewCellmlListWidget::~CellmlAnnotationViewCellmlListWidget()
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlListWidget::retranslateUi()
+void CellMLAnnotationViewCellMLListWidget::retranslateUi()
 {
     // Retranslate our GUI
 
@@ -384,54 +384,54 @@ void CellmlAnnotationViewCellmlListWidget::retranslateUi()
 
     // Retranslate some of the CellML elements in our tree view widget
 
-    retranslateDataItem(static_cast<CellmlAnnotationViewCellmlElementItem *>(mModel->invisibleRootItem()));
+    retranslateDataItem(static_cast<CellMLAnnotationViewCellMLElementItem *>(mModel->invisibleRootItem()));
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlListWidget::retranslateDataItem(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem)
+void CellMLAnnotationViewCellMLListWidget::retranslateDataItem(CellMLAnnotationViewCellMLElementItem *pCellMLElementItem)
 {
     // Retranslate some of the CellML element's children
 
-    for (int i = 0, iMax = pCellmlElementItem->rowCount(); i < iMax; ++i)
-        retranslateDataItem(static_cast<CellmlAnnotationViewCellmlElementItem *>(pCellmlElementItem->child(i)));
+    for (int i = 0, iMax = pCellMLElementItem->rowCount(); i < iMax; ++i)
+        retranslateDataItem(static_cast<CellMLAnnotationViewCellMLElementItem *>(pCellMLElementItem->child(i)));
 
     // Check whether we are dealing with a category
 
-    if (pCellmlElementItem->isCategory())
+    if (pCellMLElementItem->isCategory())
         // We are dealing with a category, so retranslate its type
 
-        switch (pCellmlElementItem->type()) {
-        case CellmlAnnotationViewCellmlElementItem::Import:
-            pCellmlElementItem->setText(tr("Imports"));
+        switch (pCellMLElementItem->type()) {
+        case CellMLAnnotationViewCellMLElementItem::Import:
+            pCellMLElementItem->setText(tr("Imports"));
 
             break;
-        case CellmlAnnotationViewCellmlElementItem::Unit:
-            pCellmlElementItem->setText(tr("Units"));
+        case CellMLAnnotationViewCellMLElementItem::Unit:
+            pCellMLElementItem->setText(tr("Units"));
 
             break;
-        case CellmlAnnotationViewCellmlElementItem::Component:
-            pCellmlElementItem->setText(tr("Components"));
+        case CellMLAnnotationViewCellMLElementItem::Component:
+            pCellMLElementItem->setText(tr("Components"));
 
             break;
-        case CellmlAnnotationViewCellmlElementItem::Variable:
-            pCellmlElementItem->setText(tr("Variables"));
+        case CellMLAnnotationViewCellMLElementItem::Variable:
+            pCellMLElementItem->setText(tr("Variables"));
 
             break;
-        case CellmlAnnotationViewCellmlElementItem::Group:
-            pCellmlElementItem->setText(tr("Groups"));
+        case CellMLAnnotationViewCellMLElementItem::Group:
+            pCellMLElementItem->setText(tr("Groups"));
 
             break;
-        case CellmlAnnotationViewCellmlElementItem::RelationshipReference:
-            pCellmlElementItem->setText(tr("Relationship References"));
+        case CellMLAnnotationViewCellMLElementItem::RelationshipReference:
+            pCellMLElementItem->setText(tr("Relationship References"));
 
             break;
-        case CellmlAnnotationViewCellmlElementItem::ComponentReference:
-            pCellmlElementItem->setText(tr("Component References"));
+        case CellMLAnnotationViewCellMLElementItem::ComponentReference:
+            pCellMLElementItem->setText(tr("Component References"));
 
             break;
-        case CellmlAnnotationViewCellmlElementItem::Connection:
-            pCellmlElementItem->setText(tr("Connections"));
+        case CellMLAnnotationViewCellMLElementItem::Connection:
+            pCellMLElementItem->setText(tr("Connections"));
 
             break;
         default:
@@ -443,13 +443,13 @@ void CellmlAnnotationViewCellmlListWidget::retranslateDataItem(CellmlAnnotationV
         // We are not dealing with a category, so check the type and see whether
         // a CellML element needs retranslating
 
-        switch (pCellmlElementItem->type()) {
-        case CellmlAnnotationViewCellmlElementItem::Group:
-            pCellmlElementItem->setText(tr("Group #%1").arg(pCellmlElementItem->number()));
+        switch (pCellMLElementItem->type()) {
+        case CellMLAnnotationViewCellMLElementItem::Group:
+            pCellMLElementItem->setText(tr("Group #%1").arg(pCellMLElementItem->number()));
 
             break;
-        case CellmlAnnotationViewCellmlElementItem::Connection:
-            pCellmlElementItem->setText(tr("Connection #%1").arg(pCellmlElementItem->number()));
+        case CellMLAnnotationViewCellMLElementItem::Connection:
+            pCellMLElementItem->setText(tr("Connection #%1").arg(pCellMLElementItem->number()));
 
             break;
         default:
@@ -461,11 +461,11 @@ void CellmlAnnotationViewCellmlListWidget::retranslateDataItem(CellmlAnnotationV
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlListWidget::populateModel()
+void CellMLAnnotationViewCellMLListWidget::populateModel()
 {
     // Make sure that the CellML file was properly loaded
 
-    CellMLSupport::CellmlFileIssues issues = mCellmlFile->issues();
+    CellMLSupport::CellMLFileIssues issues = mCellMLFile->issues();
     int issuesCount = issues.count();
 
     if (issuesCount) {
@@ -473,7 +473,7 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
         // the issue(s) and leave
 
         for (int i = 0; i < issuesCount; ++i)
-            mModel->invisibleRootItem()->appendRow(new CellmlAnnotationViewCellmlElementItem(issues[i].type() == CellMLSupport::CellmlFileIssue::Error,
+            mModel->invisibleRootItem()->appendRow(new CellMLAnnotationViewCellMLElementItem(issues[i].type() == CellMLSupport::CellMLFileIssue::Error,
                                                                                              QString("[%1:%2] %3").arg(QString::number(issues[i].line()),
                                                                                                                        QString::number(issues[i].column()),
                                                                                                                        issues[i].formattedMessage())));
@@ -483,19 +483,19 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
 
     // Retrieve the model's root
 
-    CellmlAnnotationViewCellmlElementItem *modelItem = new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::Model,
-                                                                                                 mCellmlFile->model());
+    CellMLAnnotationViewCellMLElementItem *modelItem = new CellMLAnnotationViewCellMLElementItem(CellMLAnnotationViewCellMLElementItem::Model,
+                                                                                                 mCellMLFile->model());
 
     mModel->invisibleRootItem()->appendRow(modelItem);
 
     // Retrieve the model's imports
 
-    ObjRef<iface::cellml_api::CellMLImportSet> imports = mCellmlFile->model()->imports();
+    ObjRef<iface::cellml_api::CellMLImportSet> imports = mCellMLFile->model()->imports();
 
     if (imports->length()) {
         // Imports category
 
-        CellmlAnnotationViewCellmlElementItem *importsItem = new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::Import,
+        CellMLAnnotationViewCellMLElementItem *importsItem = new CellMLAnnotationViewCellMLElementItem(CellMLAnnotationViewCellMLElementItem::Import,
                                                                                                        tr("Imports"));
 
         modelItem->appendRow(importsItem);
@@ -512,7 +512,7 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
 
             // A model import
 
-            CellmlAnnotationViewCellmlElementItem *importItem = new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::Import,
+            CellMLAnnotationViewCellMLElementItem *importItem = new CellMLAnnotationViewCellMLElementItem(CellMLAnnotationViewCellMLElementItem::Import,
                                                                                                           import);
 
             importsItem->appendRow(importItem);
@@ -524,7 +524,7 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
             if (importUnits->length()) {
                 // Units category
 
-                CellmlAnnotationViewCellmlElementItem *unitsItem = new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::ImportUnit,
+                CellMLAnnotationViewCellMLElementItem *unitsItem = new CellMLAnnotationViewCellMLElementItem(CellMLAnnotationViewCellMLElementItem::ImportUnit,
                                                                                                              tr("Units"));
 
                 importItem->appendRow(unitsItem);
@@ -541,7 +541,7 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
 
                     // A model's import's unit
 
-                    unitsItem->appendRow(new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::ImportUnit,
+                    unitsItem->appendRow(new CellMLAnnotationViewCellMLElementItem(CellMLAnnotationViewCellMLElementItem::ImportUnit,
                                                                                    importUnit));
                 }
             }
@@ -553,7 +553,7 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
             if (importComponents->length()) {
                 // Components category
 
-                CellmlAnnotationViewCellmlElementItem *componentsItem = new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::ImportComponent,
+                CellMLAnnotationViewCellMLElementItem *componentsItem = new CellMLAnnotationViewCellMLElementItem(CellMLAnnotationViewCellMLElementItem::ImportComponent,
                                                                                                                   tr("Components"));
 
                 importItem->appendRow(componentsItem);
@@ -570,7 +570,7 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
 
                     // A model's import's component
 
-                    componentsItem->appendRow(new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::ImportComponent,
+                    componentsItem->appendRow(new CellMLAnnotationViewCellMLElementItem(CellMLAnnotationViewCellMLElementItem::ImportComponent,
                                                                                         importComponent));
                 }
             }
@@ -579,18 +579,18 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
 
     // Retrieve the model's units
 
-    ObjRef<iface::cellml_api::UnitsSet> units = mCellmlFile->model()->localUnits();
+    ObjRef<iface::cellml_api::UnitsSet> units = mCellMLFile->model()->localUnits();
 
     populateUnitsModel(modelItem, units);
 
     // Retrieve the model's components
 
-    ObjRef<iface::cellml_api::CellMLComponentSet> components = mCellmlFile->model()->localComponents();
+    ObjRef<iface::cellml_api::CellMLComponentSet> components = mCellMLFile->model()->localComponents();
 
     if (components->length()) {
         // Components category
 
-        CellmlAnnotationViewCellmlElementItem *componentsItem = new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::Component,
+        CellMLAnnotationViewCellMLElementItem *componentsItem = new CellMLAnnotationViewCellMLElementItem(CellMLAnnotationViewCellMLElementItem::Component,
                                                                                                           tr("Components"));
 
         modelItem->appendRow(componentsItem);
@@ -607,7 +607,7 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
 
             // A model's component
 
-            CellmlAnnotationViewCellmlElementItem *componentItem = new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::Component,
+            CellMLAnnotationViewCellMLElementItem *componentItem = new CellMLAnnotationViewCellMLElementItem(CellMLAnnotationViewCellMLElementItem::Component,
                                                                                                              component);
 
             componentsItem->appendRow(componentItem);
@@ -625,7 +625,7 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
             if (componentVariables->length()) {
                 // Variables category
 
-                CellmlAnnotationViewCellmlElementItem *variablesItem = new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::Variable,
+                CellMLAnnotationViewCellMLElementItem *variablesItem = new CellMLAnnotationViewCellMLElementItem(CellMLAnnotationViewCellMLElementItem::Variable,
                                                                                                                  tr("Variables"));
 
                 // Retrieve the model's component's variables themselves, but
@@ -643,7 +643,7 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
 
                     if (   (componentVariable->publicInterface()  != iface::cellml_api::INTERFACE_IN)
                         && (componentVariable->privateInterface() != iface::cellml_api::INTERFACE_IN)) {
-                        variablesItem->appendRow(new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::Variable,
+                        variablesItem->appendRow(new CellMLAnnotationViewCellMLElementItem(CellMLAnnotationViewCellMLElementItem::Variable,
                                                                                            componentVariable));
 
                         atLeastOneVariable = true;
@@ -662,12 +662,12 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
 
     // Retrieve the model's groups
 
-    ObjRef<iface::cellml_api::GroupSet> groups = mCellmlFile->model()->groups();
+    ObjRef<iface::cellml_api::GroupSet> groups = mCellMLFile->model()->groups();
 
     if (groups->length()) {
         // Groups category
 
-        CellmlAnnotationViewCellmlElementItem *groupsItem = new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::Group,
+        CellMLAnnotationViewCellMLElementItem *groupsItem = new CellMLAnnotationViewCellMLElementItem(CellMLAnnotationViewCellMLElementItem::Group,
                                                                                                       tr("Groups"));
 
         modelItem->appendRow(groupsItem);
@@ -685,7 +685,7 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
 
             // A model's group
 
-            CellmlAnnotationViewCellmlElementItem *groupItem = new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::Group,
+            CellMLAnnotationViewCellMLElementItem *groupItem = new CellMLAnnotationViewCellMLElementItem(CellMLAnnotationViewCellMLElementItem::Group,
                                                                                                          group, ++counter);
 
             groupsItem->appendRow(groupItem);
@@ -697,7 +697,7 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
             if (groupRelationshipReferences->length()) {
                 // Relationship references category
 
-                CellmlAnnotationViewCellmlElementItem *groupRelationshipReferencesItem = new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::RelationshipReference,
+                CellMLAnnotationViewCellMLElementItem *groupRelationshipReferencesItem = new CellMLAnnotationViewCellMLElementItem(CellMLAnnotationViewCellMLElementItem::RelationshipReference,
                                                                                                                                    tr("Relationship References"));
 
                 groupItem->appendRow(groupRelationshipReferencesItem);
@@ -713,7 +713,7 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
                     if (!groupRelationshipReference)
                         break;
 
-                    groupRelationshipReferencesItem->appendRow(new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::RelationshipReference,
+                    groupRelationshipReferencesItem->appendRow(new CellMLAnnotationViewCellMLElementItem(CellMLAnnotationViewCellMLElementItem::RelationshipReference,
                                                                                                          groupRelationshipReference));
                 }
             }
@@ -725,7 +725,7 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
             if (groupComponentReferences->length()) {
                 // Component references category
 
-                CellmlAnnotationViewCellmlElementItem *groupComponentReferencesItem = new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::ComponentReference,
+                CellMLAnnotationViewCellMLElementItem *groupComponentReferencesItem = new CellMLAnnotationViewCellMLElementItem(CellMLAnnotationViewCellMLElementItem::ComponentReference,
                                                                                                                                 tr("Component References"));
 
                 groupItem->appendRow(groupComponentReferencesItem);
@@ -749,12 +749,12 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
 
     // Retrieve the model's connections
 
-    ObjRef<iface::cellml_api::ConnectionSet> connections = mCellmlFile->model()->connections();
+    ObjRef<iface::cellml_api::ConnectionSet> connections = mCellMLFile->model()->connections();
 
     if (connections->length()) {
         // Connections category
 
-        CellmlAnnotationViewCellmlElementItem *connectionsItem = new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::Connection,
+        CellMLAnnotationViewCellMLElementItem *connectionsItem = new CellMLAnnotationViewCellMLElementItem(CellMLAnnotationViewCellMLElementItem::Connection,
                                                                                                            tr("Connections"));
 
         modelItem->appendRow(connectionsItem);
@@ -772,14 +772,14 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
 
             // A model's connection
 
-            CellmlAnnotationViewCellmlElementItem *connectionItem = new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::Connection,
+            CellMLAnnotationViewCellMLElementItem *connectionItem = new CellMLAnnotationViewCellMLElementItem(CellMLAnnotationViewCellMLElementItem::Connection,
                                                                                                               connection, ++counter);
 
             connectionsItem->appendRow(connectionItem);
 
             // Component mapping
 
-            connectionItem->appendRow(new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::ComponentMapping,
+            connectionItem->appendRow(new CellMLAnnotationViewCellMLElementItem(CellMLAnnotationViewCellMLElementItem::ComponentMapping,
                                                                                 connection->componentMapping()));
 
             // Variable mappings
@@ -793,7 +793,7 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
                 if (!connectionVariableMapping)
                     break;
 
-                connectionItem->appendRow(new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::VariableMapping,
+                connectionItem->appendRow(new CellMLAnnotationViewCellMLElementItem(CellMLAnnotationViewCellMLElementItem::VariableMapping,
                                                                                     connectionVariableMapping));
             }
         }
@@ -802,7 +802,7 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlListWidget::populateUnitsModel(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem,
+void CellMLAnnotationViewCellMLListWidget::populateUnitsModel(CellMLAnnotationViewCellMLElementItem *pCellMLElementItem,
                                                               iface::cellml_api::UnitsSet *pUnits)
 {
     // Retrieve the units
@@ -810,10 +810,10 @@ void CellmlAnnotationViewCellmlListWidget::populateUnitsModel(CellmlAnnotationVi
     if (pUnits->length()) {
         // Units category
 
-        CellmlAnnotationViewCellmlElementItem *unitsItem = new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::Unit,
+        CellMLAnnotationViewCellMLElementItem *unitsItem = new CellMLAnnotationViewCellMLElementItem(CellMLAnnotationViewCellMLElementItem::Unit,
                                                                                                      tr("Units"));
 
-        pCellmlElementItem->appendRow(unitsItem);
+        pCellMLElementItem->appendRow(unitsItem);
 
         // Retrieve the units themselves
 
@@ -827,7 +827,7 @@ void CellmlAnnotationViewCellmlListWidget::populateUnitsModel(CellmlAnnotationVi
 
             // A unit
 
-            CellmlAnnotationViewCellmlElementItem *unitItem = new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::Unit,
+            CellMLAnnotationViewCellMLElementItem *unitItem = new CellMLAnnotationViewCellMLElementItem(CellMLAnnotationViewCellMLElementItem::Unit,
                                                                                                         unit);
 
             unitsItem->appendRow(unitItem);
@@ -845,7 +845,7 @@ void CellmlAnnotationViewCellmlListWidget::populateUnitsModel(CellmlAnnotationVi
                     if (!unitElement)
                         break;
 
-                    unitItem->appendRow(new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::UnitElement,
+                    unitItem->appendRow(new CellMLAnnotationViewCellMLElementItem(CellMLAnnotationViewCellMLElementItem::UnitElement,
                                                                                   unitElement));
                 }
             }
@@ -855,13 +855,13 @@ void CellmlAnnotationViewCellmlListWidget::populateUnitsModel(CellmlAnnotationVi
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlListWidget::populateGroupComponentReferenceModel(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem,
+void CellMLAnnotationViewCellMLListWidget::populateGroupComponentReferenceModel(CellMLAnnotationViewCellMLElementItem *pCellMLElementItem,
                                                                                 iface::cellml_api::ComponentRef *pGroupComponentReference)
 {
-    CellmlAnnotationViewCellmlElementItem *groupComponentReferencesItem = new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::ComponentReference,
+    CellMLAnnotationViewCellMLElementItem *groupComponentReferencesItem = new CellMLAnnotationViewCellMLElementItem(CellMLAnnotationViewCellMLElementItem::ComponentReference,
                                                                                                                     pGroupComponentReference);
 
-    pCellmlElementItem->appendRow(groupComponentReferencesItem);
+    pCellMLElementItem->appendRow(groupComponentReferencesItem);
 
     // Retrieve the component reference's children
 
@@ -880,7 +880,7 @@ void CellmlAnnotationViewCellmlListWidget::populateGroupComponentReferenceModel(
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlListWidget::resizeTreeViewToContents()
+void CellMLAnnotationViewCellMLListWidget::resizeTreeViewToContents()
 {
     // Resize our tree view widget so that its contents is visible
 
@@ -889,7 +889,7 @@ void CellmlAnnotationViewCellmlListWidget::resizeTreeViewToContents()
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlListWidget::updateMetadataDetails(const QModelIndex &pNewIndex,
+void CellMLAnnotationViewCellMLListWidget::updateMetadataDetails(const QModelIndex &pNewIndex,
                                                                  const QModelIndex &pOldIndex)
 {
     Q_UNUSED(pOldIndex);
@@ -909,7 +909,7 @@ void CellmlAnnotationViewCellmlListWidget::updateMetadataDetails(const QModelInd
 
     static QStringList cellmlFileBeingUpdated;
 
-    QString cellmlFileName = mCellmlFile->fileName();
+    QString cellmlFileName = mCellMLFile->fileName();
 
     if (cellmlFileBeingUpdated.contains(cellmlFileName))
         return;
@@ -930,7 +930,7 @@ void CellmlAnnotationViewCellmlListWidget::updateMetadataDetails(const QModelInd
 
         // Let people know that we request to see some metadata details
 
-        emit metadataDetailsRequested(static_cast<CellmlAnnotationViewCellmlElementItem *>(mModel->itemFromIndex(crtIndex))->element());
+        emit metadataDetailsRequested(static_cast<CellMLAnnotationViewCellMLElementItem *>(mModel->itemFromIndex(crtIndex))->element());
     }
 
     // We are done, so...
@@ -940,12 +940,12 @@ void CellmlAnnotationViewCellmlListWidget::updateMetadataDetails(const QModelInd
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlListWidget::showCustomContextMenu(const QPoint &pPosition) const
+void CellMLAnnotationViewCellMLListWidget::showCustomContextMenu(const QPoint &pPosition) const
 {
     // Determine whether to show the context menu based on whether we are over
     // an item
 
-    CellmlAnnotationViewCellmlElementItem *posItem = static_cast<CellmlAnnotationViewCellmlElementItem *>(mModel->itemFromIndex(mTreeViewWidget->indexAt(pPosition)));
+    CellMLAnnotationViewCellMLElementItem *posItem = static_cast<CellMLAnnotationViewCellMLElementItem *>(mModel->itemFromIndex(mTreeViewWidget->indexAt(pPosition)));
 
     if (posItem) {
         // We are over an item, so create a custom context menu for our current
@@ -956,10 +956,10 @@ void CellmlAnnotationViewCellmlListWidget::showCustomContextMenu(const QPoint &p
         mGui->actionExpandAll->setEnabled(posItem->hasChildren() && !indexIsAllExpanded(mTreeViewWidget->currentIndex()));
         mGui->actionCollapseAll->setEnabled(posItem->hasChildren() && mTreeViewWidget->isExpanded(mTreeViewWidget->currentIndex()));
 
-        mGui->actionRemoveCurrentMetadata->setEnabled(!posItem->isCategory() && mCellmlFile->rdfTriples(posItem->element()).count());
-        mGui->actionRemoveAllMetadata->setEnabled(!posItem->isCategory() && mCellmlFile->rdfTriples().count());
+        mGui->actionRemoveCurrentMetadata->setEnabled(!posItem->isCategory() && mCellMLFile->rdfTriples(posItem->element()).count());
+        mGui->actionRemoveAllMetadata->setEnabled(!posItem->isCategory() && mCellMLFile->rdfTriples().count());
 
-        mGui->actionOpenImport->setEnabled(posItem->type() == CellmlAnnotationViewCellmlElementItem::Import);
+        mGui->actionOpenImport->setEnabled(posItem->type() == CellMLAnnotationViewCellMLElementItem::Import);
 
         // Create and show the context menu, if it isn't empty
 
@@ -976,7 +976,7 @@ void CellmlAnnotationViewCellmlListWidget::showCustomContextMenu(const QPoint &p
             menu.addAction(mGui->actionRemoveAllMetadata);
         }
 
-        if (posItem->type() == CellmlAnnotationViewCellmlElementItem::Import) {
+        if (posItem->type() == CellMLAnnotationViewCellMLElementItem::Import) {
             menu.addSeparator();
             menu.addAction(mGui->actionOpenImport);
         }
@@ -988,7 +988,7 @@ void CellmlAnnotationViewCellmlListWidget::showCustomContextMenu(const QPoint &p
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlListWidget::on_actionExpandAll_triggered()
+void CellMLAnnotationViewCellMLListWidget::on_actionExpandAll_triggered()
 {
     // Expand all the CellML elements below the current one
     // Note: we disable and then re-enable updates before expanding all the
@@ -1005,7 +1005,7 @@ void CellmlAnnotationViewCellmlListWidget::on_actionExpandAll_triggered()
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlListWidget::on_actionCollapseAll_triggered()
+void CellMLAnnotationViewCellMLListWidget::on_actionCollapseAll_triggered()
 {
     // Collapse all the CellML elements below the current one
     // Note: see the note in on_actionExpandAll_triggered() above...
@@ -1021,11 +1021,11 @@ void CellmlAnnotationViewCellmlListWidget::on_actionCollapseAll_triggered()
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlListWidget::on_actionRemoveCurrentMetadata_triggered()
+void CellMLAnnotationViewCellMLListWidget::on_actionRemoveCurrentMetadata_triggered()
 {
     // Remove all the metadata associated with the current node
 
-    mCellmlFile->rdfTriples().remove(currentCellmlElementItem()->element());
+    mCellMLFile->rdfTriples().remove(currentCellMLElementItem()->element());
 
     // Re-update the metadata details view now that the current node doesn't
     // have any metadata associated with it
@@ -1035,11 +1035,11 @@ void CellmlAnnotationViewCellmlListWidget::on_actionRemoveCurrentMetadata_trigge
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlListWidget::on_actionRemoveAllMetadata_triggered()
+void CellMLAnnotationViewCellMLListWidget::on_actionRemoveAllMetadata_triggered()
 {
     // Remove all the metadata associated with the CellML file
 
-    mCellmlFile->rdfTriples().removeAll();
+    mCellMLFile->rdfTriples().removeAll();
 
     // Re-update the metadata details view now that the CellML file doesn't have
     // any metadata associated with it
@@ -1049,7 +1049,7 @@ void CellmlAnnotationViewCellmlListWidget::on_actionRemoveAllMetadata_triggered(
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlListWidget::indexExpandAll(const QModelIndex &pIndex) const
+void CellMLAnnotationViewCellMLListWidget::indexExpandAll(const QModelIndex &pIndex) const
 {
     // Recursively expand all the CellML elements below the current one
     // Note: the test with against pIndex.child(0, 0) is to ensure that we are
@@ -1069,7 +1069,7 @@ void CellmlAnnotationViewCellmlListWidget::indexExpandAll(const QModelIndex &pIn
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlListWidget::indexCollapseAll(const QModelIndex &pIndex) const
+void CellMLAnnotationViewCellMLListWidget::indexCollapseAll(const QModelIndex &pIndex) const
 {
     // Recursively collapse all the CellML elements below the current one
     // Note: see the note in indexExpandAll() above...
@@ -1086,7 +1086,7 @@ void CellmlAnnotationViewCellmlListWidget::indexCollapseAll(const QModelIndex &p
 
 //==============================================================================
 
-bool CellmlAnnotationViewCellmlListWidget::indexIsAllExpanded(const QModelIndex &pIndex) const
+bool CellMLAnnotationViewCellMLListWidget::indexIsAllExpanded(const QModelIndex &pIndex) const
 {
     // Recursively check that the current CellML element and all of its children
     // are expanded
@@ -1107,7 +1107,7 @@ bool CellmlAnnotationViewCellmlListWidget::indexIsAllExpanded(const QModelIndex 
 
 //==============================================================================
 
-Core::TreeViewWidget * CellmlAnnotationViewCellmlListWidget::treeViewWidget() const
+Core::TreeViewWidget * CellMLAnnotationViewCellMLListWidget::treeViewWidget() const
 {
     // Return our tree view widget
 
@@ -1116,20 +1116,20 @@ Core::TreeViewWidget * CellmlAnnotationViewCellmlListWidget::treeViewWidget() co
 
 //==============================================================================
 
-CellmlAnnotationViewCellmlElementItem * CellmlAnnotationViewCellmlListWidget::currentCellmlElementItem() const
+CellMLAnnotationViewCellMLElementItem * CellMLAnnotationViewCellMLListWidget::currentCellMLElementItem() const
 {
     // Return the current CellML element item
 
-    return static_cast<CellmlAnnotationViewCellmlElementItem *>(mModel->itemFromIndex(mTreeViewWidget->currentIndex()));
+    return static_cast<CellMLAnnotationViewCellMLElementItem *>(mModel->itemFromIndex(mTreeViewWidget->currentIndex()));
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlListWidget::on_actionOpenImport_triggered()
+void CellMLAnnotationViewCellMLListWidget::on_actionOpenImport_triggered()
 {
     // Ask OpenCOR to open the imported file
 
-    static_cast<SharedTools::QtSingleApplication *>(qApp)->handleAction("gui://openFile/"+QFileInfo(QFileInfo(mCellmlFile->fileName()).canonicalPath()+QDir::separator()+currentCellmlElementItem()->text()).canonicalFilePath());
+    static_cast<SharedTools::QtSingleApplication *>(qApp)->handleAction("gui://openFile/"+QFileInfo(QFileInfo(mCellMLFile->fileName()).canonicalPath()+QDir::separator()+currentCellMLElementItem()->text()).canonicalFilePath());
 }
 
 //==============================================================================

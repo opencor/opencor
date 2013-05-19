@@ -1,9 +1,7 @@
 #ifndef compiler_support_h
 #define compiler_support_h
 
-/*---OPENCOR---
 #include "cda_config.h"
-*/
 #include <cstdlib>
 #include <string>
 #include <vector>

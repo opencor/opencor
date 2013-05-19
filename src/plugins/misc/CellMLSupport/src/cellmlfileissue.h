@@ -20,12 +20,12 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-static const QString Cellml_1_0 = "1.0";
-static const QString Cellml_1_1 = "1.1";
+static const QString CellML_1_0 = "1.0";
+static const QString CellML_1_1 = "1.1";
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFileIssue
+class CELLMLSUPPORT_EXPORT CellMLFileIssue
 {
 public:
     enum Type {
@@ -33,7 +33,7 @@ public:
         Warning
     };
 
-    explicit CellmlFileIssue(const Type &pType, const QString &pMessage,
+    explicit CellMLFileIssue(const Type &pType, const QString &pMessage,
                              const int &pLine = 0, const int &pColumn = 0,
                              const QString &pImportedFile = QString());
 
@@ -54,7 +54,7 @@ private:
 
 //==============================================================================
 
-typedef QList<CellmlFileIssue> CellmlFileIssues;
+typedef QList<CellMLFileIssue> CellMLFileIssues;
 
 //==============================================================================
 

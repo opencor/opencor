@@ -28,34 +28,34 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-class CellmlAnnotationViewMetadataNormalViewDetailsWidget;
-class CellmlAnnotationViewMetadataRawViewDetailsWidget;
-class CellmlAnnotationViewWidget;
+class CellMLAnnotationViewMetadataNormalViewDetailsWidget;
+class CellMLAnnotationViewMetadataRawViewDetailsWidget;
+class CellMLAnnotationViewWidget;
 
 //==============================================================================
 
-class CellmlAnnotationViewMetadataViewDetailsWidget : public QStackedWidget,
+class CellMLAnnotationViewMetadataViewDetailsWidget : public QStackedWidget,
                                                       public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
-    explicit CellmlAnnotationViewMetadataViewDetailsWidget(CellmlAnnotationViewWidget *pParent);
+    explicit CellMLAnnotationViewMetadataViewDetailsWidget(CellMLAnnotationViewWidget *pParent);
 
     virtual void retranslateUi();
 
     void updateGui(iface::cellml_api::CellMLElement *pElement);
 
-    void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
+    void addRdfTriple(CellMLSupport::CellMLFileRdfTriple *pRdfTriple);
 
-    CellmlAnnotationViewMetadataRawViewDetailsWidget *rawView() const;
-    CellmlAnnotationViewMetadataNormalViewDetailsWidget *normalView() const;
+    CellMLAnnotationViewMetadataRawViewDetailsWidget *rawView() const;
+    CellMLAnnotationViewMetadataNormalViewDetailsWidget *normalView() const;
 
 private:
-    CellmlAnnotationViewMetadataRawViewDetailsWidget *mRawView;
-    CellmlAnnotationViewMetadataNormalViewDetailsWidget *mNormalView;
+    CellMLAnnotationViewMetadataRawViewDetailsWidget *mRawView;
+    CellMLAnnotationViewMetadataNormalViewDetailsWidget *mNormalView;
 
-    CellMLSupport::CellmlFile *mCellmlFile;
+    CellMLSupport::CellMLFile *mCellMLFile;
 };
 
 //==============================================================================

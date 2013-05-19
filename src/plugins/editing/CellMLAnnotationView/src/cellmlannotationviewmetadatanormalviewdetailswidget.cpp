@@ -28,11 +28,11 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadataNormalViewDetailsWidget(CellmlAnnotationViewWidget *pParent) :
+CellMLAnnotationViewMetadataNormalViewDetailsWidget::CellMLAnnotationViewMetadataNormalViewDetailsWidget(CellMLAnnotationViewWidget *pParent) :
     QScrollArea(pParent),
     CommonWidget(pParent),
-    mCellmlFile(pParent->cellmlFile()),
-    mGui(new Ui::CellmlAnnotationViewMetadataNormalViewDetailsWidget),
+    mCellMLFile(pParent->cellmlFile()),
+    mGui(new Ui::CellMLAnnotationViewMetadataNormalViewDetailsWidget),
     mGridWidget(0),
     mGridLayout(0),
     mElement(0),
@@ -41,7 +41,7 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
     mLookupInformation(First),
     mVerticalScrollBarPosition(0),
     mNeighbourRow(0),
-    mRdfTriplesMapping(QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *>()),
+    mRdfTriplesMapping(QMap<QObject *, CellMLSupport::CellMLFileRdfTriple *>()),
     mCurrentResourceOrIdLabel(0)
 {
     // Set up the GUI
@@ -66,7 +66,7 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataNormalViewDetailsWidget::~CellmlAnnotationViewMetadataNormalViewDetailsWidget()
+CellMLAnnotationViewMetadataNormalViewDetailsWidget::~CellMLAnnotationViewMetadataNormalViewDetailsWidget()
 {
     // Delete the GUI
 
@@ -75,7 +75,7 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::~CellmlAnnotationViewMetada
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::retranslateUi()
+void CellMLAnnotationViewMetadataNormalViewDetailsWidget::retranslateUi()
 {
     // Retranslate our GUI
 
@@ -89,7 +89,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::retranslateUi()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellml_api::CellMLElement *pElement,
+void CellMLAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellml_api::CellMLElement *pElement,
                                                                     const QString &pRdfTripleInformation,
                                                                     const Type &pType,
                                                                     const Information &pLookupInformation,
@@ -120,7 +120,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
 
     // Populate our new layout, but only if there is at least one RDF triple
 
-    CellMLSupport::CellmlFileRdfTriples rdfTriples = mCellmlFile->rdfTriples(pElement);
+    CellMLSupport::CellMLFileRdfTriples rdfTriples = mCellMLFile->rdfTriples(pElement);
     QString firstRdfTripleInformation = QString();
     QString lastRdfTripleInformation = QString();
 
@@ -161,10 +161,10 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
 
         int row = 0;
 
-        foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, rdfTriples) {
+        foreach (CellMLSupport::CellMLFileRdfTriple *rdfTriple, rdfTriples) {
             // Qualifier
 
-            QString qualifierAsString = (rdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
+            QString qualifierAsString = (rdfTriple->modelQualifier() != CellMLSupport::CellMLFileRdfTriple::ModelUnknown)?
                                             rdfTriple->modelQualifierAsString():
                                             rdfTriple->bioQualifierAsString();
             QString rdfTripleInformation = qualifierAsString+"|"+rdfTriple->resource()+"|"+rdfTriple->id()+"|"+QString::number(++row);
@@ -327,7 +327,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple)
+void CellMLAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSupport::CellMLFileRdfTriple *pRdfTriple)
 {
     if (!pRdfTriple)
         return;
@@ -350,7 +350,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSup
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookup(const QString &pRdfTripleInformation,
+void CellMLAnnotationViewMetadataNormalViewDetailsWidget::genericLookup(const QString &pRdfTripleInformation,
                                                                         const Type &pType,
                                                                         const bool &pRetranslate)
 {
@@ -430,7 +430,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookup(const QS
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::disableLookupInformation()
+void CellMLAnnotationViewMetadataNormalViewDetailsWidget::disableLookupInformation()
 {
     // Disable the looking up of information
 
@@ -443,7 +443,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::disableLookupInformati
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::lookupQualifier(const QString &pRdfTripleInformation)
+void CellMLAnnotationViewMetadataNormalViewDetailsWidget::lookupQualifier(const QString &pRdfTripleInformation)
 {
     // Enable the looking up of any information
 
@@ -456,7 +456,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::lookupQualifier(const 
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::lookupResource(const QString &pRdfTripleInformation)
+void CellMLAnnotationViewMetadataNormalViewDetailsWidget::lookupResource(const QString &pRdfTripleInformation)
 {
     // Enable the looking up of any information
 
@@ -469,7 +469,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::lookupResource(const Q
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::lookupId(const QString &pRdfTripleInformation)
+void CellMLAnnotationViewMetadataNormalViewDetailsWidget::lookupId(const QString &pRdfTripleInformation)
 {
     // Enable the looking up of any information
 
@@ -482,7 +482,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::lookupId(const QString
 
 //==============================================================================
 
-QString CellmlAnnotationViewMetadataNormalViewDetailsWidget::rdfTripleInformation(const int &pRow) const
+QString CellMLAnnotationViewMetadataNormalViewDetailsWidget::rdfTripleInformation(const int &pRow) const
 {
     // Return the RDF triple information for the given row
 
@@ -514,20 +514,20 @@ QString CellmlAnnotationViewMetadataNormalViewDetailsWidget::rdfTripleInformatio
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::removeRdfTriple()
+void CellMLAnnotationViewMetadataNormalViewDetailsWidget::removeRdfTriple()
 {
     // Retrieve the RDF triple associated with the remove button
 
     QObject *removeButton = sender();
 
-    CellMLSupport::CellmlFileRdfTriple *rdfTriple = mRdfTriplesMapping.value(removeButton);
+    CellMLSupport::CellMLFileRdfTriple *rdfTriple = mRdfTriplesMapping.value(removeButton);
 
     mRdfTriplesMapping.remove(removeButton);
 
     // Remove the RDF triple from the CellML file and from our set of RDF
     // triples this widget uses
 
-    mCellmlFile->rdfTriples().remove(rdfTriple);
+    mCellMLFile->rdfTriples().remove(rdfTriple);
 
     // Retrieve the number of the row we want to delete, as well as the total
     // number of rows
@@ -598,7 +598,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::removeRdfTriple()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::showNeighbourRdfTriple()
+void CellMLAnnotationViewMetadataNormalViewDetailsWidget::showNeighbourRdfTriple()
 {
     // No need to show our neighbour RDF triple, so...
 
@@ -612,7 +612,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::showNeighbourRdfTriple
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::showLastRdfTriple()
+void CellMLAnnotationViewMetadataNormalViewDetailsWidget::showLastRdfTriple()
 {
     // No need to show our last RDF triple, so...
 
@@ -635,7 +635,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::showLastRdfTriple()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::trackVerticalScrollBarPosition(const int &pPosition)
+void CellMLAnnotationViewMetadataNormalViewDetailsWidget::trackVerticalScrollBarPosition(const int &pPosition)
 {
     // Keep track of the new position of our vertical scroll bar
 
@@ -644,7 +644,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::trackVerticalScrollBar
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::showCustomContextMenu(const QPoint &pPosition)
+void CellMLAnnotationViewMetadataNormalViewDetailsWidget::showCustomContextMenu(const QPoint &pPosition)
 {
     Q_UNUSED(pPosition);
 
@@ -664,7 +664,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::showCustomContextMenu(
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::on_actionCopy_triggered()
+void CellMLAnnotationViewMetadataNormalViewDetailsWidget::on_actionCopy_triggered()
 {
     // Copy the URL of the resource or id to the clipboard
 

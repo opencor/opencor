@@ -263,7 +263,6 @@ operator!=(const ObjRef<T>& lhs, const ObjRef<U>& rhs)
     )\
   )
 
-/*---OPENCOR---
 // A wrapper for a mutex...
 class CDAMutex
 {
@@ -328,7 +327,6 @@ public:
 private:
   CDAMutex& mutex;
 };
-*/
 
 #define QUERY_INTERFACE(lhs, rhs, type) \
   if (rhs != NULL) \
@@ -364,7 +362,6 @@ private:
   ObjRef<iface::type> lhs; \
   QUERY_INTERFACE(lhs, rhs, type)
 
-/*---OPENCOR---
 class CDA_RefCount
 {
 public:
@@ -815,6 +812,5 @@ private:
       v.push_back(#c8); \
       return v; \
     }
-*/
 
 #endif // ifndef _cellml_api_cxx_support_hpp

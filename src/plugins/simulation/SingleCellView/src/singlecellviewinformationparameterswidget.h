@@ -8,6 +8,7 @@
 //==============================================================================
 
 #include "commonwidget.h"
+#include "cellmlfileruntime.h"
 
 //==============================================================================
 
@@ -27,8 +28,8 @@ namespace Core {
 //==============================================================================
 
 namespace CellMLSupport {
-    class CellmlFileRuntime;
-    class CellmlFileRuntimeModelParameter;
+    class CellMLFileRuntime;
+    class CellMLFileRuntimeCompiledModelParameter;
 }   // namespace CellMLSupport
 
 //==============================================================================
@@ -55,29 +56,31 @@ public:
     virtual void saveSettings(QSettings *pSettings) const;
 
     void initialize(const QString &pFileName,
-                    CellMLSupport::CellmlFileRuntime *pRuntime,
+                    CellMLSupport::CellMLFileRuntime *pRuntime,
                     SingleCellViewSimulationData *pSimulationData);
     void finalize(const QString &pFileName);
 
     void finishPropertyEditing();
 
 private:
+    QString mCellMLFileName;
+
     QMap<QString, Core::PropertyEditorWidget *> mPropertyEditors;
 
-    QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeModelParameter *> mModelParameters;
+    QMap<Core::Property *, QSharedPointer<CellMLSupport::CellMLFileRuntimeModelParameter> > mModelParameters;
 
     QList<int> mColumnWidths;
 
     SingleCellViewSimulationData *mSimulationData;
 
     void populateModel(Core::PropertyEditorWidget *pPropertyEditor,
-                       CellMLSupport::CellmlFileRuntime *pRuntime);
+                       CellMLSupport::CellMLFileRuntime *pRuntime);
 
     void updateModelParametersToolTips();
 
 Q_SIGNALS:
     void showModelParameter(const QString &pFileName,
-                            CellMLSupport::CellmlFileRuntimeModelParameter *pParameter,
+                            QSharedPointer<CellMLSupport::CellMLFileRuntimeModelParameter> pParameter,
                             const bool &pShow);
 
 public Q_SLOTS:

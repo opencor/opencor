@@ -19,7 +19,7 @@
 //==============================================================================
 
 namespace Ui {
-    class CellmlAnnotationViewCellmlListWidget;
+    class CellMLAnnotationViewCellMLListWidget;
 }
 
 //==============================================================================
@@ -38,11 +38,11 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-class CellmlAnnotationViewWidget;
+class CellMLAnnotationViewWidget;
 
 //==============================================================================
 
-class CellmlAnnotationViewCellmlElementItemDelegate : public QStyledItemDelegate
+class CellMLAnnotationViewCellMLElementItemDelegate : public QStyledItemDelegate
 {
 public:
     virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
@@ -51,7 +51,7 @@ public:
 
 //==============================================================================
 
-class CellmlAnnotationViewCellmlElementItem : public QStandardItem
+class CellMLAnnotationViewCellMLElementItem : public QStandardItem
 {
 public:
     enum Type {
@@ -73,9 +73,9 @@ public:
         VariableMapping       = QStandardItem::UserType+15
     };
 
-    explicit CellmlAnnotationViewCellmlElementItem(const bool &pError, const QString &pText);
-    explicit CellmlAnnotationViewCellmlElementItem(const Type &pType, const QString &pText);
-    explicit CellmlAnnotationViewCellmlElementItem(const Type &pType,
+    explicit CellMLAnnotationViewCellMLElementItem(const bool &pError, const QString &pText);
+    explicit CellMLAnnotationViewCellMLElementItem(const Type &pType, const QString &pText);
+    explicit CellMLAnnotationViewCellMLElementItem(const Type &pType,
                                                    iface::cellml_api::CellMLElement *pElement,
                                                    const int pNumber = -1);
 
@@ -102,37 +102,37 @@ private:
 
 //==============================================================================
 
-class CellmlAnnotationViewCellmlListWidget : public Core::Widget
+class CellMLAnnotationViewCellMLListWidget : public Core::Widget
 {
     Q_OBJECT
 
 public:
-    explicit CellmlAnnotationViewCellmlListWidget(CellmlAnnotationViewWidget *pParent);
-    ~CellmlAnnotationViewCellmlListWidget();
+    explicit CellMLAnnotationViewCellMLListWidget(CellMLAnnotationViewWidget *pParent);
+    ~CellMLAnnotationViewCellMLListWidget();
 
     virtual void retranslateUi();
 
     Core::TreeViewWidget * treeViewWidget() const;
 
-    CellmlAnnotationViewCellmlElementItem * currentCellmlElementItem() const;
+    CellMLAnnotationViewCellMLElementItem * currentCellMLElementItem() const;
 
 private:
-    CellMLSupport::CellmlFile *mCellmlFile;
+    CellMLSupport::CellMLFile *mCellMLFile;
 
-    Ui::CellmlAnnotationViewCellmlListWidget *mGui;
+    Ui::CellMLAnnotationViewCellMLListWidget *mGui;
 
     Core::TreeViewWidget *mTreeViewWidget;
     QStandardItemModel *mModel;
-    CellmlAnnotationViewCellmlElementItemDelegate *mItemDelegate;
+    CellMLAnnotationViewCellMLElementItemDelegate *mItemDelegate;
 
     QList<QModelIndex> mIndexes;
 
-    void retranslateDataItem(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem);
+    void retranslateDataItem(CellMLAnnotationViewCellMLElementItem *pCellMLElementItem);
 
     void populateModel();
-    void populateUnitsModel(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem,
+    void populateUnitsModel(CellMLAnnotationViewCellMLElementItem *pCellMLElementItem,
                             iface::cellml_api::UnitsSet *pUnits);
-    void populateGroupComponentReferenceModel(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem,
+    void populateGroupComponentReferenceModel(CellMLAnnotationViewCellMLElementItem *pCellMLElementItem,
                                               iface::cellml_api::ComponentRef *pGroupComponentReference);
 
     void indexExpandAll(const QModelIndex &pIndex) const;

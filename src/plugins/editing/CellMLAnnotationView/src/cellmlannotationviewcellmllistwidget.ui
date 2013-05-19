@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CellmlAnnotationViewCellmlListWidget</class>
- <widget class="QWidget" name="CellmlAnnotationViewCellmlListWidget">
+ <class>CellMLAnnotationViewCellMLListWidget</class>
+ <widget class="QWidget" name="CellMLAnnotationViewCellMLListWidget">
   <property name="geometry">
    <rect>
     <x>0</x>

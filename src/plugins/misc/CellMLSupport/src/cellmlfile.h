@@ -23,13 +23,13 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFile : public QObject
+class CELLMLSUPPORT_EXPORT CellMLFile : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit CellmlFile(const QString &pFileName);
-    ~CellmlFile();
+    explicit CellMLFile(const QString &pFileName);
+    ~CellMLFile();
 
     iface::cellml_api::Model * model() const;
 
@@ -45,28 +45,28 @@ public:
     bool isModified() const;
     void setModified(const bool &pModified) const;
 
-    CellmlFileIssues issues() const;
+    CellMLFileIssues issues() const;
 
-    CellmlFileRuntime * runtime();
+    CellMLFileRuntime * runtime();
 
     QString fileName() const;
 
-    CellmlFileRdfTriples & rdfTriples();
-    CellmlFileRdfTriples rdfTriples(iface::cellml_api::CellMLElement *pElement) const;
+    CellMLFileRdfTriples & rdfTriples();
+    CellMLFileRdfTriples rdfTriples(iface::cellml_api::CellMLElement *pElement) const;
 
     bool rdfTripleExists(iface::cellml_api::CellMLElement *pElement,
-                         const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
+                         const CellMLSupport::CellMLFileRdfTriple::ModelQualifier &pModelQualifier,
                          const QString &pResource, const QString &pId) const;
     bool rdfTripleExists(iface::cellml_api::CellMLElement *pElement,
-                         const CellMLSupport::CellmlFileRdfTriple::BioQualifier &pBioQualifier,
+                         const CellMLSupport::CellMLFileRdfTriple::BioQualifier &pBioQualifier,
                          const QString &pResource, const QString &pId) const;
 
-    CellMLSupport::CellmlFileRdfTriple * addRdfTriple(iface::cellml_api::CellMLElement *pElement,
-                                                      const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
+    CellMLSupport::CellMLFileRdfTriple * addRdfTriple(iface::cellml_api::CellMLElement *pElement,
+                                                      const CellMLSupport::CellMLFileRdfTriple::ModelQualifier &pModelQualifier,
                                                       const QString &pResource,
                                                       const QString &pId);
-    CellMLSupport::CellmlFileRdfTriple * addRdfTriple(iface::cellml_api::CellMLElement *pElement,
-                                                      const CellMLSupport::CellmlFileRdfTriple::BioQualifier &pBioQualifier,
+    CellMLSupport::CellMLFileRdfTriple * addRdfTriple(iface::cellml_api::CellMLElement *pElement,
+                                                      const CellMLSupport::CellMLFileRdfTriple::BioQualifier &pBioQualifier,
                                                       const QString &pResource,
                                                       const QString &pId);
 
@@ -82,13 +82,13 @@ private:
 
     QString mUriBase;
 
-    CellmlFileRdfTriples mRdfTriples;
+    CellMLFileRdfTriples mRdfTriples;
 
     bool mValid;
 
-    CellmlFileIssues mIssues;
+    CellMLFileIssues mIssues;
 
-    CellmlFileRuntime *mRuntime;
+    CellMLFileRuntime *mRuntime;
 
     bool mLoadingNeeded;
     bool mValidNeeded;

@@ -16,9 +16,9 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataRawViewDetailsWidget::CellmlAnnotationViewMetadataRawViewDetailsWidget(CellmlAnnotationViewWidget *pParent) :
+CellMLAnnotationViewMetadataRawViewDetailsWidget::CellMLAnnotationViewMetadataRawViewDetailsWidget(CellMLAnnotationViewWidget *pParent) :
     TreeViewWidget(pParent),
-    mCellmlFile(pParent->cellmlFile())
+    mCellMLFile(pParent->cellmlFile())
 {
     // Customise ourselves
 
@@ -37,7 +37,7 @@ CellmlAnnotationViewMetadataRawViewDetailsWidget::CellmlAnnotationViewMetadataRa
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataRawViewDetailsWidget::retranslateUi()
+void CellMLAnnotationViewMetadataRawViewDetailsWidget::retranslateUi()
 {
     // Update our header labels
 
@@ -49,7 +49,7 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::retranslateUi()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(iface::cellml_api::CellMLElement *pElement)
+void CellMLAnnotationViewMetadataRawViewDetailsWidget::updateGui(iface::cellml_api::CellMLElement *pElement)
 {
     if (!pElement)
         return;
@@ -72,9 +72,9 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(iface::cellml_a
 
     int rdfTripleCounter = 0;
 
-    foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, mCellmlFile->rdfTriples(pElement))
+    foreach (CellMLSupport::CellMLFileRdfTriple *rdfTriple, mCellMLFile->rdfTriples(pElement))
         mModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << new QStandardItem(QString::number(++rdfTripleCounter))
-                                                                        << new QStandardItem((rdfTriple->subject()->type() == CellMLSupport::CellmlFileRdfTripleElement::UriReference)?
+                                                                        << new QStandardItem((rdfTriple->subject()->type() == CellMLSupport::CellMLFileRdfTripleElement::UriReference)?
                                                                                                  rdfTriple->metadataId():
                                                                                                  rdfTriple->subject()->asString())
                                                                         << new QStandardItem(rdfTriple->predicate()->asString())

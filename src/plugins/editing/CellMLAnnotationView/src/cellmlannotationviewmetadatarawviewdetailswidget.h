@@ -21,23 +21,23 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-class CellmlAnnotationViewWidget;
+class CellMLAnnotationViewWidget;
 
 //==============================================================================
 
-class CellmlAnnotationViewMetadataRawViewDetailsWidget : public Core::TreeViewWidget
+class CellMLAnnotationViewMetadataRawViewDetailsWidget : public Core::TreeViewWidget
 {
     Q_OBJECT
 
 public:
-    explicit CellmlAnnotationViewMetadataRawViewDetailsWidget(CellmlAnnotationViewWidget *pParent);
+    explicit CellMLAnnotationViewMetadataRawViewDetailsWidget(CellMLAnnotationViewWidget *pParent);
 
     virtual void retranslateUi();
 
     void updateGui(iface::cellml_api::CellMLElement *pElement);
 
 private:
-    CellMLSupport::CellmlFile *mCellmlFile;
+    CellMLSupport::CellMLFile *mCellMLFile;
 
     QStandardItemModel *mModel;
 };

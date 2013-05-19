@@ -8,7 +8,6 @@
 //==============================================================================
 
 #include "propertyeditorwidget.h"
-#include "solverinterface.h"
 
 //==============================================================================
 
@@ -17,7 +16,7 @@ namespace OpenCOR {
 //==============================================================================
 
 namespace CellMLSupport {
-    class CellmlFileRuntime;
+    class CellMLFileRuntime;
 }   // namespace CellMLSupport
 
 //==============================================================================
@@ -61,26 +60,20 @@ public:
 
     virtual void retranslateUi();
 
-    void setSolverInterfaces(const SolverInterfaces &pSolverInterfaces);
+    void setupBuiltInSolvers();
 
     void initialize(const QString &pFileName,
-                    CellMLSupport::CellmlFileRuntime *pRuntime,
+                    CellMLSupport::CellMLFileRuntime *pRuntime,
                     SingleCellViewSimulationData *pSimulationData);
     void backup(const QString &pFileName);
     void finalize(const QString &pFileName);
 
-    QStringList odeSolvers() const;
-    QStringList daeSolvers() const;
-    QStringList nlaSolvers() const;
+    QStringList solvers() const;
 
-    SingleCellViewInformationSolversWidgetData * odeSolverData() const;
-    SingleCellViewInformationSolversWidgetData * daeSolverData() const;
-    SingleCellViewInformationSolversWidgetData * nlaSolverData() const;
+    SingleCellViewInformationSolversWidgetData * solverData() const;
 
 private:
-    SingleCellViewInformationSolversWidgetData *mOdeSolverData;
-    SingleCellViewInformationSolversWidgetData *mDaeSolverData;
-    SingleCellViewInformationSolversWidgetData *mNlaSolverData;
+    SingleCellViewInformationSolversWidgetData *mSolverData;
 
     QMap<QString, Core::PropertyEditorWidgetGuiState *> mGuiStates;
     Core::PropertyEditorWidgetGuiState *mDefaultGuiState;
@@ -88,9 +81,6 @@ private:
     QMap<Core::Property *, Descriptions> mDescriptions;
 
     void resetAllGuiStates();
-
-    SingleCellViewInformationSolversWidgetData * addSolverProperties(const SolverInterfaces &pSolverInterfaces,
-                                                                     const Solver::Type &pSolverType);
 
     bool doSolverChanged(SingleCellViewInformationSolversWidgetData *pSolverData,
                          const QString &pSolverName,

@@ -40,7 +40,7 @@ RawCellMLViewPlugin::RawCellMLViewPlugin()
     // Set our settings
 
     mGuiSettings->setView(GuiViewSettings::Editing,
-                          QStringList() << CellMLSupport::CellmlMimeType);
+                          QStringList() << CellMLSupport::CellMLMimeType);
 }
 
 //==============================================================================
@@ -49,7 +49,7 @@ void RawCellMLViewPlugin::initialize()
 {
     // Create our generic raw CellML view widget
 
-    mViewWidget = new RawCellmlViewWidget(mMainWindow);
+    mViewWidget = new RawCellMLViewWidget(mMainWindow);
 
     // Hide our generic raw CellML view widget since it may not initially be
     // shown in our central widget
@@ -82,7 +82,7 @@ QWidget * RawCellMLViewPlugin::viewWidget(const QString &pFileName)
     // Check that we are dealing with a CellML file and, if so, return our
     // generic raw CellML view widget after having initialised it
 
-    if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
+    if (!CellMLSupport::CellMLFileManager::instance()->cellmlFile(pFileName))
         // We are not dealing with a CellML file, so...
 
         return 0;
