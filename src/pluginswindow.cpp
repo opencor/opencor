@@ -164,7 +164,7 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     // Make sure that the loading state of all the plugins is right, including
     // that of the plugins which the user cannot manage
 
-    updatePluginsLoadingState(0, true);
+    updatePluginsSelectedState(0, true);
 
     // Expand the whole tree view widget and make sure that it only takes as
     // much width as necessary
@@ -451,14 +451,14 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
 
 //==============================================================================
 
-void PluginsWindow::updatePluginsLoadingState(QStandardItem *pItem,
-                                              const bool &pInitializing)
+void PluginsWindow::updatePluginsSelectedState(QStandardItem *pItem,
+                                               const bool &pInitializing)
 {
     // Disable the connection that handles a change in a plugin's loading state
     // (otherwise what we are doing here is going to be completely uneffective)
 
     disconnect(mModel, SIGNAL(itemChanged(QStandardItem *)),
-               this, SLOT(updatePluginsLoadingState(QStandardItem *)));
+               this, SLOT(updatePluginsSelectedState(QStandardItem *)));
 
     // Prevent the list view from being updated, since we may end up changing
     // quite a bit of its visual contents
@@ -469,14 +469,17 @@ void PluginsWindow::updatePluginsLoadingState(QStandardItem *pItem,
     // and un/select them accordingly
 
     if (pItem && !pItem->parent())
-        foreach (QStandardItem *manageablePluginItem, mManageablePluginItems)
-            if (manageablePluginItem->parent() == pItem)
-                manageablePluginItem->setCheckState(pItem->checkState());
+        for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i) {
+            QStandardItem *pluginItem = pItem->child(i);
+
+            if (pluginItem->isCheckable())
+                pluginItem->setCheckState(pItem->checkState());
+        }
 
     // Update the selected state of all our unmanageable plugins
 
     foreach (QStandardItem *unmanageablePluginItem, mUnmanageablePluginItems) {
-        // First, reset the loading state of our unamanageable plugin
+        // First, reset the selected state of our unamanageable plugin
 
         unmanageablePluginItem->setCheckState(Qt::Unchecked);
 
@@ -505,23 +508,36 @@ void PluginsWindow::updatePluginsLoadingState(QStandardItem *pItem,
             }
     }
 
-    // Update the selected state of all our categories
+    // Update the selected state of all our categories which have at least one
+    // manageable plugin
 
     foreach (QStandardItem *categoryItem, mPluginCategories) {
         int nbOfPlugins = categoryItem->rowCount();
 
         if (nbOfPlugins) {
-            int nbOfSelectedPlugins = 0;
+            int nbOfManageablePlugins = 0;
+            int nbOfUnmanageablePlugins = 0;
+            int nbOfSelectedManageablePlugins = 0;
 
-            for (int i = 0; i < nbOfPlugins; ++i)
-                if (categoryItem->child(i)->checkState() == Qt::Checked)
-                    ++nbOfSelectedPlugins;
+            for (int i = 0; i < nbOfPlugins; ++i) {
+                QStandardItem *pluginItem = categoryItem->child(i);
 
-            categoryItem->setCheckState(nbOfSelectedPlugins?
-                                            (nbOfSelectedPlugins == nbOfPlugins)?
-                                                Qt::Checked:
-                                                Qt::PartiallyChecked:
-                                            Qt::Unchecked);
+                if (pluginItem->isCheckable()) {
+                    ++nbOfManageablePlugins;
+
+                    if (pluginItem->checkState() == Qt::Checked)
+                        ++nbOfSelectedManageablePlugins;
+                } else {
+                    ++nbOfUnmanageablePlugins;
+                }
+            }
+
+            if (nbOfPlugins != nbOfUnmanageablePlugins)
+                categoryItem->setCheckState(nbOfSelectedManageablePlugins?
+                                                (nbOfSelectedManageablePlugins == nbOfManageablePlugins)?
+                                                    Qt::Checked:
+                                                    Qt::PartiallyChecked:
+                                                Qt::Unchecked);
         }
     }
 
@@ -559,7 +575,7 @@ void PluginsWindow::updatePluginsLoadingState(QStandardItem *pItem,
     // state
 
     connect(mModel, SIGNAL(itemChanged(QStandardItem *)),
-            this, SLOT(updatePluginsLoadingState(QStandardItem *)));
+            this, SLOT(updatePluginsSelectedState(QStandardItem *)));
 }
 
 //==============================================================================
