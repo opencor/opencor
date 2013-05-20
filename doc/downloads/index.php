@@ -7,15 +7,15 @@
 
         <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 
-        <link href="res/stylesheet.css" rel="stylesheet" type="text/css"/>
+        <link href="../res/stylesheet.css" rel="stylesheet" type="text/css"/>
 
-        <script src="3rdparty/jQuery/jquery.js" type="text/javascript"></script>
-        <script src="res/common.js" type="text/javascript"></script>
-        <script src="res/menu.js" type="text/javascript"></script>
+        <script src="../3rdparty/jQuery/jquery.js" type="text/javascript"></script>
+        <script src="../res/common.js" type="text/javascript"></script>
+        <script src="../res/menu.js" type="text/javascript"></script>
     </head>
     <body>
         <script type="text/javascript">
-            headerAndContentsMenu("Download", ".");
+            headerAndContentsMenu("Downloads", "..");
         </script>
 
         <p>
@@ -194,7 +194,7 @@
                             <tbody>
                                 <tr>
                                     <td class="logo">
-                                        <img src="res/pics/<?php echo str_replace(" ", "", strtolower($platformName)); ?>.png" width=72 height=72 alt="<?php echo $platformName; ?>">
+                                        <img src="../res/pics/<?php echo str_replace(" ", "", strtolower($platformName)); ?>.png" width=72 height=72 alt="<?php echo $platformName; ?>">
                                     </td>
                                     <td>
                                         <div>
