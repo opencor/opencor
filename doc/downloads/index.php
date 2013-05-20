@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>
-            Download
+            Downloads
         </title>
 
         <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
