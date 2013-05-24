@@ -8,7 +8,6 @@
 #include "fileinterface.h"
 #include "i18ninterface.h"
 #include "mainwindow.h"
-#include "plugin.h"
 #include "pluginmanager.h"
 #include "pluginswindow.h"
 #include "preferenceswindow.h"
@@ -482,7 +481,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
     menuActionIter.toBack();
 
     while (menuActionIter.hasPrevious()) {
-        // Insert the action/separator to the right menu and keep track of it
+        // Insert the action/separator to the right menu
 
         GuiMenuActionSettings *menuActionSettings = menuActionIter.previous();
 
@@ -495,6 +494,9 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
             else
                 action = mGui->menuFile->insertSeparator(mGui->menuFile->actions().first());
 
+            // Keep track of the action/separator, so that it can be
+            // shown/hidden depending on which view is selected
+
             mViewActions.insertMulti(pPlugin, action);
 
             break;
@@ -506,8 +508,6 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
                 mGui->menuTools->insertAction(mGui->menuTools->actions().first(), action);
             else
                 action = mGui->menuTools->insertSeparator(mGui->menuTools->actions().first());
-
-            mViewActions.insertMulti(pPlugin, action);
 
             break;
         }

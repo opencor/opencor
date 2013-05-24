@@ -1,25 +1,25 @@
 //==============================================================================
-// CellMLSupport plugin
+// CellMLTools plugin
 //==============================================================================
 
-#ifndef CELLMLSUPPORTPLUGIN_H
-#define CELLMLSUPPORTPLUGIN_H
+#ifndef CELLMLTOOLSPLUGIN_H
+#define CELLMLTOOLSPLUGIN_H
 
 //==============================================================================
 
-#include "cellmlsupportglobal.h"
+#include "cellmltoolsglobal.h"
 #include "coreinterface.h"
-#include "fileinterface.h"
+#include "guiinterface.h"
 #include "i18ninterface.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLSupport {
+namespace CellMLTools {
 
 //==============================================================================
 
-PLUGININFO_FUNC CellMLSupportPluginInfo();
+PLUGININFO_FUNC CellMLToolsPluginInfo();
 
 //==============================================================================
 
@@ -28,31 +28,32 @@ static const QString CellmlFileExtension = "cellml";
 
 //==============================================================================
 
-class CellMLSupportPlugin : public QObject, public CoreInterface,
-                            public FileInterface, public I18nInterface
+class CellMLToolsPlugin : public QObject, public CoreInterface,
+                          public GuiInterface, public I18nInterface
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.CellMLSupportPlugin" FILE "cellmlsupportplugin.json")
+    Q_PLUGIN_METADATA(IID "OpenCOR.CellMLToolsPlugin" FILE "cellmltoolsplugin.json")
 
     Q_INTERFACES(OpenCOR::CoreInterface)
-    Q_INTERFACES(OpenCOR::FileInterface)
+    Q_INTERFACES(OpenCOR::GuiInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
 
 public:
-    virtual void initializationsDone(const Plugins & pLoadedPlugins);
+    virtual void initialize();
 
-    virtual FileTypes fileTypes() const;
-    virtual QString fileTypeDescription(const QString &pMimeType) const;
+    virtual void retranslateUi();
+
+private:
+    QAction *mToolsCellmlConversionAction;
+
+private Q_SLOTS:
+    void cellmlConversion();
 };
 
 //==============================================================================
 
-bool CELLMLSUPPORT_EXPORT isCellmlFile(const QString &pFileName);
-
-//==============================================================================
-
-}   // namespace CellMLSupport
+}   // namespace CellMLTools
 }   // namespace OpenCOR
 
 //==============================================================================

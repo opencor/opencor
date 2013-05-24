@@ -1,4 +1,4 @@
-PROJECT(CellMLSupportPlugin)
+PROJECT(CellMLToolsPlugin)
 
 # Retrieve some CellML API and LLVM settings
 
@@ -7,32 +7,24 @@ RETRIEVE_LLVM_SETTINGS()
 
 # Add the plugin
 
-ADD_PLUGIN(CellMLSupport
+ADD_PLUGIN(CellMLTools
     SOURCES
         ../../coreinterface.cpp
-        ../../fileinterface.cpp
+        ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../interface.cpp
         ../../plugininfo.cpp
 
-        src/cellmlfile.cpp
-        src/cellmlfileissue.cpp
-        src/cellmlfilemanager.cpp
-        src/cellmlfilerdftriple.cpp
-        src/cellmlfilerdftripleelement.cpp
-        src/cellmlfileruntime.cpp
-        src/cellmlsupportplugin.cpp
+        src/cellmltoolsplugin.cpp
     HEADERS_MOC
-        src/cellmlfile.h
-        src/cellmlfilemanager.h
-        src/cellmlfileruntime.h
-        src/cellmlsupportplugin.h
+        src/cellmltoolsplugin.h
     DEFINITIONS
         ${LLVM_DEFINITIONS}
     INCLUDE_DIRS
         src
     PLUGIN_DEPENDENCIES
         CellMLAPI
+        CellMLSupport
         Compiler
         Core
         CoreSolver

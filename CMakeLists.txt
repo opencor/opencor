@@ -172,6 +172,7 @@ SET(PLUGINS
     misc/Compiler
 
     misc/CellMLSupport
+    misc/CellMLTools
 
     editing/CoreCellMLEditing
 

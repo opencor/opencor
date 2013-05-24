@@ -7,7 +7,6 @@
 
 //==============================================================================
 
-#include <QAction>
 #include <QFileInfo>
 #include <QXmlStreamReader>
 
@@ -31,25 +30,6 @@ PLUGININFO_FUNC CellMLSupportPluginInfo()
                           false,
                           QStringList() << "Core" << "CellMLAPI" << "Compiler",
                           descriptions);
-}
-
-//==============================================================================
-
-void CellMLSupportPlugin::initialize()
-{
-    // Create our different Tools actions
-
-    mToolsCellmlConversionAction = newAction(mMainWindow);
-
-    // Some connections to handle our different File actions
-
-    connect(mToolsCellmlConversionAction, SIGNAL(triggered(bool)),
-            this, SLOT(cellmlConversion()));
-
-    // Set our settings
-
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::Tools, mToolsCellmlConversionAction);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::Tools);
 }
 
 //==============================================================================
@@ -87,22 +67,6 @@ QString CellMLSupportPlugin::fileTypeDescription(const QString &pMimeType) const
         // Not a MIME type that we can recognise, so...
 
         return FileInterface::fileTypeDescription(pMimeType);
-}
-
-//==============================================================================
-
-void CellMLSupportPlugin::retranslateUi()
-{
-    // Retranslate our different Tools actions
-
-    retranslateAction(mToolsCellmlConversionAction, tr("CellML conversion..."), tr("Convert a CellML file from one version to another"));
-}
-
-//==============================================================================
-
-void CellMLSupportPlugin::cellmlConversion()
-{
-//---GRY--- TO BE DONE...
 }
 
 //==============================================================================
