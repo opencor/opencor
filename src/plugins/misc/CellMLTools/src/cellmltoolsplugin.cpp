@@ -36,16 +36,16 @@ void CellMLToolsPlugin::initialize()
 {
     // Create our different Tools actions
 
-    mToolsCellmlConversionAction = newAction(mMainWindow);
+    mCellmlVersionConverterAction = newAction(mMainWindow);
 
     // Some connections to handle our different File actions
 
-    connect(mToolsCellmlConversionAction, SIGNAL(triggered(bool)),
-            this, SLOT(cellmlConversion()));
+    connect(mCellmlVersionConverterAction, SIGNAL(triggered(bool)),
+            this, SLOT(cellmlVersionConverter()));
 
     // Set our settings
 
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::Tools, mToolsCellmlConversionAction);
+    mGuiSettings->addMenuAction(GuiMenuActionSettings::Tools, mCellmlVersionConverterAction);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::Tools);
 }
 
@@ -55,12 +55,12 @@ void CellMLToolsPlugin::retranslateUi()
 {
     // Retranslate our different Tools actions
 
-    retranslateAction(mToolsCellmlConversionAction, tr("CellML Version Converter..."), tr("Convert a CellML file to another CellML version"));
+    retranslateAction(mCellmlVersionConverterAction, tr("CellML Version Converter..."), tr("Convert a CellML file to another CellML version"));
 }
 
 //==============================================================================
 
-void CellMLToolsPlugin::cellmlConversion()
+void CellMLToolsPlugin::cellmlVersionConverter()
 {
 //---GRY--- TO BE DONE...
 }
