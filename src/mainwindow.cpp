@@ -499,13 +499,13 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
 
             break;
         }
-        case GuiMenuActionSettings::View: {
+        case GuiMenuActionSettings::Tools: {
             QAction *action = menuActionSettings->action();
 
             if (action)
-                mGui->menuView->insertAction(mGui->menuView->actions().first(), action);
+                mGui->menuTools->insertAction(mGui->menuTools->actions().first(), action);
             else
-                action = mGui->menuView->insertSeparator(mGui->menuView->actions().first());
+                action = mGui->menuTools->insertSeparator(mGui->menuTools->actions().first());
 
             mViewActions.insertMulti(pPlugin, action);
 

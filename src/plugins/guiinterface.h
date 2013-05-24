@@ -75,7 +75,7 @@ public:
     enum GuiMenuActionSettingsType {
         File,
         FileNew,
-        View
+        Tools
     };
 
     explicit GuiMenuActionSettings(const GuiMenuActionSettingsType &pType,

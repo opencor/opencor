@@ -7,6 +7,14 @@
         <source>CellML File</source>
         <translation>Fichier CellML</translation>
     </message>
+    <message>
+        <source>Convert a CellML file from one version to another</source>
+        <translation>Convertir un fichier CellML d&apos;une version à une autre</translation>
+    </message>
+    <message>
+        <source>CellML conversion...</source>
+        <translation>Conversion CellML...</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::CellMLSupport::CellmlFile</name>
