@@ -7,6 +7,7 @@
 //==============================================================================
 
 #include <QAction>
+#include <QMenu>
 
 //==============================================================================
 
@@ -34,18 +35,29 @@ PLUGININFO_FUNC CellMLToolsPluginInfo()
 
 void CellMLToolsPlugin::initialize()
 {
-    // Create our different Tools actions
+    // Create our Tools | Export To menu
 
-    mCellmlVersionConverterAction = newAction(mMainWindow);
+    mExportToMenu = newMenu(mMainWindow, "ExportTo");
 
-    // Some connections to handle our different File actions
+    // Create our different Tools | Export To actions, and add them to our
+    // Tools | Export To menu
 
-    connect(mCellmlVersionConverterAction, SIGNAL(triggered(bool)),
-            this, SLOT(cellmlVersionConverter()));
+    mExportToCellml10Action = newAction(mMainWindow);
+    mExportToCellml11Action = newAction(mMainWindow);
+
+    mExportToMenu->addAction(mExportToCellml10Action);
+    mExportToMenu->addAction(mExportToCellml11Action);
+
+    // Some connections to handle our different Tools | Export To actions
+
+    connect(mExportToCellml10Action, SIGNAL(triggered(bool)),
+            this, SLOT(exportToCellml10()));
+    connect(mExportToCellml11Action, SIGNAL(triggered(bool)),
+            this, SLOT(exportToCellml11()));
 
     // Set our settings
 
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::Tools, mCellmlVersionConverterAction);
+    mGuiSettings->addMenuAction(GuiMenuActionSettings::Tools, mExportToMenu->menuAction());
     mGuiSettings->addMenuAction(GuiMenuActionSettings::Tools);
 }
 
@@ -55,12 +67,22 @@ void CellMLToolsPlugin::retranslateUi()
 {
     // Retranslate our different Tools actions
 
-    retranslateAction(mCellmlVersionConverterAction, tr("CellML Version Converter..."), tr("Convert a CellML file to another CellML version"));
+    retranslateMenu(mExportToMenu, tr("Export To"), tr("Export the CellML file to a given format"));
+
+    retranslateAction(mExportToCellml10Action, tr("CellML 1.0..."), tr("Export the CellML file to CellML 1.0"));
+    retranslateAction(mExportToCellml11Action, tr("CellML 1.1..."), tr("Export the CellML file to CellML 1.1"));
 }
 
 //==============================================================================
 
-void CellMLToolsPlugin::cellmlVersionConverter()
+void CellMLToolsPlugin::exportToCellml10()
+{
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
+void CellMLToolsPlugin::exportToCellml11()
 {
 //---GRY--- TO BE DONE...
 }

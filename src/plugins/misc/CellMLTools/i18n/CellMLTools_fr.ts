@@ -4,12 +4,28 @@
 <context>
     <name>OpenCOR::CellMLTools::CellMLToolsPlugin</name>
     <message>
-        <source>CellML Version Converter...</source>
-        <translation>Convertisseur de Version CellML...</translation>
+        <source>Export To</source>
+        <translation>Exporter Vers</translation>
     </message>
     <message>
-        <source>Convert a CellML file to another CellML version</source>
-        <translation>Convertir un fichier CellML à une autre version de CellML</translation>
+        <source>Export the CellML file to a given format</source>
+        <translation>Exporter le fichier CellML vers un format donné</translation>
+    </message>
+    <message>
+        <source>Export the CellML file to CellML 1.0</source>
+        <translation>Exporter le fichier CellML vers CellML 1.0</translation>
+    </message>
+    <message>
+        <source>Export the CellML file to CellML 1.1</source>
+        <translation>Exporter le fichier CellML vers CellML 1.1</translation>
+    </message>
+    <message>
+        <source>CellML 1.0...</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>CellML 1.1...</source>
+        <translation></translation>
     </message>
 </context>
 </TS>

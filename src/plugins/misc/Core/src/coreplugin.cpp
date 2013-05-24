@@ -386,7 +386,8 @@ void CorePlugin::retranslateUi()
 
     // Retranslate our File sub-menu and its action
 
-    retranslateMenu(mFileReopenSubMenu, tr("Reopen"));
+    retranslateMenu(mFileReopenSubMenu, tr("Reopen"),
+                    tr("Reopen a previously opened file"));
 
     retranslateAction(mFileClearReopenSubMenuAction, tr("Clear Menu"),
                       tr("Clear the menu"));

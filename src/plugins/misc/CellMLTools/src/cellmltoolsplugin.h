@@ -45,10 +45,14 @@ public:
     virtual void retranslateUi();
 
 private:
-    QAction *mCellmlVersionConverterAction;
+    QMenu *mExportToMenu;
+
+    QAction *mExportToCellml10Action;
+    QAction *mExportToCellml11Action;
 
 private Q_SLOTS:
-    void cellmlVersionConverter();
+    void exportToCellml10();
+    void exportToCellml11();
 };
 
 //==============================================================================

@@ -158,6 +158,14 @@
         <source>You are about to reset &lt;strong&gt;all&lt;/strong&gt; of your settings. Do you wish to proceed?</source>
         <translation>Vous êtes sur le point de réinitialiser &lt;strong&gt;tous&lt;/strong&gt; vos paramètres. Voulez-vous continuer ?</translation>
     </message>
+    <message>
+        <source>Create a new file</source>
+        <translation>Créer un nouveau fichier</translation>
+    </message>
+    <message>
+        <source>Show/hide organisation windows</source>
+        <translation>Montrer/cacher les fenêtres d&apos;organisation</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::PluginsWindow</name>

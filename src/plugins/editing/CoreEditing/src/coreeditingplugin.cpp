@@ -101,7 +101,7 @@ void CoreEditingPlugin::retranslateUi()
 {
     // Retranslate our Edit menu
 
-    retranslateMenu(mEditMenu, tr("&Edit"));
+    retranslateMenu(mEditMenu, tr("&Edit"), QString());
 
     // Retranslate our different Edit actions
 

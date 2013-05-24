@@ -502,11 +502,13 @@ void GuiInterface::connectDockWidgetToAction(QDockWidget *pDockWidget,
 
 //==============================================================================
 
-void GuiInterface::retranslateMenu(QMenu *pMenu, const QString &pTitle)
+void GuiInterface::retranslateMenu(QMenu *pMenu, const QString &pTitle,
+                                   const QString &pStatusTip)
 {
     // Retranslate the menu, i.e. retranslate its title
 
     pMenu->setTitle(pTitle);
+    pMenu->setStatusTip(pStatusTip);
 }
 
 //==============================================================================
