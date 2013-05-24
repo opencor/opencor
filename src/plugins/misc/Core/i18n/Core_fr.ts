@@ -134,10 +134,6 @@
         <source>Sorry, but &lt;strong&gt;%1&lt;/strong&gt; does not exist anymore.</source>
         <translation>Désolé, mais &lt;strong&gt;%1&lt;/strong&gt; n&apos;existe plus.</translation>
     </message>
-    <message>
-        <source>Reopen a previously opened file</source>
-        <translation>Réouvrir un fichier qui a été précédemment ouvert</translation>
-    </message>
 </context>
 <context>
     <name>OpenCOR::Core::PropertyEditorWidget</name>

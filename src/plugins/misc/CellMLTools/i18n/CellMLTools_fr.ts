@@ -8,10 +8,6 @@
         <translation>Exporter Vers</translation>
     </message>
     <message>
-        <source>Export the CellML file to a given format</source>
-        <translation>Exporter le fichier CellML vers un format donné</translation>
-    </message>
-    <message>
         <source>Export the CellML file to CellML 1.0</source>
         <translation>Exporter le fichier CellML vers CellML 1.0</translation>
     </message>

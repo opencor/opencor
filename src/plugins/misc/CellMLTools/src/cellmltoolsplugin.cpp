@@ -67,7 +67,7 @@ void CellMLToolsPlugin::retranslateUi()
 {
     // Retranslate our different Tools actions
 
-    retranslateMenu(mExportToMenu, tr("Export To"), tr("Export the CellML file to a given format"));
+    retranslateMenu(mExportToMenu, tr("Export To"));
 
     retranslateAction(mExportToCellml10Action, tr("CellML 1.0..."), tr("Export the CellML file to CellML 1.0"));
     retranslateAction(mExportToCellml11Action, tr("CellML 1.1..."), tr("Export the CellML file to CellML 1.1"));

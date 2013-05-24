@@ -831,13 +831,11 @@ void MainWindow::setLocale(const QString &pLocale, const bool &pForceSetting)
         // interface
 
         if (mFileNewMenu)
-            GuiInterface::retranslateMenu(mFileNewMenu, tr("New"),
-                                          tr("Create a new file"));
+            GuiInterface::retranslateMenu(mFileNewMenu, tr("New"));
 
         if (mViewOrganisationMenu)
             GuiInterface::retranslateMenu(mViewOrganisationMenu,
-                                          tr("Organisation"),
-                                          tr("Show/hide organisation windows"));
+                                          tr("Organisation"));
 
         // Update the locale of our various loaded plugins
         // Note: we must set the locale of all the plugins before we can safely

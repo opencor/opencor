@@ -214,8 +214,7 @@ public:
 
     static void connectDockWidgetToAction(QDockWidget *pDockWidget, QAction *pAction);
 
-    static void retranslateMenu(QMenu *pMenu, const QString &pTitle,
-                                const QString &pStatusTip);
+    static void retranslateMenu(QMenu *pMenu, const QString &pTitle);
     static void retranslateAction(QAction *pAction, const QString &pText,
                                   const QString &pStatusTip);
 
