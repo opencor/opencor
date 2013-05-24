@@ -37,7 +37,7 @@ void CellMLToolsPlugin::initialize()
 {
     // Create our Tools | Export To menu
 
-    mExportToMenu = newMenu(mMainWindow, "ExportTo");
+    mCellmlExportToMenu = newMenu(mMainWindow, "CellmlExportTo");
 
     // Create our different Tools | Export To actions, and add them to our
     // Tools | Export To menu
@@ -45,8 +45,8 @@ void CellMLToolsPlugin::initialize()
     mExportToCellml10Action = newAction(mMainWindow);
     mExportToCellml11Action = newAction(mMainWindow);
 
-    mExportToMenu->addAction(mExportToCellml10Action);
-    mExportToMenu->addAction(mExportToCellml11Action);
+    mCellmlExportToMenu->addAction(mExportToCellml10Action);
+    mCellmlExportToMenu->addAction(mExportToCellml11Action);
 
     // Some connections to handle our different Tools | Export To actions
 
@@ -57,7 +57,7 @@ void CellMLToolsPlugin::initialize()
 
     // Set our settings
 
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::Tools, mExportToMenu->menuAction());
+    mGuiSettings->addMenuAction(GuiMenuActionSettings::Tools, mCellmlExportToMenu->menuAction());
     mGuiSettings->addMenuAction(GuiMenuActionSettings::Tools);
 }
 
@@ -67,7 +67,7 @@ void CellMLToolsPlugin::retranslateUi()
 {
     // Retranslate our different Tools actions
 
-    retranslateMenu(mExportToMenu, tr("Export To"));
+    retranslateMenu(mCellmlExportToMenu, tr("CellML Export To"));
 
     retranslateAction(mExportToCellml10Action, tr("CellML 1.0..."), tr("Export the CellML file to CellML 1.0"));
     retranslateAction(mExportToCellml11Action, tr("CellML 1.1..."), tr("Export the CellML file to CellML 1.1"));

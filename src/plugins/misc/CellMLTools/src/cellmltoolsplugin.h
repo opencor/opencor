@@ -45,7 +45,7 @@ public:
     virtual void retranslateUi();
 
 private:
-    QMenu *mExportToMenu;
+    QMenu *mCellmlExportToMenu;
 
     QAction *mExportToCellml10Action;
     QAction *mExportToCellml11Action;
