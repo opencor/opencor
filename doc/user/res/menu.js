@@ -9,6 +9,7 @@ function headerAndContentsMenu(pageName, relativePath) {
                              [0, "Plugins", "user/plugins/index.html"],
                              [1, "CellMLAnnotationView", "user/plugins/CellMLAnnotationView.html"],
                              [1, "CellMLModelRepository", "user/plugins/CellMLModelRepository.html"],
+                             [1, "CellMLTools", "user/plugins/CellMLTools.html"],
                              [1, "FileBrowser", "user/plugins/FileBrowser.html"],
                              [1, "FileOrganiser", "user/plugins/FileOrganiser.html"],
                              [1, "Help", "user/plugins/Help.html"],

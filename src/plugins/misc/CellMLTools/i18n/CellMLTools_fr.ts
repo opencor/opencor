@@ -4,12 +4,12 @@
 <context>
     <name>OpenCOR::CellMLTools::CellMLToolsPlugin</name>
     <message>
-        <source>Convert a CellML file from one version to another</source>
-        <translation>Convertir un fichier CellML d&apos;une version à une autre</translation>
+        <source>CellML Version Converter...</source>
+        <translation>Convertisseur de Version CellML...</translation>
     </message>
     <message>
-        <source>CellML conversion...</source>
-        <translation>Conversion CellML...</translation>
+        <source>Convert a CellML file to another CellML version</source>
+        <translation>Convertir un fichier CellML à une autre version de CellML</translation>
     </message>
 </context>
 </TS>

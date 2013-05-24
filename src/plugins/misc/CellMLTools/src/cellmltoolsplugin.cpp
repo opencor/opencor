@@ -55,7 +55,7 @@ void CellMLToolsPlugin::retranslateUi()
 {
     // Retranslate our different Tools actions
 
-    retranslateAction(mToolsCellmlConversionAction, tr("CellML conversion..."), tr("Convert a CellML file from one version to another"));
+    retranslateAction(mToolsCellmlConversionAction, tr("CellML Version Converter..."), tr("Convert a CellML file to another CellML version"));
 }
 
 //==============================================================================
