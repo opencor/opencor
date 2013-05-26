@@ -1033,21 +1033,14 @@ void CentralWidget::updateGui()
 
     int fileTabsCrtIndex = mFileTabs->currentIndex();
     GuiInterface *guiInterface = mPlugin?qobject_cast<GuiInterface *>(mPlugin->instance()):0;
+    QWidget *newView;
 
     if (fileTabsCrtIndex == -1) {
-        // Let people know that we are about to update the GUI
-
-        emit guiUpdated(mPlugin);
-
-        // There is no current file, so show our logo instead
-
-        mContents->removeWidget(mContents->currentWidget());
-        mContents->addWidget(mLogoView);
+        newView = mLogoView;
     } else {
         // There is a current file, so retrieve its view
 
-        QString fileName = mFileNames[fileTabsCrtIndex];
-        QWidget *newView = guiInterface->viewWidget(fileName);
+        newView = guiInterface->viewWidget(mFileNames[fileTabsCrtIndex]);
 
         if (newView) {
             // We have a view for the current file, so create a connection
@@ -1072,35 +1065,35 @@ void CentralWidget::updateGui()
 
             updateNoViewMsg();
         }
-
-        // Let people know that we are about to update the GUI
-
-        emit guiUpdated(mPlugin);
-
-        // Replace the current view with the new one
-        // Note: the order in which the adding and removing (as well as the
-        //       showing/hiding) of view is done ensures that the replacement
-        //       looks as good as possible...
-
-        mContents->removeWidget(mContents->currentWidget());
-        mContents->addWidget(newView);
     }
+
+    // Let people know that we are about to update the GUI
+
+    emit guiUpdated(mPlugin);
+
+    // Replace the current view with the new one
+    // Note: the order in which the adding and removing (as well as the
+    //       showing/hiding) of view is done to ensures that the replacement
+    //       looks as good as possible...
+
+    mContents->removeWidget(mContents->currentWidget());
+    mContents->addWidget(newView);
 
     // Give the focus to the new view after first checking whether it has a
     // focused widget
 
-    if (mContents->currentWidget()->focusWidget())
+    if (newView->focusWidget())
         // The new view has a focused widget, so just focus it (indeed, say that
         // we are using the CellML Annotation view and that we are editing some
         // metadata, then we don't want the CellML element list to get the focus
         // back, so...)
 
-        mContents->currentWidget()->focusWidget()->setFocus();
+        newView->focusWidget()->setFocus();
     else
         // The new view doesn't have a focused widget, so simply give the focus
         // to our new view
 
-        mContents->currentWidget()->setFocus();
+        newView->setFocus();
 
     // Update our modified settings
 
@@ -1109,8 +1102,7 @@ void CentralWidget::updateGui()
     // Let people know whether we can save as, as well as whether there is/are
     // at least one/two file/s
 
-    emit canSaveAs(   mFileTabs->count()
-                   && (mContents->currentWidget() != mNoViewMsg)
+    emit canSaveAs(   mFileTabs->count() && (newView != mNoViewMsg)
                    && guiInterface && guiInterface->guiSettings()->view()->mimeTypes().count());
 
     emit atLeastOneFile(mFileTabs->count());
