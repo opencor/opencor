@@ -13,10 +13,15 @@ ADD_PLUGIN(CellMLTools
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../interface.cpp
+        ../../plugin.cpp
         ../../plugininfo.cpp
+        ../../pluginmanager.cpp
 
         src/cellmltoolsplugin.cpp
     HEADERS_MOC
+        ../../plugin.h
+        ../../pluginmanager.h
+
         src/cellmltoolsplugin.h
     DEFINITIONS
         ${LLVM_DEFINITIONS}

@@ -1308,7 +1308,7 @@ void MainWindow::updateGui(Plugin *pViewPlugin)
 {
     // We come here as a result of our central widget having updated its GUI,
     // meaning that a new view has been selected, so we may need to show/hide
-    // some actions/menus as a result of it
+    // some menus/actions as a result of it
 
     // Check whether we are dealing with the current view plugin
 
@@ -1319,35 +1319,6 @@ void MainWindow::updateGui(Plugin *pViewPlugin)
 
     mViewPlugin = pViewPlugin;
     mNeedViewPluginInitialisation = false;
-
-    // Go through our view actions and check whether the view plugin to which
-    // they are attached are our current view plugin or one of its (in)direct
-    // dependencies, and if so then enable it and show it, or disable it and
-    // hide it
-
-    for (QMap<Plugin *, QAction *>::ConstIterator iter = mViewActions.constBegin(),
-                                                  iterEnd = mViewActions.constEnd();
-         iter != iterEnd; ++iter) {
-        bool validViewAction = pViewPlugin
-                               && (   !iter.key()->name().compare(pViewPlugin->name())
-                                   ||  pViewPlugin->info()->fullDependencies().contains(iter.key()->name()));
-
-        iter.value()->setEnabled(validViewAction);
-        iter.value()->setVisible(validViewAction);
-    }
-
-    // Go through our view menus and do the same as what we did for our view
-    // actions above
-
-    for (QMap<Plugin *, QMenu *>::ConstIterator iter = mViewMenus.constBegin(),
-                                                iterEnd = mViewMenus.constEnd();
-         iter != iterEnd; ++iter) {
-        bool validViewMenu = pViewPlugin
-                             && (   !iter.key()->name().compare(pViewPlugin->name())
-                                 ||  pViewPlugin->info()->fullDependencies().contains(iter.key()->name()));
-
-        iter.value()->menuAction()->setVisible(validViewMenu);
-    }
 
     // Show/hide the File|New menu by checking whether its menu items are
     // visible
@@ -1363,6 +1334,48 @@ void MainWindow::updateGui(Plugin *pViewPlugin)
             }
 
         mFileNewMenu->menuAction()->setVisible(fileNewMenuVisible);
+    }
+
+    // Go through our view menus and check whether the view plugin to which
+    // they are attached are our current view plugin or one of its (in)direct
+    // dependencies, and if so then enable and show them, or disable and hide
+    // them
+
+    for (QMap<Plugin *, QMenu *>::ConstIterator iter = mViewMenus.constBegin(),
+                                                iterEnd = mViewMenus.constEnd();
+         iter != iterEnd; ++iter) {
+        bool validViewMenu = pViewPlugin
+                             && (   !iter.key()->name().compare(pViewPlugin->name())
+                                 ||  pViewPlugin->info()->fullDependencies().contains(iter.key()->name()));
+
+        iter.value()->menuAction()->setEnabled(validViewMenu);
+        iter.value()->menuAction()->setVisible(validViewMenu);
+    }
+
+    // Go through our view actions and do the same as what we did for our view
+    // menus above
+
+    for (QMap<Plugin *, QAction *>::ConstIterator iter = mViewActions.constBegin(),
+                                                  iterEnd = mViewActions.constEnd();
+         iter != iterEnd; ++iter) {
+        bool validViewAction = pViewPlugin
+                               && (   !iter.key()->name().compare(pViewPlugin->name())
+                                   ||  pViewPlugin->info()->fullDependencies().contains(iter.key()->name()));
+
+        iter.value()->setEnabled(validViewAction);
+        iter.value()->setVisible(validViewAction);
+    }
+
+    // Let our different plugins know that the GUI got updated
+    // Note: this can be useful when a plugin (e.g. CellMLTools) offers some
+    //       tools which may need to be enabled/disabled and shown/hidden,
+    //       depending on which view plugin is currently active...
+
+    foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
+        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+
+        if (guiInterface)
+            guiInterface->updateGui(pViewPlugin);
     }
 }
 

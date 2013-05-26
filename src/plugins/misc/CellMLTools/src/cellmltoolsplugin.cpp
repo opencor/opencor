@@ -63,6 +63,27 @@ void CellMLToolsPlugin::initialize()
 
 //==============================================================================
 
+void CellMLToolsPlugin::updateGui(Plugin *pViewPlugin)
+{
+    // Enable/disable and show/hide our tools in case we are dealing with a
+    // CellML-based view plugin
+
+    bool toolsEnabledAndVisible = pViewPlugin?
+                                      pViewPlugin->info()->fullDependencies().contains("CellMLSupport"):
+                                      false;
+
+    mCellmlExportToMenu->menuAction()->setEnabled(toolsEnabledAndVisible);
+    mCellmlExportToMenu->menuAction()->setVisible(toolsEnabledAndVisible);
+
+    mExportToCellml10Action->setEnabled(toolsEnabledAndVisible);
+    mExportToCellml10Action->setVisible(toolsEnabledAndVisible);
+
+    mExportToCellml11Action->setEnabled(toolsEnabledAndVisible);
+    mExportToCellml11Action->setVisible(toolsEnabledAndVisible);
+}
+
+//==============================================================================
+
 void CellMLToolsPlugin::retranslateUi()
 {
     // Retranslate our different Tools actions

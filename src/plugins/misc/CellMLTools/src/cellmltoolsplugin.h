@@ -42,6 +42,8 @@ class CellMLToolsPlugin : public QObject, public CoreInterface,
 public:
     virtual void initialize();
 
+    virtual void updateGui(Plugin *pViewPlugin);
+
     virtual void retranslateUi();
 
 private:

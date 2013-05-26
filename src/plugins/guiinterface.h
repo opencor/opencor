@@ -31,6 +31,10 @@ namespace OpenCOR {
 
 //==============================================================================
 
+class Plugin;
+
+//==============================================================================
+
 namespace Core {
 
 //==============================================================================
@@ -183,6 +187,8 @@ public:
     explicit GuiInterface();
 
     virtual void changeEvent(QEvent *pEvent);
+
+    virtual void updateGui(Plugin *pViewPlugin);
 
     virtual QWidget * viewWidget(const QString &pFileName);
     virtual QWidget * removeViewWidget(const QString &pFileName);
