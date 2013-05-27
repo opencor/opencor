@@ -116,19 +116,13 @@ CvodeSolver::~CvodeSolver()
 
 //==============================================================================
 
-void CvodeSolver::initialize(const double &pVoiStart, const int &pStatesCount,
-                             double *pConstants, double *pStates,
-                             double *pRates, double *pAlgebraic,
+void CvodeSolver::initialize(const double &pVoiStart,
+                             const int &pRatesStatesCount, double *pConstants,
+                             double *pRates, double *pStates,
+                             double *pAlgebraic,
                              ComputeRatesFunction pComputeRates)
 {
     if (!mSolver) {
-        // Initialise the ODE solver itself
-
-        OpenCOR::CoreSolver::CoreOdeSolver::initialize(pVoiStart, pStatesCount,
-                                                       pConstants, pStates,
-                                                       pRates, pAlgebraic,
-                                                       pComputeRates);
-
         // Retrieve some of the CVODE properties
 
         if (mProperties.contains(MaximumStepProperty)) {
@@ -163,9 +157,17 @@ void CvodeSolver::initialize(const double &pVoiStart, const int &pStatesCount,
             return;
         }
 
+        // Initialise the ODE solver itself
+
+        OpenCOR::CoreSolver::CoreOdeSolver::initialize(pVoiStart,
+                                                       pRatesStatesCount,
+                                                       pConstants, pRates,
+                                                       pStates, pAlgebraic,
+                                                       pComputeRates);
+
         // Create the states vector
 
-        mStatesVector = N_VMake_Serial(pStatesCount, pStates);
+        mStatesVector = N_VMake_Serial(pRatesStatesCount, pStates);
 
         // Create the CVODE solver
 
@@ -190,7 +192,7 @@ void CvodeSolver::initialize(const double &pVoiStart, const int &pStatesCount,
 
         // Set the linear solver
 
-        CVDense(mSolver, pStatesCount);
+        CVDense(mSolver, pRatesStatesCount);
 
         // Set the maximum step
 

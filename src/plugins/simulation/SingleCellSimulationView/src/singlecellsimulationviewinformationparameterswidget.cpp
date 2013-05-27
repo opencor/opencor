@@ -172,12 +172,12 @@ void SingleCellSimulationViewInformationParametersWidget::updateParameters()
                 propertyEditor->setDoublePropertyItem(property->value(), mSimulationData->constants()[modelParameter->index()]);
 
                 break;
-            case CellMLSupport::CellmlFileRuntimeModelParameter::State:
-                propertyEditor->setDoublePropertyItem(property->value(), mSimulationData->states()[modelParameter->index()]);
-
-                break;
             case CellMLSupport::CellmlFileRuntimeModelParameter::Rate:
                 propertyEditor->setDoublePropertyItem(property->value(), mSimulationData->rates()[modelParameter->index()]);
+
+                break;
+            case CellMLSupport::CellmlFileRuntimeModelParameter::State:
+                propertyEditor->setDoublePropertyItem(property->value(), mSimulationData->states()[modelParameter->index()]);
 
                 break;
             case CellMLSupport::CellmlFileRuntimeModelParameter::Algebraic:
@@ -228,12 +228,12 @@ void SingleCellSimulationViewInformationParametersWidget::propertyChanged(Core::
         }
 
     // Recompute our 'computed constants' and 'variables'
+    // Note: we would normally call mSimulationData->checkForModifications()
+    //       after recomputing our 'computed constants' and 'variables, but the
+    //       recomputation will eventually result in updateParameters() abvove
+    //       to be called and it will check for modifications, so...
 
     mSimulationData->recomputeComputedConstantsAndVariables();
-
-    // Check whether any of our properties has actually been modified
-
-    mSimulationData->checkForModifications();
 }
 
 //==============================================================================
@@ -277,6 +277,10 @@ void SingleCellSimulationViewInformationParametersWidget::finishPropertyEditing(
 void SingleCellSimulationViewInformationParametersWidget::populateModel(Core::PropertyEditorWidget *pPropertyEditor,
                                                                         CellMLSupport::CellmlFileRuntime *pRuntime)
 {
+    // Prevent ourselves from being updated (to avoid any flickering)
+
+    pPropertyEditor->setUpdatesEnabled(false);
+
     // Populate our property editor with the model parameters
 
     Core::Property *section = 0;
@@ -327,10 +331,6 @@ void SingleCellSimulationViewInformationParametersWidget::populateModel(Core::Pr
 
         mModelParameters.insert(property, modelParameter);
     }
-
-    // Prevent ourselves from being updated (to avoid any flickering)
-
-    pPropertyEditor->setUpdatesEnabled(false);
 
     // Expand all our properties
 

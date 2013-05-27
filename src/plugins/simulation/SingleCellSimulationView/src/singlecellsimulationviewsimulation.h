@@ -49,8 +49,8 @@ public:
     ~SingleCellSimulationViewSimulationData();
 
     double * constants() const;
-    double * states() const;
     double * rates() const;
+    double * states() const;
     double * algebraic() const;
     double * condVar() const;
 
@@ -116,8 +116,8 @@ private:
     CoreSolver::Properties mNlaSolverProperties;
 
     double *mConstants;
-    double *mStates;
     double *mRates;
+    double *mStates;
     double *mAlgebraic;
     double *mCondVar;
 
@@ -149,8 +149,8 @@ public:
     double * points() const;
 
     double **constants() const;
-    double **states() const;
     double **rates() const;
+    double **states() const;
     double **algebraic() const;
 
     bool exportToCsv(const QString &pFileName) const;
@@ -165,8 +165,8 @@ private:
     double *mPoints;
 
     double **mConstants;
-    double **mStates;
     double **mRates;
+    double **mStates;
     double **mAlgebraic;
 
     bool createArrays();

@@ -116,10 +116,10 @@ double * SingleCellSimulationViewWidgetCurveData::yData() const
     if (   (mModelParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::Constant)
         || (mModelParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::ComputedConstant))
         return mSimulation->results()->constants()?mSimulation->results()->constants()[mModelParameter->index()]:0;
-    else if (mModelParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::State)
-        return mSimulation->results()->states()?mSimulation->results()->states()[mModelParameter->index()]:0;
     else if (mModelParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::Rate)
         return mSimulation->results()->rates()?mSimulation->results()->rates()[mModelParameter->index()]:0;
+    else if (mModelParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::State)
+        return mSimulation->results()->states()?mSimulation->results()->states()[mModelParameter->index()]:0;
     else
         return mSimulation->results()->algebraic()?mSimulation->results()->algebraic()[mModelParameter->index()]:0;
 }

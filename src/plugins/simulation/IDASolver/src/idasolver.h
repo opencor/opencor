@@ -47,12 +47,16 @@ static const double DefaultAbsoluteTolerance = 1.0e-7;
 class IdaSolverUserData
 {
 public:
-    explicit IdaSolverUserData(double *pConstants, double *pAlgebraic, double *pCondVar,
+    explicit IdaSolverUserData(double *pConstants, double *pOldRates,
+                               double *pOldStates, double *pAlgebraic,
+                               double *pCondVar,
                                CoreSolver::CoreDaeSolver::ComputeEssentialVariablesFunction pComputeEssentialVariables,
                                CoreSolver::CoreDaeSolver::ComputeResidualsFunction pComputeResiduals,
                                CoreSolver::CoreDaeSolver::ComputeRootInformationFunction pComputeRootInformation);
 
     double * constants() const;
+    double * oldRates() const;
+    double * oldStates() const;
     double * algebraic() const;
     double * condVar() const;
 
@@ -62,6 +66,8 @@ public:
 
 private:
     double *mConstants;
+    double *mOldRates;
+    double *mOldStates;
     double *mAlgebraic;
     double *mCondVar;
 
@@ -79,9 +85,10 @@ public:
     ~IdaSolver();
 
     virtual void initialize(const double &pVoiStart, const double &pVoiEnd,
-                            const int &pStatesCount, const int &pCondVarCount,
-                            double *pConstants, double *pRates, double *pStates,
-                            double *pAlgebraic, double *pCondVar,
+                            const int &pRatesStatesCount,
+                            const int &pCondVarCount, double *pConstants,
+                            double *pRates, double *pStates, double *pAlgebraic,
+                            double *pCondVar,
                             ComputeEssentialVariablesFunction pComputeEssentialVariables,
                             ComputeResidualsFunction pComputeResiduals,
                             ComputeRootInformationFunction pComputeRootInformation,
@@ -91,8 +98,8 @@ public:
 
 private:
     void *mSolver;
-    N_Vector mStatesVector;
     N_Vector mRatesVector;
+    N_Vector mStatesVector;
     IdaSolverUserData *mUserData;
 
     double mMaximumStep;

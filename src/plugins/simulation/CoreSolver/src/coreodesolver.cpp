@@ -19,20 +19,21 @@ CoreOdeSolver::CoreOdeSolver() :
 
 //==============================================================================
 
-void CoreOdeSolver::initialize(const double &pVoiStart, const int &pStatesCount,
-                               double *pConstants, double *pStates,
-                               double *pRates, double *pAlgebraic,
+void CoreOdeSolver::initialize(const double &pVoiStart,
+                               const int &pRatesStatesCount, double *pConstants,
+                               double *pRates, double *pStates,
+                               double *pAlgebraic,
                                ComputeRatesFunction pComputeRates)
 {
     Q_UNUSED(pVoiStart);
 
     // Initialise the ODE solver
 
-    mStatesCount = pStatesCount;
+    mRatesStatesCount = pRatesStatesCount;
 
     mConstants = pConstants;
-    mStates    = pStates;
     mRates     = pRates;
+    mStates    = pStates;
     mAlgebraic = pAlgebraic;
 
     mComputeRates = pComputeRates;

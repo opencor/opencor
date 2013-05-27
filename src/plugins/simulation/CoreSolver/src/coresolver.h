@@ -21,6 +21,11 @@ namespace CoreSolver {
 
 //==============================================================================
 
+static const int SizeOfDouble = sizeof(double);
+static const int SizeOfDoublePointer = sizeof(double *);
+
+//==============================================================================
+
 typedef QMap<QString, QVariant> Properties;
 
 //==============================================================================

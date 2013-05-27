@@ -196,10 +196,10 @@ void SingleCellSimulationViewSimulationWorker::started()
         odeSolver->initialize(currentPoint,
                               mRuntime->statesCount(),
                               mSimulation->data()->constants(),
-                              mSimulation->data()->states(),
                               mSimulation->data()->rates(),
+                              mSimulation->data()->states(),
                               mSimulation->data()->algebraic(),
-                              mRuntime->computeRates());
+                              mRuntime->computeOdeRates());
     } else {
         daeSolver->setProperties(mSimulation->data()->daeSolverProperties());
 
@@ -207,14 +207,14 @@ void SingleCellSimulationViewSimulationWorker::started()
                               mRuntime->statesCount(),
                               mRuntime->condVarCount(),
                               mSimulation->data()->constants(),
-                              mSimulation->data()->states(),
                               mSimulation->data()->rates(),
+                              mSimulation->data()->states(),
                               mSimulation->data()->algebraic(),
                               mSimulation->data()->condVar(),
-                              mRuntime->computeEssentialVariables(),
-                              mRuntime->computeResiduals(),
-                              mRuntime->computeRootInformation(),
-                              mRuntime->computeStateInformation());
+                              mRuntime->computeDaeEssentialVariables(),
+                              mRuntime->computeDaeResiduals(),
+                              mRuntime->computeDaeRootInformation(),
+                              mRuntime->computeDaeStateInformation());
     }
 
     // Initialise our NLA solver
@@ -324,23 +324,23 @@ void SingleCellSimulationViewSimulationWorker::started()
                     odeSolver->initialize(currentPoint,
                                           mRuntime->statesCount(),
                                           mSimulation->data()->constants(),
-                                          mSimulation->data()->states(),
                                           mSimulation->data()->rates(),
+                                          mSimulation->data()->states(),
                                           mSimulation->data()->algebraic(),
-                                          mRuntime->computeRates());
+                                          mRuntime->computeOdeRates());
                 else
                     daeSolver->initialize(currentPoint, endingPoint,
                                           mRuntime->statesCount(),
                                           mRuntime->condVarCount(),
                                           mSimulation->data()->constants(),
-                                          mSimulation->data()->states(),
                                           mSimulation->data()->rates(),
+                                          mSimulation->data()->states(),
                                           mSimulation->data()->algebraic(),
                                           mSimulation->data()->condVar(),
-                                          mRuntime->computeEssentialVariables(),
-                                          mRuntime->computeResiduals(),
-                                          mRuntime->computeRootInformation(),
-                                          mRuntime->computeStateInformation());
+                                          mRuntime->computeDaeEssentialVariables(),
+                                          mRuntime->computeDaeResiduals(),
+                                          mRuntime->computeDaeRootInformation(),
+                                          mRuntime->computeDaeStateInformation());
 
                 mReset = false;
             }
