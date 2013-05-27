@@ -741,63 +741,6 @@ void SingleCellSimulationViewWidget::initialize(const QString &pFileName)
         solversWidget->initialize(pFileName, cellmlFileRuntime, mSimulation->data());
         parametersWidget->initialize(pFileName, cellmlFileRuntime, mSimulation->data());
 
-#ifdef QT_DEBUG
-        // Output the type of solvers that are available to run the model
-
-        qDebug("---------------------------------------");
-        qDebug("%s", qPrintable(pFileName));
-
-        information = QString();
-
-        if (cellmlFileRuntime->needOdeSolver()) {
-            information += "\n - ODE solver(s): ";
-
-            int solverCounter = 0;
-
-            foreach (const QString &odeSolver, solversWidget->odeSolvers())
-                if (++solverCounter == 1)
-                    information += odeSolver;
-                else
-                    information += " | "+odeSolver;
-
-            if (!solverCounter)
-                information += "none available";
-        }
-
-        if (cellmlFileRuntime->needDaeSolver()) {
-            information += "\n - DAE solver(s): ";
-
-            int solverCounter = 0;
-
-            foreach (const QString &daeSolver, solversWidget->daeSolvers())
-                if (++solverCounter == 1)
-                    information += daeSolver;
-                else
-                    information += " | "+daeSolver;
-
-            if (!solverCounter)
-                information += "none available";
-        }
-
-        if (cellmlFileRuntime->needNlaSolver()) {
-            information += "\n - NLA solver(s): ";
-
-            int solverCounter = 0;
-
-            foreach (const QString &nlaSolver, solversWidget->nlaSolvers())
-                if (++solverCounter == 1)
-                    information += nlaSolver;
-                else
-                    information += " | "+nlaSolver;
-
-            if (!solverCounter)
-                information += "none available";
-        }
-
-        qDebug("%s", qPrintable(information.remove(0, 1)));
-        // Note: we must remove the leading '\n'...
-#endif
-
         // Check whether we have at least one ODE or DAE solver and, if needed,
         // at least one NLA solver
 

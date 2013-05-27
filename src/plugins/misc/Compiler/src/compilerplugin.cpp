@@ -22,7 +22,7 @@ PLUGININFO_FUNC CompilerPluginInfo()
                           PluginInfo::General,
                           PluginInfo::Miscellaneous,
                           false,
-                          QStringList() << "CoreSolver" << "LLVM",
+                          QStringList() << "LLVM",
                           descriptions);
 }
 

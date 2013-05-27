@@ -215,48 +215,6 @@ MainWindow::MainWindow(SharedTools::QtSingleApplication *pApp) :
             coreInterface->initializationsDone(loadedPlugins);
     }
 
-#ifdef QT_DEBUG
-    // Display our solvers' properties
-
-    foreach (Plugin *plugin, loadedPlugins) {
-        SolverInterface *solverInterface = qobject_cast<SolverInterface *>(plugin->instance());
-
-        if (solverInterface) {
-            qDebug("---------------------------------------");
-            qDebug("'%s' solver:", qPrintable(solverInterface->name()));
-            qDebug(" - Type: %s", qPrintable(solverInterface->typeAsString()));
-
-            Solver::Properties properties = solverInterface->properties();
-
-            if (properties.count()) {
-                qDebug(" - Properties:");
-
-                for (int i = 0, iMax = properties.count(); i < iMax; ++i) {
-                    Solver::Property property = properties[i];
-                    QString type;
-
-                    switch (property.type()) {
-                    case Solver::Double:
-                        type = "Double";
-
-                        break;
-                    case Solver::Integer:
-                        type = "Integer";
-
-                        break;
-                    default:
-                        type = "???";
-                    }
-
-                    qDebug("    - %s: %s", qPrintable(property.name()), qPrintable(type));
-                }
-            } else {
-                qDebug(" - Properties: none");
-            }
-        }
-    }
-#endif
-
     // Retrieve the user settings from the previous session, if any
 
     loadSettings();
