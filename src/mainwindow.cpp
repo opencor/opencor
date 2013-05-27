@@ -228,8 +228,8 @@ MainWindow::MainWindow(SharedTools::QtSingleApplication *pApp) :
         connect(dockWidget, SIGNAL(visibilityChanged(bool)),
                 this, SLOT(updateDockWidgetsVisibility()));
 
-    // Show/hide and en/disable the docked widgets action depending on whether
-    // there are dock widgets
+    // Show/hide and enable/disable the docked widgets action depending on
+    // whether there are dock widgets
 
     mGui->actionDockedWidgets->setEnabled(dockWidgets.size());
     mGui->actionDockedWidgets->setVisible(dockWidgets.size());
