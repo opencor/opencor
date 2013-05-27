@@ -402,6 +402,9 @@ Property::Property(const PropertyItem::Type &pType, const bool &pEditable,
     mValue(new PropertyItem(pType, pEditable)),
     mUnit(new PropertyItem(PropertyItem::String, false))
 {
+    // Note: mName, mValue and mUnit get owned by our property editor widget, so
+    //       no need to delete them afterwards...
+
     // Make the property checkable, if needed
 
     mName->setCheckable(pCheckable);
@@ -559,7 +562,7 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
 
     mProperties = Properties();
 
-    mProperty       = 0;
+    mProperty = 0;
     mPropertyEditor = 0;
 
     mOldPropertyValue = QString();
@@ -753,7 +756,7 @@ int PropertyEditorWidget::childrenRowHeight(const QStandardItem *pItem) const
     if (pItem->hasChildren())
         for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i) {
             QStandardItem *childItem = pItem->child(i, 0);
-            int childIndexHeight     = rowHeight(childItem->index());
+            int childIndexHeight = rowHeight(childItem->index());
 
             if (childIndexHeight)
                 res += childIndexHeight+childrenRowHeight(childItem);
@@ -781,7 +784,7 @@ QSize PropertyEditorWidget::sizeHint() const
 
         for (int i = 0, iMax = mModel->rowCount(); i < iMax; ++i) {
             QStandardItem *rowItem = mModel->item(i, 0);
-            int rowItemHeight      = rowHeight(rowItem->index());
+            int rowItemHeight = rowHeight(rowItem->index());
 
             if (rowItemHeight)
                 // Our current row has some height, meaning that it is visible,
@@ -918,13 +921,9 @@ Property * PropertyEditorWidget::addProperty(const PropertyItem::Type &pType,
 
 Property * PropertyEditorWidget::addSectionProperty(Property *pParent)
 {
-    // Add a section property
+    // Add a section property and return its information
 
-    Property *res = addProperty(PropertyItem::Section, false, false, pParent);
-
-    // Return our section property information
-
-    return res;
+    return addProperty(PropertyItem::Section, false, false, pParent);
 }
 
 //==============================================================================
@@ -1231,7 +1230,7 @@ void PropertyEditorWidget::editorOpened(QWidget *pEditor)
 {
     // Keep track of some information about the property
 
-    mProperty       = currentProperty();
+    mProperty = currentProperty();
     mPropertyEditor = pEditor;
 
     PropertyItem *propertyValue = mProperty->value();
@@ -1303,7 +1302,7 @@ void PropertyEditorWidget::editorClosed()
 
     // Reset some information about the property
 
-    mProperty       = 0;
+    mProperty = 0;
     mPropertyEditor = 0;
 }
 

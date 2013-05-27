@@ -306,14 +306,9 @@ void CorePlugin::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
 
 void CorePlugin::handleArguments(const QStringList &pArguments)
 {
-    // Check the arguments and if any of them is an existing file, then open it
+    // All the arguments are currently assumed to be files to open, so...
 
-    foreach (const QString &argument, pArguments)
-        if (QFileInfo(argument).exists())
-            // The argument corresponds to the name of an existing file, so open
-            // it
-
-            mCentralWidget->openFile(argument);
+    mCentralWidget->openFiles(pArguments);
 }
 
 //==============================================================================

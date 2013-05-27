@@ -102,9 +102,7 @@ void TreeViewWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
     // Retrieve the index of the item which row is the same as our current item,
     // but which column is 0, so that we can expand/collapse properly
     // Note: to retrieve the current index, we would normally use
-    //       currentIndex(), but we may be double clicking on a disabled item,
-    //       which means that it will never become the current index, hence we
-    //       use indexAt() instead...
+    //       currentIndex(), but we may not be double clicking on an item, so...
 
     QModelIndex currIndex = indexAt(pEvent->pos());
     QModelIndex index = model()->index(currIndex.row(), 0, currIndex.parent());
