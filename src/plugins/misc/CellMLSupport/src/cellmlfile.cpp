@@ -100,18 +100,24 @@ void CellmlFile::reset()
 
 //==============================================================================
 
-iface::cellml_api::Model * CellmlFile::model() const
+iface::cellml_api::Model * CellmlFile::model()
 {
-    // Return the model associated with our CellML file
+    // Return the model associated with our CellML file, after loading it if
+    // necessary
+
+    load();
 
     return mModel;
 }
 
 //==============================================================================
 
-iface::rdf_api::DataSource * CellmlFile::rdfDataSource() const
+iface::rdf_api::DataSource * CellmlFile::rdfDataSource()
 {
-    // Return the data source associated with our CellML file
+    // Return the data source associated with our CellML file, after loading it
+    // if necessary
+
+    load();
 
     return mRdfDataSource;
 }
@@ -216,6 +222,11 @@ bool CellmlFile::reload()
 
 bool CellmlFile::save(const QString &pNewFileName)
 {
+    if (!mLoadingNeeded)
+        // The file isn't loaded, so...
+
+        return false;
+
     // Determine the file name to use for the CellML file
 
     QString fileName = pNewFileName.isEmpty()?mFileName:pNewFileName;
