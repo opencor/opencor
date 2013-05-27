@@ -325,7 +325,17 @@ void SingleCellSimulationViewInformationParametersWidget::populateModel(Core::Pr
             property->name()->setIcon(QIcon(":CellMLSupport_variableNode"));
 
         pPropertyEditor->setStringPropertyItem(property->name(), modelParameter->name()+QString(modelParameter->degree(), '\''));
-        pPropertyEditor->setStringPropertyItem(property->unit(), modelParameter->unit());
+
+        QString perVoiUnitDegree = QString();
+
+        if (modelParameter->degree()) {
+            perVoiUnitDegree += "/"+pRuntime->variableOfIntegration()->unit();
+
+            if (modelParameter->degree() > 1)
+                perVoiUnitDegree += modelParameter->degree();
+        }
+
+        pPropertyEditor->setStringPropertyItem(property->unit(), modelParameter->unit()+perVoiUnitDegree);
 
         // Keep track of the link between our property value and model parameter
 
