@@ -9,8 +9,6 @@
 
 #include "cellmlsupportglobal.h"
 #include "coreinterface.h"
-#include "plugin.h"
-#include "plugininfo.h"
 #include "fileinterface.h"
 #include "i18ninterface.h"
 

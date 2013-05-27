@@ -90,7 +90,7 @@ void CoreEditingPlugin::initialize()
 
     // Set our settings
 
-/*---GRY--- DISABLED FOR VERSION 0.1...
+/*---GRY--- DISABLED FOR VERSION 0.1.x...
     mGuiSettings->addMenu(GuiMenuSettings::View, mEditMenu);
 */
 }
