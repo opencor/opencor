@@ -5,6 +5,11 @@
 #include "Ifacexpcom.hxx"
 #include <stdlib.h>
 #include <cstring>
+/*---OPENCOR---
+#ifdef WIN32
+#include <windows.h>
+#endif
+*/
 
 HEADER_INLINE int
 CDA_objcmp(iface::XPCOM::IObject* o1, iface::XPCOM::IObject* o2)
@@ -258,6 +263,73 @@ operator!=(const ObjRef<T>& lhs, const ObjRef<U>& rhs)
     )\
   )
 
+/*---OPENCOR---
+// A wrapper for a mutex...
+class CDAMutex
+{
+public:
+  CDAMutex()
+  {
+#ifdef WIN32
+    InitializeCriticalSection(&mMutex);
+#else
+    pthread_mutex_init(&mMutex, NULL);
+#endif
+  }
+
+  ~CDAMutex()
+  {
+#ifdef WIN32
+    DeleteCriticalSection(&mMutex);
+#else
+    pthread_mutex_destroy(&mMutex);
+#endif
+  }
+
+  void Lock()
+  {
+#ifdef WIN32
+    EnterCriticalSection(&mMutex);
+#else
+    pthread_mutex_lock(&mMutex);
+#endif
+  }
+
+  void Unlock()
+  {
+#ifdef WIN32
+    LeaveCriticalSection(&mMutex);
+#else
+    pthread_mutex_unlock(&mMutex);
+#endif
+  }
+private:
+#ifdef WIN32
+  CRITICAL_SECTION mMutex;
+#else
+  pthread_mutex_t mMutex;
+#endif
+};
+
+// A class to provide a scoped lock...
+class CDALock
+{
+public:
+  CDALock(CDAMutex& m)
+    : mutex(m)
+  {
+    mutex.Lock();
+  }
+
+  ~CDALock()
+  {
+    mutex.Unlock();
+  }
+private:
+  CDAMutex& mutex;
+};
+*/
+
 #define QUERY_INTERFACE(lhs, rhs, type) \
   if (rhs != NULL) \
   { \
@@ -291,5 +363,458 @@ operator!=(const ObjRef<T>& lhs, const ObjRef<U>& rhs)
 #define DECLARE_QUERY_INTERFACE_OBJREF(lhs, rhs, type) \
   ObjRef<iface::type> lhs; \
   QUERY_INTERFACE(lhs, rhs, type)
+
+/*---OPENCOR---
+class CDA_RefCount
+{
+public:
+  CDA_RefCount()
+    : mRefcount(1)
+  {
+  }
+
+  operator uint32_t()
+  {
+#if !(defined(WIN32) || defined(__GCC_HAVE_SYNC_COMPARE_AND_SWAP_4))
+    CDALock l(mMutex);
+#endif
+    return mRefcount;
+  }
+
+  CDA_RefCount& operator=(const uint32_t& aValue)
+  {
+#if !(defined(WIN32) || defined(__GCC_HAVE_SYNC_COMPARE_AND_SWAP_4))
+    CDALock l(mMutex);
+#endif
+    mRefcount = aValue;
+    return *this;
+  }
+
+  void operator++()
+  {
+#if defined(__GCC_HAVE_SYNC_COMPARE_AND_SWAP_4)
+    __sync_fetch_and_add(&mRefcount, 1);
+#elif defined(WIN32)
+    InterlockedIncrement((volatile long int*)&mRefcount);
+#else
+    CDALock l(mMutex);
+    mRefcount++;
+#endif
+  }
+
+  bool operator--()
+  {
+#if defined(__GCC_HAVE_SYNC_COMPARE_AND_SWAP_4)
+    return __sync_sub_and_fetch(&mRefcount, 1) != 0;
+#elif defined(WIN32)
+    return InterlockedDecrement((volatile long int*)&mRefcount) != 0;
+#else
+    CDALock l(mMutex);
+    mRefcount--;
+    return (mRefcount != 0);
+#endif
+  }
+
+private:
+#if !(defined(WIN32) || defined(__GCC_HAVE_SYNC_COMPARE_AND_SWAP_4))
+  CDAMutex mMutex;
+#endif
+  uint32_t mRefcount;
+};
+
+#define CDA_IMPL_REFCOUNT \
+  private: \
+    CDA_RefCount _cda_refcount; \
+  public: \
+    void add_ref() \
+      throw() \
+    { \
+      ++_cda_refcount; \
+    } \
+    void release_ref() \
+      throw() \
+    { \
+      if (!--_cda_refcount) \
+        delete this; \
+    }
+
+#define CDA_IMPL_QI0 \
+    void* query_interface(const std::string& id) \
+      throw(std::exception&) \
+    { \
+      if (id == "XPCOM::IObject") \
+      { \
+        add_ref(); \
+        return static_cast<iface::XPCOM::IObject*>(this); \
+      } \
+      return NULL; \
+    } \
+    std::vector<std::string> supported_interfaces() throw() \
+    { \
+      std::vector<std::string> v; \
+      v.push_back("XPCOM::IObject"); \
+      return v; \
+    }
+
+#define CDA_IMPL_QI1(c1) \
+    void* query_interface(const std::string& id) \
+      throw(std::exception&) \
+    { \
+      if (id == "XPCOM::IObject") \
+      { \
+        add_ref(); \
+        return static_cast<iface::XPCOM::IObject*>(this); \
+      } \
+      else if (id == #c1) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c1* >(this); \
+      } \
+      return NULL; \
+    } \
+    std::vector<std::string> supported_interfaces() throw() \
+    { \
+      std::vector<std::string> v; \
+      v.push_back("XPCOM::IObject"); \
+      v.push_back(#c1); \
+      return v; \
+    }
+
+#define CDA_IMPL_QI2(c1, c2) \
+    void* query_interface(const std::string& id) \
+      throw(std::exception&) \
+    { \
+      if (id == "XPCOM::IObject") \
+      { \
+        add_ref(); \
+        return static_cast<iface::XPCOM::IObject*>(this); \
+      } \
+      else if (id == #c1) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c1* >(this); \
+      } \
+      else if (id == #c2) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c2* >(this); \
+      } \
+      return NULL; \
+    } \
+    std::vector<std::string> supported_interfaces() throw() \
+    { \
+      std::vector<std::string> v; \
+      v.push_back("XPCOM::IObject"); \
+      v.push_back(#c1); \
+      v.push_back(#c2); \
+      return v; \
+    }
+
+#define CDA_IMPL_QI3(c1, c2, c3) \
+    void* query_interface(const std::string& id) \
+      throw(std::exception&) \
+    { \
+      if (id == "XPCOM::IObject") \
+      { \
+        add_ref(); \
+        return static_cast<iface::XPCOM::IObject*>(this); \
+      } \
+      else if (id == #c1) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c1* >(this); \
+      } \
+      else if (id == #c2) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c2* >(this); \
+      } \
+      else if (id == #c3) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c3* >(this); \
+      } \
+      return NULL; \
+    } \
+    std::vector<std::string> supported_interfaces() throw() \
+    { \
+      std::vector<std::string> v; \
+      v.push_back("XPCOM::IObject"); \
+      v.push_back(#c1); \
+      v.push_back(#c2); \
+      v.push_back(#c3); \
+      return v; \
+    }
+
+#define CDA_IMPL_QI4(c1, c2, c3, c4) \
+    void* query_interface(const std::string& id) \
+      throw(std::exception&) \
+    { \
+      if (id == "XPCOM::IObject") \
+      { \
+        add_ref(); \
+        return static_cast<iface::XPCOM::IObject*>(this); \
+      } \
+      else if (id == #c1) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c1* >(this); \
+      } \
+      else if (id == #c2) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c2* >(this); \
+      } \
+      else if (id == #c3) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c3* >(this); \
+      } \
+      else if (id == #c4) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c4* >(this); \
+      } \
+      return NULL; \
+    } \
+    std::vector<std::string> supported_interfaces() throw() \
+    { \
+      std::vector<std::string> v; \
+      v.push_back("XPCOM::IObject"); \
+      v.push_back(#c1); \
+      v.push_back(#c2); \
+      v.push_back(#c3); \
+      v.push_back(#c4); \
+      return v; \
+    }
+
+#define CDA_IMPL_QI5(c1, c2, c3, c4, c5) \
+    void* query_interface(const std::string& id) \
+      throw(std::exception&) \
+    { \
+      if (id == "XPCOM::IObject") \
+      { \
+        add_ref(); \
+        return static_cast<iface::XPCOM::IObject*>(this); \
+      } \
+      else if (id == #c1) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c1* >(this); \
+      } \
+      else if (id == #c2) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c2* >(this); \
+      } \
+      else if (id == #c3) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c3* >(this); \
+      } \
+      else if (id == #c4) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c4* >(this); \
+      } \
+      else if (id == #c5) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c5* >(this); \
+      } \
+      return NULL; \
+    } \
+    std::vector<std::string> supported_interfaces() throw() \
+    { \
+      std::vector<std::string> v; \
+      v.push_back("XPCOM::IObject"); \
+      v.push_back(#c1); \
+      v.push_back(#c2); \
+      v.push_back(#c3); \
+      v.push_back(#c4); \
+      v.push_back(#c5); \
+      return v; \
+    }
+
+#define CDA_IMPL_QI6(c1, c2, c3, c4, c5, c6) \
+    void* query_interface(const std::string& id) \
+      throw(std::exception&) \
+    { \
+      if (id == "XPCOM::IObject") \
+      { \
+        add_ref(); \
+        return static_cast<iface::XPCOM::IObject*>(this); \
+      } \
+      else if (id == #c1) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c1* >(this); \
+      } \
+      else if (id == #c2) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c2* >(this); \
+      } \
+      else if (id == #c3) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c3* >(this); \
+      } \
+      else if (id == #c4) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c4* >(this); \
+      } \
+      else if (id == #c5) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c5* >(this); \
+      } \
+      else if (id == #c6) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c6* >(this); \
+      } \
+      return NULL; \
+    } \
+    std::vector<std::string> supported_interfaces() throw() \
+    { \
+      std::vector<std::string> v; \
+      v.push_back("XPCOM::IObject"); \
+      v.push_back(#c1); \
+      v.push_back(#c2); \
+      v.push_back(#c3); \
+      v.push_back(#c4); \
+      v.push_back(#c5); \
+      v.push_back(#c6); \
+      return v; \
+    }
+
+#define CDA_IMPL_QI7(c1, c2, c3, c4, c5, c6, c7) \
+    void* query_interface(const std::string& id) \
+      throw(std::exception&) \
+    { \
+      if (id == "XPCOM::IObject") \
+      { \
+        add_ref(); \
+        return static_cast<iface::XPCOM::IObject*>(this); \
+      } \
+      else if (id == #c1) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c1* >(this); \
+      } \
+      else if (id == #c2) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c2* >(this); \
+      } \
+      else if (id == #c3) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c3* >(this); \
+      } \
+      else if (id == #c4) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c4* >(this); \
+      } \
+      else if (id == #c5) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c5* >(this); \
+      } \
+      else if (id == #c6) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c6* >(this); \
+      } \
+      else if (id == #c7) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c7* >(this); \
+      } \
+      return NULL; \
+    } \
+    std::vector<std::string> supported_interfaces() throw() \
+    { \
+      std::vector<std::string> v; \
+      v.push_back("XPCOM::IObject"); \
+      v.push_back(#c1); \
+      v.push_back(#c2); \
+      v.push_back(#c3); \
+      v.push_back(#c4); \
+      v.push_back(#c5); \
+      v.push_back(#c6); \
+      v.push_back(#c7); \
+      return v; \
+    }
+
+#define CDA_IMPL_QI8(c1, c2, c3, c4, c5, c6, c7, c8) \
+    void* query_interface(const std::string& id) \
+      throw(std::exception&) \
+    { \
+      if (id == "XPCOM::IObject") \
+      { \
+        add_ref(); \
+        return static_cast<iface::XPCOM::IObject*>(this); \
+      } \
+      else if (id == #c1) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c1* >(this); \
+      } \
+      else if (id == #c2) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c2* >(this); \
+      } \
+      else if (id == #c3) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c3* >(this); \
+      } \
+      else if (id == #c4) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c4* >(this); \
+      } \
+      else if (id == #c5) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c5* >(this); \
+      } \
+      else if (id == #c6) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c6* >(this); \
+      } \
+      else if (id == #c7) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c7* >(this); \
+      } \
+      else if (id == #c8) \
+      { \
+        add_ref(); \
+        return static_cast< iface::c8* >(this); \
+      } \
+      return NULL; \
+    } \
+    std::vector<std::string> supported_interfaces() throw() \
+    { \
+      std::vector<std::string> v; \
+      v.push_back("XPCOM::IObject"); \
+      v.push_back(#c1); \
+      v.push_back(#c2); \
+      v.push_back(#c3); \
+      v.push_back(#c4); \
+      v.push_back(#c5); \
+      v.push_back(#c6); \
+      v.push_back(#c7); \
+      v.push_back(#c8); \
+      return v; \
+    }
+*/
 
 #endif // ifndef _cellml_api_cxx_support_hpp

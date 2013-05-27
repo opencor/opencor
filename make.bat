@@ -2,7 +2,7 @@
 
 TITLE Making OpenCOR...
 
-IF NOT "%SetupMSVC2010Environment%" == "" GOTO MakeOpenCOR
+IF NOT "%SetupMSVC2010Environment%" == "" GOTO MakeOpenCORGUI
 
 IF NOT EXIST "C:\Program Files (x86)\" GOTO SetupMSVC2010EnvironmentOn32BitSystem
 
@@ -20,7 +20,7 @@ CALL "%ProgFilesDir%\Microsoft Visual Studio 10.0\VC\bin\vcvars32.bat"
 
 SET SetupMSVC2010Environment=Done
 
-:MakeOpenCOR
+:MakeOpenCORGUI
 
 ECHO.
 ECHO ---------------------------------
@@ -31,17 +31,53 @@ ECHO.
 CD build
 
 cmake -G "Visual Studio 10" ..
+
+SET ExitCode=%ERRORLEVEL%
+
+IF %ExitCode% EQU 0 GOTO BuildOpenCORGUI
+
+CD ..
+
+EXIT /B %ExitCode%
+
+:BuildOpenCORGUI
+
 msbuild OpenCOR.sln /p:Configuration=Release;OutDir=.\ %*
 
+SET ExitCode=%ERRORLEVEL%
+
+IF %ExitCode% EQU 0 GOTO MakeOpenCORCLI
+
+CD ..
+
+EXIT /B %ExitCode%
+
+:MakeOpenCORCLI
+
 ECHO.
-ECHO -------------------------------------
-ECHO Making the console version of OpenCOR
-ECHO -------------------------------------
+ECHO ---------------------------------
+ECHO Making the CLI version of OpenCOR
+ECHO ---------------------------------
 ECHO.
 
 CD ..\windows\build
 
 cmake -G "Visual Studio 10" ..
-msbuild OpenCOR.sln /p:Configuration=Release;OutDir=.\ %*
+
+SET ExitCode=%ERRORLEVEL%
+
+IF %ExitCode% EQU 0 GOTO BuildOpenCORCLI
 
 CD ..\..
+
+EXIT /B %ExitCode%
+
+:BuildOpenCORCLI
+
+msbuild OpenCOR.sln /p:Configuration=Release;OutDir=.\ %*
+
+SET ExitCode=%ERRORLEVEL%
+
+CD ..\..
+
+EXIT /B %ExitCode%

@@ -9,7 +9,7 @@ MACRO(INITIALISE_PROJECT)
     ELSEIF(CMAKE_SIZEOF_VOID_P EQUAL 8)
         SET(32BIT_MODE OFF)
     ELSE()
-        MESSAGE(FATAL_ERROR "Sorry, but OpenCOR can only be built in 32-bit or 64-bit.")
+        MESSAGE(FATAL_ERROR "Sorry, but OpenCOR can only be built in 32-bit or 64-bit...")
     ENDIF()
 
     # Required packages
@@ -159,7 +159,7 @@ MACRO(UPDATE_LANGUAGE_FILES TARGET_NAME)
     FOREACH(LANGUAGE_FILE ${LANGUAGE_FILES})
         SET(TS_FILE i18n/${LANGUAGE_FILE}.ts)
 
-        IF(EXISTS "${PROJECT_SOURCE_DIR}/${TS_FILE}")
+        IF(EXISTS ${PROJECT_SOURCE_DIR}/${TS_FILE})
             EXECUTE_PROCESS(COMMAND ${QT_BINARY_DIR}/lupdate -no-obsolete
                                                              ${SOURCES} ${HEADERS_MOC} ${UIS}
                                                          -ts ${TS_FILE}
@@ -172,6 +172,9 @@ ENDMACRO()
 
 MACRO(INCLUDE_THIRD_PARTY_LIBRARY MAIN_PROJECT_SOURCE_DIR THIRD_PARTY_LIBRARY)
     SET(MAIN_PROJECT_SOURCE_DIR ${MAIN_PROJECT_SOURCE_DIR})
+    # Note: MAIN_PROJECT_SOURCE_DIR is to be used in a third-party library's
+    #       CMake file, thus making it possible to include a third-party
+    #       library in OpenCOR's GUI, as well as in OpenCOR's CLI...
 
     INCLUDE(${MAIN_PROJECT_SOURCE_DIR}/src/3rdparty/${THIRD_PARTY_LIBRARY}/${THIRD_PARTY_LIBRARY}.cmake)
 ENDMACRO()
@@ -285,7 +288,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     SET(QRC_FILE res/${PLUGIN_NAME}.qrc)
 
-    IF(EXISTS "${PROJECT_SOURCE_DIR}/${QRC_FILE}")
+    IF(EXISTS ${PROJECT_SOURCE_DIR}/${QRC_FILE})
         SET(RESOURCES ${QRC_FILE})
     ELSE()
         SET(RESOURCES)
@@ -577,7 +580,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     ENDFOREACH()
                 ENDIF()
             ELSE()
-                MESSAGE(AUTHOR_WARNING "The '${TEST}' test for the '${PLUGIN_NAME}' plugin doesn't exist")
+                MESSAGE(AUTHOR_WARNING "The '${TEST}' test for the '${PLUGIN_NAME}' plugin doesn't exist...")
             ENDIF()
         ENDFOREACH()
     ENDIF()
@@ -927,7 +930,7 @@ MACRO(RETRIEVE_BINARY_FILE DIRNAME FILENAME SHA1_VALUE)
             MESSAGE(FATAL_ERROR "The compressed version of the file could not be retrieved...")
         ENDIF()
 
-        # Check that the file, if we managed to retrieve it, as the expected
+        # Check that the file, if we managed to retrieve it, has the expected
         # SHA-1 value
 
         IF(EXISTS ${REAL_FILENAME})
@@ -935,13 +938,11 @@ MACRO(RETRIEVE_BINARY_FILE DIRNAME FILENAME SHA1_VALUE)
 
             IF(NOT "${REAL_SHA1_VALUE}" STREQUAL "${SHA1_VALUE}")
                 FILE(REMOVE ${REAL_FILENAME})
+
+                MESSAGE(FATAL_ERROR "The file does not have the expected SHA-1 value...")
             ENDIF()
-        ENDIF()
-
-        # At this stage, if the file exists, then it's the one we are after
-
-        IF(NOT EXISTS ${REAL_FILENAME})
-            MESSAGE(FATAL_ERROR "The file could not be retrieved...")
+        ELSE()
+            MESSAGE(FATAL_ERROR "The file could not be uncompressed...")
         ENDIF()
     ENDIF()
 ENDMACRO()
