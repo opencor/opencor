@@ -9,7 +9,7 @@ div.section {
     color: rgb(103, 103, 103);
 }
 
-img.download {
+img.downloads {
     margin: 0px;
     border: none;
     padding: 3px 7px 3px 7px;
@@ -19,15 +19,11 @@ img.download {
     background: none;
 }
 
-img.download:hover {
+img.downloads:hover {
     margin: -1px;
     border: 1px solid rgba(103, 103, 103, 0.13);
     border-radius: 13px;
     background: rgba(103, 103, 103, 0.05);
-}
-
-table.version {
-    width: 100%;
 }
 
 table.recommended {
@@ -35,6 +31,17 @@ table.recommended {
     border: 1px solid rgba(118, 146, 60, 0.39);
     border-radius: 13px;
     background: rgba(118, 146, 60, 0.13);
+}
+
+table.risky {
+    margin: -1px;
+    border: 1px solid rgba(227, 108, 9, 0.39);
+    border-radius: 13px;
+    background: rgba(227, 108, 9, 0.13);
+}
+
+table.version {
+    width: 100%;
 }
 
 table.version td.topSeparator {

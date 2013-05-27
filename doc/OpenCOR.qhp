@@ -4,162 +4,23 @@
     <virtualFolder>doc</virtualFolder>
     <filterSection>
         <files>
-            <file>3rdparty/googleCodePrettify/prettify.css</file>
-            <file>3rdparty/googleCodePrettify/prettify.js</file>
+            <file>3rdparty/googleCodePrettify/*.*</file>
+            <file>3rdparty/jQuery/*.*</file>
 
-            <file>3rdparty/jQuery/jquery.js</file>
+            <file>res/*.*</file>
+            <file>res/pics/oxygen/actions/*.*</file>
 
-            <file>res/pics/oxygen/actions/help-about.png</file>
-
-            <file>res/common.css</file>
-            <file>res/common.js</file>
-
-            <file>user/res/pics/alanGarny.jpg</file>
-            <file>user/res/pics/peterHunter.jpg</file>
-
-            <file>user/res/image.html</file>
-            <file>user/res/menu.js</file>
-            <file>user/res/stylesheet.css</file>
-
-            <file>user/plugins/res/pics/oxygen/actions/document-print.png</file>
-            <file>user/plugins/res/pics/oxygen/actions/edit-copy.png</file>
-            <file>user/plugins/res/pics/oxygen/actions/edit-delete.png</file>
-            <file>user/plugins/res/pics/oxygen/actions/folder-new.png</file>
-            <file>user/plugins/res/pics/oxygen/actions/go-home.png</file>
-            <file>user/plugins/res/pics/oxygen/actions/go-next.png</file>
-            <file>user/plugins/res/pics/oxygen/actions/go-previous.png</file>
-            <file>user/plugins/res/pics/oxygen/actions/go-up.png</file>
-            <file>user/plugins/res/pics/oxygen/actions/list-add.png</file>
-            <file>user/plugins/res/pics/oxygen/actions/list-remove.png</file>
-            <file>user/plugins/res/pics/oxygen/actions/media-playback-pause.png</file>
-            <file>user/plugins/res/pics/oxygen/actions/media-playback-start.png</file>
-            <file>user/plugins/res/pics/oxygen/actions/media-playback-stop.png</file>
-            <file>user/plugins/res/pics/oxygen/actions/view-refresh.png</file>
-            <file>user/plugins/res/pics/oxygen/actions/zoom-in.png</file>
-            <file>user/plugins/res/pics/oxygen/actions/zoom-original.png</file>
-            <file>user/plugins/res/pics/oxygen/actions/zoom-out.png</file>
-
-            <file>user/plugins/res/pics/oxygen/categories/applications-internet.png</file>
-
-            <file>user/plugins/res/pics/oxygen/mimetypes/text-csv.png</file>
-
-            <file>user/plugins/res/pics/oxygen/places/user-home.png</file>
-
-            <file>user/plugins/res/pics/CellMLAnnotationViewScreenshot01.png</file>
-            <file>user/plugins/res/pics/CellMLAnnotationViewScreenshot01Small.png</file>
-            <file>user/plugins/res/pics/CellMLAnnotationViewScreenshot02.png</file>
-            <file>user/plugins/res/pics/CellMLAnnotationViewScreenshot02Small.png</file>
-            <file>user/plugins/res/pics/CellMLAnnotationViewScreenshot03.png</file>
-            <file>user/plugins/res/pics/CellMLAnnotationViewScreenshot03Small.png</file>
-            <file>user/plugins/res/pics/CellMLAnnotationViewScreenshot04.png</file>
-            <file>user/plugins/res/pics/CellMLAnnotationViewScreenshot04Small.png</file>
-            <file>user/plugins/res/pics/CellMLAnnotationViewScreenshot05.png</file>
-            <file>user/plugins/res/pics/CellMLAnnotationViewScreenshot05Small.png</file>
-            <file>user/plugins/res/pics/CellMLAnnotationViewScreenshot06.png</file>
-            <file>user/plugins/res/pics/CellMLAnnotationViewScreenshot06Small.png</file>
-            <file>user/plugins/res/pics/CellMLAnnotationViewScreenshot07.png</file>
-            <file>user/plugins/res/pics/CellMLAnnotationViewScreenshot07Small.png</file>
-            <file>user/plugins/res/pics/CellMLAnnotationViewScreenshot08.png</file>
-            <file>user/plugins/res/pics/CellMLAnnotationViewScreenshot08Small.png</file>
-            <file>user/plugins/res/pics/CellMLAnnotationViewScreenshot09.png</file>
-            <file>user/plugins/res/pics/CellMLAnnotationViewScreenshot09Small.png</file>
-            <file>user/plugins/res/pics/CellMLAnnotationViewScreenshot10.png</file>
-            <file>user/plugins/res/pics/CellMLAnnotationViewScreenshot10Small.png</file>
-            <file>user/plugins/res/pics/CellMLAnnotationViewScreenshot11.png</file>
-            <file>user/plugins/res/pics/CellMLAnnotationViewScreenshot11Small.png</file>
-            <file>user/plugins/res/pics/CellMLAnnotationViewScreenshot12.png</file>
-            <file>user/plugins/res/pics/CellMLAnnotationViewScreenshot12Small.png</file>
-
-            <file>user/plugins/res/pics/CellMLModelRepositoryScreenshot01.png</file>
-            <file>user/plugins/res/pics/CellMLModelRepositoryScreenshot01Small.png</file>
-            <file>user/plugins/res/pics/CellMLModelRepositoryScreenshot02.png</file>
-            <file>user/plugins/res/pics/CellMLModelRepositoryScreenshot02Small.png</file>
-
-            <file>user/plugins/res/pics/FileBrowserScreenshot01.png</file>
-            <file>user/plugins/res/pics/FileBrowserScreenshot01Small.png</file>
-            <file>user/plugins/res/pics/FileBrowserScreenshot02.png</file>
-            <file>user/plugins/res/pics/FileBrowserScreenshot02Small.png</file>
-            <file>user/plugins/res/pics/FileBrowserScreenshot03.png</file>
-            <file>user/plugins/res/pics/FileBrowserScreenshot03Small.png</file>
-
-            <file>user/plugins/res/pics/FileOrganiserScreenshot01.png</file>
-            <file>user/plugins/res/pics/FileOrganiserScreenshot01Small.png</file>
-            <file>user/plugins/res/pics/FileOrganiserScreenshot02.png</file>
-            <file>user/plugins/res/pics/FileOrganiserScreenshot02Small.png</file>
-            <file>user/plugins/res/pics/FileOrganiserScreenshot03.png</file>
-            <file>user/plugins/res/pics/FileOrganiserScreenshot03Small.png</file>
-            <file>user/plugins/res/pics/FileOrganiserScreenshot04.png</file>
-            <file>user/plugins/res/pics/FileOrganiserScreenshot04Small.png</file>
-            <file>user/plugins/res/pics/FileOrganiserScreenshot05.png</file>
-            <file>user/plugins/res/pics/FileOrganiserScreenshot05Small.png</file>
-            <file>user/plugins/res/pics/FileOrganiserScreenshot06.png</file>
-            <file>user/plugins/res/pics/FileOrganiserScreenshot06Small.png</file>
-
-            <file>user/plugins/res/pics/HelpScreenshot01.png</file>
-            <file>user/plugins/res/pics/HelpScreenshot01Small.png</file>
-            <file>user/plugins/res/pics/HelpScreenshot02.png</file>
-            <file>user/plugins/res/pics/HelpScreenshot02Small.png</file>
-
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot01.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot01Small.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot02.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot02Small.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot03.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot03Small.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot04.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot04Small.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot05.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot05Small.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot06.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot06Small.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot07.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot07Small.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot08.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot08Small.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot09.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot09Small.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot10.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot10Small.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot11.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot11Small.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot12.png</file>
-            <file>user/plugins/res/pics/SingleCellSimulationViewScreenshot12Small.png</file>
-
-            <file>user/plugins/res/pics/modifiableVariableNode.png</file>
-
-            <file>user/plugins/res/pics/screenshot01.png</file>
-            <file>user/plugins/res/pics/screenshot01Small.png</file>
-
-            <file>user/plugins/CellMLAnnotationView.html</file>
-            <file>user/plugins/CellMLModelRepository.html</file>
-            <file>user/plugins/FileBrowser.html</file>
-            <file>user/plugins/FileOrganiser.html</file>
-            <file>user/plugins/Help.html</file>
-            <file>user/plugins/index.html</file>
-            <file>user/plugins/SingleCellSimulationView.html</file>
-
-            <file>user/userInterfaces/res/pics/screenshot01.png</file>
-            <file>user/userInterfaces/res/pics/screenshot01Small.png</file>
-            <file>user/userInterfaces/res/pics/screenshot02.png</file>
-            <file>user/userInterfaces/res/pics/screenshot02Small.png</file>
-            <file>user/userInterfaces/res/pics/screenshot03.png</file>
-            <file>user/userInterfaces/res/pics/screenshot04.png</file>
-            <file>user/userInterfaces/res/pics/screenshot04Small.png</file>
-            <file>user/userInterfaces/res/pics/screenshot05.png</file>
-            <file>user/userInterfaces/res/pics/screenshot05Small.png</file>
-
-            <file>user/userInterfaces/commandLineInterface.html</file>
-            <file>user/userInterfaces/graphicalUserInterface.html</file>
-            <file>user/userInterfaces/index.html</file>
-
-            <file>user/contactUs.html</file>
-            <file>user/index.html</file>
-            <file>user/knownIssues.html</file>
-            <file>user/knownLimitations.html</file>
-            <file>user/licensing.html</file>
-            <file>user/supportedPlatforms.html</file>
-            <file>user/team.html</file>
-            <file>user/whatIsNew.html</file>
+            <file>user/*.*</file>
+            <file>user/plugins/*.*</file>
+            <file>user/plugins/res/pics/*.*</file>
+            <file>user/plugins/res/pics/oxygen/actions/*.*</file>
+            <file>user/plugins/res/pics/oxygen/categories/*.*</file>
+            <file>user/plugins/res/pics/oxygen/mimetypes/*.*</file>
+            <file>user/plugins/res/pics/oxygen/places/*.*</file>
+            <file>user/res/*.*</file>
+            <file>user/res/pics/*.*</file>
+            <file>user/userInterfaces/*.*</file>
+            <file>user/userInterfaces/res/pics/*.*</file>
         </files>
     </filterSection>
 </QtHelpProject>

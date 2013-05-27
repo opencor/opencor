@@ -2,20 +2,20 @@
 <html>
     <head>
         <title>
-            Download
+            Downloads
         </title>
 
         <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 
-        <link href="res/stylesheet.css" rel="stylesheet" type="text/css"/>
+        <link href="../res/stylesheet.css" rel="stylesheet" type="text/css"/>
 
-        <script src="3rdparty/jQuery/jquery.js" type="text/javascript"></script>
-        <script src="res/common.js" type="text/javascript"></script>
-        <script src="res/menu.js" type="text/javascript"></script>
+        <script src="../3rdparty/jQuery/jquery.js" type="text/javascript"></script>
+        <script src="../res/common.js" type="text/javascript"></script>
+        <script src="../res/menu.js" type="text/javascript"></script>
     </head>
     <body>
         <script type="text/javascript">
-            headerAndContentsMenu("Download", ".");
+            headerAndContentsMenu("Downloads", "..");
         </script>
 
         <p>
@@ -43,15 +43,15 @@
 
     date_default_timezone_set("Europe/London");
 
-    $versions = array(array(0, 1, 1, 17, 4, 2013, true,
+    $versions = array(array(0, 1, 1, 17, 4, 2013, 1,
                             array(array("Windows", array(".exe"), array(".zip")),
                                   array("Linux", array(".tar.gz", 32), array(".tar.gz", 64)),
                                   array("OS X", array(".dmg"), array(".zip")))),
-                      array(0, 1, 0, 1, 4, 2013, false,
+                      array(0, 1, 0, 1, 4, 2013, 0,
                             array(array("Windows", array(".exe"), array(".zip")),
                                   array("Linux", array(".tar.gz", 32), array(".tar.gz", 64)),
                                   array("OS X", array(".dmg"), array(".zip")))),
-                      array(0, 0, 0, 17, 4, 2013, false,
+                      array(0, 0, 0, 17, 5, 2013, 2,
                             array(array("Windows", array(".exe"), array(".zip")),
                                   array("Linux", array(".tar.gz", 32), array(".tar.gz", 64)),
                                   array("OS X", array(".dmg"), array(".zip")))));
@@ -71,7 +71,7 @@
         $versionDay = $version[3];
         $versionMonth = $version[4];
         $versionYear = $version[5];
-        $versionRecommended = $version[6];
+        $versionRecommendedStatus = $version[6];
         $versionFiles = $version[7];
 
         if ($versionMajor || $versionMinor || $versionPatch) {
@@ -115,8 +115,10 @@
 
         $versionClasses = "version";
 
-        if ($versionRecommended)
+        if ($versionRecommendedStatus == 1)
             $versionClasses .= " recommended";
+        else if ($versionRecommendedStatus == 2)
+            $versionClasses .= " risky";
 ?>
         <table class="<?php echo $versionClasses; ?>">
             <tbody>
@@ -192,7 +194,7 @@
                             <tbody>
                                 <tr>
                                     <td class="logo">
-                                        <img src="res/pics/<?php echo str_replace(" ", "", strtolower($platformName)); ?>.png" width=72 height=72 alt="<?php echo $platformName; ?>">
+                                        <img src="../res/pics/<?php echo str_replace(" ", "", strtolower($platformName)); ?>.png" width=72 height=72 alt="<?php echo $platformName; ?>">
                                     </td>
                                     <td>
                                         <div>
