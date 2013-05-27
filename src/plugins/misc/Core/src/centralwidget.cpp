@@ -575,14 +575,16 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
             if (hasNewFileName) {
                 // Ask our file manager to rename the file
 
-                FileManager::Status renameStatus = FileManager::instance()->rename(oldFileName, newFileName);
+#ifdef QT_DEBUG
+                FileManager::Status renameStatus =
+#endif
+                FileManager::instance()->rename(oldFileName, newFileName);
 
                 // Make sure that the file has indeed been renamed
 
 #ifdef QT_DEBUG
-                Q_ASSERT(renameStatus == FileManager::Renamed);
-#else
-                Q_UNUSED(renameStatus);
+                if (renameStatus == FileManager::Renamed)
+                    qFatal("FATAL ERROR | %s:%d: '%s' did not get renamed to '%s'", __FILE__, __LINE__, qPrintable(oldFileName), qPrintable(newFileName));
 #endif
 
                 // Update our file names and tabs

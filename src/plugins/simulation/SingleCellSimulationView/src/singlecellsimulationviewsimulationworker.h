@@ -26,12 +26,6 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-namespace Core {
-    class Thread;
-}   // namespace Core
-
-//==============================================================================
-
 namespace SingleCellSimulationView {
 
 //==============================================================================
@@ -63,7 +57,7 @@ public:
     void reset();
 
 private:
-    Core::Thread *mThread;
+    QThread *mThread;
 
     SolverInterfaces mSolverInterfaces;
 

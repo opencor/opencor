@@ -31,9 +31,9 @@ public:
     explicit CellmlFile(const QString &pFileName);
     ~CellmlFile();
 
-    iface::cellml_api::Model * model() const;
+    iface::cellml_api::Model * model();
 
-    iface::rdf_api::DataSource * rdfDataSource() const;
+    iface::rdf_api::DataSource * rdfDataSource();
 
     bool load();
     bool reload();
