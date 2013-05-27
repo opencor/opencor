@@ -92,7 +92,6 @@ private:
     QMap<Plugin *, QAction *> mViewActions;
 
     Plugin *mViewPlugin;
-    bool mNeedViewPluginInitialisation;
 
     bool mDockedWidgetsVisible;
 
@@ -128,7 +127,7 @@ private Q_SLOTS:
     void on_actionHomePage_triggered();
     void on_actionAbout_triggered();
 
-    void updateGui(Plugin *pViewPlugin);
+    void updateGui(Plugin *pViewPlugin, const QString &pFileName);
 
     void showDockedWidgets(const bool &pShow,
                            const bool &pInitialisation = false);

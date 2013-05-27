@@ -1069,7 +1069,7 @@ void CentralWidget::updateGui()
 
     // Let people know that we are about to update the GUI
 
-    emit guiUpdated(mPlugin);
+    emit guiUpdated(mPlugin, (fileTabsCrtIndex == -1)?QString():mFileNames[fileTabsCrtIndex]);
 
     // Replace the current view with the new one
     // Note: the order in which the adding and removing (as well as the

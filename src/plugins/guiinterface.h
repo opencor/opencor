@@ -188,7 +188,7 @@ public:
 
     virtual void changeEvent(QEvent *pEvent);
 
-    virtual void updateGui(Plugin *pViewPlugin);
+    virtual void updateGui(Plugin *pViewPlugin, const QString &pFileName);
 
     virtual QWidget * viewWidget(const QString &pFileName);
     virtual QWidget * removeViewWidget(const QString &pFileName);

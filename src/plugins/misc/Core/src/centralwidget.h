@@ -168,7 +168,7 @@ private:
     bool canCloseFile(const int &pIndex);
 
 Q_SIGNALS:
-    void guiUpdated(Plugin *pViewPlugin);
+    void guiUpdated(Plugin *pViewPlugin, const QString &pFileName);
 
     void fileOpened(const QString &pFileName);
     void fileSaved(const QString &pFileName);

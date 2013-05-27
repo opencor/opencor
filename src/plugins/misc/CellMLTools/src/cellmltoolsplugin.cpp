@@ -2,6 +2,7 @@
 // CellMLTools plugin
 //==============================================================================
 
+#include "cellmlfilemanager.h"
 #include "cellmltoolsplugin.h"
 
 //==============================================================================
@@ -63,23 +64,26 @@ void CellMLToolsPlugin::initialize()
 
 //==============================================================================
 
-void CellMLToolsPlugin::updateGui(Plugin *pViewPlugin)
+void CellMLToolsPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 {
     // Enable/disable and show/hide our tools in case we are dealing with a
     // CellML-based view plugin
 
-    bool toolsEnabledAndVisible = pViewPlugin?
-                                      pViewPlugin->info()->fullDependencies().contains("CellMLSupport"):
-                                      false;
+    bool toolsVisible = pViewPlugin?
+                            pViewPlugin->info()->fullDependencies().contains("CellMLSupport"):
+                            false;
+    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
 
-    mCellmlExportToMenu->menuAction()->setEnabled(toolsEnabledAndVisible);
-    mCellmlExportToMenu->menuAction()->setVisible(toolsEnabledAndVisible);
+    mCellmlExportToMenu->menuAction()->setEnabled(toolsVisible);
+    mCellmlExportToMenu->menuAction()->setVisible(toolsVisible);
 
-    mExportToCellml10Action->setEnabled(toolsEnabledAndVisible);
-    mExportToCellml10Action->setVisible(toolsEnabledAndVisible);
+    mExportToCellml10Action->setEnabled(   toolsVisible && cellmlFile
+                                        && QString::fromStdWString(cellmlFile->model()->cellmlVersion()).compare(CellMLSupport::Cellml_1_0));
+    mExportToCellml10Action->setVisible(toolsVisible);
 
-    mExportToCellml11Action->setEnabled(toolsEnabledAndVisible);
-    mExportToCellml11Action->setVisible(toolsEnabledAndVisible);
+    mExportToCellml11Action->setEnabled(   toolsVisible && cellmlFile
+                                        && QString::fromStdWString(cellmlFile->model()->cellmlVersion()).compare(CellMLSupport::Cellml_1_1));
+    mExportToCellml11Action->setVisible(toolsVisible);
 }
 
 //==============================================================================
