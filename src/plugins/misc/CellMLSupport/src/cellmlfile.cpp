@@ -93,8 +93,8 @@ void CellmlFile::reset()
 
     mIssues.clear();
 
-    mLoadingNeeded       = true;
-    mValidNeeded         = true;
+    mLoadingNeeded = true;
+    mValidNeeded = true;
     mRuntimeUpdateNeeded = true;
 }
 
@@ -156,7 +156,7 @@ bool CellmlFile::load()
     // In the case of a non CellML 1.0 model, we want all the imports to be
     // fully instantiated
 
-    if (QString::fromStdWString(mModel->cellmlVersion()).compare(Cellml_1_0))
+    if (QString::fromStdWString(mModel->cellmlVersion()).compare(CellMLSupport::Cellml_1_0))
         try {
             mModel->fullyInstantiateImports();
         } catch (...) {
@@ -229,7 +229,7 @@ bool CellmlFile::save(const QString &pNewFileName)
 
     // Determine the file name to use for the CellML file
 
-    QString fileName = pNewFileName.isEmpty()?mFileName:pNewFileName;
+    QString newFileName = pNewFileName.isEmpty()?mFileName:pNewFileName;
 
     // Make sure that the RDF API representation is up to date by updating its
     // data source
@@ -238,7 +238,7 @@ bool CellmlFile::save(const QString &pNewFileName)
 
     // (Create and) open the file for writing
 
-    QFile file(fileName);
+    QFile file(newFileName);
 
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         // The file can't be opened, so...
@@ -256,17 +256,16 @@ bool CellmlFile::save(const QString &pNewFileName)
 
     file.close();
 
+    // Update the file name, both internally and in the file manager
+
+    Core::FileManager::instance()->rename(mFileName, newFileName);
+
+    mFileName = newFileName;
+
     // The CellML file being saved, it cannot be modified (should it have been
     // before)
-    // Note: we must do this before making sure that mFileName is up to date
-    //       since we need the old file name to update the modified status of
-    //       the CellML file...
 
     setModified(false);
-
-    // Make sure that mFileName is up to date
-
-    mFileName = fileName;
 
     // Everything went fine, so...
 
@@ -423,7 +422,7 @@ bool CellmlFile::isValid()
 
         return mValid;
     } else {
-        // Something went wrong with the loading of the file, so...
+        // The file couldn't be loaded, so...
 
         return false;
     }
@@ -646,6 +645,27 @@ QString CellmlFile::uriBase() const
     // Return the CellML file's URI base
 
     return mUriBase;
+}
+
+//==============================================================================
+
+bool CellmlFile::exportTo(const QString &pFileName, const Format &pFormat)
+{
+Q_UNUSED(pFileName);
+Q_UNUSED(pFormat);
+    // Export the model to the required format, after loading it if necessary
+
+    if (load()) {
+        bool res = true;
+
+//---GRY--- TO BE DONE...
+
+        return res;
+    } else {
+        // The file couldn't be loaded, so...
+
+        return false;
+    }
 }
 
 //==============================================================================

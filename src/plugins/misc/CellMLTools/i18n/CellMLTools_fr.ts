@@ -23,5 +23,13 @@
         <source>CellML Export To</source>
         <translation>Exporter CellML Vers</translation>
     </message>
+    <message>
+        <source>Sorry, but the CellML file could not be exported to %1.</source>
+        <translation>Désolé, mais le fichier CellML n&apos;a pas pu être exporté vers %1.</translation>
+    </message>
+    <message>
+        <source>CellML export to %1</source>
+        <translation>Export CellML vers %1</translation>
+    </message>
 </context>
 </TS>

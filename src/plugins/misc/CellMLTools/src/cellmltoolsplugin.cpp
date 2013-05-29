@@ -4,11 +4,14 @@
 
 #include "cellmlfilemanager.h"
 #include "cellmltoolsplugin.h"
+#include "coreutils.h"
 
 //==============================================================================
 
 #include <QAction>
+#include <QMainWindow>
 #include <QMenu>
+#include <QMessageBox>
 
 //==============================================================================
 
@@ -64,6 +67,28 @@ void CellMLToolsPlugin::initialize()
 
 //==============================================================================
 
+void CellMLToolsPlugin::initializationsDone(const Plugins &pLoadedPlugins)
+{
+    // Retrieve the file types supported by the CellMLSupport plugin
+
+    mCellmlFileTypes = FileTypes();
+
+    foreach (Plugin *loadedPlugin, pLoadedPlugins) {
+        FileInterface *fileInterface = qobject_cast<FileInterface *>(loadedPlugin->instance());
+
+        if (loadedPlugin->name().compare("CellMLSupport") && fileInterface) {
+            // This is the CellMLSupport plugin and, as expected, it implements
+            // the file interface, so retrieve the file types it supports
+
+            mCellmlFileTypes = fileInterface->fileTypes();
+
+            break;
+        }
+    }
+}
+
+//==============================================================================
+
 void CellMLToolsPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 {
     // Enable/disable and show/hide our tools in case we are dealing with a
@@ -84,6 +109,10 @@ void CellMLToolsPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
     mExportToCellml11Action->setEnabled(   toolsVisible && cellmlFile
                                         && QString::fromStdWString(cellmlFile->model()->cellmlVersion()).compare(CellMLSupport::Cellml_1_1));
     mExportToCellml11Action->setVisible(toolsVisible);
+
+    // Keep track of the file name
+
+    mFileName = pFileName;
 }
 
 //==============================================================================
@@ -100,16 +129,61 @@ void CellMLToolsPlugin::retranslateUi()
 
 //==============================================================================
 
+void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Format &pFormat)
+{
+    // Ask for the name of the file which will contain the export
+
+    QString format;
+    QString fileTypes;
+
+    switch (pFormat) {
+    default:   // CellMLSupport::CellmlFile::Cellml_1_0 or
+               // CellMLSupport::CellmlFile::Cellml_1_1
+        if (pFormat == CellMLSupport::CellmlFile::Cellml_1_0)
+            format = "CellML 1.0";
+        else
+            format = "CellML 1.1";
+
+        foreach (const FileType &fileType, mCellmlFileTypes) {
+            if (!fileTypes.isEmpty())
+                fileTypes += ";;";
+
+            fileTypes +=  fileType.description()+" (*."+fileType.fileExtension()+")";
+        }
+    }
+
+    QString fileName = Core::getSaveFileName(tr("CellML export to %1").arg(format), mFileName, fileTypes);
+
+    // Make sure that we have a file name or leave, if not
+
+    if (fileName.isEmpty())
+        return;
+
+    // Now that we have a file name, we can do the eport itself
+
+    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
+
+    if (!cellmlFile->exportTo(fileName, pFormat))
+        QMessageBox::warning(mMainWindow, tr("CellML export to %1").arg(format),
+                             tr("Sorry, but the CellML file could not be exported to %1.").arg(format));
+}
+
+//==============================================================================
+
 void CellMLToolsPlugin::exportToCellml10()
 {
-//---GRY--- TO BE DONE...
+    // Export the current file to CellML 1.0
+
+    exportTo(CellMLSupport::CellmlFile::Cellml_1_0);
 }
 
 //==============================================================================
 
 void CellMLToolsPlugin::exportToCellml11()
 {
-//---GRY--- TO BE DONE...
+    // Export the current file to CellML 1.1
+
+    exportTo(CellMLSupport::CellmlFile::Cellml_1_1);
 }
 
 //==============================================================================
