@@ -43,7 +43,7 @@
 
     date_default_timezone_set("Europe/London");
 
-    $versions = array(array(0, 1, 2, 27, 5, 2013, 1,
+    $versions = array(array(0, 1, 2, 29, 5, 2013, 1,
                             array(array("Windows", array(".exe"), array(".zip")),
                                   array("Linux", array(".tar.gz", 32), array(".tar.gz", 64)),
                                   array("OS X", array(".dmg"), array(".zip")))),
