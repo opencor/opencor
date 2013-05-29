@@ -550,7 +550,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
                                       +" (*."+supportedFileType.fileExtension()+")";
             }
 
-        newFileName = getSaveFileName(tr("Save File"), newFileName, supportedFileTypes);
+        newFileName = Core::getSaveFileName(tr("Save File"), newFileName, supportedFileTypes);
 
         // Determine whether a new file name was retrieved and leave if not
 
