@@ -222,7 +222,7 @@ bool CellmlFile::reload()
 
 bool CellmlFile::save(const QString &pNewFileName)
 {
-    if (!mLoadingNeeded)
+    if (mLoadingNeeded)
         // The file isn't loaded, so...
 
         return false;
