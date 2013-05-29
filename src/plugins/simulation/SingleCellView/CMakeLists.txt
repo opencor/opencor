@@ -13,7 +13,9 @@ ADD_PLUGIN(SingleCellView
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../interface.cpp
+        ../../plugin.cpp
         ../../plugininfo.cpp
+        ../../pluginmanager.cpp
         ../../solverinterface.cpp
 
         src/singlecellviewcontentswidget.cpp
@@ -29,6 +31,9 @@ ADD_PLUGIN(SingleCellView
         src/singlecellviewsimulationworker.cpp
         src/singlecellviewwidget.cpp
     HEADERS_MOC
+        ../../plugin.h
+        ../../pluginmanager.h
+
         src/singlecellviewcontentswidget.h
         src/singlecellviewgraphpanelplotwidget.h
         src/singlecellviewgraphpanelswidget.h

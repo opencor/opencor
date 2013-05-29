@@ -137,8 +137,8 @@ void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Format &pForma
     QString fileTypes;
 
     switch (pFormat) {
-    default:   // CellMLSupport::CellmlFile::Cellml_1_0 or
-               // CellMLSupport::CellmlFile::Cellml_1_1
+    case CellMLSupport::CellmlFile::Cellml_1_0:
+    default:   // CellMLSupport::CellmlFile::Cellml_1_1
         if (pFormat == CellMLSupport::CellmlFile::Cellml_1_0)
             format = "CellML 1.0";
         else
