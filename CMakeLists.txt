@@ -489,10 +489,9 @@ ELSE()
     # Additional libraries required by Qt, but which are not available on a
     # 'blank' version of Ubuntu or their version differs from one version of
     # Ubuntu to another
-    # Note: it seems that, starting with Ubuntu 11.04, some libraries may end
-    #       up in /usr/lib/i386-linux-gnu or /usr/lib/x86_64-linux-gnu,
-    #       depending on whether the system is 32-bit or 64-bit, so we need to
-    #       check those folders first...
+    # Note: starting with Ubuntu 11.04, some system libraries are located in
+    #       /usr/lib/i386-linux-gnu or /usr/lib/x86_64-linux-gnu rather than
+    #       /usr/lib, so we need to check those folders first...
 
     SET(DEFAULT_LIBRARY_FOLDER /usr/lib)
     SET(X86_LIBRARY_FOLDER ${DEFAULT_LIBRARY_FOLDER}/i386-linux-gnu)
