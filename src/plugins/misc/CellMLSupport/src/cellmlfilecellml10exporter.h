@@ -15,6 +15,12 @@
 
 //==============================================================================
 
+#include "cellml-api-cxx-support.hpp"
+
+#include "IfaceAnnoTools.hxx"
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace CellMLSupport {
 
@@ -25,6 +31,9 @@ class CellmlFileCellml10Exporter : public CellmlFileExporter
 public:
     explicit CellmlFileCellml10Exporter(iface::cellml_api::Model *pModel,
                                         const QString &pFileName);
+
+private:
+    ObjRef<iface::cellml_services::AnnotationSet> mAnnotationSet;
 };
 
 //==============================================================================
