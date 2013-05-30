@@ -3,6 +3,8 @@
 //==============================================================================
 
 #include "cellmlfile.h"
+#include "cellmlfilecellml10exporter.h"
+#include "cellmlfilecellml11exporter.h"
 #include "filemanager.h"
 
 //==============================================================================
@@ -18,7 +20,7 @@
     #include <stdint.h>
     // Note: the above header file is required on Linux, so we can use uint32_t
     //       (required to 'properly' make use of the CellML API). Now, we would
-    //       normally have
+    //       normally use
     //           #include <cstdint>
     //       but this is not supported by the current ISO C++ standard. Indeed,
     //       to include it will generate the following error at compile time:
@@ -656,11 +658,37 @@ Q_UNUSED(pFormat);
     // Export the model to the required format, after loading it if necessary
 
     if (load()) {
-        bool res = true;
+        switch (pFormat) {
+        case Cellml_1_1: {
+            // To export to CellML 1.1, the model must be in a non CellML 1.1
+            // format
 
-//---GRY--- TO BE DONE...
+            if (!QString::fromStdWString(mModel->cellmlVersion()).compare(CellMLSupport::Cellml_1_1))
+                // We are dealing with a CellML 1.1 model, so...
 
-        return res;
+                return false;
+
+            // Do the actual export to CellML 1.1
+
+            CellmlFileCellml11Exporter exporter(mModel);
+
+            return exporter.result();
+        }
+        default:   // Cellml_1_0
+            // To export to CellML 1.0, the model must be in a non CellML 1.0
+            // format
+
+            if (!QString::fromStdWString(mModel->cellmlVersion()).compare(CellMLSupport::Cellml_1_0))
+                // We are dealing with a CellML 1.0 model, so...
+
+                return false;
+
+            // Do the actual export to CellML 1.0
+
+            CellmlFileCellml10Exporter exporter(mModel);
+
+            return exporter.result();
+        }
     } else {
         // The file couldn't be loaded, so...
 
