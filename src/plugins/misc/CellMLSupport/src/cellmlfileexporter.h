@@ -7,6 +7,14 @@
 
 //==============================================================================
 
+#include <QString>
+
+//==============================================================================
+
+#include "IfaceCellML_APISPEC.hxx"
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace CellMLSupport {
 
@@ -21,6 +29,8 @@ public:
 
 protected:
     bool mResult;
+
+    bool saveModel(iface::cellml_api::Model *pModel, const QString &pFileName);
 };
 
 //==============================================================================

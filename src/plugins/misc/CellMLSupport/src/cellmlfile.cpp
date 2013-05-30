@@ -670,7 +670,7 @@ Q_UNUSED(pFormat);
 
             // Do the actual export to CellML 1.1
 
-            CellmlFileCellml11Exporter exporter(mModel);
+            CellmlFileCellml11Exporter exporter(mModel, pFileName);
 
             return exporter.result();
         }
@@ -685,7 +685,7 @@ Q_UNUSED(pFormat);
 
             // Do the actual export to CellML 1.0
 
-            CellmlFileCellml10Exporter exporter(mModel);
+            CellmlFileCellml10Exporter exporter(mModel, pFileName);
 
             return exporter.result();
         }

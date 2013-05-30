@@ -6,15 +6,24 @@
 
 //==============================================================================
 
+#include "cellml-api-cxx-support.hpp"
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileCellml10Exporter::CellmlFileCellml10Exporter(iface::cellml_api::Model *pModel) :
+CellmlFileCellml10Exporter::CellmlFileCellml10Exporter(iface::cellml_api::Model *pModel,
+                                                       const QString &pFileName) :
     CellmlFileExporter()
 {
-    pModel->cellmlVersion();
+    ObjRef<iface::cellml_api::Model> exportedModel = pModel;
+
+    // Save the exported model
+
+    mResult = saveModel(exportedModel, pFileName);
 }
 
 //==============================================================================

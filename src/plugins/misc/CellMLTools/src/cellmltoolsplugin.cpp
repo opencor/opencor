@@ -76,7 +76,7 @@ void CellMLToolsPlugin::initializationsDone(const Plugins &pLoadedPlugins)
     foreach (Plugin *loadedPlugin, pLoadedPlugins) {
         FileInterface *fileInterface = qobject_cast<FileInterface *>(loadedPlugin->instance());
 
-        if (loadedPlugin->name().compare("CellMLSupport") && fileInterface) {
+        if (!loadedPlugin->name().compare("CellMLSupport") && fileInterface) {
             // This is the CellMLSupport plugin and, as expected, it implements
             // the file interface, so retrieve the file types it supports
 

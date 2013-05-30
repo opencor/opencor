@@ -11,7 +11,7 @@
 
 //==============================================================================
 
-#include "IfaceCellML_APISPEC.hxx"
+#include <QString>
 
 //==============================================================================
 
@@ -23,7 +23,8 @@ namespace CellMLSupport {
 class CellmlFileCellml10Exporter : public CellmlFileExporter
 {
 public:
-    explicit CellmlFileCellml10Exporter(iface::cellml_api::Model *pModel);
+    explicit CellmlFileCellml10Exporter(iface::cellml_api::Model *pModel,
+                                        const QString &pFileName);
 };
 
 //==============================================================================
