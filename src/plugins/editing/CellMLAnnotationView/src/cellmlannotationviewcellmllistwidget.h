@@ -131,7 +131,7 @@ private:
 
     void populateModel();
     void populateUnitsModel(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem,
-                            iface::cellml_api::UnitsSet *pUnits);
+                            iface::cellml_api::UnitsSet *pUnitsSet);
     void populateGroupComponentReferenceModel(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem,
                                               iface::cellml_api::ComponentRef *pGroupComponentReference);
 
