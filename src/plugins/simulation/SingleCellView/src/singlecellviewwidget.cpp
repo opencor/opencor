@@ -1059,7 +1059,7 @@ void SingleCellViewWidget::on_actionRunPauseResume_triggered()
                 // currently available, so let our user know about it
 
                 QMessageBox::warning(qApp->activeWindow(), tr("Run the simulation"),
-                                     tr("Sorry, but the simulation requires %1 of memory while you have %2 left.").arg(Core::sizeAsString(requiredMemory), Core::sizeAsString(freeMemory)));
+                                     tr("Sorry, but the simulation requires %1 of memory and you have only %2 left.").arg(Core::sizeAsString(requiredMemory), Core::sizeAsString(freeMemory)));
 
                 runSimulation = false;
             }
@@ -1088,7 +1088,7 @@ void SingleCellViewWidget::on_actionRunPauseResume_triggered()
                     mSimulation->run();
                 else
                     QMessageBox::warning(qApp->activeWindow(), tr("Run the simulation"),
-                                         tr("Sorry, but we could not allocate all the memory required for the simulation."));
+                                         tr("Sorry, but we could not allocate the %1 of memory required for the simulation.").arg(Core::sizeAsString(requiredMemory)));
             }
 
             // We are done handline the action, so...

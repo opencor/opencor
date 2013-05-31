@@ -182,8 +182,8 @@
         <translation>Aucune</translation>
     </message>
     <message>
-        <source>%1 must be restarted for your changes to be effective. Do you wish to proceed?</source>
-        <translation>%1 doit etre relancé pour que vos changements deviennent effectifs. Voulez-vous continuer ?</translation>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; must be restarted for your changes to be effective. Do you wish to proceed?</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; doit etre relancé pour que vos changements deviennent effectifs. Voulez-vous continuer ?</translation>
     </message>
     <message>
         <source>API</source>

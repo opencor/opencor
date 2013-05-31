@@ -173,7 +173,7 @@ void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Format &pForma
             //       following a CellML export...
 
         QMessageBox::warning(mMainWindow, tr("CellML file export to %1").arg(format),
-                             tr("Sorry, but the CellML file could not be exported to %1%2.").arg(format, errorMessage));
+                             tr("Sorry, but <strong>%1</strong> could not be exported to <strong>%2</strong>%3.").arg(fileName, format, errorMessage));
     }
 }
 

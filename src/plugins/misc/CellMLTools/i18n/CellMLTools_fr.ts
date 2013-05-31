@@ -20,8 +20,8 @@
         <translation></translation>
     </message>
     <message>
-        <source>Sorry, but the CellML file could not be exported to %1%2.</source>
-        <translation>Désolé, mais le fichier CellML n&apos;a pas pu être exporté vers %1%2.</translation>
+        <source>Sorry, but &lt;strong&gt;%1&lt;/strong&gt; could not be exported to &lt;strong&gt;%2&lt;/strong&gt;%3.</source>
+        <translation>Désolé, mais &lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être exporté vers &lt;strong&gt;%2&lt;/strong&gt;%3.</translation>
     </message>
     <message>
         <source>CellML File Export To</source>
