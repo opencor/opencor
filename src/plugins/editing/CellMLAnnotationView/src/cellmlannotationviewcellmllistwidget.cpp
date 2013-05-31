@@ -832,15 +832,15 @@ void CellmlAnnotationViewCellmlListWidget::populateUnitsModel(CellmlAnnotationVi
 
             unitsItem->appendRow(unitItem);
 
-            // Retrieve the unit's unit elements
+            // Retrieve the units' unit references
 
-            ObjRef<iface::cellml_api::UnitSet> unitElements = units->unitCollection();
+            ObjRef<iface::cellml_api::UnitSet> unitSet = units->unitCollection();
 
-            if (unitElements->length()) {
-                ObjRef<iface::cellml_api::UnitIterator> unitElementsIterator = unitElements->iterateUnits();
+            if (unitSet->length()) {
+                ObjRef<iface::cellml_api::UnitIterator> unitIterator = unitSet->iterateUnits();
 
                 forever {
-                    ObjRef<iface::cellml_api::Unit> unit = unitElementsIterator->nextUnit();
+                    ObjRef<iface::cellml_api::Unit> unit = unitIterator->nextUnit();
 
                     if (!unit)
                         break;

@@ -11,6 +11,8 @@
 
 //==============================================================================
 
+#include <QPair>
+#include <QSet>
 #include <QString>
 
 //==============================================================================
@@ -34,6 +36,11 @@ public:
 
 private:
     ObjRef<iface::cellml_services::AnnotationSet> mAnnotationSet;
+
+    QSet<QPair<QString, QString> > mCopiedUnits;
+
+    void copyUnitsSet(iface::cellml_api::UnitsSet *pUnitsSet,
+                      iface::cellml_api::CellMLElement *pElement);
 };
 
 //==============================================================================
