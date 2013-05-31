@@ -166,7 +166,7 @@ bool CellmlFile::load()
             // so...
 
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                       tr("the model's imports could not be fully instantiated"));
+                                       tr("the imports could not be fully instantiated"));
 
             return false;
         }
@@ -211,7 +211,7 @@ bool CellmlFile::load()
 
 bool CellmlFile::reload()
 {
-    // We want to reload the file, so we must first reset it
+    // We want to reload the file, so we must first reset everything
 
     reset();
 
@@ -300,13 +300,17 @@ bool CellmlFile::isValid()
         //       time it takes to fully validate a model that has many
         //       warnings/errors)...
 
-        ObjRef<iface::cellml_services::VACSService> vacssService = CreateVACSService();
-        ObjRef<iface::cellml_services::CellMLValidityErrorSet> cellmlValidityErrorSet = vacssService->validateModel(mModel);
+        // Reset any issues that we may have found before
+
+        mIssues.clear();
 
         // Determine the number of errors and warnings
         // Note: CellMLValidityErrorSet::nValidityErrors() returns any type of
         //       validation issue, be it an error or a warning, so we need to
         //       determine the number of true errors
+
+        ObjRef<iface::cellml_services::VACSService> vacssService = CreateVACSService();
+        ObjRef<iface::cellml_services::CellMLValidityErrorSet> cellmlValidityErrorSet = vacssService->validateModel(mModel);
 
         int cellmlErrorsCount = 0;
 
@@ -653,39 +657,53 @@ QString CellmlFile::uriBase() const
 
 bool CellmlFile::exportTo(const QString &pFileName, const Format &pFormat)
 {
-Q_UNUSED(pFileName);
-Q_UNUSED(pFormat);
     // Export the model to the required format, after loading it if necessary
 
     if (load()) {
+        // Check that it actually makes sense to export the model
+
         switch (pFormat) {
         case Cellml_1_1: {
             // To export to CellML 1.1, the model must be in a non CellML 1.1
             // format
 
             if (!QString::fromStdWString(mModel->cellmlVersion()).compare(CellMLSupport::Cellml_1_1))
-                // We are dealing with a CellML 1.1 model, so...
+                // We are already dealing with a CellML 1.1 model, so...
 
                 return false;
-
-            // Do the actual export to CellML 1.1
-
-            CellmlFileCellml11Exporter exporter(mModel, pFileName);
-
-            return exporter.result();
         }
         default:   // Cellml_1_0
             // To export to CellML 1.0, the model must be in a non CellML 1.0
             // format
 
             if (!QString::fromStdWString(mModel->cellmlVersion()).compare(CellMLSupport::Cellml_1_0))
-                // We are dealing with a CellML 1.0 model, so...
+                // We are already dealing with a CellML 1.0 model, so...
 
                 return false;
+        }
 
-            // Do the actual export to CellML 1.0
+        // Reset any issues that we may have found before
 
+        mIssues.clear();
+
+        // Do the actual export
+
+        switch (pFormat) {
+        case Cellml_1_1: {
+            CellmlFileCellml11Exporter exporter(mModel, pFileName);
+
+            if (exporter.errorMessage().size())
+                mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                           exporter.errorMessage());
+
+            return exporter.result();
+        }
+        default:   // Cellml_1_0
             CellmlFileCellml10Exporter exporter(mModel, pFileName);
+
+            if (exporter.errorMessage().size())
+                mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                           exporter.errorMessage());
 
             return exporter.result();
         }

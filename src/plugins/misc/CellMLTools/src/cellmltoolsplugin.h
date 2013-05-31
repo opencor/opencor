@@ -50,7 +50,7 @@ private:
 
     QString mFileName;
 
-    QMenu *mCellmlExportToMenu;
+    QMenu *mCellmlFileExportToMenu;
 
     QAction *mExportToCellml10Action;
     QAction *mExportToCellml11Action;

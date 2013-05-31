@@ -6,8 +6,15 @@
 
 //==============================================================================
 
+#include <QApplication>
+
+//==============================================================================
+
+#include "IfaceCeVAS.hxx"
+
 #include "AnnoToolsBootstrap.hpp"
 #include "CellMLBootstrap.hpp"
+#include "CeVASBootstrap.hpp"
 
 //==============================================================================
 
@@ -39,6 +46,20 @@ CellmlFileCellml10Exporter::CellmlFileCellml10Exporter(iface::cellml_api::Model 
     ObjRef<iface::cellml_services::AnnotationToolService> annotationToolService = CreateAnnotationToolService();
 
     mAnnotationSet = annotationToolService->createAnnotationSet();
+
+    // Create a CellML Variable Association Service object so that we can find
+    // relevant components
+
+    ObjRef<iface::cellml_services::CeVASBootstrap> cevasBootstrap = CreateCeVASBootstrap();
+    ObjRef<iface::cellml_services::CeVAS> cevas = cevasBootstrap->createCeVASForModel(pModel);
+
+    std::wstring cevasError = cevas->modelError();
+
+    if (cevasError.length()) {
+        mErrorMessage = QObject::tr("a CeVAS object could not be created");
+
+        return;
+    }
 
     // Save the exported model
 

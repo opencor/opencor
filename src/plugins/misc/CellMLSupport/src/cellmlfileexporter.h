@@ -27,8 +27,12 @@ public:
 
     bool result() const;
 
+    QString errorMessage() const;
+
 protected:
     bool mResult;
+
+    QString mErrorMessage;
 
     bool saveModel(iface::cellml_api::Model *pModel, const QString &pFileName);
 };

@@ -41,7 +41,7 @@ void CellMLToolsPlugin::initialize()
 {
     // Create our Tools | Export To menu
 
-    mCellmlExportToMenu = newMenu(mMainWindow, "CellmlExportTo");
+    mCellmlFileExportToMenu = newMenu(mMainWindow, "CellmlFileExportTo");
 
     // Create our different Tools | Export To actions, and add them to our
     // Tools | Export To menu
@@ -49,8 +49,8 @@ void CellMLToolsPlugin::initialize()
     mExportToCellml10Action = newAction(mMainWindow);
     mExportToCellml11Action = newAction(mMainWindow);
 
-    mCellmlExportToMenu->addAction(mExportToCellml10Action);
-    mCellmlExportToMenu->addAction(mExportToCellml11Action);
+    mCellmlFileExportToMenu->addAction(mExportToCellml10Action);
+    mCellmlFileExportToMenu->addAction(mExportToCellml11Action);
 
     // Some connections to handle our different Tools | Export To actions
 
@@ -61,7 +61,7 @@ void CellMLToolsPlugin::initialize()
 
     // Set our settings
 
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::Tools, mCellmlExportToMenu->menuAction());
+    mGuiSettings->addMenuAction(GuiMenuActionSettings::Tools, mCellmlFileExportToMenu->menuAction());
     mGuiSettings->addMenuAction(GuiMenuActionSettings::Tools);
 }
 
@@ -99,8 +99,8 @@ void CellMLToolsPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
                             false;
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
 
-    mCellmlExportToMenu->menuAction()->setEnabled(toolsVisible);
-    mCellmlExportToMenu->menuAction()->setVisible(toolsVisible);
+    mCellmlFileExportToMenu->menuAction()->setEnabled(toolsVisible);
+    mCellmlFileExportToMenu->menuAction()->setVisible(toolsVisible);
 
     mExportToCellml10Action->setEnabled(   toolsVisible && cellmlFile
                                         && QString::fromStdWString(cellmlFile->model()->cellmlVersion()).compare(CellMLSupport::Cellml_1_0));
@@ -121,7 +121,7 @@ void CellMLToolsPlugin::retranslateUi()
 {
     // Retranslate our different Tools actions
 
-    retranslateMenu(mCellmlExportToMenu, tr("CellML Export To"));
+    retranslateMenu(mCellmlFileExportToMenu, tr("CellML File Export To"));
 
     retranslateAction(mExportToCellml10Action, tr("CellML 1.0..."), tr("Export the CellML file to CellML 1.0"));
     retranslateAction(mExportToCellml11Action, tr("CellML 1.1..."), tr("Export the CellML file to CellML 1.1"));
@@ -152,7 +152,7 @@ void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Format &pForma
         }
     }
 
-    QString fileName = Core::getSaveFileName(tr("CellML export to %1").arg(format), mFileName, fileTypes);
+    QString fileName = Core::getSaveFileName(tr("CellML file export to %1").arg(format), mFileName, fileTypes);
 
     // Make sure that we have a file name or leave, if not
 
@@ -163,9 +163,18 @@ void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Format &pForma
 
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
 
-    if (!cellmlFile->exportTo(fileName, pFormat))
-        QMessageBox::warning(mMainWindow, tr("CellML export to %1").arg(format),
-                             tr("Sorry, but the CellML file could not be exported to %1.").arg(format));
+    if (!cellmlFile->exportTo(fileName, pFormat)) {
+        CellMLSupport::CellmlFileIssues issues = cellmlFile->issues();
+        QString errorMessage = QString();
+
+        if (issues.count())
+            errorMessage = " ("+issues.first().message()+")";
+            // Note: if there are 'issues', then there can be only one of them
+            //       following a CellML export...
+
+        QMessageBox::warning(mMainWindow, tr("CellML file export to %1").arg(format),
+                             tr("Sorry, but the CellML file could not be exported to %1%2.").arg(format, errorMessage));
+    }
 }
 
 //==============================================================================

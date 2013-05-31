@@ -17,7 +17,8 @@ namespace CellMLSupport {
 //==============================================================================
 
 CellmlFileExporter::CellmlFileExporter() :
-    mResult(false)
+    mResult(false),
+    mErrorMessage(QString())
 {
 }
 
@@ -28,6 +29,15 @@ bool CellmlFileExporter::result() const
     // Return the result of the conversion
 
     return mResult;
+}
+
+//==============================================================================
+
+QString CellmlFileExporter::errorMessage() const
+{
+    // Return the error message following the conversion
+
+    return mErrorMessage;
 }
 
 //==============================================================================
