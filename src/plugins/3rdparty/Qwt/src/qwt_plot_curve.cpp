@@ -156,7 +156,7 @@ void QwtPlotCurve::setPaintAttribute( PaintAttribute attribute, bool on )
 }
 
 /*!
-    \brief Return the current paint attributes
+    \return True, when attribute is enabled
     \sa setPaintAttribute()
 */
 bool QwtPlotCurve::testPaintAttribute( PaintAttribute attribute ) const
@@ -186,8 +186,8 @@ void QwtPlotCurve::setLegendAttribute( LegendAttribute attribute, bool on )
 }
 
 /*!
-    \brief Return the current paint attributes
-    \sa setLegendAttribute()
+  \return True, when attribute is enabled
+  \sa setLegendAttribute()
 */
 bool QwtPlotCurve::testLegendAttribute( LegendAttribute attribute ) const
 {
@@ -212,8 +212,8 @@ void QwtPlotCurve::setStyle( CurveStyle style )
 }
 
 /*!
-    Return the current style
-    \sa setStyle()
+  \return Style of the curve
+  \sa setStyle()
 */
 QwtPlotCurve::CurveStyle QwtPlotCurve::style() const
 {

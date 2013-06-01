@@ -270,6 +270,7 @@ Q_SIGNALS:
       A signal emitted whenever the last appended point of the
       selection has been removed.
 
+      \param pos Position of the point, that has been removed
       \sa remove(), appended()
     */
     void removed( const QPoint &pos );

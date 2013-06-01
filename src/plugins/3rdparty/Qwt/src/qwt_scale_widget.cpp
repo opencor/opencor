@@ -344,7 +344,7 @@ void QwtScaleWidget::setScaleDraw( QwtScaleDraw *scaleDraw )
 }
 
 /*!
-    scaleDraw of this scale
+    \return scaleDraw of this scale
     \sa setScaleDraw(), QwtScaleDraw::setScaleDraw()
 */
 const QwtScaleDraw *QwtScaleWidget::scaleDraw() const
@@ -353,7 +353,7 @@ const QwtScaleDraw *QwtScaleWidget::scaleDraw() const
 }
 
 /*!
-    scaleDraw of this scale
+    \return scaleDraw of this scale
     \sa QwtScaleDraw::setScaleDraw()
 */
 QwtScaleDraw *QwtScaleWidget::scaleDraw()
@@ -767,6 +767,11 @@ int QwtScaleWidget::dimForLength( int length, const QFont &scaleFont ) const
   The maximum of this distance an the minimum border distance
   is returned.
 
+  \param start Return parameter for the border width at
+               the beginning of the scale
+  \param end Return parameter for the border width at the
+             end of the scale
+
   \warning
   <ul> <li>The minimum border distance depends on the font.</ul>
   \sa setMinBorderDist(), getMinBorderDist(), setBorderDist()
@@ -801,6 +806,11 @@ void QwtScaleWidget::setMinBorderDist( int start, int end )
 /*!
   Get the minimum value for the distances of the scale's endpoints from
   the widget borders.
+
+  \param start Return parameter for the border width at
+               the beginning of the scale
+  \param end Return parameter for the border width at the
+             end of the scale
 
   \sa setMinBorderDist(), getBorderDistHint()
 */

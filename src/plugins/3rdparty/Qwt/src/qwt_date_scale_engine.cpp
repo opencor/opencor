@@ -18,7 +18,7 @@ static inline double qwtMsecsForType( QwtDate::IntervalType type )
         365.0 * 24.0 * 3600.0 * 1000.0,
     };
 
-    if ( type < 0 || type >= sizeof( msecs ) / sizeof( msecs[0] ) )
+    if ( type < 0 || type >= static_cast<int>( sizeof( msecs ) / sizeof( msecs[0] ) ) )
         return 1.0;
 
     return msecs[ type ];
@@ -850,6 +850,8 @@ int QwtDateScaleEngine::maxWeeks() const
   \param minDate Minimum ( = earlier ) of the interval
   \param maxDate Maximum ( = later ) of the interval
   \param maxSteps Maximum for the number of steps
+
+  \return Interval classification
  */
 QwtDate::IntervalType QwtDateScaleEngine::intervalType(
     const QDateTime &minDate, const QDateTime &maxDate,
@@ -976,6 +978,7 @@ void QwtDateScaleEngine::autoScale( int maxNumSteps,
    \param maxMinorSteps Maximum number of minor steps
    \param stepSize Step size. If stepSize == 0, the scaleEngine
                    calculates one.
+   \return Calculated scale division
 */
 QwtScaleDiv QwtDateScaleEngine::divideScale( double x1, double x2,
     int maxMajorSteps, int maxMinorSteps, double stepSize ) const

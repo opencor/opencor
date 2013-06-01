@@ -73,6 +73,8 @@ void QwtTextLabel::setPlainText( const QString &text )
 
 /*!
    Interface for the designer plugin
+
+   \return Text as plain text
    \sa setPlainText(), text()
  */
 QString QwtTextLabel::plainText() const

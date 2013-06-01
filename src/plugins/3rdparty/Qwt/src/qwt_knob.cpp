@@ -521,6 +521,24 @@ void QwtKnob::drawKnob( QPainter *painter, const QRectF &knobRect ) const
 
             break;
         }
+        case QwtKnob::Styled:
+        {
+            QRadialGradient gradient(knobRect.center().x() - knobRect.width() / 3,
+                knobRect.center().y() - knobRect.height() / 2,
+                knobRect.width() * 1.3,
+                knobRect.center().x(),
+                knobRect.center().y() - knobRect.height() / 2);
+
+            const QColor c = palette().color( QPalette::Button );
+            gradient.setColorAt(0, c.lighter(110));
+            gradient.setColorAt(qreal(0.5), c);
+            gradient.setColorAt(qreal(0.501), c.darker(102));
+            gradient.setColorAt(1, c.darker(115));
+
+            brush = QBrush( gradient );
+
+            break;
+        }
         case QwtKnob::Sunken:
         {
             QLinearGradient gradient(
@@ -569,13 +587,17 @@ void QwtKnob::drawMarker( QPainter *painter,
     if ( radius < 1.0 )
         radius = 1.0;
 
+    int markerSize = d_data->markerSize;
+    if ( markerSize <= 0 )
+        markerSize = qRound( 0.4 * radius );
+
     switch ( d_data->markerStyle )
     {
         case Notch:
         case Nub:
         {
             const double dotWidth =
-                qMin( double( d_data->markerSize ), radius);
+                qMin( double( markerSize ), radius);
 
             const double dotCenterDist = radius - 0.5 * dotWidth;
             if ( dotCenterDist > 0.0 )
@@ -607,7 +629,7 @@ void QwtKnob::drawMarker( QPainter *painter,
         case Dot:
         {
             const double dotWidth =
-                qMin( double( d_data->markerSize ), radius);
+                qMin( double( markerSize ), radius);
 
             const double dotCenterDist = radius - 0.5 * dotWidth;
             if ( dotCenterDist > 0.0 )
@@ -627,7 +649,7 @@ void QwtKnob::drawMarker( QPainter *painter,
         }
         case Tick:
         {
-            const double rb = qMax( radius - d_data->markerSize, 1.0 );
+            const double rb = qMax( radius - markerSize, 1.0 );
             const double re = radius;
 
             const QLineF line( xm - sinA * rb, ym - cosA * rb,
@@ -642,7 +664,7 @@ void QwtKnob::drawMarker( QPainter *painter,
         }
         case Triangle:
         {
-            const double rb = qMax( radius - d_data->markerSize, 1.0 );
+            const double rb = qMax( radius - markerSize, 1.0 );
             const double re = radius;
 
             painter->translate( rect.center() );
@@ -780,6 +802,10 @@ int QwtKnob::borderWidth() const
 
 /*!
   \brief Set the size of the marker
+
+  When setting a size <= 0 the marker will
+  automatically scaled to 40% of the radius of the knob.
+
   \sa markerSize(), markerStyle()
 */
 void QwtKnob::setMarkerSize( int size )

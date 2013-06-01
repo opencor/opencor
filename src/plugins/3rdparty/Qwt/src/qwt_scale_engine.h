@@ -117,6 +117,8 @@ public:
       \param maxMinorSteps Maximum number of minor steps
       \param stepSize Step size. If stepSize == 0.0, the scaleEngine
                    calculates one.
+
+      \return Calculated scale division
     */
     virtual QwtScaleDiv divideScale( double x1, double x2,
         int maxMajorSteps, int maxMinorSteps,

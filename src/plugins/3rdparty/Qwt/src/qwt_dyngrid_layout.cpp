@@ -113,18 +113,22 @@ void QwtDynGridLayout::setMaxColumns( uint maxColumns )
 }
 
 /*!
-  Return the upper limit for the number of columns.
+  \brief Return the upper limit for the number of columns.
+
   0 means unlimited, what is the default.
+
+  \return Upper limit for the number of columns
   \sa setMaxColumns()
 */
-
 uint QwtDynGridLayout::maxColumns() const
 {
     return d_data->maxColumns;
 }
 
-//! Adds item to the next free position.
-
+/*!
+  \brief Add an item to the next free position.
+  \param item Layout item
+ */
 void QwtDynGridLayout::addItem( QLayoutItem *item )
 {
     d_data->itemList.append( item );
@@ -134,7 +138,6 @@ void QwtDynGridLayout::addItem( QLayoutItem *item )
 /*!
   \return true if this layout is empty.
 */
-
 bool QwtDynGridLayout::isEmpty() const
 {
     return d_data->itemList.isEmpty();
@@ -143,7 +146,6 @@ bool QwtDynGridLayout::isEmpty() const
 /*!
   \return number of layout items
 */
-
 uint QwtDynGridLayout::itemCount() const
 {
     return d_data->itemList.count();
@@ -153,6 +155,7 @@ uint QwtDynGridLayout::itemCount() const
   Find the item at a specific index
 
   \param index Index
+  \return Item at a specific index
   \sa takeAt()
 */
 QLayoutItem *QwtDynGridLayout::itemAt( int index ) const
@@ -167,6 +170,7 @@ QLayoutItem *QwtDynGridLayout::itemAt( int index ) const
   Find the item at a specific index and remove it from the layout
 
   \param index Index
+  \return Layout item, removed from the layout
   \sa itemAt()
 */
 QLayoutItem *QwtDynGridLayout::takeAt( int index )
@@ -199,10 +203,13 @@ void QwtDynGridLayout::setExpandingDirections( Qt::Orientations expanding )
 }
 
 /*!
-  Returns whether this layout can make use of more space than sizeHint().
+  \brief Returns whether this layout can make use of more space than sizeHint().
+
   A value of Qt::Vertical or Qt::Horizontal means that it wants to grow in only
   one dimension, while Qt::Vertical | Qt::Horizontal means that it wants
   to grow in both dimensions.
+
+  \return Orientations, where the layout expands
   \sa setExpandingDirections()
 */
 Qt::Orientations QwtDynGridLayout::expandingDirections() const
@@ -240,13 +247,16 @@ void QwtDynGridLayout::setGeometry( const QRect &rect )
 }
 
 /*!
-  Calculate the number of columns for a given width. It tries to
-  use as many columns as possible (limited by maxColumns())
+  \brief Calculate the number of columns for a given width.
+
+  The calculation tries to use as many columns as possible
+  ( limited by maxColumns() )
 
   \param width Available width for all columns
+  \return Number of columns for a given width
+
   \sa maxColumns(), setMaxColumns()
 */
-
 uint QwtDynGridLayout::columnsForWidth( int width ) const
 {
     if ( isEmpty() )
@@ -467,6 +477,11 @@ int QwtDynGridLayout::heightForWidth( int width ) const
   rows in case of expanding() & QSizePolicy::Vertical to fill the entire
   rect. Rows and columns are stretched with the same factor.
 
+  \param rect Bounding rectangle
+  \param numColumns Number of columns
+  \param rowHeight Array to be filled with the calculated row heights
+  \param colWidth Array to be filled with the calculated column widths
+
   \sa setExpanding(), expanding()
 */
 void QwtDynGridLayout::stretchGrid( const QRect &rect,
@@ -523,6 +538,7 @@ void QwtDynGridLayout::stretchGrid( const QRect &rect,
    a grid with maxColumns() columns, otherwise it is the size for
    a grid with only one row.
 
+   \return Size hint
    \sa maxColumns(), setMaxColumns()
 */
 QSize QwtDynGridLayout::sizeHint() const

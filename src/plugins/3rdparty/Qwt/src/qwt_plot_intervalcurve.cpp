@@ -132,7 +132,7 @@ void QwtPlotIntervalCurve::setPaintAttribute(
 }
 
 /*!
-    \brief Return the current paint attributes
+    \return True, when attribute is enabled
     \sa PaintAttribute, setPaintAttribute()
 */
 bool QwtPlotIntervalCurve::testPaintAttribute(
@@ -185,7 +185,7 @@ void QwtPlotIntervalCurve::setStyle( CurveStyle style )
 }
 
 /*!
-    \brief Return the current style
+    \return Style of the curve
     \sa setStyle()
 */
 QwtPlotIntervalCurve::CurveStyle QwtPlotIntervalCurve::style() const
@@ -255,7 +255,7 @@ void QwtPlotIntervalCurve::setPen( const QPen &pen )
 }
 
 /*!
-    \brief Return the pen used to draw the lines
+    \return Pen used to draw the lines
     \sa setPen(), brush()
 */
 const QPen& QwtPlotIntervalCurve::pen() const

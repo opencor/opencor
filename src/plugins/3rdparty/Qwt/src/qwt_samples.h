@@ -218,6 +218,7 @@ inline bool QwtOHLCSample::isValid() const
 
    For valid samples the limits of this interval are always low/high.
 
+   \return Bounding interval
    \sa isValid()
  */
 inline QwtInterval QwtOHLCSample::boundingInterval() const

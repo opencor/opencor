@@ -481,6 +481,7 @@ void QwtCounter::textChanged()
 /*!
    Handle QEvent::PolishRequest events
    \param event Event
+   \return see QWidget::event()
 */
 bool QwtCounter::event( QEvent *event )
 {

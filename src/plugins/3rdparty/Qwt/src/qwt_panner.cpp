@@ -224,7 +224,7 @@ Qt::Orientations QwtPanner::orientations() const
 }
 
 /*!
-   Return true if a orientation is enabled
+   \return True if an orientation is enabled
    \sa orientations(), setOrientations()
 */
 bool QwtPanner::isOrientationEnabled( Qt::Orientation o ) const
@@ -299,6 +299,7 @@ QBitmap QwtPanner::contentsMask() const
 
 /*!
   Grab the widget into a pixmap.
+  \return Grabbed pixmap
 */
 QPixmap QwtPanner::grab() const
 {
@@ -317,6 +318,9 @@ QPixmap QwtPanner::grab() const
 
   \param object Object to be filtered
   \param event Event
+
+  \return Always false, beside for paint events for the
+          parent widget.
 
   \sa widgetMousePressEvent(), widgetMouseReleaseEvent(),
       widgetMouseMoveEvent()

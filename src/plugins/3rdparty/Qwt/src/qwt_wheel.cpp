@@ -119,6 +119,7 @@ QwtWheel::~QwtWheel()
 
   The wheelMoved() signal is emitted regardless id tracking is enabled or not.
 
+  \param enable On/Off
   \sa isTracking()
  */
 void QwtWheel::setTracking( bool enable )
@@ -949,7 +950,7 @@ QSize QwtWheel::sizeHint() const
 }
 
 /*!
-  \brief Return a minimum size hint
+  \return Minimum size hint
   \warning The return value is based on the wheel width.
 */
 QSize QwtWheel::minimumSizeHint() const
@@ -991,6 +992,7 @@ double QwtWheel::singleStep() const
   user input ( mouse, keyboard, wheel ) are aligned to
   the multiples of the single step.
 
+  \param on On/Off
   \sa stepAlignment(), setSingleStep()
  */
 void QwtWheel::setStepAlignment( bool on )

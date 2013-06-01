@@ -156,7 +156,7 @@ inline void QwtPainter::drawLine( QPainter *painter, const QLineF &line )
 }
 
 /*!
-  Returns whether line splitting for the raster paint engine is enabled.
+  \return True, when line splitting for the raster paint engine is enabled.
   \sa setPolylineSplitting()
 */
 inline bool QwtPainter::polylineSplitting()
@@ -165,10 +165,11 @@ inline bool QwtPainter::polylineSplitting()
 }
 
 /*!
-  Returns whether coordinates should be rounded, before they are painted
-  to a paint engine that floors to integer values.  For other paint engines
-  this ( PDF, SVG ), this flag has no effect.
+  Check whether coordinates should be rounded, before they are painted
+  to a paint engine that rounds to integer values. For other paint engines
+  ( PDF, SVG ), this flag has no effect.
 
+  \return True, when rounding is enabled
   \sa setRoundingAlignment(), isAligning()
 */
 inline bool QwtPainter::roundingAlignment()

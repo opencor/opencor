@@ -257,6 +257,8 @@ QwtScaleDiv QwtScaleDiv::inverted() const
    \param lowerBound Lower bound
    \param upperBound Upper bound
 
+   \return Scale division with all ticks inside of the given interval
+
    \note lowerBound might be greater than upperBound for inverted scales
 */
 QwtScaleDiv QwtScaleDiv::bounded(
@@ -303,6 +305,7 @@ void QwtScaleDiv::setTicks( int type, const QList<double> &ticks )
    Return a list of ticks
 
    \param type MinorTick, MediumTick or MajorTick
+   \return Tick list
 */
 QList<double> QwtScaleDiv::ticks( int type ) const
 {

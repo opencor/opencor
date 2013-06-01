@@ -379,6 +379,7 @@ QwtText QwtPlotBarChart::barTitle( int sampleIndex ) const
    otherwise the chart is represented like any other plot item
    from its title() and the legendIcon().
 
+   \return Information, that is needed to represent the item on the legend
    \sa title(), setLegendMode(), barTitle(), QwtLegend, QwtPlotLegendItem
  */
 QList<QwtLegendData> QwtPlotBarChart::legendData() const

@@ -293,6 +293,7 @@ double QwtDate::toDouble( const QDateTime &dateTime )
   \param intervalType Interval type, how to ceil.
                       F.e. when intervalType = QwtDate::Months, the result
                       will be ceiled to the next beginning of a month
+  \return Ceiled datetime
   \sa floor()
  */
 QDateTime QwtDate::ceil( const QDateTime &dateTime, IntervalType intervalType )
@@ -394,6 +395,7 @@ QDateTime QwtDate::ceil( const QDateTime &dateTime, IntervalType intervalType )
                       F.e. when intervalType = QwtDate::Months,
                       the result will be ceiled to the next
                       beginning of a month
+  \return Floored datetime
   \sa floor()
  */
 QDateTime QwtDate::floor( const QDateTime &dateTime,
@@ -630,6 +632,7 @@ int QwtDate::utcOffset( const QDateTime &dateTime )
   \param format Format string
   \param week0Type Specification of week 0
 
+  \return Datetime string
   \sa QDateTime::toString(), weekNumber(), QwtDateScaleDraw
  */
 QString QwtDate::toString( const QDateTime &dateTime,

@@ -75,6 +75,7 @@ QwtSimpleCompassRose::~QwtSimpleCompassRose()
   Set the Factor how to shrink the thorns with each level
   The default value is 0.9.
 
+  \param factor Shrink factor
   \sa shrinkFactor()
 */
 void QwtSimpleCompassRose::setShrinkFactor( double factor )
@@ -211,7 +212,10 @@ void QwtSimpleCompassRose::setWidth( double width )
         d_data->width = 0.4;
 }
 
-//! \sa setWidth()
+/*!
+  \return Width of the rose
+  \sa setWidth()
+ */
 double QwtSimpleCompassRose::width() const
 {
     return d_data->width;

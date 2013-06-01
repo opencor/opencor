@@ -143,8 +143,6 @@ private:
 private:
     class PrivateData;
     PrivateData *d_data;
-
-    uchar* m_rgbaBuffer;
 };
 
 #endif

@@ -26,6 +26,12 @@
 #include <qmath.h>
 #include "qwt_global.h"
 
+#ifndef M_PI_2
+// For Qt <= 4.8.4 M_PI_2 is not known by MinGW-w64
+// when compiling with -std=c++11
+#define M_PI_2 (1.57079632679489661923)
+#endif
+
 #ifndef LOG_MIN
 //! Minimum value for logarithmic scales
 #define LOG_MIN 1.0e-100

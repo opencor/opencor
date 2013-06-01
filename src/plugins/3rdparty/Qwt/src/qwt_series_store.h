@@ -88,15 +88,14 @@ public:
     T sample( int index ) const;
 
     /*!
-      Return the number of samples of the series
-
+      \return Number of samples of the series
       \sa setData(), QwtSeriesData<T>::size()
     */
     virtual size_t dataSize() const;
 
     /*!
-      Return the bounding rectangle of the series
-      or an invalid rectangle, when no series is stored
+      \return Bounding rectangle of the series
+              or an invalid rectangle, when no series is stored
 
       \sa QwtSeriesData<T>::boundingRect()
     */

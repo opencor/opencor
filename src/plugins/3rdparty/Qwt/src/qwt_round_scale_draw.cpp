@@ -74,6 +74,7 @@ void QwtRoundScaleDraw::setRadius( double radius )
 
   Radius is the radius of the backbone without ticks and labels.
 
+  \return Radius of the scale
   \sa setRadius(), extent()
 */
 double QwtRoundScaleDraw::radius() const
@@ -245,6 +246,7 @@ void QwtRoundScaleDraw::drawBackbone( QPainter *painter ) const
    for the radius of the bounding circle.
 
    \param font Font used for painting the labels
+   \return Calculated extent
 
    \sa setMinimumExtent(), minimumExtent()
    \warning The implemented algorithm is not too smart and

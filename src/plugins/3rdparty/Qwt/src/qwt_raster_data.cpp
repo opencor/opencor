@@ -247,6 +247,13 @@ QRectF QwtRasterData::pixelHint( const QRectF &area ) const
 /*!
    Calculate contour lines
 
+   \param rect Bounding rectangle for the contour lines
+   \param raster Number of data pixels of the raster data
+   \param levels List of limits, where to insert contour lines
+   \param flags Flags to customize the contouring algorithm
+
+   \return Calculated contour lines
+
    An adaption of CONREC, a simple contouring algorithm.
    http://local.wasp.uwa.edu.au/~pbourke/papers/conrec/
 */

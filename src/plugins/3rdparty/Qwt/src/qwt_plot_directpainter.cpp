@@ -97,8 +97,7 @@ void QwtPlotDirectPainter::setAttribute( Attribute attribute, bool on )
 }
 
 /*!
-  Check if a attribute is set.
-
+  \return True, when attribute is enabled
   \param attribute Attribute to be tested
   \sa Attribute, setAttribute()
 */

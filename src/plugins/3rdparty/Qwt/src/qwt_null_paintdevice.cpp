@@ -404,6 +404,10 @@ QPaintEngine *QwtNullPaintDevice::paintEngine() const
 
 /*!
     See QPaintDevice::metric()
+
+    \param deviceMetric Type of metric
+    \return Metric information for the given paint device metric.
+
     \sa sizeMetrics()
 */
 int QwtNullPaintDevice::metric( PaintDeviceMetric deviceMetric ) const

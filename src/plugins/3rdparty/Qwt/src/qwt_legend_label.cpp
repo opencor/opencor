@@ -148,8 +148,7 @@ void QwtLegendLabel::setItemMode( QwtLegendData::Mode mode )
 }
 
 /*!
-   Return the item mode
-
+   \return Item mode
    \sa setItemMode()
 */
 QwtLegendData::Mode QwtLegendLabel::itemMode() const
@@ -185,7 +184,8 @@ QPixmap QwtLegendLabel::icon() const
 }
 
 /*!
-   Change the spacing
+   \brief Change the spacing between icon and text
+
    \param spacing Spacing
    \sa spacing(), QwtTextLabel::margin()
 */
@@ -205,7 +205,7 @@ void QwtLegendLabel::setSpacing( int spacing )
 }
 
 /*!
-   Return the spacing
+   \return Spacing between icon and text
    \sa setSpacing(), QwtTextLabel::margin()
 */
 int QwtLegendLabel::spacing() const

@@ -103,8 +103,7 @@ void QwtPlotRenderer::setDiscardFlag( DiscardFlag flag, bool on )
 }
 
 /*!
-  Check if a flag is set.
-
+  \return True, if flag is enabled.
   \param flag Flag to be tested
   \sa DiscardFlag, setDiscardFlag(), setDiscardFlags(), discardFlags()
 */
@@ -150,8 +149,7 @@ void QwtPlotRenderer::setLayoutFlag( LayoutFlag flag, bool on )
 }
 
 /*!
-  Check if a flag is set.
-
+  \return True, if flag is enabled.
   \param flag Flag to be tested
   \sa LayoutFlag, setLayoutFlag(), setLayoutFlags(), layoutFlags()
 */
@@ -959,6 +957,7 @@ bool QwtPlotRenderer::updateCanvasMargins( QwtPlot *plot,
    \param sizeMM Size for the document in millimeters.
    \param resolution Resolution in dots per Inch (dpi)
 
+   \return True, when exporting was successful
    \sa renderDocument()
 */
 bool QwtPlotRenderer::exportTo( QwtPlot *plot, const QString &documentName,

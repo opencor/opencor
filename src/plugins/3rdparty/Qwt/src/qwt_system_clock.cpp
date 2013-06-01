@@ -356,9 +356,8 @@ void QwtSystemClock::start()
 }
 
 /*!
-  The start time to the current time and
-  return the time, that is elapsed since the
-  previous start time.
+  Set the start time to the current time
+  \return Time, that is elapsed since the previous start time.
 */
 double QwtSystemClock::restart()
 {

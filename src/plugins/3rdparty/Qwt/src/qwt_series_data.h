@@ -72,6 +72,8 @@ public:
        qwtBoundingRect(...) offers slow implementations iterating
        over the samples. For large sets it is recommended to implement
        something faster f.e. by caching the bounding rectangle.
+
+       \return Bounding rectangle
      */
     virtual QRectF boundingRect() const = 0;
 

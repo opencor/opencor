@@ -245,7 +245,14 @@ void QwtMagnifier::setZoomInKey( int key,
     d_data->zoomInKeyModifiers = modifiers;
 }
 
-//! \sa setZoomInKey()
+/*!
+   \brief Retrieve the settings of the zoom in key
+
+   \param key Key code, see Qt::Key
+   \param modifiers Keyboard modifiers
+
+   \sa setZoomInKey()
+*/
 void QwtMagnifier::getZoomInKey( int &key,
     Qt::KeyboardModifiers &modifiers ) const
 {
@@ -268,7 +275,14 @@ void QwtMagnifier::setZoomOutKey( int key,
     d_data->zoomOutKeyModifiers = modifiers;
 }
 
-//! \sa setZoomOutKey()
+/*!
+   \brief Retrieve the settings of the zoom out key
+
+   \param key Key code, see Qt::Key
+   \param modifiers Keyboard modifiers
+
+   \sa setZoomOutKey()
+*/
 void QwtMagnifier::getZoomOutKey( int &key,
     Qt::KeyboardModifiers &modifiers ) const
 {
@@ -284,6 +298,8 @@ void QwtMagnifier::getZoomOutKey( int &key,
 
   \param object Object to be filtered
   \param event Event
+
+  \return Forwarded to QObject::eventFilter()
 
   \sa widgetMousePressEvent(), widgetMouseReleaseEvent(),
       widgetMouseMoveEvent(), widgetWheelEvent(), widgetKeyPressEvent()

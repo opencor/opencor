@@ -114,7 +114,7 @@ public:
     virtual void updateLegend( const QwtPlotItem *,
         const QList<QwtLegendData> & );
 
-    QRect geometry( const QRectF &canvasRect ) const;
+    virtual QRect geometry( const QRectF &canvasRect ) const;
 
     virtual QSize minimumSize( const QwtLegendData & ) const;
     virtual int heightForWidth( const QwtLegendData &, int w ) const;

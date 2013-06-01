@@ -404,6 +404,8 @@ QRectF QwtPointMapper::boundingRect() const
   \param series Series of points to be mapped
   \param from Index of the first point to be painted
   \param to Index of the last point to be painted
+
+  \return Translated polygon
 */
 QPolygonF QwtPointMapper::toPolygonF(
     const QwtScaleMap &xMap, const QwtScaleMap &yMap,
@@ -452,6 +454,8 @@ QPolygonF QwtPointMapper::toPolygonF(
   \param series Series of points to be mapped
   \param from Index of the first point to be painted
   \param to Index of the last point to be painted
+
+  \return Translated polygon
 */
 QPolygon QwtPointMapper::toPolygon(
     const QwtScaleMap &xMap, const QwtScaleMap &yMap,
@@ -501,6 +505,8 @@ QPolygon QwtPointMapper::toPolygon(
   \param series Series of points to be mapped
   \param from Index of the first point to be painted
   \param to Index of the last point to be painted
+
+  \return Translated polygon
 */
 QPolygonF QwtPointMapper::toPointsF(
     const QwtScaleMap &xMap, const QwtScaleMap &yMap,
@@ -573,6 +579,8 @@ QPolygonF QwtPointMapper::toPointsF(
   \param series Series of points to be mapped
   \param from Index of the first point to be painted
   \param to Index of the last point to be painted
+
+  \return Translated polygon
 */
 QPolygon QwtPointMapper::toPoints(
     const QwtScaleMap &xMap, const QwtScaleMap &yMap,
@@ -622,6 +630,7 @@ QPolygon QwtPointMapper::toPoints(
                    If numThreads is set to 0, the system specific
                    ideal thread count is used.
 
+  \return Image displaying the series
 */
 QImage QwtPointMapper::toImage(
     const QwtScaleMap &xMap, const QwtScaleMap &yMap,

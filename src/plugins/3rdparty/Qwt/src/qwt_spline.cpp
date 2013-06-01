@@ -78,6 +78,7 @@ QwtSpline::QwtSpline( const QwtSpline& other )
 /*!
    Assignment operator
    \param other Spline used for initialization
+   \return *this
 */
 QwtSpline &QwtSpline::operator=( const QwtSpline & other )
 {
@@ -152,7 +153,7 @@ bool QwtSpline::setPoints( const QPolygonF& points )
 }
 
 /*!
-   Return points passed by setPoints()
+   \return Points, that have been by setPoints()
 */
 QPolygonF QwtSpline::points() const
 {
@@ -196,6 +197,9 @@ bool QwtSpline::isValid() const
 /*!
   Calculate the interpolated function value corresponding
   to a given argument x.
+
+  \param x Coordinate
+  \return Interpolated coordinate
 */
 double QwtSpline::value( double x ) const
 {

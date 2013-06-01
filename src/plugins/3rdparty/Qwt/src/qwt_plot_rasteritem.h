@@ -121,6 +121,8 @@ protected:
       \param yMap Y-Scale Map
       \param area Requested area for the image in scale coordinates
       \param imageSize Requested size of the image
+
+      \return Rendered image
      */
     virtual QImage renderImage( const QwtScaleMap &xMap,
         const QwtScaleMap &yMap, const QRectF &area,

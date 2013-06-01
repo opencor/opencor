@@ -85,9 +85,12 @@ public:
       pixel of the scale draw in opposite to its orientation.
       It is at least minimumExtent() pixels.
 
+      \param font Font used for drawing the tick labels
+      \return Number of pixels
+
       \sa setMinimumExtent(), minimumExtent()
     */
-    virtual double extent( const QFont & ) const = 0;
+    virtual double extent( const QFont &font ) const = 0;
 
     void setMinimumExtent( double );
     double minimumExtent() const;

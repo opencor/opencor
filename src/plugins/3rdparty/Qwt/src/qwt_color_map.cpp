@@ -279,7 +279,7 @@ void QwtLinearColorMap::addColorStop( double value, const QColor& color )
 }
 
 /*!
-   Return all positions of color stops in increasing order
+   \return Positions of color stops in increasing order
 */
 QVector<double> QwtLinearColorMap::colorStops() const
 {
@@ -309,6 +309,8 @@ QColor QwtLinearColorMap::color2() const
 
   \param interval Range for all values
   \param value Value to map into a RGB value
+
+  \return RGB value for value
 */
 QRgb QwtLinearColorMap::rgb(
     const QwtInterval &interval, double value ) const
@@ -326,10 +328,12 @@ QRgb QwtLinearColorMap::rgb(
 }
 
 /*!
-  Map a value of a given interval into a color index, between 0 and 255
+  \brief Map a value of a given interval into a color index
 
   \param interval Range for all values
   \param value Value to map into a color index
+
+  \return Index, between 0 and 255
 */
 unsigned char QwtLinearColorMap::colorIndex(
     const QwtInterval &interval, double value ) const

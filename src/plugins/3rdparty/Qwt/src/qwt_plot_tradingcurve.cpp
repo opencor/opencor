@@ -111,7 +111,7 @@ void QwtPlotTradingCurve::setPaintAttribute(
 }
 
 /*!
-    \brief Return the current paint attributes
+    \return True, when attribute is enabled
     \sa PaintAttribute, setPaintAttribute()
 */
 bool QwtPlotTradingCurve::testPaintAttribute(

@@ -657,8 +657,8 @@ void QwtAbstractSlider::incrementValue( int stepCount )
 /*!
   Increment a value
 
-  \sa value Value
-  \sa stepCount Number of steps
+  \param value Value
+  \param stepCount Number of steps
 
   \return Incremented value
  */

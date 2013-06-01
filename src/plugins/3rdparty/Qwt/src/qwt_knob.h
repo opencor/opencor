@@ -75,7 +75,13 @@ public:
           Build a gradient from QPalette::Midlight, QPalette::Button
           and QPalette::Midlight
          */
-        Sunken
+        Sunken,
+
+        /*!
+          Build a radial gradient from QPalette::Button
+          like it is used for QDial in various Qt styles.
+         */
+        Styled
     };
 
     /*!

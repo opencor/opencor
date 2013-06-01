@@ -48,9 +48,8 @@ class QWT_EXPORT QwtSlider: public QwtAbstractSlider
 public:
 
     /*!
-      Scale position.
-
-      \sa QwtSlider(), setOrientation()
+      Position of the scale
+      \sa QwtSlider(), setScalePosition(), setOrientation()
      */
     enum ScalePosition
     {

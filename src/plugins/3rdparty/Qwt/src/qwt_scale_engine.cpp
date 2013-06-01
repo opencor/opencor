@@ -105,6 +105,8 @@ static const double _eps = 1.0e-6;
   \param value Value to be ceiled
   \param intervalSize Interval size
 
+  \return Rounded value
+
   \sa floorEps()
 */
 double QwtScaleArithmetic::ceilEps( double value,
@@ -122,6 +124,7 @@ double QwtScaleArithmetic::ceilEps( double value,
   \param value Value to be floored
   \param intervalSize Interval size
 
+  \return Rounded value
   \sa floorEps()
 */
 double QwtScaleArithmetic::floorEps( double value, double intervalSize )
@@ -155,6 +158,8 @@ double QwtScaleArithmetic::divideEps( double intervalSize, double numSteps )
   \param intervalSize Interval size
   \param numSteps Number of steps
   \param base Base for the division ( usually 10 )
+
+  \return Calculated step size
  */
 double QwtScaleArithmetic::divideInterval(
     double intervalSize, int numSteps, uint base )
@@ -258,6 +263,7 @@ void QwtScaleEngine::setTransformation( QwtTransform *transform )
    of the engine. When the engine has no special transformation
    NULL is returned, indicating no transformation.
 
+   \return A clone of the transfomation
    \sa setTransformation()
  */
 QwtTransform *QwtScaleEngine::transformation() const
@@ -333,6 +339,8 @@ double QwtScaleEngine::divideInterval(
 
   \param interval Interval
   \param value Value
+
+  \return True, when the value is inside the interval
 */
 bool QwtScaleEngine::contains(
     const QwtInterval &interval, double value ) const
@@ -379,23 +387,26 @@ QList<double> QwtScaleEngine::strip( const QList<double>& ticks,
 }
 
 /*!
-  \brief Build an interval for a value
+  \brief Build an interval around a value
 
   In case of v == 0.0 the interval is [-0.5, 0.5],
   otherwide it is [0.5 * v, 1.5 * v]
+
+  \param value Initial value
+  \return Calculated interval
 */
 
-QwtInterval QwtScaleEngine::buildInterval( double v ) const
+QwtInterval QwtScaleEngine::buildInterval( double value ) const
 {
-    const double delta = ( v == 0.0 ) ? 0.5 : qAbs( 0.5 * v );
+    const double delta = ( value == 0.0 ) ? 0.5 : qAbs( 0.5 * value );
 
-    if ( DBL_MAX - delta < v )
+    if ( DBL_MAX - delta < value )
         return QwtInterval( DBL_MAX - delta, DBL_MAX );
 
-    if ( -DBL_MAX + delta > v )
+    if ( -DBL_MAX + delta > value )
         return QwtInterval( -DBL_MAX, -DBL_MAX + delta );
 
-    return QwtInterval( v - delta, v + delta );
+    return QwtInterval( value - delta, value + delta );
 }
 
 /*!
@@ -415,7 +426,7 @@ void QwtScaleEngine::setAttribute( Attribute attribute, bool on )
 }
 
 /*!
-  Check if a attribute is set.
+  \return True, if attribute is enabled.
 
   \param attribute Attribute to be tested
   \sa Attribute, setAttribute()
@@ -437,7 +448,7 @@ void QwtScaleEngine::setAttributes( Attributes attributes )
 }
 
 /*!
-  Return the scale attributes
+  \return Scale attributes
   \sa Attribute, setAttributes(), testAttribute()
 */
 QwtScaleEngine::Attributes QwtScaleEngine::attributes() const
@@ -475,6 +486,8 @@ double QwtScaleEngine::reference() const
   certain scales might need a different base: f.e 2
 
   The default setting is 10
+
+  \param base Base of the engine
 
   \sa base()
  */
@@ -553,7 +566,7 @@ void QwtLinearScaleEngine::autoScale( int maxNumSteps,
 }
 
 /*!
-   \brief Calculate a scale division
+   \brief Calculate a scale division for an interval
 
    \param x1 First interval limit
    \param x2 Second interval limit
@@ -561,6 +574,8 @@ void QwtLinearScaleEngine::autoScale( int maxNumSteps,
    \param maxMinorSteps Maximum number of minor steps
    \param stepSize Step size. If stepSize == 0, the engine
                    calculates one.
+
+   \return Calculated scale division
 */
 QwtScaleDiv QwtLinearScaleEngine::divideScale( double x1, double x2,
     int maxMajorSteps, int maxMinorSteps, double stepSize ) const
@@ -844,7 +859,7 @@ void QwtLogScaleEngine::autoScale( int maxNumSteps,
 }
 
 /*!
-   \brief Calculate a scale division
+   \brief Calculate a scale division for an interval
 
    \param x1 First interval limit
    \param x2 Second interval limit
@@ -852,6 +867,8 @@ void QwtLogScaleEngine::autoScale( int maxNumSteps,
    \param maxMinorSteps Maximum number of minor steps
    \param stepSize Step size. If stepSize == 0, the engine
                    calculates one.
+
+   \return Calculated scale division
 */
 QwtScaleDiv QwtLogScaleEngine::divideScale( double x1, double x2,
     int maxMajorSteps, int maxMinorSteps, double stepSize ) const

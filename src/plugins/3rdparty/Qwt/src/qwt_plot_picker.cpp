@@ -133,8 +133,7 @@ const QwtPlot *QwtPlotPicker::plot() const
 }
 
 /*!
-  Return normalized bounding rectangle of the axes
-
+  \return Normalized bounding rectangle of the axes
   \sa QwtPlot::autoReplot(), QwtPlot::replot().
 */
 QRectF QwtPlotPicker::scaleRect() const
@@ -261,7 +260,7 @@ void QwtPlotPicker::move( const QPoint &pos )
 
   \param ok If true, complete the selection and emit selected signals
             otherwise discard the selection.
-  \return true if the selection is accepted, false otherwise
+  \return True if the selection has been accepted, false otherwise
 */
 
 bool QwtPlotPicker::end( bool ok )

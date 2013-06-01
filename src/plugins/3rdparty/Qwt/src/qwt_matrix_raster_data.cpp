@@ -159,7 +159,11 @@ int QwtMatrixRasterData::numRows() const
 }
 
 /*!
-   \brief Pixel hint
+   \brief Calculate the pixel hint
+
+   pixelHint() returns the geometry of a pixel, that can be used
+   to calculate the resolution and alignment of the plot item, that is
+   representing the data.
 
    - NearestNeighbour\n
      pixelHint() returns the surrounding pixel of the top left value
@@ -169,10 +173,15 @@ int QwtMatrixRasterData::numRows() const
      Returns an empty rectangle recommending
      to render in target device ( f.e. screen ) resolution.
 
+   \param area Requested area, ignored
+   \return Calculated hint
+
    \sa ResampleMode, setMatrix(), setInterval()
 */
-QRectF QwtMatrixRasterData::pixelHint( const QRectF & ) const
+QRectF QwtMatrixRasterData::pixelHint( const QRectF &area ) const
 {
+    Q_UNUSED( area )
+
     QRectF rect;
     if ( d_data->resampleMode == NearestNeighbour )
     {

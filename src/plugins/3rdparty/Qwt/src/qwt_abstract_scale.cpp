@@ -43,6 +43,8 @@ public:
 /*!
   Constructor
 
+  \param parent Parent widget
+
   Creates a default QwtScaleDraw and a QwtLinearScaleEngine.
   The initial scale boundaries are set to [ 0.0, 100.0 ]
 
@@ -356,9 +358,10 @@ const QwtScaleMap &QwtAbstractScale::scaleMap() const
 }
 
 /*!
-  Translate a value into widget coordinates
+  Translate a scale value into a widget coordinate
 
-  \param value Value in scale coordinates
+  \param value Scale value
+  \return Corresponding widget coordinate for value
   \sa scaleMap(), invTransform()
  */
 int QwtAbstractScale::transform( double value ) const
@@ -367,9 +370,10 @@ int QwtAbstractScale::transform( double value ) const
 }
 
 /*!
-  Translate a position into scale coordinates
+  Translate a widget coordinate into a scale value
 
-  \param value Value in widget coordinates
+  \param value Widget coordinate
+  \return Corresponding scale coordinate for value
   \sa scaleMap(), transform()
  */
 double QwtAbstractScale::invTransform( int value ) const

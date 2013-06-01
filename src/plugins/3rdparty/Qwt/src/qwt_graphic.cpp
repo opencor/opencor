@@ -325,10 +325,10 @@ public:
 };
 
 /*!
-    \brief Constructor
+  \brief Constructor
 
-    Initializes a null graphic
-    \sa isNull()
+  Initializes a null graphic
+  \sa isNull()
  */
 QwtGraphic::QwtGraphic():
     QwtNullPaintDevice()
@@ -338,10 +338,10 @@ QwtGraphic::QwtGraphic():
 }
 
 /*!
-    \brief Copy constructor
+  \brief Copy constructor
 
-    \param other Source
-    \sa operator=()
+  \param other Source
+  \sa operator=()
  */
 QwtGraphic::QwtGraphic( const QwtGraphic &other ):
     QwtNullPaintDevice()
@@ -357,9 +357,10 @@ QwtGraphic::~QwtGraphic()
 }
 
 /*!
-    \brief Assignment operator
+  \brief Assignment operator
 
-    \param other Source
+  \param other Source
+  \return A reference of this object
  */
 QwtGraphic& QwtGraphic::operator=(const QwtGraphic &other)
 {
@@ -370,8 +371,8 @@ QwtGraphic& QwtGraphic::operator=(const QwtGraphic &other)
 }
 
 /*!
-    \brief Clear all stored commands
-    \sa isNull()
+  \brief Clear all stored commands
+  \sa isNull()
  */
 void QwtGraphic::reset()
 {
@@ -385,8 +386,8 @@ void QwtGraphic::reset()
 }
 
 /*!
-    \return True, when no painter commands have been stored
-    \sa isEmpty(), commands()
+  \return True, when no painter commands have been stored
+  \sa isEmpty(), commands()
 */
 bool QwtGraphic::isNull() const
 {
@@ -394,8 +395,8 @@ bool QwtGraphic::isNull() const
 }
 
 /*!
-    \return True, when the bounding rectangle is empty
-    \sa boundingRect(), isNull()
+  \return True, when the bounding rectangle is empty
+  \sa boundingRect(), isNull()
 */
 bool QwtGraphic::isEmpty() const
 {
@@ -403,12 +404,12 @@ bool QwtGraphic::isEmpty() const
 }
 
 /*!
-   Toggle an render hint
+  Toggle an render hint
 
-   \param hint Render hint
-   \param on true/false
+  \param hint Render hint
+  \param on true/false
 
-   \sa testRenderHint(), RenderHint
+  \sa testRenderHint(), RenderHint
 */
 void QwtGraphic::setRenderHint( RenderHint hint, bool on )
 {
@@ -419,11 +420,11 @@ void QwtGraphic::setRenderHint( RenderHint hint, bool on )
 }
 
 /*!
-   Test a render hint
+  Test a render hint
 
-   \param hint Render hint
-   \return true/false
-   \sa setRenderHint(), RenderHint
+  \param hint Render hint
+  \return true/false
+  \sa setRenderHint(), RenderHint
 */
 bool QwtGraphic::testRenderHint( RenderHint hint ) const
 {
@@ -431,12 +432,12 @@ bool QwtGraphic::testRenderHint( RenderHint hint ) const
 }
 
 /*!
-    The bounding rectangle is the controlPointRect()
-    extended by the areas needed for rendering the outlines
-    with unscaled pens.
+  The bounding rectangle is the controlPointRect()
+  extended by the areas needed for rendering the outlines
+  with unscaled pens.
 
-    \return Bounding rectangle of the graphic
-    \sa controlPointRect(), scaledBoundingRect()
+  \return Bounding rectangle of the graphic
+  \sa controlPointRect(), scaledBoundingRect()
  */
 QRectF QwtGraphic::boundingRect() const
 {
@@ -447,11 +448,12 @@ QRectF QwtGraphic::boundingRect() const
 }
 
 /*!
-    The control point rectangle is the bounding rectangle
-    of all control points of the paths and the target
-    rectangles of the images/pixmaps.
+  The control point rectangle is the bounding rectangle
+  of all control points of the paths and the target
+  rectangles of the images/pixmaps.
 
-    \sa boundingRect(), scaledBoundingRect()
+  \return Control point rectangle
+  \sa boundingRect(), scaledBoundingRect()
  */
 QRectF QwtGraphic::controlPointRect() const
 {
@@ -462,16 +464,17 @@ QRectF QwtGraphic::controlPointRect() const
 }
 
 /*!
-    \brief Calculate the target rectangle for scaling the graphic
+  \brief Calculate the target rectangle for scaling the graphic
 
-    \param sx Horizontal scaling factor
-    \param sy Vertical scaling factor
+  \param sx Horizontal scaling factor
+  \param sy Vertical scaling factor
 
-    \note In case of paths that are painted with a cosmetic pen
-    ( see QPen::isCosmetic() ) the target rectangle is different to
-    multiplying the bounding rectangle.
+  \note In case of paths that are painted with a cosmetic pen
+        ( see QPen::isCosmetic() ) the target rectangle is different to
+        multiplying the bounding rectangle.
 
-    \sa boundingRect(), controlPointRect()
+  \return Scaled bounding rectangle
+  \sa boundingRect(), controlPointRect()
  */
 QRectF QwtGraphic::scaledBoundingRect( double sx, double sy ) const
 {
@@ -500,18 +503,18 @@ QSize QwtGraphic::sizeMetrics() const
 }
 
 /*!
-    \brief Set a default size
+  \brief Set a default size
 
-    The default size is used in all methods rendering the graphic,
-    where no size is explicitly specified. Assigning an empty size
-    means, that the default size will be calculated from the bounding
-    rectangle.
+  The default size is used in all methods rendering the graphic,
+  where no size is explicitly specified. Assigning an empty size
+  means, that the default size will be calculated from the bounding
+  rectangle.
 
-    The default setting is an empty size.
+  The default setting is an empty size.
 
-    \param size Default size
+  \param size Default size
 
-    \sa defaultSize(), boundingRect()
+  \sa defaultSize(), boundingRect()
  */
 void QwtGraphic::setDefaultSize( const QSizeF &size )
 {
@@ -522,16 +525,17 @@ void QwtGraphic::setDefaultSize( const QSizeF &size )
 }
 
 /*!
-    \return Default size
+  \brief Default size
 
-    When a non empty size has been assigned by setDefaultSize() this
-    size will be returned. Otherwise the default size is the size
-    of the bounding rectangle.
+  When a non empty size has been assigned by setDefaultSize() this
+  size will be returned. Otherwise the default size is the size
+  of the bounding rectangle.
 
-    The default size is used in all methods rendering the graphic,
-    where no size is explicitly specified.
+  The default size is used in all methods rendering the graphic,
+  where no size is explicitly specified.
 
-    \sa setDefaultSize(), boundingRect()
+  \return Default size
+  \sa setDefaultSize(), boundingRect()
  */
 QSizeF QwtGraphic::defaultSize() const
 {
@@ -542,8 +546,8 @@ QSizeF QwtGraphic::defaultSize() const
 }
 
 /*!
-    \brief Replay all recorded painter commands
-    \param painter Qt painter
+  \brief Replay all recorded painter commands
+  \param painter Qt painter
  */
 void QwtGraphic::render( QPainter *painter ) const
 {
@@ -567,14 +571,14 @@ void QwtGraphic::render( QPainter *painter ) const
 }
 
 /*!
-    \brief Replay all recorded painter commands
+  \brief Replay all recorded painter commands
 
-    The graphic is scaled to fit into the rectangle
-    of the given size starting at ( 0, 0 ).
+  The graphic is scaled to fit into the rectangle
+  of the given size starting at ( 0, 0 ).
 
-    \param painter Qt painter
-    \param size Size for the scaled graphic
-    \param aspectRatioMode Mode how to scale - See Qt::AspectRatioMode
+  \param painter Qt painter
+  \param size Size for the scaled graphic
+  \param aspectRatioMode Mode how to scale - See Qt::AspectRatioMode
  */
 void QwtGraphic::render( QPainter *painter, const QSizeF &size,
     Qt::AspectRatioMode aspectRatioMode ) const
@@ -584,13 +588,13 @@ void QwtGraphic::render( QPainter *painter, const QSizeF &size,
 }
 
 /*!
-    \brief Replay all recorded painter commands
+  \brief Replay all recorded painter commands
 
-    The graphic is scaled to fit into the given rectangle
+  The graphic is scaled to fit into the given rectangle
 
-    \param painter Qt painter
-    \param rect Rectangle for the scaled graphic
-    \param aspectRatioMode Mode how to scale - See Qt::AspectRatioMode
+  \param painter Qt painter
+  \param rect Rectangle for the scaled graphic
+  \param aspectRatioMode Mode how to scale - See Qt::AspectRatioMode
  */
 void QwtGraphic::render( QPainter *painter, const QRectF &rect,
     Qt::AspectRatioMode aspectRatioMode ) const
@@ -655,17 +659,16 @@ void QwtGraphic::render( QPainter *painter, const QRectF &rect,
 }
 
 /*!
-    \brief Replay all recorded painter commands
+  \brief Replay all recorded painter commands
 
-    The graphic is scaled to the defaultSize() and aligned
-    to a position.
+  The graphic is scaled to the defaultSize() and aligned
+  to a position.
 
-    \param painter Qt painter
-    \param pos Reference point, where to render
-    \param alignment Flags how to align the target rectangle
-                     to pos.
+  \param painter Qt painter
+  \param pos Reference point, where to render
+  \param alignment Flags how to align the target rectangle
+                   to pos.
  */
-
 void QwtGraphic::render( QPainter *painter,
     const QPointF &pos, Qt::Alignment alignment ) const
 {
@@ -701,15 +704,16 @@ void QwtGraphic::render( QPainter *painter,
 }
 
 /*!
-    \brief Convert the graphic to a QPixmap
+  \brief Convert the graphic to a QPixmap
 
-    All pixels of the pixmap get initialized by Qt::transparent
-    before the graphic is scaled and rendered on it.
+  All pixels of the pixmap get initialized by Qt::transparent
+  before the graphic is scaled and rendered on it.
 
-    The size of the pixmap is the default size ( ceiled to integers )
-    of the graphic.
+  The size of the pixmap is the default size ( ceiled to integers )
+  of the graphic.
 
-    \sa defaultSize(), toImage(), render()
+  \return The graphic as pixmap in default size
+  \sa defaultSize(), toImage(), render()
  */
 QPixmap QwtGraphic::toPixmap() const
 {
@@ -734,15 +738,16 @@ QPixmap QwtGraphic::toPixmap() const
 }
 
 /*!
-    \brief Convert the graphic to a QPixmap
+  \brief Convert the graphic to a QPixmap
 
-    All pixels of the pixmap get initialized by Qt::transparent
-    before the graphic is scaled and rendered on it.
+  All pixels of the pixmap get initialized by Qt::transparent
+  before the graphic is scaled and rendered on it.
 
-    \param size Size of the image
-    \param aspectRatioMode Aspect ratio how to scale the graphic
+  \param size Size of the image
+  \param aspectRatioMode Aspect ratio how to scale the graphic
 
-    \sa toImage(), render()
+  \return The graphic as pixmap
+  \sa toImage(), render()
  */
 QPixmap QwtGraphic::toPixmap( const QSize &size,
     Qt::AspectRatioMode aspectRatioMode ) const
@@ -760,17 +765,18 @@ QPixmap QwtGraphic::toPixmap( const QSize &size,
 }
 
 /*!
-    \brief Convert the graphic to a QImage
+  \brief Convert the graphic to a QImage
 
-    All pixels of the image get initialized by 0 ( transparent )
-    before the graphic is scaled and rendered on it.
+  All pixels of the image get initialized by 0 ( transparent )
+  before the graphic is scaled and rendered on it.
 
-    The format of the image is QImage::Format_ARGB32_Premultiplied.
+  The format of the image is QImage::Format_ARGB32_Premultiplied.
 
-    \param size Size of the image
-    \param aspectRatioMode Aspect ratio how to scale the graphic
+  \param size Size of the image
+  \param aspectRatioMode Aspect ratio how to scale the graphic
 
-    \sa toPixmap(), render()
+  \return The graphic as image
+  \sa toPixmap(), render()
  */
 QImage QwtGraphic::toImage( const QSize &size,
     Qt::AspectRatioMode aspectRatioMode  ) const
@@ -788,17 +794,18 @@ QImage QwtGraphic::toImage( const QSize &size,
 }
 
 /*!
-    \brief Convert the graphic to a QImage
+  \brief Convert the graphic to a QImage
 
-    All pixels of the image get initialized by 0 ( transparent )
-    before the graphic is scaled and rendered on it.
+  All pixels of the image get initialized by 0 ( transparent )
+  before the graphic is scaled and rendered on it.
 
-    The format of the image is QImage::Format_ARGB32_Premultiplied.
+  The format of the image is QImage::Format_ARGB32_Premultiplied.
 
-    The size of the image is the default size ( ceiled to integers )
-    of the graphic.
+  The size of the image is the default size ( ceiled to integers )
+  of the graphic.
 
-    \sa defaultSize(), toPixmap(), render()
+  \return The graphic as image in default size
+  \sa defaultSize(), toPixmap(), render()
  */
 QImage QwtGraphic::toImage() const
 {
@@ -823,8 +830,10 @@ QImage QwtGraphic::toImage() const
 }
 
 /*!
-    Store a path command in the command list
-    \sa QPaintEngine::drawPath()
+  Store a path command in the command list
+
+  \param path Painter path
+  \sa QPaintEngine::drawPath()
 */
 void QwtGraphic::drawPath( const QPainterPath &path )
 {
@@ -856,8 +865,13 @@ void QwtGraphic::drawPath( const QPainterPath &path )
 }
 
 /*!
-    Store a image command in the command list
-    \sa QPaintEngine::drawPixmap()
+  \brief Store a pixmap command in the command list
+
+  \param rect target rectangle
+  \param pixmap Pixmap to be painted
+  \param subRect Reactangle of the pixmap to be painted
+
+  \sa QPaintEngine::drawPixmap()
 */
 void QwtGraphic::drawPixmap( const QRectF &rect,
     const QPixmap &pixmap, const QRectF &subRect )
@@ -874,8 +888,14 @@ void QwtGraphic::drawPixmap( const QRectF &rect,
 }
 
 /*!
-    Store a image command in the command list
-    \sa QPaintEngine::drawImage()
+  \brief Store a image command in the command list
+
+  \param rect traget rectangle
+  \param image Image to be painted
+  \param subRect Reactangle of the pixmap to be painted
+  \param flags Image conversion flags
+
+  \sa QPaintEngine::drawImage()
  */
 void QwtGraphic::drawImage( const QRectF &rect, const QImage &image,
     const QRectF &subRect, Qt::ImageConversionFlags flags)
@@ -893,8 +913,10 @@ void QwtGraphic::drawImage( const QRectF &rect, const QImage &image,
 }
 
 /*!
-    Store a state command in the command list
-    \sa QPaintEngine::updateState()
+  \brief Store a state command in the command list
+
+  \param state State to be stored
+  \sa QPaintEngine::updateState()
  */
 void QwtGraphic::updateState( const QPaintEngineState &state)
 {
@@ -929,8 +951,8 @@ void QwtGraphic::updateControlPointRect( const QRectF &rect )
 }
 
 /*!
-    \return List of recorded paint commands
-    \sa setCommands()
+  \return List of recorded paint commands
+  \sa setCommands()
  */
 const QVector< QwtPainterCommand > &QwtGraphic::commands() const
 {
@@ -938,10 +960,10 @@ const QVector< QwtPainterCommand > &QwtGraphic::commands() const
 }
 
 /*!
-   \brief Append paint commands
+  \brief Append paint commands
 
-   \param commands Paint commands
-   \sa commands()
+  \param commands Paint commands
+  \sa commands()
  */
 void QwtGraphic::setCommands( QVector< QwtPainterCommand > &commands )
 {
@@ -962,5 +984,3 @@ void QwtGraphic::setCommands( QVector< QwtPainterCommand > &commands )
 
     painter.end();
 }
-
-

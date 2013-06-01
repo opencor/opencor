@@ -169,6 +169,7 @@ const QwtPlotItemList &QwtPlotDict::itemList() const
 
 /*!
   \return List of all attached plot items of a specific type.
+  \param rtti See QwtPlotItem::RttiValues
   \sa QwtPlotItem::rtti()
 */
 QwtPlotItemList QwtPlotDict::itemList( int rtti ) const

@@ -41,7 +41,6 @@
     titleItem->attach( this );
 \endverbatim
 
-
   \sa QwtPlotMarker
 */
 
@@ -58,6 +57,8 @@ public:
 
     void setMargin( int margin );
     int margin() const;
+
+    virtual QRectF textRect( const QRectF &, const QSizeF & ) const;
 
 protected:
     virtual void draw( QPainter *,

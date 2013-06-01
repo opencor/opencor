@@ -464,6 +464,8 @@ QRectF QwtPlotLayout::footerRect() const
   This method is intended to be used from derived layouts
   overloading activate()
 
+  \param rect Rectangle for the legend
+
   \sa legendRect(), activate()
  */
 void QwtPlotLayout::setLegendRect( const QRectF &rect )
@@ -486,13 +488,15 @@ QRectF QwtPlotLayout::legendRect() const
   This method is intended to be used from derived layouts
   overloading activate()
 
+  \param axis Axis index
+  \param rect Rectangle for the scale
+
   \sa scaleRect(), activate()
  */
 void QwtPlotLayout::setScaleRect( int axis, const QRectF &rect )
 {
     if ( axis >= 0 && axis < QwtPlot::axisCnt )
         d_data->scaleRect[axis] = rect;
-
 }
 
 /*!
@@ -546,7 +550,9 @@ void QwtPlotLayout::invalidate()
 }
 
 /*!
-  \brief Return a minimum size hint
+  \return Minimum size hint
+  \param plot Plot widget
+
   \sa QwtPlot::minimumSizeHint()
 */
 
@@ -992,6 +998,10 @@ void QwtPlotLayout::expandLineBreaks( Options options, const QRectF &rect,
 /*!
   Align the ticks of the axis to the canvas borders using
   the empty corners.
+
+  \param options Layout options
+  \param canvasRect Geometry of the canvas ( IN/OUT )
+  \param scaleRect Geometries of the scales ( IN/OUT )
 
   \sa Options
 */

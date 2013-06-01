@@ -85,6 +85,9 @@ void QwtAbstractScaleDraw::enableComponent(
 
 /*!
   Check if a component is enabled
+
+  \param component Component type
+  \return true, when component is enabled
   \sa enableComponent()
 */
 bool QwtAbstractScaleDraw::hasComponent( ScaleComponent component ) const
@@ -257,6 +260,7 @@ void QwtAbstractScaleDraw::setSpacing( double spacing )
   The spacing is the distance between ticks and labels.
   The default spacing is 4 pixels.
 
+  \return Spacing
   \sa setSpacing()
 */
 double QwtAbstractScaleDraw::spacing() const
@@ -287,6 +291,7 @@ void QwtAbstractScaleDraw::setMinimumExtent( double minExtent )
 
 /*!
   Get the minimum extent
+  \return Minimum extent
   \sa extent(), setMinimumExtent()
 */
 double QwtAbstractScaleDraw::minimumExtent() const
@@ -322,8 +327,7 @@ void QwtAbstractScaleDraw::setTickLength(
 }
 
 /*!
-    Return the length of the ticks
-
+    \return Length of the ticks
     \sa setTickLength(), maxTickLength()
 */
 double QwtAbstractScaleDraw::tickLength( QwtScaleDiv::TickType tickType ) const

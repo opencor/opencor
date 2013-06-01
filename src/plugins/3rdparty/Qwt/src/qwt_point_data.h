@@ -71,7 +71,7 @@ private:
 
   The following example shows how to implement a sinus curve.
 
-  \verbatim
+  \code
 #include <cmath>
 #include <qwt_series_data.h>
 #include <qwt_plot_curve.h>
@@ -82,31 +82,32 @@ class SinusData: public QwtSyntheticPointData
 {
 public:
     SinusData():
-        QwtSyntheticPointData(100)
+        QwtSyntheticPointData( 100 )
     {
     }
-    virtual double y(double x) const
+
+    virtual double y( double x ) const
     {
-        return qSin(x);
+        return qSin( x );
     }
 };
 
 int main(int argc, char **argv)
 {
-    QApplication a(argc, argv);
+    QApplication a( argc, argv );
 
     QwtPlot plot;
-    plot.setAxisScale(QwtPlot::xBottom, 0.0, 10.0);
-    plot.setAxisScale(QwtPlot::yLeft, -1.0, 1.0);
+    plot.setAxisScale( QwtPlot::xBottom, 0.0, 10.0 );
+    plot.setAxisScale( QwtPlot::yLeft, -1.0, 1.0 );
 
-    QwtPlotCurve *curve = new QwtPlotCurve("y = sin(x)");
-    curve->setData(SinusData());
-    curve->attach(&plot);
+    QwtPlotCurve *curve = new QwtPlotCurve( "y = sin(x)" );
+    curve->setData( new SinusData() );
+    curve->attach( &plot );
 
     plot.show();
     return a.exec();
 }
-   \endverbatim
+   \endcode
 */
 class QWT_EXPORT QwtSyntheticPointData: public QwtSeriesData<QPointF>
 {

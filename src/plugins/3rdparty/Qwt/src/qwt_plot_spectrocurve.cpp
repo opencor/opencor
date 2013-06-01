@@ -98,7 +98,7 @@ void QwtPlotSpectroCurve::setPaintAttribute( PaintAttribute attribute, bool on )
 }
 
 /*!
-    \brief Return the current paint attributes
+    \return True, when attribute is enabled
     \sa PaintAttribute, setPaintAttribute()
 */
 bool QwtPlotSpectroCurve::testPaintAttribute( PaintAttribute attribute ) const

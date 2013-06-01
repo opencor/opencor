@@ -139,8 +139,8 @@ int QwtPlotZoomer::maxStackDepth() const
 }
 
 /*!
-  Return the zoom stack. zoomStack()[0] is the zoom base,
-  zoomStack()[1] the first zoomed rectangle.
+  \return The zoom stack. zoomStack()[0] is the zoom base,
+          zoomStack()[1] the first zoomed rectangle.
 
   \sa setZoomStack(), zoomRectIndex()
 */
@@ -216,8 +216,7 @@ void QwtPlotZoomer::setZoomBase( const QRectF &base )
 }
 
 /*!
-  Rectangle at the current position on the zoom stack.
-
+  \return Rectangle at the current position on the zoom stack.
   \sa zoomRectIndex(), scaleRect().
 */
 QRectF QwtPlotZoomer::zoomRect() const
@@ -566,7 +565,11 @@ void QwtPlotZoomer::begin()
   Expand the selected rectangle to minZoomSize() and zoom in
   if accepted.
 
+  \param ok If true, complete the selection and emit selected signals
+            otherwise discard the selection.
+
   \sa accept(), minZoomSize()
+  \return True if the selection has been accepted, false otherwise
 */
 bool QwtPlotZoomer::end( bool ok )
 {

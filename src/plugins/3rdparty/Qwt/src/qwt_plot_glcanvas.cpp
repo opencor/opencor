@@ -234,6 +234,7 @@ void QwtPlotGLCanvas::paintEvent( QPaintEvent *event )
 /*!
   Qt event handler for QEvent::PolishRequest and QEvent::StyleChange
   \param event Qt Event
+  \return See QGLWidget::event()
 */
 bool QwtPlotGLCanvas::event( QEvent *event )
 {

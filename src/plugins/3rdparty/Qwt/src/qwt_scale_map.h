@@ -132,6 +132,9 @@ inline double QwtScaleMap::sDist() const
   related to the interval of the paint device
 
   \param s Value relative to the coordinates of the scale
+  \return Transformed value
+
+  \sa invTransform()
 */
 inline double QwtScaleMap::transform( double s ) const
 {
@@ -146,6 +149,8 @@ inline double QwtScaleMap::transform( double s ) const
   interval of the scale.
 
   \param p Value relative to the coordinates of the paint device
+  \return Transformed value
+
   \sa transform()
 */
 inline double QwtScaleMap::invTransform( double p ) const

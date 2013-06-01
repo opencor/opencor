@@ -106,6 +106,10 @@ private:
 
 /*!
    Move the position of the scale
+
+   \param x X coordinate
+   \param y Y coordinate
+
    \sa move(const QPointF &)
 */
 inline void QwtScaleDraw::move( double x, double y )

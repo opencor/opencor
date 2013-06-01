@@ -12,9 +12,10 @@
 #include "qwt_scale_map.h"
 #include <qpainter.h>
 #include <qpixmap.h>
+#include <qmath.h>
 
 static QRect qwtItemRect( int renderFlags,
-    const QRect &rect, const QSize &itemSize )
+    const QRectF &rect, const QSizeF &itemSize )
 {
     int x;
     if ( renderFlags & Qt::AlignLeft )
@@ -37,7 +38,7 @@ static QRect qwtItemRect( int renderFlags,
     }
     else if ( renderFlags & Qt::AlignBottom )
     {
-        y = rect.bottom() - itemSize.width();
+        y = rect.bottom() - itemSize.height();
     }
     else
     {
@@ -134,11 +135,11 @@ QwtText QwtPlotTextLabel::text() const
 
   The margin is the distance between the contentsRect()
   of the plot canvas and the rectangle where the label can
-  be displayed
+  be displayed.
 
   \param margin Margin
 
-  \sa margin()
+  \sa margin(), textRect()
  */
 void QwtPlotTextLabel::setMargin( int margin )
 {
@@ -166,6 +167,8 @@ int QwtPlotTextLabel::margin() const
   \param xMap x Scale Map
   \param yMap y Scale Map
   \param canvasRect Contents rectangle of the canvas in painter coordinates
+
+  \sa textRect()
 */
 
 void QwtPlotTextLabel::draw( QPainter *painter,
@@ -177,10 +180,10 @@ void QwtPlotTextLabel::draw( QPainter *painter,
 
     const int m = d_data->margin;
 
-    const QRectF adjustedRect = canvasRect.adjusted( m, m, -m, -m );
+    const QRectF rect = textRect( canvasRect.adjusted( m, m, -m, -m ),
+        d_data->text.textSize( painter->font() ) );
 
     const bool doAlign = QwtPainter::roundingAlignment( painter );
-
     if ( doAlign )
     {
         // when the paint device is aligning it is not one
@@ -188,28 +191,52 @@ void QwtPlotTextLabel::draw( QPainter *painter,
         // As rendering a text label is an expensive operation
         // we use a cache.
 
-        const QSize sz = d_data->text.textSize( painter->font() ).toSize();
+        int pw = 0;
+        if ( d_data->text.borderPen().style() != Qt::NoPen )
+            pw = qMax( d_data->text.borderPen().width(), 1 );
 
-        if ( d_data->pixmap.isNull() || sz != d_data->pixmap.size()  )
+        QRect pixmapRect;
+        pixmapRect.setLeft( qFloor( rect.left() ) - pw );
+        pixmapRect.setTop( qFloor( rect.top() ) - pw );
+        pixmapRect.setRight( qCeil( rect.right() ) + pw );
+        pixmapRect.setBottom( qCeil( rect.bottom() ) + pw );
+
+        if ( d_data->pixmap.isNull() ||
+            ( pixmapRect.size() != d_data->pixmap.size() )  )
         {
-            d_data->pixmap = QPixmap( sz );
+            d_data->pixmap = QPixmap( pixmapRect.size() );
             d_data->pixmap.fill( Qt::transparent );
 
-            const QRect cacheRect( QPoint(), sz );
+            const QRect r( pw, pw,
+                pixmapRect.width() - 2 * pw, pixmapRect.height() - 2 * pw );
 
             QPainter pmPainter( &d_data->pixmap );
-            d_data->text.draw( &pmPainter, cacheRect );
+            d_data->text.draw( &pmPainter, r );
         }
 
-        const QRect r = qwtItemRect( d_data->text.renderFlags(),
-            adjustedRect.toRect(), d_data->pixmap.size() );
-
-        painter->drawPixmap( r, d_data->pixmap );
+        painter->drawPixmap( pixmapRect, d_data->pixmap );
     }
     else
     {
-        d_data->text.draw( painter, adjustedRect );
+        d_data->text.draw( painter, rect );
     }
+}
+
+/*!
+   \brief Align the text label
+
+   \param rect Canvas rectangle with margins subtracted
+   \param textSize Size required to draw the text
+
+   \return A rectangle aligned according the the alignment flags of
+           the text.
+
+   \sa setMargin(), QwtText::renderFlags(), QwtText::textSize()
+ */
+QRectF QwtPlotTextLabel::textRect(
+    const QRectF &rect, const QSizeF &textSize ) const
+{
+    return qwtItemRect( d_data->text.renderFlags(), rect, textSize );
 }
 
 //!  Invalidate all internal cache

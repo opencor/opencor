@@ -589,6 +589,7 @@ void QwtPlotItem::getCanvasMarginHint( const QwtScaleMap &xMap,
    The default implementation returns one entry with
    the title() of the item and the legendIcon().
 
+   \return Data, that is needed to represent the item on the legend
    \sa title(), legendIcon(), QwtLegend, QwtPlotLegendItem
  */
 QList<QwtLegendData> QwtPlotItem::legendData() const

@@ -63,6 +63,7 @@ QwtScaleDraw::~QwtScaleDraw()
 /*!
    Return alignment of the scale
    \sa setAlignment()
+   \return Alignment of the scale
 */
 QwtScaleDraw::Alignment QwtScaleDraw::alignment() const
 {
@@ -71,6 +72,8 @@ QwtScaleDraw::Alignment QwtScaleDraw::alignment() const
 
 /*!
    Set the alignment of the scale
+
+   \param align Alignment of the scale
 
    The default alignment is QwtScaleDraw::BottomScale
    \sa alignment()
@@ -85,6 +88,8 @@ void QwtScaleDraw::setAlignment( Alignment align )
 
   TopScale, BottomScale are horizontal (Qt::Horizontal) scales,
   LeftScale, RightScale are vertical (Qt::Vertical) scales.
+
+  \return Orientation of the scale
 
   \sa alignment()
 */
@@ -112,8 +117,8 @@ Qt::Orientation QwtScaleDraw::orientation() const
   \param start Start border distance
   \param end End border distance
 */
-void QwtScaleDraw::getBorderDistHint( const QFont &font,
-                                      int &start, int &end ) const
+void QwtScaleDraw::getBorderDistHint(
+    const QFont &font, int &start, int &end ) const
 {
     start = 0;
     end = 0;
@@ -270,6 +275,7 @@ int QwtScaleDraw::minLabelDist( const QFont &font ) const
    of the labels.
 
    \param font Font used for painting the labels
+   \return Extent
 
    \sa minLength()
 */
@@ -307,6 +313,7 @@ double QwtScaleDraw::extent( const QFont &font ) const
    Calculate the minimum length that is needed to draw the scale
 
    \param font Font used for painting the labels
+   \return Minimum length that is needed to draw the scale
 
    \sa extent()
 */
@@ -344,6 +351,7 @@ int QwtScaleDraw::minLength( const QFont &font ) const
    in direction of the alignment().
 
    \param value Value
+   \return Position, where to paint a label
 */
 QPointF QwtScaleDraw::labelPosition( double value ) const
 {
@@ -600,6 +608,8 @@ QPointF QwtScaleDraw::pos() const
   The length doesn't include the space needed for
   overlapping labels.
 
+  \param length Length of the backbone
+
   \sa move(), minLabelDist()
 */
 void QwtScaleDraw::setLength( double length )
@@ -665,6 +675,7 @@ void QwtScaleDraw::drawLabel( QPainter *painter, double value ) const
   \param font Font used for painting
   \param value Value
 
+  \return Bounding rectangle
   \sa labelRect()
 */
 QRect QwtScaleDraw::boundingLabelRect( const QFont &font, double value ) const
@@ -687,6 +698,7 @@ QRect QwtScaleDraw::boundingLabelRect( const QFont &font, double value ) const
    \param pos Position where to paint the label
    \param size Size of the label
 
+   \return Transformation matrix
    \sa setLabelAlignment(), setLabelRotation()
 */
 QTransform QwtScaleDraw::labelTransformation(
@@ -756,6 +768,8 @@ QTransform QwtScaleDraw::labelTransformation(
 
   \param font Font used for painting
   \param value Value
+
+   \return Bounding rectangle that is needed to draw a label
 */
 QRectF QwtScaleDraw::labelRect( const QFont &font, double value ) const
 {
@@ -779,6 +793,8 @@ QRectF QwtScaleDraw::labelRect( const QFont &font, double value ) const
 
    \param font Label font
    \param value Value
+
+   \return Size that is needed to draw a label
 */
 QSizeF QwtScaleDraw::labelSize( const QFont &font, double value ) const
 {

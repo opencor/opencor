@@ -287,7 +287,7 @@ void QwtPlotSpectrogram::setContourLevels( const QList<double> &levels )
 }
 
 /*!
-   \brief Return the levels of the contour lines.
+   \return Levels of the contour lines.
 
    The levels are sorted in increasing order.
 
@@ -551,6 +551,7 @@ QSize QwtPlotSpectrogram::contourRasterSize(
 
    \param rect Rectangle, where to calculate the contour lines
    \param raster Raster, used by the CONREC algorithm
+   \return Calculated contour lines
 
    \sa contourLevels(), setConrecFlag(),
        QwtRasterData::contourLines()

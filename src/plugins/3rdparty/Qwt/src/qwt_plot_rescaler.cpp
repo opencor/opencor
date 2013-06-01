@@ -178,7 +178,7 @@ void QwtPlotRescaler::setExpandingDirection(
 }
 
 /*!
-  Return direction in which an axis should be expanded
+  \return Direction in which an axis should be expanded
 
   \param axis Axis index ( see QwtPlot::AxisId )
   \sa setExpandingDirection()
@@ -223,7 +223,7 @@ void QwtPlotRescaler::setAspectRatio( int axis, double ratio )
 }
 
 /*!
-  Return aspect ratio between an axis and the reference axis.
+  \return Aspect ratio between an axis and the reference axis.
 
   \param axis Axis index ( see QwtPlot::AxisId )
   \sa setAspectRatio()
@@ -440,11 +440,13 @@ QwtInterval QwtPlotRescaler::expandScale( int axis,
 }
 
 /*!
-   Synchronize an axis scale according to the scale of the reference axis
+  Synchronize an axis scale according to the scale of the reference axis
 
   \param axis Axis index ( see QwtPlot::AxisId )
   \param reference Interval of the reference axis
   \param size Size of the canvas
+
+  \return New interval for axis
 */
 QwtInterval QwtPlotRescaler::syncScale( int axis,
     const QwtInterval& reference, const QSize &size ) const
@@ -474,7 +476,7 @@ QwtInterval QwtPlotRescaler::syncScale( int axis,
 }
 
 /*!
-  Return orientation of an axis
+  \return Orientation of an axis
   \param axis Axis index ( see QwtPlot::AxisId )
 */
 Qt::Orientation QwtPlotRescaler::orientation( int axis ) const

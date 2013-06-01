@@ -472,7 +472,7 @@ void QwtPlotRasterItem::setPaintAttribute( PaintAttribute attribute, bool on )
 }
 
 /*!
-    \brief Return the current paint attributes
+    \return True, when attribute is enabled
     \sa PaintAttribute, setPaintAttribute()
 */
 bool QwtPlotRasterItem::testPaintAttribute( PaintAttribute attribute ) const
@@ -896,6 +896,8 @@ QImage QwtPlotRasterItem::compose(
    \param area Area to be painted on the image
    \param imageSize Image size
    \param pixelSize Width/Height of a data pixel
+
+   \return Calculated scale map
 */
 QwtScaleMap QwtPlotRasterItem::imageMap(
     Qt::Orientation orientation,

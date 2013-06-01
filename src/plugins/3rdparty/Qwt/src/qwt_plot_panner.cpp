@@ -238,8 +238,10 @@ void QwtPlotPanner::moveCanvas( int dx, int dy )
 }
 
 /*!
-    Calculate a mask from the border path of the canvas
-    \sa QwtPlotCanvas::borderPath()
+   Calculate a mask from the border path of the canvas
+
+   \return Mask as bitmap
+   \sa QwtPlotCanvas::borderPath()
 */
 QBitmap QwtPlotPanner::contentsMask() const
 {
@@ -249,6 +251,9 @@ QBitmap QwtPlotPanner::contentsMask() const
     return QwtPanner::contentsMask();
 }
 
+/*!
+   \return Pixmap with the content of the canvas
+ */
 QPixmap QwtPlotPanner::grab() const
 {
     const QWidget *cv = canvas();

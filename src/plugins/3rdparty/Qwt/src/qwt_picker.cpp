@@ -774,6 +774,9 @@ void QwtPicker::drawTracker( QPainter *painter ) const
     }
     return adjusted;
 }\endverbatim\n
+
+  \param points Selected points
+  \return Selected points unmodified
 */
 QPolygon QwtPicker::adjustedPoints( const QPolygon &points ) const
 {
@@ -876,6 +879,8 @@ QRect QwtPicker::trackerRect( const QFont &font ) const
 
   \param object Object to be filtered
   \param event Event
+
+  \return Always false.
 
   \sa widgetEnterEvent(), widgetLeaveEvent(),
       widgetMousePressEvent(), widgetMouseReleaseEvent(),
