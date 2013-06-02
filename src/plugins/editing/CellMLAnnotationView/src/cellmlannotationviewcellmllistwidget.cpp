@@ -519,9 +519,9 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
 
             // Retrieve the model's import's units
 
-            ObjRef<iface::cellml_api::ImportUnitsSet> importUnits = import->units();
+            ObjRef<iface::cellml_api::ImportUnitsSet> importUnitsSet = import->units();
 
-            if (importUnits->length()) {
+            if (importUnitsSet->length()) {
                 // Units category
 
                 CellmlAnnotationViewCellmlElementItem *unitsItem = new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::ImportUnit,
@@ -531,7 +531,7 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
 
                 // Retrieve the model's import's units themselves
 
-                ObjRef<iface::cellml_api::ImportUnitsIterator> importUnitsIterator = importUnits->iterateImportUnits();
+                ObjRef<iface::cellml_api::ImportUnitsIterator> importUnitsIterator = importUnitsSet->iterateImportUnits();
 
                 forever {
                     ObjRef<iface::cellml_api::ImportUnits> importUnit = importUnitsIterator->nextImportUnits();
