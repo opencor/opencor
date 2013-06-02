@@ -41,6 +41,10 @@ private:
 
     void copyUnitsSet(iface::cellml_api::UnitsSet *pUnitsSet,
                       iface::cellml_api::CellMLElement *pElement);
+
+    iface::cellml_api::CellMLComponent * findRealComponent(iface::cellml_api::CellMLComponent *pComponent);
+
+    void annotateImportedComponents(iface::cellml_api::Model *pModel);
 };
 
 //==============================================================================
