@@ -785,16 +785,19 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
             // Variable mappings
 
             ObjRef<iface::cellml_api::MapVariablesSet> connectionVariableMappings = connection->variableMappings();
-            ObjRef<iface::cellml_api::MapVariablesIterator> connectionVariableMappingsIterator = connectionVariableMappings->iterateMapVariables();
 
-            forever {
-                ObjRef<iface::cellml_api::MapVariables> connectionVariableMapping = connectionVariableMappingsIterator->nextMapVariables();
+            if (connectionVariableMappings->length()) {
+                ObjRef<iface::cellml_api::MapVariablesIterator> connectionVariableMappingsIterator = connectionVariableMappings->iterateMapVariables();
 
-                if (!connectionVariableMapping)
-                    break;
+                forever {
+                    ObjRef<iface::cellml_api::MapVariables> connectionVariableMapping = connectionVariableMappingsIterator->nextMapVariables();
 
-                connectionItem->appendRow(new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::VariableMapping,
-                                                                                    connectionVariableMapping));
+                    if (!connectionVariableMapping)
+                        break;
+
+                    connectionItem->appendRow(new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::VariableMapping,
+                                                                                        connectionVariableMapping));
+                }
             }
         }
     }
@@ -866,15 +869,18 @@ void CellmlAnnotationViewCellmlListWidget::populateGroupComponentReferenceModel(
     // Retrieve the component reference's children
 
     ObjRef<iface::cellml_api::ComponentRefSet> groupComponentReferences = pGroupComponentReference->componentRefs();
-    ObjRef<iface::cellml_api::ComponentRefIterator> groupComponentReferencesIterator = groupComponentReferences->iterateComponentRefs();
 
-    forever {
-        ObjRef<iface::cellml_api::ComponentRef> groupComponentReference = groupComponentReferencesIterator->nextComponentRef();
+    if (groupComponentReferences->length()) {
+        ObjRef<iface::cellml_api::ComponentRefIterator> groupComponentReferencesIterator = groupComponentReferences->iterateComponentRefs();
 
-        if (!groupComponentReference)
-            break;
+        forever {
+            ObjRef<iface::cellml_api::ComponentRef> groupComponentReference = groupComponentReferencesIterator->nextComponentRef();
 
-        populateGroupComponentReferenceModel(groupComponentReferencesItem, groupComponentReference);
+            if (!groupComponentReference)
+                break;
+
+            populateGroupComponentReferenceModel(groupComponentReferencesItem, groupComponentReference);
+        }
     }
 }
 
