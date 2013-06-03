@@ -7,7 +7,7 @@
 
 //==============================================================================
 
-#include "cellmlfileexporter.h"
+#include "cellmlfilecellmlexporter.h"
 
 //==============================================================================
 
@@ -16,8 +16,6 @@
 #include <QString>
 
 //==============================================================================
-
-#include "cellml-api-cxx-support.hpp"
 
 #include "IfaceAnnoTools.hxx"
 #include "IfaceCeVAS.hxx"
@@ -29,7 +27,7 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-class CellmlFileCellml10Exporter : public CellmlFileExporter
+class CellmlFileCellml10Exporter : public CellmlFileCellmlExporter
 {
 public:
     explicit CellmlFileCellml10Exporter(iface::cellml_api::Model *pModel,
@@ -40,6 +38,8 @@ private:
 
     QSet<QPair<QString, QString> > mCopiedUnits;
 
+    QSet<QString> mComponentNames;
+
     void copyUnitsSet(iface::cellml_api::UnitsSet *pUnitsSet,
                       iface::cellml_api::CellMLElement *pElement);
 
@@ -47,10 +47,17 @@ private:
 
     void annotateImportedComponents(iface::cellml_api::Model *pModel);
 
+    void ensureComponentNameUniqueness(std::wstring &pComponentName);
+
+    iface::dom::Element * copyDomElement(iface::dom::Element *pDomElement);
+    void copyExtensionElements(iface::cellml_api::CellMLElement *pFromElement,
+                               iface::cellml_api::CellMLElement *pToElement);
+
+    void copyComponent(iface::cellml_api::CellMLComponent *pComponent);
     void copyComponents(iface::cellml_services::CeVAS *pCevas);
 
-    void copyConnections(iface::cellml_api::Model *pModel);
-    void copyGroups(iface::cellml_api::Model *pModel);
+    void copyConnections();
+    void copyGroups();
 
     void propagateInitialValues();
 };

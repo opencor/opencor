@@ -1,17 +1,21 @@
 //==============================================================================
-// CellML file CellML 1.1 exporter
+// CellML file CellML exporter
 //==============================================================================
 
-#ifndef CELLMLFILECELLML11EXPORTER_H
-#define CELLMLFILECELLML11EXPORTER_H
+#ifndef CELLMLFILECELLMLEXPORTER_H
+#define CELLMLFILECELLMLEXPORTER_H
 
 //==============================================================================
 
-#include "cellmlfilecellmlexporter.h"
+#include "cellmlfileexporter.h"
 
 //==============================================================================
 
 #include <QString>
+
+//==============================================================================
+
+#include "cellml-api-cxx-support.hpp"
 
 //==============================================================================
 
@@ -20,11 +24,22 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-class CellmlFileCellml11Exporter : public CellmlFileCellmlExporter
+static const std::wstring MATHML_NAMESPACE = L"http://www.w3.org/1998/Math/MathML";
+
+static const std::wstring CELLML_1_0_NAMESPACE = L"http://www.cellml.org/cellml/1.0#";
+static const std::wstring CELLML_1_1_NAMESPACE = L"http://www.cellml.org/cellml/1.1#";
+
+//==============================================================================
+
+class CellmlFileCellmlExporter : public CellmlFileExporter
 {
 public:
-    explicit CellmlFileCellml11Exporter(iface::cellml_api::Model *pModel,
-                                        const QString &pFileName);
+    explicit CellmlFileCellmlExporter(iface::cellml_api::Model *pModel,
+                                      const std::wstring &pVersion);
+
+protected:
+    iface::cellml_api::Model *mModel;
+    ObjRef<iface::cellml_api::Model> mExportedModel;
 };
 
 //==============================================================================

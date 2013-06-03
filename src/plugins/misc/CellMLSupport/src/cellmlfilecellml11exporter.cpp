@@ -6,10 +6,6 @@
 
 //==============================================================================
 
-#include "cellml-api-cxx-support.hpp"
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace CellMLSupport {
 
@@ -17,13 +13,11 @@ namespace CellMLSupport {
 
 CellmlFileCellml11Exporter::CellmlFileCellml11Exporter(iface::cellml_api::Model *pModel,
                                                        const QString &pFileName) :
-    CellmlFileExporter()
+    CellmlFileCellmlExporter(pModel, L"1.1")
 {
-    ObjRef<iface::cellml_api::Model> exportedModel = pModel;
+    // Save our exported model
 
-    // Save the exported model
-
-    mResult = saveModel(exportedModel, pFileName);
+    mResult = saveModel(mExportedModel, pFileName);
 }
 
 //==============================================================================

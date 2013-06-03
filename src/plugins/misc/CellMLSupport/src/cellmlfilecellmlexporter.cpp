@@ -1,17 +1,14 @@
 //==============================================================================
-// CellML file CellML 1.1 exporter
-//==============================================================================
-
-#ifndef CELLMLFILECELLML11EXPORTER_H
-#define CELLMLFILECELLML11EXPORTER_H
-
+// CellML file CellML exporter
 //==============================================================================
 
 #include "cellmlfilecellmlexporter.h"
 
 //==============================================================================
 
-#include <QString>
+//#include "cellml-api-cxx-support.hpp"
+
+#include "CellMLBootstrap.hpp"
 
 //==============================================================================
 
@@ -20,21 +17,22 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-class CellmlFileCellml11Exporter : public CellmlFileCellmlExporter
+CellmlFileCellmlExporter::CellmlFileCellmlExporter(iface::cellml_api::Model *pModel,
+                                                   const std::wstring &pVersion) :
+    CellmlFileExporter(),
+    mModel(pModel)
 {
-public:
-    explicit CellmlFileCellml11Exporter(iface::cellml_api::Model *pModel,
-                                        const QString &pFileName);
-};
+    // Create an empty CellML model of the required version
+
+    ObjRef<iface::cellml_api::CellMLBootstrap> cellmlBootstrap = CreateCellMLBootstrap();
+
+    mExportedModel = cellmlBootstrap->createModel(pVersion);
+}
 
 //==============================================================================
 
 }   // namespace CellMLSupport
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

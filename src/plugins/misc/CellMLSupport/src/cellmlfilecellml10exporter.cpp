@@ -18,7 +18,6 @@
 //==============================================================================
 
 #include "AnnoToolsBootstrap.hpp"
-#include "CellMLBootstrap.hpp"
 #include "CeVASBootstrap.hpp"
 
 //==============================================================================
@@ -30,21 +29,18 @@ namespace CellMLSupport {
 
 CellmlFileCellml10Exporter::CellmlFileCellml10Exporter(iface::cellml_api::Model *pModel,
                                                        const QString &pFileName) :
-    CellmlFileExporter()
+    CellmlFileCellmlExporter(pModel, L"1.0"),
+    mCopiedUnits(QSet<QPair<QString, QString> >()),
+    mComponentNames(QSet<QString>())
 {
-    // Create an empty CellML 1.0 model
+    // Set the model's name and cmeta:id, if any
 
-    ObjRef<iface::cellml_api::CellMLBootstrap> cellmlBootstrap = CreateCellMLBootstrap();
-    ObjRef<iface::cellml_api::Model> exportedModel = cellmlBootstrap->createModel(L"1.0");
-
-    // Set the model's name and id
-
-    exportedModel->name(pModel->name());
+    mExportedModel->name(pModel->name());
 
     std::wstring cmetaId = pModel->cmetaId();
 
     if (cmetaId.length())
-        exportedModel->cmetaId(cmetaId);
+        mExportedModel->cmetaId(cmetaId);
 
     // Create an annotation set to manage annotations
 
@@ -66,36 +62,36 @@ CellmlFileCellml10Exporter::CellmlFileCellml10Exporter(iface::cellml_api::Model 
         return;
     }
 
-    // Copy all (i.e. both local and imported) model-level units to the exported
+    // Copy all (i.e. both local and imported) model-level units to our exported
     // model
 
     ObjRef<iface::cellml_api::UnitsSet> unitsSet = pModel->allUnits();
 
-    copyUnitsSet(unitsSet, exportedModel);
+    copyUnitsSet(unitsSet, mExportedModel);
 
     // Annotate imported components since they may have been renamed
 
-    annotateImportedComponents(pModel);
+    annotateImportedComponents(mModel);
 
-    // Copy all needed components to the exported model
+    // Copy all needed components to our exported model
 
     copyComponents(cevas);
 
-    // Copy all groups to the exported model
+    // Copy all groups to our exported model
 
-    copyGroups(pModel);
+    copyGroups();
 
-    // Copy all connections to the exported model
+    // Copy all connections to our exported model
 
-    copyConnections(pModel);
+    copyConnections();
 
     // Deal with 'initial_value="var_name"' occurrences
 
     propagateInitialValues();
 
-    // Save the exported model
+    // Save our exported model
 
-    mResult = saveModel(exportedModel, pFileName);
+    mResult = saveModel(mExportedModel, pFileName);
 }
 
 //==============================================================================
@@ -285,28 +281,290 @@ void CellmlFileCellml10Exporter::annotateImportedComponents(iface::cellml_api::M
 
 //==============================================================================
 
+void CellmlFileCellml10Exporter::ensureComponentNameUniqueness(std::wstring &pComponentName)
+{
+    // Make sure that the component name is unique within our exported model
+    // Note: if the given component name is already used, then we append the
+    //       string "_n" to it, where n is the least natural number giving an
+    //       unused name...
+
+    QString componentName = QString::fromStdWString(pComponentName);
+    QString suffix = QString();
+    unsigned n = 0;
+
+    while (mComponentNames.contains(componentName+suffix))
+        // The current component name is already used, so generate a new suffix
+
+        suffix = QString("_%1").arg(++n);
+
+    // We have got a valid suffix for our component name, so update the given
+    // component name and keep track of it
+
+    componentName += suffix;
+
+    mComponentNames << componentName;
+
+    pComponentName = componentName.toStdWString();
+}
+
+//==============================================================================
+
+iface::dom::Element * CellmlFileCellml10Exporter::copyDomElement(iface::dom::Element *pDomElement)
+{
+    Q_UNUSED(pDomElement);
+
+    // Create and return a (manual) deep copy of the given DOM element
+    // Note #1: if the DOM element is in the MathML namespace, then it will be
+    //          converted to an iface::cellml_api::MathMLElement instance prior
+    //          to being returned...
+    // Note #2: it appears that when adding a child element or text node, which
+    //          we are subsequently going to release_ref() ourselves, then we
+    //          must also release_ref() the parent, or its refcount never
+    //          reaches zero...
+
+    std::wstring namespaceUri = pDomElement->namespaceURI();
+
+    // Create a blank DOM element
+
+    iface::dom::Element *res = mExportedModel->createExtensionElement(namespaceUri,
+                                                                      pDomElement->nodeName());
+
+    // Copy the DOM element attributes
+
+    ObjRef<iface::dom::Document> document = res->ownerDocument();
+    ObjRef<iface::dom::NamedNodeMap> attributes = pDomElement->attributes();
+
+    for (uint32_t i = 0, iMax = attributes->length(); i < iMax; ++i) {
+        ObjRef<iface::dom::Attr> attr = QueryInterface(attributes->item(i));
+        iface::dom::Attr *newAttr = document->createAttributeNS(CELLML_1_0_NAMESPACE, attr->name());
+
+        newAttr->value(attr->value());
+
+        ObjRef<iface::dom::Attr> dummyAttr = res->setAttributeNodeNS(newAttr);
+
+        Q_UNUSED(dummyAttr);
+    }
+
+    // Copy the child element and text nodes
+
+    ObjRef<iface::dom::NodeList> childNodes = pDomElement->childNodes();
+
+    for (uint32_t i = 0, iMax = childNodes->length(); i < iMax; ++i) {
+        ObjRef<iface::dom::Node> childNode = childNodes->item(i);
+
+        switch (childNode->nodeType()) {
+        case iface::dom::Node::ELEMENT_NODE: {
+            ObjRef<iface::dom::Element> elementNode = QueryInterface(childNode);
+            ObjRef<iface::dom::Element> newElementNode = copyDomElement(elementNode);
+
+            res->appendChild(newElementNode)->release_ref();
+
+            break;
+        }
+        case iface::dom::Node::TEXT_NODE: {
+            ObjRef<iface::dom::Text> newTextNode = document->createTextNode(childNode->nodeValue());
+
+            res->appendChild(newTextNode)->release_ref();
+
+            break;
+        }
+        default:
+            // Not something we care about, so do nothing...
+
+            ;
+        }
+    }
+
+    // Cast the DOM element to iface::cellml_api::MathMLElement, if it is in the
+    // MathML namespace
+
+    if (namespaceUri == MATHML_NAMESPACE) {
+        ObjRef<iface::mathml_dom::MathMLElement> realRes = QueryInterface(res);
+
+        res = realRes;
+    }
+
+    // We are all done, so return our copied DOM element
+
+    return res;
+}
+
+//==============================================================================
+
+void CellmlFileCellml10Exporter::copyExtensionElements(iface::cellml_api::CellMLElement *pFromElement,
+                                                       iface::cellml_api::CellMLElement *pToElement)
+{
+    // Copy any extension elements
+
+    ObjRef<iface::cellml_api::ExtensionElementList> elements = pFromElement->extensionElements();
+
+    for (uint32_t i = 0, iMax = elements->length(); i < iMax; ++i) {
+        ObjRef<iface::dom::Element> element = elements->getAt(i);
+
+        // Check that it's not a MathML element
+
+        if (element->namespaceURI() == MATHML_NAMESPACE)
+            continue;
+
+        ObjRef<iface::dom::Element> newElement = copyDomElement(element);
+
+        pToElement->appendExtensionElement(newElement);
+    }
+}
+
+//==============================================================================
+
+void CellmlFileCellml10Exporter::copyComponent(iface::cellml_api::CellMLComponent *pComponent)
+{
+    // Copy the given component into our exported model
+    // Note: we create a new component, and manually copy the contents of the
+    //       given component to it...
+
+    // Make sure that the component hasn't already been copied
+
+    ObjRef<iface::cellml_api::CellMLComponent> newComponent = QueryInterface(mAnnotationSet->getObjectAnnotation(pComponent, L"Copy"));
+
+    if (newComponent)
+        return;
+
+    // Create a new component and make sure that the original component knows
+    // about its existence
+
+    newComponent = mExportedModel->createComponent();
+
+    mAnnotationSet->setObjectAnnotation(pComponent, L"Copy", newComponent);
+
+    // Check whether the component has been renamed
+
+    std::wstring newComponentName = pComponent->name();
+    std::wstring componentRenamedName = mAnnotationSet->getStringAnnotation(pComponent, L"Renamed");
+
+    if (componentRenamedName.length())
+        // The component was imported, so it may have been renamed
+
+        newComponentName = componentRenamedName;
+
+    // Make sure that the name of our new component is unique within our
+    // exported model
+
+    ensureComponentNameUniqueness(newComponentName);
+
+    // Set both the name and cmeta:id, if any, of our new component
+
+    newComponent->name(newComponentName);
+
+    std::wstring newComponentCmetaId = pComponent->cmetaId();
+
+    if (newComponentCmetaId.length())
+        newComponent->cmetaId(newComponentCmetaId);
+
+    // Copy the units to our new component
+
+    ObjRef<iface::cellml_api::UnitsSet> componentUnitsSet = pComponent->units();
+
+    copyUnitsSet(componentUnitsSet, newComponent);
+
+    // Copy the variables to our new component, if any
+
+    ObjRef<iface::cellml_api::CellMLVariableSet> componentVariables = pComponent->variables();
+
+    if (componentVariables->length()) {
+        ObjRef<iface::cellml_api::CellMLVariableIterator> componentVariablesIterator = componentVariables->iterateVariables();
+
+        forever {
+            ObjRef<iface::cellml_api::CellMLVariable> componentVariable = componentVariablesIterator->nextVariable();
+
+            if (!componentVariable)
+                break;
+
+            // We have a variable to copy, so create a new variable and copy its
+            // attributes from the original variable
+
+            ObjRef<iface::cellml_api::CellMLVariable> newComponentVariable = mExportedModel->createCellMLVariable();
+
+            newComponentVariable->name(componentVariable->name());
+
+            std::wstring componentVariableCmetaId = componentVariable->cmetaId();
+
+            if (componentVariableCmetaId.length())
+                newComponentVariable->cmetaId(componentVariableCmetaId);
+
+            newComponentVariable->initialValue(componentVariable->initialValue());
+            newComponentVariable->unitsName(componentVariable->unitsName());
+            newComponentVariable->publicInterface(componentVariable->publicInterface());
+            newComponentVariable->privateInterface(componentVariable->privateInterface());
+
+            // Copy our new variable to our new component
+
+            newComponent->addElement(newComponentVariable);
+        }
+    }
+
+    // Copy the math nodes to our new component, if any
+
+    ObjRef<iface::cellml_api::MathList> componentMath = pComponent->math();
+
+    if (componentMath->length()) {
+        ObjRef<iface::cellml_api::MathMLElementIterator> componentMathIterator = componentMath->iterate();
+
+        forever {
+            ObjRef<iface::mathml_dom::MathMLElement> componentMathNode = componentMathIterator->next();
+
+            if (!componentMathNode)
+                break;
+
+            // We have a math node, so copy a clone of it to our new component
+
+            iface::cellml_api::MathMLElement newComponentMathNode = dynamic_cast<iface::cellml_api::MathMLElement>(copyDomElement(componentMathNode));
+
+            newComponent->addMath(newComponentMathNode);
+
+            newComponentMathNode->release_ref();
+            // Note: since we want the new component to be its owner...
+        }
+    }
+
+    // Copy the extension elements to our new component
+
+    copyExtensionElements(pComponent, newComponent);
+
+    // Add the new component to our exported model
+
+    mExportedModel->addElement(newComponent);
+}
+
+//==============================================================================
+
 void CellmlFileCellml10Exporter::copyComponents(iface::cellml_services::CeVAS *pCevas)
 {
-Q_UNUSED(pCevas);
+    // Copy the relevant components into our exported model, using the given
+    // CeVAS to find components to copy
 
+    ObjRef<iface::cellml_api::CellMLComponentIterator> componentsIterator = pCevas->iterateRelevantComponents();
+
+    forever {
+        ObjRef<iface::cellml_api::CellMLComponent> component = componentsIterator->nextComponent();
+
+        if (!component)
+            break;
+
+        // We have a component, so copy it
+
+        copyComponent(component);
+    }
+}
+
+//==============================================================================
+
+void CellmlFileCellml10Exporter::copyConnections()
+{
 //---GRY--- TO BE DONE...
 }
 
 //==============================================================================
 
-void CellmlFileCellml10Exporter::copyConnections(iface::cellml_api::Model *pModel)
+void CellmlFileCellml10Exporter::copyGroups()
 {
-Q_UNUSED(pModel);
-
-//---GRY--- TO BE DONE...
-}
-
-//==============================================================================
-
-void CellmlFileCellml10Exporter::copyGroups(iface::cellml_api::Model *pModel)
-{
-Q_UNUSED(pModel);
-
 //---GRY--- TO BE DONE...
 }
 
