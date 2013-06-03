@@ -56,8 +56,13 @@ private:
     void copyComponent(iface::cellml_api::CellMLComponent *pComponent);
     void copyComponents(iface::cellml_services::CeVAS *pCevas);
 
-    void copyConnections();
-    void copyGroups();
+    void copyGroup(iface::cellml_api::Model *pModel,
+                   iface::cellml_api::ComponentRefSet *pComponentReferences,
+                   iface::cellml_api::ComponentRef *pToComponentReference = 0);
+    void copyGroups(iface::cellml_api::Model *pModel);
+
+    void copyConnection(iface::cellml_api::Connection *pConnection);
+    void copyConnections(iface::cellml_api::Model *pModel);
 
     void propagateInitialValues();
 };
