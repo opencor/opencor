@@ -17,8 +17,6 @@
 
 //==============================================================================
 
-#include "IfaceCeVAS.hxx"
-
 #include "AnnoToolsBootstrap.hpp"
 #include "CellMLBootstrap.hpp"
 #include "CeVASBootstrap.hpp"
@@ -78,6 +76,22 @@ CellmlFileCellml10Exporter::CellmlFileCellml10Exporter(iface::cellml_api::Model 
     // Annotate imported components since they may have been renamed
 
     annotateImportedComponents(pModel);
+
+    // Copy all needed components to the exported model
+
+    copyComponents(cevas);
+
+    // Copy all groups to the exported model
+
+    copyGroups(pModel);
+
+    // Copy all connections to the exported model
+
+    copyConnections(pModel);
+
+    // Deal with 'initial_value="var_name"' occurrences
+
+    propagateInitialValues();
 
     // Save the exported model
 
@@ -267,6 +281,40 @@ void CellmlFileCellml10Exporter::annotateImportedComponents(iface::cellml_api::M
             }
         }
     }
+}
+
+//==============================================================================
+
+void CellmlFileCellml10Exporter::copyComponents(iface::cellml_services::CeVAS *pCevas)
+{
+Q_UNUSED(pCevas);
+
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
+void CellmlFileCellml10Exporter::copyConnections(iface::cellml_api::Model *pModel)
+{
+Q_UNUSED(pModel);
+
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
+void CellmlFileCellml10Exporter::copyGroups(iface::cellml_api::Model *pModel)
+{
+Q_UNUSED(pModel);
+
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
+void CellmlFileCellml10Exporter::propagateInitialValues()
+{
+//---GRY--- TO BE DONE...
 }
 
 //==============================================================================

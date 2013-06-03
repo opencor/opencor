@@ -20,6 +20,7 @@
 #include "cellml-api-cxx-support.hpp"
 
 #include "IfaceAnnoTools.hxx"
+#include "IfaceCeVAS.hxx"
 
 //==============================================================================
 
@@ -45,6 +46,13 @@ private:
     iface::cellml_api::CellMLComponent * findRealComponent(iface::cellml_api::CellMLComponent *pComponent);
 
     void annotateImportedComponents(iface::cellml_api::Model *pModel);
+
+    void copyComponents(iface::cellml_services::CeVAS *pCevas);
+
+    void copyConnections(iface::cellml_api::Model *pModel);
+    void copyGroups(iface::cellml_api::Model *pModel);
+
+    void propagateInitialValues();
 };
 
 //==============================================================================
