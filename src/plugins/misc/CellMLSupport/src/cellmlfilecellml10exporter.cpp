@@ -639,24 +639,22 @@ void CellmlFileCellml10Exporter::copyGroups(iface::cellml_api::Model *pModel)
     // into our exported model, if any
 
     ObjRef<iface::cellml_api::GroupSet> groups = pModel->groups();
+    ObjRef<iface::cellml_api::GroupSet> encapsulationGroups = groups->subsetInvolvingEncapsulation();
 
-    if (groups->length()) {
-        ObjRef<iface::cellml_api::GroupIterator> groupsIterator = groups->iterateGroups();
+    if (encapsulationGroups->length()) {
+        ObjRef<iface::cellml_api::GroupIterator> encapsulationGroupsIterator = encapsulationGroups->iterateGroups();
 
         forever {
-            ObjRef<iface::cellml_api::Group> group = groupsIterator->nextGroup();
+            ObjRef<iface::cellml_api::Group> encapsulationGroup = encapsulationGroupsIterator->nextGroup();
 
-            if (!group)
+            if (!encapsulationGroup)
                 break;
 
-            // Copy the encapsulation group into our exported model, but only if
-            // it is an encapsulation group
+            // Copy the encapsulation group into our exported model
 
-            if (group->isEncapsulation()) {
-                ObjRef<iface::cellml_api::ComponentRefSet> groupComponentReferences = group->componentRefs();
+            ObjRef<iface::cellml_api::ComponentRefSet> encapsulationGroupComponentReferences = encapsulationGroup->componentRefs();
 
-                copyGroup(pModel, groupComponentReferences);
-            }
+            copyGroup(pModel, encapsulationGroupComponentReferences);
         }
     }
 
