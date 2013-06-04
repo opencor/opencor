@@ -40,6 +40,8 @@ private:
 
     QSet<QString> mComponentNames;
 
+    ObjRef<iface::cellml_api::Group> mRootGroup;
+
     void copyUnitsSet(iface::cellml_api::UnitsSet *pUnitsSet,
                       iface::cellml_api::CellMLElement *pElement);
 

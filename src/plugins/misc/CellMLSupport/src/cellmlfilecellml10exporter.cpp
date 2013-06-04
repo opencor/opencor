@@ -31,7 +31,8 @@ CellmlFileCellml10Exporter::CellmlFileCellml10Exporter(iface::cellml_api::Model 
                                                        const QString &pFileName) :
     CellmlFileCellmlExporter(pModel, L"1.0"),
     mCopiedUnits(QSet<QPair<QString, QString> >()),
-    mComponentNames(QSet<QString>())
+    mComponentNames(QSet<QString>()),
+    mRootGroup(0)
 {
     // Set the model's name and cmeta:id, if any
 
@@ -603,21 +604,23 @@ void CellmlFileCellml10Exporter::copyGroup(iface::cellml_api::Model *pModel,
 
             pToComponentReference->addElement(newComponentReference);
         } else {
-            // Create a new group
+            // Create a new root group, if needed
 
-            ObjRef<iface::cellml_api::Group> group = mExportedModel->createGroup();
+            if (!mRootGroup) {
+                mRootGroup = mExportedModel->createGroup();
 
-            mExportedModel->addElement(group);
+                mExportedModel->addElement(mRootGroup);
 
-            ObjRef<iface::cellml_api::RelationshipRef> relationshipReference = mExportedModel->createRelationshipRef();
+                ObjRef<iface::cellml_api::RelationshipRef> relationshipReference = mExportedModel->createRelationshipRef();
 
-            relationshipReference->setRelationshipName(L"", L"encapsulation");
+                relationshipReference->setRelationshipName(L"", L"encapsulation");
 
-            group->addElement(relationshipReference);
+                mRootGroup->addElement(relationshipReference);
+            }
 
-            // Add our new component reference as the root
+            // Add our new component reference to our root group
 
-            group->addElement(newComponentReference);
+            mRootGroup->addElement(newComponentReference);
         }
 
         // Copy any children of our component reference
@@ -632,7 +635,7 @@ void CellmlFileCellml10Exporter::copyGroup(iface::cellml_api::Model *pModel,
 
 void CellmlFileCellml10Exporter::copyGroups(iface::cellml_api::Model *pModel)
 {
-    // Iterate only groups defining the encapsulation hierarchy and copy them
+    // Iterate only groups defining an encapsulation hierarchy and copy them
     // into our exported model, if any
 
     ObjRef<iface::cellml_api::GroupSet> groups = pModel->groups();
@@ -646,11 +649,14 @@ void CellmlFileCellml10Exporter::copyGroups(iface::cellml_api::Model *pModel)
             if (!group)
                 break;
 
-            // Copy the encapsulation group into our exported model
+            // Copy the encapsulation group into our exported model, but only if
+            // it is an encapsulation group
 
-            ObjRef<iface::cellml_api::ComponentRefSet> groupComponentReferences = group->componentRefs();
+            if (group->isEncapsulation()) {
+                ObjRef<iface::cellml_api::ComponentRefSet> groupComponentReferences = group->componentRefs();
 
-            copyGroup(pModel, groupComponentReferences);
+                copyGroup(pModel, groupComponentReferences);
+            }
         }
     }
 
