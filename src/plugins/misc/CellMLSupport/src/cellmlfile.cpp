@@ -671,6 +671,8 @@ bool CellmlFile::exportTo(const QString &pFileName, const Format &pFormat)
                 // We are already dealing with a CellML 1.1 model, so...
 
                 return false;
+
+            break;
         }
         default:   // Cellml_1_0
             // To export to CellML 1.0, the model must be in a non CellML 1.0
