@@ -786,7 +786,68 @@ void CellmlFileCellml10Exporter::copyConnections(iface::cellml_api::Model *pMode
 
 void CellmlFileCellml10Exporter::propagateInitialValues()
 {
-//---GRY--- TO BE DONE...
+    // Try to make all 'initial_value' attributes valid CellML 1.0
+    // Note: where a variable is specified, we look at its source variable. If
+    //       it has a numeric initial value, the we use that. If not, then it's
+    //       an unavoidable error condition...
+
+    ObjRef<iface::cellml_api::CellMLComponentSet> components = mExportedModel->localComponents();
+
+    if (components->length()) {
+        ObjRef<iface::cellml_api::CellMLComponentIterator> componentsIterator = components->iterateComponents();
+
+        forever {
+            ObjRef<iface::cellml_api::CellMLComponent> component = componentsIterator->nextComponent();
+
+            if (!component)
+                break;
+
+            // We have a component, so go through its variables and update their
+            // initial value, if any and needed
+
+            ObjRef<iface::cellml_api::CellMLVariableSet> componentVariables = component->variables();
+
+            if (componentVariables->length()) {
+                ObjRef<iface::cellml_api::CellMLVariableIterator> componentVariablesIterator = componentVariables->iterateVariables();
+
+                forever {
+                    ObjRef<iface::cellml_api::CellMLVariable> componentVariable = componentVariablesIterator->nextVariable();
+
+                    if (!componentVariable)
+                        break;
+
+                    // We have a variable, so check whether it has an initial
+                    // value
+
+                    std::wstring initialValue = componentVariable->initialValue();
+
+                    if (!initialValue.length())
+                        continue;
+
+                    // Is the initial value a double?
+
+                    bool doubleInitialValueValid;
+
+                    QString::fromStdWString(initialValue).toDouble(&doubleInitialValueValid);
+
+                    if (!doubleInitialValueValid) {
+                        // The variable is initialised with the initial value of
+                        // another variable, so retrieve that 'initial' variable
+
+                        ObjRef<iface::cellml_api::CellMLVariable> initialVariable = componentVariables->getVariable(initialValue);
+
+                        // Find its source
+
+                        ObjRef<iface::cellml_api::CellMLVariable> sourceVariable = initialVariable->sourceVariable();
+
+                        // And copy its initial value
+
+                        componentVariable->initialValue(sourceVariable->initialValue());
+                    }
+                }
+            }
+        }
+    }
 }
 
 //==============================================================================
