@@ -25,7 +25,7 @@ void error(QCoreApplication *pApp, const QString &pMsg);
 
 void initApplication(QCoreApplication *pApp);
 
-bool consoleApplication(QCoreApplication *pApp, int *pRes);
+bool cliApplication(QCoreApplication *pApp, int *pRes);
 
 //==============================================================================
 

@@ -43,20 +43,20 @@ int main(int pArgC, char *pArgV[])
 #if defined(Q_OS_WIN)
     // Do nothing...
 #elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
-    // Try to run OpenCOR as a console application
+    // Try to run OpenCOR as a CLI application
     // Note: in the case of Windows, we have two binaries (.com and .exe which
-    //       are for the pure console and GUI versions of OpenCOR, resp.). This
+    //       are for the CLI and GUI versions of OpenCOR, respectively). This
     //       means that when a console window is open, to enter something like:
     //           C:\>OpenCOR
     //       will effectively call OpenCOR.com. From there, should there be no
-    //       argument that requires console treatment, the GUI version of
-    //       OpenCOR will then be launched. This is, unfortunately, the only way
-    //       to have OpenCOR behave as both a console and GUI application on
-    //       Windows, hence the ../winConsole/main.cpp file which is used to
-    //       generate the console version of OpenCOR...
+    //       argument that requires CLI treatment, the GUI version of OpenCOR
+    //       will be launched. This is, unfortunately, the only way to have
+    //       OpenCOR behave as both a CLI and a GUI application on Windows,
+    //       hence the ../windows/main.cpp file which is used to generate the
+    //       CLI version of OpenCOR...
 
-    if (OpenCOR::consoleApplication(app, &res)) {
-        // OpenCOR was run as a proper console application, so...
+    if (OpenCOR::cliApplication(app, &res)) {
+        // OpenCOR was run as a CLI application, so...
 
         delete app;
 

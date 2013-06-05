@@ -152,7 +152,7 @@ IF(ENABLE_TESTING)
                                                         ${DEST_TESTS_DIR}/${MAIN_TEST_FILENAME})
 ENDIF()
 
-# Build the plugins used by either the GUI and/or console version of OpenCOR
+# Build the OpenCOR plugins
 
 SET(PLUGINS
     # Build the plugins which may be required by other plugins
