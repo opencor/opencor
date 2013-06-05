@@ -369,10 +369,13 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
 
             mGui->fieldTwoLabel->setText(tr("Dependencies:"));
 
-            if (dependencies.isEmpty())
+            if (dependencies.isEmpty()) {
                 mGui->fieldTwoValue->setText(tr("none"));
-            else
+            } else {
+                dependencies.sort();
+
                 mGui->fieldTwoValue->setText("- "+dependencies.join("\n- "));
+            }
 
             // The plugin's description
 
