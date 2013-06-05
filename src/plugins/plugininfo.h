@@ -45,13 +45,6 @@ public:
         InterfaceVersion001
     };
 
-    enum Type {
-        UndefinedType,
-        General,
-        Console,
-        Gui
-    };
-
     enum Category {
         Organisation,
         Editing,
@@ -63,7 +56,6 @@ public:
     };
 
     explicit PluginInfo(const InterfaceVersion &pInterfaceVersion = UndefinedInterfaceVersion,
-                        const Type &pType = UndefinedType,
                         const Category &pCategory = Miscellaneous,
                         const bool &pManageable = false,
                         const QStringList &pDependencies = QStringList(),
@@ -71,7 +63,6 @@ public:
 
     InterfaceVersion interfaceVersion() const;
 
-    Type type() const;
     Category category() const;
     bool manageable() const;
 
@@ -85,7 +76,6 @@ public:
 private:
     InterfaceVersion mInterfaceVersion;
 
-    Type mType;
     Category mCategory;
     bool mManageable;
 

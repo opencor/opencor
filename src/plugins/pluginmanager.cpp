@@ -17,9 +17,8 @@ namespace OpenCOR {
 
 //==============================================================================
 
-PluginManager::PluginManager(const PluginInfo::Type &pGuiOrConsoleType) :
+PluginManager::PluginManager() :
     mInterfaceVersion(PluginInfo::InterfaceVersion001),
-    mGuiOrConsoleType(pGuiOrConsoleType),
     mPlugins(Plugins())
 {
     mPluginsDir =  QDir(qApp->applicationDirPath()).canonicalPath()
@@ -72,7 +71,8 @@ PluginManager::PluginManager(const PluginInfo::Type &pGuiOrConsoleType) :
     foreach (const QString &fileName, fileNames) {
         PluginInfo *pluginInfo = Plugin::info(fileName);
 
-        if (pluginInfo->manageable() && Plugin::load(Plugin::name(fileName)))
+        if (   pluginInfo
+            && pluginInfo->manageable() && Plugin::load(Plugin::name(fileName)))
             // The plugin is manageable and to be loaded, so retrieve its
             // dependencies
 
@@ -103,7 +103,7 @@ PluginManager::PluginManager(const PluginInfo::Type &pGuiOrConsoleType) :
     // Deal with all the plugins we found
 
     foreach (const QString &fileName, orderedFileNames)
-        mPlugins << new Plugin(fileName, mGuiOrConsoleType,
+        mPlugins << new Plugin(fileName,
                                plugins.contains(Plugin::name(fileName)),
                                interfaceVersion(), pluginsDir(), this);
 }

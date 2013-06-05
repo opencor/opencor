@@ -29,7 +29,7 @@ class PluginManager : public QObject
     Q_OBJECT
 
 public:
-    explicit PluginManager(const PluginInfo::Type &pGuiOrConsoleType);
+    explicit PluginManager();
     ~PluginManager();
 
     Plugins plugins() const;
@@ -42,7 +42,6 @@ public:
 
 private:
     PluginInfo::InterfaceVersion mInterfaceVersion;
-    PluginInfo::Type mGuiOrConsoleType;
 
     QString mPluginsDir;
     Plugins mPlugins;

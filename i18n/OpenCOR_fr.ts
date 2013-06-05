@@ -162,26 +162,6 @@
 <context>
     <name>OpenCOR::PluginsWindow</name>
     <message>
-        <source>General</source>
-        <translation>Général</translation>
-    </message>
-    <message>
-        <source>Console</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>GUI</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Undefined</source>
-        <translation>Non défini</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Aucune</translation>
-    </message>
-    <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; must be restarted for your changes to be effective. Do you wish to proceed?</source>
         <translation>&lt;strong&gt;%1&lt;/strong&gt; doit etre relancé pour que vos changements deviennent effectifs. Voulez-vous continuer ?</translation>
     </message>
@@ -218,64 +198,12 @@
         <translation>inconnue</translation>
     </message>
     <message>
-        <source>The %1 plugin could not be found</source>
-        <translation>L&apos;extension %1 n&apos;a pas pu être trouvée</translation>
-    </message>
-    <message>
-        <source>The %1 plugin is not of the right type</source>
-        <translation>L&apos;extension %1 n&apos;est pas du bon type</translation>
-    </message>
-    <message>
-        <source>The %1 plugin is not wanted</source>
-        <translation>L&apos;extension %1 n&apos;est pas désirée</translation>
-    </message>
-    <message>
-        <source>The %1 plugin is not needed</source>
-        <translation>L&apos;extension %1 n&apos;est pas nécessaire</translation>
-    </message>
-    <message>
-        <source>The %1 plugin is loaded and fully functional</source>
-        <translation>L&apos;extension %1 est installée et pleinement fonctionnelle</translation>
-    </message>
-    <message>
-        <source>The %1 plugin could not be loaded due to the following problem: %2</source>
-        <translation>L&apos;extension %1 n&apos;a pas pu être installée à cause du problème suivant : %2</translation>
-    </message>
-    <message>
-        <source>The %1 plugin could not be loaded due to the following problems:
-%2</source>
-        <translation>L&apos;extension %1 n&apos;a pas pu être installée à cause des problèmes suivants :
-%2</translation>
-    </message>
-    <message>
-        <source>The %1 library is not a plugin</source>
-        <translation>La librairie %1 n&apos;est pas une extension</translation>
-    </message>
-    <message>
-        <source>The %1 plugin could not be loaded due to the %2 plugin being missing or invalid</source>
-        <translation>L&apos;extension %1 n&apos;a pas pu être installée à cause de l&apos;extension %2 étant manquante ou invalide</translation>
-    </message>
-    <message>
-        <source>The %1 plugin could not be loaded due to missing or invalid plugins:
-%2</source>
-        <translation>L&apos;extension %1 n&apos;a pas pu être installée à cause d&apos;extensions manquantes ou invalides :
-%2</translation>
-    </message>
-    <message>
-        <source>The status of the %1 plugin status is undefined</source>
-        <translation>Le statut de l&apos;extension %1 est indéfini</translation>
-    </message>
-    <message>
         <source>Miscellaneous</source>
         <translation>Divers</translation>
     </message>
     <message>
         <source>Plugin:</source>
         <translation>Extension :</translation>
-    </message>
-    <message>
-        <source>Type:</source>
-        <translation>Type :</translation>
     </message>
     <message>
         <source>Dependencies:</source>
@@ -294,36 +222,82 @@
         <translation>Catégorie :</translation>
     </message>
     <message>
+        <source>none</source>
+        <translation>aucune</translation>
+    </message>
+    <message>
+        <source>the plugin could not be found.</source>
+        <translation>l&apos;extension n&apos;a pas pu être trouvée.</translation>
+    </message>
+    <message>
+        <source>the version of the interface used by the plugin (%1) is not valid (%2 is expected).</source>
+        <translation>la version de l&apos;interface utilisée par l&apos;extension (%1) n&apos;est pas valide (%2 est espérée).</translation>
+    </message>
+    <message>
+        <source>the plugin is not wanted.</source>
+        <translation>l&apos;extension n&apos;est pas désirée.</translation>
+    </message>
+    <message>
+        <source>the plugin is not needed.</source>
+        <translation>l&apos;extension n&apos;est pas nécessaire.</translation>
+    </message>
+    <message>
+        <source>the plugin is loaded and fully functional.</source>
+        <translation>l&apos;extension est installée et pleinement fonctionnelle.</translation>
+    </message>
+    <message>
+        <source>the plugin could not be loaded due to the following problem: %1.</source>
+        <translation>l&apos;extension n&apos;a pas pu être installée à cause du problème suivant : %1.</translation>
+    </message>
+    <message>
+        <source>the plugin could not be loaded due to the %1 plugin being missing or invalid.</source>
+        <translation>l&apos;extension n&apos;a pas pu être installée à cause de l&apos;extension %1 étant manquante ou invalide.</translation>
+    </message>
+    <message>
         <source>Organisation plugins are used to search, open, organise, etc. your files.</source>
-        <translation>Les extensions Organisation sont utilisées pour chercher, ouvrir, organiser, etc. vos fichiers.</translation>
+        <translation>les extensions Organisation sont utilisées pour chercher, ouvrir, organiser, etc. vos fichiers.</translation>
     </message>
     <message>
         <source>Editing plugins are used to edit part or all of your files using one of several possible views.</source>
-        <translation>Les extensions Edition sont utilisées pour éditer tout ou partie de vos fichiers en utilisant une des plusieurs vues possibles.</translation>
+        <translation>les extensions Edition sont utilisées pour éditer tout ou partie de vos fichiers en utilisant une des plusieurs vues possibles.</translation>
     </message>
     <message>
         <source>Simulation plugins are used to simulate your files.</source>
-        <translation>Les extensions Simulation sont utilisées pour simuler vos fichiers.</translation>
+        <translation>les extensions Simulation sont utilisées pour simuler vos fichiers.</translation>
     </message>
     <message>
         <source>Analysis plugins are used to analyse your data files.</source>
-        <translation>Les extensions Analyse sont utilisées pour analyser vos fichiers.</translation>
+        <translation>les extensions Analyse sont utilisées pour analyser vos fichiers.</translation>
     </message>
     <message>
         <source>Miscellaneous plugins are used for various purposes.</source>
-        <translation>Les extensions Divers sont utilisées pour différentes choses.</translation>
+        <translation>les extensions Divers sont utilisées pour différentes choses.</translation>
     </message>
     <message>
         <source>API plugins are used to provide access to external APIs.</source>
-        <translation>Les extensions API sont utilisées pour donner accès à des APIs externes.</translation>
+        <translation>les extensions API sont utilisées pour donner accès à des APIs externes.</translation>
     </message>
     <message>
         <source>Third-party plugins are used to provide access to third-party libraries.</source>
-        <translation>Les extensions Externe sont utilisées pour donner accès à des librairies externes.</translation>
+        <translation>les extensions Externe sont utilisées pour donner accès à des librairies externes.</translation>
     </message>
     <message>
-        <source>The version of the interface used by the plugin (%1) is not valid (%2 is expected)</source>
-        <translation>La version de l&apos;interface utilisée par l&apos;extension (%1) n&apos;est pas valide (%2 est espérée)</translation>
+        <source>this library is not a plugin.</source>
+        <translation>cette librairie n&apos;est pas une extension.</translation>
+    </message>
+    <message>
+        <source>the status of the plugin is undefined.</source>
+        <translation>le statut de l&apos;extension est indéfini.</translation>
+    </message>
+    <message>
+        <source>the plugin could not be loaded due to the following problems:
+%1</source>
+        <translation>l&apos;extension n&apos;a pas pu être installée à cause des problèmes suivants :\n%1</translation>
+    </message>
+    <message>
+        <source>the plugin could not be loaded due to missing or invalid plugins:
+%1</source>
+        <translation>l&apos;extension n&apos;a pas pu être installée à cause d&apos;extensions manquantes ou invalides :\n%1</translation>
     </message>
 </context>
 <context>

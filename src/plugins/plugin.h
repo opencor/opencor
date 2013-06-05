@@ -58,7 +58,6 @@ public:
         UndefinedStatus,
         NotFound,
         InvalidInterfaceVersion,
-        NotSuitable,
         NotWanted,
         NotNeeded,
         Loaded,
@@ -67,9 +66,7 @@ public:
         MissingOrInvalidDependencies
     };
 
-    explicit Plugin(const QString &pFileName,
-                    const PluginInfo::Type &pGuiOrConsoleType,
-                    const bool &pForceLoading,
+    explicit Plugin(const QString &pFileName, const bool &pForceLoading,
                     const PluginInfo::InterfaceVersion &pExpectedInterfaceVersion,
                     const QString &pPluginsDir, PluginManager *pPluginManager);
     ~Plugin();

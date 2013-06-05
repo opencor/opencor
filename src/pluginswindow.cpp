@@ -118,30 +118,38 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
 
         PluginInfo *pluginInfo = plugin->info();
 
-        pluginItem->setCheckable(   pluginInfo->manageable()
-                                 && (pluginInfo->type() != PluginInfo::Console));
+        if (pluginInfo) {
+            pluginItem->setCheckable(pluginInfo->manageable());
 
-        if (pluginItem->isCheckable()) {
-            // Retrieve the loading state of the plugin
+            if (pluginItem->isCheckable()) {
+                // Retrieve the loading state of the plugin
 
-            pluginItem->setCheckState((Plugin::load(plugin->name()))?
-                                          Qt::Checked:
-                                          Qt::Unchecked);
+                pluginItem->setCheckState((Plugin::load(plugin->name()))?
+                                              Qt::Checked:
+                                              Qt::Unchecked);
 
-            // We are dealing with a manageable plugin, so add it to our list of
-            // manageable plugins
+                // We are dealing with a manageable plugin, so add it to our list of
+                // manageable plugins
 
-            mManageablePluginItems << pluginItem;
+                mManageablePluginItems << pluginItem;
+            } else {
+                // We are dealing with an unmanageable plugin, so add it to our list
+                // of unmanageable plugins
+
+                mUnmanageablePluginItems << pluginItem;
+            }
+
+            // Add the plugin to the right category
+
+            mPluginCategories.value(pluginInfo->category())->appendRow(pluginItem);
         } else {
-            // We are dealing with an unmanageable plugin, so add it to our list
-            // of unmanageable plugins
+            // We are not actually dealing with a plugin, so add it to the
+            // Miscellaneous category
 
             mUnmanageablePluginItems << pluginItem;
+
+            mPluginCategories.value(PluginInfo::Miscellaneous)->appendRow(pluginItem);
         }
-
-        // Add the plugin to the right category
-
-        mPluginCategories.value(pluginInfo->category())->appendRow(pluginItem);
     }
 
     // Make a category checkable if it contains manageable plugins and hide it,
@@ -295,32 +303,30 @@ QString PluginsWindow::statusDescription(Plugin *pPlugin) const
 
     switch (pPlugin->status()) {
     case Plugin::NotFound:
-        return tr("The %1 plugin could not be found").arg(pPlugin->name());
+        return tr("the plugin could not be found.");
     case Plugin::InvalidInterfaceVersion:
-        return tr("The version of the interface used by the plugin (%1) is not valid (%2 is expected)").arg(interfaceVersionAsString(pPlugin->info()->interfaceVersion()),
-                                                                                                            interfaceVersionAsString(mPluginManager->interfaceVersion()));
-    case Plugin::NotSuitable:
-        return tr("The %1 plugin is not of the right type").arg(pPlugin->name());
+        return tr("the version of the interface used by the plugin (%1) is not valid (%2 is expected).").arg(interfaceVersionAsString(pPlugin->info()->interfaceVersion()),
+                                                                                                             interfaceVersionAsString(mPluginManager->interfaceVersion()));
     case Plugin::NotWanted:
-        return tr("The %1 plugin is not wanted").arg(pPlugin->name());
+        return tr("the plugin is not wanted.");
     case Plugin::NotNeeded:
-        return tr("The %1 plugin is not needed").arg(pPlugin->name());
+        return tr("the plugin is not needed.");
     case Plugin::Loaded:
-        return tr("The %1 plugin is loaded and fully functional").arg(pPlugin->name());
+        return tr("the plugin is loaded and fully functional.");
     case Plugin::NotLoaded:
         if (pPlugin->statusErrorsCount() == 1)
-            return tr("The %1 plugin could not be loaded due to the following problem: %2").arg(pPlugin->name(), pPlugin->statusErrors());
+            return tr("the plugin could not be loaded due to the following problem: %1.").arg(pPlugin->statusErrors());
         else
-            return tr("The %1 plugin could not be loaded due to the following problems:\n%2").arg(pPlugin->name(), pPlugin->statusErrors());
+            return tr("the plugin could not be loaded due to the following problems:\n%1").arg(pPlugin->statusErrors());
     case Plugin::NotPlugin:
-        return tr("The %1 library is not a plugin").arg(pPlugin->name());
+        return tr("this library is not a plugin.");
     case Plugin::MissingOrInvalidDependencies:
         if (pPlugin->statusErrorsCount() == 1)
-            return tr("The %1 plugin could not be loaded due to the %2 plugin being missing or invalid").arg(pPlugin->name(), pPlugin->statusErrors());
+            return tr("the plugin could not be loaded due to the %1 plugin being missing or invalid.").arg(pPlugin->statusErrors());
         else
-            return tr("The %1 plugin could not be loaded due to missing or invalid plugins:\n%2").arg(pPlugin->name(), pPlugin->statusErrors());
+            return tr("the plugin could not be loaded due to missing or invalid plugins:\n%1").arg(pPlugin->statusErrors());
     default:   // Plugin::UndefinedStatus
-        return tr("The status of the %1 plugin status is undefined").arg(pPlugin->name());
+        return tr("the status of the plugin is undefined.");
     }
 }
 
@@ -336,105 +342,91 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
     //       only want to see selectable plugins) that no categories/plugins are
     //       shown, so...
 
-    bool validItem = pNewIndex.isValid();
     bool pluginItem = false;
+    bool validItem = true;
 
-    if (validItem) {
-        // Update the information view with the category's or plugin's information
+    // Update the information view with the category's or plugin's information
 
-        QString itemText = mModel->itemFromIndex(pNewIndex)->text();
-        Plugin *plugin = mPluginManager->plugin(itemText);
+    QString itemText = mModel->itemFromIndex(pNewIndex)->text();
+    Plugin *plugin = mPluginManager->plugin(itemText);
 
-        if (plugin) {
-            // We are dealing with a plugin, so retrieve the plugin's information
+    if (plugin) {
+        // We are dealing with a plugin, so retrieve its information
 
-            pluginItem = true;
+        pluginItem = true;
 
-            PluginInfo *pluginInfo = plugin->info();
+        PluginInfo *pluginInfo = plugin->info();
 
+        if (pluginInfo) {
             // The plugin's name
 
             mGui->fieldOneLabel->setText(tr("Plugin:"));
             mGui->fieldOneValue->setText(plugin->name());
 
-            // The plugin's type
-
-            mGui->fieldTwoLabel->setText(tr("Type:"));
-
-            switch (pluginInfo->type()) {
-            case PluginInfo::General:
-                mGui->fieldTwoValue->setText(tr("General"));
-
-                break;
-            case PluginInfo::Console:
-                mGui->fieldTwoValue->setText(tr("Console"));
-
-                break;
-            case PluginInfo::Gui:
-                mGui->fieldTwoValue->setText(tr("GUI"));
-
-                break;
-            default:
-                mGui->fieldTwoValue->setText(tr("Undefined"));
-            }
-
             // The plugin's dependencies
 
-            QStringList dependencies = pluginInfo->dependencies();
+            QStringList dependencies = pluginInfo->fullDependencies();
 
-            mGui->fieldThreeLabel->setText(tr("Dependencies:"));
+            mGui->fieldTwoLabel->setText(tr("Dependencies:"));
 
             if (dependencies.isEmpty())
-                mGui->fieldThreeValue->setText("None");
+                mGui->fieldTwoValue->setText(tr("none"));
             else
-                mGui->fieldThreeValue->setText("- "+dependencies.join("\n- "));
+                mGui->fieldTwoValue->setText("- "+dependencies.join("\n- "));
 
             // The plugin's description
 
             QString description = pluginInfo->description(mMainWindow->locale());
 
-            mGui->fieldFourLabel->setText(tr("Description:"));
-            mGui->fieldFourValue->setText(description.isEmpty()?
-                                              tr("None"):
-                                              description);
+            mGui->fieldThreeLabel->setText(tr("Description:"));
+            mGui->fieldThreeValue->setText(description.isEmpty()?tr("none"):description);
 
             // The plugin's status
 
-            mGui->fieldFiveLabel->setText(tr("Status:"));
-            mGui->fieldFiveValue->setText(statusDescription(plugin));
+            mGui->fieldFourLabel->setText(tr("Status:"));
+            mGui->fieldFourValue->setText(statusDescription(plugin));
         } else {
-            // We are not dealing with a plugin, but a plugin category
+            // We are not dealing with a plugin
 
-            // The category's name
+            validItem = false;
 
-            mGui->fieldOneLabel->setText(tr("Category:"));
-            mGui->fieldOneValue->setText(itemText);
-
-            // The category's description
-
-            mGui->fieldTwoLabel->setText(tr("Description:"));
-
-            if (!itemText.compare(tr("Organisation")))
-                mGui->fieldTwoValue->setText(tr("Organisation plugins are used to search, open, organise, etc. your files."));
-            else if (!itemText.compare(tr("Editing")))
-                mGui->fieldTwoValue->setText(tr("Editing plugins are used to edit part or all of your files using one of several possible views."));
-            else if (!itemText.compare(tr("Simulation")))
-                mGui->fieldTwoValue->setText(tr("Simulation plugins are used to simulate your files."));
-            else if (!itemText.compare(tr("Analysis")))
-                mGui->fieldTwoValue->setText(tr("Analysis plugins are used to analyse your data files."));
-            else if (!itemText.compare(tr("Miscellaneous")))
-                mGui->fieldTwoValue->setText(tr("Miscellaneous plugins are used for various purposes."));
-            else if (!itemText.compare(tr("API")))
-                mGui->fieldTwoValue->setText(tr("API plugins are used to provide access to external APIs."));
-            else if (!itemText.compare(tr("Third-party")))
-                mGui->fieldTwoValue->setText(tr("Third-party plugins are used to provide access to third-party libraries."));
+            mGui->fieldOneLabel->setText(tr("Status:"));
+            mGui->fieldOneValue->setText(statusDescription(plugin));
         }
+    } else {
+        // We are not dealing with a plugin, but a plugin category
+
+        validItem = true;
+
+        // The category's name
+
+        mGui->fieldOneLabel->setText(tr("Category:"));
+        mGui->fieldOneValue->setText(itemText);
+
+        // The category's description
+
+        mGui->fieldTwoLabel->setText(tr("Description:"));
+
+        if (!itemText.compare(tr("Organisation")))
+            mGui->fieldTwoValue->setText(tr("Organisation plugins are used to search, open, organise, etc. your files."));
+        else if (!itemText.compare(tr("Editing")))
+            mGui->fieldTwoValue->setText(tr("Editing plugins are used to edit part or all of your files using one of several possible views."));
+        else if (!itemText.compare(tr("Simulation")))
+            mGui->fieldTwoValue->setText(tr("Simulation plugins are used to simulate your files."));
+        else if (!itemText.compare(tr("Analysis")))
+            mGui->fieldTwoValue->setText(tr("Analysis plugins are used to analyse your data files."));
+        else if (!itemText.compare(tr("Miscellaneous")))
+            mGui->fieldTwoValue->setText(tr("Miscellaneous plugins are used for various purposes."));
+        else if (!itemText.compare(tr("API")))
+            mGui->fieldTwoValue->setText(tr("API plugins are used to provide access to external APIs."));
+        else if (!itemText.compare(tr("Third-party")))
+            mGui->fieldTwoValue->setText(tr("Third-party plugins are used to provide access to third-party libraries."));
     }
 
     // Show/hide the different fields
 
-    mGui->fieldOneLabel->setVisible(validItem);
-    mGui->fieldOneValue->setVisible(validItem);
+    mGui->fieldOneLabel->setVisible(true);
+    mGui->fieldOneValue->setVisible(true);
 
     mGui->fieldTwoLabel->setVisible(validItem);
     mGui->fieldTwoValue->setVisible(validItem);
@@ -444,9 +436,6 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
 
     mGui->fieldFourLabel->setVisible(validItem && pluginItem);
     mGui->fieldFourValue->setVisible(validItem && pluginItem);
-
-    mGui->fieldFiveLabel->setVisible(validItem && pluginItem);
-    mGui->fieldFiveValue->setVisible(validItem && pluginItem);
 }
 
 //==============================================================================

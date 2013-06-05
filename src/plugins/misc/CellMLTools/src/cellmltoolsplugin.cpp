@@ -24,11 +24,10 @@ PLUGININFO_FUNC CellMLToolsPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("A plugin which gives access to various <a href=\"http://www.cellml.org/\">CellML</a>-related tools"));
-    descriptions.insert("fr", QString::fromUtf8("Une extension qui donne accès à divers outils en rapport avec <a href=\"http://www.cellml.org/\">CellML</a>"));
+    descriptions.insert("en", QString::fromUtf8("a plugin to access to various <a href=\"http://www.cellml.org/\">CellML</a>-related tools."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder à divers outils en rapport avec <a href=\"http://www.cellml.org/\">CellML</a>."));
 
     return new PluginInfo(PluginInfo::InterfaceVersion001,
-                          PluginInfo::General,
                           PluginInfo::Miscellaneous,
                           true,
                           QStringList() << "CellMLSupport",

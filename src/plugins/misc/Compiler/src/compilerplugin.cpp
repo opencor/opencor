@@ -15,11 +15,10 @@ PLUGININFO_FUNC CompilerPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("A plugin to support code compilation"));
-    descriptions.insert("fr", QString::fromUtf8("Une extension pour supporter la compilation de code"));
+    descriptions.insert("en", QString::fromUtf8("a plugin to support code compilation."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour supporter la compilation de code."));
 
     return new PluginInfo(PluginInfo::InterfaceVersion001,
-                          PluginInfo::General,
                           PluginInfo::Miscellaneous,
                           false,
                           QStringList() << "LLVM",
