@@ -18,11 +18,11 @@
 
 //==============================================================================
 
-int main(int pArgc, char *pArgv[])
+int main(int pArgC, char *pArgV[])
 {
     // Create the application
 
-    QCoreApplication *app = new QCoreApplication(pArgc, pArgv);
+    QCoreApplication *app = new QCoreApplication(pArgC, pArgV);
 
     // Some general initialisations
 

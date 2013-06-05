@@ -2,7 +2,6 @@
 // Main source file
 //==============================================================================
 
-#include <QCoreApplication>
 #include <QDir>
 #include <QMap>
 #include <QProcess>
@@ -18,16 +17,16 @@ typedef QMap<QString, QStringList> Tests;
 
 //==============================================================================
 
-int main(int pArgc, char *pArgv[])
+int main(int pArgC, char *pArgV[])
 {
     // Retrieve the different arguments that were passed
 
     QStringList args = QStringList();
 
-    for (int i = 1; i < pArgc; ++i)
-        args << pArgv[i];
+    for (int i = 1; i < pArgC; ++i)
+        args << pArgV[i];
 
-    // The different tests that are  to be run
+    // The different tests that are to be run
 
     Tests tests;
 
@@ -35,12 +34,12 @@ int main(int pArgc, char *pArgv[])
 
     // Run the different tests
 
-    QString exePath = QCoreApplication(pArgc, pArgv).applicationDirPath();
+    QString exePath = QFileInfo(pArgV[0]).canonicalPath();
     QStringList failedTests = QStringList();
     int res = 0;
 
     Tests::const_iterator iterBegin = tests.constBegin();
-    Tests::const_iterator iterEnd   = tests.constEnd();
+    Tests::const_iterator iterEnd = tests.constEnd();
 
     Tests::const_iterator iter = iterBegin;
 
@@ -64,7 +63,7 @@ int main(int pArgc, char *pArgv[])
 
             // Execute the test itself
 
-            int testRes = QProcess::execute(QString("%1/%2").arg(exePath, testName), args);
+            int testRes = QProcess::execute(exePath+QDir::separator()+testName, args);
 
             if (testRes)
                 failedTests << testName;
