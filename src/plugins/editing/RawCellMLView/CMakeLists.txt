@@ -26,7 +26,7 @@ ADD_PLUGIN(RawCellMLView
         ${LLVM_DEFINITIONS}
     INCLUDE_DIRS
         src
-    OPENCOR_DEPENDENCIES
+    PLUGIN_DEPENDENCIES
         CellMLAPI
         CellMLSupport
         Compiler
@@ -37,7 +37,7 @@ ADD_PLUGIN(RawCellMLView
         QScintillaSupport
         QtMmlWidget
         Viewer
-    OPENCOR_BINARY_DEPENDENCIES
+    PLUGIN_BINARY_DEPENDENCIES
         ${LLVM_BINARY_PLUGIN}
     QT_MODULES
         Widgets

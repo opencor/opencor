@@ -15,7 +15,7 @@ ADD_PLUGIN(QScintillaSupport
         QSCINTILLA_DLL
     INCLUDE_DIRS
         src
-    OPENCOR_DEPENDENCIES
+    PLUGIN_DEPENDENCIES
         Core
         QScintilla
     QT_MODULES

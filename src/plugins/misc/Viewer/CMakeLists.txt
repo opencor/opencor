@@ -13,7 +13,7 @@ ADD_PLUGIN(Viewer
         src/viewerplugin.h
     INCLUDE_DIRS
         src
-    OPENCOR_DEPENDENCIES
+    PLUGIN_DEPENDENCIES
         Core
         QtMmlWidget
     QT_MODULES
