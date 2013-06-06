@@ -97,6 +97,11 @@ MainWindow::MainWindow(SharedTools::QtSingleApplication *pApp) :
     //       used in, for example, the about box...
 
     mGui->setupUi(this);
+//---GRY--- BEGIN
+// THIS IS TEMPORARY, I.E. WHILE WE DON'T FULLY SUPPORT USER PREFERENCES...
+mGui->actionPreferences->setEnabled(false);
+mGui->actionPreferences->setVisible(false);
+//---GRY--- END
 
     // Title of our main window
     // Note: we don't set it in our .ui file since this will require
