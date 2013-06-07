@@ -24,7 +24,7 @@ namespace OpenCOR {
 void usage(QCoreApplication *pApp)
 {
     std::cout << "Usage: " << qPrintable(pApp->applicationName())
-              << " [-a|--about] [-c|--command ...] [-h|--help] [-p|--plugins] [-v|--version] [<files>]"
+              << " [-a|--about] [-c|--command [<plugin>::]<command> <options>] [-h|--help] [-p|--plugins] [-v|--version] [<files>]"
               << std::endl;
     std::cout << " -a, --about     Display OpenCOR about information"
               << std::endl;
@@ -73,14 +73,55 @@ void plugins()
 
 //==============================================================================
 
-void command(const QStringList pArguments)
+int command(const QStringList pArguments)
 {
 //---GRY--- TO BE DONE...
 
-    std::cout << "A command is to be executed which arguments are:" << std::endl;
+    // Make sure that we have at least one argument
 
-    foreach (const QString argument, pArguments)
-        std::cout << " - " << qPrintable(argument) << std::endl;
+    if (!pArguments.count())
+        return -1;
+
+    // Determine whether the command is to be executed by all plugins or only a
+    // given plugin
+
+    static const QString commandSeparator = "::";
+    QString commandName = pArguments.first();
+    QString commandPlugin = commandName;
+    int commandSeparatorPosition = commandName.indexOf(commandSeparator);
+
+    if (commandSeparatorPosition != -1) {
+        commandPlugin = commandPlugin.remove(commandSeparatorPosition, commandName.length()-commandSeparatorPosition);
+        commandName = commandName.remove(0, commandPlugin.length()+commandSeparator.length());
+    } else {
+        commandPlugin = QString();
+    }
+
+    // Make sure that we have a command name
+
+    if (commandName.isEmpty())
+        return -1;
+
+    // Some debug information...
+
+    std::cout << "A command is to be executed:" << std::endl;
+    std::cout << " - Target: " << qPrintable(commandPlugin.isEmpty()?"all":commandPlugin) << std::endl;
+    std::cout << " - Command: " << qPrintable(commandName) << std::endl;
+
+    int iMax = pArguments.count();
+
+    if (iMax == 1) {
+        std::cout << " - Options: /" << std::endl;
+    } else {
+        std::cout << " - Options:" << std::endl;
+
+        for (int i = 1, iMax = pArguments.count(); i < iMax; ++i)
+            std::cout << "    - " << qPrintable(pArguments.at(i)) << std::endl;
+    }
+
+    // Everything went fine, so...
+
+    return 0;
 }
 
 //==============================================================================
@@ -163,21 +204,25 @@ bool cliApplication(QCoreApplication *pApp, int *pRes)
     // Handle the option the user requested, if any
 
     if (!*pRes) {
-        if (helpOption)
+        if (helpOption) {
             usage(pApp);
-        else if (aboutOption)
+        } else if (aboutOption) {
             about(pApp);
-        else if (versionOption)
+        } else if (versionOption) {
             version(pApp);
-        else if (pluginsOption)
+        } else if (pluginsOption) {
             plugins();
-        else if (commandOption)
-            command(commandArguments);
-        else
+        } else if (commandOption) {
+            *pRes = command(commandArguments);
+
+            if (*pRes)
+                usage(pApp);
+        } else {
             // The user didn't provide any command line option which requires
             // running OpenCOR as a CLI application
 
             return false;
+        }
     }
 
     return true;
