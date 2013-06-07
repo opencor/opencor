@@ -898,7 +898,7 @@ MACRO(RETRIEVE_BINARY_FILE DIRNAME FILENAME SHA1_VALUE)
     #       value being wrong (as well as not being able to download the file),
     #       so we handle everything ourselves...
 
-    IF(NOT EXISTS ${REAL_DIRNAME}/${FILENAME})
+    IF(NOT EXISTS ${REAL_FILENAME})
         MESSAGE("Retrieving '${DIRNAME}/${FILENAME}'...")
 
         # We retrieve the compressed version of the file
