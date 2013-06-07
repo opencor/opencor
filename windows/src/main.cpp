@@ -32,7 +32,7 @@ int main(int pArgC, char *pArgV[])
 
     int res;
 
-    if (!OpenCOR::consoleApplication(app, &res)) {
+    if (!OpenCOR::cliApplication(app, &res)) {
         // OpenCOR wasn't run as a proper console application, so start its GUI
         // version instead
 
