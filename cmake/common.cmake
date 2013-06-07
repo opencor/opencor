@@ -170,15 +170,6 @@ MACRO(UPDATE_LANGUAGE_FILES TARGET_NAME)
     ENDFOREACH()
 ENDMACRO()
 
-MACRO(INCLUDE_THIRD_PARTY_LIBRARY MAIN_PROJECT_SOURCE_DIR THIRD_PARTY_LIBRARY)
-    SET(MAIN_PROJECT_SOURCE_DIR ${MAIN_PROJECT_SOURCE_DIR})
-    # Note: MAIN_PROJECT_SOURCE_DIR is to be used in a third-party library's
-    #       CMake file, thus making it possible to include a third-party
-    #       library in OpenCOR's GUI, as well as in OpenCOR's CLI...
-
-    INCLUDE(${MAIN_PROJECT_SOURCE_DIR}/src/3rdparty/${THIRD_PARTY_LIBRARY}/${THIRD_PARTY_LIBRARY}.cmake)
-ENDMACRO()
-
 MACRO(ADD_PLUGIN PLUGIN_NAME)
     # Various initialisations
 
