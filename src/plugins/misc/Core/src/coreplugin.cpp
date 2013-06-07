@@ -65,24 +65,40 @@ void CorePlugin::initialize()
                                    ":/oxygen/actions/document-save-all.png",
                                    QKeySequence::UnknownKey);
 
+    // Note: for mFilePreviousAction and mFileNextAction, we would normally use
+    //       QKeySequence::PreviousChild and QKeySequence::NextChild,
+    //       respectively, but for Qt this means using Ctrl+Shift+BackTab and
+    //       Ctrl+Tab, respectively, on Windows/Linux, and Ctrl+{ and Ctrl+},
+    //       respectively, on OS X. On Windows, Ctrl+Shift+BackTab just doesn't
+    //       work, on OS X those key sequences are not the most natural ones.
+    //       So, instead, it would be more natural to use Ctrl+Shift+Tab and
+    //       Ctr+Tab, respectively, on Windows/Linux, and Meta+Shift+Tab and
+    //       Meta+Tab, respectively, on OS X. The original plan was therefore to
+    //       use QKeySequence::PreviousChild and QKeySequence::NextChild, as
+    //       well as our preferred key sequences, but Qt ended up 'allowing'
+    //       only using one of them. So, in the end, we only use our preferred
+    //       key sequences...
+
     mFilePreviousAction = newAction(mMainWindow, false,
                                     ":/oxygen/actions/go-previous.png",
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    // Note: QKeySequence::PreviousChild should, on Windows and Linux,
-    //       correspond to Ctrl+Shift+Tab, but somehow it corresponds to
-    //       Ctrl+Shift+Backtab and though it works on Linux (but not on
-    //       Windows), it doesn't look good, so...
-
-                                    QKeySequence(Qt::CTRL|Qt::SHIFT|Qt::Key_Tab)
+                                    QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_Tab)
 #elif defined(Q_OS_MAC)
-                                    QKeySequence::PreviousChild
+                                    QKeySequence(Qt::META | Qt::SHIFT | Qt::Key_Tab)
 #else
     #error Unsupported platform
 #endif
                                    );
     mFileNextAction     = newAction(mMainWindow, false,
                                     ":/oxygen/actions/go-next.png",
-                                    QKeySequence::NextChild);
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+                                    QKeySequence(Qt::CTRL | Qt::Key_Tab)
+#elif defined(Q_OS_MAC)
+                                    QKeySequence(Qt::META | Qt::Key_Tab)
+#else
+    #error Unsupported platform
+#endif
+                                   );
 
     mFileCloseAction    = newAction(mMainWindow, false,
                                     ":/oxygen/actions/document-close.png",
