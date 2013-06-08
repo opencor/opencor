@@ -16,4 +16,4 @@
 
 /src/plugins/api/CellMLAPI/bin/**/*
 
-/winConsole/CMakeLists.txt.user
+/windows/CMakeLists.txt.user

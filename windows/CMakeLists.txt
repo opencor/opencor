@@ -12,7 +12,7 @@ INCLUDE(${CMAKE_SOURCE_DIR}/../cmake/common.cmake)
 
 INITIALISE_PROJECT()
 
-# Files that make up the console version of OpenCOR
+# Files that make up the CLI version of OpenCOR
 
 SET(SOURCES
     src/main.cpp
@@ -34,7 +34,7 @@ SET(RESOURCES
 
 INCLUDE_DIRECTORIES(../src/misc)
 
-# Build the console version of OpenCOR
+# Build the CLI version of OpenCOR
 
 QT5_ADD_RESOURCES(SOURCES_RCS ${RESOURCES})
 
@@ -57,7 +57,7 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
     LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
 )
 
-# Copy the console version of OpenCOR to the main build folder
+# Copy the CLI version of OpenCOR to the main build folder
 
 COPY_FILE_TO_BUILD_DIR(${CMAKE_BINARY_DIR} bin
                        ${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX} ${PROJECT_NAME}.com)

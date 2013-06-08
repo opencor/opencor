@@ -28,21 +28,21 @@ int main(int pArgC, char *pArgV[])
 
     OpenCOR::initApplication(app);
 
-    // Try to run OpenCOR as a console application
+    // Try to run OpenCOR as a CLI application
 
     int res;
 
     if (!OpenCOR::cliApplication(app, &res)) {
-        // OpenCOR wasn't run as a proper console application, so start its GUI
+        // OpenCOR isn't meant to be run as a CLI application, so start its GUI
         // version instead
 
         static const QString dotExe = ".exe";
 
         if (app->applicationFilePath().right(dotExe.size()) == dotExe) {
             // This is a safeguard from accidentally running a non-renamed (to
-            // '.com') console version of OpenCOR
+            // '.com') CLI version of OpenCOR
 
-            OpenCOR::error(app, "the console version of "+app->applicationName()+" has the wrong extension ('.exe' instead of '.com').");
+            OpenCOR::error(app, "the CLI version of "+app->applicationName()+" has the wrong extension ('.exe' instead of '.com').");
 
             res = -1;
         } else {
