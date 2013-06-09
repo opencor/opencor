@@ -17,7 +17,6 @@
 
 //==============================================================================
 
-#include <iostream>
 #include <float.h>
 
 //==============================================================================
@@ -593,17 +592,14 @@ void SingleCellViewGraphPanelPlotWidget::scaleLocalAxes(const double &pScalingFa
     // Determine the local minimum/maximum values of our two axes
 
     double rangeX = localMaxX()-localMinX();
-    double centerX = mZoomOrigin.x();
     double rangeOverTwoX = 0.5*pScalingFactorX*rangeX;
 
     double rangeY = localMaxY()-localMinY();
-    double centerY = mZoomOrigin.y();
     double rangeOverTwoY = 0.5*pScalingFactorY*rangeY;
 
     // Rescale our two local axes
-
-    setLocalAxes(centerX-rangeOverTwoX, centerX+rangeOverTwoX,
-                 centerY-rangeOverTwoY, centerY+rangeOverTwoY);
+    setLocalAxes(mZoomOriginX-rangeOverTwoX, mZoomOriginX+rangeOverTwoX,
+                 mZoomOriginY-rangeOverTwoY, mZoomOriginY+rangeOverTwoY);
 }
 
 //==============================================================================
@@ -797,7 +793,7 @@ void SingleCellViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
     } else if (   (pEvent->button() == Qt::RightButton)
                && (pEvent->modifiers() == Qt::NoModifier)) {
         // We want to zoom in/out
-        mZoomOrigin = mousePositionWithinCanvas(pEvent);
+
         mAction = Zoom;
     } else if (   (pEvent->button() == Qt::RightButton)
                && (pEvent->modifiers() == Qt::ControlModifier)) {
@@ -846,9 +842,9 @@ void SingleCellViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
         mCanvasPixmap = grab(plotLayout()->canvasRect().toRect());
 
     // Retrieve our canvas' mapping information, if needed
-
     if (   (mAction == Pan)
         || (mAction == ShowCoordinates)
+        || (mAction == Zoom)
         || (mAction == ZoomRegion)) {
         mCanvasMapX = canvasMap(QwtPlot::xBottom);
         mCanvasMapY = canvasMap(QwtPlot::yLeft);
@@ -856,6 +852,13 @@ void SingleCellViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
 
     // Keep track of the mouse position
     mOriginPoint = mousePositionWithinCanvas(pEvent);
+
+    // Keep track of the local mouse position for centering a zoom
+    if (mAction == Zoom)
+    {
+        mZoomOriginX = mCanvasMapX.invTransform(mOriginPoint.x());
+        mZoomOriginY = mCanvasMapY.invTransform(mOriginPoint.y());
+    }
 
     // Make sure that we track the mouse
     setMouseTracking(true);
@@ -945,9 +948,12 @@ void SingleCellViewGraphPanelPlotWidget::wheelEvent(QWheelEvent *pEvent)
 
     // Zoom in/out by scaling our two local axes
 
-    mZoomOrigin = mousePositionWithinCanvas(pEvent);
-
     double scalingFactor = (pEvent->delta() > 0)?ScalingInFactor:ScalingOutFactor;
+
+    mCanvasMapX = canvasMap(QwtPlot::xBottom);
+    mCanvasMapY = canvasMap(QwtPlot::yLeft);
+    mZoomOriginX = mCanvasMapX.invTransform(pEvent->x());
+    mZoomOriginY = mCanvasMapY.invTransform(pEvent->y());
 
     scaleLocalAxes(scalingFactor, scalingFactor);
 }

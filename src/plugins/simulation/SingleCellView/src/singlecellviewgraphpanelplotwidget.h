@@ -122,13 +122,14 @@ private:
     Action mAction;
 
     QPoint mOriginPoint;
-    QPoint mZoomOrigin;
     QPoint mEndPoint;
 
     double mMinX;
     double mMaxX;
     double mMinY;
     double mMaxY;
+    double mZoomOriginX;
+    double mZoomOriginY;
 
     bool mFixedAxisX;
     bool mFixedAxisY;
