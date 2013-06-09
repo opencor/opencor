@@ -122,6 +122,7 @@ private:
     Action mAction;
 
     QPoint mOriginPoint;
+    QPoint mZoomOrigin;
     QPoint mEndPoint;
 
     double mMinX;
