@@ -261,8 +261,8 @@ void SingleCellViewGraphPanelPlotWidget::setLocalAxis(const int &pAxis,
 void SingleCellViewGraphPanelPlotWidget::checkLocalAxisValues(const int &pAxis,
                                                               double &pMin,
                                                               double &pMax,
-                                                                        const bool &pCanResetMin,
-                                                                        const bool &pCanResetMax)
+                                                              const bool &pCanResetMin,
+                                                              const bool &pCanResetMax)
 {
     // Make sure that the minimum/maximum values of our local axis have a valid
     // zoom factor
