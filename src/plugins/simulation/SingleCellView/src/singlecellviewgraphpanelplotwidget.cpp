@@ -60,9 +60,9 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
     mAction(None),
     mOriginPoint(QPoint()),
     mEndPoint(QPoint()),
-    mMinX(100.0),
-    mMaxX(300.0),
+    mMinX(0.0),
     mMinY(0.0),
+    mMaxX(1000.0),
     mMaxY(1000.0),
     mFixedAxisX(false),
     mFixedAxisY(false),
@@ -634,12 +634,12 @@ static const double ScalingOutFactor = 1.0/ScalingInFactor;
 
 //==============================================================================
 
-QPoint SingleCellViewGraphPanelPlotWidget::mousePositionWithinCanvas(QMouseEvent *pEvent) const
+QPoint SingleCellViewGraphPanelPlotWidget::mousePositionWithinCanvas(const QPoint &pPoint) const
 {
     // Return the mouse position relative to our canvas, resetting some of its
     // values, if needed
 
-    QPoint res = pEvent->pos();
+    QPoint res = pPoint;
     QRect canvasRect = plotLayout()->canvasRect().toRect();
 
     if (res.x() < canvasRect.left())
@@ -672,7 +672,7 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
 
     // Retrieve the current point
 
-    QPoint currentPoint = mousePositionWithinCanvas(pEvent);
+    QPoint currentPoint = mousePositionWithinCanvas(pEvent->pos());
 
     // Carry out the action
 
@@ -745,7 +745,7 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
         // Draw our zoom region by updating our end point and then replotting
         // ourselves
 
-        mEndPoint = mousePositionWithinCanvas(pEvent);
+        mEndPoint = mousePositionWithinCanvas(pEvent->pos());
 
         replotNow();
 
@@ -760,7 +760,7 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
     // not zooming a region
 
     if ((mAction != None) && (mAction != ZoomRegion))
-        mOriginPoint = mousePositionWithinCanvas(pEvent);
+        mOriginPoint = mousePositionWithinCanvas(pEvent->pos());
 }
 
 //==============================================================================
@@ -855,11 +855,7 @@ void SingleCellViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
 
     // Keep track of the mouse position
 
-    mOriginPoint = mousePositionWithinCanvas(pEvent);
-
-    // Make sure that we track the mouse
-
-    setMouseTracking(true);
+    mOriginPoint = mousePositionWithinCanvas(pEvent->pos());
 }
 
 //==============================================================================
@@ -879,10 +875,6 @@ void SingleCellViewGraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 
     if (mAction == None)
         return;
-
-    // Stop tracking the mouse
-
-    setMouseTracking(false);
 
     // Keep track of the action to carry out
     // Note: this is so that we can reset mAction while still being able to

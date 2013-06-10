@@ -125,8 +125,9 @@ private:
     QPoint mEndPoint;
 
     double mMinX;
-    double mMaxX;
     double mMinY;
+
+    double mMaxX;
     double mMaxY;
 
     bool mFixedAxisX;
@@ -157,7 +158,7 @@ private:
     void scaleLocalAxes(const double &pScalingFactorX,
                         const double &pScalingFactorY);
 
-    QPoint mousePositionWithinCanvas(QMouseEvent *pEvent) const;
+    QPoint mousePositionWithinCanvas(const QPoint &pPoint) const;
 
     void drawCoordinates(QPainter *pPainter, const QPoint &pCoordinates,
                          const QColor &pBackgroundColor,
