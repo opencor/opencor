@@ -128,6 +128,8 @@ private:
     double mMaxX;
     double mMinY;
     double mMaxY;
+    double mZoomOriginX;
+    double mZoomOriginY;
 
     bool mFixedAxisX;
     bool mFixedAxisY;
