@@ -1201,7 +1201,7 @@ void SingleCellViewWidget::simulationRunning(const bool &pIsResuming)
 
         // Prevent interaction with our graph panel's plot
 
-        mActiveGraphPanel->plot()->setInteractive(false);
+        mActiveGraphPanel->plot()->setInteractive(!mSimulation->isRunning());
     }
 }
 
@@ -1223,7 +1223,7 @@ void SingleCellViewWidget::simulationPaused()
 
         // Allow interaction with our graph panel's plot
 
-        mActiveGraphPanel->plot()->setInteractive(true);
+        mActiveGraphPanel->plot()->setInteractive(mSimulation->isPaused());
     }
 }
 
@@ -1238,8 +1238,8 @@ void SingleCellViewWidget::simulationStopped(const int &pElapsedTime)
         ResetDelay = 169
     };
 
-    // Our simulation worker has stopped, so do a few things, but only we are dealing
-    // with the active simulation
+    // Our simulation worker has stopped, so do a few things, but only if we are
+    // dealing with the active simulation
 
     SingleCellViewSimulation *simulation = qobject_cast<SingleCellViewSimulation *>(sender());
 
@@ -1274,7 +1274,7 @@ void SingleCellViewWidget::simulationStopped(const int &pElapsedTime)
 
         // Allow interaction with our graph panel's plot
 
-        mActiveGraphPanel->plot()->setInteractive(true);
+        mActiveGraphPanel->plot()->setInteractive(!mSimulation->isRunning());
     }
 
     // Remove our tracking of our simulation progress and let people know that
