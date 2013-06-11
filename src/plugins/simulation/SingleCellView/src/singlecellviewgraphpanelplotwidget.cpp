@@ -286,7 +286,7 @@ void SingleCellViewGraphPanelPlotWidget::checkLocalAxisValues(const int &pAxis,
         } else if (pCanResetMin && pCanResetMax) {
             double length = (max-min)/MaxZoomFactor;
 
-            pMin = 0.5*(pMin+pMax-length);
+            pMin = qMax(min, 0.5*(pMin+pMax-length));
             pMax = pMin+length;
         }
     }
@@ -955,8 +955,8 @@ void SingleCellViewGraphPanelPlotWidget::drawCoordinates(QPainter *pPainter,
                                                          const QPoint &pCoordinates,
                                                          const QColor &pBackgroundColor,
                                                          const QColor &pForegroundColor,
-                                                                   const Location &pLocation,
-                                                                   const bool &pCanMoveLocation)
+                                                         const Location &pLocation,
+                                                         const bool &pCanMoveLocation)
 {
     // Retrieve the size of coordinates as they will appear on the screen,
     // which means using the same font as the one used for the axes
@@ -1062,10 +1062,42 @@ void SingleCellViewGraphPanelPlotWidget::drawCanvas(QPainter *pPainter)
 
         pPainter->drawPixmap(0, 0, mCanvasPixmap);
 
-        // Now, draw the region to be zoomed
+        // Determine the coordinates of the region to be zoomed
 
-        QRect zoomRegionRect(mOriginPoint.x(), mOriginPoint.y(),
-                             mEndPoint.x()-mOriginPoint.x(), mEndPoint.y()-mOriginPoint.y());
+        double xMin;
+        double xMax;
+        double yMin;
+        double yMax;
+
+        if ((mMaxX-mMinX)/(localMaxX()-localMinX()) < MaxZoomFactor) {
+            xMin = qMin(mOriginPoint.x(), mEndPoint.x());
+            xMax = qMax(mOriginPoint.x(), mEndPoint.x());
+        } else {
+            // We are already fully zoomed in on the X axis, so hard set the
+            // minimum and maximum X values
+
+            QwtScaleMap canvasMapX = canvasMap(QwtPlot::xBottom);
+
+            xMin = canvasMapX.transform(localMinX());
+            xMax = canvasMapX.transform(localMaxX());
+        }
+
+        if ((mMaxY-mMinY)/(localMaxY()-localMinY()) < MaxZoomFactor) {
+            yMin = qMin(mOriginPoint.y(), mEndPoint.y());
+            yMax = qMax(mOriginPoint.y(), mEndPoint.y());
+        } else {
+            // We are already fully zoomed in on the Y axis, so hard set the
+            // minimum and maximum Y values
+
+            QwtScaleMap canvasMapY = canvasMap(QwtPlot::yLeft);
+
+            yMin = canvasMapY.transform(localMaxY());
+            yMax = canvasMapY.transform(localMinY());
+        }
+
+        QRect zoomRegionRect(xMin, yMin, xMax-xMin, yMax-yMin);
+
+        // Now, draw the region to be zoomed
 
         QColor penColor = Qt::darkRed;
         QColor brushColor = Qt::yellow;
@@ -1080,29 +1112,8 @@ void SingleCellViewGraphPanelPlotWidget::drawCanvas(QPainter *pPainter)
 
         // Draw the two sets of coordinates
 
-        Location originLocation;
-        Location endLocation;
-
-        if (mOriginPoint.x() <= mEndPoint.x()) {
-            if (mOriginPoint.y() <= mEndPoint.y()) {
-                originLocation = BottomRight;
-                endLocation = TopLeft;
-            } else {
-                originLocation = TopRight;
-                endLocation = BottomLeft;
-            }
-        } else {
-            if (mOriginPoint.y() <= mEndPoint.y()) {
-                originLocation = BottomLeft;
-                endLocation = TopRight;
-            } else {
-                originLocation = TopLeft;
-                endLocation = BottomRight;
-            }
-        }
-
-        drawCoordinates(pPainter, mOriginPoint, penColor, Qt::white, originLocation, false);
-        drawCoordinates(pPainter, mEndPoint, penColor, Qt::white, endLocation, false);
+        drawCoordinates(pPainter, zoomRegionRect.topLeft(), penColor, Qt::white, BottomRight, false);
+        drawCoordinates(pPainter, zoomRegionRect.bottomRight(), penColor, Qt::white, TopLeft, false);
 
         break;
     }
