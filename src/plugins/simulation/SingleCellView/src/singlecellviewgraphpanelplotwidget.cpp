@@ -1095,7 +1095,7 @@ void SingleCellViewGraphPanelPlotWidget::drawCanvas(QPainter *pPainter)
             yMax = canvasMapY.transform(localMinY());
         }
 
-        QRect zoomRegionRect(xMin, yMin, xMax-xMin+1, yMax-yMin+1);
+        QRect zoomRegionRect(xMin, yMin, xMax-xMin, yMax-yMin);
 
         // Now, draw the region to be zoomed
 
@@ -1111,9 +1111,12 @@ void SingleCellViewGraphPanelPlotWidget::drawCanvas(QPainter *pPainter)
         pPainter->drawRect(zoomRegionRect);
 
         // Draw the two sets of coordinates
+        // Note: for historical reasons, QRect::bottomRight() returns
+        //       QPoint(left()+width()-1, top()+height()-1), hence we add
+        //       QPoint(1, 1)...
 
         drawCoordinates(pPainter, zoomRegionRect.topLeft(), penColor, Qt::white, BottomRight, false);
-        drawCoordinates(pPainter, zoomRegionRect.bottomRight(), penColor, Qt::white, TopLeft, false);
+        drawCoordinates(pPainter, zoomRegionRect.bottomRight()+QPoint(1, 1), penColor, Qt::white, TopLeft, false);
 
         break;
     }
