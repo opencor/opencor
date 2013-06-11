@@ -58,8 +58,8 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
     mCurves(QList<SingleCellViewGraphPanelPlotCurve *>()),
     mInteractive(true),
     mAction(None),
-    mOriginPoint(QPoint()),
-    mEndPoint(QPoint()),
+    mOriginPoint(QPointF()),
+    mEndPoint(QPointF()),
     mMinX(0.0),
     mMinY(0.0),
     mMaxX(1000.0),
@@ -632,23 +632,15 @@ static const double ScalingOutFactor = 1.0/ScalingInFactor;
 
 //==============================================================================
 
-QPoint SingleCellViewGraphPanelPlotWidget::mousePositionWithinCanvas(const QPoint &pPoint) const
+QPointF SingleCellViewGraphPanelPlotWidget::mousePositionWithinCanvas(const QPoint &pPoint) const
 {
     // Return the mouse position relative to our canvas, after making sure that
     // its mapped values are within our local ranges
 
-    QPoint res = pPoint-plotLayout()->canvasRect().toRect().topLeft();
+    QPoint realPoint = pPoint-plotLayout()->canvasRect().toRect().topLeft();
 
-    QwtScaleMap canvasMapX = canvasMap(QwtPlot::xBottom);
-    QwtScaleMap canvasMapY = canvasMap(QwtPlot::yLeft);
-
-    double x = qMin(localMaxX(), qMax(localMinX(), canvasMapX.invTransform(res.x())));
-    double y = qMin(localMaxY(), qMax(localMinY(), canvasMapY.invTransform(res.y())));
-
-    res.setX(canvasMapX.transform(x));
-    res.setY(canvasMapY.transform(y));
-
-    return res;
+    return QPointF(qMin(localMaxX(), qMax(localMinX(), canvasMap(QwtPlot::xBottom).invTransform(realPoint.x()))),
+                   qMin(localMaxY(), qMax(localMinY(), canvasMap(QwtPlot::yLeft).invTransform(realPoint.y()))));
 }
 
 //==============================================================================
@@ -666,7 +658,7 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
 
     // Retrieve the current point
 
-    QPoint currentPoint = mousePositionWithinCanvas(pEvent->pos());
+    QPointF currentPoint = mousePositionWithinCanvas(pEvent->pos());
 
     // Carry out the action
 
@@ -674,11 +666,8 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
     case Pan: {
         // Determine the X/Y shifts for the panning
 
-        QwtScaleMap canvasMapX = canvasMap(QwtPlot::xBottom);
-        QwtScaleMap canvasMapY = canvasMap(QwtPlot::yLeft);
-
-        double shiftX = canvasMapX.invTransform(currentPoint.x())-canvasMapX.invTransform(mOriginPoint.x());
-        double shiftY = canvasMapY.invTransform(currentPoint.y())-canvasMapY.invTransform(mOriginPoint.y());
+        double shiftX = currentPoint.x()-mOriginPoint.x();
+        double shiftY = currentPoint.y()-mOriginPoint.y();
 
         // Determine our new local minimum/maximum values for our axes
 
@@ -722,8 +711,8 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
     case Zoom: {
         // Rescale ourselves (which will replot ourselves as a result)
 
-        int deltaX = currentPoint.x()-mOriginPoint.x();
-        int deltaY = currentPoint.y()-mOriginPoint.y();
+        double deltaX = currentPoint.x()-mOriginPoint.x();
+        double deltaY = currentPoint.y()-mOriginPoint.y();
 
         scaleLocalAxes(deltaX?
                            (deltaX > 0)?
@@ -731,7 +720,7 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
                                ScalingOutFactor:
                            NoScalingFactor,
                        deltaY?
-                           (deltaY > 0)?
+                           (deltaY < 0)?
                                ScalingInFactor:
                                ScalingOutFactor:
                            NoScalingFactor);
@@ -886,13 +875,10 @@ void SingleCellViewGraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
     case ZoomRegion: {
         // Zoom our region
 
-        QwtScaleMap canvasMapX = canvasMap(QwtPlot::xBottom);
-        QwtScaleMap canvasMapY = canvasMap(QwtPlot::yLeft);
+        QRectF zoomRegionRect = zoomRegion();
 
-        setLocalAxes(canvasMapX.invTransform(qMin(mOriginPoint.x(), mEndPoint.x())),
-                     canvasMapX.invTransform(qMax(mOriginPoint.x(), mEndPoint.x())),
-                     canvasMapY.invTransform(qMax(mOriginPoint.y(), mEndPoint.y())),
-                     canvasMapY.invTransform(qMin(mOriginPoint.y(), mEndPoint.y())));
+        setLocalAxes(zoomRegionRect.left(), zoomRegionRect.right(),
+                     zoomRegionRect.bottom(), zoomRegionRect.top());
 
         break;
     }
@@ -952,7 +938,7 @@ void SingleCellViewGraphPanelPlotWidget::replotNow()
 //==============================================================================
 
 void SingleCellViewGraphPanelPlotWidget::drawCoordinates(QPainter *pPainter,
-                                                         const QPoint &pCoordinates,
+                                                         const QPointF &pCoordinates,
                                                          const QColor &pBackgroundColor,
                                                          const QColor &pForegroundColor,
                                                          const Location &pLocation,
@@ -963,48 +949,51 @@ void SingleCellViewGraphPanelPlotWidget::drawCoordinates(QPainter *pPainter,
 
     pPainter->setFont(axisFont(QwtPlot::xBottom));
 
-    QString coords = QString("(%1, %2)").arg(QString::number(canvasMap(QwtPlot::xBottom).invTransform(pCoordinates.x())),
-                                             QString::number(canvasMap(QwtPlot::yLeft).invTransform(pCoordinates.y())));
+    QString coords = QString("(%1, %2)").arg(QString::number(pCoordinates.x()),
+                                             QString::number(pCoordinates.y()));
     QRect desktopGeometry = qApp->desktop()->availableGeometry();
     QRectF coordsRect = pPainter->boundingRect(QRectF(0.0, 0.0, desktopGeometry.width(), desktopGeometry.height()), coords);
 
     // Determine where the coordinates and its background should be drawn
 
+    QPoint coordinates = QPoint(canvasMap(QwtPlot::xBottom).transform(pCoordinates.x()),
+                                canvasMap(QwtPlot::yLeft).transform(pCoordinates.y()));
+
     switch (pLocation) {
     case TopLeft:
-        coordsRect.moveTo(pCoordinates.x()-coordsRect.right()-1,
-                          pCoordinates.y()-coordsRect.bottom()-1);
+        coordsRect.moveTo(coordinates.x()-coordsRect.right()-1,
+                          coordinates.y()-coordsRect.bottom()-1);
 
         break;
     case TopRight:
-        coordsRect.moveTo(pCoordinates.x()+2,
-                          pCoordinates.y()-coordsRect.bottom()-1);
+        coordsRect.moveTo(coordinates.x()+2,
+                          coordinates.y()-coordsRect.bottom()-1);
 
         break;
     case BottomLeft:
-        coordsRect.moveTo(pCoordinates.x()-coordsRect.right()-1,
-                          pCoordinates.y()+2);
+        coordsRect.moveTo(coordinates.x()-coordsRect.right()-1,
+                          coordinates.y()+2);
 
         break;
     case BottomRight:
-        coordsRect.moveTo(pCoordinates.x()+2,
-                          pCoordinates.y()+2);
+        coordsRect.moveTo(coordinates.x()+2,
+                          coordinates.y()+2);
 
         break;
     }
 
     if (pCanMoveLocation) {
         if (coordsRect.top() < 0)
-            coordsRect.moveTop(pCoordinates.y()+2);
+            coordsRect.moveTop(coordinates.y()+2);
 
         if (coordsRect.left() < 0)
-            coordsRect.moveLeft(pCoordinates.x()+2);
+            coordsRect.moveLeft(coordinates.x()+2);
 
         if (coordsRect.bottom() > plotLayout()->canvasRect().height())
-            coordsRect.moveTop(pCoordinates.y()-coordsRect.height()-1);
+            coordsRect.moveTop(coordinates.y()-coordsRect.height()-1);
 
         if (coordsRect.right() > plotLayout()->canvasRect().width())
-            coordsRect.moveLeft(pCoordinates.x()-coordsRect.width()-1);
+            coordsRect.moveLeft(coordinates.x()-coordsRect.width()-1);
     }
 
     // Draw a filled rectangle to act as the background of the coordinates
@@ -1046,10 +1035,13 @@ void SingleCellViewGraphPanelPlotWidget::drawCanvas(QPainter *pPainter)
 
         pPainter->setPen(pen);
 
-        pPainter->drawLine(0.0, mOriginPoint.y(),
-                           plotLayout()->canvasRect().width(), mOriginPoint.y());
-        pPainter->drawLine(mOriginPoint.x(), 0.0,
-                           mOriginPoint.x(), plotLayout()->canvasRect().height());
+        QPointF coordinates = QPointF(canvasMap(QwtPlot::xBottom).transform(mOriginPoint.x()),
+                                      canvasMap(QwtPlot::yLeft).transform(mOriginPoint.y()));
+
+        pPainter->drawLine(0.0, coordinates.y(),
+                           plotLayout()->canvasRect().width(), coordinates.y());
+        pPainter->drawLine(coordinates.x(), 0.0,
+                           coordinates.x(), plotLayout()->canvasRect().height());
 
         // Draw the coordinates
 
@@ -1062,40 +1054,9 @@ void SingleCellViewGraphPanelPlotWidget::drawCanvas(QPainter *pPainter)
 
         pPainter->drawPixmap(0, 0, mCanvasPixmap);
 
-        // Determine the coordinates of the region to be zoomed
+        // Retrieve the coordinates of the region to be zoomed
 
-        double xMin;
-        double xMax;
-        double yMin;
-        double yMax;
-
-        if ((mMaxX-mMinX)/(localMaxX()-localMinX()) < MaxZoomFactor) {
-            xMin = qMin(mOriginPoint.x(), mEndPoint.x());
-            xMax = qMax(mOriginPoint.x(), mEndPoint.x());
-        } else {
-            // We are already fully zoomed in on the X axis, so hard set the
-            // minimum and maximum X values
-
-            QwtScaleMap canvasMapX = canvasMap(QwtPlot::xBottom);
-
-            xMin = canvasMapX.transform(localMinX());
-            xMax = canvasMapX.transform(localMaxX());
-        }
-
-        if ((mMaxY-mMinY)/(localMaxY()-localMinY()) < MaxZoomFactor) {
-            yMin = qMin(mOriginPoint.y(), mEndPoint.y());
-            yMax = qMax(mOriginPoint.y(), mEndPoint.y());
-        } else {
-            // We are already fully zoomed in on the Y axis, so hard set the
-            // minimum and maximum Y values
-
-            QwtScaleMap canvasMapY = canvasMap(QwtPlot::yLeft);
-
-            yMin = canvasMapY.transform(localMaxY());
-            yMax = canvasMapY.transform(localMinY());
-        }
-
-        QRect zoomRegionRect(xMin, yMin, xMax-xMin, yMax-yMin);
+        QRectF zoomRegionRect = zoomRegion();
 
         // Now, draw the region to be zoomed
 
@@ -1107,16 +1068,23 @@ void SingleCellViewGraphPanelPlotWidget::drawCanvas(QPainter *pPainter)
 
         pPainter->setPen(penColor);
 
-        pPainter->fillRect(zoomRegionRect, brushColor);
-        pPainter->drawRect(zoomRegionRect);
+        QwtScaleMap canvasMapX = canvasMap(QwtPlot::xBottom);
+        QwtScaleMap canvasMapY = canvasMap(QwtPlot::yLeft);
+
+        double left = canvasMapX.transform(zoomRegionRect.left());
+        double top = canvasMapY.transform(zoomRegionRect.top());
+
+        QRectF unmappedZoomRegionRect = QRectF(left, top,
+                                               canvasMapX.transform(zoomRegionRect.right())-left,
+                                               canvasMapY.transform(zoomRegionRect.bottom())-top);
+
+        pPainter->fillRect(unmappedZoomRegionRect, brushColor);
+        pPainter->drawRect(unmappedZoomRegionRect);
 
         // Draw the two sets of coordinates
-        // Note: for historical reasons, QRect::bottomRight() returns
-        //       QPoint(left()+width()-1, top()+height()-1), hence we add
-        //       QPoint(1, 1)...
 
         drawCoordinates(pPainter, zoomRegionRect.topLeft(), penColor, Qt::white, BottomRight, false);
-        drawCoordinates(pPainter, zoomRegionRect.bottomRight()+QPoint(1, 1), penColor, Qt::white, TopLeft, false);
+        drawCoordinates(pPainter, zoomRegionRect.bottomRight(), penColor, Qt::white, TopLeft, false);
 
         break;
     }
@@ -1223,6 +1191,32 @@ void SingleCellViewGraphPanelPlotWidget::drawCurveSegment(SingleCellViewGraphPan
 
             mDirectPainter->drawSeries(pCurve, pFrom, pTo);
     }
+}
+
+//==============================================================================
+
+QRectF SingleCellViewGraphPanelPlotWidget::zoomRegion() const
+{
+    // Return the region to be zoomed based on the origin and end points
+    // Note: by default, we assume that we are already fully zoomed in in
+    //       both directions...
+
+    double xMin = localMinX();
+    double xMax = localMaxX();
+    double yMin = localMinY();
+    double yMax = localMaxY();
+
+    if ((mMaxX-mMinX)/(xMax-xMin) < MaxZoomFactor) {
+        xMin = qMin(mOriginPoint.x(), mEndPoint.x());
+        xMax = qMax(mOriginPoint.x(), mEndPoint.x());
+    }
+
+    if ((mMaxY-mMinY)/(yMax-yMin) < MaxZoomFactor) {
+        yMin = qMin(mOriginPoint.y(), mEndPoint.y());
+        yMax = qMax(mOriginPoint.y(), mEndPoint.y());
+    }
+
+    return QRectF(xMin, yMax, xMax-xMin, yMin-yMax);
 }
 
 //==============================================================================

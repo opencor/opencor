@@ -121,8 +121,8 @@ private:
 
     Action mAction;
 
-    QPoint mOriginPoint;
-    QPoint mEndPoint;
+    QPointF mOriginPoint;
+    QPointF mEndPoint;
 
     double mMinX;
     double mMinY;
@@ -155,13 +155,15 @@ private:
     void scaleLocalAxes(const double &pScalingFactorX,
                         const double &pScalingFactorY);
 
-    QPoint mousePositionWithinCanvas(const QPoint &pPoint) const;
+    QPointF mousePositionWithinCanvas(const QPoint &pPoint) const;
 
-    void drawCoordinates(QPainter *pPainter, const QPoint &pCoordinates,
+    void drawCoordinates(QPainter *pPainter, const QPointF &pCoordinates,
                          const QColor &pBackgroundColor,
                          const QColor &pForegroundColor,
                          const Location &pLocation = TopLeft,
                          const bool &pCanMoveLocation = true);
+
+    QRectF zoomRegion() const;
 };
 
 //==============================================================================
