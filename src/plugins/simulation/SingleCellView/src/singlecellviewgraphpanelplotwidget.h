@@ -135,9 +135,6 @@ private:
 
     QPixmap mCanvasPixmap;
 
-    QwtScaleMap mCanvasMapX;
-    QwtScaleMap mCanvasMapY;
-
     void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
 
     void checkLocalAxisValues(const int &pAxis, double &pMin, double &pMax,
