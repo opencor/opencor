@@ -1095,7 +1095,7 @@ void SingleCellViewGraphPanelPlotWidget::drawCanvas(QPainter *pPainter)
             yMax = canvasMapY.transform(localMinY());
         }
 
-        QRect zoomRegionRect(xMin, yMin, xMax-xMin, yMax-yMin);
+        QRect zoomRegionRect(xMin, yMin, xMax-xMin+1, yMax-yMin+1);
 
         // Now, draw the region to be zoomed
 
