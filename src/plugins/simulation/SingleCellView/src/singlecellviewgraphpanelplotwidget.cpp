@@ -277,17 +277,17 @@ void SingleCellViewGraphPanelPlotWidget::checkLocalAxisValues(const int &pAxis,
         pMax = max;
     } else if (zoomFactor > MaxZoomFactor) {
         // The local axis' zoom factor is too big, so reset the minimum and/or
-        // maximum values, depending what we are allowed to reset
+        // maximum values, depending on what we are allowed to reset
 
         if (pCanResetMin && !pCanResetMax) {
-            pMin = pMax-(max-min)/MaxZoomFactor;
+            pMin = qMax(min, pMax-(max-min)/MaxZoomFactor);
         } else if (!pCanResetMin && pCanResetMax) {
-            pMax = pMin+(max-min)/MaxZoomFactor;
+            pMax = qMin(max, pMin+(max-min)/MaxZoomFactor);
         } else if (pCanResetMin && pCanResetMax) {
             double length = (max-min)/MaxZoomFactor;
 
             pMin = qMax(min, 0.5*(pMin+pMax-length));
-            pMax = pMin+length;
+            pMax = qMin(max, pMin+length);
         }
     }
 }
