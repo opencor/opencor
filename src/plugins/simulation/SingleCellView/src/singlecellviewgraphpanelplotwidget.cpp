@@ -634,25 +634,21 @@ static const double ScalingOutFactor = 1.0/ScalingInFactor;
 
 QPoint SingleCellViewGraphPanelPlotWidget::mousePositionWithinCanvas(const QPoint &pPoint) const
 {
-    // Return the mouse position relative to our canvas, resetting some of its
-    // values, if needed
+    // Return the mouse position relative to our canvas, after making sure that
+    // its mapped values are within our local ranges
 
-    QPoint res = pPoint;
-    QRect canvasRect = plotLayout()->canvasRect().toRect();
+    QPoint res = pPoint-plotLayout()->canvasRect().toRect().topLeft();
 
-    if (res.x() < canvasRect.left())
-        res.setX(canvasRect.left());
+    QwtScaleMap canvasMapX = canvasMap(QwtPlot::xBottom);
+    QwtScaleMap canvasMapY = canvasMap(QwtPlot::yLeft);
 
-    if (res.x() > canvasRect.right())
-        res.setX(canvasRect.right());
+    double x = qMin(localMaxX(), qMax(localMinX(), canvasMapX.invTransform(res.x())));
+    double y = qMin(localMaxY(), qMax(localMinY(), canvasMapY.invTransform(res.y())));
 
-    if (res.y() < canvasRect.top())
-        res.setY(canvasRect.top());
+    res.setX(canvasMapX.transform(x));
+    res.setY(canvasMapY.transform(y));
 
-    if (res.y() > canvasRect.bottom())
-        res.setY(canvasRect.bottom());
-
-    return res-canvasRect.topLeft();
+    return res;
 }
 
 //==============================================================================
