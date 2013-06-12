@@ -19,8 +19,6 @@ namespace OpenCOR {
 
 //==============================================================================
 
-static const QString OpencorHomepageUrl = "http://www.opencor.ws/";
-
 void error(QCoreApplication *pApp, const QString &pMsg);
 
 void initApplication(QCoreApplication *pApp);
