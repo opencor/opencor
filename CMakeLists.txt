@@ -90,13 +90,8 @@ SET(RESOURCES
 # Various include directories
 
 INCLUDE_DIRECTORIES(
-    build
-    src
     src/misc
     src/plugins
-    src/plugins/misc/Core/src
-    src/ui
-    src/widgets
 )
 
 # Update the translation (.ts) files and generate the language (.qm) files
