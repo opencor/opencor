@@ -166,8 +166,7 @@ mGui->actionPreferences->setVisible(false);
     Plugins loadedPlugins = mPluginManager->loadedPlugins();
 
     foreach (Plugin *plugin, loadedPlugins) {
-        // Do various things that are related to our differennt plugin
-        // interfaces
+        // Do various things that are related to our different plugin interfaces
         // Note: the order in which we do those things is important since, for
         //       example, the call to CoreInterface::initialize() may need some
         //       information which has been set as part of the GUI interface

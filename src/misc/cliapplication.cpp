@@ -3,6 +3,7 @@
 //==============================================================================
 
 #include "cliapplication.h"
+#include "pluginmanager.h"
 #include "utils.h"
 
 //==============================================================================
@@ -12,6 +13,7 @@
 //==============================================================================
 
 #include <QCoreApplication>
+#include <QXmlStreamReader>
 
 //==============================================================================
 
@@ -20,8 +22,18 @@ namespace OpenCOR {
 //==============================================================================
 
 CliApplication::CliApplication(QCoreApplication *pApp) :
-    mApp(pApp)
+    mApp(pApp),
+    mPluginManager(0)
 {
+}
+
+//==============================================================================
+
+CliApplication::~CliApplication()
+{
+    // Delete some internal objects
+
+    delete mPluginManager;
 }
 
 //==============================================================================
@@ -37,7 +49,7 @@ void CliApplication::usage()
               << std::endl;
     std::cout << " -h, --help      Display this help information"
               << std::endl;
-    std::cout << " -p, --plugins   Display the list of available plugins"
+    std::cout << " -p, --plugins   Display the list of loaded plugins"
               << std::endl;
     std::cout << " -v, --version   Display OpenCOR version information"
               << std::endl;
@@ -70,20 +82,55 @@ void CliApplication::about()
 
 void CliApplication::loadPlugins()
 {
-    // Load all the plugins
+    // Load all the plugins by creating our plugin manager
 
-//---GRY--- TO BE DONE...
-//    mPluginManager = new OpenCOR::PluginManager();
+    mPluginManager = new OpenCOR::PluginManager();
 }
 
 //==============================================================================
 
 void CliApplication::plugins()
 {
-//---GRY--- TO BE DONE...
+    // Output some information about our loaded plugins
 
-    std::cout << "The following plugins are available:" << std::endl;
-    std::cout << " - ..." << std::endl;
+    // First, we retrieve all the plugins information and sort everything
+    // alphabetically
+
+    QStringList pluginsInfo = QStringList();
+
+    foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
+        // Retrieve the plugin's default description, stripped out of all its
+        // HTML (should it have some)
+        // Note: we enclose the plugin's default description within an html tag
+        //       so that the stripping out can proceed without any problem...
+
+        QXmlStreamReader description("<html>"+plugin->info()->description()+"</html>");
+        QString pluginInfo = QString();
+
+        while (!description.atEnd())
+            if (description.readNext() == QXmlStreamReader::Characters)
+                pluginInfo += description.text();
+
+        // Complete the plugin information
+
+        if (!pluginInfo.isEmpty())
+            pluginInfo.prepend(": ");
+
+        pluginInfo.prepend(plugin->name());
+
+        // Add the plugin information to our list
+
+        pluginsInfo << pluginInfo;
+    }
+
+    pluginsInfo.sort(Qt::CaseInsensitive);
+
+    // Now, we can output the plugin information
+
+    std::cout << "The following plugins are loaded:" << std::endl;
+
+    foreach (const QString pluginInfo, pluginsInfo)
+        std::cout << " - " << qPrintable(pluginInfo) << std::endl;
 }
 
 //==============================================================================

@@ -70,7 +70,7 @@ public:
     QStringList fullDependencies() const;
     void setFullDependencies(const QStringList &pFullDependencies);
 
-    QString description(const QString &pLocale) const;
+    QString description(const QString &pLocale = "en") const;
     Descriptions descriptions() const;
 
 private:

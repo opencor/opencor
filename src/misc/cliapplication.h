@@ -19,14 +19,21 @@ namespace OpenCOR {
 
 //==============================================================================
 
+class PluginManager;
+
+//==============================================================================
+
 class CliApplication {
 public:
     explicit CliApplication(QCoreApplication *pApp);
+    ~CliApplication();
 
     bool run(int *pRes);
 
 private:
     QCoreApplication *mApp;
+
+    PluginManager *mPluginManager;
 
     void usage();
 
