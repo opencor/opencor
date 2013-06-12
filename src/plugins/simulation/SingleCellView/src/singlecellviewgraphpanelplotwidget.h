@@ -60,28 +60,24 @@ public:
     void resetLocalAxes(const bool &pCanReplot = true);
 
     double minX() const;
-    void setMinX(const double &pMinX);
-
     double maxX() const;
-    void setMaxX(const double &pMaxX);
+
+    void setMinMaxX(const double &pMinX, const double &pMaxX);
 
     double minY() const;
-    void setMinY(const double &pMinY);
-
     double maxY() const;
-    void setMaxY(const double &pMaxY);
+
+    void setMinMaxY(const double &pMinY, const double &pMaxY);
 
     double localMinX() const;
-    void setLocalMinX(const double &pLocalMinX);
-
     double localMaxX() const;
-    void setLocalMaxX(const double &pLocalMaxX);
+
+    void setLocalMinMaxX(const double &pLocalMinX, const double &pLocalMaxX);
 
     double localMinY() const;
-    void setLocalMinY(const double &pLocalMinY);
-
     double localMaxY() const;
-    void setLocalMaxY(const double &pLocalMaxY);
+
+    void setLocalMinMaxY(const double &pLocalMinY, const double &pLocalMaxY);
 
     void setFixedAxisX(const bool &pFixedAxisX);
     void setFixedAxisY(const bool &pFixedAxisY);
@@ -135,14 +131,17 @@ private:
 
     QPixmap mCanvasPixmap;
 
+    double mZoomFactorX;
+    double mZoomFactorY;
+
     void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
 
-    void checkLocalAxisValues(const int &pAxis, double &pMin, double &pMax,
-                              const bool &pCanResetMin = true,
-                              const bool &pCanResetMax = true);
+    void checkLocalAxisValues(const int &pAxis, double &pMin, double &pMax);
 
     void checkAnyAxesValues(double &pMinX, double &pMaxX,
                             double &pMinY, double &pMaxY);
+
+    void updateZoomFactors();
 
     void setLocalAxis(const int &pAxis, const double &pMin, const double &pMax);
     void setLocalAxes(const double &pLocalMinX, const double &pLocalMaxX,
