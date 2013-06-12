@@ -47,6 +47,7 @@ SET(SOURCES
     src/pluginswindow.cpp
     src/preferenceswindow.cpp
 
+    src/misc/cliapplication.cpp
     src/misc/common.cpp
     src/misc/utils.cpp
 

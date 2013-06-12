@@ -17,6 +17,7 @@ INITIALISE_PROJECT()
 SET(SOURCES
     src/main.cpp
 
+    ../src/misc/cliapplication.cpp
     ../src/misc/common.cpp
     ../src/misc/utils.cpp
 )

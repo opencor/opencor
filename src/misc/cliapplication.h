@@ -1,13 +1,13 @@
 //==============================================================================
-// Some common methods between the CLI and GUI version of OpenCOR
+// CLI application
 //==============================================================================
 
-#ifndef COMMON_H
-#define COMMON_H
+#ifndef CLIAPPLICATION_H
+#define CLIAPPLICATION_H
 
 //==============================================================================
 
-#include <QString>
+#include <QStringList>
 
 //==============================================================================
 
@@ -19,11 +19,25 @@ namespace OpenCOR {
 
 //==============================================================================
 
-void error(QCoreApplication *pApp, const QString &pMsg);
+class CliApplication {
+public:
+    explicit CliApplication(QCoreApplication *pApp);
 
-void initApplication(QCoreApplication *pApp);
+    bool run(int *pRes);
 
-bool cliApplication(QCoreApplication *pApp, int *pRes);
+private:
+    QCoreApplication *mApp;
+
+    void usage();
+
+    void version();
+    void about();
+
+    void loadPlugins();
+    void plugins();
+
+    int command(const QStringList pArguments);
+};
 
 //==============================================================================
 
