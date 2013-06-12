@@ -183,12 +183,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
     // Enable or disable the add buttons for our retrieved terms, depending on
     // whether they are already associated with the CellML element
 
-    int row = 0;
-
-    forever {
-        if (!mGridLayout->itemAtPosition(++row, 0))
-            break;
-
+    for (int row = 0; mGridLayout->itemAtPosition(++row, 0);) {
         QPushButton *addButton = qobject_cast<QPushButton *>(mGridLayout->itemAtPosition(row, 3)->widget());
 
         Item item = mItemsMapping.value(addButton);
@@ -688,15 +683,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookup(const QString 
     //       isn't an option since the returned value will be the maximum number
     //       of rows that there has ever been, so...
 
-    int row = 0;
-
-    forever {
-        if (!mGridLayout->itemAtPosition(++row, 0))
-            break;
-
-        QLabel *nameLabel     = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 0)->widget());
+    for (int row = 0; mGridLayout->itemAtPosition(++row, 0);) {
+        QLabel *nameLabel = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 0)->widget());
         QLabel *resourceLabel = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 1)->widget());
-        QLabel *idLabel       = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 2)->widget());
+        QLabel *idLabel = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 2)->widget());
 
         QFont font = idLabel->font();
 

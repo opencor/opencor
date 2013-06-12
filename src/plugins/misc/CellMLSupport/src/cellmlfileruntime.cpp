@@ -655,14 +655,8 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
 
     ObjRef<iface::cellml_services::ComputationTargetIterator> computationTargetIterator = genericCodeInformation->iterateTargets();
 
-    forever {
-        ObjRef<iface::cellml_services::ComputationTarget> computationTarget = computationTargetIterator->nextComputationTarget();
-
-        if (!computationTarget)
-            // No more model paramaters, so...
-
-            break;
-
+    for (ObjRef<iface::cellml_services::ComputationTarget> computationTarget = computationTargetIterator->nextComputationTarget();
+         computationTarget; computationTarget = computationTargetIterator->nextComputationTarget()) {
         // Determine the type of the model parameter
 
         CellmlFileRuntimeModelParameter::ModelParameterType modelParameterType;
@@ -755,12 +749,8 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
                 ObjRef<iface::cellml_api::ImportComponentSet> importComponents = import->components();
                 ObjRef<iface::cellml_api::ImportComponentIterator> importComponentsIterator = importComponents->iterateImportComponents();
 
-                forever {
-                    ObjRef<iface::cellml_api::ImportComponent> importComponent = importComponentsIterator->nextImportComponent();
-
-                    if (!importComponent)
-                        break;
-
+                for (ObjRef<iface::cellml_api::ImportComponent> importComponent = importComponentsIterator->nextImportComponent();
+                     importComponent; importComponent = importComponentsIterator->nextImportComponent())
                     if (!componentName.compare(QString::fromStdWString(importComponent->componentRef()))) {
                         // This is the imported component we are after, so we
                         // can get the correct name of the variable's component
@@ -769,7 +759,6 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
 
                         break;
                     }
-                }
             }
 
             // Keep track of the model parameter

@@ -374,15 +374,10 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookup(const QS
     //       updateGui()), the returned value will be the maximum number of rows
     //       that there has ever been, so...
 
-    int row = 0;
-
-    forever {
-        if (!mGridLayout->itemAtPosition(++row, 0))
-            break;
-
+    for (int row = 0; mGridLayout->itemAtPosition(++row, 0);) {
         QLabel *qualifierLabel = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 0)->widget());
-        QLabel *resourceLabel  = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 1)->widget());
-        QLabel *idLabel        = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 2)->widget());
+        QLabel *resourceLabel = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 1)->widget());
+        QLabel *idLabel = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 2)->widget());
 
         QFont font = idLabel->font();
 
