@@ -12,6 +12,7 @@
 #include <QApplication>
 #include <QMainWindow>
 #include <QMenu>
+#include <QSettings>
 #include <QToolBar>
 
 //==============================================================================
@@ -528,6 +529,52 @@ void GuiInterface::retranslateAction(QAction *pAction, const QString &pText,
 
     pAction->setText(pText);
     pAction->setStatusTip(pStatusTip);
+}
+
+//==============================================================================
+
+void GuiInterface::loadWindowSettings(QSettings *pSettings,
+                                      Core::DockWidget *pWindow)
+{
+    // Retrieve the window's settings
+
+    pSettings->beginGroup(pWindow->objectName());
+        pWindow->loadSettings(pSettings);
+    pSettings->endGroup();
+}
+
+//==============================================================================
+
+void GuiInterface::saveWindowSettings(QSettings *pSettings,
+                                      Core::DockWidget *pWindow) const
+{
+    // Keep track of the window's settings
+
+    pSettings->beginGroup(pWindow->objectName());
+        pWindow->saveSettings(pSettings);
+    pSettings->endGroup();
+}
+
+//==============================================================================
+
+void GuiInterface::loadViewSettings(QSettings *pSettings, QObject *pView)
+{
+    // Retrieve the view's settings
+
+    pSettings->beginGroup(qobject_cast<QWidget *>(pView)->objectName());
+        dynamic_cast<Core::CommonWidget *>(pView)->loadSettings(pSettings);
+    pSettings->endGroup();
+}
+
+//==============================================================================
+
+void GuiInterface::saveViewSettings(QSettings *pSettings, QObject *pView) const
+{
+    // Keep track of the view's settings
+
+    pSettings->beginGroup(qobject_cast<QWidget *>(pView)->objectName());
+        dynamic_cast<Core::CommonWidget *>(pView)->saveSettings(pSettings);
+    pSettings->endGroup();
 }
 
 //==============================================================================

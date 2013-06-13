@@ -28,13 +28,6 @@ namespace OpenCOR {
 
 //==============================================================================
 
-namespace Core {
-    class CommonWidget;
-    class DockWidget;
-}
-
-//==============================================================================
-
 class CoreInterface : public Interface
 {
 public:
@@ -50,15 +43,6 @@ public:
 
     virtual void handleArguments(const QStringList &pArguments);
     virtual void handleAction(const QUrl &pUrl);
-
-protected:
-    void loadWindowSettings(QSettings *pSettings,
-                            Core::DockWidget *pWindow);
-    void saveWindowSettings(QSettings *pSettings,
-                            Core::DockWidget *pWindow) const;
-
-    void loadViewSettings(QSettings *pSettings, QObject *pView);
-    void saveViewSettings(QSettings *pSettings, QObject *pView) const;
 };
 
 //==============================================================================
