@@ -8,7 +8,7 @@
 
 //==============================================================================
 
-#include <QApplication>
+#include <QCoreApplication>
 #include <QDir>
 
 //==============================================================================
@@ -17,11 +17,11 @@ namespace OpenCOR {
 
 //==============================================================================
 
-PluginManager::PluginManager() :
+PluginManager::PluginManager(QCoreApplication *pApp) :
     mInterfaceVersion(PluginInfo::InterfaceVersion001),
     mPlugins(Plugins())
 {
-    mPluginsDir =  QDir(qApp->applicationDirPath()).canonicalPath()
+    mPluginsDir =  QDir(pApp->applicationDirPath()).canonicalPath()
                   +QDir::separator()+QString("..")
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
                   +QDir::separator()+"plugins"
@@ -30,7 +30,7 @@ PluginManager::PluginManager() :
 #else
     #error Unsupported platform
 #endif
-                  +QDir::separator()+qApp->applicationName();
+                  +QDir::separator()+pApp->applicationName();
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     // The plugins directory should be correct, but in case we try to run
@@ -42,9 +42,9 @@ PluginManager::PluginManager() :
     // not neat, but... is there another solution?...
 
     if (!QDir(mPluginsDir).exists())
-        mPluginsDir =  QDir(qApp->applicationDirPath()).canonicalPath()
+        mPluginsDir =  QDir(pApp->applicationDirPath()).canonicalPath()
                       +QDir::separator()+"plugins"
-                      +QDir::separator()+qApp->applicationName();
+                      +QDir::separator()+pApp->applicationName();
 #endif
 
     mPluginsDir = QDir::toNativeSeparators(QDir(mPluginsDir).canonicalPath());

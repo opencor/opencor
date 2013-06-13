@@ -87,7 +87,7 @@ MainWindow::MainWindow(SharedTools::QtSingleApplication *pApp) :
     // Create our plugin manager (which will automatically load our various
     // plugins)
 
-    mPluginManager = new PluginManager();
+    mPluginManager = new PluginManager(qApp);
 
     // Set up the GUI
     // Note: the application icon (which needs to be set for Linux, but not for

@@ -84,7 +84,7 @@ void CliApplication::loadPlugins()
 {
     // Load all the plugins by creating our plugin manager
 
-    mPluginManager = new OpenCOR::PluginManager();
+    mPluginManager = new OpenCOR::PluginManager(mApp);
 }
 
 //==============================================================================

@@ -16,6 +16,10 @@
 
 //==============================================================================
 
+class QCoreApplication;
+
+//==============================================================================
+
 namespace OpenCOR {
 
 //==============================================================================
@@ -29,7 +33,7 @@ class PluginManager : public QObject
     Q_OBJECT
 
 public:
-    explicit PluginManager();
+    explicit PluginManager(QCoreApplication *pApp);
     ~PluginManager();
 
     Plugins plugins() const;
