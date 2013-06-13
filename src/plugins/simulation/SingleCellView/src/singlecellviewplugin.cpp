@@ -28,6 +28,7 @@ PLUGININFO_FUNC SingleCellViewPluginInfo()
 
     return new PluginInfo(PluginInfo::InterfaceVersion001,
                           PluginInfo::Simulation,
+                          false,
                           true,
                           QStringList() << "CellMLSupport" << "Qwt",
                           descriptions);

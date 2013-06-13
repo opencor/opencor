@@ -25,6 +25,7 @@ PLUGININFO_FUNC CoreEditingPluginInfo()
     return new PluginInfo(PluginInfo::InterfaceVersion001,
                           PluginInfo::Editing,
                           false,
+                          false,
                           QStringList() << "Core",
                           descriptions);
 }

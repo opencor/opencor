@@ -21,6 +21,7 @@ PLUGININFO_FUNC FourthOrderRungeKuttaSolverPluginInfo()
 
     return new PluginInfo(PluginInfo::InterfaceVersion001,
                           PluginInfo::Simulation,
+                          false,
                           true,
                           QStringList() << "CoreSolver",
                           descriptions);

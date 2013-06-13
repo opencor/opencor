@@ -21,6 +21,7 @@ PLUGININFO_FUNC QScintillaSupportPluginInfo()
     return new PluginInfo(PluginInfo::InterfaceVersion001,
                           PluginInfo::Miscellaneous,
                           false,
+                          false,
                           QStringList() << "Core" << "QScintilla",
                           descriptions);
 }

@@ -62,9 +62,10 @@ namespace Core {
         <ul>
             <li><strong>Interface version:</strong> OpenCOR may, in the future, use a different interface to communicate with plugins. It must therefore ensure that a plugin uses the same interface before loading it. The version currently used by OpenCOR can be found in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/pluginmanager.cpp">[OpenCOR]/src/plugins/pluginmanager.cpp</a> (look for the initialisation of <code>mInterfaceVersion</code> in <code>PluginManager</code>'s constructor).</li>
             <li><strong>Category:</strong> plugins are grouped in different categories. These are only meant to improve user experience and therefore have no effects on the plugin itself.</li>
+            <li><strong>CLI support:</strong> specify whether the plugin includes support for a <a href="../../user/userInterfaces/commandLineInterface.html">command line interface (CLI)</a>.</li>
             <li><strong>Manageable:</strong> specify whether a user can change the loading state of a plugin. As a rule of thumbs, if a plugin is of no use on its own, then it should not be made manageable.</li>
             <li><strong>Dependencies:</strong> some plugins may depend on other plugins. OpenCOR must therefore know about them, so that it can make sure that they get loaded before the plugin itself.</li>
-            <li><strong>Description:</strong> a short description of the plugin.</li>
+            <li><strong>Descriptions:</strong> a short description of the plugin in various languages.</li>
         </ul>
 
         <p>

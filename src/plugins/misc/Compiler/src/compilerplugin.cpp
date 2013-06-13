@@ -21,6 +21,7 @@ PLUGININFO_FUNC CompilerPluginInfo()
     return new PluginInfo(PluginInfo::InterfaceVersion001,
                           PluginInfo::Miscellaneous,
                           false,
+                          false,
                           QStringList() << "LLVM",
                           descriptions);
 }

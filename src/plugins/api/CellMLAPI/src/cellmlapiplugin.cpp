@@ -21,6 +21,7 @@ PLUGININFO_FUNC CellMLAPIPluginInfo()
     return new PluginInfo(PluginInfo::InterfaceVersion001,
                           PluginInfo::Api,
                           false,
+                          false,
                           QStringList(),
                           descriptions);
 }

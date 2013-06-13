@@ -25,6 +25,7 @@ PLUGININFO_FUNC CoreCellMLEditingPluginInfo()
     return new PluginInfo(PluginInfo::InterfaceVersion001,
                           PluginInfo::Editing,
                           false,
+                          false,
                           QStringList() << "CoreEditing" << "CellMLSupport",
                           descriptions);
 }

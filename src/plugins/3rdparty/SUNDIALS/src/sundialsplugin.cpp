@@ -21,6 +21,7 @@ PLUGININFO_FUNC SUNDIALSPluginInfo()
     return new PluginInfo(PluginInfo::InterfaceVersion001,
                           PluginInfo::ThirdParty,
                           false,
+                          false,
                           QStringList(),
                           descriptions);
 }

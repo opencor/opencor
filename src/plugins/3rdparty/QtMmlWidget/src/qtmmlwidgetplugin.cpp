@@ -21,6 +21,7 @@ PLUGININFO_FUNC QtMmlWidgetPluginInfo()
     return new PluginInfo(PluginInfo::InterfaceVersion001,
                           PluginInfo::ThirdParty,
                           false,
+                          false,
                           QStringList(),
                           descriptions);
 }

@@ -30,6 +30,7 @@ PLUGININFO_FUNC CellMLToolsPluginInfo()
     return new PluginInfo(PluginInfo::InterfaceVersion001,
                           PluginInfo::Miscellaneous,
                           true,
+                          true,
                           QStringList() << "CellMLSupport",
                           descriptions);
 }

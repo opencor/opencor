@@ -37,6 +37,7 @@ PLUGININFO_FUNC CorePluginInfo()
     return new PluginInfo(PluginInfo::InterfaceVersion001,
                           PluginInfo::Miscellaneous,
                           false,
+                          false,
                           QStringList(),
                           descriptions);
 }

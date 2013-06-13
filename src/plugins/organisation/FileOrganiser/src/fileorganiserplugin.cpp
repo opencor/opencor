@@ -25,6 +25,7 @@ PLUGININFO_FUNC FileOrganiserPluginInfo()
 
     return new PluginInfo(PluginInfo::InterfaceVersion001,
                           PluginInfo::Organisation,
+                          false,
                           true,
                           QStringList() << "Core",
                           descriptions);

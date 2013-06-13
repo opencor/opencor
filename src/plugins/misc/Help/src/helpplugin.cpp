@@ -26,6 +26,7 @@ PLUGININFO_FUNC HelpPluginInfo()
 
     return new PluginInfo(PluginInfo::InterfaceVersion001,
                           PluginInfo::Miscellaneous,
+                          false,
                           true,
                           QStringList() << "Core",
                           descriptions);

@@ -22,6 +22,7 @@ PLUGININFO_FUNC CoreSolverPluginInfo()
     return new PluginInfo(PluginInfo::InterfaceVersion001,
                           PluginInfo::Simulation,
                           false,
+                          false,
                           QStringList(),
                           descriptions);
 }

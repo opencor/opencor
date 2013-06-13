@@ -25,6 +25,7 @@ PLUGININFO_FUNC RawViewPluginInfo()
 
     return new PluginInfo(PluginInfo::InterfaceVersion001,
                           PluginInfo::Editing,
+                          false,
                           true,
                           QStringList() << "CoreEditing" << "QScintillaSupport",
                           descriptions);

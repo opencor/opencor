@@ -21,6 +21,7 @@ PLUGININFO_FUNC MidpointSolverPluginInfo()
 
     return new PluginInfo(PluginInfo::InterfaceVersion001,
                           PluginInfo::Simulation,
+                          false,
                           true,
                           QStringList() << "CoreSolver",
                           descriptions);

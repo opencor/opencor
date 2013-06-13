@@ -56,7 +56,8 @@ public:
     };
 
     explicit PluginInfo(const InterfaceVersion &pInterfaceVersion,
-                        const Category &pCategory, const bool &pManageable,
+                        const Category &pCategory, const bool &pCliSupport,
+                        const bool &pManageable,
                         const QStringList &pDependencies,
                         const Descriptions &pDescriptions);
 
@@ -64,6 +65,7 @@ public:
 
     Category category() const;
 
+    bool hasCliSupport() const;
     bool isManageable() const;
 
     QStringList dependencies() const;
@@ -78,6 +80,7 @@ private:
 
     Category mCategory;
 
+    bool mCliSupport;
     bool mManageable;
 
     QStringList mDependencies;

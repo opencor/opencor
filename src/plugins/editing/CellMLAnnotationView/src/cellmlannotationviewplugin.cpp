@@ -31,6 +31,7 @@ PLUGININFO_FUNC CellMLAnnotationViewPluginInfo()
 
     return new PluginInfo(PluginInfo::InterfaceVersion001,
                           PluginInfo::Editing,
+                          false,
                           true,
                           QStringList() << "CoreCellMLEditing",
                           descriptions);
