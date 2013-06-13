@@ -93,8 +93,7 @@ void CliApplication::plugins()
 {
     // Output some information about our loaded plugins
 
-    // First, we retrieve all the plugins information and sort everything
-    // alphabetically
+    // First, we retrieve all the plugins information
 
     QStringList pluginsInfo = QStringList();
 
@@ -123,22 +122,24 @@ void CliApplication::plugins()
         pluginsInfo << pluginInfo;
     }
 
-    pluginsInfo.sort(Qt::CaseInsensitive);
+    // Now, we can output the plugin information, if any, in alphabetical order
 
-    // Now, we can output the plugin information
+    if (pluginsInfo.isEmpty()) {
+        std::cout << "Sorry, but no plugins could be found." << std::endl;
+    } else {
+        pluginsInfo.sort(Qt::CaseInsensitive);
 
-    std::cout << "The following plugins are loaded:" << std::endl;
+        std::cout << "The following plugins are loaded:" << std::endl;
 
-    foreach (const QString pluginInfo, pluginsInfo)
-        std::cout << " - " << qPrintable(pluginInfo) << std::endl;
+        foreach (const QString pluginInfo, pluginsInfo)
+            std::cout << " - " << qPrintable(pluginInfo) << std::endl;
+    }
 }
 
 //==============================================================================
 
 int CliApplication::command(const QStringList pArguments)
 {
-//---GRY--- TO BE DONE...
-
     // Make sure that we have at least one argument
 
     if (!pArguments.count())
@@ -155,6 +156,25 @@ int CliApplication::command(const QStringList pArguments)
     if (commandSeparatorPosition != -1) {
         commandPlugin = commandPlugin.remove(commandSeparatorPosition, commandName.length()-commandSeparatorPosition);
         commandName = commandName.remove(0, commandPlugin.length()+commandSeparator.length());
+
+        // Make sure that the plugin to which the command is to be sent exists
+
+        if (!commandPlugin.isEmpty()) {
+            bool pluginFound = false;
+
+            foreach (Plugin *plugin, mPluginManager->loadedPlugins())
+                if (!commandPlugin.compare(plugin->name())) {
+                    pluginFound = true;
+
+                    break;
+                }
+
+            if (!pluginFound) {
+                std::cout << "Sorry, but the " << qPrintable(commandPlugin) << " plugin could not be found." << std::endl;
+
+                return 0;
+            }
+        }
     } else {
         commandPlugin = QString();
     }
