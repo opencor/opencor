@@ -17,10 +17,11 @@ namespace OpenCOR {
 
 //==============================================================================
 
-PluginManager::PluginManager(QCoreApplication *pApp) :
+PluginManager::PluginManager(QCoreApplication *pApp, const bool &pCliSupport) :
     mInterfaceVersion(PluginInfo::InterfaceVersion001),
     mPlugins(Plugins())
 {
+Q_UNUSED(pCliSupport);
     mPluginsDir =  QDir(pApp->applicationDirPath()).canonicalPath()
                   +QDir::separator()+QString("..")
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)

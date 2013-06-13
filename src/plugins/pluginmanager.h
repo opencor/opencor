@@ -33,7 +33,8 @@ class PluginManager : public QObject
     Q_OBJECT
 
 public:
-    explicit PluginManager(QCoreApplication *pApp);
+    explicit PluginManager(QCoreApplication *pApp,
+                           const bool &pCliSupport = false);
     ~PluginManager();
 
     Plugins plugins() const;

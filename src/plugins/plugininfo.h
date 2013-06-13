@@ -55,16 +55,16 @@ public:
         ThirdParty
     };
 
-    explicit PluginInfo(const InterfaceVersion &pInterfaceVersion = UndefinedInterfaceVersion,
-                        const Category &pCategory = Miscellaneous,
-                        const bool &pManageable = false,
-                        const QStringList &pDependencies = QStringList(),
-                        const Descriptions &pDescriptions = Descriptions());
+    explicit PluginInfo(const InterfaceVersion &pInterfaceVersion,
+                        const Category &pCategory, const bool &pManageable,
+                        const QStringList &pDependencies,
+                        const Descriptions &pDescriptions);
 
     InterfaceVersion interfaceVersion() const;
 
     Category category() const;
-    bool manageable() const;
+
+    bool isManageable() const;
 
     QStringList dependencies() const;
     QStringList fullDependencies() const;
@@ -77,6 +77,7 @@ private:
     InterfaceVersion mInterfaceVersion;
 
     Category mCategory;
+
     bool mManageable;
 
     QStringList mDependencies;

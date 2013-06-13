@@ -43,7 +43,7 @@ PluginInfo::Category PluginInfo::category() const
 
 //==============================================================================
 
-bool PluginInfo::manageable() const
+bool PluginInfo::isManageable() const
 {
     // Return the plugin's manageability
 
