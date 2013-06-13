@@ -119,7 +119,7 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
         PluginInfo *pluginInfo = plugin->info();
 
         if (pluginInfo) {
-            pluginItem->setCheckable(pluginInfo->manageable());
+            pluginItem->setCheckable(pluginInfo->isManageable());
 
             if (pluginItem->isCheckable()) {
                 // Retrieve the loading state of the plugin

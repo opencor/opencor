@@ -49,7 +49,7 @@ Plugin::Plugin(const QString &pFileName, const bool &pForceLoading,
             // version, and if it is manageable or is required by another plugin
 
             if (    (mInfo->interfaceVersion() == pExpectedInterfaceVersion)
-                && (   (mInfo->manageable() && load(mName))
+                && (   (mInfo->isManageable() && load(mName))
                     || pForceLoading)) {
                 // We are dealing with the right kind of plugin, so check that
                 // all of its dependencies, if any, are loaded
@@ -126,7 +126,7 @@ Plugin::Plugin(const QString &pFileName, const bool &pForceLoading,
                 // with a plugin which is either not wanted or not needed,
                 // depending on whether it is manageable
 
-                if (mInfo->manageable())
+                if (mInfo->isManageable())
                     mStatus = NotWanted;
                 else
                     mStatus = NotNeeded;

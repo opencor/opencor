@@ -73,7 +73,7 @@ Q_UNUSED(pCliSupport);
         PluginInfo *pluginInfo = Plugin::info(fileName);
 
         if (   pluginInfo
-            && pluginInfo->manageable() && Plugin::load(Plugin::name(fileName)))
+            && pluginInfo->isManageable() && Plugin::load(Plugin::name(fileName)))
             // The plugin is manageable and to be loaded, so retrieve its
             // dependencies
 
