@@ -20,11 +20,15 @@ SET(SOURCES
     ../src/misc/cliapplication.cpp
     ../src/misc/common.cpp
     ../src/misc/utils.cpp
+
+    ../src/plugins/plugin.cpp
+    ../src/plugins/plugininfo.cpp
+    ../src/plugins/pluginmanager.cpp
 )
 
-SET(HEADERS
-    ../src/misc/common.h
-    ../src/misc/utils.h
+SET(HEADERS_MOC
+    ../src/plugins/plugin.h
+    ../src/plugins/pluginmanager.h
 )
 
 SET(RESOURCES
@@ -33,14 +37,19 @@ SET(RESOURCES
 
 # Various include directories
 
-INCLUDE_DIRECTORIES(../src/misc)
+INCLUDE_DIRECTORIES(
+    ../src/misc
+    ../src/plugins
+)
 
 # Build the CLI version of OpenCOR
 
+QT5_WRAP_CPP(SOURCES_MOC ${HEADERS_MOC})
 QT5_ADD_RESOURCES(SOURCES_RCS ${RESOURCES})
 
 ADD_EXECUTABLE(${PROJECT_NAME}
     ${SOURCES}
+    ${SOURCES_MOC}
     ${SOURCES_RCS}
 )
 
