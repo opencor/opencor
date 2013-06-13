@@ -4,19 +4,15 @@
 
 #include "commonwidget.h"
 #include "coreutils.h"
-#include "dockwidget.h"
 
 //==============================================================================
 
 #include <QApplication>
-#include <QColor>
 #include <QDesktopWidget>
-#include <QFrame>
-#include <QObject>
+#include <QDockWidget>
 #include <QPainter>
 #include <QPen>
 #include <QSettings>
-#include <QWidget>
 
 //==============================================================================
 
@@ -146,11 +142,11 @@ void CommonWidget::drawBorder(const bool &pDockedTop, const bool &pDockedLeft,
     // Draw a border around the widget
     // Note: a qobject_cast is not good enough for mParent on OS X, so...
 
-    DockWidget *dockWidget = dynamic_cast<DockWidget *>(mParent);
+    QDockWidget *dockWidget = dynamic_cast<QDockWidget *>(mParent);
     QWidget *widget = dynamic_cast<QWidget *>(this);
 
     if (dockWidget && widget) {
-        // The castings were successful, so our parent is really a DockWidget,
+        // The castings were successful, so our parent is really a QDockWidget,
         // we are really a QWidget, and to top it all our parent is floating (or
         // we want to force the drawing), so let's go ahead...
 
