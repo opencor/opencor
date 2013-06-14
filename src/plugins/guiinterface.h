@@ -13,7 +13,6 @@
 
 #include <QIcon>
 #include <QList>
-#include <QMap>
 #include <QKeySequence>
 
 //==============================================================================
