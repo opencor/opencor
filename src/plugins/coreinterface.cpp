@@ -82,15 +82,15 @@ void CoreInterface::handleAction(const QUrl &pUrl)
 
 //==============================================================================
 
-int CoreInterface::runCommand(const QString &pCommand,
-                              const QStringList &pArguments)
+void CoreInterface::runCliCommand(const QString &pCommand,
+                                  const QStringList &pArguments, int *pRes)
 {
     // Nothing to do by default...
 
     Q_UNUSED(pCommand);
     Q_UNUSED(pArguments);
 
-    return 0;
+    *pRes = 0;
 }
 
 //==============================================================================

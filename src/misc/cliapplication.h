@@ -43,7 +43,7 @@ private:
     void loadPlugins();
     void plugins();
 
-    int command(const QStringList pArguments);
+    bool command(const QStringList pArguments, int *pRes);
 };
 
 //==============================================================================

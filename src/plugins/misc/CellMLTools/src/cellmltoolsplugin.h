@@ -41,6 +41,9 @@ public:
 
     virtual void initializationsDone(const Plugins &pLoadedPlugins);
 
+    virtual void runCliCommand(const QString &pCommand,
+                              const QStringList &pArguments, int *pRes);
+
     virtual void updateGui(Plugin *pViewPlugin, const QString &pFileName);
 
     virtual void retranslateUi();
@@ -56,6 +59,9 @@ private:
     QAction *mExportToCellml11Action;
 
     void exportTo(const CellMLSupport::CellmlFile::Format &pFormat);
+
+    void runHelpCommand();
+    void runExportCommand(const QStringList &pArguments, int *pRes);
 
 private Q_SLOTS:
     void exportToCellml10();

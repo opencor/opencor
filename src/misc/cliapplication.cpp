@@ -147,7 +147,7 @@ void CliApplication::plugins()
 
 //==============================================================================
 
-int CliApplication::command(const QStringList pArguments)
+bool CliApplication::command(const QStringList pArguments, int *pRes)
 {
     // Send a command to one all the plugins, so first retrieve the list of
     // loaded CLI plugins
@@ -157,7 +157,7 @@ int CliApplication::command(const QStringList pArguments)
     // Make sure that we have at least one argument
 
     if (!pArguments.count())
-        return -1;
+        return false;
 
     // Determine whether the command is to be executed by all plugins or only a
     // given plugin
@@ -188,11 +188,11 @@ int CliApplication::command(const QStringList pArguments)
             if (!pluginFound) {
                 std::cout << "Sorry, but the " << qPrintable(commandPlugin) << " plugin could not be found." << std::endl;
 
-                return 0;
+                return true;
             } else if (!pluginHasCliSupport) {
                 std::cout << "Sorry, but the " << qPrintable(commandPlugin) << " plugin does not support the execution of commands." << std::endl;
 
-                return 0;
+                return true;
             }
         }
     } else {
@@ -202,27 +202,36 @@ int CliApplication::command(const QStringList pArguments)
     // Make sure that we have a command name
 
     if (commandName.isEmpty())
-        return -1;
+        return false;
 
     // Make sure that we have at least one CLI-enabled plugin
 
     if (loadedCliPlugins.isEmpty()) {
         std::cout << "Sorry, but no plugins could be found to run the command." << std::endl;
 
-        return 0;
+        return true;
     }
 
     // Send the command to the plugin(s)
 
-    int res = 0;
-
     foreach (Plugin *plugin, loadedCliPlugins)
         if (    commandPlugin.isEmpty()
-            || !commandPlugin.compare(plugin->name()))
-            if (qobject_cast<CoreInterface *>(plugin->instance())->runCommand(commandName, pArguments))
-                res = -1;
+            || !commandPlugin.compare(plugin->name())) {
+            int res = 0;
 
-    return res;
+            QStringList arguments = pArguments;
+
+            arguments.removeFirst();
+            // Note: since the first argument corresponds to the command
+            //       itself...
+
+            qobject_cast<CoreInterface *>(plugin->instance())->runCliCommand(commandName, arguments, &res);
+
+            if (res)
+                *pRes = -1;
+        }
+
+    return true;
 }
 
 //==============================================================================
@@ -282,9 +291,7 @@ bool CliApplication::run(int *pRes)
         } else if (commandOption) {
             loadPlugins();
 
-            *pRes = command(commandArguments);
-
-            if (*pRes)
+            if (!command(commandArguments, pRes))
                 usage();
         } else {
             // The user didn't provide any option which requires running OpenCOR
