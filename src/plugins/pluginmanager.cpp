@@ -17,11 +17,10 @@ namespace OpenCOR {
 
 //==============================================================================
 
-PluginManager::PluginManager(QCoreApplication *pApp, const bool &pCliSupport) :
+PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiVersion) :
     mInterfaceVersion(PluginInfo::InterfaceVersion001),
     mPlugins(Plugins())
 {
-Q_UNUSED(pCliSupport);
     mPluginsDir =  QDir(pApp->applicationDirPath()).canonicalPath()
                   +QDir::separator()+QString("..")
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
@@ -55,7 +54,7 @@ Q_UNUSED(pCliSupport);
     QFileInfoList fileInfoList = QDir(mPluginsDir).entryInfoList(QStringList("*"+PluginExtension),
                                                                  QDir::Files);
 
-    QStringList fileNames;
+    QStringList fileNames = QStringList();
 
     foreach (const QFileInfo &file, fileInfoList)
         fileNames << QDir::toNativeSeparators(file.canonicalFilePath());
@@ -67,45 +66,62 @@ Q_UNUSED(pCliSupport);
     // loaded. So, we must here determine which of those plugins must be
     // loaded...
 
-    QStringList plugins;
+    QStringList requiredPlugins = QStringList();
+    QStringList wantedPlugins = QStringList();
 
     foreach (const QString &fileName, fileNames) {
         PluginInfo *pluginInfo = Plugin::info(fileName);
+        QString pluginName = Plugin::name(fileName);
 
-        if (   pluginInfo
-            && pluginInfo->isManageable() && Plugin::load(Plugin::name(fileName)))
-            // The plugin is manageable and to be loaded, so retrieve its
-            // dependencies
+        if (    pluginInfo
+            && (   ( pGuiVersion && pluginInfo->isManageable() && Plugin::load(pluginName))
+                || (!pGuiVersion && pluginInfo->hasCliSupport()))) {
+            // We want the GUI version of the plugin manager and the plugin is
+            // manageable and to be loaded, or we don't want the GUI version of
+            // the plugin manager and the plugin has support for CLI, so
+            // retrieve and keep track of its dependencies
 
-            plugins << Plugin::requiredPlugins(mPluginsDir,
-                                               Plugin::name(fileName));
+            requiredPlugins << Plugin::requiredPlugins(mPluginsDir,
+                                                       Plugin::name(fileName));
+
+            // Also keep track of the plugin itself
+
+            wantedPlugins << pluginName;
+        }
 
         delete pluginInfo;
     }
 
-    plugins.removeDuplicates();
+    // Remove possible duplicates in our list of required plugins
 
-    // Knowing which plugins are required, we must now ensure that these are
-    // loaded first. Note that this is not required on Windows (even though it
-    // clearly doesn't harm having them loaded first!), but on Linux and OS X it
-    // certainly is since otherwise the plugin's status will be wrong (indeed,
-    // on those systems, we check that dependencies are first loaded before
-    // loading the plugin itself), so...
+    requiredPlugins.removeDuplicates();
 
-    QStringList orderedFileNames;
+    // We now have all our required and wanted plugins with our required plugins
+    // nicely sorted based on their dependency with one another. So, now, we
+    // retrieve the file name associated with all our plugins
+
+    QStringList plugins = requiredPlugins+wantedPlugins;
+    QStringList pluginFileNames = QStringList();
 
     foreach (const QString &plugin, plugins)
-        orderedFileNames << Plugin::fileName(mPluginsDir, plugin);
+        pluginFileNames << Plugin::fileName(mPluginsDir, plugin);
 
-    orderedFileNames << fileNames;
+    // If we are dealing with the GUI version of ourselves, then we want to know
+    // about all the plugins, including the ones that are not to be loaded (so
+    // that we can refer to them, in the GUI, as either not wanted or not
+    // needed)
 
-    orderedFileNames.removeDuplicates();
+    if (pGuiVersion) {
+        pluginFileNames << fileNames;
+
+        pluginFileNames.removeDuplicates();
+    }
 
     // Deal with all the plugins we found
 
-    foreach (const QString &fileName, orderedFileNames)
-        mPlugins << new Plugin(fileName,
-                               plugins.contains(Plugin::name(fileName)),
+    foreach (const QString &pluginFileName, pluginFileNames)
+        mPlugins << new Plugin(pluginFileName,
+                               plugins.contains(Plugin::name(pluginFileName)),
                                interfaceVersion(), pluginsDir(), this);
 }
 
@@ -138,6 +154,22 @@ Plugins PluginManager::loadedPlugins() const
 
     foreach (Plugin *plugin, mPlugins)
         if (plugin->status() == Plugin::Loaded)
+            res << plugin;
+
+    return res;
+}
+
+//==============================================================================
+
+Plugins PluginManager::loadedCliPlugins() const
+{
+    // Return a list of only our loaded CLI plugins
+
+    Plugins res = Plugins();
+
+    foreach (Plugin *plugin, mPlugins)
+        if (   (plugin->info()->hasCliSupport())
+            && (plugin->status() == Plugin::Loaded))
             res << plugin;
 
     return res;

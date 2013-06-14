@@ -43,15 +43,15 @@ void CliApplication::usage()
     std::cout << "Usage: " << qPrintable(mApp->applicationName())
               << " [-a|--about] [-c|--command [<plugin>::]<command> <options>] [-h|--help] [-p|--plugins] [-v|--version] [<files>]"
               << std::endl;
-    std::cout << " -a, --about     Display OpenCOR about information"
+    std::cout << " -a, --about     Display some information about OpenCOR"
               << std::endl;
     std::cout << " -c, --command   Execute a given command"
               << std::endl;
     std::cout << " -h, --help      Display this help information"
               << std::endl;
-    std::cout << " -p, --plugins   Display the list of loaded plugins"
+    std::cout << " -p, --plugins   Display the list of plugins"
               << std::endl;
-    std::cout << " -v, --version   Display OpenCOR version information"
+    std::cout << " -v, --version   Display the version of OpenCOR"
               << std::endl;
 }
 
@@ -84,7 +84,7 @@ void CliApplication::loadPlugins()
 {
     // Load all the plugins by creating our plugin manager
 
-    mPluginManager = new OpenCOR::PluginManager(mApp, true);
+    mPluginManager = new OpenCOR::PluginManager(mApp, false);
 }
 
 //==============================================================================
@@ -97,7 +97,7 @@ void CliApplication::plugins()
 
     QStringList pluginsInfo = QStringList();
 
-    foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
+    foreach (Plugin *plugin, mPluginManager->loadedCliPlugins()) {
         // Retrieve the plugin's default description, stripped out of all its
         // HTML (should it have some)
         // Note: we enclose the plugin's default description within an html tag
@@ -129,7 +129,10 @@ void CliApplication::plugins()
     } else {
         pluginsInfo.sort(Qt::CaseInsensitive);
 
-        std::cout << "The following plugins are loaded:" << std::endl;
+        if (pluginsInfo.count() == 1)
+            std::cout << "The following plugin is loaded:" << std::endl;
+        else
+            std::cout << "The following plugins are loaded:" << std::endl;
 
         foreach (const QString pluginInfo, pluginsInfo)
             std::cout << " - " << qPrintable(pluginInfo) << std::endl;
@@ -161,16 +164,22 @@ int CliApplication::command(const QStringList pArguments)
 
         if (!commandPlugin.isEmpty()) {
             bool pluginFound = false;
+            bool pluginHasCliSupport = false;
 
             foreach (Plugin *plugin, mPluginManager->loadedPlugins())
                 if (!commandPlugin.compare(plugin->name())) {
                     pluginFound = true;
+                    pluginHasCliSupport = plugin->info()->hasCliSupport();
 
                     break;
                 }
 
             if (!pluginFound) {
                 std::cout << "Sorry, but the " << qPrintable(commandPlugin) << " plugin could not be found." << std::endl;
+
+                return 0;
+            } else if (!pluginHasCliSupport) {
+                std::cout << "Sorry, but the " << qPrintable(commandPlugin) << " plugin does not support the execution of commands." << std::endl;
 
                 return 0;
             }

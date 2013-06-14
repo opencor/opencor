@@ -34,11 +34,12 @@ class PluginManager : public QObject
 
 public:
     explicit PluginManager(QCoreApplication *pApp,
-                           const bool &pCliSupport = false);
+                           const bool &pGuiVersion = true);
     ~PluginManager();
 
     Plugins plugins() const;
     Plugins loadedPlugins() const;
+    Plugins loadedCliPlugins() const;
 
     QString pluginsDir() const;
     Plugin * plugin(const QString &pName) const;

@@ -18,7 +18,7 @@ namespace OpenCOR {
 
 //==============================================================================
 
-Plugin::Plugin(const QString &pFileName, const bool &pForceLoading,
+Plugin::Plugin(const QString &pFileName, const bool &pLoad,
                const PluginInfo::InterfaceVersion &pExpectedInterfaceVersion,
                const QString &pPluginsDir, PluginManager *pPluginManager
               ) :
@@ -46,11 +46,9 @@ Plugin::Plugin(const QString &pFileName, const bool &pForceLoading,
             mInfo->setFullDependencies(requiredPlugins(pPluginsDir, mName));
 
             // Try to load the plugin, but only if it uses the right interface
-            // version, and if it is manageable or is required by another plugin
+            // version, and if it is to be loaded
 
-            if (    (mInfo->interfaceVersion() == pExpectedInterfaceVersion)
-                && (   (mInfo->isManageable() && load(mName))
-                    || pForceLoading)) {
+            if ((mInfo->interfaceVersion() == pExpectedInterfaceVersion) && pLoad) {
                 // We are dealing with the right kind of plugin, so check that
                 // all of its dependencies, if any, are loaded
                 // Note: normally, we would only do this on non-Windows systems

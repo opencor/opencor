@@ -47,7 +47,7 @@ PluginInfo::Category PluginInfo::category() const
 
 bool PluginInfo::hasCliSupport() const
 {
-    // Return whether the plugin has support for CLI
+    // Return whether the plugin includes support for CLI
 
     return mCliSupport;
 }
