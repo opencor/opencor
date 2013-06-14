@@ -20,32 +20,17 @@
             headerAndContentsMenu("Command Line Interface (CLI)", "../..");
         </script>
 
-        <p class="warning">
-            Our efforts are currently focussed on the <a href="graphicalUserInterface.html">GUI</a> version of OpenCOR. Consequently, the CLI version has very little to offer at this stage.
-        </p>
-
         <div class="section">
             Help
         </div>
 
         <pre class="prettyprint">$ ./OpenCOR -h
-<span class="nocode">Usage: OpenCOR [-a|--about] [-h|--help] [-v|--version] [<files>]
- -a, --about     Display OpenCOR about information
+<span class="nocode">Usage: OpenCOR [-a|--about] [-c|--command [&lt;plugin&gt;::]&lt;command&gt; &lt;options&gt;] [-h|--help] [-p|--plugins] [-v|--version] [&lt;files&gt;]
+ -a, --about     Display some information about OpenCOR
+ -c, --command   Send a command to one or all the plugins
  -h, --help      Display this help information
- -v, --version   Display OpenCOR version information</span>
-</pre>
-
-        <div class="section">
-            About
-        </div>
-
-        <pre class="prettyprint">$ ./OpenCOR -a
-<span class="nocode">OpenCOR 0.1.2 (32-bit)
-GNU/Linux 3.5.0-31-generic
-Copyright 2011-2013
-
-OpenCOR is a cross-platform CellML-based modelling environment which can be
-used to organise, edit, simulate and analyse CellML files.</span>
+ -p, --plugins   Display the list of plugins
+ -v, --version   Display the version of OpenCOR</span>
 </pre>
 
         <div class="section">
@@ -53,7 +38,44 @@ used to organise, edit, simulate and analyse CellML files.</span>
         </div>
 
         <pre class="prettyprint">$ ./OpenCOR -v
-<span class="nocode">OpenCOR 0.1.2 (32-bit)</span>
+<span class="nocode">OpenCOR 0.2 (32-bit)</span>
+</pre>
+
+        <div class="section">
+            About
+        </div>
+
+        <pre class="prettyprint">$ ./OpenCOR -a
+<span class="nocode">OpenCOR 0.2 (32-bit)
+GNU/Linux 3.5.0-32-generic
+Copyright 2011-2013
+
+OpenCOR is a cross-platform CellML-based modelling environment which can be
+used to organise, edit, simulate and analyse CellML files.</span>
+</pre>
+
+        <div class="section">
+            Plugins
+        </div>
+
+        <pre class="prettyprint">$ ./OpenCOR -p
+<span class="nocode">The following plugin is loaded:
+ - <a href="../plugins/CellMLTools.html">CellMLTools</a>: a plugin to access various CellML-related tools.</span>
+</pre>
+
+        <div class="section">
+            Command
+        </div>
+
+        <pre class="prettyprint">$ ./OpenCOR -c help
+<span class="nocode">Commands supported by <a href="../plugins/CellMLTools.html">CellMLTools</a>:
+ * Display the commands supported by <a href="../plugins/CellMLTools.html">CellMLTools</a>:
+      help
+ * Export &lt;in_file&gt; to &lt;out_file&gt; using &lt;format&gt; as the destination format:
+      export &lt;in_file&gt; &lt;out_file&gt; &lt;format&gt;
+   &lt;format&gt; can take one of the following values:
+      cellml_1_0: to export a CellML 1.1 file to CellML 1.0</span>
+$ ./OpenCOR -c CellMLTools::export in.cellml out.cellml cellml_1_0
 </pre>
 
         <script type="text/javascript">
