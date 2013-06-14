@@ -149,7 +149,7 @@ void CliApplication::plugins()
 
 bool CliApplication::command(const QStringList pArguments, int *pRes)
 {
-    // Send a command to one all the plugins, so first retrieve the list of
+    // Send a command to one or all the plugins, so first retrieve the list of
     // loaded CLI plugins
 
     Plugins loadedCliPlugins = mPluginManager->loadedCliPlugins();
@@ -289,10 +289,18 @@ bool CliApplication::run(int *pRes)
 
             plugins();
         } else if (commandOption) {
-            loadPlugins();
+            // Make sure that we have at least one argument (which would be the
+            // command itself) before loading the plugins and then sending the
+            // command to the plugin(s)
 
-            if (!command(commandArguments, pRes))
+            if (commandArguments.isEmpty()) {
                 usage();
+            } else {
+                loadPlugins();
+
+                if (!command(commandArguments, pRes))
+                    usage();
+            }
         } else {
             // The user didn't provide any option which requires running OpenCOR
             // as a CLI application
