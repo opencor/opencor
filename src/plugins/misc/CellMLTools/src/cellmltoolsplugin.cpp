@@ -97,7 +97,7 @@ void CellMLToolsPlugin::runHelpCommand()
     std::cout << " * Display the commands supported by CellMLTools:" << std::endl;
     std::cout << "      help" << std::endl;
     std::cout << " * Export <in_file> to <out_file> using <format> as the destination format:" << std::endl;
-    std::cout << "      export <format> <in_file> <out_file>" << std::endl;
+    std::cout << "      export <in_file> <out_file> <format>" << std::endl;
     std::cout << "   <format> can take one of the following values:" << std::endl;
     std::cout << "      cellml_1_0: to export a CellML 1.1 file to CellML 1.0" << std::endl;
 }
@@ -119,7 +119,7 @@ void CellMLToolsPlugin::runExportCommand(const QStringList &pArguments,
 
     // Check that the given format is valid
 
-    QString format = pArguments.at(0);
+    QString format = pArguments.at(2);
 
     if (format.compare("cellml_1_0"))
         validArguments = false;
@@ -138,7 +138,7 @@ void CellMLToolsPlugin::runExportCommand(const QStringList &pArguments,
     // 1.0 file
 
     QString errorMessage = QString();
-    QString inFileName = pArguments.at(1);
+    QString inFileName = pArguments.at(0);
     CellMLSupport::CellmlFile *inCellmlFile = new CellMLSupport::CellmlFile(inFileName);
 
     if (!QFileInfo(inFileName).exists())
@@ -154,7 +154,7 @@ void CellMLToolsPlugin::runExportCommand(const QStringList &pArguments,
     // CellML 1.0
 
     if (    errorMessage.isEmpty()
-        && !inCellmlFile->exportTo(pArguments.at(2), CellMLSupport::CellmlFile::Cellml_1_0))
+        && !inCellmlFile->exportTo(pArguments.at(1), CellMLSupport::CellmlFile::Cellml_1_0))
         errorMessage = "Sorry, but a problem occurred while exporting the input file.";
 
     delete inCellmlFile;
