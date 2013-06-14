@@ -3,6 +3,7 @@
 //==============================================================================
 
 #include "cliapplication.h"
+#include "coreinterface.h"
 #include "pluginmanager.h"
 #include "utils.h"
 
@@ -45,7 +46,7 @@ void CliApplication::usage()
               << std::endl;
     std::cout << " -a, --about     Display some information about OpenCOR"
               << std::endl;
-    std::cout << " -c, --command   Execute a given command"
+    std::cout << " -c, --command   Send a command to one or all the plugins"
               << std::endl;
     std::cout << " -h, --help      Display this help information"
               << std::endl;
@@ -91,13 +92,22 @@ void CliApplication::loadPlugins()
 
 void CliApplication::plugins()
 {
-    // Output some information about our loaded plugins
+    // Output some information about our CLI-enabled plugins, so first make sure
+    // that we have at least one of them
+
+    Plugins loadedCliPlugins = mPluginManager->loadedCliPlugins();
+
+    if (loadedCliPlugins.isEmpty()) {
+        std::cout << "Sorry, but no plugins could be found." << std::endl;
+
+        return;
+    }
 
     // First, we retrieve all the plugins information
 
     QStringList pluginsInfo = QStringList();
 
-    foreach (Plugin *plugin, mPluginManager->loadedCliPlugins()) {
+    foreach (Plugin *plugin, loadedCliPlugins) {
         // Retrieve the plugin's default description, stripped out of all its
         // HTML (should it have some)
         // Note: we enclose the plugin's default description within an html tag
@@ -122,27 +132,28 @@ void CliApplication::plugins()
         pluginsInfo << pluginInfo;
     }
 
-    // Now, we can output the plugin information, if any, in alphabetical order
+    // Now, we can output the plugin information in alphabetical order
 
-    if (pluginsInfo.isEmpty()) {
-        std::cout << "Sorry, but no plugins could be found." << std::endl;
-    } else {
-        pluginsInfo.sort(Qt::CaseInsensitive);
+    pluginsInfo.sort(Qt::CaseInsensitive);
 
-        if (pluginsInfo.count() == 1)
-            std::cout << "The following plugin is loaded:" << std::endl;
-        else
-            std::cout << "The following plugins are loaded:" << std::endl;
+    if (pluginsInfo.count() == 1)
+        std::cout << "The following plugin is loaded:" << std::endl;
+    else
+        std::cout << "The following plugins are loaded:" << std::endl;
 
-        foreach (const QString pluginInfo, pluginsInfo)
-            std::cout << " - " << qPrintable(pluginInfo) << std::endl;
-    }
+    foreach (const QString pluginInfo, pluginsInfo)
+        std::cout << " - " << qPrintable(pluginInfo) << std::endl;
 }
 
 //==============================================================================
 
 int CliApplication::command(const QStringList pArguments)
 {
+    // Send a command to one all the plugins, so first retrieve the list of
+    // loaded CLI plugins
+
+    Plugins loadedCliPlugins = mPluginManager->loadedCliPlugins();
+
     // Make sure that we have at least one argument
 
     if (!pArguments.count())
@@ -193,26 +204,25 @@ int CliApplication::command(const QStringList pArguments)
     if (commandName.isEmpty())
         return -1;
 
-    // Some debug information...
+    // Make sure that we have at least one CLI-enabled plugin
 
-    std::cout << "A command is to be executed:" << std::endl;
-    std::cout << " - Target: " << qPrintable(commandPlugin.isEmpty()?"all":commandPlugin) << std::endl;
-    std::cout << " - Command: " << qPrintable(commandName) << std::endl;
+    if (loadedCliPlugins.isEmpty()) {
+        std::cout << "Sorry, but no plugins could be found to run the command." << std::endl;
 
-    int iMax = pArguments.count();
-
-    if (iMax == 1) {
-        std::cout << " - Options: /" << std::endl;
-    } else {
-        std::cout << " - Options:" << std::endl;
-
-        for (int i = 1, iMax = pArguments.count(); i < iMax; ++i)
-            std::cout << "    - " << qPrintable(pArguments.at(i)) << std::endl;
+        return 0;
     }
 
-    // Everything went fine, so...
+    // Send the command to the plugin(s)
 
-    return 0;
+    int res = 0;
+
+    foreach (Plugin *plugin, loadedCliPlugins)
+        if (    commandPlugin.isEmpty()
+            || !commandPlugin.compare(plugin->name()))
+            if (qobject_cast<CoreInterface *>(plugin->instance())->runCommand(commandName, pArguments))
+                res = -1;
+
+    return res;
 }
 
 //==============================================================================

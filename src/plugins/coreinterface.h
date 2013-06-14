@@ -43,6 +43,9 @@ public:
 
     virtual void handleArguments(const QStringList &pArguments);
     virtual void handleAction(const QUrl &pUrl);
+
+    virtual int runCommand(const QString &pCommand,
+                           const QStringList &pArguments);
 };
 
 //==============================================================================

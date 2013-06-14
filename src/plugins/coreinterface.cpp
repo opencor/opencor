@@ -82,6 +82,19 @@ void CoreInterface::handleAction(const QUrl &pUrl)
 
 //==============================================================================
 
+int CoreInterface::runCommand(const QString &pCommand,
+                              const QStringList &pArguments)
+{
+    // Nothing to do by default...
+
+    Q_UNUSED(pCommand);
+    Q_UNUSED(pArguments);
+
+    return 0;
+}
+
+//==============================================================================
+
 }   // namespace OpenCOR
 
 //==============================================================================
