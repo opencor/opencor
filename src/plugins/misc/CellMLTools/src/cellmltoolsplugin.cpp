@@ -110,19 +110,19 @@ void CellMLToolsPlugin::runExportCommand(const QStringList &pArguments,
     // Export an existing file to another file using a given format as the
     // destination format
 
-    // Make sure that we have three arguments
+    // Make sure that we have three arguments and that the given format is
+    // valid
 
     bool validArguments = true;
 
-    if (pArguments.count() != 3)
+    if (pArguments.count() != 3) {
         validArguments = false;
+    } else {
+        QString format = pArguments.at(2);
 
-    // Check that the given format is valid
-
-    QString format = pArguments.at(2);
-
-    if (format.compare("cellml_1_0"))
-        validArguments = false;
+        if (format.compare("cellml_1_0"))
+            validArguments = false;
+    }
 
     // Confirm that we have valid arguments
 
