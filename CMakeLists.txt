@@ -5,8 +5,7 @@ PROJECT(OpenCOR)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.9)
 
 # Name of the main project and location of the built OpenCOR binary
-# Note: these are required, on OS X, to determine where plugins should be
-#       copied, so...
+# Note: these are required to determine where plugins should be copied on OS X...
 
 SET(MAIN_PROJECT_NAME ${PROJECT_NAME})
 SET(OS_X_PROJECT_BINARY_DIR ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app)
