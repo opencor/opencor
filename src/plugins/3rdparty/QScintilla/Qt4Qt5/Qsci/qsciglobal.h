@@ -33,8 +33,8 @@ extern "C++" {
 #include <qglobal.h>
 
 
-#define QSCINTILLA_VERSION      0x020701
-#define QSCINTILLA_VERSION_STR  "2.7.1"
+#define QSCINTILLA_VERSION      0x020702
+#define QSCINTILLA_VERSION_STR  "2.7.2"
 
 
 // Under Windows, define QSCINTILLA_MAKE_DLL to create a Scintilla DLL, or

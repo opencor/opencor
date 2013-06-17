@@ -40,6 +40,7 @@
 
 #include <qdesktopwidget.h>
 #include <qpolygon.h>
+#include <qtextlayout.h>
 
 #include "SciNamespace.h"
 
@@ -110,12 +111,7 @@ void Font::Create(const FontParameters &fp)
         strategy = QFont::PreferDefault;
     }
 
-/*---OPENCOR---
-#if defined(Q_WS_MAC)
-*/
-//---OPENCOR--- BEGIN
 #if defined(Q_OS_MAC)
-//---OPENCOR--- END
 #if QT_VERSION >= 0x040700
     strategy = static_cast<QFont::StyleStrategy>(strategy | QFont::ForceIntegerMetrics);
 #else
@@ -234,6 +230,7 @@ private:
     void drawRect(const PRectangle &rc);
     void drawText(const PRectangle &rc, Font &font_, XYPOSITION ybase,
             const char *s, int len, ColourDesired fore);
+    static QFont convertQFont(Font &font);
     QFontMetricsF metrics(Font &font_);
     QString convertText(const char *s, int len);
     static QColor convertQColor(const ColourDesired &col,
@@ -524,31 +521,59 @@ void SurfaceImpl::DrawRGBAImage(PRectangle rc, int width, int height,
 void SurfaceImpl::MeasureWidths(Font &font_, const char *s, int len,
         XYPOSITION *positions)
 {
-    QFontMetricsF fm = metrics(font_);
     QString qs = convertText(s, len);
+    QTextLayout text_layout(qs, convertQFont(font_), pd);
 
-    // The position for each byte of a character is the offset from the start
-    // where the following character should be drawn.
-    int i_byte = 0;
+    text_layout.beginLayout();
+    QTextLine text_line = text_layout.createLine();
+    text_layout.endLayout();
 
-    for (int i_char = 0; i_char < qs.length(); ++i_char)
+    if (unicodeMode)
     {
-        // We can't just add the individual character widths together because
-        // of kerning.
-        XYPOSITION width = fm.width(qs.left(i_char + 1));
+        int i_char = 0, i_byte = 0;;
 
-        if (unicodeMode)
+        while (i_char < qs.size())
         {
+            unsigned char byte = s[i_byte];
+            int nbytes, code_units;
+
+            // Work out character sizes by looking at the byte stream.
+            if (byte >= 0xf0)
+            {
+                nbytes = 4;
+                code_units = 2;
+            }
+            else
+            {
+                if (byte >= 0xe0)
+                    nbytes = 3;
+                else if (byte >= 0x80)
+                    nbytes = 2;
+                else
+                    nbytes = 1;
+
+                code_units = 1;
+            }
+
+            XYPOSITION position = text_line.cursorToX(i_char + code_units);
+
             // Set the same position for each byte of the character.
-            int nbytes = qs.mid(i_char, 1).toUtf8().length();
+            for (int i = 0; i < nbytes && i_byte < len; ++i)
+                positions[i_byte++] = position;
 
-            while (nbytes--)
-                positions[i_byte++] = width;
+            i_char += code_units;
         }
-        else
-        {
-            positions[i_byte++] = width;
-        }
+
+        // This shouldn't be necessary...
+        XYPOSITION last_position = ((i_byte > 0) ? positions[i_byte - 1] : 0);
+
+        while (i_byte < len)
+            positions[i_byte++] = last_position;
+    }
+    else
+    {
+        for (int i = 0; i < len; ++i)
+            positions[i] = text_line.cursorToX(i + 1);
     }
 }
 
@@ -611,15 +636,21 @@ void SurfaceImpl::FlushCachedState()
 {
 }
 
+// Return the QFont for a Font.
+QFont SurfaceImpl::convertQFont(Font &font)
+{
+    QFont *f = PFont(font.GetID());
+
+    if (f)
+        return *f;
+
+    return QApplication::font();
+}
+
 // Get the metrics for a font.
 QFontMetricsF SurfaceImpl::metrics(Font &font_)
 {
-    QFont *f = PFont(font_.GetID()), fnt;
-
-    if (f)
-        fnt = *f;
-    else
-        fnt = QApplication::font();
+    QFont fnt = convertQFont(font_);
 
     return QFontMetricsF(fnt, pd);
 }

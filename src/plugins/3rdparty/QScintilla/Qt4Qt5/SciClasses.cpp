@@ -123,12 +123,7 @@ QsciSciListBox::QsciSciListBox(QWidget *parent, QsciListBoxQt *lbx_)
 {
     setAttribute(Qt::WA_StaticContents);
 
-/*---OPENCOR---
-#if defined(Q_WS_WIN32)
-*/
-//---OPENCOR--- BEGIN
-#if defined(Q_OS_WIN32)
-//---OPENCOR--- END
+#if defined(Q_OS_WIN)
     setWindowFlags(Qt::Tool|Qt::FramelessWindowHint);
 
     // This stops the main widget losing focus when the user clicks on this one

@@ -115,9 +115,8 @@ QsciScintilla::QsciScintilla(QWidget *parent)
 
 #if defined(Q_OS_WIN)
     setEolMode(EolWindows);
-#elif defined(Q_OS_MAC)
-    setEolMode(EolMac);
 #else
+    // Note that EolMac is pre-OS/X.
     setEolMode(EolUnix);
 #endif
 

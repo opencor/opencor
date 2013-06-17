@@ -201,10 +201,10 @@ public:
         //! A carriage return/line feed as used on Windows systems.
         EolWindows = SC_EOL_CRLF,
 
-        //! A line feed as used on Unix systems.
+        //! A line feed as used on Unix systems, including OS/X.
         EolUnix = SC_EOL_LF,
 
-        //! A carriage return as used on Mac systems.
+        //! A carriage return as used on Mac systems prior to OS/X.
         EolMac = SC_EOL_CR
     };
 
