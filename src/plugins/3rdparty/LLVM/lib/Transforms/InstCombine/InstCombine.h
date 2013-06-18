@@ -11,12 +11,12 @@
 #define INSTCOMBINE_INSTCOMBINE_H
 
 #include "InstCombineWorklist.h"
-#include "llvm/IRBuilder.h"
-#include "llvm/IntrinsicInst.h"
-#include "llvm/Operator.h"
-#include "llvm/Pass.h"
 #include "llvm/Analysis/ValueTracking.h"
-#include "llvm/Support/InstVisitor.h"
+#include "llvm/IR/IRBuilder.h"
+#include "llvm/IR/IntrinsicInst.h"
+#include "llvm/IR/Operator.h"
+#include "llvm/InstVisitor.h"
+#include "llvm/Pass.h"
 #include "llvm/Support/TargetFolder.h"
 #include "llvm/Transforms/Utils/SimplifyLibCalls.h"
 
@@ -76,6 +76,7 @@ class LLVM_LIBRARY_VISIBILITY InstCombiner
   TargetLibraryInfo *TLI;
   bool MadeIRChange;
   LibCallSimplifier *Simplifier;
+  bool MinimizeSize;
 public:
   /// Worklist - All of the instructions that need to be simplified.
   InstCombineWorklist Worklist;
@@ -87,6 +88,7 @@ public:
 
   static char ID; // Pass identification, replacement for typeid
   InstCombiner() : FunctionPass(ID), TD(0), Builder(0) {
+    MinimizeSize = false;
     initializeInstCombinerPass(*PassRegistry::getPassRegistry());
   }
 
@@ -114,6 +116,8 @@ public:
   Instruction *visitSub(BinaryOperator &I);
   Instruction *visitFSub(BinaryOperator &I);
   Instruction *visitMul(BinaryOperator &I);
+  Value *foldFMulConst(Instruction *FMulOrDiv, ConstantFP *C,
+                       Instruction *InsertBefore);
   Instruction *visitFMul(BinaryOperator &I);
   Instruction *visitURem(BinaryOperator &I);
   Instruction *visitSRem(BinaryOperator &I);
@@ -207,7 +211,7 @@ public:
 private:
   bool ShouldChangeType(Type *From, Type *To) const;
   Value *dyn_castNegVal(Value *V) const;
-  Value *dyn_castFNegVal(Value *V) const;
+  Value *dyn_castFNegVal(Value *V, bool NoSignedZero=false) const;
   Type *FindElementAtOffset(Type *Ty, int64_t Offset,
                                   SmallVectorImpl<Value*> &NewIndices);
   Instruction *FoldOpIntoSelect(Instruction &Op, SelectInst *SI);
@@ -229,6 +233,7 @@ private:
   Instruction *transformSExtICmp(ICmpInst *ICI, Instruction &CI);
   bool WillNotOverflowSignedAdd(Value *LHS, Value *RHS);
   Value *EmitGEPOffset(User *GEP);
+  Instruction *scalarizePHI(ExtractElementInst &EI, PHINode *PN);
 
 public:
   // InsertNewInstBefore - insert an instruction New before instruction Old
@@ -327,6 +332,11 @@ private:
   bool SimplifyDemandedBits(Use &U, APInt DemandedMask,
                             APInt& KnownZero, APInt& KnownOne,
                             unsigned Depth=0);
+  /// Helper routine of SimplifyDemandedUseBits. It tries to simplify demanded
+  /// bit for "r1 = shr x, c1; r2 = shl r1, c2" instruction sequence.
+  Value *SimplifyShrShlDemandedBits(Instruction *Lsr, Instruction *Sftl,
+                                    APInt DemandedMask, APInt &KnownZero,
+                                    APInt &KnownOne);
 
   /// SimplifyDemandedInstructionBits - Inst is an integer instruction that
   /// SimplifyDemandedBits knows about.  See if the instruction has any

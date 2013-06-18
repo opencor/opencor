@@ -12,34 +12,25 @@
 //===----------------------------------------------------------------------===//
 
 #include "llvm/Support/FileOutputBuffer.h"
-
 #include "llvm/ADT/OwningPtr.h"
 #include "llvm/ADT/SmallVector.h"
-#include "llvm/Support/FileSystem.h"
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/Support/system_error.h"
 
+using llvm::sys::fs::mapped_file_region;
 
 namespace llvm {
-
-
-FileOutputBuffer::FileOutputBuffer(uint8_t *Start, uint8_t *End,
-                                  StringRef Path, StringRef TmpPath)
-  : BufferStart(Start), BufferEnd(End) {
-  FinalPath.assign(Path);
-  TempPath.assign(TmpPath);
+FileOutputBuffer::FileOutputBuffer(mapped_file_region * R,
+                                   StringRef Path, StringRef TmpPath)
+  : Region(R)
+  , FinalPath(Path)
+  , TempPath(TmpPath) {
 }
-
 
 FileOutputBuffer::~FileOutputBuffer() {
-  // If not already commited, delete buffer and remove temp file.
-  if ( BufferStart != NULL ) {
-    sys::fs::unmap_file_pages((void*)BufferStart, getBufferSize());
-    bool Existed;
-    sys::fs::remove(Twine(TempPath), Existed);
-  }
+  bool Existed;
+  sys::fs::remove(Twine(TempPath), Existed);
 }
-
 
 error_code FileOutputBuffer::create(StringRef FilePath,
                                     size_t Size,
@@ -75,19 +66,12 @@ error_code FileOutputBuffer::create(StringRef FilePath,
   SmallString<128> TempFilePath;
   int FD;
   EC = sys::fs::unique_file(Twine(FilePath) + ".tmp%%%%%%%",
-                                                FD, TempFilePath, false, 0644);
+                            FD, TempFilePath, false, 0644);
   if (EC)
     return EC;
 
-  // The unique_file() interface leaks lower layers and returns a file
-  // descriptor.  There is no way to directly close it, so use this hack
-  // to hand it off to raw_fd_ostream to close for us.
-  {
-    raw_fd_ostream Dummy(FD, /*shouldClose=*/true);
-  }
-
-  // Resize file to requested initial size
-  EC = sys::fs::resize_file(Twine(TempFilePath), Size);
+  OwningPtr<mapped_file_region> MappedFile(new mapped_file_region(
+      FD, true, mapped_file_region::readwrite, Size, 0, EC));
   if (EC)
     return EC;
 
@@ -111,30 +95,20 @@ error_code FileOutputBuffer::create(StringRef FilePath,
       return EC;
   }
 
-  // Memory map new file.
-  void *Base;
-  EC = sys::fs::map_file_pages(Twine(TempFilePath), 0, Size, true, Base);
-  if (EC)
-    return EC;
-
-  // Create FileOutputBuffer object to own mapped range.
-  uint8_t *Start = reinterpret_cast<uint8_t*>(Base);
-  Result.reset(new FileOutputBuffer(Start, Start+Size, FilePath, TempFilePath));
+  Result.reset(new FileOutputBuffer(MappedFile.get(), FilePath, TempFilePath));
+  if (Result)
+    MappedFile.take();
 
   return error_code::success();
 }
 
-
 error_code FileOutputBuffer::commit(int64_t NewSmallerSize) {
   // Unmap buffer, letting OS flush dirty pages to file on disk.
-  void *Start = reinterpret_cast<void*>(BufferStart);
-  error_code EC = sys::fs::unmap_file_pages(Start, getBufferSize());
-  if (EC)
-    return EC;
+  Region.reset(0);
 
   // If requested, resize file as part of commit.
   if ( NewSmallerSize != -1 ) {
-    EC = sys::fs::resize_file(Twine(TempPath), NewSmallerSize);
+    error_code EC = sys::fs::resize_file(Twine(TempPath), NewSmallerSize);
     if (EC)
       return EC;
   }
@@ -142,7 +116,4 @@ error_code FileOutputBuffer::commit(int64_t NewSmallerSize) {
   // Rename file to final name.
   return sys::fs::rename(Twine(TempPath), Twine(FinalPath));
 }
-
-
 } // namespace
-

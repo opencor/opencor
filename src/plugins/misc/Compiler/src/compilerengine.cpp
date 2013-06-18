@@ -18,27 +18,27 @@
     #pragma GCC diagnostic ignored "-Wunused-parameter"
 #endif
 
-#include "llvm/LLVMContext.h"
-#include "llvm/Module.h"
-#include "llvm/ADT/IntrusiveRefCntPtr.h"
-#include "llvm/ADT/OwningPtr.h"
-#include "llvm/ADT/SmallVector.h"
+//#include "llvm/ADT/IntrusiveRefCntPtr.h"
+//#include "llvm/ADT/OwningPtr.h"
+//#include "llvm/ADT/SmallVector.h"
 #include "llvm/ExecutionEngine/ExecutionEngine.h"
+#include "llvm/IR/LLVMContext.h"
+#include "llvm/IR/Module.h"
 #include "llvm/Support/TargetSelect.h"
 #include "llvm/Support/Host.h"
-#include "llvm/Support/Path.h"
+//#include "llvm/Support/Path.h"
 #include "llvm/Support/raw_ostream.h"
 
-#include "clang/Basic/Diagnostic.h"
-#include "clang/Basic/DiagnosticIDs.h"
+//#include "clang/Basic/Diagnostic.h"
+//#include "clang/Basic/DiagnosticIDs.h"
 #include "clang/Basic/DiagnosticOptions.h"
 #include "clang/CodeGen/CodeGenAction.h"
 #include "clang/Driver/Compilation.h"
 #include "clang/Driver/Driver.h"
 #include "clang/Driver/Job.h"
 #include "clang/Driver/Tool.h"
-#include "clang/Driver/Util.h"
-#include "clang/Frontend/CompilerInvocation.h"
+//#include "clang/Driver/Util.h"
+//#include "clang/Frontend/CompilerInvocation.h"
 #include "clang/Frontend/CompilerInstance.h"
 #include "clang/Frontend/TextDiagnosticPrinter.h"
 
@@ -155,7 +155,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
                                                &*diagnosticOptions,
                                                new clang::TextDiagnosticPrinter(outputStream, &*diagnosticOptions));
     clang::driver::Driver driver("clang", llvm::sys::getDefaultTargetTriple(),
-                                 "", true, diagnosticsEngine);
+                                 "", diagnosticsEngine);
 
     // Get a compilation object to which we pass some arguments
     // Note: in gcc, the -O3 option comes with a warning: "Under some
@@ -223,9 +223,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     // Create the compiler instance's diagnostics engine
 
-    compilerInstance.createDiagnostics(int(commandArguments.size()),
-                                       const_cast<char **>(commandArguments.data()),
-                                       new clang::TextDiagnosticPrinter(outputStream, &*diagnosticOptions));
+    compilerInstance.createDiagnostics(new clang::TextDiagnosticPrinter(outputStream, &*diagnosticOptions));
 
     if (!compilerInstance.hasDiagnostics()) {
         mError = tr("the diagnostics engine could not be created");

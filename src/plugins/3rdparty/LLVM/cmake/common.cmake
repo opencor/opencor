@@ -3,20 +3,20 @@ MACRO(RETRIEVE_LLVM_SETTINGS)
 
     IF(WIN32)
         SET(LLVM_DEFINITIONS
-            _CRT_NONSTDC_NO_DEPRECATE
-            _CRT_NONSTDC_NO_WARNINGS
+#            _CRT_NONSTDC_NO_DEPRECATE
+#            _CRT_NONSTDC_NO_WARNINGS
 
-            _CRT_SECURE_NO_DEPRECATE
-            _CRT_SECURE_NO_WARNINGS
+#            _CRT_SECURE_NO_DEPRECATE
+#            _CRT_SECURE_NO_WARNINGS
 
-            _SCL_SECURE_NO_DEPRECATE
-            _SCL_SECURE_NO_WARNINGS
+#            _SCL_SECURE_NO_DEPRECATE
+#            _SCL_SECURE_NO_WARNINGS
         )
     ELSEIF(APPLE)
         SET(LLVM_DEFINITIONS)
     ELSE()
         SET(LLVM_DEFINITIONS
-            __STDC_FORMAT_MACROS
+#            __STDC_FORMAT_MACROS
         )
     ENDIF()
 
@@ -28,8 +28,8 @@ MACRO(RETRIEVE_LLVM_SETTINGS)
     # Ignore some warnings on Windows
 
     IF(WIN32)
-        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4244")
-        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4244 /wd4291 /wd4351 /wd4355 /wd4624 /wd4722 /wd4805")
+#        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4244")
+#        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4244 /wd4291 /wd4351 /wd4355 /wd4624 /wd4722 /wd4805")
         # Note: on Windows, some warnings get generated. Yet, we have nothing to
         #       do with them, so we ignore them...
     ENDIF()

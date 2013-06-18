@@ -13,19 +13,19 @@
 
 #define DEBUG_TYPE "asm-printer"
 #include "llvm/CodeGen/AsmPrinter.h"
-#include "llvm/MC/MachineLocation.h"
+#include "llvm/ADT/Twine.h"
+#include "llvm/IR/DataLayout.h"
 #include "llvm/MC/MCAsmInfo.h"
 #include "llvm/MC/MCSection.h"
 #include "llvm/MC/MCStreamer.h"
 #include "llvm/MC/MCSymbol.h"
-#include "llvm/DataLayout.h"
+#include "llvm/MC/MachineLocation.h"
+#include "llvm/Support/Dwarf.h"
+#include "llvm/Support/ErrorHandling.h"
 #include "llvm/Target/TargetFrameLowering.h"
 #include "llvm/Target/TargetLoweringObjectFile.h"
 #include "llvm/Target/TargetMachine.h"
 #include "llvm/Target/TargetRegisterInfo.h"
-#include "llvm/ADT/Twine.h"
-#include "llvm/Support/Dwarf.h"
-#include "llvm/Support/ErrorHandling.h"
 using namespace llvm;
 
 //===----------------------------------------------------------------------===//
@@ -46,7 +46,7 @@ void AsmPrinter::EmitULEB128(unsigned Value, const char *Desc,
   if (isVerbose() && Desc)
     OutStreamer.AddComment(Desc);
 
-  OutStreamer.EmitULEB128IntValue(Value, 0/*addrspace*/, PadTo);
+  OutStreamer.EmitULEB128IntValue(Value, PadTo);
 }
 
 /// EmitCFAByte - Emit a .byte 42 directive for a DW_CFA_xxx value.
@@ -58,7 +58,7 @@ void AsmPrinter::EmitCFAByte(unsigned Val) const {
     else
       OutStreamer.AddComment(dwarf::CallFrameString(Val));
   }
-  OutStreamer.EmitIntValue(Val, 1, 0/*addrspace*/);
+  OutStreamer.EmitIntValue(Val, 1);
 }
 
 static const char *DecodeDWARFEncoding(unsigned Encoding) {
@@ -102,7 +102,7 @@ void AsmPrinter::EmitEncodingByte(unsigned Val, const char *Desc) const {
                              DecodeDWARFEncoding(Val));
   }
 
-  OutStreamer.EmitIntValue(Val, 1, 0/*addrspace*/);
+  OutStreamer.EmitIntValue(Val, 1);
 }
 
 /// GetSizeOfEncodedValue - Return the size of the encoding in bytes.
@@ -119,20 +119,16 @@ unsigned AsmPrinter::GetSizeOfEncodedValue(unsigned Encoding) const {
   }
 }
 
-void AsmPrinter::EmitReference(const MCSymbol *Sym, unsigned Encoding) const {
-  const TargetLoweringObjectFile &TLOF = getObjFileLowering();
+void AsmPrinter::EmitTTypeReference(const GlobalValue *GV,
+                                    unsigned Encoding) const {
+  if (GV) {
+    const TargetLoweringObjectFile &TLOF = getObjFileLowering();
 
-  const MCExpr *Exp =
-    TLOF.getExprForDwarfReference(Sym, Encoding, OutStreamer);
-  OutStreamer.EmitAbsValue(Exp, GetSizeOfEncodedValue(Encoding));
-}
-
-void AsmPrinter::EmitReference(const GlobalValue *GV, unsigned Encoding)const{
-  const TargetLoweringObjectFile &TLOF = getObjFileLowering();
-
-  const MCExpr *Exp =
-    TLOF.getExprForDwarfGlobalReference(GV, Mang, MMI, Encoding, OutStreamer);
-  OutStreamer.EmitValue(Exp, GetSizeOfEncodedValue(Encoding), /*addrspace*/0);
+    const MCExpr *Exp =
+      TLOF.getTTypeGlobalReference(GV, Mang, MMI, Encoding, OutStreamer);
+    OutStreamer.EmitValue(Exp, GetSizeOfEncodedValue(Encoding));
+  } else
+    OutStreamer.EmitIntValue(0, GetSizeOfEncodedValue(Encoding));
 }
 
 /// EmitSectionOffset - Emit the 4-byte offset of Label from the start of its
@@ -145,7 +141,7 @@ void AsmPrinter::EmitReference(const GlobalValue *GV, unsigned Encoding)const{
 void AsmPrinter::EmitSectionOffset(const MCSymbol *Label,
                                    const MCSymbol *SectionLabel) const {
   // On COFF targets, we have to emit the special .secrel32 directive.
-  if (MAI->getDwarfSectionOffsetDirective()) {
+  if (MAI->needsDwarfSectionOffsetDirective()) {
     OutStreamer.EmitCOFFSecRel32(Label);
     return;
   }
@@ -161,7 +157,7 @@ void AsmPrinter::EmitSectionOffset(const MCSymbol *Label,
   // If the section in question will end up with an address of 0 anyway, we can
   // just emit an absolute reference to save a relocation.
   if (Section.isBaseAddressKnownZero()) {
-    OutStreamer.EmitSymbolValue(Label, 4, 0/*AddrSpace*/);
+    OutStreamer.EmitSymbolValue(Label, 4);
     return;
   }
 

@@ -14,18 +14,18 @@
 #ifndef CODEGEN_ASMPRINTER_DWARFACCELTABLE_H__
 #define CODEGEN_ASMPRINTER_DWARFACCELTABLE_H__
 
-#include "llvm/ADT/StringMap.h"
+#include "DIE.h"
 #include "llvm/ADT/ArrayRef.h"
+#include "llvm/ADT/StringMap.h"
 #include "llvm/MC/MCSymbol.h"
-#include "llvm/Support/Dwarf.h"
 #include "llvm/Support/DataTypes.h"
 #include "llvm/Support/Debug.h"
+#include "llvm/Support/Dwarf.h"
 #include "llvm/Support/ErrorHandling.h"
 #include "llvm/Support/Format.h"
 #include "llvm/Support/FormattedStream.h"
-#include "DIE.h"
-#include <vector>
 #include <map>
+#include <vector>
 
 // The dwarf accelerator tables are an indirect hash table optimized
 // for null lookup rather than access to known data. They are output into
@@ -63,7 +63,7 @@ namespace llvm {
 
 class AsmPrinter;
 class DIE;
-class DwarfDebug;
+class DwarfUnits;
 
 class DwarfAccelTable {
 
@@ -245,7 +245,7 @@ private:
   void EmitBuckets(AsmPrinter *);
   void EmitHashes(AsmPrinter *);
   void EmitOffsets(AsmPrinter *, MCSymbol *);
-  void EmitData(AsmPrinter *, DwarfDebug *D);
+  void EmitData(AsmPrinter *, DwarfUnits *D);
 
   // Allocator for HashData and HashDataContents.
   BumpPtrAllocator Allocator;
@@ -272,7 +272,7 @@ private:
   ~DwarfAccelTable();
   void AddName(StringRef, DIE*, char = 0);
   void FinalizeTable(AsmPrinter *, const char *);
-  void Emit(AsmPrinter *, MCSymbol *, DwarfDebug *);
+  void Emit(AsmPrinter *, MCSymbol *, DwarfUnits *);
 #ifndef NDEBUG
   void print(raw_ostream &O);
   void dump() { print(dbgs()); }
