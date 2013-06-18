@@ -1,6 +1,6 @@
 /*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
 |*                                                                            *|
-|* Target Register Enum Values                                                *|
+|*Target Register Enum Values                                                 *|
 |*                                                                            *|
 |* Automatically generated file, do not edit!                                 *|
 |*                                                                            *|
@@ -263,7 +263,7 @@ enum {
 
 /*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
 |*                                                                            *|
-|* MC Register Information                                                    *|
+|*MC Register Information                                                     *|
 |*                                                                            *|
 |* Automatically generated file, do not edit!                                 *|
 |*                                                                            *|
@@ -274,7 +274,7 @@ enum {
 #undef GET_REGINFO_MC_DESC
 namespace llvm {
 
-extern const uint16_t X86RegDiffLists[] = {
+extern const MCPhysReg X86RegDiffLists[] = {
   /* 0 */ 0, 1, 0,
   /* 3 */ 1, 1, 1, 0,
   /* 7 */ 65533, 1, 1, 0,
@@ -2306,8 +2306,8 @@ extern const uint16_t X86RegEncodingTable[] = {
   14,
   15,
 };
-static inline void InitX86MCRegisterInfo(MCRegisterInfo *RI, unsigned RA, unsigned DwarfFlavour = 0, unsigned EHFlavour = 0) {
-  RI->InitMCRegisterInfo(X86RegDesc, 161, RA, X86MCRegisterClasses, 59, X86RegUnitRoots, 87, X86RegDiffLists, X86RegStrings, X86SubRegIdxLists, 6,
+static inline void InitX86MCRegisterInfo(MCRegisterInfo *RI, unsigned RA, unsigned DwarfFlavour = 0, unsigned EHFlavour = 0, unsigned PC = 0) {
+  RI->InitMCRegisterInfo(X86RegDesc, 161, RA, PC, X86MCRegisterClasses, 59, X86RegUnitRoots, 87, X86RegDiffLists, X86RegStrings, X86SubRegIdxLists, 6,
   X86RegEncodingTable);
 
   switch (DwarfFlavour) {
@@ -2369,7 +2369,7 @@ static inline void InitX86MCRegisterInfo(MCRegisterInfo *RI, unsigned RA, unsign
 
 /*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
 |*                                                                            *|
-|* Register Information Header Fragment                                       *|
+|*Register Information Header Fragment                                        *|
 |*                                                                            *|
 |* Automatically generated file, do not edit!                                 *|
 |*                                                                            *|
@@ -2383,16 +2383,18 @@ static inline void InitX86MCRegisterInfo(MCRegisterInfo *RI, unsigned RA, unsign
 namespace llvm {
 
 struct X86GenRegisterInfo : public TargetRegisterInfo {
-  explicit X86GenRegisterInfo(unsigned RA, unsigned D = 0, unsigned E = 0);
+  explicit X86GenRegisterInfo(unsigned RA, unsigned D = 0, unsigned E = 0, unsigned PC = 0);
   virtual bool needsStackRealignment(const MachineFunction &) const
      { return false; }
   virtual unsigned composeSubRegIndicesImpl(unsigned, unsigned) const;
   virtual const TargetRegisterClass *getSubClassWithSubReg(const TargetRegisterClass*, unsigned) const;
   virtual const RegClassWeight &getRegClassWeight(const TargetRegisterClass *RC) const;
+  virtual unsigned getRegUnitWeight(unsigned RegUnit) const;
   virtual unsigned getNumRegPressureSets() const;
   virtual const char *getRegPressureSetName(unsigned Idx) const;
   virtual unsigned getRegPressureSetLimit(unsigned Idx) const;
   virtual const int *getRegClassPressureSets(const TargetRegisterClass *RC) const;
+  virtual const int *getRegUnitPressureSets(unsigned RegUnit) const;
 };
 
 namespace X86 { // Register classes
@@ -2462,7 +2464,7 @@ namespace X86 { // Register classes
 
 /*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
 |*                                                                            *|
-|* Target Register and Register Classes Information                           *|
+|*Target Register and Register Classes Information                            *|
 |*                                                                            *|
 |* Automatically generated file, do not edit!                                 *|
 |*                                                                            *|
@@ -3211,10 +3213,10 @@ static inline unsigned GR8AltOrderSelect(const MachineFunction &MF) {
     return MF.getTarget().getSubtarget<X86Subtarget>().is64Bit();
   }
 
-static ArrayRef<uint16_t> GR8GetRawAllocationOrder(const MachineFunction &MF) {
-  static const uint16_t AltOrder1[] = { X86::AL, X86::CL, X86::DL, X86::BL, X86::SIL, X86::DIL, X86::BPL, X86::SPL, X86::R8B, X86::R9B, X86::R10B, X86::R11B, X86::R14B, X86::R15B, X86::R12B, X86::R13B };
+static ArrayRef<MCPhysReg> GR8GetRawAllocationOrder(const MachineFunction &MF) {
+  static const MCPhysReg AltOrder1[] = { X86::AL, X86::CL, X86::DL, X86::BL, X86::SIL, X86::DIL, X86::BPL, X86::SPL, X86::R8B, X86::R9B, X86::R10B, X86::R11B, X86::R14B, X86::R15B, X86::R12B, X86::R13B };
   const MCRegisterClass &MCR = X86MCRegisterClasses[X86::GR8RegClassID];
-  const ArrayRef<uint16_t> Order[] = {
+  const ArrayRef<MCPhysReg> Order[] = {
     makeArrayRef(MCR.begin(), MCR.getNumRegs()),
     makeArrayRef(AltOrder1)
   };
@@ -3227,10 +3229,10 @@ static inline unsigned GR8_NOREXAltOrderSelect(const MachineFunction &MF) {
     return MF.getTarget().getSubtarget<X86Subtarget>().is64Bit();
   }
 
-static ArrayRef<uint16_t> GR8_NOREXGetRawAllocationOrder(const MachineFunction &MF) {
-  static const uint16_t AltOrder1[] = { X86::AL, X86::CL, X86::DL, X86::BL };
+static ArrayRef<MCPhysReg> GR8_NOREXGetRawAllocationOrder(const MachineFunction &MF) {
+  static const MCPhysReg AltOrder1[] = { X86::AL, X86::CL, X86::DL, X86::BL };
   const MCRegisterClass &MCR = X86MCRegisterClasses[X86::GR8_NOREXRegClassID];
-  const ArrayRef<uint16_t> Order[] = {
+  const ArrayRef<MCPhysReg> Order[] = {
     makeArrayRef(MCR.begin(), MCR.getNumRegs()),
     makeArrayRef(AltOrder1)
   };
@@ -4500,6 +4502,14 @@ getRegClassWeight(const TargetRegisterClass *RC) const {
   return RCWeightTable[RC->getID()];
 }
 
+/// Get the weight in units of pressure for this register unit.
+unsigned X86GenRegisterInfo::
+getRegUnitWeight(unsigned RegUnit) const {
+  assert(RegUnit < 87 && "invalid register unit");
+  // All register units have unit weight.
+  return 1;
+}
+
 
 // Get the number of dimensions of register pressure.
 unsigned X86GenRegisterInfo::getNumRegPressureSets() const {
@@ -4561,79 +4571,95 @@ getRegPressureSetLimit(unsigned Idx) const {
   return PressureLimitTable[Idx];
 }
 
+/// Table of pressure sets per register class or unit.
+static const int RCSetsTable[] = {
+    0,  8,  12,  13,  14,  -1,  	// #0 GR8
+    0,  1,  8,  10,  12,  13,  14,  15,  16,  17,  18,  -1,  	// #6 GR8_NOREX
+    0,  1,  2,  8,  10,  12,  13,  14,  15,  16,  17,  18,  -1,  	// #18 GR8_ABCD_H
+    0,  1,  3,  8,  10,  12,  13,  14,  15,  16,  17,  18,  -1,  	// #31 GR8_ABCD_L
+    8,  -1,  	// #44 GR16
+    8,  10,  12,  18,  -1,  	// #46 GR16_NOREX
+    4,  -1,  	// #51 SEGMENT_REG
+    0,  1,  8,  10,  12,  13,  14,  15,  16,  17,  18,  -1,  	// #53 GR16_ABCD
+    -1,  	// #65 FPCCR
+    5,  -1,  	// #66 FR32
+    8,  -1,  	// #68 GR32
+    8,  -1,  	// #70 GR32_NOAX
+    8,  -1,  	// #72 GR32_NOSP
+    8,  -1,  	// #74 GR32_NOAX_and_GR32_NOSP
+    6,  -1,  	// #76 DEBUG_REG
+    8,  10,  12,  18,  -1,  	// #78 GR32_NOREX
+    8,  10,  12,  18,  -1,  	// #83 GR32_NOAX_and_GR32_NOREX
+    8,  10,  12,  18,  -1,  	// #88 GR32_NOREX_NOSP
+    7,  -1,  	// #93 RFP32
+    8,  10,  12,  18,  -1,  	// #95 GR32_NOAX_and_GR32_NOREX_NOSP
+    0,  1,  8,  10,  12,  13,  14,  15,  16,  17,  18,  -1,  	// #100 GR32_ABCD
+    0,  1,  8,  10,  12,  13,  14,  15,  16,  17,  18,  -1,  	// #112 GR32_ABCD_and_GR32_NOAX
+    0,  1,  8,  10,  12,  13,  14,  15,  16,  17,  18,  -1,  	// #124 GR32_TC
+    0,  1,  8,  10,  12,  13,  14,  15,  16,  17,  18,  -1,  	// #136 GR32_AD
+    0,  1,  8,  10,  12,  13,  14,  15,  16,  17,  18,  -1,  	// #148 GR32_NOAX_and_GR32_TC
+    -1,  	// #160 CCR
+    0,  1,  8,  10,  12,  13,  14,  15,  16,  17,  18,  -1,  	// #161 GR32_AD_and_GR32_NOAX
+    7,  -1,  	// #173 RFP64
+    8,  -1,  	// #175 GR64
+    9,  -1,  	// #177 CONTROL_REG
+    5,  -1,  	// #179 FR64
+    8,  -1,  	// #181 GR64_with_sub_8bit
+    8,  -1,  	// #183 GR64_NOSP
+    8,  -1,  	// #185 GR64_with_sub_32bit_in_GR32_NOAX
+    8,  -1,  	// #187 GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_NOSP
+    8,  10,  12,  18,  -1,  	// #189 GR64_NOREX
+    8,  13,  15,  18,  -1,  	// #194 GR64_TC
+    8,  13,  15,  18,  -1,  	// #199 GR64_NOSP_and_GR64_TC
+    8,  10,  12,  18,  -1,  	// #204 GR64_with_sub_16bit_in_GR16_NOREX
+    11,  -1,  	// #209 VR64
+    8,  10,  12,  18,  -1,  	// #211 GR64_NOREX_NOSP
+    8,  13,  15,  18,  -1,  	// #216 GR64_TC_and_GR64_with_sub_32bit_in_GR32_NOAX
+    8,  10,  12,  18,  -1,  	// #221 GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_NOREX
+    8,  10,  12,  13,  15,  16,  18,  -1,  	// #226 GR64_NOREX_and_GR64_TC
+    8,  13,  14,  15,  17,  18,  -1,  	// #234 GR64_TCW64
+    8,  10,  12,  18,  -1,  	// #241 GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_NOREX_NOSP
+    8,  10,  12,  13,  15,  16,  18,  -1,  	// #246 GR64_NOREX_NOSP_and_GR64_TC
+    8,  13,  14,  15,  17,  18,  -1,  	// #254 GR64_TCW64_and_GR64_with_sub_32bit_in_GR32_NOAX
+    0,  1,  8,  10,  12,  13,  14,  15,  16,  17,  18,  -1,  	// #261 GR64_ABCD
+    8,  10,  12,  13,  15,  16,  18,  -1,  	// #273 GR64_TC_and_GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_NOREX
+    0,  1,  8,  10,  12,  13,  14,  15,  16,  17,  18,  -1,  	// #281 GR64_with_sub_32bit_in_GR32_ABCD_and_GR32_NOAX
+    0,  1,  8,  10,  12,  13,  14,  15,  16,  17,  18,  -1,  	// #293 GR64_with_sub_32bit_in_GR32_TC
+    0,  1,  8,  10,  12,  13,  14,  15,  16,  17,  18,  -1,  	// #305 GR64_with_sub_32bit_in_GR32_AD
+    0,  1,  8,  10,  12,  13,  14,  15,  16,  17,  18,  -1,  	// #317 GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_TC
+    0,  1,  8,  10,  12,  13,  14,  15,  16,  17,  18,  -1,  	// #329 GR64_with_sub_32bit_in_GR32_AD_and_GR32_NOAX
+    -1,  	// #341 RST
+    7,  -1,  	// #342 RFP80
+    5,  -1,  	// #344 VR128
+    5,  -1,  	// #346 VR256
+    0,  8,  10,  12,  13,  14,  18,  -1,  	// #348 inferred~GR8~GR64~GR64_NOREX~GR8+GR64_NOREX~GR8+GR64_TC~GR8+GR64_TCW64~GR64_NOREX+GR64_TC
+    0,  8,  10,  12,  13,  14,  15,  16,  18,  -1,  	// #356 inferred~GR8~GR64~GR64_NOREX~GR8+GR64_NOREX~GR8+GR64_TC~GR8+GR64_TCW64~GR8_NOREX+GR64_TC~GR8_NOREX+GR64_NOREX_and_GR64_TC~GR64_NOREX+GR64_TC
+    0,  8,  12,  13,  14,  15,  17,  18,  -1,  	// #366 inferred~GR8~GR64~GR8+GR64_NOREX~GR8+GR64_TC~GR8+GR64_TCW64~GR8_NOREX+GR64_TC~GR8_NOREX+GR64_TCW64~GR64_NOREX+GR64_TC
+    -1 };
+
 /// Get the dimensions of register pressure impacted by this register class.
 /// Returns a -1 terminated array of pressure set IDs
 const int* X86GenRegisterInfo::
 getRegClassPressureSets(const TargetRegisterClass *RC) const {
-  static const int RCSetsTable[] = {
-    0,  8,  12,  13,  14,  -1,  	// GR8
-    0,  1,  8,  10,  12,  13,  14,  15,  16,  17,  18,  -1,  	// GR8_NOREX
-    0,  1,  2,  8,  10,  12,  13,  14,  15,  16,  17,  18,  -1,  	// GR8_ABCD_H
-    0,  1,  3,  8,  10,  12,  13,  14,  15,  16,  17,  18,  -1,  	// GR8_ABCD_L
-    8,  -1,  	// GR16
-    8,  10,  12,  18,  -1,  	// GR16_NOREX
-    4,  -1,  	// SEGMENT_REG
-    0,  1,  8,  10,  12,  13,  14,  15,  16,  17,  18,  -1,  	// GR16_ABCD
-    -1,  	// FPCCR
-    5,  -1,  	// FR32
-    8,  -1,  	// GR32
-    8,  -1,  	// GR32_NOAX
-    8,  -1,  	// GR32_NOSP
-    8,  -1,  	// GR32_NOAX_and_GR32_NOSP
-    6,  -1,  	// DEBUG_REG
-    8,  10,  12,  18,  -1,  	// GR32_NOREX
-    8,  10,  12,  18,  -1,  	// GR32_NOAX_and_GR32_NOREX
-    8,  10,  12,  18,  -1,  	// GR32_NOREX_NOSP
-    7,  -1,  	// RFP32
-    8,  10,  12,  18,  -1,  	// GR32_NOAX_and_GR32_NOREX_NOSP
-    0,  1,  8,  10,  12,  13,  14,  15,  16,  17,  18,  -1,  	// GR32_ABCD
-    0,  1,  8,  10,  12,  13,  14,  15,  16,  17,  18,  -1,  	// GR32_ABCD_and_GR32_NOAX
-    0,  1,  8,  10,  12,  13,  14,  15,  16,  17,  18,  -1,  	// GR32_TC
-    0,  1,  8,  10,  12,  13,  14,  15,  16,  17,  18,  -1,  	// GR32_AD
-    0,  1,  8,  10,  12,  13,  14,  15,  16,  17,  18,  -1,  	// GR32_NOAX_and_GR32_TC
-    -1,  	// CCR
-    0,  1,  8,  10,  12,  13,  14,  15,  16,  17,  18,  -1,  	// GR32_AD_and_GR32_NOAX
-    7,  -1,  	// RFP64
-    8,  -1,  	// GR64
-    9,  -1,  	// CONTROL_REG
-    5,  -1,  	// FR64
-    8,  -1,  	// GR64_with_sub_8bit
-    8,  -1,  	// GR64_NOSP
-    8,  -1,  	// GR64_with_sub_32bit_in_GR32_NOAX
-    8,  -1,  	// GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_NOSP
-    8,  10,  12,  18,  -1,  	// GR64_NOREX
-    8,  13,  15,  18,  -1,  	// GR64_TC
-    8,  13,  15,  18,  -1,  	// GR64_NOSP_and_GR64_TC
-    8,  10,  12,  18,  -1,  	// GR64_with_sub_16bit_in_GR16_NOREX
-    11,  -1,  	// VR64
-    8,  10,  12,  18,  -1,  	// GR64_NOREX_NOSP
-    8,  13,  15,  18,  -1,  	// GR64_TC_and_GR64_with_sub_32bit_in_GR32_NOAX
-    8,  10,  12,  18,  -1,  	// GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_NOREX
-    8,  10,  12,  13,  15,  16,  18,  -1,  	// GR64_NOREX_and_GR64_TC
-    8,  13,  14,  15,  17,  18,  -1,  	// GR64_TCW64
-    8,  10,  12,  18,  -1,  	// GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_NOREX_NOSP
-    8,  10,  12,  13,  15,  16,  18,  -1,  	// GR64_NOREX_NOSP_and_GR64_TC
-    8,  13,  14,  15,  17,  18,  -1,  	// GR64_TCW64_and_GR64_with_sub_32bit_in_GR32_NOAX
-    0,  1,  8,  10,  12,  13,  14,  15,  16,  17,  18,  -1,  	// GR64_ABCD
-    8,  10,  12,  13,  15,  16,  18,  -1,  	// GR64_TC_and_GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_NOREX
-    0,  1,  8,  10,  12,  13,  14,  15,  16,  17,  18,  -1,  	// GR64_with_sub_32bit_in_GR32_ABCD_and_GR32_NOAX
-    0,  1,  8,  10,  12,  13,  14,  15,  16,  17,  18,  -1,  	// GR64_with_sub_32bit_in_GR32_TC
-    0,  1,  8,  10,  12,  13,  14,  15,  16,  17,  18,  -1,  	// GR64_with_sub_32bit_in_GR32_AD
-    0,  1,  8,  10,  12,  13,  14,  15,  16,  17,  18,  -1,  	// GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_TC
-    0,  1,  8,  10,  12,  13,  14,  15,  16,  17,  18,  -1,  	// GR64_with_sub_32bit_in_GR32_AD_and_GR32_NOAX
-    -1,  	// RST
-    7,  -1,  	// RFP80
-    5,  -1,  	// VR128
-    5,  -1,  	// VR256
-    -1 };
   static const unsigned RCSetStartTable[] = {
     0,6,18,31,44,46,51,53,65,66,68,70,72,74,76,78,83,88,93,95,100,112,124,136,148,160,161,173,175,177,179,181,183,185,187,189,194,199,204,209,211,216,221,226,234,241,246,254,261,273,281,293,305,317,329,341,342,344,346,0 };
   unsigned SetListStart = RCSetStartTable[RC->getID()];
   return &RCSetsTable[SetListStart];
 }
 
+/// Get the dimensions of register pressure impacted by this register unit.
+/// Returns a -1 terminated array of pressure set IDs
+const int* X86GenRegisterInfo::
+getRegUnitPressureSets(unsigned RegUnit) const {
+  assert(RegUnit < 87 && "invalid register unit");
+  static const unsigned RUSetStartTable[] = {
+    18,31,18,31,348,18,31,177,177,177,177,177,177,177,177,177,177,177,177,177,177,177,177,51,18,356,31,76,76,76,76,76,76,76,76,51,65,226,65,51,356,348,93,93,93,93,93,93,93,65,51,51,209,209,209,209,209,209,209,209,366,366,0,366,0,0,0,0,65,51,65,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,0 };
+  unsigned SetListStart = RUSetStartTable[RegUnit];
+  return &RCSetsTable[SetListStart];
+}
+
 extern const MCRegisterDesc X86RegDesc[];
-extern const uint16_t X86RegDiffLists[];
+extern const MCPhysReg X86RegDiffLists[];
 extern const char X86RegStrings[];
 extern const uint16_t X86RegUnitRoots[][2];
 extern const uint16_t X86SubRegIdxLists[];
@@ -4676,10 +4702,10 @@ extern const MCRegisterInfo::DwarfLLVMRegPair X86EHFlavour2L2Dwarf[];
 extern const unsigned X86EHFlavour2L2DwarfSize;
 
 X86GenRegisterInfo::
-X86GenRegisterInfo(unsigned RA, unsigned DwarfFlavour, unsigned EHFlavour)
+X86GenRegisterInfo(unsigned RA, unsigned DwarfFlavour, unsigned EHFlavour, unsigned PC)
   : TargetRegisterInfo(X86RegInfoDesc, RegisterClasses, RegisterClasses+59,
              SubRegIndexNameTable, SubRegIndexLaneMaskTable) {
-  InitMCRegisterInfo(X86RegDesc, 161, RA,
+  InitMCRegisterInfo(X86RegDesc, 161, RA, PC,
                      X86MCRegisterClasses, 59,
                      X86RegUnitRoots,
                      87,
@@ -4743,23 +4769,25 @@ X86GenRegisterInfo(unsigned RA, unsigned DwarfFlavour, unsigned EHFlavour)
   }
 }
 
-static const uint16_t CSR_32_SaveList[] = { X86::ESI, X86::EDI, X86::EBX, X86::EBP, 0 };
+static const MCPhysReg CSR_32_SaveList[] = { X86::ESI, X86::EDI, X86::EBX, X86::EBP, 0 };
 static const uint32_t CSR_32_RegMask[] = { 0xc00001f0, 0x0020b000, 0x00000000, 0x00300000, 0x00000000, 0x00000000, };
-static const uint16_t CSR_32EHRet_SaveList[] = { X86::EAX, X86::EDX, X86::ESI, X86::EDI, X86::EBX, X86::EBP, 0 };
+static const MCPhysReg CSR_32EHRet_SaveList[] = { X86::EAX, X86::EDX, X86::ESI, X86::EDI, X86::EBX, X86::EBP, 0 };
 static const uint32_t CSR_32EHRet_RegMask[] = { 0xe00001fe, 0x0021bc01, 0x00000000, 0x00300000, 0x00000000, 0x00000000, };
-static const uint16_t CSR_64_SaveList[] = { X86::RBX, X86::R12, X86::R13, X86::R14, X86::R15, X86::RBP, 0 };
+static const MCPhysReg CSR_64_SaveList[] = { X86::RBX, X86::R12, X86::R13, X86::R14, X86::R15, X86::RBP, 0 };
 static const uint32_t CSR_64_RegMask[] = { 0x000001f0, 0x00003000, 0xfc000000, 0x00001bff, 0x00000000, 0x00000000, };
-static const uint16_t CSR_64EHRet_SaveList[] = { X86::RAX, X86::RDX, X86::RBX, X86::R12, X86::R13, X86::R14, X86::R15, X86::RBP, 0 };
+static const MCPhysReg CSR_64EHRet_SaveList[] = { X86::RAX, X86::RDX, X86::RBX, X86::R12, X86::R13, X86::R14, X86::R15, X86::RBP, 0 };
 static const uint32_t CSR_64EHRet_RegMask[] = { 0x200001fe, 0x00013c01, 0xfc000000, 0x00009fff, 0x00000000, 0x00000000, };
-static const uint16_t CSR_64_Intel_OCL_BI_SaveList[] = { X86::RBX, X86::R12, X86::R13, X86::R14, X86::R15, X86::RBP, X86::XMM8, X86::XMM9, X86::XMM10, X86::XMM11, X86::XMM12, X86::XMM13, X86::XMM14, X86::XMM15, 0 };
+static const MCPhysReg CSR_64_Intel_OCL_BI_SaveList[] = { X86::RBX, X86::R12, X86::R13, X86::R14, X86::R15, X86::RBP, X86::XMM8, X86::XMM9, X86::XMM10, X86::XMM11, X86::XMM12, X86::XMM13, X86::XMM14, X86::XMM15, 0 };
 static const uint32_t CSR_64_Intel_OCL_BI_RegMask[] = { 0x000001f0, 0x00003000, 0xfc000000, 0x00001bff, 0x0001fe00, 0x00000000, };
-static const uint16_t CSR_64_Intel_OCL_BI_AVX_SaveList[] = { X86::RBX, X86::R12, X86::R13, X86::R14, X86::R15, X86::RBP, X86::YMM8, X86::YMM9, X86::YMM10, X86::YMM11, X86::YMM12, X86::YMM13, X86::YMM14, X86::YMM15, 0 };
+static const MCPhysReg CSR_64_Intel_OCL_BI_AVX_SaveList[] = { X86::RBX, X86::R12, X86::R13, X86::R14, X86::R15, X86::RBP, X86::YMM8, X86::YMM9, X86::YMM10, X86::YMM11, X86::YMM12, X86::YMM13, X86::YMM14, X86::YMM15, 0 };
 static const uint32_t CSR_64_Intel_OCL_BI_AVX_RegMask[] = { 0x000001f0, 0x00003000, 0xfc000000, 0x00001bff, 0xfe01fe00, 0x00000001, };
-static const uint16_t CSR_NoRegs_SaveList[] = { 0 };
+static const MCPhysReg CSR_MostRegs_64_SaveList[] = { X86::RBX, X86::RCX, X86::RDX, X86::RSI, X86::RDI, X86::R8, X86::R9, X86::R10, X86::R11, X86::R12, X86::R13, X86::R14, X86::R15, X86::RBP, X86::XMM0, X86::XMM1, X86::XMM2, X86::XMM3, X86::XMM4, X86::XMM5, X86::XMM6, X86::XMM7, X86::XMM8, X86::XMM9, X86::XMM10, X86::XMM11, X86::XMM12, X86::XMM13, X86::XMM14, X86::XMM15, 0 };
+static const uint32_t CSR_MostRegs_64_RegMask[] = { 0xf00007f0, 0x0021f401, 0xfffffc00, 0x0034fbff, 0x0001fffe, 0x00000000, };
+static const MCPhysReg CSR_NoRegs_SaveList[] = { 0 };
 static const uint32_t CSR_NoRegs_RegMask[] = { 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, };
-static const uint16_t CSR_Win64_SaveList[] = { X86::RBX, X86::RBP, X86::RDI, X86::RSI, X86::R12, X86::R13, X86::R14, X86::R15, X86::XMM6, X86::XMM7, X86::XMM8, X86::XMM9, X86::XMM10, X86::XMM11, X86::XMM12, X86::XMM13, X86::XMM14, X86::XMM15, 0 };
+static const MCPhysReg CSR_Win64_SaveList[] = { X86::RBX, X86::RBP, X86::RDI, X86::RSI, X86::R12, X86::R13, X86::R14, X86::R15, X86::XMM6, X86::XMM7, X86::XMM8, X86::XMM9, X86::XMM10, X86::XMM11, X86::XMM12, X86::XMM13, X86::XMM14, X86::XMM15, 0 };
 static const uint32_t CSR_Win64_RegMask[] = { 0xc00001f0, 0x0020b000, 0xfc000000, 0x00345bff, 0x0001ff80, 0x00000000, };
-static const uint16_t CSR_Win64_Intel_OCL_BI_AVX_SaveList[] = { X86::RBX, X86::RBP, X86::RDI, X86::RSI, X86::R12, X86::R13, X86::R14, X86::R15, X86::YMM6, X86::YMM7, X86::YMM8, X86::YMM9, X86::YMM10, X86::YMM11, X86::YMM12, X86::YMM13, X86::YMM14, X86::YMM15, 0 };
+static const MCPhysReg CSR_Win64_Intel_OCL_BI_AVX_SaveList[] = { X86::RBX, X86::RBP, X86::RDI, X86::RSI, X86::R12, X86::R13, X86::R14, X86::R15, X86::YMM6, X86::YMM7, X86::YMM8, X86::YMM9, X86::YMM10, X86::YMM11, X86::YMM12, X86::YMM13, X86::YMM14, X86::YMM15, 0 };
 static const uint32_t CSR_Win64_Intel_OCL_BI_AVX_RegMask[] = { 0xc00001f0, 0x0020b000, 0xfc000000, 0x00345bff, 0xff81ff80, 0x00000001, };
 
 
