@@ -18,27 +18,17 @@
     #pragma GCC diagnostic ignored "-Wunused-parameter"
 #endif
 
-//#include "llvm/ADT/IntrusiveRefCntPtr.h"
-//#include "llvm/ADT/OwningPtr.h"
-//#include "llvm/ADT/SmallVector.h"
 #include "llvm/ExecutionEngine/ExecutionEngine.h"
 #include "llvm/IR/LLVMContext.h"
 #include "llvm/IR/Module.h"
 #include "llvm/Support/TargetSelect.h"
 #include "llvm/Support/Host.h"
-//#include "llvm/Support/Path.h"
-#include "llvm/Support/raw_ostream.h"
 
-//#include "clang/Basic/Diagnostic.h"
-//#include "clang/Basic/DiagnosticIDs.h"
 #include "clang/Basic/DiagnosticOptions.h"
 #include "clang/CodeGen/CodeGenAction.h"
 #include "clang/Driver/Compilation.h"
 #include "clang/Driver/Driver.h"
-#include "clang/Driver/Job.h"
 #include "clang/Driver/Tool.h"
-//#include "clang/Driver/Util.h"
-//#include "clang/Frontend/CompilerInvocation.h"
 #include "clang/Frontend/CompilerInstance.h"
 #include "clang/Frontend/TextDiagnosticPrinter.h"
 
@@ -154,8 +144,8 @@ bool CompilerEngine::compileCode(const QString &pCode)
     clang::DiagnosticsEngine diagnosticsEngine(llvm::IntrusiveRefCntPtr<clang::DiagnosticIDs>(new clang::DiagnosticIDs()),
                                                &*diagnosticOptions,
                                                new clang::TextDiagnosticPrinter(outputStream, &*diagnosticOptions));
-    clang::driver::Driver driver("clang", llvm::sys::getDefaultTargetTriple(),
-                                 "", diagnosticsEngine);
+    clang::driver::Driver driver("clang", llvm::sys::getProcessTriple(), "",
+                                 diagnosticsEngine);
 
     // Get a compilation object to which we pass some arguments
     // Note: in gcc, the -O3 option comes with a warning: "Under some
