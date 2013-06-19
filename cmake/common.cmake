@@ -186,6 +186,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     SET(QT_DEPENDENCIES)
     SET(EXTERNAL_BINARY_DEPENDENCIES_DIR)
     SET(EXTERNAL_BINARY_DEPENDENCIES)
+    SET(EXTERNAL_LIBRARY_DEPENDENCIES)
     SET(TESTS)
 
     # Analyse the extra parameters
@@ -235,8 +236,10 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             SET(TYPE_OF_PARAMETER 10)
         ELSEIF(${PARAMETER} STREQUAL "EXTERNAL_BINARY_DEPENDENCIES")
             SET(TYPE_OF_PARAMETER 11)
-        ELSEIF(${PARAMETER} STREQUAL "TESTS")
+        ELSEIF(${PARAMETER} STREQUAL "EXTERNAL_LIBRARY_DEPENDENCIES")
             SET(TYPE_OF_PARAMETER 12)
+        ELSEIF(${PARAMETER} STREQUAL "TESTS")
+            SET(TYPE_OF_PARAMETER 13)
         ELSE()
             # Not one of the headers, so add the parameter to the corresponding
             # set
@@ -264,6 +267,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 11)
                 LIST(APPEND EXTERNAL_BINARY_DEPENDENCIES ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 12)
+                LIST(APPEND EXTERNAL_LIBRARY_DEPENDENCIES ${PARAMETER})
+            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 13)
                 LIST(APPEND TESTS ${PARAMETER})
             ENDIF()
         ENDIF()
@@ -360,7 +365,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
     )
 
-    # External dependencies
+    # External binary dependencies
 
     IF(NOT ${EXTERNAL_BINARY_DEPENDENCIES_DIR} STREQUAL "")
         FOREACH(EXTERNAL_BINARY_DEPENDENCY ${EXTERNAL_BINARY_DEPENDENCIES})
@@ -369,6 +374,14 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             )
         ENDFOREACH()
     ENDIF()
+
+    # External library dependencies
+
+    FOREACH(EXTERNAL_LIBRARY_DEPENDENCY ${EXTERNAL_LIBRARY_DEPENDENCIES})
+        TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+            ${EXTERNAL_LIBRARY_DEPENDENCY}
+        )
+    ENDFOREACH()
 
     # Location of our plugins
 
@@ -531,7 +544,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     )
                 ENDFOREACH()
 
-                # External dependencies
+                # External binary dependencies
 
                 IF(NOT ${EXTERNAL_BINARY_DEPENDENCIES_DIR} STREQUAL "")
                     FOREACH(EXTERNAL_BINARY_DEPENDENCY ${EXTERNAL_BINARY_DEPENDENCIES})
@@ -540,6 +553,14 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                         )
                     ENDFOREACH()
                 ENDIF()
+
+                # External library dependencies
+
+                FOREACH(EXTERNAL_LIBRARY_DEPENDENCY ${EXTERNAL_LIBRARY_DEPENDENCIES})
+                    TARGET_LINK_LIBRARIES(${TEST_NAME}
+                        ${EXTERNAL_LIBRARY_DEPENDENCY}
+                    )
+                ENDFOREACH()
 
                 # Copy the test to our tests directory
                 # Note: DEST_TESTS_DIR is defined in our main CMake file...
