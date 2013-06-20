@@ -25,6 +25,9 @@
   #define WIN32_LEAN_AND_MEAN
   #define NOGDI
   #define NOMINMAX
+//---OPENCOR--- BEGIN
+#undef UNICODE
+//---OPENCOR--- END
   #include <Windows.h>
 #endif
 
