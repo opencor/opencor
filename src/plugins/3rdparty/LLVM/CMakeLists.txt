@@ -24,6 +24,12 @@ ENDFOREACH()
 
 RETRIEVE_LLVM_SETTINGS()
 
+# Check whether ZLib is available
+# Note: some platforms may have it installed, in which case LLVM will want to
+#       make use of it, so...
+
+FIND_PACKAGE(ZLIB QUIET)
+
 # Add the plugin
 
 SET(LLVM_PLUGIN
@@ -1169,10 +1175,14 @@ ADD_PLUGIN(LLVM
         lib/Target/X86
         src
         tools/clang/include
+
+        ${ZLIB_INCLUDE_DIRS}
     DEFINITIONS
         ${LLVM_DEFINITIONS}
     QT_MODULES
         Core
     QT_DEPENDENCIES
         QtCore
+    EXTERNAL_LIBRARY_DEPENDENCIES
+        ${ZLIB_LIBRARIES}
 )

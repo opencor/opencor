@@ -18,15 +18,12 @@
 #include "llvm/Support/Compiler.h"
 #include "llvm/Support/ErrorHandling.h"
 #include "llvm/Support/MemoryBuffer.h"
-/*---OPENCOR---
 #if LLVM_ENABLE_ZLIB == 1 && HAVE_ZLIB_H
 #include <zlib.h>
 #endif
-*/
 
 using namespace llvm;
 
-/*---OPENCOR---
 #if LLVM_ENABLE_ZLIB == 1 && HAVE_LIBZ
 static int encodeZlibCompressionLevel(zlib::CompressionLevel Level) {
   switch (Level) {
@@ -85,7 +82,6 @@ zlib::Status zlib::uncompress(StringRef InputBuffer,
 }
 
 #else
-*/
 bool zlib::isAvailable() { return false; }
 zlib::Status zlib::compress(StringRef InputBuffer,
                             OwningPtr<MemoryBuffer> &CompressedBuffer,
@@ -97,7 +93,5 @@ zlib::Status zlib::uncompress(StringRef InputBuffer,
                               size_t UncompressedSize) {
   return zlib::StatusUnsupported;
 }
-/*---OPENCOR---
 #endif
-*/
 
