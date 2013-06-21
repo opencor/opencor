@@ -880,8 +880,15 @@ bool Option::addOccurrence(unsigned pos, StringRef ArgName,
 
   switch (getNumOccurrencesFlag()) {
   case Optional:
+/*---OPENCOR--- IF THE FOLLOWING TEST WAS TO BE EXECUTED, THEN WE WOULD ONLY BE
+                ABLE TO (SUCCESSFULLY) COMPILE A MODEL ONCE. THE SECOND TIME WE
+                WOULD TRY TO (SUCCESSFULLY) COMPILE A MODEL, LLVM WOULD CRASH.
+                BASICALLY, IT SEEMS TO BE AN ISSUE WITH LLVM NOT RESETTING
+                ITSELF PROPERLY. NOW, WHEN IT COMES TO OUR USE OF IT, IT WOULD
+                SEEM THAT WE CAN 'SAFELY' COMMENT THE TEST OUT, SO...
     if (NumOccurrences > 1)
       return error("may only occur zero or one times!", ArgName);
+*/
     break;
   case Required:
     if (NumOccurrences > 1)
