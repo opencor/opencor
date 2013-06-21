@@ -25,6 +25,9 @@
 #endif
 
 #include <string>
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
 namespace sys {
@@ -48,7 +51,12 @@ namespace sys {
 
   /// getProcessTriple() - Return an appropriate target triple for generating
   /// code to be loaded into the current process, e.g. when using the JIT.
+/*---OPENCOR---
   std::string getProcessTriple();
+*/
+//---OPENCOR--- BEGIN
+  std::string LLVM_EXPORT getProcessTriple();
+//---OPENCOR--- END
 
   /// getHostCPUName - Get the LLVM name for the host CPU. The particular format
   /// of the name is target dependent, and suitable for passing as -mcpu to the

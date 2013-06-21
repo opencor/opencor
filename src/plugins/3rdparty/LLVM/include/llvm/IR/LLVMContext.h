@@ -18,6 +18,9 @@
 #include "llvm/Support/CBindingWrapping.h"
 #include "llvm/Support/Compiler.h"
 #include "llvm-c/Core.h"
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
 
@@ -109,7 +112,12 @@ private:
 
 /// getGlobalContext - Returns a global context.  This is for LLVM clients that
 /// only care about operating on a single thread.
+/*---OPENCOR---
 extern LLVMContext &getGlobalContext();
+*/
+//---OPENCOR--- BEGIN
+extern LLVMContext LLVM_EXPORT &getGlobalContext();
+//---OPENCOR--- END
 
 // Create wrappers for C Binding types (see CBindingWrapping.h).
 DEFINE_SIMPLE_CONVERSION_FUNCTIONS(LLVMContext, LLVMContextRef)

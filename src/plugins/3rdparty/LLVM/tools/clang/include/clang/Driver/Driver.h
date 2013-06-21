@@ -23,6 +23,9 @@
 #include <list>
 #include <set>
 #include <string>
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace clang {
 namespace driver {
@@ -40,7 +43,12 @@ namespace driver {
 
 /// Driver - Encapsulate logic for constructing compilation processes
 /// from a set of gcc-driver-like command line arguments.
+/*---OPENCOR---
 class Driver {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT Driver {
+//---OPENCOR--- END
   OptTable *Opts;
 
   DiagnosticsEngine &Diags;

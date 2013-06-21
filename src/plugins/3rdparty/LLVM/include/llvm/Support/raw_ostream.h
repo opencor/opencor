@@ -17,6 +17,9 @@
 #include "llvm/ADT/StringRef.h"
 #include "llvm/Support/Compiler.h"
 #include "llvm/Support/DataTypes.h"
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
   class format_object_base;
@@ -422,7 +425,12 @@ public:
 
 /// outs() - This returns a reference to a raw_ostream for standard output.
 /// Use it like: outs() << "foo" << "bar";
+/*---OPENCOR---
 raw_ostream &outs();
+*/
+//---OPENCOR--- BEGIN
+raw_ostream LLVM_EXPORT &outs();
+//---OPENCOR--- END
 
 /// errs() - This returns a reference to a raw_ostream for standard error.
 /// Use it like: errs() << "foo" << "bar";
@@ -430,7 +438,12 @@ raw_ostream &errs();
 
 /// nulls() - This returns a reference to a raw_ostream which simply discards
 /// output.
+/*---OPENCOR---
 raw_ostream &nulls();
+*/
+//---OPENCOR--- BEGIN
+raw_ostream LLVM_EXPORT &nulls();
+//---OPENCOR--- END
 
 //===----------------------------------------------------------------------===//
 // Output Stream Adaptors

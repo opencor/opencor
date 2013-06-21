@@ -25,6 +25,9 @@
 #include "llvm/Support/type_traits.h"
 #include <list>
 #include <vector>
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace clang {
   class DiagnosticConsumer;
@@ -129,7 +132,12 @@ public:
 /// as errors" and passes them off to the DiagnosticConsumer for reporting to
 /// the user. DiagnosticsEngine is tied to one translation unit and one
 /// SourceManager.
+/*---OPENCOR---
 class DiagnosticsEngine : public RefCountedBase<DiagnosticsEngine> {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT DiagnosticsEngine : public RefCountedBase<DiagnosticsEngine> {
+//---OPENCOR--- END
 public:
   /// \brief The level of the diagnostic, after it has been through mapping.
   enum Level {
@@ -1243,7 +1251,12 @@ public:
 
 /// \brief Abstract interface, implemented by clients of the front-end, which
 /// formats and prints fully processed diagnostics.
+/*---OPENCOR---
 class DiagnosticConsumer {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT DiagnosticConsumer {
+//---OPENCOR--- END
 protected:
   unsigned NumWarnings;       ///< Number of warnings reported
   unsigned NumErrors;         ///< Number of errors reported
