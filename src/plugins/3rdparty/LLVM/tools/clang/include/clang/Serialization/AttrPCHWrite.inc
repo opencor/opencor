@@ -1,3 +1,11 @@
+/*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
+|*                                                                            *|
+|*Attribute serialization code                                                *|
+|*                                                                            *|
+|* Automatically generated file, do not edit!                                 *|
+|*                                                                            *|
+\*===----------------------------------------------------------------------===*/
+
   switch (A->getKind()) {
   default:
     llvm_unreachable("Unknown attribute kind!");
@@ -37,7 +45,6 @@
       AddStmt(SA->getAlignmentExpr());
     else
       AddTypeSourceInfo(SA->getAlignmentType(), Record);
-    Record.push_back(SA->getIsMSDeclSpec());
     break;
   }
   case attr::AllocSize: {
@@ -98,6 +105,11 @@
     const BlocksAttr *SA = cast<BlocksAttr>(A);
     Record.push_back(SA->isInherited());
 Record.push_back(SA->getType());
+    break;
+  }
+  case attr::C11NoReturn: {
+    const C11NoReturnAttr *SA = cast<C11NoReturnAttr>(A);
+    Record.push_back(SA->isInherited());
     break;
   }
   case attr::CDecl: {
@@ -162,6 +174,11 @@ Record.push_back(SA->getType());
     Record.push_back(SA->isInherited());
     break;
   }
+  case attr::CXX11NoReturn: {
+    const CXX11NoReturnAttr *SA = cast<CXX11NoReturnAttr>(A);
+    Record.push_back(SA->isInherited());
+    break;
+  }
   case attr::CarriesDependency: {
     const CarriesDependencyAttr *SA = cast<CarriesDependencyAttr>(A);
     Record.push_back(SA->isInherited());
@@ -214,6 +231,12 @@ Record.push_back(SA->getType());
     const DestructorAttr *SA = cast<DestructorAttr>(A);
     Record.push_back(SA->isInherited());
     Record.push_back(SA->getPriority());
+    break;
+  }
+  case attr::Endian: {
+    const EndianAttr *SA = cast<EndianAttr>(A);
+    Record.push_back(SA->isInherited());
+    AddIdentifierRef(SA->getPlatform(), Record);
     break;
   }
   case attr::ExclusiveLockFunction: {
@@ -317,6 +340,11 @@ Record.push_back(SA->getType());
     Record.push_back(SA->getPriority());
     break;
   }
+  case attr::IntelOclBicc: {
+    const IntelOclBiccAttr *SA = cast<IntelOclBiccAttr>(A);
+    Record.push_back(SA->isInherited());
+    break;
+  }
   case attr::LockReturned: {
     const LockReturnedAttr *SA = cast<LockReturnedAttr>(A);
     Record.push_back(SA->isInherited());
@@ -373,6 +401,14 @@ Record.push_back(SA->getType());
     Record.push_back(SA->isInherited());
     break;
   }
+  case attr::Mips16: {
+    const Mips16Attr *SA = cast<Mips16Attr>(A);
+    Record.push_back(SA->isInherited());
+    break;
+  }
+  case attr::MsProperty: {
+    break;
+  }
   case attr::MsStruct: {
     const MsStructAttr *SA = cast<MsStructAttr>(A);
     Record.push_back(SA->isInherited());
@@ -419,11 +455,6 @@ Record.push_back(SA->getType());
     Record.push_back(SA->isInherited());
     break;
   }
-  case attr::NoAddressSafetyAnalysis: {
-    const NoAddressSafetyAnalysisAttr *SA = cast<NoAddressSafetyAnalysisAttr>(A);
-    Record.push_back(SA->isInherited());
-    break;
-  }
   case attr::NoCommon: {
     const NoCommonAttr *SA = cast<NoCommonAttr>(A);
     Record.push_back(SA->isInherited());
@@ -444,8 +475,28 @@ Record.push_back(SA->getType());
     Record.push_back(SA->isInherited());
     break;
   }
+  case attr::NoMips16: {
+    const NoMips16Attr *SA = cast<NoMips16Attr>(A);
+    Record.push_back(SA->isInherited());
+    break;
+  }
   case attr::NoReturn: {
     const NoReturnAttr *SA = cast<NoReturnAttr>(A);
+    Record.push_back(SA->isInherited());
+    break;
+  }
+  case attr::NoSanitizeAddress: {
+    const NoSanitizeAddressAttr *SA = cast<NoSanitizeAddressAttr>(A);
+    Record.push_back(SA->isInherited());
+    break;
+  }
+  case attr::NoSanitizeMemory: {
+    const NoSanitizeMemoryAttr *SA = cast<NoSanitizeMemoryAttr>(A);
+    Record.push_back(SA->isInherited());
+    break;
+  }
+  case attr::NoSanitizeThread: {
+    const NoSanitizeThreadAttr *SA = cast<NoSanitizeThreadAttr>(A);
     Record.push_back(SA->isInherited());
     break;
   }
@@ -500,6 +551,11 @@ Record.push_back(SA->getFamily());
     break;
   }
   case attr::ObjCRootClass: {
+    break;
+  }
+  case attr::OpenCLImageAccess: {
+    const OpenCLImageAccessAttr *SA = cast<OpenCLImageAccessAttr>(A);
+    Record.push_back(SA->getAccess());
     break;
   }
   case attr::OpenCLKernel: {
@@ -667,6 +723,12 @@ Record.push_back(SA->getPCS());
     Record.push_back(SA->getMustBeNull());
     break;
   }
+  case attr::TypeVisibility: {
+    const TypeVisibilityAttr *SA = cast<TypeVisibilityAttr>(A);
+    Record.push_back(SA->isInherited());
+Record.push_back(SA->getVisibility());
+    break;
+  }
   case attr::Unavailable: {
     const UnavailableAttr *SA = cast<UnavailableAttr>(A);
     Record.push_back(SA->isInherited());
@@ -679,6 +741,11 @@ Record.push_back(SA->getPCS());
     Record.push_back(SA->args_size());
     for (UnlockFunctionAttr::args_iterator i = SA->args_begin(), e = SA->args_end(); i != e; ++i)
       AddStmt((*i));
+    break;
+  }
+  case attr::UnspecifiedInheritance: {
+    const UnspecifiedInheritanceAttr *SA = cast<UnspecifiedInheritanceAttr>(A);
+    Record.push_back(SA->isInherited());
     break;
   }
   case attr::Unused: {
@@ -700,6 +767,13 @@ Record.push_back(SA->getPCS());
   case attr::VecReturn: {
     const VecReturnAttr *SA = cast<VecReturnAttr>(A);
     Record.push_back(SA->isInherited());
+    break;
+  }
+  case attr::VecTypeHint: {
+    const VecTypeHintAttr *SA = cast<VecTypeHintAttr>(A);
+    Record.push_back(SA->isInherited());
+    AddTypeRef(SA->getTypeHint(), Record);
+    AddSourceLocation(SA->getTypeLoc(), Record);
     break;
   }
   case attr::VirtualInheritance: {

@@ -133,6 +133,21 @@ public:
   virtual bool hasCodeCompletionSupport() const { return true; }
 };
 
+/// \brief Dump information about the given module file, to be used for
+/// basic debugging and discovery.
+class DumpModuleInfoAction : public ASTFrontendAction {
+protected:
+  virtual ASTConsumer *CreateASTConsumer(CompilerInstance &CI,
+                                         StringRef InFile);
+  virtual void ExecuteAction();
+
+public:
+  virtual bool hasPCHSupport() const { return false; }
+  virtual bool hasASTFileSupport() const { return true; }
+  virtual bool hasIRSupport() const { return false; }
+  virtual bool hasCodeCompletionSupport() const { return false; }
+};
+
 /**
  * \brief Frontend action adaptor that merges ASTs together.
  *

@@ -13,9 +13,9 @@
 
 #include "InstCombine.h"
 #include "llvm/Analysis/ConstantFolding.h"
-#include "llvm/DataLayout.h"
-#include "llvm/Target/TargetLibraryInfo.h"
+#include "llvm/IR/DataLayout.h"
 #include "llvm/Support/PatternMatch.h"
+#include "llvm/Target/TargetLibraryInfo.h"
 using namespace llvm;
 using namespace PatternMatch;
 
@@ -103,6 +103,12 @@ Instruction *InstCombiner::PromoteCastOfAllocation(BitCastInst &CI,
   uint64_t AllocElTySize = TD->getTypeAllocSize(AllocElTy);
   uint64_t CastElTySize = TD->getTypeAllocSize(CastElTy);
   if (CastElTySize == 0 || AllocElTySize == 0) return 0;
+
+  // If the allocation has multiple uses, only promote it if we're not
+  // shrinking the amount of memory being allocated.
+  uint64_t AllocElTyStoreSize = TD->getTypeStoreSize(AllocElTy);
+  uint64_t CastElTyStoreSize = TD->getTypeStoreSize(CastElTy);
+  if (!AI.hasOneUse() && CastElTyStoreSize < AllocElTyStoreSize) return 0;
 
   // See if we can satisfy the modulus by pulling a scale out of the array
   // size argument.
@@ -739,7 +745,7 @@ static bool CanEvaluateZExtd(Value *V, Type *Ty, unsigned &BitsToClear) {
 }
 
 Instruction *InstCombiner::visitZExt(ZExtInst &CI) {
-  // If this zero extend is only used by a truncate, let the truncate by
+  // If this zero extend is only used by a truncate, let the truncate be
   // eliminated before we try to optimize this zext.
   if (CI.hasOneUse() && isa<TruncInst>(CI.use_back()))
     return 0;
@@ -1041,8 +1047,8 @@ static bool CanEvaluateSExtd(Value *V, Type *Ty) {
 }
 
 Instruction *InstCombiner::visitSExt(SExtInst &CI) {
-  // If this sign extend is only used by a truncate, let the truncate by
-  // eliminated before we try to optimize this zext.
+  // If this sign extend is only used by a truncate, let the truncate be
+  // eliminated before we try to optimize this sext.
   if (CI.hasOneUse() && isa<TruncInst>(CI.use_back()))
     return 0;
 
@@ -1204,6 +1210,32 @@ Instruction *InstCombiner::visitFPTrunc(FPTruncInst &CI) {
       }
       break;
     }
+
+    // (fptrunc (fneg x)) -> (fneg (fptrunc x))
+    if (BinaryOperator::isFNeg(OpI)) {
+      Value *InnerTrunc = Builder->CreateFPTrunc(OpI->getOperand(1),
+                                                 CI.getType());
+      return BinaryOperator::CreateFNeg(InnerTrunc);
+    }
+  }
+
+  IntrinsicInst *II = dyn_cast<IntrinsicInst>(CI.getOperand(0));
+  if (II) {
+    switch (II->getIntrinsicID()) {
+      default: break;
+      case Intrinsic::fabs: {
+        // (fptrunc (fabs x)) -> (fabs (fptrunc x))
+        Value *InnerTrunc = Builder->CreateFPTrunc(II->getArgOperand(0),
+                                                   CI.getType());
+        Type *IntrinsicType[] = { CI.getType() };
+        Function *Overload =
+          Intrinsic::getDeclaration(CI.getParent()->getParent()->getParent(),
+                                    II->getIntrinsicID(), IntrinsicType);
+
+        Value *Args[] = { InnerTrunc };
+        return CallInst::Create(Overload, Args, II->getName());
+      }
+    }
   }
 
   // Fold (fptrunc (sqrt (fpext x))) -> (sqrtf x)
@@ -1296,19 +1328,14 @@ Instruction *InstCombiner::visitIntToPtr(IntToPtrInst &CI) {
   // If the source integer type is not the intptr_t type for this target, do a
   // trunc or zext to the intptr_t type, then inttoptr of it.  This allows the
   // cast to be exposed to other transforms.
-  if (TD) {
-    if (CI.getOperand(0)->getType()->getScalarSizeInBits() >
-        TD->getPointerSizeInBits()) {
-      Value *P = Builder->CreateTrunc(CI.getOperand(0),
-                                      TD->getIntPtrType(CI.getContext()));
-      return new IntToPtrInst(P, CI.getType());
-    }
-    if (CI.getOperand(0)->getType()->getScalarSizeInBits() <
-        TD->getPointerSizeInBits()) {
-      Value *P = Builder->CreateZExt(CI.getOperand(0),
-                                     TD->getIntPtrType(CI.getContext()));
-      return new IntToPtrInst(P, CI.getType());
-    }
+  if (TD && CI.getOperand(0)->getType()->getScalarSizeInBits() !=
+      TD->getPointerSizeInBits()) {
+    Type *Ty = TD->getIntPtrType(CI.getContext());
+    if (CI.getType()->isVectorTy()) // Handle vectors of pointers.
+      Ty = VectorType::get(Ty, CI.getType()->getVectorNumElements());
+
+    Value *P = Builder->CreateZExtOrTrunc(CI.getOperand(0), Ty);
+    return new IntToPtrInst(P, CI.getType());
   }
 
   if (Instruction *I = commonCastTransforms(CI))
@@ -1337,17 +1364,15 @@ Instruction *InstCombiner::commonPointerCastTransforms(CastInst &CI) {
     // GEP computes a constant offset, see if we can convert these three
     // instructions into fewer.  This typically happens with unions and other
     // non-type-safe code.
+    APInt Offset(TD ? TD->getPointerSizeInBits() : 1, 0);
     if (TD && GEP->hasOneUse() && isa<BitCastInst>(GEP->getOperand(0)) &&
-        GEP->hasAllConstantIndices()) {
-      SmallVector<Value*, 8> Ops(GEP->idx_begin(), GEP->idx_end());
-      int64_t Offset = TD->getIndexedOffset(GEP->getPointerOperandType(), Ops);
-
+        GEP->accumulateConstantOffset(*TD, Offset)) {
       // Get the base pointer input of the bitcast, and the type it points to.
       Value *OrigBase = cast<BitCastInst>(GEP->getOperand(0))->getOperand(0);
       Type *GEPIdxTy =
       cast<PointerType>(OrigBase->getType())->getElementType();
       SmallVector<Value*, 8> NewIndices;
-      if (FindElementAtOffset(GEPIdxTy, Offset, NewIndices)) {
+      if (FindElementAtOffset(GEPIdxTy, Offset.getSExtValue(), NewIndices)) {
         // If we were able to index down into an element, create the GEP
         // and bitcast the result.  This eliminates one bitcast, potentially
         // two.
@@ -1371,17 +1396,13 @@ Instruction *InstCombiner::visitPtrToInt(PtrToIntInst &CI) {
   // If the destination integer type is not the intptr_t type for this target,
   // do a ptrtoint to intptr_t then do a trunc or zext.  This allows the cast
   // to be exposed to other transforms.
-  if (TD) {
-    if (CI.getType()->getScalarSizeInBits() < TD->getPointerSizeInBits()) {
-      Value *P = Builder->CreatePtrToInt(CI.getOperand(0),
-                                         TD->getIntPtrType(CI.getContext()));
-      return new TruncInst(P, CI.getType());
-    }
-    if (CI.getType()->getScalarSizeInBits() > TD->getPointerSizeInBits()) {
-      Value *P = Builder->CreatePtrToInt(CI.getOperand(0),
-                                         TD->getIntPtrType(CI.getContext()));
-      return new ZExtInst(P, CI.getType());
-    }
+  if (TD && CI.getType()->getScalarSizeInBits() != TD->getPointerSizeInBits()) {
+    Type *Ty = TD->getIntPtrType(CI.getContext());
+    if (CI.getType()->isVectorTy()) // Handle vectors of pointers.
+      Ty = VectorType::get(Ty, CI.getType()->getVectorNumElements());
+
+    Value *P = Builder->CreatePtrToInt(CI.getOperand(0), Ty);
+    return CastInst::CreateIntegerCast(P, CI.getType(), /*isSigned=*/false);
   }
 
   return commonPointerCastTransforms(CI);
@@ -1589,6 +1610,9 @@ static Value *OptimizeIntegerToVectorInsertions(BitCastInst &CI,
 /// OptimizeIntToFloatBitCast - See if we can optimize an integer->float/double
 /// bitcast.  The various long double bitcasts can't get in here.
 static Instruction *OptimizeIntToFloatBitCast(BitCastInst &CI,InstCombiner &IC){
+  // We need to know the target byte order to perform this optimization.
+  if (!IC.getDataLayout()) return 0;
+
   Value *Src = CI.getOperand(0);
   Type *DestTy = CI.getType();
 
@@ -1610,7 +1634,10 @@ static Instruction *OptimizeIntToFloatBitCast(BitCastInst &CI,InstCombiner &IC){
         VecInput = IC.Builder->CreateBitCast(VecInput, VecTy);
       }
 
-      return ExtractElementInst::Create(VecInput, IC.Builder->getInt32(0));
+      unsigned Elt = 0;
+      if (IC.getDataLayout()->isBigEndian())
+        Elt = VecTy->getPrimitiveSizeInBits() / DestWidth - 1;
+      return ExtractElementInst::Create(VecInput, IC.Builder->getInt32(Elt));
     }
   }
 
@@ -1632,6 +1659,8 @@ static Instruction *OptimizeIntToFloatBitCast(BitCastInst &CI,InstCombiner &IC){
       }
 
       unsigned Elt = ShAmt->getZExtValue() / DestWidth;
+      if (IC.getDataLayout()->isBigEndian())
+        Elt = VecTy->getPrimitiveSizeInBits() / DestWidth - 1 - Elt;
       return ExtractElementInst::Create(VecInput, IC.Builder->getInt32(Elt));
     }
   }
@@ -1723,11 +1752,22 @@ Instruction *InstCombiner::visitBitCast(BitCastInst &CI) {
   }
 
   if (VectorType *SrcVTy = dyn_cast<VectorType>(SrcTy)) {
-    if (SrcVTy->getNumElements() == 1 && !DestTy->isVectorTy()) {
-      Value *Elem =
-        Builder->CreateExtractElement(Src,
-                   Constant::getNullValue(Type::getInt32Ty(CI.getContext())));
-      return CastInst::Create(Instruction::BitCast, Elem, DestTy);
+    if (SrcVTy->getNumElements() == 1) {
+      // If our destination is not a vector, then make this a straight
+      // scalar-scalar cast.
+      if (!DestTy->isVectorTy()) {
+        Value *Elem =
+          Builder->CreateExtractElement(Src,
+                     Constant::getNullValue(Type::getInt32Ty(CI.getContext())));
+        return CastInst::Create(Instruction::BitCast, Elem, DestTy);
+      }
+
+      // Otherwise, see if our source is an insert. If so, then use the scalar
+      // component directly.
+      if (InsertElementInst *IEI =
+            dyn_cast<InsertElementInst>(CI.getOperand(0)))
+        return CastInst::Create(Instruction::BitCast, IEI->getOperand(1),
+                                DestTy);
     }
   }
 

@@ -16,21 +16,21 @@
 
 #define DEBUG_TYPE "memdep"
 #include "llvm/Analysis/MemoryDependenceAnalysis.h"
-#include "llvm/Instructions.h"
-#include "llvm/IntrinsicInst.h"
-#include "llvm/Function.h"
-#include "llvm/LLVMContext.h"
+#include "llvm/ADT/STLExtras.h"
+#include "llvm/ADT/Statistic.h"
 #include "llvm/Analysis/AliasAnalysis.h"
 #include "llvm/Analysis/Dominators.h"
 #include "llvm/Analysis/InstructionSimplify.h"
 #include "llvm/Analysis/MemoryBuiltins.h"
 #include "llvm/Analysis/PHITransAddr.h"
 #include "llvm/Analysis/ValueTracking.h"
-#include "llvm/ADT/Statistic.h"
-#include "llvm/ADT/STLExtras.h"
-#include "llvm/Support/PredIteratorCache.h"
+#include "llvm/IR/DataLayout.h"
+#include "llvm/IR/Function.h"
+#include "llvm/IR/Instructions.h"
+#include "llvm/IR/IntrinsicInst.h"
+#include "llvm/IR/LLVMContext.h"
 #include "llvm/Support/Debug.h"
-#include "llvm/DataLayout.h"
+#include "llvm/Support/PredIteratorCache.h"
 using namespace llvm;
 
 STATISTIC(NumCacheNonLocal, "Number of fully cached non-local responses");
@@ -47,9 +47,7 @@ STATISTIC(NumCacheCompleteNonLocalPtr,
           "Number of block queries that were completely cached");
 
 // Limit for the number of instructions to scan in a block.
-// FIXME: Figure out what a sane value is for this.
-//        (500 is relatively insane.)
-static const int BlockScanLimit = 500;
+static const int BlockScanLimit = 100;
 
 char MemoryDependenceAnalysis::ID = 0;
 
@@ -123,7 +121,8 @@ AliasAnalysis::ModRefResult GetLocation(const Instruction *Inst,
     if (LI->isUnordered()) {
       Loc = AA->getLocation(LI);
       return AliasAnalysis::Ref;
-    } else if (LI->getOrdering() == Monotonic) {
+    }
+    if (LI->getOrdering() == Monotonic) {
       Loc = AA->getLocation(LI);
       return AliasAnalysis::ModRef;
     }
@@ -135,7 +134,8 @@ AliasAnalysis::ModRefResult GetLocation(const Instruction *Inst,
     if (SI->isUnordered()) {
       Loc = AA->getLocation(SI);
       return AliasAnalysis::Mod;
-    } else if (SI->getOrdering() == Monotonic) {
+    }
+    if (SI->getOrdering() == Monotonic) {
       Loc = AA->getLocation(SI);
       return AliasAnalysis::ModRef;
     }
@@ -262,7 +262,7 @@ isLoadLoadClobberIfExtendedToFullWidth(const AliasAnalysis::Location &MemLoc,
 
   // If we haven't already computed the base/offset of MemLoc, do so now.
   if (MemLocBase == 0)
-    MemLocBase = GetPointerBaseWithConstantOffset(MemLoc.Ptr, MemLocOffs, *TD);
+    MemLocBase = GetPointerBaseWithConstantOffset(MemLoc.Ptr, MemLocOffs, TD);
 
   unsigned Size = MemoryDependenceAnalysis::
     getLoadLoadClobberFullWidthSize(MemLocBase, MemLocOffs, MemLoc.Size,
@@ -284,10 +284,16 @@ getLoadLoadClobberFullWidthSize(const Value *MemLocBase, int64_t MemLocOffs,
   // We can only extend simple integer loads.
   if (!isa<IntegerType>(LI->getType()) || !LI->isSimple()) return 0;
 
+  // Load widening is hostile to ThreadSanitizer: it may cause false positives
+  // or make the reports more cryptic (access sizes are wrong).
+  if (LI->getParent()->getParent()->getAttributes().
+      hasAttribute(AttributeSet::FunctionIndex, Attribute::SanitizeThread))
+    return 0;
+
   // Get the base of this load.
   int64_t LIOffs = 0;
   const Value *LIBase =
-    GetPointerBaseWithConstantOffset(LI->getPointerOperand(), LIOffs, TD);
+    GetPointerBaseWithConstantOffset(LI->getPointerOperand(), LIOffs, &TD);
 
   // If the two pointers are not based on the same pointer, we can't tell that
   // they are related.
@@ -327,8 +333,8 @@ getLoadLoadClobberFullWidthSize(const Value *MemLocBase, int64_t MemLocOffs,
       return 0;
 
     if (LIOffs+NewLoadByteSize > MemLocEnd &&
-        LI->getParent()->getParent()->getFnAttributes().
-          hasAttribute(Attributes::AddressSafety))
+        LI->getParent()->getParent()->getAttributes().
+          hasAttribute(AttributeSet::FunctionIndex, Attribute::SanitizeAddress))
       // We will be reading past the location accessed by the original program.
       // While this is safe in a regular build, Address Safety analysis tools
       // may start reporting false warnings. So, don't do widening.
@@ -345,15 +351,23 @@ getLoadLoadClobberFullWidthSize(const Value *MemLocBase, int64_t MemLocOffs,
 /// getPointerDependencyFrom - Return the instruction on which a memory
 /// location depends.  If isLoad is true, this routine ignores may-aliases with
 /// read-only operations.  If isLoad is false, this routine ignores may-aliases
-/// with reads from read-only locations.
+/// with reads from read-only locations.  If possible, pass the query
+/// instruction as well; this function may take advantage of the metadata
+/// annotated to the query instruction to refine the result.
 MemDepResult MemoryDependenceAnalysis::
 getPointerDependencyFrom(const AliasAnalysis::Location &MemLoc, bool isLoad,
-                         BasicBlock::iterator ScanIt, BasicBlock *BB) {
+                         BasicBlock::iterator ScanIt, BasicBlock *BB,
+                         Instruction *QueryInst) {
 
   const Value *MemLocBase = 0;
   int64_t MemLocOffset = 0;
-
   unsigned Limit = BlockScanLimit;
+  bool isInvariantLoad = false;
+  if (isLoad && QueryInst) {
+    LoadInst *LI = dyn_cast<LoadInst>(QueryInst);
+    if (LI && LI->getMetadata(LLVMContext::MD_invariant_load) != 0)
+      isInvariantLoad = true;
+  }
 
   // Walk backwards through the basic block, looking for dependencies.
   while (ScanIt != BB->begin()) {
@@ -468,6 +482,8 @@ getPointerDependencyFrom(const AliasAnalysis::Location &MemLoc, bool isLoad,
         continue;
       if (R == AliasAnalysis::MustAlias)
         return MemDepResult::getDef(Inst);
+      if (isInvariantLoad)
+       continue;
       return MemDepResult::getClobber(Inst);
     }
 
@@ -565,7 +581,7 @@ MemDepResult MemoryDependenceAnalysis::getDependency(Instruction *QueryInst) {
         isLoad |= II->getIntrinsicID() == Intrinsic::lifetime_start;
 
       LocalCache = getPointerDependencyFrom(MemLoc, isLoad, ScanPos,
-                                            QueryParent);
+                                            QueryParent, QueryInst);
     } else if (isa<CallInst>(QueryInst) || isa<InvokeInst>(QueryInst)) {
       CallSite QueryCS(QueryInst);
       bool isReadOnly = AA->onlyReadsMemory(QueryCS);
@@ -895,7 +911,6 @@ getNonLocalPointerDepFromBB(const PHITransAddr &Pointer,
                             SmallVectorImpl<NonLocalDepResult> &Result,
                             DenseMap<BasicBlock*, Value*> &Visited,
                             bool SkipFirstBlock) {
-
   // Look up the cached info for Pointer.
   ValueIsLoadPair CacheKey(Pointer.getAddr(), isLoad);
 
@@ -983,8 +998,17 @@ getNonLocalPointerDepFromBB(const PHITransAddr &Pointer,
     for (NonLocalDepInfo::iterator I = Cache->begin(), E = Cache->end();
          I != E; ++I) {
       Visited.insert(std::make_pair(I->getBB(), Addr));
-      if (!I->getResult().isNonLocal() && DT->isReachableFromEntry(I->getBB()))
+      if (I->getResult().isNonLocal()) {
+        continue;
+      }
+
+      if (!DT) {
+        Result.push_back(NonLocalDepResult(I->getBB(),
+                                           MemDepResult::getUnknown(),
+                                           Addr));
+      } else if (DT->isReachableFromEntry(I->getBB())) {
         Result.push_back(NonLocalDepResult(I->getBB(), I->getResult(), Addr));
+      }
     }
     ++NumCacheCompleteNonLocalPtr;
     return false;
@@ -1029,9 +1053,16 @@ getNonLocalPointerDepFromBB(const PHITransAddr &Pointer,
                                                  NumSortedEntries);
 
       // If we got a Def or Clobber, add this to the list of results.
-      if (!Dep.isNonLocal() && DT->isReachableFromEntry(BB)) {
-        Result.push_back(NonLocalDepResult(BB, Dep, Pointer.getAddr()));
-        continue;
+      if (!Dep.isNonLocal()) {
+        if (!DT) {
+          Result.push_back(NonLocalDepResult(BB,
+                                             MemDepResult::getUnknown(),
+                                             Pointer.getAddr()));
+          continue;
+        } else if (DT->isReachableFromEntry(BB)) {
+          Result.push_back(NonLocalDepResult(BB, Dep, Pointer.getAddr()));
+          continue;
+        }
       }
     }
 
@@ -1118,7 +1149,7 @@ getNonLocalPointerDepFromBB(const PHITransAddr &Pointer,
 
         // Make sure to clean up the Visited map before continuing on to
         // PredTranslationFailure.
-        for (unsigned i = 0; i < PredList.size(); i++)
+        for (unsigned i = 0, n = PredList.size(); i < n; ++i)
           Visited.erase(PredList[i].first);
 
         goto PredTranslationFailure;
@@ -1130,7 +1161,7 @@ getNonLocalPointerDepFromBB(const PHITransAddr &Pointer,
     // any results for.  (getNonLocalPointerDepFromBB will modify our
     // datastructures in ways the code after the PredTranslationFailure label
     // doesn't expect.)
-    for (unsigned i = 0; i < PredList.size(); i++) {
+    for (unsigned i = 0, n = PredList.size(); i < n; ++i) {
       BasicBlock *Pred = PredList[i].first;
       PHITransAddr &PredPointer = PredList[i].second;
       Value *PredPtrVal = PredPointer.getAddr();

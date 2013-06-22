@@ -1,3 +1,11 @@
+/*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
+|*                                                                            *|
+|*List of AST nodes of a particular kind                                      *|
+|*                                                                            *|
+|* Automatically generated file, do not edit!                                 *|
+|*                                                                            *|
+\*===----------------------------------------------------------------------===*/
+
 #ifndef ABSTRACT_STMT
 #  define ABSTRACT_STMT(Type) Type
 #endif
@@ -58,6 +66,12 @@ CXXFORRANGESTMT(CXXForRangeStmt, Stmt)
 #endif
 CXXTRYSTMT(CXXTryStmt, Stmt)
 #undef CXXTRYSTMT
+
+#ifndef CAPTUREDSTMT
+#  define CAPTUREDSTMT(Type, Base) STMT(Type, Base)
+#endif
+CAPTUREDSTMT(CapturedStmt, Stmt)
+#undef CAPTUREDSTMT
 
 #ifndef COMPOUNDSTMT
 #  define COMPOUNDSTMT(Type, Base) STMT(Type, Base)
@@ -194,6 +208,12 @@ STMT_RANGE(CXXConstructExpr, CXXConstructExpr, CXXTemporaryObjectExpr)
 #endif
 CXXDEFAULTARGEXPR(CXXDefaultArgExpr, Expr)
 #undef CXXDEFAULTARGEXPR
+
+#ifndef CXXDEFAULTINITEXPR
+#  define CXXDEFAULTINITEXPR(Type, Base) EXPR(Type, Base)
+#endif
+CXXDEFAULTINITEXPR(CXXDefaultInitExpr, Expr)
+#undef CXXDEFAULTINITEXPR
 
 #ifndef CXXDELETEEXPR
 #  define CXXDELETEEXPR(Type, Base) EXPR(Type, Base)
@@ -478,6 +498,12 @@ INTEGERLITERAL(IntegerLiteral, Expr)
 #endif
 LAMBDAEXPR(LambdaExpr, Expr)
 #undef LAMBDAEXPR
+
+#ifndef MSPROPERTYREFEXPR
+#  define MSPROPERTYREFEXPR(Type, Base) EXPR(Type, Base)
+#endif
+MSPROPERTYREFEXPR(MSPropertyRefExpr, Expr)
+#undef MSPROPERTYREFEXPR
 
 #ifndef MATERIALIZETEMPORARYEXPR
 #  define MATERIALIZETEMPORARYEXPR(Type, Base) EXPR(Type, Base)

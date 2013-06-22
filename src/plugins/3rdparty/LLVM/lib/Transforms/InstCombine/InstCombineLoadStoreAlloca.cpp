@@ -12,12 +12,12 @@
 //===----------------------------------------------------------------------===//
 
 #include "InstCombine.h"
-#include "llvm/IntrinsicInst.h"
+#include "llvm/ADT/Statistic.h"
 #include "llvm/Analysis/Loads.h"
-#include "llvm/DataLayout.h"
+#include "llvm/IR/DataLayout.h"
+#include "llvm/IR/IntrinsicInst.h"
 #include "llvm/Transforms/Utils/BasicBlockUtils.h"
 #include "llvm/Transforms/Utils/Local.h"
-#include "llvm/ADT/Statistic.h"
 using namespace llvm;
 
 STATISTIC(NumDeadStore,    "Number of dead stores eliminated");
@@ -69,8 +69,8 @@ isOnlyCopiedFromConstantGlobal(Value *V, MemTransferInst *&TheCopy,
     if (GetElementPtrInst *GEP = dyn_cast<GetElementPtrInst>(U)) {
       // If the GEP has all zero indices, it doesn't offset the pointer.  If it
       // doesn't, it does.
-      if (!isOnlyCopiedFromConstantGlobal(GEP, TheCopy, ToDelete,
-                                          IsOffset || !GEP->hasAllZeroIndices()))
+      if (!isOnlyCopiedFromConstantGlobal(
+              GEP, TheCopy, ToDelete, IsOffset || !GEP->hasAllZeroIndices()))
         return false;
       continue;
     }
@@ -147,26 +147,6 @@ isOnlyCopiedFromConstantGlobal(AllocaInst *AI,
   MemTransferInst *TheCopy = 0;
   if (isOnlyCopiedFromConstantGlobal(AI, TheCopy, ToDelete))
     return TheCopy;
-  return 0;
-}
-
-/// getPointeeAlignment - Compute the minimum alignment of the value pointed
-/// to by the given pointer.
-static unsigned getPointeeAlignment(Value *V, const DataLayout &TD) {
-  if (ConstantExpr *CE = dyn_cast<ConstantExpr>(V))
-    if (CE->getOpcode() == Instruction::BitCast ||
-        (CE->getOpcode() == Instruction::GetElementPtr &&
-         cast<GEPOperator>(CE)->hasAllZeroIndices()))
-      return getPointeeAlignment(CE->getOperand(0), TD);
-
-  if (GlobalVariable *GV = dyn_cast<GlobalVariable>(V))
-    if (!GV->isDeclaration())
-      return TD.getPreferredAlignment(GV);
-
-  if (PointerType *PT = dyn_cast<PointerType>(V->getType()))
-    if (PT->getElementType()->isSized())
-      return TD.getABITypeAlignment(PT->getElementType());
-
   return 0;
 }
 
@@ -265,7 +245,7 @@ Instruction *InstCombiner::visitAllocaInst(AllocaInst &AI) {
     }
   }
 
-  if (TD) {
+  if (AI.getAlignment()) {
     // Check to see if this allocation is only modified by a memcpy/memmove from
     // a constant global whose alignment is equal to or exceeds that of the
     // allocation.  If this is the case, we can change all users to use
@@ -274,7 +254,9 @@ Instruction *InstCombiner::visitAllocaInst(AllocaInst &AI) {
     // is only subsequently read.
     SmallVector<Instruction *, 4> ToDelete;
     if (MemTransferInst *Copy = isOnlyCopiedFromConstantGlobal(&AI, ToDelete)) {
-      if (AI.getAlignment() <= getPointeeAlignment(Copy->getSource(), *TD)) {
+      unsigned SourceAlign = getOrEnforceKnownAlignment(Copy->getSource(),
+                                                        AI.getAlignment(), TD);
+      if (AI.getAlignment() <= SourceAlign) {
         DEBUG(dbgs() << "Found alloca equal to global: " << AI << '\n');
         DEBUG(dbgs() << "  memcpy = " << *Copy << '\n');
         for (unsigned i = 0, e = ToDelete.size(); i != e; ++i)
@@ -819,6 +801,13 @@ bool InstCombiner::SimplifyStoreAtEndOfBlock(StoreInst &SI) {
                                    SI.getSynchScope());
   InsertNewInstBefore(NewSI, *BBI);
   NewSI->setDebugLoc(OtherStore->getDebugLoc());
+
+  // If the two stores had the same TBAA tag, preserve it.
+  if (MDNode *TBAATag = SI.getMetadata(LLVMContext::MD_tbaa))
+    if ((TBAATag = MDNode::getMostGenericTBAA(TBAATag,
+                               OtherStore->getMetadata(LLVMContext::MD_tbaa))))
+      NewSI->setMetadata(LLVMContext::MD_tbaa, TBAATag);
+
 
   // Nuke the old stores.
   EraseInstFromFunction(SI);

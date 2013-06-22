@@ -11,10 +11,19 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef LLVM_SYSTEM_HOST_H
-#define LLVM_SYSTEM_HOST_H
+#ifndef LLVM_SUPPORT_HOST_H
+#define LLVM_SUPPORT_HOST_H
 
 #include "llvm/ADT/StringMap.h"
+
+#if defined(__linux__)
+#include <endian.h>
+#else
+#ifndef LLVM_ON_WIN32
+#include <machine/endian.h>
+#endif
+#endif
+
 #include <string>
 //---OPENCOR--- BEGIN
 #include "llvmglobal.h"
@@ -23,18 +32,13 @@
 namespace llvm {
 namespace sys {
 
-  inline bool isLittleEndianHost() {
-    union {
-      int i;
-      char c;
-    };
-    i = 1;
-    return c;
-  }
+#if defined(BYTE_ORDER) && defined(BIG_ENDIAN) && BYTE_ORDER == BIG_ENDIAN
+  static const bool IsBigEndianHost = true;
+#else
+  static const bool IsBigEndianHost = false;
+#endif
 
-  inline bool isBigEndianHost() {
-    return !isLittleEndianHost();
-  }
+  static const bool IsLittleEndianHost = !IsBigEndianHost;
 
   /// getDefaultTargetTriple() - Return the default target triple the compiler
   /// has been configured to produce code for.
@@ -43,11 +47,15 @@ namespace sys {
   ///   CPU_TYPE-VENDOR-OPERATING_SYSTEM
   /// or
   ///   CPU_TYPE-VENDOR-KERNEL-OPERATING_SYSTEM
-/*---OPENCOR---
   std::string getDefaultTargetTriple();
+
+  /// getProcessTriple() - Return an appropriate target triple for generating
+  /// code to be loaded into the current process, e.g. when using the JIT.
+/*---OPENCOR---
+  std::string getProcessTriple();
 */
 //---OPENCOR--- BEGIN
-  std::string LLVM_EXPORT getDefaultTargetTriple();
+  std::string LLVM_EXPORT getProcessTriple();
 //---OPENCOR--- END
 
   /// getHostCPUName - Get the LLVM name for the host CPU. The particular format

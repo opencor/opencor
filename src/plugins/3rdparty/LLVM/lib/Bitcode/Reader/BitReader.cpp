@@ -9,10 +9,11 @@
 
 #include "llvm-c/BitReader.h"
 #include "llvm/Bitcode/ReaderWriter.h"
-#include "llvm/LLVMContext.h"
+#include "llvm/IR/LLVMContext.h"
+#include "llvm/IR/Module.h"
 #include "llvm/Support/MemoryBuffer.h"
-#include <string>
 #include <cstring>
+#include <string>
 
 using namespace llvm;
 

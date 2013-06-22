@@ -1,6 +1,6 @@
 /*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
 |*                                                                            *|
-|* Option Parsing Definitions                                                 *|
+|*Option Parsing Definitions                                                  *|
 |*                                                                            *|
 |* Automatically generated file, do not edit!                                 *|
 |*                                                                            *|
@@ -39,14 +39,20 @@ OPTION(prefix_1, "L", L, Flag, INVALID, INVALID, 0, 0,
        "Save temporary labels in the symbol table. Note this may change .s semantics, it should almost never be used on compiler generated code!", 0)
 OPTION(prefix_1, "dwarf-debug-flags", dwarf_debug_flags, Separate, INVALID, INVALID, 0, 0,
        "The string to embed in the Dwarf debug flags record.", 0)
+OPTION(prefix_1, "dwarf-debug-producer", dwarf_debug_producer, Separate, INVALID, INVALID, 0, 0,
+       "The string to embed in the Dwarf debug AT_producer record.", 0)
 OPTION(prefix_2, "fatal-warnings", fatal_warnings, Flag, INVALID, INVALID, 0, 0,
        "Consider warnings as errors", 0)
+OPTION(prefix_1, "fdebug-compilation-dir", fdebug_compilation_dir, Separate, INVALID, INVALID, 0, 0,
+       "The compilation directory to embed in the debug info.", 0)
 OPTION(prefix_1, "filetype", filetype, Separate, INVALID, INVALID, 0, 0,
        "Specify the output file type ('asm', 'null', or 'obj')", 0)
 OPTION(prefix_1, "g", g, Flag, INVALID, INVALID, 0, 0,
        "Generate source level debug information", 0)
 OPTION(prefix_3, "help", help, Flag, INVALID, INVALID, 0, 0,
        "Print this help text", 0)
+OPTION(prefix_1, "main-file-name", main_file_name, Separate, INVALID, INVALID, 0, 0,
+       "Main file name to use for debug info", 0)
 OPTION(prefix_1, "mllvm", mllvm, Separate, INVALID, INVALID, 0, 0,
        "Additional arguments to forward to LLVM's option processing", 0)
 OPTION(prefix_2, "noexecstack", no_exec_stack, Flag, INVALID, INVALID, 0, 0,
