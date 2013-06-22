@@ -10,9 +10,9 @@ To build LLVM (incl. Clang) is time consuming and therefore not something that w
 
 Note #1: configuration files were generated using CMake (on Windows, we also need Python 2.7.x; http://www.python.org/download/):
     1) Uncompress llvm-3.3.src.tar.gz and cfe-3.3.src.tar.gz
-    2) Move the contents of <CLANG> to <LLVM>/tools/clang
+    2) Move the contents of [CLANG] to [LLVM]/tools/clang
     3) From the command line:
-           cd <LLVM>
+           cd [LLVM]
            mkdir build
            cd build
            cmake ..   OR   cmake -G "Visual Studio 10" ..

@@ -4,9 +4,16 @@ MACRO(RETRIEVE_LLVM_SETTINGS)
     IF(WIN32)
         SET(LLVM_DEFINITIONS
             _SCL_SECURE_NO_WARNINGS
+            # Note: this is required to build LLVM in debug mode...
         )
-    ELSE()
+    ELSEIF(APPLE)
         SET(LLVM_DEFINITIONS)
+    ELSE()
+        SET(LLVM_DEFINITIONS
+            __STDC_FORMAT_MACROS
+            # Note: this is required to address a couple of issues with PRIx64
+            #       in [LLVM]/lib/CodeGen/AsmPrinter/AsmPrinter.cpp...
+        )
     ENDIF()
 
     LIST(APPEND LLVM_DEFINITIONS
