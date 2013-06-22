@@ -24,6 +24,12 @@ ENDFOREACH()
 
 RETRIEVE_LLVM_SETTINGS()
 
+# Check whether ZLib is available
+# Note: some platforms may have it installed, in which case LLVM will want to
+#       make use of it, so...
+
+FIND_PACKAGE(ZLIB QUIET)
+
 # Add the plugin
 
 SET(LLVM_PLUGIN
@@ -51,11 +57,9 @@ ADD_PLUGIN(LLVM
         lib/Analysis/CodeMetrics.cpp
         lib/Analysis/ConstantFolding.cpp
         lib/Analysis/CostModel.cpp
-        lib/Analysis/DbgInfoPrinter.cpp
         lib/Analysis/DependenceAnalysis.cpp
         lib/Analysis/DominanceFrontier.cpp
         lib/Analysis/DomPrinter.cpp
-        lib/Analysis/InlineCost.cpp
         lib/Analysis/InstCount.cpp
         lib/Analysis/InstructionSimplify.cpp
         lib/Analysis/Interval.cpp
@@ -85,6 +89,7 @@ ADD_PLUGIN(LLVM
         lib/Analysis/ProfileInfoLoader.cpp
         lib/Analysis/ProfileInfoLoaderPass.cpp
         lib/Analysis/ProfileVerifierPass.cpp
+        lib/Analysis/PtrUseVisitor.cpp
         lib/Analysis/RegionInfo.cpp
         lib/Analysis/RegionPass.cpp
         lib/Analysis/RegionPrinter.cpp
@@ -93,14 +98,17 @@ ADD_PLUGIN(LLVM
         lib/Analysis/ScalarEvolutionExpander.cpp
         lib/Analysis/ScalarEvolutionNormalization.cpp
         lib/Analysis/SparsePropagation.cpp
+        lib/Analysis/TargetTransformInfo.cpp
         lib/Analysis/Trace.cpp
         lib/Analysis/TypeBasedAliasAnalysis.cpp
         lib/Analysis/ValueTracking.cpp
 
         lib/Analysis/IPA/CallGraph.cpp
         lib/Analysis/IPA/CallGraphSCCPass.cpp
+        lib/Analysis/IPA/CallPrinter.cpp
         lib/Analysis/IPA/FindUsedTypes.cpp
         lib/Analysis/IPA/GlobalsModRef.cpp
+        lib/Analysis/IPA/InlineCost.cpp
         lib/Analysis/IPA/IPA.cpp
 
         lib/Archive/Archive.cpp
@@ -113,6 +121,7 @@ ADD_PLUGIN(LLVM
 
         lib/Bitcode/Reader/BitcodeReader.cpp
         lib/Bitcode/Reader/BitReader.cpp
+        lib/Bitcode/Reader/BitstreamReader.cpp
 
         lib/Bitcode/Writer/BitcodeWriter.cpp
         lib/Bitcode/Writer/BitcodeWriterPass.cpp
@@ -122,17 +131,18 @@ ADD_PLUGIN(LLVM
         lib/CodeGen/AggressiveAntiDepBreaker.cpp
         lib/CodeGen/AllocationOrder.cpp
         lib/CodeGen/Analysis.cpp
+        lib/CodeGen/BasicTargetTransformInfo.cpp
         lib/CodeGen/BranchFolding.cpp
         lib/CodeGen/CalcSpillWeights.cpp
         lib/CodeGen/CallingConvLower.cpp
         lib/CodeGen/CodeGen.cpp
-        lib/CodeGen/CodePlacementOpt.cpp
         lib/CodeGen/CriticalAntiDepBreaker.cpp
         lib/CodeGen/DeadMachineInstructionElim.cpp
         lib/CodeGen/DFAPacketizer.cpp
         lib/CodeGen/DwarfEHPrepare.cpp
         lib/CodeGen/EarlyIfConversion.cpp
         lib/CodeGen/EdgeBundles.cpp
+        lib/CodeGen/ErlangGC.cpp
         lib/CodeGen/ExecutionDepsFix.cpp
         lib/CodeGen/ExpandISelPseudos.cpp
         lib/CodeGen/ExpandPostRAPseudos.cpp
@@ -173,7 +183,6 @@ ADD_PLUGIN(LLVM
         lib/CodeGen/MachineInstrBundle.cpp
         lib/CodeGen/MachineLICM.cpp
         lib/CodeGen/MachineLoopInfo.cpp
-        lib/CodeGen/MachineLoopRanges.cpp
         lib/CodeGen/MachineModuleInfo.cpp
         lib/CodeGen/MachineModuleInfoImpls.cpp
         lib/CodeGen/MachinePassRegistry.cpp
@@ -220,9 +229,11 @@ ADD_PLUGIN(LLVM
         lib/CodeGen/StrongPHIElimination.cpp
         lib/CodeGen/TailDuplication.cpp
         lib/CodeGen/TargetFrameLoweringImpl.cpp
-        lib/CodeGen/TargetInstrInfoImpl.cpp
+        lib/CodeGen/TargetInstrInfo.cpp
+        lib/CodeGen/TargetLoweringBase.cpp
         lib/CodeGen/TargetLoweringObjectFileImpl.cpp
         lib/CodeGen/TargetOptionsImpl.cpp
+        lib/CodeGen/TargetRegisterInfo.cpp
         lib/CodeGen/TargetSchedule.cpp
         lib/CodeGen/TwoAddressInstructionPass.cpp
         lib/CodeGen/UnreachableBlockElim.cpp
@@ -238,6 +249,7 @@ ADD_PLUGIN(LLVM
         lib/CodeGen/AsmPrinter/DwarfCompileUnit.cpp
         lib/CodeGen/AsmPrinter/DwarfDebug.cpp
         lib/CodeGen/AsmPrinter/DwarfException.cpp
+        lib/CodeGen/AsmPrinter/ErlangGCPrinter.cpp
         lib/CodeGen/AsmPrinter/OcamlGCPrinter.cpp
         lib/CodeGen/AsmPrinter/Win64Exception.cpp
 
@@ -272,6 +284,7 @@ ADD_PLUGIN(LLVM
         lib/DebugInfo/DWARFDebugAbbrev.cpp
         lib/DebugInfo/DWARFDebugAranges.cpp
         lib/DebugInfo/DWARFDebugArangeSet.cpp
+        lib/DebugInfo/DWARFDebugFrame.cpp
         lib/DebugInfo/DWARFDebugInfoEntry.cpp
         lib/DebugInfo/DWARFDebugLine.cpp
         lib/DebugInfo/DWARFDebugRangeList.cpp
@@ -283,8 +296,9 @@ ADD_PLUGIN(LLVM
 
 #        lib/ExecutionEngine/IntelJITEvents/IntelJITEventListener.cpp
 #        lib/ExecutionEngine/IntelJITEvents/jitprofiling.c
-# Note: we don't need the above, but we leave it so we know about it next time
-#       we update LLVM...
+# Note: we don't need the above, but we leave them so we know about them next
+#       time we update LLVM. Indeed, Intel JIT API support is only available on
+#       Linux and Windows, so...
 
         lib/ExecutionEngine/Interpreter/Execution.cpp
         lib/ExecutionEngine/Interpreter/ExternalFunctions.cpp
@@ -296,20 +310,60 @@ ADD_PLUGIN(LLVM
         lib/ExecutionEngine/JIT/JITMemoryManager.cpp
 
         lib/ExecutionEngine/MCJIT/MCJIT.cpp
+        lib/ExecutionEngine/MCJIT/SectionMemoryManager.cpp
 
 #        lib/ExecutionEngine/OProfileJIT/OProfileJITEventListener.cpp
 #        lib/ExecutionEngine/OProfileJIT/OProfileWrapper.cpp
 # Note: we don't need the above, but we leave them so we know about them next
-#       time we update LLVM...
+#       time we update LLVM. Indeed, OProfile support is only available on
+#       Linux, so...
 
         lib/ExecutionEngine/RuntimeDyld/GDBRegistrar.cpp
         lib/ExecutionEngine/RuntimeDyld/RuntimeDyld.cpp
         lib/ExecutionEngine/RuntimeDyld/RuntimeDyldELF.cpp
         lib/ExecutionEngine/RuntimeDyld/RuntimeDyldMachO.cpp
 
-        lib/Linker/LinkArchives.cpp
-        lib/Linker/Linker.cpp
-        lib/Linker/LinkItems.cpp
+        lib/IR/AsmWriter.cpp
+        lib/IR/Attributes.cpp
+        lib/IR/AutoUpgrade.cpp
+        lib/IR/BasicBlock.cpp
+        lib/IR/ConstantFold.cpp
+        lib/IR/Constants.cpp
+        lib/IR/Core.cpp
+        lib/IR/DataLayout.cpp
+        lib/IR/DebugInfo.cpp
+        lib/IR/DebugLoc.cpp
+        lib/IR/DIBuilder.cpp
+        lib/IR/Dominators.cpp
+        lib/IR/Function.cpp
+        lib/IR/GCOV.cpp
+        lib/IR/Globals.cpp
+        lib/IR/GVMaterializer.cpp
+        lib/IR/InlineAsm.cpp
+        lib/IR/Instruction.cpp
+        lib/IR/Instructions.cpp
+        lib/IR/IntrinsicInst.cpp
+        lib/IR/IRBuilder.cpp
+        lib/IR/LeakDetector.cpp
+        lib/IR/LLVMContext.cpp
+        lib/IR/LLVMContextImpl.cpp
+        lib/IR/Metadata.cpp
+        lib/IR/Module.cpp
+        lib/IR/Pass.cpp
+        lib/IR/PassManager.cpp
+        lib/IR/PassRegistry.cpp
+        lib/IR/PrintModulePass.cpp
+        lib/IR/Type.cpp
+        lib/IR/TypeFinder.cpp
+        lib/IR/Use.cpp
+        lib/IR/User.cpp
+        lib/IR/Value.cpp
+        lib/IR/ValueSymbolTable.cpp
+        lib/IR/ValueTypes.cpp
+        lib/IR/Verifier.cpp
+
+        lib/IRReader/IRReader.cpp
+
         lib/Linker/LinkModules.cpp
 
         lib/MC/ELFObjectWriter.cpp
@@ -350,7 +404,6 @@ ADD_PLUGIN(LLVM
         lib/MC/MCStreamer.cpp
         lib/MC/MCSubtargetInfo.cpp
         lib/MC/MCSymbol.cpp
-        lib/MC/MCTargetAsmLexer.cpp
         lib/MC/MCValue.cpp
         lib/MC/MCWin64EH.cpp
         lib/MC/SubtargetFeature.cpp
@@ -358,11 +411,6 @@ ADD_PLUGIN(LLVM
         lib/MC/WinCOFFStreamer.cpp
 
         lib/MC/MCDisassembler/Disassembler.cpp
-        lib/MC/MCDisassembler/EDDisassembler.cpp
-        lib/MC/MCDisassembler/EDInst.cpp
-        lib/MC/MCDisassembler/EDMain.cpp
-        lib/MC/MCDisassembler/EDOperand.cpp
-        lib/MC/MCDisassembler/EDToken.cpp
 
         lib/MC/MCParser/AsmLexer.cpp
         lib/MC/MCParser/AsmParser.cpp
@@ -379,10 +427,14 @@ ADD_PLUGIN(LLVM
         lib/Object/COFFObjectFile.cpp
         lib/Object/ELFObjectFile.cpp
         lib/Object/Error.cpp
-        lib/Object/MachOObject.cpp
         lib/Object/MachOObjectFile.cpp
         lib/Object/Object.cpp
         lib/Object/ObjectFile.cpp
+
+        lib/Option/Arg.cpp
+        lib/Option/ArgList.cpp
+        lib/Option/Option.cpp
+        lib/Option/OptTable.cpp
 
         lib/Support/Allocator.cpp
         lib/Support/APFloat.cpp
@@ -393,7 +445,10 @@ ADD_PLUGIN(LLVM
         lib/Support/BranchProbability.cpp
         lib/Support/circular_raw_ostream.cpp
         lib/Support/CommandLine.cpp
+        lib/Support/Compression.cpp
         lib/Support/ConstantRange.cpp
+        lib/Support/ConvertUTF.c
+        lib/Support/ConvertUTFWrapper.cpp
         lib/Support/CrashRecoveryContext.cpp
         lib/Support/DAGDeltaAlgorithm.cpp
         lib/Support/DataExtractor.cpp
@@ -462,7 +517,9 @@ ADD_PLUGIN(LLVM
         lib/Support/Triple.cpp
         lib/Support/Twine.cpp
         lib/Support/Valgrind.cpp
+        lib/Support/Watchdog.cpp
         lib/Support/YAMLParser.cpp
+        lib/Support/YAMLTraits.cpp
 
         lib/TableGen/Error.cpp
         lib/TableGen/Main.cpp
@@ -474,21 +531,19 @@ ADD_PLUGIN(LLVM
 
         lib/Target/Mangler.cpp
         lib/Target/Target.cpp
-        lib/Target/TargetInstrInfo.cpp
         lib/Target/TargetIntrinsicInfo.cpp
         lib/Target/TargetJITInfo.cpp
         lib/Target/TargetLibraryInfo.cpp
         lib/Target/TargetLoweringObjectFile.cpp
         lib/Target/TargetMachine.cpp
         lib/Target/TargetMachineC.cpp
-        lib/Target/TargetRegisterInfo.cpp
         lib/Target/TargetSubtargetInfo.cpp
-        lib/Target/TargetTransformImpl.cpp
 
         lib/Target/X86/X86AsmPrinter.cpp
         lib/Target/X86/X86CodeEmitter.cpp
         lib/Target/X86/X86COFFMachineModuleInfo.cpp
         lib/Target/X86/X86FastISel.cpp
+        lib/Target/X86/X86FixupLEAs.cpp
         lib/Target/X86/X86FloatingPoint.cpp
         lib/Target/X86/X86FrameLowering.cpp
         lib/Target/X86/X86InstrInfo.cpp
@@ -497,14 +552,15 @@ ADD_PLUGIN(LLVM
         lib/Target/X86/X86JITInfo.cpp
         lib/Target/X86/X86MachineFunctionInfo.cpp
         lib/Target/X86/X86MCInstLower.cpp
+        lib/Target/X86/X86PadShortFunction.cpp
         lib/Target/X86/X86RegisterInfo.cpp
         lib/Target/X86/X86SelectionDAGInfo.cpp
         lib/Target/X86/X86Subtarget.cpp
         lib/Target/X86/X86TargetMachine.cpp
         lib/Target/X86/X86TargetObjectFile.cpp
+        lib/Target/X86/X86TargetTransformInfo.cpp
         lib/Target/X86/X86VZeroUpper.cpp
 
-        lib/Target/X86/AsmParser/X86AsmLexer.cpp
         lib/Target/X86/AsmParser/X86AsmParser.cpp
 
         lib/Target/X86/Disassembler/X86Disassembler.cpp
@@ -548,6 +604,7 @@ ADD_PLUGIN(LLVM
         lib/Transforms/Instrumentation/EdgeProfiling.cpp
         lib/Transforms/Instrumentation/GCOVProfiling.cpp
         lib/Transforms/Instrumentation/Instrumentation.cpp
+        lib/Transforms/Instrumentation/MemorySanitizer.cpp
         lib/Transforms/Instrumentation/OptimalEdgeProfiling.cpp
         lib/Transforms/Instrumentation/PathProfiling.cpp
         lib/Transforms/Instrumentation/ProfilingUtils.cpp
@@ -575,6 +632,16 @@ ADD_PLUGIN(LLVM
         lib/Transforms/IPO/StripDeadPrototypes.cpp
         lib/Transforms/IPO/StripSymbols.cpp
 
+        lib/Transforms/ObjCARC/DependencyAnalysis.cpp
+        lib/Transforms/ObjCARC/ObjCARC.cpp
+        lib/Transforms/ObjCARC/ObjCARCAliasAnalysis.cpp
+        lib/Transforms/ObjCARC/ObjCARCAPElim.cpp
+        lib/Transforms/ObjCARC/ObjCARCContract.cpp
+        lib/Transforms/ObjCARC/ObjCARCExpand.cpp
+        lib/Transforms/ObjCARC/ObjCARCOpts.cpp
+        lib/Transforms/ObjCARC/ObjCARCUtil.cpp
+        lib/Transforms/ObjCARC/ProvenanceAnalysis.cpp
+
         lib/Transforms/Scalar/ADCE.cpp
         lib/Transforms/Scalar/BasicBlockPlacement.cpp
         lib/Transforms/Scalar/CodeGenPrepare.cpp
@@ -597,7 +664,6 @@ ADD_PLUGIN(LLVM
         lib/Transforms/Scalar/LoopUnswitch.cpp
         lib/Transforms/Scalar/LowerAtomic.cpp
         lib/Transforms/Scalar/MemCpyOptimizer.cpp
-        lib/Transforms/Scalar/ObjCARC.cpp
         lib/Transforms/Scalar/Reassociate.cpp
         lib/Transforms/Scalar/Reg2Mem.cpp
         lib/Transforms/Scalar/Scalar.cpp
@@ -609,7 +675,6 @@ ADD_PLUGIN(LLVM
         lib/Transforms/Scalar/SROA.cpp
         lib/Transforms/Scalar/TailRecursionElimination.cpp
 
-        lib/Transforms/Utils/AddrModeMatcher.cpp
         lib/Transforms/Utils/BasicBlockUtils.cpp
         lib/Transforms/Utils/BreakCriticalEdges.cpp
         lib/Transforms/Utils/BuildLibCalls.cpp
@@ -645,47 +710,9 @@ ADD_PLUGIN(LLVM
 
         lib/Transforms/Vectorize/BBVectorize.cpp
         lib/Transforms/Vectorize/LoopVectorize.cpp
+        lib/Transforms/Vectorize/SLPVectorizer.cpp
         lib/Transforms/Vectorize/Vectorize.cpp
-
-        lib/VMCore/AsmWriter.cpp
-        lib/VMCore/Attributes.cpp
-        lib/VMCore/AutoUpgrade.cpp
-        lib/VMCore/BasicBlock.cpp
-        lib/VMCore/ConstantFold.cpp
-        lib/VMCore/Constants.cpp
-        lib/VMCore/Core.cpp
-        lib/VMCore/DataLayout.cpp
-        lib/VMCore/DebugInfo.cpp
-        lib/VMCore/DebugLoc.cpp
-        lib/VMCore/DIBuilder.cpp
-        lib/VMCore/Dominators.cpp
-        lib/VMCore/Function.cpp
-        lib/VMCore/GCOV.cpp
-        lib/VMCore/Globals.cpp
-        lib/VMCore/GVMaterializer.cpp
-        lib/VMCore/InlineAsm.cpp
-        lib/VMCore/Instruction.cpp
-        lib/VMCore/Instructions.cpp
-        lib/VMCore/IntrinsicInst.cpp
-        lib/VMCore/IRBuilder.cpp
-        lib/VMCore/LeakDetector.cpp
-        lib/VMCore/LLVMContext.cpp
-        lib/VMCore/LLVMContextImpl.cpp
-        lib/VMCore/Metadata.cpp
-        lib/VMCore/Module.cpp
-        lib/VMCore/Pass.cpp
-        lib/VMCore/PassManager.cpp
-        lib/VMCore/PassRegistry.cpp
-        lib/VMCore/PrintModulePass.cpp
-        lib/VMCore/TargetTransformInfo.cpp
-        lib/VMCore/Type.cpp
-        lib/VMCore/TypeFinder.cpp
-        lib/VMCore/Use.cpp
-        lib/VMCore/User.cpp
-        lib/VMCore/Value.cpp
-        lib/VMCore/ValueSymbolTable.cpp
-        lib/VMCore/ValueTypes.cpp
-        lib/VMCore/Verifier.cpp
+        lib/Transforms/Vectorize/VecUtils.cpp
 
         src/llvmplugin.cpp
 
@@ -724,6 +751,7 @@ ADD_PLUGIN(LLVM
         tools/clang/lib/ARCMigrate/TransGCAttrs.cpp
         tools/clang/lib/ARCMigrate/TransGCCalls.cpp
         tools/clang/lib/ARCMigrate/TransProperties.cpp
+        tools/clang/lib/ARCMigrate/TransProtectedScope.cpp
         tools/clang/lib/ARCMigrate/TransRetainReleaseDealloc.cpp
         tools/clang/lib/ARCMigrate/TransUnbridgedCasts.cpp
         tools/clang/lib/ARCMigrate/TransUnusedInitDelegate.cpp
@@ -733,12 +761,12 @@ ADD_PLUGIN(LLVM
         tools/clang/lib/AST/ASTConsumer.cpp
         tools/clang/lib/AST/ASTContext.cpp
         tools/clang/lib/AST/ASTDiagnostic.cpp
+        tools/clang/lib/AST/ASTDumper.cpp
         tools/clang/lib/AST/ASTImporter.cpp
         tools/clang/lib/AST/AttrImpl.cpp
         tools/clang/lib/AST/Comment.cpp
         tools/clang/lib/AST/CommentBriefParser.cpp
         tools/clang/lib/AST/CommentCommandTraits.cpp
-        tools/clang/lib/AST/CommentDumper.cpp
         tools/clang/lib/AST/CommentLexer.cpp
         tools/clang/lib/AST/CommentParser.cpp
         tools/clang/lib/AST/CommentSema.cpp
@@ -750,6 +778,7 @@ ADD_PLUGIN(LLVM
         tools/clang/lib/AST/DeclFriend.cpp
         tools/clang/lib/AST/DeclGroup.cpp
         tools/clang/lib/AST/DeclObjC.cpp
+        tools/clang/lib/AST/DeclOpenMP.cpp
         tools/clang/lib/AST/DeclPrinter.cpp
         tools/clang/lib/AST/DeclTemplate.cpp
         tools/clang/lib/AST/DumpXML.cpp
@@ -773,7 +802,6 @@ ADD_PLUGIN(LLVM
         tools/clang/lib/AST/RecordLayoutBuilder.cpp
         tools/clang/lib/AST/SelectorLocationsKind.cpp
         tools/clang/lib/AST/Stmt.cpp
-        tools/clang/lib/AST/StmtDumper.cpp
         tools/clang/lib/AST/StmtIterator.cpp
         tools/clang/lib/AST/StmtPrinter.cpp
         tools/clang/lib/AST/StmtProfile.cpp
@@ -790,8 +818,7 @@ ADD_PLUGIN(LLVM
         tools/clang/lib/ASTMatchers/ASTMatchFinder.cpp
 
         tools/clang/lib/Basic/Builtins.cpp
-        tools/clang/lib/Basic/ConvertUTF.c
-        tools/clang/lib/Basic/ConvertUTFWrapper.cpp
+        tools/clang/lib/Basic/CharInfo.cpp
         tools/clang/lib/Basic/Diagnostic.cpp
         tools/clang/lib/Basic/DiagnosticIDs.cpp
         tools/clang/lib/Basic/FileManager.cpp
@@ -800,6 +827,8 @@ ADD_PLUGIN(LLVM
         tools/clang/lib/Basic/LangOptions.cpp
         tools/clang/lib/Basic/Module.cpp
         tools/clang/lib/Basic/ObjCRuntime.cpp
+        tools/clang/lib/Basic/OpenMPKinds.cpp
+        tools/clang/lib/Basic/OperatorPrecedence.cpp
         tools/clang/lib/Basic/SourceLocation.cpp
         tools/clang/lib/Basic/SourceManager.cpp
         tools/clang/lib/Basic/TargetInfo.cpp
@@ -809,6 +838,7 @@ ADD_PLUGIN(LLVM
         tools/clang/lib/Basic/VersionTuple.cpp
 
         tools/clang/lib/CodeGen/BackendUtil.cpp
+        tools/clang/lib/CodeGen/CGAtomic.cpp
         tools/clang/lib/CodeGen/CGBlocks.cpp
         tools/clang/lib/CodeGen/CGBuiltin.cpp
         tools/clang/lib/CodeGen/CGCall.cpp
@@ -870,6 +900,12 @@ ADD_PLUGIN(LLVM
         tools/clang/lib/Edit/EditedSource.cpp
         tools/clang/lib/Edit/RewriteObjCFoundationAPI.cpp
 
+        tools/clang/lib/Format/BreakableToken.cpp
+        tools/clang/lib/Format/Format.cpp
+        tools/clang/lib/Format/TokenAnnotator.cpp
+        tools/clang/lib/Format/UnwrappedLineParser.cpp
+        tools/clang/lib/Format/WhitespaceManager.cpp
+
         tools/clang/lib/Frontend/ASTConsumers.cpp
         tools/clang/lib/Frontend/ASTMerge.cpp
         tools/clang/lib/Frontend/ASTUnit.cpp
@@ -911,6 +947,7 @@ ADD_PLUGIN(LLVM
         tools/clang/lib/Lex/ModuleMap.cpp
         tools/clang/lib/Lex/PPCaching.cpp
         tools/clang/lib/Lex/PPCallbacks.cpp
+        tools/clang/lib/Lex/PPConditionalDirectiveRecord.cpp
         tools/clang/lib/Lex/PPDirectives.cpp
         tools/clang/lib/Lex/PPExpressions.cpp
         tools/clang/lib/Lex/PPLexerChange.cpp
@@ -932,6 +969,7 @@ ADD_PLUGIN(LLVM
         tools/clang/lib/Parse/ParseExprCXX.cpp
         tools/clang/lib/Parse/ParseInit.cpp
         tools/clang/lib/Parse/ParseObjc.cpp
+        tools/clang/lib/Parse/ParseOpenMP.cpp
         tools/clang/lib/Parse/ParsePragma.cpp
         tools/clang/lib/Parse/Parser.cpp
         tools/clang/lib/Parse/ParseStmt.cpp
@@ -985,6 +1023,7 @@ ADD_PLUGIN(LLVM
         tools/clang/lib/Sema/SemaLambda.cpp
         tools/clang/lib/Sema/SemaLookup.cpp
         tools/clang/lib/Sema/SemaObjCProperty.cpp
+        tools/clang/lib/Sema/SemaOpenMP.cpp
         tools/clang/lib/Sema/SemaOverload.cpp
         tools/clang/lib/Sema/SemaPseudoObject.cpp
         tools/clang/lib/Sema/SemaStmt.cpp
@@ -1006,13 +1045,14 @@ ADD_PLUGIN(LLVM
         tools/clang/lib/Serialization/ASTWriterDecl.cpp
         tools/clang/lib/Serialization/ASTWriterStmt.cpp
         tools/clang/lib/Serialization/GeneratePCH.cpp
+        tools/clang/lib/Serialization/GlobalModuleIndex.cpp
         tools/clang/lib/Serialization/Module.cpp
         tools/clang/lib/Serialization/ModuleManager.cpp
 
+        tools/clang/lib/StaticAnalyzer/Checkers/AllocationDiagnostics.cpp
         tools/clang/lib/StaticAnalyzer/Checkers/AnalyzerStatsChecker.cpp
         tools/clang/lib/StaticAnalyzer/Checkers/ArrayBoundChecker.cpp
         tools/clang/lib/StaticAnalyzer/Checkers/ArrayBoundCheckerV2.cpp
-        tools/clang/lib/StaticAnalyzer/Checkers/AttrNonNullChecker.cpp
         tools/clang/lib/StaticAnalyzer/Checkers/BasicObjCFoundationChecks.cpp
         tools/clang/lib/StaticAnalyzer/Checkers/BoolAssignmentChecker.cpp
         tools/clang/lib/StaticAnalyzer/Checkers/BuiltinFunctionChecker.cpp
@@ -1046,6 +1086,7 @@ ADD_PLUGIN(LLVM
         tools/clang/lib/StaticAnalyzer/Checkers/MallocChecker.cpp
         tools/clang/lib/StaticAnalyzer/Checkers/MallocOverflowSecurityChecker.cpp
         tools/clang/lib/StaticAnalyzer/Checkers/MallocSizeofChecker.cpp
+        tools/clang/lib/StaticAnalyzer/Checkers/NonNullParamChecker.cpp
         tools/clang/lib/StaticAnalyzer/Checkers/NoReturnFunctionChecker.cpp
         tools/clang/lib/StaticAnalyzer/Checkers/NSAutoreleasePoolChecker.cpp
         tools/clang/lib/StaticAnalyzer/Checkers/NSErrorChecker.cpp
@@ -1134,10 +1175,14 @@ ADD_PLUGIN(LLVM
         lib/Target/X86
         src
         tools/clang/include
+
+        ${ZLIB_INCLUDE_DIRS}
     DEFINITIONS
         ${LLVM_DEFINITIONS}
     QT_MODULES
         Core
     QT_DEPENDENCIES
         QtCore
+    EXTERNAL_LIBRARY_DEPENDENCIES
+        ${ZLIB_LIBRARIES}
 )
