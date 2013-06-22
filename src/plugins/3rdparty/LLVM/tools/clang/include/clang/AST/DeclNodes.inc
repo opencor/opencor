@@ -1,3 +1,11 @@
+/*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
+|*                                                                            *|
+|*List of AST nodes of a particular kind                                      *|
+|*                                                                            *|
+|* Automatically generated file, do not edit!                                 *|
+|*                                                                            *|
+\*===----------------------------------------------------------------------===*/
+
 #ifndef ABSTRACT_DECL
 #  define ABSTRACT_DECL(Type) Type
 #endif
@@ -21,11 +29,23 @@ ACCESSSPEC(AccessSpec, Decl)
 BLOCK(Block, Decl)
 #undef BLOCK
 
+#ifndef CAPTURED
+#  define CAPTURED(Type, Base) DECL(Type, Base)
+#endif
+CAPTURED(Captured, Decl)
+#undef CAPTURED
+
 #ifndef CLASSSCOPEFUNCTIONSPECIALIZATION
 #  define CLASSSCOPEFUNCTIONSPECIALIZATION(Type, Base) DECL(Type, Base)
 #endif
 CLASSSCOPEFUNCTIONSPECIALIZATION(ClassScopeFunctionSpecialization, Decl)
 #undef CLASSSCOPEFUNCTIONSPECIALIZATION
+
+#ifndef EMPTY
+#  define EMPTY(Type, Base) DECL(Type, Base)
+#endif
+EMPTY(Empty, Decl)
+#undef EMPTY
 
 #ifndef FILESCOPEASM
 #  define FILESCOPEASM(Type, Base) DECL(Type, Base)
@@ -347,6 +367,12 @@ DECL_RANGE(Function, Function, CXXDestructor)
 
 #undef FUNCTION
 
+#ifndef MSPROPERTY
+#  define MSPROPERTY(Type, Base) DECLARATOR(Type, Base)
+#endif
+MSPROPERTY(MSProperty, DeclaratorDecl)
+#undef MSPROPERTY
+
 #ifndef NONTYPETEMPLATEPARM
 #  define NONTYPETEMPLATEPARM(Type, Base) DECLARATOR(Type, Base)
 #endif
@@ -403,6 +429,12 @@ DECL_RANGE(Named, Label, UnresolvedUsingValue)
 
 #undef NAMED
 
+#ifndef OMPTHREADPRIVATE
+#  define OMPTHREADPRIVATE(Type, Base) DECL(Type, Base)
+#endif
+OMPTHREADPRIVATE(OMPThreadPrivate, Decl)
+#undef OMPTHREADPRIVATE
+
 #ifndef OBJCPROPERTYIMPL
 #  define OBJCPROPERTYIMPL(Type, Base) DECL(Type, Base)
 #endif
@@ -427,6 +459,14 @@ LAST_DECL_RANGE(Decl, AccessSpec, TranslationUnit)
 #undef DECL_RANGE
 #undef LAST_DECL_RANGE
 #undef ABSTRACT_DECL
+/*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
+|*                                                                            *|
+|*List of AST Decl nodes                                                      *|
+|*                                                                            *|
+|* Automatically generated file, do not edit!                                 *|
+|*                                                                            *|
+\*===----------------------------------------------------------------------===*/
+
 #ifndef DECL_CONTEXT
 #  define DECL_CONTEXT(DECL)
 #endif
@@ -437,6 +477,7 @@ DECL_CONTEXT_BASE(Function)
 DECL_CONTEXT_BASE(Tag)
 DECL_CONTEXT_BASE(ObjCContainer)
 DECL_CONTEXT(Block)
+DECL_CONTEXT(Captured)
 DECL_CONTEXT(LinkageSpec)
 DECL_CONTEXT(Namespace)
 DECL_CONTEXT(ObjCMethod)

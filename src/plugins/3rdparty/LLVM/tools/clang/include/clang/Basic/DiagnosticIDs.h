@@ -15,16 +15,12 @@
 #ifndef LLVM_CLANG_DIAGNOSTICIDS_H
 #define LLVM_CLANG_DIAGNOSTICIDS_H
 
+#include "clang/Basic/LLVM.h"
 #include "llvm/ADT/IntrusiveRefCntPtr.h"
 #include "llvm/ADT/StringRef.h"
-#include "clang/Basic/LLVM.h"
 //---OPENCOR--- BEGIN
 #include "llvmglobal.h"
 //---OPENCOR--- END
-
-namespace llvm {
-  template<typename T, unsigned> class SmallVector;
-}
 
 namespace clang {
   class DiagnosticsEngine;
@@ -136,7 +132,7 @@ public:
 
   /// \brief Return an ID for a diagnostic with the specified message and level.
   ///
-  /// If this is the first request for this diagnosic, it is registered and
+  /// If this is the first request for this diagnostic, it is registered and
   /// created, otherwise the existing ID is returned.
   unsigned getCustomDiagID(Level L, StringRef Message);
 
@@ -239,10 +235,10 @@ public:
   /// \param Diags [out] - On return, the diagnostics in the group.
   /// \returns True if the given group is unknown, false otherwise.
   bool getDiagnosticsInGroup(StringRef Group,
-                             llvm::SmallVectorImpl<diag::kind> &Diags) const;
+                             SmallVectorImpl<diag::kind> &Diags) const;
 
   /// \brief Get the set of all diagnostic IDs.
-  void getAllDiagnostics(llvm::SmallVectorImpl<diag::kind> &Diags) const;
+  void getAllDiagnostics(SmallVectorImpl<diag::kind> &Diags) const;
 
   /// \brief Get the warning option with the closest edit distance to the given
   /// group name.
@@ -253,7 +249,7 @@ private:
   ///
   /// \param Diags [out] - On return, the diagnostics in the group.
   void getDiagnosticsInGroup(const WarningOption *Group,
-                             llvm::SmallVectorImpl<diag::kind> &Diags) const;
+                             SmallVectorImpl<diag::kind> &Diags) const;
 
   /// \brief Based on the way the client configured the DiagnosticsEngine
   /// object, classify the specified diagnostic ID into a Level, consumable by

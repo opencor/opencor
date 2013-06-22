@@ -4,7 +4,10 @@
 #define CONFIG_H
 
 /* Bug report URL. */
-#define BUG_REPORT_URL ""
+#define BUG_REPORT_URL "http://llvm.org/bugs/"
+
+/* Define if we have libxml2 */
+/* #undef CLANG_HAVE_LIBXML */
 
 /* Relative directory for resource files */
 #define CLANG_RESOURCE_DIR ""
@@ -66,10 +69,13 @@
 /* Define to 1 if you have the `closedir' function. */
 /* #undef HAVE_CLOSEDIR */
 
+/* Define to 1 if you have the <cxxabi.h> header file. */
+/* #undef HAVE_CXXABI_H */
+
 /* Define to 1 if you have the <CrashReporterClient.h> header file. */
 #undef HAVE_CRASHREPORTERCLIENT_H
 
-/* Define if __crashreporter_info__ exists. */
+/* can use __crashreporter_info__ */
 #undef HAVE_CRASHREPORTER_INFO
 
 /* Define to 1 if you have the <ctype.h> header file. */
@@ -143,6 +149,24 @@
 /* Define to 1 if you have the `floorf' function. */
 #define HAVE_FLOORF 1
 
+/* Define to 1 if you have the `log' function. */
+#define HAVE_LOG 1
+
+/* Define to 1 if you have the `log2' function. */
+/* #undef HAVE_LOG2 */
+
+/* Define to 1 if you have the `log10' function. */
+#define HAVE_LOG10 1
+
+/* Define to 1 if you have the `exp' function. */
+#define HAVE_EXP 1
+
+/* Define to 1 if you have the `exp2' function. */
+/* #undef HAVE_EXP2 */
+
+/* Define to 1 if you have the `exp10' function. */
+/* #undef HAVE_EXP10 */
+
 /* Define to 1 if you have the `fmodf' function. */
 #define HAVE_FMODF 1
 
@@ -209,8 +233,11 @@
 /* Define to 1 if you have the `udis86' library (-ludis86). */
 #undef HAVE_LIBUDIS86
 
+/* Define to 1 if you have the 'z' library (-lz). */
+/* #undef HAVE_LIBZ */
+
 /* Define to 1 if you have the <limits.h> header file. */
-/* #undef HAVE_LIMITS_H */
+#define HAVE_LIMITS_H 1
 
 /* Define if you can use -Wl,-export-dynamic. */
 #define HAVE_LINK_EXPORT_DYNAMIC 1
@@ -235,7 +262,7 @@
 /* #undef HAVE_MALLINFO */
 
 /* Define to 1 if you have the <malloc.h> header file. */
-/* #undef HAVE_MALLOC_H */
+#define HAVE_MALLOC_H 1
 
 /* Define to 1 if you have the <malloc/malloc.h> header file. */
 /* #undef HAVE_MALLOC_MALLOC_H */
@@ -477,6 +504,9 @@
 /* Define if the xdot.py program is available */
 /* #undef HAVE_XDOT_PY */
 
+/* Define to 1 if you have the <zlib.h> header file. */
+/* #undef HAVE_ZLIB_H */
+
 /* Have host's _alloca */
 /* #undef HAVE__ALLOCA */
 
@@ -549,6 +579,9 @@
 /* Define if threads enabled */
 #define LLVM_ENABLE_THREADS 1
 
+/* Define if zlib compression is available */
+#define LLVM_ENABLE_ZLIB 0
+
 /* Installation directory for config files */
 /* #undef LLVM_ETCDIR */
 
@@ -556,7 +589,7 @@
 #define LLVM_HAS_ATOMICS 1
 
 /* Host triple LLVM will be executed on */
-#define LLVM_HOSTTRIPLE "i686-pc-win32"
+#define LLVM_HOST_TRIPLE "i686-pc-win32"
 
 /* Installation directory for include files */
 /* #undef LLVM_INCLUDEDIR */
@@ -637,7 +670,7 @@
 #define LLVM_VERSION_MAJOR 3
 
 /* Minor version of the LLVM API */
-#define LLVM_VERSION_MINOR 2
+#define LLVM_VERSION_MINOR 3
 
 /* Define if the OS needs help to load dependent libraries for dlopen(). */
 #define LTDL_DLOPEN_DEPLIBS 1
@@ -670,13 +703,13 @@
 #define PACKAGE_NAME "LLVM"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "LLVM 3.2svn"
+#define PACKAGE_STRING "LLVM 3.3svn"
 
 /* Define to the one symbol short name of this package. */
 #undef PACKAGE_TARNAME
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "3.2svn"
+#define PACKAGE_VERSION "3.3svn"
 
 /* Define as the return type of signal handlers (`int' or `void'). */
 #define RETSIGTYPE void

@@ -15,11 +15,11 @@
 #ifndef LLVM_CODEGEN_MACHINEDOMINATORS_H
 #define LLVM_CODEGEN_MACHINEDOMINATORS_H
 
+#include "llvm/Analysis/DominatorInternals.h"
+#include "llvm/Analysis/Dominators.h"
 #include "llvm/CodeGen/MachineBasicBlock.h"
 #include "llvm/CodeGen/MachineFunction.h"
 #include "llvm/CodeGen/MachineFunctionPass.h"
-#include "llvm/Analysis/Dominators.h"
-#include "llvm/Analysis/DominatorInternals.h"
 
 namespace llvm {
 
@@ -68,22 +68,24 @@ public:
 
   virtual bool runOnMachineFunction(MachineFunction &F);
 
-  inline bool dominates(MachineDomTreeNode* A, MachineDomTreeNode* B) const {
+  inline bool dominates(const MachineDomTreeNode* A,
+                        const MachineDomTreeNode* B) const {
     return DT->dominates(A, B);
   }
 
-  inline bool dominates(MachineBasicBlock* A, MachineBasicBlock* B) const {
+  inline bool dominates(const MachineBasicBlock* A,
+                        const MachineBasicBlock* B) const {
     return DT->dominates(A, B);
   }
 
   // dominates - Return true if A dominates B. This performs the
   // special checks necessary if A and B are in the same basic block.
-  bool dominates(MachineInstr *A, MachineInstr *B) const {
-    MachineBasicBlock *BBA = A->getParent(), *BBB = B->getParent();
+  bool dominates(const MachineInstr *A, const MachineInstr *B) const {
+    const MachineBasicBlock *BBA = A->getParent(), *BBB = B->getParent();
     if (BBA != BBB) return DT->dominates(BBA, BBB);
 
     // Loop through the basic block until we find A or B.
-    MachineBasicBlock::iterator I = BBA->begin();
+    MachineBasicBlock::const_iterator I = BBA->begin();
     for (; &*I != A && &*I != B; ++I)
       /*empty*/ ;
 
@@ -97,12 +99,12 @@ public:
   }
 
   inline bool properlyDominates(const MachineDomTreeNode* A,
-                                MachineDomTreeNode* B) const {
+                                const MachineDomTreeNode* B) const {
     return DT->properlyDominates(A, B);
   }
 
-  inline bool properlyDominates(MachineBasicBlock* A,
-                                MachineBasicBlock* B) const {
+  inline bool properlyDominates(const MachineBasicBlock* A,
+                                const MachineBasicBlock* B) const {
     return DT->properlyDominates(A, B);
   }
 
@@ -160,7 +162,7 @@ public:
 
   /// isReachableFromEntry - Return true if A is dominated by the entry
   /// block of the function containing it.
-  bool isReachableFromEntry(MachineBasicBlock *A) {
+  bool isReachableFromEntry(const MachineBasicBlock *A) {
     return DT->isReachableFromEntry(A);
   }
 

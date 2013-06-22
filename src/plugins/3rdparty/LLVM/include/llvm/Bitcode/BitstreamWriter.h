@@ -12,11 +12,11 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef BITSTREAM_WRITER_H
-#define BITSTREAM_WRITER_H
+#ifndef LLVM_BITCODE_BITSTREAMWRITER_H
+#define LLVM_BITCODE_BITSTREAMWRITER_H
 
-#include "llvm/ADT/StringRef.h"
 #include "llvm/ADT/SmallVector.h"
+#include "llvm/ADT/StringRef.h"
 #include "llvm/Bitcode/BitCodes.h"
 #include <vector>
 

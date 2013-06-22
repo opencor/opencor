@@ -67,22 +67,27 @@ void Test::basicTests()
     // Add 'void' to our string
 
     QVERIFY(!mCompilerEngine->compileCode("void"));
+    QVERIFY(!mCompilerEngine->error().compare("the model could not be compiled"));
 
     // Add an identifier to our string
 
     QVERIFY(!mCompilerEngine->compileCode("void function"));
+    QVERIFY(!mCompilerEngine->error().compare("the model could not be compiled"));
 
     // Add a '(' to our string
 
     QVERIFY(!mCompilerEngine->compileCode("void function("));
+    QVERIFY(!mCompilerEngine->error().compare("the model could not be compiled"));
 
     // Add a ')' to our string
 
     QVERIFY(!mCompilerEngine->compileCode("void function()"));
+    QVERIFY(!mCompilerEngine->error().compare("the model could not be compiled"));
 
     // Add a '{' to our string
 
     QVERIFY(!mCompilerEngine->compileCode("void function() {"));
+    QVERIFY(!mCompilerEngine->error().compare("the model could not be compiled"));
 
     // Add a '}' to our string which should make it a valid void function
 
@@ -91,18 +96,22 @@ void Test::basicTests()
     // Make the function a double function
 
     QVERIFY(!mCompilerEngine->compileCode("double function() {}"));
+    QVERIFY(!mCompilerEngine->error().compare("the model could not be compiled"));
 
     // Add 'return' to our string
 
     QVERIFY(!mCompilerEngine->compileCode("double function() { return"));
+    QVERIFY(!mCompilerEngine->error().compare("the model could not be compiled"));
 
     // Add '3' (as the RHS of an equation) to our string
 
     QVERIFY(!mCompilerEngine->compileCode("double function() { return 3.0"));
+    QVERIFY(!mCompilerEngine->error().compare("the model could not be compiled"));
 
     // Add ';' to our string
 
     QVERIFY(!mCompilerEngine->compileCode("double function() { return 3.0;"));
+    QVERIFY(!mCompilerEngine->error().compare("the model could not be compiled"));
 
     // Add a '}' to our string which should make it a valid double function
 
@@ -111,10 +120,12 @@ void Test::basicTests()
     // Check what happens when using an invalid function name
 
     QVERIFY(!mCompilerEngine->compileCode("double .function() { return 3.0; }"));
+    QVERIFY(!mCompilerEngine->error().compare("the model could not be compiled"));
 
     // Check what happens when using an invalid RHS of an equation
 
     QVERIFY(!mCompilerEngine->compileCode("double function() { return 3.0*/a; }"));
+    QVERIFY(!mCompilerEngine->error().compare("the model could not be compiled"));
 }
 
 //==============================================================================
@@ -936,6 +947,7 @@ void Test::defIntFunctionTests()
                                           "{\n"
                                           "    return defint();\n"
                                           "}"));
+    QVERIFY(!mCompilerEngine->error().compare("the model could not be compiled"));
 }
 
 //==============================================================================

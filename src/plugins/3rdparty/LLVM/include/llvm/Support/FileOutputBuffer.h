@@ -14,14 +14,14 @@
 #ifndef LLVM_SUPPORT_FILEOUTPUTBUFFER_H
 #define LLVM_SUPPORT_FILEOUTPUTBUFFER_H
 
+#include "llvm/ADT/OwningPtr.h"
 #include "llvm/ADT/SmallString.h"
 #include "llvm/ADT/StringRef.h"
 #include "llvm/Support/DataTypes.h"
+#include "llvm/Support/FileSystem.h"
 
 namespace llvm {
-
 class error_code;
-template<class T> class OwningPtr;
 
 /// FileOutputBuffer - This interface provides simple way to create an in-memory
 /// buffer which will be written to a file. During the lifetime of these
@@ -42,22 +42,21 @@ public:
   /// to the file at the specified path.
   static error_code create(StringRef FilePath, size_t Size,
                            OwningPtr<FileOutputBuffer> &Result,
-                           unsigned Flags=0);
-
+                           unsigned Flags = 0);
 
   /// Returns a pointer to the start of the buffer.
-  uint8_t *getBufferStart() const {
-    return BufferStart;
+  uint8_t *getBufferStart() {
+    return (uint8_t*)Region->data();
   }
 
   /// Returns a pointer to the end of the buffer.
-  uint8_t *getBufferEnd() const {
-    return BufferEnd;
+  uint8_t *getBufferEnd() {
+    return (uint8_t*)Region->data() + Region->size();
   }
 
   /// Returns size of the buffer.
   size_t getBufferSize() const {
-    return BufferEnd - BufferStart;
+    return Region->size();
   }
 
   /// Returns path where file will show up if buffer is committed.
@@ -77,22 +76,17 @@ public:
   /// deallocates the buffer and the target file is never written.
   ~FileOutputBuffer();
 
-
 private:
   FileOutputBuffer(const FileOutputBuffer &) LLVM_DELETED_FUNCTION;
   FileOutputBuffer &operator=(const FileOutputBuffer &) LLVM_DELETED_FUNCTION;
-protected:
-  FileOutputBuffer(uint8_t *Start, uint8_t *End,
-                    StringRef Path, StringRef TempPath);
 
-  uint8_t            *BufferStart;
-  uint8_t            *BufferEnd;
+  FileOutputBuffer(llvm::sys::fs::mapped_file_region *R,
+                   StringRef Path, StringRef TempPath);
+
+  OwningPtr<llvm::sys::fs::mapped_file_region> Region;
   SmallString<128>    FinalPath;
   SmallString<128>    TempPath;
 };
-
-
-
 } // end namespace llvm
 
 #endif

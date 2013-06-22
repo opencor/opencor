@@ -11,17 +11,17 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef LLVM_ANALYSIS_MEMORY_DEPENDENCE_H
-#define LLVM_ANALYSIS_MEMORY_DEPENDENCE_H
+#ifndef LLVM_ANALYSIS_MEMORYDEPENDENCEANALYSIS_H
+#define LLVM_ANALYSIS_MEMORYDEPENDENCEANALYSIS_H
 
-#include "llvm/BasicBlock.h"
-#include "llvm/Pass.h"
-#include "llvm/Support/ValueHandle.h"
-#include "llvm/Analysis/AliasAnalysis.h"
 #include "llvm/ADT/DenseMap.h"
-#include "llvm/ADT/SmallPtrSet.h"
 #include "llvm/ADT/OwningPtr.h"
 #include "llvm/ADT/PointerIntPair.h"
+#include "llvm/ADT/SmallPtrSet.h"
+#include "llvm/Analysis/AliasAnalysis.h"
+#include "llvm/IR/BasicBlock.h"
+#include "llvm/Pass.h"
+#include "llvm/Support/ValueHandle.h"
 
 namespace llvm {
   class Function;
@@ -391,14 +391,17 @@ namespace llvm {
     /// getPointerDependencyFrom - Return the instruction on which a memory
     /// location depends.  If isLoad is true, this routine ignores may-aliases
     /// with read-only operations.  If isLoad is false, this routine ignores
-    /// may-aliases with reads from read-only locations.
+    /// may-aliases with reads from read-only locations. If possible, pass
+    /// the query instruction as well; this function may take advantage of
+    /// the metadata annotated to the query instruction to refine the result.
     ///
     /// Note that this is an uncached query, and thus may be inefficient.
     ///
     MemDepResult getPointerDependencyFrom(const AliasAnalysis::Location &Loc,
                                           bool isLoad,
                                           BasicBlock::iterator ScanIt,
-                                          BasicBlock *BB);
+                                          BasicBlock *BB,
+                                          Instruction *QueryInst = 0);
 
 
     /// getLoadLoadClobberFullWidthSize - This is a little bit of analysis that

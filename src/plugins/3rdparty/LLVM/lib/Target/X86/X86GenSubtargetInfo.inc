@@ -1,6 +1,6 @@
 /*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
 |*                                                                            *|
-|* Subtarget Enumeration Source Fragment                                      *|
+|*Subtarget Enumeration Source Fragment                                       *|
 |*                                                                            *|
 |* Automatically generated file, do not edit!                                 *|
 |*                                                                            *|
@@ -14,39 +14,46 @@ namespace X86 {
   const uint64_t Feature3DNow = 1ULL << 0;
   const uint64_t Feature3DNowA = 1ULL << 1;
   const uint64_t Feature64Bit = 1ULL << 2;
-  const uint64_t FeatureAES = 1ULL << 3;
-  const uint64_t FeatureAVX = 1ULL << 4;
-  const uint64_t FeatureAVX2 = 1ULL << 5;
-  const uint64_t FeatureBMI = 1ULL << 6;
-  const uint64_t FeatureBMI2 = 1ULL << 7;
-  const uint64_t FeatureCMOV = 1ULL << 8;
-  const uint64_t FeatureCMPXCHG16B = 1ULL << 9;
-  const uint64_t FeatureF16C = 1ULL << 10;
-  const uint64_t FeatureFMA = 1ULL << 11;
-  const uint64_t FeatureFMA4 = 1ULL << 12;
-  const uint64_t FeatureFSGSBase = 1ULL << 13;
-  const uint64_t FeatureFastUAMem = 1ULL << 14;
-  const uint64_t FeatureLZCNT = 1ULL << 15;
-  const uint64_t FeatureLeaForSP = 1ULL << 16;
-  const uint64_t FeatureMMX = 1ULL << 17;
-  const uint64_t FeatureMOVBE = 1ULL << 18;
-  const uint64_t FeaturePCLMUL = 1ULL << 19;
-  const uint64_t FeaturePOPCNT = 1ULL << 20;
-  const uint64_t FeatureRDRAND = 1ULL << 21;
-  const uint64_t FeatureRTM = 1ULL << 22;
-  const uint64_t FeatureSSE1 = 1ULL << 23;
-  const uint64_t FeatureSSE2 = 1ULL << 24;
-  const uint64_t FeatureSSE3 = 1ULL << 25;
-  const uint64_t FeatureSSE4A = 1ULL << 26;
-  const uint64_t FeatureSSE41 = 1ULL << 27;
-  const uint64_t FeatureSSE42 = 1ULL << 28;
-  const uint64_t FeatureSSSE3 = 1ULL << 29;
-  const uint64_t FeatureSlowBTMem = 1ULL << 30;
-  const uint64_t FeatureSlowDivide = 1ULL << 31;
-  const uint64_t FeatureVectorUAMem = 1ULL << 32;
-  const uint64_t FeatureXOP = 1ULL << 33;
-  const uint64_t Mode64Bit = 1ULL << 34;
-  const uint64_t ProcIntelAtom = 1ULL << 35;
+  const uint64_t FeatureADX = 1ULL << 3;
+  const uint64_t FeatureAES = 1ULL << 4;
+  const uint64_t FeatureAVX = 1ULL << 5;
+  const uint64_t FeatureAVX2 = 1ULL << 6;
+  const uint64_t FeatureBMI = 1ULL << 7;
+  const uint64_t FeatureBMI2 = 1ULL << 8;
+  const uint64_t FeatureCMOV = 1ULL << 9;
+  const uint64_t FeatureCMPXCHG16B = 1ULL << 10;
+  const uint64_t FeatureCallRegIndirect = 1ULL << 11;
+  const uint64_t FeatureF16C = 1ULL << 12;
+  const uint64_t FeatureFMA = 1ULL << 13;
+  const uint64_t FeatureFMA4 = 1ULL << 14;
+  const uint64_t FeatureFSGSBase = 1ULL << 15;
+  const uint64_t FeatureFastUAMem = 1ULL << 16;
+  const uint64_t FeatureHLE = 1ULL << 17;
+  const uint64_t FeatureLEAUsesAG = 1ULL << 18;
+  const uint64_t FeatureLZCNT = 1ULL << 19;
+  const uint64_t FeatureLeaForSP = 1ULL << 20;
+  const uint64_t FeatureMMX = 1ULL << 21;
+  const uint64_t FeatureMOVBE = 1ULL << 22;
+  const uint64_t FeaturePCLMUL = 1ULL << 23;
+  const uint64_t FeaturePOPCNT = 1ULL << 24;
+  const uint64_t FeaturePRFCHW = 1ULL << 25;
+  const uint64_t FeaturePadShortFunctions = 1ULL << 26;
+  const uint64_t FeatureRDRAND = 1ULL << 27;
+  const uint64_t FeatureRDSEED = 1ULL << 28;
+  const uint64_t FeatureRTM = 1ULL << 29;
+  const uint64_t FeatureSSE1 = 1ULL << 30;
+  const uint64_t FeatureSSE2 = 1ULL << 31;
+  const uint64_t FeatureSSE3 = 1ULL << 32;
+  const uint64_t FeatureSSE4A = 1ULL << 33;
+  const uint64_t FeatureSSE41 = 1ULL << 34;
+  const uint64_t FeatureSSE42 = 1ULL << 35;
+  const uint64_t FeatureSSSE3 = 1ULL << 36;
+  const uint64_t FeatureSlowBTMem = 1ULL << 37;
+  const uint64_t FeatureSlowDivide = 1ULL << 38;
+  const uint64_t FeatureVectorUAMem = 1ULL << 39;
+  const uint64_t FeatureXOP = 1ULL << 40;
+  const uint64_t Mode64Bit = 1ULL << 41;
+  const uint64_t ProcIntelAtom = 1ULL << 42;
 }
 } // End llvm namespace
 #endif // GET_SUBTARGETINFO_ENUM
@@ -61,12 +68,14 @@ extern const llvm::SubtargetFeatureKV X86FeatureKV[] = {
   { "3dnowa", "Enable 3DNow! Athlon instructions", X86::Feature3DNowA, X86::Feature3DNow },
   { "64bit", "Support 64-bit instructions", X86::Feature64Bit, X86::FeatureCMOV },
   { "64bit-mode", "64-bit mode (x86_64)", X86::Mode64Bit, 0ULL },
+  { "adx", "Support ADX instructions", X86::FeatureADX, 0ULL },
   { "aes", "Enable AES instructions", X86::FeatureAES, X86::FeatureSSE2 },
   { "atom", "Intel Atom processors", X86::ProcIntelAtom, 0ULL },
   { "avx", "Enable AVX instructions", X86::FeatureAVX, X86::FeatureSSE42 },
   { "avx2", "Enable AVX2 instructions", X86::FeatureAVX2, X86::FeatureAVX },
   { "bmi", "Support BMI instructions", X86::FeatureBMI, 0ULL },
   { "bmi2", "Support BMI2 instructions", X86::FeatureBMI2, 0ULL },
+  { "call-reg-indirect", "Call register indirect", X86::FeatureCallRegIndirect, 0ULL },
   { "cmov", "Enable conditional move instructions", X86::FeatureCMOV, 0ULL },
   { "cmpxchg16b", "64-bit with cmpxchg16b", X86::FeatureCMPXCHG16B, X86::Feature64Bit },
   { "f16c", "Support 16-bit floating point conversion instructions", X86::FeatureF16C, 0ULL },
@@ -74,14 +83,19 @@ extern const llvm::SubtargetFeatureKV X86FeatureKV[] = {
   { "fma", "Enable three-operand fused multiple-add", X86::FeatureFMA, X86::FeatureAVX },
   { "fma4", "Enable four-operand fused multiple-add", X86::FeatureFMA4, X86::FeatureAVX | X86::FeatureSSE4A },
   { "fsgsbase", "Support FS/GS Base instructions", X86::FeatureFSGSBase, 0ULL },
+  { "hle", "Support HLE", X86::FeatureHLE, 0ULL },
   { "idiv-to-divb", "Use small divide for positive values less than 256", X86::FeatureSlowDivide, 0ULL },
   { "lea-sp", "Use LEA for adjusting the stack pointer", X86::FeatureLeaForSP, 0ULL },
+  { "lea-uses-ag", "LEA instruction needs inputs at AG stage", X86::FeatureLEAUsesAG, 0ULL },
   { "lzcnt", "Support LZCNT instruction", X86::FeatureLZCNT, 0ULL },
   { "mmx", "Enable MMX instructions", X86::FeatureMMX, 0ULL },
   { "movbe", "Support MOVBE instruction", X86::FeatureMOVBE, 0ULL },
+  { "pad-short-functions", "Pad short functions", X86::FeaturePadShortFunctions, 0ULL },
   { "pclmul", "Enable packed carry-less multiplication instructions", X86::FeaturePCLMUL, X86::FeatureSSE2 },
   { "popcnt", "Support POPCNT instruction", X86::FeaturePOPCNT, 0ULL },
+  { "prfchw", "Support PRFCHW instructions", X86::FeaturePRFCHW, 0ULL },
   { "rdrand", "Support RDRAND instruction", X86::FeatureRDRAND, 0ULL },
+  { "rdseed", "Support RDSEED instruction", X86::FeatureRDSEED, 0ULL },
   { "rtm", "Support RTM instructions", X86::FeatureRTM, 0ULL },
   { "slow-bt-mem", "Bit testing of memory is slow", X86::FeatureSlowBTMem, 0ULL },
   { "sse", "Enable SSE instructions", X86::FeatureSSE1, X86::FeatureMMX | X86::FeatureCMOV },
@@ -106,17 +120,18 @@ extern const llvm::SubtargetFeatureKV X86SubTypeKV[] = {
   { "athlon-xp", "Select the athlon-xp processor", X86::FeatureSSE1 | X86::Feature3DNowA | X86::FeatureSlowBTMem, 0ULL },
   { "athlon64", "Select the athlon64 processor", X86::FeatureSSE2 | X86::Feature3DNowA | X86::Feature64Bit | X86::FeatureSlowBTMem, 0ULL },
   { "athlon64-sse3", "Select the athlon64-sse3 processor", X86::FeatureSSE3 | X86::Feature3DNowA | X86::FeatureCMPXCHG16B | X86::FeatureSlowBTMem, 0ULL },
-  { "atom", "Select the atom processor", X86::ProcIntelAtom | X86::FeatureSSSE3 | X86::FeatureCMPXCHG16B | X86::FeatureMOVBE | X86::FeatureSlowBTMem | X86::FeatureLeaForSP | X86::FeatureSlowDivide, 0ULL },
+  { "atom", "Select the atom processor", X86::ProcIntelAtom | X86::FeatureSSSE3 | X86::FeatureCMPXCHG16B | X86::FeatureMOVBE | X86::FeatureSlowBTMem | X86::FeatureLeaForSP | X86::FeatureSlowDivide | X86::FeatureCallRegIndirect | X86::FeatureLEAUsesAG | X86::FeaturePadShortFunctions, 0ULL },
   { "bdver1", "Select the bdver1 processor", X86::FeatureXOP | X86::FeatureFMA4 | X86::FeatureCMPXCHG16B | X86::FeatureAES | X86::FeaturePCLMUL | X86::FeatureLZCNT | X86::FeaturePOPCNT, 0ULL },
   { "bdver2", "Select the bdver2 processor", X86::FeatureXOP | X86::FeatureFMA4 | X86::FeatureCMPXCHG16B | X86::FeatureAES | X86::FeaturePCLMUL | X86::FeatureF16C | X86::FeatureLZCNT | X86::FeaturePOPCNT | X86::FeatureBMI | X86::FeatureFMA, 0ULL },
   { "btver1", "Select the btver1 processor", X86::FeatureSSSE3 | X86::FeatureSSE4A | X86::FeatureCMPXCHG16B | X86::FeatureLZCNT | X86::FeaturePOPCNT, 0ULL },
+  { "btver2", "Select the btver2 processor", X86::FeatureAVX | X86::FeatureSSE4A | X86::FeatureCMPXCHG16B | X86::FeatureAES | X86::FeaturePCLMUL | X86::FeatureBMI | X86::FeatureF16C | X86::FeatureMOVBE | X86::FeatureLZCNT | X86::FeaturePOPCNT, 0ULL },
   { "c3", "Select the c3 processor", X86::Feature3DNow, 0ULL },
   { "c3-2", "Select the c3-2 processor", X86::FeatureSSE1, 0ULL },
-  { "core-avx-i", "Select the core-avx-i processor", X86::FeatureAVX | X86::FeatureCMPXCHG16B | X86::FeaturePOPCNT | X86::FeatureAES | X86::FeaturePCLMUL | X86::FeatureRDRAND | X86::FeatureF16C | X86::FeatureFSGSBase, 0ULL },
-  { "core-avx2", "Select the core-avx2 processor", X86::FeatureAVX2 | X86::FeatureCMPXCHG16B | X86::FeaturePOPCNT | X86::FeatureAES | X86::FeaturePCLMUL | X86::FeatureRDRAND | X86::FeatureF16C | X86::FeatureFSGSBase | X86::FeatureMOVBE | X86::FeatureLZCNT | X86::FeatureBMI | X86::FeatureBMI2 | X86::FeatureFMA | X86::FeatureRTM, 0ULL },
+  { "core-avx-i", "Select the core-avx-i processor", X86::FeatureAVX | X86::FeatureCMPXCHG16B | X86::FeatureFastUAMem | X86::FeaturePOPCNT | X86::FeatureAES | X86::FeaturePCLMUL | X86::FeatureRDRAND | X86::FeatureF16C | X86::FeatureFSGSBase, 0ULL },
+  { "core-avx2", "Select the core-avx2 processor", X86::FeatureAVX2 | X86::FeatureCMPXCHG16B | X86::FeatureFastUAMem | X86::FeaturePOPCNT | X86::FeatureAES | X86::FeaturePCLMUL | X86::FeatureRDRAND | X86::FeatureF16C | X86::FeatureFSGSBase | X86::FeatureMOVBE | X86::FeatureLZCNT | X86::FeatureBMI | X86::FeatureBMI2 | X86::FeatureFMA | X86::FeatureRTM | X86::FeatureHLE, 0ULL },
   { "core2", "Select the core2 processor", X86::FeatureSSSE3 | X86::FeatureCMPXCHG16B | X86::FeatureSlowBTMem, 0ULL },
   { "corei7", "Select the corei7 processor", X86::FeatureSSE42 | X86::FeatureCMPXCHG16B | X86::FeatureSlowBTMem | X86::FeatureFastUAMem | X86::FeaturePOPCNT | X86::FeatureAES, 0ULL },
-  { "corei7-avx", "Select the corei7-avx processor", X86::FeatureAVX | X86::FeatureCMPXCHG16B | X86::FeaturePOPCNT | X86::FeatureAES | X86::FeaturePCLMUL, 0ULL },
+  { "corei7-avx", "Select the corei7-avx processor", X86::FeatureAVX | X86::FeatureCMPXCHG16B | X86::FeatureFastUAMem | X86::FeaturePOPCNT | X86::FeatureAES | X86::FeaturePCLMUL, 0ULL },
   { "generic", "Select the generic processor", 0ULL, 0ULL },
   { "geode", "Select the geode processor", X86::Feature3DNowA, 0ULL },
   { "i386", "Select the i386 processor", 0ULL, 0ULL },
@@ -146,7 +161,7 @@ extern const llvm::SubtargetFeatureKV X86SubTypeKV[] = {
   { "westmere", "Select the westmere processor", X86::FeatureSSE42 | X86::FeatureCMPXCHG16B | X86::FeatureSlowBTMem | X86::FeatureFastUAMem | X86::FeaturePOPCNT | X86::FeatureAES | X86::FeaturePCLMUL, 0ULL },
   { "winchip-c6", "Select the winchip-c6 processor", X86::FeatureMMX, 0ULL },
   { "winchip2", "Select the winchip2 processor", X86::Feature3DNow, 0ULL },
-  { "x86-64", "Select the x86-64 processor", X86::FeatureSSE2 | X86::Feature64Bit | X86::FeatureSlowBTMem, 0ULL },
+  { "x86-64", "Select the x86-64 processor", X86::FeatureSSE2 | X86::Feature64Bit | X86::FeatureSlowBTMem | X86::FeatureFastUAMem, 0ULL },
   { "yonah", "Select the yonah processor", X86::FeatureSSE3 | X86::FeatureSlowBTMem, 0ULL }
 };
 
@@ -172,87 +187,87 @@ extern const llvm::InstrStage X86Stages[] = {
   { 21, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 3
   { 1, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 4
   { 1, AtomItinerariesFU::Port0, -1, (llvm::InstrStage::ReservationKinds)0 }, // 5
-  { 23, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 6
-  { 24, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 7
-  { 11, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 8
-  { 16, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 9
-  { 2, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 10
-  { 1, AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 11
-  { 9, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 12
-  { 40, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 13
-  { 39, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 14
-  { 15, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 15
-  { 1, AtomItinerariesFU::Port0, 0, (llvm::InstrStage::ReservationKinds)0 },   { 1, AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 16-17
-  { 3, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 18
-  { 14, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 19
-  { 33, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 20
-  { 18, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 21
-  { 22, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 22
-  { 6, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 23
-  { 121, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 24
-  { 20, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 25
-  { 68, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 26
-  { 50, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 27
-  { 130, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 28
-  { 32, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 29
-  { 99, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 30
-  { 5, AtomItinerariesFU::Port0, 0, (llvm::InstrStage::ReservationKinds)0 },   { 5, AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 31-32
-  { 4, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 33
-  { 5, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 34
-  { 10, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 35
-  { 25, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 36
-  { 63, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 37
-  { 8, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 38
-  { 183, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 39
-  { 55, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 40
-  { 71, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 41
-  { 168, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 42
-  { 46, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 43
-  { 77, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 44
-  { 174, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 45
-  { 141, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 46
-  { 140, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 47
-  { 146, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 48
-  { 147, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 49
-  { 62, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 50
-  { 5, AtomItinerariesFU::Port0, -1, (llvm::InstrStage::ReservationKinds)0 }, // 51
-  { 12, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 52
-  { 59, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 53
-  { 127, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 54
-  { 1003, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 55
-  { 92, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 56
-  { 94, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 57
-  { 109, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 58
-  { 31, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 59
-  { 54, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 60
-  { 44, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 61
-  { 64, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 62
-  { 60, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 63
-  { 67, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 64
-  { 69, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 65
-  { 17, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 66
-  { 49, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 67
-  { 83, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 68
-  { 5, AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 69
-  { 3, AtomItinerariesFU::Port0, -1, (llvm::InstrStage::ReservationKinds)0 }, // 70
-  { 4, AtomItinerariesFU::Port0, -1, (llvm::InstrStage::ReservationKinds)0 }, // 71
-  { 136, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 72
-  { 123, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 73
-  { 88, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 74
-  { 26, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 75
-  { 74, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 76
-  { 72, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 77
-  { 29, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 78
-  { 48, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 79
-  { 78, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 80
-  { 30, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 81
-  { 75, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 82
-  { 79, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 83
-  { 741, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 84
-  { 70, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 85
-  { 34, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 86
-  { 125, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 87
-  { 45, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 88
+  { 6, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 6
+  { 5, AtomItinerariesFU::Port0, 0, (llvm::InstrStage::ReservationKinds)0 },   { 5, AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 7-8
+  { 5, AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 9
+  { 23, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 10
+  { 24, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 11
+  { 11, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 12
+  { 16, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 13
+  { 9, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 14
+  { 1, AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 15
+  { 2, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 16
+  { 15, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 17
+  { 1, AtomItinerariesFU::Port0, 0, (llvm::InstrStage::ReservationKinds)0 },   { 1, AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 18-19
+  { 3, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 20
+  { 14, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 21
+  { 33, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 22
+  { 22, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 23
+  { 18, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 24
+  { 10, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 25
+  { 121, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 26
+  { 8, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 27
+  { 20, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 28
+  { 50, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 29
+  { 130, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 30
+  { 68, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 31
+  { 125, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 32
+  { 70, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 33
+  { 62, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 34
+  { 34, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 35
+  { 79, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 36
+  { 32, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 37
+  { 99, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 38
+  { 39, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 39
+  { 40, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 40
+  { 31, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 41
+  { 5, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 42
+  { 25, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 43
+  { 63, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 44
+  { 183, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 45
+  { 55, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 46
+  { 71, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 47
+  { 168, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 48
+  { 46, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 49
+  { 77, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 50
+  { 174, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 51
+  { 141, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 52
+  { 140, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 53
+  { 146, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 54
+  { 147, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 55
+  { 5, AtomItinerariesFU::Port0, -1, (llvm::InstrStage::ReservationKinds)0 }, // 56
+  { 12, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 57
+  { 59, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 58
+  { 92, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 59
+  { 94, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 60
+  { 127, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 61
+  { 1003, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 62
+  { 109, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 63
+  { 4, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 64
+  { 54, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 65
+  { 44, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 66
+  { 64, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 67
+  { 60, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 68
+  { 69, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 69
+  { 67, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 70
+  { 17, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 71
+  { 49, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 72
+  { 83, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 73
+  { 3, AtomItinerariesFU::Port0, -1, (llvm::InstrStage::ReservationKinds)0 }, // 74
+  { 4, AtomItinerariesFU::Port0, -1, (llvm::InstrStage::ReservationKinds)0 }, // 75
+  { 45, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 76
+  { 26, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 77
+  { 136, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 78
+  { 123, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 79
+  { 88, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 80
+  { 72, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 81
+  { 74, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 82
+  { 29, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 83
+  { 48, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 84
+  { 78, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 85
+  { 30, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 86
+  { 75, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 87
+  { 741, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 88
   { 96, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 89
   { 41, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 90
   { 51, AtomItinerariesFU::Port0 | AtomItinerariesFU::Port1, -1, (llvm::InstrStage::ReservationKinds)0 }, // 91
@@ -271,379 +286,481 @@ extern const unsigned X86ForwardingPaths[] = {
 static const llvm::InstrItinerary *NoItineraries = 0;
 
 static const llvm::InstrItinerary AtomItineraries[] = {
-  { 0, 0, 0, 0, 0 }, // 0 NoItinerary
-  { 1, 1, 2, 0, 0 }, // 1 IIC_AAA
-  { 1, 2, 3, 0, 0 }, // 2 IIC_AAD
-  { 1, 3, 4, 0, 0 }, // 3 IIC_AAM
-  { 1, 1, 2, 0, 0 }, // 4 IIC_AAS
-  { 1, 4, 5, 0, 0 }, // 5 IIC_AHF
-  { 1, 5, 6, 0, 0 }, // 6 IIC_ALU_MEM
-  { 1, 4, 5, 0, 0 }, // 7 IIC_ALU_NONMEM
-  { 1, 6, 7, 0, 0 }, // 8 IIC_ARPL_MEM
-  { 1, 7, 8, 0, 0 }, // 9 IIC_ARPL_REG
-  { 1, 5, 6, 0, 0 }, // 10 IIC_BIN_MEM
-  { 1, 4, 5, 0, 0 }, // 11 IIC_BIN_NONMEM
-  { 1, 8, 9, 0, 0 }, // 12 IIC_BOUND
-  { 1, 9, 10, 0, 0 }, // 13 IIC_BSF
-  { 1, 9, 10, 0, 0 }, // 14 IIC_BSR
-  { 1, 5, 6, 0, 0 }, // 15 IIC_BSWAP
-  { 1, 10, 11, 0, 0 }, // 16 IIC_BTX_MI
-  { 1, 8, 9, 0, 0 }, // 17 IIC_BTX_MR
-  { 1, 11, 12, 0, 0 }, // 18 IIC_BTX_RI
-  { 1, 11, 12, 0, 0 }, // 19 IIC_BTX_RR
-  { 1, 4, 5, 0, 0 }, // 20 IIC_BT_MI
-  { 1, 12, 13, 0, 0 }, // 21 IIC_BT_MR
-  { 1, 11, 12, 0, 0 }, // 22 IIC_BT_RI
-  { 1, 11, 12, 0, 0 }, // 23 IIC_BT_RR
-  { 1, 13, 14, 0, 0 }, // 24 IIC_CALL_FAR_MEM
-  { 1, 14, 15, 0, 0 }, // 25 IIC_CALL_FAR_PTR
-  { 1, 15, 16, 0, 0 }, // 26 IIC_CALL_MEM
-  { 1, 16, 18, 0, 0 }, // 27 IIC_CALL_RI
-  { 1, 4, 5, 0, 0 }, // 28 IIC_CLC
-  { 1, 18, 19, 0, 0 }, // 29 IIC_CLD
-  { 1, 19, 20, 0, 0 }, // 30 IIC_CLI
-  { 1, 20, 21, 0, 0 }, // 31 IIC_CLTS
-  { 1, 4, 5, 0, 0 }, // 32 IIC_CMC
-  { 1, 5, 6, 0, 0 }, // 33 IIC_CMOV16_RM
-  { 1, 4, 5, 0, 0 }, // 34 IIC_CMOV16_RR
-  { 1, 5, 6, 0, 0 }, // 35 IIC_CMOV32_RM
-  { 1, 4, 5, 0, 0 }, // 36 IIC_CMOV32_RR
-  { 1, 18, 19, 0, 0 }, // 37 IIC_CMPS
-  { 1, 21, 22, 0, 0 }, // 38 IIC_CMPXCHG_8B
-  { 1, 22, 23, 0, 0 }, // 39 IIC_CMPXCHG_16B
-  { 1, 19, 20, 0, 0 }, // 40 IIC_CMPXCHG_MEM
-  { 1, 23, 24, 0, 0 }, // 41 IIC_CMPXCHG_MEM8
-  { 1, 15, 16, 0, 0 }, // 42 IIC_CMPXCHG_REG
-  { 1, 12, 13, 0, 0 }, // 43 IIC_CMPXCHG_REG8
-  { 1, 19, 20, 0, 0 }, // 44 IIC_CMPX_LOCK
-  { 1, 23, 24, 0, 0 }, // 45 IIC_CMPX_LOCK_8
-  { 1, 21, 22, 0, 0 }, // 46 IIC_CMPX_LOCK_8B
-  { 1, 22, 23, 0, 0 }, // 47 IIC_CMPX_LOCK_16B
-  { 1, 24, 25, 0, 0 }, // 48 IIC_CPUID
-  { 1, 21, 22, 0, 0 }, // 49 IIC_DAA
-  { 1, 25, 26, 0, 0 }, // 50 IIC_DAS
-  { 1, 4, 5, 0, 0 }, // 51 IIC_DEFAULT
-  { 1, 26, 27, 0, 0 }, // 52 IIC_DIV8_MEM
-  { 1, 27, 28, 0, 0 }, // 53 IIC_DIV8_REG
-  { 1, 27, 28, 0, 0 }, // 54 IIC_DIV16
-  { 1, 27, 28, 0, 0 }, // 55 IIC_DIV32
-  { 1, 28, 29, 0, 0 }, // 56 IIC_DIV64
-  { 1, 29, 30, 0, 0 }, // 57 IIC_ENTER
-  { 1, 30, 31, 0, 0 }, // 58 IIC_F2XM1
-  { 1, 12, 13, 0, 0 }, // 59 IIC_FCOMI
-  { 1, 11, 12, 0, 0 }, // 60 IIC_FCOMPP
-  { 1, 4, 5, 0, 0 }, // 61 IIC_FFREE
-  { 1, 31, 33, 0, 0 }, // 62 IIC_FILD
-  { 1, 23, 24, 0, 0 }, // 63 IIC_FIST
-  { 1, 5, 6, 0, 0 }, // 64 IIC_FLD
-  { 1, 33, 34, 0, 0 }, // 65 IIC_FLD80
-  { 1, 34, 35, 0, 0 }, // 66 IIC_FLDCW
-  { 1, 35, 36, 0, 0 }, // 67 IIC_FLDL
-  { 1, 4, 5, 0, 0 }, // 68 IIC_FLDZ
-  { 1, 36, 37, 0, 0 }, // 69 IIC_FNCLEX
-  { 1, 37, 38, 0, 0 }, // 70 IIC_FNINIT
-  { 1, 4, 5, 0, 0 }, // 71 IIC_FNOP
-  { 1, 38, 39, 0, 0 }, // 72 IIC_FNSTCW
-  { 1, 35, 36, 0, 0 }, // 73 IIC_FNSTSW
-  { 1, 39, 40, 0, 0 }, // 74 IIC_FPATAN
-  { 1, 40, 41, 0, 0 }, // 75 IIC_FPREM
-  { 1, 41, 42, 0, 0 }, // 76 IIC_FPREM1
-  { 1, 4, 5, 0, 0 }, // 77 IIC_FPSTP
-  { 1, 42, 43, 0, 0 }, // 78 IIC_FPTAN
-  { 1, 43, 44, 0, 0 }, // 79 IIC_FRNDINT
-  { 1, 44, 45, 0, 0 }, // 80 IIC_FSCALE
-  { 1, 45, 46, 0, 0 }, // 81 IIC_FSINCOS
-  { 1, 10, 11, 0, 0 }, // 82 IIC_FST
-  { 1, 34, 35, 0, 0 }, // 83 IIC_FST80
-  { 1, 11, 12, 0, 0 }, // 84 IIC_FUCOM
-  { 1, 12, 13, 0, 0 }, // 85 IIC_FUCOMI
-  { 1, 5, 6, 0, 0 }, // 86 IIC_FXAM
-  { 1, 16, 18, 0, 0 }, // 87 IIC_FXCH
-  { 1, 46, 47, 0, 0 }, // 88 IIC_FXRSTOR
-  { 1, 47, 48, 0, 0 }, // 89 IIC_FXSAVE
-  { 1, 36, 37, 0, 0 }, // 90 IIC_FXTRACT
-  { 1, 48, 49, 0, 0 }, // 91 IIC_FYL2X
-  { 1, 49, 50, 0, 0 }, // 92 IIC_FYL2XP1
-  { 1, 24, 25, 0, 0 }, // 93 IIC_HLT
-  { 1, 50, 51, 0, 0 }, // 94 IIC_IDIV8
-  { 1, 50, 51, 0, 0 }, // 95 IIC_IDIV16
-  { 1, 50, 51, 0, 0 }, // 96 IIC_IDIV32
-  { 1, 28, 29, 0, 0 }, // 97 IIC_IDIV64
-  { 1, 2, 3, 0, 0 }, // 98 IIC_IMUL8
-  { 1, 38, 39, 0, 0 }, // 99 IIC_IMUL16_MEM
-  { 1, 2, 3, 0, 0 }, // 100 IIC_IMUL16_RM
-  { 1, 2, 3, 0, 0 }, // 101 IIC_IMUL16_RMI
-  { 1, 23, 24, 0, 0 }, // 102 IIC_IMUL16_RR
-  { 1, 23, 24, 0, 0 }, // 103 IIC_IMUL16_RRI
-  { 1, 2, 3, 0, 0 }, // 104 IIC_IMUL32_MEM
-  { 1, 51, 52, 0, 0 }, // 105 IIC_IMUL32_RM
-  { 1, 51, 52, 0, 0 }, // 106 IIC_IMUL32_RMI
-  { 1, 51, 52, 0, 0 }, // 107 IIC_IMUL32_RR
-  { 1, 51, 52, 0, 0 }, // 108 IIC_IMUL32_RRI
-  { 1, 52, 53, 0, 0 }, // 109 IIC_IMUL64
-  { 1, 52, 53, 0, 0 }, // 110 IIC_IMUL64_RM
-  { 1, 19, 20, 0, 0 }, // 111 IIC_IMUL64_RMI
-  { 1, 52, 53, 0, 0 }, // 112 IIC_IMUL64_RR
-  { 1, 19, 20, 0, 0 }, // 113 IIC_IMUL64_RRI
-  { 1, 53, 54, 0, 0 }, // 114 IIC_INS
-  { 1, 54, 55, 0, 0 }, // 115 IIC_INT
-  { 1, 28, 29, 0, 0 }, // 116 IIC_INT3
-  { 1, 55, 56, 0, 0 }, // 117 IIC_INVD
-  { 1, 41, 42, 0, 0 }, // 118 IIC_INVLPG
-  { 1, 56, 57, 0, 0 }, // 119 IIC_IN_RI
-  { 1, 57, 58, 0, 0 }, // 120 IIC_IN_RR
-  { 1, 58, 59, 0, 0 }, // 121 IIC_IRET
-  { 1, 33, 34, 0, 0 }, // 122 IIC_JCXZ
-  { 1, 29, 30, 0, 0 }, // 123 IIC_JMP_FAR_MEM
-  { 1, 59, 60, 0, 0 }, // 124 IIC_JMP_FAR_PTR
-  { 1, 10, 11, 0, 0 }, // 125 IIC_JMP_MEM
-  { 1, 11, 12, 0, 0 }, // 126 IIC_JMP_REG
-  { 1, 11, 12, 0, 0 }, // 127 IIC_JMP_REL
-  { 1, 11, 12, 0, 0 }, // 128 IIC_Jcc
-  { 1, 27, 28, 0, 0 }, // 129 IIC_LAR_RM
-  { 1, 60, 61, 0, 0 }, // 130 IIC_LAR_RR
-  { 1, 11, 12, 0, 0 }, // 131 IIC_LEA
-  { 1, 10, 11, 0, 0 }, // 132 IIC_LEAVE
-  { 1, 10, 11, 0, 0 }, // 133 IIC_LEA_16
-  { 1, 61, 62, 0, 0 }, // 134 IIC_LGDT
-  { 1, 61, 62, 0, 0 }, // 135 IIC_LIDT
-  { 1, 62, 63, 0, 0 }, // 136 IIC_LLDT_MEM
-  { 1, 63, 64, 0, 0 }, // 137 IIC_LLDT_REG
-  { 1, 64, 65, 0, 0 }, // 138 IIC_LMSW_MEM
-  { 1, 65, 66, 0, 0 }, // 139 IIC_LMSW_REG
-  { 1, 10, 11, 0, 0 }, // 140 IIC_LODS
-  { 1, 21, 22, 0, 0 }, // 141 IIC_LOOP
-  { 1, 38, 39, 0, 0 }, // 142 IIC_LOOPE
-  { 1, 66, 67, 0, 0 }, // 143 IIC_LOOPNE
-  { 1, 43, 44, 0, 0 }, // 144 IIC_LSL_RM
-  { 1, 67, 68, 0, 0 }, // 145 IIC_LSL_RR
-  { 1, 68, 69, 0, 0 }, // 146 IIC_LTR
-  { 1, 35, 36, 0, 0 }, // 147 IIC_LXS
-  { 1, 18, 19, 0, 0 }, // 148 IIC_MMX_ALUQ_RM
-  { 1, 10, 11, 0, 0 }, // 149 IIC_MMX_ALUQ_RR
-  { 1, 5, 6, 0, 0 }, // 150 IIC_MMX_ALU_RM
-  { 1, 4, 5, 0, 0 }, // 151 IIC_MMX_ALU_RR
-  { 1, 38, 39, 0, 0 }, // 152 IIC_MMX_CVT_PD_RM
-  { 1, 2, 3, 0, 0 }, // 153 IIC_MMX_CVT_PD_RR
-  { 1, 31, 33, 0, 0 }, // 154 IIC_MMX_CVT_PS_RM
-  { 1, 69, 70, 0, 0 }, // 155 IIC_MMX_CVT_PS_RR
-  { 1, 5, 6, 0, 0 }, // 156 IIC_MMX_MASKMOV
-  { 1, 5, 6, 0, 0 }, // 157 IIC_MMX_MISC_FUNC_MEM
-  { 1, 4, 5, 0, 0 }, // 158 IIC_MMX_MISC_FUNC_REG
-  { 1, 5, 6, 0, 0 }, // 159 IIC_MMX_MOVQ_RM
-  { 1, 4, 5, 0, 0 }, // 160 IIC_MMX_MOVQ_RR
-  { 1, 5, 6, 0, 0 }, // 161 IIC_MMX_MOV_MM_RM
-  { 1, 70, 71, 0, 0 }, // 162 IIC_MMX_MOV_REG_MM
-  { 1, 5, 6, 0, 0 }, // 163 IIC_MMX_PCK_RM
-  { 1, 4, 5, 0, 0 }, // 164 IIC_MMX_PCK_RR
-  { 1, 33, 34, 0, 0 }, // 165 IIC_MMX_PEXTR
-  { 1, 33, 34, 0, 0 }, // 166 IIC_MMX_PHADDSUBD_RM
-  { 1, 18, 19, 0, 0 }, // 167 IIC_MMX_PHADDSUBD_RR
-  { 1, 23, 24, 0, 0 }, // 168 IIC_MMX_PHADDSUBW_RM
-  { 1, 34, 35, 0, 0 }, // 169 IIC_MMX_PHADDSUBW_RR
-  { 1, 5, 6, 0, 0 }, // 170 IIC_MMX_PINSRW
-  { 1, 71, 72, 0, 0 }, // 171 IIC_MMX_PMUL
-  { 1, 33, 34, 0, 0 }, // 172 IIC_MMX_PSADBW
-  { 1, 5, 6, 0, 0 }, // 173 IIC_MMX_PSHUF
-  { 1, 4, 5, 0, 0 }, // 174 IIC_MMX_SHIFT_RI
-  { 1, 18, 19, 0, 0 }, // 175 IIC_MMX_SHIFT_RM
-  { 1, 10, 11, 0, 0 }, // 176 IIC_MMX_SHIFT_RR
-  { 1, 5, 6, 0, 0 }, // 177 IIC_MMX_UNPCK_H_RM
-  { 1, 4, 5, 0, 0 }, // 178 IIC_MMX_UNPCK_H_RR
-  { 1, 5, 6, 0, 0 }, // 179 IIC_MMX_UNPCK_L
-  { 1, 4, 5, 0, 0 }, // 180 IIC_MOV
-  { 1, 5, 6, 0, 0 }, // 181 IIC_MOVBE
-  { 1, 18, 19, 0, 0 }, // 182 IIC_MOVS
-  { 1, 5, 6, 0, 0 }, // 183 IIC_MOVSX
-  { 1, 18, 19, 0, 0 }, // 184 IIC_MOVSX_R16_M8
-  { 1, 10, 11, 0, 0 }, // 185 IIC_MOVSX_R16_R8
-  { 1, 5, 6, 0, 0 }, // 186 IIC_MOVZX
-  { 1, 18, 19, 0, 0 }, // 187 IIC_MOVZX_R16_M8
-  { 1, 10, 11, 0, 0 }, // 188 IIC_MOVZX_R16_R8
-  { 1, 72, 73, 0, 0 }, // 189 IIC_MOV_CR_REG
-  { 1, 73, 74, 0, 0 }, // 190 IIC_MOV_DR_REG
-  { 1, 5, 6, 0, 0 }, // 191 IIC_MOV_MEM
-  { 1, 10, 11, 0, 0 }, // 192 IIC_MOV_MEM_SR
-  { 1, 52, 53, 0, 0 }, // 193 IIC_MOV_REG_CR
-  { 1, 74, 75, 0, 0 }, // 194 IIC_MOV_REG_DR
-  { 1, 5, 6, 0, 0 }, // 195 IIC_MOV_REG_SR
-  { 1, 75, 76, 0, 0 }, // 196 IIC_MOV_SR_MEM
-  { 1, 3, 4, 0, 0 }, // 197 IIC_MOV_SR_REG
-  { 1, 2, 3, 0, 0 }, // 198 IIC_MUL8
-  { 1, 38, 39, 0, 0 }, // 199 IIC_MUL16_MEM
-  { 1, 2, 3, 0, 0 }, // 200 IIC_MUL16_REG
-  { 1, 2, 3, 0, 0 }, // 201 IIC_MUL32_MEM
-  { 1, 23, 24, 0, 0 }, // 202 IIC_MUL32_REG
-  { 1, 52, 53, 0, 0 }, // 203 IIC_MUL64
-  { 1, 4, 5, 0, 0 }, // 204 IIC_NOP
-  { 1, 76, 77, 0, 0 }, // 205 IIC_OUTS
-  { 1, 77, 78, 0, 0 }, // 206 IIC_OUT_IR
-  { 1, 26, 27, 0, 0 }, // 207 IIC_OUT_RR
-  { 1, 12, 13, 0, 0 }, // 208 IIC_POP_A
-  { 1, 29, 30, 0, 0 }, // 209 IIC_POP_F
-  { 1, 75, 76, 0, 0 }, // 210 IIC_POP_FD
-  { 1, 18, 19, 0, 0 }, // 211 IIC_POP_MEM
-  { 1, 16, 18, 0, 0 }, // 212 IIC_POP_REG
-  { 1, 10, 11, 0, 0 }, // 213 IIC_POP_REG16
-  { 1, 78, 79, 0, 0 }, // 214 IIC_POP_SR
-  { 1, 79, 80, 0, 0 }, // 215 IIC_POP_SR_SS
-  { 1, 38, 39, 0, 0 }, // 216 IIC_PUSH_A
-  { 1, 10, 11, 0, 0 }, // 217 IIC_PUSH_CS
-  { 1, 12, 13, 0, 0 }, // 218 IIC_PUSH_F
-  { 1, 16, 18, 0, 0 }, // 219 IIC_PUSH_IMM
-  { 1, 10, 11, 0, 0 }, // 220 IIC_PUSH_MEM
-  { 1, 16, 18, 0, 0 }, // 221 IIC_PUSH_REG
-  { 1, 10, 11, 0, 0 }, // 222 IIC_PUSH_SR
-  { 1, 80, 81, 0, 0 }, // 223 IIC_RDMSR
-  { 1, 43, 44, 0, 0 }, // 224 IIC_RDPMC
-  { 1, 81, 82, 0, 0 }, // 225 IIC_RDTSC
-  { 1, 82, 83, 0, 0 }, // 226 IIC_REP_MOVS
-  { 1, 76, 77, 0, 0 }, // 227 IIC_REP_STOS
-  { 1, 83, 84, 0, 0 }, // 228 IIC_RET
-  { 1, 16, 18, 0, 0 }, // 229 IIC_RET_IMM
-  { 1, 84, 85, 0, 0 }, // 230 IIC_RSM
-  { 1, 10, 11, 0, 0 }, // 231 IIC_SCAS
-  { 1, 10, 11, 0, 0 }, // 232 IIC_SET_M
-  { 1, 4, 5, 0, 0 }, // 233 IIC_SET_R
-  { 1, 33, 34, 0, 0 }, // 234 IIC_SGDT
-  { 1, 23, 24, 0, 0 }, // 235 IIC_SHD16_MEM_CL
-  { 1, 23, 24, 0, 0 }, // 236 IIC_SHD16_MEM_IM
-  { 1, 23, 24, 0, 0 }, // 237 IIC_SHD16_REG_CL
-  { 1, 23, 24, 0, 0 }, // 238 IIC_SHD16_REG_IM
-  { 1, 33, 34, 0, 0 }, // 239 IIC_SHD32_MEM_CL
-  { 1, 33, 34, 0, 0 }, // 240 IIC_SHD32_MEM_IM
-  { 1, 10, 11, 0, 0 }, // 241 IIC_SHD32_REG_CL
-  { 1, 10, 11, 0, 0 }, // 242 IIC_SHD32_REG_IM
-  { 1, 12, 13, 0, 0 }, // 243 IIC_SHD64_MEM_CL
-  { 1, 12, 13, 0, 0 }, // 244 IIC_SHD64_MEM_IM
-  { 1, 38, 39, 0, 0 }, // 245 IIC_SHD64_REG_CL
-  { 1, 12, 13, 0, 0 }, // 246 IIC_SHD64_REG_IM
-  { 1, 33, 34, 0, 0 }, // 247 IIC_SIDT
-  { 1, 18, 19, 0, 0 }, // 248 IIC_SLDT
-  { 1, 12, 13, 0, 0 }, // 249 IIC_SMSW
-  { 1, 5, 6, 0, 0 }, // 250 IIC_SR
-  { 1, 31, 33, 0, 0 }, // 251 IIC_SSE_ALU_F32P_RM
-  { 1, 69, 70, 0, 0 }, // 252 IIC_SSE_ALU_F32P_RR
-  { 1, 31, 33, 0, 0 }, // 253 IIC_SSE_ALU_F32S_RM
-  { 1, 69, 70, 0, 0 }, // 254 IIC_SSE_ALU_F32S_RR
-  { 1, 2, 3, 0, 0 }, // 255 IIC_SSE_ALU_F64P_RM
-  { 1, 23, 24, 0, 0 }, // 256 IIC_SSE_ALU_F64P_RR
-  { 1, 31, 33, 0, 0 }, // 257 IIC_SSE_ALU_F64S_RM
-  { 1, 69, 70, 0, 0 }, // 258 IIC_SSE_ALU_F64S_RR
-  { 1, 5, 6, 0, 0 }, // 259 IIC_SSE_BIT_P_RM
-  { 1, 4, 5, 0, 0 }, // 260 IIC_SSE_BIT_P_RR
-  { 1, 2, 3, 0, 0 }, // 261 IIC_SSE_CMPP_RM
-  { 1, 23, 24, 0, 0 }, // 262 IIC_SSE_CMPP_RR
-  { 1, 35, 36, 0, 0 }, // 263 IIC_SSE_COMIS_RM
-  { 1, 12, 13, 0, 0 }, // 264 IIC_SSE_COMIS_RR
-  { 1, 38, 39, 0, 0 }, // 265 IIC_SSE_CVT_PD_RM
-  { 1, 2, 3, 0, 0 }, // 266 IIC_SSE_CVT_PD_RR
-  { 1, 2, 3, 0, 0 }, // 267 IIC_SSE_CVT_PS_RM
-  { 1, 23, 24, 0, 0 }, // 268 IIC_SSE_CVT_PS_RR
-  { 1, 12, 13, 0, 0 }, // 269 IIC_SSE_CVT_SD2SI_RM
-  { 1, 38, 39, 0, 0 }, // 270 IIC_SSE_CVT_SD2SI_RR
-  { 1, 12, 13, 0, 0 }, // 271 IIC_SSE_CVT_SS2SI32_RM
-  { 1, 38, 39, 0, 0 }, // 272 IIC_SSE_CVT_SS2SI32_RR
-  { 1, 35, 36, 0, 0 }, // 273 IIC_SSE_CVT_SS2SI64_RM
-  { 1, 12, 13, 0, 0 }, // 274 IIC_SSE_CVT_SS2SI64_RR
-  { 1, 2, 3, 0, 0 }, // 275 IIC_SSE_CVT_Scalar_RM
-  { 1, 23, 24, 0, 0 }, // 276 IIC_SSE_CVT_Scalar_RR
-  { 1, 85, 86, 0, 0 }, // 277 IIC_SSE_DIV_F32P_RR
-  { 1, 86, 87, 0, 0 }, // 278 IIC_SSE_DIV_F32S_RR
-  { 1, 87, 88, 0, 0 }, // 279 IIC_SSE_DIV_F64P_RM
-  { 1, 87, 88, 0, 0 }, // 280 IIC_SSE_DIV_F64P_RR
-  { 1, 50, 51, 0, 0 }, // 281 IIC_SSE_DIV_F64S_RM
-  { 1, 50, 51, 0, 0 }, // 282 IIC_SSE_DIV_F64S_RR
-  { 1, 12, 13, 0, 0 }, // 283 IIC_SSE_HADDSUB_RM
-  { 1, 38, 39, 0, 0 }, // 284 IIC_SSE_HADDSUB_RR
-  { 1, 18, 19, 0, 0 }, // 285 IIC_SSE_INTALUQ_P_RM
-  { 1, 10, 11, 0, 0 }, // 286 IIC_SSE_INTALUQ_P_RR
-  { 1, 5, 6, 0, 0 }, // 287 IIC_SSE_INTALU_P_RM
-  { 1, 4, 5, 0, 0 }, // 288 IIC_SSE_INTALU_P_RR
-  { 1, 51, 52, 0, 0 }, // 289 IIC_SSE_INTMUL_P_RM
-  { 1, 51, 52, 0, 0 }, // 290 IIC_SSE_INTMUL_P_RR
-  { 1, 4, 5, 0, 0 }, // 291 IIC_SSE_INTSH_P_RI
-  { 1, 18, 19, 0, 0 }, // 292 IIC_SSE_INTSH_P_RM
-  { 1, 10, 11, 0, 0 }, // 293 IIC_SSE_INTSH_P_RR
-  { 1, 18, 19, 0, 0 }, // 294 IIC_SSE_LDDQU
-  { 1, 34, 35, 0, 0 }, // 295 IIC_SSE_LDMXCSR
-  { 1, 4, 5, 0, 0 }, // 296 IIC_SSE_LFENCE
-  { 1, 10, 11, 0, 0 }, // 297 IIC_SSE_MASKMOV
-  { 1, 5, 6, 0, 0 }, // 298 IIC_SSE_MFENCE
-  { 1, 88, 89, 0, 0 }, // 299 IIC_SSE_MONITOR
-  { 1, 5, 6, 0, 0 }, // 300 IIC_SSE_MOVA_P_MR
-  { 1, 5, 6, 0, 0 }, // 301 IIC_SSE_MOVA_P_RM
-  { 1, 4, 5, 0, 0 }, // 302 IIC_SSE_MOVA_P_RR
-  { 1, 5, 6, 0, 0 }, // 303 IIC_SSE_MOVDQ
-  { 1, 70, 71, 0, 0 }, // 304 IIC_SSE_MOVD_ToGP
-  { 1, 70, 71, 0, 0 }, // 305 IIC_SSE_MOVMSK
-  { 1, 5, 6, 0, 0 }, // 306 IIC_SSE_MOVNT
-  { 1, 4, 5, 0, 0 }, // 307 IIC_SSE_MOVQ_RR
-  { 1, 10, 11, 0, 0 }, // 308 IIC_SSE_MOVU_P_MR
-  { 1, 18, 19, 0, 0 }, // 309 IIC_SSE_MOVU_P_RM
-  { 1, 4, 5, 0, 0 }, // 310 IIC_SSE_MOVU_P_RR
-  { 1, 5, 6, 0, 0 }, // 311 IIC_SSE_MOV_LH
-  { 1, 5, 6, 0, 0 }, // 312 IIC_SSE_MOV_S_MR
-  { 1, 5, 6, 0, 0 }, // 313 IIC_SSE_MOV_S_RM
-  { 1, 4, 5, 0, 0 }, // 314 IIC_SSE_MOV_S_RR
-  { 1, 51, 52, 0, 0 }, // 315 IIC_SSE_MUL_F32P_RR
-  { 1, 71, 72, 0, 0 }, // 316 IIC_SSE_MUL_F32S_RR
-  { 1, 35, 36, 0, 0 }, // 317 IIC_SSE_MUL_F64P_RM
-  { 1, 12, 13, 0, 0 }, // 318 IIC_SSE_MUL_F64P_RR
-  { 1, 51, 52, 0, 0 }, // 319 IIC_SSE_MUL_F64S_RM
-  { 1, 51, 52, 0, 0 }, // 320 IIC_SSE_MUL_F64S_RR
-  { 1, 43, 44, 0, 0 }, // 321 IIC_SSE_MWAIT
-  { 1, 5, 6, 0, 0 }, // 322 IIC_SSE_PABS_RM
-  { 1, 4, 5, 0, 0 }, // 323 IIC_SSE_PABS_RR
-  { 1, 5, 6, 0, 0 }, // 324 IIC_SSE_PALIGNR
-  { 1, 66, 67, 0, 0 }, // 325 IIC_SSE_PAUSE
-  { 1, 33, 34, 0, 0 }, // 326 IIC_SSE_PEXTRW
-  { 1, 33, 34, 0, 0 }, // 327 IIC_SSE_PHADDSUBD_RM
-  { 1, 18, 19, 0, 0 }, // 328 IIC_SSE_PHADDSUBD_RR
-  { 1, 38, 39, 0, 0 }, // 329 IIC_SSE_PHADDSUBW_RM
-  { 1, 2, 3, 0, 0 }, // 330 IIC_SSE_PHADDSUBW_RR
-  { 1, 5, 6, 0, 0 }, // 331 IIC_SSE_PINSRW
-  { 1, 51, 52, 0, 0 }, // 332 IIC_SSE_PMADD
-  { 1, 5, 6, 0, 0 }, // 333 IIC_SSE_PREFETCH
-  { 1, 5, 6, 0, 0 }, // 334 IIC_SSE_PSHUF
-  { 1, 34, 35, 0, 0 }, // 335 IIC_SSE_PSHUFB_RM
-  { 1, 33, 34, 0, 0 }, // 336 IIC_SSE_PSHUFB_RR
-  { 1, 5, 6, 0, 0 }, // 337 IIC_SSE_PSIGN_RM
-  { 1, 4, 5, 0, 0 }, // 338 IIC_SSE_PSIGN_RR
-  { 1, 35, 36, 0, 0 }, // 339 IIC_SSE_RCPP_RM
-  { 1, 12, 13, 0, 0 }, // 340 IIC_SSE_RCPP_RR
-  { 1, 71, 72, 0, 0 }, // 341 IIC_SSE_RCPS_RM
-  { 1, 71, 72, 0, 0 }, // 342 IIC_SSE_RCPS_RR
-  { 1, 5, 6, 0, 0 }, // 343 IIC_SSE_SFENCE
-  { 1, 5, 6, 0, 0 }, // 344 IIC_SSE_SHUFP
-  { 1, 19, 20, 0, 0 }, // 345 IIC_SSE_SQRTP_RM
-  { 1, 1, 2, 0, 0 }, // 346 IIC_SSE_SQRTP_RR
-  { 1, 52, 53, 0, 0 }, // 347 IIC_SSE_SQRTS_RM
-  { 1, 8, 9, 0, 0 }, // 348 IIC_SSE_SQRTS_RR
-  { 1, 15, 16, 0, 0 }, // 349 IIC_SSE_STMXCSR
-  { 1, 5, 6, 0, 0 }, // 350 IIC_SSE_UNPCK
-  { 1, 4, 5, 0, 0 }, // 351 IIC_STC
-  { 1, 3, 4, 0, 0 }, // 352 IIC_STD
-  { 1, 66, 67, 0, 0 }, // 353 IIC_STI
-  { 1, 4, 5, 0, 0 }, // 354 IIC_STOS
-  { 1, 18, 19, 0, 0 }, // 355 IIC_STR
-  { 1, 22, 23, 0, 0 }, // 356 IIC_SWAPGS
-  { 1, 89, 90, 0, 0 }, // 357 IIC_SYSCALL
-  { 1, 74, 75, 0, 0 }, // 358 IIC_SYS_ENTER_EXIT
-  { 1, 5, 6, 0, 0 }, // 359 IIC_UNARY_MEM
-  { 1, 4, 5, 0, 0 }, // 360 IIC_UNARY_REG
-  { 1, 90, 91, 0, 0 }, // 361 IIC_VERR
-  { 1, 27, 28, 0, 0 }, // 362 IIC_VERW_MEM
-  { 1, 91, 92, 0, 0 }, // 363 IIC_VERW_REG
-  { 1, 4, 5, 0, 0 }, // 364 IIC_WAIT
-  { 1, 92, 93, 0, 0 }, // 365 IIC_WRMSR
-  { 1, 18, 19, 0, 0 }, // 366 IIC_XADD_LOCK_MEM
-  { 0, 0, 0, 0, 0 }, // 367 IIC_XADD_LOCK_MEM8
-  { 1, 18, 19, 0, 0 }, // 368 IIC_XADD_MEM
-  { 1, 10, 11, 0, 0 }, // 369 IIC_XADD_REG
-  { 1, 18, 19, 0, 0 }, // 370 IIC_XCHG_MEM
-  { 1, 10, 11, 0, 0 }, // 371 IIC_XCHG_REG
-  { 1, 23, 24, 0, 0 }, // 372 IIC_XLAT
+  { 0, 0, 0, 0, 0 }, // 0 NoInstrModel
+  { 1, 1, 2, 0, 0 }, // 1 IIC_AAA_WriteMicrocoded
+  { 1, 2, 3, 0, 0 }, // 2 IIC_AAD_WriteMicrocoded
+  { 1, 3, 4, 0, 0 }, // 3 IIC_AAM_WriteMicrocoded
+  { 1, 1, 2, 0, 0 }, // 4 IIC_AAS_WriteMicrocoded
+  { 1, 4, 5, 0, 0 }, // 5 IIC_BIN_NONMEM_WriteALU
+  { 1, 5, 6, 0, 0 }, // 6 IIC_BIN_MEM_WriteALULd_WriteRMW
+  { 1, 4, 5, 0, 0 }, // 7 IIC_BIN_NONMEM_WriteALULd_ReadAfterLd
+  { 1, 5, 6, 0, 0 }, // 8 IIC_BIN_MEM_WriteALULd
+  { 0, 0, 0, 0, 0 }, // 9 WriteALU
+  { 1, 2, 3, 0, 0 }, // 10 IIC_SSE_ALU_F64P_RM_WriteFAddLd_ReadAfterLd
+  { 1, 6, 7, 0, 0 }, // 11 IIC_SSE_ALU_F64P_RR_WriteFAdd
+  { 1, 7, 9, 0, 0 }, // 12 IIC_SSE_ALU_F32P_RM_WriteFAddLd_ReadAfterLd
+  { 1, 9, 10, 0, 0 }, // 13 IIC_SSE_ALU_F32P_RR_WriteFAdd
+  { 1, 7, 9, 0, 0 }, // 14 IIC_SSE_ALU_F64S_RM_WriteFAddLd_ReadAfterLd
+  { 1, 9, 10, 0, 0 }, // 15 IIC_SSE_ALU_F64S_RR_WriteFAdd
+  { 1, 7, 9, 0, 0 }, // 16 IIC_SSE_ALU_F32S_RM_WriteFAddLd_ReadAfterLd
+  { 1, 9, 10, 0, 0 }, // 17 IIC_SSE_ALU_F32S_RR_WriteFAdd
+  { 1, 6, 7, 0, 0 }, // 18 IIC_SSE_ALU_F64P_RR_WriteFAddLd_ReadAfterLd
+  { 1, 9, 10, 0, 0 }, // 19 IIC_SSE_ALU_F32P_RR_WriteFAddLd_ReadAfterLd
+  { 1, 5, 6, 0, 0 }, // 20 IIC_BIN_MEM_WriteALULd_ReadAfterLd
+  { 0, 0, 0, 0, 0 }, // 21 WriteVecLogicLd_ReadAfterLd
+  { 0, 0, 0, 0, 0 }, // 22 WriteVecLogic
+  { 1, 10, 11, 0, 0 }, // 23 IIC_ARPL_MEM_WriteSystem
+  { 1, 11, 12, 0, 0 }, // 24 IIC_ARPL_REG_WriteSystem
+  { 0, 0, 0, 0, 0 }, // 25 WriteZero
+  { 1, 12, 13, 0, 0 }, // 26 IIC_BOUND_WriteSystem
+  { 1, 13, 14, 0, 0 }, // 27 IIC_BSF_WriteShiftLd
+  { 1, 13, 14, 0, 0 }, // 28 IIC_BSF_WriteShift
+  { 1, 13, 14, 0, 0 }, // 29 IIC_BSR_WriteShiftLd
+  { 1, 13, 14, 0, 0 }, // 30 IIC_BSR_WriteShift
+  { 1, 5, 6, 0, 0 }, // 31 IIC_BSWAP_WriteALU
+  { 1, 4, 5, 0, 0 }, // 32 IIC_BT_MI_WriteALU
+  { 1, 14, 15, 0, 0 }, // 33 IIC_BT_MR_WriteALULd
+  { 1, 15, 16, 0, 0 }, // 34 IIC_BT_RI_WriteALU
+  { 1, 15, 16, 0, 0 }, // 35 IIC_BT_RR_WriteALU
+  { 1, 16, 17, 0, 0 }, // 36 IIC_BTX_MI_WriteALULd_WriteRMW
+  { 1, 12, 13, 0, 0 }, // 37 IIC_BTX_MR_WriteALULd_WriteRMW
+  { 1, 15, 16, 0, 0 }, // 38 IIC_BTX_RI_WriteALU
+  { 1, 15, 16, 0, 0 }, // 39 IIC_BTX_RR_WriteALU
+  { 1, 17, 18, 0, 0 }, // 40 IIC_CALL_MEM_WriteJumpLd
+  { 1, 18, 20, 0, 0 }, // 41 IIC_CALL_RI_WriteJump
+  { 1, 17, 18, 0, 0 }, // 42 IIC_CALL_MEM_WriteJump
+  { 1, 4, 5, 0, 0 }, // 43 IIC_CLC_WriteALU
+  { 1, 20, 21, 0, 0 }, // 44 IIC_CLD_WriteALU
+  { 1, 5, 6, 0, 0 }, // 45 IIC_SSE_PREFETCH_WriteLoad
+  { 1, 21, 22, 0, 0 }, // 46 IIC_CLI_WriteALU
+  { 1, 22, 23, 0, 0 }, // 47 IIC_CLTS_WriteALU
+  { 1, 4, 5, 0, 0 }, // 48 IIC_CMC_WriteALU
+  { 1, 5, 6, 0, 0 }, // 49 IIC_CMOV16_RM_WriteALULd_ReadAfterLd
+  { 1, 4, 5, 0, 0 }, // 50 IIC_CMOV16_RR_WriteALU
+  { 1, 5, 6, 0, 0 }, // 51 IIC_CMOV32_RM_WriteALULd_ReadAfterLd
+  { 1, 4, 5, 0, 0 }, // 52 IIC_CMOV32_RR_WriteALU
+  { 1, 2, 3, 0, 0 }, // 53 IIC_SSE_CMPP_RM_WriteFAddLd_ReadAfterLd
+  { 1, 6, 7, 0, 0 }, // 54 IIC_SSE_CMPP_RR_WriteFAdd
+  { 1, 20, 21, 0, 0 }, // 55 IIC_CMPS_WriteMicrocoded
+  { 1, 23, 24, 0, 0 }, // 56 IIC_CMPXCHG_16B_WriteALULd_WriteRMW
+  { 1, 21, 22, 0, 0 }, // 57 IIC_CMPXCHG_MEM_WriteALULd_WriteRMW
+  { 1, 17, 18, 0, 0 }, // 58 IIC_CMPXCHG_REG_WriteALU
+  { 1, 24, 25, 0, 0 }, // 59 IIC_CMPXCHG_8B_WriteALULd_WriteRMW
+  { 1, 6, 7, 0, 0 }, // 60 IIC_CMPXCHG_MEM8_WriteALULd_WriteRMW
+  { 1, 14, 15, 0, 0 }, // 61 IIC_CMPXCHG_REG8_WriteALU
+  { 1, 25, 26, 0, 0 }, // 62 IIC_SSE_COMIS_RM_WriteFAddLd_ReadAfterLd
+  { 1, 14, 15, 0, 0 }, // 63 IIC_SSE_COMIS_RR_WriteFAdd
+  { 1, 14, 15, 0, 0 }, // 64 IIC_FCOMI_WriteFAdd
+  { 1, 26, 27, 0, 0 }, // 65 IIC_CPUID_WriteSystem
+  { 1, 2, 3, 0, 0 }, // 66 IIC_SSE_CVT_PD_RR_WriteCvtI2FLd
+  { 1, 27, 28, 0, 0 }, // 67 IIC_SSE_CVT_PD_RM_WriteCvtI2F
+  { 1, 2, 3, 0, 0 }, // 68 IIC_SSE_CVT_PS_RM_WriteCvtI2FLd
+  { 1, 6, 7, 0, 0 }, // 69 IIC_SSE_CVT_PS_RR_WriteCvtI2F
+  { 1, 27, 28, 0, 0 }, // 70 IIC_SSE_CVT_PD_RM_WriteCvtF2ILd
+  { 1, 2, 3, 0, 0 }, // 71 IIC_SSE_CVT_PD_RR_WriteCvtF2I
+  { 1, 27, 28, 0, 0 }, // 72 IIC_SSE_CVT_PD_RM_WriteCvtF2FLd
+  { 1, 2, 3, 0, 0 }, // 73 IIC_SSE_CVT_PD_RR_WriteCvtF2F
+  { 1, 2, 3, 0, 0 }, // 74 IIC_SSE_CVT_PS_RM_WriteCvtF2ILd
+  { 1, 6, 7, 0, 0 }, // 75 IIC_SSE_CVT_PS_RR_WriteCvtF2I
+  { 1, 14, 15, 0, 0 }, // 76 IIC_SSE_CVT_SD2SI_RM_WriteCvtF2ILd
+  { 1, 27, 28, 0, 0 }, // 77 IIC_SSE_CVT_SD2SI_RR_WriteCvtF2I
+  { 1, 2, 3, 0, 0 }, // 78 IIC_SSE_CVT_Scalar_RM_WriteCvtF2FLd
+  { 1, 6, 7, 0, 0 }, // 79 IIC_SSE_CVT_Scalar_RR_WriteCvtF2F
+  { 1, 2, 3, 0, 0 }, // 80 IIC_SSE_CVT_Scalar_RM_WriteCvtI2FLd
+  { 1, 6, 7, 0, 0 }, // 81 IIC_SSE_CVT_Scalar_RR_WriteCvtI2F
+  { 1, 25, 26, 0, 0 }, // 82 IIC_SSE_CVT_SS2SI64_RM_WriteCvtF2ILd
+  { 1, 14, 15, 0, 0 }, // 83 IIC_SSE_CVT_SS2SI64_RR_WriteCvtF2I
+  { 1, 14, 15, 0, 0 }, // 84 IIC_SSE_CVT_SS2SI32_RM_WriteCvtF2ILd
+  { 1, 27, 28, 0, 0 }, // 85 IIC_SSE_CVT_SS2SI32_RR_WriteCvtF2I
+  { 1, 24, 25, 0, 0 }, // 86 IIC_DAA_WriteMicrocoded
+  { 1, 28, 29, 0, 0 }, // 87 IIC_DAS_WriteMicrocoded
+  { 1, 5, 6, 0, 0 }, // 88 IIC_UNARY_MEM_WriteALULd_WriteRMW
+  { 1, 4, 5, 0, 0 }, // 89 IIC_UNARY_REG_WriteALU
+  { 1, 29, 30, 0, 0 }, // 90 IIC_DIV16_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
+  { 1, 29, 30, 0, 0 }, // 91 IIC_DIV16_WriteIDiv
+  { 1, 29, 30, 0, 0 }, // 92 IIC_DIV32_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
+  { 1, 29, 30, 0, 0 }, // 93 IIC_DIV32_WriteIDiv
+  { 1, 30, 31, 0, 0 }, // 94 IIC_DIV64_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
+  { 1, 30, 31, 0, 0 }, // 95 IIC_DIV64_WriteIDiv
+  { 1, 31, 32, 0, 0 }, // 96 IIC_DIV8_MEM_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
+  { 1, 29, 30, 0, 0 }, // 97 IIC_DIV8_REG_WriteIDiv
+  { 1, 32, 33, 0, 0 }, // 98 IIC_SSE_DIV_F64P_RM_WriteFDivLd_ReadAfterLd
+  { 1, 32, 33, 0, 0 }, // 99 IIC_SSE_DIV_F64P_RR_WriteFDiv
+  { 1, 33, 34, 0, 0 }, // 100 IIC_SSE_DIV_F32P_RR_WriteFDiv
+  { 1, 34, 35, 0, 0 }, // 101 IIC_SSE_DIV_F64S_RM_WriteFDivLd_ReadAfterLd
+  { 1, 34, 35, 0, 0 }, // 102 IIC_SSE_DIV_F64S_RR_WriteFDiv
+  { 1, 35, 36, 0, 0 }, // 103 IIC_SSE_DIV_F32S_RR_WriteFDiv
+  { 1, 36, 37, 0, 0 }, // 104 IIC_RET_WriteSystem
+  { 0, 0, 0, 0, 0 }, // 105 WriteSystem
+  { 1, 37, 38, 0, 0 }, // 106 IIC_ENTER_WriteMicrocoded
+  { 1, 38, 39, 0, 0 }, // 107 IIC_F2XM1_WriteMicrocoded
+  { 1, 39, 40, 0, 0 }, // 108 IIC_CALL_FAR_PTR_WriteJump
+  { 1, 40, 41, 0, 0 }, // 109 IIC_CALL_FAR_MEM_WriteJumpLd
+  { 1, 40, 41, 0, 0 }, // 110 IIC_CALL_FAR_MEM_WriteJump
+  { 1, 41, 42, 0, 0 }, // 111 IIC_JMP_FAR_PTR_WriteJump
+  { 1, 37, 38, 0, 0 }, // 112 IIC_JMP_FAR_MEM_WriteJumpLd
+  { 1, 37, 38, 0, 0 }, // 113 IIC_JMP_FAR_MEM_WriteJump
+  { 1, 15, 16, 0, 0 }, // 114 IIC_FCOMPP_WriteMicrocoded
+  { 1, 4, 5, 0, 0 }, // 115 IIC_FPSTP_WriteMicrocoded
+  { 1, 4, 5, 0, 0 }, // 116 IIC_FFREE_WriteMicrocoded
+  { 1, 42, 43, 0, 0 }, // 117 IIC_FLDCW_WriteLoad
+  { 1, 25, 26, 0, 0 }, // 118 IIC_FLDL_WriteMicrocoded
+  { 1, 43, 44, 0, 0 }, // 119 IIC_FNCLEX_WriteMicrocoded
+  { 1, 44, 45, 0, 0 }, // 120 IIC_FNINIT_WriteMicrocoded
+  { 1, 4, 5, 0, 0 }, // 121 IIC_FNOP_WriteMicrocoded
+  { 1, 27, 28, 0, 0 }, // 122 IIC_FNSTCW_WriteALU
+  { 1, 25, 26, 0, 0 }, // 123 IIC_FNSTSW_WriteALU
+  { 1, 45, 46, 0, 0 }, // 124 IIC_FPATAN_WriteMicrocoded
+  { 1, 46, 47, 0, 0 }, // 125 IIC_FPREM_WriteMicrocoded
+  { 1, 47, 48, 0, 0 }, // 126 IIC_FPREM1_WriteMicrocoded
+  { 1, 48, 49, 0, 0 }, // 127 IIC_FPTAN_WriteMicrocoded
+  { 1, 49, 50, 0, 0 }, // 128 IIC_FRNDINT_WriteMicrocoded
+  { 1, 50, 51, 0, 0 }, // 129 IIC_FSCALE_WriteMicrocoded
+  { 1, 51, 52, 0, 0 }, // 130 IIC_FSINCOS_WriteMicrocoded
+  { 1, 5, 6, 0, 0 }, // 131 IIC_FXAM_WriteMicrocoded
+  { 1, 52, 53, 0, 0 }, // 132 IIC_FXRSTOR_WriteMicrocoded
+  { 1, 53, 54, 0, 0 }, // 133 IIC_FXSAVE_WriteMicrocoded
+  { 1, 43, 44, 0, 0 }, // 134 IIC_FXTRACT_WriteMicrocoded
+  { 1, 54, 55, 0, 0 }, // 135 IIC_FYL2X_WriteMicrocoded
+  { 1, 55, 56, 0, 0 }, // 136 IIC_FYL2XP1_WriteMicrocoded
+  { 1, 5, 6, 0, 0 }, // 137 IIC_SSE_BIT_P_RM_WriteFAddLd_ReadAfterLd
+  { 1, 4, 5, 0, 0 }, // 138 IIC_SSE_BIT_P_RR_WriteFAdd
+  { 1, 5, 6, 0, 0 }, // 139 IIC_SSE_MOVA_P_RM_WriteLoad
+  { 1, 4, 5, 0, 0 }, // 140 IIC_SSE_MOVA_P_RR_WriteMove
+  { 1, 14, 15, 0, 0 }, // 141 IIC_SSE_HADDSUB_RM_WriteFAddLd_ReadAfterLd
+  { 1, 27, 28, 0, 0 }, // 142 IIC_SSE_HADDSUB_RR_WriteFAdd
+  { 1, 26, 27, 0, 0 }, // 143 IIC_HLT_WriteSystem
+  { 1, 34, 35, 0, 0 }, // 144 IIC_IDIV16_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
+  { 1, 34, 35, 0, 0 }, // 145 IIC_IDIV16_WriteIDiv
+  { 1, 34, 35, 0, 0 }, // 146 IIC_IDIV32_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
+  { 1, 34, 35, 0, 0 }, // 147 IIC_IDIV32_WriteIDiv
+  { 1, 30, 31, 0, 0 }, // 148 IIC_IDIV64_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
+  { 1, 30, 31, 0, 0 }, // 149 IIC_IDIV64_WriteIDiv
+  { 1, 34, 35, 0, 0 }, // 150 IIC_IDIV8_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
+  { 1, 34, 35, 0, 0 }, // 151 IIC_IDIV8_WriteIDiv
+  { 1, 7, 9, 0, 0 }, // 152 IIC_FILD_WriteLoad
+  { 1, 27, 28, 0, 0 }, // 153 IIC_IMUL16_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
+  { 1, 6, 7, 0, 0 }, // 154 IIC_IMUL16_RR_WriteIMul
+  { 1, 2, 3, 0, 0 }, // 155 IIC_IMUL16_RM_WriteIMulLd_ReadAfterLd
+  { 1, 2, 3, 0, 0 }, // 156 IIC_IMUL16_RMI_WriteIMulLd
+  { 1, 6, 7, 0, 0 }, // 157 IIC_IMUL16_RRI_WriteIMul
+  { 1, 2, 3, 0, 0 }, // 158 IIC_IMUL32_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
+  { 1, 56, 57, 0, 0 }, // 159 IIC_IMUL32_RR_WriteIMul
+  { 1, 56, 57, 0, 0 }, // 160 IIC_IMUL32_RM_WriteIMulLd_ReadAfterLd
+  { 1, 56, 57, 0, 0 }, // 161 IIC_IMUL32_RMI_WriteIMulLd
+  { 1, 56, 57, 0, 0 }, // 162 IIC_IMUL32_RRI_WriteIMul
+  { 1, 57, 58, 0, 0 }, // 163 IIC_IMUL64_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
+  { 1, 57, 58, 0, 0 }, // 164 IIC_IMUL64_RR_WriteIMul
+  { 1, 57, 58, 0, 0 }, // 165 IIC_IMUL64_RM_WriteIMulLd_ReadAfterLd
+  { 1, 21, 22, 0, 0 }, // 166 IIC_IMUL64_RMI_WriteIMulLd
+  { 1, 21, 22, 0, 0 }, // 167 IIC_IMUL64_RRI_WriteIMul
+  { 1, 2, 3, 0, 0 }, // 168 IIC_IMUL8_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
+  { 1, 2, 3, 0, 0 }, // 169 IIC_IMUL8_WriteIMul
+  { 1, 58, 59, 0, 0 }, // 170 IIC_INS_WriteSystem
+  { 1, 59, 60, 0, 0 }, // 171 IIC_IN_RI_WriteSystem
+  { 1, 60, 61, 0, 0 }, // 172 IIC_IN_RR_WriteSystem
+  { 1, 61, 62, 0, 0 }, // 173 IIC_INT_WriteSystem
+  { 1, 30, 31, 0, 0 }, // 174 IIC_INT3_WriteSystem
+  { 1, 62, 63, 0, 0 }, // 175 IIC_INVD_WriteSystem
+  { 1, 47, 48, 0, 0 }, // 176 IIC_INVLPG_WriteSystem
+  { 1, 63, 64, 0, 0 }, // 177 IIC_IRET_WriteSystem
+  { 1, 16, 17, 0, 0 }, // 178 IIC_FST_WriteStore
+  { 1, 6, 7, 0, 0 }, // 179 IIC_FIST_WriteStore
+  { 1, 2, 3, 0, 0 }, // 180 IIC_SSE_CVT_Scalar_RM_WriteCvtF2FLd_ReadAfterLd
+  { 1, 2, 3, 0, 0 }, // 181 IIC_SSE_CVT_Scalar_RM_WriteCvtI2FLd_ReadAfterLd
+  { 0, 0, 0, 0, 0 }, // 182 WriteLoad
+  { 1, 15, 16, 0, 0 }, // 183 IIC_Jcc_WriteJump
+  { 1, 64, 65, 0, 0 }, // 184 IIC_JCXZ_WriteJump
+  { 1, 16, 17, 0, 0 }, // 185 IIC_JMP_MEM_WriteJumpLd
+  { 1, 15, 16, 0, 0 }, // 186 IIC_JMP_REG_WriteJump
+  { 1, 15, 16, 0, 0 }, // 187 IIC_JMP_REL_WriteJump
+  { 1, 4, 5, 0, 0 }, // 188 IIC_AHF_WriteALU
+  { 1, 29, 30, 0, 0 }, // 189 IIC_LAR_RM_WriteSystem
+  { 1, 65, 66, 0, 0 }, // 190 IIC_LAR_RR_WriteSystem
+  { 1, 21, 22, 0, 0 }, // 191 IIC_CMPX_LOCK_WriteALULd_WriteRMW
+  { 1, 23, 24, 0, 0 }, // 192 IIC_CMPX_LOCK_16B_WriteALULd_WriteRMW
+  { 1, 6, 7, 0, 0 }, // 193 IIC_CMPX_LOCK_8_WriteALULd_WriteRMW
+  { 1, 24, 25, 0, 0 }, // 194 IIC_CMPX_LOCK_8B_WriteALULd_WriteRMW
+  { 1, 20, 21, 0, 0 }, // 195 IIC_SSE_LDDQU_WriteLoad
+  { 1, 42, 43, 0, 0 }, // 196 IIC_SSE_LDMXCSR_WriteLoad
+  { 1, 25, 26, 0, 0 }, // 197 IIC_LXS_WriteSystem
+  { 1, 4, 5, 0, 0 }, // 198 IIC_FLDZ_WriteZero
+  { 1, 6, 7, 0, 0 }, // 199 IIC_FIST_WriteZero
+  { 1, 5, 6, 0, 0 }, // 200 IIC_FLD_WriteLoad
+  { 1, 64, 65, 0, 0 }, // 201 IIC_FLD80_WriteLoad
+  { 1, 5, 6, 0, 0 }, // 202 IIC_FLD_WriteMove
+  { 1, 16, 17, 0, 0 }, // 203 IIC_LEA_16_WriteLEA
+  { 1, 15, 16, 0, 0 }, // 204 IIC_LEA_WriteLEA
+  { 1, 16, 17, 0, 0 }, // 205 IIC_LEAVE_WriteALU
+  { 1, 4, 5, 0, 0 }, // 206 IIC_SSE_LFENCE_WriteLoad
+  { 1, 66, 67, 0, 0 }, // 207 IIC_LGDT_WriteSystem
+  { 1, 66, 67, 0, 0 }, // 208 IIC_LIDT_WriteSystem
+  { 1, 67, 68, 0, 0 }, // 209 IIC_LLDT_MEM_WriteSystem
+  { 1, 68, 69, 0, 0 }, // 210 IIC_LLDT_REG_WriteSystem
+  { 1, 69, 70, 0, 0 }, // 211 IIC_LMSW_REG_WriteSystem
+  { 1, 70, 71, 0, 0 }, // 212 IIC_LMSW_MEM_WriteSystem
+  { 1, 5, 6, 0, 0 }, // 213 IIC_ALU_MEM_WriteALULd_WriteRMW
+  { 1, 4, 5, 0, 0 }, // 214 IIC_ALU_NONMEM_WriteALULd_WriteRMW
+  { 1, 16, 17, 0, 0 }, // 215 IIC_LODS_WriteMicrocoded
+  { 1, 24, 25, 0, 0 }, // 216 IIC_LOOP_WriteJump
+  { 1, 27, 28, 0, 0 }, // 217 IIC_LOOPE_WriteJump
+  { 1, 71, 72, 0, 0 }, // 218 IIC_LOOPNE_WriteJump
+  { 1, 36, 37, 0, 0 }, // 219 IIC_RET_WriteJumpLd
+  { 1, 49, 50, 0, 0 }, // 220 IIC_LSL_RM_WriteSystem
+  { 1, 72, 73, 0, 0 }, // 221 IIC_LSL_RR_WriteSystem
+  { 1, 73, 74, 0, 0 }, // 222 IIC_LTR_WriteSystem
+  { 1, 20, 21, 0, 0 }, // 223 IIC_XADD_LOCK_MEM_WriteALULd_WriteRMW
+  { 0, 0, 0, 0, 0 }, // 224 IIC_XADD_LOCK_MEM8_WriteALULd_WriteRMW
+  { 1, 16, 17, 0, 0 }, // 225 IIC_SSE_MASKMOV_WriteStore
+  { 1, 5, 6, 0, 0 }, // 226 IIC_SSE_MFENCE_WriteLoad
+  { 1, 27, 28, 0, 0 }, // 227 IIC_MMX_CVT_PD_RM_WriteCvtF2ILd
+  { 1, 2, 3, 0, 0 }, // 228 IIC_MMX_CVT_PD_RR_WriteCvtF2I
+  { 1, 7, 9, 0, 0 }, // 229 IIC_MMX_CVT_PS_RM_WriteCvtF2ILd
+  { 1, 9, 10, 0, 0 }, // 230 IIC_MMX_CVT_PS_RR_WriteCvtF2I
+  { 1, 5, 6, 0, 0 }, // 231 IIC_MMX_MASKMOV_WriteShuffle
+  { 1, 74, 75, 0, 0 }, // 232 IIC_MMX_MOV_REG_MM_WriteMove
+  { 1, 5, 6, 0, 0 }, // 233 IIC_MMX_MOV_MM_RM_WriteStore
+  { 1, 5, 6, 0, 0 }, // 234 IIC_MMX_MOV_MM_RM_WriteLoad
+  { 1, 5, 6, 0, 0 }, // 235 IIC_MMX_MOV_MM_RM_WriteMove
+  { 1, 4, 5, 0, 0 }, // 236 IIC_MMX_MOVQ_RR_WriteMove
+  { 1, 5, 6, 0, 0 }, // 237 IIC_MMX_MOVQ_RM_WriteStore
+  { 0, 0, 0, 0, 0 }, // 238 WriteMove
+  { 1, 5, 6, 0, 0 }, // 239 IIC_MMX_MOVQ_RM_WriteLoad
+  { 1, 5, 6, 0, 0 }, // 240 IIC_MMX_ALU_RM_WriteVecALULd
+  { 1, 4, 5, 0, 0 }, // 241 IIC_MMX_ALU_RR_WriteVecALU
+  { 1, 5, 6, 0, 0 }, // 242 IIC_MMX_PCK_RM_WriteShuffleLd_ReadAfterLd
+  { 1, 4, 5, 0, 0 }, // 243 IIC_MMX_PCK_RR_WriteShuffle
+  { 1, 5, 6, 0, 0 }, // 244 IIC_MMX_ALU_RM_WriteVecALULd_ReadAfterLd
+  { 1, 20, 21, 0, 0 }, // 245 IIC_MMX_ALUQ_RM_WriteVecALULd_ReadAfterLd
+  { 1, 16, 17, 0, 0 }, // 246 IIC_MMX_ALUQ_RR_WriteVecALU
+  { 1, 4, 5, 0, 0 }, // 247 IIC_MMX_MISC_FUNC_REG_WriteVecALULd_ReadAfterLd
+  { 1, 5, 6, 0, 0 }, // 248 IIC_MMX_MISC_FUNC_MEM_WriteVecALU
+  { 1, 64, 65, 0, 0 }, // 249 IIC_MMX_PEXTR_WriteShuffle
+  { 1, 6, 7, 0, 0 }, // 250 IIC_MMX_PHADDSUBW_RM_WriteVecALULd_ReadAfterLd
+  { 1, 42, 43, 0, 0 }, // 251 IIC_MMX_PHADDSUBW_RR_WriteVecALU
+  { 1, 64, 65, 0, 0 }, // 252 IIC_MMX_PHADDSUBD_RM_WriteVecALULd_ReadAfterLd
+  { 1, 20, 21, 0, 0 }, // 253 IIC_MMX_PHADDSUBD_RR_WriteVecALU
+  { 1, 5, 6, 0, 0 }, // 254 IIC_MMX_PINSRW_WriteShuffleLd_ReadAfterLd
+  { 1, 5, 6, 0, 0 }, // 255 IIC_MMX_PINSRW_WriteShuffle
+  { 1, 75, 76, 0, 0 }, // 256 IIC_MMX_PMUL_WriteVecIMulLd_ReadAfterLd
+  { 1, 75, 76, 0, 0 }, // 257 IIC_MMX_PMUL_WriteVecIMul
+  { 1, 64, 65, 0, 0 }, // 258 IIC_MMX_PSADBW_WriteVecALULd_ReadAfterLd
+  { 1, 64, 65, 0, 0 }, // 259 IIC_MMX_PSADBW_WriteVecALU
+  { 1, 5, 6, 0, 0 }, // 260 IIC_MMX_PSHUF_WriteShuffleLd_ReadAfterLd
+  { 1, 5, 6, 0, 0 }, // 261 IIC_MMX_PSHUF_WriteShuffle
+  { 1, 5, 6, 0, 0 }, // 262 IIC_MMX_PSHUF_WriteShuffleLd
+  { 1, 4, 5, 0, 0 }, // 263 IIC_MMX_SHIFT_RI_WriteVecShift
+  { 1, 20, 21, 0, 0 }, // 264 IIC_MMX_SHIFT_RM_WriteVecShiftLd_ReadAfterLd
+  { 1, 16, 17, 0, 0 }, // 265 IIC_MMX_SHIFT_RR_WriteVecShift
+  { 1, 5, 6, 0, 0 }, // 266 IIC_MMX_UNPCK_H_RM_WriteShuffleLd_ReadAfterLd
+  { 1, 4, 5, 0, 0 }, // 267 IIC_MMX_UNPCK_H_RR_WriteShuffle
+  { 1, 5, 6, 0, 0 }, // 268 IIC_MMX_UNPCK_L_WriteShuffleLd_ReadAfterLd
+  { 1, 5, 6, 0, 0 }, // 269 IIC_MMX_UNPCK_L_WriteShuffle
+  { 1, 76, 77, 0, 0 }, // 270 IIC_SSE_MONITOR_WriteSystem
+  { 1, 5, 6, 0, 0 }, // 271 IIC_MOV_MEM_WriteALU
+  { 1, 5, 6, 0, 0 }, // 272 IIC_MOV_MEM_WriteStore
+  { 1, 16, 17, 0, 0 }, // 273 IIC_MOV_MEM_SR_WriteMove
+  { 1, 4, 5, 0, 0 }, // 274 IIC_ALU_NONMEM_WriteZero
+  { 1, 4, 5, 0, 0 }, // 275 IIC_MOV_WriteMove
+  { 1, 5, 6, 0, 0 }, // 276 IIC_MOV_MEM_WriteLoad
+  { 1, 5, 6, 0, 0 }, // 277 IIC_MOV_REG_SR_WriteMove
+  { 1, 77, 78, 0, 0 }, // 278 IIC_MOV_SR_MEM_WriteMove
+  { 1, 3, 4, 0, 0 }, // 279 IIC_MOV_SR_REG_WriteMove
+  { 1, 78, 79, 0, 0 }, // 280 IIC_MOV_CR_REG_WriteSystem
+  { 1, 79, 80, 0, 0 }, // 281 IIC_MOV_DR_REG_WriteSystem
+  { 1, 57, 58, 0, 0 }, // 282 IIC_MOV_REG_CR_WriteSystem
+  { 1, 80, 81, 0, 0 }, // 283 IIC_MOV_REG_DR_WriteSystem
+  { 1, 4, 5, 0, 0 }, // 284 IIC_ALU_NONMEM_WriteALU
+  { 1, 5, 6, 0, 0 }, // 285 IIC_SSE_MOVDQ_WriteMove
+  { 1, 5, 6, 0, 0 }, // 286 IIC_SSE_MOVDQ_WriteLoad
+  { 1, 5, 6, 0, 0 }, // 287 IIC_SSE_MOVA_P_MR_WriteStore
+  { 1, 5, 6, 0, 0 }, // 288 IIC_MOVBE_WriteStore
+  { 1, 5, 6, 0, 0 }, // 289 IIC_MOVBE_WriteALULd
+  { 1, 5, 6, 0, 0 }, // 290 IIC_SSE_MOV_LH_WriteShuffleLd
+  { 1, 5, 6, 0, 0 }, // 291 IIC_SSE_MOV_LH_WriteShuffle
+  { 1, 16, 17, 0, 0 }, // 292 IIC_SSE_MOVU_P_MR_WriteStore
+  { 1, 20, 21, 0, 0 }, // 293 IIC_SSE_MOVU_P_RM_WriteLoad
+  { 1, 4, 5, 0, 0 }, // 294 IIC_SSE_MOVU_P_RR_WriteMove
+  { 1, 5, 6, 0, 0 }, // 295 IIC_SSE_MOV_LH_WriteStore
+  { 1, 5, 6, 0, 0 }, // 296 IIC_SSE_MOV_LH_WriteShuffleLd_ReadAfterLd
+  { 1, 5, 6, 0, 0 }, // 297 IIC_SSE_MOVDQ_WriteStore
+  { 1, 74, 75, 0, 0 }, // 298 IIC_SSE_MOVMSK_WriteVecLogic
+  { 1, 5, 6, 0, 0 }, // 299 IIC_SSE_MOVNT_WriteStore
+  { 1, 74, 75, 0, 0 }, // 300 IIC_SSE_MOVD_ToGP_WriteMove
+  { 1, 4, 5, 0, 0 }, // 301 IIC_SSE_MOVQ_RR_WriteMove
+  { 1, 20, 21, 0, 0 }, // 302 IIC_MOVS_WriteMicrocoded
+  { 1, 5, 6, 0, 0 }, // 303 IIC_SSE_MOV_S_MR_WriteStore
+  { 1, 5, 6, 0, 0 }, // 304 IIC_SSE_MOV_S_RM_WriteLoad
+  { 1, 4, 5, 0, 0 }, // 305 IIC_SSE_MOV_S_RR_WriteMove
+  { 1, 20, 21, 0, 0 }, // 306 IIC_MOVSX_R16_M8_WriteALULd
+  { 1, 16, 17, 0, 0 }, // 307 IIC_MOVSX_R16_R8_WriteALU
+  { 1, 5, 6, 0, 0 }, // 308 IIC_MOVSX_WriteALULd
+  { 1, 5, 6, 0, 0 }, // 309 IIC_MOVSX_WriteALU
+  { 1, 5, 6, 0, 0 }, // 310 IIC_SSE_MOVDQ_WriteVecLogicLd
+  { 1, 4, 5, 0, 0 }, // 311 IIC_SSE_MOVQ_RR_WriteVecLogic
+  { 1, 20, 21, 0, 0 }, // 312 IIC_MOVZX_R16_M8_WriteALULd
+  { 1, 16, 17, 0, 0 }, // 313 IIC_MOVZX_R16_R8_WriteALU
+  { 1, 5, 6, 0, 0 }, // 314 IIC_MOVZX_WriteALULd
+  { 1, 5, 6, 0, 0 }, // 315 IIC_MOVZX_WriteALU
+  { 1, 27, 28, 0, 0 }, // 316 IIC_MUL16_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
+  { 1, 2, 3, 0, 0 }, // 317 IIC_MUL16_REG_WriteIMul
+  { 1, 2, 3, 0, 0 }, // 318 IIC_MUL32_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
+  { 1, 6, 7, 0, 0 }, // 319 IIC_MUL32_REG_WriteIMul
+  { 1, 57, 58, 0, 0 }, // 320 IIC_MUL64_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
+  { 1, 57, 58, 0, 0 }, // 321 IIC_MUL64_WriteIMul
+  { 1, 2, 3, 0, 0 }, // 322 IIC_MUL8_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd
+  { 1, 2, 3, 0, 0 }, // 323 IIC_MUL8_WriteIMul
+  { 1, 25, 26, 0, 0 }, // 324 IIC_SSE_MUL_F64P_RM_WriteFMulLd_ReadAfterLd
+  { 1, 14, 15, 0, 0 }, // 325 IIC_SSE_MUL_F64P_RR_WriteFMul
+  { 1, 56, 57, 0, 0 }, // 326 IIC_SSE_MUL_F32P_RR_WriteFMul
+  { 1, 56, 57, 0, 0 }, // 327 IIC_SSE_MUL_F64S_RM_WriteFMulLd_ReadAfterLd
+  { 1, 56, 57, 0, 0 }, // 328 IIC_SSE_MUL_F64S_RR_WriteFMul
+  { 1, 75, 76, 0, 0 }, // 329 IIC_SSE_MUL_F32S_RR_WriteFMul
+  { 1, 2, 3, 0, 0 }, // 330 IIC_MUL8_WriteIMulLd
+  { 1, 49, 50, 0, 0 }, // 331 IIC_SSE_MWAIT_WriteSystem
+  { 1, 4, 5, 0, 0 }, // 332 IIC_NOP_WriteZero
+  { 1, 81, 82, 0, 0 }, // 333 IIC_OUT_IR_WriteSystem
+  { 1, 31, 32, 0, 0 }, // 334 IIC_OUT_RR_WriteSystem
+  { 1, 82, 83, 0, 0 }, // 335 IIC_OUTS_WriteSystem
+  { 1, 5, 6, 0, 0 }, // 336 IIC_SSE_PABS_RM_WriteVecALULd
+  { 1, 4, 5, 0, 0 }, // 337 IIC_SSE_PABS_RR_WriteVecALU
+  { 1, 5, 6, 0, 0 }, // 338 IIC_SSE_INTALU_P_RM_WriteVecALULd_ReadAfterLd
+  { 1, 4, 5, 0, 0 }, // 339 IIC_SSE_INTALU_P_RR_WriteVecALU
+  { 1, 20, 21, 0, 0 }, // 340 IIC_SSE_INTALUQ_P_RM_WriteVecALULd_ReadAfterLd
+  { 1, 16, 17, 0, 0 }, // 341 IIC_SSE_INTALUQ_P_RR_WriteVecALU
+  { 1, 5, 6, 0, 0 }, // 342 IIC_SSE_PALIGNR_WriteShuffleLd_ReadAfterLd
+  { 1, 5, 6, 0, 0 }, // 343 IIC_SSE_PALIGNR_WriteShuffle
+  { 1, 71, 72, 0, 0 }, // 344 IIC_SSE_PAUSE_WriteLoad
+  { 1, 64, 65, 0, 0 }, // 345 IIC_SSE_PEXTRW_WriteShuffleLd_ReadAfterLd
+  { 1, 64, 65, 0, 0 }, // 346 IIC_SSE_PHADDSUBD_RM_WriteVecALULd_ReadAfterLd
+  { 1, 20, 21, 0, 0 }, // 347 IIC_SSE_PHADDSUBD_RR_WriteVecALU
+  { 0, 0, 0, 0, 0 }, // 348 WriteVecALULd_ReadAfterLd
+  { 0, 0, 0, 0, 0 }, // 349 WriteVecALU
+  { 1, 27, 28, 0, 0 }, // 350 IIC_SSE_PHADDSUBW_RM_WriteVecALULd_ReadAfterLd
+  { 1, 2, 3, 0, 0 }, // 351 IIC_SSE_PHADDSUBW_RR_WriteVecALU
+  { 1, 5, 6, 0, 0 }, // 352 IIC_SSE_PINSRW_WriteShuffleLd_ReadAfterLd
+  { 1, 5, 6, 0, 0 }, // 353 IIC_SSE_PINSRW_WriteShuffle
+  { 0, 0, 0, 0, 0 }, // 354 WriteVecIMulLd_ReadAfterLd
+  { 0, 0, 0, 0, 0 }, // 355 WriteVecIMul
+  { 1, 56, 57, 0, 0 }, // 356 IIC_SSE_PMADD_WriteVecIMulLd_ReadAfterLd
+  { 1, 56, 57, 0, 0 }, // 357 IIC_SSE_PMADD_WriteVecIMul
+  { 1, 56, 57, 0, 0 }, // 358 IIC_SSE_INTMUL_P_RM_WriteVecIMulLd_ReadAfterLd
+  { 1, 56, 57, 0, 0 }, // 359 IIC_SSE_INTMUL_P_RR_WriteVecIMul
+  { 1, 16, 17, 0, 0 }, // 360 IIC_POP_REG16_WriteLoad
+  { 1, 20, 21, 0, 0 }, // 361 IIC_POP_MEM_WriteLoad
+  { 1, 18, 20, 0, 0 }, // 362 IIC_POP_REG_WriteLoad
+  { 1, 14, 15, 0, 0 }, // 363 IIC_POP_A_WriteLoad
+  { 1, 83, 84, 0, 0 }, // 364 IIC_POP_SR_WriteSystem
+  { 1, 37, 38, 0, 0 }, // 365 IIC_POP_F_WriteLoad
+  { 1, 77, 78, 0, 0 }, // 366 IIC_POP_FD_WriteLoad
+  { 1, 84, 85, 0, 0 }, // 367 IIC_POP_SR_SS_WriteSystem
+  { 1, 42, 43, 0, 0 }, // 368 IIC_SSE_PSHUFB_RM_WriteShuffleLd_ReadAfterLd
+  { 1, 64, 65, 0, 0 }, // 369 IIC_SSE_PSHUFB_RR_WriteShuffle
+  { 1, 5, 6, 0, 0 }, // 370 IIC_SSE_PSHUF_WriteShuffleLd
+  { 1, 5, 6, 0, 0 }, // 371 IIC_SSE_PSHUF_WriteShuffle
+  { 1, 5, 6, 0, 0 }, // 372 IIC_SSE_PSIGN_RM_WriteVecALULd_ReadAfterLd
+  { 1, 4, 5, 0, 0 }, // 373 IIC_SSE_PSIGN_RR_WriteVecALU
+  { 0, 0, 0, 0, 0 }, // 374 WriteVecShift
+  { 1, 4, 5, 0, 0 }, // 375 IIC_SSE_INTSH_P_RI_WriteVecShift
+  { 1, 20, 21, 0, 0 }, // 376 IIC_SSE_INTSH_P_RM_WriteVecShiftLd_ReadAfterLd
+  { 1, 16, 17, 0, 0 }, // 377 IIC_SSE_INTSH_P_RR_WriteVecShift
+  { 1, 5, 6, 0, 0 }, // 378 IIC_SSE_UNPCK_WriteShuffleLd_ReadAfterLd
+  { 1, 5, 6, 0, 0 }, // 379 IIC_SSE_UNPCK_WriteShuffle
+  { 1, 18, 20, 0, 0 }, // 380 IIC_PUSH_REG_WriteStore
+  { 1, 16, 17, 0, 0 }, // 381 IIC_PUSH_MEM_WriteStore
+  { 1, 18, 20, 0, 0 }, // 382 IIC_PUSH_IMM_WriteStore
+  { 1, 27, 28, 0, 0 }, // 383 IIC_PUSH_A_WriteStore
+  { 1, 16, 17, 0, 0 }, // 384 IIC_PUSH_SR_WriteSystem
+  { 1, 16, 17, 0, 0 }, // 385 IIC_PUSH_CS_WriteSystem
+  { 1, 14, 15, 0, 0 }, // 386 IIC_PUSH_F_WriteStore
+  { 1, 5, 6, 0, 0 }, // 387 IIC_SR_WriteShiftLd_WriteRMW
+  { 1, 5, 6, 0, 0 }, // 388 IIC_SR_WriteShift
+  { 1, 25, 26, 0, 0 }, // 389 IIC_SSE_RCPP_RM_WriteFRcpLd
+  { 1, 14, 15, 0, 0 }, // 390 IIC_SSE_RCPP_RR_WriteFRcp
+  { 1, 75, 76, 0, 0 }, // 391 IIC_SSE_RCPS_RM_WriteFRcpLd
+  { 1, 75, 76, 0, 0 }, // 392 IIC_SSE_RCPS_RM_WriteFRcpLd_ReadAfterLd
+  { 0, 0, 0, 0, 0 }, // 393 WriteFRcp
+  { 1, 75, 76, 0, 0 }, // 394 IIC_SSE_RCPS_RR_WriteFRcp
+  { 1, 85, 86, 0, 0 }, // 395 IIC_RDMSR_WriteSystem
+  { 1, 49, 50, 0, 0 }, // 396 IIC_RDPMC_WriteSystem
+  { 1, 86, 87, 0, 0 }, // 397 IIC_RDTSC_WriteSystem
+  { 1, 87, 88, 0, 0 }, // 398 IIC_REP_MOVS_WriteMicrocoded
+  { 1, 82, 83, 0, 0 }, // 399 IIC_REP_STOS_WriteMicrocoded
+  { 1, 18, 20, 0, 0 }, // 400 IIC_RET_IMM_WriteJumpLd
+  { 0, 0, 0, 0, 0 }, // 401 WriteShiftLd
+  { 0, 0, 0, 0, 0 }, // 402 WriteShift
+  { 1, 88, 89, 0, 0 }, // 403 IIC_RSM_WriteSystem
+  { 1, 21, 22, 0, 0 }, // 404 IIC_SSE_SQRTP_RM_WriteFSqrtLd
+  { 1, 1, 2, 0, 0 }, // 405 IIC_SSE_SQRTP_RR_WriteFSqrt
+  { 1, 57, 58, 0, 0 }, // 406 IIC_SSE_SQRTS_RM_WriteFSqrtLd
+  { 1, 57, 58, 0, 0 }, // 407 IIC_SSE_SQRTS_RM_WriteFSqrtLd_ReadAfterLd
+  { 0, 0, 0, 0, 0 }, // 408 WriteFSqrt
+  { 1, 12, 13, 0, 0 }, // 409 IIC_SSE_SQRTS_RR_WriteFSqrt
+  { 0, 0, 0, 0, 0 }, // 410 WriteShiftLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd
+  { 1, 16, 17, 0, 0 }, // 411 IIC_SCAS_WriteMicrocoded
+  { 1, 16, 17, 0, 0 }, // 412 IIC_SET_M_WriteALU_WriteStore
+  { 1, 4, 5, 0, 0 }, // 413 IIC_SET_R_WriteALU
+  { 1, 5, 6, 0, 0 }, // 414 IIC_SSE_SFENCE_WriteLoad
+  { 1, 64, 65, 0, 0 }, // 415 IIC_SGDT_WriteSystem
+  { 1, 6, 7, 0, 0 }, // 416 IIC_SHD16_MEM_CL_WriteShiftLd_WriteRMW
+  { 1, 6, 7, 0, 0 }, // 417 IIC_SHD16_MEM_IM_WriteShiftLd_WriteRMW
+  { 1, 6, 7, 0, 0 }, // 418 IIC_SHD16_REG_CL_WriteShift
+  { 1, 6, 7, 0, 0 }, // 419 IIC_SHD16_REG_IM_WriteShift
+  { 1, 64, 65, 0, 0 }, // 420 IIC_SHD32_MEM_CL_WriteShiftLd_WriteRMW
+  { 1, 64, 65, 0, 0 }, // 421 IIC_SHD32_MEM_IM_WriteShiftLd_WriteRMW
+  { 1, 16, 17, 0, 0 }, // 422 IIC_SHD32_REG_CL_WriteShift
+  { 1, 16, 17, 0, 0 }, // 423 IIC_SHD32_REG_IM_WriteShift
+  { 1, 14, 15, 0, 0 }, // 424 IIC_SHD64_MEM_CL_WriteShiftLd_WriteRMW
+  { 1, 14, 15, 0, 0 }, // 425 IIC_SHD64_MEM_IM_WriteShiftLd_WriteRMW
+  { 1, 27, 28, 0, 0 }, // 426 IIC_SHD64_REG_CL_WriteShift
+  { 1, 14, 15, 0, 0 }, // 427 IIC_SHD64_REG_IM_WriteShift
+  { 1, 5, 6, 0, 0 }, // 428 IIC_SSE_SHUFP_WriteShuffleLd_ReadAfterLd
+  { 1, 5, 6, 0, 0 }, // 429 IIC_SSE_SHUFP_WriteShuffle
+  { 1, 64, 65, 0, 0 }, // 430 IIC_SIDT_WriteSystem
+  { 1, 20, 21, 0, 0 }, // 431 IIC_SLDT_WriteSystem
+  { 1, 14, 15, 0, 0 }, // 432 IIC_SMSW_WriteSystem
+  { 1, 4, 5, 0, 0 }, // 433 IIC_STC_WriteALU
+  { 1, 3, 4, 0, 0 }, // 434 IIC_STD_WriteALU
+  { 1, 71, 72, 0, 0 }, // 435 IIC_STI_WriteALU
+  { 1, 17, 18, 0, 0 }, // 436 IIC_SSE_STMXCSR_WriteStore
+  { 1, 4, 5, 0, 0 }, // 437 IIC_STOS_WriteMicrocoded
+  { 1, 20, 21, 0, 0 }, // 438 IIC_STR_WriteSystem
+  { 1, 42, 43, 0, 0 }, // 439 IIC_FST80_WriteStore
+  { 1, 16, 17, 0, 0 }, // 440 IIC_FST_WriteMove
+  { 1, 23, 24, 0, 0 }, // 441 IIC_SWAPGS_WriteSystem
+  { 1, 89, 90, 0, 0 }, // 442 IIC_SYSCALL_WriteSystem
+  { 1, 80, 81, 0, 0 }, // 443 IIC_SYS_ENTER_EXIT_WriteSystem
+  { 1, 15, 16, 0, 0 }, // 444 IIC_JMP_REL_WriteJumpLd
+  { 1, 16, 17, 0, 0 }, // 445 IIC_JMP_MEM_WriteJump
+  { 1, 15, 16, 0, 0 }, // 446 IIC_JMP_REG_WriteJumpLd
+  { 0, 0, 0, 0, 0 }, // 447 WriteJumpLd
+  { 0, 0, 0, 0, 0 }, // 448 WriteJump
+  { 1, 14, 15, 0, 0 }, // 449 IIC_FUCOMI_WriteFAdd
+  { 1, 15, 16, 0, 0 }, // 450 IIC_FUCOM_WriteFAdd
+  { 0, 0, 0, 0, 0 }, // 451 WriteFAdd
+  { 0, 0, 0, 0, 0 }, // 452 WriteCvtI2FLd
+  { 0, 0, 0, 0, 0 }, // 453 WriteCvtI2F
+  { 0, 0, 0, 0, 0 }, // 454 WriteCvtF2ILd
+  { 0, 0, 0, 0, 0 }, // 455 WriteCvtF2I
+  { 0, 0, 0, 0, 0 }, // 456 WriteCvtI2FLd_ReadAfterLd
+  { 1, 90, 91, 0, 0 }, // 457 IIC_VERR_WriteSystem
+  { 1, 91, 92, 0, 0 }, // 458 IIC_VERW_REG_WriteSystem
+  { 1, 29, 30, 0, 0 }, // 459 IIC_VERW_MEM_WriteSystem
+  { 0, 0, 0, 0, 0 }, // 460 WriteShuffleLd
+  { 0, 0, 0, 0, 0 }, // 461 WriteShuffle
+  { 0, 0, 0, 0, 0 }, // 462 WriteStore
+  { 0, 0, 0, 0, 0 }, // 463 WriteVecALULd
+  { 0, 0, 0, 0, 0 }, // 464 WriteShuffleLd_ReadAfterLd
+  { 0, 0, 0, 0, 0 }, // 465 WriteFRcpLd_ReadAfterLd
+  { 0, 0, 0, 0, 0 }, // 466 WriteFSqrtLd_ReadAfterLd
+  { 1, 4, 5, 0, 0 }, // 467 IIC_WAIT_WriteMicrocoded
+  { 1, 92, 93, 0, 0 }, // 468 IIC_WRMSR_WriteSystem
+  { 1, 20, 21, 0, 0 }, // 469 IIC_XADD_MEM_WriteALULd_WriteRMW
+  { 1, 16, 17, 0, 0 }, // 470 IIC_XADD_REG_WriteALU
+  { 1, 16, 17, 0, 0 }, // 471 IIC_XCHG_REG_WriteALU
+  { 1, 20, 21, 0, 0 }, // 472 IIC_XCHG_MEM_WriteALULd_WriteRMW
+  { 1, 18, 20, 0, 0 }, // 473 IIC_FXCH_WriteMove
+  { 1, 6, 7, 0, 0 }, // 474 IIC_XLAT_WriteLoad
   { 0, ~0U, ~0U, ~0U, ~0U } // end marker
 };
 
@@ -653,23 +770,1099 @@ static const llvm::InstrItinerary AtomItineraries[] = {
 // {ProcResourceIdx, Cycles}
 extern const llvm::MCWriteProcResEntry X86WriteProcResTable[] = {
   { 0,  0}, // Invalid
+  { 9,  1}, // #1
+  { 4,  1}, // #2
+  { 8,  1}, // #3
+  { 9,  1}, // #4
+  { 3,  1}, // #5
+  { 7,  1}, // #6
+  { 8,  1}, // #7
+  { 9,  1}, // #8
+  { 3,  1}, // #9
+  { 7,  1}, // #10
+  { 9,  1}, // #11
+  { 6,  1}, // #12
+  { 8,  1}, // #13
+  { 9,  1}, // #14
+  { 6,  1}, // #15
+  { 9,  1}, // #16
+  { 5,  1}, // #17
+  { 6,  1}, // #18
+  { 7,  1}, // #19
+  { 8,  1}, // #20
+  { 9,  1}, // #21
+  { 5,  1}, // #22
+  { 6,  1}, // #23
+  { 7,  1}, // #24
+  { 9,  1}, // #25
+  { 1, 10}, // #26
+  { 2,  1}, // #27
+  { 6,  1}, // #28
+  { 8,  1}, // #29
+  { 9,  1}, // #30
+  { 1, 10}, // #31
+  { 2,  1}, // #32
+  { 6,  1}, // #33
+  { 9,  1}, // #34
+  { 4,  1}, // #35
+  { 6,  1}, // #36
+  { 8,  1}, // #37
+  { 9,  1}, // #38
+  {12,  1}, // #39
+  { 4,  1}, // #40
+  { 8,  1}, // #41
+  {11,  1}, // #42
+  {12,  1}, // #43
+  { 3,  1}, // #44
+  { 7,  1}, // #45
+  { 8,  1}, // #46
+  { 9,  1}, // #47
+  {11,  1}, // #48
+  {12,  1}, // #49
+  { 3,  1}, // #50
+  { 7,  1}, // #51
+  { 9,  1}, // #52
+  {12,  1}, // #53
+  { 8,  1}, // #54
+  {10,  1}, // #55
+  {11,  1}, // #56
+  {12,  1}, // #57
+  {10,  1}, // #58
+  {12,  1}, // #59
+  { 5,  1}, // #60
+  { 6,  1}, // #61
+  { 7,  1}, // #62
+  { 8,  1}, // #63
+  { 9,  1}, // #64
+  {10,  1}, // #65
+  {11,  1}, // #66
+  {12,  1}, // #67
+  { 5,  1}, // #68
+  { 6,  1}, // #69
+  { 7,  1}, // #70
+  { 9,  1}, // #71
+  {10,  1}, // #72
+  {12,  1}, // #73
+  { 1, 10}, // #74
+  { 2,  1}, // #75
+  { 6,  1}, // #76
+  { 8,  1}, // #77
+  { 9,  1}, // #78
+  {10,  1}, // #79
+  {11,  1}, // #80
+  {12,  1}, // #81
+  { 1, 10}, // #82
+  { 2,  1}, // #83
+  { 6,  1}, // #84
+  { 9,  1}, // #85
+  {10,  1}, // #86
+  {12,  1}, // #87
+  { 4,  1}, // #88
+  {11,  1}, // #89
+  { 4,  1}, // #90
+  { 8,  1}, // #91
+  {10,  1}, // #92
+  {11,  1}, // #93
+  {12,  1}, // #94
+  { 4,  1}, // #95
+  {11,  1}, // #96
+  {12,  1} // #97
 }; // X86WriteProcResTable
 
 // {Cycles, WriteResourceID}
 extern const llvm::MCWriteLatencyEntry X86WriteLatencyTable[] = {
   { 0,  0}, // Invalid
+  {100,  0}, // #1 WriteMicrocoded_WriteSystem
+  { 1,  0}, // #2 WriteALU_WriteVecLogic_WriteZero_WriteShift_WriteJump_WriteMove_WriteStore_WriteLEA_WriteShuffle_WriteVecALU_WriteVecShift
+  { 5,  0}, // #3 WriteALULd_WriteVecLogicLd_WriteShiftLd_WriteJumpLd_WriteVecALULd_WriteShuffleLd_WriteVecIMul_WriteVecShiftLd_WriteFMul_WriteFRcp
+  { 1,  0}, // #4 WriteRMW
+  { 7,  0}, // #5 WriteFAddLd_WriteCvtF2ILd_WriteCvtF2FLd_WriteIMulLd
+  { 3,  0}, // #6 WriteFAdd_WriteCvtF2I_WriteCvtF2F_WriteIMul
+  { 4,  0}, // #7 WriteLoad_WriteCvtI2F
+  { 8,  0}, // #8 WriteCvtI2FLd
+  {29,  0}, // #9 WriteIDivLd
+  {25,  0}, // #10 WriteIDiv
+  {16,  0}, // #11 WriteFDivLd
+  {12,  0}, // #12 WriteFDiv
+  { 9,  0}, // #13 WriteVecIMulLd_WriteFMulLd_WriteFRcpLd
+  {19,  0}, // #14 WriteFSqrtLd
+  {15,  0}, // #15 WriteFSqrt
+  { 1,  0}, // #16 WriteALU
+  { 1,  0} // #17 WriteStore
 }; // X86WriteLatencyTable
 
 // {UseIdx, WriteResourceID, Cycles}
 extern const llvm::MCReadAdvanceEntry X86ReadAdvanceTable[] = {
   {0,  0,  0}, // Invalid
+  {0,  0,  4}, // #1
+  {5,  0,  4}, // #2
+  {6,  0,  4} // #3
 }; // X86ReadAdvanceTable
+
+// {Name, NumMicroOps, BeginGroup, EndGroup, WriteProcResIdx,#, WriteLatencyIdx,#, ReadAdvanceIdx,#}
+static const llvm::MCSchedClassDesc SandyBridgeModelSchedClasses[] = {
+  {DBGFIELD("InvalidSchedClass")  65535, 0, 0,  0, 0,  0, 0,  0, 0},
+  {DBGFIELD("IIC_AAA_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #1
+  {DBGFIELD("IIC_AAD_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #2
+  {DBGFIELD("IIC_AAM_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #3
+  {DBGFIELD("IIC_AAS_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #4
+  {DBGFIELD("IIC_BIN_NONMEM_WriteALU") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #5
+  {DBGFIELD("IIC_BIN_MEM_WriteALULd_WriteRMW") 2, 0, 0,  2, 3,  3, 2,  0, 0}, // #6
+  {DBGFIELD("IIC_BIN_NONMEM_WriteALULd_ReadAfterLd") 1, 0, 0,  3, 2,  3, 1,  1, 1}, // #7
+  {DBGFIELD("IIC_BIN_MEM_WriteALULd") 1, 0, 0,  3, 2,  3, 1,  0, 0}, // #8
+  {DBGFIELD("WriteALU")           1, 0, 0,  1, 1,  2, 1,  0, 0}, // #9
+  {DBGFIELD("IIC_SSE_ALU_F64P_RM_WriteFAddLd_ReadAfterLd") 1, 0, 0,  5, 4,  5, 1,  1, 1}, // #10
+  {DBGFIELD("IIC_SSE_ALU_F64P_RR_WriteFAdd") 1, 0, 0,  9, 3,  6, 1,  0, 0}, // #11
+  {DBGFIELD("IIC_SSE_ALU_F32P_RM_WriteFAddLd_ReadAfterLd") 1, 0, 0,  5, 4,  5, 1,  1, 1}, // #12
+  {DBGFIELD("IIC_SSE_ALU_F32P_RR_WriteFAdd") 1, 0, 0,  9, 3,  6, 1,  0, 0}, // #13
+  {DBGFIELD("IIC_SSE_ALU_F64S_RM_WriteFAddLd_ReadAfterLd") 1, 0, 0,  5, 4,  5, 1,  1, 1}, // #14
+  {DBGFIELD("IIC_SSE_ALU_F64S_RR_WriteFAdd") 1, 0, 0,  9, 3,  6, 1,  0, 0}, // #15
+  {DBGFIELD("IIC_SSE_ALU_F32S_RM_WriteFAddLd_ReadAfterLd") 1, 0, 0,  5, 4,  5, 1,  1, 1}, // #16
+  {DBGFIELD("IIC_SSE_ALU_F32S_RR_WriteFAdd") 1, 0, 0,  9, 3,  6, 1,  0, 0}, // #17
+  {DBGFIELD("IIC_SSE_ALU_F64P_RR_WriteFAddLd_ReadAfterLd") 1, 0, 0,  5, 4,  5, 1,  1, 1}, // #18
+  {DBGFIELD("IIC_SSE_ALU_F32P_RR_WriteFAddLd_ReadAfterLd") 1, 0, 0,  5, 4,  5, 1,  1, 1}, // #19
+  {DBGFIELD("IIC_BIN_MEM_WriteALULd_ReadAfterLd") 1, 0, 0,  3, 2,  3, 1,  1, 1}, // #20
+  {DBGFIELD("WriteVecLogicLd_ReadAfterLd") 1, 0, 0,  3, 2,  3, 1,  1, 1}, // #21
+  {DBGFIELD("WriteVecLogic")      1, 0, 0,  1, 1,  2, 1,  0, 0}, // #22
+  {DBGFIELD("IIC_ARPL_MEM_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #23
+  {DBGFIELD("IIC_ARPL_REG_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #24
+  {DBGFIELD("WriteZero")          1, 0, 0,  0, 0,  2, 1,  0, 0}, // #25
+  {DBGFIELD("IIC_BOUND_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #26
+  {DBGFIELD("IIC_BSF_WriteShiftLd") 1, 0, 0, 12, 3,  3, 1,  0, 0}, // #27
+  {DBGFIELD("IIC_BSF_WriteShift") 1, 0, 0, 15, 2,  2, 1,  0, 0}, // #28
+  {DBGFIELD("IIC_BSR_WriteShiftLd") 1, 0, 0, 12, 3,  3, 1,  0, 0}, // #29
+  {DBGFIELD("IIC_BSR_WriteShift") 1, 0, 0, 15, 2,  2, 1,  0, 0}, // #30
+  {DBGFIELD("IIC_BSWAP_WriteALU") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #31
+  {DBGFIELD("IIC_BT_MI_WriteALU") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #32
+  {DBGFIELD("IIC_BT_MR_WriteALULd") 1, 0, 0,  3, 2,  3, 1,  0, 0}, // #33
+  {DBGFIELD("IIC_BT_RI_WriteALU") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #34
+  {DBGFIELD("IIC_BT_RR_WriteALU") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #35
+  {DBGFIELD("IIC_BTX_MI_WriteALULd_WriteRMW") 2, 0, 0,  2, 3,  3, 2,  0, 0}, // #36
+  {DBGFIELD("IIC_BTX_MR_WriteALULd_WriteRMW") 2, 0, 0,  2, 3,  3, 2,  0, 0}, // #37
+  {DBGFIELD("IIC_BTX_RI_WriteALU") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #38
+  {DBGFIELD("IIC_BTX_RR_WriteALU") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #39
+  {DBGFIELD("IIC_CALL_MEM_WriteJumpLd") 1, 0, 0, 17, 5,  3, 1,  0, 0}, // #40
+  {DBGFIELD("IIC_CALL_RI_WriteJump") 1, 0, 0, 22, 4,  2, 1,  0, 0}, // #41
+  {DBGFIELD("IIC_CALL_MEM_WriteJump") 1, 0, 0, 22, 4,  2, 1,  0, 0}, // #42
+  {DBGFIELD("IIC_CLC_WriteALU")   1, 0, 0,  1, 1,  2, 1,  0, 0}, // #43
+  {DBGFIELD("IIC_CLD_WriteALU")   1, 0, 0,  1, 1,  2, 1,  0, 0}, // #44
+  {DBGFIELD("IIC_SSE_PREFETCH_WriteLoad") 1, 0, 0,  3, 1,  7, 1,  0, 0}, // #45
+  {DBGFIELD("IIC_CLI_WriteALU")   1, 0, 0,  1, 1,  2, 1,  0, 0}, // #46
+  {DBGFIELD("IIC_CLTS_WriteALU")  1, 0, 0,  1, 1,  2, 1,  0, 0}, // #47
+  {DBGFIELD("IIC_CMC_WriteALU")   1, 0, 0,  1, 1,  2, 1,  0, 0}, // #48
+  {DBGFIELD("IIC_CMOV16_RM_WriteALULd_ReadAfterLd") 1, 0, 0,  3, 2,  3, 1,  1, 1}, // #49
+  {DBGFIELD("IIC_CMOV16_RR_WriteALU") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #50
+  {DBGFIELD("IIC_CMOV32_RM_WriteALULd_ReadAfterLd") 1, 0, 0,  3, 2,  3, 1,  1, 1}, // #51
+  {DBGFIELD("IIC_CMOV32_RR_WriteALU") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #52
+  {DBGFIELD("IIC_SSE_CMPP_RM_WriteFAddLd_ReadAfterLd") 1, 0, 0,  5, 4,  5, 1,  1, 1}, // #53
+  {DBGFIELD("IIC_SSE_CMPP_RR_WriteFAdd") 1, 0, 0,  9, 3,  6, 1,  0, 0}, // #54
+  {DBGFIELD("IIC_CMPS_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #55
+  {DBGFIELD("IIC_CMPXCHG_16B_WriteALULd_WriteRMW") 2, 0, 0,  2, 3,  3, 2,  0, 0}, // #56
+  {DBGFIELD("IIC_CMPXCHG_MEM_WriteALULd_WriteRMW") 2, 0, 0,  2, 3,  3, 2,  0, 0}, // #57
+  {DBGFIELD("IIC_CMPXCHG_REG_WriteALU") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #58
+  {DBGFIELD("IIC_CMPXCHG_8B_WriteALULd_WriteRMW") 2, 0, 0,  2, 3,  3, 2,  0, 0}, // #59
+  {DBGFIELD("IIC_CMPXCHG_MEM8_WriteALULd_WriteRMW") 2, 0, 0,  2, 3,  3, 2,  0, 0}, // #60
+  {DBGFIELD("IIC_CMPXCHG_REG8_WriteALU") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #61
+  {DBGFIELD("IIC_SSE_COMIS_RM_WriteFAddLd_ReadAfterLd") 1, 0, 0,  5, 4,  5, 1,  1, 1}, // #62
+  {DBGFIELD("IIC_SSE_COMIS_RR_WriteFAdd") 1, 0, 0,  9, 3,  6, 1,  0, 0}, // #63
+  {DBGFIELD("IIC_FCOMI_WriteFAdd") 1, 0, 0,  9, 3,  6, 1,  0, 0}, // #64
+  {DBGFIELD("IIC_CPUID_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #65
+  {DBGFIELD("IIC_SSE_CVT_PD_RR_WriteCvtI2FLd") 1, 0, 0,  5, 4,  8, 1,  0, 0}, // #66
+  {DBGFIELD("IIC_SSE_CVT_PD_RM_WriteCvtI2F") 1, 0, 0,  9, 3,  7, 1,  0, 0}, // #67
+  {DBGFIELD("IIC_SSE_CVT_PS_RM_WriteCvtI2FLd") 1, 0, 0,  5, 4,  8, 1,  0, 0}, // #68
+  {DBGFIELD("IIC_SSE_CVT_PS_RR_WriteCvtI2F") 1, 0, 0,  9, 3,  7, 1,  0, 0}, // #69
+  {DBGFIELD("IIC_SSE_CVT_PD_RM_WriteCvtF2ILd") 1, 0, 0,  5, 4,  5, 1,  0, 0}, // #70
+  {DBGFIELD("IIC_SSE_CVT_PD_RR_WriteCvtF2I") 1, 0, 0,  9, 3,  6, 1,  0, 0}, // #71
+  {DBGFIELD("IIC_SSE_CVT_PD_RM_WriteCvtF2FLd") 1, 0, 0,  5, 4,  5, 1,  0, 0}, // #72
+  {DBGFIELD("IIC_SSE_CVT_PD_RR_WriteCvtF2F") 1, 0, 0,  9, 3,  6, 1,  0, 0}, // #73
+  {DBGFIELD("IIC_SSE_CVT_PS_RM_WriteCvtF2ILd") 1, 0, 0,  5, 4,  5, 1,  0, 0}, // #74
+  {DBGFIELD("IIC_SSE_CVT_PS_RR_WriteCvtF2I") 1, 0, 0,  9, 3,  6, 1,  0, 0}, // #75
+  {DBGFIELD("IIC_SSE_CVT_SD2SI_RM_WriteCvtF2ILd") 1, 0, 0,  5, 4,  5, 1,  0, 0}, // #76
+  {DBGFIELD("IIC_SSE_CVT_SD2SI_RR_WriteCvtF2I") 1, 0, 0,  9, 3,  6, 1,  0, 0}, // #77
+  {DBGFIELD("IIC_SSE_CVT_Scalar_RM_WriteCvtF2FLd") 1, 0, 0,  5, 4,  5, 1,  0, 0}, // #78
+  {DBGFIELD("IIC_SSE_CVT_Scalar_RR_WriteCvtF2F") 1, 0, 0,  9, 3,  6, 1,  0, 0}, // #79
+  {DBGFIELD("IIC_SSE_CVT_Scalar_RM_WriteCvtI2FLd") 1, 0, 0,  5, 4,  8, 1,  0, 0}, // #80
+  {DBGFIELD("IIC_SSE_CVT_Scalar_RR_WriteCvtI2F") 1, 0, 0,  9, 3,  7, 1,  0, 0}, // #81
+  {DBGFIELD("IIC_SSE_CVT_SS2SI64_RM_WriteCvtF2ILd") 1, 0, 0,  5, 4,  5, 1,  0, 0}, // #82
+  {DBGFIELD("IIC_SSE_CVT_SS2SI64_RR_WriteCvtF2I") 1, 0, 0,  9, 3,  6, 1,  0, 0}, // #83
+  {DBGFIELD("IIC_SSE_CVT_SS2SI32_RM_WriteCvtF2ILd") 1, 0, 0,  5, 4,  5, 1,  0, 0}, // #84
+  {DBGFIELD("IIC_SSE_CVT_SS2SI32_RR_WriteCvtF2I") 1, 0, 0,  9, 3,  6, 1,  0, 0}, // #85
+  {DBGFIELD("IIC_DAA_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #86
+  {DBGFIELD("IIC_DAS_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #87
+  {DBGFIELD("IIC_UNARY_MEM_WriteALULd_WriteRMW") 2, 0, 0,  2, 3,  3, 2,  0, 0}, // #88
+  {DBGFIELD("IIC_UNARY_REG_WriteALU") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #89
+  {DBGFIELD("IIC_DIV16_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, 0, 0, 26, 5,  9, 1,  2, 2}, // #90
+  {DBGFIELD("IIC_DIV16_WriteIDiv") 1, 0, 0, 31, 4, 10, 1,  0, 0}, // #91
+  {DBGFIELD("IIC_DIV32_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, 0, 0, 26, 5,  9, 1,  2, 2}, // #92
+  {DBGFIELD("IIC_DIV32_WriteIDiv") 1, 0, 0, 31, 4, 10, 1,  0, 0}, // #93
+  {DBGFIELD("IIC_DIV64_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, 0, 0, 26, 5,  9, 1,  2, 2}, // #94
+  {DBGFIELD("IIC_DIV64_WriteIDiv") 1, 0, 0, 31, 4, 10, 1,  0, 0}, // #95
+  {DBGFIELD("IIC_DIV8_MEM_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, 0, 0, 26, 5,  9, 1,  2, 2}, // #96
+  {DBGFIELD("IIC_DIV8_REG_WriteIDiv") 1, 0, 0, 31, 4, 10, 1,  0, 0}, // #97
+  {DBGFIELD("IIC_SSE_DIV_F64P_RM_WriteFDivLd_ReadAfterLd") 1, 0, 0, 27, 4, 11, 1,  1, 1}, // #98
+  {DBGFIELD("IIC_SSE_DIV_F64P_RR_WriteFDiv") 1, 0, 0, 32, 3, 12, 1,  0, 0}, // #99
+  {DBGFIELD("IIC_SSE_DIV_F32P_RR_WriteFDiv") 1, 0, 0, 32, 3, 12, 1,  0, 0}, // #100
+  {DBGFIELD("IIC_SSE_DIV_F64S_RM_WriteFDivLd_ReadAfterLd") 1, 0, 0, 27, 4, 11, 1,  1, 1}, // #101
+  {DBGFIELD("IIC_SSE_DIV_F64S_RR_WriteFDiv") 1, 0, 0, 32, 3, 12, 1,  0, 0}, // #102
+  {DBGFIELD("IIC_SSE_DIV_F32S_RR_WriteFDiv") 1, 0, 0, 32, 3, 12, 1,  0, 0}, // #103
+  {DBGFIELD("IIC_RET_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #104
+  {DBGFIELD("WriteSystem")        1, 0, 0,  1, 1,  1, 1,  0, 0}, // #105
+  {DBGFIELD("IIC_ENTER_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #106
+  {DBGFIELD("IIC_F2XM1_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #107
+  {DBGFIELD("IIC_CALL_FAR_PTR_WriteJump") 1, 0, 0, 22, 4,  2, 1,  0, 0}, // #108
+  {DBGFIELD("IIC_CALL_FAR_MEM_WriteJumpLd") 1, 0, 0, 17, 5,  3, 1,  0, 0}, // #109
+  {DBGFIELD("IIC_CALL_FAR_MEM_WriteJump") 1, 0, 0, 22, 4,  2, 1,  0, 0}, // #110
+  {DBGFIELD("IIC_JMP_FAR_PTR_WriteJump") 1, 0, 0, 22, 4,  2, 1,  0, 0}, // #111
+  {DBGFIELD("IIC_JMP_FAR_MEM_WriteJumpLd") 1, 0, 0, 17, 5,  3, 1,  0, 0}, // #112
+  {DBGFIELD("IIC_JMP_FAR_MEM_WriteJump") 1, 0, 0, 22, 4,  2, 1,  0, 0}, // #113
+  {DBGFIELD("IIC_FCOMPP_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #114
+  {DBGFIELD("IIC_FPSTP_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #115
+  {DBGFIELD("IIC_FFREE_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #116
+  {DBGFIELD("IIC_FLDCW_WriteLoad") 1, 0, 0,  3, 1,  7, 1,  0, 0}, // #117
+  {DBGFIELD("IIC_FLDL_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #118
+  {DBGFIELD("IIC_FNCLEX_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #119
+  {DBGFIELD("IIC_FNINIT_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #120
+  {DBGFIELD("IIC_FNOP_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #121
+  {DBGFIELD("IIC_FNSTCW_WriteALU") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #122
+  {DBGFIELD("IIC_FNSTSW_WriteALU") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #123
+  {DBGFIELD("IIC_FPATAN_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #124
+  {DBGFIELD("IIC_FPREM_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #125
+  {DBGFIELD("IIC_FPREM1_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #126
+  {DBGFIELD("IIC_FPTAN_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #127
+  {DBGFIELD("IIC_FRNDINT_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #128
+  {DBGFIELD("IIC_FSCALE_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #129
+  {DBGFIELD("IIC_FSINCOS_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #130
+  {DBGFIELD("IIC_FXAM_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #131
+  {DBGFIELD("IIC_FXRSTOR_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #132
+  {DBGFIELD("IIC_FXSAVE_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #133
+  {DBGFIELD("IIC_FXTRACT_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #134
+  {DBGFIELD("IIC_FYL2X_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #135
+  {DBGFIELD("IIC_FYL2XP1_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #136
+  {DBGFIELD("IIC_SSE_BIT_P_RM_WriteFAddLd_ReadAfterLd") 1, 0, 0,  5, 4,  5, 1,  1, 1}, // #137
+  {DBGFIELD("IIC_SSE_BIT_P_RR_WriteFAdd") 1, 0, 0,  9, 3,  6, 1,  0, 0}, // #138
+  {DBGFIELD("IIC_SSE_MOVA_P_RM_WriteLoad") 1, 0, 0,  3, 1,  7, 1,  0, 0}, // #139
+  {DBGFIELD("IIC_SSE_MOVA_P_RR_WriteMove") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #140
+  {DBGFIELD("IIC_SSE_HADDSUB_RM_WriteFAddLd_ReadAfterLd") 1, 0, 0,  5, 4,  5, 1,  1, 1}, // #141
+  {DBGFIELD("IIC_SSE_HADDSUB_RR_WriteFAdd") 1, 0, 0,  9, 3,  6, 1,  0, 0}, // #142
+  {DBGFIELD("IIC_HLT_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #143
+  {DBGFIELD("IIC_IDIV16_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, 0, 0, 26, 5,  9, 1,  2, 2}, // #144
+  {DBGFIELD("IIC_IDIV16_WriteIDiv") 1, 0, 0, 31, 4, 10, 1,  0, 0}, // #145
+  {DBGFIELD("IIC_IDIV32_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, 0, 0, 26, 5,  9, 1,  2, 2}, // #146
+  {DBGFIELD("IIC_IDIV32_WriteIDiv") 1, 0, 0, 31, 4, 10, 1,  0, 0}, // #147
+  {DBGFIELD("IIC_IDIV64_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, 0, 0, 26, 5,  9, 1,  2, 2}, // #148
+  {DBGFIELD("IIC_IDIV64_WriteIDiv") 1, 0, 0, 31, 4, 10, 1,  0, 0}, // #149
+  {DBGFIELD("IIC_IDIV8_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, 0, 0, 26, 5,  9, 1,  2, 2}, // #150
+  {DBGFIELD("IIC_IDIV8_WriteIDiv") 1, 0, 0, 31, 4, 10, 1,  0, 0}, // #151
+  {DBGFIELD("IIC_FILD_WriteLoad") 1, 0, 0,  3, 1,  7, 1,  0, 0}, // #152
+  {DBGFIELD("IIC_IMUL16_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, 0, 0,  5, 4,  5, 1,  2, 2}, // #153
+  {DBGFIELD("IIC_IMUL16_RR_WriteIMul") 1, 0, 0,  9, 3,  6, 1,  0, 0}, // #154
+  {DBGFIELD("IIC_IMUL16_RM_WriteIMulLd_ReadAfterLd") 1, 0, 0,  5, 4,  5, 1,  1, 1}, // #155
+  {DBGFIELD("IIC_IMUL16_RMI_WriteIMulLd") 1, 0, 0,  5, 4,  5, 1,  0, 0}, // #156
+  {DBGFIELD("IIC_IMUL16_RRI_WriteIMul") 1, 0, 0,  9, 3,  6, 1,  0, 0}, // #157
+  {DBGFIELD("IIC_IMUL32_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, 0, 0,  5, 4,  5, 1,  2, 2}, // #158
+  {DBGFIELD("IIC_IMUL32_RR_WriteIMul") 1, 0, 0,  9, 3,  6, 1,  0, 0}, // #159
+  {DBGFIELD("IIC_IMUL32_RM_WriteIMulLd_ReadAfterLd") 1, 0, 0,  5, 4,  5, 1,  1, 1}, // #160
+  {DBGFIELD("IIC_IMUL32_RMI_WriteIMulLd") 1, 0, 0,  5, 4,  5, 1,  0, 0}, // #161
+  {DBGFIELD("IIC_IMUL32_RRI_WriteIMul") 1, 0, 0,  9, 3,  6, 1,  0, 0}, // #162
+  {DBGFIELD("IIC_IMUL64_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, 0, 0,  5, 4,  5, 1,  2, 2}, // #163
+  {DBGFIELD("IIC_IMUL64_RR_WriteIMul") 1, 0, 0,  9, 3,  6, 1,  0, 0}, // #164
+  {DBGFIELD("IIC_IMUL64_RM_WriteIMulLd_ReadAfterLd") 1, 0, 0,  5, 4,  5, 1,  1, 1}, // #165
+  {DBGFIELD("IIC_IMUL64_RMI_WriteIMulLd") 1, 0, 0,  5, 4,  5, 1,  0, 0}, // #166
+  {DBGFIELD("IIC_IMUL64_RRI_WriteIMul") 1, 0, 0,  9, 3,  6, 1,  0, 0}, // #167
+  {DBGFIELD("IIC_IMUL8_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, 0, 0,  5, 4,  5, 1,  2, 2}, // #168
+  {DBGFIELD("IIC_IMUL8_WriteIMul") 1, 0, 0,  9, 3,  6, 1,  0, 0}, // #169
+  {DBGFIELD("IIC_INS_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #170
+  {DBGFIELD("IIC_IN_RI_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #171
+  {DBGFIELD("IIC_IN_RR_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #172
+  {DBGFIELD("IIC_INT_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #173
+  {DBGFIELD("IIC_INT3_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #174
+  {DBGFIELD("IIC_INVD_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #175
+  {DBGFIELD("IIC_INVLPG_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #176
+  {DBGFIELD("IIC_IRET_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #177
+  {DBGFIELD("IIC_FST_WriteStore") 1, 0, 0,  2, 2,  2, 1,  0, 0}, // #178
+  {DBGFIELD("IIC_FIST_WriteStore") 1, 0, 0,  2, 2,  2, 1,  0, 0}, // #179
+  {DBGFIELD("IIC_SSE_CVT_Scalar_RM_WriteCvtF2FLd_ReadAfterLd") 1, 0, 0,  5, 4,  5, 1,  1, 1}, // #180
+  {DBGFIELD("IIC_SSE_CVT_Scalar_RM_WriteCvtI2FLd_ReadAfterLd") 1, 0, 0,  5, 4,  8, 1,  1, 1}, // #181
+  {DBGFIELD("WriteLoad")          1, 0, 0,  3, 1,  7, 1,  0, 0}, // #182
+  {DBGFIELD("IIC_Jcc_WriteJump")  1, 0, 0, 22, 4,  2, 1,  0, 0}, // #183
+  {DBGFIELD("IIC_JCXZ_WriteJump") 1, 0, 0, 22, 4,  2, 1,  0, 0}, // #184
+  {DBGFIELD("IIC_JMP_MEM_WriteJumpLd") 1, 0, 0, 17, 5,  3, 1,  0, 0}, // #185
+  {DBGFIELD("IIC_JMP_REG_WriteJump") 1, 0, 0, 22, 4,  2, 1,  0, 0}, // #186
+  {DBGFIELD("IIC_JMP_REL_WriteJump") 1, 0, 0, 22, 4,  2, 1,  0, 0}, // #187
+  {DBGFIELD("IIC_AHF_WriteALU")   1, 0, 0,  1, 1,  2, 1,  0, 0}, // #188
+  {DBGFIELD("IIC_LAR_RM_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #189
+  {DBGFIELD("IIC_LAR_RR_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #190
+  {DBGFIELD("IIC_CMPX_LOCK_WriteALULd_WriteRMW") 2, 0, 0,  2, 3,  3, 2,  0, 0}, // #191
+  {DBGFIELD("IIC_CMPX_LOCK_16B_WriteALULd_WriteRMW") 2, 0, 0,  2, 3,  3, 2,  0, 0}, // #192
+  {DBGFIELD("IIC_CMPX_LOCK_8_WriteALULd_WriteRMW") 2, 0, 0,  2, 3,  3, 2,  0, 0}, // #193
+  {DBGFIELD("IIC_CMPX_LOCK_8B_WriteALULd_WriteRMW") 2, 0, 0,  2, 3,  3, 2,  0, 0}, // #194
+  {DBGFIELD("IIC_SSE_LDDQU_WriteLoad") 1, 0, 0,  3, 1,  7, 1,  0, 0}, // #195
+  {DBGFIELD("IIC_SSE_LDMXCSR_WriteLoad") 1, 0, 0,  3, 1,  7, 1,  0, 0}, // #196
+  {DBGFIELD("IIC_LXS_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #197
+  {DBGFIELD("IIC_FLDZ_WriteZero") 1, 0, 0,  0, 0,  2, 1,  0, 0}, // #198
+  {DBGFIELD("IIC_FIST_WriteZero") 1, 0, 0,  0, 0,  2, 1,  0, 0}, // #199
+  {DBGFIELD("IIC_FLD_WriteLoad")  1, 0, 0,  3, 1,  7, 1,  0, 0}, // #200
+  {DBGFIELD("IIC_FLD80_WriteLoad") 1, 0, 0,  3, 1,  7, 1,  0, 0}, // #201
+  {DBGFIELD("IIC_FLD_WriteMove")  1, 0, 0,  1, 1,  2, 1,  0, 0}, // #202
+  {DBGFIELD("IIC_LEA_16_WriteLEA") 1, 0, 0, 10, 2,  2, 1,  0, 0}, // #203
+  {DBGFIELD("IIC_LEA_WriteLEA")   1, 0, 0, 10, 2,  2, 1,  0, 0}, // #204
+  {DBGFIELD("IIC_LEAVE_WriteALU") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #205
+  {DBGFIELD("IIC_SSE_LFENCE_WriteLoad") 1, 0, 0,  3, 1,  7, 1,  0, 0}, // #206
+  {DBGFIELD("IIC_LGDT_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #207
+  {DBGFIELD("IIC_LIDT_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #208
+  {DBGFIELD("IIC_LLDT_MEM_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #209
+  {DBGFIELD("IIC_LLDT_REG_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #210
+  {DBGFIELD("IIC_LMSW_REG_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #211
+  {DBGFIELD("IIC_LMSW_MEM_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #212
+  {DBGFIELD("IIC_ALU_MEM_WriteALULd_WriteRMW") 2, 0, 0,  2, 3,  3, 2,  0, 0}, // #213
+  {DBGFIELD("IIC_ALU_NONMEM_WriteALULd_WriteRMW") 2, 0, 0,  2, 3,  3, 2,  0, 0}, // #214
+  {DBGFIELD("IIC_LODS_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #215
+  {DBGFIELD("IIC_LOOP_WriteJump") 1, 0, 0, 22, 4,  2, 1,  0, 0}, // #216
+  {DBGFIELD("IIC_LOOPE_WriteJump") 1, 0, 0, 22, 4,  2, 1,  0, 0}, // #217
+  {DBGFIELD("IIC_LOOPNE_WriteJump") 1, 0, 0, 22, 4,  2, 1,  0, 0}, // #218
+  {DBGFIELD("IIC_RET_WriteJumpLd") 1, 0, 0, 17, 5,  3, 1,  0, 0}, // #219
+  {DBGFIELD("IIC_LSL_RM_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #220
+  {DBGFIELD("IIC_LSL_RR_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #221
+  {DBGFIELD("IIC_LTR_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #222
+  {DBGFIELD("IIC_XADD_LOCK_MEM_WriteALULd_WriteRMW") 2, 0, 0,  2, 3,  3, 2,  0, 0}, // #223
+  {DBGFIELD("IIC_XADD_LOCK_MEM8_WriteALULd_WriteRMW") 2, 0, 0,  2, 3,  3, 2,  0, 0}, // #224
+  {DBGFIELD("IIC_SSE_MASKMOV_WriteStore") 1, 0, 0,  2, 2,  2, 1,  0, 0}, // #225
+  {DBGFIELD("IIC_SSE_MFENCE_WriteLoad") 1, 0, 0,  3, 1,  7, 1,  0, 0}, // #226
+  {DBGFIELD("IIC_MMX_CVT_PD_RM_WriteCvtF2ILd") 1, 0, 0,  5, 4,  5, 1,  0, 0}, // #227
+  {DBGFIELD("IIC_MMX_CVT_PD_RR_WriteCvtF2I") 1, 0, 0,  9, 3,  6, 1,  0, 0}, // #228
+  {DBGFIELD("IIC_MMX_CVT_PS_RM_WriteCvtF2ILd") 1, 0, 0,  5, 4,  5, 1,  0, 0}, // #229
+  {DBGFIELD("IIC_MMX_CVT_PS_RR_WriteCvtF2I") 1, 0, 0,  9, 3,  6, 1,  0, 0}, // #230
+  {DBGFIELD("IIC_MMX_MASKMOV_WriteShuffle") 1, 0, 0, 10, 2,  2, 1,  0, 0}, // #231
+  {DBGFIELD("IIC_MMX_MOV_REG_MM_WriteMove") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #232
+  {DBGFIELD("IIC_MMX_MOV_MM_RM_WriteStore") 1, 0, 0,  2, 2,  2, 1,  0, 0}, // #233
+  {DBGFIELD("IIC_MMX_MOV_MM_RM_WriteLoad") 1, 0, 0,  3, 1,  7, 1,  0, 0}, // #234
+  {DBGFIELD("IIC_MMX_MOV_MM_RM_WriteMove") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #235
+  {DBGFIELD("IIC_MMX_MOVQ_RR_WriteMove") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #236
+  {DBGFIELD("IIC_MMX_MOVQ_RM_WriteStore") 1, 0, 0,  2, 2,  2, 1,  0, 0}, // #237
+  {DBGFIELD("WriteMove")          1, 0, 0,  1, 1,  2, 1,  0, 0}, // #238
+  {DBGFIELD("IIC_MMX_MOVQ_RM_WriteLoad") 1, 0, 0,  3, 1,  7, 1,  0, 0}, // #239
+  {DBGFIELD("IIC_MMX_ALU_RM_WriteVecALULd") 1, 0, 0,  6, 3,  3, 1,  0, 0}, // #240
+  {DBGFIELD("IIC_MMX_ALU_RR_WriteVecALU") 1, 0, 0, 10, 2,  2, 1,  0, 0}, // #241
+  {DBGFIELD("IIC_MMX_PCK_RM_WriteShuffleLd_ReadAfterLd") 1, 0, 0,  6, 3,  3, 1,  1, 1}, // #242
+  {DBGFIELD("IIC_MMX_PCK_RR_WriteShuffle") 1, 0, 0, 10, 2,  2, 1,  0, 0}, // #243
+  {DBGFIELD("IIC_MMX_ALU_RM_WriteVecALULd_ReadAfterLd") 1, 0, 0,  6, 3,  3, 1,  1, 1}, // #244
+  {DBGFIELD("IIC_MMX_ALUQ_RM_WriteVecALULd_ReadAfterLd") 1, 0, 0,  6, 3,  3, 1,  1, 1}, // #245
+  {DBGFIELD("IIC_MMX_ALUQ_RR_WriteVecALU") 1, 0, 0, 10, 2,  2, 1,  0, 0}, // #246
+  {DBGFIELD("IIC_MMX_MISC_FUNC_REG_WriteVecALULd_ReadAfterLd") 1, 0, 0,  6, 3,  3, 1,  1, 1}, // #247
+  {DBGFIELD("IIC_MMX_MISC_FUNC_MEM_WriteVecALU") 1, 0, 0, 10, 2,  2, 1,  0, 0}, // #248
+  {DBGFIELD("IIC_MMX_PEXTR_WriteShuffle") 1, 0, 0, 10, 2,  2, 1,  0, 0}, // #249
+  {DBGFIELD("IIC_MMX_PHADDSUBW_RM_WriteVecALULd_ReadAfterLd") 1, 0, 0,  6, 3,  3, 1,  1, 1}, // #250
+  {DBGFIELD("IIC_MMX_PHADDSUBW_RR_WriteVecALU") 1, 0, 0, 10, 2,  2, 1,  0, 0}, // #251
+  {DBGFIELD("IIC_MMX_PHADDSUBD_RM_WriteVecALULd_ReadAfterLd") 1, 0, 0,  6, 3,  3, 1,  1, 1}, // #252
+  {DBGFIELD("IIC_MMX_PHADDSUBD_RR_WriteVecALU") 1, 0, 0, 10, 2,  2, 1,  0, 0}, // #253
+  {DBGFIELD("IIC_MMX_PINSRW_WriteShuffleLd_ReadAfterLd") 1, 0, 0,  6, 3,  3, 1,  1, 1}, // #254
+  {DBGFIELD("IIC_MMX_PINSRW_WriteShuffle") 1, 0, 0, 10, 2,  2, 1,  0, 0}, // #255
+  {DBGFIELD("IIC_MMX_PMUL_WriteVecIMulLd_ReadAfterLd") 1, 0, 0, 27, 4, 13, 1,  1, 1}, // #256
+  {DBGFIELD("IIC_MMX_PMUL_WriteVecIMul") 1, 0, 0, 32, 3,  3, 1,  0, 0}, // #257
+  {DBGFIELD("IIC_MMX_PSADBW_WriteVecALULd_ReadAfterLd") 1, 0, 0,  6, 3,  3, 1,  1, 1}, // #258
+  {DBGFIELD("IIC_MMX_PSADBW_WriteVecALU") 1, 0, 0, 10, 2,  2, 1,  0, 0}, // #259
+  {DBGFIELD("IIC_MMX_PSHUF_WriteShuffleLd_ReadAfterLd") 1, 0, 0,  6, 3,  3, 1,  1, 1}, // #260
+  {DBGFIELD("IIC_MMX_PSHUF_WriteShuffle") 1, 0, 0, 10, 2,  2, 1,  0, 0}, // #261
+  {DBGFIELD("IIC_MMX_PSHUF_WriteShuffleLd") 1, 0, 0,  6, 3,  3, 1,  0, 0}, // #262
+  {DBGFIELD("IIC_MMX_SHIFT_RI_WriteVecShift") 1, 0, 0, 15, 2,  2, 1,  0, 0}, // #263
+  {DBGFIELD("IIC_MMX_SHIFT_RM_WriteVecShiftLd_ReadAfterLd") 1, 0, 0, 12, 3,  3, 1,  1, 1}, // #264
+  {DBGFIELD("IIC_MMX_SHIFT_RR_WriteVecShift") 1, 0, 0, 15, 2,  2, 1,  0, 0}, // #265
+  {DBGFIELD("IIC_MMX_UNPCK_H_RM_WriteShuffleLd_ReadAfterLd") 1, 0, 0,  6, 3,  3, 1,  1, 1}, // #266
+  {DBGFIELD("IIC_MMX_UNPCK_H_RR_WriteShuffle") 1, 0, 0, 10, 2,  2, 1,  0, 0}, // #267
+  {DBGFIELD("IIC_MMX_UNPCK_L_WriteShuffleLd_ReadAfterLd") 1, 0, 0,  6, 3,  3, 1,  1, 1}, // #268
+  {DBGFIELD("IIC_MMX_UNPCK_L_WriteShuffle") 1, 0, 0, 10, 2,  2, 1,  0, 0}, // #269
+  {DBGFIELD("IIC_SSE_MONITOR_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #270
+  {DBGFIELD("IIC_MOV_MEM_WriteALU") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #271
+  {DBGFIELD("IIC_MOV_MEM_WriteStore") 1, 0, 0,  2, 2,  2, 1,  0, 0}, // #272
+  {DBGFIELD("IIC_MOV_MEM_SR_WriteMove") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #273
+  {DBGFIELD("IIC_ALU_NONMEM_WriteZero") 1, 0, 0,  0, 0,  2, 1,  0, 0}, // #274
+  {DBGFIELD("IIC_MOV_WriteMove")  1, 0, 0,  1, 1,  2, 1,  0, 0}, // #275
+  {DBGFIELD("IIC_MOV_MEM_WriteLoad") 1, 0, 0,  3, 1,  7, 1,  0, 0}, // #276
+  {DBGFIELD("IIC_MOV_REG_SR_WriteMove") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #277
+  {DBGFIELD("IIC_MOV_SR_MEM_WriteMove") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #278
+  {DBGFIELD("IIC_MOV_SR_REG_WriteMove") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #279
+  {DBGFIELD("IIC_MOV_CR_REG_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #280
+  {DBGFIELD("IIC_MOV_DR_REG_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #281
+  {DBGFIELD("IIC_MOV_REG_CR_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #282
+  {DBGFIELD("IIC_MOV_REG_DR_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #283
+  {DBGFIELD("IIC_ALU_NONMEM_WriteALU") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #284
+  {DBGFIELD("IIC_SSE_MOVDQ_WriteMove") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #285
+  {DBGFIELD("IIC_SSE_MOVDQ_WriteLoad") 1, 0, 0,  3, 1,  7, 1,  0, 0}, // #286
+  {DBGFIELD("IIC_SSE_MOVA_P_MR_WriteStore") 1, 0, 0,  2, 2,  2, 1,  0, 0}, // #287
+  {DBGFIELD("IIC_MOVBE_WriteStore") 1, 0, 0,  2, 2,  2, 1,  0, 0}, // #288
+  {DBGFIELD("IIC_MOVBE_WriteALULd") 1, 0, 0,  3, 2,  3, 1,  0, 0}, // #289
+  {DBGFIELD("IIC_SSE_MOV_LH_WriteShuffleLd") 1, 0, 0,  6, 3,  3, 1,  0, 0}, // #290
+  {DBGFIELD("IIC_SSE_MOV_LH_WriteShuffle") 1, 0, 0, 10, 2,  2, 1,  0, 0}, // #291
+  {DBGFIELD("IIC_SSE_MOVU_P_MR_WriteStore") 1, 0, 0,  2, 2,  2, 1,  0, 0}, // #292
+  {DBGFIELD("IIC_SSE_MOVU_P_RM_WriteLoad") 1, 0, 0,  3, 1,  7, 1,  0, 0}, // #293
+  {DBGFIELD("IIC_SSE_MOVU_P_RR_WriteMove") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #294
+  {DBGFIELD("IIC_SSE_MOV_LH_WriteStore") 1, 0, 0,  2, 2,  2, 1,  0, 0}, // #295
+  {DBGFIELD("IIC_SSE_MOV_LH_WriteShuffleLd_ReadAfterLd") 1, 0, 0,  6, 3,  3, 1,  1, 1}, // #296
+  {DBGFIELD("IIC_SSE_MOVDQ_WriteStore") 1, 0, 0,  2, 2,  2, 1,  0, 0}, // #297
+  {DBGFIELD("IIC_SSE_MOVMSK_WriteVecLogic") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #298
+  {DBGFIELD("IIC_SSE_MOVNT_WriteStore") 1, 0, 0,  2, 2,  2, 1,  0, 0}, // #299
+  {DBGFIELD("IIC_SSE_MOVD_ToGP_WriteMove") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #300
+  {DBGFIELD("IIC_SSE_MOVQ_RR_WriteMove") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #301
+  {DBGFIELD("IIC_MOVS_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #302
+  {DBGFIELD("IIC_SSE_MOV_S_MR_WriteStore") 1, 0, 0,  2, 2,  2, 1,  0, 0}, // #303
+  {DBGFIELD("IIC_SSE_MOV_S_RM_WriteLoad") 1, 0, 0,  3, 1,  7, 1,  0, 0}, // #304
+  {DBGFIELD("IIC_SSE_MOV_S_RR_WriteMove") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #305
+  {DBGFIELD("IIC_MOVSX_R16_M8_WriteALULd") 1, 0, 0,  3, 2,  3, 1,  0, 0}, // #306
+  {DBGFIELD("IIC_MOVSX_R16_R8_WriteALU") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #307
+  {DBGFIELD("IIC_MOVSX_WriteALULd") 1, 0, 0,  3, 2,  3, 1,  0, 0}, // #308
+  {DBGFIELD("IIC_MOVSX_WriteALU") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #309
+  {DBGFIELD("IIC_SSE_MOVDQ_WriteVecLogicLd") 1, 0, 0,  3, 2,  3, 1,  0, 0}, // #310
+  {DBGFIELD("IIC_SSE_MOVQ_RR_WriteVecLogic") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #311
+  {DBGFIELD("IIC_MOVZX_R16_M8_WriteALULd") 1, 0, 0,  3, 2,  3, 1,  0, 0}, // #312
+  {DBGFIELD("IIC_MOVZX_R16_R8_WriteALU") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #313
+  {DBGFIELD("IIC_MOVZX_WriteALULd") 1, 0, 0,  3, 2,  3, 1,  0, 0}, // #314
+  {DBGFIELD("IIC_MOVZX_WriteALU") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #315
+  {DBGFIELD("IIC_MUL16_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, 0, 0,  5, 4,  5, 1,  2, 2}, // #316
+  {DBGFIELD("IIC_MUL16_REG_WriteIMul") 1, 0, 0,  9, 3,  6, 1,  0, 0}, // #317
+  {DBGFIELD("IIC_MUL32_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, 0, 0,  5, 4,  5, 1,  2, 2}, // #318
+  {DBGFIELD("IIC_MUL32_REG_WriteIMul") 1, 0, 0,  9, 3,  6, 1,  0, 0}, // #319
+  {DBGFIELD("IIC_MUL64_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, 0, 0,  5, 4,  5, 1,  2, 2}, // #320
+  {DBGFIELD("IIC_MUL64_WriteIMul") 1, 0, 0,  9, 3,  6, 1,  0, 0}, // #321
+  {DBGFIELD("IIC_MUL8_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, 0, 0,  5, 4,  5, 1,  2, 2}, // #322
+  {DBGFIELD("IIC_MUL8_WriteIMul") 1, 0, 0,  9, 3,  6, 1,  0, 0}, // #323
+  {DBGFIELD("IIC_SSE_MUL_F64P_RM_WriteFMulLd_ReadAfterLd") 1, 0, 0, 27, 4, 13, 1,  1, 1}, // #324
+  {DBGFIELD("IIC_SSE_MUL_F64P_RR_WriteFMul") 1, 0, 0, 32, 3,  3, 1,  0, 0}, // #325
+  {DBGFIELD("IIC_SSE_MUL_F32P_RR_WriteFMul") 1, 0, 0, 32, 3,  3, 1,  0, 0}, // #326
+  {DBGFIELD("IIC_SSE_MUL_F64S_RM_WriteFMulLd_ReadAfterLd") 1, 0, 0, 27, 4, 13, 1,  1, 1}, // #327
+  {DBGFIELD("IIC_SSE_MUL_F64S_RR_WriteFMul") 1, 0, 0, 32, 3,  3, 1,  0, 0}, // #328
+  {DBGFIELD("IIC_SSE_MUL_F32S_RR_WriteFMul") 1, 0, 0, 32, 3,  3, 1,  0, 0}, // #329
+  {DBGFIELD("IIC_MUL8_WriteIMulLd") 1, 0, 0,  5, 4,  5, 1,  0, 0}, // #330
+  {DBGFIELD("IIC_SSE_MWAIT_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #331
+  {DBGFIELD("IIC_NOP_WriteZero")  1, 0, 0,  0, 0,  2, 1,  0, 0}, // #332
+  {DBGFIELD("IIC_OUT_IR_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #333
+  {DBGFIELD("IIC_OUT_RR_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #334
+  {DBGFIELD("IIC_OUTS_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #335
+  {DBGFIELD("IIC_SSE_PABS_RM_WriteVecALULd") 1, 0, 0,  6, 3,  3, 1,  0, 0}, // #336
+  {DBGFIELD("IIC_SSE_PABS_RR_WriteVecALU") 1, 0, 0, 10, 2,  2, 1,  0, 0}, // #337
+  {DBGFIELD("IIC_SSE_INTALU_P_RM_WriteVecALULd_ReadAfterLd") 1, 0, 0,  6, 3,  3, 1,  1, 1}, // #338
+  {DBGFIELD("IIC_SSE_INTALU_P_RR_WriteVecALU") 1, 0, 0, 10, 2,  2, 1,  0, 0}, // #339
+  {DBGFIELD("IIC_SSE_INTALUQ_P_RM_WriteVecALULd_ReadAfterLd") 1, 0, 0,  6, 3,  3, 1,  1, 1}, // #340
+  {DBGFIELD("IIC_SSE_INTALUQ_P_RR_WriteVecALU") 1, 0, 0, 10, 2,  2, 1,  0, 0}, // #341
+  {DBGFIELD("IIC_SSE_PALIGNR_WriteShuffleLd_ReadAfterLd") 1, 0, 0,  6, 3,  3, 1,  1, 1}, // #342
+  {DBGFIELD("IIC_SSE_PALIGNR_WriteShuffle") 1, 0, 0, 10, 2,  2, 1,  0, 0}, // #343
+  {DBGFIELD("IIC_SSE_PAUSE_WriteLoad") 1, 0, 0,  3, 1,  7, 1,  0, 0}, // #344
+  {DBGFIELD("IIC_SSE_PEXTRW_WriteShuffleLd_ReadAfterLd") 1, 0, 0,  6, 3,  3, 1,  1, 1}, // #345
+  {DBGFIELD("IIC_SSE_PHADDSUBD_RM_WriteVecALULd_ReadAfterLd") 1, 0, 0,  6, 3,  3, 1,  1, 1}, // #346
+  {DBGFIELD("IIC_SSE_PHADDSUBD_RR_WriteVecALU") 1, 0, 0, 10, 2,  2, 1,  0, 0}, // #347
+  {DBGFIELD("WriteVecALULd_ReadAfterLd") 1, 0, 0,  6, 3,  3, 1,  1, 1}, // #348
+  {DBGFIELD("WriteVecALU")        1, 0, 0, 10, 2,  2, 1,  0, 0}, // #349
+  {DBGFIELD("IIC_SSE_PHADDSUBW_RM_WriteVecALULd_ReadAfterLd") 1, 0, 0,  6, 3,  3, 1,  1, 1}, // #350
+  {DBGFIELD("IIC_SSE_PHADDSUBW_RR_WriteVecALU") 1, 0, 0, 10, 2,  2, 1,  0, 0}, // #351
+  {DBGFIELD("IIC_SSE_PINSRW_WriteShuffleLd_ReadAfterLd") 1, 0, 0,  6, 3,  3, 1,  1, 1}, // #352
+  {DBGFIELD("IIC_SSE_PINSRW_WriteShuffle") 1, 0, 0, 10, 2,  2, 1,  0, 0}, // #353
+  {DBGFIELD("WriteVecIMulLd_ReadAfterLd") 1, 0, 0, 27, 4, 13, 1,  1, 1}, // #354
+  {DBGFIELD("WriteVecIMul")       1, 0, 0, 32, 3,  3, 1,  0, 0}, // #355
+  {DBGFIELD("IIC_SSE_PMADD_WriteVecIMulLd_ReadAfterLd") 1, 0, 0, 27, 4, 13, 1,  1, 1}, // #356
+  {DBGFIELD("IIC_SSE_PMADD_WriteVecIMul") 1, 0, 0, 32, 3,  3, 1,  0, 0}, // #357
+  {DBGFIELD("IIC_SSE_INTMUL_P_RM_WriteVecIMulLd_ReadAfterLd") 1, 0, 0, 27, 4, 13, 1,  1, 1}, // #358
+  {DBGFIELD("IIC_SSE_INTMUL_P_RR_WriteVecIMul") 1, 0, 0, 32, 3,  3, 1,  0, 0}, // #359
+  {DBGFIELD("IIC_POP_REG16_WriteLoad") 1, 0, 0,  3, 1,  7, 1,  0, 0}, // #360
+  {DBGFIELD("IIC_POP_MEM_WriteLoad") 1, 0, 0,  3, 1,  7, 1,  0, 0}, // #361
+  {DBGFIELD("IIC_POP_REG_WriteLoad") 1, 0, 0,  3, 1,  7, 1,  0, 0}, // #362
+  {DBGFIELD("IIC_POP_A_WriteLoad") 1, 0, 0,  3, 1,  7, 1,  0, 0}, // #363
+  {DBGFIELD("IIC_POP_SR_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #364
+  {DBGFIELD("IIC_POP_F_WriteLoad") 1, 0, 0,  3, 1,  7, 1,  0, 0}, // #365
+  {DBGFIELD("IIC_POP_FD_WriteLoad") 1, 0, 0,  3, 1,  7, 1,  0, 0}, // #366
+  {DBGFIELD("IIC_POP_SR_SS_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #367
+  {DBGFIELD("IIC_SSE_PSHUFB_RM_WriteShuffleLd_ReadAfterLd") 1, 0, 0,  6, 3,  3, 1,  1, 1}, // #368
+  {DBGFIELD("IIC_SSE_PSHUFB_RR_WriteShuffle") 1, 0, 0, 10, 2,  2, 1,  0, 0}, // #369
+  {DBGFIELD("IIC_SSE_PSHUF_WriteShuffleLd") 1, 0, 0,  6, 3,  3, 1,  0, 0}, // #370
+  {DBGFIELD("IIC_SSE_PSHUF_WriteShuffle") 1, 0, 0, 10, 2,  2, 1,  0, 0}, // #371
+  {DBGFIELD("IIC_SSE_PSIGN_RM_WriteVecALULd_ReadAfterLd") 1, 0, 0,  6, 3,  3, 1,  1, 1}, // #372
+  {DBGFIELD("IIC_SSE_PSIGN_RR_WriteVecALU") 1, 0, 0, 10, 2,  2, 1,  0, 0}, // #373
+  {DBGFIELD("WriteVecShift")      1, 0, 0, 15, 2,  2, 1,  0, 0}, // #374
+  {DBGFIELD("IIC_SSE_INTSH_P_RI_WriteVecShift") 1, 0, 0, 15, 2,  2, 1,  0, 0}, // #375
+  {DBGFIELD("IIC_SSE_INTSH_P_RM_WriteVecShiftLd_ReadAfterLd") 1, 0, 0, 12, 3,  3, 1,  1, 1}, // #376
+  {DBGFIELD("IIC_SSE_INTSH_P_RR_WriteVecShift") 1, 0, 0, 15, 2,  2, 1,  0, 0}, // #377
+  {DBGFIELD("IIC_SSE_UNPCK_WriteShuffleLd_ReadAfterLd") 1, 0, 0,  6, 3,  3, 1,  1, 1}, // #378
+  {DBGFIELD("IIC_SSE_UNPCK_WriteShuffle") 1, 0, 0, 10, 2,  2, 1,  0, 0}, // #379
+  {DBGFIELD("IIC_PUSH_REG_WriteStore") 1, 0, 0,  2, 2,  2, 1,  0, 0}, // #380
+  {DBGFIELD("IIC_PUSH_MEM_WriteStore") 1, 0, 0,  2, 2,  2, 1,  0, 0}, // #381
+  {DBGFIELD("IIC_PUSH_IMM_WriteStore") 1, 0, 0,  2, 2,  2, 1,  0, 0}, // #382
+  {DBGFIELD("IIC_PUSH_A_WriteStore") 1, 0, 0,  2, 2,  2, 1,  0, 0}, // #383
+  {DBGFIELD("IIC_PUSH_SR_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #384
+  {DBGFIELD("IIC_PUSH_CS_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #385
+  {DBGFIELD("IIC_PUSH_F_WriteStore") 1, 0, 0,  2, 2,  2, 1,  0, 0}, // #386
+  {DBGFIELD("IIC_SR_WriteShiftLd_WriteRMW") 2, 0, 0, 35, 4,  3, 2,  0, 0}, // #387
+  {DBGFIELD("IIC_SR_WriteShift")  1, 0, 0, 15, 2,  2, 1,  0, 0}, // #388
+  {DBGFIELD("IIC_SSE_RCPP_RM_WriteFRcpLd") 1, 0, 0, 27, 4, 13, 1,  0, 0}, // #389
+  {DBGFIELD("IIC_SSE_RCPP_RR_WriteFRcp") 1, 0, 0, 32, 3,  3, 1,  0, 0}, // #390
+  {DBGFIELD("IIC_SSE_RCPS_RM_WriteFRcpLd") 1, 0, 0, 27, 4, 13, 1,  0, 0}, // #391
+  {DBGFIELD("IIC_SSE_RCPS_RM_WriteFRcpLd_ReadAfterLd") 1, 0, 0, 27, 4, 13, 1,  1, 1}, // #392
+  {DBGFIELD("WriteFRcp")          1, 0, 0, 32, 3,  3, 1,  0, 0}, // #393
+  {DBGFIELD("IIC_SSE_RCPS_RR_WriteFRcp") 1, 0, 0, 32, 3,  3, 1,  0, 0}, // #394
+  {DBGFIELD("IIC_RDMSR_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #395
+  {DBGFIELD("IIC_RDPMC_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #396
+  {DBGFIELD("IIC_RDTSC_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #397
+  {DBGFIELD("IIC_REP_MOVS_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #398
+  {DBGFIELD("IIC_REP_STOS_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #399
+  {DBGFIELD("IIC_RET_IMM_WriteJumpLd") 1, 0, 0, 17, 5,  3, 1,  0, 0}, // #400
+  {DBGFIELD("WriteShiftLd")       1, 0, 0, 12, 3,  3, 1,  0, 0}, // #401
+  {DBGFIELD("WriteShift")         1, 0, 0, 15, 2,  2, 1,  0, 0}, // #402
+  {DBGFIELD("IIC_RSM_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #403
+  {DBGFIELD("IIC_SSE_SQRTP_RM_WriteFSqrtLd") 1, 0, 0, 27, 4, 14, 1,  0, 0}, // #404
+  {DBGFIELD("IIC_SSE_SQRTP_RR_WriteFSqrt") 1, 0, 0, 32, 3, 15, 1,  0, 0}, // #405
+  {DBGFIELD("IIC_SSE_SQRTS_RM_WriteFSqrtLd") 1, 0, 0, 27, 4, 14, 1,  0, 0}, // #406
+  {DBGFIELD("IIC_SSE_SQRTS_RM_WriteFSqrtLd_ReadAfterLd") 1, 0, 0, 27, 4, 14, 1,  1, 1}, // #407
+  {DBGFIELD("WriteFSqrt")         1, 0, 0, 32, 3, 15, 1,  0, 0}, // #408
+  {DBGFIELD("IIC_SSE_SQRTS_RR_WriteFSqrt") 1, 0, 0, 32, 3, 15, 1,  0, 0}, // #409
+  {DBGFIELD("WriteShiftLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd") 1, 0, 0, 12, 3,  3, 1,  2, 1}, // #410
+  {DBGFIELD("IIC_SCAS_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #411
+  {DBGFIELD("IIC_SET_M_WriteALU_WriteStore") 2, 0, 0,  2, 3, 16, 2,  0, 0}, // #412
+  {DBGFIELD("IIC_SET_R_WriteALU") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #413
+  {DBGFIELD("IIC_SSE_SFENCE_WriteLoad") 1, 0, 0,  3, 1,  7, 1,  0, 0}, // #414
+  {DBGFIELD("IIC_SGDT_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #415
+  {DBGFIELD("IIC_SHD16_MEM_CL_WriteShiftLd_WriteRMW") 2, 0, 0, 35, 4,  3, 2,  0, 0}, // #416
+  {DBGFIELD("IIC_SHD16_MEM_IM_WriteShiftLd_WriteRMW") 2, 0, 0, 35, 4,  3, 2,  0, 0}, // #417
+  {DBGFIELD("IIC_SHD16_REG_CL_WriteShift") 1, 0, 0, 15, 2,  2, 1,  0, 0}, // #418
+  {DBGFIELD("IIC_SHD16_REG_IM_WriteShift") 1, 0, 0, 15, 2,  2, 1,  0, 0}, // #419
+  {DBGFIELD("IIC_SHD32_MEM_CL_WriteShiftLd_WriteRMW") 2, 0, 0, 35, 4,  3, 2,  0, 0}, // #420
+  {DBGFIELD("IIC_SHD32_MEM_IM_WriteShiftLd_WriteRMW") 2, 0, 0, 35, 4,  3, 2,  0, 0}, // #421
+  {DBGFIELD("IIC_SHD32_REG_CL_WriteShift") 1, 0, 0, 15, 2,  2, 1,  0, 0}, // #422
+  {DBGFIELD("IIC_SHD32_REG_IM_WriteShift") 1, 0, 0, 15, 2,  2, 1,  0, 0}, // #423
+  {DBGFIELD("IIC_SHD64_MEM_CL_WriteShiftLd_WriteRMW") 2, 0, 0, 35, 4,  3, 2,  0, 0}, // #424
+  {DBGFIELD("IIC_SHD64_MEM_IM_WriteShiftLd_WriteRMW") 2, 0, 0, 35, 4,  3, 2,  0, 0}, // #425
+  {DBGFIELD("IIC_SHD64_REG_CL_WriteShift") 1, 0, 0, 15, 2,  2, 1,  0, 0}, // #426
+  {DBGFIELD("IIC_SHD64_REG_IM_WriteShift") 1, 0, 0, 15, 2,  2, 1,  0, 0}, // #427
+  {DBGFIELD("IIC_SSE_SHUFP_WriteShuffleLd_ReadAfterLd") 1, 0, 0,  6, 3,  3, 1,  1, 1}, // #428
+  {DBGFIELD("IIC_SSE_SHUFP_WriteShuffle") 1, 0, 0, 10, 2,  2, 1,  0, 0}, // #429
+  {DBGFIELD("IIC_SIDT_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #430
+  {DBGFIELD("IIC_SLDT_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #431
+  {DBGFIELD("IIC_SMSW_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #432
+  {DBGFIELD("IIC_STC_WriteALU")   1, 0, 0,  1, 1,  2, 1,  0, 0}, // #433
+  {DBGFIELD("IIC_STD_WriteALU")   1, 0, 0,  1, 1,  2, 1,  0, 0}, // #434
+  {DBGFIELD("IIC_STI_WriteALU")   1, 0, 0,  1, 1,  2, 1,  0, 0}, // #435
+  {DBGFIELD("IIC_SSE_STMXCSR_WriteStore") 1, 0, 0,  2, 2,  2, 1,  0, 0}, // #436
+  {DBGFIELD("IIC_STOS_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #437
+  {DBGFIELD("IIC_STR_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #438
+  {DBGFIELD("IIC_FST80_WriteStore") 1, 0, 0,  2, 2,  2, 1,  0, 0}, // #439
+  {DBGFIELD("IIC_FST_WriteMove")  1, 0, 0,  1, 1,  2, 1,  0, 0}, // #440
+  {DBGFIELD("IIC_SWAPGS_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #441
+  {DBGFIELD("IIC_SYSCALL_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #442
+  {DBGFIELD("IIC_SYS_ENTER_EXIT_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #443
+  {DBGFIELD("IIC_JMP_REL_WriteJumpLd") 1, 0, 0, 17, 5,  3, 1,  0, 0}, // #444
+  {DBGFIELD("IIC_JMP_MEM_WriteJump") 1, 0, 0, 22, 4,  2, 1,  0, 0}, // #445
+  {DBGFIELD("IIC_JMP_REG_WriteJumpLd") 1, 0, 0, 17, 5,  3, 1,  0, 0}, // #446
+  {DBGFIELD("WriteJumpLd")        1, 0, 0, 17, 5,  3, 1,  0, 0}, // #447
+  {DBGFIELD("WriteJump")          1, 0, 0, 22, 4,  2, 1,  0, 0}, // #448
+  {DBGFIELD("IIC_FUCOMI_WriteFAdd") 1, 0, 0,  9, 3,  6, 1,  0, 0}, // #449
+  {DBGFIELD("IIC_FUCOM_WriteFAdd") 1, 0, 0,  9, 3,  6, 1,  0, 0}, // #450
+  {DBGFIELD("WriteFAdd")          1, 0, 0,  9, 3,  6, 1,  0, 0}, // #451
+  {DBGFIELD("WriteCvtI2FLd")      1, 0, 0,  5, 4,  8, 1,  0, 0}, // #452
+  {DBGFIELD("WriteCvtI2F")        1, 0, 0,  9, 3,  7, 1,  0, 0}, // #453
+  {DBGFIELD("WriteCvtF2ILd")      1, 0, 0,  5, 4,  5, 1,  0, 0}, // #454
+  {DBGFIELD("WriteCvtF2I")        1, 0, 0,  9, 3,  6, 1,  0, 0}, // #455
+  {DBGFIELD("WriteCvtI2FLd_ReadAfterLd") 1, 0, 0,  5, 4,  8, 1,  1, 1}, // #456
+  {DBGFIELD("IIC_VERR_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #457
+  {DBGFIELD("IIC_VERW_REG_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #458
+  {DBGFIELD("IIC_VERW_MEM_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #459
+  {DBGFIELD("WriteShuffleLd")     1, 0, 0,  6, 3,  3, 1,  0, 0}, // #460
+  {DBGFIELD("WriteShuffle")       1, 0, 0, 10, 2,  2, 1,  0, 0}, // #461
+  {DBGFIELD("WriteStore")         1, 0, 0,  2, 2,  2, 1,  0, 0}, // #462
+  {DBGFIELD("WriteVecALULd")      1, 0, 0,  6, 3,  3, 1,  0, 0}, // #463
+  {DBGFIELD("WriteShuffleLd_ReadAfterLd") 1, 0, 0,  6, 3,  3, 1,  1, 1}, // #464
+  {DBGFIELD("WriteFRcpLd_ReadAfterLd") 1, 0, 0, 27, 4, 13, 1,  1, 1}, // #465
+  {DBGFIELD("WriteFSqrtLd_ReadAfterLd") 1, 0, 0, 27, 4, 14, 1,  1, 1}, // #466
+  {DBGFIELD("IIC_WAIT_WriteMicrocoded") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #467
+  {DBGFIELD("IIC_WRMSR_WriteSystem") 1, 0, 0,  1, 1,  1, 1,  0, 0}, // #468
+  {DBGFIELD("IIC_XADD_MEM_WriteALULd_WriteRMW") 2, 0, 0,  2, 3,  3, 2,  0, 0}, // #469
+  {DBGFIELD("IIC_XADD_REG_WriteALU") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #470
+  {DBGFIELD("IIC_XCHG_REG_WriteALU") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #471
+  {DBGFIELD("IIC_XCHG_MEM_WriteALULd_WriteRMW") 2, 0, 0,  2, 3,  3, 2,  0, 0}, // #472
+  {DBGFIELD("IIC_FXCH_WriteMove") 1, 0, 0,  1, 1,  2, 1,  0, 0}, // #473
+  {DBGFIELD("IIC_XLAT_WriteLoad") 1, 0, 0,  3, 1,  7, 1,  0, 0} // #474
+}; // SandyBridgeModelSchedClasses
+
+// {Name, NumMicroOps, BeginGroup, EndGroup, WriteProcResIdx,#, WriteLatencyIdx,#, ReadAdvanceIdx,#}
+static const llvm::MCSchedClassDesc HaswellModelSchedClasses[] = {
+  {DBGFIELD("InvalidSchedClass")  65535, 0, 0,  0, 0,  0, 0,  0, 0},
+  {DBGFIELD("IIC_AAA_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #1
+  {DBGFIELD("IIC_AAD_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #2
+  {DBGFIELD("IIC_AAM_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #3
+  {DBGFIELD("IIC_AAS_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #4
+  {DBGFIELD("IIC_BIN_NONMEM_WriteALU") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #5
+  {DBGFIELD("IIC_BIN_MEM_WriteALULd_WriteRMW") 2, 0, 0, 40, 4,  3, 2,  0, 0}, // #6
+  {DBGFIELD("IIC_BIN_NONMEM_WriteALULd_ReadAfterLd") 1, 0, 0, 41, 3,  3, 1,  1, 1}, // #7
+  {DBGFIELD("IIC_BIN_MEM_WriteALULd") 1, 0, 0, 41, 3,  3, 1,  0, 0}, // #8
+  {DBGFIELD("WriteALU")           1, 0, 0, 39, 1,  2, 1,  0, 0}, // #9
+  {DBGFIELD("IIC_SSE_ALU_F64P_RM_WriteFAddLd_ReadAfterLd") 1, 0, 0, 44, 6,  5, 1,  1, 1}, // #10
+  {DBGFIELD("IIC_SSE_ALU_F64P_RR_WriteFAdd") 1, 0, 0, 50, 4,  6, 1,  0, 0}, // #11
+  {DBGFIELD("IIC_SSE_ALU_F32P_RM_WriteFAddLd_ReadAfterLd") 1, 0, 0, 44, 6,  5, 1,  1, 1}, // #12
+  {DBGFIELD("IIC_SSE_ALU_F32P_RR_WriteFAdd") 1, 0, 0, 50, 4,  6, 1,  0, 0}, // #13
+  {DBGFIELD("IIC_SSE_ALU_F64S_RM_WriteFAddLd_ReadAfterLd") 1, 0, 0, 44, 6,  5, 1,  1, 1}, // #14
+  {DBGFIELD("IIC_SSE_ALU_F64S_RR_WriteFAdd") 1, 0, 0, 50, 4,  6, 1,  0, 0}, // #15
+  {DBGFIELD("IIC_SSE_ALU_F32S_RM_WriteFAddLd_ReadAfterLd") 1, 0, 0, 44, 6,  5, 1,  1, 1}, // #16
+  {DBGFIELD("IIC_SSE_ALU_F32S_RR_WriteFAdd") 1, 0, 0, 50, 4,  6, 1,  0, 0}, // #17
+  {DBGFIELD("IIC_SSE_ALU_F64P_RR_WriteFAddLd_ReadAfterLd") 1, 0, 0, 44, 6,  5, 1,  1, 1}, // #18
+  {DBGFIELD("IIC_SSE_ALU_F32P_RR_WriteFAddLd_ReadAfterLd") 1, 0, 0, 44, 6,  5, 1,  1, 1}, // #19
+  {DBGFIELD("IIC_BIN_MEM_WriteALULd_ReadAfterLd") 1, 0, 0, 41, 3,  3, 1,  1, 1}, // #20
+  {DBGFIELD("WriteVecLogicLd_ReadAfterLd") 1, 0, 0, 46, 4,  3, 1,  1, 1}, // #21
+  {DBGFIELD("WriteVecLogic")      1, 0, 0, 38, 2,  2, 1,  0, 0}, // #22
+  {DBGFIELD("IIC_ARPL_MEM_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #23
+  {DBGFIELD("IIC_ARPL_REG_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #24
+  {DBGFIELD("WriteZero")          1, 0, 0,  0, 0,  2, 1,  0, 0}, // #25
+  {DBGFIELD("IIC_BOUND_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #26
+  {DBGFIELD("IIC_BSF_WriteShiftLd") 1, 0, 0, 54, 4,  3, 1,  0, 0}, // #27
+  {DBGFIELD("IIC_BSF_WriteShift") 1, 0, 0, 58, 2,  2, 1,  0, 0}, // #28
+  {DBGFIELD("IIC_BSR_WriteShiftLd") 1, 0, 0, 54, 4,  3, 1,  0, 0}, // #29
+  {DBGFIELD("IIC_BSR_WriteShift") 1, 0, 0, 58, 2,  2, 1,  0, 0}, // #30
+  {DBGFIELD("IIC_BSWAP_WriteALU") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #31
+  {DBGFIELD("IIC_BT_MI_WriteALU") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #32
+  {DBGFIELD("IIC_BT_MR_WriteALULd") 1, 0, 0, 41, 3,  3, 1,  0, 0}, // #33
+  {DBGFIELD("IIC_BT_RI_WriteALU") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #34
+  {DBGFIELD("IIC_BT_RR_WriteALU") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #35
+  {DBGFIELD("IIC_BTX_MI_WriteALULd_WriteRMW") 2, 0, 0, 40, 4,  3, 2,  0, 0}, // #36
+  {DBGFIELD("IIC_BTX_MR_WriteALULd_WriteRMW") 2, 0, 0, 40, 4,  3, 2,  0, 0}, // #37
+  {DBGFIELD("IIC_BTX_RI_WriteALU") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #38
+  {DBGFIELD("IIC_BTX_RR_WriteALU") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #39
+  {DBGFIELD("IIC_CALL_MEM_WriteJumpLd") 1, 0, 0, 60, 8,  3, 1,  0, 0}, // #40
+  {DBGFIELD("IIC_CALL_RI_WriteJump") 1, 0, 0, 68, 6,  2, 1,  0, 0}, // #41
+  {DBGFIELD("IIC_CALL_MEM_WriteJump") 1, 0, 0, 68, 6,  2, 1,  0, 0}, // #42
+  {DBGFIELD("IIC_CLC_WriteALU")   1, 0, 0, 39, 1,  2, 1,  0, 0}, // #43
+  {DBGFIELD("IIC_CLD_WriteALU")   1, 0, 0, 39, 1,  2, 1,  0, 0}, // #44
+  {DBGFIELD("IIC_SSE_PREFETCH_WriteLoad") 1, 0, 0, 41, 2,  7, 1,  0, 0}, // #45
+  {DBGFIELD("IIC_CLI_WriteALU")   1, 0, 0, 39, 1,  2, 1,  0, 0}, // #46
+  {DBGFIELD("IIC_CLTS_WriteALU")  1, 0, 0, 39, 1,  2, 1,  0, 0}, // #47
+  {DBGFIELD("IIC_CMC_WriteALU")   1, 0, 0, 39, 1,  2, 1,  0, 0}, // #48
+  {DBGFIELD("IIC_CMOV16_RM_WriteALULd_ReadAfterLd") 1, 0, 0, 41, 3,  3, 1,  1, 1}, // #49
+  {DBGFIELD("IIC_CMOV16_RR_WriteALU") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #50
+  {DBGFIELD("IIC_CMOV32_RM_WriteALULd_ReadAfterLd") 1, 0, 0, 41, 3,  3, 1,  1, 1}, // #51
+  {DBGFIELD("IIC_CMOV32_RR_WriteALU") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #52
+  {DBGFIELD("IIC_SSE_CMPP_RM_WriteFAddLd_ReadAfterLd") 1, 0, 0, 44, 6,  5, 1,  1, 1}, // #53
+  {DBGFIELD("IIC_SSE_CMPP_RR_WriteFAdd") 1, 0, 0, 50, 4,  6, 1,  0, 0}, // #54
+  {DBGFIELD("IIC_CMPS_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #55
+  {DBGFIELD("IIC_CMPXCHG_16B_WriteALULd_WriteRMW") 2, 0, 0, 40, 4,  3, 2,  0, 0}, // #56
+  {DBGFIELD("IIC_CMPXCHG_MEM_WriteALULd_WriteRMW") 2, 0, 0, 40, 4,  3, 2,  0, 0}, // #57
+  {DBGFIELD("IIC_CMPXCHG_REG_WriteALU") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #58
+  {DBGFIELD("IIC_CMPXCHG_8B_WriteALULd_WriteRMW") 2, 0, 0, 40, 4,  3, 2,  0, 0}, // #59
+  {DBGFIELD("IIC_CMPXCHG_MEM8_WriteALULd_WriteRMW") 2, 0, 0, 40, 4,  3, 2,  0, 0}, // #60
+  {DBGFIELD("IIC_CMPXCHG_REG8_WriteALU") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #61
+  {DBGFIELD("IIC_SSE_COMIS_RM_WriteFAddLd_ReadAfterLd") 1, 0, 0, 44, 6,  5, 1,  1, 1}, // #62
+  {DBGFIELD("IIC_SSE_COMIS_RR_WriteFAdd") 1, 0, 0, 50, 4,  6, 1,  0, 0}, // #63
+  {DBGFIELD("IIC_FCOMI_WriteFAdd") 1, 0, 0, 50, 4,  6, 1,  0, 0}, // #64
+  {DBGFIELD("IIC_CPUID_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #65
+  {DBGFIELD("IIC_SSE_CVT_PD_RR_WriteCvtI2FLd") 1, 0, 0, 44, 6,  8, 1,  0, 0}, // #66
+  {DBGFIELD("IIC_SSE_CVT_PD_RM_WriteCvtI2F") 1, 0, 0, 50, 4,  7, 1,  0, 0}, // #67
+  {DBGFIELD("IIC_SSE_CVT_PS_RM_WriteCvtI2FLd") 1, 0, 0, 44, 6,  8, 1,  0, 0}, // #68
+  {DBGFIELD("IIC_SSE_CVT_PS_RR_WriteCvtI2F") 1, 0, 0, 50, 4,  7, 1,  0, 0}, // #69
+  {DBGFIELD("IIC_SSE_CVT_PD_RM_WriteCvtF2ILd") 1, 0, 0, 44, 6,  5, 1,  0, 0}, // #70
+  {DBGFIELD("IIC_SSE_CVT_PD_RR_WriteCvtF2I") 1, 0, 0, 50, 4,  6, 1,  0, 0}, // #71
+  {DBGFIELD("IIC_SSE_CVT_PD_RM_WriteCvtF2FLd") 1, 0, 0, 44, 6,  5, 1,  0, 0}, // #72
+  {DBGFIELD("IIC_SSE_CVT_PD_RR_WriteCvtF2F") 1, 0, 0, 50, 4,  6, 1,  0, 0}, // #73
+  {DBGFIELD("IIC_SSE_CVT_PS_RM_WriteCvtF2ILd") 1, 0, 0, 44, 6,  5, 1,  0, 0}, // #74
+  {DBGFIELD("IIC_SSE_CVT_PS_RR_WriteCvtF2I") 1, 0, 0, 50, 4,  6, 1,  0, 0}, // #75
+  {DBGFIELD("IIC_SSE_CVT_SD2SI_RM_WriteCvtF2ILd") 1, 0, 0, 44, 6,  5, 1,  0, 0}, // #76
+  {DBGFIELD("IIC_SSE_CVT_SD2SI_RR_WriteCvtF2I") 1, 0, 0, 50, 4,  6, 1,  0, 0}, // #77
+  {DBGFIELD("IIC_SSE_CVT_Scalar_RM_WriteCvtF2FLd") 1, 0, 0, 44, 6,  5, 1,  0, 0}, // #78
+  {DBGFIELD("IIC_SSE_CVT_Scalar_RR_WriteCvtF2F") 1, 0, 0, 50, 4,  6, 1,  0, 0}, // #79
+  {DBGFIELD("IIC_SSE_CVT_Scalar_RM_WriteCvtI2FLd") 1, 0, 0, 44, 6,  8, 1,  0, 0}, // #80
+  {DBGFIELD("IIC_SSE_CVT_Scalar_RR_WriteCvtI2F") 1, 0, 0, 50, 4,  7, 1,  0, 0}, // #81
+  {DBGFIELD("IIC_SSE_CVT_SS2SI64_RM_WriteCvtF2ILd") 1, 0, 0, 44, 6,  5, 1,  0, 0}, // #82
+  {DBGFIELD("IIC_SSE_CVT_SS2SI64_RR_WriteCvtF2I") 1, 0, 0, 50, 4,  6, 1,  0, 0}, // #83
+  {DBGFIELD("IIC_SSE_CVT_SS2SI32_RM_WriteCvtF2ILd") 1, 0, 0, 44, 6,  5, 1,  0, 0}, // #84
+  {DBGFIELD("IIC_SSE_CVT_SS2SI32_RR_WriteCvtF2I") 1, 0, 0, 50, 4,  6, 1,  0, 0}, // #85
+  {DBGFIELD("IIC_DAA_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #86
+  {DBGFIELD("IIC_DAS_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #87
+  {DBGFIELD("IIC_UNARY_MEM_WriteALULd_WriteRMW") 2, 0, 0, 40, 4,  3, 2,  0, 0}, // #88
+  {DBGFIELD("IIC_UNARY_REG_WriteALU") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #89
+  {DBGFIELD("IIC_DIV16_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, 0, 0, 74, 8,  9, 1,  2, 2}, // #90
+  {DBGFIELD("IIC_DIV16_WriteIDiv") 1, 0, 0, 82, 6, 10, 1,  0, 0}, // #91
+  {DBGFIELD("IIC_DIV32_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, 0, 0, 74, 8,  9, 1,  2, 2}, // #92
+  {DBGFIELD("IIC_DIV32_WriteIDiv") 1, 0, 0, 82, 6, 10, 1,  0, 0}, // #93
+  {DBGFIELD("IIC_DIV64_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, 0, 0, 74, 8,  9, 1,  2, 2}, // #94
+  {DBGFIELD("IIC_DIV64_WriteIDiv") 1, 0, 0, 82, 6, 10, 1,  0, 0}, // #95
+  {DBGFIELD("IIC_DIV8_MEM_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, 0, 0, 74, 8,  9, 1,  2, 2}, // #96
+  {DBGFIELD("IIC_DIV8_REG_WriteIDiv") 1, 0, 0, 82, 6, 10, 1,  0, 0}, // #97
+  {DBGFIELD("IIC_SSE_DIV_F64P_RM_WriteFDivLd_ReadAfterLd") 1, 0, 0, 75, 7, 11, 1,  1, 1}, // #98
+  {DBGFIELD("IIC_SSE_DIV_F64P_RR_WriteFDiv") 1, 0, 0, 83, 5, 12, 1,  0, 0}, // #99
+  {DBGFIELD("IIC_SSE_DIV_F32P_RR_WriteFDiv") 1, 0, 0, 83, 5, 12, 1,  0, 0}, // #100
+  {DBGFIELD("IIC_SSE_DIV_F64S_RM_WriteFDivLd_ReadAfterLd") 1, 0, 0, 75, 7, 11, 1,  1, 1}, // #101
+  {DBGFIELD("IIC_SSE_DIV_F64S_RR_WriteFDiv") 1, 0, 0, 83, 5, 12, 1,  0, 0}, // #102
+  {DBGFIELD("IIC_SSE_DIV_F32S_RR_WriteFDiv") 1, 0, 0, 83, 5, 12, 1,  0, 0}, // #103
+  {DBGFIELD("IIC_RET_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #104
+  {DBGFIELD("WriteSystem")        1, 0, 0, 39, 1,  1, 1,  0, 0}, // #105
+  {DBGFIELD("IIC_ENTER_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #106
+  {DBGFIELD("IIC_F2XM1_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #107
+  {DBGFIELD("IIC_CALL_FAR_PTR_WriteJump") 1, 0, 0, 68, 6,  2, 1,  0, 0}, // #108
+  {DBGFIELD("IIC_CALL_FAR_MEM_WriteJumpLd") 1, 0, 0, 60, 8,  3, 1,  0, 0}, // #109
+  {DBGFIELD("IIC_CALL_FAR_MEM_WriteJump") 1, 0, 0, 68, 6,  2, 1,  0, 0}, // #110
+  {DBGFIELD("IIC_JMP_FAR_PTR_WriteJump") 1, 0, 0, 68, 6,  2, 1,  0, 0}, // #111
+  {DBGFIELD("IIC_JMP_FAR_MEM_WriteJumpLd") 1, 0, 0, 60, 8,  3, 1,  0, 0}, // #112
+  {DBGFIELD("IIC_JMP_FAR_MEM_WriteJump") 1, 0, 0, 68, 6,  2, 1,  0, 0}, // #113
+  {DBGFIELD("IIC_FCOMPP_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #114
+  {DBGFIELD("IIC_FPSTP_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #115
+  {DBGFIELD("IIC_FFREE_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #116
+  {DBGFIELD("IIC_FLDCW_WriteLoad") 1, 0, 0, 41, 2,  7, 1,  0, 0}, // #117
+  {DBGFIELD("IIC_FLDL_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #118
+  {DBGFIELD("IIC_FNCLEX_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #119
+  {DBGFIELD("IIC_FNINIT_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #120
+  {DBGFIELD("IIC_FNOP_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #121
+  {DBGFIELD("IIC_FNSTCW_WriteALU") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #122
+  {DBGFIELD("IIC_FNSTSW_WriteALU") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #123
+  {DBGFIELD("IIC_FPATAN_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #124
+  {DBGFIELD("IIC_FPREM_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #125
+  {DBGFIELD("IIC_FPREM1_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #126
+  {DBGFIELD("IIC_FPTAN_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #127
+  {DBGFIELD("IIC_FRNDINT_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #128
+  {DBGFIELD("IIC_FSCALE_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #129
+  {DBGFIELD("IIC_FSINCOS_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #130
+  {DBGFIELD("IIC_FXAM_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #131
+  {DBGFIELD("IIC_FXRSTOR_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #132
+  {DBGFIELD("IIC_FXSAVE_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #133
+  {DBGFIELD("IIC_FXTRACT_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #134
+  {DBGFIELD("IIC_FYL2X_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #135
+  {DBGFIELD("IIC_FYL2XP1_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #136
+  {DBGFIELD("IIC_SSE_BIT_P_RM_WriteFAddLd_ReadAfterLd") 1, 0, 0, 44, 6,  5, 1,  1, 1}, // #137
+  {DBGFIELD("IIC_SSE_BIT_P_RR_WriteFAdd") 1, 0, 0, 50, 4,  6, 1,  0, 0}, // #138
+  {DBGFIELD("IIC_SSE_MOVA_P_RM_WriteLoad") 1, 0, 0, 41, 2,  7, 1,  0, 0}, // #139
+  {DBGFIELD("IIC_SSE_MOVA_P_RR_WriteMove") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #140
+  {DBGFIELD("IIC_SSE_HADDSUB_RM_WriteFAddLd_ReadAfterLd") 1, 0, 0, 44, 6,  5, 1,  1, 1}, // #141
+  {DBGFIELD("IIC_SSE_HADDSUB_RR_WriteFAdd") 1, 0, 0, 50, 4,  6, 1,  0, 0}, // #142
+  {DBGFIELD("IIC_HLT_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #143
+  {DBGFIELD("IIC_IDIV16_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, 0, 0, 74, 8,  9, 1,  2, 2}, // #144
+  {DBGFIELD("IIC_IDIV16_WriteIDiv") 1, 0, 0, 82, 6, 10, 1,  0, 0}, // #145
+  {DBGFIELD("IIC_IDIV32_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, 0, 0, 74, 8,  9, 1,  2, 2}, // #146
+  {DBGFIELD("IIC_IDIV32_WriteIDiv") 1, 0, 0, 82, 6, 10, 1,  0, 0}, // #147
+  {DBGFIELD("IIC_IDIV64_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, 0, 0, 74, 8,  9, 1,  2, 2}, // #148
+  {DBGFIELD("IIC_IDIV64_WriteIDiv") 1, 0, 0, 82, 6, 10, 1,  0, 0}, // #149
+  {DBGFIELD("IIC_IDIV8_WriteIDivLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, 0, 0, 74, 8,  9, 1,  2, 2}, // #150
+  {DBGFIELD("IIC_IDIV8_WriteIDiv") 1, 0, 0, 82, 6, 10, 1,  0, 0}, // #151
+  {DBGFIELD("IIC_FILD_WriteLoad") 1, 0, 0, 41, 2,  7, 1,  0, 0}, // #152
+  {DBGFIELD("IIC_IMUL16_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, 0, 0, 44, 6,  5, 1,  2, 2}, // #153
+  {DBGFIELD("IIC_IMUL16_RR_WriteIMul") 1, 0, 0, 50, 4,  6, 1,  0, 0}, // #154
+  {DBGFIELD("IIC_IMUL16_RM_WriteIMulLd_ReadAfterLd") 1, 0, 0, 44, 6,  5, 1,  1, 1}, // #155
+  {DBGFIELD("IIC_IMUL16_RMI_WriteIMulLd") 1, 0, 0, 44, 6,  5, 1,  0, 0}, // #156
+  {DBGFIELD("IIC_IMUL16_RRI_WriteIMul") 1, 0, 0, 50, 4,  6, 1,  0, 0}, // #157
+  {DBGFIELD("IIC_IMUL32_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, 0, 0, 44, 6,  5, 1,  2, 2}, // #158
+  {DBGFIELD("IIC_IMUL32_RR_WriteIMul") 1, 0, 0, 50, 4,  6, 1,  0, 0}, // #159
+  {DBGFIELD("IIC_IMUL32_RM_WriteIMulLd_ReadAfterLd") 1, 0, 0, 44, 6,  5, 1,  1, 1}, // #160
+  {DBGFIELD("IIC_IMUL32_RMI_WriteIMulLd") 1, 0, 0, 44, 6,  5, 1,  0, 0}, // #161
+  {DBGFIELD("IIC_IMUL32_RRI_WriteIMul") 1, 0, 0, 50, 4,  6, 1,  0, 0}, // #162
+  {DBGFIELD("IIC_IMUL64_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, 0, 0, 44, 6,  5, 1,  2, 2}, // #163
+  {DBGFIELD("IIC_IMUL64_RR_WriteIMul") 1, 0, 0, 50, 4,  6, 1,  0, 0}, // #164
+  {DBGFIELD("IIC_IMUL64_RM_WriteIMulLd_ReadAfterLd") 1, 0, 0, 44, 6,  5, 1,  1, 1}, // #165
+  {DBGFIELD("IIC_IMUL64_RMI_WriteIMulLd") 1, 0, 0, 44, 6,  5, 1,  0, 0}, // #166
+  {DBGFIELD("IIC_IMUL64_RRI_WriteIMul") 1, 0, 0, 50, 4,  6, 1,  0, 0}, // #167
+  {DBGFIELD("IIC_IMUL8_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, 0, 0, 44, 6,  5, 1,  2, 2}, // #168
+  {DBGFIELD("IIC_IMUL8_WriteIMul") 1, 0, 0, 50, 4,  6, 1,  0, 0}, // #169
+  {DBGFIELD("IIC_INS_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #170
+  {DBGFIELD("IIC_IN_RI_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #171
+  {DBGFIELD("IIC_IN_RR_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #172
+  {DBGFIELD("IIC_INT_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #173
+  {DBGFIELD("IIC_INT3_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #174
+  {DBGFIELD("IIC_INVD_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #175
+  {DBGFIELD("IIC_INVLPG_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #176
+  {DBGFIELD("IIC_IRET_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #177
+  {DBGFIELD("IIC_FST_WriteStore") 1, 0, 0, 88, 2,  2, 1,  0, 0}, // #178
+  {DBGFIELD("IIC_FIST_WriteStore") 1, 0, 0, 88, 2,  2, 1,  0, 0}, // #179
+  {DBGFIELD("IIC_SSE_CVT_Scalar_RM_WriteCvtF2FLd_ReadAfterLd") 1, 0, 0, 44, 6,  5, 1,  1, 1}, // #180
+  {DBGFIELD("IIC_SSE_CVT_Scalar_RM_WriteCvtI2FLd_ReadAfterLd") 1, 0, 0, 44, 6,  8, 1,  1, 1}, // #181
+  {DBGFIELD("WriteLoad")          1, 0, 0, 41, 2,  7, 1,  0, 0}, // #182
+  {DBGFIELD("IIC_Jcc_WriteJump")  1, 0, 0, 68, 6,  2, 1,  0, 0}, // #183
+  {DBGFIELD("IIC_JCXZ_WriteJump") 1, 0, 0, 68, 6,  2, 1,  0, 0}, // #184
+  {DBGFIELD("IIC_JMP_MEM_WriteJumpLd") 1, 0, 0, 60, 8,  3, 1,  0, 0}, // #185
+  {DBGFIELD("IIC_JMP_REG_WriteJump") 1, 0, 0, 68, 6,  2, 1,  0, 0}, // #186
+  {DBGFIELD("IIC_JMP_REL_WriteJump") 1, 0, 0, 68, 6,  2, 1,  0, 0}, // #187
+  {DBGFIELD("IIC_AHF_WriteALU")   1, 0, 0, 39, 1,  2, 1,  0, 0}, // #188
+  {DBGFIELD("IIC_LAR_RM_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #189
+  {DBGFIELD("IIC_LAR_RR_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #190
+  {DBGFIELD("IIC_CMPX_LOCK_WriteALULd_WriteRMW") 2, 0, 0, 40, 4,  3, 2,  0, 0}, // #191
+  {DBGFIELD("IIC_CMPX_LOCK_16B_WriteALULd_WriteRMW") 2, 0, 0, 40, 4,  3, 2,  0, 0}, // #192
+  {DBGFIELD("IIC_CMPX_LOCK_8_WriteALULd_WriteRMW") 2, 0, 0, 40, 4,  3, 2,  0, 0}, // #193
+  {DBGFIELD("IIC_CMPX_LOCK_8B_WriteALULd_WriteRMW") 2, 0, 0, 40, 4,  3, 2,  0, 0}, // #194
+  {DBGFIELD("IIC_SSE_LDDQU_WriteLoad") 1, 0, 0, 41, 2,  7, 1,  0, 0}, // #195
+  {DBGFIELD("IIC_SSE_LDMXCSR_WriteLoad") 1, 0, 0, 41, 2,  7, 1,  0, 0}, // #196
+  {DBGFIELD("IIC_LXS_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #197
+  {DBGFIELD("IIC_FLDZ_WriteZero") 1, 0, 0,  0, 0,  2, 1,  0, 0}, // #198
+  {DBGFIELD("IIC_FIST_WriteZero") 1, 0, 0,  0, 0,  2, 1,  0, 0}, // #199
+  {DBGFIELD("IIC_FLD_WriteLoad")  1, 0, 0, 41, 2,  7, 1,  0, 0}, // #200
+  {DBGFIELD("IIC_FLD80_WriteLoad") 1, 0, 0, 41, 2,  7, 1,  0, 0}, // #201
+  {DBGFIELD("IIC_FLD_WriteMove")  1, 0, 0, 39, 1,  2, 1,  0, 0}, // #202
+  {DBGFIELD("IIC_LEA_16_WriteLEA") 1, 0, 0, 51, 3,  2, 1,  0, 0}, // #203
+  {DBGFIELD("IIC_LEA_WriteLEA")   1, 0, 0, 51, 3,  2, 1,  0, 0}, // #204
+  {DBGFIELD("IIC_LEAVE_WriteALU") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #205
+  {DBGFIELD("IIC_SSE_LFENCE_WriteLoad") 1, 0, 0, 41, 2,  7, 1,  0, 0}, // #206
+  {DBGFIELD("IIC_LGDT_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #207
+  {DBGFIELD("IIC_LIDT_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #208
+  {DBGFIELD("IIC_LLDT_MEM_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #209
+  {DBGFIELD("IIC_LLDT_REG_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #210
+  {DBGFIELD("IIC_LMSW_REG_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #211
+  {DBGFIELD("IIC_LMSW_MEM_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #212
+  {DBGFIELD("IIC_ALU_MEM_WriteALULd_WriteRMW") 2, 0, 0, 40, 4,  3, 2,  0, 0}, // #213
+  {DBGFIELD("IIC_ALU_NONMEM_WriteALULd_WriteRMW") 2, 0, 0, 40, 4,  3, 2,  0, 0}, // #214
+  {DBGFIELD("IIC_LODS_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #215
+  {DBGFIELD("IIC_LOOP_WriteJump") 1, 0, 0, 68, 6,  2, 1,  0, 0}, // #216
+  {DBGFIELD("IIC_LOOPE_WriteJump") 1, 0, 0, 68, 6,  2, 1,  0, 0}, // #217
+  {DBGFIELD("IIC_LOOPNE_WriteJump") 1, 0, 0, 68, 6,  2, 1,  0, 0}, // #218
+  {DBGFIELD("IIC_RET_WriteJumpLd") 1, 0, 0, 60, 8,  3, 1,  0, 0}, // #219
+  {DBGFIELD("IIC_LSL_RM_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #220
+  {DBGFIELD("IIC_LSL_RR_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #221
+  {DBGFIELD("IIC_LTR_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #222
+  {DBGFIELD("IIC_XADD_LOCK_MEM_WriteALULd_WriteRMW") 2, 0, 0, 40, 4,  3, 2,  0, 0}, // #223
+  {DBGFIELD("IIC_XADD_LOCK_MEM8_WriteALULd_WriteRMW") 2, 0, 0, 40, 4,  3, 2,  0, 0}, // #224
+  {DBGFIELD("IIC_SSE_MASKMOV_WriteStore") 1, 0, 0, 88, 2,  2, 1,  0, 0}, // #225
+  {DBGFIELD("IIC_SSE_MFENCE_WriteLoad") 1, 0, 0, 41, 2,  7, 1,  0, 0}, // #226
+  {DBGFIELD("IIC_MMX_CVT_PD_RM_WriteCvtF2ILd") 1, 0, 0, 44, 6,  5, 1,  0, 0}, // #227
+  {DBGFIELD("IIC_MMX_CVT_PD_RR_WriteCvtF2I") 1, 0, 0, 50, 4,  6, 1,  0, 0}, // #228
+  {DBGFIELD("IIC_MMX_CVT_PS_RM_WriteCvtF2ILd") 1, 0, 0, 44, 6,  5, 1,  0, 0}, // #229
+  {DBGFIELD("IIC_MMX_CVT_PS_RR_WriteCvtF2I") 1, 0, 0, 50, 4,  6, 1,  0, 0}, // #230
+  {DBGFIELD("IIC_MMX_MASKMOV_WriteShuffle") 1, 0, 0, 51, 3,  2, 1,  0, 0}, // #231
+  {DBGFIELD("IIC_MMX_MOV_REG_MM_WriteMove") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #232
+  {DBGFIELD("IIC_MMX_MOV_MM_RM_WriteStore") 1, 0, 0, 88, 2,  2, 1,  0, 0}, // #233
+  {DBGFIELD("IIC_MMX_MOV_MM_RM_WriteLoad") 1, 0, 0, 41, 2,  7, 1,  0, 0}, // #234
+  {DBGFIELD("IIC_MMX_MOV_MM_RM_WriteMove") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #235
+  {DBGFIELD("IIC_MMX_MOVQ_RR_WriteMove") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #236
+  {DBGFIELD("IIC_MMX_MOVQ_RM_WriteStore") 1, 0, 0, 88, 2,  2, 1,  0, 0}, // #237
+  {DBGFIELD("WriteMove")          1, 0, 0, 39, 1,  2, 1,  0, 0}, // #238
+  {DBGFIELD("IIC_MMX_MOVQ_RM_WriteLoad") 1, 0, 0, 41, 2,  7, 1,  0, 0}, // #239
+  {DBGFIELD("IIC_MMX_ALU_RM_WriteVecALULd") 1, 0, 0, 45, 5,  3, 1,  0, 0}, // #240
+  {DBGFIELD("IIC_MMX_ALU_RR_WriteVecALU") 1, 0, 0, 51, 3,  2, 1,  0, 0}, // #241
+  {DBGFIELD("IIC_MMX_PCK_RM_WriteShuffleLd_ReadAfterLd") 1, 0, 0, 45, 5,  3, 1,  1, 1}, // #242
+  {DBGFIELD("IIC_MMX_PCK_RR_WriteShuffle") 1, 0, 0, 51, 3,  2, 1,  0, 0}, // #243
+  {DBGFIELD("IIC_MMX_ALU_RM_WriteVecALULd_ReadAfterLd") 1, 0, 0, 45, 5,  3, 1,  1, 1}, // #244
+  {DBGFIELD("IIC_MMX_ALUQ_RM_WriteVecALULd_ReadAfterLd") 1, 0, 0, 45, 5,  3, 1,  1, 1}, // #245
+  {DBGFIELD("IIC_MMX_ALUQ_RR_WriteVecALU") 1, 0, 0, 51, 3,  2, 1,  0, 0}, // #246
+  {DBGFIELD("IIC_MMX_MISC_FUNC_REG_WriteVecALULd_ReadAfterLd") 1, 0, 0, 45, 5,  3, 1,  1, 1}, // #247
+  {DBGFIELD("IIC_MMX_MISC_FUNC_MEM_WriteVecALU") 1, 0, 0, 51, 3,  2, 1,  0, 0}, // #248
+  {DBGFIELD("IIC_MMX_PEXTR_WriteShuffle") 1, 0, 0, 51, 3,  2, 1,  0, 0}, // #249
+  {DBGFIELD("IIC_MMX_PHADDSUBW_RM_WriteVecALULd_ReadAfterLd") 1, 0, 0, 45, 5,  3, 1,  1, 1}, // #250
+  {DBGFIELD("IIC_MMX_PHADDSUBW_RR_WriteVecALU") 1, 0, 0, 51, 3,  2, 1,  0, 0}, // #251
+  {DBGFIELD("IIC_MMX_PHADDSUBD_RM_WriteVecALULd_ReadAfterLd") 1, 0, 0, 45, 5,  3, 1,  1, 1}, // #252
+  {DBGFIELD("IIC_MMX_PHADDSUBD_RR_WriteVecALU") 1, 0, 0, 51, 3,  2, 1,  0, 0}, // #253
+  {DBGFIELD("IIC_MMX_PINSRW_WriteShuffleLd_ReadAfterLd") 1, 0, 0, 45, 5,  3, 1,  1, 1}, // #254
+  {DBGFIELD("IIC_MMX_PINSRW_WriteShuffle") 1, 0, 0, 51, 3,  2, 1,  0, 0}, // #255
+  {DBGFIELD("IIC_MMX_PMUL_WriteVecIMulLd_ReadAfterLd") 1, 0, 0, 75, 7, 13, 1,  1, 1}, // #256
+  {DBGFIELD("IIC_MMX_PMUL_WriteVecIMul") 1, 0, 0, 83, 5,  3, 1,  0, 0}, // #257
+  {DBGFIELD("IIC_MMX_PSADBW_WriteVecALULd_ReadAfterLd") 1, 0, 0, 45, 5,  3, 1,  1, 1}, // #258
+  {DBGFIELD("IIC_MMX_PSADBW_WriteVecALU") 1, 0, 0, 51, 3,  2, 1,  0, 0}, // #259
+  {DBGFIELD("IIC_MMX_PSHUF_WriteShuffleLd_ReadAfterLd") 1, 0, 0, 45, 5,  3, 1,  1, 1}, // #260
+  {DBGFIELD("IIC_MMX_PSHUF_WriteShuffle") 1, 0, 0, 51, 3,  2, 1,  0, 0}, // #261
+  {DBGFIELD("IIC_MMX_PSHUF_WriteShuffleLd") 1, 0, 0, 45, 5,  3, 1,  0, 0}, // #262
+  {DBGFIELD("IIC_MMX_SHIFT_RI_WriteVecShift") 1, 0, 0, 84, 4,  2, 1,  0, 0}, // #263
+  {DBGFIELD("IIC_MMX_SHIFT_RM_WriteVecShiftLd_ReadAfterLd") 1, 0, 0, 76, 6,  3, 1,  1, 1}, // #264
+  {DBGFIELD("IIC_MMX_SHIFT_RR_WriteVecShift") 1, 0, 0, 84, 4,  2, 1,  0, 0}, // #265
+  {DBGFIELD("IIC_MMX_UNPCK_H_RM_WriteShuffleLd_ReadAfterLd") 1, 0, 0, 45, 5,  3, 1,  1, 1}, // #266
+  {DBGFIELD("IIC_MMX_UNPCK_H_RR_WriteShuffle") 1, 0, 0, 51, 3,  2, 1,  0, 0}, // #267
+  {DBGFIELD("IIC_MMX_UNPCK_L_WriteShuffleLd_ReadAfterLd") 1, 0, 0, 45, 5,  3, 1,  1, 1}, // #268
+  {DBGFIELD("IIC_MMX_UNPCK_L_WriteShuffle") 1, 0, 0, 51, 3,  2, 1,  0, 0}, // #269
+  {DBGFIELD("IIC_SSE_MONITOR_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #270
+  {DBGFIELD("IIC_MOV_MEM_WriteALU") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #271
+  {DBGFIELD("IIC_MOV_MEM_WriteStore") 1, 0, 0, 88, 2,  2, 1,  0, 0}, // #272
+  {DBGFIELD("IIC_MOV_MEM_SR_WriteMove") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #273
+  {DBGFIELD("IIC_ALU_NONMEM_WriteZero") 1, 0, 0,  0, 0,  2, 1,  0, 0}, // #274
+  {DBGFIELD("IIC_MOV_WriteMove")  1, 0, 0, 39, 1,  2, 1,  0, 0}, // #275
+  {DBGFIELD("IIC_MOV_MEM_WriteLoad") 1, 0, 0, 41, 2,  7, 1,  0, 0}, // #276
+  {DBGFIELD("IIC_MOV_REG_SR_WriteMove") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #277
+  {DBGFIELD("IIC_MOV_SR_MEM_WriteMove") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #278
+  {DBGFIELD("IIC_MOV_SR_REG_WriteMove") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #279
+  {DBGFIELD("IIC_MOV_CR_REG_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #280
+  {DBGFIELD("IIC_MOV_DR_REG_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #281
+  {DBGFIELD("IIC_MOV_REG_CR_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #282
+  {DBGFIELD("IIC_MOV_REG_DR_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #283
+  {DBGFIELD("IIC_ALU_NONMEM_WriteALU") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #284
+  {DBGFIELD("IIC_SSE_MOVDQ_WriteMove") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #285
+  {DBGFIELD("IIC_SSE_MOVDQ_WriteLoad") 1, 0, 0, 41, 2,  7, 1,  0, 0}, // #286
+  {DBGFIELD("IIC_SSE_MOVA_P_MR_WriteStore") 1, 0, 0, 88, 2,  2, 1,  0, 0}, // #287
+  {DBGFIELD("IIC_MOVBE_WriteStore") 1, 0, 0, 88, 2,  2, 1,  0, 0}, // #288
+  {DBGFIELD("IIC_MOVBE_WriteALULd") 1, 0, 0, 41, 3,  3, 1,  0, 0}, // #289
+  {DBGFIELD("IIC_SSE_MOV_LH_WriteShuffleLd") 1, 0, 0, 45, 5,  3, 1,  0, 0}, // #290
+  {DBGFIELD("IIC_SSE_MOV_LH_WriteShuffle") 1, 0, 0, 51, 3,  2, 1,  0, 0}, // #291
+  {DBGFIELD("IIC_SSE_MOVU_P_MR_WriteStore") 1, 0, 0, 88, 2,  2, 1,  0, 0}, // #292
+  {DBGFIELD("IIC_SSE_MOVU_P_RM_WriteLoad") 1, 0, 0, 41, 2,  7, 1,  0, 0}, // #293
+  {DBGFIELD("IIC_SSE_MOVU_P_RR_WriteMove") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #294
+  {DBGFIELD("IIC_SSE_MOV_LH_WriteStore") 1, 0, 0, 88, 2,  2, 1,  0, 0}, // #295
+  {DBGFIELD("IIC_SSE_MOV_LH_WriteShuffleLd_ReadAfterLd") 1, 0, 0, 45, 5,  3, 1,  1, 1}, // #296
+  {DBGFIELD("IIC_SSE_MOVDQ_WriteStore") 1, 0, 0, 88, 2,  2, 1,  0, 0}, // #297
+  {DBGFIELD("IIC_SSE_MOVMSK_WriteVecLogic") 1, 0, 0, 38, 2,  2, 1,  0, 0}, // #298
+  {DBGFIELD("IIC_SSE_MOVNT_WriteStore") 1, 0, 0, 88, 2,  2, 1,  0, 0}, // #299
+  {DBGFIELD("IIC_SSE_MOVD_ToGP_WriteMove") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #300
+  {DBGFIELD("IIC_SSE_MOVQ_RR_WriteMove") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #301
+  {DBGFIELD("IIC_MOVS_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #302
+  {DBGFIELD("IIC_SSE_MOV_S_MR_WriteStore") 1, 0, 0, 88, 2,  2, 1,  0, 0}, // #303
+  {DBGFIELD("IIC_SSE_MOV_S_RM_WriteLoad") 1, 0, 0, 41, 2,  7, 1,  0, 0}, // #304
+  {DBGFIELD("IIC_SSE_MOV_S_RR_WriteMove") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #305
+  {DBGFIELD("IIC_MOVSX_R16_M8_WriteALULd") 1, 0, 0, 41, 3,  3, 1,  0, 0}, // #306
+  {DBGFIELD("IIC_MOVSX_R16_R8_WriteALU") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #307
+  {DBGFIELD("IIC_MOVSX_WriteALULd") 1, 0, 0, 41, 3,  3, 1,  0, 0}, // #308
+  {DBGFIELD("IIC_MOVSX_WriteALU") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #309
+  {DBGFIELD("IIC_SSE_MOVDQ_WriteVecLogicLd") 1, 0, 0, 46, 4,  3, 1,  0, 0}, // #310
+  {DBGFIELD("IIC_SSE_MOVQ_RR_WriteVecLogic") 1, 0, 0, 38, 2,  2, 1,  0, 0}, // #311
+  {DBGFIELD("IIC_MOVZX_R16_M8_WriteALULd") 1, 0, 0, 41, 3,  3, 1,  0, 0}, // #312
+  {DBGFIELD("IIC_MOVZX_R16_R8_WriteALU") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #313
+  {DBGFIELD("IIC_MOVZX_WriteALULd") 1, 0, 0, 41, 3,  3, 1,  0, 0}, // #314
+  {DBGFIELD("IIC_MOVZX_WriteALU") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #315
+  {DBGFIELD("IIC_MUL16_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, 0, 0, 44, 6,  5, 1,  2, 2}, // #316
+  {DBGFIELD("IIC_MUL16_REG_WriteIMul") 1, 0, 0, 50, 4,  6, 1,  0, 0}, // #317
+  {DBGFIELD("IIC_MUL32_MEM_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, 0, 0, 44, 6,  5, 1,  2, 2}, // #318
+  {DBGFIELD("IIC_MUL32_REG_WriteIMul") 1, 0, 0, 50, 4,  6, 1,  0, 0}, // #319
+  {DBGFIELD("IIC_MUL64_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, 0, 0, 44, 6,  5, 1,  2, 2}, // #320
+  {DBGFIELD("IIC_MUL64_WriteIMul") 1, 0, 0, 50, 4,  6, 1,  0, 0}, // #321
+  {DBGFIELD("IIC_MUL8_WriteIMulLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd_ReadAfterLd") 1, 0, 0, 44, 6,  5, 1,  2, 2}, // #322
+  {DBGFIELD("IIC_MUL8_WriteIMul") 1, 0, 0, 50, 4,  6, 1,  0, 0}, // #323
+  {DBGFIELD("IIC_SSE_MUL_F64P_RM_WriteFMulLd_ReadAfterLd") 1, 0, 0, 75, 7, 13, 1,  1, 1}, // #324
+  {DBGFIELD("IIC_SSE_MUL_F64P_RR_WriteFMul") 1, 0, 0, 83, 5,  3, 1,  0, 0}, // #325
+  {DBGFIELD("IIC_SSE_MUL_F32P_RR_WriteFMul") 1, 0, 0, 83, 5,  3, 1,  0, 0}, // #326
+  {DBGFIELD("IIC_SSE_MUL_F64S_RM_WriteFMulLd_ReadAfterLd") 1, 0, 0, 75, 7, 13, 1,  1, 1}, // #327
+  {DBGFIELD("IIC_SSE_MUL_F64S_RR_WriteFMul") 1, 0, 0, 83, 5,  3, 1,  0, 0}, // #328
+  {DBGFIELD("IIC_SSE_MUL_F32S_RR_WriteFMul") 1, 0, 0, 83, 5,  3, 1,  0, 0}, // #329
+  {DBGFIELD("IIC_MUL8_WriteIMulLd") 1, 0, 0, 44, 6,  5, 1,  0, 0}, // #330
+  {DBGFIELD("IIC_SSE_MWAIT_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #331
+  {DBGFIELD("IIC_NOP_WriteZero")  1, 0, 0,  0, 0,  2, 1,  0, 0}, // #332
+  {DBGFIELD("IIC_OUT_IR_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #333
+  {DBGFIELD("IIC_OUT_RR_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #334
+  {DBGFIELD("IIC_OUTS_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #335
+  {DBGFIELD("IIC_SSE_PABS_RM_WriteVecALULd") 1, 0, 0, 45, 5,  3, 1,  0, 0}, // #336
+  {DBGFIELD("IIC_SSE_PABS_RR_WriteVecALU") 1, 0, 0, 51, 3,  2, 1,  0, 0}, // #337
+  {DBGFIELD("IIC_SSE_INTALU_P_RM_WriteVecALULd_ReadAfterLd") 1, 0, 0, 45, 5,  3, 1,  1, 1}, // #338
+  {DBGFIELD("IIC_SSE_INTALU_P_RR_WriteVecALU") 1, 0, 0, 51, 3,  2, 1,  0, 0}, // #339
+  {DBGFIELD("IIC_SSE_INTALUQ_P_RM_WriteVecALULd_ReadAfterLd") 1, 0, 0, 45, 5,  3, 1,  1, 1}, // #340
+  {DBGFIELD("IIC_SSE_INTALUQ_P_RR_WriteVecALU") 1, 0, 0, 51, 3,  2, 1,  0, 0}, // #341
+  {DBGFIELD("IIC_SSE_PALIGNR_WriteShuffleLd_ReadAfterLd") 1, 0, 0, 45, 5,  3, 1,  1, 1}, // #342
+  {DBGFIELD("IIC_SSE_PALIGNR_WriteShuffle") 1, 0, 0, 51, 3,  2, 1,  0, 0}, // #343
+  {DBGFIELD("IIC_SSE_PAUSE_WriteLoad") 1, 0, 0, 41, 2,  7, 1,  0, 0}, // #344
+  {DBGFIELD("IIC_SSE_PEXTRW_WriteShuffleLd_ReadAfterLd") 1, 0, 0, 45, 5,  3, 1,  1, 1}, // #345
+  {DBGFIELD("IIC_SSE_PHADDSUBD_RM_WriteVecALULd_ReadAfterLd") 1, 0, 0, 45, 5,  3, 1,  1, 1}, // #346
+  {DBGFIELD("IIC_SSE_PHADDSUBD_RR_WriteVecALU") 1, 0, 0, 51, 3,  2, 1,  0, 0}, // #347
+  {DBGFIELD("WriteVecALULd_ReadAfterLd") 1, 0, 0, 45, 5,  3, 1,  1, 1}, // #348
+  {DBGFIELD("WriteVecALU")        1, 0, 0, 51, 3,  2, 1,  0, 0}, // #349
+  {DBGFIELD("IIC_SSE_PHADDSUBW_RM_WriteVecALULd_ReadAfterLd") 1, 0, 0, 45, 5,  3, 1,  1, 1}, // #350
+  {DBGFIELD("IIC_SSE_PHADDSUBW_RR_WriteVecALU") 1, 0, 0, 51, 3,  2, 1,  0, 0}, // #351
+  {DBGFIELD("IIC_SSE_PINSRW_WriteShuffleLd_ReadAfterLd") 1, 0, 0, 45, 5,  3, 1,  1, 1}, // #352
+  {DBGFIELD("IIC_SSE_PINSRW_WriteShuffle") 1, 0, 0, 51, 3,  2, 1,  0, 0}, // #353
+  {DBGFIELD("WriteVecIMulLd_ReadAfterLd") 1, 0, 0, 75, 7, 13, 1,  1, 1}, // #354
+  {DBGFIELD("WriteVecIMul")       1, 0, 0, 83, 5,  3, 1,  0, 0}, // #355
+  {DBGFIELD("IIC_SSE_PMADD_WriteVecIMulLd_ReadAfterLd") 1, 0, 0, 75, 7, 13, 1,  1, 1}, // #356
+  {DBGFIELD("IIC_SSE_PMADD_WriteVecIMul") 1, 0, 0, 83, 5,  3, 1,  0, 0}, // #357
+  {DBGFIELD("IIC_SSE_INTMUL_P_RM_WriteVecIMulLd_ReadAfterLd") 1, 0, 0, 75, 7, 13, 1,  1, 1}, // #358
+  {DBGFIELD("IIC_SSE_INTMUL_P_RR_WriteVecIMul") 1, 0, 0, 83, 5,  3, 1,  0, 0}, // #359
+  {DBGFIELD("IIC_POP_REG16_WriteLoad") 1, 0, 0, 41, 2,  7, 1,  0, 0}, // #360
+  {DBGFIELD("IIC_POP_MEM_WriteLoad") 1, 0, 0, 41, 2,  7, 1,  0, 0}, // #361
+  {DBGFIELD("IIC_POP_REG_WriteLoad") 1, 0, 0, 41, 2,  7, 1,  0, 0}, // #362
+  {DBGFIELD("IIC_POP_A_WriteLoad") 1, 0, 0, 41, 2,  7, 1,  0, 0}, // #363
+  {DBGFIELD("IIC_POP_SR_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #364
+  {DBGFIELD("IIC_POP_F_WriteLoad") 1, 0, 0, 41, 2,  7, 1,  0, 0}, // #365
+  {DBGFIELD("IIC_POP_FD_WriteLoad") 1, 0, 0, 41, 2,  7, 1,  0, 0}, // #366
+  {DBGFIELD("IIC_POP_SR_SS_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #367
+  {DBGFIELD("IIC_SSE_PSHUFB_RM_WriteShuffleLd_ReadAfterLd") 1, 0, 0, 45, 5,  3, 1,  1, 1}, // #368
+  {DBGFIELD("IIC_SSE_PSHUFB_RR_WriteShuffle") 1, 0, 0, 51, 3,  2, 1,  0, 0}, // #369
+  {DBGFIELD("IIC_SSE_PSHUF_WriteShuffleLd") 1, 0, 0, 45, 5,  3, 1,  0, 0}, // #370
+  {DBGFIELD("IIC_SSE_PSHUF_WriteShuffle") 1, 0, 0, 51, 3,  2, 1,  0, 0}, // #371
+  {DBGFIELD("IIC_SSE_PSIGN_RM_WriteVecALULd_ReadAfterLd") 1, 0, 0, 45, 5,  3, 1,  1, 1}, // #372
+  {DBGFIELD("IIC_SSE_PSIGN_RR_WriteVecALU") 1, 0, 0, 51, 3,  2, 1,  0, 0}, // #373
+  {DBGFIELD("WriteVecShift")      1, 0, 0, 84, 4,  2, 1,  0, 0}, // #374
+  {DBGFIELD("IIC_SSE_INTSH_P_RI_WriteVecShift") 1, 0, 0, 84, 4,  2, 1,  0, 0}, // #375
+  {DBGFIELD("IIC_SSE_INTSH_P_RM_WriteVecShiftLd_ReadAfterLd") 1, 0, 0, 76, 6,  3, 1,  1, 1}, // #376
+  {DBGFIELD("IIC_SSE_INTSH_P_RR_WriteVecShift") 1, 0, 0, 84, 4,  2, 1,  0, 0}, // #377
+  {DBGFIELD("IIC_SSE_UNPCK_WriteShuffleLd_ReadAfterLd") 1, 0, 0, 45, 5,  3, 1,  1, 1}, // #378
+  {DBGFIELD("IIC_SSE_UNPCK_WriteShuffle") 1, 0, 0, 51, 3,  2, 1,  0, 0}, // #379
+  {DBGFIELD("IIC_PUSH_REG_WriteStore") 1, 0, 0, 88, 2,  2, 1,  0, 0}, // #380
+  {DBGFIELD("IIC_PUSH_MEM_WriteStore") 1, 0, 0, 88, 2,  2, 1,  0, 0}, // #381
+  {DBGFIELD("IIC_PUSH_IMM_WriteStore") 1, 0, 0, 88, 2,  2, 1,  0, 0}, // #382
+  {DBGFIELD("IIC_PUSH_A_WriteStore") 1, 0, 0, 88, 2,  2, 1,  0, 0}, // #383
+  {DBGFIELD("IIC_PUSH_SR_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #384
+  {DBGFIELD("IIC_PUSH_CS_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #385
+  {DBGFIELD("IIC_PUSH_F_WriteStore") 1, 0, 0, 88, 2,  2, 1,  0, 0}, // #386
+  {DBGFIELD("IIC_SR_WriteShiftLd_WriteRMW") 2, 0, 0, 90, 5,  3, 2,  0, 0}, // #387
+  {DBGFIELD("IIC_SR_WriteShift")  1, 0, 0, 58, 2,  2, 1,  0, 0}, // #388
+  {DBGFIELD("IIC_SSE_RCPP_RM_WriteFRcpLd") 1, 0, 0, 75, 7, 13, 1,  0, 0}, // #389
+  {DBGFIELD("IIC_SSE_RCPP_RR_WriteFRcp") 1, 0, 0, 83, 5,  3, 1,  0, 0}, // #390
+  {DBGFIELD("IIC_SSE_RCPS_RM_WriteFRcpLd") 1, 0, 0, 75, 7, 13, 1,  0, 0}, // #391
+  {DBGFIELD("IIC_SSE_RCPS_RM_WriteFRcpLd_ReadAfterLd") 1, 0, 0, 75, 7, 13, 1,  1, 1}, // #392
+  {DBGFIELD("WriteFRcp")          1, 0, 0, 83, 5,  3, 1,  0, 0}, // #393
+  {DBGFIELD("IIC_SSE_RCPS_RR_WriteFRcp") 1, 0, 0, 83, 5,  3, 1,  0, 0}, // #394
+  {DBGFIELD("IIC_RDMSR_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #395
+  {DBGFIELD("IIC_RDPMC_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #396
+  {DBGFIELD("IIC_RDTSC_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #397
+  {DBGFIELD("IIC_REP_MOVS_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #398
+  {DBGFIELD("IIC_REP_STOS_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #399
+  {DBGFIELD("IIC_RET_IMM_WriteJumpLd") 1, 0, 0, 60, 8,  3, 1,  0, 0}, // #400
+  {DBGFIELD("WriteShiftLd")       1, 0, 0, 54, 4,  3, 1,  0, 0}, // #401
+  {DBGFIELD("WriteShift")         1, 0, 0, 58, 2,  2, 1,  0, 0}, // #402
+  {DBGFIELD("IIC_RSM_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #403
+  {DBGFIELD("IIC_SSE_SQRTP_RM_WriteFSqrtLd") 1, 0, 0, 75, 7, 14, 1,  0, 0}, // #404
+  {DBGFIELD("IIC_SSE_SQRTP_RR_WriteFSqrt") 1, 0, 0, 83, 5, 15, 1,  0, 0}, // #405
+  {DBGFIELD("IIC_SSE_SQRTS_RM_WriteFSqrtLd") 1, 0, 0, 75, 7, 14, 1,  0, 0}, // #406
+  {DBGFIELD("IIC_SSE_SQRTS_RM_WriteFSqrtLd_ReadAfterLd") 1, 0, 0, 75, 7, 14, 1,  1, 1}, // #407
+  {DBGFIELD("WriteFSqrt")         1, 0, 0, 83, 5, 15, 1,  0, 0}, // #408
+  {DBGFIELD("IIC_SSE_SQRTS_RR_WriteFSqrt") 1, 0, 0, 83, 5, 15, 1,  0, 0}, // #409
+  {DBGFIELD("WriteShiftLd_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadDefault_ReadAfterLd") 1, 0, 0, 54, 4,  3, 1,  2, 1}, // #410
+  {DBGFIELD("IIC_SCAS_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #411
+  {DBGFIELD("IIC_SET_M_WriteALU_WriteStore") 2, 0, 0, 95, 3, 16, 2,  0, 0}, // #412
+  {DBGFIELD("IIC_SET_R_WriteALU") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #413
+  {DBGFIELD("IIC_SSE_SFENCE_WriteLoad") 1, 0, 0, 41, 2,  7, 1,  0, 0}, // #414
+  {DBGFIELD("IIC_SGDT_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #415
+  {DBGFIELD("IIC_SHD16_MEM_CL_WriteShiftLd_WriteRMW") 2, 0, 0, 90, 5,  3, 2,  0, 0}, // #416
+  {DBGFIELD("IIC_SHD16_MEM_IM_WriteShiftLd_WriteRMW") 2, 0, 0, 90, 5,  3, 2,  0, 0}, // #417
+  {DBGFIELD("IIC_SHD16_REG_CL_WriteShift") 1, 0, 0, 58, 2,  2, 1,  0, 0}, // #418
+  {DBGFIELD("IIC_SHD16_REG_IM_WriteShift") 1, 0, 0, 58, 2,  2, 1,  0, 0}, // #419
+  {DBGFIELD("IIC_SHD32_MEM_CL_WriteShiftLd_WriteRMW") 2, 0, 0, 90, 5,  3, 2,  0, 0}, // #420
+  {DBGFIELD("IIC_SHD32_MEM_IM_WriteShiftLd_WriteRMW") 2, 0, 0, 90, 5,  3, 2,  0, 0}, // #421
+  {DBGFIELD("IIC_SHD32_REG_CL_WriteShift") 1, 0, 0, 58, 2,  2, 1,  0, 0}, // #422
+  {DBGFIELD("IIC_SHD32_REG_IM_WriteShift") 1, 0, 0, 58, 2,  2, 1,  0, 0}, // #423
+  {DBGFIELD("IIC_SHD64_MEM_CL_WriteShiftLd_WriteRMW") 2, 0, 0, 90, 5,  3, 2,  0, 0}, // #424
+  {DBGFIELD("IIC_SHD64_MEM_IM_WriteShiftLd_WriteRMW") 2, 0, 0, 90, 5,  3, 2,  0, 0}, // #425
+  {DBGFIELD("IIC_SHD64_REG_CL_WriteShift") 1, 0, 0, 58, 2,  2, 1,  0, 0}, // #426
+  {DBGFIELD("IIC_SHD64_REG_IM_WriteShift") 1, 0, 0, 58, 2,  2, 1,  0, 0}, // #427
+  {DBGFIELD("IIC_SSE_SHUFP_WriteShuffleLd_ReadAfterLd") 1, 0, 0, 45, 5,  3, 1,  1, 1}, // #428
+  {DBGFIELD("IIC_SSE_SHUFP_WriteShuffle") 1, 0, 0, 51, 3,  2, 1,  0, 0}, // #429
+  {DBGFIELD("IIC_SIDT_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #430
+  {DBGFIELD("IIC_SLDT_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #431
+  {DBGFIELD("IIC_SMSW_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #432
+  {DBGFIELD("IIC_STC_WriteALU")   1, 0, 0, 39, 1,  2, 1,  0, 0}, // #433
+  {DBGFIELD("IIC_STD_WriteALU")   1, 0, 0, 39, 1,  2, 1,  0, 0}, // #434
+  {DBGFIELD("IIC_STI_WriteALU")   1, 0, 0, 39, 1,  2, 1,  0, 0}, // #435
+  {DBGFIELD("IIC_SSE_STMXCSR_WriteStore") 1, 0, 0, 88, 2,  2, 1,  0, 0}, // #436
+  {DBGFIELD("IIC_STOS_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #437
+  {DBGFIELD("IIC_STR_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #438
+  {DBGFIELD("IIC_FST80_WriteStore") 1, 0, 0, 88, 2,  2, 1,  0, 0}, // #439
+  {DBGFIELD("IIC_FST_WriteMove")  1, 0, 0, 39, 1,  2, 1,  0, 0}, // #440
+  {DBGFIELD("IIC_SWAPGS_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #441
+  {DBGFIELD("IIC_SYSCALL_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #442
+  {DBGFIELD("IIC_SYS_ENTER_EXIT_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #443
+  {DBGFIELD("IIC_JMP_REL_WriteJumpLd") 1, 0, 0, 60, 8,  3, 1,  0, 0}, // #444
+  {DBGFIELD("IIC_JMP_MEM_WriteJump") 1, 0, 0, 68, 6,  2, 1,  0, 0}, // #445
+  {DBGFIELD("IIC_JMP_REG_WriteJumpLd") 1, 0, 0, 60, 8,  3, 1,  0, 0}, // #446
+  {DBGFIELD("WriteJumpLd")        1, 0, 0, 60, 8,  3, 1,  0, 0}, // #447
+  {DBGFIELD("WriteJump")          1, 0, 0, 68, 6,  2, 1,  0, 0}, // #448
+  {DBGFIELD("IIC_FUCOMI_WriteFAdd") 1, 0, 0, 50, 4,  6, 1,  0, 0}, // #449
+  {DBGFIELD("IIC_FUCOM_WriteFAdd") 1, 0, 0, 50, 4,  6, 1,  0, 0}, // #450
+  {DBGFIELD("WriteFAdd")          1, 0, 0, 50, 4,  6, 1,  0, 0}, // #451
+  {DBGFIELD("WriteCvtI2FLd")      1, 0, 0, 44, 6,  8, 1,  0, 0}, // #452
+  {DBGFIELD("WriteCvtI2F")        1, 0, 0, 50, 4,  7, 1,  0, 0}, // #453
+  {DBGFIELD("WriteCvtF2ILd")      1, 0, 0, 44, 6,  5, 1,  0, 0}, // #454
+  {DBGFIELD("WriteCvtF2I")        1, 0, 0, 50, 4,  6, 1,  0, 0}, // #455
+  {DBGFIELD("WriteCvtI2FLd_ReadAfterLd") 1, 0, 0, 44, 6,  8, 1,  1, 1}, // #456
+  {DBGFIELD("IIC_VERR_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #457
+  {DBGFIELD("IIC_VERW_REG_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #458
+  {DBGFIELD("IIC_VERW_MEM_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #459
+  {DBGFIELD("WriteShuffleLd")     1, 0, 0, 45, 5,  3, 1,  0, 0}, // #460
+  {DBGFIELD("WriteShuffle")       1, 0, 0, 51, 3,  2, 1,  0, 0}, // #461
+  {DBGFIELD("WriteStore")         1, 0, 0, 88, 2,  2, 1,  0, 0}, // #462
+  {DBGFIELD("WriteVecALULd")      1, 0, 0, 45, 5,  3, 1,  0, 0}, // #463
+  {DBGFIELD("WriteShuffleLd_ReadAfterLd") 1, 0, 0, 45, 5,  3, 1,  1, 1}, // #464
+  {DBGFIELD("WriteFRcpLd_ReadAfterLd") 1, 0, 0, 75, 7, 13, 1,  1, 1}, // #465
+  {DBGFIELD("WriteFSqrtLd_ReadAfterLd") 1, 0, 0, 75, 7, 14, 1,  1, 1}, // #466
+  {DBGFIELD("IIC_WAIT_WriteMicrocoded") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #467
+  {DBGFIELD("IIC_WRMSR_WriteSystem") 1, 0, 0, 39, 1,  1, 1,  0, 0}, // #468
+  {DBGFIELD("IIC_XADD_MEM_WriteALULd_WriteRMW") 2, 0, 0, 40, 4,  3, 2,  0, 0}, // #469
+  {DBGFIELD("IIC_XADD_REG_WriteALU") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #470
+  {DBGFIELD("IIC_XCHG_REG_WriteALU") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #471
+  {DBGFIELD("IIC_XCHG_MEM_WriteALULd_WriteRMW") 2, 0, 0, 40, 4,  3, 2,  0, 0}, // #472
+  {DBGFIELD("IIC_FXCH_WriteMove") 1, 0, 0, 39, 1,  2, 1,  0, 0}, // #473
+  {DBGFIELD("IIC_XLAT_WriteLoad") 1, 0, 0, 41, 2,  7, 1,  0, 0} // #474
+}; // HaswellModelSchedClasses
 
 static const llvm::MCSchedModel NoSchedModel(
   MCSchedModel::DefaultIssueWidth,
   MCSchedModel::DefaultMinLatency,
   MCSchedModel::DefaultLoadLatency,
   MCSchedModel::DefaultHighLatency,
+  MCSchedModel::DefaultILPWindow,
   MCSchedModel::DefaultMispredictPenalty,
   0, // Processor ID
   0, 0, 0, 0, // No instruction-level machine model.
@@ -680,6 +1873,7 @@ static const llvm::MCSchedModel GenericModel(
   0, // MinLatency
   4, // LoadLatency
   10, // HighLatency
+  10, // ILPWindow
   MCSchedModel::DefaultMispredictPenalty,
   1, // Processor ID
   0, 0, 0, 0, // No instruction-level machine model.
@@ -690,10 +1884,70 @@ static const llvm::MCSchedModel AtomModel(
   1, // MinLatency
   3, // LoadLatency
   30, // HighLatency
+  0, // ILPWindow
   MCSchedModel::DefaultMispredictPenalty,
   2, // Processor ID
   0, 0, 0, 0, // No instruction-level machine model.
   AtomItineraries);
+
+// {Name, NumUnits, SuperIdx, IsBuffered}
+static const llvm::MCProcResourceDesc SandyBridgeModelProcResources[] = {
+  {DBGFIELD("InvalidUnit")     0, 0, 0},
+  {DBGFIELD("SBDivider")       1, 0, 1}, // #1
+  {DBGFIELD("SBPort0")         1, 0, 1}, // #2
+  {DBGFIELD("SBPort1")         1, 0, 1}, // #3
+  {DBGFIELD("SBPort4")         1, 0, 1}, // #4
+  {DBGFIELD("SBPort5")         1, 0, 1}, // #5
+  {DBGFIELD("SBPort05")        2, 0, 1}, // #6
+  {DBGFIELD("SBPort15")        2, 0, 1}, // #7
+  {DBGFIELD("SBPort23")        2, 0, 1}, // #8
+  {DBGFIELD("SBPort015")       3, 0, 1}  // #9
+};
+
+static const llvm::MCSchedModel SandyBridgeModel(
+  4, // IssueWidth
+  0, // MinLatency
+  4, // LoadLatency
+  MCSchedModel::DefaultHighLatency,
+  20, // ILPWindow
+  16, // MispredictPenalty
+  3, // Processor ID
+  SandyBridgeModelProcResources,
+  SandyBridgeModelSchedClasses,
+  10,
+  475,
+  NoItineraries);
+
+// {Name, NumUnits, SuperIdx, IsBuffered}
+static const llvm::MCProcResourceDesc HaswellModelProcResources[] = {
+  {DBGFIELD("InvalidUnit")     0, 0, 0},
+  {DBGFIELD("HWDivider")       1, 0, 1}, // #1
+  {DBGFIELD("HWPort0")         1, 0, 1}, // #2
+  {DBGFIELD("HWPort1")         1, 0, 1}, // #3
+  {DBGFIELD("HWPort4")         1, 0, 1}, // #4
+  {DBGFIELD("HWPort5")         1, 0, 1}, // #5
+  {DBGFIELD("HWPort05")        2, 0, 1}, // #6
+  {DBGFIELD("HWPort15")        2, 0, 1}, // #7
+  {DBGFIELD("HWPort23")        2, 0, 1}, // #8
+  {DBGFIELD("HWPort015")       3, 0, 1}, // #9
+  {DBGFIELD("HWPort056")       3, 0, 1}, // #10
+  {DBGFIELD("HWPort237")       3, 0, 1}, // #11
+  {DBGFIELD("HWPort0156")      4, 0, 1}  // #12
+};
+
+static const llvm::MCSchedModel HaswellModel(
+  4, // IssueWidth
+  0, // MinLatency
+  4, // LoadLatency
+  MCSchedModel::DefaultHighLatency,
+  30, // ILPWindow
+  16, // MispredictPenalty
+  4, // Processor ID
+  HaswellModelProcResources,
+  HaswellModelSchedClasses,
+  13,
+  475,
+  NoItineraries);
 
 // Sorted (by key) array of itineraries for CPU subtype.
 extern const llvm::SubtargetInfoKV X86ProcSchedKV[] = {
@@ -710,13 +1964,14 @@ extern const llvm::SubtargetInfoKV X86ProcSchedKV[] = {
   { "bdver1", (const void *)&GenericModel },
   { "bdver2", (const void *)&GenericModel },
   { "btver1", (const void *)&GenericModel },
+  { "btver2", (const void *)&GenericModel },
   { "c3", (const void *)&GenericModel },
   { "c3-2", (const void *)&GenericModel },
-  { "core-avx-i", (const void *)&GenericModel },
-  { "core-avx2", (const void *)&GenericModel },
-  { "core2", (const void *)&GenericModel },
-  { "corei7", (const void *)&GenericModel },
-  { "corei7-avx", (const void *)&GenericModel },
+  { "core-avx-i", (const void *)&SandyBridgeModel },
+  { "core-avx2", (const void *)&HaswellModel },
+  { "core2", (const void *)&SandyBridgeModel },
+  { "corei7", (const void *)&SandyBridgeModel },
+  { "corei7-avx", (const void *)&SandyBridgeModel },
   { "generic", (const void *)&GenericModel },
   { "geode", (const void *)&GenericModel },
   { "i386", (const void *)&GenericModel },
@@ -728,11 +1983,11 @@ extern const llvm::SubtargetInfoKV X86ProcSchedKV[] = {
   { "k6-3", (const void *)&GenericModel },
   { "k8", (const void *)&GenericModel },
   { "k8-sse3", (const void *)&GenericModel },
-  { "nehalem", (const void *)&GenericModel },
+  { "nehalem", (const void *)&SandyBridgeModel },
   { "nocona", (const void *)&GenericModel },
   { "opteron", (const void *)&GenericModel },
   { "opteron-sse3", (const void *)&GenericModel },
-  { "penryn", (const void *)&GenericModel },
+  { "penryn", (const void *)&SandyBridgeModel },
   { "pentium", (const void *)&GenericModel },
   { "pentium-m", (const void *)&GenericModel },
   { "pentium-mmx", (const void *)&GenericModel },
@@ -743,17 +1998,17 @@ extern const llvm::SubtargetInfoKV X86ProcSchedKV[] = {
   { "pentium4m", (const void *)&GenericModel },
   { "pentiumpro", (const void *)&GenericModel },
   { "prescott", (const void *)&GenericModel },
-  { "westmere", (const void *)&GenericModel },
+  { "westmere", (const void *)&SandyBridgeModel },
   { "winchip-c6", (const void *)&GenericModel },
   { "winchip2", (const void *)&GenericModel },
   { "x86-64", (const void *)&GenericModel },
-  { "yonah", (const void *)&GenericModel }
+  { "yonah", (const void *)&SandyBridgeModel }
 };
 #undef DBGFIELD
 static inline void InitX86MCSubtargetInfo(MCSubtargetInfo *II, StringRef TT, StringRef CPU, StringRef FS) {
   II->InitMCSubtargetInfo(TT, CPU, FS, X86FeatureKV, X86SubTypeKV,
                       X86ProcSchedKV, X86WriteProcResTable, X86WriteLatencyTable, X86ReadAdvanceTable,
-                      X86Stages, X86OperandCycles, X86ForwardingPaths, 36, 51);
+                      X86Stages, X86OperandCycles, X86ForwardingPaths, 43, 52);
 }
 
 } // End llvm namespace
@@ -774,6 +2029,7 @@ void llvm::X86Subtarget::ParseSubtargetFeatures(StringRef CPU, StringRef FS) {
   if ((Bits & X86::Feature3DNow) != 0 && X863DNowLevel < ThreeDNow) X863DNowLevel = ThreeDNow;
   if ((Bits & X86::Feature3DNowA) != 0 && X863DNowLevel < ThreeDNowA) X863DNowLevel = ThreeDNowA;
   if ((Bits & X86::Feature64Bit) != 0) HasX86_64 = true;
+  if ((Bits & X86::FeatureADX) != 0) HasADX = true;
   if ((Bits & X86::FeatureAES) != 0) HasAES = true;
   if ((Bits & X86::FeatureAVX) != 0 && X86SSELevel < AVX) X86SSELevel = AVX;
   if ((Bits & X86::FeatureAVX2) != 0 && X86SSELevel < AVX2) X86SSELevel = AVX2;
@@ -781,18 +2037,24 @@ void llvm::X86Subtarget::ParseSubtargetFeatures(StringRef CPU, StringRef FS) {
   if ((Bits & X86::FeatureBMI2) != 0) HasBMI2 = true;
   if ((Bits & X86::FeatureCMOV) != 0) HasCMov = true;
   if ((Bits & X86::FeatureCMPXCHG16B) != 0) HasCmpxchg16b = true;
+  if ((Bits & X86::FeatureCallRegIndirect) != 0) CallRegIndirect = true;
   if ((Bits & X86::FeatureF16C) != 0) HasF16C = true;
   if ((Bits & X86::FeatureFMA) != 0) HasFMA = true;
   if ((Bits & X86::FeatureFMA4) != 0) HasFMA4 = true;
   if ((Bits & X86::FeatureFSGSBase) != 0) HasFSGSBase = true;
   if ((Bits & X86::FeatureFastUAMem) != 0) IsUAMemFast = true;
+  if ((Bits & X86::FeatureHLE) != 0) HasHLE = true;
+  if ((Bits & X86::FeatureLEAUsesAG) != 0) LEAUsesAG = true;
   if ((Bits & X86::FeatureLZCNT) != 0) HasLZCNT = true;
   if ((Bits & X86::FeatureLeaForSP) != 0) UseLeaForSP = true;
   if ((Bits & X86::FeatureMMX) != 0 && X86SSELevel < MMX) X86SSELevel = MMX;
   if ((Bits & X86::FeatureMOVBE) != 0) HasMOVBE = true;
   if ((Bits & X86::FeaturePCLMUL) != 0) HasPCLMUL = true;
   if ((Bits & X86::FeaturePOPCNT) != 0) HasPOPCNT = true;
+  if ((Bits & X86::FeaturePRFCHW) != 0) HasPRFCHW = true;
+  if ((Bits & X86::FeaturePadShortFunctions) != 0) PadShortFunctions = true;
   if ((Bits & X86::FeatureRDRAND) != 0) HasRDRAND = true;
+  if ((Bits & X86::FeatureRDSEED) != 0) HasRDSEED = true;
   if ((Bits & X86::FeatureRTM) != 0) HasRTM = true;
   if ((Bits & X86::FeatureSSE1) != 0 && X86SSELevel < SSE1) X86SSELevel = SSE1;
   if ((Bits & X86::FeatureSSE2) != 0 && X86SSELevel < SSE2) X86SSELevel = SSE2;
@@ -842,7 +2104,7 @@ X86GenSubtargetInfo::X86GenSubtargetInfo(StringRef TT, StringRef CPU, StringRef 
   : TargetSubtargetInfo() {
   InitMCSubtargetInfo(TT, CPU, FS, X86FeatureKV, X86SubTypeKV,
                       X86ProcSchedKV, X86WriteProcResTable, X86WriteLatencyTable, X86ReadAdvanceTable,
-                      X86Stages, X86OperandCycles, X86ForwardingPaths, 36, 51);
+                      X86Stages, X86OperandCycles, X86ForwardingPaths, 43, 52);
 }
 
 unsigned X86GenSubtargetInfo
