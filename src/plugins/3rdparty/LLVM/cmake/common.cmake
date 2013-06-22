@@ -1,6 +1,14 @@
 MACRO(RETRIEVE_LLVM_SETTINGS)
     # Retrieve some LLVM settings
 
+    IF(WIN32)
+        SET(LLVM_DEFINITIONS
+            _SCL_SECURE_NO_WARNINGS
+        )
+    ELSE()
+        SET(LLVM_DEFINITIONS)
+    ENDIF()
+
     LIST(APPEND LLVM_DEFINITIONS
         __STDC_CONSTANT_MACROS
         __STDC_LIMIT_MACROS
