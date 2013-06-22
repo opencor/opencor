@@ -4,6 +4,17 @@ PROJECT(OpenCOR)
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.9)
 
+# CMake policies that need to be specified
+# Note: CMake 2.8.10 and lower require us to manually link the GUI version of
+#       OpenCOR to the qtmain.lib static library while from CMake 2.8.11 it's
+#       automatically done for us. Still, we want to support CMake 2.8.9 and
+#       above (since it's the first version of CMake that properly supports Qt
+#       5), so we should do the linking ourselves and therefore ask CMake to
+#       revert to the old way of doing things (which is controlled via CMake
+#       policy #0020)...
+
+CMAKE_POLICY(SET CMP0020 OLD)
+
 # Name of the main project and location of the built OpenCOR binary
 # Note: these are required to determine where plugins should be copied on OS X...
 

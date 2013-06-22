@@ -4,6 +4,11 @@ PROJECT(OpenCOR)
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.9)
 
+# CMake policies that need to be specified
+# Note: see our main CMakeLists.txt file...
+
+CMAKE_POLICY(SET CMP0020 OLD)
+
 # Some in-house CMake functions/macros
 
 INCLUDE(${CMAKE_SOURCE_DIR}/../cmake/common.cmake)
