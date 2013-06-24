@@ -4,16 +4,18 @@ PROJECT(OpenCOR)
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.9)
 
-# Make sure that whatever CMake policies are compatible with 2.8.9
+# Make sure that all CMake policies are compatible with our minimum required
+# CMake version
 # Note: indeed, and for example, CMake 2.8.10 and lower require us to manually
 #       link the GUI version of OpenCOR to the qtmain.lib static library while
 #       from CMake 2.8.11 it's automatically done for us. Still, we want to
 #       support CMake 2.8.9 and above (since it's the first version of CMake
 #       that properly supports Qt 5), so we should do the linking ourselves and
-#       therefore ask CMake to revert to the old way of doing things (which is
-#       controlled via CMake policy #0020)...
+#       this means asking CMake to use the original version of its policies...
 
-CMAKE_POLICY(VERSION 2.8.9)
+MESSAGE("CMAKE_MINIMUM_REQUIRED_VERSION: ${CMAKE_MINIMUM_REQUIRED_VERSION}")
+
+CMAKE_POLICY(VERSION ${CMAKE_MINIMUM_REQUIRED_VERSION})
 
 # Name of the main project and location of the built OpenCOR binary
 # Note: these are required to determine where plugins should be copied on OS X...
