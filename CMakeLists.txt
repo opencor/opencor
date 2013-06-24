@@ -13,8 +13,6 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8.9)
 #       that properly supports Qt 5), so we should do the linking ourselves and
 #       this means asking CMake to use the original version of its policies...
 
-MESSAGE("CMAKE_MINIMUM_REQUIRED_VERSION: ${CMAKE_MINIMUM_REQUIRED_VERSION}")
-
 CMAKE_POLICY(VERSION ${CMAKE_MINIMUM_REQUIRED_VERSION})
 
 # Name of the main project and location of the built OpenCOR binary
