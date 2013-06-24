@@ -1,11 +1,12 @@
 PROJECT(OpenCOR)
 
-# Minimum version of CMake required
+# Minimum required version of CMake
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.9)
 
-# CMake policies that need to be specified
-# Note: see our main CMakeLists.txt file...
+# Make sure that all the CMake policies that have been introduced since our
+# minimum required CMake version are compatible with it
+# Note: make sure that the same is done in [OpenCOR]/CMakeLists.txt...
 
 CMAKE_POLICY(SET CMP0020 OLD)
 
