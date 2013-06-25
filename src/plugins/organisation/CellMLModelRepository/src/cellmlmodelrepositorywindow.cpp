@@ -56,6 +56,12 @@ CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
     connect(mCellmlModelRepositoryWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(showCustomContextMenu(const QPoint &)));
 
+    // Keep track of the window's visibility, so that we can request the list of
+    // models, if necessary
+
+    connect(this, SIGNAL(visibilityChanged(bool)),
+            this, SLOT(retrieveModelList(const bool &)));
+
     // Create a network access manager so that we can then retrieve a list of
     // CellML models from the CellML Model Repository
 
@@ -261,6 +267,17 @@ void CellmlModelRepositoryWindow::showCustomContextMenu(const QPoint &) const
     menu.addAction(mGui->actionCopy);
 
     menu.exec(QCursor::pos());
+}
+
+//==============================================================================
+
+void CellmlModelRepositoryWindow::retrieveModelList(const bool &pVisible)
+{
+    // Retrieve the list of models, if we are becoming visible and the list of
+    // models has never been requested before
+
+    if (pVisible && !mModelListRequested)
+        on_refreshButton_clicked();
 }
 
 //==============================================================================

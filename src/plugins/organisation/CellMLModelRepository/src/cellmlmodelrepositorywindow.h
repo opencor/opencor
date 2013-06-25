@@ -65,6 +65,8 @@ private Q_SLOTS:
 
     void finished(QNetworkReply *pNetworkReply);
     void showCustomContextMenu(const QPoint &) const;
+
+    void retrieveModelList(const bool &pVisible);
 };
 
 //==============================================================================
