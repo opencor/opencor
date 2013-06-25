@@ -575,6 +575,8 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
     mOldPropertyValue = QString();
     mOldPropertyToolTip = QString();
 
+    mRightClicking = false;
+
     // Customise ourselves
 
     setRootIsDecorated(false);
@@ -1131,9 +1133,21 @@ void PropertyEditorWidget::mouseMoveEvent(QMouseEvent *pEvent)
 
     TreeViewWidget::mouseMoveEvent(pEvent);
 
-    // Edit our 'new' property
+    // Edit our 'new' property, but only if we are not right-clicking
+    // Note: pEvent->button() is always equal to Qt::NoButton for mouse move
+    //       events, hence we rely on mRightClicking instead...
 
-    editProperty(property(indexAt(pEvent->pos())));
+    if (mRightClicking) {
+        // We are right clicking, so we just make sure that the 'new' property
+        // is selected
+
+        selectProperty(property(indexAt(pEvent->pos())));
+    } else {
+        // We are not right clicking, so we can edit the 'new' property (which
+        // will, as a result, also select it)
+
+        editProperty(property(indexAt(pEvent->pos())));
+    }
 }
 
 //==============================================================================
@@ -1149,12 +1163,29 @@ void PropertyEditorWidget::mousePressEvent(QMouseEvent *pEvent)
 
     TreeViewWidget::mousePressEvent(pEvent);
 
-    // Edit our 'new' property, if any and different from our 'old' property
+    // Edit our 'new' property, but only if we are not right-clicking and if
+    // there is a 'new' property and it is different from our 'old' property
+
+    mRightClicking = pEvent->button() == Qt::RightButton;
 
     Property *newProperty = property(indexAt(pEvent->pos()));
 
-    if (newProperty && (newProperty != oldProperty))
+    if (!mRightClicking && newProperty && (newProperty != oldProperty))
         editProperty(newProperty);
+}
+
+//==============================================================================
+
+void PropertyEditorWidget::mouseReleaseEvent(QMouseEvent *pEvent)
+{
+    // Reset our right clicking state
+
+    mRightClicking = false;
+
+    // Default handling of the event
+    // Note: this will finish the editing of our 'old' property, if any
+
+    TreeViewWidget::mouseReleaseEvent(pEvent);
 }
 
 //==============================================================================
@@ -1308,6 +1339,18 @@ void PropertyEditorWidget::editorClosed()
 
 //==============================================================================
 
+void PropertyEditorWidget::selectProperty(Property *pProperty)
+{
+    // Select the property, if one is provided
+
+    if (!pProperty)
+        return;
+
+    setCurrentIndex(pProperty->value()->index());
+}
+
+//==============================================================================
+
 void PropertyEditorWidget::editProperty(Property *pProperty,
                                         const bool &pCommitData)
 {
@@ -1349,15 +1392,13 @@ void PropertyEditorWidget::editProperty(Property *pProperty,
         // There is a new property to edit, so first make sure that it is
         // selected
 
-        QModelIndex propertyIndex = pProperty->value()->index();
-
-        setCurrentIndex(propertyIndex);
+        selectProperty(pProperty);
 
         // Now, we can 'properly' edit the property's value, but only if the
         // property's value is actually editable
 
         if (pProperty->value()->isEditable())
-            edit(propertyIndex);
+            edit(pProperty->value()->index());
     }
 }
 

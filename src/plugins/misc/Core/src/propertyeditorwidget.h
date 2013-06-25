@@ -275,6 +275,7 @@ protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
     virtual void mouseMoveEvent(QMouseEvent *pEvent);
     virtual void mousePressEvent(QMouseEvent *pEvent);
+    virtual void mouseReleaseEvent(QMouseEvent *pEvent);
     virtual void resizeEvent(QResizeEvent *pEvent);
 
     Property * property(const QModelIndex &pIndex) const;
@@ -294,6 +295,8 @@ private:
     QString mOldPropertyValue;
     QString mOldPropertyToolTip;
 
+    bool mRightClicking;
+
     void constructor(const bool &pShowUnits = true,
                      const bool &pAutoUpdateHeight = false);
 
@@ -302,6 +305,7 @@ private:
     Property * addProperty(const PropertyItem::Type &pType, const QString &pId,
                            const bool &pEditable, Property *pParent);
 
+    void selectProperty(Property *pProperty);
     void editProperty(Property *pProperty, const bool &pCommitData = true);
 
     void goToNeighbouringProperty(const int &pShift);
