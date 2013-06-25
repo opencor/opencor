@@ -54,6 +54,8 @@ private:
     QNetworkAccessManager *mNetworkAccessManager;
     QString mErrorMsg;
 
+    bool mModelListRequested;
+
     void outputModelList(const QStringList &pModelList);
 
 private Q_SLOTS:
