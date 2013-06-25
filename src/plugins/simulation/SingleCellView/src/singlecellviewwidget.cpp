@@ -251,8 +251,10 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
 
     // Keep track of which model parameters to show/hide
 
+/*---GRY---
     connect(mContentsWidget->informationWidget()->parametersWidget(), SIGNAL(showModelParameter(const QString &, CellMLSupport::CellmlFileRuntimeModelParameter *, const bool &)),
             this, SLOT(showModelParameter(const QString &, CellMLSupport::CellmlFileRuntimeModelParameter *, const bool &)));
+*/
 
     // Create and add our invalid simulation message widget
 

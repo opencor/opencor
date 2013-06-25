@@ -23,9 +23,9 @@ SingleCellViewInformationSimulationWidget::SingleCellViewInformationSimulationWi
 {
     // Populate our property editor
 
-    mStartingPointProperty = addDoubleProperty(QString(), true, false);
-    mEndingPointProperty   = addDoubleProperty(QString(), true, false);
-    mPointIntervalProperty = addDoubleProperty(QString(), true, false);
+    mStartingPointProperty = addDoubleProperty(QString(), true);
+    mEndingPointProperty   = addDoubleProperty(QString(), true);
+    mPointIntervalProperty = addDoubleProperty(QString(), true);
 
     // Initialise our property values
 

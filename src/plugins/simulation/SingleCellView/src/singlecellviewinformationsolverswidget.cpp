@@ -233,7 +233,7 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
 
                 switch (solverInterfaceProperty.type()) {
                 case Solver::Double:
-                    property = addDoubleProperty(solverInterfaceProperty.id(), true, false, solversProperty);
+                    property = addDoubleProperty(solverInterfaceProperty.id(), true, solversProperty);
 
                     setDoublePropertyItem(property->value(), solverInterfaceProperty.defaultValue().toDouble());
 

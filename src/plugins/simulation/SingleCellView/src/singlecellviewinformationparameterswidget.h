@@ -75,11 +75,6 @@ private:
 
     void updateModelParametersToolTips();
 
-Q_SIGNALS:
-    void showModelParameter(const QString &pFileName,
-                            CellMLSupport::CellmlFileRuntimeModelParameter *pParameter,
-                            const bool &pShow);
-
 public Q_SLOTS:
     void updateParameters();
 
@@ -88,8 +83,6 @@ private Q_SLOTS:
                                       const int &pOldSize, const int &pNewSize);
 
     void propertyChanged(Core::Property *pProperty);
-
-    void emitShowModelParameter(Core::Property *pProperty, const bool &pShow);
 };
 
 //==============================================================================

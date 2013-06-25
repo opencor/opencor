@@ -146,7 +146,7 @@ class CORE_EXPORT Property
 {
 public:
     explicit Property(const PropertyItem::Type &pType, const QString &pId,
-                      const bool &pEditable, const bool &pCheckable);
+                      const bool &pEditable);
     explicit Property(const QString &pId, PropertyItem *pName,
                       PropertyItem *pValue, PropertyItem *pUnit);
 
@@ -248,7 +248,6 @@ public:
     Property * addIntegerProperty(const QString &pId, const bool &pEditable,
                                   Property *pParent = 0);
     Property * addDoubleProperty(const QString &pId, const bool &pEditable,
-                                 const bool &pCheckable,
                                  Property *pParent = 0);
     Property * addListProperty(const QString &pId, Property *pParent = 0);
 
@@ -295,16 +294,13 @@ private:
     QString mOldPropertyValue;
     QString mOldPropertyToolTip;
 
-    QMap<Property *, bool> mPropertiesChecked;
-
     void constructor(const bool &pShowUnits = true,
                      const bool &pAutoUpdateHeight = false);
 
     void retranslateEmptyListProperties(QStandardItem *pItem);
 
     Property * addProperty(const PropertyItem::Type &pType, const QString &pId,
-                           const bool &pEditable, const bool &pCheckable,
-                           Property *pParent);
+                           const bool &pEditable, Property *pParent);
 
     void editProperty(Property *pProperty, const bool &pCommitData = true);
 
@@ -316,12 +312,8 @@ Q_SIGNALS:
     void propertyChanged(Core::Property *pProperty);
     void listPropertyChanged(const QString &pValue);
 
-    void propertyChecked(Core::Property *pProperty, const bool &pChecked);
-
 private Q_SLOTS:
     void updateHeight();
-
-    void emitPropertyChecked(QStandardItem *pItem);
 
     void editorOpened(QWidget *pEditor);
     void editorClosed();

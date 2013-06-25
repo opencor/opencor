@@ -125,11 +125,6 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
         connect(propertyEditor, SIGNAL(propertyChanged(Core::Property *)),
                 this, SLOT(propertyChanged(Core::Property *)));
 
-        // Keep track of when the user wants to show/hide a model parameter
-
-        connect(propertyEditor, SIGNAL(propertyChecked(Core::Property *, const bool &)),
-                this, SLOT(emitShowModelParameter(Core::Property *, const bool &)));
-
         // Add our new property editor to ourselves
 
         addWidget(propertyEditor);
@@ -252,26 +247,6 @@ void SingleCellViewInformationParametersWidget::propertyChanged(Core::Property *
 
 //==============================================================================
 
-void SingleCellViewInformationParametersWidget::emitShowModelParameter(Core::Property *pProperty,
-                                                                       const bool &pShow)
-{
-    // Retrieve our current property editor, if any
-
-    Core::PropertyEditorWidget *propertyEditor = qobject_cast<Core::PropertyEditorWidget *>(currentWidget());
-
-    if (!propertyEditor)
-        return;
-
-    // Let people know whether a model parameter for the given file name is to
-    // be shown
-
-    emit showModelParameter(mPropertyEditors.key(propertyEditor),
-                            mModelParameters.value(pProperty),
-                            pShow);
-}
-
-//==============================================================================
-
 void SingleCellViewInformationParametersWidget::finishPropertyEditing()
 {
     // Retrieve our current property editor, if any
@@ -363,7 +338,7 @@ void SingleCellViewInformationParametersWidget::populateModel(Core::PropertyEdit
             ;
         }
 
-        Core::Property *property = pPropertyEditor->addDoubleProperty(QString(), modelParameterEditable, true, section);
+        Core::Property *property = pPropertyEditor->addDoubleProperty(QString(), modelParameterEditable, section);
 
         property->name()->setIcon(modelParameterIcon);
 

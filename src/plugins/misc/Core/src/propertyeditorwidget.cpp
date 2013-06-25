@@ -397,7 +397,7 @@ void PropertyItem::setEmptyListValue(const QString &pEmptyListValue)
 //==============================================================================
 
 Property::Property(const PropertyItem::Type &pType, const QString &pId,
-                   const bool &pEditable, const bool &pCheckable) :
+                   const bool &pEditable) :
     mId(pId),
     mName(new PropertyItem((pType == PropertyItem::Section)?pType:PropertyItem::String, false)),
     mValue(new PropertyItem(pType, pEditable)),
@@ -405,10 +405,6 @@ Property::Property(const PropertyItem::Type &pType, const QString &pId,
 {
     // Note: mName, mValue and mUnit get owned by our property editor widget, so
     //       no need to delete them afterwards...
-
-    // Make the property checkable, if needed
-
-    mName->setCheckable(pCheckable);
 }
 
 //==============================================================================
@@ -579,8 +575,6 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
     mOldPropertyValue = QString();
     mOldPropertyToolTip = QString();
 
-    mPropertiesChecked = QMap<Property *, bool>();
-
     // Customise ourselves
 
     setRootIsDecorated(false);
@@ -595,9 +589,6 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
     // few of its signals
 
     PropertyItemDelegate *propertyItemDelegate = new PropertyItemDelegate();
-
-    connect(mModel, SIGNAL(itemChanged(QStandardItem *)),
-            this, SLOT(emitPropertyChecked(QStandardItem *)));
 
     connect(selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
             this, SLOT(editorClosed()));
@@ -891,12 +882,11 @@ void PropertyEditorWidget::setGuiState(PropertyEditorWidgetGuiState *pGuiState)
 Property * PropertyEditorWidget::addProperty(const PropertyItem::Type &pType,
                                              const QString &pId,
                                              const bool &pEditable,
-                                             const bool &pCheckable,
                                              Property *pParent)
 {
     // Determine our new property's information
 
-    Property *res = new Property(pType, pId, pEditable, pCheckable);
+    Property *res = new Property(pType, pId, pEditable);
 
     // Populate our data model with our new property
 
@@ -936,7 +926,7 @@ Property * PropertyEditorWidget::addSectionProperty(Property *pParent)
 {
     // Add a section property and return its information
 
-    return addProperty(PropertyItem::Section, QString(), false, false, pParent);
+    return addProperty(PropertyItem::Section, QString(), false, pParent);
 }
 
 //==============================================================================
@@ -947,19 +937,18 @@ Property * PropertyEditorWidget::addIntegerProperty(const QString &pId,
 {
     // Add an integer property and return its information
 
-    return addProperty(PropertyItem::Integer, pId, pEditable, false, pParent);
+    return addProperty(PropertyItem::Integer, pId, pEditable, pParent);
 }
 
 //==============================================================================
 
 Property * PropertyEditorWidget::addDoubleProperty(const QString &pId,
                                                    const bool &pEditable,
-                                                   const bool &pCheckable,
                                                    Property *pParent)
 {
     // Add a double property and return its information
 
-    return addProperty(PropertyItem::Double, pId, pEditable, pCheckable, pParent);
+    return addProperty(PropertyItem::Double, pId, pEditable, pParent);
 }
 
 //==============================================================================
@@ -969,7 +958,7 @@ Property * PropertyEditorWidget::addListProperty(const QString &pId,
 {
     // Add a list property and return its information
 
-    return addProperty(PropertyItem::List, pId, true, false, pParent);
+    return addProperty(PropertyItem::List, pId, true, pParent);
 }
 
 //==============================================================================
@@ -1215,28 +1204,6 @@ void PropertyEditorWidget::updateHeight()
         // Note: the new height consists of our ideal height to which we add the
         //       height of our horizontal scroll bar, should it be shown (i.e.
         //       if our width is smaller than that of our ideal size)...
-    }
-}
-
-//==============================================================================
-
-void PropertyEditorWidget::emitPropertyChecked(QStandardItem *pItem)
-{
-    // Let people know whether our current property is checked
-
-    Property *itemProperty = property(pItem->index());
-    bool oldPropertyChecked = mPropertiesChecked.value(itemProperty, false);
-    bool newPropertyChecked = itemProperty->name()->checkState() == Qt::Checked;
-
-    if (oldPropertyChecked != newPropertyChecked) {
-        // The property's checked status has changed, so let people know about
-        // it
-
-        emit propertyChecked(itemProperty, newPropertyChecked);
-
-        // Keep track of the property's new checked status
-
-        mPropertiesChecked.insert(itemProperty, newPropertyChecked);
     }
 }
 
