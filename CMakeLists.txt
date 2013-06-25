@@ -6,9 +6,10 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8.9)
 
 # Make sure that all the CMake policies that have been introduced since our
 # minimum required CMake version are compatible with it
-# Note: make sure that the same is done in [OpenCOR]/windows/CMakeLists.txt...
 
-CMAKE_POLICY(SET CMP0020 OLD)
+IF(NOT CMAKE_VERSION VERSION_LESS 2.8.11)
+    CMAKE_POLICY(SET CMP0020 OLD)
+ENDIF()
 
 # Name of the main project and location of the built OpenCOR binary
 # Note: these are required to determine where plugins should be copied on OS X...
