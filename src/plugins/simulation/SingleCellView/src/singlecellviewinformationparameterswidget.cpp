@@ -10,6 +10,7 @@
 //==============================================================================
 
 #include <QHeaderView>
+#include <QMenu>
 #include <QSettings>
 
 //==============================================================================
@@ -109,6 +110,13 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
         // Populate our property editor
 
         populateModel(propertyEditor, pRuntime);
+
+        // We want our own context menu for our property editor
+
+        propertyEditor->setContextMenuPolicy(Qt::CustomContextMenu);
+
+        connect(propertyEditor, SIGNAL(customContextMenuRequested(const QPoint &)),
+                this, SLOT(propertyEditorContextMenu(const QPoint &)));
 
         // Keep track of changes to columns' width
 
@@ -428,6 +436,21 @@ void SingleCellViewInformationParametersWidget::updateModelParametersToolTips()
             property->unit()->setToolTip(modelParameterToolTip);
         }
     }
+}
+
+//==============================================================================
+
+void SingleCellViewInformationParametersWidget::propertyEditorContextMenu(const QPoint &pPosition) const
+{
+    Q_UNUSED(pPosition);
+
+    // Create a custom context menu which for our property editor
+
+    QMenu menu;
+
+    menu.addAction("For testing...");
+
+    menu.exec(QCursor::pos());
 }
 
 //==============================================================================

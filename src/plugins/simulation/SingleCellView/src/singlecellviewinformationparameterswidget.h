@@ -79,6 +79,8 @@ public Q_SLOTS:
     void updateParameters();
 
 private Q_SLOTS:
+    void propertyEditorContextMenu(const QPoint &pPosition) const;
+
     void propertyEditorSectionResized(const int &pLogicalIndex,
                                       const int &pOldSize, const int &pNewSize);
 
