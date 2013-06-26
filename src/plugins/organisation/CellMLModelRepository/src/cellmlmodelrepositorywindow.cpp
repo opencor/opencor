@@ -258,8 +258,10 @@ void CellmlModelRepositoryWindow::finished(QNetworkReply *pNetworkReply)
 
 //==============================================================================
 
-void CellmlModelRepositoryWindow::showCustomContextMenu(const QPoint &) const
+void CellmlModelRepositoryWindow::showCustomContextMenu(const QPoint &pPosition) const
 {
+    Q_UNUSED(pPosition);
+
     // Create a custom context menu for our CellML Models Repository widget
 
     QMenu menu;
