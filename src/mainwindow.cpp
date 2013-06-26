@@ -157,6 +157,11 @@ mGui->actionPreferences->setVisible(false);
 
     new QShortcut(QKeySequence("Ctrl+M"),
                   this, SLOT(showMinimized()));
+
+    // And another special shortcut to have OpenCOR resume from full screen mode
+
+    new QShortcut(Qt::Key_Escape,
+                  this, SLOT(resumeFromFullScreen()));
 #endif
 
     mGui->actionFullScreen->setShortcut(QKeySequence::FullScreen);
@@ -1422,6 +1427,16 @@ void MainWindow::updateDockWidgetsVisibility()
     // Update the checked state of our docked widgets action
 
     mGui->actionDockedWidgets->setChecked(mDockedWidgetsVisible);
+}
+
+//==============================================================================
+
+void MainWindow::resumeFromFullScreen()
+{
+    // Resume from full screen mode, if appropriate
+
+    if (isFullScreen())
+        on_actionFullScreen_triggered();
 }
 
 //==============================================================================
