@@ -83,11 +83,6 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
                                                            CellMLSupport::CellmlFileRuntime *pRuntime,
                                                            SingleCellViewSimulationData *pSimulationData)
 {
-    // Make sure that we have a CellML file runtime
-
-    if (!pRuntime)
-        return;
-
     // Keep track of the simulation data
 
     mSimulationData = pSimulationData;

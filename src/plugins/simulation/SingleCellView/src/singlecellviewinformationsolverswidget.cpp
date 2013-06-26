@@ -354,11 +354,6 @@ void SingleCellViewInformationSolversWidget::initialize(const QString &pFileName
                                                         CellMLSupport::CellmlFileRuntime *pRuntime,
                                                         SingleCellViewSimulationData *pSimulationData)
 {
-    // Make sure that we have a CellML file runtime
-
-    if (!pRuntime)
-        return;
-
     // Retrieve and initialise our GUI state
 
     setGuiState(mGuiStates.contains(pFileName)?
