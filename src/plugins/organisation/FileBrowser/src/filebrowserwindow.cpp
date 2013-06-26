@@ -161,8 +161,10 @@ void FileBrowserWindow::on_actionNext_triggered()
 
 //==============================================================================
 
-void FileBrowserWindow::showCustomContextMenu(const QPoint &) const
+void FileBrowserWindow::showCustomContextMenu(const QPoint &pPosition) const
 {
+    Q_UNUSED(pPosition);
+
     // Create a custom context menu which items match the contents of our
     // tool bar widget
 
@@ -175,8 +177,10 @@ void FileBrowserWindow::showCustomContextMenu(const QPoint &) const
 
 //==============================================================================
 
-void FileBrowserWindow::itemDoubleClicked(const QModelIndex &)
+void FileBrowserWindow::itemDoubleClicked(const QModelIndex &pIndex)
 {
+    Q_UNUSED(pIndex);
+
     // Check what kind of item has been double clicked and if it is a file, then
     // open it
 

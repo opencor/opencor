@@ -64,7 +64,7 @@ private Q_SLOTS:
     void on_refreshButton_clicked();
 
     void finished(QNetworkReply *pNetworkReply);
-    void showCustomContextMenu(const QPoint &) const;
+    void showCustomContextMenu(const QPoint &pPosition) const;
 
     void retrieveModelList(const bool &pVisible);
 };
