@@ -71,6 +71,7 @@ private:
     QMap<Core::PropertyEditorWidget *, QMenu *> mContextMenus;
 
     QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeModelParameter *> mModelParameters;
+    QMap<QAction *, CellMLSupport::CellmlFileRuntimeModelParameter *> mModelParameterActions;
 
     QList<int> mColumnWidths;
 
@@ -87,6 +88,10 @@ private:
 
     void retranslateContextMenu(QMenu *pContextMenu);
 
+Q_SIGNALS:
+    void plottingRequired(CellMLSupport::CellmlFileRuntimeModelParameter *pModelParameterX,
+                          CellMLSupport::CellmlFileRuntimeModelParameter *pModelParameterY);
+
 public Q_SLOTS:
     void updateParameters();
 
@@ -96,6 +101,8 @@ private Q_SLOTS:
                                       const int &pOldSize, const int &pNewSize);
 
     void propertyChanged(Core::Property *pProperty);
+
+    void emitPlottingRequired();
 };
 
 //==============================================================================

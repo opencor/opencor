@@ -25,6 +25,7 @@ SingleCellViewInformationParametersWidget::SingleCellViewInformationParametersWi
     mPropertyEditors(QMap<QString, Core::PropertyEditorWidget *>()),
     mContextMenus(QMap<Core::PropertyEditorWidget *, QMenu *>()),
     mModelParameters(QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeModelParameter *>()),
+    mModelParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeModelParameter *>()),
     mColumnWidths(QList<int>()),
     mSimulationData(0)
 {
@@ -405,7 +406,7 @@ void SingleCellViewInformationParametersWidget::populateContextMenu(QMenu *pCont
 
     // Create our two main menu items
 
-    pContextMenu->addAction(QString());
+    QAction *voiAction = pContextMenu->addAction(QString());
     QMenu *plotAgainstMenu = new QMenu(pContextMenu);
 
     pContextMenu->addAction(plotAgainstMenu->menuAction());
@@ -413,6 +414,17 @@ void SingleCellViewInformationParametersWidget::populateContextMenu(QMenu *pCont
     // Initialise our two main menu items
 
     retranslateContextMenu(pContextMenu);
+
+    // Create a connection to handle the plotting requirement against our
+    // variable of integration
+
+    connect(voiAction, SIGNAL(triggered()),
+            this, SLOT(emitPlottingRequired()));
+
+    // Keep track of the model parameter associated with our first main menu
+    // item
+
+    mModelParameterActions.insert(voiAction, pRuntime->variableOfIntegration());
 
     // Populate our property editor with the model parameters
 
@@ -438,8 +450,19 @@ void SingleCellViewInformationParametersWidget::populateContextMenu(QMenu *pCont
         // Note: in case of an algebraic variable, see the corresponding note in
         //       populateModel() above...
 
-        componentMenu->addAction(modelParameterIcon(modelParameter->type()),
-                                 modelParameter->name()+QString(modelParameter->degree(), '\''));
+        QAction *modelParameterAction = componentMenu->addAction(modelParameterIcon(modelParameter->type()),
+                                                                 modelParameter->name()+QString(modelParameter->degree(), '\''));
+
+        // Create a connection to handle the plotting requirement against our
+        // model parameter
+
+        connect(modelParameterAction, SIGNAL(triggered()),
+                this, SLOT(emitPlottingRequired()));
+
+        // Keep track of the model parameter associated with our model parameter
+        // action
+
+        mModelParameterActions.insert(modelParameterAction, modelParameter);
     }
 }
 
@@ -563,6 +586,19 @@ void SingleCellViewInformationParametersWidget::propertyEditorSectionResized(con
     foreach (Core::PropertyEditorWidget *propertyEditor, mPropertyEditors)
         connect(propertyEditor->header(), SIGNAL(sectionResized(int,int,int)),
                 this, SLOT(propertyEditorSectionResized(const int &, const int &, const int &)));
+}
+
+//==============================================================================
+
+void SingleCellViewInformationParametersWidget::emitPlottingRequired()
+{
+    // Let people know that we want to plot the current model parameter against
+    // another
+
+    Core::PropertyEditorWidget *propertyEditor = qobject_cast<Core::PropertyEditorWidget *>(currentWidget());
+
+    emit plottingRequired(mModelParameterActions.value(qobject_cast<QAction *>(sender())),
+                          mModelParameters.value(propertyEditor->currentProperty()));
 }
 
 //==============================================================================

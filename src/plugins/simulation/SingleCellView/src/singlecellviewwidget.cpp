@@ -249,12 +249,10 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     connect(mContentsWidget->graphPanelsWidget(), SIGNAL(removeGraphPanelsEnabled(const bool &)),
             mGui->actionRemove, SLOT(setEnabled(bool)));
 
-    // Keep track of which model parameters to show/hide
+    // Keep track of what to which model parameters to show/hide
 
-/*---GRY---
-    connect(mContentsWidget->informationWidget()->parametersWidget(), SIGNAL(showModelParameter(const QString &, CellMLSupport::CellmlFileRuntimeModelParameter *, const bool &)),
-            this, SLOT(showModelParameter(const QString &, CellMLSupport::CellmlFileRuntimeModelParameter *, const bool &)));
-*/
+    connect(mContentsWidget->informationWidget()->parametersWidget(), SIGNAL(plottingRequired(CellMLSupport::CellmlFileRuntimeModelParameter *, CellMLSupport::CellmlFileRuntimeModelParameter *)),
+            this, SLOT(requirePlotting(CellMLSupport::CellmlFileRuntimeModelParameter *, CellMLSupport::CellmlFileRuntimeModelParameter *)));
 
     // Create and add our invalid simulation message widget
 
@@ -1476,6 +1474,7 @@ QString SingleCellViewWidget::modelParameterKey(const QString pFileName,
 
 //==============================================================================
 
+/*---GRY---
 void SingleCellViewWidget::showModelParameter(const QString &pFileName,
                                               CellMLSupport::CellmlFileRuntimeModelParameter *pModelParameter,
                                               const bool &pShow)
@@ -1531,6 +1530,20 @@ void SingleCellViewWidget::showModelParameter(const QString &pFileName,
 
     mActiveGraphPanel->plot()->resetLocalAxes(false);
     mActiveGraphPanel->plot()->replotNow();
+}
+*/
+
+//==============================================================================
+
+void SingleCellViewWidget::requirePlotting(CellMLSupport::CellmlFileRuntimeModelParameter *pModelParameterX,
+                                           CellMLSupport::CellmlFileRuntimeModelParameter *pModelParameterY)
+{
+//---GRY--- TO BE DONE...
+    // Keep track of the plotting requirement
+
+qDebug(">>> Plotting required for:");
+qDebug(">>>  - X: %s", qPrintable(pModelParameterX->name()));
+qDebug(">>>  - Y: %s", qPrintable(pModelParameterY->name()));
 }
 
 //==============================================================================
