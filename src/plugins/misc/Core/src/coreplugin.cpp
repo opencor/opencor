@@ -128,24 +128,24 @@ void CorePlugin::initialize()
 
     // Some connections to handle our different File actions
 
-    connect(mFileOpenAction, SIGNAL(triggered(bool)),
+    connect(mFileOpenAction, SIGNAL(triggered()),
             mCentralWidget, SLOT(openFile()));
 
-    connect(mFileSaveAction, SIGNAL(triggered(bool)),
+    connect(mFileSaveAction, SIGNAL(triggered()),
             mCentralWidget, SLOT(saveFile()));
-    connect(mFileSaveAsAction, SIGNAL(triggered(bool)),
+    connect(mFileSaveAsAction, SIGNAL(triggered()),
             mCentralWidget, SLOT(saveFileAs()));
-    connect(mFileSaveAllAction, SIGNAL(triggered(bool)),
+    connect(mFileSaveAllAction, SIGNAL(triggered()),
             mCentralWidget, SLOT(saveAllFiles()));
 
-    connect(mFilePreviousAction, SIGNAL(triggered(bool)),
+    connect(mFilePreviousAction, SIGNAL(triggered()),
             mCentralWidget, SLOT(previousFile()));
-    connect(mFileNextAction, SIGNAL(triggered(bool)),
+    connect(mFileNextAction, SIGNAL(triggered()),
             mCentralWidget, SLOT(nextFile()));
 
-    connect(mFileCloseAction, SIGNAL(triggered(bool)),
+    connect(mFileCloseAction, SIGNAL(triggered()),
             mCentralWidget, SLOT(closeFile()));
-    connect(mFileCloseAllAction, SIGNAL(triggered(bool)),
+    connect(mFileCloseAllAction, SIGNAL(triggered()),
             mCentralWidget, SLOT(closeAllFiles()));
 
     // Some connections to update the enabled state of our various actions
