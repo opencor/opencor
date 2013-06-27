@@ -127,9 +127,9 @@ mGui->actionPreferences->setVisible(false);
 
     // Some connections to handle our various menu items
 
-    connect(mGui->actionExit, SIGNAL(triggered(bool)),
+    connect(mGui->actionExit, SIGNAL(triggered()),
             this, SLOT(close()));
-    connect(mGui->actionResetAll, SIGNAL(triggered(bool)),
+    connect(mGui->actionResetAll, SIGNAL(triggered()),
             this, SLOT(resetAll()));
 
     // Set the shortcuts of some actions
