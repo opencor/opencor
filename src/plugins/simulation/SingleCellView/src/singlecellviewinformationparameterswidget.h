@@ -7,11 +7,16 @@
 
 //==============================================================================
 
+#include "cellmlfileruntime.h"
 #include "commonwidget.h"
 
 //==============================================================================
 
 #include <QStackedWidget>
+
+//==============================================================================
+
+class QMenu;
 
 //==============================================================================
 
@@ -63,6 +68,7 @@ public:
 
 private:
     QMap<QString, Core::PropertyEditorWidget *> mPropertyEditors;
+    QMap<Core::PropertyEditorWidget *, QMenu *> mContextMenus;
 
     QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeModelParameter *> mModelParameters;
 
@@ -70,17 +76,22 @@ private:
 
     SingleCellViewSimulationData *mSimulationData;
 
+    QIcon modelParameterIcon(const CellMLSupport::CellmlFileRuntimeModelParameter::ModelParameterType &pModelParameterType);
+
     void populateModel(Core::PropertyEditorWidget *pPropertyEditor,
                        CellMLSupport::CellmlFileRuntime *pRuntime);
+    void populateContextMenu(QMenu *pContextMenu,
+                             CellMLSupport::CellmlFileRuntime *pRuntime);
 
     void updateModelParametersToolTips();
+
+    void retranslateContextMenu(QMenu *pContextMenu);
 
 public Q_SLOTS:
     void updateParameters();
 
 private Q_SLOTS:
     void propertyEditorContextMenu(const QPoint &pPosition) const;
-
     void propertyEditorSectionResized(const int &pLogicalIndex,
                                       const int &pOldSize, const int &pNewSize);
 

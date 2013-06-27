@@ -264,6 +264,9 @@ public:
 
     Properties properties() const;
 
+    Property * property(const QModelIndex &pIndex) const;
+    Property * currentProperty() const;
+
     void finishPropertyEditing(const bool &pCommitData = true);
 
     void removeAllProperties();
@@ -277,9 +280,6 @@ protected:
     virtual void mousePressEvent(QMouseEvent *pEvent);
     virtual void mouseReleaseEvent(QMouseEvent *pEvent);
     virtual void resizeEvent(QResizeEvent *pEvent);
-
-    Property * property(const QModelIndex &pIndex) const;
-    Property * currentProperty() const;
 
 private:
     bool mShowUnits;

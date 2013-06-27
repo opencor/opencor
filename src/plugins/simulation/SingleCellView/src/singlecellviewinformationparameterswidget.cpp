@@ -23,6 +23,7 @@ namespace SingleCellView {
 SingleCellViewInformationParametersWidget::SingleCellViewInformationParametersWidget(QWidget *pParent) :
     QStackedWidget(pParent),
     mPropertyEditors(QMap<QString, Core::PropertyEditorWidget *>()),
+    mContextMenus(QMap<Core::PropertyEditorWidget *, QMenu *>()),
     mModelParameters(QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeModelParameter *>()),
     mColumnWidths(QList<int>()),
     mSimulationData(0)
@@ -39,12 +40,27 @@ SingleCellViewInformationParametersWidget::SingleCellViewInformationParametersWi
 
 //==============================================================================
 
+void SingleCellViewInformationParametersWidget::retranslateContextMenu(QMenu *pContextMenu)
+{
+    // Retranslate our context menu
+
+    pContextMenu->actions().at(0)->setText(tr("Plot Against Variable of Integration"));
+    pContextMenu->actions().at(1)->setText(tr("Plot Against"));
+}
+
+//==============================================================================
+
 void SingleCellViewInformationParametersWidget::retranslateUi()
 {
     // Retranslate all our property editors
 
     foreach (Core::PropertyEditorWidget *propertyEditor, mPropertyEditors)
         propertyEditor->retranslateUi();
+
+    // Retranslate all our context menus
+
+    foreach (QMenu *contextMenu, mContextMenus)
+        retranslateContextMenu(contextMenu);
 
     // Retranslate the tool tip of all our model parameters
 
@@ -97,6 +113,10 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
 
         propertyEditor = new Core::PropertyEditorWidget(this);
 
+        // Also create its corresponding context menu
+
+        QMenu *contextMenu = new QMenu(this);
+
         // Initialise our property editor's columns' width
 
         for (int i = 0, iMax = mColumnWidths.size(); i < iMax; ++i)
@@ -105,6 +125,10 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
         // Populate our property editor
 
         populateModel(propertyEditor, pRuntime);
+
+        // Create our context menu
+
+        populateContextMenu(contextMenu, pRuntime);
 
         // We want our own context menu for our property editor
 
@@ -132,9 +156,10 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
 
         addWidget(propertyEditor);
 
-        // Keep track of our new property editor
+        // Keep track of our new property editor and its context menu
 
         mPropertyEditors.insert(pFileName, propertyEditor);
+        mContextMenus.insert(propertyEditor, contextMenu);
     }
 
     // Set our retrieved property editor as our widget
@@ -152,8 +177,9 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
 
 void SingleCellViewInformationParametersWidget::finalize(const QString &pFileName)
 {
-    // Remove any track of our property editor
+    // Remove any track of our property editor and its context menu
 
+    mContextMenus.remove(mPropertyEditors.value(pFileName));
     mPropertyEditors.remove(pFileName);
 }
 
@@ -266,6 +292,32 @@ void SingleCellViewInformationParametersWidget::finishPropertyEditing()
 
 //==============================================================================
 
+QIcon SingleCellViewInformationParametersWidget::modelParameterIcon(const CellMLSupport::CellmlFileRuntimeModelParameter::ModelParameterType &pModelParameterType)
+{
+    // Return an icon that illustrates the type of a model parameter
+
+    switch (pModelParameterType) {
+    case CellMLSupport::CellmlFileRuntimeModelParameter::Constant:
+        return QIcon(":SingleCellView_constant");
+    case CellMLSupport::CellmlFileRuntimeModelParameter::ComputedConstant:
+        return QIcon(":SingleCellView_computedConstant");
+    case CellMLSupport::CellmlFileRuntimeModelParameter::Rate:
+        return QIcon(":SingleCellView_rate");
+    case CellMLSupport::CellmlFileRuntimeModelParameter::State:
+        return QIcon(":SingleCellView_state");
+    case CellMLSupport::CellmlFileRuntimeModelParameter::Algebraic:
+        return QIcon(":SingleCellView_algebraic");
+    default:
+        // We are dealing with a type of model parameter which is of no
+        // interest to us
+        // Note: we should never reach this point...
+
+        return QIcon(":CellMLSupport_errorNode");
+    }
+}
+
+//==============================================================================
+
 void SingleCellViewInformationParametersWidget::populateModel(Core::PropertyEditorWidget *pPropertyEditor,
                                                               CellMLSupport::CellmlFileRuntime *pRuntime)
 {
@@ -275,21 +327,22 @@ void SingleCellViewInformationParametersWidget::populateModel(Core::PropertyEdit
 
     // Populate our property editor with the model parameters
 
-    Core::Property *section = 0;
+    Core::Property *sectionProperty = 0;
 
     foreach (CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter, pRuntime->modelParameters()) {
         // Check whether the current model parameter is in the same component as
         // the previous one
 
-        QString crtComponent = modelParameter->component();
+        QString currentComponent = modelParameter->component();
 
-        if (!section || crtComponent.compare(section->name()->text())) {
+        if (   !sectionProperty
+            ||  currentComponent.compare(sectionProperty->name()->text())) {
             // The current model parameter is in a different component, so
             // create a new section for the 'new' component
 
-            section = pPropertyEditor->addSectionProperty();
+            sectionProperty = pPropertyEditor->addSectionProperty();
 
-            pPropertyEditor->setStringPropertyItem(section->name(), crtComponent);
+            pPropertyEditor->setStringPropertyItem(sectionProperty->name(), currentComponent);
         }
 
         // Add the current model parameter to the 'current' component section
@@ -305,45 +358,12 @@ void SingleCellViewInformationParametersWidget::populateModel(Core::PropertyEdit
         //       variables of degree 1, 2 and 3 will be V', V'' and V''',
         //       respectively)...
 
-        bool modelParameterEditable = false;
-        QIcon modelParameterIcon = QIcon(":CellMLSupport_errorNode");
+        bool modelParameterEditable =    (modelParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::Constant)
+                                      || (modelParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::State);
 
-        switch (modelParameter->type()) {
-        case CellMLSupport::CellmlFileRuntimeModelParameter::Constant:
-            modelParameterEditable = true;
+        Core::Property *property = pPropertyEditor->addDoubleProperty(QString(), modelParameterEditable, sectionProperty);
 
-            modelParameterIcon = QIcon(":SingleCellView_constant");
-
-            break;
-        case CellMLSupport::CellmlFileRuntimeModelParameter::ComputedConstant:
-            modelParameterIcon = QIcon(":SingleCellView_computedConstant");
-
-            break;
-        case CellMLSupport::CellmlFileRuntimeModelParameter::Rate:
-            modelParameterIcon = QIcon(":SingleCellView_rate");
-
-            break;
-        case CellMLSupport::CellmlFileRuntimeModelParameter::State:
-            modelParameterEditable = true;
-
-            modelParameterIcon = QIcon(":SingleCellView_state");
-
-            break;
-        case CellMLSupport::CellmlFileRuntimeModelParameter::Algebraic:
-            modelParameterIcon = QIcon(":SingleCellView_algebraic");
-
-            break;
-        default:
-            // We are dealing with a type of model parameter which is of no
-            // interest to us, so do nothing...
-            // Note: we should never reach this point...
-
-            ;
-        }
-
-        Core::Property *property = pPropertyEditor->addDoubleProperty(QString(), modelParameterEditable, section);
-
-        property->name()->setIcon(modelParameterIcon);
+        property->name()->setIcon(modelParameterIcon(modelParameter->type()));
 
         pPropertyEditor->setStringPropertyItem(property->name(), modelParameter->name()+QString(modelParameter->degree(), '\''));
 
@@ -374,6 +394,53 @@ void SingleCellViewInformationParametersWidget::populateModel(Core::PropertyEdit
     // Allow ourselves to be updated again
 
     pPropertyEditor->setUpdatesEnabled(true);
+}
+
+//==============================================================================
+
+void SingleCellViewInformationParametersWidget::populateContextMenu(QMenu *pContextMenu,
+                                                                    CellMLSupport::CellmlFileRuntime *pRuntime)
+{
+    Q_UNUSED(pRuntime);
+
+    // Create our two main menu items
+
+    pContextMenu->addAction(QString());
+    QMenu *plotAgainstMenu = new QMenu(pContextMenu);
+
+    pContextMenu->addAction(plotAgainstMenu->menuAction());
+
+    // Initialise our two main menu items
+
+    retranslateContextMenu(pContextMenu);
+
+    // Populate our property editor with the model parameters
+
+    QMenu *componentMenu = 0;
+
+    foreach (CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter, pRuntime->modelParameters()) {
+        // Check whether the current model parameter is in the same component as
+        // the previous one
+
+        QString currentComponent = modelParameter->component();
+
+        if (   !componentMenu
+            ||  currentComponent.compare(componentMenu->menuAction()->text())) {
+            // The current model parameter is in a different component, so
+            // create a new menu for the 'new' component
+
+            componentMenu = new QMenu(currentComponent, pContextMenu);
+
+            plotAgainstMenu->addMenu(componentMenu);
+        }
+
+        // Add the current model parameter to the 'current' component menu
+        // Note: in case of an algebraic variable, see the corresponding note in
+        //       populateModel() above...
+
+        componentMenu->addAction(modelParameterIcon(modelParameter->type()),
+                                 modelParameter->name()+QString(modelParameter->degree(), '\''));
+    }
 }
 
 //==============================================================================
@@ -439,13 +506,31 @@ void SingleCellViewInformationParametersWidget::propertyEditorContextMenu(const 
 {
     Q_UNUSED(pPosition);
 
-    // Create a custom context menu which for our property editor
+    // Create a custom context menu for our property editor, based on what is
+    // underneath our mouse pointer
 
-    QMenu menu;
+    // Retrieve our current property editor, if any
 
-    menu.addAction("For testing...");
+    Core::PropertyEditorWidget *propertyEditor = qobject_cast<Core::PropertyEditorWidget *>(currentWidget());
 
-    menu.exec(QCursor::pos());
+    if (!propertyEditor)
+        return;
+
+    // Retrieve our current property, if any
+
+    Core::Property *currentProperty = propertyEditor->currentProperty();
+
+    if (!currentProperty)
+        return;
+
+    // Make sure that our current property is not a section
+
+    if (currentProperty->name()->type() == Core::PropertyItem::Section)
+        return;
+
+    // Generate and show the context menu
+
+    mContextMenus.value(propertyEditor)->exec(QCursor::pos());
 }
 
 //==============================================================================

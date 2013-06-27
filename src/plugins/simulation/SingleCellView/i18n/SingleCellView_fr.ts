@@ -27,6 +27,14 @@
         <source>algebraic</source>
         <translation>algébrique</translation>
     </message>
+    <message>
+        <source>Plot Against</source>
+        <translation>Tracer en Fonction de</translation>
+    </message>
+    <message>
+        <source>Plot Against Variable of Integration</source>
+        <translation>Tracer en Fonction de la Variable d&apos;Intégration</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::SingleCellView::SingleCellViewInformationSimulationWidget</name>
