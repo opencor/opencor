@@ -33,7 +33,7 @@
     </message>
     <message>
         <source>Plot Against Variable of Integration</source>
-        <translation>Tracer en Fonction de la Variable d&apos;Intégration</translation>
+        <translation>Tracer en Fonction de Variable d&apos;Intégration</translation>
     </message>
 </context>
 <context>
