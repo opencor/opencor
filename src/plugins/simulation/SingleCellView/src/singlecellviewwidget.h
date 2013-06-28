@@ -46,7 +46,7 @@ namespace Core {
 //==============================================================================
 
 namespace CellMLSupport {
-    class CellmlFileRuntimeModelParameter;
+    class CellmlFileRuntimeParameter;
 }   // namespace CellMLSupport
 
 //==============================================================================
@@ -68,12 +68,12 @@ class SingleCellViewWidgetCurveData
 public:
     explicit SingleCellViewWidgetCurveData(const QString &pFileName,
                                            SingleCellViewSimulation *pSimulation,
-                                           CellMLSupport::CellmlFileRuntimeModelParameter *pModelParameter,
+                                           CellMLSupport::CellmlFileRuntimeParameter *pParameter,
                                            SingleCellViewGraphPanelPlotCurve *pCurve);
 
     QString fileName() const;
 
-    CellMLSupport::CellmlFileRuntimeModelParameter * modelParameter() const;
+    CellMLSupport::CellmlFileRuntimeParameter * parameter() const;
 
     SingleCellViewGraphPanelPlotCurve * curve() const;
 
@@ -87,7 +87,7 @@ private:
 
     SingleCellViewSimulation *mSimulation;
 
-    CellMLSupport::CellmlFileRuntimeModelParameter *mModelParameter;
+    CellMLSupport::CellmlFileRuntimeParameter *mParameter;
 
     SingleCellViewGraphPanelPlotCurve *mCurve;
 
@@ -207,8 +207,8 @@ private:
                        const bool &pReplot = false);
     void checkResults(SingleCellViewSimulation *pSimulation);
 
-    QString modelParameterKey(const QString pFileName,
-                              CellMLSupport::CellmlFileRuntimeModelParameter *pModelParameter);
+    QString parameterKey(const QString pFileName,
+                         CellMLSupport::CellmlFileRuntimeParameter *pParameter);
 
 private Q_SLOTS:
     void on_actionRunPauseResume_triggered();
@@ -242,9 +242,9 @@ private Q_SLOTS:
     void simulationPropertyChanged(Core::Property *pProperty);
     void solversPropertyChanged(Core::Property *pProperty);
 
-    void showModelParameter(const QString &pFileName,
-                            CellMLSupport::CellmlFileRuntimeModelParameter *pParameter,
-                            const bool &pShow);
+    void showParameter(const QString &pFileName,
+                       CellMLSupport::CellmlFileRuntimeParameter *pParameter,
+                       const bool &pShow);
 
     void callCheckResults();
 };

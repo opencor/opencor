@@ -22,7 +22,7 @@ namespace SingleCellView {
 SingleCellViewInformationParametersWidget::SingleCellViewInformationParametersWidget(QWidget *pParent) :
     QStackedWidget(pParent),
     mPropertyEditors(QMap<QString, Core::PropertyEditorWidget *>()),
-    mModelParameters(QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeModelParameter *>()),
+    mParameters(QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mColumnWidths(QList<int>()),
     mSimulationData(0)
 {
@@ -45,9 +45,9 @@ void SingleCellViewInformationParametersWidget::retranslateUi()
     foreach (Core::PropertyEditorWidget *propertyEditor, mPropertyEditors)
         propertyEditor->retranslateUi();
 
-    // Retranslate the tool tip of all our model parameters
+    // Retranslate the tool tip of all our parameters
 
-    updateModelParametersToolTips();
+    updateParametersToolTips();
 }
 
 //==============================================================================
@@ -120,10 +120,10 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
         connect(propertyEditor, SIGNAL(propertyChanged(Core::Property *)),
                 this, SLOT(propertyChanged(Core::Property *)));
 
-        // Keep track of when the user wants to show/hide a model parameter
+        // Keep track of when the user wants to show/hide a parameter
 
         connect(propertyEditor, SIGNAL(propertyChecked(Core::Property *, const bool &)),
-                this, SLOT(emitShowModelParameter(Core::Property *, const bool &)));
+                this, SLOT(emitShowParameter(Core::Property *, const bool &)));
 
         // Add our new property editor to ourselves
 
@@ -138,11 +138,11 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
 
     setCurrentWidget(propertyEditor);
 
-    // Update the tool tip of all our model parameters
+    // Update the tool tip of all our parameters
     // Note: this is in case the user changed the locale and then switched to a
     //       different file...
 
-    updateModelParametersToolTips();
+    updateParametersToolTips();
 }
 
 //==============================================================================
@@ -168,25 +168,25 @@ void SingleCellViewInformationParametersWidget::updateParameters()
     // Update our property editor's data
 
     foreach (Core::Property *property, propertyEditor->properties()) {
-        CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter = mModelParameters.value(property);
+        CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(property);
 
-        if (modelParameter)
-            switch (modelParameter->type()) {
-            case CellMLSupport::CellmlFileRuntimeModelParameter::Constant:
-            case CellMLSupport::CellmlFileRuntimeModelParameter::ComputedConstant:
-                propertyEditor->setDoublePropertyItem(property->value(), mSimulationData->constants()[modelParameter->index()]);
-
-                break;
-            case CellMLSupport::CellmlFileRuntimeModelParameter::Rate:
-                propertyEditor->setDoublePropertyItem(property->value(), mSimulationData->rates()[modelParameter->index()]);
+        if (parameter)
+            switch (parameter->type()) {
+            case CellMLSupport::CellmlFileRuntimeParameter::Constant:
+            case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
+                propertyEditor->setDoublePropertyItem(property->value(), mSimulationData->constants()[parameter->index()]);
 
                 break;
-            case CellMLSupport::CellmlFileRuntimeModelParameter::State:
-                propertyEditor->setDoublePropertyItem(property->value(), mSimulationData->states()[modelParameter->index()]);
+            case CellMLSupport::CellmlFileRuntimeParameter::Rate:
+                propertyEditor->setDoublePropertyItem(property->value(), mSimulationData->rates()[parameter->index()]);
 
                 break;
-            case CellMLSupport::CellmlFileRuntimeModelParameter::Algebraic:
-                propertyEditor->setDoublePropertyItem(property->value(), mSimulationData->algebraic()[modelParameter->index()]);
+            case CellMLSupport::CellmlFileRuntimeParameter::State:
+                propertyEditor->setDoublePropertyItem(property->value(), mSimulationData->states()[parameter->index()]);
+
+                break;
+            case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
+                propertyEditor->setDoublePropertyItem(property->value(), mSimulationData->algebraic()[parameter->index()]);
 
                 break;
             default:
@@ -200,9 +200,9 @@ void SingleCellViewInformationParametersWidget::updateParameters()
 
     mSimulationData->checkForModifications();
 
-    // Update the tool tip of all our model parameters
+    // Update the tool tip of all our parameters
 
-    updateModelParametersToolTips();
+    updateParametersToolTips();
 }
 
 //==============================================================================
@@ -218,16 +218,16 @@ void SingleCellViewInformationParametersWidget::propertyChanged(Core::Property *
 
     // Update our simulation data
 
-    CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter = mModelParameters.value(pProperty);
+    CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(pProperty);
 
-    if (modelParameter)
-        switch (modelParameter->type()) {
-        case CellMLSupport::CellmlFileRuntimeModelParameter::Constant:
-            mSimulationData->constants()[modelParameter->index()] = propertyEditor->doublePropertyItem(pProperty->value());
+    if (parameter)
+        switch (parameter->type()) {
+        case CellMLSupport::CellmlFileRuntimeParameter::Constant:
+            mSimulationData->constants()[parameter->index()] = propertyEditor->doublePropertyItem(pProperty->value());
 
             break;
-        case CellMLSupport::CellmlFileRuntimeModelParameter::State:
-            mSimulationData->states()[modelParameter->index()] = propertyEditor->doublePropertyItem(pProperty->value());
+        case CellMLSupport::CellmlFileRuntimeParameter::State:
+            mSimulationData->states()[parameter->index()] = propertyEditor->doublePropertyItem(pProperty->value());
 
             break;
         default:
@@ -247,8 +247,8 @@ void SingleCellViewInformationParametersWidget::propertyChanged(Core::Property *
 
 //==============================================================================
 
-void SingleCellViewInformationParametersWidget::emitShowModelParameter(Core::Property *pProperty,
-                                                                       const bool &pShow)
+void SingleCellViewInformationParametersWidget::emitShowParameter(Core::Property *pProperty,
+                                                                  const bool &pShow)
 {
     // Retrieve our current property editor, if any
 
@@ -257,12 +257,11 @@ void SingleCellViewInformationParametersWidget::emitShowModelParameter(Core::Pro
     if (!propertyEditor)
         return;
 
-    // Let people know whether a model parameter for the given file name is to
-    // be shown
+    // Let people know whether a parameter for the given file name is to be
+    // shown
 
-    emit showModelParameter(mPropertyEditors.key(propertyEditor),
-                            mModelParameters.value(pProperty),
-                            pShow);
+    emit showParameter(mPropertyEditors.key(propertyEditor),
+                       mParameters.value(pProperty), pShow);
 }
 
 //==============================================================================
@@ -290,15 +289,15 @@ void SingleCellViewInformationParametersWidget::populateModel(Core::PropertyEdit
 
     pPropertyEditor->setUpdatesEnabled(false);
 
-    // Populate our property editor with the model parameters
+    // Populate our property editor with the parameters
 
     Core::Property *section = 0;
 
-    foreach (CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter, pRuntime->modelParameters()) {
-        // Check whether the current model parameter is in the same component as
-        // the previous one
+    foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, pRuntime->parameters()) {
+        // Check whether the current parameter is in the same component as the
+        // previous one
 
-        QString crtComponent = modelParameter->component();
+        QString crtComponent = parameter->component();
 
         if (!section || crtComponent.compare(section->name()->text())) {
             // The current model parameter is in a different component, so
@@ -322,32 +321,32 @@ void SingleCellViewInformationParametersWidget::populateModel(Core::PropertyEdit
         //       variables of degree 1, 2 and 3 will be V', V'' and V''',
         //       respectively)...
 
-        bool modelParameterEditable = false;
-        QIcon modelParameterIcon = QIcon(":CellMLSupport_errorNode");
+        bool parameterEditable = false;
+        QIcon parameterIcon = QIcon(":CellMLSupport_errorNode");
 
-        switch (modelParameter->type()) {
-        case CellMLSupport::CellmlFileRuntimeModelParameter::Constant:
-            modelParameterEditable = true;
+        switch (parameter->type()) {
+        case CellMLSupport::CellmlFileRuntimeParameter::Constant:
+            parameterEditable = true;
 
-            modelParameterIcon = QIcon(":SingleCellView_constant");
-
-            break;
-        case CellMLSupport::CellmlFileRuntimeModelParameter::ComputedConstant:
-            modelParameterIcon = QIcon(":SingleCellView_computedConstant");
+            parameterIcon = QIcon(":SingleCellView_constant");
 
             break;
-        case CellMLSupport::CellmlFileRuntimeModelParameter::Rate:
-            modelParameterIcon = QIcon(":SingleCellView_rate");
+        case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
+            parameterIcon = QIcon(":SingleCellView_computedConstant");
 
             break;
-        case CellMLSupport::CellmlFileRuntimeModelParameter::State:
-            modelParameterEditable = true;
-
-            modelParameterIcon = QIcon(":SingleCellView_state");
+        case CellMLSupport::CellmlFileRuntimeParameter::Rate:
+            parameterIcon = QIcon(":SingleCellView_rate");
 
             break;
-        case CellMLSupport::CellmlFileRuntimeModelParameter::Algebraic:
-            modelParameterIcon = QIcon(":SingleCellView_algebraic");
+        case CellMLSupport::CellmlFileRuntimeParameter::State:
+            parameterEditable = true;
+
+            parameterIcon = QIcon(":SingleCellView_state");
+
+            break;
+        case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
+            parameterIcon = QIcon(":SingleCellView_algebraic");
 
             break;
         default:
@@ -358,31 +357,31 @@ void SingleCellViewInformationParametersWidget::populateModel(Core::PropertyEdit
             ;
         }
 
-        Core::Property *property = pPropertyEditor->addDoubleProperty(QString(), modelParameterEditable, true, section);
+        Core::Property *property = pPropertyEditor->addDoubleProperty(QString(), parameterEditable, true, section);
 
-        property->name()->setIcon(modelParameterIcon);
+        property->name()->setIcon(parameterIcon);
 
-        pPropertyEditor->setStringPropertyItem(property->name(), modelParameter->name()+QString(modelParameter->degree(), '\''));
+        pPropertyEditor->setStringPropertyItem(property->name(), parameter->name()+QString(parameter->degree(), '\''));
 
         QString perVoiUnitDegree = QString();
 
-        if (modelParameter->degree()) {
+        if (parameter->degree()) {
             perVoiUnitDegree += "/"+pRuntime->variableOfIntegration()->unit();
 
-            if (modelParameter->degree() > 1)
-                perVoiUnitDegree += modelParameter->degree();
+            if (parameter->degree() > 1)
+                perVoiUnitDegree += parameter->degree();
         }
 
-        pPropertyEditor->setStringPropertyItem(property->unit(), modelParameter->unit()+perVoiUnitDegree);
+        pPropertyEditor->setStringPropertyItem(property->unit(), parameter->unit()+perVoiUnitDegree);
 
         // Keep track of the link between our property value and model parameter
 
-        mModelParameters.insert(property, modelParameter);
+        mParameters.insert(property, parameter);
     }
 
     // Update the tool tip of all our model parameters
 
-    updateModelParametersToolTips();
+    updateParametersToolTips();
 
     // Expand all our properties
 
@@ -395,7 +394,7 @@ void SingleCellViewInformationParametersWidget::populateModel(Core::PropertyEdit
 
 //==============================================================================
 
-void SingleCellViewInformationParametersWidget::updateModelParametersToolTips()
+void SingleCellViewInformationParametersWidget::updateParametersToolTips()
 {
     // Retrieve our current property editor, if any
 
@@ -407,30 +406,30 @@ void SingleCellViewInformationParametersWidget::updateModelParametersToolTips()
     // Update the tool tip of all our property editor's properties
 
     foreach (Core::Property *property, propertyEditor->properties()) {
-        CellMLSupport::CellmlFileRuntimeModelParameter *modelParameter = mModelParameters.value(property);
+        CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(property);
 
-        if (modelParameter) {
-            QString modelParameterType = QString();
+        if (parameter) {
+            QString parameterType = QString();
 
-            switch (modelParameter->type()) {
-            case CellMLSupport::CellmlFileRuntimeModelParameter::Constant:
-                modelParameterType = tr("constant");
-
-                break;
-            case CellMLSupport::CellmlFileRuntimeModelParameter::ComputedConstant:
-                modelParameterType = tr("computed constant");
+            switch (parameter->type()) {
+            case CellMLSupport::CellmlFileRuntimeParameter::Constant:
+                parameterType = tr("constant");
 
                 break;
-            case CellMLSupport::CellmlFileRuntimeModelParameter::Rate:
-                modelParameterType = tr("rate");
+            case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
+                parameterType = tr("computed constant");
 
                 break;
-            case CellMLSupport::CellmlFileRuntimeModelParameter::State:
-                modelParameterType = tr("state");
+            case CellMLSupport::CellmlFileRuntimeParameter::Rate:
+                parameterType = tr("rate");
 
                 break;
-            case CellMLSupport::CellmlFileRuntimeModelParameter::Algebraic:
-                modelParameterType = tr("algebraic");
+            case CellMLSupport::CellmlFileRuntimeParameter::State:
+                parameterType = tr("state");
+
+                break;
+            case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
+                parameterType = tr("algebraic");
 
                 break;
             default:
@@ -441,11 +440,11 @@ void SingleCellViewInformationParametersWidget::updateModelParametersToolTips()
                 ;
             }
 
-            QString modelParameterToolTip = property->name()->text()+tr(": ")+property->value()->text()+" "+property->unit()->text()+" ("+modelParameterType+")";
+            QString parameterToolTip = property->name()->text()+tr(": ")+property->value()->text()+" "+property->unit()->text()+" ("+parameterType+")";
 
-            property->name()->setToolTip(modelParameterToolTip);
-            property->value()->setToolTip(modelParameterToolTip);
-            property->unit()->setToolTip(modelParameterToolTip);
+            property->name()->setToolTip(parameterToolTip);
+            property->value()->setToolTip(parameterToolTip);
+            property->unit()->setToolTip(parameterToolTip);
         }
     }
 }

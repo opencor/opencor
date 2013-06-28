@@ -28,7 +28,7 @@ namespace Core {
 
 namespace CellMLSupport {
     class CellmlFileRuntime;
-    class CellmlFileRuntimeModelParameter;
+    class CellmlFileRuntimeParameter;
 }   // namespace CellMLSupport
 
 //==============================================================================
@@ -64,7 +64,7 @@ public:
 private:
     QMap<QString, Core::PropertyEditorWidget *> mPropertyEditors;
 
-    QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeModelParameter *> mModelParameters;
+    QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> mParameters;
 
     QList<int> mColumnWidths;
 
@@ -73,12 +73,12 @@ private:
     void populateModel(Core::PropertyEditorWidget *pPropertyEditor,
                        CellMLSupport::CellmlFileRuntime *pRuntime);
 
-    void updateModelParametersToolTips();
+    void updateParametersToolTips();
 
 Q_SIGNALS:
-    void showModelParameter(const QString &pFileName,
-                            CellMLSupport::CellmlFileRuntimeModelParameter *pParameter,
-                            const bool &pShow);
+    void showParameter(const QString &pFileName,
+                       CellMLSupport::CellmlFileRuntimeParameter *pParameter,
+                       const bool &pShow);
 
 public Q_SLOTS:
     void updateParameters();
@@ -89,7 +89,7 @@ private Q_SLOTS:
 
     void propertyChanged(Core::Property *pProperty);
 
-    void emitShowModelParameter(Core::Property *pProperty, const bool &pShow);
+    void emitShowParameter(Core::Property *pProperty, const bool &pShow);
 };
 
 //==============================================================================

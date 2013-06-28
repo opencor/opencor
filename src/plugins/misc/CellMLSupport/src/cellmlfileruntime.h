@@ -40,10 +40,10 @@ class CellmlFile;
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFileRuntimeModelParameter
+class CELLMLSUPPORT_EXPORT CellmlFileRuntimeParameter
 {
 public:
-    enum ModelParameterType {
+    enum ParameterType {
         Voi,
         Constant,
         ComputedConstant,
@@ -53,18 +53,18 @@ public:
         Undefined
     };
 
-    explicit CellmlFileRuntimeModelParameter(const QString &pName,
-                                             const int &pDegree,
-                                             const QString &pUnit,
-                                             const QString &pComponent,
-                                             const ModelParameterType &pType,
-                                             const int &pIndex);
+    explicit CellmlFileRuntimeParameter(const QString &pName,
+                                        const int &pDegree,
+                                        const QString &pUnit,
+                                        const QString &pComponent,
+                                        const ParameterType &pType,
+                                        const int &pIndex);
 
     QString name() const;
     int degree() const;
     QString unit() const;
     QString component() const;
-    ModelParameterType type() const;
+    ParameterType type() const;
     int index() const;
 
 private:
@@ -72,13 +72,13 @@ private:
     int mDegree;
     QString mUnit;
     QString mComponent;
-    ModelParameterType mType;
+    ParameterType mType;
     int mIndex;
 };
 
 //==============================================================================
 
-typedef QList<CellmlFileRuntimeModelParameter *> CellmlFileRuntimeModelParameters;
+typedef QList<CellmlFileRuntimeParameter *> CellmlFileRuntimeParameters;
 
 //==============================================================================
 
@@ -140,11 +140,11 @@ public:
 
     CellmlFileIssues issues() const;
 
-    CellmlFileRuntimeModelParameters modelParameters() const;
+    CellmlFileRuntimeParameters parameters() const;
 
     CellmlFileRuntime * update(CellmlFile *pCellmlFile);
 
-    CellmlFileRuntimeModelParameter * variableOfIntegration() const;
+    CellmlFileRuntimeParameter * variableOfIntegration() const;
 
 private:
     ModelType mModelType;
@@ -157,8 +157,8 @@ private:
 
     CellmlFileIssues mIssues;
 
-    CellmlFileRuntimeModelParameter *mVariableOfIntegration;
-    CellmlFileRuntimeModelParameters mModelParameters;
+    CellmlFileRuntimeParameter *mVariableOfIntegration;
+    CellmlFileRuntimeParameters mParameters;
 
     InitializeConstantsFunction mInitializeConstants;
 
