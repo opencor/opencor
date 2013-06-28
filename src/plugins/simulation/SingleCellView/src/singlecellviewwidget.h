@@ -247,8 +247,8 @@ private Q_SLOTS:
                        CellMLSupport::CellmlFileRuntimeParameter *pParameter,
                        const bool &pShow);
 */
-    void requirePlotting(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
-                         CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
+    void requireTrace(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
+                      CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 
     void callCheckResults();
 };

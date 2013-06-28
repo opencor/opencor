@@ -1,13 +1,12 @@
 //==============================================================================
-// Single cell view information parameters widget
+// Single cell view information traces widget
 //==============================================================================
 
-#ifndef SINGLECELLVIEWINFORMATIONPARAMETERSWIDGET_H
-#define SINGLECELLVIEWINFORMATIONPARAMETERSWIDGET_H
+#ifndef SINGLECELLVIEWINFORMATIONTRACESWIDGET_H
+#define SINGLECELLVIEWINFORMATIONTRACESWIDGET_H
 
 //==============================================================================
 
-#include "cellmlfileruntime.h"
 #include "commonwidget.h"
 
 //==============================================================================
@@ -16,16 +15,11 @@
 
 //==============================================================================
 
-class QMenu;
-
-//==============================================================================
-
 namespace OpenCOR {
 
 //==============================================================================
 
 namespace Core {
-    class Property;
     class PropertyEditorWidget;
 }   // namespace Core
 
@@ -33,7 +27,6 @@ namespace Core {
 
 namespace CellMLSupport {
     class CellmlFileRuntime;
-    class CellmlFileRuntimeParameter;
 }   // namespace CellMLSupport
 
 //==============================================================================
@@ -46,13 +39,13 @@ class SingleCellViewSimulationData;
 
 //==============================================================================
 
-class SingleCellViewInformationParametersWidget : public QStackedWidget,
-                                                  public Core::CommonWidget
+class SingleCellViewInformationTracesWidget : public QStackedWidget,
+                                              public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
-    explicit SingleCellViewInformationParametersWidget(QWidget *pParent = 0);
+    explicit SingleCellViewInformationTracesWidget(QWidget *pParent = 0);
 
     virtual void retranslateUi();
 
@@ -68,41 +61,8 @@ public:
 
 private:
     QMap<QString, Core::PropertyEditorWidget *> mPropertyEditors;
-    QMap<Core::PropertyEditorWidget *, QMenu *> mContextMenus;
-
-    QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> mParameters;
-    QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
 
     QList<int> mColumnWidths;
-
-    SingleCellViewSimulationData *mSimulationData;
-
-    QIcon parameterIcon(const CellMLSupport::CellmlFileRuntimeParameter::ParameterType &pParameterType);
-
-    void populateModel(Core::PropertyEditorWidget *pPropertyEditor,
-                       CellMLSupport::CellmlFileRuntime *pRuntime);
-    void populateContextMenu(QMenu *pContextMenu,
-                             CellMLSupport::CellmlFileRuntime *pRuntime);
-
-    void updateParametersToolTips();
-
-    void retranslateContextMenu(QMenu *pContextMenu);
-
-Q_SIGNALS:
-    void traceRequired(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
-                       CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
-
-public Q_SLOTS:
-    void updateParameters();
-
-private Q_SLOTS:
-    void propertyEditorContextMenu(const QPoint &pPosition) const;
-    void propertyEditorSectionResized(const int &pLogicalIndex,
-                                      const int &pOldSize, const int &pNewSize);
-
-    void propertyChanged(Core::Property *pProperty);
-
-    void emitTraceRequired();
 };
 
 //==============================================================================

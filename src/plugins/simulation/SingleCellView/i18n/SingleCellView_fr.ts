@@ -96,6 +96,10 @@
         <source>Parameters</source>
         <translation>Paramètres</translation>
     </message>
+    <message>
+        <source>Traces</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::SingleCellView::SingleCellViewPlugin</name>

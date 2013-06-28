@@ -14,6 +14,7 @@
 #include "singlecellviewinformationparameterswidget.h"
 #include "singlecellviewinformationsimulationwidget.h"
 #include "singlecellviewinformationsolverswidget.h"
+#include "singlecellviewinformationtraceswidget.h"
 #include "singlecellviewinformationwidget.h"
 #include "singlecellviewplugin.h"
 #include "singlecellviewsimulation.h"
@@ -249,10 +250,10 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     connect(mContentsWidget->graphPanelsWidget(), SIGNAL(removeGraphPanelsEnabled(const bool &)),
             mGui->actionRemove, SLOT(setEnabled(bool)));
 
-    // Keep track of what requires plotting
+    // Keep track of which traces are required
 
-    connect(mContentsWidget->informationWidget()->parametersWidget(), SIGNAL(plottingRequired(CellMLSupport::CellmlFileRuntimeParameter *, CellMLSupport::CellmlFileRuntimeParameter *)),
-            this, SLOT(requirePlotting(CellMLSupport::CellmlFileRuntimeParameter *, CellMLSupport::CellmlFileRuntimeParameter *)));
+    connect(mContentsWidget->informationWidget()->parametersWidget(), SIGNAL(traceRequired(CellMLSupport::CellmlFileRuntimeParameter *, CellMLSupport::CellmlFileRuntimeParameter *)),
+            this, SLOT(requireTrace(CellMLSupport::CellmlFileRuntimeParameter *, CellMLSupport::CellmlFileRuntimeParameter *)));
 
     // Create and add our invalid simulation message widget
 
@@ -543,6 +544,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
     SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
     SingleCellViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
     SingleCellViewInformationSolversWidget *solversWidget = informationWidget->solversWidget();
+    SingleCellViewInformationTracesWidget *tracesWidget = informationWidget->tracesWidget();
     SingleCellViewInformationParametersWidget *parametersWidget = informationWidget->parametersWidget();
 
     if (previousSimulation) {
@@ -731,7 +733,8 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
         mContentsWidget->setVisible(true);
 
-        // Initialise our GUI's simulation, solvers and parameters widgets
+        // Initialise our GUI's simulation, solvers, traces and parameters
+        // widgets
         // Note: this will also initialise some of our simulation data (i.e. our
         //       simulation's starting point and simulation's NLA solver's
         //       properties) which is needed since we want to be able to reset
@@ -739,6 +742,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
         simulationWidget->initialize(pFileName, cellmlFileRuntime, mSimulation->data());
         solversWidget->initialize(pFileName, cellmlFileRuntime, mSimulation->data());
+        tracesWidget->initialize(pFileName, cellmlFileRuntime, mSimulation->data());
         parametersWidget->initialize(pFileName, cellmlFileRuntime, mSimulation->data());
 
         // Check whether we have at least one ODE or DAE solver and, if needed,
@@ -951,6 +955,7 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
 
     informationWidget->simulationWidget()->finalize(pFileName);
     informationWidget->solversWidget()->finalize(pFileName);
+    informationWidget->tracesWidget()->finalize(pFileName);
     informationWidget->parametersWidget()->finalize(pFileName);
 }
 
@@ -1535,8 +1540,8 @@ void SingleCellViewWidget::showParameter(const QString &pFileName,
 
 //==============================================================================
 
-void SingleCellViewWidget::requirePlotting(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
-                                           CellMLSupport::CellmlFileRuntimeParameter *pParameterY)
+void SingleCellViewWidget::requireTrace(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
+                                        CellMLSupport::CellmlFileRuntimeParameter *pParameterY)
 {
 //---GRY--- TO BE DONE...
     // Keep track of the plotting requirement
@@ -1618,8 +1623,7 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
 
             mProgresses.insert(simulation->fileName(), newProgress);
 
-            // Let people know about the file tab icon to be used for the
-            // model
+            // Let people know about the file tab icon to be used for the model
 
             emit updateFileTabIcon(simulation->fileName(),
                                    fileTabIcon(simulation->fileName()));
