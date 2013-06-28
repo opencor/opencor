@@ -300,15 +300,15 @@ void SingleCellViewInformationParametersWidget::populateModel(Core::PropertyEdit
         QString crtComponent = parameter->component();
 
         if (!section || crtComponent.compare(section->name()->text())) {
-            // The current model parameter is in a different component, so
-            // create a new section for the 'new' component
+            // The current parameter is in a different component, so create a
+            // new section for the 'new' component
 
             section = pPropertyEditor->addSectionProperty();
 
             pPropertyEditor->setStringPropertyItem(section->name(), crtComponent);
         }
 
-        // Add the current model parameter to the 'current' component section
+        // Add the current parameter to the 'current' component section
         // Note: in case of an algebraic variable, if its degree is equal to
         //       zero, then we are dealing with a 'proper' algebraic variable
         //       otherwise a rate variable. Now, there may be several rate
@@ -350,8 +350,8 @@ void SingleCellViewInformationParametersWidget::populateModel(Core::PropertyEdit
 
             break;
         default:
-            // We are dealing with a type of model parameter which is of no
-            // interest to us, so do nothing...
+            // We are dealing with a type of parameter which is of no interest
+            // to us, so do nothing...
             // Note: we should never reach this point...
 
             ;
@@ -374,12 +374,12 @@ void SingleCellViewInformationParametersWidget::populateModel(Core::PropertyEdit
 
         pPropertyEditor->setStringPropertyItem(property->unit(), parameter->unit()+perVoiUnitDegree);
 
-        // Keep track of the link between our property value and model parameter
+        // Keep track of the link between our property value and parameter
 
         mParameters.insert(property, parameter);
     }
 
-    // Update the tool tip of all our model parameters
+    // Update the tool tip of all our parameters
 
     updateParametersToolTips();
 
@@ -433,7 +433,7 @@ void SingleCellViewInformationParametersWidget::updateParametersToolTips()
 
                 break;
             default:
-                // We are dealing with a type of model parameter which is of no
+                // We are dealing with a type of parameter which is of no
                 // interest to us, so do nothing...
                 // Note: we should never reach this point...
 

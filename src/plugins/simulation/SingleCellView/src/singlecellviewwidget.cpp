@@ -1467,7 +1467,7 @@ void SingleCellViewWidget::solversPropertyChanged(Core::Property *pProperty)
 QString SingleCellViewWidget::parameterKey(const QString pFileName,
                                            CellMLSupport::CellmlFileRuntimeParameter *pParameter)
 {
-    // Return the for the given model parameter
+    // Return the for the given parameter
 
     return pFileName+"|"+QString::number(pParameter->type())+"|"+QString::number(pParameter->index());
 }

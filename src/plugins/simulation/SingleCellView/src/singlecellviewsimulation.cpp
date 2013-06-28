@@ -307,7 +307,7 @@ void SingleCellViewSimulationData::setNlaSolverName(const QString &pNlaSolverNam
     if (mRuntime->needNlaSolver()) {
         mNlaSolverName = pNlaSolverName;
 
-        // Reset our model parameter values, if required
+        // Reset our parameter values, if required
         // Note: to only recompute our 'computed constants' and 'variables' is
         //       not sufficient since some constants may also need to be
         //       reinitialised...
@@ -337,7 +337,7 @@ void SingleCellViewSimulationData::addNlaSolverProperty(const QString &pName,
     if (mRuntime->needNlaSolver()) {
         mNlaSolverProperties.insert(pName, pValue);
 
-        // Reset our model parameter values, if required
+        // Reset our parameter values, if required
         // Note: to only recompute our 'computed constants' and 'variables' is
         //       not sufficient since some constants may also need to be
         //       reinitialised...
@@ -351,8 +351,8 @@ void SingleCellViewSimulationData::addNlaSolverProperty(const QString &pName,
 
 void SingleCellViewSimulationData::reset()
 {
-    // Reset our model parameter values which means both initialising our
-    // 'constants' and computing our 'computed constants' and 'variables'
+    // Reset our parameter values which means both initialising our 'constants'
+    // and computing our 'computed constants' and 'variables'
     // Note #1: we must check whether our runtime needs NLA solver and, if so,
     //          then retrieve an instance of our NLA solver since some of the
     //          resetting may require solving one or several NLA systems...
@@ -389,7 +389,7 @@ void SingleCellViewSimulationData::reset()
         nlaSolver->setProperties(mNlaSolverProperties);
     }
 
-    // Reset our model parameter values
+    // Reset our parameter values
 
     memset(mConstants, 0, mRuntime->constantsCount()*OpenCOR::CoreSolver::SizeOfDouble);
     memset(mRates, 0, mRuntime->ratesCount()*OpenCOR::CoreSolver::SizeOfDouble);

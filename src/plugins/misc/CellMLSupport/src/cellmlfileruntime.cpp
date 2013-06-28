@@ -649,8 +649,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
         genericCodeInformation = mDaeCodeInformation;
     }
 
-    // Retrieve all the model parameters and sort them by component/variable
-    // name
+    // Retrieve all the parameters and sort them by component/variable name
 
     ObjRef<iface::cellml_services::ComputationTargetIterator> computationTargetIterator = genericCodeInformation->iterateTargets();
 
@@ -760,7 +759,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
                     }
             }
 
-            // Keep track of the model parameter
+            // Keep track of the parameter
 
             CellmlFileRuntimeParameter *parameter = new CellmlFileRuntimeParameter(QString::fromStdWString(variable->name()),
                                                                                    computationTarget->degree(),
@@ -852,7 +851,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
 
     // Retrieve the body of the function that initialises constants and extract
     // the statements that are related to computed variables (since we want to
-    // be able to recompute those whenever the user modifies a model parameter)
+    // be able to recompute those whenever the user modifies a parameter)
     // Note: ideally, we wouldn't have to do that, but the fact is that the
     //       CellML API doesn't distinguish between 'proper' and 'computed'
     //       constants, so...
