@@ -15,6 +15,10 @@
 
 //==============================================================================
 
+class QLabel;
+
+//==============================================================================
+
 namespace OpenCOR {
 
 //==============================================================================
@@ -59,6 +63,8 @@ private:
     QMap<QString, Core::PropertyEditorWidget *> mPropertyEditors;
 
     QList<int> mColumnWidths;
+
+    QLabel *mNoTracesMessageWidget;
 
 public Q_SLOTS:
     void requireTrace(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,

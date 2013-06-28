@@ -9,6 +9,7 @@
 //==============================================================================
 
 #include <QHeaderView>
+#include <QLabel>
 #include <QSettings>
 
 //==============================================================================
@@ -23,6 +24,19 @@ SingleCellViewInformationTracesWidget::SingleCellViewInformationTracesWidget(QWi
     mPropertyEditors(QMap<QString, Core::PropertyEditorWidget *>()),
     mColumnWidths(QList<int>())
 {
+    // Create a widget that will be shown whenever there are no traces
+    // associated with the current plotting area
+
+    mNoTracesMessageWidget = new QLabel(pParent);
+
+    mNoTracesMessageWidget->setAlignment(Qt::AlignCenter);
+    mNoTracesMessageWidget->setAutoFillBackground(true);
+    mNoTracesMessageWidget->setBackgroundRole(QPalette::Base);
+    mNoTracesMessageWidget->setMargin(3);
+    mNoTracesMessageWidget->setWordWrap(true);
+
+    addWidget(mNoTracesMessageWidget);
+
     // Determine the default width of each column of our property editors
 
     Core::PropertyEditorWidget *tempPropertyEditor = new Core::PropertyEditorWidget(this);
@@ -37,6 +51,10 @@ SingleCellViewInformationTracesWidget::SingleCellViewInformationTracesWidget(QWi
 
 void SingleCellViewInformationTracesWidget::retranslateUi()
 {
+    // Retranslate our no traces message widget
+
+    mNoTracesMessageWidget->setText(tr("There are no traces..."));
+
     // Retranslate all our property editors
 
     foreach (Core::PropertyEditorWidget *propertyEditor, mPropertyEditors)

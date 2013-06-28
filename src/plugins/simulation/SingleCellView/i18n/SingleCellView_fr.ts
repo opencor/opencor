@@ -83,6 +83,13 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::SingleCellView::SingleCellViewInformationTracesWidget</name>
+    <message>
+        <source>There are no traces...</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::SingleCellView::SingleCellViewInformationWidget</name>
     <message>
         <source>Simulation</source>
