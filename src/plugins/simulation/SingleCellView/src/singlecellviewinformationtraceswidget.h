@@ -52,11 +52,6 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-    void initialize(const QString &pFileName,
-                    CellMLSupport::CellmlFileRuntime *pRuntime,
-                    SingleCellViewSimulationData *pSimulationData);
-    void finalize(const QString &pFileName);
-
     void finishPropertyEditing();
 
 private:

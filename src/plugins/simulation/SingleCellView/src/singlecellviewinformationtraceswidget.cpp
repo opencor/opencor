@@ -73,26 +73,6 @@ void SingleCellViewInformationTracesWidget::saveSettings(QSettings *pSettings) c
 
 //==============================================================================
 
-void SingleCellViewInformationTracesWidget::initialize(const QString &pFileName,
-                                                       CellMLSupport::CellmlFileRuntime *pRuntime,
-                                                       SingleCellViewSimulationData *pSimulationData)
-{
-Q_UNUSED(pFileName);
-Q_UNUSED(pRuntime);
-Q_UNUSED(pSimulationData);
-//---GRY--- TO BE DONE...
-}
-
-//==============================================================================
-
-void SingleCellViewInformationTracesWidget::finalize(const QString &pFileName)
-{
-Q_UNUSED(pFileName);
-//---GRY--- TO BE DONE...
-}
-
-//==============================================================================
-
 void SingleCellViewInformationTracesWidget::finishPropertyEditing()
 {
     // Retrieve our current property editor, if any
