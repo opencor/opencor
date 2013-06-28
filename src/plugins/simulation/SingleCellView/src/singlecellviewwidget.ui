@@ -99,14 +99,13 @@
   <action name="actionReset">
    <property name="icon">
     <iconset resource="../res/SingleCellView.qrc">
-
      <normaloff>:/oxygen/actions/view-refresh.png</normaloff>:/oxygen/actions/view-refresh.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Reset</string>
    </property>
    <property name="statusTip">
-    <string>Reset all the model parameters</string>
+    <string>Reset all the parameters</string>
    </property>
   </action>
   <action name="actionCsvExport">

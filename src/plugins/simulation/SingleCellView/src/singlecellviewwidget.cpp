@@ -70,11 +70,11 @@ static const QString OutputBrLn = "<br/>\n";
 
 SingleCellViewWidgetCurveData::SingleCellViewWidgetCurveData(const QString &pFileName,
                                                              SingleCellViewSimulation *pSimulation,
-                                                             CellMLSupport::CellmlFileRuntimeModelParameter *pModelParameter,
+                                                             CellMLSupport::CellmlFileRuntimeParameter *pParameter,
                                                              SingleCellViewGraphPanelPlotCurve *pCurve) :
     mFileName(pFileName),
     mSimulation(pSimulation),
-    mModelParameter(pModelParameter),
+    mParameter(pParameter),
     mCurve(pCurve),
     mAttached(true)
 {
@@ -91,11 +91,11 @@ QString SingleCellViewWidgetCurveData::fileName() const
 
 //==============================================================================
 
-CellMLSupport::CellmlFileRuntimeModelParameter * SingleCellViewWidgetCurveData::modelParameter() const
+CellMLSupport::CellmlFileRuntimeParameter * SingleCellViewWidgetCurveData::parameter() const
 {
-    // Return our model parameter
+    // Return our parameter
 
-    return mModelParameter;
+    return mParameter;
 }
 
 //==============================================================================
@@ -113,15 +113,15 @@ double * SingleCellViewWidgetCurveData::yData() const
 {
     // Return our Y data array
 
-    if (   (mModelParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::Constant)
-        || (mModelParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::ComputedConstant))
-        return mSimulation->results()->constants()?mSimulation->results()->constants()[mModelParameter->index()]:0;
-    else if (mModelParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::Rate)
-        return mSimulation->results()->rates()?mSimulation->results()->rates()[mModelParameter->index()]:0;
-    else if (mModelParameter->type() == CellMLSupport::CellmlFileRuntimeModelParameter::State)
-        return mSimulation->results()->states()?mSimulation->results()->states()[mModelParameter->index()]:0;
+    if (   (mParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)
+        || (mParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant))
+        return mSimulation->results()->constants()?mSimulation->results()->constants()[mParameter->index()]:0;
+    else if (mParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Rate)
+        return mSimulation->results()->rates()?mSimulation->results()->rates()[mParameter->index()]:0;
+    else if (mParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State)
+        return mSimulation->results()->states()?mSimulation->results()->states()[mParameter->index()]:0;
     else
-        return mSimulation->results()->algebraic()?mSimulation->results()->algebraic()[mModelParameter->index()]:0;
+        return mSimulation->results()->algebraic()?mSimulation->results()->algebraic()[mParameter->index()]:0;
 }
 
 //==============================================================================
@@ -249,10 +249,10 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     connect(mContentsWidget->graphPanelsWidget(), SIGNAL(removeGraphPanelsEnabled(const bool &)),
             mGui->actionRemove, SLOT(setEnabled(bool)));
 
-    // Keep track of what to which model parameters to show/hide
+    // Keep track of what requires plotting
 
-    connect(mContentsWidget->informationWidget()->parametersWidget(), SIGNAL(plottingRequired(CellMLSupport::CellmlFileRuntimeModelParameter *, CellMLSupport::CellmlFileRuntimeModelParameter *)),
-            this, SLOT(requirePlotting(CellMLSupport::CellmlFileRuntimeModelParameter *, CellMLSupport::CellmlFileRuntimeModelParameter *)));
+    connect(mContentsWidget->informationWidget()->parametersWidget(), SIGNAL(plottingRequired(CellMLSupport::CellmlFileRuntimeParameter *, CellMLSupport::CellmlFileRuntimeParameter *)),
+            this, SLOT(requirePlotting(CellMLSupport::CellmlFileRuntimeParameter *, CellMLSupport::CellmlFileRuntimeParameter *)));
 
     // Create and add our invalid simulation message widget
 
@@ -643,7 +643,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
     // Retrieve our variable of integration, if any
 
-    CellMLSupport::CellmlFileRuntimeModelParameter *variableOfIntegration = validCellmlFileRuntime?cellmlFileRuntime->variableOfIntegration():0;
+    CellMLSupport::CellmlFileRuntimeParameter *variableOfIntegration = validCellmlFileRuntime?cellmlFileRuntime->variableOfIntegration():0;
 
     // Output some information about our CellML file
 
@@ -917,14 +917,14 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
     // Remove our curves' data associated with the given file name, if any
 
     QList<QString> fileNames = QList<QString>();
-    QList<CellMLSupport::CellmlFileRuntimeModelParameter *> modelParameters = QList<CellMLSupport::CellmlFileRuntimeModelParameter *>();
+    QList<CellMLSupport::CellmlFileRuntimeParameter *> parameters = QList<CellMLSupport::CellmlFileRuntimeParameter *>();
 
     foreach (SingleCellViewWidgetCurveData *curveData, mCurvesData)
         if (!curveData->fileName().compare(pFileName)) {
-            // Keep track of the file name and model parameter of the curve data
+            // Keep track of the file name and parameter of the curve data
 
             fileNames << curveData->fileName();
-            modelParameters << curveData->modelParameter();
+            parameters << curveData->parameter();
 
             // Delete the curve and the curve data themselves
 
@@ -933,7 +933,7 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
         }
 
     for (int i = 0, iMax = fileNames.count(); i < iMax; ++i)
-        mCurvesData.remove(modelParameterKey(fileNames[i], modelParameters[i]));
+        mCurvesData.remove(parameterKey(fileNames[i], parameters[i]));
 
     // Remove various information associated with the given file name
 
@@ -1464,24 +1464,24 @@ void SingleCellViewWidget::solversPropertyChanged(Core::Property *pProperty)
 
 //==============================================================================
 
-QString SingleCellViewWidget::modelParameterKey(const QString pFileName,
-                                                CellMLSupport::CellmlFileRuntimeModelParameter *pModelParameter)
+QString SingleCellViewWidget::parameterKey(const QString pFileName,
+                                           CellMLSupport::CellmlFileRuntimeParameter *pParameter)
 {
-    // Return the for the given model parameter
+    // Return the for the given parameter
 
-    return pFileName+"|"+QString::number(pModelParameter->type())+"|"+QString::number(pModelParameter->index());
+    return pFileName+"|"+QString::number(pParameter->type())+"|"+QString::number(pParameter->index());
 }
 
 //==============================================================================
 
 /*---GRY---
-void SingleCellViewWidget::showModelParameter(const QString &pFileName,
-                                              CellMLSupport::CellmlFileRuntimeModelParameter *pModelParameter,
-                                              const bool &pShow)
+void SingleCellViewWidget::showParameter(const QString &pFileName,
+                                         CellMLSupport::CellmlFileRuntimeParameter *pParameter,
+                                         const bool &pShow)
 {
     // Determine the key for the given parameter
 
-    QString key = modelParameterKey(pFileName, pModelParameter);
+    QString key = parameterKey(pFileName, pParameter);
 
     // Retrieve the curve data associated with the key, if any
 
@@ -1507,7 +1507,7 @@ void SingleCellViewWidget::showModelParameter(const QString &pFileName,
         // data for it
 
         SingleCellViewGraphPanelPlotCurve *curve = new SingleCellViewGraphPanelPlotCurve();
-        SingleCellViewWidgetCurveData *curveData = new SingleCellViewWidgetCurveData(pFileName, mSimulation, pModelParameter, curve);
+        SingleCellViewWidgetCurveData *curveData = new SingleCellViewWidgetCurveData(pFileName, mSimulation, pParameter, curve);
 
         // Set some data for our curve
 
@@ -1535,15 +1535,15 @@ void SingleCellViewWidget::showModelParameter(const QString &pFileName,
 
 //==============================================================================
 
-void SingleCellViewWidget::requirePlotting(CellMLSupport::CellmlFileRuntimeModelParameter *pModelParameterX,
-                                           CellMLSupport::CellmlFileRuntimeModelParameter *pModelParameterY)
+void SingleCellViewWidget::requirePlotting(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
+                                           CellMLSupport::CellmlFileRuntimeParameter *pParameterY)
 {
 //---GRY--- TO BE DONE...
     // Keep track of the plotting requirement
 
 qDebug(">>> Plotting required for:");
-qDebug(">>>  - X: %s", qPrintable(pModelParameterX->name()));
-qDebug(">>>  - Y: %s", qPrintable(pModelParameterY->name()));
+qDebug(">>>  - X: %s", qPrintable(pParameterX->name()));
+qDebug(">>>  - Y: %s", qPrintable(pParameterY->name()));
 }
 
 //==============================================================================

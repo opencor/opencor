@@ -33,7 +33,7 @@ namespace Core {
 
 namespace CellMLSupport {
     class CellmlFileRuntime;
-    class CellmlFileRuntimeModelParameter;
+    class CellmlFileRuntimeParameter;
 }   // namespace CellMLSupport
 
 //==============================================================================
@@ -70,27 +70,27 @@ private:
     QMap<QString, Core::PropertyEditorWidget *> mPropertyEditors;
     QMap<Core::PropertyEditorWidget *, QMenu *> mContextMenus;
 
-    QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeModelParameter *> mModelParameters;
-    QMap<QAction *, CellMLSupport::CellmlFileRuntimeModelParameter *> mModelParameterActions;
+    QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> mParameters;
+    QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
 
     QList<int> mColumnWidths;
 
     SingleCellViewSimulationData *mSimulationData;
 
-    QIcon modelParameterIcon(const CellMLSupport::CellmlFileRuntimeModelParameter::ModelParameterType &pModelParameterType);
+    QIcon parameterIcon(const CellMLSupport::CellmlFileRuntimeParameter::ParameterType &pParameterType);
 
     void populateModel(Core::PropertyEditorWidget *pPropertyEditor,
                        CellMLSupport::CellmlFileRuntime *pRuntime);
     void populateContextMenu(QMenu *pContextMenu,
                              CellMLSupport::CellmlFileRuntime *pRuntime);
 
-    void updateModelParametersToolTips();
+    void updateParametersToolTips();
 
     void retranslateContextMenu(QMenu *pContextMenu);
 
 Q_SIGNALS:
-    void plottingRequired(CellMLSupport::CellmlFileRuntimeModelParameter *pModelParameterX,
-                          CellMLSupport::CellmlFileRuntimeModelParameter *pModelParameterY);
+    void plottingRequired(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
+                          CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 
 public Q_SLOTS:
     void updateParameters();
