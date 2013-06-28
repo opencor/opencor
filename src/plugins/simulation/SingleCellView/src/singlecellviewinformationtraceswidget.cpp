@@ -74,8 +74,8 @@ void SingleCellViewInformationTracesWidget::saveSettings(QSettings *pSettings) c
 //==============================================================================
 
 void SingleCellViewInformationTracesWidget::initialize(const QString &pFileName,
-                                                           CellMLSupport::CellmlFileRuntime *pRuntime,
-                                                           SingleCellViewSimulationData *pSimulationData)
+                                                       CellMLSupport::CellmlFileRuntime *pRuntime,
+                                                       SingleCellViewSimulationData *pSimulationData)
 {
 Q_UNUSED(pFileName);
 Q_UNUSED(pRuntime);
