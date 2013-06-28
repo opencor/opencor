@@ -2,15 +2,13 @@
 // Single cell view information traces widget
 //==============================================================================
 
-//#include "cellmlfileruntime.h"
+#include "cellmlfileruntime.h"
 #include "propertyeditorwidget.h"
 #include "singlecellviewinformationtraceswidget.h"
-//#include "singlecellviewsimulation.h"
 
 //==============================================================================
 
 #include <QHeaderView>
-//#include <QMenu>
 #include <QSettings>
 
 //==============================================================================
@@ -85,6 +83,19 @@ void SingleCellViewInformationTracesWidget::finishPropertyEditing()
     // Finish the editing of our current property editor
 
     propertyEditor->finishPropertyEditing();
+}
+
+//==============================================================================
+
+void SingleCellViewInformationTracesWidget::requireTrace(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
+                                                         CellMLSupport::CellmlFileRuntimeParameter *pParameterY)
+{
+//---GRY--- TO BE DONE...
+    // Keep track of the trace requirement
+
+qDebug(">>> Trace required for:");
+qDebug(">>>  - X: %s", qPrintable(pParameterX->name()));
+qDebug(">>>  - Y: %s", qPrintable(pParameterY->name()));
 }
 
 //==============================================================================

@@ -27,6 +27,7 @@ namespace Core {
 
 namespace CellMLSupport {
     class CellmlFileRuntime;
+    class CellmlFileRuntimeParameter;
 }   // namespace CellMLSupport
 
 //==============================================================================
@@ -58,6 +59,10 @@ private:
     QMap<QString, Core::PropertyEditorWidget *> mPropertyEditors;
 
     QList<int> mColumnWidths;
+
+public Q_SLOTS:
+    void requireTrace(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
+                      CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 };
 
 //==============================================================================

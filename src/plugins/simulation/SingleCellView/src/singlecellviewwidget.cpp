@@ -253,7 +253,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     // Keep track of which traces are required
 
     connect(mContentsWidget->informationWidget()->parametersWidget(), SIGNAL(traceRequired(CellMLSupport::CellmlFileRuntimeParameter *, CellMLSupport::CellmlFileRuntimeParameter *)),
-            this, SLOT(requireTrace(CellMLSupport::CellmlFileRuntimeParameter *, CellMLSupport::CellmlFileRuntimeParameter *)));
+            mContentsWidget->informationWidget()->tracesWidget(), SLOT(requireTrace(CellMLSupport::CellmlFileRuntimeParameter *, CellMLSupport::CellmlFileRuntimeParameter *)));
 
     // Create and add our invalid simulation message widget
 
@@ -1533,19 +1533,6 @@ void SingleCellViewWidget::showParameter(const QString &pFileName,
     mActiveGraphPanel->plot()->replotNow();
 }
 */
-
-//==============================================================================
-
-void SingleCellViewWidget::requireTrace(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
-                                        CellMLSupport::CellmlFileRuntimeParameter *pParameterY)
-{
-//---GRY--- TO BE DONE...
-    // Keep track of the plotting requirement
-
-qDebug(">>> Plotting required for:");
-qDebug(">>>  - X: %s", qPrintable(pParameterX->name()));
-qDebug(">>>  - Y: %s", qPrintable(pParameterY->name()));
-}
 
 //==============================================================================
 

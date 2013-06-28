@@ -242,14 +242,6 @@ private Q_SLOTS:
     void simulationPropertyChanged(Core::Property *pProperty);
     void solversPropertyChanged(Core::Property *pProperty);
 
-/*---GRY---
-    void showParameter(const QString &pFileName,
-                       CellMLSupport::CellmlFileRuntimeParameter *pParameter,
-                       const bool &pShow);
-*/
-    void requireTrace(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
-                      CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
-
     void callCheckResults();
 };
 
