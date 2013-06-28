@@ -84,7 +84,7 @@ private:
     void populateContextMenu(QMenu *pContextMenu,
                              CellMLSupport::CellmlFileRuntime *pRuntime);
 
-    void updateParametersToolTips();
+    void updateToolTips();
 
     void retranslateContextMenu(QMenu *pContextMenu);
 

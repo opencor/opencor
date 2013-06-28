@@ -65,7 +65,7 @@ void SingleCellViewInformationParametersWidget::retranslateUi()
 
     // Retranslate the tool tip of all our parameters
 
-    updateParametersToolTips();
+    updateToolTips();
 }
 
 //==============================================================================
@@ -171,7 +171,7 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
     // Note: this is in case the user changed the locale and then switched to a
     //       different file...
 
-    updateParametersToolTips();
+    updateToolTips();
 }
 
 //==============================================================================
@@ -232,7 +232,7 @@ void SingleCellViewInformationParametersWidget::updateParameters()
 
     // Update the tool tip of all our parameters
 
-    updateParametersToolTips();
+    updateToolTips();
 }
 
 //==============================================================================
@@ -385,7 +385,7 @@ void SingleCellViewInformationParametersWidget::populateModel(Core::PropertyEdit
 
     // Update the tool tip of all our parameters
 
-    updateParametersToolTips();
+    updateToolTips();
 
     // Expand all our properties
 
@@ -466,7 +466,7 @@ void SingleCellViewInformationParametersWidget::populateContextMenu(QMenu *pCont
 
 //==============================================================================
 
-void SingleCellViewInformationParametersWidget::updateParametersToolTips()
+void SingleCellViewInformationParametersWidget::updateToolTips()
 {
     // Retrieve our current property editor, if any
 
