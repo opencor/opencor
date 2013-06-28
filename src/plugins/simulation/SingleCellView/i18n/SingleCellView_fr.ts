@@ -2,6 +2,13 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR" sourcelanguage="en_GB">
 <context>
+    <name>OpenCOR::SingleCellView::SingleCellViewInformationGraphsWidget</name>
+    <message>
+        <source>There are no graphs...</source>
+        <translation>Il n&apos;y a pas de courbes...</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::SingleCellView::SingleCellViewInformationParametersWidget</name>
     <message>
         <source>: </source>
@@ -83,13 +90,6 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::SingleCellView::SingleCellViewInformationTracesWidget</name>
-    <message>
-        <source>There are no traces...</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>OpenCOR::SingleCellView::SingleCellViewInformationWidget</name>
     <message>
         <source>Simulation</source>
@@ -104,8 +104,8 @@
         <translation>Paramètres</translation>
     </message>
     <message>
-        <source>Traces</source>
-        <translation></translation>
+        <source>Graphs</source>
+        <translation>Courbes</translation>
     </message>
 </context>
 <context>

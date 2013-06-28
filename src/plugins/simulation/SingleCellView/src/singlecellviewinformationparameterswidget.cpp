@@ -418,7 +418,7 @@ void SingleCellViewInformationParametersWidget::populateContextMenu(QMenu *pCont
     // variable of integration
 
     connect(voiAction, SIGNAL(triggered()),
-            this, SLOT(emitTraceRequired()));
+            this, SLOT(emitGraphRequired()));
 
     // Keep track of the parameter associated with our first main menu item
 
@@ -455,7 +455,7 @@ void SingleCellViewInformationParametersWidget::populateContextMenu(QMenu *pCont
         // parameter
 
         connect(parameterAction, SIGNAL(triggered()),
-                this, SLOT(emitTraceRequired()));
+                this, SLOT(emitGraphRequired()));
 
         // Keep track of the parameter associated with our model parameter
         // action
@@ -588,14 +588,14 @@ void SingleCellViewInformationParametersWidget::propertyEditorSectionResized(con
 
 //==============================================================================
 
-void SingleCellViewInformationParametersWidget::emitTraceRequired()
+void SingleCellViewInformationParametersWidget::emitGraphRequired()
 {
     // Let people know that we want to plot the current parameter against
     // another
 
     Core::PropertyEditorWidget *propertyEditor = qobject_cast<Core::PropertyEditorWidget *>(currentWidget());
 
-    emit traceRequired(mParameterActions.value(qobject_cast<QAction *>(sender())),
+    emit graphRequired(mParameterActions.value(qobject_cast<QAction *>(sender())),
                        mParameters.value(propertyEditor->currentProperty()));
 }
 

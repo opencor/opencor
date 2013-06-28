@@ -11,10 +11,10 @@
 #include "singlecellviewgraphpanelplotwidget.h"
 #include "singlecellviewgraphpanelswidget.h"
 #include "singlecellviewgraphpanelwidget.h"
+#include "singlecellviewinformationgraphswidget.h"
 #include "singlecellviewinformationparameterswidget.h"
 #include "singlecellviewinformationsimulationwidget.h"
 #include "singlecellviewinformationsolverswidget.h"
-#include "singlecellviewinformationtraceswidget.h"
 #include "singlecellviewinformationwidget.h"
 #include "singlecellviewplugin.h"
 #include "singlecellviewsimulation.h"
@@ -250,10 +250,10 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     connect(mContentsWidget->graphPanelsWidget(), SIGNAL(removeGraphPanelsEnabled(const bool &)),
             mGui->actionRemove, SLOT(setEnabled(bool)));
 
-    // Keep track of which traces are required
+    // Keep track of which graphs are required
 
-    connect(mContentsWidget->informationWidget()->parametersWidget(), SIGNAL(traceRequired(CellMLSupport::CellmlFileRuntimeParameter *, CellMLSupport::CellmlFileRuntimeParameter *)),
-            mContentsWidget->informationWidget()->tracesWidget(), SLOT(requireTrace(CellMLSupport::CellmlFileRuntimeParameter *, CellMLSupport::CellmlFileRuntimeParameter *)));
+    connect(mContentsWidget->informationWidget()->parametersWidget(), SIGNAL(graphRequired(CellMLSupport::CellmlFileRuntimeParameter *, CellMLSupport::CellmlFileRuntimeParameter *)),
+            mContentsWidget->informationWidget()->graphsWidget(), SLOT(requireGraph(CellMLSupport::CellmlFileRuntimeParameter *, CellMLSupport::CellmlFileRuntimeParameter *)));
 
     // Create and add our invalid simulation message widget
 

@@ -4,10 +4,10 @@
 
 #include "collapsiblewidget.h"
 #include "coreutils.h"
+#include "singlecellviewinformationgraphswidget.h"
 #include "singlecellviewinformationparameterswidget.h"
 #include "singlecellviewinformationsimulationwidget.h"
 #include "singlecellviewinformationsolverswidget.h"
-#include "singlecellviewinformationtraceswidget.h"
 #include "singlecellviewinformationwidget.h"
 
 //==============================================================================
@@ -56,11 +56,11 @@ SingleCellViewInformationWidget::SingleCellViewInformationWidget(QWidget *pParen
 
     mSolversWidget->setObjectName("Solvers");
 
-    // Create our traces widget
+    // Create our graphs widget
 
-    mTracesWidget = new SingleCellViewInformationTracesWidget(mCollapsibleWidget);
+    mGraphsWidget = new SingleCellViewInformationGraphsWidget(mCollapsibleWidget);
 
-    mTracesWidget->setObjectName("Traces");
+    mGraphsWidget->setObjectName("Graphs");
 
     // Create our parameters widget
 
@@ -68,12 +68,12 @@ SingleCellViewInformationWidget::SingleCellViewInformationWidget(QWidget *pParen
 
     mParametersWidget->setObjectName("Parameters");
 
-    // Add our simulation, solvers, traces and parameters widgets to our
+    // Add our simulation, solvers, graphs and parameters widgets to our
     // collapsible widget
 
     mCollapsibleWidget->addWidget(mSimulationWidget);
     mCollapsibleWidget->addWidget(mSolversWidget);
-    mCollapsibleWidget->addWidget(mTracesWidget);
+    mCollapsibleWidget->addWidget(mGraphsWidget);
     mCollapsibleWidget->addWidget(mParametersWidget);
 
     // Add our collapsible widget to our layout
@@ -107,14 +107,14 @@ void SingleCellViewInformationWidget::retranslateUi()
 
     mCollapsibleWidget->setHeaderTitle(0, tr("Simulation"));
     mCollapsibleWidget->setHeaderTitle(1, tr("Solvers"));
-    mCollapsibleWidget->setHeaderTitle(2, tr("Traces"));
+    mCollapsibleWidget->setHeaderTitle(2, tr("Graphs"));
     mCollapsibleWidget->setHeaderTitle(3, tr("Parameters"));
 
-    // Retranslate our simulation, solvers, traces and parameters widgets
+    // Retranslate our simulation, solvers, graphs and parameters widgets
 
     mSimulationWidget->retranslateUi();
     mSolversWidget->retranslateUi();
-    mTracesWidget->retranslateUi();
+    mGraphsWidget->retranslateUi();
     mParametersWidget->retranslateUi();
 }
 
@@ -140,10 +140,10 @@ void SingleCellViewInformationWidget::loadSettings(QSettings *pSettings)
         mSolversWidget->loadSettings(pSettings);
     pSettings->endGroup();
 
-    // Retrieve the settings of our traces widget
+    // Retrieve the settings of our graphs widget
 
-    pSettings->beginGroup(mTracesWidget->objectName());
-        mTracesWidget->loadSettings(pSettings);
+    pSettings->beginGroup(mGraphsWidget->objectName());
+        mGraphsWidget->loadSettings(pSettings);
     pSettings->endGroup();
 
     // Retrieve the settings of our parameters widget
@@ -175,10 +175,10 @@ void SingleCellViewInformationWidget::saveSettings(QSettings *pSettings) const
         mSolversWidget->saveSettings(pSettings);
     pSettings->endGroup();
 
-    // Keep track of the settings of our traces widget
+    // Keep track of the settings of our graphs widget
 
-    pSettings->beginGroup(mTracesWidget->objectName());
-        mTracesWidget->saveSettings(pSettings);
+    pSettings->beginGroup(mGraphsWidget->objectName());
+        mGraphsWidget->saveSettings(pSettings);
     pSettings->endGroup();
 
     // Keep track of the settings of our parameters widget
@@ -208,11 +208,11 @@ SingleCellViewInformationSolversWidget * SingleCellViewInformationWidget::solver
 
 //==============================================================================
 
-SingleCellViewInformationTracesWidget * SingleCellViewInformationWidget::tracesWidget()
+SingleCellViewInformationGraphsWidget * SingleCellViewInformationWidget::graphsWidget()
 {
-    // Return our traces widget
+    // Return our graphs widget
 
-    return mTracesWidget;
+    return mGraphsWidget;
 }
 
 //==============================================================================
@@ -232,7 +232,7 @@ void SingleCellViewInformationWidget::finishEditing()
 
     mSimulationWidget->finishPropertyEditing();
     mSolversWidget->finishPropertyEditing();
-    mTracesWidget->finishPropertyEditing();
+    mGraphsWidget->finishPropertyEditing();
     mParametersWidget->finishPropertyEditing();
 }
 

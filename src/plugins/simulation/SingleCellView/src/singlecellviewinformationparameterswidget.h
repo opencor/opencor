@@ -89,7 +89,7 @@ private:
     void retranslateContextMenu(QMenu *pContextMenu);
 
 Q_SIGNALS:
-    void traceRequired(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
+    void graphRequired(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
                        CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 
 public Q_SLOTS:
@@ -102,7 +102,7 @@ private Q_SLOTS:
 
     void propertyChanged(Core::Property *pProperty);
 
-    void emitTraceRequired();
+    void emitGraphRequired();
 };
 
 //==============================================================================

@@ -1,10 +1,10 @@
 //==============================================================================
-// Single cell view information traces widget
+// Single cell view information graphs widget
 //==============================================================================
 
 #include "cellmlfileruntime.h"
 #include "propertyeditorwidget.h"
-#include "singlecellviewinformationtraceswidget.h"
+#include "singlecellviewinformationgraphswidget.h"
 
 //==============================================================================
 
@@ -19,23 +19,23 @@ namespace SingleCellView {
 
 //==============================================================================
 
-SingleCellViewInformationTracesWidget::SingleCellViewInformationTracesWidget(QWidget *pParent) :
+SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(QWidget *pParent) :
     QStackedWidget(pParent),
     mPropertyEditors(QMap<QString, Core::PropertyEditorWidget *>()),
     mColumnWidths(QList<int>())
 {
-    // Create a widget that will be shown whenever there are no traces
+    // Create a widget that will be shown whenever there are no graphs
     // associated with the current plotting area
 
-    mNoTracesMessageWidget = new QLabel(pParent);
+    mNoGraphsMessageWidget = new QLabel(pParent);
 
-    mNoTracesMessageWidget->setAlignment(Qt::AlignCenter);
-    mNoTracesMessageWidget->setAutoFillBackground(true);
-    mNoTracesMessageWidget->setBackgroundRole(QPalette::Base);
-    mNoTracesMessageWidget->setMargin(3);
-    mNoTracesMessageWidget->setWordWrap(true);
+    mNoGraphsMessageWidget->setAlignment(Qt::AlignCenter);
+    mNoGraphsMessageWidget->setAutoFillBackground(true);
+    mNoGraphsMessageWidget->setBackgroundRole(QPalette::Base);
+    mNoGraphsMessageWidget->setMargin(3);
+    mNoGraphsMessageWidget->setWordWrap(true);
 
-    addWidget(mNoTracesMessageWidget);
+    addWidget(mNoGraphsMessageWidget);
 
     // Determine the default width of each column of our property editors
 
@@ -49,11 +49,11 @@ SingleCellViewInformationTracesWidget::SingleCellViewInformationTracesWidget(QWi
 
 //==============================================================================
 
-void SingleCellViewInformationTracesWidget::retranslateUi()
+void SingleCellViewInformationGraphsWidget::retranslateUi()
 {
-    // Retranslate our no traces message widget
+    // Retranslate our no graphs message widget
 
-    mNoTracesMessageWidget->setText(tr("There are no traces..."));
+    mNoGraphsMessageWidget->setText(tr("There are no graphs..."));
 
     // Retranslate all our property editors
 
@@ -67,7 +67,7 @@ static const QString SettingsColumnWidth = "ColumnWidth%1";
 
 //==============================================================================
 
-void SingleCellViewInformationTracesWidget::loadSettings(QSettings *pSettings)
+void SingleCellViewInformationGraphsWidget::loadSettings(QSettings *pSettings)
 {
     // Retrieve the width of each column of our property editors
 
@@ -79,7 +79,7 @@ void SingleCellViewInformationTracesWidget::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void SingleCellViewInformationTracesWidget::saveSettings(QSettings *pSettings) const
+void SingleCellViewInformationGraphsWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the width of each column of our current property editor
 
@@ -89,7 +89,7 @@ void SingleCellViewInformationTracesWidget::saveSettings(QSettings *pSettings) c
 
 //==============================================================================
 
-void SingleCellViewInformationTracesWidget::finishPropertyEditing()
+void SingleCellViewInformationGraphsWidget::finishPropertyEditing()
 {
     // Retrieve our current property editor, if any
 
@@ -105,13 +105,13 @@ void SingleCellViewInformationTracesWidget::finishPropertyEditing()
 
 //==============================================================================
 
-void SingleCellViewInformationTracesWidget::requireTrace(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
+void SingleCellViewInformationGraphsWidget::requireGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
                                                          CellMLSupport::CellmlFileRuntimeParameter *pParameterY)
 {
 //---GRY--- TO BE DONE...
-    // Keep track of the trace requirement
+    // Keep track of the graph requirement
 
-qDebug(">>> Trace required for:");
+qDebug(">>> Graph required for:");
 qDebug(">>>  - X: %s", qPrintable(pParameterX->name()));
 qDebug(">>>  - Y: %s", qPrintable(pParameterY->name()));
 }

@@ -1,9 +1,9 @@
 //==============================================================================
-// Single cell view information traces widget
+// Single cell view information graphs widget
 //==============================================================================
 
-#ifndef SINGLECELLVIEWINFORMATIONTRACESWIDGET_H
-#define SINGLECELLVIEWINFORMATIONTRACESWIDGET_H
+#ifndef SINGLECELLVIEWINFORMATIONGRAPHSWIDGET_H
+#define SINGLECELLVIEWINFORMATIONGRAPHSWIDGET_H
 
 //==============================================================================
 
@@ -44,13 +44,13 @@ class SingleCellViewSimulationData;
 
 //==============================================================================
 
-class SingleCellViewInformationTracesWidget : public QStackedWidget,
+class SingleCellViewInformationGraphsWidget : public QStackedWidget,
                                               public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
-    explicit SingleCellViewInformationTracesWidget(QWidget *pParent = 0);
+    explicit SingleCellViewInformationGraphsWidget(QWidget *pParent = 0);
 
     virtual void retranslateUi();
 
@@ -64,10 +64,10 @@ private:
 
     QList<int> mColumnWidths;
 
-    QLabel *mNoTracesMessageWidget;
+    QLabel *mNoGraphsMessageWidget;
 
 public Q_SLOTS:
-    void requireTrace(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
+    void requireGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
                       CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 };
 
