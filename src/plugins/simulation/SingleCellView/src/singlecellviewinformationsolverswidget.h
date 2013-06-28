@@ -99,7 +99,7 @@ private:
     void setPropertiesUnit(SingleCellViewInformationSolversWidgetData *pSolverData,
                            const QString &pVoiUnit);
 
-    void updatePropertiesToolTip();
+    void updateToolTips();
 
 private Q_SLOTS:
     void solverChanged(const QString &pValue);

@@ -133,7 +133,7 @@ void SingleCellViewInformationSolversWidget::retranslateUi()
 
     // Retranslate the tool tip of all our solvers' properties
 
-    updatePropertiesToolTip();
+    updateToolTips();
 
     // Default retranslation
     // Note: we must do it last since we set the empty list value of some
@@ -170,7 +170,7 @@ void SingleCellViewInformationSolversWidget::updatePropertyToolTip(Core::Propert
 
 //==============================================================================
 
-void SingleCellViewInformationSolversWidget::updatePropertiesToolTip()
+void SingleCellViewInformationSolversWidget::updateToolTips()
 {
     // Update the tool tip of all our solvers' properties
 
@@ -387,7 +387,7 @@ void SingleCellViewInformationSolversWidget::initialize(const QString &pFileName
 
     // Update the tool tip of all our solvers' properties
 
-    updatePropertiesToolTip();
+    updateToolTips();
 
     // Initialise our simulation's NLA solver's properties, so that we can then
     // properly reset our simulation the first time round
