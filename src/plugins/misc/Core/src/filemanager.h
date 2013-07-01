@@ -48,7 +48,8 @@ public:
 
         // Miscellaneous
 
-        Renamed
+        Renamed,
+        NotNeeded
     };
 
     explicit FileManager(const int &pTimerInterval = 1000);
