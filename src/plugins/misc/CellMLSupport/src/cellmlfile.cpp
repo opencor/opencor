@@ -253,16 +253,16 @@ bool CellmlFile::save(const QString &pNewFileName)
 
     file.close();
 
-    // Update the file name, both internally and in the file manager
-
-    Core::FileManager::instance()->rename(mFileName, newFileName);
-
-    mFileName = newFileName;
-
     // The CellML file being saved, it cannot be modified (should it have been
     // before)
+    // Note: we must do this before updating mFileName (should it be given a new
+    //       value) since we use it to update our modified status...
 
     setModified(false);
+
+    // Make sure that mFileName is up to date
+
+    mFileName = newFileName;
 
     // Everything went fine, so...
 

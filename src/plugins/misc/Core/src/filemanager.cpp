@@ -125,7 +125,7 @@ File * FileManager::isManaged(const QString &pFileName) const
     QString nativeFileName = nativeCanonicalFileName(pFileName);
 
     foreach (File *file, mFiles)
-        if (file->fileName() == nativeFileName)
+        if (!file->fileName().compare(nativeFileName))
             // The file has been found meaning it is managed
 
             return file;
@@ -141,7 +141,7 @@ bool FileManager::isModified(const QString &pFileName) const
 {
     // Return whether the file, if it is being managed, has been modified
 
-    File *file = isManaged(pFileName);
+    File *file = isManaged(nativeCanonicalFileName(pFileName));
 
     if (file)
         return file->isModified();
@@ -155,7 +155,9 @@ void FileManager::setModified(const QString &pFileName, const bool &pModified)
 {
     // Set the modified status of the file, should it be managed
 
-    File *file = isManaged(pFileName);
+    QString nativeFileName = nativeCanonicalFileName(pFileName);
+
+    File *file = isManaged(nativeFileName);
 
     if (file) {
         // We are dealing with a managed file, so we can check its modified
@@ -167,7 +169,7 @@ void FileManager::setModified(const QString &pFileName, const bool &pModified)
 
         file->setModified(pModified);
 
-        emit fileModified(nativeCanonicalFileName(pFileName), pModified);
+        emit fileModified(nativeFileName, pModified);
     }
 }
 
@@ -176,12 +178,17 @@ void FileManager::setModified(const QString &pFileName, const bool &pModified)
 FileManager::Status FileManager::rename(const QString &pOldFileName,
                                         const QString &pNewFileName)
 {
+    // Make sure that the file names are different
+
+    QString oldNativeFileName = nativeCanonicalFileName(pOldFileName);
+    QString newNativeFileName = nativeCanonicalFileName(pNewFileName);
+
+    if (!newNativeFileName.compare(oldNativeFileName))
+        return NotNeeded;
+
     // Check whether the 'old' file is managed
 
-    QString oldFileName = nativeCanonicalFileName(pOldFileName);
-    QString newFileName = nativeCanonicalFileName(pNewFileName);
-
-    File *file = isManaged(oldFileName);
+    File *file = isManaged(oldNativeFileName);
 
     if (!file) {
         // The 'old' file is not managed, so...
@@ -190,9 +197,9 @@ FileManager::Status FileManager::rename(const QString &pOldFileName,
     } else {
         // The 'old' file is managed, so we can rename it
 
-        file->setFileName(newFileName);
+        file->setFileName(newNativeFileName);
 
-        emit fileRenamed(oldFileName, newFileName);
+        emit fileRenamed(oldNativeFileName, newNativeFileName);
 
         return Renamed;
     }
