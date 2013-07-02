@@ -32,7 +32,6 @@ SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(QWi
     mNoGraphsMessageWidget->setAlignment(Qt::AlignCenter);
     mNoGraphsMessageWidget->setAutoFillBackground(true);
     mNoGraphsMessageWidget->setBackgroundRole(QPalette::Base);
-    mNoGraphsMessageWidget->setMargin(3);
     mNoGraphsMessageWidget->setWordWrap(true);
 
     addWidget(mNoGraphsMessageWidget);
