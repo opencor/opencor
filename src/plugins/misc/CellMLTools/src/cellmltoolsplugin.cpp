@@ -206,9 +206,6 @@ void CellMLToolsPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
                             false;
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
 
-    mCellmlFileExportToMenu->menuAction()->setEnabled(toolsVisible);
-    mCellmlFileExportToMenu->menuAction()->setVisible(toolsVisible);
-
     mExportToCellml10Action->setEnabled(   toolsVisible && cellmlFile
                                         && QString::fromStdWString(cellmlFile->model()->cellmlVersion()).compare(CellMLSupport::Cellml_1_0));
     mExportToCellml10Action->setVisible(toolsVisible);
@@ -223,6 +220,18 @@ void CellMLToolsPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 mExportToCellml11Action->setEnabled(false);
 mExportToCellml11Action->setVisible(false);
 //---GRY--- END
+
+    bool menuEnabled = true;
+
+    foreach (QAction *action, mCellmlFileExportToMenu->actions())
+        if (!action->isEnabled()) {
+            menuEnabled = false;
+
+            break;
+        }
+
+    mCellmlFileExportToMenu->menuAction()->setEnabled(menuEnabled);
+    mCellmlFileExportToMenu->menuAction()->setVisible(toolsVisible);
 
     // Keep track of the file name
 
