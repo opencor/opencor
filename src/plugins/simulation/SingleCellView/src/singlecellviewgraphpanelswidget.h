@@ -48,7 +48,7 @@ private:
 
 Q_SIGNALS:
     void grapPanelAdded(SingleCellViewGraphPanelWidget *pGraphPanel);
-    void grapPanelRemoved();
+    void grapPanelRemoved(SingleCellViewGraphPanelWidget *pGraphPanel);
 
     void removeGraphPanelsEnabled(const bool &pEnabled);
 

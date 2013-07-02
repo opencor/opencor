@@ -250,6 +250,13 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     connect(mContentsWidget->graphPanelsWidget(), SIGNAL(removeGraphPanelsEnabled(const bool &)),
             mGui->actionRemove, SLOT(setEnabled(bool)));
 
+    // Keep track of the addition and removal of a graph panel
+
+    connect(mContentsWidget->graphPanelsWidget(), SIGNAL(grapPanelAdded(SingleCellViewGraphPanelWidget *)),
+            mContentsWidget->informationWidget()->graphsWidget(), SLOT(initialize(SingleCellViewGraphPanelWidget *)));
+    connect(mContentsWidget->graphPanelsWidget(), SIGNAL(grapPanelRemoved(SingleCellViewGraphPanelWidget *)),
+            mContentsWidget->informationWidget()->graphsWidget(), SLOT(finalize(SingleCellViewGraphPanelWidget *)));
+
     // Keep track of which graphs are required
 
     connect(mContentsWidget->informationWidget()->parametersWidget(), SIGNAL(graphRequired(CellMLSupport::CellmlFileRuntimeParameter *, CellMLSupport::CellmlFileRuntimeParameter *)),

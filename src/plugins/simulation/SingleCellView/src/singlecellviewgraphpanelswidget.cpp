@@ -208,8 +208,10 @@ void SingleCellViewGraphPanelsWidget::removeGraphPanel()
 
     // Remove the current graph panel
 
+    SingleCellViewGraphPanelWidget *graphPanel = 0;
+
     for (int i = 0, iMax = count(); i < iMax; ++i) {
-        SingleCellViewGraphPanelWidget *graphPanel = qobject_cast<SingleCellViewGraphPanelWidget *>(widget(i));
+        graphPanel = qobject_cast<SingleCellViewGraphPanelWidget *>(widget(i));
 
         if (graphPanel->isActive()) {
             // We are dealing with the currently active graph panel, so remove
@@ -242,8 +244,12 @@ void SingleCellViewGraphPanelsWidget::removeGraphPanel()
     splitterMoved();
 
     // Let people know that we have removed a graph panel
+    // Note: the reason we pass a pointer to a now non-existing graph panel is
+    //       that some people interested in that signal might have used the
+    //       pointer to keep track of some information, as is the case with
+    //       SingleCellViewInformationGraphsWidget for example...
 
-    emit grapPanelRemoved();
+    emit grapPanelRemoved(graphPanel);
 
     // Let people know whether graph panels can be removed
 

@@ -23,14 +23,16 @@ namespace OpenCOR {
 
 //==============================================================================
 
+//==============================================================================
+
 namespace Core {
+    class Property;
     class PropertyEditorWidget;
 }   // namespace Core
 
 //==============================================================================
 
 namespace CellMLSupport {
-    class CellmlFileRuntime;
     class CellmlFileRuntimeParameter;
 }   // namespace CellMLSupport
 
@@ -40,7 +42,7 @@ namespace SingleCellView {
 
 //==============================================================================
 
-class SingleCellViewSimulationData;
+class SingleCellViewGraphPanelWidget;
 
 //==============================================================================
 
@@ -60,15 +62,21 @@ public:
     void finishPropertyEditing();
 
 private:
-    QMap<QString, Core::PropertyEditorWidget *> mPropertyEditors;
+    QMap<SingleCellViewGraphPanelWidget *, Core::PropertyEditorWidget *> mPropertyEditors;
 
     QList<int> mColumnWidths;
 
     QLabel *mNoGraphsMessageWidget;
 
 public Q_SLOTS:
+    void initialize(SingleCellViewGraphPanelWidget *pGraphPanel);
+    void finalize(SingleCellViewGraphPanelWidget *pGraphPanel);
+
     void requireGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
                       CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
+
+private Q_SLOTS:
+    void propertyChanged(Core::Property *pProperty);
 };
 
 //==============================================================================

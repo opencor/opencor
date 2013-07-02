@@ -114,10 +114,6 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
 
         propertyEditor = new Core::PropertyEditorWidget(this);
 
-        // Also create its corresponding context menu
-
-        QMenu *contextMenu = new QMenu(this);
-
         // Initialise our property editor's columns' width
 
         for (int i = 0, iMax = mColumnWidths.size(); i < iMax; ++i)
@@ -127,7 +123,9 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
 
         populateModel(propertyEditor, pRuntime);
 
-        // Create our context menu
+        // Create and populate our property editor's context menu
+
+        QMenu *contextMenu = new QMenu(this);
 
         populateContextMenu(contextMenu, pRuntime);
 
@@ -163,7 +161,7 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
         mContextMenus.insert(propertyEditor, contextMenu);
     }
 
-    // Set our retrieved property editor as our widget
+    // Set our retrieved property editor as our current widget
 
     setCurrentWidget(propertyEditor);
 
