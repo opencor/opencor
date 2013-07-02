@@ -252,13 +252,11 @@ static const QString SettingsRecentFiles = "RecentFiles";
 void CorePlugin::loadSettings(QSettings *pSettings)
 {
     // Retrieve the recent files
-    // Note: it's import to retrieve the recent files before retrieving our
+    // Note: it's important to retrieve the recent files before retrieving our
     //       central widget settings since mRecentFileNames gets updated as a
     //       result of opening/closing a file...
 
     mRecentFileNames = pSettings->value(SettingsRecentFiles).toStringList();
-
-    updateFileReopenMenu();
 
     // Retrieve the central widget settings
 
@@ -290,6 +288,14 @@ void CorePlugin::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
     // their settings
 
     mCentralWidget->loadingOfSettingsDone(pLoadedPlugins);
+
+    // Update our Reopen sub-menu
+    // Note: we used to do this in loadSettings(), but for some reasons the menu
+    //       wouldn't be disabled (assuming it had to be) on OS X while it is
+    //       when doing it here in loadingOfSettingsDone() (maybe because the
+    //       GUI is 'ready' by then?)...
+
+    updateFileReopenMenu();
 }
 
 //==============================================================================
@@ -515,7 +521,7 @@ void CorePlugin::clearReopenSubMenu()
 
 void CorePlugin::updateFileReopenMenu()
 {
-    // Update the contents of our reopen sub-menu by first cleaning it
+    // Update the contents of our Reopen sub-menu by first cleaning it
 
     foreach (QAction *action, mFileReopenSubMenu->actions()) {
         if (action != mFileReopenSubMenuSeparator)
@@ -547,7 +553,7 @@ void CorePlugin::updateFileReopenMenu()
     // Enable/disable our our reopen sub-menu depending on whether we have
     // recent file names
 
-    mFileReopenSubMenu->setEnabled(!mRecentFileNames.isEmpty());
+    mFileReopenSubMenu->menuAction()->setEnabled(!mRecentFileNames.isEmpty());
 }
 
 //==============================================================================
