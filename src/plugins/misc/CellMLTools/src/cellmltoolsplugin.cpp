@@ -230,7 +230,7 @@ mExportToCellml11Action->setVisible(false);
             break;
         }
 
-    mCellmlFileExportToMenu->menuAction()->setEnabled(menuEnabled);
+    mCellmlFileExportToMenu->menuAction()->setEnabled(toolsVisible && menuEnabled);
     mCellmlFileExportToMenu->menuAction()->setVisible(toolsVisible);
 
     // Keep track of the file name
