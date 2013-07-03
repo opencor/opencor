@@ -106,13 +106,13 @@ void CorePlugin::initialize()
                                     QKeySequence::Close);
     mFileCloseAllAction = newAction(mMainWindow);
 
-    // Create the separator before which we will insert our reopen sub-menu
+    // Create the separator before which we will insert our Reopen sub-menu
 
     QAction *openSaveSeparator = newAction(mMainWindow);
 
     openSaveSeparator->setSeparator(true);
 
-    // Create our reopen sub-menu
+    // Create our Reopen sub-menu
 
     mFileReopenSubMenu = newMenu(mMainWindow,
                                  ":/oxygen/actions/document-open-recent.png",
@@ -252,11 +252,13 @@ static const QString SettingsRecentFiles = "RecentFiles";
 void CorePlugin::loadSettings(QSettings *pSettings)
 {
     // Retrieve the recent files
-    // Note: it's import to retrieve the recent files before retrieving our
+    // Note: it's important to retrieve the recent files before retrieving our
     //       central widget settings since mRecentFileNames gets updated as a
     //       result of opening/closing a file...
 
     mRecentFileNames = pSettings->value(SettingsRecentFiles).toStringList();
+
+    // Update our Reopen sub-menu
 
     updateFileReopenMenu();
 
@@ -425,7 +427,7 @@ bool CorePlugin::canClose()
 
 void CorePlugin::fileOpened(const QString &pFileName)
 {
-    // Remove the file from our list of recent files and update our reopen
+    // Remove the file from our list of recent files and update our Reopen
     // sub-menu
 
     mRecentFileNames.removeOne(pFileName);
@@ -458,7 +460,7 @@ void CorePlugin::fileRenamed(const QString &pOldFileName,
 void CorePlugin::fileClosed(const QString &pFileName)
 {
     // Add the file to our list of recent files (making sure that we don't end
-    // up with more than 10 recent file names) and update our reopen sub-menu
+    // up with more than 10 recent file names) and update our Reopen sub-menu
     // Note: the most recent file is to be shown first...
 
     mRecentFileNames.prepend(pFileName);
@@ -483,7 +485,7 @@ void CorePlugin::openRecentFile()
         QMessageBox::warning(mMainWindow, tr("Reopen File"),
                              tr("Sorry, but <strong>%1</strong> does not exist anymore.").arg(fileName));
 
-        // Remove the file from our list of recent files and update our reopen
+        // Remove the file from our list of recent files and update our Reopen
         // sub-menu
 
         mRecentFileNames.removeOne(fileName);
@@ -504,7 +506,7 @@ void CorePlugin::openRecentFile()
 
 void CorePlugin::clearReopenSubMenu()
 {
-    // Indirectly clear our reopen sub-menu
+    // Indirectly clear our Reopen sub-menu
 
     mRecentFileNames.clear();
 
@@ -515,14 +517,14 @@ void CorePlugin::clearReopenSubMenu()
 
 void CorePlugin::updateFileReopenMenu()
 {
-    // Update the contents of our reopen sub-menu by first cleaning it
+    // Update the contents of our Reopen sub-menu by first cleaning it
 
     foreach (QAction *action, mFileReopenSubMenu->actions()) {
         if (action != mFileReopenSubMenuSeparator)
             disconnect(action, SIGNAL(triggered()),
                        this, SLOT(openRecentFile()));
         else
-            // We have reached our reopen sub-menu separator, so...
+            // We have reached our Reopen sub-menu separator, so...
 
             break;
 
@@ -531,7 +533,7 @@ void CorePlugin::updateFileReopenMenu()
         delete action;
     }
 
-    // Add the recent files to our reopen sub-menu
+    // Add the recent files to our Reopen sub-menu
 
     foreach (const QString &recentFile, mRecentFileNames) {
         QAction *action = newAction(mMainWindow);
@@ -544,10 +546,10 @@ void CorePlugin::updateFileReopenMenu()
         mFileReopenSubMenu->insertAction(mFileReopenSubMenuSeparator, action);
     }
 
-    // Enable/disable our our reopen sub-menu depending on whether we have
+    // Enable/disable mFileClearReopenSubMenuAction depending on whether we have
     // recent file names
 
-    mFileReopenSubMenu->setEnabled(!mRecentFileNames.isEmpty());
+    mFileClearReopenSubMenuAction->setEnabled(!mRecentFileNames.isEmpty());
 }
 
 //==============================================================================
