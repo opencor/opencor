@@ -11,6 +11,10 @@
 #include <QProcess>
 #include <QSettings>
 
+#ifdef Q_OS_WIN
+    #include <QWebSettings>
+#endif
+
 //==============================================================================
 
 #include <QtSingleApplication>
@@ -153,6 +157,18 @@ int main(int pArgC, char *pArgV[])
         // OpenCOR was originally started, since we want to reset everything
 
         QProcess::startDetached(appFilePath, QStringList(), appDirPath);
+
+    // If we use QtWebKit, and QWebPage in particular, then leak messages will
+    // get generated on Windows when leaving OpenCOR. This is because an object
+    // cache is shared between all QWebPage instances. So to destroy a QWebPage
+    // instance won't clear the cache, hence the leak messages. However, these
+    // messages are 'only' warnings, so we can safely live with them. Still, it
+    // doesn't look 'good', so we clear the memory caches, thus avoiding those
+    // leak messages...
+
+#ifdef Q_OS_WIN
+    QWebSettings::clearMemoryCaches();
+#endif
 
     // We are done, so...
 
