@@ -24,14 +24,6 @@
         <translation>&amp;Voir</translation>
     </message>
     <message>
-        <source>&amp;Exit</source>
-        <translation>&amp;Quitter</translation>
-    </message>
-    <message>
-        <source>Exit OpenCOR</source>
-        <translation>Quitter OpenCOR</translation>
-    </message>
-    <message>
         <source>&amp;English</source>
         <translation>&amp;Anglais</translation>
     </message>
@@ -126,6 +118,18 @@
     <message>
         <source>Preferences for OpenCOR and its plugins</source>
         <translation>Préférences pour OpenCOR et ses extensions</translation>
+    </message>
+    <message>
+        <source>&amp;Quit</source>
+        <translation>&amp;Quitter</translation>
+    </message>
+    <message>
+        <source>Quit</source>
+        <translation>Quitter</translation>
+    </message>
+    <message>
+        <source>Quit OpenCOR</source>
+        <translation>Quitter OpenCOR</translation>
     </message>
 </context>
 <context>

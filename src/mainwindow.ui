@@ -28,7 +28,7 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
-    <addaction name="actionExit"/>
+    <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
@@ -79,16 +79,19 @@
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="actionExit">
+  <action name="actionQuit">
    <property name="icon">
     <iconset resource="../res/ui.qrc">
      <normaloff>:/oxygen/actions/application-exit.png</normaloff>:/oxygen/actions/application-exit.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Exit</string>
+    <string>&amp;Quit</string>
+   </property>
+   <property name="toolTip">
+    <string>Quit</string>
    </property>
    <property name="statusTip">
-    <string>Exit OpenCOR</string>
+    <string>Quit OpenCOR</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>

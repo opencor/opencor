@@ -106,7 +106,7 @@ mGui->actionPreferences->setVisible(false);
     // Set the role of some of our menu items, so that OS X can move them into
     // the application menu
 
-    mGui->actionExit->setMenuRole(QAction::QuitRole);
+    mGui->actionQuit->setMenuRole(QAction::QuitRole);
     mGui->actionPreferences->setMenuRole(QAction::PreferencesRole);
     mGui->actionAbout->setMenuRole(QAction::AboutRole);
 
@@ -134,7 +134,7 @@ mGui->actionPreferences->setVisible(false);
 
     // Some connections to handle our various menu items
 
-    connect(mGui->actionExit, SIGNAL(triggered()),
+    connect(mGui->actionQuit, SIGNAL(triggered()),
             this, SLOT(close()));
     connect(mGui->actionResetAll, SIGNAL(triggered()),
             this, SLOT(resetAll()));
@@ -148,11 +148,11 @@ mGui->actionPreferences->setVisible(false);
     //       get shown in the menu item, not to mention that we would also like
     //       to support Ctrl+Q, so...
 
-    mGui->actionExit->setShortcuts(QList<QKeySequence>()
+    mGui->actionQuit->setShortcuts(QList<QKeySequence>()
                                        << QKeySequence(Qt::ALT|Qt::Key_F4)
                                        << QKeySequence(Qt::CTRL|Qt::Key_Q));
 #elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
-    mGui->actionExit->setShortcut(QKeySequence::Quit);
+    mGui->actionQuit->setShortcut(QKeySequence::Quit);
 #else
     #error Unsupported platform
 #endif
