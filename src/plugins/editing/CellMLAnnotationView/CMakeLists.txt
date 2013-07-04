@@ -62,6 +62,7 @@ ADD_PLUGIN(CellMLAnnotationView
         QtPrintSupport
         QtQml
         QtQuick
+        QtSensors
         QtWebKit
         QtWebKitWidgets
         QtWidgets

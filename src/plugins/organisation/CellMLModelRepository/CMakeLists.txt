@@ -34,6 +34,7 @@ ADD_PLUGIN(CellMLModelRepository
         QtPrintSupport
         QtQml
         QtQuick
+        QtSensors
         QtWebKit
         QtWebKitWidgets
         QtWidgets
