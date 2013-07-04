@@ -374,7 +374,7 @@ IF(WIN32)
 
     # Qt libraries required by OpenCOR
 
-    WINDOWS_DEPLOY_QT_LIBRARIES(Qt5CLucene Qt5Core Qt5Gui Qt5Help Qt5Multimedia Qt5MultimediaWidgets Qt5Network Qt5OpenGL Qt5PrintSupport Qt5Qml Qt5Quick QtSensors Qt5Sql Qt5Svg Qt5V8 Qt5WebKit Qt5WebKitWidgets Qt5Widgets Qt5Xml)
+    WINDOWS_DEPLOY_QT_LIBRARIES(Qt5CLucene Qt5Core Qt5Gui Qt5Help Qt5Multimedia Qt5MultimediaWidgets Qt5Network Qt5OpenGL Qt5PrintSupport Qt5Qml Qt5Quick Qt5Sensors Qt5Sql Qt5Svg Qt5V8 Qt5WebKit Qt5WebKitWidgets Qt5Widgets Qt5Xml)
     WINDOWS_DEPLOY_QT_LIBRARIES(icudt51 icuin51 icuuc51)
     WINDOWS_DEPLOY_QT_LIBRARIES(libEGL libGLESv2 D3DCompiler_43)
 
