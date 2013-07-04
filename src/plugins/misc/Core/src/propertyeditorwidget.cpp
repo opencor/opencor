@@ -100,6 +100,16 @@ DoubleEditorWidget::DoubleEditorWidget(QWidget *pParent) :
 ListEditorWidget::ListEditorWidget(QWidget *pParent) :
     QComboBox(pParent)
 {
+    // Customise the focus policy
+    // Note #1: this is not strictly necessary on Windows and Linux, but
+    //          definitely is on OS X since otherwise we wouldn't be able to
+    //          change the value of a property by simply double-clicking on it.
+    //          Indeed, with Qt 5, the focus policy of a QComboBox has changed
+    //          to be more native, but that breaks things for us, so...
+    // Note #2: see https://bugreports.qt-project.org/browse/QTBUG-29398#comment-208467
+    //          for more information...
+
+    setFocusPolicy(Qt::WheelFocus);
 }
 
 //==============================================================================

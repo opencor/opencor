@@ -103,6 +103,13 @@ mGui->actionPreferences->setEnabled(false);
 mGui->actionPreferences->setVisible(false);
 //---GRY--- END
 
+    // Set the role of some of our menu items, so that OS X can move them into
+    // the application menu
+
+    mGui->actionExit->setMenuRole(QAction::QuitRole);
+    mGui->actionPreferences->setMenuRole(QAction::PreferencesRole);
+    mGui->actionAbout->setMenuRole(QAction::AboutRole);
+
     // Title of our main window
     // Note: we don't set it in our .ui file since this will require
     //       'translating' it in other languages...
