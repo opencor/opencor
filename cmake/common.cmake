@@ -25,6 +25,13 @@ MACRO(INITIALISE_PROJECT)
     SET(QT_VERSION_MINOR ${Qt5Widgets_VERSION_MINOR})
     SET(QT_VERSION_PATCH ${Qt5Widgets_VERSION_PATCH})
 
+    # Address an issue with Qt 5.1.0 which affects deployment on OS X (see
+    # https://github.com/opencor/opencor/issues/207)
+
+    IF("${QT_LIBRARY_DIR}" STREQUAL "/Applications/Qt/5.1.0/clang_64/lib")
+        SET(QT_LIBRARY_DIR /Applications/Qt//5.1.0/clang_64/lib)
+    ENDIF()
+
     # Some settings which depend on whether we want a debug or release version
     # of OpenCOR
 

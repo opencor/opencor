@@ -42,6 +42,7 @@ ADD_PLUGIN(Help
         QtPrintSupport
         QtQml
         QtQuick
+        QtSensors
         QtWebKit
         QtWebKitWidgets
         QtWidgets
