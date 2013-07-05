@@ -465,31 +465,21 @@ void SingleCellViewSimulationData::recomputeVariables(const double &pCurrentPoin
 void SingleCellViewSimulationData::checkForModifications()
 {
     // Check whether any of our constants or states has been modified
+    // Note: we start with our states since they are more likely to be modified
+    //       than our constants...
 
-    foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, mRuntime->parameters())
-        switch (parameter->type()) {
-        case CellMLSupport::CellmlFileRuntimeParameter::Constant:
-            if (   !qIsFinite(mConstants[parameter->index()])
-                || (mConstants[parameter->index()] != mInitialConstants[parameter->index()])) {
-                emit modified(true);
+    for (int i = 0, iMax = mRuntime->statesCount(); i < iMax; ++i)
+        if (!qIsFinite(mStates[i]) || (mStates[i] != mInitialStates[i])) {
+            emit modified(true);
 
-                return;
-            }
+            return;
+        }
 
-            break;
-        case CellMLSupport::CellmlFileRuntimeParameter::State:
-            if (   !qIsFinite(mStates[parameter->index()])
-                || (mStates[parameter->index()] != mInitialStates[parameter->index()])) {
-                emit modified(true);
+    for (int i = 0, iMax = mRuntime->constantsCount(); i < iMax; ++i)
+        if (!qIsFinite(mConstants[i]) || (mConstants[i] != mInitialConstants[i])) {
+            emit modified(true);
 
-                return;
-            }
-
-            break;
-        default:
-            // Either Voi, ComputedConstant, Rate, Algebraic or Undefined, so...
-
-            ;
+            return;
         }
 
     // Let people know that no data has been modified
