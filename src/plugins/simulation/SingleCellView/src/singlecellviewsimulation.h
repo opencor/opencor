@@ -93,6 +93,7 @@ public:
     void recomputeVariables(const double &pCurrentPoint,
                             const bool &pEmitSignal = true);
 
+    bool isModified() const;
     void checkForModifications();
 
 private:

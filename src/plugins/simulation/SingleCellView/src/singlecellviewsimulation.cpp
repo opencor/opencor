@@ -462,29 +462,30 @@ void SingleCellViewSimulationData::recomputeVariables(const double &pCurrentPoin
 
 //==============================================================================
 
-void SingleCellViewSimulationData::checkForModifications()
+bool SingleCellViewSimulationData::isModified() const
 {
     // Check whether any of our constants or states has been modified
     // Note: we start with our states since they are more likely to be modified
     //       than our constants...
 
     for (int i = 0, iMax = mRuntime->statesCount(); i < iMax; ++i)
-        if (!qIsFinite(mStates[i]) || (mStates[i] != mInitialStates[i])) {
-            emit modified(true);
-
-            return;
-        }
+        if (!qIsFinite(mStates[i]) || (mStates[i] != mInitialStates[i]))
+            return true;
 
     for (int i = 0, iMax = mRuntime->constantsCount(); i < iMax; ++i)
-        if (!qIsFinite(mConstants[i]) || (mConstants[i] != mInitialConstants[i])) {
-            emit modified(true);
+        if (!qIsFinite(mConstants[i]) || (mConstants[i] != mInitialConstants[i]))
+            return true;
 
-            return;
-        }
+    return false;
+}
 
-    // Let people know that no data has been modified
+//==============================================================================
 
-    emit modified(false);
+void SingleCellViewSimulationData::checkForModifications()
+{
+    // Let people know whether any of our constants or states has been modified
+
+    emit modified(isModified());
 }
 
 //==============================================================================

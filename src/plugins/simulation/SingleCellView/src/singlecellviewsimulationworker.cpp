@@ -244,6 +244,12 @@ void SingleCellViewSimulationWorker::started()
         mSimulation->results()->addPoint(currentPoint);
 
         // Our main work loop
+        // Note: for performance reasons, it is essential that the following
+        //       loop doesn't emit any signal, be it directly or indirectly,
+        //       unless it is to let people know that we are pausing or running.
+        //       Indeed, the signal/slot mechanism adds a certain level of
+        //       overhead and, here, we want things to be as fast as possible,
+        //       so...
 
         QMutex pausedMutex;
 
@@ -270,10 +276,6 @@ void SingleCellViewSimulationWorker::started()
             mSimulation->data()->recomputeVariables(currentPoint, false);
 
             mSimulation->results()->addPoint(currentPoint);
-
-            // Check whether some or even all of our data has changed
-
-            mSimulation->data()->checkForModifications();
 
             // Delay things a bit, if (really) needed
 
