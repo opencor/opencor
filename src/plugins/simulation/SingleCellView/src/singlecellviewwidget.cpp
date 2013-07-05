@@ -1556,7 +1556,17 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
 
     if (simulation == mSimulation) {
         // We are dealing with the active simulation, so update our curves and
-        // progress bar, and enable/disable the export to CSV
+        // progress bar, and enable/disable the reset action
+
+        // Enable/disable the reset action
+        // Note: normally, our simulation worker would, for each point interval,
+        //       call SingleCellViewSimulationData::checkForModifications(),
+        //       but this would result in a signal being emitted (and then
+        //       handled by SingleCellViewWidget::simulationDataModified()),
+        //       resulting in some time overhead, so we check things here
+        //       instead...
+
+        mGui->actionReset->setEnabled(mSimulation->data()->isModified());
 
         // Update our curves, if any
 
