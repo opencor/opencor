@@ -183,7 +183,6 @@ SET(PLUGINS
     simulation/HeunSolver
     simulation/IDASolver
     simulation/KINSOLSolver
-    simulation/MidpointSolver
     simulation/SecondOrderRungeKuttaSolver
 
 #---GRY--- DISABLED FOR VERSION 0.1.x...
