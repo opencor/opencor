@@ -131,7 +131,7 @@ void SingleCellViewGraphPanelWidget::updateMarkerColor()
                             CommonWidget::highlightColor():
                             CommonWidget::windowColor());
 
-//    mMarker->setPalette(newPalette);
+    mMarker->setPalette(newPalette);
 }
 
 //==============================================================================
