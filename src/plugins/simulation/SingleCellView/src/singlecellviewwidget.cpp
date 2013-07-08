@@ -69,21 +69,21 @@ static const QString OutputBrLn = "<br/>\n";
 
 //==============================================================================
 
-SingleCellViewWidgetCurveData::SingleCellViewWidgetCurveData(const QString &pFileName,
+SingleCellViewWidgetGraphData::SingleCellViewWidgetGraphData(const QString &pFileName,
                                                              SingleCellViewSimulation *pSimulation,
                                                              CellMLSupport::CellmlFileRuntimeParameter *pParameter,
-                                                             SingleCellViewGraphPanelPlotCurve *pCurve) :
+                                                             SingleCellViewGraphPanelPlotGraph *pGraph) :
     mFileName(pFileName),
     mSimulation(pSimulation),
     mParameter(pParameter),
-    mCurve(pCurve),
+    mGraph(pGraph),
     mAttached(true)
 {
 }
 
 //==============================================================================
 
-QString SingleCellViewWidgetCurveData::fileName() const
+QString SingleCellViewWidgetGraphData::fileName() const
 {
     // Return our file name
 
@@ -92,7 +92,7 @@ QString SingleCellViewWidgetCurveData::fileName() const
 
 //==============================================================================
 
-CellMLSupport::CellmlFileRuntimeParameter * SingleCellViewWidgetCurveData::parameter() const
+CellMLSupport::CellmlFileRuntimeParameter * SingleCellViewWidgetGraphData::parameter() const
 {
     // Return our parameter
 
@@ -101,16 +101,16 @@ CellMLSupport::CellmlFileRuntimeParameter * SingleCellViewWidgetCurveData::param
 
 //==============================================================================
 
-SingleCellViewGraphPanelPlotCurve * SingleCellViewWidgetCurveData::curve() const
+SingleCellViewGraphPanelPlotGraph * SingleCellViewWidgetGraphData::graph() const
 {
-    // Return our curve
+    // Return our graph
 
-    return mCurve;
+    return mGraph;
 }
 
 //==============================================================================
 
-double * SingleCellViewWidgetCurveData::yData() const
+double * SingleCellViewWidgetGraphData::yData() const
 {
     // Return our Y data array
 
@@ -127,7 +127,7 @@ double * SingleCellViewWidgetCurveData::yData() const
 
 //==============================================================================
 
-bool SingleCellViewWidgetCurveData::isAttached() const
+bool SingleCellViewWidgetGraphData::isAttached() const
 {
     // Return our attached status
 
@@ -136,7 +136,7 @@ bool SingleCellViewWidgetCurveData::isAttached() const
 
 //==============================================================================
 
-void SingleCellViewWidgetCurveData::setAttached(const bool &pAttached)
+void SingleCellViewWidgetGraphData::setAttached(const bool &pAttached)
 {
     // Set our attached status
 
@@ -160,7 +160,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mAxesSettings(QMap<QString, AxisSettings>()),
     mSplitterWidgetSizes(QList<int>()),
     mRunActionEnabled(true),
-    mCurvesData(QMap<QString, SingleCellViewWidgetCurveData *>()),
+    mGraphsData(QMap<QString, SingleCellViewWidgetGraphData *>()),
     mOldSimulationResultsSizes(QMap<SingleCellViewSimulation *, qulonglong>()),
     mCheckResultsSimulations(QList<SingleCellViewSimulation *>())
 {
@@ -326,11 +326,11 @@ SingleCellViewWidget::~SingleCellViewWidget()
     foreach (SingleCellViewSimulation *simulation, mSimulations)
         delete simulation;
 
-    // Delete our curves' data
+    // Delete our graphs' data
 
-    foreach (SingleCellViewWidgetCurveData *curveData, mCurvesData) {
-        delete curveData->curve();
-        delete curveData;
+    foreach (SingleCellViewWidgetGraphData *graphData, mGraphsData) {
+        delete graphData->graph();
+        delete graphData;
     }
 
     // Delete the GUI
@@ -583,11 +583,11 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
         mAxesSettings.insert(previousFileName, axisSettings);
 
-        // Keep track of the attachment status of our curves
+        // Keep track of the attachment status of our graphs
 
-        foreach (SingleCellViewWidgetCurveData *curveData, mCurvesData)
-            if (!curveData->fileName().compare(previousFileName))
-                curveData->setAttached(curveData->curve()->plot());
+        foreach (SingleCellViewWidgetGraphData *graphData, mGraphsData)
+            if (!graphData->fileName().compare(previousFileName))
+                graphData->setAttached(graphData->graph()->plot());
     }
 
     // Retrieve our simulation object for the current model, if any
@@ -830,19 +830,19 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         mSimulation->results()->reset(false);
     }
 
-    // Attach/detach the curves, based on whether they are associated with then
+    // Attach/detach the graphs, based on whether they are associated with then
     // given file name
 
-    foreach (SingleCellViewWidgetCurveData *curveData, mCurvesData)
-        if (    curveData->isAttached()
-            && !curveData->fileName().compare(pFileName)) {
-            curveData->curve()->setRawSamples(mSimulation->results()->points(),
-                                              curveData->yData(),
+    foreach (SingleCellViewWidgetGraphData *graphData, mGraphsData)
+        if (    graphData->isAttached()
+            && !graphData->fileName().compare(pFileName)) {
+            graphData->graph()->setRawSamples(mSimulation->results()->points(),
+                                              graphData->yData(),
                                               mSimulation->results()->size());
 
-            mActiveGraphPanel->plot()->attach(curveData->curve());
+            mActiveGraphPanel->plot()->attach(graphData->graph());
         } else {
-            mActiveGraphPanel->plot()->detach(curveData->curve());
+            mActiveGraphPanel->plot()->detach(graphData->graph());
         }
 
     // Retrieve our graph panel's plot's axes settings and replot our graph
@@ -922,26 +922,26 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
             mSimulation = 0;
     }
 
-    // Remove our curves' data associated with the given file name, if any
+    // Remove our graphs' data associated with the given file name, if any
 
     QList<QString> fileNames = QList<QString>();
     QList<CellMLSupport::CellmlFileRuntimeParameter *> parameters = QList<CellMLSupport::CellmlFileRuntimeParameter *>();
 
-    foreach (SingleCellViewWidgetCurveData *curveData, mCurvesData)
-        if (!curveData->fileName().compare(pFileName)) {
-            // Keep track of the file name and parameter of the curve data
+    foreach (SingleCellViewWidgetGraphData *graphData, mGraphsData)
+        if (!graphData->fileName().compare(pFileName)) {
+            // Keep track of the file name and parameter of the graph data
 
-            fileNames << curveData->fileName();
-            parameters << curveData->parameter();
+            fileNames << graphData->fileName();
+            parameters << graphData->parameter();
 
-            // Delete the curve and the curve data themselves
+            // Delete the graph and the graph data themselves
 
-            delete curveData->curve();
-            delete curveData;
+            delete graphData->graph();
+            delete graphData;
         }
 
     for (int i = 0, iMax = fileNames.count(); i < iMax; ++i)
-        mCurvesData.remove(parameterKey(fileNames[i], parameters[i]));
+        mGraphsData.remove(parameterKey(fileNames[i], parameters[i]));
 
     // Remove various information associated with the given file name
 
@@ -1491,45 +1491,45 @@ void SingleCellViewWidget::showParameter(const QString &pFileName,
 
     QString key = parameterKey(pFileName, pParameter);
 
-    // Retrieve the curve data associated with the key, if any
+    // Retrieve the graph data associated with the key, if any
 
-    SingleCellViewWidgetCurveData *curveData = mCurvesData.value(key);
+    SingleCellViewWidgetGraphData *graphData = mGraphsData.value(key);
 
-    // Check whether to show/hide a curve
+    // Check whether to show/hide a graph
 
-    if (curveData) {
-        // We already have a curve, so just make it visible/invisible and update
-        // our curve's data, in case we are to make it visible
+    if (graphData) {
+        // We already have a graph, so just make it visible/invisible and update
+        // our graph's data, in case we are to make it visible
 
         if (pShow) {
-            curveData->curve()->setRawSamples(mSimulation->results()->points(),
-                                              curveData->yData(),
+            graphData->graph()->setRawSamples(mSimulation->results()->points(),
+                                              graphData->yData(),
                                               mSimulation->results()->size());
 
-            mActiveGraphPanel->plot()->attach(curveData->curve());
+            mActiveGraphPanel->plot()->attach(graphData->graph());
         } else {
-            mActiveGraphPanel->plot()->detach(curveData->curve());
+            mActiveGraphPanel->plot()->detach(graphData->graph());
         }
     } else if (pShow) {
-        // We don't have a curve, but we want one so create one, as well as some
+        // We don't have a graph, but we want one so create one, as well as some
         // data for it
 
-        SingleCellViewGraphPanelPlotCurve *curve = new SingleCellViewGraphPanelPlotCurve();
-        SingleCellViewWidgetCurveData *curveData = new SingleCellViewWidgetCurveData(pFileName, mSimulation, pParameter, curve);
+        SingleCellViewGraphPanelPlotGraph *graph = new SingleCellViewGraphPanelPlotGraph();
+        SingleCellViewWidgetGraphData *graphData = new SingleCellViewWidgetGraphData(pFileName, mSimulation, pParameter, graph);
 
-        // Set some data for our curve
+        // Set some data for our graph
 
-        curve->setRawSamples(mSimulation->results()->points(),
-                             curveData->yData(),
+        graph->setRawSamples(mSimulation->results()->points(),
+                             graphData->yData(),
                              mSimulation->results()->size());
 
-        // Attach the curve to our graph panel's plot
+        // Attach the graph to our graph panel's plot
 
-        mActiveGraphPanel->plot()->attach(curve);
+        mActiveGraphPanel->plot()->attach(graph);
 
-        // Keep track of our curve data
+        // Keep track of our graph data
 
-        mCurvesData.insert(key, curveData);
+        mGraphsData.insert(key, graphData);
     }
 
     // Check our graph panel's plot's local axes before replotting everything
@@ -1547,7 +1547,7 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
                                          const qulonglong &pSize,
                                          const bool &pReplot)
 {
-    // Update our curves, if any and only if actually necessary
+    // Update our graphs, if any and only if actually necessary
 
     SingleCellViewSimulation *simulation = pSimulation?pSimulation:mSimulation;
 
@@ -1555,7 +1555,7 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
     // but only if we are dealing with the active simulation
 
     if (simulation == mSimulation) {
-        // We are dealing with the active simulation, so update our curves and
+        // We are dealing with the active simulation, so update our graphs and
         // progress bar, and enable/disable the reset action
 
         // Enable/disable the reset action
@@ -1568,27 +1568,27 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
 
         mGui->actionReset->setEnabled(mSimulation->data()->isModified());
 
-        // Update our curves, if any
+        // Update our graphs, if any
 
-        foreach (SingleCellViewWidgetCurveData *curveData, mCurvesData)
-            // Update the curve, should it be attached
+        foreach (SingleCellViewWidgetGraphData *graphData, mGraphsData)
+            // Update the graph, should it be attached
 
-            if (curveData->curve()->plot()) {
-                // Keep track of our curve's old size
+            if (graphData->graph()->plot()) {
+                // Keep track of our graph's old size
 
-                qulonglong oldDataSize = curveData->curve()->dataSize();
+                qulonglong oldDataSize = graphData->graph()->dataSize();
 
-                // Update our curve's data
+                // Update our graph's data
 
-                curveData->curve()->setRawSamples(mSimulation->results()->points(),
-                                                  curveData->yData(),
+                graphData->graph()->setRawSamples(mSimulation->results()->points(),
+                                                  graphData->yData(),
                                                   pSize);
 
-                // Draw the curve's new segment, but only if there is some data to
+                // Draw the graph's new segment, but only if there is some data to
                 // plot and that we don't want to replot everything
 
                 if (!pReplot && (pSize > 1))
-                    mActiveGraphPanel->plot()->drawCurveSegment(curveData->curve(), oldDataSize?oldDataSize-1:0, pSize-1);
+                    mActiveGraphPanel->plot()->drawGraphSegment(graphData->graph(), oldDataSize?oldDataSize-1:0, pSize-1);
             }
 
         // Replot our active graph panel, if needed

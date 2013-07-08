@@ -56,26 +56,26 @@ namespace SingleCellView {
 //==============================================================================
 
 class SingleCellViewContentsWidget;
-class SingleCellViewGraphPanelPlotCurve;
+class SingleCellViewGraphPanelPlotGraph;
 class SingleCellViewGraphPanelWidget;
 class SingleCellViewPlugin;
 class SingleCellViewSimulation;
 
 //==============================================================================
 
-class SingleCellViewWidgetCurveData
+class SingleCellViewWidgetGraphData
 {
 public:
-    explicit SingleCellViewWidgetCurveData(const QString &pFileName,
+    explicit SingleCellViewWidgetGraphData(const QString &pFileName,
                                            SingleCellViewSimulation *pSimulation,
                                            CellMLSupport::CellmlFileRuntimeParameter *pParameter,
-                                           SingleCellViewGraphPanelPlotCurve *pCurve);
+                                           SingleCellViewGraphPanelPlotGraph *pGraph);
 
     QString fileName() const;
 
     CellMLSupport::CellmlFileRuntimeParameter * parameter() const;
 
-    SingleCellViewGraphPanelPlotCurve * curve() const;
+    SingleCellViewGraphPanelPlotGraph * graph() const;
 
     double * yData() const;
 
@@ -89,7 +89,7 @@ private:
 
     CellMLSupport::CellmlFileRuntimeParameter *mParameter;
 
-    SingleCellViewGraphPanelPlotCurve *mCurve;
+    SingleCellViewGraphPanelPlotGraph *mGraph;
 
     bool mAttached;
 };
@@ -184,7 +184,7 @@ private:
 
     SingleCellViewGraphPanelWidget *mActiveGraphPanel;
 
-    QMap<QString, SingleCellViewWidgetCurveData *> mCurvesData;
+    QMap<QString, SingleCellViewWidgetGraphData *> mGraphsData;
 
     QMap<SingleCellViewSimulation *, qulonglong> mOldSimulationResultsSizes;
 

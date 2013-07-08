@@ -21,10 +21,10 @@ namespace SingleCellView {
 
 //==============================================================================
 
-class SingleCellViewGraphPanelPlotCurve : public QwtPlotCurve
+class SingleCellViewGraphPanelPlotGraph : public QwtPlotCurve
 {
 public:
-    explicit SingleCellViewGraphPanelPlotCurve();
+    explicit SingleCellViewGraphPanelPlotGraph();
 };
 
 //==============================================================================
@@ -39,10 +39,10 @@ public:
 
     void replotNow();
 
-    void attach(SingleCellViewGraphPanelPlotCurve *pCurve);
-    void detach(SingleCellViewGraphPanelPlotCurve *pCurve);
+    void attach(SingleCellViewGraphPanelPlotGraph *pGraph);
+    void detach(SingleCellViewGraphPanelPlotGraph *pGraph);
 
-    void drawCurveSegment(SingleCellViewGraphPanelPlotCurve *pCurve,
+    void drawGraphSegment(SingleCellViewGraphPanelPlotGraph *pGraph,
                           const qulonglong &pFrom, const qulonglong &pTo);
 
     void checkLocalAxes(const bool &pCanReplot = true,
@@ -102,7 +102,7 @@ private:
 
     QwtPlotDirectPainter *mDirectPainter;
 
-    QList<SingleCellViewGraphPanelPlotCurve *> mCurves;
+    QList<SingleCellViewGraphPanelPlotGraph *> mGraphs;
 
     bool mInteractive;
 
