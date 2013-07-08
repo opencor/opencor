@@ -63,39 +63,6 @@ class SingleCellViewSimulation;
 
 //==============================================================================
 
-class SingleCellViewWidgetGraphData
-{
-public:
-    explicit SingleCellViewWidgetGraphData(const QString &pFileName,
-                                           SingleCellViewSimulation *pSimulation,
-                                           CellMLSupport::CellmlFileRuntimeParameter *pParameter,
-                                           SingleCellViewGraphPanelPlotGraph *pGraph);
-
-    QString fileName() const;
-
-    CellMLSupport::CellmlFileRuntimeParameter * parameter() const;
-
-    SingleCellViewGraphPanelPlotGraph * graph() const;
-
-    double * yData() const;
-
-    bool isAttached() const;
-    void setAttached(const bool &pAttached);
-
-private:
-    QString mFileName;
-
-    SingleCellViewSimulation *mSimulation;
-
-    CellMLSupport::CellmlFileRuntimeParameter *mParameter;
-
-    SingleCellViewGraphPanelPlotGraph *mGraph;
-
-    bool mAttached;
-};
-
-//==============================================================================
-
 class SingleCellViewWidget : public Core::ViewWidget
 {
     Q_OBJECT
@@ -184,7 +151,7 @@ private:
 
     SingleCellViewGraphPanelWidget *mActiveGraphPanel;
 
-    QMap<QString, SingleCellViewWidgetGraphData *> mGraphsData;
+    QList<SingleCellViewGraphPanelPlotGraph *> mGraphs;
 
     QMap<SingleCellViewSimulation *, qulonglong> mOldSimulationResultsSizes;
 
@@ -206,9 +173,6 @@ private:
                        const qulonglong &pSize,
                        const bool &pReplot = false);
     void checkResults(SingleCellViewSimulation *pSimulation);
-
-    QString parameterKey(const QString pFileName,
-                         CellMLSupport::CellmlFileRuntimeParameter *pParameter);
 
 private Q_SLOTS:
     void on_actionRunPauseResume_triggered();

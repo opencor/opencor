@@ -17,6 +17,15 @@ class QwtPlotDirectPainter;
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace CellMLSupport {
+    class CellmlFileRuntimeParameter;
+}   // namespace CellMLSupport
+
+//==============================================================================
+
 namespace SingleCellView {
 
 //==============================================================================
@@ -24,7 +33,13 @@ namespace SingleCellView {
 class SingleCellViewGraphPanelPlotGraph : public QwtPlotCurve
 {
 public:
-    explicit SingleCellViewGraphPanelPlotGraph();
+    explicit SingleCellViewGraphPanelPlotGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
+                                               CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
+    ~SingleCellViewGraphPanelPlotGraph();
+
+private:
+    CellMLSupport::CellmlFileRuntimeParameter *mParameterX;
+    CellMLSupport::CellmlFileRuntimeParameter *mParameterY;
 };
 
 //==============================================================================

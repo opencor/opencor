@@ -69,82 +69,6 @@ static const QString OutputBrLn = "<br/>\n";
 
 //==============================================================================
 
-SingleCellViewWidgetGraphData::SingleCellViewWidgetGraphData(const QString &pFileName,
-                                                             SingleCellViewSimulation *pSimulation,
-                                                             CellMLSupport::CellmlFileRuntimeParameter *pParameter,
-                                                             SingleCellViewGraphPanelPlotGraph *pGraph) :
-    mFileName(pFileName),
-    mSimulation(pSimulation),
-    mParameter(pParameter),
-    mGraph(pGraph),
-    mAttached(true)
-{
-}
-
-//==============================================================================
-
-QString SingleCellViewWidgetGraphData::fileName() const
-{
-    // Return our file name
-
-    return mFileName;
-}
-
-//==============================================================================
-
-CellMLSupport::CellmlFileRuntimeParameter * SingleCellViewWidgetGraphData::parameter() const
-{
-    // Return our parameter
-
-    return mParameter;
-}
-
-//==============================================================================
-
-SingleCellViewGraphPanelPlotGraph * SingleCellViewWidgetGraphData::graph() const
-{
-    // Return our graph
-
-    return mGraph;
-}
-
-//==============================================================================
-
-double * SingleCellViewWidgetGraphData::yData() const
-{
-    // Return our Y data array
-
-    if (   (mParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)
-        || (mParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant))
-        return mSimulation->results()->constants()?mSimulation->results()->constants()[mParameter->index()]:0;
-    else if (mParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Rate)
-        return mSimulation->results()->rates()?mSimulation->results()->rates()[mParameter->index()]:0;
-    else if (mParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State)
-        return mSimulation->results()->states()?mSimulation->results()->states()[mParameter->index()]:0;
-    else
-        return mSimulation->results()->algebraic()?mSimulation->results()->algebraic()[mParameter->index()]:0;
-}
-
-//==============================================================================
-
-bool SingleCellViewWidgetGraphData::isAttached() const
-{
-    // Return our attached status
-
-    return mAttached;
-}
-
-//==============================================================================
-
-void SingleCellViewWidgetGraphData::setAttached(const bool &pAttached)
-{
-    // Set our attached status
-
-    mAttached = pAttached;
-}
-
-//==============================================================================
-
 SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
                                            QWidget *pParent) :
     ViewWidget(pParent),
@@ -160,7 +84,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mAxesSettings(QMap<QString, AxisSettings>()),
     mSplitterWidgetSizes(QList<int>()),
     mRunActionEnabled(true),
-    mGraphsData(QMap<QString, SingleCellViewWidgetGraphData *>()),
+    mGraphs(QList<SingleCellViewGraphPanelPlotGraph *>()),
     mOldSimulationResultsSizes(QMap<SingleCellViewSimulation *, qulonglong>()),
     mCheckResultsSimulations(QList<SingleCellViewSimulation *>())
 {
@@ -326,12 +250,10 @@ SingleCellViewWidget::~SingleCellViewWidget()
     foreach (SingleCellViewSimulation *simulation, mSimulations)
         delete simulation;
 
-    // Delete our graphs' data
+    // Delete our graphs
 
-    foreach (SingleCellViewWidgetGraphData *graphData, mGraphsData) {
-        delete graphData->graph();
-        delete graphData;
-    }
+    foreach (SingleCellViewGraphPanelPlotGraph *graph, mGraphs)
+        delete graph;
 
     // Delete the GUI
 
@@ -582,12 +504,6 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         axisSettings.localMaxY = mActiveGraphPanel->plot()->localMaxY();
 
         mAxesSettings.insert(previousFileName, axisSettings);
-
-        // Keep track of the attachment status of our graphs
-
-        foreach (SingleCellViewWidgetGraphData *graphData, mGraphsData)
-            if (!graphData->fileName().compare(previousFileName))
-                graphData->setAttached(graphData->graph()->plot());
     }
 
     // Retrieve our simulation object for the current model, if any
@@ -830,21 +746,6 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         mSimulation->results()->reset(false);
     }
 
-    // Attach/detach the graphs, based on whether they are associated with then
-    // given file name
-
-    foreach (SingleCellViewWidgetGraphData *graphData, mGraphsData)
-        if (    graphData->isAttached()
-            && !graphData->fileName().compare(pFileName)) {
-            graphData->graph()->setRawSamples(mSimulation->results()->points(),
-                                              graphData->yData(),
-                                              mSimulation->results()->size());
-
-            mActiveGraphPanel->plot()->attach(graphData->graph());
-        } else {
-            mActiveGraphPanel->plot()->detach(graphData->graph());
-        }
-
     // Retrieve our graph panel's plot's axes settings and replot our graph
     // panel's plot, if available
 
@@ -921,27 +822,6 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
         if (simulation == mSimulation)
             mSimulation = 0;
     }
-
-    // Remove our graphs' data associated with the given file name, if any
-
-    QList<QString> fileNames = QList<QString>();
-    QList<CellMLSupport::CellmlFileRuntimeParameter *> parameters = QList<CellMLSupport::CellmlFileRuntimeParameter *>();
-
-    foreach (SingleCellViewWidgetGraphData *graphData, mGraphsData)
-        if (!graphData->fileName().compare(pFileName)) {
-            // Keep track of the file name and parameter of the graph data
-
-            fileNames << graphData->fileName();
-            parameters << graphData->parameter();
-
-            // Delete the graph and the graph data themselves
-
-            delete graphData->graph();
-            delete graphData;
-        }
-
-    for (int i = 0, iMax = fileNames.count(); i < iMax; ++i)
-        mGraphsData.remove(parameterKey(fileNames[i], parameters[i]));
 
     // Remove various information associated with the given file name
 
@@ -1472,87 +1352,15 @@ void SingleCellViewWidget::solversPropertyChanged(Core::Property *pProperty)
 
 //==============================================================================
 
-QString SingleCellViewWidget::parameterKey(const QString pFileName,
-                                           CellMLSupport::CellmlFileRuntimeParameter *pParameter)
-{
-    // Return the for the given parameter
-
-    return pFileName+"|"+QString::number(pParameter->type())+"|"+QString::number(pParameter->index());
-}
-
-//==============================================================================
-
 void SingleCellViewWidget::requireGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
                                         CellMLSupport::CellmlFileRuntimeParameter *pParameterY)
 {
-//---GRY--- TO BE DONE...
-    // Keep track of the graph requirement
+    // Create the required graph
 
-qDebug(">>> Graph required for:");
-qDebug(">>>  - X: %s", qPrintable(pParameterX->name()));
-qDebug(">>>  - Y: %s", qPrintable(pParameterY->name()));
+    SingleCellViewGraphPanelPlotGraph *graph = new SingleCellViewGraphPanelPlotGraph(pParameterX, pParameterY);
+
+    mGraphs << graph;
 }
-
-//==============================================================================
-
-/*---GRY---
-void SingleCellViewWidget::showParameter(const QString &pFileName,
-                                         CellMLSupport::CellmlFileRuntimeParameter *pParameter,
-                                         const bool &pShow)
-{
-    // Determine the key for the given parameter
-
-    QString key = parameterKey(pFileName, pParameter);
-
-    // Retrieve the graph data associated with the key, if any
-
-    SingleCellViewWidgetGraphData *graphData = mGraphsData.value(key);
-
-    // Check whether to show/hide a graph
-
-    if (graphData) {
-        // We already have a graph, so just make it visible/invisible and update
-        // our graph's data, in case we are to make it visible
-
-        if (pShow) {
-            graphData->graph()->setRawSamples(mSimulation->results()->points(),
-                                              graphData->yData(),
-                                              mSimulation->results()->size());
-
-            mActiveGraphPanel->plot()->attach(graphData->graph());
-        } else {
-            mActiveGraphPanel->plot()->detach(graphData->graph());
-        }
-    } else if (pShow) {
-        // We don't have a graph, but we want one so create one, as well as some
-        // data for it
-
-        SingleCellViewGraphPanelPlotGraph *graph = new SingleCellViewGraphPanelPlotGraph();
-        SingleCellViewWidgetGraphData *graphData = new SingleCellViewWidgetGraphData(pFileName, mSimulation, pParameter, graph);
-
-        // Set some data for our graph
-
-        graph->setRawSamples(mSimulation->results()->points(),
-                             graphData->yData(),
-                             mSimulation->results()->size());
-
-        // Attach the graph to our graph panel's plot
-
-        mActiveGraphPanel->plot()->attach(graph);
-
-        // Keep track of our graph data
-
-        mGraphsData.insert(key, graphData);
-    }
-
-    // Check our graph panel's plot's local axes before replotting everything
-    // Note: we always want to replot, hence our passing false as an argument to
-    //       resetLocalAxes()...
-
-    mActiveGraphPanel->plot()->resetLocalAxes(false);
-    mActiveGraphPanel->plot()->replotNow();
-}
-*/
 
 //==============================================================================
 
@@ -1583,26 +1391,26 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
 
         // Update our graphs, if any
 
-        foreach (SingleCellViewWidgetGraphData *graphData, mGraphsData)
-            // Update the graph, should it be attached
+//        foreach (SingleCellViewWidgetGraph *graphData, mGraphsData)
+//            // Update the graph, should it be attached
 
-            if (graphData->graph()->plot()) {
-                // Keep track of our graph's old size
+//            if (graphData->graph()->plot()) {
+//                // Keep track of our graph's old size
 
-                qulonglong oldDataSize = graphData->graph()->dataSize();
+//                qulonglong oldDataSize = graphData->graph()->dataSize();
 
-                // Update our graph's data
+//                // Update our graph's data
 
-                graphData->graph()->setRawSamples(mSimulation->results()->points(),
-                                                  graphData->yData(),
-                                                  pSize);
+//                graphData->graph()->setRawSamples(mSimulation->results()->points(),
+//                                                  graphData->yData(),
+//                                                  pSize);
 
-                // Draw the graph's new segment, but only if there is some data to
-                // plot and that we don't want to replot everything
+//                // Draw the graph's new segment, but only if there is some data to
+//                // plot and that we don't want to replot everything
 
-                if (!pReplot && (pSize > 1))
-                    mActiveGraphPanel->plot()->drawGraphSegment(graphData->graph(), oldDataSize?oldDataSize-1:0, pSize-1);
-            }
+//                if (!pReplot && (pSize > 1))
+//                    mActiveGraphPanel->plot()->drawGraphSegment(graphData->graph(), oldDataSize?oldDataSize-1:0, pSize-1);
+//            }
 
         // Replot our active graph panel, if needed
 

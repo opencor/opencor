@@ -2,6 +2,7 @@
 // Single cell view graph panel plot widget
 //==============================================================================
 
+#include "cellmlfileruntime.h"
 #include "singlecellviewgraphpanelplotwidget.h"
 
 //==============================================================================
@@ -37,13 +38,26 @@ namespace SingleCellView {
 
 //==============================================================================
 
-SingleCellViewGraphPanelPlotGraph::SingleCellViewGraphPanelPlotGraph() :
-    QwtPlotCurve()
+SingleCellViewGraphPanelPlotGraph::SingleCellViewGraphPanelPlotGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
+                                                                     CellMLSupport::CellmlFileRuntimeParameter *pParameterY) :
+    QwtPlotCurve(),
+    mParameterX(pParameterX),
+    mParameterY(pParameterY)
 {
-    // Customise it a bit
+qDebug(">>> Creating graph [%p] for:", this);
+qDebug(">>>  - X: %s", qPrintable(mParameterX->name()));
+qDebug(">>>  - Y: %s", qPrintable(mParameterY->name()));
+    // Customise ourselves a bit
 
     setPen(QPen(Qt::darkBlue));
     setRenderHint(QwtPlotItem::RenderAntialiased);
+}
+
+//==============================================================================
+
+SingleCellViewGraphPanelPlotGraph::~SingleCellViewGraphPanelPlotGraph()
+{
+qDebug(">>> Deleting graph [%p]...", this);
 }
 
 //==============================================================================
