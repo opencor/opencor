@@ -56,8 +56,8 @@ public:
 
     QList<SingleCellViewGraphPanelPlotGraph *> graphs() const;
 
-    void addGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
-    void removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
+    bool addGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
+    bool removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
 
     void drawGraphSegment(SingleCellViewGraphPanelPlotGraph *pGraph,
                           const qulonglong &pFrom, const qulonglong &pTo);

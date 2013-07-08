@@ -1113,34 +1113,38 @@ void SingleCellViewGraphPanelPlotWidget::drawCanvas(QPainter *pPainter)
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::addGraph(SingleCellViewGraphPanelPlotGraph *pGraph)
+bool SingleCellViewGraphPanelPlotWidget::addGraph(SingleCellViewGraphPanelPlotGraph *pGraph)
 {
     // Make sure that the given graph is not already attached to us
 
     if (mGraphs.contains(pGraph))
-        return;
+        return false;
 
     // Attach the given graph to ourselves and keep track of it
 
     pGraph->attach(this);
 
     mGraphs << pGraph;
+
+    return true;
 }
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph)
+bool SingleCellViewGraphPanelPlotWidget::removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph)
 {
     // Check that the given graph is attached to us
 
     if (!mGraphs.contains(pGraph))
-        return;
+        return false;
 
     // Detach the given graph from ourselves and stop tracking it
 
     pGraph->detach();
 
     mGraphs.removeOne(pGraph);
+
+    return true;
 }
 
 //==============================================================================

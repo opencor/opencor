@@ -64,6 +64,9 @@ private:
 Q_SIGNALS:
     void activated(SingleCellViewGraphPanelWidget *pGraphPanel);
     void inactivated(SingleCellViewGraphPanelWidget *pGraphPanel);
+
+    void graphAdded(SingleCellViewGraphPanelPlotGraph *pGraph);
+    void graphRemoved(SingleCellViewGraphPanelPlotGraph *pGraph);
 };
 
 //==============================================================================
