@@ -260,7 +260,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     // Keep track of which graphs are required
 
     connect(mContentsWidget->informationWidget()->parametersWidget(), SIGNAL(graphRequired(CellMLSupport::CellmlFileRuntimeParameter *, CellMLSupport::CellmlFileRuntimeParameter *)),
-            mContentsWidget->informationWidget()->graphsWidget(), SLOT(requireGraph(CellMLSupport::CellmlFileRuntimeParameter *, CellMLSupport::CellmlFileRuntimeParameter *)));
+            this, SLOT(requireGraph(CellMLSupport::CellmlFileRuntimeParameter *, CellMLSupport::CellmlFileRuntimeParameter *)));
 
     // Create and add our invalid simulation message widget
 
@@ -1478,6 +1478,19 @@ QString SingleCellViewWidget::parameterKey(const QString pFileName,
     // Return the for the given parameter
 
     return pFileName+"|"+QString::number(pParameter->type())+"|"+QString::number(pParameter->index());
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::requireGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
+                                        CellMLSupport::CellmlFileRuntimeParameter *pParameterY)
+{
+//---GRY--- TO BE DONE...
+    // Keep track of the graph requirement
+
+qDebug(">>> Graph required for:");
+qDebug(">>>  - X: %s", qPrintable(pParameterX->name()));
+qDebug(">>>  - Y: %s", qPrintable(pParameterY->name()));
 }
 
 //==============================================================================

@@ -72,9 +72,6 @@ public Q_SLOTS:
     void initialize(SingleCellViewGraphPanelWidget *pGraphPanel);
     void finalize(SingleCellViewGraphPanelWidget *pGraphPanel);
 
-    void requireGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
-                      CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
-
 private Q_SLOTS:
     void propertyChanged(Core::Property *pProperty);
 };

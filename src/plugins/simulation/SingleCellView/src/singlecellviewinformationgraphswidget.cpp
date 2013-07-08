@@ -155,19 +155,6 @@ void SingleCellViewInformationGraphsWidget::finishPropertyEditing()
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::requireGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
-                                                         CellMLSupport::CellmlFileRuntimeParameter *pParameterY)
-{
-//---GRY--- TO BE DONE...
-    // Keep track of the graph requirement
-
-qDebug(">>> Graph required for:");
-qDebug(">>>  - X: %s", qPrintable(pParameterX->name()));
-qDebug(">>>  - Y: %s", qPrintable(pParameterY->name()));
-}
-
-//==============================================================================
-
 void SingleCellViewInformationGraphsWidget::propertyChanged(Core::Property *pProperty)
 {
 //---GRY--- TO BE DONE...
