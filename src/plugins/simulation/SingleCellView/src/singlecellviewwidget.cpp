@@ -1230,7 +1230,7 @@ void SingleCellViewWidget::simulationPropertyChanged(Core::Property *pProperty)
     //       because it's can potentially have an effect on the value of our
     //       'computed constants' and 'variables'...
 
-    bool needUpdating = true;
+//    bool needUpdating = true;
 
     if (pProperty == mContentsWidget->informationWidget()->simulationWidget()->startingPointProperty()) {
         mSimulation->data()->setStartingPoint(Core::PropertyEditorWidget::doublePropertyItem(pProperty->value()));
@@ -1239,7 +1239,7 @@ void SingleCellViewWidget::simulationPropertyChanged(Core::Property *pProperty)
     } else if (pProperty == mContentsWidget->informationWidget()->simulationWidget()->pointIntervalProperty()) {
         mSimulation->data()->setPointInterval(Core::PropertyEditorWidget::doublePropertyItem(pProperty->value()));
 
-        needUpdating = false;
+//        needUpdating = false;
     }
 
     // Update the minimum/maximum values of our X axis and replot ourselves, if
