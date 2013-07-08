@@ -179,6 +179,11 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     connect(mContentsWidget->graphPanelsWidget(), SIGNAL(grapPanelRemoved(SingleCellViewGraphPanelWidget *)),
             mContentsWidget->informationWidget()->graphsWidget(), SLOT(finalize(SingleCellViewGraphPanelWidget *)));
 
+    // Keep track of whether a graph panel has been activated
+
+    connect(mContentsWidget->graphPanelsWidget(), SIGNAL(graphPanelActivated(SingleCellViewGraphPanelWidget *)),
+            mContentsWidget->informationWidget()->graphsWidget(), SLOT(initialize(SingleCellViewGraphPanelWidget *)));
+
     // Keep track of which graphs are required
 
     connect(mContentsWidget->informationWidget()->parametersWidget(), SIGNAL(graphRequired(CellMLSupport::CellmlFileRuntimeParameter *, CellMLSupport::CellmlFileRuntimeParameter *)),

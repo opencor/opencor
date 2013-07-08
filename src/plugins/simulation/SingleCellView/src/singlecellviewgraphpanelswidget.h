@@ -41,9 +41,6 @@ public:
     SingleCellViewGraphPanelWidget * addGraphPanel();
     void removeGraphPanel();
 
-protected:
-    virtual void wheelEvent(QWheelEvent *pEvent);
-
 private:
     QList<int> mSplitterSizes;
 
@@ -53,10 +50,12 @@ Q_SIGNALS:
 
     void removeGraphPanelsEnabled(const bool &pEnabled);
 
+    void graphPanelActivated(SingleCellViewGraphPanelWidget *pGraphPanel);
+
 private Q_SLOTS:
     void splitterMoved();
 
-    void graphPanelActivated(SingleCellViewGraphPanelWidget *pGraphPanel);
+    void updateGraphPanels(SingleCellViewGraphPanelWidget *pGraphPanel);
 };
 
 //==============================================================================

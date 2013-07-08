@@ -90,6 +90,11 @@ void SingleCellViewInformationGraphsWidget::saveSettings(QSettings *pSettings) c
 
 void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelWidget *pGraphPanel)
 {
+//---GRY--- THE BELOW IS JUST FOR DEVELOPMENT PURPOSES...
+mNoGraphsMessageWidget->setText(tr("There are no graphs..."));
+QString p;
+p.sprintf("%p", pGraphPanel);
+mNoGraphsMessageWidget->setText(mNoGraphsMessageWidget->text()+" ["+p+"]");
     // Retrieve the property editor for the given file name or create one, if
     // none exists
 

@@ -103,49 +103,6 @@ void SingleCellViewGraphPanelsWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void SingleCellViewGraphPanelsWidget::wheelEvent(QWheelEvent *pEvent)
-{
-    // Default handling of the event
-
-    QSplitter::wheelEvent(pEvent);
-
-    // Select the previous/next graph panel, if any
-
-    if (pEvent->delta())
-    for (int i = 0, iMax = count(); i < iMax; ++i) {
-        SingleCellViewGraphPanelWidget *graphPanel = qobject_cast<SingleCellViewGraphPanelWidget *>(widget(i));
-
-        if (graphPanel->isActive()) {
-            // We are dealing with the currently active graph panel, so
-            // inactivate it and activate either its predecessor or successor
-
-            graphPanel->setActive(false);
-
-            int shift = 1;
-
-#if defined(Q_OS_MAC) && defined(AVAILABLE_MAC_OS_X_VERSION_10_7_AND_LATER)
-            // From version 10.7 of OS X, the scrolling works the other way
-            // round, so...
-
-            shift = -1;
-#endif
-
-            i += (pEvent->delta() < 0)?shift:-shift;
-
-            if (i < 0)
-                i = 0;
-            else if (i == iMax)
-                i = iMax-1;
-
-            qobject_cast<SingleCellViewGraphPanelWidget *>(widget(i))->setActive(true);
-
-            break;
-        }
-    }
-}
-
-//==============================================================================
-
 QList<SingleCellViewGraphPanelWidget *> SingleCellViewGraphPanelsWidget::graphPanels() const
 {
     // Return all our graph panels
@@ -206,11 +163,14 @@ SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::addGraphPanel(
 
     setSizes(origSizes << height()/count());
 
-    // Create a connection to keep track of whenever the graph panel gets
+    // Create some connections to keep track of whenever a graph panel gets
     // activated
 
     connect(res, SIGNAL(activated(SingleCellViewGraphPanelWidget *)),
-            this, SLOT(graphPanelActivated(SingleCellViewGraphPanelWidget *)));
+            this, SIGNAL(graphPanelActivated(SingleCellViewGraphPanelWidget *)));
+
+    connect(res, SIGNAL(activated(SingleCellViewGraphPanelWidget *)),
+            this, SLOT(updateGraphPanels(SingleCellViewGraphPanelWidget *)));
 
     // Activate the graph panel
 
@@ -303,7 +263,7 @@ void SingleCellViewGraphPanelsWidget::splitterMoved()
 
 //==============================================================================
 
-void SingleCellViewGraphPanelsWidget::graphPanelActivated(SingleCellViewGraphPanelWidget *pGraphPanel)
+void SingleCellViewGraphPanelsWidget::updateGraphPanels(SingleCellViewGraphPanelWidget *pGraphPanel)
 {
     // A graph panel has been activated, so inactivate all the others
 
