@@ -56,8 +56,6 @@ namespace SingleCellView {
 //==============================================================================
 
 class SingleCellViewContentsWidget;
-class SingleCellViewGraphPanelPlotGraph;
-class SingleCellViewGraphPanelWidget;
 class SingleCellViewPlugin;
 class SingleCellViewSimulation;
 
@@ -134,8 +132,6 @@ private:
     QTextEdit *mOutputWidget;
 
     ErrorType mErrorType;
-
-    QList<SingleCellViewGraphPanelPlotGraph *> mGraphs;
 
     QMap<SingleCellViewSimulation *, qulonglong> mOldSimulationResultsSizes;
 

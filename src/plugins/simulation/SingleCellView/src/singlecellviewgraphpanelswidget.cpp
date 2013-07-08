@@ -146,6 +146,42 @@ void SingleCellViewGraphPanelsWidget::wheelEvent(QWheelEvent *pEvent)
 
 //==============================================================================
 
+QList<SingleCellViewGraphPanelWidget *> SingleCellViewGraphPanelsWidget::graphPanels() const
+{
+    // Return all our graph panels
+
+    QList<SingleCellViewGraphPanelWidget *> res = QList<SingleCellViewGraphPanelWidget *>();
+
+    for (int i = 0, iMax = count(); i < iMax; ++i)
+        res << qobject_cast<SingleCellViewGraphPanelWidget *>(widget(i));
+
+    return res;
+}
+
+//==============================================================================
+
+SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::activeGraphPanel() const
+{
+    // Return the active graph panel
+
+    for (int i = 0, iMax = count(); i < iMax; ++i) {
+        SingleCellViewGraphPanelWidget *graphPanel = qobject_cast<SingleCellViewGraphPanelWidget *>(widget(i));
+
+        if (graphPanel->isActive())
+            // We found the active graph panel, so...
+
+            return graphPanel;
+    }
+
+    // There are no graph panels, so...
+    // Note: we should never reach this point since there should always be at
+    //       least one graph panel...
+
+    return 0;
+}
+
+//==============================================================================
+
 SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::addGraphPanel()
 {
     // Keep track of the graph panels' original size
@@ -254,28 +290,6 @@ void SingleCellViewGraphPanelsWidget::removeGraphPanel()
     // Let people know whether graph panels can be removed
 
     emit removeGraphPanelsEnabled(count() > 1);
-}
-
-//==============================================================================
-
-SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::activeGraphPanel()
-{
-    // Return the active graph panel
-
-    for (int i = 0, iMax = count(); i < iMax; ++i) {
-        SingleCellViewGraphPanelWidget *graphPanel = qobject_cast<SingleCellViewGraphPanelWidget *>(widget(i));
-
-        if (graphPanel->isActive())
-            // We found the active graph panel, so...
-
-            return graphPanel;
-    }
-
-    // There are no graph panels, so...
-    // Note: we should never reach this point since there should always be at
-    //       least one graph panel...
-
-    return 0;
 }
 
 //==============================================================================

@@ -102,11 +102,29 @@ void SingleCellViewGraphPanelWidget::mousePressEvent(QMouseEvent *pEvent)
 
 //==============================================================================
 
-SingleCellViewGraphPanelPlotWidget * SingleCellViewGraphPanelWidget::plot()
+QList<SingleCellViewGraphPanelPlotGraph *> SingleCellViewGraphPanelWidget::graphs() const
 {
-    // Return the pointer to our plot widget
+    // Return all our plot's graphs
 
-    return mPlot;
+    return mPlot->graphs();
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelWidget::addGraph(SingleCellViewGraphPanelPlotGraph *pGraph)
+{
+    // Add the graph to our plot
+
+    mPlot->addGraph(pGraph);
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelWidget::removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph)
+{
+    // Remove the graph from our plot
+
+    mPlot->removeGraph(pGraph);
 }
 
 //==============================================================================

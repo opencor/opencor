@@ -400,6 +400,15 @@ void SingleCellViewGraphPanelPlotWidget::setFixedAxisY(const bool &pFixedAxisY)
 
 //==============================================================================
 
+QList<SingleCellViewGraphPanelPlotGraph *> SingleCellViewGraphPanelPlotWidget::graphs() const
+{
+    // Return all our graphs
+
+    return mGraphs;
+}
+
+//==============================================================================
+
 void SingleCellViewGraphPanelPlotWidget::setInteractive(const bool &pInteractive)
 {
     // Specify whether interaction is allowed
@@ -1104,36 +1113,32 @@ void SingleCellViewGraphPanelPlotWidget::drawCanvas(QPainter *pPainter)
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::attach(SingleCellViewGraphPanelPlotGraph *pGraph)
+void SingleCellViewGraphPanelPlotWidget::addGraph(SingleCellViewGraphPanelPlotGraph *pGraph)
 {
     // Make sure that the given graph is not already attached to us
 
     if (mGraphs.contains(pGraph))
         return;
 
-    // Attach the given graph to ourselves
+    // Attach the given graph to ourselves and keep track of it
 
     pGraph->attach(this);
-
-    // Add the given graph to our list of graphs
 
     mGraphs << pGraph;
 }
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::detach(SingleCellViewGraphPanelPlotGraph *pGraph)
+void SingleCellViewGraphPanelPlotWidget::removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph)
 {
     // Check that the given graph is attached to us
 
     if (!mGraphs.contains(pGraph))
         return;
 
-    // Detach the given graph from ourselves
+    // Detach the given graph from ourselves and stop tracking it
 
     pGraph->detach();
-
-    // Remove the given graph from our list of graphs
 
     mGraphs.removeOne(pGraph);
 }

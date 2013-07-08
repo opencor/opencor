@@ -54,8 +54,10 @@ public:
 
     void replotNow();
 
-    void attach(SingleCellViewGraphPanelPlotGraph *pGraph);
-    void detach(SingleCellViewGraphPanelPlotGraph *pGraph);
+    QList<SingleCellViewGraphPanelPlotGraph *> graphs() const;
+
+    void addGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
+    void removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
 
     void drawGraphSegment(SingleCellViewGraphPanelPlotGraph *pGraph,
                           const qulonglong &pFrom, const qulonglong &pTo);

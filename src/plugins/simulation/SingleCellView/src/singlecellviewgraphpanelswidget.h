@@ -35,10 +35,11 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
+    QList<SingleCellViewGraphPanelWidget *> graphPanels() const;
+    SingleCellViewGraphPanelWidget * activeGraphPanel() const;
+
     SingleCellViewGraphPanelWidget * addGraphPanel();
     void removeGraphPanel();
-
-    SingleCellViewGraphPanelWidget * activeGraphPanel();
 
 protected:
     virtual void wheelEvent(QWheelEvent *pEvent);

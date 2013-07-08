@@ -83,7 +83,6 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mDelays(QMap<QString, int>()),
     mSplitterWidgetSizes(QList<int>()),
     mRunActionEnabled(true),
-    mGraphs(QList<SingleCellViewGraphPanelPlotGraph *>()),
     mOldSimulationResultsSizes(QMap<SingleCellViewSimulation *, qulonglong>()),
     mCheckResultsSimulations(QList<SingleCellViewSimulation *>())
 {
@@ -249,10 +248,11 @@ SingleCellViewWidget::~SingleCellViewWidget()
     foreach (SingleCellViewSimulation *simulation, mSimulations)
         delete simulation;
 
-    // Delete our graphs
+    // Delete all the graphs from all our graph panels
 
-    foreach (SingleCellViewGraphPanelPlotGraph *graph, mGraphs)
-        delete graph;
+    foreach (SingleCellViewGraphPanelWidget *graphPanel, mContentsWidget->graphPanelsWidget()->graphPanels())
+        foreach (SingleCellViewGraphPanelPlotGraph *graph, graphPanel->graphs())
+            delete graph;
 
     // Delete the GUI
 
@@ -1297,7 +1297,9 @@ void SingleCellViewWidget::requireGraph(CellMLSupport::CellmlFileRuntimeParamete
 
     SingleCellViewGraphPanelPlotGraph *graph = new SingleCellViewGraphPanelPlotGraph(pParameterX, pParameterY);
 
-    mGraphs << graph;
+    // Associate it with the current graph panel
+
+    mContentsWidget->graphPanelsWidget()->activeGraphPanel()->addGraph(graph);
 }
 
 //==============================================================================
