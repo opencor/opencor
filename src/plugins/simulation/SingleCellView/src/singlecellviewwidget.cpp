@@ -81,7 +81,6 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mProgresses(QMap<QString, int>()),
     mResets(QMap<QString, bool>()),
     mDelays(QMap<QString, int>()),
-    mAxesSettings(QMap<QString, AxisSettings>()),
     mSplitterWidgetSizes(QList<int>()),
     mRunActionEnabled(true),
     mGraphs(QList<SingleCellViewGraphPanelPlotGraph *>()),
@@ -134,10 +133,10 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
 /*---GRY--- THE BELOW SHOULD BE RE-ENABLED AT SOME POINT...
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mGui->actionDebugMode);
+*/
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mGui->actionAdd);
     mToolBarWidget->addAction(mGui->actionRemove);
-*/
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mGui->actionCsvExport);
 
@@ -321,9 +320,9 @@ void SingleCellViewWidget::loadSettings(QSettings *pSettings)
 //---GRY--- WE SHOULD STOP USING mActiveGraphPanel ONCE WE HAVE RE-ENABLED THE
 //          ADDITION/REMOVAL OF GRAPH PANELS...
 
-    mActiveGraphPanel = mContentsWidget->graphPanelsWidget()->activeGraphPanel();
+//    mActiveGraphPanel = mContentsWidget->graphPanelsWidget()->activeGraphPanel();
 
-    mActiveGraphPanel->plot()->setFixedAxisX(true);
+//    mActiveGraphPanel->plot()->setFixedAxisX(true);
 }
 
 //==============================================================================
@@ -488,22 +487,6 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
         mResets.insert(previousFileName, mGui->actionReset->isEnabled());
         mDelays.insert(previousFileName, mDelayWidget->value());
-
-        // Keept rack of our graph panel's plot's axes settings
-
-        AxisSettings axisSettings;
-
-        axisSettings.minX = mActiveGraphPanel->plot()->minX();
-        axisSettings.maxX = mActiveGraphPanel->plot()->maxX();
-        axisSettings.minY = mActiveGraphPanel->plot()->minY();
-        axisSettings.maxY = mActiveGraphPanel->plot()->maxY();
-
-        axisSettings.localMinX = mActiveGraphPanel->plot()->localMinX();
-        axisSettings.localMaxX = mActiveGraphPanel->plot()->localMaxX();
-        axisSettings.localMinY = mActiveGraphPanel->plot()->localMinY();
-        axisSettings.localMaxY = mActiveGraphPanel->plot()->localMaxY();
-
-        mAxesSettings.insert(previousFileName, axisSettings);
     }
 
     // Retrieve our simulation object for the current model, if any
@@ -745,50 +728,6 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         mSimulation->data()->reset();
         mSimulation->results()->reset(false);
     }
-
-    // Retrieve our graph panel's plot's axes settings and replot our graph
-    // panel's plot, if available
-
-    if (mAxesSettings.contains(pFileName)) {
-        // We have some axes settings for the given file name, so retrieve its
-        // graph panel's plot's axes settings
-
-        AxisSettings axisSettings = mAxesSettings.value(pFileName);
-
-        mActiveGraphPanel->plot()->setMinMaxX(axisSettings.minX,
-                                              axisSettings.maxX);
-        mActiveGraphPanel->plot()->setMinMaxY(axisSettings.minY,
-                                              axisSettings.maxY);
-
-        mActiveGraphPanel->plot()->setLocalMinMaxX(axisSettings.localMinX,
-                                                   axisSettings.localMaxX);
-        mActiveGraphPanel->plot()->setLocalMinMaxY(axisSettings.localMinY,
-                                                   axisSettings.localMaxY);
-    } else {
-        // We don't have any X axis settings for the given file name, so first
-        // initialise our simulation's properties
-
-        simulationPropertyChanged(simulationWidget->startingPointProperty());
-        simulationPropertyChanged(simulationWidget->endingPointProperty());
-        simulationPropertyChanged(simulationWidget->pointIntervalProperty());
-
-        // Now, initialise our graph panel's plot's X axis settings
-
-        mActiveGraphPanel->plot()->setLocalMinMaxX(mActiveGraphPanel->plot()->minX(),
-                                                   mActiveGraphPanel->plot()->maxX());
-    }
-
-    // Check our graph panel's plot's local axes and then replot our graph
-    // panel's plot
-    // Note: we always want to replot everything, hence our passing false to
-    //       checkLocalAxes()...
-
-    mActiveGraphPanel->plot()->checkLocalAxes(false);
-    mActiveGraphPanel->plot()->replotNow();
-
-    // Allow/prevent interaction with our graph panel's plot
-
-    mActiveGraphPanel->plot()->setInteractive(!mSimulation->isRunning());
 }
 
 //==============================================================================
@@ -829,8 +768,6 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
 
     mResets.remove(pFileName);
     mDelays.remove(pFileName);
-
-    mAxesSettings.remove(pFileName);
 
     // Finalize a few things in our GUI's simulation, solvers and parameters
     // widgets
@@ -957,8 +894,8 @@ void SingleCellViewWidget::on_actionRunPauseResume_triggered()
             if (runSimulation) {
                 // Reset our local X axis
 
-                mActiveGraphPanel->plot()->setLocalMinMaxX(mActiveGraphPanel->plot()->minX(),
-                                                           mActiveGraphPanel->plot()->maxX());
+//                mActiveGraphPanel->plot()->setLocalMinMaxX(mActiveGraphPanel->plot()->minX(),
+//                                                           mActiveGraphPanel->plot()->maxX());
 
                 // Reset our simulation settings
 
@@ -1078,8 +1015,9 @@ void SingleCellViewWidget::simulationRunning(const bool &pIsResuming)
         // Reset our local axes' values, if resuming (since the user might have
         // been zooming in/out, etc.)
 
-        if (pIsResuming)
-            mActiveGraphPanel->plot()->resetLocalAxes();
+Q_UNUSED(pIsResuming);
+//        if (pIsResuming)
+//            mActiveGraphPanel->plot()->resetLocalAxes();
 
         // Update our simulation mode and check for results
 
@@ -1089,7 +1027,7 @@ void SingleCellViewWidget::simulationRunning(const bool &pIsResuming)
 
         // Prevent interaction with our graph panel's plot
 
-        mActiveGraphPanel->plot()->setInteractive(!mSimulation->isRunning());
+//        mActiveGraphPanel->plot()->setInteractive(!mSimulation->isRunning());
     }
 }
 
@@ -1111,7 +1049,7 @@ void SingleCellViewWidget::simulationPaused()
 
         // Allow interaction with our graph panel's plot
 
-        mActiveGraphPanel->plot()->setInteractive(mSimulation->isPaused());
+//        mActiveGraphPanel->plot()->setInteractive(mSimulation->isPaused());
     }
 }
 
@@ -1162,7 +1100,7 @@ void SingleCellViewWidget::simulationStopped(const int &pElapsedTime)
 
         // Allow interaction with our graph panel's plot
 
-        mActiveGraphPanel->plot()->setInteractive(!mSimulation->isRunning());
+//        mActiveGraphPanel->plot()->setInteractive(!mSimulation->isRunning());
     }
 
     // Remove our tracking of our simulation progress and let people know that
@@ -1307,21 +1245,21 @@ void SingleCellViewWidget::simulationPropertyChanged(Core::Property *pProperty)
     // Update the minimum/maximum values of our X axis and replot ourselves, if
     // needed
 
-    if (needUpdating) {
-        if (mSimulation->data()->startingPoint() < mSimulation->data()->endingPoint()) {
-            mActiveGraphPanel->plot()->setMinMaxX(mSimulation->data()->startingPoint(),
-                                                  mSimulation->data()->endingPoint());
-            mActiveGraphPanel->plot()->setLocalMinMaxX(mActiveGraphPanel->plot()->minX(),
-                                                       mActiveGraphPanel->plot()->maxX());
-        } else {
-            mActiveGraphPanel->plot()->setMinMaxX(mSimulation->data()->endingPoint(),
-                                                  mSimulation->data()->startingPoint());
-            mActiveGraphPanel->plot()->setLocalMinMaxX(mActiveGraphPanel->plot()->minX(),
-                                                       mActiveGraphPanel->plot()->maxX());
-        }
+//    if (needUpdating) {
+//        if (mSimulation->data()->startingPoint() < mSimulation->data()->endingPoint()) {
+//            mActiveGraphPanel->plot()->setMinMaxX(mSimulation->data()->startingPoint(),
+//                                                  mSimulation->data()->endingPoint());
+//            mActiveGraphPanel->plot()->setLocalMinMaxX(mActiveGraphPanel->plot()->minX(),
+//                                                       mActiveGraphPanel->plot()->maxX());
+//        } else {
+//            mActiveGraphPanel->plot()->setMinMaxX(mSimulation->data()->endingPoint(),
+//                                                  mSimulation->data()->startingPoint());
+//            mActiveGraphPanel->plot()->setLocalMinMaxX(mActiveGraphPanel->plot()->minX(),
+//                                                       mActiveGraphPanel->plot()->maxX());
+//        }
 
-        mActiveGraphPanel->plot()->replotNow();
-    }
+//        mActiveGraphPanel->plot()->replotNow();
+//    }
 }
 
 //==============================================================================
@@ -1330,9 +1268,9 @@ void SingleCellViewWidget::solversPropertyChanged(Core::Property *pProperty)
 {
     // Check whether any of our NLA solver's properties has been modified and,
     // if so, then update our simulation data object accordingly
-    // Note: these are the only solvers propeties property we need to check
-    //       because they are the only ones that can potentially have an effect
-    //       on the value of 'computed constants' and 'variables'...
+    // Note: these are the only solvers propeties we need to check since they
+    //       are the only ones that can potentially have an effect on the value
+    //       of 'computed constants' and 'variables'...
 
     SingleCellViewInformationSolversWidget *solversWidget = mContentsWidget->informationWidget()->solversWidget();
 
@@ -1391,6 +1329,8 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
 
         // Update our graphs, if any
 
+Q_UNUSED(pSize);
+Q_UNUSED(pReplot);
 //        foreach (SingleCellViewWidgetGraph *graphData, mGraphsData)
 //            // Update the graph, should it be attached
 
@@ -1414,11 +1354,11 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
 
         // Replot our active graph panel, if needed
 
-        if (pReplot || (pSize <= 1))
-            // We want to initialise the plot and/or there is no data to plot,
-            // so replot our active graph panel
+//        if (pReplot || (pSize <= 1))
+//            // We want to initialise the plot and/or there is no data to plot,
+//            // so replot our active graph panel
 
-            mActiveGraphPanel->plot()->replotNow();
+//            mActiveGraphPanel->plot()->replotNow();
 
         // Update our progress bar
 
