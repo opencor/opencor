@@ -126,7 +126,7 @@ private:
     double *mInitialStates;
 
 Q_SIGNALS:
-    void updated();
+    void updated(const double &pCurrentPoint);
     void modified(const bool &pIsModified);
 
     void error(const QString &pMessage);
@@ -195,6 +195,8 @@ public:
 
     bool isRunning() const;
     bool isPaused() const;
+
+    double currentPoint() const;
 
     double progress() const;
 

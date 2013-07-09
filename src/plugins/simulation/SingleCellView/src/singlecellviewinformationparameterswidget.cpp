@@ -144,8 +144,8 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
 
         // Keep track of when some of the model's data has changed
 
-        connect(pSimulationData, SIGNAL(updated()),
-                this, SLOT(updateParameters()));
+        connect(pSimulationData, SIGNAL(updated(const double &)),
+                this, SLOT(updateParameters(const double &)));
 
         // Keep track of when the user changes a property value
 
@@ -185,7 +185,7 @@ void SingleCellViewInformationParametersWidget::finalize(const QString &pFileNam
 
 //==============================================================================
 
-void SingleCellViewInformationParametersWidget::updateParameters()
+void SingleCellViewInformationParametersWidget::updateParameters(const double &pCurrentPoint)
 {
     // Make sure that we have a property editor
 
@@ -199,6 +199,10 @@ void SingleCellViewInformationParametersWidget::updateParameters()
 
         if (parameter)
             switch (parameter->type()) {
+            case CellMLSupport::CellmlFileRuntimeParameter::Voi:
+                mPropertyEditor->setDoublePropertyItem(property->value(), pCurrentPoint);
+
+                break;
             case CellMLSupport::CellmlFileRuntimeParameter::Constant:
             case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
                 mPropertyEditor->setDoublePropertyItem(property->value(), mSimulationData->constants()[parameter->index()]);
@@ -291,6 +295,8 @@ QIcon SingleCellViewInformationParametersWidget::parameterIcon(const CellMLSuppo
     // Return an icon that illustrates the type of a parameter
 
     switch (pParameterType) {
+    case CellMLSupport::CellmlFileRuntimeParameter::Voi:
+        return QIcon(":SingleCellView_voi");
     case CellMLSupport::CellmlFileRuntimeParameter::Constant:
         return QIcon(":SingleCellView_constant");
     case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
@@ -469,6 +475,10 @@ void SingleCellViewInformationParametersWidget::updateToolTips()
             QString parameterType = QString();
 
             switch (parameter->type()) {
+            case CellMLSupport::CellmlFileRuntimeParameter::Voi:
+                parameterType = tr("variable of integration");
+
+                break;
             case CellMLSupport::CellmlFileRuntimeParameter::Constant:
                 parameterType = tr("constant");
 

@@ -439,12 +439,10 @@ void CellmlFileRuntime::reset(const bool &pRecreateCompilerEngine,
     if (pResetIssues)
         mIssues.clear();
 
-    delete mVariableOfIntegration;
-
-    mVariableOfIntegration = 0;
-
     foreach (CellmlFileRuntimeParameter *parameter, mParameters)
         delete parameter;
+
+    mVariableOfIntegration = 0;
 
     mParameters.clear();
 }
@@ -806,8 +804,8 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
 
             if (parameterType == CellmlFileRuntimeParameter::Voi)
                 mVariableOfIntegration = parameter;
-            else
-                mParameters.append(parameter);
+
+            mParameters.append(parameter);
         }
     }
 

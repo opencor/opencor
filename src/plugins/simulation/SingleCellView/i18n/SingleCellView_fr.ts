@@ -42,6 +42,10 @@
         <source>Plot Against Variable of Integration</source>
         <translation>Tracer en Fonction de Variable d&apos;Intégration</translation>
     </message>
+    <message>
+        <source>variable of integration</source>
+        <translation>variable d&apos;intégration</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::SingleCellView::SingleCellViewInformationSimulationWidget</name>

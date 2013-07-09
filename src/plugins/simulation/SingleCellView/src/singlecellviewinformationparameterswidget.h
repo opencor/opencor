@@ -94,7 +94,7 @@ Q_SIGNALS:
                        CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 
 public Q_SLOTS:
-    void updateParameters();
+    void updateParameters(const double &pCurrentPoint);
 
 private Q_SLOTS:
     void propertyEditorContextMenu(const QPoint &pPosition) const;

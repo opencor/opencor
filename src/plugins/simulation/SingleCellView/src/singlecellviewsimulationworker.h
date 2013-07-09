@@ -47,6 +47,8 @@ public:
     bool isRunning() const;
     bool isPaused() const;
 
+    double currentPoint() const;
+
     double progress() const;
 
     void run();
@@ -64,6 +66,8 @@ private:
     CellMLSupport::CellmlFileRuntime *mRuntime;
 
     SingleCellViewSimulation *mSimulation;
+
+    double mCurrentPoint;
 
     double mProgress;
 

@@ -29,6 +29,7 @@ SingleCellViewSimulationWorker::SingleCellViewSimulationWorker(const SolverInter
     mSolverInterfaces(pSolverInterfaces),
     mRuntime(pRuntime),
     mSimulation(pSimulation),
+    mCurrentPoint(0.0),
     mProgress(0.0),
     mPaused(false),
     mStopped(false),
@@ -78,6 +79,17 @@ bool SingleCellViewSimulationWorker::isPaused() const
     return mThread?
                mThread->isRunning() && mPaused:
                false;
+}
+
+//==============================================================================
+
+double SingleCellViewSimulationWorker::currentPoint() const
+{
+    // Return our progress
+
+    return mThread?
+               mThread->isRunning()?mCurrentPoint:mSimulation->data()->startingPoint():
+               mSimulation->data()->startingPoint();
 }
 
 //==============================================================================
@@ -186,14 +198,15 @@ void SingleCellViewSimulationWorker::started()
     bool increasingPoints = endingPoint > startingPoint;
     const double oneOverPointsRange = 1.0/(endingPoint-startingPoint);
     int pointCounter = 0;
-    double currentPoint = startingPoint;
+
+    mCurrentPoint = startingPoint;
 
     // Initialise our ODE/DAE solver
 
     if (odeSolver) {
         odeSolver->setProperties(mSimulation->data()->odeSolverProperties());
 
-        odeSolver->initialize(currentPoint,
+        odeSolver->initialize(mCurrentPoint,
                               mRuntime->statesCount(),
                               mSimulation->data()->constants(),
                               mSimulation->data()->rates(),
@@ -203,7 +216,7 @@ void SingleCellViewSimulationWorker::started()
     } else {
         daeSolver->setProperties(mSimulation->data()->daeSolverProperties());
 
-        daeSolver->initialize(currentPoint, endingPoint,
+        daeSolver->initialize(mCurrentPoint, endingPoint,
                               mRuntime->statesCount(),
                               mRuntime->condVarCount(),
                               mSimulation->data()->constants(),
@@ -239,9 +252,9 @@ void SingleCellViewSimulationWorker::started()
         // Add our first point after making sure that all the variables have
         // been computed
 
-        mSimulation->data()->recomputeVariables(currentPoint, false);
+        mSimulation->data()->recomputeVariables(mCurrentPoint, false);
 
-        mSimulation->results()->addPoint(currentPoint);
+        mSimulation->results()->addPoint(mCurrentPoint);
 
         // Our main work loop
         // Note: for performance reasons, it is essential that the following
@@ -256,26 +269,26 @@ void SingleCellViewSimulationWorker::started()
         QMutex delayMutex;
         QWaitCondition delayCondition;
 
-        while ((currentPoint != endingPoint) && !mStopped && !mError) {
+        while ((mCurrentPoint != endingPoint) && !mStopped && !mError) {
             // Determine our next point and compute our model up to it
 
             ++pointCounter;
 
-            voiSolver->solve(currentPoint,
+            voiSolver->solve(mCurrentPoint,
                              increasingPoints?
                                  qMin(endingPoint, startingPoint+pointCounter*pointInterval):
                                  qMax(endingPoint, startingPoint+pointCounter*pointInterval));
 
             // Update our progress
 
-            mProgress = (currentPoint-startingPoint)*oneOverPointsRange;
+            mProgress = (mCurrentPoint-startingPoint)*oneOverPointsRange;
 
             // Add our new point after making sure that all the variables have
             // been computed
 
-            mSimulation->data()->recomputeVariables(currentPoint, false);
+            mSimulation->data()->recomputeVariables(mCurrentPoint, false);
 
-            mSimulation->results()->addPoint(currentPoint);
+            mSimulation->results()->addPoint(mCurrentPoint);
 
             // Delay things a bit, if (really) needed
 
@@ -323,7 +336,7 @@ void SingleCellViewSimulationWorker::started()
 
             if (mReset) {
                 if (odeSolver)
-                    odeSolver->initialize(currentPoint,
+                    odeSolver->initialize(mCurrentPoint,
                                           mRuntime->statesCount(),
                                           mSimulation->data()->constants(),
                                           mSimulation->data()->rates(),
@@ -331,7 +344,7 @@ void SingleCellViewSimulationWorker::started()
                                           mSimulation->data()->algebraic(),
                                           mRuntime->computeOdeRates());
                 else
-                    daeSolver->initialize(currentPoint, endingPoint,
+                    daeSolver->initialize(mCurrentPoint, endingPoint,
                                           mRuntime->statesCount(),
                                           mRuntime->condVarCount(),
                                           mSimulation->data()->constants(),

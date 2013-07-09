@@ -5,6 +5,7 @@
         <file alias="SingleCellView_constant">constant.png</file>
         <file alias="SingleCellView_rate">rate.png</file>
         <file alias="SingleCellView_state">state.png</file>
+        <file alias="SingleCellView_voi">voi.png</file>
         <file>oxygen/actions/list-add.png</file>
         <file>oxygen/actions/list-remove.png</file>
         <file>oxygen/actions/media-playback-pause.png</file>

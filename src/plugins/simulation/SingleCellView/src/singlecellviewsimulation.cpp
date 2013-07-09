@@ -434,7 +434,7 @@ void SingleCellViewSimulationData::recomputeComputedConstantsAndVariables()
 
         // Let people know that our data has been updated
 
-        emit updated();
+        emit updated(mStartingPoint);
     }
 }
 
@@ -457,7 +457,7 @@ void SingleCellViewSimulationData::recomputeVariables(const double &pCurrentPoin
     //       hence the caller can decide whether to emit a signal or not...
 
     if (pEmitSignal)
-        emit updated();
+        emit updated(pCurrentPoint);
 }
 
 //==============================================================================
@@ -796,9 +796,10 @@ bool SingleCellViewSimulationResults::exportToCsv(const QString &pFileName) cons
     for (int i = 0, iMax = mRuntime->parameters().count(); i < iMax; ++i) {
         CellMLSupport::CellmlFileRuntimeParameter *parameter = mRuntime->parameters()[i];
 
-        out << "," << Header.arg(parameter->component(),
-                                 parameter->formattedName(),
-                                 parameter->formattedUnit(mRuntime->variableOfIntegration()->name()));
+        if (parameter != mRuntime->variableOfIntegration())
+            out << "," << Header.arg(parameter->component(),
+                                     parameter->formattedName(),
+                                     parameter->formattedUnit(mRuntime->variableOfIntegration()->name()));
     }
 
     out << "\n";
@@ -923,6 +924,15 @@ bool SingleCellViewSimulation::isPaused() const
     // Return whether we are paused
 
     return mWorker?mWorker->isPaused():false;
+}
+
+//==============================================================================
+
+double SingleCellViewSimulation::currentPoint() const
+{
+    // Return our current point
+
+    return mWorker?mWorker->currentPoint():data()->startingPoint();
 }
 
 //==============================================================================
