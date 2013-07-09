@@ -68,6 +68,7 @@ private:
     QList<int> mColumnWidths;
 
     QLabel *mNoGraphsMessageWidget;
+    Core::PropertyEditorWidget *mPropertyEditor;
 
 public Q_SLOTS:
     void initialize(SingleCellViewGraphPanelWidget *pGraphPanel);

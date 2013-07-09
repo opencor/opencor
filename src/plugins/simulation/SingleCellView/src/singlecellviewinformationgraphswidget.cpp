@@ -22,7 +22,8 @@ namespace SingleCellView {
 SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(QWidget *pParent) :
     QStackedWidget(pParent),
     mPropertyEditors(QMap<SingleCellViewGraphPanelWidget *, Core::PropertyEditorWidget *>()),
-    mColumnWidths(QList<int>())
+    mColumnWidths(QList<int>()),
+    mPropertyEditor(0)
 {
     // Create a widget that will be shown whenever there are no graphs
     // associated with the current plotting area
@@ -98,37 +99,37 @@ mNoGraphsMessageWidget->setText(mNoGraphsMessageWidget->text()+" ["+p+"]");
     // Retrieve the property editor for the given file name or create one, if
     // none exists
 
-    Core::PropertyEditorWidget *propertyEditor = mPropertyEditors.value(pGraphPanel);
+    mPropertyEditor = mPropertyEditors.value(pGraphPanel);
 
-    if (!propertyEditor) {
+    if (!mPropertyEditor) {
         // No property editor exists for the given graph panel, so create one
 
-        propertyEditor = new Core::PropertyEditorWidget(this);
+        mPropertyEditor = new Core::PropertyEditorWidget(this);
 
         // Initialise our property editor's columns' width
 
         for (int i = 0, iMax = mColumnWidths.size(); i < iMax; ++i)
-            propertyEditor->setColumnWidth(i, mColumnWidths.at(i));
+            mPropertyEditor->setColumnWidth(i, mColumnWidths.at(i));
 
         // Keep track of when the user changes a property value
 
-        connect(propertyEditor, SIGNAL(propertyChanged(Core::Property *)),
+        connect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
                 this, SLOT(propertyChanged(Core::Property *)));
 
         // Add our new property editor to ourselves
 
-        addWidget(propertyEditor);
+        addWidget(mPropertyEditor);
 
         // Keep track of our new property editor
 
-        mPropertyEditors.insert(pGraphPanel, propertyEditor);
+        mPropertyEditors.insert(pGraphPanel, mPropertyEditor);
     }
 
     // Set our retrieved property editor as our current widget, but only if it
     // isn't empty
 
-    if (propertyEditor->properties().count())
-        setCurrentWidget(propertyEditor);
+    if (mPropertyEditor->properties().count())
+        setCurrentWidget(mPropertyEditor);
     else
         setCurrentWidget(mNoGraphsMessageWidget);
 }
@@ -162,16 +163,14 @@ qDebug(">>> Removed graph: %p", pGraph);
 
 void SingleCellViewInformationGraphsWidget::finishPropertyEditing()
 {
-    // Retrieve our current property editor, if any
+    // Make sure that we have a property editor
 
-    Core::PropertyEditorWidget *propertyEditor = qobject_cast<Core::PropertyEditorWidget *>(currentWidget());
-
-    if (!propertyEditor)
+    if (!mPropertyEditor)
         return;
 
-    // Finish the editing of our current property editor
+    // Finish the editing of our property editor
 
-    propertyEditor->finishPropertyEditing();
+    mPropertyEditor->finishPropertyEditing();
 }
 
 //==============================================================================

@@ -75,6 +75,8 @@ private:
 
     QList<int> mColumnWidths;
 
+    Core::PropertyEditorWidget *mPropertyEditor;
+
     SingleCellViewSimulationData *mSimulationData;
 
     QIcon parameterIcon(const CellMLSupport::CellmlFileRuntimeParameter::ParameterType &pParameterType);
