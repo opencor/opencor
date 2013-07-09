@@ -250,6 +250,7 @@ public:
     Property * addDoubleProperty(const QString &pId, const bool &pEditable,
                                  Property *pParent = 0);
     Property * addListProperty(const QString &pId, Property *pParent = 0);
+    Property * addStringProperty(const QString &pId, Property *pParent = 0);
 
     void setStringPropertyItem(QStandardItem *pPropertyItem,
                                const QString &pValue);

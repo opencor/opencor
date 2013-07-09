@@ -152,12 +152,30 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
 
     mPropertyEditor->setUpdatesEnabled(false);
 
-    // Create a section for our given graph
+    // Create a section for our newly added graph
 
     Core::Property *sectionProperty = mPropertyEditor->addSectionProperty();
 
     mPropertyEditor->setStringPropertyItem(sectionProperty->name(), QString("%1 | %2").arg(pGraph->parameterY()->fullyFormattedName(),
                                                                                            pGraph->parameterX()->fullyFormattedName()));
+
+    // Create some properties for our graph
+//---GRY--- TO BE DONE 'PROPERLY'...
+
+    Core::Property *xProperty = mPropertyEditor->addStringProperty(QString(), sectionProperty);
+    Core::Property *yProperty = mPropertyEditor->addStringProperty(QString(), sectionProperty);
+
+    mPropertyEditor->setStringPropertyItem(xProperty->name(), "X");
+    mPropertyEditor->setStringPropertyItem(xProperty->value(), pGraph->parameterX()->fullyFormattedName());
+    mPropertyEditor->setStringPropertyItem(xProperty->unit(), pGraph->parameterX()->formattedUnit("???"));
+
+    mPropertyEditor->setStringPropertyItem(yProperty->name(), "Y");
+    mPropertyEditor->setStringPropertyItem(yProperty->value(), pGraph->parameterY()->fullyFormattedName());
+    mPropertyEditor->setStringPropertyItem(yProperty->unit(), pGraph->parameterY()->formattedUnit("???"));
+
+    // Expand our section
+
+    mPropertyEditor->expand(sectionProperty->name()->index());
 
     // Allow ourselves to be updated again
 

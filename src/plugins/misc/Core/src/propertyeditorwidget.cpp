@@ -975,6 +975,16 @@ Property * PropertyEditorWidget::addListProperty(const QString &pId,
 
 //==============================================================================
 
+Property * PropertyEditorWidget::addStringProperty(const QString &pId,
+                                                   Property *pParent)
+{
+    // Add a list property and return its information
+
+    return addProperty(PropertyItem::String, pId, true, pParent);
+}
+
+//==============================================================================
+
 void PropertyEditorWidget::setPropertyItem(QStandardItem *pPropertyItem,
                                            const QString &pValue)
 {
