@@ -174,9 +174,9 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
 
     // Keep track of the addition and removal of a graph panel
 
-    connect(mContentsWidget->graphPanelsWidget(), SIGNAL(grapPanelAdded(SingleCellViewGraphPanelWidget *)),
+    connect(mContentsWidget->graphPanelsWidget(), SIGNAL(graphPanelAdded(SingleCellViewGraphPanelWidget *)),
             mContentsWidget->informationWidget()->graphsWidget(), SLOT(initialize(SingleCellViewGraphPanelWidget *)));
-    connect(mContentsWidget->graphPanelsWidget(), SIGNAL(grapPanelRemoved(SingleCellViewGraphPanelWidget *)),
+    connect(mContentsWidget->graphPanelsWidget(), SIGNAL(graphPanelRemoved(SingleCellViewGraphPanelWidget *)),
             mContentsWidget->informationWidget()->graphsWidget(), SLOT(finalize(SingleCellViewGraphPanelWidget *)));
 
     // Keep track of whether a graph panel has been activated
@@ -184,10 +184,17 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     connect(mContentsWidget->graphPanelsWidget(), SIGNAL(graphPanelActivated(SingleCellViewGraphPanelWidget *)),
             mContentsWidget->informationWidget()->graphsWidget(), SLOT(initialize(SingleCellViewGraphPanelWidget *)));
 
-    // Keep track of which graphs are required
+    // Keep track of a graph being required
 
     connect(mContentsWidget->informationWidget()->parametersWidget(), SIGNAL(graphRequired(CellMLSupport::CellmlFileRuntimeParameter *, CellMLSupport::CellmlFileRuntimeParameter *)),
             this, SLOT(requireGraph(CellMLSupport::CellmlFileRuntimeParameter *, CellMLSupport::CellmlFileRuntimeParameter *)));
+
+    // Keep track of the addition and removal of a graph
+
+    connect(mContentsWidget->graphPanelsWidget(), SIGNAL(graphAdded(SingleCellViewGraphPanelPlotGraph *)),
+            mContentsWidget->informationWidget()->graphsWidget(), SLOT(addGraph(SingleCellViewGraphPanelPlotGraph *)));
+    connect(mContentsWidget->graphPanelsWidget(), SIGNAL(graphRemoved(SingleCellViewGraphPanelPlotGraph *)),
+            mContentsWidget->informationWidget()->graphsWidget(), SLOT(removeGraph(SingleCellViewGraphPanelPlotGraph *)));
 
     // Create and add our invalid simulation message widget
 
@@ -1298,13 +1305,9 @@ void SingleCellViewWidget::solversPropertyChanged(Core::Property *pProperty)
 void SingleCellViewWidget::requireGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
                                         CellMLSupport::CellmlFileRuntimeParameter *pParameterY)
 {
-    // Create the required graph
+    // Create the required graph and associate it with the current graph panel
 
-    SingleCellViewGraphPanelPlotGraph *graph = new SingleCellViewGraphPanelPlotGraph(pParameterX, pParameterY);
-
-    // Associate it with the current graph panel
-
-    mContentsWidget->graphPanelsWidget()->activeGraphPanel()->addGraph(graph);
+    mContentsWidget->graphPanelsWidget()->activeGraphPanel()->addGraph(new SingleCellViewGraphPanelPlotGraph(pParameterX, pParameterY));
 }
 
 //==============================================================================

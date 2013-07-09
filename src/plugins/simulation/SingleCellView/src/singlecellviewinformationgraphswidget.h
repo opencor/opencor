@@ -42,6 +42,7 @@ namespace SingleCellView {
 
 //==============================================================================
 
+class SingleCellViewGraphPanelPlotGraph;
 class SingleCellViewGraphPanelWidget;
 
 //==============================================================================
@@ -71,6 +72,9 @@ private:
 public Q_SLOTS:
     void initialize(SingleCellViewGraphPanelWidget *pGraphPanel);
     void finalize(SingleCellViewGraphPanelWidget *pGraphPanel);
+
+    void addGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
+    void removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
 
 private Q_SLOTS:
     void propertyChanged(Core::Property *pProperty);

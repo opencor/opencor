@@ -163,14 +163,20 @@ SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::addGraphPanel(
 
     setSizes(origSizes << height()/count());
 
-    // Create some connections to keep track of whenever a graph panel gets
-    // activated
+    // Keep track of whenever a graph panel gets activated
 
     connect(res, SIGNAL(activated(SingleCellViewGraphPanelWidget *)),
             this, SIGNAL(graphPanelActivated(SingleCellViewGraphPanelWidget *)));
 
     connect(res, SIGNAL(activated(SingleCellViewGraphPanelWidget *)),
             this, SLOT(updateGraphPanels(SingleCellViewGraphPanelWidget *)));
+
+    // Keep track of the addition and removal of a graph
+
+    connect(res, SIGNAL(graphAdded(SingleCellViewGraphPanelPlotGraph *)),
+            this, SIGNAL(graphAdded(SingleCellViewGraphPanelPlotGraph *)));
+    connect(res, SIGNAL(graphRemoved(SingleCellViewGraphPanelPlotGraph *)),
+            this, SIGNAL(graphRemoved(SingleCellViewGraphPanelPlotGraph *)));
 
     // Activate the graph panel
 
@@ -182,7 +188,7 @@ SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::addGraphPanel(
 
     // Let people know that we have added a graph panel
 
-    emit grapPanelAdded(res);
+    emit graphPanelAdded(res);
 
     // Let people know whether graph panels can be removed
 
@@ -245,7 +251,7 @@ void SingleCellViewGraphPanelsWidget::removeGraphPanel()
     //       pointer to keep track of some information, as is the case with
     //       SingleCellViewInformationGraphsWidget for example...
 
-    emit grapPanelRemoved(graphPanel);
+    emit graphPanelRemoved(graphPanel);
 
     // Let people know whether graph panels can be removed
 

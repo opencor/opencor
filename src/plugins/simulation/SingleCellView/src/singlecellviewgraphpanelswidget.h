@@ -20,6 +20,7 @@ namespace SingleCellView {
 
 //==============================================================================
 
+class SingleCellViewGraphPanelPlotGraph;
 class SingleCellViewGraphPanelWidget;
 
 //==============================================================================
@@ -45,12 +46,15 @@ private:
     QList<int> mSplitterSizes;
 
 Q_SIGNALS:
-    void grapPanelAdded(SingleCellViewGraphPanelWidget *pGraphPanel);
-    void grapPanelRemoved(SingleCellViewGraphPanelWidget *pGraphPanel);
+    void graphPanelAdded(SingleCellViewGraphPanelWidget *pGraphPanel);
+    void graphPanelRemoved(SingleCellViewGraphPanelWidget *pGraphPanel);
 
     void removeGraphPanelsEnabled(const bool &pEnabled);
 
     void graphPanelActivated(SingleCellViewGraphPanelWidget *pGraphPanel);
+
+    void graphAdded(SingleCellViewGraphPanelPlotGraph *pGraph);
+    void graphRemoved(SingleCellViewGraphPanelPlotGraph *pGraph);
 
 private Q_SLOTS:
     void splitterMoved();

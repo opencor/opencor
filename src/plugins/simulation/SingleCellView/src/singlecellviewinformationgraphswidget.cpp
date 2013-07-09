@@ -144,6 +144,22 @@ void SingleCellViewInformationGraphsWidget::finalize(SingleCellViewGraphPanelWid
 
 //==============================================================================
 
+void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlotGraph *pGraph)
+{
+//---GRY--- TO BE DONE...
+qDebug(">>> Added graph: %p", pGraph);
+}
+
+//==============================================================================
+
+void SingleCellViewInformationGraphsWidget::removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph)
+{
+//---GRY--- TO BE DONE...
+qDebug(">>> Removed graph: %p", pGraph);
+}
+
+//==============================================================================
+
 void SingleCellViewInformationGraphsWidget::finishPropertyEditing()
 {
     // Retrieve our current property editor, if any
