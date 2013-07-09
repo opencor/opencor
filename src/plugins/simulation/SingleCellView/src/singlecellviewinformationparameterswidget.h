@@ -81,8 +81,7 @@ private:
 
     QIcon parameterIcon(const CellMLSupport::CellmlFileRuntimeParameter::ParameterType &pParameterType);
 
-    void populateModel(Core::PropertyEditorWidget *pPropertyEditor,
-                       CellMLSupport::CellmlFileRuntime *pRuntime);
+    void populateModel(CellMLSupport::CellmlFileRuntime *pRuntime);
     void populateContextMenu(QMenu *pContextMenu,
                              CellMLSupport::CellmlFileRuntime *pRuntime);
 

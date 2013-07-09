@@ -122,7 +122,7 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
 
         // Populate our property editor
 
-        populateModel(mPropertyEditor, pRuntime);
+        populateModel(pRuntime);
 
         // Create and populate our property editor's context menu
 
@@ -311,12 +311,16 @@ QIcon SingleCellViewInformationParametersWidget::parameterIcon(const CellMLSuppo
 
 //==============================================================================
 
-void SingleCellViewInformationParametersWidget::populateModel(Core::PropertyEditorWidget *pPropertyEditor,
-                                                              CellMLSupport::CellmlFileRuntime *pRuntime)
+void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::CellmlFileRuntime *pRuntime)
 {
+    // Make sure that we have a property editor
+
+    if (!mPropertyEditor)
+        return;
+
     // Prevent ourselves from being updated (to avoid any flickering)
 
-    pPropertyEditor->setUpdatesEnabled(false);
+    mPropertyEditor->setUpdatesEnabled(false);
 
     // Populate our property editor with the parameters
 
@@ -333,9 +337,9 @@ void SingleCellViewInformationParametersWidget::populateModel(Core::PropertyEdit
             // The current parameter is in a different component, so create a
             // new section for the 'new' component
 
-            sectionProperty = pPropertyEditor->addSectionProperty();
+            sectionProperty = mPropertyEditor->addSectionProperty();
 
-            pPropertyEditor->setStringPropertyItem(sectionProperty->name(), currentComponent);
+            mPropertyEditor->setStringPropertyItem(sectionProperty->name(), currentComponent);
         }
 
         // Add the current parameter to the 'current' component section
@@ -354,11 +358,11 @@ void SingleCellViewInformationParametersWidget::populateModel(Core::PropertyEdit
         bool parameterEditable =    (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)
                                  || (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State);
 
-        Core::Property *property = pPropertyEditor->addDoubleProperty(QString(), parameterEditable, sectionProperty);
+        Core::Property *property = mPropertyEditor->addDoubleProperty(QString(), parameterEditable, sectionProperty);
 
         property->name()->setIcon(parameterIcon(parameter->type()));
 
-        pPropertyEditor->setStringPropertyItem(property->name(), parameter->name()+QString(parameter->degree(), '\''));
+        mPropertyEditor->setStringPropertyItem(property->name(), parameter->name()+QString(parameter->degree(), '\''));
 
         QString perVoiUnitDegree = QString();
 
@@ -369,7 +373,7 @@ void SingleCellViewInformationParametersWidget::populateModel(Core::PropertyEdit
                 perVoiUnitDegree += parameter->degree();
         }
 
-        pPropertyEditor->setStringPropertyItem(property->unit(), parameter->unit()+perVoiUnitDegree);
+        mPropertyEditor->setStringPropertyItem(property->unit(), parameter->unit()+perVoiUnitDegree);
 
         // Keep track of the link between our property value and parameter
 
@@ -382,11 +386,11 @@ void SingleCellViewInformationParametersWidget::populateModel(Core::PropertyEdit
 
     // Expand all our properties
 
-    pPropertyEditor->expandAll();
+    mPropertyEditor->expandAll();
 
     // Allow ourselves to be updated again
 
-    pPropertyEditor->setUpdatesEnabled(true);
+    mPropertyEditor->setUpdatesEnabled(true);
 }
 
 //==============================================================================
