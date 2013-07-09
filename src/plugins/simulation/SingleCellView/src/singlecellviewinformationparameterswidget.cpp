@@ -362,18 +362,8 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
 
         property->name()->setIcon(parameterIcon(parameter->type()));
 
-        mPropertyEditor->setStringPropertyItem(property->name(), parameter->name()+QString(parameter->degree(), '\''));
-
-        QString perVoiUnitDegree = QString();
-
-        if (parameter->degree()) {
-            perVoiUnitDegree += "/"+pRuntime->variableOfIntegration()->unit();
-
-            if (parameter->degree() > 1)
-                perVoiUnitDegree += parameter->degree();
-        }
-
-        mPropertyEditor->setStringPropertyItem(property->unit(), parameter->unit()+perVoiUnitDegree);
+        mPropertyEditor->setStringPropertyItem(property->name(), parameter->formattedName());
+        mPropertyEditor->setStringPropertyItem(property->unit(), parameter->formattedUnit(pRuntime->variableOfIntegration()->unit()));
 
         // Keep track of the link between our property value and parameter
 

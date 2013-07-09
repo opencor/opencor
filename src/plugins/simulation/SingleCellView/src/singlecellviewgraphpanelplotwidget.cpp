@@ -44,9 +44,6 @@ SingleCellViewGraphPanelPlotGraph::SingleCellViewGraphPanelPlotGraph(CellMLSuppo
     mParameterX(pParameterX),
     mParameterY(pParameterY)
 {
-qDebug(">>> Creating graph [%p] for:", this);
-qDebug(">>>  - X: %s", qPrintable(mParameterX->name()));
-qDebug(">>>  - Y: %s", qPrintable(mParameterY->name()));
     // Customise ourselves a bit
 
     setPen(QPen(Qt::darkBlue));
@@ -55,9 +52,20 @@ qDebug(">>>  - Y: %s", qPrintable(mParameterY->name()));
 
 //==============================================================================
 
-SingleCellViewGraphPanelPlotGraph::~SingleCellViewGraphPanelPlotGraph()
+CellMLSupport::CellmlFileRuntimeParameter * SingleCellViewGraphPanelPlotGraph::parameterX() const
 {
-qDebug(">>> Deleting graph [%p]...", this);
+    // Return our parameter X
+
+    return mParameterX;
+}
+
+//==============================================================================
+
+CellMLSupport::CellmlFileRuntimeParameter * SingleCellViewGraphPanelPlotGraph::parameterY() const
+{
+    // Return our parameter Y
+
+    return mParameterY;
 }
 
 //==============================================================================

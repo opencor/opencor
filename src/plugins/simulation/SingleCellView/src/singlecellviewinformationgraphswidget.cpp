@@ -4,6 +4,7 @@
 
 #include "cellmlfileruntime.h"
 #include "propertyeditorwidget.h"
+#include "singlecellviewgraphpanelplotwidget.h"
 #include "singlecellviewinformationgraphswidget.h"
 
 //==============================================================================
@@ -91,11 +92,6 @@ void SingleCellViewInformationGraphsWidget::saveSettings(QSettings *pSettings) c
 
 void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelWidget *pGraphPanel)
 {
-//---GRY--- THE BELOW IS JUST FOR DEVELOPMENT PURPOSES...
-mNoGraphsMessageWidget->setText(tr("There are no graphs..."));
-QString p;
-p.sprintf("%p", pGraphPanel);
-mNoGraphsMessageWidget->setText(mNoGraphsMessageWidget->text()+" ["+p+"]");
     // Retrieve the property editor for the given file name or create one, if
     // none exists
 
@@ -147,16 +143,53 @@ void SingleCellViewInformationGraphsWidget::finalize(SingleCellViewGraphPanelWid
 
 void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlotGraph *pGraph)
 {
-//---GRY--- TO BE DONE...
-qDebug(">>> Added graph: %p", pGraph);
+    // Make sure that we have a property editor
+
+    if (!mPropertyEditor)
+        return;
+
+    // Prevent ourselves from being updated (to avoid any flickering)
+
+    mPropertyEditor->setUpdatesEnabled(false);
+
+    // Create a section for our given graph
+
+    Core::Property *sectionProperty = mPropertyEditor->addSectionProperty();
+
+    mPropertyEditor->setStringPropertyItem(sectionProperty->name(), QString("%1 | %2").arg(pGraph->parameterY()->fullyFormattedName(),
+                                                                                           pGraph->parameterX()->fullyFormattedName()));
+
+    // Allow ourselves to be updated again
+
+    mPropertyEditor->setUpdatesEnabled(true);
+
+    // Make sure that our property editor is our current widget
+
+    setCurrentWidget(mPropertyEditor);
 }
 
 //==============================================================================
 
 void SingleCellViewInformationGraphsWidget::removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph)
 {
-//---GRY--- TO BE DONE...
-qDebug(">>> Removed graph: %p", pGraph);
+Q_UNUSED(pGraph);
+    // Make sure that we have a property editor
+
+    if (!mPropertyEditor)
+        return;
+
+    // Prevent ourselves from being updated (to avoid any flickering)
+
+    mPropertyEditor->setUpdatesEnabled(false);
+
+    // Allow ourselves to be updated again
+
+    mPropertyEditor->setUpdatesEnabled(true);
+
+    // Hide our property editor if it doesn't contain any graph anymore
+
+    if (!mPropertyEditor->properties().count())
+        setCurrentWidget(mNoGraphsMessageWidget);
 }
 
 //==============================================================================

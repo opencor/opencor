@@ -99,6 +99,42 @@ int CellmlFileRuntimeParameter::index() const
 
 //==============================================================================
 
+QString CellmlFileRuntimeParameter::formattedName() const
+{
+    // Return a formatted version of our name
+
+    return mName+QString(mDegree, '\'');
+}
+
+//==============================================================================
+
+QString CellmlFileRuntimeParameter::fullyFormattedName() const
+{
+    // Return a fully formatted version of our name
+
+    return mComponent+"."+mName+QString(mDegree, '\'');
+}
+
+//==============================================================================
+
+QString CellmlFileRuntimeParameter::formattedUnit(const QString &pVoiUnit) const
+{
+    // Return a formatted version of our unit
+
+    QString perVoiUnitDegree = QString();
+
+    if (mDegree) {
+        perVoiUnitDegree += "/"+pVoiUnit;
+
+        if (mDegree > 1)
+            perVoiUnitDegree += mDegree;
+    }
+
+    return mUnit+perVoiUnitDegree;
+}
+
+//==============================================================================
+
 CellmlFileRuntime::CellmlFileRuntime() :
     mOdeCodeInformation(0),
     mDaeCodeInformation(0),

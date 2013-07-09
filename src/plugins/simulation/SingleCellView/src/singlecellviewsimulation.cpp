@@ -797,8 +797,8 @@ bool SingleCellViewSimulationResults::exportToCsv(const QString &pFileName) cons
         CellMLSupport::CellmlFileRuntimeParameter *parameter = mRuntime->parameters()[i];
 
         out << "," << Header.arg(parameter->component(),
-                                 parameter->name()+QString(parameter->degree(), '\''),
-                                 parameter->unit());
+                                 parameter->formattedName(),
+                                 parameter->formattedUnit(mRuntime->variableOfIntegration()->name()));
     }
 
     out << "\n";

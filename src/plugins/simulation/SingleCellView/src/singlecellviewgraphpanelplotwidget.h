@@ -35,7 +35,9 @@ class SingleCellViewGraphPanelPlotGraph : public QwtPlotCurve
 public:
     explicit SingleCellViewGraphPanelPlotGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
                                                CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
-    ~SingleCellViewGraphPanelPlotGraph();
+
+    CellMLSupport::CellmlFileRuntimeParameter * parameterX() const;
+    CellMLSupport::CellmlFileRuntimeParameter * parameterY() const;
 
 private:
     CellMLSupport::CellmlFileRuntimeParameter *mParameterX;
