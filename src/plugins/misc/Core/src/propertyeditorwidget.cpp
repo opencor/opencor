@@ -401,8 +401,7 @@ void PropertyItem::setEmptyListValue(const QString &pEmptyListValue)
 
 //==============================================================================
 
-Property::Property(const PropertyItem::Type &pType, const QString &pId,
-                   const bool &pEditable) :
+Property::Property(const PropertyItem::Type &pType, const QString &pId) :
     mId(pId),
     mName(new PropertyItem((pType == PropertyItem::Section)?pType:PropertyItem::String)),
     mValue(new PropertyItem(pType)),
@@ -410,10 +409,6 @@ Property::Property(const PropertyItem::Type &pType, const QString &pId,
 {
     // Note: mName, mValue and mUnit get owned by our property editor widget, so
     //       no need to delete them afterwards...
-
-    // Make our value property item editable, if needed
-
-    mValue->setEditable(pEditable);
 }
 
 //==============================================================================
@@ -459,6 +454,24 @@ QList<QStandardItem *> Property::items() const
     // Return our items as a list
 
     return QList<QStandardItem *>() << mName << mValue << mUnit;
+}
+
+//==============================================================================
+
+bool Property::isEditable() const
+{
+    // Return whether our value item is editable
+
+    return mValue->isEditable();
+}
+
+//==============================================================================
+
+void Property::setEditable(const bool &pEditable)
+{
+    // Make our value item (non-)editable
+
+    return mValue->setEditable(pEditable);
 }
 
 //==============================================================================
@@ -886,7 +899,11 @@ Property * PropertyEditorWidget::addProperty(const PropertyItem::Type &pType,
 {
     // Determine our new property's information
 
-    Property *res = new Property(pType, pId, pEditable);
+    Property *res = new Property(pType, pId);
+
+    // Make our property editable, if needed
+
+    res->setEditable(pEditable);
 
     // Populate our data model with our new property
 

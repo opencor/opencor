@@ -145,8 +145,7 @@ typedef QList<PropertyItem *> PropertyItems;
 class CORE_EXPORT Property
 {
 public:
-    explicit Property(const PropertyItem::Type &pType, const QString &pId,
-                      const bool &pEditable);
+    explicit Property(const PropertyItem::Type &pType, const QString &pId);
 
     QString id() const;
 
@@ -155,6 +154,9 @@ public:
     PropertyItem * unit() const;
 
     QList<QStandardItem *> items() const;
+
+    bool isEditable() const;
+    void setEditable(const bool &pEditable);
 
 private:
     QString mId;
