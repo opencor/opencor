@@ -246,10 +246,10 @@ public:
     void setGuiState(PropertyEditorWidgetGuiState *pGuiState);
 
     Property * addSectionProperty(Property *pParent = 0);
-    Property * addIntegerProperty(const QString &pId, Property *pParent = 0);
-    Property * addDoubleProperty(const QString &pId, Property *pParent = 0);
-    Property * addListProperty(const QString &pId, Property *pParent = 0);
-    Property * addStringProperty(const QString &pId, Property *pParent = 0);
+    Property * addIntegerProperty(Property *pParent = 0);
+    Property * addDoubleProperty(Property *pParent = 0);
+    Property * addListProperty(Property *pParent = 0);
+    Property * addStringProperty(Property *pParent = 0);
 
     void setStringPropertyItem(QStandardItem *pPropertyItem,
                                const QString &pValue);
@@ -302,8 +302,7 @@ private:
 
     void retranslateEmptyListProperties(QStandardItem *pItem);
 
-    Property * addProperty(const PropertyItem::Type &pType, const QString &pId,
-                           Property *pParent);
+    Property * addProperty(const PropertyItem::Type &pType, Property *pParent);
 
     void selectProperty(Property *pProperty);
     void editProperty(Property *pProperty, const bool &pCommitData = true);

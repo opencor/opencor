@@ -361,7 +361,7 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
         //       variables of degree 1, 2 and 3 will be V', V'' and V''',
         //       respectively)...
 
-        Core::Property *property = mPropertyEditor->addDoubleProperty(QString(), sectionProperty);
+        Core::Property *property = mPropertyEditor->addDoubleProperty(sectionProperty);
 
         property->setEditable(   (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)
                               || (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State));

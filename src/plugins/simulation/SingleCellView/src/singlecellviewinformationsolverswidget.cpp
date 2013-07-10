@@ -208,7 +208,7 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
 
     // Add our list property for the solvers
 
-    Core::Property *solversListProperty = addListProperty(QString(), solversProperty);
+    Core::Property *solversListProperty = addListProperty(solversProperty);
 
     // Retrieve the name of the solvers which type is the one in whhich we are
     // interested
@@ -233,7 +233,9 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
 
                 switch (solverInterfaceProperty.type()) {
                 case Solver::Double:
-                    property = addDoubleProperty(solverInterfaceProperty.id(), solversProperty);
+                    property = addDoubleProperty(solversProperty);
+
+                    property->setId(solverInterfaceProperty.id());
 
                     setDoublePropertyItem(property->value(), solverInterfaceProperty.defaultValue().toDouble());
 
@@ -241,7 +243,9 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
                 default:
                     // Solver::Integer
 
-                    property = addIntegerProperty(solverInterfaceProperty.id(), solversProperty);
+                    property = addIntegerProperty(solversProperty);
+
+                    property->setId(solverInterfaceProperty.id());
 
                     setIntegerPropertyItem(property->value(), solverInterfaceProperty.defaultValue().toInt());
                 }
