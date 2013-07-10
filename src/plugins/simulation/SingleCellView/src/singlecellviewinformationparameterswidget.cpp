@@ -139,7 +139,7 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
 
         // Keep track of changes to columns' width
 
-        connect(mPropertyEditor->header(), SIGNAL(sectionResized(int,int,int)),
+        connect(mPropertyEditor->header(), SIGNAL(sectionResized(int, int, int)),
                 this, SLOT(propertyEditorSectionResized(const int &, const int &, const int &)));
 
         // Keep track of when some of the model's data has changed
@@ -559,7 +559,7 @@ void SingleCellViewInformationParametersWidget::propertyEditorSectionResized(con
     // columns' width
 
     foreach (Core::PropertyEditorWidget *propertyEditor, mPropertyEditors)
-        disconnect(propertyEditor->header(), SIGNAL(sectionResized(int,int,int)),
+        disconnect(propertyEditor->header(), SIGNAL(sectionResized(int, int, int)),
                    this, SLOT(propertyEditorSectionResized(const int &, const int &, const int &)));
 
     // Update the column width of all our property editors
@@ -575,7 +575,7 @@ void SingleCellViewInformationParametersWidget::propertyEditorSectionResized(con
     // columns' width
 
     foreach (Core::PropertyEditorWidget *propertyEditor, mPropertyEditors)
-        connect(propertyEditor->header(), SIGNAL(sectionResized(int,int,int)),
+        connect(propertyEditor->header(), SIGNAL(sectionResized(int, int, int)),
                 this, SLOT(propertyEditorSectionResized(const int &, const int &, const int &)));
 }
 
