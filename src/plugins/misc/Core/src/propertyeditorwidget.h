@@ -145,9 +145,10 @@ typedef QList<PropertyItem *> PropertyItems;
 class CORE_EXPORT Property
 {
 public:
-    explicit Property(const PropertyItem::Type &pType, const QString &pId);
+    explicit Property(const PropertyItem::Type &pType);
 
     QString id() const;
+    void setId(const QString &pId);
 
     PropertyItem * name() const;
     PropertyItem * value() const;

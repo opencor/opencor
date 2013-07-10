@@ -401,8 +401,8 @@ void PropertyItem::setEmptyListValue(const QString &pEmptyListValue)
 
 //==============================================================================
 
-Property::Property(const PropertyItem::Type &pType, const QString &pId) :
-    mId(pId),
+Property::Property(const PropertyItem::Type &pType) :
+    mId(QString()),
     mName(new PropertyItem((pType == PropertyItem::Section)?pType:PropertyItem::String)),
     mValue(new PropertyItem(pType)),
     mUnit(new PropertyItem(PropertyItem::String))
@@ -418,6 +418,15 @@ QString Property::id() const
     // Return our id
 
     return mId;
+}
+
+//==============================================================================
+
+void Property::setId(const QString &pId)
+{
+    // Set our id
+
+    mId = pId;
 }
 
 //==============================================================================
@@ -898,7 +907,9 @@ Property * PropertyEditorWidget::addProperty(const PropertyItem::Type &pType,
 {
     // Determine our new property's information
 
-    Property *res = new Property(pType, pId);
+    Property *res = new Property(pType);
+
+    res->setId(pId);
 
     // Populate our data model with our new property
 
