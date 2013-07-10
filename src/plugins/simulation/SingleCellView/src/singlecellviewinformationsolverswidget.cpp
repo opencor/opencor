@@ -235,8 +235,6 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
                 case Solver::Double:
                     property = addDoubleProperty(solverInterfaceProperty.id(), solversProperty);
 
-                    property->setEditable(true);
-
                     setDoublePropertyItem(property->value(), solverInterfaceProperty.defaultValue().toDouble());
 
                     break;
@@ -245,10 +243,12 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
 
                     property = addIntegerProperty(solverInterfaceProperty.id(), solversProperty);
 
-                    property->setEditable(true);
-
                     setIntegerPropertyItem(property->value(), solverInterfaceProperty.defaultValue().toInt());
                 }
+
+                // Make the property editable
+
+                property->setEditable(true);
 
                 // Set the solver's property's 'unit', if needed
 
