@@ -120,7 +120,7 @@ public:
         List     = QStandardItem::UserType+4
     };
 
-    explicit PropertyItem(const Type &pType, const bool &pEditable);
+    explicit PropertyItem(const Type &pType);
 
     virtual int type() const;
 
@@ -147,8 +147,6 @@ class CORE_EXPORT Property
 public:
     explicit Property(const PropertyItem::Type &pType, const QString &pId,
                       const bool &pEditable);
-    explicit Property(const QString &pId, PropertyItem *pName,
-                      PropertyItem *pValue, PropertyItem *pUnit);
 
     QString id() const;
 

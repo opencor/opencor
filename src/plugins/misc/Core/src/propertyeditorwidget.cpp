@@ -333,17 +333,12 @@ void PropertyItemDelegate::paint(QPainter *pPainter,
 
 //==============================================================================
 
-PropertyItem::PropertyItem(const Type &pType, const bool &pEditable) :
+PropertyItem::PropertyItem(const Type &pType) :
     QStandardItem(),
     mType(pType),
     mList(QStringList()),
     mEmptyListValue(QString("???"))
 {
-    // Disable the editing of the property item if it is of section or string
-    // type
-
-    if (!pEditable)
-        setFlags(flags() & ~Qt::ItemIsEditable);
 }
 
 //==============================================================================
@@ -409,23 +404,16 @@ void PropertyItem::setEmptyListValue(const QString &pEmptyListValue)
 Property::Property(const PropertyItem::Type &pType, const QString &pId,
                    const bool &pEditable) :
     mId(pId),
-    mName(new PropertyItem((pType == PropertyItem::Section)?pType:PropertyItem::String, false)),
-    mValue(new PropertyItem(pType, pEditable)),
-    mUnit(new PropertyItem(PropertyItem::String, false))
+    mName(new PropertyItem((pType == PropertyItem::Section)?pType:PropertyItem::String)),
+    mValue(new PropertyItem(pType)),
+    mUnit(new PropertyItem(PropertyItem::String))
 {
     // Note: mName, mValue and mUnit get owned by our property editor widget, so
     //       no need to delete them afterwards...
-}
 
-//==============================================================================
+    // Make our value property item editable, if needed
 
-Property::Property(const QString &pId, PropertyItem *pName,
-                   PropertyItem *pValue, PropertyItem *pUnit) :
-    mId(pId),
-    mName(pName),
-    mValue(pValue),
-    mUnit(pUnit)
-{
+    mValue->setEditable(pEditable);
 }
 
 //==============================================================================
