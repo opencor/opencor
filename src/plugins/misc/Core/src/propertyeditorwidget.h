@@ -304,7 +304,7 @@ private:
     void retranslateEmptyListProperties(QStandardItem *pItem);
 
     Property * addProperty(const PropertyItem::Type &pType, const QString &pId,
-                           const bool &pEditable, Property *pParent);
+                           Property *pParent);
 
     void selectProperty(Property *pProperty);
     void editProperty(Property *pProperty, const bool &pCommitData = true);

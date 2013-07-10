@@ -894,16 +894,11 @@ void PropertyEditorWidget::setGuiState(PropertyEditorWidgetGuiState *pGuiState)
 
 Property * PropertyEditorWidget::addProperty(const PropertyItem::Type &pType,
                                              const QString &pId,
-                                             const bool &pEditable,
                                              Property *pParent)
 {
     // Determine our new property's information
 
     Property *res = new Property(pType, pId);
-
-    // Make our property editable, if needed
-
-    res->setEditable(pEditable);
 
     // Populate our data model with our new property
 
@@ -943,7 +938,7 @@ Property * PropertyEditorWidget::addSectionProperty(Property *pParent)
 {
     // Add a section property and return its information
 
-    return addProperty(PropertyItem::Section, QString(), false, pParent);
+    return addProperty(PropertyItem::Section, QString(), pParent);
 }
 
 //==============================================================================
@@ -954,7 +949,11 @@ Property * PropertyEditorWidget::addIntegerProperty(const QString &pId,
 {
     // Add an integer property and return its information
 
-    return addProperty(PropertyItem::Integer, pId, pEditable, pParent);
+    Property *res = addProperty(PropertyItem::Integer, pId, pParent);
+
+    res->setEditable(pEditable);
+
+    return res;
 }
 
 //==============================================================================
@@ -965,7 +964,11 @@ Property * PropertyEditorWidget::addDoubleProperty(const QString &pId,
 {
     // Add a double property and return its information
 
-    return addProperty(PropertyItem::Double, pId, pEditable, pParent);
+    Property *res = addProperty(PropertyItem::Double, pId, pParent);
+
+    res->setEditable(pEditable);
+
+    return res;
 }
 
 //==============================================================================
@@ -975,7 +978,11 @@ Property * PropertyEditorWidget::addListProperty(const QString &pId,
 {
     // Add a list property and return its information
 
-    return addProperty(PropertyItem::List, pId, true, pParent);
+    Property *res = addProperty(PropertyItem::List, pId, pParent);
+
+    res->setEditable(true);
+
+    return res;
 }
 
 //==============================================================================
@@ -985,7 +992,11 @@ Property * PropertyEditorWidget::addStringProperty(const QString &pId,
 {
     // Add a list property and return its information
 
-    return addProperty(PropertyItem::String, pId, true, pParent);
+    Property *res = addProperty(PropertyItem::String, pId, pParent);
+
+    res->setEditable(true);
+
+    return res;
 }
 
 //==============================================================================
