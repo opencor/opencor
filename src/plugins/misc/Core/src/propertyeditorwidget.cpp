@@ -944,31 +944,21 @@ Property * PropertyEditorWidget::addSectionProperty(Property *pParent)
 //==============================================================================
 
 Property * PropertyEditorWidget::addIntegerProperty(const QString &pId,
-                                                    const bool &pEditable,
                                                     Property *pParent)
 {
     // Add an integer property and return its information
 
-    Property *res = addProperty(PropertyItem::Integer, pId, pParent);
-
-    res->setEditable(pEditable);
-
-    return res;
+    return addProperty(PropertyItem::Integer, pId, pParent);
 }
 
 //==============================================================================
 
 Property * PropertyEditorWidget::addDoubleProperty(const QString &pId,
-                                                   const bool &pEditable,
                                                    Property *pParent)
 {
     // Add a double property and return its information
 
-    Property *res = addProperty(PropertyItem::Double, pId, pParent);
-
-    res->setEditable(pEditable);
-
-    return res;
+    return addProperty(PropertyItem::Double, pId, pParent);
 }
 
 //==============================================================================
@@ -992,11 +982,7 @@ Property * PropertyEditorWidget::addStringProperty(const QString &pId,
 {
     // Add a list property and return its information
 
-    Property *res = addProperty(PropertyItem::String, pId, pParent);
-
-    res->setEditable(true);
-
-    return res;
+    return addProperty(PropertyItem::String, pId, pParent);
 }
 
 //==============================================================================

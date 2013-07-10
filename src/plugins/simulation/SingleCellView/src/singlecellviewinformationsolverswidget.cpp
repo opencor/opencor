@@ -233,7 +233,9 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
 
                 switch (solverInterfaceProperty.type()) {
                 case Solver::Double:
-                    property = addDoubleProperty(solverInterfaceProperty.id(), true, solversProperty);
+                    property = addDoubleProperty(solverInterfaceProperty.id(), solversProperty);
+
+                    property->setEditable(true);
 
                     setDoublePropertyItem(property->value(), solverInterfaceProperty.defaultValue().toDouble());
 
@@ -241,7 +243,9 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
                 default:
                     // Solver::Integer
 
-                    property = addIntegerProperty(solverInterfaceProperty.id(), true, solversProperty);
+                    property = addIntegerProperty(solverInterfaceProperty.id(), solversProperty);
+
+                    property->setEditable(true);
 
                     setIntegerPropertyItem(property->value(), solverInterfaceProperty.defaultValue().toInt());
                 }
