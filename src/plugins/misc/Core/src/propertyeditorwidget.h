@@ -111,6 +111,9 @@ Q_SIGNALS:
 
 class CORE_EXPORT PropertyItem : public QStandardItem
 {
+    friend class Property;
+    friend class PropertyItemDelegate;
+
 public:
     enum Type {
         Section  = QStandardItem::UserType,
@@ -124,16 +127,23 @@ public:
 
     virtual int type() const;
 
-    QStringList list() const;
-    void setList(const QStringList &pList);
+//---GRY---
+QStringList list() const;
+void setList(const QStringList &pList);
 
-    QString emptyListValue() const;
-    void setEmptyListValue(const QString &pEmptyListValue);
+QString emptyListValue() const;
+void setEmptyListValue(const QString &pEmptyListValue);
 
 private:
     Type mType;
     QStringList mList;
     QString mEmptyListValue;
+
+//    QStringList list() const;
+//    void setList(const QStringList &pList);
+
+//    QString emptyListValue() const;
+//    void setEmptyListValue(const QString &pEmptyListValue);
 };
 
 //==============================================================================
@@ -158,6 +168,12 @@ public:
 
     bool isEditable() const;
     void setEditable(const bool &pEditable);
+
+    QStringList list() const;
+    void setList(const QStringList &pList);
+
+    QString emptyListValue() const;
+    void setEmptyListValue(const QString &pEmptyListValue);
 
 private:
     QString mId;
@@ -254,11 +270,11 @@ public:
     void setStringPropertyItem(QStandardItem *pPropertyItem,
                                const QString &pValue);
 
-    static int integerPropertyItem(PropertyItem *pPropertyItem);
+    int integerPropertyItem(PropertyItem *pPropertyItem) const;
     void setIntegerPropertyItem(PropertyItem *pPropertyItem,
                                 const int &pValue);
 
-    static double doublePropertyItem(PropertyItem *pPropertyItem);
+    double doublePropertyItem(PropertyItem *pPropertyItem) const;
     void setDoublePropertyItem(PropertyItem *pPropertyItem,
                                const double &pValue);
 

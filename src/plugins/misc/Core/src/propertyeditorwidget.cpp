@@ -485,6 +485,42 @@ void Property::setEditable(const bool &pEditable)
 
 //==============================================================================
 
+QStringList Property::list() const
+{
+    // Return our value item's list
+
+    return mValue->list();
+}
+
+//==============================================================================
+
+void Property::setList(const QStringList &pList)
+{
+    // Set our value item's list
+
+    mValue->setList(pList);
+}
+
+//==============================================================================
+
+QString Property::emptyListValue() const
+{
+    // Return our value item's empty list value
+
+    return mValue->emptyListValue();
+}
+
+//==============================================================================
+
+void Property::setEmptyListValue(const QString &pEmptyListValue)
+{
+    // Set our value item's empty list value
+
+    mValue->setEmptyListValue(pEmptyListValue);
+}
+
+//==============================================================================
+
 PropertyEditorWidgetGuiStateProperty::PropertyEditorWidgetGuiStateProperty(Property *pProperty,
                                                                            const bool &pHidden,
                                                                            const bool &pExpanded,
@@ -708,7 +744,7 @@ void PropertyEditorWidget::retranslateEmptyListProperties(QStandardItem *pItem)
     QModelIndex index = pItem->index();
 
     if (index.isValid()) {
-        // The index is valid (i.e. it's not our invisible root item), soc heck
+        // The index is valid (i.e. it's not our invisible root item), so check
         // whether the property value is of list type and whether its list is
         // empty and, if so, then set its text value accordingly
 
@@ -1024,7 +1060,7 @@ void PropertyEditorWidget::setStringPropertyItem(QStandardItem *pPropertyItem,
 
 //==============================================================================
 
-int PropertyEditorWidget::integerPropertyItem(PropertyItem *pPropertyItem)
+int PropertyEditorWidget::integerPropertyItem(PropertyItem *pPropertyItem) const
 {
     // Return the value of the given integer property item, if it exists and is
     // valid
@@ -1051,7 +1087,7 @@ void PropertyEditorWidget::setIntegerPropertyItem(PropertyItem *pPropertyItem,
 
 //==============================================================================
 
-double PropertyEditorWidget::doublePropertyItem(PropertyItem *pPropertyItem)
+double PropertyEditorWidget::doublePropertyItem(PropertyItem *pPropertyItem) const
 {
     // Return the value of the given double property item, if it exists and is
     // valid

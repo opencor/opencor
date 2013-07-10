@@ -167,8 +167,12 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
     // Create some properties for our graph
 //---GRY--- TO BE DONE 'PROPERLY'...
 
+    Core::Property *modelProperty = mPropertyEditor->addListProperty(sectionProperty);
     Core::Property *xProperty = mPropertyEditor->addStringProperty(sectionProperty);
     Core::Property *yProperty = mPropertyEditor->addStringProperty(sectionProperty);
+
+    mPropertyEditor->setStringPropertyItem(modelProperty->name(), "Model");
+    mPropertyEditor->setStringPropertyItem(modelProperty->value(), "???");
 
     mPropertyEditor->setStringPropertyItem(xProperty->name(), "X");
     mPropertyEditor->setStringPropertyItem(xProperty->value(), pGraph->parameterX()->fullyFormattedName());

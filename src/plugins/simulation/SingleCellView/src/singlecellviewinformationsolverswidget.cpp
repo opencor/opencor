@@ -210,7 +210,7 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
 
     Core::Property *solversListProperty = addListProperty(solversProperty);
 
-    // Retrieve the name of the solvers which type is the one in whhich we are
+    // Retrieve the name of the solvers which type is the one in which we are
     // interested
 
     QStringList solvers = QStringList();
@@ -406,8 +406,8 @@ void SingleCellViewInformationSolversWidget::initialize(const QString &pFileName
         foreach (Core::Property *property, mNlaSolverData->solversProperties().value(pSimulationData->nlaSolverName()))
             pSimulationData->addNlaSolverProperty(property->id(),
                                                   (property->value()->type() == Core::PropertyItem::Integer)?
-                                                      Core::PropertyEditorWidget::integerPropertyItem(property->value()):
-                                                      Core::PropertyEditorWidget::doublePropertyItem(property->value()),
+                                                      integerPropertyItem(property->value()):
+                                                      doublePropertyItem(property->value()),
                                                   false);
     }
 }

@@ -875,14 +875,14 @@ void SingleCellViewWidget::on_actionRunPauseResume_triggered()
             foreach (Core::Property *property, solversWidget->odeSolverData()->solversProperties().value(simulationData->odeSolverName()))
                 simulationData->addOdeSolverProperty(property->id(),
                                                      (property->value()->type() == Core::PropertyItem::Integer)?
-                                                         Core::PropertyEditorWidget::integerPropertyItem(property->value()):
-                                                         Core::PropertyEditorWidget::doublePropertyItem(property->value()));
+                                                         solversWidget->integerPropertyItem(property->value()):
+                                                         solversWidget->doublePropertyItem(property->value()));
 
             foreach (Core::Property *property, solversWidget->daeSolverData()->solversProperties().value(simulationData->daeSolverName()))
                 simulationData->addDaeSolverProperty(property->id(),
                                                      (property->value()->type() == Core::PropertyItem::Integer)?
-                                                         Core::PropertyEditorWidget::integerPropertyItem(property->value()):
-                                                         Core::PropertyEditorWidget::doublePropertyItem(property->value()));
+                                                         solversWidget->integerPropertyItem(property->value()):
+                                                         solversWidget->doublePropertyItem(property->value()));
 
             // Check how much memory is needed to run our simulation
 
@@ -1244,12 +1244,14 @@ void SingleCellViewWidget::simulationPropertyChanged(Core::Property *pProperty)
 
 //    bool needUpdating = true;
 
-    if (pProperty == mContentsWidget->informationWidget()->simulationWidget()->startingPointProperty()) {
-        mSimulation->data()->setStartingPoint(Core::PropertyEditorWidget::doublePropertyItem(pProperty->value()));
-    } else if (pProperty == mContentsWidget->informationWidget()->simulationWidget()->endingPointProperty()) {
-        mSimulation->data()->setEndingPoint(Core::PropertyEditorWidget::doublePropertyItem(pProperty->value()));
-    } else if (pProperty == mContentsWidget->informationWidget()->simulationWidget()->pointIntervalProperty()) {
-        mSimulation->data()->setPointInterval(Core::PropertyEditorWidget::doublePropertyItem(pProperty->value()));
+    SingleCellViewInformationSimulationWidget *simulationWidget = mContentsWidget->informationWidget()->simulationWidget();
+
+    if (pProperty == simulationWidget->startingPointProperty()) {
+        mSimulation->data()->setStartingPoint(simulationWidget->doublePropertyItem(pProperty->value()));
+    } else if (pProperty == simulationWidget->endingPointProperty()) {
+        mSimulation->data()->setEndingPoint(simulationWidget->doublePropertyItem(pProperty->value()));
+    } else if (pProperty == simulationWidget->pointIntervalProperty()) {
+        mSimulation->data()->setPointInterval(simulationWidget->doublePropertyItem(pProperty->value()));
 
 //        needUpdating = false;
     }
@@ -1293,8 +1295,8 @@ void SingleCellViewWidget::solversPropertyChanged(Core::Property *pProperty)
             if (pProperty == property) {
                 mSimulation->data()->addNlaSolverProperty(pProperty->id(),
                                                           (pProperty->value()->type() == Core::PropertyItem::Integer)?
-                                                              Core::PropertyEditorWidget::integerPropertyItem(pProperty->value()):
-                                                              Core::PropertyEditorWidget::doublePropertyItem(pProperty->value()));
+                                                              solversWidget->integerPropertyItem(pProperty->value()):
+                                                              solversWidget->doublePropertyItem(pProperty->value()));
 
                 break;
             }

@@ -136,7 +136,7 @@ void SingleCellViewInformationSimulationWidget::initialize(const QString &pFileN
     // Initialise our simulation's starting point so that we can then properly
     // reset our simulation the first time round
 
-    pSimulationData->setStartingPoint(Core::PropertyEditorWidget::doublePropertyItem(mStartingPointProperty->value()), false);
+    pSimulationData->setStartingPoint(doublePropertyItem(mStartingPointProperty->value()), false);
 
     // Update the tool tip of all our properties
 
