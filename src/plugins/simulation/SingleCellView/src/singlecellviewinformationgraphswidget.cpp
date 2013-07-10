@@ -107,6 +107,11 @@ void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelW
         for (int i = 0, iMax = mColumnWidths.size(); i < iMax; ++i)
             mPropertyEditor->setColumnWidth(i, mColumnWidths.at(i));
 
+        // Keep track of changes to columns' width
+
+        connect(mPropertyEditor->header(), SIGNAL(sectionResized(int, int, int)),
+                this, SLOT(propertyEditorSectionResized(const int &, const int &, const int &)));
+
         // Keep track of when the user changes a property value
 
         connect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
@@ -222,6 +227,38 @@ void SingleCellViewInformationGraphsWidget::finishPropertyEditing()
     // Finish the editing of our property editor
 
     mPropertyEditor->finishPropertyEditing();
+}
+
+//==============================================================================
+
+void SingleCellViewInformationGraphsWidget::propertyEditorSectionResized(const int &pLogicalIndex,
+                                                                             const int &pOldSize,
+                                                                             const int &pNewSize)
+{
+    Q_UNUSED(pOldSize);
+
+    // Prevent all our property editors from responding to an updating of their
+    // columns' width
+
+    foreach (Core::PropertyEditorWidget *propertyEditor, mPropertyEditors)
+        disconnect(propertyEditor->header(), SIGNAL(sectionResized(int, int, int)),
+                   this, SLOT(propertyEditorSectionResized(const int &, const int &, const int &)));
+
+    // Update the column width of all our property editors
+
+    foreach (Core::PropertyEditorWidget *propertyEditor, mPropertyEditors)
+        propertyEditor->header()->resizeSection(pLogicalIndex, pNewSize);
+
+    // Keep track of the new column width
+
+    mColumnWidths[pLogicalIndex] = pNewSize;
+
+    // Re-allow all our property editors to respond to an updating of their
+    // columns' width
+
+    foreach (Core::PropertyEditorWidget *propertyEditor, mPropertyEditors)
+        connect(propertyEditor->header(), SIGNAL(sectionResized(int, int, int)),
+                this, SLOT(propertyEditorSectionResized(const int &, const int &, const int &)));
 }
 
 //==============================================================================

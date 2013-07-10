@@ -78,6 +78,9 @@ public Q_SLOTS:
     void removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
 
 private Q_SLOTS:
+    void propertyEditorSectionResized(const int &pLogicalIndex,
+                                      const int &pOldSize, const int &pNewSize);
+
     void propertyChanged(Core::Property *pProperty);
 };
 
