@@ -173,6 +173,7 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
     Core::Property *yProperty = mPropertyEditor->addStringProperty(pGraph->parameterY()->fullyFormattedName(), sectionProperty);
 
     modelProperty->setName("Model");
+    modelProperty->setIcon(QIcon(":/oxygen/status/object-unlocked.png"));
 
     xProperty->setName("X");
 xProperty->setUnit(pGraph->parameterX()->formattedUnit("???"));
