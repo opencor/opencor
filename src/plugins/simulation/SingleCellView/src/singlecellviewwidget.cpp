@@ -550,7 +550,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
     // Reset our file tab icon and stop tracking our simulation progress, in
     // case our simulation is running
 
-    if (mSimulation->isRunning()) {
+    if (mSimulation->isRunning() || mSimulation->isPaused()) {
         mProgresses.remove(mSimulation->fileName());
 
         emit updateFileTabIcon(mSimulation->fileName(), QIcon());
