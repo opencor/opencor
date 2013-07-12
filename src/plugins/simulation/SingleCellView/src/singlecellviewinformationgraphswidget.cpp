@@ -162,6 +162,9 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
     Core::Property *sectionProperty = mPropertyEditor->addSectionProperty(QString("%1 | %2").arg(pGraph->parameterY()->fullyFormattedName(),
                                                                                                  pGraph->parameterX()->fullyFormattedName()));
 
+    sectionProperty->setCheckable(true);
+    sectionProperty->setChecked(true);
+
     // Create some properties for our graph
 //---GRY--- TO BE DONE 'PROPERLY'...
 
@@ -176,10 +179,6 @@ xProperty->setUnit(pGraph->parameterX()->formattedUnit("???"));
 
     yProperty->setName("Y");
 yProperty->setUnit(pGraph->parameterY()->formattedUnit("???"));
-
-    // Expand our section
-
-    mPropertyEditor->expand(sectionProperty->index());
 
     // Allow ourselves to be updated again
 

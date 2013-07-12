@@ -156,6 +156,12 @@ public:
     QString id() const;
     void setId(const QString &pId);
 
+    bool isCheckable() const;
+    void setCheckable(const bool &pCheckable);
+
+    bool isChecked() const;
+    void setChecked(const bool &pChecked);
+
     bool isEditable() const;
     void setEditable(const bool &pEditable);
 

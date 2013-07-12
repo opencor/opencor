@@ -461,6 +461,42 @@ void Property::setId(const QString &pId)
 
 //==============================================================================
 
+bool Property::isCheckable() const
+{
+    // Return whether our name item is checkable
+
+    return mName->isCheckable();
+}
+
+//==============================================================================
+
+void Property::setCheckable(const bool &pCheckable)
+{
+    // Make our name item (un)checkable
+
+    mName->setCheckable(pCheckable);
+}
+
+//==============================================================================
+
+bool Property::isChecked() const
+{
+    // Return whether our name item is checked
+
+    return mName->checkState() == Qt::Checked;
+}
+
+//==============================================================================
+
+void Property::setChecked(const bool &pChecked)
+{
+    // Make our name item (un)checked
+
+    mName->setCheckState(pChecked?Qt::Checked:Qt::Unchecked);
+}
+
+//==============================================================================
+
 bool Property::isEditable() const
 {
     // Return whether our value item is editable
