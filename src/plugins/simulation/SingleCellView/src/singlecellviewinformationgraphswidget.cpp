@@ -159,32 +159,27 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
 
     // Create a section for our newly added graph
 
-    Core::Property *sectionProperty = mPropertyEditor->addSectionProperty();
-
-    mPropertyEditor->setStringPropertyItem(sectionProperty->name(), QString("%1 | %2").arg(pGraph->parameterY()->fullyFormattedName(),
-                                                                                           pGraph->parameterX()->fullyFormattedName()));
+    Core::Property *sectionProperty = mPropertyEditor->addSectionProperty(QString("%1 | %2").arg(pGraph->parameterY()->fullyFormattedName(),
+                                                                                                 pGraph->parameterX()->fullyFormattedName()));
 
     // Create some properties for our graph
 //---GRY--- TO BE DONE 'PROPERLY'...
 
     Core::Property *modelProperty = mPropertyEditor->addListProperty(sectionProperty);
-    Core::Property *xProperty = mPropertyEditor->addStringProperty(sectionProperty);
-    Core::Property *yProperty = mPropertyEditor->addStringProperty(sectionProperty);
+    Core::Property *xProperty = mPropertyEditor->addStringProperty(pGraph->parameterX()->fullyFormattedName(), sectionProperty);
+    Core::Property *yProperty = mPropertyEditor->addStringProperty(pGraph->parameterY()->fullyFormattedName(), sectionProperty);
 
-    mPropertyEditor->setStringPropertyItem(modelProperty->name(), "Model");
-    mPropertyEditor->setStringPropertyItem(modelProperty->value(), "???");
+    modelProperty->setName("Model");
 
-    mPropertyEditor->setStringPropertyItem(xProperty->name(), "X");
-    mPropertyEditor->setStringPropertyItem(xProperty->value(), pGraph->parameterX()->fullyFormattedName());
-    mPropertyEditor->setStringPropertyItem(xProperty->unit(), pGraph->parameterX()->formattedUnit("???"));
+    xProperty->setName("X");
+xProperty->setUnit(pGraph->parameterX()->formattedUnit("???"));
 
-    mPropertyEditor->setStringPropertyItem(yProperty->name(), "Y");
-    mPropertyEditor->setStringPropertyItem(yProperty->value(), pGraph->parameterY()->fullyFormattedName());
-    mPropertyEditor->setStringPropertyItem(yProperty->unit(), pGraph->parameterY()->formattedUnit("???"));
+    yProperty->setName("Y");
+yProperty->setUnit(pGraph->parameterY()->formattedUnit("???"));
 
     // Expand our section
 
-    mPropertyEditor->expand(sectionProperty->name()->index());
+    mPropertyEditor->expand(sectionProperty->index());
 
     // Allow ourselves to be updated again
 

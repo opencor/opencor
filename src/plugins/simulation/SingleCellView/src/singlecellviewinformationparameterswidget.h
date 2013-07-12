@@ -42,7 +42,7 @@ namespace SingleCellView {
 
 //==============================================================================
 
-class SingleCellViewSimulationData;
+class SingleCellViewSimulation;
 
 //==============================================================================
 
@@ -61,7 +61,7 @@ public:
 
     void initialize(const QString &pFileName,
                     CellMLSupport::CellmlFileRuntime *pRuntime,
-                    SingleCellViewSimulationData *pSimulationData);
+                    SingleCellViewSimulation *pSimulation);
     void finalize(const QString &pFileName);
 
     void finishPropertyEditing();
@@ -77,7 +77,7 @@ private:
 
     Core::PropertyEditorWidget *mPropertyEditor;
 
-    SingleCellViewSimulationData *mSimulationData;
+    SingleCellViewSimulation *mSimulation;
 
     QIcon parameterIcon(const CellMLSupport::CellmlFileRuntimeParameter::ParameterType &pParameterType);
 
@@ -85,7 +85,7 @@ private:
     void populateContextMenu(QMenu *pContextMenu,
                              CellMLSupport::CellmlFileRuntime *pRuntime);
 
-    void updateToolTips();
+    void updateExtraInfos();
 
     void retranslateContextMenu(QMenu *pContextMenu);
 

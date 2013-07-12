@@ -28,7 +28,7 @@ SingleCellViewInformationParametersWidget::SingleCellViewInformationParametersWi
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mColumnWidths(QList<int>()),
     mPropertyEditor(0),
-    mSimulationData(0)
+    mSimulation(0)
 {
     // Determine the default width of each column of our property editors
 
@@ -64,9 +64,9 @@ void SingleCellViewInformationParametersWidget::retranslateUi()
     foreach (QMenu *contextMenu, mContextMenus)
         retranslateContextMenu(contextMenu);
 
-    // Retranslate the tool tip of all our parameters
+    // Retranslate the extra info of all our parameters
 
-    updateToolTips();
+    updateExtraInfos();
 }
 
 //==============================================================================
@@ -99,11 +99,11 @@ void SingleCellViewInformationParametersWidget::saveSettings(QSettings *pSetting
 
 void SingleCellViewInformationParametersWidget::initialize(const QString &pFileName,
                                                            CellMLSupport::CellmlFileRuntime *pRuntime,
-                                                           SingleCellViewSimulationData *pSimulationData)
+                                                           SingleCellViewSimulation *pSimulation)
 {
-    // Keep track of the simulation data
+    // Keep track of the simulation
 
-    mSimulationData = pSimulationData;
+    mSimulation = pSimulation;
 
     // Retrieve the property editor for the given file name or create one, if
     // none exists
@@ -144,7 +144,7 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
 
         // Keep track of when some of the model's data has changed
 
-        connect(pSimulationData, SIGNAL(updated(const double &)),
+        connect(pSimulation->data(), SIGNAL(updated(const double &)),
                 this, SLOT(updateParameters(const double &)));
 
         // Keep track of when the user changes a property value
@@ -166,11 +166,11 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
 
     setCurrentWidget(mPropertyEditor);
 
-    // Update the tool tip of all our parameters
+    // Update the extra info of all our parameters
     // Note: this is in case the user changed the locale and then switched to a
     //       different file...
 
-    updateToolTips();
+    updateExtraInfos();
 }
 
 //==============================================================================
@@ -200,24 +200,24 @@ void SingleCellViewInformationParametersWidget::updateParameters(const double &p
         if (parameter)
             switch (parameter->type()) {
             case CellMLSupport::CellmlFileRuntimeParameter::Voi:
-                mPropertyEditor->setDoublePropertyItem(property->value(), pCurrentPoint);
+                property->setDoubleValue(pCurrentPoint, false);
 
                 break;
             case CellMLSupport::CellmlFileRuntimeParameter::Constant:
             case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
-                mPropertyEditor->setDoublePropertyItem(property->value(), mSimulationData->constants()[parameter->index()]);
+                property->setDoubleValue(mSimulation->data()->constants()[parameter->index()], false);
 
                 break;
             case CellMLSupport::CellmlFileRuntimeParameter::Rate:
-                mPropertyEditor->setDoublePropertyItem(property->value(), mSimulationData->rates()[parameter->index()]);
+                property->setDoubleValue(mSimulation->data()->rates()[parameter->index()], false);
 
                 break;
             case CellMLSupport::CellmlFileRuntimeParameter::State:
-                mPropertyEditor->setDoublePropertyItem(property->value(), mSimulationData->states()[parameter->index()]);
+                property->setDoubleValue(mSimulation->data()->states()[parameter->index()], false);
 
                 break;
             case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
-                mPropertyEditor->setDoublePropertyItem(property->value(), mSimulationData->algebraic()[parameter->index()]);
+                property->setDoubleValue(mSimulation->data()->algebraic()[parameter->index()], false);
 
                 break;
             default:
@@ -229,11 +229,7 @@ void SingleCellViewInformationParametersWidget::updateParameters(const double &p
 
     // Check whether any of our properties has actually been modified
 
-    mSimulationData->checkForModifications();
-
-    // Update the tool tip of all our parameters
-
-    updateToolTips();
+    mSimulation->data()->checkForModifications();
 }
 
 //==============================================================================
@@ -252,11 +248,11 @@ void SingleCellViewInformationParametersWidget::propertyChanged(Core::Property *
     if (parameter)
         switch (parameter->type()) {
         case CellMLSupport::CellmlFileRuntimeParameter::Constant:
-            mSimulationData->constants()[parameter->index()] = mPropertyEditor->doublePropertyItem(pProperty->value());
+            mSimulation->data()->constants()[parameter->index()] = pProperty->doubleValue();
 
             break;
         case CellMLSupport::CellmlFileRuntimeParameter::State:
-            mSimulationData->states()[parameter->index()] = mPropertyEditor->doublePropertyItem(pProperty->value());
+            mSimulation->data()->states()[parameter->index()] = pProperty->doubleValue();
 
             break;
         default:
@@ -266,12 +262,12 @@ void SingleCellViewInformationParametersWidget::propertyChanged(Core::Property *
         }
 
     // Recompute our 'computed constants' and 'variables'
-    // Note: we would normally call mSimulationData->checkForModifications()
+    // Note: we would normally call mSimulation->data()->checkForModifications()
     //       after recomputing our 'computed constants' and 'variables, but the
     //       recomputation will eventually result in updateParameters() abvove
     //       to be called and it will check for modifications, so...
 
-    mSimulationData->recomputeComputedConstantsAndVariables();
+    mSimulation->data()->recomputeComputedConstantsAndVariables(mSimulation->currentPoint());
 }
 
 //==============================================================================
@@ -339,13 +335,11 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
         QString currentComponent = parameter->component();
 
         if (   !sectionProperty
-            ||  currentComponent.compare(sectionProperty->name()->text())) {
+            ||  currentComponent.compare(sectionProperty->name())) {
             // The current parameter is in a different component, so create a
             // new section for the 'new' component
 
-            sectionProperty = mPropertyEditor->addSectionProperty();
-
-            mPropertyEditor->setStringPropertyItem(sectionProperty->name(), currentComponent);
+            sectionProperty = mPropertyEditor->addSectionProperty(currentComponent);
         }
 
         // Add the current parameter to the 'current' component section
@@ -366,19 +360,19 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
         property->setEditable(   (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)
                               || (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State));
 
-        property->name()->setIcon(parameterIcon(parameter->type()));
+        property->setIcon(parameterIcon(parameter->type()));
 
-        mPropertyEditor->setStringPropertyItem(property->name(), parameter->formattedName());
-        mPropertyEditor->setStringPropertyItem(property->unit(), parameter->formattedUnit(pRuntime->variableOfIntegration()->unit()));
+        property->setName(parameter->formattedName());
+        property->setUnit(parameter->formattedUnit(pRuntime->variableOfIntegration()->unit()));
 
         // Keep track of the link between our property value and parameter
 
         mParameters.insert(property, parameter);
     }
 
-    // Update the tool tip of all our parameters
+    // Update (well, set here) the extra info of all our parameters
 
-    updateToolTips();
+    updateExtraInfos();
 
     // Expand all our properties
 
@@ -459,14 +453,14 @@ void SingleCellViewInformationParametersWidget::populateContextMenu(QMenu *pCont
 
 //==============================================================================
 
-void SingleCellViewInformationParametersWidget::updateToolTips()
+void SingleCellViewInformationParametersWidget::updateExtraInfos()
 {
     // Make sure that we have a property editor
 
     if (!mPropertyEditor)
         return;
 
-    // Update the tool tip of all our property editor's properties
+    // Update the extra info of all our property editor's properties
 
     foreach (Core::Property *property, mPropertyEditor->properties()) {
         CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(property);
@@ -507,11 +501,7 @@ void SingleCellViewInformationParametersWidget::updateToolTips()
                 ;
             }
 
-            QString parameterToolTip = property->name()->text()+tr(": ")+property->value()->text()+" "+property->unit()->text()+" ("+parameterType+")";
-
-            property->name()->setToolTip(parameterToolTip);
-            property->value()->setToolTip(parameterToolTip);
-            property->unit()->setToolTip(parameterToolTip);
+            property->setExtraInfo(parameterType);
         }
     }
 }
@@ -539,7 +529,7 @@ void SingleCellViewInformationParametersWidget::propertyEditorContextMenu(const 
 
     // Make sure that our current property is not a section
 
-    if (currentProperty->name()->type() == Core::PropertyItem::Section)
+    if (currentProperty->type() == Core::Property::Section)
         return;
 
     // Generate and show the context menu

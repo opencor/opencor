@@ -171,7 +171,7 @@ void SingleCellViewSimulationData::setStartingPoint(const double &pStartingPoint
     // Recompute our 'computed constants' and 'variables'
 
     if (pRecompute)
-        recomputeComputedConstantsAndVariables();
+        recomputeComputedConstantsAndVariables(mStartingPoint);
 }
 
 //==============================================================================
@@ -398,7 +398,7 @@ void SingleCellViewSimulationData::reset()
     memset(mCondVar, 0, mRuntime->condVarCount()*OpenCOR::CoreSolver::SizeOfDouble);
 
     mRuntime->initializeConstants()(mConstants, mRates, mStates);
-    recomputeComputedConstantsAndVariables();
+    recomputeComputedConstantsAndVariables(mStartingPoint);
 
     // Delete our NLA solver, if any
 
@@ -420,7 +420,7 @@ void SingleCellViewSimulationData::reset()
 
 //==============================================================================
 
-void SingleCellViewSimulationData::recomputeComputedConstantsAndVariables()
+void SingleCellViewSimulationData::recomputeComputedConstantsAndVariables(const double &pCurrentPoint)
 {
     // Recompute our 'computed constants' and 'variables', if possible
 
@@ -428,13 +428,13 @@ void SingleCellViewSimulationData::recomputeComputedConstantsAndVariables()
         mRuntime->computeComputedConstants()(mConstants, mRates, mStates);
 
         if (mRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)
-            mRuntime->computeOdeVariables()(mStartingPoint, mConstants, mRates, mStates, mAlgebraic);
+            mRuntime->computeOdeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic);
         else
-            mRuntime->computeDaeVariables()(mStartingPoint, mConstants, mRates, mStates, mAlgebraic, mCondVar);
+            mRuntime->computeDaeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic, mCondVar);
 
         // Let people know that our data has been updated
 
-        emit updated(mStartingPoint);
+        emit updated(pCurrentPoint);
     }
 }
 

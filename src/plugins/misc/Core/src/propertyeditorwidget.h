@@ -109,10 +109,26 @@ Q_SIGNALS:
 
 //==============================================================================
 
+class Property;
+
 class CORE_EXPORT PropertyItem : public QStandardItem
 {
-    friend class Property;
-    friend class PropertyItemDelegate;
+public:
+    explicit PropertyItem(Property *pOwner);
+
+    Property *owner() const;
+
+private:
+    Property *mOwner;
+};
+
+//==============================================================================
+
+class PropertyEditorWidget;
+
+class CORE_EXPORT Property : public QObject
+{
+    Q_OBJECT
 
 public:
     enum Type {
@@ -123,64 +139,85 @@ public:
         List     = QStandardItem::UserType+4
     };
 
-    explicit PropertyItem(const Type &pType);
+    explicit Property(const Type &pType, PropertyEditorWidget *pParent);
 
-    virtual int type() const;
+    Type type() const;
 
-//---GRY---
-QStringList list() const;
-void setList(const QStringList &pList);
+    QStandardItem * parent() const;
 
-QString emptyListValue() const;
-void setEmptyListValue(const QString &pEmptyListValue);
+    int row() const;
 
-private:
-    Type mType;
-    QStringList mList;
-    QString mEmptyListValue;
+    void add(Property *pChildProperty);
+    void addTo(QStandardItem *pParent);
 
-//    QStringList list() const;
-//    void setList(const QStringList &pList);
-
-//    QString emptyListValue() const;
-//    void setEmptyListValue(const QString &pEmptyListValue);
-};
-
-//==============================================================================
-
-typedef QList<PropertyItem *> PropertyItems;
-
-//==============================================================================
-
-class CORE_EXPORT Property
-{
-public:
-    explicit Property(const PropertyItem::Type &pType);
+    QModelIndex index() const;
+    bool hasIndex(const QModelIndex &pIndex) const;
 
     QString id() const;
     void setId(const QString &pId);
 
-    PropertyItem * name() const;
-    PropertyItem * value() const;
-    PropertyItem * unit() const;
-
-    QList<QStandardItem *> items() const;
-
     bool isEditable() const;
     void setEditable(const bool &pEditable);
 
-    QStringList list() const;
-    void setList(const QStringList &pList);
+    QString name() const;
+    void setName(const QString &pName);
+
+    QIcon icon() const;
+    void setIcon(const QIcon &pIcon);
+
+    int integerValue() const;
+    void setIntegerValue(const int &pIntegerValue);
+
+    double doubleValue() const;
+    void setDoubleValue(const double &pDoubleValue,
+                        const bool &pEmitSignal = true);
+
+    QString value() const;
+    void setValue(const QString &pValue, const bool &pForce = false,
+                  const bool &pEmitSignal = true);
+
+    QStringList listValue() const;
+    void setListValue(const QStringList &pListValue);
 
     QString emptyListValue() const;
     void setEmptyListValue(const QString &pEmptyListValue);
 
+    QString unit() const;
+    void setUnit(const QString &pUnit);
+
+    QString extraInfo() const;
+    void setExtraInfo(const QString &pExtraInfo);
+
+    bool isVisible() const;
+    void setVisible(const bool &pVisible);
+
+    void select() const;
+
+    void edit() const;
+
 private:
+    PropertyEditorWidget *mOwner;
+
+    Type mType;
+
     QString mId;
 
     PropertyItem *mName;
     PropertyItem *mValue;
     PropertyItem *mUnit;
+
+    QStringList mListValue;
+    QString mEmptyListValue;
+
+    QString mExtraInfo;
+
+    QList<QStandardItem *> items() const;
+
+    void updateToolTip();
+
+Q_SIGNALS:
+    void visibilityChanged(const bool &pVisible);
+    void valueChanged(const QString &pOldValue, const QString &pNewValue);
 };
 
 //==============================================================================
@@ -241,9 +278,6 @@ class CORE_EXPORT PropertyEditorWidget : public TreeViewWidget
     Q_OBJECT
 
 public:
-    explicit PropertyEditorWidget(const bool &pShowUnits,
-                                  const bool &pAutoUpdateHeight,
-                                  QWidget *pParent = 0);
     explicit PropertyEditorWidget(const bool &pAutoUpdateHeight,
                                   QWidget *pParent = 0);
     explicit PropertyEditorWidget(QWidget *pParent = 0);
@@ -261,22 +295,21 @@ public:
     PropertyEditorWidgetGuiState * guiState();
     void setGuiState(PropertyEditorWidgetGuiState *pGuiState);
 
+    Property * addSectionProperty(const QString &pName, Property *pParent = 0);
     Property * addSectionProperty(Property *pParent = 0);
+
+    Property * addIntegerProperty(const int &pValue, Property *pParent = 0);
     Property * addIntegerProperty(Property *pParent = 0);
+
+    Property * addDoubleProperty(const double &pValue, Property *pParent = 0);
     Property * addDoubleProperty(Property *pParent = 0);
+
+    Property * addListProperty(const QStringList &pStringList,
+                               Property *pParent = 0);
     Property * addListProperty(Property *pParent = 0);
+
+    Property * addStringProperty(const QString &pString, Property *pParent = 0);
     Property * addStringProperty(Property *pParent = 0);
-
-    void setStringPropertyItem(QStandardItem *pPropertyItem,
-                               const QString &pValue);
-
-    int integerPropertyItem(PropertyItem *pPropertyItem) const;
-    void setIntegerPropertyItem(PropertyItem *pPropertyItem,
-                                const int &pValue);
-
-    double doublePropertyItem(PropertyItem *pPropertyItem) const;
-    void setDoublePropertyItem(PropertyItem *pPropertyItem,
-                               const double &pValue);
 
     Properties properties() const;
 
@@ -287,9 +320,6 @@ public:
 
     void removeAllProperties();
 
-    static void setPropertyItem(QStandardItem *pPropertyItem, const QString &pValue);
-    void setPropertyVisible(Property *pProperty, const bool &pVisible);
-
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
     virtual void mouseMoveEvent(QMouseEvent *pEvent);
@@ -298,7 +328,6 @@ protected:
     virtual void resizeEvent(QResizeEvent *pEvent);
 
 private:
-    bool mShowUnits;
     bool mAutoUpdateHeight;
 
     QStandardItemModel *mModel;
@@ -308,17 +337,13 @@ private:
     Property *mProperty;
     QWidget *mPropertyEditor;
 
-    QString mOldPropertyValue;
-    QString mOldPropertyToolTip;
-
     bool mRightClicking;
 
-    void constructor(const bool &pShowUnits = true,
-                     const bool &pAutoUpdateHeight = false);
+    void constructor(const bool &pAutoUpdateHeight = false);
 
     void retranslateEmptyListProperties(QStandardItem *pItem);
 
-    Property * addProperty(const PropertyItem::Type &pType, Property *pParent);
+    Property * addProperty(const Property::Type &pType, Property *pParent);
 
     void selectProperty(Property *pProperty);
     void editProperty(Property *pProperty, const bool &pCommitData = true);
@@ -339,6 +364,8 @@ private Q_SLOTS:
 
     void goToPreviousProperty();
     void goToNextProperty();
+
+    void emitPropertyChanged();
 };
 
 //==============================================================================

@@ -89,7 +89,7 @@ public:
 
     void reset();
 
-    void recomputeComputedConstantsAndVariables();
+    void recomputeComputedConstantsAndVariables(const double &pCurrentPoint);
     void recomputeVariables(const double &pCurrentPoint,
                             const bool &pEmitSignal = true);
 

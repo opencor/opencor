@@ -25,7 +25,7 @@ namespace SingleCellView {
 
 //==============================================================================
 
-class SingleCellViewSimulationData;
+class SingleCellViewSimulation;
 
 //==============================================================================
 
@@ -41,7 +41,7 @@ public:
 
     void initialize(const QString &pFileName,
                     CellMLSupport::CellmlFileRuntime *pRuntime,
-                    SingleCellViewSimulationData *pSimulationData);
+                    SingleCellViewSimulation *pSimulation);
     void backup(const QString &pFileName);
     void finalize(const QString &pFileName);
 
@@ -62,9 +62,6 @@ private:
     Core::PropertyEditorWidgetGuiState *mDefaultGuiState;
 
     void updateToolTips();
-
-private Q_SLOTS:
-    void updatePropertyToolTip(Core::Property *pProperty);
 };
 
 //==============================================================================

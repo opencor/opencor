@@ -23,24 +23,13 @@ SingleCellViewInformationSimulationWidget::SingleCellViewInformationSimulationWi
 {
     // Populate our property editor
 
-    mStartingPointProperty = addDoubleProperty();
-    mEndingPointProperty   = addDoubleProperty();
-    mPointIntervalProperty = addDoubleProperty();
+    mStartingPointProperty = addDoubleProperty(0.0);
+    mEndingPointProperty   = addDoubleProperty(1000.0);
+    mPointIntervalProperty = addDoubleProperty(1.0);
 
     mStartingPointProperty->setEditable(true);
     mEndingPointProperty->setEditable(true);
-    mEndingPointProperty->setEditable(true);
-
-    // Initialise our property values
-
-    setDoublePropertyItem(mStartingPointProperty->value(), 0.0);
-    setDoublePropertyItem(mEndingPointProperty->value(), 1000.0);
-    setDoublePropertyItem(mPointIntervalProperty->value(), 1.0);
-
-    // Update the tool tip of any property which value gets changed by the user
-
-    connect(this, SIGNAL(propertyChanged(Core::Property *)),
-            this, SLOT(updatePropertyToolTip(Core::Property *)));
+    mPointIntervalProperty->setEditable(true);
 
     // Some further initialisations which are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
@@ -74,50 +63,16 @@ void SingleCellViewInformationSimulationWidget::retranslateUi()
 
     // Update our property names
 
-    setStringPropertyItem(mStartingPointProperty->name(), tr("Starting point"));
-    setStringPropertyItem(mEndingPointProperty->name(), tr("Ending point"));
-    setStringPropertyItem(mPointIntervalProperty->name(), tr("Point interval"));
-
-    // Retranslate the tool tip of all our properties
-
-    updateToolTips();
-}
-
-//==============================================================================
-
-void SingleCellViewInformationSimulationWidget::updatePropertyToolTip(Core::Property *pProperty)
-{
-    // Update the tool tip of the given property
-
-    QString propertyToolTip = pProperty->name()->text()+tr(": ");
-
-    if (pProperty->value()->text().isEmpty())
-        propertyToolTip += "???";
-    else
-        propertyToolTip += pProperty->value()->text();
-
-    propertyToolTip += " "+pProperty->unit()->text();
-
-    pProperty->name()->setToolTip(propertyToolTip);
-    pProperty->value()->setToolTip(propertyToolTip);
-    pProperty->unit()->setToolTip(propertyToolTip);
-}
-
-//==============================================================================
-
-void SingleCellViewInformationSimulationWidget::updateToolTips()
-{
-    // Update the tool tip of all our properties
-
-    foreach (Core::Property *property, properties())
-        updatePropertyToolTip(property);
+    mStartingPointProperty->setName(tr("Starting point"));
+    mEndingPointProperty->setName(tr("Ending point"));
+    mPointIntervalProperty->setName(tr("Point interval"));
 }
 
 //==============================================================================
 
 void SingleCellViewInformationSimulationWidget::initialize(const QString &pFileName,
                                                            CellMLSupport::CellmlFileRuntime *pRuntime,
-                                                           SingleCellViewSimulationData *pSimulationData)
+                                                           SingleCellViewSimulation *pSimulation)
 {
     // Retrieve and initialise our GUI state
 
@@ -129,18 +84,14 @@ void SingleCellViewInformationSimulationWidget::initialize(const QString &pFileN
 
     QString unit = pRuntime->variableOfIntegration()->unit();
 
-    setStringPropertyItem(mStartingPointProperty->unit(), unit);
-    setStringPropertyItem(mEndingPointProperty->unit(), unit);
-    setStringPropertyItem(mPointIntervalProperty->unit(), unit);
+    mStartingPointProperty->setUnit(unit);
+    mEndingPointProperty->setUnit(unit);
+    mPointIntervalProperty->setUnit(unit);
 
     // Initialise our simulation's starting point so that we can then properly
     // reset our simulation the first time round
 
-    pSimulationData->setStartingPoint(doublePropertyItem(mStartingPointProperty->value()), false);
-
-    // Update the tool tip of all our properties
-
-    updateToolTips();
+    pSimulation->data()->setStartingPoint(mStartingPointProperty->doubleValue(), false);
 }
 
 //==============================================================================
@@ -194,7 +145,7 @@ double SingleCellViewInformationSimulationWidget::startingPoint() const
 {
     // Return our starting point
 
-    return doublePropertyItem(mStartingPointProperty->value());
+    return mStartingPointProperty->doubleValue();
 }
 
 //==============================================================================
@@ -203,7 +154,7 @@ double SingleCellViewInformationSimulationWidget::endingPoint() const
 {
     // Return our ending point
 
-    return doublePropertyItem(mEndingPointProperty->value());
+    return mEndingPointProperty->doubleValue();
 }
 
 //==============================================================================
@@ -212,7 +163,7 @@ double SingleCellViewInformationSimulationWidget::pointInterval() const
 {
     // Return our point interval
 
-    return doublePropertyItem(mPointIntervalProperty->value());
+    return mPointIntervalProperty->doubleValue();
 }
 
 //==============================================================================
