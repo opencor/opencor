@@ -159,10 +159,14 @@ void ListEditorWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
     // We want to go to the next item in the list (and go back to the first one
     // if we are at the end of the list), so determine the new current index
 
-    int newCurrentIndex = currentIndex()+1;
+    int newCurrentIndex = currentIndex();
 
-    if (newCurrentIndex == count())
-        newCurrentIndex = 0;
+    do {
+        ++newCurrentIndex;
+
+        if (newCurrentIndex == count())
+            newCurrentIndex = 0;
+    } while (itemText(newCurrentIndex).isEmpty());
 
     // Set the new current index
 
@@ -262,7 +266,13 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
     case Property::List: {
         ListEditorWidget *listEditor = new ListEditorWidget(pParent);
 
-        listEditor->addItems(property->listValue());
+        // Add the value items to the list, keeping in mind separators
+
+        foreach (const QString &valueItem, property->listValue())
+            if (valueItem.isEmpty())
+                listEditor->insertSeparator(listEditor->count());
+            else
+                listEditor->addItem(valueItem);
 
         editor = listEditor;
 
@@ -647,10 +657,48 @@ QStringList Property::listValue() const
 
 void Property::setListValue(const QStringList &pListValue)
 {
+    // Make sure that there would be a point in setting the list value
+
+    if (mType != List)
+        return;
+
+    // Clean up the list value we were given:
+    //  - Remove leading empty items
+    //  - Add items, making sure that only one empty item (i.e. separator) can
+    //    be used at once
+    //  - Remove the trailing empty item, if any
+
+    QStringList listValue = QStringList();
+    int i = 0;
+    int iMax = pListValue.count();
+
+    for (; i < iMax; ++i)
+        if (!pListValue.at(i).isEmpty())
+            break;
+
+    bool previousItemIsSeparator = false;
+
+    for (; i < iMax; ++i) {
+        QString listValueItem = pListValue.at(i);
+
+        if (!listValueItem.isEmpty()) {
+            listValue << listValueItem;
+
+            previousItemIsSeparator = false;
+        } else if (!previousItemIsSeparator) {
+            listValue << listValueItem;
+
+            previousItemIsSeparator = true;
+        }
+    }
+
+    if (!listValue.isEmpty() && listValue.last().isEmpty())
+        listValue.removeLast();
+
     // Set our list value, if appropriate
 
-    if ((mType == List) && (pListValue != mListValue)) {
-        mListValue = pListValue;
+    if (listValue != mListValue) {
+        mListValue = listValue;
 
         // Update our value using the first item of our new list, if it isn't
         // empty, otherwise use our empty list value

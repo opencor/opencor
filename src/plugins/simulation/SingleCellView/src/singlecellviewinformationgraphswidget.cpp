@@ -172,12 +172,15 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
     Core::Property *xProperty = mPropertyEditor->addStringProperty(pGraph->parameterX()->fullyFormattedName(), sectionProperty);
     Core::Property *yProperty = mPropertyEditor->addStringProperty(pGraph->parameterY()->fullyFormattedName(), sectionProperty);
 
-    modelProperty->setName("Model");
     modelProperty->setIcon(QIcon(":/oxygen/status/object-unlocked.png"));
+    modelProperty->setName("Model");
+    modelProperty->setListValue(QStringList() << "" << "" << "" << "Item #1" << "" << "Item #2" << "Item #3" << "" << "" << "Item #4" << "Item #5" << "Item #6" << "" << "" << "");
 
+    xProperty->setEditable(true);
     xProperty->setName("X");
 xProperty->setUnit(pGraph->parameterX()->formattedUnit("???"));
 
+    yProperty->setEditable(true);
     yProperty->setName("Y");
 yProperty->setUnit(pGraph->parameterY()->formattedUnit("???"));
 
