@@ -156,6 +156,11 @@ void ListEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 
 void ListEditorWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
 {
+    // Make sure that we have at least one item
+
+    if (!count())
+        return;
+
     // We want to go to the next item in the list (and go back to the first one
     // if we are at the end of the list), so determine the new current index
 
