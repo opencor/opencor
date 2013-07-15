@@ -7,6 +7,18 @@
         <source>There are no graphs...</source>
         <translation>Il n&apos;y a pas de courbes...</translation>
     </message>
+    <message>
+        <source>Model</source>
+        <translation>Modèle</translation>
+    </message>
+    <message>
+        <source>X</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Y</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::SingleCellView::SingleCellViewInformationParametersWidget</name>

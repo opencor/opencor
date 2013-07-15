@@ -378,7 +378,8 @@ Property::Property(const Type &pType, PropertyEditorWidget *pParent) :
     mUnit(new PropertyItem(this)),
     mListValue(QStringList()),
     mEmptyListValue(QString("???")),
-    mExtraInfo(QString())
+    mExtraInfo(QString()),
+    mProperties(QList<Property *>())
 {
     // Note: mName, mValue and mUnit get owned by our property editor widget, so
     //       no need to delete them afterwards...
@@ -413,11 +414,22 @@ int Property::row() const
 
 //==============================================================================
 
-void Property::add(Property *pChildProperty)
+QList<Property *> Property::properties() const
 {
-    // Add the child property
+    // Return our properties
 
-    return mName->appendRow(pChildProperty->items());
+    return mProperties;
+}
+
+//==============================================================================
+
+void Property::add(Property *pProperty)
+{
+    // Add the property to ourselves
+
+    mProperties << pProperty;
+
+    return mName->appendRow(pProperty->items());
 }
 
 //==============================================================================

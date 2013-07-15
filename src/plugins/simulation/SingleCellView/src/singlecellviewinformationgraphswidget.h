@@ -68,6 +68,8 @@ private:
     QLabel *mNoGraphsMessageWidget;
     Core::PropertyEditorWidget *mPropertyEditor;
 
+    void updateGraphsInfo(Core::Property *pSectionProperty = 0);
+
 public Q_SLOTS:
     void initialize(SingleCellViewGraphPanelWidget *pGraphPanel);
     void finalize(SingleCellViewGraphPanelWidget *pGraphPanel);

@@ -147,7 +147,9 @@ public:
 
     int row() const;
 
-    void add(Property *pChildProperty);
+    QList<Property *> properties() const;
+
+    void add(Property *pProperty);
     void addTo(QStandardItem *pParent);
 
     QModelIndex index() const;
@@ -216,6 +218,8 @@ private:
     QString mEmptyListValue;
 
     QString mExtraInfo;
+
+    QList<Property *> mProperties;
 
     QList<QStandardItem *> items() const;
 

@@ -60,6 +60,10 @@ void SingleCellViewInformationGraphsWidget::retranslateUi()
 
     foreach (Core::PropertyEditorWidget *propertyEditor, mPropertyEditors)
         propertyEditor->retranslateUi();
+
+    // Retranslate the information about our graphs properties
+
+    updateGraphsInfo();
 }
 
 //==============================================================================
@@ -133,6 +137,12 @@ void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelW
         setCurrentWidget(mPropertyEditor);
     else
         setCurrentWidget(mNoGraphsMessageWidget);
+
+    // Update the information about our graphs properties
+    // Note: this is in case the user changed the locale and then switched to a
+    //       different graph panel...
+
+    updateGraphsInfo();
 }
 
 //==============================================================================
@@ -173,16 +183,16 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
     Core::Property *yProperty = mPropertyEditor->addStringProperty(pGraph->parameterY()->fullyFormattedName(), sectionProperty);
 
     modelProperty->setIcon(QIcon(":/oxygen/status/object-unlocked.png"));
-    modelProperty->setName("Model");
-    modelProperty->setListValue(QStringList() << "" << "" << "" << "Item #1" << "" << "Item #2" << "Item #3" << "" << "" << "Item #4" << "Item #5" << "Item #6" << "" << "" << "");
 
     xProperty->setEditable(true);
-    xProperty->setName("X");
 xProperty->setUnit(pGraph->parameterX()->formattedUnit("???"));
 
     yProperty->setEditable(true);
-    yProperty->setName("Y");
 yProperty->setUnit(pGraph->parameterY()->formattedUnit("???"));
+
+    // Update the information about our new graph
+
+    updateGraphsInfo(sectionProperty);
 
     // Allow ourselves to be updated again
 
@@ -270,6 +280,38 @@ void SingleCellViewInformationGraphsWidget::propertyChanged(Core::Property *pPro
 //---GRY--- TO BE DONE...
 
 Q_UNUSED(pProperty);
+}
+
+//==============================================================================
+
+void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSectionProperty)
+{
+    // Make sure that we have a property editor
+
+    if (!mPropertyEditor)
+        return;
+
+    // Use the given section property or retrieve the ones for our current
+    // property editor
+
+    QList<Core::Property *> sectionProperties = QList<Core::Property *>();
+
+    if (pSectionProperty)
+        sectionProperties << pSectionProperty;
+    else
+        foreach (Core::Property *property, mPropertyEditor->properties())
+            if (property->type() == Core::Property::Section)
+                sectionProperties << property;
+
+    // Go through our section properties and update their information
+
+    foreach (Core::Property *sectionProperty, sectionProperties) {
+        QList<Core::Property *> properties = sectionProperty->properties();
+
+        properties[0]->setName(tr("Model"));
+        properties[1]->setName(tr("X"));
+        properties[2]->setName(tr("Y"));
+    }
 }
 
 //==============================================================================
