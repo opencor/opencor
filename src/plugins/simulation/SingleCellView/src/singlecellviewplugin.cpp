@@ -155,6 +155,25 @@ QIcon SingleCellViewPlugin::fileTabIcon(const QString &pFileName) const
 
 //==============================================================================
 
+void SingleCellViewPlugin::fileOpened(const QString &pFileName)
+{
+    // Let our view widget know that a file has been opened
+
+    mViewWidget->fileOpened(pFileName);
+}
+
+//==============================================================================
+
+void SingleCellViewPlugin::fileRenamed(const QString &pOldFileName,
+                                       const QString &pNewFileName)
+{
+    // Let our view widget know that a file has been renamed
+
+    mViewWidget->fileRenamed(pOldFileName, pNewFileName);
+}
+
+//==============================================================================
+
 void SingleCellViewPlugin::retranslateUi()
 {
     // Retranslate our single cell view

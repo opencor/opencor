@@ -834,6 +834,25 @@ QIcon SingleCellViewWidget::fileTabIcon(const QString &pFileName) const
 
 //==============================================================================
 
+void SingleCellViewWidget::fileOpened(const QString &pFileName)
+{
+    // Let our graphs widget know that a file has been opened
+
+    mContentsWidget->informationWidget()->graphsWidget()->fileOpened(pFileName);
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::fileRenamed(const QString &pOldFileName,
+                                       const QString &pNewFileName)
+{
+    // Let our view widget know that a file has been renamed
+
+    mContentsWidget->informationWidget()->graphsWidget()->fileRenamed(pOldFileName, pNewFileName);
+}
+
+//==============================================================================
+
 void SingleCellViewWidget::on_actionRunPauseResume_triggered()
 {
     // Run or resume our simulation, or pause it

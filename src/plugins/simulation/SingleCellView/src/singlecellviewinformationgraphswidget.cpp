@@ -106,11 +106,6 @@ void SingleCellViewInformationGraphsWidget::initialize(const QString &pFileName,
 
     mFileName = pFileName;
 
-    if (!mFileNames.contains(pFileName))
-        mFileNames << pFileName;
-
-    mFileNames.sort();
-
     mRuntimes.insert(pFileName, pRuntime);
     mSimulations.insert(pFileName, pSimulation);
 
@@ -133,6 +128,35 @@ void SingleCellViewInformationGraphsWidget::finalize(const QString &pFileName)
     // Update the information about our graphs properties
 
     updateGraphsInfo();
+}
+
+//==============================================================================
+
+void SingleCellViewInformationGraphsWidget::fileOpened(const QString &pFileName)
+{
+    // Keep track of the file name
+
+    if (!mFileNames.contains(pFileName))
+        mFileNames << pFileName;
+
+    mFileNames.sort();
+
+    // Update the information about our graphs properties
+
+    updateGraphsInfo();
+}
+
+//==============================================================================
+
+void SingleCellViewInformationGraphsWidget::fileRenamed(const QString &pOldFileName,
+                                                        const QString &pNewFileName)
+{
+    // Let our view widget know that a file has been renamed
+
+    Q_UNUSED(pOldFileName);
+    Q_UNUSED(pNewFileName);
+
+//    mContentsWidget->informationWidget()->graphsWidget()->fileRenamed(pOldFileName, pNewFileName);
 }
 
 //==============================================================================
@@ -333,6 +357,10 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
 
     if (!mPropertyEditor)
         return;
+
+    // Make sure that no editing is in progress
+
+    finishPropertyEditing();
 
     // Use the given section property or retrieve the ones for our current
     // property editor

@@ -54,6 +54,10 @@ public:
 
     virtual QIcon fileTabIcon(const QString &pFileName) const;
 
+    virtual void fileOpened(const QString &pFileName);
+    virtual void fileRenamed(const QString &pOldFileName,
+                             const QString &pNewFileName);
+
     virtual void retranslateUi();
 
 private:
