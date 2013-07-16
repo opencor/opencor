@@ -31,6 +31,7 @@ namespace Core {
 //==============================================================================
 
 namespace CellMLSupport {
+    class CellmlFileRuntime;
     class CellmlFileRuntimeParameter;
 }   // namespace CellMLSupport
 
@@ -42,6 +43,7 @@ namespace SingleCellView {
 
 class SingleCellViewGraphPanelPlotGraph;
 class SingleCellViewGraphPanelWidget;
+class SingleCellViewSimulation;
 
 //==============================================================================
 
@@ -58,6 +60,11 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
+    void initialize(const QString &pFileName,
+                    CellMLSupport::CellmlFileRuntime *pRuntime,
+                    SingleCellViewSimulation *pSimulation);
+    void finalize(const QString &pFileName);
+
     void finishPropertyEditing();
 
 private:
@@ -67,6 +74,12 @@ private:
 
     QLabel *mNoGraphsMessageWidget;
     Core::PropertyEditorWidget *mPropertyEditor;
+
+    QString mFileName;
+    QStringList mFileNames;
+
+    QMap<QString, CellMLSupport::CellmlFileRuntime *> mRuntimes;
+    QMap<QString, SingleCellViewSimulation *> mSimulations;
 
     void updateGraphsInfo(Core::Property *pSectionProperty = 0);
 

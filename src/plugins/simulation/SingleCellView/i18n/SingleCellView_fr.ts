@@ -19,6 +19,10 @@
         <source>Y</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Current</source>
+        <translation>Actuel</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::SingleCellView::SingleCellViewInformationParametersWidget</name>

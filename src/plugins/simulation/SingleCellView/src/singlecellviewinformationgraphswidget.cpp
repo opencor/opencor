@@ -24,7 +24,11 @@ SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(QWi
     QStackedWidget(pParent),
     mPropertyEditors(QMap<SingleCellViewGraphPanelWidget *, Core::PropertyEditorWidget *>()),
     mColumnWidths(QList<int>()),
-    mPropertyEditor(0)
+    mPropertyEditor(0),
+    mFileName(QString()),
+    mFileNames(QStringList()),
+    mRuntimes(QMap<QString, CellMLSupport::CellmlFileRuntime *>()),
+    mSimulations(QMap<QString, SingleCellViewSimulation *>())
 {
     // Create a widget that will be shown whenever there are no graphs
     // associated with the current plotting area
@@ -94,6 +98,45 @@ void SingleCellViewInformationGraphsWidget::saveSettings(QSettings *pSettings) c
 
 //==============================================================================
 
+void SingleCellViewInformationGraphsWidget::initialize(const QString &pFileName,
+                                                       CellMLSupport::CellmlFileRuntime *pRuntime,
+                                                       SingleCellViewSimulation *pSimulation)
+{
+    // Keep track of the file name, runtime and simulation
+
+    mFileName = pFileName;
+
+    if (!mFileNames.contains(pFileName))
+        mFileNames << pFileName;
+
+    mFileNames.sort();
+
+    mRuntimes.insert(pFileName, pRuntime);
+    mSimulations.insert(pFileName, pSimulation);
+
+    // Update the information about our graphs properties
+
+    updateGraphsInfo();
+}
+
+//==============================================================================
+
+void SingleCellViewInformationGraphsWidget::finalize(const QString &pFileName)
+{
+    // Remove track of the file name, runtime and simulation
+
+    mFileNames.removeOne(pFileName);
+
+    mRuntimes.remove(pFileName);
+    mSimulations.remove(pFileName);
+
+    // Update the information about our graphs properties
+
+    updateGraphsInfo();
+}
+
+//==============================================================================
+
 void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelWidget *pGraphPanel)
 {
     // Retrieve the property editor for the given file name or create one, if
@@ -149,7 +192,7 @@ void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelW
 
 void SingleCellViewInformationGraphsWidget::finalize(SingleCellViewGraphPanelWidget *pGraphPanel)
 {
-    // Remove any track of our property editor
+    // Remove track of our property editor
 
     mPropertyEditors.remove(pGraphPanel);
 }
@@ -303,6 +346,16 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
             if (property->type() == Core::Property::Section)
                 sectionProperties << property;
 
+    // Determine the model list value
+
+    QStringList modelListValue = QStringList();
+
+    modelListValue << tr("Current");
+    modelListValue << QString();
+
+    foreach (const QString &fileName, mFileNames)
+        modelListValue << fileName;
+
     // Go through our section properties and update their information
 
     foreach (Core::Property *sectionProperty, sectionProperties) {
@@ -311,6 +364,8 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
         properties[0]->setName(tr("Model"));
         properties[1]->setName(tr("X"));
         properties[2]->setName(tr("Y"));
+
+        properties[0]->setListValue(modelListValue);
     }
 }
 

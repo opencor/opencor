@@ -177,7 +177,7 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
 
 void SingleCellViewInformationParametersWidget::finalize(const QString &pFileName)
 {
-    // Remove any track of our property editor and its context menu
+    // Remove track of our property editor and its context menu
 
     mContextMenus.remove(mPropertyEditors.value(pFileName));
     mPropertyEditors.remove(pFileName);

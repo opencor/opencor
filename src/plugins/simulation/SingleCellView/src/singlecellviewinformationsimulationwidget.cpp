@@ -107,7 +107,7 @@ void SingleCellViewInformationSimulationWidget::backup(const QString &pFileName)
 
 void SingleCellViewInformationSimulationWidget::finalize(const QString &pFileName)
 {
-    // Remove any track of our GUI state
+    // Remove track of our GUI state
 
     mGuiStates.remove(pFileName);
 }

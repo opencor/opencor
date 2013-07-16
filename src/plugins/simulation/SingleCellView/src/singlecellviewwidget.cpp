@@ -484,7 +484,6 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
     SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
     SingleCellViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
     SingleCellViewInformationSolversWidget *solversWidget = informationWidget->solversWidget();
-    SingleCellViewInformationParametersWidget *parametersWidget = informationWidget->parametersWidget();
 
     if (previousSimulation) {
         // There is a previous simulation, so backup a few things
@@ -658,7 +657,8 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
         simulationWidget->initialize(pFileName, cellmlFileRuntime, mSimulation);
         solversWidget->initialize(pFileName, cellmlFileRuntime, mSimulation);
-        parametersWidget->initialize(pFileName, cellmlFileRuntime, mSimulation);
+        informationWidget->graphsWidget()->initialize(pFileName, cellmlFileRuntime, mSimulation);
+        informationWidget->parametersWidget()->initialize(pFileName, cellmlFileRuntime, mSimulation);
 
         // Check whether we have at least one ODE or DAE solver and, if needed,
         // at least one NLA solver
@@ -788,6 +788,7 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
 
     informationWidget->simulationWidget()->finalize(pFileName);
     informationWidget->solversWidget()->finalize(pFileName);
+    informationWidget->graphsWidget()->finalize(pFileName);
     informationWidget->parametersWidget()->finalize(pFileName);
 }
 
