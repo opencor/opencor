@@ -426,6 +426,8 @@ void CentralWidget::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
     updateGui();
 
     // Let all the plugins know that our files have been opened
+    // Note: this is because mLoadedPlugins is not set when openFile() gets
+    //       called as part of OpenCOR's loading of settings...
 
     foreach (Plugin *plugin, mLoadedPlugins) {
         GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
@@ -488,10 +490,19 @@ void CentralWidget::openFile(const QString &pFileName)
 
     mFileTabs->setCurrentIndex(fileTabIndex);
 
-    // Note: everything went fine, so we should be letting all the plugins know
-    //       that the file has been opened. However, this would require using
-    //       mLoadedPlugins, yet it's not properly set at this stage. So,
-    //       instead, we do this in loadingOfSettingsDone()...
+    // Everything went fine, so let all the plugins know that our file have been
+    // opened
+    // Note: this requires using mLoadedPlugins, but it will not be set when we
+    //       come here following OpenCOR's loading of settings, hence we do
+    //       something similar to the below in loadingOfSettingsDone()...
+
+    foreach (Plugin *plugin, mLoadedPlugins) {
+        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+
+        if (guiInterface)
+            guiInterface->fileOpened(nativeFileName);
+    }
+
 }
 
 //==============================================================================
