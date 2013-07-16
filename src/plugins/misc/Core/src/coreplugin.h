@@ -58,6 +58,10 @@ public:
 
     virtual void retranslateUi();
 
+    virtual void fileOpened(const QString &pFileName);
+    virtual void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
+    virtual void fileClosed(const QString &pFileName);
+
     virtual bool canClose();
 
 private:
@@ -85,10 +89,6 @@ private:
     void retrieveColors();
 
 private Q_SLOTS:
-    void fileOpened(const QString &pFileName);
-    void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
-    void fileClosed(const QString &pFileName);
-
     void openRecentFile();
 
     void clearReopenSubMenu();
