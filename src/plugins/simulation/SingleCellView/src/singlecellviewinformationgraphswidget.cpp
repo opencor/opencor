@@ -268,6 +268,7 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
 
 void SingleCellViewInformationGraphsWidget::removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph)
 {
+//---GRY--- TO BE DONE...
 Q_UNUSED(pGraph);
     // Make sure that we have a property editor
 
