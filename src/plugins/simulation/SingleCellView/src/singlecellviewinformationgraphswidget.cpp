@@ -157,7 +157,7 @@ void SingleCellViewInformationGraphsWidget::fileRenamed(const QString &pOldFileN
     Q_UNUSED(pOldFileName);
     Q_UNUSED(pNewFileName);
 
-//    mContentsWidget->informationWidget()->graphsWidget()->fileRenamed(pOldFileName, pNewFileName);
+//---GRY--- TO BE DONE...
 }
 
 //==============================================================================
@@ -336,9 +336,31 @@ void SingleCellViewInformationGraphsWidget::propertyEditorSectionResized(const i
 
 //==============================================================================
 
-bool SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pProperty) const
+bool SingleCellViewInformationGraphsWidget::checkParameter(Core::Property *pProperty) const
 {
+    // Check that we have a runtime for the current file name
+
+    CellMLSupport::CellmlFileRuntime *runtime = mRuntimes.value(mFileName);
+
+    if (!runtime)
+        return false;
+
+    // Check that the information held by the given property corresponds to
+    // an existing parameter in our runtime
+
     bool res = false;
+
+    QStringList info = pProperty->value().split(".");
+    QString componentName = info.first();
+    QString parameterName = info.last();
+
+    foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, runtime->parameters())
+        if (   !parameter->component().compare(componentName)
+            && !parameter->name().compare(parameterName)) {
+            res = true;
+
+            break;
+        }
 
     pProperty->setIcon(res?QIcon():QIcon(":/oxygen/status/task-attention.png"));
     pProperty->setExtraInfo(res?QString():tr("does not exist"));
@@ -348,52 +370,54 @@ bool SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::propertyChanged(Core::Property *pProperty)
+void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pProperty) const
 {
-    // Retrieve the parent property
-    // Note: there is always going to be one since all of our editable
-    //       properties are within a section property...
+    // Update the graph information by checking the new value of the given
+    // section property
 
-    Core::Property *parentProperty = pProperty->parentProperty();
+    // Update the model property's icon based on its value
 
-    // Update the properties of the graph by checking the new value of the given
-    // property
-
-    bool graphOk = true;
-
-    if (pProperty == parentProperty->properties()[0]) {
-        // We are dealing with the Model property, so update its icon based on
-        // whether its value
-
-        if (!pProperty->value().compare(tr("Current")))
-            pProperty->setIcon(QIcon(":/oxygen/status/object-unlocked.png"));
-        else
-            pProperty->setIcon(QIcon(":/oxygen/status/object-locked.png"));
-    }
+    if (!pProperty->properties()[0]->value().compare(tr("Current")))
+        pProperty->properties()[0]->setIcon(QIcon(":/oxygen/status/object-unlocked.png"));
+    else
+        pProperty->properties()[0]->setIcon(QIcon(":/oxygen/status/object-locked.png"));
 
     // Check that the parameters represented by the value of the X and Y
     // properties exist for the current/selected model
     // Note: we absolutely want to check the parameter (so that an icon can be
-    //       assigned to the propery) , hence the order of our && assignment...
+    //       assigned to its corresponding property) , hence the order of our &&
+    //       assignment...
 
-    if (parentProperty->properties().count() >= 2)
-        graphOk = updateGraphInfo(parentProperty->properties()[1]) && graphOk;
+    bool graphOk = true;
 
-    if (parentProperty->properties().count() >= 3)
-        graphOk = updateGraphInfo(parentProperty->properties()[2]) && graphOk;
+    if (pProperty->properties().count() >= 2)
+        graphOk = checkParameter(pProperty->properties()[1]) && graphOk;
+
+    if (pProperty->properties().count() == 3)
+        graphOk = checkParameter(pProperty->properties()[2]) && graphOk;
 
     // Update our section's name, if possible
-    // Note: indeed, when populating ourselves, propertyChanged() will get
-    //       called, yet we don't want to (and can't) do what follows if not all
-    //       the properties are available...
+    // Note: indeed, when populating ourselves, updateGraphInfo() gets called
+    //       (through propertyChanged()), yet we don't want to (and can't) do
+    //       what follows if not all the properties are available...
 
-    if (parentProperty->properties().count() == 3)
-        parentProperty->setName(QString("%1 | %2").arg(parentProperty->properties()[1]->value(),
-                                                       parentProperty->properties()[2]->value()));
+    if (pProperty->properties().count() == 3)
+        pProperty->setName(QString("%1 | %2").arg(pProperty->properties()[1]->value(),
+                                                  pProperty->properties()[2]->value()));
 
     // Update the status (i.e. icon) of our (section) parent property
 
-    parentProperty->setIcon(graphOk?QIcon():QIcon(":/oxygen/status/task-attention.png"));
+    pProperty->setIcon(graphOk?QIcon():QIcon(":/oxygen/status/task-attention.png"));
+}
+
+//==============================================================================
+
+void SingleCellViewInformationGraphsWidget::propertyChanged(Core::Property *pProperty)
+{
+    // Update the graph information associated with the given property's
+    // corresponding section property
+
+    updateGraphInfo(pProperty->parentProperty());
 }
 
 //==============================================================================
@@ -443,8 +467,7 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
 
         properties[0]->setListValue(modelListValue);
 
-        updateGraphInfo(sectionProperty->properties()[1]);
-        updateGraphInfo(sectionProperty->properties()[2]);
+        updateGraphInfo(sectionProperty);
     }
 }
 
