@@ -196,5 +196,9 @@
         <source>YB</source>
         <translation>Yo</translation>
     </message>
+    <message>
+        <source>: </source>
+        <translation> : </translation>
+    </message>
 </context>
 </TS>

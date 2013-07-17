@@ -20,6 +20,7 @@ namespace SingleCellView {
 
 //==============================================================================
 
+class SingleCellViewGraphPanelPlotGraph;
 class SingleCellViewGraphPanelWidget;
 
 //==============================================================================
@@ -35,27 +36,30 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
+    QList<SingleCellViewGraphPanelWidget *> graphPanels() const;
+    SingleCellViewGraphPanelWidget * activeGraphPanel() const;
+
     SingleCellViewGraphPanelWidget * addGraphPanel();
     void removeGraphPanel();
-
-    SingleCellViewGraphPanelWidget * activeGraphPanel();
-
-protected:
-    virtual void wheelEvent(QWheelEvent *pEvent);
 
 private:
     QList<int> mSplitterSizes;
 
 Q_SIGNALS:
-    void grapPanelAdded(SingleCellViewGraphPanelWidget *pGraphPanel);
-    void grapPanelRemoved();
+    void graphPanelAdded(SingleCellViewGraphPanelWidget *pGraphPanel);
+    void graphPanelRemoved(SingleCellViewGraphPanelWidget *pGraphPanel);
 
     void removeGraphPanelsEnabled(const bool &pEnabled);
+
+    void graphPanelActivated(SingleCellViewGraphPanelWidget *pGraphPanel);
+
+    void graphAdded(SingleCellViewGraphPanelPlotGraph *pGraph);
+    void graphRemoved(SingleCellViewGraphPanelPlotGraph *pGraph);
 
 private Q_SLOTS:
     void splitterMoved();
 
-    void graphPanelActivated(SingleCellViewGraphPanelWidget *pGraphPanel);
+    void updateGraphPanels(SingleCellViewGraphPanelWidget *pGraphPanel);
 };
 
 //==============================================================================

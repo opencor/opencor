@@ -170,11 +170,6 @@ private:
 Q_SIGNALS:
     void guiUpdated(Plugin *pViewPlugin, const QString &pFileName);
 
-    void fileOpened(const QString &pFileName);
-    void fileSaved(const QString &pFileName);
-    void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
-    void fileClosed(const QString &pFileName);
-
     void canSave(const bool &pEnabled);
     void canSaveAs(const bool &pEnabled);
     void canSaveAll(const bool &pEnabled);

@@ -17,14 +17,31 @@ class QwtPlotDirectPainter;
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace CellMLSupport {
+    class CellmlFileRuntimeParameter;
+}   // namespace CellMLSupport
+
+//==============================================================================
+
 namespace SingleCellView {
 
 //==============================================================================
 
-class SingleCellViewGraphPanelPlotCurve : public QwtPlotCurve
+class SingleCellViewGraphPanelPlotGraph : public QwtPlotCurve
 {
 public:
-    explicit SingleCellViewGraphPanelPlotCurve();
+    explicit SingleCellViewGraphPanelPlotGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
+                                               CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
+
+    CellMLSupport::CellmlFileRuntimeParameter * parameterX() const;
+    CellMLSupport::CellmlFileRuntimeParameter * parameterY() const;
+
+private:
+    CellMLSupport::CellmlFileRuntimeParameter *mParameterX;
+    CellMLSupport::CellmlFileRuntimeParameter *mParameterY;
 };
 
 //==============================================================================
@@ -39,10 +56,12 @@ public:
 
     void replotNow();
 
-    void attach(SingleCellViewGraphPanelPlotCurve *pCurve);
-    void detach(SingleCellViewGraphPanelPlotCurve *pCurve);
+    QList<SingleCellViewGraphPanelPlotGraph *> graphs() const;
 
-    void drawCurveSegment(SingleCellViewGraphPanelPlotCurve *pCurve,
+    bool addGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
+    bool removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
+
+    void drawGraphSegment(SingleCellViewGraphPanelPlotGraph *pGraph,
                           const qulonglong &pFrom, const qulonglong &pTo);
 
     void checkLocalAxes(const bool &pCanReplot = true,
@@ -102,7 +121,7 @@ private:
 
     QwtPlotDirectPainter *mDirectPainter;
 
-    QList<SingleCellViewGraphPanelPlotCurve *> mCurves;
+    QList<SingleCellViewGraphPanelPlotGraph *> mGraphs;
 
     bool mInteractive;
 

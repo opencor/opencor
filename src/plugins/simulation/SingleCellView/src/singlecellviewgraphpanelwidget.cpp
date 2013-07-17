@@ -36,20 +36,19 @@ SingleCellViewGraphPanelWidget::SingleCellViewGraphPanelWidget(QWidget *pParent)
 
     // Create, customise and add an inactive marker to our layout
 
-//    enum {
-//        MarkerWidth = 3
-//    };
+    enum {
+        MarkerWidth = 3
+    };
 
-//    mMarker = new QFrame(this);
+    mMarker = new QFrame(this);
 
-//    mMarker->setFrameShape(QFrame::VLine);
-//    mMarker->setLineWidth(MarkerWidth);
-//    mMarker->setMinimumWidth(MarkerWidth);
+    mMarker->setFrameShape(QFrame::VLine);
+    mMarker->setLineWidth(MarkerWidth);
+    mMarker->setMinimumWidth(MarkerWidth);
 
     setActive(false);
 
-//    mGui->layout->addWidget(mMarker);
-//---GRY--- THIS IS TEMPORARY, I.E. WHILE WE SUPPORT ONLY ONE GRAPH PANEL...
+    mGui->layout->addWidget(mMarker);
 
     // Create and add a plot widget to our layout
 
@@ -103,11 +102,31 @@ void SingleCellViewGraphPanelWidget::mousePressEvent(QMouseEvent *pEvent)
 
 //==============================================================================
 
-SingleCellViewGraphPanelPlotWidget * SingleCellViewGraphPanelWidget::plot()
+QList<SingleCellViewGraphPanelPlotGraph *> SingleCellViewGraphPanelWidget::graphs() const
 {
-    // Return the pointer to our plot widget
+    // Return all our plot's graphs
 
-    return mPlot;
+    return mPlot->graphs();
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelWidget::addGraph(SingleCellViewGraphPanelPlotGraph *pGraph)
+{
+    // Add the graph to our plot
+
+    if (mPlot->addGraph(pGraph))
+        emit graphAdded(pGraph);
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelWidget::removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph)
+{
+    // Remove the graph from our plot
+
+    if (mPlot->removeGraph(pGraph))
+        emit graphRemoved(pGraph);
 }
 
 //==============================================================================
@@ -132,7 +151,7 @@ void SingleCellViewGraphPanelWidget::updateMarkerColor()
                             CommonWidget::highlightColor():
                             CommonWidget::windowColor());
 
-//    mMarker->setPalette(newPalette);
+    mMarker->setPalette(newPalette);
 }
 
 //==============================================================================

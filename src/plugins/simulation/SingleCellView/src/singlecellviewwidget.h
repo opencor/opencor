@@ -56,43 +56,8 @@ namespace SingleCellView {
 //==============================================================================
 
 class SingleCellViewContentsWidget;
-class SingleCellViewGraphPanelPlotCurve;
-class SingleCellViewGraphPanelWidget;
 class SingleCellViewPlugin;
 class SingleCellViewSimulation;
-
-//==============================================================================
-
-class SingleCellViewWidgetCurveData
-{
-public:
-    explicit SingleCellViewWidgetCurveData(const QString &pFileName,
-                                           SingleCellViewSimulation *pSimulation,
-                                           CellMLSupport::CellmlFileRuntimeParameter *pParameter,
-                                           SingleCellViewGraphPanelPlotCurve *pCurve);
-
-    QString fileName() const;
-
-    CellMLSupport::CellmlFileRuntimeParameter * parameter() const;
-
-    SingleCellViewGraphPanelPlotCurve * curve() const;
-
-    double * yData() const;
-
-    bool isAttached() const;
-    void setAttached(const bool &pAttached);
-
-private:
-    QString mFileName;
-
-    SingleCellViewSimulation *mSimulation;
-
-    CellMLSupport::CellmlFileRuntimeParameter *mParameter;
-
-    SingleCellViewGraphPanelPlotCurve *mCurve;
-
-    bool mAttached;
-};
 
 //==============================================================================
 
@@ -117,6 +82,9 @@ public:
     void finalize(const QString &pFileName);
 
     QIcon fileTabIcon(const QString &pFileName) const;
+
+    void fileOpened(const QString &pFileName);
+    void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
     SingleCellViewSimulation * simulation() const;
 
@@ -147,20 +115,6 @@ private:
     QMap<QString, bool> mResets;
     QMap<QString, int> mDelays;
 
-    struct AxisSettings {
-        double minX;
-        double maxX;
-        double minY;
-        double maxY;
-
-        double localMinX;
-        double localMaxX;
-        double localMinY;
-        double localMaxY;
-    };
-
-    QMap<QString, AxisSettings> mAxesSettings;
-
     Core::ToolBarWidget *mToolBarWidget;
 
     QFrame *mTopSeparator;
@@ -182,10 +136,6 @@ private:
 
     ErrorType mErrorType;
 
-    SingleCellViewGraphPanelWidget *mActiveGraphPanel;
-
-    QMap<QString, SingleCellViewWidgetCurveData *> mCurvesData;
-
     QMap<SingleCellViewSimulation *, qulonglong> mOldSimulationResultsSizes;
 
     QList<SingleCellViewSimulation *> mCheckResultsSimulations;
@@ -206,9 +156,6 @@ private:
                        const qulonglong &pSize,
                        const bool &pReplot = false);
     void checkResults(SingleCellViewSimulation *pSimulation);
-
-    QString parameterKey(const QString pFileName,
-                         CellMLSupport::CellmlFileRuntimeParameter *pParameter);
 
 private Q_SLOTS:
     void on_actionRunPauseResume_triggered();
@@ -242,9 +189,8 @@ private Q_SLOTS:
     void simulationPropertyChanged(Core::Property *pProperty);
     void solversPropertyChanged(Core::Property *pProperty);
 
-    void showParameter(const QString &pFileName,
-                       CellMLSupport::CellmlFileRuntimeParameter *pParameter,
-                       const bool &pShow);
+    void requireGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
+                      CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 
     void callCheckResults();
 };

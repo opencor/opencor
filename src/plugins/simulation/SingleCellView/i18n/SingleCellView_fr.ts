@@ -2,11 +2,34 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>OpenCOR::SingleCellView::SingleCellViewInformationParametersWidget</name>
+    <name>OpenCOR::SingleCellView::SingleCellViewInformationGraphsWidget</name>
     <message>
-        <source>: </source>
-        <translation> : </translation>
+        <source>There are no graphs...</source>
+        <translation>Il n&apos;y a pas de courbes...</translation>
     </message>
+    <message>
+        <source>Current</source>
+        <translation>Actuel</translation>
+    </message>
+    <message>
+        <source>Model</source>
+        <translation>Modèle</translation>
+    </message>
+    <message>
+        <source>X</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Y</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>does not exist</source>
+        <translation>n&apos;existe pas</translation>
+    </message>
+</context>
+<context>
+    <name>OpenCOR::SingleCellView::SingleCellViewInformationParametersWidget</name>
     <message>
         <source>constant</source>
         <translation>constante</translation>
@@ -27,6 +50,18 @@
         <source>algebraic</source>
         <translation>algébrique</translation>
     </message>
+    <message>
+        <source>Plot Against</source>
+        <translation>Tracer en Fonction de</translation>
+    </message>
+    <message>
+        <source>Plot Against Variable of Integration</source>
+        <translation>Tracer en Fonction de Variable d&apos;Intégration</translation>
+    </message>
+    <message>
+        <source>variable of integration</source>
+        <translation>variable d&apos;intégration</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::SingleCellView::SingleCellViewInformationSimulationWidget</name>
@@ -41,10 +76,6 @@
     <message>
         <source>Point interval</source>
         <translation>Interval de point</translation>
-    </message>
-    <message>
-        <source>: </source>
-        <translation> : </translation>
     </message>
 </context>
 <context>
@@ -69,10 +100,6 @@
         <source>Name</source>
         <translation>Nom</translation>
     </message>
-    <message>
-        <source>: </source>
-        <translation> : </translation>
-    </message>
 </context>
 <context>
     <name>OpenCOR::SingleCellView::SingleCellViewInformationWidget</name>
@@ -87,6 +114,10 @@
     <message>
         <source>Parameters</source>
         <translation>Paramètres</translation>
+    </message>
+    <message>
+        <source>Graphs</source>
+        <translation>Courbes</translation>
     </message>
 </context>
 <context>

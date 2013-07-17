@@ -2,6 +2,7 @@
 // Single cell view graph panel plot widget
 //==============================================================================
 
+#include "cellmlfileruntime.h"
 #include "singlecellviewgraphpanelplotwidget.h"
 
 //==============================================================================
@@ -37,13 +38,34 @@ namespace SingleCellView {
 
 //==============================================================================
 
-SingleCellViewGraphPanelPlotCurve::SingleCellViewGraphPanelPlotCurve() :
-    QwtPlotCurve()
+SingleCellViewGraphPanelPlotGraph::SingleCellViewGraphPanelPlotGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
+                                                                     CellMLSupport::CellmlFileRuntimeParameter *pParameterY) :
+    QwtPlotCurve(),
+    mParameterX(pParameterX),
+    mParameterY(pParameterY)
 {
-    // Customise it a bit
+    // Customise ourselves a bit
 
     setPen(QPen(Qt::darkBlue));
     setRenderHint(QwtPlotItem::RenderAntialiased);
+}
+
+//==============================================================================
+
+CellMLSupport::CellmlFileRuntimeParameter * SingleCellViewGraphPanelPlotGraph::parameterX() const
+{
+    // Return our parameter X
+
+    return mParameterX;
+}
+
+//==============================================================================
+
+CellMLSupport::CellmlFileRuntimeParameter * SingleCellViewGraphPanelPlotGraph::parameterY() const
+{
+    // Return our parameter Y
+
+    return mParameterY;
 }
 
 //==============================================================================
@@ -55,7 +77,7 @@ static const double MaxZoomFactor = 1024.0;
 
 SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *pParent) :
     QwtPlot(pParent),
-    mCurves(QList<SingleCellViewGraphPanelPlotCurve *>()),
+    mGraphs(QList<SingleCellViewGraphPanelPlotGraph *>()),
     mInteractive(true),
     mAction(None),
     mOriginPoint(QPointF()),
@@ -386,6 +408,15 @@ void SingleCellViewGraphPanelPlotWidget::setFixedAxisY(const bool &pFixedAxisY)
 
 //==============================================================================
 
+QList<SingleCellViewGraphPanelPlotGraph *> SingleCellViewGraphPanelPlotWidget::graphs() const
+{
+    // Return all our graphs
+
+    return mGraphs;
+}
+
+//==============================================================================
+
 void SingleCellViewGraphPanelPlotWidget::setInteractive(const bool &pInteractive)
 {
     // Specify whether interaction is allowed
@@ -439,14 +470,14 @@ void SingleCellViewGraphPanelPlotWidget::setLocalAxes(const double &pLocalMinX,
     double newLocalMinY = pLocalMinY;
     double newLocalMaxY = pLocalMaxY;
 
-    // Retrieve the bounding rectangle for all our curves (but only for those
+    // Retrieve the bounding rectangle for all our graphs (but only for those
     // that have some data)
 
     QRectF boundingRect = QRectF();
 
-    foreach (SingleCellViewGraphPanelPlotCurve *curve, mCurves)
-        if (curve->dataSize())
-            boundingRect |= curve->boundingRect();
+    foreach (SingleCellViewGraphPanelPlotGraph *graph, mGraphs)
+        if (graph->dataSize())
+            boundingRect |= graph->boundingRect();
 
     // Update the minimum/maximum values of our axes, should we have retrieved a
     // valid bounding rectangle
@@ -1090,63 +1121,63 @@ void SingleCellViewGraphPanelPlotWidget::drawCanvas(QPainter *pPainter)
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::attach(SingleCellViewGraphPanelPlotCurve *pCurve)
+bool SingleCellViewGraphPanelPlotWidget::addGraph(SingleCellViewGraphPanelPlotGraph *pGraph)
 {
-    // Make sure that the given curve is not already attached to us
+    // Make sure that the given graph is not already attached to us
 
-    if (mCurves.contains(pCurve))
-        return;
+    if (mGraphs.contains(pGraph))
+        return false;
 
-    // Attach the given curve to ourselves
+    // Attach the given graph to ourselves and keep track of it
 
-    pCurve->attach(this);
+    pGraph->attach(this);
 
-    // Add the given curve to our list of curves
+    mGraphs << pGraph;
 
-    mCurves << pCurve;
+    return true;
 }
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::detach(SingleCellViewGraphPanelPlotCurve *pCurve)
+bool SingleCellViewGraphPanelPlotWidget::removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph)
 {
-    // Check that the given curve is attached to us
+    // Check that the given graph is attached to us
 
-    if (!mCurves.contains(pCurve))
-        return;
+    if (!mGraphs.contains(pGraph))
+        return false;
 
-    // Detach the given curve from ourselves
+    // Detach the given graph from ourselves and stop tracking it
 
-    pCurve->detach();
+    pGraph->detach();
 
-    // Remove the given curve from our list of curves
+    mGraphs.removeOne(pGraph);
 
-    mCurves.removeOne(pCurve);
+    return true;
 }
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::drawCurveSegment(SingleCellViewGraphPanelPlotCurve *pCurve,
+void SingleCellViewGraphPanelPlotWidget::drawGraphSegment(SingleCellViewGraphPanelPlotGraph *pGraph,
                                                           const qulonglong &pFrom,
                                                           const qulonglong &pTo)
 {
-    // Make sure that we have a curve segment to draw
+    // Make sure that we have a graph segment to draw
 
     if (pFrom == pTo)
         return;
 
-    // Reset our local axes and replot ourselves, if it is our first curve
+    // Reset our local axes and replot ourselves, if it is our first graph
     // segment, or carry on as normal
 
     if (!pFrom) {
-        // It is our first curve segment, so check our local axes
+        // It is our first graph segment, so check our local axes
         // Note: we always want to replot, hence our passing false as an
         //       argument to resetLocalAxes()...
 
         resetLocalAxes(false);
         replotNow();
     } else {
-        // It's not our first curve segment, so determine the minimum/maximum
+        // It's not our first graph segment, so determine the minimum/maximum
         // X/Y values of our new data
 
         double xMin = 0.0;
@@ -1156,11 +1187,11 @@ void SingleCellViewGraphPanelPlotWidget::drawCurveSegment(SingleCellViewGraphPan
 
         for (qulonglong i = pFrom; i <= pTo; ++i)
             if (i == pFrom) {
-                xMin = xMax = pCurve->data()->sample(i).x();
-                yMin = yMax = pCurve->data()->sample(i).y();
+                xMin = xMax = pGraph->data()->sample(i).x();
+                yMin = yMax = pGraph->data()->sample(i).y();
             } else {
-                double xVal = pCurve->data()->sample(i).x();
-                double yVal = pCurve->data()->sample(i).y();
+                double xVal = pGraph->data()->sample(i).x();
+                double yVal = pGraph->data()->sample(i).y();
 
                 xMin = qMin(xMin, xVal);
                 xMax = qMax(xMax, xVal);
@@ -1180,9 +1211,9 @@ void SingleCellViewGraphPanelPlotWidget::drawCurveSegment(SingleCellViewGraphPan
             checkLocalAxes(true, true, true);
         else
             // Our X/Y axis can handle the X/Y min/max of our new data, so just
-            // draw our new curve segment
+            // draw our new graph segment
 
-            mDirectPainter->drawSeries(pCurve, pFrom, pTo);
+            mDirectPainter->drawSeries(pGraph, pFrom, pTo);
     }
 }
 

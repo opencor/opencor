@@ -99,6 +99,42 @@ int CellmlFileRuntimeParameter::index() const
 
 //==============================================================================
 
+QString CellmlFileRuntimeParameter::formattedName() const
+{
+    // Return a formatted version of our name
+
+    return mName+QString(mDegree, '\'');
+}
+
+//==============================================================================
+
+QString CellmlFileRuntimeParameter::fullyFormattedName() const
+{
+    // Return a fully formatted version of our name
+
+    return mComponent+"."+mName+QString(mDegree, '\'');
+}
+
+//==============================================================================
+
+QString CellmlFileRuntimeParameter::formattedUnit(const QString &pVoiUnit) const
+{
+    // Return a formatted version of our unit
+
+    QString perVoiUnitDegree = QString();
+
+    if (mDegree) {
+        perVoiUnitDegree += "/"+pVoiUnit;
+
+        if (mDegree > 1)
+            perVoiUnitDegree += mDegree;
+    }
+
+    return mUnit+perVoiUnitDegree;
+}
+
+//==============================================================================
+
 CellmlFileRuntime::CellmlFileRuntime() :
     mOdeCodeInformation(0),
     mDaeCodeInformation(0),
@@ -403,12 +439,10 @@ void CellmlFileRuntime::reset(const bool &pRecreateCompilerEngine,
     if (pResetIssues)
         mIssues.clear();
 
-    delete mVariableOfIntegration;
-
-    mVariableOfIntegration = 0;
-
     foreach (CellmlFileRuntimeParameter *parameter, mParameters)
         delete parameter;
+
+    mVariableOfIntegration = 0;
 
     mParameters.clear();
 }
@@ -770,8 +804,8 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
 
             if (parameterType == CellmlFileRuntimeParameter::Voi)
                 mVariableOfIntegration = parameter;
-            else
-                mParameters.append(parameter);
+
+            mParameters.append(parameter);
         }
     }
 

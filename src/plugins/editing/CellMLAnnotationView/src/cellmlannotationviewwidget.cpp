@@ -48,8 +48,8 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(CellMLAnnotationViewPlugi
 
     // Retrieve some SVG diagrams
 
-    QFile modelQualifierFile(":modelQualifier");
-    QFile biologyQualifierFile(":biologyQualifier");
+    QFile modelQualifierFile(":CellMLAnnotationView_modelQualifier");
+    QFile biologyQualifierFile(":CellMLAnnotationView_biologyQualifier");
 
     modelQualifierFile.open(QIODevice::ReadOnly);
     biologyQualifierFile.open(QIODevice::ReadOnly);
@@ -62,7 +62,7 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(CellMLAnnotationViewPlugi
 
     // Retrieve our output template
 
-    QFile qualifierInformationFile(":qualifierInformation");
+    QFile qualifierInformationFile(":CellMLAnnotationView_qualifierInformation");
 
     qualifierInformationFile.open(QIODevice::ReadOnly);
 

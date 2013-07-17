@@ -11,6 +11,7 @@
 #include "singlecellviewgraphpanelplotwidget.h"
 #include "singlecellviewgraphpanelswidget.h"
 #include "singlecellviewgraphpanelwidget.h"
+#include "singlecellviewinformationgraphswidget.h"
 #include "singlecellviewinformationparameterswidget.h"
 #include "singlecellviewinformationsimulationwidget.h"
 #include "singlecellviewinformationsolverswidget.h"
@@ -68,82 +69,6 @@ static const QString OutputBrLn = "<br/>\n";
 
 //==============================================================================
 
-SingleCellViewWidgetCurveData::SingleCellViewWidgetCurveData(const QString &pFileName,
-                                                             SingleCellViewSimulation *pSimulation,
-                                                             CellMLSupport::CellmlFileRuntimeParameter *pParameter,
-                                                             SingleCellViewGraphPanelPlotCurve *pCurve) :
-    mFileName(pFileName),
-    mSimulation(pSimulation),
-    mParameter(pParameter),
-    mCurve(pCurve),
-    mAttached(true)
-{
-}
-
-//==============================================================================
-
-QString SingleCellViewWidgetCurveData::fileName() const
-{
-    // Return our file name
-
-    return mFileName;
-}
-
-//==============================================================================
-
-CellMLSupport::CellmlFileRuntimeParameter * SingleCellViewWidgetCurveData::parameter() const
-{
-    // Return our parameter
-
-    return mParameter;
-}
-
-//==============================================================================
-
-SingleCellViewGraphPanelPlotCurve * SingleCellViewWidgetCurveData::curve() const
-{
-    // Return our curve
-
-    return mCurve;
-}
-
-//==============================================================================
-
-double * SingleCellViewWidgetCurveData::yData() const
-{
-    // Return our Y data array
-
-    if (   (mParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)
-        || (mParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant))
-        return mSimulation->results()->constants()?mSimulation->results()->constants()[mParameter->index()]:0;
-    else if (mParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Rate)
-        return mSimulation->results()->rates()?mSimulation->results()->rates()[mParameter->index()]:0;
-    else if (mParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State)
-        return mSimulation->results()->states()?mSimulation->results()->states()[mParameter->index()]:0;
-    else
-        return mSimulation->results()->algebraic()?mSimulation->results()->algebraic()[mParameter->index()]:0;
-}
-
-//==============================================================================
-
-bool SingleCellViewWidgetCurveData::isAttached() const
-{
-    // Return our attached status
-
-    return mAttached;
-}
-
-//==============================================================================
-
-void SingleCellViewWidgetCurveData::setAttached(const bool &pAttached)
-{
-    // Set our attached status
-
-    mAttached = pAttached;
-}
-
-//==============================================================================
-
 SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
                                            QWidget *pParent) :
     ViewWidget(pParent),
@@ -156,10 +81,8 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mProgresses(QMap<QString, int>()),
     mResets(QMap<QString, bool>()),
     mDelays(QMap<QString, int>()),
-    mAxesSettings(QMap<QString, AxisSettings>()),
     mSplitterWidgetSizes(QList<int>()),
     mRunActionEnabled(true),
-    mCurvesData(QMap<QString, SingleCellViewWidgetCurveData *>()),
     mOldSimulationResultsSizes(QMap<SingleCellViewSimulation *, qulonglong>()),
     mCheckResultsSimulations(QList<SingleCellViewSimulation *>())
 {
@@ -209,10 +132,10 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
 /*---GRY--- THE BELOW SHOULD BE RE-ENABLED AT SOME POINT...
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mGui->actionDebugMode);
+*/
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mGui->actionAdd);
     mToolBarWidget->addAction(mGui->actionRemove);
-*/
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mGui->actionCsvExport);
 
@@ -249,10 +172,29 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     connect(mContentsWidget->graphPanelsWidget(), SIGNAL(removeGraphPanelsEnabled(const bool &)),
             mGui->actionRemove, SLOT(setEnabled(bool)));
 
-    // Keep track of which parameters to show/hide
+    // Keep track of the addition and removal of a graph panel
 
-    connect(mContentsWidget->informationWidget()->parametersWidget(), SIGNAL(showParameter(const QString &, CellMLSupport::CellmlFileRuntimeParameter *, const bool &)),
-            this, SLOT(showParameter(const QString &, CellMLSupport::CellmlFileRuntimeParameter *, const bool &)));
+    connect(mContentsWidget->graphPanelsWidget(), SIGNAL(graphPanelAdded(SingleCellViewGraphPanelWidget *)),
+            mContentsWidget->informationWidget()->graphsWidget(), SLOT(initialize(SingleCellViewGraphPanelWidget *)));
+    connect(mContentsWidget->graphPanelsWidget(), SIGNAL(graphPanelRemoved(SingleCellViewGraphPanelWidget *)),
+            mContentsWidget->informationWidget()->graphsWidget(), SLOT(finalize(SingleCellViewGraphPanelWidget *)));
+
+    // Keep track of whether a graph panel has been activated
+
+    connect(mContentsWidget->graphPanelsWidget(), SIGNAL(graphPanelActivated(SingleCellViewGraphPanelWidget *)),
+            mContentsWidget->informationWidget()->graphsWidget(), SLOT(initialize(SingleCellViewGraphPanelWidget *)));
+
+    // Keep track of a graph being required
+
+    connect(mContentsWidget->informationWidget()->parametersWidget(), SIGNAL(graphRequired(CellMLSupport::CellmlFileRuntimeParameter *, CellMLSupport::CellmlFileRuntimeParameter *)),
+            this, SLOT(requireGraph(CellMLSupport::CellmlFileRuntimeParameter *, CellMLSupport::CellmlFileRuntimeParameter *)));
+
+    // Keep track of the addition and removal of a graph
+
+    connect(mContentsWidget->graphPanelsWidget(), SIGNAL(graphAdded(SingleCellViewGraphPanelPlotGraph *)),
+            mContentsWidget->informationWidget()->graphsWidget(), SLOT(addGraph(SingleCellViewGraphPanelPlotGraph *)));
+    connect(mContentsWidget->graphPanelsWidget(), SIGNAL(graphRemoved(SingleCellViewGraphPanelPlotGraph *)),
+            mContentsWidget->informationWidget()->graphsWidget(), SLOT(removeGraph(SingleCellViewGraphPanelPlotGraph *)));
 
     // Create and add our invalid simulation message widget
 
@@ -318,12 +260,11 @@ SingleCellViewWidget::~SingleCellViewWidget()
     foreach (SingleCellViewSimulation *simulation, mSimulations)
         delete simulation;
 
-    // Delete our curves' data
+    // Delete all the graphs from all our graph panels
 
-    foreach (SingleCellViewWidgetCurveData *curveData, mCurvesData) {
-        delete curveData->curve();
-        delete curveData;
-    }
+    foreach (SingleCellViewGraphPanelWidget *graphPanel, mContentsWidget->graphPanelsWidget()->graphPanels())
+        foreach (SingleCellViewGraphPanelPlotGraph *graph, graphPanel->graphs())
+            delete graph;
 
     // Delete the GUI
 
@@ -391,9 +332,9 @@ void SingleCellViewWidget::loadSettings(QSettings *pSettings)
 //---GRY--- WE SHOULD STOP USING mActiveGraphPanel ONCE WE HAVE RE-ENABLED THE
 //          ADDITION/REMOVAL OF GRAPH PANELS...
 
-    mActiveGraphPanel = mContentsWidget->graphPanelsWidget()->activeGraphPanel();
+//    mActiveGraphPanel = mContentsWidget->graphPanelsWidget()->activeGraphPanel();
 
-    mActiveGraphPanel->plot()->setFixedAxisX(true);
+//    mActiveGraphPanel->plot()->setFixedAxisX(true);
 }
 
 //==============================================================================
@@ -543,7 +484,6 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
     SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
     SingleCellViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
     SingleCellViewInformationSolversWidget *solversWidget = informationWidget->solversWidget();
-    SingleCellViewInformationParametersWidget *parametersWidget = informationWidget->parametersWidget();
 
     if (previousSimulation) {
         // There is a previous simulation, so backup a few things
@@ -558,28 +498,6 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
         mResets.insert(previousFileName, mGui->actionReset->isEnabled());
         mDelays.insert(previousFileName, mDelayWidget->value());
-
-        // Keept rack of our graph panel's plot's axes settings
-
-        AxisSettings axisSettings;
-
-        axisSettings.minX = mActiveGraphPanel->plot()->minX();
-        axisSettings.maxX = mActiveGraphPanel->plot()->maxX();
-        axisSettings.minY = mActiveGraphPanel->plot()->minY();
-        axisSettings.maxY = mActiveGraphPanel->plot()->maxY();
-
-        axisSettings.localMinX = mActiveGraphPanel->plot()->localMinX();
-        axisSettings.localMaxX = mActiveGraphPanel->plot()->localMaxX();
-        axisSettings.localMinY = mActiveGraphPanel->plot()->localMinY();
-        axisSettings.localMaxY = mActiveGraphPanel->plot()->localMaxY();
-
-        mAxesSettings.insert(previousFileName, axisSettings);
-
-        // Keep track of the attachment status of our curves
-
-        foreach (SingleCellViewWidgetCurveData *curveData, mCurvesData)
-            if (!curveData->fileName().compare(previousFileName))
-                curveData->setAttached(curveData->curve()->plot());
     }
 
     // Retrieve our simulation object for the current model, if any
@@ -631,7 +549,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
     // Reset our file tab icon and stop tracking our simulation progress, in
     // case our simulation is running
 
-    if (mSimulation->isRunning()) {
+    if (mSimulation->isRunning() || mSimulation->isPaused()) {
         mProgresses.remove(mSimulation->fileName());
 
         emit updateFileTabIcon(mSimulation->fileName(), QIcon());
@@ -737,9 +655,10 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         //       properties) which is needed since we want to be able to reset
         //       our simulation below...
 
-        simulationWidget->initialize(pFileName, cellmlFileRuntime, mSimulation->data());
-        solversWidget->initialize(pFileName, cellmlFileRuntime, mSimulation->data());
-        parametersWidget->initialize(pFileName, cellmlFileRuntime, mSimulation->data());
+        simulationWidget->initialize(pFileName, cellmlFileRuntime, mSimulation);
+        solversWidget->initialize(pFileName, cellmlFileRuntime, mSimulation);
+        informationWidget->graphsWidget()->initialize(pFileName, cellmlFileRuntime, mSimulation);
+        informationWidget->parametersWidget()->initialize(pFileName, cellmlFileRuntime, mSimulation);
 
         // Check whether we have at least one ODE or DAE solver and, if needed,
         // at least one NLA solver
@@ -821,65 +740,6 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         mSimulation->data()->reset();
         mSimulation->results()->reset(false);
     }
-
-    // Attach/detach the curves, based on whether they are associated with then
-    // given file name
-
-    foreach (SingleCellViewWidgetCurveData *curveData, mCurvesData)
-        if (    curveData->isAttached()
-            && !curveData->fileName().compare(pFileName)) {
-            curveData->curve()->setRawSamples(mSimulation->results()->points(),
-                                              curveData->yData(),
-                                              mSimulation->results()->size());
-
-            mActiveGraphPanel->plot()->attach(curveData->curve());
-        } else {
-            mActiveGraphPanel->plot()->detach(curveData->curve());
-        }
-
-    // Retrieve our graph panel's plot's axes settings and replot our graph
-    // panel's plot, if available
-
-    if (mAxesSettings.contains(pFileName)) {
-        // We have some axes settings for the given file name, so retrieve its
-        // graph panel's plot's axes settings
-
-        AxisSettings axisSettings = mAxesSettings.value(pFileName);
-
-        mActiveGraphPanel->plot()->setMinMaxX(axisSettings.minX,
-                                              axisSettings.maxX);
-        mActiveGraphPanel->plot()->setMinMaxY(axisSettings.minY,
-                                              axisSettings.maxY);
-
-        mActiveGraphPanel->plot()->setLocalMinMaxX(axisSettings.localMinX,
-                                                   axisSettings.localMaxX);
-        mActiveGraphPanel->plot()->setLocalMinMaxY(axisSettings.localMinY,
-                                                   axisSettings.localMaxY);
-    } else {
-        // We don't have any X axis settings for the given file name, so first
-        // initialise our simulation's properties
-
-        simulationPropertyChanged(simulationWidget->startingPointProperty());
-        simulationPropertyChanged(simulationWidget->endingPointProperty());
-        simulationPropertyChanged(simulationWidget->pointIntervalProperty());
-
-        // Now, initialise our graph panel's plot's X axis settings
-
-        mActiveGraphPanel->plot()->setLocalMinMaxX(mActiveGraphPanel->plot()->minX(),
-                                                   mActiveGraphPanel->plot()->maxX());
-    }
-
-    // Check our graph panel's plot's local axes and then replot our graph
-    // panel's plot
-    // Note: we always want to replot everything, hence our passing false to
-    //       checkLocalAxes()...
-
-    mActiveGraphPanel->plot()->checkLocalAxes(false);
-    mActiveGraphPanel->plot()->replotNow();
-
-    // Allow/prevent interaction with our graph panel's plot
-
-    mActiveGraphPanel->plot()->setInteractive(!mSimulation->isRunning());
 }
 
 //==============================================================================
@@ -914,35 +774,12 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
             mSimulation = 0;
     }
 
-    // Remove our curves' data associated with the given file name, if any
-
-    QList<QString> fileNames = QList<QString>();
-    QList<CellMLSupport::CellmlFileRuntimeParameter *> parameters = QList<CellMLSupport::CellmlFileRuntimeParameter *>();
-
-    foreach (SingleCellViewWidgetCurveData *curveData, mCurvesData)
-        if (!curveData->fileName().compare(pFileName)) {
-            // Keep track of the file name and parameter of the curve data
-
-            fileNames << curveData->fileName();
-            parameters << curveData->parameter();
-
-            // Delete the curve and the curve data themselves
-
-            delete curveData->curve();
-            delete curveData;
-        }
-
-    for (int i = 0, iMax = fileNames.count(); i < iMax; ++i)
-        mCurvesData.remove(parameterKey(fileNames[i], parameters[i]));
-
     // Remove various information associated with the given file name
 
     mProgresses.remove(pFileName);
 
     mResets.remove(pFileName);
     mDelays.remove(pFileName);
-
-    mAxesSettings.remove(pFileName);
 
     // Finalize a few things in our GUI's simulation, solvers and parameters
     // widgets
@@ -951,6 +788,7 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
 
     informationWidget->simulationWidget()->finalize(pFileName);
     informationWidget->solversWidget()->finalize(pFileName);
+    informationWidget->graphsWidget()->finalize(pFileName);
     informationWidget->parametersWidget()->finalize(pFileName);
 }
 
@@ -996,6 +834,25 @@ QIcon SingleCellViewWidget::fileTabIcon(const QString &pFileName) const
 
 //==============================================================================
 
+void SingleCellViewWidget::fileOpened(const QString &pFileName)
+{
+    // Let our graphs widget know that a file has been opened
+
+    mContentsWidget->informationWidget()->graphsWidget()->fileOpened(pFileName);
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::fileRenamed(const QString &pOldFileName,
+                                       const QString &pNewFileName)
+{
+    // Let our view widget know that a file has been renamed
+
+    mContentsWidget->informationWidget()->graphsWidget()->fileRenamed(pOldFileName, pNewFileName);
+}
+
+//==============================================================================
+
 void SingleCellViewWidget::on_actionRunPauseResume_triggered()
 {
     // Run or resume our simulation, or pause it
@@ -1032,20 +889,20 @@ void SingleCellViewWidget::on_actionRunPauseResume_triggered()
             SingleCellViewSimulationData *simulationData = mSimulation->data();
             SingleCellViewInformationSolversWidget *solversWidget = mContentsWidget->informationWidget()->solversWidget();
 
-            simulationData->setOdeSolverName(solversWidget->odeSolverData()->solversListProperty()->value()->text());
-            simulationData->setDaeSolverName(solversWidget->daeSolverData()->solversListProperty()->value()->text());
+            simulationData->setOdeSolverName(solversWidget->odeSolverData()->solversListProperty()->value());
+            simulationData->setDaeSolverName(solversWidget->daeSolverData()->solversListProperty()->value());
 
             foreach (Core::Property *property, solversWidget->odeSolverData()->solversProperties().value(simulationData->odeSolverName()))
                 simulationData->addOdeSolverProperty(property->id(),
-                                                     (property->value()->type() == Core::PropertyItem::Integer)?
-                                                         Core::PropertyEditorWidget::integerPropertyItem(property->value()):
-                                                         Core::PropertyEditorWidget::doublePropertyItem(property->value()));
+                                                     (property->type() == Core::Property::Integer)?
+                                                         property->integerValue():
+                                                         property->doubleValue());
 
             foreach (Core::Property *property, solversWidget->daeSolverData()->solversProperties().value(simulationData->daeSolverName()))
                 simulationData->addDaeSolverProperty(property->id(),
-                                                     (property->value()->type() == Core::PropertyItem::Integer)?
-                                                         Core::PropertyEditorWidget::integerPropertyItem(property->value()):
-                                                         Core::PropertyEditorWidget::doublePropertyItem(property->value()));
+                                                     (property->type() == Core::Property::Integer)?
+                                                         property->integerValue():
+                                                         property->doubleValue());
 
             // Check how much memory is needed to run our simulation
 
@@ -1069,8 +926,8 @@ void SingleCellViewWidget::on_actionRunPauseResume_triggered()
             if (runSimulation) {
                 // Reset our local X axis
 
-                mActiveGraphPanel->plot()->setLocalMinMaxX(mActiveGraphPanel->plot()->minX(),
-                                                           mActiveGraphPanel->plot()->maxX());
+//                mActiveGraphPanel->plot()->setLocalMinMaxX(mActiveGraphPanel->plot()->minX(),
+//                                                           mActiveGraphPanel->plot()->maxX());
 
                 // Reset our simulation settings
 
@@ -1190,8 +1047,9 @@ void SingleCellViewWidget::simulationRunning(const bool &pIsResuming)
         // Reset our local axes' values, if resuming (since the user might have
         // been zooming in/out, etc.)
 
-        if (pIsResuming)
-            mActiveGraphPanel->plot()->resetLocalAxes();
+Q_UNUSED(pIsResuming);
+//        if (pIsResuming)
+//            mActiveGraphPanel->plot()->resetLocalAxes();
 
         // Update our simulation mode and check for results
 
@@ -1201,7 +1059,7 @@ void SingleCellViewWidget::simulationRunning(const bool &pIsResuming)
 
         // Prevent interaction with our graph panel's plot
 
-        mActiveGraphPanel->plot()->setInteractive(!mSimulation->isRunning());
+//        mActiveGraphPanel->plot()->setInteractive(!mSimulation->isRunning());
     }
 }
 
@@ -1217,13 +1075,13 @@ void SingleCellViewWidget::simulationPaused()
 
         updateSimulationMode();
 
-        mContentsWidget->informationWidget()->parametersWidget()->updateParameters();
+        mContentsWidget->informationWidget()->parametersWidget()->updateParameters(mSimulation->currentPoint());
 
         checkResults(mSimulation);
 
         // Allow interaction with our graph panel's plot
 
-        mActiveGraphPanel->plot()->setInteractive(mSimulation->isPaused());
+//        mActiveGraphPanel->plot()->setInteractive(mSimulation->isPaused());
     }
 }
 
@@ -1268,13 +1126,13 @@ void SingleCellViewWidget::simulationStopped(const int &pElapsedTime)
 
         // Update our parameters and simulation mode
 
-        mContentsWidget->informationWidget()->parametersWidget()->updateParameters();
-
         updateSimulationMode();
+
+        mContentsWidget->informationWidget()->parametersWidget()->updateParameters(mSimulation->currentPoint());
 
         // Allow interaction with our graph panel's plot
 
-        mActiveGraphPanel->plot()->setInteractive(!mSimulation->isRunning());
+//        mActiveGraphPanel->plot()->setInteractive(!mSimulation->isRunning());
     }
 
     // Remove our tracking of our simulation progress and let people know that
@@ -1404,36 +1262,39 @@ void SingleCellViewWidget::simulationPropertyChanged(Core::Property *pProperty)
     //       because it's can potentially have an effect on the value of our
     //       'computed constants' and 'variables'...
 
-    bool needUpdating = true;
+//---GRY---
+//    bool needUpdating = true;
 
-    if (pProperty == mContentsWidget->informationWidget()->simulationWidget()->startingPointProperty()) {
-        mSimulation->data()->setStartingPoint(Core::PropertyEditorWidget::doublePropertyItem(pProperty->value()));
-    } else if (pProperty == mContentsWidget->informationWidget()->simulationWidget()->endingPointProperty()) {
-        mSimulation->data()->setEndingPoint(Core::PropertyEditorWidget::doublePropertyItem(pProperty->value()));
-    } else if (pProperty == mContentsWidget->informationWidget()->simulationWidget()->pointIntervalProperty()) {
-        mSimulation->data()->setPointInterval(Core::PropertyEditorWidget::doublePropertyItem(pProperty->value()));
+    SingleCellViewInformationSimulationWidget *simulationWidget = mContentsWidget->informationWidget()->simulationWidget();
 
-        needUpdating = false;
+    if (pProperty == simulationWidget->startingPointProperty()) {
+        mSimulation->data()->setStartingPoint(pProperty->doubleValue());
+    } else if (pProperty == simulationWidget->endingPointProperty()) {
+        mSimulation->data()->setEndingPoint(pProperty->doubleValue());
+    } else if (pProperty == simulationWidget->pointIntervalProperty()) {
+        mSimulation->data()->setPointInterval(pProperty->doubleValue());
+
+//        needUpdating = false;
     }
 
     // Update the minimum/maximum values of our X axis and replot ourselves, if
     // needed
 
-    if (needUpdating) {
-        if (mSimulation->data()->startingPoint() < mSimulation->data()->endingPoint()) {
-            mActiveGraphPanel->plot()->setMinMaxX(mSimulation->data()->startingPoint(),
-                                                  mSimulation->data()->endingPoint());
-            mActiveGraphPanel->plot()->setLocalMinMaxX(mActiveGraphPanel->plot()->minX(),
-                                                       mActiveGraphPanel->plot()->maxX());
-        } else {
-            mActiveGraphPanel->plot()->setMinMaxX(mSimulation->data()->endingPoint(),
-                                                  mSimulation->data()->startingPoint());
-            mActiveGraphPanel->plot()->setLocalMinMaxX(mActiveGraphPanel->plot()->minX(),
-                                                       mActiveGraphPanel->plot()->maxX());
-        }
+//    if (needUpdating) {
+//        if (mSimulation->data()->startingPoint() < mSimulation->data()->endingPoint()) {
+//            mActiveGraphPanel->plot()->setMinMaxX(mSimulation->data()->startingPoint(),
+//                                                  mSimulation->data()->endingPoint());
+//            mActiveGraphPanel->plot()->setLocalMinMaxX(mActiveGraphPanel->plot()->minX(),
+//                                                       mActiveGraphPanel->plot()->maxX());
+//        } else {
+//            mActiveGraphPanel->plot()->setMinMaxX(mSimulation->data()->endingPoint(),
+//                                                  mSimulation->data()->startingPoint());
+//            mActiveGraphPanel->plot()->setLocalMinMaxX(mActiveGraphPanel->plot()->minX(),
+//                                                       mActiveGraphPanel->plot()->maxX());
+//        }
 
-        mActiveGraphPanel->plot()->replotNow();
-    }
+//        mActiveGraphPanel->plot()->replotNow();
+//    }
 }
 
 //==============================================================================
@@ -1442,93 +1303,39 @@ void SingleCellViewWidget::solversPropertyChanged(Core::Property *pProperty)
 {
     // Check whether any of our NLA solver's properties has been modified and,
     // if so, then update our simulation data object accordingly
-    // Note: these are the only solvers propeties property we need to check
-    //       because they are the only ones that can potentially have an effect
-    //       on the value of 'computed constants' and 'variables'...
+    // Note #1: these are the only solvers properties we need to check since
+    //          they are the only ones that can potentially have an effect on
+    //          the value of 'computed constants' and 'variables'...
+    // Note #2: we must check that we have some NLA solver data since there may
+    //          may be no NLA solver, in which case there would be no NLA solver
+    //          data...
 
     SingleCellViewInformationSolversWidget *solversWidget = mContentsWidget->informationWidget()->solversWidget();
 
-    if (pProperty == solversWidget->nlaSolverData()->solversListProperty())
-        mSimulation->data()->setNlaSolverName(pProperty->value()->text());
-    else
-        foreach (Core::Property *property, solversWidget->nlaSolverData()->solversProperties().value(mSimulation->data()->nlaSolverName()))
-            if (pProperty == property) {
-                mSimulation->data()->addNlaSolverProperty(pProperty->id(),
-                                                          (pProperty->value()->type() == Core::PropertyItem::Integer)?
-                                                              Core::PropertyEditorWidget::integerPropertyItem(pProperty->value()):
-                                                              Core::PropertyEditorWidget::doublePropertyItem(pProperty->value()));
+    if (solversWidget->nlaSolverData()) {
+        if (pProperty == solversWidget->nlaSolverData()->solversListProperty())
+            mSimulation->data()->setNlaSolverName(pProperty->value());
+        else
+            foreach (Core::Property *property, solversWidget->nlaSolverData()->solversProperties().value(mSimulation->data()->nlaSolverName()))
+                if (pProperty == property) {
+                    mSimulation->data()->addNlaSolverProperty(pProperty->id(),
+                                                              (pProperty->type() == Core::Property::Integer)?
+                                                                  pProperty->integerValue():
+                                                                  pProperty->doubleValue());
 
-                break;
-            }
-}
-
-//==============================================================================
-
-QString SingleCellViewWidget::parameterKey(const QString pFileName,
-                                           CellMLSupport::CellmlFileRuntimeParameter *pParameter)
-{
-    // Return the for the given parameter
-
-    return pFileName+"|"+QString::number(pParameter->type())+"|"+QString::number(pParameter->index());
-}
-
-//==============================================================================
-
-void SingleCellViewWidget::showParameter(const QString &pFileName,
-                                         CellMLSupport::CellmlFileRuntimeParameter *pParameter,
-                                         const bool &pShow)
-{
-    // Determine the key for the given parameter
-
-    QString key = parameterKey(pFileName, pParameter);
-
-    // Retrieve the curve data associated with the key, if any
-
-    SingleCellViewWidgetCurveData *curveData = mCurvesData.value(key);
-
-    // Check whether to show/hide a curve
-
-    if (curveData) {
-        // We already have a curve, so just make it visible/invisible and update
-        // our curve's data, in case we are to make it visible
-
-        if (pShow) {
-            curveData->curve()->setRawSamples(mSimulation->results()->points(),
-                                              curveData->yData(),
-                                              mSimulation->results()->size());
-
-            mActiveGraphPanel->plot()->attach(curveData->curve());
-        } else {
-            mActiveGraphPanel->plot()->detach(curveData->curve());
-        }
-    } else if (pShow) {
-        // We don't have a curve, but we want one so create one, as well as some
-        // data for it
-
-        SingleCellViewGraphPanelPlotCurve *curve = new SingleCellViewGraphPanelPlotCurve();
-        SingleCellViewWidgetCurveData *curveData = new SingleCellViewWidgetCurveData(pFileName, mSimulation, pParameter, curve);
-
-        // Set some data for our curve
-
-        curve->setRawSamples(mSimulation->results()->points(),
-                             curveData->yData(),
-                             mSimulation->results()->size());
-
-        // Attach the curve to our graph panel's plot
-
-        mActiveGraphPanel->plot()->attach(curve);
-
-        // Keep track of our curve data
-
-        mCurvesData.insert(key, curveData);
+                    break;
+                }
     }
+}
 
-    // Check our graph panel's plot's local axes before replotting everything
-    // Note: we always want to replot, hence our passing false as an argument to
-    //       resetLocalAxes()...
+//==============================================================================
 
-    mActiveGraphPanel->plot()->resetLocalAxes(false);
-    mActiveGraphPanel->plot()->replotNow();
+void SingleCellViewWidget::requireGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
+                                        CellMLSupport::CellmlFileRuntimeParameter *pParameterY)
+{
+    // Create the required graph and associate it with the current graph panel
+
+    mContentsWidget->graphPanelsWidget()->activeGraphPanel()->addGraph(new SingleCellViewGraphPanelPlotGraph(pParameterX, pParameterY));
 }
 
 //==============================================================================
@@ -1537,7 +1344,7 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
                                          const qulonglong &pSize,
                                          const bool &pReplot)
 {
-    // Update our curves, if any and only if actually necessary
+    // Update our graphs, if any and only if actually necessary
 
     SingleCellViewSimulation *simulation = pSimulation?pSimulation:mSimulation;
 
@@ -1545,7 +1352,7 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
     // but only if we are dealing with the active simulation
 
     if (simulation == mSimulation) {
-        // We are dealing with the active simulation, so update our curves and
+        // We are dealing with the active simulation, so update our graphs and
         // progress bar, and enable/disable the reset action
 
         // Enable/disable the reset action
@@ -1558,36 +1365,38 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
 
         mGui->actionReset->setEnabled(mSimulation->data()->isModified());
 
-        // Update our curves, if any
+        // Update our graphs, if any
 
-        foreach (SingleCellViewWidgetCurveData *curveData, mCurvesData)
-            // Update the curve, should it be attached
+Q_UNUSED(pSize);
+Q_UNUSED(pReplot);
+//        foreach (SingleCellViewWidgetGraph *graphData, mGraphsData)
+//            // Update the graph, should it be attached
 
-            if (curveData->curve()->plot()) {
-                // Keep track of our curve's old size
+//            if (graphData->graph()->plot()) {
+//                // Keep track of our graph's old size
 
-                qulonglong oldDataSize = curveData->curve()->dataSize();
+//                qulonglong oldDataSize = graphData->graph()->dataSize();
 
-                // Update our curve's data
+//                // Update our graph's data
 
-                curveData->curve()->setRawSamples(mSimulation->results()->points(),
-                                                  curveData->yData(),
-                                                  pSize);
+//                graphData->graph()->setRawSamples(mSimulation->results()->points(),
+//                                                  graphData->yData(),
+//                                                  pSize);
 
-                // Draw the curve's new segment, but only if there is some data to
-                // plot and that we don't want to replot everything
+//                // Draw the graph's new segment, but only if there is some data to
+//                // plot and that we don't want to replot everything
 
-                if (!pReplot && (pSize > 1))
-                    mActiveGraphPanel->plot()->drawCurveSegment(curveData->curve(), oldDataSize?oldDataSize-1:0, pSize-1);
-            }
+//                if (!pReplot && (pSize > 1))
+//                    mActiveGraphPanel->plot()->drawGraphSegment(graphData->graph(), oldDataSize?oldDataSize-1:0, pSize-1);
+//            }
 
         // Replot our active graph panel, if needed
 
-        if (pReplot || (pSize <= 1))
-            // We want to initialise the plot and/or there is no data to plot,
-            // so replot our active graph panel
+//        if (pReplot || (pSize <= 1))
+//            // We want to initialise the plot and/or there is no data to plot,
+//            // so replot our active graph panel
 
-            mActiveGraphPanel->plot()->replotNow();
+//            mActiveGraphPanel->plot()->replotNow();
 
         // Update our progress bar
 
@@ -1613,8 +1422,7 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
 
             mProgresses.insert(simulation->fileName(), newProgress);
 
-            // Let people know about the file tab icon to be used for the
-            // model
+            // Let people know about the file tab icon to be used for the model
 
             emit updateFileTabIcon(simulation->fileName(),
                                    fileTabIcon(simulation->fileName()));
