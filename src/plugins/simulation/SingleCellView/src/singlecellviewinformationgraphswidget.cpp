@@ -244,19 +244,13 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
     sectionProperty->setChecked(true);
 
     // Create some properties for our graph
-//---GRY--- TO BE DONE 'PROPERLY'...
 
-    Core::Property *modelProperty = mPropertyEditor->addListProperty(sectionProperty);
+    mPropertyEditor->addListProperty(sectionProperty);
     Core::Property *xProperty = mPropertyEditor->addStringProperty(pGraph->parameterX()->fullyFormattedName(), sectionProperty);
     Core::Property *yProperty = mPropertyEditor->addStringProperty(pGraph->parameterY()->fullyFormattedName(), sectionProperty);
 
-    modelProperty->setIcon(QIcon(":/oxygen/status/object-unlocked.png"));
-
     xProperty->setEditable(true);
-xProperty->setUnit(pGraph->parameterX()->formattedUnit("???"));
-
     yProperty->setEditable(true);
-yProperty->setUnit(pGraph->parameterY()->formattedUnit("???"));
 
     // Update the information about our new graph
 
@@ -349,10 +343,22 @@ void SingleCellViewInformationGraphsWidget::propertyChanged(Core::Property *pPro
 
 Q_UNUSED(pProperty);
 
-    if (pProperty->parentProperty())
+    Core::Property *parentProperty = pProperty->parentProperty();
+
+    if (parentProperty) {
         // We have a (section) parent property, so set its icon
 
-        pProperty->parentProperty()->setIcon(QIcon(":/oxygen/status/task-attention.png"));
+        parentProperty->setIcon(QIcon(":/oxygen/status/task-attention.png"));
+
+        // Update the model property icon, if needed
+
+        if (pProperty == parentProperty->properties()[0]) {
+            if (!pProperty->value().compare(tr("Current")))
+                pProperty->setIcon(QIcon(":/oxygen/status/object-unlocked.png"));
+            else
+                pProperty->setIcon(QIcon(":/oxygen/status/object-locked.png"));
+        }
+    }
 }
 
 //==============================================================================
