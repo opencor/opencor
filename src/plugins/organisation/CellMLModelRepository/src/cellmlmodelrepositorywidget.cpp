@@ -44,7 +44,7 @@ CellmlModelRepositoryWidget::CellmlModelRepositoryWidget(QWidget *pParent) :
 
     // Retrieve the output template
 
-    QFile cellmlModelRepositoryWidgetOutputFile(":cellmlModelRepositoryWidgetOutput");
+    QFile cellmlModelRepositoryWidgetOutputFile(":CellMLModelRepository_output");
 
     cellmlModelRepositoryWidgetOutputFile.open(QIODevice::ReadOnly);
 

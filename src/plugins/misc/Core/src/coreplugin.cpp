@@ -167,14 +167,7 @@ void CorePlugin::initialize()
     connect(mCentralWidget, SIGNAL(atLeastOneFile(const bool &)),
             mFileCloseAllAction, SLOT(setEnabled(bool)));
 
-    // Some connections related to our Reopen sub-menu
-
-    connect(mCentralWidget, SIGNAL(fileOpened(const QString &)),
-            this, SLOT(fileOpened(const QString &)));
-    connect(mCentralWidget, SIGNAL(fileRenamed(const QString &, const QString &)),
-            this, SLOT(fileRenamed(const QString &, const QString &)));
-    connect(mCentralWidget, SIGNAL(fileClosed(const QString &)),
-            this, SLOT(fileClosed(const QString &)));
+    // A connection related to our Reopen sub-menu
 
     connect(mFileClearReopenSubMenuAction, SIGNAL(triggered()),
             this, SLOT(clearReopenSubMenu()));
@@ -416,15 +409,6 @@ void CorePlugin::retranslateUi()
 
 //==============================================================================
 
-bool CorePlugin::canClose()
-{
-    // To determine whether we can close, we must ask our central widget
-
-    return mCentralWidget->canClose();
-}
-
-//==============================================================================
-
 void CorePlugin::fileOpened(const QString &pFileName)
 {
     // Remove the file from our list of recent files and update our Reopen
@@ -469,6 +453,15 @@ void CorePlugin::fileClosed(const QString &pFileName)
         mRecentFileNames.removeLast();
 
     updateFileReopenMenu();
+}
+
+//==============================================================================
+
+bool CorePlugin::canClose()
+{
+    // To determine whether we can close, we must ask our central widget
+
+    return mCentralWidget->canClose();
 }
 
 //==============================================================================

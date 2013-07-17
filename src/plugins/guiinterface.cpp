@@ -406,6 +406,44 @@ bool GuiInterface::saveFile(const QString &pOldFileName,
 
 //==============================================================================
 
+void GuiInterface::fileOpened(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // Nothing to do by default...
+}
+
+//==============================================================================
+
+void GuiInterface::fileSaved(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // Nothing to do by default...
+}
+
+//==============================================================================
+
+void GuiInterface::fileRenamed(const QString &pOldFileName,
+                               const QString &pNewFileName)
+{
+    Q_UNUSED(pOldFileName);
+    Q_UNUSED(pNewFileName);
+
+    // Nothing to do by default...
+}
+
+//==============================================================================
+
+void GuiInterface::fileClosed(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // Nothing to do by default...
+}
+
+//==============================================================================
+
 bool GuiInterface::canClose()
 {
     // We can close by default...

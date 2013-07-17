@@ -12,7 +12,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="../res/ui.qrc">
-    <normaloff>:/appIcon</normaloff>:/appIcon</iconset>
+    <normaloff>:/app_icon</normaloff>:/app_icon</iconset>
   </property>
   <widget class="QWidget" name="centralWidget"/>
   <widget class="QMenuBar" name="menuBar">

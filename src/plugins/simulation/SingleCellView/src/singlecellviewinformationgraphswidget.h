@@ -1,13 +1,12 @@
 //==============================================================================
-// Single cell view information parameters widget
+// Single cell view information graphs widget
 //==============================================================================
 
-#ifndef SINGLECELLVIEWINFORMATIONPARAMETERSWIDGET_H
-#define SINGLECELLVIEWINFORMATIONPARAMETERSWIDGET_H
+#ifndef SINGLECELLVIEWINFORMATIONGRAPHSWIDGET_H
+#define SINGLECELLVIEWINFORMATIONGRAPHSWIDGET_H
 
 //==============================================================================
 
-#include "cellmlfileruntime.h"
 #include "commonwidget.h"
 
 //==============================================================================
@@ -16,7 +15,7 @@
 
 //==============================================================================
 
-class QMenu;
+class QLabel;
 
 //==============================================================================
 
@@ -42,17 +41,19 @@ namespace SingleCellView {
 
 //==============================================================================
 
+class SingleCellViewGraphPanelPlotGraph;
+class SingleCellViewGraphPanelWidget;
 class SingleCellViewSimulation;
 
 //==============================================================================
 
-class SingleCellViewInformationParametersWidget : public QStackedWidget,
-                                                  public Core::CommonWidget
+class SingleCellViewInformationGraphsWidget : public QStackedWidget,
+                                              public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
-    explicit SingleCellViewInformationParametersWidget(QWidget *pParent = 0);
+    explicit SingleCellViewInformationGraphsWidget(QWidget *pParent = 0);
 
     virtual void retranslateUi();
 
@@ -64,46 +65,42 @@ public:
                     SingleCellViewSimulation *pSimulation);
     void finalize(const QString &pFileName);
 
+    void fileOpened(const QString &pFileName);
+    void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
+
     void finishPropertyEditing();
 
 private:
-    QMap<QString, Core::PropertyEditorWidget *> mPropertyEditors;
-    QMap<Core::PropertyEditorWidget *, QMenu *> mContextMenus;
-
-    QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> mParameters;
-    QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
+    QMap<SingleCellViewGraphPanelWidget *, Core::PropertyEditorWidget *> mPropertyEditors;
 
     QList<int> mColumnWidths;
 
+    QLabel *mNoGraphsMessageWidget;
     Core::PropertyEditorWidget *mPropertyEditor;
 
-    SingleCellViewSimulation *mSimulation;
+    QString mFileName;
+    QStringList mFileNames;
 
-    QIcon parameterIcon(const CellMLSupport::CellmlFileRuntimeParameter::ParameterType &pParameterType);
+    QMap<QString, CellMLSupport::CellmlFileRuntime *> mRuntimes;
+    QMap<QString, SingleCellViewSimulation *> mSimulations;
 
-    void populateModel(CellMLSupport::CellmlFileRuntime *pRuntime);
-    void populateContextMenu(QMenu *pContextMenu,
-                             CellMLSupport::CellmlFileRuntime *pRuntime);
+    bool checkParameter(OpenCOR::Core::Property *pProperty) const;
 
-    void updateExtraInfos();
-
-    void retranslateContextMenu(QMenu *pContextMenu);
-
-Q_SIGNALS:
-    void graphRequired(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
-                       CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
+    void updateGraphInfo(OpenCOR::Core::Property *pProperty) const;
+    void updateGraphsInfo(Core::Property *pSectionProperty = 0);
 
 public Q_SLOTS:
-    void updateParameters(const double &pCurrentPoint);
+    void initialize(SingleCellViewGraphPanelWidget *pGraphPanel);
+    void finalize(SingleCellViewGraphPanelWidget *pGraphPanel);
+
+    void addGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
+    void removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
 
 private Q_SLOTS:
-    void propertyEditorContextMenu(const QPoint &pPosition) const;
     void propertyEditorSectionResized(const int &pLogicalIndex,
                                       const int &pOldSize, const int &pNewSize);
 
     void propertyChanged(Core::Property *pProperty);
-
-    void emitGraphRequired();
 };
 
 //==============================================================================

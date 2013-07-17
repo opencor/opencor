@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file alias="appIcon">boomy/OpenCOR.png</file>
+        <file alias="app_icon">boomy/OpenCOR.png</file>
         <file>flags/en.png</file>
         <file>flags/fr.png</file>
         <file>oxygen/actions/application-exit.png</file>

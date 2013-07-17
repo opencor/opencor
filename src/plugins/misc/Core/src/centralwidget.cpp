@@ -149,7 +149,7 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
 
     mLogoView->setStyleSheet("QWidget {"
                              "    background-color: white;"
-                             "    background-image: url(:logo);"
+                             "    background-image: url(:Core_logo);"
                              "    background-position: center;"
                              "    background-repeat: no-repeat;"
                              "}");
@@ -424,6 +424,18 @@ void CentralWidget::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
     // Update the GUI
 
     updateGui();
+
+    // Let all the plugins know that our files have been opened
+    // Note: this is because mLoadedPlugins is not set when openFile() gets
+    //       called as part of OpenCOR's loading of settings...
+
+    foreach (Plugin *plugin, mLoadedPlugins) {
+        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+
+        if (guiInterface)
+            foreach (const QString &fileName, mFileNames)
+                guiInterface->fileOpened(fileName);
+    }
 }
 
 //==============================================================================
@@ -478,9 +490,19 @@ void CentralWidget::openFile(const QString &pFileName)
 
     mFileTabs->setCurrentIndex(fileTabIndex);
 
-    // Everything went fine, so let people know that the file has been opened
+    // Everything went fine, so let all the plugins know that our file have been
+    // opened
+    // Note: this requires using mLoadedPlugins, but it will not be set when we
+    //       come here following OpenCOR's loading of settings, hence we do
+    //       something similar to the below in loadingOfSettingsDone()...
 
-    emit fileOpened(nativeFileName);
+    foreach (Plugin *plugin, mLoadedPlugins) {
+        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+
+        if (guiInterface)
+            guiInterface->fileOpened(nativeFileName);
+    }
+
 }
 
 //==============================================================================
@@ -566,9 +588,14 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
     if (   (FileManager::instance()->isModified(oldFileName) && !pNeedNewFileName)
         || hasNewFileName) {
         if (guiInterface->saveFile(oldFileName, newFileName)) {
-            // Let people know about the file having been saved
+            // Let all the plugins know about the file having been saved
 
-            emit fileSaved(newFileName);
+            foreach (Plugin *plugin, mLoadedPlugins) {
+                GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+
+                if (guiInterface)
+                    guiInterface->fileSaved(newFileName);
+            }
 
             // The file was saved, so update its file name, if needed
 
@@ -594,9 +621,14 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
                 mFileTabs->setTabText(pIndex, QFileInfo(newFileName).fileName());
                 mFileTabs->setTabToolTip(pIndex, newFileName);
 
-                // Let people know about the file having been renamed
+                // Let all the plugins know about the file having been renamed
 
-                emit fileRenamed(oldFileName, newFileName);
+                foreach (Plugin *plugin, mLoadedPlugins) {
+                    GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+
+                    if (guiInterface)
+                        guiInterface->fileRenamed(oldFileName, newFileName);
+                }
             }
 
             // Update our modified settings
@@ -751,9 +783,14 @@ bool CentralWidget::closeFile(const int &pIndex)
 
         FileManager::instance()->unmanage(fileName);
 
-        // Let people know about the file having just been closed
+        // Let all the plugins know about the file having just been closed
 
-        emit fileClosed(fileName);
+        foreach (Plugin *plugin, mLoadedPlugins) {
+            GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+
+            if (guiInterface)
+                guiInterface->fileClosed(fileName);
+        }
 
         // Update our modified settings
 

@@ -5,6 +5,7 @@
         <file alias="SingleCellView_constant">constant.png</file>
         <file alias="SingleCellView_rate">rate.png</file>
         <file alias="SingleCellView_state">state.png</file>
+        <file alias="SingleCellView_voi">voi.png</file>
         <file>oxygen/actions/list-add.png</file>
         <file>oxygen/actions/list-remove.png</file>
         <file>oxygen/actions/media-playback-pause.png</file>
@@ -13,6 +14,9 @@
         <file>oxygen/actions/tools-report-bug.png</file>
         <file>oxygen/actions/view-refresh.png</file>
         <file>oxygen/mimetypes/text-csv.png</file>
+        <file>oxygen/status/object-locked.png</file>
+        <file>oxygen/status/object-unlocked.png</file>
+        <file>oxygen/status/task-attention.png</file>
         <file alias="SingleCellView_fr">../../../../../build/SingleCellView_fr.qm</file>
     </qresource>
 </RCC>

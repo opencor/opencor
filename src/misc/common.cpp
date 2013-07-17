@@ -38,7 +38,7 @@ void initApplication(QCoreApplication *pApp)
 
     // Retrieve and set the version of the application
 
-    QFile versionFile(":version");
+    QFile versionFile(":app_version");
 
     versionFile.open(QIODevice::ReadOnly);
 

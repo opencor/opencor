@@ -67,6 +67,11 @@ public:
     ParameterType type() const;
     int index() const;
 
+    QString formattedName() const;
+    QString fullyFormattedName() const;
+
+    QString formattedUnit(const QString &pVoiUnit) const;
+
 private:
     QString mName;
     int mDegree;

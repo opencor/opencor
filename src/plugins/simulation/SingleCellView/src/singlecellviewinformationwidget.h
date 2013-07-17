@@ -35,6 +35,7 @@ namespace SingleCellView {
 
 //==============================================================================
 
+class SingleCellViewInformationGraphsWidget;
 class SingleCellViewInformationParametersWidget;
 class SingleCellViewInformationSimulationWidget;
 class SingleCellViewInformationSolversWidget;
@@ -57,6 +58,7 @@ public:
 
     SingleCellViewInformationSimulationWidget * simulationWidget();
     SingleCellViewInformationSolversWidget * solversWidget();
+    SingleCellViewInformationGraphsWidget * graphsWidget();
     SingleCellViewInformationParametersWidget * parametersWidget();
 
     void finishEditing();
@@ -68,6 +70,7 @@ private:
 
     SingleCellViewInformationSimulationWidget *mSimulationWidget;
     SingleCellViewInformationSolversWidget *mSolversWidget;
+    SingleCellViewInformationGraphsWidget *mGraphsWidget;
     SingleCellViewInformationParametersWidget *mParametersWidget;
 };
 

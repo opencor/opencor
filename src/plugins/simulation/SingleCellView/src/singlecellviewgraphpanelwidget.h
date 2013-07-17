@@ -26,6 +26,7 @@ namespace SingleCellView {
 
 //==============================================================================
 
+class SingleCellViewGraphPanelPlotGraph;
 class SingleCellViewGraphPanelPlotWidget;
 
 //==============================================================================
@@ -41,7 +42,10 @@ public:
     bool isActive() const;
     void setActive(const bool &pActive);
 
-    SingleCellViewGraphPanelPlotWidget * plot();
+    QList<SingleCellViewGraphPanelPlotGraph *> graphs() const;
+
+    void addGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
+    void removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
 
 protected:
     virtual void changeEvent(QEvent *pEvent);
@@ -50,7 +54,7 @@ protected:
 private:
     Ui::SingleCellViewGraphPanelWidget *mGui;
 
-//    QFrame *mMarker;
+    QFrame *mMarker;
     SingleCellViewGraphPanelPlotWidget *mPlot;
 
     bool mActive;
@@ -60,6 +64,9 @@ private:
 Q_SIGNALS:
     void activated(SingleCellViewGraphPanelWidget *pGraphPanel);
     void inactivated(SingleCellViewGraphPanelWidget *pGraphPanel);
+
+    void graphAdded(SingleCellViewGraphPanelPlotGraph *pGraph);
+    void graphRemoved(SingleCellViewGraphPanelPlotGraph *pGraph);
 };
 
 //==============================================================================

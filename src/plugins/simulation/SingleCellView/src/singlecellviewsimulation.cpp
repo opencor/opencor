@@ -171,7 +171,7 @@ void SingleCellViewSimulationData::setStartingPoint(const double &pStartingPoint
     // Recompute our 'computed constants' and 'variables'
 
     if (pRecompute)
-        recomputeComputedConstantsAndVariables();
+        recomputeComputedConstantsAndVariables(mStartingPoint);
 }
 
 //==============================================================================
@@ -398,7 +398,7 @@ void SingleCellViewSimulationData::reset()
     memset(mCondVar, 0, mRuntime->condVarCount()*OpenCOR::CoreSolver::SizeOfDouble);
 
     mRuntime->initializeConstants()(mConstants, mRates, mStates);
-    recomputeComputedConstantsAndVariables();
+    recomputeComputedConstantsAndVariables(mStartingPoint);
 
     // Delete our NLA solver, if any
 
@@ -420,7 +420,7 @@ void SingleCellViewSimulationData::reset()
 
 //==============================================================================
 
-void SingleCellViewSimulationData::recomputeComputedConstantsAndVariables()
+void SingleCellViewSimulationData::recomputeComputedConstantsAndVariables(const double &pCurrentPoint)
 {
     // Recompute our 'computed constants' and 'variables', if possible
 
@@ -428,13 +428,13 @@ void SingleCellViewSimulationData::recomputeComputedConstantsAndVariables()
         mRuntime->computeComputedConstants()(mConstants, mRates, mStates);
 
         if (mRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)
-            mRuntime->computeOdeVariables()(mStartingPoint, mConstants, mRates, mStates, mAlgebraic);
+            mRuntime->computeOdeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic);
         else
-            mRuntime->computeDaeVariables()(mStartingPoint, mConstants, mRates, mStates, mAlgebraic, mCondVar);
+            mRuntime->computeDaeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic, mCondVar);
 
         // Let people know that our data has been updated
 
-        emit updated();
+        emit updated(pCurrentPoint);
     }
 }
 
@@ -457,7 +457,7 @@ void SingleCellViewSimulationData::recomputeVariables(const double &pCurrentPoin
     //       hence the caller can decide whether to emit a signal or not...
 
     if (pEmitSignal)
-        emit updated();
+        emit updated(pCurrentPoint);
 }
 
 //==============================================================================
@@ -796,9 +796,10 @@ bool SingleCellViewSimulationResults::exportToCsv(const QString &pFileName) cons
     for (int i = 0, iMax = mRuntime->parameters().count(); i < iMax; ++i) {
         CellMLSupport::CellmlFileRuntimeParameter *parameter = mRuntime->parameters()[i];
 
-        out << "," << Header.arg(parameter->component(),
-                                 parameter->name()+QString(parameter->degree(), '\''),
-                                 parameter->unit());
+        if (parameter != mRuntime->variableOfIntegration())
+            out << "," << Header.arg(parameter->component(),
+                                     parameter->formattedName(),
+                                     parameter->formattedUnit(mRuntime->variableOfIntegration()->name()));
     }
 
     out << "\n";
@@ -923,6 +924,15 @@ bool SingleCellViewSimulation::isPaused() const
     // Return whether we are paused
 
     return mWorker?mWorker->isPaused():false;
+}
+
+//==============================================================================
+
+double SingleCellViewSimulation::currentPoint() const
+{
+    // Return our current point
+
+    return mWorker?mWorker->currentPoint():data()->startingPoint();
 }
 
 //==============================================================================

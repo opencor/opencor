@@ -103,45 +103,38 @@ void SingleCellViewGraphPanelsWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void SingleCellViewGraphPanelsWidget::wheelEvent(QWheelEvent *pEvent)
+QList<SingleCellViewGraphPanelWidget *> SingleCellViewGraphPanelsWidget::graphPanels() const
 {
-    // Default handling of the event
+    // Return all our graph panels
 
-    QSplitter::wheelEvent(pEvent);
+    QList<SingleCellViewGraphPanelWidget *> res = QList<SingleCellViewGraphPanelWidget *>();
 
-    // Select the previous/next graph panel, if any
+    for (int i = 0, iMax = count(); i < iMax; ++i)
+        res << qobject_cast<SingleCellViewGraphPanelWidget *>(widget(i));
 
-    if (pEvent->delta())
+    return res;
+}
+
+//==============================================================================
+
+SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::activeGraphPanel() const
+{
+    // Return the active graph panel
+
     for (int i = 0, iMax = count(); i < iMax; ++i) {
         SingleCellViewGraphPanelWidget *graphPanel = qobject_cast<SingleCellViewGraphPanelWidget *>(widget(i));
 
-        if (graphPanel->isActive()) {
-            // We are dealing with the currently active graph panel, so
-            // inactivate it and activate either its predecessor or successor
+        if (graphPanel->isActive())
+            // We found the active graph panel, so...
 
-            graphPanel->setActive(false);
-
-            int shift = 1;
-
-#if defined(Q_OS_MAC) && defined(AVAILABLE_MAC_OS_X_VERSION_10_7_AND_LATER)
-            // From version 10.7 of OS X, the scrolling works the other way
-            // round, so...
-
-            shift = -1;
-#endif
-
-            i += (pEvent->delta() < 0)?shift:-shift;
-
-            if (i < 0)
-                i = 0;
-            else if (i == iMax)
-                i = iMax-1;
-
-            qobject_cast<SingleCellViewGraphPanelWidget *>(widget(i))->setActive(true);
-
-            break;
-        }
+            return graphPanel;
     }
+
+    // There are no graph panels, so...
+    // Note: we should never reach this point since there should always be at
+    //       least one graph panel...
+
+    return 0;
 }
 
 //==============================================================================
@@ -170,11 +163,20 @@ SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::addGraphPanel(
 
     setSizes(origSizes << height()/count());
 
-    // Create a connection to keep track of whenever the graph panel gets
-    // activated
+    // Keep track of whenever a graph panel gets activated
 
     connect(res, SIGNAL(activated(SingleCellViewGraphPanelWidget *)),
-            this, SLOT(graphPanelActivated(SingleCellViewGraphPanelWidget *)));
+            this, SIGNAL(graphPanelActivated(SingleCellViewGraphPanelWidget *)));
+
+    connect(res, SIGNAL(activated(SingleCellViewGraphPanelWidget *)),
+            this, SLOT(updateGraphPanels(SingleCellViewGraphPanelWidget *)));
+
+    // Keep track of the addition and removal of a graph
+
+    connect(res, SIGNAL(graphAdded(SingleCellViewGraphPanelPlotGraph *)),
+            this, SIGNAL(graphAdded(SingleCellViewGraphPanelPlotGraph *)));
+    connect(res, SIGNAL(graphRemoved(SingleCellViewGraphPanelPlotGraph *)),
+            this, SIGNAL(graphRemoved(SingleCellViewGraphPanelPlotGraph *)));
 
     // Activate the graph panel
 
@@ -186,7 +188,7 @@ SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::addGraphPanel(
 
     // Let people know that we have added a graph panel
 
-    emit grapPanelAdded(res);
+    emit graphPanelAdded(res);
 
     // Let people know whether graph panels can be removed
 
@@ -208,8 +210,10 @@ void SingleCellViewGraphPanelsWidget::removeGraphPanel()
 
     // Remove the current graph panel
 
+    SingleCellViewGraphPanelWidget *graphPanel = 0;
+
     for (int i = 0, iMax = count(); i < iMax; ++i) {
-        SingleCellViewGraphPanelWidget *graphPanel = qobject_cast<SingleCellViewGraphPanelWidget *>(widget(i));
+        graphPanel = qobject_cast<SingleCellViewGraphPanelWidget *>(widget(i));
 
         if (graphPanel->isActive()) {
             // We are dealing with the currently active graph panel, so remove
@@ -242,34 +246,16 @@ void SingleCellViewGraphPanelsWidget::removeGraphPanel()
     splitterMoved();
 
     // Let people know that we have removed a graph panel
+    // Note: the reason we pass a pointer to a now non-existing graph panel is
+    //       that some people interested in that signal might have used the
+    //       pointer to keep track of some information, as is the case with
+    //       SingleCellViewInformationGraphsWidget for example...
 
-    emit grapPanelRemoved();
+    emit graphPanelRemoved(graphPanel);
 
     // Let people know whether graph panels can be removed
 
     emit removeGraphPanelsEnabled(count() > 1);
-}
-
-//==============================================================================
-
-SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::activeGraphPanel()
-{
-    // Return the active graph panel
-
-    for (int i = 0, iMax = count(); i < iMax; ++i) {
-        SingleCellViewGraphPanelWidget *graphPanel = qobject_cast<SingleCellViewGraphPanelWidget *>(widget(i));
-
-        if (graphPanel->isActive())
-            // We found the active graph panel, so...
-
-            return graphPanel;
-    }
-
-    // There are no graph panels, so...
-    // Note: we should never reach this point since there should always be at
-    //       least one graph panel...
-
-    return 0;
 }
 
 //==============================================================================
@@ -283,7 +269,7 @@ void SingleCellViewGraphPanelsWidget::splitterMoved()
 
 //==============================================================================
 
-void SingleCellViewGraphPanelsWidget::graphPanelActivated(SingleCellViewGraphPanelWidget *pGraphPanel)
+void SingleCellViewGraphPanelsWidget::updateGraphPanels(SingleCellViewGraphPanelWidget *pGraphPanel)
 {
     // A graph panel has been activated, so inactivate all the others
 
