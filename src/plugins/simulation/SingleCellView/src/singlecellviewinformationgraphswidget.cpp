@@ -237,8 +237,7 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
 
     // Create a section for our newly added graph
 
-    Core::Property *sectionProperty = mPropertyEditor->addSectionProperty(QString("%1 | %2").arg(pGraph->parameterY()->fullyFormattedName(),
-                                                                                                 pGraph->parameterX()->fullyFormattedName()));
+    Core::Property *sectionProperty = mPropertyEditor->addSectionProperty();
 
     sectionProperty->setCheckable(true);
     sectionProperty->setChecked(true);
@@ -339,26 +338,40 @@ void SingleCellViewInformationGraphsWidget::propertyEditorSectionResized(const i
 
 void SingleCellViewInformationGraphsWidget::propertyChanged(Core::Property *pProperty)
 {
-//---GRY--- TO BE DONE...
-
-Q_UNUSED(pProperty);
+    // Retrieve the parent property
+    // Note: there is always going to be one since all of our editable
+    //       properties are within a section property...
 
     Core::Property *parentProperty = pProperty->parentProperty();
 
-    if (parentProperty) {
-        // We have a (section) parent property, so set its icon
+    // Make sure that the parent property has the required number of properties
+    // Note: indeed, when populating ourselves, propertyChanged() will get
+    //       called, yet we don't want to (and can't) do what follows if not all
+    //       the properties are available...
 
-        parentProperty->setIcon(QIcon(":/oxygen/status/task-attention.png"));
+    if (parentProperty->properties().count() != 3)
+        return;
 
-        // Update the model property icon, if needed
+    // Update the properties of the graph by checking the new value of the given
+    // property
 
-        if (pProperty == parentProperty->properties()[0]) {
-            if (!pProperty->value().compare(tr("Current")))
-                pProperty->setIcon(QIcon(":/oxygen/status/object-unlocked.png"));
-            else
-                pProperty->setIcon(QIcon(":/oxygen/status/object-locked.png"));
-        }
+    bool graphOk = true;
+
+    if (pProperty == parentProperty->properties()[0]) {
+        // Model property
+
+        if (!pProperty->value().compare(tr("Current")))
+            pProperty->setIcon(QIcon(":/oxygen/status/object-unlocked.png"));
+        else
+            pProperty->setIcon(QIcon(":/oxygen/status/object-locked.png"));
     }
+
+    parentProperty->setName(QString("%1 | %2").arg(parentProperty->properties()[1]->value(),
+                                                   parentProperty->properties()[2]->value()));
+
+    // Update the status (i.e. icon) of our (section) parent property
+
+    parentProperty->setIcon(graphOk?QIcon():QIcon(":/oxygen/status/task-attention.png"));
 }
 
 //==============================================================================
@@ -394,7 +407,7 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
     modelListValue << QString();
 
     foreach (const QString &fileName, mFileNames)
-        modelListValue << QFileInfo(fileName).fileName()+" | "+fileName;
+        modelListValue << QString("%1 | %2").arg(QFileInfo(fileName).fileName(), fileName);
 
     // Go through our section properties and update their information
 

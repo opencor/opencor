@@ -8,6 +8,10 @@
         <translation>Il n&apos;y a pas de courbes...</translation>
     </message>
     <message>
+        <source>Current</source>
+        <translation>Actuel</translation>
+    </message>
+    <message>
         <source>Model</source>
         <translation>Modèle</translation>
     </message>
@@ -18,10 +22,6 @@
     <message>
         <source>Y</source>
         <translation></translation>
-    </message>
-    <message>
-        <source>Current</source>
-        <translation>Actuel</translation>
     </message>
 </context>
 <context>

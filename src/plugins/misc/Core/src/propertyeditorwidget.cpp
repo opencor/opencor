@@ -24,7 +24,7 @@ namespace Core {
 
 //==============================================================================
 
-NumberEditorWidget::NumberEditorWidget(QWidget *pParent) :
+TextEditorWidget::TextEditorWidget(QWidget *pParent) :
     QLineEdit(pParent)
 {
 #ifdef Q_OS_MAC
@@ -37,7 +37,7 @@ NumberEditorWidget::NumberEditorWidget(QWidget *pParent) :
 
 //==============================================================================
 
-void NumberEditorWidget::keyPressEvent(QKeyEvent *pEvent)
+void TextEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Check some key combinations
 
@@ -78,7 +78,7 @@ void NumberEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 //==============================================================================
 
 IntegerEditorWidget::IntegerEditorWidget(QWidget *pParent) :
-    NumberEditorWidget(pParent)
+    TextEditorWidget(pParent)
 {
     // Set a validator which accepts any integer
 
@@ -88,7 +88,7 @@ IntegerEditorWidget::IntegerEditorWidget(QWidget *pParent) :
 //==============================================================================
 
 DoubleEditorWidget::DoubleEditorWidget(QWidget *pParent) :
-    NumberEditorWidget(pParent)
+    TextEditorWidget(pParent)
 {
     // Set a validator which accepts any double
 
@@ -260,6 +260,10 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
     Property *property = static_cast<PropertyItem *>(qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex))->owner();
 
     switch (property->type()) {
+    case Property::String:
+        editor = new TextEditorWidget(pParent);
+
+        break;
     case Property::Integer:
         editor = new IntegerEditorWidget(pParent);
 

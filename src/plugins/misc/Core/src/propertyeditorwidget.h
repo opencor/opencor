@@ -28,12 +28,12 @@ namespace Core {
 
 //==============================================================================
 
-class NumberEditorWidget : public QLineEdit
+class TextEditorWidget : public QLineEdit
 {
     Q_OBJECT
 
 public:
-    explicit NumberEditorWidget(QWidget *pParent = 0);
+    explicit TextEditorWidget(QWidget *pParent = 0);
 
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
@@ -45,7 +45,7 @@ Q_SIGNALS:
 
 //==============================================================================
 
-class IntegerEditorWidget : public NumberEditorWidget
+class IntegerEditorWidget : public TextEditorWidget
 {
     Q_OBJECT
 
@@ -55,7 +55,7 @@ public:
 
 //==============================================================================
 
-class DoubleEditorWidget : public NumberEditorWidget
+class DoubleEditorWidget : public TextEditorWidget
 {
     Q_OBJECT
 
