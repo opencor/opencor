@@ -152,12 +152,16 @@ void SingleCellViewInformationGraphsWidget::fileOpened(const QString &pFileName)
 void SingleCellViewInformationGraphsWidget::fileRenamed(const QString &pOldFileName,
                                                         const QString &pNewFileName)
 {
-    // Let our view widget know that a file has been renamed
+    // Replace the old file name with the new one in our various trackers
 
-    Q_UNUSED(pOldFileName);
-    Q_UNUSED(pNewFileName);
+    mFileName = pNewFileName;
 
-//---GRY--- TO BE DONE...
+    mFileNames << pNewFileName;
+
+    mRuntimes.insert(pNewFileName, mRuntimes.value(pOldFileName));
+    mSimulations.insert(pNewFileName, mSimulations.value(pOldFileName));
+
+    finalize(pOldFileName);
 }
 
 //==============================================================================
@@ -450,11 +454,13 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
 
     QStringList modelListValue = QStringList();
 
-    modelListValue << tr("Current");
-    modelListValue << QString();
-
     foreach (const QString &fileName, mFileNames)
         modelListValue << QString("%1 | %2").arg(QFileInfo(fileName).fileName(), fileName);
+
+    modelListValue.sort();
+
+    modelListValue.prepend(QString());
+    modelListValue.prepend(tr("Current"));
 
     // Go through our section properties and update (incl. retranslate) their
     // information
