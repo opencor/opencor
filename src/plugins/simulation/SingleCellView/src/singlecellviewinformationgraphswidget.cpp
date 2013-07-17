@@ -336,6 +336,18 @@ void SingleCellViewInformationGraphsWidget::propertyEditorSectionResized(const i
 
 //==============================================================================
 
+bool SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pProperty) const
+{
+    bool res = false;
+
+    pProperty->setIcon(res?QIcon():QIcon(":/oxygen/status/task-attention.png"));
+    pProperty->setExtraInfo(res?QString():tr("does not exist"));
+
+    return res;
+}
+
+//==============================================================================
+
 void SingleCellViewInformationGraphsWidget::propertyChanged(Core::Property *pProperty)
 {
     // Retrieve the parent property
@@ -344,21 +356,14 @@ void SingleCellViewInformationGraphsWidget::propertyChanged(Core::Property *pPro
 
     Core::Property *parentProperty = pProperty->parentProperty();
 
-    // Make sure that the parent property has the required number of properties
-    // Note: indeed, when populating ourselves, propertyChanged() will get
-    //       called, yet we don't want to (and can't) do what follows if not all
-    //       the properties are available...
-
-    if (parentProperty->properties().count() != 3)
-        return;
-
     // Update the properties of the graph by checking the new value of the given
     // property
 
     bool graphOk = true;
 
     if (pProperty == parentProperty->properties()[0]) {
-        // Model property
+        // We are dealing with the Model property, so update its icon based on
+        // whether its value
 
         if (!pProperty->value().compare(tr("Current")))
             pProperty->setIcon(QIcon(":/oxygen/status/object-unlocked.png"));
@@ -366,8 +371,25 @@ void SingleCellViewInformationGraphsWidget::propertyChanged(Core::Property *pPro
             pProperty->setIcon(QIcon(":/oxygen/status/object-locked.png"));
     }
 
-    parentProperty->setName(QString("%1 | %2").arg(parentProperty->properties()[1]->value(),
-                                                   parentProperty->properties()[2]->value()));
+    // Check that the parameters represented by the value of the X and Y
+    // properties exist for the current/selected model
+    // Note: we absolutely want to check the parameter (so that an icon can be
+    //       assigned to the propery) , hence the order of our || assignment...
+
+    if (parentProperty->properties().count() >= 2)
+        graphOk = updateGraphInfo(parentProperty->properties()[1]) || graphOk;
+
+    if (parentProperty->properties().count() >= 3)
+        graphOk = updateGraphInfo(parentProperty->properties()[2]) || graphOk;
+
+    // Update our section's name, if possible
+    // Note: indeed, when populating ourselves, propertyChanged() will get
+    //       called, yet we don't want to (and can't) do what follows if not all
+    //       the properties are available...
+
+    if (parentProperty->properties().count() == 3)
+        parentProperty->setName(QString("%1 | %2").arg(parentProperty->properties()[1]->value(),
+                                                       parentProperty->properties()[2]->value()));
 
     // Update the status (i.e. icon) of our (section) parent property
 
@@ -409,7 +431,8 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
     foreach (const QString &fileName, mFileNames)
         modelListValue << QString("%1 | %2").arg(QFileInfo(fileName).fileName(), fileName);
 
-    // Go through our section properties and update their information
+    // Go through our section properties and update (incl. retranslate) their
+    // information
 
     foreach (Core::Property *sectionProperty, sectionProperties) {
         QList<Core::Property *> properties = sectionProperty->properties();
@@ -419,6 +442,9 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
         properties[2]->setName(tr("Y"));
 
         properties[0]->setListValue(modelListValue);
+
+        updateGraphInfo(sectionProperty->properties()[1]);
+        updateGraphInfo(sectionProperty->properties()[2]);
     }
 }
 

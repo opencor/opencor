@@ -884,7 +884,8 @@ void Property::updateToolTip()
         else
             toolTip += mValue->text();
 
-        toolTip += " "+mUnit->text();
+        if (!mUnit->text().isEmpty())
+            toolTip += " "+mUnit->text();
 
         if (!mExtraInfo.isEmpty())
             toolTip += " ("+mExtraInfo+")";

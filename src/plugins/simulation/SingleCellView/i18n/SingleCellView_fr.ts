@@ -23,6 +23,10 @@
         <source>Y</source>
         <translation></translation>
     </message>
+    <message>
+        <source>does not exist</source>
+        <translation>n&apos;existe pas</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::SingleCellView::SingleCellViewInformationParametersWidget</name>

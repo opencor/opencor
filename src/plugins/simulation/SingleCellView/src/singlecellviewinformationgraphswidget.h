@@ -84,6 +84,7 @@ private:
     QMap<QString, CellMLSupport::CellmlFileRuntime *> mRuntimes;
     QMap<QString, SingleCellViewSimulation *> mSimulations;
 
+    bool updateGraphInfo(OpenCOR::Core::Property *pProperty) const;
     void updateGraphsInfo(Core::Property *pSectionProperty = 0);
 
 public Q_SLOTS:
