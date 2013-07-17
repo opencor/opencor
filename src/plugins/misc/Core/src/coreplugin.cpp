@@ -424,7 +424,7 @@ void CorePlugin::fileOpened(const QString &pFileName)
 void CorePlugin::fileRenamed(const QString &pOldFileName,
                              const QString &pNewFileName)
 {
-    Q_UNUSED(pNewFileName);
+    Q_UNUSED(pOldFileName);
 
     // Remove the new file from our list of recent files, should it be there
     // Note: it's fine if the new file isn't in our list since nothing will be
@@ -432,11 +432,6 @@ void CorePlugin::fileRenamed(const QString &pOldFileName,
     //       presence)...
 
     mRecentFileNames.removeOne(pNewFileName);
-
-    // A file has been renamed, so we want the old file name to be added to our
-    // list of recent files, i.e. as if it had been closed
-
-    fileClosed(pOldFileName);
 }
 
 //==============================================================================
