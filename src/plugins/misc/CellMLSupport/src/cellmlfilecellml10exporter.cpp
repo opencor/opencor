@@ -274,8 +274,6 @@ void CellmlFileCellml10Exporter::ensureComponentNameUniqueness(std::wstring &pCo
 
 iface::dom::Element * CellmlFileCellml10Exporter::copyDomElement(iface::dom::Element *pDomElement)
 {
-    Q_UNUSED(pDomElement);
-
     // Create and return a (manual) deep copy of the given DOM element
     // Note #1: if the DOM element is in the MathML namespace, then it will be
     //          converted to an iface::cellml_api::MathMLElement instance prior

@@ -388,8 +388,6 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
 void SingleCellViewInformationParametersWidget::populateContextMenu(QMenu *pContextMenu,
                                                                     CellMLSupport::CellmlFileRuntime *pRuntime)
 {
-    Q_UNUSED(pRuntime);
-
     // Create our two main menu items
 
     QAction *voiAction = pContextMenu->addAction(QString());
