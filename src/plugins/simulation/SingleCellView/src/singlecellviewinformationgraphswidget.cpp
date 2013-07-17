@@ -9,6 +9,7 @@
 
 //==============================================================================
 
+#include <QFileInfo>
 #include <QHeaderView>
 #include <QLabel>
 #include <QSettings>
@@ -382,7 +383,7 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
     modelListValue << QString();
 
     foreach (const QString &fileName, mFileNames)
-        modelListValue << fileName;
+        modelListValue << QFileInfo(fileName).fileName()+" | "+fileName;
 
     // Go through our section properties and update their information
 
