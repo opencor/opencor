@@ -886,10 +886,10 @@ void Property::updateToolTip()
 
         if (!mUnit->text().isEmpty())
             toolTip += " "+mUnit->text();
-
-        if (!mExtraInfo.isEmpty())
-            toolTip += " ("+mExtraInfo+")";
     }
+
+    if (!mExtraInfo.isEmpty())
+        toolTip += " ("+mExtraInfo+")";
 
     mName->setToolTip(toolTip);
 

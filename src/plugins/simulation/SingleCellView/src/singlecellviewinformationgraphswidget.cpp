@@ -374,13 +374,13 @@ void SingleCellViewInformationGraphsWidget::propertyChanged(Core::Property *pPro
     // Check that the parameters represented by the value of the X and Y
     // properties exist for the current/selected model
     // Note: we absolutely want to check the parameter (so that an icon can be
-    //       assigned to the propery) , hence the order of our || assignment...
+    //       assigned to the propery) , hence the order of our && assignment...
 
     if (parentProperty->properties().count() >= 2)
-        graphOk = updateGraphInfo(parentProperty->properties()[1]) || graphOk;
+        graphOk = updateGraphInfo(parentProperty->properties()[1]) && graphOk;
 
     if (parentProperty->properties().count() >= 3)
-        graphOk = updateGraphInfo(parentProperty->properties()[2]) || graphOk;
+        graphOk = updateGraphInfo(parentProperty->properties()[2]) && graphOk;
 
     // Update our section's name, if possible
     // Note: indeed, when populating ourselves, propertyChanged() will get
