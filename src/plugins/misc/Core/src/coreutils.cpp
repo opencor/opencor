@@ -387,9 +387,17 @@ void setFocusTo(QWidget *pWidget)
 
 QString nativeCanonicalFileName(const QString &pFileName)
 {
-    // Return a native and canonical version of the file's name
+    // Return a native and canonical version of the given file name
 
-    return QDir::toNativeSeparators(QFileInfo(pFileName).canonicalFilePath());
+    QString res = QFileInfo(pFileName).canonicalFilePath();
+
+    if (res.isEmpty())
+        // The file name doesn't correspond to a physical file, so just use what
+        // we were given
+
+        res = pFileName;
+
+    return QDir::toNativeSeparators(res);
 }
 
 //==============================================================================

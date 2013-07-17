@@ -582,70 +582,87 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
             return false;
     }
 
-    // Try to save the file in case it has been modified or it needs a new file
-    // name (either as a result of a save as or because the file was new)
+    // Try to save and/or rename the file in case it has been modified or it
+    // needs a new file name (either as a result of a save as or because the
+    // file was new)
 
-    if (   (FileManager::instance()->isModified(oldFileName) && !pNeedNewFileName)
-        || hasNewFileName) {
-        if (guiInterface->saveFile(oldFileName, newFileName)) {
-            // Let all the plugins know about the file having been saved
+    if (FileManager::instance()->isModified(oldFileName) || hasNewFileName) {
+        // Physically save the file in case it has been modified, or physically
+        // rename it
 
-            foreach (Plugin *plugin, mLoadedPlugins) {
-                GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+        if (FileManager::instance()->isModified(oldFileName)) {
+            // The file has been modified, so ask the current view to save it
 
-                if (guiInterface)
-                    guiInterface->fileSaved(newFileName);
-            }
-
-            // The file was saved, so update its file name, if needed
-
-            if (hasNewFileName) {
-                // Ask our file manager to rename the file
-
-#ifdef QT_DEBUG
-                FileManager::Status renameStatus =
-#endif
-                FileManager::instance()->rename(oldFileName, newFileName);
-
-                // Make sure that the file has indeed been renamed
-
-#ifdef QT_DEBUG
-                if (renameStatus == FileManager::Renamed)
-                    qFatal("FATAL ERROR | %s:%d: '%s' did not get renamed to '%s'", __FILE__, __LINE__, qPrintable(oldFileName), qPrintable(newFileName));
-#endif
-
-                // Update our file names and tabs
-
-                mFileNames[pIndex] = newFileName;
-
-                mFileTabs->setTabText(pIndex, QFileInfo(newFileName).fileName());
-                mFileTabs->setTabToolTip(pIndex, newFileName);
-
-                // Let all the plugins know about the file having been renamed
+            if (guiInterface->saveFile(oldFileName, newFileName)) {
+                // Let all the plugins know about the file having been saved
 
                 foreach (Plugin *plugin, mLoadedPlugins) {
                     GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
 
                     if (guiInterface)
-                        guiInterface->fileRenamed(oldFileName, newFileName);
+                        guiInterface->fileSaved(newFileName);
                 }
+            } else {
+                // The file couldn't be saved, so...
+
+                QMessageBox::warning(mMainWindow, tr("Save File"),
+                                     tr("Sorry, but <strong>%1</strong> could not be saved.").arg(newFileName));
+
+                return false;
             }
-
-            // Update our modified settings
-
-            updateModifiedSettings();
-
-            // Everything went fine, so...
-
-            return true;
         } else {
-            // The file couldn't be saved, so...
+            // The file hasn't been modified, so we just need to physically
+            // rename the file
 
-            QMessageBox::warning(mMainWindow, tr("Save File"),
-                                 tr("Sorry, but <strong>%1</strong> could not be saved.").arg(newFileName));
+            if (!QFile::rename(oldFileName, newFileName)) {
+                QMessageBox::warning(mMainWindow, tr("Save File"),
+                                     tr("Sorry, but <strong>%1</strong> could not be saved.").arg(newFileName));
 
-            return false;
+                return false;
+            }
         }
+
+        // Update its file name, if needed
+
+        if (hasNewFileName) {
+            // Ask our file manager to rename the file
+
+#ifdef QT_DEBUG
+            FileManager::Status renameStatus =
+#endif
+            FileManager::instance()->rename(oldFileName, newFileName);
+
+            // Make sure that the file has indeed been renamed
+
+#ifdef QT_DEBUG
+            if (renameStatus != FileManager::Renamed)
+                qFatal("FATAL ERROR | %s:%d: '%s' did not get renamed to '%s'", __FILE__, __LINE__, qPrintable(oldFileName), qPrintable(newFileName));
+#endif
+
+            // Update our file names and tabs
+
+            mFileNames[pIndex] = newFileName;
+
+            mFileTabs->setTabText(pIndex, QFileInfo(newFileName).fileName());
+            mFileTabs->setTabToolTip(pIndex, newFileName);
+
+            // Let all the plugins know about the file having been renamed
+
+            foreach (Plugin *plugin, mLoadedPlugins) {
+                GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+
+                if (guiInterface)
+                    guiInterface->fileRenamed(oldFileName, newFileName);
+            }
+        }
+
+        // Update our modified settings
+
+        updateModifiedSettings();
+
+        // Everything went fine, so...
+
+        return true;
     } else {
         // Nothing to save, so...
 
