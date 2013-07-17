@@ -147,6 +147,9 @@ public:
 
     int row() const;
 
+    Property * parentProperty() const;
+    void setParentProperty(Property *pProperty);
+
     QList<Property *> properties() const;
 
     void add(Property *pProperty);
@@ -219,6 +222,7 @@ private:
 
     QString mExtraInfo;
 
+    Property * mParentProperty;
     QList<Property *> mProperties;
 
     QList<QStandardItem *> items() const;

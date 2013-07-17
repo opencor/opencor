@@ -379,6 +379,7 @@ Property::Property(const Type &pType, PropertyEditorWidget *pParent) :
     mListValue(QStringList()),
     mEmptyListValue(QString("???")),
     mExtraInfo(QString()),
+    mParentProperty(0),
     mProperties(QList<Property *>())
 {
     // Note: mName, mValue and mUnit get owned by our property editor widget, so
@@ -414,6 +415,24 @@ int Property::row() const
 
 //==============================================================================
 
+Property * Property::parentProperty() const
+{
+    // Return our parent property
+
+    return mParentProperty;
+}
+
+//==============================================================================
+
+void Property::setParentProperty(Property *pProperty)
+{
+    // Set our parent property
+
+    mParentProperty = pProperty;
+}
+
+//==============================================================================
+
 QList<Property *> Property::properties() const
 {
     // Return our properties
@@ -429,7 +448,11 @@ void Property::add(Property *pProperty)
 
     mProperties << pProperty;
 
-    return mName->appendRow(pProperty->items());
+    mName->appendRow(pProperty->items());
+
+    // Let the property that we are its parent
+
+    pProperty->setParentProperty(this);
 }
 
 //==============================================================================
@@ -438,7 +461,7 @@ void Property::addTo(QStandardItem *pParent)
 {
     // Add ourselves to the given parent
 
-    return pParent->appendRow(items());
+    pParent->appendRow(items());
 }
 
 //==============================================================================

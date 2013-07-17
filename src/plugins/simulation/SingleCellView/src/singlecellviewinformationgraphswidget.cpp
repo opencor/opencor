@@ -348,6 +348,11 @@ void SingleCellViewInformationGraphsWidget::propertyChanged(Core::Property *pPro
 //---GRY--- TO BE DONE...
 
 Q_UNUSED(pProperty);
+
+    if (pProperty->parentProperty())
+        // We have a (section) parent property, so set its icon
+
+        pProperty->parentProperty()->setIcon(QIcon(":/oxygen/status/task-attention.png"));
 }
 
 //==============================================================================
