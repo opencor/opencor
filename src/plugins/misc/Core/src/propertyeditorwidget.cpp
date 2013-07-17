@@ -681,9 +681,9 @@ void Property::setValue(const QString &pValue, const bool &pForce,
 
         updateToolTip();
 
-        // Let people know that we have a new value (or forced a 'new' one)
+        // Let people know if we have a new value
 
-        if (pEmitSignal)
+        if (pEmitSignal && pValue.compare(oldValue))
             emit valueChanged(oldValue, pValue);
     }
 }
