@@ -176,7 +176,7 @@ void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelW
     if (!mPropertyEditor) {
         // No property editor exists for the given graph panel, so create one
 
-        mPropertyEditor = new Core::PropertyEditorWidget(this);
+        mPropertyEditor = new Core::PropertyEditorWidget(false, false, this);
 
         // Initialise our property editor's columns' width
 
