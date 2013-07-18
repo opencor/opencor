@@ -188,6 +188,11 @@ void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelW
         connect(mPropertyEditor->header(), SIGNAL(sectionResized(int, int, int)),
                 this, SLOT(propertyEditorSectionResized(const int &, const int &, const int &)));
 
+        // Keep track of changes to list properties
+
+        connect(mPropertyEditor, SIGNAL(listPropertyChanged(Core::Property *, const QString &)),
+                this, SLOT(modelChanged(Core::Property *, const QString &)));
+
         // Keep track of when the user changes a property value
 
         connect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
@@ -381,7 +386,8 @@ bool SingleCellViewInformationGraphsWidget::checkParameter(const QString &pFileN
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pProperty) const
+void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pProperty,
+                                                            const QString &pModel) const
 {
     // Update the graph information by checking the new value of the given
     // section property
@@ -391,12 +397,12 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
 
     QString fileName = mFileName;
 
-    if (!pProperty->properties()[0]->value().compare(tr("Current"))) {
+    if (!pModel.compare(tr("Current"))) {
         pProperty->properties()[0]->setIcon(QIcon(":/oxygen/status/object-unlocked.png"));
     } else {
         pProperty->properties()[0]->setIcon(QIcon(":/oxygen/status/object-locked.png"));
 
-        fileName = pProperty->properties()[0]->value().split(" | ").last();
+        fileName = pModel.split(" | ").last();
     }
 
     // Check that the parameters represented by the value of the X and Y
@@ -431,12 +437,27 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::propertyChanged(Core::Property *pProperty)
+void SingleCellViewInformationGraphsWidget::modelChanged(Core::Property *pProperty,
+                                                         const QString &pValue)
 {
     // Update the graph information associated with the given property's
     // corresponding section property
 
-    updateGraphInfo(pProperty->parentProperty());
+    updateGraphInfo(pProperty->parentProperty(), pValue);
+}
+
+//==============================================================================
+
+void SingleCellViewInformationGraphsWidget::propertyChanged(Core::Property *pProperty)
+{
+    // Update the graph information associated with the given property's
+    // corresponding section property, but only if the property is not the model
+    // one (since we will have been updating the graph information in
+    // modelChanged()) above)
+
+    if (pProperty != pProperty->parentProperty()->properties()[0])
+        updateGraphInfo(pProperty->parentProperty(),
+                        pProperty->parentProperty()->properties()[0]->value());
 }
 
 //==============================================================================
@@ -480,15 +501,13 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
     // information
 
     foreach (Core::Property *sectionProperty, sectionProperties) {
-        QList<Core::Property *> properties = sectionProperty->properties();
+        sectionProperty->properties()[0]->setName(tr("Model"));
+        sectionProperty->properties()[1]->setName(tr("X"));
+        sectionProperty->properties()[2]->setName(tr("Y"));
 
-        properties[0]->setName(tr("Model"));
-        properties[1]->setName(tr("X"));
-        properties[2]->setName(tr("Y"));
+        sectionProperty->properties()[0]->setListValue(modelListValue);
 
-        properties[0]->setListValue(modelListValue);
-
-        updateGraphInfo(sectionProperty);
+        updateGraphInfo(sectionProperty, sectionProperty->properties()[0]->value());
     }
 }
 

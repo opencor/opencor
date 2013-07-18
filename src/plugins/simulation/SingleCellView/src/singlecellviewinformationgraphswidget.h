@@ -87,7 +87,8 @@ private:
     bool checkParameter(const QString &pFileName,
                         OpenCOR::Core::Property *pProperty) const;
 
-    void updateGraphInfo(OpenCOR::Core::Property *pProperty) const;
+    void updateGraphInfo(OpenCOR::Core::Property *pProperty,
+                         const QString &pModel) const;
     void updateGraphsInfo(Core::Property *pSectionProperty = 0);
 
 public Q_SLOTS:
@@ -101,6 +102,7 @@ private Q_SLOTS:
     void propertyEditorSectionResized(const int &pLogicalIndex,
                                       const int &pOldSize, const int &pNewSize);
 
+    void modelChanged(Core::Property *pProperty, const QString &pValue);
     void propertyChanged(Core::Property *pProperty);
 };
 
