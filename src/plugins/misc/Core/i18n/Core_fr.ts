@@ -200,5 +200,9 @@
         <source>: </source>
         <translation> : </translation>
     </message>
+    <message>
+        <source>Please choose a different file name.</source>
+        <translation>Veuillez choisir un nom de fichier différent .</translation>
+    </message>
 </context>
 </TS>

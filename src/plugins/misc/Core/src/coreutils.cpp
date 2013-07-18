@@ -325,13 +325,22 @@ QString CORE_EXPORT getSaveFileName(const QString &pCaption,
                                                                         pCaption,
                                                                         pFileName.isEmpty()?
                                                                             activeDirectory():
-                                                                            QFileInfo(pFileName).canonicalPath(),
+                                                                            pFileName,
                                                                         pFilter, 0,
                                                                         QFileDialog::DontConfirmOverwrite));
 
     // Make sure that we have got a save file name
 
     if (!res.isEmpty()) {
+        // Make sure that the save file name is not the same as our given one
+
+        if (!res.compare(pFileName)) {
+            QMessageBox::warning(qApp->activeWindow(), pCaption,
+                                 QObject::tr("Please choose a different file name."));
+
+            return QString();
+        }
+
         // Update our active directory
 
         QFileInfo resInfo = res;
