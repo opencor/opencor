@@ -424,14 +424,18 @@ void CorePlugin::fileOpened(const QString &pFileName)
 void CorePlugin::fileRenamed(const QString &pOldFileName,
                              const QString &pNewFileName)
 {
-    Q_UNUSED(pOldFileName);
-
     // Remove the new file from our list of recent files, should it be there
     // Note: it's fine if the new file isn't in our list since nothing will be
     //       done in that case (thus avoiding us having to test for its
     //       presence)...
 
     mRecentFileNames.removeOne(pNewFileName);
+
+    // A file has been created or saved under a new name, so we want the old
+    // file name to be added to our list of recent files, i.e. as if it had been
+    // closed
+
+    fileClosed(pOldFileName);
 }
 
 //==============================================================================

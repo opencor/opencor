@@ -582,13 +582,12 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
             return false;
     }
 
-    // Try to save and/or rename the file in case it has been modified or it
-    // needs a new file name (either as a result of a save as or because the
-    // file was new)
+    // Try to save the file in case it has been modified or it needs a new file
+    // name (either as a result of a save as or because the file was new)
 
     if (FileManager::instance()->isModified(oldFileName) || hasNewFileName) {
-        // Physically save the file in case it has been modified, or physically
-        // rename it
+        // Physically save the file in case it has been modified, or make a
+        // physical copy of it
 
         if (FileManager::instance()->isModified(oldFileName)) {
             // The file has been modified, so ask the current view to save it
@@ -611,10 +610,10 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
                 return false;
             }
         } else {
-            // The file hasn't been modified, so we just need to physically
-            // rename the file
+            // The file hasn't been modified, so we just need to make a physical
+            // copy of it
 
-            if (!QFile::rename(oldFileName, newFileName)) {
+            if (!QFile::copy(oldFileName, newFileName)) {
                 QMessageBox::warning(mMainWindow, tr("Save File"),
                                      tr("Sorry, but <strong>%1</strong> could not be saved.").arg(newFileName));
 

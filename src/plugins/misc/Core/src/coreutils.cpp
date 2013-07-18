@@ -389,15 +389,7 @@ QString nativeCanonicalFileName(const QString &pFileName)
 {
     // Return a native and canonical version of the given file name
 
-    QString res = QFileInfo(pFileName).canonicalFilePath();
-
-    if (res.isEmpty())
-        // The file name doesn't correspond to a physical file, so just use what
-        // we were given
-
-        res = pFileName;
-
-    return QDir::toNativeSeparators(res);
+    return QDir::toNativeSeparators(QFileInfo(pFileName).canonicalFilePath());
 }
 
 //==============================================================================
