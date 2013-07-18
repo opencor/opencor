@@ -386,6 +386,8 @@ bool SingleCellViewInformationGraphsWidget::checkParameter(const QString &pFileN
 
 //==============================================================================
 
+static const QString PropertySeparator = " | ";
+
 void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pProperty,
                                                             const QString &pFileName) const
 {
@@ -395,7 +397,6 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
     // Update the model property's icon based on its value and determine the
     // file name from which we will have to check our X and Y properties
 
-    QString oldFileName = pProperty->properties()[0]->value();
     QString fileName = mFileName;
 
     if (!pFileName.compare(tr("Current"))) {
@@ -403,7 +404,7 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
     } else {
         pProperty->properties()[0]->setIcon(QIcon(":/oxygen/status/object-locked.png"));
 
-        fileName = pFileName.split(" | ").last();
+        fileName = pFileName.split(PropertySeparator).last();
     }
 
     // Check that the parameters represented by the value of the X and Y
@@ -426,8 +427,9 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
     //       what follows if not all the properties are available...
 
     if (pProperty->properties().count() == 3)
-        pProperty->setName(QString("%1 | %2").arg(pProperty->properties()[1]->value(),
-                                                  pProperty->properties()[2]->value()));
+        pProperty->setName( pProperty->properties()[1]->value()
+                           +PropertySeparator
+                           +pProperty->properties()[2]->value());
 
     // Update the status (i.e. icon) of our (section) property
 
@@ -491,7 +493,7 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
     QStringList modelListValue = QStringList();
 
     foreach (const QString &fileName, mFileNames)
-        modelListValue << QString("%1 | %2").arg(QFileInfo(fileName).fileName(), fileName);
+        modelListValue << QFileInfo(fileName).fileName()+PropertySeparator+fileName;
 
     modelListValue.sort();
 
@@ -506,9 +508,30 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
         sectionProperty->properties()[1]->setName(tr("X"));
         sectionProperty->properties()[2]->setName(tr("Y"));
 
+        // Keep track of the current model value, so that we can safely update
+        // its list value and then select the correct model value back
+
+        QString oldModelValue = sectionProperty->properties()[0]->value();
+        QString newModelValue = oldModelValue;
+
         sectionProperty->properties()[0]->setListValue(modelListValue);
 
-        updateGraphInfo(sectionProperty, sectionProperty->properties()[0]->value());
+        if (!modelListValue.contains(oldModelValue))
+            // Our old model value is not in our new model list value, which
+            // means that the current file got renamed, so we use that instead
+
+            newModelValue = QFileInfo(mFileName).fileName()+PropertySeparator+mFileName;
+
+        // Check whether newModelValue is empty and, if so, update our graph
+        // info using the current value of our model property, otherwise set the
+        // value of our model property to newModelValue
+        // Note: the latter will result in updateGraphInfo() being called, so we
+        //       are all fine...
+
+        if (newModelValue.isEmpty())
+            updateGraphInfo(sectionProperty, sectionProperty->properties()[0]->value());
+        else
+            sectionProperty->properties()[0]->setValue(newModelValue);
     }
 }
 
