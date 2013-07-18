@@ -213,6 +213,8 @@ private:
 
     QString mId;
 
+    bool mHasUnit;
+
     PropertyItem *mName;
     PropertyItem *mValue;
     PropertyItem *mUnit;
@@ -292,6 +294,9 @@ class CORE_EXPORT PropertyEditorWidget : public TreeViewWidget
     Q_OBJECT
 
 public:
+    explicit PropertyEditorWidget(const bool &pShowUnits,
+                                  const bool &pAutoUpdateHeight,
+                                  QWidget *pParent = 0);
     explicit PropertyEditorWidget(const bool &pAutoUpdateHeight,
                                   QWidget *pParent = 0);
     explicit PropertyEditorWidget(QWidget *pParent = 0);
@@ -330,6 +335,8 @@ public:
     Property * property(const QModelIndex &pIndex) const;
     Property * currentProperty() const;
 
+    bool showUnits() const;
+
     void finishPropertyEditing(const bool &pCommitData = true);
 
     void removeAllProperties();
@@ -342,6 +349,7 @@ protected:
     virtual void resizeEvent(QResizeEvent *pEvent);
 
 private:
+    bool mShowUnits;
     bool mAutoUpdateHeight;
 
     QStandardItemModel *mModel;
@@ -353,7 +361,8 @@ private:
 
     bool mRightClicking;
 
-    void constructor(const bool &pAutoUpdateHeight = false);
+    void constructor(const bool &pShowUnits = true,
+                     const bool &pAutoUpdateHeight = false);
 
     void retranslateEmptyListProperties(QStandardItem *pItem);
 

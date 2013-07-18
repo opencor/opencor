@@ -377,9 +377,10 @@ Property::Property(const Type &pType, PropertyEditorWidget *pParent) :
     mOwner(pParent),
     mType(pType),
     mId(QString()),
+    mHasUnit(pParent->showUnits()),
     mName(new PropertyItem(this)),
     mValue(new PropertyItem(this)),
-    mUnit(new PropertyItem(this)),
+    mUnit(mHasUnit?new PropertyItem(this):0),
     mListValue(QStringList()),
     mEmptyListValue(QString("???")),
     mExtraInfo(QString()),
@@ -474,7 +475,12 @@ QList<QStandardItem *> Property::items() const
 {
     // Return our items as a list
 
-    return QList<QStandardItem *>() << mName << mValue << mUnit;
+    QList<QStandardItem *> res = QList<QStandardItem *>() << mName << mValue;
+
+    if (mHasUnit)
+        res << mUnit;
+
+    return res;
 }
 
 //==============================================================================
@@ -492,7 +498,12 @@ bool Property::hasIndex(const QModelIndex &pIndex) const
 {
     // Return whether the given is that our name, value or unit item
 
-    return (mName->index()  == pIndex) || (mValue->index() == pIndex) || (mUnit->index()  == pIndex);
+    bool res = (mName->index()  == pIndex) || (mValue->index() == pIndex);
+
+    if (mHasUnit)
+        res = res || (mUnit->index()  == pIndex);
+
+    return res;
 }
 
 //==============================================================================
@@ -782,7 +793,7 @@ QString Property::unit() const
 {
     // Return our unit
 
-    return mUnit->text();
+    return mHasUnit?mUnit->text():QString();
 }
 
 //==============================================================================
@@ -791,7 +802,7 @@ void Property::setUnit(const QString &pUnit)
 {
     // Set our unit, if it's not of section type
 
-    if ((mType != Section) && pUnit.compare(mUnit->text())) {
+    if (mHasUnit && (mType != Section) && pUnit.compare(mUnit->text())) {
         mUnit->setText(pUnit);
 
         updateToolTip();
@@ -884,7 +895,7 @@ void Property::updateToolTip()
         else
             toolTip += mValue->text();
 
-        if (!mUnit->text().isEmpty())
+        if (mHasUnit && !mUnit->text().isEmpty())
             toolTip += " "+mUnit->text();
     }
 
@@ -895,7 +906,9 @@ void Property::updateToolTip()
 
     if (mType != Section) {
         mValue->setToolTip(toolTip);
-        mUnit->setToolTip(toolTip);
+
+        if (mHasUnit)
+            mUnit->setToolTip(toolTip);
     }
 }
 
@@ -995,10 +1008,12 @@ QModelIndex PropertyEditorWidgetGuiState::currentProperty() const
 
 //==============================================================================
 
-void PropertyEditorWidget::constructor(const bool &pAutoUpdateHeight)
+void PropertyEditorWidget::constructor(const bool &pShowUnits,
+                                       const bool &pAutoUpdateHeight)
 {
     // Some initialisations
 
+    mShowUnits = pShowUnits;
     mAutoUpdateHeight = pAutoUpdateHeight;
 
     mProperties = Properties();
@@ -1069,13 +1084,25 @@ void PropertyEditorWidget::constructor(const bool &pAutoUpdateHeight)
 
 //==============================================================================
 
+PropertyEditorWidget::PropertyEditorWidget(const bool &pShowUnits,
+                                           const bool &pAutoUpdateHeight,
+                                           QWidget *pParent) :
+    TreeViewWidget(pParent)
+{
+    // Construct our object
+
+    constructor(pShowUnits, pAutoUpdateHeight);
+}
+
+//==============================================================================
+
 PropertyEditorWidget::PropertyEditorWidget(const bool &pAutoUpdateHeight,
                                            QWidget *pParent) :
     TreeViewWidget(pParent)
 {
     // Construct our object
 
-    constructor(pAutoUpdateHeight);
+    constructor(true, pAutoUpdateHeight);
 }
 
 //==============================================================================
@@ -1121,9 +1148,13 @@ void PropertyEditorWidget::retranslateUi()
 {
     // Retranslate our header labels
 
-    mModel->setHorizontalHeaderLabels(QStringList() << tr("Property")
-                                                    << tr("Value")
-                                                    << tr("Unit"));
+    QStringList horizontalHeaderLabels = QStringList() << tr("Property")
+                                                       << tr("Value");
+
+    if (mShowUnits)
+        horizontalHeaderLabels << tr("Unit");
+
+    mModel->setHorizontalHeaderLabels(horizontalHeaderLabels);
 
     // 'Retranslate' the value of all empty list properties
 
@@ -1890,6 +1921,15 @@ Property * PropertyEditorWidget::currentProperty() const
     // Return some information about the current property
 
     return property(currentIndex());
+}
+
+//==============================================================================
+
+bool PropertyEditorWidget::showUnits() const
+{
+    // Return whether we show units
+
+    return mShowUnits;
 }
 
 //==============================================================================
