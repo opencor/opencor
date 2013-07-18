@@ -92,15 +92,14 @@ private:
     SingleCellViewInformationSolversWidgetData * addSolverProperties(const SolverInterfaces &pSolverInterfaces,
                                                                      const Solver::Type &pSolverType);
 
-    bool doSolverChanged(SingleCellViewInformationSolversWidgetData *pSolverData,
-                         const QString &pSolverName,
-                         const bool &pForceHandling = false);
+    void doSolverChanged(SingleCellViewInformationSolversWidgetData *pSolverData,
+                         const QString &pSolverName);
 
     void setPropertiesUnit(SingleCellViewInformationSolversWidgetData *pSolverData,
                            const QString &pVoiUnit);
 
 private Q_SLOTS:
-    void solverChanged(const QString &pValue);
+    void solverChanged(Core::Property *pProperty, const QString &pValue);
 };
 
 //==============================================================================

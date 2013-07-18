@@ -84,11 +84,16 @@ Q_SIGNALS:
 
 //==============================================================================
 
+class Property;
+class PropertyEditorWidget;
+
 class PropertyItemDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 
 public:
+    explicit PropertyItemDelegate(PropertyEditorWidget *pParent);
+
     virtual QWidget *createEditor(QWidget *pParent,
                                   const QStyleOptionViewItem &pOption,
                                   const QModelIndex &pIndex) const;
@@ -104,12 +109,13 @@ Q_SIGNALS:
     void goToPreviousPropertyRequested();
     void goToNextPropertyRequested();
 
-    void listPropertyChanged(const QString &pValue);
+    void listPropertyChanged(Core::Property *pProperty, const QString &pValue);
+
+private Q_SLOTS:
+    void emitListPropertyChanged(const QString &pValue);
 };
 
 //==============================================================================
-
-class Property;
 
 class CORE_EXPORT PropertyItem : public QStandardItem
 {
@@ -123,8 +129,6 @@ private:
 };
 
 //==============================================================================
-
-class PropertyEditorWidget;
 
 class CORE_EXPORT Property : public QObject
 {
@@ -377,7 +381,7 @@ private:
 
 Q_SIGNALS:
     void propertyChanged(Core::Property *pProperty);
-    void listPropertyChanged(const QString &pValue);
+    void listPropertyChanged(Core::Property *pProperty, const QString &pValue);
 
 private Q_SLOTS:
     void updateHeight();

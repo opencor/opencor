@@ -63,8 +63,8 @@ SingleCellViewInformationSolversWidget::SingleCellViewInformationSolversWidget(Q
 {
     // Keep track of changes to list properties
 
-    connect(this, SIGNAL(listPropertyChanged(const QString &)),
-            this, SLOT(solverChanged(const QString &)));
+    connect(this, SIGNAL(listPropertyChanged(Core::Property *, const QString &)),
+            this, SLOT(solverChanged(Core::Property *, const QString &)));
 }
 
 //==============================================================================
@@ -283,13 +283,13 @@ void SingleCellViewInformationSolversWidget::setSolverInterfaces(const SolverInt
     // Show/hide the relevant properties
 
     if (mOdeSolverData)
-        doSolverChanged(mOdeSolverData, mOdeSolverData->solversListProperty()->value(), true);
+        doSolverChanged(mOdeSolverData, mOdeSolverData->solversListProperty()->value());
 
     if (mDaeSolverData)
-        doSolverChanged(mDaeSolverData, mDaeSolverData->solversListProperty()->value(), true);
+        doSolverChanged(mDaeSolverData, mDaeSolverData->solversListProperty()->value());
 
     if (mNlaSolverData)
-        doSolverChanged(mNlaSolverData, mNlaSolverData->solversListProperty()->value(), true);
+        doSolverChanged(mNlaSolverData, mNlaSolverData->solversListProperty()->value());
 
     // Expand all our properties
 
@@ -446,56 +446,36 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
 
 //==============================================================================
 
-bool SingleCellViewInformationSolversWidget::doSolverChanged(SingleCellViewInformationSolversWidgetData *pSolverData,
-                                                             const QString &pSolverName,
-                                                             const bool &pForceHandling)
+void SingleCellViewInformationSolversWidget::doSolverChanged(SingleCellViewInformationSolversWidgetData *pSolverData,
+                                                             const QString &pSolverName)
 {
-    // Make sure that we have some solver's data
+    // Go through the different properties for the given type of solver and
+    // show/hide whatever needs showing/hiding
 
-    if (!pSolverData)
-        return false;
+    for (QMap<QString, Core::Properties>::ConstIterator iter = pSolverData->solversProperties().constBegin(),
+                                                        iterEnd = pSolverData->solversProperties().constEnd();
+         iter != iterEnd; ++iter) {
+        bool propertyVisible = !iter.key().compare(pSolverName);
 
-    // By default, we don't handle the change in the list property
-
-    bool res = false;
-
-    // Check whether the list property that got changed is the one we are after
-
-    if (   (pSolverData->solversListProperty() == currentProperty())
-        || pForceHandling) {
-        // It is the list property we are after or we want to force the
-        // handling, so update our result
-
-        res = true;
-
-        // Go through the different properties for the given type of solver and
-        // show/hide whatever needs showing/hiding
-
-        for (QMap<QString, Core::Properties>::ConstIterator iter = pSolverData->solversProperties().constBegin(),
-                                                            iterEnd = pSolverData->solversProperties().constEnd();
-             iter != iterEnd; ++iter) {
-            bool propertyVisible = !iter.key().compare(pSolverName);
-
-            foreach (Core::Property *property, iter.value())
-                property->setVisible(propertyVisible);
-        }
+        foreach (Core::Property *property, iter.value())
+            property->setVisible(propertyVisible);
     }
-
-    // Return our result
-
-    return res;
 }
 
 //==============================================================================
 
-void SingleCellViewInformationSolversWidget::solverChanged(const QString &pValue)
+void SingleCellViewInformationSolversWidget::solverChanged(Core::Property *pProperty,
+                                                           const QString &pValue)
 {
     // Try, for the ODE, DAE and NLA solvers list property, to handle the change
     // in the list property
 
-    if (!doSolverChanged(mOdeSolverData, pValue))
-        if (!doSolverChanged(mDaeSolverData, pValue))
-            doSolverChanged(mNlaSolverData, pValue);
+    doSolverChanged((pProperty == mOdeSolverData->solversListProperty())?
+                        mOdeSolverData:
+                        (pProperty == mDaeSolverData->solversListProperty())?
+                            mDaeSolverData:
+                            mNlaSolverData,
+                    pValue);
 }
 
 //==============================================================================

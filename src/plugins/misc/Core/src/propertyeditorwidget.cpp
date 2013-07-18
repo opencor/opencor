@@ -248,6 +248,13 @@ void ListEditorWidget::mousePressEvent(QMouseEvent *pEvent)
 
 //==============================================================================
 
+PropertyItemDelegate::PropertyItemDelegate(PropertyEditorWidget *pParent) :
+    QStyledItemDelegate(pParent)
+{
+}
+
+//==============================================================================
+
 QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
                                              const QStyleOptionViewItem &pOption,
                                              const QModelIndex &pIndex) const
@@ -289,7 +296,7 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
         // changed
 
         connect(listEditor, SIGNAL(currentIndexChanged(const QString &)),
-                this, SIGNAL(listPropertyChanged(const QString &)));
+                this, SLOT(emitListPropertyChanged(const QString &)));
 
         break;
     }
@@ -348,6 +355,16 @@ void PropertyItemDelegate::paint(QPainter *pPainter,
     }
 
     QStyledItemDelegate::paint(pPainter, option, pIndex);
+}
+
+//==============================================================================
+
+void PropertyItemDelegate::emitListPropertyChanged(const QString &pValue)
+{
+    // Let people know about the list property value having changed
+
+    emit listPropertyChanged(qobject_cast<PropertyEditorWidget *>(parent())->currentProperty(),
+                             pValue);
 }
 
 //==============================================================================
@@ -1036,7 +1053,7 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
     // Create our item delegate and set it, after making sure that we handle a
     // few of its signals
 
-    PropertyItemDelegate *propertyItemDelegate = new PropertyItemDelegate();
+    PropertyItemDelegate *propertyItemDelegate = new PropertyItemDelegate(this);
 
     connect(selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
             this, SLOT(editorClosed()));
@@ -1051,8 +1068,8 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
     connect(propertyItemDelegate, SIGNAL(goToNextPropertyRequested()),
             this, SLOT(goToNextProperty()));
 
-    connect(propertyItemDelegate, SIGNAL(listPropertyChanged(const QString &)),
-            this, SIGNAL(listPropertyChanged(const QString &)));
+    connect(propertyItemDelegate, SIGNAL(listPropertyChanged(Core::Property *, const QString &)),
+            this, SIGNAL(listPropertyChanged(Core::Property *, const QString &)));
 
     setItemDelegate(propertyItemDelegate);
 
