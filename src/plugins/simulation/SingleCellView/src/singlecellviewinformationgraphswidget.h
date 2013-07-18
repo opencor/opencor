@@ -88,7 +88,7 @@ private:
                         OpenCOR::Core::Property *pProperty) const;
 
     void updateGraphInfo(OpenCOR::Core::Property *pProperty,
-                         const QString &pModel) const;
+                         const QString &pFileName) const;
     void updateGraphsInfo(Core::Property *pSectionProperty = 0);
 
 public Q_SLOTS:

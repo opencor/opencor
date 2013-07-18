@@ -329,7 +329,7 @@ QString CORE_EXPORT getSaveFileName(const QString &pCaption,
                                                                         pFilter, 0,
                                                                         QFileDialog::DontConfirmOverwrite));
 
-    // Make sure that we got a save file name
+    // Make sure that we have got a save file name
 
     if (!res.isEmpty()) {
         // Update our active directory
@@ -344,8 +344,7 @@ QString CORE_EXPORT getSaveFileName(const QString &pCaption,
             // The save file already exists, so ask whether we want to overwrite
             // it
 
-            if (QMessageBox::question(qApp->activeWindow(),
-                                      qApp->applicationName(),
+            if (QMessageBox::question(qApp->activeWindow(), pCaption,
                                       QObject::tr("<strong>%1</strong> already exists. Do you want to overwrite it?").arg(res),
                                       QMessageBox::Yes|QMessageBox::No,
                                       QMessageBox::Yes) == QMessageBox::No )

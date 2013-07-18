@@ -387,7 +387,7 @@ bool SingleCellViewInformationGraphsWidget::checkParameter(const QString &pFileN
 //==============================================================================
 
 void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pProperty,
-                                                            const QString &pModel) const
+                                                            const QString &pFileName) const
 {
     // Update the graph information by checking the new value of the given
     // section property
@@ -395,14 +395,15 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
     // Update the model property's icon based on its value and determine the
     // file name from which we will have to check our X and Y properties
 
+    QString oldFileName = pProperty->properties()[0]->value();
     QString fileName = mFileName;
 
-    if (!pModel.compare(tr("Current"))) {
+    if (!pFileName.compare(tr("Current"))) {
         pProperty->properties()[0]->setIcon(QIcon(":/oxygen/status/object-unlocked.png"));
     } else {
         pProperty->properties()[0]->setIcon(QIcon(":/oxygen/status/object-locked.png"));
 
-        fileName = pModel.split(" | ").last();
+        fileName = pFileName.split(" | ").last();
     }
 
     // Check that the parameters represented by the value of the X and Y
@@ -428,7 +429,7 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
         pProperty->setName(QString("%1 | %2").arg(pProperty->properties()[1]->value(),
                                                   pProperty->properties()[2]->value()));
 
-    // Update the status (i.e. icon) of our (section) parent property
+    // Update the status (i.e. icon) of our (section) property
 
     pProperty->setIcon(graphOk?
                            QIcon(":Core_blankIcon"):
@@ -441,7 +442,7 @@ void SingleCellViewInformationGraphsWidget::modelChanged(Core::Property *pProper
                                                          const QString &pValue)
 {
     // Update the graph information associated with the given property's
-    // corresponding section property
+    // corresponding section property and the given value
 
     updateGraphInfo(pProperty->parentProperty(), pValue);
 }
