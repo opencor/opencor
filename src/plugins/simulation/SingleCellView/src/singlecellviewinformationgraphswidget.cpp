@@ -367,8 +367,14 @@ bool SingleCellViewInformationGraphsWidget::checkParameter(const QString &pFileN
             }
     }
 
-    pProperty->setIcon(res?QIcon(":Core_blankIcon"):QIcon(":/oxygen/status/task-attention.png"));
-    pProperty->setExtraInfo(res?QString():tr("does not exist"));
+    pProperty->setIcon(res?
+                           QIcon(":Core_blankIcon"):
+                           QIcon(":/oxygen/status/task-attention.png"));
+    pProperty->setExtraInfo(res?
+                                QString():
+                                runtime?
+                                    tr("does not exist"):
+                                    tr("no runtime"));
 
     return res;
 }
@@ -418,7 +424,9 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
 
     // Update the status (i.e. icon) of our (section) parent property
 
-    pProperty->setIcon(graphOk?QIcon(":Core_blankIcon"):QIcon(":/oxygen/status/task-attention.png"));
+    pProperty->setIcon(graphOk?
+                           QIcon(":Core_blankIcon"):
+                           QIcon(":/oxygen/status/task-attention.png"));
 }
 
 //==============================================================================

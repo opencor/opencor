@@ -27,6 +27,10 @@
         <source>does not exist</source>
         <translation>n&apos;existe pas</translation>
     </message>
+    <message>
+        <source>no runtime</source>
+        <translation>pas de modèle d&apos;exécution</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::SingleCellView::SingleCellViewInformationParametersWidget</name>
