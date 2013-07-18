@@ -694,7 +694,7 @@ void Property::setValue(const QString &pValue, const bool &pForce,
 
         // Let people know if we have a new value
 
-        if (pEmitSignal && pValue.compare(oldValue))
+        if (pEmitSignal)
             emit valueChanged(oldValue, pValue);
     }
 }
