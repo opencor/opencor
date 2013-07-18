@@ -84,7 +84,8 @@ private:
     QMap<QString, CellMLSupport::CellmlFileRuntime *> mRuntimes;
     QMap<QString, SingleCellViewSimulation *> mSimulations;
 
-    bool checkParameter(OpenCOR::Core::Property *pProperty) const;
+    bool checkParameter(const QString &pFileName,
+                        OpenCOR::Core::Property *pProperty) const;
 
     void updateGraphInfo(OpenCOR::Core::Property *pProperty) const;
     void updateGraphsInfo(Core::Property *pSectionProperty = 0);
