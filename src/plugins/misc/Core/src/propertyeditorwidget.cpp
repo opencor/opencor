@@ -1606,12 +1606,20 @@ void PropertyEditorWidget::mousePressEvent(QMouseEvent *pEvent)
 
     TreeViewWidget::mousePressEvent(pEvent);
 
+    // Select the current property, if any
+    // Note: the idea is, for example, if we want to show a context menu, then
+    //       nothing will happen if we are not over a property...
+
+    QModelIndex index = indexAt(pEvent->pos());
+
+    setCurrentIndex(index);
+
     // Edit our 'new' property, but only if we are not right-clicking and if
     // there is a 'new' property and it is different from our 'old' property
 
-    mRightClicking = pEvent->button() == Qt::RightButton;
+    Property *newProperty = property(index);
 
-    Property *newProperty = property(indexAt(pEvent->pos()));
+    mRightClicking = pEvent->button() == Qt::RightButton;
 
     if (!mRightClicking && newProperty && (newProperty != oldProperty))
         editProperty(newProperty);
