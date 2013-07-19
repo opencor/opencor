@@ -112,7 +112,7 @@ QString CellmlFileRuntimeParameter::fullyFormattedName() const
 {
     // Return a fully formatted version of our name
 
-    return mComponent+"."+mName+QString(mDegree, '\'');
+    return mComponent+"."+formattedName();
 }
 
 //==============================================================================

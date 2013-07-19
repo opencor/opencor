@@ -6,12 +6,14 @@
 #include "propertyeditorwidget.h"
 #include "singlecellviewgraphpanelplotwidget.h"
 #include "singlecellviewinformationgraphswidget.h"
+#include "singlecellviewwidget.h"
 
 //==============================================================================
 
 #include <QFileInfo>
 #include <QHeaderView>
 #include <QLabel>
+#include <QMenu>
 #include <QSettings>
 
 //==============================================================================
@@ -24,10 +26,12 @@ namespace SingleCellView {
 SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(QWidget *pParent) :
     QStackedWidget(pParent),
     mPropertyEditors(QMap<SingleCellViewGraphPanelWidget *, Core::PropertyEditorWidget *>()),
+    mContextMenus(QMap<QString, QMenu *>()),
+    mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mColumnWidths(QList<int>()),
     mPropertyEditor(0),
-    mFileName(QString()),
     mFileNames(QStringList()),
+    mFileName(QString()),
     mRuntimes(QMap<QString, CellMLSupport::CellmlFileRuntime *>()),
     mSimulations(QMap<QString, SingleCellViewSimulation *>())
 {
@@ -103,12 +107,26 @@ void SingleCellViewInformationGraphsWidget::initialize(const QString &pFileName,
                                                        CellMLSupport::CellmlFileRuntime *pRuntime,
                                                        SingleCellViewSimulation *pSimulation)
 {
-    // Keep track of the file name, runtime and simulation
+    // Keep track of the context menu, file name, runtime and simulation
 
     mFileName = pFileName;
 
     mRuntimes.insert(pFileName, pRuntime);
     mSimulations.insert(pFileName, pSimulation);
+
+    // Create and populate our context menu
+
+    QMenu *contextMenu = mContextMenus.value(pFileName);
+
+    if (!contextMenu) {
+        QMenu *contextMenu = new QMenu(this);
+
+        populateContextMenu(contextMenu, pRuntime);
+
+        // Keep track of our new context menu
+
+        mContextMenus.insert(pFileName, contextMenu);
+    }
 
     // Update the information about our graphs properties
 
@@ -119,7 +137,9 @@ void SingleCellViewInformationGraphsWidget::initialize(const QString &pFileName,
 
 void SingleCellViewInformationGraphsWidget::finalize(const QString &pFileName)
 {
-    // Remove track of the file name, runtime and simulation
+    // Remove track of the context menu, file name, runtime and simulation
+
+    mContextMenus.remove(pFileName);
 
     mFileNames.removeOne(pFileName);
 
@@ -182,6 +202,13 @@ void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelW
 
         for (int i = 0, iMax = mColumnWidths.size(); i < iMax; ++i)
             mPropertyEditor->setColumnWidth(i, mColumnWidths.at(i));
+
+        // We want our own context menu for our property editor
+
+        mPropertyEditor->setContextMenuPolicy(Qt::CustomContextMenu);
+
+        connect(mPropertyEditor, SIGNAL(customContextMenuRequested(const QPoint &)),
+                this, SLOT(propertyEditorContextMenu(const QPoint &)));
 
         // Keep track of changes to columns' width
 
@@ -314,6 +341,39 @@ void SingleCellViewInformationGraphsWidget::finishPropertyEditing()
 
 //==============================================================================
 
+void SingleCellViewInformationGraphsWidget::propertyEditorContextMenu(const QPoint &pPosition) const
+{
+    Q_UNUSED(pPosition);
+
+    // Create a custom context menu for our property editor, based on what is
+    // underneath our mouse pointer
+
+    // Make sure that we have a property editor
+
+    if (!mPropertyEditor)
+        return;
+
+    // Retrieve our current property, if any
+
+    Core::Property *currentProperty = mPropertyEditor->currentProperty();
+
+    if (!currentProperty)
+        return;
+
+    // Make sure that our current property is not a section or the model
+    // property
+
+    if (   (currentProperty->type() == Core::Property::Section)
+        || (!currentProperty->name().compare(tr("Model"))))
+        return;
+
+    // Generate and show the context menu
+
+    mContextMenus.value(mFileName)->exec(QCursor::pos());
+}
+
+//==============================================================================
+
 void SingleCellViewInformationGraphsWidget::propertyEditorSectionResized(const int &pLogicalIndex,
                                                                              const int &pOldSize,
                                                                              const int &pNewSize)
@@ -342,6 +402,48 @@ void SingleCellViewInformationGraphsWidget::propertyEditorSectionResized(const i
     foreach (Core::PropertyEditorWidget *propertyEditor, mPropertyEditors)
         connect(propertyEditor->header(), SIGNAL(sectionResized(int, int, int)),
                 this, SLOT(propertyEditorSectionResized(const int &, const int &, const int &)));
+}
+
+//==============================================================================
+
+void SingleCellViewInformationGraphsWidget::populateContextMenu(QMenu *pContextMenu,
+                                                                CellMLSupport::CellmlFileRuntime *pRuntime)
+{
+    // Populate our property editor with the parameters
+
+    QMenu *componentMenu = 0;
+
+    foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, pRuntime->parameters()) {
+        // Check whether the current parameter is in the same component as the
+        // previous one
+
+        QString currentComponent = parameter->component();
+
+        if (   !componentMenu
+            ||  currentComponent.compare(componentMenu->menuAction()->text())) {
+            // The current parameter is in a different component, so create a
+            // new menu for the 'new' component
+
+            componentMenu = new QMenu(currentComponent, pContextMenu);
+
+            pContextMenu->addMenu(componentMenu);
+        }
+
+        // Add the current parameter to the 'current' component menu
+
+        QAction *parameterAction = componentMenu->addAction(SingleCellViewWidget::parameterIcon(parameter->type()),
+                                                            parameter->formattedName());
+
+        // Create a connection to handle the parameter value update
+
+        connect(parameterAction, SIGNAL(triggered()),
+                this, SLOT(updateParameterValue()));
+
+        // Keep track of the parameter associated with our model parameter
+        // action
+
+        mParameterActions.insert(parameterAction, parameter);
+    }
 }
 
 //==============================================================================
@@ -554,6 +656,15 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
         else
             sectionProperty->properties()[0]->setValue(newModelValue);
     }
+}
+
+//==============================================================================
+
+void SingleCellViewInformationGraphsWidget::updateParameterValue()
+{
+    // Update the current property's value
+
+    mPropertyEditor->currentProperty()->setValue(mParameterActions.value(qobject_cast<QAction *>(sender()))->fullyFormattedName());
 }
 
 //==============================================================================

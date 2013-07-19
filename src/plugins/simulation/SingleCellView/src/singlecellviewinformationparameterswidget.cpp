@@ -405,7 +405,7 @@ void SingleCellViewInformationParametersWidget::populateContextMenu(QMenu *pCont
         //       populateModel() above...
 
         QAction *parameterAction = componentMenu->addAction(SingleCellViewWidget::parameterIcon(parameter->type()),
-                                                            parameter->name()+QString(parameter->degree(), '\''));
+                                                            parameter->formattedName());
 
         // Create a connection to handle the graph requirement against our
         // parameter

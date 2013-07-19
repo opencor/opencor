@@ -16,6 +16,7 @@
 //==============================================================================
 
 class QLabel;
+class QMenu;
 
 //==============================================================================
 
@@ -72,17 +73,23 @@ public:
 
 private:
     QMap<SingleCellViewGraphPanelWidget *, Core::PropertyEditorWidget *> mPropertyEditors;
+    QMap<QString, QMenu *> mContextMenus;
+
+    QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
 
     QList<int> mColumnWidths;
 
     QLabel *mNoGraphsMessageWidget;
     Core::PropertyEditorWidget *mPropertyEditor;
 
-    QString mFileName;
     QStringList mFileNames;
+    QString mFileName;
 
     QMap<QString, CellMLSupport::CellmlFileRuntime *> mRuntimes;
     QMap<QString, SingleCellViewSimulation *> mSimulations;
+
+    void populateContextMenu(QMenu *pContextMenu,
+                             CellMLSupport::CellmlFileRuntime *pRuntime);
 
     bool checkParameter(const QString &pFileName,
                         OpenCOR::Core::Property *pProperty) const;
@@ -99,11 +106,14 @@ public Q_SLOTS:
     void removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
 
 private Q_SLOTS:
+    void propertyEditorContextMenu(const QPoint &pPosition) const;
     void propertyEditorSectionResized(const int &pLogicalIndex,
                                       const int &pOldSize, const int &pNewSize);
 
     void modelChanged(Core::Property *pProperty, const QString &pValue);
     void propertyChanged(Core::Property *pProperty);
+
+    void updateParameterValue();
 };
 
 //==============================================================================
