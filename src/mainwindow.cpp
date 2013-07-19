@@ -902,7 +902,7 @@ void MainWindow::reorderViewMenu(QMenu *pViewMenu)
     // Retrieve the title of the menu items and keep track of their actions
 
     foreach (QAction *menuItemAction, pViewMenu->actions()) {
-        // Remove any '&' present in the menu item title, as well as replace
+        // Remove any "&" present in the menu item title, as well as replace
         // accentuated characters by non-accentuated ones, making the sorting
         // sensible
 

@@ -261,7 +261,7 @@ bool CliApplication::run(int *pRes)
             pluginsOption = true;
         } else if (!argument.compare("-c") || !argument.compare("--command")) {
             commandOption = true;
-        } else if (argument.startsWith('-')) {
+        } else if (argument.startsWith("-")) {
             // The user provided at least one unknown option
 
             usage();
