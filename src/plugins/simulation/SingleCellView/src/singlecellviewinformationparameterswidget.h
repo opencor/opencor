@@ -7,7 +7,6 @@
 
 //==============================================================================
 
-#include "cellmlfileruntime.h"
 #include "commonwidget.h"
 
 //==============================================================================
@@ -80,8 +79,6 @@ private:
     QString mFileName;
 
     SingleCellViewSimulation *mSimulation;
-
-    QIcon parameterIcon(const CellMLSupport::CellmlFileRuntimeParameter::ParameterType &pParameterType);
 
     void populateModel(CellMLSupport::CellmlFileRuntime *pRuntime);
     void populateContextMenu(QMenu *pContextMenu,

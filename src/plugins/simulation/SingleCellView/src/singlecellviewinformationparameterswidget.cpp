@@ -6,6 +6,7 @@
 #include "propertyeditorwidget.h"
 #include "singlecellviewinformationparameterswidget.h"
 #include "singlecellviewsimulation.h"
+#include "singlecellviewwidget.h"
 
 //==============================================================================
 
@@ -126,7 +127,7 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
 
         populateModel(pRuntime);
 
-        // Create and populate our property editor's context menu
+        // Create and populate our context menu
 
         QMenu *contextMenu = new QMenu(this);
 
@@ -158,7 +159,7 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
 
         addWidget(mPropertyEditor);
 
-        // Keep track of our new property editor and its context menu
+        // Keep track of our new property editor and context menu
 
         mPropertyEditors.insert(pFileName, mPropertyEditor);
         mContextMenus.insert(pFileName, contextMenu);
@@ -288,33 +289,6 @@ void SingleCellViewInformationParametersWidget::finishPropertyEditing()
 
 //==============================================================================
 
-QIcon SingleCellViewInformationParametersWidget::parameterIcon(const CellMLSupport::CellmlFileRuntimeParameter::ParameterType &pParameterType)
-{
-    // Return an icon that illustrates the type of a parameter
-
-    switch (pParameterType) {
-    case CellMLSupport::CellmlFileRuntimeParameter::Voi:
-        return QIcon(":SingleCellView_voi");
-    case CellMLSupport::CellmlFileRuntimeParameter::Constant:
-        return QIcon(":SingleCellView_constant");
-    case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
-        return QIcon(":SingleCellView_computedConstant");
-    case CellMLSupport::CellmlFileRuntimeParameter::Rate:
-        return QIcon(":SingleCellView_rate");
-    case CellMLSupport::CellmlFileRuntimeParameter::State:
-        return QIcon(":SingleCellView_state");
-    case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
-        return QIcon(":SingleCellView_algebraic");
-    default:
-        // We are dealing with a type of parameter which is of no interest to us
-        // Note: we should never reach this point...
-
-        return QIcon(":CellMLSupport_errorNode");
-    }
-}
-
-//==============================================================================
-
 void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::CellmlFileRuntime *pRuntime)
 {
     // Make sure that we have a property editor
@@ -362,7 +336,7 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
         property->setEditable(   (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)
                               || (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State));
 
-        property->setIcon(parameterIcon(parameter->type()));
+        property->setIcon(SingleCellViewWidget::parameterIcon(parameter->type()));
 
         property->setName(parameter->formattedName());
         property->setUnit(parameter->formattedUnit(pRuntime->variableOfIntegration()->unit()));
@@ -401,8 +375,8 @@ void SingleCellViewInformationParametersWidget::populateContextMenu(QMenu *pCont
 
     retranslateContextMenu(pContextMenu);
 
-    // Create a connection to handle the plotting requirement against our
-    // variable of integration
+    // Create a connection to handle the graph requirement against our variable
+    // of integration
 
     connect(voiAction, SIGNAL(triggered()),
             this, SLOT(emitGraphRequired()));
@@ -435,7 +409,7 @@ void SingleCellViewInformationParametersWidget::populateContextMenu(QMenu *pCont
         // Note: in case of an algebraic variable, see the corresponding note in
         //       populateModel() above...
 
-        QAction *parameterAction = componentMenu->addAction(parameterIcon(parameter->type()),
+        QAction *parameterAction = componentMenu->addAction(SingleCellViewWidget::parameterIcon(parameter->type()),
                                                             parameter->name()+QString(parameter->degree(), '\''));
 
         // Create a connection to handle the plotting requirement against our

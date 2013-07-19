@@ -1479,6 +1479,33 @@ void SingleCellViewWidget::callCheckResults()
 
 //==============================================================================
 
+QIcon SingleCellViewWidget::parameterIcon(const CellMLSupport::CellmlFileRuntimeParameter::ParameterType &pParameterType)
+{
+    // Return an icon that illustrates the type of a parameter
+
+    switch (pParameterType) {
+    case CellMLSupport::CellmlFileRuntimeParameter::Voi:
+        return QIcon(":SingleCellView_voi");
+    case CellMLSupport::CellmlFileRuntimeParameter::Constant:
+        return QIcon(":SingleCellView_constant");
+    case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
+        return QIcon(":SingleCellView_computedConstant");
+    case CellMLSupport::CellmlFileRuntimeParameter::Rate:
+        return QIcon(":SingleCellView_rate");
+    case CellMLSupport::CellmlFileRuntimeParameter::State:
+        return QIcon(":SingleCellView_state");
+    case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
+        return QIcon(":SingleCellView_algebraic");
+    default:
+        // We are dealing with a type of parameter which is of no interest to us
+        // Note: we should never reach this point...
+
+        return QIcon(":CellMLSupport_errorNode");
+    }
+}
+
+//==============================================================================
+
 }   // namespace SingleCellView
 }   // namespace OpenCOR
 

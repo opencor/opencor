@@ -7,6 +7,7 @@
 
 //==============================================================================
 
+#include "cellmlfileruntime.h"
 #include "solverinterface.h"
 #include "viewwidget.h"
 
@@ -89,6 +90,8 @@ public:
     SingleCellViewSimulation * simulation() const;
 
     SingleCellViewContentsWidget * contentsWidget() const;
+
+    static QIcon parameterIcon(const CellMLSupport::CellmlFileRuntimeParameter::ParameterType &pParameterType);
 
 private:
     enum ErrorType {
