@@ -77,11 +77,13 @@ private:
 
     QMap<QString, QMenu *> mContextMenus;
 
+    QMenu *mGeneralContextMenu;
+    QAction *mAddGraphAction;
+    QAction *mRemoveGraphAction;
+
     QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
 
     QList<int> mColumnWidths;
-
-    QLabel *mNoGraphsMessageWidget;
 
     QStringList mFileNames;
     QString mFileName;

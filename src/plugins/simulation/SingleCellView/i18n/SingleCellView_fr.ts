@@ -4,10 +4,6 @@
 <context>
     <name>OpenCOR::SingleCellView::SingleCellViewInformationGraphsWidget</name>
     <message>
-        <source>There are no graphs...</source>
-        <translation>Il n&apos;y a pas de courbes...</translation>
-    </message>
-    <message>
         <source>Current</source>
         <translation>Actuel</translation>
     </message>
@@ -30,6 +26,22 @@
     <message>
         <source>no runtime</source>
         <translation>pas de modèle d&apos;exécution</translation>
+    </message>
+    <message>
+        <source>Add a graph</source>
+        <translation>Ajouter une courbe</translation>
+    </message>
+    <message>
+        <source>Remove the current graph</source>
+        <translation>Supprimer la courbe actuelle</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>Ajouter</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Supprimer</translation>
     </message>
 </context>
 <context>

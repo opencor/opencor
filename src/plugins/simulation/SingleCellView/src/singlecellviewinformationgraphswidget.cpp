@@ -35,18 +35,6 @@ SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(QWi
     mRuntimes(QMap<QString, CellMLSupport::CellmlFileRuntime *>()),
     mSimulations(QMap<QString, SingleCellViewSimulation *>())
 {
-    // Create a widget that will be shown whenever there are no graphs
-    // associated with the current plotting area
-
-    mNoGraphsMessageWidget = new QLabel(pParent);
-
-    mNoGraphsMessageWidget->setAlignment(Qt::AlignCenter);
-    mNoGraphsMessageWidget->setAutoFillBackground(true);
-    mNoGraphsMessageWidget->setBackgroundRole(QPalette::Base);
-    mNoGraphsMessageWidget->setWordWrap(true);
-
-    addWidget(mNoGraphsMessageWidget);
-
     // Determine the default width of each column of our property editors
 
     Core::PropertyEditorWidget *tempPropertyEditor = new Core::PropertyEditorWidget(this);
@@ -55,20 +43,31 @@ SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(QWi
         mColumnWidths.append(tempPropertyEditor->columnWidth(i));
 
     delete tempPropertyEditor;
+
+    // Create our general context menu
+
+    mGeneralContextMenu = new QMenu(this);
+
+    mAddGraphAction = mGeneralContextMenu->addAction(QIcon(":/oxygen/actions/list-add.png"), QString());
+    mRemoveGraphAction = mGeneralContextMenu->addAction(QIcon(":/oxygen/actions/list-remove.png"), QString());
 }
 
 //==============================================================================
 
 void SingleCellViewInformationGraphsWidget::retranslateUi()
 {
-    // Retranslate our no graphs message widget
-
-    mNoGraphsMessageWidget->setText(tr("There are no graphs..."));
-
     // Retranslate all our property editors
 
     foreach (Core::PropertyEditorWidget *propertyEditor, mPropertyEditors)
         propertyEditor->retranslateUi();
+
+    // Retranslate our add/remove graph actions
+
+    mAddGraphAction->setText(tr("Add"));
+    mAddGraphAction->setStatusTip(tr("Add a graph"));
+
+    mRemoveGraphAction->setText(tr("Remove"));
+    mRemoveGraphAction->setStatusTip(tr("Remove the current graph"));
 
     // Retranslate the information about our graphs properties
 
@@ -234,13 +233,9 @@ void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelW
         mPropertyEditors.insert(pGraphPanel, mPropertyEditor);
     }
 
-    // Set our retrieved property editor as our current widget, but only if it
-    // isn't empty
+    // Set our retrieved property editor as our current widget
 
-    if (mPropertyEditor->properties().count())
-        setCurrentWidget(mPropertyEditor);
-    else
-        setCurrentWidget(mNoGraphsMessageWidget);
+    setCurrentWidget(mPropertyEditor);
 
     // Update the information about our graphs properties
     // Note: this is in case the user changed the locale and then switched to a
@@ -318,11 +313,6 @@ Q_UNUSED(pGraph);
     // Allow ourselves to be updated again
 
     mPropertyEditor->setUpdatesEnabled(true);
-
-    // Hide our property editor if it doesn't contain any graph anymore
-
-    if (!mPropertyEditor->properties().count())
-        setCurrentWidget(mNoGraphsMessageWidget);
 }
 
 //==============================================================================
@@ -357,19 +347,16 @@ void SingleCellViewInformationGraphsWidget::propertyEditorContextMenu(const QPoi
 
     Core::Property *currentProperty = mPropertyEditor->currentProperty();
 
-    if (!currentProperty)
+    // Show the context menu, or not, depending ont the type of property we are
+    // dealing with, if any
+
+    if (   !currentProperty
+        || (currentProperty->type() == Core::Property::Section))
+        mGeneralContextMenu->exec(QCursor::pos());
+    else if (!currentProperty->name().compare(tr("Model")))
         return;
-
-    // Make sure that our current property is not a section or the model
-    // property
-
-    if (   (currentProperty->type() == Core::Property::Section)
-        || (!currentProperty->name().compare(tr("Model"))))
-        return;
-
-    // Generate and show the context menu
-
-    mContextMenus.value(mFileName)->exec(QCursor::pos());
+    else
+        mContextMenus.value(mFileName)->exec(QCursor::pos());
 }
 
 //==============================================================================
