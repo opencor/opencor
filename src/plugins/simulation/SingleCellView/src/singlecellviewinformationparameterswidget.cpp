@@ -23,11 +23,12 @@ namespace SingleCellView {
 SingleCellViewInformationParametersWidget::SingleCellViewInformationParametersWidget(QWidget *pParent) :
     QStackedWidget(pParent),
     mPropertyEditors(QMap<QString, Core::PropertyEditorWidget *>()),
-    mContextMenus(QMap<Core::PropertyEditorWidget *, QMenu *>()),
+    mContextMenus(QMap<QString, QMenu *>()),
     mParameters(QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mColumnWidths(QList<int>()),
     mPropertyEditor(0),
+    mFileName(QString()),
     mSimulation(0)
 {
     // Determine the default width of each column of our property editors
@@ -101,8 +102,9 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
                                                            CellMLSupport::CellmlFileRuntime *pRuntime,
                                                            SingleCellViewSimulation *pSimulation)
 {
-    // Keep track of the simulation
+    // Keep track of the file name and simulation
 
+    mFileName = pFileName;
     mSimulation = pSimulation;
 
     // Retrieve the property editor for the given file name or create one, if
@@ -159,7 +161,7 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
         // Keep track of our new property editor and its context menu
 
         mPropertyEditors.insert(pFileName, mPropertyEditor);
-        mContextMenus.insert(mPropertyEditor, contextMenu);
+        mContextMenus.insert(pFileName, contextMenu);
     }
 
     // Set our retrieved property editor as our current widget
@@ -179,8 +181,8 @@ void SingleCellViewInformationParametersWidget::finalize(const QString &pFileNam
 {
     // Remove track of our property editor and its context menu
 
-    mContextMenus.remove(mPropertyEditors.value(pFileName));
     mPropertyEditors.remove(pFileName);
+    mContextMenus.remove(pFileName);
 }
 
 //==============================================================================
@@ -518,7 +520,7 @@ void SingleCellViewInformationParametersWidget::propertyEditorContextMenu(const 
     if (!mPropertyEditor)
         return;
 
-    // Retrieve our current property, if any
+    // Make that we have a current property
 
     Core::Property *currentProperty = mPropertyEditor->currentProperty();
 
@@ -532,7 +534,7 @@ void SingleCellViewInformationParametersWidget::propertyEditorContextMenu(const 
 
     // Generate and show the context menu
 
-    mContextMenus.value(mPropertyEditor)->exec(QCursor::pos());
+    mContextMenus.value(mFileName)->exec(QCursor::pos());
 }
 
 //==============================================================================

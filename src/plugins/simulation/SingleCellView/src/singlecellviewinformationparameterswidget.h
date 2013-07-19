@@ -68,7 +68,7 @@ public:
 
 private:
     QMap<QString, Core::PropertyEditorWidget *> mPropertyEditors;
-    QMap<Core::PropertyEditorWidget *, QMenu *> mContextMenus;
+    QMap<QString, QMenu *> mContextMenus;
 
     QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> mParameters;
     QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
@@ -76,6 +76,8 @@ private:
     QList<int> mColumnWidths;
 
     Core::PropertyEditorWidget *mPropertyEditor;
+
+    QString mFileName;
 
     SingleCellViewSimulation *mSimulation;
 
