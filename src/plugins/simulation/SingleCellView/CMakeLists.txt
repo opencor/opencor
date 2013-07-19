@@ -22,10 +22,10 @@ ADD_PLUGIN(SingleCellView
         src/singlecellviewgraphpanelplotwidget.cpp
         src/singlecellviewgraphpanelswidget.cpp
         src/singlecellviewgraphpanelwidget.cpp
+        src/singlecellviewinformationgraphswidget.cpp
         src/singlecellviewinformationparameterswidget.cpp
         src/singlecellviewinformationsimulationwidget.cpp
         src/singlecellviewinformationsolverswidget.cpp
-        src/singlecellviewinformationgraphswidget.cpp
         src/singlecellviewinformationwidget.cpp
         src/singlecellviewplugin.cpp
         src/singlecellviewsimulation.cpp
@@ -39,10 +39,10 @@ ADD_PLUGIN(SingleCellView
         src/singlecellviewgraphpanelplotwidget.h
         src/singlecellviewgraphpanelswidget.h
         src/singlecellviewgraphpanelwidget.h
+        src/singlecellviewinformationgraphswidget.h
         src/singlecellviewinformationparameterswidget.h
         src/singlecellviewinformationsimulationwidget.h
         src/singlecellviewinformationsolverswidget.h
-        src/singlecellviewinformationgraphswidget.h
         src/singlecellviewinformationwidget.h
         src/singlecellviewplugin.h
         src/singlecellviewsimulation.h
@@ -50,6 +50,7 @@ ADD_PLUGIN(SingleCellView
         src/singlecellviewwidget.h
     UIS
         src/singlecellviewgraphpanelwidget.ui
+        src/singlecellviewinformationgraphswidget.ui
         src/singlecellviewinformationwidget.ui
         src/singlecellviewwidget.ui
     DEFINITIONS

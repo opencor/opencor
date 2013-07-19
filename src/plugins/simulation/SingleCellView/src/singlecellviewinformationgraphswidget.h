@@ -20,6 +20,12 @@ class QMenu;
 
 //==============================================================================
 
+namespace Ui {
+    class SingleCellViewInformationGraphsWidget;
+}
+
+//==============================================================================
+
 namespace OpenCOR {
 
 //==============================================================================
@@ -72,14 +78,13 @@ public:
     void finishPropertyEditing();
 
 private:
+    Ui::SingleCellViewInformationGraphsWidget *mGui;
+
     QMap<SingleCellViewGraphPanelWidget *, Core::PropertyEditorWidget *> mPropertyEditors;
     Core::PropertyEditorWidget *mPropertyEditor;
 
     QMap<QString, QMenu *> mContextMenus;
-
     QMenu *mGeneralContextMenu;
-    QAction *mAddGraphAction;
-    QAction *mRemoveGraphAction;
 
     QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
 

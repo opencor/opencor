@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SingleCellViewInformationGraphsWidget</class>
+ <widget class="QStackedWidget" name="SingleCellViewInformationGraphsWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>320</width>
+    <height>240</height>
+   </rect>
+  </property>
+  <action name="actionAdd">
+   <property name="icon">
+    <iconset resource="../res/SingleCellView.qrc">
+     <normaloff>:/oxygen/actions/list-add.png</normaloff>:/oxygen/actions/list-add.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Add</string>
+   </property>
+   <property name="statusTip">
+    <string>Add a graph</string>
+   </property>
+  </action>
+  <action name="actionRemove">
+   <property name="icon">
+    <iconset resource="../res/SingleCellView.qrc">
+     <normaloff>:/oxygen/actions/list-remove.png</normaloff>:/oxygen/actions/list-remove.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Remove</string>
+   </property>
+   <property name="statusTip">
+    <string>Remove the current graph</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="../res/SingleCellView.qrc"/>
+ </resources>
+ <connections/>
+</ui>

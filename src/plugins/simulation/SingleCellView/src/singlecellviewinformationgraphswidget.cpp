@@ -18,6 +18,10 @@
 
 //==============================================================================
 
+#include "ui_singlecellviewinformationgraphswidget.h"
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace SingleCellView {
 
@@ -25,6 +29,7 @@ namespace SingleCellView {
 
 SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(QWidget *pParent) :
     QStackedWidget(pParent),
+    mGui(new Ui::SingleCellViewInformationGraphsWidget),
     mPropertyEditors(QMap<SingleCellViewGraphPanelWidget *, Core::PropertyEditorWidget *>()),
     mPropertyEditor(0),
     mContextMenus(QMap<QString, QMenu *>()),
@@ -35,6 +40,10 @@ SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(QWi
     mRuntimes(QMap<QString, CellMLSupport::CellmlFileRuntime *>()),
     mSimulations(QMap<QString, SingleCellViewSimulation *>())
 {
+    // Set up the GUI
+
+    mGui->setupUi(this);
+
     // Determine the default width of each column of our property editors
 
     Core::PropertyEditorWidget *tempPropertyEditor = new Core::PropertyEditorWidget(this);
@@ -48,8 +57,8 @@ SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(QWi
 
     mGeneralContextMenu = new QMenu(this);
 
-    mAddGraphAction = mGeneralContextMenu->addAction(QIcon(":/oxygen/actions/list-add.png"), QString());
-    mRemoveGraphAction = mGeneralContextMenu->addAction(QIcon(":/oxygen/actions/list-remove.png"), QString());
+    mGeneralContextMenu->addAction(mGui->actionAdd);
+    mGeneralContextMenu->addAction(mGui->actionRemove);
 }
 
 //==============================================================================
@@ -60,14 +69,6 @@ void SingleCellViewInformationGraphsWidget::retranslateUi()
 
     foreach (Core::PropertyEditorWidget *propertyEditor, mPropertyEditors)
         propertyEditor->retranslateUi();
-
-    // Retranslate our add/remove graph actions
-
-    mAddGraphAction->setText(tr("Add"));
-    mAddGraphAction->setStatusTip(tr("Add a graph"));
-
-    mRemoveGraphAction->setText(tr("Remove"));
-    mRemoveGraphAction->setStatusTip(tr("Remove the current graph"));
 
     // Retranslate the information about our graphs properties
 

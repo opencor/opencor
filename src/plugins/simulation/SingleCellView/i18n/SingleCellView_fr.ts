@@ -27,22 +27,6 @@
         <source>no runtime</source>
         <translation>pas de modèle d&apos;exécution</translation>
     </message>
-    <message>
-        <source>Add a graph</source>
-        <translation>Ajouter une courbe</translation>
-    </message>
-    <message>
-        <source>Remove the current graph</source>
-        <translation>Supprimer la courbe actuelle</translation>
-    </message>
-    <message>
-        <source>Add</source>
-        <translation>Ajouter</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Supprimer</translation>
-    </message>
 </context>
 <context>
     <name>OpenCOR::SingleCellView::SingleCellViewInformationParametersWidget</name>
@@ -338,6 +322,25 @@
     <message>
         <source>NLA</source>
         <translation>ANL</translation>
+    </message>
+</context>
+<context>
+    <name>SingleCellViewInformationGraphsWidget</name>
+    <message>
+        <source>&amp;Add</source>
+        <translation>&amp;Ajouter</translation>
+    </message>
+    <message>
+        <source>Add a graph</source>
+        <translation>Ajouter une courbe</translation>
+    </message>
+    <message>
+        <source>&amp;Remove</source>
+        <translation>&amp;Supprimer</translation>
+    </message>
+    <message>
+        <source>Remove the current graph</source>
+        <translation>Supprimer la courbe actuelle</translation>
     </message>
 </context>
 <context>
