@@ -516,11 +516,20 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
 
         sectionProperty->properties()[0]->setListValue(modelListValue);
 
-        if (!modelListValue.contains(oldModelValue))
+        if (!modelListValue.contains(oldModelValue)) {
             // Our old model value is not in our new model list value, which
-            // means that the current file got renamed, so we use that instead
+            // means that either the value of the model property was "Current"
+            // or the current file got renamed, so we use that instead
 
-            newModelValue = QFileInfo(mFileName).fileName()+PropertySeparator+mFileName;
+            if (oldModelValue.contains(PropertySeparator))
+                // The current file got renamed
+
+                newModelValue = QFileInfo(mFileName).fileName()+PropertySeparator+mFileName;
+            else
+                // The value of the model property was "Current"
+
+                newModelValue = tr("Current");
+        }
 
         // Check whether newModelValue is empty and, if so, update our graph
         // info using the current value of our model property, otherwise set the
