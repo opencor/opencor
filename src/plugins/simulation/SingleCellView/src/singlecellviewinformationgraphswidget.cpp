@@ -572,9 +572,15 @@ void SingleCellViewInformationGraphsWidget::propertyChanged(Core::Property *pPro
     // one (since we will have been updating the graph information in
     // modelChanged()) above)
 
-    if (pProperty != pProperty->parentProperty()->properties()[0])
-        updateGraphInfo(pProperty->parentProperty(),
-                        pProperty->parentProperty()->properties()[0]->value());
+    if (pProperty != pProperty->parentProperty()->properties()[0]) {
+        if (pProperty->value().isEmpty())
+            // The property value is empty, so...
+
+            pProperty->setValue("???");
+        else
+            updateGraphInfo(pProperty->parentProperty(),
+                            pProperty->parentProperty()->properties()[0]->value());
+    }
 }
 
 //==============================================================================
