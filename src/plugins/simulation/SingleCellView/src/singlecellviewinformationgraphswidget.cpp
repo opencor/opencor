@@ -568,19 +568,15 @@ void SingleCellViewInformationGraphsWidget::modelChanged(Core::Property *pProper
 void SingleCellViewInformationGraphsWidget::propertyChanged(Core::Property *pProperty)
 {
     // Update the graph information associated with the given property's
-    // corresponding section property, but only if the property is not the model
-    // one (since we will have been updating the graph information in
-    // modelChanged()) above)
+    // corresponding section property
 
-    if (pProperty != pProperty->parentProperty()->properties()[0]) {
-        if (pProperty->value().isEmpty())
-            // The property value is empty, so...
+    if (pProperty->value().isEmpty())
+        // The property value is empty, so...
 
-            pProperty->setValue("???");
-        else
-            updateGraphInfo(pProperty->parentProperty(),
-                            pProperty->parentProperty()->properties()[0]->value());
-    }
+        pProperty->setValue("???");
+    else
+        updateGraphInfo(pProperty->parentProperty(),
+                        pProperty->parentProperty()->properties()[0]->value());
 }
 
 //==============================================================================
@@ -639,7 +635,8 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
         if (!modelListValue.contains(oldModelValue)) {
             // Our old model value is not in our new model list value, which
             // means that either the value of the model property was "Current"
-            // or the current file got renamed, so we use that instead
+            // (and the locale got changed) or the current file got renamed, so
+            // we use that instead
 
             if (oldModelValue.contains(PropertySeparator))
                 // The current file got renamed
@@ -651,16 +648,21 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
                 newModelValue = tr("Current");
         }
 
-        // Check whether newModelValue is empty and, if so, update our graph
-        // info using the current value of our model property, otherwise set the
-        // value of our model property to newModelValue
-        // Note: the latter will result in updateGraphInfo() being called, so we
-        //       are all fine...
+        // Check whether newModelValue is empty (which is the case when we first
+        // come here) and, if so, update our graph info using the current value
+        // of our model property (which will have been set through our call to
+        // Property::setListValue() above), otherwise set the value of our model
+        // property to newModelValue (which will result in updateGraphInfo()
+        // being called, so we are all fine)
 
         if (newModelValue.isEmpty())
             updateGraphInfo(sectionProperty, sectionProperty->properties()[0]->value());
         else
-            sectionProperty->properties()[0]->setValue(newModelValue);
+            sectionProperty->properties()[0]->setValue(newModelValue, true);
+            // Note: we must force the setting of the value since it may very
+            //       well be that it's the same as before, yet we want the
+            //       signal associated with setValue() to be emitted (so that
+            //       updateGraphInfo() can then be called)...
     }
 }
 
