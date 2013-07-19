@@ -239,11 +239,6 @@ void SingleCellViewInformationParametersWidget::updateParameters(const double &p
 
 void SingleCellViewInformationParametersWidget::propertyChanged(Core::Property *pProperty)
 {
-    // Make sure that we have a property editor
-
-    if (!mPropertyEditor)
-        return;
-
     // Update our simulation data
 
     CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(pProperty);
@@ -412,7 +407,7 @@ void SingleCellViewInformationParametersWidget::populateContextMenu(QMenu *pCont
         QAction *parameterAction = componentMenu->addAction(SingleCellViewWidget::parameterIcon(parameter->type()),
                                                             parameter->name()+QString(parameter->degree(), '\''));
 
-        // Create a connection to handle the plotting requirement against our
+        // Create a connection to handle the graph requirement against our
         // parameter
 
         connect(parameterAction, SIGNAL(triggered()),
