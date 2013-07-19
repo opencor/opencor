@@ -183,6 +183,21 @@ void TreeViewWidget::keyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
+void TreeViewWidget::mousePressEvent(QMouseEvent *pEvent)
+{
+    // Default handling of the event
+
+    QTreeView::mousePressEvent(pEvent);
+
+    // Select the current item, if any
+    // Note: the idea is, for example, if we want to show a context menu, then
+    //       nothing will happen if we are not over an item...
+
+    setCurrentIndex(indexAt(pEvent->pos()));
+}
+
+//==============================================================================
+
 void TreeViewWidget::startDrag(Qt::DropActions pSupportedActions)
 {
     // This a reimplementation of QAbstractItemView::startDrag, so that we can
