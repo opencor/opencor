@@ -39,8 +39,10 @@ SingleCellViewGraphPanelsWidget::SingleCellViewGraphPanelsWidget(QWidget *pParen
 //==============================================================================
 
 static const QString SettingsGraphPanelsCount = "GraphPanelsCount";
-static const QString SettingsActiveGraphPanel = "ActiveGraphPanel";
 static const QString SettingsGraphPanelSize   = "GraphPanelSize%1";
+//static const QString SettingsActiveGraphPanel = "ActiveGraphPanel";
+//---GRY--- WE DON'T CURRENTLY KEEP TRACK OF THE REQUIRED GRAPHS, SO NO POINT IN
+//          KEEPING TRACK OF WHICH GRAPH PANEL IS ACTIVE...
 
 //==============================================================================
 
@@ -76,29 +78,30 @@ void SingleCellViewGraphPanelsWidget::loadSettings(QSettings *pSettings)
 
     // Select the graph panel that used to be active
 
-    qobject_cast<SingleCellViewGraphPanelWidget *>(widget(pSettings->value(SettingsActiveGraphPanel, 0).toInt()))->setActive(true);
+//    qobject_cast<SingleCellViewGraphPanelWidget *>(widget(pSettings->value(SettingsActiveGraphPanel, 0).toInt()))->setActive(true);
+qobject_cast<SingleCellViewGraphPanelWidget *>(widget(0))->setActive(true);
 }
 
 //==============================================================================
 
 void SingleCellViewGraphPanelsWidget::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of the number of graph panels, of which graph panel was the
-    // active one, and of the size of each graph panel
+    // Keep track of the number of graph panels, of the size of each graph panel
+    // and of which graph panel is the active one
 
     pSettings->setValue(SettingsGraphPanelsCount, mSplitterSizes.count());
 
     for (int i = 0, iMax = mSplitterSizes.count(); i < iMax; ++i)
-        if (qobject_cast<SingleCellViewGraphPanelWidget *>(widget(i))->isActive()) {
-            // We found the active graph panel, so...
-
-            pSettings->setValue(SettingsActiveGraphPanel, i);
-
-            break;
-        }
-
-    for (int i = 0, iMax = mSplitterSizes.count(); i < iMax; ++i)
         pSettings->setValue(SettingsGraphPanelSize.arg(i), mSplitterSizes[i]);
+
+//    for (int i = 0, iMax = mSplitterSizes.count(); i < iMax; ++i)
+//        if (qobject_cast<SingleCellViewGraphPanelWidget *>(widget(i))->isActive()) {
+//            // We found the active graph panel, so...
+
+//            pSettings->setValue(SettingsActiveGraphPanel, i);
+
+//            break;
+//        }
 }
 
 //==============================================================================
