@@ -359,13 +359,25 @@ bool SingleCellViewInformationGraphsWidget::checkParameter(const QString &pFileN
     // an existing parameter in our runtime
 
     if (runtime) {
+        // Retrieve the component and parameter of the property
+
         QStringList info = pProperty->value().split(".");
         QString componentName = info.first();
         QString parameterName = info.last();
+        int parameterDegree = parameterName.size();
+
+        // Determine the degree of our parameter, if any
+
+        parameterName.replace("'", QString());
+
+        parameterDegree -= parameterName.size();
+
+        // Check whether we can find our property among our runtime's parameters
 
         foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, runtime->parameters())
             if (   !parameter->component().compare(componentName)
-                && !parameter->name().compare(parameterName)) {
+                && !parameter->name().compare(parameterName)
+                && (parameter->degree() == parameterDegree)) {
                 res = true;
 
                 break;
