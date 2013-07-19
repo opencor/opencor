@@ -67,14 +67,14 @@ public:
 
 private:
     QMap<QString, Core::PropertyEditorWidget *> mPropertyEditors;
+    Core::PropertyEditorWidget *mPropertyEditor;
+
     QMap<QString, QMenu *> mContextMenus;
 
     QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> mParameters;
     QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
 
     QList<int> mColumnWidths;
-
-    Core::PropertyEditorWidget *mPropertyEditor;
 
     QString mFileName;
 

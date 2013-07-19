@@ -26,10 +26,10 @@ namespace SingleCellView {
 SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(QWidget *pParent) :
     QStackedWidget(pParent),
     mPropertyEditors(QMap<SingleCellViewGraphPanelWidget *, Core::PropertyEditorWidget *>()),
+    mPropertyEditor(0),
     mContextMenus(QMap<QString, QMenu *>()),
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mColumnWidths(QList<int>()),
-    mPropertyEditor(0),
     mFileNames(QStringList()),
     mFileName(QString()),
     mRuntimes(QMap<QString, CellMLSupport::CellmlFileRuntime *>()),

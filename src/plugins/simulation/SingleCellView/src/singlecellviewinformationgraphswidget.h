@@ -73,6 +73,8 @@ public:
 
 private:
     QMap<SingleCellViewGraphPanelWidget *, Core::PropertyEditorWidget *> mPropertyEditors;
+    Core::PropertyEditorWidget *mPropertyEditor;
+
     QMap<QString, QMenu *> mContextMenus;
 
     QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
@@ -80,7 +82,6 @@ private:
     QList<int> mColumnWidths;
 
     QLabel *mNoGraphsMessageWidget;
-    Core::PropertyEditorWidget *mPropertyEditor;
 
     QStringList mFileNames;
     QString mFileName;
