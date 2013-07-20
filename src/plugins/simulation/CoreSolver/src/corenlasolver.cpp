@@ -69,11 +69,7 @@ void setNlaSolver(const QString &pRuntime, CoreNlaSolver *pGlobalNlaSolver)
     QSettings settings(SettingsOrganization, SettingsApplication);
 
     settings.beginGroup(SettingsGlobal);
-        settings.setValue(pRuntime, QString::number(qulonglong(pGlobalNlaSolver)));
-        // Note: for some reasons, on Windows and OS X, QSettings doesn't handle
-        //       qulonglong values properly, so we do it through a QString value
-        //       instead...
-        //       (See https://bugreports.qt-project.org/browse/QTBUG-29681)
+        settings.setValue(pRuntime, qulonglong(pGlobalNlaSolver));
     settings.endGroup();
 }
 
