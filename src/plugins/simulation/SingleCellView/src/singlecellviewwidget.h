@@ -161,17 +161,17 @@ private:
     void checkResults(SingleCellViewSimulation *pSimulation);
 
 private Q_SLOTS:
-    void on_actionRunPauseResume_triggered();
-    void on_actionStop_triggered();
+    void on_actionRunPauseResumeSimulation_triggered();
+    void on_actionStopSimulation_triggered();
 
-    void on_actionReset_triggered();
+    void on_actionResetModelParameters_triggered();
 
     void on_actionDebugMode_triggered();
 
-    void on_actionAdd_triggered();
-    void on_actionRemove_triggered();
+    void on_actionAddGraphPanel_triggered();
+    void on_actionRemoveGraphPanel_triggered();
 
-    void on_actionCsvExport_triggered();
+    void on_actionSimulationDataCsvExport_triggered();
 
     void updateDelayValue(const double &pDelayValue);
 

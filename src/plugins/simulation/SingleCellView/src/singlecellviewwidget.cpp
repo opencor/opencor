@@ -119,10 +119,10 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
 
     mToolBarWidget = new Core::ToolBarWidget(this);
 
-    mToolBarWidget->addAction(mGui->actionRunPauseResume);
-    mToolBarWidget->addAction(mGui->actionStop);
+    mToolBarWidget->addAction(mGui->actionRunPauseResumeSimulation);
+    mToolBarWidget->addAction(mGui->actionStopSimulation);
     mToolBarWidget->addSeparator();
-    mToolBarWidget->addAction(mGui->actionReset);
+    mToolBarWidget->addAction(mGui->actionResetModelParameters);
     mToolBarWidget->addSeparator();
     mToolBarWidget->addWidget(mDelayWidget);
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
@@ -134,10 +134,10 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mToolBarWidget->addAction(mGui->actionDebugMode);
 */
     mToolBarWidget->addSeparator();
-    mToolBarWidget->addAction(mGui->actionAdd);
-    mToolBarWidget->addAction(mGui->actionRemove);
+    mToolBarWidget->addAction(mGui->actionAddGraphPanel);
+    mToolBarWidget->addAction(mGui->actionRemoveGraphPanel);
     mToolBarWidget->addSeparator();
-    mToolBarWidget->addAction(mGui->actionCsvExport);
+    mToolBarWidget->addAction(mGui->actionSimulationDataCsvExport);
 
     mTopSeparator = Core::newLineWidget(this);
 
@@ -170,7 +170,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     // Keep track of whether we can remove graph panels
 
     connect(mContentsWidget->graphPanelsWidget(), SIGNAL(removeGraphPanelsEnabled(const bool &)),
-            mGui->actionRemove, SLOT(setEnabled(bool)));
+            mGui->actionRemoveGraphPanel, SLOT(setEnabled(bool)));
 
     // Keep track of the addition and removal of a graph panel
 
@@ -275,7 +275,7 @@ void SingleCellViewWidget::retranslateUi()
 
     // Retranslate our delay and delay value widgets
 
-    mDelayWidget->setToolTip(tr("Delay"));
+    mDelayWidget->setToolTip(tr("Simulation Delay"));
     mDelayValueWidget->setToolTip(mDelayWidget->toolTip());
 
     mDelayWidget->setStatusTip(tr("Delay in milliseconds between two data points"));
@@ -395,7 +395,7 @@ void SingleCellViewWidget::updateSimulationMode()
 
     // Enable/disable our stop action
 
-    mGui->actionStop->setEnabled(simulationModeEnabled);
+    mGui->actionStopSimulation->setEnabled(simulationModeEnabled);
 
     // Enable or disable our simulation and solvers widgets
 
@@ -404,8 +404,8 @@ void SingleCellViewWidget::updateSimulationMode()
 
     // Enable/disable our export to CSV
 
-    mGui->actionCsvExport->setEnabled(    mSimulation->results()->size()
-                                      && !simulationModeEnabled);
+    mGui->actionSimulationDataCsvExport->setEnabled(    mSimulation->results()->size()
+                                                    && !simulationModeEnabled);
 
     // Give the focus to our focus proxy, in case we leave our simulation mode
     // (so that the user can modify simulation data, etc.)
@@ -420,32 +420,32 @@ void SingleCellViewWidget::updateRunPauseAction(const bool &pRunActionEnabled)
 {
     mRunActionEnabled = pRunActionEnabled;
 
-    mGui->actionRunPauseResume->setIcon(pRunActionEnabled?
-                                            QIcon(":/oxygen/actions/media-playback-start.png"):
-                                            QIcon(":/oxygen/actions/media-playback-pause.png"));
+    mGui->actionRunPauseResumeSimulation->setIcon(pRunActionEnabled?
+                                                      QIcon(":/oxygen/actions/media-playback-start.png"):
+                                                      QIcon(":/oxygen/actions/media-playback-pause.png"));
 
     bool simulationPaused = mSimulation && mSimulation->isPaused();
 
-    mGui->actionRunPauseResume->setIconText(pRunActionEnabled?
-                                                simulationPaused?
-                                                    tr("Resume"):
-                                                    tr("Run"):
-                                                tr("Pause"));
-    mGui->actionRunPauseResume->setStatusTip(pRunActionEnabled?
-                                                 simulationPaused?
-                                                     tr("Resume the simulation"):
-                                                     tr("Run the simulation"):
-                                                 tr("Pause the simulation"));
-    mGui->actionRunPauseResume->setText(pRunActionEnabled?
-                                            simulationPaused?
-                                                tr("&Resume"):
-                                                tr("&Run"):
-                                            tr("&Pause"));
-    mGui->actionRunPauseResume->setToolTip(pRunActionEnabled?
-                                               simulationPaused?
-                                                   tr("Resume"):
-                                                   tr("Run"):
-                                               tr("Pause"));
+    mGui->actionRunPauseResumeSimulation->setIconText(pRunActionEnabled?
+                                                          simulationPaused?
+                                                              tr("Resume Simulation"):
+                                                              tr("Run Simulation"):
+                                                          tr("Pause Simulation"));
+    mGui->actionRunPauseResumeSimulation->setStatusTip(pRunActionEnabled?
+                                                           simulationPaused?
+                                                               tr("Resume the simulation"):
+                                                               tr("Run the simulation"):
+                                                           tr("Pause the simulation"));
+    mGui->actionRunPauseResumeSimulation->setText(pRunActionEnabled?
+                                                      simulationPaused?
+                                                          tr("Resume Simulation"):
+                                                          tr("Run Simulation"):
+                                                      tr("Pause Simulation"));
+    mGui->actionRunPauseResumeSimulation->setToolTip(pRunActionEnabled?
+                                                         simulationPaused?
+                                                             tr("Resume Simulation"):
+                                                             tr("Run Simulation"):
+                                                         tr("Pause Simulation"));
 }
 
 //==============================================================================
@@ -490,7 +490,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         // Keep track of the status of the reset action and of the value of the
         // delay widget
 
-        mResets.insert(previousFileName, mGui->actionReset->isEnabled());
+        mResets.insert(previousFileName, mGui->actionResetModelParameters->isEnabled());
         mDelays.insert(previousFileName, mDelayWidget->value());
     }
 
@@ -536,7 +536,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
     // Retrieve the status of the reset action and the value of the delay widget
 
-    mGui->actionReset->setEnabled(mResets.value(pFileName, false));
+    mGui->actionResetModelParameters->setEnabled(mResets.value(pFileName, false));
 
     setDelayValue(mDelays.value(pFileName, 0));
 
@@ -607,7 +607,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
     // Enable/disable our run/pause action depending on whether we have a
     // variable of integration
 
-    mGui->actionRunPauseResume->setEnabled(variableOfIntegration);
+    mGui->actionRunPauseResumeSimulation->setEnabled(variableOfIntegration);
 
     // Update our simulation mode
 
@@ -847,7 +847,7 @@ void SingleCellViewWidget::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
-void SingleCellViewWidget::on_actionRunPauseResume_triggered()
+void SingleCellViewWidget::on_actionRunPauseResumeSimulation_triggered()
 {
     // Run or resume our simulation, or pause it
 
@@ -955,7 +955,7 @@ void SingleCellViewWidget::on_actionRunPauseResume_triggered()
 
 //==============================================================================
 
-void SingleCellViewWidget::on_actionStop_triggered()
+void SingleCellViewWidget::on_actionStopSimulation_triggered()
 {
     // Stop our simulation
 
@@ -964,7 +964,7 @@ void SingleCellViewWidget::on_actionStop_triggered()
 
 //==============================================================================
 
-void SingleCellViewWidget::on_actionReset_triggered()
+void SingleCellViewWidget::on_actionResetModelParameters_triggered()
 {
     // Reset our simulation parameters
 
@@ -986,7 +986,7 @@ void SingleCellViewWidget::on_actionDebugMode_triggered()
 
 //==============================================================================
 
-void SingleCellViewWidget::on_actionAdd_triggered()
+void SingleCellViewWidget::on_actionAddGraphPanel_triggered()
 {
     // Ask our graph panels widget to add a new graph panel
 
@@ -995,7 +995,7 @@ void SingleCellViewWidget::on_actionAdd_triggered()
 
 //==============================================================================
 
-void SingleCellViewWidget::on_actionRemove_triggered()
+void SingleCellViewWidget::on_actionRemoveGraphPanel_triggered()
 {
     // Ask our graph panels widget to remove the current graph panel
 
@@ -1004,7 +1004,7 @@ void SingleCellViewWidget::on_actionRemove_triggered()
 
 //==============================================================================
 
-void SingleCellViewWidget::on_actionCsvExport_triggered()
+void SingleCellViewWidget::on_actionSimulationDataCsvExport_triggered()
 {
     // Export our simulation data results to a CSV file
 
@@ -1205,7 +1205,7 @@ void SingleCellViewWidget::simulationDataModified(const bool &pIsModified)
     // simulation
 
     if (qobject_cast<SingleCellViewSimulationData *>(sender()) == mSimulation->data())
-        mGui->actionReset->setEnabled(pIsModified);
+        mGui->actionResetModelParameters->setEnabled(pIsModified);
 }
 
 //==============================================================================
@@ -1357,7 +1357,7 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
         //       resulting in some time overhead, so we check things here
         //       instead...
 
-        mGui->actionReset->setEnabled(mSimulation->data()->isModified());
+        mGui->actionResetModelParameters->setEnabled(mSimulation->data()->isModified());
 
         // Update our graphs, if any
 

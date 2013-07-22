@@ -153,10 +153,6 @@
 <context>
     <name>OpenCOR::SingleCellView::SingleCellViewWidget</name>
     <message>
-        <source>Delay</source>
-        <translation>Délai</translation>
-    </message>
-    <message>
         <source>Delay in milliseconds between two data points</source>
         <translation>Délai en millisecondes entre deux points de données</translation>
     </message>
@@ -277,36 +273,28 @@
         <translation>%1 s avec %2</translation>
     </message>
     <message>
-        <source>Run</source>
-        <translation>Lancer</translation>
-    </message>
-    <message>
-        <source>Pause</source>
-        <translation>Pauser</translation>
-    </message>
-    <message>
         <source>Pause the simulation</source>
         <translation>Pauser la simulation</translation>
-    </message>
-    <message>
-        <source>&amp;Run</source>
-        <translation>&amp;Lancer</translation>
-    </message>
-    <message>
-        <source>&amp;Pause</source>
-        <translation>&amp;Pauser</translation>
     </message>
     <message>
         <source>Resume the simulation</source>
         <translation>Résumer la simulation</translation>
     </message>
     <message>
-        <source>&amp;Resume</source>
-        <translation>&amp;Résumer</translation>
+        <source>Resume Simulation</source>
+        <translation>Résumer Simulation</translation>
     </message>
     <message>
-        <source>Resume</source>
-        <translation>Résumer</translation>
+        <source>Run Simulation</source>
+        <translation>Lancer Simulation</translation>
+    </message>
+    <message>
+        <source>Pause Simulation</source>
+        <translation>Pauser Simulation</translation>
+    </message>
+    <message>
+        <source>Simulation Delay</source>
+        <translation>Délai Simulation</translation>
     </message>
 </context>
 <context>
@@ -354,20 +342,12 @@
 <context>
     <name>SingleCellViewWidget</name>
     <message>
-        <source>&amp;Run</source>
-        <translation>&amp;Lancer</translation>
-    </message>
-    <message>
         <source>Run the simulation</source>
         <translation>Lancer la simulation</translation>
     </message>
     <message>
         <source>F9</source>
         <translation></translation>
-    </message>
-    <message>
-        <source>&amp;Stop</source>
-        <translation>&amp;Arrêter</translation>
     </message>
     <message>
         <source>Stop the simulation</source>
@@ -378,14 +358,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>&amp;Debug Mode</source>
-        <translation>Mode &amp;Déboguage</translation>
-    </message>
-    <message>
-        <source>&amp;CSV Export</source>
-        <translation>Export &amp;CSV</translation>
-    </message>
-    <message>
         <source>Export the simulation data to CSV</source>
         <translation>Exporter les données de la simulation vers CSV</translation>
     </message>
@@ -394,28 +366,44 @@
         <translation>Activer le mode déboguage</translation>
     </message>
     <message>
-        <source>&amp;Add</source>
-        <translation>&amp;Ajouter</translation>
-    </message>
-    <message>
         <source>Add a graph panel</source>
         <translation>Ajouter un panneau graphique</translation>
-    </message>
-    <message>
-        <source>&amp;Remove</source>
-        <translation>&amp;Supprimer</translation>
     </message>
     <message>
         <source>Remove the current graph panel</source>
         <translation>Supprimer le panneau graphique actuel</translation>
     </message>
     <message>
-        <source>&amp;Reset</source>
-        <translation>&amp;Réinitialiser</translation>
+        <source>Run Simulation</source>
+        <translation>Lancer Simulation</translation>
     </message>
     <message>
-        <source>Reset all the parameters</source>
-        <translation>Réinitialiser tous les paramètres</translation>
+        <source>Stop Simulation</source>
+        <translation>Arrêter Simulation</translation>
+    </message>
+    <message>
+        <source>Debug Mode</source>
+        <translation>Mode Déboguage</translation>
+    </message>
+    <message>
+        <source>Add Graph Panel</source>
+        <translation>Ajouter Panneau Graphique</translation>
+    </message>
+    <message>
+        <source>Reset Model Parameters</source>
+        <translation>Réinitialiser Paramètres Modèle</translation>
+    </message>
+    <message>
+        <source>Simulation Data CSV Export</source>
+        <translation>Exporter CSV Données Simulation</translation>
+    </message>
+    <message>
+        <source>Remove Graph Panel</source>
+        <translation>Supprimer Panneau Graphique</translation>
+    </message>
+    <message>
+        <source>Reset all the model parameters</source>
+        <translation>Réinitialiser tous les paramètres du modèle</translation>
     </message>
 </context>
 </TS>
