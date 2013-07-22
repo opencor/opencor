@@ -37,7 +37,10 @@ public:
                                                CellMLSupport::CellmlFileRuntimeParameter *pParameterY = 0);
 
     CellMLSupport::CellmlFileRuntimeParameter * parameterX() const;
+    void setParameterX(CellMLSupport::CellmlFileRuntimeParameter *pParameterX);
+
     CellMLSupport::CellmlFileRuntimeParameter * parameterY() const;
+    void setParameterY(CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 
 private:
     CellMLSupport::CellmlFileRuntimeParameter *mParameterX;

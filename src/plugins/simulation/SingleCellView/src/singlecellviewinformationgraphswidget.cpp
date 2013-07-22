@@ -490,10 +490,9 @@ void SingleCellViewInformationGraphsWidget::populateContextMenu(QMenu *pContextM
 //==============================================================================
 
 bool SingleCellViewInformationGraphsWidget::checkParameter(const QString &pFileName,
-                                                           Core::Property *pProperty) const
+                                                           Core::Property *pProperty,
+                                                           const Parameter &pParameter) const
 {
-    bool res = false;
-
     // Retrieve the runtime associated with the given file name
 
     CellMLSupport::CellmlFileRuntime *runtime = mRuntimes.value(pFileName);
@@ -501,10 +500,13 @@ bool SingleCellViewInformationGraphsWidget::checkParameter(const QString &pFileN
     // Check that the information held by the given property corresponds to
     // an existing parameter in our runtime
 
+    CellMLSupport::CellmlFileRuntimeParameter *res = 0;
+    Core::Property *parameterProperty = pProperty->properties()[(pParameter == ParameterX)?1:2];
+
     if (runtime) {
         // Retrieve the component and parameter of the property
 
-        QStringList info = pProperty->value().split(".");
+        QStringList info = parameterProperty->value().split(".");
         QString componentName = info.first();
         QString parameterName = info.last();
         int parameterDegree = parameterName.size();
@@ -521,20 +523,31 @@ bool SingleCellViewInformationGraphsWidget::checkParameter(const QString &pFileN
             if (   !parameter->component().compare(componentName)
                 && !parameter->name().compare(parameterName)
                 && (parameter->degree() == parameterDegree)) {
-                res = true;
+                res = parameter;
 
                 break;
             }
     }
 
-    pProperty->setIcon(res?
-                           QIcon(":Core_blankIcon"):
-                           QIcon(":/oxygen/status/task-attention.png"));
-    pProperty->setExtraInfo(res?
-                                QString():
-                                runtime?
-                                    tr("does not exist"):
-                                    tr("no runtime"));
+    // Update our parameter property based on whether it corresponds to an
+    // existing parameter in our runtime
+
+    parameterProperty->setIcon(res?
+                                   QIcon(":Core_blankIcon"):
+                                   QIcon(":/oxygen/status/task-attention.png"));
+    parameterProperty->setExtraInfo(res?
+                                        QString():
+                                        runtime?
+                                            tr("does not exist"):
+                                            tr("no runtime"));
+
+    // Keep track of the existing parameter, if any, to which our property
+    // corresponds
+
+    if (pParameter == ParameterX)
+        mGraphs.value(pProperty)->setParameterX(res);
+    else
+        mGraphs.value(pProperty)->setParameterY(res);
 
     return res;
 }
@@ -571,10 +584,10 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
     bool graphOk = true;
 
     if (pProperty->properties().count() >= 2)
-        graphOk = checkParameter(fileName, pProperty->properties()[1]) && graphOk;
+        graphOk = checkParameter(fileName, pProperty, ParameterX) && graphOk;
 
     if (pProperty->properties().count() == 3)
-        graphOk = checkParameter(fileName, pProperty->properties()[2]) && graphOk;
+        graphOk = checkParameter(fileName, pProperty, ParameterY) && graphOk;
 
     // Update our section's name, if possible
     // Note: indeed, when populating ourselves, updateGraphInfo() gets called

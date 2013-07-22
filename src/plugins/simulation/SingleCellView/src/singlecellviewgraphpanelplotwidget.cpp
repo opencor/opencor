@@ -61,11 +61,29 @@ CellMLSupport::CellmlFileRuntimeParameter * SingleCellViewGraphPanelPlotGraph::p
 
 //==============================================================================
 
+void SingleCellViewGraphPanelPlotGraph::setParameterX(CellMLSupport::CellmlFileRuntimeParameter *pParameterX)
+{
+    // Set our parameter X
+
+    mParameterX = pParameterX;
+}
+
+//==============================================================================
+
 CellMLSupport::CellmlFileRuntimeParameter * SingleCellViewGraphPanelPlotGraph::parameterY() const
 {
     // Return our parameter Y
 
     return mParameterY;
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelPlotGraph::setParameterY(CellMLSupport::CellmlFileRuntimeParameter *pParameterY)
+{
+    // Set our parameter Y
+
+    mParameterY = pParameterY;
 }
 
 //==============================================================================

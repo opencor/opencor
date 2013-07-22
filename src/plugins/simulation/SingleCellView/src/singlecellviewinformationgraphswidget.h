@@ -102,8 +102,14 @@ private:
     void populateContextMenu(QMenu *pContextMenu,
                              CellMLSupport::CellmlFileRuntime *pRuntime);
 
+    enum Parameter {
+        ParameterX,
+        ParameterY
+    };
+
     bool checkParameter(const QString &pFileName,
-                        OpenCOR::Core::Property *pProperty) const;
+                        OpenCOR::Core::Property *pProperty,
+                        const Parameter &pParameter) const;
 
     void updateGraphInfo(OpenCOR::Core::Property *pProperty,
                          const QString &pFileName) const;
