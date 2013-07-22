@@ -33,8 +33,8 @@ namespace SingleCellView {
 class SingleCellViewGraphPanelPlotGraph : public QwtPlotCurve
 {
 public:
-    explicit SingleCellViewGraphPanelPlotGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
-                                               CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
+    explicit SingleCellViewGraphPanelPlotGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX = 0,
+                                               CellMLSupport::CellmlFileRuntimeParameter *pParameterY = 0);
 
     CellMLSupport::CellmlFileRuntimeParameter * parameterX() const;
     CellMLSupport::CellmlFileRuntimeParameter * parameterY() const;

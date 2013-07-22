@@ -80,8 +80,11 @@ public:
 private:
     Ui::SingleCellViewInformationGraphsWidget *mGui;
 
+    QMap<Core::PropertyEditorWidget *, SingleCellViewGraphPanelWidget *> mGraphPanels;
     QMap<SingleCellViewGraphPanelWidget *, Core::PropertyEditorWidget *> mPropertyEditors;
     Core::PropertyEditorWidget *mPropertyEditor;
+
+    QMap<Core::Property *, SingleCellViewGraphPanelPlotGraph *> mGraphs;
 
     QMap<QString, QMenu *> mContextMenus;
     QMenu *mGeneralContextMenu;
@@ -110,7 +113,7 @@ public Q_SLOTS:
     void initialize(SingleCellViewGraphPanelWidget *pGraphPanel);
     void finalize(SingleCellViewGraphPanelWidget *pGraphPanel);
 
-    void addGraph(SingleCellViewGraphPanelPlotGraph *pGraph = 0);
+    void addGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
     void removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
 
 private Q_SLOTS:

@@ -5,6 +5,7 @@
 #include "cellmlfileruntime.h"
 #include "propertyeditorwidget.h"
 #include "singlecellviewgraphpanelplotwidget.h"
+#include "singlecellviewgraphpanelwidget.h"
 #include "singlecellviewinformationgraphswidget.h"
 #include "singlecellviewwidget.h"
 
@@ -30,8 +31,10 @@ namespace SingleCellView {
 SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(QWidget *pParent) :
     QStackedWidget(pParent),
     mGui(new Ui::SingleCellViewInformationGraphsWidget),
+    mGraphPanels(QMap<Core::PropertyEditorWidget *, SingleCellViewGraphPanelWidget *>()),
     mPropertyEditors(QMap<SingleCellViewGraphPanelWidget *, Core::PropertyEditorWidget *>()),
     mPropertyEditor(0),
+    mGraphs(QMap<Core::Property *, SingleCellViewGraphPanelPlotGraph *>()),
     mContextMenus(QMap<QString, QMenu *>()),
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mColumnWidths(QList<int>()),
@@ -235,8 +238,10 @@ void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelW
 
         addWidget(mPropertyEditor);
 
-        // Keep track of our new property editor
+        // Keep track of the link between our existing graph panel and our new
+        // property editor
 
+        mGraphPanels.insert(mPropertyEditor, pGraphPanel);
         mPropertyEditors.insert(pGraphPanel, mPropertyEditor);
     }
 
@@ -255,8 +260,9 @@ void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelW
 
 void SingleCellViewInformationGraphsWidget::finalize(SingleCellViewGraphPanelWidget *pGraphPanel)
 {
-    // Remove track of our property editor
+    // Remove track of the link betwen our graph panel and our property editor
 
+    mGraphPanels.remove(mPropertyEditors.value(pGraphPanel));
     mPropertyEditors.remove(pGraphPanel);
 }
 
@@ -280,11 +286,15 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
     sectionProperty->setCheckable(true);
     sectionProperty->setChecked(true);
 
+    // Keep track of the given graph for our (section) graph property
+
+    mGraphs.insert(sectionProperty, pGraph);
+
     // Create some properties for our graph
 
     mPropertyEditor->addListProperty(sectionProperty);
-    Core::Property *xProperty = mPropertyEditor->addStringProperty(pGraph?pGraph->parameterX()->fullyFormattedName():Core::UnknownValue, sectionProperty);
-    Core::Property *yProperty = mPropertyEditor->addStringProperty(pGraph?pGraph->parameterY()->fullyFormattedName():Core::UnknownValue, sectionProperty);
+    Core::Property *xProperty = mPropertyEditor->addStringProperty(pGraph->parameterX()?pGraph->parameterX()->fullyFormattedName():Core::UnknownValue, sectionProperty);
+    Core::Property *yProperty = mPropertyEditor->addStringProperty(pGraph->parameterY()?pGraph->parameterY()->fullyFormattedName():Core::UnknownValue, sectionProperty);
 
     xProperty->setEditable(true);
     yProperty->setEditable(true);
@@ -332,24 +342,24 @@ Q_UNUSED(pGraph);
 
 //==============================================================================
 
-void SingleCellView::SingleCellViewInformationGraphsWidget::on_actionAddGraph_triggered()
+void SingleCellViewInformationGraphsWidget::on_actionAddGraph_triggered()
 {
-    // Add an 'empty' graph
+    // Add the graph panel associate with our current property editor to add an
+    // 'empty' graph
 
-    addGraph();
+    mGraphPanels.value(mPropertyEditor)->addGraph(new SingleCellViewGraphPanelPlotGraph());
+}
+
+//==============================================================================
+
+void SingleCellViewInformationGraphsWidget::on_actionRemoveCurrentGraph_triggered()
+{
 //---GRY--- TO BE DONE...
 }
 
 //==============================================================================
 
-void SingleCellView::SingleCellViewInformationGraphsWidget::on_actionRemoveCurrentGraph_triggered()
-{
-//---GRY--- TO BE DONE...
-}
-
-//==============================================================================
-
-void SingleCellView::SingleCellViewInformationGraphsWidget::on_actionRemoveAllGraphs_triggered()
+void SingleCellViewInformationGraphsWidget::on_actionRemoveAllGraphs_triggered()
 {
     //---GRY--- TO BE DONE...
 }
