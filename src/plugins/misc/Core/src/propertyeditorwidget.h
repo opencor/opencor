@@ -28,6 +28,10 @@ namespace Core {
 
 //==============================================================================
 
+static const QString UnknownValue = "???";
+
+//==============================================================================
+
 class TextEditorWidget : public QLineEdit
 {
     Q_OBJECT

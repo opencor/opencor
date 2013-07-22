@@ -283,8 +283,8 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
     // Create some properties for our graph
 
     mPropertyEditor->addListProperty(sectionProperty);
-    Core::Property *xProperty = mPropertyEditor->addStringProperty(pGraph->parameterX()->fullyFormattedName(), sectionProperty);
-    Core::Property *yProperty = mPropertyEditor->addStringProperty(pGraph->parameterY()->fullyFormattedName(), sectionProperty);
+    Core::Property *xProperty = mPropertyEditor->addStringProperty(pGraph?pGraph->parameterX()->fullyFormattedName():Core::UnknownValue, sectionProperty);
+    Core::Property *yProperty = mPropertyEditor->addStringProperty(pGraph?pGraph->parameterY()->fullyFormattedName():Core::UnknownValue, sectionProperty);
 
     xProperty->setEditable(true);
     yProperty->setEditable(true);
@@ -300,6 +300,10 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
     // Make sure that our property editor is our current widget
 
     setCurrentWidget(mPropertyEditor);
+
+    // Enable our remove all graphs action
+
+    mGui->actionRemoveAllGraphs->setEnabled(true);
 }
 
 //==============================================================================
@@ -320,6 +324,34 @@ Q_UNUSED(pGraph);
     // Allow ourselves to be updated again
 
     mPropertyEditor->setUpdatesEnabled(true);
+
+    // Update our remove all graphs action enabled state
+
+    mGui->actionRemoveAllGraphs->setEnabled(!mPropertyEditor->properties().isEmpty());
+}
+
+//==============================================================================
+
+void SingleCellView::SingleCellViewInformationGraphsWidget::on_actionAddGraph_triggered()
+{
+    // Add an 'empty' graph
+
+    addGraph();
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
+void SingleCellView::SingleCellViewInformationGraphsWidget::on_actionRemoveCurrentGraph_triggered()
+{
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
+void SingleCellView::SingleCellViewInformationGraphsWidget::on_actionRemoveAllGraphs_triggered()
+{
+    //---GRY--- TO BE DONE...
 }
 
 //==============================================================================
@@ -342,9 +374,6 @@ void SingleCellViewInformationGraphsWidget::propertyEditorContextMenu(const QPoi
 {
     Q_UNUSED(pPosition);
 
-    // Create a custom context menu for our property editor, based on what is
-    // underneath our mouse pointer
-
     // Make sure that we have a property editor
 
     if (!mPropertyEditor)
@@ -353,6 +382,10 @@ void SingleCellViewInformationGraphsWidget::propertyEditorContextMenu(const QPoi
     // Retrieve our current property, if any
 
     Core::Property *currentProperty = mPropertyEditor->currentProperty();
+
+    // Update the enabled state of our remove current graph action
+
+    mGui->actionRemoveCurrentGraph->setEnabled(currentProperty);
 
     // Show the context menu, or not, depending ont the type of property we are
     // dealing with, if any
@@ -571,7 +604,7 @@ void SingleCellViewInformationGraphsWidget::propertyChanged(Core::Property *pPro
     if (pProperty->value().isEmpty())
         // The property value is empty, so...
 
-        pProperty->setValue("???");
+        pProperty->setValue(Core::UnknownValue);
     else
         updateGraphInfo(pProperty->parentProperty(),
                         pProperty->parentProperty()->properties()[0]->value());

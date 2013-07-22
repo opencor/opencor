@@ -110,10 +110,14 @@ public Q_SLOTS:
     void initialize(SingleCellViewGraphPanelWidget *pGraphPanel);
     void finalize(SingleCellViewGraphPanelWidget *pGraphPanel);
 
-    void addGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
+    void addGraph(SingleCellViewGraphPanelPlotGraph *pGraph = 0);
     void removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
 
 private Q_SLOTS:
+    void on_actionAddGraph_triggered();
+    void on_actionRemoveCurrentGraph_triggered();
+    void on_actionRemoveAllGraphs_triggered();
+
     void propertyEditorContextMenu(const QPoint &pPosition) const;
     void propertyEditorSectionResized(const int &pLogicalIndex,
                                       const int &pOldSize, const int &pNewSize);

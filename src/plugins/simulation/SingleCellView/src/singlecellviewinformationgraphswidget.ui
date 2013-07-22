@@ -19,6 +19,9 @@
    </property>
   </action>
   <action name="actionRemoveCurrentGraph">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>&amp;Remove Current Graph</string>
    </property>
@@ -27,6 +30,9 @@
    </property>
   </action>
   <action name="actionRemoveAllGraphs">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>&amp;Remove All Graphs</string>
    </property>

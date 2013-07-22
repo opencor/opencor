@@ -399,7 +399,7 @@ Property::Property(const Type &pType, PropertyEditorWidget *pParent) :
     mValue(new PropertyItem(this)),
     mUnit(mHasUnit?new PropertyItem(this):0),
     mListValue(QStringList()),
-    mEmptyListValue(QString("???")),
+    mEmptyListValue(UnknownValue),
     mExtraInfo(QString()),
     mParentProperty(0),
     mProperties(QList<Property *>())
@@ -908,7 +908,7 @@ void Property::updateToolTip()
         toolTip += QObject::tr(": ");
 
         if (mValue->text().isEmpty())
-            toolTip += "???";
+            toolTip += UnknownValue;
         else
             toolTip += mValue->text();
 
