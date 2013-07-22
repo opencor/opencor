@@ -260,12 +260,6 @@ SingleCellViewWidget::~SingleCellViewWidget()
     foreach (SingleCellViewSimulation *simulation, mSimulations)
         delete simulation;
 
-    // Delete all the graphs from all our graph panels
-
-    foreach (SingleCellViewGraphPanelWidget *graphPanel, mContentsWidget->graphPanelsWidget()->graphPanels())
-        foreach (SingleCellViewGraphPanelPlotGraph *graph, graphPanel->graphs())
-            delete graph;
-
     // Delete the GUI
 
     delete mGui;

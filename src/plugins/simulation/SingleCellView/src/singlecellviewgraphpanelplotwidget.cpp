@@ -149,6 +149,9 @@ SingleCellViewGraphPanelPlotWidget::~SingleCellViewGraphPanelPlotWidget()
     // Delete some internal objects
 
     delete mDirectPainter;
+
+    foreach (SingleCellViewGraphPanelPlotGraph *graph, mGraphs)
+        delete graph;
 }
 
 //==============================================================================
