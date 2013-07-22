@@ -189,11 +189,12 @@ void TreeViewWidget::mousePressEvent(QMouseEvent *pEvent)
 
     QTreeView::mousePressEvent(pEvent);
 
-    // Select the current item, if any
-    // Note: the idea is, for example, if we want to show a context menu, then
-    //       nothing will happen if we are not over an item...
+    // Select the current item (if any), if we are right clicking
+    // Note: the idea is that if we want to show a context menu, then nothing
+    //       will happen if we are not over an item...
 
-    setCurrentIndex(indexAt(pEvent->pos()));
+    if (pEvent->button() == Qt::RightButton)
+        setCurrentIndex(indexAt(pEvent->pos()));
 }
 
 //==============================================================================
