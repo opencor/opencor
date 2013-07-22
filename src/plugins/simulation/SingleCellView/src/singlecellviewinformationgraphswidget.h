@@ -85,6 +85,7 @@ private:
     Core::PropertyEditorWidget *mPropertyEditor;
 
     QMap<Core::Property *, SingleCellViewGraphPanelPlotGraph *> mGraphs;
+    QMap<SingleCellViewGraphPanelPlotGraph *, Core::Property *> mGraphProperties;
 
     QMap<QString, QMenu *> mContextMenus;
     QMenu *mGeneralContextMenu;

@@ -1167,11 +1167,13 @@ bool SingleCellViewGraphPanelPlotWidget::removeGraph(SingleCellViewGraphPanelPlo
     if (!mGraphs.contains(pGraph))
         return false;
 
-    // Detach the given graph from ourselves and stop tracking it
+    // Detach the given graph from ourselves, stop tracking it and delete it
 
     pGraph->detach();
 
     mGraphs.removeOne(pGraph);
+
+    delete pGraph;
 
     return true;
 }

@@ -35,6 +35,7 @@ SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(QWi
     mPropertyEditors(QMap<SingleCellViewGraphPanelWidget *, Core::PropertyEditorWidget *>()),
     mPropertyEditor(0),
     mGraphs(QMap<Core::Property *, SingleCellViewGraphPanelPlotGraph *>()),
+    mGraphProperties(QMap<SingleCellViewGraphPanelPlotGraph *, Core::Property *>()),
     mContextMenus(QMap<QString, QMenu *>()),
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mColumnWidths(QList<int>()),
@@ -281,27 +282,28 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
 
     // Create a section for our newly added graph
 
-    Core::Property *sectionProperty = mPropertyEditor->addSectionProperty();
+    Core::Property *graphProperty = mPropertyEditor->addSectionProperty();
 
-    sectionProperty->setCheckable(true);
-    sectionProperty->setChecked(true);
+    graphProperty->setCheckable(true);
+    graphProperty->setChecked(true);
 
-    // Keep track of the given graph for our (section) graph property
+    // Keep track of the link between our given graph and our graph property
 
-    mGraphs.insert(sectionProperty, pGraph);
+    mGraphs.insert(graphProperty, pGraph);
+    mGraphProperties.insert(pGraph, graphProperty);
 
     // Create some properties for our graph
 
-    mPropertyEditor->addListProperty(sectionProperty);
-    Core::Property *xProperty = mPropertyEditor->addStringProperty(pGraph->parameterX()?pGraph->parameterX()->fullyFormattedName():Core::UnknownValue, sectionProperty);
-    Core::Property *yProperty = mPropertyEditor->addStringProperty(pGraph->parameterY()?pGraph->parameterY()->fullyFormattedName():Core::UnknownValue, sectionProperty);
+    mPropertyEditor->addListProperty(graphProperty);
+    Core::Property *xProperty = mPropertyEditor->addStringProperty(pGraph->parameterX()?pGraph->parameterX()->fullyFormattedName():Core::UnknownValue, graphProperty);
+    Core::Property *yProperty = mPropertyEditor->addStringProperty(pGraph->parameterY()?pGraph->parameterY()->fullyFormattedName():Core::UnknownValue, graphProperty);
 
     xProperty->setEditable(true);
     yProperty->setEditable(true);
 
     // Update the information about our new graph
 
-    updateGraphsInfo(sectionProperty);
+    updateGraphsInfo(graphProperty);
 
     // Allow ourselves to be updated again
 
@@ -320,8 +322,6 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
 
 void SingleCellViewInformationGraphsWidget::removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph)
 {
-//---GRY--- TO BE DONE...
-Q_UNUSED(pGraph);
     // Make sure that we have a property editor
 
     if (!mPropertyEditor)
@@ -330,6 +330,10 @@ Q_UNUSED(pGraph);
     // Prevent ourselves from being updated (to avoid any flickering)
 
     mPropertyEditor->setUpdatesEnabled(false);
+
+    // Remove the graph property associated with the given graph
+
+    mPropertyEditor->removeProperty(mGraphProperties.value(pGraph));
 
     // Allow ourselves to be updated again
 
@@ -344,7 +348,7 @@ Q_UNUSED(pGraph);
 
 void SingleCellViewInformationGraphsWidget::on_actionAddGraph_triggered()
 {
-    // Add the graph panel associate with our current property editor to add an
+    // Ask the graph panel associated with our current property editor to add an
     // 'empty' graph
 
     mGraphPanels.value(mPropertyEditor)->addGraph(new SingleCellViewGraphPanelPlotGraph());
@@ -354,7 +358,10 @@ void SingleCellViewInformationGraphsWidget::on_actionAddGraph_triggered()
 
 void SingleCellViewInformationGraphsWidget::on_actionRemoveCurrentGraph_triggered()
 {
-//---GRY--- TO BE DONE...
+    // Ask the graph panel associated with our current property editor to remove
+    // the current graph
+
+    mGraphPanels.value(mPropertyEditor)->removeGraph(mGraphs.value(mPropertyEditor->currentProperty()));
 }
 
 //==============================================================================
@@ -649,14 +656,14 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
     // Use the given section property or retrieve the ones for our current
     // property editor
 
-    QList<Core::Property *> sectionProperties = QList<Core::Property *>();
+    QList<Core::Property *> graphProperties = QList<Core::Property *>();
 
     if (pSectionProperty)
-        sectionProperties << pSectionProperty;
+        graphProperties << pSectionProperty;
     else
         foreach (Core::Property *property, mPropertyEditor->properties())
             if (property->type() == Core::Property::Section)
-                sectionProperties << property;
+                graphProperties << property;
 
     // Determine the model list value
 
@@ -670,21 +677,21 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
     modelListValue.prepend(QString());
     modelListValue.prepend(tr("Current"));
 
-    // Go through our section properties and update (incl. retranslate) their
+    // Go through our graph properties and update (incl. retranslate) their
     // information
 
-    foreach (Core::Property *sectionProperty, sectionProperties) {
-        sectionProperty->properties()[0]->setName(tr("Model"));
-        sectionProperty->properties()[1]->setName(tr("X"));
-        sectionProperty->properties()[2]->setName(tr("Y"));
+    foreach (Core::Property *graphProperty, graphProperties) {
+        graphProperty->properties()[0]->setName(tr("Model"));
+        graphProperty->properties()[1]->setName(tr("X"));
+        graphProperty->properties()[2]->setName(tr("Y"));
 
         // Keep track of the current model value, so that we can safely update
         // its list value and then select the correct model value back
 
-        QString oldModelValue = sectionProperty->properties()[0]->value();
+        QString oldModelValue = graphProperty->properties()[0]->value();
         QString newModelValue = oldModelValue;
 
-        sectionProperty->properties()[0]->setListValue(modelListValue);
+        graphProperty->properties()[0]->setListValue(modelListValue);
 
         if (!modelListValue.contains(oldModelValue)) {
             // Our old model value is not in our new model list value, which
@@ -710,9 +717,9 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
         // being called, so we are all fine)
 
         if (newModelValue.isEmpty())
-            updateGraphInfo(sectionProperty, sectionProperty->properties()[0]->value());
+            updateGraphInfo(graphProperty, graphProperty->properties()[0]->value());
         else
-            sectionProperty->properties()[0]->setValue(newModelValue, true);
+            graphProperty->properties()[0]->setValue(newModelValue, true);
             // Note: we must force the setting of the value since it may very
             //       well be that it's the same as before, yet we want the
             //       signal associated with setValue() to be emitted (so that

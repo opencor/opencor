@@ -1835,6 +1835,50 @@ void PropertyEditorWidget::editProperty(Property *pProperty,
 
 //==============================================================================
 
+bool PropertyEditorWidget::removeProperty(Property *pProperty)
+{
+    // Remove the given property and any of its children, but first make sure
+    // that we know about the given property
+
+    if (!mProperties.contains(pProperty))
+        return false;
+
+    // Stop track the property
+
+    mProperties.removeOne(pProperty);
+
+    // Remove the property from our model
+    // Note: the below will remove the given property and any of its children
+
+    mModel->removeRow(pProperty->row(),
+                      pProperty->parent()?
+                          pProperty->parent()->index():
+                          mModel->invisibleRootItem()->index());
+
+    // Delete the given property and any of its children
+
+    deleteProperty(pProperty);
+
+    return true;
+}
+
+//==============================================================================
+
+void PropertyEditorWidget::deleteProperty(Property *pProperty)
+{
+    // Recursively delete the memory associated with the given property and any
+    // of its children
+
+    foreach (Property *property, pProperty->properties())
+        deleteProperty(property);
+
+    mProperties.removeOne(pProperty);
+
+    delete pProperty;
+}
+
+//==============================================================================
+
 Properties PropertyEditorWidget::properties() const
 {
     // Return our properties

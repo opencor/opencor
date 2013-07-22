@@ -338,6 +338,8 @@ public:
     Property * addStringProperty(const QString &pString, Property *pParent = 0);
     Property * addStringProperty(Property *pParent = 0);
 
+    bool removeProperty(Property *pProperty);
+
     Properties properties() const;
 
     Property * property(const QModelIndex &pIndex) const;
@@ -382,6 +384,8 @@ private:
     void goToNeighbouringProperty(const int &pShift);
 
     int childrenRowHeight(const QStandardItem *pItem) const;
+
+    void deleteProperty(Property *pProperty);
 
 Q_SIGNALS:
     void propertyChanged(Core::Property *pProperty);
