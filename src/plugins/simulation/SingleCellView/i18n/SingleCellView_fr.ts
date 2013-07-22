@@ -327,20 +327,28 @@
 <context>
     <name>SingleCellViewInformationGraphsWidget</name>
     <message>
-        <source>&amp;Add</source>
-        <translation>&amp;Ajouter</translation>
-    </message>
-    <message>
         <source>Add a graph</source>
         <translation>Ajouter une courbe</translation>
     </message>
     <message>
-        <source>&amp;Remove</source>
-        <translation>&amp;Supprimer</translation>
-    </message>
-    <message>
         <source>Remove the current graph</source>
         <translation>Supprimer la courbe actuelle</translation>
+    </message>
+    <message>
+        <source>&amp;Add Graph</source>
+        <translation>&amp;Ajouter Courbe</translation>
+    </message>
+    <message>
+        <source>&amp;Remove Current Graph</source>
+        <translation>&amp;Supprimer Courbe Actuelle</translation>
+    </message>
+    <message>
+        <source>&amp;Remove All Graphs</source>
+        <translation>Supprimer &amp;Toutes Courbes</translation>
+    </message>
+    <message>
+        <source>Remove all graphs</source>
+        <translation>Supprimer toutes les courbes</translation>
     </message>
 </context>
 <context>

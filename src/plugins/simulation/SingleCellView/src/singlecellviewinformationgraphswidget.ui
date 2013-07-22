@@ -10,33 +10,31 @@
     <height>240</height>
    </rect>
   </property>
-  <action name="actionAdd">
-   <property name="icon">
-    <iconset resource="../res/SingleCellView.qrc">
-     <normaloff>:/oxygen/actions/list-add.png</normaloff>:/oxygen/actions/list-add.png</iconset>
-   </property>
+  <action name="actionAddGraph">
    <property name="text">
-    <string>&amp;Add</string>
+    <string>&amp;Add Graph</string>
    </property>
    <property name="statusTip">
     <string>Add a graph</string>
    </property>
   </action>
-  <action name="actionRemove">
-   <property name="icon">
-    <iconset resource="../res/SingleCellView.qrc">
-     <normaloff>:/oxygen/actions/list-remove.png</normaloff>:/oxygen/actions/list-remove.png</iconset>
-   </property>
+  <action name="actionRemoveCurrentGraph">
    <property name="text">
-    <string>&amp;Remove</string>
+    <string>&amp;Remove Current Graph</string>
    </property>
    <property name="statusTip">
     <string>Remove the current graph</string>
    </property>
   </action>
+  <action name="actionRemoveAllGraphs">
+   <property name="text">
+    <string>&amp;Remove All Graphs</string>
+   </property>
+   <property name="statusTip">
+    <string>Remove all graphs</string>
+   </property>
+  </action>
  </widget>
- <resources>
-  <include location="../res/SingleCellView.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
