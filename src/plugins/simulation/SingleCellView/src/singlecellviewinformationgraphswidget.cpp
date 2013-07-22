@@ -368,7 +368,11 @@ void SingleCellViewInformationGraphsWidget::on_actionRemoveCurrentGraph_triggere
 
 void SingleCellViewInformationGraphsWidget::on_actionRemoveAllGraphs_triggered()
 {
-    //---GRY--- TO BE DONE...
+    // Ask the graph panel associated with our current property editor to remove
+    // the current graph
+
+    foreach (SingleCellViewGraphPanelPlotGraph *graph, mGraphs)
+        mGraphPanels.value(mPropertyEditor)->removeGraph(graph);
 }
 
 //==============================================================================
