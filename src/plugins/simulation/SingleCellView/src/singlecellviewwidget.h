@@ -192,8 +192,8 @@ private Q_SLOTS:
     void simulationPropertyChanged(Core::Property *pProperty);
     void solversPropertyChanged(Core::Property *pProperty);
 
-    void requireGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
-                      CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
+    void addGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
+                  CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 
     void callCheckResults();
 };

@@ -187,7 +187,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     // Keep track of a graph being required
 
     connect(mContentsWidget->informationWidget()->parametersWidget(), SIGNAL(graphRequired(CellMLSupport::CellmlFileRuntimeParameter *, CellMLSupport::CellmlFileRuntimeParameter *)),
-            this, SLOT(requireGraph(CellMLSupport::CellmlFileRuntimeParameter *, CellMLSupport::CellmlFileRuntimeParameter *)));
+            this, SLOT(addGraph(CellMLSupport::CellmlFileRuntimeParameter *, CellMLSupport::CellmlFileRuntimeParameter *)));
 
     // Keep track of the addition and removal of a graph
 
@@ -1330,10 +1330,10 @@ void SingleCellViewWidget::solversPropertyChanged(Core::Property *pProperty)
 
 //==============================================================================
 
-void SingleCellViewWidget::requireGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
-                                        CellMLSupport::CellmlFileRuntimeParameter *pParameterY)
+void SingleCellViewWidget::addGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
+                                    CellMLSupport::CellmlFileRuntimeParameter *pParameterY)
 {
-    // Create the required graph and associate it with the current graph panel
+    // Ask the current graph panel to add the required graph
 
     mContentsWidget->graphPanelsWidget()->activeGraphPanel()->addGraph(new SingleCellViewGraphPanelPlotGraph(pParameterX, pParameterY));
 }
