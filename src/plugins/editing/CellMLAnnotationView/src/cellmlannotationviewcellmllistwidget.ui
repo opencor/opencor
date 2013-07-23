@@ -29,11 +29,11 @@
   </layout>
   <action name="actionExpandAll">
    <property name="icon">
-    <iconset resource="../res/CellMLAnnotationView.qrc">
+    <iconset resource="../../../simulation/SingleCellView/res/SingleCellView.qrc">
      <normaloff>:/oxygen/actions/list-add.png</normaloff>:/oxygen/actions/list-add.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Expand All</string>
+    <string>Expand All</string>
    </property>
    <property name="statusTip">
     <string>Expand all the children nodes</string>
@@ -41,11 +41,11 @@
   </action>
   <action name="actionCollapseAll">
    <property name="icon">
-    <iconset resource="../res/CellMLAnnotationView.qrc">
+    <iconset resource="../../../simulation/SingleCellView/res/SingleCellView.qrc">
      <normaloff>:/oxygen/actions/list-remove.png</normaloff>:/oxygen/actions/list-remove.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Collapse All</string>
+    <string>Collapse All</string>
    </property>
    <property name="statusTip">
     <string>Collapse all the children nodes</string>
@@ -53,7 +53,7 @@
   </action>
   <action name="actionRemoveCurrentMetadata">
    <property name="text">
-    <string>&amp;Remove Current Metadata</string>
+    <string>Remove Current Metadata</string>
    </property>
    <property name="statusTip">
     <string>Remove the metadata associated with the current node</string>
@@ -61,7 +61,7 @@
   </action>
   <action name="actionRemoveAllMetadata">
    <property name="text">
-    <string>Remove &amp;All Metadata</string>
+    <string>Remove All Metadata</string>
    </property>
    <property name="statusTip">
     <string>Remove all the metadata associated with the different nodes</string>
@@ -69,7 +69,7 @@
   </action>
   <action name="actionOpenImport">
    <property name="text">
-    <string>Open &amp;Import</string>
+    <string>Open Import</string>
    </property>
    <property name="toolTip">
     <string>Open Import</string>
@@ -80,7 +80,7 @@
   </action>
  </widget>
  <resources>
-  <include location="../res/CellMLAnnotationView.qrc"/>
+  <include location="../../../simulation/SingleCellView/res/SingleCellView.qrc"/>
  </resources>
  <connections/>
 </ui>

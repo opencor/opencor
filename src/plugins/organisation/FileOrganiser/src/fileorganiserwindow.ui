@@ -18,7 +18,16 @@
     <property name="spacing">
      <number>0</number>
     </property>
-    <property name="margin">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
      <number>0</number>
     </property>
    </layout>
@@ -29,7 +38,7 @@
      <normaloff>:/oxygen/actions/folder-new.png</normaloff>:/oxygen/actions/folder-new.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;New</string>
+    <string>New</string>
    </property>
    <property name="statusTip">
     <string>Create a new folder</string>
@@ -41,7 +50,7 @@
      <normaloff>:/oxygen/actions/edit-delete.png</normaloff>:/oxygen/actions/edit-delete.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Delete</string>
+    <string>Delete</string>
    </property>
    <property name="statusTip">
     <string>Delete the current folder(s) and/or link(s) to the current file(s)</string>

@@ -4,40 +4,20 @@
 <context>
     <name>CellmlAnnotationViewCellmlListWidget</name>
     <message>
-        <source>&amp;Expand All</source>
-        <translation>Tout &amp;Étendre</translation>
-    </message>
-    <message>
         <source>Expand all the children nodes</source>
         <translation>Etendre tous les noeuds enfants</translation>
-    </message>
-    <message>
-        <source>&amp;Collapse All</source>
-        <translation>Tout &amp;Réduire</translation>
     </message>
     <message>
         <source>Collapse all the children nodes</source>
         <translation>Réduire tous les noeuds enfants</translation>
     </message>
     <message>
-        <source>&amp;Remove Current Metadata</source>
-        <translation>&amp;Supprimer Métadonnées Courantes</translation>
-    </message>
-    <message>
         <source>Remove the metadata associated with the current node</source>
         <translation>Supprimer les métadonnées associées au noeud actuel</translation>
     </message>
     <message>
-        <source>Remove &amp;All Metadata</source>
-        <translation>Supprimer &amp;Toutes Métadonnées</translation>
-    </message>
-    <message>
         <source>Remove all the metadata associated with the different nodes</source>
         <translation>Supprimer toutes les métadonnées associées aux différents noeuds</translation>
-    </message>
-    <message>
-        <source>Open &amp;Import</source>
-        <translation>Ouvrir &amp;Import</translation>
     </message>
     <message>
         <source>Open Import</source>
@@ -47,27 +27,43 @@
         <source>Open the imported file</source>
         <translation>Ouvrir le fichier importé</translation>
     </message>
+    <message>
+        <source>Expand All</source>
+        <translation>Tout Étendre</translation>
+    </message>
+    <message>
+        <source>Collapse All</source>
+        <translation>Tout Réduire</translation>
+    </message>
+    <message>
+        <source>Remove Current Metadata</source>
+        <translation>Supprimer Métadonnées Courantes</translation>
+    </message>
+    <message>
+        <source>Remove All Metadata</source>
+        <translation>Supprimer Toutes Métadonnées</translation>
+    </message>
 </context>
 <context>
     <name>CellmlAnnotationViewMetadataEditDetailsWidget</name>
     <message>
-        <source>&amp;Copy</source>
-        <translation>&amp;Copier</translation>
-    </message>
-    <message>
         <source>Copy the URL to the clipboard</source>
         <translation>Copier l&apos;URL dans le presse-papier</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Copier</translation>
     </message>
 </context>
 <context>
     <name>CellmlAnnotationViewMetadataNormalViewDetailsWidget</name>
     <message>
-        <source>&amp;Copy</source>
-        <translation>&amp;Copier</translation>
-    </message>
-    <message>
         <source>Copy the URL to the clipboard</source>
         <translation>Copier l&apos;URL dans le presse-papier</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Copier</translation>
     </message>
 </context>
 <context>

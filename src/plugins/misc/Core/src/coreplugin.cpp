@@ -376,11 +376,11 @@ void CorePlugin::retranslateUi()
 {
     // Retranslate our different File actions
 
-    retranslateAction(mFileOpenAction, tr("&Open..."), tr("Open a file"));
+    retranslateAction(mFileOpenAction, tr("Open..."), tr("Open a file"));
 
-    retranslateAction(mFileSaveAction, tr("&Save"),
+    retranslateAction(mFileSaveAction, tr("Save"),
                       tr("Save the current file"));
-    retranslateAction(mFileSaveAsAction, tr("Save &As..."),
+    retranslateAction(mFileSaveAsAction, tr("Save As..."),
                       tr("Save the current file under a different name"));
     retranslateAction(mFileSaveAllAction, tr("Save All"),
                       tr("Save all the files"));
@@ -390,7 +390,7 @@ void CorePlugin::retranslateUi()
     retranslateAction(mFileNextAction, tr("Next"),
                       tr("Select the next file"));
 
-    retranslateAction(mFileCloseAction, tr("Clos&e"),
+    retranslateAction(mFileCloseAction, tr("Close"),
                       tr("Close the current file"));
     retranslateAction(mFileCloseAllAction, tr("Close All"),
                       tr("Close all the files"));

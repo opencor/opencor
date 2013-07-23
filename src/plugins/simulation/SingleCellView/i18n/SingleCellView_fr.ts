@@ -323,20 +323,20 @@
         <translation>Supprimer la courbe actuelle</translation>
     </message>
     <message>
-        <source>&amp;Add Graph</source>
-        <translation>&amp;Ajouter Courbe</translation>
-    </message>
-    <message>
-        <source>&amp;Remove Current Graph</source>
-        <translation>&amp;Supprimer Courbe Actuelle</translation>
-    </message>
-    <message>
-        <source>&amp;Remove All Graphs</source>
-        <translation>Supprimer &amp;Toutes Courbes</translation>
-    </message>
-    <message>
         <source>Remove all graphs</source>
         <translation>Supprimer toutes les courbes</translation>
+    </message>
+    <message>
+        <source>Add Graph</source>
+        <translation>Ajouter Courbe</translation>
+    </message>
+    <message>
+        <source>Remove Current Graph</source>
+        <translation>Supprimer Courbe Actuelle</translation>
+    </message>
+    <message>
+        <source>Remove All Graphs</source>
+        <translation>Supprimer Toutes Courbes</translation>
     </message>
 </context>
 <context>

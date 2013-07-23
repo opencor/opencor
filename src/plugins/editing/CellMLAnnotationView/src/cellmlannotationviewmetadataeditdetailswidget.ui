@@ -22,7 +22,7 @@
      <normaloff>:/oxygen/actions/edit-copy.png</normaloff>:/oxygen/actions/edit-copy.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Copy</string>
+    <string>Copy</string>
    </property>
    <property name="statusTip">
     <string>Copy the URL to the clipboard</string>

@@ -51,24 +51,12 @@
 <context>
     <name>OpenCOR::Core::CorePlugin</name>
     <message>
-        <source>&amp;Open...</source>
-        <translation>&amp;Ouvrir...</translation>
-    </message>
-    <message>
         <source>Open a file</source>
         <translation>Ouvrir un fichier</translation>
     </message>
     <message>
-        <source>&amp;Save</source>
-        <translation>&amp;Sauvegarder</translation>
-    </message>
-    <message>
         <source>Save the current file</source>
         <translation>Sauvegarder le fichier actuel</translation>
-    </message>
-    <message>
-        <source>Save &amp;As...</source>
-        <translation>S&amp;auvegarder Sous...</translation>
     </message>
     <message>
         <source>Save the current file under a different name</source>
@@ -81,10 +69,6 @@
     <message>
         <source>Save all the files</source>
         <translation>Sauvegader tous les fichiers</translation>
-    </message>
-    <message>
-        <source>Clos&amp;e</source>
-        <translation>F&amp;ermer</translation>
     </message>
     <message>
         <source>Close the current file</source>
@@ -133,6 +117,22 @@
     <message>
         <source>Sorry, but &lt;strong&gt;%1&lt;/strong&gt; does not exist anymore.</source>
         <translation>Désolé, mais &lt;strong&gt;%1&lt;/strong&gt; n&apos;existe plus.</translation>
+    </message>
+    <message>
+        <source>Open...</source>
+        <translation>Ouvrir...</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>Sauvegarder</translation>
+    </message>
+    <message>
+        <source>Save As...</source>
+        <translation>Sauvegarder Sous...</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>Fermer</translation>
     </message>
 </context>
 <context>

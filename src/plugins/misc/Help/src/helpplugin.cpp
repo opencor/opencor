@@ -76,7 +76,7 @@ void HelpPlugin::retranslateUi()
 {
     // Retranslate our help action
 
-    retranslateAction(mHelpAction, tr("&Help"),
+    retranslateAction(mHelpAction, tr("Help"),
                       tr("Show/hide the OpenCOR help"));
 
     // Retranslate our help window

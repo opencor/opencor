@@ -12,7 +12,7 @@
   </property>
   <action name="actionAddGraph">
    <property name="text">
-    <string>&amp;Add Graph</string>
+    <string>Add Graph</string>
    </property>
    <property name="statusTip">
     <string>Add a graph</string>
@@ -23,7 +23,7 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>&amp;Remove Current Graph</string>
+    <string>Remove Current Graph</string>
    </property>
    <property name="statusTip">
     <string>Remove the current graph</string>
@@ -34,7 +34,7 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>&amp;Remove All Graphs</string>
+    <string>Remove All Graphs</string>
    </property>
    <property name="statusTip">
     <string>Remove all graphs</string>

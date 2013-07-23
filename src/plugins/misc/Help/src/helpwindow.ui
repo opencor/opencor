@@ -18,7 +18,16 @@
     <property name="spacing">
      <number>0</number>
     </property>
-    <property name="margin">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
      <number>0</number>
     </property>
    </layout>
@@ -29,7 +38,7 @@
      <normaloff>:/oxygen/actions/go-home.png</normaloff>:/oxygen/actions/go-home.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Home</string>
+    <string>Home</string>
    </property>
    <property name="statusTip">
     <string>Go to the home page</string>
@@ -41,7 +50,7 @@
      <normaloff>:/oxygen/actions/go-previous.png</normaloff>:/oxygen/actions/go-previous.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Back</string>
+    <string>Back</string>
    </property>
    <property name="statusTip">
     <string>Go back</string>
@@ -53,7 +62,7 @@
      <normaloff>:/oxygen/actions/go-next.png</normaloff>:/oxygen/actions/go-next.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Forward</string>
+    <string>Forward</string>
    </property>
    <property name="statusTip">
     <string>Go forward</string>
@@ -65,7 +74,7 @@
      <normaloff>:/oxygen/actions/zoom-in.png</normaloff>:/oxygen/actions/zoom-in.png</iconset>
    </property>
    <property name="text">
-    <string>Zoom &amp;In</string>
+    <string>Zoom In</string>
    </property>
    <property name="statusTip">
     <string>Zoom in the help page contents</string>
@@ -77,7 +86,7 @@
      <normaloff>:/oxygen/actions/zoom-out.png</normaloff>:/oxygen/actions/zoom-out.png</iconset>
    </property>
    <property name="text">
-    <string>Zoom &amp;Out</string>
+    <string>Zoom Out</string>
    </property>
    <property name="statusTip">
     <string>Zoom out the help page contents</string>
@@ -89,7 +98,7 @@
      <normaloff>:/oxygen/actions/zoom-original.png</normaloff>:/oxygen/actions/zoom-original.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Normal Size</string>
+    <string>Normal Size</string>
    </property>
    <property name="statusTip">
     <string>Reset the size of the help page contents</string>
@@ -101,7 +110,7 @@
      <normaloff>:/oxygen/actions/edit-copy.png</normaloff>:/oxygen/actions/edit-copy.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Copy</string>
+    <string>Copy</string>
    </property>
    <property name="statusTip">
     <string>Copy the selection to the clipboard</string>
@@ -109,11 +118,11 @@
   </action>
   <action name="actionPrint">
    <property name="icon">
-    <iconset resource="../../Core/res/Core.qrc">
+    <iconset resource="../res/Help.qrc">
      <normaloff>:/oxygen/actions/document-print.png</normaloff>:/oxygen/actions/document-print.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Print</string>
+    <string>Print</string>
    </property>
    <property name="statusTip">
     <string>Print the help page contents</string>
@@ -121,6 +130,7 @@
   </action>
  </widget>
  <resources>
+  <include location="../../Core/res/Core.qrc"/>
   <include location="../res/Help.qrc"/>
  </resources>
  <connections/>

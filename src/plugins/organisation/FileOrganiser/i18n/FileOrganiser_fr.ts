@@ -8,20 +8,20 @@
         <translation>Organisateur de Fichiers</translation>
     </message>
     <message>
-        <source>&amp;New</source>
-        <translation>&amp;Nouveau</translation>
-    </message>
-    <message>
         <source>Create a new folder</source>
         <translation>Créer un nouveau répertoire</translation>
     </message>
     <message>
-        <source>&amp;Delete</source>
-        <translation>&amp;Supprimer</translation>
-    </message>
-    <message>
         <source>Delete the current folder(s) and/or link(s) to the current file(s)</source>
         <translation>Supprimer le(s) répertoire(s) et/ou le(s) lien(s) vers les fichier(s) actuel(s)</translation>
+    </message>
+    <message>
+        <source>New</source>
+        <translation>Nouveau</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation>Supprimer</translation>
     </message>
 </context>
 <context>

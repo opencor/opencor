@@ -16,7 +16,7 @@
     </message>
     <message>
         <source>the imports could not be fully instantiated</source>
-        <translation>les importations n&amp;apos;ont pas pu être complètement instanciées</translation>
+        <translation>les importations n&apos;ont pas pu être complètement instanciées</translation>
     </message>
 </context>
 <context>

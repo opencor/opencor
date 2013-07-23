@@ -101,34 +101,34 @@ void CoreEditingPlugin::retranslateUi()
 {
     // Retranslate our Edit menu
 
-    retranslateMenu(mEditMenu, tr("&Edit"));
+    retranslateMenu(mEditMenu, tr("Edit"));
 
     // Retranslate our different Edit actions
 
-    retranslateAction(mEditUndoAction, tr("&Undo"),
+    retranslateAction(mEditUndoAction, tr("Undo"),
                       tr("Undo the last action"));
-    retranslateAction(mEditRedoAction, tr("&Redo"),
+    retranslateAction(mEditRedoAction, tr("Redo"),
                       tr("Redo the last action"));
 
-    retranslateAction(mEditCutAction, tr("Cu&t"),
+    retranslateAction(mEditCutAction, tr("Cut"),
                       tr("Cut the selected object"));
-    retranslateAction(mEditCopyAction, tr("&Copy"),
+    retranslateAction(mEditCopyAction, tr("Copy"),
                       tr("Copy the selected object"));
-    retranslateAction(mEditPasteAction, tr("&Paste"),
+    retranslateAction(mEditPasteAction, tr("Paste"),
                       tr("Paste the contents of the clipboard"));
-    retranslateAction(mEditDeleteAction, tr("&Delete"),
+    retranslateAction(mEditDeleteAction, tr("Delete"),
                       tr("Delete the selected object"));
 
-    retranslateAction(mEditFindAction, tr("&Find..."),
+    retranslateAction(mEditFindAction, tr("Find..."),
                       tr("Search for a specific object"));
-    retranslateAction(mEditFindNextAction, tr("Find &Next"),
+    retranslateAction(mEditFindNextAction, tr("Find Next"),
                       tr("Search forwards for the same object"));
-    retranslateAction(mEditPreviousAction, tr("Find Pre&vious"),
+    retranslateAction(mEditPreviousAction, tr("Find Previous"),
                       tr("Search backwards for the same object"));
-    retranslateAction(mEditReplaceAction, tr("Re&place"),
+    retranslateAction(mEditReplaceAction, tr("Replace"),
                       tr("Search for a specific object and replace it with another"));
 
-    retranslateAction(mEditSelectAllAction, tr("Select &All"),
+    retranslateAction(mEditSelectAllAction, tr("Select All"),
                       tr("Select all the objects"));
 }
 
