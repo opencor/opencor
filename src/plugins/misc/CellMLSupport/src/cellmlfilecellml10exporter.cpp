@@ -114,56 +114,58 @@ void CellmlFileCellml10Exporter::copyUnitsSet(iface::cellml_api::UnitsSet *pUnit
 
         ObjRef<iface::cellml_api::Model> unitsModel = units->modelElement();
 
-        if (unitsModel != model) {
-            // Only copy units which haven't already been copied
+        if (!CDA_objcmp(unitsModel, model))
+            continue;
 
-            std::wstring unitsName = units->name();
-            QPair<QString, QString> unitsPair(QString::fromStdWString(unitsName),
-                                              QString::fromStdWString(unitsModel->name()));
+        // Only copy units which haven't already been copied
 
-            if (!mCopiedUnits.contains(unitsPair)) {
-                // Keep track of the units pair
+        std::wstring unitsName = units->name();
+        QPair<QString, QString> unitsPair(QString::fromStdWString(unitsName),
+                                          QString::fromStdWString(unitsModel->name()));
 
-                mCopiedUnits << unitsPair;
+        if (mCopiedUnits.contains(unitsPair))
+            continue;
 
-                // Create a new units
+        // Keep track of the units pair
 
-                ObjRef<iface::cellml_api::Units> newUnits = model->createUnits();
+        mCopiedUnits << unitsPair;
 
-                newUnits->name(unitsName);
+        // Create a new units
 
-                bool newUnitsIsBaseUnits = units->isBaseUnits();
+        ObjRef<iface::cellml_api::Units> newUnits = model->createUnits();
 
-                if (newUnitsIsBaseUnits)
-                    newUnits->isBaseUnits(newUnitsIsBaseUnits);
+        newUnits->name(unitsName);
 
-                // Copy the units' unit references to the new units
+        bool newUnitsIsBaseUnits = units->isBaseUnits();
 
-                ObjRef<iface::cellml_api::UnitSet> unitSet = units->unitCollection();
-                ObjRef<iface::cellml_api::UnitIterator> unitIterator = unitSet->iterateUnits();
+        if (newUnitsIsBaseUnits)
+            newUnits->isBaseUnits(newUnitsIsBaseUnits);
 
-                for (ObjRef<iface::cellml_api::Unit> unit = unitIterator->nextUnit();
-                     unit; unit = unitIterator->nextUnit()) {
-                    // Create a new unit reference
+        // Copy the units' unit references to the new units
 
-                    ObjRef<iface::cellml_api::Unit> newUnit = model->createUnit();
+        ObjRef<iface::cellml_api::UnitSet> unitSet = units->unitCollection();
+        ObjRef<iface::cellml_api::UnitIterator> unitIterator = unitSet->iterateUnits();
 
-                    newUnit->prefix(unit->prefix());
-                    newUnit->multiplier(unit->multiplier());
-                    newUnit->offset(unit->offset());
-                    newUnit->exponent(unit->exponent());
-                    newUnit->units(unit->units());
+        for (ObjRef<iface::cellml_api::Unit> unit = unitIterator->nextUnit();
+             unit; unit = unitIterator->nextUnit()) {
+            // Create a new unit reference
 
-                    // Add the unit reference to the new units
+            ObjRef<iface::cellml_api::Unit> newUnit = model->createUnit();
 
-                    newUnits->addElement(newUnit);
-                }
+            newUnit->prefix(unit->prefix());
+            newUnit->multiplier(unit->multiplier());
+            newUnit->offset(unit->offset());
+            newUnit->exponent(unit->exponent());
+            newUnit->units(unit->units());
 
-                // Add the new units to the element
+            // Add the unit reference to the new units
 
-                pElement->addElement(newUnits);
-            }
+            newUnits->addElement(newUnit);
         }
+
+        // Add the new units to the element
+
+        pElement->addElement(newUnits);
     }
 }
 
