@@ -93,7 +93,23 @@
     <string>Remove Graph Panel</string>
    </property>
    <property name="statusTip">
+    <string>Remove the current graph panel or all the graph panels</string>
+   </property>
+  </action>
+  <action name="actionRemoveCurrentGraphPanel">
+   <property name="text">
+    <string>Current</string>
+   </property>
+   <property name="statusTip">
     <string>Remove the current graph panel</string>
+   </property>
+  </action>
+  <action name="actionRemoveAllGraphPanels">
+   <property name="text">
+    <string>All</string>
+   </property>
+   <property name="statusTip">
+    <string>Remove all the graph panels</string>
    </property>
   </action>
   <action name="actionResetModelParameters">

@@ -35,6 +35,7 @@
 #include <QFrame>
 #include <QImage>
 #include <QLabel>
+#include <QMenu>
 #include <QMessageBox>
 #include <QPainter>
 #include <QScrollBar>
@@ -42,6 +43,7 @@
 #include <QSplitter>
 #include <QTextEdit>
 #include <QTimer>
+#include <QToolButton>
 #include <QVariant>
 
 //==============================================================================
@@ -119,6 +121,16 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
 
     mToolBarWidget = new Core::ToolBarWidget(this);
 
+    QToolButton *removeGraphPanelToolButton = new QToolButton(mToolBarWidget);
+    QMenu *removeGraphPanelDropDownMenu = new QMenu(removeGraphPanelToolButton);
+
+    removeGraphPanelDropDownMenu->addAction(mGui->actionRemoveCurrentGraphPanel);
+    removeGraphPanelDropDownMenu->addAction(mGui->actionRemoveAllGraphPanels);
+
+    removeGraphPanelToolButton->setDefaultAction(mGui->actionRemoveGraphPanel);
+    removeGraphPanelToolButton->setMenu(removeGraphPanelDropDownMenu);
+    removeGraphPanelToolButton->setPopupMode(QToolButton::MenuButtonPopup);
+
     mToolBarWidget->addAction(mGui->actionRunPauseResumeSimulation);
     mToolBarWidget->addAction(mGui->actionStopSimulation);
     mToolBarWidget->addSeparator();
@@ -135,7 +147,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
 */
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mGui->actionAddGraphPanel);
-    mToolBarWidget->addAction(mGui->actionRemoveGraphPanel);
+    mToolBarWidget->addWidget(removeGraphPanelToolButton);
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mGui->actionSimulationDataCsvExport);
 
@@ -997,9 +1009,27 @@ void SingleCellViewWidget::on_actionAddGraphPanel_triggered()
 
 void SingleCellViewWidget::on_actionRemoveGraphPanel_triggered()
 {
+    // Default action for our removing of graph panel
+
+    on_actionRemoveCurrentGraphPanel_triggered();
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::on_actionRemoveCurrentGraphPanel_triggered()
+{
     // Ask our graph panels widget to remove the current graph panel
 
-    mContentsWidget->graphPanelsWidget()->removeGraphPanel();
+    mContentsWidget->graphPanelsWidget()->removeCurrentGraphPanel();
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::on_actionRemoveAllGraphPanels_triggered()
+{
+    // Ask our graph panels widget to remove the current graph panel
+
+    mContentsWidget->graphPanelsWidget()->removeAllGraphPanels();
 }
 
 //==============================================================================

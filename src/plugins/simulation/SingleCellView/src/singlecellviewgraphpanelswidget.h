@@ -40,10 +40,16 @@ public:
     SingleCellViewGraphPanelWidget * activeGraphPanel() const;
 
     SingleCellViewGraphPanelWidget * addGraphPanel();
-    void removeGraphPanel();
+
+    void removeCurrentGraphPanel();
+    void removeAllGraphPanels();
 
 private:
     QList<int> mSplitterSizes;
+
+    SingleCellViewGraphPanelWidget *mActiveGraphPanel;
+
+    void removeGraphPanel(SingleCellViewGraphPanelWidget *pGraphPanel);
 
 Q_SIGNALS:
     void graphPanelAdded(SingleCellViewGraphPanelWidget *pGraphPanel);

@@ -21,7 +21,8 @@ namespace SingleCellView {
 SingleCellViewGraphPanelsWidget::SingleCellViewGraphPanelsWidget(QWidget *pParent) :
     QSplitter(pParent),
     CommonWidget(pParent),
-    mSplitterSizes(QList<int>())
+    mSplitterSizes(QList<int>()),
+    mActiveGraphPanel(0)
 {
     // Set our orientation
 
@@ -204,61 +205,79 @@ SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::addGraphPanel(
 
 //==============================================================================
 
-void SingleCellViewGraphPanelsWidget::removeGraphPanel()
+void SingleCellViewGraphPanelsWidget::removeGraphPanel(SingleCellViewGraphPanelWidget *pGraphPanel)
 {
-    if (count() == 1)
-        // There is only one graph panel left, so...
-
+    if (!pGraphPanel)
         return;
 
-    // Remove the current graph panel
+    // Retrieve the index of the given graph panel
 
-    SingleCellViewGraphPanelWidget *graphPanel = 0;
+    int index = indexOf(pGraphPanel);
 
-    for (int i = 0, iMax = count(); i < iMax; ++i) {
-        graphPanel = qobject_cast<SingleCellViewGraphPanelWidget *>(widget(i));
+    // Hide the graph panel and then delete it
 
-        if (graphPanel->isActive()) {
-            // We are dealing with the currently active graph panel, so remove
-            // it
+    pGraphPanel->hide();
 
-            graphPanel->hide();
+    delete pGraphPanel;
 
-            delete graphPanel;
+    // Activate the next graph panel or the last one available, if any
 
-            // Activate the next graph panel or the last one available, if any
+    if (index < count())
+        // There is a next graph panel, so activate it
 
-            if (i < count())
-                // There is a next graph panel, so activate it
+        qobject_cast<SingleCellViewGraphPanelWidget *>(widget(index))->setActive(true);
+    else
+        // We were dealing with the last graph panel, so just activate the new
+        // last graph panel
 
-                qobject_cast<SingleCellViewGraphPanelWidget *>(widget(i))->setActive(true);
-            else
-                // We were dealing with the last graph panel, so just activate
-                // the new last graph panel
-
-                qobject_cast<SingleCellViewGraphPanelWidget *>(widget(count()-1))->setActive(true);
-
-            // We are all done, so...
-
-            break;
-        }
-    }
+        qobject_cast<SingleCellViewGraphPanelWidget *>(widget(count()-1))->setActive(true);
 
     // Keep track of our new sizes
 
     splitterMoved();
 
-    // Let people know that we have removed a graph panel
+    // Let people know that we have removed the given graph panel
     // Note: the reason we pass a pointer to a now non-existing graph panel is
     //       that some people interested in that signal might have used the
-    //       pointer to keep track of some information, as is the case with
+    //       pointer to keep track of some information, as is done in
     //       SingleCellViewInformationGraphsWidget for example...
 
-    emit graphPanelRemoved(graphPanel);
+    emit graphPanelRemoved(pGraphPanel);
 
     // Let people know whether graph panels can be removed
 
     emit removeGraphPanelsEnabled(count() > 1);
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelsWidget::removeCurrentGraphPanel()
+{
+    // Make sure that we don't have only one graph panel left
+
+    if (count() == 1)
+        return;
+
+    // Remove the current graph panel
+
+    removeGraphPanel(mActiveGraphPanel);
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelsWidget::removeAllGraphPanels()
+{
+    // Make sure that we don't have only one graph panel left
+
+    if (count() == 1)
+        return;
+
+    // Remove all the graph panels but one
+    // Note: the one we keep is the very first one since it may be the user's
+    //       most important graph panel...
+
+    while (count() > 1)
+        removeGraphPanel(qobject_cast<SingleCellViewGraphPanelWidget *>(widget(count()-1)));
 }
 
 //==============================================================================
@@ -274,7 +293,11 @@ void SingleCellViewGraphPanelsWidget::splitterMoved()
 
 void SingleCellViewGraphPanelsWidget::updateGraphPanels(SingleCellViewGraphPanelWidget *pGraphPanel)
 {
-    // A graph panel has been activated, so inactivate all the others
+    // Keep track of the newly activated graph panel
+
+    mActiveGraphPanel = pGraphPanel;
+
+    // Inactivate all the other graph panels
 
     for (int i = 0, iMax = count(); i < iMax; ++i) {
         SingleCellViewGraphPanelWidget *graphPanel = qobject_cast<SingleCellViewGraphPanelWidget *>(widget(i));

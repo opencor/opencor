@@ -169,7 +169,10 @@ private Q_SLOTS:
     void on_actionDebugMode_triggered();
 
     void on_actionAddGraphPanel_triggered();
+
     void on_actionRemoveGraphPanel_triggered();
+    void on_actionRemoveCurrentGraphPanel_triggered();
+    void on_actionRemoveAllGraphPanels_triggered();
 
     void on_actionSimulationDataCsvExport_triggered();
 
