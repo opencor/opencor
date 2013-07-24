@@ -717,7 +717,8 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
 
                 newModelValue = QFileInfo(mFileName).fileName()+PropertySeparator+mFileName;
             else
-                // The value of the model property was "Current"
+                // The value of the model property was "Current" (and the locale
+                // got changed)
 
                 newModelValue = tr("Current");
         }
