@@ -869,8 +869,8 @@ void SingleCellViewWidget::on_actionRunPauseResumeSimulation_triggered()
 
             mSimulation->resume();
         } else {
-            // Protect ourselves against two successive (very) quick attempts at
-            // trying to run a simulation
+            // Protect ourselves against two successive (and very) quick
+            // attempts at trying to run a simulation
 
             static bool handlingAction = false;
 
@@ -882,7 +882,7 @@ void SingleCellViewWidget::on_actionRunPauseResumeSimulation_triggered()
             // Our simulation is not paused, so finish any editing of our
             // simulation information
 
-            mContentsWidget->informationWidget()->finishEditing();;
+            mContentsWidget->informationWidget()->finishEditing();
 
             // Now, we would normally retrieve our simulation properties, but
             // there is no need for it since they have already been retrieved
@@ -892,23 +892,22 @@ void SingleCellViewWidget::on_actionRunPauseResumeSimulation_triggered()
             // Note: we don't need to retrieve the NLA solver's properties since
             //       we already have them (see solversPropertyChanged())...
 
-            SingleCellViewSimulationData *simulationData = mSimulation->data();
             SingleCellViewInformationSolversWidget *solversWidget = mContentsWidget->informationWidget()->solversWidget();
 
-            simulationData->setOdeSolverName(solversWidget->odeSolverData()->solversListProperty()->value());
-            simulationData->setDaeSolverName(solversWidget->daeSolverData()->solversListProperty()->value());
+            mSimulation->data()->setOdeSolverName(solversWidget->odeSolverData()->solversListProperty()->value());
+            mSimulation->data()->setDaeSolverName(solversWidget->daeSolverData()->solversListProperty()->value());
 
-            foreach (Core::Property *property, solversWidget->odeSolverData()->solversProperties().value(simulationData->odeSolverName()))
-                simulationData->addOdeSolverProperty(property->id(),
-                                                     (property->type() == Core::Property::Integer)?
-                                                         property->integerValue():
-                                                         property->doubleValue());
+            foreach (Core::Property *property, solversWidget->odeSolverData()->solversProperties().value(mSimulation->data()->odeSolverName()))
+                mSimulation->data()->addOdeSolverProperty(property->id(),
+                                                          (property->type() == Core::Property::Integer)?
+                                                              property->integerValue():
+                                                              property->doubleValue());
 
-            foreach (Core::Property *property, solversWidget->daeSolverData()->solversProperties().value(simulationData->daeSolverName()))
-                simulationData->addDaeSolverProperty(property->id(),
-                                                     (property->type() == Core::Property::Integer)?
-                                                         property->integerValue():
-                                                         property->doubleValue());
+            foreach (Core::Property *property, solversWidget->daeSolverData()->solversProperties().value(mSimulation->data()->daeSolverName()))
+                mSimulation->data()->addDaeSolverProperty(property->id(),
+                                                          (property->type() == Core::Property::Integer)?
+                                                              property->integerValue():
+                                                              property->doubleValue());
 
             // Check how much memory is needed to run our simulation
 

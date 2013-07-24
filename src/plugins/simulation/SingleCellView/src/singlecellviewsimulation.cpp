@@ -223,10 +223,13 @@ QString SingleCellViewSimulationData::odeSolverName() const
 
 void SingleCellViewSimulationData::setOdeSolverName(const QString &pOdeSolverName)
 {
-    // Set our ODE solver name
+    // Set our ODE solver name and reset its properties
 
-    if (mRuntime->needOdeSolver())
+    if (mRuntime->needOdeSolver()) {
         mOdeSolverName = pOdeSolverName;
+
+        mOdeSolverProperties.clear();
+    }
 }
 
 //==============================================================================
@@ -262,10 +265,13 @@ QString SingleCellViewSimulationData::daeSolverName() const
 
 void SingleCellViewSimulationData::setDaeSolverName(const QString &pDaeSolverName)
 {
-    // Set our DAE solver name
+    // Set our DAE solver name and reset its properties
 
-    if (mRuntime->needDaeSolver())
+    if (mRuntime->needDaeSolver()) {
         mDaeSolverName = pDaeSolverName;
+
+        mDaeSolverProperties.clear();
+    }
 }
 
 //==============================================================================
@@ -302,10 +308,12 @@ QString SingleCellViewSimulationData::nlaSolverName() const
 void SingleCellViewSimulationData::setNlaSolverName(const QString &pNlaSolverName,
                                                     const bool &pReset)
 {
-    // Set our NLA solver name
+    // Set our NLA solver name and reset its properties
 
     if (mRuntime->needNlaSolver()) {
         mNlaSolverName = pNlaSolverName;
+
+        mNlaSolverProperties.clear();
 
         // Reset our parameter values, if required
         // Note: to only recompute our 'computed constants' and 'variables' is
