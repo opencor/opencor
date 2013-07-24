@@ -211,7 +211,7 @@ public:
     void resume();
     void stop();
 
-    void resetWorker();
+    void reset();
 
 private:
     SingleCellViewSimulationWorker *mWorker;

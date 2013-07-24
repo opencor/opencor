@@ -1080,7 +1080,7 @@ void SingleCellViewSimulation::run()
 
 void SingleCellViewSimulation::pause()
 {
-    // Ask our worker to pause, if active
+    // Pause our worker
 
     if (mWorker)
         mWorker->pause();
@@ -1090,7 +1090,7 @@ void SingleCellViewSimulation::pause()
 
 void SingleCellViewSimulation::resume()
 {
-    // Ask our worker to resume, if active
+    // Resume our worker
 
     if (mWorker)
         mWorker->resume();
@@ -1100,7 +1100,7 @@ void SingleCellViewSimulation::resume()
 
 void SingleCellViewSimulation::stop()
 {
-    // Ask our worker to stop, if active
+    // Stop our worker
 
     if (mWorker)
         mWorker->stop();
@@ -1108,9 +1108,13 @@ void SingleCellViewSimulation::stop()
 
 //==============================================================================
 
-void SingleCellViewSimulation::resetWorker()
+void SingleCellViewSimulation::reset()
 {
-    // Ask our worker to reset itself
+    // Reset our data
+
+    mData->reset();
+
+    // Reset our worker
 
     if (mWorker)
         mWorker->reset();

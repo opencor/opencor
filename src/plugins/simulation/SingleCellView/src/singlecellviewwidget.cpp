@@ -953,7 +953,7 @@ void SingleCellViewWidget::on_actionRunPauseResumeSimulation_triggered()
                                          tr("Sorry, but we could not allocate the %1 of memory required for the simulation.").arg(Core::sizeAsString(requiredMemory)));
             }
 
-            // We are done handline the action, so...
+            // We are done handling the action, so...
 
             handlingAction = false;
         }
@@ -977,15 +977,9 @@ void SingleCellViewWidget::on_actionStopSimulation_triggered()
 
 void SingleCellViewWidget::on_actionResetModelParameters_triggered()
 {
-    // Reset our simulation parameters
+    // Reset our simulation
 
-    mSimulation->data()->reset();
-
-    // Reset our worker
-    // Note: indeed, if we are running a simulation then we may need to
-    //       reinitialise our solver (e.g. CVODE)...
-
-    mSimulation->resetWorker();
+    mSimulation->reset();
 }
 
 //==============================================================================
