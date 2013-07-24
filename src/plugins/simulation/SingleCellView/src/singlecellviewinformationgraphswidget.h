@@ -113,8 +113,11 @@ private:
                         const Parameter &pParameter) const;
 
     void updateGraphInfo(OpenCOR::Core::Property *pProperty,
-                         const QString &pFileName) const;
+                         const QString &pFileName);
     void updateGraphsInfo(Core::Property *pSectionProperty = 0);
+
+Q_SIGNALS:
+    void graphUpdated(SingleCellViewGraphPanelPlotGraph *pGraph);
 
 public Q_SLOTS:
     void initialize(SingleCellViewGraphPanelWidget *pGraphPanel);

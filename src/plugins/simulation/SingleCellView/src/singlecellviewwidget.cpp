@@ -208,6 +208,30 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     connect(mContentsWidget->graphPanelsWidget(), SIGNAL(graphRemoved(SingleCellViewGraphPanelPlotGraph *)),
             mContentsWidget->informationWidget()->graphsWidget(), SLOT(removeGraph(SingleCellViewGraphPanelPlotGraph *)));
 
+    connect(mContentsWidget->graphPanelsWidget(), SIGNAL(graphAdded(SingleCellViewGraphPanelPlotGraph *)),
+            this, SLOT(graphAdded(SingleCellViewGraphPanelPlotGraph *)));
+    connect(mContentsWidget->graphPanelsWidget(), SIGNAL(graphRemoved(SingleCellViewGraphPanelPlotGraph *)),
+            this, SLOT(graphRemoved(SingleCellViewGraphPanelPlotGraph *)));
+
+    // Keep track of the updating of a graph
+    // Note: ideally, and as for the addition and removal of a graph, this would
+    //       be done through mContentsWidget->graphPanelsWidget() (i.e. a graph
+    //       would let people know that it has been updated and the graph panel
+    //       with which it is associated would forward the signal to
+    //       mContentsWidget->graphPanelsWidget()), but this may result in too
+    //       many graphUpdated() signals being emitted. For example, say that
+    //       you change the model with which a graph is associated, then both
+    //       the X and Y parameters will get updated, and for each of those
+    //       updates a graphUpdated() would be emitted by the graph, hence we
+    //       would end up with two signals when only one would have sufficed.
+    //       Even worse is that after having updated the X parameter, the graph
+    //       would have its X parameter coming for the 'new' model while its Y
+    //       parameter coming from the 'old' model, which could mess things up
+    //       quite a bit from a plotting viewpoint...
+
+    connect(mContentsWidget->informationWidget()->graphsWidget(), SIGNAL(graphUpdated(SingleCellViewGraphPanelPlotGraph *)),
+            this, SLOT(graphUpdated(SingleCellViewGraphPanelPlotGraph *)));
+
     // Create and add our invalid simulation message widget
 
     mInvalidModelMessageWidget = new Core::UserMessageWidget(":/oxygen/actions/help-about.png",
@@ -1353,6 +1377,27 @@ void SingleCellViewWidget::addGraph(CellMLSupport::CellmlFileRuntimeParameter *p
     // Ask the current graph panel to add the required graph
 
     mContentsWidget->graphPanelsWidget()->activeGraphPanel()->addGraph(new SingleCellViewGraphPanelPlotGraph(pParameterX, pParameterY));
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::graphAdded(SingleCellViewGraphPanelPlotGraph *pGraph)
+{
+    qDebug(">>> Added graph [%ld]", long(pGraph));
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::graphRemoved(SingleCellViewGraphPanelPlotGraph *pGraph)
+{
+    qDebug(">>> Removed graph [%ld]", long(pGraph));
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::graphUpdated(SingleCellViewGraphPanelPlotGraph *pGraph)
+{
+    qDebug(">>> Updated graph [%ld]", long(pGraph));
 }
 
 //==============================================================================

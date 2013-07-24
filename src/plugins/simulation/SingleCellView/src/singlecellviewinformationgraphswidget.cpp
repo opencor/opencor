@@ -568,7 +568,7 @@ bool SingleCellViewInformationGraphsWidget::checkParameter(const QString &pFileN
 static const QString PropertySeparator = " | ";
 
 void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pProperty,
-                                                            const QString &pFileName) const
+                                                            const QString &pFileName)
 {
     // Update the graph information by checking the new value of the given
     // section property
@@ -593,6 +593,9 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
     //       assignment...
 
     bool graphOk = true;
+    SingleCellViewGraphPanelPlotGraph *graph = mGraphs.value(pProperty);
+    CellMLSupport::CellmlFileRuntimeParameter *oldParameterX = graph->parameterX();
+    CellMLSupport::CellmlFileRuntimeParameter *oldParameterY = graph->parameterY();
 
     if (pProperty->properties().count() >= 2)
         graphOk = checkParameter(fileName, pProperty, ParameterX) && graphOk;
@@ -615,6 +618,12 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
     pProperty->setIcon(graphOk?
                            QIcon(":Core_blankIcon"):
                            QIcon(":/oxygen/status/task-attention.png"));
+
+    // Let people know if we consider that the graph has been updated
+
+    if (   (oldParameterX != graph->parameterX())
+        || (oldParameterY != graph->parameterY()))
+        emit graphUpdated(graph);
 }
 
 //==============================================================================

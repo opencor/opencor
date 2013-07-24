@@ -57,6 +57,7 @@ namespace SingleCellView {
 //==============================================================================
 
 class SingleCellViewContentsWidget;
+class SingleCellViewGraphPanelPlotGraph;
 class SingleCellViewPlugin;
 class SingleCellViewSimulation;
 
@@ -197,6 +198,10 @@ private Q_SLOTS:
 
     void addGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
                   CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
+
+    void graphAdded(SingleCellViewGraphPanelPlotGraph *pGraph);
+    void graphRemoved(SingleCellViewGraphPanelPlotGraph *pGraph);
+    void graphUpdated(SingleCellViewGraphPanelPlotGraph *pGraph);
 
     void callCheckResults();
 };
