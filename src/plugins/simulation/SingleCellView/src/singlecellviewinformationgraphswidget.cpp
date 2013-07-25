@@ -705,6 +705,8 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
         QString newModelValue = oldModelValue;
 
         graphProperty->properties()[0]->setListValue(modelListValue, false);
+        // Note: we don't want setListValue() to emit a signal since one will be
+        //       emitted as a result of our call to setValue() below...
 
         if (newModelValue.isEmpty()) {
             // newModelValue is empty, which means that this is the first time
