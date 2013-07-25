@@ -45,6 +45,7 @@ public:
     bool sendMessage(const QString &message, int timeout, bool block);
     QString applicationId() const
         { return id; }
+    static QString appSessionId(const QString &appId);
 
 Q_SIGNALS:
     void messageReceived(const QString &message, QObject *socket);
@@ -57,9 +58,6 @@ protected:
     QString socketName;
     QLocalServer* server;
     QtLockedFile lockFile;
-
-private:
-    static const char* ack;
 };
 
 } // namespace SharedTools
