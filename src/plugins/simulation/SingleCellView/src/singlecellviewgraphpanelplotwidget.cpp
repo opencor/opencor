@@ -52,6 +52,15 @@ SingleCellViewGraphPanelPlotGraph::SingleCellViewGraphPanelPlotGraph(CellMLSuppo
 
 //==============================================================================
 
+bool SingleCellViewGraphPanelPlotGraph::isValid() const
+{
+    // Return we are valid
+
+    return mParameterX && mParameterY;
+}
+
+//==============================================================================
+
 CellMLSupport::CellmlFileRuntimeParameter * SingleCellViewGraphPanelPlotGraph::parameterX() const
 {
     // Return our parameter X
@@ -100,8 +109,11 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
     mAction(None),
     mOriginPoint(QPointF()),
     mEndPoint(QPointF()),
-    mMinX(0.0),
-    mMinY(0.0),
+//    mMinX(0.0),
+//    mMinY(0.0),
+//---GRY--- THE BELOW IS TEMPORARY...
+mMinX(-1000.0),
+mMinY(-1000.0),
     mMaxX(1000.0),
     mMaxY(1000.0),
     mFixedAxisX(false),

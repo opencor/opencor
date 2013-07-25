@@ -144,6 +144,8 @@ private:
 
     QList<SingleCellViewSimulation *> mCheckResultsSimulations;
 
+    QList<SingleCellViewGraphPanelPlotGraph *> mGraphs;
+
     void setDelayValue(const int &pDelayValue);
 
     void output(const QString &pMessage);
@@ -155,6 +157,8 @@ private:
     void updateRunPauseAction(const bool &pRunActionEnabled);
 
     void updateInvalidModelMessageWidget();
+
+    double * dataPoints(CellMLSupport::CellmlFileRuntimeParameter *pParameter) const;
 
     void updateResults(SingleCellViewSimulation *pSimulation,
                        const qulonglong &pSize,

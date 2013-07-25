@@ -86,7 +86,8 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mSplitterWidgetSizes(QList<int>()),
     mRunActionEnabled(true),
     mOldSimulationResultsSizes(QMap<SingleCellViewSimulation *, qulonglong>()),
-    mCheckResultsSimulations(QList<SingleCellViewSimulation *>())
+    mCheckResultsSimulations(QList<SingleCellViewSimulation *>()),
+    mGraphs(QList<SingleCellViewGraphPanelPlotGraph *>())
 {
     // Set up the GUI
 
@@ -1383,21 +1384,64 @@ void SingleCellViewWidget::addGraph(CellMLSupport::CellmlFileRuntimeParameter *p
 
 void SingleCellViewWidget::graphAdded(SingleCellViewGraphPanelPlotGraph *pGraph)
 {
-    qDebug(">>> Added graph [%ld]", long(pGraph));
+qDebug(">>> Added graph [%ld]", long(pGraph));
+    // A new graph has been added, so keep track of it and update our results
+
+    mGraphs << pGraph;
+
+    updateResults(mSimulation, mSimulation->results()->size()/*, true*/);
 }
 
 //==============================================================================
 
 void SingleCellViewWidget::graphRemoved(SingleCellViewGraphPanelPlotGraph *pGraph)
 {
-    qDebug(">>> Removed graph [%ld]", long(pGraph));
+qDebug(">>> Removed graph [%ld]", long(pGraph));
+    // A graph has been removed, so stop tracking it and update our results
+
+    mGraphs.removeOne(pGraph);
+
+    updateResults(mSimulation, mSimulation->results()->size()/*, true*/);
 }
 
 //==============================================================================
 
 void SingleCellViewWidget::graphUpdated(SingleCellViewGraphPanelPlotGraph *pGraph)
 {
-    qDebug(">>> Updated graph [%ld]", long(pGraph));
+qDebug(">>> Updated graph [%ld]", long(pGraph));
+    // A graph has been updated, so update our results, but only if some are
+    // available
+    // Note: the rationale for testing for mSimulation is that upon quitting
+    //       OpenCOR, some of the properties of our graphs may end up being
+    //       modified (e.g. the X and Y parameters because the current file has
+    //       been closed and another has been selected), resulting in our graphs
+    //       widget emitting a graphUpdated() signal, which we handle here...
+
+    if (mSimulation)
+        updateResults(mSimulation, mSimulation->results()->size()/*, true*/);
+}
+
+//==============================================================================
+
+double * SingleCellViewWidget::dataPoints(CellMLSupport::CellmlFileRuntimeParameter *pParameter) const
+{
+    // Return the data points associated with the given parameter
+
+    if (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi)
+        return mSimulation->results()->points()?mSimulation->results()->points():0;
+    else if (   (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)
+             || (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant))
+        return mSimulation->results()->constants()?mSimulation->results()->constants()[pParameter->index()]:0;
+    else if (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Rate)
+        return mSimulation->results()->rates()?mSimulation->results()->rates()[pParameter->index()]:0;
+    else if (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State)
+        return mSimulation->results()->states()?mSimulation->results()->states()[pParameter->index()]:0;
+    else if (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Algebraic)
+        return mSimulation->results()->algebraic()?mSimulation->results()->algebraic()[pParameter->index()]:0;
+    else
+        // Undefined type
+
+        return 0;
 }
 
 //==============================================================================
@@ -1431,26 +1475,28 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
 
 Q_UNUSED(pSize);
 Q_UNUSED(pReplot);
-//        foreach (SingleCellViewWidgetGraph *graphData, mGraphsData)
-//            // Update the graph, should it be attached
+        foreach (SingleCellViewGraphPanelPlotGraph *graph, mGraphs) {
+            // Show/hide the graph, depending on whether it's valid
 
-//            if (graphData->graph()->plot()) {
-//                // Keep track of our graph's old size
+            graph->setVisible(graph->isValid());
 
-//                qulonglong oldDataSize = graphData->graph()->dataSize();
+            // Keep track of our graph's old size
 
-//                // Update our graph's data
+//            qulonglong oldDataSize = graphData->graph()->dataSize();
 
-//                graphData->graph()->setRawSamples(mSimulation->results()->points(),
-//                                                  graphData->yData(),
-//                                                  pSize);
+            // Update our graph's data
 
-//                // Draw the graph's new segment, but only if there is some data to
-//                // plot and that we don't want to replot everything
+            if (graph->isValid())
+                graph->setRawSamples(dataPoints(graph->parameterX()),
+                                     dataPoints(graph->parameterY()),
+                                     pSize);
 
-//                if (!pReplot && (pSize > 1))
-//                    mActiveGraphPanel->plot()->drawGraphSegment(graphData->graph(), oldDataSize?oldDataSize-1:0, pSize-1);
-//            }
+            // Draw the graph's new segment, but only if there is some data to
+            // plot and that we don't want to replot everything
+
+//            if (!pReplot && (pSize > 1))
+//                mActiveGraphPanel->plot()->drawGraphSegment(graphData->graph(), oldDataSize?oldDataSize-1:0, pSize-1);
+        }
 
         // Replot our active graph panel, if needed
 
@@ -1459,6 +1505,11 @@ Q_UNUSED(pReplot);
 //            // so replot our active graph panel
 
 //            mActiveGraphPanel->plot()->replotNow();
+
+// Replot all of our graph panels
+
+foreach (SingleCellViewGraphPanelWidget *graphPanel, mContentsWidget->graphPanelsWidget()->graphPanels())
+    graphPanel->replot();
 
         // Update our progress bar
 

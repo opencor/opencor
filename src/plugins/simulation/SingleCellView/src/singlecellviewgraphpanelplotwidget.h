@@ -36,6 +36,8 @@ public:
     explicit SingleCellViewGraphPanelPlotGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX = 0,
                                                CellMLSupport::CellmlFileRuntimeParameter *pParameterY = 0);
 
+    bool isValid() const;
+
     CellMLSupport::CellmlFileRuntimeParameter * parameterX() const;
     void setParameterX(CellMLSupport::CellmlFileRuntimeParameter *pParameterX);
 
