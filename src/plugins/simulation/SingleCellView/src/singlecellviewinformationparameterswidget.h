@@ -63,7 +63,7 @@ public:
                     SingleCellViewSimulation *pSimulation);
     void finalize(const QString &pFileName);
 
-    void finishPropertyEditing();
+    void finishEditing();
 
 private:
     QMap<QString, Core::PropertyEditorWidget *> mPropertyEditors;

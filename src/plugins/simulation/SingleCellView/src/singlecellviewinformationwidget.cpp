@@ -230,10 +230,10 @@ void SingleCellViewInformationWidget::finishEditing()
 {
     // Finish the editing of any of the information we support
 
-    mSimulationWidget->finishPropertyEditing();
-    mSolversWidget->finishPropertyEditing();
-    mGraphsWidget->finishPropertyEditing();
-    mParametersWidget->finishPropertyEditing();
+    mSimulationWidget->finishEditing();
+    mSolversWidget->finishEditing();
+    mGraphsWidget->finishEditing();
+    mParametersWidget->finishEditing();
 }
 
 //==============================================================================

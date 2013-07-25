@@ -75,7 +75,7 @@ public:
     void fileOpened(const QString &pFileName);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
-    void finishPropertyEditing();
+    void finishEditing();
 
 private:
     Ui::SingleCellViewInformationGraphsWidget *mGui;

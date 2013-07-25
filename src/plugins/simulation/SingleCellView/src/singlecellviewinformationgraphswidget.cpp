@@ -377,16 +377,16 @@ void SingleCellViewInformationGraphsWidget::on_actionRemoveAllGraphs_triggered()
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::finishPropertyEditing()
+void SingleCellViewInformationGraphsWidget::finishEditing()
 {
     // Make sure that we have a property editor
 
     if (!mPropertyEditor)
         return;
 
-    // Finish the editing of our property editor
+    // Ask our property editor to finish editing
 
-    mPropertyEditor->finishPropertyEditing();
+    mPropertyEditor->finishEditing();
 }
 
 //==============================================================================
@@ -664,7 +664,7 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
 
     // Make sure that no editing is in progress
 
-    finishPropertyEditing();
+    finishEditing();
 
     // Use the given section property or retrieve the ones for our current
     // property editor

@@ -270,16 +270,16 @@ void SingleCellViewInformationParametersWidget::propertyChanged(Core::Property *
 
 //==============================================================================
 
-void SingleCellViewInformationParametersWidget::finishPropertyEditing()
+void SingleCellViewInformationParametersWidget::finishEditing()
 {
     // Make sure that we have a property editor
 
     if (!mPropertyEditor)
         return;
 
-    // Finish the editing of our current property editor
+    // Ask our current property editor to finish the editing
 
-    mPropertyEditor->finishPropertyEditing();
+    mPropertyEditor->finishEditing();
 }
 
 //==============================================================================

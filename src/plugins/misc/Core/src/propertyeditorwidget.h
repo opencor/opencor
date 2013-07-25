@@ -347,7 +347,7 @@ public:
 
     bool showUnits() const;
 
-    void finishPropertyEditing(const bool &pCommitData = true);
+    void finishEditing(const bool &pCommitData = true);
 
     void removeAllProperties();
 
