@@ -704,9 +704,15 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
         QString oldModelValue = graphProperty->properties()[0]->value();
         QString newModelValue = oldModelValue;
 
-        graphProperty->properties()[0]->setListValue(modelListValue);
+        graphProperty->properties()[0]->setListValue(modelListValue, false);
 
-        if (!modelListValue.contains(oldModelValue)) {
+        if (newModelValue.isEmpty()) {
+            // newModelValue is empty, which means that this is the first time
+            // we come here, so update our graph info using the current value of
+            // our model property
+
+            newModelValue = graphProperty->properties()[0]->value();
+        } else if (!modelListValue.contains(oldModelValue)) {
             // Our old model value is not in our new model list value, which
             // means that either the value of the model property was "Current"
             // (and the locale got changed) or the current file got renamed, so
@@ -723,21 +729,14 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
                 newModelValue = tr("Current");
         }
 
-        // Check whether newModelValue is empty (which is the case when we first
-        // come here) and, if so, update our graph info using the current value
-        // of our model property (which will have been set through our call to
-        // Property::setListValue() above), otherwise set the value of our model
-        // property to newModelValue (which will result in updateGraphInfo()
-        // being called, so we are all fine)
+        // Set the value of our model property to newModelValue (which will
+        // result in updateGraphInfo() being called, so we are all fine)
 
-        if (newModelValue.isEmpty())
-            updateGraphInfo(graphProperty, graphProperty->properties()[0]->value());
-        else
-            graphProperty->properties()[0]->setValue(newModelValue, true);
-            // Note: we must force the setting of the value since it may very
-            //       well be that it's the same as before, yet we want the
-            //       signal associated with setValue() to be emitted (so that
-            //       updateGraphInfo() can then be called)...
+        graphProperty->properties()[0]->setValue(newModelValue, true);
+        // Note: we must force the setting of the value since it may very well
+        //       be that it's the same as before, yet we want the signal
+        //       associated with setValue() to be emitted (so that
+        //       updateGraphInfo() can then be called)...
     }
 }
 

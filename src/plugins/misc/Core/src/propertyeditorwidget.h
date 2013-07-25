@@ -196,7 +196,8 @@ public:
                   const bool &pEmitSignal = true);
 
     QStringList listValue() const;
-    void setListValue(const QStringList &pListValue);
+    void setListValue(const QStringList &pListValue,
+                      const bool &pEmitSignal = true);
 
     QString emptyListValue() const;
     void setEmptyListValue(const QString &pEmptyListValue);

@@ -727,7 +727,8 @@ QStringList Property::listValue() const
 
 //==============================================================================
 
-void Property::setListValue(const QStringList &pListValue)
+void Property::setListValue(const QStringList &pListValue,
+                            const bool &pEmitSignal)
 {
     // Make sure that there would be a point in setting the list value
 
@@ -775,7 +776,7 @@ void Property::setListValue(const QStringList &pListValue)
         // Update our value using the first item of our new list, if it isn't
         // empty, otherwise use our empty list value
 
-        setValue(mListValue.isEmpty()?mEmptyListValue:mListValue.first());
+        setValue(mListValue.isEmpty()?mEmptyListValue:mListValue.first(), pEmitSignal);
     }
 }
 
