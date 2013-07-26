@@ -256,7 +256,9 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
 
     mOutputWidget = new QTextEdit(this);
 
+    mOutputWidget->setAcceptDrops(false);
     mOutputWidget->setFrameStyle(QFrame::NoFrame);
+    mOutputWidget->setReadOnly(true);
 
     simulationOutputLayout->addWidget(Core::newLineWidget(this));
     simulationOutputLayout->addWidget(mOutputWidget);
@@ -411,13 +413,13 @@ void SingleCellViewWidget::output(const QString &pMessage)
 
 void SingleCellViewWidget::updateSimulationMode()
 {
-    bool simulationModeEnabled = mSimulation->isRunning() || mSimulation->isPaused();
-
     // Update our run/pause action
 
     updateRunPauseAction(!mSimulation->isRunning() || mSimulation->isPaused());
 
     // Enable/disable our stop action
+
+    bool simulationModeEnabled = mSimulation->isRunning() || mSimulation->isPaused();
 
     mGui->actionStopSimulation->setEnabled(simulationModeEnabled);
 
