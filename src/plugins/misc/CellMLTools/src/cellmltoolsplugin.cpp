@@ -209,7 +209,8 @@ void CellMLToolsPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
     mCellmlFileExportToMenu->menuAction()->setEnabled(toolsVisible);
     mCellmlFileExportToMenu->menuAction()->setVisible(toolsVisible);
 
-    mExportToCellml10Action->setEnabled(   toolsVisible && cellmlFile
+    mExportToCellml10Action->setEnabled(   toolsVisible
+                                        && cellmlFile && cellmlFile->model()
                                         && QString::fromStdWString(cellmlFile->model()->cellmlVersion()).compare(CellMLSupport::Cellml_1_0));
     mExportToCellml10Action->setVisible(toolsVisible);
 

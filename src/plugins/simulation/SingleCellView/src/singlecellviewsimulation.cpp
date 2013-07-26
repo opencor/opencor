@@ -216,13 +216,16 @@ QString SingleCellViewSimulationData::odeSolverName() const
 {
     // Return our ODE solver name
 
-    return mRuntime->needOdeSolver()?mOdeSolverName:QString();
+    return (mRuntime && mRuntime->needOdeSolver())?mOdeSolverName:QString();
 }
 
 //==============================================================================
 
 void SingleCellViewSimulationData::setOdeSolverName(const QString &pOdeSolverName)
 {
+    if (!mRuntime)
+        return;
+
     // Set our ODE solver name and reset its properties
 
     if (mRuntime->needOdeSolver()) {
@@ -238,7 +241,7 @@ CoreSolver::Properties SingleCellViewSimulationData::odeSolverProperties() const
 {
     // Return our ODE solver's properties
 
-    return mRuntime->needOdeSolver()?mOdeSolverProperties:CoreSolver::Properties();
+    return (mRuntime && mRuntime->needOdeSolver())?mOdeSolverProperties:CoreSolver::Properties();
 }
 
 //==============================================================================
@@ -246,6 +249,9 @@ CoreSolver::Properties SingleCellViewSimulationData::odeSolverProperties() const
 void SingleCellViewSimulationData::addOdeSolverProperty(const QString &pName,
                                                         const QVariant &pValue)
 {
+    if (!mRuntime)
+        return;
+
     // Add an ODE solver property
 
     if (mRuntime->needOdeSolver())
@@ -258,13 +264,16 @@ QString SingleCellViewSimulationData::daeSolverName() const
 {
     // Return our DAE solver name
 
-    return mRuntime->needDaeSolver()?mDaeSolverName:QString();
+    return (mRuntime && mRuntime->needDaeSolver())?mDaeSolverName:QString();
 }
 
 //==============================================================================
 
 void SingleCellViewSimulationData::setDaeSolverName(const QString &pDaeSolverName)
 {
+    if (!mRuntime)
+        return;
+
     // Set our DAE solver name and reset its properties
 
     if (mRuntime->needDaeSolver()) {
@@ -280,7 +289,7 @@ CoreSolver::Properties SingleCellViewSimulationData::daeSolverProperties() const
 {
     // Return our DAE solver's properties
 
-    return mRuntime->needDaeSolver()?mDaeSolverProperties:CoreSolver::Properties();
+    return (mRuntime && mRuntime->needDaeSolver())?mDaeSolverProperties:CoreSolver::Properties();
 }
 
 //==============================================================================
@@ -288,6 +297,9 @@ CoreSolver::Properties SingleCellViewSimulationData::daeSolverProperties() const
 void SingleCellViewSimulationData::addDaeSolverProperty(const QString &pName,
                                                         const QVariant &pValue)
 {
+    if (!mRuntime)
+        return;
+
     // Add an DAE solver property
 
     if (mRuntime->needDaeSolver())
@@ -300,7 +312,7 @@ QString SingleCellViewSimulationData::nlaSolverName() const
 {
     // Return our NLA solver name
 
-    return mRuntime->needNlaSolver()?mNlaSolverName:QString();
+    return (mRuntime && mRuntime->needNlaSolver())?mNlaSolverName:QString();
 }
 
 //==============================================================================
@@ -308,6 +320,9 @@ QString SingleCellViewSimulationData::nlaSolverName() const
 void SingleCellViewSimulationData::setNlaSolverName(const QString &pNlaSolverName,
                                                     const bool &pReset)
 {
+    if (!mRuntime)
+        return;
+
     // Set our NLA solver name and reset its properties
 
     if (mRuntime->needNlaSolver()) {
@@ -331,7 +346,7 @@ CoreSolver::Properties SingleCellViewSimulationData::nlaSolverProperties() const
 {
     // Return our NLA solver's properties
 
-    return mRuntime->needNlaSolver()?mNlaSolverProperties:CoreSolver::Properties();
+    return (mRuntime && mRuntime->needNlaSolver())?mNlaSolverProperties:CoreSolver::Properties();
 }
 
 //==============================================================================
@@ -340,6 +355,9 @@ void SingleCellViewSimulationData::addNlaSolverProperty(const QString &pName,
                                                         const QVariant &pValue,
                                                         const bool &pReset)
 {
+    if (!mRuntime)
+        return;
+
     // Add an NLA solver property
 
     if (mRuntime->needNlaSolver()) {
@@ -359,6 +377,9 @@ void SingleCellViewSimulationData::addNlaSolverProperty(const QString &pName,
 
 void SingleCellViewSimulationData::reset()
 {
+    if (!mRuntime)
+        return;
+
     // Reset our parameter values which means both initialising our 'constants'
     // and computing our 'computed constants' and 'variables'
     // Note #1: we must check whether our runtime needs NLA solver and, if so,
@@ -430,9 +451,12 @@ void SingleCellViewSimulationData::reset()
 
 void SingleCellViewSimulationData::recomputeComputedConstantsAndVariables(const double &pCurrentPoint)
 {
+    if (!mRuntime)
+        return;
+
     // Recompute our 'computed constants' and 'variables', if possible
 
-    if (mRuntime && mRuntime->isValid()) {
+    if (mRuntime->isValid()) {
         mRuntime->computeComputedConstants()(mConstants, mRates, mStates);
 
         if (mRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)
@@ -451,6 +475,9 @@ void SingleCellViewSimulationData::recomputeComputedConstantsAndVariables(const 
 void SingleCellViewSimulationData::recomputeVariables(const double &pCurrentPoint,
                                                       const bool &pEmitSignal)
 {
+    if (!mRuntime)
+        return;
+
     // Recompute our 'variables'
 
     if (mRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)
@@ -472,6 +499,9 @@ void SingleCellViewSimulationData::recomputeVariables(const double &pCurrentPoin
 
 bool SingleCellViewSimulationData::isModified() const
 {
+    if (!mRuntime)
+        return false;
+
     // Check whether any of our constants or states has been modified
     // Note: we start with our states since they are more likely to be modified
     //       than our constants...
@@ -524,6 +554,15 @@ SingleCellViewSimulationResults::~SingleCellViewSimulationResults()
 
 bool SingleCellViewSimulationResults::createArrays()
 {
+    // Clean things up
+
+    deleteArrays();
+
+    // Make sure that we have a runtime
+
+    if (!mRuntime)
+        return true;
+
     // Retrieve the size of our data and make sure that it is valid
 
     qulonglong simulationSize = qulonglong(mSimulation->size());
@@ -640,7 +679,7 @@ void SingleCellViewSimulationResults::deleteArrays()
 
     // Delete our constants arrays
 
-    if (mConstants)
+    if (mRuntime && mConstants)
         for (int i = 0, iMax = mRuntime->constantsCount(); i < iMax; ++i)
             delete[] mConstants[i];
 
@@ -650,7 +689,7 @@ void SingleCellViewSimulationResults::deleteArrays()
 
     // Delete our rates arrays
 
-    if (mRates)
+    if (mRuntime && mRates)
         for (int i = 0, iMax = mRuntime->ratesCount(); i < iMax; ++i)
             delete[] mRates[i];
 
@@ -660,7 +699,7 @@ void SingleCellViewSimulationResults::deleteArrays()
 
     // Delete our states arrays
 
-    if (mStates)
+    if (mRuntime && mStates)
         for (int i = 0, iMax = mRuntime->statesCount(); i < iMax; ++i)
             delete[] mStates[i];
 
@@ -670,7 +709,7 @@ void SingleCellViewSimulationResults::deleteArrays()
 
     // Delete our algebraic arrays
 
-    if (mAlgebraic)
+    if (mRuntime && mAlgebraic)
         for (int i = 0, iMax = mRuntime->algebraicCount(); i < iMax; ++i)
             delete[] mAlgebraic[i];
 
@@ -689,15 +728,22 @@ bool SingleCellViewSimulationResults::reset(const bool &pCreateArrays)
 
     // Reset our arrays
 
-    deleteArrays();
+    if (pCreateArrays) {
+        return createArrays();
+    } else {
+        deleteArrays();
 
-    return pCreateArrays?createArrays():true;
+        return true;
+    }
 }
 
 //==============================================================================
 
 void SingleCellViewSimulationResults::addPoint(const double &pPoint)
 {
+    if (!mRuntime)
+        return;
+
     // Add the data to our different arrays
 
     mPoints[mSize] = pPoint;
@@ -777,6 +823,9 @@ double ** SingleCellViewSimulationResults::algebraic() const
 
 bool SingleCellViewSimulationResults::exportToCsv(const QString &pFileName) const
 {
+    if (!mRuntime)
+        return false;
+
     // Export of all of our data to a CSV file
 
     QFile file(pFileName);
@@ -970,15 +1019,18 @@ double SingleCellViewSimulation::requiredMemory()
     //          do when retrieving the total/free amount of memory available;
     //          see [OpenCOR]/src/plugins/misc/Core/src/coreutils.cpp) in case a
     //          simulation requires an insane amount of memory...
-    // Note #2: the 1 is for mPoints in SingleCellViewSimulationResults...
+    // Note #2: the 1.0 is for mPoints in SingleCellViewSimulationResults...
 
-    return  size()
-           *( 1
-             +mRuntime->constantsCount()
-             +mRuntime->ratesCount()
-             +mRuntime->statesCount()
-             +mRuntime->algebraicCount())
-           *OpenCOR::CoreSolver::SizeOfDouble;
+    if (mRuntime)
+        return  size()
+               *( 1
+                 +mRuntime->constantsCount()
+                 +mRuntime->ratesCount()
+                 +mRuntime->statesCount()
+                 +mRuntime->algebraicCount())
+               *OpenCOR::CoreSolver::SizeOfDouble;
+    else
+        return 0.0;
 }
 
 //==============================================================================
@@ -1037,6 +1089,9 @@ double SingleCellViewSimulation::size()
 
 void SingleCellViewSimulation::run()
 {
+    if (!mRuntime)
+        return;
+
     // Initialise our worker, if not active
 
     if (!mWorker) {
