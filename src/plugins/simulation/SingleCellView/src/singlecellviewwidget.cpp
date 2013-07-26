@@ -157,6 +157,13 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mGui->layout->addWidget(mToolBarWidget);
     mGui->layout->addWidget(mTopSeparator);
 
+    // Create and add our invalid simulation message widget
+
+    mInvalidModelMessageWidget = new Core::UserMessageWidget(":/oxygen/actions/help-about.png",
+                                                             pParent);
+
+    mGui->layout->addWidget(mInvalidModelMessageWidget);
+
     // Create our splitter widget and keep track of its movement
     // Note: we need to keep track of its movement so that saveSettings() can
     //       work fine even when mContentsWidget is not visible (which happens
@@ -215,30 +222,24 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
             this, SLOT(graphRemoved(SingleCellViewGraphPanelPlotGraph *)));
 
     // Keep track of the updating of a graph
-    // Note: ideally, and as for the addition and removal of a graph, this would
-    //       be done through mContentsWidget->graphPanelsWidget() (i.e. a graph
-    //       would let people know that it has been updated and the graph panel
-    //       with which it is associated would forward the signal to
-    //       mContentsWidget->graphPanelsWidget()), but this may result in too
-    //       many graphUpdated() signals being emitted. For example, say that
-    //       you change the model with which a graph is associated, then both
-    //       the X and Y parameters will get updated, and for each of those
-    //       updates a graphUpdated() would be emitted by the graph, hence we
-    //       would end up with two signals when only one would have sufficed.
-    //       Even worse is that after having updated the X parameter, the graph
-    //       would have its X parameter coming for the 'new' model while its Y
-    //       parameter coming from the 'old' model, which could mess things up
-    //       quite a bit from a plotting viewpoint...
+    // Note: ideally, this would, as for the addition and removal of a graph
+    //       (see above), be done through mContentsWidget->graphPanelsWidget()
+    //       (i.e. a graph would let people know that it has been updated and
+    //       the graph panel with which it is associated would forward the
+    //       signal to mContentsWidget->graphPanelsWidget()), but this may
+    //       result in too many graphUpdated() signals being emitted. For
+    //       example, say that you change the model with which a graph is
+    //       associated, then both the X and Y parameters will get updated, and
+    //       for each of those updates a graphUpdated() signal would be emitted
+    //       by the graph, hence we would end up with two signals when only one
+    //       would have sufficed. Even worse is that after having updated the X
+    //       parameter, the graph would have its X parameter coming from the
+    //       'new' model while its Y parameter from the 'old' model, which could
+    //       mess things up quite a bit from a plotting viewpoint. So, instead,
+    //       the updating is done through our graphs property editor...
 
     connect(mContentsWidget->informationWidget()->graphsWidget(), SIGNAL(graphUpdated(SingleCellViewGraphPanelPlotGraph *)),
             this, SLOT(graphUpdated(SingleCellViewGraphPanelPlotGraph *)));
-
-    // Create and add our invalid simulation message widget
-
-    mInvalidModelMessageWidget = new Core::UserMessageWidget(":/oxygen/actions/help-about.png",
-                                                             pParent);
-
-    mGui->layout->addWidget(mInvalidModelMessageWidget);
 
     // Create our simulation output widget with a layout on which we put a
     // separating line and our simulation output list view
@@ -273,12 +274,11 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
 
     // Create our (thin) simulation progress widget
 
+    mBottomSeparator = Core::newLineWidget(this);
     mProgressBarWidget = new Core::ProgressBarWidget(this);
 
     mProgressBarWidget->setFixedHeight(3);
     mProgressBarWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-
-    mBottomSeparator = Core::newLineWidget(this);
 
     mGui->layout->addWidget(mBottomSeparator);
     mGui->layout->addWidget(mProgressBarWidget);
@@ -358,14 +358,6 @@ void SingleCellViewWidget::loadSettings(QSettings *pSettings)
     pSettings->beginGroup(mContentsWidget->objectName());
         mContentsWidget->loadSettings(pSettings);
     pSettings->endGroup();
-
-    // Retrieve our active graph panel
-//---GRY--- WE SHOULD STOP USING mActiveGraphPanel ONCE WE HAVE RE-ENABLED THE
-//          ADDITION/REMOVAL OF GRAPH PANELS...
-
-//    mActiveGraphPanel = mContentsWidget->graphPanelsWidget()->activeGraphPanel();
-
-//    mActiveGraphPanel->plot()->setFixedAxisX(true);
 }
 
 //==============================================================================
@@ -403,16 +395,11 @@ void SingleCellViewWidget::setSolverInterfaces(const SolverInterfaces &pSolverIn
 
 void SingleCellViewWidget::output(const QString &pMessage)
 {
-    // Move to the end of the output (just in case...)
+    // Move to the end of the output
+    // Note: this is just in case the user clicked somewhere in the output and
+    //       we are therefore not at the end of it anymore...
 
     mOutputWidget->moveCursor(QTextCursor::End);
-
-    // Make sure that the output ends as expected and if not then add BrLn to it
-
-    static const QString EndOfOutput = "<br /></p></body></html>";
-
-    if (mOutputWidget->toHtml().right(EndOfOutput.size()).compare(EndOfOutput))
-        mOutputWidget->insertHtml(OutputBrLn);
 
     // Output the message and make sure that it's visible
 
@@ -1082,7 +1069,7 @@ void SingleCellViewWidget::updateDelayValue(const double &pDelayValue)
 
 void SingleCellViewWidget::simulationRunning(const bool &pIsResuming)
 {
-    // Our simulation is running, so do a few things, but only we are dealing
+    // Our simulation is running, so do a few things, but only if we are dealing
     // with the active simulation
 
     if (qobject_cast<SingleCellViewSimulation *>(sender()) == mSimulation) {
@@ -1091,7 +1078,8 @@ void SingleCellViewWidget::simulationRunning(const bool &pIsResuming)
 
 Q_UNUSED(pIsResuming);
 //        if (pIsResuming)
-//            mActiveGraphPanel->plot()->resetLocalAxes();
+//            foreach (SingleCellViewGraphPanelWidget *graphPanel, mContentsWidget->graphPanelsWidget()->graphPanels())
+//                graphPanel->resetLocalAxes();
 
         // Update our simulation mode and check for results
 
@@ -1101,7 +1089,8 @@ Q_UNUSED(pIsResuming);
 
         // Prevent interaction with our graph panel's plot
 
-//        mActiveGraphPanel->plot()->setInteractive(!mSimulation->isRunning());
+//        foreach (SingleCellViewGraphPanelWidget *graphPanel, mContentsWidget->graphPanelsWidget()->graphPanels())
+//            graphPanel->setInteractive(!mSimulation->isRunning());
     }
 }
 
