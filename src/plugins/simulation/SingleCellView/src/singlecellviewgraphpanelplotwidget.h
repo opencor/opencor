@@ -72,7 +72,6 @@ public:
     void checkLocalAxes(const bool &pCanReplot = true,
                         const bool &pForceMinMaxValues = false,
                         const bool &pUpdateMinMaxValues = false);
-    void resetLocalAxes(const bool &pCanReplot = true);
 
     double minX() const;
     double maxX() const;
@@ -96,8 +95,6 @@ public:
 
     void setFixedAxisX(const bool &pFixedAxisX);
     void setFixedAxisY(const bool &pFixedAxisY);
-
-    void setInteractive(const bool &pInteractive);
 
     virtual void drawCanvas(QPainter *pPainter);
 
@@ -127,8 +124,6 @@ private:
     QwtPlotDirectPainter *mDirectPainter;
 
     QList<SingleCellViewGraphPanelPlotGraph *> mGraphs;
-
-    bool mInteractive;
 
     Action mAction;
 

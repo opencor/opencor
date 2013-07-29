@@ -143,7 +143,7 @@ void SingleCellViewGraphPanelWidget::replot()
 
 bool SingleCellViewGraphPanelWidget::isActive() const
 {
-    // Return whether the graph panel as active
+    // Return whether the graph panel is active
 
     return mActive;
 }

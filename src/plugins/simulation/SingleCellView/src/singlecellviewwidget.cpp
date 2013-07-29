@@ -1067,28 +1067,17 @@ void SingleCellViewWidget::updateDelayValue(const double &pDelayValue)
 
 void SingleCellViewWidget::simulationRunning(const bool &pIsResuming)
 {
+    Q_UNUSED(pIsResuming);
+
     // Our simulation is running, so do a few things, but only if we are dealing
     // with the active simulation
 
     if (qobject_cast<SingleCellViewSimulation *>(sender()) == mSimulation) {
-        // Reset our local axes' values, if resuming (since the user might have
-        // been zooming in/out, etc.)
-
-Q_UNUSED(pIsResuming);
-//        if (pIsResuming)
-//            foreach (SingleCellViewGraphPanelWidget *graphPanel, mContentsWidget->graphPanelsWidget()->graphPanels())
-//                graphPanel->resetLocalAxes();
-
         // Update our simulation mode and check for results
 
         updateSimulationMode();
 
         checkResults(mSimulation);
-
-        // Prevent interaction with our graph panel's plot
-
-//        foreach (SingleCellViewGraphPanelWidget *graphPanel, mContentsWidget->graphPanelsWidget()->graphPanels())
-//            graphPanel->setInteractive(!mSimulation->isRunning());
     }
 }
 

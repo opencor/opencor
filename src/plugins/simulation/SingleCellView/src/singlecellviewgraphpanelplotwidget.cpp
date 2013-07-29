@@ -105,7 +105,6 @@ static const double MaxZoomFactor = 1024.0;
 SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *pParent) :
     QwtPlot(pParent),
     mGraphs(QList<SingleCellViewGraphPanelPlotGraph *>()),
-    mInteractive(true),
     mAction(None),
     mOriginPoint(QPointF()),
     mEndPoint(QPointF()),
@@ -450,15 +449,6 @@ QList<SingleCellViewGraphPanelPlotGraph *> SingleCellViewGraphPanelPlotWidget::g
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::setInteractive(const bool &pInteractive)
-{
-    // Specify whether interaction is allowed
-
-    mInteractive = pInteractive;
-}
-
-//==============================================================================
-
 void SingleCellViewGraphPanelPlotWidget::checkAnyAxesValues(double &pMinX,
                                                             double &pMaxX,
                                                             double &pMinY,
@@ -673,15 +663,6 @@ void SingleCellViewGraphPanelPlotWidget::checkLocalAxes(const bool &pCanReplot,
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::resetLocalAxes(const bool &pCanReplot)
-{
-    // Reset our local axes by trying to set them
-
-    setLocalAxes(0.0, 0.0, 0.0, 0.0, pCanReplot, true, false, true);
-}
-
-//==============================================================================
-
 static const double NoScalingFactor  = 1.0;
 static const double ScalingInFactor  = 0.57;
 static const double ScalingOutFactor = 1.0/ScalingInFactor;
@@ -706,11 +687,6 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
     // Default handling of the event
 
     QwtPlot::mouseMoveEvent(pEvent);
-
-    // Check that interaction is allowed
-
-    if (!mInteractive)
-        return;
 
     // Retrieve the current point
 
@@ -813,11 +789,6 @@ void SingleCellViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
 
     QwtPlot::mousePressEvent(pEvent);
 
-    // Check that interaction is allowed
-
-    if (!mInteractive)
-        return;
-
     // Check that the position of the mouse is over our canvas
 
     if (!plotLayout()->canvasRect().contains(pEvent->pos()))
@@ -898,11 +869,6 @@ void SingleCellViewGraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 
     QwtPlot::mouseReleaseEvent(pEvent);
 
-    // Check that interaction is allowed
-
-    if (!mInteractive)
-        return;
-
     // Check whether we need to carry out an action
 
     if (mAction == None)
@@ -951,11 +917,6 @@ void SingleCellViewGraphPanelPlotWidget::wheelEvent(QWheelEvent *pEvent)
     // Default handling of the event
 
     QwtPlot::wheelEvent(pEvent);
-
-    // Check that interaction is allowed
-
-    if (!mInteractive)
-        return;
 
     // The only action we support using the wheel is zooming in/out, but this
     // requires no modifiers being used
@@ -1205,11 +1166,12 @@ void SingleCellViewGraphPanelPlotWidget::drawGraphSegment(SingleCellViewGraphPan
     // segment, or carry on as normal
 
     if (!pFrom) {
-        // It is our first graph segment, so check our local axes
-        // Note: we always want to replot, hence our passing false as an
-        //       argument to resetLocalAxes()...
+        // It is our first graph segment, so reset our local axes by trying to
+        // set them
+        // Note: we always want to replot, hence our first boolean being false
+        //       in our call to setLocalAxes()...
 
-        resetLocalAxes(false);
+        setLocalAxes(0.0, 0.0, 0.0, 0.0, false, true, false, true);
         replotNow();
     } else {
         // It's not our first graph segment, so determine the minimum/maximum
