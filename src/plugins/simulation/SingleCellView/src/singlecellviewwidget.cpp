@@ -499,7 +499,6 @@ void SingleCellViewWidget::updateInvalidModelMessageWidget()
 
 //==============================================================================
 
-//---GRY--- NEED TO CHECK THE CODE FROM HERE...
 void SingleCellViewWidget::initialize(const QString &pFileName)
 {
     // Keep track of our simulation data for our previous model and finalise a
@@ -511,7 +510,8 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
     SingleCellViewInformationSolversWidget *solversWidget = informationWidget->solversWidget();
 
     if (previousSimulation) {
-        // There is a previous simulation, so backup a few things
+        // There is a previous simulation, so backup our simulation and solvers'
+        // settings
 
         QString previousFileName = previousSimulation->fileName();
 
@@ -541,7 +541,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
         newSimulation = true;
 
-        // Set our simulation object's delay
+        // Initialise our simulation object's delay
 
         mSimulation->setDelay(mDelayWidget->value());
 
@@ -1146,7 +1146,7 @@ void SingleCellViewWidget::simulationStopped(const int &pElapsedTime)
         if (pElapsedTime != -1) {
             // We have a valid elapsed time, so show our simulation time
 
-            SingleCellViewSimulationData *simulationData = mSimulation->data();
+            SingleCellViewSimulationData *simulationData = simulation->data();
             QString solversInformation = QString();
 
             if (!simulationData->odeSolverName().isEmpty())
@@ -1166,11 +1166,11 @@ void SingleCellViewWidget::simulationStopped(const int &pElapsedTime)
 
         updateSimulationMode();
 
-        mContentsWidget->informationWidget()->parametersWidget()->updateParameters(mSimulation->currentPoint());
+        mContentsWidget->informationWidget()->parametersWidget()->updateParameters(simulation->currentPoint());
 
         // Allow interaction with our graph panel's plot
 
-//        mActiveGraphPanel->plot()->setInteractive(!mSimulation->isRunning());
+//        mActiveGraphPanel->plot()->setInteractive(!simulation->isRunning());
     }
 
     // Remove our tracking of our simulation progress and let people know that
