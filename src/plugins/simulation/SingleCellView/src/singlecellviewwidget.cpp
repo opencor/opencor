@@ -182,9 +182,11 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
 
     // Keep track of changes to some of our simulation and solvers properties
 
-    connect(mContentsWidget->informationWidget()->simulationWidget(), SIGNAL(propertyChanged(Core::Property *)),
+    SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
+
+    connect(informationWidget->simulationWidget(), SIGNAL(propertyChanged(Core::Property *)),
             this, SLOT(simulationPropertyChanged(Core::Property *)));
-    connect(mContentsWidget->informationWidget()->solversWidget(), SIGNAL(propertyChanged(Core::Property *)),
+    connect(informationWidget->solversWidget(), SIGNAL(propertyChanged(Core::Property *)),
             this, SLOT(solversPropertyChanged(Core::Property *)));
 
     // Keep track of whether we can remove graph panels
@@ -194,27 +196,29 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
 
     // Keep track of the addition and removal of a graph panel
 
+    SingleCellViewInformationGraphsWidget *graphsWidget = informationWidget->graphsWidget();
+
     connect(mContentsWidget->graphPanelsWidget(), SIGNAL(graphPanelAdded(SingleCellViewGraphPanelWidget *)),
-            mContentsWidget->informationWidget()->graphsWidget(), SLOT(initialize(SingleCellViewGraphPanelWidget *)));
+            graphsWidget, SLOT(initialize(SingleCellViewGraphPanelWidget *)));
     connect(mContentsWidget->graphPanelsWidget(), SIGNAL(graphPanelRemoved(SingleCellViewGraphPanelWidget *)),
-            mContentsWidget->informationWidget()->graphsWidget(), SLOT(finalize(SingleCellViewGraphPanelWidget *)));
+            graphsWidget, SLOT(finalize(SingleCellViewGraphPanelWidget *)));
 
     // Keep track of whether a graph panel has been activated
 
     connect(mContentsWidget->graphPanelsWidget(), SIGNAL(graphPanelActivated(SingleCellViewGraphPanelWidget *)),
-            mContentsWidget->informationWidget()->graphsWidget(), SLOT(initialize(SingleCellViewGraphPanelWidget *)));
+            graphsWidget, SLOT(initialize(SingleCellViewGraphPanelWidget *)));
 
     // Keep track of a graph being required
 
-    connect(mContentsWidget->informationWidget()->parametersWidget(), SIGNAL(graphRequired(CellMLSupport::CellmlFileRuntimeParameter *, CellMLSupport::CellmlFileRuntimeParameter *)),
+    connect(informationWidget->parametersWidget(), SIGNAL(graphRequired(CellMLSupport::CellmlFileRuntimeParameter *, CellMLSupport::CellmlFileRuntimeParameter *)),
             this, SLOT(addGraph(CellMLSupport::CellmlFileRuntimeParameter *, CellMLSupport::CellmlFileRuntimeParameter *)));
 
     // Keep track of the addition and removal of a graph
 
     connect(mContentsWidget->graphPanelsWidget(), SIGNAL(graphAdded(SingleCellViewGraphPanelPlotGraph *)),
-            mContentsWidget->informationWidget()->graphsWidget(), SLOT(addGraph(SingleCellViewGraphPanelPlotGraph *)));
+            graphsWidget, SLOT(addGraph(SingleCellViewGraphPanelPlotGraph *)));
     connect(mContentsWidget->graphPanelsWidget(), SIGNAL(graphRemoved(SingleCellViewGraphPanelPlotGraph *)),
-            mContentsWidget->informationWidget()->graphsWidget(), SLOT(removeGraph(SingleCellViewGraphPanelPlotGraph *)));
+            graphsWidget, SLOT(removeGraph(SingleCellViewGraphPanelPlotGraph *)));
 
     connect(mContentsWidget->graphPanelsWidget(), SIGNAL(graphAdded(SingleCellViewGraphPanelPlotGraph *)),
             this, SLOT(graphAdded(SingleCellViewGraphPanelPlotGraph *)));
@@ -238,7 +242,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     //       mess things up quite a bit from a plotting viewpoint. So, instead,
     //       the updating is done through our graphs property editor...
 
-    connect(mContentsWidget->informationWidget()->graphsWidget(), SIGNAL(graphUpdated(SingleCellViewGraphPanelPlotGraph *)),
+    connect(graphsWidget, SIGNAL(graphUpdated(SingleCellViewGraphPanelPlotGraph *)),
             this, SLOT(graphUpdated(SingleCellViewGraphPanelPlotGraph *)));
 
     // Create our simulation output widget with a layout on which we put a
@@ -495,6 +499,7 @@ void SingleCellViewWidget::updateInvalidModelMessageWidget()
 
 //==============================================================================
 
+//---GRY--- NEED TO CHECK THE CODE FROM HERE...
 void SingleCellViewWidget::initialize(const QString &pFileName)
 {
     // Keep track of our simulation data for our previous model and finalise a
