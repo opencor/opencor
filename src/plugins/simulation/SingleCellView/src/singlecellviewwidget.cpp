@@ -571,8 +571,9 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
     setDelayValue(mDelays.value(pFileName, 0));
 
-    // Reset our file tab icon and stop tracking our simulation progress, in
-    // case our simulation is running
+    // Stop tracking our simulation progress and let people know that our file
+    // tab icon should be reset, these in case our simulation is running or
+    // paused
 
     if (mSimulation->isRunning() || mSimulation->isPaused()) {
         mProgresses.remove(mSimulation->fileName());
@@ -584,7 +585,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
     bool validCellmlFileRuntime = cellmlFileRuntime && cellmlFileRuntime->isValid();
 
-    // Retrieve our variable of integration, if any
+    // Retrieve our variable of integration, if possible
 
     CellMLSupport::CellmlFileRuntimeParameter *variableOfIntegration = validCellmlFileRuntime?cellmlFileRuntime->variableOfIntegration():0;
 
@@ -598,9 +599,9 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
     information += "<strong>"+pFileName+"</strong>"+OutputBrLn;
     information += OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
 
-    if (validCellmlFileRuntime && variableOfIntegration) {
-        // A valid runtime could be retrieved for the CellML file and we have a
-        // variable of integration
+    if (variableOfIntegration) {
+        // A variable of integration could be retrieved for our CellML file, so
+        // we can also output the model type
 
         QString additionalInformation = QString();
 
@@ -611,12 +612,13 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         information += QString(OutputTab+"<strong>"+tr("Model type:")+"</strong> <span"+OutputInfo+">%1%2</span>."+OutputBrLn).arg((cellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?tr("ODE"):tr("DAE"),
                                                                                                                                    additionalInformation);
     } else {
-        // Either we couldn't retrieve a runtime for the CellML file or we
-        // could, but it's not valid or it's valid but then we don't have a
-        // variable of integration
+        // We couldn't retrieve a variable a variable of integration, which
+        // means that we either don't have a runtime or we have one, but it's
+        // not valid or it's valid but we really don't have a variable of
+        // integration
         // Note: in the case of a valid runtime and no variable of integration,
         //       we really shouldn't consider the runtime to be valid, hence we
-        //       handle the no variable of integration case here...
+        //       handle this case here...
 
         mErrorType = InvalidCellmlFile;
 
@@ -625,8 +627,14 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         information += "<span"+OutputBad+">"+(cellmlFileRuntime?tr("invalid"):tr("none"))+"</span>."+OutputBrLn;
 
         if (validCellmlFileRuntime)
+            // We have a valid runtime, but no variable of integration, which
+            // means that the model doesn't contain any ODE or DAE
+
             information += OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+tr("the model must have at least one ODE or DAE")+".</span>"+OutputBrLn;
         else
+            // We don't have a valid runtime, so either there are some problems
+            // with the CellML file or its runtime
+
             foreach (const CellMLSupport::CellmlFileIssue &issue,
                      cellmlFileRuntime?cellmlFileRuntime->issues():cellmlFile->issues())
                 information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2</span>."+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
@@ -652,29 +660,24 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
     updateResults(mSimulation, mSimulation->results()->size(), true);
 
-    // Check that we have a valid runtime
+    // Initialise our contents widget and make sure that we have the required
+    // type(s) of solvers
 
-    bool hasError = true;
+    bool validSimulationEnvironment = false;
 
-    if (validCellmlFileRuntime && variableOfIntegration) {
-        // We have both a valid runtime and a variable of integration
-        // Note: if we didn't have a valid runtime, then there would be no need
-        //       to output an error message since one would have already been
-        //       generated while trying to get the runtime (see above)...
-
-        // Retrieve the unit of the variable of integration
-
+    if (variableOfIntegration) {
         // Show our contents widget in case it got previously hidden
         // Note: indeed, if it was to remain hidden then some initialisations
-        //       wouldn't work (e.g. the solvers widget has property editor
+        //       wouldn't work (e.g. the solvers widget has a property editor
         //       which all properties need to be removed and if the contents
         //       widget is not visible, then upon repopulating the property
         //       editor, scrollbars will be shown even though they are not
-        //       needed), so...
+        //       needed)...
 
         mContentsWidget->setVisible(true);
 
-        // Initialise our GUI's simulation, solvers and parameters widgets
+        // Initialise our GUI's simulation, solvers, graphs and parameters
+        // widgets
         // Note: this will also initialise some of our simulation data (i.e. our
         //       simulation's starting point and simulation's NLA solver's
         //       properties) which is needed since we want to be able to reset
@@ -714,9 +717,9 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
                     simulationError(tr("the model needs both a DAE and an NLA solver, but no DAE solver is available"),
                                     InvalidSimulationEnvironment);
             } else {
-                // We have the solver(s) we need, so...
+                // We have the solvers we need, so...
 
-                hasError = false;
+                validSimulationEnvironment = true;
             }
         } else if (   cellmlFileRuntime->needOdeSolver()
                    && solversWidget->odeSolvers().isEmpty()) {
@@ -727,56 +730,49 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
             simulationError(tr("the model needs a DAE solver, but none is available"),
                             InvalidSimulationEnvironment);
         } else {
-            // We have the solver(s) we need, so...
+            // We have the solver we need, so...
 
-            hasError = false;
+            validSimulationEnvironment = true;
         }
     }
 
-    // Check if an error occurred and, if so, show/hide some widgets
+    // Show/hide some widgets depending on whether we have a valid simulation
+    // environment
 
-    bool previousHasError = mInvalidModelMessageWidget->isVisible();
+    bool previousValidSimulationEnvironment = mInvalidModelMessageWidget->isHidden();
 
-    mToolBarWidget->setVisible(!hasError);
-    mTopSeparator->setVisible(!hasError);
+    mToolBarWidget->setVisible(validSimulationEnvironment);
+    mTopSeparator->setVisible(validSimulationEnvironment);
 
-    mContentsWidget->setVisible(!hasError);
-    mInvalidModelMessageWidget->setVisible(hasError);
+    mContentsWidget->setVisible(validSimulationEnvironment);
+    mInvalidModelMessageWidget->setVisible(!validSimulationEnvironment);
 
-    mBottomSeparator->setVisible(!hasError);
-    mProgressBarWidget->setVisible(!hasError);
+    mBottomSeparator->setVisible(validSimulationEnvironment);
+    mProgressBarWidget->setVisible(validSimulationEnvironment);
 
     // Make sure that the last output message is visible
-    // Note: indeed, to (re)show some widgets (see above) will change the height
-    //       of our output widget, messing up the vertical scroll bar a bit (if
-    //       visible), resulting in the output being shifted a bit, so...
+    // Note: indeed, to (re)show some widgets (see above) might change the
+    //       height of our output widget, messing up the vertical scroll bar a
+    //       bit (if visible), resulting in the output being shifted a bit...
 
-    if (previousHasError != hasError) {
+    if (previousValidSimulationEnvironment != validSimulationEnvironment) {
         qApp->processEvents();
 
         mOutputWidget->ensureCursorVisible();
     }
 
-    // If no error occurred and if we are dealing with a new simulation, then
-    // reset both its data and its results (well, initialise in the case of its
-    // data)
+    // If we have a valid simulation environment and we are dealing with a new
+    // simulation, then reset both the simulation's data and results (well,
+    // initialise in the case of its data)
 
-    if (!hasError && newSimulation) {
+    if (validSimulationEnvironment && newSimulation) {
         mSimulation->data()->reset();
         mSimulation->results()->reset(false);
     }
 }
 
 //==============================================================================
-
-bool SingleCellViewWidget::isManaged(const QString &pFileName) const
-{
-    // Return whether the given file name is managed
-
-    return mSimulations.value(pFileName);
-}
-
-//==============================================================================
+//---GRY--- NEED TO CHECK THE CODE FROM HERE...
 
 void SingleCellViewWidget::finalize(const QString &pFileName)
 {
@@ -1446,6 +1442,7 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
                                          const qulonglong &pSize,
                                          const bool &pReplot)
 {
+//---GRY--- DO WE ACTUALLY NEED THE pReplot PARAMETER?...
     // Update our graphs, if any and only if actually necessary
 
     SingleCellViewSimulation *simulation = pSimulation?pSimulation:mSimulation;
