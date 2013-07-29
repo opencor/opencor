@@ -145,8 +145,6 @@ private:
 
     QList<SingleCellViewGraphPanelPlotGraph *> mGraphs;
 
-    void setDelayValue(const int &pDelayValue);
-
     void output(const QString &pMessage);
 
     void updateSimulationMode();

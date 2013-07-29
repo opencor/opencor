@@ -116,7 +116,11 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     connect(mDelayWidget, SIGNAL(valueChanged(double)),
             this, SLOT(updateDelayValue(const double &)));
 
-    setDelayValue(0);
+    mDelayWidget->setValue(0);
+
+    updateDelayValue(mDelayWidget->value());
+    // Note: our call to updateDelayValue() is because the connection is not yet
+    //       effective when we set the value of the delay widget...
 
     // Create a tool bar widget with different buttons
 
@@ -569,7 +573,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
     mGui->actionResetModelParameters->setEnabled(mResets.value(pFileName, false));
 
-    setDelayValue(mDelays.value(pFileName, 0));
+    mDelayWidget->setValue(mDelays.value(pFileName, 0));
 
     // Stop tracking our simulation progress and let people know that our file
     // tab icon should be reset, these in case our simulation is running or
@@ -772,7 +776,6 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 }
 
 //==============================================================================
-//---GRY--- NEED TO CHECK THE CODE FROM HERE...
 
 void SingleCellViewWidget::finalize(const QString &pFileName)
 {
@@ -802,8 +805,8 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
     mResets.remove(pFileName);
     mDelays.remove(pFileName);
 
-    // Finalize a few things in our GUI's simulation, solvers and parameters
-    // widgets
+    // Finalize a few things in our GUI's simulation, solvers, graphs and
+    // parameters widgets
 
     SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
 
@@ -867,7 +870,7 @@ void SingleCellViewWidget::fileOpened(const QString &pFileName)
 void SingleCellViewWidget::fileRenamed(const QString &pOldFileName,
                                        const QString &pNewFileName)
 {
-    // Let our view widget know that a file has been renamed
+    // Let our graphs widget know that a file has been renamed
 
     mContentsWidget->informationWidget()->graphsWidget()->fileRenamed(pOldFileName, pNewFileName);
 }
@@ -895,17 +898,17 @@ void SingleCellViewWidget::on_actionRunPauseResumeSimulation_triggered()
             handlingAction = true;
 
             // Our simulation is not paused, so finish any editing of our
-            // simulation information
+            // simulation information before running it
 
             mContentsWidget->informationWidget()->finishEditing();
 
-            // Now, we would normally retrieve our simulation properties, but
-            // there is no need for it since they have already been retrieved
-            // (see simulationPropertyChanged())...
+            // Now, we would normally retrieve our simulation's properties, but
+            // there is no need for it since they have already been retrieved,
+            // thanks to simulationPropertyChanged()
 
             // Retrieve our solvers' properties
             // Note: we don't need to retrieve the NLA solver's properties since
-            //       we already have them (see solversPropertyChanged())...
+            //       we already have them, thanks to solversPropertyChanged()...
 
             SingleCellViewInformationSolversWidget *solversWidget = mContentsWidget->informationWidget()->solversWidget();
 
@@ -924,7 +927,7 @@ void SingleCellViewWidget::on_actionRunPauseResumeSimulation_triggered()
                                                               property->integerValue():
                                                               property->doubleValue());
 
-            // Check how much memory is needed to run our simulation
+            // Check that we have enough memory to run our simulation
 
             bool runSimulation = true;
 
@@ -932,32 +935,23 @@ void SingleCellViewWidget::on_actionRunPauseResumeSimulation_triggered()
             double requiredMemory = mSimulation->requiredMemory();
 
             if (requiredMemory > freeMemory) {
-                // More memory is required to run our simulation than is
-                // currently available, so let our user know about it
-
                 QMessageBox::warning(qApp->activeWindow(), tr("Run the simulation"),
                                      tr("Sorry, but the simulation requires %1 of memory and you have only %2 left.").arg(Core::sizeAsString(requiredMemory), Core::sizeAsString(freeMemory)));
-
-                runSimulation = false;
-            }
-
-            // Run our simulation, if possible/wanted
-
-            if (runSimulation) {
-                // Reset our local X axis
-
-//                mActiveGraphPanel->plot()->setLocalMinMaxX(mActiveGraphPanel->plot()->minX(),
-//                                                           mActiveGraphPanel->plot()->maxX());
-
-                // Reset our simulation settings
-
-                mOldSimulationResultsSizes.insert(mSimulation, 0);
+            } else {
+                // Theoretically speaking, we have enough memory to run the
+                // simulation, so try to allocate all the memory we need by
+                // resetting our simulation settings
 
                 runSimulation = mSimulation->results()->reset();
 
-                updateResults(mSimulation, 0);
+                qulonglong simulationResultsSize = mSimulation->results()->size();
 
-                // Effectively run our simulation, if possible
+                mOldSimulationResultsSizes.insert(mSimulation, simulationResultsSize);
+
+                updateResults(mSimulation, simulationResultsSize);
+
+                // Effectively run our simulation in case we were able to
+                // allocate all the memory we need to run the simulation
 
                 if (runSimulation)
                     // Now, we really run our simulation
@@ -1017,7 +1011,8 @@ void SingleCellViewWidget::on_actionAddGraphPanel_triggered()
 
 void SingleCellViewWidget::on_actionRemoveGraphPanel_triggered()
 {
-    // Default action for our removing of graph panel
+    // Default action for our removing of graph panel, i.e. remove the current
+    // graph panel
 
     on_actionRemoveCurrentGraphPanel_triggered();
 }
@@ -1255,17 +1250,6 @@ SingleCellViewSimulation * SingleCellViewWidget::simulation() const
     // Return our (current) simulation
 
     return mSimulation;
-}
-
-//==============================================================================
-
-void SingleCellViewWidget::setDelayValue(const int &pDelayValue)
-{
-    // Set the value of our delay widget
-
-    mDelayWidget->setValue(pDelayValue);
-
-    updateDelayValue(pDelayValue);
 }
 
 //==============================================================================

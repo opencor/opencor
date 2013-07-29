@@ -561,14 +561,14 @@ bool SingleCellViewSimulationResults::createArrays()
     // Make sure that we have a runtime
 
     if (!mRuntime)
-        return true;
+        return false;
 
     // Retrieve the size of our data and make sure that it is valid
 
     qulonglong simulationSize = qulonglong(mSimulation->size());
 
     if (!simulationSize)
-        return true;
+        return false;
 
     // Create our points array
 
