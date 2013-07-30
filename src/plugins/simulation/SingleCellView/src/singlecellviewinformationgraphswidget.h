@@ -108,8 +108,7 @@ private:
                         Core::Property *pParameterProperty,
                         const bool &pParameterX) const;
 
-    void updateGraphInfo(OpenCOR::Core::Property *pProperty,
-                         const QString &pFileName);
+    void updateGraphInfo(Core::Property *pProperty, const QString &pFileName);
     void updateGraphsInfo(Core::Property *pSectionProperty = 0);
 
 Q_SIGNALS:

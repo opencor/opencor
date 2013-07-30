@@ -420,11 +420,11 @@ void SingleCellViewSimulationData::reset()
 
     // Reset our parameter values
 
-    memset(mConstants, 0, mRuntime->constantsCount()*OpenCOR::CoreSolver::SizeOfDouble);
-    memset(mRates, 0, mRuntime->ratesCount()*OpenCOR::CoreSolver::SizeOfDouble);
-    memset(mStates, 0, mRuntime->statesCount()*OpenCOR::CoreSolver::SizeOfDouble);
-    memset(mAlgebraic, 0, mRuntime->algebraicCount()*OpenCOR::CoreSolver::SizeOfDouble);
-    memset(mCondVar, 0, mRuntime->condVarCount()*OpenCOR::CoreSolver::SizeOfDouble);
+    memset(mConstants, 0, mRuntime->constantsCount()*CoreSolver::SizeOfDouble);
+    memset(mRates, 0, mRuntime->ratesCount()*CoreSolver::SizeOfDouble);
+    memset(mStates, 0, mRuntime->statesCount()*CoreSolver::SizeOfDouble);
+    memset(mAlgebraic, 0, mRuntime->algebraicCount()*CoreSolver::SizeOfDouble);
+    memset(mCondVar, 0, mRuntime->condVarCount()*CoreSolver::SizeOfDouble);
 
     mRuntime->initializeConstants()(mConstants, mRates, mStates);
     recomputeComputedConstantsAndVariables(mStartingPoint);
@@ -439,8 +439,8 @@ void SingleCellViewSimulationData::reset()
 
     // Keep track of our various initial values
 
-    memcpy(mInitialConstants, mConstants, mRuntime->constantsCount()*OpenCOR::CoreSolver::SizeOfDouble);
-    memcpy(mInitialStates, mStates, mRuntime->statesCount()*OpenCOR::CoreSolver::SizeOfDouble);
+    memcpy(mInitialConstants, mConstants, mRuntime->constantsCount()*CoreSolver::SizeOfDouble);
+    memcpy(mInitialStates, mStates, mRuntime->statesCount()*CoreSolver::SizeOfDouble);
 
     // Let people know that our data is 'cleaned', i.e. not modified
 
@@ -583,7 +583,7 @@ bool SingleCellViewSimulationResults::createArrays()
     try {
         mConstants = new double*[mRuntime->constantsCount()];
 
-        memset(mConstants, 0, mRuntime->constantsCount()*OpenCOR::CoreSolver::SizeOfDoublePointer);
+        memset(mConstants, 0, mRuntime->constantsCount()*CoreSolver::SizeOfDoublePointer);
     } catch(...) {
         deleteArrays();
 
@@ -604,7 +604,7 @@ bool SingleCellViewSimulationResults::createArrays()
     try {
         mRates = new double*[mRuntime->ratesCount()];
 
-        memset(mRates, 0, mRuntime->ratesCount()*OpenCOR::CoreSolver::SizeOfDoublePointer);
+        memset(mRates, 0, mRuntime->ratesCount()*CoreSolver::SizeOfDoublePointer);
     } catch(...) {
         deleteArrays();
 
@@ -625,7 +625,7 @@ bool SingleCellViewSimulationResults::createArrays()
     try {
         mStates = new double*[mRuntime->statesCount()];
 
-        memset(mStates, 0, mRuntime->statesCount()*OpenCOR::CoreSolver::SizeOfDoublePointer);
+        memset(mStates, 0, mRuntime->statesCount()*CoreSolver::SizeOfDoublePointer);
     } catch(...) {
         deleteArrays();
 
@@ -646,7 +646,7 @@ bool SingleCellViewSimulationResults::createArrays()
     try {
         mAlgebraic = new double*[mRuntime->algebraicCount()];
 
-        memset(mAlgebraic, 0, mRuntime->algebraicCount()*OpenCOR::CoreSolver::SizeOfDoublePointer);
+        memset(mAlgebraic, 0, mRuntime->algebraicCount()*CoreSolver::SizeOfDoublePointer);
     } catch(...) {
         deleteArrays();
 
@@ -1028,7 +1028,7 @@ double SingleCellViewSimulation::requiredMemory()
                  +mRuntime->ratesCount()
                  +mRuntime->statesCount()
                  +mRuntime->algebraicCount())
-               *OpenCOR::CoreSolver::SizeOfDouble;
+               *CoreSolver::SizeOfDouble;
     else
         return 0.0;
 }
