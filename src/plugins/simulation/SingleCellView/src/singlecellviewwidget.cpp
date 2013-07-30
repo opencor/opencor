@@ -1335,21 +1335,26 @@ void SingleCellViewWidget::graphUpdated(SingleCellViewGraphPanelPlotGraph *pGrap
 
 //==============================================================================
 
-double * SingleCellViewWidget::dataPoints(CellMLSupport::CellmlFileRuntimeParameter *pParameter) const
+double * SingleCellViewWidget::dataPoints(SingleCellViewSimulation *pSimulation,
+                                          CellMLSupport::CellmlFileRuntimeParameter *pParameter) const
 {
-    // Return the array of data points associated with the given parameter
+    // Return the array of data points associated with the given simulation and
+    // parameter
+
+    if (!pSimulation || !pParameter)
+        return 0;
 
     if (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi)
-        return mSimulation->results()->points()?mSimulation->results()->points():0;
+        return pSimulation->results()->points()?pSimulation->results()->points():0;
     else if (   (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)
              || (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant))
-        return mSimulation->results()->constants()?mSimulation->results()->constants()[pParameter->index()]:0;
+        return pSimulation->results()->constants()?pSimulation->results()->constants()[pParameter->index()]:0;
     else if (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Rate)
-        return mSimulation->results()->rates()?mSimulation->results()->rates()[pParameter->index()]:0;
+        return pSimulation->results()->rates()?pSimulation->results()->rates()[pParameter->index()]:0;
     else if (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State)
-        return mSimulation->results()->states()?mSimulation->results()->states()[pParameter->index()]:0;
+        return pSimulation->results()->states()?pSimulation->results()->states()[pParameter->index()]:0;
     else if (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Algebraic)
-        return mSimulation->results()->algebraic()?mSimulation->results()->algebraic()[pParameter->index()]:0;
+        return pSimulation->results()->algebraic()?pSimulation->results()->algebraic()[pParameter->index()]:0;
     else
         // Undefined type
 
@@ -1399,10 +1404,13 @@ Q_UNUSED(pReplot);
 
             // Update our graph's data
 
-            if (graph->isValid())
-                graph->setRawSamples(dataPoints(graph->parameterX()),
-                                     dataPoints(graph->parameterY()),
+            if (graph->isValid()) {
+                SingleCellViewSimulation *simulation = mSimulations.value(graph->fileName());
+
+                graph->setRawSamples(dataPoints(simulation, graph->parameterX()),
+                                     dataPoints(simulation, graph->parameterY()),
                                      pSize);
+            }
 
             // Draw the graph's new segment, but only if there is some data to
             // plot and that we don't want to replot everything

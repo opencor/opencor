@@ -151,7 +151,8 @@ private:
 
     void updateInvalidModelMessageWidget();
 
-    double * dataPoints(CellMLSupport::CellmlFileRuntimeParameter *pParameter) const;
+    double * dataPoints(SingleCellViewSimulation *pSimulation,
+                        CellMLSupport::CellmlFileRuntimeParameter *pParameter) const;
 
     void updateResults(SingleCellViewSimulation *pSimulation,
                        const qulonglong &pSize,

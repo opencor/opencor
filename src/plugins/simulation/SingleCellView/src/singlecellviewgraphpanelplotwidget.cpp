@@ -41,6 +41,7 @@ namespace SingleCellView {
 SingleCellViewGraphPanelPlotGraph::SingleCellViewGraphPanelPlotGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
                                                                      CellMLSupport::CellmlFileRuntimeParameter *pParameterY) :
     QwtPlotCurve(),
+    mFileName(QString()),
     mParameterX(pParameterX),
     mParameterY(pParameterY)
 {
@@ -54,9 +55,28 @@ SingleCellViewGraphPanelPlotGraph::SingleCellViewGraphPanelPlotGraph(CellMLSuppo
 
 bool SingleCellViewGraphPanelPlotGraph::isValid() const
 {
-    // Return we are valid
+    // Return whether we are valid
 
-    return mParameterX && mParameterY;
+    return   !mFileName.isEmpty()
+           && mParameterX && mParameterY;
+}
+
+//==============================================================================
+
+QString SingleCellViewGraphPanelPlotGraph::fileName() const
+{
+    // Return our file name
+
+    return mFileName;
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelPlotGraph::setFileName(const QString &pFileName)
+{
+    // Set our file name
+
+    mFileName = pFileName;
 }
 
 //==============================================================================

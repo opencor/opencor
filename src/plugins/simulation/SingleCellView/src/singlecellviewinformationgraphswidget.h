@@ -103,15 +103,10 @@ private:
     void populateContextMenu(QMenu *pContextMenu,
                              CellMLSupport::CellmlFileRuntime *pRuntime);
 
-    enum Parameter {
-        ParameterX,
-        ParameterY
-    };
-
     bool checkParameter(CellMLSupport::CellmlFileRuntime *pRuntime,
                         SingleCellViewGraphPanelPlotGraph *pGraph,
                         Core::Property *pParameterProperty,
-                        const Parameter &pParameter) const;
+                        const bool &pParameterX) const;
 
     void updateGraphInfo(OpenCOR::Core::Property *pProperty,
                          const QString &pFileName);

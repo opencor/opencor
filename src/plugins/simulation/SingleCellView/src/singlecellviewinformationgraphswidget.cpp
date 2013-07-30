@@ -503,7 +503,7 @@ void SingleCellViewInformationGraphsWidget::populateContextMenu(QMenu *pContextM
 bool SingleCellViewInformationGraphsWidget::checkParameter(CellMLSupport::CellmlFileRuntime *pRuntime,
                                                            SingleCellViewGraphPanelPlotGraph *pGraph,
                                                            Core::Property *pParameterProperty,
-                                                           const Parameter &pParameter) const
+                                                           const bool &pParameterX) const
 {
     // Check that the information held by the given property corresponds to
     // an existing parameter in our runtime
@@ -551,7 +551,7 @@ bool SingleCellViewInformationGraphsWidget::checkParameter(CellMLSupport::Cellml
     // Keep track of the existing parameter, if any, to which our property
     // corresponds
 
-    if (pParameter == ParameterX)
+    if (pParameterX)
         pGraph->setParameterX(res);
     else
         pGraph->setParameterY(res);
@@ -595,10 +595,10 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
     CellMLSupport::CellmlFileRuntimeParameter *oldParameterY = graph->parameterY();
 
     if (pProperty->properties().count() >= 2)
-        graphOk = checkParameter(runtime, graph, pProperty->properties()[1], ParameterX) && graphOk;
+        graphOk = checkParameter(runtime, graph, pProperty->properties()[1], true) && graphOk;
 
     if (pProperty->properties().count() == 3)
-        graphOk = checkParameter(runtime, graph, pProperty->properties()[2], ParameterY) && graphOk;
+        graphOk = checkParameter(runtime, graph, pProperty->properties()[2], false) && graphOk;
 
     // Update our section's name, if possible
     // Note: indeed, when populating ourselves, updateGraphInfo() gets called
@@ -615,6 +615,10 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
     pProperty->setIcon(graphOk?
                            QIcon(":Core_blankIcon"):
                            QIcon(":/oxygen/status/task-attention.png"));
+
+    // Update the file name with which the graph is associated
+
+    graph->setFileName(fileName);
 
     // Let people know if we consider that the graph has been updated
 
