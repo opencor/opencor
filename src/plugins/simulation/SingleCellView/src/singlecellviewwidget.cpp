@@ -1233,45 +1233,16 @@ void SingleCellViewWidget::splitterWidgetMoved()
 
 void SingleCellViewWidget::simulationPropertyChanged(Core::Property *pProperty)
 {
-    // Update one of our simulation's properties and, if needed, update the
-    // minimum or maximum value for our X axis
-    // Note: with regards to the starting point property, we need to update it
-    //       because it's can potentially have an effect on the value of our
-    //       'computed constants' and 'variables'...
-
-//---GRY---
-//    bool needUpdating = true;
+    // Update one of our simulation's properties
 
     SingleCellViewInformationSimulationWidget *simulationWidget = mContentsWidget->informationWidget()->simulationWidget();
 
-    if (pProperty == simulationWidget->startingPointProperty()) {
+    if (pProperty == simulationWidget->startingPointProperty())
         mSimulation->data()->setStartingPoint(pProperty->doubleValue());
-    } else if (pProperty == simulationWidget->endingPointProperty()) {
+    else if (pProperty == simulationWidget->endingPointProperty())
         mSimulation->data()->setEndingPoint(pProperty->doubleValue());
-    } else if (pProperty == simulationWidget->pointIntervalProperty()) {
+    else if (pProperty == simulationWidget->pointIntervalProperty())
         mSimulation->data()->setPointInterval(pProperty->doubleValue());
-
-//        needUpdating = false;
-    }
-
-    // Update the minimum/maximum values of our X axis and replot ourselves, if
-    // needed
-
-//    if (needUpdating) {
-//        if (mSimulation->data()->startingPoint() < mSimulation->data()->endingPoint()) {
-//            mActiveGraphPanel->plot()->setMinMaxX(mSimulation->data()->startingPoint(),
-//                                                  mSimulation->data()->endingPoint());
-//            mActiveGraphPanel->plot()->setLocalMinMaxX(mActiveGraphPanel->plot()->minX(),
-//                                                       mActiveGraphPanel->plot()->maxX());
-//        } else {
-//            mActiveGraphPanel->plot()->setMinMaxX(mSimulation->data()->endingPoint(),
-//                                                  mSimulation->data()->startingPoint());
-//            mActiveGraphPanel->plot()->setLocalMinMaxX(mActiveGraphPanel->plot()->minX(),
-//                                                       mActiveGraphPanel->plot()->maxX());
-//        }
-
-//        mActiveGraphPanel->plot()->replotNow();
-//    }
 }
 
 //==============================================================================
@@ -1280,21 +1251,28 @@ void SingleCellViewWidget::solversPropertyChanged(Core::Property *pProperty)
 {
     // Check whether any of our NLA solver's properties has been modified and,
     // if so, then update our simulation data object accordingly
-    // Note #1: these are the only solvers properties we need to check since
-    //          they are the only ones that can potentially have an effect on
-    //          the value of 'computed constants' and 'variables'...
+    // Note #1: we only need to check our NLA solver's properties since they are
+    //          the only ones that can potentially have an effect on the value
+    //          of our 'computed constants' and 'variables'...
     // Note #2: we must check that we have some NLA solver data since there may
-    //          may be no NLA solver, in which case there would be no NLA solver
-    //          data...
+    //          may be no NLA solver (and therefore no NLA solver data)...
 
-    SingleCellViewInformationSolversWidget *solversWidget = mContentsWidget->informationWidget()->solversWidget();
+    SingleCellViewInformationSolversWidgetData *nlaSolverData = mContentsWidget->informationWidget()->solversWidget()->nlaSolverData();
 
-    if (solversWidget->nlaSolverData()) {
-        if (pProperty == solversWidget->nlaSolverData()->solversListProperty())
+    if (nlaSolverData) {
+        if (pProperty == nlaSolverData->solversListProperty())
+            // The property for selecting a particular NLA solver
+
             mSimulation->data()->setNlaSolverName(pProperty->value());
         else
-            foreach (Core::Property *property, solversWidget->nlaSolverData()->solversProperties().value(mSimulation->data()->nlaSolverName()))
+            // We are dealing with one of the selected NLA solver's properties,
+            // so go through them and check which one it is
+
+            foreach (Core::Property *property, nlaSolverData->solversProperties().value(mSimulation->data()->nlaSolverName()))
                 if (pProperty == property) {
+                    // We have found the NLA solver's property that got changed,
+                    // so keep track of the new value
+
                     mSimulation->data()->addNlaSolverProperty(pProperty->id(),
                                                               (pProperty->type() == Core::Property::Integer)?
                                                                   pProperty->integerValue():
@@ -1310,7 +1288,7 @@ void SingleCellViewWidget::solversPropertyChanged(Core::Property *pProperty)
 void SingleCellViewWidget::addGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
                                     CellMLSupport::CellmlFileRuntimeParameter *pParameterY)
 {
-    // Ask the current graph panel to add the required graph
+    // Ask the current graph panel to add a new graph for the given parameters
 
     mContentsWidget->graphPanelsWidget()->activeGraphPanel()->addGraph(new SingleCellViewGraphPanelPlotGraph(pParameterX, pParameterY));
 }
@@ -1319,31 +1297,30 @@ void SingleCellViewWidget::addGraph(CellMLSupport::CellmlFileRuntimeParameter *p
 
 void SingleCellViewWidget::graphAdded(SingleCellViewGraphPanelPlotGraph *pGraph)
 {
-qDebug(">>> Added graph [%ld]", long(pGraph));
     // A new graph has been added, so keep track of it and update our results
 
     mGraphs << pGraph;
 
-    updateResults(mSimulation, mSimulation->results()->size()/*, true*/);
+    updateResults(mSimulation, mSimulation->results()->size()/*---GRY---, true*/);
 }
 
 //==============================================================================
 
 void SingleCellViewWidget::graphRemoved(SingleCellViewGraphPanelPlotGraph *pGraph)
 {
-qDebug(">>> Removed graph [%ld]", long(pGraph));
     // A graph has been removed, so stop tracking it and update our results
 
     mGraphs.removeOne(pGraph);
 
-    updateResults(mSimulation, mSimulation->results()->size()/*, true*/);
+    updateResults(mSimulation, mSimulation->results()->size()/*---GRY---, true*/);
 }
 
 //==============================================================================
 
 void SingleCellViewWidget::graphUpdated(SingleCellViewGraphPanelPlotGraph *pGraph)
 {
-qDebug(">>> Updated graph [%ld]", long(pGraph));
+    Q_UNUSED(pGraph);
+
     // A graph has been updated, so update our results, but only if some are
     // available
     // Note: the rationale for testing for mSimulation is that upon quitting
@@ -1353,14 +1330,14 @@ qDebug(">>> Updated graph [%ld]", long(pGraph));
     //       widget emitting a graphUpdated() signal, which we handle here...
 
     if (mSimulation)
-        updateResults(mSimulation, mSimulation->results()->size()/*, true*/);
+        updateResults(mSimulation, mSimulation->results()->size()/*---GRY---, true*/);
 }
 
 //==============================================================================
 
 double * SingleCellViewWidget::dataPoints(CellMLSupport::CellmlFileRuntimeParameter *pParameter) const
 {
-    // Return the data points associated with the given parameter
+    // Return the array of data points associated with the given parameter
 
     if (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi)
         return mSimulation->results()->points()?mSimulation->results()->points():0;
@@ -1517,7 +1494,7 @@ void SingleCellViewWidget::checkResults(SingleCellViewSimulation *pSimulation)
 void SingleCellViewWidget::callCheckResults()
 {
     // Retrieve the simulation for which we want to call checkResults() and then
-    // call checkResults()
+    // call checkResults() for it
 
     SingleCellViewSimulation *simulation = mCheckResultsSimulations.first();
 
