@@ -108,8 +108,9 @@ private:
         ParameterY
     };
 
-    bool checkParameter(const QString &pFileName,
-                        OpenCOR::Core::Property *pProperty,
+    bool checkParameter(CellMLSupport::CellmlFileRuntime *pRuntime,
+                        SingleCellViewGraphPanelPlotGraph *pGraph,
+                        Core::Property *pParameterProperty,
                         const Parameter &pParameter) const;
 
     void updateGraphInfo(OpenCOR::Core::Property *pProperty,

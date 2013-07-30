@@ -500,24 +500,20 @@ void SingleCellViewInformationGraphsWidget::populateContextMenu(QMenu *pContextM
 
 //==============================================================================
 
-bool SingleCellViewInformationGraphsWidget::checkParameter(const QString &pFileName,
-                                                           Core::Property *pProperty,
+bool SingleCellViewInformationGraphsWidget::checkParameter(CellMLSupport::CellmlFileRuntime *pRuntime,
+                                                           SingleCellViewGraphPanelPlotGraph *pGraph,
+                                                           Core::Property *pParameterProperty,
                                                            const Parameter &pParameter) const
 {
-    // Retrieve the runtime associated with the given file name
-
-    CellMLSupport::CellmlFileRuntime *runtime = mRuntimes.value(pFileName);
-
     // Check that the information held by the given property corresponds to
     // an existing parameter in our runtime
 
     CellMLSupport::CellmlFileRuntimeParameter *res = 0;
-    Core::Property *parameterProperty = pProperty->properties()[(pParameter == ParameterX)?1:2];
 
-    if (runtime) {
+    if (pRuntime) {
         // Retrieve the component and parameter of the property
 
-        QStringList info = parameterProperty->value().split(".");
+        QStringList info = pParameterProperty->value().split(".");
         QString componentName = info.first();
         QString parameterName = info.last();
         int parameterDegree = parameterName.size();
@@ -530,7 +526,7 @@ bool SingleCellViewInformationGraphsWidget::checkParameter(const QString &pFileN
 
         // Check whether we can find our property among our runtime's parameters
 
-        foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, runtime->parameters())
+        foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, pRuntime->parameters())
             if (   !parameter->component().compare(componentName)
                 && !parameter->name().compare(parameterName)
                 && (parameter->degree() == parameterDegree)) {
@@ -543,22 +539,22 @@ bool SingleCellViewInformationGraphsWidget::checkParameter(const QString &pFileN
     // Update our parameter property based on whether it corresponds to an
     // existing parameter in our runtime
 
-    parameterProperty->setIcon(res?
-                                   QIcon(":Core_blankIcon"):
-                                   QIcon(":/oxygen/status/task-attention.png"));
-    parameterProperty->setExtraInfo(res?
-                                        QString():
-                                        runtime?
-                                            tr("does not exist"):
-                                            tr("no runtime"));
+    pParameterProperty->setIcon(res?
+                                    QIcon(":Core_blankIcon"):
+                                    QIcon(":/oxygen/status/task-attention.png"));
+    pParameterProperty->setExtraInfo(res?
+                                         QString():
+                                         pRuntime?
+                                             tr("does not exist"):
+                                             tr("no runtime"));
 
     // Keep track of the existing parameter, if any, to which our property
     // corresponds
 
     if (pParameter == ParameterX)
-        mGraphs.value(pProperty)->setParameterX(res);
+        pGraph->setParameterX(res);
     else
-        mGraphs.value(pProperty)->setParameterY(res);
+        pGraph->setParameterY(res);
 
     return res;
 }
@@ -593,15 +589,16 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
     //       assignment...
 
     bool graphOk = true;
+    CellMLSupport::CellmlFileRuntime *runtime = mRuntimes.value(fileName);
     SingleCellViewGraphPanelPlotGraph *graph = mGraphs.value(pProperty);
     CellMLSupport::CellmlFileRuntimeParameter *oldParameterX = graph->parameterX();
     CellMLSupport::CellmlFileRuntimeParameter *oldParameterY = graph->parameterY();
 
     if (pProperty->properties().count() >= 2)
-        graphOk = checkParameter(fileName, pProperty, ParameterX) && graphOk;
+        graphOk = checkParameter(runtime, graph, pProperty->properties()[1], ParameterX) && graphOk;
 
     if (pProperty->properties().count() == 3)
-        graphOk = checkParameter(fileName, pProperty, ParameterY) && graphOk;
+        graphOk = checkParameter(runtime, graph, pProperty->properties()[2], ParameterY) && graphOk;
 
     // Update our section's name, if possible
     // Note: indeed, when populating ourselves, updateGraphInfo() gets called
