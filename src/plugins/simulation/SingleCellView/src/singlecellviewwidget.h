@@ -87,10 +87,6 @@ public:
     void fileOpened(const QString &pFileName);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
-    SingleCellViewSimulation * simulation() const;
-
-    SingleCellViewContentsWidget * contentsWidget() const;
-
     static QIcon parameterIcon(const CellMLSupport::CellmlFileRuntimeParameter::ParameterType &pParameterType);
 
 private:

@@ -1085,7 +1085,7 @@ void SingleCellViewWidget::simulationRunning(const bool &pIsResuming)
 
 void SingleCellViewWidget::simulationPaused()
 {
-    // Our simulation is paused, so do a few things, but only we are dealing
+    // Our simulation is paused, so do a few things, but only if we are dealing
     // with the active simulation
 
     if (qobject_cast<SingleCellViewSimulation *>(sender()) == mSimulation) {
@@ -1096,10 +1096,6 @@ void SingleCellViewWidget::simulationPaused()
         mContentsWidget->informationWidget()->parametersWidget()->updateParameters(mSimulation->currentPoint());
 
         checkResults(mSimulation);
-
-        // Allow interaction with our graph panel's plot
-
-//        mActiveGraphPanel->plot()->setInteractive(mSimulation->isPaused());
     }
 }
 
@@ -1147,15 +1143,10 @@ void SingleCellViewWidget::simulationStopped(const int &pElapsedTime)
         updateSimulationMode();
 
         mContentsWidget->informationWidget()->parametersWidget()->updateParameters(simulation->currentPoint());
-
-        // Allow interaction with our graph panel's plot
-
-//        mActiveGraphPanel->plot()->setInteractive(!simulation->isRunning());
     }
 
-    // Remove our tracking of our simulation progress and let people know that
-    // we should reset our file tab icon, but only if we are the active
-    // simulation
+    // Stop keeping track of our simulation progress and let people know that we
+    // should reset our file tab icon, but only if we are the active simulation
 
     if (simulation) {
         // Stop keeping track of our simulation progress
@@ -1204,15 +1195,12 @@ void SingleCellViewWidget::simulationError(const QString &pMessage,
                                            const ErrorType &pErrorType)
 {
     // Output the simulation error, but only if we are dealing with the active
-    // simulation
+    // simulation or if we came here directly (i.e. not as a result of the
+    // SingleCellViewSimulation::error() signal being emitted)
 
     SingleCellViewSimulation *simulation = qobject_cast<SingleCellViewSimulation *>(sender());
 
     if (!simulation || (simulation == mSimulation)) {
-        // Note: we test for simulation to be valid since simulationError() can
-        //       also be called directly (as opposed to being called as a
-        //       response to a signal) as is done in initialize() above...
-
         mErrorType = pErrorType;
 
         updateInvalidModelMessageWidget();
@@ -1230,24 +1218,6 @@ void SingleCellViewWidget::simulationDataModified(const bool &pIsModified)
 
     if (qobject_cast<SingleCellViewSimulationData *>(sender()) == mSimulation->data())
         mGui->actionResetModelParameters->setEnabled(pIsModified);
-}
-
-//==============================================================================
-
-SingleCellViewSimulation * SingleCellViewWidget::simulation() const
-{
-    // Return our (current) simulation
-
-    return mSimulation;
-}
-
-//==============================================================================
-
-SingleCellViewContentsWidget * SingleCellViewWidget::contentsWidget() const
-{
-    // Return our contents widget
-
-    return mContentsWidget;
 }
 
 //==============================================================================
