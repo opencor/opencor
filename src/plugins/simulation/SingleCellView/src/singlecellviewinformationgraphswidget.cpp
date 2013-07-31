@@ -312,10 +312,6 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
     // Make sure that our property editor is our current widget
 
     setCurrentWidget(mPropertyEditor);
-
-    // Enable our remove all graphs action
-
-    mGui->actionRemoveAllGraphs->setEnabled(true);
 }
 
 //==============================================================================
@@ -338,10 +334,6 @@ void SingleCellViewInformationGraphsWidget::removeGraph(SingleCellViewGraphPanel
     // Allow ourselves to be updated again
 
     mPropertyEditor->setUpdatesEnabled(true);
-
-    // Update our remove all graphs action enabled state
-
-    mGui->actionRemoveAllGraphs->setEnabled(!mPropertyEditor->properties().isEmpty());
 }
 
 //==============================================================================
@@ -404,9 +396,10 @@ void SingleCellViewInformationGraphsWidget::propertyEditorContextMenu(const QPoi
 
     Core::Property *currentProperty = mPropertyEditor->currentProperty();
 
-    // Update the enabled state of our remove current graph action
+    // Update the enabled state of our remove current/all graph/s actions
 
     mGui->actionRemoveCurrentGraph->setEnabled(currentProperty);
+    mGui->actionRemoveAllGraphs->setEnabled(!mPropertyEditor->properties().isEmpty());
 
     // Show the context menu, or not, depending ont the type of property we are
     // dealing with, if any
