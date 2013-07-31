@@ -129,9 +129,13 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
     mOriginPoint(QPointF()),
     mEndPoint(QPointF()),
     mMinX(0.0),
-    mMinY(0.0),
     mMaxX(1000.0),
+    mMinY(0.0),
     mMaxY(1000.0),
+    mNeedMinX(0.0),
+    mNeedMaxX(0.0),
+    mNeedMinY(0.0),
+    mNeedMaxY(0.0),
     mFixedAxisX(false),
     mFixedAxisY(false),
     mCanvasPixmap(QPixmap()),
@@ -222,6 +226,28 @@ void SingleCellViewGraphPanelPlotWidget::handleMouseDoubleClickEvent(QMouseEvent
 
         QApplication::clipboard()->setImage(image);
     }
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelPlotWidget::setNeedMinMaxX(const double &pNeedMinX,
+                                                        const double &pNeedMaxX)
+{
+    // Set our needed minimum/maximum X values
+
+    mNeedMinX = pNeedMinX;
+    mNeedMaxX = pNeedMaxX;
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelPlotWidget::setNeedMinMaxY(const double &pNeedMinY,
+                                                        const double &pNeedMaxY)
+{
+    // Set our needed minimum/maximum Y values
+
+    mNeedMinY = pNeedMinY;
+    mNeedMaxY = pNeedMaxY;
 }
 
 //==============================================================================
@@ -471,8 +497,7 @@ void SingleCellViewGraphPanelPlotWidget::checkAnyAxesValues(double &pMinX,
                                                             double &pMinY,
                                                             double &pMaxY)
 {
-    // Make sure that the minimum/maximum values of our (local) axes have finite
-    // values
+    // Make sure that the minimum/maximum values of our axes have finite values
 
     if (!qIsFinite(pMinX))
         pMinX = -DBL_MAX;
@@ -516,13 +541,28 @@ void SingleCellViewGraphPanelPlotWidget::setLocalAxes(const double &pLocalMinX,
     QRectF boundingRect = QRectF();
 
     foreach (SingleCellViewGraphPanelPlotGraph *graph, mGraphs)
-        if (graph->dataSize())
+        if (graph->isValid() && graph->dataSize())
             boundingRect |= graph->boundingRect();
+
+    // Take into account the needed minimum/maximum values for our X and Y axes,
+    // if any
+
+    bool boundingRectIsEmpty = boundingRect.isEmpty();
+
+    if (mNeedMinX != mNeedMaxX) {
+        boundingRect.setLeft(boundingRectIsEmpty?mNeedMinX:qMin(boundingRect.left(), mNeedMinX));
+        boundingRect.setRight(boundingRectIsEmpty?mNeedMaxX:qMax(boundingRect.right(), mNeedMaxX));
+    }
+
+    if (mNeedMinY != mNeedMaxY) {
+        boundingRect.setTop(boundingRectIsEmpty?mNeedMinY:qMin(boundingRect.top(), mNeedMinY));
+        boundingRect.setBottom(boundingRectIsEmpty?mNeedMaxY:qMax(boundingRect.bottom(), mNeedMaxY));
+    }
 
     // Update the minimum/maximum values of our axes, should we have retrieved a
     // valid bounding rectangle
 
-    if (boundingRect != QRectF()) {
+    if (!boundingRect.isEmpty()) {
         // Optimise our bounding rectangle by first retrieving the
         // minimum/maximum values of our axes
 
@@ -589,13 +629,9 @@ void SingleCellViewGraphPanelPlotWidget::setLocalAxes(const double &pLocalMinX,
 
     checkAnyAxesValues(newLocalMinX, newLocalMaxX, newLocalMinY, newLocalMaxY);
 
-    // Make sure that the new minimum/maximum values of our local axes have a
-    // valid zoom factor
-
-    checkLocalAxisValues(QwtPlot::xBottom, newLocalMinX, newLocalMaxX);
-    checkLocalAxisValues(QwtPlot::yLeft, newLocalMinY, newLocalMaxY);
-
-    // Update the minimum/maximum values of our local axes, if needed
+    // Update the minimum/maximum values of our local axes, if needed, or make
+    // sure that the new minimum/maximum values of our local axes have a valid
+    // zoom factor
 
     bool needReplot = false;
 
@@ -603,12 +639,16 @@ void SingleCellViewGraphPanelPlotWidget::setLocalAxes(const double &pLocalMinX,
         setLocalMinMaxX(newLocalMinX, newLocalMaxX);
 
         needReplot = true;
+    } else {
+        checkLocalAxisValues(QwtPlot::xBottom, newLocalMinX, newLocalMaxX);
     }
 
     if ((newLocalMinY != oldLocalMinY) || (newLocalMaxY != oldLocalMaxY)) {
         setLocalMinMaxY(newLocalMinY, newLocalMaxY);
 
         needReplot = true;
+    } else {
+        checkLocalAxisValues(QwtPlot::yLeft, newLocalMinY, newLocalMaxY);
     }
 
     // Replot ourselves, if needed and allowed
@@ -1166,6 +1206,15 @@ bool SingleCellViewGraphPanelPlotWidget::removeGraph(SingleCellViewGraphPanelPlo
     delete pGraph;
 
     return true;
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelPlotWidget::updateAxes()
+{
+    // Update our axes by trying to set them
+
+    setLocalAxes(0.0, 0.0, 0.0, 0.0, true, true, false, true);
 }
 
 //==============================================================================

@@ -64,42 +64,18 @@ public:
     explicit SingleCellViewGraphPanelPlotWidget(QWidget *pParent = 0);
     ~SingleCellViewGraphPanelPlotWidget();
 
-    void replotNow();
-
     QList<SingleCellViewGraphPanelPlotGraph *> graphs() const;
 
     bool addGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
     bool removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
 
+    void setNeedMinMaxX(const double &pNeedMinX, const double &pNeedMaxX);
+    void setNeedMinMaxY(const double &pNeedMinY, const double &pNeedMaxY);
+
+    void updateAxes();
+
     void drawGraphSegment(SingleCellViewGraphPanelPlotGraph *pGraph,
                           const qulonglong &pFrom, const qulonglong &pTo);
-
-    void checkLocalAxes(const bool &pCanReplot = true,
-                        const bool &pForceMinMaxValues = false,
-                        const bool &pUpdateMinMaxValues = false);
-
-    double minX() const;
-    double maxX() const;
-
-    void setMinMaxX(const double &pMinX, const double &pMaxX);
-
-    double minY() const;
-    double maxY() const;
-
-    void setMinMaxY(const double &pMinY, const double &pMaxY);
-
-    double localMinX() const;
-    double localMaxX() const;
-
-    void setLocalMinMaxX(const double &pLocalMinX, const double &pLocalMaxX);
-
-    double localMinY() const;
-    double localMaxY() const;
-
-    void setLocalMinMaxY(const double &pLocalMinY, const double &pLocalMaxY);
-
-    void setFixedAxisX(const bool &pFixedAxisX);
-    void setFixedAxisY(const bool &pFixedAxisY);
 
     virtual void drawCanvas(QPainter *pPainter);
 
@@ -136,10 +112,16 @@ private:
     QPointF mEndPoint;
 
     double mMinX;
-    double mMinY;
-
     double mMaxX;
+
+    double mMinY;
     double mMaxY;
+
+    double mNeedMinX;
+    double mNeedMaxX;
+
+    double mNeedMinY;
+    double mNeedMaxY;
 
     bool mFixedAxisX;
     bool mFixedAxisY;
@@ -149,6 +131,8 @@ private:
     double mZoomFactorX;
     double mZoomFactorY;
 
+    void replotNow();
+
     void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
 
     void checkLocalAxisValues(const int &pAxis, double &pMin, double &pMax);
@@ -157,6 +141,33 @@ private:
                             double &pMinY, double &pMaxY);
 
     void updateZoomFactors();
+
+    double minX() const;
+    double maxX() const;
+
+    void setMinMaxX(const double &pMinX, const double &pMaxX);
+
+    double minY() const;
+    double maxY() const;
+
+    void setMinMaxY(const double &pMinY, const double &pMaxY);
+
+    double localMinX() const;
+    double localMaxX() const;
+
+    void setLocalMinMaxX(const double &pLocalMinX, const double &pLocalMaxX);
+
+    double localMinY() const;
+    double localMaxY() const;
+
+    void setLocalMinMaxY(const double &pLocalMinY, const double &pLocalMaxY);
+
+    void checkLocalAxes(const bool &pCanReplot = true,
+                        const bool &pForceMinMaxValues = false,
+                        const bool &pUpdateMinMaxValues = false);
+
+    void setFixedAxisX(const bool &pFixedAxisX);
+    void setFixedAxisY(const bool &pFixedAxisY);
 
     void setLocalAxis(const int &pAxis, const double &pMin, const double &pMax);
     void setLocalAxes(const double &pLocalMinX, const double &pLocalMaxX,

@@ -1377,6 +1377,49 @@ double * SingleCellViewWidget::dataPoints(SingleCellViewSimulation *pSimulation,
 void SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot)
 {
 qDebug(">>> Updating plot %ld", long(pPlot));
+
+    bool needInitialisationX = true;
+    bool needInitialisationY = true;
+
+    double needMinX = 0.0;
+    double needMaxX = 0.0;
+    double needMinY = 0.0;
+    double needMaxY = 0.0;
+
+    foreach (SingleCellViewGraphPanelPlotGraph *graph, pPlot->graphs())
+        if (graph->isValid()) {
+            SingleCellViewSimulation *simulation = mSimulations.value(graph->fileName());
+
+            if (graph->parameterX()->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi) {
+                if (needInitialisationX) {
+                    needMinX = simulation->data()->startingPoint();
+                    needMaxX = simulation->data()->endingPoint();
+
+                    needInitialisationX = false;
+                } else {
+                    needMinX = qMin(needMinX, simulation->data()->startingPoint());
+                    needMaxX = qMax(needMaxX, simulation->data()->endingPoint());
+                }
+            }
+
+            if (graph->parameterY()->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi)
+            {
+                if (needInitialisationY) {
+                    needMinY = simulation->data()->startingPoint();
+                    needMaxY = simulation->data()->endingPoint();
+
+                    needInitialisationY = false;
+                } else {
+                    needMinY = qMin(needMinY, simulation->data()->startingPoint());
+                    needMaxY = qMax(needMaxY, simulation->data()->endingPoint());
+                }
+            }
+        }
+
+    pPlot->setNeedMinMaxX(needMinX, needMaxX);
+    pPlot->setNeedMinMaxY(needMinY, needMaxY);
+
+    pPlot->updateAxes();
 }
 
 //==============================================================================
