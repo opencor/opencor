@@ -86,7 +86,8 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mSplitterWidgetSizes(QList<int>()),
     mRunActionEnabled(true),
     mOldSimulationResultsSizes(QMap<SingleCellViewSimulation *, qulonglong>()),
-    mCheckResultsSimulations(QList<SingleCellViewSimulation *>())
+    mCheckResultsSimulations(QList<SingleCellViewSimulation *>()),
+    mPlots(QMap<SingleCellViewGraphPanelPlotGraph *, SingleCellViewGraphPanelPlotWidget *>())
 {
     // Set up the GUI
 
@@ -1236,13 +1237,22 @@ void SingleCellViewWidget::simulationPropertyChanged(Core::Property *pProperty)
     // Update one of our simulation's properties
 
     SingleCellViewInformationSimulationWidget *simulationWidget = mContentsWidget->informationWidget()->simulationWidget();
+    bool needUpdatePlots = true;
 
-    if (pProperty == simulationWidget->startingPointProperty())
+    if (pProperty == simulationWidget->startingPointProperty()) {
         mSimulation->data()->setStartingPoint(pProperty->doubleValue());
-    else if (pProperty == simulationWidget->endingPointProperty())
+    } else if (pProperty == simulationWidget->endingPointProperty()) {
         mSimulation->data()->setEndingPoint(pProperty->doubleValue());
-    else if (pProperty == simulationWidget->pointIntervalProperty())
+    } else if (pProperty == simulationWidget->pointIntervalProperty()) {
         mSimulation->data()->setPointInterval(pProperty->doubleValue());
+
+        needUpdatePlots = false;
+    }
+
+    // Now, update our plots, if needed
+
+    if (needUpdatePlots)
+        updatePlots();
 }
 
 //==============================================================================
@@ -1297,31 +1307,23 @@ void SingleCellViewWidget::addGraph(CellMLSupport::CellmlFileRuntimeParameter *p
 
 void SingleCellViewWidget::graphAdded(SingleCellViewGraphPanelPlotGraph *pGraph)
 {
-    // A new graph has been added, so make sure that the axes of its
-    // corresponding plot are optimal
+    // A new graph has been added, so keep track of it and update its
+    // corresponding plot
 
-    SingleCellViewSimulation *simulation = mSimulations.value(pGraph->fileName());
-    SingleCellViewGraphPanelPlotWidget *plot = qobject_cast<SingleCellViewGraphPanelPlotWidget *>(pGraph->plot());
+    mPlots.insert(pGraph, qobject_cast<SingleCellViewGraphPanelPlotWidget *>(pGraph->plot()));
 
-    if (    pGraph->parameterX()
-        && (pGraph->parameterX()->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi))
-        plot->setMinMaxX(simulation->data()->startingPoint(), simulation->data()->endingPoint());
-
-    if (    pGraph->parameterY()
-        && (pGraph->parameterY()->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi))
-        plot->setMinMaxY(simulation->data()->startingPoint(), simulation->data()->endingPoint());
-
-//---GRY---    updateResults(mSimulation, mSimulation->results()->size()/*---GRY---, true*/);
+    updatePlot(mPlots.value(pGraph));
 }
 
 //==============================================================================
 
 void SingleCellViewWidget::graphRemoved(SingleCellViewGraphPanelPlotGraph *pGraph)
 {
-Q_UNUSED(pGraph);
-    // A graph has been removed, so stop tracking it and update our results
+    // A graph has been removed, so update our plots and stop tracking it
 
-//---GRY---    updateResults(mSimulation, mSimulation->results()->size()/*---GRY---, true*/);
+    updatePlot(mPlots.value(pGraph));
+
+    mPlots.remove(pGraph);
 }
 
 //==============================================================================
@@ -1368,6 +1370,32 @@ double * SingleCellViewWidget::dataPoints(SingleCellViewSimulation *pSimulation,
         // Undefined type
 
         return 0;
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot)
+{
+qDebug(">>> Updating plot %ld", long(pPlot));
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::updatePlots()
+{
+    // Update all the plots that have graphs
+    // Note: for this, we use the values of mPlots, making sure that we don't
+    //       update the same plot more than once...
+
+    SingleCellViewGraphPanelPlotWidget *previousPlot = 0;
+
+    foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots.values()) {
+        if (plot != previousPlot) {
+            updatePlot(plot);
+
+            previousPlot = plot;
+        }
+    }
 }
 
 //==============================================================================
@@ -1438,8 +1466,8 @@ Q_UNUSED(pReplot);
 
 // Replot all of our graph panels
 
-foreach (SingleCellViewGraphPanelWidget *graphPanel, mContentsWidget->graphPanelsWidget()->graphPanels())
-    graphPanel->replot();
+//foreach (SingleCellViewGraphPanelWidget *graphPanel, mContentsWidget->graphPanelsWidget()->graphPanels())
+//    graphPanel->replot();
 
         // Update our progress bar
 

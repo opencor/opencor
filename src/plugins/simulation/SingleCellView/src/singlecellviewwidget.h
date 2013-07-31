@@ -58,6 +58,7 @@ namespace SingleCellView {
 
 class SingleCellViewContentsWidget;
 class SingleCellViewGraphPanelPlotGraph;
+class SingleCellViewGraphPanelPlotWidget;
 class SingleCellViewPlugin;
 class SingleCellViewSimulation;
 
@@ -139,6 +140,8 @@ private:
 
     QList<SingleCellViewSimulation *> mCheckResultsSimulations;
 
+    QMap<SingleCellViewGraphPanelPlotGraph *, SingleCellViewGraphPanelPlotWidget *> mPlots;
+
     void output(const QString &pMessage);
 
     void updateSimulationMode();
@@ -156,6 +159,9 @@ private:
                        const qulonglong &pSize,
                        const bool &pReplot = false);
     void checkResults(SingleCellViewSimulation *pSimulation);
+
+    void updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot);
+    void updatePlots();
 
 private Q_SLOTS:
     void on_actionRunPauseResumeSimulation_triggered();
