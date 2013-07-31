@@ -139,8 +139,6 @@ private:
 
     QList<SingleCellViewSimulation *> mCheckResultsSimulations;
 
-    QList<SingleCellViewGraphPanelPlotGraph *> mGraphs;
-
     void output(const QString &pMessage);
 
     void updateSimulationMode();

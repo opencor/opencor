@@ -86,8 +86,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mSplitterWidgetSizes(QList<int>()),
     mRunActionEnabled(true),
     mOldSimulationResultsSizes(QMap<SingleCellViewSimulation *, qulonglong>()),
-    mCheckResultsSimulations(QList<SingleCellViewSimulation *>()),
-    mGraphs(QList<SingleCellViewGraphPanelPlotGraph *>())
+    mCheckResultsSimulations(QList<SingleCellViewSimulation *>())
 {
     // Set up the GUI
 
@@ -657,12 +656,13 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
     updateSimulationMode();
 
     // Update our previous (if any) and current simulation results
+//---GRY--- WE SHOULDN'T THIS ANYMORE SINCE GRAPHS ARE NOT SPECIFIC TO A
+//          PARTICULAR SIMULATION...
+//    if (   previousSimulation
+//        && (previousSimulation->isRunning() || previousSimulation->isPaused()))
+//        updateResults(previousSimulation, previousSimulation->results()->size());
 
-    if (   previousSimulation
-        && (previousSimulation->isRunning() || previousSimulation->isPaused()))
-        updateResults(previousSimulation, previousSimulation->results()->size());
-
-    updateResults(mSimulation, mSimulation->results()->size(), true);
+//    updateResults(mSimulation, mSimulation->results()->size(), true);
 
     // Initialise our contents widget and make sure that we have the required
     // type(s) of solvers
@@ -948,7 +948,7 @@ void SingleCellViewWidget::on_actionRunPauseResumeSimulation_triggered()
 
                 mOldSimulationResultsSizes.insert(mSimulation, simulationResultsSize);
 
-                updateResults(mSimulation, simulationResultsSize);
+//---GRY---                updateResults(mSimulation, simulationResultsSize);
 
                 // Effectively run our simulation in case we were able to
                 // allocate all the memory we need to run the simulation
@@ -1297,22 +1297,31 @@ void SingleCellViewWidget::addGraph(CellMLSupport::CellmlFileRuntimeParameter *p
 
 void SingleCellViewWidget::graphAdded(SingleCellViewGraphPanelPlotGraph *pGraph)
 {
-    // A new graph has been added, so keep track of it and update our results
+    // A new graph has been added, so make sure that the axes of its
+    // corresponding plot are optimal
 
-    mGraphs << pGraph;
+    SingleCellViewSimulation *simulation = mSimulations.value(pGraph->fileName());
+    SingleCellViewGraphPanelPlotWidget *plot = qobject_cast<SingleCellViewGraphPanelPlotWidget *>(pGraph->plot());
 
-    updateResults(mSimulation, mSimulation->results()->size()/*---GRY---, true*/);
+    if (    pGraph->parameterX()
+        && (pGraph->parameterX()->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi))
+        plot->setMinMaxX(simulation->data()->startingPoint(), simulation->data()->endingPoint());
+
+    if (    pGraph->parameterY()
+        && (pGraph->parameterY()->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi))
+        plot->setMinMaxY(simulation->data()->startingPoint(), simulation->data()->endingPoint());
+
+//---GRY---    updateResults(mSimulation, mSimulation->results()->size()/*---GRY---, true*/);
 }
 
 //==============================================================================
 
 void SingleCellViewWidget::graphRemoved(SingleCellViewGraphPanelPlotGraph *pGraph)
 {
+Q_UNUSED(pGraph);
     // A graph has been removed, so stop tracking it and update our results
 
-    mGraphs.removeOne(pGraph);
-
-    updateResults(mSimulation, mSimulation->results()->size()/*---GRY---, true*/);
+//---GRY---    updateResults(mSimulation, mSimulation->results()->size()/*---GRY---, true*/);
 }
 
 //==============================================================================
@@ -1329,8 +1338,8 @@ void SingleCellViewWidget::graphUpdated(SingleCellViewGraphPanelPlotGraph *pGrap
     //       been closed and another has been selected), resulting in our graphs
     //       widget emitting a graphUpdated() signal, which we handle here...
 
-    if (mSimulation)
-        updateResults(mSimulation, mSimulation->results()->size()/*---GRY---, true*/);
+//---GRY---    if (mSimulation)
+//---GRY---        updateResults(mSimulation, mSimulation->results()->size()/*---GRY---, true*/);
 }
 
 //==============================================================================
@@ -1393,31 +1402,31 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
 
 Q_UNUSED(pSize);
 Q_UNUSED(pReplot);
-        foreach (SingleCellViewGraphPanelPlotGraph *graph, mGraphs) {
-            // Show/hide the graph, depending on whether it's valid
+//        foreach (SingleCellViewGraphPanelPlotGraph *graph, mGraphs) {
+//            // Show/hide the graph, depending on whether it's valid
 
-            graph->setVisible(graph->isValid());
+//            graph->setVisible(graph->isValid());
 
-            // Keep track of our graph's old size
+//            // Keep track of our graph's old size
 
-//            qulonglong oldDataSize = graphData->graph()->dataSize();
+////            qulonglong oldDataSize = graphData->graph()->dataSize();
 
-            // Update our graph's data
+//            // Update our graph's data
 
-            if (graph->isValid()) {
-                SingleCellViewSimulation *simulation = mSimulations.value(graph->fileName());
+//            if (graph->isValid()) {
+//                SingleCellViewSimulation *simulation = mSimulations.value(graph->fileName());
 
-                graph->setRawSamples(dataPoints(simulation, graph->parameterX()),
-                                     dataPoints(simulation, graph->parameterY()),
-                                     pSize);
-            }
+//                graph->setRawSamples(dataPoints(simulation, graph->parameterX()),
+//                                     dataPoints(simulation, graph->parameterY()),
+//                                     pSize);
+//            }
 
-            // Draw the graph's new segment, but only if there is some data to
-            // plot and that we don't want to replot everything
+//            // Draw the graph's new segment, but only if there is some data to
+//            // plot and that we don't want to replot everything
 
-//            if (!pReplot && (pSize > 1))
-//                mActiveGraphPanel->plot()->drawGraphSegment(graphData->graph(), oldDataSize?oldDataSize-1:0, pSize-1);
-        }
+////            if (!pReplot && (pSize > 1))
+////                mActiveGraphPanel->plot()->drawGraphSegment(graphData->graph(), oldDataSize?oldDataSize-1:0, pSize-1);
+//        }
 
         // Replot our active graph panel, if needed
 
@@ -1477,7 +1486,7 @@ void SingleCellViewWidget::checkResults(SingleCellViewSimulation *pSimulation)
     if (simulationResultsSize != mOldSimulationResultsSizes.value(pSimulation)) {
         mOldSimulationResultsSizes.insert(pSimulation, simulationResultsSize);
 
-        updateResults(pSimulation, simulationResultsSize);
+//---GRY---        updateResults(pSimulation, simulationResultsSize);
     }
 
     // Ask to recheck our simulation's results, but only if our simulation is
