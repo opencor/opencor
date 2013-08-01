@@ -1378,6 +1378,11 @@ void SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot)
 {
 qDebug(">>> Updating plot %ld", long(pPlot));
 
+    // Check all the graphs associated with the given plot and see whether any
+    // of them uses the variable of integration as parameter X and/or Y, and if
+    // so then asks the plot to use the minimum/maximum points as the
+    // minimum/maximum values for the X and/or Y axes
+
     bool needInitialisationX = true;
     bool needInitialisationY = true;
 
@@ -1390,28 +1395,39 @@ qDebug(">>> Updating plot %ld", long(pPlot));
         if (graph->isValid()) {
             SingleCellViewSimulation *simulation = mSimulations.value(graph->fileName());
 
+            double startingPoint = simulation->data()->startingPoint();
+            double endingPoint = simulation->data()->endingPoint();
+
+            if (startingPoint > endingPoint) {
+                // The starting point is greater than the ending point, so swap
+                // them
+
+                startingPoint = simulation->data()->endingPoint();
+                endingPoint = simulation->data()->startingPoint();
+            }
+
             if (graph->parameterX()->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi) {
                 if (needInitialisationX) {
-                    needMinX = simulation->data()->startingPoint();
-                    needMaxX = simulation->data()->endingPoint();
+                    needMinX = startingPoint;
+                    needMaxX = endingPoint;
 
                     needInitialisationX = false;
                 } else {
-                    needMinX = qMin(needMinX, simulation->data()->startingPoint());
-                    needMaxX = qMax(needMaxX, simulation->data()->endingPoint());
+                    needMinX = qMin(needMinX, startingPoint);
+                    needMaxX = qMax(needMaxX, endingPoint);
                 }
             }
 
             if (graph->parameterY()->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi)
             {
                 if (needInitialisationY) {
-                    needMinY = simulation->data()->startingPoint();
-                    needMaxY = simulation->data()->endingPoint();
+                    needMinY = startingPoint;
+                    needMaxY = endingPoint;
 
                     needInitialisationY = false;
                 } else {
-                    needMinY = qMin(needMinY, simulation->data()->startingPoint());
-                    needMaxY = qMax(needMaxY, simulation->data()->endingPoint());
+                    needMinY = qMin(needMinY, startingPoint);
+                    needMaxY = qMax(needMaxY, endingPoint);
                 }
             }
         }
