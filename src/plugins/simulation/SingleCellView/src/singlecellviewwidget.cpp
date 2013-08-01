@@ -187,6 +187,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     // Keep track of changes to some of our simulation and solvers properties
 
     SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
+    SingleCellViewGraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
 
     connect(informationWidget->simulationWidget(), SIGNAL(propertyChanged(Core::Property *)),
             this, SLOT(simulationPropertyChanged(Core::Property *)));
@@ -195,21 +196,21 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
 
     // Keep track of whether we can remove graph panels
 
-    connect(mContentsWidget->graphPanelsWidget(), SIGNAL(removeGraphPanelsEnabled(const bool &)),
+    connect(graphPanelsWidget, SIGNAL(removeGraphPanelsEnabled(const bool &)),
             mGui->actionRemoveGraphPanel, SLOT(setEnabled(bool)));
 
     // Keep track of the addition and removal of a graph panel
 
     SingleCellViewInformationGraphsWidget *graphsWidget = informationWidget->graphsWidget();
 
-    connect(mContentsWidget->graphPanelsWidget(), SIGNAL(graphPanelAdded(SingleCellViewGraphPanelWidget *)),
+    connect(graphPanelsWidget, SIGNAL(graphPanelAdded(SingleCellViewGraphPanelWidget *)),
             graphsWidget, SLOT(initialize(SingleCellViewGraphPanelWidget *)));
-    connect(mContentsWidget->graphPanelsWidget(), SIGNAL(graphPanelRemoved(SingleCellViewGraphPanelWidget *)),
+    connect(graphPanelsWidget, SIGNAL(graphPanelRemoved(SingleCellViewGraphPanelWidget *)),
             graphsWidget, SLOT(finalize(SingleCellViewGraphPanelWidget *)));
 
     // Keep track of whether a graph panel has been activated
 
-    connect(mContentsWidget->graphPanelsWidget(), SIGNAL(graphPanelActivated(SingleCellViewGraphPanelWidget *)),
+    connect(graphPanelsWidget, SIGNAL(graphPanelActivated(SingleCellViewGraphPanelWidget *)),
             graphsWidget, SLOT(initialize(SingleCellViewGraphPanelWidget *)));
 
     // Keep track of a graph being required
@@ -219,32 +220,32 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
 
     // Keep track of the addition and removal of a graph
 
-    connect(mContentsWidget->graphPanelsWidget(), SIGNAL(graphAdded(SingleCellViewGraphPanelPlotGraph *)),
+    connect(graphPanelsWidget, SIGNAL(graphAdded(SingleCellViewGraphPanelPlotGraph *)),
             graphsWidget, SLOT(addGraph(SingleCellViewGraphPanelPlotGraph *)));
-    connect(mContentsWidget->graphPanelsWidget(), SIGNAL(graphRemoved(SingleCellViewGraphPanelPlotGraph *)),
+    connect(graphPanelsWidget, SIGNAL(graphRemoved(SingleCellViewGraphPanelPlotGraph *)),
             graphsWidget, SLOT(removeGraph(SingleCellViewGraphPanelPlotGraph *)));
 
-    connect(mContentsWidget->graphPanelsWidget(), SIGNAL(graphAdded(SingleCellViewGraphPanelPlotGraph *)),
+    connect(graphPanelsWidget, SIGNAL(graphAdded(SingleCellViewGraphPanelPlotGraph *)),
             this, SLOT(graphAdded(SingleCellViewGraphPanelPlotGraph *)));
-    connect(mContentsWidget->graphPanelsWidget(), SIGNAL(graphRemoved(SingleCellViewGraphPanelPlotGraph *)),
+    connect(graphPanelsWidget, SIGNAL(graphRemoved(SingleCellViewGraphPanelPlotGraph *)),
             this, SLOT(graphRemoved(SingleCellViewGraphPanelPlotGraph *)));
 
     // Keep track of the updating of a graph
     // Note: ideally, this would, as for the addition and removal of a graph
-    //       (see above), be done through mContentsWidget->graphPanelsWidget()
-    //       (i.e. a graph would let people know that it has been updated and
-    //       the graph panel with which it is associated would forward the
-    //       signal to mContentsWidget->graphPanelsWidget()), but this may
-    //       result in too many graphUpdated() signals being emitted. For
-    //       example, say that you change the model with which a graph is
-    //       associated, then both the X and Y parameters will get updated, and
-    //       for each of those updates a graphUpdated() signal would be emitted
-    //       by the graph, hence we would end up with two signals when only one
-    //       would have sufficed. Even worse is that after having updated the X
-    //       parameter, the graph would have its X parameter coming from the
-    //       'new' model while its Y parameter from the 'old' model, which could
-    //       mess things up quite a bit from a plotting viewpoint. So, instead,
-    //       the updating is done through our graphs property editor...
+    //       (see above), be done through graphPanelsWidget (i.e. a graph would
+    //       let people know that it has been updated and the graph panel with
+    //       which it is associated would forward the signal to
+    //       graphPanelsWidget), but this may result in too many graphUpdated()
+    //       signals being emitted. For example, say that you change the model
+    //       with which a graph is associated, then both the X and Y parameters
+    //       will get updated, and for each of those updates a graphUpdated()
+    //       signal would be emitted by the graph, hence we would end up with
+    //       two signals when only one would have sufficed. Even worse is that
+    //       after having updated the X parameter, the graph would have its X
+    //       parameter coming from the 'new' model while its Y parameter from
+    //       the 'old' model, which could mess things up quite a bit from a
+    //       plotting viewpoint. So, instead, the updating is done through our
+    //       graphs property editor...
 
     connect(graphsWidget, SIGNAL(graphUpdated(SingleCellViewGraphPanelPlotGraph *)),
             this, SLOT(graphUpdated(SingleCellViewGraphPanelPlotGraph *)));
@@ -749,10 +750,6 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         }
     }
 
-    // Update our plots (so that all of our graphs are up to date)
-
-    updatePlots();
-
     // Show/hide some widgets depending on whether we have a valid simulation
     // environment
 
@@ -777,6 +774,11 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
         mOutputWidget->ensureCursorVisible();
     }
+
+    // Update our plots (so that all of our graphs are up to date)
+
+    if (validSimulationEnvironment)
+        updatePlots();
 
     // If we have a valid simulation environment and we are dealing with a new
     // simulation, then reset both the simulation's data and results (well,
@@ -1460,19 +1462,14 @@ qDebug(">>> Updating plot %ld", long(pPlot));
 
 void SingleCellViewWidget::updatePlots()
 {
-    // Update all the plots that have graphs
-    // Note: for this, we use the values of mPlots, making sure that we don't
-    //       update the same plot more than once...
+    // Update all our plots
+    // Note: for this, we retrieve all our plots from the values of mPlots, but
+    //       we have to make sure that there are no duplicates (so we don't call
+    //       updatePlot() more than actually needed), hence we convert the list
+    //       to a set...
 
-    SingleCellViewGraphPanelPlotWidget *previousPlot = 0;
-
-    foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots.values()) {
-        if (plot != previousPlot) {
-            updatePlot(plot);
-
-            previousPlot = plot;
-        }
-    }
+    foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots.values().toSet())
+        updatePlot(plot);
 }
 
 //==============================================================================

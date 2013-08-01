@@ -81,6 +81,10 @@ void SingleCellViewInformationGraphsWidget::retranslateUi()
         propertyEditor->retranslateUi();
 
     // Retranslate the information about our graphs properties
+    // Note: no need to do this for all our property editors (i.e. call
+    //       updateAllGraphsInfo()) since this will automatically be done when
+    //       selecting another graph panel. So, instead, we just do this for the
+    //       current graph panel...
 
     updateGraphsInfo();
 }
@@ -138,9 +142,10 @@ void SingleCellViewInformationGraphsWidget::initialize(const QString &pFileName,
         mContextMenus.insert(pFileName, contextMenu);
     }
 
-    // Update the information about our graphs properties
+    // Update the information about our graphs properties and this for all our
+    // property editors
 
-    updateGraphsInfo();
+    updateAllGraphsInfo();
 }
 
 //==============================================================================
@@ -155,10 +160,6 @@ void SingleCellViewInformationGraphsWidget::finalize(const QString &pFileName)
 
     mRuntimes.remove(pFileName);
     mSimulations.remove(pFileName);
-
-    // Update the information about our graphs properties
-
-    updateGraphsInfo();
 }
 
 //==============================================================================
@@ -172,9 +173,10 @@ void SingleCellViewInformationGraphsWidget::fileOpened(const QString &pFileName)
 
     mFileNames.sort();
 
-    // Update the information about our graphs properties
+    // Update the information about our graphs properties and this for all our
+    // property editors
 
-    updateGraphsInfo();
+    updateAllGraphsInfo();
 }
 
 //==============================================================================
@@ -250,11 +252,12 @@ void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelW
 
     setCurrentWidget(mPropertyEditor);
 
-    // Update the information about our graphs properties
+    // Update the information about our graphs properties and this for all our
+    // property editors
     // Note: this is in case the user changed the locale and then switched to a
     //       different graph panel...
 
-    updateGraphsInfo();
+    updateAllGraphsInfo();
 }
 
 //==============================================================================
@@ -734,6 +737,29 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
         //       associated with setValue() to be emitted (so that
         //       updateGraphInfo() can then be called)...
     }
+}
+
+//==============================================================================
+
+void SingleCellViewInformationGraphsWidget::updateAllGraphsInfo()
+{
+    // Update the information about our graphs properties and this for all our
+    // property editors, so first keep track our active property editor
+
+    Core::PropertyEditorWidget *oldPropertyEditor = mPropertyEditor;
+
+    // Go through our property editors and update the information about the
+    // graph properties they hold
+
+    foreach (Core::PropertyEditorWidget *propertyEditor, mPropertyEditors) {
+        mPropertyEditor = propertyEditor;
+
+        updateGraphsInfo();
+    }
+
+    // Retrieve our originally active property editor
+
+    mPropertyEditor = oldPropertyEditor;
 }
 
 //==============================================================================

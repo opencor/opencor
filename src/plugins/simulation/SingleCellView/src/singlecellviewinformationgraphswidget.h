@@ -110,6 +110,7 @@ private:
 
     void updateGraphInfo(Core::Property *pProperty, const QString &pFileName);
     void updateGraphsInfo(Core::Property *pSectionProperty = 0);
+    void updateAllGraphsInfo();
 
 Q_SIGNALS:
     void graphUpdated(SingleCellViewGraphPanelPlotGraph *pGraph);
