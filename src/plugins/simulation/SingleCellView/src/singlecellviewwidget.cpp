@@ -505,11 +505,19 @@ void SingleCellViewWidget::updateInvalidModelMessageWidget()
 
 void SingleCellViewWidget::initialize(const QString &pFileName)
 {
+    // Stop keeping track of certain things (so that updatePlots() doesn't get
+    // called unnecessarily)
+    // Note: see the corresponding code at the end of this method...
+
+    SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
+
+    disconnect(informationWidget->simulationWidget(), SIGNAL(propertyChanged(Core::Property *)),
+               this, SLOT(simulationPropertyChanged(Core::Property *)));
+
     // Keep track of our simulation data for our previous model and finalise a
     // few things, if needed
 
     SingleCellViewSimulation *previousSimulation = mSimulation;
-    SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
     SingleCellViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
     SingleCellViewInformationSolversWidget *solversWidget = informationWidget->solversWidget();
 
@@ -741,6 +749,10 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         }
     }
 
+    // Update our plots (so that all of our graphs are up to date)
+
+    updatePlots();
+
     // Show/hide some widgets depending on whether we have a valid simulation
     // environment
 
@@ -774,6 +786,12 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         mSimulation->data()->reset();
         mSimulation->results()->reset(false);
     }
+
+    // Resume the tracking of certain things
+    // Note: see the corresponding code at the beginning of this method...
+
+    connect(informationWidget->simulationWidget(), SIGNAL(propertyChanged(Core::Property *)),
+            this, SLOT(simulationPropertyChanged(Core::Property *)));
 }
 
 //==============================================================================
