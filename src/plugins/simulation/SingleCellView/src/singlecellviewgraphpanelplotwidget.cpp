@@ -120,6 +120,9 @@ void SingleCellViewGraphPanelPlotGraph::setParameterY(CellMLSupport::CellmlFileR
 static const double MinZoomFactor =    1.0;
 static const double MaxZoomFactor = 1024.0;
 
+static const double MinAxis =    0.0;
+static const double MaxAxis = 1000.0;
+
 //==============================================================================
 
 SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *pParent) :
@@ -128,16 +131,14 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
     mAction(None),
     mOriginPoint(QPointF()),
     mEndPoint(QPointF()),
-    mMinX(0.0),
-    mMaxX(1000.0),
-    mMinY(0.0),
-    mMaxY(1000.0),
+    mMinX(MinAxis),
+    mMaxX(MaxAxis),
+    mMinY(MinAxis),
+    mMaxY(MaxAxis),
     mNeedMinX(0.0),
     mNeedMaxX(0.0),
     mNeedMinY(0.0),
     mNeedMaxY(0.0),
-    mFixedAxisX(false),
-    mFixedAxisY(false),
     mCanvasPixmap(QPixmap()),
     mZoomFactorX(MinZoomFactor),
     mZoomFactorY(MinZoomFactor)
@@ -465,24 +466,6 @@ void SingleCellViewGraphPanelPlotWidget::setLocalMinMaxY(const double &pLocalMin
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::setFixedAxisX(const bool &pFixedAxisX)
-{
-    // Specify whether our X axis is to be fixed
-
-    mFixedAxisX = pFixedAxisX;
-}
-
-//==============================================================================
-
-void SingleCellViewGraphPanelPlotWidget::setFixedAxisY(const bool &pFixedAxisY)
-{
-    // Specify whether our Y axis is to be fixed
-
-    mFixedAxisY = pFixedAxisY;
-}
-
-//==============================================================================
-
 QList<SingleCellViewGraphPanelPlotGraph *> SingleCellViewGraphPanelPlotWidget::graphs() const
 {
     // Return all our graphs
@@ -545,18 +528,26 @@ void SingleCellViewGraphPanelPlotWidget::setLocalAxes(const double &pLocalMinX,
             boundingRect |= graph->boundingRect();
 
     // Take into account the needed minimum/maximum values for our X and Y axes,
-    // if any
+    // if any, or use MinAxis/MaxAxis if boundingRect is empty
 
     bool boundingRectIsEmpty = boundingRect.isEmpty();
+    bool needMinMaxX = mNeedMinX != mNeedMaxX;
+    bool needMinMaxY = mNeedMinY != mNeedMaxY;
 
-    if (mNeedMinX != mNeedMaxX) {
+    if (needMinMaxX) {
         boundingRect.setLeft(boundingRectIsEmpty?mNeedMinX:qMin(boundingRect.left(), mNeedMinX));
         boundingRect.setRight(boundingRectIsEmpty?mNeedMaxX:qMax(boundingRect.right(), mNeedMaxX));
+    } else if (boundingRectIsEmpty) {
+        boundingRect.setLeft(MinAxis);
+        boundingRect.setRight(MaxAxis);
     }
 
-    if (mNeedMinY != mNeedMaxY) {
+    if (needMinMaxY) {
         boundingRect.setTop(boundingRectIsEmpty?mNeedMinY:qMin(boundingRect.top(), mNeedMinY));
         boundingRect.setBottom(boundingRectIsEmpty?mNeedMaxY:qMax(boundingRect.bottom(), mNeedMaxY));
+    } else if (boundingRectIsEmpty) {
+        boundingRect.setTop(MinAxis);
+        boundingRect.setBottom(MaxAxis);
     }
 
     // Update the minimum/maximum values of our axes, should we have retrieved a
@@ -582,10 +573,10 @@ void SingleCellViewGraphPanelPlotWidget::setLocalAxes(const double &pLocalMinX,
         double powerX = qPow(10.0, qMax(xMin?qFloor(log10(qAbs(xMin))):0, xMax?qFloor(log10(qAbs(xMax))):0));
         double powerY = qPow(10.0, qMax(yMin?qFloor(log10(qAbs(yMin))):0, yMax?qFloor(log10(qAbs(yMax))):0));
 
-        xMin = powerX*qFloor(xMin/powerX);
-        xMax = powerX*qCeil(xMax/powerX);
-        yMin = powerY*qFloor(yMin/powerY);
-        yMax = powerY*qCeil(yMax/powerY);
+        xMin = (needMinMaxX && (xMin == mNeedMinX))?mNeedMinX:powerX*qFloor(xMin/powerX);
+        xMax = (needMinMaxX && (xMax == mNeedMaxX))?mNeedMaxX:powerX*qCeil(xMax/powerX);
+        yMin = (needMinMaxY && (yMin == mNeedMinY))?mNeedMinY:powerY*qFloor(yMin/powerY);
+        yMax = (needMinMaxY && (yMax == mNeedMaxY))?mNeedMaxY:powerY*qCeil(yMax/powerY);
 
         // Make sure that the optimised minimum/maximum values of our axes have
         // finite values
@@ -594,19 +585,15 @@ void SingleCellViewGraphPanelPlotWidget::setLocalAxes(const double &pLocalMinX,
 
         // Update the minimum/maximum values of our axes, if required
 
-        if (!mFixedAxisX) {
-            if (pResetMinMaxValues)
-                setMinMaxX(xMin, xMax);
-            else if (pUpdateMinMaxValues)
-                setMinMaxX(qMin(mMinX, xMin), qMax(mMaxX, xMax));
-        }
+        if (pResetMinMaxValues)
+            setMinMaxX(xMin, xMax);
+        else if (pUpdateMinMaxValues)
+            setMinMaxX(qMin(mMinX, xMin), qMax(mMaxX, xMax));
 
-        if (!mFixedAxisY) {
-            if (pResetMinMaxValues)
-                setMinMaxY(yMin, yMax);
-            else if (pUpdateMinMaxValues)
-                setMinMaxY(qMin(mMinY, yMin), qMax(mMaxY, yMax));
-        }
+        if (pResetMinMaxValues)
+            setMinMaxY(yMin, yMax);
+        else if (pUpdateMinMaxValues)
+            setMinMaxY(qMin(mMinY, yMin), qMax(mMaxY, yMax));
     }
 
     // Make sure that the new minimum/maximum values of our local axes fit

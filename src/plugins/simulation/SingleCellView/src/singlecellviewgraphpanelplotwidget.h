@@ -123,9 +123,6 @@ private:
     double mNeedMinY;
     double mNeedMaxY;
 
-    bool mFixedAxisX;
-    bool mFixedAxisY;
-
     QPixmap mCanvasPixmap;
 
     double mZoomFactorX;
@@ -165,9 +162,6 @@ private:
     void checkLocalAxes(const bool &pCanReplot = true,
                         const bool &pForceMinMaxValues = false,
                         const bool &pUpdateMinMaxValues = false);
-
-    void setFixedAxisX(const bool &pFixedAxisX);
-    void setFixedAxisY(const bool &pFixedAxisY);
 
     void setLocalAxis(const int &pAxis, const double &pMin, const double &pMax);
     void setLocalAxes(const double &pLocalMinX, const double &pLocalMaxX,
