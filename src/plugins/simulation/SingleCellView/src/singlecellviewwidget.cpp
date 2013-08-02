@@ -1359,7 +1359,7 @@ void SingleCellViewWidget::graphUpdated(SingleCellViewGraphPanelPlotGraph *pGrap
 void SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot)
 {
 static int counter = 0;
-qDebug(">>> [P%03d] Updating plot       [%ld]", ++counter, long(pPlot));
+qDebug(">>> [P%07d] Updating plot    [%ld]", ++counter, long(pPlot));
 
     // Check all the graphs associated with the given plot and see whether any
     // of them uses the variable of integration as parameter X and/or Y, and if
@@ -1469,7 +1469,7 @@ void SingleCellViewWidget::updateGraph(SingleCellViewGraphPanelPlotGraph *pGraph
                                        const qulonglong &pSize)
 {
 static int counter = 0;
-qDebug(">>> [G%03d] Updating graph      [%ld]", ++counter, long(pGraph));
+qDebug(">>> [G%07d] Updating graph   [%ld]", ++counter, long(pGraph));
 
     // Show/hide the graph, depending on whether it's valid
 
@@ -1491,7 +1491,7 @@ qDebug(">>> [G%03d] Updating graph      [%ld]", ++counter, long(pGraph));
 
     // Draw the graph's new segment, but only if there is some data to plot
 
-    if (pSize > 1)
+    if (pSize)
         qobject_cast<SingleCellViewGraphPanelPlotWidget *>(pGraph->plot())->drawGraphSegment(pGraph, oldDataSize?oldDataSize-1:0, pSize-1);
 }
 
@@ -1501,7 +1501,7 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
                                          const qulonglong &pSize)
 {
 static int counter = 0;
-qDebug(">>> [S%03d] Updating simulation [%ld]", ++counter, long(pSimulation));
+qDebug(">>> [S%07d] Updating results [%ld]", ++counter, long(pSimulation));
 
     // Enable/disable the reset action, in case we are dealing with the active
     // simulation
@@ -1515,11 +1515,19 @@ qDebug(">>> [S%03d] Updating simulation [%ld]", ++counter, long(pSimulation));
         mGui->actionResetModelParameters->setEnabled(pSimulation->data()->isModified());
 
     // Update all the graphs associated with the given simulation
+    // Note: if pSize is greater than zero, then the graphs will be individually
+    //       updated. On the other hand, if we have a pSize value of zero (e.g.
+    //       when starting a simulation), then we ask the plot to directly
+    //       replot itself...
 
-    foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots.values().toSet())
+    foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots.values().toSet()) {
         foreach (SingleCellViewGraphPanelPlotGraph *graph, plot->graphs())
             if (!graph->fileName().compare(pSimulation->fileName()))
                 updateGraph(graph, pSize);
+
+        if (!pSize)
+            plot->replotNow();
+    }
 
     // Update our progress bar (or the tab icon, in case we are not dealing with
     // the active simulation)

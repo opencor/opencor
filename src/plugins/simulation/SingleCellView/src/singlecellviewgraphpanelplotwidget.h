@@ -79,6 +79,8 @@ public:
 
     virtual void drawCanvas(QPainter *pPainter);
 
+    void replotNow();
+
 protected:
     virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
     virtual void mouseMoveEvent(QMouseEvent *pEvent);
@@ -127,8 +129,6 @@ private:
 
     double mZoomFactorX;
     double mZoomFactorY;
-
-    void replotNow();
 
     void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
 
