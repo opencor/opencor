@@ -960,8 +960,8 @@ void SingleCellViewWidget::on_actionRunPauseResumeSimulation_triggered()
 
                 mOldSimulationResultsSizes.insert(mSimulation, simulationResultsSize);
 
-                updateSimulation(mSimulation, simulationResultsSize);
-                // Note: to call updateSimulation() will effectively reset our
+                updateResults(mSimulation, simulationResultsSize);
+                // Note: to call updateResults() will effectively reset our
                 //       graphs...
 
                 // Effectively run our simulation in case we were able to
@@ -1353,34 +1353,6 @@ void SingleCellViewWidget::graphUpdated(SingleCellViewGraphPanelPlotGraph *pGrap
 
 //==============================================================================
 
-double * SingleCellViewWidget::dataPoints(SingleCellViewSimulation *pSimulation,
-                                          CellMLSupport::CellmlFileRuntimeParameter *pParameter) const
-{
-    // Return the array of data points associated with the given simulation and
-    // parameter
-
-    if (!pSimulation || !pParameter)
-        return 0;
-
-    if (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi)
-        return pSimulation->results()->points()?pSimulation->results()->points():0;
-    else if (   (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)
-             || (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant))
-        return pSimulation->results()->constants()?pSimulation->results()->constants()[pParameter->index()]:0;
-    else if (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Rate)
-        return pSimulation->results()->rates()?pSimulation->results()->rates()[pParameter->index()]:0;
-    else if (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State)
-        return pSimulation->results()->states()?pSimulation->results()->states()[pParameter->index()]:0;
-    else if (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Algebraic)
-        return pSimulation->results()->algebraic()?pSimulation->results()->algebraic()[pParameter->index()]:0;
-    else
-        // Undefined type
-
-        return 0;
-}
-
-//==============================================================================
-
 void SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot)
 {
 static int counter = 0;
@@ -1462,6 +1434,34 @@ void SingleCellViewWidget::updatePlots()
 
 //==============================================================================
 
+double * SingleCellViewWidget::dataPoints(SingleCellViewSimulation *pSimulation,
+                                          CellMLSupport::CellmlFileRuntimeParameter *pParameter) const
+{
+    // Return the array of data points associated with the given simulation and
+    // parameter
+
+    if (!pSimulation || !pParameter)
+        return 0;
+
+    if (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi)
+        return pSimulation->results()->points()?pSimulation->results()->points():0;
+    else if (   (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)
+             || (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant))
+        return pSimulation->results()->constants()?pSimulation->results()->constants()[pParameter->index()]:0;
+    else if (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Rate)
+        return pSimulation->results()->rates()?pSimulation->results()->rates()[pParameter->index()]:0;
+    else if (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State)
+        return pSimulation->results()->states()?pSimulation->results()->states()[pParameter->index()]:0;
+    else if (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Algebraic)
+        return pSimulation->results()->algebraic()?pSimulation->results()->algebraic()[pParameter->index()]:0;
+    else
+        // Undefined type
+
+        return 0;
+}
+
+//==============================================================================
+
 void SingleCellViewWidget::updateGraph(SingleCellViewGraphPanelPlotGraph *pGraph,
                                        const qulonglong &pSize)
 {
@@ -1494,8 +1494,8 @@ qDebug(">>> [G%03d] Updating graph      [%ld]", ++counter, long(pGraph));
 
 //==============================================================================
 
-void SingleCellViewWidget::updateSimulation(SingleCellViewSimulation *pSimulation,
-                                            const qulonglong &pSize)
+void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
+                                         const qulonglong &pSize)
 {
 static int counter = 0;
 qDebug(">>> [S%03d] Updating simulation [%ld]", ++counter, long(pSimulation));
@@ -1563,7 +1563,7 @@ void SingleCellViewWidget::checkResults(SingleCellViewSimulation *pSimulation)
     if (simulationResultsSize != mOldSimulationResultsSizes.value(pSimulation)) {
         mOldSimulationResultsSizes.insert(pSimulation, simulationResultsSize);
 
-        updateSimulation(pSimulation, simulationResultsSize);
+        updateResults(pSimulation, simulationResultsSize);
     }
 
     // Ask to recheck our simulation's results, but only if our simulation is

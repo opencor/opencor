@@ -152,18 +152,17 @@ private:
 
     void updateInvalidModelMessageWidget();
 
-    double * dataPoints(SingleCellViewSimulation *pSimulation,
-                        CellMLSupport::CellmlFileRuntimeParameter *pParameter) const;
-
     void updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot);
     void updatePlots();
+
+    double * dataPoints(SingleCellViewSimulation *pSimulation,
+                        CellMLSupport::CellmlFileRuntimeParameter *pParameter) const;
 
     void updateGraph(SingleCellViewGraphPanelPlotGraph *pGraph,
                      const qulonglong &pSize);
 
-    void updateSimulation(SingleCellViewSimulation *pSimulation,
-                          const qulonglong &pSize);
-
+    void updateResults(SingleCellViewSimulation *pSimulation,
+                       const qulonglong &pSize);
     void checkResults(SingleCellViewSimulation *pSimulation);
 
 private Q_SLOTS:
