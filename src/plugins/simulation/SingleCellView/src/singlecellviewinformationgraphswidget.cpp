@@ -296,6 +296,17 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
     mGraphProperties.insert(pGraph, graphProperty);
 
     // Create some properties for our graph
+    // Note: to add properties will result in some signals being emitted, but we
+    //       don't want to handle them (at least, not when creating a graph
+    //       since not everyting may be set yet so this might cause more
+    //       problems than anything), so we must disconnect ourselves from them,
+    //       before adding the properties (and then reconnect ourselves to
+    //       them)...
+
+    disconnect(mPropertyEditor, SIGNAL(listPropertyChanged(Core::Property *, const QString &)),
+               this, SLOT(modelChanged(Core::Property *, const QString &)));
+    disconnect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
+               this, SLOT(propertyChanged(Core::Property *)));
 
     mPropertyEditor->addListProperty(graphProperty);
     Core::Property *xProperty = mPropertyEditor->addStringProperty(pGraph->parameterX()?pGraph->parameterX()->fullyFormattedName():Core::UnknownValue, graphProperty);
@@ -303,6 +314,11 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
 
     xProperty->setEditable(true);
     yProperty->setEditable(true);
+
+    connect(mPropertyEditor, SIGNAL(listPropertyChanged(Core::Property *, const QString &)),
+            this, SLOT(modelChanged(Core::Property *, const QString &)));
+    connect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
+            this, SLOT(propertyChanged(Core::Property *)));
 
     // Update the information about our new graph
 

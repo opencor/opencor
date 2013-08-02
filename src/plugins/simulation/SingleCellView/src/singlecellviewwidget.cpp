@@ -1353,18 +1353,9 @@ void SingleCellViewWidget::graphRemoved(SingleCellViewGraphPanelPlotGraph *pGrap
 
 void SingleCellViewWidget::graphUpdated(SingleCellViewGraphPanelPlotGraph *pGraph)
 {
-    Q_UNUSED(pGraph);
+    // A graph has been updated, so update it
 
-    // A graph has been updated, so update our results, but only if some are
-    // available
-    // Note: the rationale for testing for mSimulation is that upon quitting
-    //       OpenCOR, some of the properties of our graphs may end up being
-    //       modified (e.g. the X and Y parameters because the current file has
-    //       been closed and another has been selected), resulting in our graphs
-    //       widget emitting a graphUpdated() signal, which we handle here...
-
-//---GRY---    if (mSimulation)
-//---GRY---        updateResults(mSimulation, mSimulation->results()->size()/*---GRY---, true*/);
+    updateGraph(pGraph, mSimulations.value(pGraph->fileName())->results()->size());
 }
 
 //==============================================================================
