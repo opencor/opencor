@@ -1347,6 +1347,13 @@ void SingleCellViewWidget::graphRemoved(SingleCellViewGraphPanelPlotGraph *pGrap
 void SingleCellViewWidget::graphUpdated(SingleCellViewGraphPanelPlotGraph *pGraph)
 {
     // A graph has been updated, so update it
+    // Note: it may happen that we don't have a simulation associated with the
+    //       graph, hence we must check for it. Indeed, say that you have two
+    //       files opened, but only one has been selected so far. From there,
+    //       say you create a graph and then double click on its model property
+    //       so that the other file gets selected. In this case, for example,
+    //       there won't be a simulation associated with the file and therefore
+    //       the graph...
 
     SingleCellViewSimulation *simulation = mSimulations.value(pGraph->fileName());
 
