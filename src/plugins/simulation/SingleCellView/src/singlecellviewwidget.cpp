@@ -665,15 +665,6 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
     updateSimulationMode();
 
-    // Update our previous (if any) and current simulation results
-//---GRY--- WE SHOULDN'T THIS ANYMORE SINCE GRAPHS ARE NOT SPECIFIC TO A
-//          PARTICULAR SIMULATION...
-//    if (   previousSimulation
-//        && (previousSimulation->isRunning() || previousSimulation->isPaused()))
-//        updateResults(previousSimulation, previousSimulation->results()->size());
-
-//    updateResults(mSimulation, mSimulation->results()->size(), true);
-
     // Initialise our contents widget and make sure that we have the required
     // type(s) of solvers
 
@@ -969,7 +960,9 @@ void SingleCellViewWidget::on_actionRunPauseResumeSimulation_triggered()
 
                 mOldSimulationResultsSizes.insert(mSimulation, simulationResultsSize);
 
-//---GRY---                updateResults(mSimulation, simulationResultsSize);
+                updateSimulation(mSimulation, simulationResultsSize);
+                // Note: to call updateSimulation() will effectively reset our
+                //       graphs...
 
                 // Effectively run our simulation in case we were able to
                 // allocate all the memory we need to run the simulation
@@ -1501,112 +1494,58 @@ qDebug(">>> [G%03d] Updating graph      [%ld]", ++counter, long(pGraph));
 
 //==============================================================================
 
-void SingleCellViewWidget::updateSimulation(SingleCellViewSimulation *pSimulation)
+void SingleCellViewWidget::updateSimulation(SingleCellViewSimulation *pSimulation,
+                                            const qulonglong &pSize)
 {
 static int counter = 0;
 qDebug(">>> [S%03d] Updating simulation [%ld]", ++counter, long(pSimulation));
 
-}
+    // Enable/disable the reset action, in case we are dealing with the active
+    // simulation
+    // Note: normally, our simulation worker would, for each point interval,
+    //       call SingleCellViewSimulationData::checkForModifications(), but
+    //       this would result in a signal being emitted (and then handled by
+    //       SingleCellViewWidget::simulationDataModified()), resulting in some
+    //       time overhead, so we check things here instead...
 
-//==============================================================================
+    if (pSimulation == mSimulation)
+        mGui->actionResetModelParameters->setEnabled(pSimulation->data()->isModified());
 
-void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
-                                         const qulonglong &pSize,
-                                         const bool &pReplot)
-{
-//---GRY--- DO WE ACTUALLY NEED THE pReplot PARAMETER?...
-    // Update our graphs, if any and only if actually necessary
+    // Update all the graphs associated with the given simulation
 
-    SingleCellViewSimulation *simulation = pSimulation?pSimulation:mSimulation;
+    foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots.values().toSet())
+        foreach (SingleCellViewGraphPanelPlotGraph *graph, plot->graphs())
+            if (!graph->fileName().compare(pSimulation->fileName()))
+                updateGraph(graph, pSize);
 
-    // Our simulation worker has made some progress, so update our progress bar,
-    // but only if we are dealing with the active simulation
+    // Update our progress bar (or the tab icon, in case we are not dealing with
+    // the active simulation)
 
-    if (simulation == mSimulation) {
-        // We are dealing with the active simulation, so update our graphs and
-        // progress bar, and enable/disable the reset action
-
-        // Enable/disable the reset action
-        // Note: normally, our simulation worker would, for each point interval,
-        //       call SingleCellViewSimulationData::checkForModifications(),
-        //       but this would result in a signal being emitted (and then
-        //       handled by SingleCellViewWidget::simulationDataModified()),
-        //       resulting in some time overhead, so we check things here
-        //       instead...
-
-        mGui->actionResetModelParameters->setEnabled(mSimulation->data()->isModified());
-
-        // Update our graphs, if any
-
-Q_UNUSED(pSize);
-Q_UNUSED(pReplot);
-//        foreach (SingleCellViewGraphPanelPlotGraph *graph, mGraphs) {
-//            // Show/hide the graph, depending on whether it's valid
-
-//            graph->setVisible(graph->isValid());
-
-//            // Keep track of our graph's old size
-
-////            qulonglong oldDataSize = graphData->graph()->dataSize();
-
-//            // Update our graph's data
-
-//            if (graph->isValid()) {
-//                SingleCellViewSimulation *simulation = mSimulations.value(graph->fileName());
-
-//                graph->setRawSamples(dataPoints(simulation, graph->parameterX()),
-//                                     dataPoints(simulation, graph->parameterY()),
-//                                     pSize);
-//            }
-
-//            // Draw the graph's new segment, but only if there is some data to
-//            // plot and that we don't want to replot everything
-
-////            if (!pReplot && (pSize > 1))
-////                mActiveGraphPanel->plot()->drawGraphSegment(graphData->graph(), oldDataSize?oldDataSize-1:0, pSize-1);
-//        }
-
-        // Replot our active graph panel, if needed
-
-//        if (pReplot || (pSize <= 1))
-//            // We want to initialise the plot and/or there is no data to plot,
-//            // so replot our active graph panel
-
-//            mActiveGraphPanel->plot()->replotNow();
-
-// Replot all of our graph panels
-
-//foreach (SingleCellViewGraphPanelWidget *graphPanel, mContentsWidget->graphPanelsWidget()->graphPanels())
-//    graphPanel->replot();
-
-        // Update our progress bar
-
+    if (pSimulation == mSimulation) {
         mProgressBarWidget->setValue(mSimulation->progress());
     } else {
-        // We are dealing with another simulation, so simply create an icon that
-        // shows the other simulation's progress and let people know about it
+        // We are not dealing with the active simulation, so create an icon that
+        // shows the simulation's progress and let people know about it
         // Note: we need to retrieve the name of the file associated with the
         //       other simulation since we have only one simulation object at
         //       any given time, and anyone handling the updateFileTabIcon()
         //       signal (e.g. CentralWidget) won't be able to tell for which
         //       simulation the update is...
 
-        int oldProgress = mProgresses.value(simulation->fileName(), -1);
-        int newProgress = (tabBarIconSize()-2)*simulation->progress();
-        // Note: tabBarIconSize()-2 because we want a one-pixel wide
-        //       border...
+        int oldProgress = mProgresses.value(pSimulation->fileName(), -1);
+        int newProgress = (tabBarIconSize()-2)*pSimulation->progress();
+        // Note: tabBarIconSize()-2 because we want a one-pixel wide border...
 
         if (newProgress != oldProgress) {
-            // The progress has changed (or we want to force the updating of a
-            // specific simulation), so keep track of its new value and update
-            // our file tab icon
+            // The progress has changed, so keep track of its new value and
+            // update our file tab icon
 
-            mProgresses.insert(simulation->fileName(), newProgress);
+            mProgresses.insert(pSimulation->fileName(), newProgress);
 
             // Let people know about the file tab icon to be used for the model
 
-            emit updateFileTabIcon(simulation->fileName(),
-                                   fileTabIcon(simulation->fileName()));
+            emit updateFileTabIcon(pSimulation->fileName(),
+                                   fileTabIcon(pSimulation->fileName()));
         }
     }
 }
@@ -1624,7 +1563,7 @@ void SingleCellViewWidget::checkResults(SingleCellViewSimulation *pSimulation)
     if (simulationResultsSize != mOldSimulationResultsSizes.value(pSimulation)) {
         mOldSimulationResultsSizes.insert(pSimulation, simulationResultsSize);
 
-//---GRY---        updateResults(pSimulation, simulationResultsSize);
+        updateSimulation(pSimulation, simulationResultsSize);
     }
 
     // Ask to recheck our simulation's results, but only if our simulation is

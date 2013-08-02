@@ -155,18 +155,16 @@ private:
     double * dataPoints(SingleCellViewSimulation *pSimulation,
                         CellMLSupport::CellmlFileRuntimeParameter *pParameter) const;
 
-    void updateResults(SingleCellViewSimulation *pSimulation,
-                       const qulonglong &pSize,
-                       const bool &pReplot = false);
-    void checkResults(SingleCellViewSimulation *pSimulation);
-
     void updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot);
     void updatePlots();
 
     void updateGraph(SingleCellViewGraphPanelPlotGraph *pGraph,
                      const qulonglong &pSize);
 
-    void updateSimulation(SingleCellViewSimulation *pSimulation);
+    void updateSimulation(SingleCellViewSimulation *pSimulation,
+                          const qulonglong &pSize);
+
+    void checkResults(SingleCellViewSimulation *pSimulation);
 
 private Q_SLOTS:
     void on_actionRunPauseResumeSimulation_triggered();
