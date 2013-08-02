@@ -1330,9 +1330,12 @@ void SingleCellViewWidget::graphAdded(SingleCellViewGraphPanelPlotGraph *pGraph)
     // A new graph has been added, so keep track of it and update its
     // corresponding plot
 
-    mPlots.insert(pGraph, qobject_cast<SingleCellViewGraphPanelPlotWidget *>(pGraph->plot()));
+    SingleCellViewGraphPanelPlotWidget *plot = qobject_cast<SingleCellViewGraphPanelPlotWidget *>(pGraph->plot());
 
-    updatePlot(mPlots.value(pGraph));
+    mPlots.insert(pGraph, plot);
+
+    updatePlot(plot);
+    updateGraph(pGraph, mSimulations.value(pGraph->fileName())->results()->size());
 }
 
 //==============================================================================
@@ -1396,7 +1399,8 @@ double * SingleCellViewWidget::dataPoints(SingleCellViewSimulation *pSimulation,
 
 void SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot)
 {
-qDebug(">>> Updating plot %ld", long(pPlot));
+static int counter = 0;
+qDebug(">>> [P%03d] Updating plot       [%ld]", ++counter, long(pPlot));
 
     // Check all the graphs associated with the given plot and see whether any
     // of them uses the variable of integration as parameter X and/or Y, and if
@@ -1470,6 +1474,47 @@ void SingleCellViewWidget::updatePlots()
 
     foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots.values().toSet())
         updatePlot(plot);
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::updateGraph(SingleCellViewGraphPanelPlotGraph *pGraph,
+                                       const qulonglong &pSize)
+{
+static int counter = 0;
+qDebug(">>> [G%03d] Updating graph      [%ld]", ++counter, long(pGraph));
+
+    // Show/hide the graph, depending on whether it's valid
+
+    pGraph->setVisible(pGraph->isValid());
+
+    // Keep track of our graph's old size
+
+    qulonglong oldDataSize = pGraph->dataSize();
+
+    // Update our graph's data
+
+    if (pGraph->isValid()) {
+        SingleCellViewSimulation *simulation = mSimulations.value(pGraph->fileName());
+
+        pGraph->setRawSamples(dataPoints(simulation, pGraph->parameterX()),
+                              dataPoints(simulation, pGraph->parameterY()),
+                              pSize);
+    }
+
+    // Draw the graph's new segment, but only if there is some data to plot
+
+    if (pSize > 1)
+        qobject_cast<SingleCellViewGraphPanelPlotWidget *>(pGraph->plot())->drawGraphSegment(pGraph, oldDataSize?oldDataSize-1:0, pSize-1);
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::updateSimulation(SingleCellViewSimulation *pSimulation)
+{
+static int counter = 0;
+qDebug(">>> [S%03d] Updating simulation [%ld]", ++counter, long(pSimulation));
+
 }
 
 //==============================================================================

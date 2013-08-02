@@ -163,6 +163,11 @@ private:
     void updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot);
     void updatePlots();
 
+    void updateGraph(SingleCellViewGraphPanelPlotGraph *pGraph,
+                     const qulonglong &pSize);
+
+    void updateSimulation(SingleCellViewSimulation *pSimulation);
+
 private Q_SLOTS:
     void on_actionRunPauseResumeSimulation_triggered();
     void on_actionStopSimulation_triggered();
