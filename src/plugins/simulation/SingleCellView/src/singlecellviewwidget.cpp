@@ -1348,7 +1348,10 @@ void SingleCellViewWidget::graphUpdated(SingleCellViewGraphPanelPlotGraph *pGrap
 {
     // A graph has been updated, so update it
 
-    updateGraph(pGraph, mSimulations.value(pGraph->fileName())->results()->size());
+    SingleCellViewSimulation *simulation = mSimulations.value(pGraph->fileName());
+
+    if (simulation)
+        updateGraph(pGraph, simulation->results()->size());
 }
 
 //==============================================================================

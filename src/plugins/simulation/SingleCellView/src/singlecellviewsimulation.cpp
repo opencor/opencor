@@ -554,6 +554,11 @@ SingleCellViewSimulationResults::~SingleCellViewSimulationResults()
 
 bool SingleCellViewSimulationResults::createArrays()
 {
+    // Note: the boolean value we return is true if we have had no problem
+    //       allocating memory, false otherwise. This is the reason, for
+    //       example, we return true when there is either no runtime or the
+    //       simulation size is zero...
+
     // Clean things up
 
     deleteArrays();
@@ -561,14 +566,14 @@ bool SingleCellViewSimulationResults::createArrays()
     // Make sure that we have a runtime
 
     if (!mRuntime)
-        return false;
+        return true;
 
     // Retrieve the size of our data and make sure that it is valid
 
     qulonglong simulationSize = qulonglong(mSimulation->size());
 
     if (!simulationSize)
-        return false;
+        return true;
 
     // Create our points array
 
