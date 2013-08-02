@@ -6,15 +6,7 @@
 
 //==============================================================================
 
-#ifdef Q_OS_MAC
-    #pragma GCC diagnostic ignored "-Wunused-private-field"
-#endif
-
 #include <QtTest/QtTest>
-
-#ifdef Q_OS_MAC
-    #pragma GCC diagnostic warning "-Wunused-private-field"
-#endif
 
 //==============================================================================
 
