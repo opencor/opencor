@@ -220,6 +220,18 @@ void SingleCellViewGraphPanelsWidget::removeGraphPanel(SingleCellViewGraphPanelW
 
     delete pGraphPanel;
 
+    // Let people know that we have removed the given graph panel
+    // Note: the reason we pass a pointer to a now non-existing graph panel is
+    //       that some people interested in that signal might have used the
+    //       pointer to keep track of some information, as is done in
+    //       SingleCellViewInformationGraphsWidget for example...
+
+    emit graphPanelRemoved(pGraphPanel);
+
+    // Let people know whether graph panels can be removed
+
+    emit removeGraphPanelsEnabled(count() > 1);
+
     // Activate the next graph panel or the last one available, if any
 
     if (index < count())
@@ -235,18 +247,6 @@ void SingleCellViewGraphPanelsWidget::removeGraphPanel(SingleCellViewGraphPanelW
     // Keep track of our new sizes
 
     splitterMoved();
-
-    // Let people know that we have removed the given graph panel
-    // Note: the reason we pass a pointer to a now non-existing graph panel is
-    //       that some people interested in that signal might have used the
-    //       pointer to keep track of some information, as is done in
-    //       SingleCellViewInformationGraphsWidget for example...
-
-    emit graphPanelRemoved(pGraphPanel);
-
-    // Let people know whether graph panels can be removed
-
-    emit removeGraphPanelsEnabled(count() > 1);
 }
 
 //==============================================================================
