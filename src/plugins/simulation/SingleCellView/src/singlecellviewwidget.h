@@ -59,6 +59,7 @@ namespace SingleCellView {
 class SingleCellViewContentsWidget;
 class SingleCellViewGraphPanelPlotGraph;
 class SingleCellViewGraphPanelPlotWidget;
+class SingleCellViewGraphPanelWidget;
 class SingleCellViewPlugin;
 class SingleCellViewSimulation;
 
@@ -140,7 +141,9 @@ private:
 
     QList<SingleCellViewSimulation *> mCheckResultsSimulations;
 
-    QMap<SingleCellViewGraphPanelPlotGraph *, SingleCellViewGraphPanelPlotWidget *> mPlots;
+    QList<SingleCellViewGraphPanelPlotWidget *> mPlots;
+    QMap<SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotWidget *> mGraphPanelPlots;
+    QMap<SingleCellViewGraphPanelPlotGraph *, SingleCellViewGraphPanelPlotWidget *> mGraphPlots;
 
     void output(const QString &pMessage);
 
@@ -199,6 +202,8 @@ private Q_SLOTS:
 
     void simulationPropertyChanged(Core::Property *pProperty);
     void solversPropertyChanged(Core::Property *pProperty);
+
+    void graphPanelRemoved(SingleCellViewGraphPanelWidget *pGraphPanel);
 
     void addGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
                   CellMLSupport::CellmlFileRuntimeParameter *pParameterY);

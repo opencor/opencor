@@ -87,7 +87,9 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mRunActionEnabled(true),
     mOldSimulationResultsSizes(QMap<SingleCellViewSimulation *, qulonglong>()),
     mCheckResultsSimulations(QList<SingleCellViewSimulation *>()),
-    mPlots(QMap<SingleCellViewGraphPanelPlotGraph *, SingleCellViewGraphPanelPlotWidget *>())
+    mPlots(QList<SingleCellViewGraphPanelPlotWidget *>()),
+    mGraphPanelPlots(QMap<SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotWidget *>()),
+    mGraphPlots(QMap<SingleCellViewGraphPanelPlotGraph *, SingleCellViewGraphPanelPlotWidget *>())
 {
     // Set up the GUI
 
@@ -146,7 +148,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mToolBarWidget->addWidget(delaySpaceWidget);
 #endif
     mToolBarWidget->addWidget(mDelayValueWidget);
-/*---GRY--- THE BELOW SHOULD BE RE-ENABLED AT SOME POINT...
+/*---GRY--- DISABLED UNTIL WE ACTUALLY SUPPORT DEBUG MODE...
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mGui->actionDebugMode);
 */
@@ -207,6 +209,9 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
             graphsWidget, SLOT(initialize(SingleCellViewGraphPanelWidget *)));
     connect(graphPanelsWidget, SIGNAL(graphPanelRemoved(SingleCellViewGraphPanelWidget *)),
             graphsWidget, SLOT(finalize(SingleCellViewGraphPanelWidget *)));
+
+    connect(graphPanelsWidget, SIGNAL(graphPanelRemoved(SingleCellViewGraphPanelWidget *)),
+            this, SLOT(graphPanelRemoved(SingleCellViewGraphPanelWidget *)));
 
     // Keep track of whether a graph panel has been activated
 
@@ -1308,6 +1313,17 @@ void SingleCellViewWidget::solversPropertyChanged(Core::Property *pProperty)
 
 //==============================================================================
 
+void SingleCellViewWidget::graphPanelRemoved(SingleCellViewGraphPanelWidget *pGraphPanel)
+{
+    // A graph panel has been removed, so stop tracking its plot
+
+    mPlots.removeOne(mGraphPanelPlots.value(pGraphPanel));
+
+    mGraphPanelPlots.remove(pGraphPanel);
+}
+
+//==============================================================================
+
 void SingleCellViewWidget::addGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
                                     CellMLSupport::CellmlFileRuntimeParameter *pParameterY)
 {
@@ -1325,10 +1341,18 @@ void SingleCellViewWidget::graphAdded(SingleCellViewGraphPanelPlotGraph *pGraph)
 
     SingleCellViewGraphPanelPlotWidget *plot = qobject_cast<SingleCellViewGraphPanelPlotWidget *>(pGraph->plot());
 
-    mPlots.insert(pGraph, plot);
+    mGraphPlots.insert(pGraph, plot);
 
     updatePlot(plot);
     updateGraph(pGraph, mSimulations.value(pGraph->fileName())->results()->size());
+
+    // Keep track of the plot itself, if needed
+
+    if (!mPlots.contains(plot)) {
+        mPlots << plot;
+
+        mGraphPanelPlots.insert(qobject_cast<SingleCellViewGraphPanelWidget *>(plot->parentWidget()), plot);
+    }
 }
 
 //==============================================================================
@@ -1336,10 +1360,19 @@ void SingleCellViewWidget::graphAdded(SingleCellViewGraphPanelPlotGraph *pGraph)
 void SingleCellViewWidget::graphRemoved(SingleCellViewGraphPanelPlotGraph *pGraph)
 {
     // A graph has been removed, so update our plots and stop tracking it
+    // Note: pGraph points a graph which has already been deleted, hence we
+    //       retrieve its 'old' plot from mGraphPlots
 
-    updatePlot(mPlots.value(pGraph));
+    SingleCellViewGraphPanelPlotWidget *plot = mGraphPlots.value(pGraph);
 
-    mPlots.remove(pGraph);
+    updatePlot(plot);
+
+    mGraphPlots.remove(pGraph);
+
+    // Stop tracking the plot itself, if needed
+
+    if (!plot->graphs().size())
+        mPlots.removeOne(plot);
 }
 
 //==============================================================================
@@ -1365,9 +1398,6 @@ void SingleCellViewWidget::graphUpdated(SingleCellViewGraphPanelPlotGraph *pGrap
 
 void SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot)
 {
-static int counter = 0;
-qDebug(">>> [P%07d] Updating plot    [%ld]", ++counter, long(pPlot));
-
     // Check all the graphs associated with the given plot and see whether any
     // of them uses the variable of integration as parameter X and/or Y, and if
     // so then asks the plot to use the minimum/maximum points as the
@@ -1433,12 +1463,8 @@ qDebug(">>> [P%07d] Updating plot    [%ld]", ++counter, long(pPlot));
 void SingleCellViewWidget::updatePlots()
 {
     // Update all our plots
-    // Note: for this, we retrieve all our plots from the values of mPlots, but
-    //       we have to make sure that there are no duplicates (so we don't call
-    //       updatePlot() more than actually needed), hence we convert the list
-    //       to a set...
 
-    foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots.values().toSet())
+    foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots)
         updatePlot(plot);
 }
 
@@ -1475,9 +1501,6 @@ double * SingleCellViewWidget::dataPoints(SingleCellViewSimulation *pSimulation,
 void SingleCellViewWidget::updateGraph(SingleCellViewGraphPanelPlotGraph *pGraph,
                                        const qulonglong &pSize)
 {
-static int counter = 0;
-qDebug(">>> [G%07d] Updating graph   [%ld]", ++counter, long(pGraph));
-
     // Show/hide the graph, depending on whether it's valid
 
     pGraph->setVisible(pGraph->isValid());
@@ -1507,9 +1530,6 @@ qDebug(">>> [G%07d] Updating graph   [%ld]", ++counter, long(pGraph));
 void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
                                          const qulonglong &pSize)
 {
-static int counter = 0;
-qDebug(">>> [S%07d] Updating results [%ld]", ++counter, long(pSimulation));
-
     // Enable/disable the reset action, in case we are dealing with the active
     // simulation
     // Note: normally, our simulation worker would, for each point interval,
@@ -1527,7 +1547,7 @@ qDebug(">>> [S%07d] Updating results [%ld]", ++counter, long(pSimulation));
     //       when starting a simulation), then we ask the plot to directly
     //       replot itself...
 
-    foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots.values().toSet()) {
+    foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots) {
         foreach (SingleCellViewGraphPanelPlotGraph *graph, plot->graphs())
             if (!graph->fileName().compare(pSimulation->fileName()))
                 updateGraph(graph, pSize);
