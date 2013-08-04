@@ -117,13 +117,13 @@ void SingleCellViewSimulationWorker::run()
 
 void SingleCellViewSimulationWorker::started()
 {
-    // Reset our progress
-
-    mProgress = 0.0;
-
     // Let people know that we are running
 
     emit running(false);
+
+    // Reset our progress
+
+    mProgress = 0.0;
 
     // Set up our ODE/DAE solver
 
