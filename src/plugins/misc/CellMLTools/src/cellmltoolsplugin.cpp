@@ -214,13 +214,12 @@ void CellMLToolsPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
                                         && QString::fromStdWString(cellmlFile->model()->cellmlVersion()).compare(CellMLSupport::Cellml_1_0));
     mExportToCellml10Action->setVisible(toolsVisible);
 
-/*---GRY---
+/*---GRY--- DISABLED UNTIL EXPORTING TO CellML 1.1 IS FULLY SUPPORTED...
     mExportToCellml11Action->setEnabled(   toolsVisible && cellmlFile
                                         && QString::fromStdWString(cellmlFile->model()->cellmlVersion()).compare(CellMLSupport::Cellml_1_1));
     mExportToCellml11Action->setVisible(toolsVisible);
 */
 //---GRY--- BEGIN
-// THIS IS UNTIL EXPORTING TO CellML 1.1 IS FULLY SUPPORTED...
 mExportToCellml11Action->setEnabled(false);
 mExportToCellml11Action->setVisible(false);
 //---GRY--- END

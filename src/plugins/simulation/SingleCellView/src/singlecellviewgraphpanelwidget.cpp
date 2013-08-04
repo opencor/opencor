@@ -131,16 +131,6 @@ void SingleCellViewGraphPanelWidget::removeGraph(SingleCellViewGraphPanelPlotGra
 
 //==============================================================================
 
-void SingleCellViewGraphPanelWidget::replot()
-{
-    // Replot ourselves
-//---GRY--- CHECK WHETHER WE WILL REALLY NEED THIS METHOD IN THE LONG RUN...
-
-    mPlot->replot();
-}
-
-//==============================================================================
-
 bool SingleCellViewGraphPanelWidget::isActive() const
 {
     // Return whether the graph panel is active

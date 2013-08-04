@@ -47,8 +47,6 @@ public:
     void addGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
     void removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
 
-    void replot();
-
 protected:
     virtual void changeEvent(QEvent *pEvent);
     virtual void mousePressEvent(QMouseEvent *pEvent);
