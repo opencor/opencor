@@ -1379,19 +1379,41 @@ void SingleCellViewWidget::graphRemoved(SingleCellViewGraphPanelPlotGraph *pGrap
 
 void SingleCellViewWidget::graphUpdated(SingleCellViewGraphPanelPlotGraph *pGraph)
 {
-    // A graph has been updated, so update it
+    // A graph has been updated, so make sure that its corresponding plot is up
+    // to date
+
+    // Show/hide the graph
+
+    pGraph->setVisible(pGraph->isValid() && pGraph->isSelected());
+
+    // Update the graph's data and replot it
     // Note: it may happen that we don't have a simulation associated with the
-    //       graph, hence we must check for it. Indeed, say that you have two
-    //       files opened, but only one has been selected so far. From there,
-    //       say you create a graph and then double click on its model property
-    //       so that the other file gets selected. In this case, for example,
-    //       there won't be a simulation associated with the file and therefore
-    //       the graph...
+    //       given graph, hence we must check for it. Indeed, say that you have
+    //       two files opened, but only one has been selected so far. From
+    //       there, say you create a graph and then double click on its model
+    //       property so that the other file gets selected. In this case, for
+    //       example, there won't be a simulation associated with the file and
+    //       therefore the graph...
 
     SingleCellViewSimulation *simulation = mSimulations.value(pGraph->fileName());
 
-    if (simulation)
-        updateGraph(pGraph, simulation->results()->size());
+    if (simulation) {
+        // Update the graph's data
+        // Note: we don't want graph segments to be drawn (hence we pass false
+        //       to updateGraph()) since we come here as a result of a graph
+        //       being un/selected or its X or Y parameter being updated,
+        //       meaning that we have replot everything...
+
+        updateGraph(pGraph, simulation->results()->size(), false);
+
+        // Update our plot and replot it
+
+        SingleCellViewGraphPanelPlotWidget *plot = qobject_cast<SingleCellViewGraphPanelPlotWidget *>(pGraph->plot());
+
+        updatePlot(plot);
+
+        plot->replotNow();
+    }
 }
 
 //==============================================================================
@@ -1412,7 +1434,7 @@ void SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot)
     double needMaxY = 0.0;
 
     foreach (SingleCellViewGraphPanelPlotGraph *graph, pPlot->graphs())
-        if (graph->isValid()) {
+        if (graph->isValid() && graph->isSelected()) {
             SingleCellViewSimulation *simulation = mSimulations.value(graph->fileName());
 
             double startingPoint = simulation->data()->startingPoint();
@@ -1499,12 +1521,9 @@ double * SingleCellViewWidget::dataPoints(SingleCellViewSimulation *pSimulation,
 //==============================================================================
 
 void SingleCellViewWidget::updateGraph(SingleCellViewGraphPanelPlotGraph *pGraph,
-                                       const qulonglong &pSize)
+                                       const qulonglong &pSize,
+                                       const bool &pDrawGraphSegment)
 {
-    // Show/hide the graph, depending on whether it's valid
-
-    pGraph->setVisible(pGraph->isValid());
-
     // Keep track of our graph's old size
 
     qulonglong oldDataSize = pGraph->dataSize();
@@ -1519,9 +1538,10 @@ void SingleCellViewWidget::updateGraph(SingleCellViewGraphPanelPlotGraph *pGraph
                               pSize);
     }
 
-    // Draw the graph's new segment, but only if there is some data to plot
+    // Draw the graph's new segment, but only if required and if there is some
+    // data to plot and the graph is visible
 
-    if (pSize)
+    if (pDrawGraphSegment && pSize && pGraph->isVisible())
         qobject_cast<SingleCellViewGraphPanelPlotWidget *>(pGraph->plot())->drawGraphSegment(pGraph, oldDataSize?oldDataSize-1:0, pSize-1);
 }
 

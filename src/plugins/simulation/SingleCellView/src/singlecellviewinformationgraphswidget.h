@@ -132,7 +132,7 @@ private Q_SLOTS:
                                       const int &pOldSize, const int &pNewSize);
 
     void modelChanged(Core::Property *pProperty, const QString &pValue);
-    void propertyChanged(Core::Property *pProperty);
+    void graphChanged(Core::Property *pProperty);
 
     void updateParameterValue();
 };

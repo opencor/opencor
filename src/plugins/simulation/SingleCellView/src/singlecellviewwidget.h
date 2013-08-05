@@ -162,7 +162,8 @@ private:
                         CellMLSupport::CellmlFileRuntimeParameter *pParameter) const;
 
     void updateGraph(SingleCellViewGraphPanelPlotGraph *pGraph,
-                     const qulonglong &pSize);
+                     const qulonglong &pSize,
+                     const bool &pDrawGraphSegment = true);
 
     void updateResults(SingleCellViewSimulation *pSimulation,
                        const qulonglong &pSize);

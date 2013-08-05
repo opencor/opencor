@@ -235,7 +235,7 @@ void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelW
         // Keep track of when the user changes a property value
 
         connect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-                this, SLOT(propertyChanged(Core::Property *)));
+                this, SLOT(graphChanged(Core::Property *)));
 
         // Add our new property editor to ourselves
 
@@ -306,7 +306,7 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
     disconnect(mPropertyEditor, SIGNAL(listPropertyChanged(Core::Property *, const QString &)),
                this, SLOT(modelChanged(Core::Property *, const QString &)));
     disconnect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-               this, SLOT(propertyChanged(Core::Property *)));
+               this, SLOT(graphChanged(Core::Property *)));
 
     mPropertyEditor->addListProperty(graphProperty);
     Core::Property *xProperty = mPropertyEditor->addStringProperty(pGraph->parameterX()?pGraph->parameterX()->fullyFormattedName():Core::UnknownValue, graphProperty);
@@ -318,7 +318,7 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
     connect(mPropertyEditor, SIGNAL(listPropertyChanged(Core::Property *, const QString &)),
             this, SLOT(modelChanged(Core::Property *, const QString &)));
     connect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-            this, SLOT(propertyChanged(Core::Property *)));
+            this, SLOT(graphChanged(Core::Property *)));
 
     // Update the information about our new graph
 
@@ -614,8 +614,8 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
 
     // Update our section's name, if possible
     // Note: indeed, when populating ourselves, updateGraphInfo() gets called
-    //       (through propertyChanged()), yet we don't want to (and can't) do
-    //       what follows if not all the properties are available...
+    //       (through graphChanged()), yet we don't want to (and can't) do what
+    //       follows if not all the properties are available...
 
     if (pProperty->properties().count() == 3)
         pProperty->setName( pProperty->properties()[1]->value()
@@ -652,18 +652,32 @@ void SingleCellViewInformationGraphsWidget::modelChanged(Core::Property *pProper
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::propertyChanged(Core::Property *pProperty)
+void SingleCellViewInformationGraphsWidget::graphChanged(Core::Property *pProperty)
 {
-    // Update the graph information associated with the given property's
-    // corresponding section property
+    // The graph has changed, which means that either it has been un/selected or
+    // that the value of its X or Y parameter has changed
 
-    if (pProperty->value().isEmpty())
-        // The property value is empty, so...
+    if (pProperty->type() == Core::Property::Section) {
+        // The property associated with the graph is a section, which means that
+        // the graph has been un/selected, so update its selected state and let
+        // people know that our graph has been updated
 
-        pProperty->setValue(Core::UnknownValue);
-    else
+        SingleCellViewGraphPanelPlotGraph *graph = mGraphs.value(pProperty);
+
+        if (graph) {
+            graph->setSelected(pProperty->isChecked());
+
+            emit graphUpdated(graph);
+        }
+    } else {
+        // Either the X or Y parameter of the graph has changed, so update its
+        // information
+        // Note: updateGraphInfo() will emit the graphUpdated() signal, if
+        //       needed...
+
         updateGraphInfo(pProperty->parentProperty(),
                         pProperty->parentProperty()->properties()[0]->value());
+    }
 }
 
 //==============================================================================

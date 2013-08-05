@@ -41,6 +41,7 @@ namespace SingleCellView {
 SingleCellViewGraphPanelPlotGraph::SingleCellViewGraphPanelPlotGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
                                                                      CellMLSupport::CellmlFileRuntimeParameter *pParameterY) :
     QwtPlotCurve(),
+    mSelected(true),
     mFileName(QString()),
     mParameterX(pParameterX),
     mParameterY(pParameterY)
@@ -59,6 +60,24 @@ bool SingleCellViewGraphPanelPlotGraph::isValid() const
 
     return   !mFileName.isEmpty()
            && mParameterX && mParameterY;
+}
+
+//==============================================================================
+
+bool SingleCellViewGraphPanelPlotGraph::isSelected() const
+{
+    // Return whether we are selected
+
+    return mSelected;
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelPlotGraph::setSelected(const bool &pSelected)
+{
+    // Set our selected state
+
+    mSelected = pSelected;
 }
 
 //==============================================================================
@@ -524,7 +543,7 @@ void SingleCellViewGraphPanelPlotWidget::setLocalAxes(const double &pLocalMinX,
     QRectF boundingRect = QRectF();
 
     foreach (SingleCellViewGraphPanelPlotGraph *graph, mGraphs)
-        if (graph->isValid() && graph->dataSize())
+        if (graph->isValid() && graph->isSelected() && graph->dataSize())
             boundingRect |= graph->boundingRect();
 
     // Take into account the needed minimum/maximum values for our X and Y axes,

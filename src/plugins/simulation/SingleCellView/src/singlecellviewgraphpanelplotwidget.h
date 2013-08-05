@@ -38,6 +38,9 @@ public:
 
     bool isValid() const;
 
+    bool isSelected() const;
+    void setSelected(const bool &pSelected);
+
     QString fileName() const;
     void setFileName(const QString &pFileName);
 
@@ -48,6 +51,8 @@ public:
     void setParameterY(CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 
 private:
+    bool mSelected;
+
     QString mFileName;
 
     CellMLSupport::CellmlFileRuntimeParameter *mParameterX;
