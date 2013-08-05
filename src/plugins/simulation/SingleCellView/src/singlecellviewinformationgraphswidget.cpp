@@ -662,7 +662,7 @@ void SingleCellViewInformationGraphsWidget::modelChanged(Core::Property *pProper
 void SingleCellViewInformationGraphsWidget::graphChanged(Core::Property *pProperty)
 {
     // The graph has changed, which means that either it has been un/selected or
-    // that the value of its X or Y parameter has changed
+    // that the value of its model, X or Y parameter property has changed
 
     if (pProperty->type() == Core::Property::Section) {
         // The property associated with the graph is a section, which means that
@@ -677,8 +677,8 @@ void SingleCellViewInformationGraphsWidget::graphChanged(Core::Property *pProper
             emit graphUpdated(graph);
         }
     } else {
-        // Either the X or Y parameter of the graph has changed, so update its
-        // information
+        // Either the model, X or Y parameter property of the graph has changed,
+        // so update its information
         // Note: updateGraphInfo() will emit the graphUpdated() signal, if
         //       needed...
 

@@ -1401,8 +1401,9 @@ void SingleCellViewWidget::graphUpdated(SingleCellViewGraphPanelPlotGraph *pGrap
         // Update the graph's data
         // Note: we don't want graph segments to be drawn (hence we pass false
         //       to updateGraph()) since we come here as a result of a graph
-        //       being un/selected or its X or Y parameter being updated,
-        //       meaning that we have replot everything...
+        //       being un/selected, or as a result of its model, X or Y
+        //       parameter being updated, meaning that we have to replot
+        //       everything...
 
         updateGraph(pGraph, simulation->results()->size(), false);
 
