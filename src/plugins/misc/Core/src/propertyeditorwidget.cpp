@@ -1041,6 +1041,8 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
 
     mRightClicking = false;
 
+    mPropertyChecked = QMap<Property *, bool>();
+
     // Customise ourselves
 
     setRootIsDecorated(false);
@@ -1058,6 +1060,9 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
 
     connect(selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
             this, SLOT(editorClosed()));
+
+    connect(mModel, SIGNAL(itemChanged(QStandardItem *)),
+            this, SLOT(checkCheckState(QStandardItem *)));
 
     connect(propertyItemDelegate, SIGNAL(openEditor(QWidget *)),
             this, SLOT(editorOpened(QWidget *)));
@@ -1370,6 +1375,10 @@ Property * PropertyEditorWidget::addProperty(const Property::Type &pType,
     connect(res, SIGNAL(valueChanged(const QString &, const QString &)),
             this, SLOT(emitPropertyChanged()));
 
+    // Keep track of our property's check state
+
+    mPropertyChecked.insert(res, res->isChecked());
+
     // Keep track of our property and return it
 
     mProperties << res;
@@ -1679,6 +1688,27 @@ void PropertyEditorWidget::updateHeight()
         // Note: the new height consists of our ideal height to which we add the
         //       height of our horizontal scroll bar, should it be shown (i.e.
         //       if our width is smaller than that of our ideal size)...
+    }
+}
+
+//==============================================================================
+
+void PropertyEditorWidget::checkCheckState(QStandardItem *pItem)
+{
+    // Let people know whether the check state of the given property has changed
+
+    Property *prop = property(pItem->index());
+    bool oldPropertyChecked = mPropertyChecked.value(prop, false);
+    bool newPropertyChecked = prop->isChecked();
+
+    if (oldPropertyChecked != newPropertyChecked) {
+        // Keep track of the property's new check state
+
+        mPropertyChecked.insert(prop, newPropertyChecked);
+
+        // The property's check state has changed, so let people know about it
+
+        emit propertyChanged(prop);
     }
 }
 

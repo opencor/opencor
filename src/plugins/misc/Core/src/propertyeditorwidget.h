@@ -372,6 +372,8 @@ private:
 
     bool mRightClicking;
 
+    QMap<Property *, bool> mPropertyChecked;
+
     void constructor(const bool &pShowUnits = true,
                      const bool &pAutoUpdateHeight = false);
 
@@ -394,6 +396,8 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void updateHeight();
+
+    void checkCheckState(QStandardItem *pItem);
 
     void editorOpened(QWidget *pEditor);
     void editorClosed();
