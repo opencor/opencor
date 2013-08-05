@@ -584,12 +584,17 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
     // Update the model property's icon based on its value and determine the
     // file name from which we will have to check our X and Y properties
 
+    SingleCellViewGraphPanelPlotGraph *graph = mGraphs.value(pProperty);
     QString fileName = mFileName;
 
     if (!pFileName.compare(tr("Current"))) {
         pProperty->properties()[0]->setIcon(QIcon(":/oxygen/status/object-unlocked.png"));
+
+        graph->setPen(QPen(Qt::darkBlue));
     } else {
         pProperty->properties()[0]->setIcon(QIcon(":/oxygen/status/object-locked.png"));
+
+        graph->setPen(QPen(Qt::darkRed));
 
         fileName = pFileName.split(PropertySeparator).last();
     }
@@ -602,7 +607,6 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
 
     bool graphOk = true;
     CellMLSupport::CellmlFileRuntime *runtime = mRuntimes.value(fileName);
-    SingleCellViewGraphPanelPlotGraph *graph = mGraphs.value(pProperty);
     CellMLSupport::CellmlFileRuntimeParameter *oldParameterX = graph->parameterX();
     CellMLSupport::CellmlFileRuntimeParameter *oldParameterY = graph->parameterY();
 
