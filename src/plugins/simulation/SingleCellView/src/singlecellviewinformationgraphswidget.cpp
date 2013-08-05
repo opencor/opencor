@@ -581,11 +581,13 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
     // Update the graph information by checking the new value of the given
     // section property
 
-    // Update the model property's icon based on its value and determine the
-    // file name from which we will have to check our X and Y properties
+    // Update the model property's icon and graph colour, based on the value of
+    // the model property, and determine the file name from which we will have
+    // to check our X and Y properties
 
     SingleCellViewGraphPanelPlotGraph *graph = mGraphs.value(pProperty);
     QString fileName = mFileName;
+    QPen oldPen = graph->pen();
 
     if (!pFileName.compare(tr("Current"))) {
         pProperty->properties()[0]->setIcon(QIcon(":/oxygen/status/object-unlocked.png"));
@@ -639,7 +641,8 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
     // Let people know if we consider that the graph has been updated
 
     if (   (oldParameterX != graph->parameterX())
-        || (oldParameterY != graph->parameterY()))
+        || (oldParameterY != graph->parameterY())
+        || (oldPen != graph->pen()))
         emit graphUpdated(graph);
 }
 
