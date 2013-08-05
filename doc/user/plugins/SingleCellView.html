@@ -120,19 +120,27 @@
         </p>
 
         <p>
-            At this stage, we can run our model by pressing the F9 key or by clicking on the <img src="res/pics/oxygen/actions/media-playback-start.png" width=24 height=24 alt="Run" align=absmiddle> button. Then, or before, we can decide on a model parameter to be plotted against the variable of integration (which, here, is time since the simulation properties are expressed in milliseconds). All the model parameters are listed to the left of the view, grouped by components in which they were originally defined. To select a model parameter, click on its corresponding check box:
+            At this stage, we can run our model by pressing the F9 key or by clicking on the <img src="res/pics/oxygen/actions/media-playback-start.png" width=24 height=24 alt="Run" align=absmiddle> button. Then, or before, we can add a graph. All the model parameters are listed to the bottom left of the view, grouped by components in which they were originally defined. To add a graph, right click on a model parameter and select against which other model parameter you want to plot it. Here, we create a graph for <code>V</code> (from the <code>membrane</code> component) which is to be plotted against the variable of integration (i.e. time since the simulation properties are expressed in milliseconds):
         </p>
 
         <p class="center">
-            <a class="image" href="../res/image.html?image=../plugins/res/pics/SingleCellViewScreenshot05.png&caption=SingleCellView plugin: failed simulation"><img class="link" src="res/pics/SingleCellViewScreenshot05Small.png" width=360 height=270 alt="SingleCellView plugin: failed simulation"></a>
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/SingleCellViewScreenshot05.png&caption=SingleCellView plugin: failed simulation"><img class="link" src="res/pics/SingleCellViewScreenshot05Small.png" width=360 height=270 alt="SingleCellView plugin: add a graph"></a>
         </p>
 
         <p>
-            As can be seen, the simulation failed. Several model parameters, including the one we selected, have a <code>nan</code> value (i.e. not a number). In this case, it is because the solver was not properly set up. Its <code>Step</code> property is too big. If we set it to <code>0.01 milliseconds</code>, reset the model parameters (by clicking on the <img src="res/pics/oxygen/actions/view-refresh.png" width=24 height=24 alt="Reset" align=absmiddle> button), and restart the simulation, then we get the following trace:
+            Some information about the graph can be seen by double clicking on it. The <code>Model</code> property is used to associate the graph with a particular CellML file. By default, it has a value of <code>Current</code>, which means that if you select another CellML file, then OpenCOR will try to associate the graph with it (the <img src="res/pics/oxygen/status/task-attention.png" width=24 height=24 alt="Run" align=absmiddle> icon will be shown next to the check box, if it cannot, as well as next to the <code>X</code> and/or <code>Y</code> properties to highlight which model parameter(s) could not be found in the other CellML file). The <img src="res/pics/oxygen/status/object-unlocked.png" width=24 height=24 alt="Run" align=absmiddle> icon indicates that the graph is not locked (i.e. its <code>Model</code> property has a value of <code>Current</code>). The <img src="res/pics/oxygen/status/object-locked.png" width=24 height=24 alt="Run" align=absmiddle> icon is used when a graph is specifically associated with a CellML file. The <code>X</code> and <code>Y</code> properties can be modified either by editing their value or by right clicking on them and selecting another model parameter. The latter method can also be used to add or remove a graph.
         </p>
 
         <p class="center">
-            <a class="image" href="../res/image.html?image=../plugins/res/pics/SingleCellViewScreenshot06.png&caption=SingleCellView plugin: successful simulation"><img class="link" src="res/pics/SingleCellViewScreenshot06Small.png" width=360 height=270 alt="SingleCellView plugin: successful simulation"></a>
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/SingleCellViewScreenshot06.png&caption=SingleCellView plugin: failed simulation"><img class="link" src="res/pics/SingleCellViewScreenshot06Small.png" width=360 height=270 alt="SingleCellView plugin: failed simulation"></a>
+        </p>
+
+        <p>
+            Back to the simulation, we can see that it failed. Several model parameters have a value of <code>nan</code> (i.e. not a number). In this case, it is because the solver was not properly set up. Its <code>Step</code> property is too big. If we set it to <code>0.01 millisecond</code>s, reset the model parameters (by clicking on the <img src="res/pics/oxygen/actions/view-refresh.png" width=24 height=24 alt="Reset" align=absmiddle> button), and restart the simulation, then we get the following trace:
+        </p>
+
+        <p class="center">
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/SingleCellViewScreenshot07.png&caption=SingleCellView plugin: successful simulation"><img class="link" src="res/pics/SingleCellViewScreenshot07Small.png" width=360 height=270 alt="SingleCellView plugin: successful simulation"></a>
         </p>
 
         <p>
@@ -140,15 +148,15 @@
         </p>
 
         <p class="center">
-            <a class="image" href="../res/image.html?image=../plugins/res/pics/SingleCellViewScreenshot07.png&caption=SingleCellView plugin: CVODE solver"><img class="link" src="res/pics/SingleCellViewScreenshot07Small.png" width=360 height=270 alt="SingleCellView plugin: CVODE solver"></a>
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/SingleCellViewScreenshot08.png&caption=SingleCellView plugin: CVODE solver"><img class="link" src="res/pics/SingleCellViewScreenshot08Small.png" width=360 height=270 alt="SingleCellView plugin: CVODE solver"></a>
         </p>
 
         <p>
-            However, the simulation is so quick to run that we do not get a chance to see the progress of the simulation. Between the <img src="res/pics/oxygen/actions/view-refresh.png" width=24 height=24 alt="Reset" align=absmiddle> and <img src="res/pics/oxygen/mimetypes/text-csv.png" width=24 height=24 alt="Reset" align=absmiddle> buttons, there is a wheel which we can use to add a short delay between the output of two data points. Here, we set the delay to <code>13 ms</code>. This allows us to rerun the simulation, after having reset the model parameters, and pause it at a point of interest:
+            However, the simulation is so quick to run that we do not get a chance to see the progress of the simulation. Between the <img src="res/pics/oxygen/actions/view-refresh.png" width=24 height=24 alt="Reset" align=absmiddle> and <img src="res/pics/oxygen/actions/list-remove.png" width=24 height=24 alt="Reset" align=absmiddle> buttons, there is a wheel which we can use to add a short delay between the output of two data points. Here, we set the delay to <code>13 ms</code>. This allows us to rerun the simulation, after having reset the model parameters, and pause it at a point of interest:
         </p>
 
         <p class="center">
-            <a class="image" href="../res/image.html?image=../plugins/res/pics/SingleCellViewScreenshot08.png&caption=SingleCellView plugin: pausing a simulation"><img class="link" src="res/pics/SingleCellViewScreenshot08Small.png" width=360 height=270 alt="SingleCellView plugin: pausing a simulation"></a>
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/SingleCellViewScreenshot09.png&caption=SingleCellView plugin: pausing a simulation"><img class="link" src="res/pics/SingleCellViewScreenshot09Small.png" width=360 height=270 alt="SingleCellView plugin: pausing a simulation"></a>
         </p>
 
         <p>
@@ -156,11 +164,27 @@
         </p>
 
         <p class="center">
-            <a class="image" href="../res/image.html?image=../plugins/res/pics/SingleCellViewScreenshot09.png&caption=SingleCellView plugin: resuming a simulation"><img class="link" src="res/pics/SingleCellViewScreenshot09Small.png" width=360 height=270 alt="SingleCellView plugin: resuming a simulation"></a>
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/SingleCellViewScreenshot10.png&caption=SingleCellView plugin: resuming a simulation"><img class="link" src="res/pics/SingleCellViewScreenshot10Small.png" width=360 height=270 alt="SingleCellView plugin: resuming a simulation"></a>
         </p>
 
         <p>
-            If we want, we could export <em>all</em> the simulation data to a comma-separated values (CSV) file. To do so, we need to click on the <img src="res/pics/oxygen/mimetypes/text-csv.png" width=24 height=24 alt="Reset" align=absmiddle> button.
+            If we want, we could export <em>all</em> the simulation data to a comma-separated values (CSV) file. To do so, we would need to click on the <img src="res/pics/oxygen/mimetypes/text-csv.png" width=24 height=24 alt="Reset" align=absmiddle> button. Alternatively, if we want to create other graphs, but do not want them on the same graph panel as the existing one, we can click on the <img src="res/pics/oxygen/actions/list-add.png" width=24 height=24 alt="Reset" align=absmiddle> button to create a new graph panel:
+        </p>
+
+        <p class="center">
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/SingleCellViewScreenshot11.png&caption=SingleCellView plugin: resuming a simulation"><img class="link" src="res/pics/SingleCellViewScreenshot11Small.png" width=360 height=270 alt="SingleCellView plugin: create a graph panel"></a>
+        </p>
+
+        <p>
+            You might have noticed that the bottom graph panel has a blue vertical line to its left. This is to indicate that it is the currently selected graph panel (another graph panel can be selected by clicking on it). Something else you might have noticed is that the graphs area is now empty. This is because there are currently no graphs associated with the graph panel. Just for illustration, we have created a graph to plot <code>V</code> (from the <code>membrane</code> component) against <code>V'</code> (also from the <code>membrane</code> component):
+        </p>
+
+        <p class="center">
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/SingleCellViewScreenshot12.png&caption=SingleCellView plugin: resuming a simulation"><img class="link" src="res/pics/SingleCellViewScreenshot12Small.png" width=360 height=270 alt="SingleCellView plugin: add a graph"></a>
+        </p>
+
+        <p>
+            You can create as many graph panels (and graphs) as you want. The current graph panel or all the graph panels (but the top one) can be removed by clicking on the <img src="res/pics/oxygen/actions/list-remove.png" width=24 height=24 alt="Reset" align=absmiddle> button.
         </p>
 
         <div class="section">
@@ -172,7 +196,7 @@
         </p>
 
         <p class="center">
-            <a class="image" href="../res/image.html?image=../plugins/res/pics/SingleCellViewScreenshot10.png&caption=SingleCellView plugin: simulate a DAE model"><img class="link" src="res/pics/SingleCellViewScreenshot10Small.png" width=360 height=270 alt="SingleCellView plugin: simulate a DAE model"></a>
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/SingleCellViewScreenshot13.png&caption=SingleCellView plugin: simulate a DAE model"><img class="link" src="res/pics/SingleCellViewScreenshot13Small.png" width=360 height=270 alt="SingleCellView plugin: simulate a DAE model"></a>
         </p>
 
         <div class="section">
@@ -184,7 +208,7 @@
         </p>
 
         <p class="center">
-            <a class="image" href="../res/image.html?image=../plugins/res/pics/SingleCellViewScreenshot11.png&caption=SingleCellView plugin: simulate a CellML 1.1 model"><img class="link" src="res/pics/SingleCellViewScreenshot11Small.png" width=360 height=270 alt="SingleCellView plugin: simulate a CellML 1.1 model"></a>
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/SingleCellViewScreenshot14.png&caption=SingleCellView plugin: simulate a CellML 1.1 model"><img class="link" src="res/pics/SingleCellViewScreenshot14Small.png" width=360 height=270 alt="SingleCellView plugin: simulate a CellML 1.1 model"></a>
         </p>
 
         <div class="section">
@@ -192,11 +216,11 @@
         </div>
 
         <p>
-            Each simulation is run in its own thread which means that several simulations can be run at the same time. Simulations running in the 'background' display a small progress bar in the top tab bar while the 'foreground' simulation uses the main progress bar at the bottom of the view:
+            Each simulation is run in its own thread, which means that several simulations can be run at the same time. Simulations running in the background display a small progress bar in the top tab bar while the foreground simulation uses the main progress bar at the bottom of the view:
         </p>
 
         <p class="center">
-            <a class="image" href="../res/image.html?image=../plugins/res/pics/SingleCellViewScreenshot12.png&caption=SingleCellView plugin: simulate several models at once"><img class="link" src="res/pics/SingleCellViewScreenshot12Small.png" width=360 height=270 alt="SingleCellView plugin: simulate several models at once"></a>
+            <a class="image" href="../res/image.html?image=../plugins/res/pics/SingleCellViewScreenshot15.png&caption=SingleCellView plugin: simulate several models at once"><img class="link" src="res/pics/SingleCellViewScreenshot15Small.png" width=360 height=270 alt="SingleCellView plugin: simulate several models at once"></a>
         </p>
 
         <div class="section">
