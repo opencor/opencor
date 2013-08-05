@@ -168,6 +168,9 @@ private:
                         const bool &pForceMinMaxValues = false,
                         const bool &pUpdateMinMaxValues = false);
 
+    double optimisedValue(const double &pValue, const double &pPower,
+                          const bool &pLowValue);
+
     void setLocalAxis(const int &pAxis, const double &pMin, const double &pMax);
     void setLocalAxes(const double &pLocalMinX, const double &pLocalMaxX,
                       const double &pLocalMinY, const double &pLocalMaxY,

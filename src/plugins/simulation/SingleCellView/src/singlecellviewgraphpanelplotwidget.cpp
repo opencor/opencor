@@ -516,6 +516,25 @@ void SingleCellViewGraphPanelPlotWidget::checkAnyAxesValues(double &pMinX,
 
 //==============================================================================
 
+double SingleCellViewGraphPanelPlotWidget::optimisedValue(const double &pValue,
+                                                          const double &pPower,
+                                                          const bool &pLowValue)
+{
+    double res = pPower*(pLowValue?qFloor(pValue/pPower):qCeil(pValue/pPower));
+
+    if (pLowValue) {
+        double otherRes = res+0.5*pPower;
+
+        return (otherRes < pValue)?otherRes:res;
+    } else {
+        double otherRes = res-0.5*pPower;
+
+        return (otherRes > pValue)?otherRes:res;
+    }
+}
+
+//==============================================================================
+
 void SingleCellViewGraphPanelPlotWidget::setLocalAxes(const double &pLocalMinX,
                                                       const double &pLocalMaxX,
                                                       const double &pLocalMinY,
@@ -592,10 +611,10 @@ void SingleCellViewGraphPanelPlotWidget::setLocalAxes(const double &pLocalMinX,
         double powerX = qPow(10.0, qMax(xMin?qFloor(log10(qAbs(xMin))):0, xMax?qFloor(log10(qAbs(xMax))):0));
         double powerY = qPow(10.0, qMax(yMin?qFloor(log10(qAbs(yMin))):0, yMax?qFloor(log10(qAbs(yMax))):0));
 
-        xMin = (needMinMaxX && (xMin == mNeedMinX))?mNeedMinX:powerX*qFloor(xMin/powerX);
-        xMax = (needMinMaxX && (xMax == mNeedMaxX))?mNeedMaxX:powerX*qCeil(xMax/powerX);
-        yMin = (needMinMaxY && (yMin == mNeedMinY))?mNeedMinY:powerY*qFloor(yMin/powerY);
-        yMax = (needMinMaxY && (yMax == mNeedMaxY))?mNeedMaxY:powerY*qCeil(yMax/powerY);
+        xMin = (needMinMaxX && (xMin == mNeedMinX))?mNeedMinX:optimisedValue(xMin, powerX, true);
+        xMax = (needMinMaxX && (xMax == mNeedMaxX))?mNeedMaxX:optimisedValue(xMax, powerX, false);
+        yMin = (needMinMaxY && (yMin == mNeedMinY))?mNeedMinY:optimisedValue(yMin, powerY, true);
+        yMax = (needMinMaxY && (yMax == mNeedMaxY))?mNeedMaxY:optimisedValue(yMax, powerY, false);
 
         // Make sure that the optimised minimum/maximum values of our axes have
         // finite values
