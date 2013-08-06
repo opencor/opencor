@@ -13,7 +13,9 @@ ADD_PLUGIN(CellMLAnnotationView
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../interface.cpp
+        ../../plugin.cpp
         ../../plugininfo.cpp
+        ../../pluginmanager.cpp
 
         src/cellmlannotationviewcellmllistwidget.cpp
         src/cellmlannotationviewmetadatadetailswidget.cpp
@@ -24,6 +26,9 @@ ADD_PLUGIN(CellMLAnnotationView
         src/cellmlannotationviewplugin.cpp
         src/cellmlannotationviewwidget.cpp
     HEADERS_MOC
+        ../../plugin.h
+        ../../pluginmanager.h
+
         src/cellmlannotationviewcellmllistwidget.h
         src/cellmlannotationviewmetadatadetailswidget.h
         src/cellmlannotationviewmetadataeditdetailswidget.h
