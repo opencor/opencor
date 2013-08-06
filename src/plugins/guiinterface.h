@@ -184,6 +184,9 @@ public:
 
     virtual void updateGui(Plugin *pViewPlugin, const QString &pFileName);
 
+    virtual void initializeView();
+    virtual void finalizeView();
+
     virtual QWidget * viewWidget(const QString &pFileName);
     virtual QWidget * removeViewWidget(const QString &pFileName);
     virtual QString viewName() const;

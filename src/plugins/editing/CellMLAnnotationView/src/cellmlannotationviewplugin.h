@@ -19,6 +19,21 @@ class QSettings;
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace CoreEditing {
+    class CoreEditingPlugin;
+}   // namespace CoreEditing
+
+//==============================================================================
+
+namespace CoreCellMLEditing {
+    class CoreCellMLEditingPlugin;
+}   // namespace CoreCellMLEditing
+
+//==============================================================================
+
 namespace CellMLAnnotationView {
 
 //==============================================================================
@@ -46,8 +61,13 @@ public:
     explicit CellMLAnnotationViewPlugin();
     ~CellMLAnnotationViewPlugin();
 
+    virtual void initializationsDone(const Plugins &pLoadedPlugins);
+
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
+
+    virtual void initializeView();
+    virtual void finalizeView();
 
     virtual QWidget * viewWidget(const QString &pFileName);
     virtual QWidget * removeViewWidget(const QString &pFileName);
@@ -63,6 +83,9 @@ private:
     QList<int> mMetadataDetailsWidgetSizes;
 
     QMap<QString, CellmlAnnotationViewWidget *> mViewWidgets;
+
+    CoreEditing::CoreEditingPlugin *mCoreEditingPlugin;
+    CoreCellMLEditing::CoreCellMLEditingPlugin *mCoreCellmlEditingPlugin;
 
 private Q_SLOTS:
     void splitterMoved(const QList<int> &pSizes);

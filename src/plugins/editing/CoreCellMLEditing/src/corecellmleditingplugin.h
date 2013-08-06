@@ -39,6 +39,8 @@ public:
 
     virtual void retranslateUi();
 
+    void setFileNewActionsVisible(const bool &pVisible);
+
 private:
     QAction *mFileNewCellml1_0Action;
     QAction *mFileNewCellml1_1Action;

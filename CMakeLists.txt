@@ -185,28 +185,24 @@ SET(PLUGINS
     simulation/KINSOLSolver
     simulation/SecondOrderRungeKuttaSolver
 
-#---GRY--- DISABLED FOR VERSION 0.1.x...
-#    3rdparty/QScintilla
-#    3rdparty/QtMmlWidget
+    3rdparty/QScintilla
+    3rdparty/QtMmlWidget
     3rdparty/Qwt
 
-#---GRY--- DISABLED FOR VERSION 0.1.x...
-#    misc/QScintillaSupport
+    misc/QScintillaSupport
 
     # Build the remaining plugins
 
     misc/Help
-#---GRY--- DISABLED FOR VERSION 0.1.x...
-#    misc/Viewer
+    misc/Viewer
 
     organisation/CellMLModelRepository
     organisation/FileBrowser
     organisation/FileOrganiser
 
     editing/CellMLAnnotationView
-#---GRY--- DISABLED FOR VERSION 0.1.x...
-#    editing/RawCellMLView
-#    editing/RawView
+    editing/RawCellMLView
+    editing/RawView
 
     simulation/SingleCellView
 )

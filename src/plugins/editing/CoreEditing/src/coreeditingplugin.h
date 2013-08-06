@@ -43,6 +43,8 @@ public:
 
     virtual void retranslateUi();
 
+    void setEditMenuVisible(const bool &pVisible);
+
 private:
     QMenu *mEditMenu;
 

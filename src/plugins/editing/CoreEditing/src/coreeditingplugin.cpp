@@ -90,9 +90,7 @@ void CoreEditingPlugin::initialize()
 
     // Set our settings
 
-/*---GRY--- DISABLED FOR VERSION 0.1.x...
     mGuiSettings->addMenu(GuiMenuSettings::View, mEditMenu);
-*/
 }
 
 //==============================================================================
@@ -130,6 +128,15 @@ void CoreEditingPlugin::retranslateUi()
 
     retranslateAction(mEditSelectAllAction, tr("Select All"),
                       tr("Select all the objects"));
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::setEditMenuVisible(const bool &pVisible)
+{
+    // Show/hide our Edit menu
+
+    mEditMenu->menuAction()->setVisible(pVisible);
 }
 
 //==============================================================================

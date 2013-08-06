@@ -47,6 +47,8 @@ ADD_PLUGIN(CellMLAnnotationView
         CellMLSupport
         Compiler
         Core
+        CoreCellMLEditing
+        CoreEditing
         CoreSolver
         ${LLVM_PLUGIN}
     PLUGIN_BINARY_DEPENDENCIES

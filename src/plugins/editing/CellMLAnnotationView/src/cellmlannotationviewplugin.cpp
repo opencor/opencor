@@ -7,6 +7,8 @@
 #include "cellmlannotationviewwidget.h"
 #include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
+#include "corecellmleditingplugin.h"
+#include "coreeditingplugin.h"
 
 //==============================================================================
 
@@ -58,6 +60,19 @@ CellMLAnnotationViewPlugin::~CellMLAnnotationViewPlugin()
 
     foreach (QWidget *viewWidget, mViewWidgets)
         delete viewWidget;
+}
+
+//==============================================================================
+
+void CellMLAnnotationViewPlugin::initializationsDone(const Plugins &pLoadedPlugins)
+{
+    // Keep track of the CoreEditing and CoreCellMLEditing plugin instances
+
+    foreach (Plugin *loadedPlugin, pLoadedPlugins)
+        if (!loadedPlugin->name().compare("CoreEditing"))
+            mCoreEditingPlugin = static_cast<CoreEditing::CoreEditingPlugin *>(loadedPlugin->instance());
+        else if (!loadedPlugin->name().compare("CoreCellMLEditing"))
+            mCoreCellmlEditingPlugin = static_cast<CoreCellMLEditing::CoreCellMLEditingPlugin *>(loadedPlugin->instance());
 }
 
 //==============================================================================
@@ -141,6 +156,26 @@ void CellMLAnnotationViewPlugin::saveSettings(QSettings *pSettings) const
         for (int i = 0, iMax = mMetadataDetailsWidgetSizes.count(); i < iMax; ++i)
             pSettings->setValue(SettingsCellmlAnnotationWidgetMetadataDetailsWidgetSizes.arg(i), mMetadataDetailsWidgetSizes[i]);
     pSettings->endGroup();
+}
+
+//==============================================================================
+
+void CellMLAnnotationViewPlugin::initializeView()
+{
+    // Hide our inherited File|New actions and Edit menu
+
+    mCoreEditingPlugin->setEditMenuVisible(false);
+    mCoreCellmlEditingPlugin->setFileNewActionsVisible(false);
+}
+
+//==============================================================================
+
+void CellMLAnnotationViewPlugin::finalizeView()
+{
+    // Re-show our inherited File|New actions and Edit menu
+
+    mCoreEditingPlugin->setEditMenuVisible(true);
+    mCoreCellmlEditingPlugin->setFileNewActionsVisible(true);
 }
 
 //==============================================================================

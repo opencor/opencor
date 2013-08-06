@@ -1324,6 +1324,19 @@ void MainWindow::updateGui(Plugin *pViewPlugin, const QString &pFileName)
     // Things that are to be done when a new view plugin has been selected
 
     if (pViewPlugin != mViewPlugin) {
+        // Ask the previous view plugin, if any, to finalise its view
+        // Note #1: this is useful when a view (e.g. CellMLAnnotationView) wants
+        //          to show/hide some menus that it inherited (e.g. from
+        //          CoreEditing)...
+        // Note #2: see its GuiInterface::initializeView() counterpart below...
+
+        if (mViewPlugin) {
+            GuiInterface *guiInterface = qobject_cast<GuiInterface *>(mViewPlugin->instance());
+
+            if (guiInterface)
+                guiInterface->finalizeView();
+        }
+
         // Keep track of our view plugin
 
         mViewPlugin = pViewPlugin;
@@ -1357,6 +1370,14 @@ void MainWindow::updateGui(Plugin *pViewPlugin, const QString &pFileName)
             iter.value()->setEnabled(validViewAction);
             iter.value()->setVisible(validViewAction);
         }
+
+        // Ask our new view plugin to initialise its view
+        // Note: see its GuiInterface::finalizeView() counterpart above...
+
+        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(mViewPlugin->instance());
+
+        if (guiInterface)
+            guiInterface->initializeView();
 
         // Show/hide the File|New menu by checking whether its menu items are
         // visible

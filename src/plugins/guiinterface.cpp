@@ -351,6 +351,20 @@ void GuiInterface::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 
 //==============================================================================
 
+void GuiInterface::initializeView()
+{
+    // Nothing to do by default...
+}
+
+//==============================================================================
+
+void GuiInterface::finalizeView()
+{
+    // Nothing to do by default...
+}
+
+//==============================================================================
+
 QWidget * GuiInterface::viewWidget(const QString &pFileName)
 {
     Q_UNUSED(pFileName);

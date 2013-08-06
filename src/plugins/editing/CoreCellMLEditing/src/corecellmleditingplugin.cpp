@@ -41,10 +41,8 @@ void CoreCellMLEditingPlugin::initialize()
 
     // Set our settings
 
-/*---GRY--- DISABLED FOR VERSION 0.1.x...
     mGuiSettings->addMenuAction(GuiMenuActionSettings::FileNew, mFileNewCellml1_0Action);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::FileNew, mFileNewCellml1_1Action);
-*/
 }
 
 //==============================================================================
@@ -57,6 +55,16 @@ void CoreCellMLEditingPlugin::retranslateUi()
                       tr("Create a new CellML 1.0 file"));
     retranslateAction(mFileNewCellml1_1Action, tr("CellML 1.1 File"),
                       tr("Create a new CellML 1.1 file"));
+}
+
+//==============================================================================
+
+void CoreCellMLEditingPlugin::setFileNewActionsVisible(const bool &pVisible)
+{
+    // En/disable and show/hide our File|New actions
+
+    mFileNewCellml1_0Action->setVisible(pVisible);
+    mFileNewCellml1_1Action->setVisible(pVisible);
 }
 
 //==============================================================================
