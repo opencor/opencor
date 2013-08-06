@@ -7,6 +7,7 @@
 
 //==============================================================================
 
+#include "coreglobal.h"
 #include "coreinterface.h"
 #include "guiinterface.h"
 #include "i18ninterface.h"
@@ -27,8 +28,8 @@ static const QString EditGroup = "Edit";
 
 //==============================================================================
 
-class CoreEditingPlugin : public QObject, public CoreInterface,
-                          public GuiInterface, public I18nInterface
+class CORE_EXPORT CoreEditingPlugin : public QObject, public CoreInterface,
+                                      public GuiInterface, public I18nInterface
 {
     Q_OBJECT
 
