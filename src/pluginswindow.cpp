@@ -342,12 +342,13 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
     //       only want to see selectable plugins) that no categories/plugins are
     //       shown, so...
 
+    bool atLeastOneItem = pNewIndex.isValid();
     bool pluginItem = false;
     bool validItem = true;
 
     // Update the information view with the category's or plugin's information
 
-    QString itemText = mModel->itemFromIndex(pNewIndex)->text();
+    QString itemText = atLeastOneItem?mModel->itemFromIndex(pNewIndex)->text():QString();
     Plugin *plugin = mPluginManager->plugin(itemText);
 
     if (plugin) {
@@ -396,7 +397,7 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
             mGui->fieldOneLabel->setText(tr("Status:"));
             mGui->fieldOneValue->setText(statusDescription(plugin));
         }
-    } else {
+    } else if (atLeastOneItem) {
         // We are not dealing with a plugin, but a plugin category
 
         validItem = true;
@@ -428,17 +429,17 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
 
     // Show/hide the different fields
 
-    mGui->fieldOneLabel->setVisible(true);
-    mGui->fieldOneValue->setVisible(true);
+    mGui->fieldOneLabel->setVisible(atLeastOneItem);
+    mGui->fieldOneValue->setVisible(atLeastOneItem);
 
-    mGui->fieldTwoLabel->setVisible(validItem);
-    mGui->fieldTwoValue->setVisible(validItem);
+    mGui->fieldTwoLabel->setVisible(atLeastOneItem && validItem);
+    mGui->fieldTwoValue->setVisible(atLeastOneItem && validItem);
 
-    mGui->fieldThreeLabel->setVisible(validItem && pluginItem);
-    mGui->fieldThreeValue->setVisible(validItem && pluginItem);
+    mGui->fieldThreeLabel->setVisible(atLeastOneItem && validItem && pluginItem);
+    mGui->fieldThreeValue->setVisible(atLeastOneItem && validItem && pluginItem);
 
-    mGui->fieldFourLabel->setVisible(validItem && pluginItem);
-    mGui->fieldFourValue->setVisible(validItem && pluginItem);
+    mGui->fieldFourLabel->setVisible(atLeastOneItem && validItem && pluginItem);
+    mGui->fieldFourValue->setVisible(atLeastOneItem && validItem && pluginItem);
 }
 
 //==============================================================================
