@@ -7,7 +7,7 @@
 
 //==============================================================================
 
-#include "coreglobal.h"
+#include "corecellmleditingglobal.h"
 #include "coreinterface.h"
 #include "guiinterface.h"
 #include "i18ninterface.h"
@@ -24,10 +24,10 @@ PLUGININFO_FUNC CoreCellMLEditingPluginInfo();
 
 //==============================================================================
 
-class CORE_EXPORT CoreCellMLEditingPlugin : public QObject,
-                                            public CoreInterface,
-                                            public GuiInterface,
-                                            public I18nInterface
+class CORECELLMLEDITING_EXPORT CoreCellMLEditingPlugin : public QObject,
+                                                         public CoreInterface,
+                                                         public GuiInterface,
+                                                         public I18nInterface
 {
     Q_OBJECT
 
