@@ -15,13 +15,17 @@ ADD_PLUGIN(Viewer
         src
     PLUGIN_DEPENDENCIES
         Core
-        QtMmlWidget
+        Qwt
     QT_MODULES
         Widgets
     QT_DEPENDENCIES
+        QtConcurrent
         QtCore
         QtGui
         QtNetwork
+        QtOpenGL
+        QtPrintSupport
+        QtSvg
         QtWidgets
         QtXml
 )

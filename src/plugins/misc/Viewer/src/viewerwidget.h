@@ -12,7 +12,7 @@
 
 //==============================================================================
 
-#include <QtMmlWidget>
+#include "qwt_mml_document.h"
 
 //==============================================================================
 
@@ -37,10 +37,10 @@ protected:
     virtual void paintEvent(QPaintEvent *pEvent);
 
 private:
-    QtMmlDocument mMmlDocument;
+    QwtMathMLDocument mMathmlDocument;
 
-    double mOneOverMmlDocumentWidth;
-    double mOneOverMmlDocumentHeight;
+    double mOneOverMathmlDocumentWidth;
+    double mOneOverMathmlDocumentHeight;
 
     QString mContent;
 };

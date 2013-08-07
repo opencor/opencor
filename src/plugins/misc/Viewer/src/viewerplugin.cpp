@@ -22,7 +22,7 @@ PLUGININFO_FUNC ViewerPluginInfo()
                           PluginInfo::Miscellaneous,
                           false,
                           false,
-                          QStringList() << "CoreEditing" << "QtMmlWidget",
+                          QStringList() << "Qwt",
                           descriptions);
 }
 

@@ -186,7 +186,6 @@ SET(PLUGINS
     simulation/SecondOrderRungeKuttaSolver
 
     3rdparty/QScintilla
-    3rdparty/QtMmlWidget
     3rdparty/Qwt
 
     misc/QScintillaSupport

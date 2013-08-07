@@ -35,16 +35,20 @@ ADD_PLUGIN(RawCellMLView
         ${LLVM_PLUGIN}
         QScintilla
         QScintillaSupport
-        QtMmlWidget
+        Qwt
         Viewer
     PLUGIN_BINARY_DEPENDENCIES
         ${LLVM_BINARY_PLUGIN}
     QT_MODULES
         Widgets
     QT_DEPENDENCIES
+        QtConcurrent
         QtCore
         QtGui
         QtNetwork
+        QtOpenGL
+        QtPrintSupport
+        QtSvg
         QtWidgets
         QtXml
     EXTERNAL_BINARY_DEPENDENCIES

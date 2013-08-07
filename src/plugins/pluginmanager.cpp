@@ -61,10 +61,9 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiVersion) :
 
     // Unmanageable plugins (e.g. the QScintilla plugin) don't, by default, get
     // loaded, but the situation is obviously different if such a plugin is
-    // required by another plugin (e.g. the Viewer plugin requires the
-    // QtMmlWidget plugin), in which case the unmanageable plugin must be
-    // loaded. So, we must here determine which of those plugins must be
-    // loaded...
+    // required by another plugin (e.g. the Viewer plugin requires the Qwt
+    // plugin), in which case the unmanageable plugin must be loaded. So, we
+    // must here determine which of those plugins must be loaded...
 
     QStringList requiredPlugins = QStringList();
     QStringList wantedPlugins = QStringList();
