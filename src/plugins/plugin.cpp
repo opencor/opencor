@@ -313,11 +313,14 @@ QStringList Plugin::requiredPlugins(const QString &pPluginsDir,
 {
     // Return the list of plugins required by a given plugin
 
-    QStringList res;
+    QStringList res = QStringList();
 
     // Recursively look for the plugins required by the current plugin
 
     PluginInfo *pluginInfo = Plugin::info(Plugin::fileName(pPluginsDir, pName));
+
+    if (!pluginInfo)
+        return res;
 
     foreach (const QString &plugin, pluginInfo->dependencies())
         res << requiredPlugins(pPluginsDir, plugin, pLevel+1);
