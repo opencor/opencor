@@ -17,6 +17,7 @@ namespace Viewer {
 
 ViewerWidget::ViewerWidget(QWidget *pParent) :
     QwtTextLabel(pParent),
+    CommonWidget(pParent),
     mContent(QString())
 {
     // Make sure that MathML support is enabled
