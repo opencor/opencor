@@ -32,7 +32,6 @@ ADD_PLUGIN(Help
         Help
         Network
         WebKitWidgets
-        Widgets
     QT_DEPENDENCIES
         QtCore
         QtGui

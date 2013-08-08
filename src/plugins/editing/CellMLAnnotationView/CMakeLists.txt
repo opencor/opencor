@@ -60,7 +60,6 @@ ADD_PLUGIN(CellMLAnnotationView
         ${LLVM_BINARY_PLUGIN}
     QT_MODULES
         WebKitWidgets
-        Widgets
     QT_DEPENDENCIES
         QtCore
         QtGui
