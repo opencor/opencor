@@ -21,7 +21,6 @@ ADD_PLUGIN(Viewer
         QtConcurrent
         QtCore
         QtGui
-        QtNetwork
         QtOpenGL
         QtPrintSupport
         QtSvg
