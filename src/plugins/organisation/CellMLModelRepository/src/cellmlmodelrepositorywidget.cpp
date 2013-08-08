@@ -60,7 +60,7 @@ QSize CellmlModelRepositoryWidget::sizeHint() const
     // Suggest a default size for the CellML Model Repository widget
     // Note: this is critical if we want a docked widget, with a CellML Model
     //       Repository widget on it, to have a decent size when docked to the
-    //       main window
+    //       main window...
 
     return defaultSize(0.15);
 }
