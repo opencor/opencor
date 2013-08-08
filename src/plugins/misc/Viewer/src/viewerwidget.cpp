@@ -6,8 +6,7 @@
 
 //==============================================================================
 
-#include <QPainter>
-#include <QPaintEvent>
+#include "qwt_mathml_text_engine.h"
 
 //==============================================================================
 
@@ -17,15 +16,17 @@ namespace Viewer {
 //==============================================================================
 
 ViewerWidget::ViewerWidget(QWidget *pParent) :
-    Widget(pParent),
-    mMathmlDocument(QwtMathMLDocument()),
-    mOneOverMathmlDocumentWidth(0),
-    mOneOverMathmlDocumentHeight(0),
+    QwtTextLabel(pParent),
     mContent(QString())
 {
-    // Initialise the font of our MathML document
+    // Make sure that MathML support is enabled
 
-    mMathmlDocument.setFontName(QwtMathMLDocument::NormalFont, "Times New Roman");
+    QwtText::setTextEngine(QwtText::MathMLText, new QwtMathMLTextEngine());
+
+    // Customise our background
+
+    setAutoFillBackground(true);
+    setBackgroundRole(QPalette::Base);
 
 //---GRY--- THE BELOW CODE IS JUST FOR TESTING THE WIDGET...
 setContent("<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mrow><msub><mi>i</mi><mi>Na</mi></msub><mo>=</mo><mfrac><mrow><msub><mi>g</mi><mi>Na</mi></msub><mo>&middot;</mo><msup><mi>m</mi><mn>3</mn></msup><mo>&middot;</mo><mi>h</mi><mo>&middot;</mo><msub><mi>Na</mi><mi>o</mi></msub><mo>&middot;</mo><mfrac><msup><mi>F</mi><mn>2</mn></msup><mrow><mi>R</mi><mo>&middot;</mo><mi>T</mi></mrow></mfrac><mo>&middot;</mo><mo>(</mo><mrow><msup><mi>e</mi><mrow><mo>(</mo><mi>V</mi><mo>-</mo><msub><mi>E</mi><mn>Na</mn></msub><mo>)</mo><mo>&middot;</mo><mfrac><mrow><mi>F</mi></mrow><mrow><mi>R</mi><mo>&middot;</mo><mi>T</mi></mrow></mfrac></mrow></msup><mo>-</mo><mn>1</mn></mrow><mo>)</mo></mrow><mrow><msup><mi>e</mi><mrow><mi>V</mi><mo>&middot;</mo><mfrac><mrow><mi>F</mi></mrow><mrow><mi>R</mi><mo>&middot;</mo><mi>T</mi></mrow></mfrac></mrow></msup><mo>-</mo><mn>1</mn></mrow></mfrac><mo>&middot;</mo><mi>V</mi></mrow></math>");
@@ -33,76 +34,16 @@ setContent("<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mrow><msub><mi>i
 
 //==============================================================================
 
-bool ViewerWidget::setContent(const QString &pContent, QString *pErrorMsg,
-                              int *pErrorLine, int *pErrorColumn)
+void ViewerWidget::setContent(const QString &pContent)
 {
+    if (!pContent.compare(mContent))
+        return;
+
     // Keep track of the the MathML equation
 
     mContent = pContent;
 
-    // Make sure that the base font size is set to 100 pixels and then set the
-    // MathML equation
-    // Note: when setting the equation, QtMathmlDocument recomputes the
-    //       equation's layout. Now, because we want the equation to be rendered as
-    //       optimally as possible, we use a big font size, so that when we
-    //       actually need to render the equation (see paintEvent()), we can
-    //       based on the size of the widget use an optimal font size...
-
-    mMathmlDocument.setBaseFontPointSize(100);
-
-    bool res = mMathmlDocument.setContent(pContent, pErrorMsg, pErrorLine, pErrorColumn);
-
-    // Keep track of the size of the big version of the rendered equation
-
-    QSize mathmlDocumentSize = mMathmlDocument.size();
-
-    mOneOverMathmlDocumentWidth  = 1.0/mathmlDocumentSize.width();
-    mOneOverMathmlDocumentHeight = 1.0/mathmlDocumentSize.height();
-
-    // We are all done, so just return the result of setContent()
-
-    return res;
-}
-
-//==============================================================================
-
-QSize ViewerWidget::sizeHint() const
-{
-    // Suggest a default size for the file browser widget
-    // Note: this is critical if we want a docked widget, with a file browser
-    //       widget on it, to have a decent size when docked to the main window
-
-    return defaultSize(0.1);
-}
-
-//==============================================================================
-
-void ViewerWidget::paintEvent(QPaintEvent *pEvent)
-{
-    QPainter painter(this);
-
-    // Set the base font size value
-    // Note: to go for 100% of the 'optimal' size might result in the edges of
-    //       the equation being clipped, hence we go for 93% of the 'optimal'
-    //       size...
-
-    mMathmlDocument.setBaseFontPointSize(qRound(93*qMin(mOneOverMathmlDocumentWidth*width(),
-                                                        mOneOverMathmlDocumentHeight*height())));
-
-    // Clear the background
-
-    painter.fillRect(pEvent->rect(), QColor(palette().color(QPalette::Base)));
-
-    // Render the equation
-
-    QSize mathmlDocumentSize = mMathmlDocument.size();
-
-    mMathmlDocument.paint(&painter, QPoint(0.5*(width()-mathmlDocumentSize.width()),
-                                           0.5*(height()-mathmlDocumentSize.height())));
-
-    // Accept the event
-
-    pEvent->accept();
+    setText(mContent, QwtText::MathMLText);
 }
 
 //==============================================================================

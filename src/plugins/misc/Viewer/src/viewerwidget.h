@@ -7,12 +7,11 @@
 
 //==============================================================================
 
-#include "widget.h"
 #include "viewerglobal.h"
 
 //==============================================================================
 
-#include "qwt_mml_document.h"
+#include "qwt_text_label.h"
 
 //==============================================================================
 
@@ -21,27 +20,16 @@ namespace Viewer {
 
 //==============================================================================
 
-class VIEWER_EXPORT ViewerWidget : public Core::Widget
+class VIEWER_EXPORT ViewerWidget : public QwtTextLabel
 {
     Q_OBJECT
 
 public:
     explicit ViewerWidget(QWidget *pParent = 0);
 
-    bool setContent(const QString &pContent, QString *pErrorMsg = 0,
-                    int *pErrorLine = 0, int *pErrorColumn = 0);
-
-protected:
-    virtual QSize sizeHint() const;
-
-    virtual void paintEvent(QPaintEvent *pEvent);
+    void setContent(const QString &pContent);
 
 private:
-    QwtMathMLDocument mMathmlDocument;
-
-    double mOneOverMathmlDocumentWidth;
-    double mOneOverMathmlDocumentHeight;
-
     QString mContent;
 };
 
