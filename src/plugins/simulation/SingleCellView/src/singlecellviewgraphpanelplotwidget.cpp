@@ -520,7 +520,12 @@ double SingleCellViewGraphPanelPlotWidget::optimisedValue(const double &pValue,
                                                           const double &pPower,
                                                           const bool &pLowValue)
 {
+    // Optimise the given value using the given power
+
     double res = pPower*(pLowValue?qFloor(pValue/pPower):qCeil(pValue/pPower));
+
+    // Now, try to optimise even further by testing against half of the given
+    // power
 
     if (pLowValue) {
         double otherRes = res+0.5*pPower;
@@ -608,8 +613,20 @@ void SingleCellViewGraphPanelPlotWidget::setLocalAxes(const double &pLocalMinX,
         // Optimise the minimum/maximum values of our axes by rounding them
         // down/up, respectively
 
-        double powerX = qPow(10.0, qMax(xMin?qFloor(log10(qAbs(xMin))):0, xMax?qFloor(log10(qAbs(xMax))):0));
-        double powerY = qPow(10.0, qMax(yMin?qFloor(log10(qAbs(yMin))):0, yMax?qFloor(log10(qAbs(yMax))):0));
+        double powerX = qPow(10.0, qMin(qFloor(log10(qAbs(xMax-xMin))),
+                                        qMax(xMin?
+                                                 qFloor(log10(qAbs(xMin))):
+                                                 0,
+                                             xMax?
+                                                 qFloor(log10(qAbs(xMax))):
+                                                 0)));
+        double powerY = qPow(10.0, qMin(qFloor(log10(qAbs(yMax-yMin))),
+                                        qMax(yMin?
+                                                 qFloor(log10(qAbs(yMin))):
+                                                 0,
+                                             yMax?
+                                                 qFloor(log10(qAbs(yMax))):
+                                                 0)));
 
         xMin = (needMinMaxX && (xMin == mNeedMinX))?mNeedMinX:optimisedValue(xMin, powerX, true);
         xMax = (needMinMaxX && (xMax == mNeedMaxX))?mNeedMaxX:optimisedValue(xMax, powerX, false);
