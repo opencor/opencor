@@ -16,6 +16,7 @@ ADD_PLUGIN(Viewer
     INCLUDE_DIRS
         src
     PLUGIN_DEPENDENCIES
+        Core
         Qwt
     QT_MODULES
         Widgets
@@ -23,6 +24,7 @@ ADD_PLUGIN(Viewer
         QtConcurrent
         QtCore
         QtGui
+        QtNetwork
         QtOpenGL
         QtPrintSupport
         QtSvg

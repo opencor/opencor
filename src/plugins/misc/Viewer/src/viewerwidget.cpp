@@ -48,6 +48,17 @@ void ViewerWidget::setContent(const QString &pContent)
 
 //==============================================================================
 
+QSize ViewerWidget::sizeHint() const
+{
+    // Suggest a default size for our viewer widget
+    // Note: this is critical if we want a docked widget, with a viewer widget
+    //       on it, to have a decent size when docked to the main window...
+
+    return defaultSize(0.1);
+}
+
+//==============================================================================
+
 }   // namespace Viewer
 }   // namespace OpenCOR
 

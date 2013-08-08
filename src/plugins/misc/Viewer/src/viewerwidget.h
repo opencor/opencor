@@ -7,6 +7,7 @@
 
 //==============================================================================
 
+#include "commonwidget.h"
 #include "viewerglobal.h"
 
 //==============================================================================
@@ -20,7 +21,8 @@ namespace Viewer {
 
 //==============================================================================
 
-class VIEWER_EXPORT ViewerWidget : public QwtTextLabel
+class VIEWER_EXPORT ViewerWidget : public QwtTextLabel,
+                                   public Core::CommonWidget
 {
     Q_OBJECT
 
@@ -28,6 +30,9 @@ public:
     explicit ViewerWidget(QWidget *pParent = 0);
 
     void setContent(const QString &pContent);
+
+protected:
+    virtual QSize sizeHint() const;
 
 private:
     QString mContent;
