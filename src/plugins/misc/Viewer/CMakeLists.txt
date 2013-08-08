@@ -11,6 +11,8 @@ ADD_PLUGIN(Viewer
     HEADERS_MOC
         src/viewerwidget.h
         src/viewerplugin.h
+    DEFINITIONS
+        QWT_DLL
     INCLUDE_DIRS
         src
     PLUGIN_DEPENDENCIES
