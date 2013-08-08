@@ -421,5 +421,13 @@
         <source>Remove the current graph panel or all the graph panels</source>
         <translation>Supprimer le panneau graphique actuel ou tous les panneaux graphiques</translation>
     </message>
+    <message>
+        <source>Clear Simulation Data</source>
+        <translation>Supprimer Données Simulation</translation>
+    </message>
+    <message>
+        <source>Clear the simulation data</source>
+        <translation>Supprimer les données de la simulation</translation>
+    </message>
 </context>
 </TS>

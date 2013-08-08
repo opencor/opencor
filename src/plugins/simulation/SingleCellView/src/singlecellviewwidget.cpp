@@ -142,6 +142,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mToolBarWidget->addAction(mGui->actionStopSimulation);
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mGui->actionResetModelParameters);
+    mToolBarWidget->addAction(mGui->actionClearSimulationData);
     mToolBarWidget->addSeparator();
     mToolBarWidget->addWidget(mDelayWidget);
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
@@ -442,8 +443,10 @@ void SingleCellViewWidget::updateSimulationMode()
     mContentsWidget->informationWidget()->simulationWidget()->setEnabled(!simulationModeEnabled);
     mContentsWidget->informationWidget()->solversWidget()->setEnabled(!simulationModeEnabled);
 
-    // Enable/disable our export to CSV
+    // Enable/disable some actions
 
+    mGui->actionClearSimulationData->setEnabled(    mSimulation->results()->size()
+                                                && !simulationModeEnabled);
     mGui->actionSimulationDataCsvExport->setEnabled(    mSimulation->results()->size()
                                                     && !simulationModeEnabled);
 
@@ -1005,9 +1008,24 @@ void SingleCellViewWidget::on_actionStopSimulation_triggered()
 
 void SingleCellViewWidget::on_actionResetModelParameters_triggered()
 {
-    // Reset our simulation
+    // Reset our model parameters
 
     mSimulation->reset();
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::on_actionClearSimulationData_triggered()
+{
+    // Clear our simulation data
+
+    mSimulation->results()->reset(false);
+
+    // Update our simulation mode and check for results
+
+    updateSimulationMode();
+
+    checkResults(mSimulation);
 }
 
 //==============================================================================
