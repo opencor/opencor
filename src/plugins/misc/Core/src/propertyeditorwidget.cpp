@@ -82,7 +82,7 @@ IntegerEditorWidget::IntegerEditorWidget(QWidget *pParent) :
 {
     // Set a validator which accepts any integer
 
-    setValidator(new QRegExpValidator(QRegExp("^[+-]?[0-9]*([eE][+-]?[0-9]+)?$"), this));
+    setValidator(new QRegExpValidator(QRegExp("^[+-]?[0-9]*$"), this));
 }
 
 //==============================================================================
