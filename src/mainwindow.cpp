@@ -118,11 +118,7 @@ mGui->actionPreferences->setVisible(false);
 
     // Customise our docked widgets action and handle it through a connection
 
-#ifdef Q_OS_MAC
-    mGui->actionDockedWidgets->setShortcut(QKeySequence(Qt::CTRL|Qt::META|Qt::Key_Space));
-#else
     mGui->actionDockedWidgets->setShortcut(QKeySequence(Qt::CTRL|Qt::Key_Space));
-#endif
 
     connect(mGui->actionDockedWidgets, SIGNAL(triggered(bool)),
             this, SLOT(showDockedWidgets(const bool &)));
