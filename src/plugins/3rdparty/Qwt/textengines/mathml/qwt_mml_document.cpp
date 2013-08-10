@@ -13,7 +13,7 @@
 
 #define ROUND(a) (int)((a)+.5)
 
-static bool           g_draw_frames             = false;
+static bool           g_draw_frames             = true;//false;
 static const double   g_mfrac_spacing           = 0.1;
 static const double   g_mroot_base_margin       = 0.1;
 static const double   g_script_size_multiplier  = 0.7071; // sqrt(1/2)
@@ -4034,11 +4034,12 @@ void QwtMmlNode::paintSymbol( QPainter *p ) const
     {
         p->save();
         p->setPen( QPen( Qt::red, 0 ) );
-        p->drawRect( m_my_rect );
+        QPoint dPos = devicePoint( relOrigin() );
+        p->drawRect( m_my_rect.adjusted( dPos.x(), dPos.y(), dPos.x(), dPos.y() ) );
         QPen pen = p->pen();
         pen.setStyle( Qt::DotLine );
         p->setPen( pen );
-        p->drawLine( myRect().left(), 0, myRect().right(), 0 );
+        p->drawLine( dPos.x() + myRect().left(), dPos.y(), dPos.x() + myRect().right(), dPos.y() );
         p->restore();
     }
 }
