@@ -4235,7 +4235,8 @@ void QwtMmlRootBaseNode::paintSymbol( QPainter *p ) const
 
     p->restore();
 
-    p->drawLine( sr.right(), sr.top(), myRect().right(), sr.top() );
+    QPoint dPos = devicePoint( relOrigin() );
+    p->drawLine( dPos.x() + sr.right(), dPos.y() + sr.top(), dPos.x() + myRect().right(), dPos.y() + sr.top() );
 }
 
 QwtMmlTextNode::QwtMmlTextNode( const QString &text, QwtMmlDocument *document )
@@ -4796,6 +4797,7 @@ void QwtMmlMtableNode::paintSymbol( QPainter *p ) const
     int col_spc = columnspacing();
     int row_spc = rowspacing();
 
+    QPoint dPos = devicePoint( relOrigin() );
     QPen pen = p->pen();
     int col_offset = 0;
     int i;
@@ -4813,7 +4815,7 @@ void QwtMmlMtableNode::paintSymbol( QPainter *p ) const
 
             p->setPen( pen );
             int x = col_offset + 0.5 * col_spc;
-            p->drawLine( x, -0.5 * m_content_height, x, 0.5 * m_content_height );
+            p->drawLine( dPos.x() + x, dPos.y() - 0.5 * m_content_height, dPos.x() + x, dPos.y() + 0.5 * m_content_height );
         }
         col_offset += col_spc;
     }
@@ -4833,7 +4835,7 @@ void QwtMmlMtableNode::paintSymbol( QPainter *p ) const
 
             p->setPen( pen );
             int y = row_offset + 0.5 * ( row_spc - m_content_height );
-            p->drawLine( 0, y, m_content_width, y );
+            p->drawLine( dPos.x(), dPos.y(), dPos.x() + m_content_width, dPos.y() + y );
         }
         row_offset += row_spc;
     }
