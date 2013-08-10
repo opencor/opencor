@@ -159,7 +159,7 @@ public:
     QwtMmlNode( NodeType type, QwtMmlDocument *document, const QwtMmlAttributeMap &attribute_map );
     virtual ~QwtMmlNode();
 
-    // Mml stuff
+    // QwtMml stuff
     NodeType nodeType() const
     { return m_node_type; }
 
@@ -4260,7 +4260,7 @@ void QwtMmlTextNode::paintSymbol( QPainter *p ) const
     QFont fn = font();
 
     QFontInfo fi( fn );
-//    qWarning("MmlTextNode::paintSymbol(): requested: %s, used: %s, size=%d, italic=%d, bold=%d, text=\"%s\" sl=%d",
+//    qWarning("QwtMmlTextNode::paintSymbol(): requested: %s, used: %s, size=%d, italic=%d, bold=%d, text=\"%s\" sl=%d",
 //              fn.family().latin1(), fi.family().latin1(), fi.pointSize(), (int)fi.italic(), (int)fi.bold(), m_text.latin1(), scriptlevel());
 
     QFontMetrics fm( fn );
@@ -4911,14 +4911,14 @@ void QwtMmlMtdNode::setMyRect( const QRect &rect )
                 && child->font().pointSize() > g_min_font_point_size )
         {
 
-//          qWarning("MmlMtdNode::setMyRect(): rect.width()=%d, child()->myRect().width=%d sl=%d",
+//          qWarning("QwtMmlMtdNode::setMyRect(): rect.width()=%d, child()->myRect().width=%d sl=%d",
 //              rect.width(), child->myRect().width(), m_scriptlevel_adjust);
 
             ++m_scriptlevel_adjust;
             child->layout();
         }
 
-//      qWarning("MmlMtdNode::setMyRect(): rect.width()=%d, child()->myRect().width=%d sl=%d",
+//      qWarning("QwtMmlMtdNode::setMyRect(): rect.width()=%d, child()->myRect().width=%d sl=%d",
 //              rect.width(), child->myRect().width(), m_scriptlevel_adjust);
     }
 
