@@ -117,8 +117,15 @@ mGui->actionPreferences->setVisible(false);
     setWindowTitle(qApp->applicationName());
 
     // Customise our docked widgets action and handle it through a connection
+    // Note: Ctrl+Space doesn't work on OS X, so ideally we would add the Alt
+    //       key (since it's next to it, but it doesn't work either), so in the
+    //       we add the Meta key...
 
+#ifdef Q_OS_MAC
+    mGui->actionDockedWidgets->setShortcut(QKeySequence(Qt::CTRL|Qt::META|Qt::Key_Space));
+#else
     mGui->actionDockedWidgets->setShortcut(QKeySequence(Qt::CTRL|Qt::Key_Space));
+#endif
 
     connect(mGui->actionDockedWidgets, SIGNAL(triggered(bool)),
             this, SLOT(showDockedWidgets(const bool &)));
