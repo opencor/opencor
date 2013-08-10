@@ -4089,7 +4089,7 @@ QRect QwtMmlMfracNode::symbolRect() const
     int denom_width = denominator()->myRect().width();
     int my_width = qMax( num_width, denom_width ) + 4;
 
-    return QRect( -my_width / 2, 0, my_width, 1 );
+    return QRect( -0.5 * my_width, 0, my_width, 1 );
 }
 
 void QwtMmlMfracNode::layoutSymbol()
@@ -4102,8 +4102,8 @@ void QwtMmlMfracNode::layoutSymbol()
 
     int spacing = ( int )( g_mfrac_spacing * ( num_rect.height() + denom_rect.height() ) );
 
-    num->setRelOrigin( QPoint( -num_rect.width() / 2, - spacing - num_rect.bottom() ) );
-    denom->setRelOrigin( QPoint( -denom_rect.width() / 2, spacing - denom_rect.top() ) );
+    num->setRelOrigin( QPoint( -0.5 * num_rect.width(), - spacing - num_rect.bottom() ) );
+    denom->setRelOrigin( QPoint( -0.5 * denom_rect.width(), spacing - denom_rect.top() ) );
 }
 
 static bool zeroLineThickness( const QString &s )
@@ -4213,7 +4213,7 @@ void QwtMmlRootBaseNode::layoutSymbol()
         int tw = tailWidth();
 
         QRect i_rect = i->myRect();
-        i->setRelOrigin( QPoint( -tw / 2 - i_rect.width(),
+        i->setRelOrigin( QPoint( -0.5 * tw - i_rect.width(),
                                  -i_rect.bottom() - 4 ) );
     }
 }
@@ -4730,7 +4730,7 @@ void QwtMmlMtableNode::layoutSymbol()
     m_content_height = m_cell_size_data.rowHeightSum()
                        + row_spc * ( m_cell_size_data.numRows() - 1 );
 
-    int bottom = -m_content_height / 2;
+    int bottom = -0.5 * m_content_height;
     QwtMmlNode *child = firstChild();
     for ( ; child != 0; child = child->nextSibling() )
     {
@@ -4750,7 +4750,7 @@ QRect QwtMmlMtableNode::symbolRect() const
     int frame_spc_ver = framespacing_ver();
 
     return QRect( -frame_spc_hor,
-                  -m_content_height / 2 - frame_spc_ver,
+                  -0.5 * m_content_height - frame_spc_ver,
                   m_content_width + 2 * frame_spc_hor,
                   m_content_height + 2 * frame_spc_ver );
 }
@@ -4812,8 +4812,8 @@ void QwtMmlMtableNode::paintSymbol( QPainter *p ) const
                 pen.setStyle( Qt::SolidLine );
 
             p->setPen( pen );
-            int x = col_offset + col_spc / 2;
-            p->drawLine( x, -m_content_height / 2, x, m_content_height / 2 );
+            int x = col_offset + 0.5 * col_spc;
+            p->drawLine( x, -0.5 * m_content_height, x, 0.5 * m_content_height );
         }
         col_offset += col_spc;
     }
@@ -4832,7 +4832,7 @@ void QwtMmlMtableNode::paintSymbol( QPainter *p ) const
                 pen.setStyle( Qt::SolidLine );
 
             p->setPen( pen );
-            int y = row_offset + row_spc / 2 - m_content_height / 2;
+            int y = row_offset + 0.5 * ( row_spc - m_content_height );
             p->drawLine( 0, y, m_content_width, y );
         }
         row_offset += row_spc;
@@ -4937,7 +4937,7 @@ void QwtMmlMtdNode::setMyRect( const QRect &rect )
             child_rel_origin.setX( 0 );
             break;
         case ColAlignCenter:
-            child_rel_origin.setX( mr.left() + ( mr.width() - cmr.width() ) / 2 );
+            child_rel_origin.setX( mr.left() + 0.5 * ( mr.width() - cmr.width() ) );
             break;
         case ColAlignRight:
             child_rel_origin.setX( mr.right() - cmr.width() );
@@ -4951,7 +4951,7 @@ void QwtMmlMtdNode::setMyRect( const QRect &rect )
             break;
         case RowAlignCenter:
         case RowAlignBaseline:
-            child_rel_origin.setY( mr.top() - cmr.top() + ( mr.height() - cmr.height() ) / 2 );
+            child_rel_origin.setY( mr.top() - cmr.top() + 0.5 * ( mr.height() - cmr.height() ) );
             break;
         case RowAlignBottom:
             child_rel_origin.setY( mr.bottom() - cmr.bottom() );
@@ -5051,8 +5051,8 @@ void QwtMmlMoverNode::layoutSymbol()
     int spacing = ( int )( g_mfrac_spacing * ( over_rect.height()
                            + base_rect.height() ) );
 
-    base->setRelOrigin( QPoint( -base_rect.width() / 2, 0 ) );
-    over->setRelOrigin( QPoint( -over_rect.width() / 2,
+    base->setRelOrigin( QPoint( -0.5 * base_rect.width(), 0 ) );
+    over->setRelOrigin( QPoint( -0.5 * over_rect.width(),
                                 base_rect.top() - spacing - over_rect.bottom() ) );
 }
 
@@ -5082,8 +5082,8 @@ void QwtMmlMunderNode::layoutSymbol()
 
     int spacing = ( int )( g_mfrac_spacing * ( under_rect.height() + base_rect.height() ) );
 
-    base->setRelOrigin( QPoint( -base_rect.width() / 2, 0 ) );
-    under->setRelOrigin( QPoint( -under_rect.width() / 2, base_rect.bottom() + spacing - under_rect.top() ) );
+    base->setRelOrigin( QPoint( -0.5 * base_rect.width(), 0 ) );
+    under->setRelOrigin( QPoint( -0.5 * under_rect.width(), base_rect.bottom() + spacing - under_rect.top() ) );
 }
 
 int QwtMmlMunderNode::scriptlevel( const QwtMmlNode *node ) const
@@ -5117,9 +5117,9 @@ void QwtMmlMunderoverNode::layoutSymbol()
                            + under_rect.height()
                            + over_rect.height() )   );
 
-    base->setRelOrigin( QPoint( -base_rect.width() / 2, 0 ) );
-    under->setRelOrigin( QPoint( -under_rect.width() / 2, base_rect.bottom() + spacing - under_rect.top() ) );
-    over->setRelOrigin( QPoint( -over_rect.width() / 2, base_rect.top() - spacing - under_rect.bottom() ) );
+    base->setRelOrigin( QPoint( -0.5 * base_rect.width(), 0 ) );
+    under->setRelOrigin( QPoint( -0.5 * under_rect.width(), base_rect.bottom() + spacing - under_rect.top() ) );
+    over->setRelOrigin( QPoint( -0.5 * over_rect.width(), base_rect.top() - spacing - under_rect.bottom() ) );
 }
 
 int QwtMmlMunderoverNode::scriptlevel( const QwtMmlNode *node ) const
@@ -5759,7 +5759,7 @@ static const QwtMmlOperSpec *searchOperSpecData( const QString &name )
     // invariant holds
     while ( end - begin > 1 )
     {
-        uint mid = ( begin + end ) / 2;
+        uint mid = 0.5 * ( begin + end );
 
         const QwtMmlOperSpec *spec = g_oper_spec_data + mid;
         int cmp = qstrcmp( name_latin1, spec->name );
