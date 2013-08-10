@@ -13,7 +13,6 @@
 
 #define ROUND(a) (int)((a)+.5)
 
-static bool           g_draw_frames         = false;
 static const double   g_mfrac_spacing           = 0.1;
 static const double   g_mroot_base_margin       = 0.1;
 static const double   g_script_size_multiplier          = 0.7071; // sqrt(1/2)
@@ -222,7 +221,6 @@ public:
 
 protected:
     virtual void layoutSymbol();
-    virtual void paintSymbol( QPainter *p ) const;
     virtual QRect symbolRect() const
     { return QRect( 0, 0, 0, 0 ); }
 
@@ -4023,24 +4021,7 @@ void QwtMmlNode::paint( QPainter *p )
     for ( ; child != 0; child = child->nextSibling() )
         child->paint( p );
 
-    paintSymbol( p );
-
     p->restore();
-}
-
-void QwtMmlNode::paintSymbol( QPainter *p ) const
-{
-    if ( g_draw_frames && myRect().isValid() )
-    {
-        p->save();
-        p->setPen( QPen( Qt::red, 0 ) );
-        p->drawRect( m_my_rect );
-        QPen pen = p->pen();
-        pen.setStyle( Qt::DotLine );
-        p->setPen( pen );
-        p->drawLine( myRect().left(), 0, myRect().right(), 0 );
-        p->restore();
-    }
 }
 
 void QwtMmlNode::stretch()
@@ -4255,8 +4236,6 @@ QString QwtMmlTextNode::toStr() const
 
 void QwtMmlTextNode::paintSymbol( QPainter *p ) const
 {
-    QwtMmlNode::paintSymbol( p );
-
     QFont fn = font();
 
     QFontInfo fi( fn );
@@ -4911,14 +4890,14 @@ void QwtMmlMtdNode::setMyRect( const QRect &rect )
                 && child->font().pointSize() > g_min_font_point_size )
         {
 
-//          qWarning("QwtMmlMtdNode::setMyRect(): rect.width()=%d, child()->myRect().width=%d sl=%d",
+//          qWarning("MmlMtdNode::setMyRect(): rect.width()=%d, child()->myRect().width=%d sl=%d",
 //              rect.width(), child->myRect().width(), m_scriptlevel_adjust);
 
             ++m_scriptlevel_adjust;
             child->layout();
         }
 
-//      qWarning("QwtMmlMtdNode::setMyRect(): rect.width()=%d, child()->myRect().width=%d sl=%d",
+//      qWarning("MmlMtdNode::setMyRect(): rect.width()=%d, child()->myRect().width=%d sl=%d",
 //              rect.width(), child->myRect().width(), m_scriptlevel_adjust);
     }
 
