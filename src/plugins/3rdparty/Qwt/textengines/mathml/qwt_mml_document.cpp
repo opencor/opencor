@@ -15,10 +15,10 @@
 
 static const double   g_mfrac_spacing           = 0.1;
 static const double   g_mroot_base_margin       = 0.1;
-static const double   g_script_size_multiplier          = 0.7071; // sqrt(1/2)
+static const double   g_script_size_multiplier  = 0.7071; // sqrt(1/2)
 static const int      g_min_font_point_size     = 8;
-static const QChar    g_radical_char                    = QChar( 0x1A, 0x22 );
-static const unsigned g_oper_spec_rows              = 9;
+static const QChar    g_radical_char            = QChar( 0x1A, 0x22 );
+static const unsigned g_oper_spec_rows          = 9;
 
 struct QwtMml
 {
@@ -4238,7 +4238,7 @@ void QwtMmlTextNode::paintSymbol( QPainter *p ) const
 {
     QFont fn = font();
 
-    QFontInfo fi( fn );
+//    QFontInfo fi( fn );
 //    qWarning("QwtMmlTextNode::paintSymbol(): requested: %s, used: %s, size=%d, italic=%d, bold=%d, text=\"%s\" sl=%d",
 //              fn.family().latin1(), fi.family().latin1(), fi.pointSize(), (int)fi.italic(), (int)fi.bold(), m_text.latin1(), scriptlevel());
 
