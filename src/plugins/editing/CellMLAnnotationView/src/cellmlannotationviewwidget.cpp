@@ -11,7 +11,6 @@
 #include "cellmlannotationviewplugin.h"
 #include "cellmlannotationviewwidget.h"
 #include "cellmlfilemanager.h"
-#include "coreutils.h"
 #include "treeviewwidget.h"
 
 //==============================================================================
@@ -316,8 +315,7 @@ void CellmlAnnotationViewWidget::updateWebViewerWithQualifierDetails(QWebView *p
     pWebView->setHtml(mQualifierInformationTemplate.arg(pQualifier,
                                                         qualifierSvg,
                                                         shortDescription,
-                                                        longDescription,
-                                                        Core::copyright()));
+                                                        longDescription));
 }
 
 //==============================================================================
