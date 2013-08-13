@@ -68,6 +68,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
     mWebView             = new QWebView(pParent);
 
     mWebView->setAcceptDrops(false);
+    mWebView->setContextMenuPolicy(Qt::NoContextMenu);
 
     mBorderedMetadataEditDetails = new Core::BorderedWidget(mMetadataEditDetails,
                                                             false, true, true, false);
