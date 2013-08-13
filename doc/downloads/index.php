@@ -277,7 +277,7 @@
 ?>
 
         <script type="text/javascript">
-            copyright();
+            copyright("..");
         </script>
     </body>
 </html>

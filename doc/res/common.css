@@ -97,11 +97,37 @@ div.copyright {
     bottom: 0px;
     left: 0px;
     width: 100%;
-    height: 17px;
+    height: 19px;
     border-top: 1px solid rgba(161, 161, 161, 0.39);
     background: rgb(229, 229, 229);
     color: rgb(161, 161, 161);
     font-size: 9pt;
     font-weight: bold;
-    text-align: center;
+}
+
+div.copyright table.copyright {
+    width: 100%;
+}
+
+div.copyright table.copyright td.left {
+    position: relative;
+    top: -5px;
+    text-align: left;
+}
+
+div.copyright table.copyright td.right {
+    position: relative;
+    top: -8px;
+    text-align: right;
+}
+
+div.copyright table.copyright td.right a.funding:hover {
+    margin: 0px;
+    border: none;
+    background: none;
+}
+
+div.copyright table.copyright td.right img.funding {
+    position: relative;
+    top: 5px;
 }

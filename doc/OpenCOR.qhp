@@ -8,6 +8,7 @@
             <file>3rdparty/jQuery/*.*</file>
 
             <file>res/*.*</file>
+            <file>res/pics/*.*</file>
             <file>res/pics/oxygen/actions/*.*</file>
 
             <file>user/*.*</file>
