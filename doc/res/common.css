@@ -130,4 +130,5 @@ div.copyright table.copyright td.right a.funding:hover {
 div.copyright table.copyright td.right img.funding {
     position: relative;
     top: 5px;
+    border: none;
 }
