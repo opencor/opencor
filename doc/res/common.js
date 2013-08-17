@@ -196,17 +196,11 @@ function copyright(relativePath) {
     var date = new Date();
 
     document.write("<div class=\"copyright\">");
-    document.write("    <table class=\"copyright\">");
-    document.write("        <tbody>");
-    document.write("            <tr>");
-    document.write("                <td class=\"left\">");
-    document.write("                    Copyright ©2011-"+date.getFullYear());
-    document.write("                </td>");
-    document.write("                <td class=\"right\">");
-    document.write("                    Funded by the <a class=\"funding\" href=\"http://www.virtualrat.org/\"><img class=\"funding\" src=\""+relativePath+"/res/pics/vprLogo.png\" width=60 height=18 alt=\"VPR\"></a> project");
-    document.write("                </td>");
-    document.write("            </tr>");
-    document.write("        </tbody>");
-    document.write("    </table>");
+    document.write("    <div class=\"left\">");
+    document.write("        Copyright ©2011-"+date.getFullYear());
+    document.write("    </div>");
+    document.write("    <div class=\"right\">");
+    document.write("        Funded by the <a class=\"funding\" href=\"http://www.virtualrat.org/\"><img class=\"funding\" src=\""+relativePath+"/res/pics/vprLogo.png\" width=60 height=18 alt=\"VPR\"></a> project");
+    document.write("    </div>");
     document.write("</div>");
 }

@@ -83,8 +83,12 @@
         <translation>La page d&apos;aide suivante n&apos;a pas pu être trouvée :</translation>
     </message>
     <message>
-        <source>Please &lt;a href=&quot;%1&quot;&gt;contact us&lt;/a&gt; about this error.</source>
-        <translation>Veuillez &lt;a href=&quot;%1&quot;&gt;nous contacter&lt;/a&gt; au sujet de cette erreur.</translation>
+        <source>Please &lt;a href=&quot;contactUs.html&quot;&gt;contact us&lt;/a&gt; about this error.</source>
+        <translation>Veuillez &lt;a href=&quot;contactUs.html&quot;&gt;nous contacter&lt;/a&gt; au sujet de cette erreur.</translation>
+    </message>
+    <message>
+        <source>Funded by the &lt;a class=&quot;funding&quot; href=&quot;http://www.virtualrat.org/&quot;&gt;&lt;img class=&quot;funding&quot; src=&quot;qthelp://opencor/doc/res/pics/vprLogo.png&quot; width=60 height=18 alt=&quot;VPR&quot;&gt;&lt;/a&gt; project</source>
+        <translation>Financé par le projet &lt;a class=&quot;funding&quot; href=&quot;http://www.virtualrat.org/&quot;&gt;&lt;img class=&quot;funding&quot; src=&quot;qthelp://opencor/doc/res/pics/vprLogo.png&quot; width=60 height=18 alt=&quot;VPR&quot;&gt;&lt;/a&gt;</translation>
     </message>
 </context>
 <context>

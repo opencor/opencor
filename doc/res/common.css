@@ -105,30 +105,28 @@ div.copyright {
     font-weight: bold;
 }
 
-div.copyright table.copyright {
-    width: 100%;
+div.copyright div {
+    display: table-cell;
+    position: fixed;
+    bottom: 2px;
 }
 
-div.copyright table.copyright td.left {
-    position: relative;
-    top: -5px;
-    text-align: left;
+div.copyright div.left {
+    left: 4px;
 }
 
-div.copyright table.copyright td.right {
-    position: relative;
-    top: -8px;
-    text-align: right;
+div.copyright div.right {
+    right: 4px;
 }
 
-div.copyright table.copyright td.right a.funding:hover {
+div.copyright div a.funding:hover {
     margin: 0px;
     border: none;
     background: none;
 }
 
-div.copyright table.copyright td.right img.funding {
+div.copyright div img.funding {
     position: relative;
-    top: 5px;
+    top: 4px;
     border: none;
 }
