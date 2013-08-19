@@ -28,7 +28,7 @@ PLUGININFO_FUNC CellMLSupportPluginInfo()
                           PluginInfo::Miscellaneous,
                           false,
                           false,
-                          QStringList() << "Core" << "CellMLAPI" << "Compiler",
+                          QStringList() << "Core" << "CellMLAPI" << "Compiler" << "CoreSolver",
                           descriptions);
 }
 

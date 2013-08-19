@@ -168,6 +168,8 @@ SET(PLUGINS
 
     misc/Compiler
 
+    simulation/CoreSolver
+
     misc/CellMLSupport
 
     editing/CoreCellMLEditing
@@ -177,8 +179,6 @@ SET(PLUGINS
 
     misc/QScintillaSupport
     misc/Viewer
-
-    simulation/CoreSolver
 
     3rdparty/SUNDIALS
 
