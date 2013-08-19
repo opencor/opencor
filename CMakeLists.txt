@@ -156,7 +156,7 @@ ENDIF()
 
 SET(PLUGINS
     # Build the plugins which may be required by other plugins
-    # Note: the build order is very important...
+    # Note: the build order must be such that dependencies are built first...
 
     misc/Core
 
@@ -171,29 +171,21 @@ SET(PLUGINS
     misc/Compiler
 
     misc/CellMLSupport
-    misc/CellMLTools
 
     editing/CoreCellMLEditing
-
-    3rdparty/SUNDIALS
-
-    simulation/CVODESolver
-    simulation/ForwardEulerSolver
-    simulation/FourthOrderRungeKuttaSolver
-    simulation/HeunSolver
-    simulation/IDASolver
-    simulation/KINSOLSolver
-    simulation/SecondOrderRungeKuttaSolver
 
     3rdparty/QScintilla
     3rdparty/Qwt
 
     misc/QScintillaSupport
+    misc/Viewer
+
+    3rdparty/SUNDIALS
 
     # Build the remaining plugins
 
+    misc/CellMLTools
     misc/Help
-    misc/Viewer
 
     organisation/CellMLModelRepository
     organisation/FileBrowser
@@ -203,6 +195,13 @@ SET(PLUGINS
     editing/RawCellMLView
     editing/RawView
 
+    simulation/CVODESolver
+    simulation/ForwardEulerSolver
+    simulation/FourthOrderRungeKuttaSolver
+    simulation/HeunSolver
+    simulation/IDASolver
+    simulation/KINSOLSolver
+    simulation/SecondOrderRungeKuttaSolver
     simulation/SingleCellView
 )
 
