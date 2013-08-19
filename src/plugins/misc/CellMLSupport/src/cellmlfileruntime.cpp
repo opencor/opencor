@@ -6,6 +6,7 @@
 #include "cellmlfileruntime.h"
 #include "compilerengine.h"
 #include "compilermath.h"
+#include "corenlasolver.h"
 
 //==============================================================================
 

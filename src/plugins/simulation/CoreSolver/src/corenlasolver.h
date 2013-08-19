@@ -11,6 +11,16 @@
 
 //==============================================================================
 
+extern "C" void CORESOLVER_EXPORT doNonLinearSolve(char *pRuntime,
+                                                   void (*pFunction)(double *,
+                                                                     double *,
+                                                                     void *),
+                                                   double *pParameters,
+                                                   int *pRes, int pSize,
+                                                   void *pUserData);
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace CoreSolver {
 

@@ -189,36 +189,5 @@ double atanh(double pNb)
 #endif
 
 //==============================================================================
-
-void doNonLinearSolve(char *pRuntime,
-                      void (*pFunction)(double *, double *, void *),
-                      double *pParameters, int *pRes, int pSize,
-                      void *pUserData)
-{
-    // Retrieve the NLA solver which we should use
-
-    OpenCOR::CoreSolver::CoreNlaSolver *nlaSolver = OpenCOR::CoreSolver::nlaSolver(pRuntime);
-
-    if (nlaSolver) {
-        // We have found our NLA solver, so initialise it
-
-        nlaSolver->initialize(pFunction, pParameters, pSize, pUserData);
-
-        // Now, we can solve our NLA system
-
-        nlaSolver->solve();
-
-        // Everything went fine, so...
-
-        *pRes = 1;
-    } else {
-        // We couldn't retrieve an NLA solver, so...
-        // Note: this should never happen, but better be safe than sorry, so...
-
-        *pRes = 0;
-    }
-}
-
-//==============================================================================
 // End of file
 //==============================================================================
