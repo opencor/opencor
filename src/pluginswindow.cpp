@@ -203,7 +203,7 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
 
     // Connection to handle the activation of a link in the description
 
-    connect(mGui->fieldFourValue, SIGNAL(linkActivated(const QString &)),
+    connect(mGui->fieldThreeValue, SIGNAL(linkActivated(const QString &)),
             this, SLOT(openLink(const QString &)));
 
     // Connection to handle the window's buttons
