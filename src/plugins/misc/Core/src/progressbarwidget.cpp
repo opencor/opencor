@@ -52,13 +52,13 @@ void ProgressBarWidget::paintEvent(QPaintEvent *pEvent)
 
 void ProgressBarWidget::resizeEvent(QResizeEvent *pEvent)
 {
-    // Keep track of our new width
-
-    mWidth = pEvent->size().width();
-
     // Default handling of the event
 
     Widget::resizeEvent(pEvent);
+
+    // Keep track of our new width
+
+    mWidth = pEvent->size().width();
 }
 
 //==============================================================================
