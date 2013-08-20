@@ -142,13 +142,12 @@ bool ViewerWidget::event(QEvent *pEvent)
     // we don't want to handle those events, so we have mPaintEventLevel which
     // keeps track of our level of painting. mPaintEventLevel is manually
     // increased prior to calling setFont() and decreased here, if necessary
-    // (i.e. whenever we receive QEvent::UpdateLater or QEvent::UpdateRequest).
-    // If mPaintEventLevel is zero, then we just ask QwtTextLabel to process the
-    // event (as well as any other event)...
+    // (i.e. whenever we receive QEvent::UpdateLater). If mPaintEventLevel is
+    // equal to zero, then we just ask QwtTextLabel to process the event (as
+    // well as any other event)...
 
     switch (pEvent->type()) {
     case QEvent::UpdateLater:
-    case QEvent::UpdateRequest:
         if (mPaintEventLevel) {
             --mPaintEventLevel;
 
