@@ -12,6 +12,7 @@
 
 //==============================================================================
 
+#include "qwt_mml_document.h"
 #include "qwt_text_label.h"
 
 //==============================================================================
@@ -42,9 +43,16 @@ protected:
     virtual QSize sizeHint() const;
 
 private:
+    QwtMathMLDocument mMathmlDocument;
+
+    double mOneOverMathmlDocumentWidth;
+    double mOneOverMathmlDocumentHeight;
+
     int mPaintEventLevel;
 
     bool mOptimiseFontSize;
+
+    void checkOptimalFontSize();
 };
 
 //==============================================================================

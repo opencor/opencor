@@ -11,7 +11,6 @@
 //==============================================================================
 
 #include "qwt_mathml_text_engine.h"
-#include "qwt_mml_document.h"
 
 //==============================================================================
 
@@ -23,12 +22,19 @@ namespace Viewer {
 ViewerWidget::ViewerWidget(QWidget *pParent) :
     QwtTextLabel(pParent),
     CommonWidget(pParent),
+    mMathmlDocument(QwtMathMLDocument()),
+    mOneOverMathmlDocumentWidth(0),
+    mOneOverMathmlDocumentHeight(0),
     mPaintEventLevel(0),
     mOptimiseFontSize(true)
 {
     // Make sure that MathML support is enabled
 
     QwtText::setTextEngine(QwtText::MathMLText, new QwtMathMLTextEngine());
+
+    // Initialise the font of our MathML document
+
+    mMathmlDocument.setFontName(QwtMathMLDocument::NormalFont, "Times New Roman");
 
     // Customise our background
 
@@ -108,6 +114,10 @@ void ViewerWidget::setContent(const QString &pContent)
     // Keep track of the content
 
     setText(pContent, QwtText::MathMLText);
+
+    // Check for the optimal font size
+
+    checkOptimalFontSize();
 }
 
 //==============================================================================
@@ -129,6 +139,10 @@ void ViewerWidget::setOptimiseFontSize(const bool &pOptimiseFontSize)
         return;
 
     mOptimiseFontSize = pOptimiseFontSize;
+
+    // Check for the optimal font size and repaint ourselves
+
+    checkOptimalFontSize();
 
     repaint();
 }
@@ -170,31 +184,20 @@ void ViewerWidget::paintEvent(QPaintEvent *pEvent)
     int origFontSize = font().pointSize();
 
     if (mOptimiseFontSize) {
-        // Determine the size the content would take if rendered using a font
-        // size of 100 pt
+        // Determine our optimal font size
+        // Note: to go for 100% of the 'optimal' font size might result in the
+        //       edges of the content being clipped, hence we go for 75% of
+        //       it instead...
 
-        QwtMathMLDocument mathmlDocument;
+        int optimalFontSize = qRound(75.0*qMin(mOneOverMathmlDocumentWidth*width(),
+                                               mOneOverMathmlDocumentHeight*height()));
 
-        mathmlDocument.setBaseFontPointSize(100);
-        mathmlDocument.setContent(plainText());
+        // Update the font, if possible
 
-        QSize textSize = mathmlDocument.size();
-
-        int fontSize = 75.0*qMin(double(width())/textSize.width(),
-                                 double(height())/textSize.height());
-        // Note: normally, we would multiply the lowest ratio by 100 pt, but we
-        //       need to account for the fact that the lowest ratio may not be
-        //       100% accurate (since the size of the rendered content is only
-        //       approximated by using a font size of 100 pt), hence we give
-        //       ourselves a safety net by using 75 pt instead...
-
-        // Update the font, if possible, now that we have found its 'optimal'
-        // size
-
-        if (fontSize) {
+        if (optimalFontSize) {
             QFont newFont = font();
 
-            newFont.setPointSize(fontSize);
+            newFont.setPointSize(optimalFontSize);
 
             ++mPaintEventLevel;
 
@@ -228,6 +231,29 @@ QSize ViewerWidget::sizeHint() const
     //       on it, to have a decent size when docked to the main window...
 
     return defaultSize(0.1);
+}
+
+//==============================================================================
+
+void ViewerWidget::checkOptimalFontSize()
+{
+    if (!mOptimiseFontSize)
+        return;
+
+    // Determine (the inverse of) the size of the content when rendered using a
+    // font size of 100 pt
+    // Note: when setting the content, QwtMathMLDocument recomputes its layout.
+    //       Now, because we want the content to be rendered as optimally as
+    //       possible, we use a big font size, so that when we actually need to
+    //       render the content (see paintEvent()), we can do so optimally...
+
+    mMathmlDocument.setBaseFontPointSize(100);
+    mMathmlDocument.setContent(plainText());
+
+    QSize mathmlDocumentSize = mMathmlDocument.size();
+
+    mOneOverMathmlDocumentWidth  = 1.0/mathmlDocumentSize.width();
+    mOneOverMathmlDocumentHeight = 1.0/mathmlDocumentSize.height();
 }
 
 //==============================================================================
