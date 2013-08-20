@@ -29,13 +29,22 @@ class VIEWER_EXPORT ViewerWidget : public QwtTextLabel,
 public:
     explicit ViewerWidget(QWidget *pParent = 0);
 
+    QString content() const;
     void setContent(const QString &pContent);
 
+    bool optimiseFontSize() const;
+    void setOptimiseFontSize(const bool &pOptimiseFontSize);
+
 protected:
+    virtual bool event(QEvent *pEvent);
+    virtual void paintEvent(QPaintEvent *pEvent);
+
     virtual QSize sizeHint() const;
 
 private:
-    QString mContent;
+    int mPaintEventLevel;
+
+    bool mOptimiseFontSize;
 };
 
 //==============================================================================

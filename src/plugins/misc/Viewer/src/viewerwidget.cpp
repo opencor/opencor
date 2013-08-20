@@ -6,7 +6,12 @@
 
 //==============================================================================
 
+#include <QEvent>
+
+//==============================================================================
+
 #include "qwt_mathml_text_engine.h"
+#include "qwt_mml_document.h"
 
 //==============================================================================
 
@@ -18,7 +23,8 @@ namespace Viewer {
 ViewerWidget::ViewerWidget(QWidget *pParent) :
     QwtTextLabel(pParent),
     CommonWidget(pParent),
-    mContent(QString())
+    mPaintEventLevel(0),
+    mOptimiseFontSize(true)
 {
     // Make sure that MathML support is enabled
 
@@ -83,16 +89,135 @@ ViewerWidget::ViewerWidget(QWidget *pParent) :
 
 //==============================================================================
 
+QString ViewerWidget::content() const
+{
+    // Return our content
+
+    return plainText();
+}
+
+//==============================================================================
+
 void ViewerWidget::setContent(const QString &pContent)
 {
-    if (!pContent.compare(mContent))
+    // Set our content
+
+    if (!pContent.compare(plainText()))
         return;
 
-    // Keep track of the the MathML equation
+    // Keep track of the content
 
-    mContent = pContent;
+    setText(pContent, QwtText::MathMLText);
+}
 
-    setText(mContent, QwtText::MathMLText);
+//==============================================================================
+
+bool ViewerWidget::optimiseFontSize() const
+{
+    // Return whether we optimise our font size
+
+    return mOptimiseFontSize;
+}
+
+//==============================================================================
+
+void ViewerWidget::setOptimiseFontSize(const bool &pOptimiseFontSize)
+{
+    // Keep track of whether we should optimise our font size
+
+    if (pOptimiseFontSize == mOptimiseFontSize)
+        return;
+
+    mOptimiseFontSize = pOptimiseFontSize;
+
+    repaint();
+}
+
+//==============================================================================
+
+bool ViewerWidget::event(QEvent *pEvent)
+{
+    // In paintEvent(), we may change the font size (in case we need to optimise
+    // it), which means that another paint event will eventually get sent. Yet,
+    // we don't want to handle those events, so we have mPaintEventLevel which
+    // keeps track of our level of painting. mPaintEventLevel is manually
+    // increased prior to calling setFont() and decreased here, if necessary
+    // (i.e. whenever we receive QEvent::UpdateLater or QEvent::UpdateRequest).
+    // If mPaintEventLevel is zero, then we just ask QwtTextLabel to process the
+    // event (as well as any other event)...
+
+    switch (pEvent->type()) {
+    case QEvent::UpdateLater:
+    case QEvent::UpdateRequest:
+        if (mPaintEventLevel) {
+            --mPaintEventLevel;
+
+            return true;
+        }
+    default:
+        // Default handling of the event
+
+        return QwtTextLabel::event(pEvent);
+    }
+}
+
+//==============================================================================
+
+void ViewerWidget::paintEvent(QPaintEvent *pEvent)
+{
+    // Optimise the font size, if requested, so that the rendered content is as
+    // big as possible
+
+    int origFontSize = font().pointSize();
+
+    if (mOptimiseFontSize) {
+        // Determine the size the content would take if rendered using a font
+        // size of 100 pt
+
+        QwtMathMLDocument mathmlDocument;
+
+        mathmlDocument.setBaseFontPointSize(100);
+        mathmlDocument.setContent(plainText());
+
+        QSize textSize = mathmlDocument.size();
+
+        int fontSize = 75.0*qMin(double(width())/textSize.width(),
+                                 double(height())/textSize.height());
+        // Note: normally, we would multiply the lowest ratio by 100 pt, but we
+        //       need to account for the fact that the lowest ratio may not be
+        //       100% accurate (since the size of the rendered content is only
+        //       approximated by using a font size of 100 pt), hence we give
+        //       ourselves a safety net by using 75 pt instead...
+
+        // Update the font, if possible, now that we have found its 'optimal'
+        // size
+
+        if (fontSize) {
+            QFont newFont = font();
+
+            newFont.setPointSize(fontSize);
+
+            ++mPaintEventLevel;
+
+            setFont(newFont);
+        }
+    }
+
+    // Default handling of the event
+
+    QwtTextLabel::paintEvent(pEvent);
+
+    // Reset the font size, if needed
+
+    if (origFontSize != font().pointSize()) {
+        QFont newFont = font();
+
+        newFont.setPointSize(origFontSize);
+
+        ++mPaintEventLevel;
+
+        setFont(newFont);
+    }
 }
 
 //==============================================================================
