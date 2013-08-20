@@ -7,13 +7,12 @@
 
 //==============================================================================
 
-#include "commonwidget.h"
 #include "viewerglobal.h"
+#include "widget.h"
 
 //==============================================================================
 
 #include "qwt_mml_document.h"
-#include "qwt_text_label.h"
 
 //==============================================================================
 
@@ -22,8 +21,7 @@ namespace Viewer {
 
 //==============================================================================
 
-class VIEWER_EXPORT ViewerWidget : public QwtTextLabel,
-                                   public Core::CommonWidget
+class VIEWER_EXPORT ViewerWidget : public Core::Widget
 {
     Q_OBJECT
 
@@ -37,7 +35,6 @@ public:
     void setOptimiseFontSize(const bool &pOptimiseFontSize);
 
 protected:
-    virtual bool event(QEvent *pEvent);
     virtual void paintEvent(QPaintEvent *pEvent);
 
     virtual QSize sizeHint() const;
@@ -48,11 +45,8 @@ private:
     double mOneOverMathmlDocumentWidth;
     double mOneOverMathmlDocumentHeight;
 
-    int mPaintEventLevel;
-
+    QString mContent;
     bool mOptimiseFontSize;
-
-    void checkOptimalFontSize();
 };
 
 //==============================================================================
