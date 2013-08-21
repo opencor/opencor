@@ -82,7 +82,8 @@ setContent("<math><mrow><msub><mi>i</mi><mi>Na</mi></msub><mo>=</mo><mfrac><mrow
 //    setContent("<math><mrow><mo>{</mo><mtable><mtr><mtd><mrow><mrow><mrow><mn>2</mn><mo>&#8290;</mo><mi>x</mi></mrow><mo>+</mo><mi>y</mi></mrow><mo>=</mo><mn>8</mn></mrow></mtd></mtr><mtr><mtd><mrow><mrow><mi>x</mi><mo>+</mo><mi>y</mi></mrow><mo>=</mo><mn>6</mn></mrow></mtd></mtr></mtable></mrow></math>");
 //    setContent("<math><mtable side=\"left\"><mlabeledtr><mtd><mtext>Gauss' law</mtext></mtd><mtd><mrow><mrow><mo>&#8711;</mo><mo>&#8729;</mo><mi mathvariant=\"normal\">E</mi></mrow><mo>=</mo><mfrac><mi>&#961;</mi><msub><mi>&#949;</mi><mn>0</mn></msub></mfrac></mrow></mtd></mlabeledtr><mlabeledtr><mtd><mtext>Gauss's law for magnetism</mtext></mtd><mtd><mrow><mrow><mo>&#8711;</mo><mo>&#8729;</mo><mi mathvariant=\"normal\">B</mi></mrow><mo>=</mo><mn>0</mn></mrow></mtd></mlabeledtr></mtable></math>");
 
-//    setContent("<math><mstyle mathbackground=\"yellow\" mathcolor=\"navy\" mathsize=\"16pt\"mathvariant=\"bold\"><mrow><mi>x</mi><mo>+</mo><mi>y</mi></mrow><mo>=</mo><mn mathcolor=\"red\">2</mn></mstyle></math>");
+//    setContent("<math><mstyle mathbackground=\"yellow\" mathcolor=\"navy\" mathsize=\"16pt\" mathvariant=\"bold\"><mrow><mi>x</mi><mo>+</mo><mi>y</mi></mrow><mo>=</mo><mn mathcolor=\"red\">2</mn></mstyle></math>");
+//    setContent("<math><mstyle mathbackground=\"yellow\" mathcolor=\"navy\"><mrow><mi>x</mi><mo>+</mo><mi>y</mi></mrow><mo>=</mo><mn mathcolor=\"red\">2</mn></mstyle></math>");
 
 //    setContent("<math><mfrac><mrow><mi> x </mi><mo> + </mo><mi> y </mi><mo> + </mo><mi> z </mi></mrow><mrow><mi> x </mi><mphantom><mo form=\"infix\"> + </mo><mi> y </mi></mphantom><mo> + </mo><mi> z </mi></mrow></mfrac></math>");
 }
@@ -162,18 +163,14 @@ void ViewerWidget::paintEvent(QPaintEvent *pEvent)
 
     // Set our base font size and font name
     // Note: to go for 100% of the 'optimal' font size might result in the edges
-    //       of the content being clipped once Windows, hence we go for 93% of
-    //       it instead...
-
-#ifdef Q_OS_WIN
-    static const double Scaling = 93.0;
-#else
-    static const double Scaling = 100.0;
-#endif
+    //       of the content being clipped on Windows (compared to Linux and OS
+    //       X) or in some cases on Linux and OS X (e.g. if the content includes
+    //       a square root), hence we go for 75% of the 'optimal' font size
+    //       instead...
 
     mMathmlDocument.setBaseFontPointSize(mOptimiseFontSize?
-                                             qRound(Scaling*qMin(mOneOverMathmlDocumentWidth*width(),
-                                                                 mOneOverMathmlDocumentHeight*height())):
+                                             qRound(75.0*qMin(mOneOverMathmlDocumentWidth*width(),
+                                                              mOneOverMathmlDocumentHeight*height())):
                                              font().pointSize());
     mMathmlDocument.setFontName(QwtMathMLDocument::NormalFont, font().family());
 
