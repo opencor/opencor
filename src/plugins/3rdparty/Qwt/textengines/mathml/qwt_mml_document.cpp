@@ -4013,6 +4013,8 @@ void QwtMmlNode::paint( QPainter *p )
     if ( !myRect().isValid() )
         return;
     p->save();
+    p->setViewport(deviceRect());
+    p->setWindow(myRect());
 
     QColor fg = color();
     QColor bg = background();
