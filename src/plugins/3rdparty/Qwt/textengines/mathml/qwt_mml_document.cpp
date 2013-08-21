@@ -5888,21 +5888,21 @@ static uint interpretMathVariant( const QString &value, bool *ok )
 
     static const MathVariantValue g_mv_data[] =
     {
-        { "normal",                 QwtMml::NormalMV },
-        { "bold",                   QwtMml::BoldMV },
-        { "italic",                 QwtMml::ItalicMV },
-        { "bold-italic",            QwtMml::BoldMV | QwtMml::ItalicMV },
-        { "double-struck",          QwtMml::DoubleStruckMV },
-        { "bold-fraktur",           QwtMml::BoldMV | QwtMml::FrakturMV },
-        { "script",                 QwtMml::ScriptMV },
-        { "bold-script",            QwtMml::BoldMV | QwtMml::ScriptMV },
-        { "fraktur",                QwtMml::FrakturMV },
-        { "sans-serif",             QwtMml::SansSerifMV },
-        { "bold-sans-serif",        QwtMml::BoldMV | QwtMml::SansSerifMV },
-        { "sans-serif-italic",      QwtMml::SansSerifMV | QwtMml::ItalicMV },
+        { "normal",                 QwtMml::NormalMV                                        },
+        { "bold",                   QwtMml::BoldMV                                          },
+        { "italic",                 QwtMml::ItalicMV                                        },
+        { "bold-italic",            QwtMml::BoldMV | QwtMml::ItalicMV                       },
+        { "double-struck",          QwtMml::DoubleStruckMV                                  },
+        { "bold-fraktur",           QwtMml::BoldMV | QwtMml::FrakturMV                      },
+        { "script",                 QwtMml::ScriptMV                                        },
+        { "bold-script",            QwtMml::BoldMV | QwtMml::ScriptMV                       },
+        { "fraktur",                QwtMml::FrakturMV                                       },
+        { "sans-serif",             QwtMml::SansSerifMV                                     },
+        { "bold-sans-serif",        QwtMml::BoldMV | QwtMml::SansSerifMV                    },
+        { "sans-serif-italic",      QwtMml::SansSerifMV | QwtMml::ItalicMV                  },
         { "sans-serif-bold-italic", QwtMml::SansSerifMV | QwtMml::ItalicMV | QwtMml::BoldMV },
-        { "monospace",              QwtMml::MonospaceMV },
-        { 0,                        0 }
+        { "monospace",              QwtMml::MonospaceMV                                     },
+        { 0,                        0                                                       }
     };
 
     const MathVariantValue *v = g_mv_data;
