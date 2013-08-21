@@ -161,10 +161,19 @@ void ViewerWidget::paintEvent(QPaintEvent *pEvent)
     painter.fillRect(pEvent->rect(), QColor(palette().color(QPalette::Base)));
 
     // Set our base font size and font name
+    // Note: to go for 100% of the 'optimal' font size might result in the edges
+    //       of the content being clipped once Windows, hence we go for 93% of
+    //       it instead...
+
+#ifdef Q_OS_WIN
+    static const double Scaling = 93.0;
+#else
+    static const double Scaling = 100.0;
+#endif
 
     mMathmlDocument.setBaseFontPointSize(mOptimiseFontSize?
-                                             qRound(100.0*qMin(mOneOverMathmlDocumentWidth*width(),
-                                                               mOneOverMathmlDocumentHeight*height())):
+                                             qRound(Scaling*qMin(mOneOverMathmlDocumentWidth*width(),
+                                                                 mOneOverMathmlDocumentHeight*height())):
                                              font().pointSize());
     mMathmlDocument.setFontName(QwtMathMLDocument::NormalFont, font().family());
 
