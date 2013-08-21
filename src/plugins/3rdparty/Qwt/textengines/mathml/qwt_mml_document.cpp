@@ -13,9 +13,7 @@
 
 #define ROUND(a) (int)((a)+.5)
 
-//---GRY---
-//static bool           g_draw_frames             = false;
-static bool           g_draw_frames             = true;
+static bool           g_draw_frames             = false;
 static const double   g_mfrac_spacing           = 0.1;
 static const double   g_mroot_base_margin       = 0.1;
 static const double   g_script_size_multiplier  = 0.7071; // sqrt(1/2)
