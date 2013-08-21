@@ -6236,6 +6236,9 @@ QString QwtMathMLDocument::fontName( QwtMathMLDocument::MmlFont type ) const
 */
 void QwtMathMLDocument::setFontName( QwtMathMLDocument::MmlFont type, const QString &name )
 {
+    if ( !name.compare(m_doc->fontName( type ) ) )
+        return;
+
     m_doc->setFontName( type, name );
     m_doc->layout();
 }
@@ -6259,6 +6262,9 @@ int QwtMathMLDocument::baseFontPointSize() const
 */
 void QwtMathMLDocument::setBaseFontPointSize( int size )
 {
+    if ( size == m_doc->baseFontPointSize() )
+        return;
+
     if ( size < g_min_font_point_size )
         return;
 
