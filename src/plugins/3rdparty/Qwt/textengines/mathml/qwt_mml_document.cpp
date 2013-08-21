@@ -5168,7 +5168,7 @@ int QwtMmlMpaddedNode::interpretSpacing( QString value, int base_value, bool *ok
     double factor = factor_str.toFloat( &float_ok );
     if ( !float_ok || factor < 0 )
     {
-        qWarning( "MmlMpaddedNode::interpretSpacing(): could not parse \"%s\"", value.toLatin1().data() );
+        qWarning( "QwtMmlMpaddedNode::interpretSpacing(): could not parse \"%s\"", value.toLatin1().data() );
         return 0;
     }
 
