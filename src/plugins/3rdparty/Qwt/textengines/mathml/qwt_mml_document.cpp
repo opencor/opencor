@@ -14,12 +14,12 @@
 #define ROUND(a) (int)((a)+.5)
 
 //---GRY---
-static bool           g_draw_frames             = false;
-//static bool           g_draw_frames             = true;
+//static bool           g_draw_frames             = false;
+static bool           g_draw_frames             = true;
 static const double   g_mfrac_spacing           = 0.1;
 static const double   g_mroot_base_margin       = 0.1;
 static const double   g_script_size_multiplier  = 0.7071; // sqrt(1/2)
-static const int      g_min_font_point_size     = 8;
+static const int      g_min_font_point_size     = 1;
 static const QChar    g_radical_char            = QChar( 0x1A, 0x22 );
 static const unsigned g_oper_spec_rows          = 9;
 
@@ -4036,12 +4036,11 @@ void QwtMmlNode::paintSymbol( QPainter *p ) const
     {
         p->save();
         p->setPen( QPen( Qt::red, 0 ) );
-        QPoint dPos = devicePoint( relOrigin() );
-        p->drawRect( m_my_rect.adjusted( dPos.x(), dPos.y(), dPos.x(), dPos.y() ) );
+        p->drawRect( m_my_rect );
         QPen pen = p->pen();
         pen.setStyle( Qt::DotLine );
         p->setPen( pen );
-        p->drawLine( dPos.x() + myRect().left(), dPos.y(), dPos.x() + myRect().right(), dPos.y() );
+        p->drawLine( myRect().left(), 0, myRect().right(), 0 );
         p->restore();
     }
 }
@@ -4140,8 +4139,7 @@ void QwtMmlMfracNode::paintSymbol( QPainter *p ) const
         pen.setWidth( linethickness );
         p->setPen( pen );
         QSize s = myRect().size();
-        QPoint dPos = devicePoint( relOrigin() );
-        p->drawLine( dPos.x() - 0.5 * s.width(), dPos.y(), dPos.x() + 0.5 * s.width(), dPos.y() );
+        p->drawLine( -0.5 * s.width(), 0, 0.5 * s.width(), 0 );
         p->restore();
     }
 }
@@ -4235,8 +4233,7 @@ void QwtMmlRootBaseNode::paintSymbol( QPainter *p ) const
 
     p->restore();
 
-    QPoint dPos = devicePoint( relOrigin() );
-    p->drawLine( dPos.x() + sr.right(), dPos.y() + sr.top(), dPos.x() + myRect().right(), dPos.y() + sr.top() );
+    p->drawLine( sr.right(), sr.top(), myRect().right(), sr.top() );
 }
 
 QwtMmlTextNode::QwtMmlTextNode( const QString &text, QwtMmlDocument *document )
@@ -4273,8 +4270,7 @@ void QwtMmlTextNode::paintSymbol( QPainter *p ) const
     p->save();
     p->setFont( fn );
 
-    QPoint dPos = devicePoint( relOrigin() );
-    p->drawText( dPos.x(), dPos.y() + fm.strikeOutPos(), m_text );
+    p->drawText( 0, fm.strikeOutPos(), m_text );
 
     p->restore();
 }
@@ -4797,7 +4793,6 @@ void QwtMmlMtableNode::paintSymbol( QPainter *p ) const
     int col_spc = columnspacing();
     int row_spc = rowspacing();
 
-    QPoint dPos = devicePoint( relOrigin() );
     QPen pen = p->pen();
     int col_offset = 0;
     int i;
@@ -4815,7 +4810,7 @@ void QwtMmlMtableNode::paintSymbol( QPainter *p ) const
 
             p->setPen( pen );
             int x = col_offset + 0.5 * col_spc;
-            p->drawLine( dPos.x() + x, dPos.y() - 0.5 * m_content_height, dPos.x() + x, dPos.y() + 0.5 * m_content_height );
+            p->drawLine( x, -0.5 * m_content_height, x, 0.5 * m_content_height );
         }
         col_offset += col_spc;
     }
@@ -4835,7 +4830,7 @@ void QwtMmlMtableNode::paintSymbol( QPainter *p ) const
 
             p->setPen( pen );
             int y = row_offset + 0.5 * ( row_spc - m_content_height );
-            p->drawLine( dPos.x(), dPos.y(), dPos.x() + m_content_width, dPos.y() + y );
+            p->drawLine( 0, y, m_content_width, y );
         }
         row_offset += row_spc;
     }
@@ -6242,6 +6237,7 @@ QString QwtMathMLDocument::fontName( QwtMathMLDocument::MmlFont type ) const
 void QwtMathMLDocument::setFontName( QwtMathMLDocument::MmlFont type, const QString &name )
 {
     m_doc->setFontName( type, name );
+    m_doc->layout();
 }
 
 /*!
@@ -6263,5 +6259,9 @@ int QwtMathMLDocument::baseFontPointSize() const
 */
 void QwtMathMLDocument::setBaseFontPointSize( int size )
 {
+    if ( size < g_min_font_point_size )
+        return;
+
     m_doc->setBaseFontPointSize( size );
+    m_doc->layout();
 }
