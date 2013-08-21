@@ -184,6 +184,15 @@ void ViewerWidget::paintEvent(QPaintEvent *pEvent)
 
 //==============================================================================
 
+QSize ViewerWidget::minimumSizeHint() const
+{
+    // Suggest a default minimum size for our viewer widget
+
+    return defaultSize(0.03);
+}
+
+//==============================================================================
+
 QSize ViewerWidget::sizeHint() const
 {
     // Suggest a default size for our viewer widget
