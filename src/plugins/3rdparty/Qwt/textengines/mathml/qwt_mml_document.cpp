@@ -4659,7 +4659,7 @@ void QwtMmlMtableNode::layoutSymbol()
                 continue;
             }
             else
-                qWarning( "MmlMtableNode::layoutSymbol(): could not parse value %s%%", value.toLatin1().data() );
+                qWarning( "QwtMmlMtableNode::layoutSymbol(): could not parse value %s%%", value.toLatin1().data() );
         }
 
         // Relatively sized column, but we failed to parse the factor. Treat is like an auto
@@ -4912,14 +4912,14 @@ void QwtMmlMtdNode::setMyRect( const QRect &rect )
                 && child->font().pointSize() > g_min_font_point_size )
         {
 
-//          qWarning("MmlMtdNode::setMyRect(): rect.width()=%d, child()->myRect().width=%d sl=%d",
+//          qWarning("QwtMmlMtdNode::setMyRect(): rect.width()=%d, child()->myRect().width=%d sl=%d",
 //              rect.width(), child->myRect().width(), m_scriptlevel_adjust);
 
             ++m_scriptlevel_adjust;
             child->layout();
         }
 
-//      qWarning("MmlMtdNode::setMyRect(): rect.width()=%d, child()->myRect().width=%d sl=%d",
+//      qWarning("QwtMmlMtdNode::setMyRect(): rect.width()=%d, child()->myRect().width=%d sl=%d",
 //              rect.width(), child->myRect().width(), m_scriptlevel_adjust);
     }
 
@@ -5197,7 +5197,7 @@ int QwtMmlMpaddedNode::interpretSpacing( QString value, int base_value, bool *ok
         unit_size = QwtMmlNode::interpretSpacing( "1" + pseudo_unit, &unit_ok );
         if ( !unit_ok )
         {
-            qWarning( "MmlMpaddedNode::interpretSpacing(): could not parse \"%s\"", value.toLatin1().data() );
+            qWarning( "QwtMmlMpaddedNode::interpretSpacing(): could not parse \"%s\"", value.toLatin1().data() );
             return 0;
         }
     }
