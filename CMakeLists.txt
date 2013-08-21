@@ -180,29 +180,29 @@ SET(PLUGINS
     misc/QScintillaSupport
     misc/Viewer
 
-#    3rdparty/SUNDIALS
+    3rdparty/SUNDIALS
 
     # Build the remaining plugins
 
-#    misc/CellMLTools
-#    misc/Help
+    misc/CellMLTools
+    misc/Help
 
-#    organisation/CellMLModelRepository
-#    organisation/FileBrowser
-#    organisation/FileOrganiser
+    organisation/CellMLModelRepository
+    organisation/FileBrowser
+    organisation/FileOrganiser
 
-#    editing/CellMLAnnotationView
+    editing/CellMLAnnotationView
     editing/RawCellMLView
-#    editing/RawView
+    editing/RawView
 
-#    simulation/CVODESolver
-#    simulation/ForwardEulerSolver
-#    simulation/FourthOrderRungeKuttaSolver
-#    simulation/HeunSolver
-#    simulation/IDASolver
-#    simulation/KINSOLSolver
-#    simulation/SecondOrderRungeKuttaSolver
-#    simulation/SingleCellView
+    simulation/CVODESolver
+    simulation/ForwardEulerSolver
+    simulation/FourthOrderRungeKuttaSolver
+    simulation/HeunSolver
+    simulation/IDASolver
+    simulation/KINSOLSolver
+    simulation/SecondOrderRungeKuttaSolver
+    simulation/SingleCellView
 )
 
 FOREACH(PLUGIN ${PLUGINS})
