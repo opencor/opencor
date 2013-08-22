@@ -4202,8 +4202,10 @@ QRect QwtMmlRootBaseNode::symbolRect() const
     int tw = tailWidth();
     int lWidth = lineWidth( font() );
 
-    return QRect( -tw, base_rect.top() - lWidth - margin,
+    return QRect( -tw, base_rect.top() - lWidth - margin -1,
                   tw + base_rect.width() + margin, base_rect.height() + 2 * margin + lWidth );
+    // Note: see the note for setClipRect() in QwtMmlRootBaseNode::paintSymbol()
+    //       for why - 1 in the top value of our returned region...
 }
 
 int QwtMmlRootBaseNode::tailWidth() const
@@ -4250,7 +4252,7 @@ void QwtMmlRootBaseNode::paintSymbol( QPainter *p ) const
 
     p->save();
 
-    QRect sr = symbolRect().adjusted(0, 0, -base_rect.width() - margin, 0);
+    QRect sr = symbolRect().adjusted( 0, 0, -base_rect.width() - margin, 0 );
     // Note: symbolRect() returns the whole region needed to paint the radical
     //       and the horizontal line, as well as some space between the
     //       radical's 'content' and the end of the horizontal line. Yet, here,
@@ -4262,9 +4264,14 @@ void QwtMmlRootBaseNode::paintSymbol( QPainter *p ) const
     r.moveTopLeft( devicePoint( sr.topLeft() ) );
     p->setViewport( r );
     p->setWindow( QFontMetrics( fn ).boundingRect( g_radical_char ) );
-    p->setClipRect( p->window() );
+    p->setClipRect( p->window().adjusted( 0, 1, 0, 0 ) );
     // Note: on some systems (e.g. Windows), the radical will be rendered taller
-    //       than expected, hence we clip...
+    //       than expected, hence we clip. As for the adjustment, it's because
+    //       on Linux and OS X, it may happen that due to antialiasing the top
+    //       end of the radical is not always rendered in the exact colour of
+    //       the radical, and if that happens it only concerns one line of
+    //       pixels, hence we adjust the top of the clipping region by one
+    //       pixel...
     p->setFont( fn );
     p->drawText( 0, 0, QString( g_radical_char ) );
 
@@ -4272,13 +4279,14 @@ void QwtMmlRootBaseNode::paintSymbol( QPainter *p ) const
 
     int lWidth = lineWidth( fn );
 
-    p->fillRect( sr.right() - 0.5 * lWidth, sr.top(),
+    p->fillRect( sr.right() - 0.5 * lWidth, sr.top() + 1,
                  myRect().right() - ( sr.right() - 0.5 * lWidth ) + 1, lWidth,
-                 color() );
+                 p->pen().color() );
     // Note: we start at sr.right() - 0.5 * lWidth to address the case where we
     //       use a big font size, thus avoiding the tiny gap seen on some
     //       systems (e.g. OS X) between the radical character and the
-    //       horizontal line...
+    //       horizontal line. As for the top, we add + 1 because of the reason
+    //       given in the above note related to the call to setClipRect()...
 }
 
 QwtMmlTextNode::QwtMmlTextNode( const QString &text, QwtMmlDocument *document )
