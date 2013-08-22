@@ -229,6 +229,8 @@ protected:
     QwtMmlNode *parentWithExplicitAttribute( const QString &name, NodeType type = NoNode );
     int interpretSpacing( const QString &value, bool *ok ) const;
 
+    int lineWidth( const QFont &font) const;
+
 private:
     QwtMmlAttributeMap m_attribute_map;
     bool m_stretched;
@@ -3647,6 +3649,11 @@ int QwtMmlNode::interpretSpacing( const QString &value, bool *ok ) const
     return ::interpretSpacing( value, em(), ex(), ok );
 }
 
+int QwtMmlNode::lineWidth( const QFont &font) const
+{
+    return qMax( 1.0, 0.5 * QFontMetrics( font ).lineWidth() );
+}
+
 int QwtMmlNode::basePos() const
 {
     QFontMetrics fm( font() );
@@ -4191,11 +4198,12 @@ QRect QwtMmlRootBaseNode::symbolRect() const
     else
         base_rect = base()->myRect();
 
-    int margin = ( int )( g_mroot_base_margin * base_rect.height() );
+    int margin = g_mroot_base_margin * qMin( base_rect.width(), base_rect.height() );
     int tw = tailWidth();
+    int lWidth = lineWidth( font() );
 
-    return QRect( -tw, base_rect.top() - margin, tw,
-                  base_rect.height() + 2 * margin );
+    return QRect( -tw, base_rect.top() - lWidth - margin,
+                  tw + base_rect.width() + margin, base_rect.height() + 2 * margin + lWidth );
 }
 
 int QwtMmlRootBaseNode::tailWidth() const
@@ -4231,20 +4239,46 @@ void QwtMmlRootBaseNode::paintSymbol( QPainter *p ) const
 {
     QFont fn = font();
 
+    QwtMmlNode *b = base();
+    QRect base_rect;
+    if ( b == 0 )
+        base_rect = QRect( 0, 0, 1, 1 );
+    else
+        base_rect = base()->myRect();
+
+    int margin = g_mroot_base_margin * qMin( base_rect.width(), base_rect.height() );
+
     p->save();
 
-    QRect sr = symbolRect();
+    QRect sr = symbolRect().adjusted(0, 0, -base_rect.width() - margin, 0);
+    // Note: symbolRect() returns the whole region needed to paint the radical
+    //       and the horizontal line, as well as some space between the
+    //       radical's 'content' and the end of the horizontal line. Yet, here,
+    //       we only want to retrieve the region needed to paint the radical
+    //       itself, hence we remove the width needed for the 'content' and the
+    //       extra bit of horizontal line...
 
     QRect r = sr;
     r.moveTopLeft( devicePoint( sr.topLeft() ) );
     p->setViewport( r );
     p->setWindow( QFontMetrics( fn ).boundingRect( g_radical_char ) );
-    p->setFont( font() );
+    p->setClipRect( p->window() );
+    // Note: on some systems (e.g. Windows), the radical will be rendered taller
+    //       than expected, hence we clip...
+    p->setFont( fn );
     p->drawText( 0, 0, QString( g_radical_char ) );
 
     p->restore();
 
-    p->drawLine( sr.right(), sr.top(), myRect().right(), sr.top() );
+    int lWidth = lineWidth( fn );
+
+    p->fillRect( sr.right() - 0.5 * lWidth, sr.top(),
+                 myRect().right() - ( sr.right() - 0.5 * lWidth ) + 1, lWidth,
+                 color() );
+    // Note: we start at sr.right() - 0.5 * lWidth to address the case where we
+    //       use a big font size, thus avoiding the tiny gap seen on some
+    //       systems (e.g. OS X) between the radical character and the
+    //       horizontal line...
 }
 
 QwtMmlTextNode::QwtMmlTextNode( const QString &text, QwtMmlDocument *document )
