@@ -653,380 +653,386 @@ static QString entityDeclarations();
 static const QwtMmlNodeSpec g_node_spec_data[] =
 {
 
-//      type                    tag           type_str          child_spec                    child_types              attributes ""=none, 0=any
-//      ----------------------- ------------- ----------------- ----------------------------- ------------------------ ---------------------------------------------------------------------
-    {   QwtMml::MiNode,         "mi",         "MiNode",         QwtMmlNodeSpec::ChildAny,     " TextNode MalignMark ", MML_ATT_COMMON MML_ATT_FONTINFO                                       },
-    {   QwtMml::MnNode,         "mn",         "MnNode",         QwtMmlNodeSpec::ChildAny,     " TextNode MalignMark ", MML_ATT_COMMON MML_ATT_FONTINFO                                       },
-    {   QwtMml::MfracNode,      "mfrac",      "MfracNode",      2,                            0,                       MML_ATT_COMMON MML_ATT_MFRAC                                          },
-    {   QwtMml::MrowNode,       "mrow",       "MrowNode",       QwtMmlNodeSpec::ChildAny,     0,                       MML_ATT_COMMON " display mode "                                       },
-    {   QwtMml::MsqrtNode,      "msqrt",      "MsqrtNode",      QwtMmlNodeSpec::ImplicitMrow, 0,                       MML_ATT_COMMON                                                        },
-    {   QwtMml::MrootNode,      "mroot",      "MrootNode",      2,                            0,                       MML_ATT_COMMON                                                        },
-    {   QwtMml::MsupNode,       "msup",       "MsupNode",       2,                            0,                       MML_ATT_COMMON " subscriptshift "                                     },
-    {   QwtMml::MsubNode,       "msub",       "MsubNode",       2,                            0,                       MML_ATT_COMMON " superscriptshift "                                   },
-    {   QwtMml::MsubsupNode,    "msubsup",    "MsubsupNode",    3,                            0,                       MML_ATT_COMMON " subscriptshift superscriptshift "                    },
-    {   QwtMml::MoNode,         "mo",         "MoNode",         QwtMmlNodeSpec::ChildAny,     " TextNode MalignMark ", MML_ATT_COMMON MML_ATT_FONTINFO MML_ATT_OPINFO                        },
-    {   QwtMml::MstyleNode,     "mstyle",     "MstyleNode",     QwtMmlNodeSpec::ImplicitMrow, 0,                       MML_ATT_COMMON MML_ATT_MSTYLE                                         },
-    {   QwtMml::MphantomNode,   "mphantom",   "MphantomNode",   QwtMmlNodeSpec::ImplicitMrow, 0,                       MML_ATT_COMMON                                                        },
-    {   QwtMml::MalignMarkNode, "malignmark", "MalignMarkNode", 0,                            0,                       ""                                                                    },
-    {   QwtMml::MfencedNode,    "mfenced",    "MfencedNode",    QwtMmlNodeSpec::ChildAny,     0,                       MML_ATT_COMMON " open close separators "                              },
-    {   QwtMml::MtableNode,     "mtable",     "MtableNode",     QwtMmlNodeSpec::ChildAny,     " MtrNode ",             MML_ATT_COMMON MML_ATT_MTABLE                                         },
-    {   QwtMml::MtrNode,        "mtr",        "MtrNode",        QwtMmlNodeSpec::ChildAny,     " MtdNode ",             MML_ATT_COMMON " rowalign columnalign groupalign "                    },
-    {   QwtMml::MtdNode,        "mtd",        "MtdNode",        QwtMmlNodeSpec::ImplicitMrow, 0,                       MML_ATT_COMMON " rowspan columnspan rowalign columnalign groupalign " },
-    {   QwtMml::MoverNode,      "mover",      "MoverNode",      2,                            0,                       MML_ATT_COMMON " accent "                                             },
-    {   QwtMml::MunderNode,     "munder",     "MunderNode",     2,                            0,                       MML_ATT_COMMON " accentunder "                                        },
-    {   QwtMml::MunderoverNode, "munderover", "MunderoverNode", 3,                            0,                       MML_ATT_COMMON " accentunder accent "                                 },
-    {   QwtMml::MerrorNode,     "merror",     "MerrorNode",     QwtMmlNodeSpec::ImplicitMrow, 0,                       MML_ATT_COMMON                                                        },
-    {   QwtMml::MtextNode,      "mtext",      "MtextNode",      1,                            " TextNode ",            MML_ATT_COMMON " width height depth linebreak "                       },
-    {   QwtMml::MpaddedNode,    "mpadded",    "MpaddedNode",    QwtMmlNodeSpec::ImplicitMrow, 0,                       MML_ATT_COMMON " width height depth lspace "                          },
-    {   QwtMml::MspaceNode,     "mspace",     "MspaceNode",     QwtMmlNodeSpec::ImplicitMrow, 0,                       MML_ATT_COMMON " width height depth linebreak "                       },
-    {   QwtMml::TextNode,       0,            "TextNode",       QwtMmlNodeSpec::ChildIgnore,  0,                       ""                                                                    },
-    {   QwtMml::UnknownNode,    0,            "UnknownNode",    QwtMmlNodeSpec::ChildAny,     0,                       0                                                                     },
-    {   QwtMml::NoNode,         0,            0,                0,                            0,                       0                                                                     }
+//    type                    tag           type_str          child_spec                    child_types              attributes ""=none, 0=any
+//    ----------------------- ------------- ----------------- ----------------------------- ------------------------ ---------------------------------------------------------------------
+    { QwtMml::MiNode,         "mi",         "MiNode",         QwtMmlNodeSpec::ChildAny,     " TextNode MalignMark ", MML_ATT_COMMON MML_ATT_FONTINFO                                       },
+    { QwtMml::MnNode,         "mn",         "MnNode",         QwtMmlNodeSpec::ChildAny,     " TextNode MalignMark ", MML_ATT_COMMON MML_ATT_FONTINFO                                       },
+    { QwtMml::MfracNode,      "mfrac",      "MfracNode",      2,                            0,                       MML_ATT_COMMON MML_ATT_MFRAC                                          },
+    { QwtMml::MrowNode,       "mrow",       "MrowNode",       QwtMmlNodeSpec::ChildAny,     0,                       MML_ATT_COMMON " display mode "                                       },
+    { QwtMml::MsqrtNode,      "msqrt",      "MsqrtNode",      QwtMmlNodeSpec::ImplicitMrow, 0,                       MML_ATT_COMMON                                                        },
+    { QwtMml::MrootNode,      "mroot",      "MrootNode",      2,                            0,                       MML_ATT_COMMON                                                        },
+    { QwtMml::MsupNode,       "msup",       "MsupNode",       2,                            0,                       MML_ATT_COMMON " subscriptshift "                                     },
+    { QwtMml::MsubNode,       "msub",       "MsubNode",       2,                            0,                       MML_ATT_COMMON " superscriptshift "                                   },
+    { QwtMml::MsubsupNode,    "msubsup",    "MsubsupNode",    3,                            0,                       MML_ATT_COMMON " subscriptshift superscriptshift "                    },
+    { QwtMml::MoNode,         "mo",         "MoNode",         QwtMmlNodeSpec::ChildAny,     " TextNode MalignMark ", MML_ATT_COMMON MML_ATT_FONTINFO MML_ATT_OPINFO                        },
+    { QwtMml::MstyleNode,     "mstyle",     "MstyleNode",     QwtMmlNodeSpec::ImplicitMrow, 0,                       MML_ATT_COMMON MML_ATT_MSTYLE                                         },
+    { QwtMml::MphantomNode,   "mphantom",   "MphantomNode",   QwtMmlNodeSpec::ImplicitMrow, 0,                       MML_ATT_COMMON                                                        },
+    { QwtMml::MalignMarkNode, "malignmark", "MalignMarkNode", 0,                            0,                       ""                                                                    },
+    { QwtMml::MfencedNode,    "mfenced",    "MfencedNode",    QwtMmlNodeSpec::ChildAny,     0,                       MML_ATT_COMMON " open close separators "                              },
+    { QwtMml::MtableNode,     "mtable",     "MtableNode",     QwtMmlNodeSpec::ChildAny,     " MtrNode ",             MML_ATT_COMMON MML_ATT_MTABLE                                         },
+    { QwtMml::MtrNode,        "mtr",        "MtrNode",        QwtMmlNodeSpec::ChildAny,     " MtdNode ",             MML_ATT_COMMON " rowalign columnalign groupalign "                    },
+    { QwtMml::MtdNode,        "mtd",        "MtdNode",        QwtMmlNodeSpec::ImplicitMrow, 0,                       MML_ATT_COMMON " rowspan columnspan rowalign columnalign groupalign " },
+    { QwtMml::MoverNode,      "mover",      "MoverNode",      2,                            0,                       MML_ATT_COMMON " accent "                                             },
+    { QwtMml::MunderNode,     "munder",     "MunderNode",     2,                            0,                       MML_ATT_COMMON " accentunder "                                        },
+    { QwtMml::MunderoverNode, "munderover", "MunderoverNode", 3,                            0,                       MML_ATT_COMMON " accentunder accent "                                 },
+    { QwtMml::MerrorNode,     "merror",     "MerrorNode",     QwtMmlNodeSpec::ImplicitMrow, 0,                       MML_ATT_COMMON                                                        },
+    { QwtMml::MtextNode,      "mtext",      "MtextNode",      1,                            " TextNode ",            MML_ATT_COMMON " width height depth linebreak "                       },
+    { QwtMml::MpaddedNode,    "mpadded",    "MpaddedNode",    QwtMmlNodeSpec::ImplicitMrow, 0,                       MML_ATT_COMMON " width height depth lspace "                          },
+    { QwtMml::MspaceNode,     "mspace",     "MspaceNode",     QwtMmlNodeSpec::ImplicitMrow, 0,                       MML_ATT_COMMON " width height depth linebreak "                       },
+    { QwtMml::TextNode,       0,            "TextNode",       QwtMmlNodeSpec::ChildIgnore,  0,                       ""                                                                    },
+    { QwtMml::UnknownNode,    0,            "UnknownNode",    QwtMmlNodeSpec::ChildAny,     0,                       0                                                                     },
+    { QwtMml::NoNode,         0,            0,                0,                            0,                       0                                                                     }
 };
 
-static const char *g_oper_spec_names[g_oper_spec_rows] = {                                   "accent",                 "fence",               "largeop",                "lspace",               "minsize",         "movablelimits",                "rspace",             "separator",              "stretchy"       /* stretchdir */ };
+static const char *g_oper_spec_names[g_oper_spec_rows] =
+{
+    "accent", "fence", "largeop", "lspace", "minsize", "movablelimits",
+    "rspace", "separator", "stretchy"
+};
 static const QwtMmlOperSpec g_oper_spec_data[] =
 {
-    { "!!"                      ,       QwtMml::PostfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0,           "0em",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "!!"
-    { "!"                       ,       QwtMml::PostfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0,           "0em",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "!"
-    { "!="                      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "!="
-    { "&And;"               ,         QwtMml::InfixForm, {              0,               0,               0,       "mediummathspace",           0,           0,   "mediummathspace",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "&And;"
-    { "&ApplyFunction;"     ,         QwtMml::InfixForm, {              0,               0,               0,           "0em",           0,           0,           "0em",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&ApplyFunction;"
-    { "&Assign;"                ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&Assign;"
-    { "&Backslash;"             ,         QwtMml::InfixForm, {              0,               0,               0,     "thinmathspace",           0,           0,     "thinmathspace",               0,              "true" },           QwtMmlOperSpec::HVStretch }, // "&Backslash;"
-    { "&Because;"               ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&Because;"
-    { "&Breve;"             ,       QwtMml::PostfixForm, {             "true",               0,               0,           "0em",           0,           0,           "0em",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&Breve;"
-    { "&Cap;"               ,         QwtMml::InfixForm, {              0,               0,               0,     "thinmathspace",           0,           0,     "thinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&Cap;"
-    { "&CapitalDifferentialD;"       ,       QwtMml::PrefixForm, {              0,               0,               0,           "0em",           0,           0, "verythinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // &CapitalDifferentialD;"
-    { "&Cedilla;"               ,       QwtMml::PostfixForm, {             "true",               0,               0,           "0em",           0,           0,           "0em",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&Cedilla;"
-    { "&CenterDot;"             ,         QwtMml::InfixForm, {              0,               0,               0,     "thinmathspace",           0,           0,     "thinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&CenterDot;"
-    { "&CircleDot;"             ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&CircleDot;"
-    { "&CircleMinus;"       ,         QwtMml::InfixForm, {              0,               0,               0,     "thinmathspace",           0,           0,     "thinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&CircleMinus;"
-    { "&CirclePlus;"        ,         QwtMml::InfixForm, {              0,               0,               0,     "thinmathspace",           0,           0,     "thinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&CirclePlus;"
-    { "&CircleTimes;"       ,         QwtMml::InfixForm, {              0,               0,               0,     "thinmathspace",           0,           0,     "thinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&CircleTimes;"
-    { "&ClockwiseContourIntegral;"   ,       QwtMml::PrefixForm, {              0,               0,          "true",           "0em",           0,           0,           "0em",               0,           "true"},            QwtMmlOperSpec::VStretch }, // &ClockwiseContourIntegral;"
-    { "&CloseCurlyDoubleQuote;"      ,      QwtMml::PostfixForm, {              0,          "true",               0,           "0em",           0,           0,           "0em",               0,               0 },           QwtMmlOperSpec::NoStretch }, // &CloseCurlyDoubleQuote;"
-    { "&CloseCurlyQuote;"       ,       QwtMml::PostfixForm, {              0,          "true",               0,           "0em",           0,           0,           "0em",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&CloseCurlyQuote;"
-    { "&Colon;"             ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&Colon;"
-    { "&Congruent;"             ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&Congruent;"
-    { "&ContourIntegral;"       ,        QwtMml::PrefixForm, {              0,               0,          "true",           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "&ContourIntegral;"
-    { "&Coproduct;"             ,         QwtMml::InfixForm, {              0,               0,               0,     "thinmathspace",           0,           0,     "thinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&Coproduct;"
-    { "&CounterClockwiseContourIntegral;",       QwtMml::PrefixForm, {                  0,               0,          "true",           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::VStretch }, // &CounterClockwiseContourInteg
-    { "&Cross;"             ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&Cross;"
-    { "&Cup;"               ,         QwtMml::InfixForm, {              0,               0,               0,     "thinmathspace",           0,           0,     "thinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&Cup;"
-    { "&CupCap;"                ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&CupCap;"
-    { "&Del;"               ,        QwtMml::PrefixForm, {              0,               0,               0,           "0em",           0,           0, "verythinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&Del;"
-    { "&DiacriticalAcute;"      ,       QwtMml::PostfixForm, {             "true",               0,               0,           "0em",           0,           0,           "0em",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&DiacriticalAcute;"
-    { "&DiacriticalDot;"        ,       QwtMml::PostfixForm, {             "true",               0,               0,           "0em",           0,           0,           "0em",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&DiacriticalDot;"
-    { "&DiacriticalDoubleAcute;"    ,       QwtMml::PostfixForm, {             "true",               0,               0,           "0em",           0,           0,           "0em",               0,               0 },           QwtMmlOperSpec::NoStretch }, // &DiacriticalDoubleAcute;"
-    { "&DiacriticalGrave;"      ,       QwtMml::PostfixForm, {             "true",               0,               0,           "0em",           0,           0,           "0em",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&DiacriticalGrave;"
-    { "&DiacriticalLeftArrow;"      ,       QwtMml::PostfixForm, {             "true",               0,               0,           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::HStretch }, // &DiacriticalLeftArrow;"
-    { "&DiacriticalLeftRightArrow;"  ,      QwtMml::PostfixForm, {             "true",               0,               0,           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::HStretch }, // &DiacriticalLeftRightArrow;"
-    { "&DiacriticalLeftRightVector;" ,      QwtMml::PostfixForm, {             "true",               0,               0,           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::HStretch }, // &DiacriticalLeftRightVector;"
-    { "&DiacriticalLeftVector;"      ,      QwtMml::PostfixForm, {             "true",               0,               0,           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::HStretch }, // &DiacriticalLeftVector;"
-    { "&DiacriticalRightArrow;"     ,       QwtMml::PostfixForm, {             "true",               0,               0,           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::HStretch }, // &DiacriticalRightArrow;"
-    { "&DiacriticalRightVector;"    ,       QwtMml::PostfixForm, {             "true",               0,               0,           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::HStretch }, // &DiacriticalRightVector;"
-    { "&DiacriticalTilde;"      ,       QwtMml::PostfixForm, {             "true",               0,               0,           "0em",           0,           0,           "0em",               0,              "true" },           QwtMmlOperSpec::NoStretch }, // "&DiacriticalTilde;"
-    { "&Diamond;"               ,         QwtMml::InfixForm, {              0,               0,               0,     "thinmathspace",           0,           0,     "thinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&Diamond;"
-    { "&DifferentialD;"     ,        QwtMml::PrefixForm, {              0,               0,               0,           "0em",           0,           0, "verythinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&DifferentialD;"
-    { "&DotEqual;"              ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&DotEqual;"
-    { "&DoubleContourIntegral;"      ,       QwtMml::PrefixForm, {              0,               0,          "true",           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::VStretch }, // &DoubleContourIntegral;"
-    { "&DoubleDot;"             ,       QwtMml::PostfixForm, {             "true",               0,               0,           "0em",           0,           0,           "0em",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&DoubleDot;"
-    { "&DoubleDownArrow;"       ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "&DoubleDownArrow;"
-    { "&DoubleLeftArrow;"       ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },            QwtMmlOperSpec::HStretch }, // "&DoubleLeftArrow;"
-    { "&DoubleLeftRightArrow;"       ,        QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },            QwtMmlOperSpec::HStretch }, // &DoubleLeftRightArrow;"
-    { "&DoubleLeftTee;"     ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&DoubleLeftTee;"
-    { "&DoubleLongLeftArrow;"   ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },            QwtMmlOperSpec::HStretch }, // "&DoubleLongLeftArrow;"
-    { "&DoubleLongLeftRightArrow;"  ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },            QwtMmlOperSpec::HStretch }, // &DoubleLongLeftRightArrow;"
-    { "&DoubleLongRightArrow;"       ,        QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },            QwtMmlOperSpec::HStretch }, // &DoubleLongRightArrow;"
-    { "&DoubleRightArrow;"      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },            QwtMmlOperSpec::HStretch }, // "&DoubleRightArrow;"
-    { "&DoubleRightTee;"        ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&DoubleRightTee;"
-    { "&DoubleUpArrow;"     ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "&DoubleUpArrow;"
-    { "&DoubleUpDownArrow;"     ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "&DoubleUpDownArrow;"
-    { "&DoubleVerticalBar;"     ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&DoubleVerticalBar;"
-    { "&DownArrow;"             ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "&DownArrow;"
-    { "&DownArrowBar;"      ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "&DownArrowBar;"
-    { "&DownArrowUpArrow;"      ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "&DownArrowUpArrow;"
-    { "&DownBreve;"             ,       QwtMml::PostfixForm, {             "true",               0,               0,           "0em",           0,           0,           "0em",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&DownBreve;"
-    { "&DownLeftRightVector;"   ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },           QwtMmlOperSpec::HVStretch }, // "&DownLeftRightVector;"
-    { "&DownLeftTeeVector;"     ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },           QwtMmlOperSpec::HVStretch }, // "&DownLeftTeeVector;"
-    { "&DownLeftVector;"        ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },           QwtMmlOperSpec::HVStretch }, // "&DownLeftVector;"
-    { "&DownLeftVectorBar;"     ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },           QwtMmlOperSpec::HVStretch }, // "&DownLeftVectorBar;"
-    { "&DownRightTeeVector;"    ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },           QwtMmlOperSpec::HVStretch }, // "&DownRightTeeVector;"
-    { "&DownRightVector;"       ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },           QwtMmlOperSpec::HVStretch }, // "&DownRightVector;"
-    { "&DownRightVectorBar;"    ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },           QwtMmlOperSpec::HVStretch }, // "&DownRightVectorBar;"
-    { "&DownTee;"               ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&DownTee;"
-    { "&DownTeeArrow;"      ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "&DownTeeArrow;"
-    { "&Element;"               ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&Element;"
-    { "&Equal;"             ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&Equal;"
-    { "&EqualTilde;"        ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&EqualTilde;"
-    { "&Equilibrium;"       ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },            QwtMmlOperSpec::HStretch }, // "&Equilibrium;"
-    { "&Exists;"                ,        QwtMml::PrefixForm, {              0,               0,               0,           "0em",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&Exists;"
-    { "&ForAll;"                ,        QwtMml::PrefixForm, {              0,               0,               0,           "0em",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&ForAll;"
-    { "&GreaterEqual;"      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&GreaterEqual;"
-    { "&GreaterEqualLess;"      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&GreaterEqualLess;"
-    { "&GreaterFullEqual;"      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&GreaterFullEqual;"
-    { "&GreaterGreater;"        ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&GreaterGreater;"
-    { "&GreaterLess;"       ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&GreaterLess;"
-    { "&GreaterSlantEqual;"     ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&GreaterSlantEqual;"
-    { "&GreaterTilde;"      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&GreaterTilde;"
-    { "&Hacek;"             ,       QwtMml::PostfixForm, {             "true",               0,               0,           "0em",           0,           0,           "0em",               0,              "true" },           QwtMmlOperSpec::NoStretch }, // "&Hacek;"
-    { "&Hat;"               ,       QwtMml::PostfixForm, {             "true",               0,               0,           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::HStretch }, // "&Hat;"
-    { "&HorizontalLine;"        ,         QwtMml::InfixForm, {              0,               0,               0,           "0em",             "0",           0,           "0em",               0,              "true" },            QwtMmlOperSpec::HStretch }, // "&HorizontalLine;"
-    { "&HumpDownHump;"      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&HumpDownHump;"
-    { "&HumpEqual;"             ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&HumpEqual;"
-    { "&Implies;"               ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },            QwtMmlOperSpec::HStretch }, // "&Implies;"
-    { "&Integral;"              ,        QwtMml::PrefixForm, {              0,               0,          "true",           "0em",           0,           0,           "0em",               0,                   0 },           QwtMmlOperSpec::NoStretch }, // "&Integral;"
-    { "&Intersection;"      ,        QwtMml::PrefixForm, {              0,               0,          "true",           "0em",           0,          "true",     "thinmathspace",               0,              "true" },           QwtMmlOperSpec::HVStretch }, // "&Intersection;"
-    { "&InvisibleComma;"        ,         QwtMml::InfixForm, {              0,               0,               0,           "0em",           0,           0,           "0em",              "true",               0 },           QwtMmlOperSpec::NoStretch }, // "&InvisibleComma;"
-    { "&InvisibleTimes;"        ,         QwtMml::InfixForm, {              0,               0,               0,           "0em",           0,           0,           "0em",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&InvisibleTimes;"
-    { "&LeftAngleBracket;"      ,        QwtMml::PrefixForm, {              0,          "true",               0,           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "&LeftAngleBracket;"
-    { "&LeftArrow;"             ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },            QwtMmlOperSpec::HStretch }, // "&LeftArrow;"
-    { "&LeftArrowBar;"      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },            QwtMmlOperSpec::HStretch }, // "&LeftArrowBar;"
-    { "&LeftArrowRightArrow;"   ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },            QwtMmlOperSpec::HStretch }, // "&LeftArrowRightArrow;"
-    { "&LeftBracketingBar;"     ,        QwtMml::PrefixForm, {              0,          "true",               0,           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "&LeftBracketingBar;"
-    { "&LeftCeiling;"       ,        QwtMml::PrefixForm, {              0,          "true",               0,           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "&LeftCeiling;"
-    { "&LeftDoubleBracket;"     ,        QwtMml::PrefixForm, {              0,          "true",               0,           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::HStretch }, // "&LeftDoubleBracket;"
-    { "&LeftDoubleBracketingBar;"    ,       QwtMml::PrefixForm, {              0,          "true",               0,           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::HStretch }, // &LeftDoubleBracketingBar;"
-    { "&LeftDownTeeVector;"     ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },           QwtMmlOperSpec::HVStretch }, // "&LeftDownTeeVector;"
-    { "&LeftDownVector;"        ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },           QwtMmlOperSpec::HVStretch }, // "&LeftDownVector;"
-    { "&LeftDownVectorBar;"     ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },           QwtMmlOperSpec::HVStretch }, // "&LeftDownVectorBar;"
-    { "&LeftFloor;"             ,        QwtMml::PrefixForm, {              0,          "true",               0,           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "&LeftFloor;"
-    { "&LeftRightArrow;"        ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },            QwtMmlOperSpec::HStretch }, // "&LeftRightArrow;"
-    { "&LeftRightVector;"       ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },            QwtMmlOperSpec::HStretch }, // "&LeftRightVector;"
-    { "&LeftSkeleton;"      ,        QwtMml::PrefixForm, {              0,          "true",               0,           "0em",           0,           0,           "0em",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&LeftSkeleton;"
-    { "&LeftTee;"               ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&LeftTee;"
-    { "&LeftTeeArrow;"      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },            QwtMmlOperSpec::HStretch }, // "&LeftTeeArrow;"
-    { "&LeftTeeVector;"     ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },            QwtMmlOperSpec::HStretch }, // "&LeftTeeVector;"
-    { "&LeftTriangle;"      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&LeftTriangle;"
-    { "&LeftTriangleBar;"       ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&LeftTriangleBar;"
-    { "&LeftTriangleEqual;"     ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&LeftTriangleEqual;"
-    { "&LeftUpDownVector;"      ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },           QwtMmlOperSpec::HVStretch }, // "&LeftUpDownVector;"
-    { "&LeftUpTeeVector;"       ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },           QwtMmlOperSpec::HVStretch }, // "&LeftUpTeeVector;"
-    { "&LeftUpVector;"      ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },           QwtMmlOperSpec::HVStretch }, // "&LeftUpVector;"
-    { "&LeftUpVectorBar;"       ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },           QwtMmlOperSpec::HVStretch }, // "&LeftUpVectorBar;"
-    { "&LeftVector;"        ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },            QwtMmlOperSpec::HStretch }, // "&LeftVector;"
-    { "&LeftVectorBar;"     ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "&LeftVectorBar;"
-    { "&LessEqualGreater;"      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&LessEqualGreater;"
-    { "&LessFullEqual;"     ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&LessFullEqual;"
-    { "&LessGreater;"       ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&LessGreater;"
-    { "&LessLess;"              ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&LessLess;"
-    { "&LessSlantEqual;"        ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&LessSlantEqual;"
-    { "&LessTilde;"             ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&LessTilde;"
-    { "&LongLeftArrow;"     ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },            QwtMmlOperSpec::HStretch }, // "&LongLeftArrow;"
-    { "&LongLeftRightArrow;"        ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },            QwtMmlOperSpec::HStretch }, // "&LongLeftRightArrow;"
-    { "&LongRightArrow;"        ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },            QwtMmlOperSpec::HStretch }, // "&LongRightArrow;"
-    { "&LowerLeftArrow;"        ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },           QwtMmlOperSpec::HVStretch }, // "&LowerLeftArrow;"
-    { "&LowerRightArrow;"       ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },           QwtMmlOperSpec::HVStretch }, // "&LowerRightArrow;"
-    { "&MinusPlus;"             ,        QwtMml::PrefixForm, {              0,               0,               0,           "0em",           0,           0, "veryverythinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&MinusPlus;"
-    { "&NestedGreaterGreater;"       ,        QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // &NestedGreaterGreater;"
-    { "&NestedLessLess;"        ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NestedLessLess;"
-    { "&Not;"               ,        QwtMml::PrefixForm, {              0,               0,               0,           "0em",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&Not;"
-    { "&NotCongruent;"      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotCongruent;"
-    { "&NotCupCap;"             ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotCupCap;"
-    { "&NotDoubleVerticalBar;"       ,        QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // &NotDoubleVerticalBar;"
-    { "&NotElement;"        ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotElement;"
-    { "&NotEqual;"              ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotEqual;"
-    { "&NotEqualTilde;"     ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotEqualTilde;"
-    { "&NotExists;"             ,        QwtMml::PrefixForm, {              0,               0,               0,           "0em",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotExists;"
-    { "&NotGreater;"        ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotGreater;"
-    { "&NotGreaterEqual;"       ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotGreaterEqual;"
-    { "&NotGreaterFullEqual;"   ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotGreaterFullEqual;"
-    { "&NotGreaterGreater;"     ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotGreaterGreater;"
-    { "&NotGreaterLess;"        ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotGreaterLess;"
-    { "&NotGreaterSlantEqual;"       ,        QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // &NotGreaterSlantEqual;"
-    { "&NotGreaterTilde;"       ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotGreaterTilde;"
-    { "&NotHumpDownHump;"       ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotHumpDownHump;"
-    { "&NotHumpEqual;"      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotHumpEqual;"
-    { "&NotLeftTriangle;"       ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotLeftTriangle;"
-    { "&NotLeftTriangleBar;"    ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotLeftTriangleBar;"
-    { "&NotLeftTriangleEqual;"       ,        QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // &NotLeftTriangleEqual;"
-    { "&NotLess;"               ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotLess;"
-    { "&NotLessEqual;"      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotLessEqual;"
-    { "&NotLessFullEqual;"      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotLessFullEqual;"
-    { "&NotLessGreater;"        ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotLessGreater;"
-    { "&NotLessLess;"       ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotLessLess;"
-    { "&NotLessSlantEqual;"     ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotLessSlantEqual;"
-    { "&NotLessTilde;"      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotLessTilde;"
-    { "&NotNestedGreaterGreater;"    ,        QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // &NotNestedGreaterGreater;"
-    { "&NotNestedLessLess;"     ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotNestedLessLess;"
-    { "&NotPrecedes;"       ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotPrecedes;"
-    { "&NotPrecedesEqual;"      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotPrecedesEqual;"
-    { "&NotPrecedesSlantEqual;"      ,        QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // &NotPrecedesSlantEqual;"
-    { "&NotPrecedesTilde;"      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotPrecedesTilde;"
-    { "&NotReverseElement;"     ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotReverseElement;"
-    { "&NotRightTriangle;"      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotRightTriangle;"
-    { "&NotRightTriangleBar;"       ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotRightTriangleBar;"
-    { "&NotRightTriangleEqual;"     ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // &NotRightTriangleEqual;"
-    { "&NotSquareSubset;"       ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotSquareSubset;"
-    { "&NotSquareSubsetEqual;"      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // &NotSquareSubsetEqual;"
-    { "&NotSquareSuperset;"     ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotSquareSuperset;"
-    { "&NotSquareSupersetEqual;"     ,        QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // &NotSquareSupersetEqual;"
-    { "&NotSubset;"             ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotSubset;"
-    { "&NotSubsetEqual;"        ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotSubsetEqual;"
-    { "&NotSucceeds;"       ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotSucceeds;"
-    { "&NotSucceedsEqual;"      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotSucceedsEqual;"
-    { "&NotSucceedsSlantEqual;"      ,        QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // &NotSucceedsSlantEqual;"
-    { "&NotSucceedsTilde;"      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotSucceedsTilde;"
-    { "&NotSuperset;"       ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotSuperset;"
-    { "&NotSupersetEqual;"      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotSupersetEqual;"
-    { "&NotTilde;"              ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotTilde;"
-    { "&NotTildeEqual;"     ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotTildeEqual;"
-    { "&NotTildeFullEqual;"     ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotTildeFullEqual;"
-    { "&NotTildeTilde;"     ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotTildeTilde;"
-    { "&NotVerticalBar;"        ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&NotVerticalBar;"
-    { "&OpenCurlyDoubleQuote;"       ,       QwtMml::PrefixForm, {              0,          "true",               0,           "0em",           0,           0,           "0em",               0,               0 },           QwtMmlOperSpec::NoStretch }, // &OpenCurlyDoubleQuote;"
-    { "&OpenCurlyQuote;"        ,        QwtMml::PrefixForm, {              0,          "true",               0,           "0em",           0,           0,           "0em",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&OpenCurlyQuote;"
-    { "&Or;"                ,         QwtMml::InfixForm, {              0,               0,               0,       "mediummathspace",           0,           0,   "mediummathspace",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "&Or;"
-    { "&OverBar;"               ,       QwtMml::PostfixForm, {             "true",               0,               0,           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::HStretch }, // "&OverBar;"
-    { "&OverBrace;"             ,       QwtMml::PostfixForm, {             "true",               0,               0,           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::HStretch }, // "&OverBrace;"
-    { "&OverBracket;"       ,       QwtMml::PostfixForm, {             "true",               0,               0,           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::HStretch }, // "&OverBracket;"
-    { "&OverParenthesis;"       ,       QwtMml::PostfixForm, {             "true",               0,               0,           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "&OverParenthesis;"
-    { "&PartialD;"              ,        QwtMml::PrefixForm, {              0,               0,               0,           "0em",           0,           0, "verythinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&PartialD;"
-    { "&PlusMinus;"             ,        QwtMml::PrefixForm, {              0,               0,               0,           "0em",           0,           0, "veryverythinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&PlusMinus;"
-    { "&Precedes;"              ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&Precedes;"
-    { "&PrecedesEqual;"     ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&PrecedesEqual;"
-    { "&PrecedesSlantEqual;"    ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&PrecedesSlantEqual;"
-    { "&PrecedesTilde;"     ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&PrecedesTilde;"
-    { "&Product;"               ,        QwtMml::PrefixForm, {              0,               0,          "true",           "0em",           0,          "true",     "thinmathspace",               0,                   0 },           QwtMmlOperSpec::NoStretch }, // "&Product;"
-    { "&Proportion;"        ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&Proportion;"
-    { "&Proportional;"      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&Proportional;"
-    { "&ReverseElement;"        ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&ReverseElement;"
-    { "&ReverseEquilibrium;"    ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },            QwtMmlOperSpec::HStretch }, // "&ReverseEquilibrium;"
-    { "&ReverseUpEquilibrium;"      ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },            QwtMmlOperSpec::HStretch }, // &ReverseUpEquilibrium;"
-    { "&RightAngleBracket;"     ,       QwtMml::PostfixForm, {              0,          "true",               0,           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "&RightAngleBracket;"
-    { "&RightArrow;"        ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },            QwtMmlOperSpec::HStretch }, // "&RightArrow;"
-    { "&RightArrowBar;"     ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },            QwtMmlOperSpec::HStretch }, // "&RightArrowBar;"
-    { "&RightArrowLeftArrow;"   ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },            QwtMmlOperSpec::HStretch }, // "&RightArrowLeftArrow;"
-    { "&RightBracketingBar;"    ,       QwtMml::PostfixForm, {              0,          "true",               0,           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "&RightBracketingBar;"
-    { "&RightCeiling;"      ,       QwtMml::PostfixForm, {              0,          "true",               0,           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "&RightCeiling;"
-    { "&RightDoubleBracket;"    ,       QwtMml::PostfixForm, {              0,          "true",               0,           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "&RightDoubleBracket;"
-    { "&RightDoubleBracketingBar;"   ,      QwtMml::PostfixForm, {              0,          "true",               0,           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::HStretch }, // &RightDoubleBracketingBar;"
-    { "&RightDownTeeVector;"    ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },           QwtMmlOperSpec::HVStretch }, // "&RightDownTeeVector;"
-    { "&RightDownVector;"       ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },           QwtMmlOperSpec::HVStretch }, // "&RightDownVector;"
-    { "&RightDownVectorBar;"    ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },           QwtMmlOperSpec::HVStretch }, // "&RightDownVectorBar;"
-    { "&RightFloor;"        ,       QwtMml::PostfixForm, {              0,          "true",               0,           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "&RightFloor;"
-    { "&RightSkeleton;"     ,       QwtMml::PostfixForm, {              0,          "true",               0,           "0em",           0,           0,           "0em",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&RightSkeleton;"
-    { "&RightTee;"              ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&RightTee;"
-    { "&RightTeeArrow;"     ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },            QwtMmlOperSpec::HStretch }, // "&RightTeeArrow;"
-    { "&RightTeeVector;"        ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },            QwtMmlOperSpec::HStretch }, // "&RightTeeVector;"
-    { "&RightTriangle;"     ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&RightTriangle;"
-    { "&RightTriangleBar;"      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&RightTriangleBar;"
-    { "&RightTriangleEqual;"    ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&RightTriangleEqual;"
-    { "&RightUpDownVector;"     ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "&RightUpDownVector;"
-    { "&RightUpTeeVector;"      ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },           QwtMmlOperSpec::HVStretch }, // "&RightUpTeeVector;"
-    { "&RightUpVector;"     ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },           QwtMmlOperSpec::HVStretch }, // "&RightUpVector;"
-    { "&RightUpVectorBar;"      ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },           QwtMmlOperSpec::HVStretch }, // "&RightUpVectorBar;"
-    { "&RightVector;"       ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },            QwtMmlOperSpec::HStretch }, // "&RightVector;"
-    { "&RightVectorBar;"        ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },            QwtMmlOperSpec::HStretch }, // "&RightVectorBar;"
-    { "&RoundImplies;"      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&RoundImplies;"
-    { "&ShortDownArrow;"        ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&ShortDownArrow;"
-    { "&ShortLeftArrow;"        ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },            QwtMmlOperSpec::HStretch }, // "&ShortLeftArrow;"
-    { "&ShortRightArrow;"       ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },            QwtMmlOperSpec::HStretch }, // "&ShortRightArrow;"
-    { "&ShortUpArrow;"      ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,               0 },            QwtMmlOperSpec::VStretch }, // "&ShortUpArrow;"
-    { "&SmallCircle;"       ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&SmallCircle;"
-    { "&Sqrt;"              ,        QwtMml::PrefixForm, {              0,               0,               0,           "0em",           0,           0, "verythinmathspace",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "&Sqrt;"
-    { "&Square;"                ,        QwtMml::PrefixForm, {              0,               0,               0,           "0em",           0,           0, "verythinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&Square;"
-    { "&SquareIntersection;"    ,         QwtMml::InfixForm, {              0,               0,               0,       "mediummathspace",           0,           0,   "mediummathspace",               0,              "true" },           QwtMmlOperSpec::HVStretch }, // "&SquareIntersection;"
-    { "&SquareSubset;"      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&SquareSubset;"
-    { "&SquareSubsetEqual;"     ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&SquareSubsetEqual;"
-    { "&SquareSuperset;"        ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&SquareSuperset;"
-    { "&SquareSupersetEqual;"   ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&SquareSupersetEqual;"
-    { "&SquareUnion;"       ,         QwtMml::InfixForm, {              0,               0,               0,       "mediummathspace",           0,           0,   "mediummathspace",               0,              "true" },           QwtMmlOperSpec::HVStretch }, // "&SquareUnion;"
-    { "&Star;"              ,         QwtMml::InfixForm, {              0,               0,               0,     "thinmathspace",           0,           0,     "thinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&Star;"
-    { "&Subset;"                ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&Subset;"
-    { "&SubsetEqual;"       ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&SubsetEqual;"
-    { "&Succeeds;"              ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&Succeeds;"
-    { "&SucceedsEqual;"     ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&SucceedsEqual;"
-    { "&SucceedsSlantEqual;"    ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&SucceedsSlantEqual;"
-    { "&SucceedsTilde;"     ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&SucceedsTilde;"
-    { "&SuchThat;"              ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&SuchThat;"
-    { "&Sum;"               ,        QwtMml::PrefixForm, {              0,               0,          "true",           "0em",           0,          "true",     "thinmathspace",               0,                   0 },           QwtMmlOperSpec::NoStretch }, // "&Sum;"
-    { "&Superset;"              ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&Superset;"
-    { "&SupersetEqual;"     ,                 QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&SupersetEqual;"
-    { "&Therefore;"             ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&Therefore;"
-    { "&Tilde;"             ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&Tilde;"
-    { "&TildeEqual;"        ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&TildeEqual;"
-    { "&TildeFullEqual;"        ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&TildeFullEqual;"
-    { "&TildeTilde;"        ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&TildeTilde;"
-    { "&TripleDot;"             ,       QwtMml::PostfixForm, {             "true",               0,               0,           "0em",           0,           0,           "0em",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&TripleDot;"
-    { "&UnderBar;"              ,       QwtMml::PostfixForm, {             "true",               0,               0,           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::HStretch }, // "&UnderBar;"
-    { "&UnderBrace;"        ,       QwtMml::PostfixForm, {             "true",               0,               0,           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::HStretch }, // "&UnderBrace;"
-    { "&UnderBracket;"      ,       QwtMml::PostfixForm, {             "true",               0,               0,           "0em",           0,           0,           "0em",               0,              "true" },           QwtMmlOperSpec::HStretch }, // "&UnderBracket;"
-    { "&UnderParenthesis;"      ,       QwtMml::PostfixForm, {             "true",               0,               0,           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::HStretch }, // "&UnderParenthesis;"
-    { "&Union;"             ,        QwtMml::PrefixForm, {              0,               0,          "true",           "0em",           0,          "true",     "thinmathspace",               0,              "true" },           QwtMmlOperSpec::HVStretch }, // "&Union;"
-    { "&UnionPlus;"             ,        QwtMml::PrefixForm, {              0,               0,          "true",           "0em",           0,          "true",     "thinmathspace",               0,              "true" },           QwtMmlOperSpec::HVStretch }, // "&UnionPlus;"
-    { "&UpArrow;"               ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "&UpArrow;"
-    { "&UpArrowBar;"        ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "&UpArrowBar;"
-    { "&UpArrowDownArrow;"      ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "&UpArrowDownArrow;"
-    { "&UpDownArrow;"       ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "&UpDownArrow;"
-    { "&UpEquilibrium;"     ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "&UpEquilibrium;"
-    { "&UpTee;"             ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&UpTee;"
-    { "&UpTeeArrow;"        ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "&UpTeeArrow;"
-    { "&UpperLeftArrow;"        ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },           QwtMmlOperSpec::HVStretch }, // "&UpperLeftArrow;"
-    { "&UpperRightArrow;"       ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },           QwtMmlOperSpec::HVStretch }, // "&UpperRightArrow;"
-    { "&Vee;"               ,         QwtMml::InfixForm, {              0,               0,               0,     "thinmathspace",           0,           0,     "thinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&Vee;"
-    { "&VerticalBar;"       ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&VerticalBar;"
-    { "&VerticalLine;"      ,         QwtMml::InfixForm, {              0,               0,               0,           "0em",             "0",           0,           "0em",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "&VerticalLine;"
-    { "&VerticalSeparator;"     ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "&VerticalSeparator;"
-    { "&VerticalTilde;"     ,         QwtMml::InfixForm, {              0,               0,               0,     "thinmathspace",           0,           0,     "thinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&VerticalTilde;"
-    { "&Wedge;"             ,         QwtMml::InfixForm, {              0,               0,               0,     "thinmathspace",           0,           0,     "thinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&Wedge;"
-    { "&amp;"               ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&amp;"
-    { "&amp;&amp;"              ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&amp;&amp;"
-    { "&le;"                ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&le;"
-    { "&lt;"                ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&lt;"
-    { "&lt;="               ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&lt;="
-    { "&lt;>"               ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "&lt;>"
-    { "'"                       ,       QwtMml::PostfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0,           "0em",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "'"
-    { "("                       ,        QwtMml::PrefixForm, {              0,          "true",               0,           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "("
-    { ")"                       ,       QwtMml::PostfixForm, {              0,          "true",               0,           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::VStretch }, // ")"
-    { "*"                       ,         QwtMml::InfixForm, {              0,               0,               0,     "thinmathspace",           0,           0,     "thinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "*"
-    { "**"                      ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "**"
-    { "*="                      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "*="
-    { "+"                       ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "+"
-    { "+"                       ,        QwtMml::PrefixForm, {              0,               0,               0,           "0em",           0,           0, "veryverythinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "+"
-    { "++"                      ,        QwtMml::PrefixForm, {              0,               0,               0,           "0em",           0,           0, "verythinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "++"
-    { "+="                      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "+="
-    { ","                       ,         QwtMml::InfixForm, {              0,               0,               0,           "0em",           0,           0,    "verythickmathspace",              "true",               0 },           QwtMmlOperSpec::NoStretch }, // ","
-    { "-"                       ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "-"
-    { "-"                       ,        QwtMml::PrefixForm, {              0,               0,               0,           "0em",           0,           0, "veryverythinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "-"
-    { "--"                      ,        QwtMml::PrefixForm, {              0,               0,               0,           "0em",           0,           0, "verythinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, //   "--"
-    { "-="                      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "-="
-    { "->"                      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "->"
-    { "."                       ,         QwtMml::InfixForm, {              0,               0,               0,           "0em",           0,           0,           "0em",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "."
-    { ".."                      ,       QwtMml::PostfixForm, {              0,               0,               0,       "mediummathspace",           0,           0,           "0em",               0,               0 },           QwtMmlOperSpec::NoStretch }, // ".."
-    { "..."                     ,       QwtMml::PostfixForm, {              0,               0,               0,       "mediummathspace",           0,           0,           "0em",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "..."
-    { "/"                       ,         QwtMml::InfixForm, {              0,               0,               0,     "thinmathspace",           0,           0,     "thinmathspace",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "/"
-    { "//"                      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "//"
-    { "/="                      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "/="
-    { ":"                       ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // ":"
-    { ":="                      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // ":="
-    { ";"                       ,         QwtMml::InfixForm, {              0,               0,               0,           "0em",           0,           0,    "verythickmathspace",              "true",               0 },           QwtMmlOperSpec::NoStretch }, // ";"
-    { ";"                       ,       QwtMml::PostfixForm, {              0,               0,               0,           "0em",           0,           0,           "0em",              "true",               0 },           QwtMmlOperSpec::NoStretch }, // ";"
-    { "="                       ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "="
-    { "=="                      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "=="
-    { ">"                       ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // ">"
-    { ">="                      ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // ">="
-    { "?"                       ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "?"
-    { "@"                       ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "@"
-    { "["                       ,        QwtMml::PrefixForm, {              0,          "true",               0,           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "["
-    { "]"                       ,       QwtMml::PostfixForm, {              0,          "true",               0,           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "]"
-    { "^"                       ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "^"
-    { "_"                       ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "_"
-    { "lim"                     ,        QwtMml::PrefixForm, {              0,               0,               0,           "0em",           0,          "true",     "thinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "lim"
-    { "max"                     ,        QwtMml::PrefixForm, {              0,               0,               0,           "0em",           0,          "true",     "thinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "max"
-    { "min"                     ,        QwtMml::PrefixForm, {              0,               0,               0,           "0em",           0,          "true",     "thinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "min"
-    { "{"                   ,        QwtMml::PrefixForm, {              0,          "true",               0,           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "{"
-    { "|"                       ,         QwtMml::InfixForm, {              0,               0,               0,    "thickmathspace",           0,           0,    "thickmathspace",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "|"
-    { "||"                      ,         QwtMml::InfixForm, {              0,               0,               0,       "mediummathspace",           0,           0,   "mediummathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "||"
-    { "}"                       ,       QwtMml::PostfixForm, {              0,          "true",               0,           "0em",           0,           0,           "0em",               0,              "true" },            QwtMmlOperSpec::VStretch }, // "}"
-    { "~"                       ,         QwtMml::InfixForm, {              0,               0,               0,     "verythinmathspace",           0,           0, "verythinmathspace",               0,               0 },           QwtMmlOperSpec::NoStretch }, // "~"
-    {  0                        ,                 QwtMml::InfixForm, {                      0,                       0,                       0,                       0,                       0,               0,                       0,                       0,                       0 },           QwtMmlOperSpec::NoStretch }
+//                                                                accent   fence    largeop  lspace               minsize movablelimits rspace                   separator stretchy
+//                                                                -------- -------- -------- -------------------- ------- ------------- ------------------------ --------- --------
+    { "!!",                                QwtMml::PostfixForm, { 0,       0,       0,       "verythinmathspace", 0,      0,            "0em",                   0,        0        }, QwtMmlOperSpec::NoStretch }, // "!!"
+    { "!",                                 QwtMml::PostfixForm, { 0,       0,       0,       "verythinmathspace", 0,      0,            "0em",                   0,        0        }, QwtMmlOperSpec::NoStretch }, // "!"
+    { "!=",                                QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "!="
+    { "&And;",                             QwtMml::InfixForm,   { 0,       0,       0,       "mediummathspace",   0,      0,            "mediummathspace",       0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&And;"
+    { "&ApplyFunction;",                   QwtMml::InfixForm,   { 0,       0,       0,       "0em",               0,      0,            "0em",                   0,        0        }, QwtMmlOperSpec::NoStretch }, // "&ApplyFunction;"
+    { "&Assign;",                          QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&Assign;"
+    { "&Backslash;",                       QwtMml::InfixForm,   { 0,       0,       0,       "thinmathspace",     0,      0,            "thinmathspace",         0,        "true"   }, QwtMmlOperSpec::HVStretch }, // "&Backslash;"
+    { "&Because;",                         QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&Because;"
+    { "&Breve;",                           QwtMml::PostfixForm, { "true",  0,       0,       "0em",               0,      0,            "0em",                   0,        0        }, QwtMmlOperSpec::NoStretch }, // "&Breve;"
+    { "&Cap;",                             QwtMml::InfixForm,   { 0,       0,       0,       "thinmathspace",     0,      0,            "thinmathspace",         0,        0        }, QwtMmlOperSpec::NoStretch }, // "&Cap;"
+    { "&CapitalDifferentialD;",            QwtMml::PrefixForm,  { 0,       0,       0,       "0em",               0,      0,            "verythinmathspace",     0,        0        }, QwtMmlOperSpec::NoStretch }, // "&CapitalDifferentialD;"
+    { "&Cedilla;",                         QwtMml::PostfixForm, { "true",  0,       0,       "0em",               0,      0,            "0em",                   0,        0        }, QwtMmlOperSpec::NoStretch }, // "&Cedilla;"
+    { "&CenterDot;",                       QwtMml::InfixForm,   { 0,       0,       0,       "thinmathspace",     0,      0,            "thinmathspace",         0,        0        }, QwtMmlOperSpec::NoStretch }, // "&CenterDot;"
+    { "&CircleDot;",                       QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        0        }, QwtMmlOperSpec::NoStretch }, // "&CircleDot;"
+    { "&CircleMinus;",                     QwtMml::InfixForm,   { 0,       0,       0,       "thinmathspace",     0,      0,            "thinmathspace",         0,        0        }, QwtMmlOperSpec::NoStretch }, // "&CircleMinus;"
+    { "&CirclePlus;",                      QwtMml::InfixForm,   { 0,       0,       0,       "thinmathspace",     0,      0,            "thinmathspace",         0,        0        }, QwtMmlOperSpec::NoStretch }, // "&CirclePlus;"
+    { "&CircleTimes;",                     QwtMml::InfixForm,   { 0,       0,       0,       "thinmathspace",     0,      0,            "thinmathspace",         0,        0        }, QwtMmlOperSpec::NoStretch }, // "&CircleTimes;"
+    { "&ClockwiseContourIntegral;",        QwtMml::PrefixForm,  { 0,       0,       "true",  "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&ClockwiseContourIntegral;"
+    { "&CloseCurlyDoubleQuote;",           QwtMml::PostfixForm, { 0,       "true",  0,       "0em",               0,      0,            "0em",                   0,        0        }, QwtMmlOperSpec::NoStretch }, // "&CloseCurlyDoubleQuote;"
+    { "&CloseCurlyQuote;",                 QwtMml::PostfixForm, { 0,       "true",  0,       "0em",               0,      0,            "0em",                   0,        0        }, QwtMmlOperSpec::NoStretch }, // "&CloseCurlyQuote;"
+    { "&Colon;",                           QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&Colon;"
+    { "&Congruent;",                       QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&Congruent;"
+    { "&ContourIntegral;",                 QwtMml::PrefixForm,  { 0,       0,       "true",  "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&ContourIntegral;"
+    { "&Coproduct;",                       QwtMml::InfixForm,   { 0,       0,       0,       "thinmathspace",     0,      0,            "thinmathspace",         0,        0        }, QwtMmlOperSpec::NoStretch }, // "&Coproduct;"
+    { "&CounterClockwiseContourIntegral;", QwtMml::PrefixForm,  { 0,       0,       "true",  "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&CounterClockwiseContourInteg
+    { "&Cross;",                           QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        0        }, QwtMmlOperSpec::NoStretch }, // "&Cross;"
+    { "&Cup;",                             QwtMml::InfixForm,   { 0,       0,       0,       "thinmathspace",     0,      0,            "thinmathspace",         0,        0        }, QwtMmlOperSpec::NoStretch }, // "&Cup;"
+    { "&CupCap;",                          QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&CupCap;"
+    { "&Del;",                             QwtMml::PrefixForm,  { 0,       0,       0,       "0em",               0,      0,            "verythinmathspace",     0,        0        }, QwtMmlOperSpec::NoStretch }, // "&Del;"
+    { "&DiacriticalAcute;",                QwtMml::PostfixForm, { "true",  0,       0,       "0em",               0,      0,            "0em",                   0,        0        }, QwtMmlOperSpec::NoStretch }, // "&DiacriticalAcute;"
+    { "&DiacriticalDot;",                  QwtMml::PostfixForm, { "true",  0,       0,       "0em",               0,      0,            "0em",                   0,        0        }, QwtMmlOperSpec::NoStretch }, // "&DiacriticalDot;"
+    { "&DiacriticalDoubleAcute;",          QwtMml::PostfixForm, { "true",  0,       0,       "0em",               0,      0,            "0em",                   0,        0        }, QwtMmlOperSpec::NoStretch }, // "&DiacriticalDoubleAcute;"
+    { "&DiacriticalGrave;",                QwtMml::PostfixForm, { "true",  0,       0,       "0em",               0,      0,            "0em",                   0,        0        }, QwtMmlOperSpec::NoStretch }, // "&DiacriticalGrave;"
+    { "&DiacriticalLeftArrow;",            QwtMml::PostfixForm, { "true",  0,       0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&DiacriticalLeftArrow;"
+    { "&DiacriticalLeftRightArrow;",       QwtMml::PostfixForm, { "true",  0,       0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&DiacriticalLeftRightArrow;"
+    { "&DiacriticalLeftRightVector;",      QwtMml::PostfixForm, { "true",  0,       0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&DiacriticalLeftRightVector;"
+    { "&DiacriticalLeftVector;",           QwtMml::PostfixForm, { "true",  0,       0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&DiacriticalLeftVector;"
+    { "&DiacriticalRightArrow;",           QwtMml::PostfixForm, { "true",  0,       0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&DiacriticalRightArrow;"
+    { "&DiacriticalRightVector;",          QwtMml::PostfixForm, { "true",  0,       0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&DiacriticalRightVector;"
+    { "&DiacriticalTilde;",                QwtMml::PostfixForm, { "true",  0,       0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::NoStretch }, // "&DiacriticalTilde;"
+    { "&Diamond;",                         QwtMml::InfixForm,   { 0,       0,       0,       "thinmathspace",     0,      0,            "thinmathspace",         0,        0        }, QwtMmlOperSpec::NoStretch }, // "&Diamond;"
+    { "&DifferentialD;",                   QwtMml::PrefixForm,  { 0,       0,       0,       "0em",               0,      0,            "verythinmathspace",     0,        0        }, QwtMmlOperSpec::NoStretch }, // "&DifferentialD;"
+    { "&DotEqual;",                        QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&DotEqual;"
+    { "&DoubleContourIntegral;",           QwtMml::PrefixForm,  { 0,       0,       "true",  "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&DoubleContourIntegral;"
+    { "&DoubleDot;",                       QwtMml::PostfixForm, { "true",  0,       0,       "0em",               0,      0,            "0em",                   0,        0        }, QwtMmlOperSpec::NoStretch }, // "&DoubleDot;"
+    { "&DoubleDownArrow;",                 QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&DoubleDownArrow;"
+    { "&DoubleLeftArrow;",                 QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&DoubleLeftArrow;"
+    { "&DoubleLeftRightArrow;",            QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&DoubleLeftRightArrow;"
+    { "&DoubleLeftTee;",                   QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&DoubleLeftTee;"
+    { "&DoubleLongLeftArrow;",             QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&DoubleLongLeftArrow;"
+    { "&DoubleLongLeftRightArrow;",        QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&DoubleLongLeftRightArrow;"
+    { "&DoubleLongRightArrow;",            QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&DoubleLongRightArrow;"
+    { "&DoubleRightArrow;",                QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&DoubleRightArrow;"
+    { "&DoubleRightTee;",                  QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&DoubleRightTee;"
+    { "&DoubleUpArrow;",                   QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&DoubleUpArrow;"
+    { "&DoubleUpDownArrow;",               QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&DoubleUpDownArrow;"
+    { "&DoubleVerticalBar;",               QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&DoubleVerticalBar;"
+    { "&DownArrow;",                       QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&DownArrow;"
+    { "&DownArrowBar;",                    QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&DownArrowBar;"
+    { "&DownArrowUpArrow;",                QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&DownArrowUpArrow;"
+    { "&DownBreve;",                       QwtMml::PostfixForm, { "true",  0,       0,       "0em",               0,      0,            "0em",                   0,        0        }, QwtMmlOperSpec::NoStretch }, // "&DownBreve;"
+    { "&DownLeftRightVector;",             QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::HVStretch }, // "&DownLeftRightVector;"
+    { "&DownLeftTeeVector;",               QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::HVStretch }, // "&DownLeftTeeVector;"
+    { "&DownLeftVector;",                  QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::HVStretch }, // "&DownLeftVector;"
+    { "&DownLeftVectorBar;",               QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::HVStretch }, // "&DownLeftVectorBar;"
+    { "&DownRightTeeVector;",              QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::HVStretch }, // "&DownRightTeeVector;"
+    { "&DownRightVector;",                 QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::HVStretch }, // "&DownRightVector;"
+    { "&DownRightVectorBar;",              QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::HVStretch }, // "&DownRightVectorBar;"
+    { "&DownTee;",                         QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&DownTee;"
+    { "&DownTeeArrow;",                    QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&DownTeeArrow;"
+    { "&Element;",                         QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&Element;"
+    { "&Equal;",                           QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&Equal;"
+    { "&EqualTilde;",                      QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&EqualTilde;"
+    { "&Equilibrium;",                     QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&Equilibrium;"
+    { "&Exists;",                          QwtMml::PrefixForm,  { 0,       0,       0,       "0em",               0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&Exists;"
+    { "&ForAll;",                          QwtMml::PrefixForm,  { 0,       0,       0,       "0em",               0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&ForAll;"
+    { "&GreaterEqual;",                    QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&GreaterEqual;"
+    { "&GreaterEqualLess;",                QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&GreaterEqualLess;"
+    { "&GreaterFullEqual;",                QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&GreaterFullEqual;"
+    { "&GreaterGreater;",                  QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&GreaterGreater;"
+    { "&GreaterLess;",                     QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&GreaterLess;"
+    { "&GreaterSlantEqual;",               QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&GreaterSlantEqual;"
+    { "&GreaterTilde;",                    QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&GreaterTilde;"
+    { "&Hacek;",                           QwtMml::PostfixForm, { "true",  0,       0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::NoStretch }, // "&Hacek;"
+    { "&Hat;",                             QwtMml::PostfixForm, { "true",  0,       0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&Hat;"
+    { "&HorizontalLine;",                  QwtMml::InfixForm,   { 0,       0,       0,       "0em",               "0",    0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&HorizontalLine;"
+    { "&HumpDownHump;",                    QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&HumpDownHump;"
+    { "&HumpEqual;",                       QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&HumpEqual;"
+    { "&Implies;",                         QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&Implies;"
+    { "&Integral;",                        QwtMml::PrefixForm,  { 0,       0,       "true",  "0em",               0,      0,            "0em",                   0,        0        }, QwtMmlOperSpec::NoStretch }, // "&Integral;"
+    { "&Intersection;",                    QwtMml::PrefixForm,  { 0,       0,       "true",  "0em",               0,      "true",       "thinmathspace",         0,        "true"   }, QwtMmlOperSpec::HVStretch }, // "&Intersection;"
+    { "&InvisibleComma;",                  QwtMml::InfixForm,   { 0,       0,       0,       "0em",               0,      0,            "0em",                   "true",   0        }, QwtMmlOperSpec::NoStretch }, // "&InvisibleComma;"
+    { "&InvisibleTimes;",                  QwtMml::InfixForm,   { 0,       0,       0,       "0em",               0,      0,            "0em",                   0,        0        }, QwtMmlOperSpec::NoStretch }, // "&InvisibleTimes;"
+    { "&LeftAngleBracket;",                QwtMml::PrefixForm,  { 0,       "true",  0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&LeftAngleBracket;"
+    { "&LeftArrow;",                       QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&LeftArrow;"
+    { "&LeftArrowBar;",                    QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&LeftArrowBar;"
+    { "&LeftArrowRightArrow;",             QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&LeftArrowRightArrow;"
+    { "&LeftBracketingBar;",               QwtMml::PrefixForm,  { 0,       "true",  0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&LeftBracketingBar;"
+    { "&LeftCeiling;",                     QwtMml::PrefixForm,  { 0,       "true",  0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&LeftCeiling;"
+    { "&LeftDoubleBracket;",               QwtMml::PrefixForm,  { 0,       "true",  0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&LeftDoubleBracket;"
+    { "&LeftDoubleBracketingBar;",         QwtMml::PrefixForm,  { 0,       "true",  0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&LeftDoubleBracketingBar;"
+    { "&LeftDownTeeVector;",               QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::HVStretch }, // "&LeftDownTeeVector;"
+    { "&LeftDownVector;",                  QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::HVStretch }, // "&LeftDownVector;"
+    { "&LeftDownVectorBar;",               QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::HVStretch }, // "&LeftDownVectorBar;"
+    { "&LeftFloor;",                       QwtMml::PrefixForm,  { 0,       "true",  0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&LeftFloor;"
+    { "&LeftRightArrow;",                  QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&LeftRightArrow;"
+    { "&LeftRightVector;",                 QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&LeftRightVector;"
+    { "&LeftSkeleton;",                    QwtMml::PrefixForm,  { 0,       "true",  0,       "0em",               0,      0,            "0em",                   0,        0        }, QwtMmlOperSpec::NoStretch }, // "&LeftSkeleton;"
+    { "&LeftTee;",                         QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&LeftTee;"
+    { "&LeftTeeArrow;",                    QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&LeftTeeArrow;"
+    { "&LeftTeeVector;",                   QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&LeftTeeVector;"
+    { "&LeftTriangle;",                    QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&LeftTriangle;"
+    { "&LeftTriangleBar;",                 QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&LeftTriangleBar;"
+    { "&LeftTriangleEqual;",               QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&LeftTriangleEqual;"
+    { "&LeftUpDownVector;",                QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::HVStretch }, // "&LeftUpDownVector;"
+    { "&LeftUpTeeVector;",                 QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::HVStretch }, // "&LeftUpTeeVector;"
+    { "&LeftUpVector;",                    QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::HVStretch }, // "&LeftUpVector;"
+    { "&LeftUpVectorBar;",                 QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::HVStretch }, // "&LeftUpVectorBar;"
+    { "&LeftVector;",                      QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&LeftVector;"
+    { "&LeftVectorBar;",                   QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&LeftVectorBar;"
+    { "&LessEqualGreater;",                QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&LessEqualGreater;"
+    { "&LessFullEqual;",                   QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&LessFullEqual;"
+    { "&LessGreater;",                     QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&LessGreater;"
+    { "&LessLess;",                        QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&LessLess;"
+    { "&LessSlantEqual;",                  QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&LessSlantEqual;"
+    { "&LessTilde;",                       QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&LessTilde;"
+    { "&LongLeftArrow;",                   QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&LongLeftArrow;"
+    { "&LongLeftRightArrow;",              QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&LongLeftRightArrow;"
+    { "&LongRightArrow;",                  QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&LongRightArrow;"
+    { "&LowerLeftArrow;",                  QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::HVStretch }, // "&LowerLeftArrow;"
+    { "&LowerRightArrow;",                 QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::HVStretch }, // "&LowerRightArrow;"
+    { "&MinusPlus;",                       QwtMml::PrefixForm,  { 0,       0,       0,       "0em",               0,      0,            "veryverythinmathspace", 0,        0        }, QwtMmlOperSpec::NoStretch }, // "&MinusPlus;"
+    { "&NestedGreaterGreater;",            QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NestedGreaterGreater;"
+    { "&NestedLessLess;",                  QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NestedLessLess;"
+    { "&Not;",                             QwtMml::PrefixForm,  { 0,       0,       0,       "0em",               0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&Not;"
+    { "&NotCongruent;",                    QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotCongruent;"
+    { "&NotCupCap;",                       QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotCupCap;"
+    { "&NotDoubleVerticalBar;",            QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotDoubleVerticalBar;"
+    { "&NotElement;",                      QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotElement;"
+    { "&NotEqual;",                        QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotEqual;"
+    { "&NotEqualTilde;",                   QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotEqualTilde;"
+    { "&NotExists;",                       QwtMml::PrefixForm,  { 0,       0,       0,       "0em",               0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotExists;"
+    { "&NotGreater;",                      QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotGreater;"
+    { "&NotGreaterEqual;",                 QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotGreaterEqual;"
+    { "&NotGreaterFullEqual;",             QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotGreaterFullEqual;"
+    { "&NotGreaterGreater;",               QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotGreaterGreater;"
+    { "&NotGreaterLess;",                  QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotGreaterLess;"
+    { "&NotGreaterSlantEqual;",            QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotGreaterSlantEqual;"
+    { "&NotGreaterTilde;",                 QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotGreaterTilde;"
+    { "&NotHumpDownHump;",                 QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotHumpDownHump;"
+    { "&NotHumpEqual;",                    QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotHumpEqual;"
+    { "&NotLeftTriangle;",                 QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotLeftTriangle;"
+    { "&NotLeftTriangleBar;",              QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotLeftTriangleBar;"
+    { "&NotLeftTriangleEqual;",            QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotLeftTriangleEqual;"
+    { "&NotLess;",                         QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotLess;"
+    { "&NotLessEqual;",                    QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotLessEqual;"
+    { "&NotLessFullEqual;",                QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotLessFullEqual;"
+    { "&NotLessGreater;",                  QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotLessGreater;"
+    { "&NotLessLess;",                     QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotLessLess;"
+    { "&NotLessSlantEqual;",               QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotLessSlantEqual;"
+    { "&NotLessTilde;",                    QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotLessTilde;"
+    { "&NotNestedGreaterGreater;",         QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotNestedGreaterGreater;"
+    { "&NotNestedLessLess;",               QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotNestedLessLess;"
+    { "&NotPrecedes;",                     QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotPrecedes;"
+    { "&NotPrecedesEqual;",                QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotPrecedesEqual;"
+    { "&NotPrecedesSlantEqual;",           QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotPrecedesSlantEqual;"
+    { "&NotPrecedesTilde;",                QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotPrecedesTilde;"
+    { "&NotReverseElement;",               QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotReverseElement;"
+    { "&NotRightTriangle;",                QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotRightTriangle;"
+    { "&NotRightTriangleBar;",             QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotRightTriangleBar;"
+    { "&NotRightTriangleEqual;",           QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotRightTriangleEqual;"
+    { "&NotSquareSubset;",                 QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotSquareSubset;"
+    { "&NotSquareSubsetEqual;",            QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotSquareSubsetEqual;"
+    { "&NotSquareSuperset;",               QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotSquareSuperset;"
+    { "&NotSquareSupersetEqual;",          QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotSquareSupersetEqual;"
+    { "&NotSubset;",                       QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotSubset;"
+    { "&NotSubsetEqual;",                  QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotSubsetEqual;"
+    { "&NotSucceeds;",                     QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotSucceeds;"
+    { "&NotSucceedsEqual;",                QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotSucceedsEqual;"
+    { "&NotSucceedsSlantEqual;",           QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotSucceedsSlantEqual;"
+    { "&NotSucceedsTilde;",                QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotSucceedsTilde;"
+    { "&NotSuperset;",                     QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotSuperset;"
+    { "&NotSupersetEqual;",                QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotSupersetEqual;"
+    { "&NotTilde;",                        QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotTilde;"
+    { "&NotTildeEqual;",                   QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotTildeEqual;"
+    { "&NotTildeFullEqual;",               QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotTildeFullEqual;"
+    { "&NotTildeTilde;",                   QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotTildeTilde;"
+    { "&NotVerticalBar;",                  QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&NotVerticalBar;"
+    { "&OpenCurlyDoubleQuote;",            QwtMml::PrefixForm,  { 0,       "true",  0,       "0em",               0,      0,            "0em",                   0,        0        }, QwtMmlOperSpec::NoStretch }, // "&OpenCurlyDoubleQuote;"
+    { "&OpenCurlyQuote;",                  QwtMml::PrefixForm,  { 0,       "true",  0,       "0em",               0,      0,            "0em",                   0,        0        }, QwtMmlOperSpec::NoStretch }, // "&OpenCurlyQuote;"
+    { "&Or;",                              QwtMml::InfixForm,   { 0,       0,       0,       "mediummathspace",   0,      0,            "mediummathspace",       0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&Or;"
+    { "&OverBar;",                         QwtMml::PostfixForm, { "true",  0,       0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&OverBar;"
+    { "&OverBrace;",                       QwtMml::PostfixForm, { "true",  0,       0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&OverBrace;"
+    { "&OverBracket;",                     QwtMml::PostfixForm, { "true",  0,       0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&OverBracket;"
+    { "&OverParenthesis;",                 QwtMml::PostfixForm, { "true",  0,       0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&OverParenthesis;"
+    { "&PartialD;",                        QwtMml::PrefixForm,  { 0,       0,       0,       "0em",               0,      0,            "verythinmathspace",     0,        0        }, QwtMmlOperSpec::NoStretch }, // "&PartialD;"
+    { "&PlusMinus;",                       QwtMml::PrefixForm,  { 0,       0,       0,       "0em",               0,      0,            "veryverythinmathspace", 0,        0        }, QwtMmlOperSpec::NoStretch }, // "&PlusMinus;"
+    { "&Precedes;",                        QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&Precedes;"
+    { "&PrecedesEqual;",                   QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&PrecedesEqual;"
+    { "&PrecedesSlantEqual;",              QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&PrecedesSlantEqual;"
+    { "&PrecedesTilde;",                   QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&PrecedesTilde;"
+    { "&Product;",                         QwtMml::PrefixForm,  { 0,       0,       "true",  "0em",               0,      "true",       "thinmathspace",         0,        0        }, QwtMmlOperSpec::NoStretch }, // "&Product;"
+    { "&Proportion;",                      QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&Proportion;"
+    { "&Proportional;",                    QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&Proportional;"
+    { "&ReverseElement;",                  QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&ReverseElement;"
+    { "&ReverseEquilibrium;",              QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&ReverseEquilibrium;"
+    { "&ReverseUpEquilibrium;",            QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&ReverseUpEquilibrium;"
+    { "&RightAngleBracket;",               QwtMml::PostfixForm, { 0,       "true",  0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&RightAngleBracket;"
+    { "&RightArrow;",                      QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&RightArrow;"
+    { "&RightArrowBar;",                   QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&RightArrowBar;"
+    { "&RightArrowLeftArrow;",             QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&RightArrowLeftArrow;"
+    { "&RightBracketingBar;",              QwtMml::PostfixForm, { 0,       "true",  0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&RightBracketingBar;"
+    { "&RightCeiling;",                    QwtMml::PostfixForm, { 0,       "true",  0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&RightCeiling;"
+    { "&RightDoubleBracket;",              QwtMml::PostfixForm, { 0,       "true",  0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&RightDoubleBracket;"
+    { "&RightDoubleBracketingBar;",        QwtMml::PostfixForm, { 0,       "true",  0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&RightDoubleBracketingBar;"
+    { "&RightDownTeeVector;",              QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::HVStretch }, // "&RightDownTeeVector;"
+    { "&RightDownVector;",                 QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::HVStretch }, // "&RightDownVector;"
+    { "&RightDownVectorBar;",              QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::HVStretch }, // "&RightDownVectorBar;"
+    { "&RightFloor;",                      QwtMml::PostfixForm, { 0,       "true",  0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&RightFloor;"
+    { "&RightSkeleton;",                   QwtMml::PostfixForm, { 0,       "true",  0,       "0em",               0,      0,            "0em",                   0,        0        }, QwtMmlOperSpec::NoStretch }, // "&RightSkeleton;"
+    { "&RightTee;",                        QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&RightTee;"
+    { "&RightTeeArrow;",                   QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&RightTeeArrow;"
+    { "&RightTeeVector;",                  QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&RightTeeVector;"
+    { "&RightTriangle;",                   QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&RightTriangle;"
+    { "&RightTriangleBar;",                QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&RightTriangleBar;"
+    { "&RightTriangleEqual;",              QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&RightTriangleEqual;"
+    { "&RightUpDownVector;",               QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&RightUpDownVector;"
+    { "&RightUpTeeVector;",                QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::HVStretch }, // "&RightUpTeeVector;"
+    { "&RightUpVector;",                   QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::HVStretch }, // "&RightUpVector;"
+    { "&RightUpVectorBar;",                QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::HVStretch }, // "&RightUpVectorBar;"
+    { "&RightVector;",                     QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&RightVector;"
+    { "&RightVectorBar;",                  QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&RightVectorBar;"
+    { "&RoundImplies;",                    QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&RoundImplies;"
+    { "&ShortDownArrow;",                  QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        0        }, QwtMmlOperSpec::NoStretch }, // "&ShortDownArrow;"
+    { "&ShortLeftArrow;",                  QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::HStretch  }, // "&ShortLeftArrow;"
+    { "&ShortRightArrow;",                 QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::HStretch  }, // "&ShortRightArrow;"
+    { "&ShortUpArrow;",                    QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        0        }, QwtMmlOperSpec::VStretch  }, // "&ShortUpArrow;"
+    { "&SmallCircle;",                     QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        0        }, QwtMmlOperSpec::NoStretch }, // "&SmallCircle;"
+    { "&Sqrt;",                            QwtMml::PrefixForm,  { 0,       0,       0,       "0em",               0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&Sqrt;"
+    { "&Square;",                          QwtMml::PrefixForm,  { 0,       0,       0,       "0em",               0,      0,            "verythinmathspace",     0,        0        }, QwtMmlOperSpec::NoStretch }, // "&Square;"
+    { "&SquareIntersection;",              QwtMml::InfixForm,   { 0,       0,       0,       "mediummathspace",   0,      0,            "mediummathspace",       0,        "true"   }, QwtMmlOperSpec::HVStretch }, // "&SquareIntersection;"
+    { "&SquareSubset;",                    QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&SquareSubset;"
+    { "&SquareSubsetEqual;",               QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&SquareSubsetEqual;"
+    { "&SquareSuperset;",                  QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&SquareSuperset;"
+    { "&SquareSupersetEqual;",             QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&SquareSupersetEqual;"
+    { "&SquareUnion;",                     QwtMml::InfixForm,   { 0,       0,       0,       "mediummathspace",   0,      0,            "mediummathspace",       0,        "true"   }, QwtMmlOperSpec::HVStretch }, // "&SquareUnion;"
+    { "&Star;",                            QwtMml::InfixForm,   { 0,       0,       0,       "thinmathspace",     0,      0,            "thinmathspace",         0,        0        }, QwtMmlOperSpec::NoStretch }, // "&Star;"
+    { "&Subset;",                          QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&Subset;"
+    { "&SubsetEqual;",                     QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&SubsetEqual;"
+    { "&Succeeds;",                        QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&Succeeds;"
+    { "&SucceedsEqual;",                   QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&SucceedsEqual;"
+    { "&SucceedsSlantEqual;",              QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&SucceedsSlantEqual;"
+    { "&SucceedsTilde;",                   QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&SucceedsTilde;"
+    { "&SuchThat;",                        QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&SuchThat;"
+    { "&Sum;",                             QwtMml::PrefixForm,  { 0,       0,       "true",  "0em",               0,      "true",       "thinmathspace",         0,        0        }, QwtMmlOperSpec::NoStretch }, // "&Sum;"
+    { "&Superset;",                        QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&Superset;"
+    { "&SupersetEqual;",                   QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&SupersetEqual;"
+    { "&Therefore;",                       QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&Therefore;"
+    { "&Tilde;",                           QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&Tilde;"
+    { "&TildeEqual;",                      QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&TildeEqual;"
+    { "&TildeFullEqual;",                  QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&TildeFullEqual;"
+    { "&TildeTilde;",                      QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&TildeTilde;"
+    { "&TripleDot;",                       QwtMml::PostfixForm, { "true",  0,       0,       "0em",               0,      0,            "0em",                   0,        0        }, QwtMmlOperSpec::NoStretch }, // "&TripleDot;"
+    { "&UnderBar;",                        QwtMml::PostfixForm, { "true",  0,       0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&UnderBar;"
+    { "&UnderBrace;",                      QwtMml::PostfixForm, { "true",  0,       0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&UnderBrace;"
+    { "&UnderBracket;",                    QwtMml::PostfixForm, { "true",  0,       0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&UnderBracket;"
+    { "&UnderParenthesis;",                QwtMml::PostfixForm, { "true",  0,       0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::HStretch  }, // "&UnderParenthesis;"
+    { "&Union;",                           QwtMml::PrefixForm,  { 0,       0,       "true",  "0em",               0,      "true",       "thinmathspace",         0,        "true"   }, QwtMmlOperSpec::HVStretch }, // "&Union;"
+    { "&UnionPlus;",                       QwtMml::PrefixForm,  { 0,       0,       "true",  "0em",               0,      "true",       "thinmathspace",         0,        "true"   }, QwtMmlOperSpec::HVStretch }, // "&UnionPlus;"
+    { "&UpArrow;",                         QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&UpArrow;"
+    { "&UpArrowBar;",                      QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&UpArrowBar;"
+    { "&UpArrowDownArrow;",                QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&UpArrowDownArrow;"
+    { "&UpDownArrow;",                     QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&UpDownArrow;"
+    { "&UpEquilibrium;",                   QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&UpEquilibrium;"
+    { "&UpTee;",                           QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&UpTee;"
+    { "&UpTeeArrow;",                      QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&UpTeeArrow;"
+    { "&UpperLeftArrow;",                  QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::HVStretch }, // "&UpperLeftArrow;"
+    { "&UpperRightArrow;",                 QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::HVStretch }, // "&UpperRightArrow;"
+    { "&Vee;",                             QwtMml::InfixForm,   { 0,       0,       0,       "thinmathspace",     0,      0,            "thinmathspace",         0,        0        }, QwtMmlOperSpec::NoStretch }, // "&Vee;"
+    { "&VerticalBar;",                     QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&VerticalBar;"
+    { "&VerticalLine;",                    QwtMml::InfixForm,   { 0,       0,       0,       "0em",               "0",    0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&VerticalLine;"
+    { "&VerticalSeparator;",               QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "&VerticalSeparator;"
+    { "&VerticalTilde;",                   QwtMml::InfixForm,   { 0,       0,       0,       "thinmathspace",     0,      0,            "thinmathspace",         0,        0        }, QwtMmlOperSpec::NoStretch }, // "&VerticalTilde;"
+    { "&Wedge;",                           QwtMml::InfixForm,   { 0,       0,       0,       "thinmathspace",     0,      0,            "thinmathspace",         0,        0        }, QwtMmlOperSpec::NoStretch }, // "&Wedge;"
+    { "&amp;",                             QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&amp;"
+    { "&amp;&amp;",                        QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&amp;&amp;"
+    { "&le;",                              QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&le;"
+    { "&lt;",                              QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&lt;"
+    { "&lt;=",                             QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "&lt;="
+    { "&lt;>",                             QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        0        }, QwtMmlOperSpec::NoStretch }, // "&lt;>"
+    { "'",                                 QwtMml::PostfixForm, { 0,       0,       0,       "verythinmathspace", 0,      0,            "0em",                   0,        0        }, QwtMmlOperSpec::NoStretch }, // "'"
+    { "(",                                 QwtMml::PrefixForm,  { 0,       "true",  0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "("
+    { ")",                                 QwtMml::PostfixForm, { 0,       "true",  0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::VStretch  }, // ")"
+    { "*",                                 QwtMml::InfixForm,   { 0,       0,       0,       "thinmathspace",     0,      0,            "thinmathspace",         0,        0        }, QwtMmlOperSpec::NoStretch }, // "*"
+    { "**",                                QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        0        }, QwtMmlOperSpec::NoStretch }, // "**"
+    { "*=",                                QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "*="
+    { "+",                                 QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "+"
+    { "+",                                 QwtMml::PrefixForm,  { 0,       0,       0,       "0em",               0,      0,            "veryverythinmathspace", 0,        0        }, QwtMmlOperSpec::NoStretch }, // "+"
+    { "++",                                QwtMml::PrefixForm,  { 0,       0,       0,       "0em",               0,      0,            "verythinmathspace",     0,        0        }, QwtMmlOperSpec::NoStretch }, // "++"
+    { "+=",                                QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "+="
+    { ",",                                 QwtMml::InfixForm,   { 0,       0,       0,       "0em",               0,      0,            "verythickmathspace",    "true",   0        }, QwtMmlOperSpec::NoStretch }, // ","
+    { "-",                                 QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "-"
+    { "-",                                 QwtMml::PrefixForm,  { 0,       0,       0,       "0em",               0,      0,            "veryverythinmathspace", 0,        0        }, QwtMmlOperSpec::NoStretch }, // "-"
+    { "--",                                QwtMml::PrefixForm,  { 0,       0,       0,       "0em",               0,      0,            "verythinmathspace",     0,        0        }, QwtMmlOperSpec::NoStretch }, // "--"
+    { "-=",                                QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "-="
+    { "->",                                QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "->"
+    { ".",                                 QwtMml::InfixForm,   { 0,       0,       0,       "0em",               0,      0,            "0em",                   0,        0        }, QwtMmlOperSpec::NoStretch }, // "."
+    { "..",                                QwtMml::PostfixForm, { 0,       0,       0,       "mediummathspace",   0,      0,            "0em",                   0,        0        }, QwtMmlOperSpec::NoStretch }, // ".."
+    { "...",                               QwtMml::PostfixForm, { 0,       0,       0,       "mediummathspace",   0,      0,            "0em",                   0,        0        }, QwtMmlOperSpec::NoStretch }, // "..."
+    { "/",                                 QwtMml::InfixForm,   { 0,       0,       0,       "thinmathspace",     0,      0,            "thinmathspace",         0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "/"
+    { "//",                                QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "//"
+    { "/=",                                QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "/="
+    { ":",                                 QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // ":"
+    { ":=",                                QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // ":="
+    { ";",                                 QwtMml::InfixForm,   { 0,       0,       0,       "0em",               0,      0,            "verythickmathspace",    "true",   0        }, QwtMmlOperSpec::NoStretch }, // ";"
+    { ";",                                 QwtMml::PostfixForm, { 0,       0,       0,       "0em",               0,      0,            "0em",                   "true",   0        }, QwtMmlOperSpec::NoStretch }, // ";"
+    { "=",                                 QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "="
+    { "==",                                QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // "=="
+    { ">",                                 QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // ">"
+    { ">=",                                QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        0        }, QwtMmlOperSpec::NoStretch }, // ">="
+    { "?",                                 QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        0        }, QwtMmlOperSpec::NoStretch }, // "?"
+    { "@",                                 QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        0        }, QwtMmlOperSpec::NoStretch }, // "@"
+    { "[",                                 QwtMml::PrefixForm,  { 0,       "true",  0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "["
+    { "]",                                 QwtMml::PostfixForm, { 0,       "true",  0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "]"
+    { "^",                                 QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        0        }, QwtMmlOperSpec::NoStretch }, // "^"
+    { "_",                                 QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        0        }, QwtMmlOperSpec::NoStretch }, // "_"
+    { "lim",                               QwtMml::PrefixForm,  { 0,       0,       0,       "0em",               0,      "true",       "thinmathspace",         0,        0        }, QwtMmlOperSpec::NoStretch }, // "lim"
+    { "max",                               QwtMml::PrefixForm,  { 0,       0,       0,       "0em",               0,      "true",       "thinmathspace",         0,        0        }, QwtMmlOperSpec::NoStretch }, // "max"
+    { "min",                               QwtMml::PrefixForm,  { 0,       0,       0,       "0em",               0,      "true",       "thinmathspace",         0,        0        }, QwtMmlOperSpec::NoStretch }, // "min"
+    { "{",                                 QwtMml::PrefixForm,  { 0,       "true",  0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "{"
+    { "|",                                 QwtMml::InfixForm,   { 0,       0,       0,       "thickmathspace",    0,      0,            "thickmathspace",        0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "|"
+    { "||",                                QwtMml::InfixForm,   { 0,       0,       0,       "mediummathspace",   0,      0,            "mediummathspace",       0,        0        }, QwtMmlOperSpec::NoStretch }, // "||"
+    { "}",                                 QwtMml::PostfixForm, { 0,       "true",  0,       "0em",               0,      0,            "0em",                   0,        "true"   }, QwtMmlOperSpec::VStretch  }, // "}"
+    { "~",                                 QwtMml::InfixForm,   { 0,       0,       0,       "verythinmathspace", 0,      0,            "verythinmathspace",     0,        0        }, QwtMmlOperSpec::NoStretch }, // "~"
+    { 0,                                   QwtMml::InfixForm,   { 0,       0,       0,       0,                   0,      0,            0,                       0,        0        }, QwtMmlOperSpec::NoStretch }
 };
 
 static const QwtMmlOperSpec g_oper_spec_defaults =
 {
-    0                            ,                 QwtMml::InfixForm, {                "false",                 "false",                 "false",         "thickmathspace",                     "1",            "false",        "thickmathspace",                 "false",                 "false" },           QwtMmlOperSpec::NoStretch
+      0,                                   QwtMml::InfixForm,   { "false", "false", "false", "thickmathspace",    "1",    "false",      "thickmathspace",        "false",  "false"  }, QwtMmlOperSpec::NoStretch
 };
 
 static const uint g_oper_spec_count = sizeof( g_oper_spec_data ) / sizeof( QwtMmlOperSpec ) - 1;
@@ -3005,7 +3011,8 @@ QString QwtMmlDocument::fontName( QwtMathMLDocument::MmlFont type ) const
     return QString::null;
 }
 
-void QwtMmlDocument::setFontName( QwtMathMLDocument::MmlFont type, const QString &name )
+void QwtMmlDocument::setFontName( QwtMathMLDocument::MmlFont type,
+                                  const QString &name )
 {
     switch ( type )
     {
@@ -3058,7 +3065,7 @@ QwtMml::NodeType domToQwtMmlNodeType( const QDomNode &dom_node )
             break;
 
         case QDomNode::EntityReferenceNode:
-//      qWarning("EntityReferenceNode: name=\"" + dom_node.nodeName() + "\" value=\"" + dom_node.nodeValue() + "\"");
+//            qWarning( "EntityReferenceNode: name=\"" + dom_node.nodeName() + "\" value=\"" + dom_node.nodeValue() + "\"" );
             break;
 
         case QDomNode::AttributeNode:
@@ -3174,11 +3181,13 @@ bool QwtMmlDocument::setContent( QString text, QString *errorMsg,
     insertChild( 0, root_node, 0 );
     layout();
 
-    /*    QFile of("/tmp/dump.xml");
-        of.open(IO_WriteOnly);
-        QTextStream os(&of);
-        os.setEncoding(QTextStream::UnicodeUTF8);
-        os << dom.toString(); */
+    /*
+        QFile of( "/tmp/dump.xml" );
+        of.open( IO_WriteOnly );
+        QTextStream os( &of );
+        os.setEncoding( QTextStream::UnicodeUTF8 );
+        os << dom.toString();
+    */
 
     return true;
 }
@@ -3236,9 +3245,9 @@ bool QwtMmlDocument::insertChild( QwtMmlNode *parent, QwtMmlNode *new_node,
 }
 
 QwtMmlNode *QwtMmlDocument::createNode( NodeType type,
-                                     const QwtMmlAttributeMap &mml_attr,
-                                     const QString &mml_value,
-                                     QString *errorMsg )
+                                        const QwtMmlAttributeMap &mml_attr,
+                                        const QString &mml_value,
+                                        QString *errorMsg )
 {
     Q_ASSERT( type != NoNode );
 
@@ -3346,7 +3355,8 @@ void QwtMmlDocument::insertOperator( QwtMmlNode *node, const QString &text )
     Q_ASSERT( ok );
 }
 
-QwtMmlNode *QwtMmlDocument::domToMml( const QDomNode &dom_node, bool *ok, QString *errorMsg )
+QwtMmlNode *QwtMmlDocument::domToMml( const QDomNode &dom_node, bool *ok,
+                                      QString *errorMsg )
 {
     // create the node
 
@@ -3507,8 +3517,9 @@ QwtMmlNode *QwtMmlDocument::domToMml( const QDomNode &dom_node, bool *ok, QStrin
     return mml_node;
 }
 
-QwtMmlNode *QwtMmlDocument::createImplicitMrowNode( const QDomNode &dom_node, bool *ok,
-        QString *errorMsg )
+QwtMmlNode *QwtMmlDocument::createImplicitMrowNode( const QDomNode &dom_node,
+                                                    bool *ok,
+                                                    QString *errorMsg )
 {
     QDomNodeList dom_child_list = dom_node.childNodes();
     int child_cnt = dom_child_list.count();
@@ -3523,7 +3534,7 @@ QwtMmlNode *QwtMmlDocument::createImplicitMrowNode( const QDomNode &dom_node, bo
         return domToMml( dom_child_list.item( 0 ), ok, errorMsg );
 
     QwtMmlNode *mml_node = createNode( MrowNode, QwtMmlAttributeMap(),
-                                    QString::null, errorMsg );
+                                       QString::null, errorMsg );
     Q_ASSERT( mml_node != 0 ); // there is no reason in heaven or hell for this to fail
 
     for ( int i = 0; i < child_cnt; ++i )
@@ -3554,11 +3565,13 @@ void QwtMmlDocument::paint( QPainter *p, const QPoint &pos ) const
     if ( m_root_node == 0 )
         return;
 
-    /*    p->save();
-        p->setPen(Qt::blue);
-        p->drawLine(pos.x() - 5, pos.y(), pos.x() + 5, pos.y());
-        p->drawLine(pos.x(), pos.y() - 5, pos.x(), pos.y() + 5);
-        p->restore(); */
+    /*
+        p->save();
+        p->setPen( QPen( Qt::blue, 0 ) );
+        p->drawLine( pos.x() - 5, pos.y(), pos.x() + 5, pos.y() );
+        p->drawLine( pos.x(), pos.y() - 5, pos.x(), pos.y() + 5 );
+        p->restore();
+    */
 
     QRect mr = m_root_node->myRect();
     m_root_node->setRelOrigin( pos - mr.topLeft() );
@@ -3572,15 +3585,12 @@ QSize QwtMmlDocument::size() const
     return m_root_node->deviceRect().size();
 }
 
-
-
-
 // *******************************************************************
 // QwtMmlNode
 // *******************************************************************
 
-
-QwtMmlNode::QwtMmlNode( NodeType type, QwtMmlDocument *document, const QwtMmlAttributeMap &attribute_map )
+QwtMmlNode::QwtMmlNode( NodeType type, QwtMmlDocument *document,
+                        const QwtMmlAttributeMap &attribute_map )
 {
     m_parent = 0;
     m_first_child = 0;
@@ -3965,14 +3975,15 @@ QRect QwtMmlNode::deviceRect() const
     if ( parent() == 0 )
         return QRect( relOrigin() + myRect().topLeft(), myRect().size() );
 
-    /*    if (!isStretched()) {
-        QRect pdr = parent()->deviceRect();
-        QRect pmr = parent()->myRect();
-        QRect pr = parentRect();
-        QRect mr = myRect();
-        return QRect(pdr.left() + pr.left() - pmr.left(),
-                pdr.top()  + pr.top() - pmr.top(),
-                mr.width(), mr.height());
+    /*
+        if ( !isStretched() ) {
+            QRect pdr = parent()->deviceRect();
+            QRect pmr = parent()->myRect();
+            QRect pr = parentRect();
+            QRect mr = myRect();
+            return QRect( pdr.left() + pr.left() - pmr.left(),
+                          pdr.top()  + pr.top() - pmr.top(),
+                          mr.width(), mr.height() );
         }
     */
     QRect pdr = parent()->deviceRect();
@@ -4262,8 +4273,8 @@ void QwtMmlTextNode::paintSymbol( QPainter *p ) const
     QFont fn = font();
 
 //    QFontInfo fi( fn );
-//    qWarning("QwtMmlTextNode::paintSymbol(): requested: %s, used: %s, size=%d, italic=%d, bold=%d, text=\"%s\" sl=%d",
-//              fn.family().latin1(), fi.family().latin1(), fi.pointSize(), (int)fi.italic(), (int)fi.bold(), m_text.latin1(), scriptlevel());
+//    qWarning( "QwtMmlTextNode::paintSymbol(): requested: %s, used: %s, size=%d, italic=%d, bold=%d, text=\"%s\" sl=%d",
+//              fn.family().latin1(), fi.family().latin1(), fi.pointSize(), (int)fi.italic(), (int)fi.bold(), m_text.latin1(), scriptlevel() );
 
     QFontMetrics fm( fn );
 
@@ -4390,7 +4401,8 @@ void QwtMmlMoNode::layoutSymbol()
         m_oper_spec = mmlFindOperSpec( text(), form() );
 }
 
-QwtMmlMoNode::QwtMmlMoNode( QwtMmlDocument *document, const QwtMmlAttributeMap &attribute_map )
+QwtMmlMoNode::QwtMmlMoNode( QwtMmlDocument *document,
+                            const QwtMmlAttributeMap &attribute_map )
     : QwtMmlTokenNode( MoNode, document, attribute_map )
 {
     m_oper_spec = 0;
@@ -4911,16 +4923,15 @@ void QwtMmlMtdNode::setMyRect( const QRect &rect )
         while ( rect.width() < child->myRect().width()
                 && child->font().pointSize() > g_min_font_point_size )
         {
-
-//          qWarning("QwtMmlMtdNode::setMyRect(): rect.width()=%d, child()->myRect().width=%d sl=%d",
-//              rect.width(), child->myRect().width(), m_scriptlevel_adjust);
+//            qWarning( "QwtMmlMtdNode::setMyRect(): rect.width()=%d, child()->myRect().width=%d sl=%d",
+//                      rect.width(), child->myRect().width(), m_scriptlevel_adjust );
 
             ++m_scriptlevel_adjust;
             child->layout();
         }
 
-//      qWarning("QwtMmlMtdNode::setMyRect(): rect.width()=%d, child()->myRect().width=%d sl=%d",
-//              rect.width(), child->myRect().width(), m_scriptlevel_adjust);
+//        qWarning( "QwtMmlMtdNode::setMyRect(): rect.width()=%d, child()->myRect().width=%d sl=%d",
+//                  rect.width(), child->myRect().width(), m_scriptlevel_adjust );
     }
 
     QRect mr = myRect();
@@ -5135,7 +5146,8 @@ int QwtMmlMunderoverNode::scriptlevel( const QwtMmlNode *node ) const
         return sl;
 }
 
-int QwtMmlMpaddedNode::interpretSpacing( QString value, int base_value, bool *ok ) const
+int QwtMmlMpaddedNode::interpretSpacing( QString value, int base_value,
+                                         bool *ok ) const
 {
     if ( ok != 0 )
         *ok = false;
@@ -5343,14 +5355,14 @@ static int interpretSpacing( QString value, int em, int ex, bool *ok )
 
     static const HSpacingValue g_h_spacing_data[] =
     {
-        { "veryverythinmathspace",  ( float ) 0.0555556   },
-        { "verythinmathspace",      ( float ) 0.111111    },
-        { "thinmathspace",              ( float ) 0.166667    },
-        { "mediummathspace",        ( float ) 0.222222    },
-        { "thickmathspace",         ( float ) 0.277778    },
-        { "verythickmathspace",     ( float ) 0.333333    },
-        { "veryverythickmathspace",     ( float ) 0.388889    },
-        { 0,                        ( float ) 0           }
+        { "veryverythinmathspace",  ( float ) 0.0555556 },
+        { "verythinmathspace",      ( float ) 0.111111  },
+        { "thinmathspace",          ( float ) 0.166667  },
+        { "mediummathspace",        ( float ) 0.222222  },
+        { "thickmathspace",         ( float ) 0.277778  },
+        { "verythickmathspace",     ( float ) 0.333333  },
+        { "veryverythickmathspace", ( float ) 0.388889  },
+        { 0,                        ( float ) 0         }
     };
 
     const HSpacingValue *v = g_h_spacing_data;
@@ -5555,7 +5567,8 @@ static const QwtMmlNodeSpec *mmlFindNodeSpec( const QString &tag )
     return 0;
 }
 
-static bool mmlCheckChildType( QwtMml::NodeType parent_type, QwtMml::NodeType child_type,
+static bool mmlCheckChildType( QwtMml::NodeType parent_type,
+                               QwtMml::NodeType child_type,
                                QString *error_str )
 {
     if ( parent_type == QwtMml::UnknownNode || child_type == QwtMml::UnknownNode )
@@ -5586,7 +5599,8 @@ static bool mmlCheckChildType( QwtMml::NodeType parent_type, QwtMml::NodeType ch
     return true;
 }
 
-static bool mmlCheckAttributes( QwtMml::NodeType child_type, const QwtMmlAttributeMap &attr,
+static bool mmlCheckAttributes( QwtMml::NodeType child_type,
+                                const QwtMmlAttributeMap &attr,
                                 QString *error_str )
 {
     const QwtMmlNodeSpec *spec = mmlFindNodeSpec( child_type );
@@ -5689,7 +5703,8 @@ static QString decodeEntityValue( QString literal )
     return result;
 }
 
-static const QwtMmlEntitySpec *searchEntitySpecData( const QString &value, const QwtMmlEntitySpec *from = 0 )
+static const QwtMmlEntitySpec *searchEntitySpecData( const QString &value,
+                                                     const QwtMmlEntitySpec *from = 0 )
 {
     const QwtMmlEntitySpec *ent = from;
     if ( ent == 0 )
@@ -5776,7 +5791,8 @@ static const QwtMmlOperSpec *searchOperSpecData( const QString &name )
     or until name_list is exhausted. The idea here is that if we don't find the operator in the
     specified form, we still want to use some other available form of that operator.
 */
-static OperSpecSearchResult _mmlFindOperSpec( const QStringList &name_list, QwtMml::FormType form )
+static OperSpecSearchResult _mmlFindOperSpec( const QStringList &name_list,
+                                              QwtMml::FormType form )
 {
     OperSpecSearchResult result;
 
@@ -5825,7 +5841,8 @@ static OperSpecSearchResult _mmlFindOperSpec( const QStringList &name_list, QwtM
     text, but of some other form in the preference order specified by the MathML spec.
     If that's not available either, returns the default operator spec.
 */
-static const QwtMmlOperSpec *mmlFindOperSpec( const QString &text, QwtMml::FormType form )
+static const QwtMmlOperSpec *mmlFindOperSpec( const QString &text,
+                                              QwtMml::FormType form )
 {
     QStringList name_list;
     name_list.append( text );
@@ -5943,7 +5960,8 @@ static QwtMml::FormType interpretForm( const QString &value, bool *ok )
     return QwtMml::InfixForm;
 }
 
-static QwtMml::ColAlign interpretColAlign( const QString &value_list, uint colnum, bool *ok )
+static QwtMml::ColAlign interpretColAlign( const QString &value_list,
+                                           uint colnum, bool *ok )
 {
     QString value = interpretListAttr( value_list, colnum, "center" );
 
@@ -5964,7 +5982,8 @@ static QwtMml::ColAlign interpretColAlign( const QString &value_list, uint colnu
     return QwtMml::ColAlignCenter;
 }
 
-static QwtMml::RowAlign interpretRowAlign( const QString &value_list, uint rownum, bool *ok )
+static QwtMml::RowAlign interpretRowAlign( const QString &value_list,
+                                           uint rownum, bool *ok )
 {
     QString value = interpretListAttr( value_list, rownum, "axis" );
 
@@ -5989,7 +6008,8 @@ static QwtMml::RowAlign interpretRowAlign( const QString &value_list, uint rownu
     return QwtMml::RowAlignAxis;
 }
 
-static QString interpretListAttr( const QString &value_list, int idx, const QString &def )
+static QString interpretListAttr( const QString &value_list, int idx,
+                                  const QString &def )
 {
     QStringList l = value_list.split( ' ' );
 
@@ -6002,7 +6022,8 @@ static QString interpretListAttr( const QString &value_list, int idx, const QStr
         return l[idx];
 }
 
-static QwtMml::FrameType interpretFrameType( const QString &value_list, uint idx, bool *ok )
+static QwtMml::FrameType interpretFrameType( const QString &value_list,
+                                             uint idx, bool *ok )
 {
     if ( ok != 0 )
         *ok = true;
@@ -6024,7 +6045,8 @@ static QwtMml::FrameType interpretFrameType( const QString &value_list, uint idx
 }
 
 
-static QwtMml::FrameSpacing interpretFrameSpacing( const QString &value_list, int em, int ex, bool *ok )
+static QwtMml::FrameSpacing interpretFrameSpacing( const QString &value_list,
+                                                   int em, int ex, bool *ok )
 {
     QwtMml::FrameSpacing fs;
 
@@ -6047,7 +6069,8 @@ static QwtMml::FrameSpacing interpretFrameSpacing( const QString &value_list, in
     return fs;
 }
 
-static QFont interpretDepreciatedFontAttr( const QwtMmlAttributeMap &font_attr, QFont &fn, int em, int ex )
+static QFont interpretDepreciatedFontAttr( const QwtMmlAttributeMap &font_attr,
+                                           QFont &fn, int em, int ex )
 {
     if ( font_attr.contains( "fontsize" ) )
     {
@@ -6113,7 +6136,8 @@ static QFont interpretDepreciatedFontAttr( const QwtMmlAttributeMap &font_attr, 
     return fn;
 }
 
-static QFont interpretMathSize( QString value, QFont &fn, int em, int ex, bool *ok )
+static QFont interpretMathSize( QString value, QFont &fn, int em, int ex,
+                                bool *ok )
 {
     if ( ok != 0 )
         *ok = true;
@@ -6234,7 +6258,8 @@ QString QwtMathMLDocument::fontName( QwtMathMLDocument::MmlFont type ) const
 
     \sa fontName() setBaseFontPointSize() baseFontPointSize() QwtMathMLDocument::MmlFont
 */
-void QwtMathMLDocument::setFontName( QwtMathMLDocument::MmlFont type, const QString &name )
+void QwtMathMLDocument::setFontName( QwtMathMLDocument::MmlFont type,
+                                     const QString &name )
 {
     if ( !name.compare(m_doc->fontName( type ) ) )
         return;
