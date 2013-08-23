@@ -13,7 +13,7 @@
 
 #define ROUND(a) (int)((a)+.5)
 
-static bool           g_draw_frames            = false;
+static bool           g_draw_frames            = true;//false;
 static const double   g_mfrac_spacing          = 0.1;
 static const double   g_mroot_base_margin      = 0.1;
 static const double   g_script_size_multiplier = 0.5;
@@ -302,6 +302,9 @@ protected:
     virtual void layoutSymbol();
     virtual void paintSymbol( QPainter *p ) const;
     virtual QRect symbolRect() const;
+
+private:
+    int lineThickness() const;
 };
 
 class QwtMmlMrowNode : public QwtMmlNode
@@ -4104,9 +4107,10 @@ QRect QwtMmlMfracNode::symbolRect() const
 {
     int num_width = numerator()->myRect().width();
     int denom_width = denominator()->myRect().width();
-    int my_width = qMax( num_width, denom_width ) + 4;
+    int my_width = ( 1 + g_mfrac_spacing ) * qMax( num_width, denom_width ) ;
+    int linethickness = lineThickness();
 
-    return QRect( -0.5 * my_width, 0, my_width, 1 );
+    return QRect( -0.5 * my_width, -0.5 * linethickness, my_width, linethickness );
 }
 
 void QwtMmlMfracNode::layoutSymbol()
@@ -4118,9 +4122,10 @@ void QwtMmlMfracNode::layoutSymbol()
     QRect denom_rect = denom->myRect();
 
     int spacing = ( int )( g_mfrac_spacing * ( num_rect.height() + denom_rect.height() ) );
+    int linethickness = lineThickness();
 
-    num->setRelOrigin( QPoint( -0.5 * num_rect.width(), - spacing - num_rect.bottom() ) );
-    denom->setRelOrigin( QPoint( -0.5 * denom_rect.width(), spacing - denom_rect.top() ) );
+    num->setRelOrigin( QPoint( -0.5 * num_rect.width(), - spacing - num_rect.bottom() - 0.5 * linethickness ) );
+    denom->setRelOrigin( QPoint( -0.5 * denom_rect.width(), spacing - denom_rect.top() + 0.5 * linethickness ) );
 }
 
 static bool zeroLineThickness( const QString &s )
@@ -4137,27 +4142,39 @@ static bool zeroLineThickness( const QString &s )
     return true;
 }
 
-void QwtMmlMfracNode::paintSymbol( QPainter *p ) const
+int QwtMmlMfracNode::lineThickness() const
 {
-    QString linethickness_str = inheritAttributeFromMrow( "linethickness", "1" );
+    QString linethickness_str = inheritAttributeFromMrow( "linethickness", QString::number( lineWidth ( font() ) ) );
 
     /* InterpretSpacing returns an int, which might be 0 even if the thickness
-       is > 0, though very very small. That's ok, because the painter then paints
-       a line of thickness 1. However, we have to run this check if the line
-       thickness really is zero */
+       is > 0, though very very small. That's ok, because we can set it to 1.
+       However, we have to run this check if the line thickness really is zero */
     if ( !zeroLineThickness( linethickness_str ) )
     {
         bool ok;
         int linethickness = interpretSpacing( linethickness_str, &ok );
-        if ( !ok )
+        if ( !ok || !linethickness )
             linethickness = 1;
 
+        return linethickness;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+void QwtMmlMfracNode::paintSymbol( QPainter *p ) const
+{
+    int linethickness = lineThickness();
+
+    if ( linethickness )
+    {
         p->save();
-        QPen pen = p->pen();
-        pen.setWidth( linethickness );
-        p->setPen( pen );
         QSize s = myRect().size();
-        p->drawLine( -0.5 * s.width(), 0, 0.5 * s.width(), 0 );
+        p->fillRect( -0.5 * s.width(), -0.5 * linethickness,
+                     s.width(), linethickness,
+                     p->pen().color() );
         p->restore();
     }
 }
