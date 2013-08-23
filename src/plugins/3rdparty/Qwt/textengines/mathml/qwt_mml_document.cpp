@@ -3654,7 +3654,7 @@ int QwtMmlNode::interpretSpacing( const QString &value, bool *ok ) const
 
 int QwtMmlNode::lineWidth( const QFont &font) const
 {
-    return qMax( 1.0, 0.5 * QFontMetrics( font ).lineWidth() );
+    return qMax( 1, QFontMetrics( font ).lineWidth() );
 }
 
 int QwtMmlNode::basePos() const
@@ -4144,7 +4144,7 @@ static bool zeroLineThickness( const QString &s )
 
 int QwtMmlMfracNode::lineThickness() const
 {
-    QString linethickness_str = inheritAttributeFromMrow( "linethickness", QString::number( lineWidth ( font() ) ) );
+    QString linethickness_str = inheritAttributeFromMrow( "linethickness", QString::number( 0.75 * lineWidth ( font() ) ) );
 
     /* InterpretSpacing returns an int, which might be 0 even if the thickness
        is > 0, though very very small. That's ok, because we can set it to 1.
@@ -4217,7 +4217,7 @@ QRect QwtMmlRootBaseNode::symbolRect() const
 
     int margin = g_mroot_base_margin * qMin( base_rect.width(), base_rect.height() );
     int tw = tailWidth();
-    int linewidth = lineWidth( font() );
+    int linewidth = 0.5 * lineWidth( font() );
 
     return QRect( -tw, base_rect.top() - linewidth - margin -1,
                   tw + base_rect.width() + margin, base_rect.height() + 2 * margin + linewidth );
@@ -4294,7 +4294,7 @@ void QwtMmlRootBaseNode::paintSymbol( QPainter *p ) const
 
     p->restore();
 
-    int linewidth = lineWidth( fn );
+    int linewidth = 0.5 * lineWidth( fn );
 
     p->fillRect( sr.right() - 0.5 * linewidth, sr.top() + 1,
                  myRect().right() - ( sr.right() - 0.5 * linewidth ) + 1, linewidth,
