@@ -16,7 +16,7 @@
 static bool           g_draw_frames            = false;
 static const double   g_mfrac_spacing          = 0.1;
 static const double   g_mroot_base_margin      = 0.1;
-static const double   g_script_size_multiplier = 0.7071; // sqrt(1/2)
+static const double   g_script_size_multiplier = 0.5;
 static const int      g_min_font_point_size    = 1;
 static const QChar    g_radical_char           = QChar( 0x1A, 0x22 );
 static const unsigned g_oper_spec_rows         = 9;
@@ -4205,7 +4205,7 @@ QRect QwtMmlRootBaseNode::symbolRect() const
     return QRect( -tw, base_rect.top() - lWidth - margin -1,
                   tw + base_rect.width() + margin, base_rect.height() + 2 * margin + lWidth );
     // Note: see the note for setClipRect() in QwtMmlRootBaseNode::paintSymbol()
-    //       for why - 1 in the top value of our returned region...
+    //       about why - 1 in the top value of our returned region...
 }
 
 int QwtMmlRootBaseNode::tailWidth() const
