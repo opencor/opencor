@@ -4217,10 +4217,10 @@ QRect QwtMmlRootBaseNode::symbolRect() const
 
     int margin = g_mroot_base_margin * qMin( base_rect.width(), base_rect.height() );
     int tw = tailWidth();
-    int lWidth = lineWidth( font() );
+    int linewidth = lineWidth( font() );
 
-    return QRect( -tw, base_rect.top() - lWidth - margin -1,
-                  tw + base_rect.width() + margin, base_rect.height() + 2 * margin + lWidth );
+    return QRect( -tw, base_rect.top() - linewidth - margin -1,
+                  tw + base_rect.width() + margin, base_rect.height() + 2 * margin + linewidth );
     // Note: see the note for setClipRect() in QwtMmlRootBaseNode::paintSymbol()
     //       about why - 1 in the top value of our returned region...
 }
@@ -4294,13 +4294,13 @@ void QwtMmlRootBaseNode::paintSymbol( QPainter *p ) const
 
     p->restore();
 
-    int lWidth = lineWidth( fn );
+    int linewidth = lineWidth( fn );
 
-    p->fillRect( sr.right() - 0.5 * lWidth, sr.top() + 1,
-                 myRect().right() - ( sr.right() - 0.5 * lWidth ) + 1, lWidth,
+    p->fillRect( sr.right() - 0.5 * linewidth, sr.top() + 1,
+                 myRect().right() - ( sr.right() - 0.5 * linewidth ) + 1, linewidth,
                  p->pen().color() );
-    // Note: we start at sr.right() - 0.5 * lWidth to address the case where we
-    //       use a big font size, thus avoiding the tiny gap seen on some
+    // Note: we start at sr.right() - 0.5 * linewidth to address the case where
+    //       we use a big font size, thus avoiding the tiny gap seen on some
     //       systems (e.g. OS X) between the radical character and the
     //       horizontal line. As for the top, we add + 1 because of the reason
     //       given in the above note related to the call to setClipRect()...
