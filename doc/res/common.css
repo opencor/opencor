@@ -115,17 +115,29 @@ div.copyright div.left {
     left: 4px;
 }
 
+div.copyright div.center {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+}
+
 div.copyright div.right {
     right: 4px;
 }
 
-div.copyright div a.funding:hover {
+div.copyright div a.copyright:hover {
     margin: 0px;
     border: none;
     background: none;
 }
 
-div.copyright div img.funding {
+div.copyright div img.twitter {
+    position: relative;
+    top: -15px;
+    border: none;
+}
+
+div.copyright div img.vpr {
     position: relative;
     top: 4px;
     border: none;

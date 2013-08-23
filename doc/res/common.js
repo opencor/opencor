@@ -199,8 +199,11 @@ function copyright(relativePath) {
     document.write("    <div class=\"left\">");
     document.write("        Copyright ©2011-"+date.getFullYear());
     document.write("    </div>");
+    document.write("    <div class=\"center\">");
+    document.write("        <a class=\"copyright\" href=\"https://twitter.com/TeamOpenCOR/\"><img class=\"twitter\" src=\""+relativePath+"/res/pics/twitter.png\" width=30 height=30 alt=\"Twitter\"></a>");
+    document.write("    </div>");
     document.write("    <div class=\"right\">");
-    document.write("        Funded by the <a class=\"funding\" href=\"http://www.virtualrat.org/\"><img class=\"funding\" src=\""+relativePath+"/res/pics/vprLogo.png\" width=60 height=18 alt=\"VPR\"></a> project");
+    document.write("        <a class=\"copyright\" href=\"http://www.virtualrat.org/\"><img class=\"vpr\" src=\""+relativePath+"/res/pics/vprLogo.png\" width=60 height=18 alt=\"VPR\"></a>");
     document.write("    </div>");
     document.write("</div>");
 }

@@ -120,8 +120,7 @@ QNetworkReply * HelpNetworkAccessManager::createRequest(Operation,
                           QByteArray(mErrorMsgTemplate.arg(tr("Error"),
                                                            tr("The following help file could not be found:")+" <strong>"+url.toString()+"</strong>.",
                                                            tr("Please <a href=\"contactUs.html\">contact us</a> about this error."),
-                                                           Core::copyright(),
-                                                           tr("Funded by the <a class=\"funding\" href=\"http://www.virtualrat.org/\"><img class=\"funding\" src=\"qthelp://opencor/doc/res/pics/vprLogo.png\" width=60 height=18 alt=\"VPR\"></a> project")).toUtf8());
+                                                           Core::copyright()).toUtf8());
 
     // Return the requested document or an error message
 
