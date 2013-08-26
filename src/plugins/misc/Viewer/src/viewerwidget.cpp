@@ -44,7 +44,7 @@ setContent("<math><mrow><msub><mi>i</mi><mi>Na</mi></msub><mo>=</mo><mfrac><mrow
 
 // Fraction: mfrac
 
-setContent("<math><mfrac><mrow><mi>x</mi><mo>-</mo><mn>1</mn></mrow><mn>100</mn></mfrac></math>");
+//setContent("<math><mfrac><mrow><mi>x</mi><mo>-</mo><mn>1</mn></mrow><mn>100</mn></mfrac></math>");
 //setContent("<math><mfrac linethickness=\"150\"><mrow><mi>x</mi><mo>-</mo><mn>1</mn></mrow><mn>100</mn></mfrac></math>");
 //setContent("<math><mfrac linethickness=\"0.00001\"><mrow><mi>x</mi><mo>-</mo><mn>1</mn></mrow><mn>100</mn></mfrac></math>");
 //setContent("<math><mfrac linethickness=\"0\"><mrow><mi>x</mi><mo>-</mo><mn>1</mn></mrow><mn>100</mn></mfrac></math>");

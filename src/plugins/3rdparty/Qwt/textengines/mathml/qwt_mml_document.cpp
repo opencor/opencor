@@ -16,8 +16,8 @@
 static bool           g_draw_frames            = false;
 static const double   g_mfrac_spacing          = 0.1;
 static const double   g_mroot_base_margin      = 0.1;
-static const double   g_script_size_multiplier = 0.5;
-static const int      g_min_font_point_size    = 1;
+static const double   g_script_size_multiplier = 0.7071; // sqrt(1/2)
+static const int      g_min_font_point_size    = 8;
 static const QChar    g_radical_char           = QChar( 0x1A, 0x22 );
 static const unsigned g_oper_spec_rows         = 9;
 
@@ -229,8 +229,6 @@ protected:
     QwtMmlNode *parentWithExplicitAttribute( const QString &name, NodeType type = NoNode );
     int interpretSpacing( const QString &value, bool *ok ) const;
 
-    int lineWidth( const QFont &font) const;
-
 private:
     QwtMmlAttributeMap m_attribute_map;
     bool m_stretched;
@@ -302,9 +300,6 @@ protected:
     virtual void layoutSymbol();
     virtual void paintSymbol( QPainter *p ) const;
     virtual QRect symbolRect() const;
-
-private:
-    int lineThickness() const;
 };
 
 class QwtMmlMrowNode : public QwtMmlNode
@@ -3652,11 +3647,6 @@ int QwtMmlNode::interpretSpacing( const QString &value, bool *ok ) const
     return ::interpretSpacing( value, em(), ex(), ok );
 }
 
-int QwtMmlNode::lineWidth( const QFont &font) const
-{
-    return qMax( 1, QFontMetrics( font ).lineWidth() );
-}
-
 int QwtMmlNode::basePos() const
 {
     QFontMetrics fm( font() );
@@ -4107,10 +4097,9 @@ QRect QwtMmlMfracNode::symbolRect() const
 {
     int num_width = numerator()->myRect().width();
     int denom_width = denominator()->myRect().width();
-    int my_width = ( 1 + g_mfrac_spacing ) * qMax( num_width, denom_width ) ;
-    int linethickness = lineThickness();
+    int my_width = qMax( num_width, denom_width ) + 4;
 
-    return QRect( -0.5 * my_width, -0.5 * linethickness, my_width, linethickness );
+    return QRect( -0.5 * my_width, 0, my_width, 1 );
 }
 
 void QwtMmlMfracNode::layoutSymbol()
@@ -4122,10 +4111,9 @@ void QwtMmlMfracNode::layoutSymbol()
     QRect denom_rect = denom->myRect();
 
     int spacing = ( int )( g_mfrac_spacing * ( num_rect.height() + denom_rect.height() ) );
-    int linethickness = lineThickness();
 
-    num->setRelOrigin( QPoint( -0.5 * num_rect.width(), - spacing - num_rect.bottom() - 0.5 * linethickness ) );
-    denom->setRelOrigin( QPoint( -0.5 * denom_rect.width(), spacing - denom_rect.top() + 0.5 * linethickness ) );
+    num->setRelOrigin( QPoint( -0.5 * num_rect.width(), - spacing - num_rect.bottom() ) );
+    denom->setRelOrigin( QPoint( -0.5 * denom_rect.width(), spacing - denom_rect.top() ) );
 }
 
 static bool zeroLineThickness( const QString &s )
@@ -4142,39 +4130,27 @@ static bool zeroLineThickness( const QString &s )
     return true;
 }
 
-int QwtMmlMfracNode::lineThickness() const
+void QwtMmlMfracNode::paintSymbol( QPainter *p ) const
 {
-    QString linethickness_str = inheritAttributeFromMrow( "linethickness", QString::number( 0.75 * lineWidth ( font() ) ) );
+    QString linethickness_str = inheritAttributeFromMrow( "linethickness", "1" );
 
     /* InterpretSpacing returns an int, which might be 0 even if the thickness
-       is > 0, though very very small. That's ok, because we can set it to 1.
-       However, we have to run this check if the line thickness really is zero */
+       is > 0, though very very small. That's ok, because the painter then paints
+       a line of thickness 1. However, we have to run this check if the line
+       thickness really is zero */
     if ( !zeroLineThickness( linethickness_str ) )
     {
         bool ok;
         int linethickness = interpretSpacing( linethickness_str, &ok );
-        if ( !ok || !linethickness )
+        if ( !ok )
             linethickness = 1;
 
-        return linethickness;
-    }
-    else
-    {
-        return 0;
-    }
-}
-
-void QwtMmlMfracNode::paintSymbol( QPainter *p ) const
-{
-    int linethickness = lineThickness();
-
-    if ( linethickness )
-    {
         p->save();
+        QPen pen = p->pen();
+        pen.setWidth( linethickness );
+        p->setPen( pen );
         QSize s = myRect().size();
-        p->fillRect( -0.5 * s.width(), -0.5 * linethickness,
-                     s.width(), linethickness,
-                     p->pen().color() );
+        p->drawLine( -0.5 * s.width(), 0, 0.5 * s.width(), 0 );
         p->restore();
     }
 }
@@ -4215,14 +4191,11 @@ QRect QwtMmlRootBaseNode::symbolRect() const
     else
         base_rect = base()->myRect();
 
-    int margin = g_mroot_base_margin * qMin( base_rect.width(), base_rect.height() );
+    int margin = ( int )( g_mroot_base_margin * base_rect.height() );
     int tw = tailWidth();
-    int linewidth = 0.5 * lineWidth( font() );
 
-    return QRect( -tw, base_rect.top() - linewidth - margin -1,
-                  tw + base_rect.width() + margin, base_rect.height() + 2 * margin + linewidth );
-    // Note: see the note for setClipRect() in QwtMmlRootBaseNode::paintSymbol()
-    //       about why - 1 in the top value of our returned region...
+    return QRect( -tw, base_rect.top() - margin, tw,
+                  base_rect.height() + 2 * margin );
 }
 
 int QwtMmlRootBaseNode::tailWidth() const
@@ -4258,52 +4231,20 @@ void QwtMmlRootBaseNode::paintSymbol( QPainter *p ) const
 {
     QFont fn = font();
 
-    QwtMmlNode *b = base();
-    QRect base_rect;
-    if ( b == 0 )
-        base_rect = QRect( 0, 0, 1, 1 );
-    else
-        base_rect = base()->myRect();
-
-    int margin = g_mroot_base_margin * qMin( base_rect.width(), base_rect.height() );
-
     p->save();
 
-    QRect sr = symbolRect().adjusted( 0, 0, -base_rect.width() - margin, 0 );
-    // Note: symbolRect() returns the whole region needed to paint the radical
-    //       and the horizontal line, as well as some space between the
-    //       radical's 'content' and the end of the horizontal line. Yet, here,
-    //       we only want to retrieve the region needed to paint the radical
-    //       itself, hence we remove the width needed for the 'content' and the
-    //       extra bit of horizontal line...
+    QRect sr = symbolRect();
 
     QRect r = sr;
     r.moveTopLeft( devicePoint( sr.topLeft() ) );
     p->setViewport( r );
     p->setWindow( QFontMetrics( fn ).boundingRect( g_radical_char ) );
-    p->setClipRect( p->window().adjusted( 0, 1, 0, 0 ) );
-    // Note: on some systems (e.g. Windows), the radical will be rendered taller
-    //       than expected, hence we clip. As for the adjustment, it's because
-    //       on Linux and OS X, it may happen that due to antialiasing the top
-    //       end of the radical is not always rendered in the exact colour of
-    //       the radical, and if that happens it only concerns one line of
-    //       pixels, hence we adjust the top of the clipping region by one
-    //       pixel...
     p->setFont( fn );
     p->drawText( 0, 0, QString( g_radical_char ) );
 
     p->restore();
 
-    int linewidth = 0.5 * lineWidth( fn );
-
-    p->fillRect( sr.right() - 0.5 * linewidth, sr.top() + 1,
-                 myRect().right() - ( sr.right() - 0.5 * linewidth ) + 1, linewidth,
-                 p->pen().color() );
-    // Note: we start at sr.right() - 0.5 * linewidth to address the case where
-    //       we use a big font size, thus avoiding the tiny gap seen on some
-    //       systems (e.g. OS X) between the radical character and the
-    //       horizontal line. As for the top, we add + 1 because of the reason
-    //       given in the above note related to the call to setClipRect()...
+    p->drawLine( sr.right(), sr.top(), myRect().right(), sr.top() );
 }
 
 QwtMmlTextNode::QwtMmlTextNode( const QString &text, QwtMmlDocument *document )
