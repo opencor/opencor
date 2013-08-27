@@ -341,7 +341,7 @@ IF(WIN32)
 
     SET(CPACK_SYSTEM_NAME "Windows")
 
-    SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/distrib/licensing.txt")
+    SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt")
 
     # Install both the GUI and consolve version of OpenCOR
     # Note: we would normally use
@@ -424,7 +424,7 @@ ELSEIF(APPLE)
 
     SET(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_SOURCE_DIR}/distrib/osx/welcome.txt")
     SET(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/distrib/readMe.txt")
-    SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/distrib/licensing.txt")
+    SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt")
 
     SET(INSTALL_DIR "/Applications/${PROJECT_NAME}")
 
