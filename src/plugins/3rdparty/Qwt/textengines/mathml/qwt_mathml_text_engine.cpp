@@ -55,7 +55,7 @@ QSizeF QwtMathMLTextEngine::textSize( const QFont &font,
     Q_UNUSED( flags );
 
     static QString t;
-    static QSize sz;
+    static QSizeF sz;
 
     if ( text != t )
     {

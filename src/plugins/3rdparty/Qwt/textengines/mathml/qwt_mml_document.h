@@ -29,8 +29,8 @@ public:
 
     bool setContent( QString text, QString *errorMsg = 0,
                      int *errorLine = 0, int *errorColumn = 0 );
-    void paint( QPainter *p, const QPoint &pos ) const;
-    QSize size() const;
+    void paint( QPainter *p, const QPointF &pos ) const;
+    QSizeF size() const;
 
     QString fontName( MmlFont type ) const;
     void setFontName( MmlFont type, const QString &name );

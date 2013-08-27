@@ -118,7 +118,7 @@ void ViewerWidget::setContent(const QString &pContent)
     mMathmlDocument.setBaseFontPointSize(100);
     mMathmlDocument.setContent(mContent);
 
-    QSize mathmlDocumentSize = mMathmlDocument.size();
+    QSizeF mathmlDocumentSize = mMathmlDocument.size();
 
     mOneOverMathmlDocumentWidth  = 1.0/mathmlDocumentSize.width();
     mOneOverMathmlDocumentHeight = 1.0/mathmlDocumentSize.height();
@@ -174,10 +174,10 @@ void ViewerWidget::paintEvent(QPaintEvent *pEvent)
 
     // Render our content
 
-    QSize mathmlDocumentSize = mMathmlDocument.size();
+    QSizeF mathmlDocumentSize = mMathmlDocument.size();
 
-    mMathmlDocument.paint(&painter, QPoint(0.5*(width()-mathmlDocumentSize.width()),
-                                           0.5*(height()-mathmlDocumentSize.height())));
+    mMathmlDocument.paint(&painter, QPointF(0.5*(width()-mathmlDocumentSize.width()),
+                                            0.5*(height()-mathmlDocumentSize.height())));
 
     // Accept the event
 

@@ -11,8 +11,6 @@
 // Declarations
 // *******************************************************************
 
-#define ROUND(a) (int)((a)+.5)
-
 static bool           g_draw_frames            = false;
 static const double   g_mfrac_spacing          = 0.1;
 static const double   g_mroot_base_margin      = 0.1;
@@ -54,9 +52,9 @@ struct QwtMml
 
     struct FrameSpacing
     {
-        FrameSpacing( int hor = 0, int ver = 0 )
+        FrameSpacing( double hor = 0.0, double ver = 0.0 )
             : m_hor( hor ), m_ver( ver ) {}
-        int m_hor, m_ver;
+        double m_hor, m_ver;
     };
 };
 
@@ -105,9 +103,9 @@ public:
 
     bool setContent( QString text, QString *errorMsg = 0,
                      int *errorLine = 0, int *errorColumn = 0 );
-    void paint( QPainter *p, const QPoint &pos ) const;
+    void paint( QPainter *p, const QPointF &pos ) const;
     void dump() const;
-    QSize size() const;
+    QSizeF size() const;
     void layout();
 
     QString fontName( QwtMathMLDocument::MmlFont type ) const;
@@ -165,20 +163,20 @@ public:
 
     virtual QString toStr() const;
 
-    void setRelOrigin( const QPoint &rel_origin );
-    QPoint relOrigin() const
+    void setRelOrigin( const QPointF &rel_origin );
+    QPointF relOrigin() const
     { return m_rel_origin; }
-    void stretchTo( const QRect &rect );
+    void stretchTo( const QRectF &rect );
     bool isStretched() const
     { return m_stretched; }
-    QPoint devicePoint( const QPoint &p ) const;
+    QPointF devicePoint( const QPointF &p ) const;
 
-    QRect myRect() const
+    QRectF myRect() const
     { return m_my_rect; }
-    QRect parentRect() const;
-    virtual QRect deviceRect() const;
+    QRectF parentRect() const;
+    virtual QRectF deviceRect() const;
     void updateMyRect();
-    virtual void setMyRect( const QRect &rect )
+    virtual void setMyRect( const QRectF &rect )
     { m_my_rect = rect; }
 
     virtual void stretch();
@@ -223,25 +221,25 @@ public:
 protected:
     virtual void layoutSymbol();
     virtual void paintSymbol( QPainter *p ) const;
-    virtual QRect symbolRect() const
-    { return QRect( 0, 0, 0, 0 ); }
+    virtual QRectF symbolRect() const
+    { return QRectF( 0.0, 0.0, 0.0, 0.0 ); }
 
     QwtMmlNode *parentWithExplicitAttribute( const QString &name, NodeType type = NoNode );
-    int interpretSpacing( const QString &value, bool *ok ) const;
+    double interpretSpacing( const QString &value, bool *ok ) const;
 
 private:
     QwtMmlAttributeMap m_attribute_map;
     bool m_stretched;
-    QRect m_my_rect, m_parent_rect;
-    QPoint m_rel_origin;
+    QRectF m_my_rect, m_parent_rect;
+    QPointF m_rel_origin;
 
     NodeType m_node_type;
     QwtMmlDocument *m_document;
 
     QwtMmlNode *m_parent,
-            *m_first_child,
-            *m_next_sibling,
-            *m_previous_sibling;
+               *m_first_child,
+               *m_next_sibling,
+               *m_previous_sibling;
 };
 
 class QwtMmlTokenNode : public QwtMmlNode
@@ -299,7 +297,7 @@ public:
 protected:
     virtual void layoutSymbol();
     virtual void paintSymbol( QPainter *p ) const;
-    virtual QRect symbolRect() const;
+    virtual QRectF symbolRect() const;
 };
 
 class QwtMmlMrowNode : public QwtMmlNode
@@ -323,7 +321,7 @@ public:
 protected:
     virtual void layoutSymbol();
     virtual void paintSymbol( QPainter *p ) const;
-    virtual QRect symbolRect() const;
+    virtual QRectF symbolRect() const;
     int tailWidth() const;
 };
 
@@ -365,7 +363,7 @@ public:
 
 protected:
     virtual void paintSymbol( QPainter *p ) const;
-    virtual QRect symbolRect() const;
+    virtual QRectF symbolRect() const;
 
     QString m_text;
 };
@@ -439,14 +437,14 @@ public:
 
     QString dictionaryAttribute( const QString &name ) const;
     virtual void stretch();
-    virtual int lspace() const;
-    virtual int rspace() const;
+    virtual double lspace() const;
+    virtual double rspace() const;
 
     virtual QString toStr() const;
 
 protected:
     virtual void layoutSymbol();
-    virtual QRect symbolRect() const;
+    virtual QRectF symbolRect() const;
 
     virtual FormType form() const;
 
@@ -474,32 +472,32 @@ public:
     QwtMmlMtableNode( QwtMmlDocument *document, const QwtMmlAttributeMap &attribute_map )
         : QwtMmlTableBaseNode( MtableNode, document, attribute_map ) {}
 
-    int rowspacing() const;
-    int columnspacing() const;
-    int framespacing_hor() const;
-    int framespacing_ver() const;
+    double rowspacing() const;
+    double columnspacing() const;
+    double framespacing_hor() const;
+    double framespacing_ver() const;
     FrameType frame() const;
     FrameType columnlines( int idx ) const;
     FrameType rowlines( int idx ) const;
 
 protected:
     virtual void layoutSymbol();
-    virtual QRect symbolRect() const;
+    virtual QRectF symbolRect() const;
     virtual void paintSymbol( QPainter *p ) const;
 
 private:
     struct CellSizeData
     {
         void init( const QwtMmlNode *first_row );
-        QList<int> col_widths, row_heights;
+        QList<double> col_widths, row_heights;
         int numCols() const { return col_widths.count(); }
         int numRows() const { return row_heights.count(); }
-        uint colWidthSum() const;
-        uint rowHeightSum() const;
+        double colWidthSum() const;
+        double rowHeightSum() const;
     };
 
     CellSizeData m_cell_size_data;
-    int m_content_width, m_content_height;
+    double m_content_width, m_content_height;
 };
 
 class QwtMmlMtrNode : public QwtMmlTableBaseNode
@@ -507,7 +505,7 @@ class QwtMmlMtrNode : public QwtMmlTableBaseNode
 public:
     QwtMmlMtrNode( QwtMmlDocument *document, const QwtMmlAttributeMap &attribute_map )
         : QwtMmlTableBaseNode( MtrNode, document, attribute_map ) {}
-    void layoutCells( const QList<int> &col_widths, int col_spc );
+    void layoutCells( const QList<double> &col_widths, double col_spc );
 };
 
 class QwtMmlMtdNode : public QwtMmlTableBaseNode
@@ -516,7 +514,7 @@ public:
     QwtMmlMtdNode( QwtMmlDocument *document, const QwtMmlAttributeMap &attribute_map )
         : QwtMmlTableBaseNode( MtdNode, document, attribute_map )
     { m_scriptlevel_adjust = 0; }
-    virtual void setMyRect( const QRect &rect );
+    virtual void setMyRect( const QRectF &rect );
 
     ColAlign columnalign();
     RowAlign rowalign();
@@ -526,7 +524,7 @@ public:
 
 private:
     int m_scriptlevel_adjust; // added or subtracted to scriptlevel to
-    // make contents fit the cell
+                              // make contents fit the cell
 };
 
 class QwtMmlMoverNode : public QwtMmlNode
@@ -583,15 +581,15 @@ public:
         : QwtMmlNode( MpaddedNode, document, attribute_map ) {}
 
 public:
-    int lspace() const;
-    int width() const;
-    int height() const;
-    int depth() const;
+    double lspace() const;
+    double width() const;
+    double height() const;
+    double depth() const;
 
 protected:
-    int interpretSpacing( QString value, int base_value, bool *ok ) const;
+    double interpretSpacing( QString value, double base_value, bool *ok ) const;
     virtual void layoutSymbol();
-    virtual QRect symbolRect() const;
+    virtual QRectF symbolRect() const;
 };
 
 class QwtMmlMspaceNode : public QwtMmlNode
@@ -609,8 +607,8 @@ static bool mmlCheckAttributes( QwtMml::NodeType child_type,
                                 const QwtMmlAttributeMap &attr, QString *error_str );
 static QString mmlDictAttribute( const QString &name, const QwtMmlOperSpec *spec );
 static const QwtMmlOperSpec *mmlFindOperSpec( const QString &name, QwtMml::FormType form );
-static int interpretSpacing( QString name, int em, int ex, bool *ok );
-static int interpretPercentSpacing( QString value, int base, bool *ok );
+static double interpretSpacing( QString name, int em, int ex, bool *ok );
+static double interpretPercentSpacing( QString value, int base, bool *ok );
 static uint interpretMathVariant( const QString &value, bool *ok );
 static QwtMml::FormType interpretForm( const QString &value, bool *ok );
 static QwtMml::FrameType interpretFrameType( const QString &value_list, uint idx, bool *ok );
@@ -621,9 +619,8 @@ static QwtMml::FrameType interpretFrameType( const QString &value_list, uint idx
 static QFont interpretDepreciatedFontAttr( const QwtMmlAttributeMap &font_attr, QFont &fn, int em, int ex );
 static QFont interpretMathSize( QString value, QFont &fn, int em, int ex, bool *ok );
 static QString interpretListAttr( const QString &value_list, int idx, const QString &def );
-static QString rectToStr( const QRect &rect );
+static QString rectToStr(const QRectF &rect );
 static QString entityDeclarations();
-
 
 #define MML_ATT_COMMON      " class style id xref actiontype "
 #define MML_ATT_FONTSIZE    " fontsize fontweight fontstyle fontfamily color "
@@ -652,7 +649,6 @@ static QString entityDeclarations();
 
 static const QwtMmlNodeSpec g_node_spec_data[] =
 {
-
 //    type                    tag           type_str          child_spec                    child_types              attributes ""=none, 0=any
 //    ----------------------- ------------- ----------------- ----------------------------- ------------------------ ---------------------------------------------------------------------
     { QwtMml::MiNode,         "mi",         "MiNode",         QwtMmlNodeSpec::ChildAny,     " TextNode MalignMark ", MML_ATT_COMMON MML_ATT_FONTINFO                                       },
@@ -689,6 +685,7 @@ static const char *g_oper_spec_names[g_oper_spec_rows] =
     "accent", "fence", "largeop", "lspace", "minsize", "movablelimits",
     "rspace", "separator", "stretchy"
 };
+
 static const QwtMmlOperSpec g_oper_spec_data[] =
 {
 //                                                                accent   fence    largeop  lspace               minsize movablelimits rspace                   separator stretchy
@@ -3499,7 +3496,7 @@ QwtMmlNode *QwtMmlDocument::domToMml( const QDomNode &dom_node, bool *ok,
                 if ( i < child_cnt - 1 && mml_type == MfencedNode && !separator_list.isEmpty() )
                 {
                     QChar separator;
-                    if ( i >= ( int )separator_list.length() )
+                    if ( i >= separator_list.length() )
                         separator = separator_list.at( separator_list.length() - 1 );
                     else
                         separator = separator_list[i];
@@ -3560,7 +3557,7 @@ QwtMmlNode *QwtMmlDocument::createImplicitMrowNode( const QDomNode &dom_node,
     return mml_node;
 }
 
-void QwtMmlDocument::paint( QPainter *p, const QPoint &pos ) const
+void QwtMmlDocument::paint( QPainter *p, const QPointF &pos ) const
 {
     if ( m_root_node == 0 )
         return;
@@ -3568,20 +3565,20 @@ void QwtMmlDocument::paint( QPainter *p, const QPoint &pos ) const
     /*
         p->save();
         p->setPen( QPen( Qt::blue, 0 ) );
-        p->drawLine( pos.x() - 5, pos.y(), pos.x() + 5, pos.y() );
-        p->drawLine( pos.x(), pos.y() - 5, pos.x(), pos.y() + 5 );
+        p->drawLine( pos.x() - 5.0, pos.y(), pos.x() + 5.0, pos.y() );
+        p->drawLine( pos.x(), pos.y() - 5.0, pos.x(), pos.y() + 5.0 );
         p->restore();
     */
 
-    QRect mr = m_root_node->myRect();
+    QRectF mr = m_root_node->myRect();
     m_root_node->setRelOrigin( pos - mr.topLeft() );
     m_root_node->paint( p );
 }
 
-QSize QwtMmlDocument::size() const
+QSizeF QwtMmlDocument::size() const
 {
     if ( m_root_node == 0 )
-        return QSize( 0, 0 );
+        return QSizeF( 0.0, 0.0 );
     return m_root_node->deviceRect().size();
 }
 
@@ -3601,8 +3598,8 @@ QwtMmlNode::QwtMmlNode( NodeType type, QwtMmlDocument *document,
     m_document = document;
     m_attribute_map = attribute_map;
 
-    m_my_rect = m_parent_rect = QRect( 0, 0, 0, 0 );
-    m_rel_origin = QPoint( 0, 0 );
+    m_my_rect = m_parent_rect = QRectF( 0.0, 0.0, 0.0, 0.0 );
+    m_rel_origin = QPointF( 0.0, 0.0 );
     m_stretched = false;
 }
 
@@ -3617,7 +3614,7 @@ QwtMmlNode::~QwtMmlNode()
     }
 }
 
-static QString rectToStr( const QRect &rect )
+static QString rectToStr( const QRectF &rect )
 {
     return QString( "[(%1, %2), %3x%4]" )
            .arg( rect.x() )
@@ -3642,7 +3639,7 @@ QString QwtMmlNode::toStr() const
            .arg( ( int )isStretched() );
 }
 
-int QwtMmlNode::interpretSpacing( const QString &value, bool *ok ) const
+double QwtMmlNode::interpretSpacing( const QString &value, bool *ok ) const
 {
     return ::interpretSpacing( value, em(), ex(), ok );
 }
@@ -3735,20 +3732,20 @@ int QwtMmlNode::scriptlevel( const QwtMmlNode * ) const
     }
 }
 
-QPoint QwtMmlNode::devicePoint( const QPoint &p ) const
+QPointF QwtMmlNode::devicePoint( const QPointF &p ) const
 {
-    QRect mr = myRect();
-    QRect dr = deviceRect();
+    QRectF mr = myRect();
+    QRectF dr = deviceRect();
 
     if ( isStretched() )
-        return dr.topLeft() + QPoint( ( p.x() - mr.left() ) * dr.width() / mr.width(),
-                                      ( p.y() - mr.top() ) * dr.height() / mr.height() );
+        return dr.topLeft() + QPointF( ( p.x() - mr.left() ) * dr.width() / mr.width(),
+                                       ( p.y() - mr.top() ) * dr.height() / mr.height() );
     else
         return dr.topLeft() + p - mr.topLeft();
 }
 
 QString QwtMmlNode::inheritAttributeFromMrow( const QString &name,
-        const QString &def ) const
+                                              const QString &def ) const
 {
     const QwtMmlNode *p = this;
     for ( ; p != 0; p = p->parent() )
@@ -3795,7 +3792,8 @@ QColor QwtMmlNode::background() const
 }
 
 static void updateFontAttr( QwtMmlAttributeMap &font_attr, const QwtMmlNode *n,
-                            const QString &name, const QString &preferred_name = QString::null )
+                            const QString &name,
+                            const QString &preferred_name = QString::null )
 {
     if ( font_attr.contains( preferred_name ) || font_attr.contains( name ) )
         return;
@@ -3836,12 +3834,12 @@ QFont QwtMmlNode::font() const
     if ( sl >= 0 )
     {
         for ( int i = 0; i < sl; ++i )
-            ps = ( int )( ps * g_script_size_multiplier );
+            ps = ps * g_script_size_multiplier;
     }
     else
     {
         for ( int i = 0; i > sl; --i )
-            ps = ( int )( ps / g_script_size_multiplier );
+            ps = ps / g_script_size_multiplier;
     }
     if ( ps < g_min_font_point_size )
         ps = g_min_font_point_size;
@@ -3919,27 +3917,27 @@ QString QwtMmlNode::explicitAttribute( const QString &name, const QString &def )
 }
 
 
-QRect QwtMmlNode::parentRect() const
+QRectF QwtMmlNode::parentRect() const
 {
     if ( isStretched() )
         return m_parent_rect;
 
-    QRect mr = myRect();
-    QPoint ro = relOrigin();
+    QRectF mr = myRect();
+    QPointF ro = relOrigin();
 
-    return QRect( ro + mr.topLeft(), mr.size() );
+    return QRectF( ro + mr.topLeft(), mr.size() );
 }
 
 
-void QwtMmlNode::stretchTo( const QRect &rect )
+void QwtMmlNode::stretchTo( const QRectF &rect )
 {
     m_parent_rect = rect;
     m_stretched = true;
 }
 
-void QwtMmlNode::setRelOrigin( const QPoint &rel_origin )
+void QwtMmlNode::setRelOrigin( const QPointF &rel_origin )
 {
-    m_rel_origin = rel_origin + QPoint( -myRect().left(), 0 );
+    m_rel_origin = rel_origin + QPointF( -myRect().left(), 0.0 );
     m_stretched = false;
 }
 
@@ -3953,9 +3951,9 @@ void QwtMmlNode::updateMyRect()
 
 void QwtMmlNode::layout()
 {
-    m_parent_rect = QRect( 0, 0, 0, 0 );
+    m_parent_rect = QRectF( 0.0, 0.0, 0.0, 0.0 );
     m_stretched = false;
-    m_rel_origin = QPoint( 0, 0 );
+    m_rel_origin = QPointF( 0.0, 0.0 );
 
     QwtMmlNode *child = firstChild();
     for ( ; child != 0; child = child->nextSibling() )
@@ -3966,41 +3964,41 @@ void QwtMmlNode::layout()
     updateMyRect();
 
     if ( parent() == 0 )
-        m_rel_origin = QPoint( 0, 0 );
+        m_rel_origin = QPointF( 0.0, 0.0 );
 }
 
 
-QRect QwtMmlNode::deviceRect() const
+QRectF QwtMmlNode::deviceRect() const
 {
     if ( parent() == 0 )
-        return QRect( relOrigin() + myRect().topLeft(), myRect().size() );
+        return QRectF( relOrigin() + myRect().topLeft(), myRect().size() );
 
     /*
         if ( !isStretched() ) {
-            QRect pdr = parent()->deviceRect();
-            QRect pmr = parent()->myRect();
-            QRect pr = parentRect();
-            QRect mr = myRect();
-            return QRect( pdr.left() + pr.left() - pmr.left(),
-                          pdr.top()  + pr.top() - pmr.top(),
-                          mr.width(), mr.height() );
+            QRectF pdr = parent()->deviceRect();
+            QRectF pmr = parent()->myRect();
+            QRectF pr = parentRect();
+            QRectF mr = myRect();
+            return QRectF( pdr.left() + pr.left() - pmr.left(),
+                           pdr.top()  + pr.top() - pmr.top(),
+                           mr.width(), mr.height() );
         }
     */
-    QRect pdr = parent()->deviceRect();
-    QRect pr = parentRect();
-    QRect pmr = parent()->myRect();
+    QRectF pdr = parent()->deviceRect();
+    QRectF pr = parentRect();
+    QRectF pmr = parent()->myRect();
 
-    float scale_w = 0;
-    if ( pmr.width() != 0 )
-        scale_w = ( float )pdr.width() / pmr.width();
-    float scale_h = 0;
-    if ( pmr.height() != 0 )
-        scale_h = ( float )pdr.height() / pmr.height();
+    double scale_w = 0.0;
+    if ( pmr.width() != 0.0 )
+        scale_w = pdr.width() / pmr.width();
+    double scale_h = 0.0;
+    if ( pmr.height() != 0.0 )
+        scale_h = pdr.height() / pmr.height();
 
-    return QRect( pdr.left() + ROUND( ( pr.left() - pmr.left() ) * scale_w ),
-                  pdr.top()  + ROUND( ( pr.top() - pmr.top() ) * scale_h ),
-                  ROUND( ( pr.width() * scale_w ) ),
-                  ROUND( ( pr.height() * scale_h ) ) );
+    return QRectF( pdr.left() + ( pr.left() - pmr.left() ) * scale_w,
+                   pdr.top()  + ( pr.top() - pmr.top() ) * scale_h,
+                   pr.width() * scale_w,
+                   pr.height() * scale_h );
 }
 
 void QwtMmlNode::layoutSymbol()
@@ -4008,12 +4006,12 @@ void QwtMmlNode::layoutSymbol()
     // default behaves like an mrow
 
     // now lay them out in a neat row, aligning their origins to my origin
-    int w = 0;
+    double w = 0.0;
     QwtMmlNode *child = firstChild();
     for ( ; child != 0; child = child->nextSibling() )
     {
-        child->setRelOrigin( QPoint( w, 0 ) );
-        w += child->parentRect().width() + 1;
+        child->setRelOrigin( QPointF( w, 0.0 ) );
+        w += child->parentRect().width() + 1.0;
     }
 }
 
@@ -4022,8 +4020,8 @@ void QwtMmlNode::paint( QPainter *p )
     if ( !myRect().isValid() )
         return;
     p->save();
-    p->setViewport(deviceRect());
-    p->setWindow(myRect());
+    p->setViewport( deviceRect().toRect() );
+    p->setWindow( myRect().toRect() );
 
     QColor fg = color();
     QColor bg = background();
@@ -4051,7 +4049,7 @@ void QwtMmlNode::paintSymbol( QPainter *p ) const
         QPen pen = p->pen();
         pen.setStyle( Qt::DotLine );
         p->setPen( pen );
-        p->drawLine( myRect().left(), 0, myRect().right(), 0 );
+        p->drawLine( myRect().left(), 0.0, myRect().right(), 0.0 );
         p->restore();
     }
 }
@@ -4093,13 +4091,13 @@ QwtMmlNode *QwtMmlMfracNode::denominator() const
     return node;
 }
 
-QRect QwtMmlMfracNode::symbolRect() const
+QRectF QwtMmlMfracNode::symbolRect() const
 {
-    int num_width = numerator()->myRect().width();
-    int denom_width = denominator()->myRect().width();
-    int my_width = qMax( num_width, denom_width ) + 4;
+    double num_width = numerator()->myRect().width();
+    double denom_width = denominator()->myRect().width();
+    double my_width = qMax( num_width, denom_width ) + 4.0;
 
-    return QRect( -0.5 * my_width, 0, my_width, 1 );
+    return QRectF( -0.5 * my_width, 0.0, my_width, 1.0 );
 }
 
 void QwtMmlMfracNode::layoutSymbol()
@@ -4107,13 +4105,13 @@ void QwtMmlMfracNode::layoutSymbol()
     QwtMmlNode *num = numerator();
     QwtMmlNode *denom = denominator();
 
-    QRect num_rect = num->myRect();
-    QRect denom_rect = denom->myRect();
+    QRectF num_rect = num->myRect();
+    QRectF denom_rect = denom->myRect();
 
-    int spacing = ( int )( g_mfrac_spacing * ( num_rect.height() + denom_rect.height() ) );
+    double spacing = g_mfrac_spacing * ( num_rect.height() + denom_rect.height() ) ;
 
-    num->setRelOrigin( QPoint( -0.5 * num_rect.width(), - spacing - num_rect.bottom() ) );
-    denom->setRelOrigin( QPoint( -0.5 * denom_rect.width(), spacing - denom_rect.top() ) );
+    num->setRelOrigin( QPointF( -0.5 * num_rect.width(), - spacing - num_rect.bottom() ) );
+    denom->setRelOrigin( QPointF( -0.5 * denom_rect.width(), spacing - denom_rect.top() ) );
 }
 
 static bool zeroLineThickness( const QString &s )
@@ -4141,16 +4139,16 @@ void QwtMmlMfracNode::paintSymbol( QPainter *p ) const
     if ( !zeroLineThickness( linethickness_str ) )
     {
         bool ok;
-        int linethickness = interpretSpacing( linethickness_str, &ok );
+        double linethickness = interpretSpacing( linethickness_str, &ok );
         if ( !ok )
-            linethickness = 1;
+            linethickness = 1.0;
 
         p->save();
         QPen pen = p->pen();
         pen.setWidth( linethickness );
         p->setPen( pen );
-        QSize s = myRect().size();
-        p->drawLine( -0.5 * s.width(), 0, 0.5 * s.width(), 0 );
+        QSizeF s = myRect().size();
+        p->drawLine( -0.5 * s.width(), 0.0, 0.5 * s.width(), 0.0 );
         p->restore();
     }
 }
@@ -4181,21 +4179,20 @@ int QwtMmlRootBaseNode::scriptlevel( const QwtMmlNode *child ) const
         return sl;
 }
 
-
-QRect QwtMmlRootBaseNode::symbolRect() const
+QRectF QwtMmlRootBaseNode::symbolRect() const
 {
     QwtMmlNode *b = base();
-    QRect base_rect;
+    QRectF base_rect;
     if ( b == 0 )
-        base_rect = QRect( 0, 0, 1, 1 );
+        base_rect = QRectF( 0.0, 0.0, 1.0, 1.0 );
     else
         base_rect = base()->myRect();
 
-    int margin = ( int )( g_mroot_base_margin * base_rect.height() );
+    double margin = g_mroot_base_margin * base_rect.height();
     int tw = tailWidth();
 
-    return QRect( -tw, base_rect.top() - margin, tw,
-                  base_rect.height() + 2 * margin );
+    return QRectF( -tw, base_rect.top() - margin, tw,
+                   base_rect.height() + 2.0 * margin );
 }
 
 int QwtMmlRootBaseNode::tailWidth() const
@@ -4207,23 +4204,23 @@ int QwtMmlRootBaseNode::tailWidth() const
 void QwtMmlRootBaseNode::layoutSymbol()
 {
     QwtMmlNode *b = base();
-    QSize base_size;
+    QSizeF base_size;
     if ( b != 0 )
     {
-        b->setRelOrigin( QPoint( 0, 0 ) );
+        b->setRelOrigin( QPointF( 0.0, 0.0 ) );
         base_size = base()->myRect().size();
     }
     else
-        base_size = QSize( 1, 1 );
+        base_size = QSizeF( 1.0, 1.0 );
 
     QwtMmlNode *i = index();
     if ( i != 0 )
     {
         int tw = tailWidth();
 
-        QRect i_rect = i->myRect();
-        i->setRelOrigin( QPoint( -0.5 * tw - i_rect.width(),
-                                 -i_rect.bottom() - 4 ) );
+        QRectF i_rect = i->myRect();
+        i->setRelOrigin( QPointF( -0.5 * tw - i_rect.width(),
+                                  -i_rect.bottom() - 4.0 ) );
     }
 }
 
@@ -4233,14 +4230,14 @@ void QwtMmlRootBaseNode::paintSymbol( QPainter *p ) const
 
     p->save();
 
-    QRect sr = symbolRect();
+    QRectF sr = symbolRect();
 
-    QRect r = sr;
+    QRectF r = sr;
     r.moveTopLeft( devicePoint( sr.topLeft() ) );
-    p->setViewport( r );
+    p->setViewport( r.toRect() );
     p->setWindow( QFontMetrics( fn ).boundingRect( g_radical_char ) );
     p->setFont( fn );
-    p->drawText( 0, 0, QString( g_radical_char ) );
+    p->drawText( 0.0, 0.0, QString( g_radical_char ) );
 
     p->restore();
 
@@ -4274,24 +4271,24 @@ void QwtMmlTextNode::paintSymbol( QPainter *p ) const
 
 //    QFontInfo fi( fn );
 //    qWarning( "QwtMmlTextNode::paintSymbol(): requested: %s, used: %s, size=%d, italic=%d, bold=%d, text=\"%s\" sl=%d",
-//              fn.family().latin1(), fi.family().latin1(), fi.pointSize(), (int)fi.italic(), (int)fi.bold(), m_text.latin1(), scriptlevel() );
+//              fn.family().latin1(), fi.family().latin1(), fi.pointSize(), ( int )fi.italic(), ( int )fi.bold(), m_text.latin1(), scriptlevel() );
 
     QFontMetrics fm( fn );
 
     p->save();
     p->setFont( fn );
 
-    p->drawText( 0, fm.strikeOutPos(), m_text );
+    p->drawText( 0.0, fm.strikeOutPos(), m_text );
 
     p->restore();
 }
 
-QRect QwtMmlTextNode::symbolRect() const
+QRectF QwtMmlTextNode::symbolRect() const
 {
     QFontMetrics fm( font() );
 
-    QRect br = fm.tightBoundingRect( m_text );
-    br.translate( 0, fm.strikeOutPos() );
+    QRectF br = fm.tightBoundingRect( m_text );
+    br.translate( 0.0, fm.strikeOutPos() );
 
     return br;
 }
@@ -4326,8 +4323,8 @@ void QwtMmlMsupNode::layoutSymbol()
     QwtMmlNode *b = base();
     QwtMmlNode *s = sscript();
 
-    b->setRelOrigin( QPoint( -b->myRect().width(), 0 ) );
-    s->setRelOrigin( QPoint( 0, b->myRect().top() ) );
+    b->setRelOrigin( QPointF( -b->myRect().width(), 0.0 ) );
+    s->setRelOrigin( QPointF( 0.0, b->myRect().top() ) );
 }
 
 void QwtMmlMsubNode::layoutSymbol()
@@ -4335,8 +4332,8 @@ void QwtMmlMsubNode::layoutSymbol()
     QwtMmlNode *b = base();
     QwtMmlNode *s = sscript();
 
-    b->setRelOrigin( QPoint( -b->myRect().width(), 0 ) );
-    s->setRelOrigin( QPoint( 0, b->myRect().bottom() ) );
+    b->setRelOrigin( QPointF( -b->myRect().width(), 0.0 ) );
+    s->setRelOrigin( QPointF( 0.0, b->myRect().bottom() ) );
 }
 
 QwtMmlNode *QwtMmlMsubsupNode::base() const
@@ -4366,9 +4363,9 @@ void QwtMmlMsubsupNode::layoutSymbol()
     QwtMmlNode *sub = subscript();
     QwtMmlNode *sup = superscript();
 
-    b->setRelOrigin( QPoint( -b->myRect().width(), 0 ) );
-    sub->setRelOrigin( QPoint( 0, b->myRect().bottom() ) );
-    sup->setRelOrigin( QPoint( 0, b->myRect().top() ) );
+    b->setRelOrigin( QPointF( -b->myRect().width(), 0.0 ) );
+    sub->setRelOrigin( QPointF( 0.0, b->myRect().bottom() ) );
+    sup->setRelOrigin( QPointF( 0.0, b->myRect().top() ) );
 }
 
 int QwtMmlMsubsupNode::scriptlevel( const QwtMmlNode *child ) const
@@ -4395,7 +4392,7 @@ void QwtMmlMoNode::layoutSymbol()
     if ( child == 0 )
         return;
 
-    child->setRelOrigin( QPoint( 0, 0 ) );
+    child->setRelOrigin( QPointF( 0.0, 0.0 ) );
 
     if ( m_oper_spec == 0 )
         m_oper_spec = mmlFindOperSpec( text(), form() );
@@ -4435,7 +4432,6 @@ QwtMml::FormType QwtMmlMoNode::form() const
             return value;
         else
             qWarning( "Could not convert %s to form", value_str.toLatin1().data() );
-
     }
 
     // Default heuristic.
@@ -4443,8 +4439,8 @@ QwtMml::FormType QwtMmlMoNode::form() const
         return PrefixForm;
     else if ( lastSibling() == ( QwtMmlNode* )this && firstSibling() != ( QwtMmlNode* )this )
         return PostfixForm;
-    else return InfixForm;
-
+    else
+        return InfixForm;
 }
 
 void QwtMmlMoNode::stretch()
@@ -4460,16 +4456,16 @@ void QwtMmlMoNode::stretch()
             && ( nextSibling() != 0 || previousSibling() != 0 ) )
         return;
 
-    QRect pmr = parent()->myRect();
-    QRect pr = parentRect();
+    QRectF pmr = parent()->myRect();
+    QRectF pr = parentRect();
 
     switch ( m_oper_spec->stretch_dir )
     {
         case QwtMmlOperSpec::VStretch:
-            stretchTo( QRect( pr.left(), pmr.top(), pr.width(), pmr.height() ) );
+            stretchTo( QRectF( pr.left(), pmr.top(), pr.width(), pmr.height() ) );
             break;
         case QwtMmlOperSpec::HStretch:
-            stretchTo( QRect( pmr.left(), pr.top(), pmr.width(), pr.height() ) );
+            stretchTo( QRectF( pmr.left(), pr.top(), pmr.width(), pr.height() ) );
             break;
         case QwtMmlOperSpec::HVStretch:
             stretchTo( pmr );
@@ -4479,7 +4475,7 @@ void QwtMmlMoNode::stretch()
     }
 }
 
-int QwtMmlMoNode::lspace() const
+double QwtMmlMoNode::lspace() const
 {
     Q_ASSERT( m_oper_spec != 0 );
     if ( parent() == 0
@@ -4487,12 +4483,12 @@ int QwtMmlMoNode::lspace() const
                  && parent()->nodeType() != MfencedNode
                  && parent()->nodeType() != UnknownNode )
             || ( previousSibling() == 0 && nextSibling() == 0 ) )
-        return 0;
+        return 0.0;
     else
         return interpretSpacing( dictionaryAttribute( "lspace" ), 0 );
 }
 
-int QwtMmlMoNode::rspace() const
+double QwtMmlMoNode::rspace() const
 {
     Q_ASSERT( m_oper_spec != 0 );
     if ( parent() == 0
@@ -4500,31 +4496,31 @@ int QwtMmlMoNode::rspace() const
                  && parent()->nodeType() != MfencedNode
                  && parent()->nodeType() != UnknownNode )
             || ( previousSibling() == 0 && nextSibling() == 0 ) )
-        return 0;
+        return 0.0;
     else
         return interpretSpacing( dictionaryAttribute( "rspace" ), 0 );
 }
 
-QRect QwtMmlMoNode::symbolRect() const
+QRectF QwtMmlMoNode::symbolRect() const
 {
     const QwtMmlNode *child = firstChild();
 
     if ( child == 0 )
-        return QRect( 0, 0, 0, 0 );
+        return QRectF( 0.0, 0.0, 0.0, 0.0 );
 
-    QRect cmr = child->myRect();
+    QRectF cmr = child->myRect();
 
-    return QRect( -lspace(), cmr.top(),
-                  cmr.width() + lspace() + rspace(), cmr.height() );
+    return QRectF( -lspace(), cmr.top(),
+                   cmr.width() + lspace() + rspace(), cmr.height() );
 }
 
-int QwtMmlMtableNode::rowspacing() const
+double QwtMmlMtableNode::rowspacing() const
 {
     QString value = explicitAttribute( "rowspacing" );
     if ( value.isNull() )
         return ex();
     bool ok;
-    int r = interpretSpacing( value, &ok );
+    double r = interpretSpacing( value, &ok );
 
     if ( ok )
         return r;
@@ -4532,31 +4528,31 @@ int QwtMmlMtableNode::rowspacing() const
         return ex();
 }
 
-int QwtMmlMtableNode::columnspacing() const
+double QwtMmlMtableNode::columnspacing() const
 {
     QString value = explicitAttribute( "columnspacing" );
     if ( value.isNull() )
-        return ( int )( 0.8 * em() );
+        return 0.8 * em();
     bool ok;
-    int r = interpretSpacing( value, &ok );
+    double r = interpretSpacing( value, &ok );
 
     if ( ok )
         return r;
     else
-        return ( int )( 0.8 * em() );
+        return 0.8 * em();
 }
 
-uint QwtMmlMtableNode::CellSizeData::colWidthSum() const
+double QwtMmlMtableNode::CellSizeData::colWidthSum() const
 {
-    uint w = 0;
+    double w = 0.0;
     for ( int i = 0; i < col_widths.count(); ++i )
         w += col_widths[i];
     return w;
 }
 
-uint QwtMmlMtableNode::CellSizeData::rowHeightSum() const
+double QwtMmlMtableNode::CellSizeData::rowHeightSum() const
 {
-    uint h = 0;
+    double h = 0.0;
     for ( int i = 0; i < row_heights.count(); ++i )
         h += row_heights[i];
     return h;
@@ -4570,17 +4566,15 @@ void QwtMmlMtableNode::CellSizeData::init( const QwtMmlNode *first_row )
     const QwtMmlNode *mtr = first_row;
     for ( ; mtr != 0; mtr = mtr->nextSibling() )
     {
-
         Q_ASSERT( mtr->nodeType() == MtrNode );
 
         int col_cnt = 0;
         const QwtMmlNode *mtd = mtr->firstChild();
         for ( ; mtd != 0; mtd = mtd->nextSibling(), ++col_cnt )
         {
-
             Q_ASSERT( mtd->nodeType() == MtdNode );
 
-            QRect mtdmr = mtd->myRect();
+            QRectF mtdmr = mtd->myRect();
 
             if ( col_cnt == col_widths.count() )
                 col_widths.append( mtdmr.width() );
@@ -4597,35 +4591,35 @@ void QwtMmlMtableNode::layoutSymbol()
     // Obtain natural widths of columns
     m_cell_size_data.init( firstChild() );
 
-    int col_spc = columnspacing();
-    int row_spc = rowspacing();
-    int frame_spc_hor = framespacing_hor();
+    double col_spc = columnspacing();
+    double row_spc = rowspacing();
+    double frame_spc_hor = framespacing_hor();
     QString columnwidth_attr = explicitAttribute( "columnwidth", "auto" );
 
     // Is table width set by user? If so, set col_width_sum and never ever change it.
-    int col_width_sum = m_cell_size_data.colWidthSum();
+    double col_width_sum = m_cell_size_data.colWidthSum();
     bool width_set_by_user = false;
     QString width_str = explicitAttribute( "width", "auto" );
     if ( width_str != "auto" )
     {
         bool ok;
 
-        int w = interpretSpacing( width_str, &ok );
+        double w = interpretSpacing( width_str, &ok );
         if ( ok )
         {
             col_width_sum = w
-                            - col_spc * ( m_cell_size_data.numCols() - 1 )
-                            - frame_spc_hor * 2;
+                            - col_spc * ( m_cell_size_data.numCols() - 1.0 )
+                            - frame_spc_hor * 2.0;
             width_set_by_user = true;
         }
     }
 
     // Find out what kind of columns we are dealing with and set the widths of
     // statically sized columns.
-    int fixed_width_sum = 0;          // sum of widths of statically sized set columns
-    int auto_width_sum = 0;           // sum of natural widths of auto sized columns
-    int relative_width_sum = 0;       // sum of natural widths of relatively sized columns
-    double relative_fraction_sum = 0; // total fraction of width taken by relatively
+    double fixed_width_sum = 0.0;          // sum of widths of statically sized set columns
+    double auto_width_sum = 0.0;           // sum of natural widths of auto sized columns
+    double relative_width_sum = 0.0;       // sum of natural widths of relatively sized columns
+    double relative_fraction_sum = 0.0;    // total fraction of width taken by relatively
     // sized columns
     int i;
     for ( i = 0; i < m_cell_size_data.numCols(); ++i )
@@ -4641,7 +4635,7 @@ void QwtMmlMtableNode::layoutSymbol()
 
         // Is it a statically sized column?
         bool ok;
-        int w = interpretSpacing( value, &ok );
+        double w = interpretSpacing( value, &ok );
         if ( ok )
         {
             // Yup, sets its width to the user specified value
@@ -4654,17 +4648,17 @@ void QwtMmlMtableNode::layoutSymbol()
         if ( value.endsWith( "%" ) )
         {
             value.truncate( value.length() - 1 );
-            double factor = value.toFloat( &ok );
+            double factor = value.toDouble( &ok );
             if ( ok && !value.isEmpty() )
             {
-                factor /= 100.0;
+                factor *= 0.01;
                 relative_width_sum += m_cell_size_data.col_widths[i];
                 relative_fraction_sum += factor;
                 if ( !width_set_by_user )
                 {
                     // If the table width was not set by the user, we are free to increase
                     // it so that the width of this column will be >= than its natural width
-                    int min_col_width_sum = ROUND( m_cell_size_data.col_widths[i] / factor );
+                    double min_col_width_sum = m_cell_size_data.col_widths[i] / factor;
                     if ( min_col_width_sum > col_width_sum )
                         col_width_sum = min_col_width_sum;
                 }
@@ -4681,23 +4675,23 @@ void QwtMmlMtableNode::layoutSymbol()
 
     // Work out how much space remains for the auto olumns, after allocating
     // the statically sized and the relatively sized columns.
-    int required_auto_width_sum = col_width_sum
-                                  - ROUND( relative_fraction_sum * col_width_sum )
-                                  - fixed_width_sum;
+    double required_auto_width_sum = col_width_sum
+                                     - relative_fraction_sum * col_width_sum
+                                     - fixed_width_sum;
 
     if ( !width_set_by_user && required_auto_width_sum < auto_width_sum )
     {
-        if ( relative_fraction_sum < 1 )
-            col_width_sum = ROUND( ( fixed_width_sum + auto_width_sum ) / ( 1 - relative_fraction_sum ) );
+        if ( relative_fraction_sum < 1.0 )
+            col_width_sum = ( fixed_width_sum + auto_width_sum ) / ( 1 - relative_fraction_sum );
         else
             col_width_sum = fixed_width_sum + auto_width_sum + relative_width_sum;
         required_auto_width_sum = auto_width_sum;
     }
 
     // Ratio by which we have to shring/grow all auto sized columns to make it all fit
-    double auto_width_scale = 1;
-    if ( auto_width_sum > 0 )
-        auto_width_scale = ( float )required_auto_width_sum / auto_width_sum;
+    double auto_width_scale = 1.0;
+    if ( auto_width_sum > 0.0 )
+        auto_width_scale = required_auto_width_sum / auto_width_sum;
 
     // Set correct sizes for the auto sized and the relatively sized columns.
     for ( i = 0; i < m_cell_size_data.numCols(); ++i )
@@ -4708,38 +4702,40 @@ void QwtMmlMtableNode::layoutSymbol()
         if ( value.endsWith( "%" ) )
         {
             bool ok;
-            int w = interpretPercentSpacing( value, col_width_sum, &ok );
+            double w = interpretPercentSpacing( value, col_width_sum, &ok );
             if ( ok )
                 m_cell_size_data.col_widths[i] = w;
             else
                 // We're treating parsing errors here as auto sized columns
                 m_cell_size_data.col_widths[i]
-                = ROUND( auto_width_scale * m_cell_size_data.col_widths[i] );
+                = auto_width_scale * m_cell_size_data.col_widths[i];
         }
         // Is it an auto sized column?
         else if ( value == "auto" )
         {
             m_cell_size_data.col_widths[i]
-            = ROUND( auto_width_scale * m_cell_size_data.col_widths[i] );
+            = auto_width_scale * m_cell_size_data.col_widths[i];
         }
     }
 
+/*
     QString s;
-    QList<int> &col_widths = m_cell_size_data.col_widths;
+    QList<double> &col_widths = m_cell_size_data.col_widths;
     for ( i = 0; i < col_widths.count(); ++i )
     {
         s += QString( "[w=%1 %2%%]" )
              .arg( col_widths[i] )
-             .arg( 100 * col_widths[i] / m_cell_size_data.colWidthSum() );
+             .arg( 100.0 * col_widths[i] / m_cell_size_data.colWidthSum() );
     }
-//    qWarning(s);
+    qWarning(s);
+*/
 
     m_content_width = m_cell_size_data.colWidthSum()
-                      + col_spc * ( m_cell_size_data.numCols() - 1 );
+                      + col_spc * ( m_cell_size_data.numCols() - 1.0 );
     m_content_height = m_cell_size_data.rowHeightSum()
-                       + row_spc * ( m_cell_size_data.numRows() - 1 );
+                       + row_spc * ( m_cell_size_data.numRows() - 1.0 );
 
-    int bottom = -0.5 * m_content_height;
+    double bottom = -0.5 * m_content_height;
     QwtMmlNode *child = firstChild();
     for ( ; child != 0; child = child->nextSibling() )
     {
@@ -4747,21 +4743,21 @@ void QwtMmlMtableNode::layoutSymbol()
         QwtMmlMtrNode *row = ( QwtMmlMtrNode* ) child;
 
         row->layoutCells( m_cell_size_data.col_widths, col_spc );
-        QRect rmr = row->myRect();
-        row->setRelOrigin( QPoint( 0, bottom - rmr.top() ) );
+        QRectF rmr = row->myRect();
+        row->setRelOrigin( QPointF( 0.0, bottom - rmr.top() ) );
         bottom += rmr.height() + row_spc;
     }
 }
 
-QRect QwtMmlMtableNode::symbolRect() const
+QRectF QwtMmlMtableNode::symbolRect() const
 {
-    int frame_spc_hor = framespacing_hor();
-    int frame_spc_ver = framespacing_ver();
+    double frame_spc_hor = framespacing_hor();
+    double frame_spc_ver = framespacing_ver();
 
-    return QRect( -frame_spc_hor,
-                  -0.5 * m_content_height - frame_spc_ver,
-                  m_content_width + 2 * frame_spc_hor,
-                  m_content_height + 2 * frame_spc_ver );
+    return QRectF( -frame_spc_hor,
+                   -0.5 * m_content_height - frame_spc_ver,
+                   m_content_width + 2.0 * frame_spc_hor,
+                   m_content_height + 2.0 * frame_spc_ver );
 }
 
 QwtMml::FrameType QwtMmlMtableNode::frame() const
@@ -4802,11 +4798,11 @@ void QwtMmlMtableNode::paintSymbol( QPainter *p ) const
 
     p->save();
 
-    int col_spc = columnspacing();
-    int row_spc = rowspacing();
+    double col_spc = columnspacing();
+    double row_spc = rowspacing();
 
     QPen pen = p->pen();
-    int col_offset = 0;
+    double col_offset = 0.0;
     int i;
     for ( i = 0; i < m_cell_size_data.numCols() - 1; ++i )
     {
@@ -4821,13 +4817,13 @@ void QwtMmlMtableNode::paintSymbol( QPainter *p ) const
                 pen.setStyle( Qt::SolidLine );
 
             p->setPen( pen );
-            int x = col_offset + 0.5 * col_spc;
+            double x = col_offset + 0.5 * col_spc;
             p->drawLine( x, -0.5 * m_content_height, x, 0.5 * m_content_height );
         }
         col_offset += col_spc;
     }
 
-    int row_offset = 0;
+    double row_offset = 0.0;
     for ( i = 0; i < m_cell_size_data.numRows() - 1; ++i )
     {
         FrameType f = rowlines( i );
@@ -4841,7 +4837,7 @@ void QwtMmlMtableNode::paintSymbol( QPainter *p ) const
                 pen.setStyle( Qt::SolidLine );
 
             p->setPen( pen );
-            int y = row_offset + 0.5 * ( row_spc - m_content_height );
+            double y = row_offset + 0.5 * ( row_spc - m_content_height );
             p->drawLine( 0, y, m_content_width, y );
         }
         row_offset += row_spc;
@@ -4850,10 +4846,10 @@ void QwtMmlMtableNode::paintSymbol( QPainter *p ) const
     p->restore();
 }
 
-int QwtMmlMtableNode::framespacing_ver() const
+double QwtMmlMtableNode::framespacing_ver() const
 {
     if ( frame() == FrameNone )
-        return ( int )( 0.2 * em() );
+        return 0.2 * em();
 
     QString value = explicitAttribute( "framespacing", "0.4em 0.5ex" );
 
@@ -4862,13 +4858,13 @@ int QwtMmlMtableNode::framespacing_ver() const
     if ( ok )
         return fs.m_ver;
     else
-        return ( int )( 0.5 * ex() );
+        return 0.5 * ex();
 }
 
-int QwtMmlMtableNode::framespacing_hor() const
+double QwtMmlMtableNode::framespacing_hor() const
 {
     if ( frame() == FrameNone )
-        return ( int )( 0.2 * em() );
+        return 0.2 * em();
 
     QString value = explicitAttribute( "framespacing", "0.4em 0.5ex" );
 
@@ -4877,25 +4873,25 @@ int QwtMmlMtableNode::framespacing_hor() const
     if ( ok )
         return fs.m_hor;
     else
-        return ( int )( 0.4 * em() );
+        return 0.4 * em();
 }
 
-void QwtMmlMtrNode::layoutCells( const QList<int> &col_widths,
-                              int col_spc )
+void QwtMmlMtrNode::layoutCells( const QList<double> &col_widths,
+                                 double col_spc )
 {
-    QRect mr = myRect();
+    QRectF mr = myRect();
 
     QwtMmlNode *child = firstChild();
-    int col_offset = 0;
+    double col_offset = 0.0;
     uint colnum = 0;
     for ( ; child != 0; child = child->nextSibling(), ++colnum )
     {
         Q_ASSERT( child->nodeType() == MtdNode );
         QwtMmlMtdNode *mtd = ( QwtMmlMtdNode* ) child;
 
-        QRect r = QRect( 0, mr.top(), col_widths[colnum], mr.height() );
+        QRectF r = QRectF( 0.0, mr.top(), col_widths[colnum], mr.height() );
         mtd->setMyRect( r );
-        mtd->setRelOrigin( QPoint( col_offset, 0 ) );
+        mtd->setRelOrigin( QPointF( col_offset, 0.0 ) );
         col_offset += col_widths[colnum] + col_spc;
     }
 
@@ -4911,7 +4907,7 @@ int QwtMmlMtdNode::scriptlevel( const QwtMmlNode *child ) const
         return sl;
 }
 
-void QwtMmlMtdNode::setMyRect( const QRect &rect )
+void QwtMmlMtdNode::setMyRect( const QRectF &rect )
 {
     QwtMmlNode::setMyRect( rect );
     QwtMmlNode *child = firstChild();
@@ -4934,15 +4930,15 @@ void QwtMmlMtdNode::setMyRect( const QRect &rect )
 //                  rect.width(), child->myRect().width(), m_scriptlevel_adjust );
     }
 
-    QRect mr = myRect();
-    QRect cmr = child->myRect();
+    QRectF mr = myRect();
+    QRectF cmr = child->myRect();
 
-    QPoint child_rel_origin;
+    QPointF child_rel_origin;
 
     switch ( columnalign() )
     {
         case ColAlignLeft:
-            child_rel_origin.setX( 0 );
+            child_rel_origin.setX( 0.0 );
             break;
         case ColAlignCenter:
             child_rel_origin.setX( mr.left() + 0.5 * ( mr.width() - cmr.width() ) );
@@ -4965,7 +4961,7 @@ void QwtMmlMtdNode::setMyRect( const QRect &rect )
             child_rel_origin.setY( mr.bottom() - cmr.bottom() );
             break;
         case RowAlignAxis:
-            child_rel_origin.setY( 0 );
+            child_rel_origin.setY( 0.0 );
             break;
     }
 
@@ -5053,15 +5049,14 @@ void QwtMmlMoverNode::layoutSymbol()
     QwtMmlNode *over = base->nextSibling();
     Q_ASSERT( over != 0 );
 
-    QRect base_rect = base->myRect();
-    QRect over_rect = over->myRect();
+    QRectF base_rect = base->myRect();
+    QRectF over_rect = over->myRect();
 
-    int spacing = ( int )( g_mfrac_spacing * ( over_rect.height()
-                           + base_rect.height() ) );
+    double spacing = g_mfrac_spacing * ( over_rect.height() + base_rect.height() );
 
-    base->setRelOrigin( QPoint( -0.5 * base_rect.width(), 0 ) );
-    over->setRelOrigin( QPoint( -0.5 * over_rect.width(),
-                                base_rect.top() - spacing - over_rect.bottom() ) );
+    base->setRelOrigin( QPointF( -0.5 * base_rect.width(), 0.0 ) );
+    over->setRelOrigin( QPointF( -0.5 * over_rect.width(),
+                                 base_rect.top() - spacing - over_rect.bottom() ) );
 }
 
 int QwtMmlMoverNode::scriptlevel( const QwtMmlNode *node ) const
@@ -5085,13 +5080,13 @@ void QwtMmlMunderNode::layoutSymbol()
     QwtMmlNode *under = base->nextSibling();
     Q_ASSERT( under != 0 );
 
-    QRect base_rect = base->myRect();
-    QRect under_rect = under->myRect();
+    QRectF base_rect = base->myRect();
+    QRectF under_rect = under->myRect();
 
-    int spacing = ( int )( g_mfrac_spacing * ( under_rect.height() + base_rect.height() ) );
+    double spacing = g_mfrac_spacing * ( under_rect.height() + base_rect.height() );
 
-    base->setRelOrigin( QPoint( -0.5 * base_rect.width(), 0 ) );
-    under->setRelOrigin( QPoint( -0.5 * under_rect.width(), base_rect.bottom() + spacing - under_rect.top() ) );
+    base->setRelOrigin( QPointF( -0.5 * base_rect.width(), 0.0 ) );
+    under->setRelOrigin( QPointF( -0.5 * under_rect.width(), base_rect.bottom() + spacing - under_rect.top() ) );
 }
 
 int QwtMmlMunderNode::scriptlevel( const QwtMmlNode *node ) const
@@ -5117,17 +5112,15 @@ void QwtMmlMunderoverNode::layoutSymbol()
     QwtMmlNode *over = under->nextSibling();
     Q_ASSERT( over != 0 );
 
-    QRect base_rect = base->myRect();
-    QRect under_rect = under->myRect();
-    QRect over_rect = over->myRect();
+    QRectF base_rect = base->myRect();
+    QRectF under_rect = under->myRect();
+    QRectF over_rect = over->myRect();
 
-    int spacing = ( int )( g_mfrac_spacing * (   base_rect.height()
-                           + under_rect.height()
-                           + over_rect.height() )   );
+    double spacing = g_mfrac_spacing * ( base_rect.height() + under_rect.height() + over_rect.height() );
 
-    base->setRelOrigin( QPoint( -0.5 * base_rect.width(), 0 ) );
-    under->setRelOrigin( QPoint( -0.5 * under_rect.width(), base_rect.bottom() + spacing - under_rect.top() ) );
-    over->setRelOrigin( QPoint( -0.5 * over_rect.width(), base_rect.top() - spacing - under_rect.bottom() ) );
+    base->setRelOrigin( QPointF( -0.5 * base_rect.width(), 0.0 ) );
+    under->setRelOrigin( QPointF( -0.5 * under_rect.width(), base_rect.bottom() + spacing - under_rect.top() ) );
+    over->setRelOrigin( QPointF( -0.5 * over_rect.width(), base_rect.top() - spacing - under_rect.bottom() ) );
 }
 
 int QwtMmlMunderoverNode::scriptlevel( const QwtMmlNode *node ) const
@@ -5146,8 +5139,8 @@ int QwtMmlMunderoverNode::scriptlevel( const QwtMmlNode *node ) const
         return sl;
 }
 
-int QwtMmlMpaddedNode::interpretSpacing( QString value, int base_value,
-                                         bool *ok ) const
+double QwtMmlMpaddedNode::interpretSpacing( QString value, double base_value,
+                                            bool *ok ) const
 {
     if ( ok != 0 )
         *ok = false;
@@ -5176,24 +5169,24 @@ int QwtMmlMpaddedNode::interpretSpacing( QString value, int base_value,
     // extract the pseudo-unit
     pseudo_unit = value.mid( idx );
 
-    bool float_ok;
-    double factor = factor_str.toFloat( &float_ok );
-    if ( !float_ok || factor < 0 )
+    bool double_ok;
+    double factor = factor_str.toDouble( &double_ok );
+    if ( !double_ok || factor < 0.0 )
     {
         qWarning( "QwtMmlMpaddedNode::interpretSpacing(): could not parse \"%s\"", value.toLatin1().data() );
-        return 0;
+        return 0.0;
     }
 
     if ( percent )
-        factor /= 100.0;
+        factor *= 0.01;
 
-    QRect cr;
+    QRectF cr;
     if ( firstChild() == 0 )
-        cr = QRect( 0, 0, 0, 0 );
+        cr = QRectF( 0.0, 0.0, 0.0, 0.0 );
     else
         cr = firstChild()->myRect();
 
-    int unit_size;
+    double unit_size;
 
     if ( pseudo_unit.isEmpty() )
         unit_size = base_value;
@@ -5210,7 +5203,7 @@ int QwtMmlMpaddedNode::interpretSpacing( QString value, int base_value,
         if ( !unit_ok )
         {
             qWarning( "QwtMmlMpaddedNode::interpretSpacing(): could not parse \"%s\"", value.toLatin1().data() );
-            return 0;
+            return 0.0;
         }
     }
 
@@ -5218,32 +5211,32 @@ int QwtMmlMpaddedNode::interpretSpacing( QString value, int base_value,
         *ok = true;
 
     if ( sign.isNull() )
-        return ( int )( factor * unit_size );
+        return factor * unit_size;
     else if ( sign == "+" )
-        return base_value + ( int )( factor * unit_size );
+        return base_value + factor * unit_size;
     else // sign == "-"
-        return base_value - ( int )( factor * unit_size );
+        return base_value - factor * unit_size;
 }
 
-int QwtMmlMpaddedNode::lspace() const
+double QwtMmlMpaddedNode::lspace() const
 {
     QString value = explicitAttribute( "lspace" );
 
     if ( value.isNull() )
-        return 0;
+        return 0.0;
 
     bool ok;
-    int lspace = interpretSpacing( value, 0, &ok );
+    double lspace = interpretSpacing( value, 0.0, &ok );
 
     if ( ok )
         return lspace;
 
-    return 0;
+    return 0.0;
 }
 
-int QwtMmlMpaddedNode::width() const
+double QwtMmlMpaddedNode::width() const
 {
-    int child_width = 0;
+    double child_width = 0.0;
     if ( firstChild() != 0 )
         child_width = firstChild()->myRect().width();
 
@@ -5252,18 +5245,18 @@ int QwtMmlMpaddedNode::width() const
         return child_width;
 
     bool ok;
-    int w = interpretSpacing( value, child_width, &ok );
+    double w = interpretSpacing( value, child_width, &ok );
     if ( ok )
         return w;
 
     return child_width;
 }
 
-int QwtMmlMpaddedNode::height() const
+double QwtMmlMpaddedNode::height() const
 {
-    QRect cr;
+    QRectF cr;
     if ( firstChild() == 0 )
-        cr = QRect( 0, 0, 0, 0 );
+        cr = QRectF( 0.0, 0.0, 0.0, 0.0 );
     else
         cr = firstChild()->myRect();
 
@@ -5272,18 +5265,18 @@ int QwtMmlMpaddedNode::height() const
         return -cr.top();
 
     bool ok;
-    int h = interpretSpacing( value, -cr.top(), &ok );
+    double h = interpretSpacing( value, -cr.top(), &ok );
     if ( ok )
         return h;
 
     return -cr.top();
 }
 
-int QwtMmlMpaddedNode::depth() const
+double QwtMmlMpaddedNode::depth() const
 {
-    QRect cr;
+    QRectF cr;
     if ( firstChild() == 0 )
-        cr = QRect( 0, 0, 0, 0 );
+        cr = QRectF( 0.0, 0.0, 0.0, 0.0 );
     else
         cr = firstChild()->myRect();
 
@@ -5292,7 +5285,7 @@ int QwtMmlMpaddedNode::depth() const
         return cr.bottom();
 
     bool ok;
-    int h = interpretSpacing( value, cr.bottom(), &ok );
+    double h = interpretSpacing( value, cr.bottom(), &ok );
     if ( ok )
         return h;
 
@@ -5305,13 +5298,13 @@ void QwtMmlMpaddedNode::layoutSymbol()
     if ( child == 0 )
         return;
 
-    child->setRelOrigin( QPoint( 0, 0 ) );
+    child->setRelOrigin( QPointF( 0.0, 0.0 ) );
 }
 
 
-QRect QwtMmlMpaddedNode::symbolRect() const
+QRectF QwtMmlMpaddedNode::symbolRect() const
 {
-    return QRect( -lspace(), -height(), lspace() + width(), height() + depth() );
+    return QRectF( -lspace(), -height(), lspace() + width(), height() + depth() );
 }
 
 // *******************************************************************
@@ -5333,196 +5326,196 @@ static QString entityDeclarations()
     return result;
 }
 
-static int interpretSpacing( QString value, int em, int ex, bool *ok )
+static double interpretSpacing( QString value, int em, int ex, bool *ok )
 {
     if ( ok != 0 )
         *ok = true;
 
     if ( value == "thin" )
-        return 1;
+        return 1.0;
 
     if ( value == "medium" )
-        return 2;
+        return 2.0;
 
     if ( value == "thick" )
-        return 3;
+        return 3.0;
 
     struct HSpacingValue
     {
         const char *name;
-        float factor;
+        double factor;
     };
 
     static const HSpacingValue g_h_spacing_data[] =
     {
-        { "veryverythinmathspace",  ( float ) 0.0555556 },
-        { "verythinmathspace",      ( float ) 0.111111  },
-        { "thinmathspace",          ( float ) 0.166667  },
-        { "mediummathspace",        ( float ) 0.222222  },
-        { "thickmathspace",         ( float ) 0.277778  },
-        { "verythickmathspace",     ( float ) 0.333333  },
-        { "veryverythickmathspace", ( float ) 0.388889  },
-        { 0,                        ( float ) 0         }
+        { "veryverythinmathspace",  0.0555556 },
+        { "verythinmathspace",      0.111111  },
+        { "thinmathspace",          0.166667  },
+        { "mediummathspace",        0.222222  },
+        { "thickmathspace",         0.277778  },
+        { "verythickmathspace",     0.333333  },
+        { "veryverythickmathspace", 0.388889  },
+        { 0,                        0.0       }
     };
 
     const HSpacingValue *v = g_h_spacing_data;
     for ( ; v->name != 0; ++v )
     {
         if ( value == v->name )
-            return ( int )( em * v->factor );
+            return em * v->factor;
     }
 
     if ( value.endsWith( "em" ) )
     {
         value.truncate( value.length() - 2 );
-        bool float_ok;
-        float factor = value.toFloat( &float_ok );
-        if ( float_ok && factor >= 0 )
-            return ( int )( em * factor );
+        bool double_ok;
+        double factor = value.toDouble( &double_ok );
+        if ( double_ok && factor >= 0 )
+            return em * factor;
         else
         {
             qWarning( "interpretSpacing(): could not parse \"%sem\"", value.toLatin1().data() );
             if ( ok != 0 )
                 *ok = false;
-            return 0;
+            return 0.0;
         }
     }
 
     if ( value.endsWith( "ex" ) )
     {
         value.truncate( value.length() - 2 );
-        bool float_ok;
-        float factor = value.toFloat( &float_ok );
-        if ( float_ok && factor >= 0 )
-            return ( int )( ex * factor );
+        bool double_ok;
+        double factor = value.toDouble( &double_ok );
+        if ( double_ok && factor >= 0 )
+            return ex * factor;
         else
         {
             qWarning( "interpretSpacing(): could not parse \"%sex\"", value.toLatin1().data() );
             if ( ok != 0 )
                 *ok = false;
-            return 0;
+            return 0.0;
         }
     }
 
     if ( value.endsWith( "cm" ) )
     {
         value.truncate( value.length() - 2 );
-        bool float_ok;
-        float factor = value.toFloat( &float_ok );
-        if ( float_ok && factor >= 0 )
+        bool double_ok;
+        double factor = value.toDouble( &double_ok );
+        if ( double_ok && factor >= 0.0 )
         {
             Q_ASSERT( qApp->desktop() != 0 );
             QDesktopWidget *dw = qApp->desktop();
             Q_ASSERT( dw->width() != 0 );
             Q_ASSERT( dw->widthMM() != 0 );
-            return ( int )( factor * 10 * dw->width() / dw->widthMM() );
+            return factor * 10.0 * dw->width() / dw->widthMM();
         }
         else
         {
             qWarning( "interpretSpacing(): could not parse \"%scm\"", value.toLatin1().data() );
             if ( ok != 0 )
                 *ok = false;
-            return 0;
+            return 0.0;
         }
     }
 
     if ( value.endsWith( "mm" ) )
     {
         value.truncate( value.length() - 2 );
-        bool float_ok;
-        float factor = value.toFloat( &float_ok );
-        if ( float_ok && factor >= 0 )
+        bool double_ok;
+        double factor = value.toDouble( &double_ok );
+        if ( double_ok && factor >= 0.0 )
         {
             Q_ASSERT( qApp->desktop() != 0 );
             QDesktopWidget *dw = qApp->desktop();
             Q_ASSERT( dw->width() != 0 );
             Q_ASSERT( dw->widthMM() != 0 );
-            return ( int )( factor * dw->width() / dw->widthMM() );
+            return factor * dw->width() / dw->widthMM();
         }
         else
         {
             qWarning( "interpretSpacing(): could not parse \"%smm\"", value.toLatin1().data() );
             if ( ok != 0 )
                 *ok = false;
-            return 0;
+            return 0.0;
         }
     }
 
     if ( value.endsWith( "in" ) )
     {
         value.truncate( value.length() - 2 );
-        bool float_ok;
-        float factor = value.toFloat( &float_ok );
-        if ( float_ok && factor >= 0 )
+        bool double_ok;
+        double factor = value.toDouble( &double_ok );
+        if ( double_ok && factor >= 0.0 )
         {
             Q_ASSERT( qApp->desktop() != 0 );
             QDesktopWidget *dw = qApp->desktop();
             Q_ASSERT( dw->width() != 0 );
             Q_ASSERT( dw->widthMM() != 0 );
-            return ( int )( factor * 10 * dw->width() / ( 2.54 * dw->widthMM() ) );
+            return factor * 10.0 * dw->width() / ( 2.54 * dw->widthMM() );
         }
         else
         {
             qWarning( "interpretSpacing(): could not parse \"%sin\"", value.toLatin1().data() );
             if ( ok != 0 )
                 *ok = false;
-            return 0;
+            return 0.0;
         }
     }
 
     if ( value.endsWith( "px" ) )
     {
         value.truncate( value.length() - 2 );
-        bool float_ok;
-        int i = ( int ) value.toFloat( &float_ok );
-        if ( float_ok && i >= 0 )
+        bool double_ok;
+        int i = value.toDouble( &double_ok );
+        if ( double_ok && i >= 0 )
             return i;
         else
         {
             qWarning( "interpretSpacing(): could not parse \"%spx\"", value.toLatin1().data() );
             if ( ok != 0 )
                 *ok = false;
-            return 0;
+            return 0.0;
         }
     }
 
-    bool float_ok;
-    int i = ( int )value.toFloat( &float_ok );
-    if ( float_ok && i >= 0 )
+    bool double_ok;
+    int i = value.toDouble( &double_ok );
+    if ( double_ok && i >= 0 )
         return i;
 
     qWarning( "interpretSpacing(): could not parse \"%s\"", value.toLatin1().data() );
     if ( ok != 0 )
         *ok = false;
-    return 0;
+    return 0.0;
 }
 
-static int interpretPercentSpacing( QString value, int base, bool *ok )
+static double interpretPercentSpacing( QString value, int base, bool *ok )
 {
     if ( !value.endsWith( "%" ) )
     {
         if ( ok != 0 )
             *ok = false;
-        return 0;
+        return 0.0;
     }
 
     value.truncate( value.length() - 1 );
-    bool float_ok;
-    float factor = value.toFloat( &float_ok );
-    if ( float_ok && factor >= 0 )
+    bool double_ok;
+    double factor = value.toDouble( &double_ok );
+    if ( double_ok && factor >= 0.0 )
     {
         if ( ok != 0 )
             *ok = true;
-        return ( int )( base * factor / 100.0 );
+        return 0.01 * base * factor;
     }
 
     qWarning( "interpretPercentSpacing(): could not parse \"%s%%\"", value.toLatin1().data() );
     if ( ok != 0 )
         *ok = false;
-    return 0;
+    return 0.0;
 }
 
-static int interpretPointSize( QString value, bool *ok )
+static double interpretPointSize( QString value, bool *ok )
 {
     if ( !value.endsWith( "pt" ) )
     {
@@ -5532,9 +5525,9 @@ static int interpretPointSize( QString value, bool *ok )
     }
 
     value.truncate( value.length() - 2 );
-    bool float_ok;
-    int pt_size = ( int ) value.toFloat( &float_ok );
-    if ( float_ok && pt_size > 0 )
+    bool double_ok;
+    double pt_size = value.toDouble( &double_ok );
+    if ( double_ok && pt_size > 0.0 )
     {
         if ( ok != 0 )
             *ok = true;
@@ -5544,7 +5537,7 @@ static int interpretPointSize( QString value, bool *ok )
     qWarning( "interpretPointSize(): could not parse \"%spt\"", value.toLatin1().data() );
     if ( ok != 0 )
         *ok = false;
-    return 0;
+    return 0.0;
 }
 
 static const QwtMmlNodeSpec *mmlFindNodeSpec( QwtMml::NodeType type )
@@ -6056,7 +6049,7 @@ static QwtMml::FrameSpacing interpretFrameSpacing( const QString &value_list,
         qWarning( "interpretFrameSpacing: could not parse value \"%s\"", value_list.toLatin1().data() );
         if ( ok != 0 )
             *ok = false;
-        return QwtMml::FrameSpacing( ( int )( 0.4 * em ), ( int )( 0.5 * ex ) );
+        return QwtMml::FrameSpacing( 0.4 * em, 0.5 * ex );
     }
 
     bool hor_ok, ver_ok;
@@ -6078,7 +6071,6 @@ static QFont interpretDepreciatedFontAttr( const QwtMmlAttributeMap &font_attr,
 
         for ( ;; )
         {
-
             bool ok;
             int ptsize = interpretPointSize( value, &ok );
             if ( ok )
@@ -6144,7 +6136,7 @@ static QFont interpretMathSize( QString value, QFont &fn, int em, int ex,
 
     if ( value == "small" )
     {
-        fn.setPointSize( ( int )( fn.pointSize() * 0.7 ) );
+        fn.setPointSize( fn.pointSize() * 0.7 );
         return fn;
     }
 
@@ -6153,7 +6145,7 @@ static QFont interpretMathSize( QString value, QFont &fn, int em, int ex,
 
     if ( value == "big" )
     {
-        fn.setPointSize( ( int )( fn.pointSize() * 1.5 ) );
+        fn.setPointSize( fn.pointSize() * 1.5 );
         return fn;
     }
 
@@ -6230,7 +6222,7 @@ bool QwtMathMLDocument::setContent( QString text, QString *errorMsg,
 /*!
   Renders this MML document with the painter \a p at position \a pos.
 */
-void QwtMathMLDocument::paint( QPainter *p, const QPoint &pos ) const
+void QwtMathMLDocument::paint(QPainter *p, const QPointF &pos ) const
 {
     m_doc->paint( p, pos );
 }
@@ -6238,7 +6230,7 @@ void QwtMathMLDocument::paint( QPainter *p, const QPoint &pos ) const
 /*!
     Returns the size of this MML document, as rendered, in pixels.
 */
-QSize QwtMathMLDocument::size() const
+QSizeF QwtMathMLDocument::size() const
 {
     return m_doc->size();
 }
