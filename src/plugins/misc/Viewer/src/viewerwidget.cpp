@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 
 #include <QPainter>
 #include <QPaintEvent>
+#include <QRectF>
 
 //==============================================================================
 
@@ -174,7 +175,9 @@ void ViewerWidget::paintEvent(QPaintEvent *pEvent)
 
     // Clear our background
 
-    painter.fillRect(pEvent->rect(), QColor(palette().color(QPalette::Base)));
+    QRectF rect = pEvent->rect();
+
+    painter.fillRect(rect, QColor(palette().color(QPalette::Base)));
 
     // Set our base font size and font name
     // Note: to go for 100% of the 'optimal' font size might result in the edges
@@ -193,8 +196,8 @@ void ViewerWidget::paintEvent(QPaintEvent *pEvent)
 
     QSizeF mathmlDocumentSize = mMathmlDocument.size();
 
-    mMathmlDocument.paint(&painter, QPointF(0.5*(width()-mathmlDocumentSize.width()),
-                                            0.5*(height()-mathmlDocumentSize.height())));
+    mMathmlDocument.paint(&painter, QPointF(0.5*(rect.width()-mathmlDocumentSize.width()),
+                                            0.5*(rect.height()-mathmlDocumentSize.height())));
 
     // Accept the event
 
