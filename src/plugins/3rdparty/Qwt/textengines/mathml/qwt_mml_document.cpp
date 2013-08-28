@@ -619,7 +619,7 @@ static QwtMml::FrameType interpretFrameType( const QString &value_list, uint idx
 static QFont interpretDepreciatedFontAttr( const QwtMmlAttributeMap &font_attr, QFont &fn, int em, int ex );
 static QFont interpretMathSize( QString value, QFont &fn, int em, int ex, bool *ok );
 static QString interpretListAttr( const QString &value_list, int idx, const QString &def );
-static QString rectToStr(const QRectF &rect );
+static QString rectToStr( const QRectF &rect );
 static QString entityDeclarations();
 
 #define MML_ATT_COMMON      " class style id xref actiontype "
@@ -4108,7 +4108,7 @@ void QwtMmlMfracNode::layoutSymbol()
     QRectF num_rect = num->myRect();
     QRectF denom_rect = denom->myRect();
 
-    double spacing = g_mfrac_spacing * ( num_rect.height() + denom_rect.height() ) ;
+    double spacing = g_mfrac_spacing * ( num_rect.height() + denom_rect.height() );
 
     num->setRelOrigin( QPointF( -0.5 * num_rect.width(), - spacing - num_rect.bottom() ) );
     denom->setRelOrigin( QPointF( -0.5 * denom_rect.width(), spacing - denom_rect.top() ) );
@@ -4145,7 +4145,7 @@ void QwtMmlMfracNode::paintSymbol( QPainter *p ) const
 
         p->save();
         QPen pen = p->pen();
-        pen.setWidth( linethickness );
+        pen.setWidthF( linethickness );
         p->setPen( pen );
         QSizeF s = myRect().size();
         p->drawLine( -0.5 * s.width(), 0.0, 0.5 * s.width(), 0.0 );
@@ -4682,7 +4682,7 @@ void QwtMmlMtableNode::layoutSymbol()
     if ( !width_set_by_user && required_auto_width_sum < auto_width_sum )
     {
         if ( relative_fraction_sum < 1.0 )
-            col_width_sum = ( fixed_width_sum + auto_width_sum ) / ( 1 - relative_fraction_sum );
+            col_width_sum = ( fixed_width_sum + auto_width_sum ) / ( 1.0 - relative_fraction_sum );
         else
             col_width_sum = fixed_width_sum + auto_width_sum + relative_width_sum;
         required_auto_width_sum = auto_width_sum;
@@ -5370,7 +5370,7 @@ static double interpretSpacing( QString value, int em, int ex, bool *ok )
         value.truncate( value.length() - 2 );
         bool double_ok;
         double factor = value.toDouble( &double_ok );
-        if ( double_ok && factor >= 0 )
+        if ( double_ok && factor >= 0.0 )
             return em * factor;
         else
         {
@@ -5386,7 +5386,7 @@ static double interpretSpacing( QString value, int em, int ex, bool *ok )
         value.truncate( value.length() - 2 );
         bool double_ok;
         double factor = value.toDouble( &double_ok );
-        if ( double_ok && factor >= 0 )
+        if ( double_ok && factor >= 0.0 )
             return ex * factor;
         else
         {
@@ -6222,7 +6222,7 @@ bool QwtMathMLDocument::setContent( QString text, QString *errorMsg,
 /*!
   Renders this MML document with the painter \a p at position \a pos.
 */
-void QwtMathMLDocument::paint(QPainter *p, const QPointF &pos ) const
+void QwtMathMLDocument::paint( QPainter *p, const QPointF &pos ) const
 {
     m_doc->paint( p, pos );
 }
