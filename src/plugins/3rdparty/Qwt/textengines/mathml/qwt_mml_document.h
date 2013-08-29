@@ -2,10 +2,11 @@
 #define _QWT_MML_DOCUMENT_H_
 
 #include <qwt_global.h>
-#include <QString>
+#include <qstring.h>
+#include <qsize.h>
 
 class QPainter;
-class QPoint;
+class QPointF;
 
 class QwtMmlDocument;
 
@@ -29,14 +30,14 @@ public:
 
     bool setContent( QString text, QString *errorMsg = 0,
                      int *errorLine = 0, int *errorColumn = 0 );
-    void paint( QPainter *p, const QPointF &pos ) const;
+    void paint( QPainter *, const QPointF &pos ) const;
     QSizeF size() const;
 
     QString fontName( MmlFont type ) const;
     void setFontName( MmlFont type, const QString &name );
 
-    int baseFontPointSize() const;
-    void setBaseFontPointSize( int size );
+    qreal baseFontPointSize() const;
+    void setBaseFontPointSize( qreal size );
 
 private:
     QwtMmlDocument *m_doc;

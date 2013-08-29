@@ -106,6 +106,7 @@ ADD_PLUGIN(Qwt
 
         textengines/mathml/qwt_mathml_text_engine.cpp
         textengines/mathml/qwt_mml_document.cpp
+        textengines/mathml/qwt_mml_entity_table.cpp
     HEADERS_MOC
         src/qwt_abstract_legend.h
         src/qwt_abstract_scale.h
