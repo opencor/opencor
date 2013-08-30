@@ -2091,12 +2091,24 @@ void QwtMmlNode::paintSymbol( QPainter *painter ) const
         painter->save();
 
         painter->setPen( QPen( Qt::red, 0 ) );
-        painter->drawRect( m_my_rect );
+
+#if 1
+        const QPointF dPos = devicePoint( relOrigin() );
+        const QRectF dRect = myRect().translated( dPos );
+        painter->drawRect( dRect );
+#else
+        painter->drawRect( myRect() );
+#endif
 
         QPen pen = painter->pen();
         pen.setStyle( Qt::DotLine );
         painter->setPen( pen );
+
+#if 1
+        painter->drawLine( dRect.left(), dPos.y(), dRect.right(), dPos.y() );
+#else
         painter->drawLine( myRect().left(), 0.0, myRect().right(), 0.0 );
+#endif
 
         painter->restore();
     }
