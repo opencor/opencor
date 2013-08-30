@@ -12,7 +12,6 @@
 // Declarations
 // *******************************************************************
 
-static bool           g_draw_frames            = false;
 static const qreal    g_mfrac_spacing          = 0.1;
 static const qreal    g_mroot_base_margin      = 0.1;
 static const qreal    g_script_size_multiplier = 0.7071; // sqrt(1/2)
@@ -117,6 +116,9 @@ public:
     QColor backgroundColor() const { return m_background_color; }
     void setBackgroundColor( const QColor &color ) { m_background_color = color; }
 
+    bool drawFrames() const { return m_draw_frames; }
+    void setDrawFrames( const bool &drawFrames ) { m_draw_frames = drawFrames; }
+
 private:
     void _dump( const QwtMmlNode *node, QString &indent ) const;
     bool insertChild( QwtMmlNode *parent, QwtMmlNode *new_node, QString *errorMsg );
@@ -140,6 +142,7 @@ private:
     qreal m_base_font_point_size;
     QColor m_foreground_color;
     QColor m_background_color;
+    bool m_draw_frames;
 };
 
 class QwtMmlNode : public QwtMml
@@ -1138,6 +1141,7 @@ QwtMmlDocument::QwtMmlDocument()
     m_base_font_point_size = 16;
     m_foreground_color = Qt::black;
     m_background_color = Qt::white;
+    m_draw_frames = false;
 }
 
 QwtMmlDocument::~QwtMmlDocument()
@@ -2053,11 +2057,23 @@ void QwtMmlNode::paint( QPainter *painter )
 
     const QColor bg = background();
     if ( bg.isValid() )
+    {
         painter->fillRect( myRect(), bg );
+    }
+    else
+    {
+        painter->fillRect( myRect(), m_document->backgroundColor() );
+    }
 
     const QColor fg = color();
     if ( fg.isValid() )
-        painter->setPen( QPen( color(), 1 ) );
+    {
+        painter->setPen( QPen( fg, 1 ) );
+    }
+    else
+    {
+        painter->setPen( QPen( m_document->foregroundColor(), 1 ) );
+    }
 
     QwtMmlNode *child = firstChild();
     for ( ; child != 0; child = child->nextSibling() )
@@ -2070,7 +2086,7 @@ void QwtMmlNode::paint( QPainter *painter )
 
 void QwtMmlNode::paintSymbol( QPainter *painter ) const
 {
-    if ( g_draw_frames && myRect().isValid() )
+    if ( m_document->drawFrames() && myRect().isValid() )
     {
         painter->save();
 
@@ -4015,7 +4031,7 @@ static QwtMml::FrameSpacing mmlInterpretFrameSpacing( const QString &value_list,
     return fs;
 }
 
-static QFont mmlInterpretDepreciatedFontAttr( 
+static QFont mmlInterpretDepreciatedFontAttr(
     const QwtMmlAttributeMap &font_attr, QFont &fn, int em, int ex )
 {
     if ( font_attr.contains( "fontsize" ) )
@@ -4218,7 +4234,7 @@ void QwtMathMLDocument::setFontName( QwtMathMLDocument::MmlFont type,
 
 /*!
     Returns the point size of the font used to render expressions
-    whose scriptlevel is 0.
+    which scriptlevel is 0.
 
     \sa setBaseFontPointSize() fontName() setFontName()
 */
@@ -4229,7 +4245,7 @@ qreal QwtMathMLDocument::baseFontPointSize() const
 
 /*!
     Sets the point \a size of the font used to render expressions
-    whose scriptlevel is 0.
+    which scriptlevel is 0.
 
     \sa baseFontPointSize() fontName() setFontName()
 */
@@ -4243,4 +4259,61 @@ void QwtMathMLDocument::setBaseFontPointSize( qreal size )
 
     m_doc->setBaseFontPointSize( size );
     m_doc->layout();
+}
+
+/*!
+    Returns the color used to render expressions.
+*/
+QColor QwtMathMLDocument::foregroundColor() const
+{
+    return m_doc->foregroundColor();
+}
+
+/*!
+    Sets the color used to render expressions.
+*/
+void QwtMathMLDocument::setForegroundColor( const QColor &color )
+{
+    if ( color == m_doc->foregroundColor() )
+        return;
+
+    m_doc->setForegroundColor( color );
+}
+
+/*!
+    Returns the color used to render the background of expressions.
+*/
+QColor QwtMathMLDocument::backgroundColor() const
+{
+    return m_doc->backgroundColor();
+}
+
+/*!
+    Sets the color used to render the background of expressions.
+*/
+void QwtMathMLDocument::setBackgroundColor( const QColor &color )
+{
+    if ( color == m_doc->backgroundColor() )
+        return;
+
+    m_doc->setBackgroundColor( color );
+}
+
+/*!
+    Returns whether frames are to be drawn.
+*/
+bool QwtMathMLDocument::drawFrames() const
+{
+    return m_doc->drawFrames();
+}
+
+/*!
+    Specifies whether frames are to be drawn.
+*/
+void QwtMathMLDocument::setDrawFrames( const bool &drawFrames )
+{
+    if ( drawFrames == m_doc->drawFrames() )
+        return;
+
+    m_doc->setDrawFrames( drawFrames );
 }

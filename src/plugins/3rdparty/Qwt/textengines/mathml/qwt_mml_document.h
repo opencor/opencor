@@ -2,6 +2,7 @@
 #define _QWT_MML_DOCUMENT_H_
 
 #include <qwt_global.h>
+#include <qcolor.h>
 #include <qstring.h>
 #include <qsize.h>
 
@@ -38,6 +39,15 @@ public:
 
     qreal baseFontPointSize() const;
     void setBaseFontPointSize( qreal size );
+
+    QColor foregroundColor() const;
+    void setForegroundColor( const QColor &color );
+
+    QColor backgroundColor() const;
+    void setBackgroundColor( const QColor &color );
+
+    bool drawFrames() const;
+    void setDrawFrames( const bool &drawFrames );
 
 private:
     QwtMmlDocument *m_doc;

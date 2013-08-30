@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 
 #include <QPainter>
 #include <QPaintEvent>
+#include <QPalette>
 #include <QRectF>
 
 //==============================================================================
@@ -176,21 +177,26 @@ void ViewerWidget::paintEvent(QPaintEvent *pEvent)
     // Clear our background
 
     QRectF rect = pEvent->rect();
+    QColor backgroundColor = QColor(palette().color(QPalette::Base));
 
-    painter.fillRect(rect, QColor(palette().color(QPalette::Base)));
+    painter.fillRect(rect, backgroundColor);
 
-    // Set our base font size and font name
+    // Customise our MathML document
     // Note: to go for 100% of the 'optimal' font size might result in the edges
     //       of the content being clipped on Windows (compared to Linux and OS
     //       X) or in some cases on Linux and OS X (e.g. if the content includes
     //       a square root), hence we go for 75% of the 'optimal' font size
     //       instead...
 
+    mMathmlDocument.setBackgroundColor(backgroundColor);
+    mMathmlDocument.setForegroundColor(QColor(palette().color(QPalette::Text)));
+
+    mMathmlDocument.setFontName(QwtMathMLDocument::NormalFont, font().family());
+
     mMathmlDocument.setBaseFontPointSize(mOptimiseFontSize?
                                              qRound(75.0*qMin(mOneOverMathmlDocumentWidth*width(),
                                                               mOneOverMathmlDocumentHeight*height())):
                                              font().pointSize());
-    mMathmlDocument.setFontName(QwtMathMLDocument::NormalFont, font().family());
 
     // Render our content
 
