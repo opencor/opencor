@@ -2025,8 +2025,8 @@ QString QwtMMLEntityTable::entities() const
 }
 
 
-const QwtMMLEntityTable::Spec *QwtMMLEntityTable::search( const QString &value,
-                                                          const QwtMMLEntityTable::Spec *from ) const
+const QwtMMLEntityTable::Spec *QwtMMLEntityTable::search( 
+    const QString &value, const QwtMMLEntityTable::Spec *from ) const
 {
     const QwtMMLEntityTable::Spec *entity = from;
     if ( entity == 0 )

@@ -1760,10 +1760,14 @@ QPointF QwtMmlNode::devicePoint( const QPointF &pos ) const
     QRectF dr = deviceRect();
 
     if ( isStretched() )
+    {
         return dr.topLeft() + QPointF( ( pos.x() - mr.left() ) * dr.width() / mr.width(),
                                        ( pos.y() - mr.top() ) * dr.height() / mr.height() );
+    }
     else
+    {
         return dr.topLeft() + pos - mr.topLeft();
+    }
 }
 
 QString QwtMmlNode::inheritAttributeFromMrow( const QString &name,
@@ -1930,8 +1934,7 @@ QFont QwtMmlNode::font() const
     return fn;
 }
 
-QString QwtMmlNode::explicitAttribute( const QString &name,
-                                       const QString &def ) const
+QString QwtMmlNode::explicitAttribute( const QString &name, const QString &def ) const
 {
     QwtMmlAttributeMap::const_iterator it = m_attribute_map.find( name );
     if ( it != m_attribute_map.end() )
@@ -2005,8 +2008,8 @@ QRectF QwtMmlNode::deviceRect() const
         QRectF mr = myRect();
 
         return QRectF( pdr.left() + pr.left() - pmr.left(),
-                       pdr.top()  + pr.top() - pmr.top(),
-                       mr.width(), mr.height() );
+            pdr.top()  + pr.top() - pmr.top(),
+            mr.width(), mr.height() );
     }
 #endif
 
@@ -2654,7 +2657,7 @@ void QwtMmlMtableNode::layoutSymbol()
         if ( ok )
         {
             col_width_sum = w
-                            - col_spc * ( m_cell_size_data.numCols() - 1.0 )
+                            - col_spc * ( m_cell_size_data.numCols() - 1 )
                             - frame_spc_hor * 2.0;
             width_set_by_user = true;
         }
@@ -2769,9 +2772,9 @@ void QwtMmlMtableNode::layoutSymbol()
     }
 
     m_content_width = m_cell_size_data.colWidthSum()
-                      + col_spc * ( m_cell_size_data.numCols() - 1.0 );
+                      + col_spc * ( m_cell_size_data.numCols() - 1 );
     m_content_height = m_cell_size_data.rowHeightSum()
-                       + row_spc * ( m_cell_size_data.numRows() - 1.0 );
+                       + row_spc * ( m_cell_size_data.numRows() - 1 );
 
     qreal bottom = -0.5 * m_content_height;
     QwtMmlNode *child = firstChild();
@@ -2959,7 +2962,7 @@ void QwtMmlMtdNode::setMyRect( const QRectF &rect )
         {
 #if 0
             qWarning( "QwtMmlMtdNode::setMyRect(): rect.width()=%d, child()->myRect().width=%d sl=%d",
-                      rect.width(), child->myRect().width(), m_scriptlevel_adjust );
+                rect.width(), child->myRect().width(), m_scriptlevel_adjust );
 #endif
 
             ++m_scriptlevel_adjust;
@@ -2968,7 +2971,7 @@ void QwtMmlMtdNode::setMyRect( const QRectF &rect )
 
 #if 0
         qWarning( "QwtMmlMtdNode::setMyRect(): rect.width()=%d, child()->myRect().width=%d sl=%d",
-                  rect.width(), child->myRect().width(), m_scriptlevel_adjust );
+            rect.width(), child->myRect().width(), m_scriptlevel_adjust );
 #endif
     }
 
@@ -3717,7 +3720,7 @@ static const QwtMmlOperSpec *searchOperSpecData( const QString &name )
     // invariant holds
     while ( end - begin > 1 )
     {
-        uint mid = 0.5 * ( begin + end );
+        uint mid = ( begin + end ) / 2;
 
         const QwtMmlOperSpec *spec = g_oper_spec_data + mid;
         int cmp = qstrcmp( name_latin1, spec->name );
@@ -3928,8 +3931,7 @@ static QwtMml::ColAlign mmlInterpretColAlign( const QString &value_list,
     return QwtMml::ColAlignCenter;
 }
 
-static QwtMml::RowAlign mmlInterpretRowAlign( const QString &value_list,
-                                              uint rownum, bool *ok )
+static QwtMml::RowAlign mmlInterpretRowAlign( const QString &value_list, uint rownum, bool *ok )
 {
     const QString value = mmlInterpretListAttr( value_list, rownum, "axis" );
 
@@ -3954,8 +3956,7 @@ static QwtMml::RowAlign mmlInterpretRowAlign( const QString &value_list,
     return QwtMml::RowAlignAxis;
 }
 
-static QString mmlInterpretListAttr( const QString &value_list, int idx,
-                                     const QString &def )
+static QString mmlInterpretListAttr( const QString &value_list, int idx, const QString &def )
 {
     QStringList l = value_list.split( ' ' );
 
@@ -3968,8 +3969,7 @@ static QString mmlInterpretListAttr( const QString &value_list, int idx,
         return l[idx];
 }
 
-static QwtMml::FrameType mmlInterpretFrameType( const QString &value_list,
-                                                uint idx, bool *ok )
+static QwtMml::FrameType mmlInterpretFrameType( const QString &value_list, uint idx, bool *ok )
 {
     if ( ok != 0 )
         *ok = true;
@@ -3992,7 +3992,7 @@ static QwtMml::FrameType mmlInterpretFrameType( const QString &value_list,
 
 
 static QwtMml::FrameSpacing mmlInterpretFrameSpacing( const QString &value_list,
-                                                      int em, int ex, bool *ok )
+                                                   int em, int ex, bool *ok )
 {
     QwtMml::FrameSpacing fs;
 
@@ -4015,8 +4015,8 @@ static QwtMml::FrameSpacing mmlInterpretFrameSpacing( const QString &value_list,
     return fs;
 }
 
-static QFont mmlInterpretDepreciatedFontAttr( const QwtMmlAttributeMap &font_attr,
-                                              QFont &fn, int em, int ex )
+static QFont mmlInterpretDepreciatedFontAttr( 
+    const QwtMmlAttributeMap &font_attr, QFont &fn, int em, int ex )
 {
     if ( font_attr.contains( "fontsize" ) )
     {
@@ -4083,8 +4083,7 @@ static QFont mmlInterpretDepreciatedFontAttr( const QwtMmlAttributeMap &font_att
     return fn;
 }
 
-static QFont mmlInterpretMathSize( QString value, QFont &fn, int em, int ex,
-                                   bool *ok )
+static QFont mmlInterpretMathSize( QString value, QFont &fn, int em, int ex, bool *ok )
 {
     if ( ok != 0 )
         *ok = true;
