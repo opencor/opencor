@@ -328,7 +328,7 @@ ENDIF()
 # Package OpenCOR (using CPack)
 
 SET(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
-SET(CPACK_PACKAGE_CONTACT "Alan Garny (alan.garny@inria.fr)")
+SET(CPACK_PACKAGE_CONTACT "Team OpenCOR (team@opencor.ws)")
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "A cross-platform CellML-based modelling environment")
 SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/distrib/readMe.txt")
 SET(CPACK_PACKAGE_INSTALL_DIRECTORY "${PROJECT_NAME}")
