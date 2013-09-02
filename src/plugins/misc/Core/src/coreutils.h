@@ -113,6 +113,8 @@ QLabel CORE_EXPORT * newLabel(const QString &pText, QWidget *pParent = 0);
 
 QString CORE_EXPORT copyright();
 
+QString CORE_EXPORT formatErrorMsg(const QString &pErrorMsg);
+
 //==============================================================================
 
 }   // namespace Core

@@ -139,23 +139,19 @@ void CellmlModelRepositoryWindow::outputModelList(const QStringList &pModelList)
 
         contents += leadingSpaces+"</ul>";
     } else if (mModelNames.empty()) {
-        if (mErrorMsg.count()) {
+        if (mErrorMsg.count())
             // Something went wrong while trying to retrieve the list of models,
             // so...
 
-            QString errorMsg = mErrorMsg[0].toLower()+mErrorMsg.right(mErrorMsg.size()-1);
-            QString dots = (errorMsg[errorMsg.size()-1] == '.')?"..":"...";
-
-            contents = leadingSpaces+tr("<strong>Error:</strong> ")+errorMsg+dots;
-        } else if (mModelListRequested) {
+            contents = leadingSpaces+tr("<strong>Error:</strong> ")+Core::formatErrorMsg(mErrorMsg);
+        else if (mModelListRequested)
             // The list is still being loaded, so...
 
             contents = leadingSpaces+tr("Please wait while the list of CellML models is being loaded...");
-        } else {
+        else
             // We have yet to request the list of models, so...
 
             contents = QString();
-        }
     } else {
         // No model could be found, so...
 

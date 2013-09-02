@@ -619,10 +619,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
                 labelText = tr("Sorry, but no terms were found for <strong>%1</strong>...").arg(mTerm);
             }
         } else {
-            QString errorMsg = pErrorMsg[0].toLower()+pErrorMsg.right(pErrorMsg.size()-1);
-            QString dots = (errorMsg[errorMsg.size()-1] == '.')?"..":"...";
-
-            labelText = tr("<strong>Error:</strong> ")+errorMsg+dots;
+            labelText = tr("<strong>Error:</strong> ")+Core::formatErrorMsg(pErrorMsg);
         }
 
         newGridLayout->addWidget(Core::newLabel(labelText,

@@ -554,6 +554,37 @@ QString copyright()
 
 //==============================================================================
 
+QString formatErrorMsg(const QString &pErrorMsg)
+{
+    static const QString DotDotDot = "...";
+
+    if (pErrorMsg.isEmpty())
+        return DotDotDot;
+
+    // Format and return the error message
+
+    QString errorMsg = ".......";//pErrorMsg;
+
+    // Lower the case of the first character, but if the message is one
+    // character long (!!) or if its second character is not in upper case
+
+    if (    (errorMsg.size() <= 1)
+        || ((errorMsg.size() > 1) && !errorMsg[1].isUpper()))
+        errorMsg = errorMsg[0].toLower()+errorMsg.right(errorMsg.size()-1);
+
+    // Return the error message after making sure that its end finishes with
+    // "..."
+
+    int subsize = errorMsg.size();
+
+    while (subsize && (errorMsg[subsize-1] == '.'))
+        --subsize;
+
+    return errorMsg.left(subsize)+DotDotDot;
+}
+
+//==============================================================================
+
 }   // namespace Core
 }   // namespace OpenCOR
 
