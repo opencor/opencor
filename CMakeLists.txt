@@ -310,11 +310,11 @@ IF(APPLE)
     # Clean up our main executable
 
     OS_X_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${OS_X_PROJECT_BINARY_DIR}/Contents/MacOS ${PROJECT_NAME}
-                                            QtConcurrent QtCore QtGui QtHelp QtNetwork QtOpenGL QtPrintSupport QtQml QtQuick QtSvg QtWebKit QtWebKitWidgets QtWidgets QtXml)
+                                            QtConcurrent QtCore QtGui QtHelp QtNetwork QtOpenGL QtPrintSupport QtQml QtQuick QtSensors QtSvg QtWebKit QtWebKitWidgets QtWidgets QtXml)
 
     # Deploy our Qt dependencies
 
-    OS_X_DEPLOY_QT_LIBRARIES(QtCLucene QtConcurrent QtCore QtGui QtHelp QtNetwork QtOpenGL QtPrintSupport QtQml QtQuick QtSql QtSvg QtV8 QtWebKit QtWebKitWidgets QtWidgets QtXml)
+    OS_X_DEPLOY_QT_LIBRARIES(QtCLucene QtConcurrent QtCore QtGui QtHelp QtNetwork QtOpenGL QtPrintSupport QtQml QtQuick QtSensors QtSql QtSvg QtV8 QtWebKit QtWebKitWidgets QtWidgets QtXml)
 
     # Deploy some plugins
 
