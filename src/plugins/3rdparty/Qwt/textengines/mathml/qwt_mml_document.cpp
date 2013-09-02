@@ -2056,13 +2056,14 @@ void QwtMmlNode::paint( QPainter *painter )
     painter->save();
 
     const QColor bg = background();
+    const QRectF dRect = myRect().translated( devicePoint( relOrigin() ) );
     if ( bg.isValid() )
     {
-        painter->fillRect( myRect(), bg );
+        painter->fillRect( dRect, bg );
     }
     else
     {
-        painter->fillRect( myRect(), m_document->backgroundColor() );
+        painter->fillRect( dRect, m_document->backgroundColor() );
     }
 
     const QColor fg = color();
@@ -2092,23 +2093,15 @@ void QwtMmlNode::paintSymbol( QPainter *painter ) const
 
         painter->setPen( QPen( Qt::red, 0 ) );
 
-#if 1
         const QPointF dPos = devicePoint( relOrigin() );
         const QRectF dRect = myRect().translated( dPos );
         painter->drawRect( dRect );
-#else
-        painter->drawRect( myRect() );
-#endif
 
         QPen pen = painter->pen();
         pen.setStyle( Qt::DotLine );
         painter->setPen( pen );
 
-#if 1
         painter->drawLine( dRect.left(), dPos.y(), dRect.right(), dPos.y() );
-#else
-        painter->drawLine( myRect().left(), 0.0, myRect().right(), 0.0 );
-#endif
 
         painter->restore();
     }
@@ -2340,12 +2333,8 @@ void QwtMmlTextNode::paintSymbol( QPainter *painter ) const
     painter->save();
     painter->setFont( fn );
 
-#if 1
     const QPointF dPos = devicePoint( relOrigin() );
     painter->drawText( dPos.x(), dPos.y() + fm.strikeOutPos(), m_text );
-#else
-    painter->drawText( 0.0, fm.strikeOutPos(), m_text );
-#endif
 
     painter->restore();
 }
@@ -4070,9 +4059,7 @@ static QFont mmlInterpretDepreciatedFontAttr(
             qreal size = mmlInterpretSpacing( value, em, ex, &ok );
             if ( ok )
             {
-#if 1
                 fn.setPixelSize( size );
-#endif
                 break;
             }
 
@@ -4143,9 +4130,7 @@ static QFont mmlInterpretMathSize( QString value, QFont &fn, int em, int ex, boo
     qreal size = mmlInterpretSpacing( value, em, ex, &size_ok );
     if ( size_ok )
     {
-#if 1
-        fn.setPixelSize( size );  // setPointSizeF ???
-#endif
+        fn.setPixelSize( size );
         return fn;
     }
 
