@@ -3,6 +3,8 @@
 
 #include <qwt_global.h>
 
+#include <qstring.h>
+
 class QWT_EXPORT QwtMMLEntityTable
 {
 public:

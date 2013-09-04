@@ -1,12 +1,12 @@
 #include "qwt_mml_document.h"
 #include "qwt_mml_entity_table.h"
 
-#include <QApplication>
-#include <QMap>
-#include <QDesktopWidget>
-#include <QPainter>
-#include <QDomNode>
-#include <QDebug>
+#include <qapplication.h>
+#include <qdebug.h>
+#include <qdesktopwidget.h>
+#include <qdom.h>
+#include <qmap.h>
+#include <qpainter.h>
 
 // *******************************************************************
 // Declarations

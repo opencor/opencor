@@ -1,5 +1,5 @@
 #include "qwt_mml_entity_table.h"
-#include <qstring.h>
+
 #include <qdebug.h>
 
 static const QwtMMLEntityTable::Spec mml_entity_data[] =
@@ -2025,7 +2025,7 @@ QString QwtMMLEntityTable::entities() const
 }
 
 
-const QwtMMLEntityTable::Spec *QwtMMLEntityTable::search( 
+const QwtMMLEntityTable::Spec *QwtMMLEntityTable::search(
     const QString &value, const QwtMMLEntityTable::Spec *from ) const
 {
     const QwtMMLEntityTable::Spec *entity = from;

@@ -2,9 +2,10 @@
 #define _QWT_MML_DOCUMENT_H_
 
 #include <qwt_global.h>
+
 #include <qcolor.h>
-#include <qstring.h>
 #include <qsize.h>
+#include <qstring.h>
 
 class QPainter;
 class QPointF;
