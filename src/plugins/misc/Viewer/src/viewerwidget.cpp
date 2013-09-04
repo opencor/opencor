@@ -183,8 +183,6 @@ void ViewerWidget::paintEvent(QPaintEvent *pEvent)
     mMathmlDocument.setBackgroundColor(backgroundColor);
     mMathmlDocument.setForegroundColor(QColor(palette().color(QPalette::Text)));
 
-    mMathmlDocument.setFontName(QwtMathMLDocument::NormalFont, font().family());
-
     mMathmlDocument.setBaseFontPointSize(mOptimiseFontSize?
                                              qRound(75.0*qMin(mOneOverMathmlDocumentWidth*width(),
                                                               mOneOverMathmlDocumentHeight*height())):
