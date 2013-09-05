@@ -30,13 +30,13 @@ public:
 
     void clear();
 
-    bool setContent( QString text, QString *errorMsg = 0,
+    bool setContent( const QString &text, QString *errorMsg = 0,
                      int *errorLine = 0, int *errorColumn = 0 );
     void paint( QPainter *, const QPointF &pos ) const;
     QSizeF size() const;
 
-    QString fontName( MmlFont type ) const;
-    void setFontName( MmlFont type, const QString &name );
+    QString fontName( const MmlFont &type ) const;
+    void setFontName( const MmlFont &type, const QString &name );
 
     qreal baseFontPointSize() const;
     void setBaseFontPointSize( qreal size );

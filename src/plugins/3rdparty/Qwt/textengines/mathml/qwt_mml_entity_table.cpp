@@ -2024,7 +2024,6 @@ QString QwtMMLEntityTable::entities() const
     return result;
 }
 
-
 const QwtMMLEntityTable::Spec *QwtMMLEntityTable::search(
     const QString &value, const QwtMMLEntityTable::Spec *from ) const
 {

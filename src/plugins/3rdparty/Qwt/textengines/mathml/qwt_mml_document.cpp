@@ -12,14 +12,14 @@
 // Declarations
 // *******************************************************************
 
-static const qreal    g_mfrac_spacing          = 0.1;
-static const qreal    g_mroot_base_margin      = 0.1;
-static const qreal    g_script_size_multiplier = 0.7071; // sqrt(1/2)
-static const QString  g_subsup_horiz_spacing   = "veryverythinmathspace";
-static const QString  g_subsup_vert_spacing    = "thinmathspace";
-static const int      g_min_font_point_size    = 8;
-static const QChar    g_radical_char           = QChar( 0x1A, 0x22 );
-static const unsigned g_oper_spec_rows         = 9;
+static const qreal   g_mfrac_spacing          = 0.1;
+static const qreal   g_mroot_base_margin      = 0.1;
+static const qreal   g_script_size_multiplier = 0.7071; // sqrt(1/2)
+static const QString g_subsup_horiz_spacing   = "veryverythinmathspace";
+static const QString g_subsup_vert_spacing    = "thinmathspace";
+static const qreal   g_min_font_point_size    = 8.0;
+static const QChar   g_radical_char           = QChar( 0x1A, 0x22 );
+static const int     g_oper_spec_rows         = 9;
 
 static QwtMMLEntityTable mmlEntityTable;
 
@@ -66,20 +66,20 @@ struct QwtMmlOperSpec
 {
     enum StretchDir { NoStretch, HStretch, VStretch, HVStretch };
 
-    const char *name;
+    const QString name;
     QwtMml::FormType form;
-    const char *attributes[g_oper_spec_rows];
+    const QString attributes[g_oper_spec_rows];
     StretchDir stretch_dir;
 };
 
 struct QwtMmlNodeSpec
 {
     QwtMml::NodeType type;
-    const char *tag;
-    const char *type_str;
+    const QString tag;
+    const QString type_str;
     int child_spec;
-    const char *child_types;
-    const char *attributes;
+    const QString child_types;
+    const QString attributes;
 
     enum ChildSpec
     {
@@ -99,18 +99,18 @@ public:
     ~QwtMmlDocument();
     void clear();
 
-    bool setContent( QString text, QString *errorMsg = 0,
+    bool setContent( const QString &text, QString *errorMsg = 0,
                      int *errorLine = 0, int *errorColumn = 0 );
     void paint( QPainter *p, const QPointF &pos ) const;
     void dump() const;
     QSizeF size() const;
     void layout();
 
-    QString fontName( QwtMathMLDocument::MmlFont type ) const;
-    void setFontName( QwtMathMLDocument::MmlFont type, const QString &name );
+    QString fontName( const QwtMathMLDocument::MmlFont &type ) const;
+    void setFontName( const QwtMathMLDocument::MmlFont &type, const QString &name );
 
     qreal baseFontPointSize() const { return m_base_font_point_size; }
-    void setBaseFontPointSize( qreal size ) { m_base_font_point_size = size; }
+    void setBaseFontPointSize( const qreal &size ) { m_base_font_point_size = size; }
 
     QColor foregroundColor() const { return m_foreground_color; }
     void setForegroundColor( const QColor &color ) { m_foreground_color = color; }
@@ -122,12 +122,15 @@ public:
     void setDrawFrames( const bool &drawFrames ) { m_draw_frames = drawFrames; }
 
 private:
-    void _dump( const QwtMmlNode *node, QString &indent ) const;
-    bool insertChild( QwtMmlNode *parent, QwtMmlNode *new_node, QString *errorMsg );
+    void _dump( const QwtMmlNode *node, const QString &indent ) const;
+    bool insertChild( QwtMmlNode *parent, QwtMmlNode *new_node,
+                      QString *errorMsg );
 
-    QwtMmlNode *domToMml( const QDomNode &dom_node, bool *ok, QString *errorMsg );
-    QwtMmlNode *createNode( NodeType type, const QwtMmlAttributeMap &mml_attr,
-                         const QString &mml_value, QString *errorMsg );
+    QwtMmlNode *domToMml( const QDomNode &dom_node, bool *ok,
+                          QString *errorMsg );
+    QwtMmlNode *createNode( const NodeType &type,
+                            const QwtMmlAttributeMap &mml_attr,
+                            const QString &mml_value, QString *errorMsg );
     QwtMmlNode *createImplicitMrowNode( const QDomNode &dom_node, bool *ok,
                                      QString *errorMsg );
 
@@ -152,12 +155,12 @@ class QwtMmlNode : public QwtMml
     friend class QwtMmlDocument;
 
 public:
-    QwtMmlNode( NodeType type, QwtMmlDocument *document, const QwtMmlAttributeMap &attribute_map );
+    QwtMmlNode( const NodeType &type, QwtMmlDocument *document,
+                const QwtMmlAttributeMap &attribute_map );
     virtual ~QwtMmlNode();
 
     // Mml stuff
-    NodeType nodeType() const
-    { return m_node_type; }
+    NodeType nodeType() const { return m_node_type; }
 
     virtual QString toStr() const;
 
@@ -339,19 +342,14 @@ public:
     QwtMmlTextNode( const QString &text, QwtMmlDocument *document );
 
     virtual QString toStr() const;
-    QString text() const
-    { return m_text; }
+    QString text() const { return m_text; }
 
     // TextNodes are not xml elements, so they can't have attributes of
     // their own. Everything is taken from the parent.
-    virtual QFont font() const
-    { return m_parent->font(); }
-    virtual int scriptlevel( const QwtMmlNode* = 0 ) const
-    { return m_parent->scriptlevel( this ); }
-    virtual QColor color() const
-    { return m_parent->color(); }
-    virtual QColor background() const
-    { return m_parent->background(); }
+    virtual QFont font() const { return m_parent->font(); }
+    virtual int scriptlevel( const QwtMmlNode* = 0 ) const { return m_parent->scriptlevel( this ); }
+    virtual QColor color() const { return m_parent->color(); }
+    virtual QColor background() const { return m_parent->background(); }
 
 protected:
     virtual void paintSymbol( QPainter *p ) const;
@@ -469,8 +467,8 @@ public:
     qreal framespacing_hor() const;
     qreal framespacing_ver() const;
     FrameType frame() const;
-    FrameType columnlines( int idx ) const;
-    FrameType rowlines( int idx ) const;
+    FrameType columnlines( const int &idx ) const;
+    FrameType rowlines( const int &idx ) const;
 
 protected:
     virtual void layoutSymbol();
@@ -497,21 +495,20 @@ class QwtMmlMtrNode : public QwtMmlTableBaseNode
 public:
     QwtMmlMtrNode( QwtMmlDocument *document, const QwtMmlAttributeMap &attribute_map )
         : QwtMmlTableBaseNode( MtrNode, document, attribute_map ) {}
-    void layoutCells( const QList<qreal> &col_widths, qreal col_spc );
+    void layoutCells( const QList<qreal> &col_widths, const qreal &col_spc );
 };
 
 class QwtMmlMtdNode : public QwtMmlTableBaseNode
 {
 public:
     QwtMmlMtdNode( QwtMmlDocument *document, const QwtMmlAttributeMap &attribute_map )
-        : QwtMmlTableBaseNode( MtdNode, document, attribute_map )
-    { m_scriptlevel_adjust = 0; }
+        : QwtMmlTableBaseNode( MtdNode, document, attribute_map ) { m_scriptlevel_adjust = 0; }
     virtual void setMyRect( const QRectF &rect );
 
     ColAlign columnalign();
     RowAlign rowalign();
-    uint colNum();
-    uint rowNum();
+    int colNum();
+    int rowNum();
     virtual int scriptlevel( const QwtMmlNode *child = 0 ) const;
 
 private:
@@ -583,7 +580,8 @@ protected:
     virtual QRectF symbolRect() const;
 
 private:
-    qreal interpretSpacing( QString value, qreal base_value, bool *ok ) const;
+    qreal interpretSpacing( QString value, const qreal &base_value,
+                            bool *ok ) const;
 };
 
 class QwtMmlMspaceNode : public QwtMmlNode
@@ -593,26 +591,44 @@ public:
         : QwtMmlNode( MspaceNode, document, attribute_map ) {}
 };
 
-static const QwtMmlNodeSpec *mmlFindNodeSpec( QwtMml::NodeType type );
+static const QwtMmlNodeSpec *mmlFindNodeSpec( const QwtMml::NodeType &type );
 static const QwtMmlNodeSpec *mmlFindNodeSpec( const QString &tag );
-static bool mmlCheckChildType( QwtMml::NodeType parent_type,
-                               QwtMml::NodeType child_type, QString *error_str );
-static bool mmlCheckAttributes( QwtMml::NodeType child_type,
-                                const QwtMmlAttributeMap &attr, QString *error_str );
-static QString mmlDictAttribute( const QString &name, const QwtMmlOperSpec *spec );
-static const QwtMmlOperSpec *mmlFindOperSpec( const QString &name, QwtMml::FormType form );
-static qreal mmlInterpretSpacing( QString name, int em, int ex, bool *ok );
-static qreal mmlInterpretPercentSpacing( QString value, int base, bool *ok );
-static uint mmlInterpretMathVariant( const QString &value, bool *ok );
+static bool mmlCheckChildType( const QwtMml::NodeType &parent_type,
+                               const QwtMml::NodeType &child_type,
+                               QString *error_str );
+static bool mmlCheckAttributes( const QwtMml::NodeType &child_type,
+                                const QwtMmlAttributeMap &attr,
+                                QString *error_str );
+static QString mmlDictAttribute( const QString &name,
+                                 const QwtMmlOperSpec *spec );
+static const QwtMmlOperSpec *mmlFindOperSpec( const QString &name,
+                                              const QwtMml::FormType &form );
+static qreal mmlInterpretSpacing( QString name, const qreal &em,
+                                  const qreal &ex, bool *ok );
+static qreal mmlInterpretPercentSpacing( QString value, const qreal &base,
+                                         bool *ok );
+static int mmlInterpretMathVariant( const QString &value, bool *ok );
 static QwtMml::FormType mmlInterpretForm( const QString &value, bool *ok );
-static QwtMml::FrameType mmlInterpretFrameType( const QString &value_list, uint idx, bool *ok );
-static QwtMml::FrameSpacing mmlInterpretFrameSpacing( const QString &value_list, int em, int ex, bool *ok );
-static QwtMml::ColAlign mmlInterpretColAlign( const QString &value_list, uint colnum, bool *ok );
-static QwtMml::RowAlign mmlInterpretRowAlign( const QString &value_list, uint rownum, bool *ok );
-static QwtMml::FrameType mmlInterpretFrameType( const QString &value_list, uint idx, bool *ok );
-static QFont mmlInterpretDepreciatedFontAttr( const QwtMmlAttributeMap &font_attr, QFont &fn, int em, int ex );
-static QFont mmlInterpretMathSize( QString value, QFont &fn, int em, int ex, bool *ok );
-static QString mmlInterpretListAttr( const QString &value_list, int idx, const QString &def );
+static QwtMml::FrameType mmlInterpretFrameType( const QString &value_list,
+                                                const int &idx, bool *ok );
+static QwtMml::FrameSpacing mmlInterpretFrameSpacing( const QString &value_list,
+                                                      const qreal &em,
+                                                      const qreal &ex,
+                                                      bool *ok );
+static QwtMml::ColAlign mmlInterpretColAlign( const QString &value_list,
+                                              const int &colnum, bool *ok );
+static QwtMml::RowAlign mmlInterpretRowAlign( const QString &value_list,
+                                              const int &rownum, bool *ok );
+static QwtMml::FrameType mmlInterpretFrameType( const QString &value_list,
+                                                const int &idx, bool *ok );
+static QFont mmlInterpretDepreciatedFontAttr( const QwtMmlAttributeMap &font_attr,
+                                              QFont &fn, const qreal &em,
+                                              const qreal &ex );
+static QFont mmlInterpretMathSize( const QString &value, QFont &fn,
+                                   const qreal &em, const qreal &ex,
+                                   bool *ok );
+static QString mmlInterpretListAttr( const QString &value_list, const int &idx,
+                                     const QString &def );
 static qreal mmlQstringToQreal( const QString &string, bool *ok = 0 );
 
 #define MML_ATT_COMMON      " class style id xref actiontype "
@@ -673,7 +689,7 @@ static const QwtMmlNodeSpec g_node_spec_data[] =
     { QwtMml::NoNode,         0,            0,                0,                            0,                       0                                                                     }
 };
 
-static const char *g_oper_spec_names[g_oper_spec_rows] =
+static const QString g_oper_spec_names[g_oper_spec_rows] =
 {
     "accent", "fence", "largeop", "lspace", "minsize", "movablelimits",
     "rspace", "separator", "stretchy" /* stretchdir */
@@ -1025,13 +1041,13 @@ static const QwtMmlOperSpec g_oper_spec_defaults =
     0,  QwtMml::InfixForm, { "false", "false", "false", "thickmathspace", "1", "false", "thickmathspace", "false",  "false" }, QwtMmlOperSpec::NoStretch
 };
 
-static const uint g_oper_spec_count = sizeof( g_oper_spec_data ) / sizeof( QwtMmlOperSpec ) - 1;
+static const int g_oper_spec_count = sizeof( g_oper_spec_data ) / sizeof( QwtMmlOperSpec ) - 1;
 
 // *******************************************************************
 // QwtMmlDocument
 // *******************************************************************
 
-QString QwtMmlDocument::fontName( QwtMathMLDocument::MmlFont type ) const
+QString QwtMmlDocument::fontName( const QwtMathMLDocument::MmlFont &type ) const
 {
     switch ( type )
     {
@@ -1052,8 +1068,8 @@ QString QwtMmlDocument::fontName( QwtMathMLDocument::MmlFont type ) const
     return QString::null;
 }
 
-void QwtMmlDocument::setFontName( QwtMathMLDocument::MmlFont type,
-                                  const QString &name )
+void QwtMmlDocument::setFontName(
+    const QwtMathMLDocument::MmlFont &type, const QString &name )
 {
     switch ( type )
     {
@@ -1168,28 +1184,27 @@ void QwtMmlDocument::dump() const
     _dump( m_root_node, indent );
 }
 
-void QwtMmlDocument::_dump( const QwtMmlNode *node, QString &indent ) const
+void QwtMmlDocument::_dump(
+    const QwtMmlNode *node, const QString &indent ) const
 {
     if ( node == 0 ) return;
 
     qWarning() << indent + node->toStr();
 
-    indent += "  ";
     const QwtMmlNode *child = node->firstChild();
     for ( ; child != 0; child = child->nextSibling() )
-        _dump( child, indent );
-    indent.truncate( indent.length() - 2 );
+        _dump( child, indent + "  " );
 }
 
-bool QwtMmlDocument::setContent( QString text, QString *errorMsg,
-                                 int *errorLine, int *errorColumn )
+bool QwtMmlDocument::setContent(
+    const QString &text, QString *errorMsg, int *errorLine, int *errorColumn )
 {
     clear();
 
     QString prefix = "<?xml version=\"2.0\"?>\n";
     prefix.append( mmlEntityTable.entities() );
 
-    uint prefix_lines = 0;
+    int prefix_lines = 0;
     for ( int i = 0; i < prefix.length(); ++i )
     {
         if ( prefix.at( i ) == '\n' )
@@ -1236,8 +1251,8 @@ void QwtMmlDocument::layout()
     m_root_node->stretch();
 }
 
-bool QwtMmlDocument::insertChild( QwtMmlNode *parent, QwtMmlNode *new_node,
-                                  QString *errorMsg )
+bool QwtMmlDocument::insertChild(
+    QwtMmlNode *parent, QwtMmlNode *new_node, QString *errorMsg )
 {
     if ( new_node == 0 )
         return true;
@@ -1255,7 +1270,9 @@ bool QwtMmlDocument::insertChild( QwtMmlNode *parent, QwtMmlNode *new_node,
     if ( parent == 0 )
     {
         if ( m_root_node == 0 )
+        {
             m_root_node = new_node;
+        }
         else
         {
             QwtMmlNode *n = m_root_node->lastSibling();
@@ -1272,16 +1289,18 @@ bool QwtMmlDocument::insertChild( QwtMmlNode *parent, QwtMmlNode *new_node,
             n->setNextSibling( new_node );
             new_node->setPreviousSibling( n );
         }
-        else parent->setFirstChild( new_node );
+        else
+        {
+            parent->setFirstChild( new_node );
+        }
     }
 
     return true;
 }
 
-QwtMmlNode *QwtMmlDocument::createNode( NodeType type,
-                                        const QwtMmlAttributeMap &mml_attr,
-                                        const QString &mml_value,
-                                        QString *errorMsg )
+QwtMmlNode *QwtMmlDocument::createNode(
+    const NodeType &type, const QwtMmlAttributeMap &mml_attr,
+    const QString &mml_value, QString *errorMsg )
 {
     Q_ASSERT( type != NoNode );
 
@@ -1552,9 +1571,8 @@ QwtMmlNode *QwtMmlDocument::domToMml( const QDomNode &dom_node, bool *ok,
     return mml_node;
 }
 
-QwtMmlNode *QwtMmlDocument::createImplicitMrowNode( const QDomNode &dom_node,
-                                                    bool *ok,
-                                                    QString *errorMsg )
+QwtMmlNode *QwtMmlDocument::createImplicitMrowNode(
+    const QDomNode &dom_node, bool *ok, QString *errorMsg )
 {
     QDomNodeList dom_child_list = dom_node.childNodes();
     int child_cnt = dom_child_list.count();
@@ -1615,8 +1633,9 @@ QSizeF QwtMmlDocument::size() const
 // QwtMmlNode
 // *******************************************************************
 
-QwtMmlNode::QwtMmlNode( NodeType type, QwtMmlDocument *document,
-                        const QwtMmlAttributeMap &attribute_map )
+QwtMmlNode::QwtMmlNode(
+    const NodeType &type, QwtMmlDocument *document,
+    const QwtMmlAttributeMap &attribute_map )
 {
     m_parent = 0;
     m_first_child = 0;
@@ -1776,8 +1795,8 @@ QPointF QwtMmlNode::devicePoint( const QPointF &pos ) const
     }
 }
 
-QString QwtMmlNode::inheritAttributeFromMrow( const QString &name,
-                                              const QString &def ) const
+QString QwtMmlNode::inheritAttributeFromMrow(
+    const QString &name, const QString &def ) const
 {
     const QwtMmlNode *p = this;
     for ( ; p != 0; p = p->parent() )
@@ -1887,7 +1906,7 @@ QFont QwtMmlNode::font() const
         QString value = font_attr["mathvariant"];
 
         bool ok;
-        uint mv = mmlInterpretMathVariant( value, &ok );
+        int mv = mmlInterpretMathVariant( value, &ok );
 
         if ( ok )
         {
@@ -1940,7 +1959,8 @@ QFont QwtMmlNode::font() const
     return fn;
 }
 
-QString QwtMmlNode::explicitAttribute( const QString &name, const QString &def ) const
+QString QwtMmlNode::explicitAttribute(
+    const QString &name, const QString &def ) const
 {
     QwtMmlAttributeMap::const_iterator it = m_attribute_map.find( name );
     if ( it != m_attribute_map.end() )
@@ -2187,6 +2207,8 @@ static bool zeroLineThickness( const QString &s )
 
 void QwtMmlMfracNode::paintSymbol( QPainter *painter ) const
 {
+    QwtMmlNode::paintSymbol( painter );
+
     QString linethickness_str = inheritAttributeFromMrow( "linethickness", "1" );
 
     /* InterpretSpacing returns an int, which might be 0 even if the thickness
@@ -2250,7 +2272,7 @@ QRectF QwtMmlRootBaseNode::symbolRect() const
         base_rect = base()->myRect();
 
     qreal margin = g_mroot_base_margin * base_rect.height();
-    int tw = tailWidth();
+    qreal tw = tailWidth();
 
     return QRectF( -tw, base_rect.top() - margin, tw,
                    base_rect.height() + 2.0 * margin );
@@ -2289,6 +2311,8 @@ void QwtMmlRootBaseNode::layoutSymbol()
 
 void QwtMmlRootBaseNode::paintSymbol( QPainter *painter ) const
 {
+    QwtMmlNode::paintSymbol( painter );
+
     QRectF r = symbolRect();
     r.moveTopLeft( devicePoint( r.topLeft() ) );
 
@@ -2299,7 +2323,8 @@ void QwtMmlRootBaseNode::paintSymbol( QPainter *painter ) const
     painter->translate( r.bottomLeft() );
     painter->scale( r.width() / radixSize.width(), r.height() / radixSize.height() );
     painter->setFont( font() );
-    painter->drawText( QPointF( 0.0, 0.0), QString( g_radical_char ) );
+
+    painter->drawText( QPointF( 0.0, 0.0 ), QString( g_radical_char ) );
 
     painter->restore();
 
@@ -2335,6 +2360,7 @@ void QwtMmlTextNode::paintSymbol( QPainter *painter ) const
     QFontMetricsF fm( fn );
 
     painter->save();
+
     painter->setFont( fn );
 
     const QPointF dPos = devicePoint( QPointF() );
@@ -2459,8 +2485,8 @@ void QwtMmlMoNode::layoutSymbol()
         m_oper_spec = mmlFindOperSpec( text(), form() );
 }
 
-QwtMmlMoNode::QwtMmlMoNode( QwtMmlDocument *document,
-                            const QwtMmlAttributeMap &attribute_map )
+QwtMmlMoNode::QwtMmlMoNode(
+    QwtMmlDocument *document, const QwtMmlAttributeMap &attribute_map )
     : QwtMmlTokenNode( MoNode, document, attribute_map )
 {
     m_oper_spec = 0;
@@ -2827,13 +2853,13 @@ QwtMml::FrameType QwtMmlMtableNode::frame() const
     return mmlInterpretFrameType( value, 0, 0 );
 }
 
-QwtMml::FrameType QwtMmlMtableNode::columnlines( int idx ) const
+QwtMml::FrameType QwtMmlMtableNode::columnlines( const int &idx ) const
 {
     QString value = explicitAttribute( "columnlines", "none" );
     return mmlInterpretFrameType( value, idx, 0 );
 }
 
-QwtMml::FrameType QwtMmlMtableNode::rowlines( int idx ) const
+QwtMml::FrameType QwtMmlMtableNode::rowlines( const int &idx ) const
 {
     QString value = explicitAttribute( "rowlines", "none" );
     return mmlInterpretFrameType( value, idx, 0 );
@@ -2841,6 +2867,8 @@ QwtMml::FrameType QwtMmlMtableNode::rowlines( int idx ) const
 
 void QwtMmlMtableNode::paintSymbol( QPainter *painter ) const
 {
+    QwtMmlNode::paintSymbol( painter );
+
     FrameType f = frame();
     if ( f != FrameNone )
     {
@@ -2939,12 +2967,12 @@ qreal QwtMmlMtableNode::framespacing_hor() const
         return 0.4 * em();
 }
 
-void QwtMmlMtrNode::layoutCells( const QList<qreal> &col_widths,
-                                 qreal col_spc )
+void QwtMmlMtrNode::layoutCells(
+    const QList<qreal> &col_widths, const qreal &col_spc )
 {
     QwtMmlNode *child = m_first_child;
     qreal col_offset = 0.0;
-    uint colnum = 0;
+    int colnum = 0;
     for ( ; child != 0; child = child->nextSibling(), ++colnum )
     {
         Q_ASSERT( child->nodeType() == MtdNode );
@@ -3029,22 +3057,22 @@ void QwtMmlMtdNode::setMyRect( const QRectF &rect )
     m_first_child->setRelOrigin( child_rel_origin );
 }
 
-uint QwtMmlMtdNode::colNum()
+int QwtMmlMtdNode::colNum()
 {
     QwtMmlNode *syb = m_previous_sibling;
 
-    uint i = 0;
+    int i = 0;
     for ( ; syb != 0; syb = syb->previousSibling() )
         ++i;
 
     return i;
 }
 
-uint QwtMmlMtdNode::rowNum()
+int QwtMmlMtdNode::rowNum()
 {
     QwtMmlNode *row = m_parent->previousSibling();
 
-    uint i = 0;
+    int i = 0;
     for ( ; row != 0; row = row->previousSibling() )
         ++i;
 
@@ -3061,7 +3089,7 @@ QwtMmlMtdNode::ColAlign QwtMmlMtdNode::columnalign()
     if ( node == 0 )
         return ColAlignCenter;
 
-    uint colnum = colNum();
+    int colnum = colNum();
     val = node->explicitAttribute( "columnalign" );
     if ( !val.isNull() )
         return mmlInterpretColAlign( val, colnum, 0 );
@@ -3087,7 +3115,7 @@ QwtMmlMtdNode::RowAlign QwtMmlMtdNode::rowalign()
     if ( node == 0 )
         return RowAlignAxis;
 
-    uint rownum = rowNum();
+    int rownum = rowNum();
     val = node->explicitAttribute( "rowalign" );
     if ( !val.isNull() )
         return mmlInterpretRowAlign( val, rownum, 0 );
@@ -3200,8 +3228,8 @@ int QwtMmlMunderoverNode::scriptlevel( const QwtMmlNode *node ) const
         return sl;
 }
 
-qreal QwtMmlMpaddedNode::interpretSpacing( QString value, qreal base_value,
-                                           bool *ok ) const
+qreal QwtMmlMpaddedNode::interpretSpacing(
+    QString value, const qreal &base_value, bool *ok ) const
 {
     if ( ok != 0 )
         *ok = false;
@@ -3234,7 +3262,7 @@ qreal QwtMmlMpaddedNode::interpretSpacing( QString value, qreal base_value,
     qreal factor = mmlQstringToQreal( factor_str, &qreal_ok );
     if ( !qreal_ok || factor < 0.0 )
     {
-        qWarning( "QwtMmlMpaddedNode::interpretSpacing(): could not parse \"%s\"", value.toLatin1().data() );
+        qWarning( "QwtMmlMpaddedNode::interpretSpacing(): could not parse \"%s\"", qPrintable( value ) );
         return 0.0;
     }
 
@@ -3263,7 +3291,7 @@ qreal QwtMmlMpaddedNode::interpretSpacing( QString value, qreal base_value,
         unit_size = QwtMmlNode::interpretSpacing( "1" + pseudo_unit, &unit_ok );
         if ( !unit_ok )
         {
-            qWarning( "QwtMmlMpaddedNode::interpretSpacing(): could not parse \"%s\"", value.toLatin1().data() );
+            qWarning( "QwtMmlMpaddedNode::interpretSpacing(): could not parse \"%s\"", qPrintable( value ) );
             return 0.0;
         }
     }
@@ -3371,7 +3399,8 @@ QRectF QwtMmlMpaddedNode::symbolRect() const
 // Static helper functions
 // *******************************************************************
 
-static qreal mmlInterpretSpacing( QString value, int em, int ex, bool *ok )
+static qreal mmlInterpretSpacing(
+    QString value, const qreal &em, const qreal &ex, bool *ok )
 {
     if ( ok != 0 )
         *ok = true;
@@ -3387,7 +3416,7 @@ static qreal mmlInterpretSpacing( QString value, int em, int ex, bool *ok )
 
     struct HSpacingValue
     {
-        const char *name;
+        const QString name;
         qreal factor;
     };
 
@@ -3419,7 +3448,7 @@ static qreal mmlInterpretSpacing( QString value, int em, int ex, bool *ok )
             return em * factor;
         else
         {
-            qWarning( "interpretSpacing(): could not parse \"%sem\"", value.toLatin1().data() );
+            qWarning( "interpretSpacing(): could not parse \"%sem\"", qPrintable( value ) );
             if ( ok != 0 )
                 *ok = false;
             return 0.0;
@@ -3435,7 +3464,7 @@ static qreal mmlInterpretSpacing( QString value, int em, int ex, bool *ok )
             return ex * factor;
         else
         {
-            qWarning( "interpretSpacing(): could not parse \"%sex\"", value.toLatin1().data() );
+            qWarning( "interpretSpacing(): could not parse \"%sex\"", qPrintable( value ) );
             if ( ok != 0 )
                 *ok = false;
             return 0.0;
@@ -3457,7 +3486,7 @@ static qreal mmlInterpretSpacing( QString value, int em, int ex, bool *ok )
         }
         else
         {
-            qWarning( "interpretSpacing(): could not parse \"%scm\"", value.toLatin1().data() );
+            qWarning( "interpretSpacing(): could not parse \"%scm\"", qPrintable( value ) );
             if ( ok != 0 )
                 *ok = false;
             return 0.0;
@@ -3479,7 +3508,7 @@ static qreal mmlInterpretSpacing( QString value, int em, int ex, bool *ok )
         }
         else
         {
-            qWarning( "interpretSpacing(): could not parse \"%smm\"", value.toLatin1().data() );
+            qWarning( "interpretSpacing(): could not parse \"%smm\"", qPrintable( value ) );
             if ( ok != 0 )
                 *ok = false;
             return 0.0;
@@ -3501,7 +3530,7 @@ static qreal mmlInterpretSpacing( QString value, int em, int ex, bool *ok )
         }
         else
         {
-            qWarning( "interpretSpacing(): could not parse \"%sin\"", value.toLatin1().data() );
+            qWarning( "interpretSpacing(): could not parse \"%sin\"", qPrintable( value ) );
             if ( ok != 0 )
                 *ok = false;
             return 0.0;
@@ -3517,7 +3546,7 @@ static qreal mmlInterpretSpacing( QString value, int em, int ex, bool *ok )
             return i;
         else
         {
-            qWarning( "interpretSpacing(): could not parse \"%spx\"", value.toLatin1().data() );
+            qWarning( "interpretSpacing(): could not parse \"%spx\"", qPrintable( value ) );
             if ( ok != 0 )
                 *ok = false;
             return 0.0;
@@ -3529,13 +3558,14 @@ static qreal mmlInterpretSpacing( QString value, int em, int ex, bool *ok )
     if ( qreal_ok && i >= 0 )
         return i;
 
-    qWarning( "interpretSpacing(): could not parse \"%s\"", value.toLatin1().data() );
+    qWarning( "interpretSpacing(): could not parse \"%s\"", qPrintable( value ) );
     if ( ok != 0 )
         *ok = false;
     return 0.0;
 }
 
-static qreal mmlInterpretPercentSpacing( QString value, int base, bool *ok )
+static qreal mmlInterpretPercentSpacing(
+    QString value, const qreal &base, bool *ok )
 {
     if ( !value.endsWith( "%" ) )
     {
@@ -3554,7 +3584,7 @@ static qreal mmlInterpretPercentSpacing( QString value, int base, bool *ok )
         return 0.01 * base * factor;
     }
 
-    qWarning( "interpretPercentSpacing(): could not parse \"%s%%\"", value.toLatin1().data() );
+    qWarning( "interpretPercentSpacing(): could not parse \"%s%%\"", qPrintable( value ) );
     if ( ok != 0 )
         *ok = false;
     return 0.0;
@@ -3579,13 +3609,13 @@ static qreal mmlInterpretPointSize( QString value, bool *ok )
         return pt_size;
     }
 
-    qWarning( "interpretPointSize(): could not parse \"%spt\"", value.toLatin1().data() );
+    qWarning( "interpretPointSize(): could not parse \"%spt\"", qPrintable( value ) );
     if ( ok != 0 )
         *ok = false;
     return 0.0;
 }
 
-static const QwtMmlNodeSpec *mmlFindNodeSpec( QwtMml::NodeType type )
+static const QwtMmlNodeSpec *mmlFindNodeSpec( const QwtMml::NodeType &type )
 {
     const QwtMmlNodeSpec *spec = g_node_spec_data;
     for ( ; spec->type != QwtMml::NoNode; ++spec )
@@ -3605,9 +3635,9 @@ static const QwtMmlNodeSpec *mmlFindNodeSpec( const QString &tag )
     return 0;
 }
 
-static bool mmlCheckChildType( QwtMml::NodeType parent_type,
-                               QwtMml::NodeType child_type,
-                               QString *error_str )
+static bool mmlCheckChildType(
+    const QwtMml::NodeType &parent_type, const QwtMml::NodeType &child_type,
+    QString *error_str )
 {
     if ( parent_type == QwtMml::UnknownNode || child_type == QwtMml::UnknownNode )
         return true;
@@ -3637,9 +3667,9 @@ static bool mmlCheckChildType( QwtMml::NodeType parent_type,
     return true;
 }
 
-static bool mmlCheckAttributes( QwtMml::NodeType child_type,
-                                const QwtMmlAttributeMap &attr,
-                                QString *error_str )
+static bool mmlCheckAttributes(
+    const QwtMml::NodeType &child_type, const QwtMmlAttributeMap &attr,
+    QString *error_str )
 {
     const QwtMmlNodeSpec *spec = mmlFindNodeSpec( child_type );
     Q_ASSERT( spec != 0 );
@@ -3674,7 +3704,7 @@ static bool mmlCheckAttributes( QwtMml::NodeType child_type,
 
 static int attributeIndex( const QString &name )
 {
-    for ( unsigned i = 0; i < g_oper_spec_rows; ++i )
+    for ( int i = 0; i < g_oper_spec_rows; ++i )
     {
         if ( name == g_oper_spec_names[i] )
             return i;
@@ -3690,14 +3720,12 @@ struct OperSpecSearchResult
           *infix_form,
           *postfix_form;
 
-    const QwtMmlOperSpec *&getForm( QwtMml::FormType f );
-    bool haveForm( QwtMml::FormType f )
-    { return getForm( f ) != 0; }
-    void addForm( const QwtMmlOperSpec *spec )
-    { getForm( spec->form ) = spec; }
+    const QwtMmlOperSpec *&getForm( const QwtMml::FormType &f );
+    bool haveForm( const QwtMml::FormType &f ) { return getForm( f ) != 0; }
+    void addForm( const QwtMmlOperSpec *spec ) { getForm( spec->form ) = spec; }
 };
 
-const QwtMmlOperSpec *&OperSpecSearchResult::getForm( QwtMml::FormType f )
+const QwtMmlOperSpec *&OperSpecSearchResult::getForm( const QwtMml::FormType &f )
 {
     switch ( f )
     {
@@ -3717,28 +3745,26 @@ const QwtMmlOperSpec *&OperSpecSearchResult::getForm( QwtMml::FormType f )
 */
 static const QwtMmlOperSpec *searchOperSpecData( const QString &name )
 {
-    const char *name_latin1 = name.toLatin1().data();
-
     // binary search
     // establish invariant g_oper_spec_data[begin].name < name < g_oper_spec_data[end].name
 
-    int cmp = qstrcmp( name_latin1, g_oper_spec_data[0].name );
+    int cmp = name.compare( g_oper_spec_data[0].name );
     if ( cmp < 0 )
         return 0;
 
     if ( cmp == 0 )
         return g_oper_spec_data;
 
-    uint begin = 0;
-    uint end = g_oper_spec_count;
+    int begin = 0;
+    int end = g_oper_spec_count;
 
     // invariant holds
     while ( end - begin > 1 )
     {
-        uint mid = 0.5 * ( begin + end );
+        int mid = 0.5 * ( begin + end );
 
         const QwtMmlOperSpec *spec = g_oper_spec_data + mid;
-        int cmp = qstrcmp( name_latin1, spec->name );
+        int cmp = name.compare( spec->name );
         if ( cmp < 0 )
             end = mid;
         else if ( cmp > 0 )
@@ -3755,8 +3781,8 @@ static const QwtMmlOperSpec *searchOperSpecData( const QString &name )
     or until name_list is exhausted. The idea here is that if we don't find the operator in the
     specified form, we still want to use some other available form of that operator.
 */
-static OperSpecSearchResult _mmlFindOperSpec( const QStringList &name_list,
-                                              QwtMml::FormType form )
+static OperSpecSearchResult _mmlFindOperSpec(
+    const QStringList &name_list, const QwtMml::FormType &form )
 {
     OperSpecSearchResult result;
 
@@ -3770,10 +3796,8 @@ static OperSpecSearchResult _mmlFindOperSpec( const QStringList &name_list,
         if ( spec == 0 )
             continue;
 
-        const char *name_latin1 = name.toLatin1().data();
-
         // backtrack to the first instance of name
-        while ( spec > g_oper_spec_data && qstrcmp( ( spec - 1 )->name, name_latin1 ) == 0 )
+        while ( spec > g_oper_spec_data && ( spec - 1 )->name.compare( name ) == 0 )
             --spec;
 
         // iterate over instances of name until the instances are exhausted or until we
@@ -3784,7 +3808,7 @@ static OperSpecSearchResult _mmlFindOperSpec( const QStringList &name_list,
             if ( result.haveForm( form ) )
                 break;
         }
-        while ( qstrcmp( spec->name, name_latin1 ) == 0 );
+        while ( spec->name.compare( name ) == 0 );
 
         if ( result.haveForm( form ) )
             break;
@@ -3805,8 +3829,8 @@ static OperSpecSearchResult _mmlFindOperSpec( const QStringList &name_list,
     text, but of some other form in the preference order specified by the MathML spec.
     If that's not available either, returns the default operator spec.
 */
-static const QwtMmlOperSpec *mmlFindOperSpec( const QString &text,
-                                              QwtMml::FormType form )
+static const QwtMmlOperSpec *mmlFindOperSpec(
+    const QString &text, const QwtMml::FormType &form )
 {
     QStringList name_list;
     name_list.append( text );
@@ -3850,7 +3874,8 @@ static const QwtMmlOperSpec *mmlFindOperSpec( const QString &text,
     return &g_oper_spec_defaults;
 }
 
-static QString mmlDictAttribute( const QString &name, const QwtMmlOperSpec *spec )
+static QString mmlDictAttribute(
+    const QString &name, const QwtMmlOperSpec *spec )
 {
     int i = attributeIndex( name );
     if ( i == -1 )
@@ -3859,12 +3884,12 @@ static QString mmlDictAttribute( const QString &name, const QwtMmlOperSpec *spec
         return spec->attributes[i];
 }
 
-static uint mmlInterpretMathVariant( const QString &value, bool *ok )
+static int mmlInterpretMathVariant( const QString &value, bool *ok )
 {
     struct MathVariantValue
     {
-        const char *value;
-        uint mv;
+        const QString value;
+        int mv;
     };
 
     static const MathVariantValue g_mv_data[] =
@@ -3900,7 +3925,7 @@ static uint mmlInterpretMathVariant( const QString &value, bool *ok )
     if ( ok != 0 )
         *ok = false;
 
-    qWarning( "interpretMathVariant(): could not parse value: \"%s\"", value.toLatin1().data() );
+    qWarning( "interpretMathVariant(): could not parse value: \"%s\"", qPrintable( value ) );
 
     return QwtMml::NormalMV;
 }
@@ -3920,12 +3945,12 @@ static QwtMml::FormType mmlInterpretForm( const QString &value, bool *ok )
     if ( ok != 0 )
         *ok = false;
 
-    qWarning( "interpretForm(): could not parse value \"%s\"", value.toLatin1().data() );
+    qWarning( "interpretForm(): could not parse value \"%s\"", qPrintable( value ) );
     return QwtMml::InfixForm;
 }
 
-static QwtMml::ColAlign mmlInterpretColAlign( const QString &value_list,
-                                              uint colnum, bool *ok )
+static QwtMml::ColAlign mmlInterpretColAlign(
+    const QString &value_list, const int &colnum, bool *ok )
 {
     const QString value = mmlInterpretListAttr( value_list, colnum, "center" );
 
@@ -3942,11 +3967,12 @@ static QwtMml::ColAlign mmlInterpretColAlign( const QString &value_list,
     if ( ok != 0 )
         *ok = false;
 
-    qWarning( "interpretColAlign(): could not parse value \"%s\"", value.toLatin1().data() );
+    qWarning( "interpretColAlign(): could not parse value \"%s\"", qPrintable( value ) );
     return QwtMml::ColAlignCenter;
 }
 
-static QwtMml::RowAlign mmlInterpretRowAlign( const QString &value_list, uint rownum, bool *ok )
+static QwtMml::RowAlign mmlInterpretRowAlign(
+    const QString &value_list, const int &rownum, bool *ok )
 {
     const QString value = mmlInterpretListAttr( value_list, rownum, "axis" );
 
@@ -3967,11 +3993,12 @@ static QwtMml::RowAlign mmlInterpretRowAlign( const QString &value_list, uint ro
     if ( ok != 0 )
         *ok = false;
 
-    qWarning( "interpretRowAlign(): could not parse value \"%s\"", value.toLatin1().data() );
+    qWarning( "interpretRowAlign(): could not parse value \"%s\"", qPrintable( value ) );
     return QwtMml::RowAlignAxis;
 }
 
-static QString mmlInterpretListAttr( const QString &value_list, int idx, const QString &def )
+static QString mmlInterpretListAttr(
+    const QString &value_list, const int &idx, const QString &def )
 {
     QStringList l = value_list.split( ' ' );
 
@@ -3984,7 +4011,8 @@ static QString mmlInterpretListAttr( const QString &value_list, int idx, const Q
         return l[idx];
 }
 
-static QwtMml::FrameType mmlInterpretFrameType( const QString &value_list, uint idx, bool *ok )
+static QwtMml::FrameType mmlInterpretFrameType(
+    const QString &value_list, const int &idx, bool *ok )
 {
     if ( ok != 0 )
         *ok = true;
@@ -4001,20 +4029,20 @@ static QwtMml::FrameType mmlInterpretFrameType( const QString &value_list, uint 
     if ( ok != 0 )
         *ok = false;
 
-    qWarning( "interpretFrameType(): could not parse value \"%s\"", value.toLatin1().data() );
+    qWarning( "interpretFrameType(): could not parse value \"%s\"", qPrintable( value ) );
     return QwtMml::FrameNone;
 }
 
 
-static QwtMml::FrameSpacing mmlInterpretFrameSpacing( const QString &value_list,
-                                                   int em, int ex, bool *ok )
+static QwtMml::FrameSpacing mmlInterpretFrameSpacing(
+const QString &value_list, const qreal &em, const qreal &ex, bool *ok )
 {
     QwtMml::FrameSpacing fs;
 
     QStringList l = value_list.split( ' ' );
     if ( l.count() != 2 )
     {
-        qWarning( "interpretFrameSpacing: could not parse value \"%s\"", value_list.toLatin1().data() );
+        qWarning( "interpretFrameSpacing: could not parse value \"%s\"", qPrintable( value_list ) );
         if ( ok != 0 )
             *ok = false;
         return QwtMml::FrameSpacing( 0.4 * em, 0.5 * ex );
@@ -4031,7 +4059,8 @@ static QwtMml::FrameSpacing mmlInterpretFrameSpacing( const QString &value_list,
 }
 
 static QFont mmlInterpretDepreciatedFontAttr(
-    const QwtMmlAttributeMap &font_attr, QFont &fn, int em, int ex )
+    const QwtMmlAttributeMap &font_attr, QFont &fn, const qreal &em,
+    const qreal &ex )
 {
     if ( font_attr.contains( "fontsize" ) )
     {
@@ -4073,7 +4102,7 @@ static QFont mmlInterpretDepreciatedFontAttr(
         else if ( value == "bold" )
             fn.setBold( true );
         else
-            qWarning( "interpretDepreciatedFontAttr(): could not parse fontweight \"%s\"", value.toLatin1().data() );
+            qWarning( "interpretDepreciatedFontAttr(): could not parse fontweight \"%s\"", qPrintable( value ) );
     }
 
     if ( font_attr.contains( "fontstyle" ) )
@@ -4084,7 +4113,7 @@ static QFont mmlInterpretDepreciatedFontAttr(
         else if ( value == "italic" )
             fn.setItalic( true );
         else
-            qWarning( "interpretDepreciatedFontAttr(): could not parse fontstyle \"%s\"", value.toLatin1().data() );
+            qWarning( "interpretDepreciatedFontAttr(): could not parse fontstyle \"%s\"", qPrintable( value ) );
     }
 
     if ( font_attr.contains( "fontfamily" ) )
@@ -4096,7 +4125,9 @@ static QFont mmlInterpretDepreciatedFontAttr(
     return fn;
 }
 
-static QFont mmlInterpretMathSize( QString value, QFont &fn, int em, int ex, bool *ok )
+static QFont mmlInterpretMathSize(
+    const QString &value, QFont &fn, const qreal &em, const qreal &ex,
+    bool *ok )
 {
     if ( ok != 0 )
         *ok = true;
@@ -4134,7 +4165,7 @@ static QFont mmlInterpretMathSize( QString value, QFont &fn, int em, int ex, boo
 
     if ( ok != 0 )
         *ok = false;
-    qWarning( "interpretMathSize(): could not parse mathsize \"%s\"", value.toLatin1().data() );
+    qWarning( "interpretMathSize(): could not parse mathsize \"%s\"", qPrintable( value ) );
     return fn;
 }
 
@@ -4180,8 +4211,8 @@ void QwtMathMLDocument::clear()
     \a text should contain MathML 2.0 presentation markup elements enclosed
     in a <math> element.
 */
-bool QwtMathMLDocument::setContent( QString text, QString *errorMsg,
-                                    int *errorLine, int *errorColumn )
+bool QwtMathMLDocument::setContent(
+    const QString &text, QString *errorMsg, int *errorLine, int *errorColumn )
 {
     return m_doc->setContent( text, errorMsg, errorLine, errorColumn );
 }
@@ -4207,7 +4238,8 @@ QSizeF QwtMathMLDocument::size() const
 
     \sa setFontName()  setBaseFontPointSize() baseFontPointSize() QwtMathMLDocument::MmlFont
 */
-QString QwtMathMLDocument::fontName( QwtMathMLDocument::MmlFont type ) const
+QString QwtMathMLDocument::fontName(
+    const QwtMathMLDocument::MmlFont &type ) const
 {
     return m_doc->fontName( type );
 }
@@ -4217,8 +4249,8 @@ QString QwtMathMLDocument::fontName( QwtMathMLDocument::MmlFont type ) const
 
     \sa fontName() setBaseFontPointSize() baseFontPointSize() QwtMathMLDocument::MmlFont
 */
-void QwtMathMLDocument::setFontName( QwtMathMLDocument::MmlFont type,
-                                     const QString &name )
+void QwtMathMLDocument::setFontName(
+    const QwtMathMLDocument::MmlFont &type, const QString &name )
 {
     if ( name == m_doc->fontName( type ) )
         return;
