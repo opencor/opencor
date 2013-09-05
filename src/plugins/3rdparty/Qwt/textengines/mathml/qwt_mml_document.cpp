@@ -15,6 +15,8 @@
 static const qreal    g_mfrac_spacing          = 0.1;
 static const qreal    g_mroot_base_margin      = 0.1;
 static const qreal    g_script_size_multiplier = 0.7071; // sqrt(1/2)
+static const QString  g_subsup_horiz_spacing   = "veryverythinmathspace";
+static const QString  g_subsup_vert_spacing    = "thinmathspace";
 static const int      g_min_font_point_size    = 8;
 static const QChar    g_radical_char           = QChar( 0x1A, 0x22 );
 static const unsigned g_oper_spec_rows         = 9;
@@ -1130,7 +1132,11 @@ QwtMmlDocument::QwtMmlDocument()
 
     // Some defaults which happen to work on my computer,
     // but probably won't work on other's
+#if defined( Q_OS_LINUX )
+    m_normal_font_name = "Century Schoolbook L";
+#else
     m_normal_font_name = "Times New Roman";
+#endif
     m_fraktur_font_name = "Fraktur";
     m_sans_serif_font_name = "Luxi Sans";
     m_script_font_name = "Urw Chancery L";
@@ -1381,6 +1387,7 @@ void QwtMmlDocument::insertOperator( QwtMmlNode *node, const QString &text )
     Q_ASSERT( ok );
     ok = insertChild( mo_node, text_node, 0 );
     Q_ASSERT( ok );
+    Q_UNUSED( ok );
 }
 
 QwtMmlNode *QwtMmlDocument::domToMml( const QDomNode &dom_node, bool *ok,
@@ -2376,7 +2383,8 @@ void QwtMmlMsupNode::layoutSymbol()
     QwtMmlNode *s = sscript();
 
     b->setRelOrigin( QPointF( -b->myRect().width(), 0.0 ) );
-    s->setRelOrigin( QPointF( 0.0, b->myRect().top() ) );
+    s->setRelOrigin( QPointF( interpretSpacing( g_subsup_horiz_spacing, 0 ),
+                              b->myRect().top() - interpretSpacing( g_subsup_vert_spacing, 0 ) ) );
 }
 
 void QwtMmlMsubNode::layoutSymbol()
@@ -2385,7 +2393,8 @@ void QwtMmlMsubNode::layoutSymbol()
     QwtMmlNode *s = sscript();
 
     b->setRelOrigin( QPointF( -b->myRect().width(), 0.0 ) );
-    s->setRelOrigin( QPointF( 0.0, b->myRect().bottom() ) );
+    s->setRelOrigin( QPointF( interpretSpacing( g_subsup_horiz_spacing, 0 ),
+                              b->myRect().bottom() + interpretSpacing( g_subsup_vert_spacing, 0 ) ) );
 }
 
 QwtMmlNode *QwtMmlMsubsupNode::base() const
@@ -2415,8 +2424,10 @@ void QwtMmlMsubsupNode::layoutSymbol()
     QwtMmlNode *sup = superscript();
 
     b->setRelOrigin( QPointF( -b->myRect().width(), 0.0 ) );
-    sub->setRelOrigin( QPointF( 0.0, b->myRect().bottom() ) );
-    sup->setRelOrigin( QPointF( 0.0, b->myRect().top() ) );
+    sub->setRelOrigin( QPointF( interpretSpacing( g_subsup_horiz_spacing, 0 ),
+                                b->myRect().bottom() + interpretSpacing( g_subsup_vert_spacing, 0 ) ) );
+    sup->setRelOrigin( QPointF( interpretSpacing( g_subsup_horiz_spacing, 0 ),
+                                b->myRect().top() - interpretSpacing( g_subsup_vert_spacing, 0 ) ) );
 }
 
 int QwtMmlMsubsupNode::scriptlevel( const QwtMmlNode *child ) const
@@ -3724,7 +3735,7 @@ static const QwtMmlOperSpec *searchOperSpecData( const QString &name )
     // invariant holds
     while ( end - begin > 1 )
     {
-        uint mid = ( begin + end ) / 2;
+        uint mid = 0.5 * ( begin + end );
 
         const QwtMmlOperSpec *spec = g_oper_spec_data + mid;
         int cmp = qstrcmp( name_latin1, spec->name );
