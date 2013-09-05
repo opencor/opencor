@@ -2217,12 +2217,12 @@ void QwtMmlMfracNode::paintSymbol( QPainter *painter ) const
        thickness really is zero */
     if ( !zeroLineThickness( linethickness_str ) )
     {
+        painter->save();
+
         bool ok;
         qreal linethickness = interpretSpacing( linethickness_str, &ok );
         if ( !ok )
             linethickness = 1.0;
-
-        painter->save();
 
         QPen pen = painter->pen();
         pen.setWidthF( linethickness );
@@ -2313,18 +2313,21 @@ void QwtMmlRootBaseNode::paintSymbol( QPainter *painter ) const
 {
     QwtMmlNode::paintSymbol( painter );
 
+    painter->save();
+
     QRectF r = symbolRect();
     r.moveTopLeft( devicePoint( r.topLeft() ) );
 
-    const QSizeF radixSize = QFontMetricsF( font() ).boundingRect( g_radical_char ).size();
-
-    painter->save();
+    const QFont fn = font();
+    const QSizeF radixSize = QFontMetricsF( fn ).boundingRect( g_radical_char ).size();
 
     painter->translate( r.bottomLeft() );
     painter->scale( r.width() / radixSize.width(), r.height() / radixSize.height() );
-    painter->setFont( font() );
+    painter->setFont( fn );
 
-    painter->drawText( QPointF( 0.0, 0.0 ), QString( g_radical_char ) );
+    painter->fillRect( QRectF( 0.0, 0.0, radixSize.width(), -radixSize.height() ),
+                       QBrush( QColor( 128, 128, 255, 128 ) ) );
+    painter->drawText( QPointF( 0.0, 0.0 ), g_radical_char );
 
     painter->restore();
 
@@ -2355,11 +2358,11 @@ void QwtMmlTextNode::paintSymbol( QPainter *painter ) const
 {
     QwtMmlNode::paintSymbol( painter );
 
+    painter->save();
+
     QFont fn = font();
 
     QFontMetricsF fm( fn );
-
-    painter->save();
 
     painter->setFont( fn );
 
