@@ -10,8 +10,8 @@ class QWT_EXPORT QwtMMLEntityTable
 public:
     struct Spec
     {
-        const QString name;
-        const QString value;
+        QString name;
+        QString value;
     };
 
     QString entities() const;
