@@ -15,14 +15,26 @@
 
 static const qreal   g_mfrac_spacing          = 0.05;
 static const qreal   g_mroot_base_margin      = 0.1;
-static const qreal   g_mroot_base_line        = 0.3;
+static const qreal   g_mroot_base_line        = 0.5;
 static const qreal   g_script_size_multiplier = 0.7071; // sqrt(1/2)
 static const QString g_subsup_horiz_spacing   = "veryverythinmathspace";
 static const QString g_subsup_vert_spacing    = "thinmathspace";
 static const qreal   g_min_font_point_size    = 8.0;
 static const QChar   g_radical_char           = QChar( 0x1A, 0x22 );
-static const qreal   g_radical_scaling        = 1.1;
 static const int     g_oper_spec_rows         = 9;
+
+static const int g_radical_points_size = 11;
+static const QPointF g_radical_points[] = { QPointF( 0.0,         0.344439758 ),
+                                            QPointF( 0.217181096, 0.419051636 ),
+                                            QPointF( 0.557377049, 0.102829829 ),
+                                            QPointF( 0.942686988, 1.048864253 ),
+                                            QPointF( 1.0,         1.048864253 ),
+                                            QPointF( 1.0,         1.0         ),
+                                            QPointF( 1.0,         1.0         ),
+                                            QPointF( 0.594230277, 0.0         ),
+                                            QPointF( 0.516457480, 0.0         ),
+                                            QPointF( 0.135213883, 0.352172079 ),
+                                            QPointF( 0.024654201, 0.316221808 ) };
 
 static QwtMMLEntityTable mmlEntityTable;
 
@@ -323,10 +335,12 @@ protected:
     virtual void layoutSymbol();
     virtual void paintSymbol( QPainter *p ) const;
     virtual QRectF symbolRect() const;
-    qreal tailWidth() const;
 
 private:
     QRectF baseRect() const;
+    QRectF radicalRect() const;
+    qreal radicalMargin() const;
+    qreal radicalLineWidth() const;
 };
 
 class QwtMmlMrootNode : public QwtMmlRootBaseNode
@@ -2288,43 +2302,45 @@ QRectF QwtMmlRootBaseNode::baseRect() const
         return b->myRect();
 }
 
+QRectF QwtMmlRootBaseNode::radicalRect() const
+{
+    QFontMetricsF fm( font() );
+    return fm.boundingRect( g_radical_char );
+}
+
+qreal QwtMmlRootBaseNode::radicalMargin() const
+{
+    return g_mroot_base_margin * baseRect().height();
+}
+
+qreal QwtMmlRootBaseNode::radicalLineWidth() const
+{
+    return g_mroot_base_line * lineWidth();
+}
+
 QRectF QwtMmlRootBaseNode::symbolRect() const
 {
     QRectF base_rect = baseRect();
-    qreal margin = g_mroot_base_margin * base_rect.height();
-    qreal tail_width = tailWidth();
-    int line_width = qCeil( g_mroot_base_line * lineWidth() );
+    qreal radical_margin = radicalMargin();
+    qreal radical_width = radicalRect().width();
+    int radical_line_width = qCeil( radicalLineWidth() );
 
-    return QRectF( -tail_width, base_rect.top() - margin - line_width,
-                    tail_width + base_rect.width() + margin, base_rect.height() + 2.0 * margin + line_width );
-}
-
-qreal QwtMmlRootBaseNode::tailWidth() const
-{
-    QFontMetricsF fm( font() );
-    return fm.boundingRect( g_radical_char ).width();
+    return QRectF( -radical_width, base_rect.top() - radical_margin - radical_line_width,
+                    radical_width + base_rect.width() + radical_margin, base_rect.height() + 2.0 * radical_margin + radical_line_width );
 }
 
 void QwtMmlRootBaseNode::layoutSymbol()
 {
     QwtMmlNode *b = base();
-    QSizeF base_size;
     if ( b != 0 )
-    {
         b->setRelOrigin( QPointF( 0.0, 0.0 ) );
-        base_size = base()->myRect().size();
-    }
-    else
-    {
-        base_size = QSizeF( 1.0, 1.0 );
-    }
 
     QwtMmlNode *i = index();
     if ( i != 0 )
     {
         QRectF i_rect = i->myRect();
-        i->setRelOrigin( QPointF( -0.3 * tailWidth() - i_rect.width(),
-                                  -symbolRect().height() / 3.0 - i_rect.bottom() ) );
+        i->setRelOrigin( QPointF( -0.33 * radicalRect().width() - i_rect.width(),
+                                  -i_rect.bottom() ) );
     }
 }
 
@@ -2337,42 +2353,45 @@ void QwtMmlRootBaseNode::paintSymbol( QPainter *painter ) const
     QRectF sr = symbolRect();
     sr.moveTopLeft( devicePoint( sr.topLeft() ) );
 
-    int line_width = qCeil( g_mroot_base_line * lineWidth() );
-    QRectF r = sr;
-    r.adjust( 0.0, line_width, -(r.width() - tailWidth() ), 0.0 );
+    QRectF radical_rect = QFontMetricsF( font() ).boundingRect( g_radical_char );
 
-    QFont fn = font();
-    QFontMetricsF fm( fn );
-    QSizeF radix_size = fm.boundingRect( g_radical_char ).size();
-    qreal vertical_scaling = g_radical_scaling * r.height() / radix_size.height();
+    QRectF r = sr;
+    r.adjust(  0.0, qCeil( radicalLineWidth() ),
+              -(r.width() - radical_rect.width() ), 0.0 );
 
     painter->translate( r.bottomLeft() );
-    painter->scale( r.width() / radix_size.width(), vertical_scaling );
-    painter->setFont( fn );
-    painter->setClipRect( QRectF( 0.0, 0.0, radix_size.width(), -sr.height() / vertical_scaling ) );
-    // Note: we draw the radical taller than it should so as to avoid any kind
-    //       of antialiasing effect in the top-right of the radical, but this
-    //       means that we then have to clip things...
 
-    painter->drawText( -fm.boundingRect( g_radical_char ).bottomLeft(), g_radical_char );
+    QPointF radical_points[ g_radical_points_size ];
 
-    painter->restore();
+    for ( int i = 0; i < g_radical_points_size; ++i )
+    {
+        radical_points[ i ].setX( radical_rect.width() * g_radical_points[ i ].x() );
+        radical_points[ i ].setY( -r.height() * g_radical_points[ i ].y() );
+    }
 
-    painter->save();
+    qreal x2 = radical_points[ 2 ].x();
+    qreal y2 = radical_points[ 2 ].y();
+    qreal x3 = radical_points[ 3 ].x();
+    qreal y3 = radical_points[ 3 ].y();
 
-    QPen pen = painter->pen();
-    pen.setWidthF( line_width );
-    painter->setPen( pen );
+    radical_points[ 4 ].setX( sr.width() );
+    radical_points[ 5 ].setX( sr.width() );
 
-    painter->drawLine( QPointF( r.right() - line_width, r.top() - 0.5 * line_width ),
-                       QPointF( sr.right(), r.top() - 0.5 * line_width ) );
-    // Note: the abscissa of the first point really ought to be r.right(), but
-    //       then it a small gap might be occur between the top-right of the
-    //       radical and the line, so we shift the abscissa of the first point
-    //       slightly to the left. It's a bit of black magic and may not
-    //       therefore be 100% bullet-proof, but from what I have seen all
-    //       MathML renderers have one or several problems when it comes to
-    //       rendering radicals...
+    radical_points[ 3 ].setY( -sr.height() );
+    radical_points[ 4 ].setY( -sr.height() );
+
+    qreal new_y3 = radical_points[ 3 ].y();
+
+    radical_points[ 3 ].setX( x2 + ( x3 - x2 ) * ( new_y3 - y2 ) / ( y3 - y2 ) );
+
+    QBrush brush = painter->brush();
+    brush.setColor( painter->pen().color() );
+    brush.setStyle( Qt::SolidPattern );
+    painter->setBrush( brush );
+
+    painter->setRenderHint( QPainter::Antialiasing, true );
+
+    painter->drawPolygon( radical_points, g_radical_points_size );
 
     painter->restore();
 }
