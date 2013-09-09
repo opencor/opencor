@@ -715,9 +715,9 @@ static const QwtMmlNodeSpec g_node_spec_data[] =
     { QwtMml::MtableNode,     "mtable",     "MtableNode",     QwtMmlNodeSpec::ChildAny,     " MtrNode ",             MML_ATT_COMMON MML_ATT_MTABLE                                         },
     { QwtMml::MtrNode,        "mtr",        "MtrNode",        QwtMmlNodeSpec::ChildAny,     " MtdNode ",             MML_ATT_COMMON " rowalign columnalign groupalign "                    },
     { QwtMml::MtdNode,        "mtd",        "MtdNode",        QwtMmlNodeSpec::ImplicitMrow, 0,                       MML_ATT_COMMON " rowspan columnspan rowalign columnalign groupalign " },
-    { QwtMml::MoverNode,      "mover",      "MoverNode",      2,                            0,                       MML_ATT_COMMON " accent "                                             },
-    { QwtMml::MunderNode,     "munder",     "MunderNode",     2,                            0,                       MML_ATT_COMMON " accentunder "                                        },
-    { QwtMml::MunderoverNode, "munderover", "MunderoverNode", 3,                            0,                       MML_ATT_COMMON " accentunder accent "                                 },
+    { QwtMml::MoverNode,      "mover",      "MoverNode",      2,                            0,                       MML_ATT_COMMON " accent align "                                       },
+    { QwtMml::MunderNode,     "munder",     "MunderNode",     2,                            0,                       MML_ATT_COMMON " accentunder align "                                  },
+    { QwtMml::MunderoverNode, "munderover", "MunderoverNode", 3,                            0,                       MML_ATT_COMMON " accentunder accent align "                           },
     { QwtMml::MerrorNode,     "merror",     "MerrorNode",     QwtMmlNodeSpec::ImplicitMrow, 0,                       MML_ATT_COMMON                                                        },
     { QwtMml::MtextNode,      "mtext",      "MtextNode",      1,                            " TextNode ",            MML_ATT_COMMON " width height depth linebreak "                       },
     { QwtMml::MpaddedNode,    "mpadded",    "MpaddedNode",    QwtMmlNodeSpec::ImplicitMrow, 0,                       MML_ATT_COMMON " width height depth lspace "                          },
@@ -1276,7 +1276,6 @@ bool QwtMmlDocument::setContent(
 
     insertChild( 0, root_node, 0 );
     layout();
-
 
     return true;
 }
@@ -2423,7 +2422,7 @@ QwtMmlTextNode::QwtMmlTextNode( const QString &text, QwtMmlDocument *document )
 
 QString QwtMmlTextNode::toStr() const
 {
-    return QwtMmlNode::toStr() + ", text=\"" + m_text + "\"";
+    return QwtMmlNode::toStr() + " text=\"" + m_text + "\"";
 }
 
 bool QwtMmlTextNode::isInvisibleOperator() const
@@ -3221,10 +3220,12 @@ void QwtMmlMoverNode::layoutSymbol()
     QRectF base_rect = base->myRect();
     QRectF over_rect = over->myRect();
 
-    qreal spacing = g_mfrac_spacing * ( over_rect.height() + base_rect.height() );
+    qreal spacing = explicitAttribute( "accent" ) == "true" ? 0.0 : g_mfrac_spacing * ( over_rect.height() + base_rect.height() );
+    QString align_value = explicitAttribute( "align" );
+    qreal over_rel_factor = align_value == "left" ? 1.0 : align_value == "right" ? 0.0 : 0.5;
 
     base->setRelOrigin( QPointF( -0.5 * base_rect.width(), 0.0 ) );
-    over->setRelOrigin( QPointF( -0.5 * over_rect.width(),
+    over->setRelOrigin( QPointF( -over_rel_factor * over_rect.width(),
                                  base_rect.top() - spacing - over_rect.bottom() ) );
 }
 
@@ -3252,10 +3253,12 @@ void QwtMmlMunderNode::layoutSymbol()
     QRectF base_rect = base->myRect();
     QRectF under_rect = under->myRect();
 
-    qreal spacing = g_mfrac_spacing * ( under_rect.height() + base_rect.height() );
+    qreal spacing = explicitAttribute( "accentunder" ) == "true" ? 0.0 : g_mfrac_spacing * ( under_rect.height() + base_rect.height() );
+    QString align_value = explicitAttribute( "align" );
+    qreal under_rel_factor = align_value == "left" ? 1.0 : align_value == "right" ? 0.0 : 0.5;
 
     base->setRelOrigin( QPointF( -0.5 * base_rect.width(), 0.0 ) );
-    under->setRelOrigin( QPointF( -0.5 * under_rect.width(), base_rect.bottom() + spacing - under_rect.top() ) );
+    under->setRelOrigin( QPointF( -under_rel_factor * under_rect.width(), base_rect.bottom() + spacing - under_rect.top() ) );
 }
 
 int QwtMmlMunderNode::scriptlevel( const QwtMmlNode *node ) const
@@ -3285,11 +3288,14 @@ void QwtMmlMunderoverNode::layoutSymbol()
     QRectF under_rect = under->myRect();
     QRectF over_rect = over->myRect();
 
-    qreal spacing = g_mfrac_spacing * ( base_rect.height() + under_rect.height() + over_rect.height() );
+    qreal over_spacing = explicitAttribute( "accent" ) == "true" ? 0.0 : g_mfrac_spacing * ( base_rect.height() + under_rect.height() + over_rect.height() );
+    qreal under_spacing = explicitAttribute( "accentunder" ) == "true" ? 0.0 : g_mfrac_spacing * ( base_rect.height() + under_rect.height() + over_rect.height() );
+    QString align_value = explicitAttribute( "align" );
+    qreal underover_rel_factor = align_value == "left" ? 1.0 : align_value == "right" ? 0.0 : 0.5;
 
     base->setRelOrigin( QPointF( -0.5 * base_rect.width(), 0.0 ) );
-    under->setRelOrigin( QPointF( -0.5 * under_rect.width(), base_rect.bottom() + spacing - under_rect.top() ) );
-    over->setRelOrigin( QPointF( -0.5 * over_rect.width(), base_rect.top() - spacing - under_rect.bottom() ) );
+    under->setRelOrigin( QPointF( -underover_rel_factor * under_rect.width(), base_rect.bottom() + under_spacing - under_rect.top() ) );
+    over->setRelOrigin( QPointF( -underover_rel_factor * over_rect.width(), base_rect.top() - over_spacing - under_rect.bottom() ) );
 }
 
 int QwtMmlMunderoverNode::scriptlevel( const QwtMmlNode *node ) const
