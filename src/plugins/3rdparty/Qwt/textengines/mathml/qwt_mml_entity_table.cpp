@@ -2037,5 +2037,6 @@ const QwtMMLEntityTable::Spec *QwtMMLEntityTable::search(
         if ( value == ent_value )
             return entity;
     }
+
     return 0;
 }

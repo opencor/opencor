@@ -587,14 +587,13 @@ public:
         : QwtMmlNode( MtextNode, document, attribute_map ) {}
 };
 
-class QwtMmlMpaddedNode : public QwtMmlNode
+class QwtMmlSpacingNode : public QwtMmlNode
 {
 public:
-    QwtMmlMpaddedNode( QwtMmlDocument *document, const QwtMmlAttributeMap &attribute_map )
-        : QwtMmlNode( MpaddedNode, document, attribute_map ) {}
+    QwtMmlSpacingNode( const NodeType &node_type, QwtMmlDocument *document, const QwtMmlAttributeMap &attribute_map )
+        : QwtMmlNode( node_type, document, attribute_map ) {}
 
 public:
-    virtual qreal lspace() const;
     qreal width() const;
     qreal height() const;
     qreal depth() const;
@@ -603,16 +602,28 @@ protected:
     virtual void layoutSymbol();
     virtual QRectF symbolRect() const;
 
-private:
     qreal interpretSpacing( QString value, const qreal &base_value,
                             bool *ok ) const;
 };
 
-class QwtMmlMspaceNode : public QwtMmlNode
+class QwtMmlMpaddedNode : public QwtMmlSpacingNode
+{
+public:
+    QwtMmlMpaddedNode( QwtMmlDocument *document, const QwtMmlAttributeMap &attribute_map )
+        : QwtMmlSpacingNode( MpaddedNode, document, attribute_map ) {}
+
+public:
+    virtual qreal lspace() const;
+
+protected:
+    virtual QRectF symbolRect() const;
+};
+
+class QwtMmlMspaceNode : public QwtMmlSpacingNode
 {
 public:
     QwtMmlMspaceNode( QwtMmlDocument *document, const QwtMmlAttributeMap &attribute_map )
-        : QwtMmlNode( MspaceNode, document, attribute_map ) {}
+        : QwtMmlSpacingNode( MspaceNode, document, attribute_map ) {}
 };
 
 static const QwtMmlNodeSpec *mmlFindNodeSpec( const QwtMml::NodeType &type );
@@ -3287,7 +3298,7 @@ int QwtMmlMunderoverNode::scriptlevel( const QwtMmlNode *node ) const
         return sl;
 }
 
-qreal QwtMmlMpaddedNode::interpretSpacing(
+qreal QwtMmlSpacingNode::interpretSpacing(
     QString value, const qreal &base_value, bool *ok ) const
 {
     if ( ok != 0 )
@@ -3321,7 +3332,7 @@ qreal QwtMmlMpaddedNode::interpretSpacing(
     qreal factor = mmlQstringToQreal( factor_str, &qreal_ok );
     if ( !qreal_ok || factor < 0.0 )
     {
-        qWarning( "QwtMmlMpaddedNode::interpretSpacing(): could not parse \"%s\"", qPrintable( value ) );
+        qWarning( "QwtMmlSpacingNode::interpretSpacing(): could not parse \"%s\"", qPrintable( value ) );
         return 0.0;
     }
 
@@ -3350,7 +3361,7 @@ qreal QwtMmlMpaddedNode::interpretSpacing(
         unit_size = QwtMmlNode::interpretSpacing( "1" + pseudo_unit, &unit_ok );
         if ( !unit_ok )
         {
-            qWarning( "QwtMmlMpaddedNode::interpretSpacing(): could not parse \"%s\"", qPrintable( value ) );
+            qWarning( "QwtMmlSpacingNode::interpretSpacing(): could not parse \"%s\"", qPrintable( value ) );
             return 0.0;
         }
     }
@@ -3366,23 +3377,7 @@ qreal QwtMmlMpaddedNode::interpretSpacing(
         return base_value - factor * unit_size;
 }
 
-qreal QwtMmlMpaddedNode::lspace() const
-{
-    QString value = explicitAttribute( "lspace" );
-
-    if ( value.isNull() )
-        return 0.0;
-
-    bool ok;
-    qreal lspace = interpretSpacing( value, 0.0, &ok );
-
-    if ( ok )
-        return lspace;
-
-    return 0.0;
-}
-
-qreal QwtMmlMpaddedNode::width() const
+qreal QwtMmlSpacingNode::width() const
 {
     qreal child_width = 0.0;
     if ( m_first_child != 0 )
@@ -3400,7 +3395,7 @@ qreal QwtMmlMpaddedNode::width() const
     return child_width;
 }
 
-qreal QwtMmlMpaddedNode::height() const
+qreal QwtMmlSpacingNode::height() const
 {
     QRectF cr;
     if ( m_first_child == 0 )
@@ -3420,7 +3415,7 @@ qreal QwtMmlMpaddedNode::height() const
     return -cr.top();
 }
 
-qreal QwtMmlMpaddedNode::depth() const
+qreal QwtMmlSpacingNode::depth() const
 {
     QRectF cr;
     if ( m_first_child == 0 )
@@ -3440,7 +3435,7 @@ qreal QwtMmlMpaddedNode::depth() const
     return cr.bottom();
 }
 
-void QwtMmlMpaddedNode::layoutSymbol()
+void QwtMmlSpacingNode::layoutSymbol()
 {
     if ( m_first_child == 0 )
         return;
@@ -3448,6 +3443,27 @@ void QwtMmlMpaddedNode::layoutSymbol()
     m_first_child->setRelOrigin( QPointF( 0.0, 0.0 ) );
 }
 
+
+QRectF QwtMmlSpacingNode::symbolRect() const
+{
+    return QRectF( 0.0, -height(), width(), height() + depth() );
+}
+
+qreal QwtMmlMpaddedNode::lspace() const
+{
+    QString value = explicitAttribute( "lspace" );
+
+    if ( value.isNull() )
+        return 0.0;
+
+    bool ok;
+    qreal lspace = interpretSpacing( value, 0.0, &ok );
+
+    if ( ok )
+        return lspace;
+
+    return 0.0;
+}
 
 QRectF QwtMmlMpaddedNode::symbolRect() const
 {
