@@ -34,7 +34,8 @@ static const QPointF g_radical_points[] = { QPointF( 0.0,         0.344439758 ),
                                             QPointF( 0.594230277, 0.0         ),
                                             QPointF( 0.516457480, 0.0         ),
                                             QPointF( 0.135213883, 0.352172079 ),
-                                            QPointF( 0.024654201, 0.316221808 ) };
+                                            QPointF( 0.024654201, 0.316221808 )
+                                          };
 
 static QwtMMLEntityTable mmlEntityTable;
 
@@ -2340,7 +2341,7 @@ void QwtMmlRootBaseNode::layoutSymbol()
     {
         QRectF i_rect = i->myRect();
         i->setRelOrigin( QPointF( -0.33 * radicalRect().width() - i_rect.width(),
-                                  -i_rect.bottom() ) );
+                                  -1.1 * i_rect.bottom() ) );
     }
 }
 
