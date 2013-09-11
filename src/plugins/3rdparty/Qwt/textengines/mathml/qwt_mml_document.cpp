@@ -5,6 +5,7 @@
 #include <qdebug.h>
 #include <qdesktopwidget.h>
 #include <qdom.h>
+#include <qfontdatabase.h>
 #include <qmap.h>
 #include <qmath.h>
 #include <qpainter.h>
@@ -221,7 +222,6 @@ public:
     bool hasChildNodes() const { return m_first_child != 0; }
 
 protected:
-bool m_stretched;
     QRectF m_my_rect;
 
     QwtMmlNode *m_parent,
@@ -240,7 +240,7 @@ bool m_stretched;
 
 private:
     QwtMmlAttributeMap m_attribute_map;
-//    bool m_stretched;
+    bool m_stretched;
     QRectF m_parent_rect;
     QPointF m_rel_origin;
 
@@ -1185,10 +1185,29 @@ QwtMmlDocument::QwtMmlDocument()
 {
     m_root_node = 0;
 
-    // Some defaults which happen to work on my computer,
-    // but probably won't work on other's
-#if defined( Q_OS_LINUX )
+    // We set m_normal_font_name based on the information available at
+    // https://vismor.com/documents/site_implementation/viewing_mathematics/S7.php
+    // Note: on Linux, the Ubuntu, DejaVu Serif, FreeSerif and Liberation Serif
+    //       either don't look that great or have rendering problems (e.g.
+    //       FreeSerif doesn't render 0 properly!), so we simply use Century
+    //       Schoolbook L...
+
+    QFontDatabase font_database;
+
+#if defined( Q_OS_WIN )
+    if ( font_database.hasFamily( "Cambria" ) )
+        m_normal_font_name = "Cambria";
+    else if ( font_database.hasFamily( "Lucida Sans Unicode" ) )
+        m_normal_font_name = "Lucida Sans Unicode";
+    else
+        m_normal_font_name = "Times New Roman";
+#elif defined( Q_OS_LINUX )
     m_normal_font_name = "Century Schoolbook L";
+#elif defined( Q_OS_MAC )
+    if ( font_database.hasFamily( "STIXGeneral" ) )
+        m_normal_font_name = "STIXGeneral";
+    else
+        m_normal_font_name = "Times New Roman";
 #else
     m_normal_font_name = "Times New Roman";
 #endif
@@ -2094,14 +2113,13 @@ void QwtMmlNode::paint( QPainter *painter )
         painter->save();
 
         const QColor bg = background();
-        const QRectF d_rect = m_my_rect.translated( devicePoint( QPointF() ) );
         if ( bg.isValid() )
         {
-            painter->fillRect( d_rect, bg );
+            painter->fillRect( deviceRect(), bg );
         }
         else
         {
-            painter->fillRect( d_rect, m_document->backgroundColor() );
+            painter->fillRect( deviceRect(), m_document->backgroundColor() );
         }
 
         const QColor fg = color();
@@ -2129,19 +2147,21 @@ void QwtMmlNode::paint( QPainter *painter )
 
 void QwtMmlNode::paintSymbol( QPainter *painter ) const
 {
-    if ( m_document->drawFrames() && m_my_rect.isValid() )
+    QRectF d_rect = deviceRect();
+
+    if ( m_document->drawFrames() && d_rect.isValid() )
     {
         painter->save();
 
         painter->setPen( QPen( Qt::red, 0 ) );
 
-        const QPointF d_pos = devicePoint( QPointF() );
-        const QRectF d_rect = m_my_rect.translated( d_pos );
         painter->drawRect( d_rect );
 
         QPen pen = painter->pen();
         pen.setStyle( Qt::DotLine );
         painter->setPen( pen );
+
+        const QPointF d_pos = devicePoint( QPointF() );
 
         painter->drawLine( QPointF( d_rect.left(), d_pos.y() ),
                            QPointF ( d_rect.right(), d_pos.y() ) );
@@ -2194,8 +2214,8 @@ QRectF QwtMmlMfracNode::symbolRect() const
     qreal my_width = qMax( num_rect.width(), denom_rect.width() ) + 2.0 * spacing;
     int line_thickness = qCeil( lineThickness() );
 
-    return QRectF( -0.5 * my_width, -0.5 * line_thickness,
-                   my_width, line_thickness );
+    return QRectF( -0.5 * ( my_width + line_thickness ), -0.5 * line_thickness,
+                   my_width + line_thickness, line_thickness );
 }
 
 void QwtMmlMfracNode::layoutSymbol()
@@ -2264,8 +2284,8 @@ void QwtMmlMfracNode::paintSymbol( QPainter *painter ) const
         QRectF r = symbolRect();
         r.moveTopLeft( devicePoint( r.topLeft() ) );
 
-        painter->drawLine( QPointF( r.left(), r.center().y() ),
-                           QPointF( r.right(), r.center().y() ) );
+        painter->drawLine( QPointF( r.left() + 0.5 * line_thickness, r.center().y() ),
+                           QPointF( r.right() - 0.5 * line_thickness, r.center().y() ) );
 
         painter->restore();
     }
@@ -2432,12 +2452,6 @@ void QwtMmlTextNode::paintSymbol( QPainter *painter ) const
 
     QPointF d_pos = devicePoint( QPointF() );
     painter->drawText( QPointF( d_pos.x(), d_pos.y() + basePos() ), m_text );
-if ( m_stretched )
-{
-    qDebug() << "---";
-    qDebug() << m_text;
-    qDebug() << "---";
-}
 
     painter->restore();
 }
@@ -2626,6 +2640,8 @@ void QwtMmlMoNode::stretch()
             && ( m_previous_sibling != 0 || m_next_sibling != 0) )
         return;
 
+    Q_ASSERT( m_first_child != 0 );
+
     QRectF pmr = m_parent->myRect();
     QRectF pr = parentRect();
 
@@ -2633,12 +2649,15 @@ void QwtMmlMoNode::stretch()
     {
         case QwtMmlOperSpec::VStretch:
             stretchTo( QRectF( pr.left(), pmr.top(), pr.width(), pmr.height() ) );
+            m_first_child->stretchTo( QRectF( pr.left(), pmr.top(), pr.width(), pmr.height() ) );
             break;
         case QwtMmlOperSpec::HStretch:
             stretchTo( QRectF( pmr.left(), pr.top(), pmr.width(), pr.height() ) );
+            m_first_child->stretchTo( QRectF( pmr.left(), pr.top(), pmr.width(), pr.height() ) );
             break;
         case QwtMmlOperSpec::HVStretch:
             stretchTo( pmr );
+            m_first_child->stretchTo( pmr );
             break;
         case QwtMmlOperSpec::NoStretch:
             break;
