@@ -117,10 +117,12 @@ public:
 
     bool setContent( const QString &text, QString *errorMsg = 0,
                      int *errorLine = 0, int *errorColumn = 0 );
-    void paint( QPainter *p, const QPointF &pos ) const;
+    void paint( QPainter *p, const QPointF &pos );
     void dump() const;
     QSizeF size() const;
     void layout();
+
+    QTransform originalTransform() const { return m_original_transform; }
 
     QString fontName( const QwtMathMLDocument::MmlFont &type ) const;
     void setFontName( const QwtMathMLDocument::MmlFont &type, const QString &name );
@@ -151,6 +153,8 @@ private:
                                      QString *errorMsg );
 
     void insertOperator( QwtMmlNode *node, const QString &text );
+
+    QTransform m_original_transform;
 
     QwtMmlNode *m_root_node;
 
@@ -1670,10 +1674,12 @@ QwtMmlNode *QwtMmlDocument::createImplicitMrowNode(
     return mml_node;
 }
 
-void QwtMmlDocument::paint( QPainter *painter, const QPointF &pos ) const
+void QwtMmlDocument::paint( QPainter *painter, const QPointF &pos )
 {
     if ( m_root_node == 0 )
         return;
+
+    m_original_transform = painter->transform();
 
     m_root_node->setRelOrigin( pos - m_root_node->myRect().topLeft() );
     m_root_node->paint( painter );
@@ -2117,11 +2123,16 @@ void QwtMmlNode::paint( QPainter *painter )
 
     if ( m_node_type != UnknownNode )
     {
+        painter->save();
+        painter->setTransform( m_document->originalTransform() );
+
         const QColor bg = background();
         if ( bg.isValid() )
             painter->fillRect( d_rect, bg );
         else
             painter->fillRect( d_rect, m_document->backgroundColor() );
+
+        painter->restore();
 
         const QColor fg = color();
         if ( fg.isValid() )
@@ -2147,6 +2158,7 @@ void QwtMmlNode::paintSymbol( QPainter *painter ) const
     if ( m_document->drawFrames() && d_rect.isValid() )
     {
         painter->save();
+        painter->setTransform( m_document->originalTransform() );
 
         painter->setPen( QPen( Qt::red, 0 ) );
 
@@ -2159,7 +2171,7 @@ void QwtMmlNode::paintSymbol( QPainter *painter ) const
         const QPointF d_pos = devicePoint( QPointF() );
 
         painter->drawLine( QPointF( d_rect.left(), d_pos.y() ),
-                           QPointF ( d_rect.right(), d_pos.y() ) );
+                           QPointF( d_rect.right(), d_pos.y() ) );
 
         painter->restore();
     }
