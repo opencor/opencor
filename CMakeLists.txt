@@ -557,6 +557,9 @@ ENDIF()
 INSTALL(FILES ${CMAKE_SOURCE_DIR}/models/hodgkin_huxley_squid_axon_model_1952.cellml
         DESTINATION models
         PERMISSIONS OWNER_READ GROUP_READ WORLD_READ)
+INSTALL(FILES ${CMAKE_SOURCE_DIR}/models/noble_model_1962.cellml
+        DESTINATION models
+        PERMISSIONS OWNER_READ GROUP_READ WORLD_READ)
 INSTALL(FILES ${CMAKE_SOURCE_DIR}/models/van_der_pol_model_1928.cellml
         DESTINATION models
         PERMISSIONS OWNER_READ GROUP_READ WORLD_READ)
