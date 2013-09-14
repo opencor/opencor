@@ -117,12 +117,10 @@ public:
 
     bool setContent( const QString &text, QString *errorMsg = 0,
                      int *errorLine = 0, int *errorColumn = 0 );
-    void paint( QPainter *p, const QPointF &pos );
+    void paint( QPainter *painter, const QPointF &pos );
     void dump() const;
     QSizeF size() const;
     void layout();
-
-    QTransform originalTransform() const { return m_original_transform; }
 
     QString fontName( const QwtMathMLDocument::MmlFont &type ) const;
     void setFontName( const QwtMathMLDocument::MmlFont &type, const QString &name );
@@ -153,8 +151,6 @@ private:
                                      QString *errorMsg );
 
     void insertOperator( QwtMmlNode *node, const QString &text );
-
-    QTransform m_original_transform;
 
     QwtMmlNode *m_root_node;
 
@@ -198,7 +194,7 @@ public:
 
     virtual void stretch();
     virtual void layout();
-    virtual void paint( QPainter *p );
+    virtual void paint( QPainter *painter, qreal x_scaling, qreal y_scaling );
 
     qreal basePos() const;
 
@@ -234,7 +230,7 @@ protected:
                *m_next_sibling;
 
     virtual void layoutSymbol();
-    virtual void paintSymbol( QPainter *p ) const;
+    virtual void paintSymbol( QPainter *painter, qreal, qreal ) const;
     virtual QRectF symbolRect() const { return QRectF( 0.0, 0.0, 0.0, 0.0 ); }
 
     QwtMmlNode *parentWithExplicitAttribute( const QString &name, NodeType type = NoNode );
@@ -274,7 +270,7 @@ public:
                      const QwtMmlAttributeMap &attribute_map )
         : QwtMmlNode( MphantomNode, document, attribute_map ) {}
 
-    virtual void paint( QPainter * ) {}
+    virtual void paint( QPainter *, qreal, qreal ) {}
 };
 
 class QwtMmlUnknownNode : public QwtMmlNode
@@ -311,7 +307,7 @@ public:
 
 protected:
     virtual void layoutSymbol();
-    virtual void paintSymbol( QPainter *p ) const;
+    virtual void paintSymbol( QPainter *painter, qreal x_scaling, qreal y_scaling ) const;
     virtual QRectF symbolRect() const;
 
 private:
@@ -338,7 +334,7 @@ public:
 
 protected:
     virtual void layoutSymbol();
-    virtual void paintSymbol( QPainter *p ) const;
+    virtual void paintSymbol( QPainter *painter, qreal x_scaling, qreal y_scaling ) const;
     virtual QRectF symbolRect() const;
 
 private:
@@ -380,7 +376,7 @@ public:
     virtual QColor background() const { return m_parent->background(); }
 
 protected:
-    virtual void paintSymbol( QPainter *p ) const;
+    virtual void paintSymbol( QPainter *painter, qreal x_scaling, qreal y_scaling ) const;
     virtual QRectF symbolRect() const;
 
     QString m_text;
@@ -504,7 +500,7 @@ public:
 protected:
     virtual void layoutSymbol();
     virtual QRectF symbolRect() const;
-    virtual void paintSymbol( QPainter *p ) const;
+    virtual void paintSymbol( QPainter *painter, qreal x_scaling, qreal y_scaling ) const;
 
 private:
     struct CellSizeData
@@ -1679,10 +1675,8 @@ void QwtMmlDocument::paint( QPainter *painter, const QPointF &pos )
     if ( m_root_node == 0 )
         return;
 
-    m_original_transform = painter->transform();
-
     m_root_node->setRelOrigin( pos - m_root_node->myRect().topLeft() );
-    m_root_node->paint( painter );
+    m_root_node->paint( painter, 1.0, 1.0 );
 }
 
 QSizeF QwtMmlDocument::size() const
@@ -2109,7 +2103,8 @@ void QwtMmlNode::layoutSymbol()
     }
 }
 
-void QwtMmlNode::paint( QPainter *painter )
+void QwtMmlNode::paint(
+    QPainter *painter, qreal x_scaling, qreal y_scaling )
 {
     if ( !m_my_rect.isValid() )
         return;
@@ -2119,20 +2114,18 @@ void QwtMmlNode::paint( QPainter *painter )
     QRectF d_rect = deviceRect();
 
     if ( m_stretched )
-        painter->scale( d_rect.width() / m_my_rect.width(), d_rect.height() / m_my_rect.height() );
+    {
+        x_scaling *= d_rect.width() / m_my_rect.width();
+        y_scaling *= d_rect.height() / m_my_rect.height();
+    }
 
     if ( m_node_type != UnknownNode )
     {
-        painter->save();
-        painter->setTransform( m_document->originalTransform() );
-
         const QColor bg = background();
         if ( bg.isValid() )
             painter->fillRect( d_rect, bg );
         else
             painter->fillRect( d_rect, m_document->backgroundColor() );
-
-        painter->restore();
 
         const QColor fg = color();
         if ( fg.isValid() )
@@ -2143,22 +2136,21 @@ void QwtMmlNode::paint( QPainter *painter )
 
     QwtMmlNode *child = m_first_child;
     for ( ; child != 0; child = child->nextSibling() )
-        child->paint( painter );
+        child->paint( painter, x_scaling, y_scaling );
 
     if ( m_node_type != UnknownNode )
-        paintSymbol( painter );
+        paintSymbol( painter, x_scaling, y_scaling );
 
     painter->restore();
 }
 
-void QwtMmlNode::paintSymbol( QPainter *painter ) const
+void QwtMmlNode::paintSymbol( QPainter *painter, qreal, qreal ) const
 {
     QRectF d_rect = deviceRect();
 
     if ( m_document->drawFrames() && d_rect.isValid() )
     {
         painter->save();
-        painter->setTransform( m_document->originalTransform() );
 
         painter->setPen( QPen( Qt::red, 0 ) );
 
@@ -2274,9 +2266,10 @@ qreal QwtMmlMfracNode::lineThickness() const
     }
 }
 
-void QwtMmlMfracNode::paintSymbol( QPainter *painter ) const
+void QwtMmlMfracNode::paintSymbol(
+    QPainter *painter, qreal x_scaling, qreal y_scaling ) const
 {
-    QwtMmlNode::paintSymbol( painter );
+    QwtMmlNode::paintSymbol( painter, x_scaling, y_scaling );
 
     int line_thickness = qCeil( lineThickness() );
 
@@ -2372,9 +2365,10 @@ void QwtMmlRootBaseNode::layoutSymbol()
     }
 }
 
-void QwtMmlRootBaseNode::paintSymbol( QPainter *painter ) const
+void QwtMmlRootBaseNode::paintSymbol(
+    QPainter *painter, qreal x_scaling, qreal y_scaling ) const
 {
-    QwtMmlNode::paintSymbol( painter );
+    QwtMmlNode::paintSymbol( painter, x_scaling, y_scaling );
 
     painter->save();
 
@@ -2446,19 +2440,25 @@ bool QwtMmlTextNode::isInvisibleOperator() const
            || m_text == QString( QChar( 0x64, 0x20 ) ); // Invisible addition
 }
 
-void QwtMmlTextNode::paintSymbol( QPainter *painter ) const
+void QwtMmlTextNode::paintSymbol(
+    QPainter *painter, qreal x_scaling, qreal y_scaling ) const
 {
-    QwtMmlNode::paintSymbol( painter );
+    QwtMmlNode::paintSymbol( painter, x_scaling, y_scaling );
 
     if ( isInvisibleOperator() )
         return;
 
     painter->save();
 
+    QRectF r = symbolRect();
+    r.moveTopLeft( devicePoint( r.topLeft() ) );
+
+    painter->translate( r.bottomLeft() );
+    painter->scale( x_scaling / r.width(), y_scaling / r.height() );
+
     painter->setFont( font() );
 
-    QPointF d_pos = devicePoint( QPointF() );
-    painter->drawText( QPointF( d_pos.x(), d_pos.y() + basePos() ), m_text );
+    painter->drawText( QPointF( 0.0, 0.0), m_text );
 
     painter->restore();
 }
@@ -2969,9 +2969,10 @@ QwtMml::FrameType QwtMmlMtableNode::rowlines( const int &idx ) const
     return mmlInterpretFrameType( value, idx, 0 );
 }
 
-void QwtMmlMtableNode::paintSymbol( QPainter *painter ) const
+void QwtMmlMtableNode::paintSymbol(
+    QPainter *painter, qreal x_scaling, qreal y_scaling ) const
 {
-    QwtMmlNode::paintSymbol( painter );
+    QwtMmlNode::paintSymbol( painter, x_scaling, y_scaling );
 
     FrameType f = frame();
     if ( f != FrameNone )
