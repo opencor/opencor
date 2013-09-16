@@ -367,7 +367,7 @@ IF(WIN32)
 
     # Qt libraries required by OpenCOR
 
-    WINDOWS_DEPLOY_QT_LIBRARIES(Qt5CLucene Qt5Core Qt5Gui Qt5Help Qt5Multimedia Qt5MultimediaWidgets Qt5Network Qt5OpenGL Qt5PrintSupport Qt5Qml Qt5Quick Qt5Sql Qt5Svg Qt5V8 Qt5WebKit Qt5WebKitWidgets Qt5Widgets Qt5Xml)
+    WINDOWS_DEPLOY_QT_LIBRARIES(Qt5CLucene Qt5Core Qt5Gui Qt5Help Qt5Multimedia Qt5MultimediaWidgets Qt5Network Qt5OpenGL Qt5PrintSupport Qt5Qml Qt5Quick Qt5Sensors Qt5Sql Qt5Svg Qt5V8 Qt5WebKit Qt5WebKitWidgets Qt5Widgets Qt5Xml)
     WINDOWS_DEPLOY_QT_LIBRARIES(icudt49 icuin49 icuuc49)
     WINDOWS_DEPLOY_QT_LIBRARIES(libEGL libGLESv2 D3DCompiler_43)
 
@@ -467,7 +467,7 @@ ELSE()
     #       its suffix, so unless making the macro unnecessarily cumbersome to
     #       use, it's better to do things ourselves...
 
-    FOREACH(QT_LIBRARY CLucene Core DBus Gui Help Network OpenGL PrintSupport Qml Quick Sql Svg V8 WebKit WebKitWidgets Widgets Xml)
+    FOREACH(QT_LIBRARY CLucene Core DBus Gui Help Network OpenGL PrintSupport Qml Quick Sensors Sql Svg V8 WebKit WebKitWidgets Widgets Xml)
         INSTALL(FILES ${QT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}
                 DESTINATION lib
                 RENAME ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
