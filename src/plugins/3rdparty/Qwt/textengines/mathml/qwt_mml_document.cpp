@@ -2973,46 +2973,44 @@ void QwtMmlMtableNode::paintSymbol(
 {
     QwtMmlNode::paintSymbol( painter, x_scaling, y_scaling );
 
-    FrameType f = frame();
-    if ( f != FrameNone )
-    {
-        painter->save();
+    painter->save();
 
-        QPen pen = painter->pen();
-        if ( f == FrameDashed )
+    painter->translate( devicePoint( QPointF() ) );
+
+    QPen pen = painter->pen();
+
+    FrameType frame_type = frame();
+    if ( frame_type != FrameNone )
+    {
+        if ( frame_type == FrameDashed )
             pen.setStyle( Qt::DashLine );
         else
             pen.setStyle( Qt::SolidLine );
         painter->setPen( pen );
         painter->drawRect( m_my_rect );
-
-        painter->restore();
     }
-
-    painter->save();
 
     qreal col_spc = columnspacing();
     qreal row_spc = rowspacing();
 
-    QPen pen = painter->pen();
     qreal col_offset = 0.0;
     int i;
     for ( i = 0; i < m_cell_size_data.numCols() - 1; ++i )
     {
-        FrameType f = columnlines( i );
+        FrameType frame_type = columnlines( i );
         col_offset += m_cell_size_data.col_widths[i];
 
-        if ( f != FrameNone )
+        if ( frame_type != FrameNone )
         {
-            if ( f == FrameDashed )
+            if ( frame_type == FrameDashed )
                 pen.setStyle( Qt::DashLine );
-            else if ( f == FrameSolid )
+            else if ( frame_type == FrameSolid )
                 pen.setStyle( Qt::SolidLine );
 
             painter->setPen( pen );
             qreal x = col_offset + 0.5 * col_spc;
             painter->drawLine( QPointF( x, -0.5 * m_content_height ),
-                               QPointF( x, 0.5 * m_content_height ) );
+                               QPointF( x,  0.5 * m_content_height ) );
         }
         col_offset += col_spc;
     }
@@ -3020,14 +3018,14 @@ void QwtMmlMtableNode::paintSymbol(
     qreal row_offset = 0.0;
     for ( i = 0; i < m_cell_size_data.numRows() - 1; ++i )
     {
-        FrameType f = rowlines( i );
+        FrameType frame_type = rowlines( i );
         row_offset += m_cell_size_data.row_heights[i];
 
-        if ( f != FrameNone )
+        if ( frame_type != FrameNone )
         {
-            if ( f == FrameDashed )
+            if ( frame_type == FrameDashed )
                 pen.setStyle( Qt::DashLine );
-            else if ( f == FrameSolid )
+            else if ( frame_type == FrameSolid )
                 pen.setStyle( Qt::SolidLine );
 
             painter->setPen( pen );
@@ -3846,14 +3844,14 @@ struct OperSpecSearchResult
                          *infix_form,
                          *postfix_form;
 
-    const QwtMmlOperSpec *&getForm( const QwtMml::FormType &f );
-    bool haveForm( const QwtMml::FormType &f ) { return getForm( f ) != 0; }
+    const QwtMmlOperSpec *&getForm( const QwtMml::FormType &form );
+    bool haveForm( const QwtMml::FormType &form ) { return getForm( form ) != 0; }
     void addForm( const QwtMmlOperSpec *spec ) { getForm( spec->form ) = spec; }
 };
 
-const QwtMmlOperSpec *&OperSpecSearchResult::getForm( const QwtMml::FormType &f )
+const QwtMmlOperSpec *&OperSpecSearchResult::getForm( const QwtMml::FormType &form )
 {
-    switch ( f )
+    switch ( form )
     {
         case QwtMml::PrefixForm:
             return prefix_form;
