@@ -2281,11 +2281,11 @@ void QwtMmlMfracNode::paintSymbol(
         pen.setWidthF( line_thickness );
         painter->setPen( pen );
 
-        QRectF r = symbolRect();
-        r.moveTopLeft( devicePoint( r.topLeft() ) );
+        QRectF s_rect = symbolRect();
+        s_rect.moveTopLeft( devicePoint( s_rect.topLeft() ) );
 
-        painter->drawLine( QPointF( r.left() + 0.5 * line_thickness, r.center().y() ),
-                           QPointF( r.right() - 0.5 * line_thickness, r.center().y() ) );
+        painter->drawLine( QPointF( s_rect.left() + 0.5 * line_thickness, s_rect.center().y() ),
+                           QPointF( s_rect.right() - 0.5 * line_thickness, s_rect.center().y() ) );
 
         painter->restore();
     }
@@ -2372,23 +2372,23 @@ void QwtMmlRootBaseNode::paintSymbol(
 
     painter->save();
 
-    QRectF sr = symbolRect();
-    sr.moveTopLeft( devicePoint( sr.topLeft() ) );
+    QRectF s_rect = symbolRect();
+    s_rect.moveTopLeft( devicePoint( s_rect.topLeft() ) );
 
     QRectF radical_rect = QFontMetricsF( font() ).boundingRect( g_radical_char );
 
-    QRectF r = sr;
-    r.adjust(  0.0, qCeil( radicalLineWidth() ),
-              -(r.width() - radical_rect.width() ), 0.0 );
+    QRectF rect = s_rect;
+    rect.adjust(  0.0, qCeil( radicalLineWidth() ),
+                 -(rect.width() - radical_rect.width() ), 0.0 );
 
-    painter->translate( r.bottomLeft() );
+    painter->translate( rect.bottomLeft() );
 
     QPointF radical_points[ g_radical_points_size ];
 
     for ( int i = 0; i < g_radical_points_size; ++i )
     {
         radical_points[ i ].setX( radical_rect.width() * g_radical_points[ i ].x() );
-        radical_points[ i ].setY( -r.height() * g_radical_points[ i ].y() );
+        radical_points[ i ].setY( -rect.height() * g_radical_points[ i ].y() );
     }
 
     qreal x2 = radical_points[ 2 ].x();
@@ -2396,11 +2396,11 @@ void QwtMmlRootBaseNode::paintSymbol(
     qreal x3 = radical_points[ 3 ].x();
     qreal y3 = radical_points[ 3 ].y();
 
-    radical_points[ 4 ].setX( sr.width() );
-    radical_points[ 5 ].setX( sr.width() );
+    radical_points[ 4 ].setX( s_rect.width() );
+    radical_points[ 5 ].setX( s_rect.width() );
 
-    radical_points[ 3 ].setY( -sr.height() );
-    radical_points[ 4 ].setY( -sr.height() );
+    radical_points[ 3 ].setY( -s_rect.height() );
+    radical_points[ 4 ].setY( -s_rect.height() );
 
     qreal new_y3 = radical_points[ 3 ].y();
 
@@ -2450,15 +2450,14 @@ void QwtMmlTextNode::paintSymbol(
 
     painter->save();
 
-    QRectF r = symbolRect();
-    r.moveTopLeft( devicePoint( r.topLeft() ) );
+    QPointF d_pos = devicePoint( QPointF() );
+    QPointF s_pos = symbolRect().topLeft();
 
-    painter->translate( r.bottomLeft() );
-    painter->scale( x_scaling / r.width(), y_scaling / r.height() );
-
+    painter->translate( d_pos + s_pos );
+    painter->scale( x_scaling, y_scaling );
     painter->setFont( font() );
 
-    painter->drawText( QPointF( 0.0, 0.0), m_text );
+    painter->drawText( QPointF( 0.0, basePos() ) - s_pos, m_text );
 
     painter->restore();
 }
@@ -2709,10 +2708,10 @@ qreal QwtMmlMtableNode::rowspacing() const
     if ( value.isNull() )
         return ex();
     bool ok;
-    qreal r = interpretSpacing( value, &ok );
+    qreal spacing = interpretSpacing( value, &ok );
 
     if ( ok )
-        return r;
+        return spacing;
     else
         return ex();
 }
@@ -2723,10 +2722,10 @@ qreal QwtMmlMtableNode::columnspacing() const
     if ( value.isNull() )
         return 0.8 * em();
     bool ok;
-    qreal r = interpretSpacing( value, &ok );
+    qreal spacing = interpretSpacing( value, &ok );
 
     if ( ok )
-        return r;
+        return spacing;
     else
         return 0.8 * em();
 }
@@ -3083,8 +3082,8 @@ void QwtMmlMtrNode::layoutCells(
         Q_ASSERT( child->nodeType() == MtdNode );
         QwtMmlMtdNode *mtd = ( QwtMmlMtdNode* ) child;
 
-        QRectF r = QRectF( 0.0, m_my_rect.top(), col_widths[colnum], m_my_rect.height() );
-        mtd->setMyRect( r );
+        QRectF rect = QRectF( 0.0, m_my_rect.top(), col_widths[colnum], m_my_rect.height() );
+        mtd->setMyRect( rect );
         mtd->setRelOrigin( QPointF( col_offset, 0.0 ) );
         col_offset += col_widths[colnum] + col_spc;
     }
