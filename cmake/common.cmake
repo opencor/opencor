@@ -9,7 +9,7 @@ MACRO(INITIALISE_PROJECT)
     ELSEIF(CMAKE_SIZEOF_VOID_P EQUAL 8)
         SET(32BIT_MODE OFF)
     ELSE()
-        MESSAGE(FATAL_ERROR "Sorry, but OpenCOR can only be built in 32-bit or 64-bit...")
+        MESSAGE(FATAL_ERROR "Sorry, but OpenCOR can only be built in 32-bit or 64-bit mode...")
     ENDIF()
 
     # Required packages
