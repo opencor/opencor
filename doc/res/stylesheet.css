@@ -58,9 +58,16 @@ table.version td.platform td.logo {
 
 table.version td.platform div {
     color: rgb(103, 103, 103);
-    font-size: 12pt;
     font-style: italic;
+}
+
+table.version td.platform div.name {
+    font-size: 12pt;
     font-weight: bold;
+}
+
+table.version td.platform div.supported {
+    font-size: 8pt;
 }
 
 table.version td.platform span.fileSize {

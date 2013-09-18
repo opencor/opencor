@@ -44,21 +44,21 @@
     date_default_timezone_set("Europe/London");
 
     $versions = array(array(0, 1, 2, 29, 5, 2013, 1,
-                            array(array("Windows", array(".exe"), array(".zip")),
-                                  array("Linux", array(".tar.gz", 32), array(".tar.gz", 64)),
-                                  array("OS X", array(".dmg"), array(".zip")))),
-                      array(0, 0, 0, 5, 8, 2013, 2,
-                            array(array("Windows", array(".exe"), array(".zip")),
-                                  array("Linux", array(".tar.gz", 32), array(".tar.gz", 64)),
-                                  array("OS X", array(".dmg"), array(".zip")))),
+                            array(array("Windows", "Windows XP and above", array(".exe"), array(".zip")),
+                                  array("Linux", "Ubuntu 12.04 LTS (Precise Pangolin) and above", array(".tar.gz", 32), array(".tar.gz", 64)),
+                                  array("OS X", "OS X 10.8 (Mountain Lion)", array(".dmg"), array(".zip")))),
+                      array(0, 0, 0, 18, 9, 2013, 2,
+                            array(array("Windows", "Windows XP and above", array(".exe"), array(".zip")),
+                                  array("Linux", "Ubuntu 12.04 LTS (Precise Pangolin) and above", array(".tar.gz", 32), array(".tar.gz", 64)),
+                                  array("OS X", "Mac OS X 10.7 (Lion) and above", array(".dmg"), array(".zip")))),
                       array(0, 1, 1, 17, 4, 2013, 0,
-                            array(array("Windows", array(".exe"), array(".zip")),
-                                  array("Linux", array(".tar.gz", 32), array(".tar.gz", 64)),
-                                  array("OS X", array(".dmg"), array(".zip")))),
+                            array(array("Windows", "Windows XP and above", array(".exe"), array(".zip")),
+                                  array("Linux", "Ubuntu 12.04 LTS (Precise Pangolin) and above", array(".tar.gz", 32), array(".tar.gz", 64)),
+                                  array("OS X", "OS X 10.8 (Mountain Lion)", array(".dmg"), array(".zip")))),
                       array(0, 1, 0, 1, 4, 2013, 0,
-                            array(array("Windows", array(".exe"), array(".zip")),
-                                  array("Linux", array(".tar.gz", 32), array(".tar.gz", 64)),
-                                  array("OS X", array(".dmg"), array(".zip")))));
+                            array(array("Windows", "Windows XP and above", array(".exe"), array(".zip")),
+                                  array("Linux", "Ubuntu 12.04 LTS (Precise Pangolin) and above", array(".tar.gz", 32), array(".tar.gz", 64)),
+                                  array("OS X", "OS X 10.8 (Mountain Lion)", array(".dmg"), array(".zip")))));
 
     // Output our various versions
 
@@ -193,6 +193,7 @@
 
             if (sizeof($platformFiles)) {
                 $platformName = $platformFiles[0];
+                $platformSupported = $platformFiles[1];
 ?>
                         <table>
                             <tbody>
@@ -201,15 +202,19 @@
                                         <img src="../res/pics/<?php echo str_replace(" ", "", strtolower($platformName)); ?>.png" width=72 height=72 alt="<?php echo $platformName; ?>">
                                     </td>
                                     <td>
-                                        <div>
+                                        <div class="name">
                                             <?php echo $platformName."\n"; ?>
+                                        </div>
+
+                                        <div class="supported">
+                                            <?php echo $platformSupported."\n"; ?>
                                         </div>
 
                                         <ul>
 <?php
                 // List the platform files
 
-                $platformFileIndex = 1;
+                $platformFileIndex = 2;
 
                 while ($platformFileIndex != sizeof($platformFiles)) {
                     $platformFile = $platformFiles[$platformFileIndex];
