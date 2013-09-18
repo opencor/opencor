@@ -761,9 +761,6 @@ ENDMACRO()
 
 MACRO(OS_X_QT_DEPENDENCIES FILENAME QT_DEPENDENCIES)
     # Retrieve the file's full-path Qt dependencies as a list
-    # Note: some people may be using grep with coloring (e.g. they have
-    #       export GREP_OPTIONS='--color=always' in their profile), hence we ask
-    #       for coloring never to be used...
 
     SET(QT_LIBRARY_DIR_FOR_GREP "\t${QT_LIBRARY_DIR}/")
 
