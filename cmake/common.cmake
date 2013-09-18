@@ -9,7 +9,7 @@ MACRO(INITIALISE_PROJECT)
     ELSEIF(CMAKE_SIZEOF_VOID_P EQUAL 8)
         SET(32BIT_MODE OFF)
     ELSE()
-        MESSAGE(FATAL_ERROR "Sorry, but OpenCOR can only be built in 32-bit or 64-bit...")
+        MESSAGE(FATAL_ERROR "Sorry, but OpenCOR can only be built in 32-bit or 64-bit mode...")
     ENDIF()
 
     # Required packages
@@ -90,6 +90,38 @@ MACRO(INITIALISE_PROJECT)
 
     IF(WIN32)
         ADD_DEFINITIONS(-D_UNICODE)
+    ENDIF()
+
+    # Use the oldest SDK shipped with Xcode
+    # Note: xcodebuild always seems to generate an error message even though
+    #       everything works fine, hence we pass ERROR_QUIET to
+    #       EXECUTE_PROCESS()...
+
+    IF(APPLE)
+        EXECUTE_PROCESS(COMMAND xcodebuild -showsdks
+                        COMMAND grep --colour=never macosx
+                        COMMAND head -1
+                        OUTPUT_VARIABLE OLDEST_SDK_LINE
+                        OUTPUT_STRIP_TRAILING_WHITESPACE
+                        ERROR_QUIET)
+        EXECUTE_PROCESS(COMMAND echo ${OLDEST_SDK_LINE}
+                        COMMAND cut -f2
+                        OUTPUT_VARIABLE OLDEST_OS_X_VERSION
+                        OUTPUT_STRIP_TRAILING_WHITESPACE)
+        EXECUTE_PROCESS(COMMAND echo ${OLDEST_SDK_LINE}
+                        COMMAND cut -f3
+                        OUTPUT_VARIABLE OLDEST_SDK_VERSION
+                        OUTPUT_STRIP_TRAILING_WHITESPACE)
+        EXECUTE_PROCESS(COMMAND echo ${OLDEST_SDK_VERSION}
+                        COMMAND cut -d " " -f2
+                        OUTPUT_VARIABLE OLDEST_SDK_NAME
+                        OUTPUT_STRIP_TRAILING_WHITESPACE)
+        EXECUTE_PROCESS(COMMAND xcodebuild -version -sdk ${OLDEST_SDK_NAME} Path
+                        OUTPUT_VARIABLE OLDEST_SDK_PATH
+                        OUTPUT_STRIP_TRAILING_WHITESPACE
+                        ERROR_QUIET)
+
+        SET(CMAKE_OSX_SYSROOT ${OLDEST_SDK_PATH})
     ENDIF()
 
     # Default location of third-party libraries
