@@ -121,6 +121,8 @@ MACRO(INITIALISE_PROJECT)
                         OUTPUT_STRIP_TRAILING_WHITESPACE
                         ERROR_QUIET)
 
+        MESSAGE("Building for ${OLDEST_OS_X_VERSION} and above...")
+
         SET(CMAKE_OSX_SYSROOT ${OLDEST_SDK_PATH})
     ENDIF()
 
