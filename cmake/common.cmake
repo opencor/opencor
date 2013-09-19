@@ -108,6 +108,12 @@ MACRO(INITIALISE_PROJECT)
                         COMMAND cut -f2
                         OUTPUT_VARIABLE OLDEST_OS_X_VERSION
                         OUTPUT_STRIP_TRAILING_WHITESPACE)
+        EXECUTE_PROCESS(COMMAND echo ${OLDEST_OS_X_VERSION}
+                        COMMAND rev
+                        COMMAND cut -d " " -f1
+                        COMMAND rev
+                        OUTPUT_VARIABLE OLDEST_OS_X_VERSION_NUMBER
+                        OUTPUT_STRIP_TRAILING_WHITESPACE)
         EXECUTE_PROCESS(COMMAND echo ${OLDEST_SDK_LINE}
                         COMMAND cut -f3
                         OUTPUT_VARIABLE OLDEST_SDK_VERSION
@@ -123,6 +129,7 @@ MACRO(INITIALISE_PROJECT)
 
         MESSAGE("Building for ${OLDEST_OS_X_VERSION} and above...")
 
+        SET(CMAKE_OSX_DEPLOYMENT_TARGET ${OLDEST_OS_X_VERSION_NUMBER})
         SET(CMAKE_OSX_SYSROOT ${OLDEST_SDK_PATH})
     ENDIF()
 
