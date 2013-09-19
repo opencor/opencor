@@ -30,7 +30,22 @@ ECHO.
 
 CD build
 
-cmake -G "Visual Studio 10" -DENABLE_TESTING=True ..
-msbuild OpenCOR.sln /p:Configuration=Release;OutDir=.\ %*
+cmake -G "NMake Makefiles JOM" -DENABLE_TESTING=True ..
+
+SET ExitCode=%ERRORLEVEL%
+
+IF %ExitCode% EQU 0 GOTO BuildOpenCOR
 
 CD ..
+
+EXIT /B %ExitCode%
+
+:BuildOpenCOR
+
+jom %*
+
+SET ExitCode=%ERRORLEVEL%
+
+CD ..
+
+EXIT /B %ExitCode%

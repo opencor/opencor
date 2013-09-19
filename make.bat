@@ -30,7 +30,7 @@ ECHO.
 
 CD build
 
-cmake -G "Visual Studio 10" ..
+cmake -G "NMake Makefiles JOM" ..
 
 SET ExitCode=%ERRORLEVEL%
 
@@ -42,7 +42,7 @@ EXIT /B %ExitCode%
 
 :BuildOpenCORGUI
 
-msbuild OpenCOR.sln /p:Configuration=Release;OutDir=.\ %*
+jom %*
 
 SET ExitCode=%ERRORLEVEL%
 
@@ -62,7 +62,7 @@ ECHO.
 
 CD ..\windows\build
 
-cmake -G "Visual Studio 10" ..
+cmake -G "NMake Makefiles JOM" ..
 
 SET ExitCode=%ERRORLEVEL%
 
@@ -74,7 +74,7 @@ EXIT /B %ExitCode%
 
 :BuildOpenCORCLI
 
-msbuild OpenCOR.sln /p:Configuration=Release;OutDir=.\ %*
+jom %*
 
 SET ExitCode=%ERRORLEVEL%
 
