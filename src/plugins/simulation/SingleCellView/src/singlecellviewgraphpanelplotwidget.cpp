@@ -780,7 +780,7 @@ void SingleCellViewGraphPanelPlotWidget::checkLocalAxes(const bool &pCanReplot,
 //==============================================================================
 
 static const double NoScalingFactor  = 1.0;
-static const double ScalingInFactor  = 0.57;
+static const double ScalingInFactor  = 0.9;
 static const double ScalingOutFactor = 1.0/ScalingInFactor;
 
 //==============================================================================
