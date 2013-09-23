@@ -804,14 +804,14 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
 
     QwtPlot::mouseMoveEvent(pEvent);
 
-    // Retrieve the current point
-
-    QPointF currentPoint = mousePositionWithinCanvas(pEvent->pos());
-
     // Carry out the action
 
     switch (mAction) {
     case Pan: {
+        // Retrieve the current point
+
+        QPointF currentPoint = mousePositionWithinCanvas(pEvent->pos());
+
         // Determine the X/Y shifts for the panning
 
         double shiftX = currentPoint.x()-mOriginPoint.x();
@@ -848,15 +848,27 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
 
         setLocalAxes(newLocalMinX, newLocalMaxX, newLocalMinY, newLocalMaxY);
 
+        // Reset our point of origin
+
+        mOriginPoint = currentPoint;
+
         break;
     }
     case ShowCoordinates:
+        // Update our point of origin
+
+        mOriginPoint = mousePositionWithinCanvas(pEvent->pos());
+
         // Show the coordinates by simply replotting ourselves
 
         replotNow();
 
         break;
     case Zoom: {
+        // Retrieve the current point
+
+        QPointF currentPoint = mousePositionWithinCanvas(pEvent->pos());
+
         // Rescale ourselves (which will replot ourselves as a result)
 
         double deltaX = currentPoint.x()-mOriginPoint.x();
@@ -872,6 +884,10 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
                                ScalingInFactor:
                                ScalingOutFactor:
                            NoScalingFactor);
+
+        // Reset our point of origin
+
+        mOriginPoint = currentPoint;
 
         break;
     }
@@ -889,12 +905,6 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
 
         ;
     }
-
-    // Reset our point of origin, but only if we are doing something and it's
-    // not zooming a region
-
-    if ((mAction != None) && (mAction != ZoomRegion))
-        mOriginPoint = mousePositionWithinCanvas(pEvent->pos());
 }
 
 //==============================================================================
@@ -910,42 +920,12 @@ void SingleCellViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
     if (!plotLayout()->canvasRect().contains(pEvent->pos()))
         return;
 
-    // Check which action we can carry out
+    // Make sure that we are not already carrying out an action (e.g. we were
+    // zooming in/out and then press on the left mouse button)
 
-    if (   (pEvent->button() == Qt::LeftButton)
-        && (pEvent->modifiers() == Qt::NoModifier)) {
-        // We want to pan
-
-        mAction = Pan;
-    } else if (   (pEvent->button() == Qt::LeftButton)
-               && (pEvent->modifiers() == Qt::ShiftModifier)) {
-        // We want to show the coordinates
-
-        mAction = ShowCoordinates;
-    } else if (   (pEvent->button() == Qt::RightButton)
-               && (pEvent->modifiers() == Qt::NoModifier)) {
-        // We want to zoom in/out
-
-        mAction = Zoom;
-    } else if (   (pEvent->button() == Qt::RightButton)
-               && (pEvent->modifiers() == Qt::ControlModifier)) {
-        // We want to zoom a region, but we can only do this if we are not
-        // already fully zoomed in
-
-        if ((mZoomFactorX < MaxZoomFactor) || (mZoomFactorY < MaxZoomFactor)) {
-            mAction = ZoomRegion;
-        } else {
-            // We are already fully zoomed in, so...
-
-            mAction = None;
-
-            return;
-        }
-    } else {
-        // We cannot carry out any action, so check whether we need to replot
-        // ourselves (in case we were in the middle of carrying out a visual
-        // action), make sure that we have no action to carry out, replot
-        // ourselves if needed, and then leave
+    if (mAction != None) {
+        // Check whether we need to replot ourselves, reset our action, replot
+        // ourselves, if needed, and then leave
 
         bool needReplotNow;
 
@@ -967,14 +947,51 @@ void SingleCellViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
         return;
     }
 
-    // Retrieve a pixmap version of our canvas, if needed
+    // Check which action we can carry out
 
-    if ((mAction == ShowCoordinates) || (mAction == ZoomRegion))
+    if (   (pEvent->button() == Qt::LeftButton)
+        && (pEvent->modifiers() == Qt::NoModifier)) {
+        // We want to pan
+
+        mAction = Pan;
+
+        mOriginPoint = mousePositionWithinCanvas(pEvent->pos());
+    } else if (   (pEvent->button() == Qt::LeftButton)
+               && (pEvent->modifiers() == Qt::ShiftModifier)) {
+        // We want to show the coordinates
+
+        mAction = ShowCoordinates;
+
+        mOriginPoint = mousePositionWithinCanvas(pEvent->pos());
+
         mCanvasPixmap = grab(plotLayout()->canvasRect().toRect());
 
-    // Keep track of the mouse position
+        replotNow();
+    } else if (   (pEvent->button() == Qt::RightButton)
+               && (pEvent->modifiers() == Qt::NoModifier)) {
+        // We want to zoom in/out
 
-    mOriginPoint = mousePositionWithinCanvas(pEvent->pos());
+        mAction = Zoom;
+
+        mOriginPoint = mousePositionWithinCanvas(pEvent->pos());
+    } else if (   (pEvent->button() == Qt::RightButton)
+               && (pEvent->modifiers() == Qt::ControlModifier)) {
+        // We want to zoom a region, but we can only do this if we are not
+        // already fully zoomed in
+
+        if ((mZoomFactorX < MaxZoomFactor) || (mZoomFactorY < MaxZoomFactor)) {
+            mAction = ZoomRegion;
+
+            mOriginPoint = mousePositionWithinCanvas(pEvent->pos());
+            mEndPoint = mOriginPoint;
+
+            mCanvasPixmap = grab(plotLayout()->canvasRect().toRect());
+        } else {
+            // We are already fully zoomed in, so...
+
+            mAction = None;
+        }
+    }
 }
 
 //==============================================================================
@@ -1014,13 +1031,14 @@ void SingleCellViewGraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 
         QRectF zoomRegionRect = zoomRegion();
 
-        setLocalAxes(zoomRegionRect.left(), zoomRegionRect.right(),
-                     zoomRegionRect.bottom(), zoomRegionRect.top());
+        if (zoomRegionRect.isValid())
+            setLocalAxes(zoomRegionRect.left(), zoomRegionRect.right(),
+                         zoomRegionRect.bottom(), zoomRegionRect.top());
 
         break;
     }
     default:
-        // Another action which needs nothing more to be done
+        // Another action which doesn't require anything more to be done
 
         ;
     }
