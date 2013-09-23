@@ -4,8 +4,8 @@
 #include <qwt_global.h>
 
 #include <qcolor.h>
-#include <qsize.h>
 #include <qstring.h>
+#include <qsize.h>
 
 class QPainter;
 class QPointF;
@@ -35,8 +35,8 @@ public:
     void paint( QPainter *, const QPointF &pos ) const;
     QSizeF size() const;
 
-    QString fontName( const MmlFont &type ) const;
-    void setFontName( const MmlFont &type, const QString &name );
+    QString fontName( MmlFont type ) const;
+    void setFontName( MmlFont type, const QString &name );
 
     qreal baseFontPointSize() const;
     void setBaseFontPointSize( qreal size );
@@ -47,8 +47,10 @@ public:
     QColor backgroundColor() const;
     void setBackgroundColor( const QColor &color );
 
+#ifdef MML_TEST
     bool drawFrames() const;
-    void setDrawFrames( const bool &drawFrames );
+    void setDrawFrames( bool );
+#endif
 
 private:
     QwtMmlDocument *m_doc;

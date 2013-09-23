@@ -2031,6 +2031,8 @@ const QwtMMLEntityTable::Spec *QwtMMLEntityTable::search(
     if ( entity == 0 )
         entity = mml_entity_data;
 
+	// linear search -> bad
+
     for ( ; entity->name != 0; ++entity )
     {
         QString ent_value = mmlDecodeEntityValue( entity->value );
