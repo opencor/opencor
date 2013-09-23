@@ -262,6 +262,15 @@ void SingleCellViewGraphPanelPlotWidget::handleMouseDoubleClickEvent(QMouseEvent
         // Set the image to the clipboard
 
         QApplication::clipboard()->setImage(image);
+
+        // Make sure that our layout updated
+        // Note: indeed, our call to QwtPlotRenderer::render() invalidates our
+        //       layout just before returning. This means that a call to
+        //       plotLayout()->canvasRect() would return an empty rectangle,
+        //       which means that the user couldn't carry out another action
+        //       (e.g. see mousePressEvent()), so...
+
+        updateLayout();
     }
 }
 
