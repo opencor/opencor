@@ -1034,6 +1034,11 @@ void SingleCellViewGraphPanelPlotWidget::wheelEvent(QWheelEvent *pEvent)
 
     QwtPlot::wheelEvent(pEvent);
 
+    // Check whether we are already carrying out an action
+
+    if (mAction != None)
+        return;
+
     // The only action we support using the wheel is zooming in/out, but this
     // requires no modifiers being used
 
