@@ -995,10 +995,6 @@ void SingleCellViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
             mEndPoint = mOriginPoint;
 
             mCanvasPixmap = grab(plotLayout()->canvasRect().toRect());
-        } else {
-            // We are already fully zoomed in, so...
-
-            mAction = None;
         }
     }
 }
