@@ -41,6 +41,7 @@ class QMenu;
 class QSettings;
 class QTabBar;
 class QToolBar;
+class QWidget;
 
 //==============================================================================
 
@@ -222,18 +223,16 @@ public:
 
     GuiSettings * guiSettings() const;
 
-    static QMenu * newMenu(QMainWindow *pMainWindow,
-                           const QString &pNameOrIconResource,
+    static QMenu * newMenu(QWidget *pParent, const QString &pNameOrIconResource,
                            const bool &pProvidedName = true);
 
-    static QAction * newAction(QMainWindow *pMainWindow, const bool &pCheckable,
+    static QAction * newAction(QWidget *pParent, const bool &pCheckable,
                                const QString &pIconResource,
                                const QList<QKeySequence> &pKeySequences);
-    static QAction * newAction(QMainWindow *pMainWindow, const bool &pCheckable,
+    static QAction * newAction(QWidget *pParent, const bool &pCheckable,
                                const QString &pIconResource,
                                const QKeySequence::StandardKey &pStandardKey = QKeySequence::UnknownKey);
-    static QAction * newAction(QMainWindow *pMainWindow,
-                               const bool &pCheckable = false,
+    static QAction * newAction(QWidget *pParent, const bool &pCheckable = false,
                                const QString &pIconResource = QString(),
                                const QKeySequence &pKeySequence = QKeySequence());
 
