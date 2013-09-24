@@ -1086,7 +1086,7 @@ void SingleCellViewGraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 
         QRectF zoomRegionRect = zoomRegion();
 
-        if (zoomRegionRect.isValid())
+        if (zoomRegionRect.width() && zoomRegionRect.height())
             setLocalAxes(zoomRegionRect.left(), zoomRegionRect.right(),
                          zoomRegionRect.bottom(), zoomRegionRect.top());
 
