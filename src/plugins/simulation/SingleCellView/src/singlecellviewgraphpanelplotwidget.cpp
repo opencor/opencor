@@ -32,6 +32,7 @@ specific language governing permissions and limitations under the License.
 #include <QDesktopWidget>
 #include <QMenu>
 #include <QMouseEvent>
+#include <QWidget>
 
 //==============================================================================
 
