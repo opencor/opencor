@@ -866,14 +866,12 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
 
     switch (mAction) {
     case Pan: {
-        // Determine the X/Y shifts for the panning
+        // Determine the X/Y shifts for our panning
 
         QPointF currentPoint = mousePositionWithinCanvas(pEvent->pos());
 
         double shiftX = currentPoint.x()-mOriginPoint.x();
         double shiftY = currentPoint.y()-mOriginPoint.y();
-
-        mOriginPoint = currentPoint;
 
         // Determine our new local minimum/maximum values for our axes
 
@@ -906,6 +904,10 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
 
         setLocalAxes(newLocalMinX, newLocalMaxX, newLocalMinY, newLocalMaxY);
 
+        // Update our point of origin
+
+        mOriginPoint = mousePositionWithinCanvas(pEvent->pos());
+
         break;
     }
     case ShowCoordinates:
@@ -919,14 +921,15 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
 
         break;
     case Zoom: {
-        // Rescale ourselves (which will replot ourselves as a result)
+        // Determine our X/Y delta values
 
         QPointF currentPoint = mousePositionWithinCanvas(pEvent->pos());
 
         double deltaX = currentPoint.x()-mOriginPoint.x();
         double deltaY = currentPoint.y()-mOriginPoint.y();
 
-        mOriginPoint = currentPoint;
+        // Rescale ourselves
+        // Note: this will automatically replot ourselves...
 
         scaleLocalAxes(deltaX?
                            (deltaX > 0)?
@@ -938,6 +941,10 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
                                ScalingInFactor:
                                ScalingOutFactor:
                            NoScalingFactor);
+
+        // Update our point of origin
+
+        mOriginPoint = mousePositionWithinCanvas(pEvent->pos());
 
         break;
     }
