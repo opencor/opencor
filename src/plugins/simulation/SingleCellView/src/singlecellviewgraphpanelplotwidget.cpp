@@ -843,7 +843,7 @@ static const double BigScalingOutFactor = 1.0/BigScalingInFactor;
 
 //==============================================================================
 
-QPointF SingleCellViewGraphPanelPlotWidget::mousePositionWithinCanvas(const QPointF &pPoint) const
+QPointF SingleCellViewGraphPanelPlotWidget::mousePositionWithinCanvas(const QPoint &pPoint) const
 {
     // Return the mouse position relative to our canvas, after making sure that
     // its mapped values are within our local ranges
