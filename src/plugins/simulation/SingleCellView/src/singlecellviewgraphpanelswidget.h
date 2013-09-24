@@ -50,6 +50,8 @@ class SingleCellViewGraphPanelsWidget : public QSplitter,
 public:
     explicit SingleCellViewGraphPanelsWidget(QWidget *pParent = 0);
 
+    virtual void retranslateUi();
+
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 

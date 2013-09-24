@@ -89,6 +89,15 @@ SingleCellViewGraphPanelWidget::~SingleCellViewGraphPanelWidget()
 
 //==============================================================================
 
+void SingleCellViewGraphPanelWidget::retranslateUi()
+{
+    // Retranslate our plot
+
+    mPlot->retranslateUi();
+}
+
+//==============================================================================
+
 void SingleCellViewGraphPanelWidget::changeEvent(QEvent *pEvent)
 {
     // Default handling of the event

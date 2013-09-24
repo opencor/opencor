@@ -56,6 +56,16 @@ SingleCellViewGraphPanelsWidget::SingleCellViewGraphPanelsWidget(QWidget *pParen
 
 //==============================================================================
 
+void SingleCellViewGraphPanelsWidget::retranslateUi()
+{
+    // Retranslate all our graph panels
+
+    for (int i = 0, iMax = count(); i < iMax; ++i)
+        qobject_cast<SingleCellViewGraphPanelWidget *>(widget(i))->retranslateUi();
+}
+
+//==============================================================================
+
 static const QString SettingsGraphPanelsCount = "GraphPanelsCount";
 static const QString SettingsGraphPanelSize   = "GraphPanelSize%1";
 //static const QString SettingsActiveGraphPanel = "ActiveGraphPanel";

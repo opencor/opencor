@@ -78,9 +78,10 @@ SingleCellViewContentsWidget::SingleCellViewContentsWidget(QWidget *pParent) :
 
 void SingleCellViewContentsWidget::retranslateUi()
 {
-    // Retranslate our information widget
+    // Retranslate our information and graph panels widgets
 
     mInformationWidget->retranslateUi();
+    mGraphPanelsWidget->retranslateUi();
 }
 
 //==============================================================================

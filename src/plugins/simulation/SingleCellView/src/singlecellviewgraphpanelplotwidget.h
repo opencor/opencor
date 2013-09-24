@@ -24,8 +24,17 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "commonwidget.h"
+
+//==============================================================================
+
 #include "qwt_plot.h"
 #include "qwt_plot_curve.h"
+
+//==============================================================================
+
+class QAction;
+class QMenu;
 
 //==============================================================================
 
@@ -78,13 +87,16 @@ private:
 
 //==============================================================================
 
-class SingleCellViewGraphPanelPlotWidget : public QwtPlot
+class SingleCellViewGraphPanelPlotWidget : public QwtPlot,
+                                           public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
     explicit SingleCellViewGraphPanelPlotWidget(QWidget *pParent = 0);
     ~SingleCellViewGraphPanelPlotWidget();
+
+    virtual void retranslateUi();
 
     QList<SingleCellViewGraphPanelPlotGraph *> graphs() const;
 
@@ -152,6 +164,13 @@ private:
     double mZoomFactorX;
     double mZoomFactorY;
 
+    bool mNeedCustomContextMenu;
+    QMenu *mCustomContextMenu;
+
+    QAction *mZoomInAction;
+    QAction *mZoomOutAction;
+    QAction *mResetZoomAction;
+
     void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
 
     void checkLocalAxisValues(const int &pAxis, double &pMin, double &pMax);
@@ -208,6 +227,11 @@ private:
                          const bool &pCanMoveLocation = true);
 
     QRectF zoomRegion() const;
+
+private Q_SLOTS:
+    void zoomIn();
+    void zoomOut();
+    void resetZoom();
 };
 
 //==============================================================================

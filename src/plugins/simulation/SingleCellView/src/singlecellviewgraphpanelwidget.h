@@ -56,6 +56,8 @@ public:
     explicit SingleCellViewGraphPanelWidget(QWidget *pParent = 0);
     ~SingleCellViewGraphPanelWidget();
 
+    virtual void retranslateUi();
+
     bool isActive() const;
     void setActive(const bool &pActive);
 

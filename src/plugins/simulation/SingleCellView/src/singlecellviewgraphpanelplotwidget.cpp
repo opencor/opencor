@@ -20,13 +20,17 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlfileruntime.h"
+#include "guiinterface.h"
 #include "singlecellviewgraphpanelplotwidget.h"
 
 //==============================================================================
 
+#include <QAction>
 #include <QApplication>
 #include <QClipboard>
+#include <QCursor>
 #include <QDesktopWidget>
+#include <QMenu>
 #include <QMouseEvent>
 
 //==============================================================================
@@ -163,6 +167,7 @@ static const double MaxAxis = 1000.0;
 
 SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *pParent) :
     QwtPlot(pParent),
+    CommonWidget(pParent),
     mGraphs(QList<SingleCellViewGraphPanelPlotGraph *>()),
     mAction(None),
     mOriginPoint(QPointF()),
@@ -177,7 +182,11 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
     mNeedMaxY(0.0),
     mCanvasPixmap(QPixmap()),
     mZoomFactorX(MinZoomFactor),
-    mZoomFactorY(MinZoomFactor)
+    mZoomFactorY(MinZoomFactor),
+    mNeedCustomContextMenu(false),
+    mZoomInAction(GuiInterface::newAction(this)),
+    mZoomOutAction(GuiInterface::newAction(this)),
+    mResetZoomAction(GuiInterface::newAction(this))
 {
     // Get ourselves a direct painter
 
@@ -209,6 +218,24 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
     grid->setMajorPen(Qt::gray, 0, Qt::DotLine);
 
     grid->attach(this);
+
+    // Create and populate our custom context menu
+
+    mCustomContextMenu = new QMenu(this);
+
+    mCustomContextMenu->addAction(mZoomInAction);
+    mCustomContextMenu->addAction(mZoomOutAction);
+    mCustomContextMenu->addSeparator();
+    mCustomContextMenu->addAction(mResetZoomAction);
+
+    // Some connections
+
+    connect(mZoomInAction, SIGNAL(triggered(bool)),
+            this, SLOT(zoomIn()));
+    connect(mZoomOutAction, SIGNAL(triggered(bool)),
+            this, SLOT(zoomOut()));
+    connect(mResetZoomAction, SIGNAL(triggered(bool)),
+            this, SLOT(resetZoom()));
 }
 
 //==============================================================================
@@ -221,6 +248,20 @@ SingleCellViewGraphPanelPlotWidget::~SingleCellViewGraphPanelPlotWidget()
 
     foreach (SingleCellViewGraphPanelPlotGraph *graph, mGraphs)
         delete graph;
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelPlotWidget::retranslateUi()
+{
+    // Retranslate our actions
+
+    GuiInterface::retranslateAction(mZoomInAction, tr("Zoom In"),
+                                    tr("Zoom in the plot"));
+    GuiInterface::retranslateAction(mZoomOutAction, tr("Zoom Out"),
+                                    tr("Zoom out the plot"));
+    GuiInterface::retranslateAction(mResetZoomAction, tr("Reset Zoom"),
+                                    tr("Reset the zoom level of the plot"));
 }
 
 //==============================================================================
@@ -375,6 +416,12 @@ void SingleCellViewGraphPanelPlotWidget::updateZoomFactors()
 
     mZoomFactorX = (mMaxX-mMinX)/(localMaxX()-localMinX());
     mZoomFactorY = (mMaxY-mMinY)/(localMaxY()-localMinY());
+
+    // Update the enabled status of our actions
+
+    mZoomInAction->setEnabled((mZoomFactorX < MaxZoomFactor) || (mZoomFactorY < MaxZoomFactor));
+    mZoomOutAction->setEnabled((mZoomFactorX > MinZoomFactor) || (mZoomFactorY > MinZoomFactor));
+    mResetZoomAction->setEnabled((mZoomFactorX != MinZoomFactor) && (mZoomFactorY != MinZoomFactor));
 }
 
 //==============================================================================
@@ -788,9 +835,11 @@ void SingleCellViewGraphPanelPlotWidget::checkLocalAxes(const bool &pCanReplot,
 
 //==============================================================================
 
-static const double NoScalingFactor  = 1.0;
-static const double ScalingInFactor  = 0.9;
-static const double ScalingOutFactor = 1.0/ScalingInFactor;
+static const double NoScalingFactor     = 1.0;
+static const double ScalingInFactor     = 0.9;
+static const double ScalingOutFactor    = 1.0/ScalingInFactor;
+static const double BigScalingInFactor  = 0.5*ScalingInFactor;
+static const double BigScalingOutFactor = 1.0/BigScalingInFactor;
 
 //==============================================================================
 
@@ -817,14 +866,14 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
 
     switch (mAction) {
     case Pan: {
-        // Retrieve the current point
+        // Determine the X/Y shifts for the panning
 
         QPointF currentPoint = mousePositionWithinCanvas(pEvent->pos());
 
-        // Determine the X/Y shifts for the panning
-
         double shiftX = currentPoint.x()-mOriginPoint.x();
         double shiftY = currentPoint.y()-mOriginPoint.y();
+
+        mOriginPoint = currentPoint;
 
         // Determine our new local minimum/maximum values for our axes
 
@@ -857,10 +906,6 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
 
         setLocalAxes(newLocalMinX, newLocalMaxX, newLocalMinY, newLocalMaxY);
 
-        // Reset our point of origin
-
-        mOriginPoint = currentPoint;
-
         break;
     }
     case ShowCoordinates:
@@ -874,14 +919,14 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
 
         break;
     case Zoom: {
-        // Retrieve the current point
+        // Rescale ourselves (which will replot ourselves as a result)
 
         QPointF currentPoint = mousePositionWithinCanvas(pEvent->pos());
 
-        // Rescale ourselves (which will replot ourselves as a result)
-
         double deltaX = currentPoint.x()-mOriginPoint.x();
         double deltaY = currentPoint.y()-mOriginPoint.y();
+
+        mOriginPoint = currentPoint;
 
         scaleLocalAxes(deltaX?
                            (deltaX > 0)?
@@ -893,10 +938,6 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
                                ScalingInFactor:
                                ScalingOutFactor:
                            NoScalingFactor);
-
-        // Reset our point of origin
-
-        mOriginPoint = currentPoint;
 
         break;
     }
@@ -914,6 +955,11 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
 
         ;
     }
+
+    // The mouse has moved, so we definitely won't need to show our custom
+    // context menu
+
+    mNeedCustomContextMenu = false;
 }
 
 //==============================================================================
@@ -997,6 +1043,10 @@ void SingleCellViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
             mCanvasPixmap = grab(plotLayout()->canvasRect().toRect());
         }
     }
+
+    // Check whether we might need to show our custom context menu
+
+    mNeedCustomContextMenu = pEvent->button() == Qt::RightButton;
 }
 
 //==============================================================================
@@ -1047,6 +1097,11 @@ void SingleCellViewGraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 
         ;
     }
+
+    // Show our custom context menu, if still needed
+
+    if (mNeedCustomContextMenu)
+        mCustomContextMenu->exec(QCursor::pos());
 }
 
 //==============================================================================
@@ -1391,6 +1446,37 @@ QRectF SingleCellViewGraphPanelPlotWidget::zoomRegion() const
     }
 
     return QRectF(xMin, yMax, xMax-xMin, yMin-yMax);
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelPlotWidget::zoomIn()
+{
+    // Zoom in by scaling our two local axes
+
+    mOriginPoint = mousePositionWithinCanvas(mapFromGlobal(QCursor::pos()));
+
+    scaleLocalAxes(BigScalingInFactor, BigScalingInFactor);
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelPlotWidget::zoomOut()
+{
+    // Zoom out by scaling our two local axes
+
+    mOriginPoint = mousePositionWithinCanvas(mapFromGlobal(QCursor::pos()));
+
+    scaleLocalAxes(BigScalingOutFactor, BigScalingOutFactor);
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelPlotWidget::resetZoom()
+{
+    // Reset the zoom level by resetting our two local axes
+
+    setLocalAxes(mMinX, mMaxX, mMinY, mMaxY);
 }
 
 //==============================================================================

@@ -2,6 +2,33 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR" sourcelanguage="en_GB">
 <context>
+    <name>OpenCOR::SingleCellView::SingleCellViewGraphPanelPlotWidget</name>
+    <message>
+        <source>Zoom In</source>
+        <translation>Aggrandir</translation>
+    </message>
+    <message>
+        <source>Zoom Out</source>
+        <translation>Réduire</translation>
+    </message>
+    <message>
+        <source>Reset Zoom</source>
+        <translation>Réinitialiser Zoom</translation>
+    </message>
+    <message>
+        <source>Zoom in the plot</source>
+        <translation>Aggrandir le graphe</translation>
+    </message>
+    <message>
+        <source>Zoom out the plot</source>
+        <translation>Réduire le graphe</translation>
+    </message>
+    <message>
+        <source>Reset the zoom level of the plot</source>
+        <translation>Réinitialiser la taille du graphe</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::SingleCellView::SingleCellViewInformationGraphsWidget</name>
     <message>
         <source>Current</source>
