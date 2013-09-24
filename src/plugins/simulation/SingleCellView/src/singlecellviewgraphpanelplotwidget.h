@@ -218,7 +218,7 @@ private:
     void scaleLocalAxes(const double &pScalingFactorX,
                         const double &pScalingFactorY);
 
-    QPointF mousePositionWithinCanvas(const QPoint &pPoint) const;
+    QPointF mousePositionWithinCanvas(const QPointF &pPoint) const;
 
     void drawCoordinates(QPainter *pPainter, const QPointF &pCoordinates,
                          const QColor &pBackgroundColor,

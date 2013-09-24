@@ -843,12 +843,12 @@ static const double BigScalingOutFactor = 1.0/BigScalingInFactor;
 
 //==============================================================================
 
-QPointF SingleCellViewGraphPanelPlotWidget::mousePositionWithinCanvas(const QPoint &pPoint) const
+QPointF SingleCellViewGraphPanelPlotWidget::mousePositionWithinCanvas(const QPointF &pPoint) const
 {
     // Return the mouse position relative to our canvas, after making sure that
     // its mapped values are within our local ranges
 
-    QPoint realPoint = pPoint-plotLayout()->canvasRect().toRect().topLeft();
+    QPointF realPoint = pPoint-plotLayout()->canvasRect().topLeft();
 
     return QPointF(qMin(localMaxX(), qMax(localMinX(), canvasMap(QwtPlot::xBottom).invTransform(realPoint.x()))),
                    qMin(localMaxY(), qMax(localMinY(), canvasMap(QwtPlot::yLeft).invTransform(realPoint.y()))));
@@ -1006,11 +1006,13 @@ void SingleCellViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
 
     if (   (pEvent->button() == Qt::LeftButton)
         && (pEvent->modifiers() == Qt::NoModifier)) {
-        // We want to pan
+        // We want to pan, but only do this if we are zoomed in
 
-        mAction = Pan;
+        if ((mZoomFactorX > MinZoomFactor) || (mZoomFactorY > MinZoomFactor)) {
+            mAction = Pan;
 
-        mOriginPoint = mousePositionWithinCanvas(pEvent->pos());
+            mOriginPoint = mousePositionWithinCanvas(pEvent->pos());
+        }
     } else if (   (pEvent->button() == Qt::LeftButton)
                && (pEvent->modifiers() == Qt::ShiftModifier)) {
         // We want to show the coordinates
@@ -1031,8 +1033,8 @@ void SingleCellViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
         mOriginPoint = mousePositionWithinCanvas(pEvent->pos());
     } else if (   (pEvent->button() == Qt::RightButton)
                && (pEvent->modifiers() == Qt::ControlModifier)) {
-        // We want to zoom a region, but we can only do this if we are not
-        // already fully zoomed in
+        // We want to zoom a region, but only do this if we are not already
+        // fully zoomed in
 
         if ((mZoomFactorX < MaxZoomFactor) || (mZoomFactorY < MaxZoomFactor)) {
             mAction = ZoomRegion;
@@ -1173,8 +1175,8 @@ void SingleCellViewGraphPanelPlotWidget::drawCoordinates(QPainter *pPainter,
 
     // Determine where the coordinates and its background should be drawn
 
-    QPoint coordinates = QPoint(canvasMap(QwtPlot::xBottom).transform(pCoordinates.x()),
-                                canvasMap(QwtPlot::yLeft).transform(pCoordinates.y()));
+    QPointF coordinates = QPointF(canvasMap(QwtPlot::xBottom).transform(pCoordinates.x()),
+                                  canvasMap(QwtPlot::yLeft).transform(pCoordinates.y()));
 
     switch (pLocation) {
     case TopLeft:
