@@ -702,12 +702,6 @@ static const QString SettingsStatusBarVisible     = "StatusBarVisible";
 
 void MainWindow::loadSettings()
 {
-    // Retrieve and set the language to be used by OpenCOR
-    // Note: the setting is forced in order to account for locale-dependent
-    //       initialisations (e.g. see CentralWidget::retranslateUi())...
-
-    setLocale(mSettings->value(SettingsLocale, SystemLocale).toString(), true);
-
     // Retrieve the geometry and state of the main window
 
     if (   !restoreGeometry(mSettings->value(SettingsGeometry).toByteArray())
@@ -770,6 +764,16 @@ void MainWindow::loadSettings()
 #ifdef Q_OS_MAC
     mGui->menuFile->menuAction()->setVisible(loadedPlugins.count());
 #endif
+
+    // Retrieve and set the language to be used by OpenCOR
+    // Note #1: the setting is forced in order to account for locale-dependent
+    //          initialisations (e.g. see CentralWidget::retranslateUi())...
+    // Note #2: this must be done once all the settings have been loaded since
+    //          some plugins may, as a result of the loading of settings, create
+    //          widgets that need translating (e.g. graph panels get created in
+    //          the SingleCellView plugin)...
+
+    setLocale(mSettings->value(SettingsLocale, SystemLocale).toString(), true);
 }
 
 //==============================================================================
