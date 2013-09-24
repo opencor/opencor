@@ -34,6 +34,7 @@ namespace Ui {
 
 //==============================================================================
 
+class QMenu;
 class QModelIndex;
 
 //==============================================================================
@@ -64,6 +65,8 @@ private:
     Ui::FileBrowserWindow *mGui;
 
     FileBrowserWidget *mFileBrowserWidget;
+
+    QMenu *mCustomContextMenu;
 
 private Q_SLOTS:
     void on_actionHome_triggered();

@@ -44,6 +44,7 @@ class QFormLayout;
 class QGridLayout;
 class QLabel;
 class QLineEdit;
+class QMenu;
 class QNetworkAccessManager;
 class QNetworkReply;
 class QPushButton;
@@ -144,6 +145,8 @@ private:
     ObjRef<iface::cellml_api::CellMLElement> mElement;
 
     QLabel *mCurrentResourceOrIdLabel;
+
+    QMenu *mCustomContextMenu;
 
     void updateGui(const Items &pItems, const QString &pErrorMsg,
                    const bool &pLookupTerm,

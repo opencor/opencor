@@ -64,6 +64,12 @@ CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
 
     mGui->dockWidgetContents->layout()->addWidget(mCellmlModelRepositoryWidget);
 
+    // Create and populate our custom context menu
+
+    mCustomContextMenu = new QMenu(this);
+
+    mCustomContextMenu->addAction(mGui->actionCopy);
+
     // We want our own context menu for the help widget (indeed, we don't want
     // the default one which has the reload menu item and not the other actions
     // that we have in our tool bar widget, so...)
@@ -89,6 +95,11 @@ CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
 
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply *)),
             this, SLOT(finished(QNetworkReply *)) );
+
+    // Connection to update the enabled state of our copy action
+
+    connect(mCellmlModelRepositoryWidget, SIGNAL(copyTextEnabled(const bool &)),
+            mGui->actionCopy, SLOT(setEnabled(bool)));
 }
 
 //==============================================================================
@@ -275,13 +286,9 @@ void CellmlModelRepositoryWindow::showCustomContextMenu(const QPoint &pPosition)
 {
     Q_UNUSED(pPosition);
 
-    // Create a custom context menu for our CellML Models Repository widget
+    // Show our custom context menu for our CellML Models Repository widget
 
-    QMenu menu;
-
-    menu.addAction(mGui->actionCopy);
-
-    menu.exec(QCursor::pos());
+    mCustomContextMenu->exec(QCursor::pos());
 }
 
 //==============================================================================

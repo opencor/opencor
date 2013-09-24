@@ -38,6 +38,10 @@ namespace Ui {
 
 //==============================================================================
 
+class QMenu;
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace FileOrganiser {
 
@@ -64,6 +68,8 @@ private:
     Ui::FileOrganiserWindow *mGui;
 
     FileOrganiserWidget *mFileOrganiserWidget;
+
+    QMenu *mCustomContextMenu;
 
 private Q_SLOTS:
     void on_actionNew_triggered();

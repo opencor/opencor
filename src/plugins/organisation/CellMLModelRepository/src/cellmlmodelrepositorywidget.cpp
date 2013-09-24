@@ -56,8 +56,13 @@ CellmlModelRepositoryWidget::CellmlModelRepositoryWidget(QWidget *pParent) :
 
     page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
 
+    // Some connections
+
     connect(this, SIGNAL(linkClicked(const QUrl &)),
             this, SLOT(openLink(const QUrl &)));
+
+    connect(page(), SIGNAL(selectionChanged()),
+            this, SLOT(selectionChanged()));
 
     // Retrieve the output template
 
@@ -68,6 +73,10 @@ CellmlModelRepositoryWidget::CellmlModelRepositoryWidget(QWidget *pParent) :
     mOutputTemplate = QString(cellmlModelRepositoryWidgetOutputFile.readAll());
 
     cellmlModelRepositoryWidgetOutputFile.close();
+
+    // Let people know that there is nothing to copy initially
+
+    emit copyTextEnabled(false);
 }
 
 //==============================================================================
@@ -120,6 +129,16 @@ void CellmlModelRepositoryWidget::openLink(const QUrl &pUrl)
     // Open the link in the user's browser
 
     QDesktopServices::openUrl(pUrl);
+}
+
+//==============================================================================
+
+void CellmlModelRepositoryWidget::selectionChanged()
+{
+    // The text selection has changed, so let the user know whether some text is
+    // now selected
+
+    emit copyTextEnabled(!selectedText().isEmpty());
 }
 
 //==============================================================================

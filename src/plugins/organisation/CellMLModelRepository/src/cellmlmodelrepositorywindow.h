@@ -34,6 +34,7 @@ namespace Ui {
 
 //==============================================================================
 
+class QMenu;
 class QNetworkAccessManager;
 class QNetworkReply;
 
@@ -72,6 +73,8 @@ private:
     QString mErrorMsg;
 
     bool mModelListRequested;
+
+    QMenu *mCustomContextMenu;
 
     void outputModelList(const QStringList &pModelList);
 

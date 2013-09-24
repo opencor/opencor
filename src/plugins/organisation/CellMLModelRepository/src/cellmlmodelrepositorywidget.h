@@ -54,8 +54,13 @@ protected:
 private:
     QString mOutputTemplate;
 
+Q_SIGNALS:
+    void copyTextEnabled(const bool &pEnabled);
+
 private Q_SLOTS:
     void openLink(const QUrl &pUrl);
+
+    void selectionChanged();
 };
 
 //==============================================================================

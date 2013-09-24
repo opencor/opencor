@@ -136,7 +136,13 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     // complete
 
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply *)),
-            this, SLOT(termLookedUp(QNetworkReply *)) );
+            this, SLOT(termLookedUp(QNetworkReply *)));
+
+    // Create and populate our custom context menu
+
+    mCustomContextMenu = new QMenu(this);
+
+    mCustomContextMenu->addAction(mGui->actionCopy);
 }
 
 //==============================================================================
@@ -1083,14 +1089,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::showCustomContextMenu(const 
 
     mCurrentResourceOrIdLabel = qobject_cast<QLabel *>(qApp->widgetAt(QCursor::pos()));
 
-    // Create a custom context menu to allow the copying of the URL of the
+    // Show our custom context menu to allow the copying of the URL of the
     // resource or id
 
-    QMenu menu;
-
-    menu.addAction(mGui->actionCopy);
-
-    menu.exec(QCursor::pos());
+    mCustomContextMenu->exec(QCursor::pos());
 }
 
 //==============================================================================

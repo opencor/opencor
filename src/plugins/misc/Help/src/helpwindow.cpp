@@ -100,6 +100,24 @@ HelpWindow::HelpWindow(QWidget *pParent) :
 
     mGui->layout->addWidget(mHelpWidget);
 
+    // Create and populate our custom context menu
+
+    mCustomContextMenu = new QMenu(this);
+
+    mCustomContextMenu->addAction(mGui->actionHome);
+    mCustomContextMenu->addSeparator();
+    mCustomContextMenu->addAction(mGui->actionBack);
+    mCustomContextMenu->addAction(mGui->actionForward);
+    mCustomContextMenu->addSeparator();
+    mCustomContextMenu->addAction(mGui->actionCopy);
+    mCustomContextMenu->addSeparator();
+    mCustomContextMenu->addAction(mGui->actionNormalSize);
+    mCustomContextMenu->addSeparator();
+    mCustomContextMenu->addAction(mGui->actionZoomIn);
+    mCustomContextMenu->addAction(mGui->actionZoomOut);
+    mCustomContextMenu->addSeparator();
+    mCustomContextMenu->addAction(mGui->actionPrint);
+
     // We want our own context menu for the help widget (indeed, we don't want
     // the default one which has the reload menu item and not the other actions
     // that we have in our tool bar widget, so...)
@@ -265,26 +283,10 @@ void HelpWindow::showCustomContextMenu(const QPoint &pPosition) const
 {
     Q_UNUSED(pPosition);
 
-    // Create a custom context menu which items match the contents of our
-    // tool bar widget
+    // Show our custom context menu which items match the contents of our tool
+    // bar widget
 
-    QMenu menu;
-
-    menu.addAction(mGui->actionHome);
-    menu.addSeparator();
-    menu.addAction(mGui->actionBack);
-    menu.addAction(mGui->actionForward);
-    menu.addSeparator();
-    menu.addAction(mGui->actionCopy);
-    menu.addSeparator();
-    menu.addAction(mGui->actionNormalSize);
-    menu.addSeparator();
-    menu.addAction(mGui->actionZoomIn);
-    menu.addAction(mGui->actionZoomOut);
-    menu.addSeparator();
-    menu.addAction(mGui->actionPrint);
-
-    menu.exec(QCursor::pos());
+    mCustomContextMenu->exec(QCursor::pos());
 }
 
 //==============================================================================

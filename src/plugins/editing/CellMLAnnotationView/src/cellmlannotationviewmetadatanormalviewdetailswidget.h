@@ -41,6 +41,7 @@ namespace Ui {
 
 class QGridLayout;
 class QLabel;
+class QMenu;
 class QStackedWidget;
 
 //==============================================================================
@@ -112,6 +113,8 @@ private:
     QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *> mRdfTriplesMapping;
 
     QLabel *mCurrentResourceOrIdLabel;
+
+    QMenu *mCustomContextMenu;
 
     void genericLookup(const QString &pRdfTripleInformation = QString(),
                        const Type &pType = No,

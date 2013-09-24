@@ -29,6 +29,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 class QHelpEngine;
+class QMenu;
 class QUrl;
 
 //==============================================================================
@@ -70,6 +71,8 @@ private:
 
     QString mQchFileName;
     QString mQhcFileName;
+
+    QMenu *mCustomContextMenu;
 
 private Q_SLOTS:
     void on_actionHome_triggered();
