@@ -287,33 +287,45 @@ bool SingleCellViewGraphPanelPlotWidget::eventFilter(QObject *pObject,
 
 //==============================================================================
 
+QPixmap SingleCellViewGraphPanelPlotWidget::drawCanvas()
+{
+    // Render ourselves to a pixmap
+
+    QwtPlotRenderer renderer;
+    QPixmap res = QPixmap(size());
+    QPainter painter(&res);
+
+    renderer.render(this, &painter, rect());
+
+    // Make sure that our layout is updated
+    // Note: indeed, our call to QwtPlotRenderer::render() invalidates our
+    //       layout just before returning. This means that a call to
+    //       plotLayout()->canvasRect() would return an empty rectangle,
+    //       which in turn means that the user couldn't carry out another
+    //       action (e.g. see mousePressEvent()), so...
+
+    updateLayout();
+
+    // Return our image
+
+    return res;
+}
+
+//==============================================================================
+
 void SingleCellViewGraphPanelPlotWidget::handleMouseDoubleClickEvent(QMouseEvent *pEvent)
 {
-    // Copy the contents of the plot to the clipboard, in case we double-clicked
-    // using the left mouse button
+    // Check whether we are already carrying out an action
 
-    if (pEvent->button() == Qt::LeftButton) {
-        // Render the plot to an image
+    if (mAction != None)
+        return;
 
-        QwtPlotRenderer renderer;
-        QImage image = QImage(size(), QImage::Format_ARGB32_Premultiplied);
-        QPainter painter(&image);
+    // Copy our contents to the clipboard
 
-        renderer.render(this, &painter, rect());
+    if (pEvent->button() == Qt::LeftButton)
+        // Retrieve and set our image to the clipboard
 
-        // Set the image to the clipboard
-
-        QApplication::clipboard()->setImage(image);
-
-        // Make sure that our layout updated
-        // Note: indeed, our call to QwtPlotRenderer::render() invalidates our
-        //       layout just before returning. This means that a call to
-        //       plotLayout()->canvasRect() would return an empty rectangle,
-        //       which in turn means that the user couldn't carry out another
-        //       action (e.g. see mousePressEvent()), so...
-
-        updateLayout();
-    }
+        QApplication::clipboard()->setPixmap(drawCanvas());
 }
 
 //==============================================================================
@@ -1029,7 +1041,7 @@ void SingleCellViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
 
         mOriginPoint = mousePositionWithinCanvas(pEvent->pos());
 
-        mCanvasPixmap = grab(plotLayout()->canvasRect().toRect());
+        mCanvasPixmap = drawCanvas();
 
         replotNow();
     } else if (   (pEvent->button() == Qt::RightButton)
@@ -1050,7 +1062,7 @@ void SingleCellViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
             mOriginPoint = mousePositionWithinCanvas(pEvent->pos());
             mEndPoint = mOriginPoint;
 
-            mCanvasPixmap = grab(plotLayout()->canvasRect().toRect());
+            mCanvasPixmap = drawCanvas();
         }
     }
 
@@ -1247,7 +1259,9 @@ void SingleCellViewGraphPanelPlotWidget::drawCanvas(QPainter *pPainter)
     case ShowCoordinates: {
         // We are showing some coordinates, so start by drawing our pixmap
 
-        pPainter->drawPixmap(0, 0, mCanvasPixmap);
+        pPainter->drawPixmap(-plotLayout()->canvasRect().left(),
+                             -plotLayout()->canvasRect().top(),
+                             mCanvasPixmap);
 
         // Draw the two dashed lines that show the coordinates, using a dark
         // cyan pen
@@ -1279,7 +1293,9 @@ void SingleCellViewGraphPanelPlotWidget::drawCanvas(QPainter *pPainter)
     case ZoomRegion: {
         // We are zooming a region, so start by drawing our pixmap
 
-        pPainter->drawPixmap(0, 0, mCanvasPixmap);
+        pPainter->drawPixmap(-plotLayout()->canvasRect().left(),
+                             -plotLayout()->canvasRect().top(),
+                             mCanvasPixmap);
 
         // Retrieve the coordinates of the region to be zoomed
 

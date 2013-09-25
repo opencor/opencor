@@ -171,6 +171,8 @@ private:
     QAction *mZoomOutAction;
     QAction *mResetZoomAction;
 
+    QPixmap drawCanvas();
+
     void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
 
     void checkLocalAxisValues(const int &pAxis, double &pMin, double &pMax);
