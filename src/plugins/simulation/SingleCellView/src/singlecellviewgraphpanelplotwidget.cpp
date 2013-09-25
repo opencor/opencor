@@ -287,26 +287,19 @@ bool SingleCellViewGraphPanelPlotWidget::eventFilter(QObject *pObject,
 
 //==============================================================================
 
-QPixmap SingleCellViewGraphPanelPlotWidget::drawCanvas()
+QPixmap SingleCellViewGraphPanelPlotWidget::toPixmap()
 {
-    // Render ourselves to a pixmap
+    // Draw ourselves to a pixmap
+    // Note: for this, we need drawCanvas() to draw our canvas normally, hence
+    //       no action should be carried out during that time...
 
-    QwtPlotRenderer renderer;
-    QPixmap res = QPixmap(size());
-    QPainter painter(&res);
+    Action action = mAction;
 
-    renderer.render(this, &painter, rect());
+    mAction = None;
 
-    // Make sure that our layout is updated
-    // Note: indeed, our call to QwtPlotRenderer::render() invalidates our
-    //       layout just before returning. This means that a call to
-    //       plotLayout()->canvasRect() would return an empty rectangle,
-    //       which in turn means that the user couldn't carry out another
-    //       action (e.g. see mousePressEvent()), so...
+    QPixmap res = grab();
 
-    updateLayout();
-
-    // Return our image
+    mAction = action;
 
     return res;
 }
@@ -325,7 +318,7 @@ void SingleCellViewGraphPanelPlotWidget::handleMouseDoubleClickEvent(QMouseEvent
     if (pEvent->button() == Qt::LeftButton)
         // Retrieve and set our image to the clipboard
 
-        QApplication::clipboard()->setPixmap(drawCanvas());
+        QApplication::clipboard()->setPixmap(toPixmap());
 }
 
 //==============================================================================
@@ -1041,7 +1034,7 @@ void SingleCellViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
 
         mOriginPoint = mousePositionWithinCanvas(pEvent->pos());
 
-        mCanvasPixmap = drawCanvas();
+        mCanvasPixmap = toPixmap();
 
         replotNow();
     } else if (   (pEvent->button() == Qt::RightButton)
@@ -1062,7 +1055,7 @@ void SingleCellViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
             mOriginPoint = mousePositionWithinCanvas(pEvent->pos());
             mEndPoint = mOriginPoint;
 
-            mCanvasPixmap = drawCanvas();
+            mCanvasPixmap = toPixmap();
         }
     }
 

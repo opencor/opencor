@@ -171,7 +171,7 @@ private:
     QAction *mZoomOutAction;
     QAction *mResetZoomAction;
 
-    QPixmap drawCanvas();
+    QPixmap toPixmap();
 
     void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
 
