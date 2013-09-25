@@ -427,7 +427,7 @@ void SingleCellViewGraphPanelPlotWidget::updateZoomFactors()
 
     mZoomInAction->setEnabled((mZoomFactorX < MaxZoomFactor) || (mZoomFactorY < MaxZoomFactor));
     mZoomOutAction->setEnabled((mZoomFactorX > MinZoomFactor) || (mZoomFactorY > MinZoomFactor));
-    mResetZoomAction->setEnabled((mZoomFactorX != MinZoomFactor) && (mZoomFactorY != MinZoomFactor));
+    mResetZoomAction->setEnabled((mZoomFactorX != MinZoomFactor) || (mZoomFactorY != MinZoomFactor));
 }
 
 //==============================================================================
