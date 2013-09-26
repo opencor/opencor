@@ -213,8 +213,11 @@ private:
     bool mNeedCustomContextMenu;
     QMenu *mCustomContextMenu;
 
+    QAction *mCopyAction;
+
     QAction *mZoomInAction;
     QAction *mZoomOutAction;
+
     QAction *mResetZoomAction;
 
     void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
@@ -270,8 +273,11 @@ private:
     QPointF mousePositionWithinCanvas(const QPoint &pPoint) const;
 
 private Q_SLOTS:
+    void copy();
+
     void zoomIn();
     void zoomOut();
+
     void resetZoom();
 };
 

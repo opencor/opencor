@@ -27,6 +27,14 @@
         <source>Reset the zoom level of the plot</source>
         <translation>Réinitialiser la taille du graphe</translation>
     </message>
+    <message>
+        <source>Copy</source>
+        <translation>Copier</translation>
+    </message>
+    <message>
+        <source>Copy the plot to the clipboard</source>
+        <translation>Copier le graphe dans le presse-papier</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::SingleCellView::SingleCellViewInformationGraphsWidget</name>

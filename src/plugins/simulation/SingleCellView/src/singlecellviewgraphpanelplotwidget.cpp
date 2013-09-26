@@ -448,6 +448,7 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
     mZoomFactorX(MinZoomFactor),
     mZoomFactorY(MinZoomFactor),
     mNeedCustomContextMenu(false),
+    mCopyAction(GuiInterface::newAction(this)),
     mZoomInAction(GuiInterface::newAction(this)),
     mZoomOutAction(GuiInterface::newAction(this)),
     mResetZoomAction(GuiInterface::newAction(this))
@@ -491,6 +492,8 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
 
     mCustomContextMenu = new QMenu(this);
 
+    mCustomContextMenu->addAction(mCopyAction);
+    mCustomContextMenu->addSeparator();
     mCustomContextMenu->addAction(mZoomInAction);
     mCustomContextMenu->addAction(mZoomOutAction);
     mCustomContextMenu->addSeparator();
@@ -498,10 +501,14 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
 
     // Some connections
 
+    connect(mCopyAction, SIGNAL(triggered(bool)),
+            this, SLOT(copy()));
+
     connect(mZoomInAction, SIGNAL(triggered(bool)),
             this, SLOT(zoomIn()));
     connect(mZoomOutAction, SIGNAL(triggered(bool)),
             this, SLOT(zoomOut()));
+
     connect(mResetZoomAction, SIGNAL(triggered(bool)),
             this, SLOT(resetZoom()));
 }
@@ -524,10 +531,14 @@ void SingleCellViewGraphPanelPlotWidget::retranslateUi()
 {
     // Retranslate our actions
 
+    GuiInterface::retranslateAction(mCopyAction, tr("Copy"),
+                                    tr("Copy the plot to the clipboard"));
+
     GuiInterface::retranslateAction(mZoomInAction, tr("Zoom In"),
                                     tr("Zoom in the plot"));
     GuiInterface::retranslateAction(mZoomOutAction, tr("Zoom Out"),
                                     tr("Zoom out the plot"));
+
     GuiInterface::retranslateAction(mResetZoomAction, tr("Reset Zoom"),
                                     tr("Reset the zoom level of the plot"));
 }
@@ -556,16 +567,12 @@ bool SingleCellViewGraphPanelPlotWidget::eventFilter(QObject *pObject,
 
 void SingleCellViewGraphPanelPlotWidget::handleMouseDoubleClickEvent(QMouseEvent *pEvent)
 {
-    // Check whether we are already carrying out an action
-
-    if (mAction != None)
-        return;
-
     // Copy our contents to the clipboard, in case we double-clicked using the
-    // left mouse button
+    // left mouse button with no modifiers
 
-    if (pEvent->button() == Qt::LeftButton)
-        QApplication::clipboard()->setPixmap(grab());
+    if (   (pEvent->button() == Qt::LeftButton)
+        && (pEvent->modifiers() == Qt::NoModifier))
+        copy();
 }
 
 //==============================================================================
@@ -674,6 +681,7 @@ void SingleCellViewGraphPanelPlotWidget::updateZoomFactors()
 
     mZoomInAction->setEnabled((mZoomFactorX < MaxZoomFactor) || (mZoomFactorY < MaxZoomFactor));
     mZoomOutAction->setEnabled((mZoomFactorX > MinZoomFactor) || (mZoomFactorY > MinZoomFactor));
+
     mResetZoomAction->setEnabled((mZoomFactorX != MinZoomFactor) || (mZoomFactorY != MinZoomFactor));
 }
 
@@ -1542,6 +1550,15 @@ void SingleCellViewGraphPanelPlotWidget::drawGraphSegment(SingleCellViewGraphPan
 
             mDirectPainter->drawSeries(pGraph, pFrom, pTo);
     }
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelPlotWidget::copy()
+{
+    // Copy our contents to the clipboard
+
+    QApplication::clipboard()->setPixmap(grab());
 }
 
 //==============================================================================
