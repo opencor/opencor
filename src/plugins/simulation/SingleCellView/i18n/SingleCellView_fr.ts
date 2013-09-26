@@ -16,24 +16,24 @@
         <translation>Réinitialiser Zoom</translation>
     </message>
     <message>
-        <source>Zoom in the plot</source>
-        <translation>Aggrandir le graphe</translation>
-    </message>
-    <message>
-        <source>Zoom out the plot</source>
-        <translation>Réduire le graphe</translation>
-    </message>
-    <message>
-        <source>Reset the zoom level of the plot</source>
-        <translation>Réinitialiser la taille du graphe</translation>
-    </message>
-    <message>
         <source>Copy</source>
         <translation>Copier</translation>
     </message>
     <message>
-        <source>Copy the plot to the clipboard</source>
-        <translation>Copier le graphe dans le presse-papier</translation>
+        <source>Copy the graph panel to the clipboard</source>
+        <translation>Copier le panneau graphique dans le presse-papier</translation>
+    </message>
+    <message>
+        <source>Zoom in the graph panel</source>
+        <translation>Aggrandir le panneau graphique</translation>
+    </message>
+    <message>
+        <source>Zoom out the graph panel</source>
+        <translation>Réduire le panneau graphique</translation>
+    </message>
+    <message>
+        <source>Reset the zoom level of the graph panel</source>
+        <translation>Réinitialiser la taille du panneau graphique</translation>
     </message>
 </context>
 <context>
