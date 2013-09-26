@@ -45,6 +45,18 @@
         <source>a problem occurred during the compilation of the model</source>
         <translation>un problème s&apos;est produit durant la compilation du modèle</translation>
     </message>
+    <message>
+        <source>an unexpected problem occurred while trying to retrieve the %1 functions</source>
+        <translation>un problème inattendu s&apos;est produit lors de la récupération des fonctions %1</translation>
+    </message>
+    <message>
+        <source>ODE</source>
+        <translation>EDO</translation>
+    </message>
+    <message>
+        <source>DAE</source>
+        <translation>EAD</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>

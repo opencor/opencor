@@ -294,7 +294,16 @@ void * CompilerEngine::getFunction(const QString &pFunctionName)
 {
     // Return the requested function
 
-    return mExecutionEngine?mExecutionEngine->getPointerToFunction(mModule->getFunction(qPrintable(pFunctionName))):0;
+    if (mExecutionEngine) {
+        llvm::Function *function = mModule->getFunction(qPrintable(pFunctionName));
+
+        if (function)
+            return mExecutionEngine->getPointerToFunction(function);
+        else
+            return 0;
+    } else {
+        return 0;
+    }
 }
 
 //==============================================================================

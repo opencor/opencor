@@ -1014,6 +1014,30 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
             mComputeDaeStateInformation   = (ComputeDaeStateInformationFunction) (intptr_t) mCompilerEngine->getFunction("computeDaeStateInformation");
             mComputeDaeVariables          = (ComputeDaeVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeDaeVariables");
         }
+
+        // Make sure that we managed to retrieve all the ODE/DAE functions
+
+        bool functionsOk =    mInitializeConstants
+                           && mComputeComputedConstants;
+
+        if (mModelType == Ode)
+            functionsOk =    functionsOk
+                          && mComputeOdeRates
+                          && mComputeOdeVariables;
+        else
+            functionsOk =    functionsOk
+                          && mComputeDaeEssentialVariables
+                          && mComputeDaeResiduals
+                          && mComputeDaeRootInformation
+                          && mComputeDaeStateInformation
+                          && mComputeDaeVariables;
+
+        if (!functionsOk) {
+            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                       tr("an unexpected problem occurred while trying to retrieve the %1 functions").arg((mModelType == Ode)?tr("ODE"):tr("DAE")));
+
+            reset(true, false);
+        }
     }
 
     // We are done, so return ourselves
