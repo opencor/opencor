@@ -32,11 +32,16 @@ specific language governing permissions and limitations under the License.
 #include <QDesktopWidget>
 #include <QMenu>
 #include <QMouseEvent>
+#include <QPainter>
 #include <QWidget>
 
 //==============================================================================
 
 #include <QtNumeric>
+
+//==============================================================================
+
+#include <qnamespace.h>
 
 //==============================================================================
 
@@ -158,8 +163,268 @@ void SingleCellViewGraphPanelPlotGraph::setParameterY(CellMLSupport::CellmlFileR
 
 //==============================================================================
 
+SingleCellViewGraphPanelPlotOverlayWidget::SingleCellViewGraphPanelPlotOverlayWidget(SingleCellViewGraphPanelPlotWidget *pParent) :
+    QWidget(pParent),
+    mOwner(pParent),
+    mAction(None),
+    mOriginPoint(QPointF()),
+    mEndPoint(QPointF())
+{
+    setAttribute(Qt::WA_NoSystemBackground);
+    setAttribute(Qt::WA_TransparentForMouseEvents);
+
+    setFocusPolicy(Qt::NoFocus);
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
+{
+    // Accept the event
+
+    pEvent->accept();
+
+    // Check whether an action is to be carried out
+
+    if (mAction == None)
+        return;
+
+    // Paint the overlay, if any is needed
+
+    QPainter painter(this);
+
+    QRectF plotLayoutCanvasRect = mOwner->plotLayout()->canvasRect();
+
+    painter.translate(plotLayoutCanvasRect.x(), plotLayoutCanvasRect.y());
+
+    switch (mAction) {
+    case ShowCoordinates: {
+        // Draw the two dashed lines that show the coordinates, using a dark
+        // cyan pen
+
+        QPen pen = painter.pen();
+        QColor backgroundColor = Qt::darkCyan;
+
+        backgroundColor.setAlphaF(0.69);
+
+        pen.setColor(backgroundColor);
+        pen.setStyle(Qt::DashLine);
+
+        painter.setPen(pen);
+
+        QPointF coordinates = QPointF(mOwner->canvasMap(QwtPlot::xBottom).transform(mOriginPoint.x()),
+                                      mOwner->canvasMap(QwtPlot::yLeft).transform(mOriginPoint.y()));
+
+        painter.drawLine(0.0, coordinates.y(),
+                         plotLayoutCanvasRect.width(), coordinates.y());
+        painter.drawLine(coordinates.x(), 0.0,
+                         coordinates.x(), plotLayoutCanvasRect.height());
+
+        // Draw the coordinates
+
+        drawCoordinates(&painter, mOriginPoint, coordinates,
+                        backgroundColor, Qt::white);
+
+        break;
+    }
+    case ZoomRegion: {
+        // Retrieve the coordinates of the region to be zoomed
+
+        QRectF zoomRegionRect = zoomRegion();
+
+        // Now, draw the region to be zoomed
+
+        QColor penColor = Qt::darkRed;
+        QColor brushColor = Qt::yellow;
+
+        penColor.setAlphaF(0.69);
+        brushColor.setAlphaF(0.19);
+
+        painter.setPen(penColor);
+
+        QwtScaleMap canvasMapX = mOwner->canvasMap(QwtPlot::xBottom);
+        QwtScaleMap canvasMapY = mOwner->canvasMap(QwtPlot::yLeft);
+
+        QPointF topLeftCoordinates = QPointF(canvasMapX.transform(zoomRegionRect.left()),
+                                             canvasMapY.transform(zoomRegionRect.top()));
+        QPointF bottomRightCoordinates = QPointF(canvasMapX.transform(zoomRegionRect.right()),
+                                                 canvasMapY.transform(zoomRegionRect.bottom()));
+
+        QRectF unmappedZoomRegionRect = QRectF(topLeftCoordinates.x(),
+                                               topLeftCoordinates.y(),
+                                               bottomRightCoordinates.x()-topLeftCoordinates.x(),
+                                               bottomRightCoordinates.y()-topLeftCoordinates.y());
+
+        painter.fillRect(unmappedZoomRegionRect, brushColor);
+        painter.drawRect(unmappedZoomRegionRect);
+
+        // Draw the two sets of coordinates
+
+        drawCoordinates(&painter, zoomRegionRect.topLeft(), topLeftCoordinates,
+                        penColor, Qt::white, BottomRight, false);
+        drawCoordinates(&painter, zoomRegionRect.bottomRight(), bottomRightCoordinates,
+                        penColor, Qt::white, TopLeft, false);
+
+        break;
+    }
+    default:
+        // None
+
+        ;
+    }
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelPlotOverlayWidget::reset()
+{
+    // Reset ourselves
+
+    setAction(None);
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelPlotOverlayWidget::setAction(const Action &pAction)
+{
+    // Set our action
+
+    mAction = pAction;
+
+    repaint();
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelPlotOverlayWidget::setOriginPoint(const QPointF &pOriginPoint)
+{
+    // Set our point of origin
+
+    mOriginPoint = pOriginPoint;
+
+    repaint();
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelPlotOverlayWidget::setEndPoint(const QPointF &pEndPoint)
+{
+    // Set our end point
+
+    mEndPoint = pEndPoint;
+
+    repaint();
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
+                                                                const QPointF &pCoordinates,
+                                                                const QPointF &pCoordinatesPosition,
+                                                                const QColor &pBackgroundColor,
+                                                                const QColor &pForegroundColor,
+                                                                const Location &pLocation,
+                                                                const bool &pCanMoveLocation)
+{
+    // Retrieve the size of coordinates as they will appear on the screen,
+    // which means using the same font as the one used for the axes
+
+    pPainter->setFont(mOwner->axisFont(QwtPlot::xBottom));
+
+    QString coords = QString("(%1, %2)").arg(QString::number(pCoordinates.x()),
+                                             QString::number(pCoordinates.y()));
+    QRect desktopGeometry = qApp->desktop()->availableGeometry();
+    QRectF coordsRect = pPainter->boundingRect(QRectF(0.0, 0.0, desktopGeometry.width(), desktopGeometry.height()), coords);
+
+    // Determine where the coordinates and its background should be drawn
+
+    switch (pLocation) {
+    case TopLeft:
+        coordsRect.moveTo(pCoordinatesPosition.x()-coordsRect.right()-1.0,
+                          pCoordinatesPosition.y()-coordsRect.bottom()-1.0);
+
+        break;
+    case TopRight:
+        coordsRect.moveTo(pCoordinatesPosition.x()+2.0,
+                          pCoordinatesPosition.y()-coordsRect.bottom()-1.0);
+
+        break;
+    case BottomLeft:
+        coordsRect.moveTo(pCoordinatesPosition.x()-coordsRect.right()-1.0,
+                          pCoordinatesPosition.y()+2.0);
+
+        break;
+    case BottomRight:
+        coordsRect.moveTo(pCoordinatesPosition.x()+2.0,
+                          pCoordinatesPosition.y()+2.0);
+
+        break;
+    }
+
+    if (pCanMoveLocation) {
+        if (coordsRect.top() < 0.0)
+            coordsRect.moveTop(pCoordinatesPosition.y()+2.0);
+
+        if (coordsRect.left() < 0.0)
+            coordsRect.moveLeft(pCoordinatesPosition.x()+2.0);
+
+        QRectF plotLayoutCanvasRect = mOwner->plotLayout()->canvasRect();
+
+        if (coordsRect.bottom() > plotLayoutCanvasRect.height())
+            coordsRect.moveTop(pCoordinatesPosition.y()-coordsRect.height()-1.0);
+
+        if (coordsRect.right() > plotLayoutCanvasRect.width())
+            coordsRect.moveLeft(pCoordinatesPosition.x()-coordsRect.width()-1.0);
+    }
+
+    // Draw a filled rectangle to act as the background of the coordinates
+    // we are to show
+
+    pPainter->fillRect(coordsRect, pBackgroundColor);
+
+    // Draw the text for the coordinates, using a white pen
+
+    QPen pen = pPainter->pen();
+
+    pen.setColor(pForegroundColor);
+
+    pPainter->setPen(pen);
+
+    pPainter->drawText(coordsRect, coords);
+}
+
+//==============================================================================
+
 static const double MinZoomFactor =    1.0;
 static const double MaxZoomFactor = 1024.0;
+
+//==============================================================================
+
+QRectF SingleCellViewGraphPanelPlotOverlayWidget::zoomRegion() const
+{
+    // Return the region to be zoomed based on our origin and end points
+    // Note: by default, we assume that we are already fully zoomed in in both
+    //       directions...
+
+    double xMin = mOwner->localMinX();
+    double xMax = mOwner->localMaxX();
+    double yMin = mOwner->localMinY();
+    double yMax = mOwner->localMaxY();
+
+    if (mOwner->zoomFactorX() < MaxZoomFactor) {
+        xMin = qMin(mOriginPoint.x(), mEndPoint.x());
+        xMax = qMax(mOriginPoint.x(), mEndPoint.x());
+    }
+
+    if (mOwner->zoomFactorY() < MaxZoomFactor) {
+        yMin = qMin(mOriginPoint.y(), mEndPoint.y());
+        yMax = qMax(mOriginPoint.y(), mEndPoint.y());
+    }
+
+    return QRectF(xMin, yMax, xMax-xMin, yMin-yMax);
+}
+
+//==============================================================================
 
 static const double MinAxis =    0.0;
 static const double MaxAxis = 1000.0;
@@ -172,7 +437,6 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
     mGraphs(QList<SingleCellViewGraphPanelPlotGraph *>()),
     mAction(None),
     mOriginPoint(QPointF()),
-    mEndPoint(QPointF()),
     mMinX(MinAxis),
     mMaxX(MaxAxis),
     mMinY(MinAxis),
@@ -181,7 +445,6 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
     mNeedMaxX(0.0),
     mNeedMinY(0.0),
     mNeedMaxY(0.0),
-    mCanvasPixmap(QPixmap()),
     mZoomFactorX(MinZoomFactor),
     mZoomFactorY(MinZoomFactor),
     mNeedCustomContextMenu(false),
@@ -219,6 +482,10 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
     grid->setMajorPen(Qt::gray, 0, Qt::DotLine);
 
     grid->attach(this);
+
+    // Create our overlay widget
+
+    mOverlayWidget = new SingleCellViewGraphPanelPlotOverlayWidget(this);
 
     // Create and populate our custom context menu
 
@@ -287,25 +554,6 @@ bool SingleCellViewGraphPanelPlotWidget::eventFilter(QObject *pObject,
 
 //==============================================================================
 
-QPixmap SingleCellViewGraphPanelPlotWidget::toPixmap()
-{
-    // Draw ourselves to a pixmap
-    // Note: for this, we need drawCanvas() to draw our canvas normally, hence
-    //       no action should be carried out during that time...
-
-    Action action = mAction;
-
-    mAction = None;
-
-    QPixmap res = grab();
-
-    mAction = action;
-
-    return res;
-}
-
-//==============================================================================
-
 void SingleCellViewGraphPanelPlotWidget::handleMouseDoubleClickEvent(QMouseEvent *pEvent)
 {
     // Check whether we are already carrying out an action
@@ -313,12 +561,11 @@ void SingleCellViewGraphPanelPlotWidget::handleMouseDoubleClickEvent(QMouseEvent
     if (mAction != None)
         return;
 
-    // Copy our contents to the clipboard
+    // Copy our contents to the clipboard, in case we double-clicked using the
+    // left mouse button
 
     if (pEvent->button() == Qt::LeftButton)
-        // Retrieve and set our image to the clipboard
-
-        QApplication::clipboard()->setPixmap(toPixmap());
+        QApplication::clipboard()->setPixmap(grab());
 }
 
 //==============================================================================
@@ -545,6 +792,24 @@ double SingleCellViewGraphPanelPlotWidget::localMaxY() const
     // Return our local maximum Y value
 
     return axisScaleDiv(QwtPlot::yLeft).upperBound();
+}
+
+//==============================================================================
+
+double SingleCellViewGraphPanelPlotWidget::zoomFactorX() const
+{
+    // Return our zoom factor for the X axis
+
+    return mZoomFactorX;
+}
+
+//==============================================================================
+
+double SingleCellViewGraphPanelPlotWidget::zoomFactorY() const
+{
+    // Return our zoom factor for the Y axis
+
+    return mZoomFactorY;
 }
 
 //==============================================================================
@@ -821,7 +1086,7 @@ void SingleCellViewGraphPanelPlotWidget::scaleLocalAxes(const double &pScalingFa
         needRescaling = true;
     }
 
-    // Rescale our two local axes, if needed
+    // Rescale our local axes, if needed
 
     if (needRescaling)
         setLocalAxes(xMin, xMax, yMin, yMax);
@@ -905,7 +1170,7 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
             newLocalMinY = newLocalMaxY-localMaxY()+localMinY();
         }
 
-        // Set our new local minimum/maximum values for our local axes which
+        // Set our new local minimum/maximum values for our local axes, which
         // will replot ourselves as a result
 
         setLocalAxes(newLocalMinX, newLocalMaxX, newLocalMinY, newLocalMaxY);
@@ -917,13 +1182,9 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
         break;
     }
     case ShowCoordinates:
-        // Update our point of origin
+        // Update the point of origin of our overlay widget
 
-        mOriginPoint = mousePositionWithinCanvas(pEvent->pos());
-
-        // Show the coordinates by simply replotting ourselves
-
-        replotNow();
+        mOverlayWidget->setOriginPoint(mousePositionWithinCanvas(pEvent->pos()));
 
         break;
     case Zoom: {
@@ -955,12 +1216,9 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
         break;
     }
     case ZoomRegion:
-        // Draw our zoom region by updating our end point and then replotting
-        // ourselves
+        // Draw our zoom region by updating the end point of our overlay widget
 
-        mEndPoint = mousePositionWithinCanvas(pEvent->pos());
-
-        replotNow();
+        mOverlayWidget->setEndPoint(mousePositionWithinCanvas(pEvent->pos()));
 
         break;
     default:
@@ -989,28 +1247,14 @@ void SingleCellViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
         return;
 
     // Make sure that we are not already carrying out an action (e.g. we were
-    // zooming in/out and then press on the left mouse button)
+    // zooming in/out and then press on the left mouse button) and if so, then
+    // cancel it and reset our overlay widget (in case we were, for example,
+    // showing the coordinates)
 
     if (mAction != None) {
-        // Check whether we need to replot ourselves, reset our action, replot
-        // ourselves, if needed, and then leave
-
-        bool needReplotNow;
-
-        switch (mAction) {
-        case ShowCoordinates:
-        case ZoomRegion:
-            needReplotNow = true;
-
-            break;
-        default:
-            needReplotNow = false;
-        }
-
         mAction = None;
 
-        if (needReplotNow)
-            replotNow();
+        mOverlayWidget->reset();
 
         return;
     }
@@ -1032,11 +1276,9 @@ void SingleCellViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
 
         mAction = ShowCoordinates;
 
-        mOriginPoint = mousePositionWithinCanvas(pEvent->pos());
+        mOverlayWidget->setAction(SingleCellViewGraphPanelPlotOverlayWidget::ShowCoordinates);
 
-        mCanvasPixmap = toPixmap();
-
-        replotNow();
+        mOverlayWidget->setOriginPoint(mousePositionWithinCanvas(pEvent->pos()));
     } else if (   (pEvent->button() == Qt::RightButton)
                && (pEvent->modifiers() == Qt::NoModifier)) {
         // We want to zoom in/out
@@ -1052,10 +1294,12 @@ void SingleCellViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
         if ((mZoomFactorX < MaxZoomFactor) || (mZoomFactorY < MaxZoomFactor)) {
             mAction = ZoomRegion;
 
-            mOriginPoint = mousePositionWithinCanvas(pEvent->pos());
-            mEndPoint = mOriginPoint;
+            mOverlayWidget->setAction(SingleCellViewGraphPanelPlotOverlayWidget::ZoomRegion);
 
-            mCanvasPixmap = toPixmap();
+            QPointF originPoint = mousePositionWithinCanvas(pEvent->pos());
+
+            mOverlayWidget->setOriginPoint(originPoint);
+            mOverlayWidget->setEndPoint(originPoint);
         }
     }
 
@@ -1091,19 +1335,28 @@ void SingleCellViewGraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 
     switch (action) {
     case ShowCoordinates:
-        // Remove the coordinates by replotting ourselves
+        // Remove the coordinates by resetting our overlay widget
 
-        replotNow();
+        mOverlayWidget->reset();
 
         break;
     case ZoomRegion: {
-        // Zoom our region
+        // Zoom our region, so update the end point of our overlay widget and
+        // retrieve the zoom region
 
-        QRectF zoomRegionRect = zoomRegion();
+        mOverlayWidget->setEndPoint(mousePositionWithinCanvas(pEvent->pos()));
 
-        if (zoomRegionRect.width() && zoomRegionRect.height())
-            setLocalAxes(zoomRegionRect.left(), zoomRegionRect.right(),
-                         zoomRegionRect.bottom(), zoomRegionRect.top());
+        QRectF zoomRegion = mOverlayWidget->zoomRegion();
+
+        // Reset our overlay widget
+
+        mOverlayWidget->reset();
+
+        // Effectively zoom our region, if possible, by updating our local axes
+
+        if (zoomRegion.width() && zoomRegion.height())
+            setLocalAxes(zoomRegion.left(), zoomRegion.right(),
+                         zoomRegion.bottom(), zoomRegion.top());
 
         break;
     }
@@ -1117,6 +1370,19 @@ void SingleCellViewGraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 
     if (mNeedCustomContextMenu)
         mCustomContextMenu->exec(QCursor::pos());
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelPlotWidget::resizeEvent(QResizeEvent *pEvent)
+{
+    // Default handling of the event
+
+    QwtPlot::resizeEvent(pEvent);
+
+    // Update the size of our overlay widget
+
+    mOverlayWidget->resize(pEvent->size());
 }
 
 //==============================================================================
@@ -1165,170 +1431,6 @@ void SingleCellViewGraphPanelPlotWidget::replotNow()
     //       replotting won't occur immediately (because of threading)...
 
     qApp->processEvents();
-}
-
-//==============================================================================
-
-void SingleCellViewGraphPanelPlotWidget::drawCoordinates(QPainter *pPainter,
-                                                         const QPointF &pCoordinates,
-                                                         const QColor &pBackgroundColor,
-                                                         const QColor &pForegroundColor,
-                                                         const Location &pLocation,
-                                                         const bool &pCanMoveLocation)
-{
-    // Retrieve the size of coordinates as they will appear on the screen,
-    // which means using the same font as the one used for the axes
-
-    pPainter->setFont(axisFont(QwtPlot::xBottom));
-
-    QString coords = QString("(%1, %2)").arg(QString::number(pCoordinates.x()),
-                                             QString::number(pCoordinates.y()));
-    QRect desktopGeometry = qApp->desktop()->availableGeometry();
-    QRectF coordsRect = pPainter->boundingRect(QRectF(0.0, 0.0, desktopGeometry.width(), desktopGeometry.height()), coords);
-
-    // Determine where the coordinates and its background should be drawn
-
-    QPointF coordinates = QPointF(canvasMap(QwtPlot::xBottom).transform(pCoordinates.x()),
-                                  canvasMap(QwtPlot::yLeft).transform(pCoordinates.y()));
-
-    switch (pLocation) {
-    case TopLeft:
-        coordsRect.moveTo(coordinates.x()-coordsRect.right()-1,
-                          coordinates.y()-coordsRect.bottom()-1);
-
-        break;
-    case TopRight:
-        coordsRect.moveTo(coordinates.x()+2,
-                          coordinates.y()-coordsRect.bottom()-1);
-
-        break;
-    case BottomLeft:
-        coordsRect.moveTo(coordinates.x()-coordsRect.right()-1,
-                          coordinates.y()+2);
-
-        break;
-    case BottomRight:
-        coordsRect.moveTo(coordinates.x()+2,
-                          coordinates.y()+2);
-
-        break;
-    }
-
-    if (pCanMoveLocation) {
-        if (coordsRect.top() < 0)
-            coordsRect.moveTop(coordinates.y()+2);
-
-        if (coordsRect.left() < 0)
-            coordsRect.moveLeft(coordinates.x()+2);
-
-        if (coordsRect.bottom() > plotLayout()->canvasRect().height())
-            coordsRect.moveTop(coordinates.y()-coordsRect.height()-1);
-
-        if (coordsRect.right() > plotLayout()->canvasRect().width())
-            coordsRect.moveLeft(coordinates.x()-coordsRect.width()-1);
-    }
-
-    // Draw a filled rectangle to act as the background of the coordinates
-    // we are to show
-
-    pPainter->fillRect(coordsRect, pBackgroundColor);
-
-    // Draw the text for the coordinates, using a white pen
-
-    QPen pen = pPainter->pen();
-
-    pen.setColor(pForegroundColor);
-
-    pPainter->setPen(pen);
-
-    pPainter->drawText(coordsRect, coords);
-}
-
-//==============================================================================
-
-void SingleCellViewGraphPanelPlotWidget::drawCanvas(QPainter *pPainter)
-{
-    switch (mAction) {
-    case ShowCoordinates: {
-        // We are showing some coordinates, so start by drawing our pixmap
-
-        pPainter->drawPixmap(-plotLayout()->canvasRect().left(),
-                             -plotLayout()->canvasRect().top(),
-                             mCanvasPixmap);
-
-        // Draw the two dashed lines that show the coordinates, using a dark
-        // cyan pen
-
-        QPen pen = pPainter->pen();
-        QColor backgroundColor = Qt::darkCyan;
-
-        backgroundColor.setAlphaF(0.69);
-
-        pen.setColor(backgroundColor);
-        pen.setStyle(Qt::DashLine);
-
-        pPainter->setPen(pen);
-
-        QPointF coordinates = QPointF(canvasMap(QwtPlot::xBottom).transform(mOriginPoint.x()),
-                                      canvasMap(QwtPlot::yLeft).transform(mOriginPoint.y()));
-
-        pPainter->drawLine(0.0, coordinates.y(),
-                           plotLayout()->canvasRect().width(), coordinates.y());
-        pPainter->drawLine(coordinates.x(), 0.0,
-                           coordinates.x(), plotLayout()->canvasRect().height());
-
-        // Draw the coordinates
-
-        drawCoordinates(pPainter, mOriginPoint, backgroundColor, Qt::white);
-
-        break;
-    }
-    case ZoomRegion: {
-        // We are zooming a region, so start by drawing our pixmap
-
-        pPainter->drawPixmap(-plotLayout()->canvasRect().left(),
-                             -plotLayout()->canvasRect().top(),
-                             mCanvasPixmap);
-
-        // Retrieve the coordinates of the region to be zoomed
-
-        QRectF zoomRegionRect = zoomRegion();
-
-        // Now, draw the region to be zoomed
-
-        QColor penColor = Qt::darkRed;
-        QColor brushColor = Qt::yellow;
-
-        penColor.setAlphaF(0.69);
-        brushColor.setAlphaF(0.19);
-
-        pPainter->setPen(penColor);
-
-        QwtScaleMap canvasMapX = canvasMap(QwtPlot::xBottom);
-        QwtScaleMap canvasMapY = canvasMap(QwtPlot::yLeft);
-
-        double left = canvasMapX.transform(zoomRegionRect.left());
-        double top = canvasMapY.transform(zoomRegionRect.top());
-
-        QRectF unmappedZoomRegionRect = QRectF(left, top,
-                                               canvasMapX.transform(zoomRegionRect.right())-left,
-                                               canvasMapY.transform(zoomRegionRect.bottom())-top);
-
-        pPainter->fillRect(unmappedZoomRegionRect, brushColor);
-        pPainter->drawRect(unmappedZoomRegionRect);
-
-        // Draw the two sets of coordinates
-
-        drawCoordinates(pPainter, zoomRegionRect.topLeft(), penColor, Qt::white, BottomRight, false);
-        drawCoordinates(pPainter, zoomRegionRect.bottomRight(), penColor, Qt::white, TopLeft, false);
-
-        break;
-    }
-    default:
-        // We aren't doing anything special, so just draw our canvas normally
-
-        QwtPlot::drawCanvas(pPainter);
-    }
 }
 
 //==============================================================================
@@ -1399,6 +1501,7 @@ void SingleCellViewGraphPanelPlotWidget::drawGraphSegment(SingleCellViewGraphPan
         //       in our call to setLocalAxes()...
 
         setLocalAxes(0.0, 0.0, 0.0, 0.0, false, true, false, true);
+
         replotNow();
     } else {
         // It's not our first graph segment, so determine the minimum/maximum
@@ -1443,32 +1546,6 @@ void SingleCellViewGraphPanelPlotWidget::drawGraphSegment(SingleCellViewGraphPan
 
 //==============================================================================
 
-QRectF SingleCellViewGraphPanelPlotWidget::zoomRegion() const
-{
-    // Return the region to be zoomed based on the origin and end points
-    // Note: by default, we assume that we are already fully zoomed in in
-    //       both directions...
-
-    double xMin = localMinX();
-    double xMax = localMaxX();
-    double yMin = localMinY();
-    double yMax = localMaxY();
-
-    if (mZoomFactorX < MaxZoomFactor) {
-        xMin = qMin(mOriginPoint.x(), mEndPoint.x());
-        xMax = qMax(mOriginPoint.x(), mEndPoint.x());
-    }
-
-    if (mZoomFactorY < MaxZoomFactor) {
-        yMin = qMin(mOriginPoint.y(), mEndPoint.y());
-        yMax = qMax(mOriginPoint.y(), mEndPoint.y());
-    }
-
-    return QRectF(xMin, yMax, xMax-xMin, yMin-yMax);
-}
-
-//==============================================================================
-
 void SingleCellViewGraphPanelPlotWidget::zoomIn()
 {
     // Zoom in by scaling our two local axes
@@ -1493,7 +1570,7 @@ void SingleCellViewGraphPanelPlotWidget::zoomOut()
 
 void SingleCellViewGraphPanelPlotWidget::resetZoom()
 {
-    // Reset the zoom level by resetting our two local axes
+    // Reset the zoom level by resetting our local axes
 
     setLocalAxes(mMinX, mMaxX, mMinY, mMaxY);
 }

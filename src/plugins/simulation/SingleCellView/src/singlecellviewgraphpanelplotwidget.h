@@ -87,10 +87,65 @@ private:
 
 //==============================================================================
 
+class SingleCellViewGraphPanelPlotWidget;
+
+//==============================================================================
+
+class SingleCellViewGraphPanelPlotOverlayWidget : public QWidget
+{
+public:
+    enum Action {
+        None,
+        ShowCoordinates,
+        ZoomRegion
+    };
+
+    explicit SingleCellViewGraphPanelPlotOverlayWidget(SingleCellViewGraphPanelPlotWidget *pParent = 0);
+
+    void reset();
+
+    void setAction(const Action &pAction);
+
+    void setOriginPoint(const QPointF &pOriginPoint);
+    void setEndPoint(const QPointF &pEndPoint);
+
+    QRectF zoomRegion() const;
+
+protected:
+    virtual void paintEvent(QPaintEvent *pEvent);
+
+private:
+    enum Location {
+        TopLeft,
+        TopRight,
+        BottomLeft,
+        BottomRight
+    };
+
+    SingleCellViewGraphPanelPlotWidget *mOwner;
+
+    Action mAction;
+
+    QPointF mOriginPoint;
+    QPointF mEndPoint;
+
+    void drawCoordinates(QPainter *pPainter, const QPointF &pCoordinates,
+                         const QPointF &pCoordinatesPosition,
+                         const QColor &pBackgroundColor,
+                         const QColor &pForegroundColor,
+                         const Location &pLocation = TopLeft,
+                         const bool &pCanMoveLocation = true);
+
+};
+
+//==============================================================================
+
 class SingleCellViewGraphPanelPlotWidget : public QwtPlot,
                                            public Core::CommonWidget
 {
     Q_OBJECT
+
+    friend class SingleCellViewGraphPanelPlotOverlayWidget;
 
 public:
     explicit SingleCellViewGraphPanelPlotWidget(QWidget *pParent = 0);
@@ -111,8 +166,6 @@ public:
     void drawGraphSegment(SingleCellViewGraphPanelPlotGraph *pGraph,
                           const qulonglong &pFrom, const qulonglong &pTo);
 
-    virtual void drawCanvas(QPainter *pPainter);
-
     void replotNow();
 
 protected:
@@ -120,6 +173,7 @@ protected:
     virtual void mouseMoveEvent(QMouseEvent *pEvent);
     virtual void mousePressEvent(QMouseEvent *pEvent);
     virtual void mouseReleaseEvent(QMouseEvent *pEvent);
+    virtual void resizeEvent(QResizeEvent *pEvent);
     virtual void wheelEvent(QWheelEvent *pEvent);
 
 private:
@@ -131,13 +185,6 @@ private:
         ZoomRegion
     };
 
-    enum Location {
-        TopLeft,
-        TopRight,
-        BottomLeft,
-        BottomRight
-    };
-
     QwtPlotDirectPainter *mDirectPainter;
 
     QList<SingleCellViewGraphPanelPlotGraph *> mGraphs;
@@ -145,7 +192,6 @@ private:
     Action mAction;
 
     QPointF mOriginPoint;
-    QPointF mEndPoint;
 
     double mMinX;
     double mMaxX;
@@ -159,7 +205,7 @@ private:
     double mNeedMinY;
     double mNeedMaxY;
 
-    QPixmap mCanvasPixmap;
+    SingleCellViewGraphPanelPlotOverlayWidget *mOverlayWidget;
 
     double mZoomFactorX;
     double mZoomFactorY;
@@ -170,8 +216,6 @@ private:
     QAction *mZoomInAction;
     QAction *mZoomOutAction;
     QAction *mResetZoomAction;
-
-    QPixmap toPixmap();
 
     void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
 
@@ -200,6 +244,9 @@ private:
     double localMinY() const;
     double localMaxY() const;
 
+    double zoomFactorX() const;
+    double zoomFactorY() const;
+
     void setLocalMinMaxY(const double &pLocalMinY, const double &pLocalMaxY);
 
     void checkLocalAxes(const bool &pCanReplot = true,
@@ -221,14 +268,6 @@ private:
                         const double &pScalingFactorY);
 
     QPointF mousePositionWithinCanvas(const QPoint &pPoint) const;
-
-    void drawCoordinates(QPainter *pPainter, const QPointF &pCoordinates,
-                         const QColor &pBackgroundColor,
-                         const QColor &pForegroundColor,
-                         const Location &pLocation = TopLeft,
-                         const bool &pCanMoveLocation = true);
-
-    QRectF zoomRegion() const;
 
 private Q_SLOTS:
     void zoomIn();
