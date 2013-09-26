@@ -129,7 +129,7 @@ void CoreEditingPlugin::retranslateUi()
     retranslateAction(mEditCutAction, tr("Cut"),
                       tr("Cut the selected object"));
     retranslateAction(mEditCopyAction, tr("Copy"),
-                      tr("Copy the selected object"));
+                      tr("Copy the selected object to the clipboard"));
     retranslateAction(mEditPasteAction, tr("Paste"),
                       tr("Paste the contents of the clipboard"));
     retranslateAction(mEditDeleteAction, tr("Delete"),

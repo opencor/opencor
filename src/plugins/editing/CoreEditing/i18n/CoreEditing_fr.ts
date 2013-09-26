@@ -16,8 +16,8 @@
         <translation>Couper l&apos;objet sélectionné</translation>
     </message>
     <message>
-        <source>Copy the selected object</source>
-        <translation>Copier l&apos;objet sélectionné</translation>
+        <source>Copy the selected object to the clipboard</source>
+        <translation>Copier l&apos;objet sélectionné dans le presse-papier</translation>
     </message>
     <message>
         <source>Paste the contents of the clipboard</source>
