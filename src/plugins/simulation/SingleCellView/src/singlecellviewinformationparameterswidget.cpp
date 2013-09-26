@@ -277,12 +277,19 @@ void SingleCellViewInformationParametersWidget::propertyChanged(Core::Property *
         }
 
     // Recompute our 'computed constants' and 'variables'
-    // Note: we would normally call mSimulation->data()->checkForModifications()
-    //       after recomputing our 'computed constants' and 'variables, but the
-    //       recomputation will eventually result in updateParameters() abvove
-    //       to be called and it will check for modifications, so...
+    // Note #1: we would normally call
+    //          mSimulation->data()->checkForModifications() after recomputing
+    //          our 'computed constants' and 'variables, but the recomputation
+    //          will eventually result in updateParameters() abvove to be called
+    //          and it will check for modifications, so...
+    // Note #2: some state variables may be considered as computed constants by
+    //          the CellML API. This is fine when we need to initialise things,
+    //          but not after the user has modified one or several of model
+    //          parameters (see https://github.com/opencor/opencor/issues/234
+    //          for more insight on this issue), hence our passing false to
+    //          recomputeComputedConstantsAndVariables()...
 
-    mSimulation->data()->recomputeComputedConstantsAndVariables(mSimulation->currentPoint());
+    mSimulation->data()->recomputeComputedConstantsAndVariables(mSimulation->currentPoint(), false);
 }
 
 //==============================================================================

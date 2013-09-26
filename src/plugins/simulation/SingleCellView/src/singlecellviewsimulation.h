@@ -106,7 +106,8 @@ public:
 
     void reset();
 
-    void recomputeComputedConstantsAndVariables(const double &pCurrentPoint);
+    void recomputeComputedConstantsAndVariables(const double &pCurrentPoint,
+                                                const bool &pFullComputeComputedConstants = true);
     void recomputeVariables(const double &pCurrentPoint,
                             const bool &pEmitSignal = true);
 

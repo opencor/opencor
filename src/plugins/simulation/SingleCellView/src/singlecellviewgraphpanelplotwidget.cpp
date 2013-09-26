@@ -532,15 +532,15 @@ void SingleCellViewGraphPanelPlotWidget::retranslateUi()
     // Retranslate our actions
 
     GuiInterface::retranslateAction(mCopyAction, tr("Copy"),
-                                    tr("Copy the plot to the clipboard"));
+                                    tr("Copy the graph panel to the clipboard"));
 
     GuiInterface::retranslateAction(mZoomInAction, tr("Zoom In"),
-                                    tr("Zoom in the plot"));
+                                    tr("Zoom in the graph panel"));
     GuiInterface::retranslateAction(mZoomOutAction, tr("Zoom Out"),
-                                    tr("Zoom out the plot"));
+                                    tr("Zoom out the graph panel"));
 
     GuiInterface::retranslateAction(mResetZoomAction, tr("Reset Zoom"),
-                                    tr("Reset the zoom level of the plot"));
+                                    tr("Reset the zoom level of the graph panel"));
 }
 
 //==============================================================================

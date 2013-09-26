@@ -466,7 +466,8 @@ void SingleCellViewSimulationData::reset()
 
 //==============================================================================
 
-void SingleCellViewSimulationData::recomputeComputedConstantsAndVariables(const double &pCurrentPoint)
+void SingleCellViewSimulationData::recomputeComputedConstantsAndVariables(const double &pCurrentPoint,
+                                                                          const bool &pFullComputeComputedConstants)
 {
     if (!mRuntime)
         return;
@@ -474,7 +475,15 @@ void SingleCellViewSimulationData::recomputeComputedConstantsAndVariables(const 
     // Recompute our 'computed constants' and 'variables', if possible
 
     if (mRuntime->isValid()) {
-        mRuntime->computeComputedConstants()(mConstants, mRates, mStates);
+        double *realStates = mStates;
+
+        if (!pFullComputeComputedConstants)
+            realStates = new double[mRuntime->statesCount()];
+
+        mRuntime->computeComputedConstants()(mConstants, mRates, realStates);
+
+        if (!pFullComputeComputedConstants)
+            delete[] realStates;
 
         if (mRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)
             mRuntime->computeOdeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic);
