@@ -57,6 +57,10 @@
         <source>DAE</source>
         <translation>EAD</translation>
     </message>
+    <message>
+        <source>definite integrals are not yet supported</source>
+        <translation>les intégrales définies ne sont pas encore supportées</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>

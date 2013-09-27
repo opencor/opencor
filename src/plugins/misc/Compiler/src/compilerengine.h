@@ -60,8 +60,8 @@ public:
     void * getFunction(const QString &pFunctionName);
 
 private:
-    llvm::Module *mModule;
     llvm::ExecutionEngine *mExecutionEngine;
+    llvm::Module *mModule;
 
     QString mError;
 

@@ -4,10 +4,6 @@
 <context>
     <name>OpenCOR::Compiler::CompilerEngine</name>
     <message>
-        <source>definite integrals are not yet supported</source>
-        <translation>les intégrales définies ne sont pas encore supportées</translation>
-    </message>
-    <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; could not be created</source>
         <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être créé</translation>
     </message>

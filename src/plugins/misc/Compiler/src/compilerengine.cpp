@@ -149,10 +149,11 @@ bool CompilerEngine::compileCode(const QString &pCode)
     llvm::raw_ostream &outputStream = llvm::nulls();
 #endif
     llvm::IntrusiveRefCntPtr<clang::DiagnosticOptions> diagnosticOptions = new clang::DiagnosticOptions();
+    clang::TextDiagnosticPrinter *diagnosticClient = new clang::TextDiagnosticPrinter(outputStream, &*diagnosticOptions);
 
     clang::DiagnosticsEngine diagnosticsEngine(llvm::IntrusiveRefCntPtr<clang::DiagnosticIDs>(new clang::DiagnosticIDs()),
                                                &*diagnosticOptions,
-                                               new clang::TextDiagnosticPrinter(outputStream, &*diagnosticOptions));
+                                               diagnosticClient);
     clang::driver::Driver driver("clang", llvm::sys::getProcessTriple(), "",
                                  diagnosticsEngine);
 
@@ -222,7 +223,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     // Create the compiler instance's diagnostics engine
 
-    compilerInstance.createDiagnostics(new clang::TextDiagnosticPrinter(outputStream, &*diagnosticOptions));
+    compilerInstance.createDiagnostics(diagnosticClient, false);
 
     if (!compilerInstance.hasDiagnostics()) {
         mError = tr("the diagnostics engine could not be created");
