@@ -61,8 +61,8 @@ namespace Compiler {
 //==============================================================================
 
 CompilerEngine::CompilerEngine() :
-    mModule(0),
     mExecutionEngine(0),
+    mModule(0),
     mError(QString())
 {
 }
@@ -86,8 +86,8 @@ void CompilerEngine::reset(const bool &pResetError)
     // Note: we must NOT delete mModule, since it gets deleted when deleting
     //       mExecutionEngine...
 
-    mModule = 0;
     mExecutionEngine = 0;
+    mModule = 0;
 
     if (pResetError)
         mError = QString();
@@ -118,14 +118,6 @@ bool CompilerEngine::compileCode(const QString &pCode)
     // Reset our compiler engine
 
     reset();
-
-    // Check whether we want to compute a definite integral
-
-    if (pCode.contains("defint(func")) {
-        mError = tr("definite integrals are not yet supported");
-
-        return false;
-    }
 
     // Retrieve the application file name and determine the name of the
     // temporary file which will contain our model code

@@ -977,11 +977,13 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
     modelCode.chop(1);
 #endif
 
-    // Compile the model code and check that everything went fine
+    // Check whether the model code contains a definite integral, otherwise
+    // compute it and check that everything went fine
 
-    if (!mCompilerEngine->compileCode(modelCode))
-        // Something went wrong, so output the error that was found
-
+    if (modelCode.contains("defint(func"))
+        mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                   tr("definite integrals are not yet supported"));
+    else if (!mCompilerEngine->compileCode(modelCode))
         mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                    QString("%1").arg(mCompilerEngine->error()));
 
