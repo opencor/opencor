@@ -1406,15 +1406,16 @@ void SingleCellViewGraphPanelPlotWidget::wheelEvent(QWheelEvent *pEvent)
     if (mAction != None)
         return;
 
+    // Make sure that we have actually got a delta that will tell us about the
+    // kind of zooming we need to do
+
+    if (!pEvent->delta())
+        return;
+
     // The only action we support using the wheel is zooming in/out, but this
     // requires no modifiers being used
 
     if (pEvent->modifiers() != Qt::NoModifier)
-        return;
-
-    // Make sure that we actually want to zoom in/out
-
-    if (!pEvent->delta())
         return;
 
     // Zoom in/out by scaling our two local axes
