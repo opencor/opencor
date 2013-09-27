@@ -158,11 +158,6 @@ bool CompilerEngine::compileCode(const QString &pCode)
                                  diagnosticsEngine);
 
     // Get a compilation object to which we pass some arguments
-    // Note: in gcc, the -O3 option comes with a warning: "Under some
-    //       circumstances where these optimizations are not favorable, this
-    //       option might actually make a program slower." This is the reason
-    //       we use -O2 to build OpenCOR. In Clang, however, there is no such
-    //       warning, hence we use -O3 to compile our code...
 
     llvm::SmallVector<const char *, 16> compilationArguments;
 
