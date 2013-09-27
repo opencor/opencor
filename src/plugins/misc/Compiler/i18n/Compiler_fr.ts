@@ -24,8 +24,8 @@
         <translation>le moteur de diagnostiques n&apos;a pas pu être créé</translation>
     </message>
     <message>
-        <source>the model could not be compiled</source>
-        <translation>le modèle n&apos;a pas pu être compilé</translation>
+        <source>the code could not be compiled</source>
+        <translation>le code n&apos;a pas pu être compilé</translation>
     </message>
     <message>
         <source>the JIT execution engine could not be created</source>

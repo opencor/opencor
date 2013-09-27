@@ -120,7 +120,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
     reset();
 
     // Retrieve the application file name and determine the name of the
-    // temporary file which will contain our model code
+    // temporary file which will contain our code
 
     QTemporaryFile tempFile(QDir::tempPath()+QDir::separator()+QFileInfo(qApp->applicationFilePath()).baseName()+"_XXXXXX.c");
 
@@ -133,7 +133,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
     QByteArray tempFileByteArray = tempFile.fileName().toUtf8();
     const char *tempFileName = tempFileByteArray.constData();
 
-    // Save the model code in our temporary file
+    // Save the code in our temporary file
 
     QTextStream out(&tempFile);
 
@@ -162,7 +162,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
     //       circumstances where these optimizations are not favorable, this
     //       option might actually make a program slower." This is the reason
     //       we use -O2 to build OpenCOR. In Clang, however, there is no such
-    //       warning, hence we use -O3 to compile a model...
+    //       warning, hence we use -O3 to compile our code...
 
     llvm::SmallVector<const char *, 16> compilationArguments;
 
@@ -265,7 +265,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
     codeGenerationAction->setLinkModule(mModule);
 
     if (!compilerInstance.ExecuteAction(*codeGenerationAction, outputStream)) {
-        mError = tr("the model could not be compiled");
+        mError = tr("the code could not be compiled");
 
         reset(false);
 
