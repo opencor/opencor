@@ -135,7 +135,6 @@ private:
                          const QColor &pForegroundColor,
                          const Location &pLocation = TopLeft,
                          const bool &pCanMoveLocation = true);
-
 };
 
 //==============================================================================
