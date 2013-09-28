@@ -1036,7 +1036,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
 
         if (!functionsOk) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                       tr("an unexpected problem occurred while trying to retrieve the %1 functions").arg((mModelType == Ode)?tr("ODE"):tr("DAE")));
+                                       tr("an unexpected problem occurred while trying to retrieve the model functions"));
 
             reset(true, false);
         }
