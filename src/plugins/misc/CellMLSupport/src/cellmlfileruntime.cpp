@@ -964,21 +964,6 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
                                   QString::fromStdWString(genericCodeInformation->variablesString()));
     }
 
-    modelCode += "\n";
-
-    // In the case of Windows, remove all '\r' characters from our model code
-    // and then, for all platforms, remove the last '\n'
-    // Note: these are only so that it looks better on Windows when we need to
-    //       debug things...
-
-#if defined(QT_DEBUG)
-    #if defined(Q_OS_WIN)
-    modelCode.remove('\r');
-    #endif
-
-    modelCode.chop(1);
-#endif
-
     // Check whether the model code contains a definite integral, otherwise
     // compute it and check that everything went fine
 
