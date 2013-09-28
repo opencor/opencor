@@ -80,11 +80,11 @@ CompilerEngine::~CompilerEngine()
 
 void CompilerEngine::reset(const bool &pResetError)
 {
-    // Delete some internal objects
+    // Reset some internal objects
+    // Note: mModule is owned by mExecutionEngine, so we don't need to delete it
+    //       ourselves...
 
     delete mExecutionEngine;
-    // Note: we must NOT delete mModule, since it gets deleted when deleting
-    //       mExecutionEngine...
 
     mExecutionEngine = 0;
     mModule = 0;
@@ -149,11 +149,10 @@ bool CompilerEngine::compileCode(const QString &pCode)
     llvm::raw_ostream &outputStream = llvm::nulls();
 #endif
     llvm::IntrusiveRefCntPtr<clang::DiagnosticOptions> diagnosticOptions = new clang::DiagnosticOptions();
-    clang::TextDiagnosticPrinter *diagnosticClient = new clang::TextDiagnosticPrinter(outputStream, &*diagnosticOptions);
 
     clang::DiagnosticsEngine diagnosticsEngine(llvm::IntrusiveRefCntPtr<clang::DiagnosticIDs>(new clang::DiagnosticIDs()),
                                                &*diagnosticOptions,
-                                               diagnosticClient);
+                                               new clang::TextDiagnosticPrinter(outputStream, &*diagnosticOptions));
     clang::driver::Driver driver("clang", llvm::sys::getProcessTriple(), "",
                                  diagnosticsEngine);
 
@@ -218,7 +217,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     // Create the compiler instance's diagnostics engine
 
-    compilerInstance.createDiagnostics(diagnosticClient, false);
+    compilerInstance.createDiagnostics();
 
     if (!compilerInstance.hasDiagnostics()) {
         mError = tr("the diagnostics engine could not be created");
@@ -230,26 +229,6 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     mModule = new llvm::Module(tempFileName, llvm::getGlobalContext());
 
-    // Initialise the native target, so not only can we then create a JIT
-    // execution engine, but more importantly its data layout will match that of
-    // our target platform...
-
-    llvm::InitializeNativeTarget();
-
-    // Create a JIT execution engine
-
-    mExecutionEngine = llvm::ExecutionEngine::createJIT(mModule);
-
-    if (!mExecutionEngine) {
-        mError = tr("the JIT execution engine could not be created");
-
-        delete mModule;
-
-        return false;
-    }
-
-    // Create and execute the frontend to generate the LLVM assembly code,
-    // making sure that all added functions end up in the same module
     // Note: the LLVM team has been meaning to modify
     //       CompilerInstance::ExecuteAction() so that we could specify the
     //       output stream we want to use (rather than always use llvm::errs()),
@@ -267,9 +246,27 @@ bool CompilerEngine::compileCode(const QString &pCode)
         return false;
     }
 
-    // The LLVM assembly code was generated, so we can update our module
+    // Keep track of the LLVM bitcode module
 
     mModule = codeGenerationAction->takeModule();
+
+    // Initialise the native target, so not only can we then create a JIT
+    // execution engine, but more importantly its data layout will match that of
+    // our target platform...
+
+    llvm::InitializeNativeTarget();
+
+    // Create a JIT execution engine and keep track of it
+
+    mExecutionEngine = llvm::ExecutionEngine::createJIT(mModule);
+
+    if (!mExecutionEngine) {
+        mError = tr("the JIT execution engine could not be created");
+
+        delete mModule;
+
+        return false;
+    }
 
     // Everything went fine, so...
 
