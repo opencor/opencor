@@ -30,7 +30,7 @@ ECHO.
 
 CD build
 
-cmake -G "NMake Makefiles JOM" -DENABLE_TESTING=True ..
+cmake -G "NMake Makefiles" -DENABLE_TESTING=True ..
 
 SET ExitCode=%ERRORLEVEL%
 
