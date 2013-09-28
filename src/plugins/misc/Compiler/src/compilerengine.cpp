@@ -202,7 +202,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
     // Create a compiler invocation using our command's arguments
 
     const clang::driver::ArgStringList &commandArguments = command->getArguments();
-    llvm::OwningPtr<clang::CompilerInvocation> compilerInvocation(new clang::CompilerInvocation());
+    clang::CompilerInvocation *compilerInvocation = new clang::CompilerInvocation();
 
     clang::CompilerInvocation::CreateFromArgs(*compilerInvocation,
                                               const_cast<const char **>(commandArguments.data()),
@@ -213,7 +213,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     clang::CompilerInstance compilerInstance;
 
-    compilerInstance.setInvocation(compilerInvocation.take());
+    compilerInstance.setInvocation(compilerInvocation);
 
     // Create the compiler instance's diagnostics engine
 
