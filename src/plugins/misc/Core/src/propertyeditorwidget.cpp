@@ -123,8 +123,8 @@ ListEditorWidget::ListEditorWidget(QWidget *pParent) :
     //          change the value of a property by simply double-clicking on it.
     //          Indeed, with Qt 5, the focus policy of a QComboBox has changed
     //          to be more native, but that breaks things for us, so...
-    // Note #2: see https://bugreports.qt-project.org/browse/QTBUG-29398#comment-208467
-    //          for more information...
+    // Note #2: see https://bugreports.qt-project.org/browse/QTBUG-29398 for
+    //          more information...
 
     setFocusPolicy(Qt::WheelFocus);
 }
