@@ -130,16 +130,35 @@ bool CompilerEngine::compileCode(const QString &pCode)
         return false;
     }
 
-    QByteArray tempFileByteArray = tempFile.fileName().toUtf8();
-    const char *tempFileName = tempFileByteArray.constData();
+    tempFile.close();
+
+    // 'Properly' create our temporary file
+    // Note #1: for some reasons, a temporary file created using QTemporaryFile
+    //          doesn't work straightaway with stat() (which LLVM uses in its
+    //          call to CompilerInstance::ExecuteAction()), so instead we use
+    //          QTemporaryFile to get a temporary file name and then use QFile
+    //          to 'properly' create our temporary file...
+    // Note #2: see https://bugreports.qt-project.org/browse/QTBUG-33727 for
+    //          more information...
+
+    QFile file(tempFile.fileName());
+    // Note: we don't have to delete the file ourselves afterwards since it has
+    //       the same name as our temporary file above, which will get
+    //       automatically deleted...
+
+    if (!file.open(QIODevice::WriteOnly)) {
+        mError = tr("<strong>%1</strong> could not be created").arg(tempFile.fileName());
+
+        return false;
+    }
 
     // Save the code in our temporary file
 
-    QTextStream out(&tempFile);
+    QTextStream out(&file);
 
     out << pCode;
 
-    tempFile.close();
+    file.close();
 
     // Get a driver to compile our code
 
@@ -158,6 +177,9 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     // Get a compilation object to which we pass some arguments
 
+    QByteArray tempFileByteArray = tempFile.fileName().toUtf8();
+    const char *tempFileName = tempFileByteArray.constData();
+
     llvm::SmallVector<const char *, 16> compilationArguments;
 
     compilationArguments.push_back("clang");
@@ -169,8 +191,6 @@ bool CompilerEngine::compileCode(const QString &pCode)
     llvm::OwningPtr<clang::driver::Compilation> compilation(driver.BuildCompilation(compilationArguments));
 
     if (!compilation) {
-        // We couldn't get a compilation object, so...
-
         mError = tr("the compilation object could not be created");
 
         return false;
