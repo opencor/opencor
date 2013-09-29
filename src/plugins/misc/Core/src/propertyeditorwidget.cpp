@@ -1091,8 +1091,8 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
     connect(propertyItemDelegate, SIGNAL(goToNextPropertyRequested()),
             this, SLOT(goToNextProperty()));
 
-    connect(propertyItemDelegate, SIGNAL(listPropertyChanged(Property *, const QString &)),
-            this, SIGNAL(listPropertyChanged(Property *, const QString &)));
+    connect(propertyItemDelegate, SIGNAL(listPropertyChanged(Core::Property *, const QString &)),
+            this, SIGNAL(listPropertyChanged(Core::Property *, const QString &)));
 
     setItemDelegate(propertyItemDelegate);
 
