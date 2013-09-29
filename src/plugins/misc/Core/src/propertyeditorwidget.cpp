@@ -1091,8 +1091,8 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
     connect(propertyItemDelegate, SIGNAL(goToNextPropertyRequested()),
             this, SLOT(goToNextProperty()));
 
-    connect(propertyItemDelegate, SIGNAL(listPropertyChanged(Core::Property *, const QString &)),
-            this, SIGNAL(listPropertyChanged(Core::Property *, const QString &)));
+    connect(propertyItemDelegate, SIGNAL(listPropertyChanged(Property *, const QString &)),
+            this, SIGNAL(listPropertyChanged(Property *, const QString &)));
 
     setItemDelegate(propertyItemDelegate);
 
@@ -1269,8 +1269,8 @@ QSize PropertyEditorWidget::sizeHint() const
 
             if (rowItemHeight)
                 // Our current row has some height, meaning that it is visible,
-                // so we can its height to ou hintHeight, as well as retrieve
-                // the total height of our row's children
+                // so we can set its height to our hintHeight, as well as
+                // retrieve the total height of our row's children
 
                 hintHeight += rowItemHeight+childrenRowHeight(rowItem);
         }

@@ -130,7 +130,7 @@ Q_SIGNALS:
     void goToPreviousPropertyRequested();
     void goToNextPropertyRequested();
 
-    void listPropertyChanged(Core::Property *pProperty, const QString &pValue);
+    void listPropertyChanged(Property *pProperty, const QString &pValue);
 
 private Q_SLOTS:
     void emitListPropertyChanged(const QString &pValue);
@@ -408,8 +408,8 @@ private:
     void deleteProperty(Property *pProperty);
 
 Q_SIGNALS:
-    void propertyChanged(Core::Property *pProperty);
-    void listPropertyChanged(Core::Property *pProperty, const QString &pValue);
+    void propertyChanged(Property *pProperty);
+    void listPropertyChanged(Property *pProperty, const QString &pValue);
 
 private Q_SLOTS:
     void updateHeight();
