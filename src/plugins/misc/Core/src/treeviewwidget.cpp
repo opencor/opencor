@@ -49,7 +49,6 @@ TreeViewWidget::TreeViewWidget(QWidget *pParent) :
 #endif
     setFrameShape(QFrame::NoFrame);
     setSelectionMode(QAbstractItemView::ExtendedSelection);
-    setUniformRowHeights(true);
 }
 
 //==============================================================================
