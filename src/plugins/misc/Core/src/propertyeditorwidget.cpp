@@ -359,13 +359,13 @@ void PropertyItemDelegate::paint(QPainter *pPainter,
 {
     // Paint the item as normal, except if it is a section item
 
-    PropertyItem *propertyItem = static_cast<PropertyItem *>(qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex));
+    Property *property = static_cast<PropertyItem *>(qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex))->owner();
 
     QStyleOptionViewItemV4 option(pOption);
 
     initStyleOption(&option, pIndex);
 
-    if (propertyItem->owner()->type() == Property::Section) {
+    if (property->type() == Property::Section) {
         // Make our section item bold
 
         option.font.setBold(true);
