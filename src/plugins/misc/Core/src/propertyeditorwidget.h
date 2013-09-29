@@ -411,8 +411,9 @@ private:
     void deleteProperty(Property *pProperty);
 
 Q_SIGNALS:
-    void propertyChanged(Property *pProperty);
-    void listPropertyChanged(Property *pProperty, const QString &pValue);
+    void propertyChanged(Core::Property *pProperty);
+    void listPropertyChanged(Core::Property *pProperty, const QString &pValue);
+    // Note: see the comment for the same signal in PropertyItemDelegate...
 
 private Q_SLOTS:
     void updateHeight();
