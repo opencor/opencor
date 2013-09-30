@@ -577,24 +577,21 @@ void SingleCellViewGraphPanelPlotWidget::handleMouseDoubleClickEvent(QMouseEvent
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::setNeedMinMaxX(const double &pNeedMinX,
-                                                        const double &pNeedMaxX)
+void SingleCellViewGraphPanelPlotWidget::setAxes(const double &pMinX,
+                                                 const double &pMaxX,
+                                                 const double &pMinY,
+                                                 const double &pMaxY)
 {
-    // Set our needed minimum/maximum X values
+    // Set our needed minimum/maximum X/Y values
 
-    mNeedMinX = pNeedMinX;
-    mNeedMaxX = pNeedMaxX;
-}
+    mNeedMinX = pMinX;
+    mNeedMaxX = pMaxX;
+    mNeedMinY = pMinY;
+    mNeedMaxY = pMaxY;
 
-//==============================================================================
+    // Effectively update our axes by trying to set them
 
-void SingleCellViewGraphPanelPlotWidget::setNeedMinMaxY(const double &pNeedMinY,
-                                                        const double &pNeedMaxY)
-{
-    // Set our needed minimum/maximum Y values
-
-    mNeedMinY = pNeedMinY;
-    mNeedMaxY = pNeedMaxY;
+    setLocalAxes(0.0, 0.0, 0.0, 0.0, true, true, false, true);
 }
 
 //==============================================================================
@@ -1478,15 +1475,6 @@ bool SingleCellViewGraphPanelPlotWidget::removeGraph(SingleCellViewGraphPanelPlo
     delete pGraph;
 
     return true;
-}
-
-//==============================================================================
-
-void SingleCellViewGraphPanelPlotWidget::updateAxes()
-{
-    // Update our axes by trying to set them
-
-    setLocalAxes(0.0, 0.0, 0.0, 0.0, true, true, false, true);
 }
 
 //==============================================================================

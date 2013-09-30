@@ -1464,10 +1464,10 @@ void SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot)
     bool needInitialisationX = true;
     bool needInitialisationY = true;
 
-    double needMinX = 0.0;
-    double needMaxX = 0.0;
-    double needMinY = 0.0;
-    double needMaxY = 0.0;
+    double minX = 0.0;
+    double maxX = 0.0;
+    double minY = 0.0;
+    double maxY = 0.0;
 
     foreach (SingleCellViewGraphPanelPlotGraph *graph, pPlot->graphs())
         if (graph->isValid() && graph->isSelected()) {
@@ -1486,34 +1486,31 @@ void SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot)
 
             if (graph->parameterX()->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi) {
                 if (needInitialisationX) {
-                    needMinX = startingPoint;
-                    needMaxX = endingPoint;
+                    minX = startingPoint;
+                    maxX = endingPoint;
 
                     needInitialisationX = false;
                 } else {
-                    needMinX = qMin(needMinX, startingPoint);
-                    needMaxX = qMax(needMaxX, endingPoint);
+                    minX = qMin(minX, startingPoint);
+                    maxX = qMax(maxX, endingPoint);
                 }
             }
 
             if (graph->parameterY()->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi)
             {
                 if (needInitialisationY) {
-                    needMinY = startingPoint;
-                    needMaxY = endingPoint;
+                    minY = startingPoint;
+                    maxY = endingPoint;
 
                     needInitialisationY = false;
                 } else {
-                    needMinY = qMin(needMinY, startingPoint);
-                    needMaxY = qMax(needMaxY, endingPoint);
+                    minY = qMin(minY, startingPoint);
+                    maxY = qMax(maxY, endingPoint);
                 }
             }
         }
 
-    pPlot->setNeedMinMaxX(needMinX, needMaxX);
-    pPlot->setNeedMinMaxY(needMinY, needMaxY);
-
-    pPlot->updateAxes();
+    pPlot->setAxes(minX, maxX, minY, maxY);
 }
 
 //==============================================================================

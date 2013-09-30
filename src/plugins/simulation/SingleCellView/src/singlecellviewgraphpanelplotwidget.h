@@ -157,10 +157,8 @@ public:
     bool addGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
     bool removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
 
-    void setNeedMinMaxX(const double &pNeedMinX, const double &pNeedMaxX);
-    void setNeedMinMaxY(const double &pNeedMinY, const double &pNeedMaxY);
-
-    void updateAxes();
+    void setAxes(const double &pMinX, const double &pMaxX,
+                 const double &pMinY, const double &pMaxY);
 
     void drawGraphSegment(SingleCellViewGraphPanelPlotGraph *pGraph,
                           const qulonglong &pFrom, const qulonglong &pTo);
