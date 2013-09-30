@@ -688,11 +688,11 @@ void SingleCellViewGraphPanelPlotWidget::setLocalAxis(const int &pAxis,
                                                       const double &pMin,
                                                       const double &pMax)
 {
-    // Set our local axes
+    // Set our local axis
     // Note #1: to use setAxisScale() on its own is not sufficient unless we
     //          were to replot ourselves immediately after, but we don't want to
     //          do that, so instead we also use setAxisScaleDiv() to make sure
-    //          that our local axes are indeed taken into account (i.e. we can
+    //          that our local axis is indeed taken into account (i.e. we can
     //          retrieve them using localMinX(), localMaxX(), localMinY() and
     //          localMaxY()). Also, we must call setAxisScaleDiv() before
     //          setAxisScale() to make sure that the axis data is not considered
