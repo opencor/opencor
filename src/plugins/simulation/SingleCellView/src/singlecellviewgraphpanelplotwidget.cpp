@@ -57,6 +57,7 @@ specific language governing permissions and limitations under the License.
 #include "qwt_plot_layout.h"
 #include "qwt_plot_renderer.h"
 #include "qwt_scale_div.h"
+#include "qwt_scale_engine.h"
 
 //==============================================================================
 
@@ -865,30 +866,6 @@ void SingleCellViewGraphPanelPlotWidget::checkAnyAxesValues(double &pMinX,
 
 //==============================================================================
 
-double SingleCellViewGraphPanelPlotWidget::optimisedValue(const double &pValue,
-                                                          const double &pPower,
-                                                          const bool &pLowValue)
-{
-    // Optimise the given value using the given power
-
-    double res = pPower*(pLowValue?qFloor(pValue/pPower):qCeil(pValue/pPower));
-
-    // Now, try to optimise even further by testing against half of the given
-    // power
-
-    if (pLowValue) {
-        double otherRes = res+0.5*pPower;
-
-        return (otherRes < pValue)?otherRes:res;
-    } else {
-        double otherRes = res-0.5*pPower;
-
-        return (otherRes > pValue)?otherRes:res;
-    }
-}
-
-//==============================================================================
-
 void SingleCellViewGraphPanelPlotWidget::setLocalAxes(const double &pLocalMinX,
                                                       const double &pLocalMaxX,
                                                       const double &pLocalMinY,
@@ -962,25 +939,17 @@ void SingleCellViewGraphPanelPlotWidget::setLocalAxes(const double &pLocalMinX,
         // Optimise the minimum/maximum values of our axes by rounding them
         // down/up, respectively
 
-        double powerX = qPow(10.0, qMin(qFloor(log10(qAbs(xMax-xMin))),
-                                        qMax(xMin?
-                                                 qFloor(log10(qAbs(xMin))):
-                                                 0,
-                                             xMax?
-                                                 qFloor(log10(qAbs(xMax))):
-                                                 0)));
-        double powerY = qPow(10.0, qMin(qFloor(log10(qAbs(yMax-yMin))),
-                                        qMax(yMin?
-                                                 qFloor(log10(qAbs(yMin))):
-                                                 0,
-                                             yMax?
-                                                 qFloor(log10(qAbs(yMax))):
-                                                 0)));
+        double xStep = QwtScaleArithmetic::divideInterval(xMax-xMin,
+                                                          axisMaxMajor(QwtPlot::xBottom),
+                                                          axisScaleEngine(QwtPlot::xBottom)->base());
+        double yStep = QwtScaleArithmetic::divideInterval(yMax-yMin,
+                                                          axisMaxMajor(QwtPlot::yLeft),
+                                                          axisScaleEngine(QwtPlot::yLeft)->base());
 
-        xMin = (needMinMaxX && (xMin == mNeedMinX))?mNeedMinX:optimisedValue(xMin, powerX, true);
-        xMax = (needMinMaxX && (xMax == mNeedMaxX))?mNeedMaxX:optimisedValue(xMax, powerX, false);
-        yMin = (needMinMaxY && (yMin == mNeedMinY))?mNeedMinY:optimisedValue(yMin, powerY, true);
-        yMax = (needMinMaxY && (yMax == mNeedMaxY))?mNeedMaxY:optimisedValue(yMax, powerY, false);
+        xMin = (needMinMaxX && (xMin == mNeedMinX))?mNeedMinX:qFloor(xMin/xStep)*xStep;
+        xMax = (needMinMaxX && (xMax == mNeedMaxX))?mNeedMaxX:qCeil(xMax/xStep)*xStep;
+        yMin = (needMinMaxY && (yMin == mNeedMinY))?mNeedMinY:qFloor(yMin/yStep)*yStep;
+        yMax = (needMinMaxY && (yMax == mNeedMaxY))?mNeedMaxY:qCeil(yMax/yStep)*yStep;
 
         // Make sure that the optimised minimum/maximum values of our axes have
         // finite values
