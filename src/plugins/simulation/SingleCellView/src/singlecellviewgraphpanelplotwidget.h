@@ -42,6 +42,12 @@ class QwtPlotDirectPainter;
 
 //==============================================================================
 
+namespace Ui {
+    class SingleCellViewGraphPanelPlotWidget;
+}
+
+//==============================================================================
+
 namespace OpenCOR {
 
 //==============================================================================
@@ -182,6 +188,8 @@ private:
         ZoomRegion
     };
 
+    Ui::SingleCellViewGraphPanelPlotWidget *mGui;
+
     QwtPlotDirectPainter *mDirectPainter;
 
     QList<SingleCellViewGraphPanelPlotGraph *> mGraphs;
@@ -207,15 +215,8 @@ private:
     double mZoomFactorX;
     double mZoomFactorY;
 
-    bool mNeedCustomContextMenu;
-    QMenu *mCustomContextMenu;
-
-    QAction *mCopyAction;
-
-    QAction *mZoomInAction;
-    QAction *mZoomOutAction;
-
-    QAction *mResetZoomAction;
+    bool mNeedContextMenu;
+    QMenu *mContextMenu;
 
     void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
 
@@ -267,12 +268,12 @@ private:
     QPointF mousePositionWithinCanvas(const QPoint &pPoint) const;
 
 private Q_SLOTS:
-    void copy();
+    void on_actionCopy_triggered();
 
-    void zoomIn();
-    void zoomOut();
+    void on_actionZoomIn_triggered();
+    void on_actionZoomOut_triggered();
 
-    void resetZoom();
+    void on_actionResetZoom_triggered();
 };
 
 //==============================================================================

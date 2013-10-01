@@ -20,7 +20,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlfileruntime.h"
-#include "guiinterface.h"
 #include "singlecellviewgraphpanelplotwidget.h"
 
 //==============================================================================
@@ -58,6 +57,10 @@ specific language governing permissions and limitations under the License.
 #include "qwt_plot_renderer.h"
 #include "qwt_scale_div.h"
 #include "qwt_scale_engine.h"
+
+//==============================================================================
+
+#include "ui_singlecellviewgraphpanelplotwidget.h"
 
 //==============================================================================
 
@@ -435,6 +438,7 @@ static const double MaxAxis = 1000.0;
 SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *pParent) :
     QwtPlot(pParent),
     CommonWidget(pParent),
+    mGui(new Ui::SingleCellViewGraphPanelPlotWidget),
     mGraphs(QList<SingleCellViewGraphPanelPlotGraph *>()),
     mAction(None),
     mOriginPoint(QPointF()),
@@ -448,12 +452,12 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
     mNeedMaxY(0.0),
     mZoomFactorX(MinZoomFactor),
     mZoomFactorY(MinZoomFactor),
-    mNeedCustomContextMenu(false),
-    mCopyAction(GuiInterface::newAction(this)),
-    mZoomInAction(GuiInterface::newAction(this)),
-    mZoomOutAction(GuiInterface::newAction(this)),
-    mResetZoomAction(GuiInterface::newAction(this))
+    mNeedContextMenu(false)
 {
+    // Set up the GUI
+
+    mGui->setupUi(this);
+
     // Get ourselves a direct painter
 
     mDirectPainter = new QwtPlotDirectPainter(this);
@@ -489,29 +493,16 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
 
     mOverlayWidget = new SingleCellViewGraphPanelPlotOverlayWidget(this);
 
-    // Create and populate our custom context menu
+    // Create our context menu
 
-    mCustomContextMenu = new QMenu(this);
+    mContextMenu = new QMenu(this);
 
-    mCustomContextMenu->addAction(mCopyAction);
-    mCustomContextMenu->addSeparator();
-    mCustomContextMenu->addAction(mZoomInAction);
-    mCustomContextMenu->addAction(mZoomOutAction);
-    mCustomContextMenu->addSeparator();
-    mCustomContextMenu->addAction(mResetZoomAction);
-
-    // Some connections
-
-    connect(mCopyAction, SIGNAL(triggered(bool)),
-            this, SLOT(copy()));
-
-    connect(mZoomInAction, SIGNAL(triggered(bool)),
-            this, SLOT(zoomIn()));
-    connect(mZoomOutAction, SIGNAL(triggered(bool)),
-            this, SLOT(zoomOut()));
-
-    connect(mResetZoomAction, SIGNAL(triggered(bool)),
-            this, SLOT(resetZoom()));
+    mContextMenu->addAction(mGui->actionCopy);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mGui->actionZoomIn);
+    mContextMenu->addAction(mGui->actionZoomOut);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mGui->actionResetZoom);
 }
 
 //==============================================================================
@@ -530,18 +521,9 @@ SingleCellViewGraphPanelPlotWidget::~SingleCellViewGraphPanelPlotWidget()
 
 void SingleCellViewGraphPanelPlotWidget::retranslateUi()
 {
-    // Retranslate our actions
+    // Retranslate our GUI
 
-    GuiInterface::retranslateAction(mCopyAction, tr("Copy"),
-                                    tr("Copy the graph panel to the clipboard"));
-
-    GuiInterface::retranslateAction(mZoomInAction, tr("Zoom In"),
-                                    tr("Zoom in the graph panel"));
-    GuiInterface::retranslateAction(mZoomOutAction, tr("Zoom Out"),
-                                    tr("Zoom out the graph panel"));
-
-    GuiInterface::retranslateAction(mResetZoomAction, tr("Reset Zoom"),
-                                    tr("Reset the zoom level of the graph panel"));
+    mGui->retranslateUi(this);
 }
 
 //==============================================================================
@@ -573,7 +555,7 @@ void SingleCellViewGraphPanelPlotWidget::handleMouseDoubleClickEvent(QMouseEvent
 
     if (   (pEvent->button() == Qt::LeftButton)
         && (pEvent->modifiers() == Qt::NoModifier))
-        resetZoom();
+        on_actionResetZoom_triggered();
 }
 
 //==============================================================================
@@ -677,10 +659,10 @@ void SingleCellViewGraphPanelPlotWidget::updateZoomFactors()
 
     // Update the enabled status of our actions
 
-    mZoomInAction->setEnabled((mZoomFactorX < MaxZoomFactor) || (mZoomFactorY < MaxZoomFactor));
-    mZoomOutAction->setEnabled((mZoomFactorX > MinZoomFactor) || (mZoomFactorY > MinZoomFactor));
+    mGui->actionZoomIn->setEnabled((mZoomFactorX < MaxZoomFactor) || (mZoomFactorY < MaxZoomFactor));
+    mGui->actionZoomOut->setEnabled((mZoomFactorX > MinZoomFactor) || (mZoomFactorY > MinZoomFactor));
 
-    mResetZoomAction->setEnabled((mZoomFactorX != MinZoomFactor) || (mZoomFactorY != MinZoomFactor));
+    mGui->actionResetZoom->setEnabled((mZoomFactorX != MinZoomFactor) || (mZoomFactorY != MinZoomFactor));
 }
 
 //==============================================================================
@@ -1209,10 +1191,9 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
         ;
     }
 
-    // The mouse has moved, so we definitely won't need to show our custom
-    // context menu
+    // The mouse has moved, so we definitely won't need to show our context menu
 
-    mNeedCustomContextMenu = false;
+    mNeedContextMenu = false;
 }
 
 //==============================================================================
@@ -1285,9 +1266,9 @@ void SingleCellViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
         }
     }
 
-    // Check whether we might need to show our custom context menu
+    // Check whether we might need to show our context menu
 
-    mNeedCustomContextMenu = pEvent->button() == Qt::RightButton;
+    mNeedContextMenu = pEvent->button() == Qt::RightButton;
 }
 
 //==============================================================================
@@ -1348,10 +1329,10 @@ void SingleCellViewGraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
         ;
     }
 
-    // Show our custom context menu, if still needed
+    // Show our context menu, if still needed
 
-    if (mNeedCustomContextMenu)
-        mCustomContextMenu->exec(QCursor::pos());
+    if (mNeedContextMenu)
+        mContextMenu->exec(QCursor::pos());
 }
 
 //==============================================================================
@@ -1520,7 +1501,7 @@ void SingleCellViewGraphPanelPlotWidget::drawGraphSegment(SingleCellViewGraphPan
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::copy()
+void SingleCellViewGraphPanelPlotWidget::on_actionCopy_triggered()
 {
     // Copy our contents to the clipboard
 
@@ -1529,7 +1510,7 @@ void SingleCellViewGraphPanelPlotWidget::copy()
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::zoomIn()
+void SingleCellViewGraphPanelPlotWidget::on_actionZoomIn_triggered()
 {
     // Zoom in by scaling our two local axes
 
@@ -1540,7 +1521,7 @@ void SingleCellViewGraphPanelPlotWidget::zoomIn()
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::zoomOut()
+void SingleCellViewGraphPanelPlotWidget::on_actionZoomOut_triggered()
 {
     // Zoom out by scaling our two local axes
 
@@ -1551,12 +1532,14 @@ void SingleCellViewGraphPanelPlotWidget::zoomOut()
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::resetZoom()
+void SingleCellViewGraphPanelPlotWidget::on_actionResetZoom_triggered()
 {
     // Reset the zoom level by resetting our local axes, but only if the reset
     // zoom action is enabled
+    // Note: we check for the reset zoom action to be enabled since we may call
+    //       this method directly...
 
-    if (mResetZoomAction->isEnabled())
+    if (mGui->actionResetZoom->isEnabled())
         setLocalAxes(mMinX, mMaxX, mMinY, mMaxY);
 }
 
