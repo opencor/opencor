@@ -568,12 +568,12 @@ bool SingleCellViewGraphPanelPlotWidget::eventFilter(QObject *pObject,
 
 void SingleCellViewGraphPanelPlotWidget::handleMouseDoubleClickEvent(QMouseEvent *pEvent)
 {
-    // Copy our contents to the clipboard, in case we double-clicked using the
-    // left mouse button with no modifiers
+    // Reset the zoom level, in case we double-clicked using the left mouse
+    // button with no modifiers
 
     if (   (pEvent->button() == Qt::LeftButton)
         && (pEvent->modifiers() == Qt::NoModifier))
-        copy();
+        resetZoom();
 }
 
 //==============================================================================
@@ -1553,9 +1553,11 @@ void SingleCellViewGraphPanelPlotWidget::zoomOut()
 
 void SingleCellViewGraphPanelPlotWidget::resetZoom()
 {
-    // Reset the zoom level by resetting our local axes
+    // Reset the zoom level by resetting our local axes, but only if the reset
+    // zoom action is enabled
 
-    setLocalAxes(mMinX, mMaxX, mMinY, mMaxY);
+    if (mResetZoomAction->isEnabled())
+        setLocalAxes(mMinX, mMaxX, mMinY, mMaxY);
 }
 
 //==============================================================================
