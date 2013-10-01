@@ -74,14 +74,14 @@ SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(QWi
 
     delete tempPropertyEditor;
 
-    // Create our general context menu
+    // Create our context menu
 
-    mGeneralContextMenu = new QMenu(this);
+    mContextMenu = new QMenu(this);
 
-    mGeneralContextMenu->addAction(mGui->actionAddGraph);
-    mGeneralContextMenu->addSeparator();
-    mGeneralContextMenu->addAction(mGui->actionRemoveCurrentGraph);
-    mGeneralContextMenu->addAction(mGui->actionRemoveAllGraphs);
+    mContextMenu->addAction(mGui->actionAddGraph);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mGui->actionRemoveCurrentGraph);
+    mContextMenu->addAction(mGui->actionRemoveAllGraphs);
 }
 
 //==============================================================================
@@ -443,7 +443,7 @@ void SingleCellViewInformationGraphsWidget::propertyEditorContextMenu(const QPoi
     if (   !currentProperty
         || (currentProperty->type() == Core::Property::Section)
         || (!currentProperty->name().compare(tr("Model"))))
-        mGeneralContextMenu->exec(QCursor::pos());
+        mContextMenu->exec(QCursor::pos());
     else
         mContextMenus.value(mFileName)->exec(QCursor::pos());
 }
@@ -485,9 +485,9 @@ void SingleCellViewInformationGraphsWidget::propertyEditorSectionResized(const i
 void SingleCellViewInformationGraphsWidget::populateContextMenu(QMenu *pContextMenu,
                                                                 CellMLSupport::CellmlFileRuntime *pRuntime)
 {
-    // Populate our context menu with the contents of our general context menu
+    // Populate our context menu with the contents of our context menu
 
-    pContextMenu->addActions(mGeneralContextMenu->actions());
+    pContextMenu->addActions(mContextMenu->actions());
     pContextMenu->addSeparator();
 
     // Now, add our model parameters to it
