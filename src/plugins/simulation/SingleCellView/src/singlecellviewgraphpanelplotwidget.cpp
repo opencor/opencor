@@ -939,17 +939,25 @@ void SingleCellViewGraphPanelPlotWidget::setLocalAxes(const double &pLocalMinX,
         // Optimise the minimum/maximum values of our axes by rounding them
         // down/up, respectively
 
-        double xStep = QwtScaleArithmetic::divideInterval(xMax-xMin,
-                                                          axisMaxMajor(QwtPlot::xBottom),
-                                                          axisScaleEngine(QwtPlot::xBottom)->base());
-        double yStep = QwtScaleArithmetic::divideInterval(yMax-yMin,
-                                                          axisMaxMajor(QwtPlot::yLeft),
-                                                          axisScaleEngine(QwtPlot::yLeft)->base());
+        uint xBase = axisScaleEngine(QwtPlot::xBottom)->base();
+        double xMajorStep = QwtScaleArithmetic::divideInterval(xMax-xMin,
+                                                               axisMaxMajor(QwtPlot::xBottom),
+                                                               xBase);
+        double xMinorStep = QwtScaleArithmetic::divideInterval(xMajorStep,
+                                                               axisMaxMinor(QwtPlot::xBottom),
+                                                               axisScaleEngine(QwtPlot::xBottom)->base());
 
-        xMin = (needMinMaxX && (xMin == mNeedMinX))?mNeedMinX:qFloor(xMin/xStep)*xStep;
-        xMax = (needMinMaxX && (xMax == mNeedMaxX))?mNeedMaxX:qCeil(xMax/xStep)*xStep;
-        yMin = (needMinMaxY && (yMin == mNeedMinY))?mNeedMinY:qFloor(yMin/yStep)*yStep;
-        yMax = (needMinMaxY && (yMax == mNeedMaxY))?mNeedMaxY:qCeil(yMax/yStep)*yStep;
+        uint yBase = axisScaleEngine(QwtPlot::yLeft)->base();
+        double yMajorStep = QwtScaleArithmetic::divideInterval(yMax-yMin,
+                                                               axisMaxMajor(QwtPlot::yLeft),
+                                                               yBase);
+        double yMinorStep = QwtScaleArithmetic::divideInterval(yMajorStep,
+                                                               axisMaxMinor(QwtPlot::yLeft),
+                                                               yBase);
+        xMin = (needMinMaxX && (xMin == mNeedMinX))?mNeedMinX:qFloor(xMin/xMinorStep)*xMinorStep;
+        xMax = (needMinMaxX && (xMax == mNeedMaxX))?mNeedMaxX:qCeil(xMax/xMinorStep)*xMinorStep;
+        yMin = (needMinMaxY && (yMin == mNeedMinY))?mNeedMinY:qFloor(yMin/yMinorStep)*yMinorStep;
+        yMax = (needMinMaxY && (yMax == mNeedMaxY))?mNeedMaxY:qCeil(yMax/yMinorStep)*yMinorStep;
 
         // Make sure that the optimised minimum/maximum values of our axes have
         // finite values
