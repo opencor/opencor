@@ -82,6 +82,9 @@ SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(QWi
     mContextMenu->addSeparator();
     mContextMenu->addAction(mGui->actionRemoveCurrentGraph);
     mContextMenu->addAction(mGui->actionRemoveAllGraphs);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mGui->actionSelectAllGraphs);
+    mContextMenu->addAction(mGui->actionUnselectAllGraphs);
 }
 
 //==============================================================================
@@ -169,6 +172,11 @@ void SingleCellViewInformationGraphsWidget::initialize(const QString &pFileName,
 
 void SingleCellViewInformationGraphsWidget::finalize(const QString &pFileName)
 {
+    // Remove all our graphs, if there is going to be no file left opened
+
+    if ((mFileNames.count() == 1) && mFileNames.contains(pFileName))
+        on_actionRemoveAllGraphs_triggered();
+
     // Remove track of the context menu, file name, runtime and simulation
 
     mContextMenus.remove(pFileName);
@@ -352,7 +360,7 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph)
+void SingleCellViewInformationGraphsWidget::removeGraphs(QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs)
 {
     // Make sure that we have a property editor
 
@@ -363,9 +371,17 @@ void SingleCellViewInformationGraphsWidget::removeGraph(SingleCellViewGraphPanel
 
     mPropertyEditor->setUpdatesEnabled(false);
 
-    // Remove the graph property associated with the given graph
+    // Remove the graph properties associated with the given graphs, as well as
+    // their trace
 
-    mPropertyEditor->removeProperty(mGraphProperties.value(pGraph));
+    foreach (SingleCellViewGraphPanelPlotGraph *graph, pGraphs) {
+        Core::Property *property = mGraphProperties.value(graph);
+
+        mPropertyEditor->removeProperty(property);
+
+        mGraphs.remove(property);
+        mGraphProperties.remove(graph);
+    }
 
     // Allow ourselves to be updated again
 
@@ -389,7 +405,7 @@ void SingleCellViewInformationGraphsWidget::on_actionRemoveCurrentGraph_triggere
     // Ask the graph panel associated with our current property editor to remove
     // the current graph
 
-    mGraphPanels.value(mPropertyEditor)->removeGraph(mGraphs.value(mPropertyEditor->currentProperty()));
+    mGraphPanels.value(mPropertyEditor)->removeGraphs(QList<SingleCellViewGraphPanelPlotGraph *>() << mGraphs.value(mPropertyEditor->currentProperty()));
 }
 
 //==============================================================================
@@ -397,10 +413,57 @@ void SingleCellViewInformationGraphsWidget::on_actionRemoveCurrentGraph_triggere
 void SingleCellViewInformationGraphsWidget::on_actionRemoveAllGraphs_triggered()
 {
     // Ask the graph panel associated with our current property editor to remove
-    // the current graph
+    // all the graphs
+
+    mGraphPanels.value(mPropertyEditor)->removeGraphs(mGraphs.values());
+}
+
+//==============================================================================
+
+void SingleCellViewInformationGraphsWidget::selectAllGraphs(const bool &pSelect)
+{
+    // (Un)select all the graphs
+    // Note: normall, we would only update the checked state of our graph
+    //       properties, which would in turn update the selected state of our
+    //       graphs and let people know that they have been updated. Now, the
+    //       problem with this is that every single graph is going to be shown/
+    //       hidden indivdually. So, if we have loads of graphs with many data
+    //       points, then it's going to be slow. So, instead, we disconnect the
+    //       propertyChanged() signal, update the checked state of our graph
+    //       properties as well as the selected state of our graphs, and then
+    //       let people know that all the graphs have been updated...
+
+    disconnect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
+               this, SLOT(graphChanged(Core::Property *)));
+
+    foreach (Core::Property *property, mGraphProperties)
+        property->setChecked(pSelect);
 
     foreach (SingleCellViewGraphPanelPlotGraph *graph, mGraphs)
-        mGraphPanels.value(mPropertyEditor)->removeGraph(graph);
+        graph->setSelected(pSelect);
+
+    emit graphsUpdated(mGraphs.values());
+
+    connect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
+            this, SLOT(graphChanged(Core::Property *)));
+}
+
+//==============================================================================
+
+void SingleCellViewInformationGraphsWidget::on_actionSelectAllGraphs_triggered()
+{
+    // Select all the graphs
+
+    selectAllGraphs(true);
+}
+
+//==============================================================================
+
+void SingleCellViewInformationGraphsWidget::on_actionUnselectAllGraphs_triggered()
+{
+    // Unselect all the graphs
+
+    selectAllGraphs(false);
 }
 
 //==============================================================================
@@ -432,10 +495,23 @@ void SingleCellViewInformationGraphsWidget::propertyEditorContextMenu(const QPoi
 
     Core::Property *currentProperty = mPropertyEditor->currentProperty();
 
-    // Update the enabled state of our remove current/all graph/s actions
+    // Update the enabled state of some of our actions
 
     mGui->actionRemoveCurrentGraph->setEnabled(currentProperty);
     mGui->actionRemoveAllGraphs->setEnabled(!mPropertyEditor->properties().isEmpty());
+
+    bool canSelectAllGraphs = false;
+    bool canUnselectAllGraphs = false;
+
+    foreach (Core::Property *property, mGraphProperties) {
+        bool graphSelected = property->isChecked();
+
+        canSelectAllGraphs   = canSelectAllGraphs   || !graphSelected;
+        canUnselectAllGraphs = canUnselectAllGraphs ||  graphSelected;
+    }
+
+    mGui->actionSelectAllGraphs->setEnabled(canSelectAllGraphs);
+    mGui->actionUnselectAllGraphs->setEnabled(canUnselectAllGraphs);
 
     // Show the context menu, or not, depending ont the type of property we are
     // dealing with, if any
@@ -660,7 +736,7 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
     if (   (oldParameterX != graph->parameterX())
         || (oldParameterY != graph->parameterY())
         || (oldPen != graph->pen()))
-        emit graphUpdated(graph);
+        emit graphsUpdated(QList<SingleCellViewGraphPanelPlotGraph *>() << graph);
 }
 
 //==============================================================================
@@ -691,7 +767,7 @@ void SingleCellViewInformationGraphsWidget::graphChanged(Core::Property *pProper
         if (graph) {
             graph->setSelected(pProperty->isChecked());
 
-            emit graphUpdated(graph);
+            emit graphsUpdated(QList<SingleCellViewGraphPanelPlotGraph *>() << graph);
         }
     } else {
         // Either the model, X or Y parameter property of the graph has changed,

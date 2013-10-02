@@ -28,6 +28,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QList>
+
+//==============================================================================
+
 class QFrame;
 
 //==============================================================================
@@ -64,7 +68,7 @@ public:
     QList<SingleCellViewGraphPanelPlotGraph *> graphs() const;
 
     void addGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
-    void removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
+    void removeGraphs(const QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs);
 
 protected:
     virtual void changeEvent(QEvent *pEvent);
@@ -85,7 +89,7 @@ Q_SIGNALS:
     void inactivated(SingleCellViewGraphPanelWidget *pGraphPanel);
 
     void graphAdded(SingleCellViewGraphPanelPlotGraph *pGraph);
-    void graphRemoved(SingleCellViewGraphPanelPlotGraph *pGraph);
+    void graphsRemoved(QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs);
 };
 
 //==============================================================================

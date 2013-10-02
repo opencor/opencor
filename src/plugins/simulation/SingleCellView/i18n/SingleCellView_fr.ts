@@ -358,7 +358,7 @@
         <translation>Supprimer la courbe actuelle</translation>
     </message>
     <message>
-        <source>Remove all graphs</source>
+        <source>Remove all the graphs</source>
         <translation>Supprimer toutes les courbes</translation>
     </message>
     <message>
@@ -372,6 +372,22 @@
     <message>
         <source>Remove All Graphs</source>
         <translation>Supprimer Toutes Courbes</translation>
+    </message>
+    <message>
+        <source>Select All Graphs</source>
+        <translation>Sélectionner Toutes Courbes</translation>
+    </message>
+    <message>
+        <source>Unselect All Graphs</source>
+        <translation>Déselectionner Toutes Courbes</translation>
+    </message>
+    <message>
+        <source>Select all the graphs</source>
+        <translation>Sélectionner toutes les courbes</translation>
+    </message>
+    <message>
+        <source>Unselect all the graphs</source>
+        <translation>Déselectionner toutes les courbes</translation>
     </message>
 </context>
 <context>

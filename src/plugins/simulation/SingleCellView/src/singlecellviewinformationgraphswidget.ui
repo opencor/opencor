@@ -31,7 +31,29 @@
     <string>Remove All Graphs</string>
    </property>
    <property name="statusTip">
-    <string>Remove all graphs</string>
+    <string>Remove all the graphs</string>
+   </property>
+  </action>
+  <action name="actionSelectAllGraphs">
+   <property name="text">
+    <string>Select All Graphs</string>
+   </property>
+   <property name="toolTip">
+    <string>Select All Graphs</string>
+   </property>
+   <property name="statusTip">
+    <string>Select all the graphs</string>
+   </property>
+  </action>
+  <action name="actionUnselectAllGraphs">
+   <property name="text">
+    <string>Unselect All Graphs</string>
+   </property>
+   <property name="toolTip">
+    <string>Unselect All Graphs</string>
+   </property>
+   <property name="statusTip">
+    <string>Unselect all the graphs</string>
    </property>
   </action>
  </widget>

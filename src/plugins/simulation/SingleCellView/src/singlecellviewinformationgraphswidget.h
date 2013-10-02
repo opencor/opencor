@@ -28,10 +28,12 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QList>
 #include <QStackedWidget>
 
 //==============================================================================
 
+class QAction;
 class QLabel;
 class QMenu;
 
@@ -129,20 +131,26 @@ private:
     void updateGraphsInfo(Core::Property *pSectionProperty = 0);
     void updateAllGraphsInfo();
 
+    void selectAllGraphs(const bool &pSelect);
+
 Q_SIGNALS:
-    void graphUpdated(SingleCellViewGraphPanelPlotGraph *pGraph);
+    void graphsUpdated(const QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs);
 
 public Q_SLOTS:
     void initialize(SingleCellViewGraphPanelWidget *pGraphPanel);
     void finalize(SingleCellViewGraphPanelWidget *pGraphPanel);
 
     void addGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
-    void removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
+    void removeGraphs(QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs);
 
 private Q_SLOTS:
     void on_actionAddGraph_triggered();
+
     void on_actionRemoveCurrentGraph_triggered();
     void on_actionRemoveAllGraphs_triggered();
+
+    void on_actionSelectAllGraphs_triggered();
+    void on_actionUnselectAllGraphs_triggered();
 
     void propertyEditorContextMenu(const QPoint &pPosition) const;
     void propertyEditorSectionResized(const int &pLogicalIndex,

@@ -245,23 +245,23 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
 
     connect(graphPanelsWidget, SIGNAL(graphAdded(SingleCellViewGraphPanelPlotGraph *)),
             graphsWidget, SLOT(addGraph(SingleCellViewGraphPanelPlotGraph *)));
-    connect(graphPanelsWidget, SIGNAL(graphRemoved(SingleCellViewGraphPanelPlotGraph *)),
-            graphsWidget, SLOT(removeGraph(SingleCellViewGraphPanelPlotGraph *)));
+    connect(graphPanelsWidget, SIGNAL(graphsRemoved(QList<SingleCellViewGraphPanelPlotGraph *> &)),
+            graphsWidget, SLOT(removeGraphs(QList<SingleCellViewGraphPanelPlotGraph *> &)));
 
     connect(graphPanelsWidget, SIGNAL(graphAdded(SingleCellViewGraphPanelPlotGraph *)),
             this, SLOT(graphAdded(SingleCellViewGraphPanelPlotGraph *)));
-    connect(graphPanelsWidget, SIGNAL(graphRemoved(SingleCellViewGraphPanelPlotGraph *)),
-            this, SLOT(graphRemoved(SingleCellViewGraphPanelPlotGraph *)));
+    connect(graphPanelsWidget, SIGNAL(graphsRemoved(QList<SingleCellViewGraphPanelPlotGraph *> &)),
+            this, SLOT(graphsRemoved(QList<SingleCellViewGraphPanelPlotGraph *> &)));
 
     // Keep track of the updating of a graph
     // Note: ideally, this would, as for the addition and removal of a graph
     //       (see above), be done through graphPanelsWidget (i.e. a graph would
     //       let people know that it has been updated and the graph panel with
     //       which it is associated would forward the signal to
-    //       graphPanelsWidget), but this may result in too many graphUpdated()
+    //       graphPanelsWidget), but this may result in too many graphsUpdated()
     //       signals being emitted. For example, say that you change the model
     //       with which a graph is associated, then both the X and Y parameters
-    //       will get updated, and for each of those updates a graphUpdated()
+    //       will get updated, and for each of those updates a graphsUpdated()
     //       signal would be emitted by the graph, hence we would end up with
     //       two signals when only one would have sufficed. Even worse is that
     //       after having updated the X parameter, the graph would have its X
@@ -270,8 +270,8 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     //       plotting viewpoint. So, instead, the updating is done through our
     //       graphs property editor...
 
-    connect(graphsWidget, SIGNAL(graphUpdated(SingleCellViewGraphPanelPlotGraph *)),
-            this, SLOT(graphUpdated(SingleCellViewGraphPanelPlotGraph *)));
+    connect(graphsWidget, SIGNAL(graphsUpdated(const QList<SingleCellViewGraphPanelPlotGraph *> &)),
+            this, SLOT(graphsUpdated(const QList<SingleCellViewGraphPanelPlotGraph *> &)));
 
     // Create our simulation output widget with a layout on which we put a
     // separating line and our simulation output list view
@@ -1392,60 +1392,90 @@ void SingleCellViewWidget::graphAdded(SingleCellViewGraphPanelPlotGraph *pGraph)
 
 //==============================================================================
 
-void SingleCellViewWidget::graphRemoved(SingleCellViewGraphPanelPlotGraph *pGraph)
+void SingleCellViewWidget::graphsRemoved(QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs)
 {
-    // A graph has been removed, so update our plots and stop tracking it
-    // Note: pGraph points a graph which has already been deleted, hence we
+    // One or several graphs have been removed, so update and stop tracking (if
+    // needed) their corresponding plots
+    // Note: pGraph points to a graph which has already been deleted, hence we
     //       retrieve its 'old' plot from mGraphPlots
 
-    SingleCellViewGraphPanelPlotWidget *plot = mGraphPlots.value(pGraph);
+    QList<SingleCellViewGraphPanelPlotWidget *> plots = QList<SingleCellViewGraphPanelPlotWidget *>();
 
-    updatePlot(plot);
+    foreach (SingleCellViewGraphPanelPlotGraph *graph, pGraphs) {
+        // Keep track of the plot that we will need to update
+        // Note: normally, the plot associated with a graph should always be the
+        //       same for all the graphs, but we never know we might, in the
+        //       future, come here with graphs from different plots...
 
-    mGraphPlots.remove(pGraph);
+        SingleCellViewGraphPanelPlotWidget *plot = mGraphPlots.value(graph);
 
-    // Stop tracking the plot itself, if needed
+        if (!plots.contains(plot))
+            plots << plot;
 
-    if (!plot->graphs().size())
-        mPlots.removeOne(plot);
+        // Stop tracking the plot associated with the graph and stop tracking
+        // the plot itself, if it doesn't have any graph anymore
+
+        mGraphPlots.remove(graph);
+
+        if (plot->graphs().isEmpty())
+            mPlots.removeOne(plot);
+    }
+
+    // Update our plots
+
+    foreach (SingleCellViewGraphPanelPlotWidget *plot, plots)
+        updatePlot(plot);
 }
 
 //==============================================================================
 
-void SingleCellViewWidget::graphUpdated(SingleCellViewGraphPanelPlotGraph *pGraph)
+void SingleCellViewWidget::graphsUpdated(const QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs)
 {
-    // A graph has been updated, so make sure that its corresponding plot is up
-    // to date
+    // One or several graphs have been updated, so make sure that their
+    // corresponding plots are up to date
 
-    // Show/hide the graph
+    QList<SingleCellViewGraphPanelPlotWidget *> plots = QList<SingleCellViewGraphPanelPlotWidget *>();
 
-    pGraph->setVisible(pGraph->isValid() && pGraph->isSelected());
+    foreach (SingleCellViewGraphPanelPlotGraph *graph, pGraphs) {
+        // Show/hide the graph
 
-    // Update the graph's data and replot it
-    // Note: it may happen that we don't have a simulation associated with the
-    //       given graph, hence we must check for it. Indeed, say that you have
-    //       two files opened, but only one has been selected so far. From
-    //       there, say you create a graph and then double click on its model
-    //       property so that the other file gets selected. In this case, for
-    //       example, there won't be a simulation associated with the file and
-    //       therefore the graph...
+        graph->setVisible(graph->isValid() && graph->isSelected());
 
-    SingleCellViewSimulation *simulation = mSimulations.value(pGraph->fileName());
+        // Update the graph's data and replot it
+        // Note: it may happen that we don't have a simulation associated with the
+        //       given graph, hence we must check for it. Indeed, say that you have
+        //       two files opened, but only one has been selected so far. From
+        //       there, say you create a graph and then double click on its model
+        //       property so that the other file gets selected. In this case, for
+        //       example, there won't be a simulation associated with the file and
+        //       therefore the graph...
 
-    if (simulation) {
-        // Update the graph's data
-        // Note: we don't want graph segments to be drawn (hence we pass false
-        //       to updateGraph()) since we come here as a result of a graph
-        //       being un/selected, or as a result of its model, X or Y
-        //       parameter being updated, meaning that we have to replot
-        //       everything...
+        SingleCellViewSimulation *simulation = mSimulations.value(graph->fileName());
 
-        updateGraph(pGraph, simulation->results()->size(), false);
+        if (simulation) {
+            // Update the graph's data
+            // Note: we don't want graph segments to be drawn (hence we pass false
+            //       to updateGraph()) since we come here as a result of a graph
+            //       being un/selected, or as a result of its model, X or Y
+            //       parameter being updated, meaning that we have to replot
+            //       everything...
 
-        // Update our plot and replot it
+            updateGraph(graph, simulation->results()->size(), false);
 
-        SingleCellViewGraphPanelPlotWidget *plot = qobject_cast<SingleCellViewGraphPanelPlotWidget *>(pGraph->plot());
+            // Keep track of the plot that we will need to update and replot
+            // Note: see the corresponding comment in
+            //       SingleCellViewWidget::graphsRemoved() above...
 
+            SingleCellViewGraphPanelPlotWidget *plot = qobject_cast<SingleCellViewGraphPanelPlotWidget *>(graph->plot());
+
+            if (!plots.contains(plot))
+                plots << plot;
+        }
+    }
+
+    // Update and replot our various plots
+
+    foreach (SingleCellViewGraphPanelPlotWidget *plot, plots) {
         updatePlot(plot);
 
         plot->replotNow();

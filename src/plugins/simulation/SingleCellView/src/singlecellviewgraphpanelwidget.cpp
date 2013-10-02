@@ -147,12 +147,17 @@ void SingleCellViewGraphPanelWidget::addGraph(SingleCellViewGraphPanelPlotGraph 
 
 //==============================================================================
 
-void SingleCellViewGraphPanelWidget::removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph)
+void SingleCellViewGraphPanelWidget::removeGraphs(const QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs)
 {
-    // Remove the graph from our plot
+    // Remove the graphs from our plot
 
-    if (mPlot->removeGraph(pGraph))
-        emit graphRemoved(pGraph);
+    QList<SingleCellViewGraphPanelPlotGraph *> graphs = QList<SingleCellViewGraphPanelPlotGraph *>();
+
+    foreach (SingleCellViewGraphPanelPlotGraph *graph, pGraphs)
+        if (mPlot->removeGraph(graph))
+            graphs << graph;
+
+    emit graphsRemoved(graphs);
 }
 
 //==============================================================================

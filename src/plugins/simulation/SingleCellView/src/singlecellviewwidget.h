@@ -228,8 +228,9 @@ private Q_SLOTS:
                   CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 
     void graphAdded(SingleCellViewGraphPanelPlotGraph *pGraph);
-    void graphRemoved(SingleCellViewGraphPanelPlotGraph *pGraph);
-    void graphUpdated(SingleCellViewGraphPanelPlotGraph *pGraph);
+    void graphsRemoved(QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs);
+
+    void graphsUpdated(const QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs);
 
     void callCheckResults();
 };
