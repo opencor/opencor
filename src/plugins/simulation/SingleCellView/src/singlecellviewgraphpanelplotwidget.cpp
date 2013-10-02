@@ -879,32 +879,32 @@ void SingleCellViewGraphPanelPlotWidget::setLocalAxes(const double &pLocalMinX,
             boundingRect |= graph->boundingRect();
 
     // Take into account the needed minimum/maximum values for our X and Y axes,
-    // if any, or use MinAxis/MaxAxis if boundingRect is empty
+    // if any, or use MinAxis/MaxAxis if we have null bounding rectangle
 
-    bool boundingRectIsEmpty = boundingRect.isEmpty();
+    bool boundingRectIsNull = boundingRect.isNull();
     bool needMinMaxX = mNeedMinX != mNeedMaxX;
     bool needMinMaxY = mNeedMinY != mNeedMaxY;
 
     if (needMinMaxX) {
-        boundingRect.setLeft(boundingRectIsEmpty?mNeedMinX:qMin(boundingRect.left(), mNeedMinX));
-        boundingRect.setRight(boundingRectIsEmpty?mNeedMaxX:qMax(boundingRect.right(), mNeedMaxX));
-    } else if (boundingRectIsEmpty) {
+        boundingRect.setLeft(boundingRectIsNull?mNeedMinX:qMin(boundingRect.left(), mNeedMinX));
+        boundingRect.setRight(boundingRectIsNull?mNeedMaxX:qMax(boundingRect.right(), mNeedMaxX));
+    } else if (boundingRectIsNull) {
         boundingRect.setLeft(MinAxis);
         boundingRect.setRight(MaxAxis);
     }
 
     if (needMinMaxY) {
-        boundingRect.setTop(boundingRectIsEmpty?mNeedMinY:qMin(boundingRect.top(), mNeedMinY));
-        boundingRect.setBottom(boundingRectIsEmpty?mNeedMaxY:qMax(boundingRect.bottom(), mNeedMaxY));
-    } else if (boundingRectIsEmpty) {
+        boundingRect.setTop(boundingRectIsNull?mNeedMinY:qMin(boundingRect.top(), mNeedMinY));
+        boundingRect.setBottom(boundingRectIsNull?mNeedMaxY:qMax(boundingRect.bottom(), mNeedMaxY));
+    } else if (boundingRectIsNull) {
         boundingRect.setTop(MinAxis);
         boundingRect.setBottom(MaxAxis);
     }
 
     // Update the minimum/maximum values of our axes, should we have retrieved a
-    // valid bounding rectangle
+    // non-null bounding rectangle
 
-    if (!boundingRect.isEmpty()) {
+    if (!boundingRectIsNull) {
         // Optimise our bounding rectangle by first retrieving the
         // minimum/maximum values of our axes
 
@@ -922,7 +922,18 @@ void SingleCellViewGraphPanelPlotWidget::setLocalAxes(const double &pLocalMinX,
         // down/up, respectively
 
         uint xBase = axisScaleEngine(QwtPlot::xBottom)->base();
-        double xMajorStep = QwtScaleArithmetic::divideInterval(xMax-xMin,
+        double xInterval = xMax-xMin;
+        double xMinReal = xMin;
+        double xMaxReal = xMax;
+
+        if (!xInterval) {
+            xInterval = pow(10.0, qFloor(log10(qAbs(xMin))));
+
+            xMinReal = xMin-0.5*xInterval;
+            xMaxReal = xMinReal+xInterval;
+        }
+
+        double xMajorStep = QwtScaleArithmetic::divideInterval(xInterval,
                                                                axisMaxMajor(QwtPlot::xBottom),
                                                                xBase);
         double xMinorStep = QwtScaleArithmetic::divideInterval(xMajorStep,
@@ -930,16 +941,28 @@ void SingleCellViewGraphPanelPlotWidget::setLocalAxes(const double &pLocalMinX,
                                                                axisScaleEngine(QwtPlot::xBottom)->base());
 
         uint yBase = axisScaleEngine(QwtPlot::yLeft)->base();
-        double yMajorStep = QwtScaleArithmetic::divideInterval(yMax-yMin,
+        double yInterval = yMax-yMin;
+        double yMinReal = yMin;
+        double yMaxReal = yMax;
+
+        if (!yInterval) {
+            yInterval = pow(10.0, qFloor(log10(qAbs(yMin))));
+
+            yMinReal = yMin-0.5*yInterval;
+            yMaxReal = yMinReal+yInterval;
+        }
+
+        double yMajorStep = QwtScaleArithmetic::divideInterval(yInterval,
                                                                axisMaxMajor(QwtPlot::yLeft),
                                                                yBase);
         double yMinorStep = QwtScaleArithmetic::divideInterval(yMajorStep,
                                                                axisMaxMinor(QwtPlot::yLeft),
                                                                yBase);
-        xMin = (needMinMaxX && (xMin == mNeedMinX))?mNeedMinX:qFloor(xMin/xMinorStep)*xMinorStep;
-        xMax = (needMinMaxX && (xMax == mNeedMaxX))?mNeedMaxX:qCeil(xMax/xMinorStep)*xMinorStep;
-        yMin = (needMinMaxY && (yMin == mNeedMinY))?mNeedMinY:qFloor(yMin/yMinorStep)*yMinorStep;
-        yMax = (needMinMaxY && (yMax == mNeedMaxY))?mNeedMaxY:qCeil(yMax/yMinorStep)*yMinorStep;
+
+        xMin = (needMinMaxX && (xMin == mNeedMinX))?mNeedMinX:qFloor(xMinReal/xMinorStep)*xMinorStep;
+        xMax = (needMinMaxX && (xMax == mNeedMaxX))?mNeedMaxX:qCeil(xMaxReal/xMinorStep)*xMinorStep;
+        yMin = (needMinMaxY && (yMin == mNeedMinY))?mNeedMinY:qFloor(yMinReal/yMinorStep)*yMinorStep;
+        yMax = (needMinMaxY && (yMax == mNeedMaxY))?mNeedMaxY:qCeil(yMaxReal/yMinorStep)*yMinorStep;
 
         // Make sure that the optimised minimum/maximum values of our axes have
         // finite values
