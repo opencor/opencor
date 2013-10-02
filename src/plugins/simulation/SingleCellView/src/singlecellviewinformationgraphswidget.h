@@ -119,6 +119,8 @@ private:
     QMap<QString, CellMLSupport::CellmlFileRuntime *> mRuntimes;
     QMap<QString, SingleCellViewSimulation *> mSimulations;
 
+    bool mCanEmitGraphsUpdatedSignal;
+
     void populateContextMenu(QMenu *pContextMenu,
                              CellMLSupport::CellmlFileRuntime *pRuntime);
 
@@ -128,8 +130,9 @@ private:
                         const bool &pParameterX) const;
 
     void updateGraphInfo(Core::Property *pProperty, const QString &pFileName);
-    void updateGraphsInfo(Core::Property *pSectionProperty = 0);
-    void updateAllGraphsInfo();
+    void updateGraphsInfo(Core::Property *pSectionProperty = 0,
+                          const bool &pGlobalGraphsUpdate = false);
+    void updateAllGraphsInfo(const bool &pGlobalGraphsUpdate = false);
 
     void selectAllGraphs(const bool &pSelect);
 
