@@ -30,6 +30,7 @@ specific language governing permissions and limitations under the License.
 
 #include "qwt_plot.h"
 #include "qwt_plot_curve.h"
+#include "qwt_scale_draw.h"
 
 //==============================================================================
 
@@ -141,6 +142,14 @@ private:
                          const QColor &pForegroundColor,
                          const Location &pLocation = TopLeft,
                          const bool &pCanMoveLocation = true);
+};
+
+//==============================================================================
+
+class SingleCellViewGraphPanelPlotScaleDraw : public QwtScaleDraw
+{
+protected:
+    virtual QwtText label(double pValue) const;
 };
 
 //==============================================================================

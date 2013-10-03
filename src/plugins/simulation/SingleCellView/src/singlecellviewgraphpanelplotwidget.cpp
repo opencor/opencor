@@ -29,6 +29,7 @@ specific language governing permissions and limitations under the License.
 #include <QClipboard>
 #include <QCursor>
 #include <QDesktopWidget>
+#include <QLocale>
 #include <QMenu>
 #include <QMouseEvent>
 #include <QPainter>
@@ -335,8 +336,8 @@ void SingleCellViewGraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPaint
 
     pPainter->setFont(mOwner->axisFont(QwtPlot::xBottom));
 
-    QString coords = QString("(%1, %2)").arg(QString::number(pCoordinates.x()),
-                                             QString::number(pCoordinates.y()));
+    QString coords = QString("(%1, %2)").arg(QString::number(pCoordinates.x(), 'g', 15),
+                                             QString::number(pCoordinates.y(), 'g', 15));
     QRect desktopGeometry = qApp->desktop()->availableGeometry();
     QRectF coordsRect = pPainter->boundingRect(QRectF(0.0, 0.0, desktopGeometry.width(), desktopGeometry.height()), coords);
 
@@ -399,8 +400,11 @@ void SingleCellViewGraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPaint
 
 //==============================================================================
 
-static const double MinZoomFactor =    1.0;
-static const double MaxZoomFactor = 1024.0;
+static const double MinZoomFactor =     1.0;
+static const double MaxZoomFactor = 32768.0;
+// Note: ideally, we would be able to zoom in as much as we want, but in
+//       practice this may cause problems with QwtPlot, so we limit how much we
+//       can zoom in...
 
 //==============================================================================
 
@@ -426,6 +430,16 @@ QRectF SingleCellViewGraphPanelPlotOverlayWidget::zoomRegion() const
     }
 
     return QRectF(xMin, yMax, xMax-xMin, yMin-yMax);
+}
+
+//==============================================================================
+
+QwtText SingleCellViewGraphPanelPlotScaleDraw::label(double pValue) const
+{
+    if (qFuzzyCompare(pValue+1.0, 1.0))
+        pValue = 0.0;
+
+    return QLocale().toString(pValue, 'g', 15);
 }
 
 //==============================================================================
@@ -471,6 +485,9 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
     // Customise ourselves a bit
 
     setCanvasBackground(Qt::white);
+
+    setAxisScaleDraw(QwtPlot::xBottom, new SingleCellViewGraphPanelPlotScaleDraw());
+    setAxisScaleDraw(QwtPlot::yLeft, new SingleCellViewGraphPanelPlotScaleDraw());
 
     // We don't want a frame around ourselves
 
