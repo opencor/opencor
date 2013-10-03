@@ -920,10 +920,8 @@ void SingleCellViewGraphPanelPlotWidget::setLocalAxes(const double &pLocalMinX,
 
     // Update the minimum/maximum values of our axes, should we have retrieved a
     // non-null bounding rectangle
-    // Note: we must check the value of boundingRect.isNull() and not that of
-    //       isBoundingRectNull since boundingRect may have been updated...
 
-    if (!boundingRect.isNull()) {
+    if (boundingRect.isValid()) {
         // Optimise our bounding rectangle by first retrieving the
         // minimum/maximum values of our axes
 
