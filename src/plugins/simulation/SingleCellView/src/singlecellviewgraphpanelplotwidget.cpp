@@ -898,30 +898,32 @@ void SingleCellViewGraphPanelPlotWidget::setLocalAxes(const double &pLocalMinX,
     // Take into account the needed minimum/maximum values for our X and Y axes,
     // if any, or use MinAxis/MaxAxis if we have null bounding rectangle
 
-    bool boundingRectIsNull = boundingRect.isNull();
+    bool isBoundingRectNull = boundingRect.isNull();
     bool needMinMaxX = mNeedMinX != mNeedMaxX;
     bool needMinMaxY = mNeedMinY != mNeedMaxY;
 
     if (needMinMaxX) {
-        boundingRect.setLeft(boundingRectIsNull?mNeedMinX:qMin(boundingRect.left(), mNeedMinX));
-        boundingRect.setRight(boundingRectIsNull?mNeedMaxX:qMax(boundingRect.right(), mNeedMaxX));
-    } else if (boundingRectIsNull) {
+        boundingRect.setLeft(isBoundingRectNull?mNeedMinX:qMin(boundingRect.left(), mNeedMinX));
+        boundingRect.setRight(isBoundingRectNull?mNeedMaxX:qMax(boundingRect.right(), mNeedMaxX));
+    } else if (isBoundingRectNull) {
         boundingRect.setLeft(MinAxis);
         boundingRect.setRight(MaxAxis);
     }
 
     if (needMinMaxY) {
-        boundingRect.setTop(boundingRectIsNull?mNeedMinY:qMin(boundingRect.top(), mNeedMinY));
-        boundingRect.setBottom(boundingRectIsNull?mNeedMaxY:qMax(boundingRect.bottom(), mNeedMaxY));
-    } else if (boundingRectIsNull) {
+        boundingRect.setTop(isBoundingRectNull?mNeedMinY:qMin(boundingRect.top(), mNeedMinY));
+        boundingRect.setBottom(isBoundingRectNull?mNeedMaxY:qMax(boundingRect.bottom(), mNeedMaxY));
+    } else if (isBoundingRectNull) {
         boundingRect.setTop(MinAxis);
         boundingRect.setBottom(MaxAxis);
     }
 
     // Update the minimum/maximum values of our axes, should we have retrieved a
     // non-null bounding rectangle
+    // Note: we must check the value of boundingRect.isNull() and not that of
+    //       isBoundingRectNull since boundingRect may have been updated...
 
-    if (!boundingRectIsNull) {
+    if (!boundingRect.isNull()) {
         // Optimise our bounding rectangle by first retrieving the
         // minimum/maximum values of our axes
 
