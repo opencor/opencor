@@ -336,8 +336,8 @@ void SingleCellViewGraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPaint
 
     pPainter->setFont(mOwner->axisFont(QwtPlot::xBottom));
 
-    QString coords = QString("(%1, %2)").arg(QString::number(pCoordinates.x(), 'g', 15),
-                                             QString::number(pCoordinates.y(), 'g', 15));
+    QString coords = QString("X: %1\nY: %2").arg(QLocale().toString(pCoordinates.x(), 'g', 15),
+                                                 QLocale().toString(pCoordinates.y(), 'g', 15));
     QRect desktopGeometry = qApp->desktop()->availableGeometry();
     QRectF coordsRect = pPainter->boundingRect(QRectF(0.0, 0.0, desktopGeometry.width(), desktopGeometry.height()), coords);
 
