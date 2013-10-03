@@ -208,11 +208,11 @@ void SingleCellViewGraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
         // cyan pen
 
         QPen pen = painter.pen();
-        QColor backgroundColor = Qt::darkCyan;
+        QColor penColor = Qt::darkCyan;
 
-        backgroundColor.setAlphaF(0.69);
+        penColor.setAlphaF(0.69);
 
-        pen.setColor(backgroundColor);
+        pen.setColor(penColor);
         pen.setStyle(Qt::DashLine);
 
         painter.setPen(pen);
@@ -227,8 +227,7 @@ void SingleCellViewGraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
 
         // Draw the coordinates
 
-        drawCoordinates(&painter, mOriginPoint, coordinates,
-                        backgroundColor, Qt::white);
+        drawCoordinates(&painter, mOriginPoint, coordinates, penColor, Qt::white);
 
         break;
     }
@@ -382,7 +381,7 @@ void SingleCellViewGraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPaint
             coordsRect.moveLeft(pCoordinatesPosition.x()-coordsRect.width()-1.0);
     }
 
-    // Draw a filled rectangle to act as the background of the coordinates
+    // Draw a filled rectangle to act as the background for the coordinates
     // we are to show
 
     pPainter->fillRect(coordsRect, pBackgroundColor);
