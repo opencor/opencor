@@ -444,8 +444,13 @@ QwtText SingleCellViewGraphPanelPlotScaleDraw::label(double pValue) const
 
 //==============================================================================
 
-static const double MinAxis =    0.0;
-static const double MaxAxis = 1000.0;
+static const double DblMaxAxis = 0.3*DBL_MAX;
+
+static const double MinAxis = -DblMaxAxis;
+static const double MaxAxis =  DblMaxAxis;
+
+static const double DefMinAxis =    0.0;
+static const double DefMaxAxis = 1000.0;
 
 //==============================================================================
 
@@ -456,10 +461,10 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
     mGraphs(QList<SingleCellViewGraphPanelPlotGraph *>()),
     mAction(None),
     mOriginPoint(QPointF()),
-    mMinX(MinAxis),
-    mMaxX(MaxAxis),
-    mMinY(MinAxis),
-    mMaxY(MaxAxis),
+    mMinX(DefMinAxis),
+    mMaxX(DefMaxAxis),
+    mMinY(DefMinAxis),
+    mMaxY(DefMaxAxis),
     mNeedMinX(0.0),
     mNeedMaxX(0.0),
     mNeedMinY(0.0),
@@ -495,8 +500,8 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
 
     // Set our axes' local minimum/maximum values
 
-    setLocalMinMaxX(mMinX, mMaxX);
-    setLocalMinMaxY(mMinY, mMaxY);
+    setLocalMinMaxX(DefMinAxis, DefMaxAxis);
+    setLocalMinMaxY(DefMinAxis, DefMaxAxis);
 
     // Attach a grid to ourselves
 
@@ -703,12 +708,10 @@ void SingleCellViewGraphPanelPlotWidget::setLocalAxis(const int &pAxis,
     //          though it would be a valid axis, so we check that the axis fits
     //          within what we know works fine with QwtPlot...
 
-    static const double DBL_MAX_AXIS = 0.3*DBL_MAX;
-
-    setAxisScaleDiv(pAxis, QwtScaleDiv(qMax(-DBL_MAX_AXIS, pMin),
-                                       qMin( DBL_MAX_AXIS, pMax)));
-    setAxisScale(pAxis, qMax(-DBL_MAX_AXIS, pMin),
-                        qMin( DBL_MAX_AXIS, pMax));
+    setAxisScaleDiv(pAxis, QwtScaleDiv(qMax(-DblMaxAxis, pMin),
+                                       qMin( DblMaxAxis, pMax)));
+    setAxisScale(pAxis, qMax(-DblMaxAxis, pMin),
+                        qMin( DblMaxAxis, pMax));
 
     // Make sure that our zoom factors are up-to-date
 
@@ -896,7 +899,7 @@ void SingleCellViewGraphPanelPlotWidget::setLocalAxes(const double &pLocalMinX,
             boundingRect |= graph->boundingRect();
 
     // Take into account the needed minimum/maximum values for our X and Y axes,
-    // if any, or use MinAxis/MaxAxis if we have null bounding rectangle
+    // if any, or use DefMinAxis/DefMaxAxis if we have null bounding rectangle
 
     bool isBoundingRectNull = boundingRect.isNull();
     bool needMinMaxX = mNeedMinX != mNeedMaxX;
@@ -906,16 +909,16 @@ void SingleCellViewGraphPanelPlotWidget::setLocalAxes(const double &pLocalMinX,
         boundingRect.setLeft(isBoundingRectNull?mNeedMinX:qMin(boundingRect.left(), mNeedMinX));
         boundingRect.setRight(isBoundingRectNull?mNeedMaxX:qMax(boundingRect.right(), mNeedMaxX));
     } else if (isBoundingRectNull) {
-        boundingRect.setLeft(MinAxis);
-        boundingRect.setRight(MaxAxis);
+        boundingRect.setLeft(DefMinAxis);
+        boundingRect.setRight(DefMaxAxis);
     }
 
     if (needMinMaxY) {
         boundingRect.setTop(isBoundingRectNull?mNeedMinY:qMin(boundingRect.top(), mNeedMinY));
         boundingRect.setBottom(isBoundingRectNull?mNeedMaxY:qMax(boundingRect.bottom(), mNeedMaxY));
     } else if (isBoundingRectNull) {
-        boundingRect.setTop(MinAxis);
-        boundingRect.setBottom(MaxAxis);
+        boundingRect.setTop(DefMinAxis);
+        boundingRect.setBottom(DefMaxAxis);
     }
 
     // Update the minimum/maximum values of our axes, should we have retrieved a
