@@ -22,8 +22,8 @@
 <context>
     <name>OpenCOR::CellMLSupport::CellmlFileRuntime</name>
     <message>
-        <source>an unexpected problem occurred while trying to compile the model</source>
-        <translation>un problème inattendu s&apos;est produit lors de la compilation du modèle</translation>
+        <source>an unexpected problem occurred while trying to generate the model code</source>
+        <translation>un problème inattendu s&apos;est produit lors de la génération du code pour le modèle</translation>
     </message>
     <message>
         <source>the model is underconstrained (i.e. some variables need to be initialised or computed)</source>
@@ -42,8 +42,8 @@
         <translation>Le code pour le modèle n&apos;a pas pu être généré</translation>
     </message>
     <message>
-        <source>a problem occurred during the code generation of the model</source>
-        <translation>un problème s&apos;est produit durant la génération du code du modèle</translation>
+        <source>a problem occurred during the generation of the model code</source>
+        <translation>un problème s&apos;est produit durant la génération du code pour le modèle</translation>
     </message>
     <message>
         <source>an unexpected problem occurred while trying to retrieve the model functions</source>

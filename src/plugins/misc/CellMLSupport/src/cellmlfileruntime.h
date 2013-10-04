@@ -203,7 +203,7 @@ private:
     void reset(const bool &pRecreateCompilerEngine, const bool &pResetIssues);
 
     void couldNotGenerateModelCodeIssue();
-    void unexpectedProblemDuringModelCompilationIssue();
+    void unexpectedProblemDuringModelCodeGenerationIssue();
 
     void checkCodeInformation(iface::cellml_services::CodeInformation *pCodeInformation);
 
