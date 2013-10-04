@@ -42,8 +42,8 @@
         <translation>Le code pour le modèle n&apos;a pas pu être généré</translation>
     </message>
     <message>
-        <source>a problem occurred during the compilation of the model</source>
-        <translation>un problème s&apos;est produit durant la compilation du modèle</translation>
+        <source>a problem occurred during the code generation of the model</source>
+        <translation>un problème s&apos;est produit durant la génération du code du modèle</translation>
     </message>
     <message>
         <source>an unexpected problem occurred while trying to retrieve the model functions</source>
