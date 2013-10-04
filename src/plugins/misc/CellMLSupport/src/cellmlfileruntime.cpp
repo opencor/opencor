@@ -526,7 +526,7 @@ void CellmlFileRuntime::getOdeCodeInformation(iface::cellml_api::Model *pModel)
     ObjRef<iface::cellml_services::CodeGeneratorBootstrap> codeGeneratorBootstrap = CreateCodeGeneratorBootstrap();
     ObjRef<iface::cellml_services::CodeGenerator> codeGenerator = codeGeneratorBootstrap->createCodeGenerator();
 
-    // Generate some code for the model (i.e. 'compile' the model)
+    // Generate some code for the model
 
     try {
         mOdeCodeInformation = codeGenerator->generateCode(pModel);
@@ -557,7 +557,7 @@ void CellmlFileRuntime::getDaeCodeInformation(iface::cellml_api::Model *pModel)
     ObjRef<iface::cellml_services::CodeGeneratorBootstrap> codeGeneratorBootstrap = CreateCodeGeneratorBootstrap();
     ObjRef<iface::cellml_services::IDACodeGenerator> codeGenerator = codeGeneratorBootstrap->createIDACodeGenerator();
 
-    // Generate some code for the model (i.e. 'compile' the model)
+    // Generate some code for the model
 
     try {
         mDaeCodeInformation = codeGenerator->generateIDACode(pModel);
