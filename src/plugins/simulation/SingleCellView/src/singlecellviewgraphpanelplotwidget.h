@@ -221,20 +221,23 @@ private:
 
     SingleCellViewGraphPanelPlotOverlayWidget *mOverlayWidget;
 
-    double mZoomFactorX;
-    double mZoomFactorY;
+    bool mCanZoomInX;
+    bool mCanZoomOutX;
+
+    bool mCanZoomInY;
+    bool mCanZoomOutY;
 
     bool mNeedContextMenu;
     QMenu *mContextMenu;
 
     void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
 
-    void checkLocalAxisValues(const int &pAxis, double &pMin, double &pMax);
+    void checkLocalAxisValues(double &pMin, double &pMax);
 
     void checkAnyAxesValues(double &pMinX, double &pMaxX,
                             double &pMinY, double &pMaxY);
 
-    void updateZoomFactors();
+    void updateActions();
 
     double minX() const;
     double maxX() const;
@@ -254,8 +257,11 @@ private:
     double localMinY() const;
     double localMaxY() const;
 
-    double zoomFactorX() const;
-    double zoomFactorY() const;
+    bool canZoomInX() const;
+    bool canZoomOutX() const;
+
+    bool canZoomInY() const;
+    bool canZoomOutY() const;
 
     void setLocalMinMaxY(const double &pLocalMinY, const double &pLocalMaxY);
 

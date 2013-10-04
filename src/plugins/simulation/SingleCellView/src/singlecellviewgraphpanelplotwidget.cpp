@@ -399,14 +399,6 @@ void SingleCellViewGraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPaint
 
 //==============================================================================
 
-static const double MinZoomFactor =     1.0;
-static const double MaxZoomFactor = 32768.0;
-// Note: ideally, we would be able to zoom in as much as we want, but in
-//       practice this may cause problems with QwtPlot, so we limit how much we
-//       can zoom in...
-
-//==============================================================================
-
 QRectF SingleCellViewGraphPanelPlotOverlayWidget::zoomRegion() const
 {
     // Return the region to be zoomed based on our origin and end points
@@ -418,12 +410,12 @@ QRectF SingleCellViewGraphPanelPlotOverlayWidget::zoomRegion() const
     double yMin = mOwner->localMinY();
     double yMax = mOwner->localMaxY();
 
-    if (mOwner->zoomFactorX() < MaxZoomFactor) {
+    if (mOwner->canZoomInX()) {
         xMin = qMin(mOriginPoint.x(), mEndPoint.x());
         xMax = qMax(mOriginPoint.x(), mEndPoint.x());
     }
 
-    if (mOwner->zoomFactorY() < MaxZoomFactor) {
+    if (mOwner->canZoomInY()) {
         yMin = qMin(mOriginPoint.y(), mEndPoint.y());
         yMax = qMax(mOriginPoint.y(), mEndPoint.y());
     }
@@ -444,9 +436,18 @@ QwtText SingleCellViewGraphPanelPlotScaleDraw::label(double pValue) const
 //==============================================================================
 
 static const double DblMaxAxis = 0.3*DBL_MAX;
+// Note: normally, we would use DBL_MAX, but this means that our maximum axis
+//       range would be 2*DBL_MAX, which would cause problems with QwtPlot (e.g.
+//       to create ticks), so instead we use a value that results in a range
+//       that we know will work...
 
 static const double MinAxis = -DblMaxAxis;
 static const double MaxAxis =  DblMaxAxis;
+
+static const double MaxAxisRange = MaxAxis-MinAxis;
+static const double MinAxisRange = 1.0e-11;
+// Note: to use a smaller minimum axis range would make the coordinates to be
+//       shown as "0", so...
 
 static const double DefMinAxis =    0.0;
 static const double DefMaxAxis = 1000.0;
@@ -468,8 +469,10 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
     mNeedMaxX(0.0),
     mNeedMinY(0.0),
     mNeedMaxY(0.0),
-    mZoomFactorX(MinZoomFactor),
-    mZoomFactorY(MinZoomFactor),
+    mCanZoomInX(true),
+    mCanZoomOutX(true),
+    mCanZoomInY(true),
+    mCanZoomOutY(true),
     mNeedContextMenu(false)
 {
     // Set up the GUI
@@ -625,10 +628,6 @@ void SingleCellViewGraphPanelPlotWidget::setMinMaxX(const double &pMinX,
 
     mMinX = pMinX;
     mMaxX = pMaxX;
-
-    // Make sure that our zoom factors are up-to-date
-
-    updateZoomFactors();
 }
 
 //==============================================================================
@@ -658,32 +657,31 @@ void SingleCellViewGraphPanelPlotWidget::setMinMaxY(const double &pMinY,
 
     mMinY = pMinY;
     mMaxY = pMaxY;
-
-    // Make sure that our zoom factors are up-to-date
-
-    updateZoomFactors();
 }
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::updateZoomFactors()
+void SingleCellViewGraphPanelPlotWidget::updateActions()
 {
-    // Update our zoom factors
-    // Note: ideally, we wouldn't keep track of them, but say that you are fully
-    //       zoomed in, then to pan the plotting area might result in the 'new'
-    //       zoom factors not being exactly the same as the 'old' ones (typical
-    //       issue when using floating numbers). This, in turn, might result in
-    //       the user being wrongly allowed to zoom in, so...
+    // Update our actions
 
-    mZoomFactorX = (mMaxX-mMinX)/(localMaxX()-localMinX());
-    mZoomFactorY = (mMaxY-mMinY)/(localMaxY()-localMinY());
+    double xRange = localMaxX()-localMinX();
+    double yRange = localMaxY()-localMinY();
+
+    mCanZoomInX  = xRange > MinAxisRange;
+    mCanZoomOutX = xRange < MaxAxisRange;
+
+    mCanZoomInY  = yRange > MinAxisRange;
+    mCanZoomOutY = yRange < MaxAxisRange;
 
     // Update the enabled status of our actions
 
-    mGui->actionZoomIn->setEnabled((mZoomFactorX < MaxZoomFactor) || (mZoomFactorY < MaxZoomFactor));
-    mGui->actionZoomOut->setEnabled((mZoomFactorX > MinZoomFactor) || (mZoomFactorY > MinZoomFactor));
+    mGui->actionZoomIn->setEnabled(mCanZoomInX || mCanZoomInY);
+    mGui->actionZoomOut->setEnabled(mCanZoomOutX || mCanZoomOutY);
 
-    mGui->actionResetZoom->setEnabled((mZoomFactorX != MinZoomFactor) || (mZoomFactorY != MinZoomFactor));
+    mGui->actionResetZoom->setEnabled(true);
+//---GRY--- WE SHOULD 'PROPERLY' SET THE ENABLED STATE OF THE RESET ZOOM
+//          ACTION...
 }
 
 //==============================================================================
@@ -712,41 +710,45 @@ void SingleCellViewGraphPanelPlotWidget::setLocalAxis(const int &pAxis,
     setAxisScale(pAxis, qMax(-DblMaxAxis, pMin),
                         qMin( DblMaxAxis, pMax));
 
-    // Make sure that our zoom factors are up-to-date
+    // Make sure that our actions are up-to-date
 
-    updateZoomFactors();
+    updateActions();
 }
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::checkLocalAxisValues(const int &pAxis,
-                                                              double &pMin,
+void SingleCellViewGraphPanelPlotWidget::checkLocalAxisValues(double &pMin,
                                                               double &pMax)
 {
-    // Make sure that the minimum/maximum values of our local axis have a valid
-    // zoom factor
+    // Make sure that the minimum/maximum values of our local axis are valid
 
-    double min = (pAxis == QwtPlot::xBottom)?mMinX:mMinY;
-    double max = (pAxis == QwtPlot::xBottom)?mMaxX:mMaxY;
-    double zoomFactor = (max-min)/(pMax-pMin);
+    double range = pMax-pMin;
 
-    if (zoomFactor < MinZoomFactor) {
-        // The local axis' zoom factor is too small, so reset our
-        // minimum/maximum values
+    if (pMin < MinAxis) {
+        // The minimum value is too small, so reset it
 
-        pMin = min;
-        pMax = max;
-    } else if (zoomFactor > MaxZoomFactor) {
-        // The local axis' zoom factor is too big, so reset our minimum/maximum
-        // values
+        pMin = MinAxis;
+        pMax = pMin+range;
+    } else if (pMax > MaxAxis) {
+        // The maximum value is too big, so reset it
 
-        double length = (max-min)/MaxZoomFactor;
+        pMax = MaxAxis;
+        pMin = pMax-range;
+    }
 
-        pMin = qMax(min, 0.5*(pMin+pMax-length));
-        pMax = qMin(max, pMin+length);
-        pMin = pMax-length;
-        // Note: the last statement is in case pMax has been set to max, in
-        //       which case we need to update pMin...
+    if (range > MaxAxisRange) {
+        // The range is too big, so reset our minimum/maximum values
+
+        pMin = MinAxis;
+        pMax = MaxAxis;
+    } else if (range < MinAxisRange) {
+        // The range is too small, reset our minimum/maximum values
+
+        pMin = qMax(MinAxis, 0.5*(pMin+pMax-range));
+        pMax = qMin(MaxAxis, pMin+range);
+        pMin = pMax-range;
+        // Note: the last statement is in case pMax has been set to MaxAxis, in
+        //       which case we need to re-reset pMin...
     }
 }
 
@@ -778,7 +780,7 @@ void SingleCellViewGraphPanelPlotWidget::setLocalMinMaxX(const double &pLocalMin
     double locMinX = pLocalMinX;
     double locMaxX = pLocalMaxX;
 
-    checkLocalAxisValues(QwtPlot::xBottom, locMinX, locMaxX);
+    checkLocalAxisValues(locMinX, locMaxX);
 
     setLocalAxis(QwtPlot::xBottom, locMinX, locMaxX);
 }
@@ -799,24 +801,43 @@ double SingleCellViewGraphPanelPlotWidget::localMaxY() const
     // Return our local maximum Y value
 
     return axisScaleDiv(QwtPlot::yLeft).upperBound();
+
 }
 
 //==============================================================================
 
-double SingleCellViewGraphPanelPlotWidget::zoomFactorX() const
+bool SingleCellViewGraphPanelPlotWidget::canZoomInX() const
 {
-    // Return our zoom factor for the X axis
+    // Return whether we can zoom in on the X axis
 
-    return mZoomFactorX;
+    return mCanZoomInX;
 }
 
 //==============================================================================
 
-double SingleCellViewGraphPanelPlotWidget::zoomFactorY() const
+bool SingleCellViewGraphPanelPlotWidget::canZoomOutX() const
 {
-    // Return our zoom factor for the Y axis
+    // Return whether we can zoom out on the X axis
 
-    return mZoomFactorY;
+    return mCanZoomOutX;
+}
+
+//==============================================================================
+
+bool SingleCellViewGraphPanelPlotWidget::canZoomInY() const
+{
+    // Return whether we can zoom in on the Y axis
+
+    return mCanZoomInY;
+}
+
+//==============================================================================
+
+bool SingleCellViewGraphPanelPlotWidget::canZoomOutY() const
+{
+    // Return whether we can zoom out on the Y axis
+
+    return mCanZoomOutY;
 }
 
 //==============================================================================
@@ -829,7 +850,7 @@ void SingleCellViewGraphPanelPlotWidget::setLocalMinMaxY(const double &pLocalMin
     double locMinY = pLocalMinY;
     double locMaxY = pLocalMaxY;
 
-    checkLocalAxisValues(QwtPlot::yLeft, locMinY, locMaxY);
+    checkLocalAxisValues(locMinY, locMaxY);
 
     setLocalAxis(QwtPlot::yLeft, locMinY, locMaxY);
 }
@@ -1032,7 +1053,7 @@ void SingleCellViewGraphPanelPlotWidget::setLocalAxes(const double &pLocalMinX,
 
         needReplot = true;
     } else {
-        checkLocalAxisValues(QwtPlot::xBottom, newLocalMinX, newLocalMaxX);
+        checkLocalAxisValues(newLocalMinX, newLocalMaxX);
     }
 
     if ((newLocalMinY != oldLocalMinY) || (newLocalMaxY != oldLocalMaxY)) {
@@ -1040,7 +1061,7 @@ void SingleCellViewGraphPanelPlotWidget::setLocalAxes(const double &pLocalMinX,
 
         needReplot = true;
     } else {
-        checkLocalAxisValues(QwtPlot::yLeft, newLocalMinY, newLocalMaxY);
+        checkLocalAxisValues(newLocalMinY, newLocalMaxY);
     }
 
     // Replot ourselves, if needed and allowed
@@ -1061,8 +1082,8 @@ void SingleCellViewGraphPanelPlotWidget::scaleLocalAxes(const double &pScalingFa
     double xMin = localMinX();
     double xMax = localMaxX();
 
-    if (   ((pScalingFactorX < 1.0) && (mZoomFactorX < MaxZoomFactor))
-        || ((pScalingFactorX > 1.0) && (mZoomFactorX > MinZoomFactor))) {
+    if (   ((pScalingFactorX < 1.0) && mCanZoomInX)
+        || ((pScalingFactorX > 1.0) && mCanZoomOutX)) {
         double rangeX = pScalingFactorX*(xMax-xMin);
 
         xMin = qMax(mMinX, mOriginPoint.x()-0.5*rangeX);
@@ -1079,8 +1100,8 @@ void SingleCellViewGraphPanelPlotWidget::scaleLocalAxes(const double &pScalingFa
     double yMin = localMinY();
     double yMax = localMaxY();
 
-    if (   ((pScalingFactorY < 1.0) && (mZoomFactorY < MaxZoomFactor))
-        || ((pScalingFactorY > 1.0) && (mZoomFactorY > MinZoomFactor))) {
+    if (   ((pScalingFactorY < 1.0) && mCanZoomInY)
+        || ((pScalingFactorY > 1.0) && mCanZoomOutY)) {
         double rangeY = pScalingFactorY*(yMax-yMin);
 
         yMin = qMax(mMinY, mOriginPoint.y()-0.5*rangeY);
@@ -1268,9 +1289,9 @@ void SingleCellViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
 
     if (   (pEvent->button() == Qt::LeftButton)
         && (pEvent->modifiers() == Qt::NoModifier)) {
-        // We want to pan, but only do this if we are zoomed in
+        // We want to pan, but only do this if we are not completely zoomed out
 
-        if ((mZoomFactorX > MinZoomFactor) || (mZoomFactorY > MinZoomFactor)) {
+        if (mCanZoomOutX || mCanZoomOutY) {
             mAction = Pan;
 
             mOriginPoint = mousePositionWithinCanvas(pEvent->pos());
@@ -1296,7 +1317,7 @@ void SingleCellViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
         // We want to zoom a region, but only do this if we are not already
         // fully zoomed in
 
-        if ((mZoomFactorX < MaxZoomFactor) || (mZoomFactorY < MaxZoomFactor)) {
+        if (mCanZoomInX || mCanZoomInY) {
             mAction = ZoomRegion;
 
             mOverlayWidget->setAction(SingleCellViewGraphPanelPlotOverlayWidget::ZoomRegion);
