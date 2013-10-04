@@ -207,12 +207,6 @@ private:
 
     QPointF mOriginPoint;
 
-    double mMinX;
-    double mMaxX;
-
-    double mMinY;
-    double mMaxY;
-
     double mNeedMinX;
     double mNeedMaxX;
 
@@ -238,16 +232,6 @@ private:
                             double &pMinY, double &pMaxY);
 
     void updateActions();
-
-    double minX() const;
-    double maxX() const;
-
-    void setMinMaxX(const double &pMinX, const double &pMaxX);
-
-    double minY() const;
-    double maxY() const;
-
-    void setMinMaxY(const double &pMinY, const double &pMaxY);
 
     double localMinX() const;
     double localMaxX() const;
