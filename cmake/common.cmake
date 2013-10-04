@@ -55,7 +55,7 @@ MACRO(INITIALISE_PROJECT)
             SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
         ENDIF()
 
-        # Make sure that debugging is on for Qt
+        # Make sure that debugging is on in Qt
 
         ADD_DEFINITIONS(-DQT_DEBUG)
     ELSE()
@@ -91,7 +91,7 @@ MACRO(INITIALISE_PROJECT)
             #          so...
         ENDIF()
 
-        # Make sure that debugging is off for Qt
+        # Make sure that debugging is off in Qt
 
         ADD_DEFINITIONS(-DQT_NO_DEBUG)
     ENDIF()
