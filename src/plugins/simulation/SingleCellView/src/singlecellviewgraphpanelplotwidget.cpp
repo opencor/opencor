@@ -220,10 +220,10 @@ void SingleCellViewGraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
         QPointF coordinates = QPointF(mOwner->canvasMap(QwtPlot::xBottom).transform(mOriginPoint.x()),
                                       mOwner->canvasMap(QwtPlot::yLeft).transform(mOriginPoint.y()));
 
-        painter.drawLine(0.0, coordinates.y(),
-                         plotLayoutCanvasRect.width(), coordinates.y());
-        painter.drawLine(coordinates.x(), 0.0,
-                         coordinates.x(), plotLayoutCanvasRect.height());
+        painter.drawLine(QPointF(0.0, coordinates.y()),
+                         QPointF(plotLayoutCanvasRect.width(), coordinates.y()));
+        painter.drawLine(QPointF(coordinates.x(), 0.0),
+                         QPointF(coordinates.x(), plotLayoutCanvasRect.height()));
 
         // Draw the coordinates
 
