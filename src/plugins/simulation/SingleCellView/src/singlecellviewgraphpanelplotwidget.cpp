@@ -217,13 +217,13 @@ void SingleCellViewGraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
 
         painter.setPen(pen);
 
-        QPointF coordinates = QPointF(mOwner->canvasMap(QwtPlot::xBottom).transform(mOriginPoint.x()),
-                                      mOwner->canvasMap(QwtPlot::yLeft).transform(mOriginPoint.y()));
+        QPoint coordinates = QPoint(mOwner->canvasMap(QwtPlot::xBottom).transform(mOriginPoint.x()),
+                                    mOwner->canvasMap(QwtPlot::yLeft).transform(mOriginPoint.y()));
+        // Note: see drawCoordinates() as why we use QPoint rather than
+        //       QPointF...
 
-        painter.drawLine(QPointF(0.0, coordinates.y()),
-                         QPointF(plotLayoutCanvasRect.width(), coordinates.y()));
-        painter.drawLine(QPointF(coordinates.x(), 0.0),
-                         QPointF(coordinates.x(), plotLayoutCanvasRect.height()));
+        painter.drawLine(0, coordinates.y(), plotLayoutCanvasRect.width(), coordinates.y());
+        painter.drawLine(coordinates.x(), 0, coordinates.x(), plotLayoutCanvasRect.height());
 
         // Draw the coordinates
 
@@ -249,15 +249,17 @@ void SingleCellViewGraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
         QwtScaleMap canvasMapX = mOwner->canvasMap(QwtPlot::xBottom);
         QwtScaleMap canvasMapY = mOwner->canvasMap(QwtPlot::yLeft);
 
-        QPointF topLeftCoordinates = QPointF(canvasMapX.transform(zoomRegionRect.left()),
-                                             canvasMapY.transform(zoomRegionRect.top()));
-        QPointF bottomRightCoordinates = QPointF(canvasMapX.transform(zoomRegionRect.right()),
-                                                 canvasMapY.transform(zoomRegionRect.bottom()));
+        QPoint topLeftCoordinates = QPoint(canvasMapX.transform(zoomRegionRect.left()),
+                                           canvasMapY.transform(zoomRegionRect.top()));
+        QPoint bottomRightCoordinates = QPoint(canvasMapX.transform(zoomRegionRect.right()),
+                                               canvasMapY.transform(zoomRegionRect.bottom()));
+        // Note: see drawCoordinates() as why we use QPoint (and QRect below)
+        //       rather than QPointF (and QRectF)...
 
-        QRectF unmappedZoomRegionRect = QRectF(topLeftCoordinates.x(),
-                                               topLeftCoordinates.y(),
-                                               bottomRightCoordinates.x()-topLeftCoordinates.x(),
-                                               bottomRightCoordinates.y()-topLeftCoordinates.y());
+        QRect unmappedZoomRegionRect = QRect(topLeftCoordinates.x(),
+                                             topLeftCoordinates.y(),
+                                             bottomRightCoordinates.x()-topLeftCoordinates.x(),
+                                             bottomRightCoordinates.y()-topLeftCoordinates.y());
 
         painter.fillRect(unmappedZoomRegionRect, brushColor);
         painter.drawRect(unmappedZoomRegionRect);
@@ -324,7 +326,7 @@ void SingleCellViewGraphPanelPlotOverlayWidget::setEndPoint(const QPointF &pEndP
 
 void SingleCellViewGraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
                                                                 const QPointF &pCoordinates,
-                                                                const QPointF &pCoordinatesPosition,
+                                                                const QPoint &pCoordinatesPosition,
                                                                 const QColor &pBackgroundColor,
                                                                 const QColor &pForegroundColor,
                                                                 const Location &pLocation,
@@ -332,53 +334,62 @@ void SingleCellViewGraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPaint
 {
     // Retrieve the size of coordinates as they will appear on the screen,
     // which means using the same font as the one used for the axes
+    // Note: normally, pCoordinatesPosition would be a QPointF, but we want the
+    //       coordinates to be drawn relative to pCoordinatesPosition (where
+    //       something is drawn, see paintEvent()) and the only way to guarantee
+    //       that everything will be painted as expected is to use QPoint.
+    //       Indeed, if we were to use QPointF, then QPainter would have to do
+    //       some rouding and though everything should be fine (since we always
+    //       add/subtract a rounded number), it happens that it's not always the
+    //       case. Indeed, we should always have a gap of one pixel between the
+    //       coordinates and pCoordinatesPosition, but it may happen that we
+    //       have either no gap or a gap of two pixels, so...
 
     pPainter->setFont(mOwner->axisFont(QwtPlot::xBottom));
 
     QString coords = QString("X: %1\nY: %2").arg(QLocale().toString(pCoordinates.x(), 'g', 15),
                                                  QLocale().toString(pCoordinates.y(), 'g', 15));
-    QRect desktopGeometry = qApp->desktop()->availableGeometry();
-    QRectF coordsRect = pPainter->boundingRect(QRectF(0.0, 0.0, desktopGeometry.width(), desktopGeometry.height()), coords);
+    QRect coordsRect = pPainter->boundingRect(qApp->desktop()->availableGeometry(), 0, coords);
 
     // Determine where the coordinates and its background should be drawn
 
     switch (pLocation) {
     case TopLeft:
-        coordsRect.moveTo(pCoordinatesPosition.x()-coordsRect.right()-1.0,
-                          pCoordinatesPosition.y()-coordsRect.bottom()-1.0);
+        coordsRect.moveTo(pCoordinatesPosition.x()-coordsRect.right()-1,
+                          pCoordinatesPosition.y()-coordsRect.bottom()-1);
 
         break;
     case TopRight:
-        coordsRect.moveTo(pCoordinatesPosition.x()+2.0,
-                          pCoordinatesPosition.y()-coordsRect.bottom()-1.0);
+        coordsRect.moveTo(pCoordinatesPosition.x()+2,
+                          pCoordinatesPosition.y()-coordsRect.bottom()-1);
 
         break;
     case BottomLeft:
-        coordsRect.moveTo(pCoordinatesPosition.x()-coordsRect.right()-1.0,
-                          pCoordinatesPosition.y()+2.0);
+        coordsRect.moveTo(pCoordinatesPosition.x()-coordsRect.right()-1,
+                          pCoordinatesPosition.y()+2);
 
         break;
     case BottomRight:
-        coordsRect.moveTo(pCoordinatesPosition.x()+2.0,
-                          pCoordinatesPosition.y()+2.0);
+        coordsRect.moveTo(pCoordinatesPosition.x()+2,
+                          pCoordinatesPosition.y()+2;
 
         break;
     }
 
     if (pCanMoveLocation) {
-        if (coordsRect.top() < 0.0)
-            coordsRect.moveTop(pCoordinatesPosition.y()+2.0);
+        if (coordsRect.top() < 0)
+            coordsRect.moveTop(pCoordinatesPosition.y()+2);
 
-        if (coordsRect.left() < 0.0)
-            coordsRect.moveLeft(pCoordinatesPosition.x()+2.0);
+        if (coordsRect.left() < 0)
+            coordsRect.moveLeft(pCoordinatesPosition.x()+2);
 
         QRectF plotLayoutCanvasRect = mOwner->plotLayout()->canvasRect();
 
         if (coordsRect.bottom() > plotLayoutCanvasRect.height())
-            coordsRect.moveTop(pCoordinatesPosition.y()-coordsRect.height()-1.0);
+            coordsRect.moveTop(pCoordinatesPosition.y()-coordsRect.height()-1);
 
         if (coordsRect.right() > plotLayoutCanvasRect.width())
-            coordsRect.moveLeft(pCoordinatesPosition.x()-coordsRect.width()-1.0);
+            coordsRect.moveLeft(pCoordinatesPosition.x()-coordsRect.width()-1);
     }
 
     // Draw a filled rectangle to act as the background for the coordinates

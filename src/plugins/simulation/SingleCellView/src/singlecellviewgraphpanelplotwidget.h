@@ -137,7 +137,7 @@ private:
     QPointF mEndPoint;
 
     void drawCoordinates(QPainter *pPainter, const QPointF &pCoordinates,
-                         const QPointF &pCoordinatesPosition,
+                         const QPoint &pCoordinatesPosition,
                          const QColor &pBackgroundColor,
                          const QColor &pForegroundColor,
                          const Location &pLocation = TopLeft,
