@@ -347,55 +347,58 @@ void SingleCellViewGraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPaint
 
     pPainter->setFont(mOwner->axisFont(QwtPlot::xBottom));
 
-    QString coords = QString("X: %1\nY: %2").arg(QLocale().toString(pCoordinates.x(), 'g', 15),
-                                                 QLocale().toString(pCoordinates.y(), 'g', 15));
-    QRect coordsRect = pPainter->boundingRect(qApp->desktop()->availableGeometry(), 0, coords);
+    QString coordinates = QString("X: %1\nY: %2").arg(QLocale().toString(pCoordinates.x(), 'g', 15),
+                                                      QLocale().toString(pCoordinates.y(), 'g', 15));
+    QRect coordinatesRect = pPainter->boundingRect(qApp->desktop()->availableGeometry(), 0, coordinates);
 
     // Determine where the coordinates and its background should be drawn
 
     switch (pLocation) {
     case TopLeft:
-        coordsRect.moveTo(pCoordinatesPosition.x()-coordsRect.right()-1,
-                          pCoordinatesPosition.y()-coordsRect.bottom()-1);
+        coordinatesRect.moveTo(pCoordinatesPosition.x()-coordinatesRect.right()-2,
+                               pCoordinatesPosition.y()-coordinatesRect.bottom()-2);
 
         break;
     case TopRight:
-        coordsRect.moveTo(pCoordinatesPosition.x()+2,
-                          pCoordinatesPosition.y()-coordsRect.bottom()-1);
+        coordinatesRect.moveTo(pCoordinatesPosition.x()+2,
+                               pCoordinatesPosition.y()-coordinatesRect.bottom()-2);
 
         break;
     case BottomLeft:
-        coordsRect.moveTo(pCoordinatesPosition.x()-coordsRect.right()-1,
-                          pCoordinatesPosition.y()+2);
+        coordinatesRect.moveTo(pCoordinatesPosition.x()-coordinatesRect.right()-2,
+                               pCoordinatesPosition.y()+2);
 
         break;
     case BottomRight:
-        coordsRect.moveTo(pCoordinatesPosition.x()+2,
-                          pCoordinatesPosition.y()+2);
+        coordinatesRect.moveTo(pCoordinatesPosition.x()+2,
+                               pCoordinatesPosition.y()+2);
 
         break;
     }
 
     if (pCanMoveLocation) {
-        if (coordsRect.top() < 0)
-            coordsRect.moveTop(pCoordinatesPosition.y()+2);
+        QPoint topLeftPoint = QPoint(mOwner->canvasMap(QwtPlot::xBottom).transform(mOwner->localMinX()),
+                                     mOwner->canvasMap(QwtPlot::yLeft).transform(mOwner->localMaxY()));
+        QPoint bottomRightPoint = QPoint(mOwner->canvasMap(QwtPlot::xBottom).transform(mOwner->localMaxX()),
+                                         mOwner->canvasMap(QwtPlot::yLeft).transform(mOwner->localMinY()));
 
-        if (coordsRect.left() < 0)
-            coordsRect.moveLeft(pCoordinatesPosition.x()+2);
+        if (coordinatesRect.top() < topLeftPoint.y())
+            coordinatesRect.moveTop(pCoordinatesPosition.y()+2);
 
-        QRectF plotLayoutCanvasRect = mOwner->plotLayout()->canvasRect();
+        if (coordinatesRect.left() < topLeftPoint.x())
+            coordinatesRect.moveLeft(pCoordinatesPosition.x()+2);
 
-        if (coordsRect.bottom() > plotLayoutCanvasRect.height())
-            coordsRect.moveTop(pCoordinatesPosition.y()-coordsRect.height()-1);
+        if (coordinatesRect.bottom() > bottomRightPoint.y())
+            coordinatesRect.moveTop(pCoordinatesPosition.y()-coordinatesRect.height()-1);
 
-        if (coordsRect.right() > plotLayoutCanvasRect.width())
-            coordsRect.moveLeft(pCoordinatesPosition.x()-coordsRect.width()-1);
+        if (coordinatesRect.right() > bottomRightPoint.x())
+            coordinatesRect.moveLeft(pCoordinatesPosition.x()-coordinatesRect.width()-1);
     }
 
     // Draw a filled rectangle to act as the background for the coordinates
     // we are to show
 
-    pPainter->fillRect(coordsRect, pBackgroundColor);
+    pPainter->fillRect(coordinatesRect, pBackgroundColor);
 
     // Draw the text for the coordinates, using a white pen
 
@@ -405,7 +408,7 @@ void SingleCellViewGraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPaint
 
     pPainter->setPen(pen);
 
-    pPainter->drawText(coordsRect, coords);
+    pPainter->drawText(coordinatesRect, coordinates);
 }
 
 //==============================================================================
