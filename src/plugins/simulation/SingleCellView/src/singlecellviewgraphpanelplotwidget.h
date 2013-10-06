@@ -101,22 +101,12 @@ class SingleCellViewGraphPanelPlotWidget;
 class SingleCellViewGraphPanelPlotOverlayWidget : public QWidget
 {
 public:
-    enum Action {
-        None,
-        ShowCoordinates,
-        ZoomRegion
-    };
-
     explicit SingleCellViewGraphPanelPlotOverlayWidget(SingleCellViewGraphPanelPlotWidget *pParent = 0);
 
-    void reset();
+    void setOriginPoint(const QPoint &pOriginPoint);
+    void setPoint(const QPoint &pPoint);
 
-    void setAction(const Action &pAction);
-
-    void setOriginPoint(const QPointF &pOriginPoint);
-    void setEndPoint(const QPointF &pEndPoint);
-
-    QRectF zoomRegion() const;
+    QRect zoomRegion() const;
 
 protected:
     virtual void paintEvent(QPaintEvent *pEvent);
@@ -131,16 +121,15 @@ private:
 
     SingleCellViewGraphPanelPlotWidget *mOwner;
 
-    Action mAction;
+    QPoint mOriginPoint;
+    QPoint mPoint;
 
-    QPointF mOriginPoint;
-    QPointF mEndPoint;
+    QPoint optimisedPoint(const QPoint &pPoint) const;
 
-    void drawCoordinates(QPainter *pPainter, const QPointF &pCoordinates,
-                         const QPoint &pCoordinatesPosition,
+    void drawCoordinates(QPainter *pPainter, const QPoint &pPoint,
                          const QColor &pBackgroundColor,
                          const QColor &pForegroundColor,
-                         const Location &pLocation = TopLeft,
+                         const Location &pLocation,
                          const bool &pCanMoveLocation = true);
 };
 
@@ -205,7 +194,7 @@ private:
 
     Action mAction;
 
-    QPointF mOriginPoint;
+    QPoint mPoint;
 
     double mNeedMinX;
     double mNeedMaxX;
@@ -232,6 +221,10 @@ private:
                             double &pMinY, double &pMaxY);
 
     void updateActions();
+
+    Action action() const;
+
+    void resetAction();
 
     double localMinX() const;
     double localMaxX() const;
@@ -264,7 +257,8 @@ private:
     void scaleLocalAxes(const double &pScalingFactorX,
                         const double &pScalingFactorY);
 
-    QPointF mousePositionWithinCanvas(const QPoint &pPoint) const;
+    QPointF canvasPoint(const QPoint &pPoint,
+                        const bool pNeedOffset = true) const;
 
 private Q_SLOTS:
     void on_actionCopy_triggered();
