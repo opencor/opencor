@@ -403,13 +403,16 @@ void SingleCellViewGraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPaint
 
         if (coordinatesRect.top() < topLeftPoint.y())
             coordinatesRect.moveTop(pPoint.y()+2);
-        else if (coordinatesRect.top()+coordinatesRect.height() > bottomRightPoint.y())
+        else if (coordinatesRect.top()+coordinatesRect.height()-1 > bottomRightPoint.y())
             coordinatesRect.moveTop(pPoint.y()-coordinatesRect.height()-1);
 
         if (coordinatesRect.left() < topLeftPoint.x())
             coordinatesRect.moveLeft(pPoint.x()+2);
-        else if (coordinatesRect.left()+coordinatesRect.width() > bottomRightPoint.x())
+        else if (coordinatesRect.left()+coordinatesRect.width()-1 > bottomRightPoint.x())
             coordinatesRect.moveLeft(pPoint.x()-coordinatesRect.width()-1);
+
+        // Note: the -1 for the else-if tests is because fillRect() below works
+        //       on (0, 0; width-1, height-1)...
     }
 
     // Draw a filled rectangle to act as the background for the coordinates
