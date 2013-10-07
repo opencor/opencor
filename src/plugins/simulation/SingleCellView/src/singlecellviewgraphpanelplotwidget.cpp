@@ -504,7 +504,7 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
 
     qobject_cast<QwtPlotCanvas *>(canvas())->setFrameShape(QFrame::NoFrame);
 
-    // Set our axes' minimum/maximum values
+    // Set our axes' values
 
     doSetAxis(QwtPlot::xBottom, DefMinAxis, DefMaxAxis);
     doSetAxis(QwtPlot::yLeft, DefMinAxis, DefMaxAxis);
@@ -593,7 +593,7 @@ void SingleCellViewGraphPanelPlotWidget::setAxes(const double &pMinX,
                                                  const double &pMinY,
                                                  const double &pMaxY)
 {
-    // Set our needed minimum/maximum X/Y values
+    // Set our axes' needed values
 
     mNeedMinX = pMinX;
     mNeedMaxX = pMaxX;
@@ -635,7 +635,7 @@ void SingleCellViewGraphPanelPlotWidget::updateActions()
 void SingleCellViewGraphPanelPlotWidget::checkAxisValues(double &pMin,
                                                          double &pMax)
 {
-    // Make sure that the minimum/maximum values of our axis have finite values
+    // Make sure that our axis' values have finite values
 
     if (!qIsFinite(pMin))
         pMin = MinAxis;
@@ -643,17 +643,17 @@ void SingleCellViewGraphPanelPlotWidget::checkAxisValues(double &pMin,
     if (!qIsFinite(pMax))
         pMax = MaxAxis;
 
-    // Make sure that the minimum/maximum values of our axis are valid
+    // Make sure that our axis' values are valid
 
     double range = pMax-pMin;
 
     if (range > MaxAxisRange) {
-        // The range is too big, so reset our minimum/maximum values
+        // The range is too big, so reset our values
 
         pMin = MinAxis;
         pMax = MaxAxis;
     } else if (range < MinAxisRange) {
-        // The range is too small, so reset our minimum/maximum values
+        // The range is too small, so reset our values
 
         pMin = qMax(MinAxis, 0.5*(pMin+pMax-MinAxisRange));
         pMax = qMin(MaxAxis, pMin+MinAxisRange);
@@ -680,7 +680,7 @@ void SingleCellViewGraphPanelPlotWidget::checkAxesValues(double &pMinX,
                                                          double &pMinY,
                                                          double &pMaxY)
 {
-    // Make sure that the minimum/maximum values of our axes are fine
+    // Make sure that our axes' values are fine
 
     checkAxisValues(pMinX, pMaxX);
     checkAxisValues(pMinY, pMaxY);
@@ -820,7 +820,7 @@ void SingleCellViewGraphPanelPlotWidget::doSetAxes(double pMinX, double pMaxX,
                                                    const bool &pUpdateMinMaxValues,
                                                    const bool &pResetMinMaxValues)
 {
-    // Keep track of our the minimum/maximum values of our axes
+    // Keep track of our axes' old values
 
     double oldMinX = minX();
     double oldMaxX = maxX();
@@ -836,8 +836,8 @@ void SingleCellViewGraphPanelPlotWidget::doSetAxes(double pMinX, double pMaxX,
         if (graph->isValid() && graph->isSelected() && graph->dataSize())
             boundingRect |= graph->boundingRect();
 
-    // Take into account the needed minimum/maximum values for our X and Y axes,
-    // if any, or use DefMinAxis/DefMaxAxis if we have null bounding rectangle
+    // Take into account our axes' needed values, if any, or use
+    // DefMinAxis/DefMaxAxis, if we have null bounding rectangle
 
     bool isBoundingRectNull = boundingRect.isNull();
     bool needMinMaxX = mNeedMinX != mNeedMaxX;
@@ -863,8 +863,8 @@ void SingleCellViewGraphPanelPlotWidget::doSetAxes(double pMinX, double pMaxX,
         boundingRect.setHeight(DefMaxAxis-DefMinAxis);
     }
 
-    // Update the minimum/maximum values of our axes, should we have retrieved a
-    // valid bounding rectangle
+    // Update our axes' values, should we have retrieved a valid bounding
+    // rectangle
 
     double realMinX = MinAxis;
     double realMaxX = MaxAxis;
@@ -872,20 +872,18 @@ void SingleCellViewGraphPanelPlotWidget::doSetAxes(double pMinX, double pMaxX,
     double realMaxY = MaxAxis;
 
     if (boundingRect.isValid()) {
-        // Optimise our bounding rectangle by first retrieving the
-        // minimum/maximum values of our axes
+        // Optimise our bounding rectangle by first retrieving our axes' values
 
         double minX = boundingRect.left();
         double maxX = minX+boundingRect.width();
         double minY = boundingRect.top();
         double maxY = minY+boundingRect.height();
 
-        // Make sure that the minimum/maximum values of our axes are fine
+        // Make sure that our axes' values are fine
 
         checkAxesValues(minX, maxX, minY, maxY);
 
-        // Optimise the minimum/maximum values of our axes by rounding them
-        // down/up, respectively
+        // Optimise our axes' values by rounding them down/up
 
         uint baseX = axisScaleEngine(QwtPlot::xBottom)->base();
         double majorStepX = QwtScaleArithmetic::divideInterval(maxX-minX,
@@ -908,12 +906,11 @@ void SingleCellViewGraphPanelPlotWidget::doSetAxes(double pMinX, double pMaxX,
         minY = (needMinMaxY && (minY == mNeedMinY))?mNeedMinY:qFloor(minY/minorStepY)*minorStepY;
         maxY = (needMinMaxY && (maxY == mNeedMaxY))?mNeedMaxY:qCeil(maxY/minorStepY)*minorStepY;
 
-        // Make sure that the optimised minimum/maximum values of our axes are
-        // fine
+        // Make sure that our axes' optimised values are fine
 
         checkAxesValues(minX, maxX, minY, maxY);
 
-        // Update the minimum/maximum values of our axes, if required
+        // Update our axes' values, if needed
 
         if (pResetMinMaxValues) {
             realMinX = minX;
@@ -932,8 +929,7 @@ void SingleCellViewGraphPanelPlotWidget::doSetAxes(double pMinX, double pMaxX,
         }
     }
 
-    // Make sure that the new minimum/maximum values of our axes fit within the
-    // minimum/maximum values of our axes
+    // Make sure that our axes' new values fit within our axes' values
 
     if (pForceMinMaxValues) {
         pMinX = realMinX;
@@ -947,7 +943,7 @@ void SingleCellViewGraphPanelPlotWidget::doSetAxes(double pMinX, double pMaxX,
         pMaxY = qMin(pMaxY, realMaxY);
     }
 
-    // Update the minimum/maximum values of our axes, if needed
+    // Update our axes' values, if needed
 
     bool needReplot = false;
 
@@ -1067,34 +1063,18 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
 
         mPoint = pEvent->pos();
 
-        // Determine our new minimum/maximum values for our axes
+        // Determine our axes' new values
 
         double newMinX = minX()-shiftX;
         double newMaxX = maxX()-shiftX;
         double newMinY = minY()-shiftY;
         double newMaxY = maxY()-shiftY;
 
-        // Make sure that our new minimum/maximum values for our axes are within
-        // our  minimum/maximum values
+        // Make sure that our axes' new values are fine
 
-        if (newMinX < MinAxis) {
-            newMinX = MinAxis;
-            newMaxX = newMinX+maxX()-minX();
-        } else if (newMaxX > MaxAxis) {
-            newMaxX = MaxAxis;
-            newMinX = newMaxX-maxX()+minX();
-        }
+        checkAxesValues(newMinX, newMaxX, newMinY, newMaxY);
 
-        if (newMinY < MinAxis) {
-            newMinY = MinAxis;
-            newMaxY = newMinY+maxY()-minY();
-        } else if (newMaxY > MaxAxis) {
-            newMaxY = MaxAxis;
-            newMinY = newMaxY-maxY()+minY();
-        }
-
-        // Set our new minimum/maximum values for our axes, which will replot
-        // ourselves as a result
+        // Set our axes' new values, which will replot ourselves as a result
 
         doSetAxes(newMinX, newMaxX, newMinY, newMaxY);
 
@@ -1393,7 +1373,7 @@ void SingleCellViewGraphPanelPlotWidget::drawGraphSegment(SingleCellViewGraphPan
         replotNow();
     } else {
         // It's not our first graph segment, so determine the minimum/maximum
-        // X/Y values of our new data
+        // X/Y values for our new data
 
         double newMinX = 0.0;
         double newMaxX = 0.0;
@@ -1416,11 +1396,11 @@ void SingleCellViewGraphPanelPlotWidget::drawGraphSegment(SingleCellViewGraphPan
             }
 
         // Check whether our X/Y axis can handle the minimum/maximum X/Y values
-        // of our new data
+        // for our new data
 
         if (   (newMinX < MinAxis) || (newMaxX > MaxAxis)
             || (newMinY < MinAxis) || (newMaxY > MaxAxis))
-            // Our X/Y axis cannot handle the minimum/maximum X/Y values of our
+            // Our X/Y axis cannot handle the minimum/maximum X/Y values for our
             // new data, so check our axes by trying to set them
 
             doSetAxes(minX(), maxX(), minY(), maxY(), true, true, true);
