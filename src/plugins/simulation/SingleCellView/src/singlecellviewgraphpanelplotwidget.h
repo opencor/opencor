@@ -215,10 +215,10 @@ private:
 
     void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
 
-    void checkLocalAxisValues(double &pMin, double &pMax);
+    void checkAxisValues(double &pMin, double &pMax);
 
-    void checkAnyAxesValues(double &pMinX, double &pMaxX,
-                            double &pMinY, double &pMaxY);
+    void checkAxesValues(double &pMinX, double &pMaxX,
+                         double &pMinY, double &pMaxY);
 
     void updateActions();
 
@@ -226,13 +226,15 @@ private:
 
     void resetAction();
 
-    double localMinX() const;
-    double localMaxX() const;
+    double minX() const;
+    double maxX() const;
 
-    void setLocalMinMaxX(const double &pLocalMinX, const double &pLocalMaxX);
+    void setMinMaxX(double pMinX, double pMaxX);
 
-    double localMinY() const;
-    double localMaxY() const;
+    double minY() const;
+    double maxY() const;
+
+    void setMinMaxY(double pMinY, double pMaxY);
 
     bool canZoomInX() const;
     bool canZoomOutX() const;
@@ -240,22 +242,15 @@ private:
     bool canZoomInY() const;
     bool canZoomOutY() const;
 
-    void setLocalMinMaxY(const double &pLocalMinY, const double &pLocalMaxY);
+    void doSetAxis(const int &pAxis, const double &pMin, const double &pMax);
+    void doSetAxes(double pMinX, double pMaxX, double pMinY, double pMaxY,
+                   const bool &pCanReplot = true,
+                   const bool &pForceMinMaxValues = false,
+                   const bool &pUpdateMinMaxValues = false,
+                   const bool &pResetMinMaxValues = false);
 
-    void checkLocalAxes(const bool &pCanReplot = true,
-                        const bool &pForceMinMaxValues = false,
-                        const bool &pUpdateMinMaxValues = false);
-
-    void setLocalAxis(const int &pAxis, const double &pMin, const double &pMax);
-    void setLocalAxes(const double &pLocalMinX, const double &pLocalMaxX,
-                      const double &pLocalMinY, const double &pLocalMaxY,
-                      const bool &pCanReplot = true,
-                      const bool &pForceMinMaxValues = false,
-                      const bool &pUpdateMinMaxValues = false,
-                      const bool &pResetMinMaxValues = false);
-
-    void scaleLocalAxes(const double &pScalingFactorX,
-                        const double &pScalingFactorY);
+    void scaleAxes(const double &pScalingFactorX,
+                   const double &pScalingFactorY);
 
     QPointF canvasPoint(const QPoint &pPoint,
                         const bool pNeedOffset = true) const;

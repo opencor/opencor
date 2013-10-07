@@ -184,18 +184,18 @@ SingleCellViewGraphPanelPlotOverlayWidget::SingleCellViewGraphPanelPlotOverlayWi
 
 QPoint SingleCellViewGraphPanelPlotOverlayWidget::optimisedPoint(const QPoint &pPoint) const
 {
-    // Optimise the given point so that it fits within our owner's local ranges
+    // Optimise the given point so that it fits within our owner's ranges
 
     QPoint realPoint = pPoint-mOwner->plotLayout()->canvasRect().topLeft().toPoint();
 
     QwtScaleMap canvasMapX = mOwner->canvasMap(QwtPlot::xBottom);
     QwtScaleMap canvasMapY = mOwner->canvasMap(QwtPlot::yLeft);
 
-    return QPoint(qMin(qRound(canvasMapX.transform(mOwner->localMaxX())),
-                       qMax(qRound(canvasMapX.transform(mOwner->localMinX())),
+    return QPoint(qMin(qRound(canvasMapX.transform(mOwner->maxX())),
+                       qMax(qRound(canvasMapX.transform(mOwner->minX())),
                             realPoint.x())),
-                  qMin(qRound(canvasMapY.transform(mOwner->localMinY())),
-                       qMax(qRound(canvasMapY.transform(mOwner->localMaxY())),
+                  qMin(qRound(canvasMapY.transform(mOwner->minY())),
+                       qMax(qRound(canvasMapY.transform(mOwner->maxY())),
                             realPoint.y())));
 }
 
@@ -316,27 +316,27 @@ QRect SingleCellViewGraphPanelPlotOverlayWidget::zoomRegion() const
     QwtScaleMap canvasMapX = mOwner->canvasMap(QwtPlot::xBottom);
     QwtScaleMap canvasMapY = mOwner->canvasMap(QwtPlot::yLeft);
 
-    double xMin = canvasMapX.transform(mOwner->localMinX());
-    double xMax = canvasMapX.transform(mOwner->localMaxX());
-    double yMin = canvasMapY.transform(mOwner->localMinY());
-    double yMax = canvasMapY.transform(mOwner->localMaxY());
+    double minX = canvasMapX.transform(mOwner->minX());
+    double maxX = canvasMapX.transform(mOwner->maxX());
+    double minY = canvasMapY.transform(mOwner->minY());
+    double maxY = canvasMapY.transform(mOwner->maxY());
 
     if (mOwner->canZoomInX() || mOwner->canZoomInY()) {
         QPoint originPoint = optimisedPoint(mOriginPoint);
         QPoint point = optimisedPoint(mPoint);
 
         if (mOwner->canZoomInX()) {
-            xMin = qMin(originPoint.x(), point.x());
-            xMax = qMax(originPoint.x(), point.x());
+            minX = qMin(originPoint.x(), point.x());
+            maxX = qMax(originPoint.x(), point.x());
         }
 
         if (mOwner->canZoomInY()) {
-            yMin = qMin(originPoint.y(), point.y());
-            yMax = qMax(originPoint.y(), point.y());
+            minY = qMin(originPoint.y(), point.y());
+            maxY = qMax(originPoint.y(), point.y());
         }
     }
 
-    return QRect(xMin, yMin, xMax-xMin, yMax-yMin);
+    return QRect(minX, minY, maxX-minX, maxY-minY);
 }
 
 //==============================================================================
@@ -396,10 +396,10 @@ void SingleCellViewGraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPaint
         QwtScaleMap canvasMapX = mOwner->canvasMap(QwtPlot::xBottom);
         QwtScaleMap canvasMapY = mOwner->canvasMap(QwtPlot::yLeft);
 
-        QPoint topLeftPoint = QPoint(canvasMapX.transform(mOwner->localMinX()),
-                                     canvasMapY.transform(mOwner->localMaxY()));
-        QPoint bottomRightPoint = QPoint(canvasMapX.transform(mOwner->localMaxX()),
-                                         canvasMapY.transform(mOwner->localMinY()));
+        QPoint topLeftPoint = QPoint(canvasMapX.transform(mOwner->minX()),
+                                     canvasMapY.transform(mOwner->maxY()));
+        QPoint bottomRightPoint = QPoint(canvasMapX.transform(mOwner->maxX()),
+                                         canvasMapY.transform(mOwner->minY()));
 
         if (coordinatesRect.top() < topLeftPoint.y())
             coordinatesRect.moveTop(pPoint.y()+2);
@@ -504,10 +504,10 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
 
     qobject_cast<QwtPlotCanvas *>(canvas())->setFrameShape(QFrame::NoFrame);
 
-    // Set our axes' local minimum/maximum values
+    // Set our axes' minimum/maximum values
 
-    setLocalMinMaxX(DefMinAxis, DefMaxAxis);
-    setLocalMinMaxY(DefMinAxis, DefMaxAxis);
+    setMinMaxX(DefMinAxis, DefMaxAxis);
+    setMinMaxY(DefMinAxis, DefMaxAxis);
 
     // Attach a grid to ourselves
 
@@ -602,7 +602,7 @@ void SingleCellViewGraphPanelPlotWidget::setAxes(const double &pMinX,
 
     // Effectively update our axes by trying to set them
 
-    setLocalAxes(0.0, 0.0, 0.0, 0.0, true, true, false, true);
+    doSetAxes(0.0, 0.0, 0.0, 0.0, true, true, false, true);
 }
 
 //==============================================================================
@@ -611,14 +611,14 @@ void SingleCellViewGraphPanelPlotWidget::updateActions()
 {
     // Update our actions
 
-    double xRange = localMaxX()-localMinX();
-    double yRange = localMaxY()-localMinY();
+    double rangeX = maxX()-minX();
+    double rangeY = maxY()-minY();
 
-    mCanZoomInX  = xRange > MinAxisRange;
-    mCanZoomOutX = xRange < MaxAxisRange;
+    mCanZoomInX  = rangeX > MinAxisRange;
+    mCanZoomOutX = rangeX < MaxAxisRange;
 
-    mCanZoomInY  = yRange > MinAxisRange;
-    mCanZoomOutY = yRange < MaxAxisRange;
+    mCanZoomInY  = rangeY > MinAxisRange;
+    mCanZoomOutY = rangeY < MaxAxisRange;
 
     // Update the enabled status of our actions
 
@@ -632,20 +632,19 @@ void SingleCellViewGraphPanelPlotWidget::updateActions()
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::setLocalAxis(const int &pAxis,
-                                                      const double &pMin,
-                                                      const double &pMax)
+void SingleCellViewGraphPanelPlotWidget::doSetAxis(const int &pAxis,
+                                                   const double &pMin,
+                                                   const double &pMax)
 {
-    // Set our local axis
+    // Set our axis
     // Note #1: to use setAxisScale() on its own is not sufficient unless we
     //          were to replot ourselves immediately after, but we don't want to
     //          do that, so instead we also use setAxisScaleDiv() to make sure
-    //          that our local axis is indeed taken into account (i.e. we can
-    //          retrieve them using localMinX(), localMaxX(), localMinY() and
-    //          localMaxY()). Also, we must call setAxisScaleDiv() before
-    //          setAxisScale() to make sure that the axis data is not considered
-    //          as valid which is important when it comes to plotting
-    //          ourselves...
+    //          that our axis is indeed taken into account (i.e. we can retrieve
+    //          them using minX(), maxX(), minY() and maxY()). Also, we must
+    //          call setAxisScaleDiv() before setAxisScale() to make sure that
+    //          the axis data is not considered as valid which is important when
+    //          it comes to plotting ourselves...
     // Note #2: the way QwtPlot create ticks for an axis means that it cannot
     //          handle an axis that would go from -DBL_MAX to DBL_MAX, even
     //          though it would be a valid axis, so we check that the axis fits
@@ -663,10 +662,10 @@ void SingleCellViewGraphPanelPlotWidget::setLocalAxis(const int &pAxis,
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::checkLocalAxisValues(double &pMin,
-                                                              double &pMax)
+void SingleCellViewGraphPanelPlotWidget::checkAxisValues(double &pMin,
+                                                         double &pMax)
 {
-    // Make sure that the minimum/maximum values of our local axis are valid
+    // Make sure that the minimum/maximum values of our axis are valid
 
     double range = pMax-pMin;
 
@@ -720,54 +719,61 @@ void SingleCellViewGraphPanelPlotWidget::resetAction()
 
 //==============================================================================
 
-double SingleCellViewGraphPanelPlotWidget::localMinX() const
+double SingleCellViewGraphPanelPlotWidget::minX() const
 {
-    // Return our local minimum X value
+    // Return our minimum X value
 
     return axisScaleDiv(QwtPlot::xBottom).lowerBound();
 }
 
 //==============================================================================
 
-double SingleCellViewGraphPanelPlotWidget::localMaxX() const
+double SingleCellViewGraphPanelPlotWidget::maxX() const
 {
-    // Return our local maximum X value
+    // Return our maximum X value
 
     return axisScaleDiv(QwtPlot::xBottom).upperBound();
 }
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::setLocalMinMaxX(const double &pLocalMinX,
-                                                         const double &pLocalMaxX)
+void SingleCellViewGraphPanelPlotWidget::setMinMaxX(double pMinX, double pMaxX)
 {
-    // Set our local minimum X value
+    // Set our minimum X value
 
-    double locMinX = pLocalMinX;
-    double locMaxX = pLocalMaxX;
+    checkAxisValues(pMinX, pMaxX);
 
-    checkLocalAxisValues(locMinX, locMaxX);
-
-    setLocalAxis(QwtPlot::xBottom, locMinX, locMaxX);
+    doSetAxis(QwtPlot::xBottom, pMinX, pMaxX);
 }
 
 //==============================================================================
 
-double SingleCellViewGraphPanelPlotWidget::localMinY() const
+double SingleCellViewGraphPanelPlotWidget::minY() const
 {
-    // Return our local minimum Y value
+    // Return our minimum Y value
 
     return axisScaleDiv(QwtPlot::yLeft).lowerBound();
 }
 
 //==============================================================================
 
-double SingleCellViewGraphPanelPlotWidget::localMaxY() const
+double SingleCellViewGraphPanelPlotWidget::maxY() const
 {
-    // Return our local maximum Y value
+    // Return our maximum Y value
 
     return axisScaleDiv(QwtPlot::yLeft).upperBound();
 
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelPlotWidget::setMinMaxY(double pMinY, double pMaxY)
+{
+    // Set our minimum Y value
+
+    checkAxisValues(pMinY, pMaxY);
+
+    doSetAxis(QwtPlot::yLeft, pMinY, pMaxY);
 }
 
 //==============================================================================
@@ -808,21 +814,6 @@ bool SingleCellViewGraphPanelPlotWidget::canZoomOutY() const
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::setLocalMinMaxY(const double &pLocalMinY,
-                                                         const double &pLocalMaxY)
-{
-    // Set our local minimum Y value
-
-    double locMinY = pLocalMinY;
-    double locMaxY = pLocalMaxY;
-
-    checkLocalAxisValues(locMinY, locMaxY);
-
-    setLocalAxis(QwtPlot::yLeft, locMinY, locMaxY);
-}
-
-//==============================================================================
-
 QList<SingleCellViewGraphPanelPlotGraph *> SingleCellViewGraphPanelPlotWidget::graphs() const
 {
     // Return all our graphs
@@ -832,10 +823,10 @@ QList<SingleCellViewGraphPanelPlotGraph *> SingleCellViewGraphPanelPlotWidget::g
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::checkAnyAxesValues(double &pMinX,
-                                                            double &pMaxX,
-                                                            double &pMinY,
-                                                            double &pMaxY)
+void SingleCellViewGraphPanelPlotWidget::checkAxesValues(double &pMinX,
+                                                         double &pMaxX,
+                                                         double &pMinY,
+                                                         double &pMaxY)
 {
     // Make sure that the minimum/maximum values of our axes have finite values
 
@@ -854,26 +845,19 @@ void SingleCellViewGraphPanelPlotWidget::checkAnyAxesValues(double &pMinX,
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::setLocalAxes(const double &pLocalMinX,
-                                                      const double &pLocalMaxX,
-                                                      const double &pLocalMinY,
-                                                      const double &pLocalMaxY,
-                                                      const bool &pCanReplot,
-                                                      const bool &pForceMinMaxValues,
-                                                      const bool &pUpdateMinMaxValues,
-                                                      const bool &pResetMinMaxValues)
+void SingleCellViewGraphPanelPlotWidget::doSetAxes(double pMinX, double pMaxX,
+                                                   double pMinY,double pMaxY,
+                                                   const bool &pCanReplot,
+                                                   const bool &pForceMinMaxValues,
+                                                   const bool &pUpdateMinMaxValues,
+                                                   const bool &pResetMinMaxValues)
 {
-    // Update our axes
+    // Keep of our old axes' values
 
-    double oldLocalMinX = localMinX();
-    double oldLocalMaxX = localMaxX();
-    double oldLocalMinY = localMinY();
-    double oldLocalMaxY = localMaxY();
-
-    double newLocalMinX = pLocalMinX;
-    double newLocalMaxX = pLocalMaxX;
-    double newLocalMinY = pLocalMinY;
-    double newLocalMaxY = pLocalMaxY;
+    double oldMinX = minX();
+    double oldMaxX = maxX();
+    double oldMinY = minY();
+    double oldMaxY = maxY();
 
     // Retrieve the bounding rectangle for all our graphs (but only for those
     // that have some data)
@@ -912,137 +896,136 @@ void SingleCellViewGraphPanelPlotWidget::setLocalAxes(const double &pLocalMinX,
     }
 
     // Update the minimum/maximum values of our axes, should we have retrieved a
-    // non-null bounding rectangle
+    // valid bounding rectangle
 
-    double xRealMin = MinAxis;
-    double xRealMax = MaxAxis;
-    double yRealMin = MinAxis;
-    double yRealMax = MaxAxis;
+    double realMinX = MinAxis;
+    double realMaxX = MaxAxis;
+    double realMinY = MinAxis;
+    double realMaxY = MaxAxis;
 
     if (boundingRect.isValid()) {
         // Optimise our bounding rectangle by first retrieving the
         // minimum/maximum values of our axes
 
-        double xMin = boundingRect.left();
-        double xMax = xMin+boundingRect.width();
-        double yMin = boundingRect.top();
-        double yMax = yMin+boundingRect.height();
+        double minX = boundingRect.left();
+        double maxX = minX+boundingRect.width();
+        double minY = boundingRect.top();
+        double maxY = minY+boundingRect.height();
 
         // Make sure that the minimum/maximum values of our axes have finite
         // values
 
-        checkAnyAxesValues(xMin, xMax, yMin, yMax);
+        checkAxesValues(minX, maxX, minY, maxY);
 
         // Optimise the minimum/maximum values of our axes by rounding them
         // down/up, respectively
 
-        uint xBase = axisScaleEngine(QwtPlot::xBottom)->base();
-        double xInterval = xMax-xMin;
-        double xMinReal = xMin;
-        double xMaxReal = xMax;
+        uint baseX = axisScaleEngine(QwtPlot::xBottom)->base();
+        double intervalX = maxX-minX;
+        double realMinX = minX;
+        double realMaxX = maxX;
 
-        if (!xInterval) {
-            xInterval = pow(10.0, qFloor(log10(qAbs(xMin))));
+        if (!intervalX) {
+            intervalX = pow(10.0, qFloor(log10(qAbs(minX))));
 
-            xMinReal = xMin-0.5*xInterval;
-            xMaxReal = xMinReal+xInterval;
+            realMinX = minX-0.5*intervalX;
+            realMaxX = realMinX+intervalX;
         }
 
-        double xMajorStep = QwtScaleArithmetic::divideInterval(xInterval,
+        double majorStepX = QwtScaleArithmetic::divideInterval(intervalX,
                                                                axisMaxMajor(QwtPlot::xBottom),
-                                                               xBase);
-        double xMinorStep = QwtScaleArithmetic::divideInterval(xMajorStep,
+                                                               baseX);
+        double minorStepX = QwtScaleArithmetic::divideInterval(majorStepX,
                                                                axisMaxMinor(QwtPlot::xBottom),
-                                                               axisScaleEngine(QwtPlot::xBottom)->base());
+                                                               baseX);
 
-        uint yBase = axisScaleEngine(QwtPlot::yLeft)->base();
-        double yInterval = yMax-yMin;
-        double yMinReal = yMin;
-        double yMaxReal = yMax;
+        uint baseY = axisScaleEngine(QwtPlot::yLeft)->base();
+        double intervalY = maxY-minY;
+        double realMinY = minY;
+        double realMaxY = maxY;
 
-        if (!yInterval) {
-            yInterval = pow(10.0, qFloor(log10(qAbs(yMin))));
+        if (!intervalY) {
+            intervalY = pow(10.0, qFloor(log10(qAbs(minY))));
 
-            yMinReal = yMin-0.5*yInterval;
-            yMaxReal = yMinReal+yInterval;
+            realMinY = minY-0.5*intervalY;
+            realMaxY = realMinY+intervalY;
         }
 
-        double yMajorStep = QwtScaleArithmetic::divideInterval(yInterval,
+        double majorStepY = QwtScaleArithmetic::divideInterval(intervalY,
                                                                axisMaxMajor(QwtPlot::yLeft),
-                                                               yBase);
-        double yMinorStep = QwtScaleArithmetic::divideInterval(yMajorStep,
+                                                               baseY);
+        double minorStepY = QwtScaleArithmetic::divideInterval(majorStepY,
                                                                axisMaxMinor(QwtPlot::yLeft),
-                                                               yBase);
+                                                               baseY);
 
-        xMin = (needMinMaxX && (xMin == mNeedMinX))?mNeedMinX:qFloor(xMinReal/xMinorStep)*xMinorStep;
-        xMax = (needMinMaxX && (xMax == mNeedMaxX))?mNeedMaxX:qCeil(xMaxReal/xMinorStep)*xMinorStep;
-        yMin = (needMinMaxY && (yMin == mNeedMinY))?mNeedMinY:qFloor(yMinReal/yMinorStep)*yMinorStep;
-        yMax = (needMinMaxY && (yMax == mNeedMaxY))?mNeedMaxY:qCeil(yMaxReal/yMinorStep)*yMinorStep;
+        minX = (needMinMaxX && (minX == mNeedMinX))?mNeedMinX:qFloor(realMinX/minorStepX)*minorStepX;
+        maxX = (needMinMaxX && (maxX == mNeedMaxX))?mNeedMaxX:qCeil(realMaxX/minorStepX)*minorStepX;
+        minY = (needMinMaxY && (minY == mNeedMinY))?mNeedMinY:qFloor(realMinY/minorStepY)*minorStepY;
+        maxY = (needMinMaxY && (maxY == mNeedMaxY))?mNeedMaxY:qCeil(realMaxY/minorStepY)*minorStepY;
 
         // Make sure that the optimised minimum/maximum values of our axes have
         // finite values
 
-        checkAnyAxesValues(xMin, xMax, yMin, yMax);
+        checkAxesValues(minX, maxX, minY, maxY);
 
         // Update the minimum/maximum values of our axes, if required
 
         if (pResetMinMaxValues) {
-            xRealMin = xMin;
-            xRealMax = xMax;
+            realMinX = minX;
+            realMaxX = maxX;
         } else if (pUpdateMinMaxValues) {
-            xRealMin = qMin(xRealMin, xMin);
-            xRealMax = qMax(xRealMax, xMax);
+            realMinX = qMin(realMinX, minX);
+            realMaxX = qMax(realMaxX, maxX);
         }
 
         if (pResetMinMaxValues) {
-            yRealMin = yMin;
-            yRealMax = yMax;
+            realMinY = minY;
+            realMaxY = maxY;
         } else if (pUpdateMinMaxValues) {
-            yRealMin = qMin(yRealMin, yMin);
-            yRealMax = qMax(yRealMax, yMax);
+            realMinY = qMin(realMinY, minY);
+            realMaxY = qMax(realMaxY, maxY);
         }
     }
 
-    // Make sure that the new minimum/maximum values of our local axes fit
-    // within the minimum/maximum values of our axes
+    // Make sure that the new minimum/maximum values of our axes fit within the
+    // minimum/maximum values of our axes
 
     if (pForceMinMaxValues) {
-        newLocalMinX = xRealMin;
-        newLocalMaxX = xRealMax;
-        newLocalMinY = yRealMin;
-        newLocalMaxY = yRealMax;
+        pMinX = realMinX;
+        pMaxX = realMaxX;
+        pMinY = realMinY;
+        pMaxY = realMaxY;
     } else {
-        newLocalMinX = qMax(newLocalMinX, xRealMin);
-        newLocalMaxX = qMin(newLocalMaxX, xRealMax);
-        newLocalMinY = qMax(newLocalMinY, yRealMin);
-        newLocalMaxY = qMin(newLocalMaxY, yRealMax);
+        pMinX = qMax(pMinX, realMinX);
+        pMaxX = qMin(pMaxX, realMaxX);
+        pMinY = qMax(pMinY, realMinY);
+        pMaxY = qMin(pMaxY, realMaxY);
     }
 
-    // Make sure that the new minimum/maximum values of our local axes have
-    // finite values
+    // Make sure that the new minimum/maximum values of our axes have finite
+    // values
 
-    checkAnyAxesValues(newLocalMinX, newLocalMaxX, newLocalMinY, newLocalMaxY);
+    checkAxesValues(pMinX, pMaxX, pMinY, pMaxY);
 
-    // Update the minimum/maximum values of our local axes, if needed, or make
-    // sure that the new minimum/maximum values of our local axes have a valid
-    // zoom factor
+    // Update the minimum/maximum values of our axes, if needed, or make sure
+    // that the new minimum/maximum values of our axes have a valid zoom factor
 
     bool needReplot = false;
 
-    if ((newLocalMinX != oldLocalMinX) || (newLocalMaxX != oldLocalMaxX)) {
-        setLocalMinMaxX(newLocalMinX, newLocalMaxX);
+    if ((pMinX != oldMinX) || (pMaxX != oldMaxX)) {
+        setMinMaxX(pMinX, pMaxX);
 
         needReplot = true;
     } else {
-        checkLocalAxisValues(newLocalMinX, newLocalMaxX);
+        checkAxisValues(pMinX, pMaxX);
     }
 
-    if ((newLocalMinY != oldLocalMinY) || (newLocalMaxY != oldLocalMaxY)) {
-        setLocalMinMaxY(newLocalMinY, newLocalMaxY);
+    if ((pMinY != oldMinY) || (pMaxY != oldMaxY)) {
+        setMinMaxY(pMinY, pMaxY);
 
         needReplot = true;
     } else {
-        checkLocalAxisValues(newLocalMinY, newLocalMaxY);
+        checkAxisValues(pMinY, pMaxY);
     }
 
     // Replot ourselves, if needed and allowed
@@ -1053,8 +1036,8 @@ void SingleCellViewGraphPanelPlotWidget::setLocalAxes(const double &pLocalMinX,
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::scaleLocalAxes(const double &pScalingFactorX,
-                                                        const double &pScalingFactorY)
+void SingleCellViewGraphPanelPlotWidget::scaleAxes(const double &pScalingFactorX,
+                                                   const double &pScalingFactorY)
 {
     // Rescale our X axis, but only if zooming in/out is possible on that axis
 
@@ -1062,56 +1045,44 @@ void SingleCellViewGraphPanelPlotWidget::scaleLocalAxes(const double &pScalingFa
 
     QPointF originPoint = canvasPoint(mPoint);
 
-    double xMin = localMinX();
-    double xMax = localMaxX();
+    double newMinX = minX();
+    double newMaxX = maxX();
 
     if (   ((pScalingFactorX < 1.0) && mCanZoomInX)
         || ((pScalingFactorX > 1.0) && mCanZoomOutX)) {
-        double range = pScalingFactorX*(xMax-xMin);
+        double range = pScalingFactorX*(newMaxX-newMinX);
 
-        xMin = qMax(MinAxis, originPoint.x()-0.5*range);
-        xMax = qMin(MaxAxis, xMin+range);
-        xMin = xMax-range;
-        // Note: the last statement is in case xMax has been set to mMaxX, in
-        //       which case we need to update xMin...
+        newMinX = qMax(MinAxis, originPoint.x()-0.5*range);
+        newMaxX = qMin(MaxAxis, newMinX+range);
+        newMinX = newMaxX-range;
+        // Note: the last statement is in case newMaxX has been set to mMaxX, in
+        //       which case we need to update newMinX...
 
         needRescaling = true;
     }
 
     // Rescale our Y axis, but only if zooming in/out is possible on that axis
 
-    double yMin = localMinY();
-    double yMax = localMaxY();
+    double newMinY = minY();
+    double newMaxY = maxY();
 
     if (   ((pScalingFactorY < 1.0) && mCanZoomInY)
         || ((pScalingFactorY > 1.0) && mCanZoomOutY)) {
-        double range = pScalingFactorY*(yMax-yMin);
+        double range = pScalingFactorY*(newMaxY-newMinY);
 
-        yMin = qMax(MinAxis, originPoint.y()-0.5*range);
-        yMax = qMin(MaxAxis, yMin+range);
-        yMin = yMax-range;
-        // Note: the last statement is in case yMax has been set to mMaxY, in
-        //       which case we need to update yMin...
+        newMinY = qMax(MinAxis, originPoint.y()-0.5*range);
+        newMaxY = qMin(MaxAxis, newMinY+range);
+        newMinY = newMaxY-range;
+        // Note: the last statement is in case newMaxY has been set to mMaxY, in
+        //       which case we need to update newMinY...
 
         needRescaling = true;
     }
 
-    // Rescale our local axes, if needed
+    // Rescale our axes, if needed
 
     if (needRescaling)
-        setLocalAxes(xMin, xMax, yMin, yMax);
-}
-
-//==============================================================================
-
-void SingleCellViewGraphPanelPlotWidget::checkLocalAxes(const bool &pCanReplot,
-                                                        const bool &pForceMinMaxValues,
-                                                        const bool &pUpdateMinMaxValues)
-{
-    // Check our local axes by trying to set them
-
-    setLocalAxes(localMinX(), localMaxX(), localMinY(), localMaxY(),
-                 pCanReplot, pForceMinMaxValues, pUpdateMinMaxValues);
+        doSetAxes(newMinX, newMaxX, newMinY, newMaxY);
 }
 
 //==============================================================================
@@ -1128,15 +1099,15 @@ QPointF SingleCellViewGraphPanelPlotWidget::canvasPoint(const QPoint &pPoint,
                                                         const bool pNeedOffset) const
 {
     // Return the mouse position using canvas coordinates, making sure that they
-    // are within our local ranges
+    // are within our ranges
 
     QPointF realPoint = pPoint;
 
     if (pNeedOffset)
         realPoint -= plotLayout()->canvasRect().topLeft();
 
-    return QPointF(qMin(localMaxX(), qMax(localMinX(), canvasMap(QwtPlot::xBottom).invTransform(realPoint.x()))),
-                   qMin(localMaxY(), qMax(localMinY(), canvasMap(QwtPlot::yLeft).invTransform(realPoint.y()))));
+    return QPointF(qMin(maxX(), qMax(minX(), canvasMap(QwtPlot::xBottom).invTransform(realPoint.x()))),
+                   qMin(maxY(), qMax(minY(), canvasMap(QwtPlot::yLeft).invTransform(realPoint.y()))));
 }
 
 //==============================================================================
@@ -1161,36 +1132,36 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
 
         mPoint = pEvent->pos();
 
-        // Determine our new local minimum/maximum values for our axes
+        // Determine our new minimum/maximum values for our axes
 
-        double newLocalMinX = localMinX()-shiftX;
-        double newLocalMaxX = localMaxX()-shiftX;
-        double newLocalMinY = localMinY()-shiftY;
-        double newLocalMaxY = localMaxY()-shiftY;
+        double newMinX = minX()-shiftX;
+        double newMaxX = maxX()-shiftX;
+        double newMinY = minY()-shiftY;
+        double newMaxY = maxY()-shiftY;
 
-        // Make sure that our new local minimum/maximum values for our axes
-        // are within our local minimum/maximum values
+        // Make sure that our new minimum/maximum values for our axes are within
+        // our  minimum/maximum values
 
-        if (newLocalMinX < MinAxis) {
-            newLocalMinX = MinAxis;
-            newLocalMaxX = newLocalMinX+localMaxX()-localMinX();
-        } else if (newLocalMaxX > MaxAxis) {
-            newLocalMaxX = MaxAxis;
-            newLocalMinX = newLocalMaxX-localMaxX()+localMinX();
+        if (newMinX < MinAxis) {
+            newMinX = MinAxis;
+            newMaxX = newMinX+maxX()-minX();
+        } else if (newMaxX > MaxAxis) {
+            newMaxX = MaxAxis;
+            newMinX = newMaxX-maxX()+minX();
         }
 
-        if (newLocalMinY < MinAxis) {
-            newLocalMinY = MinAxis;
-            newLocalMaxY = newLocalMinY+localMaxY()-localMinY();
-        } else if (newLocalMaxY > MaxAxis) {
-            newLocalMaxY = MaxAxis;
-            newLocalMinY = newLocalMaxY-localMaxY()+localMinY();
+        if (newMinY < MinAxis) {
+            newMinY = MinAxis;
+            newMaxY = newMinY+maxY()-minY();
+        } else if (newMaxY > MaxAxis) {
+            newMaxY = MaxAxis;
+            newMinY = newMaxY-maxY()+minY();
         }
 
-        // Set our new local minimum/maximum values for our local axes, which
-        // will replot ourselves as a result
+        // Set our new minimum/maximum values for our axes, which will replot
+        // ourselves as a result
 
-        setLocalAxes(newLocalMinX, newLocalMaxX, newLocalMinY, newLocalMaxY);
+        doSetAxes(newMinX, newMaxX, newMinY, newMaxY);
 
         break;
     }
@@ -1214,16 +1185,16 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
         // Rescale ourselves
         // Note: this will automatically replot ourselves...
 
-        scaleLocalAxes(deltaX?
-                           (deltaX > 0)?
-                               ScalingInFactor:
-                               ScalingOutFactor:
-                           NoScalingFactor,
-                       deltaY?
-                           (deltaY < 0)?
-                               ScalingInFactor:
-                               ScalingOutFactor:
-                           NoScalingFactor);
+        scaleAxes(deltaX?
+                      (deltaX > 0)?
+                          ScalingInFactor:
+                          ScalingOutFactor:
+                      NoScalingFactor,
+                  deltaY?
+                      (deltaY < 0)?
+                          ScalingInFactor:
+                          ScalingOutFactor:
+                      NoScalingFactor);
 
         break;
     }
@@ -1338,14 +1309,14 @@ void SingleCellViewGraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 
         resetAction();
 
-        // Effectively zoom our region, if possible, by updating our local axes
+        // Effectively zoom our region, if possible, by updating our axes
 
         QRectF zoomRegion = QRectF(canvasPoint(zoomRegionRect.topLeft(), false),
                                    canvasPoint(zoomRegionRect.topLeft()+QPoint(zoomRegionRect.width(), zoomRegionRect.height()), false));
 
         if (zoomRegion.width() && zoomRegion.height())
-            setLocalAxes(zoomRegion.left(), zoomRegion.left()+zoomRegion.width(),
-                         zoomRegion.top()+zoomRegion.height(), zoomRegion.top());
+            doSetAxes(zoomRegion.left(), zoomRegion.left()+zoomRegion.width(),
+                      zoomRegion.top()+zoomRegion.height(), zoomRegion.top());
 
         break;
     }
@@ -1400,13 +1371,13 @@ void SingleCellViewGraphPanelPlotWidget::wheelEvent(QWheelEvent *pEvent)
     if (pEvent->modifiers() != Qt::NoModifier)
         return;
 
-    // Zoom in/out by scaling our two local axes
+    // Zoom in/out by scaling our two axes
 
     double scalingFactor = (pEvent->delta() > 0)?ScalingInFactor:ScalingOutFactor;
 
     mPoint = pEvent->pos();
 
-    scaleLocalAxes(scalingFactor, scalingFactor);
+    scaleAxes(scalingFactor, scalingFactor);
 }
 
 //==============================================================================
@@ -1473,51 +1444,51 @@ void SingleCellViewGraphPanelPlotWidget::drawGraphSegment(SingleCellViewGraphPan
     if (pFrom == pTo)
         return;
 
-    // Reset our local axes and replot ourselves, if it is our first graph
-    // segment, or carry on as normal
+    // Reset our axes and replot ourselves, if it is our first graph segment, or
+    // carry on as normal
 
     if (!pFrom) {
-        // It is our first graph segment, so reset our local axes by trying to
-        // set them
+        // It is our first graph segment, so reset our axes by trying to set
+        // them
         // Note: we always want to replot, hence our first boolean being false
-        //       in our call to setLocalAxes()...
+        //       in our call to doSetAxes()...
 
-        setLocalAxes(0.0, 0.0, 0.0, 0.0, false, true, false, true);
+        doSetAxes(0.0, 0.0, 0.0, 0.0, false, true, false, true);
 
         replotNow();
     } else {
         // It's not our first graph segment, so determine the minimum/maximum
         // X/Y values of our new data
 
-        double xMin = 0.0;
-        double xMax = 0.0;
-        double yMin = 0.0;
-        double yMax = 0.0;
+        double newMinX = 0.0;
+        double newMaxX = 0.0;
+        double newMinY = 0.0;
+        double newMaxY = 0.0;
 
         for (qulonglong i = pFrom; i <= pTo; ++i)
             if (i == pFrom) {
-                xMin = xMax = pGraph->data()->sample(i).x();
-                yMin = yMax = pGraph->data()->sample(i).y();
+                newMinX = newMaxX = pGraph->data()->sample(i).x();
+                newMinY = newMaxY = pGraph->data()->sample(i).y();
             } else {
-                double xVal = pGraph->data()->sample(i).x();
-                double yVal = pGraph->data()->sample(i).y();
+                double valX = pGraph->data()->sample(i).x();
+                double valY = pGraph->data()->sample(i).y();
 
-                xMin = qMin(xMin, xVal);
-                xMax = qMax(xMax, xVal);
+                newMinX = qMin(newMinX, valX);
+                newMaxX = qMax(newMaxX, valX);
 
-                yMin = qMin(yMin, yVal);
-                yMax = qMax(yMax, yVal);
+                newMinY = qMin(newMinY, valY);
+                newMaxY = qMax(newMaxY, valY);
             }
 
         // Check whether our X/Y axis can handle the minimum/maximum X/Y values
         // of our new data
 
-        if (   (xMin < MinAxis) || (xMax > MaxAxis)
-            || (yMin < MinAxis) || (yMax > MaxAxis))
+        if (   (newMinX < MinAxis) || (newMaxX > MaxAxis)
+            || (newMinY < MinAxis) || (newMaxY > MaxAxis))
             // Our X/Y axis cannot handle the minimum/maximum X/Y values of our
-            // new data, so check our local axes
+            // new data, so check our axes by trying to set them
 
-            checkLocalAxes(true, true, true);
+            doSetAxes(minX(), maxX(), minY(), maxY(), true, true, true);
         else
             // Our X/Y axis can handle the X/Y min/max of our new data, so just
             // draw our new graph segment
@@ -1539,36 +1510,36 @@ void SingleCellViewGraphPanelPlotWidget::on_actionCopy_triggered()
 
 void SingleCellViewGraphPanelPlotWidget::on_actionZoomIn_triggered()
 {
-    // Zoom in by scaling our two local axes
+    // Zoom in by scaling our two axes
 
     mPoint = mapFromGlobal(QCursor::pos());
 
-    scaleLocalAxes(BigScalingInFactor, BigScalingInFactor);
+    scaleAxes(BigScalingInFactor, BigScalingInFactor);
 }
 
 //==============================================================================
 
 void SingleCellViewGraphPanelPlotWidget::on_actionZoomOut_triggered()
 {
-    // Zoom out by scaling our two local axes
+    // Zoom out by scaling our two axes
 
     mPoint = mapFromGlobal(QCursor::pos());
 
-    scaleLocalAxes(BigScalingOutFactor, BigScalingOutFactor);
+    scaleAxes(BigScalingOutFactor, BigScalingOutFactor);
 }
 
 //==============================================================================
 
 void SingleCellViewGraphPanelPlotWidget::on_actionResetZoom_triggered()
 {
-    // Reset the zoom level by resetting our local axes, but only if the reset
-    // zoom action is enabled
+    // Reset the zoom level by resetting our axes, but only if the reset zoom
+    // action is enabled
     // Note: we check for the reset zoom action to be enabled since we may call
     //       this method directly...
 
     if (mGui->actionResetZoom->isEnabled())
-        setLocalAxes(0.0, 1000.0, 0.0, 1000.0);
-//---GRY--- WE SHOULD 'PROPERLY' SET THE LOCAL AXES...
+        doSetAxes(0.0, 1000.0, 0.0, 1000.0);
+//---GRY--- WE SHOULD 'PROPERLY' SET THE AXES...
 }
 
 //==============================================================================
