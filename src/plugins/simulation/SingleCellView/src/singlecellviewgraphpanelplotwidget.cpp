@@ -371,17 +371,17 @@ void SingleCellViewGraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPaint
 
     switch (pLocation) {
     case TopLeft:
-        coordinatesRect.moveTo(pPoint.x()-(coordinatesRect.left()+coordinatesRect.width())-1,
-                               pPoint.y()-(coordinatesRect.top()+coordinatesRect.height())-1);
+        coordinatesRect.moveTo(pPoint.x()-coordinatesRect.width()-1,
+                               pPoint.y()-coordinatesRect.height()-1);
 
         break;
     case TopRight:
         coordinatesRect.moveTo(pPoint.x()+2,
-                               pPoint.y()-(coordinatesRect.top()+coordinatesRect.height())-1);
+                               pPoint.y()-coordinatesRect.height()-1);
 
         break;
     case BottomLeft:
-        coordinatesRect.moveTo(pPoint.x()-(coordinatesRect.left()+coordinatesRect.width())-1,
+        coordinatesRect.moveTo(pPoint.x()-coordinatesRect.width()-1,
                                pPoint.y()+2);
 
         break;
