@@ -506,8 +506,8 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
 
     // Set our axes' minimum/maximum values
 
-    setMinMaxX(DefMinAxis, DefMaxAxis);
-    setMinMaxY(DefMinAxis, DefMaxAxis);
+    doSetAxis(QwtPlot::xBottom, DefMinAxis, DefMaxAxis);
+    doSetAxis(QwtPlot::yLeft, DefMinAxis, DefMaxAxis);
 
     // Attach a grid to ourselves
 
@@ -632,44 +632,35 @@ void SingleCellViewGraphPanelPlotWidget::updateActions()
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::doSetAxis(const int &pAxis,
-                                                   const double &pMin,
-                                                   const double &pMax)
-{
-    // Set our axis
-    // Note #1: to use setAxisScale() on its own is not sufficient unless we
-    //          were to replot ourselves immediately after, but we don't want to
-    //          do that, so instead we also use setAxisScaleDiv() to make sure
-    //          that our axis is indeed taken into account (i.e. we can retrieve
-    //          them using minX(), maxX(), minY() and maxY()). Also, we must
-    //          call setAxisScaleDiv() before setAxisScale() to make sure that
-    //          the axis data is not considered as valid which is important when
-    //          it comes to plotting ourselves...
-    // Note #2: the way QwtPlot create ticks for an axis means that it cannot
-    //          handle an axis that would go from -DBL_MAX to DBL_MAX, even
-    //          though it would be a valid axis, so we check that the axis fits
-    //          within what we know works fine with QwtPlot...
-
-    setAxisScaleDiv(pAxis, QwtScaleDiv(qMax(-DblMaxAxis, pMin),
-                                       qMin( DblMaxAxis, pMax)));
-    setAxisScale(pAxis, qMax(-DblMaxAxis, pMin),
-                        qMin( DblMaxAxis, pMax));
-
-    // Make sure that our actions are up-to-date
-
-    updateActions();
-}
-
-//==============================================================================
-
 void SingleCellViewGraphPanelPlotWidget::checkAxisValues(double &pMin,
                                                          double &pMax)
 {
+    // Make sure that the minimum/maximum values of our axis have finite values
+
+    if (!qIsFinite(pMin))
+        pMin = MinAxis;
+
+    if (!qIsFinite(pMax))
+        pMax = MaxAxis;
+
     // Make sure that the minimum/maximum values of our axis are valid
 
     double range = pMax-pMin;
 
-    if (pMin < MinAxis) {
+    if (range > MaxAxisRange) {
+        // The range is too big, so reset our minimum/maximum values
+
+        pMin = MinAxis;
+        pMax = MaxAxis;
+    } else if (range < MinAxisRange) {
+        // The range is too small, so reset our minimum/maximum values
+
+        pMin = qMax(MinAxis, 0.5*(pMin+pMax-MinAxisRange));
+        pMax = qMin(MaxAxis, pMin+MinAxisRange);
+        pMin = pMax-MinAxisRange;
+        // Note: the last statement is in case pMax was set to MaxAxis, in which
+        //       case pMin would have to be re-reset...
+    } else if (pMin < MinAxis) {
         // The minimum value is too small, so reset it
 
         pMin = MinAxis;
@@ -680,21 +671,42 @@ void SingleCellViewGraphPanelPlotWidget::checkAxisValues(double &pMin,
         pMax = MaxAxis;
         pMin = pMax-range;
     }
+}
 
-    if (range > MaxAxisRange) {
-        // The range is too big, so reset our minimum/maximum values
+//==============================================================================
 
-        pMin = MinAxis;
-        pMax = MaxAxis;
-    } else if (range < MinAxisRange) {
-        // The range is too small, reset our minimum/maximum values
+void SingleCellViewGraphPanelPlotWidget::checkAxesValues(double &pMinX,
+                                                         double &pMaxX,
+                                                         double &pMinY,
+                                                         double &pMaxY)
+{
+    // Make sure that the minimum/maximum values of our axes are fine
 
-        pMin = qMax(MinAxis, 0.5*(pMin+pMax-range));
-        pMax = qMin(MaxAxis, pMin+range);
-        pMin = pMax-range;
-        // Note: the last statement is in case pMax has been set to MaxAxis, in
-        //       which case we need to re-reset pMin...
-    }
+    checkAxisValues(pMinX, pMaxX);
+    checkAxisValues(pMinY, pMaxY);
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelPlotWidget::doSetAxis(const int &pAxis,
+                                                   double pMin, double pMax)
+{
+    // Set our axis
+    // Note: to use setAxisScale() on its own is not sufficient unless we were
+    //       to replot ourselves immediately after, but we don't want to do
+    //       that, so instead we also use setAxisScaleDiv() to make sure that
+    //       our axis is indeed taken into account (i.e. we can retrieve them
+    //       using minX(), maxX(), minY() and maxY()). Also, we must call
+    //       setAxisScaleDiv() before setAxisScale() to make sure that the axis
+    //       data is not considered as valid, which is important when it comes
+    //       to plotting ourselves...
+
+    setAxisScaleDiv(pAxis, QwtScaleDiv(pMin, pMax));
+    setAxisScale(pAxis, pMin, pMax);
+
+    // Make sure that our actions are up-to-date
+
+    updateActions();
 }
 
 //==============================================================================
@@ -737,17 +749,6 @@ double SingleCellViewGraphPanelPlotWidget::maxX() const
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::setMinMaxX(double pMinX, double pMaxX)
-{
-    // Set our minimum X value
-
-    checkAxisValues(pMinX, pMaxX);
-
-    doSetAxis(QwtPlot::xBottom, pMinX, pMaxX);
-}
-
-//==============================================================================
-
 double SingleCellViewGraphPanelPlotWidget::minY() const
 {
     // Return our minimum Y value
@@ -763,17 +764,6 @@ double SingleCellViewGraphPanelPlotWidget::maxY() const
 
     return axisScaleDiv(QwtPlot::yLeft).upperBound();
 
-}
-
-//==============================================================================
-
-void SingleCellViewGraphPanelPlotWidget::setMinMaxY(double pMinY, double pMaxY)
-{
-    // Set our minimum Y value
-
-    checkAxisValues(pMinY, pMaxY);
-
-    doSetAxis(QwtPlot::yLeft, pMinY, pMaxY);
 }
 
 //==============================================================================
@@ -823,28 +813,6 @@ QList<SingleCellViewGraphPanelPlotGraph *> SingleCellViewGraphPanelPlotWidget::g
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::checkAxesValues(double &pMinX,
-                                                         double &pMaxX,
-                                                         double &pMinY,
-                                                         double &pMaxY)
-{
-    // Make sure that the minimum/maximum values of our axes have finite values
-
-    if (!qIsFinite(pMinX))
-        pMinX = -DBL_MAX;
-
-    if (!qIsFinite(pMaxX))
-        pMaxX = DBL_MAX;
-
-    if (!qIsFinite(pMinY))
-        pMinY = -DBL_MAX;
-
-    if (!qIsFinite(pMaxY))
-        pMaxY = DBL_MAX;
-}
-
-//==============================================================================
-
 void SingleCellViewGraphPanelPlotWidget::doSetAxes(double pMinX, double pMaxX,
                                                    double pMinY,double pMaxY,
                                                    const bool &pCanReplot,
@@ -852,7 +820,7 @@ void SingleCellViewGraphPanelPlotWidget::doSetAxes(double pMinX, double pMaxX,
                                                    const bool &pUpdateMinMaxValues,
                                                    const bool &pResetMinMaxValues)
 {
-    // Keep of our old axes' values
+    // Keep track of our the minimum/maximum values of our axes
 
     double oldMinX = minX();
     double oldMaxX = maxX();
@@ -912,8 +880,7 @@ void SingleCellViewGraphPanelPlotWidget::doSetAxes(double pMinX, double pMaxX,
         double minY = boundingRect.top();
         double maxY = minY+boundingRect.height();
 
-        // Make sure that the minimum/maximum values of our axes have finite
-        // values
+        // Make sure that the minimum/maximum values of our axes are fine
 
         checkAxesValues(minX, maxX, minY, maxY);
 
@@ -921,18 +888,7 @@ void SingleCellViewGraphPanelPlotWidget::doSetAxes(double pMinX, double pMaxX,
         // down/up, respectively
 
         uint baseX = axisScaleEngine(QwtPlot::xBottom)->base();
-        double intervalX = maxX-minX;
-        double realMinX = minX;
-        double realMaxX = maxX;
-
-        if (!intervalX) {
-            intervalX = pow(10.0, qFloor(log10(qAbs(minX))));
-
-            realMinX = minX-0.5*intervalX;
-            realMaxX = realMinX+intervalX;
-        }
-
-        double majorStepX = QwtScaleArithmetic::divideInterval(intervalX,
+        double majorStepX = QwtScaleArithmetic::divideInterval(maxX-minX,
                                                                axisMaxMajor(QwtPlot::xBottom),
                                                                baseX);
         double minorStepX = QwtScaleArithmetic::divideInterval(majorStepX,
@@ -940,31 +896,20 @@ void SingleCellViewGraphPanelPlotWidget::doSetAxes(double pMinX, double pMaxX,
                                                                baseX);
 
         uint baseY = axisScaleEngine(QwtPlot::yLeft)->base();
-        double intervalY = maxY-minY;
-        double realMinY = minY;
-        double realMaxY = maxY;
-
-        if (!intervalY) {
-            intervalY = pow(10.0, qFloor(log10(qAbs(minY))));
-
-            realMinY = minY-0.5*intervalY;
-            realMaxY = realMinY+intervalY;
-        }
-
-        double majorStepY = QwtScaleArithmetic::divideInterval(intervalY,
+        double majorStepY = QwtScaleArithmetic::divideInterval(maxY-minY,
                                                                axisMaxMajor(QwtPlot::yLeft),
                                                                baseY);
         double minorStepY = QwtScaleArithmetic::divideInterval(majorStepY,
                                                                axisMaxMinor(QwtPlot::yLeft),
                                                                baseY);
 
-        minX = (needMinMaxX && (minX == mNeedMinX))?mNeedMinX:qFloor(realMinX/minorStepX)*minorStepX;
-        maxX = (needMinMaxX && (maxX == mNeedMaxX))?mNeedMaxX:qCeil(realMaxX/minorStepX)*minorStepX;
-        minY = (needMinMaxY && (minY == mNeedMinY))?mNeedMinY:qFloor(realMinY/minorStepY)*minorStepY;
-        maxY = (needMinMaxY && (maxY == mNeedMaxY))?mNeedMaxY:qCeil(realMaxY/minorStepY)*minorStepY;
+        minX = (needMinMaxX && (minX == mNeedMinX))?mNeedMinX:qFloor(minX/minorStepX)*minorStepX;
+        maxX = (needMinMaxX && (maxX == mNeedMaxX))?mNeedMaxX:qCeil(maxX/minorStepX)*minorStepX;
+        minY = (needMinMaxY && (minY == mNeedMinY))?mNeedMinY:qFloor(minY/minorStepY)*minorStepY;
+        maxY = (needMinMaxY && (maxY == mNeedMaxY))?mNeedMaxY:qCeil(maxY/minorStepY)*minorStepY;
 
-        // Make sure that the optimised minimum/maximum values of our axes have
-        // finite values
+        // Make sure that the optimised minimum/maximum values of our axes are
+        // fine
 
         checkAxesValues(minX, maxX, minY, maxY);
 
@@ -1002,30 +947,20 @@ void SingleCellViewGraphPanelPlotWidget::doSetAxes(double pMinX, double pMaxX,
         pMaxY = qMin(pMaxY, realMaxY);
     }
 
-    // Make sure that the new minimum/maximum values of our axes have finite
-    // values
-
-    checkAxesValues(pMinX, pMaxX, pMinY, pMaxY);
-
-    // Update the minimum/maximum values of our axes, if needed, or make sure
-    // that the new minimum/maximum values of our axes have a valid zoom factor
+    // Update the minimum/maximum values of our axes, if needed
 
     bool needReplot = false;
 
     if ((pMinX != oldMinX) || (pMaxX != oldMaxX)) {
-        setMinMaxX(pMinX, pMaxX);
+        doSetAxis(QwtPlot::xBottom, pMinX, pMaxX);
 
         needReplot = true;
-    } else {
-        checkAxisValues(pMinX, pMaxX);
     }
 
     if ((pMinY != oldMinY) || (pMaxY != oldMaxY)) {
-        setMinMaxY(pMinY, pMaxY);
+        doSetAxis(QwtPlot::yLeft, pMinY, pMaxY);
 
         needReplot = true;
-    } else {
-        checkAxisValues(pMinY, pMaxY);
     }
 
     // Replot ourselves, if needed and allowed

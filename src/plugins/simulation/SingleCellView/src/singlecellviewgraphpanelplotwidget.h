@@ -198,7 +198,6 @@ private:
 
     double mNeedMinX;
     double mNeedMaxX;
-
     double mNeedMinY;
     double mNeedMaxY;
 
@@ -206,7 +205,6 @@ private:
 
     bool mCanZoomInX;
     bool mCanZoomOutX;
-
     bool mCanZoomInY;
     bool mCanZoomOutY;
 
@@ -216,7 +214,6 @@ private:
     void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
 
     void checkAxisValues(double &pMin, double &pMax);
-
     void checkAxesValues(double &pMinX, double &pMaxX,
                          double &pMinY, double &pMaxY);
 
@@ -228,21 +225,15 @@ private:
 
     double minX() const;
     double maxX() const;
-
-    void setMinMaxX(double pMinX, double pMaxX);
-
     double minY() const;
     double maxY() const;
 
-    void setMinMaxY(double pMinY, double pMaxY);
-
     bool canZoomInX() const;
     bool canZoomOutX() const;
-
     bool canZoomInY() const;
     bool canZoomOutY() const;
 
-    void doSetAxis(const int &pAxis, const double &pMin, const double &pMax);
+    void doSetAxis(const int &pAxis, double pMin, double pMax);
     void doSetAxes(double pMinX, double pMaxX, double pMinY, double pMaxY,
                    const bool &pCanReplot = true,
                    const bool &pForceMinMaxValues = false,
