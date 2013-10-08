@@ -468,6 +468,7 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
     mGui(new Ui::SingleCellViewGraphPanelPlotWidget),
     mGraphs(QList<SingleCellViewGraphPanelPlotGraph *>()),
     mMouseAction(None),
+    mOriginPoint(QPoint()),
     mPoint(QPoint()),
     mWantedMinX(0.0),
     mWantedMaxX(0.0),
@@ -845,13 +846,12 @@ bool SingleCellViewGraphPanelPlotWidget::doSetAxes(const SettingAction &pSetting
     double oldMinY = minY();
     double oldMaxY = maxY();
 
-    // Make sure that the given axes' values are fine
+    // Make sure that the given axes' values are fine, if we want to set them,
+    // or merge/reset our axes' values
 
-    checkAxesValues(pMinX, pMaxX, pMinY, pMaxY);
-
-    // Merge/reset our axes' values, if needed
-
-    if (pSettingAction != Set) {
+    if (pSettingAction == Set) {
+        checkAxesValues(pMinX, pMaxX, pMinY, pMaxY);
+    } else {
         // Retrieve the bounding rectangle for all our graphs (but only for
         // those that actually have some data), if needed
 
@@ -978,25 +978,30 @@ bool SingleCellViewGraphPanelPlotWidget::doSetAxes(const SettingAction &pSetting
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::scaleAxes(const double &pScalingFactorX,
+void SingleCellViewGraphPanelPlotWidget::scaleAxes(const QPoint &pPoint,
+                                                   const double &pScalingFactorX,
                                                    const double &pScalingFactorY)
 {
     // Rescale our X axis, but only if zooming in/out is possible on that axis
 
     bool needRescaling = false;
 
-    QPointF originPoint = canvasPoint(mPoint);
+    QPointF originPoint = canvasPoint(pPoint);
 
     double newMinX = minX();
     double newMaxX = maxX();
 
     if (   ((pScalingFactorX < 1.0) && mCanZoomInX)
         || ((pScalingFactorX > 1.0) && mCanZoomOutX)) {
-        double range = pScalingFactorX*(newMaxX-newMinX);
+        double oldMinX = minX();
+        double oldRange = maxX()-oldMinX;
+        double newRange = pScalingFactorX*oldRange;
+        double factor = (originPoint.x()-oldMinX)/oldRange;
+        // Note: we make sure that the factor is within the [0; 1] range...
 
-        newMinX = qMax(MinAxis, originPoint.x()-0.5*range);
-        newMaxX = qMin(MaxAxis, newMinX+range);
-        newMinX = newMaxX-range;
+        newMinX = qMax(MinAxis, originPoint.x()-factor*newRange);
+        newMaxX = qMin(MaxAxis, newMinX+newRange);
+        newMinX = newMaxX-newRange;
         // Note: the last statement is in case newMaxX has been set to mMaxX, in
         //       which case we need to update newMinX...
 
@@ -1010,11 +1015,15 @@ void SingleCellViewGraphPanelPlotWidget::scaleAxes(const double &pScalingFactorX
 
     if (   ((pScalingFactorY < 1.0) && mCanZoomInY)
         || ((pScalingFactorY > 1.0) && mCanZoomOutY)) {
-        double range = pScalingFactorY*(newMaxY-newMinY);
+        double oldMinY = minY();
+        double oldRange = maxY()-oldMinY;
+        double newRange = pScalingFactorY*(oldRange);
+        double factor = (originPoint.y()-oldMinY)/oldRange;
+        // Note: we make sure that the factor is within the [0; 1] range...
 
-        newMinY = qMax(MinAxis, originPoint.y()-0.5*range);
-        newMaxY = qMin(MaxAxis, newMinY+range);
-        newMinY = newMaxY-range;
+        newMinY = qMax(MinAxis, originPoint.y()-factor*newRange);
+        newMaxY = qMin(MaxAxis, newMinY+newRange);
+        newMinY = newMaxY-newRange;
         // Note: the last statement is in case newMaxY has been set to mMaxY, in
         //       which case we need to update newMinY...
 
@@ -1100,7 +1109,8 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
         // Rescale ourselves
         // Note: this will automatically replot ourselves...
 
-        scaleAxes(deltaX?
+        scaleAxes(mOriginPoint,
+                  deltaX?
                       (deltaX > 0)?
                           ScalingInFactor:
                           ScalingOutFactor:
@@ -1177,6 +1187,7 @@ void SingleCellViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
 
         mMouseAction = Zoom;
 
+        mOriginPoint = pEvent->pos();
         mPoint = pEvent->pos();
     } else if (   (pEvent->button() == Qt::RightButton)
                && (pEvent->modifiers() == Qt::ControlModifier)) {
@@ -1242,8 +1253,11 @@ void SingleCellViewGraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 
     // Show our context menu, if still needed
 
-    if (mNeedContextMenu)
+    if (mNeedContextMenu) {
+        mOriginPoint = mapFromGlobal(QCursor::pos());
+
         mContextMenu->exec(QCursor::pos());
+    }
 }
 
 //==============================================================================
@@ -1267,7 +1281,7 @@ void SingleCellViewGraphPanelPlotWidget::wheelEvent(QWheelEvent *pEvent)
 
     QwtPlot::wheelEvent(pEvent);
 
-    // Check whether we are already carrying out a mouse action
+    // Make sure that we are not already carrying out a mouse action
 
     if (mMouseAction != None)
         return;
@@ -1288,9 +1302,7 @@ void SingleCellViewGraphPanelPlotWidget::wheelEvent(QWheelEvent *pEvent)
 
     double scalingFactor = (pEvent->delta() > 0)?ScalingInFactor:ScalingOutFactor;
 
-    mPoint = pEvent->pos();
-
-    scaleAxes(scalingFactor, scalingFactor);
+    scaleAxes(pEvent->pos(), scalingFactor, scalingFactor);
 }
 
 //==============================================================================
@@ -1420,22 +1432,20 @@ void SingleCellViewGraphPanelPlotWidget::on_actionCopy_triggered()
 
 void SingleCellViewGraphPanelPlotWidget::on_actionZoomIn_triggered()
 {
-    // Zoom in by scaling our two axes
+    // Zoom in by scaling our two axes around the point where the context menu
+    // was shown
 
-    mPoint = mapFromGlobal(QCursor::pos());
-
-    scaleAxes(BigScalingInFactor, BigScalingInFactor);
+    scaleAxes(mOriginPoint, BigScalingInFactor, BigScalingInFactor);
 }
 
 //==============================================================================
 
 void SingleCellViewGraphPanelPlotWidget::on_actionZoomOut_triggered()
 {
-    // Zoom out by scaling our two axes
+    // Zoom out by scaling our two axes around the point where the context menu
+    // was shown
 
-    mPoint = mapFromGlobal(QCursor::pos());
-
-    scaleAxes(BigScalingOutFactor, BigScalingOutFactor);
+    scaleAxes(mOriginPoint, BigScalingOutFactor, BigScalingOutFactor);
 }
 
 //==============================================================================

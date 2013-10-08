@@ -200,6 +200,7 @@ private:
 
     MouseAction mMouseAction;
 
+    QPoint mOriginPoint;
     QPoint mPoint;
 
     double mWantedMinX;
@@ -246,7 +247,8 @@ private:
                    double pMinX = 0, double pMaxX = 0,
                    double pMinY = 0, double pMaxY = 0);
 
-    void scaleAxes(const double &pScalingFactorX,
+    void scaleAxes(const QPoint &pPoint,
+                   const double &pScalingFactorX,
                    const double &pScalingFactorY);
 
     QPointF canvasPoint(const QPoint &pPoint,
