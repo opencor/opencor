@@ -992,7 +992,10 @@ bool SingleCellViewGraphPanelPlotWidget::scaleAxis(const double &pScalingFactor,
         double oldRange = pMax-pMin;
         double newRange = pScalingFactor*oldRange;
         double factor = qMin(1.0, qMax(0.0, (pOriginPoint-pMin)/oldRange));
-        // Note: we make sure that the factor is within the [0; 1] range...
+        // Note: QwtPlot puts some extra space around the area we want to show,
+        //       which means that we could end up with a factor which is either
+        //       smaller than zero or bigger than one, hence we have to make
+        //       sure that it is clamped within the [0; 1] range...
 
         pMin = qMax(MinAxis, pOriginPoint-factor*newRange);
         pMax = qMin(MaxAxis, pMin+newRange);
