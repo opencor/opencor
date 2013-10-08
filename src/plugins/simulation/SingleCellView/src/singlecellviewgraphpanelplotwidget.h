@@ -233,6 +233,8 @@ private:
     bool canZoomInY() const;
     bool canZoomOutY() const;
 
+    void optimiseAxisValues(const int &pAxisId, double &pMin, double &pMax);
+
     void doSetAxis(const int &pAxis, double pMin, double pMax);
     void doSetAxes(double pMinX, double pMaxX, double pMinY, double pMaxY,
                    const bool &pCanReplot = true,

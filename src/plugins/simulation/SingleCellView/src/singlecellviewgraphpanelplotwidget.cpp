@@ -688,29 +688,6 @@ void SingleCellViewGraphPanelPlotWidget::checkAxesValues(double &pMinX,
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::doSetAxis(const int &pAxis,
-                                                   double pMin, double pMax)
-{
-    // Set our axis
-    // Note: to use setAxisScale() on its own is not sufficient unless we were
-    //       to replot ourselves immediately after, but we don't want to do
-    //       that, so instead we also use setAxisScaleDiv() to make sure that
-    //       our axis is indeed taken into account (i.e. we can retrieve them
-    //       using minX(), maxX(), minY() and maxY()). Also, we must call
-    //       setAxisScaleDiv() before setAxisScale() to make sure that the axis
-    //       data is not considered as valid, which is important when it comes
-    //       to plotting ourselves...
-
-    setAxisScaleDiv(pAxis, QwtScaleDiv(pMin, pMax));
-    setAxisScale(pAxis, pMin, pMax);
-
-    // Make sure that our actions are up-to-date
-
-    updateActions();
-}
-
-//==============================================================================
-
 SingleCellViewGraphPanelPlotWidget::Action SingleCellViewGraphPanelPlotWidget::action() const
 {
     // Return our action
@@ -813,6 +790,50 @@ QList<SingleCellViewGraphPanelPlotGraph *> SingleCellViewGraphPanelPlotWidget::g
 
 //==============================================================================
 
+void SingleCellViewGraphPanelPlotWidget::optimiseAxisValues(const int &pAxisId,
+                                                            double &pMin,
+                                                            double &pMax)
+{
+    // Optimise the axis' values so that they fall onto a factor of the axis'
+    // minor step
+
+    uint base = axisScaleEngine(pAxisId)->base();
+    double majorStep = QwtScaleArithmetic::divideInterval(pMax-pMin,
+                                                          axisMaxMajor(pAxisId),
+                                                          base);
+    double minorStep = QwtScaleArithmetic::divideInterval(majorStep,
+                                                          axisMaxMinor(pAxisId),
+                                                          base);
+
+    pMin = qFloor(pMin/minorStep)*minorStep;
+    pMax = qCeil(pMax/minorStep)*minorStep;
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelPlotWidget::doSetAxis(const int &pAxis,
+                                                   double pMin, double pMax)
+{
+    // Set our axis
+    // Note: to use setAxisScale() on its own is not sufficient unless we were
+    //       to replot ourselves immediately after, but we don't want to do
+    //       that, so instead we also use setAxisScaleDiv() to make sure that
+    //       our axis is indeed taken into account (i.e. we can retrieve them
+    //       using minX(), maxX(), minY() and maxY()). Also, we must call
+    //       setAxisScaleDiv() before setAxisScale() to make sure that the axis
+    //       data is not considered as valid, which is important when it comes
+    //       to plotting ourselves...
+
+    setAxisScaleDiv(pAxis, QwtScaleDiv(pMin, pMax));
+    setAxisScale(pAxis, pMin, pMax);
+
+    // Make sure that our actions are up-to-date
+
+    updateActions();
+}
+
+//==============================================================================
+
 void SingleCellViewGraphPanelPlotWidget::doSetAxes(double pMinX, double pMaxX,
                                                    double pMinY,double pMaxY,
                                                    const bool &pCanReplot,
@@ -863,7 +884,7 @@ void SingleCellViewGraphPanelPlotWidget::doSetAxes(double pMinX, double pMaxX,
         boundingRect.setHeight(DefMaxAxis-DefMinAxis);
     }
 
-    // Update our axes' values, should we have retrieved a valid bounding
+    // Update our axes' values, should we have retrieved a non-null bounding
     // rectangle
 
     double realMinX = DefMinAxis;
@@ -871,7 +892,7 @@ void SingleCellViewGraphPanelPlotWidget::doSetAxes(double pMinX, double pMaxX,
     double realMinY = DefMinAxis;
     double realMaxY = DefMaxAxis;
 
-    if (boundingRect.isValid()) {
+    if (!boundingRect.isNull()) {
         // Optimise our bounding rectangle by first retrieving our axes' values
 
         double minX = boundingRect.left();
@@ -883,32 +904,19 @@ void SingleCellViewGraphPanelPlotWidget::doSetAxes(double pMinX, double pMaxX,
 
         checkAxesValues(minX, maxX, minY, maxY);
 
-        // Optimise our axes' values by rounding them down/up
+        // Optimise our axes' values by rounding them down/up, if needed
 
-        uint baseX = axisScaleEngine(QwtPlot::xBottom)->base();
-        double majorStepX = QwtScaleArithmetic::divideInterval(maxX-minX,
-                                                               axisMaxMajor(QwtPlot::xBottom),
-                                                               baseX);
-        double minorStepX = QwtScaleArithmetic::divideInterval(majorStepX,
-                                                               axisMaxMinor(QwtPlot::xBottom),
-                                                               baseX);
+        if (!needMinMaxX || !needMinMaxY) {
+            if (!needMinMaxX)
+                optimiseAxisValues(QwtPlot::xBottom, minX, maxX);
 
-        uint baseY = axisScaleEngine(QwtPlot::yLeft)->base();
-        double majorStepY = QwtScaleArithmetic::divideInterval(maxY-minY,
-                                                               axisMaxMajor(QwtPlot::yLeft),
-                                                               baseY);
-        double minorStepY = QwtScaleArithmetic::divideInterval(majorStepY,
-                                                               axisMaxMinor(QwtPlot::yLeft),
-                                                               baseY);
+            if (!needMinMaxY)
+                optimiseAxisValues(QwtPlot::yLeft, minY, maxY);
 
-        minX = (needMinMaxX && (minX == mNeedMinX))?mNeedMinX:qFloor(minX/minorStepX)*minorStepX;
-        maxX = (needMinMaxX && (maxX == mNeedMaxX))?mNeedMaxX:qCeil(maxX/minorStepX)*minorStepX;
-        minY = (needMinMaxY && (minY == mNeedMinY))?mNeedMinY:qFloor(minY/minorStepY)*minorStepY;
-        maxY = (needMinMaxY && (maxY == mNeedMaxY))?mNeedMaxY:qCeil(maxY/minorStepY)*minorStepY;
+            // Make sure that our axes' optimised values are fine
 
-        // Make sure that our axes' optimised values are fine
-
-        checkAxesValues(minX, maxX, minY, maxY);
+            checkAxesValues(minX, maxX, minY, maxY);
+        }
 
         // Update our axes' values, if needed
 
