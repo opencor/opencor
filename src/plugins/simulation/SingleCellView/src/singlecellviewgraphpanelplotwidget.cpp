@@ -469,10 +469,10 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
     mGraphs(QList<SingleCellViewGraphPanelPlotGraph *>()),
     mMouseAction(None),
     mPoint(QPoint()),
-    mNeedMinX(0.0),
-    mNeedMaxX(0.0),
-    mNeedMinY(0.0),
-    mNeedMaxY(0.0),
+    mWantedMinX(0.0),
+    mWantedMaxX(0.0),
+    mWantedMinY(0.0),
+    mWantedMaxY(0.0),
     mCanZoomInX(true),
     mCanZoomOutX(true),
     mCanZoomInY(true),
@@ -588,19 +588,19 @@ void SingleCellViewGraphPanelPlotWidget::handleMouseDoubleClickEvent(QMouseEvent
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::setAxes(const double &pMinX,
-                                                 const double &pMaxX,
-                                                 const double &pMinY,
-                                                 const double &pMaxY)
+void SingleCellViewGraphPanelPlotWidget::setWantedAxes(const double &pWantedMinX,
+                                                       const double &pWantedMaxX,
+                                                       const double &pWantedMinY,
+                                                       const double &pWantedMaxY)
 {
-    // Set our axes' needed values
+    // Set our axes' wanted values
 
-    mNeedMinX = pMinX;
-    mNeedMaxX = pMaxX;
-    mNeedMinY = pMinY;
-    mNeedMaxY = pMaxY;
+    mWantedMinX = pWantedMinX;
+    mWantedMaxX = pWantedMaxX;
+    mWantedMinY = pWantedMinY;
+    mWantedMaxY = pWantedMaxY;
 
-    // Effectively update our axes by trying to set them
+    // Effectively update our axes by resetting them
 
     doSetAxes(Reset);
 }
@@ -856,10 +856,10 @@ bool SingleCellViewGraphPanelPlotWidget::doSetAxes(const SettingAction &pSetting
         // those that actually have some data), if needed
 
         QRectF boundingRect = QRectF();
-        bool needMinMaxX = mNeedMinX != mNeedMaxX;
-        bool needMinMaxY = mNeedMinY != mNeedMaxY;
+        bool wantMinMaxX = mWantedMinX != mWantedMaxX;
+        bool wantMinMaxY = mWantedMinY != mWantedMaxY;
 
-        if (!needMinMaxX || !needMinMaxY)
+        if (!wantMinMaxX || !wantMinMaxY)
             foreach (SingleCellViewGraphPanelPlotGraph *graph, mGraphs)
                 if (graph->isValid() && graph->isSelected() && graph->dataSize())
                     boundingRect |= graph->boundingRect();
@@ -867,26 +867,26 @@ bool SingleCellViewGraphPanelPlotWidget::doSetAxes(const SettingAction &pSetting
         // Take into account our axes' needed values, if any, or use our default
         // axes' values, if our bounding rectangle has no width/height
 
-        if (needMinMaxX) {
+        if (wantMinMaxX) {
             if (boundingRect.width()) {
-                boundingRect.setLeft(qMin(boundingRect.left(), mNeedMinX));
-                boundingRect.setWidth(qMax(boundingRect.width(), mNeedMaxX-mNeedMinX));
+                boundingRect.setLeft(qMin(boundingRect.left(), mWantedMinX));
+                boundingRect.setWidth(qMax(boundingRect.width(), mWantedMaxX-mWantedMinX));
             } else {
-                boundingRect.setLeft(mNeedMinX);
-                boundingRect.setWidth(mNeedMaxX-mNeedMinX);
+                boundingRect.setLeft(mWantedMinX);
+                boundingRect.setWidth(mWantedMaxX-mWantedMinX);
             }
         } else if (!boundingRect.width()) {
             boundingRect.setLeft(DefMinAxis);
             boundingRect.setWidth(DefMaxAxis-DefMinAxis);
         }
 
-        if (needMinMaxY) {
+        if (wantMinMaxY) {
             if (boundingRect.height()) {
-                boundingRect.setTop(qMin(boundingRect.top(), mNeedMinY));
-                boundingRect.setHeight(qMax(boundingRect.height(), mNeedMaxY-mNeedMinY));
+                boundingRect.setTop(qMin(boundingRect.top(), mWantedMinY));
+                boundingRect.setHeight(qMax(boundingRect.height(), mWantedMaxY-mWantedMinY));
             } else {
-                boundingRect.setTop(mNeedMinY);
-                boundingRect.setHeight(mNeedMaxY-mNeedMinY);
+                boundingRect.setTop(mWantedMinY);
+                boundingRect.setHeight(mWantedMaxY-mWantedMinY);
             }
         } else if (!boundingRect.height()) {
             boundingRect.setTop(DefMinAxis);
@@ -914,11 +914,11 @@ bool SingleCellViewGraphPanelPlotWidget::doSetAxes(const SettingAction &pSetting
             // Optimise our axes' values by rounding them down/up, if needed,
             // and make sure that they are fine
 
-            if (!needMinMaxX || !needMinMaxY) {
-                if (!needMinMaxX)
+            if (!wantMinMaxX || !wantMinMaxY) {
+                if (!wantMinMaxX)
                     optimiseAxisValues(QwtPlot::xBottom, minX, maxX);
 
-                if (!needMinMaxY)
+                if (!wantMinMaxY)
                     optimiseAxisValues(QwtPlot::yLeft, minY, maxY);
 
                 checkAxesValues(minX, maxX, minY, maxY);
@@ -1361,8 +1361,7 @@ void SingleCellViewGraphPanelPlotWidget::drawGraphSegment(SingleCellViewGraphPan
     // carry on as normal
 
     if (!pFrom) {
-        // It is our first graph segment, so reset our axes by trying to set
-        // them
+        // It is our first graph segment, so reset our axes
         // Note: we always want to replot...
 
         if (!doSetAxes(Reset))

@@ -161,8 +161,8 @@ public:
     bool addGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
     bool removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
 
-    void setAxes(const double &pMinX, const double &pMaxX,
-                 const double &pMinY, const double &pMaxY);
+    void setWantedAxes(const double &pWantedMinX, const double &pWantedMaxX,
+                       const double &pWantedMinY, const double &pWantedMaxY);
 
     void drawGraphSegment(SingleCellViewGraphPanelPlotGraph *pGraph,
                           const qulonglong &pFrom, const qulonglong &pTo);
@@ -202,10 +202,10 @@ private:
 
     QPoint mPoint;
 
-    double mNeedMinX;
-    double mNeedMaxX;
-    double mNeedMinY;
-    double mNeedMaxY;
+    double mWantedMinX;
+    double mWantedMaxX;
+    double mWantedMinY;
+    double mWantedMaxY;
 
     SingleCellViewGraphPanelPlotOverlayWidget *mOverlayWidget;
 

@@ -1540,7 +1540,7 @@ void SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot)
             }
         }
 
-    pPlot->setAxes(minX, maxX, minY, maxY);
+    pPlot->setWantedAxes(minX, maxX, minY, maxY);
 }
 
 //==============================================================================
