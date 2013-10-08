@@ -965,7 +965,7 @@ bool SingleCellViewGraphPanelPlotWidget::doSetAxes(const SettingAction &pSetting
         needReplot = true;
     }
 
-    // Replot ourselves, if needed and allowed
+    // Replot ourselves, if needed
 
     if (needReplot) {
         replotNow();
