@@ -316,10 +316,10 @@ QRect SingleCellViewGraphPanelPlotOverlayWidget::zoomRegion() const
     QwtScaleMap canvasMapX = mOwner->canvasMap(QwtPlot::xBottom);
     QwtScaleMap canvasMapY = mOwner->canvasMap(QwtPlot::yLeft);
 
-    double minX = canvasMapX.transform(mOwner->minX());
-    double maxX = canvasMapX.transform(mOwner->maxX());
-    double minY = canvasMapY.transform(mOwner->minY());
-    double maxY = canvasMapY.transform(mOwner->maxY());
+    int minX = canvasMapX.transform(mOwner->minX());
+    int maxX = canvasMapX.transform(mOwner->maxX());
+    int minY = canvasMapY.transform(mOwner->maxY());
+    int maxY = canvasMapY.transform(mOwner->minY());
 
     if (mOwner->canZoomInX() || mOwner->canZoomInY()) {
         QPoint originPoint = optimisedPoint(mOriginPoint);
@@ -1078,7 +1078,8 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
 
         // Set our axes' new values
 
-        doSetAxes(Set, minX()-shiftX, maxX()-shiftX, minY()-shiftY, maxY()-shiftY);
+        doSetAxes(Set, minX()-shiftX, maxX()-shiftX,
+                       minY()-shiftY, maxY()-shiftY);
 
         break;
     }
@@ -1367,7 +1368,8 @@ void SingleCellViewGraphPanelPlotWidget::drawGraphSegment(SingleCellViewGraphPan
 
     if (!pFrom) {
         // It is our first graph segment, so reset our axes
-        // Note: we always want to replot...
+        // Note: we always want to replot hence we check whether doSetAxes()
+        //       replotted ourselves...
 
         if (!doSetAxes(Reset))
             replotNow();
