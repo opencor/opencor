@@ -178,12 +178,18 @@ protected:
     virtual void wheelEvent(QWheelEvent *pEvent);
 
 private:
-    enum Action {
+    enum MouseAction {
         None,
         Pan,
         ShowCoordinates,
         Zoom,
         ZoomRegion
+    };
+
+    enum SettingAction {
+        Set,
+        Update,
+        Reset
     };
 
     Ui::SingleCellViewGraphPanelPlotWidget *mGui;
@@ -192,7 +198,7 @@ private:
 
     QList<SingleCellViewGraphPanelPlotGraph *> mGraphs;
 
-    Action mAction;
+    MouseAction mMouseAction;
 
     QPoint mPoint;
 
@@ -219,9 +225,9 @@ private:
 
     void updateActions();
 
-    Action action() const;
+    MouseAction mouseAction() const;
 
-    void resetAction();
+    void resetMouseAction();
 
     double minX() const;
     double maxX() const;
@@ -236,11 +242,9 @@ private:
     void optimiseAxisValues(const int &pAxisId, double &pMin, double &pMax);
 
     void doSetAxis(const int &pAxis, double pMin, double pMax);
-    void doSetAxes(double pMinX, double pMaxX, double pMinY, double pMaxY,
-                   const bool &pCanReplot = true,
-                   const bool &pForceMinMaxValues = false,
-                   const bool &pUpdateMinMaxValues = false,
-                   const bool &pResetMinMaxValues = false);
+    bool doSetAxes(const SettingAction &pSettingAction,
+                   double pMinX = 0, double pMaxX = 0,
+                   double pMinY = 0, double pMaxY = 0);
 
     void scaleAxes(const double &pScalingFactorX,
                    const double &pScalingFactorY);

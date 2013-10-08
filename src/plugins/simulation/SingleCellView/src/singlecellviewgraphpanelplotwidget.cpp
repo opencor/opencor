@@ -207,9 +207,9 @@ void SingleCellViewGraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
 
     pEvent->accept();
 
-    // Check whether an action is to be carried out
+    // Check whether a mouse action is to be carried out
 
-    if (mOwner->action() == SingleCellViewGraphPanelPlotWidget::None)
+    if (mOwner->mouseAction() == SingleCellViewGraphPanelPlotWidget::None)
         return;
 
     // Paint the overlay, if any is needed
@@ -220,7 +220,7 @@ void SingleCellViewGraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
 
     painter.translate(canvasRect.x(), canvasRect.y());
 
-    switch (mOwner->action()) {
+    switch (mOwner->mouseAction()) {
     case SingleCellViewGraphPanelPlotWidget::ShowCoordinates: {
         // Draw the two dashed lines that show the coordinates, using a dark
         // cyan pen
@@ -275,7 +275,7 @@ void SingleCellViewGraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
         break;
     }
     default:
-        // Either no action or not an action we know how to handle
+        // Either no mouse action or not a mouse action we know how to handle
 
         ;
     }
@@ -467,7 +467,7 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
     CommonWidget(pParent),
     mGui(new Ui::SingleCellViewGraphPanelPlotWidget),
     mGraphs(QList<SingleCellViewGraphPanelPlotGraph *>()),
-    mAction(None),
+    mMouseAction(None),
     mPoint(QPoint()),
     mNeedMinX(0.0),
     mNeedMaxX(0.0),
@@ -602,7 +602,7 @@ void SingleCellViewGraphPanelPlotWidget::setAxes(const double &pMinX,
 
     // Effectively update our axes by trying to set them
 
-    doSetAxes(0.0, 0.0, 0.0, 0.0, true, true, false, true);
+    doSetAxes(Reset);
 }
 
 //==============================================================================
@@ -688,20 +688,20 @@ void SingleCellViewGraphPanelPlotWidget::checkAxesValues(double &pMinX,
 
 //==============================================================================
 
-SingleCellViewGraphPanelPlotWidget::Action SingleCellViewGraphPanelPlotWidget::action() const
+SingleCellViewGraphPanelPlotWidget::MouseAction SingleCellViewGraphPanelPlotWidget::mouseAction() const
 {
-    // Return our action
+    // Return our mouse action
 
-    return mAction;
+    return mMouseAction;
 }
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::resetAction()
+void SingleCellViewGraphPanelPlotWidget::resetMouseAction()
 {
-    // Reset our action and our overlay widget, by repainting it
+    // Reset our mouse action and our overlay widget, by repainting it
 
-    mAction = None;
+    mMouseAction = None;
 
     mOverlayWidget->repaint();
 }
@@ -834,12 +834,9 @@ void SingleCellViewGraphPanelPlotWidget::doSetAxis(const int &pAxis,
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::doSetAxes(double pMinX, double pMaxX,
-                                                   double pMinY,double pMaxY,
-                                                   const bool &pCanReplot,
-                                                   const bool &pForceMinMaxValues,
-                                                   const bool &pUpdateMinMaxValues,
-                                                   const bool &pResetMinMaxValues)
+bool SingleCellViewGraphPanelPlotWidget::doSetAxes(const SettingAction &pSettingAction,
+                                                   double pMinX, double pMaxX,
+                                                   double pMinY,double pMaxY)
 {
     // Keep track of our axes' old values
 
@@ -848,107 +845,108 @@ void SingleCellViewGraphPanelPlotWidget::doSetAxes(double pMinX, double pMaxX,
     double oldMinY = minY();
     double oldMaxY = maxY();
 
-    // Retrieve the bounding rectangle for all our graphs (but only for those
-    // that have some data)
+    // Make sure that the given axes' values are fine
 
-    QRectF boundingRect = QRectF();
+    checkAxesValues(pMinX, pMaxX, pMinY, pMaxY);
 
-    foreach (SingleCellViewGraphPanelPlotGraph *graph, mGraphs)
-        if (graph->isValid() && graph->isSelected() && graph->dataSize())
-            boundingRect |= graph->boundingRect();
+    // Update/reset our axes' values, if needed
 
-    // Take into account our axes' needed values, if any, or use
-    // DefMinAxis/DefMaxAxis, if we have null bounding rectangle
+    if (pSettingAction != Set) {
+        // Retrieve the bounding rectangle for all our graphs (but only for
+        // those that actually have some data), if needed
 
-    bool isBoundingRectNull = boundingRect.isNull();
-    bool needMinMaxX = mNeedMinX != mNeedMaxX;
-    bool needMinMaxY = mNeedMinY != mNeedMaxY;
+        QRectF boundingRect = QRectF();
+        bool needMinMaxX = mNeedMinX != mNeedMaxX;
+        bool needMinMaxY = mNeedMinY != mNeedMaxY;
 
-    if (needMinMaxX) {
-        double needWidth = mNeedMaxX-mNeedMinX;
+        if (!needMinMaxX || !needMinMaxY)
+            foreach (SingleCellViewGraphPanelPlotGraph *graph, mGraphs)
+                if (graph->isValid() && graph->isSelected() && graph->dataSize())
+                    boundingRect |= graph->boundingRect();
 
-        boundingRect.setLeft(isBoundingRectNull?mNeedMinX:qMin(boundingRect.left(), mNeedMinX));
-        boundingRect.setWidth(isBoundingRectNull?needWidth:qMax(boundingRect.width(), needWidth));
-    } else if (isBoundingRectNull) {
-        boundingRect.setLeft(DefMinAxis);
-        boundingRect.setWidth(DefMaxAxis-DefMinAxis);
-    }
+        // Take into account our axes' needed values, if any, or use our default
+        // axes' values, if our bounding rectangle has no width/height
 
-    if (needMinMaxY) {
-        double needHeight = mNeedMaxY-mNeedMinY;
+        if (needMinMaxX) {
+            if (boundingRect.width()) {
+                boundingRect.setLeft(qMin(boundingRect.left(), mNeedMinX));
+                boundingRect.setWidth(qMax(boundingRect.width(), mNeedMaxX-mNeedMinX));
+            } else {
+                boundingRect.setLeft(mNeedMinX);
+                boundingRect.setWidth(mNeedMaxX-mNeedMinX);
+            }
+        } else if (!boundingRect.width()) {
+            boundingRect.setLeft(DefMinAxis);
+            boundingRect.setWidth(DefMaxAxis-DefMinAxis);
+        }
 
-        boundingRect.setTop(isBoundingRectNull?mNeedMinY:qMin(boundingRect.top(), mNeedMinY));
-        boundingRect.setHeight(isBoundingRectNull?needHeight:qMax(boundingRect.height(), needHeight));
-    } else if (isBoundingRectNull) {
-        boundingRect.setTop(DefMinAxis);
-        boundingRect.setHeight(DefMaxAxis-DefMinAxis);
-    }
+        if (needMinMaxY) {
+            if (boundingRect.height()) {
+                boundingRect.setTop(qMin(boundingRect.top(), mNeedMinY));
+                boundingRect.setHeight(qMax(boundingRect.height(), mNeedMaxY-mNeedMinY));
+            } else {
+                boundingRect.setTop(mNeedMinY);
+                boundingRect.setHeight(mNeedMaxY-mNeedMinY);
+            }
+        } else if (!boundingRect.height()) {
+            boundingRect.setTop(DefMinAxis);
+            boundingRect.setHeight(DefMaxAxis-DefMinAxis);
+        }
 
-    // Update our axes' values, should we have retrieved a non-null bounding
-    // rectangle
+        // Update our axes' values, should we have retrieved a non-null bounding
+        // rectangle and in case we need to reset or update the axes' values
 
-    double realMinX = DefMinAxis;
-    double realMaxX = DefMaxAxis;
-    double realMinY = DefMinAxis;
-    double realMaxY = DefMaxAxis;
+        double realMinX = DefMinAxis;
+        double realMaxX = DefMaxAxis;
+        double realMinY = DefMinAxis;
+        double realMaxY = DefMaxAxis;
 
-    if (!boundingRect.isNull()) {
-        // Optimise our bounding rectangle by first retrieving our axes' values
+        if (!boundingRect.isNull()) {
+            // Retrieve our axes' values and make sure that they are fine
 
-        double minX = boundingRect.left();
-        double maxX = minX+boundingRect.width();
-        double minY = boundingRect.top();
-        double maxY = minY+boundingRect.height();
-
-        // Make sure that our axes' values are fine
-
-        checkAxesValues(minX, maxX, minY, maxY);
-
-        // Optimise our axes' values by rounding them down/up, if needed
-
-        if (!needMinMaxX || !needMinMaxY) {
-            if (!needMinMaxX)
-                optimiseAxisValues(QwtPlot::xBottom, minX, maxX);
-
-            if (!needMinMaxY)
-                optimiseAxisValues(QwtPlot::yLeft, minY, maxY);
-
-            // Make sure that our axes' optimised values are fine
+            double minX = boundingRect.left();
+            double maxX = minX+boundingRect.width();
+            double minY = boundingRect.top();
+            double maxY = minY+boundingRect.height();
 
             checkAxesValues(minX, maxX, minY, maxY);
+
+            // Optimise our axes' values by rounding them down/up, if needed,
+            // and make sure that they are fine
+
+            if (!needMinMaxX || !needMinMaxY) {
+                if (!needMinMaxX)
+                    optimiseAxisValues(QwtPlot::xBottom, minX, maxX);
+
+                if (!needMinMaxY)
+                    optimiseAxisValues(QwtPlot::yLeft, minY, maxY);
+
+                checkAxesValues(minX, maxX, minY, maxY);
+            }
+
+            // Now, we can update our axes' values
+
+            if (pSettingAction == Update) {
+                realMinX = qMin(realMinX, minX);
+                realMaxX = qMax(realMaxX, maxX);
+                realMinY = qMin(realMinY, minY);
+                realMaxY = qMax(realMaxY, maxY);
+            } else {
+                // Reset
+
+                realMinX = minX;
+                realMaxX = maxX;
+                realMinY = minY;
+                realMaxY = maxY;
+            }
         }
 
-        // Update our axes' values, if needed
+        // Effectively force our axes' new values
 
-        if (pResetMinMaxValues) {
-            realMinX = minX;
-            realMaxX = maxX;
-        } else if (pUpdateMinMaxValues) {
-            realMinX = qMin(realMinX, minX);
-            realMaxX = qMax(realMaxX, maxX);
-        }
-
-        if (pResetMinMaxValues) {
-            realMinY = minY;
-            realMaxY = maxY;
-        } else if (pUpdateMinMaxValues) {
-            realMinY = qMin(realMinY, minY);
-            realMaxY = qMax(realMaxY, maxY);
-        }
-    }
-
-    // Make sure that our axes' new values fit within our axes' values
-
-    if (pForceMinMaxValues) {
         pMinX = realMinX;
         pMaxX = realMaxX;
         pMinY = realMinY;
         pMaxY = realMaxY;
-    } else {
-        pMinX = qMax(pMinX, realMinX);
-        pMaxX = qMin(pMaxX, realMaxX);
-        pMinY = qMax(pMinY, realMinY);
-        pMaxY = qMin(pMaxY, realMaxY);
     }
 
     // Update our axes' values, if needed
@@ -969,8 +967,13 @@ void SingleCellViewGraphPanelPlotWidget::doSetAxes(double pMinX, double pMaxX,
 
     // Replot ourselves, if needed and allowed
 
-    if (needReplot && pCanReplot)
+    if (needReplot) {
         replotNow();
+
+        return true;
+    } else {
+        return false;
+    }
 }
 
 //==============================================================================
@@ -1021,7 +1024,7 @@ void SingleCellViewGraphPanelPlotWidget::scaleAxes(const double &pScalingFactorX
     // Rescale our axes, if needed
 
     if (needRescaling)
-        doSetAxes(newMinX, newMaxX, newMinY, newMaxY);
+        doSetAxes(Set, newMinX, newMaxX, newMinY, newMaxY);
 }
 
 //==============================================================================
@@ -1057,9 +1060,9 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
 
     QwtPlot::mouseMoveEvent(pEvent);
 
-    // Carry out the action
+    // Carry out the mouse action
 
-    switch (mAction) {
+    switch (mMouseAction) {
     case Pan: {
         // Determine the X/Y shifts for our panning
 
@@ -1071,20 +1074,9 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
 
         mPoint = pEvent->pos();
 
-        // Determine our axes' new values
+        // Set our axes' new values
 
-        double newMinX = minX()-shiftX;
-        double newMaxX = maxX()-shiftX;
-        double newMinY = minY()-shiftY;
-        double newMaxY = maxY()-shiftY;
-
-        // Make sure that our axes' new values are fine
-
-        checkAxesValues(newMinX, newMaxX, newMinY, newMaxY);
-
-        // Set our axes' new values, which will replot ourselves as a result
-
-        doSetAxes(newMinX, newMaxX, newMinY, newMaxY);
+        doSetAxes(Set, minX()-shiftX, maxX()-shiftX, minY()-shiftY, maxY()-shiftY);
 
         break;
     }
@@ -1151,24 +1143,24 @@ void SingleCellViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
     if (!plotLayout()->canvasRect().contains(pEvent->pos()))
         return;
 
-    // Make sure that we are not already carrying out an action (e.g. we were
-    // zooming in/out and then pressed on the left mouse button) and if so, then
-    // cancel it by resetting our action
+    // Make sure that we are not already carrying out a mouse action (e.g. we
+    // were zooming in/out and then pressed on the left mouse button) and if so,
+    // then cancel it by resetting our mouse action
 
-    if (mAction != None) {
-        resetAction();
+    if (mMouseAction != None) {
+        resetMouseAction();
 
         return;
     }
 
-    // Check which action we can carry out
+    // Check which mouse action to can carry out
 
     if (   (pEvent->button() == Qt::LeftButton)
         && (pEvent->modifiers() == Qt::NoModifier)) {
         // We want to pan, but only do this if we are not completely zoomed out
 
         if (mCanZoomOutX || mCanZoomOutY) {
-            mAction = Pan;
+            mMouseAction = Pan;
 
             mPoint = pEvent->pos();
         }
@@ -1176,14 +1168,14 @@ void SingleCellViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
                && (pEvent->modifiers() == Qt::ShiftModifier)) {
         // We want to show the coordinates
 
-        mAction = ShowCoordinates;
+        mMouseAction = ShowCoordinates;
 
         mOverlayWidget->setPoint(pEvent->pos());
     } else if (   (pEvent->button() == Qt::RightButton)
                && (pEvent->modifiers() == Qt::NoModifier)) {
         // We want to zoom in/out
 
-        mAction = Zoom;
+        mMouseAction = Zoom;
 
         mPoint = pEvent->pos();
     } else if (   (pEvent->button() == Qt::RightButton)
@@ -1192,7 +1184,7 @@ void SingleCellViewGraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
         // fully zoomed in
 
         if (mCanZoomInX || mCanZoomInY) {
-            mAction = ZoomRegion;
+            mMouseAction = ZoomRegion;
 
             mOverlayWidget->setOriginPoint(pEvent->pos());
             mOverlayWidget->setPoint(pEvent->pos());
@@ -1212,25 +1204,22 @@ void SingleCellViewGraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 
     QwtPlot::mouseReleaseEvent(pEvent);
 
-    // Check whether we need to carry out an action
+    // Check whether we need to carry out a mouse action
 
-    if (mAction == None)
+    if (mMouseAction == None)
         return;
 
-    // Finish carrying out the action
+    // Finish carrying out the mouse action, if needed
 
-    switch (mAction) {
+    switch (mMouseAction) {
     case ZoomRegion: {
-        // Zoom our region, so update the point of our overlay widget and
-        // retrieve the zoom region
-
-        mOverlayWidget->setPoint(pEvent->pos());
+        // Retrieve our zoom region
 
         QRect zoomRegionRect = mOverlayWidget->zoomRegion();
 
-        // Reset our action
+        // Reset our mouse action
 
-        resetAction();
+        resetMouseAction();
 
         // Effectively zoom our region, if possible, by updating our axes
 
@@ -1238,16 +1227,17 @@ void SingleCellViewGraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
                                    canvasPoint(zoomRegionRect.topLeft()+QPoint(zoomRegionRect.width(), zoomRegionRect.height()), false));
 
         if (zoomRegion.width() && zoomRegion.height())
-            doSetAxes(zoomRegion.left(), zoomRegion.left()+zoomRegion.width(),
+            doSetAxes(Set,
+                      zoomRegion.left(), zoomRegion.left()+zoomRegion.width(),
                       zoomRegion.top()+zoomRegion.height(), zoomRegion.top());
 
         break;
     }
     default:
-        // An action that doesn't require anything specific to be done, except
-        // to reset our action
+        // A mouse action that doesn't require anything specific to be done,
+        // except to reset our mouse action
 
-        resetAction();
+        resetMouseAction();
     }
 
     // Show our context menu, if still needed
@@ -1277,9 +1267,9 @@ void SingleCellViewGraphPanelPlotWidget::wheelEvent(QWheelEvent *pEvent)
 
     QwtPlot::wheelEvent(pEvent);
 
-    // Check whether we are already carrying out an action
+    // Check whether we are already carrying out a mouse action
 
-    if (mAction != None)
+    if (mMouseAction != None)
         return;
 
     // Make sure that we have actually got a delta that will tell us about the
@@ -1288,8 +1278,8 @@ void SingleCellViewGraphPanelPlotWidget::wheelEvent(QWheelEvent *pEvent)
     if (!pEvent->delta())
         return;
 
-    // The only action we support using the wheel is zooming in/out, but this
-    // requires no modifiers being used
+    // The only mouse action we support using the wheel is zooming in/out, but
+    // this requires no modifiers being used
 
     if (pEvent->modifiers() != Qt::NoModifier)
         return;
@@ -1373,12 +1363,10 @@ void SingleCellViewGraphPanelPlotWidget::drawGraphSegment(SingleCellViewGraphPan
     if (!pFrom) {
         // It is our first graph segment, so reset our axes by trying to set
         // them
-        // Note: we always want to replot, hence our first boolean being false
-        //       in our call to doSetAxes()...
+        // Note: we always want to replot...
 
-        doSetAxes(0.0, 0.0, 0.0, 0.0, false, true, false, true);
-
-        replotNow();
+        if (!doSetAxes(Reset))
+            replotNow();
     } else {
         // It's not our first graph segment, so determine the minimum/maximum
         // X/Y values for our new data
@@ -1411,7 +1399,7 @@ void SingleCellViewGraphPanelPlotWidget::drawGraphSegment(SingleCellViewGraphPan
             // Our X/Y axis cannot handle the minimum/maximum X/Y values for our
             // new data, so check our axes by trying to set them
 
-            doSetAxes(minX(), maxX(), minY(), maxY(), true, true, true);
+            doSetAxes(Update, minX(), maxX(), minY(), maxY());
         else
             // Our X/Y axis can handle the X/Y min/max of our new data, so just
             // draw our new graph segment
@@ -1456,12 +1444,12 @@ void SingleCellViewGraphPanelPlotWidget::on_actionZoomOut_triggered()
 void SingleCellViewGraphPanelPlotWidget::on_actionResetZoom_triggered()
 {
     // Reset the zoom level by resetting our axes, but only if the reset zoom
-    // action is enabled
-    // Note: we check for the reset zoom action to be enabled since we may call
-    //       this method directly...
+    // mouse action is enabled
+    // Note: we check for the reset zoom mouse action to be enabled since we may
+    //       call this method directly...
 
     if (mGui->actionResetZoom->isEnabled())
-        doSetAxes(0.0, 1000.0, 0.0, 1000.0);
+        doSetAxes(Set, 0.0, 1000.0, 0.0, 1000.0);
 //---GRY--- WE SHOULD 'PROPERLY' SET THE AXES...
 }
 
