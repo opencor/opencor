@@ -247,6 +247,9 @@ private:
                    double pMinX = 0, double pMaxX = 0,
                    double pMinY = 0, double pMaxY = 0);
 
+    bool scaleAxis(const double &pScalingFactor,
+                   const bool &pCanZoomIn, const bool &pCanZoomOut,
+                   const double pOriginPoint, double &pMin, double &pMax);
     void scaleAxes(const QPoint &pPoint,
                    const double &pScalingFactorX,
                    const double &pScalingFactorY);

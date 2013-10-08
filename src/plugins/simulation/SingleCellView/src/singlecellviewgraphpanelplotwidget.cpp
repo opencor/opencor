@@ -978,61 +978,54 @@ bool SingleCellViewGraphPanelPlotWidget::doSetAxes(const SettingAction &pSetting
 
 //==============================================================================
 
+bool SingleCellViewGraphPanelPlotWidget::scaleAxis(const double &pScalingFactor,
+                                                   const bool &pCanZoomIn,
+                                                   const bool &pCanZoomOut,
+                                                   const double pOriginPoint,
+                                                   double &pMin, double &pMax)
+{
+    // Check whether we can scale the axis and, if so, determine what its new
+    // values should be
+
+    if (   ((pScalingFactor < 1.0) && pCanZoomIn)
+        || ((pScalingFactor > 1.0) && pCanZoomOut)) {
+        double oldRange = pMax-pMin;
+        double newRange = pScalingFactor*oldRange;
+        double factor = qMin(1.0, qMax(0.0, (pOriginPoint-pMin)/oldRange));
+        // Note: we make sure that the factor is within the [0; 1] range...
+
+        pMin = qMax(MinAxis, pOriginPoint-factor*newRange);
+        pMax = qMin(MaxAxis, pMin+newRange);
+        pMin = pMax-newRange;
+        // Note: the last statement is in case pNewMax has been set to MaxAxis,
+        //       in which case we need to re-update pNewMin...
+
+        return true;
+    } else {
+        return false;
+    }
+}
+
+//==============================================================================
+
 void SingleCellViewGraphPanelPlotWidget::scaleAxes(const QPoint &pPoint,
                                                    const double &pScalingFactorX,
                                                    const double &pScalingFactorY)
 {
     // Rescale our X axis, but only if zooming in/out is possible on that axis
 
-    bool needRescaling = false;
-
     QPointF originPoint = canvasPoint(pPoint);
 
     double newMinX = minX();
     double newMaxX = maxX();
-
-    if (   ((pScalingFactorX < 1.0) && mCanZoomInX)
-        || ((pScalingFactorX > 1.0) && mCanZoomOutX)) {
-        double oldMinX = minX();
-        double oldRange = maxX()-oldMinX;
-        double newRange = pScalingFactorX*oldRange;
-        double factor = (originPoint.x()-oldMinX)/oldRange;
-        // Note: we make sure that the factor is within the [0; 1] range...
-
-        newMinX = qMax(MinAxis, originPoint.x()-factor*newRange);
-        newMaxX = qMin(MaxAxis, newMinX+newRange);
-        newMinX = newMaxX-newRange;
-        // Note: the last statement is in case newMaxX has been set to mMaxX, in
-        //       which case we need to update newMinX...
-
-        needRescaling = true;
-    }
-
-    // Rescale our Y axis, but only if zooming in/out is possible on that axis
-
     double newMinY = minY();
     double newMaxY = maxY();
+    bool scaledAxisX = scaleAxis(pScalingFactorX, mCanZoomInX, mCanZoomOutX, originPoint.x(), newMinX, newMaxX);
+    bool scaledAxisY = scaleAxis(pScalingFactorY, mCanZoomInY, mCanZoomOutY, originPoint.y(), newMinY, newMaxY);
+    // Note: we want to make both calls to scaleAxis(), hence they are not part
+    //       of the if() statement below...
 
-    if (   ((pScalingFactorY < 1.0) && mCanZoomInY)
-        || ((pScalingFactorY > 1.0) && mCanZoomOutY)) {
-        double oldMinY = minY();
-        double oldRange = maxY()-oldMinY;
-        double newRange = pScalingFactorY*(oldRange);
-        double factor = (originPoint.y()-oldMinY)/oldRange;
-        // Note: we make sure that the factor is within the [0; 1] range...
-
-        newMinY = qMax(MinAxis, originPoint.y()-factor*newRange);
-        newMaxY = qMin(MaxAxis, newMinY+newRange);
-        newMinY = newMaxY-newRange;
-        // Note: the last statement is in case newMaxY has been set to mMaxY, in
-        //       which case we need to update newMinY...
-
-        needRescaling = true;
-    }
-
-    // Rescale our axes, if needed
-
-    if (needRescaling)
+    if (scaledAxisX || scaledAxisY)
         doSetAxes(Set, newMinX, newMaxX, newMinY, newMaxY);
 }
 
