@@ -659,7 +659,7 @@ void SingleCellViewGraphPanelPlotWidget::checkAxisValues(double &pMin,
         pMax = qMin(MaxAxis, pMin+MinAxisRange);
         pMin = pMax-MinAxisRange;
         // Note: the last statement is in case pMax was set to MaxAxis, in which
-        //       case pMin would have to be re-reset...
+        //       case pMin has to be re-reset...
     } else if (pMin < MinAxis) {
         // The minimum value is too small, so reset it
 
@@ -866,10 +866,10 @@ void SingleCellViewGraphPanelPlotWidget::doSetAxes(double pMinX, double pMaxX,
     // Update our axes' values, should we have retrieved a valid bounding
     // rectangle
 
-    double realMinX = MinAxis;
-    double realMaxX = MaxAxis;
-    double realMinY = MinAxis;
-    double realMaxY = MaxAxis;
+    double realMinX = DefMinAxis;
+    double realMaxX = DefMaxAxis;
+    double realMinY = DefMinAxis;
+    double realMaxY = DefMaxAxis;
 
     if (boundingRect.isValid()) {
         // Optimise our bounding rectangle by first retrieving our axes' values
