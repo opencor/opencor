@@ -188,7 +188,7 @@ private:
 
     enum SettingAction {
         Set,
-        Update,
+        Merge,
         Reset
     };
 

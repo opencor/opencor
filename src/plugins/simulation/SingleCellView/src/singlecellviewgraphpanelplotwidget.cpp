@@ -849,7 +849,7 @@ bool SingleCellViewGraphPanelPlotWidget::doSetAxes(const SettingAction &pSetting
 
     checkAxesValues(pMinX, pMaxX, pMinY, pMaxY);
 
-    // Update/reset our axes' values, if needed
+    // Merge/reset our axes' values, if needed
 
     if (pSettingAction != Set) {
         // Retrieve the bounding rectangle for all our graphs (but only for
@@ -926,7 +926,7 @@ bool SingleCellViewGraphPanelPlotWidget::doSetAxes(const SettingAction &pSetting
 
             // Now, we can update our axes' values
 
-            if (pSettingAction == Update) {
+            if (pSettingAction == Merge) {
                 realMinX = qMin(realMinX, minX);
                 realMaxX = qMax(realMaxX, maxX);
                 realMinY = qMin(realMinY, minY);
@@ -1399,7 +1399,7 @@ void SingleCellViewGraphPanelPlotWidget::drawGraphSegment(SingleCellViewGraphPan
             // Our X/Y axis cannot handle the minimum/maximum X/Y values for our
             // new data, so check our axes by trying to set them
 
-            doSetAxes(Update, minX(), maxX(), minY(), maxY());
+            doSetAxes(Merge, minX(), maxX(), minY(), maxY());
         else
             // Our X/Y axis can handle the X/Y min/max of our new data, so just
             // draw our new graph segment
