@@ -164,6 +164,8 @@ private:
     QMap<SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotWidget *> mGraphPanelPlots;
     QMap<SingleCellViewGraphPanelPlotGraph *, SingleCellViewGraphPanelPlotWidget *> mGraphPlots;
 
+    bool mCanUpdatePlotsForUpdatedGraphs;
+
     void output(const QString &pMessage);
 
     void updateSimulationMode();
@@ -185,9 +187,6 @@ private:
 
     void updateGraphData(SingleCellViewGraphPanelPlotGraph *pGraph,
                          const qulonglong &pSize);
-    void updateGraph(SingleCellViewGraphPanelPlotGraph *pGraph,
-                     const qulonglong &pSize,
-                     const bool &pDrawGraphSegment = true);
 
     void updateResults(SingleCellViewSimulation *pSimulation,
                        const qulonglong &pSize);

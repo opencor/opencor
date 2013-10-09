@@ -107,7 +107,8 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mCheckResultsSimulations(QList<SingleCellViewSimulation *>()),
     mPlots(QList<SingleCellViewGraphPanelPlotWidget *>()),
     mGraphPanelPlots(QMap<SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotWidget *>()),
-    mGraphPlots(QMap<SingleCellViewGraphPanelPlotGraph *, SingleCellViewGraphPanelPlotWidget *>())
+    mGraphPlots(QMap<SingleCellViewGraphPanelPlotGraph *, SingleCellViewGraphPanelPlotWidget *>()),
+    mCanUpdatePlotsForUpdatedGraphs(true)
 {
     // Set up the GUI
 
@@ -717,18 +718,6 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
         mContentsWidget->setVisible(true);
 
-        // Initialise our GUI's simulation, solvers, graphs and parameters
-        // widgets
-        // Note: this will also initialise some of our simulation data (i.e. our
-        //       simulation's starting point and simulation's NLA solver's
-        //       properties) which is needed since we want to be able to reset
-        //       our simulation below...
-
-        simulationWidget->initialize(pFileName, cellmlFileRuntime, mSimulation);
-        solversWidget->initialize(pFileName, cellmlFileRuntime, mSimulation);
-        informationWidget->graphsWidget()->initialize(pFileName, cellmlFileRuntime, mSimulation);
-        informationWidget->parametersWidget()->initialize(pFileName, cellmlFileRuntime, mSimulation);
-
         // Check whether we have at least one ODE or DAE solver and, if needed,
         // at least one NLA solver
 
@@ -802,28 +791,64 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         mOutputWidget->ensureCursorVisible();
     }
 
-    // Update our plots (so that all of our graphs are up to date)
+    // Some additional initialisations in case we have a valid simulation
+    // environment
 
     if (validSimulationEnvironment) {
+        // Reset both the simulation's data and results (well, initialise in the
+        // case of its data), in case we are dealing with a new simulation
+
+        if (newSimulation) {
+            mSimulation->data()->reset();
+            mSimulation->results()->reset(false);
+        }
+
+        // Update our plots' axes' values
+
         QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> plotsRects = mPlotsRects.value(pFileName, QMap<SingleCellViewGraphPanelPlotWidget *, QRectF>());
 
         foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots) {
             QRectF dataRect = plotsRects.value(plot);
 
-            if (dataRect.isNull())
-                updatePlot(plot, true);
-            else if (!plot->setAxes(dataRect))
-                plot->replotNow();
+            if (!dataRect.isNull())
+                plot->setAxes(dataRect, false);
         }
-    }
 
-    // If we have a valid simulation environment and we are dealing with a new
-    // simulation, then reset both the simulation's data and results (well,
-    // initialise in the case of its data)
+        // Initialise our GUI's simulation, solvers, graphs and parameters
+        // widgets
+        // Note #1: this will also initialise some of our simulation data (i.e.
+        //          our simulation's starting point and simulation's NLA
+        //          solver's properties) which is needed since we want to be
+        //          able to reset our simulation below...
+        // Note #2: to initialise our graphs widget will result in some graphs
+        //          being shown/hidden and, therefore, in graphsUpdated() being
+        //          called. Yet, we don't want graphsUpdated() to update our
+        //          plots. Indeed, if it did, then all of our plots' axes'
+        //          values would be reset while we want to keep the ones we just
+        //          retrieved (thus making it possible for the user to have
+        //          different views for different files). So, for this to work
+        //          we use mCanUpdatePlotsForUpdatedGraphs, and then 'manually'
+        //          replot our plots, once we know which graphs are to be
+        //          shown/hidden. We could do the initialisation before the
+        //          setting of the plots' axes' values, but then we could see
+        //          the graphs being plotted twice. Once after the plots' axes'
+        //          values have been reset following the call to graphsUpdated()
+        //          and another after we update our plots' axes' values. This is
+        //          clearly not neat, hence the current solution...
 
-    if (validSimulationEnvironment && newSimulation) {
-        mSimulation->data()->reset();
-        mSimulation->results()->reset(false);
+        mCanUpdatePlotsForUpdatedGraphs = false;
+
+        simulationWidget->initialize(pFileName, cellmlFileRuntime, mSimulation);
+        solversWidget->initialize(pFileName, cellmlFileRuntime, mSimulation);
+        informationWidget->graphsWidget()->initialize(pFileName, cellmlFileRuntime, mSimulation);
+        informationWidget->parametersWidget()->initialize(pFileName, cellmlFileRuntime, mSimulation);
+
+        mCanUpdatePlotsForUpdatedGraphs = true;
+
+        // 'Manually' replot our plots
+
+        foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots)
+            plot->replotNow();
     }
 
     // Resume the tracking of certain things
@@ -1483,13 +1508,8 @@ void SingleCellViewWidget::graphsUpdated(const QList<SingleCellViewGraphPanelPlo
 
         if (simulation) {
             // Update the graph's data
-            // Note: we don't want graph segments to be drawn (hence we pass
-            //       false to updateGraph()) since we come here as a result of a
-            //       graph being un/selected, or as a result of its model, X or
-            //       Y parameter being updated, meaning that we have to replot
-            //       everything...
 
-            updateGraph(graph, simulation->results()->size(), false);
+            updateGraphData(graph, simulation->results()->size());
 
             // Keep track of the plot that we will need to update and replot
             // Note: see the corresponding comment in
@@ -1502,13 +1522,14 @@ void SingleCellViewWidget::graphsUpdated(const QList<SingleCellViewGraphPanelPlo
         }
     }
 
-    // Update and replot our various plots
+    // Update and replot our various plots, if allowed
 
-    foreach (SingleCellViewGraphPanelPlotWidget *plot, plots)
-        updatePlot(plot, true);
-        // Note: even if the axes' values of the plot haven't changed, we still
-        //       want to replot the plot since at least one of its graphs has
-        //       been updated...
+    if (mCanUpdatePlotsForUpdatedGraphs)
+        foreach (SingleCellViewGraphPanelPlotWidget *plot, plots)
+            updatePlot(plot, true);
+            // Note: even if the axes' values of the plot haven't changed, we
+            //       still want to replot the plot since at least one of its
+            //       graphs has been updated...
 }
 
 //==============================================================================
@@ -1617,6 +1638,8 @@ bool SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot,
         }
 
     // Optimise our axes' values, if possible
+    // Note: we first optimise our axes' values and then revert axis value which
+    //       is equal to a starting or an ending point value...
 
     double origMinX = minX;
     double origMaxX = maxX;
@@ -1695,30 +1718,6 @@ void SingleCellViewWidget::updateGraphData(SingleCellViewGraphPanelPlotGraph *pG
 
 //==============================================================================
 
-void SingleCellViewWidget::updateGraph(SingleCellViewGraphPanelPlotGraph *pGraph,
-                                       const qulonglong &pSize,
-                                       const bool &pDrawGraphSegment)
-{
-    // Keep track of our graph's old size
-
-    qulonglong oldDataSize = pGraph->dataSize();
-
-    // Update our graph's data
-
-    updateGraphData(pGraph, pSize);
-
-    // Draw the graph's new segment, but only if required and if there is some
-    // data to plot and the graph is visible
-
-    if (pDrawGraphSegment && pSize && pGraph->isVisible()) {
-        SingleCellViewGraphPanelPlotWidget *plot = qobject_cast<SingleCellViewGraphPanelPlotWidget *>(pGraph->plot());
-
-        plot->drawGraphSegment(pGraph, oldDataSize?oldDataSize-1:0, pSize-1);
-    }
-}
-
-//==============================================================================
-
 void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
                                          const qulonglong &pSize)
 {
@@ -1741,8 +1740,24 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
 
     foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots) {
         foreach (SingleCellViewGraphPanelPlotGraph *graph, plot->graphs())
-            if (!graph->fileName().compare(pSimulation->fileName()))
-                updateGraph(graph, pSize);
+            if (!graph->fileName().compare(pSimulation->fileName())) {
+                // Keep track of our graph's old size
+
+                qulonglong oldDataSize = graph->dataSize();
+
+                // Update our graph's data
+
+                updateGraphData(graph, pSize);
+
+                // Draw the graph's new segment, but only if there is some data
+                // to plot and the graph is visible
+
+                if (pSize && graph->isVisible()) {
+                    SingleCellViewGraphPanelPlotWidget *plot = qobject_cast<SingleCellViewGraphPanelPlotWidget *>(graph->plot());
+
+                    plot->drawGraphSegment(graph, oldDataSize?oldDataSize-1:0, pSize-1);
+                }
+            }
 
         if (!pSize)
             plot->replotNow();
