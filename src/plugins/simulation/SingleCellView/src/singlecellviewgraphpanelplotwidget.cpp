@@ -19,12 +19,10 @@ specific language governing permissions and limitations under the License.
 // Single cell view graph panel plot widget
 //==============================================================================
 
-#include "cellmlfileruntime.h"
 #include "singlecellviewgraphpanelplotwidget.h"
 
 //==============================================================================
 
-#include <QAction>
 #include <QApplication>
 #include <QClipboard>
 #include <QCursor>
@@ -33,15 +31,10 @@ specific language governing permissions and limitations under the License.
 #include <QMenu>
 #include <QMouseEvent>
 #include <QPainter>
-#include <QWidget>
 
 //==============================================================================
 
 #include <QtNumeric>
-
-//==============================================================================
-
-#include <qnamespace.h>
 
 //==============================================================================
 
@@ -55,8 +48,6 @@ specific language governing permissions and limitations under the License.
 #include "qwt_plot_directpainter.h"
 #include "qwt_plot_grid.h"
 #include "qwt_plot_layout.h"
-#include "qwt_plot_renderer.h"
-#include "qwt_scale_div.h"
 #include "qwt_scale_engine.h"
 
 //==============================================================================
@@ -783,6 +774,18 @@ void SingleCellViewGraphPanelPlotWidget::optimiseValues(const int &pAxisId,
                                                         double &pMin,
                                                         double &pMax)
 {
+    // Make sure that the given values are different
+
+    if (pMin == pMax) {
+        // The given values are the same, so update them so that we can properly
+        // optimise them below
+
+        double powerValue = pMin?qFloor(log10(qAbs(pMin)))-1.0:0.0;
+
+        pMin = pMin-pow(10.0, powerValue);
+        pMax = pMax+pow(10.0, powerValue);
+    }
+
     // Optimise the axis' values so that they fall onto a factor of the axis'
     // minor step
 
