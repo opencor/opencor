@@ -1494,10 +1494,10 @@ void SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot)
     bool needInitialisationX = true;
     bool needInitialisationY = true;
 
-    double minX = 0.0;
-    double maxX = 0.0;
-    double minY = 0.0;
-    double maxY = 0.0;
+    double minX =    0.0;
+    double maxX = 1000.0;
+    double minY =    0.0;
+    double maxY = 1000.0;
 
     foreach (SingleCellViewGraphPanelPlotGraph *graph, pPlot->graphs())
         if (graph->isValid() && graph->isSelected()) {
@@ -1540,7 +1540,7 @@ void SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot)
             }
         }
 
-    pPlot->setWantedAxes(minX, maxX, minY, maxY);
+    pPlot->setAxes(minX, maxX, minY, maxY);
 }
 
 //==============================================================================

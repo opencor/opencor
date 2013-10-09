@@ -161,8 +161,8 @@ public:
     bool addGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
     bool removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
 
-    void setWantedAxes(const double &pWantedMinX, const double &pWantedMaxX,
-                       const double &pWantedMinY, const double &pWantedMaxY);
+    bool setAxes(double pMinX, double pMaxX, double pMinY, double pMaxY,
+                 const bool &pCanReplot = true);
 
     void drawGraphSegment(SingleCellViewGraphPanelPlotGraph *pGraph,
                           const qulonglong &pFrom, const qulonglong &pTo);
@@ -196,11 +196,6 @@ private:
 
     QPoint mOriginPoint;
     QPoint mPoint;
-
-    double mWantedMinX;
-    double mWantedMaxX;
-    double mWantedMinY;
-    double mWantedMaxY;
 
     SingleCellViewGraphPanelPlotOverlayWidget *mOverlayWidget;
 
@@ -243,8 +238,6 @@ private:
     QRectF dataRect() const;
 
     void setAxis(const int &pAxis, double pMin, double pMax);
-    bool setAxes(double pMinX, double pMaxX, double pMinY, double pMaxY,
-                 const bool &pCanReplot = true);
     bool setAxes(const QRectF &pRect, const bool &pCanReplot = true);
 
     bool resetAxes();

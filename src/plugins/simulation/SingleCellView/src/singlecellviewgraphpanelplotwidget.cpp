@@ -461,9 +461,6 @@ static const double MinAxisRange = 1.0e-5;
 //       a 6-digit precision, we give ourselves a bit of a safety net and allow
 //       minimum axis range of 10^-5...
 
-static const double DefMinAxis =    0.0;
-static const double DefMaxAxis = 1000.0;
-
 //==============================================================================
 
 SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *pParent) :
@@ -474,10 +471,6 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
     mAction(None),
     mOriginPoint(QPoint()),
     mPoint(QPoint()),
-    mWantedMinX(0.0),
-    mWantedMaxX(0.0),
-    mWantedMinY(0.0),
-    mWantedMaxY(0.0),
     mCanZoomInX(true),
     mCanZoomOutX(true),
     mCanZoomInY(true),
@@ -513,7 +506,7 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
     // Note: we are not all initialised yet, so we don't want to setAxes() to
     //       replot ourselves...
 
-    setAxes(DefMinAxis, DefMaxAxis, DefMinAxis, DefMaxAxis, false);
+    setAxes(0.0, 1000.0, 0.0, 1000.0, false);
 
     // Attach a grid to ourselves
 
@@ -590,25 +583,6 @@ void SingleCellViewGraphPanelPlotWidget::handleMouseDoubleClickEvent(QMouseEvent
     if (   (pEvent->button() == Qt::LeftButton)
         && (pEvent->modifiers() == Qt::NoModifier))
         on_actionResetZoom_triggered();
-}
-
-//==============================================================================
-
-void SingleCellViewGraphPanelPlotWidget::setWantedAxes(const double &pWantedMinX,
-                                                       const double &pWantedMaxX,
-                                                       const double &pWantedMinY,
-                                                       const double &pWantedMaxY)
-{
-    // Set our axes' wanted values
-
-    mWantedMinX = pWantedMinX;
-    mWantedMaxX = pWantedMaxX;
-    mWantedMinY = pWantedMinY;
-    mWantedMaxY = pWantedMaxY;
-
-    // Effectively update our axes by resetting them
-
-    resetAxes();
 }
 
 //==============================================================================
