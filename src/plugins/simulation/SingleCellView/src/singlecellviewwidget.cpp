@@ -808,11 +808,11 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> plotsRects = mPlotsRects.value(pFileName, QMap<SingleCellViewGraphPanelPlotWidget *, QRectF>());
 
         foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots) {
-            QRectF axesRect = plotsRects.value(plot);
+            QRectF dataRect = plotsRects.value(plot);
 
-            if (axesRect.isNull())
+            if (dataRect.isNull())
                 updatePlot(plot, true);
-            else if (!plot->setAxes(axesRect))
+            else if (!plot->setAxes(dataRect))
                 plot->replotNow();
         }
     }
@@ -1402,8 +1402,8 @@ void SingleCellViewWidget::graphAdded(SingleCellViewGraphPanelPlotGraph *pGraph)
 
     mGraphPlots.insert(pGraph, plot);
 
+    updateGraphData(pGraph, mSimulations.value(pGraph->fileName())->results()->size());
     updatePlot(plot);
-    updateGraph(pGraph, mSimulations.value(pGraph->fileName())->results()->size());
 
     // Keep track of the plot itself, if needed
 
@@ -1481,10 +1481,10 @@ void SingleCellViewWidget::graphsUpdated(const QList<SingleCellViewGraphPanelPlo
 
         if (simulation) {
             // Update the graph's data
-            // Note: we don't want graph segments to be drawn (hence we pass false
-            //       to updateGraph()) since we come here as a result of a graph
-            //       being un/selected, or as a result of its model, X or Y
-            //       parameter being updated, meaning that we have to replot
+            // Note: we don't want graph segments to be drawn (hence we pass
+            //       false to updateGraph()) since we come here as a result of a
+            //       graph being un/selected, or as a result of its model, X or
+            //       Y parameter being updated, meaning that we have to replot
             //       everything...
 
             updateGraph(graph, simulation->results()->size(), false);
@@ -1514,6 +1514,25 @@ void SingleCellViewWidget::graphsUpdated(const QList<SingleCellViewGraphPanelPlo
 bool SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot,
                                       const bool &pForceReplot)
 {
+    // Retrieve the current axes' values or use some default ones, if none are
+    // available
+
+    bool hasAxesValues = false;
+
+    double minX =    0.0;
+    double maxX = 1000.0;
+    double minY =    0.0;
+    double maxY = 1000.0;
+
+    QRectF dataRect = pPlot->dataRect();
+
+    if (!dataRect.isNull()) {
+        minX = dataRect.left();
+        maxX = minX+dataRect.width();
+        minY = dataRect.top();
+        maxY = minY+dataRect.height();
+    }
+
     // Check all the graphs associated with the given plot and see whether any
     // of them uses the variable of integration as parameter X and/or Y, and if
     // so then asks the plot to use the minimum/maximum points as the
@@ -1522,10 +1541,8 @@ bool SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot,
     bool needInitialisationX = true;
     bool needInitialisationY = true;
 
-    double minX =    0.0;
-    double maxX = 1000.0;
-    double minY =    0.0;
-    double maxY = 1000.0;
+    bool canOptimiseAxisX = true;
+    bool canOptimiseAxisY = true;
 
     foreach (SingleCellViewGraphPanelPlotGraph *graph, pPlot->graphs())
         if (graph->isValid() && graph->isSelected()) {
@@ -1543,7 +1560,7 @@ bool SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot,
             }
 
             if (graph->parameterX()->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi) {
-                if (needInitialisationX) {
+                if (!hasAxesValues && needInitialisationX) {
                     minX = startingPoint;
                     maxX = endingPoint;
 
@@ -1552,11 +1569,13 @@ bool SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot,
                     minX = qMin(minX, startingPoint);
                     maxX = qMax(maxX, endingPoint);
                 }
+
+                canOptimiseAxisX = false;
             }
 
             if (graph->parameterY()->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi)
             {
-                if (needInitialisationY) {
+                if (!hasAxesValues && needInitialisationY) {
                     minY = startingPoint;
                     maxY = endingPoint;
 
@@ -1565,8 +1584,20 @@ bool SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot,
                     minY = qMin(minY, startingPoint);
                     maxY = qMax(maxY, endingPoint);
                 }
+
+                canOptimiseAxisY = false;
             }
         }
+
+    // Optimise our axes' values, if possible
+
+    if (canOptimiseAxisX)
+        pPlot->optimiseAxisX(minX, maxX);
+
+    if (canOptimiseAxisY)
+        pPlot->optimiseAxisY(minY, maxY);
+
+    // Set our axes' values and replot the plot, if needed
 
     if (pPlot->setAxes(minX, maxX, minY, maxY)) {
         return true;
@@ -1609,6 +1640,22 @@ double * SingleCellViewWidget::dataPoints(SingleCellViewSimulation *pSimulation,
 
 //==============================================================================
 
+void SingleCellViewWidget::updateGraphData(SingleCellViewGraphPanelPlotGraph *pGraph,
+                                           const qulonglong &pSize)
+{
+    // Update our graph's data
+
+    if (pGraph->isValid()) {
+        SingleCellViewSimulation *simulation = mSimulations.value(pGraph->fileName());
+
+        pGraph->setRawSamples(dataPoints(simulation, pGraph->parameterX()),
+                              dataPoints(simulation, pGraph->parameterY()),
+                              pSize);
+    }
+}
+
+//==============================================================================
+
 void SingleCellViewWidget::updateGraph(SingleCellViewGraphPanelPlotGraph *pGraph,
                                        const qulonglong &pSize,
                                        const bool &pDrawGraphSegment)
@@ -1619,13 +1666,7 @@ void SingleCellViewWidget::updateGraph(SingleCellViewGraphPanelPlotGraph *pGraph
 
     // Update our graph's data
 
-    if (pGraph->isValid()) {
-        SingleCellViewSimulation *simulation = mSimulations.value(pGraph->fileName());
-
-        pGraph->setRawSamples(dataPoints(simulation, pGraph->parameterX()),
-                              dataPoints(simulation, pGraph->parameterY()),
-                              pSize);
-    }
+    updateGraphData(pGraph, pSize);
 
     // Draw the graph's new segment, but only if required and if there is some
     // data to plot and the graph is visible

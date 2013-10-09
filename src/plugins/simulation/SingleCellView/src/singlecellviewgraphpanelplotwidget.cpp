@@ -601,7 +601,7 @@ void SingleCellViewGraphPanelPlotWidget::updateActions()
     mGui->actionZoomIn->setEnabled(mCanZoomInX || mCanZoomInY);
     mGui->actionZoomOut->setEnabled(mCanZoomOutX || mCanZoomOutY);
 
-    QRectF dRect = dataRect();
+    QRectF dRect = optimisedDataRect();
 
     mGui->actionResetZoom->setEnabled(   !dRect.isNull()
                                       && (  (currentMinX != dRect.left())
@@ -772,7 +772,7 @@ QList<SingleCellViewGraphPanelPlotGraph *> SingleCellViewGraphPanelPlotWidget::g
 
 void SingleCellViewGraphPanelPlotWidget::optimiseAxis(const int &pAxisId,
                                                       double &pMin,
-                                                      double &pMax)
+                                                      double &pMax) const
 {
     // Make sure that the given values are different
 
@@ -803,10 +803,28 @@ void SingleCellViewGraphPanelPlotWidget::optimiseAxis(const int &pAxisId,
 
 //==============================================================================
 
+void SingleCellViewGraphPanelPlotWidget::optimiseAxisX(double &pMin, double &pMax) const
+{
+    // Optimise our X axis' values
+
+    optimiseAxis(QwtPlot::xBottom, pMin, pMax);
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelPlotWidget::optimiseAxisY(double &pMin, double &pMax) const
+{
+    // Optimise our Y axis' values
+
+    optimiseAxis(QwtPlot::yLeft, pMin, pMax);
+}
+
+//==============================================================================
+
 void SingleCellViewGraphPanelPlotWidget::optimiseAxes(double &pMinX,
                                                       double &pMaxX,
                                                       double &pMinY,
-                                                      double &pMaxY)
+                                                      double &pMaxY) const
 {
     // Optimise our axes' values
 
@@ -816,27 +834,34 @@ void SingleCellViewGraphPanelPlotWidget::optimiseAxes(double &pMinX,
 
 //==============================================================================
 
-QRectF SingleCellViewGraphPanelPlotWidget::dataRect()
+QRectF SingleCellViewGraphPanelPlotWidget::dataRect() const
 {
-    // Determine the rectangle within which all the graphs, which are valid,
-    // selected and have some data, can fit
+    // Determine and return the rectangle within which all the graphs, which are
+    // valid, selected and have some data, can fit
 
-    QRectF dRect = QRect();
+    QRectF res = QRect();
 
     foreach (SingleCellViewGraphPanelPlotGraph *graph, mGraphs)
         if (graph->isValid() && graph->isSelected() && graph->dataSize())
-            dRect |= graph->boundingRect();
+            res |= graph->boundingRect();
 
-    // Optimise our data rectangle
+    return res;
+}
+
+//==============================================================================
+
+QRectF SingleCellViewGraphPanelPlotWidget::optimisedDataRect() const
+{
+    // Retrieve our data rectangle, optimise it and return it
+
+    QRectF dRect = dataRect();
 
     double minX = dRect.left();
-    double maxX = dRect.left()+dRect.width();
+    double maxX = minX+dRect.width();
     double minY = dRect.top();
-    double maxY = dRect.top()+dRect.height();
+    double maxY = minY+dRect.height();
 
     optimiseAxes(minX, maxX, minY, maxY);
-
-    // Return our optimised data rectangle
 
     return QRectF(minX, minY, maxX-minX, maxY-minY);
 }
@@ -1367,7 +1392,7 @@ void SingleCellViewGraphPanelPlotWidget::on_actionResetZoom_triggered()
     //       this method directly...
 
     if (mGui->actionResetZoom->isEnabled())
-        setAxes(dataRect());
+        setAxes(optimisedDataRect());
 }
 
 //==============================================================================

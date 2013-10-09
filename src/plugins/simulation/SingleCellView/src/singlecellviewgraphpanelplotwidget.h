@@ -161,6 +161,11 @@ public:
     bool addGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
     bool removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
 
+    QRectF dataRect() const;
+
+    void optimiseAxisX(double &pMin, double &pMax) const;
+    void optimiseAxisY(double &pMin, double &pMax) const;
+
     double minX() const;
     double maxX() const;
     double minY() const;
@@ -230,11 +235,11 @@ private:
     bool canZoomInY() const;
     bool canZoomOutY() const;
 
-    void optimiseAxis(const int &pAxisId, double &pMin, double &pMax);
+    void optimiseAxis(const int &pAxisId, double &pMin, double &pMax) const;
     void optimiseAxes(double &pMinX, double &pMaxX,
-                      double &pMinY, double &pMaxY);
+                      double &pMinY, double &pMaxY) const;
 
-    QRectF dataRect();
+    QRectF optimisedDataRect() const;
 
     void setAxis(const int &pAxis, double pMin, double pMax);
 

@@ -180,6 +180,8 @@ private:
     double * dataPoints(SingleCellViewSimulation *pSimulation,
                         CellMLSupport::CellmlFileRuntimeParameter *pParameter) const;
 
+    void updateGraphData(SingleCellViewGraphPanelPlotGraph *pGraph,
+                         const qulonglong &pSize);
     void updateGraph(SingleCellViewGraphPanelPlotGraph *pGraph,
                      const qulonglong &pSize,
                      const bool &pDrawGraphSegment = true);
