@@ -1421,7 +1421,7 @@ void SingleCellViewWidget::graphsRemoved(QList<SingleCellViewGraphPanelPlotGraph
             mPlots.removeOne(plot);
     }
 
-    // Update our plots
+    // Update the relevant plots
 
     foreach (SingleCellViewGraphPanelPlotWidget *plot, plots)
         updatePlot(plot);
@@ -1475,16 +1475,14 @@ void SingleCellViewWidget::graphsUpdated(const QList<SingleCellViewGraphPanelPlo
 
     // Update and replot our various plots
 
-    foreach (SingleCellViewGraphPanelPlotWidget *plot, plots) {
-        updatePlot(plot);
-
-        plot->replotNow();
-    }
+    foreach (SingleCellViewGraphPanelPlotWidget *plot, plots)
+        if (!updatePlot(plot))
+            plot->replotNow();
 }
 
 //==============================================================================
 
-void SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot)
+bool SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot)
 {
     // Check all the graphs associated with the given plot and see whether any
     // of them uses the variable of integration as parameter X and/or Y, and if
@@ -1540,7 +1538,7 @@ void SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot)
             }
         }
 
-    pPlot->setAxes(minX, maxX, minY, maxY);
+    return pPlot->setAxes(minX, maxX, minY, maxY);
 }
 
 //==============================================================================

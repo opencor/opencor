@@ -172,7 +172,7 @@ private:
 
     void updateInvalidModelMessageWidget();
 
-    void updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot);
+    bool updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot);
     void updatePlots();
 
     double * dataPoints(SingleCellViewSimulation *pSimulation,
