@@ -178,18 +178,12 @@ protected:
     virtual void wheelEvent(QWheelEvent *pEvent);
 
 private:
-    enum MouseAction {
+    enum Action {
         None,
         Pan,
         ShowCoordinates,
         Zoom,
         ZoomRegion
-    };
-
-    enum SettingAction {
-        Set,
-        Merge,
-        Reset
     };
 
     Ui::SingleCellViewGraphPanelPlotWidget *mGui;
@@ -198,7 +192,7 @@ private:
 
     QList<SingleCellViewGraphPanelPlotGraph *> mGraphs;
 
-    MouseAction mMouseAction;
+    Action mAction;
 
     QPoint mOriginPoint;
     QPoint mPoint;
@@ -226,9 +220,9 @@ private:
 
     void updateActions();
 
-    MouseAction mouseAction() const;
+    Action action() const;
 
-    void resetMouseAction();
+    void resetAction();
 
     double minX() const;
     double maxX() const;
@@ -249,11 +243,9 @@ private:
     QRectF dataRect() const;
 
     void setAxis(const int &pAxis, double pMin, double pMax);
-    bool setAxes(const SettingAction &pSettingAction,
-                 double pMinX, double pMaxX, double pMinY, double pMaxY,
+    bool setAxes(double pMinX, double pMaxX, double pMinY, double pMaxY,
                  const bool &pCanReplot = true);
-    bool setAxes(const SettingAction &pSettingAction,
-                 const QRectF &pRect, const bool &pCanReplot = true);
+    bool setAxes(const QRectF &pRect, const bool &pCanReplot = true);
 
     bool resetAxes();
 
