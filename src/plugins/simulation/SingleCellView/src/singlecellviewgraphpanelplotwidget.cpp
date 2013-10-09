@@ -608,7 +608,7 @@ void SingleCellViewGraphPanelPlotWidget::setWantedAxes(const double &pWantedMinX
 
     // Effectively update our axes by resetting them
 
-    setAxes(Reset);
+    resetAxes();
 }
 
 //==============================================================================
@@ -982,6 +982,15 @@ bool SingleCellViewGraphPanelPlotWidget::setAxes(const SettingAction &pSettingAc
     } else {
         return false;
     }
+}
+
+//==============================================================================
+
+bool SingleCellViewGraphPanelPlotWidget::resetAxes()
+{
+    // Reset our axes
+
+    return setAxes(Reset, 0.0, 0.0, 0.0, 0.0);
 }
 
 //==============================================================================
@@ -1384,7 +1393,7 @@ void SingleCellViewGraphPanelPlotWidget::drawGraphSegment(SingleCellViewGraphPan
         // Note: we always want to replot hence we check whether setAxes()
         //       replotted ourselves...
 
-        if (!setAxes(Reset))
+        if (!resetAxes())
             replotNow();
     } else {
         // It's not our first graph segment, so determine the minimum/maximum
