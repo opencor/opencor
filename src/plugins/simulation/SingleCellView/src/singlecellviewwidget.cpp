@@ -1604,8 +1604,11 @@ void SingleCellViewWidget::updateGraph(SingleCellViewGraphPanelPlotGraph *pGraph
     // Draw the graph's new segment, but only if required and if there is some
     // data to plot and the graph is visible
 
-    if (pDrawGraphSegment && pSize && pGraph->isVisible())
-        qobject_cast<SingleCellViewGraphPanelPlotWidget *>(pGraph->plot())->drawGraphSegment(pGraph, oldDataSize?oldDataSize-1:0, pSize-1);
+    if (pDrawGraphSegment && pSize && pGraph->isVisible()) {
+        SingleCellViewGraphPanelPlotWidget *plot = qobject_cast<SingleCellViewGraphPanelPlotWidget *>(pGraph->plot());
+
+        plot->drawGraphSegment(pGraph, oldDataSize?oldDataSize-1:0, pSize-1);
+    }
 }
 
 //==============================================================================

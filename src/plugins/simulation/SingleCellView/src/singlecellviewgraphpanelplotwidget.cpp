@@ -1328,56 +1328,9 @@ void SingleCellViewGraphPanelPlotWidget::drawGraphSegment(SingleCellViewGraphPan
     if (pFrom == pTo)
         return;
 
-    // Reset our axes and replot ourselves, if it is our first graph segment, or
-    // carry on as normal
+    // Draw our new graph segment
 
-    if (!pFrom) {
-        // It is our first graph segment, so reset our axes
-        // Note: we always want to replot hence we check whether the result of
-        //       resetAxes()...
-
-        if (!resetAxes())
-            replotNow();
-    } else {
-        // It's not our first graph segment, so determine the minimum/maximum
-        // X/Y values for our new data
-
-        double newMinX = 0.0;
-        double newMaxX = 0.0;
-        double newMinY = 0.0;
-        double newMaxY = 0.0;
-
-        for (qulonglong i = pFrom; i <= pTo; ++i)
-            if (i == pFrom) {
-                newMinX = newMaxX = pGraph->data()->sample(i).x();
-                newMinY = newMaxY = pGraph->data()->sample(i).y();
-            } else {
-                double valX = pGraph->data()->sample(i).x();
-                double valY = pGraph->data()->sample(i).y();
-
-                newMinX = qMin(newMinX, valX);
-                newMaxX = qMax(newMaxX, valX);
-
-                newMinY = qMin(newMinY, valY);
-                newMaxY = qMax(newMaxY, valY);
-            }
-
-        // Check whether our X/Y axis can handle the minimum/maximum X/Y values
-        // for our new data
-
-        if (   (newMinX < MinAxis) || (newMaxX > MaxAxis)
-            || (newMinY < MinAxis) || (newMaxY > MaxAxis))
-            // Our X/Y axis cannot handle the minimum/maximum X/Y values for our
-            // new data, so check our axes by trying to set them
-
-//            setAxes(Merge, minX(), maxX(), minY(), maxY());
-            ;//---GRY---
-        else
-            // Our X/Y axis can handle the X/Y min/max of our new data, so just
-            // draw our new graph segment
-
-            mDirectPainter->drawSeries(pGraph, pFrom, pTo);
-    }
+    mDirectPainter->drawSeries(pGraph, pFrom, pTo);
 }
 
 //==============================================================================
