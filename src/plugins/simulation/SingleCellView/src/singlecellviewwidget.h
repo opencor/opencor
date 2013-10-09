@@ -172,8 +172,9 @@ private:
 
     void updateInvalidModelMessageWidget();
 
-    bool updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot);
-    void updatePlots();
+    bool updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot,
+                    const bool &pForceReplot = false);
+    void updatePlots(const bool &pForceReplot = false);
 
     double * dataPoints(SingleCellViewSimulation *pSimulation,
                         CellMLSupport::CellmlFileRuntimeParameter *pParameter) const;

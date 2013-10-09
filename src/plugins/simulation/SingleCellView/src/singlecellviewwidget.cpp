@@ -794,7 +794,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
     // Update our plots (so that all of our graphs are up to date)
 
     if (validSimulationEnvironment)
-        updatePlots();
+        updatePlots(true);
 
     // If we have a valid simulation environment and we are dealing with a new
     // simulation, then reset both the simulation's data and results (well,
@@ -1424,7 +1424,10 @@ void SingleCellViewWidget::graphsRemoved(QList<SingleCellViewGraphPanelPlotGraph
     // Update the relevant plots
 
     foreach (SingleCellViewGraphPanelPlotWidget *plot, plots)
-        updatePlot(plot);
+        updatePlot(plot, true);
+        // Note: even if the axes' values of the plot haven't changed, we still
+        //       want to replot the plot since at least one of its graphs has
+        //       been removed...
 }
 
 //==============================================================================
@@ -1476,13 +1479,16 @@ void SingleCellViewWidget::graphsUpdated(const QList<SingleCellViewGraphPanelPlo
     // Update and replot our various plots
 
     foreach (SingleCellViewGraphPanelPlotWidget *plot, plots)
-        if (!updatePlot(plot))
-            plot->replotNow();
+        updatePlot(plot, true);
+        // Note: even if the axes' values of the plot haven't changed, we still
+        //       want to replot the plot since at least one of its graphs has
+        //       been updated...
 }
 
 //==============================================================================
 
-bool SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot)
+bool SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot,
+                                      const bool &pForceReplot)
 {
     // Check all the graphs associated with the given plot and see whether any
     // of them uses the variable of integration as parameter X and/or Y, and if
@@ -1538,17 +1544,25 @@ bool SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot)
             }
         }
 
-    return pPlot->setAxes(minX, maxX, minY, maxY);
+    if (pPlot->setAxes(minX, maxX, minY, maxY)) {
+        return true;
+    } else if (pForceReplot) {
+        pPlot->replotNow();
+
+        return true;
+    } else {
+        return false;
+    }
 }
 
 //==============================================================================
 
-void SingleCellViewWidget::updatePlots()
+void SingleCellViewWidget::updatePlots(const bool &pForceReplot)
 {
     // Update all our plots
 
     foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots)
-        updatePlot(plot);
+        updatePlot(plot, pForceReplot);
 }
 
 //==============================================================================
