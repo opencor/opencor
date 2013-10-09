@@ -1531,6 +1531,8 @@ bool SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot,
         maxX = minX+dataRect.width();
         minY = dataRect.top();
         maxY = minY+dataRect.height();
+
+        hasAxesValues = true;
     }
 
     // Check all the graphs associated with the given plot and see whether any
@@ -1553,7 +1555,7 @@ bool SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot,
 
             if (startingPoint > endingPoint) {
                 // The starting point is greater than the ending point, so swap
-                // them
+                // the two of them
 
                 startingPoint = simulation->data()->endingPoint();
                 endingPoint = simulation->data()->startingPoint();
