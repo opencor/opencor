@@ -1390,8 +1390,8 @@ void SingleCellViewGraphPanelPlotWidget::drawGraphSegment(SingleCellViewGraphPan
 
     if (!pFrom) {
         // It is our first graph segment, so reset our axes
-        // Note: we always want to replot hence we check whether setAxes()
-        //       replotted ourselves...
+        // Note: we always want to replot hence we check whether the result of
+        //       resetAxes()...
 
         if (!resetAxes())
             replotNow();
