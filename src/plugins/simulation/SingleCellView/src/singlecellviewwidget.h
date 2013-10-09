@@ -133,6 +133,8 @@ private:
     QMap<QString, bool> mResets;
     QMap<QString, int> mDelays;
 
+    QMap<QString, QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> > mPlotsRects;
+
     Core::ToolBarWidget *mToolBarWidget;
 
     QFrame *mTopSeparator;
@@ -174,7 +176,6 @@ private:
 
     bool updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot,
                     const bool &pForceReplot = false);
-    void updatePlots(const bool &pForceReplot = false);
 
     double * dataPoints(SingleCellViewSimulation *pSimulation,
                         CellMLSupport::CellmlFileRuntimeParameter *pParameter) const;

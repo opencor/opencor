@@ -912,13 +912,13 @@ bool SingleCellViewGraphPanelPlotWidget::setAxes(double pMinX, double pMaxX,
 
 //==============================================================================
 
-bool SingleCellViewGraphPanelPlotWidget::setAxes(const QRectF &pRect,
+bool SingleCellViewGraphPanelPlotWidget::setAxes(const QRectF &pAxesRect,
                                                  const bool &pCanReplot)
 {
     // Set our axes' values
 
-    return setAxes(pRect.left(), pRect.left()+pRect.width(),
-                   pRect.top(), pRect.top()+pRect.height(),
+    return setAxes(pAxesRect.left(), pAxesRect.left()+pAxesRect.width(),
+                   pAxesRect.top(), pAxesRect.top()+pAxesRect.height(),
                    pCanReplot);
 }
 

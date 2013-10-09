@@ -161,8 +161,14 @@ public:
     bool addGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
     bool removeGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
 
+    double minX() const;
+    double maxX() const;
+    double minY() const;
+    double maxY() const;
+
     bool setAxes(double pMinX, double pMaxX, double pMinY, double pMaxY,
                  const bool &pCanReplot = true);
+    bool setAxes(const QRectF &pAxesRect, const bool &pCanReplot = true);
 
     void drawGraphSegment(SingleCellViewGraphPanelPlotGraph *pGraph,
                           const qulonglong &pFrom, const qulonglong &pTo);
@@ -219,11 +225,6 @@ private:
 
     void resetAction();
 
-    double minX() const;
-    double maxX() const;
-    double minY() const;
-    double maxY() const;
-
     bool canZoomInX() const;
     bool canZoomOutX() const;
     bool canZoomInY() const;
@@ -236,7 +237,6 @@ private:
     QRectF dataRect();
 
     void setAxis(const int &pAxis, double pMin, double pMax);
-    bool setAxes(const QRectF &pRect, const bool &pCanReplot = true);
 
     bool resetAxes();
 

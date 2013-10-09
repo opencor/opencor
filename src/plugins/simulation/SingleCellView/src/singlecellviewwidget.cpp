@@ -100,6 +100,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mProgresses(QMap<QString, int>()),
     mResets(QMap<QString, bool>()),
     mDelays(QMap<QString, int>()),
+    mPlotsRects(QMap<QString, QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> >()),
     mSplitterWidgetSizes(QList<int>()),
     mRunActionEnabled(true),
     mOldSimulationResultsSizes(QMap<SingleCellViewSimulation *, qulonglong>()),
@@ -531,7 +532,7 @@ void SingleCellViewWidget::updateInvalidModelMessageWidget()
 
 void SingleCellViewWidget::initialize(const QString &pFileName)
 {
-    // Stop keeping track of certain things (so that updatePlots() doesn't get
+    // Stop keeping track of certain things (so that updatePlot() doesn't get
     // called unnecessarily)
     // Note: see the corresponding code at the end of this method...
 
@@ -561,6 +562,16 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
         mResets.insert(previousFileName, mGui->actionResetModelParameters->isEnabled());
         mDelays.insert(previousFileName, mDelayWidget->value());
+
+        // Keep track of the axes' values of the different plots
+
+        QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> plotsRects = QMap<SingleCellViewGraphPanelPlotWidget *, QRectF>();
+
+        foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots)
+            plotsRects.insert(plot, QRectF(QPointF(plot->minX(), plot->minY()),
+                                           QPointF(plot->maxX(), plot->maxY())));
+
+        mPlotsRects.insert(previousFileName, plotsRects);
     }
 
     // Retrieve our simulation object for the current model, if any
@@ -793,8 +804,18 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
     // Update our plots (so that all of our graphs are up to date)
 
-    if (validSimulationEnvironment)
-        updatePlots(true);
+    if (validSimulationEnvironment) {
+        QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> plotsRects = mPlotsRects.value(pFileName, QMap<SingleCellViewGraphPanelPlotWidget *, QRectF>());
+
+        foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots) {
+            QRectF axesRect = plotsRects.value(plot);
+
+            if (axesRect.isNull())
+                updatePlot(plot, true);
+            else if (!plot->setAxes(axesRect))
+                plot->replotNow();
+        }
+    }
 
     // If we have a valid simulation environment and we are dealing with a new
     // simulation, then reset both the simulation's data and results (well,
@@ -841,6 +862,8 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
 
     mResets.remove(pFileName);
     mDelays.remove(pFileName);
+
+    mPlotsRects.remove(pFileName);
 
     // Finalize a few things in our GUI's simulation, solvers, graphs and
     // parameters widgets
@@ -1305,7 +1328,8 @@ void SingleCellViewWidget::simulationPropertyChanged(Core::Property *pProperty)
     // Now, update our plots, if needed
 
     if (needUpdatePlots)
-        updatePlots();
+        foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots)
+            updatePlot(plot);
 }
 
 //==============================================================================
@@ -1553,16 +1577,6 @@ bool SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot,
     } else {
         return false;
     }
-}
-
-//==============================================================================
-
-void SingleCellViewWidget::updatePlots(const bool &pForceReplot)
-{
-    // Update all our plots
-
-    foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots)
-        updatePlot(plot, pForceReplot);
 }
 
 //==============================================================================
