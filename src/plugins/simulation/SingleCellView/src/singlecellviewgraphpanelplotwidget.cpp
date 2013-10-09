@@ -453,9 +453,13 @@ static const double MinAxis = -DblMaxAxis;
 static const double MaxAxis =  DblMaxAxis;
 
 static const double MaxAxisRange = MaxAxis-MinAxis;
-static const double MinAxisRange = 1.0e-11;
-// Note: to use a smaller minimum axis range would make the coordinates to be
-//       shown as "0", so...
+static const double MinAxisRange = 1.0e-5;
+// Note: we use double precision (as opposed to single precision), however it
+//       would seem that, at times, Qwt switches between the two types of
+//       precisions. Indeed, if we are to zoom in too much then graphs may be
+//       rendered incorrectly. So, knowing that single precision corresponds to
+//       a 6-digit precision, we give ourselves a bit of a safety net and allow
+//       minimum axis range of 10^-5...
 
 static const double DefMinAxis =    0.0;
 static const double DefMaxAxis = 1000.0;
@@ -506,9 +510,10 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
     qobject_cast<QwtPlotCanvas *>(canvas())->setFrameShape(QFrame::NoFrame);
 
     // Set our axes' values
+    // Note: we are not all initialised yet, so we don't want to doSetAxes() to
+    //       replot ourselves...
 
-    doSetAxis(QwtPlot::xBottom, DefMinAxis, DefMaxAxis);
-    doSetAxis(QwtPlot::yLeft, DefMinAxis, DefMaxAxis);
+    doSetAxes(Set, DefMinAxis, DefMaxAxis, DefMinAxis, DefMaxAxis, false);
 
     // Attach a grid to ourselves
 
@@ -827,17 +832,14 @@ void SingleCellViewGraphPanelPlotWidget::doSetAxis(const int &pAxis,
 
     setAxisScaleDiv(pAxis, QwtScaleDiv(pMin, pMax));
     setAxisScale(pAxis, pMin, pMax);
-
-    // Make sure that our actions are up-to-date
-
-    updateActions();
 }
 
 //==============================================================================
 
 bool SingleCellViewGraphPanelPlotWidget::doSetAxes(const SettingAction &pSettingAction,
                                                    double pMinX, double pMaxX,
-                                                   double pMinY,double pMaxY)
+                                                   double pMinY,double pMaxY,
+                                                   const bool &pCanReplot)
 {
     // Keep track of our axes' old values
 
@@ -951,23 +953,29 @@ bool SingleCellViewGraphPanelPlotWidget::doSetAxes(const SettingAction &pSetting
 
     // Update our axes' values, if needed
 
-    bool needReplot = false;
+    bool axesValuesChanged = false;
 
     if ((pMinX != oldMinX) || (pMaxX != oldMaxX)) {
         doSetAxis(QwtPlot::xBottom, pMinX, pMaxX);
 
-        needReplot = true;
+        axesValuesChanged = true;
     }
 
     if ((pMinY != oldMinY) || (pMaxY != oldMaxY)) {
         doSetAxis(QwtPlot::yLeft, pMinY, pMaxY);
 
-        needReplot = true;
+        axesValuesChanged = true;
     }
 
-    // Replot ourselves, if needed
+    // Make sure that our actions are up to date, should our axes' values have
+    // changed
 
-    if (needReplot) {
+    if (axesValuesChanged)
+        updateActions();
+
+    // Replot ourselves, if needed and allowed
+
+    if (axesValuesChanged && pCanReplot) {
         replotNow();
 
         return true;
@@ -1023,8 +1031,10 @@ void SingleCellViewGraphPanelPlotWidget::scaleAxes(const QPoint &pPoint,
     double newMaxX = maxX();
     double newMinY = minY();
     double newMaxY = maxY();
-    bool scaledAxisX = scaleAxis(pScalingFactorX, mCanZoomInX, mCanZoomOutX, originPoint.x(), newMinX, newMaxX);
-    bool scaledAxisY = scaleAxis(pScalingFactorY, mCanZoomInY, mCanZoomOutY, originPoint.y(), newMinY, newMaxY);
+    bool scaledAxisX = scaleAxis(pScalingFactorX, mCanZoomInX, mCanZoomOutX,
+                                 originPoint.x(), newMinX, newMaxX);
+    bool scaledAxisY = scaleAxis(pScalingFactorY, mCanZoomInY, mCanZoomOutY,
+                                 originPoint.y(), newMinY, newMaxY);
     // Note: we want to make both calls to scaleAxis(), hence they are not part
     //       of the if() statement below...
 

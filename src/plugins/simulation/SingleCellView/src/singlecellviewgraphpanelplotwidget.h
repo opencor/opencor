@@ -245,7 +245,8 @@ private:
     void doSetAxis(const int &pAxis, double pMin, double pMax);
     bool doSetAxes(const SettingAction &pSettingAction,
                    double pMinX = 0, double pMaxX = 0,
-                   double pMinY = 0, double pMaxY = 0);
+                   double pMinY = 0, double pMaxY = 0,
+                   const bool &pCanReplot = true);
 
     bool scaleAxis(const double &pScalingFactor,
                    const bool &pCanZoomIn, const bool &pCanZoomOut,
