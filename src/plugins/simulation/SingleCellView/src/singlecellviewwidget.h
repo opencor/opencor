@@ -174,6 +174,9 @@ private:
 
     void updateInvalidModelMessageWidget();
 
+    void checkAxisValue(double &pValue, const double &pOrigValue,
+                        const QList<double> &pTestValues);
+
     bool updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot,
                     const bool &pForceReplot = false);
 

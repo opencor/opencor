@@ -1405,6 +1405,8 @@ void SingleCellViewWidget::graphAdded(SingleCellViewGraphPanelPlotGraph *pGraph)
     updateGraphData(pGraph, mSimulations.value(pGraph->fileName())->results()->size());
     updatePlot(plot);
 
+    plot->drawGraphSegment(pGraph, 0, -1);
+
     // Keep track of the plot itself, if needed
 
     if (!mPlots.contains(plot)) {
@@ -1511,6 +1513,23 @@ void SingleCellViewWidget::graphsUpdated(const QList<SingleCellViewGraphPanelPlo
 
 //==============================================================================
 
+void SingleCellViewWidget::checkAxisValue(double &pValue,
+                                          const double &pOrigValue,
+                                          const QList<double> &pTestValues)
+{
+    // Check whether pOrigValue is equal to one of the values in pTestValues and
+    // if so then update pValue with pOrigValue
+
+    foreach (const double &testValue, pTestValues)
+        if (pOrigValue == testValue) {
+            pValue = pOrigValue;
+
+            break;
+        }
+}
+
+//==============================================================================
+
 bool SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot,
                                       const bool &pForceReplot)
 {
@@ -1546,12 +1565,18 @@ bool SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot,
     bool canOptimiseAxisX = true;
     bool canOptimiseAxisY = true;
 
+    QList<double> startingPoints = QList<double>();
+    QList<double> endingPoints = QList<double>();
+
     foreach (SingleCellViewGraphPanelPlotGraph *graph, pPlot->graphs())
         if (graph->isValid() && graph->isSelected()) {
             SingleCellViewSimulation *simulation = mSimulations.value(graph->fileName());
 
             double startingPoint = simulation->data()->startingPoint();
             double endingPoint = simulation->data()->endingPoint();
+
+            startingPoints << startingPoint;
+            endingPoints << endingPoint;
 
             if (startingPoint > endingPoint) {
                 // The starting point is greater than the ending point, so swap
@@ -1593,11 +1618,23 @@ bool SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot,
 
     // Optimise our axes' values, if possible
 
-    if (canOptimiseAxisX)
-        pPlot->optimiseAxisX(minX, maxX);
+    double origMinX = minX;
+    double origMaxX = maxX;
+    double origMinY = minY;
+    double origMaxY = maxY;
 
-    if (canOptimiseAxisY)
-        pPlot->optimiseAxisY(minY, maxY);
+    pPlot->optimiseAxisX(minX, maxX);
+    pPlot->optimiseAxisY(minY, maxY);
+
+    if (!canOptimiseAxisX) {
+        checkAxisValue(minX, origMinX, startingPoints);
+        checkAxisValue(maxX, origMaxX, endingPoints);
+    }
+
+    if (!canOptimiseAxisY) {
+        checkAxisValue(minY, origMinY, startingPoints);
+        checkAxisValue(maxY, origMaxY, endingPoints);
+    }
 
     // Set our axes' values and replot the plot, if needed
 
