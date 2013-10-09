@@ -240,12 +240,21 @@ private:
     bool canZoomInY() const;
     bool canZoomOutY() const;
 
-    void optimiseAxisValues(const int &pAxisId, double &pMin, double &pMax);
+    void optimiseValues(const int &pAxisId, double &pMin, double &pMax);
+    void optimiseValues(double &pMinX, double &pMaxX,
+                        double &pMinY, double &pMaxY);
+
+    QRectF optimisedRect(const QRectF &pRect);
+
+    QRectF dataRect() const;
 
     void setAxis(const int &pAxis, double pMin, double pMax);
     bool setAxes(const SettingAction &pSettingAction,
                  double pMinX, double pMaxX, double pMinY, double pMaxY,
                  const bool &pCanReplot = true);
+    bool setAxes(const SettingAction &pSettingAction,
+                 const QRectF &pRect, const bool &pCanReplot = true);
+
     bool resetAxes();
 
     bool scaleAxis(const double &pScalingFactor,

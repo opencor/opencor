@@ -617,23 +617,32 @@ void SingleCellViewGraphPanelPlotWidget::updateActions()
 {
     // Update our actions
 
-    double rangeX = maxX()-minX();
-    double rangeY = maxY()-minY();
+    double currentMinX = minX();
+    double currentMaxX = maxX();
+    double currentMinY = minY();
+    double currentMaxY = maxY();
 
-    mCanZoomInX  = rangeX > MinAxisRange;
-    mCanZoomOutX = rangeX < MaxAxisRange;
+    double currentRangeX = currentMaxX-currentMinX;
+    double currentRangeY = currentMaxY-currentMinY;
 
-    mCanZoomInY  = rangeY > MinAxisRange;
-    mCanZoomOutY = rangeY < MaxAxisRange;
+    mCanZoomInX  = currentRangeX > MinAxisRange;
+    mCanZoomOutX = currentRangeX < MaxAxisRange;
+
+    mCanZoomInY  = currentRangeY > MinAxisRange;
+    mCanZoomOutY = currentRangeY < MaxAxisRange;
 
     // Update the enabled status of our actions
 
     mGui->actionZoomIn->setEnabled(mCanZoomInX || mCanZoomInY);
     mGui->actionZoomOut->setEnabled(mCanZoomOutX || mCanZoomOutY);
 
-    mGui->actionResetZoom->setEnabled(true);
-//---GRY--- WE SHOULD 'PROPERLY' SET THE ENABLED STATE OF THE RESET ZOOM
-//          ACTION...
+    QRectF optimisedDataRect = optimisedRect(dataRect());
+
+    mGui->actionResetZoom->setEnabled(   !optimisedDataRect.isNull()
+                                      && (  (currentMinX != optimisedDataRect.left())
+                                          || (currentMaxX != optimisedDataRect.left()+optimisedDataRect.width())
+                                          || (currentMinY != optimisedDataRect.top())
+                                          || (currentMaxY != optimisedDataRect.top()+optimisedDataRect.height())));
 }
 
 //==============================================================================
@@ -796,9 +805,9 @@ QList<SingleCellViewGraphPanelPlotGraph *> SingleCellViewGraphPanelPlotWidget::g
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::optimiseAxisValues(const int &pAxisId,
-                                                            double &pMin,
-                                                            double &pMax)
+void SingleCellViewGraphPanelPlotWidget::optimiseValues(const int &pAxisId,
+                                                        double &pMin,
+                                                        double &pMax)
 {
     // Optimise the axis' values so that they fall onto a factor of the axis'
     // minor step
@@ -813,6 +822,51 @@ void SingleCellViewGraphPanelPlotWidget::optimiseAxisValues(const int &pAxisId,
 
     pMin = qFloor(pMin/minorStep)*minorStep;
     pMax = qCeil(pMax/minorStep)*minorStep;
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelPlotWidget::optimiseValues(double &pMinX,
+                                                        double &pMaxX,
+                                                        double &pMinY,
+                                                        double &pMaxY)
+{
+    // Optimise our axes' values
+
+    optimiseValues(QwtPlot::xBottom, pMinX, pMaxX);
+    optimiseValues(QwtPlot::yLeft, pMinY, pMaxY);
+}
+
+//==============================================================================
+
+QRectF SingleCellViewGraphPanelPlotWidget::optimisedRect(const QRectF &pRect)
+{
+    // Optimise our axes' values
+
+    double minX = pRect.left();
+    double maxX = pRect.left()+pRect.width();
+    double minY = pRect.top();
+    double maxY = pRect.top()+pRect.height();
+
+    optimiseValues(minX, maxX, minY, maxY);
+
+    return QRectF(minX, minY, maxX-minX, maxY-minY);
+}
+
+//==============================================================================
+
+QRectF SingleCellViewGraphPanelPlotWidget::dataRect() const
+{
+    // Return the rectangle within which all the graphs, which are valid,
+    // selected and have some data, can fit
+
+    QRectF res = QRect();
+
+    foreach (SingleCellViewGraphPanelPlotGraph *graph, mGraphs)
+        if (graph->isValid() && graph->isSelected() && graph->dataSize())
+            res |= graph->boundingRect();
+
+    return res;
 }
 
 //==============================================================================
@@ -854,48 +908,46 @@ bool SingleCellViewGraphPanelPlotWidget::setAxes(const SettingAction &pSettingAc
     if (pSettingAction == Set) {
         checkAxesValues(pMinX, pMaxX, pMinY, pMaxY);
     } else {
-        // Retrieve the bounding rectangle for all our graphs (but only for
-        // those that actually have some data), if needed
+        // Retrieve the data rectangle for all our graphs (but only for those
+        // that actually have some data), if needed
 
-        QRectF boundingRect = QRectF();
+        QRectF dRect = QRectF();
         bool wantMinMaxX = mWantedMinX != mWantedMaxX;
         bool wantMinMaxY = mWantedMinY != mWantedMaxY;
 
         if (!wantMinMaxX || !wantMinMaxY)
-            foreach (SingleCellViewGraphPanelPlotGraph *graph, mGraphs)
-                if (graph->isValid() && graph->isSelected() && graph->dataSize())
-                    boundingRect |= graph->boundingRect();
+            dRect = dataRect();
 
-        // Take into account our axes' needed values, if any, or use our default
-        // axes' values, if our bounding rectangle has no width/height
+        // Take into account our axes' wanted values, if any, or use our default
+        // axes' values, if our data rectangle has no width/height
 
         if (wantMinMaxX) {
-            if (boundingRect.width()) {
-                boundingRect.setLeft(qMin(boundingRect.left(), mWantedMinX));
-                boundingRect.setWidth(qMax(boundingRect.width(), mWantedMaxX-mWantedMinX));
+            if (dRect.width()) {
+                dRect.setLeft(qMin(dRect.left(), mWantedMinX));
+                dRect.setWidth(qMax(dRect.width(), mWantedMaxX-mWantedMinX));
             } else {
-                boundingRect.setLeft(mWantedMinX);
-                boundingRect.setWidth(mWantedMaxX-mWantedMinX);
+                dRect.setLeft(mWantedMinX);
+                dRect.setWidth(mWantedMaxX-mWantedMinX);
             }
-        } else if (!boundingRect.width()) {
-            boundingRect.setLeft(DefMinAxis);
-            boundingRect.setWidth(DefMaxAxis-DefMinAxis);
+        } else if (!dRect.width()) {
+            dRect.setLeft(DefMinAxis);
+            dRect.setWidth(DefMaxAxis-DefMinAxis);
         }
 
         if (wantMinMaxY) {
-            if (boundingRect.height()) {
-                boundingRect.setTop(qMin(boundingRect.top(), mWantedMinY));
-                boundingRect.setHeight(qMax(boundingRect.height(), mWantedMaxY-mWantedMinY));
+            if (dRect.height()) {
+                dRect.setTop(qMin(dRect.top(), mWantedMinY));
+                dRect.setHeight(qMax(dRect.height(), mWantedMaxY-mWantedMinY));
             } else {
-                boundingRect.setTop(mWantedMinY);
-                boundingRect.setHeight(mWantedMaxY-mWantedMinY);
+                dRect.setTop(mWantedMinY);
+                dRect.setHeight(mWantedMaxY-mWantedMinY);
             }
-        } else if (!boundingRect.height()) {
-            boundingRect.setTop(DefMinAxis);
-            boundingRect.setHeight(DefMaxAxis-DefMinAxis);
+        } else if (!dRect.height()) {
+            dRect.setTop(DefMinAxis);
+            dRect.setHeight(DefMaxAxis-DefMinAxis);
         }
 
-        // Update our axes' values, should we have retrieved a non-null bounding
+        // Update our axes' values, should we have retrieved a non-null data
         // rectangle and in case we need to reset or update the axes' values
 
         double realMinX = DefMinAxis;
@@ -903,13 +955,13 @@ bool SingleCellViewGraphPanelPlotWidget::setAxes(const SettingAction &pSettingAc
         double realMinY = DefMinAxis;
         double realMaxY = DefMaxAxis;
 
-        if (!boundingRect.isNull()) {
+        if (!dRect.isNull()) {
             // Retrieve our axes' values and make sure that they are fine
 
-            double minX = boundingRect.left();
-            double maxX = minX+boundingRect.width();
-            double minY = boundingRect.top();
-            double maxY = minY+boundingRect.height();
+            double minX = dRect.left();
+            double maxX = minX+dRect.width();
+            double minY = dRect.top();
+            double maxY = minY+dRect.height();
 
             checkAxesValues(minX, maxX, minY, maxY);
 
@@ -918,10 +970,10 @@ bool SingleCellViewGraphPanelPlotWidget::setAxes(const SettingAction &pSettingAc
 
             if (!wantMinMaxX || !wantMinMaxY) {
                 if (!wantMinMaxX)
-                    optimiseAxisValues(QwtPlot::xBottom, minX, maxX);
+                    optimiseValues(QwtPlot::xBottom, minX, maxX);
 
                 if (!wantMinMaxY)
-                    optimiseAxisValues(QwtPlot::yLeft, minY, maxY);
+                    optimiseValues(QwtPlot::yLeft, minY, maxY);
 
                 checkAxesValues(minX, maxX, minY, maxY);
             }
@@ -982,6 +1034,20 @@ bool SingleCellViewGraphPanelPlotWidget::setAxes(const SettingAction &pSettingAc
     } else {
         return false;
     }
+}
+
+//==============================================================================
+
+bool SingleCellViewGraphPanelPlotWidget::setAxes(const SettingAction &pSettingAction,
+                                                 const QRectF &pRect,
+                                                 const bool &pCanReplot)
+{
+    // Set our axes' values
+
+    return setAxes(pSettingAction,
+                   pRect.left(), pRect.left()+pRect.width(),
+                   pRect.top(), pRect.top()+pRect.height(),
+                   pCanReplot);
 }
 
 //==============================================================================
@@ -1469,14 +1535,16 @@ void SingleCellViewGraphPanelPlotWidget::on_actionZoomOut_triggered()
 
 void SingleCellViewGraphPanelPlotWidget::on_actionResetZoom_triggered()
 {
-    // Reset the zoom level by resetting our axes, but only if the reset zoom
-    // mouse action is enabled
+    // Reset the zoom level by setting our axes' values to those of our
+    // optimised data rectangle
     // Note: we check for the reset zoom mouse action to be enabled since we may
     //       call this method directly...
 
-    if (mGui->actionResetZoom->isEnabled())
-        setAxes(Set, 0.0, 1000.0, 0.0, 1000.0);
-//---GRY--- WE SHOULD 'PROPERLY' SET THE AXES...
+    if (mGui->actionResetZoom->isEnabled()) {
+        QRectF dRect = dataRect();
+
+        setAxes(Set, optimisedRect(dRect));
+    }
 }
 
 //==============================================================================
