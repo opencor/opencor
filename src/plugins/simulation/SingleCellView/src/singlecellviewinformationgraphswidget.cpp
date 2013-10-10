@@ -174,7 +174,9 @@ void SingleCellViewInformationGraphsWidget::initialize(const QString &pFileName,
     QMap<Core::Property *, bool> graphsPropertiesSelected = mGraphPropertiesSelected.value(pFileName);
 
     foreach (Core::Property *graphProperty, mGraphProperties.values())
-        graphProperty->setChecked(graphsPropertiesSelected.value(graphProperty));
+        graphProperty->setChecked(graphsPropertiesSelected.value(graphProperty, true));
+        // Note: by default, we want graphs to be selected, hence our use of
+        //       true as the default value...
 }
 
 //==============================================================================
