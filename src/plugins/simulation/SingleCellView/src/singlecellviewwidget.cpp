@@ -1751,6 +1751,12 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
 
 void SingleCellViewWidget::checkResults(SingleCellViewSimulation *pSimulation)
 {
+    // Make sure that we can still check results (i.e. we are not closing down
+    // with some simulations still running)
+
+    if (!mSimulations.values().contains(pSimulation))
+        return;
+
     // Update our simulation results size
 
     qulonglong simulationResultsSize = pSimulation->results()->size();
