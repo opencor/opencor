@@ -911,12 +911,6 @@ bool SingleCellViewGraphPanelPlotWidget::setAxes(double pMinX, double pMaxX,
         axesValuesChanged = true;
     }
 
-    // Make sure that our actions are up to date, should our axes' values have
-    // changed
-
-    if (axesValuesChanged)
-        updateActions();
-
     // Replot ourselves, if needed and allowed
 
     if (axesValuesChanged && pCanReplot) {
