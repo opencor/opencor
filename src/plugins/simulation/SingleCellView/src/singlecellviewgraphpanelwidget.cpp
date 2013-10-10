@@ -128,6 +128,15 @@ void SingleCellViewGraphPanelWidget::mousePressEvent(QMouseEvent *pEvent)
 
 //==============================================================================
 
+SingleCellViewGraphPanelPlotWidget * SingleCellViewGraphPanelWidget::plot() const
+{
+    // Return our plot
+
+    return mPlot;
+}
+
+//==============================================================================
+
 QList<SingleCellViewGraphPanelPlotGraph *> SingleCellViewGraphPanelWidget::graphs() const
 {
     // Return all our plot's graphs

@@ -65,6 +65,8 @@ public:
     bool isActive() const;
     void setActive(const bool &pActive);
 
+    SingleCellViewGraphPanelPlotWidget * plot() const;
+
     QList<SingleCellViewGraphPanelPlotGraph *> graphs() const;
 
     void addGraph(SingleCellViewGraphPanelPlotGraph *pGraph);

@@ -99,7 +99,6 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mOldSimulationResultsSizes(QMap<SingleCellViewSimulation *, qulonglong>()),
     mCheckResultsSimulations(QList<SingleCellViewSimulation *>()),
     mPlots(QList<SingleCellViewGraphPanelPlotWidget *>()),
-    mGraphPanelPlots(QMap<SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotWidget *>()),
     mGraphPlots(QMap<SingleCellViewGraphPanelPlotGraph *, SingleCellViewGraphPanelPlotWidget *>()),
     mCanUpdatePlotsForUpdatedGraphs(true)
 {
@@ -1418,9 +1417,7 @@ void SingleCellViewWidget::graphPanelRemoved(SingleCellViewGraphPanelWidget *pGr
 {
     // A graph panel has been removed, so stop tracking its plot
 
-    mPlots.removeOne(mGraphPanelPlots.value(pGraphPanel));
-
-    mGraphPanelPlots.remove(pGraphPanel);
+    mPlots.removeOne(pGraphPanel->plot());
 }
 
 //==============================================================================
@@ -1451,11 +1448,8 @@ void SingleCellViewWidget::graphAdded(SingleCellViewGraphPanelPlotGraph *pGraph)
 
     // Keep track of the plot itself, if needed
 
-    if (!mPlots.contains(plot)) {
+    if (!mPlots.contains(plot))
         mPlots << plot;
-
-        mGraphPanelPlots.insert(qobject_cast<SingleCellViewGraphPanelWidget *>(plot->parentWidget()), plot);
-    }
 }
 
 //==============================================================================

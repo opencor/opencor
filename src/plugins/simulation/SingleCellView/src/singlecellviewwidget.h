@@ -163,7 +163,6 @@ private:
     QList<SingleCellViewSimulation *> mCheckResultsSimulations;
 
     QList<SingleCellViewGraphPanelPlotWidget *> mPlots;
-    QMap<SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotWidget *> mGraphPanelPlots;
     QMap<SingleCellViewGraphPanelPlotGraph *, SingleCellViewGraphPanelPlotWidget *> mGraphPlots;
 
     bool mCanUpdatePlotsForUpdatedGraphs;
