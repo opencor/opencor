@@ -298,8 +298,11 @@ void SingleCellViewInformationGraphsWidget::finalize(SingleCellViewGraphPanelWid
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlotGraph *pGraph)
+void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlotWidget *pPlot,
+                                                     SingleCellViewGraphPanelPlotGraph *pGraph)
 {
+    Q_UNUSED(pPlot);
+
     // Make sure that we have a property editor
 
     if (!mPropertyEditor)
@@ -361,8 +364,11 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::removeGraphs(QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs)
+void SingleCellViewInformationGraphsWidget::removeGraphs(SingleCellViewGraphPanelPlotWidget *pPlot,
+                                                         const QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs)
 {
+    Q_UNUSED(pPlot);
+
     // Make sure that we have a property editor
 
     if (!mPropertyEditor)
@@ -443,7 +449,9 @@ void SingleCellViewInformationGraphsWidget::selectAllGraphs(const bool &pSelect)
     foreach (SingleCellViewGraphPanelPlotGraph *graph, mGraphs)
         graph->setSelected(pSelect);
 
-    emit graphsUpdated(mGraphs.values());
+    if (mGraphs.count())
+        emit graphsUpdated(qobject_cast<SingleCellViewGraphPanelPlotWidget *>(mGraphs.values().first()->plot()),
+                           mGraphs.values());
 
     connect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
             this, SLOT(graphChanged(Core::Property *)));
@@ -738,7 +746,8 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
         && (   (oldParameterX != graph->parameterX())
             || (oldParameterY != graph->parameterY())
             || (oldPen != graph->pen())))
-        emit graphsUpdated(QList<SingleCellViewGraphPanelPlotGraph *>() << graph);
+        emit graphsUpdated(qobject_cast<SingleCellViewGraphPanelPlotWidget *>(graph->plot()),
+                           QList<SingleCellViewGraphPanelPlotGraph *>() << graph);
 }
 
 //==============================================================================
@@ -769,7 +778,8 @@ void SingleCellViewInformationGraphsWidget::graphChanged(Core::Property *pProper
         if (graph) {
             graph->setSelected(pProperty->isChecked());
 
-            emit graphsUpdated(QList<SingleCellViewGraphPanelPlotGraph *>() << graph);
+            emit graphsUpdated(qobject_cast<SingleCellViewGraphPanelPlotWidget *>(graph->plot()),
+                               QList<SingleCellViewGraphPanelPlotGraph *>() << graph);
         }
     } else {
         // Either the model, X or Y parameter property of the graph has changed,
@@ -898,7 +908,9 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
         foreach (Core::Property *graphProperty, graphProperties)
             graphs << mGraphs.value(graphProperty);
 
-        emit graphsUpdated(graphs);
+        if (graphs.count())
+            emit graphsUpdated(qobject_cast<SingleCellViewGraphPanelPlotWidget *>(graphs.first()->plot()),
+                               graphs);
     }
 }
 

@@ -90,8 +90,10 @@ Q_SIGNALS:
     void activated(SingleCellViewGraphPanelWidget *pGraphPanel);
     void inactivated(SingleCellViewGraphPanelWidget *pGraphPanel);
 
-    void graphAdded(SingleCellViewGraphPanelPlotGraph *pGraph);
-    void graphsRemoved(QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs);
+    void graphAdded(SingleCellViewGraphPanelPlotWidget *pPlot,
+                    SingleCellViewGraphPanelPlotGraph *pGraph);
+    void graphsRemoved(SingleCellViewGraphPanelPlotWidget *pPlot,
+                       const QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs);
 };
 
 //==============================================================================

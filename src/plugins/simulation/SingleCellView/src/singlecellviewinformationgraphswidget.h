@@ -68,6 +68,7 @@ namespace SingleCellView {
 //==============================================================================
 
 class SingleCellViewGraphPanelPlotGraph;
+class SingleCellViewGraphPanelPlotWidget;
 class SingleCellViewGraphPanelWidget;
 class SingleCellViewSimulation;
 
@@ -137,14 +138,17 @@ private:
     void selectAllGraphs(const bool &pSelect);
 
 Q_SIGNALS:
-    void graphsUpdated(const QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs);
+    void graphsUpdated(SingleCellViewGraphPanelPlotWidget *pPlot,
+                       const QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs);
 
 public Q_SLOTS:
     void initialize(SingleCellViewGraphPanelWidget *pGraphPanel);
     void finalize(SingleCellViewGraphPanelWidget *pGraphPanel);
 
-    void addGraph(SingleCellViewGraphPanelPlotGraph *pGraph);
-    void removeGraphs(QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs);
+    void addGraph(SingleCellViewGraphPanelPlotWidget *pPlot,
+                  SingleCellViewGraphPanelPlotGraph *pGraph);
+    void removeGraphs(SingleCellViewGraphPanelPlotWidget *pPlot,
+                      const QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs);
 
 private Q_SLOTS:
     void on_actionAddGraph_triggered();

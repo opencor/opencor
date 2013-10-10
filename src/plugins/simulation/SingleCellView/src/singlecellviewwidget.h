@@ -163,7 +163,6 @@ private:
     QList<SingleCellViewSimulation *> mCheckResultsSimulations;
 
     QList<SingleCellViewGraphPanelPlotWidget *> mPlots;
-    QMap<SingleCellViewGraphPanelPlotGraph *, SingleCellViewGraphPanelPlotWidget *> mGraphPlots;
 
     bool mCanUpdatePlotsForUpdatedGraphs;
 
@@ -234,10 +233,13 @@ private Q_SLOTS:
     void addGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
                   CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 
-    void graphAdded(SingleCellViewGraphPanelPlotGraph *pGraph);
-    void graphsRemoved(QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs);
+    void graphAdded(SingleCellViewGraphPanelPlotWidget *pPlot,
+                    SingleCellViewGraphPanelPlotGraph *pGraph);
+    void graphsRemoved(SingleCellViewGraphPanelPlotWidget *pPlot,
+                       const QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs);
 
-    void graphsUpdated(const QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs);
+    void graphsUpdated(SingleCellViewGraphPanelPlotWidget *pPlot,
+                       const QList<SingleCellViewGraphPanelPlotGraph *> &pGraphs);
 
     void callCheckResults();
 };
