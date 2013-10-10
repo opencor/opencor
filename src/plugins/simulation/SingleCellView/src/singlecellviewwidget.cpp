@@ -92,6 +92,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mProgresses(QMap<QString, int>()),
     mResets(QMap<QString, bool>()),
     mDelays(QMap<QString, int>()),
+    mActiveGraphPanels(QMap<QString, SingleCellViewGraphPanelWidget *>()),
     mPlotsRects(QMap<QString, QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> >()),
     mSplitterWidgetSizes(QList<int>()),
     mRunActionEnabled(true),
@@ -564,6 +565,10 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         mResets.insert(previousFileName, mGui->actionResetModelParameters->isEnabled());
         mDelays.insert(previousFileName, mDelayWidget->value());
 
+        // Keep track of the active graph panel
+
+        mActiveGraphPanels.insert(previousFileName, mContentsWidget->graphPanelsWidget()->activeGraphPanel());
+
         // Keep track of the axes' values of the different plots
 
         QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> plotsRects = QMap<SingleCellViewGraphPanelPlotWidget *, QRectF>();
@@ -803,6 +808,16 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
             mSimulation->results()->reset(false);
         }
 
+        // Set the active graph panel or select the first one, if no backup
+        // exists
+
+        SingleCellViewGraphPanelWidget *activeGraphPanel = mActiveGraphPanels.value(pFileName);
+
+        if (activeGraphPanel)
+            activeGraphPanel->setActive(true);
+        else
+            mContentsWidget->graphPanelsWidget()->graphPanels().first()->setActive(true);
+
         // Update our plots' axes' values
 
         QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> plotsRects = mPlotsRects.value(pFileName, QMap<SingleCellViewGraphPanelPlotWidget *, QRectF>());
@@ -887,6 +902,8 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
 
     mResets.remove(pFileName);
     mDelays.remove(pFileName);
+
+    mActiveGraphPanels.remove(pFileName);
 
     mPlotsRects.remove(pFileName);
 
