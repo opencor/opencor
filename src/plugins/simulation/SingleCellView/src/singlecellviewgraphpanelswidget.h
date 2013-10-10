@@ -28,6 +28,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QRectF>
 #include <QSplitter>
 
 //==============================================================================
@@ -73,6 +74,8 @@ private:
 
     QMap<QString, SingleCellViewGraphPanelWidget *> mActiveGraphPanels;
     SingleCellViewGraphPanelWidget *mActiveGraphPanel;
+
+    QMap<QString, QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> > mPlotsRects;
 
     void removeGraphPanel(SingleCellViewGraphPanelWidget *pGraphPanel);
 

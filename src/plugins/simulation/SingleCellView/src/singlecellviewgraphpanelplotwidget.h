@@ -175,6 +175,8 @@ public:
                  const bool &pCanReplot = true);
     bool setAxes(const QRectF &pAxesRect, const bool &pCanReplot = true);
 
+    bool resetAxes(const bool &pCanReplot = true);
+
     void drawGraphSegment(SingleCellViewGraphPanelPlotGraph *pGraph,
                           const qulonglong &pFrom, const qulonglong &pTo);
 
@@ -240,8 +242,6 @@ private:
     QRectF optimisedRect(const QRectF &pAxes) const;
 
     void setAxis(const int &pAxis, double pMin, double pMax);
-
-    bool resetAxes();
 
     bool scaleAxis(const double &pScalingFactor,
                    const bool &pCanZoomIn, const bool &pCanZoomOut,

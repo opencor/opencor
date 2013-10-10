@@ -571,12 +571,12 @@ bool SingleCellViewGraphPanelPlotWidget::eventFilter(QObject *pObject,
 
 void SingleCellViewGraphPanelPlotWidget::handleMouseDoubleClickEvent(QMouseEvent *pEvent)
 {
-    // Reset the zoom level, in case we double-clicked using the left mouse
-    // button with no modifiers
+    // Reset the zoom level (i.e. our axes), in case we double-clicked using the
+    // left mouse button with no modifiers
 
     if (   (pEvent->button() == Qt::LeftButton)
         && (pEvent->modifiers() == Qt::NoModifier))
-        on_actionResetZoom_triggered();
+        resetAxes();
 }
 
 //==============================================================================
@@ -942,13 +942,19 @@ bool SingleCellViewGraphPanelPlotWidget::setAxes(const QRectF &pAxesRect,
 
 //==============================================================================
 
-bool SingleCellViewGraphPanelPlotWidget::resetAxes()
+bool SingleCellViewGraphPanelPlotWidget::resetAxes(const bool &pCanReplot)
 {
-    // Reset our axes
+    // Reset our axes by setting their values to either default ones or to some
+    // that allow to see all the graphs
 
-//    return setAxes(Reset, 0.0, 0.0, 0.0, 0.0);
-//---GRY---
-    return false;
+    QRectF dRect = dataRect();
+
+    if (dRect.isNull())
+        return setAxes(QRectF(DefMinAxis, DefMinAxis,
+                              DefMaxAxis-DefMinAxis, DefMaxAxis-DefMinAxis),
+                       pCanReplot);
+    else
+        return setAxes(optimisedRect(dRect), pCanReplot);
 }
 
 //==============================================================================
@@ -1379,19 +1385,9 @@ void SingleCellViewGraphPanelPlotWidget::on_actionZoomOut_triggered()
 
 void SingleCellViewGraphPanelPlotWidget::on_actionResetZoom_triggered()
 {
-    // Reset the zoom level by setting our axes' values
-    // Note: we check for the reset zoom action to be enabled since we may call
-    //       this method directly...
+    // Reset the zoom level by resetting our axes
 
-    if (mGui->actionResetZoom->isEnabled()) {
-        QRectF dRect = dataRect();
-
-        if (dRect.isNull())
-            setAxes(QRectF(DefMinAxis, DefMinAxis,
-                           DefMaxAxis-DefMinAxis, DefMaxAxis-DefMinAxis));
-        else
-            setAxes(optimisedRect(dRect));
-    }
+    resetAxes();
 }
 
 //==============================================================================

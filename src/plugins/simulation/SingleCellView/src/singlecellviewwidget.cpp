@@ -92,7 +92,6 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mProgresses(QMap<QString, int>()),
     mResets(QMap<QString, bool>()),
     mDelays(QMap<QString, int>()),
-    mPlotsRects(QMap<QString, QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> >()),
     mSplitterWidgetSizes(QList<int>()),
     mRunActionEnabled(true),
     mOldSimulationResultsSizes(QMap<SingleCellViewSimulation *, qulonglong>()),
@@ -565,16 +564,6 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
         mResets.insert(previousFileName, mGui->actionResetModelParameters->isEnabled());
         mDelays.insert(previousFileName, mDelayWidget->value());
-
-        // Keep track of the axes' values of the different plots
-
-        QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> plotsRects = QMap<SingleCellViewGraphPanelPlotWidget *, QRectF>();
-
-        foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots)
-            plotsRects.insert(plot, QRectF(QPointF(plot->minX(), plot->minY()),
-                                           QPointF(plot->maxX(), plot->maxY())));
-
-        mPlotsRects.insert(previousFileName, plotsRects);
     }
 
     // Retrieve our simulation object for the current model, if any
@@ -805,17 +794,6 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
             mSimulation->results()->reset(false);
         }
 
-        // Update our plots' axes' values
-
-        QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> plotsRects = mPlotsRects.value(pFileName, QMap<SingleCellViewGraphPanelPlotWidget *, QRectF>());
-
-        foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots) {
-            QRectF dataRect = plotsRects.value(plot);
-
-            if (!dataRect.isNull())
-                plot->setAxes(dataRect, false);
-        }
-
         // Initialise our GUI's simulation, solvers, graphs, parameters and
         // graph panels widgets
         // Note #1: this will also initialise some of our simulation data (i.e.
@@ -848,11 +826,6 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         graphPanelsWidget->initialize(pFileName);
 
         mCanUpdatePlotsForUpdatedGraphs = true;
-
-        // 'Manually' replot our plots
-
-        foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots)
-            plot->replotNow();
     }
 
     // Resume the tracking of certain things
@@ -891,8 +864,6 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
 
     mResets.remove(pFileName);
     mDelays.remove(pFileName);
-
-    mPlotsRects.remove(pFileName);
 
     // Finalize a few things in our GUI's simulation, solvers, graphs,
     // parameters and graph panels widgets

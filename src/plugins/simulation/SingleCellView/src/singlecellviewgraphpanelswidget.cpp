@@ -40,7 +40,8 @@ SingleCellViewGraphPanelsWidget::SingleCellViewGraphPanelsWidget(QWidget *pParen
     CommonWidget(pParent),
     mSplitterSizes(QList<int>()),
     mActiveGraphPanels(QMap<QString, SingleCellViewGraphPanelWidget *>()),
-    mActiveGraphPanel(0)
+    mActiveGraphPanel(0),
+    mPlotsRects(QMap<QString, QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> >())
 {
     // Set our orientation
 
@@ -128,6 +129,21 @@ void SingleCellViewGraphPanelsWidget::initialize(const QString &pFileName)
         activeGraphPanel->setActive(true);
     else
         qobject_cast<SingleCellViewGraphPanelWidget *>(widget(0))->setActive(true);
+
+    // Update our plots' axes' values
+
+    QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> plotsRects = mPlotsRects.value(pFileName, QMap<SingleCellViewGraphPanelPlotWidget *, QRectF>());
+
+    for (int i = 0, iMax = count(); i < iMax; ++i) {
+        SingleCellViewGraphPanelPlotWidget *plot = qobject_cast<SingleCellViewGraphPanelWidget *>(widget(i))->plot();
+
+        QRectF dataRect = plotsRects.value(plot);
+
+        if (dataRect.isNull())
+            plot->resetAxes();
+        else
+            plot->setAxes(dataRect);
+    }
 }
 
 //==============================================================================
@@ -137,15 +153,30 @@ void SingleCellViewGraphPanelsWidget::backup(const QString &pFileName)
     // Keep track of our active graph panel
 
     mActiveGraphPanels.insert(pFileName, mActiveGraphPanel);
+
+    // Keep track of the axes' values of our different plots
+
+    QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> plotsRects = QMap<SingleCellViewGraphPanelPlotWidget *, QRectF>();
+
+    for (int i = 0, iMax = count(); i < iMax; ++i) {
+        SingleCellViewGraphPanelPlotWidget *plot = qobject_cast<SingleCellViewGraphPanelWidget *>(widget(i))->plot();
+
+        plotsRects.insert(plot, QRectF(QPointF(plot->minX(), plot->minY()),
+                                       QPointF(plot->maxX(), plot->maxY())));
+    }
+
+    mPlotsRects.insert(pFileName, plotsRects);
 }
 
 //==============================================================================
 
 void SingleCellViewGraphPanelsWidget::finalize(const QString &pFileName)
 {
-    // Remove track of our active graph panel
+    // Remove track of our active graph panel and the axes' values of our
+    // different plots
 
     mActiveGraphPanels.remove(pFileName);
+    mPlotsRects.remove(pFileName);
 }
 
 //==============================================================================
