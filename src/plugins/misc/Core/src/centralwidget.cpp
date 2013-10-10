@@ -972,7 +972,7 @@ void CentralWidget::addModeView(Plugin *pPlugin, GuiViewSettings *pSettings,
 
 void CentralWidget::addView(Plugin *pPlugin, GuiViewSettings *pSettings)
 {
-    // Make sure that our list of required modes is up-to-date
+    // Make sure that our list of required modes is up to date
 
     GuiViewSettings::Mode mode = pSettings->mode();
 

@@ -237,7 +237,7 @@ void CvodeSolver::solve(double &pVoi, const double &pVoiEnd) const
 
     CVode(mSolver, pVoiEnd, mStatesVector, &pVoi, CV_NORMAL);
 
-    // Compute the rates one more time to get up-to-date values for the rates
+    // Compute the rates one more time to get up to date values for the rates
     // Note: another way of doing this would be to copy the contents of the
     //       calculated rates in rhsFunction, but that's bound to be more time
     //       consuming since a call to CVode is likely to generate at least a

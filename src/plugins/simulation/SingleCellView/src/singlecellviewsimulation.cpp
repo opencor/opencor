@@ -514,7 +514,7 @@ void SingleCellViewSimulationData::recomputeVariables(const double &pCurrentPoin
     // Let people know that our data has been updated, if requested
     // Note: recomputeVariables() will normally be called many times when
     //       running a simulation to ensure that all of our 'variables' are
-    //       up-to-date and to emit loads of signals wouldn't be a good idea,
+    //       up to date and to emit loads of signals wouldn't be a good idea,
     //       hence the caller can decide whether to emit a signal or not...
 
     if (pEmitSignal)
