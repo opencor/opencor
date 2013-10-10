@@ -80,14 +80,6 @@ namespace SingleCellView {
 
 //==============================================================================
 
-static const QString OutputTab  = "&nbsp;&nbsp;&nbsp;&nbsp;";
-static const QString OutputGood = " style=\"color: green;\"";
-static const QString OutputInfo = " style=\"color: navy;\"";
-static const QString OutputBad  = " style=\"color: maroon;\"";
-static const QString OutputBrLn = "<br/>\n";
-
-//==============================================================================
-
 SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
                                            QWidget *pParent) :
     ViewWidget(pParent),
@@ -528,6 +520,14 @@ void SingleCellViewWidget::updateInvalidModelMessageWidget()
                                            "    </p>"
                                            "</div>");
 }
+
+//==============================================================================
+
+static const QString OutputTab  = "&nbsp;&nbsp;&nbsp;&nbsp;";
+static const QString OutputGood = " style=\"color: green;\"";
+static const QString OutputInfo = " style=\"color: navy;\"";
+static const QString OutputBad  = " style=\"color: maroon;\"";
+static const QString OutputBrLn = "<br/>\n";
 
 //==============================================================================
 
