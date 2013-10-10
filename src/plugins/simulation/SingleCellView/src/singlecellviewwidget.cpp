@@ -551,13 +551,15 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
     SingleCellViewSimulation *previousSimulation = mSimulation;
 
     if (previousSimulation) {
-        // There is a previous simulation, so backup our simulation and solvers'
-        // settings
+        // There is a previous simulation, so backup our simulation, solvers and
+        // graph panels' settings
 
         QString previousFileName = previousSimulation->fileName();
 
         simulationWidget->backup(previousFileName);
         solversWidget->backup(previousFileName);
+
+        graphPanelsWidget->backup(previousFileName);
 
         // Keep track of the status of the reset action and of the value of the
         // delay widget
@@ -829,8 +831,8 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
                 plot->setAxes(dataRect, false);
         }
 
-        // Initialise our GUI's simulation, solvers, graphs and parameters
-        // widgets
+        // Initialise our GUI's simulation, solvers, graphs, parameters and
+        // graph panels widgets
         // Note #1: this will also initialise some of our simulation data (i.e.
         //          our simulation's starting point and simulation's NLA
         //          solver's properties) which is needed since we want to be
@@ -857,6 +859,8 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         solversWidget->initialize(pFileName, cellmlFileRuntime, mSimulation);
         informationWidget->graphsWidget()->initialize(pFileName, cellmlFileRuntime, mSimulation);
         informationWidget->parametersWidget()->initialize(pFileName, cellmlFileRuntime, mSimulation);
+
+        graphPanelsWidget->initialize(pFileName);
 
         mCanUpdatePlotsForUpdatedGraphs = true;
 
@@ -907,8 +911,8 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
 
     mPlotsRects.remove(pFileName);
 
-    // Finalize a few things in our GUI's simulation, solvers, graphs and
-    // parameters widgets
+    // Finalize a few things in our GUI's simulation, solvers, graphs,
+    // parameters and graph panels widgets
 
     SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
 
@@ -916,6 +920,8 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
     informationWidget->solversWidget()->finalize(pFileName);
     informationWidget->graphsWidget()->finalize(pFileName);
     informationWidget->parametersWidget()->finalize(pFileName);
+
+    mContentsWidget->graphPanelsWidget()->finalize(pFileName);
 }
 
 //==============================================================================

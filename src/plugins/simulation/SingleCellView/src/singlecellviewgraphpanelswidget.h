@@ -56,6 +56,10 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
+    void initialize(const QString &pFileName);
+    void backup(const QString &pFileName);
+    void finalize(const QString &pFileName);
+
     QList<SingleCellViewGraphPanelWidget *> graphPanels() const;
     SingleCellViewGraphPanelWidget * activeGraphPanel() const;
 

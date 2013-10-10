@@ -68,9 +68,6 @@ void SingleCellViewGraphPanelsWidget::retranslateUi()
 
 static const QString SettingsGraphPanelsCount = "GraphPanelsCount";
 static const QString SettingsGraphPanelSize   = "GraphPanelSize%1";
-//static const QString SettingsActiveGraphPanel = "ActiveGraphPanel";
-//---GRY--- WE DON'T CURRENTLY KEEP TRACK OF THE REQUIRED GRAPHS, SO NO POINT IN
-//          KEEPING TRACK OF WHICH GRAPH PANEL IS ACTIVE...
 
 //==============================================================================
 
@@ -103,11 +100,6 @@ void SingleCellViewGraphPanelsWidget::loadSettings(QSettings *pSettings)
         mSplitterSizes << pSettings->value(SettingsGraphPanelSize.arg(i)).toInt();
 
     setSizes(mSplitterSizes);
-
-    // Select the graph panel that used to be active
-
-//    qobject_cast<SingleCellViewGraphPanelWidget *>(widget(pSettings->value(SettingsActiveGraphPanel, 0).toInt()))->setActive(true);
-qobject_cast<SingleCellViewGraphPanelWidget *>(widget(0))->setActive(true);
 }
 
 //==============================================================================
@@ -121,15 +113,30 @@ void SingleCellViewGraphPanelsWidget::saveSettings(QSettings *pSettings) const
 
     for (int i = 0, iMax = mSplitterSizes.count(); i < iMax; ++i)
         pSettings->setValue(SettingsGraphPanelSize.arg(i), mSplitterSizes[i]);
+}
 
-//    for (int i = 0, iMax = mSplitterSizes.count(); i < iMax; ++i)
-//        if (qobject_cast<SingleCellViewGraphPanelWidget *>(widget(i))->isActive()) {
-//            // We found the active graph panel, so...
+//==============================================================================
 
-//            pSettings->setValue(SettingsActiveGraphPanel, i);
+void SingleCellViewGraphPanelsWidget::initialize(const QString &pFileName)
+{
+Q_UNUSED(pFileName);
+//---GRY--- TO BE DONE...
+}
 
-//            break;
-//        }
+//==============================================================================
+
+void SingleCellViewGraphPanelsWidget::backup(const QString &pFileName)
+{
+Q_UNUSED(pFileName);
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
+void SingleCellViewGraphPanelsWidget::finalize(const QString &pFileName)
+{
+Q_UNUSED(pFileName);
+//---GRY--- TO BE DONE...
 }
 
 //==============================================================================
