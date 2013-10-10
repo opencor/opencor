@@ -131,6 +131,12 @@ void SingleCellViewGraphPanelsWidget::initialize(const QString &pFileName)
         qobject_cast<SingleCellViewGraphPanelWidget *>(widget(0))->setActive(true);
 
     // Update our plots' axes' values
+    // Note: we always want our plot to be replotted. Indeed, say that you plot
+    //       a graph that doesn't require changing the axes' values of the plot
+    //       (i.e. they still have their default values), and then you switch to
+    //       a different file. In that case, the axes' values won't be updated
+    //       and the plot not replotted. That is, unless we replot the plot no
+    //       matter what...
 
     QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> plotsRects = mPlotsRects.value(pFileName);
 
@@ -139,10 +145,13 @@ void SingleCellViewGraphPanelsWidget::initialize(const QString &pFileName)
 
         QRectF dataRect = plotsRects.value(plot);
 
-        if (dataRect.isNull())
-            plot->resetAxes();
-        else
-            plot->setAxes(dataRect);
+        if (dataRect.isNull()) {
+            if (!plot->resetAxes())
+                plot->replotNow();
+        } else {
+            if (!plot->setAxes(dataRect))
+                plot->replotNow();
+        }
     }
 }
 
