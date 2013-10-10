@@ -133,8 +133,6 @@ private:
     QMap<QString, bool> mResets;
     QMap<QString, int> mDelays;
 
-    QMap<QString, SingleCellViewGraphPanelWidget *> mActiveGraphPanels;
-
     QMap<QString, QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> > mPlotsRects;
 
     Core::ToolBarWidget *mToolBarWidget;

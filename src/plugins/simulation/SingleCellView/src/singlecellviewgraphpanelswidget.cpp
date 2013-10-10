@@ -39,6 +39,7 @@ SingleCellViewGraphPanelsWidget::SingleCellViewGraphPanelsWidget(QWidget *pParen
     QSplitter(pParent),
     CommonWidget(pParent),
     mSplitterSizes(QList<int>()),
+    mActiveGraphPanels(QMap<QString, SingleCellViewGraphPanelWidget *>()),
     mActiveGraphPanel(0)
 {
     // Set our orientation
@@ -119,24 +120,32 @@ void SingleCellViewGraphPanelsWidget::saveSettings(QSettings *pSettings) const
 
 void SingleCellViewGraphPanelsWidget::initialize(const QString &pFileName)
 {
-Q_UNUSED(pFileName);
-//---GRY--- TO BE DONE...
+    // Set the active graph panel or select the first one, if no backup exists
+
+    SingleCellViewGraphPanelWidget *activeGraphPanel = mActiveGraphPanels.value(pFileName);
+
+    if (activeGraphPanel)
+        activeGraphPanel->setActive(true);
+    else
+        qobject_cast<SingleCellViewGraphPanelWidget *>(widget(0))->setActive(true);
 }
 
 //==============================================================================
 
 void SingleCellViewGraphPanelsWidget::backup(const QString &pFileName)
 {
-Q_UNUSED(pFileName);
-//---GRY--- TO BE DONE...
+    // Keep track of our active graph panel
+
+    mActiveGraphPanels.insert(pFileName, mActiveGraphPanel);
 }
 
 //==============================================================================
 
 void SingleCellViewGraphPanelsWidget::finalize(const QString &pFileName)
 {
-Q_UNUSED(pFileName);
-//---GRY--- TO BE DONE...
+    // Remove track of our active graph panel
+
+    mActiveGraphPanels.remove(pFileName);
 }
 
 //==============================================================================
@@ -157,22 +166,9 @@ QList<SingleCellViewGraphPanelWidget *> SingleCellViewGraphPanelsWidget::graphPa
 
 SingleCellViewGraphPanelWidget * SingleCellViewGraphPanelsWidget::activeGraphPanel() const
 {
-    // Return the active graph panel
+    // Return our active graph panel
 
-    for (int i = 0, iMax = count(); i < iMax; ++i) {
-        SingleCellViewGraphPanelWidget *graphPanel = qobject_cast<SingleCellViewGraphPanelWidget *>(widget(i));
-
-        if (graphPanel->isActive())
-            // We found the active graph panel, so...
-
-            return graphPanel;
-    }
-
-    // There are no graph panels, so...
-    // Note: we should never reach this point since there should always be at
-    //       least one graph panel...
-
-    return 0;
+    return mActiveGraphPanel;
 }
 
 //==============================================================================
