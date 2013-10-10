@@ -452,6 +452,9 @@ static const double MinAxisRange = 1.0e-5;
 //       a 6-digit precision, we give ourselves a bit of a safety net and allow
 //       minimum axis range of 10^-5...
 
+static const double DefMinAxis =    0.0;
+static const double DefMaxAxis = 1000.0;
+
 //==============================================================================
 
 SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *pParent) :
@@ -497,7 +500,7 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
     // Note: we are not all initialised yet, so we don't want to setAxes() to
     //       replot ourselves...
 
-    setAxes(0.0, 1000.0, 0.0, 1000.0, false);
+    setAxes(DefMinAxis, DefMaxAxis, DefMinAxis, DefMaxAxis, false);
 
     // Attach a grid to ourselves
 
@@ -601,13 +604,17 @@ void SingleCellViewGraphPanelPlotWidget::updateActions()
     mGui->actionZoomIn->setEnabled(mCanZoomInX || mCanZoomInY);
     mGui->actionZoomOut->setEnabled(mCanZoomOutX || mCanZoomOutY);
 
-    QRectF dRect = optimisedDataRect();
+    QRectF dRect = dataRect();
 
-    mGui->actionResetZoom->setEnabled(   !dRect.isNull()
-                                      && (  (currentMinX != dRect.left())
-                                          || (currentMaxX != dRect.left()+dRect.width())
-                                          || (currentMinY != dRect.top())
-                                          || (currentMaxY != dRect.top()+dRect.height())));
+    if (dRect.isNull())
+        dRect = QRectF(DefMinAxis, DefMinAxis, DefMaxAxis-DefMinAxis, DefMaxAxis-DefMinAxis);
+    else
+        dRect = optimisedRect(dRect);
+
+    mGui->actionResetZoom->setEnabled(   (currentMinX != dRect.left())
+                                      || (currentMaxX != dRect.left()+dRect.width())
+                                      || (currentMinY != dRect.top())
+                                      || (currentMaxY != dRect.top()+dRect.height()));
 }
 
 //==============================================================================
@@ -821,15 +828,19 @@ void SingleCellViewGraphPanelPlotWidget::optimiseAxisY(double &pMin, double &pMa
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::optimiseAxes(double &pMinX,
-                                                      double &pMaxX,
-                                                      double &pMinY,
-                                                      double &pMaxY) const
+QRectF SingleCellViewGraphPanelPlotWidget::optimisedRect(const QRectF &pAxes) const
 {
     // Optimise our axes' values
 
-    optimiseAxis(QwtPlot::xBottom, pMinX, pMaxX);
-    optimiseAxis(QwtPlot::yLeft, pMinY, pMaxY);
+    double minX = pAxes.left();
+    double maxX = minX+pAxes.width();
+    double minY = pAxes.top();
+    double maxY = minY+pAxes.height();
+
+    optimiseAxisX(minX, maxX);
+    optimiseAxisY(minY, maxY);
+
+    return QRectF(minX, minY, maxX-minX, maxY-minY);
 }
 
 //==============================================================================
@@ -846,24 +857,6 @@ QRectF SingleCellViewGraphPanelPlotWidget::dataRect() const
             res |= graph->boundingRect();
 
     return res;
-}
-
-//==============================================================================
-
-QRectF SingleCellViewGraphPanelPlotWidget::optimisedDataRect() const
-{
-    // Retrieve our data rectangle, optimise it and return it
-
-    QRectF dRect = dataRect();
-
-    double minX = dRect.left();
-    double maxX = minX+dRect.width();
-    double minY = dRect.top();
-    double maxY = minY+dRect.height();
-
-    optimiseAxes(minX, maxX, minY, maxY);
-
-    return QRectF(minX, minY, maxX-minX, maxY-minY);
 }
 
 //==============================================================================
@@ -1386,13 +1379,19 @@ void SingleCellViewGraphPanelPlotWidget::on_actionZoomOut_triggered()
 
 void SingleCellViewGraphPanelPlotWidget::on_actionResetZoom_triggered()
 {
-    // Reset the zoom level by setting our axes' values to those of our
-    // optimised data rectangle
+    // Reset the zoom level by setting our axes' values
     // Note: we check for the reset zoom action to be enabled since we may call
     //       this method directly...
 
-    if (mGui->actionResetZoom->isEnabled())
-        setAxes(optimisedDataRect());
+    if (mGui->actionResetZoom->isEnabled()) {
+        QRectF dRect = dataRect();
+
+        if (dRect.isNull())
+            setAxes(QRectF(DefMinAxis, DefMinAxis,
+                           DefMaxAxis-DefMinAxis, DefMaxAxis-DefMinAxis));
+        else
+            setAxes(optimisedRect(dRect));
+    }
 }
 
 //==============================================================================

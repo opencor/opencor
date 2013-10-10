@@ -236,10 +236,8 @@ private:
     bool canZoomOutY() const;
 
     void optimiseAxis(const int &pAxisId, double &pMin, double &pMax) const;
-    void optimiseAxes(double &pMinX, double &pMaxX,
-                      double &pMinY, double &pMaxY) const;
 
-    QRectF optimisedDataRect() const;
+    QRectF optimisedRect(const QRectF &pAxes) const;
 
     void setAxis(const int &pAxis, double pMin, double pMax);
 
