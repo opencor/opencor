@@ -1704,11 +1704,8 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
                 // Draw the graph's new segment, but only if there is some data
                 // to plot and the graph is visible
 
-                if (pSize && graph->isVisible()) {
-                    SingleCellViewGraphPanelPlotWidget *plot = qobject_cast<SingleCellViewGraphPanelPlotWidget *>(graph->plot());
-
+                if (pSize && graph->isVisible())
                     plot->drawGraphSegment(graph, oldDataSize?oldDataSize-1:0, pSize-1);
-                }
             }
 
         if (!pSize)
