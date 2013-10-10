@@ -537,16 +537,18 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
     // Note: see the corresponding code at the end of this method...
 
     SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
+    SingleCellViewGraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
 
-    disconnect(informationWidget->simulationWidget(), SIGNAL(propertyChanged(Core::Property *)),
+    SingleCellViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
+    SingleCellViewInformationSolversWidget *solversWidget = informationWidget->solversWidget();
+
+    disconnect(simulationWidget, SIGNAL(propertyChanged(Core::Property *)),
                this, SLOT(simulationPropertyChanged(Core::Property *)));
 
     // Keep track of our simulation data for our previous model and finalise a
     // few things, if needed
 
     SingleCellViewSimulation *previousSimulation = mSimulation;
-    SingleCellViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
-    SingleCellViewInformationSolversWidget *solversWidget = informationWidget->solversWidget();
 
     if (previousSimulation) {
         // There is a previous simulation, so backup our simulation and solvers'
@@ -565,7 +567,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
         // Keep track of the active graph panel
 
-        mActiveGraphPanels.insert(previousFileName, mContentsWidget->graphPanelsWidget()->activeGraphPanel());
+        mActiveGraphPanels.insert(previousFileName, graphPanelsWidget->activeGraphPanel());
 
         // Keep track of the axes' values of the different plots
 
@@ -814,7 +816,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         if (activeGraphPanel)
             activeGraphPanel->setActive(true);
         else
-            mContentsWidget->graphPanelsWidget()->graphPanels().first()->setActive(true);
+            graphPanelsWidget->graphPanels().first()->setActive(true);
 
         // Update our plots' axes' values
 
@@ -867,7 +869,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
     // Resume the tracking of certain things
     // Note: see the corresponding code at the beginning of this method...
 
-    connect(informationWidget->simulationWidget(), SIGNAL(propertyChanged(Core::Property *)),
+    connect(simulationWidget, SIGNAL(propertyChanged(Core::Property *)),
             this, SLOT(simulationPropertyChanged(Core::Property *)));
 }
 
