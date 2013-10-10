@@ -1229,9 +1229,12 @@ void SingleCellViewGraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
         resetAction();
     }
 
-    // Show our context menu, if still needed
+    // Show our context menu, if still needed, after making sure that our
+    // actions are up to date
 
     if (mNeedContextMenu) {
+        updateActions();
+
         mOriginPoint = mapFromGlobal(QCursor::pos());
 
         mContextMenu->exec(QCursor::pos());
