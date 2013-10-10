@@ -539,6 +539,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
     SingleCellViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
     SingleCellViewInformationSolversWidget *solversWidget = informationWidget->solversWidget();
+    SingleCellViewInformationGraphsWidget *graphsWidget = informationWidget->graphsWidget();
 
     disconnect(simulationWidget, SIGNAL(propertyChanged(Core::Property *)),
                this, SLOT(simulationPropertyChanged(Core::Property *)));
@@ -556,6 +557,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
         simulationWidget->backup(previousFileName);
         solversWidget->backup(previousFileName);
+        graphsWidget->backup(previousFileName);
 
         graphPanelsWidget->backup(previousFileName);
 
@@ -608,9 +610,9 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
     // Retrieve the status of the reset action and the value of the delay widget
 
-    mGui->actionResetModelParameters->setEnabled(mResets.value(pFileName, false));
+    mGui->actionResetModelParameters->setEnabled(mResets.value(pFileName));
 
-    mDelayWidget->setValue(mDelays.value(pFileName, 0));
+    mDelayWidget->setValue(mDelays.value(pFileName));
 
     // Stop tracking our simulation progress and let people know that our file
     // tab icon should be reset, these in case our simulation is running or
@@ -820,7 +822,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
         simulationWidget->initialize(pFileName, cellmlFileRuntime, mSimulation);
         solversWidget->initialize(pFileName, cellmlFileRuntime, mSimulation);
-        informationWidget->graphsWidget()->initialize(pFileName, cellmlFileRuntime, mSimulation);
+        graphsWidget->initialize(pFileName, cellmlFileRuntime, mSimulation);
         informationWidget->parametersWidget()->initialize(pFileName, cellmlFileRuntime, mSimulation);
 
         graphPanelsWidget->initialize(pFileName);

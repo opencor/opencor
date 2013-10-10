@@ -90,6 +90,7 @@ public:
     void initialize(const QString &pFileName,
                     CellMLSupport::CellmlFileRuntime *pRuntime,
                     SingleCellViewSimulation *pSimulation);
+    void backup(const QString &pFileName);
     void finalize(const QString &pFileName);
 
     void fileOpened(const QString &pFileName);
@@ -119,6 +120,7 @@ private:
 
     QMap<QString, CellMLSupport::CellmlFileRuntime *> mRuntimes;
     QMap<QString, SingleCellViewSimulation *> mSimulations;
+    QMap<QString, QMap<Core::Property *, bool> > mGraphPropertiesSelected;
 
     bool mCanEmitGraphsUpdatedSignal;
 

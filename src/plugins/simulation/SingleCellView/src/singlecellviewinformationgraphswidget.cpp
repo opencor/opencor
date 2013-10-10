@@ -60,6 +60,7 @@ SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(QWi
     mFileName(QString()),
     mRuntimes(QMap<QString, CellMLSupport::CellmlFileRuntime *>()),
     mSimulations(QMap<QString, SingleCellViewSimulation *>()),
+    mGraphPropertiesSelected(QMap<QString, QMap<Core::Property *, bool> >()),
     mCanEmitGraphsUpdatedSignal(true)
 {
     // Set up the GUI
@@ -167,6 +168,27 @@ void SingleCellViewInformationGraphsWidget::initialize(const QString &pFileName,
     // property editors
 
     updateAllGraphsInfo(true);
+
+    // Specify which graphs should be selected
+
+    QMap<Core::Property *, bool> graphsPropertiesSelected = mGraphPropertiesSelected.value(pFileName);
+
+    foreach (Core::Property *graphProperty, mGraphProperties.values())
+        graphProperty->setChecked(graphsPropertiesSelected.value(graphProperty));
+}
+
+//==============================================================================
+
+void SingleCellViewInformationGraphsWidget::backup(const QString &pFileName)
+{
+    // Keep track of which graphs are selected
+
+    QMap<Core::Property *, bool> graphsPropertiesSelected = QMap<Core::Property *, bool>();
+
+    foreach (Core::Property *graphProperty, mGraphProperties.values())
+        graphsPropertiesSelected.insert(graphProperty, graphProperty->isChecked());
+
+    mGraphPropertiesSelected.insert(pFileName, graphsPropertiesSelected);
 }
 
 //==============================================================================
@@ -178,7 +200,7 @@ void SingleCellViewInformationGraphsWidget::finalize(const QString &pFileName)
     if ((mFileNames.count() == 1) && mFileNames.contains(pFileName))
         on_actionRemoveAllGraphs_triggered();
 
-    // Remove track of the context menu, file name, runtime and simulation
+    // Remove track of various information
 
     mContextMenus.remove(pFileName);
 
@@ -186,6 +208,8 @@ void SingleCellViewInformationGraphsWidget::finalize(const QString &pFileName)
 
     mRuntimes.remove(pFileName);
     mSimulations.remove(pFileName);
+
+    mGraphPropertiesSelected.remove(pFileName);
 }
 
 //==============================================================================

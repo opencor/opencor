@@ -132,7 +132,7 @@ void SingleCellViewGraphPanelsWidget::initialize(const QString &pFileName)
 
     // Update our plots' axes' values
 
-    QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> plotsRects = mPlotsRects.value(pFileName, QMap<SingleCellViewGraphPanelPlotWidget *, QRectF>());
+    QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> plotsRects = mPlotsRects.value(pFileName);
 
     for (int i = 0, iMax = count(); i < iMax; ++i) {
         SingleCellViewGraphPanelPlotWidget *plot = qobject_cast<SingleCellViewGraphPanelWidget *>(widget(i))->plot();
