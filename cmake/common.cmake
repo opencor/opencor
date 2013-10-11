@@ -46,7 +46,7 @@ MACRO(INITIALISE_PROJECT)
 
         SET(DEBUG_MODE ON)
 
-        # Default compiler settings
+        # Default compiler and linker settings
 
         IF(WIN32)
             SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D_DEBUG /MDd /Zi /Ob0 /Od /RTC1")
