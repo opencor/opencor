@@ -155,10 +155,10 @@ private:
     ErrorType mErrorType;
 
     QMap<SingleCellViewSimulation *, qulonglong> mOldSimulationResultsSizes;
-
     QList<SingleCellViewSimulation *> mCheckResultsSimulations;
 
     QList<SingleCellViewGraphPanelPlotWidget *> mPlots;
+    QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> mPlotsViewports;
 
     bool mCanUpdatePlotsForUpdatedGraphs;
 

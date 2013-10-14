@@ -97,6 +97,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mOldSimulationResultsSizes(QMap<SingleCellViewSimulation *, qulonglong>()),
     mCheckResultsSimulations(QList<SingleCellViewSimulation *>()),
     mPlots(QList<SingleCellViewGraphPanelPlotWidget *>()),
+    mPlotsViewports(QMap<SingleCellViewGraphPanelPlotWidget *, QRectF>()),
     mCanUpdatePlotsForUpdatedGraphs(true)
 {
     // Set up the GUI
@@ -1692,6 +1693,8 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
     double minX, maxX, minY, maxY;
     double valX, valY;
 
+    QRectF plotViewport;
+
     foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots) {
         needUpdatePlot = false;
 
@@ -1699,6 +1702,9 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
         plotMaxX = plot->maxX();
         plotMinY = plot->minY();
         plotMaxY = plot->maxY();
+
+        plotViewport = QRectF(plotMinX, plotMinY,
+                              plotMaxX-plotMinX, plotMaxY-plotMinY);
 
         foreach (SingleCellViewGraphPanelPlotGraph *graph, plot->graphs())
             if (!graph->fileName().compare(pSimulation->fileName())) {
@@ -1725,38 +1731,52 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
                 if (   graph->isVisible()
                     && !needUpdatePlot && (dataStart != dataEnd)) {
                     // Check that our graph segment can fit within our plot's
-                    // current viewport
+                    // current viewport, but only if the user hasn't changed the
+                    // plot's viewport since our last call to updateResults()
 
-                    minX = plotMinX;
-                    maxX = plotMaxX;
-                    minY = plotMinY;
-                    maxY = plotMaxY;
+                    if (mPlotsViewports.value(plot) == plotViewport) {
+                        minX = plotMinX;
+                        maxX = plotMaxX;
+                        minY = plotMinY;
+                        maxY = plotMaxY;
 
-                    for (qulonglong i = dataStart; i <= dataEnd; ++i) {
-                        valX = graph->data()->sample(i).x();
-                        valY = graph->data()->sample(i).y();
+                        for (qulonglong i = dataStart; i <= dataEnd; ++i) {
+                            valX = graph->data()->sample(i).x();
+                            valY = graph->data()->sample(i).y();
 
-                        minX = qMin(minX, valX);
-                        maxX = qMax(maxX, valX);
-                        minY = qMin(minY, valY);
-                        maxY = qMax(maxY, valY);
+                            minX = qMin(minX, valX);
+                            maxX = qMax(maxX, valX);
+                            minY = qMin(minY, valY);
+                            maxY = qMax(maxY, valY);
+                        }
+
+                        if (   (minX < plotMinX) || (maxX > plotMaxX)
+                            || (minY < plotMinY) || (maxY > plotMaxY))
+                            // Our graph segment cannot fit within our plot's
+                            // current viewport, so we will need to update it
+
+                            needUpdatePlot = true;
                     }
 
-                    if (   (minX < plotMinX) || (maxX > plotMaxX)
-                        || (minY < plotMinY) || (maxY > plotMaxY))
-                        // Our graph segment cannot fit within our plot's
-                        // current viewport, so we will need to update it
-
-                        needUpdatePlot = true;
-                    else
-                        // Draw our graph segment
-
+                    if (!needUpdatePlot)
                         plot->drawGraphSegment(graph, dataStart, dataEnd);
                 }
             }
 
-        if (needUpdatePlot)
+        // Check whether we need to update our plot
+
+        if (needUpdatePlot) {
             updatePlot(plot, true);
+
+            // Keep track of our plot's viewport
+
+            plotMinX = plot->minX();
+            plotMinY = plot->minY();
+
+            mPlotsViewports.insert(plot,
+                                   QRectF(plotMinX, plotMinY,
+                                          plot->maxX()-plotMinX, plot->maxY()-plotMinY));
+        }
     }
 
     // Update our progress bar (or the tab icon, in case we are not dealing with
