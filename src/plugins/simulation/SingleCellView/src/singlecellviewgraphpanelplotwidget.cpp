@@ -912,6 +912,11 @@ bool SingleCellViewGraphPanelPlotWidget::setAxes(double pMinX, double pMaxX,
         axesValuesChanged = true;
     }
 
+    // Update our actions in case the axes' values have changed
+
+    if (axesValuesChanged)
+        updateActions();
+
     // Replot ourselves, if needed and allowed
 
     if (axesValuesChanged && pCanReplot) {
@@ -1224,12 +1229,9 @@ void SingleCellViewGraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
         resetAction();
     }
 
-    // Show our context menu, if still needed, after making sure that our
-    // actions are up to date
+    // Show our context menu, if still needed
 
     if (mNeedContextMenu) {
-        updateActions();
-
         mOriginPoint = mapFromGlobal(QCursor::pos());
 
         mContextMenu->exec(QCursor::pos());
