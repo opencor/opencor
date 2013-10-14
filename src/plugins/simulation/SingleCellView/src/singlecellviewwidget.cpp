@@ -1009,7 +1009,8 @@ void SingleCellViewWidget::on_actionRunPauseResumeSimulation_triggered()
 
                 runSimulation = mSimulation->results()->reset();
 
-                mOldSimulationResultsSizes.insert(mSimulation, 0);
+                checkResults(mSimulation);
+                // Note: this will, among other things, clear our plots...
 
                 // Effectively run our simulation in case we were able to
                 // allocate all the memory we need to run the simulation
@@ -1680,9 +1681,6 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
         mGui->actionResetModelParameters->setEnabled(pSimulation->data()->isModified());
 
     // Update all the graphs associated with the given simulation
-    // Note: if pSize is greater than zero, then each graph will be individually
-    //       updated. On the other hand, if we have a pSize value of zero (i.e.
-    //       when starting a simulation), then we update and replot our plot...
 
     bool needUpdatePlot;
 
@@ -1712,11 +1710,11 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
 
                 oldDataSize = graph->dataSize();
 
-                // Check whether we are drawing our first graph segment or need
-                // to clear everything, in which case we will need to update our
-                // plot
+                // Check whether we are drawing this graph's first segment, in
+                // which case we will need to update our plot
 
-                needUpdatePlot = needUpdatePlot || !oldDataSize || !pSize;
+
+                needUpdatePlot = needUpdatePlot || !oldDataSize;
 
                 // Update our graph's data
 
@@ -1728,11 +1726,11 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
                 dataStart = oldDataSize-1;
                 dataEnd = pSize-1;
 
-                if (   graph->isVisible()
-                    && !needUpdatePlot && (dataStart != dataEnd)) {
+                if (   graph->isVisible() && !needUpdatePlot && pSize
+                    && (dataStart != dataEnd)) {
                     // Check that our graph segment can fit within our plot's
                     // current viewport, but only if the user hasn't changed the
-                    // plot's viewport since our last call to updateResults()
+                    // plot's viewport since we last came here
 
                     if (mPlotsViewports.value(plot) == plotViewport) {
                         minX = plotMinX;
@@ -1763,12 +1761,16 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
                 }
             }
 
-        // Check whether we need to update our plot
+        // Check whether we need to update/replot our plot
 
         if (needUpdatePlot) {
+            // We are either drawing a graph's first segment or its new segment
+            // doesn't fit within the plot's current viewport, in which case we
+            // need to udate our plot
+
             updatePlot(plot, true);
 
-            // Keep track of our plot's viewport
+            // Keep track of our plot's new viewport
 
             plotMinX = plot->minX();
             plotMinY = plot->minY();
@@ -1776,6 +1778,15 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
             mPlotsViewports.insert(plot,
                                    QRectF(plotMinX, plotMinY,
                                           plot->maxX()-plotMinX, plot->maxY()-plotMinY));
+        } else if (!pSize) {
+            // We came here as a result of starting a simulation or clearing a
+            // our plot, so simply replot it (rather than update it)
+            // Note: we don't want to update our plot since this is going to
+            //       reset its axes' values and therefore result in some
+            //       (expected) flickering, if some data is to be drawn
+            //       straightaway (e.g. when we start a simulation)...
+
+            plot->replotNow();
         }
     }
 
