@@ -606,8 +606,9 @@ void SingleCellViewGraphPanelPlotWidget::updateActions()
 
     QRectF dRect = dataRect();
 
-    if (dRect.isNull())
-        dRect = QRectF(DefMinAxis, DefMinAxis, DefMaxAxis-DefMinAxis, DefMaxAxis-DefMinAxis);
+    if (dRect == QRectF())
+        dRect = QRectF(DefMinAxis, DefMinAxis,
+                       DefMaxAxis-DefMinAxis, DefMaxAxis-DefMinAxis);
     else
         dRect = optimisedRect(dRect);
 
@@ -943,7 +944,7 @@ bool SingleCellViewGraphPanelPlotWidget::resetAxes(const bool &pCanReplot)
 
     QRectF dRect = dataRect();
 
-    if (dRect.isNull())
+    if (dRect == QRectF())
         return setAxes(QRectF(DefMinAxis, DefMinAxis,
                               DefMaxAxis-DefMinAxis, DefMaxAxis-DefMinAxis),
                        pCanReplot);
