@@ -1683,18 +1683,34 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
     //       updated. On the other hand, if we have a pSize value of zero (i.e.
     //       when starting a simulation), then we update and replot our plot...
 
+    bool needUpdatePlot;
+
+    qulonglong oldDataSize;
+    qulonglong dataStart, dataEnd;
+
+    double plotMinX, plotMaxX, plotMinY, plotMaxY;
+    double minX, maxX, minY, maxY;
+    double valX, valY;
+
     foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots) {
-        bool firstGraphSegments = false;
+        needUpdatePlot = false;
+
+        plotMinX = plot->minX();
+        plotMaxX = plot->maxX();
+        plotMinY = plot->minY();
+        plotMaxY = plot->maxY();
 
         foreach (SingleCellViewGraphPanelPlotGraph *graph, plot->graphs())
             if (!graph->fileName().compare(pSimulation->fileName())) {
                 // Keep track of our graph's old size
 
-                qulonglong oldDataSize = graph->dataSize();
+                oldDataSize = graph->dataSize();
 
-                // Check whether we are drawing our first graph segment
+                // Check whether we are drawing our first graph segment or need
+                // to clear everything, in which case we will need to update our
+                // plot
 
-                firstGraphSegments = firstGraphSegments || !oldDataSize;
+                needUpdatePlot = needUpdatePlot || !oldDataSize || !pSize;
 
                 // Update our graph's data
 
@@ -1703,11 +1719,43 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
                 // Draw the graph's new segment, but only if there is some data
                 // to plot and the graph is visible
 
-                if (oldDataSize && graph->isVisible())
-                    plot->drawGraphSegment(graph, oldDataSize, pSize-1);
+                dataStart = oldDataSize-1;
+                dataEnd = pSize-1;
+
+                if (   graph->isVisible()
+                    && !needUpdatePlot && (dataStart != dataEnd)) {
+                    // Check that our graph segment can fit within our plot's
+                    // current viewport
+
+                    minX = plotMinX;
+                    maxX = plotMaxX;
+                    minY = plotMinY;
+                    maxY = plotMaxY;
+
+                    for (qulonglong i = dataStart; i <= dataEnd; ++i) {
+                        valX = graph->data()->sample(i).x();
+                        valY = graph->data()->sample(i).y();
+
+                        minX = qMin(minX, valX);
+                        maxX = qMax(maxX, valX);
+                        minY = qMin(minY, valY);
+                        maxY = qMax(maxY, valY);
+                    }
+
+                    if (   (minX < plotMinX) || (maxX > plotMaxX)
+                        || (minY < plotMinY) || (maxY > plotMaxY))
+                        // Our graph segment cannot fit within our plot's
+                        // current viewport, so we will need to update it
+
+                        needUpdatePlot = true;
+                    else
+                        // Draw our graph segment
+
+                        plot->drawGraphSegment(graph, dataStart, dataEnd);
+                }
             }
 
-        if (firstGraphSegments)
+        if (needUpdatePlot)
             updatePlot(plot, true);
     }
 
