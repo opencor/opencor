@@ -1003,18 +1003,12 @@ void SingleCellViewWidget::on_actionRunPauseResumeSimulation_triggered()
                                      tr("Sorry, but the simulation requires %1 of memory and you have only %2 left.").arg(Core::sizeAsString(requiredMemory), Core::sizeAsString(freeMemory)));
             } else {
                 // Theoretically speaking, we have enough memory to run the
-                // simulation, so try to allocate all the memory we need by
-                // resetting our simulation settings
+                // simulation, so try to allocate all the memory we need for the
+                // simulation by resetting its settings
 
                 runSimulation = mSimulation->results()->reset();
 
-                qulonglong simulationResultsSize = mSimulation->results()->size();
-
-                mOldSimulationResultsSizes.insert(mSimulation, simulationResultsSize);
-
-                updateResults(mSimulation, simulationResultsSize);
-                // Note: to call updateResults() will effectively reset our
-                //       graphs...
+                mOldSimulationResultsSizes.insert(mSimulation, 0);
 
                 // Effectively run our simulation in case we were able to
                 // allocate all the memory we need to run the simulation
@@ -1518,7 +1512,7 @@ bool SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot,
 
     QRectF dataRect = pPlot->dataRect();
 
-    if (!dataRect.isNull()) {
+    if (dataRect != QRectF()) {
         minX = dataRect.left();
         maxX = minX+dataRect.width();
         minY = dataRect.top();
@@ -1685,17 +1679,22 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
         mGui->actionResetModelParameters->setEnabled(pSimulation->data()->isModified());
 
     // Update all the graphs associated with the given simulation
-    // Note: if pSize is greater than zero, then the graphs will be individually
-    //       updated. On the other hand, if we have a pSize value of zero (e.g.
-    //       when starting a simulation), then we ask the plot to directly
-    //       replot itself...
+    // Note: if pSize is greater than zero, then each graph will be individually
+    //       updated. On the other hand, if we have a pSize value of zero (i.e.
+    //       when starting a simulation), then we update and replot our plot...
 
     foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots) {
+        bool firstGraphSegments = false;
+
         foreach (SingleCellViewGraphPanelPlotGraph *graph, plot->graphs())
             if (!graph->fileName().compare(pSimulation->fileName())) {
                 // Keep track of our graph's old size
 
                 qulonglong oldDataSize = graph->dataSize();
+
+                // Check whether we are drawing our first graph segment
+
+                firstGraphSegments = firstGraphSegments || !oldDataSize;
 
                 // Update our graph's data
 
@@ -1704,12 +1703,12 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
                 // Draw the graph's new segment, but only if there is some data
                 // to plot and the graph is visible
 
-                if (pSize && graph->isVisible())
-                    plot->drawGraphSegment(graph, oldDataSize?oldDataSize-1:0, pSize-1);
+                if (oldDataSize && graph->isVisible())
+                    plot->drawGraphSegment(graph, oldDataSize, pSize-1);
             }
 
-        if (!pSize)
-            plot->replotNow();
+        if (firstGraphSegments)
+            updatePlot(plot, true);
     }
 
     // Update our progress bar (or the tab icon, in case we are not dealing with
