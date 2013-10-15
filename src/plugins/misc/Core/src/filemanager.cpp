@@ -238,8 +238,7 @@ void FileManager::checkFiles()
     // Check our various files
 
     foreach (File *file, mFiles)
-        switch (file->check())
-        {
+        switch (file->check()) {
             case File::Changed:
                 // The contents of the file has changed, so...
 
