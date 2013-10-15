@@ -321,34 +321,79 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
 
     // Populate our property editor with the parameters
 
+    QString componentHierarchy = QString();
     Core::Property *sectionProperty = 0;
 
     foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, pRuntime->parameters()) {
-        // Check whether the current parameter is in the same component as the
-        // previous one
+        // Check whether the current parameter is in the same component
+        // hierarchy as the previous one
 
-        QString currentComponent = parameter->component();
+        QString currentComponentHierarchy = parameter->formattedComponentHierarchy();
 
-        if (   !sectionProperty
-            ||  currentComponent.compare(sectionProperty->name())) {
-            // The current parameter is in a different component, so create a
-            // new section for the 'new' component
+        if (currentComponentHierarchy.compare(componentHierarchy)) {
+            // The current parameter is in a different component hierarchy, so
+            // create a new section hierarchy for our 'new' component, reusing
+            // existing sections, whenever possible
 
-            sectionProperty = mPropertyEditor->addSectionProperty(currentComponent);
+            Core::Property *section = 0;
+
+            foreach (const QString &component, parameter->componentHierarchy()) {
+                // Check whether we already have a section for our current
+                // component
+
+                sectionProperty = 0;
+
+                // Retrieve the sub-sections for the current section
+
+                QList<Core::Property *> subSections = QList<Core::Property *>();
+
+                if (section)
+                    // We have a section, so go through its children and keep
+                    // track of its propeties that are a section
+
+                    foreach (QObject *object, section->children()) {
+                        Core::Property *property = dynamic_cast<Core::Property *>(object);
+
+                        if (   property
+                            && (property->type() == Core::Property::Section))
+                            subSections << property;
+                    }
+                else
+                    // We don't have a section, so go through our property
+                    // editor's properties and keep tack of those that are a
+                    // section
+
+                    foreach (Core::Property *property, mPropertyEditor->properties())
+                        if (property->type() == Core::Property::Section)
+                            subSections << property;
+
+                // Go through the sub-sections and check if one of them
+
+                foreach (Core::Property *subSection, subSections) {
+                    if (!subSection->name().compare(component)) {
+                        sectionProperty = subSection;
+
+                        break;
+                    }
+                }
+
+                // Create a new section for our current component, if none could
+                // be found
+
+                if (!sectionProperty)
+                    sectionProperty = mPropertyEditor->addSectionProperty(component, section);
+
+                // Get ready for the next component in our component hierarchy
+
+                section = sectionProperty;
+            }
+
+            // Keep track of the new component hierarchy
+
+            componentHierarchy = currentComponentHierarchy;
         }
 
-        // Add the current parameter to the 'current' component section
-        // Note: in case of an algebraic variable, if its degree is equal to
-        //       zero, then we are dealing with a 'proper' algebraic variable
-        //       otherwise a rate variable. Now, there may be several rate
-        //       variables with the same name (but different degrees) and a
-        //       state variable with the same name will also exist. So, to
-        //       distinguish between all of them, we 'customise' our variable's
-        //       name by appending n single quotes with n the degree of our
-        //       variable (that degree is zero for all but rate variables; e.g.
-        //       for a state variable which name is V, the corresponding rate
-        //       variables of degree 1, 2 and 3 will be V', V'' and V''',
-        //       respectively)...
+        // Add the current parameter to the current section property
 
         Core::Property *property = mPropertyEditor->addDoubleProperty(sectionProperty);
 
@@ -404,29 +449,61 @@ void SingleCellViewInformationParametersWidget::populateContextMenu(QMenu *pCont
 
     mParameterActions.insert(voiAction, pRuntime->variableOfIntegration());
 
-    // Populate our property editor with the parameters
+    // Populate our context menu with the parameters
 
+    QString componentHierarchy = QString();
     QMenu *componentMenu = 0;
 
     foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, pRuntime->parameters()) {
-        // Check whether the current parameter is in the same component as the
-        // previous one
+        // Check whether the current parameter is in the same component
+        // hierarchy as the previous one
 
-        QString currentComponent = parameter->component();
+        QString currentComponentHierarchy = parameter->formattedComponentHierarchy();
 
-        if (   !componentMenu
-            ||  currentComponent.compare(componentMenu->menuAction()->text())) {
-            // The current parameter is in a different component, so create a
-            // new menu for the 'new' component
+        if (currentComponentHierarchy.compare(componentHierarchy)) {
+            // The current parameter is in a different component hierarchy, so
+            // create a new menu hierarchy for our 'new' component, reusing
+            // existing menus, whenever possible
 
-            componentMenu = new QMenu(currentComponent, pContextMenu);
+            QMenu *menu = plotAgainstMenu;
 
-            plotAgainstMenu->addMenu(componentMenu);
-        }
+            foreach (const QString &component, parameter->componentHierarchy()) {
+                // Check whether we already have a menu for our current
+                // component
+
+                componentMenu = 0;
+
+                foreach (QObject *object, menu->children()) {
+                    QMenu *subMenu = dynamic_cast<QMenu *>(object);
+
+                    if (    subMenu
+                        && !subMenu->menuAction()->text().compare(component)) {
+                        componentMenu = subMenu;
+
+                        break;
+                    }
+                }
+
+                // Create a new menu for our current component, if none could be
+                // found
+
+                if (!componentMenu) {
+                    componentMenu = new QMenu(component, menu);
+
+                    menu->addMenu(componentMenu);
+                }
+
+                // Get ready for the next component in our component hierarchy
+
+                menu = componentMenu;
+            }
+
+            // Keep track of the new component hierarchy
+
+            componentHierarchy = currentComponentHierarchy;
+                    }
 
         // Add the current parameter to the 'current' component menu
-        // Note: in case of an algebraic variable, see the corresponding note in
-        //       populateModel() above...
 
         QAction *parameterAction = componentMenu->addAction(SingleCellViewWidget::parameterIcon(parameter->type()),
                                                             parameter->formattedName());

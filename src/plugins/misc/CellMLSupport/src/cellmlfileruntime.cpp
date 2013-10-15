@@ -49,13 +49,13 @@ namespace CellMLSupport {
 CellmlFileRuntimeParameter::CellmlFileRuntimeParameter(const QString &pName,
                                                        const int &pDegree,
                                                        const QString &pUnit,
-                                                       const QString &pComponent,
+                                                       const QStringList &pComponentHierarchy,
                                                        const ParameterType &pType,
                                                        const int &pIndex) :
     mName(pName),
     mDegree(pDegree),
     mUnit(pUnit),
-    mComponent(pComponent),
+    mComponentHierarchy(pComponentHierarchy),
     mType(pType),
     mIndex(pIndex)
 {
@@ -90,11 +90,11 @@ QString CellmlFileRuntimeParameter::unit() const
 
 //==============================================================================
 
-QString CellmlFileRuntimeParameter::component() const
+QStringList CellmlFileRuntimeParameter::componentHierarchy() const
 {
-    // Return our component
+    // Return our component hierarchy
 
-    return mComponent;
+    return mComponentHierarchy;
 }
 
 //==============================================================================
@@ -126,11 +126,20 @@ QString CellmlFileRuntimeParameter::formattedName() const
 
 //==============================================================================
 
+QString CellmlFileRuntimeParameter::formattedComponentHierarchy() const
+{
+    // Return a formatted version of our component hierarchy
+
+    return mComponentHierarchy.join(".");
+}
+
+//==============================================================================
+
 QString CellmlFileRuntimeParameter::fullyFormattedName() const
 {
     // Return a fully formatted version of our name
 
-    return mComponent+"."+formattedName();
+    return formattedComponentHierarchy()+"."+formattedName();
 }
 
 //==============================================================================
@@ -627,7 +636,10 @@ bool sortParameters(CellmlFileRuntimeParameter *pParameter1,
     // Note: the two comparisons which result we return are case insensitive,
     //       so that it's easier for people to search a parameter...
 
-    if (!pParameter1->component().compare(pParameter2->component())) {
+    QString componentHierarchy1 = pParameter1->formattedComponentHierarchy();
+    QString componentHierarchy2 = pParameter2->formattedComponentHierarchy();
+
+    if (!componentHierarchy1.compare(componentHierarchy2)) {
         // The parameters are in the same component, so check their name
 
         if (!pParameter1->name().compare(pParameter2->name()))
@@ -641,8 +653,68 @@ bool sortParameters(CellmlFileRuntimeParameter *pParameter1,
     } else {
         // The parameters are in different components, so...
 
-        return pParameter1->component().compare(pParameter2->component(), Qt::CaseInsensitive) < 0;
+        return componentHierarchy1.compare(componentHierarchy2, Qt::CaseInsensitive) < 0;
     }
+}
+
+//==============================================================================
+
+QStringList CellmlFileRuntime::componentHierarchy(iface::cellml_api::CellMLElement *pElement)
+{
+    // Make sure that we have a given element
+
+    if (!pElement)
+        return QStringList();
+
+    // Try to retrieve the component that owns the given element, unless the
+    // given element is a component itself (which will be the case when we come
+    // here through recursion)
+
+    ObjRef<iface::cellml_api::CellMLComponent> component = QueryInterface(pElement);
+
+    ObjRef<iface::cellml_api::CellMLElement> parent = pElement->parentElement();
+    ObjRef<iface::cellml_api::CellMLComponent> parentComponent = QueryInterface(parent);
+
+    if (!component && !parentComponent)
+        // The element isn't a component and neither is its parent, so...
+
+        return QStringList();
+
+    // Check whether this is an imported component and, if so, retrieve its
+    // imported name
+
+    QString componentName = QString::fromStdWString(component?component->name():parentComponent->name());
+
+    ObjRef<iface::cellml_api::CellMLElement> componentParent = component?component->parentElement():parentComponent->parentElement();
+    ObjRef<iface::cellml_api::CellMLElement> componentParentParent = componentParent->parentElement();
+
+    if (componentParentParent) {
+        // The given element comes from or is an imported component, so go
+        // through our different imported components and look for the one we are
+        // after
+
+        ObjRef<iface::cellml_api::CellMLImport> import = QueryInterface(componentParentParent);
+        ObjRef<iface::cellml_api::ImportComponentSet> importComponents = import->components();
+        ObjRef<iface::cellml_api::ImportComponentIterator> importComponentsIterator = importComponents->iterateImportComponents();
+
+        for (ObjRef<iface::cellml_api::ImportComponent> importComponent = importComponentsIterator->nextImportComponent();
+             importComponent; importComponent = importComponentsIterator->nextImportComponent())
+            if (!componentName.compare(QString::fromStdWString(importComponent->componentRef()))) {
+                // This is the imported component we are after, so retrieve its
+                // imported name
+
+                componentName = QString::fromStdWString(importComponent->name());
+
+                break;
+            }
+    }
+
+    // Recursively retrieve the component hierarchy of the given element's
+    // encapsulation parent, if any
+
+    ObjRef<iface::cellml_api::CellMLComponent> componentEncapsulationParent = component?component->encapsulationParent():parentComponent->encapsulationParent();
+
+    return componentHierarchy(componentEncapsulationParent) << componentName;
 }
 
 //==============================================================================
@@ -775,47 +847,12 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
 
             ObjRef<iface::cellml_api::CellMLVariable> variable = computationTarget->variable();
 
-            // Retrieve the component in which the variable was declared
-            // Note: for this, we need to check whether the component was
-            //       imported which means retrieving the parent element of the
-            //       variable (i.e. a component), then the parent of its parent
-            //       (i.e. a model) and, finally, the parent of its parent's
-            //       parent (i.e. an import, should the component have been
-            //       imported)
-
-            QString componentName = QString::fromStdWString(variable->componentName());
-
-            ObjRef<iface::cellml_api::CellMLElement> variableComponent = variable->parentElement();
-            ObjRef<iface::cellml_api::CellMLElement> variableComponentModel = variableComponent->parentElement();
-            ObjRef<iface::cellml_api::CellMLElement> variableComponentModelImport = variableComponentModel->parentElement();
-
-            if (variableComponentModelImport) {
-                // The component has been imported, so retrieve the import's
-                // components, and check which one has the name of variable's
-                // component
-
-                ObjRef<iface::cellml_api::CellMLImport> import = QueryInterface(variableComponentModelImport);
-                ObjRef<iface::cellml_api::ImportComponentSet> importComponents = import->components();
-                ObjRef<iface::cellml_api::ImportComponentIterator> importComponentsIterator = importComponents->iterateImportComponents();
-
-                for (ObjRef<iface::cellml_api::ImportComponent> importComponent = importComponentsIterator->nextImportComponent();
-                     importComponent; importComponent = importComponentsIterator->nextImportComponent())
-                    if (!componentName.compare(QString::fromStdWString(importComponent->componentRef()))) {
-                        // This is the imported component we are after, so we
-                        // can get the correct name of the variable's component
-
-                        componentName = QString::fromStdWString(importComponent->name());
-
-                        break;
-                    }
-            }
-
             // Keep track of the parameter
 
             CellmlFileRuntimeParameter *parameter = new CellmlFileRuntimeParameter(QString::fromStdWString(variable->name()),
                                                                                    computationTarget->degree(),
                                                                                    QString::fromStdWString(variable->unitsName()),
-                                                                                   componentName,
+                                                                                   componentHierarchy(variable),
                                                                                    parameterType,
                                                                                    computationTarget->assignedIndex());
 

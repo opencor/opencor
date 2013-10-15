@@ -28,6 +28,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QAction>
 #include <QFileInfo>
 #include <QHeaderView>
 #include <QLabel>
@@ -603,22 +604,56 @@ void SingleCellViewInformationGraphsWidget::populateContextMenu(QMenu *pContextM
 
     // Now, add our model parameters to it
 
+    QString componentHierarchy = QString();
     QMenu *componentMenu = 0;
 
     foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, pRuntime->parameters()) {
-        // Check whether the current parameter is in the same component as the
-        // previous one
+        // Check whether the current parameter is in the same component
+        // hierarchy as the previous one
 
-        QString currentComponent = parameter->component();
+        QString currentComponentHierarchy = parameter->formattedComponentHierarchy();
 
-        if (   !componentMenu
-            ||  currentComponent.compare(componentMenu->menuAction()->text())) {
-            // The current parameter is in a different component, so create a
-            // new menu for the 'new' component
+        if (currentComponentHierarchy.compare(componentHierarchy)) {
+            // The current parameter is in a different component hierarchy, so
+            // create a new menu hierarchy for our 'new' component, reusing
+            // existing menus, whenever possible
 
-            componentMenu = new QMenu(currentComponent, pContextMenu);
+            QMenu *menu = pContextMenu;
 
-            pContextMenu->addMenu(componentMenu);
+            foreach (const QString &component, parameter->componentHierarchy()) {
+                // Check whether we already have a menu for our current
+                // component
+
+                componentMenu = 0;
+
+                foreach (QObject *object, menu->children()) {
+                    QMenu *subMenu = dynamic_cast<QMenu *>(object);
+
+                    if (    subMenu
+                        && !subMenu->menuAction()->text().compare(component)) {
+                        componentMenu = subMenu;
+
+                        break;
+                    }
+                }
+
+                // Create a new menu for our current component, if none could be
+                // found
+
+                if (!componentMenu) {
+                    componentMenu = new QMenu(component, menu);
+
+                    menu->addMenu(componentMenu);
+                }
+
+                // Get ready for the next component in our component hierarchy
+
+                menu = componentMenu;
+            }
+
+            // Keep track of the new component hierarchy
+
+            componentHierarchy = currentComponentHierarchy;
         }
 
         // Add the current parameter to the 'current' component menu
@@ -654,9 +689,11 @@ bool SingleCellViewInformationGraphsWidget::checkParameter(CellMLSupport::Cellml
         // Retrieve the component and parameter of the property
 
         QStringList info = pParameterProperty->value().split(".");
-        QString componentName = info.first();
+        QStringList componentHierarchy = info;
         QString parameterName = info.last();
         int parameterDegree = parameterName.size();
+
+        componentHierarchy.removeLast();
 
         // Determine the degree of our parameter, if any
 
@@ -667,7 +704,7 @@ bool SingleCellViewInformationGraphsWidget::checkParameter(CellMLSupport::Cellml
         // Check whether we can find our property among our runtime's parameters
 
         foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, pRuntime->parameters())
-            if (   !parameter->component().compare(componentName)
+            if (   (parameter->componentHierarchy() == componentHierarchy)
                 && !parameter->name().compare(parameterName)
                 && (parameter->degree() == parameterDegree)) {
                 res = parameter;

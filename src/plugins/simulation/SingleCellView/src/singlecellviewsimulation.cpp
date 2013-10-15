@@ -877,7 +877,7 @@ bool SingleCellViewSimulationResults::exportToCsv(const QString &pFileName) cons
 
     static const QString Header = "%1 | %2 (%3)";
 
-    out << Header.arg(mRuntime->variableOfIntegration()->component(),
+    out << Header.arg(mRuntime->variableOfIntegration()->componentHierarchy().join(" | "),
                       mRuntime->variableOfIntegration()->name(),
                       mRuntime->variableOfIntegration()->unit());
 
@@ -885,7 +885,7 @@ bool SingleCellViewSimulationResults::exportToCsv(const QString &pFileName) cons
         CellMLSupport::CellmlFileRuntimeParameter *parameter = mRuntime->parameters()[i];
 
         if (parameter != mRuntime->variableOfIntegration())
-            out << "," << Header.arg(parameter->component(),
+            out << "," << Header.arg(parameter->componentHierarchy().join(" | "),
                                      parameter->formattedName(),
                                      parameter->formattedUnit(mRuntime->variableOfIntegration()->name()));
     }

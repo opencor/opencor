@@ -31,6 +31,7 @@ specific language governing permissions and limitations under the License.
 
 #include <QList>
 #include <QObject>
+#include <QStringlist>
 
 //==============================================================================
 
@@ -73,18 +74,19 @@ public:
     explicit CellmlFileRuntimeParameter(const QString &pName,
                                         const int &pDegree,
                                         const QString &pUnit,
-                                        const QString &pComponent,
+                                        const QStringList &pComponentHierarchy,
                                         const ParameterType &pType,
                                         const int &pIndex);
 
     QString name() const;
     int degree() const;
     QString unit() const;
-    QString component() const;
+    QStringList componentHierarchy() const;
     ParameterType type() const;
     int index() const;
 
     QString formattedName() const;
+    QString formattedComponentHierarchy() const;
     QString fullyFormattedName() const;
 
     QString formattedUnit(const QString &pVoiUnit) const;
@@ -93,7 +95,7 @@ private:
     QString mName;
     int mDegree;
     QString mUnit;
-    QString mComponent;
+    QStringList mComponentHierarchy;
     ParameterType mType;
     int mIndex;
 };
@@ -213,6 +215,8 @@ private:
     QString functionCode(const QString &pFunctionSignature,
                          const QString &pFunctionBody,
                          const bool &pHasDefines = false);
+
+    QStringList componentHierarchy(iface::cellml_api::CellMLElement *pElement);
 };
 
 //==============================================================================
