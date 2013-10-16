@@ -191,6 +191,15 @@ void SingleCellViewPlugin::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
+void SingleCellViewPlugin::fileClosed(const QString &pFileName)
+{
+    // Let our view widget know that a file has been closed
+
+    mViewWidget->fileClosed(pFileName);
+}
+
+//==============================================================================
+
 void SingleCellViewPlugin::retranslateUi()
 {
     // Retranslate our single cell view

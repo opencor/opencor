@@ -942,6 +942,15 @@ void SingleCellViewWidget::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
+void SingleCellViewWidget::fileClosed(const QString &pFileName)
+{
+    // Let our graphs widget know that a file has been closed
+
+    mContentsWidget->informationWidget()->graphsWidget()->fileClosed(pFileName);
+}
+
+//==============================================================================
+
 void SingleCellViewWidget::on_actionRunPauseResumeSimulation_triggered()
 {
     // Run or resume our simulation, or pause it

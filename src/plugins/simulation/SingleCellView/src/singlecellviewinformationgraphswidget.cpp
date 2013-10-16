@@ -221,13 +221,7 @@ void SingleCellViewInformationGraphsWidget::fileOpened(const QString &pFileName)
 {
     // Keep track of the file name
 
-    if (!mFileNames.contains(pFileName))
-        mFileNames << pFileName;
-
-    mFileNames.sort();
-
-    // Update the information about our graphs properties and this for all our
-    // property editors
+    mFileNames << pFileName;
 
     updateAllGraphsInfo(true);
 }
@@ -247,6 +241,21 @@ void SingleCellViewInformationGraphsWidget::fileRenamed(const QString &pOldFileN
     mSimulations.insert(pNewFileName, mSimulations.value(pOldFileName));
 
     finalize(pOldFileName);
+
+    updateAllGraphsInfo(true);
+}
+
+//==============================================================================
+
+void SingleCellViewInformationGraphsWidget::fileClosed(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // Update the information about our graphs properties
+    // Note: our various trackers (e.g. mFileNames) will have been updated
+    //       through finalize(), so we are fine...
+
+    updateAllGraphsInfo(true);
 }
 
 //==============================================================================
