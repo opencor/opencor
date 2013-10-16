@@ -5,7 +5,6 @@ PROJECT(SecondOrderRungeKuttaSolverPlugin)
 ADD_PLUGIN(SecondOrderRungeKuttaSolver
     SOURCES
         ../../i18ninterface.cpp
-        ../../interface.cpp
         ../../plugininfo.cpp
         ../../solverinterface.cpp
 

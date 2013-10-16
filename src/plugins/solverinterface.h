@@ -24,7 +24,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "interface.h"
 #include "plugininfo.h"
 
 //==============================================================================
@@ -86,7 +85,7 @@ typedef QList<Property> Properties;
 
 //==============================================================================
 
-class SolverInterface : public Interface
+class SolverInterface
 {
 public:
     virtual Solver::Type type() const = 0;

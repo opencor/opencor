@@ -340,7 +340,7 @@ GuiInterface::GuiInterface() :
 
 //==============================================================================
 
-void GuiInterface::destroy()
+GuiInterface::~GuiInterface()
 {
     // Delete our GUI settings object
 

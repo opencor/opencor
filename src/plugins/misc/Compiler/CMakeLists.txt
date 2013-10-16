@@ -9,7 +9,6 @@ RETRIEVE_LLVM_SETTINGS()
 ADD_PLUGIN(Compiler
     SOURCES
         ../../i18ninterface.cpp
-        ../../interface.cpp
         ../../plugininfo.cpp
 
         src/compilerengine.cpp

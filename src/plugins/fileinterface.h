@@ -24,10 +24,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "interface.h"
-
-//==============================================================================
-
 #include <QStringList>
 
 //==============================================================================
@@ -65,7 +61,7 @@ typedef QList<FileType> FileTypes;
 
 //==============================================================================
 
-class FileInterface : public Interface
+class FileInterface
 {
 public:
     virtual FileTypes fileTypes() const;

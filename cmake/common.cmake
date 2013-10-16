@@ -565,7 +565,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     ../../../../test/testutils.cpp
 
                     ../../coreinterface.cpp
-                    ../../interface.cpp
                     ../../plugin.cpp
                     ../../plugininfo.cpp
                     ../../pluginmanager.cpp

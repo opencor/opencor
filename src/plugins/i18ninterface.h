@@ -24,10 +24,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "interface.h"
-
-//==============================================================================
-
 #include <QTranslator>
 
 //==============================================================================
@@ -36,7 +32,7 @@ namespace OpenCOR {
 
 //==============================================================================
 
-class I18nInterface : public Interface
+class I18nInterface
 {
 public:
     void setLocale(const QString &pLocale);

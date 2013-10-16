@@ -12,7 +12,6 @@ ADD_PLUGIN(CellMLTools
         ../../coreinterface.cpp
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
-        ../../interface.cpp
         ../../fileinterface.cpp
         ../../plugin.cpp
         ../../plugininfo.cpp

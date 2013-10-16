@@ -7,7 +7,6 @@ ADD_PLUGIN(CoreCellMLEditing
         ../../coreinterface.cpp
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
-        ../../interface.cpp
         ../../plugininfo.cpp
 
         src/corecellmleditingplugin.cpp

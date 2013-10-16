@@ -5,7 +5,6 @@ PROJECT(CVODESolverPlugin)
 ADD_PLUGIN(CVODESolver
     SOURCES
         ../../i18ninterface.cpp
-        ../../interface.cpp
         ../../plugininfo.cpp
         ../../solverinterface.cpp
 

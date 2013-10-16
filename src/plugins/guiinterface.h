@@ -24,10 +24,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "interface.h"
-
-//==============================================================================
-
 #include <QIcon>
 #include <QList>
 #include <QKeySequence>
@@ -191,12 +187,13 @@ private:
 
 //==============================================================================
 
-class GuiInterface : public Interface
+class GuiInterface
 {
     friend class MainWindow;
 
 public:
     explicit GuiInterface();
+    ~GuiInterface();
 
     virtual void changeEvent(QEvent *pEvent);
 
@@ -257,8 +254,6 @@ protected:
     void saveViewSettings(QSettings *pSettings, QObject *pView) const;
 
 private:
-    virtual void destroy();
-
     void setMainWindow(QMainWindow *pMainWindow);
 };
 

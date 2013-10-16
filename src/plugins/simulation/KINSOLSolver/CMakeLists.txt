@@ -4,7 +4,6 @@ PROJECT(KINSOLSolverPlugin)
 
 ADD_PLUGIN(KINSOLSolver
     SOURCES
-        ../../interface.cpp
         ../../plugininfo.cpp
         ../../solverinterface.cpp
 

@@ -5,7 +5,6 @@ PROJECT(IDASolverPlugin)
 ADD_PLUGIN(IDASolver
     SOURCES
         ../../i18ninterface.cpp
-        ../../interface.cpp
         ../../plugininfo.cpp
         ../../solverinterface.cpp
 

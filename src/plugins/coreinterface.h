@@ -24,7 +24,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "interface.h"
 #include "plugin.h"
 
 //==============================================================================
@@ -41,7 +40,7 @@ namespace OpenCOR {
 
 //==============================================================================
 
-class CoreInterface : public Interface
+class CoreInterface
 {
 public:
     virtual void initialize();

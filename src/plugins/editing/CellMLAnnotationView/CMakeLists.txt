@@ -12,7 +12,6 @@ ADD_PLUGIN(CellMLAnnotationView
         ../../coreinterface.cpp
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
-        ../../interface.cpp
         ../../plugin.cpp
         ../../plugininfo.cpp
         ../../pluginmanager.cpp

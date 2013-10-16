@@ -12,7 +12,6 @@ ADD_PLUGIN(CellMLSupport
         ../../coreinterface.cpp
         ../../fileinterface.cpp
         ../../i18ninterface.cpp
-        ../../interface.cpp
         ../../plugininfo.cpp
 
         src/cellmlfile.cpp
