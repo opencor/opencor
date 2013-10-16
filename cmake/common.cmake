@@ -104,18 +104,14 @@ MACRO(INITIALISE_PROJECT)
         ADD_DEFINITIONS(-D_UNICODE)
     ENDIF()
 
-    # Use the oldest SDK shipped with Xcode
-    # Note: xcodebuild always seems to generate an error message even though
-    #       everything works fine, hence we pass ERROR_QUIET to
-    #       EXECUTE_PROCESS()...
+    # On OS X, use the oldest SDK shipped with Xcode
 
     IF(APPLE)
         EXECUTE_PROCESS(COMMAND xcodebuild -showsdks
                         COMMAND grep --colour=never macosx
                         COMMAND head -1
                         OUTPUT_VARIABLE OLDEST_SDK_LINE
-                        OUTPUT_STRIP_TRAILING_WHITESPACE
-                        ERROR_QUIET)
+                        OUTPUT_STRIP_TRAILING_WHITESPACE)
         EXECUTE_PROCESS(COMMAND echo ${OLDEST_SDK_LINE}
                         COMMAND cut -f2
                         OUTPUT_VARIABLE OLDEST_OS_X_VERSION
@@ -136,8 +132,7 @@ MACRO(INITIALISE_PROJECT)
                         OUTPUT_STRIP_TRAILING_WHITESPACE)
         EXECUTE_PROCESS(COMMAND xcodebuild -version -sdk ${OLDEST_SDK_NAME} Path
                         OUTPUT_VARIABLE OLDEST_SDK_PATH
-                        OUTPUT_STRIP_TRAILING_WHITESPACE
-                        ERROR_QUIET)
+                        OUTPUT_STRIP_TRAILING_WHITESPACE)
 
         MESSAGE("Building for ${OLDEST_OS_X_VERSION} and above...")
 
