@@ -28,6 +28,11 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QList>
+#include <QSslError>
+
+//==============================================================================
+
 namespace Ui {
     class CellmlModelRepositoryWindow;
 }
@@ -84,6 +89,9 @@ private Q_SLOTS:
     void on_refreshButton_clicked();
 
     void finished(QNetworkReply *pNetworkReply);
+    void sslErrors(QNetworkReply *pNetworkReply,
+                   const QList<QSslError> &pSslErrors);
+
     void showCustomContextMenu(const QPoint &pPosition) const;
 
     void retrieveModelList(const bool &pVisible);

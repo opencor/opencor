@@ -91,10 +91,13 @@ CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
     mNetworkAccessManager = new QNetworkAccessManager(this);
 
     // Make sure that we get told when the download of our Internet file is
-    // complete
+    // complete, as well as if there are SSL errors (which would happen if the
+    // website's certificate is invalid, e.g. it expired)
 
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply *)),
             this, SLOT(finished(QNetworkReply *)) );
+    connect(mNetworkAccessManager, SIGNAL(sslErrors(QNetworkReply *, const QList<QSslError> &)),
+            this, SLOT(sslErrors(QNetworkReply *, const QList<QSslError> &)) );
 
     // Connection to update the enabled state of our copy action
 
@@ -278,6 +281,17 @@ void CellmlModelRepositoryWindow::finished(QNetworkReply *pNetworkReply)
     // Delete (later) the network reply
 
     pNetworkReply->deleteLater();
+}
+
+//==============================================================================
+
+void CellmlModelRepositoryWindow::sslErrors(QNetworkReply *pNetworkReply,
+                                            const QList<QSslError> &pSslErrors)
+{
+    // Ignore the SSL errors since we trust the website and therefore its
+    // certificate (even if it is invalid, e.g. it has expired)
+
+    pNetworkReply->ignoreSslErrors(pSslErrors);
 }
 
 //==============================================================================
