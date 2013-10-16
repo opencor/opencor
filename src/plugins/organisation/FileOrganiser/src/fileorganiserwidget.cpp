@@ -78,8 +78,8 @@ FileOrganiserWidget::FileOrganiserWidget(QWidget *pParent) :
 
     // Some connections to handle our file manager
 
-    connect(mFileManager, SIGNAL(fileContentsChanged(const QString &)),
-            this, SLOT(fileContentsChanged(const QString &)));
+    connect(mFileManager, SIGNAL(fileChanged(const QString &)),
+            this, SLOT(fileChanged(const QString &)));
     connect(mFileManager, SIGNAL(fileDeleted(const QString &)),
             this, SLOT(fileDeleted(const QString &)));
 }
@@ -1181,11 +1181,11 @@ void FileOrganiserWidget::updateFileItems(QStandardItem *pItem,
 
 //==============================================================================
 
-void FileOrganiserWidget::fileContentsChanged(const QString &pFileName) const
+void FileOrganiserWidget::fileChanged(const QString &pFileName) const
 {
-    // The contents of a file has been changed which may also mean that a file
-    // may have been deleted and recreated, so go through all the (file) items
-    // and update the icon of the ones that refer to the file in question
+    // The file has changed, which may also mean that a file may have been
+    // deleted and recreated, so go through all the (file) items and update the
+    // icon of the ones that refer to the file in question
 
     updateFileItems(mModel->invisibleRootItem(), pFileName,
                     Core::File::Changed);

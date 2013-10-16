@@ -93,7 +93,7 @@ Q_SIGNALS:
     void fileManaged(const QString &pFileName);
     void fileUnmanaged(const QString &pFileName);
 
-    void fileContentsChanged(const QString &pFileName);
+    void fileChanged(const QString &pFileName);
     void fileDeleted(const QString &pFileName);
 
     void fileModified(const QString &pFileName, const bool &pModified);
