@@ -92,7 +92,7 @@ CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
 
     // Make sure that we get told when the download of our Internet file is
     // complete, as well as if there are SSL errors (which would happen if the
-    // website's certificate is invalid, e.g. it expired)
+    // website's certificate is invalid, e.g. it has expired)
 
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply *)),
             this, SLOT(finished(QNetworkReply *)) );
