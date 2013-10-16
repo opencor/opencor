@@ -1333,7 +1333,7 @@ bool QwtMmlDocument::insertChild( QwtMmlNode *parent, QwtMmlNode *new_node,
             n->m_next_sibling = new_node;
             new_node->m_previous_sibling = n;
         }
-        else 
+        else
         {
             parent->m_first_child = new_node;
         }
