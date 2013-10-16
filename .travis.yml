@@ -1,0 +1,15 @@
+language: cpp
+compiler:
+  - clang
+  - gcc
+env:
+  - CONFIG=Debug
+  - CONFIG=Release
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-add-repository -y ppa:beineri/opt-qt511
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq qt51base qt51tools qt51webkit
+  - sudo apt-get install -qq cmake
+  - bash -c "cmake --version"
+script: bash -c "cd build; cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt51/lib/cmake -DENABLE_TESTING=True .. && make -j 4 && cd tests; ./runtests"
