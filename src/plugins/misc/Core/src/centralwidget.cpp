@@ -519,7 +519,6 @@ void CentralWidget::openFile(const QString &pFileName)
         if (guiInterface)
             guiInterface->fileOpened(nativeFileName);
     }
-
 }
 
 //==============================================================================
