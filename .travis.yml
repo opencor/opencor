@@ -9,18 +9,21 @@ env:
   - CONFIG=Debug
 
 before_install:
-  - wget http://www.cmake.org/files/v2.8/cmake-2.8.12-Linux-i386.sh
-  - chmod +x cmake-2.8.12-Linux-i386.sh
-  - sudo ./cmake-2.8.12-Linux-i386.sh --skip-license --prefix=/usr
+  - export PROCS=`cat /proc/cpuinfo | grep processor | wc -l`
+  - wget http://www.cmake.org/files/v2.8/cmake-2.8.12.tar.gz
+  - tar xf cmake-2.8.12.tar.gz
+  - cd cmake-2.8.12
+  - ./configure --parallel=$PROCS --prefix=/usr
+  - make -j $PROCS
+  - sudo make install
+  - cd ..
   - sudo apt-get -qq update
-  - sudo apt-get -qq install ia32-libs-multiarch
   - sudo apt-get -qq install libgl1-mesa-dev
   - sudo apt-add-repository -y ppa:beineri/opt-qt511
   - sudo apt-get -qq update
   - sudo apt-get -qq install qt51base qt51svg
 
 before_script:
-  - export PROCS=`cat /proc/cpuinfo | grep processor | wc -l`
   - echo "Number of processors: $PROCS."
   - cmake --version
   - qmake --version | grep "Qt version" | awk '{ print $2 " " $3 " " $4 }'
