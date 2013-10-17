@@ -1,13 +1,12 @@
 language: cpp
 
 env:
-  global:
-    - JOBS=16
-  matrix:
-    - CONFIG=Release
-    - CONFIG=Debug
+  - CONFIG=Release
+  - CONFIG=Debug
 
 before_install:
+  - export PROCS=`cat /proc/cpuinfo | grep processor | wc -l`
+  - env
   - sudo apt-get -qq update
   - sudo apt-get -qq install cmake
   - wget http://www.cmake.org/files/v2.8/cmake-2.8.12.tar.gz
@@ -16,7 +15,7 @@ before_install:
   - mkdir build
   - cd build
   - cmake -DCMAKE_INSTALL_PREFIX=/usr ..
-  - make -j $JOBS
+  - make -j $PROCS
   - sudo make install
   - cd ../..
   - sudo apt-get -qq update
@@ -32,7 +31,7 @@ before_script:
 script:
   - cd build
   - cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt51/lib/cmake -DENABLE_TESTING=True ..
-  - make -j $JOBS
+  - make -j $PROCS
   - cd tests
   - ./runtests
 
