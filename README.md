@@ -1,7 +1,3 @@
-[![OpenCOR](http://www.opencor.ws/res/pics/logo.png)](http://www.opencor.ws/)
-
-#######
-
 [OpenCOR](http://www.opencor.ws/) is an [open source](http://www.opencor.ws/user/licensing.html) cross-platform modelling environment. Here a few links, which you might find useful:
 
 #######
