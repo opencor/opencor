@@ -1,14 +1,15 @@
 language: cpp
 
 compiler:
-  - clang
   - gcc
+  - clang
 
 env:
   - CONFIG=Release
   - CONFIG=Debug
 
 before_install:
+  - uname -a
   - wget http://www.cmake.org/files/v2.8/cmake-2.8.12-Linux-i386.sh
   - chmod +x cmake-2.8.12-Linux-i386.sh
   - sudo ./cmake-2.8.12-Linux-i386.sh --skip-license --prefix=/usr
