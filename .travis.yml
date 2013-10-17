@@ -18,8 +18,8 @@ before_install:
   - make -j $PROCS
   - sudo make install
   - cd ../..
-#  - sudo apt-get -qq install libgl1-mesa-dev
-  - sudo apt-get -qq install qt51base qt51tools qt51svg qt51webkit
+#  - sudo apt-get -qq install qt51base qt51tools qt51svg qt51webkit
+  - sudo apt-get -qq install qt51tools qt51svg qt51webkit
 
 script:
   - cd build
