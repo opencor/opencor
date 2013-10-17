@@ -2,11 +2,13 @@ language: cpp
 
 compiler:
   - gcc
-  - clang
 
 env:
-  - CONFIG=Release
-  - CONFIG=Debug
+  global:
+    - JOBS=4
+  matrix:
+    - CONFIG=Release
+    - CONFIG=Debug
 
 before_install:
   - sudo apt-get -qq update
@@ -17,7 +19,7 @@ before_install:
   - mkdir build
   - cd build
   - cmake -DCMAKE_INSTALL_PREFIX=/usr ..
-  - make -j
+  - make -j $JOBS
   - sudo make install
   - cd ../..
   - sudo apt-get -qq update
@@ -33,7 +35,7 @@ before_script:
 script:
   - cd build
   - cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_PREFIX_PATH=/opt/qt51/lib/cmake -DENABLE_TESTING=True ..
-  - make -j
+  - make -j $JOBS
   - cd tests
   - ./runtests
 
