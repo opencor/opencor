@@ -24,16 +24,12 @@ before_install:
   - sudo apt-get -qq update
   - sudo apt-get -qq install qt51base qt51tools qt51svg qt51webkit
 
-before_script:
-  - cmake --version
-  - /opt/qt51/bin/qmake --version | grep "Qt version" | awk '{ print $2 " " $3 " " $4 }'
-
 script:
   - cd build
   - cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt51/lib/cmake -DENABLE_TESTING=True ..
   - make -j $PROCS
   - cd tests
-  - ./runtests
+  - ./runtests -platform offscreen
 
 notifications:
   recipients: team@opencor.ws
