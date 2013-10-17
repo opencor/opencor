@@ -5,13 +5,11 @@ compiler:
   - clang
 
 env:
-  global:
-    - JOBS=`cat /proc/cpuinfo | grep processor | wc -l`
-  matrix:
-    - CONFIG=Release
-    - CONFIG=Debug
+  - CONFIG=Release
+  - CONFIG=Debug
 
 before_install:
+  - export JOBS=`cat /proc/cpuinfo | grep processor | wc -l`
   - sudo apt-get -qq update
   - sudo apt-get -qq install ia32-libs
   - wget http://www.cmake.org/files/v2.8/cmake-2.8.12-Linux-i386.sh
