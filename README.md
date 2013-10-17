@@ -1,4 +1,4 @@
-<div style="text-align: center"><img src="http://www.opencor.ws/res/pics/logo.png" alt="OpenCOR" /></div>
+[![OpenCOR](http://www.opencor.ws/res/pics/logo.png)](http://www.opencor.ws/)
 
 #######
 
