@@ -10,15 +10,12 @@ env:
 
 before_install:
   - uname -a
-  - wget http://www.cmake.org/files/v2.8/cmake-2.8.12-Linux-i386.sh
-  - chmod +x cmake-2.8.12-Linux-i386.sh
-  - sudo ./cmake-2.8.12-Linux-i386.sh --skip-license --prefix=/usr
-  - for i in `find /usr -user 501 -group 501 -name "*"`; do sudo chown root:root $i; done
-  - ls -alR /usr/bin/cm*
-  - sudo apt-get update -qq
-  - sudo apt-get install ia32-libs
-  - which cmake
-  - /usr/bin/cmake --version
+  - wget http://www.cmake.org/files/v2.8/cmake-2.8.12.tar.gz
+  - tar xvf cmake-2.8.12.tar.gz
+  - cd cmake-2.8.12
+  - ./configure --prefix=/usr
+  - make -j 4
+  - sudo make install
   - cmake --version
   - sudo apt-get update -qq
   - sudo apt-get install -qq libgl1-mesa-dev
