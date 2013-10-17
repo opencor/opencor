@@ -9,23 +9,26 @@ env:
   - CONFIG=Debug
 
 before_install:
-  - cat /proc/cpuinfo | grep processor | wc -l
+  - sudo apt-get -qq update
+  - sudo apt-get -qq install cmake
   - wget http://www.cmake.org/files/v2.8/cmake-2.8.12.tar.gz
   - tar xf cmake-2.8.12.tar.gz
   - cd cmake-2.8.12
-  - ./configure --prefix=/usr
+  - mkdir build
+  - cd build
+  - cmake -DCMAKE_INSTALL_PREFIX=/usr ..
   - make -j
   - sudo make install
-  - cd ..
+  - cd ../..
   - sudo apt-get -qq update
   - sudo apt-get -qq install libgl1-mesa-dev
   - sudo apt-add-repository -y ppa:beineri/opt-qt511
   - sudo apt-get -qq update
-  - sudo apt-get -qq install qt51base qt51svg
+  - sudo apt-get -qq install qt51base qt51tools qt51svg
 
 before_script:
   - cmake --version
-  - qmake --version | grep "Qt version" | awk '{ print $2 " " $3 " " $4 }'
+  - /opt/qt51/bin/qmake --version | grep "Qt version" | awk '{ print $2 " " $3 " " $4 }'
 
 script:
   - cd build
