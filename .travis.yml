@@ -9,12 +9,12 @@ env:
   - CONFIG=Debug
 
 before_install:
-  - export PROCS=`cat /proc/cpuinfo | grep processor | wc -l`
+  - cat /proc/cpuinfo | grep processor | wc -l
   - wget http://www.cmake.org/files/v2.8/cmake-2.8.12.tar.gz
   - tar xf cmake-2.8.12.tar.gz
   - cd cmake-2.8.12
-  - ./configure --parallel=$PROCS --prefix=/usr
-  - make -j $PROCS
+  - ./configure --prefix=/usr
+  - make -j
   - sudo make install
   - cd ..
   - sudo apt-get -qq update
@@ -24,14 +24,13 @@ before_install:
   - sudo apt-get -qq install qt51base qt51svg
 
 before_script:
-  - "echo 'Number of processors: $PROCS.'"
   - cmake --version
   - qmake --version | grep "Qt version" | awk '{ print $2 " " $3 " " $4 }'
 
 script:
   - cd build
   - cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_PREFIX_PATH=/opt/qt51/lib/cmake -DENABLE_TESTING=True ..
-  - make -j $PROCS
+  - make -j
   - cd tests
   - ./runtests
 
