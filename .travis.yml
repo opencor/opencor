@@ -24,7 +24,7 @@ before_install:
   - sudo apt-get -qq install qt51base qt51svg
 
 before_script:
-  - echo "Number of processors: $PROCS."
+  - "echo 'Number of processors: $PROCS.'"
   - cmake --version
   - qmake --version | grep "Qt version" | awk '{ print $2 " " $3 " " $4 }'
 
