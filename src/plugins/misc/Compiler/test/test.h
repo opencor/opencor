@@ -99,8 +99,6 @@ private Q_SLOTS:
     void lcmFunctionTests();
     void maxFunctionTests();
     void minFunctionTests();
-
-    void defIntFunctionTests();
 };
 
 //==============================================================================
