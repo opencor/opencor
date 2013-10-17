@@ -14,7 +14,7 @@ before_install:
   - sudo ./cmake-2.8.12-Linux-i386.sh --skip-license --prefix=/usr
   - sudo dpkg --add-architecture i386
   - sudo apt-get -qq update
-  - sudo apt-get -qq install ia32-libs
+  - sudo apt-get -qq install ia32-libs-multiarch
   - sudo apt-get -qq install libgl1-mesa-dev
   - sudo apt-add-repository -y ppa:beineri/opt-qt511
   - sudo apt-get -qq update
