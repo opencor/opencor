@@ -1,11 +1,8 @@
 language: cpp
 
-compiler:
-  - gcc
-
 env:
   global:
-    - JOBS=4
+    - JOBS=16
   matrix:
     - CONFIG=Release
     - CONFIG=Debug
@@ -34,7 +31,7 @@ before_script:
 
 script:
   - cd build
-  - cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_PREFIX_PATH=/opt/qt51/lib/cmake -DENABLE_TESTING=True ..
+  - cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt51/lib/cmake -DENABLE_TESTING=True ..
   - make -j $JOBS
   - cd tests
   - ./runtests
