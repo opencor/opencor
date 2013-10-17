@@ -6,25 +6,23 @@ compiler:
 
 env:
   global:
-    - JOBS=4
+    - JOBS=`cat /proc/cpuinfo | grep processor | wc -l`
   matrix:
     - CONFIG=Release
     - CONFIG=Debug
 
 before_install:
-  - wget http://www.cmake.org/files/v2.8/cmake-2.8.12.tar.gz
-  - tar xf cmake-2.8.12.tar.gz
-  - cd cmake-2.8.12
-  - ./configure --parallel=$JOBS --prefix=/usr
-  - make -j $JOBS
-  - sudo make install
-  - cd ..
+  - sudo apt-get -qq update
+  - sudo apt-get -qq install ia32-libs
+  - wget http://www.cmake.org/files/v2.8/cmake-2.8.12-Linux-i386.sh
+  - chmod +x cmake-2.8.12-Linux-i386.sh
+  - sudo ./cmake-2.8.12-Linux-i386.sh --skip-license --prefix=/usr
   - cmake --version
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq libgl1-mesa-dev
+  - sudo apt-get -qq update
+  - sudo apt-get -qq install libgl1-mesa-dev
   - sudo apt-add-repository -y ppa:beineri/opt-qt511
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq qt51base
+  - sudo apt-get -qq update
+  - sudo apt-get -qq install qt51base qt51svg
 
 script:
   - cd build
