@@ -5,6 +5,7 @@ compiler:
   - clang
 
 env:
+  - JOBS=4
   - CONFIG=Release
   - CONFIG=Debug
 
@@ -12,9 +13,10 @@ before_install:
   - wget http://www.cmake.org/files/v2.8/cmake-2.8.12.tar.gz
   - tar xf cmake-2.8.12.tar.gz
   - cd cmake-2.8.12
-  - ./configure --prefix=/usr
-  - make -j 4 -s
+  - ./configure --parallel=$JOBS --prefix=/usr
+  - make -j $JOBS
   - sudo make install
+  - cd ..
   - cmake --version
   - sudo apt-get update -qq
   - sudo apt-get install -qq libgl1-mesa-dev
@@ -23,11 +25,9 @@ before_install:
   - sudo apt-get install -qq qt51base
 
 script:
-  - pwd
-  - ls -alR
   - cd build
   - cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_PREFIX_PATH=/opt/qt51/lib/cmake -DENABLE_TESTING=True ..
-  - make -j 4
+  - make -j $JOBS
   - cd tests
   - ./runtests
 
