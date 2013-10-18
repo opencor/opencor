@@ -46,6 +46,13 @@ PLUGININFO_FUNC CVODESolverPluginInfo()
 
 //==============================================================================
 
+void CVODESolverPlugin::retranslateUi()
+{
+    // Nothing to retranslate as such...
+}
+
+//==============================================================================
+
 Solver::Type CVODESolverPlugin::type() const
 {
     // Return the type of the solver

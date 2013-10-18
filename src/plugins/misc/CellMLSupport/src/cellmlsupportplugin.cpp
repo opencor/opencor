@@ -51,6 +51,13 @@ PLUGININFO_FUNC CellMLSupportPluginInfo()
 
 //==============================================================================
 
+void CellMLSupportPlugin::retranslateUi()
+{
+    // Nothing to retranslate as such...
+}
+
+//==============================================================================
+
 void CellMLSupportPlugin::initializationsDone(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);

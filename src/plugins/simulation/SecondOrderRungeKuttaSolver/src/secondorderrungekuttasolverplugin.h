@@ -51,6 +51,8 @@ class SecondOrderRungeKuttaSolverPlugin : public QObject,
     Q_INTERFACES(OpenCOR::SolverInterface)
 
 public:
+    virtual void retranslateUi();
+
     virtual Solver::Type type() const;
     virtual QString name() const;
     virtual Solver::Properties properties() const;

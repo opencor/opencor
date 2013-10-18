@@ -46,6 +46,13 @@ PLUGININFO_FUNC SecondOrderRungeKuttaSolverPluginInfo()
 
 //==============================================================================
 
+void SecondOrderRungeKuttaSolverPlugin::retranslateUi()
+{
+    // Nothing to retranslate as such...
+}
+
+//==============================================================================
+
 Solver::Type SecondOrderRungeKuttaSolverPlugin::type() const
 {
     // Return the type of the solver

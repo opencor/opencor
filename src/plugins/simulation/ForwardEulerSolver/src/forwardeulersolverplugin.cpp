@@ -46,6 +46,13 @@ PLUGININFO_FUNC ForwardEulerSolverPluginInfo()
 
 //==============================================================================
 
+void ForwardEulerSolverPlugin::retranslateUi()
+{
+    // Nothing to retranslate as such...
+}
+
+//==============================================================================
+
 Solver::Type ForwardEulerSolverPlugin::type() const
 {
     // Return the type of the solver

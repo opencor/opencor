@@ -46,6 +46,13 @@ PLUGININFO_FUNC FourthOrderRungeKuttaSolverPluginInfo()
 
 //==============================================================================
 
+void FourthOrderRungeKuttaSolverPlugin::retranslateUi()
+{
+    // Nothing to retranslate as such...
+}
+
+//==============================================================================
+
 Solver::Type FourthOrderRungeKuttaSolverPlugin::type() const
 {
     // Return the type of the solver

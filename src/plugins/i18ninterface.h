@@ -38,7 +38,7 @@ public:
     void setLocale(const QString &pLocale);
     void setPluginName(const QString &pPluginName);
 
-    virtual void retranslateUi();
+    virtual void retranslateUi() = 0;
 
 private:
     QString mPluginName;

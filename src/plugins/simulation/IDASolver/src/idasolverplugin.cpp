@@ -46,6 +46,13 @@ PLUGININFO_FUNC IDASolverPluginInfo()
 
 //==============================================================================
 
+void IDASolverPlugin::retranslateUi()
+{
+    // Nothing to retranslate as such...
+}
+
+//==============================================================================
+
 Solver::Type IDASolverPlugin::type() const
 {
     // Return the type of the solver

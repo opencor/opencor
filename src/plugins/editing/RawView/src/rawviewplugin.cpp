@@ -70,6 +70,13 @@ RawViewPlugin::~RawViewPlugin()
 
 //==============================================================================
 
+void RawViewPlugin::retranslateUi()
+{
+    // Nothing to retranslate as such...
+}
+
+//==============================================================================
+
 QWidget * RawViewPlugin::viewWidget(const QString &pFileName)
 {
     // Retrieve from our list the view widget associated with the file name

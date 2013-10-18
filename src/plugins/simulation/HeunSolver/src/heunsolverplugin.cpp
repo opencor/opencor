@@ -46,6 +46,13 @@ PLUGININFO_FUNC HeunSolverPluginInfo()
 
 //==============================================================================
 
+void HeunSolverPlugin::retranslateUi()
+{
+    // Nothing to retranslate as such...
+}
+
+//==============================================================================
+
 Solver::Type HeunSolverPlugin::type() const
 {
     // Return the type of the solver

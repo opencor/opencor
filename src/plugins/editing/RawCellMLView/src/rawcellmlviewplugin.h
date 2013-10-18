@@ -58,6 +58,8 @@ class RawCellMLViewPlugin : public QObject, public CoreInterface,
 public:
     explicit RawCellMLViewPlugin();
 
+    virtual void retranslateUi();
+
     virtual void initialize();
 
     virtual void loadSettings(QSettings *pSettings);

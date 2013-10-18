@@ -62,6 +62,13 @@ RawCellMLViewPlugin::RawCellMLViewPlugin()
 
 //==============================================================================
 
+void RawCellMLViewPlugin::retranslateUi()
+{
+    // Nothing to retranslate as such...
+}
+
+//==============================================================================
+
 void RawCellMLViewPlugin::initialize()
 {
     // Create our generic raw CellML view widget
