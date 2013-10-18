@@ -90,7 +90,7 @@ QString CellMLSupportPlugin::fileTypeDescription(const QString &pMimeType) const
     else
         // Not a MIME type that we can recognise, so...
 
-        return FileInterface::fileTypeDescription(pMimeType);
+        return QString();
 }
 
 //==============================================================================

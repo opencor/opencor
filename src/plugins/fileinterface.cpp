@@ -74,26 +74,6 @@ QString FileType::description() const
 
 //==============================================================================
 
-FileTypes FileInterface::fileTypes() const
-{
-    // By default, there are no file types
-
-    return FileTypes();
-}
-
-//==============================================================================
-
-QString FileInterface::fileTypeDescription(const QString &pMimeType) const
-{
-    // By default, there is no description for the requested MIME type
-
-    Q_UNUSED(pMimeType);
-
-    return QString();
-}
-
-//==============================================================================
-
 }   // namespace OpenCOR
 
 //==============================================================================
