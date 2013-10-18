@@ -57,8 +57,6 @@ ADD_PLUGIN(SingleCellView
         ${LLVM_DEFINITIONS}
         QWT_DLL
     INCLUDE_DIRS
-        ../../3rdparty/Qwt/src
-
         src
     PLUGIN_DEPENDENCIES
         CellMLAPI
