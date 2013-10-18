@@ -39,8 +39,8 @@ PLUGININFO_FUNC ForwardEulerSolverPluginInfo();
 
 //==============================================================================
 
-class ForwardEulerSolverPlugin : public QObject, public SolverInterface,
-                                 public I18nInterface
+class ForwardEulerSolverPlugin : public QObject, public I18nInterface,
+                                 public SolverInterface
 {
     Q_OBJECT
 
@@ -50,13 +50,17 @@ class ForwardEulerSolverPlugin : public QObject, public SolverInterface,
     Q_INTERFACES(OpenCOR::SolverInterface)
 
 public:
+    // I18n interface
+
     virtual void retranslateUi();
+
+    // Solver interface
+
+    virtual void * instance() const;
 
     virtual Solver::Type type() const;
     virtual QString name() const;
     virtual Solver::Properties properties() const;
-
-    virtual void * instance() const;
 };
 
 //==============================================================================

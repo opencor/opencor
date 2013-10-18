@@ -45,10 +45,23 @@ PLUGININFO_FUNC CVODESolverPluginInfo()
 }
 
 //==============================================================================
+// I18n interface
+//==============================================================================
 
 void CVODESolverPlugin::retranslateUi()
 {
     // Nothing to retranslate as such...
+}
+
+//==============================================================================
+// Solver interface
+//==============================================================================
+
+void * CVODESolverPlugin::instance() const
+{
+    // Create and return an instance of the solver
+
+    return new CvodeSolver();
 }
 
 //==============================================================================
@@ -99,15 +112,6 @@ Solver::Properties CVODESolverPlugin::properties() const
     res.append(Solver::Property(Solver::Double, AbsoluteToleranceId, AbsoluteToleranceDescriptions, AbsoluteToleranceDefaultValue));
 
     return res;
-}
-
-//==============================================================================
-
-void * CVODESolverPlugin::instance() const
-{
-    // Create and return an instance of the solver
-
-    return new CvodeSolver();
 }
 
 //==============================================================================

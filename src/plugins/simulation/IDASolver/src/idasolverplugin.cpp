@@ -45,10 +45,25 @@ PLUGININFO_FUNC IDASolverPluginInfo()
 }
 
 //==============================================================================
+// I18n interface
+//==============================================================================
+
 
 void IDASolverPlugin::retranslateUi()
 {
     // Nothing to retranslate as such...
+}
+
+//==============================================================================
+// Solver interface
+//==============================================================================
+
+
+void * IDASolverPlugin::instance() const
+{
+    // Create and return an instance of the solver
+
+    return new IdaSolver();
 }
 
 //==============================================================================
@@ -99,15 +114,6 @@ Solver::Properties IDASolverPlugin::properties() const
     res.append(Solver::Property(Solver::Double, AbsoluteToleranceId, AbsoluteTolerancePropertyDescriptions, AbsoluteToleranceDefaultValue));
 
     return res;
-}
-
-//==============================================================================
-
-void * IDASolverPlugin::instance() const
-{
-    // Create and return an instance of the solver
-
-    return new IdaSolver();
 }
 
 //==============================================================================

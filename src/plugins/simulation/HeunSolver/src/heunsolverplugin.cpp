@@ -45,10 +45,25 @@ PLUGININFO_FUNC HeunSolverPluginInfo()
 }
 
 //==============================================================================
+// I18n interface
+//==============================================================================
+
 
 void HeunSolverPlugin::retranslateUi()
 {
     // Nothing to retranslate as such...
+}
+
+//==============================================================================
+// Solver interface
+//==============================================================================
+
+
+void * HeunSolverPlugin::instance() const
+{
+    // Create and return an instance of the solver
+
+    return new HeunSolver();
 }
 
 //==============================================================================
@@ -84,15 +99,6 @@ Solver::Properties HeunSolverPlugin::properties() const
     res.append(Solver::Property(Solver::Double, StepId, stepPropertyDescriptions, StepDefaultValue, true));
 
     return res;
-}
-
-//==============================================================================
-
-void * HeunSolverPlugin::instance() const
-{
-    // Create and return an instance of the solver
-
-    return new HeunSolver();
 }
 
 //==============================================================================

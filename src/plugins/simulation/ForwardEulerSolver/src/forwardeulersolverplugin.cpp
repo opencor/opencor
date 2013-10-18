@@ -45,10 +45,23 @@ PLUGININFO_FUNC ForwardEulerSolverPluginInfo()
 }
 
 //==============================================================================
+// I18n interface
+//==============================================================================
 
 void ForwardEulerSolverPlugin::retranslateUi()
 {
     // Nothing to retranslate as such...
+}
+
+//==============================================================================
+// Solver interface
+//==============================================================================
+
+void * ForwardEulerSolverPlugin::instance() const
+{
+    // Create and return an instance of the solver
+
+    return new ForwardEulerSolver();
 }
 
 //==============================================================================
@@ -84,15 +97,6 @@ Solver::Properties ForwardEulerSolverPlugin::properties() const
     res.append(Solver::Property(Solver::Double, StepId, stepPropertyDescriptions, StepDefaultValue, true));
 
     return res;
-}
-
-//==============================================================================
-
-void * ForwardEulerSolverPlugin::instance() const
-{
-    // Create and return an instance of the solver
-
-    return new ForwardEulerSolver();
 }
 
 //==============================================================================

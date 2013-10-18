@@ -40,8 +40,8 @@ PLUGININFO_FUNC FourthOrderRungeKuttaSolverPluginInfo();
 //==============================================================================
 
 class FourthOrderRungeKuttaSolverPlugin : public QObject,
-                                          public SolverInterface,
-                                          public I18nInterface
+                                          public I18nInterface,
+                                          public SolverInterface
 {
     Q_OBJECT
 
@@ -51,13 +51,17 @@ class FourthOrderRungeKuttaSolverPlugin : public QObject,
     Q_INTERFACES(OpenCOR::SolverInterface)
 
 public:
+    // I18n interface
+
     virtual void retranslateUi();
+
+    // Solver interface
+
+    virtual void * instance() const;
 
     virtual Solver::Type type() const;
     virtual QString name() const;
     virtual Solver::Properties properties() const;
-
-    virtual void * instance() const;
 };
 
 //==============================================================================

@@ -45,10 +45,23 @@ PLUGININFO_FUNC SecondOrderRungeKuttaSolverPluginInfo()
 }
 
 //==============================================================================
+// I18n interface
+//==============================================================================
 
 void SecondOrderRungeKuttaSolverPlugin::retranslateUi()
 {
     // Nothing to retranslate as such...
+}
+
+//==============================================================================
+// Solver interface
+//==============================================================================
+
+void * SecondOrderRungeKuttaSolverPlugin::instance() const
+{
+    // Create and return an instance of the solver
+
+    return new SecondOrderRungeKuttaSolver();
 }
 
 //==============================================================================
@@ -84,15 +97,6 @@ Solver::Properties SecondOrderRungeKuttaSolverPlugin::properties() const
     res.append(Solver::Property(Solver::Double, StepId, stepPropertyDescriptions, StepDefaultValue, true));
 
     return res;
-}
-
-//==============================================================================
-
-void * SecondOrderRungeKuttaSolverPlugin::instance() const
-{
-    // Create and return an instance of the solver
-
-    return new SecondOrderRungeKuttaSolver();
 }
 
 //==============================================================================

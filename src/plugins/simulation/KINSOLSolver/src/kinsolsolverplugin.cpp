@@ -45,6 +45,17 @@ PLUGININFO_FUNC KINSOLSolverPluginInfo()
 }
 
 //==============================================================================
+// Solver interface
+//==============================================================================
+
+void * KINSOLSolverPlugin::instance() const
+{
+    // Create and return an instance of the solver
+
+    return new KinsolSolver();
+}
+
+//==============================================================================
 
 Solver::Type KINSOLSolverPlugin::type() const
 {
@@ -69,15 +80,6 @@ Solver::Properties KINSOLSolverPlugin::properties() const
     // Return the properties supported by the solver
 
     return Solver::Properties();
-}
-
-//==============================================================================
-
-void * KINSOLSolverPlugin::instance() const
-{
-    // Create and return an instance of the solver
-
-    return new KinsolSolver();
 }
 
 //==============================================================================

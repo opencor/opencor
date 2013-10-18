@@ -45,10 +45,25 @@ PLUGININFO_FUNC FourthOrderRungeKuttaSolverPluginInfo()
 }
 
 //==============================================================================
+// I18n interface
+//==============================================================================
+
 
 void FourthOrderRungeKuttaSolverPlugin::retranslateUi()
 {
     // Nothing to retranslate as such...
+}
+
+//==============================================================================
+// Solver interface
+//==============================================================================
+
+
+void * FourthOrderRungeKuttaSolverPlugin::instance() const
+{
+    // Create and return an instance of the solver
+
+    return new FourthOrderRungeKuttaSolver();
 }
 
 //==============================================================================
@@ -84,15 +99,6 @@ Solver::Properties FourthOrderRungeKuttaSolverPlugin::properties() const
     res.append(Solver::Property(Solver::Double, StepId, stepPropertyDescriptions, StepDefaultValue, true));
 
     return res;
-}
-
-//==============================================================================
-
-void * FourthOrderRungeKuttaSolverPlugin::instance() const
-{
-    // Create and return an instance of the solver
-
-    return new FourthOrderRungeKuttaSolver();
 }
 
 //==============================================================================
