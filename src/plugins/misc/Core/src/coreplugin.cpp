@@ -226,7 +226,7 @@ void CorePlugin::finalize()
 
 //==============================================================================
 
-void CorePlugin::initializationsDone(const Plugins &pLoadedPlugins)
+void CorePlugin::initialized(const Plugins &pLoadedPlugins)
 {
     // Retrieve the different file types supported by our various plugins and
     // make our central widget aware of them
@@ -305,12 +305,12 @@ void CorePlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CorePlugin::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
+void CorePlugin::settingsLoaded(const Plugins &pLoadedPlugins)
 {
     // Let our central widget know that all the other plugins have now loaded
     // their settings
 
-    mCentralWidget->loadingOfSettingsDone(pLoadedPlugins);
+    mCentralWidget->settingsLoaded(pLoadedPlugins);
 }
 
 //==============================================================================
@@ -341,7 +341,7 @@ void CorePlugin::runCliCommand(const QString &pCommand,
 
     // We don't handle this interface...
 
-    pRes = 0;
+    *pRes = 0;
 }
 
 //==============================================================================

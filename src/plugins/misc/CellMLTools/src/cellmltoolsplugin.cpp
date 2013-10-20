@@ -95,7 +95,7 @@ void CellMLToolsPlugin::finalize()
 
 //==============================================================================
 
-void CellMLToolsPlugin::initializationsDone(const Plugins &pLoadedPlugins)
+void CellMLToolsPlugin::initialized(const Plugins &pLoadedPlugins)
 {
     // Retrieve the file types supported by the CellMLSupport plugin
 
@@ -135,7 +135,7 @@ void CellMLToolsPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CellMLToolsPlugin::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
+void CellMLToolsPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 

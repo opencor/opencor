@@ -79,7 +79,7 @@ void CellMLModelRepositoryPlugin::finalize()
 
 //==============================================================================
 
-void CellMLModelRepositoryPlugin::initializationsDone(const Plugins &pLoadedPlugins)
+void CellMLModelRepositoryPlugin::initialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -106,7 +106,7 @@ void CellMLModelRepositoryPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CellMLModelRepositoryPlugin::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
+void CellMLModelRepositoryPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -142,7 +142,7 @@ void CellMLModelRepositoryPlugin::runCliCommand(const QString &pCommand,
 
     // We don't handle this interface...
 
-    pRes = 0;
+    *pRes = 0;
 }
 
 //==============================================================================

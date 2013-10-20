@@ -254,7 +254,7 @@ mGui->actionPreferences->setVisible(false);
         CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
 
         if (coreInterface)
-            coreInterface->initializationsDone(loadedPlugins);
+            coreInterface->initialized(loadedPlugins);
     }
 
     // Keep track of the showing/hiding of the different dock widgets
@@ -720,13 +720,13 @@ void MainWindow::loadSettings()
     }
 
     // Let our various plugins know that all of them have loaded their settings
-    // Note: this is similar to initialize() vs. initializationsDone()...
+    // Note: this is similar to initialize() vs. initialized()...
 
     foreach (Plugin *plugin, loadedPlugins) {
         CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
 
         if (coreInterface)
-            coreInterface->loadingOfSettingsDone(loadedPlugins);
+            coreInterface->settingsLoaded(loadedPlugins);
     }
 
     // Remove the File menu when on OS X, should no plugins be loaded

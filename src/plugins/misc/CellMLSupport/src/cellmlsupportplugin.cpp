@@ -67,7 +67,7 @@ void CellMLSupportPlugin::finalize()
 
 //==============================================================================
 
-void CellMLSupportPlugin::initializationsDone(const Plugins &pLoadedPlugins)
+void CellMLSupportPlugin::initialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -99,7 +99,7 @@ void CellMLSupportPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CellMLSupportPlugin::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
+void CellMLSupportPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -135,7 +135,7 @@ void CellMLSupportPlugin::runCliCommand(const QString &pCommand,
 
     // We don't handle this interface...
 
-    pRes = 0;
+    *pRes = 0;
 }
 
 //==============================================================================

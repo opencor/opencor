@@ -86,7 +86,7 @@ void SingleCellViewPlugin::finalize()
 
 //==============================================================================
 
-void SingleCellViewPlugin::initializationsDone(const Plugins &pLoadedPlugins)
+void SingleCellViewPlugin::initialized(const Plugins &pLoadedPlugins)
 {
     // Retrieve the different solvers that are available to us
 
@@ -127,7 +127,7 @@ void SingleCellViewPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void SingleCellViewPlugin::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
+void SingleCellViewPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -163,7 +163,7 @@ void SingleCellViewPlugin::runCliCommand(const QString &pCommand,
 
     // We don't handle this interface...
 
-    pRes = 0;
+    *pRes = 0;
 }
 
 //==============================================================================

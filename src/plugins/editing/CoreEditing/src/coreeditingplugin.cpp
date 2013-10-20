@@ -122,7 +122,7 @@ void CoreEditingPlugin::finalize()
 
 //==============================================================================
 
-void CoreEditingPlugin::initializationsDone(const Plugins &pLoadedPlugins)
+void CoreEditingPlugin::initialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -149,7 +149,7 @@ void CoreEditingPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CoreEditingPlugin::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
+void CoreEditingPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -184,7 +184,7 @@ void CoreEditingPlugin::runCliCommand(const QString &pCommand,
 
     // We don't handle this interface...
 
-    pRes = 0;
+    *pRes = 0;
 }
 
 //==============================================================================

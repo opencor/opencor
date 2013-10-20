@@ -79,7 +79,7 @@ void HelpPlugin::finalize()
 
 //==============================================================================
 
-void HelpPlugin::initializationsDone(const Plugins &pLoadedPlugins)
+void HelpPlugin::initialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -106,7 +106,7 @@ void HelpPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void HelpPlugin::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
+void HelpPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -141,7 +141,7 @@ void HelpPlugin::runCliCommand(const QString &pCommand,
 
     // We don't handle this interface...
 
-    pRes = 0;
+    *pRes = 0;
 }
 
 //==============================================================================

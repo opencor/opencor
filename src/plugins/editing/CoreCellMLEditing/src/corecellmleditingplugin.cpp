@@ -74,7 +74,7 @@ void CoreCellMLEditingPlugin::finalize()
 
 //==============================================================================
 
-void CoreCellMLEditingPlugin::initializationsDone(const Plugins &pLoadedPlugins)
+void CoreCellMLEditingPlugin::initialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -101,7 +101,7 @@ void CoreCellMLEditingPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CoreCellMLEditingPlugin::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
+void CoreCellMLEditingPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -136,7 +136,7 @@ void CoreCellMLEditingPlugin::runCliCommand(const QString &pCommand,
 
     // We don't handle this interface...
 
-    pRes = 0;
+    *pRes = 0;
 }
 
 //==============================================================================

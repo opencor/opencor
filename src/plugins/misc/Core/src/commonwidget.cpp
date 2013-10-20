@@ -57,36 +57,36 @@ QSize CommonWidget::defaultSize(const double &pRatio) const
 
 //==============================================================================
 
-void CommonWidget::retranslateUi()
-{
-    // Nothing to do by default...
-}
-
-//==============================================================================
-
 void CommonWidget::loadSettings(QSettings *pSettings)
 {
-    // Nothing to do by default...
-
     Q_UNUSED(pSettings);
+
+    // Nothing to do by default...
 }
 
 //==============================================================================
 
 void CommonWidget::saveSettings(QSettings *pSettings) const
 {
-    // Nothing to do by default...
-
     Q_UNUSED(pSettings);
+
+    // Nothing to do by default...
 }
 
 //==============================================================================
 
-void CommonWidget::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
+void CommonWidget::settingsLoaded(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // Nothing to do by default...
+}
+
+//==============================================================================
+
+void CommonWidget::retranslateUi()
 {
     // Nothing to do by default...
-
-    Q_UNUSED(pLoadedPlugins);
 }
 
 //==============================================================================

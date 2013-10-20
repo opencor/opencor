@@ -78,7 +78,7 @@ void FileOrganiserPlugin::finalize()
 
 //==============================================================================
 
-void FileOrganiserPlugin::initializationsDone(const Plugins &pLoadedPlugins)
+void FileOrganiserPlugin::initialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -105,7 +105,7 @@ void FileOrganiserPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void FileOrganiserPlugin::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
+void FileOrganiserPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -141,7 +141,7 @@ void FileOrganiserPlugin::runCliCommand(const QString &pCommand,
 
     // We don't handle this interface...
 
-    pRes = 0;
+    *pRes = 0;
 }
 
 //==============================================================================

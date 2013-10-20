@@ -78,7 +78,7 @@ void FileBrowserPlugin::finalize()
 
 //==============================================================================
 
-void FileBrowserPlugin::initializationsDone(const Plugins &pLoadedPlugins)
+void FileBrowserPlugin::initialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -105,7 +105,7 @@ void FileBrowserPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void FileBrowserPlugin::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
+void FileBrowserPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -140,7 +140,7 @@ void FileBrowserPlugin::runCliCommand(const QString &pCommand,
 
     // We don't handle this interface...
 
-    pRes = 0;
+    *pRes = 0;
 }
 
 //==============================================================================

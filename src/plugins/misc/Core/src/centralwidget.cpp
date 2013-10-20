@@ -263,37 +263,6 @@ CentralWidget::~CentralWidget()
 
 //==============================================================================
 
-void CentralWidget::retranslateUi()
-{
-    // Retranslate the modes tab bar
-
-    mModeTabs->setTabText(modeTabIndex(GuiViewSettings::Editing),
-                          tr("Editing"));
-    mModeTabs->setTabText(modeTabIndex(GuiViewSettings::Simulation),
-                          tr("Simulation"));
-    mModeTabs->setTabText(modeTabIndex(GuiViewSettings::Analysis),
-                          tr("Analysis"));
-
-    // Retranslate our mode views tab bar
-
-    foreach (CentralWidgetMode *mode, mModes) {
-        QTabBar *modeViews = mode->views();
-
-        for (int i = 0, iMax = modeViews->count(); i < iMax; ++i)
-            modeViews->setTabText(i, qobject_cast<GuiInterface *>(mode->viewPlugins()->value(i)->instance())->viewName());
-    }
-
-    // Retranslate our modified settings, if needed
-
-    updateModifiedSettings();
-
-    // Retranslate our no view widget message
-
-    updateNoViewMsg();
-}
-
-//==============================================================================
-
 static const QString SettingsFileNames          = "FileNames";
 static const QString SettingsCurrentFileName    = "CurrentFileName";
 static const QString SettingsCurrentMode        = "CurrentMode";
@@ -428,7 +397,7 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CentralWidget::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
+void CentralWidget::settingsLoaded(const Plugins &pLoadedPlugins)
 {
     // Keep track of the loaded plugins
 
@@ -453,6 +422,37 @@ void CentralWidget::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
             foreach (const QString &fileName, mFileNames)
                 guiInterface->fileOpened(fileName);
     }
+}
+
+//==============================================================================
+
+void CentralWidget::retranslateUi()
+{
+    // Retranslate the modes tab bar
+
+    mModeTabs->setTabText(modeTabIndex(GuiViewSettings::Editing),
+                          tr("Editing"));
+    mModeTabs->setTabText(modeTabIndex(GuiViewSettings::Simulation),
+                          tr("Simulation"));
+    mModeTabs->setTabText(modeTabIndex(GuiViewSettings::Analysis),
+                          tr("Analysis"));
+
+    // Retranslate our mode views tab bar
+
+    foreach (CentralWidgetMode *mode, mModes) {
+        QTabBar *modeViews = mode->views();
+
+        for (int i = 0, iMax = modeViews->count(); i < iMax; ++i)
+            modeViews->setTabText(i, qobject_cast<GuiInterface *>(mode->viewPlugins()->value(i)->instance())->viewName());
+    }
+
+    // Retranslate our modified settings, if needed
+
+    updateModifiedSettings();
+
+    // Retranslate our no view widget message
+
+    updateNoViewMsg();
 }
 
 //==============================================================================
@@ -511,7 +511,7 @@ void CentralWidget::openFile(const QString &pFileName)
     // opened
     // Note: this requires using mLoadedPlugins, but it will not be set when we
     //       come here following OpenCOR's loading of settings, hence we do
-    //       something similar to the below in loadingOfSettingsDone()...
+    //       something similar to the below in settingsLoaded()...
 
     foreach (Plugin *plugin, mLoadedPlugins) {
         GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());

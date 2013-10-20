@@ -85,7 +85,7 @@ void RawCellMLViewPlugin::finalize()
 
 //==============================================================================
 
-void RawCellMLViewPlugin::initializationsDone(const Plugins &pLoadedPlugins)
+void RawCellMLViewPlugin::initialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -112,7 +112,7 @@ void RawCellMLViewPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void RawCellMLViewPlugin::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
+void RawCellMLViewPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -148,7 +148,7 @@ void RawCellMLViewPlugin::runCliCommand(const QString &pCommand,
 
     // We don't handle this interface...
 
-    pRes = 0;
+    *pRes = 0;
 }
 
 //==============================================================================

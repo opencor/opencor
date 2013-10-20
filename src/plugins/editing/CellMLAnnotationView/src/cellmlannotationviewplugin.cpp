@@ -97,7 +97,7 @@ void CellMLAnnotationViewPlugin::finalize()
 
 //==============================================================================
 
-void CellMLAnnotationViewPlugin::initializationsDone(const Plugins &pLoadedPlugins)
+void CellMLAnnotationViewPlugin::initialized(const Plugins &pLoadedPlugins)
 {
     // Keep track of the CoreEditing and CoreCellMLEditing plugin instances
 
@@ -193,7 +193,7 @@ void CellMLAnnotationViewPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CellMLAnnotationViewPlugin::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
+void CellMLAnnotationViewPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -229,7 +229,7 @@ void CellMLAnnotationViewPlugin::runCliCommand(const QString &pCommand,
 
     // We don't handle this interface...
 
-    pRes = 0;
+    *pRes = 0;
 }
 
 //==============================================================================
