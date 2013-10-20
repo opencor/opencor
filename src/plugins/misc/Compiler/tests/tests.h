@@ -16,7 +16,12 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Compiler test
+// Compiler tests
+//==============================================================================
+
+#ifndef TESTS_H
+#define TESTS_H
+
 //==============================================================================
 
 #include <QtGlobal>
@@ -41,7 +46,7 @@ namespace Compiler {
 
 //==============================================================================
 
-class Test : public QObject
+class Tests : public QObject
 {
     Q_OBJECT
 
@@ -49,8 +54,8 @@ private:
     OpenCOR::Compiler::CompilerEngine *mCompilerEngine;
 
 private Q_SLOTS:
-    void initTestCase();
-    void cleanupTestCase();
+    void initTestsCase();
+    void cleanupTestsCase();
 
     void basicTests();
 
@@ -100,6 +105,10 @@ private Q_SLOTS:
     void maxFunctionTests();
     void minFunctionTests();
 };
+
+//==============================================================================
+
+#endif
 
 //==============================================================================
 // End of file

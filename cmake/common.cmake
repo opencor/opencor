@@ -521,12 +521,12 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     # Create some tests, if any and if required
 
-    IF(ENABLE_TESTING)
+    IF(ENABLE_TESTS)
         FOREACH(TEST ${TESTS})
             SET(TEST_NAME ${PLUGIN_NAME}_${TEST})
 
-            SET(TEST_SOURCE_FILE test/${TEST}.cpp)
-            SET(TEST_HEADER_MOC_FILE test/${TEST}.h)
+            SET(TEST_SOURCE_FILE tests/${TEST}.cpp)
+            SET(TEST_HEADER_MOC_FILE tests/${TEST}.h)
 
             IF(    EXISTS ${PROJECT_SOURCE_DIR}/${TEST_SOURCE_FILE}
                AND EXISTS ${PROJECT_SOURCE_DIR}/${TEST_HEADER_MOC_FILE})
@@ -562,7 +562,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 )
 
                 ADD_EXECUTABLE(${TEST_NAME}
-                    ../../../../test/testutils.cpp
+                    ../../../../tests/testsutils.cpp
 
                     ../../plugin.cpp
                     ../../plugininfo.cpp

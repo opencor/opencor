@@ -16,16 +16,16 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Compiler test
+// Compiler tests
 //==============================================================================
 
 #include "compilerengine.h"
 #include "compilermath.h"
-#include "test.h"
+#include "tests.h"
 
 //==============================================================================
 
-#include "../../../../test/testutils.h"
+#include "../../../../tests/testsutils.h"
 
 //==============================================================================
 
@@ -53,7 +53,7 @@ static const double BigC = 5.0*7.0*17.0;
 
 //==============================================================================
 
-void Test::initTestCase()
+void Tests::initTestsCase()
 {
     // Load the Compiler plugin
 
@@ -66,7 +66,7 @@ void Test::initTestCase()
 
 //==============================================================================
 
-void Test::cleanupTestCase()
+void Tests::cleanupTestsCase()
 {
     // Delete some internal objects
 
@@ -75,7 +75,7 @@ void Test::cleanupTestCase()
 
 //==============================================================================
 
-void Test::basicTests()
+void Tests::basicTests()
 {
     // Check what happens when using an empty string to add a function
 
@@ -136,7 +136,7 @@ void Test::basicTests()
 
 //==============================================================================
 
-void Test::voidFunctionTests()
+void Tests::voidFunctionTests()
 {
     double arrayA[3];
     double arrayB[3];
@@ -174,7 +174,7 @@ void Test::voidFunctionTests()
 
 //==============================================================================
 
-void Test::timesOperatorTests()
+void Tests::timesOperatorTests()
 {
     QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
                                          "{\n"
@@ -189,7 +189,7 @@ void Test::timesOperatorTests()
 
 //==============================================================================
 
-void Test::divideOperatorTests()
+void Tests::divideOperatorTests()
 {
     QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
                                          "{\n"
@@ -204,7 +204,7 @@ void Test::divideOperatorTests()
 
 //==============================================================================
 
-void Test::moduloOperatorTests()
+void Tests::moduloOperatorTests()
 {
     QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
                                          "{\n"
@@ -219,7 +219,7 @@ void Test::moduloOperatorTests()
 
 //==============================================================================
 
-void Test::plusOperatorTests()
+void Tests::plusOperatorTests()
 {
     QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
                                          "{\n"
@@ -234,7 +234,7 @@ void Test::plusOperatorTests()
 
 //==============================================================================
 
-void Test::minusOperatorTests()
+void Tests::minusOperatorTests()
 {
     QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
                                          "{\n"
@@ -249,7 +249,7 @@ void Test::minusOperatorTests()
 
 //==============================================================================
 
-void Test::notOperatorTests()
+void Tests::notOperatorTests()
 {
     QVERIFY(mCompilerEngine->compileCode("double function(double pNb)\n"
                                          "{\n"
@@ -268,7 +268,7 @@ void Test::notOperatorTests()
 
 //==============================================================================
 
-void Test::orOperatorTests()
+void Tests::orOperatorTests()
 {
     QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
                                          "{\n"
@@ -295,7 +295,7 @@ void Test::orOperatorTests()
 
 //==============================================================================
 
-void Test::xorOperatorTests()
+void Tests::xorOperatorTests()
 {
     QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
                                          "{\n"
@@ -322,7 +322,7 @@ void Test::xorOperatorTests()
 
 //==============================================================================
 
-void Test::andOperatorTests()
+void Tests::andOperatorTests()
 {
     QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
                                          "{\n"
@@ -349,7 +349,7 @@ void Test::andOperatorTests()
 
 //==============================================================================
 
-void Test::equalEqualOperatorTests()
+void Tests::equalEqualOperatorTests()
 {
     QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
                                          "{\n"
@@ -368,7 +368,7 @@ void Test::equalEqualOperatorTests()
 
 //==============================================================================
 
-void Test::notEqualOperatorTests()
+void Tests::notEqualOperatorTests()
 {
     QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
                                          "{\n"
@@ -387,7 +387,7 @@ void Test::notEqualOperatorTests()
 
 //==============================================================================
 
-void Test::lowerThanOperatorTests()
+void Tests::lowerThanOperatorTests()
 {
     QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
                                          "{\n"
@@ -410,7 +410,7 @@ void Test::lowerThanOperatorTests()
 
 //==============================================================================
 
-void Test::greaterThanOperatorTests()
+void Tests::greaterThanOperatorTests()
 {
     QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
                                          "{\n"
@@ -433,7 +433,7 @@ void Test::greaterThanOperatorTests()
 
 //==============================================================================
 
-void Test::lowerOrEqualThanOperatorTests()
+void Tests::lowerOrEqualThanOperatorTests()
 {
     QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
                                          "{\n"
@@ -456,7 +456,7 @@ void Test::lowerOrEqualThanOperatorTests()
 
 //==============================================================================
 
-void Test::greaterOrEqualThanOperatorTests()
+void Tests::greaterOrEqualThanOperatorTests()
 {
     QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2)\n"
                                          "{\n"
@@ -479,7 +479,7 @@ void Test::greaterOrEqualThanOperatorTests()
 
 //==============================================================================
 
-void Test::absFunctionTests()
+void Tests::absFunctionTests()
 {
     QVERIFY(mCompilerEngine->compileCode("extern double fabs(double);\n"
                                          "\n"
@@ -500,7 +500,7 @@ void Test::absFunctionTests()
 
 //==============================================================================
 
-void Test::expFunctionTests()
+void Tests::expFunctionTests()
 {
     QVERIFY(mCompilerEngine->compileCode("extern double exp(double);\n"
                                          "\n"
@@ -517,7 +517,7 @@ void Test::expFunctionTests()
 
 //==============================================================================
 
-void Test::logFunctionTests()
+void Tests::logFunctionTests()
 {
     QVERIFY(mCompilerEngine->compileCode("extern double log(double);\n"
                                          "\n"
@@ -534,7 +534,7 @@ void Test::logFunctionTests()
 
 //==============================================================================
 
-void Test::ceilFunctionTests()
+void Tests::ceilFunctionTests()
 {
     QVERIFY(mCompilerEngine->compileCode("extern double ceil(double);\n"
                                          "\n"
@@ -555,7 +555,7 @@ void Test::ceilFunctionTests()
 
 //==============================================================================
 
-void Test::floorFunctionTests()
+void Tests::floorFunctionTests()
 {
     QVERIFY(mCompilerEngine->compileCode("extern double floor(double);\n"
                                          "\n"
@@ -576,7 +576,7 @@ void Test::floorFunctionTests()
 
 //==============================================================================
 
-void Test::factorialFunctionTests()
+void Tests::factorialFunctionTests()
 {
     QVERIFY(mCompilerEngine->compileCode("extern double factorial(double);\n"
                                          "\n"
@@ -593,7 +593,7 @@ void Test::factorialFunctionTests()
 
 //==============================================================================
 
-void Test::sinFunctionTests()
+void Tests::sinFunctionTests()
 {
     QVERIFY(mCompilerEngine->compileCode("extern double sin(double);\n"
                                          "\n"
@@ -610,7 +610,7 @@ void Test::sinFunctionTests()
 
 //==============================================================================
 
-void Test::cosFunctionTests()
+void Tests::cosFunctionTests()
 {
     QVERIFY(mCompilerEngine->compileCode("extern double cos(double);\n"
                                          "\n"
@@ -627,7 +627,7 @@ void Test::cosFunctionTests()
 
 //==============================================================================
 
-void Test::tanFunctionTests()
+void Tests::tanFunctionTests()
 {
     QVERIFY(mCompilerEngine->compileCode("extern double tan(double);\n"
                                          "\n"
@@ -644,7 +644,7 @@ void Test::tanFunctionTests()
 
 //==============================================================================
 
-void Test::sinhFunctionTests()
+void Tests::sinhFunctionTests()
 {
     QVERIFY(mCompilerEngine->compileCode("extern double sinh(double);\n"
                                          "\n"
@@ -661,7 +661,7 @@ void Test::sinhFunctionTests()
 
 //==============================================================================
 
-void Test::coshFunctionTests()
+void Tests::coshFunctionTests()
 {
     QVERIFY(mCompilerEngine->compileCode("extern double cosh(double);\n"
                                          "\n"
@@ -678,7 +678,7 @@ void Test::coshFunctionTests()
 
 //==============================================================================
 
-void Test::tanhFunctionTests()
+void Tests::tanhFunctionTests()
 {
     QVERIFY(mCompilerEngine->compileCode("extern double tanh(double);\n"
                                          "\n"
@@ -695,7 +695,7 @@ void Test::tanhFunctionTests()
 
 //==============================================================================
 
-void Test::asinFunctionTests()
+void Tests::asinFunctionTests()
 {
     QVERIFY(mCompilerEngine->compileCode("extern double asin(double);\n"
                                          "\n"
@@ -712,7 +712,7 @@ void Test::asinFunctionTests()
 
 //==============================================================================
 
-void Test::acosFunctionTests()
+void Tests::acosFunctionTests()
 {
     QVERIFY(mCompilerEngine->compileCode("extern double acos(double);\n"
                                          "\n"
@@ -729,7 +729,7 @@ void Test::acosFunctionTests()
 
 //==============================================================================
 
-void Test::atanFunctionTests()
+void Tests::atanFunctionTests()
 {
     QVERIFY(mCompilerEngine->compileCode("extern double atan(double);\n"
                                          "\n"
@@ -746,7 +746,7 @@ void Test::atanFunctionTests()
 
 //==============================================================================
 
-void Test::asinhFunctionTests()
+void Tests::asinhFunctionTests()
 {
     QVERIFY(mCompilerEngine->compileCode("extern double asinh(double);\n"
                                          "\n"
@@ -763,7 +763,7 @@ void Test::asinhFunctionTests()
 
 //==============================================================================
 
-void Test::acoshFunctionTests()
+void Tests::acoshFunctionTests()
 {
     QVERIFY(mCompilerEngine->compileCode("extern double acosh(double);\n"
                                          "\n"
@@ -780,7 +780,7 @@ void Test::acoshFunctionTests()
 
 //==============================================================================
 
-void Test::atanhFunctionTests()
+void Tests::atanhFunctionTests()
 {
     QVERIFY(mCompilerEngine->compileCode("extern double atanh(double);\n"
                                          "\n"
@@ -797,7 +797,7 @@ void Test::atanhFunctionTests()
 
 //==============================================================================
 
-void Test::arbitraryLogFunctionTests()
+void Tests::arbitraryLogFunctionTests()
 {
     QVERIFY(mCompilerEngine->compileCode("extern double arbitrary_log(double, double);\n"
                                          "\n"
@@ -814,7 +814,7 @@ void Test::arbitraryLogFunctionTests()
 
 //==============================================================================
 
-void Test::powFunctionTests()
+void Tests::powFunctionTests()
 {
     QVERIFY(mCompilerEngine->compileCode("extern double pow(double, double);\n"
                                          "\n"
@@ -831,7 +831,7 @@ void Test::powFunctionTests()
 
 //==============================================================================
 
-void Test::gcdFunctionTests()
+void Tests::gcdFunctionTests()
 {
     QVERIFY(mCompilerEngine->compileCode("extern double gcd_multi(int, ...);\n"
                                          "\n"
@@ -860,7 +860,7 @@ void Test::gcdFunctionTests()
 
 //==============================================================================
 
-void Test::lcmFunctionTests()
+void Tests::lcmFunctionTests()
 {
     QVERIFY(mCompilerEngine->compileCode("extern double lcm_multi(int, ...);\n"
                                          "\n"
@@ -889,7 +889,7 @@ void Test::lcmFunctionTests()
 
 //==============================================================================
 
-void Test::maxFunctionTests()
+void Tests::maxFunctionTests()
 {
     QVERIFY(mCompilerEngine->compileCode("extern double multi_max(int, ...);\n"
                                          "\n"
@@ -918,7 +918,7 @@ void Test::maxFunctionTests()
 
 //==============================================================================
 
-void Test::minFunctionTests()
+void Tests::minFunctionTests()
 {
     QVERIFY(mCompilerEngine->compileCode("extern double multi_min(int, ...);\n"
                                          "\n"
@@ -947,7 +947,7 @@ void Test::minFunctionTests()
 
 //==============================================================================
 
-QTEST_MAIN(Test)
+QTEST_MAIN(Tests)
 
 //==============================================================================
 // End of file

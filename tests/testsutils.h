@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Some useful test-related functions
+// Some useful tests-related functions
 //==============================================================================
 
-#ifndef TESTUTILS_H
-#define TESTUTILS_H
+#ifndef TESTSUTILS_H
+#define TESTSUTILS_H
 
 //==============================================================================
 

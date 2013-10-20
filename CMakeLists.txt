@@ -124,7 +124,7 @@ ENDIF()
 # Check whether tests are required and, if so, set the destination tests
 # directory and build our main test program
 
-IF(ENABLE_TESTING)
+IF(ENABLE_TESTS)
     # Destination tests directory
 
     SET(DEST_TESTS_DIR ${CMAKE_BINARY_DIR}/tests)
@@ -134,7 +134,7 @@ IF(ENABLE_TESTING)
     SET(RUNTESTS_NAME runtests)
 
     ADD_EXECUTABLE(${RUNTESTS_NAME}
-        test/main.cpp
+        tests/main.cpp
     )
 
     QT5_USE_MODULES(${RUNTESTS_NAME}

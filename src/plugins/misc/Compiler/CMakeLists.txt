@@ -32,5 +32,5 @@ ADD_PLUGIN(Compiler
         QtGui
         QtWidgets
     TESTS
-        test
+        tests
 )

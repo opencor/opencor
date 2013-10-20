@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Some useful test-related functions
+// Some useful tests-related functions
 //==============================================================================
 
 #include "plugin.h"
-#include "testutils.h"
+#include "testsutils.h"
 
 //==============================================================================
 
