@@ -559,6 +559,14 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     )
                 ENDFOREACH()
 
+                # OpenCOR binary dependencies
+
+                FOREACH(PLUGIN_BINARY_DEPENDENCY ${PLUGIN_BINARY_DEPENDENCIES})
+                    TARGET_LINK_LIBRARIES(${TEST_NAME}
+                        ${PLUGIN_BINARY_DEPENDENCY}
+                    )
+                ENDFOREACH()
+
                 # Qt modules
 
                 FOREACH(QT_MODULE ${QT_MODULES} Test)
@@ -566,6 +574,13 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                         ${QT_MODULE}
                     )
                 ENDFOREACH()
+
+                # Linker settings
+
+                SET_TARGET_PROPERTIES(${TEST_NAME} PROPERTIES
+                    OUTPUT_NAME ${TEST_NAME}
+                    LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
+                )
 
                 # External binary dependencies
 
@@ -593,27 +608,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
                                    COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/${TEST_FILENAME}
                                                                     ${DEST_TESTS_DIR}/${TEST_FILENAME})
-
-                # Make sure that, on OS X, the test refers to our test version
-                # of the external libraries on which it depends
-                # Note: we do it in two different ways, since some external
-                #       libraries we use refer to the library itself (e.g.
-                #       CellML) while others refer to some @executable_path
-                #       information (e.g. LLVM), so...
-
-                IF(APPLE)
-                    FOREACH(EXTERNAL_BINARY_DEPENDENCY ${EXTERNAL_BINARY_DEPENDENCIES})
-                        ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
-                                           COMMAND install_name_tool -change ${EXTERNAL_BINARY_DEPENDENCY}
-                                                                             ${CMAKE_BINARY_DIR}/${EXTERNAL_BINARY_DEPENDENCY}
-                                                                             ${DEST_TESTS_DIR}/${TEST_FILENAME})
-
-                        ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
-                                           COMMAND install_name_tool -change @executable_path/../lib/${EXTERNAL_BINARY_DEPENDENCY}
-                                                                             ${CMAKE_BINARY_DIR}/${EXTERNAL_BINARY_DEPENDENCY}
-                                                                             ${DEST_TESTS_DIR}/${TEST_FILENAME})
-                    ENDFOREACH()
-                ENDIF()
             ELSE()
                 MESSAGE(AUTHOR_WARNING "The '${TEST}' test for the '${PLUGIN_NAME}' plugin doesn't exist...")
             ENDIF()
