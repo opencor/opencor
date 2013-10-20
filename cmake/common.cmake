@@ -535,25 +535,11 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 #       but we need a solution that works for all possible
                 #       tests, hence they are included...
 
-                IF(WIN32)
-                    SET(CORE_SOURCES_MOC)
-                    SET(CORE_SOURCES)
-                ELSE()
-                    SET(CORE_SOURCES_MOC
-                        ../../misc/Core/src/dockwidget.h
-                    )
-
-                    SET(CORE_SOURCES
-                        ../../misc/Core/src/commonwidget.cpp
-                        ../../misc/Core/src/dockwidget.cpp
-                    )
-                ENDIF()
-
                 QT5_WRAP_CPP(TEST_SOURCES_MOC
+                    ../../misc/Core/src/dockwidget.h
+
                     ../../plugin.h
                     ../../pluginmanager.h
-
-                    ${CORE_SOURCES_MOC}
 
                     ${HEADERS_MOC}
                     ${TEST_HEADER_MOC_FILE}
@@ -562,6 +548,9 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 ADD_EXECUTABLE(${TEST_NAME}
                     ../../../../tests/testsutils.cpp
 
+                    ../../misc/Core/src/commonwidget.cpp
+                    ../../misc/Core/src/dockwidget.cpp
+
                     ../../fileinterface.cpp
                     ../../guiinterface.cpp
                     ../../i18ninterface.cpp
@@ -569,8 +558,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     ../../plugininfo.cpp
                     ../../pluginmanager.cpp
                     ../../solverinterface.cpp
-
-                    ${CORE_SOURCES}
 
                     ${TEST_SOURCE_FILE}
                     ${TEST_SOURCES_MOC}
