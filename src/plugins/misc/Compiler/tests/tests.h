@@ -28,12 +28,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-namespace llvm {
-    class Function;
-}   // namespace llvm
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace Compiler {
     class CompilerEngine;
