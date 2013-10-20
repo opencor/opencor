@@ -41,6 +41,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QtTest/QtTest>
+
+//==============================================================================
+
 static const double A = 5.0;
 static const double B = 7.9;
 
