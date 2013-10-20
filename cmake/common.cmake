@@ -532,30 +532,9 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                AND EXISTS ${PROJECT_SOURCE_DIR}/${TEST_HEADER_MOC_FILE})
                 # The test exists, so build it
 
-                # On Linux and OS X, we need to refer to some bits from the Core
-                # plugin even if we don't use them, so...
-
-                IF(WIN32)
-                    SET(CORE_SOURCES_MOC)
-                    SET(CORE_SOURCES)
-                ELSE()
-                    SET(CORE_SOURCES_MOC
-                        ../../misc/Core/src/dockwidget.h
-                    )
-
-                    SET(CORE_SOURCES
-                        ../../misc/Core/src/commonwidget.cpp
-                        ../../misc/Core/src/dockwidget.cpp
-                    )
-                ENDIF()
-
-                # Rules to build the test
-
                 QT5_WRAP_CPP(TEST_SOURCES_MOC
                     ../../plugin.h
                     ../../pluginmanager.h
-
-                    ${CORE_SOURCES_MOC}
 
                     ${HEADERS_MOC}
                     ${TEST_HEADER_MOC_FILE}
@@ -567,8 +546,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     ../../plugin.cpp
                     ../../plugininfo.cpp
                     ../../pluginmanager.cpp
-
-                    ${CORE_SOURCES}
 
                     ${TEST_SOURCE_FILE}
                     ${TEST_SOURCES_MOC}
