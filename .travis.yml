@@ -5,27 +5,27 @@ env:
   - CONFIG=Debug
 
 before_install:
-  - export PROCS=`cat /proc/cpuinfo | grep processor | wc -l`
-  - sudo apt-add-repository -y ppa:beineri/opt-qt511
-  - sudo apt-get -qq update
-  - sudo apt-get -qq install cmake
-  - wget http://www.cmake.org/files/v2.8/cmake-2.8.12.tar.gz
-  - tar xf cmake-2.8.12.tar.gz
-  - cd cmake-2.8.12
-  - mkdir build
-  - cd build
-  - cmake -DCMAKE_INSTALL_PREFIX=/usr ..
-  - make -j $PROCS
-  - sudo make install
-  - cd ../..
-  - sudo apt-get -qq install qt51tools qt51svg qt51webkit
+  -    export PROCS=`cat /proc/cpuinfo | grep processor | wc -l`
+    && sudo apt-add-repository -y ppa:beineri/opt-qt511
+    && sudo apt-get -qq update
+    && sudo apt-get -qq install cmake
+    && wget http://www.cmake.org/files/v2.8/cmake-2.8.12.tar.gz
+    && tar xf cmake-2.8.12.tar.gz
+    && cd cmake-2.8.12
+    && mkdir build
+    && cd build
+    && cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+    && make -j $PROCS
+    && sudo make install
+    && cd ../..
+    && sudo apt-get -qq install qt51tools qt51svg qt51webkit
 
 script:
-  - cd build
-  - cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt51/lib/cmake -DENABLE_TESTING=True ..
-  - make -j $PROCS
-  - cd tests
-  - ./runtests -platform offscreen
+  -    cd build
+    && cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt51/lib/cmake -DENABLE_TESTING=True ..
+    && make -j $PROCS
+    && cd tests
+    && ./runtests -platform offscreen
 
 notifications:
   recipients:
