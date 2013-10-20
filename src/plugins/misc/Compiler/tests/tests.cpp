@@ -53,7 +53,7 @@ static const double BigC = 5.0*7.0*17.0;
 
 //==============================================================================
 
-void Tests::initTestsCase()
+void Tests::initTestCase()
 {
     // Load the Compiler plugin
 
@@ -66,7 +66,7 @@ void Tests::initTestsCase()
 
 //==============================================================================
 
-void Tests::cleanupTestsCase()
+void Tests::cleanupTestCase()
 {
     // Delete some internal objects
 

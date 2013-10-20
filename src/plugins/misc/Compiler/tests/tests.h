@@ -54,8 +54,8 @@ private:
     OpenCOR::Compiler::CompilerEngine *mCompilerEngine;
 
 private Q_SLOTS:
-    void initTestsCase();
-    void cleanupTestsCase();
+    void initTestCase();
+    void cleanupTestCase();
 
     void basicTests();
 
