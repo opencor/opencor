@@ -531,10 +531,29 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             IF(    EXISTS ${PROJECT_SOURCE_DIR}/${TEST_SOURCE_FILE}
                AND EXISTS ${PROJECT_SOURCE_DIR}/${TEST_HEADER_MOC_FILE})
                 # The test exists, so build it
+                # Note: some features (e.g. the interfaces) may not be needed,
+                #       but we need a solution that works for all possible
+                #       tests, hence they are included...
+
+                IF(WIN32)
+                    SET(CORE_SOURCES_MOC)
+                    SET(CORE_SOURCES)
+                ELSE()
+                    SET(CORE_SOURCES_MOC
+                        ../../misc/Core/src/dockwidget.h
+                    )
+
+                    SET(CORE_SOURCES
+                        ../../misc/Core/src/commonwidget.cpp
+                        ../../misc/Core/src/dockwidget.cpp
+                    )
+                ENDIF()
 
                 QT5_WRAP_CPP(TEST_SOURCES_MOC
                     ../../plugin.h
                     ../../pluginmanager.h
+
+                    ${CORE_SOURCES_MOC}
 
                     ${HEADERS_MOC}
                     ${TEST_HEADER_MOC_FILE}
@@ -550,6 +569,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     ../../plugininfo.cpp
                     ../../pluginmanager.cpp
                     ../../solverinterface.cpp
+
+                    ${CORE_SOURCES}
 
                     ${TEST_SOURCE_FILE}
                     ${TEST_SOURCES_MOC}
