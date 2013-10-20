@@ -28,7 +28,9 @@ script:
   - ./runtests -platform offscreen
 
 notifications:
-  recipients: team@opencor.ws
+  recipients:
+    - team@opencor.ws
+    - agarny@hellix.com
   email:
     on_success: change
     on_failure: always
