@@ -50,7 +50,7 @@ PLUGININFO_FUNC CVODESolverPluginInfo()
 
 void CVODESolverPlugin::retranslateUi()
 {
-    // Nothing to retranslate as such...
+    // We don't handle this interface...
 }
 
 //==============================================================================

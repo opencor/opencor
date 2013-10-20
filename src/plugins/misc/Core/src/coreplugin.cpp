@@ -60,6 +60,8 @@ PLUGININFO_FUNC CorePluginInfo()
 }
 
 //==============================================================================
+// Core interface
+//==============================================================================
 
 void CorePlugin::initialize()
 {
@@ -217,6 +219,13 @@ void CorePlugin::initialize()
 
 //==============================================================================
 
+void CorePlugin::finalize()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
 void CorePlugin::initializationsDone(const Plugins &pLoadedPlugins)
 {
     // Retrieve the different file types supported by our various plugins and
@@ -315,6 +324,265 @@ void CorePlugin::handleArguments(const QStringList &pArguments)
 
 //==============================================================================
 
+void CorePlugin::handleAction(const QUrl &pUrl)
+{
+    Q_UNUSED(pUrl);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CorePlugin::runCliCommand(const QString &pCommand,
+                               const QStringList &pArguments, int *pRes)
+{
+    Q_UNUSED(pCommand);
+    Q_UNUSED(pArguments);
+
+    // We don't handle this interface...
+
+    pRes = 0;
+}
+
+//==============================================================================
+// GUI interface
+//==============================================================================
+
+void CorePlugin::changeEvent(QEvent *pEvent)
+{
+    // Check whether the palette has changed and if so then retrieve some new
+    // colours to be used
+
+    if (pEvent->type() == QEvent::PaletteChange)
+        retrieveColors();
+}
+
+//==============================================================================
+
+void CorePlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
+{
+    Q_UNUSED(pViewPlugin);
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CorePlugin::initializeView()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CorePlugin::finalizeView()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+QWidget * CorePlugin::viewWidget(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return 0;
+}
+
+//==============================================================================
+
+QWidget * CorePlugin::removeViewWidget(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return 0;
+}
+
+//==============================================================================
+
+QString CorePlugin::viewName() const
+{
+    // We don't handle this interface...
+
+    return QString();
+}
+
+//==============================================================================
+
+QIcon CorePlugin::fileTabIcon(const QString &pFileName) const
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return QIcon();
+}
+
+//==============================================================================
+
+bool CorePlugin::saveFile(const QString &pOldFileName,
+                          const QString &pNewFileName)
+{
+    Q_UNUSED(pOldFileName);
+    Q_UNUSED(pNewFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
+void CorePlugin::fileOpened(const QString &pFileName)
+{
+    // Remove the file from our list of recent files and update our Reopen
+    // sub-menu
+
+    mRecentFileNames.removeOne(pFileName);
+
+    updateFileReopenMenu();
+}
+
+//==============================================================================
+
+void CorePlugin::fileSaved(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CorePlugin::fileRenamed(const QString &pOldFileName,
+                             const QString &pNewFileName)
+{
+    // Remove the new file from our list of recent files, should it be there
+    // Note: it's fine if the new file isn't in our list since nothing will be
+    //       done in that case (thus avoiding us having to test for its
+    //       presence)...
+
+    mRecentFileNames.removeOne(pNewFileName);
+
+    // A file has been created or saved under a new name, so we want the old
+    // file name to be added to our list of recent files, i.e. as if it had been
+    // closed
+
+    fileClosed(pOldFileName);
+}
+
+//==============================================================================
+
+void CorePlugin::fileClosed(const QString &pFileName)
+{
+    // Add the file to our list of recent files (making sure that we don't end
+    // up with more than 10 recent file names) and update our Reopen sub-menu
+    // Note: the most recent file is to be shown first...
+
+    mRecentFileNames.prepend(pFileName);
+
+    while (mRecentFileNames.count() > 10)
+        mRecentFileNames.removeLast();
+
+    updateFileReopenMenu();
+}
+
+//==============================================================================
+
+bool CorePlugin::canClose()
+{
+    // To determine whether we can close, we must ask our central widget
+
+    return mCentralWidget->canClose();
+}
+
+//==============================================================================
+// I18n interface
+//==============================================================================
+
+void CorePlugin::retranslateUi()
+{
+    // Retranslate our different File actions
+
+    retranslateAction(mFileOpenAction, tr("Open..."), tr("Open a file"));
+
+    retranslateAction(mFileSaveAction, tr("Save"),
+                      tr("Save the current file"));
+    retranslateAction(mFileSaveAsAction, tr("Save As..."),
+                      tr("Save the current file under a different name"));
+    retranslateAction(mFileSaveAllAction, tr("Save All"),
+                      tr("Save all the files"));
+
+    retranslateAction(mFilePreviousAction, tr("Previous"),
+                      tr("Select the previous file"));
+    retranslateAction(mFileNextAction, tr("Next"),
+                      tr("Select the next file"));
+
+    retranslateAction(mFileCloseAction, tr("Close"),
+                      tr("Close the current file"));
+    retranslateAction(mFileCloseAllAction, tr("Close All"),
+                      tr("Close all the files"));
+
+    // Retranslate our File sub-menu and its action
+
+    retranslateMenu(mFileReopenSubMenu, tr("Reopen"));
+
+    retranslateAction(mFileClearReopenSubMenuAction, tr("Clear Menu"),
+                      tr("Clear the menu"));
+
+    // Retranslate our central widget
+
+    mCentralWidget->retranslateUi();
+}
+
+//==============================================================================
+// Plugin specific
+//==============================================================================
+
+void CorePlugin::updateFileReopenMenu()
+{
+    // Update the contents of our Reopen sub-menu by first cleaning it
+
+    foreach (QAction *action, mFileReopenSubMenu->actions()) {
+        if (action != mFileReopenSubMenuSeparator)
+            disconnect(action, SIGNAL(triggered()),
+                       this, SLOT(openRecentFile()));
+        else
+            // We have reached our Reopen sub-menu separator, so...
+
+            break;
+
+        mFileReopenSubMenu->removeAction(action);
+
+        delete action;
+    }
+
+    // Add the recent files to our Reopen sub-menu
+
+    foreach (const QString &recentFile, mRecentFileNames) {
+        QAction *action = newAction(mMainWindow);
+
+        action->setText(recentFile);
+
+        connect(action, SIGNAL(triggered()),
+                this, SLOT(openRecentFile()));
+
+        mFileReopenSubMenu->insertAction(mFileReopenSubMenuSeparator, action);
+    }
+
+    // Enable/disable mFileClearReopenSubMenuAction depending on whether we have
+    // recent file names
+
+    mFileClearReopenSubMenuAction->setEnabled(!mRecentFileNames.isEmpty());
+}
+
+//==============================================================================
+
 void CorePlugin::retrieveBorderColor()
 {
     // Retrieve the colour used for a 'normal' border
@@ -378,110 +646,6 @@ void CorePlugin::retrieveColors()
 
 //==============================================================================
 
-void CorePlugin::changeEvent(QEvent *pEvent)
-{
-    // Check whether the palette has changed and if so then retrieve some new
-    // colours to be used
-
-    if (pEvent->type() == QEvent::PaletteChange)
-        retrieveColors();
-}
-
-//==============================================================================
-
-void CorePlugin::retranslateUi()
-{
-    // Retranslate our different File actions
-
-    retranslateAction(mFileOpenAction, tr("Open..."), tr("Open a file"));
-
-    retranslateAction(mFileSaveAction, tr("Save"),
-                      tr("Save the current file"));
-    retranslateAction(mFileSaveAsAction, tr("Save As..."),
-                      tr("Save the current file under a different name"));
-    retranslateAction(mFileSaveAllAction, tr("Save All"),
-                      tr("Save all the files"));
-
-    retranslateAction(mFilePreviousAction, tr("Previous"),
-                      tr("Select the previous file"));
-    retranslateAction(mFileNextAction, tr("Next"),
-                      tr("Select the next file"));
-
-    retranslateAction(mFileCloseAction, tr("Close"),
-                      tr("Close the current file"));
-    retranslateAction(mFileCloseAllAction, tr("Close All"),
-                      tr("Close all the files"));
-
-    // Retranslate our File sub-menu and its action
-
-    retranslateMenu(mFileReopenSubMenu, tr("Reopen"));
-
-    retranslateAction(mFileClearReopenSubMenuAction, tr("Clear Menu"),
-                      tr("Clear the menu"));
-
-    // Retranslate our central widget
-
-    mCentralWidget->retranslateUi();
-}
-
-//==============================================================================
-
-void CorePlugin::fileOpened(const QString &pFileName)
-{
-    // Remove the file from our list of recent files and update our Reopen
-    // sub-menu
-
-    mRecentFileNames.removeOne(pFileName);
-
-    updateFileReopenMenu();
-}
-
-//==============================================================================
-
-void CorePlugin::fileRenamed(const QString &pOldFileName,
-                             const QString &pNewFileName)
-{
-    // Remove the new file from our list of recent files, should it be there
-    // Note: it's fine if the new file isn't in our list since nothing will be
-    //       done in that case (thus avoiding us having to test for its
-    //       presence)...
-
-    mRecentFileNames.removeOne(pNewFileName);
-
-    // A file has been created or saved under a new name, so we want the old
-    // file name to be added to our list of recent files, i.e. as if it had been
-    // closed
-
-    fileClosed(pOldFileName);
-}
-
-//==============================================================================
-
-void CorePlugin::fileClosed(const QString &pFileName)
-{
-    // Add the file to our list of recent files (making sure that we don't end
-    // up with more than 10 recent file names) and update our Reopen sub-menu
-    // Note: the most recent file is to be shown first...
-
-    mRecentFileNames.prepend(pFileName);
-
-    while (mRecentFileNames.count() > 10)
-        mRecentFileNames.removeLast();
-
-    updateFileReopenMenu();
-}
-
-//==============================================================================
-
-bool CorePlugin::canClose()
-{
-    // To determine whether we can close, we must ask our central widget
-
-    return mCentralWidget->canClose();
-}
-
-//==============================================================================
-
 void CorePlugin::openRecentFile()
 {
     // Check that the recent file still exists
@@ -520,45 +684,6 @@ void CorePlugin::clearReopenSubMenu()
     mRecentFileNames.clear();
 
     updateFileReopenMenu();
-}
-
-//==============================================================================
-
-void CorePlugin::updateFileReopenMenu()
-{
-    // Update the contents of our Reopen sub-menu by first cleaning it
-
-    foreach (QAction *action, mFileReopenSubMenu->actions()) {
-        if (action != mFileReopenSubMenuSeparator)
-            disconnect(action, SIGNAL(triggered()),
-                       this, SLOT(openRecentFile()));
-        else
-            // We have reached our Reopen sub-menu separator, so...
-
-            break;
-
-        mFileReopenSubMenu->removeAction(action);
-
-        delete action;
-    }
-
-    // Add the recent files to our Reopen sub-menu
-
-    foreach (const QString &recentFile, mRecentFileNames) {
-        QAction *action = newAction(mMainWindow);
-
-        action->setText(recentFile);
-
-        connect(action, SIGNAL(triggered()),
-                this, SLOT(openRecentFile()));
-
-        mFileReopenSubMenu->insertAction(mFileReopenSubMenuSeparator, action);
-    }
-
-    // Enable/disable mFileClearReopenSubMenuAction depending on whether we have
-    // recent file names
-
-    mFileClearReopenSubMenuAction->setEnabled(!mRecentFileNames.isEmpty());
 }
 
 //==============================================================================

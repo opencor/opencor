@@ -49,6 +49,8 @@ PLUGININFO_FUNC CoreEditingPluginInfo()
 }
 
 //==============================================================================
+// Core interface
+//==============================================================================
 
 void CoreEditingPlugin::initialize()
 {
@@ -113,6 +115,219 @@ void CoreEditingPlugin::initialize()
 
 //==============================================================================
 
+void CoreEditingPlugin::finalize()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::initializationsDone(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::loadSettings(QSettings *pSettings)
+{
+    Q_UNUSED(pSettings);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::saveSettings(QSettings *pSettings) const
+{
+    Q_UNUSED(pSettings);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::handleArguments(const QStringList &pArguments)
+{
+    Q_UNUSED(pArguments);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::handleAction(const QUrl &pUrl)
+{
+    Q_UNUSED(pUrl);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::runCliCommand(const QString &pCommand,
+                                      const QStringList &pArguments, int *pRes)
+{
+    Q_UNUSED(pCommand);
+    Q_UNUSED(pArguments);
+
+    // We don't handle this interface...
+
+    pRes = 0;
+}
+
+//==============================================================================
+// GUI interface
+//==============================================================================
+
+void CoreEditingPlugin::changeEvent(QEvent *pEvent)
+{
+    Q_UNUSED(pEvent);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
+{
+    Q_UNUSED(pViewPlugin);
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::initializeView()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::finalizeView()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+QWidget * CoreEditingPlugin::viewWidget(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return 0;
+}
+
+//==============================================================================
+
+QWidget * CoreEditingPlugin::removeViewWidget(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return 0;
+}
+
+//==============================================================================
+
+QString CoreEditingPlugin::viewName() const
+{
+    // We don't handle this interface...
+
+    return QString();
+}
+
+//==============================================================================
+
+QIcon CoreEditingPlugin::fileTabIcon(const QString &pFileName) const
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return QIcon();
+}
+
+//==============================================================================
+
+bool CoreEditingPlugin::saveFile(const QString &pOldFileName,
+                                 const QString &pNewFileName)
+{
+    Q_UNUSED(pOldFileName);
+    Q_UNUSED(pNewFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::fileOpened(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::fileSaved(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::fileRenamed(const QString &pOldFileName,
+                                    const QString &pNewFileName)
+{
+    Q_UNUSED(pOldFileName);
+    Q_UNUSED(pNewFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::fileClosed(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+bool CoreEditingPlugin::canClose()
+{
+    // We don't handle this interface...
+
+    return true;
+}
+
+//==============================================================================
+// I18n interface
+//==============================================================================
+
 void CoreEditingPlugin::retranslateUi()
 {
     // Retranslate our Edit menu
@@ -148,6 +363,8 @@ void CoreEditingPlugin::retranslateUi()
                       tr("Select all the objects"));
 }
 
+//==============================================================================
+// Plugin specific
 //==============================================================================
 
 void CoreEditingPlugin::setEditMenuVisible(const bool &pVisible)

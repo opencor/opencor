@@ -57,12 +57,9 @@ class CellMLSupportPlugin : public QObject, public CoreInterface,
     Q_INTERFACES(OpenCOR::I18nInterface)
 
 public:
-    virtual void retranslateUi();
-
-    virtual void initializationsDone(const Plugins & pLoadedPlugins);
-
-    virtual FileTypes fileTypes() const;
-    virtual QString fileTypeDescription(const QString &pMimeType) const;
+#include "coreinterface.inl"
+#include "fileinterface.inl"
+#include "i18ninterface.inl"
 };
 
 //==============================================================================

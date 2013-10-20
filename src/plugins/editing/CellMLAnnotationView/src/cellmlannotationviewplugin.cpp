@@ -80,6 +80,22 @@ CellMLAnnotationViewPlugin::~CellMLAnnotationViewPlugin()
 }
 
 //==============================================================================
+// Core interface
+//==============================================================================
+
+void CellMLAnnotationViewPlugin::initialize()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLAnnotationViewPlugin::finalize()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
 
 void CellMLAnnotationViewPlugin::initializationsDone(const Plugins &pLoadedPlugins)
 {
@@ -173,6 +189,69 @@ void CellMLAnnotationViewPlugin::saveSettings(QSettings *pSettings) const
         for (int i = 0, iMax = mMetadataDetailsWidgetSizes.count(); i < iMax; ++i)
             pSettings->setValue(SettingsCellmlAnnotationWidgetMetadataDetailsWidgetSizes.arg(i), mMetadataDetailsWidgetSizes[i]);
     pSettings->endGroup();
+}
+
+//==============================================================================
+
+void CellMLAnnotationViewPlugin::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLAnnotationViewPlugin::handleArguments(const QStringList &pArguments)
+{
+    Q_UNUSED(pArguments);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLAnnotationViewPlugin::handleAction(const QUrl &pUrl)
+{
+    Q_UNUSED(pUrl);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLAnnotationViewPlugin::runCliCommand(const QString &pCommand,
+                                               const QStringList &pArguments,
+                                               int *pRes)
+{
+    Q_UNUSED(pCommand);
+    Q_UNUSED(pArguments);
+
+    // We don't handle this interface...
+
+    pRes = 0;
+}
+
+//==============================================================================
+// GUI interface
+//==============================================================================
+
+void CellMLAnnotationViewPlugin::changeEvent(QEvent *pEvent)
+{
+    Q_UNUSED(pEvent);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLAnnotationViewPlugin::updateGui(Plugin *pViewPlugin,
+                                           const QString &pFileName)
+{
+    Q_UNUSED(pViewPlugin);
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
 }
 
 //==============================================================================
@@ -290,12 +369,13 @@ QString CellMLAnnotationViewPlugin::viewName() const
 
 //==============================================================================
 
-void CellMLAnnotationViewPlugin::retranslateUi()
+QIcon CellMLAnnotationViewPlugin::fileTabIcon(const QString &pFileName) const
 {
-    // Retranslate all of our CellML annotation view widgets
+    Q_UNUSED(pFileName);
 
-    foreach (CellmlAnnotationViewWidget *viewWidget, mViewWidgets)
-        viewWidget->retranslateUi();
+    // We don't handle this interface...
+
+    return QIcon();
 }
 
 //==============================================================================
@@ -337,6 +417,67 @@ bool CellMLAnnotationViewPlugin::saveFile(const QString &pOldFileName,
     }
 }
 
+//==============================================================================
+
+void CellMLAnnotationViewPlugin::fileOpened(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLAnnotationViewPlugin::fileSaved(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLAnnotationViewPlugin::fileRenamed(const QString &pOldFileName,
+                                             const QString &pNewFileName)
+{
+    Q_UNUSED(pOldFileName);
+    Q_UNUSED(pNewFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLAnnotationViewPlugin::fileClosed(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+bool CellMLAnnotationViewPlugin::canClose()
+{
+    // We don't handle this interface...
+
+    return true;
+}
+
+//==============================================================================
+// I18n interface
+//==============================================================================
+
+void CellMLAnnotationViewPlugin::retranslateUi()
+{
+    // Retranslate all of our CellML annotation view widgets
+
+    foreach (CellmlAnnotationViewWidget *viewWidget, mViewWidgets)
+        viewWidget->retranslateUi();
+}
+
+//==============================================================================
+// Plugin specific
 //==============================================================================
 
 void CellMLAnnotationViewPlugin::splitterMoved(const QList<int> &pSizes)

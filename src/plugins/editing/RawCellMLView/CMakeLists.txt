@@ -9,7 +9,6 @@ RETRIEVE_LLVM_SETTINGS()
 
 ADD_PLUGIN(RawCellMLView
     SOURCES
-        ../../coreinterface.cpp
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp

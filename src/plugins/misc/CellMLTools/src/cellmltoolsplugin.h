@@ -54,16 +54,9 @@ class CellMLToolsPlugin : public QObject, public CoreInterface,
     Q_INTERFACES(OpenCOR::I18nInterface)
 
 public:
-    virtual void initialize();
-
-    virtual void initializationsDone(const Plugins &pLoadedPlugins);
-
-    virtual void runCliCommand(const QString &pCommand,
-                              const QStringList &pArguments, int *pRes);
-
-    virtual void updateGui(Plugin *pViewPlugin, const QString &pFileName);
-
-    virtual void retranslateUi();
+#include "coreinterface.inl"
+#include "guiinterface.inl"
+#include "i18ninterface.inl"
 
 private:
     FileTypes mCellmlFileTypes;

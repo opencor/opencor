@@ -50,10 +50,19 @@ PLUGININFO_FUNC CellMLSupportPluginInfo()
 }
 
 //==============================================================================
+// Core interface
+//==============================================================================
 
-void CellMLSupportPlugin::retranslateUi()
+void CellMLSupportPlugin::initialize()
 {
-    // Nothing to retranslate as such...
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLSupportPlugin::finalize()
+{
+    // We don't handle this interface...
 }
 
 //==============================================================================
@@ -64,10 +73,73 @@ void CellMLSupportPlugin::initializationsDone(const Plugins &pLoadedPlugins)
 
     // Make a call to the instance of the CellML file manager so that it gets
     // set up and can then do its job
+    // Note: we do it rather than in initialize() since we need the Core plugin
+    //       to be initialised...
 
     CellmlFileManager::instance();
 }
 
+//==============================================================================
+
+void CellMLSupportPlugin::loadSettings(QSettings *pSettings)
+{
+    Q_UNUSED(pSettings);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLSupportPlugin::saveSettings(QSettings *pSettings) const
+{
+    Q_UNUSED(pSettings);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLSupportPlugin::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLSupportPlugin::handleArguments(const QStringList &pArguments)
+{
+    Q_UNUSED(pArguments);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLSupportPlugin::handleAction(const QUrl &pUrl)
+{
+    Q_UNUSED(pUrl);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLSupportPlugin::runCliCommand(const QString &pCommand,
+                                        const QStringList &pArguments,
+                                        int *pRes)
+{
+    Q_UNUSED(pCommand);
+    Q_UNUSED(pArguments);
+
+    // We don't handle this interface...
+
+    pRes = 0;
+}
+
+//==============================================================================
+// File interface
 //==============================================================================
 
 FileTypes CellMLSupportPlugin::fileTypes() const
@@ -93,6 +165,17 @@ QString CellMLSupportPlugin::fileTypeDescription(const QString &pMimeType) const
         return QString();
 }
 
+//==============================================================================
+// GUI interface
+//==============================================================================
+
+void CellMLSupportPlugin::retranslateUi()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+// Plugin specific
 //==============================================================================
 
 bool isCellmlFile(const QString &pFileName)

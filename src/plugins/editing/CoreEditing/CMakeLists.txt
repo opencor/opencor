@@ -4,7 +4,6 @@ PROJECT(CoreEditingPlugin)
 
 ADD_PLUGIN(CoreEditing
     SOURCES
-        ../../coreinterface.cpp
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp

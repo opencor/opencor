@@ -38,7 +38,9 @@ public:
     void setLocale(const QString &pLocale);
     void setPluginName(const QString &pPluginName);
 
-    virtual void retranslateUi() = 0;
+#define INTERFACE_DEFINITION
+    #include "i18ninterface.inl"
+#undef INTERFACE_DEFINITION
 
 private:
     QString mPluginName;

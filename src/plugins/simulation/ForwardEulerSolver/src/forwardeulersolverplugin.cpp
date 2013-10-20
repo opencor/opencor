@@ -50,7 +50,7 @@ PLUGININFO_FUNC ForwardEulerSolverPluginInfo()
 
 void ForwardEulerSolverPlugin::retranslateUi()
 {
-    // Nothing to retranslate as such...
+    // We don't handle this interface...
 }
 
 //==============================================================================

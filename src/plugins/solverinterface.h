@@ -88,13 +88,11 @@ typedef QList<Property> Properties;
 class SolverInterface
 {
 public:
-    virtual Solver::Type type() const = 0;
-    virtual QString name() const = 0;
-    virtual Solver::Properties properties() const = 0;
+#define INTERFACE_DEFINITION
+    #include "solverinterface.inl"
+#undef INTERFACE_DEFINITION
 
     QString typeAsString() const;
-
-    virtual void * instance() const = 0;
 };
 
 //==============================================================================

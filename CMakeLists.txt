@@ -58,7 +58,6 @@ SET(SOURCES
     src/misc/common.cpp
     src/misc/utils.cpp
 
-    src/plugins/coreinterface.cpp
     src/plugins/fileinterface.cpp
     src/plugins/guiinterface.cpp
     src/plugins/i18ninterface.cpp

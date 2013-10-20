@@ -58,25 +58,9 @@ class SingleCellViewPlugin : public QObject, public CoreInterface,
 public:
     explicit SingleCellViewPlugin();
 
-    virtual void initialize();
-
-    virtual void initializationsDone(const Plugins &pLoadedPlugins);
-
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
-
-    virtual QWidget * viewWidget(const QString &pFileName);
-    virtual QWidget * removeViewWidget(const QString &pFileName);
-    virtual QString viewName() const;
-
-    virtual QIcon fileTabIcon(const QString &pFileName) const;
-
-    virtual void fileOpened(const QString &pFileName);
-    virtual void fileRenamed(const QString &pOldFileName,
-                             const QString &pNewFileName);
-    virtual void fileClosed(const QString &pFileName);
-
-    virtual void retranslateUi();
+#include "coreinterface.inl"
+#include "guiinterface.inl"
+#include "i18ninterface.inl"
 
 private:
     SingleCellViewWidget *mViewWidget;

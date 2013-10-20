@@ -51,7 +51,7 @@ PLUGININFO_FUNC IDASolverPluginInfo()
 
 void IDASolverPlugin::retranslateUi()
 {
-    // Nothing to retranslate as such...
+    // We don't handle this interface...
 }
 
 //==============================================================================

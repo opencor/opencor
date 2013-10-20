@@ -50,6 +50,8 @@ PLUGININFO_FUNC HelpPluginInfo()
 }
 
 //==============================================================================
+// Core interface
+//==============================================================================
 
 void HelpPlugin::initialize()
 {
@@ -71,6 +73,21 @@ void HelpPlugin::initialize()
 
 //==============================================================================
 
+void HelpPlugin::finalize()
+{
+}
+
+//==============================================================================
+
+void HelpPlugin::initializationsDone(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
 void HelpPlugin::loadSettings(QSettings *pSettings)
 {
     // Retrieve our help window settings
@@ -87,6 +104,185 @@ void HelpPlugin::saveSettings(QSettings *pSettings) const
     saveWindowSettings(pSettings, mHelpWindow);
 }
 
+//==============================================================================
+
+void HelpPlugin::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void HelpPlugin::handleArguments(const QStringList &pArguments)
+{
+    Q_UNUSED(pArguments);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void HelpPlugin::handleAction(const QUrl &pUrl)
+{
+    Q_UNUSED(pUrl);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void HelpPlugin::runCliCommand(const QString &pCommand,
+                               const QStringList &pArguments, int *pRes)
+{
+    Q_UNUSED(pCommand);
+    Q_UNUSED(pArguments);
+
+    // We don't handle this interface...
+
+    pRes = 0;
+}
+
+//==============================================================================
+// GUI interface
+//==============================================================================
+
+void HelpPlugin::changeEvent(QEvent *pEvent)
+{
+    Q_UNUSED(pEvent);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void HelpPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
+{
+    Q_UNUSED(pViewPlugin);
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void HelpPlugin::initializeView()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void HelpPlugin::finalizeView()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+QWidget * HelpPlugin::viewWidget(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return 0;
+}
+
+//==============================================================================
+
+QWidget * HelpPlugin::removeViewWidget(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return 0;
+}
+
+//==============================================================================
+
+QString HelpPlugin::viewName() const
+{
+    // We don't handle this interface...
+
+    return QString();
+}
+
+//==============================================================================
+
+QIcon HelpPlugin::fileTabIcon(const QString &pFileName) const
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return QIcon();
+}
+
+//==============================================================================
+
+bool HelpPlugin::saveFile(const QString &pOldFileName,
+                          const QString &pNewFileName)
+{
+    Q_UNUSED(pOldFileName);
+    Q_UNUSED(pNewFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
+void HelpPlugin::fileOpened(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void HelpPlugin::fileSaved(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void HelpPlugin::fileRenamed(const QString &pOldFileName,
+                             const QString &pNewFileName)
+{
+    Q_UNUSED(pOldFileName);
+    Q_UNUSED(pNewFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void HelpPlugin::fileClosed(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+bool HelpPlugin::canClose()
+{
+    // We don't handle this interface...
+
+    return true;
+}
+
+//==============================================================================
+// I18n interface
 //==============================================================================
 
 void HelpPlugin::retranslateUi()

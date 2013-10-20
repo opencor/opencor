@@ -51,7 +51,7 @@ PLUGININFO_FUNC HeunSolverPluginInfo()
 
 void HeunSolverPlugin::retranslateUi()
 {
-    // Nothing to retranslate as such...
+    // We don't handle this interface...
 }
 
 //==============================================================================

@@ -4,7 +4,6 @@ PROJECT(CellMLModelRepositoryPlugin)
 
 ADD_PLUGIN(CellMLModelRepository
     SOURCES
-        ../../coreinterface.cpp
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp

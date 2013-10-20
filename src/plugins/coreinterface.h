@@ -43,21 +43,9 @@ namespace OpenCOR {
 class CoreInterface
 {
 public:
-    virtual void initialize();
-    virtual void finalize();
-
-    virtual void initializationsDone(const Plugins &pLoadedPlugins);
-
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
-
-    virtual void loadingOfSettingsDone(const Plugins &pLoadedPlugins);
-
-    virtual void handleArguments(const QStringList &pArguments);
-    virtual void handleAction(const QUrl &pUrl);
-
-    virtual void runCliCommand(const QString &pCommand,
-                              const QStringList &pArguments, int *pRes);
+#define INTERFACE_DEFINITION
+    #include "coreinterface.inl"
+#undef INTERFACE_DEFINITION
 };
 
 //==============================================================================

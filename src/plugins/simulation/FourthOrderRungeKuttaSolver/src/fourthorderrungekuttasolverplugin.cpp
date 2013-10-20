@@ -51,7 +51,7 @@ PLUGININFO_FUNC FourthOrderRungeKuttaSolverPluginInfo()
 
 void FourthOrderRungeKuttaSolverPlugin::retranslateUi()
 {
-    // Nothing to retranslate as such...
+    // We don't handle this interface...
 }
 
 //==============================================================================

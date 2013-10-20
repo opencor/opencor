@@ -64,8 +64,9 @@ typedef QList<FileType> FileTypes;
 class FileInterface
 {
 public:
-    virtual FileTypes fileTypes() const = 0;
-    virtual QString fileTypeDescription(const QString &pMimeType) const = 0;
+#define INTERFACE_DEFINITION
+    #include "fileinterface.inl"
+#undef INTERFACE_DEFINITION
 };
 
 //==============================================================================

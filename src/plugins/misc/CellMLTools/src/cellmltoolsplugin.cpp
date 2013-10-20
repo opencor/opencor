@@ -55,6 +55,8 @@ PLUGININFO_FUNC CellMLToolsPluginInfo()
 }
 
 //==============================================================================
+// Core interface
+//==============================================================================
 
 void CellMLToolsPlugin::initialize()
 {
@@ -86,6 +88,13 @@ void CellMLToolsPlugin::initialize()
 
 //==============================================================================
 
+void CellMLToolsPlugin::finalize()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
 void CellMLToolsPlugin::initializationsDone(const Plugins &pLoadedPlugins)
 {
     // Retrieve the file types supported by the CellMLSupport plugin
@@ -104,6 +113,323 @@ void CellMLToolsPlugin::initializationsDone(const Plugins &pLoadedPlugins)
             break;
         }
     }
+}
+
+//==============================================================================
+
+void CellMLToolsPlugin::loadSettings(QSettings *pSettings)
+{
+    Q_UNUSED(pSettings);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLToolsPlugin::saveSettings(QSettings *pSettings) const
+{
+    Q_UNUSED(pSettings);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLToolsPlugin::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLToolsPlugin::handleArguments(const QStringList &pArguments)
+{
+    Q_UNUSED(pArguments);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLToolsPlugin::handleAction(const QUrl &pUrl)
+{
+    Q_UNUSED(pUrl);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLToolsPlugin::runCliCommand(const QString &pCommand,
+                                      const QStringList &pArguments, int *pRes)
+{
+    // Run the given CLI command
+
+    *pRes = 0;
+
+    if (!pCommand.compare("help")) {
+        // Display the commands we support
+
+        runHelpCommand();
+    } else if (!pCommand.compare("export")) {
+        // Export a file from one format to another
+
+        runExportCommand(pArguments, pRes);
+    } else {
+        // Not a CLI command that we can run, so...
+
+        runHelpCommand();
+
+        *pRes = -1;
+    }
+}
+
+//==============================================================================
+// GUI interface
+//==============================================================================
+
+void CellMLToolsPlugin::changeEvent(QEvent *pEvent)
+{
+    Q_UNUSED(pEvent);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLToolsPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
+{
+    // Enable/disable and show/hide our tools in case we are dealing with a
+    // CellML-based view plugin
+
+    bool toolsVisible = pViewPlugin?
+                            pViewPlugin->info()->fullDependencies().contains("CellMLSupport"):
+                            false;
+    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
+
+    mCellmlFileExportToMenu->menuAction()->setEnabled(toolsVisible);
+    mCellmlFileExportToMenu->menuAction()->setVisible(toolsVisible);
+
+    mExportToCellml10Action->setEnabled(   toolsVisible
+                                        && cellmlFile && cellmlFile->model()
+                                        && QString::fromStdWString(cellmlFile->model()->cellmlVersion()).compare(CellMLSupport::Cellml_1_0));
+    mExportToCellml10Action->setVisible(toolsVisible);
+
+/*---GRY--- DISABLED UNTIL WE FULLY SUPPORT EXPORT TO CellML 1.1...
+    mExportToCellml11Action->setEnabled(   toolsVisible && cellmlFile
+                                        && QString::fromStdWString(cellmlFile->model()->cellmlVersion()).compare(CellMLSupport::Cellml_1_1));
+    mExportToCellml11Action->setVisible(toolsVisible);
+*/
+//---GRY--- BEGIN
+mExportToCellml11Action->setEnabled(false);
+mExportToCellml11Action->setVisible(false);
+//---GRY--- END
+
+    // Keep track of the file name
+
+    mFileName = pFileName;
+}
+
+//==============================================================================
+
+void CellMLToolsPlugin::initializeView()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLToolsPlugin::finalizeView()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+QWidget * CellMLToolsPlugin::viewWidget(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return 0;
+}
+
+//==============================================================================
+
+QWidget * CellMLToolsPlugin::removeViewWidget(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return 0;
+}
+
+//==============================================================================
+
+QString CellMLToolsPlugin::viewName() const
+{
+    // We don't handle this interface...
+
+    return QString();
+}
+
+//==============================================================================
+
+QIcon CellMLToolsPlugin::fileTabIcon(const QString &pFileName) const
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return QIcon();
+}
+
+//==============================================================================
+
+bool CellMLToolsPlugin::saveFile(const QString &pOldFileName,
+                                 const QString &pNewFileName)
+{
+    Q_UNUSED(pOldFileName);
+    Q_UNUSED(pNewFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
+void CellMLToolsPlugin::fileOpened(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLToolsPlugin::fileSaved(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLToolsPlugin::fileRenamed(const QString &pOldFileName,
+                                    const QString &pNewFileName)
+{
+    Q_UNUSED(pOldFileName);
+    Q_UNUSED(pNewFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLToolsPlugin::fileClosed(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+bool CellMLToolsPlugin::canClose()
+{
+    // We don't handle this interface...
+
+    return true;
+}
+
+//==============================================================================
+// I18n interface
+//==============================================================================
+
+void CellMLToolsPlugin::retranslateUi()
+{
+    // Retranslate our different Tools actions
+
+    retranslateMenu(mCellmlFileExportToMenu, tr("CellML File Export To"));
+
+    retranslateAction(mExportToCellml10Action, tr("CellML 1.0..."), tr("Export the CellML file to CellML 1.0"));
+    retranslateAction(mExportToCellml11Action, tr("CellML 1.1..."), tr("Export the CellML file to CellML 1.1"));
+}
+
+//==============================================================================
+// Plugin specific
+//==============================================================================
+
+void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Format &pFormat)
+{
+    // Ask for the name of the file that will contain the export
+
+    QString format;
+    QString fileTypes;
+
+    switch (pFormat) {
+    case CellMLSupport::CellmlFile::Cellml_1_1:
+    default:   // CellMLSupport::CellmlFile::Cellml_1_0
+        if (pFormat == CellMLSupport::CellmlFile::Cellml_1_0)
+            format = "CellML 1.0";
+        else
+            format = "CellML 1.1";
+
+        foreach (const FileType &fileType, mCellmlFileTypes) {
+            if (!fileTypes.isEmpty())
+                fileTypes += ";;";
+
+            fileTypes +=  fileType.description()+" (*."+fileType.fileExtension()+")";
+        }
+    }
+
+    QString fileName = Core::getSaveFileName(tr("CellML file export to %1").arg(format), mFileName, fileTypes);
+
+    // Make sure that we have a file name or leave, if not
+
+    if (fileName.isEmpty())
+        return;
+
+    // Now that we have a file name, we can do the eport itself
+
+    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
+
+    if (!cellmlFile->exportTo(fileName, pFormat)) {
+        CellMLSupport::CellmlFileIssues issues = cellmlFile->issues();
+        QString errorMessage = QString();
+
+        if (issues.count())
+            errorMessage = " ("+issues.first().message()+")";
+            // Note: if there are 'issues', then there can be only one of them
+            //       following a CellML export...
+
+        QMessageBox::warning(mMainWindow, tr("CellML file export to %1").arg(format),
+                             tr("Sorry, but <strong>%1</strong> could not be exported to <strong>%2</strong>%3.").arg(fileName, format, errorMessage));
+    }
+}
+
+//==============================================================================
+
+void CellMLToolsPlugin::exportToCellml10()
+{
+    // Export the current file to CellML 1.0
+
+    exportTo(CellMLSupport::CellmlFile::Cellml_1_0);
+}
+
+//==============================================================================
+
+void CellMLToolsPlugin::exportToCellml11()
+{
+    // Export the current file to CellML 1.1
+
+    exportTo(CellMLSupport::CellmlFile::Cellml_1_1);
 }
 
 //==============================================================================
@@ -183,147 +509,6 @@ void CellMLToolsPlugin::runExportCommand(const QStringList &pArguments,
 
         *pRes = -1;
     }
-}
-
-//==============================================================================
-
-void CellMLToolsPlugin::runCliCommand(const QString &pCommand,
-                                      const QStringList &pArguments, int *pRes)
-{
-    // Run the given CLI command
-
-    *pRes = 0;
-
-    if (!pCommand.compare("help")) {
-        // Display the commands we support
-
-        runHelpCommand();
-    } else if (!pCommand.compare("export")) {
-        // Export a file from one format to another
-
-        runExportCommand(pArguments, pRes);
-    } else {
-        // Not a CLI command that we can run, so...
-
-        runHelpCommand();
-
-        *pRes = -1;
-    }
-}
-
-//==============================================================================
-
-void CellMLToolsPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
-{
-    // Enable/disable and show/hide our tools in case we are dealing with a
-    // CellML-based view plugin
-
-    bool toolsVisible = pViewPlugin?
-                            pViewPlugin->info()->fullDependencies().contains("CellMLSupport"):
-                            false;
-    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
-
-    mCellmlFileExportToMenu->menuAction()->setEnabled(toolsVisible);
-    mCellmlFileExportToMenu->menuAction()->setVisible(toolsVisible);
-
-    mExportToCellml10Action->setEnabled(   toolsVisible
-                                        && cellmlFile && cellmlFile->model()
-                                        && QString::fromStdWString(cellmlFile->model()->cellmlVersion()).compare(CellMLSupport::Cellml_1_0));
-    mExportToCellml10Action->setVisible(toolsVisible);
-
-/*---GRY--- DISABLED UNTIL EXPORTING TO CellML 1.1 IS FULLY SUPPORTED...
-    mExportToCellml11Action->setEnabled(   toolsVisible && cellmlFile
-                                        && QString::fromStdWString(cellmlFile->model()->cellmlVersion()).compare(CellMLSupport::Cellml_1_1));
-    mExportToCellml11Action->setVisible(toolsVisible);
-*/
-//---GRY--- BEGIN
-mExportToCellml11Action->setEnabled(false);
-mExportToCellml11Action->setVisible(false);
-//---GRY--- END
-
-    // Keep track of the file name
-
-    mFileName = pFileName;
-}
-
-//==============================================================================
-
-void CellMLToolsPlugin::retranslateUi()
-{
-    // Retranslate our different Tools actions
-
-    retranslateMenu(mCellmlFileExportToMenu, tr("CellML File Export To"));
-
-    retranslateAction(mExportToCellml10Action, tr("CellML 1.0..."), tr("Export the CellML file to CellML 1.0"));
-    retranslateAction(mExportToCellml11Action, tr("CellML 1.1..."), tr("Export the CellML file to CellML 1.1"));
-}
-
-//==============================================================================
-
-void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Format &pFormat)
-{
-    // Ask for the name of the file which will contain the export
-
-    QString format;
-    QString fileTypes;
-
-    switch (pFormat) {
-    case CellMLSupport::CellmlFile::Cellml_1_1:
-    default:   // CellMLSupport::CellmlFile::Cellml_1_0
-        if (pFormat == CellMLSupport::CellmlFile::Cellml_1_0)
-            format = "CellML 1.0";
-        else
-            format = "CellML 1.1";
-
-        foreach (const FileType &fileType, mCellmlFileTypes) {
-            if (!fileTypes.isEmpty())
-                fileTypes += ";;";
-
-            fileTypes +=  fileType.description()+" (*."+fileType.fileExtension()+")";
-        }
-    }
-
-    QString fileName = Core::getSaveFileName(tr("CellML file export to %1").arg(format), mFileName, fileTypes);
-
-    // Make sure that we have a file name or leave, if not
-
-    if (fileName.isEmpty())
-        return;
-
-    // Now that we have a file name, we can do the eport itself
-
-    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
-
-    if (!cellmlFile->exportTo(fileName, pFormat)) {
-        CellMLSupport::CellmlFileIssues issues = cellmlFile->issues();
-        QString errorMessage = QString();
-
-        if (issues.count())
-            errorMessage = " ("+issues.first().message()+")";
-            // Note: if there are 'issues', then there can be only one of them
-            //       following a CellML export...
-
-        QMessageBox::warning(mMainWindow, tr("CellML file export to %1").arg(format),
-                             tr("Sorry, but <strong>%1</strong> could not be exported to <strong>%2</strong>%3.").arg(fileName, format, errorMessage));
-    }
-}
-
-//==============================================================================
-
-void CellMLToolsPlugin::exportToCellml10()
-{
-    // Export the current file to CellML 1.0
-
-    exportTo(CellMLSupport::CellmlFile::Cellml_1_0);
-}
-
-//==============================================================================
-
-void CellMLToolsPlugin::exportToCellml11()
-{
-    // Export the current file to CellML 1.1
-
-    exportTo(CellMLSupport::CellmlFile::Cellml_1_1);
 }
 
 //==============================================================================

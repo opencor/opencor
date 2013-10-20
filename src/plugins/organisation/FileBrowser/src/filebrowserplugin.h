@@ -56,12 +56,9 @@ class FileBrowserPlugin : public QObject, public CoreInterface,
     Q_INTERFACES(OpenCOR::I18nInterface)
 
 public:
-    virtual void initialize();
-
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
-
-    virtual void retranslateUi();
+#include "coreinterface.inl"
+#include "guiinterface.inl"
+#include "i18ninterface.inl"
 
 private:
     QAction *mFileBrowserAction;

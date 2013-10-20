@@ -62,6 +62,8 @@ SingleCellViewPlugin::SingleCellViewPlugin()
 }
 
 //==============================================================================
+// Core interface
+//==============================================================================
 
 void SingleCellViewPlugin::initialize()
 {
@@ -73,6 +75,13 @@ void SingleCellViewPlugin::initialize()
     // central widget
 
     mViewWidget->setVisible(false);
+}
+
+//==============================================================================
+
+void SingleCellViewPlugin::finalize()
+{
+    // We don't handle this interface...
 }
 
 //==============================================================================
@@ -114,6 +123,83 @@ void SingleCellViewPlugin::saveSettings(QSettings *pSettings) const
     // Retrieve our single cell view settings
 
     saveViewSettings(pSettings, mViewWidget);
+}
+
+//==============================================================================
+
+void SingleCellViewPlugin::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SingleCellViewPlugin::handleArguments(const QStringList &pArguments)
+{
+    Q_UNUSED(pArguments);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SingleCellViewPlugin::handleAction(const QUrl &pUrl)
+{
+    Q_UNUSED(pUrl);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SingleCellViewPlugin::runCliCommand(const QString &pCommand,
+                                         const QStringList &pArguments,
+                                         int *pRes)
+{
+    Q_UNUSED(pCommand);
+    Q_UNUSED(pArguments);
+
+    // We don't handle this interface...
+
+    pRes = 0;
+}
+
+//==============================================================================
+// GUI interface
+//==============================================================================
+
+void SingleCellViewPlugin::changeEvent(QEvent *pEvent)
+{
+    Q_UNUSED(pEvent);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SingleCellViewPlugin::updateGui(Plugin *pViewPlugin,
+                                     const QString &pFileName)
+{
+    Q_UNUSED(pViewPlugin);
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SingleCellViewPlugin::initializeView()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SingleCellViewPlugin::finalizeView()
+{
+    // We don't handle this interface...
 }
 
 //==============================================================================
@@ -172,11 +258,33 @@ QIcon SingleCellViewPlugin::fileTabIcon(const QString &pFileName) const
 
 //==============================================================================
 
+bool SingleCellViewPlugin::saveFile(const QString &pOldFileName,
+                                    const QString &pNewFileName)
+{
+    Q_UNUSED(pOldFileName);
+    Q_UNUSED(pNewFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 void SingleCellViewPlugin::fileOpened(const QString &pFileName)
 {
     // Let our view widget know that a file has been opened
 
     mViewWidget->fileOpened(pFileName);
+}
+
+//==============================================================================
+
+void SingleCellViewPlugin::fileSaved(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
 }
 
 //==============================================================================
@@ -198,6 +306,17 @@ void SingleCellViewPlugin::fileClosed(const QString &pFileName)
     mViewWidget->fileClosed(pFileName);
 }
 
+//==============================================================================
+
+bool SingleCellViewPlugin::canClose()
+{
+    // We don't handle this interface...
+
+    return true;
+}
+
+//==============================================================================
+// I18n interface
 //==============================================================================
 
 void SingleCellViewPlugin::retranslateUi()

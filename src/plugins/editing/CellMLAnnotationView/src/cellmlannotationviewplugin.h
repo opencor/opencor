@@ -78,22 +78,9 @@ public:
     explicit CellMLAnnotationViewPlugin();
     ~CellMLAnnotationViewPlugin();
 
-    virtual void initializationsDone(const Plugins &pLoadedPlugins);
-
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
-
-    virtual void initializeView();
-    virtual void finalizeView();
-
-    virtual QWidget * viewWidget(const QString &pFileName);
-    virtual QWidget * removeViewWidget(const QString &pFileName);
-    virtual QString viewName() const;
-
-    virtual void retranslateUi();
-
-    virtual bool saveFile(const QString &pOldFileName,
-                          const QString &pNewFileName);
+#include "coreinterface.inl"
+#include "guiinterface.inl"
+#include "i18ninterface.inl"
 
 private:
     QList<int> mSizes;

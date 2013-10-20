@@ -49,6 +49,8 @@ PLUGININFO_FUNC FileBrowserPluginInfo()
 }
 
 //==============================================================================
+// Core interface
+//==============================================================================
 
 void FileBrowserPlugin::initialize()
 {
@@ -69,6 +71,22 @@ void FileBrowserPlugin::initialize()
 
 //==============================================================================
 
+void FileBrowserPlugin::finalize()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void FileBrowserPlugin::initializationsDone(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
 void FileBrowserPlugin::loadSettings(QSettings *pSettings)
 {
     // Retrieve our file browser window settings
@@ -85,6 +103,185 @@ void FileBrowserPlugin::saveSettings(QSettings *pSettings) const
     saveWindowSettings(pSettings, mFileBrowserWindow);
 }
 
+//==============================================================================
+
+void FileBrowserPlugin::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void FileBrowserPlugin::handleArguments(const QStringList &pArguments)
+{
+    Q_UNUSED(pArguments);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void FileBrowserPlugin::handleAction(const QUrl &pUrl)
+{
+    Q_UNUSED(pUrl);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void FileBrowserPlugin::runCliCommand(const QString &pCommand,
+                                      const QStringList &pArguments, int *pRes)
+{
+    Q_UNUSED(pCommand);
+    Q_UNUSED(pArguments);
+
+    // We don't handle this interface...
+
+    pRes = 0;
+}
+
+//==============================================================================
+// GUI interface
+//==============================================================================
+
+void FileBrowserPlugin::changeEvent(QEvent *pEvent)
+{
+    Q_UNUSED(pEvent);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void FileBrowserPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
+{
+    Q_UNUSED(pViewPlugin);
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void FileBrowserPlugin::initializeView()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void FileBrowserPlugin::finalizeView()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+QWidget * FileBrowserPlugin::viewWidget(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return 0;
+}
+
+//==============================================================================
+
+QWidget * FileBrowserPlugin::removeViewWidget(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return 0;
+}
+
+//==============================================================================
+
+QString FileBrowserPlugin::viewName() const
+{
+    // We don't handle this interface...
+
+    return QString();
+}
+
+//==============================================================================
+
+QIcon FileBrowserPlugin::fileTabIcon(const QString &pFileName) const
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return QIcon();
+}
+
+//==============================================================================
+
+bool FileBrowserPlugin::saveFile(const QString &pOldFileName,
+                                 const QString &pNewFileName)
+{
+    Q_UNUSED(pOldFileName);
+    Q_UNUSED(pNewFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
+void FileBrowserPlugin::fileOpened(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void FileBrowserPlugin::fileSaved(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void FileBrowserPlugin::fileRenamed(const QString &pOldFileName,
+                                    const QString &pNewFileName)
+{
+    Q_UNUSED(pOldFileName);
+    Q_UNUSED(pNewFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void FileBrowserPlugin::fileClosed(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+bool FileBrowserPlugin::canClose()
+{
+    // We don't handle this interface...
+
+    return true;
+}
+
+//==============================================================================
+// I18n interface
 //==============================================================================
 
 void FileBrowserPlugin::retranslateUi()

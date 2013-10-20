@@ -61,12 +61,7 @@ RawCellMLViewPlugin::RawCellMLViewPlugin()
 }
 
 //==============================================================================
-
-void RawCellMLViewPlugin::retranslateUi()
-{
-    // Nothing to retranslate as such...
-}
-
+// Core interface
 //==============================================================================
 
 void RawCellMLViewPlugin::initialize()
@@ -79,6 +74,22 @@ void RawCellMLViewPlugin::initialize()
     // shown in our central widget
 
     mViewWidget->setVisible(false);
+}
+
+//==============================================================================
+
+void RawCellMLViewPlugin::finalize()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void RawCellMLViewPlugin::initializationsDone(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
 }
 
 //==============================================================================
@@ -97,6 +108,83 @@ void RawCellMLViewPlugin::saveSettings(QSettings *pSettings) const
     // Retrieve our generic raw CellML view widget settings
 
     saveViewSettings(pSettings, mViewWidget);
+}
+
+//==============================================================================
+
+void RawCellMLViewPlugin::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void RawCellMLViewPlugin::handleArguments(const QStringList &pArguments)
+{
+    Q_UNUSED(pArguments);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void RawCellMLViewPlugin::handleAction(const QUrl &pUrl)
+{
+    Q_UNUSED(pUrl);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void RawCellMLViewPlugin::runCliCommand(const QString &pCommand,
+                                        const QStringList &pArguments,
+                                        int *pRes)
+{
+    Q_UNUSED(pCommand);
+    Q_UNUSED(pArguments);
+
+    // We don't handle this interface...
+
+    pRes = 0;
+}
+
+//==============================================================================
+// GUI interface
+//==============================================================================
+
+void RawCellMLViewPlugin::changeEvent(QEvent *pEvent)
+{
+    Q_UNUSED(pEvent);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void RawCellMLViewPlugin::updateGui(Plugin *pViewPlugin,
+                                    const QString &pFileName)
+{
+    Q_UNUSED(pViewPlugin);
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void RawCellMLViewPlugin::initializeView()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void RawCellMLViewPlugin::finalizeView()
+{
+    // We don't handle this interface...
 }
 
 //==============================================================================
@@ -142,6 +230,86 @@ QString RawCellMLViewPlugin::viewName() const
     // Return our raw CellML view's name
 
     return tr("Raw CellML");
+}
+
+//==============================================================================
+
+QIcon RawCellMLViewPlugin::fileTabIcon(const QString &pFileName) const
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return QIcon();
+}
+
+//==============================================================================
+
+bool RawCellMLViewPlugin::saveFile(const QString &pOldFileName,
+                                   const QString &pNewFileName)
+{
+    Q_UNUSED(pOldFileName);
+    Q_UNUSED(pNewFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
+void RawCellMLViewPlugin::fileOpened(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void RawCellMLViewPlugin::fileSaved(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void RawCellMLViewPlugin::fileRenamed(const QString &pOldFileName,
+                                      const QString &pNewFileName)
+{
+    Q_UNUSED(pOldFileName);
+    Q_UNUSED(pNewFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void RawCellMLViewPlugin::fileClosed(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+bool RawCellMLViewPlugin::canClose()
+{
+    // We don't handle this interface...
+
+    return true;
+}
+
+//==============================================================================
+// I18n interface
+//==============================================================================
+
+void RawCellMLViewPlugin::retranslateUi()
+{
+    // We don't handle this interface...
 }
 
 //==============================================================================

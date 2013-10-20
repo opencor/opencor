@@ -195,29 +195,9 @@ public:
     explicit GuiInterface();
     ~GuiInterface();
 
-    virtual void changeEvent(QEvent *pEvent);
-
-    virtual void updateGui(Plugin *pViewPlugin, const QString &pFileName);
-
-    virtual void initializeView();
-    virtual void finalizeView();
-
-    virtual QWidget * viewWidget(const QString &pFileName);
-    virtual QWidget * removeViewWidget(const QString &pFileName);
-    virtual QString viewName() const;
-
-    virtual QIcon fileTabIcon(const QString &pFileName) const;
-
-    virtual bool saveFile(const QString &pOldFileName,
-                          const QString &pNewFileName);
-
-    virtual void fileOpened(const QString &pFileName);
-    virtual void fileSaved(const QString &pFileName);
-    virtual void fileRenamed(const QString &pOldFileName,
-                             const QString &pNewFileName);
-    virtual void fileClosed(const QString &pFileName);
-
-    virtual bool canClose();
+#define INTERFACE_DEFINITION
+    #include "guiinterface.inl"
+#undef INTERFACE_DEFINITION
 
     GuiSettings * guiSettings() const;
 

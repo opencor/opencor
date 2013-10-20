@@ -69,10 +69,38 @@ RawViewPlugin::~RawViewPlugin()
 }
 
 //==============================================================================
+// GUI interface
+//==============================================================================
 
-void RawViewPlugin::retranslateUi()
+void RawViewPlugin::changeEvent(QEvent *pEvent)
 {
-    // Nothing to retranslate as such...
+    Q_UNUSED(pEvent);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void RawViewPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
+{
+    Q_UNUSED(pViewPlugin);
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void RawViewPlugin::initializeView()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void RawViewPlugin::finalizeView()
+{
+    // We don't handle this interface...
 }
 
 //==============================================================================
@@ -126,6 +154,86 @@ QString RawViewPlugin::viewName() const
     // Return our raw view's name
 
     return tr("Raw");
+}
+
+//==============================================================================
+
+QIcon RawViewPlugin::fileTabIcon(const QString &pFileName) const
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return QIcon();
+}
+
+//==============================================================================
+
+bool RawViewPlugin::saveFile(const QString &pOldFileName,
+                             const QString &pNewFileName)
+{
+    Q_UNUSED(pOldFileName);
+    Q_UNUSED(pNewFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
+void RawViewPlugin::fileOpened(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void RawViewPlugin::fileSaved(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void RawViewPlugin::fileRenamed(const QString &pOldFileName,
+                                const QString &pNewFileName)
+{
+    Q_UNUSED(pOldFileName);
+    Q_UNUSED(pNewFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void RawViewPlugin::fileClosed(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+bool RawViewPlugin::canClose()
+{
+    // We don't handle this interface...
+
+    return true;
+}
+
+//==============================================================================
+// I18n interface
+//==============================================================================
+
+void RawViewPlugin::retranslateUi()
+{
+    // We don't handle this interface...
 }
 
 //==============================================================================

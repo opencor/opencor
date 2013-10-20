@@ -4,7 +4,6 @@ PROJECT(CoreCellMLEditingPlugin)
 
 ADD_PLUGIN(CoreCellMLEditing
     SOURCES
-        ../../coreinterface.cpp
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp

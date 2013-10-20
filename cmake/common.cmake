@@ -564,7 +564,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 ADD_EXECUTABLE(${TEST_NAME}
                     ../../../../test/testutils.cpp
 
-                    ../../coreinterface.cpp
                     ../../plugin.cpp
                     ../../plugininfo.cpp
                     ../../pluginmanager.cpp

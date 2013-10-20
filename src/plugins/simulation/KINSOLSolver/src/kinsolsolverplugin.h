@@ -47,13 +47,7 @@ class KINSOLSolverPlugin : public QObject, public SolverInterface
     Q_INTERFACES(OpenCOR::SolverInterface)
 
 public:
-    // Solver interface
-
-    virtual void * instance() const;
-
-    virtual Solver::Type type() const;
-    virtual QString name() const;
-    virtual Solver::Properties properties() const;
+#include "solverinterface.inl"
 };
 
 //==============================================================================

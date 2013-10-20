@@ -60,26 +60,9 @@ class CorePlugin : public QObject, public CoreInterface, public GuiInterface,
     Q_INTERFACES(OpenCOR::I18nInterface)
 
 public:
-    virtual void initialize();
-
-    virtual void initializationsDone(const Plugins &pLoadedPlugins);
-
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
-
-    virtual void loadingOfSettingsDone(const Plugins &pLoadedPlugins);
-
-    virtual void handleArguments(const QStringList &pArguments);
-
-    virtual void changeEvent(QEvent *pEvent);
-
-    virtual void retranslateUi();
-
-    virtual void fileOpened(const QString &pFileName);
-    virtual void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
-    virtual void fileClosed(const QString &pFileName);
-
-    virtual bool canClose();
+#include "coreinterface.inl"
+#include "guiinterface.inl"
+#include "i18ninterface.inl"
 
 private:
     CentralWidget *mCentralWidget;

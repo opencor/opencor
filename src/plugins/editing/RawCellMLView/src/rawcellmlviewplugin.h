@@ -58,16 +58,9 @@ class RawCellMLViewPlugin : public QObject, public CoreInterface,
 public:
     explicit RawCellMLViewPlugin();
 
-    virtual void retranslateUi();
-
-    virtual void initialize();
-
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
-
-    virtual QWidget * viewWidget(const QString &pFileName);
-    virtual QWidget * removeViewWidget(const QString &pFileName);
-    virtual QString viewName() const;
+#include "coreinterface.inl"
+#include "guiinterface.inl"
+#include "i18ninterface.inl"
 
 private:
     RawCellmlViewWidget *mViewWidget;

@@ -9,7 +9,6 @@ RETRIEVE_LLVM_SETTINGS()
 
 ADD_PLUGIN(CellMLTools
     SOURCES
-        ../../coreinterface.cpp
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../fileinterface.cpp

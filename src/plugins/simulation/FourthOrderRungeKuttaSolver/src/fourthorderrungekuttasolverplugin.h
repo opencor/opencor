@@ -51,17 +51,8 @@ class FourthOrderRungeKuttaSolverPlugin : public QObject,
     Q_INTERFACES(OpenCOR::SolverInterface)
 
 public:
-    // I18n interface
-
-    virtual void retranslateUi();
-
-    // Solver interface
-
-    virtual void * instance() const;
-
-    virtual Solver::Type type() const;
-    virtual QString name() const;
-    virtual Solver::Properties properties() const;
+#include "i18ninterface.inl"
+#include "solverinterface.inl"
 };
 
 //==============================================================================

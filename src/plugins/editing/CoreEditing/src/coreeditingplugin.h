@@ -59,9 +59,11 @@ class COREEDITING_EXPORT CoreEditingPlugin : public QObject,
     Q_INTERFACES(OpenCOR::I18nInterface)
 
 public:
-    virtual void initialize();
+#include "coreinterface.inl"
+#include "guiinterface.inl"
+#include "i18ninterface.inl"
 
-    virtual void retranslateUi();
+    // Plugin specific
 
     void setEditMenuVisible(const bool &pVisible);
 

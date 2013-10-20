@@ -19,7 +19,6 @@ ADD_PLUGIN(Core
         ../../../3rdparty/QtSingleApplication/src/qtlockedfile_${PLATFORM}.cpp
         ../../../3rdparty/QtSingleApplication/src/qtsingleapplication.cpp
 
-        ../../coreinterface.cpp
         ../../fileinterface.cpp
         ../../guiinterface.cpp
         ../../i18ninterface.cpp

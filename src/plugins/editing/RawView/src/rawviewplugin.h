@@ -56,11 +56,8 @@ public:
     explicit RawViewPlugin();
     ~RawViewPlugin();
 
-    virtual void retranslateUi();
-
-    virtual QWidget * viewWidget(const QString &pFileName);
-    virtual QWidget * removeViewWidget(const QString &pFileName);
-    virtual QString viewName() const;
+#include "guiinterface.inl"
+#include "i18ninterface.inl"
 
 private:
     QMap<QString, RawViewWidget *> mViewWidgets;

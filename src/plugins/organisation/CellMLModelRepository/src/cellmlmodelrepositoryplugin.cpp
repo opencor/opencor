@@ -49,6 +49,8 @@ PLUGININFO_FUNC CellMLModelRepositoryPluginInfo()
 }
 
 //==============================================================================
+// Core interface
+//==============================================================================
 
 void CellMLModelRepositoryPlugin::initialize()
 {
@@ -70,6 +72,22 @@ void CellMLModelRepositoryPlugin::initialize()
 
 //==============================================================================
 
+void CellMLModelRepositoryPlugin::finalize()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLModelRepositoryPlugin::initializationsDone(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
 void CellMLModelRepositoryPlugin::loadSettings(QSettings *pSettings)
 {
     // Retrieve our CellML Model Repository window settings
@@ -86,6 +104,185 @@ void CellMLModelRepositoryPlugin::saveSettings(QSettings *pSettings) const
     saveWindowSettings(pSettings, mCellmlModelRepositoryWindow);
 }
 
+//==============================================================================
+
+void CellMLModelRepositoryPlugin::loadingOfSettingsDone(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLModelRepositoryPlugin::handleArguments(const QStringList &pArguments)
+{
+    Q_UNUSED(pArguments);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLModelRepositoryPlugin::handleAction(const QUrl &pUrl)
+{
+    Q_UNUSED(pUrl);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLModelRepositoryPlugin::runCliCommand(const QString &pCommand,
+                                                const QStringList &pArguments,
+                                                int *pRes)
+{
+    Q_UNUSED(pCommand);
+    Q_UNUSED(pArguments);
+
+    // We don't handle this interface...
+
+    pRes = 0;
+}
+
+//==============================================================================
+
+void CellMLModelRepositoryPlugin::changeEvent(QEvent *pEvent)
+{
+    Q_UNUSED(pEvent);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLModelRepositoryPlugin::updateGui(Plugin *pViewPlugin,
+                                            const QString &pFileName)
+{
+    Q_UNUSED(pViewPlugin);
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLModelRepositoryPlugin::initializeView()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLModelRepositoryPlugin::finalizeView()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+QWidget * CellMLModelRepositoryPlugin::viewWidget(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return 0;
+}
+
+//==============================================================================
+
+QWidget * CellMLModelRepositoryPlugin::removeViewWidget(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return 0;
+}
+
+//==============================================================================
+
+QString CellMLModelRepositoryPlugin::viewName() const
+{
+    // We don't handle this interface...
+
+    return QString();
+}
+
+//==============================================================================
+
+QIcon CellMLModelRepositoryPlugin::fileTabIcon(const QString &pFileName) const
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return QIcon();
+}
+
+//==============================================================================
+
+bool CellMLModelRepositoryPlugin::saveFile(const QString &pOldFileName,
+                                           const QString &pNewFileName)
+{
+    Q_UNUSED(pOldFileName);
+    Q_UNUSED(pNewFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
+void CellMLModelRepositoryPlugin::fileOpened(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLModelRepositoryPlugin::fileSaved(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLModelRepositoryPlugin::fileRenamed(const QString &pOldFileName,
+                                              const QString &pNewFileName)
+{
+    Q_UNUSED(pOldFileName);
+    Q_UNUSED(pNewFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLModelRepositoryPlugin::fileClosed(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+bool CellMLModelRepositoryPlugin::canClose()
+{
+    // We don't handle this interface...
+
+    return true;
+}
+
+//==============================================================================
+// I18n interface
 //==============================================================================
 
 void CellMLModelRepositoryPlugin::retranslateUi()
