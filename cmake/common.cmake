@@ -543,9 +543,13 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 ADD_EXECUTABLE(${TEST_NAME}
                     ../../../../tests/testsutils.cpp
 
+                    ../../fileinterface.cpp
+                    ../../guiinterface.cpp
+                    ../../i18ninterface.cpp
                     ../../plugin.cpp
                     ../../plugininfo.cpp
                     ../../pluginmanager.cpp
+                    ../../solverinterface.cpp
 
                     ${TEST_SOURCE_FILE}
                     ${TEST_SOURCES_MOC}
