@@ -139,7 +139,7 @@ mGui->actionPreferences->setVisible(false);
     //       key (since it's next to it, but it doesn't work either), so in the
     //       we add the Meta key...
 
-#ifdef Q_OS_MAC
+#if defined(Q_OS_MAC)
     mGui->actionDockedWidgets->setShortcut(QKeySequence(Qt::CTRL|Qt::META|Qt::Key_Space));
 #else
     mGui->actionDockedWidgets->setShortcut(QKeySequence(Qt::CTRL|Qt::Key_Space));
