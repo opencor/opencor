@@ -32,6 +32,10 @@ namespace OpenCOR {
 
 //==============================================================================
 
+QStringList fileContents(const QString &pFileName);
+
+QStringList runCli(const QStringList pArguments);
+
 void loadPlugin(const QString &pPluginName);
 
 //==============================================================================

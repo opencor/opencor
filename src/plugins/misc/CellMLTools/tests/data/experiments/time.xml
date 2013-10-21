@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<model xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:xlink="http://www.w3.org/1999/xlink" name="time">
+  <import xlink:href="../components/units.xml">
+    <units name="ms" units_ref="ms"/>
+  </import>
+  <component name="time">
+    <variable name="time" initial_value="0.0" public_interface="out" units="ms"/>
+  </component>
+</model>

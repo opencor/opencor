@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<model xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:xlink="http://www.w3.org/1999/xlink" name="INa_gating_rates">
+  
+  <import xlink:href="units.xml">
+    <units name="ms" units_ref="ms"/>
+    <units name="mV" units_ref="mV"/>
+    <units name="per_ms" units_ref="per_ms"/>
+    <units name="per_ms_mV" units_ref="per_ms_mV"/>
+  </import>
+  <component name="alpha_m">
+    <variable name="alpha" public_interface="out" private_interface="out" units="per_ms"/>
+    <variable name="V" public_interface="in" private_interface="out" units="mV"/>
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply id="alpha_m_calculation"><eq/>
+        <ci>alpha</ci>
+        <apply><divide/>
+          <apply><times/>
+            <cn cellml:units="per_ms_mV">0.1</cn>
+            <apply><plus/>
+              <ci>V</ci>
+              <cn cellml:units="mV">25.0</cn>
+            </apply>
+          </apply>
+          <apply><minus/>
+            <apply><exp/>
+              <apply><divide/>
+                <apply><plus/>
+                  <ci>V</ci>
+                  <cn cellml:units="mV">25.0</cn>
+                </apply>
+                <cn cellml:units="mV">10.0</cn>
+              </apply>
+            </apply>
+            <cn cellml:units="dimensionless">1.0</cn>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+  </component>
+  <component name="beta_m">
+    <variable name="beta" public_interface="out" private_interface="out" units="per_ms"/>
+    <variable name="V" public_interface="in" private_interface="out" units="mV"/>
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply id="beta_m_calculation"><eq/>
+        <ci>beta</ci>
+        <apply><times/>
+          <cn cellml:units="per_ms">4.0</cn>
+          <apply><exp/>
+            <apply><divide/>
+              <ci>V</ci>
+              <cn cellml:units="mV">18.0</cn>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+  </component>
+  <component name="alpha_h">
+    <variable name="alpha" public_interface="out" private_interface="out" units="per_ms"/>
+    <variable name="V" public_interface="in" private_interface="out" units="mV"/>
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply id="alpha_h_calculation"><eq/>
+        <ci>alpha</ci>
+        <apply><times/>
+          <cn cellml:units="per_ms">0.07</cn>
+          <apply><exp/>
+            <apply><divide/>
+              <ci>V</ci>
+              <cn cellml:units="mV">20.0</cn>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+  </component>
+  <component name="beta_h">
+    <variable name="beta" public_interface="out" private_interface="out" units="per_ms"/>
+    <variable name="V" public_interface="in" private_interface="out" units="mV"/>
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply id="beta_h_calculation"><eq/>
+        <ci>beta</ci>
+        <apply><divide/>
+          <cn cellml:units="per_ms">1.0</cn>
+          <apply><plus/>
+            <apply><exp/>
+              <apply><divide/>
+                <apply><plus/>
+                  <ci>V</ci>
+                  <cn cellml:units="mV">30.0</cn>
+                </apply>
+                <cn cellml:units="mV">10.0</cn>
+              </apply>
+            </apply>
+            <cn cellml:units="dimensionless">1.0</cn>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+  </component>
+</model>

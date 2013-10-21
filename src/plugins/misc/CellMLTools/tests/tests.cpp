@@ -23,7 +23,43 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "../../../../tests/testsutils.h"
+
+//==============================================================================
+
 #include <QtTest/QtTest>
+
+//==============================================================================
+
+void Tests::cliHelpTest()
+{
+    // Ask for the plugin's help
+
+    QStringList a = OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::help");
+    QStringList b = OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/cliHelpTest.out");
+
+    QCOMPARE(a, b);
+}
+
+//==============================================================================
+
+void Tests::cliCellmlExportTest()
+{
+    // Export a CellML 1.1 file to CellML 1.0
+
+    QString inFileName = QFileInfo("../src/plugins/misc/CellMLTools/tests/data/experiments/periodic-stimulus.xml").absoluteFilePath();
+    QString outFileName = "actual.out";
+
+    QStringList a = OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileName << outFileName << "cellml_1_0");
+    QStringList b = QStringList() << QString();
+
+    QCOMPARE(a, b);
+
+    a = OpenCOR::fileContents(outFileName);
+    b = OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/cliCellmlExportTest.out");
+
+    QCOMPARE(a, b);
+}
 
 //==============================================================================
 

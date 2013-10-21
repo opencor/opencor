@@ -32,8 +32,59 @@ namespace OpenCOR {
 
 //==============================================================================
 
+QStringList fileContents(const QString &pFileName)
+{
+    // Read and return the contents of the given file
+
+    QFile file(pFileName);
+    QString contents = QString();
+
+    if (file.open(QIODevice::ReadOnly|QIODevice::Text)) {
+        contents = QTextStream(&file).readAll();
+
+        file.close();
+    }
+
+    return contents.replace("\r", "").split("\n");
+}
+
+//==============================================================================
+
+QStringList runCli(const QStringList pArguments)
+{
+    // Execute the CLI version of OpenCOR (passing to it the given arguments)
+    // and return the output it has generated, if any
+
+#if defined(Q_OS_WIN)
+    QString program = "bin/OpenCOR.com";
+#elif defined(Q_OS_LINUX)
+    QString program = "bin/OpenCOR";
+#elif defined(Q_OS_MAC)
+    QString program = "OpenCOR.app/Contents/MacOS/OpenCOR";
+#else
+    #error Unsupported platform
+#endif
+
+    QProcess process;
+
+    process.setProcessChannelMode(QProcess::MergedChannels);
+
+    process.start(program, pArguments);
+
+    QString output = QString();
+
+    while (process.waitForReadyRead())
+        output += process.readAll();
+
+    return output.replace("\r", "").split("\n");
+}
+
+//==============================================================================
+
 void loadPlugin(const QString &pPluginName)
 {
+    // Load the given plugin
+
     QStringList plugins = QStringList() << Plugin::requiredPlugins(".", pPluginName)
                                         << pPluginName;
 

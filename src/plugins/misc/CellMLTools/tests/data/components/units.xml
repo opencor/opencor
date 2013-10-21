@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<model xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" name="units">
+  <units name="ms">
+    <unit units="second" prefix="milli"/>
+  </units>
+  <units name="per_ms">
+    <unit units="ms" exponent="-1"/>
+  </units>
+  <units name="per_ms_mV">
+    <unit units="ms" exponent="-1"/>
+    <unit units="mV" exponent="-1"/>
+  </units>
+  <units name="mV">
+    <unit units="volt" prefix="milli"/>
+  </units>
+  <units name="mV_per_ms">
+    <unit units="mV"/>
+    <unit units="ms" exponent="-1"/>
+  </units>
+  <units name="cm">
+    <unit units="metre" prefix="centi"/>
+  </units>
+  <units name="uA">
+    <unit units="ampere" prefix="micro"/>
+  </units>
+  <units name="uA_per_cmsq">
+    <unit units="uA"/>
+    <unit units="cm" exponent="-2"/>
+  </units>
+  <units name="mS">
+    <unit units="siemens" prefix="milli"/>
+  </units>
+  <units name="mS_per_cmsq">
+    <unit units="mS"/>
+    <unit units="cm" exponent="-2"/>
+  </units>
+  <units name="uF">
+    <unit units="farad" prefix="micro"/>
+  </units>
+  <units name="uF_per_cmsq">
+    <unit units="uF"/>
+    <unit units="cm" exponent="-2"/>
+  </units>
+</model>

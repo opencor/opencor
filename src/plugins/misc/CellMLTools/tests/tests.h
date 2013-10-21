@@ -31,6 +31,10 @@ specific language governing permissions and limitations under the License.
 class Tests : public QObject
 {
     Q_OBJECT
+
+private Q_SLOTS:
+    void cliHelpTest();
+    void cliCellmlExportTest();
 };
 
 //==============================================================================

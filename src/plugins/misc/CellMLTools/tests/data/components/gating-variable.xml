@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<model xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:xlink="http://www.w3.org/1999/xlink" name="hh_gating_variable">
+  
+  <import xlink:href="units.xml">
+    <units name="ms" units_ref="ms"/>
+    <units name="per_ms" units_ref="per_ms"/>
+  </import>
+  <component name="hh_gating_variable">
+    <variable name="time" public_interface="in" private_interface="out" units="ms"/>
+    <variable name="X" initial_value="X_initial" public_interface="out" private_interface="out" units="dimensionless"/>
+    <variable name="X_initial" public_interface="in" private_interface="out" units="dimensionless"/>
+    <variable name="alpha_X" public_interface="in" private_interface="out" units="per_ms"/>
+    <variable name="beta_X" public_interface="in" private_interface="out" units="per_ms"/>
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply><eq/>
+        <apply><diff/>
+          <bvar><ci>time</ci></bvar>
+          <ci>X</ci>
+        </apply>
+        <apply><minus/>
+          <apply><times/>
+            <ci>alpha_X</ci>
+            <apply><minus/>
+              <cn cellml:units="dimensionless">1.0</cn>
+              <ci>X</ci>
+            </apply>
+          </apply>
+          <apply><times/>
+            <ci>beta_X</ci>
+            <ci>X</ci>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+  </component>
+</model>

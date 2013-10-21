@@ -1,0 +1,270 @@
+<?xml version="1.0"?>
+<model xmlns="http://www.cellml.org/cellml/1.0#" name="periodic_stimulus"><units name="ms"><unit prefix="milli" units="second"/></units><units name="per_ms"><unit exponent="-1" units="ms"/></units><units name="per_ms_mV"><unit exponent="-1" units="ms"/><unit exponent="-1" units="mV"/></units><units name="mV"><unit prefix="milli" units="volt"/></units><units name="mV_per_ms"><unit units="mV"/><unit exponent="-1" units="ms"/></units><units name="cm"><unit prefix="centi" units="metre"/></units><units name="uA"><unit prefix="micro" units="ampere"/></units><units name="uA_per_cmsq"><unit units="uA"/><unit exponent="-2" units="cm"/></units><units name="mS"><unit prefix="milli" units="siemens"/></units><units name="mS_per_cmsq"><unit units="mS"/><unit exponent="-2" units="cm"/></units><units name="uF"><unit prefix="micro" units="farad"/></units><units name="uF_per_cmsq"><unit units="uF"/><unit exponent="-2" units="cm"/></units><component name="stimulus_protocol_params"><variable initial_value="50" name="stimPeriod" public_interface="out" units="ms"/><variable initial_value="0.5" name="stimDuration" public_interface="out" units="ms"/><variable initial_value="-10.0" name="stimCurrent" public_interface="out" units="uA_per_cmsq"/></component><component name="parameters"/><component name="initial_conditions"/><component name="outputs"><variable name="time" public_interface="in" units="ms"/><variable name="INa" public_interface="in" units="uA_per_cmsq"/><variable name="IK" public_interface="in" units="uA_per_cmsq"/><variable name="Ileak" public_interface="in" units="uA_per_cmsq"/><variable name="V" public_interface="in" units="mV"/><variable name="minus_V" public_interface="in" units="mV"/><variable name="h" public_interface="in" units="dimensionless"/><variable name="m" public_interface="in" units="dimensionless"/><variable name="n" public_interface="in" units="dimensionless"/></component><component name="model"><variable name="V_initial" private_interface="out" public_interface="in" units="mV"/><variable name="n_initial" private_interface="out" public_interface="in" units="dimensionless"/><variable name="m_initial" private_interface="out" public_interface="in" units="dimensionless"/><variable name="h_initial" private_interface="out" public_interface="in" units="dimensionless"/><variable name="Istim" private_interface="out" public_interface="in" units="uA_per_cmsq"/><variable name="INa" private_interface="in" public_interface="out" units="uA_per_cmsq"/><variable name="IK" private_interface="in" public_interface="out" units="uA_per_cmsq"/><variable name="Ileak" private_interface="in" public_interface="out" units="uA_per_cmsq"/><variable name="h" private_interface="in" public_interface="out" units="dimensionless"/><variable name="m" private_interface="in" public_interface="out" units="dimensionless"/><variable name="n" private_interface="in" public_interface="out" units="dimensionless"/><variable initial_value="0.0" name="V" private_interface="out" public_interface="out" units="mV"/><variable name="minus_V" private_interface="out" public_interface="out" units="mV"/><variable name="VNa" private_interface="out" public_interface="in" units="mV"/><variable name="VK" private_interface="out" public_interface="in" units="mV"/><variable name="Vleak" private_interface="out" public_interface="in" units="mV"/><variable name="gNa_max" private_interface="out" public_interface="in" units="mS_per_cmsq"/><variable name="gK_max" private_interface="out" public_interface="in" units="mS_per_cmsq"/><variable name="gleak_max" private_interface="out" public_interface="in" units="mS_per_cmsq"/><variable name="Cm" private_interface="out" public_interface="in" units="uF_per_cmsq"/><variable name="time" private_interface="out" public_interface="in" units="ms"/><math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply cellml:id="V_calculation"><eq/>
+        <apply><diff/>
+          <bvar><ci>time</ci></bvar>
+          <ci>V</ci>
+        </apply>
+        <apply><divide/>
+          <apply><minus/>
+            <ci>Istim</ci>
+            <apply><plus/>
+              <ci>INa</ci>
+              <ci>IK</ci>
+              <ci>Ileak</ci>
+            </apply>
+          </apply>
+          <ci>Cm</ci>
+        </apply>
+      </apply>
+    </math><math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply cellml:id="minus_V_calculation"><eq/>
+        <ci>minus_V</ci>
+        <apply><minus/>
+          <ci>V</ci>
+        </apply>
+      </apply>
+    </math></component><component name="stimulus_protocol"><variable name="IStim" public_interface="out" units="uA_per_cmsq"/><variable name="time" public_interface="in" units="ms"/><variable name="stimPeriod" public_interface="in" units="ms"/><variable name="stimDuration" public_interface="in" units="ms"/><variable name="stimCurrent" public_interface="in" units="uA_per_cmsq"/><math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply cellml:id="stimulus_calculation"><eq/>
+        <ci>IStim</ci>
+        <piecewise>
+          <piece>
+            <ci>stimCurrent</ci>
+            <apply><lt/>
+              <apply><rem/>
+                <ci>time</ci>
+                <ci>stimPeriod</ci>
+              </apply>
+              <ci>stimDuration</ci>
+            </apply>
+          </piece>
+          <otherwise>
+            <cn cellml:units="uA_per_cmsq">0.0</cn>
+          </otherwise>
+        </piecewise>
+      </apply>
+    </math></component><component name="time"><variable initial_value="0.0" name="time" public_interface="out" units="ms"/></component><component name="default_parameters"><variable initial_value="12.0" name="VK" private_interface="out" public_interface="out" units="mV"/><variable initial_value="-115.0" name="VNa" private_interface="out" public_interface="out" units="mV"/><variable initial_value="-10.613" name="Vleak" private_interface="out" public_interface="out" units="mV"/><variable initial_value="36.0" name="gK_max" private_interface="out" public_interface="out" units="mS_per_cmsq"/><variable initial_value="120.0" name="gNa_max" private_interface="out" public_interface="out" units="mS_per_cmsq"/><variable initial_value="0.3" name="gleak_max" private_interface="out" public_interface="out" units="mS_per_cmsq"/><variable initial_value="1.0" name="Cm" private_interface="out" public_interface="out" units="uF_per_cmsq"/></component><component name="default_initial_conditions"><variable initial_value="0.0" name="V_initial" private_interface="out" public_interface="out" units="mV"/><variable initial_value="0.315" name="n_initial" private_interface="out" public_interface="out" units="dimensionless"/><variable initial_value="0.042" name="m_initial" private_interface="out" public_interface="out" units="dimensionless"/><variable initial_value="0.608" name="h_initial" private_interface="out" public_interface="out" units="dimensionless"/></component><component name="INa"><variable name="INa" private_interface="out" public_interface="out" units="uA_per_cmsq"/><variable name="m_initial" private_interface="out" public_interface="in" units="dimensionless"/><variable name="m" private_interface="in" public_interface="out" units="dimensionless"/><variable name="h_initial" private_interface="out" public_interface="in" units="dimensionless"/><variable name="h" private_interface="in" public_interface="out" units="dimensionless"/><variable name="time" private_interface="out" public_interface="in" units="ms"/><variable name="V" private_interface="out" public_interface="in" units="mV"/><variable name="VNa" private_interface="out" public_interface="in" units="mV"/><variable name="gNa" private_interface="out" public_interface="out" units="mS_per_cmsq"/><variable name="gNa_max" private_interface="out" public_interface="in" units="mS_per_cmsq"/><math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply cellml:id="INa_calculation"><eq/>
+        <ci>INa</ci>
+        <apply><times/>
+          <ci>gNa</ci>
+          <apply><minus/>
+            <ci>V</ci>
+            <ci>VNa</ci>
+          </apply>
+        </apply>
+      </apply>
+    </math><math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply cellml:id="gNa_calculation"><eq/>
+        <ci>gNa</ci>
+        <apply><times/>
+          <ci>gNa_max</ci>
+          <apply><power/>
+            <ci>m</ci>
+            <cn cellml:units="dimensionless">3.0</cn>
+          </apply>
+          <ci>h</ci>
+        </apply>
+      </apply>
+    </math></component><component name="IK"><variable name="IK" private_interface="out" public_interface="out" units="uA_per_cmsq"/><variable name="n_initial" private_interface="out" public_interface="in" units="dimensionless"/><variable name="n" private_interface="in" public_interface="out" units="dimensionless"/><variable name="time" private_interface="out" public_interface="in" units="ms"/><variable name="V" private_interface="out" public_interface="in" units="mV"/><variable name="VK" private_interface="out" public_interface="in" units="mV"/><variable name="gK" private_interface="out" public_interface="out" units="mS_per_cmsq"/><variable name="gK_max" private_interface="out" public_interface="in" units="mS_per_cmsq"/><math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply cellml:id="IK_calculation"><eq/>
+        <ci>IK</ci>
+        <apply><times/>
+          <ci>gK</ci>
+          <apply><minus/>
+            <ci>V</ci>
+            <ci>VK</ci>
+          </apply>
+        </apply>
+      </apply>
+    </math><math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply cellml:id="gK_calculation"><eq/>
+        <ci>gK</ci>
+        <apply><times/>
+          <ci>gK_max</ci>
+          <apply><power/>
+            <ci>n</ci>
+            <cn cellml:units="dimensionless">4.0</cn>
+          </apply>
+        </apply>
+      </apply>
+    </math></component><component name="Ileak"><variable name="Ileak" private_interface="out" public_interface="out" units="uA_per_cmsq"/><variable name="V" private_interface="out" public_interface="in" units="mV"/><variable name="Vleak" private_interface="out" public_interface="in" units="mV"/><variable name="gleak_max" private_interface="out" public_interface="in" units="mS_per_cmsq"/><math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply cellml:id="Ileak_calculation"><eq/>
+        <ci>Ileak</ci>
+        <apply><times/>
+          <ci>gleak_max</ci>
+          <apply><minus/>
+            <ci>V</ci>
+            <ci>Vleak</ci>
+          </apply>
+        </apply>
+      </apply>
+    </math></component><component name="alpha_m"><variable name="alpha" private_interface="out" public_interface="out" units="per_ms"/><variable name="V" private_interface="out" public_interface="in" units="mV"/><math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply cellml:id="alpha_m_calculation"><eq/>
+        <ci>alpha</ci>
+        <apply><divide/>
+          <apply><times/>
+            <cn cellml:units="per_ms_mV">0.1</cn>
+            <apply><plus/>
+              <ci>V</ci>
+              <cn cellml:units="mV">25.0</cn>
+            </apply>
+          </apply>
+          <apply><minus/>
+            <apply><exp/>
+              <apply><divide/>
+                <apply><plus/>
+                  <ci>V</ci>
+                  <cn cellml:units="mV">25.0</cn>
+                </apply>
+                <cn cellml:units="mV">10.0</cn>
+              </apply>
+            </apply>
+            <cn cellml:units="dimensionless">1.0</cn>
+          </apply>
+        </apply>
+      </apply>
+    </math></component><component name="beta_m"><variable name="beta" private_interface="out" public_interface="out" units="per_ms"/><variable name="V" private_interface="out" public_interface="in" units="mV"/><math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply cellml:id="beta_m_calculation"><eq/>
+        <ci>beta</ci>
+        <apply><times/>
+          <cn cellml:units="per_ms">4.0</cn>
+          <apply><exp/>
+            <apply><divide/>
+              <ci>V</ci>
+              <cn cellml:units="mV">18.0</cn>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+    </math></component><component name="alpha_h"><variable name="alpha" private_interface="out" public_interface="out" units="per_ms"/><variable name="V" private_interface="out" public_interface="in" units="mV"/><math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply cellml:id="alpha_h_calculation"><eq/>
+        <ci>alpha</ci>
+        <apply><times/>
+          <cn cellml:units="per_ms">0.07</cn>
+          <apply><exp/>
+            <apply><divide/>
+              <ci>V</ci>
+              <cn cellml:units="mV">20.0</cn>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+    </math></component><component name="beta_h"><variable name="beta" private_interface="out" public_interface="out" units="per_ms"/><variable name="V" private_interface="out" public_interface="in" units="mV"/><math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply cellml:id="beta_h_calculation"><eq/>
+        <ci>beta</ci>
+        <apply><divide/>
+          <cn cellml:units="per_ms">1.0</cn>
+          <apply><plus/>
+            <apply><exp/>
+              <apply><divide/>
+                <apply><plus/>
+                  <ci>V</ci>
+                  <cn cellml:units="mV">30.0</cn>
+                </apply>
+                <cn cellml:units="mV">10.0</cn>
+              </apply>
+            </apply>
+            <cn cellml:units="dimensionless">1.0</cn>
+          </apply>
+        </apply>
+      </apply>
+    </math></component><component name="m_gate"><variable name="time" private_interface="out" public_interface="in" units="ms"/><variable initial_value="0.042" name="X" private_interface="out" public_interface="out" units="dimensionless"/><variable name="X_initial" private_interface="out" public_interface="in" units="dimensionless"/><variable name="alpha_X" private_interface="out" public_interface="in" units="per_ms"/><variable name="beta_X" private_interface="out" public_interface="in" units="per_ms"/><math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply><eq/>
+        <apply><diff/>
+          <bvar><ci>time</ci></bvar>
+          <ci>X</ci>
+        </apply>
+        <apply><minus/>
+          <apply><times/>
+            <ci>alpha_X</ci>
+            <apply><minus/>
+              <cn cellml:units="dimensionless">1.0</cn>
+              <ci>X</ci>
+            </apply>
+          </apply>
+          <apply><times/>
+            <ci>beta_X</ci>
+            <ci>X</ci>
+          </apply>
+        </apply>
+      </apply>
+    </math></component><component name="h_gate"><variable name="time" private_interface="out" public_interface="in" units="ms"/><variable initial_value="0.608" name="X" private_interface="out" public_interface="out" units="dimensionless"/><variable name="X_initial" private_interface="out" public_interface="in" units="dimensionless"/><variable name="alpha_X" private_interface="out" public_interface="in" units="per_ms"/><variable name="beta_X" private_interface="out" public_interface="in" units="per_ms"/><math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply><eq/>
+        <apply><diff/>
+          <bvar><ci>time</ci></bvar>
+          <ci>X</ci>
+        </apply>
+        <apply><minus/>
+          <apply><times/>
+            <ci>alpha_X</ci>
+            <apply><minus/>
+              <cn cellml:units="dimensionless">1.0</cn>
+              <ci>X</ci>
+            </apply>
+          </apply>
+          <apply><times/>
+            <ci>beta_X</ci>
+            <ci>X</ci>
+          </apply>
+        </apply>
+      </apply>
+    </math></component><component name="alpha_n"><variable name="alpha" private_interface="out" public_interface="out" units="per_ms"/><variable name="V" private_interface="out" public_interface="in" units="mV"/><math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply cellml:id="alpha_n_calculation"><eq/>
+        <ci>alpha</ci>
+        <apply><divide/>
+          <apply><times/>
+            <cn cellml:units="per_ms_mV">0.01</cn>
+            <apply><plus/>
+              <ci>V</ci>
+              <cn cellml:units="mV">10.0</cn>
+            </apply>
+          </apply>
+          <apply><minus/>
+            <apply><exp/>
+              <apply><divide/>
+                <apply><plus/>
+                  <ci>V</ci>
+                  <cn cellml:units="mV">10.0</cn>
+                </apply>
+                <cn cellml:units="mV">10.0</cn>
+              </apply>
+            </apply>
+            <cn cellml:units="dimensionless">1.0</cn>
+          </apply>
+        </apply>
+      </apply>
+    </math></component><component name="beta_n"><variable name="beta" private_interface="out" public_interface="out" units="per_ms"/><variable name="V" private_interface="out" public_interface="in" units="mV"/><math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply cellml:id="beta_n_calculation"><eq/>
+        <ci>beta</ci>
+        <apply><times/>
+          <cn cellml:units="per_ms">0.125</cn>
+          <apply><exp/>
+            <apply><divide/>
+              <ci>V</ci>
+              <cn cellml:units="mV">80.0</cn>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+    </math></component><component name="n_gate"><variable name="time" private_interface="out" public_interface="in" units="ms"/><variable initial_value="0.315" name="X" private_interface="out" public_interface="out" units="dimensionless"/><variable name="X_initial" private_interface="out" public_interface="in" units="dimensionless"/><variable name="alpha_X" private_interface="out" public_interface="in" units="per_ms"/><variable name="beta_X" private_interface="out" public_interface="in" units="per_ms"/><math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/1.0#" cellml:xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply><eq/>
+        <apply><diff/>
+          <bvar><ci>time</ci></bvar>
+          <ci>X</ci>
+        </apply>
+        <apply><minus/>
+          <apply><times/>
+            <ci>alpha_X</ci>
+            <apply><minus/>
+              <cn cellml:units="dimensionless">1.0</cn>
+              <ci>X</ci>
+            </apply>
+          </apply>
+          <apply><times/>
+            <ci>beta_X</ci>
+            <ci>X</ci>
+          </apply>
+        </apply>
+      </apply>
+    </math></component><group><relationship_ref relationship="encapsulation"/><component_ref component="model"><component_ref component="INa"/><component_ref component="IK"/><component_ref component="Ileak"/></component_ref><component_ref component="INa"><component_ref component="alpha_m"/><component_ref component="beta_m"/><component_ref component="alpha_h"/><component_ref component="beta_h"/><component_ref component="m_gate"/><component_ref component="h_gate"/></component_ref><component_ref component="IK"><component_ref component="alpha_n"/><component_ref component="beta_n"/><component_ref component="n_gate"/></component_ref></group><connection><map_components component_1="model" component_2="time"/><map_variables variable_1="time" variable_2="time"/></connection><connection><map_components component_1="time" component_2="stimulus_protocol"/><map_variables variable_1="time" variable_2="time"/></connection><connection><map_components component_1="stimulus_protocol_params" component_2="stimulus_protocol"/><map_variables variable_1="stimPeriod" variable_2="stimPeriod"/><map_variables variable_1="stimDuration" variable_2="stimDuration"/><map_variables variable_1="stimCurrent" variable_2="stimCurrent"/></connection><connection><map_components component_1="model" component_2="stimulus_protocol"/><map_variables variable_1="Istim" variable_2="IStim"/></connection><connection><map_components component_1="model" component_2="default_parameters"/><map_variables variable_1="Cm" variable_2="Cm"/><map_variables variable_1="VNa" variable_2="VNa"/><map_variables variable_1="VK" variable_2="VK"/><map_variables variable_1="Vleak" variable_2="Vleak"/><map_variables variable_1="gNa_max" variable_2="gNa_max"/><map_variables variable_1="gK_max" variable_2="gK_max"/><map_variables variable_1="gleak_max" variable_2="gleak_max"/></connection><connection><map_components component_1="model" component_2="default_initial_conditions"/><map_variables variable_1="V_initial" variable_2="V_initial"/><map_variables variable_1="m_initial" variable_2="m_initial"/><map_variables variable_1="h_initial" variable_2="h_initial"/><map_variables variable_1="n_initial" variable_2="n_initial"/></connection><connection><map_components component_1="outputs" component_2="model"/><map_variables variable_1="INa" variable_2="INa"/><map_variables variable_1="IK" variable_2="IK"/><map_variables variable_1="Ileak" variable_2="Ileak"/><map_variables variable_1="V" variable_2="V"/><map_variables variable_1="minus_V" variable_2="minus_V"/><map_variables variable_1="h" variable_2="h"/><map_variables variable_1="m" variable_2="m"/><map_variables variable_1="n" variable_2="n"/></connection><connection><map_components component_1="outputs" component_2="time"/><map_variables variable_1="time" variable_2="time"/></connection><connection><map_components component_1="model" component_2="INa"/><map_variables variable_1="INa" variable_2="INa"/><map_variables variable_1="h" variable_2="h"/><map_variables variable_1="m" variable_2="m"/><map_variables variable_1="m_initial" variable_2="m_initial"/><map_variables variable_1="h_initial" variable_2="h_initial"/><map_variables variable_1="time" variable_2="time"/><map_variables variable_1="V" variable_2="V"/><map_variables variable_1="VNa" variable_2="VNa"/><map_variables variable_1="gNa_max" variable_2="gNa_max"/></connection><connection><map_components component_1="model" component_2="IK"/><map_variables variable_1="IK" variable_2="IK"/><map_variables variable_1="n" variable_2="n"/><map_variables variable_1="n_initial" variable_2="n_initial"/><map_variables variable_1="time" variable_2="time"/><map_variables variable_1="V" variable_2="V"/><map_variables variable_1="VK" variable_2="VK"/><map_variables variable_1="gK_max" variable_2="gK_max"/></connection><connection><map_components component_1="model" component_2="Ileak"/><map_variables variable_1="Ileak" variable_2="Ileak"/><map_variables variable_1="V" variable_2="V"/><map_variables variable_1="Vleak" variable_2="Vleak"/><map_variables variable_1="gleak_max" variable_2="gleak_max"/></connection><connection><map_components component_1="INa" component_2="m_gate"/><map_variables variable_1="time" variable_2="time"/><map_variables variable_1="m_initial" variable_2="X_initial"/><map_variables variable_1="m" variable_2="X"/></connection><connection><map_components component_1="INa" component_2="h_gate"/><map_variables variable_1="time" variable_2="time"/><map_variables variable_1="h_initial" variable_2="X_initial"/><map_variables variable_1="h" variable_2="X"/></connection><connection><map_components component_1="INa" component_2="alpha_m"/><map_variables variable_1="V" variable_2="V"/></connection><connection><map_components component_1="INa" component_2="beta_m"/><map_variables variable_1="V" variable_2="V"/></connection><connection><map_components component_1="INa" component_2="alpha_h"/><map_variables variable_1="V" variable_2="V"/></connection><connection><map_components component_1="INa" component_2="beta_h"/><map_variables variable_1="V" variable_2="V"/></connection><connection><map_components component_1="m_gate" component_2="alpha_m"/><map_variables variable_1="alpha_X" variable_2="alpha"/></connection><connection><map_components component_1="m_gate" component_2="beta_m"/><map_variables variable_1="beta_X" variable_2="beta"/></connection><connection><map_components component_1="h_gate" component_2="alpha_h"/><map_variables variable_1="alpha_X" variable_2="alpha"/></connection><connection><map_components component_1="h_gate" component_2="beta_h"/><map_variables variable_1="beta_X" variable_2="beta"/></connection><connection><map_components component_1="IK" component_2="n_gate"/><map_variables variable_1="time" variable_2="time"/><map_variables variable_1="n_initial" variable_2="X_initial"/><map_variables variable_1="n" variable_2="X"/></connection><connection><map_components component_1="IK" component_2="alpha_n"/><map_variables variable_1="V" variable_2="V"/></connection><connection><map_components component_1="IK" component_2="beta_n"/><map_variables variable_1="V" variable_2="V"/></connection><connection><map_components component_1="n_gate" component_2="alpha_n"/><map_variables variable_1="alpha_X" variable_2="alpha"/></connection><connection><map_components component_1="n_gate" component_2="beta_n"/><map_variables variable_1="beta_X" variable_2="beta"/></connection></model>
