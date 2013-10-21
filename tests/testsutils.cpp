@@ -69,7 +69,7 @@ QStringList runCli(const QStringList pArguments)
 
     process.setProcessChannelMode(QProcess::MergedChannels);
 
-    process.start(program, pArguments);
+    process.start(program, QStringList() << "-platform" << "offscreen" << pArguments);
 
     QString output = QString();
 
