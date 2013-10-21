@@ -47,7 +47,8 @@ int main(int pArgC, char *pArgV[])
 
     Tests tests;
 
-    tests["Compiler"] = QStringList() << "tests";
+    tests["CellMLTools"] = QStringList() << "tests";
+    tests["Compiler"]    = QStringList() << "tests";
 
     // Run the different tests
 

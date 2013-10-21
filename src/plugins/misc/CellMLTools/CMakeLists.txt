@@ -44,4 +44,6 @@ ADD_PLUGIN(CellMLTools
         QtWidgets
     EXTERNAL_BINARY_DEPENDENCIES
         ${CELLML_API_EXTERNAL_BINARY_DEPENDENCIES}
+    TESTS
+        tests
 )
