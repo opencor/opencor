@@ -42,8 +42,10 @@ PLUGININFO_FUNC CellMLToolsPluginInfo();
 
 //==============================================================================
 
-class CellMLToolsPlugin : public QObject, public CoreInterface,
-                          public GuiInterface, public I18nInterface
+class CELLMLTOOLS_EXPORT CellMLToolsPlugin : public QObject,
+                                             public CoreInterface,
+                                             public GuiInterface,
+                                             public I18nInterface
 {
     Q_OBJECT
 
