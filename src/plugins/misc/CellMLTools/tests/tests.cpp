@@ -31,19 +31,26 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-void Tests::cliHelpTest()
+void Tests::cliHelpTests()
 {
     // Ask for the plugin's help
 
     QStringList a = OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::help");
-    QStringList b = OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/cliHelpTest.out");
+    QStringList b = OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/help.out");
+
+    QCOMPARE(a, b);
+
+    // Try an unknown command, resulting in the help being shown
+
+    a = OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::unknown");
+    b = OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/help.out");
 
     QCOMPARE(a, b);
 }
 
 //==============================================================================
 
-void Tests::cliCellmlExportTest()
+void Tests::cliCellmlExportTests()
 {
     // Export a CellML 1.1 file to CellML 1.0
 
@@ -56,7 +63,21 @@ void Tests::cliCellmlExportTest()
     QCOMPARE(a, b);
 
     a = OpenCOR::fileContents(outFileName);
-    b = OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/cliCellmlExportTest.out");
+    b = OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/cellml_1_0_export.out");
+
+    QCOMPARE(a, b);
+
+    // Try to export a non-existing CellML file to CellML 1.0
+
+    a = OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << "non_existing_file" << outFileName << "cellml_1_0");
+    b = OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/file_not_found.out");
+
+    QCOMPARE(a, b);
+
+    // Try to export an unknown format
+
+    a = OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileName << outFileName << "unknown_format");
+    b = OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/help.out");
 
     QCOMPARE(a, b);
 }
