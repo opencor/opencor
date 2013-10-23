@@ -31,6 +31,7 @@ table.recommended {
     border: 1px solid rgba(118, 146, 60, 0.39);
     border-radius: 13px;
     background: rgba(118, 146, 60, 0.13);
+    display: inline-block;
 }
 
 table.risky {
@@ -38,6 +39,7 @@ table.risky {
     border: 1px solid rgba(227, 108, 9, 0.39);
     border-radius: 13px;
     background: rgba(227, 108, 9, 0.13);
+    display: inline-block;
 }
 
 table.version {
