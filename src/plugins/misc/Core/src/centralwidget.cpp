@@ -228,7 +228,12 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
                 this, SLOT(updateFileTabIcons()));
     }
 
-    // A connection to handle a change in the modified status of a file
+    // A connection to handle an external change in the status of a file
+
+    connect(FileManager::instance(), SIGNAL(fileDeleted(const QString &)),
+            this, SLOT(fileDeleted(const QString &)));
+
+    // A connection to handle an internal change in the status of a file
 
     connect(FileManager::instance(), SIGNAL(fileModified(const QString &, const bool &)),
             this, SLOT(updateModifiedSettings()));
@@ -475,14 +480,16 @@ void CentralWidget::openFile(const QString &pFileName)
 
     // Check whether the file is already opened
 
-    if (activateFile(pFileName))
+    QString nativeFileName = nativeCanonicalFileName(pFileName);
+
+    if (activateFile(nativeFileName))
         // The file is already opened and, if anything, got selected, so...
 
         return;
 
     // Register the file with our file manager
 
-    FileManager::instance()->manage(pFileName);
+    FileManager::instance()->manage(nativeFileName);
 
     // Create a new tab, insert it just after the current tab, set the full name
     // of the file as the tool tip for the new tab, and make the new tab the
@@ -496,7 +503,6 @@ void CentralWidget::openFile(const QString &pFileName)
     //          connections and therefore some events triggering updateGui() to
     //          be called when the tool tip has not yet been assigned, so...
 
-    QString nativeFileName = nativeCanonicalFileName(pFileName);
     QFileInfo fileInfo = nativeFileName;
     int fileTabIndex = mFileTabs->currentIndex()+1;
 
@@ -775,7 +781,7 @@ bool CentralWidget::canCloseFile(const int &pIndex)
 
 //==============================================================================
 
-bool CentralWidget::closeFile(const int &pIndex)
+bool CentralWidget::closeFile(const int &pIndex, const bool &pForceClosing)
 {
     if (mStatus == UpdatingGui)
         // We are updating the GUI, so we can't close the file for now
@@ -785,9 +791,14 @@ bool CentralWidget::closeFile(const int &pIndex)
     // Close the file at the given tab index or the current tab index, if no tab
     // index is provided, and then return the name of the file that was closed,
     // if any
+    // Note: pIndex can take the following values:
+    //        - 0+: the index of the file to close;
+    //        - -1: the current file is to be closed; and
+    //        - -2: same as -1, except that we come here with the intention of
+    //              closing all the files (see closeAllFiles()).
 
-    bool closingAllFiles = pIndex == -1;
-    int realIndex = closingAllFiles?mFileTabs->currentIndex():pIndex;
+    bool closingAllFiles = pIndex == -2;
+    int realIndex = (pIndex < 0)?mFileTabs->currentIndex():pIndex;
 
     if (realIndex != -1) {
         // There is a file currently opened, so first retrieve its file name
@@ -796,7 +807,7 @@ bool CentralWidget::closeFile(const int &pIndex)
 
         // Check whether the file can be closed
 
-        if (!closingAllFiles && !canCloseFile(realIndex))
+        if (!closingAllFiles && !pForceClosing && !canCloseFile(realIndex))
             // The file cannot be closed, so...
 
             return false;
@@ -856,7 +867,7 @@ void CentralWidget::closeAllFiles(const bool &pForceClosing)
 
     // Close all the files
 
-    while (closeFile()) {}
+    while (closeFile(-2, pForceClosing)) {}
 }
 
 //==============================================================================
@@ -866,10 +877,8 @@ bool CentralWidget::activateFile(const QString &pFileName)
     // Go through the different tabs and check whether one of them corresponds
     // to the requested file
 
-    QString nativeFileName = nativeCanonicalFileName(pFileName);
-
-    for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i)
-        if (!mFileNames[i].compare(nativeFileName)) {
+    for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i)
+        if (!mFileNames[i].compare(pFileName)) {
             // We have found the file, so set the current index to that of its
             // tab
 
@@ -1246,6 +1255,33 @@ void CentralWidget::updateNoViewMsg()
         viewName = modeViewName(GuiViewSettings::Analysis);
 
     mNoViewMsg->setMessage(tr("Sorry, but the <strong>%1</strong> view does not support this type of file...").arg(viewName));
+}
+
+//==============================================================================
+
+void CentralWidget::fileDeleted(const QString &pFileName)
+{
+    // The given file doesn't exist anymore, so ask the user whether to close it
+
+    if (QMessageBox::question(mMainWindow, qApp->applicationName(),
+                              tr("<strong>%1</strong> does not exist anymore. Do you want to close it?").arg(pFileName),
+                              QMessageBox::Yes|QMessageBox::No,
+                              QMessageBox::Yes) == QMessageBox::Yes) {
+        // The user wants to close the file
+
+        for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i)
+            if (!mFileNames[i].compare(pFileName)) {
+                // We have found the file to close
+
+                closeFile(i, true);
+
+                break;
+            }
+    } else {
+        // The user wants to keep the file, so consider it as modified
+
+        Core::FileManager::instance()->setModified(pFileName, true);
+    }
 }
 
 //==============================================================================

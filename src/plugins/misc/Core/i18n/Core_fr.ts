@@ -47,6 +47,10 @@
         <source>Several files are being edited, so switching editing views is not possible for now</source>
         <translation>Plusieurs fichiers sont en train d&apos;être édités, donc changer de vues d&apos;édition n&apos;est pas possible pour le moment</translation>
     </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; does not exist anymore. Do you want to close it?</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;existe plus. Voulez-vous le fermer ?</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::Core::CorePlugin</name>

@@ -199,6 +199,8 @@ private Q_SLOTS:
 
     void openFile();
 
+    void fileDeleted(const QString &pFileName);
+
     void updateModifiedSettings();
 
     void saveFile();
@@ -208,7 +210,7 @@ private Q_SLOTS:
     void previousFile();
     void nextFile();
 
-    bool closeFile(const int &pIndex = -1);
+    bool closeFile(const int &pIndex = -1, const bool &pForceClosing = false);
     void closeAllFiles(const bool &pForceClosing = false);
 
     void moveFile(const int &pFromIndex, const int &pToIndex);
