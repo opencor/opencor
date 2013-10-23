@@ -252,14 +252,9 @@ void FileManager::checkFiles()
 
                 break;
             case File::Deleted:
-                // The file has been deleted, so let people know about it, but
-                // only if it is not a new file
-                // Note: indeed, it may be that we originally opened a file,
-                //       that it then got deleted, but the user decided to keep
-                //       the file opened, hence its status changed to new...
+                // The file has been deleted, so let people know about it
 
-                if (!isNew(file->fileName()))
-                    emit fileDeleted(file->fileName());
+                emit fileDeleted(file->fileName());
 
                 break;
             default:

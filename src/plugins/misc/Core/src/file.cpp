@@ -64,26 +64,25 @@ void File::setFileName(const QString &pFileName)
 
 File::Status File::check()
 {
-    // Get the current SHA1 value for the file and compare it to its currently
-    // stored value
+    // Retrieve the SHA-1 value of our file and compare it to its stored value
 
     QString crtSha1 = sha1();
 
-    if (crtSha1.isEmpty()) {
-        // The current SHA1 value is empty, meaning that the file has been
-        // deleted, so update our currently stored value and let the caller know
+    if (!crtSha1.compare(mSha1)) {
+        // The SHA-1 values are the same, so...
+
+        return File::Unchanged;
+    } else if (crtSha1.isEmpty()) {
+        // The SHA-1 value of our file is now empty, which means that our file
+        // has been deleted, so update our stored value and let people know
+        // about it
 
         mSha1 = crtSha1;
 
         return File::Deleted;
-    } else if (!crtSha1.compare(mSha1)) {
-        // The current SHA1 value is the same as our currently stored value,
-        // so...
-
-        return File::Unchanged;
     } else {
-        // The current SHA1 value is different from our currently stored value,
-        // so update the latter and make the caller aware of the change
+        // The SHA-1 value of our file is different from our stored value, so
+        // update it and let people know that our file has changed
 
         mSha1 = crtSha1;
 
@@ -95,10 +94,10 @@ File::Status File::check()
 
 QString File::sha1() const
 {
-    // Compute the SHA1 value for the file, if it still exists
+    // Compute the SHA-1 value for the file, if it still exists
 
     if (QFileInfo(mFileName).exists()) {
-        // The file still exists, so we can go ahead and compute its SHA1 value
+        // The file still exists, so we can go ahead and compute its SHA-1 value
 
         QFile file(mFileName);
 
