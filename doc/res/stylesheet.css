@@ -4,6 +4,20 @@ div.header {
     background: rgb(103, 103, 103);
 }
 
+div.recommended {
+    margin: -1px;
+    border: 1px solid rgba(118, 146, 60, 0.39);
+    border-radius: 13px;
+    background: rgba(118, 146, 60, 0.13);
+}
+
+div.risky {
+    margin: -1px;
+    border: 1px solid rgba(227, 108, 9, 0.39);
+    border-radius: 13px;
+    background: rgba(227, 108, 9, 0.13);
+}
+
 div.section {
     border-bottom: 1px solid rgba(103, 103, 103, 0.39);
     color: rgb(103, 103, 103);
@@ -24,22 +38,6 @@ img.downloads:hover {
     border: 1px solid rgba(103, 103, 103, 0.13);
     border-radius: 13px;
     background: rgba(103, 103, 103, 0.05);
-}
-
-table.recommended {
-    margin: -1px;
-    border: 1px solid rgba(118, 146, 60, 0.39);
-    border-radius: 13px;
-    background: rgba(118, 146, 60, 0.13);
-    display: inline-block;
-}
-
-table.risky {
-    margin: -1px;
-    border: 1px solid rgba(227, 108, 9, 0.39);
-    border-radius: 13px;
-    background: rgba(227, 108, 9, 0.13);
-    display: inline-block;
 }
 
 table.version {

@@ -75,7 +75,7 @@
         $versionDay = $version[3];
         $versionMonth = $version[4];
         $versionYear = $version[5];
-        $versionRecommendedStatus = $version[6];
+        $versionType = $version[6];
         $versionFiles = $version[7];
 
         if ($versionMajor || $versionMinor || $versionPatch) {
@@ -117,16 +117,17 @@
 <?php
         // Output some information about the version files
 
-        $versionClasses = "version";
+        $versionClass = "";
 
-        if ($versionRecommendedStatus == 1)
-            $versionClasses .= " recommended";
-        else if ($versionRecommendedStatus == 2)
-            $versionClasses .= " risky";
+        if ($versionType == 1)
+            $versionClass = "recommended";
+        else if ($versionType == 2)
+            $versionClass = "risky";
 ?>
-        <table class="<?php echo $versionClasses; ?>">
-            <tbody>
-                <tr>
+        <div class="<?php echo $versionClass; ?>">
+            <table class="version">
+                <tbody>
+                    <tr>
 <?php
         // Show n platforms per row
         // Note: for aesthetical reasons (i.e. having top/left separators all
@@ -154,15 +155,15 @@
             if ($platformIndex) {
                 if (sizeof($platformFiles)) {
 ?>
-                                        </ul>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
 <?php
                 }
 ?>
-                    </td>
+                        </td>
 <?php
             }
 
@@ -172,8 +173,8 @@
 
             if ($platformIndex && !$platformLocalIndex) {
 ?>
-                </tr>
-                <tr>
+                    </tr>
+                    <tr>
 <?php
             }
 
@@ -187,7 +188,7 @@
             if ($platformLocalIndex)
                 $platformClasses .= " leftSeparator";
 ?>
-                    <td class="<?php echo $platformClasses; ?>" style="width: <?php echo $platformWidth; ?>">
+                        <td class="<?php echo $platformClasses; ?>" style="width: <?php echo $platformWidth; ?>">
 <?php
             $platformFiles = $versionFiles[$platformIndex];
 
@@ -195,22 +196,22 @@
                 $platformName = $platformFiles[0];
                 $platformSupported = $platformFiles[1];
 ?>
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td class="logo">
-                                        <img src="../res/pics/<?php echo str_replace(" ", "", strtolower($platformName)); ?>.png" width=72 height=72 alt="<?php echo $platformName; ?>">
-                                    </td>
-                                    <td>
-                                        <div class="name">
-                                            <?php echo $platformName."\n"; ?>
-                                        </div>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td class="logo">
+                                            <img src="../res/pics/<?php echo str_replace(" ", "", strtolower($platformName)); ?>.png" width=72 height=72 alt="<?php echo $platformName; ?>">
+                                        </td>
+                                        <td>
+                                            <div class="name">
+                                                <?php echo $platformName."\n"; ?>
+                                            </div>
 
-                                        <div class="supported">
-                                            <?php echo $platformSupported."\n"; ?>
-                                        </div>
+                                            <div class="supported">
+                                                <?php echo $platformSupported."\n"; ?>
+                                            </div>
 
-                                        <ul>
+                                            <ul>
 <?php
                 // List the platform files
 
@@ -245,7 +246,7 @@
 
                     // List the file for download
 ?>
-                                            <li><a href="http://www.opencor.ws/<?php echo $platformFileName; ?>"><?php echo $platformFileType; ?></a><?php echo $platformFileExtraInfo; ?> <span class="fileSize">(<?php echo formattedFileSize($platformFileName); ?>)</span></li>
+                                                <li><a href="http://www.opencor.ws/<?php echo $platformFileName; ?>"><?php echo $platformFileType; ?></a><?php echo $platformFileExtraInfo; ?> <span class="fileSize">(<?php echo formattedFileSize($platformFileName); ?>)</span></li>
 <?php
                     // Go to the next platform file
 
@@ -262,18 +263,19 @@
 
         if (sizeof($platformFiles)) {
 ?>
-                                        </ul>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
 <?php
         }
 ?>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 <?php
         // Go to the next version
 
