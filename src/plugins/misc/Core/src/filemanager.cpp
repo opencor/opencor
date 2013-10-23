@@ -80,6 +80,8 @@ FileManager * FileManager::instance()
 
 FileManager::Status FileManager::manage(const QString &pFileName)
 {
+    // Manage the given file, should it not be already managed
+
     QString nativeFileName = nativeCanonicalFileName(pFileName);
 
     if (QFileInfo(nativeFileName).exists()) {
@@ -108,6 +110,8 @@ FileManager::Status FileManager::manage(const QString &pFileName)
 
 FileManager::Status FileManager::unmanage(const QString &pFileName)
 {
+    // Unmanage the given file, should it be managed
+
     QString nativeFileName = nativeCanonicalFileName(pFileName);
 
     if (QFileInfo(nativeFileName).exists()) {
@@ -139,6 +143,8 @@ FileManager::Status FileManager::unmanage(const QString &pFileName)
 
 File * FileManager::isManaged(const QString &pFileName) const
 {
+    // Return whether the given file is managed
+
     QString nativeFileName = nativeCanonicalFileName(pFileName);
 
     foreach (File *file, mFiles)
@@ -156,7 +162,7 @@ File * FileManager::isManaged(const QString &pFileName) const
 
 bool FileManager::isModified(const QString &pFileName) const
 {
-    // Return whether the file, if it is being managed, has been modified
+    // Return whether the given file, if it is being managed, has been modified
 
     File *file = isManaged(nativeCanonicalFileName(pFileName));
 
@@ -170,7 +176,7 @@ bool FileManager::isModified(const QString &pFileName) const
 
 void FileManager::setModified(const QString &pFileName, const bool &pModified)
 {
-    // Set the modified status of the file, should it be managed
+    // Set the modified status of the given file, should it be managed
 
     QString nativeFileName = nativeCanonicalFileName(pFileName);
 
@@ -179,7 +185,7 @@ void FileManager::setModified(const QString &pFileName, const bool &pModified)
     if (file) {
         // We are dealing with a managed file, so we can check its modified
         // status and update it, if necessary, and then let people know about
-        // the new modified status
+        // its new status
 
         if (pModified == file->isModified())
             return;
@@ -195,7 +201,7 @@ void FileManager::setModified(const QString &pFileName, const bool &pModified)
 FileManager::Status FileManager::rename(const QString &pOldFileName,
                                         const QString &pNewFileName)
 {
-    // Make sure that the file names are different
+    // Make sure that the given file names are different
 
     QString oldNativeFileName = nativeCanonicalFileName(pOldFileName);
     QString newNativeFileName = nativeCanonicalFileName(pNewFileName);
@@ -240,15 +246,20 @@ void FileManager::checkFiles()
     foreach (File *file, mFiles)
         switch (file->check()) {
             case File::Changed:
-                // The file has changed, so...
+                // The file has changed, so let people know about it
 
                 emit fileChanged(file->fileName());
 
                 break;
             case File::Deleted:
-                // The file has been deleted, so...
+                // The file has been deleted, so let people know about it, but
+                // only if it is not a new file
+                // Note: indeed, it may be that we originally opened a file,
+                //       that it then got deleted, but the user decided to keep
+                //       the file opened, hence its status changed to new...
 
-                emit fileDeleted(file->fileName());
+                if (!isNew(file->fileName()))
+                    emit fileDeleted(file->fileName());
 
                 break;
             default:
