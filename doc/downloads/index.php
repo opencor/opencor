@@ -44,21 +44,21 @@
     date_default_timezone_set("Europe/London");
 
     $versions = array(array(0, 1, 2, 29, 5, 2013, 1,
-                            array(array("Windows", "Windows XP and above", array(".exe"), array(".zip")),
-                                  array("Linux", "Ubuntu 12.04 LTS (Precise Pangolin) and above", array(".tar.gz", 32), array(".tar.gz", 64)),
-                                  array("OS X", "OS X 10.8 (Mountain Lion)", array(".dmg"), array(".zip")))),
+                            array(array("Windows", "Windows XP and later", array(".exe"), array(".zip")),
+                                  array("Linux", "Ubuntu 12.04 LTS (Precise Pangolin) and later", array(".tar.gz", 32), array(".tar.gz", 64)),
+                                  array("OS X", "OS X 10.8 (Mountain Lion) and later", array(".dmg"), array(".zip")))),
                       array(0, 0, 0, 15, 10, 2013, 2,
-                            array(array("Windows", "Windows XP and above", array(".exe"), array(".zip")),
-                                  array("Linux", "Ubuntu 12.04 LTS (Precise Pangolin) and above", array(".tar.gz", 32), array(".tar.gz", 64)),
-                                  array("OS X", "Mac OS X 10.6 (Snow Leopard) and above", array(".dmg"), array(".zip")))),
+                            array(array("Windows", "Windows XP and later", array(".exe"), array(".zip")),
+                                  array("Linux", "Ubuntu 12.04 LTS (Precise Pangolin) and later", array(".tar.gz", 32), array(".tar.gz", 64)),
+                                  array("OS X", "Mac OS X 10.6 (Snow Leopard) and later", array(".dmg"), array(".zip")))),
                       array(0, 1, 1, 17, 4, 2013, 0,
-                            array(array("Windows", "Windows XP and above", array(".exe"), array(".zip")),
-                                  array("Linux", "Ubuntu 12.04 LTS (Precise Pangolin) and above", array(".tar.gz", 32), array(".tar.gz", 64)),
-                                  array("OS X", "OS X 10.8 (Mountain Lion)", array(".dmg"), array(".zip")))),
+                            array(array("Windows", "Windows XP and later", array(".exe"), array(".zip")),
+                                  array("Linux", "Ubuntu 12.04 LTS (Precise Pangolin) and later", array(".tar.gz", 32), array(".tar.gz", 64)),
+                                  array("OS X", "OS X 10.8 (Mountain Lion) and later", array(".dmg"), array(".zip")))),
                       array(0, 1, 0, 1, 4, 2013, 0,
-                            array(array("Windows", "Windows XP and above", array(".exe"), array(".zip")),
-                                  array("Linux", "Ubuntu 12.04 LTS (Precise Pangolin) and above", array(".tar.gz", 32), array(".tar.gz", 64)),
-                                  array("OS X", "OS X 10.8 (Mountain Lion)", array(".dmg"), array(".zip")))));
+                            array(array("Windows", "Windows XP and later", array(".exe"), array(".zip")),
+                                  array("Linux", "Ubuntu 12.04 LTS (Precise Pangolin) and later", array(".tar.gz", 32), array(".tar.gz", 64)),
+                                  array("OS X", "OS X 10.8 (Mountain Lion) and later", array(".dmg"), array(".zip")))));
 
     // Output our various versions
 
