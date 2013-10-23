@@ -414,9 +414,13 @@ void setFocusTo(QWidget *pWidget)
 
 QString nativeCanonicalFileName(const QString &pFileName)
 {
-    // Return a native and canonical version of the given file name
+    // Return a native and canonical version of the given file name or the given
+    // file name, the native and canonical version is empty (i.e. the file
+    // doesn't exist (anymore?))
 
-    return QDir::toNativeSeparators(QFileInfo(pFileName).canonicalFilePath());
+    QString res = QDir::toNativeSeparators(QFileInfo(pFileName).canonicalFilePath());
+
+    return res.isEmpty()?pFileName:res;
 }
 
 //==============================================================================
