@@ -409,11 +409,11 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 
 void CentralWidget::settingsLoaded(const Plugins &pLoadedPlugins)
 {
-    // Keep track of the loaded plugins
+    // Keep track of our loaded plugins
 
     mLoadedPlugins = pLoadedPlugins;
 
-    // Update our status now that all the plugins  are fully ready
+    // Update our status now that our plugins  are fully ready
 
     mStatus = Idling;
 
@@ -421,7 +421,7 @@ void CentralWidget::settingsLoaded(const Plugins &pLoadedPlugins)
 
     updateGui();
 
-    // Let all the plugins know that our files have been opened
+    // Let our plugins know that our files have been opened
     // Note: this is because mLoadedPlugins is not set when openFile() gets
     //       called as part of OpenCOR's loading of settings...
 
@@ -518,7 +518,7 @@ void CentralWidget::openFile(const QString &pFileName)
 
     mFileTabs->setCurrentIndex(fileTabIndex);
 
-    // Everything went fine, so let all the plugins know that our file have been
+    // Everything went fine, so let our plugins know that our file has been
     // opened
     // Note: this requires using mLoadedPlugins, but it will not be set when we
     //       come here following OpenCOR's loading of settings, hence we do
@@ -631,7 +631,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
             // The file has been modified, so ask the current view to save it
 
             if (guiInterface->saveFile(oldFileName, newFileName)) {
-                // Let all the plugins know about the file having been saved
+                // Let all our plugins know about the file having been saved
 
                 foreach (Plugin *plugin, mLoadedPlugins) {
                     GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
@@ -817,8 +817,7 @@ bool CentralWidget::closeFile(const int &pIndex, const bool &pForceClosing)
         mFileNames.removeAt(realIndex);
         mFileTabs->removeTab(realIndex);
 
-        // Ask all the view plugins to remove the corresponding view for the
-        // file
+        // Ask our view plugins to remove the corresponding view for the file
 
         foreach (Plugin *plugin, mLoadedPlugins) {
             GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
@@ -831,7 +830,7 @@ bool CentralWidget::closeFile(const int &pIndex, const bool &pForceClosing)
 
         FileManager::instance()->unmanage(fileName);
 
-        // Let all the plugins know about the file having just been closed
+        // Let our plugins know about the file having just been closed
 
         foreach (Plugin *plugin, mLoadedPlugins) {
             GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
@@ -1375,7 +1374,7 @@ void CentralWidget::fileRenamed(const QString &pOldFileName,
             mFileTabs->setTabText(i, QFileInfo(pNewFileName).fileName());
             mFileTabs->setTabToolTip(i, pNewFileName);
 
-            // Let all the plugins know about the file having been renamed
+            // Let our plugins know about the file having been renamed
 
             foreach (Plugin *plugin, mLoadedPlugins) {
                 GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
