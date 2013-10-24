@@ -209,22 +209,21 @@ FileManager::Status FileManager::rename(const QString &pOldFileName,
     if (!newNativeFileName.compare(oldNativeFileName))
         return NotNeeded;
 
-    // Check whether the 'old' file is managed
+    // Make sure that the given 'old' file is managed
 
     File *file = isManaged(oldNativeFileName);
 
-    if (!file) {
-        // The 'old' file is not managed, so...
-
-        return NotManaged;
-    } else {
-        // The 'old' file is managed, so we can rename it
+    if (file) {
+        // The 'old' file is managed, so we can rename it and let people know
+        // about it
 
         file->setFileName(newNativeFileName);
 
         emit fileRenamed(oldNativeFileName, newNativeFileName);
 
         return Renamed;
+    } else {
+        return NotManaged;
     }
 }
 

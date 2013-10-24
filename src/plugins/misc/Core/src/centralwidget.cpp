@@ -479,7 +479,7 @@ void CentralWidget::setSupportedFileTypes(const FileTypes &pSupportedFileTypes)
 void CentralWidget::openFile(const QString &pFileName)
 {
     if (!mModeTabs->count() || !QFileInfo(pFileName).exists())
-        // No mode is available or the file doesn't exist, so...
+        // No modes are available or the file doesn't exist, so...
 
         return;
 
