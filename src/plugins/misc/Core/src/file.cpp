@@ -58,6 +58,11 @@ void File::setFileName(const QString &pFileName)
     // Set the new file name of the file
 
     mFileName = pFileName;
+
+    // Also update our SHA-1 value in case the physical state of our file has
+    // changed
+
+    mSha1 = sha1();
 }
 
 //==============================================================================
