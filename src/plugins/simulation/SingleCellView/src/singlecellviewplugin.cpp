@@ -261,12 +261,11 @@ QIcon SingleCellViewPlugin::fileTabIcon(const QString &pFileName) const
 bool SingleCellViewPlugin::saveFile(const QString &pOldFileName,
                                     const QString &pNewFileName)
 {
-    Q_UNUSED(pOldFileName);
-    Q_UNUSED(pNewFileName);
+    // Make sure that we are dealing with a CellML file
 
-    // We don't handle this interface...
+    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pOldFileName);
 
-    return false;
+    return cellmlFile?cellmlFile->save(pNewFileName):false;
 }
 
 //==============================================================================

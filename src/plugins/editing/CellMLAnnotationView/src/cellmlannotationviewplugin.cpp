@@ -388,14 +388,7 @@ bool CellMLAnnotationViewPlugin::saveFile(const QString &pOldFileName,
 
     CellmlAnnotationViewWidget *viewWidget = mViewWidgets.value(pOldFileName);
 
-    if (viewWidget) {
-        if (viewWidget->cellmlFile()->save(pNewFileName))
-            return true;
-        else
-            return false;
-    } else {
-        return false;
-    }
+    return viewWidget?viewWidget->cellmlFile()->save(pNewFileName):false;
 }
 
 //==============================================================================
