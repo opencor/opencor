@@ -172,11 +172,13 @@ SET(PLUGINS
 
     editing/CoreCellMLEditing
 
-    3rdparty/QScintilla
+#---GRY--- DISABLED FOR VERSION 0.2.x...
+#    3rdparty/QScintilla
     3rdparty/Qwt
 
-    misc/QScintillaSupport
-    misc/Viewer
+#---GRY--- DISABLED FOR VERSION 0.2.x...
+#    misc/QScintillaSupport
+#    misc/Viewer
 
     3rdparty/SUNDIALS
 
@@ -190,8 +192,9 @@ SET(PLUGINS
     organisation/FileOrganiser
 
     editing/CellMLAnnotationView
-    editing/RawCellMLView
-    editing/RawView
+#---GRY--- DISABLED FOR VERSION 0.2.x...
+#    editing/RawCellMLView
+#    editing/RawView
 
     simulation/CVODESolver
     simulation/ForwardEulerSolver
