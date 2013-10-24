@@ -230,6 +230,8 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
 
     // A connection to handle an external change in the status of a file
 
+    connect(FileManager::instance(), SIGNAL(fileChanged(const QString &)),
+            this, SLOT(fileChanged(const QString &)));
     connect(FileManager::instance(), SIGNAL(fileDeleted(const QString &)),
             this, SLOT(fileDeleted(const QString &)));
 
@@ -564,6 +566,17 @@ void CentralWidget::openFile()
     // Open the file(s)
 
     openFiles(files);
+}
+
+//==============================================================================
+
+void CentralWidget::reloadFile(const int &pIndex)
+{
+Q_UNUSED(pIndex);
+
+//---GRY--- TO BE DONE...
+
+qDebug(">>> Reloading file <strong>%s</strong>...", qPrintable(mFileNames[pIndex]));
 }
 
 //==============================================================================
@@ -1241,6 +1254,33 @@ void CentralWidget::updateNoViewMsg()
         viewName = modeViewName(GuiViewSettings::Analysis);
 
     mNoViewMsg->setMessage(tr("Sorry, but the <strong>%1</strong> view does not support this type of file...").arg(viewName));
+}
+
+//==============================================================================
+
+void CentralWidget::fileChanged(const QString &pFileName)
+{
+    // The given file has been changed, so ask the user whether to reload it
+
+    if (QMessageBox::question(mMainWindow, qApp->applicationName(),
+                              tr("<strong>%1</strong> has been modified. Do you want to reload it?").arg(pFileName),
+                              QMessageBox::Yes|QMessageBox::No,
+                              QMessageBox::Yes) == QMessageBox::Yes) {
+        // The user wants to reload the file
+
+        for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i)
+            if (!mFileNames[i].compare(pFileName)) {
+                // We have found the file to reload
+
+                reloadFile(i);
+
+                break;
+            }
+    } else {
+        // The user doesn't want to reload the file, so consider it as modified
+
+        FileManager::instance()->setModified(pFileName, true);
+    }
 }
 
 //==============================================================================

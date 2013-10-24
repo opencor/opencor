@@ -199,6 +199,9 @@ private Q_SLOTS:
 
     void openFile();
 
+    void reloadFile(const int &pIndex = -1);
+
+    void fileChanged(const QString &pFileName);
     void fileDeleted(const QString &pFileName);
 
     void updateModifiedSettings();
