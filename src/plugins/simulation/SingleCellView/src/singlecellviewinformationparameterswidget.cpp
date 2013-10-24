@@ -241,7 +241,8 @@ void SingleCellViewInformationParametersWidget::updateParameters(const double &p
 
                 break;
             default:
-                // Either Voi or Undefined, so...
+                // Undefined, so...
+                // Note: we should never reach this point...
 
                 ;
             }
@@ -367,7 +368,8 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
                         if (property->type() == Core::Property::Section)
                             subSections << property;
 
-                // Go through the sub-sections and check if one of them
+                // Go through the sub-sections and check if one of them is the
+                // one we are after
 
                 foreach (Core::Property *subSection, subSections) {
                     if (!subSection->name().compare(component)) {
@@ -393,9 +395,41 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
             componentHierarchy = currentComponentHierarchy;
         }
 
-        // Add the current parameter to the current section property
+        // Add the current parameter to the current section property, after
+        // having retrieved its current value
 
-        Core::Property *property = mPropertyEditor->addDoubleProperty(sectionProperty);
+        double propertyValue = 0.0;
+
+        switch (parameter->type()) {
+        case CellMLSupport::CellmlFileRuntimeParameter::Voi:
+            propertyValue = mSimulation->data()->startingPoint();
+
+            break;
+        case CellMLSupport::CellmlFileRuntimeParameter::Constant:
+        case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
+            propertyValue = mSimulation->data()->constants()[parameter->index()];
+
+            break;
+        case CellMLSupport::CellmlFileRuntimeParameter::Rate:
+            propertyValue = mSimulation->data()->rates()[parameter->index()];
+
+            break;
+        case CellMLSupport::CellmlFileRuntimeParameter::State:
+            propertyValue = mSimulation->data()->states()[parameter->index()];
+
+            break;
+        case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
+            propertyValue = mSimulation->data()->algebraic()[parameter->index()];
+
+            break;
+        default:
+            // Undefined, so...
+            // Note: we should never reach this point...
+
+            ;
+        }
+
+        Core::Property *property = mPropertyEditor->addDoubleProperty(propertyValue, sectionProperty);
 
         property->setEditable(   (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)
                               || (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State));
@@ -564,8 +598,7 @@ void SingleCellViewInformationParametersWidget::updateExtraInfos()
 
                 break;
             default:
-                // We are dealing with a type of parameter which is of no
-                // interest to us, so do nothing...
+                // Undefined, so...
                 // Note: we should never reach this point...
 
                 ;
