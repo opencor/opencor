@@ -383,36 +383,17 @@ QIcon CellMLAnnotationViewPlugin::fileTabIcon(const QString &pFileName) const
 bool CellMLAnnotationViewPlugin::saveFile(const QString &pOldFileName,
                                           const QString &pNewFileName)
 {
-    // Retrieve the view widget associated with the 'old' file name
+    // Retrieve the view widget associated with the 'old' file name and, if any,
+    // save it
 
     CellmlAnnotationViewWidget *viewWidget = mViewWidgets.value(pOldFileName);
 
-    // Save the CellML file, should we have a valid view widget
-
     if (viewWidget) {
-        // We have a view widget, so we can try to save the file
-
-        if (viewWidget->cellmlFile()->save(pNewFileName)) {
-            // The file was properly saved, so check if we need to update our
-            // view widgets mapping
-
-            if (pNewFileName.compare(pOldFileName)) {
-                // The old and new file names are different, so we do need to
-                // update our view widgets mapping
-
-                mViewWidgets.insert(pNewFileName, mViewWidgets.value(pOldFileName));
-                mViewWidgets.remove(pOldFileName);
-            }
-
+        if (viewWidget->cellmlFile()->save(pNewFileName))
             return true;
-        } else {
-            // The file couldn't be saved, so...
-
+        else
             return false;
-        }
     } else {
-        // No view widget exists for the file, so...
-
         return false;
     }
 }
@@ -440,10 +421,10 @@ void CellMLAnnotationViewPlugin::fileSaved(const QString &pFileName)
 void CellMLAnnotationViewPlugin::fileRenamed(const QString &pOldFileName,
                                              const QString &pNewFileName)
 {
-    Q_UNUSED(pOldFileName);
-    Q_UNUSED(pNewFileName);
+    // Update our view widgets mapping
 
-    // We don't handle this interface...
+    mViewWidgets.insert(pNewFileName, mViewWidgets.value(pOldFileName));
+    mViewWidgets.remove(pOldFileName);
 }
 
 //==============================================================================
