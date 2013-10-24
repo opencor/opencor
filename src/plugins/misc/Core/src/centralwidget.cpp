@@ -1266,7 +1266,7 @@ void CentralWidget::fileDeleted(const QString &pFileName)
     } else {
         // The user wants to keep the file, so consider it as modified
 
-        Core::FileManager::instance()->setModified(pFileName, true);
+        FileManager::instance()->setModified(pFileName, true);
     }
 }
 
