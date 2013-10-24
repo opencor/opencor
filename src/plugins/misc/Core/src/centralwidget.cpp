@@ -237,6 +237,9 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
 
     connect(FileManager::instance(), SIGNAL(fileModified(const QString &, const bool &)),
             this, SLOT(updateModifiedSettings()));
+
+    connect(FileManager::instance(), SIGNAL(fileRenamed(const QString &, const QString &)),
+            this, SLOT(fileRenamed(const QString &, const QString &)));
 }
 
 //==============================================================================
@@ -664,22 +667,6 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
             if (renameStatus != FileManager::Renamed)
                 qFatal("FATAL ERROR | %s:%d: '%s' did not get renamed to '%s'", __FILE__, __LINE__, qPrintable(oldFileName), qPrintable(newFileName));
 #endif
-
-            // Update our file names and tabs
-
-            mFileNames[pIndex] = newFileName;
-
-            mFileTabs->setTabText(pIndex, QFileInfo(newFileName).fileName());
-            mFileTabs->setTabToolTip(pIndex, newFileName);
-
-            // Let all the plugins know about the file having been renamed
-
-            foreach (Plugin *plugin, mLoadedPlugins) {
-                GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
-
-                if (guiInterface)
-                    guiInterface->fileRenamed(oldFileName, newFileName);
-            }
         }
 
         // Update our modified settings
@@ -1333,6 +1320,33 @@ void CentralWidget::updateModifiedSettings()
                      FileManager::instance()->isModified(mFileNames[mFileTabs->currentIndex()]):
                      false);
     emit canSaveAll(nbOfModifiedFiles);
+}
+
+//==============================================================================
+
+void CentralWidget::fileRenamed(const QString &pOldFileName,
+                                const QString &pNewFileName)
+{
+    // Update our file names and tabs
+
+    for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i)
+        if (!mFileNames[i].compare(pOldFileName)) {
+            mFileNames[i] = pNewFileName;
+
+            mFileTabs->setTabText(i, QFileInfo(pNewFileName).fileName());
+            mFileTabs->setTabToolTip(i, pNewFileName);
+
+            // Let all the plugins know about the file having been renamed
+
+            foreach (Plugin *plugin, mLoadedPlugins) {
+                GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+
+                if (guiInterface)
+                    guiInterface->fileRenamed(pOldFileName, pNewFileName);
+            }
+
+            break;
+        }
 }
 
 //==============================================================================
