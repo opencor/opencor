@@ -240,6 +240,9 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     connect(FileManager::instance(), SIGNAL(fileModified(const QString &, const bool &)),
             this, SLOT(updateModifiedSettings()));
 
+    connect(FileManager::instance(), SIGNAL(fileReloaded(const QString &, const QString &)),
+            this, SLOT(fileReloaded(const QString &, const QString &)));
+
     connect(FileManager::instance(), SIGNAL(fileRenamed(const QString &, const QString &)),
             this, SLOT(fileRenamed(const QString &, const QString &)));
 }
@@ -572,11 +575,12 @@ void CentralWidget::openFile()
 
 void CentralWidget::reloadFile(const int &pIndex)
 {
-//---GRY--- TO BE DONE...
+    // Ask our file manager to reload the file
+
     int realIndex = (pIndex < 0)?mFileTabs->currentIndex():pIndex;
 
     if (realIndex != -1)
-        qDebug(">>> Reloading '%s'...", qPrintable(mFileNames[realIndex]));
+        FileManager::instance()->reload(mFileNames[realIndex]);
 }
 
 //==============================================================================
@@ -1358,6 +1362,20 @@ void CentralWidget::updateModifiedSettings()
                      FileManager::instance()->isModified(mFileNames[mFileTabs->currentIndex()]):
                      false);
     emit canSaveAll(nbOfModifiedFiles);
+}
+
+//==============================================================================
+
+void CentralWidget::fileReloaded(const QString &pFileName)
+{
+    // Let our plugins know about the file having been reloaded
+
+    foreach (Plugin *plugin, mLoadedPlugins) {
+        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+
+        if (guiInterface)
+            guiInterface->fileReloaded(pFileName);
+    }
 }
 
 //==============================================================================

@@ -279,6 +279,15 @@ void SingleCellViewPlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
+void SingleCellViewPlugin::fileReloaded(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
 void SingleCellViewPlugin::fileSaved(const QString &pFileName)
 {
     Q_UNUSED(pFileName);

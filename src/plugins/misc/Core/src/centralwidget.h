@@ -206,6 +206,8 @@ private Q_SLOTS:
 
     void updateModifiedSettings();
 
+    void fileReloaded(const QString &pFileName);
+
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
     void saveFile();

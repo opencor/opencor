@@ -198,6 +198,20 @@ void FileManager::setModified(const QString &pFileName, const bool &pModified)
 
 //==============================================================================
 
+void FileManager::reload(const QString &pFileName)
+{
+    // Make sure that the given file is managed
+
+    QString nativeFileName = nativeCanonicalFileName(pFileName);
+
+    if (isManaged(nativeFileName))
+        // The file is managed, so let people know that it should be reloaded
+
+        emit fileReloaded(nativeFileName);
+}
+
+//==============================================================================
+
 FileManager::Status FileManager::rename(const QString &pOldFileName,
                                         const QString &pNewFileName)
 {

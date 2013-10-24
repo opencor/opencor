@@ -246,6 +246,15 @@ void FileOrganiserPlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
+void FileOrganiserPlugin::fileReloaded(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
 void FileOrganiserPlugin::fileSaved(const QString &pFileName)
 {
     Q_UNUSED(pFileName);

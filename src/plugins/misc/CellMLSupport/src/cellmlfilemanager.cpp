@@ -48,6 +48,9 @@ CellmlFileManager::CellmlFileManager() :
     connect(fileManagerInstance, SIGNAL(fileUnmanaged(const QString &)),
             this, SLOT(unmanageFile(const QString &)));
 
+    connect(fileManagerInstance, SIGNAL(fileReloaded(const QString &)),
+            this, SLOT(reloadFile(const QString &)));
+
     connect(fileManagerInstance, SIGNAL(fileRenamed(const QString &, const QString &)),
             this, SLOT(renameFile(const QString &, const QString &)));
 }
@@ -105,6 +108,22 @@ void CellmlFileManager::unmanageFile(const QString &pFileName)
         delete cellmlFile(pFileName);
 
         mCellmlFiles.remove(pFileName);
+    }
+}
+
+//==============================================================================
+
+void CellmlFileManager::reloadFile(const QString &pFileName)
+{
+    // The file is to be reloaded, so reload it
+    // Note: to reload a file here ensures that our different CellML-based views
+    //       won't each do it, thus saving time, etc.
+
+    if (isCellmlFile(pFileName)) {
+        CellmlFile *crtCellmlFile = cellmlFile(pFileName);
+
+        if (crtCellmlFile)
+            crtCellmlFile->reload();
     }
 }
 

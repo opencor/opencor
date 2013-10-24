@@ -191,6 +191,15 @@ void RawViewPlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
+void RawViewPlugin::fileReloaded(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
 void RawViewPlugin::fileSaved(const QString &pFileName)
 {
     Q_UNUSED(pFileName);

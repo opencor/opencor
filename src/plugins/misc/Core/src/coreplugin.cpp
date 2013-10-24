@@ -460,6 +460,15 @@ void CorePlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
+void CorePlugin::fileReloaded(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
 void CorePlugin::fileSaved(const QString &pFileName)
 {
     Q_UNUSED(pFileName);

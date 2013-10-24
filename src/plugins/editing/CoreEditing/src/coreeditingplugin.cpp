@@ -288,6 +288,15 @@ void CoreEditingPlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
+void CoreEditingPlugin::fileReloaded(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
 void CoreEditingPlugin::fileSaved(const QString &pFileName)
 {
     Q_UNUSED(pFileName);

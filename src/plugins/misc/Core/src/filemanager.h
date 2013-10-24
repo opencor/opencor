@@ -81,6 +81,8 @@ public:
 
     bool isModified(const QString &pFileName) const;
 
+    void reload(const QString &pFileName);
+
     Status rename(const QString &pOldFileName, const QString &pNewFileName);
 
     int count() const;
@@ -97,6 +99,8 @@ Q_SIGNALS:
     void fileDeleted(const QString &pFileName);
 
     void fileModified(const QString &pFileName, const bool &pModified);
+
+    void fileReloaded(const QString &pFileName);
 
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 

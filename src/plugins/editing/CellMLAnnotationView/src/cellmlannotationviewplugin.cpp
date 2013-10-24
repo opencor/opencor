@@ -402,6 +402,15 @@ void CellMLAnnotationViewPlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
+void CellMLAnnotationViewPlugin::fileReloaded(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
 void CellMLAnnotationViewPlugin::fileSaved(const QString &pFileName)
 {
     Q_UNUSED(pFileName);

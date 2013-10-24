@@ -245,6 +245,15 @@ void HelpPlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
+void HelpPlugin::fileReloaded(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
 void HelpPlugin::fileSaved(const QString &pFileName)
 {
     Q_UNUSED(pFileName);

@@ -267,6 +267,15 @@ void RawCellMLViewPlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
+void RawCellMLViewPlugin::fileReloaded(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
 void RawCellMLViewPlugin::fileSaved(const QString &pFileName)
 {
     Q_UNUSED(pFileName);

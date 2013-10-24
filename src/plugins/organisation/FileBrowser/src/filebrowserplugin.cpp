@@ -244,6 +244,15 @@ void FileBrowserPlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
+void FileBrowserPlugin::fileReloaded(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
 void FileBrowserPlugin::fileSaved(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
