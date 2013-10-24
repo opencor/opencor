@@ -75,6 +75,8 @@ void CorePlugin::initialize()
                                 ":/oxygen/actions/document-open.png",
                                 QKeySequence::Open);
 
+    mFileReloadAction = newAction(mMainWindow);
+
     mFileSaveAction    = newAction(mMainWindow, false,
                                    ":/oxygen/actions/document-save.png",
                                    QKeySequence::Save);
@@ -127,9 +129,9 @@ void CorePlugin::initialize()
 
     // Create the separator before which we will insert our Reopen sub-menu
 
-    QAction *openSaveSeparator = newAction(mMainWindow);
+    QAction *openReloadSeparator = newAction(mMainWindow);
 
-    openSaveSeparator->setSeparator(true);
+    openReloadSeparator->setSeparator(true);
 
     // Create our Reopen sub-menu
 
@@ -150,6 +152,9 @@ void CorePlugin::initialize()
     connect(mFileOpenAction, SIGNAL(triggered()),
             mCentralWidget, SLOT(openFile()));
 
+    connect(mFileReloadAction, SIGNAL(triggered()),
+            mCentralWidget, SLOT(reloadFile()));
+
     connect(mFileSaveAction, SIGNAL(triggered()),
             mCentralWidget, SLOT(saveFile()));
     connect(mFileSaveAsAction, SIGNAL(triggered()),
@@ -168,6 +173,9 @@ void CorePlugin::initialize()
             mCentralWidget, SLOT(closeAllFiles()));
 
     // Some connections to update the enabled state of our various actions
+
+    connect(mCentralWidget, SIGNAL(atLeastOneFile(const bool &)),
+            mFileReloadAction, SLOT(setEnabled(bool)));
 
     connect(mCentralWidget, SIGNAL(canSave(const bool &)),
             mFileSaveAction, SLOT(setEnabled(bool)));
@@ -194,7 +202,9 @@ void CorePlugin::initialize()
     // Set our settings
 
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileOpenAction);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, openSaveSeparator);
+    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, openReloadSeparator);
+    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileReloadAction);
+    mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileSaveAction);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileSaveAsAction);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileSaveAllAction);
@@ -206,7 +216,7 @@ void CorePlugin::initialize()
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileCloseAllAction);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
 
-    mGuiSettings->addMenu(GuiMenuSettings::File, openSaveSeparator, mFileReopenSubMenu);
+    mGuiSettings->addMenu(GuiMenuSettings::File, openReloadSeparator, mFileReopenSubMenu);
 
     mGuiSettings->setCentralWidget(mCentralWidget);
 
@@ -510,6 +520,9 @@ void CorePlugin::retranslateUi()
     // Retranslate our different File actions
 
     retranslateAction(mFileOpenAction, tr("Open..."), tr("Open a file"));
+
+    retranslateAction(mFileReloadAction, tr("Reload"),
+                      tr("Reload the current file"));
 
     retranslateAction(mFileSaveAction, tr("Save"),
                       tr("Save the current file"));

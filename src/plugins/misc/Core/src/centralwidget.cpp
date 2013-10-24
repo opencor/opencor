@@ -572,11 +572,11 @@ void CentralWidget::openFile()
 
 void CentralWidget::reloadFile(const int &pIndex)
 {
-Q_UNUSED(pIndex);
-
 //---GRY--- TO BE DONE...
+    int realIndex = (pIndex < 0)?mFileTabs->currentIndex():pIndex;
 
-qDebug(">>> Reloading file <strong>%s</strong>...", qPrintable(mFileNames[pIndex]));
+    if (realIndex != -1)
+        qDebug(">>> Reloading '%s'...", qPrintable(mFileNames[realIndex]));
 }
 
 //==============================================================================

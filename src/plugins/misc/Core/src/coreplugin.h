@@ -68,11 +68,16 @@ private:
     CentralWidget *mCentralWidget;
 
     QAction *mFileOpenAction;
+
+    QAction *mFileReloadAction;
+
     QAction *mFileSaveAction;
     QAction *mFileSaveAsAction;
     QAction *mFileSaveAllAction;
+
     QAction *mFilePreviousAction;
     QAction *mFileNextAction;
+
     QAction *mFileCloseAction;
     QAction *mFileCloseAllAction;
 
