@@ -66,27 +66,27 @@ File::Status File::check()
 {
     // Retrieve the SHA-1 value of our file and compare it to its stored value
 
-    QString crtSha1 = sha1();
+    QString newSha1 = sha1();
 
-    if (!crtSha1.compare(mSha1)) {
+    if (!newSha1.compare(mSha1)) {
         // The SHA-1 values are the same, so...
 
         return File::Unchanged;
-    } else if (crtSha1.isEmpty()) {
-        // The SHA-1 value of our file is now empty, which means that our file
-        // has been deleted, so update our stored value and let people know
-        // about it
-
-        mSha1 = crtSha1;
-
-        return File::Deleted;
     } else {
-        // The SHA-1 value of our file is different from our stored value, so
-        // update it and let people know that our file has changed
+        // We have a new SHA-1 value, so keep track of it
 
-        mSha1 = crtSha1;
+        mSha1 = newSha1;
 
-        return File::Changed;
+        if (newSha1.isEmpty())
+            // The SHA-1 value of our file is now empty, which means that our
+            // file has been deleted
+
+            return File::Deleted;
+        else
+            // The SHA-1 value of our file is different from our stored value,
+            // which means that our file has changed
+
+            return File::Changed;
     }
 }
 
@@ -132,6 +132,11 @@ void File::setModified(const bool &pModified)
     // Set the modified status of the file
 
     mModified = pModified;
+
+    // Also update our SHA-1 value in case the physical state of our file has
+    // changed
+
+    mSha1 = sha1();
 }
 
 //==============================================================================
