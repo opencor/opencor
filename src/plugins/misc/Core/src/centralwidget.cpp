@@ -1172,8 +1172,7 @@ void CentralWidget::updateGui()
     // Let people know whether we can save as, as well as whether there is/are
     // at least one/two file/s
 
-    emit canSaveAs(   mFileTabs->count() && (newView != mNoViewMsg)
-                   && guiInterface && guiInterface->guiSettings()->view()->mimeTypes().count());
+    emit canSaveAs(mFileTabs->count() && (newView != mNoViewMsg) && guiInterface);
 
     emit atLeastOneFile(mFileTabs->count());
     emit atLeastTwoFiles(mFileTabs->count() > 1);
