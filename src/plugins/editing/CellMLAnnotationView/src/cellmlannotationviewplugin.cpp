@@ -404,9 +404,12 @@ void CellMLAnnotationViewPlugin::fileOpened(const QString &pFileName)
 
 void CellMLAnnotationViewPlugin::fileReloaded(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    // The file has been reloaded, so update our view widget, if any
 
-    // We don't handle this interface...
+    CellmlAnnotationViewWidget *viewWidget = mViewWidgets.value(pFileName);
+
+    if (viewWidget)
+        viewWidget->reload();
 }
 
 //==============================================================================

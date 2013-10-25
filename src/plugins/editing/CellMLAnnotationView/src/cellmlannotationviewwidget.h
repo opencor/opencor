@@ -88,6 +88,8 @@ public:
                                       const QString &pId,
                                       const bool &pRetranslate);
 
+    void reload();
+
 private:
     Ui::CellmlAnnotationViewWidget *mGui;
 

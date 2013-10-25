@@ -382,6 +382,17 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateMetadataEditDetails()
 
 //==============================================================================
 
+void CellmlAnnotationViewMetadataDetailsWidget::reload()
+{
+    // Ask our metadata edit details widget to reload itself
+    // Note: we don't need to ask such a thing to our metadata view details
+    //       widget since it only presents information to the user...
+
+    mMetadataEditDetails->reload();
+}
+
+//==============================================================================
+
 }   // namespace CellMLAnnotationView
 }   // namespace OpenCOR
 

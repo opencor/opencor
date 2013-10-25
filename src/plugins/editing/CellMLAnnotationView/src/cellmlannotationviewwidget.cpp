@@ -131,10 +131,10 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(CellMLAnnotationViewPlugi
 
     setFocusProxy(mCellmlList);
 
-    // Select the first item from our lists
-    // Note: our CellML list is our primary list, so we must select the first
-    //       item of our lists in a reverse order, i.e. finish with our CellML
-    //       list...
+    // Select the first item from our CellML list widget
+    // Note: we need to do this after having set up the connections above since
+    //       we want our metadata details widget to get updated when the first
+    //       item from our CellML list widget gets selected...
 
     mCellmlList->treeViewWidget()->selectFirstItem();
 }
@@ -401,6 +401,20 @@ void CellmlAnnotationViewWidget::addRdfTriple(CellMLSupport::CellmlFileRdfTriple
     // Add the given RDF triple to our details widget
 
     mMetadataDetails->addRdfTriple(pRdfTriple);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewWidget::reload()
+{
+    // Ask our CellML list and metadata details widgets to reload themselves
+
+    mCellmlList->reload();
+    mMetadataDetails->reload();
+
+    // Set the focus to our CellML list widget
+
+    mCellmlList->setFocus();
 }
 
 //==============================================================================

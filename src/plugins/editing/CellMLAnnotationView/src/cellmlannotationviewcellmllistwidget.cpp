@@ -364,22 +364,17 @@ CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(Cellm
     connect(mTreeViewWidget->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
             this, SLOT(updateMetadataDetails(const QModelIndex &, const QModelIndex &)));
 
-    // Populate our tree view widget
+    // Initialise our tree view widget
+    // Note: we don't want to select first item of our tree view widget just yet
+    //       since we need a connection between ourselves and the metadata
+    //       details widget to be set first (see
+    //       CellmlAnnotationViewWidget::CellmlAnnotationViewWidget)...
 
-    populateModel();
+    initializeTreeViewWidget(false);
 
     // Make our tree view widget our focus proxy
 
     setFocusProxy(mTreeViewWidget);
-
-    // Expand our tree view widget enough so that we can see the meaningful
-    // parts of the CellML file
-
-    mTreeViewWidget->expandToDepth(1);
-
-    // Resize our tree view widget, just to be on the safe side
-
-    resizeTreeViewToContents();
 }
 
 //==============================================================================
@@ -474,6 +469,29 @@ void CellmlAnnotationViewCellmlListWidget::retranslateDataItem(CellmlAnnotationV
 
             ;
         }
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewCellmlListWidget::initializeTreeViewWidget(const bool &pSelectFirstItem)
+{
+    // Populate our tree view widget
+
+    populateModel();
+
+    // Expand our tree view widget enough so that we can see the meaningful
+    // parts of the CellML file
+
+    mTreeViewWidget->expandToDepth(1);
+
+    // Resize our tree view widget, just to be on the safe side
+
+    resizeTreeViewToContents();
+
+    // Select the first item of our tree view widget
+
+    if (pSelectFirstItem)
+        mTreeViewWidget->selectFirstItem();
 }
 
 //==============================================================================
@@ -1070,6 +1088,18 @@ void CellmlAnnotationViewCellmlListWidget::on_actionOpenImport_triggered()
     // Ask OpenCOR to open the imported file
 
     static_cast<SharedTools::QtSingleApplication *>(qApp)->handleAction("gui://openFile/"+QFileInfo(QFileInfo(mCellmlFile->fileName()).canonicalPath()+QDir::separator()+currentCellmlElementItem()->text()).canonicalFilePath());
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewCellmlListWidget::reload()
+{
+    // To reload the file means clearing our tree view widget (i.e. the model
+    // associated with it) and (re)initialising it
+
+    mModel->clear();
+
+    initializeTreeViewWidget();
 }
 
 //==============================================================================

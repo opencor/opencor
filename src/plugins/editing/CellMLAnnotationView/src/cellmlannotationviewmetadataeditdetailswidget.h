@@ -73,6 +73,8 @@ public:
 
     virtual void retranslateUi();
 
+    void reload();
+
 private:
     enum Type {
         No,

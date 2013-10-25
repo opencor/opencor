@@ -296,7 +296,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
     mLookupQualifierButton->setToolTip(tr("Look Up"));
     mLookupQualifierButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
-    connect(mLookupQualifierButton, SIGNAL(clicked()),
+    connect(mLookupQualifierButton, SIGNAL(toggled(bool)),
             this, SLOT(lookupQualifier()));
 
     // Add our QComboBox and QPushButton to our cmeta:id widget
@@ -1102,6 +1102,18 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::on_actionCopy_triggered()
     // Copy the URL of the resource or id to the clipboard
 
     QApplication::clipboard()->setText(mCurrentResourceOrIdLabel->accessibleDescription());
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataEditDetailsWidget::reload()
+{
+    // To reload ourselves means resetting our various user fields
+
+    mQualifierValue->setCurrentIndex(0);
+    mLookupQualifierButton->setChecked(false);
+
+    mTermValue->setText(QString());
 }
 
 //==============================================================================

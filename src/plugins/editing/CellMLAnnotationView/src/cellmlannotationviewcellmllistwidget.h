@@ -133,6 +133,8 @@ public:
 
     CellmlAnnotationViewCellmlElementItem * currentCellmlElementItem() const;
 
+    void reload();
+
 private:
     CellMLSupport::CellmlFile *mCellmlFile;
 
@@ -145,6 +147,8 @@ private:
     QList<QModelIndex> mIndexes;
 
     void retranslateDataItem(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem);
+
+    void initializeTreeViewWidget(const bool &pSelectFirstItem = true);
 
     void populateModel();
     void populateUnitsModel(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem,
