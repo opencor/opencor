@@ -240,8 +240,8 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     connect(FileManager::instance(), SIGNAL(fileModified(const QString &, const bool &)),
             this, SLOT(updateModifiedSettings()));
 
-    connect(FileManager::instance(), SIGNAL(fileReloaded(const QString &, const QString &)),
-            this, SLOT(fileReloaded(const QString &, const QString &)));
+    connect(FileManager::instance(), SIGNAL(fileReloaded(const QString &)),
+            this, SLOT(fileReloaded(const QString &)));
 
     connect(FileManager::instance(), SIGNAL(fileRenamed(const QString &, const QString &)),
             this, SLOT(fileRenamed(const QString &, const QString &)));
