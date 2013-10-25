@@ -67,18 +67,6 @@ class CellmlAnnotationViewMetadataEditDetailsWidget : public QScrollArea,
 {
     Q_OBJECT
 
-private:
-    struct Item
-    {
-        QString name;
-        QString resource;
-        QString id;
-
-        bool operator<(const Item &pItem) const;
-    };
-
-    typedef QList<Item> Items;
-
 public:
     explicit CellmlAnnotationViewMetadataEditDetailsWidget(CellmlAnnotationViewWidget *pParent);
     ~CellmlAnnotationViewMetadataEditDetailsWidget();
@@ -92,6 +80,17 @@ private:
         Resource,
         Id
     };
+
+    struct Item
+    {
+        QString name;
+        QString resource;
+        QString id;
+
+        bool operator<(const Item &pItem) const;
+    };
+
+    typedef QList<Item> Items;
 
     CellmlAnnotationViewWidget *mParent;
 
