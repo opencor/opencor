@@ -1118,20 +1118,22 @@ double SingleCellViewSimulation::size()
 
 //==============================================================================
 
-void SingleCellViewSimulation::run()
+bool SingleCellViewSimulation::run()
 {
     if (!mRuntime)
-        return;
+        return false;
 
     // Initialise our worker, if not active
 
-    if (!mWorker) {
-        // First, check that our simulation settings we were given are sound
+    if (mWorker) {
+        return false;
+    } else {
+        // Make sure that that the simulation settings we were given are sound
 
         if (!simulationSettingsOk())
             // Something wrong with our simulation settings, so...
 
-            return;
+            return false;
 
         // Create our worker
 
@@ -1140,7 +1142,7 @@ void SingleCellViewSimulation::run()
         if (!mWorker) {
             emit error(tr("the simulation worker could not be created"));
 
-            return;
+            return false;
         }
 
         // Create a few connections
@@ -1158,43 +1160,49 @@ void SingleCellViewSimulation::run()
 
         // Start our worker
 
-        mWorker->run();
+        return mWorker->run();
     }
 }
 
 //==============================================================================
 
-void SingleCellViewSimulation::pause()
+bool SingleCellViewSimulation::pause()
 {
     // Pause our worker
 
     if (mWorker)
-        mWorker->pause();
+        return mWorker->pause();
+    else
+        return false;
 }
 
 //==============================================================================
 
-void SingleCellViewSimulation::resume()
+bool SingleCellViewSimulation::resume()
 {
     // Resume our worker
 
     if (mWorker)
-        mWorker->resume();
+        return mWorker->resume();
+    else
+        return false;
 }
 
 //==============================================================================
 
-void SingleCellViewSimulation::stop()
+bool SingleCellViewSimulation::stop()
 {
     // Stop our worker
 
     if (mWorker)
-        mWorker->stop();
+        return mWorker->stop();
+    else
+        return false;
 }
 
 //==============================================================================
 
-void SingleCellViewSimulation::reset()
+bool SingleCellViewSimulation::reset()
 {
     // Reset our data
 
@@ -1203,7 +1211,9 @@ void SingleCellViewSimulation::reset()
     // Reset our worker
 
     if (mWorker)
-        mWorker->reset();
+        return mWorker->reset();
+    else
+        return false;
 }
 
 //==============================================================================

@@ -68,12 +68,12 @@ public:
 
     double progress() const;
 
-    void run();
-    void pause();
-    void resume();
-    void stop();
+    bool run();
+    bool pause();
+    bool resume();
+    bool stop();
 
-    void reset();
+    bool reset();
 
 private:
     QThread *mThread;

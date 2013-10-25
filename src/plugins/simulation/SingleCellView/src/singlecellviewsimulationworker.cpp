@@ -122,12 +122,17 @@ double SingleCellViewSimulationWorker::progress() const
 
 //==============================================================================
 
-void SingleCellViewSimulationWorker::run()
+bool SingleCellViewSimulationWorker::run()
 {
     // Start our thread
 
-    if (mThread)
+    if (mThread) {
         mThread->start();
+
+        return true;
+    } else {
+        return false;
+    }
 }
 
 //==============================================================================
@@ -418,31 +423,41 @@ void SingleCellViewSimulationWorker::started()
 
 //==============================================================================
 
-void SingleCellViewSimulationWorker::pause()
+bool SingleCellViewSimulationWorker::pause()
 {
     // Pause ourselves, but only if we are currently running
 
-    if (isRunning())
+    if (isRunning()) {
         // Ask ourselves to pause
 
         mPaused = true;
+
+        return true;
+    } else {
+        return false;
+    }
 }
 
 //==============================================================================
 
-void SingleCellViewSimulationWorker::resume()
+bool SingleCellViewSimulationWorker::resume()
 {
     // Resume ourselves, but only if are currently paused
 
-    if (isPaused())
+    if (isPaused()) {
         // Ask ourselves to resume
 
-        mPausedCondition.wakeAll();
+        mPausedCondition.wakeOne();
+
+        return true;
+    } else {
+        return false;
+    }
 }
 
 //==============================================================================
 
-void SingleCellViewSimulationWorker::stop()
+bool SingleCellViewSimulationWorker::stop()
 {
     // Check that we are either running or paused
 
@@ -450,7 +465,7 @@ void SingleCellViewSimulationWorker::stop()
         // Resume ourselves, if needed
 
         if (isPaused())
-            mPausedCondition.wakeAll();
+            mPausedCondition.wakeOne();
 
         // Ask ourselves to stop
 
@@ -464,19 +479,28 @@ void SingleCellViewSimulationWorker::stop()
         mThread = 0;
         // Note: this is in case we, for example, want to retrieve our
         //       progress...
+
+        return true;
+    } else {
+        return false;
     }
 }
 
 //==============================================================================
 
-void SingleCellViewSimulationWorker::reset()
+bool SingleCellViewSimulationWorker::reset()
 {
     // Check that we are either running or paused
 
-    if (isRunning() || isPaused())
+    if (isRunning() || isPaused()) {
         // Ask ourselves to reinitialise our solver
 
         mReset = true;
+
+        return true;
+    } else {
+        return false;
+    }
 }
 
 //==============================================================================

@@ -224,12 +224,12 @@ public:
 
     double size();
 
-    void run();
-    void pause();
-    void resume();
-    void stop();
+    bool run();
+    bool pause();
+    bool resume();
+    bool stop();
 
-    void reset();
+    bool reset();
 
 private:
     SingleCellViewSimulationWorker *mWorker;
