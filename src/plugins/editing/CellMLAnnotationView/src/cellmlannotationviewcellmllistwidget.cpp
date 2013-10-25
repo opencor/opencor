@@ -316,8 +316,7 @@ iface::cellml_api::CellMLElement * CellmlAnnotationViewCellmlElementItem::elemen
 CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(CellmlAnnotationViewWidget *pParent) :
     Widget(pParent),
     mCellmlFile(pParent->cellmlFile()),
-    mGui(new Ui::CellmlAnnotationViewCellmlListWidget),
-    mIndexes(QList<QModelIndex>())
+    mGui(new Ui::CellmlAnnotationViewCellmlListWidget)
 {
     // Set up the GUI
 
@@ -857,43 +856,10 @@ void CellmlAnnotationViewCellmlListWidget::updateMetadataDetails(const QModelInd
     if (!pNewIndex.isValid())
         return;
 
-    // Keep track of the fact that there is a CellML element to update
+    // Let people know that we want to see the metadata associated with the
+    // CellML element
 
-    mIndexes << pNewIndex;
-
-    // Make sure that we are not already updating a CellML element by checking
-    // that the CellML file for which we want to update an element is not in our
-    // list of CellML files being updated
-
-    static QStringList cellmlFileBeingUpdated;
-
-    QString cellmlFileName = mCellmlFile->fileName();
-
-    if (cellmlFileBeingUpdated.contains(cellmlFileName))
-        return;
-
-    cellmlFileBeingUpdated << cellmlFileName;
-
-    // Loop while there are CellML elements to update
-    // Note: this is done because a CellML element may take time to update and
-    //       we may end up in a situation where several CellML elements need
-    //       updating, so...
-
-    while (mIndexes.count()) {
-        // Retrieve the first CellML element to update
-
-        QModelIndex crtIndex = mIndexes.first();
-
-        mIndexes.removeFirst();
-
-        // Let people know that we request to see some metadata details
-
-        emit metadataDetailsRequested(static_cast<CellmlAnnotationViewCellmlElementItem *>(mModel->itemFromIndex(crtIndex))->element());
-    }
-
-    // We are done, so...
-
-    cellmlFileBeingUpdated.removeAt(cellmlFileBeingUpdated.indexOf(cellmlFileName));
+    emit metadataDetailsRequested(static_cast<CellmlAnnotationViewCellmlElementItem *>(mModel->itemFromIndex(pNewIndex))->element());
 }
 
 //==============================================================================
