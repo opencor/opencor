@@ -314,9 +314,11 @@ void CentralWidget::loadSettings(QSettings *pSettings)
     //       asked (by us, the central widget) to reload the file (i.e. update
     //       their GUIs)...
 
-    connect(FileManager::instance(), SIGNAL(fileChanged(const QString &)),
+    FileManager *fileManagerInstance = FileManager::instance();
+
+    connect(fileManagerInstance, SIGNAL(fileChanged(const QString &)),
             this, SLOT(fileChanged(const QString &)));
-    connect(FileManager::instance(), SIGNAL(fileDeleted(const QString &)),
+    connect(fileManagerInstance, SIGNAL(fileDeleted(const QString &)),
             this, SLOT(fileDeleted(const QString &)));
 
     // Some connections to handle an internal change in the status of a file
@@ -324,13 +326,13 @@ void CentralWidget::loadSettings(QSettings *pSettings)
     //       connections to handle an internal change in the status of a
     //       file)...
 
-    connect(FileManager::instance(), SIGNAL(fileModified(const QString &, const bool &)),
+    connect(fileManagerInstance, SIGNAL(fileModified(const QString &, const bool &)),
             this, SLOT(updateModifiedSettings()));
 
-    connect(FileManager::instance(), SIGNAL(fileReloaded(const QString &)),
+    connect(fileManagerInstance, SIGNAL(fileReloaded(const QString &)),
             this, SLOT(fileReloaded(const QString &)));
 
-    connect(FileManager::instance(), SIGNAL(fileRenamed(const QString &, const QString &)),
+    connect(fileManagerInstance, SIGNAL(fileRenamed(const QString &, const QString &)),
             this, SLOT(fileRenamed(const QString &, const QString &)));
 
     // Let the user know of a few default things about ourselves by emitting a
@@ -592,9 +594,10 @@ void CentralWidget::reloadFile(const int &pIndex)
     if (realIndex != -1) {
         bool doReloadFile = true;
 
+        FileManager *fileManagerInstance = FileManager::instance();
         QString fileName = mFileNames[realIndex];
 
-        if (FileManager::instance()->isModified(fileName))
+        if (fileManagerInstance->isModified(fileName))
             // The current file is modified, so ask the user whether s/he still
             // wants to reload it
 
@@ -609,9 +612,9 @@ void CentralWidget::reloadFile(const int &pIndex)
         //       all view plugins do their job properly and update their GUI...
 
         if (doReloadFile) {
-            FileManager::instance()->reload(fileName);
+            fileManagerInstance->reload(fileName);
 
-            FileManager::instance()->setModified(fileName, false);
+            fileManagerInstance->setModified(fileName, false);
         }
     }
 }
@@ -660,11 +663,13 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
     // Try to save the file in case it has been modified or it needs a new file
     // name (either as a result of a save as or because the file was new)
 
-    if (FileManager::instance()->isModified(oldFileName) || hasNewFileName) {
+    FileManager *fileManagerInstance = FileManager::instance();
+
+    if (fileManagerInstance->isModified(oldFileName) || hasNewFileName) {
         // Physically save the file in case it has been modified, or make a
         // physical copy of it
 
-        if (FileManager::instance()->isModified(oldFileName)) {
+        if (fileManagerInstance->isModified(oldFileName)) {
             // The file has been modified, so ask the current view to save it
 
             if (guiInterface->saveFile(oldFileName, newFileName)) {
@@ -709,7 +714,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 #ifdef QT_DEBUG
             FileManager::Status renameStatus =
 #endif
-            FileManager::instance()->rename(oldFileName, newFileName);
+            fileManagerInstance->rename(oldFileName, newFileName);
 
             // Make sure that the file has indeed been renamed
 
@@ -1353,12 +1358,13 @@ void CentralWidget::updateModifiedSettings()
     // Enable or disable the Mode and Views tabs, depending on whether one or
     // several files have been modified, and update the tab text if necessary
 
+    FileManager *fileManagerInstance = FileManager::instance();
     int nbOfModifiedFiles = 0;
 
     for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i) {
         QString tabText = mFileTabs->tabText(i);
 
-        if (FileManager::instance()->isModified(mFileNames[i])) {
+        if (fileManagerInstance->isModified(mFileNames[i])) {
             // The current file has been modified, so the Mode and Views tabs
             // should be disabled
 
@@ -1392,7 +1398,7 @@ void CentralWidget::updateModifiedSettings()
     // Let people know that we can save at least one file
 
     emit canSave(mFileTabs->count()?
-                     FileManager::instance()->isModified(mFileNames[mFileTabs->currentIndex()]):
+                     fileManagerInstance->isModified(mFileNames[mFileTabs->currentIndex()]):
                      false);
     emit canSaveAll(nbOfModifiedFiles);
 }
