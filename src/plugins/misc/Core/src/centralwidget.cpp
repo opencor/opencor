@@ -227,24 +227,6 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
         connect(mode->views(), SIGNAL(currentChanged(int)),
                 this, SLOT(updateFileTabIcons()));
     }
-
-    // A connection to handle an external change in the status of a file
-
-    connect(FileManager::instance(), SIGNAL(fileChanged(const QString &)),
-            this, SLOT(fileChanged(const QString &)));
-    connect(FileManager::instance(), SIGNAL(fileDeleted(const QString &)),
-            this, SLOT(fileDeleted(const QString &)));
-
-    // A connection to handle an internal change in the status of a file
-
-    connect(FileManager::instance(), SIGNAL(fileModified(const QString &, const bool &)),
-            this, SLOT(updateModifiedSettings()));
-
-    connect(FileManager::instance(), SIGNAL(fileReloaded(const QString &)),
-            this, SLOT(fileReloaded(const QString &)));
-
-    connect(FileManager::instance(), SIGNAL(fileRenamed(const QString &, const QString &)),
-            this, SLOT(fileRenamed(const QString &, const QString &)));
 }
 
 //==============================================================================
@@ -324,6 +306,33 @@ void CentralWidget::loadModeSettings(QSettings *pSettings,
 
 void CentralWidget::loadSettings(QSettings *pSettings)
 {
+    // Some connections to handle an external change in the status of a file
+    // Note: we do it here because we want other plugins to get a chance to
+    //       handle our file manager's signals before us. Indeed, in the case of
+    //       the CellML file manager for example, we will want the CellML file
+    //       manager to reload a CellML file before our different views get
+    //       asked (by us, the central widget) to reload the file (i.e. update
+    //       their GUIs)...
+
+    connect(FileManager::instance(), SIGNAL(fileChanged(const QString &)),
+            this, SLOT(fileChanged(const QString &)));
+    connect(FileManager::instance(), SIGNAL(fileDeleted(const QString &)),
+            this, SLOT(fileDeleted(const QString &)));
+
+    // Some connections to handle an internal change in the status of a file
+    // Note: we do it here for the same reason as above (see the note for the
+    //       connections to handle an internal change in the status of a
+    //       file)...
+
+    connect(FileManager::instance(), SIGNAL(fileModified(const QString &, const bool &)),
+            this, SLOT(updateModifiedSettings()));
+
+    connect(FileManager::instance(), SIGNAL(fileReloaded(const QString &)),
+            this, SLOT(fileReloaded(const QString &)));
+
+    connect(FileManager::instance(), SIGNAL(fileRenamed(const QString &, const QString &)),
+            this, SLOT(fileRenamed(const QString &, const QString &)));
+
     // Let the user know of a few default things about ourselves by emitting a
     // few signals
 

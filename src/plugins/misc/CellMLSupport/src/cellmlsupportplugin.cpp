@@ -74,7 +74,8 @@ void CellMLSupportPlugin::initialized(const Plugins &pLoadedPlugins)
     // Make a call to the instance of the CellML file manager so that it gets
     // properly set up before it actually gets used
     // Note: we do it here rather than in initialize() since we need the Core
-    //       plugin to be initialised...
+    //       plugin to be initialised (so we can get access to our 'global' file
+    //       manager)...
 
     CellmlFileManager::instance();
 }

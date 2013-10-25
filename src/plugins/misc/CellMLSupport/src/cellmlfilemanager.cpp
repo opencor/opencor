@@ -41,17 +41,15 @@ CellmlFileManager::CellmlFileManager() :
     // Create some connections to keep track of some events related to our
     // 'global' file manager
 
-    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-
-    connect(fileManagerInstance, SIGNAL(fileManaged(const QString &)),
+    connect(Core::FileManager::instance(), SIGNAL(fileManaged(const QString &)),
             this, SLOT(manageFile(const QString &)));
-    connect(fileManagerInstance, SIGNAL(fileUnmanaged(const QString &)),
+    connect(Core::FileManager::instance(), SIGNAL(fileUnmanaged(const QString &)),
             this, SLOT(unmanageFile(const QString &)));
 
-    connect(fileManagerInstance, SIGNAL(fileReloaded(const QString &)),
+    connect(Core::FileManager::instance(), SIGNAL(fileReloaded(const QString &)),
             this, SLOT(reloadFile(const QString &)));
 
-    connect(fileManagerInstance, SIGNAL(fileRenamed(const QString &, const QString &)),
+    connect(Core::FileManager::instance(), SIGNAL(fileRenamed(const QString &, const QString &)),
             this, SLOT(renameFile(const QString &, const QString &)));
 }
 
