@@ -98,7 +98,8 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mCheckResultsSimulations(QList<SingleCellViewSimulation *>()),
     mPlots(QList<SingleCellViewGraphPanelPlotWidget *>()),
     mPlotsViewports(QMap<SingleCellViewGraphPanelPlotWidget *, QRectF>()),
-    mCanUpdatePlotsForUpdatedGraphs(true)
+    mCanUpdatePlotsForUpdatedGraphs(true),
+    mNeedReloadView(false)
 {
     // Set up the GUI
 
@@ -932,6 +933,41 @@ void SingleCellViewWidget::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
+void SingleCellViewWidget::reloadView(const QString &pFileName)
+{
+    // Reload ourselves, i.e. finalise and (re)initialise ourselves
+
+    finalize(pFileName);
+    initialize(pFileName);
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::fileReloaded(const QString &pFileName)
+{
+    // The given file has been reloaded, so stop its current simulation, if any
+    // Note: indeed, it may be that a file has been opened (e.g. from a previous
+    //       session), but hasn't yet been selected, in which case it won't have
+    //       simulation associated with it...
+
+    bool needReloadView = true;
+    SingleCellViewSimulation *simulation = mSimulations.value(pFileName);
+
+    if (simulation)
+        if (simulation->stop()) {
+            mNeedReloadView = true;
+
+            needReloadView = false;
+        }
+
+    // Next, we need to reload ourselves
+
+    if (needReloadView)
+        reloadView(pFileName);
+}
+
+//==============================================================================
+
 void SingleCellViewWidget::fileRenamed(const QString &pOldFileName,
                                        const QString &pNewFileName)
 {
@@ -1200,6 +1236,7 @@ void SingleCellViewWidget::simulationStopped(const int &pElapsedTime)
     // dealing with the active simulation
 
     SingleCellViewSimulation *simulation = qobject_cast<SingleCellViewSimulation *>(sender());
+    QString simulationFileName = simulation->fileName();
 
     if (simulation == mSimulation) {
         // Output the elapsed time, if valid, and reset our progress bar (with a
@@ -1231,26 +1268,27 @@ void SingleCellViewWidget::simulationStopped(const int &pElapsedTime)
         mContentsWidget->informationWidget()->parametersWidget()->updateParameters(simulation->currentPoint());
     }
 
-    // Stop keeping track of our simulation progress and let people know that we
-    // should reset our file tab icon, but only if we are the active simulation
+    // Stop keeping track of our simulation progress
 
-    if (simulation) {
-        // Stop keeping track of our simulation progress
+    mProgresses.remove(simulationFileName);
 
-        mProgresses.remove(simulation->fileName());
+    // Reset our file tab icon (with a bit of a delay), but only if we are
+    // not the active simulation
+    // Note: we can't directly pass simulation to resetFileTabIcon(), so
+    //       instead we use mStoppedSimulations which is a list of
+    //       simulations in case several simulations were to stop at around
+    //       the same time...
 
-        // Reset our file tab icon (with a bit of a delay)
-        // Note: we can't directly pass simulation to resetFileTabIcon(), so
-        //       instead we use mStoppedSimulations which is a list of
-        //       simulations in case several simulations were to stop at around
-        //       the same time...
+    if (simulation != mSimulation) {
+        mStoppedSimulations << simulation;
 
-        if (simulation != mSimulation) {
-            mStoppedSimulations << simulation;
-
-            QTimer::singleShot(ResetDelay, this, SLOT(resetFileTabIcon()));
-        }
+        QTimer::singleShot(ResetDelay, this, SLOT(resetFileTabIcon()));
     }
+
+    // Reload ourselves, if needed (see fileReloaded())
+
+    if (mNeedReloadView)
+        reloadView(simulationFileName);
 }
 
 //==============================================================================

@@ -104,6 +104,7 @@ public:
     QIcon fileTabIcon(const QString &pFileName) const;
 
     void fileOpened(const QString &pFileName);
+    void fileReloaded(const QString &pFileName);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
     void fileClosed(const QString &pFileName);
 
@@ -162,6 +163,10 @@ private:
     QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> mPlotsViewports;
 
     bool mCanUpdatePlotsForUpdatedGraphs;
+
+    bool mNeedReloadView;
+
+    void reloadView(const QString &pFileName);
 
     void output(const QString &pMessage);
 
