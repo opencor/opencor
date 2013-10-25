@@ -935,10 +935,14 @@ void SingleCellViewWidget::fileOpened(const QString &pFileName)
 
 void SingleCellViewWidget::reloadView(const QString &pFileName)
 {
-    // Reload ourselves, i.e. finalise and (re)initialise ourselves
+    // Reload ourselves, i.e. finalise and (re)initialise ourselves, meaning
+    // that the given file will have effectively been closed and (re)opened
 
     finalize(pFileName);
+    fileClosed(pFileName);
+
     initialize(pFileName);
+    fileOpened(pFileName);
 }
 
 //==============================================================================
