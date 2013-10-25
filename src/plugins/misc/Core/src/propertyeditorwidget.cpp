@@ -1834,11 +1834,6 @@ void PropertyEditorWidget::selectProperty(Property *pProperty)
 void PropertyEditorWidget::editProperty(Property *pProperty,
                                         const bool &pCommitData)
 {
-    // Check that we are dealing with a 'proper' property item and not a section
-
-    if (pProperty && (pProperty->type() == Property::Section))
-        return;
-
     // We want to edit a new property, so first stop the editing of the current
     // one, if any
 
