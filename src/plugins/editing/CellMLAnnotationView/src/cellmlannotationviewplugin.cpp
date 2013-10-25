@@ -409,7 +409,7 @@ void CellMLAnnotationViewPlugin::fileReloaded(const QString &pFileName)
     CellmlAnnotationViewWidget *viewWidget = mViewWidgets.value(pFileName);
 
     if (viewWidget)
-        viewWidget->reload();
+        viewWidget->fileReloaded();
 }
 
 //==============================================================================

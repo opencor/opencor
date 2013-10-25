@@ -1106,9 +1106,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::on_actionCopy_triggered()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::reload()
+void CellmlAnnotationViewMetadataEditDetailsWidget::fileReloaded()
 {
-    // To reload ourselves means resetting our various user fields
+    // The file has been reloaded, so we need to reset our various user fields
 
     mQualifierValue->setCurrentIndex(0);
     mLookupQualifierButton->setChecked(false);

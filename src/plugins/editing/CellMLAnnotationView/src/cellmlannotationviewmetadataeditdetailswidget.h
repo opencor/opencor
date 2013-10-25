@@ -73,7 +73,7 @@ public:
 
     virtual void retranslateUi();
 
-    void reload();
+    void fileReloaded();
 
 private:
     enum Type {

@@ -382,13 +382,13 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateMetadataEditDetails()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataDetailsWidget::reload()
+void CellmlAnnotationViewMetadataDetailsWidget::fileReloaded()
 {
-    // Ask our metadata edit details widget to reload itself
-    // Note: we don't need to ask such a thing to our metadata view details
-    //       widget since it only presents information to the user...
+    // Let our metadata edit details widget know that the file has been reloaded
+    // Note: we don't need to let our metadata view details widget know about it
+    //       since it only presents information to the user...
 
-    mMetadataEditDetails->reload();
+    mMetadataEditDetails->fileReloaded();
 }
 
 //==============================================================================

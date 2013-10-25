@@ -405,14 +405,16 @@ void CellmlAnnotationViewWidget::addRdfTriple(CellMLSupport::CellmlFileRdfTriple
 
 //==============================================================================
 
-void CellmlAnnotationViewWidget::reload()
+void CellmlAnnotationViewWidget::fileReloaded()
 {
-    // Ask our CellML list and metadata details widgets to reload themselves
+    // Let our CellML list and metadata details widgets know that the file has
+    // been reloaded
 
-    mCellmlList->reload();
-    mMetadataDetails->reload();
+    mCellmlList->fileReloaded();
+    mMetadataDetails->fileReloaded();
 
-    // Set the focus to our CellML list widget
+    // Set the focus back to our CellML list widget (so that it looks like we
+    // are really starting over)
 
     mCellmlList->setFocus();
 }
