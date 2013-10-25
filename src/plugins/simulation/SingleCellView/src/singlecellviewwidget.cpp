@@ -925,7 +925,7 @@ QIcon SingleCellViewWidget::fileTabIcon(const QString &pFileName) const
 
 void SingleCellViewWidget::fileOpened(const QString &pFileName)
 {
-    // Let our graphs widget know that a file has been opened
+    // Let our graphs widget know that the given file has been opened
 
     mContentsWidget->informationWidget()->graphsWidget()->fileOpened(pFileName);
 }
@@ -935,7 +935,7 @@ void SingleCellViewWidget::fileOpened(const QString &pFileName)
 void SingleCellViewWidget::fileRenamed(const QString &pOldFileName,
                                        const QString &pNewFileName)
 {
-    // Let our graphs widget know that a file has been renamed
+    // Let our graphs widget know that the given file has been renamed
 
     mContentsWidget->informationWidget()->graphsWidget()->fileRenamed(pOldFileName, pNewFileName);
 }
@@ -944,7 +944,7 @@ void SingleCellViewWidget::fileRenamed(const QString &pOldFileName,
 
 void SingleCellViewWidget::fileClosed(const QString &pFileName)
 {
-    // Let our graphs widget know that a file has been closed
+    // Let our graphs widget know that the given file has been closed
 
     mContentsWidget->informationWidget()->graphsWidget()->fileClosed(pFileName);
 }
@@ -1453,13 +1453,13 @@ void SingleCellViewWidget::graphsUpdated(SingleCellViewGraphPanelPlotWidget *pPl
         graph->setVisible(graph->isValid() && graph->isSelected());
 
         // Update the graph's data and replot it
-        // Note: it may happen that we don't have a simulation associated with the
-        //       given graph, hence we must check for it. Indeed, say that you have
-        //       two files opened, but only one has been selected so far. From
-        //       there, say you create a graph and then double click on its model
-        //       property so that the other file gets selected. In this case, for
-        //       example, there won't be a simulation associated with the file and
-        //       therefore the graph...
+        // Note: it may happen that we don't have a simulation associated with
+        //       the given graph, hence we must check for it. Indeed, say that
+        //       you have two files opened, but only one has been selected so
+        //       far. From there, say you create a graph and then double click
+        //       on its model property so that the other file gets selected. In
+        //       this case, for example, there won't be a simulation associated
+        //       with the file and therefore the graph...
 
         SingleCellViewSimulation *simulation = mSimulations.value(graph->fileName());
 
