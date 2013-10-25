@@ -584,12 +584,36 @@ void CentralWidget::openFile()
 
 void CentralWidget::reloadFile(const int &pIndex)
 {
-    // Ask our file manager to reload the file
+    // Ask our file manager to reload the file, but only if it isn't modified or
+    // the user wants to ignore current modifications
 
     int realIndex = (pIndex < 0)?mFileTabs->currentIndex():pIndex;
 
-    if (realIndex != -1)
-        FileManager::instance()->reload(mFileNames[realIndex]);
+    if (realIndex != -1) {
+        bool doReloadFile = true;
+
+        QString fileName = mFileNames[realIndex];
+
+        if (FileManager::instance()->isModified(fileName))
+            // The current file is modified, so ask the user whether s/he still
+            // wants to reload it
+
+            doReloadFile = QMessageBox::question(mMainWindow, qApp->applicationName(),
+                                                 tr("<strong>%1</strong> has been modified. Do you still want to reload it?").arg(fileName),
+                                                 QMessageBox::Yes|QMessageBox::No,
+                                                 QMessageBox::Yes) == QMessageBox::Yes;
+
+        // Reload the file, if needed, and consider it as non-modified anymore
+        // (in case it was before)
+        // Note: by making the file non-modified anymore, we clearly assume that
+        //       all view plugins do their job properly and update their GUI...
+
+        if (doReloadFile) {
+            FileManager::instance()->reload(fileName);
+
+            FileManager::instance()->setModified(fileName, false);
+        }
+    }
 }
 
 //==============================================================================
