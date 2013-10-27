@@ -62,7 +62,8 @@ QString CellmlFileExporter::errorMessage() const
 bool CellmlFileExporter::saveModel(iface::cellml_api::Model *pModel,
                                    const QString &pFileName)
 {
-    // Save the given model
+    // Save the given model, adding an empty line at the end, if needed (i.e.
+    // what is expected from various tools, e.g. GitHub)
 
     QFile file(pFileName);
 
@@ -73,7 +74,12 @@ bool CellmlFileExporter::saveModel(iface::cellml_api::Model *pModel,
     } else {
         QTextStream out(&file);
 
-        out << QString::fromStdWString(pModel->serialisedText());
+        QString serialisedText = QString::fromStdWString(pModel->serialisedText());
+
+        if (!serialisedText.endsWith("\n"))
+            serialisedText += "\n";
+
+        out << serialisedText;
 
         file.close();
 
