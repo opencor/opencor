@@ -676,16 +676,16 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
                 // Let all our plugins know about the file having been saved
 
                 foreach (Plugin *plugin, mLoadedPlugins) {
-                    GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+                    GuiInterface *otherGuiInterface = qobject_cast<GuiInterface *>(plugin->instance());
 
-                    if (guiInterface)
-                        guiInterface->fileSaved(newFileName);
+                    if (otherGuiInterface)
+                        otherGuiInterface->fileSaved(newFileName);
                 }
             } else {
                 // The file couldn't be saved, so...
 
                 QMessageBox::warning(mMainWindow, tr("Save File"),
-                                     tr("Sorry, but <strong>%1</strong> could not be saved.").arg(newFileName));
+                                     tr("Sorry, but the <strong>%1</strong> view could not save <strong>%2</strong>.").arg(guiInterface->viewName(), newFileName));
 
                 return false;
             }
