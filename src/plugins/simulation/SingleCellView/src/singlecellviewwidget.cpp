@@ -945,8 +945,6 @@ void SingleCellViewWidget::reloadView(const QString &pFileName)
     fileOpened(pFileName);
 
     // Stop keeping track of the fact that we need to reload ourselves
-    // Note: this is not alway necessary (i.e. we don't need to stop a
-    //       simulation), but better be safe than sorry...
 
     mNeedReloadViews.removeOne(pFileName);
 }
@@ -963,14 +961,13 @@ void SingleCellViewWidget::fileReloaded(const QString &pFileName)
     bool needReloadView = true;
     SingleCellViewSimulation *simulation = mSimulations.value(pFileName);
 
+    mNeedReloadViews << pFileName;
+
     if (simulation)
-        if (simulation->stop()) {
-            mNeedReloadViews << pFileName;
-
+        if (simulation->stop())
             needReloadView = false;
-        }
 
-    // Next, we need to reload ourselves
+    // Reload ourselves, if needed
 
     if (needReloadView)
         reloadView(pFileName);
