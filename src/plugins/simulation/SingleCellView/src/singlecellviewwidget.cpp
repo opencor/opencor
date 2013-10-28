@@ -966,6 +966,12 @@ void SingleCellViewWidget::fileReloaded(const QString &pFileName)
     if (simulation)
         if (simulation->stop())
             needReloadView = false;
+            // Note: we don't need to reload ourselves since stopping the
+            //       simulation will result in the stopped() signal being
+            //       received and, therefore, the simulationStopped() slot being
+            //       called, which is where we should reload ourselves since we
+            //       cannot tell how long the signal/slot mechanism is going to
+            //       take...
 
     // Reload ourselves, if needed
 
