@@ -616,15 +616,22 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
     mDelayWidget->setValue(mDelays.value(pFileName));
 
-    // Stop tracking our simulation progress and let people know that our file
-    // tab icon should be reset, these in case our simulation is running or
-    // paused
+    // In case our simulation is running or paused, then stop tracking our
+    // simulation progress and let people know that our file tab icon should be
+    // reset
 
     if (mSimulation->isRunning() || mSimulation->isPaused()) {
         mProgresses.remove(mSimulation->fileName());
 
         emit updateFileTabIcon(mSimulation->fileName(), QIcon());
     }
+
+    // Update our progress bar, if needed
+    // Note: indeed, it's only if our simulation is running that our progress
+    //       bar will get updated (when checking for results)...
+
+    if (!mSimulation->isRunning())
+        mProgressBarWidget->setValue(mSimulation->progress());
 
     // Determine whether the CellML file has a valid runtime
 
