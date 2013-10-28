@@ -164,7 +164,7 @@ private:
 
     bool mCanUpdatePlotsForUpdatedGraphs;
 
-    bool mNeedReloadView;
+    QList<QString> mNeedReloadViews;
 
     void reloadView(const QString &pFileName);
 

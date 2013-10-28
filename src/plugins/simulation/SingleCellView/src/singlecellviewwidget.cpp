@@ -99,7 +99,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mPlots(QList<SingleCellViewGraphPanelPlotWidget *>()),
     mPlotsViewports(QMap<SingleCellViewGraphPanelPlotWidget *, QRectF>()),
     mCanUpdatePlotsForUpdatedGraphs(true),
-    mNeedReloadView(false)
+    mNeedReloadViews(QList<QString>())
 {
     // Set up the GUI
 
@@ -943,6 +943,12 @@ void SingleCellViewWidget::reloadView(const QString &pFileName)
 
     initialize(pFileName);
     fileOpened(pFileName);
+
+    // Stop keeping track of the fact that we need to reload ourselves
+    // Note: this is not alway necessary (i.e. we don't need to stop a
+    //       simulation), but better be safe than sorry...
+
+    mNeedReloadViews.removeOne(pFileName);
 }
 
 //==============================================================================
@@ -959,7 +965,7 @@ void SingleCellViewWidget::fileReloaded(const QString &pFileName)
 
     if (simulation)
         if (simulation->stop()) {
-            mNeedReloadView = true;
+            mNeedReloadViews << pFileName;
 
             needReloadView = false;
         }
@@ -1230,7 +1236,12 @@ void SingleCellViewWidget::simulationPaused()
 void SingleCellViewWidget::simulationStopped(const int &pElapsedTime)
 {
     // We want a short delay before resetting the progress bar and the file tab
-    // icon, so that the user can really see when our simulation has completed
+    // icon, so that the user can really see when our simulation has completed,
+    // but this is only is we don't need to reload ourselves
+    // Note: indeed, if we need to reload ourselves (see fileReloaded()), we
+    //       want things to be done as quickly as possible. Not only that, but
+    //       we don't want to risk problems with our simulation being used while
+    //       it has already been deleted due to threading issues...
 
     enum {
         ResetDelay = 169
@@ -1241,6 +1252,7 @@ void SingleCellViewWidget::simulationStopped(const int &pElapsedTime)
 
     SingleCellViewSimulation *simulation = qobject_cast<SingleCellViewSimulation *>(sender());
     QString simulationFileName = simulation->fileName();
+    bool needReloadView = mNeedReloadViews.contains(simulationFileName);
 
     if (simulation == mSimulation) {
         // Output the elapsed time, if valid, and reset our progress bar (with a
@@ -1263,7 +1275,10 @@ void SingleCellViewWidget::simulationStopped(const int &pElapsedTime)
             output(QString(OutputTab+"<strong>"+tr("Simulation time:")+"</strong> <span"+OutputInfo+">"+tr("%1 s using %2").arg(QString::number(0.001*pElapsedTime, 'g', 3), solversInformation)+"</span>."+OutputBrLn));
         }
 
-        QTimer::singleShot(ResetDelay, this, SLOT(resetProgressBar()));
+        if (needReloadView)
+            resetProgressBar();
+        else
+            QTimer::singleShot(ResetDelay, this, SLOT(resetProgressBar()));
 
         // Update our parameters and simulation mode
 
@@ -1286,12 +1301,15 @@ void SingleCellViewWidget::simulationStopped(const int &pElapsedTime)
     if (simulation != mSimulation) {
         mStoppedSimulations << simulation;
 
-        QTimer::singleShot(ResetDelay, this, SLOT(resetFileTabIcon()));
+        if (needReloadView)
+            resetFileTabIcon();
+        else
+            QTimer::singleShot(ResetDelay, this, SLOT(resetFileTabIcon()));
     }
 
     // Reload ourselves, if needed (see fileReloaded())
 
-    if (mNeedReloadView)
+    if (needReloadView)
         reloadView(simulationFileName);
 }
 
