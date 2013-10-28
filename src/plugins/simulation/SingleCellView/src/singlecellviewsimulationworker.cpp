@@ -477,7 +477,7 @@ bool SingleCellViewSimulationWorker::stop()
         mThread->wait();
 
         mThread = 0;
-        // Note: this is in case we, for example, want to retrieve our
+        // Note: this is in case we want, for example, to retrieve our
         //       progress...
 
         return true;
