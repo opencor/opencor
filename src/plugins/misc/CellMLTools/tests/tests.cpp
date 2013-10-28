@@ -35,15 +35,20 @@ void Tests::cliHelpTests()
 {
     // Ask for the plugin's help
 
-    QStringList a = OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::help");
+    QStringList a = OpenCOR::runCli(QStringList() << "-c" << "CellMLTools");
     QStringList b = OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/help.out");
+
+    QCOMPARE(a, b);
+
+    // Ask for the plugin's help
+
+    a = OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::help");
 
     QCOMPARE(a, b);
 
     // Try an unknown command, resulting in the help being shown
 
     a = OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::unknown");
-    b = OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/help.out");
 
     QCOMPARE(a, b);
 }
