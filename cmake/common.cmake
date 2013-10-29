@@ -23,13 +23,26 @@ MACRO(INITIALISE_PROJECT)
 
     COMMON_INITIALISATION()
 
-    # Check whether we are building in 32-bit or 64-bit
-    # Note: normally, we would check the value of CMAKE_SIZEOF_VOID_P, but in
-    #       some cases it may not be set (e.g. when generating an Xcode project
-    #       file), so we determine and retrieve that value ourselves...
+    # Make sure that we are building on a supported architecture
+    # Note #1: normally, we would check the value of CMAKE_SIZEOF_VOID_P, but
+    #          in some cases it may not be set (e.g. when generating an Xcode
+    #          project file), so we determine and retrieve that value
+    #          ourselves...
+    # Note #2: we can come here from either the main project (i.e. the GUI
+    #          version of OpenCOR on Windows and the GUI/CLI versions of
+    #          OpenCOR on Linux / OS X) or non-main project (i.e. the CLI
+    #          version of OpenCOR on Windows), hence we test the existence of
+    #          the cmake folder so that we can determine the exact location of
+    #          architecture.c file...
+
+    IF(EXISTS ${CMAKE_SOURCE_DIR}/cmake)
+        SET(ARCHITECTURE_FILENAME ${CMAKE_SOURCE_DIR}/cmake/architecture.c)
+    ELSE()
+        SET(ARCHITECTURE_FILENAME ${CMAKE_SOURCE_DIR}/../cmake/architecture.c)
+    ENDIF()
 
     TRY_RUN(ARCHITECTURE_RUN ARCHITECTURE_COMPILE
-            ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/cmake/architecture.c
+            ${CMAKE_BINARY_DIR} ${ARCHITECTURE_FILENAME}
             RUN_OUTPUT_VARIABLE ARCHITECTURE)
 
     IF(NOT ${ARCHITECTURE} EQUAL 32 AND NOT ${ARCHITECTURE} EQUAL 64)
@@ -756,20 +769,13 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
 ENDMACRO()
 
 MACRO(COPY_FILE_TO_BUILD_DIR ORIG_DIRNAME DEST_DIRNAME FILENAME)
-    # Determine the real destination folder, based on whether we came here from
-    # the main project (i.e. GUI version of OpenCOR on Windows and GUI/CLI
-    # versions of OpenCOR on Linux / OS X) or non-main project (i.e. the CLI
-    # version of OpenCOR on Windows)
+    # Determine the real destination folder
+    # Note: see the INITIALISE_PROJECT() macro for an explanation of why we
+    #       check the existence of the cmake folder below...
 
-    IF(EXISTS ${CMAKE_BINARY_DIR}/../cmake)
-        # A CMake directory exists at the same level as the binary directory,
-        # so we are dealing with the main project
-
+    IF(EXISTS ${CMAKE_SOURCE_DIR}/cmake)
         SET(REAL_DEST_DIRNAME ${PROJECT_BUILD_DIR}/${DEST_DIRNAME})
     ELSE()
-        # No CMake directory exists at the same level as the binary directory,
-        # so we are dealing with a non-main project
-
         SET(REAL_DEST_DIRNAME ${CMAKE_BINARY_DIR}/../../build/${CMAKE_CFG_INTDIR}/${DEST_DIRNAME})
     ENDIF()
 
