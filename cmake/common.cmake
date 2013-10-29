@@ -13,6 +13,8 @@ IF(NOT "${CMAKE_CFG_INTDIR}" STREQUAL ".")
     SET(PROJECT_BUILD_DIR ${PROJECT_BUILD_DIR}/${CMAKE_CFG_INTDIR})
 ENDIF()
 
+#===============================================================================
+
 MACRO(INITIALISE_PROJECT)
 #    SET(CMAKE_VERBOSE_MAKEFILE ON)
     SET(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -221,6 +223,8 @@ MACRO(INITIALISE_PROJECT)
     ENDIF()
 ENDMACRO()
 
+#===============================================================================
+
 MACRO(UPDATE_LANGUAGE_FILES TARGET_NAME)
     # Update the translation (.ts) files (if they exist) and generate the
     # language (.qm) files which will later on be embedded in the project
@@ -248,6 +252,8 @@ MACRO(UPDATE_LANGUAGE_FILES TARGET_NAME)
         ENDIF()
     ENDFOREACH()
 ENDMACRO()
+
+#===============================================================================
 
 MACRO(ADD_PLUGIN PLUGIN_NAME)
     # Various initialisations
@@ -671,6 +677,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     ENDIF()
 ENDMACRO()
 
+#===============================================================================
+
 MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
     # Various initialisations
 
@@ -754,6 +762,8 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
     ENDIF()
 ENDMACRO()
 
+#===============================================================================
+
 MACRO(COPY_FILE_TO_BUILD_DIR ORIG_DIRNAME DEST_DIRNAME FILENAME)
     # Determine the real destination folder
     # Note: see the INITIALISE_PROJECT() macro for an explanation of why we
@@ -779,6 +789,8 @@ MACRO(COPY_FILE_TO_BUILD_DIR ORIG_DIRNAME DEST_DIRNAME FILENAME)
     ENDIF()
 ENDMACRO()
 
+#===============================================================================
+
 MACRO(WINDOWS_DEPLOY_QT_LIBRARIES)
     FOREACH(LIBRARY ${ARGN})
         # Deploy the Qt library itself
@@ -788,6 +800,8 @@ MACRO(WINDOWS_DEPLOY_QT_LIBRARIES)
     ENDFOREACH()
 ENDMACRO()
 
+#===============================================================================
+
 MACRO(WINDOWS_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
     FOREACH(PLUGIN_NAME ${ARGN})
         # Deploy the Qt plugin itself
@@ -796,6 +810,8 @@ MACRO(WINDOWS_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
                 DESTINATION plugins/${PLUGIN_CATEGORY})
     ENDFOREACH()
 ENDMACRO()
+
+#===============================================================================
 
 MACRO(WINDOWS_DEPLOY_LIBRARY DIRNAME FILENAME)
     # Copy the library file to both the build and build/bin folders, so we can
@@ -810,6 +826,8 @@ MACRO(WINDOWS_DEPLOY_LIBRARY DIRNAME FILENAME)
             DESTINATION bin)
 ENDMACRO()
 
+#===============================================================================
+
 MACRO(LINUX_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
     FOREACH(PLUGIN_NAME ${ARGN})
         # Deploy the Qt plugin itself
@@ -818,6 +836,8 @@ MACRO(LINUX_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
                 DESTINATION plugins/${PLUGIN_CATEGORY})
     ENDFOREACH()
 ENDMACRO()
+
+#===============================================================================
 
 MACRO(LINUX_DEPLOY_LIBRARY DIRNAME FILENAME)
     # Copy the library file to the build folder, so we can test things without
@@ -829,6 +849,8 @@ MACRO(LINUX_DEPLOY_LIBRARY DIRNAME FILENAME)
 
     INSTALL(FILES ${DIRNAME}/${FILENAME} DESTINATION lib)
 ENDMACRO()
+
+#===============================================================================
 
 MACRO(OS_X_QT_DEPENDENCIES FILENAME QT_DEPENDENCIES)
     # Retrieve the file's full-path Qt dependencies as a list
@@ -852,6 +874,8 @@ MACRO(OS_X_QT_DEPENDENCIES FILENAME QT_DEPENDENCIES)
         LIST(APPEND ${QT_DEPENDENCIES} ${QT_DEPENDENCY})
     ENDFOREACH()
 ENDMACRO()
+
+#===============================================================================
 
 MACRO(OS_X_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES DIRNAME FILENAME)
     # Strip the Qt file of all local symbols
@@ -882,6 +906,8 @@ MACRO(OS_X_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES DIRNAME FILENAME)
     ENDFOREACH()
 ENDMACRO()
 
+#===============================================================================
+
 MACRO(OS_X_DEPLOY_QT_FILE ORIG_DIRNAME DEST_DIRNAME FILENAME)
     # Copy the Qt file itself
 
@@ -900,6 +926,8 @@ MACRO(OS_X_DEPLOY_QT_FILE ORIG_DIRNAME DEST_DIRNAME FILENAME)
     OS_X_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${DEST_DIRNAME} ${FILENAME} ${DEPENDENCIES})
 ENDMACRO()
 
+#===============================================================================
+
 MACRO(OS_X_DEPLOY_QT_LIBRARIES)
     FOREACH(LIBRARY_NAME ${ARGN})
         # Deploy the Qt library itself
@@ -912,6 +940,8 @@ MACRO(OS_X_DEPLOY_QT_LIBRARIES)
     ENDFOREACH()
 ENDMACRO()
 
+#===============================================================================
+
 MACRO(OS_X_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
     FOREACH(PLUGIN_NAME ${ARGN})
         # Deploy the Qt plugin itself
@@ -921,6 +951,8 @@ MACRO(OS_X_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
                             ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
     ENDFOREACH()
 ENDMACRO()
+
+#===============================================================================
 
 MACRO(OS_X_DEPLOY_LIBRARY DIRNAME LIBRARY_NAME)
     # Copy the library itself
@@ -958,6 +990,8 @@ MACRO(OS_X_DEPLOY_LIBRARY DIRNAME LIBRARY_NAME)
                                                              ${LIBRARY_FILEPATH})
     ENDFOREACH()
 ENDMACRO()
+
+#===============================================================================
 
 MACRO(RETRIEVE_BINARY_FILE DIRNAME FILENAME SHA1_VALUE)
     # Create the destination folder, if needed
