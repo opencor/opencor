@@ -12,10 +12,6 @@ IF(NOT CMAKE_VERSION VERSION_LESS 2.8.11)
     CMAKE_POLICY(SET CMP0020 OLD)
 ENDIF()
 
-# Location of the OpenCOR bundle (OS X specific)
-
-SET(OS_X_PROJECT_BINARY_DIR ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app)
-
 # Some in-house CMake functions/macros
 
 INCLUDE(${CMAKE_SOURCE_DIR}/cmake/common.cmake)
@@ -304,11 +300,11 @@ IF(APPLE)
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/distrib/osx/qt.conf
-                                                        ${OS_X_PROJECT_BINARY_DIR}/Contents/Resources/qt.conf)
+                                                        ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Resources/qt.conf)
 
     # Clean up our main executable
 
-    OS_X_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${OS_X_PROJECT_BINARY_DIR}/Contents/MacOS ${PROJECT_NAME}
+    OS_X_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${PROJECT_NAME}
                                             QtConcurrent QtCore QtGui QtHelp QtNetwork QtOpenGL QtPrintSupport QtQml QtQuick QtSensors QtSvg QtWebKit QtWebKitWidgets QtWidgets QtXml)
 
     # Deploy our Qt dependencies

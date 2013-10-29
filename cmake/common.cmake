@@ -153,7 +153,7 @@ MACRO(INITIALISE_PROJECT)
     # Windows and Linux before being able to test it
 
     IF(APPLE)
-        SET(DEST_PLUGINS_DIR ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${CMAKE_PROJECT_NAME})
+        SET(DEST_PLUGINS_DIR ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${CMAKE_PROJECT_NAME})
     ELSE()
         SET(DEST_PLUGINS_DIR ${CMAKE_BINARY_DIR}/plugins/${CMAKE_PROJECT_NAME})
     ENDIF()
@@ -467,7 +467,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     IF(APPLE)
         # Clean up our plugin
 
-        OS_X_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${CMAKE_PROJECT_NAME}
+        OS_X_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${CMAKE_PROJECT_NAME}
                                                 ${PLUGIN_FILENAME} ${QT_DEPENDENCIES})
 
         # Make sure that the plugin refers to our embedded version of the other
@@ -477,7 +477,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                                COMMAND install_name_tool -change ${PLUGIN_BUILD_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX}
                                                                  @executable_path/../PlugIns/${CMAKE_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                                                                 ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_FILENAME})
+                                                                 ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_FILENAME})
         ENDFOREACH()
 
         # Make sure that the plugin refers to our embedded version of the
@@ -489,7 +489,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                                COMMAND install_name_tool -change ${PLUGIN_BINARY_DEPENDENCY}
                                                                  @executable_path/../PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_BINARY_DEPENDENCY}
-                                                                 ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_FILENAME})
+                                                                 ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_FILENAME})
         ENDFOREACH()
 
         # Make sure that the plugin refers to our embedded version of the
@@ -502,12 +502,12 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                                COMMAND install_name_tool -change ${EXTERNAL_BINARY_DEPENDENCY}
                                                                  @executable_path/../Frameworks/${EXTERNAL_BINARY_DEPENDENCY}
-                                                                 ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_FILENAME})
+                                                                 ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_FILENAME})
 
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                                COMMAND install_name_tool -change @executable_path/../lib/${EXTERNAL_BINARY_DEPENDENCY}
                                                                  @executable_path/../Frameworks/${EXTERNAL_BINARY_DEPENDENCY}
-                                                                 ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_FILENAME})
+                                                                 ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_FILENAME})
         ENDFOREACH()
     ENDIF()
 
@@ -878,7 +878,7 @@ MACRO(OS_X_DEPLOY_QT_LIBRARIES)
         SET(QT_FRAMEWORK_DIR ${LIBRARY_NAME}.framework/Versions/${QT_VERSION_MAJOR})
 
         OS_X_DEPLOY_QT_FILE(${QT_LIBRARY_DIR}/${QT_FRAMEWORK_DIR}
-                            ${OS_X_PROJECT_BINARY_DIR}/Contents/Frameworks/${QT_FRAMEWORK_DIR}
+                            ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${QT_FRAMEWORK_DIR}
                             ${LIBRARY_NAME})
     ENDFOREACH()
 ENDMACRO()
@@ -888,7 +888,7 @@ MACRO(OS_X_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
         # Deploy the Qt plugin itself
 
         OS_X_DEPLOY_QT_FILE(${QT_PLUGINS_DIR}/${PLUGIN_CATEGORY}
-                            ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${PLUGIN_CATEGORY}
+                            ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${PLUGIN_CATEGORY}
                             ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
     ENDFOREACH()
 ENDMACRO()
@@ -897,7 +897,7 @@ MACRO(OS_X_DEPLOY_LIBRARY DIRNAME LIBRARY_NAME)
     # Copy the library itself
 
     SET(LIBRARY_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(LIBRARY_FILEPATH ${OS_X_PROJECT_BINARY_DIR}/Contents/Frameworks/${LIBRARY_FILENAME})
+    SET(LIBRARY_FILEPATH ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${LIBRARY_FILENAME})
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                        COMMAND ${CMAKE_COMMAND} -E copy ${DIRNAME}/${LIBRARY_FILENAME}
