@@ -22,15 +22,13 @@ SET(VERSION_PATCH 0)
 
 IF(SNAPSHOT)
     TRY_RUN(DATE_RUN DATE_COMPILE
-            ${PROJECT_BUILD_DIR} ${CMAKE_SOURCE_DIR}/cmake/date.c
-            RUN_OUTPUT_VARIABLE DATE)
-
-    SET(VERSION ${DATE})
+            ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/cmake/date.c
+            RUN_OUTPUT_VARIABLE VERSION)
 ELSE()
     SET(VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
 ENDIF()
 
-FILE(WRITE ${PROJECT_BUILD_DIR}/version.txt ${VERSION})
+FILE(WRITE ${CMAKE_BINARY_DIR}/version.txt ${VERSION})
 
 # Files that make up the GUI version of OpenCOR
 
@@ -270,9 +268,9 @@ IF(APPLE)
     # Configure and use our own Info.plist file
     # Note: the reason for using our own Info.plist file is that it contains
     #       some information about associating .cellml files to OpenCOR,
-    #       something which can't be done using CMake (or so it seems)...
+    #       something that can't be done using CMake (or so it seems)...
 
-    SET(InfoPlistFile ${PROJECT_BUILD_DIR}/Info.plist)
+    SET(InfoPlistFile ${CMAKE_BINARY_DIR}/Info.plist)
 
     EXECUTE_PROCESS(COMMAND date "+%Y"
                     OUTPUT_VARIABLE YEAR
@@ -422,7 +420,7 @@ ELSEIF(APPLE)
     # Shell script to run OpenCOR (useful when downloading a ZIPped version of
     # OpenCOR)
 
-    SET(SHELL_FILENAME ${PROJECT_BUILD_DIR}/${PROJECT_NAME}.sh)
+    SET(SHELL_FILENAME ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.sh)
 
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/application.sh.in ${SHELL_FILENAME})
 
