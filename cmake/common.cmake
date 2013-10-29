@@ -28,15 +28,11 @@ MACRO(INITIALISE_PROJECT)
     #       some cases it may not be set (e.g. when generating an Xcode project
     #       file), so we determine and retrieve that value ourselves...
 
-    TRY_RUN(DATE_RUN DATE_COMPILE
-            ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/cmake/voidpointersize.c
-            RUN_OUTPUT_VARIABLE SIZEOF_VOID_P)
+    TRY_RUN(ARCHITECTURE_RUN ARCHITECTURE_COMPILE
+            ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/cmake/architecture.c
+            RUN_OUTPUT_VARIABLE ARCHITECTURE)
 
-    IF(SIZEOF_VOID_P EQUAL 4)
-        SET(32BIT_MODE ON)
-    ELSEIF(SIZEOF_VOID_P EQUAL 8)
-        SET(32BIT_MODE OFF)
-    ELSE()
+    IF(NOT ${ARCHITECTURE} EQUAL 32 AND NOT ${ARCHITECTURE} EQUAL 64)
         MESSAGE(FATAL_ERROR "Sorry, but OpenCOR can only be built in 32-bit or 64-bit mode...")
     ENDIF()
 
@@ -70,7 +66,7 @@ MACRO(INITIALISE_PROJECT)
     ENDIF()
 
     IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-        MESSAGE("Building a debug version...")
+        MESSAGE("Building a ${ARCHITECTURE}-bit debug version...")
 
         SET(DEBUG_MODE ON)
 
@@ -87,7 +83,7 @@ MACRO(INITIALISE_PROJECT)
 
         ADD_DEFINITIONS(-DQT_DEBUG)
     ELSE()
-        MESSAGE("Building a release version...")
+        MESSAGE("Building a ${ARCHITECTURE}-bit release version...")
 
         SET(DEBUG_MODE OFF)
 
@@ -193,7 +189,7 @@ MACRO(INITIALISE_PROJECT)
     ELSEIF(APPLE)
         SET(DISTRIB_DIR osx)
     ELSE()
-        IF(32BIT_MODE)
+        IF(${ARCHITECTURE} EQUAL 32)
             SET(DISTRIB_DIR linux/x86)
         ELSE()
             SET(DISTRIB_DIR linux/x64)

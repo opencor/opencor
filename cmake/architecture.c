@@ -19,7 +19,18 @@ specific language governing permissions and limitations under the License.
 
 int main()
 {
-    printf("%d", sizeof(void *));
+    switch (sizeof(void *)) {
+    case 4:
+        printf("32");
+
+        break;
+    case 8:
+        printf("64");
+
+        break;
+    default:
+        printf("Unknown");
+    }
 
     return 0;
 }
