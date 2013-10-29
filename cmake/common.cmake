@@ -1,6 +1,19 @@
+MACRO(UPDATE_CMAKE_POLICIES)
+    # Make sure that all the CMake policies that have been introduced since our
+    # minimum required CMake version (i.e. 2.8.9) are compatible with it
+
+    IF(NOT CMAKE_VERSION VERSION_LESS 2.8.11)
+        CMAKE_POLICY(SET CMP0020 OLD)
+    ENDIF()
+ENDMACRO()
+
 MACRO(INITIALISE_PROJECT)
 #    SET(CMAKE_VERBOSE_MAKEFILE ON)
     SET(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+    # Update our CMake policies
+
+    UPDATE_CMAKE_POLICIES()
 
     # Check whether we are building in 32-bit or 64-bit
 
@@ -219,6 +232,10 @@ MACRO(UPDATE_LANGUAGE_FILES TARGET_NAME)
 ENDMACRO()
 
 MACRO(ADD_PLUGIN PLUGIN_NAME)
+    # Update our CMake policies
+
+    UPDATE_CMAKE_POLICIES()
+
     # Various initialisations
 
     SET(PLUGIN_NAME ${PLUGIN_NAME})

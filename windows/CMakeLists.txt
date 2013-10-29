@@ -4,14 +4,6 @@ PROJECT(OpenCOR)
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.9)
 
-# Make sure that all the CMake policies that have been introduced since our
-# minimum required CMake version are compatible with it
-# Note: the same code should be used in [OpenCOR]/CMakeLists.txt...
-
-IF(NOT CMAKE_VERSION VERSION_LESS 2.8.11)
-    CMAKE_POLICY(SET CMP0020 OLD)
-ENDIF()
-
 # Some in-house CMake functions/macros
 
 INCLUDE(${CMAKE_SOURCE_DIR}/../cmake/common.cmake)
