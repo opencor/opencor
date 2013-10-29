@@ -24,10 +24,17 @@ MACRO(INITIALISE_PROJECT)
     COMMON_INITIALISATION()
 
     # Check whether we are building in 32-bit or 64-bit
+    # Note: normally, we would check the value of CMAKE_SIZEOF_VOID_P, but in
+    #       some cases it may not be set (e.g. when generating an Xcode project
+    #       file), so we determine and retrieve that value ourselves...
 
-    IF(CMAKE_SIZEOF_VOID_P EQUAL 4)
+    TRY_RUN(DATE_RUN DATE_COMPILE
+            ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/cmake/voidpointersize.c
+            RUN_OUTPUT_VARIABLE SIZEOF_VOID_P)
+
+    IF(SIZEOF_VOID_P EQUAL 4)
         SET(32BIT_MODE ON)
-    ELSEIF(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    ELSEIF(SIZEOF_VOID_P EQUAL 8)
         SET(32BIT_MODE OFF)
     ELSE()
         MESSAGE(FATAL_ERROR "Sorry, but OpenCOR can only be built in 32-bit or 64-bit mode...")
