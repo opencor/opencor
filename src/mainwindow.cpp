@@ -164,15 +164,15 @@ mGui->actionPreferences->setVisible(false);
     // Note: we do it here, so that we can use standard shortcuts (whenever
     //       possible)...
 
-#if defined(Q_OS_WIN)
-    // Note: QKeySequence::Quit corresponds to Alt+F4 on Windows, but it doesn't
-    //       get shown in the menu item, not to mention that we would also like
-    //       to support Ctrl+Q, so...
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+    // Note: normally, we would be using QKeySequence::Quit, but we want to
+    //       support both Alt+F4 and Ctrl+Q on Windows and Linux while it the
+    //       default key sequence doesn't, so...
 
     mGui->actionQuit->setShortcuts(QList<QKeySequence>()
                                        << QKeySequence(Qt::ALT|Qt::Key_F4)
                                        << QKeySequence(Qt::CTRL|Qt::Key_Q));
-#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
+#elif defined(Q_OS_MAC)
     mGui->actionQuit->setShortcut(QKeySequence::Quit);
 #else
     #error Unsupported platform
