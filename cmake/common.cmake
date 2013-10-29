@@ -237,7 +237,7 @@ MACRO(UPDATE_LANGUAGE_FILES TARGET_NAME)
                                                          -ts ${TS_FILE}
                             WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
             EXECUTE_PROCESS(COMMAND ${QT_BINARY_DIR}/lrelease ${PROJECT_SOURCE_DIR}/${TS_FILE}
-                                                          -qm ${PROJECT_BUILD_DIR}/${LANGUAGE_FILE}.qm)
+                                                          -qm ${CMAKE_BINARY_DIR}/${LANGUAGE_FILE}.qm)
         ENDIF()
     ENDFOREACH()
 ENDMACRO()
