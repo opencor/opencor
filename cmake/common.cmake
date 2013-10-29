@@ -1,9 +1,17 @@
-MACRO(UPDATE_CMAKE_POLICIES)
+MACRO(COMMON_INITIALISATION)
     # Make sure that all the CMake policies that have been introduced since our
     # minimum required CMake version (i.e. 2.8.9) are compatible with it
 
     IF(NOT CMAKE_VERSION VERSION_LESS 2.8.11)
         CMAKE_POLICY(SET CMP0020 OLD)
+    ENDIF()
+
+    # Determine the effective build directory
+
+    SET(PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR})
+
+    IF(NOT "${CMAKE_CFG_INTDIR}" STREQUAL ".")
+        SET(PROJECT_BUILD_DIR ${PROJECT_BUILD_DIR}/${CMAKE_CFG_INTDIR})
     ENDIF()
 ENDMACRO()
 
@@ -11,9 +19,9 @@ MACRO(INITIALISE_PROJECT)
 #    SET(CMAKE_VERBOSE_MAKEFILE ON)
     SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-    # Update our CMake policies
+    # Common initialisation
 
-    UPDATE_CMAKE_POLICIES()
+    COMMON_INITIALISATION()
 
     # Check whether we are building in 32-bit or 64-bit
 
@@ -158,7 +166,7 @@ MACRO(INITIALISE_PROJECT)
     #       libraries without first having to package everything...
 
     IF(NOT WIN32)
-        SET(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+        SET(LIBRARY_OUTPUT_PATH ${PROJECT_BUILD_DIR})
         # Note: MSVC doesn't care about this location, so...
     ENDIF()
 
@@ -166,9 +174,9 @@ MACRO(INITIALISE_PROJECT)
     # Windows and Linux before being able to test it
 
     IF(APPLE)
-        SET(DEST_PLUGINS_DIR ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${CMAKE_PROJECT_NAME})
+        SET(DEST_PLUGINS_DIR ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${CMAKE_PROJECT_NAME})
     ELSE()
-        SET(DEST_PLUGINS_DIR ${CMAKE_BINARY_DIR}/plugins/${CMAKE_PROJECT_NAME})
+        SET(DEST_PLUGINS_DIR ${PROJECT_BUILD_DIR}/plugins/${CMAKE_PROJECT_NAME})
     ENDIF()
 
     # Default location of external dependencies
@@ -226,15 +234,15 @@ MACRO(UPDATE_LANGUAGE_FILES TARGET_NAME)
                                                          -ts ${TS_FILE}
                             WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
             EXECUTE_PROCESS(COMMAND ${QT_BINARY_DIR}/lrelease ${PROJECT_SOURCE_DIR}/${TS_FILE}
-                                                          -qm ${CMAKE_BINARY_DIR}/${LANGUAGE_FILE}.qm)
+                                                          -qm ${PROJECT_BUILD_DIR}/${LANGUAGE_FILE}.qm)
         ENDIF()
     ENDFOREACH()
 ENDMACRO()
 
 MACRO(ADD_PLUGIN PLUGIN_NAME)
-    # Update our CMake policies
+    # Common initialisation
 
-    UPDATE_CMAKE_POLICIES()
+    COMMON_INITIALISATION()
 
     # Various initialisations
 
@@ -452,7 +460,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     IF(WIN32)
         STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}" "" PLUGIN_BUILD_DIR ${PROJECT_SOURCE_DIR})
-        SET(PLUGIN_BUILD_DIR "${CMAKE_BINARY_DIR}${PLUGIN_BUILD_DIR}")
+        SET(PLUGIN_BUILD_DIR "${PROJECT_BUILD_DIR}${PLUGIN_BUILD_DIR}")
         # Note: MSVC generate things in a different place to GCC, so...
     ELSE()
         SET(PLUGIN_BUILD_DIR ${LIBRARY_OUTPUT_PATH})
@@ -476,7 +484,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     IF(WIN32)
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                            COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME}
-                                                            ${CMAKE_BINARY_DIR}/${PLUGIN_FILENAME})
+                                                            ${PROJECT_BUILD_DIR}/${PLUGIN_FILENAME})
     ENDIF()
 
     # A few OS X specific things
@@ -484,47 +492,47 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     IF(APPLE)
         # Clean up our plugin
 
-        OS_X_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${CMAKE_PROJECT_NAME}
+        OS_X_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${CMAKE_PROJECT_NAME}
                                                 ${PLUGIN_FILENAME} ${QT_DEPENDENCIES})
 
         # Make sure that the plugin refers to our embedded version of the other
         # plugins on which it depends
+        # Note: we do it in two different ways, since some plugins we
+        #       use refer to the library itself (e.g. CellML) while others refer
+        #       to some @executable_path information (e.g. LLVM), so...
 
         FOREACH(PLUGIN_DEPENDENCY ${PLUGIN_DEPENDENCIES})
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                               COMMAND install_name_tool -change ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                                                                 @executable_path/../PlugIns/${CMAKE_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                                                                 ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_FILENAME})
+
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                                COMMAND install_name_tool -change ${PLUGIN_BUILD_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX}
                                                                  @executable_path/../PlugIns/${CMAKE_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                                                                 ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_FILENAME})
+                                                                 ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_FILENAME})
         ENDFOREACH()
 
         # Make sure that the plugin refers to our embedded version of the
         # binary plugins on which it depends
 
         FOREACH(PLUGIN_BINARY_DEPENDENCY ${PLUGIN_BINARY_DEPENDENCIES})
-            STRING(REPLACE "${PLUGIN_BUILD_DIR}/" "" PLUGIN_BINARY_DEPENDENCY "${PLUGIN_BINARY_DEPENDENCY}")
+            STRING(REGEX REPLACE "^.*/" "" PLUGIN_BINARY_DEPENDENCY "${PLUGIN_BINARY_DEPENDENCY}")
 
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                                COMMAND install_name_tool -change ${PLUGIN_BINARY_DEPENDENCY}
                                                                  @executable_path/../PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_BINARY_DEPENDENCY}
-                                                                 ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_FILENAME})
+                                                                 ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_FILENAME})
         ENDFOREACH()
 
         # Make sure that the plugin refers to our embedded version of the
         # external dependencies on which it depends
-        # Note: we do it in two different ways, since some external libraries we
-        #       use refer to the library itself (e.g. CellML) while others refer
-        #       to some @executable_path information (e.g. LLVM), so...
 
         FOREACH(EXTERNAL_BINARY_DEPENDENCY ${EXTERNAL_BINARY_DEPENDENCIES})
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                                COMMAND install_name_tool -change ${EXTERNAL_BINARY_DEPENDENCY}
                                                                  @executable_path/../Frameworks/${EXTERNAL_BINARY_DEPENDENCY}
-                                                                 ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_FILENAME})
-
-            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change @executable_path/../lib/${EXTERNAL_BINARY_DEPENDENCY}
-                                                                 @executable_path/../Frameworks/${EXTERNAL_BINARY_DEPENDENCY}
-                                                                 ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_FILENAME})
+                                                                 ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_FILENAME})
         ENDFOREACH()
     ENDIF()
 
@@ -658,6 +666,10 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 ENDMACRO()
 
 MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
+    # Common initialisation
+
+    COMMON_INITIALISATION()
+
     # Various initialisations
 
     SET(PLUGIN_NAME ${PLUGIN_NAME})
@@ -711,7 +723,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
 
     ADD_CUSTOM_TARGET(${PLUGIN_NAME}_COPY_PLUGIN_TO_BUILD_DIRECTORY ALL
                       COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
-                                                       ${CMAKE_BINARY_DIR}/${PLUGIN_FILENAME})
+                                                       ${PROJECT_BUILD_DIR}/${PLUGIN_FILENAME})
 
     # A few OS X specific things
 
@@ -741,16 +753,21 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
 ENDMACRO()
 
 MACRO(COPY_FILE_TO_BUILD_DIR ORIG_DIRNAME DEST_DIRNAME FILENAME)
+    # Determine the real destination folder, based on whether we came here from
+    # the main project (i.e. GUI version of OpenCOR on Windows and GUI/CLI
+    # versions of OpenCOR on Linux / OS X) or non-main project (i.e. the CLI
+    # version of OpenCOR on Windows)
+
     IF(EXISTS ${CMAKE_BINARY_DIR}/../cmake)
         # A CMake directory exists at the same level as the binary directory,
         # so we are dealing with the main project
 
-        SET(REAL_DEST_DIRNAME ${CMAKE_BINARY_DIR}/${DEST_DIRNAME})
+        SET(REAL_DEST_DIRNAME ${PROJECT_BUILD_DIR}/${DEST_DIRNAME})
     ELSE()
         # No CMake directory exists at the same level as the binary directory,
         # so we are dealing with a non-main project
 
-        SET(REAL_DEST_DIRNAME ${CMAKE_BINARY_DIR}/../../build/${DEST_DIRNAME})
+        SET(REAL_DEST_DIRNAME ${CMAKE_BINARY_DIR}/../../build/${CMAKE_CFG_INTDIR}/${DEST_DIRNAME})
     ENDIF()
 
     IF("${ARGN}" STREQUAL "")
@@ -895,7 +912,7 @@ MACRO(OS_X_DEPLOY_QT_LIBRARIES)
         SET(QT_FRAMEWORK_DIR ${LIBRARY_NAME}.framework/Versions/${QT_VERSION_MAJOR})
 
         OS_X_DEPLOY_QT_FILE(${QT_LIBRARY_DIR}/${QT_FRAMEWORK_DIR}
-                            ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${QT_FRAMEWORK_DIR}
+                            ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${QT_FRAMEWORK_DIR}
                             ${LIBRARY_NAME})
     ENDFOREACH()
 ENDMACRO()
@@ -905,7 +922,7 @@ MACRO(OS_X_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
         # Deploy the Qt plugin itself
 
         OS_X_DEPLOY_QT_FILE(${QT_PLUGINS_DIR}/${PLUGIN_CATEGORY}
-                            ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${PLUGIN_CATEGORY}
+                            ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${PLUGIN_CATEGORY}
                             ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
     ENDFOREACH()
 ENDMACRO()
@@ -914,7 +931,7 @@ MACRO(OS_X_DEPLOY_LIBRARY DIRNAME LIBRARY_NAME)
     # Copy the library itself
 
     SET(LIBRARY_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(LIBRARY_FILEPATH ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${LIBRARY_FILENAME})
+    SET(LIBRARY_FILEPATH ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${LIBRARY_FILENAME})
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                        COMMAND ${CMAKE_COMMAND} -E copy ${DIRNAME}/${LIBRARY_FILENAME}
@@ -925,7 +942,7 @@ MACRO(OS_X_DEPLOY_LIBRARY DIRNAME LIBRARY_NAME)
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                        COMMAND ${CMAKE_COMMAND} -E copy ${DIRNAME}/${LIBRARY_FILENAME}
-                                                        ${CMAKE_BINARY_DIR}/${LIBRARY_FILENAME})
+                                                        ${PROJECT_BUILD_DIR}/${LIBRARY_FILENAME})
 
     # Strip the library of all local symbols
 

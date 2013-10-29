@@ -22,7 +22,7 @@ SET(VERSION_PATCH 0)
 
 IF(SNAPSHOT)
     TRY_RUN(DATE_RUN DATE_COMPILE
-            ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/cmake/date.c
+            ${PROJECT_BUILD_DIR} ${CMAKE_SOURCE_DIR}/cmake/date.c
             RUN_OUTPUT_VARIABLE DATE)
 
     SET(VERSION ${DATE})
@@ -30,7 +30,7 @@ ELSE()
     SET(VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
 ENDIF()
 
-FILE(WRITE ${CMAKE_BINARY_DIR}/version.txt ${VERSION})
+FILE(WRITE ${PROJECT_BUILD_DIR}/version.txt ${VERSION})
 
 # Files that make up the GUI version of OpenCOR
 
@@ -113,7 +113,7 @@ ENDIF()
 IF(ENABLE_TESTS)
     # Destination tests directory
 
-    SET(DEST_TESTS_DIR ${CMAKE_BINARY_DIR}/tests)
+    SET(DEST_TESTS_DIR ${PROJECT_BUILD_DIR}/tests)
 
     # Build our main test program
 
@@ -250,7 +250,7 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
 IF(NOT APPLE)
     # Copy the OpenCOR executable to the build/bin folder
 
-    COPY_FILE_TO_BUILD_DIR(${CMAKE_BINARY_DIR} bin
+    COPY_FILE_TO_BUILD_DIR(${PROJECT_BUILD_DIR} bin
                            ${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX})
 
     IF(WIN32)
@@ -259,7 +259,7 @@ IF(NOT APPLE)
         # that make.bat asks for the OpenCOR executable to be generated in
         # build to match what does Qt Creator, so...
 
-        COPY_FILE_TO_BUILD_DIR(${CMAKE_BINARY_DIR} Release
+        COPY_FILE_TO_BUILD_DIR(${PROJECT_BUILD_DIR} Release
                                ${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX})
     ENDIF()
 ENDIF()
@@ -272,7 +272,7 @@ IF(APPLE)
     #       some information about associating .cellml files to OpenCOR,
     #       something which can't be done using CMake (or so it seems)...
 
-    SET(InfoPlistFile ${CMAKE_BINARY_DIR}/Info.plist)
+    SET(InfoPlistFile ${PROJECT_BUILD_DIR}/Info.plist)
 
     EXECUTE_PROCESS(COMMAND date "+%Y"
                     OUTPUT_VARIABLE YEAR
@@ -292,11 +292,11 @@ IF(APPLE)
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/distrib/osx/qt.conf
-                                                        ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Resources/qt.conf)
+                                                        ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Resources/qt.conf)
 
     # Clean up our main executable
 
-    OS_X_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${PROJECT_NAME}
+    OS_X_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${PROJECT_NAME}
                                             QtConcurrent QtCore QtGui QtHelp QtNetwork QtOpenGL QtPrintSupport QtQml QtQuick QtSensors QtSvg QtWebKit QtWebKitWidgets QtWidgets QtXml)
 
     # Deploy our Qt dependencies
@@ -337,9 +337,9 @@ IF(WIN32)
     #       work (anymore?) while it works fine on Linux and OS X. Could that
     #       have something to do with us now using MSVC?...
 
-    INSTALL(FILES ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX}
+    INSTALL(FILES ${PROJECT_BUILD_DIR}/bin/${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX}
             DESTINATION bin)
-    INSTALL(FILES ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME}.com
+    INSTALL(FILES ${PROJECT_BUILD_DIR}/bin/${PROJECT_NAME}.com
             DESTINATION bin)
 
     # MSVC files required by OpenCOR
@@ -375,8 +375,8 @@ IF(WIN32)
     # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
     # version of OpenCOR)
 
-    SET(BatFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.bat)
-    SET(VbsFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.vbs)
+    SET(BatFile ${PROJECT_BUILD_DIR}/${PROJECT_NAME}.bat)
+    SET(VbsFile ${PROJECT_BUILD_DIR}/${PROJECT_NAME}.vbs)
 
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/application.bat.in ${BatFile})
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/application.vbs.in ${VbsFile})
@@ -422,7 +422,7 @@ ELSEIF(APPLE)
     # Shell script to run OpenCOR (useful when downloading a ZIPped version of
     # OpenCOR)
 
-    SET(SHELL_FILENAME ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.sh)
+    SET(SHELL_FILENAME ${PROJECT_BUILD_DIR}/${PROJECT_NAME}.sh)
 
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/application.sh.in ${SHELL_FILENAME})
 
@@ -521,7 +521,7 @@ ELSE()
 
     # Shell script to run OpenCOR
 
-    SET(ShellFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.sh)
+    SET(ShellFile ${PROJECT_BUILD_DIR}/${PROJECT_NAME}.sh)
 
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/linux/application.sh.in ${ShellFile})
 
