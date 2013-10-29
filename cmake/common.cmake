@@ -153,9 +153,9 @@ MACRO(INITIALISE_PROJECT)
     # Windows and Linux before being able to test it
 
     IF(APPLE)
-        SET(DEST_PLUGINS_DIR ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME})
+        SET(DEST_PLUGINS_DIR ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${CMAKE_PROJECT_NAME})
     ELSE()
-        SET(DEST_PLUGINS_DIR ${CMAKE_BINARY_DIR}/plugins/${MAIN_PROJECT_NAME})
+        SET(DEST_PLUGINS_DIR ${CMAKE_BINARY_DIR}/plugins/${CMAKE_PROJECT_NAME})
     ENDIF()
 
     # Default location of external dependencies
@@ -434,7 +434,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     # Location of our plugins
 
     IF(WIN32)
-        STRING(REPLACE "${${MAIN_PROJECT_NAME}_SOURCE_DIR}" "" PLUGIN_BUILD_DIR ${PROJECT_SOURCE_DIR})
+        STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}" "" PLUGIN_BUILD_DIR ${PROJECT_SOURCE_DIR})
         SET(PLUGIN_BUILD_DIR "${CMAKE_BINARY_DIR}${PLUGIN_BUILD_DIR}")
         # Note: MSVC generate things in a different place to GCC, so...
     ELSE()
@@ -467,7 +467,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     IF(APPLE)
         # Clean up our plugin
 
-        OS_X_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}
+        OS_X_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${CMAKE_PROJECT_NAME}
                                                 ${PLUGIN_FILENAME} ${QT_DEPENDENCIES})
 
         # Make sure that the plugin refers to our embedded version of the other
@@ -476,8 +476,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         FOREACH(PLUGIN_DEPENDENCY ${PLUGIN_DEPENDENCIES})
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                                COMMAND install_name_tool -change ${PLUGIN_BUILD_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                                                                 @executable_path/../PlugIns/${MAIN_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                                                                 ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
+                                                                 @executable_path/../PlugIns/${CMAKE_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                                                                 ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_FILENAME})
         ENDFOREACH()
 
         # Make sure that the plugin refers to our embedded version of the
@@ -488,8 +488,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                                COMMAND install_name_tool -change ${PLUGIN_BINARY_DEPENDENCY}
-                                                                 @executable_path/../PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_BINARY_DEPENDENCY}
-                                                                 ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
+                                                                 @executable_path/../PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_BINARY_DEPENDENCY}
+                                                                 ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_FILENAME})
         ENDFOREACH()
 
         # Make sure that the plugin refers to our embedded version of the
@@ -502,12 +502,12 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                                COMMAND install_name_tool -change ${EXTERNAL_BINARY_DEPENDENCY}
                                                                  @executable_path/../Frameworks/${EXTERNAL_BINARY_DEPENDENCY}
-                                                                 ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
+                                                                 ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_FILENAME})
 
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                                COMMAND install_name_tool -change @executable_path/../lib/${EXTERNAL_BINARY_DEPENDENCY}
                                                                  @executable_path/../Frameworks/${EXTERNAL_BINARY_DEPENDENCY}
-                                                                 ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${MAIN_PROJECT_NAME}/${PLUGIN_FILENAME})
+                                                                 ${OS_X_PROJECT_BINARY_DIR}/Contents/PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_FILENAME})
         ENDFOREACH()
     ENDIF()
 
@@ -516,7 +516,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     IF(NOT APPLE)
         INSTALL(FILES ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME}
-                DESTINATION plugins/${MAIN_PROJECT_NAME})
+                DESTINATION plugins/${CMAKE_PROJECT_NAME})
     ENDIF()
 
     # Create some tests, if any and if required
@@ -719,7 +719,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
 
     IF(NOT APPLE)
         INSTALL(FILES ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
-                DESTINATION plugins/${MAIN_PROJECT_NAME})
+                DESTINATION plugins/${CMAKE_PROJECT_NAME})
     ENDIF()
 ENDMACRO()
 

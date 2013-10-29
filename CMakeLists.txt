@@ -12,10 +12,8 @@ IF(NOT CMAKE_VERSION VERSION_LESS 2.8.11)
     CMAKE_POLICY(SET CMP0020 OLD)
 ENDIF()
 
-# Name of the main project and location of the built OpenCOR binary
-# Note: these are required to determine where plugins should be copied on OS X...
+# Location of the OpenCOR bundle (OS X specific)
 
-SET(MAIN_PROJECT_NAME ${PROJECT_NAME})
 SET(OS_X_PROJECT_BINARY_DIR ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app)
 
 # Some in-house CMake functions/macros
