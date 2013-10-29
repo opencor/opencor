@@ -26,7 +26,7 @@ MACRO(INITIALISE_PROJECT)
     #          ourselves...
     # Note #2: we can come here from either the main project (i.e. the GUI
     #          version of OpenCOR on Windows and the GUI/CLI versions of
-    #          OpenCOR on Linux / OS X) or non-main project (i.e. the CLI
+    #          OpenCOR on Linux / OS X) or the non-main project (i.e. the CLI
     #          version of OpenCOR on Windows), hence we test the existence of
     #          the cmake folder so that we can determine the exact location of
     #          architecture.c file...
@@ -509,16 +509,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
         # Make sure that the plugin refers to our embedded version of the other
         # plugins on which it depends
-        # Note: we do it in two different ways, since some plugins we
-        #       use refer to the library itself (e.g. CellML) while others refer
-        #       to some @executable_path information (e.g. LLVM), so...
 
         FOREACH(PLUGIN_DEPENDENCY ${PLUGIN_DEPENDENCIES})
-            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                                                                 @executable_path/../PlugIns/${CMAKE_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                                                                 ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_FILENAME})
-
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                                COMMAND install_name_tool -change ${PLUGIN_BUILD_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX}
                                                                  @executable_path/../PlugIns/${CMAKE_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX}

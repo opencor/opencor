@@ -20,6 +20,8 @@ specific language governing permissions and limitations under the License.
 
 int main()
 {
+    // Print out the date as yyyy-mm-dd
+
     time_t now = time(0);
     struct tm *now_tm = localtime(&now);
 

@@ -19,6 +19,8 @@ specific language governing permissions and limitations under the License.
 
 int main()
 {
+    // Print out the architecture, if recognised
+
     switch (sizeof(void *)) {
     case 4:
         printf("32");

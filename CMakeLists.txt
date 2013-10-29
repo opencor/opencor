@@ -375,8 +375,8 @@ IF(WIN32)
     # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
     # version of OpenCOR)
 
-    SET(BatFile ${PROJECT_BUILD_DIR}/${PROJECT_NAME}.bat)
-    SET(VbsFile ${PROJECT_BUILD_DIR}/${PROJECT_NAME}.vbs)
+    SET(BatFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.bat)
+    SET(VbsFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.vbs)
 
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/application.bat.in ${BatFile})
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/application.vbs.in ${VbsFile})
@@ -515,7 +515,7 @@ ELSE()
 
     # Shell script to run OpenCOR
 
-    SET(ShellFile ${PROJECT_BUILD_DIR}/${PROJECT_NAME}.sh)
+    SET(ShellFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.sh)
 
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/linux/application.sh.in ${ShellFile})
 
