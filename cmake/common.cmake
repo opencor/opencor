@@ -1,27 +1,21 @@
-MACRO(COMMON_INITIALISATION)
-    # Make sure that all the CMake policies that have been introduced since our
-    # minimum required CMake version (i.e. 2.8.9) are compatible with it
+# Make sure that all the CMake policies that have been introduced since our
+# minimum required CMake version (i.e. 2.8.9) are compatible with it
 
-    IF(NOT CMAKE_VERSION VERSION_LESS 2.8.11)
-        CMAKE_POLICY(SET CMP0020 OLD)
-    ENDIF()
+IF(NOT CMAKE_VERSION VERSION_LESS 2.8.11)
+    CMAKE_POLICY(SET CMP0020 OLD)
+ENDIF()
 
-    # Determine the effective build directory
+# Determine the effective build directory
 
-    SET(PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR})
+SET(PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR})
 
-    IF(NOT "${CMAKE_CFG_INTDIR}" STREQUAL ".")
-        SET(PROJECT_BUILD_DIR ${PROJECT_BUILD_DIR}/${CMAKE_CFG_INTDIR})
-    ENDIF()
-ENDMACRO()
+IF(NOT "${CMAKE_CFG_INTDIR}" STREQUAL ".")
+    SET(PROJECT_BUILD_DIR ${PROJECT_BUILD_DIR}/${CMAKE_CFG_INTDIR})
+ENDIF()
 
 MACRO(INITIALISE_PROJECT)
 #    SET(CMAKE_VERBOSE_MAKEFILE ON)
     SET(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-    # Common initialisation
-
-    COMMON_INITIALISATION()
 
     # Make sure that we are building on a supported architecture
     # Note #1: normally, we would check the value of CMAKE_SIZEOF_VOID_P, but
@@ -256,10 +250,6 @@ MACRO(UPDATE_LANGUAGE_FILES TARGET_NAME)
 ENDMACRO()
 
 MACRO(ADD_PLUGIN PLUGIN_NAME)
-    # Common initialisation
-
-    COMMON_INITIALISATION()
-
     # Various initialisations
 
     SET(PLUGIN_NAME ${PLUGIN_NAME})
@@ -682,10 +672,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 ENDMACRO()
 
 MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
-    # Common initialisation
-
-    COMMON_INITIALISATION()
-
     # Various initialisations
 
     SET(PLUGIN_NAME ${PLUGIN_NAME})
