@@ -96,6 +96,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mRunActionEnabled(true),
     mOldSimulationResultsSizes(QMap<SingleCellViewSimulation *, qulonglong>()),
     mCheckResultsSimulations(QList<SingleCellViewSimulation *>()),
+    mGraphPanelsPlots(QMap<SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotWidget *>()),
     mPlots(QList<SingleCellViewGraphPanelPlotWidget *>()),
     mPlotsViewports(QMap<SingleCellViewGraphPanelPlotWidget *, QRectF>()),
     mCanUpdatePlotsForUpdatedGraphs(true),
@@ -221,6 +222,8 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     connect(graphPanelsWidget, SIGNAL(graphPanelRemoved(SingleCellViewGraphPanelWidget *)),
             graphsWidget, SLOT(finalize(SingleCellViewGraphPanelWidget *)));
 
+    connect(graphPanelsWidget, SIGNAL(graphPanelAdded(SingleCellViewGraphPanelWidget *)),
+            this, SLOT(graphPanelAdded(SingleCellViewGraphPanelWidget *)));
     connect(graphPanelsWidget, SIGNAL(graphPanelRemoved(SingleCellViewGraphPanelWidget *)),
             this, SLOT(graphPanelRemoved(SingleCellViewGraphPanelWidget *)));
 
@@ -1451,11 +1454,22 @@ void SingleCellViewWidget::solversPropertyChanged(Core::Property *pProperty)
 
 //==============================================================================
 
+void SingleCellViewWidget::graphPanelAdded(SingleCellViewGraphPanelWidget *pGraphPanel)
+{
+    // Keep track of the graph panel's plot
+
+    mGraphPanelsPlots.insert(pGraphPanel, pGraphPanel->plot());
+}
+
+//==============================================================================
+
 void SingleCellViewWidget::graphPanelRemoved(SingleCellViewGraphPanelWidget *pGraphPanel)
 {
     // A graph panel has been removed, so stop tracking its plot
 
-    mPlots.removeOne(pGraphPanel->plot());
+    mPlots.removeOne(mGraphPanelsPlots.value(pGraphPanel));
+
+    mGraphPanelsPlots.remove(pGraphPanel);
 }
 
 //==============================================================================

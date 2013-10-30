@@ -159,6 +159,7 @@ private:
     QMap<SingleCellViewSimulation *, qulonglong> mOldSimulationResultsSizes;
     QList<SingleCellViewSimulation *> mCheckResultsSimulations;
 
+    QMap<SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotWidget *> mGraphPanelsPlots;
     QList<SingleCellViewGraphPanelPlotWidget *> mPlots;
     QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> mPlotsViewports;
 
@@ -230,6 +231,7 @@ private Q_SLOTS:
     void simulationPropertyChanged(Core::Property *pProperty);
     void solversPropertyChanged(Core::Property *pProperty);
 
+    void graphPanelAdded(SingleCellViewGraphPanelWidget *pGraphPanel);
     void graphPanelRemoved(SingleCellViewGraphPanelWidget *pGraphPanel);
 
     void addGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,

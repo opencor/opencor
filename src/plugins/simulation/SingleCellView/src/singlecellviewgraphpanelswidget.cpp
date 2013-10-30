@@ -284,19 +284,20 @@ void SingleCellViewGraphPanelsWidget::removeGraphPanel(SingleCellViewGraphPanelW
 
     int index = indexOf(pGraphPanel);
 
-    // Hide the graph panel and then delete it
-
-    pGraphPanel->hide();
-
-    delete pGraphPanel;
-
-    // Let people know that we have removed the given graph panel
-    // Note: the reason we pass a pointer to a now non-existing graph panel is
-    //       that some people interested in that signal might have used the
+    // Hide the graph panel and let people know that we have removed it (or,
+    // rather, about to remove it)
+    // Note: we let people know before we actually delete the graph panel,
+    //       because some people interested in that signal might have used the
     //       pointer to keep track of some information, as is done in
     //       SingleCellViewInformationGraphsWidget for example...
 
+    pGraphPanel->hide();
+
     emit graphPanelRemoved(pGraphPanel);
+
+    // Now, we can delete our graph panel
+
+    delete pGraphPanel;
 
     // Let people know whether graph panels can be removed
 
