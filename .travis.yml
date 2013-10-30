@@ -10,7 +10,7 @@ before_install:
     && sudo apt-get -qq update
     && sudo apt-get -qq install cmake
     && wget http://www.cmake.org/files/v2.8/cmake-2.8.12.tar.gz
-    && tar xf cmake-2.8.12.tar.gz
+    && tar -xzf cmake-2.8.12.tar.gz
     && cd cmake-2.8.12
     && mkdir build
     && cd build
