@@ -256,12 +256,9 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
 
     // Check whether we have at least one solver
 
-    if (solvers.isEmpty()) {
-        // We don't have any solver, so...
-
-        return 0;
-    } else {
-        // We have at least one solver, so sort our list
+    if (solversListProperty) {
+        // We have a solvers list property, which means that we have at least
+        // one solver, so sort our list
 
         solvers.sort();
 
@@ -274,6 +271,10 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
         return new SingleCellViewInformationSolversWidgetData(solversProperty,
                                                               solversListProperty,
                                                               solversProperties);
+    } else {
+        // We don't have a solvers list property, so...
+
+        return 0;
     }
 }
 

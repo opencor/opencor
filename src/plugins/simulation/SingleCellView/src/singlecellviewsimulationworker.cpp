@@ -175,11 +175,28 @@ void SingleCellViewSimulationWorker::started()
             }
     }
 
+    // Make sure that we have found our ODE/DAE solver
+    // Note #1: this should never happen, but we never know, so...
+    // Note #2: see the end of this method about we do before returning...
+
+    if (!voiSolver) {
+        if (mRuntime->needOdeSolver())
+            emitError(tr("the ODE solver could not be found"));
+        else
+            emitError(tr("the DAE solver could not be found"));
+
+        *mSelf = 0;
+
+        emit finished(-1);
+
+        return;
+    }
+
     // Set up our NLA solver, if needed
 
     CoreSolver::CoreNlaSolver *nlaSolver = 0;
 
-    if (mRuntime->needNlaSolver())
+    if (mRuntime->needNlaSolver()) {
         foreach (SolverInterface *solverInterface, mSolverInterfaces)
             if (!solverInterface->name().compare(mSimulation->data()->nlaSolverName())) {
                 // The requested NLA solver was found, so retrieve an instance
@@ -194,6 +211,23 @@ void SingleCellViewSimulationWorker::started()
 
                 break;
             }
+
+        // Make sure that we have found our NLA solver
+        // Note #1: this should never happen, but we never know, so...
+        // Note #2: see the end of this method about we do before returning...
+
+        if (!nlaSolver) {
+            emitError(tr("the NLA solver could not be found"));
+
+            delete voiSolver;
+
+            *mSelf = 0;
+
+            emit finished(-1);
+
+            return;
+        }
+    }
 
     // Keep track of any error that might be reported by any of our solvers
 

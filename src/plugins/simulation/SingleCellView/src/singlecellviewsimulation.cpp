@@ -425,6 +425,15 @@ void SingleCellViewSimulationData::reset()
                 break;
             }
 
+        // Make sure that we have found our NLA solver
+        // Note: this should never happen, but we never know, so...
+
+        if (!nlaSolver) {
+            emit error(tr("the NLA solver could not be found"));
+
+            return;
+        }
+
         // Keep track of any error that might be reported by our NLA solver
 
         connect(nlaSolver, SIGNAL(error(const QString &)),

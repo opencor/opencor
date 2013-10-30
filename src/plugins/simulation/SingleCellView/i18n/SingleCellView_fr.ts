@@ -151,6 +151,28 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::SingleCellView::SingleCellViewSimulationData</name>
+    <message>
+        <source>the NLA solver could not be found</source>
+        <translation>le solveur ALN n&apos;a pas pu être trouvé</translation>
+    </message>
+</context>
+<context>
+    <name>OpenCOR::SingleCellView::SingleCellViewSimulationWorker</name>
+    <message>
+        <source>the ODE solver could not be found</source>
+        <translation>le solveur EDO n&apos;a pas pu être trouvé</translation>
+    </message>
+    <message>
+        <source>the DAE solver could not be found</source>
+        <translation>le solveur EAD n&apos;a pas pu être trouvé</translation>
+    </message>
+    <message>
+        <source>the NLA solver could not be found</source>
+        <translation>le solveur ALN n&apos;a pas pu être trouvé</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::SingleCellView::SingleCellViewWidget</name>
     <message>
         <source>Delay in milliseconds between two data points</source>
