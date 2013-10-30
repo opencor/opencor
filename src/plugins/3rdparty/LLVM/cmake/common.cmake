@@ -6,8 +6,6 @@ MACRO(RETRIEVE_LLVM_SETTINGS)
             _SCL_SECURE_NO_WARNINGS
             # Note: this is required to build LLVM in debug mode...
         )
-    ELSEIF(APPLE)
-        SET(LLVM_DEFINITIONS)
     ELSE()
         SET(LLVM_DEFINITIONS
             __STDC_FORMAT_MACROS
