@@ -471,10 +471,21 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         )
     ENDFOREACH()
 
-    # Location of our plugins
+    # Location of our plugin
 
     STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" "" PLUGIN_BUILD_DIR ${PROJECT_SOURCE_DIR})
-    SET(PLUGIN_BUILD_DIR ${CMAKE_BINARY_DIR}/${PLUGIN_BUILD_DIR}/${CMAKE_CFG_INTDIR})
+    SET(PLUGIN_BUILD_DIR ${CMAKE_BINARY_DIR}/${PLUGIN_BUILD_DIR})
+
+    IF(NOT "${CMAKE_CFG_INTDIR}" STREQUAL ".")
+        SET(PLUGIN_BUILD_DIR ${PLUGIN_BUILD_DIR}/${CMAKE_CFG_INTDIR})
+    ENDIF()
+
+    # Keep track of the location of our plugins, so that we can properly clean
+    # up our bundle on OS X
+
+    LIST(APPEND PLUGIN_BUILD_DIRS ${PLUGIN_BUILD_DIR})
+
+    SET(PLUGIN_BUILD_DIRS "${PLUGIN_BUILD_DIRS}" PARENT_SCOPE)
 
     # Copy the plugin to our plugins directory
     # Note: this is done so that we can, on Windows and Linux, test the use of
@@ -505,10 +516,15 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         # plugins on which it depends
 
         FOREACH(PLUGIN_DEPENDENCY ${PLUGIN_DEPENDENCIES})
-            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change ${PLUGIN_BUILD_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                                                                 @executable_path/../PlugIns/${CMAKE_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                                                                 ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_FILENAME})
+            # We don't know where our plugin dependency is located, so we try
+            # our different plugin build directories
+
+            FOREACH(PLUGIN_BUILD_DIR ${PLUGIN_BUILD_DIRS})
+                ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                                   COMMAND install_name_tool -change ${PLUGIN_BUILD_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                                                                     @executable_path/../PlugIns/${CMAKE_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                                                                     ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_FILENAME})
+            ENDFOREACH()
         ENDFOREACH()
 
         # Make sure that the plugin refers to our embedded version of the
