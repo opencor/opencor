@@ -665,6 +665,12 @@ void SingleCellViewInformationGraphsWidget::populateContextMenu(QMenu *pContextM
             componentHierarchy = currentComponentHierarchy;
         }
 
+        // Make sure that we have a 'current' component menu
+        // Note: this should never happen, but we never know, so...
+
+        if (!componentMenu)
+            continue;
+
         // Add the current parameter to the 'current' component menu
 
         QAction *parameterAction = componentMenu->addAction(SingleCellViewWidget::parameterIcon(parameter->type()),
