@@ -211,16 +211,11 @@ QWidget * RawCellMLViewPlugin::viewWidget(const QString &pFileName)
 
 //==============================================================================
 
-QWidget * RawCellMLViewPlugin::removeViewWidget(const QString &pFileName)
+void RawCellMLViewPlugin::removeViewWidget(const QString &pFileName)
 {
     // Ask our generic view widget to finalise the given file
 
     mViewWidget->finalize(pFileName);
-
-    // We don't want to give people the address of the widget that we removed
-    // since it would have to be mViewWidget and we want to be able to reuse it
-
-    return 0;
 }
 
 //==============================================================================

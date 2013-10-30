@@ -193,13 +193,11 @@ QWidget * FileOrganiserPlugin::viewWidget(const QString &pFileName)
 
 //==============================================================================
 
-QWidget * FileOrganiserPlugin::removeViewWidget(const QString &pFileName)
+void FileOrganiserPlugin::removeViewWidget(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
     // We don't handle this interface...
-
-    return 0;
 }
 
 //==============================================================================

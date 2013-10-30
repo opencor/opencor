@@ -192,13 +192,11 @@ QWidget * HelpPlugin::viewWidget(const QString &pFileName)
 
 //==============================================================================
 
-QWidget * HelpPlugin::removeViewWidget(const QString &pFileName)
+void HelpPlugin::removeViewWidget(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
     // We don't handle this interface...
-
-    return 0;
 }
 
 //==============================================================================

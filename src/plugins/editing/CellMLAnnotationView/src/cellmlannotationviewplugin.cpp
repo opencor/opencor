@@ -339,23 +339,21 @@ QWidget * CellMLAnnotationViewPlugin::viewWidget(const QString &pFileName)
 
 //==============================================================================
 
-QWidget * CellMLAnnotationViewPlugin::removeViewWidget(const QString &pFileName)
+void CellMLAnnotationViewPlugin::removeViewWidget(const QString &pFileName)
 {
     // Remove the view widget from our list, should there be one for the given
     // file name
 
-    CellmlAnnotationViewWidget *res = mViewWidgets.value(pFileName);
+    CellmlAnnotationViewWidget *viewWidget = mViewWidgets.value(pFileName);
 
-    if (res) {
+    if (viewWidget) {
         // There is a view widget for the given file name, so delete it and
         // remove it from our list
 
-        delete res;
+        delete viewWidget;
 
         mViewWidgets.remove(pFileName);
     }
-
-    return res;
 }
 
 //==============================================================================

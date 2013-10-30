@@ -192,13 +192,11 @@ QWidget * CellMLModelRepositoryPlugin::viewWidget(const QString &pFileName)
 
 //==============================================================================
 
-QWidget * CellMLModelRepositoryPlugin::removeViewWidget(const QString &pFileName)
+void CellMLModelRepositoryPlugin::removeViewWidget(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
     // We don't handle this interface...
-
-    return 0;
 }
 
 //==============================================================================

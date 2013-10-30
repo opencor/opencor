@@ -188,13 +188,11 @@ QWidget * CoreCellMLEditingPlugin::viewWidget(const QString &pFileName)
 
 //==============================================================================
 
-QWidget * CoreCellMLEditingPlugin::removeViewWidget(const QString &pFileName)
+void CoreCellMLEditingPlugin::removeViewWidget(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
     // We don't handle this interface...
-
-    return 0;
 }
 
 //==============================================================================

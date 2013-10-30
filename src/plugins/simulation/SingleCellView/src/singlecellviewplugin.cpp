@@ -226,16 +226,11 @@ QWidget * SingleCellViewPlugin::viewWidget(const QString &pFileName)
 
 //==============================================================================
 
-QWidget * SingleCellViewPlugin::removeViewWidget(const QString &pFileName)
+void SingleCellViewPlugin::removeViewWidget(const QString &pFileName)
 {
     // Ask our generic view widget to finalise the given file
 
     mViewWidget->finalize(pFileName);
-
-    // We don't want to give people the address of the widget that we removed
-    // since it would have to be mViewWidget and we want to be able to reuse it
-
-    return 0;
 }
 
 //==============================================================================

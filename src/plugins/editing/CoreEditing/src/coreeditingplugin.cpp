@@ -235,13 +235,11 @@ QWidget * CoreEditingPlugin::viewWidget(const QString &pFileName)
 
 //==============================================================================
 
-QWidget * CoreEditingPlugin::removeViewWidget(const QString &pFileName)
+void CoreEditingPlugin::removeViewWidget(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
     // We don't handle this interface...
-
-    return 0;
 }
 
 //==============================================================================

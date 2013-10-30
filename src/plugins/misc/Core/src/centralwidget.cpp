@@ -864,8 +864,11 @@ bool CentralWidget::closeFile(const int &pIndex, const bool &pForceClosing)
         foreach (Plugin *plugin, mLoadedPlugins) {
             GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
 
-            if (guiInterface)
-                mContents->removeWidget(guiInterface->removeViewWidget(fileName));
+            if (guiInterface) {
+                mContents->removeWidget(guiInterface->viewWidget(fileName));
+
+                guiInterface->removeViewWidget(fileName);
+            }
         }
 
         // Unregister the file from our file manager
@@ -1148,6 +1151,8 @@ void CentralWidget::updateGui()
     // Show/hide the editing, simulation and analysis modes' corresponding views
     // tab, as needed, and retrieve the corresponding view plugin
 
+    mPlugin = 0;
+
     updateModeGui(GuiViewSettings::Editing);
     updateModeGui(GuiViewSettings::Simulation);
     updateModeGui(GuiViewSettings::Analysis);
@@ -1164,7 +1169,7 @@ void CentralWidget::updateGui()
     } else {
         // There is a current file, so retrieve its view
 
-        newView = guiInterface->viewWidget(mFileNames[fileTabsCrtIndex]);
+        newView = guiInterface?guiInterface->viewWidget(mFileNames[fileTabsCrtIndex]):0;
 
         if (newView) {
             // We have a view for the current file, so create a connection
