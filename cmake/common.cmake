@@ -486,16 +486,12 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                        COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME}
                                                         ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
 
-    # On Windows, make a copy of the plugin to our main build directory, since
-    # this is where it will be on Linux and OS X and where any test which
-    # requires the plugin will expect it to be, but this is not where MSVC
-    # generates the plugin, so...
+    # Also copy the plugin to our main build directory, since this is where any
+    # test that requires the plugin will expect it to be
 
-    IF(WIN32)
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME}
-                                                            ${PROJECT_BUILD_DIR}/${PLUGIN_FILENAME})
-    ENDIF()
+    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                       COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME}
+                                                        ${PROJECT_BUILD_DIR}/${PLUGIN_FILENAME})
 
     # A few OS X specific things
 
