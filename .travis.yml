@@ -22,10 +22,10 @@ before_install:
 
 script:
   -    cd build
-    && cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt51/lib/cmake -DTRAVIS_CI -DENABLE_TESTS=True ..
+    && cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt51/lib/cmake -DENABLE_TRAVIS_CI=True -DENABLE_TESTS=True ..
     && make -j $PROCS
     && cd tests
-    && ./runtests -platform offscreen
+    && ./runtests
 
 notifications:
   recipients:

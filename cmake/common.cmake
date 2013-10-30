@@ -582,6 +582,10 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     ${TEST_HEADER_MOC_FILE}
                 )
 
+                IF(ENABLE_TRAVIS_CI)
+                    ADD_DEFINITIONS(-DTRAVIS_CI)
+                ENDIF()
+
                 ADD_EXECUTABLE(${TEST_NAME}
                     ../../../../tests/testsutils.cpp
 
