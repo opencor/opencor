@@ -173,15 +173,6 @@ MACRO(INITIALISE_PROJECT)
         SET(CMAKE_OSX_SYSROOT ${OLDEST_SDK_PATH})
     ENDIF()
 
-    # Default location of third-party libraries
-    # Note: this is only required so that we can quickly test third-party
-    #       libraries without first having to package everything...
-
-    IF(NOT WIN32)
-        SET(LIBRARY_OUTPUT_PATH ${PROJECT_BUILD_DIR})
-        # Note: MSVC doesn't care about this location, so...
-    ENDIF()
-
     # Location of our plugins so that we don't have to deploy OpenCOR on
     # Windows and Linux before being able to test it
 
@@ -470,13 +461,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     # Location of our plugins
 
-    IF(WIN32)
-        STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}" "" PLUGIN_BUILD_DIR ${PROJECT_SOURCE_DIR})
-        SET(PLUGIN_BUILD_DIR "${PROJECT_BUILD_DIR}${PLUGIN_BUILD_DIR}")
-        # Note: MSVC generate things in a different place to GCC, so...
-    ELSE()
-        SET(PLUGIN_BUILD_DIR ${LIBRARY_OUTPUT_PATH})
-    ENDIF()
+    STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" "" PLUGIN_BUILD_DIR ${PROJECT_SOURCE_DIR})
+    SET(PLUGIN_BUILD_DIR ${CMAKE_BINARY_DIR}/${PLUGIN_BUILD_DIR}/${CMAKE_CFG_INTDIR})
 
     # Copy the plugin to our plugins directory
     # Note: this is done so that we can, on Windows and Linux, test the use of
@@ -741,7 +727,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
                               DEPENDS ${PLUGIN_NAME}_COPY_PLUGIN_TO_BUILD_DIRECTORY
                               COMMAND install_name_tool -change @executable_path/../Frameworks/${QT_DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_DEPENDENCY}
                                                                 ${QT_LIBRARY_DIR}/${QT_DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_DEPENDENCY}
-                                                                ${LIBRARY_OUTPUT_PATH}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
+                                                                ${PROJECT_BUILD_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
         ENDFOREACH()
     ENDIF()
 
