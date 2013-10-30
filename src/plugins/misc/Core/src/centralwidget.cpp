@@ -1183,8 +1183,8 @@ void CentralWidget::updateGui()
             ViewWidget *newViewWidget = dynamic_cast<ViewWidget *>(newView);
 
             if (newViewWidget)
-                connect(newViewWidget, SIGNAL(updateFileTabIcon(const QString &, const QIcon &)),
-                        this, SLOT(updateFileTabIcon(const QString &, const QIcon &)),
+                connect(newViewWidget, SIGNAL(updateFileTabIcon(const QString &, const QString &, const QIcon &)),
+                        this, SLOT(updateFileTabIcon(const QString &, const QString &, const QIcon &)),
                         Qt::UniqueConnection);
         } else {
             // The interface doesn't have a view for the current file, so use
@@ -1465,15 +1465,16 @@ void CentralWidget::updateFileTabIcons()
 
 //==============================================================================
 
-void CentralWidget::updateFileTabIcon(const QString &pFileName,
+void CentralWidget::updateFileTabIcon(const QString &pViewName,
+                                      const QString &pFileName,
                                       const QIcon &pIcon)
 {
-    // Update the requested file tab icon, but only if the view (from which the
-    // signal was emitted) is the currently active one
+    // Update the requested file tab icon, but only if the view plugin (from
+    // which the signal was emitted) is the one currently active
 
-    QWidget *viewWidget = qobject_cast<QWidget *>(sender());
+    GuiInterface *guiInterface = qobject_cast<GuiInterface *>(mPlugin->instance());
 
-    if (viewWidget->isVisible())
+    if (guiInterface && !pViewName.compare(guiInterface->viewName()))
         // The view from which the signal was emitted is visible, so we can
         // handle its signal
 

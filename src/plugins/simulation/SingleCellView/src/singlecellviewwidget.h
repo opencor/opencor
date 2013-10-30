@@ -195,6 +195,9 @@ private:
                        const qulonglong &pSize);
     void checkResults(SingleCellViewSimulation *pSimulation);
 
+    void resetFileTabIcon(const QString &pFileName,
+                          const bool &pRemoveProgress = true);
+
 private Q_SLOTS:
     void on_actionRunPauseResumeSimulation_triggered();
     void on_actionStopSimulation_triggered();

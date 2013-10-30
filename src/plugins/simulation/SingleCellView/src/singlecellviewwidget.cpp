@@ -619,22 +619,12 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
     mDelayWidget->setValue(mDelays.value(pFileName));
 
-    // In case our simulation is running or paused, then stop tracking our
-    // simulation progress and let people know that our file tab icon should be
-    // reset
+    // Reset our file tab icon and update our progress bar
+    // Note: they may not both be necessary, but we never know, so...
 
-    if (mSimulation->isRunning() || mSimulation->isPaused()) {
-        mProgresses.remove(mSimulation->fileName());
+    resetFileTabIcon(mSimulation->fileName());
 
-        emit updateFileTabIcon(mSimulation->fileName(), QIcon());
-    }
-
-    // Update our progress bar, if needed
-    // Note: indeed, it's only if our simulation is running that our progress
-    //       bar will get updated (when checking for results)...
-
-    if (!mSimulation->isRunning())
-        mProgressBarWidget->setValue(mSimulation->progress());
+    mProgressBarWidget->setValue(mSimulation->progress());
 
     // Determine whether the CellML file has a valid runtime
 
@@ -1304,14 +1294,17 @@ void SingleCellViewWidget::simulationStopped(const int &pElapsedTime)
 
     mProgresses.remove(simulationFileName);
 
-    // Reset our file tab icon (with a bit of a delay), but only if we are
-    // not the active simulation
-    // Note: we can't directly pass simulation to resetFileTabIcon(), so
-    //       instead we use mStoppedSimulations which is a list of
-    //       simulations in case several simulations were to stop at around
-    //       the same time...
+    // Reset our tab icon in case we are not visible or not dealing with the
+    // active simulation
+    // Note #1: we check that we are not visible in case the user has selected a
+    //          file that cannot be handled by us, meaning that our central
+    //          widget would show a message rather than us...
+    // Note #2: we can't directly pass simulation to resetFileTabIcon(), so
+    //          instead we use mStoppedSimulations which is a list of
+    //          simulations in case several simulations were to stop at around
+    //          the same time...
 
-    if (simulation != mSimulation) {
+    if (!isVisible() || (simulation != mSimulation)) {
         mStoppedSimulations << simulation;
 
         if (needReloadView)
@@ -1337,15 +1330,29 @@ void SingleCellViewWidget::resetProgressBar()
 
 //==============================================================================
 
+void SingleCellViewWidget::resetFileTabIcon(const QString &pFileName,
+                                            const bool &pRemoveProgress)
+{
+    // Stop tracking our simulation progress and let people know that our file
+    // tab icon should be reset
+
+    if (pRemoveProgress)
+        mProgresses.remove(pFileName);
+
+    emit updateFileTabIcon(mPluginParent->viewName(), pFileName, QIcon());
+}
+
+//==============================================================================
+
 void SingleCellViewWidget::resetFileTabIcon()
 {
-    // Let people know that we want to reset our file tab icon
+    // Reset the file tab icon of our most recently stopped simulation
 
     SingleCellViewSimulation *simulation = mStoppedSimulations.first();
 
     mStoppedSimulations.removeFirst();
 
-    emit updateFileTabIcon(simulation->fileName(), QIcon());
+    resetFileTabIcon(simulation->fileName());
 }
 
 //==============================================================================
@@ -1883,10 +1890,13 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
         }
     }
 
-    // Update our progress bar (or the tab icon, in case we are not dealing with
-    // the active simulation)
+    // Update our progress bar, if we are visible and dealing with the active
+    // simulation, otherwise the tab icon
+    // Note: we check that we are visible in case the user has selected a file
+    //       that cannot be handled by us, meaning that our central widget would
+    //       show a message rather than us...
 
-    if (pSimulation == mSimulation) {
+    if (isVisible() && (pSimulation == mSimulation)) {
         mProgressBarWidget->setValue(mSimulation->progress());
     } else {
         // We are not dealing with the active simulation, so create an icon that
@@ -1909,7 +1919,8 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
 
             // Let people know about the file tab icon to be used for the model
 
-            emit updateFileTabIcon(pSimulation->fileName(),
+            emit updateFileTabIcon(mPluginParent->viewName(),
+                                   pSimulation->fileName(),
                                    fileTabIcon(pSimulation->fileName()));
         }
     }
