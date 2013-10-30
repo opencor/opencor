@@ -515,7 +515,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
             if (action)
                 mGui->menuTools->insertAction(mGui->menuTools->actions().first(), action);
             else
-                action = mGui->menuTools->insertSeparator(mGui->menuTools->actions().first());
+                mGui->menuTools->insertSeparator(mGui->menuTools->actions().first());
 
             break;
         }
@@ -1314,6 +1314,11 @@ void MainWindow::restart(const bool &pSaveSettings) const
 
 void MainWindow::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 {
+    // Make sure that we have a view plugin
+
+    if (!pViewPlugin)
+        return;
+
     // We come here as a result of our central widget having updated its GUI,
     // meaning that a new view or file has been selected, so we may need to
     // enable/disable and/or show/hide some menus/actions/etc.
