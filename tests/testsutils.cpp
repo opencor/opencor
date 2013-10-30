@@ -71,7 +71,7 @@ QStringList runCli(const QStringList pArguments)
 
     QStringList defaultArguments = QStringList();
 
-#ifdef Q_OS_LINUX
+#ifdef TRAVIS_CI
     defaultArguments << "-platform" << "offscreen";
 #endif
 
