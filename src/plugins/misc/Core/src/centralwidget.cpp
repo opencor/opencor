@@ -1412,12 +1412,13 @@ void CentralWidget::updateModifiedSettings()
 
 void CentralWidget::fileReloaded(const QString &pFileName)
 {
-    // Let our plugins know about the file having been reloaded
+    // Let our plugins know about the file having been reloaded, but only if
+    // they already have a view for it
 
     foreach (Plugin *plugin, mLoadedPlugins) {
         GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
 
-        if (guiInterface)
+        if (guiInterface && guiInterface->viewWidget(pFileName, false))
             guiInterface->fileReloaded(pFileName);
     }
 }

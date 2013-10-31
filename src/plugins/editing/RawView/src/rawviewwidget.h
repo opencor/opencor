@@ -41,6 +41,7 @@ public:
     explicit RawViewWidget(const QString &pFileName, QWidget *pParent = 0);
 
     void fileReloaded();
+    void fileRenamed(const QString &pFileName);
 
 private:
     QString mFileName;

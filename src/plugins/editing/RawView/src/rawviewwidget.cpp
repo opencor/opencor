@@ -70,6 +70,15 @@ void RawViewWidget::fileReloaded()
 
 //==============================================================================
 
+void RawViewWidget::fileRenamed(const QString &pFileName)
+{
+    // The file has been renamed, so update our copy of its name
+
+    mFileName = pFileName;
+}
+
+//==============================================================================
+
 }   // namespace RawView
 }   // namespace OpenCOR
 
