@@ -927,8 +927,17 @@ MACRO(OS_X_DEPLOY_QT_FILE ORIG_DIRNAME DEST_DIRNAME FILENAME)
     OS_X_QT_DEPENDENCIES(${ORIG_FILENAME} DEPENDENCIES)
 
     # Clean up the Qt file
+    # Note: we only do this if we are to package OpenCOR. Indeed, if we were to
+    #       do this when building OpenCOR for, say, debugging purposes, then we
+    #       would end up with two sets of Qt libraries (one in /Applications/Qt5
+    #       and another in the OpenCOR bundle), potentially confusing tools such
+    #       as Xcode, generating messages like "XXX is implemented in both YYY
+    #       and ZZZ. One of the two will be used. Which one is undefined." even
+    #       though everything is actually fine...
 
-    OS_X_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${DEST_DIRNAME} ${FILENAME} ${DEPENDENCIES})
+    IF("$ENV{PACKAGE_OPENCOR}" STREQUAL "True")
+        OS_X_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${DEST_DIRNAME} ${FILENAME} ${DEPENDENCIES})
+    ENDIF()
 ENDMACRO()
 
 #===============================================================================
