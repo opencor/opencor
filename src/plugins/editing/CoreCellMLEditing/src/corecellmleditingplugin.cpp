@@ -177,9 +177,11 @@ void CoreCellMLEditingPlugin::finalizeView()
 
 //==============================================================================
 
-QWidget * CoreCellMLEditingPlugin::viewWidget(const QString &pFileName)
+QWidget * CoreCellMLEditingPlugin::viewWidget(const QString &pFileName,
+                                              const bool &pCreate)
 {
     Q_UNUSED(pFileName);
+    Q_UNUSED(pCreate);
 
     // We don't handle this interface...
 

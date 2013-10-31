@@ -204,7 +204,8 @@ void SingleCellViewPlugin::finalizeView()
 
 //==============================================================================
 
-QWidget * SingleCellViewPlugin::viewWidget(const QString &pFileName)
+QWidget * SingleCellViewPlugin::viewWidget(const QString &pFileName,
+                                           const bool &pCreate)
 {
     // Check that we are dealing with a CellML file and, if so, return our
     // generic simulation view widget after having initialised it
@@ -217,11 +218,13 @@ QWidget * SingleCellViewPlugin::viewWidget(const QString &pFileName)
     // We are dealing with a CellML file, so update our generic simulation view
     // widget using the given CellML file
 
-    mViewWidget->initialize(pFileName);
+    if (pCreate) {
+        mViewWidget->initialize(pFileName);
 
-    // Our generic simulation view widget is now ready, so...
-
-    return mViewWidget;
+        return mViewWidget;
+    } else {
+        return 0;
+    }
 }
 
 //==============================================================================

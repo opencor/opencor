@@ -865,7 +865,7 @@ bool CentralWidget::closeFile(const int &pIndex, const bool &pForceClosing)
             GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
 
             if (guiInterface) {
-                mContents->removeWidget(guiInterface->viewWidget(fileName));
+                mContents->removeWidget(guiInterface->viewWidget(fileName, false));
 
                 guiInterface->removeViewWidget(fileName);
             }
@@ -1175,10 +1175,10 @@ void CentralWidget::updateGui()
             // We have a view for the current file, so create a connection
             // (should it be be of the right type) to keep track of any request
             // for a change in its corresponding file tab icon
-            // Note: we pass Qt::UniqueConnection in our call to connect(),
-            //       thus ensuring that we don't have several identical
-            //       connections (something which could happen if we were to
-            //       switch views and back)...
+            // Note: we pass Qt::UniqueConnection in our call to connect() to
+            //       ensure that we don't have several identical connections
+            //       (something that might happen if we were to switch views and
+            //       back)...
 
             ViewWidget *newViewWidget = dynamic_cast<ViewWidget *>(newView);
 

@@ -105,7 +105,8 @@ void RawViewPlugin::finalizeView()
 
 //==============================================================================
 
-QWidget * RawViewPlugin::viewWidget(const QString &pFileName)
+QWidget * RawViewPlugin::viewWidget(const QString &pFileName,
+                                    const bool &pCreate)
 {
     // Retrieve from our list the view widget associated with the file name
 
@@ -113,7 +114,7 @@ QWidget * RawViewPlugin::viewWidget(const QString &pFileName)
 
     // Create a new view widget, if none could be retrieved
 
-    if (!res) {
+    if (!res && pCreate) {
         res = new RawViewWidget(pFileName, mMainWindow);
 
         // Keep track of our new view widget

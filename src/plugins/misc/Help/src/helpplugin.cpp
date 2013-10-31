@@ -181,9 +181,11 @@ void HelpPlugin::finalizeView()
 
 //==============================================================================
 
-QWidget * HelpPlugin::viewWidget(const QString &pFileName)
+QWidget * HelpPlugin::viewWidget(const QString &pFileName,
+                                 const bool &pCreate)
 {
     Q_UNUSED(pFileName);
+    Q_UNUSED(pCreate);
 
     // We don't handle this interface...
 

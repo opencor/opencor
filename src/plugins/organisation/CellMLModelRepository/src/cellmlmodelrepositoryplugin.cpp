@@ -181,9 +181,11 @@ void CellMLModelRepositoryPlugin::finalizeView()
 
 //==============================================================================
 
-QWidget * CellMLModelRepositoryPlugin::viewWidget(const QString &pFileName)
+QWidget * CellMLModelRepositoryPlugin::viewWidget(const QString &pFileName,
+                                                  const bool &pCreate)
 {
     Q_UNUSED(pFileName);
+    Q_UNUSED(pCreate);
 
     // We don't handle this interface...
 

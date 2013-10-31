@@ -276,7 +276,8 @@ void CellMLAnnotationViewPlugin::finalizeView()
 
 //==============================================================================
 
-QWidget * CellMLAnnotationViewPlugin::viewWidget(const QString &pFileName)
+QWidget * CellMLAnnotationViewPlugin::viewWidget(const QString &pFileName,
+                                                 const bool &pCreate)
 {
     // Check that we are dealing with a CellML file
 
@@ -291,7 +292,7 @@ QWidget * CellMLAnnotationViewPlugin::viewWidget(const QString &pFileName)
 
     // Create a new view widget, if none could be retrieved
 
-    if (!res) {
+    if (!res && pCreate) {
         res = new CellmlAnnotationViewWidget(this, pFileName, mMainWindow);
 
         // Initialise our new view widget's sizes
