@@ -226,8 +226,7 @@ ENDMACRO()
 
 MACRO(UPDATE_LANGUAGE_FILES TARGET_NAME)
     # Update the translation (.ts) files (if they exist) and generate the
-    # language (.qm) files which will later on be embedded in the project
-    # itself
+    # language (.qm) files, which will later on be embedded in the project
     # Note: this requires SOURCES, HEADERS_MOC and UIS to be defined for the
     #       current CMake project, even if that means that these variables are
     #       to be empty (the case with some plugins for example). Indeed, since
@@ -378,8 +377,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         SET(RESOURCES)
     ENDIF()
 
-    # Update the translation (.ts) files and generate the language (.qm) files
-    # which will later on be embedded in the plugin itself
+    # Update the translation (.ts) files and generate the language (.qm) files,
+    # which will later on be embedded in the plugin
 
     IF(NOT "${RESOURCES}" STREQUAL "")
         UPDATE_LANGUAGE_FILES(${PLUGIN_NAME})
@@ -550,8 +549,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         ENDFOREACH()
     ENDIF()
 
-    # Package the plugin itself, but only if we are not on OS X since it will
-    # have already been copied
+    # Package the plugin, but only if we are not on OS X since it will  have
+    # already been copied
 
     IF(NOT APPLE)
         INSTALL(FILES ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME}
@@ -759,8 +758,8 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
         ENDFOREACH()
     ENDIF()
 
-    # Package the plugin itself, but only if we are not on OS X since it will
-    # have already been copied
+    # Package the plugin, but only if we are not on OS X since it will have
+    # already been copied
 
     IF(NOT APPLE)
         INSTALL(FILES ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
@@ -799,7 +798,7 @@ ENDMACRO()
 
 MACRO(WINDOWS_DEPLOY_QT_LIBRARIES)
     FOREACH(LIBRARY ${ARGN})
-        # Deploy the Qt library itself
+        # Deploy the Qt library
 
         INSTALL(FILES ${QT_BINARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}
                 DESTINATION bin)
@@ -810,7 +809,7 @@ ENDMACRO()
 
 MACRO(WINDOWS_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
     FOREACH(PLUGIN_NAME ${ARGN})
-        # Deploy the Qt plugin itself
+        # Deploy the Qt plugin
 
         INSTALL(FILES ${QT_PLUGINS_DIR}/${PLUGIN_CATEGORY}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}
                 DESTINATION plugins/${PLUGIN_CATEGORY})
@@ -836,7 +835,7 @@ ENDMACRO()
 
 MACRO(LINUX_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
     FOREACH(PLUGIN_NAME ${ARGN})
-        # Deploy the Qt plugin itself
+        # Deploy the Qt plugin
 
         INSTALL(FILES ${QT_PLUGINS_DIR}/${PLUGIN_CATEGORY}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}
                 DESTINATION plugins/${PLUGIN_CATEGORY})
@@ -915,7 +914,7 @@ ENDMACRO()
 #===============================================================================
 
 MACRO(OS_X_DEPLOY_QT_FILE ORIG_DIRNAME DEST_DIRNAME FILENAME)
-    # Copy the Qt file itself
+    # Copy the Qt file
 
     SET(ORIG_FILENAME ${ORIG_DIRNAME}/${FILENAME})
 
@@ -936,7 +935,7 @@ ENDMACRO()
 
 MACRO(OS_X_DEPLOY_QT_LIBRARIES)
     FOREACH(LIBRARY_NAME ${ARGN})
-        # Deploy the Qt library itself
+        # Deploy the Qt library
 
         SET(QT_FRAMEWORK_DIR ${LIBRARY_NAME}.framework/Versions/${QT_VERSION_MAJOR})
 
@@ -950,7 +949,7 @@ ENDMACRO()
 
 MACRO(OS_X_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
     FOREACH(PLUGIN_NAME ${ARGN})
-        # Deploy the Qt plugin itself
+        # Deploy the Qt plugin
 
         OS_X_DEPLOY_QT_FILE(${QT_PLUGINS_DIR}/${PLUGIN_CATEGORY}
                             ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${PLUGIN_CATEGORY}
@@ -961,7 +960,7 @@ ENDMACRO()
 #===============================================================================
 
 MACRO(OS_X_DEPLOY_LIBRARY DIRNAME LIBRARY_NAME)
-    # Copy the library itself
+    # Copy the library
 
     SET(LIBRARY_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
     SET(LIBRARY_FILEPATH ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${LIBRARY_FILENAME})
