@@ -344,13 +344,13 @@ void CellMLAnnotationViewPlugin::removeViewWidget(const QString &pFileName)
     // Remove the view widget from our list, should there be one for the given
     // file name
 
-    CellmlAnnotationViewWidget *viewWidget = mViewWidgets.value(pFileName);
+    CellmlAnnotationViewWidget *crtViewWidget = mViewWidgets.value(pFileName);
 
-    if (viewWidget) {
+    if (crtViewWidget) {
         // There is a view widget for the given file name, so delete it and
         // remove it from our list
 
-        delete viewWidget;
+        delete crtViewWidget;
 
         mViewWidgets.remove(pFileName);
     }
@@ -384,9 +384,9 @@ bool CellMLAnnotationViewPlugin::saveFile(const QString &pOldFileName,
     // Retrieve the view widget associated with the 'old' file name and, if any,
     // save it
 
-    CellmlAnnotationViewWidget *viewWidget = mViewWidgets.value(pOldFileName);
+    CellmlAnnotationViewWidget *crtViewWidget = mViewWidgets.value(pOldFileName);
 
-    return viewWidget?viewWidget->cellmlFile()->save(pNewFileName):false;
+    return crtViewWidget?crtViewWidget->cellmlFile()->save(pNewFileName):false;
 }
 
 //==============================================================================
@@ -402,13 +402,13 @@ void CellMLAnnotationViewPlugin::fileOpened(const QString &pFileName)
 
 void CellMLAnnotationViewPlugin::fileReloaded(const QString &pFileName)
 {
-    // The given file has been reloaded, so let its corresponding view widget,
-    // if any, know about it
+    // The given file has been reloaded, so let its corresponding view widget
+    // know about it
 
-    CellmlAnnotationViewWidget *viewWidget = mViewWidgets.value(pFileName);
+    CellmlAnnotationViewWidget *crtViewWidget = mViewWidgets.value(pFileName);
 
-    if (viewWidget)
-        viewWidget->fileReloaded();
+    if (crtViewWidget)
+        crtViewWidget->fileReloaded();
 }
 
 //==============================================================================
