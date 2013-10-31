@@ -39,6 +39,11 @@ class RawViewWidget : public QScintillaSupport::QScintillaWidget
 
 public:
     explicit RawViewWidget(const QString &pFileName, QWidget *pParent = 0);
+
+    void fileReloaded();
+
+private:
+    QString mFileName;
 };
 
 //==============================================================================

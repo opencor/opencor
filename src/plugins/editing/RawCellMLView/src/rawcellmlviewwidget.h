@@ -79,6 +79,8 @@ public:
     bool isManaged(const QString &pFileName) const;
     void finalize(const QString &pFileName);
 
+    void fileReloaded(const QString &pFileName);
+
 private:
     Ui::RawCellmlViewWidget *mGui;
 

@@ -264,9 +264,11 @@ void RawCellMLViewPlugin::fileOpened(const QString &pFileName)
 
 void RawCellMLViewPlugin::fileReloaded(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    // The given file has been reloaded, so let its corresponding view widget
+    // know about it
 
-    // We don't handle this interface...
+    if (viewWidget(pFileName))
+        mViewWidget->fileReloaded(pFileName);
 }
 
 //==============================================================================

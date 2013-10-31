@@ -191,9 +191,13 @@ void RawViewPlugin::fileOpened(const QString &pFileName)
 
 void RawViewPlugin::fileReloaded(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    // The given file has been reloaded, so let its corresponding view widget
+    // know about it
 
-    // We don't handle this interface...
+    RawViewWidget *crtViewWidget = mViewWidgets.value(pFileName);
+
+    if (crtViewWidget)
+        crtViewWidget->fileReloaded();
 }
 
 //==============================================================================

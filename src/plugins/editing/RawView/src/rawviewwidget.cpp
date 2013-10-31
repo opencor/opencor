@@ -34,11 +34,21 @@ namespace RawView {
 //==============================================================================
 
 RawViewWidget::RawViewWidget(const QString &pFileName, QWidget *pParent) :
-    QScintillaWidget(pParent)
+    QScintillaWidget(pParent),
+    mFileName(pFileName)
 {
-    // Customise ourselves
+    // Customise ourselves by 'reloading' our file
 
-    QFile file(pFileName);
+    fileReloaded();
+}
+
+//==============================================================================
+
+void RawViewWidget::fileReloaded()
+{
+    // The given file has been reloaded, so reload it
+
+    QFile file(mFileName);
     QString fileContents = QString();
     bool fileIsReadOnly = false;
 
@@ -47,7 +57,7 @@ RawViewWidget::RawViewWidget(const QString &pFileName, QWidget *pParent) :
         // be written to
 
         fileContents = QTextStream(&file).readAll();
-        fileIsReadOnly = !(QFileInfo(pFileName).isWritable());
+        fileIsReadOnly = !(QFileInfo(mFileName).isWritable());
 
         // We are done with the file, so close it
 

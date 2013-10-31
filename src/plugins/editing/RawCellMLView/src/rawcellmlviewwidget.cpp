@@ -242,6 +242,18 @@ void RawCellmlViewWidget::finalize(const QString &pFileName)
 
 //==============================================================================
 
+void RawCellmlViewWidget::fileReloaded(const QString &pFileName)
+{
+    // The given file has been reloaded, so reload it, should it be managed
+
+    if (isManaged(pFileName)) {
+        finalize(pFileName);
+        initialize(pFileName);
+    }
+}
+
+//==============================================================================
+
 void RawCellmlViewWidget::splitterMoved()
 {
     // The splitter has moved, so keep track of the viewer and editor's new
