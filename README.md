@@ -11,7 +11,7 @@
 
 #######
 
-If you have any question about OpenCOR, please do not hesitate to [contact us](http://www.opencor.ws/user/contactUs.html).
+Please [contact us](http://www.opencor.ws/user/contactUs.html) if you have any questions about OpenCOR.
 
 #######
 
