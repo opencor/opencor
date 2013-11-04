@@ -9,7 +9,7 @@ function headerAndContentsMenu(pageName, relativePath) {
                              [1, "Plugins", "developer/develop/plugins.html"],
                              [1, "Internationalisation", "developer/develop/internationalisation.html"],
                              [1, "Tests", "developer/develop/tests.html"],
-                             [0, "Build, run and test", "developer/buildRunAndTest.html"],
+                             [0, "Build, test and run", "developer/buildTestAndRun.html"],
                              [0, "Package", "developer/package.html"],
                              [0, "Third-party libraries", "developer/thirdPartyLibraries.html"],
                              [],

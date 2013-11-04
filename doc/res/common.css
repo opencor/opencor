@@ -22,11 +22,12 @@ a:hover {
     color: rgb(103, 103, 103);
 }
 
-a.image:hover {
-    /* This prevents anchors with an image in them from looking like a link */
+a.noHover:hover {
+    /* This prevents anchors from looking like a link */
 
     margin: 0px;
     border: none;
+    background: rgb(255, 255, 255);
 }
 
 div.header {
@@ -62,6 +63,12 @@ div.section table td {
 div.section table td.date {
     text-align: right;
     font-size: 9pt;
+    font-style: italic;
+    font-weight: normal;
+}
+
+div.section table td span.whatIsNew {
+    font-size: 7pt;
     font-style: italic;
     font-weight: normal;
 }

@@ -18,10 +18,6 @@
             headerAndContentsMenu("Downloads", "..");
         </script>
 
-        <p>
-            Please find below the official releases of OpenCOR, as well as its latest snapshot (you might want to check the <a href="../user/supportedPlatforms.html">supported platforms</a>, as well as <a href="../user/whatIsNew.html">what is new</a>).
-        </p>
-
 <?php
     // Function to retrieve the formatted size of a file
 
@@ -80,12 +76,16 @@
 
         if ($versionMajor || $versionMinor || $versionPatch) {
             $versionTitle = "Version ".$versionMajor.".".$versionMinor;
+            $versionWhatIsNew = $versionMajor.".".$versionMinor;
             $versionVersion = $versionMajor."-".$versionMinor."-".$versionPatch;
 
-            if ($versionPatch)
+            if ($versionPatch) {
                 $versionTitle .= ".".$versionPatch;
+                $versionWhatIsNew .= ".".$versionPatch;
+            }
         } else {
             $versionTitle = "Latest snapshot";
+            $versionWhatIsNew = "latest";
             $versionVersion = date("Y-m-d", mktime(0, 0, 0, $versionMonth, $versionDay, $versionYear));
         }
 
@@ -104,7 +104,7 @@
                 <tbody>
                     <tr>
                         <td>
-                            <?php echo $versionTitle."\n"; ?>
+                            <?php echo $versionTitle."\n"; ?> <span class="whatIsNew"><a href="../user/whatIsNew.html#<?php echo $versionWhatIsNew; ?>">What is new?</a></span>
                         </td>
                         <td class="date">
                             (<?php echo date("j F Y", mktime(0, 0, 0, $versionMonth, $versionDay, $versionYear)); ?>)
