@@ -14,8 +14,19 @@ div.official {
 div.latest {
     margin: -1px;
     border: 1px solid rgba(227, 108, 9, 0.39);
-    border-radius: 13px;
+    border-radius: 13px 13px 0px 0px;
     background: rgba(227, 108, 9, 0.13);
+}
+
+div.latestInfo {
+    margin: -1px;
+    border-bottom: 1px solid rgba(227, 108, 9, 0.39);
+    border-left: 1px solid rgba(227, 108, 9, 0.39);
+    border-right: 1px solid rgba(227, 108, 9, 0.39);
+    border-radius: 0px 0px 13px 13px;
+    padding: 3px 7px 3px 7px;
+    background: rgba(227, 108, 9, 0.39);
+    color: rgb(103, 103, 103);
 }
 
 div.section {
@@ -42,12 +53,6 @@ img.downloads:hover {
 
 table.version {
     width: 100%;
-}
-
-table.version td.latestInfo {
-    padding: 3px 7px 0px 7px;
-    border-top: 1px dashed rgba(103, 103, 103, 0.39);
-    color: rgb(103, 103, 103);
 }
 
 table.version td.topSeparator {

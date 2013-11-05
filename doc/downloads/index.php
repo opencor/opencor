@@ -273,21 +273,20 @@
 ?>
                         </td>
                     </tr>
-<?php
-        if ($versionType == 2) {
-?>
-                    <tr>
-                        <td class="latestInfo" colspan=<?php echo $nbOfPlatformsPerRow; ?>>
-                            <strong>Note:</strong> we aim to release fairly stable snapshots, so feel free to try them out to see what is coming up (new releases are announced on our <a href="https://twitter.com/TeamOpenCOR/">Twitter account</a>).
-                        </td>
-                    </tr>
-<?php
-        }
-?>
                 </tbody>
             </table>
         </div>
 <?php
+        // Add a note in case of the latest snapshot
+
+        if ($versionType == 2) {
+?>
+        <div class="latestInfo">
+            <strong>Note:</strong> this version is fairly stable and therefore the one we would recommend using, especially if you want to get access to the latest features (new snapshots are announced on our <a href="https://twitter.com/TeamOpenCOR/">Twitter feed</a>).
+        </div>
+<?php
+        }
+
         // Go to the next version
 
         ++$versionIndex;
