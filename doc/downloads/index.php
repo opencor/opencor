@@ -39,14 +39,14 @@
 
     date_default_timezone_set("Europe/London");
 
-    $versions = array(array(0, 1, 2, 29, 5, 2013, 1,
-                            array(array("Windows", "Windows XP and later", array(".exe"), array(".zip")),
-                                  array("Linux", "Ubuntu 12.04 LTS (Precise Pangolin) and later", array(".tar.gz", 32), array(".tar.gz", 64)),
-                                  array("OS X", "OS X 10.8 (Mountain Lion) and later", array(".dmg"), array(".zip")))),
-                      array(0, 0, 0, 31, 10, 2013, 2,
+    $versions = array(array(0, 0, 0, 31, 10, 2013, 2,
                             array(array("Windows", "Windows XP and later", array(".exe"), array(".zip")),
                                   array("Linux", "Ubuntu 12.04 LTS (Precise Pangolin) and later", array(".tar.gz", 32), array(".tar.gz", 64)),
                                   array("OS X", "Mac OS X 10.6 (Snow Leopard) and later", array(".dmg"), array(".zip")))),
+                      array(0, 1, 2, 29, 5, 2013, 1,
+                            array(array("Windows", "Windows XP and later", array(".exe"), array(".zip")),
+                                  array("Linux", "Ubuntu 12.04 LTS (Precise Pangolin) and later", array(".tar.gz", 32), array(".tar.gz", 64)),
+                                  array("OS X", "OS X 10.8 (Mountain Lion) and later", array(".dmg"), array(".zip")))),
                       array(0, 1, 1, 17, 4, 2013, 0,
                             array(array("Windows", "Windows XP and later", array(".exe"), array(".zip")),
                                   array("Linux", "Ubuntu 12.04 LTS (Precise Pangolin) and later", array(".tar.gz", 32), array(".tar.gz", 64)),
@@ -120,9 +120,9 @@
         $versionClass = "";
 
         if ($versionType == 1)
-            $versionClass = "recommended";
+            $versionClass = "official";
         else if ($versionType == 2)
-            $versionClass = "risky";
+            $versionClass = "latest";
 ?>
         <div class="<?php echo $versionClass; ?>">
             <table class="version">
@@ -273,6 +273,17 @@
 ?>
                         </td>
                     </tr>
+<?php
+        if ($versionType == 2) {
+?>
+                    <tr>
+                        <td class="latestInfo" colspan=<?php echo $nbOfPlatformsPerRow; ?>>
+                            <strong>Note:</strong> we aim to release fairly stable snapshots, so feel free to try them out to see what is coming up (new releases are announced on our <a href="https://twitter.com/TeamOpenCOR/">Twitter account</a>).
+                        </td>
+                    </tr>
+<?php
+        }
+?>
                 </tbody>
             </table>
         </div>
