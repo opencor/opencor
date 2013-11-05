@@ -83,7 +83,8 @@ QString getOsName()
     else
         return os+" "+exec("uname", QStringList() << "-r");
 #elif defined(Q_OS_MAC)
-    // Note: from version 10.7, Apple uses OS X rather than Mac OS X...
+    // Note: from version 10.8, Apple officially uses OS X rather than Mac OS
+    //       X...
 
     switch (QSysInfo::MacintoshVersion) {
     case QSysInfo::MV_9:
@@ -103,13 +104,15 @@ QString getOsName()
     case QSysInfo::MV_10_6:
         return "Mac OS X 10.6 (Snow Leopard)";
     case QSysInfo::MV_10_7:
-        return "OS X 10.7 (Lion)";
+        return "Mac OS X 10.7 (Lion)";
     case QSysInfo::MV_10_8:
         return "OS X 10.8 (Mountain Lion)";
+    case QSysInfo::MV_10_9:
+        return "OS X 10.9 (Mavericks)";
     default:
         return "Mac OS";
-        // Note: we return Mac OS rather than Mac OS X or even OS X since we
-        //       handle all the recent versions...
+        // Note: we return Mac OS rather than Mac OS X or even OS X since only
+        //       old versions are not handled...
     }
 #else
     #error Unsupported platform
