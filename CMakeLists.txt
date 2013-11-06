@@ -342,15 +342,17 @@ IF(WIN32)
     INSTALL(FILES ${PROJECT_BUILD_DIR}/bin/${PROJECT_NAME}.com
             DESTINATION bin)
 
-    # MSVC files required by OpenCOR
+    # Redistributable files required by OpenCOR
 
+    RETRIEVE_BINARY_FILE(distrib/windows/x86 libeay32.dll 38c830cbe05d4ef7a193bbf754a521c8f7a185c5)
     RETRIEVE_BINARY_FILE(distrib/windows/x86 msvcp100.dll 2ada702a0c143a7ae39b7de16a4b5cc994d2548b)
     RETRIEVE_BINARY_FILE(distrib/windows/x86 msvcr100.dll 0b51fb415ec89848f339f8989d323bea722bfd70)
+    RETRIEVE_BINARY_FILE(distrib/windows/x86 ssleay32.dll e89a16dfcea27e5528c4781a2140cb57dc40cd61)
 
-    INSTALL(FILES distrib/windows/x86/msvcp100.dll
-            DESTINATION bin)
-    INSTALL(FILES distrib/windows/x86/msvcr100.dll
-            DESTINATION bin)
+    FOREACH(REDISTRIBUTABLE_FILE libeay32 msvcp100 msvcr100 ssleay32)
+        INSTALL(FILES distrib/windows/x86/${REDISTRIBUTABLE_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                DESTINATION bin)
+    ENDFOREACH()
 
     # Qt libraries required by OpenCOR
 
