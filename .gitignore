@@ -1,7 +1,9 @@
 /CMakeLists.txt.user
 
+/distrib/windows/x86/libeay32.dll
 /distrib/windows/x86/msvcr100.dll
 /distrib/windows/x86/msvcp100.dll
+/distrib/windows/x86/ssleay32.dll
 
 /src/plugins/3rdparty/LLVM/bin/**/*
 
