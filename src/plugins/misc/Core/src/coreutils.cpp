@@ -569,7 +569,7 @@ QString formatErrorMsg(const QString &pErrorMsg)
 
     // Format and return the error message
 
-    QString errorMsg = ".......";//pErrorMsg;
+    QString errorMsg = pErrorMsg;
 
     // Lower the case of the first character, but if the message is one
     // character long (!!) or if its second character is not in upper case
