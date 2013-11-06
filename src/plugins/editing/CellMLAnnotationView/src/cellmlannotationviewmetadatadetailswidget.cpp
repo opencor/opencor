@@ -255,7 +255,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateGui(iface::cellml_api::Cel
     // Update our metadata edit and view details, if needed
 
     if (!isCategoryElement && !isUnknownMetadata)
-        mMetadataEditDetails->updateGui(pElement);
+        mMetadataEditDetails->updateGui(pElement, false);
 
     if (!isCategoryElement)
         mMetadataViewDetails->updateGui(pElement);
@@ -377,7 +377,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateMetadataEditDetails()
 {
     // Update our metadata edit details widget
 
-    mMetadataEditDetails->updateGui(mElement);
+    mMetadataEditDetails->updateGui(mElement, false);
 }
 
 //==============================================================================
