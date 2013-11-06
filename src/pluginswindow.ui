@@ -186,7 +186,7 @@
    <item>
     <widget class="QLabel" name="noteLabel">
      <property name="text">
-      <string>&lt;b&gt;&lt;u&gt;Note:&lt;/u&gt;&lt;/b&gt; %1 will need to be restarted for your changes to be effective.</string>
+      <string>&lt;b&gt;&lt;u&gt;Note:&lt;/u&gt;&lt;/b&gt; %1 will need to be restarted for your changes to take effect.</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>

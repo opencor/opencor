@@ -166,8 +166,8 @@
 <context>
     <name>OpenCOR::PluginsWindow</name>
     <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; must be restarted for your changes to be effective. Do you wish to proceed?</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; doit etre relancé pour que vos changements deviennent effectifs. Voulez-vous continuer ?</translation>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; must be restarted for your changes to take effect. Do you wish to proceed?</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; doit etre relancé pour que vos changements puissent prendre effet. Voulez-vous continuer ?</translation>
     </message>
     <message>
         <source>API</source>
@@ -315,8 +315,8 @@
         <translation>Montrer seulement les extensions sélectables</translation>
     </message>
     <message>
-        <source>&lt;b&gt;&lt;u&gt;Note:&lt;/u&gt;&lt;/b&gt; %1 will need to be restarted for your changes to be effective.</source>
-        <translation>&lt;b&gt;&lt;u&gt;Note :&lt;/u&gt;&lt;/b&gt; %1 devra être relancé pour que vos changements puissent être effectifs.</translation>
+        <source>&lt;b&gt;&lt;u&gt;Note:&lt;/u&gt;&lt;/b&gt; %1 will need to be restarted for your changes to take effect.</source>
+        <translation>&lt;b&gt;&lt;u&gt;Note :&lt;/u&gt;&lt;/b&gt; %1 devra être relancé pour que vos changements puissent prendre effet.</translation>
     </message>
 </context>
 <context>
