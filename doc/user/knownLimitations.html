@@ -40,7 +40,7 @@
 
         <ul>
             <li>
-                OpenCOR's File Browser plugin may, on some systems, result in OpenCOR being slow to respond at startup. This has nothing to do with OpenCOR, but with Windows or, more precisely, a program which tightly integrates with its shell. There are <a href="http://www.brighthub.com/computing/windows-platform/articles/86552.aspx">several known causes and solutions</a> to this problem. However, should none of them work for you, then you might have to unselect the plugin.
+                OpenCOR's File Browser plugin may, on some systems, result in OpenCOR being slow to respond at startup. This has nothing to do with OpenCOR, but with Windows or, more precisely, a program that tightly integrates with its shell. There are <a href="http://www.brighthub.com/computing/windows-platform/articles/86552.aspx">several known causes and solutions</a> to this problem. However, should none of them work for you, then you might have to unselect the plugin.
             </li>
         </ul>
 
@@ -50,7 +50,7 @@
 
         <ul>
             <li>
-                Depending on which <a href="plugins/index.html">plugins</a> you select, OpenCOR may need <a href="http://www.llvm.org/">LLVM</a>. If so, and in case your video card uses a driver which relies on LLVM (e.g. <a href="http://en.wikipedia.org/wiki/Gallium3D">Gallium3D</a> and <a href="http://www.mesa3d.org/">Mesa 3D</a>), then there may be a conflict between the version of LLVM used by OpenCOR and the version used by your video card. To address this issue, you should either use a different driver or use indirect rendering. The latter can be done either every time you run OpenCOR:
+                Depending on which <a href="plugins/index.html">plugins</a> you select, OpenCOR may need <a href="http://www.llvm.org/">LLVM</a>. If so, and in case your video card uses a driver that relies on LLVM (e.g. <a href="http://en.wikipedia.org/wiki/Gallium3D">Gallium3D</a> and <a href="http://www.mesa3d.org/">Mesa 3D</a>), then there may be a conflict between the version of LLVM used by OpenCOR and the version used by your video card. To address this issue, you should either use a different driver or use indirect rendering. The latter can be done either every time you run OpenCOR:
 
                 <pre class="prettyprint">$ LIBGL_ALWAYS_INDIRECT=1 ./OpenCOR</pre>
 
