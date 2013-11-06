@@ -794,7 +794,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::qualifierChanged(const QStri
 
     // Update the enabled state of our various add buttons
 
-    updateGui(mElement, false);
+    updateGui(mElement);
 }
 
 //==============================================================================
