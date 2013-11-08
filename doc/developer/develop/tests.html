@@ -21,12 +21,12 @@
         </script>
 
         <p>
-            Tests can be created at the plugin level. Every test must:
+            Tests can be created at the plugin level. Tests must:
         </p>
 
         <ul>
-            <li>Be located under the <code>test</code> folder (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Compiler/test"><code>[OpenCOR]/src/plugins/misc/Compiler/test</code></a>) of a plugin folder (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Compiler"><code>[OpenCOR]/src/plugins/misc/Compiler</code></a>);</li>
-            <li>Consist of at least one set of <code>.cpp</code> and <code>.h</code> files (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Compiler/test/test.cpp"><code>[OpenCOR]/src/plugins/misc/Compiler/test/test.cpp</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Compiler/test/test.h"><code>[OpenCOR]/src/plugins/misc/Compiler/test/test.h</code></a>);</li>
+            <li>Be located under the <code>tests</code> folder (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Compiler/tests"><code>[OpenCOR]/src/plugins/misc/Compiler/tests</code></a>) of a plugin folder (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Compiler"><code>[OpenCOR]/src/plugins/misc/Compiler</code></a>);</li>
+            <li>Consist of at least one set of <code>.cpp</code> and <code>.h</code> files (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Compiler/tests/tests.cpp"><code>[OpenCOR]/src/plugins/misc/Compiler/tests/tests.cpp</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Compiler/tests/tests.h"><code>[OpenCOR]/src/plugins/misc/Compiler/tests/tests.h</code></a>);</li>
             <li>
                 Be listed under the <code>TESTS</code> header in the call to our CMake <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>ADD_PLUGIN</code></a> macro of the plugin's <code>CMakeLists.txt</code> file (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Compiler/CMakeLists.txt"><code>[OpenCOR]/src/plugins/misc/Compiler/CMakeLists.txt</code></a>):
                 <pre class="prettyprint">PROJECT(MyPlugin)
@@ -36,14 +36,14 @@
 ADD_PLUGIN(MyPlugin
     ...
     TESTS
-        test1
-        test2
-        test3
+        tests1
+        tests2
+        tests3
         ...
 )</pre>
             </li>
             <li>
-                Be referenced in our <a href="https://github.com/opencor/opencor/blob/master/test/main.cpp"><code>main test program</code></a>:
+                Be referenced in the <a href="https://github.com/opencor/opencor/blob/master/tests/main.cpp">main <code>.cpp</code> file</a> for our tests:
                 <pre class="prettyprint">...
 
 // The different tests that are  to be run
@@ -51,12 +51,16 @@ ADD_PLUGIN(MyPlugin
 Tests tests;
 
 ...
-tests["MyPlugin"] = QStringList() << "test1" << "test2" << "test3" << ...;
+tests["MyPlugin"] = QStringList() << "tests1" << "tests2" << "tests3" << ...;
 ...
 
 ...</pre>
             </li>
         </ul>
+
+        <p>
+            Some functions are available to load a plugin, run the <a href="http://en.wikipedia.org/wiki/Command-line_interface">CLI</a> version of OpenCOR and retrieve the contents of a file (see <a href="https://github.com/opencor/opencor/blob/master/tests/testsutils.cpp"><code>[OpenCOR]/tests/testsutils.cpp</code></a> and <a href="https://github.com/opencor/opencor/blob/master/tests/testsutils.h"><code>[OpenCOR]/tests/testsutils.h</code></a>).
+        </p>
 
         <script type="text/javascript">
             copyright("../..");
