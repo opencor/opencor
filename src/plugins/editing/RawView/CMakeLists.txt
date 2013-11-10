@@ -17,13 +17,13 @@ ADD_PLUGIN(RawView
         QSCINTILLA_DLL
     INCLUDE_DIRS
         src
-    PLUGIN_DEPENDENCIES
+    PLUGINS
         Core
         QScintilla
         QScintillaSupport
     QT_MODULES
         Widgets
-    QT_DEPENDENCIES
+    QT_LIBRARIES
         QtCore
         QtGui
         QtNetwork

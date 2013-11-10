@@ -57,7 +57,7 @@ ADD_PLUGIN(SingleCellView
         QWT_DLL
     INCLUDE_DIRS
         src
-    PLUGIN_DEPENDENCIES
+    PLUGINS
         CellMLAPI
         CellMLSupport
         Compiler
@@ -65,11 +65,11 @@ ADD_PLUGIN(SingleCellView
         CoreSolver
         ${LLVM_PLUGIN}
         Qwt
-    PLUGIN_BINARY_DEPENDENCIES
+    PLUGIN_BINARIES
         ${LLVM_BINARY_PLUGIN}
     QT_MODULES
         Widgets
-    QT_DEPENDENCIES
+    QT_LIBRARIES
         QtConcurrent
         QtCore
         QtGui
@@ -79,6 +79,6 @@ ADD_PLUGIN(SingleCellView
         QtSvg
         QtWidgets
         QtXml
-    EXTERNAL_BINARY_DEPENDENCIES
-        ${CELLML_API_EXTERNAL_BINARY_DEPENDENCIES}
+    EXTERNAL_BINARIES
+        ${CELLML_API_EXTERNAL_BINARIES}
 )

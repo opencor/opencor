@@ -66,6 +66,6 @@ ADD_PLUGIN(SUNDIALS
         NO_FPRINTF_OUTPUT
     QT_MODULES
         Core
-    QT_DEPENDENCIES
+    QT_LIBRARIES
         QtCore
 )

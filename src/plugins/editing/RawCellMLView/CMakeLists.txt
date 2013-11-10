@@ -24,7 +24,7 @@ ADD_PLUGIN(RawCellMLView
         ${LLVM_DEFINITIONS}
     INCLUDE_DIRS
         src
-    PLUGIN_DEPENDENCIES
+    PLUGINS
         CellMLAPI
         CellMLSupport
         Compiler
@@ -35,11 +35,11 @@ ADD_PLUGIN(RawCellMLView
         QScintillaSupport
         Qwt
         Viewer
-    PLUGIN_BINARY_DEPENDENCIES
+    PLUGIN_BINARIES
         ${LLVM_BINARY_PLUGIN}
     QT_MODULES
         Widgets
-    QT_DEPENDENCIES
+    QT_LIBRARIES
         QtConcurrent
         QtCore
         QtGui
@@ -49,6 +49,6 @@ ADD_PLUGIN(RawCellMLView
         QtSvg
         QtWidgets
         QtXml
-    EXTERNAL_BINARY_DEPENDENCIES
-        ${CELLML_API_EXTERNAL_BINARY_DEPENDENCIES}
+    EXTERNAL_BINARIES
+        ${CELLML_API_EXTERNAL_BINARIES}
 )

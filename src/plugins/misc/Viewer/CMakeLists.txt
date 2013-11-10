@@ -15,12 +15,12 @@ ADD_PLUGIN(Viewer
         QWT_DLL
     INCLUDE_DIRS
         src
-    PLUGIN_DEPENDENCIES
+    PLUGINS
         Core
         Qwt
     QT_MODULES
         Widgets
-    QT_DEPENDENCIES
+    QT_LIBRARIES
         QtConcurrent
         QtCore
         QtGui

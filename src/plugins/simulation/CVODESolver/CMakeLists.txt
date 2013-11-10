@@ -14,13 +14,13 @@ ADD_PLUGIN(CVODESolver
         src/cvodesolverplugin.h
     INCLUDE_DIRS
         src
-    PLUGIN_DEPENDENCIES
+    PLUGINS
         CoreSolver
         SUNDIALS
     QT_MODULES
         Core
         Widgets
-    QT_DEPENDENCIES
+    QT_LIBRARIES
         QtCore
         QtGui
         QtWidgets

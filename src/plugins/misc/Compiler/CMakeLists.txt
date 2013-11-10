@@ -21,13 +21,13 @@ ADD_PLUGIN(Compiler
         src
     DEFINITIONS
         ${LLVM_DEFINITIONS}
-    PLUGIN_DEPENDENCIES
+    PLUGINS
         ${LLVM_PLUGIN}
-    PLUGIN_BINARY_DEPENDENCIES
+    PLUGIN_BINARIES
         ${LLVM_BINARY_PLUGIN}
     QT_MODULES
         Widgets
-    QT_DEPENDENCIES
+    QT_LIBRARIES
         QtCore
         QtGui
         QtWidgets

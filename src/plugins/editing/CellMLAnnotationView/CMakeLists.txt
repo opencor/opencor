@@ -45,7 +45,7 @@ ADD_PLUGIN(CellMLAnnotationView
         ${LLVM_DEFINITIONS}
     INCLUDE_DIRS
         src
-    PLUGIN_DEPENDENCIES
+    PLUGINS
         CellMLAPI
         CellMLSupport
         Compiler
@@ -54,11 +54,11 @@ ADD_PLUGIN(CellMLAnnotationView
         CoreEditing
         CoreSolver
         ${LLVM_PLUGIN}
-    PLUGIN_BINARY_DEPENDENCIES
+    PLUGIN_BINARIES
         ${LLVM_BINARY_PLUGIN}
     QT_MODULES
         WebKitWidgets
-    QT_DEPENDENCIES
+    QT_LIBRARIES
         QtCore
         QtGui
         QtNetwork
@@ -70,6 +70,6 @@ ADD_PLUGIN(CellMLAnnotationView
         QtWebKit
         QtWebKitWidgets
         QtWidgets
-    EXTERNAL_BINARY_DEPENDENCIES
-        ${CELLML_API_EXTERNAL_BINARY_DEPENDENCIES}
+    EXTERNAL_BINARIES
+        ${CELLML_API_EXTERNAL_BINARIES}
 )

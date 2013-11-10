@@ -19,11 +19,11 @@ ADD_PLUGIN(CellMLModelRepository
         src/cellmlmodelrepositorywindow.ui
     INCLUDE_DIRS
         src
-    PLUGIN_DEPENDENCIES
+    PLUGINS
         Core
     QT_MODULES
         WebKitWidgets
-    QT_DEPENDENCIES
+    QT_LIBRARIES
         QtCore
         QtGui
         QtNetwork

@@ -71,7 +71,7 @@ ADD_PLUGIN(Core
     QT_MODULES
         Network
         Widgets
-    QT_DEPENDENCIES
+    QT_LIBRARIES
         QtCore
         QtGui
         QtNetwork

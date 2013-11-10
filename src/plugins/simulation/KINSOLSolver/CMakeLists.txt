@@ -13,11 +13,11 @@ ADD_PLUGIN(KINSOLSolver
         src/kinsolsolverplugin.h
     INCLUDE_DIRS
         src
-    PLUGIN_DEPENDENCIES
+    PLUGINS
         CoreSolver
         SUNDIALS
     QT_MODULES
         Core
-    QT_DEPENDENCIES
+    QT_LIBRARIES
         QtCore
 )

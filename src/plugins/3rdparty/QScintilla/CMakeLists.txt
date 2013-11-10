@@ -89,7 +89,7 @@ ADD_PLUGIN(QScintilla
         src
     QT_MODULES
         Widgets
-    QT_DEPENDENCIES
+    QT_LIBRARIES
         QtCore
         QtGui
         QtWidgets

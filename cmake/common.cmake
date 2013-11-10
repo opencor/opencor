@@ -53,6 +53,19 @@ MACRO(INITIALISE_PROJECT)
         MESSAGE(FATAL_ERROR "Sorry, but OpenCOR can only be built in 32-bit or 64-bit mode...")
     ENDIF()
 
+    # By default, we are building a release version of OpenCOR, unless we are
+    # explicitly asked for a debug version
+
+    IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+        MESSAGE("Building a ${ARCHITECTURE}-bit debug version...")
+
+        SET(RELEASE_MODE OFF)
+    ELSE()
+        MESSAGE("Building a ${ARCHITECTURE}-bit release version...")
+
+        SET(RELEASE_MODE ON)
+    ENDIF()
+
     # Required packages
 
     FIND_PACKAGE(Qt5Widgets REQUIRED)
@@ -66,8 +79,7 @@ MACRO(INITIALISE_PROJECT)
     SET(QT_VERSION_MINOR ${Qt5Widgets_VERSION_MINOR})
     SET(QT_VERSION_PATCH ${Qt5Widgets_VERSION_PATCH})
 
-    # Some settings which depend on whether we want a debug or release version
-    # of OpenCOR
+    # Some general build settings
 
     IF(WIN32)
         STRING(REPLACE "/W3" "/W3 /WX" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
@@ -82,28 +94,10 @@ MACRO(INITIALISE_PROJECT)
         SET(LINK_FLAGS_PROPERTIES)
     ENDIF()
 
-    IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-        MESSAGE("Building a ${ARCHITECTURE}-bit debug version...")
+    # Some build settings that depend on whether we want a debug or release
+    # version of OpenCOR
 
-        SET(DEBUG_MODE ON)
-
-        # Default compiler and linker settings
-
-        IF(WIN32)
-            SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D_DEBUG /MDd /Zi /Ob0 /Od /RTC1")
-            SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} /DEBUG")
-        ELSE()
-            SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
-        ENDIF()
-
-        # Make sure that debugging is on in Qt
-
-        ADD_DEFINITIONS(-DQT_DEBUG)
-    ELSE()
-        MESSAGE("Building a ${ARCHITECTURE}-bit release version...")
-
-        SET(DEBUG_MODE OFF)
-
+    IF(RELEASE_MODE)
         # Default compiler and linker settings
         # Note: OpenCOR is built using gcc on Linux. However, in gcc, the -O3
         #       option comes with a warning: "Under some circumstances where
@@ -135,6 +129,19 @@ MACRO(INITIALISE_PROJECT)
         # Make sure that debugging is off in Qt
 
         ADD_DEFINITIONS(-DQT_NO_DEBUG)
+    ELSE()
+        # Default compiler and linker settings
+
+        IF(WIN32)
+            SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D_DEBUG /MDd /Zi /Ob0 /Od /RTC1")
+            SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} /DEBUG")
+        ELSE()
+            SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
+        ENDIF()
+
+        # Make sure that debugging is on in Qt
+
+        ADD_DEFINITIONS(-DQT_DEBUG)
     ENDIF()
 
     # Ask for Unicode to be used
@@ -205,10 +212,10 @@ MACRO(INITIALISE_PROJECT)
     ENDIF()
 
     IF(WIN32)
-        IF(DEBUG_MODE)
-            SET(DISTRIB_BINARY_DIR ${DISTRIB_DIR}/debug)
-        ELSE()
+        IF(RELEASE_MODE)
             SET(DISTRIB_BINARY_DIR ${DISTRIB_DIR}/release)
+        ELSE()
+            SET(DISTRIB_BINARY_DIR ${DISTRIB_DIR}/debug)
         ENDIF()
     ELSE()
         SET(DISTRIB_BINARY_DIR ${DISTRIB_DIR})
@@ -267,13 +274,13 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     SET(UIS)
     SET(INCLUDE_DIRS)
     SET(DEFINITIONS)
-    SET(PLUGIN_DEPENDENCIES)
-    SET(PLUGIN_BINARY_DEPENDENCIES)
+    SET(PLUGINS)
+    SET(PLUGIN_BINARIES)
     SET(QT_MODULES)
-    SET(QT_DEPENDENCIES)
-    SET(EXTERNAL_BINARY_DEPENDENCIES_DIR)
-    SET(EXTERNAL_BINARY_DEPENDENCIES)
-    SET(EXTERNAL_LIBRARY_DEPENDENCIES)
+    SET(QT_LIBRARIES)
+    SET(EXTERNAL_BINARIES_DIR)
+    SET(EXTERNAL_BINARIES)
+    SET(EXTERNAL_LIBRARIES)
     SET(TESTS)
 
     # Analyse the extra parameters
@@ -311,19 +318,19 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             SET(TYPE_OF_PARAMETER 4)
         ELSEIF(${PARAMETER} STREQUAL "DEFINITIONS")
             SET(TYPE_OF_PARAMETER 5)
-        ELSEIF(${PARAMETER} STREQUAL "PLUGIN_DEPENDENCIES")
+        ELSEIF(${PARAMETER} STREQUAL "PLUGINS")
             SET(TYPE_OF_PARAMETER 6)
-        ELSEIF(${PARAMETER} STREQUAL "PLUGIN_BINARY_DEPENDENCIES")
+        ELSEIF(${PARAMETER} STREQUAL "PLUGIN_BINARIES")
             SET(TYPE_OF_PARAMETER 7)
         ELSEIF(${PARAMETER} STREQUAL "QT_MODULES")
             SET(TYPE_OF_PARAMETER 8)
-        ELSEIF(${PARAMETER} STREQUAL "QT_DEPENDENCIES")
+        ELSEIF(${PARAMETER} STREQUAL "QT_LIBRARIES")
             SET(TYPE_OF_PARAMETER 9)
-        ELSEIF(${PARAMETER} STREQUAL "EXTERNAL_BINARY_DEPENDENCIES_DIR")
+        ELSEIF(${PARAMETER} STREQUAL "EXTERNAL_BINARIES_DIR")
             SET(TYPE_OF_PARAMETER 10)
-        ELSEIF(${PARAMETER} STREQUAL "EXTERNAL_BINARY_DEPENDENCIES")
+        ELSEIF(${PARAMETER} STREQUAL "EXTERNAL_BINARIES")
             SET(TYPE_OF_PARAMETER 11)
-        ELSEIF(${PARAMETER} STREQUAL "EXTERNAL_LIBRARY_DEPENDENCIES")
+        ELSEIF(${PARAMETER} STREQUAL "EXTERNAL_LIBRARIES")
             SET(TYPE_OF_PARAMETER 12)
         ELSEIF(${PARAMETER} STREQUAL "TESTS")
             SET(TYPE_OF_PARAMETER 13)
@@ -342,19 +349,19 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 5)
                 LIST(APPEND DEFINITIONS ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 6)
-                LIST(APPEND PLUGIN_DEPENDENCIES ${PARAMETER})
+                LIST(APPEND PLUGINS ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 7)
-                LIST(APPEND PLUGIN_BINARY_DEPENDENCIES ${PARAMETER})
+                LIST(APPEND PLUGIN_BINARIES ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 8)
                 LIST(APPEND QT_MODULES ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 9)
-                LIST(APPEND QT_DEPENDENCIES ${PARAMETER})
+                LIST(APPEND QT_LIBRARIES ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 10)
-                SET(EXTERNAL_BINARY_DEPENDENCIES_DIR ${PARAMETER})
+                SET(EXTERNAL_BINARIES_DIR ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 11)
-                LIST(APPEND EXTERNAL_BINARY_DEPENDENCIES ${PARAMETER})
+                LIST(APPEND EXTERNAL_BINARIES ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 12)
-                LIST(APPEND EXTERNAL_LIBRARY_DEPENDENCIES ${PARAMETER})
+                LIST(APPEND EXTERNAL_LIBRARIES ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 13)
                 LIST(APPEND TESTS ${PARAMETER})
             ENDIF()
@@ -421,19 +428,19 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         ${SOURCES_RCS}
     )
 
-    # OpenCOR dependencies
+    # OpenCOR plugins
 
-    FOREACH(PLUGIN_DEPENDENCY ${PLUGIN_DEPENDENCIES})
+    FOREACH(PLUGIN ${PLUGINS})
         TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-            ${PLUGIN_DEPENDENCY}Plugin
+            ${PLUGIN}Plugin
         )
     ENDFOREACH()
 
-    # OpenCOR binary dependencies
+    # OpenCOR binaries
 
-    FOREACH(PLUGIN_BINARY_DEPENDENCY ${PLUGIN_BINARY_DEPENDENCIES})
+    FOREACH(PLUGIN_BINARY ${PLUGIN_BINARIES})
         TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-            ${PLUGIN_BINARY_DEPENDENCY}
+            ${PLUGIN_BINARY}
         )
     ENDFOREACH()
 
@@ -452,21 +459,21 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
     )
 
-    # External binary dependencies
+    # External binaries
 
-    IF(NOT ${EXTERNAL_BINARY_DEPENDENCIES_DIR} STREQUAL "")
-        FOREACH(EXTERNAL_BINARY_DEPENDENCY ${EXTERNAL_BINARY_DEPENDENCIES})
+    IF(NOT ${EXTERNAL_BINARIES_DIR} STREQUAL "")
+        FOREACH(EXTERNAL_BINARY ${EXTERNAL_BINARIES})
             TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-                ${EXTERNAL_BINARY_DEPENDENCIES_DIR}/${EXTERNAL_BINARY_DEPENDENCY}
+                ${EXTERNAL_BINARIES_DIR}/${EXTERNAL_BINARY}
             )
         ENDFOREACH()
     ENDIF()
 
-    # External library dependencies
+    # External libraries
 
-    FOREACH(EXTERNAL_LIBRARY_DEPENDENCY ${EXTERNAL_LIBRARY_DEPENDENCIES})
+    FOREACH(EXTERNAL_LIBRARY ${EXTERNAL_LIBRARIES})
         TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-            ${EXTERNAL_LIBRARY_DEPENDENCY}
+            ${EXTERNAL_LIBRARY}
         )
     ENDFOREACH()
 
@@ -508,20 +515,20 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     IF(APPLE)
         # Clean up our plugin
 
-        OS_X_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${CMAKE_PROJECT_NAME}
-                                                ${PLUGIN_FILENAME} ${QT_DEPENDENCIES})
+        OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${CMAKE_PROJECT_NAME}
+                                             ${PLUGIN_FILENAME} ${QT_LIBRARIES})
 
         # Make sure that the plugin refers to our embedded version of the other
         # plugins on which it depends
 
-        FOREACH(PLUGIN_DEPENDENCY ${PLUGIN_DEPENDENCIES})
-            # We don't know where our plugin dependency is located, so we try
-            # our different plugin build directories
+        FOREACH(PLUGIN ${PLUGINS})
+            # We don't know where the plugin is located, so we try our different
+            # plugin build directories
 
             FOREACH(PLUGIN_BUILD_DIR ${PLUGIN_BUILD_DIRS})
                 ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                                   COMMAND install_name_tool -change ${PLUGIN_BUILD_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                                                                     @executable_path/../PlugIns/${CMAKE_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_DEPENDENCY}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                                   COMMAND install_name_tool -change ${PLUGIN_BUILD_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                                                                     @executable_path/../PlugIns/${CMAKE_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN}${CMAKE_SHARED_LIBRARY_SUFFIX}
                                                                      ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_FILENAME})
             ENDFOREACH()
         ENDFOREACH()
@@ -529,22 +536,22 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         # Make sure that the plugin refers to our embedded version of the
         # binary plugins on which it depends
 
-        FOREACH(PLUGIN_BINARY_DEPENDENCY ${PLUGIN_BINARY_DEPENDENCIES})
-            STRING(REGEX REPLACE "^.*/" "" PLUGIN_BINARY_DEPENDENCY "${PLUGIN_BINARY_DEPENDENCY}")
+        FOREACH(PLUGIN_BINARY ${PLUGIN_BINARIES})
+            STRING(REGEX REPLACE "^.*/" "" PLUGIN_BINARY "${PLUGIN_BINARY}")
 
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change ${PLUGIN_BINARY_DEPENDENCY}
-                                                                 @executable_path/../PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_BINARY_DEPENDENCY}
+                               COMMAND install_name_tool -change ${PLUGIN_BINARY}
+                                                                 @executable_path/../PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_BINARY}
                                                                  ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_FILENAME})
         ENDFOREACH()
 
         # Make sure that the plugin refers to our embedded version of the
-        # external dependencies on which it depends
+        # external binaries on which it depends
 
-        FOREACH(EXTERNAL_BINARY_DEPENDENCY ${EXTERNAL_BINARY_DEPENDENCIES})
+        FOREACH(EXTERNAL_BINARY ${EXTERNAL_BINARIES})
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND install_name_tool -change ${EXTERNAL_BINARY_DEPENDENCY}
-                                                                 @executable_path/../Frameworks/${EXTERNAL_BINARY_DEPENDENCY}
+                               COMMAND install_name_tool -change ${EXTERNAL_BINARY}
+                                                                 @executable_path/../Frameworks/${EXTERNAL_BINARY}
                                                                  ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_FILENAME})
         ENDFOREACH()
     ENDIF()
@@ -618,19 +625,19 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     ${TEST_SOURCES_MOC}
                 )
 
-                # OpenCOR dependencies
+                # Plugins
 
-                FOREACH(PLUGIN_DEPENDENCY ${PLUGIN_DEPENDENCIES} ${PLUGIN_NAME})
+                FOREACH(PLUGIN ${PLUGINS} ${PLUGIN_NAME})
                     TARGET_LINK_LIBRARIES(${TEST_NAME}
-                        ${PLUGIN_DEPENDENCY}Plugin
+                        ${PLUGIN}Plugin
                     )
                 ENDFOREACH()
 
-                # OpenCOR binary dependencies
+                # OpenCOR binaries
 
-                FOREACH(PLUGIN_BINARY_DEPENDENCY ${PLUGIN_BINARY_DEPENDENCIES})
+                FOREACH(PLUGIN_BINARY ${PLUGIN_BINARIES})
                     TARGET_LINK_LIBRARIES(${TEST_NAME}
-                        ${PLUGIN_BINARY_DEPENDENCY}
+                        ${PLUGIN_BINARY}
                     )
                 ENDFOREACH()
 
@@ -649,21 +656,21 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
                 )
 
-                # External binary dependencies
+                # External binaries
 
-                IF(NOT ${EXTERNAL_BINARY_DEPENDENCIES_DIR} STREQUAL "")
-                    FOREACH(EXTERNAL_BINARY_DEPENDENCY ${EXTERNAL_BINARY_DEPENDENCIES})
+                IF(NOT ${EXTERNAL_BINARIES_DIR} STREQUAL "")
+                    FOREACH(EXTERNAL_BINARY ${EXTERNAL_BINARIES})
                         TARGET_LINK_LIBRARIES(${TEST_NAME}
-                            ${EXTERNAL_BINARY_DEPENDENCIES_DIR}/${EXTERNAL_BINARY_DEPENDENCY}
+                            ${EXTERNAL_BINARIES_DIR}/${EXTERNAL_BINARY}
                         )
                     ENDFOREACH()
                 ENDIF()
 
-                # External library dependencies
+                # External libraries
 
-                FOREACH(EXTERNAL_LIBRARY_DEPENDENCY ${EXTERNAL_LIBRARY_DEPENDENCIES})
+                FOREACH(EXTERNAL_LIBRARY ${EXTERNAL_LIBRARIES})
                     TARGET_LINK_LIBRARIES(${TEST_NAME}
-                        ${EXTERNAL_LIBRARY_DEPENDENCY}
+                        ${EXTERNAL_LIBRARY}
                     )
                 ENDFOREACH()
 
@@ -690,7 +697,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
     SET(PLUGIN_NAME ${PLUGIN_NAME})
 
     SET(INCLUDE_DIRS)
-    SET(QT_DEPENDENCIES)
+    SET(QT_LIBRARIES)
 
     # Analyse the extra parameters
 
@@ -699,7 +706,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
     FOREACH(PARAMETER ${ARGN})
         IF(${PARAMETER} STREQUAL "INCLUDE_DIRS")
             SET(TYPE_OF_PARAMETER 1)
-        ELSEIF(${PARAMETER} STREQUAL "QT_DEPENDENCIES")
+        ELSEIF(${PARAMETER} STREQUAL "QT_LIBRARIES")
             SET(TYPE_OF_PARAMETER 2)
         ELSE()
             # Not one of the headers, so add the parameter to the corresponding
@@ -708,7 +715,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
             IF(${TYPE_OF_PARAMETER} EQUAL 1)
                 LIST(APPEND INCLUDE_DIRS ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 2)
-                LIST(APPEND QT_DEPENDENCIES ${PARAMETER})
+                LIST(APPEND QT_LIBRARIES ${PARAMETER})
             ENDIF()
         ENDIF()
     ENDFOREACH()
@@ -749,11 +756,11 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
         #       libraries while, if we want the tests to work, it should refer
         #       to the system version of the Qt libraries, so...
 
-        FOREACH(QT_DEPENDENCY ${QT_DEPENDENCIES})
+        FOREACH(QT_LIBRARY ${QT_LIBRARIES})
             ADD_CUSTOM_TARGET(${PLUGIN_NAME}_UPDATE_OS_X_QT_REFERENCE ALL
                               DEPENDS ${PLUGIN_NAME}_COPY_PLUGIN_TO_BUILD_DIRECTORY
-                              COMMAND install_name_tool -change @executable_path/../Frameworks/${QT_DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_DEPENDENCY}
-                                                                ${QT_LIBRARY_DIR}/${QT_DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_DEPENDENCY}
+                              COMMAND install_name_tool -change @executable_path/../Frameworks/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
+                                                                ${QT_LIBRARY_DIR}/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
                                                                 ${PROJECT_BUILD_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
         ENDFOREACH()
     ENDIF()
@@ -857,37 +864,37 @@ ENDMACRO()
 
 #===============================================================================
 
-MACRO(OS_X_QT_DEPENDENCIES FILENAME QT_DEPENDENCIES)
-    # Retrieve the file's full-path Qt dependencies as a list
+MACRO(OS_X_QT_LIBRARIES FILENAME QT_LIBRARIES)
+    # Retrieve the file's full-path Qt libraries as a list
 
     SET(QT_LIBRARY_DIR_FOR_GREP "\t${QT_LIBRARY_DIR}/")
 
     EXECUTE_PROCESS(COMMAND otool -L ${FILENAME}
                     COMMAND grep --colour=never ${QT_LIBRARY_DIR_FOR_GREP}
-                    OUTPUT_VARIABLE RAW_QT_DEPENDENCIES)
+                    OUTPUT_VARIABLE RAW_QT_LIBRARIES)
 
-    STRING(REPLACE "\n" ";" RAW_QT_DEPENDENCIES "${RAW_QT_DEPENDENCIES}")
+    STRING(REPLACE "\n" ";" RAW_QT_LIBRARIES "${RAW_QT_LIBRARIES}")
 
     # Extract and return the Qt depencies as a list
 
-    SET(${QT_DEPENDENCIES})
+    SET(${QT_LIBRARIES})
 
-    FOREACH(RAW_QT_DEPENDENCY ${RAW_QT_DEPENDENCIES})
-        STRING(REPLACE ${QT_LIBRARY_DIR_FOR_GREP} "" RAW_QT_DEPENDENCY "${RAW_QT_DEPENDENCY}")
-        STRING(REGEX REPLACE "\\.framework.*$" "" QT_DEPENDENCY "${RAW_QT_DEPENDENCY}")
+    FOREACH(RAW_QT_LIBRARY ${RAW_QT_LIBRARIES})
+        STRING(REPLACE ${QT_LIBRARY_DIR_FOR_GREP} "" RAW_QT_LIBRARY "${RAW_QT_LIBRARY}")
+        STRING(REGEX REPLACE "\\.framework.*$" "" QT_LIBRARY "${RAW_QT_LIBRARY}")
 
-        LIST(APPEND ${QT_DEPENDENCIES} ${QT_DEPENDENCY})
+        LIST(APPEND ${QT_LIBRARIES} ${QT_LIBRARY})
     ENDFOREACH()
 ENDMACRO()
 
 #===============================================================================
 
-MACRO(OS_X_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES DIRNAME FILENAME)
+MACRO(OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES DIRNAME FILENAME)
     # Strip the Qt file of all local symbols
 
     SET(FULL_FILENAME ${DIRNAME}/${FILENAME})
 
-    IF(NOT DEBUG_MODE)
+    IF(RELEASE_MODE)
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                            COMMAND strip -x ${FULL_FILENAME})
     ENDIF()
@@ -924,7 +931,7 @@ MACRO(OS_X_DEPLOY_QT_FILE ORIG_DIRNAME DEST_DIRNAME FILENAME)
 
     # Retrieve the Qt file's Qt dependencies
 
-    OS_X_QT_DEPENDENCIES(${ORIG_FILENAME} DEPENDENCIES)
+    OS_X_QT_LIBRARIES(${ORIG_FILENAME} DEPENDENCIES)
 
     # Clean up the Qt file
     # Note: we only do this if we are to package OpenCOR. Indeed, if we were to
@@ -936,7 +943,7 @@ MACRO(OS_X_DEPLOY_QT_FILE ORIG_DIRNAME DEST_DIRNAME FILENAME)
     #       though everything is actually fine...
 
     IF("$ENV{PACKAGE_OPENCOR}" STREQUAL "True")
-        OS_X_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${DEST_DIRNAME} ${FILENAME} ${DEPENDENCIES})
+        OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${DEST_DIRNAME} ${FILENAME} ${DEPENDENCIES})
     ENDIF()
 ENDMACRO()
 
@@ -987,7 +994,7 @@ MACRO(OS_X_DEPLOY_LIBRARY DIRNAME LIBRARY_NAME)
 
     # Strip the library of all local symbols
 
-    IF(NOT DEBUG_MODE)
+    IF(RELEASE_MODE)
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                            COMMAND strip -x ${LIBRARY_FILEPATH})
     ENDIF()

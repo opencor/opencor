@@ -14,12 +14,12 @@ ADD_PLUGIN(FourthOrderRungeKuttaSolver
         src/fourthorderrungekuttasolverplugin.h
     INCLUDE_DIRS
         src
-    PLUGIN_DEPENDENCIES
+    PLUGINS
         CoreSolver
     QT_MODULES
         Core
         Widgets
-    QT_DEPENDENCIES
+    QT_LIBRARIES
         QtCore
         QtGui
         QtWidgets

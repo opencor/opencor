@@ -150,7 +150,7 @@ ADD_PLUGIN(Qwt
         Svg
         Widgets
         Xml
-    QT_DEPENDENCIES
+    QT_LIBRARIES
         QtConcurrent
         QtCore
         QtGui

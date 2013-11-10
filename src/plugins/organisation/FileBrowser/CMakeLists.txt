@@ -21,11 +21,11 @@ ADD_PLUGIN(FileBrowser
         src/filebrowserwindow.ui
     INCLUDE_DIRS
         src
-    PLUGIN_DEPENDENCIES
+    PLUGINS
         Core
     QT_MODULES
         Widgets
-    QT_DEPENDENCIES
+    QT_LIBRARIES
         QtCore
         QtGui
         QtNetwork

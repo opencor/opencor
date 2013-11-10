@@ -15,13 +15,13 @@ ADD_PLUGIN(QScintillaSupport
         QSCINTILLA_DLL
     INCLUDE_DIRS
         src
-    PLUGIN_DEPENDENCIES
+    PLUGINS
         Core
         QScintilla
     QT_MODULES
         Network
         Widgets
-    QT_DEPENDENCIES
+    QT_LIBRARIES
         QtCore
         QtGui
         QtNetwork

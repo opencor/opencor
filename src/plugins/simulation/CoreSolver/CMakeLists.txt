@@ -19,6 +19,6 @@ ADD_PLUGIN(CoreSolver
         src
     QT_MODULES
         Core
-    QT_DEPENDENCIES
+    QT_LIBRARIES
         QtCore
 )

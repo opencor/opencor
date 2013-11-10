@@ -140,7 +140,8 @@ ENDIF()
 
 SET(PLUGINS
     # Build the plugins which may be required by other plugins
-    # Note: the build order must be such that dependencies are built first...
+    # Note: the build order must be such that plugins needed by others are built
+    #       first...
 
     misc/Core
 
@@ -296,10 +297,10 @@ IF(APPLE)
 
     # Clean up our main executable
 
-    OS_X_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES(${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${PROJECT_NAME}
-                                            QtConcurrent QtCore QtGui QtHelp QtNetwork QtOpenGL QtPrintSupport QtQml QtQuick QtSensors QtSvg QtWebKit QtWebKitWidgets QtWidgets QtXml)
+    OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${PROJECT_NAME}
+                                         QtConcurrent QtCore QtGui QtHelp QtNetwork QtOpenGL QtPrintSupport QtQml QtQuick QtSensors QtSvg QtWebKit QtWebKitWidgets QtWidgets QtXml)
 
-    # Deploy our Qt dependencies
+    # Deploy our Qt libraries
 
     OS_X_DEPLOY_QT_LIBRARIES(QtCLucene QtConcurrent QtCore QtGui QtHelp QtNetwork QtOpenGL QtPrintSupport QtQml QtQuick QtSensors QtSql QtSvg QtV8 QtWebKit QtWebKitWidgets QtWidgets QtXml)
 

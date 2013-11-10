@@ -33,21 +33,21 @@ ADD_PLUGIN(CellMLSupport
         ${LLVM_DEFINITIONS}
     INCLUDE_DIRS
         src
-    PLUGIN_DEPENDENCIES
+    PLUGINS
         CellMLAPI
         Compiler
         Core
         CoreSolver
         ${LLVM_PLUGIN}
-    PLUGIN_BINARY_DEPENDENCIES
+    PLUGIN_BINARIES
         ${LLVM_BINARY_PLUGIN}
     QT_MODULES
         Widgets
-    QT_DEPENDENCIES
+    QT_LIBRARIES
         QtCore
         QtGui
         QtNetwork
         QtWidgets
-    EXTERNAL_BINARY_DEPENDENCIES
-        ${CELLML_API_EXTERNAL_BINARY_DEPENDENCIES}
+    EXTERNAL_BINARIES
+        ${CELLML_API_EXTERNAL_BINARIES}
 )
