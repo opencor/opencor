@@ -40,9 +40,7 @@ PLUGININFO_FUNC FileBrowserPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to access your local files."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour accéder à vos fichiers locaux."));
 
-    return new PluginInfo(PluginInfo::Organisation,
-                          false,
-                          true,
+    return new PluginInfo(PluginInfo::Organisation, true,
                           QStringList() << "Core",
                           descriptions);
 }
@@ -127,19 +125,6 @@ void FileBrowserPlugin::handleAction(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
-}
-
-//==============================================================================
-
-void FileBrowserPlugin::runCliCommand(const QString &pCommand,
-                                      const QStringList &pArguments, int *pRes)
-{
-    Q_UNUSED(pCommand);
-    Q_UNUSED(pArguments);
-
-    // We don't handle this interface...
-
-    *pRes = 0;
 }
 
 //==============================================================================

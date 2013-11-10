@@ -17,7 +17,4 @@
     virtual void handleArguments(const QStringList &pArguments) PURE;
     virtual void handleAction(const QUrl &pUrl) PURE;
 
-    virtual void runCliCommand(const QString &pCommand,
-                              const QStringList &pArguments, int *pRes) PURE;
-
 #undef PURE

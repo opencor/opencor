@@ -48,9 +48,7 @@ PLUGININFO_FUNC CellMLAnnotationViewPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to annotate CellML files."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour annoter des fichiers CellML."));
 
-    return new PluginInfo(PluginInfo::Editing,
-                          false,
-                          true,
+    return new PluginInfo(PluginInfo::Editing, true,
                           QStringList() << "CoreCellMLEditing",
                           descriptions);
 }
@@ -215,20 +213,6 @@ void CellMLAnnotationViewPlugin::handleAction(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CellMLAnnotationViewPlugin::runCliCommand(const QString &pCommand,
-                                               const QStringList &pArguments,
-                                               int *pRes)
-{
-    Q_UNUSED(pCommand);
-    Q_UNUSED(pArguments);
-
-    // We don't handle this interface...
-
-    *pRes = 0;
 }
 
 //==============================================================================

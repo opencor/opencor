@@ -40,9 +40,7 @@ PLUGININFO_FUNC CellMLModelRepositoryPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to access the <a href=\"http://models.physiomeproject.org/cellml/\">CellML Model Repository</a>."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour accéder au <a href=\"http://models.physiomeproject.org/cellml/\">Répertoire de Modèles CellML</a>."));
 
-    return new PluginInfo(PluginInfo::Organisation,
-                          false,
-                          true,
+    return new PluginInfo(PluginInfo::Organisation, true,
                           QStringList() << "Core",
                           descriptions);
 }
@@ -128,20 +126,6 @@ void CellMLModelRepositoryPlugin::handleAction(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CellMLModelRepositoryPlugin::runCliCommand(const QString &pCommand,
-                                                const QStringList &pArguments,
-                                                int *pRes)
-{
-    Q_UNUSED(pCommand);
-    Q_UNUSED(pArguments);
-
-    // We don't handle this interface...
-
-    *pRes = 0;
 }
 
 //==============================================================================

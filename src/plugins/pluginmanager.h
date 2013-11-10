@@ -50,8 +50,7 @@ class PluginManager : public QObject
     Q_OBJECT
 
 public:
-    explicit PluginManager(QCoreApplication *pApp,
-                           const bool &pGuiVersion = true);
+    explicit PluginManager(QCoreApplication *pApp, const bool &pGuiMode = true);
     ~PluginManager();
 
     Plugins plugins() const;

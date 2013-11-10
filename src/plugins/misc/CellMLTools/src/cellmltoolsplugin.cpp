@@ -46,11 +46,37 @@ PLUGININFO_FUNC CellMLToolsPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to access various <a href=\"http://www.cellml.org/\">CellML</a>-related tools."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour accéder à divers outils en rapport avec <a href=\"http://www.cellml.org/\">CellML</a>."));
 
-    return new PluginInfo(PluginInfo::Miscellaneous,
-                          true,
-                          true,
+    return new PluginInfo(PluginInfo::Miscellaneous, true,
                           QStringList() << "CellMLSupport",
                           descriptions);
+}
+
+//==============================================================================
+// CLI interface
+//==============================================================================
+
+int CellMLToolsPlugin::execute(const QString &pCommand,
+                               const QStringList &pArguments)
+{
+    // Run the given CLI command
+
+    if (!pCommand.compare("help")) {
+        // Display the commands we support
+
+        runHelpCommand();
+
+        return 0;
+    } else if (!pCommand.compare("export")) {
+        // Export a file from one format to another
+
+        return runExportCommand(pArguments);
+    } else {
+        // Not a CLI command that we support, so...
+
+        runHelpCommand();
+
+        return -1;
+    }
 }
 
 //==============================================================================
@@ -157,32 +183,6 @@ void CellMLToolsPlugin::handleAction(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CellMLToolsPlugin::runCliCommand(const QString &pCommand,
-                                      const QStringList &pArguments, int *pRes)
-{
-    // Run the given CLI command
-
-    *pRes = 0;
-
-    if (!pCommand.compare("help")) {
-        // Display the commands we support
-
-        runHelpCommand();
-    } else if (!pCommand.compare("export")) {
-        // Export a file from one format to another
-
-        runExportCommand(pArguments, pRes);
-    } else {
-        // Not a CLI command that we can run, so...
-
-        runHelpCommand();
-
-        *pRes = -1;
-    }
 }
 
 //==============================================================================
@@ -455,8 +455,7 @@ void CellMLToolsPlugin::runHelpCommand()
 
 //==============================================================================
 
-void CellMLToolsPlugin::runExportCommand(const QStringList &pArguments,
-                                         int *pRes)
+int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
 {
     // Export an existing file to another file using a given format as the
     // destination format
@@ -480,9 +479,7 @@ void CellMLToolsPlugin::runExportCommand(const QStringList &pArguments,
     if (!validArguments) {
         runHelpCommand();
 
-        *pRes = -1;
-
-        return;
+        return -1;
     }
 
     // Make sure that the input file exists and that it is a valid non CellML
@@ -515,8 +512,12 @@ void CellMLToolsPlugin::runExportCommand(const QStringList &pArguments,
     if (!errorMessage.isEmpty()) {
         std::cout << qPrintable(errorMessage) << std::endl;
 
-        *pRes = -1;
+        return -1;
     }
+
+    // Everything went fine, so...
+
+    return 0;
 }
 
 //==============================================================================

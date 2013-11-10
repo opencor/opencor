@@ -16,34 +16,41 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Compiler plugin
+// CLI interface
 //==============================================================================
 
-#include "compilerplugin.h"
+#ifndef CLIINTERFACE_H
+#define CLIINTERFACE_H
+
+//==============================================================================
+
+#include <QObject>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace Compiler {
 
 //==============================================================================
 
-PLUGININFO_FUNC CompilerPluginInfo()
+class CliInterface
 {
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8("a plugin to support code compilation."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour supporter la compilation de code."));
-
-    return new PluginInfo(PluginInfo::Miscellaneous, false,
-                          QStringList() << "LLVM",
-                          descriptions);
-}
+public:
+#define INTERFACE_DEFINITION
+    #include "cliinterface.inl"
+#undef INTERFACE_DEFINITION
+};
 
 //==============================================================================
 
-}   // namespace Compiler
 }   // namespace OpenCOR
+
+//==============================================================================
+
+Q_DECLARE_INTERFACE(OpenCOR::CliInterface, "OpenCOR::CliInterface")
+
+//==============================================================================
+
+#endif
 
 //==============================================================================
 // End of file

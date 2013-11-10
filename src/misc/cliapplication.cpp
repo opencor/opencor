@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cliapplication.h"
-#include "coreinterface.h"
+#include "cliinterface.h"
 #include "pluginmanager.h"
 #include "utils.h"
 
@@ -197,7 +197,7 @@ bool CliApplication::command(const QStringList pArguments, int *pRes)
             foreach (Plugin *plugin, mPluginManager->loadedPlugins())
                 if (!commandPlugin.compare(plugin->name())) {
                     pluginFound = true;
-                    pluginHasCliSupport = plugin->info()->hasCliSupport();
+                    pluginHasCliSupport = qobject_cast<CliInterface *>(plugin->instance());
 
                     break;
                 }
@@ -234,17 +234,13 @@ bool CliApplication::command(const QStringList pArguments, int *pRes)
     foreach (Plugin *plugin, loadedCliPlugins)
         if (    commandPlugin.isEmpty()
             || !commandPlugin.compare(plugin->name())) {
-            int res = 0;
-
             QStringList arguments = pArguments;
 
             arguments.removeFirst();
             // Note: since the first argument corresponds to the command
             //       itself...
 
-            qobject_cast<CoreInterface *>(plugin->instance())->runCliCommand(commandName, arguments, &res);
-
-            if (res)
+            if (qobject_cast<CliInterface *>(plugin->instance())->execute(commandName, arguments))
                 *pRes = -1;
         }
 

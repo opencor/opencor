@@ -41,9 +41,7 @@ PLUGININFO_FUNC CellMLSupportPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to support <a href=\"http://www.cellml.org/\">CellML</a>."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour supporter <a href=\"http://www.cellml.org/\">CellML</a>."));
 
-    return new PluginInfo(PluginInfo::Miscellaneous,
-                          false,
-                          false,
+    return new PluginInfo(PluginInfo::Miscellaneous, false,
                           QStringList() << "Core" << "CellMLAPI" << "Compiler" << "CoreSolver",
                           descriptions);
 }
@@ -122,20 +120,6 @@ void CellMLSupportPlugin::handleAction(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CellMLSupportPlugin::runCliCommand(const QString &pCommand,
-                                        const QStringList &pArguments,
-                                        int *pRes)
-{
-    Q_UNUSED(pCommand);
-    Q_UNUSED(pArguments);
-
-    // We don't handle this interface...
-
-    *pRes = 0;
 }
 
 //==============================================================================

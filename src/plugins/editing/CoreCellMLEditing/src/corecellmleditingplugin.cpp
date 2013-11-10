@@ -40,9 +40,7 @@ PLUGININFO_FUNC CoreCellMLEditingPluginInfo()
     descriptions.insert("en", QString::fromUtf8("the core CellML editing plugin."));
     descriptions.insert("fr", QString::fromUtf8("l'extension d'édition CellML de base."));
 
-    return new PluginInfo(PluginInfo::Editing,
-                          false,
-                          false,
+    return new PluginInfo(PluginInfo::Editing, false,
                           QStringList() << "CoreEditing" << "CellMLSupport",
                           descriptions);
 }
@@ -123,19 +121,6 @@ void CoreCellMLEditingPlugin::handleAction(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CoreCellMLEditingPlugin::runCliCommand(const QString &pCommand,
-                                            const QStringList &pArguments, int *pRes)
-{
-    Q_UNUSED(pCommand);
-    Q_UNUSED(pArguments);
-
-    // We don't handle this interface...
-
-    *pRes = 0;
 }
 
 //==============================================================================

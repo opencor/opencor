@@ -19,8 +19,9 @@ specific language governing permissions and limitations under the License.
 // Plugin manager
 //==============================================================================
 
-#include "plugin.h"
+#include "cliinterface.h"
 #include "coreinterface.h"
+#include "plugin.h"
 #include "pluginmanager.h"
 
 //==============================================================================
@@ -34,7 +35,7 @@ namespace OpenCOR {
 
 //==============================================================================
 
-PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiVersion) :
+PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
     mPlugins(Plugins())
 {
     mPluginsDir =  QDir(pApp->applicationDirPath()).canonicalPath()
@@ -88,13 +89,16 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiVersion) :
         PluginInfo *pluginInfo = Plugin::info(fileName);
         QString pluginName = Plugin::name(fileName);
 
-        if (    pluginInfo
-            && (   ( pGuiVersion && pluginInfo->isManageable() && Plugin::load(pluginName))
-                || (!pGuiVersion && pluginInfo->hasCliSupport()))) {
-            // We want the GUI version of the plugin manager and the plugin is
-            // manageable and to be loaded, or we don't want the GUI version of
-            // the plugin manager and the plugin has support for CLI, so
-            // retrieve and keep track of its dependencies
+        if (    pluginInfo && pluginInfo->isManageable()
+            && ((pGuiMode && Plugin::load(pluginName)) || !pGuiMode)) {
+            // We want the GUI mode of the plugin manager and the plugin is both
+            // manageable and to be loaded, or we don't want the GUI mode of the
+            // plugin manager but the plugin is manageable, so retrieve and keep
+            // track of its dependencies
+            // Note: in the non-GUI mode (i.e. CLI mode), if a plugin is
+            //       manageable then it is automatically loaded no matter what
+            //       (thus making sure that the CLI version of OpenCOR has
+            //       access to everything)...
 
             requiredPlugins << Plugin::requiredPlugins(mPluginsDir,
                                                        Plugin::name(fileName));
@@ -126,7 +130,7 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiVersion) :
     // that we can refer to them, in the GUI, as either not wanted or not
     // needed)
 
-    if (pGuiVersion) {
+    if (pGuiMode) {
         pluginFileNames << fileNames;
 
         pluginFileNames.removeDuplicates();
@@ -183,7 +187,7 @@ Plugins PluginManager::loadedCliPlugins() const
     Plugins res = Plugins();
 
     foreach (Plugin *plugin, mPlugins)
-        if (   (plugin->info()->hasCliSupport())
+        if (   qobject_cast<CliInterface *>(plugin->instance())
             && (plugin->status() == Plugin::Loaded))
             res << plugin;
 

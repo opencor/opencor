@@ -27,12 +27,10 @@ namespace OpenCOR {
 
 //==============================================================================
 
-PluginInfo::PluginInfo(const Category &pCategory, const bool &pCliSupport,
-                       const bool &pManageable,
+PluginInfo::PluginInfo(const Category &pCategory, const bool &pManageable,
                        const QStringList &pDependencies,
                        const Descriptions &pDescriptions) :
     mCategory(pCategory),
-    mCliSupport(pCliSupport),
     mManageable(pManageable),
     mDependencies(pDependencies),
     mFullDependencies(QStringList()),
@@ -47,15 +45,6 @@ PluginInfo::Category PluginInfo::category() const
     // Return the plugin's category
 
     return mCategory;
-}
-
-//==============================================================================
-
-bool PluginInfo::hasCliSupport() const
-{
-    // Return whether the plugin includes support for CLI
-
-    return mCliSupport;
 }
 
 //==============================================================================

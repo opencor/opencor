@@ -26,6 +26,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfile.h"
 #include "cellmltoolsglobal.h"
+#include "cliinterface.h"
 #include "coreinterface.h"
 #include "fileinterface.h"
 #include "guiinterface.h"
@@ -43,6 +44,7 @@ PLUGININFO_FUNC CellMLToolsPluginInfo();
 //==============================================================================
 
 class CELLMLTOOLS_EXPORT CellMLToolsPlugin : public QObject,
+                                             public CliInterface,
                                              public CoreInterface,
                                              public GuiInterface,
                                              public I18nInterface
@@ -51,11 +53,13 @@ class CELLMLTOOLS_EXPORT CellMLToolsPlugin : public QObject,
 
     Q_PLUGIN_METADATA(IID "OpenCOR.CellMLToolsPlugin" FILE "cellmltoolsplugin.json")
 
+    Q_INTERFACES(OpenCOR::CliInterface)
     Q_INTERFACES(OpenCOR::CoreInterface)
     Q_INTERFACES(OpenCOR::GuiInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
 
 public:
+#include "cliinterface.inl"
 #include "coreinterface.inl"
 #include "guiinterface.inl"
 #include "i18ninterface.inl"
@@ -73,7 +77,7 @@ private:
     void exportTo(const CellMLSupport::CellmlFile::Format &pFormat);
 
     void runHelpCommand();
-    void runExportCommand(const QStringList &pArguments, int *pRes);
+    int runExportCommand(const QStringList &pArguments);
 
 private Q_SLOTS:
     void exportToCellml10();

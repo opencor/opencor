@@ -41,9 +41,7 @@ PLUGININFO_FUNC HelpPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to provide help."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour fournir de l'aide."));
 
-    return new PluginInfo(PluginInfo::Miscellaneous,
-                          false,
-                          true,
+    return new PluginInfo(PluginInfo::Miscellaneous, true,
                           QStringList() << "Core",
                           descriptions);
 }
@@ -128,19 +126,6 @@ void HelpPlugin::handleAction(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
-}
-
-//==============================================================================
-
-void HelpPlugin::runCliCommand(const QString &pCommand,
-                               const QStringList &pArguments, int *pRes)
-{
-    Q_UNUSED(pCommand);
-    Q_UNUSED(pArguments);
-
-    // We don't handle this interface...
-
-    *pRes = 0;
 }
 
 //==============================================================================

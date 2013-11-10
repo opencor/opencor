@@ -51,9 +51,7 @@ PLUGININFO_FUNC CorePluginInfo()
     descriptions.insert("en", QString::fromUtf8("the core plugin."));
     descriptions.insert("fr", QString::fromUtf8("l'extension de base."));
 
-    return new PluginInfo(PluginInfo::Miscellaneous,
-                          false,
-                          false,
+    return new PluginInfo(PluginInfo::Miscellaneous, false,
                           QStringList(),
                           descriptions);
 }
@@ -338,19 +336,6 @@ void CorePlugin::handleAction(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CorePlugin::runCliCommand(const QString &pCommand,
-                               const QStringList &pArguments, int *pRes)
-{
-    Q_UNUSED(pCommand);
-    Q_UNUSED(pArguments);
-
-    // We don't handle this interface...
-
-    *pRes = 0;
 }
 
 //==============================================================================

@@ -43,9 +43,7 @@ PLUGININFO_FUNC SingleCellViewPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to run single cell simulations."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour exécuter des simulations unicellulaires."));
 
-    return new PluginInfo(PluginInfo::Simulation,
-                          false,
-                          true,
+    return new PluginInfo(PluginInfo::Simulation, true,
                           QStringList() << "CellMLSupport" << "Qwt",
                           descriptions);
 }
@@ -149,20 +147,6 @@ void SingleCellViewPlugin::handleAction(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
-}
-
-//==============================================================================
-
-void SingleCellViewPlugin::runCliCommand(const QString &pCommand,
-                                         const QStringList &pArguments,
-                                         int *pRes)
-{
-    Q_UNUSED(pCommand);
-    Q_UNUSED(pArguments);
-
-    // We don't handle this interface...
-
-    *pRes = 0;
 }
 
 //==============================================================================

@@ -40,9 +40,7 @@ PLUGININFO_FUNC FileOrganiserPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to virtually organise your files."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour organiser virtuellement vos fichiers."));
 
-    return new PluginInfo(PluginInfo::Organisation,
-                          false,
-                          true,
+    return new PluginInfo(PluginInfo::Organisation, true,
                           QStringList() << "Core",
                           descriptions);
 }
@@ -127,20 +125,6 @@ void FileOrganiserPlugin::handleAction(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
-}
-
-//==============================================================================
-
-void FileOrganiserPlugin::runCliCommand(const QString &pCommand,
-                                        const QStringList &pArguments,
-                                        int *pRes)
-{
-    Q_UNUSED(pCommand);
-    Q_UNUSED(pArguments);
-
-    // We don't handle this interface...
-
-    *pRes = 0;
 }
 
 //==============================================================================

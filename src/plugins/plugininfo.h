@@ -67,14 +67,12 @@ public:
         ThirdParty
     };
 
-    explicit PluginInfo(const Category &pCategory, const bool &pCliSupport,
-                        const bool &pManageable,
+    explicit PluginInfo(const Category &pCategory, const bool &pManageable,
                         const QStringList &pDependencies,
                         const Descriptions &pDescriptions);
 
     Category category() const;
 
-    bool hasCliSupport() const;
     bool isManageable() const;
 
     QStringList dependencies() const;
@@ -87,7 +85,6 @@ public:
 private:
     Category mCategory;
 
-    bool mCliSupport;
     bool mManageable;
 
     QStringList mDependencies;
