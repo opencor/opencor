@@ -30,7 +30,7 @@
 
         <p>
             A plugin's code must be in its own namespace within the <code>OpenCOR</code> namespace. For example, for the <code>Core</code> plugin (see <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Core/src/coreplugin.cpp"><code>[OpenCOR]/src/plugins/misc/Core/src/coreplugin.cpp</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Core/src/coreplugin.h"><code>[OpenCOR]/src/plugins/misc/Core/src/coreplugin.h</code></a>), we have:
-            
+
             <pre class="prettyprint">...
 namespace OpenCOR {
 namespace Core {
@@ -118,7 +118,7 @@ class LLVMPlugin : public QObject
 
             <pre class="prettyprint">PLUGININFO_FUNC CorePluginInfo();</pre>
         </p>
-        
+
         <p>
             As you can see, the name of the function is related to the name of the plugin and is  <code>&lt;PluginName&gt;PluginInfo</code>.
         </p>
@@ -169,12 +169,23 @@ class LLVMPlugin : public QObject
 ...</pre>
         </p>
 
+        <p>
+            <code>_WIN32</code> and <code>Compiler_PLUGIN</code> (or, more generally, <code>&lt;PluginName&gt;_PLUGIN</code>) are automatically defined at build time and are used to determine the value of <code>COMPILER_EXPORT</code> (or, more generally, the value of <code>&lt;PLUGINNAME&gt;_EXPORT</code>). <code>COMPILER_EXPORT</code> can then be used as follows (see <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Compiler/src/compilerengine.h"><code>[OpenCOR]/src/plugins/misc/Compiler/src/compilerengine.h</code></a>):
+
+            <pre class="prettyprint">...
+class COMPILER_EXPORT CompilerEngine : public QObject
+{
+...
+};
+...</pre>
+        </p>
+
         <div class="section">
             <code>ADD_PLUGIN</code> macro
         </div>
 
         <p>
-            Our CMake <code>ADD_PLUGIN</code> macro is used both to build and to package a plugin (see <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>[OpenCOR]/cmake/common.cmake</code></a>) and it requires one or several types of arguments to be passed to it:
+            The CMake <code>ADD_PLUGIN</code> macro is used both to build and to package a plugin (see <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>[OpenCOR]/cmake/common.cmake</code></a>) and it requires one or several types of arguments to be passed to it:
         </p>
 
         <ul>
