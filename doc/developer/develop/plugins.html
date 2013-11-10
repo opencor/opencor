@@ -194,13 +194,13 @@ class COMPILER_EXPORT CompilerEngine : public QObject
             <li><code>UIS</code>: user interface files.</li>
             <li><code>INCLUDE_DIRS</code>: various locations where header files can be found.</li>
             <li><code>DEFINITIONS</code>: definitions needed to build the plugin (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/3rdparty/SUNDIALS/CMakeLists.txt"><code>[OpenCOR]/src/plugins/3rdparty/SUNDIALS/CMakeLists.txt</code></a>).</li>
-            <li><code>PLUGIN_DEPENDENCIES</code>: other plugins needed by the plugin (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Help/CMakeLists.txt"><code>[OpenCOR]/src/plugins/misc/Help/CMakeLists.txt</code></a>).</li>
-            <li><code>PLUGIN_BINARY_DEPENDENCIES</code>: the binary version of other plugins needed by the plugin (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Compiler/CMakeLists.txt"><code>[OpenCOR]/src/plugins/misc/Compiler/CMakeLists.txt</code></a>).</li>
+            <li><code>PLUGINS</code>: other plugins needed by the plugin (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Help/CMakeLists.txt"><code>[OpenCOR]/src/plugins/misc/Help/CMakeLists.txt</code></a>).</li>
+            <li><code>PLUGIN_BINARIES</code>: the binary version of other plugins needed by the plugin (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Compiler/CMakeLists.txt"><code>[OpenCOR]/src/plugins/misc/Compiler/CMakeLists.txt</code></a>).</li>
             <li><code>QT_MODULES</code>: Qt modules needed by the plugin.</li>
-            <li><code>QT_DEPENDENCIES</code>: Qt libraries needed by the plugin.</li>
-            <li><code>EXTERNAL_BINARY_DEPENDENCIES_DIR</code>: location of any external binaries needed by the plugin (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/api/CellMLAPI/CMakeLists.txt"><code>[OpenCOR]/src/plugins/api/CellMLAPI/CMakeLists.txt</code></a>).</li>
-            <li><code>EXTERNAL_BINARY_DEPENDENCIES</code>: external binaries needed by the plugin (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/api/CellMLAPI/CMakeLists.txt"><code>[OpenCOR]/src/plugins/api/CellMLAPI/CMakeLists.txt</code></a>).</li>
-            <li><code>EXTERNAL_LIBRARY_DEPENDENCIES</code>: external libraries needed by the plugin (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/3rdparty/LLVM/CMakeLists.txt.build"><code>[OpenCOR]/src/plugins/3rdparty/LLVM/CMakeLists.txt.build</code></a>).</li>
+            <li><code>QT_LIBRARIES</code>: Qt libraries needed by the plugin.</li>
+            <li><code>EXTERNAL_BINARIES_DIR</code>: location where any external binaries needed by the plugin can be found (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/api/CellMLAPI/CMakeLists.txt"><code>[OpenCOR]/src/plugins/api/CellMLAPI/CMakeLists.txt</code></a>).</li>
+            <li><code>EXTERNAL_BINARIES</code>: external binaries needed by the plugin (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/api/CellMLAPI/CMakeLists.txt"><code>[OpenCOR]/src/plugins/api/CellMLAPI/CMakeLists.txt</code></a>).</li>
+            <li><code>EXTERNAL_LIBRARIES</code>: external libraries needed by the plugin (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/3rdparty/LLVM/CMakeLists.txt.build"><code>[OpenCOR]/src/plugins/3rdparty/LLVM/CMakeLists.txt.build</code></a>).</li>
             <li><code>TESTS</code>: tests for the plugin (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/misc/Compiler/CMakeLists.txt"><code>[OpenCOR]/src/plugins/misc/Compiler/CMakeLists.txt</code></a>).</li>
         </ul>
 
