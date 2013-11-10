@@ -36,7 +36,6 @@ namespace OpenCOR {
 //==============================================================================
 
 Plugin::Plugin(const QString &pFileName, const bool &pLoad,
-               const PluginInfo::InterfaceVersion &pExpectedInterfaceVersion,
                const QString &pPluginsDir, PluginManager *pPluginManager
               ) :
     mName(name(pFileName)),
@@ -65,7 +64,7 @@ Plugin::Plugin(const QString &pFileName, const bool &pLoad,
             // Try to load the plugin, but only if it uses the right interface
             // version, and if it is to be loaded
 
-            if ((mInfo->interfaceVersion() == pExpectedInterfaceVersion) && pLoad) {
+            if (pLoad) {
                 // We are dealing with the right kind of plugin, so check that
                 // all of its dependencies, if any, are loaded
                 // Note: normally, we would only do this on non-Windows systems
@@ -131,15 +130,9 @@ Plugin::Plugin(const QString &pFileName, const bool &pLoad,
                         mStatusErrors = pluginLoader.errorString();
                     }
                 }
-            } else if (mInfo->interfaceVersion() != pExpectedInterfaceVersion) {
-                // We are dealing with a plugin which relies on a different
-                // interface version, so...
-
-                mStatus = InvalidInterfaceVersion;
             } else {
-                // If none of the above applies then it means we are dealing
-                // with a plugin which is either not wanted or not needed,
-                // depending on whether it is manageable
+                // The plugin is not to be loaded, which means it is either not
+                // wanted or not needed, depending on whether it is manageable
 
                 if (mInfo->isManageable())
                     mStatus = NotWanted;

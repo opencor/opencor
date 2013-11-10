@@ -57,11 +57,6 @@ typedef QMap<QString, QString> Descriptions;
 class PluginInfo
 {
 public:
-    enum InterfaceVersion {
-        UndefinedInterfaceVersion,
-        InterfaceVersion001
-    };
-
     enum Category {
         Organisation,
         Editing,
@@ -72,13 +67,10 @@ public:
         ThirdParty
     };
 
-    explicit PluginInfo(const InterfaceVersion &pInterfaceVersion,
-                        const Category &pCategory, const bool &pCliSupport,
+    explicit PluginInfo(const Category &pCategory, const bool &pCliSupport,
                         const bool &pManageable,
                         const QStringList &pDependencies,
                         const Descriptions &pDescriptions);
-
-    InterfaceVersion interfaceVersion() const;
 
     Category category() const;
 
@@ -93,8 +85,6 @@ public:
     Descriptions descriptions() const;
 
 private:
-    InterfaceVersion mInterfaceVersion;
-
     Category mCategory;
 
     bool mCliSupport;

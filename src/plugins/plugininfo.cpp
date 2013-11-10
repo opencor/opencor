@@ -27,12 +27,10 @@ namespace OpenCOR {
 
 //==============================================================================
 
-PluginInfo::PluginInfo(const InterfaceVersion &pInterfaceVersion,
-                       const Category &pCategory, const bool &pCliSupport,
+PluginInfo::PluginInfo(const Category &pCategory, const bool &pCliSupport,
                        const bool &pManageable,
                        const QStringList &pDependencies,
                        const Descriptions &pDescriptions) :
-    mInterfaceVersion(pInterfaceVersion),
     mCategory(pCategory),
     mCliSupport(pCliSupport),
     mManageable(pManageable),
@@ -40,15 +38,6 @@ PluginInfo::PluginInfo(const InterfaceVersion &pInterfaceVersion,
     mFullDependencies(QStringList()),
     mDescriptions(pDescriptions)
 {
-}
-
-//==============================================================================
-
-PluginInfo::InterfaceVersion PluginInfo::interfaceVersion() const
-{
-    // Return the interface version used by the plugin
-
-    return mInterfaceVersion;
 }
 
 //==============================================================================

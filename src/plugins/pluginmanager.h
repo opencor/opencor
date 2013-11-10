@@ -61,11 +61,7 @@ public:
     QString pluginsDir() const;
     Plugin * plugin(const QString &pName) const;
 
-    PluginInfo::InterfaceVersion interfaceVersion() const;
-
 private:
-    PluginInfo::InterfaceVersion mInterfaceVersion;
-
     QString mPluginsDir;
     Plugins mPlugins;
 };

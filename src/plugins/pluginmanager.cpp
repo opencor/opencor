@@ -35,7 +35,6 @@ namespace OpenCOR {
 //==============================================================================
 
 PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiVersion) :
-    mInterfaceVersion(PluginInfo::InterfaceVersion001),
     mPlugins(Plugins())
 {
     mPluginsDir =  QDir(pApp->applicationDirPath()).canonicalPath()
@@ -138,7 +137,7 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiVersion) :
     foreach (const QString &pluginFileName, pluginFileNames)
         mPlugins << new Plugin(pluginFileName,
                                plugins.contains(Plugin::name(pluginFileName)),
-                               interfaceVersion(), pluginsDir(), this);
+                               pluginsDir(), this);
 }
 
 //==============================================================================
@@ -215,15 +214,6 @@ Plugin * PluginManager::plugin(const QString &pName) const
     // The plugin we are after wasn't found, so...
 
     return 0;
-}
-
-//==============================================================================
-
-PluginInfo::InterfaceVersion PluginManager::interfaceVersion() const
-{
-    // Return the interface version used by the plugin manager
-
-    return mInterfaceVersion;
 }
 
 //==============================================================================

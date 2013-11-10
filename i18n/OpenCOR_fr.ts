@@ -194,14 +194,6 @@
         <translation>Externe</translation>
     </message>
     <message>
-        <source>001</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>unknown</source>
-        <translation>inconnue</translation>
-    </message>
-    <message>
         <source>Miscellaneous</source>
         <translation>Divers</translation>
     </message>
@@ -232,10 +224,6 @@
     <message>
         <source>the plugin could not be found.</source>
         <translation>l&apos;extension n&apos;a pas pu être trouvée.</translation>
-    </message>
-    <message>
-        <source>the version of the interface used by the plugin (%1) is not valid (%2 is expected).</source>
-        <translation>la version de l&apos;interface utilisée par l&apos;extension (%1) n&apos;est pas valide (%2 est espérée).</translation>
     </message>
     <message>
         <source>the plugin is not wanted.</source>

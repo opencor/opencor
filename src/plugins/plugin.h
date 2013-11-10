@@ -74,7 +74,6 @@ public:
     enum Status {
         UndefinedStatus,
         NotFound,
-        InvalidInterfaceVersion,
         NotWanted,
         NotNeeded,
         Loaded,
@@ -84,7 +83,6 @@ public:
     };
 
     explicit Plugin(const QString &pFileName, const bool &pLoad,
-                    const PluginInfo::InterfaceVersion &pExpectedInterfaceVersion,
                     const QString &pPluginsDir, PluginManager *pPluginManager);
     ~Plugin();
 

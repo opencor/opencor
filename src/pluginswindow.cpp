@@ -295,25 +295,6 @@ void PluginsWindow::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-QString PluginsWindow::interfaceVersionAsString(const PluginInfo::InterfaceVersion &pInterfaceVersion) const
-{
-    // Return the given interface version as a string
-    // Note: ideally, this function would be part of the CoreInterface class,
-    //       but this class is used by all the plugins and because this method
-    //       requires a translation, well... we can't have it there since a
-    //       translation will otherwise be required for each plugin, so...
-    //       another solution is to have it here...
-
-    switch (pInterfaceVersion) {
-    case PluginInfo::InterfaceVersion001:
-        return tr("001");
-    default:
-        return tr("unknown");
-    }
-}
-
-//==============================================================================
-
 QString PluginsWindow::statusDescription(Plugin *pPlugin) const
 {
     // Return the plugin's status' description, if any
@@ -321,9 +302,6 @@ QString PluginsWindow::statusDescription(Plugin *pPlugin) const
     switch (pPlugin->status()) {
     case Plugin::NotFound:
         return tr("the plugin could not be found.");
-    case Plugin::InvalidInterfaceVersion:
-        return tr("the version of the interface used by the plugin (%1) is not valid (%2 is expected).").arg(interfaceVersionAsString(pPlugin->info()->interfaceVersion()),
-                                                                                                             interfaceVersionAsString(mPluginManager->interfaceVersion()));
     case Plugin::NotWanted:
         return tr("the plugin is not wanted.");
     case Plugin::NotNeeded:

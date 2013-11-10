@@ -40,8 +40,7 @@ PLUGININFO_FUNC CoreCellMLEditingPluginInfo()
     descriptions.insert("en", QString::fromUtf8("the core CellML editing plugin."));
     descriptions.insert("fr", QString::fromUtf8("l'extension d'édition CellML de base."));
 
-    return new PluginInfo(PluginInfo::InterfaceVersion001,
-                          PluginInfo::Editing,
+    return new PluginInfo(PluginInfo::Editing,
                           false,
                           false,
                           QStringList() << "CoreEditing" << "CellMLSupport",

@@ -48,8 +48,7 @@ PLUGININFO_FUNC CellMLAnnotationViewPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to annotate CellML files."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour annoter des fichiers CellML."));
 
-    return new PluginInfo(PluginInfo::InterfaceVersion001,
-                          PluginInfo::Editing,
+    return new PluginInfo(PluginInfo::Editing,
                           false,
                           true,
                           QStringList() << "CoreCellMLEditing",
