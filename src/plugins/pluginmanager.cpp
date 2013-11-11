@@ -96,9 +96,16 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
             // plugin manager but the plugin is manageable, so retrieve and keep
             // track of its dependencies
             // Note: in the non-GUI mode (i.e. CLI mode), if a plugin is
-            //       manageable then it is automatically loaded no matter what
-            //       (thus making sure that the CLI version of OpenCOR has
-            //       access to everything)...
+            //       manageable then it is automatically loaded no matter what,
+            //       thus making sure that the CLI version of OpenCOR has access
+            //       to all the plugins. The drawback of this approach is that
+            //       non-CLI capable plugins will also be loaded, but there is
+            //       not much we can do about it. Actually, we could have a
+            //       boolean in the plugin information to tell us whether a
+            //       plugin is CLI-capable, but this is error-prone (i.e. what
+            //       happens if the developer of a CLI-capable plugin forgets to
+            //       turn it on?). So, it's better to load all the plugins and
+            //       then deal with only those that support the CLI interface...
 
             requiredPlugins << Plugin::requiredPlugins(mPluginsDir,
                                                        Plugin::name(fileName));
