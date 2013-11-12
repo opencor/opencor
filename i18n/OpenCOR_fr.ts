@@ -320,7 +320,7 @@
     </message>
     <message>
         <source>Show only selectable plugins</source>
-        <translation>Montrer seulement les extensions sélectables</translation>
+        <translation>Montrer seulement les extensions sélectionables</translation>
     </message>
     <message>
         <source>&lt;b&gt;&lt;u&gt;Note:&lt;/u&gt;&lt;/b&gt; %1 will need to be restarted for your changes to take effect.</source>
