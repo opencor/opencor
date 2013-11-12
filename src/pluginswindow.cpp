@@ -123,13 +123,16 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     // Note: we create all of them in one go (rather than when required), so
     //       that they are in the order we want them to be
 
-    newPluginCategory(PluginInfo::Organisation, tr("Organisation"));
-    newPluginCategory(PluginInfo::Editing, tr("Editing"));
-    newPluginCategory(PluginInfo::Simulation, tr("Simulation"));
     newPluginCategory(PluginInfo::Analysis, tr("Analysis"));
-    newPluginCategory(PluginInfo::Miscellaneous, tr("Miscellaneous"));
     newPluginCategory(PluginInfo::Api, tr("API"));
+    newPluginCategory(PluginInfo::Editing, tr("Editing"));
+    newPluginCategory(PluginInfo::Miscellaneous, tr("Miscellaneous"));
+    newPluginCategory(PluginInfo::Organisation, tr("Organisation"));
+    newPluginCategory(PluginInfo::Simulation, tr("Simulation"));
+    newPluginCategory(PluginInfo::Solver, tr("Solver"));
+    newPluginCategory(PluginInfo::Support, tr("Support"));
     newPluginCategory(PluginInfo::ThirdParty, tr("Third-party"));
+    newPluginCategory(PluginInfo::Widget, tr("Widget"));
 
     // Sort our different plugins by their name
     // Note: indeed, they are currently sorted based on their depedencies with
@@ -424,20 +427,26 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
 
         mGui->fieldTwoLabel->setText(tr("Description:"));
 
-        if (!itemText.compare(tr("Organisation")))
-            mGui->fieldTwoValue->setText(tr("Organisation plugins are used to search, open, organise, etc. your files."));
+        if (!itemText.compare(tr("Analysis")))
+            mGui->fieldTwoValue->setText(tr("Analysis plugins are used to analyse your files."));
+        else if (!itemText.compare(tr("API")))
+            mGui->fieldTwoValue->setText(tr("API plugins are used to provide access to various APIs."));
         else if (!itemText.compare(tr("Editing")))
-            mGui->fieldTwoValue->setText(tr("Editing plugins are used to edit part or all of your files using one of several possible views."));
-        else if (!itemText.compare(tr("Simulation")))
-            mGui->fieldTwoValue->setText(tr("Simulation plugins are used to simulate your files."));
-        else if (!itemText.compare(tr("Analysis")))
-            mGui->fieldTwoValue->setText(tr("Analysis plugins are used to analyse your data files."));
+            mGui->fieldTwoValue->setText(tr("Editing plugins are used to edit your files."));
         else if (!itemText.compare(tr("Miscellaneous")))
             mGui->fieldTwoValue->setText(tr("Miscellaneous plugins are used for various purposes."));
-        else if (!itemText.compare(tr("API")))
-            mGui->fieldTwoValue->setText(tr("API plugins are used to provide access to external APIs."));
+        else if (!itemText.compare(tr("Organisation")))
+            mGui->fieldTwoValue->setText(tr("Organisation plugins are used to organise your files."));
+        else if (!itemText.compare(tr("Simulation")))
+            mGui->fieldTwoValue->setText(tr("Simulation plugins are used to simulate your files."));
+        else if (!itemText.compare(tr("Solver")))
+            mGui->fieldTwoValue->setText(tr("Solver plugins are used to provide access to various solvers."));
+        else if (!itemText.compare(tr("Support")))
+            mGui->fieldTwoValue->setText(tr("Support plugins are used to provide support for various third-party libraries and APIs."));
         else if (!itemText.compare(tr("Third-party")))
-            mGui->fieldTwoValue->setText(tr("Third-party plugins are used to provide access to third-party libraries."));
+            mGui->fieldTwoValue->setText(tr("Third-party plugins are used to provide access to various third-party libraries."));
+        else if (!itemText.compare(tr("Widget")))
+            mGui->fieldTwoValue->setText(tr("Widget plugins are used to provide access to various ad hoc widgets."));
     }
 
     // Show/hide the different fields

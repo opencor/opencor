@@ -242,19 +242,19 @@
         <translation>l&apos;extension n&apos;a pas pu être installée à cause de l&apos;extension %1 étant manquante ou invalide.</translation>
     </message>
     <message>
-        <source>Organisation plugins are used to search, open, organise, etc. your files.</source>
-        <translation>les extensions Organisation sont utilisées pour chercher, ouvrir, organiser, etc. vos fichiers.</translation>
+        <source>Organisation plugins are used to organise your files.</source>
+        <translation>les extensions Organisation sont utilisées pour organiser vos fichiers.</translation>
     </message>
     <message>
-        <source>Editing plugins are used to edit part or all of your files using one of several possible views.</source>
-        <translation>les extensions Edition sont utilisées pour éditer tout ou partie de vos fichiers en utilisant une des plusieurs vues possibles.</translation>
+        <source>Editing plugins are used to edit your files.</source>
+        <translation>les extensions Edition sont utilisées pour éditer vos fichiers.</translation>
     </message>
     <message>
         <source>Simulation plugins are used to simulate your files.</source>
         <translation>les extensions Simulation sont utilisées pour simuler vos fichiers.</translation>
     </message>
     <message>
-        <source>Analysis plugins are used to analyse your data files.</source>
+        <source>Analysis plugins are used to analyse your files.</source>
         <translation>les extensions Analyse sont utilisées pour analyser vos fichiers.</translation>
     </message>
     <message>
@@ -262,12 +262,12 @@
         <translation>les extensions Divers sont utilisées pour différentes choses.</translation>
     </message>
     <message>
-        <source>API plugins are used to provide access to external APIs.</source>
-        <translation>les extensions API sont utilisées pour donner accès à des APIs externes.</translation>
+        <source>API plugins are used to provide access to various APIs.</source>
+        <translation>les extensions API sont utilisées pour donner accès à différentes APIs.</translation>
     </message>
     <message>
-        <source>Third-party plugins are used to provide access to third-party libraries.</source>
-        <translation>les extensions Externe sont utilisées pour donner accès à des librairies externes.</translation>
+        <source>Third-party plugins are used to provide access to various third-party libraries.</source>
+        <translation>les extensions Externe sont utilisées pour donner accès à différentes librairies externes.</translation>
     </message>
     <message>
         <source>this is not a plugin.</source>
@@ -286,6 +286,30 @@
         <source>the plugin could not be loaded due to missing or invalid plugins:
 %1</source>
         <translation>l&apos;extension n&apos;a pas pu être installée à cause d&apos;extensions manquantes ou invalides :\n%1</translation>
+    </message>
+    <message>
+        <source>Solver</source>
+        <translation>Solveur</translation>
+    </message>
+    <message>
+        <source>Support</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Widget</source>
+        <translation>Gadget</translation>
+    </message>
+    <message>
+        <source>Solver plugins are used to provide access to various solvers.</source>
+        <translation>les extensions Solveur sont utilisées pour donner accès à différents solveurs.</translation>
+    </message>
+    <message>
+        <source>Support plugins are used to provide support for various third-party libraries and APIs.</source>
+        <translation>les extensions Support sont utilisées pour supporter différentes librairies externes et APIs.</translation>
+    </message>
+    <message>
+        <source>Widget plugins are used to provide access to various ad hoc widgets.</source>
+        <translation>les extensions Gadget sont utilisées pour donner accès à différents gadgets ad hoc.</translation>
     </message>
 </context>
 <context>

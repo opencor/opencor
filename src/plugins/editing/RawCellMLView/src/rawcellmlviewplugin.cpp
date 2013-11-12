@@ -42,10 +42,7 @@ PLUGININFO_FUNC RawCellMLViewPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to edit <a href=\"http://www.cellml.org/\">CellML</a> files using an XML editor."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour éditer des fichiers <a href=\"http://www.cellml.org/\">CellML</a> à l'aide d'un éditeur XML."));
 
-    return new PluginInfo(PluginInfo::InterfaceVersion001,
-                          PluginInfo::Editing,
-                          false,
-                          true,
+    return new PluginInfo(PluginInfo::Editing,
                           QStringList() << "CoreCellMLEditing" << "QScintillaSupport" << "Viewer",
                           descriptions);
 }
@@ -135,20 +132,6 @@ void RawCellMLViewPlugin::handleAction(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
-}
-
-//==============================================================================
-
-void RawCellMLViewPlugin::runCliCommand(const QString &pCommand,
-                                        const QStringList &pArguments,
-                                        int *pRes)
-{
-    Q_UNUSED(pCommand);
-    Q_UNUSED(pArguments);
-
-    // We don't handle this interface...
-
-    *pRes = 0;
 }
 
 //==============================================================================

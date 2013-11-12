@@ -35,10 +35,7 @@ PLUGININFO_FUNC ViewerPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to graphically visualise various modelling concepts (e.g. mathematical equations)."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour visualiser graphiquement différents concepts de modélisation (par exemple des équations mathématiques)."));
 
-    return new PluginInfo(PluginInfo::InterfaceVersion001,
-                          PluginInfo::Miscellaneous,
-                          false,
-                          false,
+    return new PluginInfo(PluginInfo::Widget,
                           QStringList() << "Qwt",
                           descriptions);
 }

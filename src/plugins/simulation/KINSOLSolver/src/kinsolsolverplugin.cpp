@@ -36,7 +36,7 @@ PLUGININFO_FUNC KINSOLSolverPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin which uses <a href=\"http://computation.llnl.gov/casc/sundials/description/description.html#descr_kinsol\">KINSOL</a> to solve non-linear systems."));
     descriptions.insert("fr", QString::fromUtf8("une extension qui utilise <a href=\"http://computation.llnl.gov/casc/sundials/description/description.html#descr_kinsol\">KINSOL</a> pour résoudre des systèmes non-linéaires."));
 
-    return new PluginInfo(PluginInfo::Simulation,
+    return new PluginInfo(PluginInfo::Solver,
                           QStringList() << "CoreSolver" << "SUNDIALS",
                           descriptions);
 }

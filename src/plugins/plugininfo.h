@@ -59,13 +59,16 @@ class PluginInfo
 {
 public:
     enum Category {
-        Organisation,
-        Editing,
-        Simulation,
         Analysis,
-        Miscellaneous,
         Api,
-        ThirdParty
+        Editing,
+        Miscellaneous,
+        Organisation,
+        Simulation,
+        Solver,
+        Support,
+        ThirdParty,
+        Widget
     };
 
     explicit PluginInfo(const Category &pCategory,
