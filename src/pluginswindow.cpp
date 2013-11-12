@@ -71,6 +71,17 @@ void PluginItemDelegate::paint(QPainter *pPainter,
 
 //==============================================================================
 
+bool sortPlugins(Plugin *pPlugin1, Plugin *pPlugin2)
+{
+    // Determine which of the two plugins should be first based on their name
+    // Note: the two comparisons are case insensitive, so that it's easier for
+    //       people to search a plugin...
+
+    return pPlugin1->name().compare(pPlugin2->name(), Qt::CaseInsensitive) < 0;
+}
+
+//==============================================================================
+
 PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
                              MainWindow *pMainWindow) :
     QDialog(pMainWindow),
@@ -120,9 +131,18 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     newPluginCategory(PluginInfo::Api, tr("API"));
     newPluginCategory(PluginInfo::ThirdParty, tr("Third-party"));
 
+    // Sort our different plugins by their name
+    // Note: indeed, they are currently sorted based on their depedencies with
+    //       one another while here it makes more sense to have them sorted by
+    //       name...
+
+    Plugins plugins = mPluginManager->plugins();
+
+    qSort(plugins.begin(), plugins.end(), sortPlugins);
+
     // Populate the data model with our different plugins
 
-    foreach (Plugin *plugin, mPluginManager->plugins()) {
+    foreach (Plugin *plugin, plugins) {
         // Create the item corresponding to the current plugin
 
         QStandardItem *pluginItem = new QStandardItem((plugin->status() == Plugin::Loaded)?
@@ -359,7 +379,7 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
 
             // The plugin's dependencies
 
-            QStringList dependencies = pluginInfo->fullDependencies();
+            QStringList dependencies = pluginInfo->dependencies();
 
             mGui->fieldTwoLabel->setText(tr("Dependencies:"));
 

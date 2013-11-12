@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QList>
 #include <QObject>
 #include <QString>
 #include <QStringList>
