@@ -29,6 +29,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QMap>
+#include <QString>
 #include <QStringList>
 
 //==============================================================================
@@ -67,13 +68,14 @@ public:
         ThirdParty
     };
 
-    explicit PluginInfo(const Category &pCategory, const bool &pManageable,
+    explicit PluginInfo(const Category &pCategory,
                         const QStringList &pDependencies,
                         const Descriptions &pDescriptions);
 
     Category category() const;
 
     bool isManageable() const;
+    void setManageable(const bool &pManageable);
 
     QStringList dependencies() const;
     QStringList fullDependencies() const;

@@ -91,7 +91,7 @@ void loadPlugin(const QString &pPluginName)
 {
     // Load the given plugin
 
-    QStringList plugins = QStringList() << Plugin::requiredPlugins(".", pPluginName)
+    QStringList plugins = QStringList() << Plugin::fullDependencies(".", pPluginName)
                                         << pPluginName;
 
     foreach (const QString &plugin, plugins) {

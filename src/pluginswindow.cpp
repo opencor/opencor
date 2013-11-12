@@ -300,8 +300,6 @@ QString PluginsWindow::statusDescription(Plugin *pPlugin) const
     // Return the plugin's status' description, if any
 
     switch (pPlugin->status()) {
-    case Plugin::NotFound:
-        return tr("the plugin could not be found.");
     case Plugin::NotWanted:
         return tr("the plugin is not wanted.");
     case Plugin::NotNeeded:
@@ -314,7 +312,7 @@ QString PluginsWindow::statusDescription(Plugin *pPlugin) const
         else
             return tr("the plugin could not be loaded due to the following problems:\n%1").arg(pPlugin->statusErrors());
     case Plugin::NotPlugin:
-        return tr("this library is not a plugin.");
+        return tr("this is not a plugin.");
     case Plugin::MissingOrInvalidDependencies:
         if (pPlugin->statusErrorsCount() == 1)
             return tr("the plugin could not be loaded due to the %1 plugin being missing or invalid.").arg(pPlugin->statusErrors());

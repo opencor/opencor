@@ -222,10 +222,6 @@
         <translation>aucune</translation>
     </message>
     <message>
-        <source>the plugin could not be found.</source>
-        <translation>l&apos;extension n&apos;a pas pu être trouvée.</translation>
-    </message>
-    <message>
         <source>the plugin is not wanted.</source>
         <translation>l&apos;extension n&apos;est pas désirée.</translation>
     </message>
@@ -274,8 +270,8 @@
         <translation>les extensions Externe sont utilisées pour donner accès à des librairies externes.</translation>
     </message>
     <message>
-        <source>this library is not a plugin.</source>
-        <translation>cette librairie n&apos;est pas une extension.</translation>
+        <source>this is not a plugin.</source>
+        <translation>ce n&apos;est pas une extension.</translation>
     </message>
     <message>
         <source>the status of the plugin is undefined.</source>

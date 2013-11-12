@@ -18,7 +18,7 @@ PLUGININFO_FUNC QwtPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"http://qwt.sourceforge.net/\">Qwt</a>."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour accéder à <a href=\"http://qwt.sourceforge.net/\">Qwt</a>."));
 
-    return new PluginInfo(PluginInfo::ThirdParty, false,
+    return new PluginInfo(PluginInfo::ThirdParty,
                           QStringList(),
                           descriptions);
 }

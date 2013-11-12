@@ -27,11 +27,11 @@ namespace OpenCOR {
 
 //==============================================================================
 
-PluginInfo::PluginInfo(const Category &pCategory, const bool &pManageable,
+PluginInfo::PluginInfo(const Category &pCategory,
                        const QStringList &pDependencies,
                        const Descriptions &pDescriptions) :
     mCategory(pCategory),
-    mManageable(pManageable),
+    mManageable(false),
     mDependencies(pDependencies),
     mFullDependencies(QStringList()),
     mDescriptions(pDescriptions)
@@ -54,6 +54,15 @@ bool PluginInfo::isManageable() const
     // Return the plugin's manageability
 
     return mManageable;
+}
+
+//==============================================================================
+
+void PluginInfo::setManageable(const bool &pManageable)
+{
+    // Set whether the plugin is manageable
+
+    mManageable = pManageable;
 }
 
 //==============================================================================

@@ -35,116 +35,87 @@ namespace OpenCOR {
 
 //==============================================================================
 
-Plugin::Plugin(const QString &pFileName, const bool &pLoad,
-               const QString &pPluginsDir, PluginManager *pPluginManager
-              ) :
+Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo, const bool &pLoad,
+               PluginManager *pPluginManager) :
     mName(name(pFileName)),
-    // Note: to get the name of the plugin from its file name, we must remove
-    //       the plugin prefix part from it...
+    mInfo(pInfo),
     mInstance(0),
     mStatus(UndefinedStatus)
 {
-    // Check whether the plugin physically exists
+    if (pInfo) {
+        // We are dealing with a plugin, so try to load it, but only if the user
+        // wants
 
-    if (QFileInfo(pFileName).exists()) {
-        // The plugin exists, so retrieve its information
+        if (pLoad) {
+            // Make sure that the plugin's dependencies, if any, are loaded
+            // before loading the plugin itself
+            // Note: normally, we would only do this on non-Windows systems
+            //       since, on Windows, a shared library's dependencies must be
+            //       loaded before the shared library itself can be loaded,
+            //       while on Linux / OS X, it's possible to load a shared
+            //       library even if its dependencies are not loaded. Still, it
+            //       doesn't harm doing the same on Linux / OS X, so...
 
-        mInfo = info(pFileName);
+            bool pluginDependenciesLoaded = true;
 
-        if (!mInfo) {
-            // What we thought was a plugin is not actually a plugin...
+            mStatusErrors = "";
 
-            mStatus = NotPlugin;
-        } else {
-            // Retrieve the plugin's full dependencies (i.e. both its direct
-            // and indirect dependencies)
+            foreach (const QString &dependency, pInfo->dependencies()) {
+                Plugin *pluginDependency = pPluginManager->plugin(dependency);
 
-            mInfo->setFullDependencies(requiredPlugins(pPluginsDir, mName));
+                if (   !pluginDependency
+                    || (   pluginDependency
+                        && (pluginDependency->status() != Loaded))) {
+                    // Either the plugin dependency couldn't be found or it
+                    // could be found but it isn't loaded, so...
 
-            // Try to load the plugin, but only if it uses the right interface
-            // version, and if it is to be loaded
+                    pluginDependenciesLoaded = false;
 
-            if (pLoad) {
-                // We are dealing with the right kind of plugin, so check that
-                // all of its dependencies, if any, are loaded
-                // Note: normally, we would only do this on non-Windows systems
-                //       since, on Windows, a shared library's dependencies must
-                //       be loaded before the shared library itself can be
-                //       loaded, while on Linux / OS X, it's possible to load a
-                //       shared library even if its dependencies are not loaded.
-                //       However, we want to check that the interface version
-                //       used by the plugin matches the one used by OpenCOR, so
-                //       in the end we also do it on Windows. Indeed, it might
-                //       very well be that a plugin can still be loaded fine,
-                //       yet use an invalid format, so...
+                    mStatus = MissingOrInvalidDependencies;
 
-                bool pluginDependenciesLoaded = true;
+                    if (!mStatusErrors.isEmpty())
+                        mStatusErrors += "\n";
 
-                mStatusErrors = "";
-
-                foreach (const QString &dependency, mInfo->dependencies()) {
-                    Plugin *pluginDependency = pPluginManager->plugin(dependency);
-
-                    if (   !pluginDependency
-                        || (   pluginDependency
-                            && (pluginDependency->status() != Loaded))) {
-                        // Either the plugin dependency couldn't be found or it
-                        // could be found but it isn't loaded, so...
-
-                        pluginDependenciesLoaded = false;
-
-                        mStatus = MissingOrInvalidDependencies;
-
-                        if (!mStatusErrors.isEmpty())
-                            mStatusErrors += "\n";
-
-                        mStatusErrors += " - "+dependency;
-                    }
+                    mStatusErrors += " - "+dependency;
                 }
-
-                if (statusErrorsCount() == 1)
-                    // There is only one error, so remove the leading " - "
-
-                    mStatusErrors = mStatusErrors.remove(0, 3);
-
-                // Check whether all of the plugin's dependencies, if any, were
-                // loaded, and if so then try to load the plugin itself
-
-                if (pluginDependenciesLoaded) {
-                    // All the plugin's dependencies, if any, were loaded, so
-                    // try to load the plugin itself
-
-                    QPluginLoader pluginLoader(pFileName);
-
-                    if (pluginLoader.load()) {
-                        // The plugin has been properly loaded, so...
-
-                        mInstance = pluginLoader.instance();
-
-                        mStatus = Loaded;
-                    } else {
-                        // The plugin couldn't be loaded for some reason
-                        // (surely, this should never happen...?!), so...
-
-                        mStatus = NotLoaded;
-                        mStatusErrors = pluginLoader.errorString();
-                    }
-                }
-            } else {
-                // The plugin is not to be loaded, which means it is either not
-                // wanted or not needed, depending on whether it is manageable
-
-                if (mInfo->isManageable())
-                    mStatus = NotWanted;
-                else
-                    mStatus = NotNeeded;
             }
+
+            if (statusErrorsCount() == 1)
+                // There is only one error, so remove the leading " - "
+
+                mStatusErrors = mStatusErrors.remove(0, 3);
+
+            // Check whether all of the plugin's dependencies, if any, were
+            // loaded, and if so then try to load the plugin itself
+
+            if (pluginDependenciesLoaded) {
+                // All the plugin's dependencies, if any, were loaded, so try to
+                // load the plugin itself
+
+                QPluginLoader pluginLoader(pFileName);
+
+                if (pluginLoader.load()) {
+                    mInstance = pluginLoader.instance();
+
+                    mStatus = Loaded;
+                } else {
+                    mStatus = NotLoaded;
+                    mStatusErrors = pluginLoader.errorString();
+                }
+            }
+        } else {
+            // The plugin is not to be loaded, which means that it is either not
+            // wanted or not needed, depending on whether it is manageable
+
+            if (pInfo->isManageable())
+                mStatus = NotWanted;
+            else
+                mStatus = NotNeeded;
         }
     } else {
-        // The plugin doesn't exist, so...
+       // What we thought was a plugin is not actually a plugin...
 
-        mInfo = 0;
-        mStatus = NotFound;
+       mStatus = NotPlugin;
     }
 }
 
@@ -317,15 +288,14 @@ void Plugin::setLoad(const QString &pName, const bool &pToBeLoaded)
 
 //==============================================================================
 
-QStringList Plugin::requiredPlugins(const QString &pPluginsDir,
-                                    const QString &pName,
-                                    const int &pLevel)
+QStringList Plugin::fullDependencies(const QString &pPluginsDir,
+                                     const QString &pName, const int &pLevel)
 {
-    // Return the list of plugins required by a given plugin
+    // Return the given plugin's full dependencies
 
     QStringList res = QStringList();
 
-    // Recursively look for the plugins required by the current plugin
+    // Recursively look for the plugin's full dependencies
 
     PluginInfo *pluginInfo = Plugin::info(Plugin::fileName(pPluginsDir, pName));
 
@@ -333,20 +303,16 @@ QStringList Plugin::requiredPlugins(const QString &pPluginsDir,
         return res;
 
     foreach (const QString &plugin, pluginInfo->dependencies())
-        res << requiredPlugins(pPluginsDir, plugin, pLevel+1);
+        res << fullDependencies(pPluginsDir, plugin, pLevel+1);
 
     delete pluginInfo;
 
     // Add the current plugin to the list, but only if it is not the original
-    // plugin for which we want to know what its requirements are
+    // plugin, otherwise remove any duplicates
 
     if (pLevel)
-        // We are not dealing with the original plugin, so...
-
         res << pName;
     else
-        // We are done, so remove any duplicate which might be present
-
         res.removeDuplicates();
 
     return res;

@@ -55,8 +55,8 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
     // will be running from [OpenCOR]/build/OpenCOR[.exe] rather than
     // [OpenCOR]/build/bin/OpenCOR[.exe] as it should if we were to mimic the
     // case where OpenCOR has been deployed. Then, because the plugins are in
-    // [OpenCOR]/build/plugins/OpenCOR, we must skip the "../" bit. Yes, it's
-    // not neat, but... is there another solution?...
+    // [OpenCOR]/build/plugins/OpenCOR, we must skip the "../" bit. So, yes,
+    // it's not neat, but... is there another solution?...
 
     if (!QDir(mPluginsDir).exists())
         mPluginsDir =  QDir(pApp->applicationDirPath()).canonicalPath()
@@ -76,57 +76,95 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
     foreach (const QFileInfo &file, fileInfoList)
         fileNames << QDir::toNativeSeparators(file.canonicalFilePath());
 
-    // Unmanageable plugins (e.g. the QScintilla plugin) don't, by default, get
-    // loaded, but the situation is obviously different if such a plugin is
-    // required by another plugin (e.g. the Viewer plugin requires the Qwt
-    // plugin), in which case the unmanageable plugin must be loaded. So, we
-    // must here determine which of those plugins must be loaded...
+    // Determine which plugins, if any, are needed by others
 
-    QStringList requiredPlugins = QStringList();
-    QStringList wantedPlugins = QStringList();
+    QMap<QString, PluginInfo *> pluginsInfo = QMap<QString, PluginInfo *>();
+
+    QStringList validPlugins = QStringList();
+    QStringList neededPlugins = QStringList();
 
     foreach (const QString &fileName, fileNames) {
         PluginInfo *pluginInfo = Plugin::info(fileName);
+        // Note: if there is some plugin information, then it will get owned by
+        //       the plugin itself and it will therefore be its responsibility
+        //       to delete it (see Plugin::~Plugin())...
         QString pluginName = Plugin::name(fileName);
 
-        if (    pluginInfo && pluginInfo->isManageable()
-            && ((pGuiMode && Plugin::load(pluginName)) || !pGuiMode)) {
-            // We want the GUI mode of the plugin manager and the plugin is both
-            // manageable and to be loaded, or we don't want the GUI mode of the
-            // plugin manager but the plugin is manageable, so retrieve and keep
-            // track of its dependencies
-            // Note: in the non-GUI mode (i.e. CLI mode), if a plugin is
-            //       manageable then it is automatically loaded no matter what,
-            //       thus making sure that the CLI version of OpenCOR has access
-            //       to all the plugins. The drawback of this approach is that
-            //       non-CLI capable plugins will also be loaded, but there is
-            //       not much we can do about it. Actually, we could have a
-            //       boolean in the plugin information to tell us whether a
-            //       plugin is CLI-capable, but this is error-prone (i.e. what
-            //       happens if the developer of a CLI-capable plugin forgets to
-            //       turn it on?). So, it's better to load all the plugins and
-            //       then deal with only those that support the CLI interface...
+        pluginsInfo.insert(pluginName, pluginInfo);
 
-            requiredPlugins << Plugin::requiredPlugins(mPluginsDir,
-                                                       Plugin::name(fileName));
+        if (pluginInfo) {
+            // Keep track of the plugin's full dependencies
+
+            QStringList pluginFullDependencies = Plugin::fullDependencies(mPluginsDir, pluginName);
+
+            pluginInfo->setFullDependencies(pluginFullDependencies);
+
+            neededPlugins << pluginFullDependencies;
+
+            // Keep track of the plugin itself
+
+            validPlugins << pluginName;
+        }
+    }
+
+    neededPlugins.removeDuplicates();
+
+    // Determine which of our available plugins, if any, are manageable, i.e.
+    // not used by any other plugin
+
+    QStringList manageablePlugins = QStringList();
+
+    foreach (const QString &validPlugin, validPlugins)
+        if (!neededPlugins.contains(validPlugin)) {
+            pluginsInfo.value(validPlugin)->setManageable(true);
+
+            manageablePlugins << validPlugin;
+        }
+
+    // Determine which plugins are needed or wanted
+    // Note: unmanageable plugins (e.g. the QScintilla plugin) don't get loaded
+    //       by default, but the situation is obviously different if such a
+    //       plugin is needed by another plugin (e.g. the Viewer plugin requires
+    //       the Qwt plugin), in which case the unmanageable plugin must be
+    //       loaded...
+
+    QStringList wantedPlugins = QStringList();
+    neededPlugins = QStringList();
+
+    foreach (const QString &manageablePlugin, manageablePlugins)
+        if ((pGuiMode && Plugin::load(manageablePlugin)) || !pGuiMode) {
+            // We are in GUI mode and the user wants to load the plugin, or we
+            // are not in GUI mode, so retrieve and keep track of the plugin's
+            // dependencies
+            // Note: in non-GUI mode (i.e. CLI mode), a manageable plugin gets
+            //       automatically loaded no matter what, thus making sure that
+            //       the CLI version of OpenCOR has access to all the plugins.
+            //       The drawback with this approach is that non-CLI capable
+            //       plugins will also be loaded, but there is not much we can
+            //       do about it. Actually, we could have a boolean in the
+            //       plugin information to tell us whether a plugin is
+            //       CLI-capable, but this is error-prone (i.e. what would
+            //       happen if the developer of a CLI-capable plugin was to
+            //       forget to turn that flag on?). So, in the end, it's better
+            //       to load all the plugins and then deal with only those that
+            //       support the CLI interface...
+
+            neededPlugins << pluginsInfo.value(manageablePlugin)->fullDependencies();
 
             // Also keep track of the plugin itself
 
-            wantedPlugins << pluginName;
+            wantedPlugins << manageablePlugin;
         }
 
-        delete pluginInfo;
-    }
+    // Remove possible duplicates in our list of needed plugins
 
-    // Remove possible duplicates in our list of required plugins
+    neededPlugins.removeDuplicates();
 
-    requiredPlugins.removeDuplicates();
+    // We now have all our needed and wanted plugins with our needed plugins
+    // nicely sorted based on their dependencies with one another. So, retrieve
+    // their file name
 
-    // We now have all our required and wanted plugins with our required plugins
-    // nicely sorted based on their dependency with one another. So, now, we
-    // retrieve the file name associated with all our plugins
-
-    QStringList plugins = requiredPlugins+wantedPlugins;
+    QStringList plugins = neededPlugins+wantedPlugins;
     QStringList pluginFileNames = QStringList();
 
     foreach (const QString &plugin, plugins)
@@ -134,8 +172,8 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
 
     // If we are dealing with the GUI version of ourselves, then we want to know
     // about all the plugins, including the ones that are not to be loaded (so
-    // that we can refer to them, in the GUI, as either not wanted or not
-    // needed)
+    // that we can refer to them, in the plugins window, as either not wanted or
+    // not needed)
 
     if (pGuiMode) {
         pluginFileNames << fileNames;
@@ -145,10 +183,12 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
 
     // Deal with all the plugins we found
 
-    foreach (const QString &pluginFileName, pluginFileNames)
-        mPlugins << new Plugin(pluginFileName,
-                               plugins.contains(Plugin::name(pluginFileName)),
-                               pluginsDir(), this);
+    foreach (const QString &pluginFileName, pluginFileNames) {
+        QString pluginName = Plugin::name(pluginFileName);
+
+        mPlugins << new Plugin(pluginFileName, pluginsInfo.value(pluginName),
+                               plugins.contains(pluginName), this);
+    }
 }
 
 //==============================================================================

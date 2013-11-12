@@ -40,7 +40,7 @@ PLUGININFO_FUNC CoreEditingPluginInfo()
     descriptions.insert("en", QString::fromUtf8("the core editing plugin."));
     descriptions.insert("fr", QString::fromUtf8("l'extension d'édition de base."));
 
-    return new PluginInfo(PluginInfo::Editing, false,
+    return new PluginInfo(PluginInfo::Editing,
                           QStringList() << "Core",
                           descriptions);
 }

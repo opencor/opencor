@@ -24,11 +24,9 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "plugininfo.h"
-
-//==============================================================================
-
 #include <QObject>
+#include <QString>
+#include <QStringList>
 
 //==============================================================================
 
@@ -58,6 +56,7 @@ static const QString SettingsPlugins = "Plugins";
 //==============================================================================
 
 class Plugin;
+class PluginInfo;
 class PluginManager;
 
 //==============================================================================
@@ -73,7 +72,6 @@ class Plugin : public QObject
 public:
     enum Status {
         UndefinedStatus,
-        NotFound,
         NotWanted,
         NotNeeded,
         Loaded,
@@ -82,8 +80,8 @@ public:
         MissingOrInvalidDependencies
     };
 
-    explicit Plugin(const QString &pFileName, const bool &pLoad,
-                    const QString &pPluginsDir, PluginManager *pPluginManager);
+    explicit Plugin(const QString &pFileName, PluginInfo *pInfo,
+                    const bool &pLoad, PluginManager *pPluginManager);
     ~Plugin();
 
     QString name() const;
@@ -100,9 +98,9 @@ public:
     static bool load(const QString &pName);
     static void setLoad(const QString &pName, const bool &pToBeLoaded);
 
-    static QStringList requiredPlugins(const QString &pPluginsDir,
-                                       const QString &pName,
-                                       const int &pLevel = 0);
+    static QStringList fullDependencies(const QString &pPluginsDir,
+                                        const QString &pName,
+                                        const int &pLevel = 0);
 
 private:
     QString mName;
