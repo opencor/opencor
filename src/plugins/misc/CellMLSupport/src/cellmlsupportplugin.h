@@ -28,6 +28,7 @@ specific language governing permissions and limitations under the License.
 #include "coreinterface.h"
 #include "fileinterface.h"
 #include "i18ninterface.h"
+#include "plugininfo.h"
 
 //==============================================================================
 

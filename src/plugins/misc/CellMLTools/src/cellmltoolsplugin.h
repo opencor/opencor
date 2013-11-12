@@ -31,6 +31,7 @@ specific language governing permissions and limitations under the License.
 #include "fileinterface.h"
 #include "guiinterface.h"
 #include "i18ninterface.h"
+#include "plugininfo.h"
 
 //==============================================================================
 
