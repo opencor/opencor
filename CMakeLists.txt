@@ -153,9 +153,9 @@ SET(PLUGINS
 
     misc/Compiler
 
-    simulation/CoreSolver
+    solver/CoreSolver
 
-    misc/CellMLSupport
+    support/CellMLSupport
 
     editing/CoreCellMLEditing
 
@@ -164,8 +164,8 @@ SET(PLUGINS
     3rdparty/Qwt
 
 #---GRY--- DISABLED FOR VERSION 0.2.x...
-#    misc/QScintillaSupport
-#    misc/Viewer
+#    support/QScintillaSupport
+#    widget/Viewer
 
     3rdparty/SUNDIALS
 
@@ -183,13 +183,14 @@ SET(PLUGINS
 #    editing/RawCellMLView
 #    editing/RawView
 
-    simulation/CVODESolver
-    simulation/ForwardEulerSolver
-    simulation/FourthOrderRungeKuttaSolver
-    simulation/HeunSolver
-    simulation/IDASolver
-    simulation/KINSOLSolver
-    simulation/SecondOrderRungeKuttaSolver
+    solver/CVODESolver
+    solver/ForwardEulerSolver
+    solver/FourthOrderRungeKuttaSolver
+    solver/HeunSolver
+    solver/IDASolver
+    solver/KINSOLSolver
+    solver/SecondOrderRungeKuttaSolver
+
     simulation/SingleCellView
 )
 
