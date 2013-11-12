@@ -107,7 +107,6 @@ class LLVMPlugin : public QObject
 
         <ul>
             <li><strong>Category:</strong> plugins are grouped in different categories. These are only meant to improve user experience and therefore have no effects on the plugin itself.</li>
-            <li><strong>Manageable:</strong> specify whether a user can change the loading state of a plugin. As a rule of thumbs, if a plugin can be used by another plugin, then it probably should not be made manageable.</li>
             <li><strong>Dependencies:</strong> some plugins may depend on other plugins. OpenCOR must therefore know about them, so that it can make sure that they get loaded before the plugin itself.</li>
             <li><strong>Descriptions:</strong> a short description of the plugin in various languages.</li>
         </ul>
@@ -136,7 +135,7 @@ class LLVMPlugin : public QObject
     descriptions.insert("en", QString::fromUtf8("the core plugin."));
     descriptions.insert("fr", QString::fromUtf8("l'extension de base."));
 
-    return new PluginInfo(PluginInfo::Miscellaneous, false,
+    return new PluginInfo(PluginInfo::Miscellaneous,
                           QStringList(),
                           descriptions);
 }</pre>
