@@ -160,12 +160,12 @@ SET(PLUGINS
     editing/CoreCellMLEditing
 
 #---GRY--- DISABLED FOR VERSION 0.2.x...
-    3rdparty/QScintilla
+#    3rdparty/QScintilla
     3rdparty/Qwt
 
 #---GRY--- DISABLED FOR VERSION 0.2.x...
-    support/QScintillaSupport
-    widget/Viewer
+#    support/QScintillaSupport
+#    widget/Viewer
 
     3rdparty/SUNDIALS
 
@@ -180,8 +180,8 @@ SET(PLUGINS
 
     editing/CellMLAnnotationView
 #---GRY--- DISABLED FOR VERSION 0.2.x...
-    editing/RawCellMLView
-    editing/RawView
+#    editing/RawCellMLView
+#    editing/RawView
 
     solver/CVODESolver
     solver/ForwardEulerSolver
