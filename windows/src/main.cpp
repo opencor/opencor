@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // Main source file
 //==============================================================================
 
+#include "cliutils.h"
 #include "common.h"
 
 //==============================================================================
@@ -37,7 +38,7 @@ specific language governing permissions and limitations under the License.
 
 void error(QCoreApplication *pApp, const QString &pMsg)
 {
-    std::cout << qPrintable(Core::version(pApp)) << std::endl;
+    std::cout << qPrintable(OpenCOR::Core::version(pApp)) << std::endl;
     std::cout << std::endl;
     std::cout << "Error: " << qPrintable(pMsg) << std::endl;
 }

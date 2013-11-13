@@ -19,11 +19,12 @@ SET(SOURCES
 
     ../src/misc/cliapplication.cpp
     ../src/misc/common.cpp
-    ../src/misc/utils.cpp
 
     ../src/plugins/plugin.cpp
     ../src/plugins/plugininfo.cpp
     ../src/plugins/pluginmanager.cpp
+
+    ../src/plugins/misc/Core/src/cliutils.cpp
 )
 
 SET(HEADERS_MOC
@@ -40,6 +41,7 @@ SET(RESOURCES
 INCLUDE_DIRECTORIES(
     ../src/misc
     ../src/plugins
+    ../src/plugins/misc/Core/src
 )
 
 # Build the CLI version of OpenCOR
@@ -58,6 +60,8 @@ QT5_USE_MODULES(${PROJECT_NAME}
 )
 
 # Additional linker settings
+
+ADD_DEFINITIONS(-D${PROJECT_NAME}_MAIN)
 
 SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
     LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
