@@ -44,36 +44,12 @@ namespace Core {
 
 //==============================================================================
 
-static const QString SettingsGlobal = "Global";
-
-static const QString SettingsLocale = "Locale";
-
-static const QString SettingsActiveDirectory = "ActiveDirectory";
-
 static const QString SettingsBorderColor    = "BorderColor";
 static const QString SettingsBaseColor      = "BaseColor";
 static const QString SettingsWindowColor    = "WindowColor";
 static const QString SettingsHighlightColor = "HighlightColor";
 
 //==============================================================================
-
-QString CORE_EXPORT locale();
-
-QString CORE_EXPORT sizeAsString(const double &pSize,
-                                 const int &pPrecision = 1);
-
-qulonglong totalMemory();
-qulonglong CORE_EXPORT freeMemory();
-
-QByteArray CORE_EXPORT resourceAsByteArray(const QString &pResource);
-bool CORE_EXPORT saveResourceAs(const QString &pResource,
-                                const QString &pFilename);
-
-void CORE_EXPORT * globalInstance(const QString &pObjectName,
-                                  void *pDefaultGlobalInstance);
-
-void CORE_EXPORT setActiveDirectory(const QString &pDirName);
-QString CORE_EXPORT activeDirectory();
 
 QStringList CORE_EXPORT getOpenFileNames(const QString &pCaption,
                                          const QString &pFilter);
@@ -82,8 +58,6 @@ QString CORE_EXPORT getSaveFileName(const QString &pCaption,
                                     const QString &pFilter);
 
 void CORE_EXPORT setFocusTo(QWidget *pWidget);
-
-QString CORE_EXPORT nativeCanonicalFileName(const QString &pFileName);
 
 QFrame CORE_EXPORT * newLineWidget(const bool &pHorizontal,
                                    const QColor &pColor,
@@ -112,8 +86,6 @@ QLabel CORE_EXPORT * newLabel(const QString &pText,
 QLabel CORE_EXPORT * newLabel(const QString &pText, QWidget *pParent = 0);
 
 QString CORE_EXPORT copyright();
-
-QString CORE_EXPORT formatErrorMsg(const QString &pErrorMsg);
 
 //==============================================================================
 

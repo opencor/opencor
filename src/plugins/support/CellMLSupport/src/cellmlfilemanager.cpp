@@ -21,8 +21,8 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
+#include "cliutils.h"
 #include "filemanager.h"
-#include "guiutils.h"
 
 //==============================================================================
 

@@ -19,8 +19,8 @@ specific language governing permissions and limitations under the License.
 // Single cell view information solvers widget
 //==============================================================================
 
+#include "cliutils.h"
 #include "cellmlfileruntime.h"
-#include "guiutils.h"
 #include "singlecellviewinformationsolverswidget.h"
 #include "singlecellviewsimulation.h"
 

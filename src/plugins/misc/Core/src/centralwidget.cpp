@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "centralwidget.h"
+#include "cliutils.h"
 #include "filemanager.h"
 #include "guiutils.h"
 #include "plugin.h"

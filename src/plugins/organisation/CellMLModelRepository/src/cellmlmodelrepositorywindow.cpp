@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlmodelrepositorywindow.h"
 #include "cellmlmodelrepositorywidget.h"
+#include "cliutils.h"
 #include "guiutils.h"
 
 //==============================================================================
