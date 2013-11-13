@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // Plugins window
 //==============================================================================
 
+#include "cliutils.h"
 #include "mainwindow.h"
 #include "plugin.h"
 #include "pluginmanager.h"
@@ -119,20 +120,36 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     mGui->pluginsTreeView->setModel(mModel);
     mGui->pluginsTreeView->setItemDelegate(mPluginItemDelegate);
 
-    // Populate the data model with our different categories of plugins
-    // Note: we create all of them in one go (rather than when required), so
-    //       that they are in the order we want them to be
+    // Populate the data model with our different categories of plugins, making
+    // sure that they are in alphabetical order, no matter the locale
 
-    newPluginCategory(PluginInfo::Analysis, tr("Analysis"));
-    newPluginCategory(PluginInfo::Api, tr("API"));
-    newPluginCategory(PluginInfo::Editing, tr("Editing"));
-    newPluginCategory(PluginInfo::Miscellaneous, tr("Miscellaneous"));
-    newPluginCategory(PluginInfo::Organisation, tr("Organisation"));
-    newPluginCategory(PluginInfo::Simulation, tr("Simulation"));
-    newPluginCategory(PluginInfo::Solver, tr("Solver"));
-    newPluginCategory(PluginInfo::Support, tr("Support"));
-    newPluginCategory(PluginInfo::ThirdParty, tr("Third-party"));
-    newPluginCategory(PluginInfo::Widget, tr("Widget"));
+    QMap<QString, PluginInfo::Category> mappedCategories = QMap<QString, PluginInfo::Category>();
+
+    mappedCategories.insert(tr("Analysis"), PluginInfo::Analysis);
+    mappedCategories.insert(tr("API"), PluginInfo::Api);
+    mappedCategories.insert(tr("Editing"), PluginInfo::Editing);
+    mappedCategories.insert(tr("Miscellaneous"), PluginInfo::Miscellaneous);
+    mappedCategories.insert(tr("Organisation"), PluginInfo::Organisation);
+    mappedCategories.insert(tr("Simulation"), PluginInfo::Simulation);
+    mappedCategories.insert(tr("Solver"), PluginInfo::Solver);
+    mappedCategories.insert(tr("Support"), PluginInfo::Support);
+    mappedCategories.insert(tr("Third-party"), PluginInfo::ThirdParty);
+    mappedCategories.insert(tr("Widget"), PluginInfo::Widget);
+
+    QMap<QString, QString> diacriticCategories = QMap<QString, QString>();
+
+    foreach (const QString &diacriticCategory, mappedCategories.keys())
+        diacriticCategories.insert(Core::nonDiacriticString(diacriticCategory), diacriticCategory);
+
+    QStringList nonDiacriticCategories = diacriticCategories.keys();
+
+    nonDiacriticCategories.sort(Qt::CaseInsensitive);
+
+    foreach (const QString &nonDiacriticCategory, nonDiacriticCategories) {
+        QString diacriticCategory = diacriticCategories.value(nonDiacriticCategory);
+
+        newPluginCategory(mappedCategories.value(diacriticCategory), diacriticCategory);
+    }
 
     // Sort our different plugins by their name
     // Note: indeed, they are currently sorted based on their depedencies with

@@ -28,6 +28,7 @@ ADD_PLUGIN(Core
 
         src/borderedwidget.cpp
         src/centralwidget.cpp
+        src/cliutils.cpp
         src/collapsiblewidget.cpp
         src/commonwidget.cpp
         src/coreplugin.cpp

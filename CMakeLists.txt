@@ -52,6 +52,7 @@ SET(SOURCES
     src/plugins/pluginmanager.cpp
     src/plugins/solverinterface.cpp
 
+    src/plugins/misc/Core/src/cliutils.cpp
     src/plugins/misc/Core/src/commonwidget.cpp
 )
 
