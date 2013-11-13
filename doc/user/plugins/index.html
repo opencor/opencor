@@ -19,15 +19,15 @@
         </script>
 
         <p>
-            OpenCOR is a plugin-based application. This means that if no plugins are selected, then OpenCOR can do <a href="../userInterfaces/graphicalUserInterface.html">next to nothing</a>.
+            OpenCOR is a plugin-based application. This means that if no plugins are selected, then OpenCOR can do next to nothing (scroll down near the end of <a href="../userInterfaces/graphicalUserInterface.html">this page</a>).
         </p>
 
         <p>
-            As can be seen by opening the Plugins dialog box (<span class="opencor">either </span>by selecting the <code>Tools</code> | <code>Plugins...</code> menu<span class="opencor"> or by clicking <a href="gui://openPluginsDialogBox">here</a></span>) and by unselecting <code>Show only selectable plugins</code> (if necessary), OpenCOR supports different types of plugins (Organisation, Editing, Simulation, Miscellaneous, API and Third-party; see below):
+            As can be seen by opening the Plugins dialog box (<span class="opencor">either </span>by selecting the <code>Tools</code> | <code>Plugins...</code> menu<span class="opencor"> or by clicking <a href="gui://openPluginsDialogBox">here</a></span>) and by unselecting <code>Show only selectable plugins</code> (if necessary), OpenCOR supports different types of plugins:
         </p>
 
         <p class="center">
-            <a class="noHover" href="../res/image.html?image=../plugins/res/pics/screenshot01.png&caption=Plugins window"><img class="link" src="res/pics/screenshot01Small.png" width=360 height=344 alt="Plugins window"></a>
+            <a class="noHover" href="../res/image.html?image=../plugins/res/pics/screenshot01.png&caption=Plugins window"><img class="link" src="res/pics/screenshot01Small.png" width=360 height=362 alt="Plugins window"></a>
         </p>
 
         <p>
@@ -44,17 +44,15 @@
         </ul>
 
         <div class="section">
-            Organisation
+            API
         </div>
 
         <p>
-            Organisation plugins are used to search, open, organise, etc. your files:
+            (Non-selectable) API plugins are used to provide access to various APIs:
         </p>
 
         <ul>
-            <li><strong><a href="CellMLModelRepository.html">CellMLModelRepository</a>:</strong> a plugin to access the <a href="http://models.cellml.org/">CellML Model Repository</a>.</li>
-            <li><strong><a href="FileBrowser.html">FileBrowser</a>:</strong> a plugin to access your local files.</li>
-            <li><strong><a href="FileOrganiser.html">FileOrganiser</a>:</strong> a plugin to virtually organise your files.</li>
+            <li><strong>CellMLAPI:</strong> a plugin to access the <a href="http://cellml-api.sourceforge.net/">CellML API</a>.</li>
         </ul>
 
         <div class="section">
@@ -62,7 +60,7 @@
         </div>
 
         <p>
-            Editing plugins are used to edit part or all of your files using one of several possible views:
+            Editing plugins are used to edit your files:
         </p>
 
         <ul>
@@ -74,35 +72,8 @@
         </p>
 
         <ul>
-            <li><strong>CoreEditing:</strong> the core editing plugin.</li>
             <li><strong>CoreCellMLEditing:</strong> the core <a href="http://www.cellml.org/">CellML</a> editing plugin.</li>
-        </ul>
-
-        <div class="section">
-            Simulation
-        </div>
-
-        <p>
-            Simulation plugins are used to simulate or to help you simulate your files:
-        </p>
-
-        <ul>
-            <li><strong>CVODESolver:</strong> a plugin that uses <a href="http://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode">CVODE</a> to solve ODEs.</li>
-            <li><strong>ForwardEulerSolver:</strong> a plugin that implements the <a href="http://en.wikipedia.org/wiki/Euler_method">Forward Euler method</a> to solve ODEs.</li>
-            <li><strong>FourthOrderRungeKuttaSolver:</strong> a plugin that implements the fourth-order <a href="http://en.wikipedia.org/wiki/Runge–Kutta_methods">Runge-Kutta method</a> to solve ODEs.</li>
-            <li><strong>HeunSolver:</strong> a plugin that implements the <a href="http://en.wikipedia.org/wiki/Heun's_method">Heun method</a> to solve ODEs.</li>
-            <li><strong>IDASolver:</strong> a plugin that uses <a href="http://computation.llnl.gov/casc/sundials/description/description.html#descr_ida">IDA</a> to solve DAEs.</li>
-            <li><strong>KINSOLSolver:</strong> a plugin that uses <a href="http://computation.llnl.gov/casc/sundials/description/description.html#descr_kinsol">KINSOL</a> to solve non-linear algebraic systems.</li>
-            <li><strong>SecondOrderRungeKuttaSolver:</strong> a plugin that implements the second-order <a href="http://en.wikipedia.org/wiki/Runge–Kutta_methods">Runge-Kutta method</a> to solve ODEs.</li>
-            <li><strong><a href="SingleCellView.html">SingleCellView</a>:</strong> a plugin to run single cell simulations.</li>
-        </ul>
-
-        <p>
-            There is also a non-selectable Simulation plugin:
-        </p>
-
-        <ul>
-            <li><strong>CoreSolver:</strong> the core solver plugin.</li>
+            <li><strong>CoreEditing:</strong> the core editing plugin.</li>
         </ul>
 
         <div class="section">
@@ -123,21 +94,72 @@
         </p>
 
         <ul>
-            <li><strong>Core:</strong> the core plugin.</li>
             <li><strong>Compiler:</strong> a plugin to support code compilation.</li>
-            <li><strong>CellMLSupport:</strong> a plugin to support <a href="http://www.cellml.org/">CellML</a>.</li>
+            <li><strong>Core:</strong> the core plugin.</li>
         </ul>
 
         <div class="section">
-            API
+            Organisation
         </div>
 
         <p>
-            (Non-selectable) API plugins are used to provide access to external APIs:
+            Organisation plugins are used to organise your files:
         </p>
 
         <ul>
-            <li><strong>CellMLAPI:</strong> a plugin to access the <a href="http://cellml-api.sourceforge.net/">CellML API</a>.</li>
+            <li><strong><a href="CellMLModelRepository.html">CellMLModelRepository</a>:</strong> a plugin to access the <a href="http://models.cellml.org/">CellML Model Repository</a>.</li>
+            <li><strong><a href="FileBrowser.html">FileBrowser</a>:</strong> a plugin to access your local files.</li>
+            <li><strong><a href="FileOrganiser.html">FileOrganiser</a>:</strong> a plugin to virtually organise your files.</li>
+        </ul>
+
+        <div class="section">
+            Simulation
+        </div>
+
+        <p>
+            Simulation plugins are used to simulate your files:
+        </p>
+
+        <ul>
+            <li><strong><a href="SingleCellView.html">SingleCellView</a>:</strong> a plugin to run single cell simulations.</li>
+        </ul>
+
+        <div class="section">
+            Solver
+        </div>
+
+        <p>
+            Solver plugins are used to provide access to various solvers:
+        </p>
+
+        <ul>
+            <li><strong>CVODESolver:</strong> a plugin that uses <a href="http://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode">CVODE</a> to solve ODEs.</li>
+            <li><strong>ForwardEulerSolver:</strong> a plugin that implements the <a href="http://en.wikipedia.org/wiki/Euler_method">Forward Euler method</a> to solve ODEs.</li>
+            <li><strong>FourthOrderRungeKuttaSolver:</strong> a plugin that implements the fourth-order <a href="http://en.wikipedia.org/wiki/Runge–Kutta_methods">Runge-Kutta method</a> to solve ODEs.</li>
+            <li><strong>HeunSolver:</strong> a plugin that implements the <a href="http://en.wikipedia.org/wiki/Heun's_method">Heun method</a> to solve ODEs.</li>
+            <li><strong>IDASolver:</strong> a plugin that uses <a href="http://computation.llnl.gov/casc/sundials/description/description.html#descr_ida">IDA</a> to solve DAEs.</li>
+            <li><strong>KINSOLSolver:</strong> a plugin that uses <a href="http://computation.llnl.gov/casc/sundials/description/description.html#descr_kinsol">KINSOL</a> to solve non-linear algebraic systems.</li>
+            <li><strong>SecondOrderRungeKuttaSolver:</strong> a plugin that implements the second-order <a href="http://en.wikipedia.org/wiki/Runge–Kutta_methods">Runge-Kutta method</a> to solve ODEs.</li>
+        </ul>
+
+        <p>
+            There is also a non-selectable Solver plugin:
+        </p>
+
+        <ul>
+            <li><strong>CoreSolver:</strong> the core solver plugin.</li>
+        </ul>
+
+        <div class="section">
+            Support
+        </div>
+
+        <p>
+            (Non-selectable) support plugins are used to provide support for various third-party libraries and APIs:
+        </p>
+
+        <ul>
+            <li><strong>CellMLSupport:</strong> a plugin to support <a href="http://www.cellml.org/">CellML</a>.</li>
         </ul>
 
         <div class="section">
@@ -145,13 +167,13 @@
         </div>
 
         <p>
-            (Non-selectable) third-party plugins are used to provide access to third-party libraries:
+            (Non-selectable) third-party plugins are used to provide access to various third-party libraries:
         </p>
 
         <ul>
             <li><strong>LLVM:</strong> a plugin to access <a href="http://www.llvm.org/">LLVM</a> (as well as <a href="http://clang.llvm.org/">Clang</a>).</li>
-            <li><strong>SUNDIALS:</strong> a plugin to access <a href="http://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode">CVODE</a>, <a href="http://computation.llnl.gov/casc/sundials/description/description.html#descr_ida">IDA</a> and <a href="http://computation.llnl.gov/casc/sundials/description/description.html#descr_kinsol">KINSOL</a> from the <a href="http://computation.llnl.gov/casc/sundials/description/description.html">SUNDIALS</a> library.</li>
             <li><strong>Qwt:</strong> a plugin to access <a href="http://qwt.sourceforge.net/">Qwt</a>.</li>
+            <li><strong>SUNDIALS:</strong> a plugin to access <a href="http://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode">CVODE</a>, <a href="http://computation.llnl.gov/casc/sundials/description/description.html#descr_ida">IDA</a> and <a href="http://computation.llnl.gov/casc/sundials/description/description.html#descr_kinsol">KINSOL</a> from the <a href="http://computation.llnl.gov/casc/sundials/description/description.html">SUNDIALS</a> library.</li>
         </ul>
 
         <script type="text/javascript">
