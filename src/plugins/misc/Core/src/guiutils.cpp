@@ -303,15 +303,6 @@ QLabel * newLabel(const QString &pText, QWidget *pParent)
 
 //==============================================================================
 
-QString copyright()
-{
-    // Return a generic copyright
-
-    return QObject::tr("Copyright")+" 2011-"+QString::number(QDate::currentDate().year());
-}
-
-//==============================================================================
-
 }   // namespace Core
 }   // namespace OpenCOR
 

@@ -20,8 +20,8 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cliapplication.h"
+#include "cliutils.h"
 #include "common.h"
-#include "utils.h"
 
 //==============================================================================
 
@@ -40,7 +40,7 @@ namespace OpenCOR {
 
 void error(QCoreApplication *pApp, const QString &pMsg)
 {
-    std::cout << qPrintable(getAppVersion(pApp)) << std::endl;
+    std::cout << qPrintable(Core::version(pApp)) << std::endl;
     std::cout << std::endl;
     std::cout << "Error: " << qPrintable(pMsg) << std::endl;
 }

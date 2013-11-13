@@ -21,8 +21,8 @@ specific language governing permissions and limitations under the License.
 
 #include "cliapplication.h"
 #include "cliinterface.h"
+#include "cliutils.h"
 #include "pluginmanager.h"
-#include "utils.h"
 
 //==============================================================================
 
@@ -77,7 +77,7 @@ void CliApplication::usage()
 
 void CliApplication::version()
 {
-    std::cout << qPrintable(getAppVersion(mApp)) << std::endl;
+    std::cout << qPrintable(Core::version(mApp)) << std::endl;
 }
 
 //==============================================================================
@@ -86,8 +86,8 @@ void CliApplication::about()
 {
     version();
 
-    std::cout << qPrintable(getOsName()) << std::endl;
-    std::cout << qPrintable(getAppCopyright(false)) << std::endl;
+    std::cout << qPrintable(Core::osName()) << std::endl;
+    std::cout << qPrintable(Core::copyright()) << std::endl;
     std::cout << std::endl;
     std::cout << qPrintable(mApp->applicationName())
               << " is a cross-platform CellML-based modelling environment"

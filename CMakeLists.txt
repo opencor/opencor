@@ -42,7 +42,6 @@ SET(SOURCES
 
     src/misc/cliapplication.cpp
     src/misc/common.cpp
-    src/misc/utils.cpp
 
     src/plugins/fileinterface.cpp
     src/plugins/guiinterface.cpp

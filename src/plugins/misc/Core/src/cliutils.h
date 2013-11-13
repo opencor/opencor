@@ -33,6 +33,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+class QCoreApplication;
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace Core {
 
@@ -46,9 +50,15 @@ static const QString SettingsActiveDirectory = "ActiveDirectory";
 
 //==============================================================================
 
+QString CORE_EXPORT osName();
+
+QString CORE_EXPORT version(QCoreApplication *pApp);
+
+QString CORE_EXPORT copyright();
+
 QString CORE_EXPORT locale();
 
-qulonglong totalMemory();
+qulonglong CORE_EXPORT totalMemory();
 qulonglong CORE_EXPORT freeMemory();
 
 QString CORE_EXPORT sizeAsString(const double &pSize,

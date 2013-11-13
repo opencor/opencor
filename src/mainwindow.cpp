@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "centralwidget.h"
+#include "cliutils.h"
 #include "common.h"
 #include "dockwidget.h"
 #include "fileinterface.h"
@@ -29,7 +30,6 @@ specific language governing permissions and limitations under the License.
 #include "pluginswindow.h"
 #include "preferenceswindow.h"
 #include "solverinterface.h"
-#include "utils.h"
 
 //==============================================================================
 
@@ -1289,9 +1289,9 @@ void MainWindow::on_actionAbout_triggered()
     // Display some information about OpenCOR
 
     QMessageBox::about(this, tr("About"),
-                        "<h1 align=center><strong>"+getAppVersion(qApp)+"</strong></h1>"
-                       +"<h3 align=center><em>"+getOsName()+"</em></h3>"
-                       +"<p align=center><em>"+getAppCopyright(true)+"</em></p>"
+                        "<h1 align=center><strong>"+Core::version(qApp)+"</strong></h1>"
+                       +"<h3 align=center><em>"+Core::osName()+"</em></h3>"
+                       +"<p align=center><em>"+Core::copyright()+"</em></p>"
                        +"<a href=\""+QString(OpencorHomePageUrl)+"\"><strong>"+qApp->applicationName()+"</strong></a> "+tr("is a cross-platform modelling environment, which can be used to organise, edit, simulate and analyse <a href=\"http://www.cellml.org/\">CellML</a> files."));
 }
 
