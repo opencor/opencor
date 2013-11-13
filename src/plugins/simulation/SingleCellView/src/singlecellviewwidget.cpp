@@ -21,7 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfilemanager.h"
 #include "cellmlfileruntime.h"
-#include "coreutils.h"
+#include "guiutils.h"
 #include "progressbarwidget.h"
 #include "propertyeditorwidget.h"
 #include "singlecellviewcontentswidget.h"

@@ -21,7 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlannotationviewmetadatanormalviewdetailswidget.h"
 #include "cellmlannotationviewwidget.h"
-#include "coreutils.h"
+#include "guiutils.h"
 
 //==============================================================================
 

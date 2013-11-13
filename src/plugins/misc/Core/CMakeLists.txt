@@ -32,10 +32,10 @@ ADD_PLUGIN(Core
         src/collapsiblewidget.cpp
         src/commonwidget.cpp
         src/coreplugin.cpp
-        src/coreutils.cpp
         src/dockwidget.cpp
         src/file.cpp
         src/filemanager.cpp
+        src/guiutils.cpp
         src/organisationwidget.cpp
         src/progressbarwidget.cpp
         src/propertyeditorwidget.cpp

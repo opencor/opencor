@@ -21,8 +21,8 @@ specific language governing permissions and limitations under the License.
 
 #include "centralwidget.h"
 #include "coreplugin.h"
-#include "coreutils.h"
 #include "fileinterface.h"
+#include "guiutils.h"
 #include "organisationwidget.h"
 #include "plugin.h"
 

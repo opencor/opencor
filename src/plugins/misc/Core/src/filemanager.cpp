@@ -19,8 +19,8 @@ specific language governing permissions and limitations under the License.
 // File manager
 //==============================================================================
 
-#include "coreutils.h"
 #include "filemanager.h"
+#include "guiutils.h"
 
 //==============================================================================
 

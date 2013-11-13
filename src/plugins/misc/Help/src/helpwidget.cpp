@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 // Help widget
 //==============================================================================
 
-#include "coreutils.h"
+#include "guiutils.h"
 #include "helpwidget.h"
 
 //==============================================================================
