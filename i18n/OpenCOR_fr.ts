@@ -284,7 +284,7 @@
         <translation>Extensions pour éditer des fichiers.</translation>
     </message>
     <message>
-        <source>Plugins for various purposes.</source>
+        <source>Plugins for various things.</source>
         <translation>Extensions pour différentes choses.</translation>
     </message>
     <message>
