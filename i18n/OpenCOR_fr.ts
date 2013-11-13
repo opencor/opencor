@@ -242,34 +242,6 @@
         <translation>l&apos;extension n&apos;a pas pu être installée à cause de l&apos;extension %1 étant manquante ou invalide.</translation>
     </message>
     <message>
-        <source>Organisation plugins are used to organise your files.</source>
-        <translation>les extensions Organisation sont utilisées pour organiser vos fichiers.</translation>
-    </message>
-    <message>
-        <source>Editing plugins are used to edit your files.</source>
-        <translation>les extensions Edition sont utilisées pour éditer vos fichiers.</translation>
-    </message>
-    <message>
-        <source>Simulation plugins are used to simulate your files.</source>
-        <translation>les extensions Simulation sont utilisées pour simuler vos fichiers.</translation>
-    </message>
-    <message>
-        <source>Analysis plugins are used to analyse your files.</source>
-        <translation>les extensions Analyse sont utilisées pour analyser vos fichiers.</translation>
-    </message>
-    <message>
-        <source>Miscellaneous plugins are used for various purposes.</source>
-        <translation>les extensions Divers sont utilisées pour différentes choses.</translation>
-    </message>
-    <message>
-        <source>API plugins are used to provide access to various APIs.</source>
-        <translation>les extensions API sont utilisées pour donner accès à différentes APIs.</translation>
-    </message>
-    <message>
-        <source>Third-party plugins are used to provide access to various third-party libraries.</source>
-        <translation>les extensions Externe sont utilisées pour donner accès à différentes librairies externes.</translation>
-    </message>
-    <message>
         <source>this is not a plugin.</source>
         <translation>ce n&apos;est pas une extension.</translation>
     </message>
@@ -300,16 +272,44 @@
         <translation>Gadget</translation>
     </message>
     <message>
-        <source>Solver plugins are used to provide access to various solvers.</source>
-        <translation>les extensions Solveur sont utilisées pour donner accès à différents solveurs.</translation>
+        <source>Plugins to analyse files.</source>
+        <translation>Extensions pour analyser des fichiers.</translation>
     </message>
     <message>
-        <source>Support plugins are used to provide support for various third-party libraries and APIs.</source>
-        <translation>les extensions Support sont utilisées pour supporter différentes librairies externes et APIs.</translation>
+        <source>Plugins to access various APIs.</source>
+        <translation>Extensions pour accéder différentes APIs.</translation>
     </message>
     <message>
-        <source>Widget plugins are used to provide access to various ad hoc widgets.</source>
-        <translation>les extensions Gadget sont utilisées pour donner accès à différents gadgets ad hoc.</translation>
+        <source>Plugins to edit files.</source>
+        <translation>Extensions pour éditer des fichiers.</translation>
+    </message>
+    <message>
+        <source>Plugins for various purposes.</source>
+        <translation>Extensions pour différentes choses.</translation>
+    </message>
+    <message>
+        <source>Plugins to organise files.</source>
+        <translation>Extensions pour organiser des fichiers.</translation>
+    </message>
+    <message>
+        <source>Plugins to simulate files.</source>
+        <translation>Extensions pour simuler des fichiers.</translation>
+    </message>
+    <message>
+        <source>Plugins to access various solvers.</source>
+        <translation>Extensions pour accéder différents solveurs.</translation>
+    </message>
+    <message>
+        <source>Plugins to support various third-party libraries and APIs.</source>
+        <translation>Extensions pour supporter différentes librairies externes et APIs.</translation>
+    </message>
+    <message>
+        <source>Plugins to access various third-party libraries.</source>
+        <translation>Extensions pour donner accéder différentes librairies externes.</translation>
+    </message>
+    <message>
+        <source>Plugins to access various ad hoc widgets.</source>
+        <translation>Extensions pour accéder différents gadgets ad hoc.</translation>
     </message>
 </context>
 <context>

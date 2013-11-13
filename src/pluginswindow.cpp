@@ -445,25 +445,25 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
         mGui->fieldTwoLabel->setText(tr("Description:"));
 
         if (!itemText.compare(tr("Analysis")))
-            mGui->fieldTwoValue->setText(tr("Analysis plugins are used to analyse your files."));
+            mGui->fieldTwoValue->setText(tr("Plugins to analyse files."));
         else if (!itemText.compare(tr("API")))
-            mGui->fieldTwoValue->setText(tr("API plugins are used to provide access to various APIs."));
+            mGui->fieldTwoValue->setText(tr("Plugins to access various APIs."));
         else if (!itemText.compare(tr("Editing")))
-            mGui->fieldTwoValue->setText(tr("Editing plugins are used to edit your files."));
+            mGui->fieldTwoValue->setText(tr("Plugins to edit files."));
         else if (!itemText.compare(tr("Miscellaneous")))
-            mGui->fieldTwoValue->setText(tr("Miscellaneous plugins are used for various purposes."));
+            mGui->fieldTwoValue->setText(tr("Plugins for various purposes."));
         else if (!itemText.compare(tr("Organisation")))
-            mGui->fieldTwoValue->setText(tr("Organisation plugins are used to organise your files."));
+            mGui->fieldTwoValue->setText(tr("Plugins to organise files."));
         else if (!itemText.compare(tr("Simulation")))
-            mGui->fieldTwoValue->setText(tr("Simulation plugins are used to simulate your files."));
+            mGui->fieldTwoValue->setText(tr("Plugins to simulate files."));
         else if (!itemText.compare(tr("Solver")))
-            mGui->fieldTwoValue->setText(tr("Solver plugins are used to provide access to various solvers."));
+            mGui->fieldTwoValue->setText(tr("Plugins to access various solvers."));
         else if (!itemText.compare(tr("Support")))
-            mGui->fieldTwoValue->setText(tr("Support plugins are used to provide support for various third-party libraries and APIs."));
+            mGui->fieldTwoValue->setText(tr("Plugins to support various third-party libraries and APIs."));
         else if (!itemText.compare(tr("Third-party")))
-            mGui->fieldTwoValue->setText(tr("Third-party plugins are used to provide access to various third-party libraries."));
+            mGui->fieldTwoValue->setText(tr("Plugins to access various third-party libraries."));
         else if (!itemText.compare(tr("Widget")))
-            mGui->fieldTwoValue->setText(tr("Widget plugins are used to provide access to various ad hoc widgets."));
+            mGui->fieldTwoValue->setText(tr("Plugins to access various ad hoc widgets."));
     }
 
     // Show/hide the different fields
