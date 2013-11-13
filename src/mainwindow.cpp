@@ -21,7 +21,6 @@ specific language governing permissions and limitations under the License.
 
 #include "centralwidget.h"
 #include "cliutils.h"
-#include "common.h"
 #include "dockwidget.h"
 #include "fileinterface.h"
 #include "i18ninterface.h"

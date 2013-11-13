@@ -16,16 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Some common methods between the CLI and GUI version of OpenCOR
+// Some common methods between the CLI and GUI versions of OpenCOR
 //==============================================================================
 
 #include "cliapplication.h"
-#include "cliutils.h"
 #include "common.h"
-
-//==============================================================================
-
-#include <iostream>
 
 //==============================================================================
 
@@ -35,15 +30,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
-void error(QCoreApplication *pApp, const QString &pMsg)
-{
-    std::cout << qPrintable(Core::version(pApp)) << std::endl;
-    std::cout << std::endl;
-    std::cout << "Error: " << qPrintable(pMsg) << std::endl;
-}
 
 //==============================================================================
 

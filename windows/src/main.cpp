@@ -35,6 +35,15 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+void error(QCoreApplication *pApp, const QString &pMsg)
+{
+    std::cout << qPrintable(Core::version(pApp)) << std::endl;
+    std::cout << std::endl;
+    std::cout << "Error: " << qPrintable(pMsg) << std::endl;
+}
+
+//==============================================================================
+
 int main(int pArgC, char *pArgV[])
 {
     // Create the application
@@ -59,7 +68,7 @@ int main(int pArgC, char *pArgV[])
             // This is a safeguard from accidentally running a non-renamed (to
             // '.com') CLI version of OpenCOR
 
-            OpenCOR::error(app, "the CLI version of "+app->applicationName()+" has the wrong extension ('.exe' instead of '.com').");
+            error(app, "the CLI version of "+app->applicationName()+" has the wrong extension ('.exe' instead of '.com').");
 
             res = -1;
         } else {
@@ -68,7 +77,7 @@ int main(int pArgC, char *pArgV[])
             if (!QFileInfo(guiAppFilePath).exists()) {
                 // We can't find the GUI version of OpenCOR, so...
 
-                OpenCOR::error(app, "the GUI version of "+app->applicationName()+" cannot be found.");
+                error(app, "the GUI version of "+app->applicationName()+" cannot be found.");
 
                 res = -1;
             } else {
