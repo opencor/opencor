@@ -90,7 +90,7 @@ void CliApplication::about()
     std::cout << qPrintable(Core::copyright()) << std::endl;
     std::cout << std::endl;
     std::cout << qPrintable(mApp->applicationName())
-              << " is a cross-platform CellML-based modelling environment"
+              << " is a cross-platform CellML-based modelling environment,"
               << " which can be" << std::endl;
     std::cout << "used to organise, edit, simulate and analyse CellML files."
               << std::endl;
