@@ -21,7 +21,7 @@
         </script>
 
         <p>
-            This page contains various rules which anyone working on OpenCOR should (try to) respect. These rules were taken (paraphrased, if not simply copied/pasted) from the <a href="http://qt.gitorious.org/qt-creator/qt-creator/blobs/master/doc/api/coding-style.qdoc">coding style document</a> written by the developers of <a href="http://qt-project.org/wiki/Category:Tools::QtCreator">Qt Creator</a>.
+            This page contains various rules, which anyone working on OpenCOR should (try to) respect. These rules were taken (paraphrased, if not simply copied/pasted) from the <a href="http://qt.gitorious.org/qt-creator/qt-creator/blobs/master/doc/api/coding-style.qdoc">coding style document</a> written by the developers of <a href="http://qt-project.org/wiki/Category:Tools::QtCreator">Qt Creator</a>.
         </p>
 
         <div class="section">
@@ -29,9 +29,9 @@
         </div>
 
         <ul>
-            <li>The most important rule of all: the <a href="http://en.wikipedia.org/wiki/KISS_principle">KISS principle</a>, i.e.  <em>keep it simple, stupid!</em> Always use a simple implementation in favour of a more complicated one. This eases maintenance a lot!
-            <li>Write good C++ code: readable, well commented when necessary, and taking advantage of the object-oriented model.</li>
-            <li>Adapt the code to the structures already existing in OpenCOR, or in the case that you have better ideas, discuss them with the <a href="../../user/team.html">lead developer</a> before implementing them.</li>
+            <li>The most important rule of all: the <a href="http://en.wikipedia.org/wiki/KISS_principle">KISS principle</a>, i.e. <em>Keep it simple, stupid!</em> Always use a simple implementation in favour of a more complicated one. This eases maintenance a lot!
+            <li>Write good C++ code: readable, well commented when necessary, and object-oriented.</li>
+            <li>Adapt the code to the structures already existing in OpenCOR or, in the case that you have better ideas, discuss them with the <a href="../../user/team.html">lead developer</a> before implementing them.</li>
             <li>Take advantage of <a href="http://qt-project.org/">Qt</a>. Do not re-invent the wheel.
         </ul>
 
@@ -55,9 +55,7 @@ j--;</pre>
             </li>
             <li>
                 Try to minimise evaluation of the same code over and over. This is aimed especially at loops:
-                <pre class="good prettyprint">Container::iterator end = large.end();
-
-for (Container::iterator iter = large.begin(); iter != end; ++iter) {
+                <pre class="good prettyprint">for (Container::iterator iter = large.begin(), end = large.end(); iter != end; ++iter) {
     ...
 }</pre>
                 <pre class="bad prettyprint">for (Container::iterator iter = large.begin(); iter != large.end(); ++iter) {
@@ -68,9 +66,7 @@ for (Container::iterator iter = large.begin(); iter != end; ++iter) {
                 You can use the Qt <code>foreach</code> loop in non-time-critical code with a Qt container. It is a nice way to keep line noise down and to give the loop variable a proper name:
                 <pre class="good prettyprint">foreach (QWidget *widget, container)
     doSomething(widget);</pre>
-                <pre class="bad prettyprint">Container::iterator end = container.end();
-
-for (Container::iterator iter = container.begin(); iter != end; ++iter)
+                <pre class="bad prettyprint">for (Container::iterator iter = container.begin(), end = container.end(); iter != end; ++iter)
     doSomething(*iter);</pre>
                 Make the loop variable <code>const</code>, if possible. This might prevent unnecessary detaching of shared data.
                 <pre class="good prettyprint">foreach (const QString &amp;name, someListOfNames)
@@ -104,24 +100,24 @@ char *c, *d;</pre>
                         <pre class="good prettyprint">class MainWindow : public QMainWindow
 {
     ...
-    int mMyVariable;
+    int mVariable;
     ...
-    void myFunction();
+    void function();
     ...
 }</pre>
                         <pre class="bad prettyprint">class mainWindow : public QMainWindow
 {
     ...
-    int Myvariable;
+    int Variable;
     ...
-    void My_function();
+    void Function();
     ...
 }</pre>
                         <strong>Note:</strong> class variables start with a lower-case <code>m</code>.
                     </li>
                     <li>
                         Parameters passed to a function start with a lower-case <code>p</code>, but not local variables.
-                        <pre class="good prettyprint">int main(int pArgc, char *pArgv[])
+                        <pre class="good prettyprint">int main(int pArgC, char *pArgV[])
 {
     int someVariable;
     ...
@@ -139,42 +135,34 @@ char *c, *d;</pre>
                 <ul>
                     <li>Use this order for the access sections of your class: <code>public</code>, <code>protected</code> and <code>private</code>. The <code>public</code> section is interesting for every user of the class. The <code>private</code> section is only of interest for the implementors of the class (you).</li>
                     <li>Avoid declaring global objects in the declaration file of the class. If the same variable is used for all objects, use a <code>static</code> member.</li>
+                    <li>Avoid declaring global or static variables.</li>
                     <li>
-                        <strong>Declaring Variables:</strong>
-                        <ul>
-                            <li>Avoid global or static variables.</li>
-                            <li>Avoid short names (such as <code>a</code>, <code>rbarr</code>, <code>nughdeget</code>) whenever possible. Use single-character variable names only for counters and temporaries where the purpose of the variable is obvious.</li>
-                            <li>
-                                Use only one declaration per line:
-                                <pre class="good prettyprint">int a;
-int b;</pre>
-                                <pre class="bad prettyprint">int a, b;</pre>
-                                This is especially important when initialisation is done at the same time:
-                                <pre class="good prettyprint">QString a = "Joe";
-QString b = "Foo";</pre>
-                                <pre class="bad prettyprint">QString a = "Joe", b = "Foo";</pre>
-                                <strong>Note:</strong> <code>QString a = "Joe";</code> is formally calling a copy constructor on a temporary string constructed from a string literal and therefore has the potential of being more expensive than direct construction by <code>QString a("joe")</code>. However, the compiler is allowed to elide the copy (even if it had side effects), and modern compilers typically do so. Given these equal costs, OpenCOR code favours the <code>=</code> idiom as it is in line with the traditional C-style initialisation, <em>and</em> cannot be mistaken as a function declaration, <em>and</em> reduces the level of nested parantheses in more initialisations.
-                            </li>
-                            <li>Wait with declaring a variable until it is needed. This is especially important when initialization is done at the same time.</li>
-                        </ul>
+                        Use only one declaration per line:
+                        <pre class="good prettyprint">int width;
+int height;</pre>
+                        <pre class="bad prettyprint">int width, height;</pre>
+                        This is especially important when initialisation is done at the same time:
+                        <pre class="good prettyprint">QString firstName = "Joe";
+QString lastName = "Foo";</pre>
+                        <pre class="bad prettyprint">QString firstName = "Joe", lastName = "Foo";</pre>
+                        <strong>Note:</strong> <code>QString firstName = "Joe";</code> is formally calling a copy constructor on a temporary string constructed from a string literal and therefore has the potential of being more expensive than direct construction by <code>QString firstName("joe")</code>. However, the compiler is allowed to elide the copy (even if it has side effects), and modern compilers typically do so. Given these equal costs, OpenCOR code favours the <code>=</code> idiom as it is in line with the traditional C-style initialisation, <em>and</em> cannot be mistaken as a function declaration, <em>and</em> reduces the level of nested parantheses in more initialisations.
                     </li>
                 </ul>
             </li>
             <li>
                 Pointers and references:
-                <pre class="good prettyprint">char *p = "flop";
-char &amp;c = *p;</pre>
-                    <pre class="bad prettyprint">char* p = "flop";
-char &amp; c = * p;</pre>
+                <pre class="good prettyprint">char *ptr = "flop";
+char &amp;c = *ptr;</pre>
+                    <pre class="bad prettyprint">char* ptr = "flop";
+char &amp; c = * ptr;</pre>
                 Also, we will have:
-                <pre class="good prettyprint">const char *p;</pre>
-                <pre class="bad prettyprint">char const * p;</pre>
+                <pre class="good prettyprint">const char *ptr;</pre>
+                <pre class="bad prettyprint">char const * ptr;</pre>
                 Using a plain <code>0</code> for <code>NULL</code> pointer constants is always correct and least effort to type. So:
-                <pre class="good prettyprint">void *p = 0;</pre>
-                <pre class="bad prettyprint">void *p = NULL;
-void *p = '\0';
-void *p = 42-7*6;</pre>
-                <strong>Note:</strong> as an exception, imported third-party code can use <code>NULL</code>.
+                <pre class="good prettyprint">void *ptr = 0;</pre>
+                <pre class="bad prettyprint">void *ptr = NULL;
+void *ptr = '\0';
+void *ptr = 42-7*6;</pre>
             </li>
             <li>
                 <strong>Whitespace:</strong>
@@ -200,17 +188,10 @@ void *p = 42-7*6;</pre>
                     </li>
                     <li>
                         For pointers or references, always use a single space before <code>*</code> or <code>&amp;</code>, but never after.
-                        <pre class="good prettyprint">int *a;
-int &amp;b;</pre>
-                        <pre class="bad prettyprint">int* a;
-int&amp; b;</pre>
-                    </li>
-                    <li>
-                        Avoid C-style casts when possible:
-                        <pre class="good prettyprint">char *blockOfMemory = (char *) malloc(data.size());
-char *blockOfMemory = reinterpret_cast&lt;char *&gt;(malloc(data.size()));</pre>
-                        <pre class="bad prettyprint">char* blockOfMemory = (char* ) malloc(data.size());</pre>
-                        Of course, in this particular case, using <code>new</code> might be an even better option.
+                        <pre class="good prettyprint">int *var1;
+int &amp;var2;</pre>
+                        <pre class="bad prettyprint">int* var1;
+int&amp; var2;</pre>
                     </li>
                 </ul>
             </li>
@@ -225,12 +206,10 @@ char *blockOfMemory = reinterpret_cast&lt;char *&gt;(malloc(data.size()));</pre>
 {
 }</pre>
                         <strong>Exception:</strong> function implementations and class declarations always have the left curly brace in the beginning of a line:
-                        <pre class="good prettyprint">static void foo(int g)
+                        <pre class="good prettyprint">static void foo()
 {
-    qDebug("foo: %i", g);
 }</pre>
-                        <pre class="bad prettyprint">static void foo(int g) {
-    qDebug("foo: %i", g);
+                        <pre class="bad prettyprint">static void foo() {
 }</pre>
                         <pre class="good prettyprint">class Moo
 {
@@ -246,9 +225,9 @@ char *blockOfMemory = reinterpret_cast&lt;char *&gt;(malloc(data.size()));</pre>
     return false;
 }</pre>
                         <pre class="good prettyprint">for (int i = 0; i &lt; 10; ++i)
-    qDebug("%i", i);</pre>
+    qDebug("%d", i);</pre>
                         <pre class="bad prettyprint">for (int i = 0; i &lt; 10; ++i) {
-    qDebug("%i", i);
+    qDebug("%d", i);
 }</pre>
                         <strong>Exception #1:</strong> use braces also if the parent statement covers several lines or if it wraps:
                         <pre class="good prettyprint">if (   address.isEmpty()
@@ -273,31 +252,31 @@ else {
     qDebug("%s", qPrintable(address));
     ++it;
 }</pre>
-                        <pre class="good prettyprint">if (a) {
-    if (b)
+                        <pre class="good prettyprint">if (cond1) {
+    if (cond2)
         ...
     else
         ...
 }</pre>
-                        <pre class="bad prettyprint">if (a)
-    if (b)
+                        <pre class="bad prettyprint">if (cond1)
+    if (cond2)
         ...
     else
         ...</pre>
                     </li>
                     <li>
                         Use curly braces when the body of a conditional statement is empty:
-                        <pre class="good prettyprint">while (a) {}</pre>
-                        <pre class="bad prettyprint">while (a);</pre>
+                        <pre class="good prettyprint">while (cond) {}</pre>
+                        <pre class="bad prettyprint">while (cond);</pre>
                     </li>
                 </ul>
             </li>
             <li>
                 Parentheses: use parentheses to group expressions:
-                <pre class="good prettyprint">if ((a &amp;&amp; b) || c)</pre>
-                <pre class="bad prettyprint">if (a &amp;&amp; b || c)</pre>
-                <pre class="good prettyprint">(a+b) &amp; c</pre>
-                <pre class="bad prettyprint">a+b &amp; c</pre>
+                <pre class="good prettyprint">if ((cond1 &amp;&amp; cond2) || cond3)</pre>
+                <pre class="bad prettyprint">if (cond1 &amp;&amp; cond2 || cond3)</pre>
+                <pre class="good prettyprint">(var1+var2) &amp; var3</pre>
+                <pre class="bad prettyprint">var1+var2 &amp; var3</pre>
             </li>
             <li>
                 Line Breaks:
@@ -311,7 +290,7 @@ else {
                     <li>Insert line breaks if necessary.</li>
                     <li>Commas go at the end of a broken line.</li>
                     <li>
-                        Operators start at the beginning of the new line.
+                        Operators start at the beginning of a new line.
                         <pre class="good prettyprint">if (   longExpression
     || otherLongExpression
     || otherOtherLongExpression) {
@@ -330,26 +309,12 @@ else {
         </div>
 
         <ul>
+            <li>Do not use exceptions, unless you know what you are doing.</li>
+            <li>Do not use RTTI (Run-Time Type Information, i.e. the <code>typeinfo struct</code>, the <code>dynamic_cast</code> or the <code>typeid</code> operators, including throwing exceptions), unless you know what you are doing.</li>
+            <li>Use templates wisely, not just because you can.</li>
             <li>
-                <strong>C++ features:</strong>
-                <ul>
-                    <li>Do not use exceptions, unless you know what you are doing.</li>
-                    <li>Do not use RTTI (Run-Time Type Information, i.e. the <code>typeinfo struct</code>, the <code>dynamic_cast</code> or the <code>typeid</code> operators, including throwing exceptions), unless you know what you are doing.</li>
-                    <li>Use templates wisely, not just because you can.</li>
-                    <li>
-                        All code is ASCII only (7-bit characters only, run <code>man ascii</code> if unsure). For strings, use <code>\\nnn</code> (where <code>nnn</code> is the octal representation of whatever locale you want your string in) or <code>\xnn</code> (where <code>nn</code> is the hexadecimal representation):
-                        <pre class="prettyprint">QString s = QString::fromUtf8("\\213\\005");</pre>
-                    </li>
-                    <li>Use static keywords instead of anonymous namespaces whenever possible. A name localised to the compilation unit with static is guaranteed to have internal linkage. For names declared in anonymous namespaces, the C++ standard unfortunately mandates external linkage (ISO/IEC 14882, 7.1.1/6, or see various discussions about this on the gcc mailing lists).</li>
-                </ul>
-            </li>
-            <li>
-                <strong>Using <code>QObject</code>:</strong>
-                <ul>
-                    <li>Every <code>QObject</code> subclass must have a <code>Q_OBJECT</code> macro, even if it does not have signals or slots, if it is intended to be used with <code>qobject_cast&lt;&gt;</code>.</li>
-                </ul>
-            </li>
-            <li>File headers: if you create a new file, the top of the file should include a header comment equal to the one found in other source files of OpenCOR.</li>
+            <li>Every <code>QObject</code> subclass must have a <code>Q_OBJECT</code> macro, even if it does not have signals or slots, if it is intended to be used with <code>qobject_cast&lt;&gt;</code>.</li>
+            <li>If you create a new set of <code>.cpp</code>/<code>.h</code> files, then top of those files should include a comment common to both files.</li>
             <li>
                 <strong>Including headers:</strong>
                 <ul>
@@ -363,7 +328,7 @@ else {
 #include &lt;QMessageBox&gt;</pre>
                     </li>
                     <li>
-                        Arrange includes in an order that goes from specific to generic to ensure that the headers are self-contained. For example:
+                        Arrange includes in an order that goes from specific (to OpenCOR) to generic to ensure that the headers are self-contained. For example:
                         <pre class="prettyprint">#include "common.h"
 #include "utils.h"
 
@@ -389,7 +354,7 @@ else {
             <li>
                 <strong>Casting:</strong>
                 <ul>
-                    <li>Avoid C casts, prefer C++ casts (<code>static_cast</code>, <code>const_cast</code>, <code>reinterpret_cast</code>) Both <code>reinterpret_cast</code> and C-style casts are dangerous, but at least <code>reinterpret_cast</code> will not remove the const modifier.</li>
+                    <li>Avoid C casts, prefer C++ casts (<code>static_cast</code>, <code>const_cast</code>, <code>reinterpret_cast</code>). Both <code>reinterpret_cast</code> and C-style casts are dangerous, but at least <code>reinterpret_cast</code> will not remove the const modifier.</li>
                     <li>Do not use <code>dynamic_cast</code>, use <code>qobject_cast</code> for <code>QObject</code>, or refactor your design, for example by introducing a <code>type()</code> method (see <code>QListWidgetItem</code>), unless you know what you are doing.</li>
                 </ul>
             </li>
@@ -398,9 +363,9 @@ else {
                 <ul>
                     <li>
                         Be extremely careful when using the question mark operator. If the returned types are not identical, some compilers generate code that crashes at runtime (you will not even get a compiler warning):
-                        <pre class="prettyprint">QString s;
+                        <pre class="prettyprint">QString str;
 
-return condition?s:"nothing";   // Crash at runtime - QString <em>vs</em> const char *</pre>
+return condition?str:"nothing";   // Crash at runtime - QString <em>vs</em> const char *</pre>
                     </li>
                     <li>
                         Be extremely careful about alignment. Whenever a pointer is cast such that the required alignment of the target is increased, the resulting code might crash at runtime on some architectures. For example, if a <code>const char *</code> is cast to a <code>const int *</code>, it will crash on machines where integers have to be aligned at two-byte or four-byte boundaries. Use a union to force the compiler to align variables correctly. In the example below, you can be sure that all instances of <code>AlignHelper</code> are aligned at integer-boundaries:
@@ -461,8 +426,8 @@ if (c >= 0) {
                     <li>Avoid 64-bit enum values. The AAPCS (Procedure Call Standard for the ARM Architecture) embedded ABI hard codes all enum values to a 32-bit integer.</li>
                     <li>
                         Do not mix <code>const</code> and non-<code>const</code> iterators. This will silently crash on broken compilers.
-                        <pre class="good prettyprint">for (Container::const_iterator it = c.constBegin(); it != c.constEnd(); ++it)</pre>
-                        <pre class="bad prettyprint">for (Container::const_iterator it = c.begin(); it != c.end(); ++it)</pre>
+                        <pre class="good prettyprint">for (Container::const_iterator iter = c.constBegin(), end = c.constEnd(); iter != end; ++iter)</pre>
+                        <pre class="bad prettyprint">for (Container::const_iterator iter = c.begin(), Container::iterator end = c.end(); iter != end; ++iter)</pre>
                     </li>
                 </ul>
             </li>
@@ -472,12 +437,12 @@ if (c >= 0) {
                     <li>The destructors are not virtual, which can lead to memory leaks.</li>
                     <li>The symbols are not exported (and mostly inline), which can lead to symbol clashes.</li>
                 </ul>
-                For example, library <code>A</code> has class <code>Q_EXPORT X: public QList&lt;QVariant&gt; {};</code> and library <code>B</code> has class <code>Q_EXPORT Y: public QList&lt;QVariant&gt; {};</code>. Suddenly, <code>QList</code> symbols are exported from two libraries which results in a clash.
+                For example, library <code>A</code> has <code>class Q_EXPORT X: public QList&lt;QVariant&gt; {};</code> and library <code>B</code> has <code>class Q_EXPORT Y: public QList&lt;QVariant&gt; {};</code>. Suddenly, <code>QList</code> symbols are exported from two libraries, which results in a clash.
             </li>
             <li>
                 <strong>Aestethics:</strong>
                 <ul>
-                    <li>Put the body of a function in a <code>.cpp</code> file, not in its corresponding header file. There is a reason for having both a <code>.cpp</code> file and a <code>.h</code> file.</li>
+                    <li>Put the body of a function in a <code>.cpp</code> file, not in its <code>.h</code> file. There is a reason for having both a <code>.cpp</code> file and a <code>.h</code> file.</li>
                     <li>Prefer <code>enum</code> to define constants over <code>static const int</code> or <code>#define</code>. Enumeration values will be replaced by the compiler at compile time, resulting in faster code. Also, <code>#define</code> is not namespace safe.</li>
                 </ul>
             </li>
@@ -496,24 +461,24 @@ if (c >= 0) {
             </li>
             <li>
                 Use a reference rather than a pointer to pass a variable to a function, if you want that variable to be changed:
-                <pre class="good prettyprint">void myFunction(int &amp;pMyVar)
+                <pre class="good prettyprint">void function(int &amp;pVar)
 {
-    pMyVar = 3;
+    pVar = 3;
 }</pre>
-                        <pre class="bad prettyprint">void myFunction(int *pMyVar)
+                <pre class="bad prettyprint">void function(int *pVar)
 {
-    *pMyVar = 3;
+    *pVar = 3;
 }</pre>
             </li>
             <li>
                 Use a constant reference to pass a variable to a function, if you do not intend to modify that variable:
-                <pre class="good prettyprint">int myFunction(const int &amp;pMyVar)
+                <pre class="good prettyprint">int function(const int &amp;pVar)
 {
-    return 3*pMyVar;
+    return 3*pVar;
 }</pre>
-                <pre class="bad prettyprint">void myFunction(int pMyVar)
+                <pre class="bad prettyprint">void function(int pVar)
 {
-    return 3*pMyVar;
+    return 3*pVar;
 }</pre>
             </li>
         </ul>
