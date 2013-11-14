@@ -535,10 +535,11 @@ bool CellmlFile::rdfTripleExists(iface::cellml_api::CellMLElement *pElement,
     foreach (CellmlFileRdfTriple *rdfTriple, rdfTriples(pElement))
         if (   !pQualifier.compare(rdfTriple->qualifierAsString())
             && !pResource.compare(rdfTriple->resource())
-            && !pId.compare(rdfTriple->id()))
+            && !pId.compare(rdfTriple->id())) {
             // This is the RDF triple we are after, so...
 
             return true;
+        }
 
     // We couldn't find the RDF triple, so...
 

@@ -563,10 +563,11 @@ void SingleCellViewInformationGraphsWidget::propertyEditorContextMenu(const QPoi
 
     if (   !currentProperty
         || (currentProperty->type() == Core::Property::Section)
-        || (!currentProperty->name().compare(tr("Model"))))
+        || (!currentProperty->name().compare(tr("Model")))) {
         mContextMenu->exec(QCursor::pos());
-    else
+    } else {
         mContextMenus.value(mFileName)->exec(QCursor::pos());
+    }
 }
 
 //==============================================================================
@@ -823,9 +824,10 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
     if (   mCanEmitGraphsUpdatedSignal
         && (   (oldParameterX != graph->parameterX())
             || (oldParameterY != graph->parameterY())
-            || (oldPen != graph->pen())))
+            || (oldPen != graph->pen()))) {
         emit graphsUpdated(qobject_cast<SingleCellViewGraphPanelPlotWidget *>(graph->plot()),
                            QList<SingleCellViewGraphPanelPlotGraph *>() << graph);
+    }
 }
 
 //==============================================================================

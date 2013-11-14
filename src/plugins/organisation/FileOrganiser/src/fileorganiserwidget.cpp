@@ -307,10 +307,11 @@ void FileOrganiserWidget::dragEnterEvent(QDragEnterEvent *pEvent)
     // URIs
 
     if (   (pEvent->mimeData()->hasFormat(Core::FileSystemMimeType))
-        || (pEvent->mimeData()->hasFormat(FileOrganiserMimeType)))
+        || (pEvent->mimeData()->hasFormat(FileOrganiserMimeType))) {
         pEvent->acceptProposedAction();
-    else
+    } else {
         pEvent->ignore();
+    }
 }
 
 //==============================================================================
@@ -357,10 +358,11 @@ void FileOrganiserWidget::dragMoveEvent(QDragMoveEvent *pEvent)
     if (   (pEvent->mimeData()->urls().count() || indexes.count())
         && (   (dropItem && dropItem->data(Item::Folder).toBool())
             || (dropIndicatorPosition() != QAbstractItemView::OnItem))
-        && !draggingOnSelfOrChild)
+        && !draggingOnSelfOrChild) {
         pEvent->acceptProposedAction();
-    else
+    } else {
         pEvent->ignore();
+    }
 }
 
 //==============================================================================
@@ -489,11 +491,12 @@ void FileOrganiserWidget::keyPressEvent(QKeyEvent *pEvent)
 #else
     #error Unsupported platform
 #endif
-       )
+       ) {
         // There are some files that are selected and we want to open them, so
         // let people know about it
 
         emit filesOpenRequested(crtSelectedFiles);
+    }
 }
 
 //==============================================================================
@@ -797,8 +800,9 @@ bool FileOrganiserWidget::ownedBy(const QString &pFileName,
         QStandardItem *crtItem = pItem->child(i);
 
         if (   !crtItem->data(Item::Folder).toBool()
-            && (crtItem->data(Item::Path).toString() == pFileName))
+            && (crtItem->data(Item::Path).toString() == pFileName)) {
             return true;
+        }
     }
 
     // We couldn't find a file with pFileName as its name in pItem, so...
@@ -1170,13 +1174,14 @@ void FileOrganiserWidget::updateFileItems(QStandardItem *pItem,
     // Recursively update the icon of all file items that refer to pFileName
 
     if (   !pItem->data(Item::Folder).toBool()
-        && !pItem->data(Item::Path).toString().compare(pFileName))
+        && !pItem->data(Item::Path).toString().compare(pFileName)) {
         // The current item is a file item and it refers to pFileName, so update
         // its icon based on the value of pStatus
 
         pItem->setIcon(QIcon((pStatus == Core::File::Deleted)?
                                  DeletedFileIcon:
                                  FileIcon));
+    }
 
     // Update our child file items, if any
 

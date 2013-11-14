@@ -168,11 +168,12 @@ void setFocusTo(QWidget *pWidget)
     pWidget->setFocus();
 
     if (   focusedWidget
-        && (pWidget->parentWidget() != focusedWidget->parentWidget()))
+        && (pWidget->parentWidget() != focusedWidget->parentWidget())) {
         // The current and previously focused widgets don't share the same
         // parent, so revert the focus back to the previously focused widget
 
         focusedWidget->setFocus();
+    }
 }
 
 //==============================================================================

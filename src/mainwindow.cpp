@@ -333,13 +333,13 @@ void MainWindow::changeEvent(QEvent *pEvent)
     // Do a few more things for some changes
 
     if (   (pEvent->type() == QEvent::LocaleChange)
-        && (mGui->actionSystem->isChecked()))
+        && (mGui->actionSystem->isChecked())) {
         // The system's locale has changed, so update OpenCOR's locale in case
         // the user wants to use the system's locale
 
         setLocale(SystemLocale);
 #ifdef Q_OS_MAC
-    else if (pEvent->type() == QEvent::WindowStateChange)
+    } else if (pEvent->type() == QEvent::WindowStateChange) {
         // The window state has changed, so update the checked state of our full
         // screen action
         // Note: useful on OS X since there is a special full screen button in
@@ -347,6 +347,7 @@ void MainWindow::changeEvent(QEvent *pEvent)
 
         mGui->actionFullScreen->setChecked(isFullScreen());
 #endif
+    }
 }
 
 //==============================================================================

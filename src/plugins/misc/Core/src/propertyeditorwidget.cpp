@@ -1796,11 +1796,12 @@ void PropertyEditorWidget::editorClosed()
 
         if (    value.isEmpty()
             && (   (mProperty->type() == Property::Integer)
-                || (mProperty->type() == Property::Double)))
+                || (mProperty->type() == Property::Double))) {
             // We are dealing with an 'empty' integer or double property, so set
             // its value to zero
 
             value = "0";
+        }
 
         mProperty->setValue(value, true);
     }

@@ -502,8 +502,9 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
     // CellML 1.0
 
     if (    errorMessage.isEmpty()
-        && !inCellmlFile->exportTo(pArguments.at(1), CellMLSupport::CellmlFile::Cellml_1_0))
+        && !inCellmlFile->exportTo(pArguments.at(1), CellMLSupport::CellmlFile::Cellml_1_0)) {
         errorMessage = "Sorry, but a problem occurred while exporting the input file.";
+    }
 
     delete inCellmlFile;
 

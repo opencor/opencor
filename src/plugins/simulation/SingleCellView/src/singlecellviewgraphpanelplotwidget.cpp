@@ -575,8 +575,9 @@ void SingleCellViewGraphPanelPlotWidget::handleMouseDoubleClickEvent(QMouseEvent
     // left mouse button with no modifiers
 
     if (   (pEvent->button() == Qt::LeftButton)
-        && (pEvent->modifiers() == Qt::NoModifier))
+        && (pEvent->modifiers() == Qt::NoModifier)) {
         resetAxes();
+    }
 }
 
 //==============================================================================

@@ -234,7 +234,7 @@ void TreeViewWidget::startDrag(Qt::DropActions pSupportedActions)
 
     for (int i = selectedDraggableIndexes.count()-1; i >= 0; --i)
         if (   !(model()->flags(selectedDraggableIndexes[i]) & Qt::ItemIsDragEnabled)
-            || selectedDraggableIndexes[i].column())
+            || selectedDraggableIndexes[i].column()) {
             // The current selected item is not draggable or is not in the first
             // column
             // Note: regarding the test on the column number, it is because we
@@ -246,6 +246,7 @@ void TreeViewWidget::startDrag(Qt::DropActions pSupportedActions)
             //       selection mode of QAbstractItemView::ExtendedSelection)
 
             selectedDraggableIndexes.removeAt(i);
+        }
 
     // Start the dragging action is there is at least one selected draggable
     // item
@@ -278,11 +279,12 @@ void TreeViewWidget::startDrag(Qt::DropActions pSupportedActions)
         Qt::DropAction realDefaultDropAction = Qt::IgnoreAction;
 
         if (   (defaultDropAction() != Qt::IgnoreAction)
-            && (pSupportedActions & defaultDropAction()))
+            && (pSupportedActions & defaultDropAction())) {
             realDefaultDropAction = defaultDropAction();
-        else if (   (pSupportedActions & Qt::CopyAction)
-                 && (dragDropMode() != QAbstractItemView::InternalMove))
+        } else if (   (pSupportedActions & Qt::CopyAction)
+                   && (dragDropMode() != QAbstractItemView::InternalMove)) {
             realDefaultDropAction = Qt::CopyAction;
+        }
 
         if (drag->exec(pSupportedActions, realDefaultDropAction) == Qt::MoveAction) {
             // We want to move the items

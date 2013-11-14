@@ -235,8 +235,9 @@ Plugins PluginManager::loadedCliPlugins() const
 
     foreach (Plugin *plugin, mPlugins)
         if (   qobject_cast<CliInterface *>(plugin->instance())
-            && (plugin->status() == Plugin::Loaded))
+            && (plugin->status() == Plugin::Loaded)) {
             res << plugin;
+        }
 
     return res;
 }

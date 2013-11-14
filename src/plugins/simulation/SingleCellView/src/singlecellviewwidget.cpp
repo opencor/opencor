@@ -1732,21 +1732,22 @@ double * SingleCellViewWidget::dataPoints(SingleCellViewSimulation *pSimulation,
     if (!pSimulation || !pParameter)
         return 0;
 
-    if (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi)
+    if (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi) {
         return pSimulation->results()->points()?pSimulation->results()->points():0;
-    else if (   (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)
-             || (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant))
+    } else if (   (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)
+               || (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant)) {
         return pSimulation->results()->constants()?pSimulation->results()->constants()[pParameter->index()]:0;
-    else if (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Rate)
+    } else if (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Rate) {
         return pSimulation->results()->rates()?pSimulation->results()->rates()[pParameter->index()]:0;
-    else if (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State)
+    } else if (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State) {
         return pSimulation->results()->states()?pSimulation->results()->states()[pParameter->index()]:0;
-    else if (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Algebraic)
+    } else if (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Algebraic) {
         return pSimulation->results()->algebraic()?pSimulation->results()->algebraic()[pParameter->index()]:0;
-    else
+    } else {
         // Undefined type
 
         return 0;
+    }
 }
 
 //==============================================================================
@@ -1850,11 +1851,12 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
                         }
 
                         if (   (minX < plotMinX) || (maxX > plotMaxX)
-                            || (minY < plotMinY) || (maxY > plotMaxY))
+                            || (minY < plotMinY) || (maxY > plotMaxY)) {
                             // Our graph segment cannot fit within our plot's
                             // current viewport, so we will need to update it
 
                             needUpdatePlot = true;
+                        }
                     }
 
                     if (!needUpdatePlot)

@@ -356,8 +356,9 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
                         Core::Property *property = dynamic_cast<Core::Property *>(object);
 
                         if (   property
-                            && (property->type() == Core::Property::Section))
+                            && (property->type() == Core::Property::Section)) {
                             subSections << property;
+                        }
                     }
                 else
                     // We don't have a section, so go through our property

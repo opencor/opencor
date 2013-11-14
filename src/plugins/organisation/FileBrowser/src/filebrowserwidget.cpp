@@ -447,11 +447,12 @@ void FileBrowserWidget::keyPressEvent(QKeyEvent *pEvent)
 #else
     #error Unsupported platform
 #endif
-       )
+       ) {
         // There are some files that are selected and we want to open them, so
         // let people know about it
 
         emit filesOpenRequested(crtSelectedFiles);
+    }
 }
 
 //==============================================================================

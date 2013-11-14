@@ -426,8 +426,9 @@ QString formatErrorMsg(const QString &pErrorMsg)
     // character long (!!) or if its second character is not in upper case
 
     if (    (errorMsg.size() <= 1)
-        || ((errorMsg.size() > 1) && !errorMsg[1].isUpper()))
+        || ((errorMsg.size() > 1) && !errorMsg[1].isUpper())) {
         errorMsg = errorMsg[0].toLower()+errorMsg.right(errorMsg.size()-1);
+    }
 
     // Return the error message after making sure that its end finishes with
     // "..."

@@ -451,11 +451,12 @@ CellmlFileRdfTriple::Type CellmlFileRdfTriples::type() const
 
         foreach (CellmlFileRdfTriple *rdfTriple, *this)
             if (   rdfTriple->subject()->asString().compare(subject)
-                || (rdfTriple->type() != res))
+                || (rdfTriple->type() != res)) {
                 // The subject and/or the type of the current RDF triple is
                 // different from that of the first RDF triple, so...
 
                 return CellmlFileRdfTriple::Unknown;
+            }
 
         // All of the RDF triples have the same type, so...
 

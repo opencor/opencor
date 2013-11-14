@@ -198,11 +198,12 @@ bool isCellmlFile(const QString &pFileName)
 
             if (   !xml.name().toString().compare("model")
                 &&  (   (!xml.namespaceUri().toString().compare("http://www.cellml.org/cellml/1.0#"))
-                     || (!xml.namespaceUri().toString().compare("http://www.cellml.org/cellml/1.1#"))))
+                     || (!xml.namespaceUri().toString().compare("http://www.cellml.org/cellml/1.1#")))) {
                 // All the requirements are gathered for the file to be
                 // considered a CellML file, so...
 
                 res = true;
+            }
 
             break;
         }
