@@ -21,11 +21,11 @@ have something like:
 
     ...
     #include "disableunusedvariablewarning.inl"
-    namespace OpenCOR {
-        static const char *SettingsOrganization = "Physiome";
-        static const char *SettingsApplication  = "OpenCOR";
-        static const char *SettingsPlugins      = "Plugins";
-    }   // namespace OpenCOR
+        namespace OpenCOR {
+            static const char *SettingsOrganization = "Physiome";
+            static const char *SettingsApplication  = "OpenCOR";
+            static const char *SettingsPlugins      = "Plugins";
+        }   // namespace OpenCOR
     #include "enableunusedvariablewarning.inl"
     ...
     namespace OpenCOR {
