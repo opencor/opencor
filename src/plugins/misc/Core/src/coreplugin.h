@@ -40,7 +40,13 @@ PLUGININFO_FUNC CorePluginInfo();
 
 //==============================================================================
 
-static const QString FileGroup = "File";
+#pragma GCC diagnostic ignored "-Wunused-variable"
+// Note: the following constants are defined here but used elsewhere, hence we
+//       temporarily ignore warnings about unused variables...
+
+static const char *FileGroup = "File";
+
+#pragma GCC diagnostic warning "-Wunused-variable"
 
 //==============================================================================
 

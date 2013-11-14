@@ -37,8 +37,14 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-static const QString Cellml_1_0 = "1.0";
-static const QString Cellml_1_1 = "1.1";
+#pragma GCC diagnostic ignored "-Wunused-variable"
+// Note: the following constants are defined here but used elsewhere, hence we
+//       temporarily ignore warnings about unused variables...
+
+static const char *Cellml_1_0 = "1.0";
+static const char *Cellml_1_1 = "1.1";
+
+#pragma GCC diagnostic warning "-Wunused-variable"
 
 //==============================================================================
 

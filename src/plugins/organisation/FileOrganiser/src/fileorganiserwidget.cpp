@@ -37,10 +37,10 @@ namespace FileOrganiser {
 
 //==============================================================================
 
-static const QString CollapsedFolderIcon = ":oxygen/places/folder.png";
-static const QString ExpandedFolderIcon  = ":oxygen/actions/document-open-folder.png";
-static const QString FileIcon            = ":oxygen/mimetypes/application-x-zerosize.png";
-static const QString DeletedFileIcon     = ":oxygen/status/image-missing.png";
+static const char *CollapsedFolderIcon = ":oxygen/places/folder.png";
+static const char *ExpandedFolderIcon  = ":oxygen/actions/document-open-folder.png";
+static const char *FileIcon            = ":oxygen/mimetypes/application-x-zerosize.png";
+static const char *DeletedFileIcon     = ":oxygen/status/image-missing.png";
 
 //==============================================================================
 
@@ -95,8 +95,8 @@ FileOrganiserWidget::~FileOrganiserWidget()
 
 //==============================================================================
 
-static const QString SettingsModel        = "Model";
-static const QString SettingsSelectedItem = "SelectedItem";
+static const char *SettingsModel        = "Model";
+static const char *SettingsSelectedItem = "SelectedItem";
 
 //==============================================================================
 

@@ -145,7 +145,9 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
 
     // Set the text for some types
 
-    static const QChar RightArrow = QChar(0x2192);
+    enum {
+        RightArrow = 0x2192
+    };
 
     switch (pType) {
     case Import: {
@@ -179,7 +181,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
         ObjRef<iface::cellml_api::MapComponents> mapComponents = dynamic_cast<iface::cellml_api::MapComponents *>(pElement);
 
         setText(QString("%1 %2 %3").arg(QString::fromStdWString(mapComponents->firstComponentName()),
-                                        RightArrow,
+                                        QChar(RightArrow),
                                         QString::fromStdWString(mapComponents->secondComponentName())));
 
         break;
@@ -188,7 +190,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
         ObjRef<iface::cellml_api::MapVariables> mapVariables = dynamic_cast<iface::cellml_api::MapVariables *>(pElement);
 
         setText(QString("%1 %2 %3").arg(QString::fromStdWString(mapVariables->firstVariableName()),
-                                        RightArrow,
+                                        QChar(RightArrow),
                                         QString::fromStdWString(mapVariables->secondVariableName())));
 
         break;

@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QApplication>
+#include <QDir>
 #include <QHeaderView>
 #include <QHelpEvent>
 #include <QSettings>
@@ -32,10 +33,6 @@ specific language governing permissions and limitations under the License.
 
 namespace OpenCOR {
 namespace FileBrowser {
-
-//==============================================================================
-
-static const QString HomeFolder = QDir::homePath();
 
 //==============================================================================
 
@@ -72,10 +69,10 @@ FileBrowserWidget::FileBrowserWidget(QWidget *pParent) :
 
 //==============================================================================
 
-static const QString SettingsColumnWidth = "ColumnWidth%1";
-static const QString SettingsInitialPath = "InitialPath";
-static const QString SettingsSortColumn  = "SortColumn";
-static const QString SettingsSortOrder   = "SortOrder";
+static const char *SettingsColumnWidth = "ColumnWidth%1";
+static const char *SettingsInitialPath = "InitialPath";
+static const char *SettingsSortColumn  = "SortColumn";
+static const char *SettingsSortOrder   = "SortOrder";
 
 //==============================================================================
 
@@ -92,7 +89,7 @@ void FileBrowserWidget::loadSettings(QSettings *pSettings)
     QString columnWidthKey;
 
     for (int i = 0, iMax = header()->count(); i < iMax; ++i) {
-        columnWidthKey = SettingsColumnWidth.arg(i);
+        columnWidthKey = QString(SettingsColumnWidth).arg(i);
 
         mNeedDefColWidth =     mNeedDefColWidth
                            && !pSettings->contains(columnWidthKey);
@@ -197,7 +194,7 @@ void FileBrowserWidget::saveSettings(QSettings *pSettings) const
     // Keep track of the width of each column
 
     for (int i = 0, iMax = header()->count(); i < iMax; ++i)
-        pSettings->setValue(SettingsColumnWidth.arg(i), columnWidth(i));
+        pSettings->setValue(QString(SettingsColumnWidth).arg(i), columnWidth(i));
 
     // Keep track of the sorting information
 
@@ -283,7 +280,7 @@ void FileBrowserWidget::emitItemChangedRelatedSignals()
     // Let the user know whether the path of the new item is not that of our
     // home folder, as well as whether we could go to the parent item
 
-    emit notHomeFolder(currentPath() != HomeFolder);
+    emit notHomeFolder(currentPath() != QDir::homePath());
     emit goToParentFolderEnabled(!currentPathParent().isEmpty());
 
     // Let the user know whether we can go to the previous/next file/folder
@@ -605,7 +602,7 @@ void FileBrowserWidget::goToHomeFolder()
 {
     // Go to the home folder
 
-    goToPath(HomeFolder, true);
+    goToPath(QDir::homePath(), true);
 }
 
 //==============================================================================

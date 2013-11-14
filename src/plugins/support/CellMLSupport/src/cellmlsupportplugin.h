@@ -41,8 +41,14 @@ PLUGININFO_FUNC CellMLSupportPluginInfo();
 
 //==============================================================================
 
-static const QString CellmlMimeType = "application/cellml+xml";
-static const QString CellmlFileExtension = "cellml";
+#pragma GCC diagnostic ignored "-Wunused-variable"
+// Note: the following constants are defined here but used elsewhere, hence we
+//       temporarily ignore warnings about unused variables...
+
+static const char *CellmlMimeType      = "application/cellml+xml";
+static const char *CellmlFileExtension = "cellml";
+
+#pragma GCC diagnostic warning "-Wunused-variable"
 
 //==============================================================================
 

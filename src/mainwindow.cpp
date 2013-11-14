@@ -64,14 +64,14 @@ namespace OpenCOR {
 
 //==============================================================================
 
-static const QString SystemLocale  = "";
-static const QString EnglishLocale = "en";
-static const QString FrenchLocale  = "fr";
+static const char *SystemLocale  = "";
+static const char *EnglishLocale = "en";
+static const char *FrenchLocale  = "fr";
 
 //==============================================================================
 
-static const QString CorePlugin = "Core";
-static const QString HelpPlugin = "Help";
+static const char *CorePlugin = "Core";
+static const char *HelpPlugin = "Help";
 
 //==============================================================================
 
@@ -664,12 +664,12 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
 
 //==============================================================================
 
-static const QString SettingsGlobal               = "Global";
-static const QString SettingsLocale               = "Locale";
-static const QString SettingsGeometry             = "Geometry";
-static const QString SettingsState                = "State";
-static const QString SettingsDockedWidgetsVisible = "DockedWidgetsVisible";
-static const QString SettingsStatusBarVisible     = "StatusBarVisible";
+static const char *SettingsGlobal               = "Global";
+static const char *SettingsLocale               = "Locale";
+static const char *SettingsGeometry             = "Geometry";
+static const char *SettingsState                = "State";
+static const char *SettingsDockedWidgetsVisible = "DockedWidgetsVisible";
+static const char *SettingsStatusBarVisible     = "StatusBarVisible";
 
 //==============================================================================
 
@@ -1271,7 +1271,7 @@ void MainWindow::on_actionPreferences_triggered()
 
 //==============================================================================
 
-static const QString OpencorHomePageUrl = "http://www.opencor.ws/";
+static const char *OpencorHomePageUrl = "http://www.opencor.ws/";
 
 //==============================================================================
 

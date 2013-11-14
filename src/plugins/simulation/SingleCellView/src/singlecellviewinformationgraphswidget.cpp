@@ -114,7 +114,7 @@ void SingleCellViewInformationGraphsWidget::retranslateUi()
 
 //==============================================================================
 
-static const QString SettingsColumnWidth = "ColumnWidth%1";
+static const char *SettingsColumnWidth = "ColumnWidth%1";
 
 //==============================================================================
 
@@ -123,7 +123,7 @@ void SingleCellViewInformationGraphsWidget::loadSettings(QSettings *pSettings)
     // Retrieve the width of each column of our property editors
 
     for (int i = 0, iMax = mColumnWidths.size(); i < iMax; ++i)
-        mColumnWidths[i] = pSettings->value(SettingsColumnWidth.arg(i),
+        mColumnWidths[i] = pSettings->value(QString(SettingsColumnWidth).arg(i),
                                             mColumnWidths.at(i)).toInt();
 
 }
@@ -135,7 +135,8 @@ void SingleCellViewInformationGraphsWidget::saveSettings(QSettings *pSettings) c
     // Keep track of the width of each column of our current property editor
 
     for (int i = 0, iMax = mColumnWidths.size(); i < iMax; ++i)
-        pSettings->setValue(SettingsColumnWidth.arg(i), mColumnWidths.at(i));
+        pSettings->setValue(QString(SettingsColumnWidth).arg(i),
+                            mColumnWidths.at(i));
 }
 
 //==============================================================================
@@ -754,7 +755,9 @@ bool SingleCellViewInformationGraphsWidget::checkParameter(CellMLSupport::Cellml
 
 //==============================================================================
 
-static const QString PropertySeparator = " | ";
+static const char *PropertySeparator = " | ";
+
+//==============================================================================
 
 void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pProperty,
                                                             const QString &pFileName)

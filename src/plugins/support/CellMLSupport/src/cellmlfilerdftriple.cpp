@@ -474,7 +474,7 @@ bool CellmlFileRdfTriple::decodeTerm(const QString &pTerm, QString &pResource,
 
     bool res = true;
 
-    if (QRegularExpression("^urn:miriam:"+ResourceRegExp+":"+IdRegExp).match(pTerm).hasMatch()) {
+    if (QRegularExpression("^urn:miriam:"+QString(ResourceRegExp)+":"+QString(IdRegExp)).match(pTerm).hasMatch()) {
         // The term is a MIRIAM URN, so retrieve its corresponding resource and
         // id
 
@@ -482,7 +482,7 @@ bool CellmlFileRdfTriple::decodeTerm(const QString &pTerm, QString &pResource,
 
         pResource = miriamUrnList[2];
         pId       = miriamUrnList[3].replace("%3A", ":");
-    } else if (QRegularExpression("^http://identifiers.org/"+ResourceRegExp+"/#?"+IdRegExp).match(pTerm).hasMatch()) {
+    } else if (QRegularExpression("^http://identifiers.org/"+QString(ResourceRegExp)+"/#?"+QString(IdRegExp)).match(pTerm).hasMatch()) {
         // The term is an identifiers.org URI, so retrieve its corresponding
         // resource and id
 

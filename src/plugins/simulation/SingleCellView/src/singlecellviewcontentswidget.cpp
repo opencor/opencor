@@ -86,8 +86,8 @@ void SingleCellViewContentsWidget::retranslateUi()
 
 //==============================================================================
 
-static const QString SettingsContentsCount = "ContentsCount";
-static const QString SettingsContentsSize  = "ContentsSize%1";
+static const char *SettingsContentsCount = "ContentsCount";
+static const char *SettingsContentsSize  = "ContentsSize%1";
 
 //==============================================================================
 
@@ -105,7 +105,7 @@ void SingleCellViewContentsWidget::loadSettings(QSettings *pSettings)
                        << 0.75*qApp->desktop()->screenGeometry().width();
     else
         for (int i = 0; i < sizesCount; ++i)
-            mSplitterSizes << pSettings->value(SettingsContentsSize.arg(i)).toInt();
+            mSplitterSizes << pSettings->value(QString(SettingsContentsSize).arg(i)).toInt();
 
     setSizes(mSplitterSizes);
 
@@ -129,7 +129,8 @@ void SingleCellViewContentsWidget::saveSettings(QSettings *pSettings) const
     pSettings->setValue(SettingsContentsCount, mSplitterSizes.count());
 
     for (int i = 0, iMax = mSplitterSizes.count(); i < iMax; ++i)
-        pSettings->setValue(SettingsContentsSize.arg(i), mSplitterSizes[i]);
+        pSettings->setValue(QString(SettingsContentsSize).arg(i),
+                            mSplitterSizes[i]);
 
     // Keep track of the settings of our information and graph panels widgets
 

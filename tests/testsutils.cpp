@@ -95,7 +95,7 @@ void loadPlugin(const QString &pPluginName)
                                         << pPluginName;
 
     foreach (const QString &plugin, plugins) {
-        QPluginLoader pluginLoader(PluginPrefix+plugin+PluginExtension);
+        QPluginLoader pluginLoader(QString(PluginPrefix)+plugin+QString(PluginExtension));
 
         QVERIFY2(pluginLoader.load(),
                  qPrintable(QString("the %1 plugin could not be loaded").arg(plugin)));

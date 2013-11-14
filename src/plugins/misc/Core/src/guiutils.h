@@ -44,10 +44,16 @@ namespace Core {
 
 //==============================================================================
 
-static const QString SettingsBorderColor    = "BorderColor";
-static const QString SettingsBaseColor      = "BaseColor";
-static const QString SettingsWindowColor    = "WindowColor";
-static const QString SettingsHighlightColor = "HighlightColor";
+#pragma GCC diagnostic ignored "-Wunused-variable"
+// Note: the following constants are defined here but used elsewhere, hence we
+//       temporarily ignore warnings about unused variables...
+
+static const char *SettingsBorderColor    = "BorderColor";
+static const char *SettingsBaseColor      = "BaseColor";
+static const char *SettingsWindowColor    = "WindowColor";
+static const char *SettingsHighlightColor = "HighlightColor";
+
+#pragma GCC diagnostic warning "-Wunused-variable"
 
 //==============================================================================
 

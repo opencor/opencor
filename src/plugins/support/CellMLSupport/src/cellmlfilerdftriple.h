@@ -41,8 +41,14 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-static const QString ResourceRegExp = "[0-9a-z]+((-|\\.)[0-9a-z]+)?";
-static const QString IdRegExp = "[0-9A-Za-z\\.%-_:]+(:[0-9A-Za-z\\.%-_:]+)?";
+#pragma GCC diagnostic ignored "-Wunused-variable"
+// Note: the following constants are defined here but used elsewhere, hence we
+//       temporarily ignore warnings about unused variables...
+
+static const char *ResourceRegExp = "[0-9a-z]+((-|\\.)[0-9a-z]+)?";
+static const char *IdRegExp       = "[0-9A-Za-z\\.%-_:]+(:[0-9A-Za-z\\.%-_:]+)?";
+
+#pragma GCC diagnostic warning "-Wunused-variable"
 
 //==============================================================================
 

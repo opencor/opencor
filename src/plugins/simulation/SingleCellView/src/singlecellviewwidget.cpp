@@ -364,8 +364,8 @@ void SingleCellViewWidget::retranslateUi()
 
 //==============================================================================
 
-static const QString SettingsSizesCount = "SizesCount";
-static const QString SettingsSize       = "Size%1";
+static const char *SettingsSizesCount = "SizesCount";
+static const char *SettingsSize       = "Size%1";
 
 //==============================================================================
 
@@ -379,7 +379,7 @@ void SingleCellViewWidget::loadSettings(QSettings *pSettings)
         mSplitterWidgetSizes = QList<int>();
 
         for (int i = 0; i < sizesCount; ++i)
-            mSplitterWidgetSizes << pSettings->value(SettingsSize.arg(i)).toInt();
+            mSplitterWidgetSizes << pSettings->value(QString(SettingsSize).arg(i)).toInt();
 
         mSplitterWidget->setSizes(mSplitterWidgetSizes);
     }
@@ -400,7 +400,8 @@ void SingleCellViewWidget::saveSettings(QSettings *pSettings) const
     pSettings->setValue(SettingsSizesCount, mSplitterWidgetSizes.count());
 
     for (int i = 0, iMax = mSplitterWidgetSizes.count(); i < iMax; ++i)
-        pSettings->setValue(SettingsSize.arg(i), mSplitterWidgetSizes[i]);
+        pSettings->setValue(QString(SettingsSize).arg(i),
+                            mSplitterWidgetSizes[i]);
 
     // Keep track of the settings of our contents widget
 
@@ -526,11 +527,11 @@ void SingleCellViewWidget::updateInvalidModelMessageWidget()
 
 //==============================================================================
 
-static const QString OutputTab  = "&nbsp;&nbsp;&nbsp;&nbsp;";
-static const QString OutputGood = " style=\"color: green;\"";
-static const QString OutputInfo = " style=\"color: navy;\"";
-static const QString OutputBad  = " style=\"color: maroon;\"";
-static const QString OutputBrLn = "<br/>\n";
+static const char *OutputTab  = "&nbsp;&nbsp;&nbsp;&nbsp;";
+static const char *OutputGood = " style=\"color: green;\"";
+static const char *OutputInfo = " style=\"color: navy;\"";
+static const char *OutputBad  = " style=\"color: maroon;\"";
+static const char *OutputBrLn = "<br/>\n";
 
 //==============================================================================
 
@@ -642,8 +643,8 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
     if (!mOutputWidget->document()->isEmpty())
         information += "<hr/>\n";
 
-    information += "<strong>"+pFileName+"</strong>"+OutputBrLn;
-    information += OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
+    information += "<strong>"+pFileName+"</strong>"+QString(OutputBrLn);
+    information += QString(OutputTab)+"<strong>"+tr("Runtime:")+"</strong> ";
 
     if (variableOfIntegration) {
         // A variable of integration could be retrieved for our CellML file, so
@@ -654,9 +655,9 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         if (cellmlFileRuntime->needNlaSolver())
             additionalInformation = " + "+tr("NLA system(s)");
 
-        information += "<span"+OutputGood+">"+tr("valid")+"</span>."+OutputBrLn;
-        information += QString(OutputTab+"<strong>"+tr("Model type:")+"</strong> <span"+OutputInfo+">%1%2</span>."+OutputBrLn).arg((cellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?tr("ODE"):tr("DAE"),
-                                                                                                                                   additionalInformation);
+        information += "<span"+QString(OutputGood)+">"+tr("valid")+"</span>."+QString(OutputBrLn);
+        information += QString(QString(OutputTab)+"<strong>"+tr("Model type:")+"</strong> <span"+QString(OutputInfo)+">%1%2</span>."+QString(OutputBrLn)).arg((cellmlFileRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?tr("ODE"):tr("DAE"),
+                                                                                                                                                              additionalInformation);
     } else {
         // We couldn't retrieve a variable a variable of integration, which
         // means that we either don't have a runtime or we have one, but it's
@@ -670,21 +671,21 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
         updateInvalidModelMessageWidget();
 
-        information += "<span"+OutputBad+">"+(cellmlFileRuntime?tr("invalid"):tr("none"))+"</span>."+OutputBrLn;
+        information += "<span"+QString(OutputBad)+">"+(cellmlFileRuntime?tr("invalid"):tr("none"))+"</span>."+QString(OutputBrLn);
 
         if (validCellmlFileRuntime)
             // We have a valid runtime, but no variable of integration, which
             // means that the model doesn't contain any ODE or DAE
 
-            information += OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+tr("the model must have at least one ODE or DAE")+".</span>"+OutputBrLn;
+            information += QString(OutputTab)+"<span"+QString(OutputBad)+"><strong>"+tr("Error:")+"</strong> "+tr("the model must have at least one ODE or DAE")+".</span>"+QString(OutputBrLn);
         else
             // We don't have a valid runtime, so either there are some problems
             // with the CellML file or its runtime
 
             foreach (const CellMLSupport::CellmlFileIssue &issue,
                      cellmlFileRuntime?cellmlFileRuntime->issues():cellmlFile->issues())
-                information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2</span>."+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
-                                                                                                                     issue.message());
+                information += QString(QString(OutputTab)+"<span"+QString(OutputBad)+"><strong>%1</strong> %2</span>."+QString(OutputBrLn)).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
+                                                                                                                                                issue.message());
     }
 
     output(information);
@@ -1276,7 +1277,7 @@ void SingleCellViewWidget::simulationStopped(const int &pElapsedTime)
             if (!simulationData->nlaSolverName().isEmpty())
                 solversInformation += "+"+simulationData->nlaSolverName();
 
-            output(QString(OutputTab+"<strong>"+tr("Simulation time:")+"</strong> <span"+OutputInfo+">"+tr("%1 s using %2").arg(QString::number(0.001*pElapsedTime, 'g', 3), solversInformation)+"</span>."+OutputBrLn));
+            output(QString(QString(OutputTab)+"<strong>"+tr("Simulation time:")+"</strong> <span"+QString(OutputInfo)+">"+tr("%1 s using %2").arg(QString::number(0.001*pElapsedTime, 'g', 3), solversInformation)+"</span>."+QString(OutputBrLn)));
         }
 
         if (needReloadView)
@@ -1372,7 +1373,7 @@ void SingleCellViewWidget::simulationError(const QString &pMessage,
 
         updateInvalidModelMessageWidget();
 
-        output(OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+pMessage+".</span>"+OutputBrLn);
+        output(QString(OutputTab)+"<span"+QString(OutputBad)+"><strong>"+tr("Error:")+"</strong> "+pMessage+".</span>"+QString(OutputBrLn));
     }
 }
 

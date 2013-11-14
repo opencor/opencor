@@ -68,7 +68,7 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
 
     // Retrieve the list of plugins available for loading
 
-    QFileInfoList fileInfoList = QDir(mPluginsDir).entryInfoList(QStringList("*"+PluginExtension),
+    QFileInfoList fileInfoList = QDir(mPluginsDir).entryInfoList(QStringList("*"+QString(PluginExtension)),
                                                                  QDir::Files);
 
     QStringList fileNames = QStringList();

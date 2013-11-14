@@ -88,7 +88,7 @@ void CoreNlaSolver::initialize(ComputeSystemFunction pComputeSystem,
 
 //==============================================================================
 
-static const QString SettingsGlobal = "Global";
+static const char *SettingsGlobal = "Global";
 
 //==============================================================================
 

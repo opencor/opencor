@@ -41,10 +41,16 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-static const std::wstring MATHML_NAMESPACE = L"http://www.w3.org/1998/Math/MathML";
+#pragma GCC diagnostic ignored "-Wunused-variable"
+// Note: the following constants are defined here but used elsewhere, hence we
+//       temporarily ignore warnings about unused variables...
 
-static const std::wstring CELLML_1_0_NAMESPACE = L"http://www.cellml.org/cellml/1.0#";
-static const std::wstring CELLML_1_1_NAMESPACE = L"http://www.cellml.org/cellml/1.1#";
+static const char *MathmlNamespace = "http://www.w3.org/1998/Math/MathML";
+
+static const char *Cellml_1_0_Namespace = "http://www.cellml.org/cellml/1.0#";
+static const char *Cellml_1_1_Namespace = "http://www.cellml.org/cellml/1.1#";
+
+#pragma GCC diagnostic warning "-Wunused-variable"
 
 //==============================================================================
 

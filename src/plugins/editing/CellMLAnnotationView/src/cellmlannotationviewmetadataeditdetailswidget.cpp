@@ -850,8 +850,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookupId(const QString &pIte
 
 //==============================================================================
 
-static const QString SemanticSbmlUrlStart = "http://www.semanticsbml.org/semanticSBML/annotate/search.json?q=";
-static const QString SemanticSbmlUrlEnd   = "&full_info=1";
+static const char *SemanticSbmlUrlStart = "http://www.semanticsbml.org/semanticSBML/annotate/search.json?q=";
+static const char *SemanticSbmlUrlEnd   = "&full_info=1";
 
 //==============================================================================
 
@@ -864,7 +864,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termChanged(const QString &p
     // Check whether the term could be directly added, resulting in the add term
     // button being enabled/disabled, depending on the case
 
-    mTermIsDirect = QRegularExpression("^"+CellMLSupport::ResourceRegExp+"/"+CellMLSupport::IdRegExp+"$").match(pTerm).hasMatch();
+    mTermIsDirect = QRegularExpression("^"+QString(CellMLSupport::ResourceRegExp)+"/"+QString(CellMLSupport::IdRegExp)+"$").match(pTerm).hasMatch();
 
     // Update the enabled state of our various add buttons
 

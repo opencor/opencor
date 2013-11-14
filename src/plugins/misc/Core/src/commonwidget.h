@@ -49,24 +49,30 @@ namespace Core {
 //==============================================================================
 // Note: the default font family and size below were taken from Qt Creator...
 
+#pragma GCC diagnostic ignored "-Wunused-variable"
+// Note: the following constants are defined here but used elsewhere, hence we
+//       temporarily ignore warnings about unused variables...
+
 #if defined(Q_OS_WIN)
-    static const QString DefaultFontFamily = "Courier";
+    static const char *DefaultFontFamily = "Courier";
     enum {
         DefaultFontSize = 10
     };
 #elif defined(Q_OS_LINUX)
-    static const QString DefaultFontFamily = "Monospace";
+    static const char *DefaultFontFamily = "Monospace";
     enum {
         DefaultFontSize = 9
     };
 #elif defined(Q_OS_MAC)
-    static const QString DefaultFontFamily = "Monaco";
+    static const char *DefaultFontFamily = "Monaco";
     enum {
         DefaultFontSize = 12
     };
 #else
     #error Unsupported platform
 #endif
+
+#pragma GCC diagnostic warning "-Wunused-variable"
 
 //==============================================================================
 

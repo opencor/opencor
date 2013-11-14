@@ -35,24 +35,36 @@ namespace OpenCOR {
 
 //==============================================================================
 
-static const QString SettingsOrganization = "Physiome";
-static const QString SettingsApplication = "OpenCOR";
-static const QString SettingsPlugins = "Plugins";
+#pragma GCC diagnostic ignored "-Wunused-variable"
+// Note: the following constants are defined here but used elsewhere, hence we
+//       temporarily ignore warnings about unused variables...
+
+static const char *SettingsOrganization = "Physiome";
+static const char *SettingsApplication  = "OpenCOR";
+static const char *SettingsPlugins      = "Plugins";
+
+#pragma GCC diagnostic warning "-Wunused-variable"
 
 //==============================================================================
 
+#pragma GCC diagnostic ignored "-Wunused-variable"
+// Note: the following constants are defined here but used elsewhere, hence we
+//       temporarily ignore warnings about unused variables...
+
 #if defined(Q_OS_WIN)
-    static const QString PluginPrefix = "";
-    static const QString PluginExtension = ".dll";
+    static const char *PluginPrefix    = "";
+    static const char *PluginExtension = ".dll";
 #elif defined(Q_OS_LINUX)
-    static const QString PluginPrefix = "lib";
-    static const QString PluginExtension = ".so";
+    static const char *PluginPrefix    = "lib";
+    static const char *PluginExtension = ".so";
 #elif defined(Q_OS_MAC)
-    static const QString PluginPrefix = "lib";
-    static const QString PluginExtension = ".dylib";
+    static const char *PluginPrefix    = "lib";
+    static const char *PluginExtension = ".dylib";
 #else
     #error Unsupported platform
 #endif
+
+#pragma GCC diagnostic warning "-Wunused-variable"
 
 //==============================================================================
 

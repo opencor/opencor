@@ -37,10 +37,10 @@ namespace CVODESolver {
 
 //==============================================================================
 
-static const QString MaximumStepId = "MaximumStep";
-static const QString MaximumNumberOfStepsId = "MaximumNumberOfSteps";
-static const QString RelativeToleranceId = "RelativeTolerance";
-static const QString AbsoluteToleranceId = "AbsoluteTolerance";
+static const char *MaximumStepId          = "MaximumStep";
+static const char *MaximumNumberOfStepsId = "MaximumNumberOfSteps";
+static const char *RelativeToleranceId    = "RelativeTolerance";
+static const char *AbsoluteToleranceId    = "AbsoluteTolerance";
 
 //==============================================================================
 

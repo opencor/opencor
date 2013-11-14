@@ -884,19 +884,19 @@ bool SingleCellViewSimulationResults::exportToCsv(const QString &pFileName) cons
 
     // Header
 
-    static const QString Header = "%1 | %2 (%3)";
+    static const char *Header = "%1 | %2 (%3)";
 
-    out << Header.arg(mRuntime->variableOfIntegration()->componentHierarchy().join(" | "),
-                      mRuntime->variableOfIntegration()->name(),
-                      mRuntime->variableOfIntegration()->unit());
+    out << QString(Header).arg(mRuntime->variableOfIntegration()->componentHierarchy().join(" | "),
+                               mRuntime->variableOfIntegration()->name(),
+                               mRuntime->variableOfIntegration()->unit());
 
     for (int i = 0, iMax = mRuntime->parameters().count(); i < iMax; ++i) {
         CellMLSupport::CellmlFileRuntimeParameter *parameter = mRuntime->parameters()[i];
 
         if (parameter != mRuntime->variableOfIntegration())
-            out << "," << Header.arg(parameter->componentHierarchy().join(" | "),
-                                     parameter->formattedName(),
-                                     parameter->formattedUnit(mRuntime->variableOfIntegration()->name()));
+            out << "," << QString(Header).arg(parameter->componentHierarchy().join(" | "),
+                                              parameter->formattedName(),
+                                              parameter->formattedUnit(mRuntime->variableOfIntegration()->name()));
     }
 
     out << "\n";

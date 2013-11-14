@@ -33,7 +33,7 @@ namespace SecondOrderRungeKuttaSolver {
 
 //==============================================================================
 
-static const QString StepId = "Step";
+static const char *StepId = "Step";
 
 //==============================================================================
 

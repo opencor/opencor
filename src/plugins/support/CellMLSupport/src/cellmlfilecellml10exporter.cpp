@@ -316,7 +316,7 @@ iface::dom::Element * CellmlFileCellml10Exporter::copyDomElement(iface::dom::Ele
 
     for (uint32_t i = 0, iMax = attributes->length(); i < iMax; ++i) {
         ObjRef<iface::dom::Attr> attr = QueryInterface(attributes->item(i));
-        iface::dom::Attr *newAttr = document->createAttributeNS(CELLML_1_0_NAMESPACE, attr->name());
+        iface::dom::Attr *newAttr = document->createAttributeNS(QString(Cellml_1_0_Namespace).toStdWString(), attr->name());
 
         newAttr->value(attr->value());
 
