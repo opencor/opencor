@@ -31,18 +31,22 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "disableunusedvariablewarning.inl"
+    namespace OpenCOR {
+    namespace Core {
+        static const char *FileGroup = "File";
+    }   // namespace Core
+    }   // namespace OpenCOR
+#include "enableunusedvariablewarning.inl"
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace Core {
 
 //==============================================================================
 
 PLUGININFO_FUNC CorePluginInfo();
-
-//==============================================================================
-
-#include "disableunusedvariablewarning.inl"
-    static const char *FileGroup = "File";
-#include "enableunusedvariablewarning.inl"
 
 //==============================================================================
 

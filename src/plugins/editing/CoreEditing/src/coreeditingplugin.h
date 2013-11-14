@@ -32,18 +32,22 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "disableunusedvariablewarning.inl"
+    namespace OpenCOR {
+    namespace CoreEditing {
+        static const char *EditGroup = "Edit";
+    }   // namespace CoreEditing
+    }   // namespace OpenCOR
+#include "enableunusedvariablewarning.inl"
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace CoreEditing {
 
 //==============================================================================
 
 PLUGININFO_FUNC CoreEditingPluginInfo();
-
-//==============================================================================
-
-#include "disableunusedvariablewarning.inl"
-    static const char *EditGroup = "Edit";
-#include "enableunusedvariablewarning.inl"
 
 //==============================================================================
 

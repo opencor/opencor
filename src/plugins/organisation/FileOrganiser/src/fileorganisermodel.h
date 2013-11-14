@@ -28,6 +28,16 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "disableunusedvariablewarning.inl"
+    namespace OpenCOR {
+    namespace FileOrganiser {
+        static const char *FileOrganiserMimeType = "opencor/file-organiser";
+    }   // namespace FileOrganiser
+    }   // namespace OpenCOR
+#include "enableunusedvariablewarning.inl"
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace FileOrganiser {
 
@@ -40,12 +50,6 @@ namespace Item {
         Expanded = Qt::UserRole+2
     };
 }
-
-//==============================================================================
-
-#include "disableunusedvariablewarning.inl"
-    static const char *FileOrganiserMimeType = "opencor/file-organiser";
-#include "enableunusedvariablewarning.inl"
 
 //==============================================================================
 

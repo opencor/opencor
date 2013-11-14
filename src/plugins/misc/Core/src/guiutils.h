@@ -39,17 +39,21 @@ class QWidget;
 
 //==============================================================================
 
-namespace OpenCOR {
-namespace Core {
+#include "disableunusedvariablewarning.inl"
+    namespace OpenCOR {
+    namespace Core {
+        static const char *SettingsBorderColor    = "BorderColor";
+        static const char *SettingsBaseColor      = "BaseColor";
+        static const char *SettingsWindowColor    = "WindowColor";
+        static const char *SettingsHighlightColor = "HighlightColor";
+    }   // namespace Core
+    }   // namespace OpenCOR
+#include "enableunusedvariablewarning.inl"
 
 //==============================================================================
 
-#include "disableunusedvariablewarning.inl"
-    static const char *SettingsBorderColor    = "BorderColor";
-    static const char *SettingsBaseColor      = "BaseColor";
-    static const char *SettingsWindowColor    = "WindowColor";
-    static const char *SettingsHighlightColor = "HighlightColor";
-#include "enableunusedvariablewarning.inl"
+namespace OpenCOR {
+namespace Core {
 
 //==============================================================================
 

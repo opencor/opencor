@@ -32,15 +32,19 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-namespace OpenCOR {
-namespace CellMLSupport {
+#include "disableunusedvariablewarning.inl"
+    namespace OpenCOR {
+    namespace CellMLSupport {
+        static const char *Cellml_1_0 = "1.0";
+        static const char *Cellml_1_1 = "1.1";
+    }   // namespace CellMLSupport
+    }   // namespace OpenCOR
+#include "enableunusedvariablewarning.inl"
 
 //==============================================================================
 
-#include "disableunusedvariablewarning.inl"
-    static const char *Cellml_1_0 = "1.0";
-    static const char *Cellml_1_1 = "1.1";
-#include "enableunusedvariablewarning.inl"
+namespace OpenCOR {
+namespace CellMLSupport {
 
 //==============================================================================
 

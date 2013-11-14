@@ -40,14 +40,18 @@ class QStandardItemModel;
 
 //==============================================================================
 
-namespace OpenCOR {
-namespace Core {
+#include "disableunusedvariablewarning.inl"
+    namespace OpenCOR {
+    namespace Core {
+        static const char *UnknownValue = "???";
+    }   // namespace Core
+    }   // namespace OpenCOR
+#include "enableunusedvariablewarning.inl"
 
 //==============================================================================
 
-#include "disableunusedvariablewarning.inl"
-    static const char *UnknownValue = "???";
-#include "enableunusedvariablewarning.inl"
+namespace OpenCOR {
+namespace Core {
 
 //==============================================================================
 
