@@ -376,7 +376,7 @@ return condition?str:"nothing";   // Crash at runtime - QString <em>vs</em> cons
 };</pre>
                     </li>
                     <li>
-                        Anything that has a constructor or needs to run code to be initialised cannot be used as global object in library code, since it is undefined when that constructor or code will be run (on first usage, on library load, before <code>main()</code> or not at all). Even if the execution time of the initialiser is defined for shared libraries, you will get into trouble when moving that code in a plugin or if the library is compiled statically:
+                        Anything that has a constructor or needs to run code to be initialised cannot be used as global object in library code since it is undefined when that constructor or code will be run (on first usage, on library load, before <code>main()</code> or not at all). Even if the execution time of the initialiser is defined for shared libraries, you will get into trouble when moving that code in a plugin or if the library is compiled statically:
                         <pre class="bad prettyprint">// The default constructor needs to be run to initialize x
 
 static const QString x;
