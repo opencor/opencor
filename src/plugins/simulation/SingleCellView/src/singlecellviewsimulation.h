@@ -154,6 +154,8 @@ Q_SIGNALS:
 
 class SingleCellViewSimulationResults : public QObject
 {
+    Q_OBJECT
+
 public:
     explicit SingleCellViewSimulationResults(CellMLSupport::CellmlFileRuntime *pRuntime,
                                              SingleCellViewSimulation *pSimulation);

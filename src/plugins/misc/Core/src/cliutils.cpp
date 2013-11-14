@@ -140,22 +140,18 @@ QString version(QCoreApplication *pApp)
 {
     QString appVersion = pApp->applicationVersion();
     QString bitVersion;
-    static const int SizeOfPointer = sizeof(void *);
+    enum {
+        SizeOfPointer = sizeof(void *)
+    };
 
-    switch (SizeOfPointer) {
-    case 4:
+    if (SizeOfPointer == 4)
         bitVersion = "32-bit";
-
-        break;
-    case 8:
+    else if (SizeOfPointer == 8)
         bitVersion = "64-bit";
-
-        break;
-    default:
+    else
         // Not a size that we could recognise, so...
 
         bitVersion = "";
-    }
 
     bool snapshot = appVersion.contains("-");
     QString res = pApp->applicationName()+" ";
