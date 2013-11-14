@@ -58,11 +58,6 @@ namespace OpenCOR {
 
 //==============================================================================
 
-#include "disableunusedvariablewarning.inl"
-#include "enableunusedvariablewarning.inl"
-
-//==============================================================================
-
 class Plugin;
 class PluginInfo;
 class PluginManager;
