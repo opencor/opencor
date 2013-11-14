@@ -42,11 +42,11 @@ namespace Core {
 
 //==============================================================================
 
-#include "disableunusedvariableswarning.inl"
+#include "disableunusedvariablewarning.inl"
     static const char *SettingsGlobal          = "Global";
     static const char *SettingsLocale          = "Locale";
     static const char *SettingsActiveDirectory = "ActiveDirectory";
-#include "enableunusedvariableswarning.inl"
+#include "enableunusedvariablewarning.inl"
 
 //==============================================================================
 

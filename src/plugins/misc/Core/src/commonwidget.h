@@ -49,7 +49,7 @@ namespace Core {
 //==============================================================================
 // Note: the default font family and size below were taken from Qt Creator...
 
-#include "disableunusedvariableswarning.inl"
+#include "disableunusedvariablewarning.inl"
     #if defined(Q_OS_WIN)
         static const char *DefaultFontFamily = "Courier";
         enum {
@@ -68,7 +68,7 @@ namespace Core {
     #else
         #error Unsupported platform
     #endif
-#include "enableunusedvariableswarning.inl"
+#include "enableunusedvariablewarning.inl"
 
 //==============================================================================
 

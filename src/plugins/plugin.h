@@ -35,15 +35,15 @@ namespace OpenCOR {
 
 //==============================================================================
 
-#include "disableunusedvariableswarning.inl"
+#include "disableunusedvariablewarning.inl"
     static const char *SettingsOrganization = "Physiome";
     static const char *SettingsApplication  = "OpenCOR";
     static const char *SettingsPlugins      = "Plugins";
-#include "enableunusedvariableswarning.inl"
+#include "enableunusedvariablewarning.inl"
 
 //==============================================================================
 
-#include "disableunusedvariableswarning.inl"
+#include "disableunusedvariablewarning.inl"
     #if defined(Q_OS_WIN)
         static const char *PluginPrefix    = "";
         static const char *PluginExtension = ".dll";
@@ -56,7 +56,7 @@ namespace OpenCOR {
     #else
         #error Unsupported platform
     #endif
-#include "enableunusedvariableswarning.inl"
+#include "enableunusedvariablewarning.inl"
 
 //==============================================================================
 

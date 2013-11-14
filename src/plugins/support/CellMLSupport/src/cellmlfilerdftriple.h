@@ -41,10 +41,10 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-#include "disableunusedvariableswarning.inl"
+#include "disableunusedvariablewarning.inl"
     static const char *ResourceRegExp = "[0-9a-z]+((-|\\.)[0-9a-z]+)?";
     static const char *IdRegExp       = "[0-9A-Za-z\\.%-_:]+(:[0-9A-Za-z\\.%-_:]+)?";
-#include "enableunusedvariableswarning.inl"
+#include "enableunusedvariablewarning.inl"
 
 //==============================================================================
 

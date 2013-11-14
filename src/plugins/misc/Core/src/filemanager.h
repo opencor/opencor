@@ -42,9 +42,9 @@ namespace Core {
 
 //==============================================================================
 
-#include "disableunusedvariableswarning.inl"
+#include "disableunusedvariablewarning.inl"
     static const char *FileSystemMimeType = "text/uri-list";
-#include "enableunusedvariableswarning.inl"
+#include "enableunusedvariablewarning.inl"
 
 //==============================================================================
 

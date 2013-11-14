@@ -41,9 +41,9 @@ PLUGININFO_FUNC CoreEditingPluginInfo();
 
 //==============================================================================
 
-#include "disableunusedvariableswarning.inl"
+#include "disableunusedvariablewarning.inl"
     static const char *EditGroup = "Edit";
-#include "enableunusedvariableswarning.inl"
+#include "enableunusedvariablewarning.inl"
 
 //==============================================================================
 

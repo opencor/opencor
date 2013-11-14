@@ -41,10 +41,10 @@ PLUGININFO_FUNC CellMLSupportPluginInfo();
 
 //==============================================================================
 
-#include "disableunusedvariableswarning.inl"
+#include "disableunusedvariablewarning.inl"
     static const char *CellmlMimeType      = "application/cellml+xml";
     static const char *CellmlFileExtension = "cellml";
-#include "enableunusedvariableswarning.inl"
+#include "enableunusedvariablewarning.inl"
 
 //==============================================================================
 

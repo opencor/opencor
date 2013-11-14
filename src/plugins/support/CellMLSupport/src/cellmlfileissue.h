@@ -37,10 +37,10 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-#include "disableunusedvariableswarning.inl"
+#include "disableunusedvariablewarning.inl"
     static const char *Cellml_1_0 = "1.0";
     static const char *Cellml_1_1 = "1.1";
-#include "enableunusedvariableswarning.inl"
+#include "enableunusedvariablewarning.inl"
 
 //==============================================================================
 

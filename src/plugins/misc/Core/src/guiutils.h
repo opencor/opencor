@@ -44,12 +44,12 @@ namespace Core {
 
 //==============================================================================
 
-#include "disableunusedvariableswarning.inl"
+#include "disableunusedvariablewarning.inl"
     static const char *SettingsBorderColor    = "BorderColor";
     static const char *SettingsBaseColor      = "BaseColor";
     static const char *SettingsWindowColor    = "WindowColor";
     static const char *SettingsHighlightColor = "HighlightColor";
-#include "enableunusedvariableswarning.inl"
+#include "enableunusedvariablewarning.inl"
 
 //==============================================================================
 

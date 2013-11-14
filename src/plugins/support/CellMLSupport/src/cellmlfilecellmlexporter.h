@@ -41,12 +41,12 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-#include "disableunusedvariableswarning.inl"
+#include "disableunusedvariablewarning.inl"
     static const char *MathmlNamespace = "http://www.w3.org/1998/Math/MathML";
 
     static const char *Cellml_1_0_Namespace = "http://www.cellml.org/cellml/1.0#";
     static const char *Cellml_1_1_Namespace = "http://www.cellml.org/cellml/1.1#";
-#include "enableunusedvariableswarning.inl"
+#include "enableunusedvariablewarning.inl"
 
 //==============================================================================
 

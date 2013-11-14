@@ -31,27 +31,21 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#if defined(Q_OS_LINUX) || defined(Q_OS_MAC)
-    #pragma GCC diagnostic ignored "-Wunused-parameter"
-#endif
+#include "disableunusedparameterwarning.inl"
+    #include "llvm/ExecutionEngine/ExecutionEngine.h"
+    #include "llvm/IR/LLVMContext.h"
+    #include "llvm/IR/Module.h"
+    #include "llvm/Support/TargetSelect.h"
+    #include "llvm/Support/Host.h"
 
-#include "llvm/ExecutionEngine/ExecutionEngine.h"
-#include "llvm/IR/LLVMContext.h"
-#include "llvm/IR/Module.h"
-#include "llvm/Support/TargetSelect.h"
-#include "llvm/Support/Host.h"
-
-#include "clang/Basic/DiagnosticOptions.h"
-#include "clang/CodeGen/CodeGenAction.h"
-#include "clang/Driver/Compilation.h"
-#include "clang/Driver/Driver.h"
-#include "clang/Driver/Tool.h"
-#include "clang/Frontend/CompilerInstance.h"
-#include "clang/Frontend/TextDiagnosticPrinter.h"
-
-#if defined(Q_OS_LINUX) || defined(Q_OS_MAC)
-    #pragma GCC diagnostic warning "-Wunused-parameter"
-#endif
+    #include "clang/Basic/DiagnosticOptions.h"
+    #include "clang/CodeGen/CodeGenAction.h"
+    #include "clang/Driver/Compilation.h"
+    #include "clang/Driver/Driver.h"
+    #include "clang/Driver/Tool.h"
+    #include "clang/Frontend/CompilerInstance.h"
+    #include "clang/Frontend/TextDiagnosticPrinter.h"
+#include "enableunusedparameterwarning.inl"
 
 //==============================================================================
 
