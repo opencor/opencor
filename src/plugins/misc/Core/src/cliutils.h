@@ -42,15 +42,11 @@ namespace Core {
 
 //==============================================================================
 
-#pragma GCC diagnostic ignored "-Wunused-variable"
-// Note: the following constants are defined here but used elsewhere, hence we
-//       temporarily ignore warnings about unused variables...
-
-static const char *SettingsGlobal          = "Global";
-static const char *SettingsLocale          = "Locale";
-static const char *SettingsActiveDirectory = "ActiveDirectory";
-
-#pragma GCC diagnostic warning "-Wunused-variable"
+#include "disableunusedvariableswarning.inl"
+    static const char *SettingsGlobal          = "Global";
+    static const char *SettingsLocale          = "Locale";
+    static const char *SettingsActiveDirectory = "ActiveDirectory";
+#include "enableunusedvariableswarning.inl"
 
 //==============================================================================
 

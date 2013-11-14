@@ -78,6 +78,7 @@ SET(RESOURCES
 # Various include directories
 
 INCLUDE_DIRECTORIES(
+    src/comp
     src/misc
     src/plugins
 )

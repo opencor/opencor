@@ -40,13 +40,9 @@ PLUGININFO_FUNC CorePluginInfo();
 
 //==============================================================================
 
-#pragma GCC diagnostic ignored "-Wunused-variable"
-// Note: the following constants are defined here but used elsewhere, hence we
-//       temporarily ignore warnings about unused variables...
-
-static const char *FileGroup = "File";
-
-#pragma GCC diagnostic warning "-Wunused-variable"
+#include "disableunusedvariableswarning.inl"
+    static const char *FileGroup = "File";
+#include "enableunusedvariableswarning.inl"
 
 //==============================================================================
 

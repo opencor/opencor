@@ -44,16 +44,12 @@ namespace Core {
 
 //==============================================================================
 
-#pragma GCC diagnostic ignored "-Wunused-variable"
-// Note: the following constants are defined here but used elsewhere, hence we
-//       temporarily ignore warnings about unused variables...
-
-static const char *SettingsBorderColor    = "BorderColor";
-static const char *SettingsBaseColor      = "BaseColor";
-static const char *SettingsWindowColor    = "WindowColor";
-static const char *SettingsHighlightColor = "HighlightColor";
-
-#pragma GCC diagnostic warning "-Wunused-variable"
+#include "disableunusedvariableswarning.inl"
+    static const char *SettingsBorderColor    = "BorderColor";
+    static const char *SettingsBaseColor      = "BaseColor";
+    static const char *SettingsWindowColor    = "WindowColor";
+    static const char *SettingsHighlightColor = "HighlightColor";
+#include "enableunusedvariableswarning.inl"
 
 //==============================================================================
 

@@ -35,36 +35,28 @@ namespace OpenCOR {
 
 //==============================================================================
 
-#pragma GCC diagnostic ignored "-Wunused-variable"
-// Note: the following constants are defined here but used elsewhere, hence we
-//       temporarily ignore warnings about unused variables...
-
-static const char *SettingsOrganization = "Physiome";
-static const char *SettingsApplication  = "OpenCOR";
-static const char *SettingsPlugins      = "Plugins";
-
-#pragma GCC diagnostic warning "-Wunused-variable"
+#include "disableunusedvariableswarning.inl"
+    static const char *SettingsOrganization = "Physiome";
+    static const char *SettingsApplication  = "OpenCOR";
+    static const char *SettingsPlugins      = "Plugins";
+#include "enableunusedvariableswarning.inl"
 
 //==============================================================================
 
-#pragma GCC diagnostic ignored "-Wunused-variable"
-// Note: the following constants are defined here but used elsewhere, hence we
-//       temporarily ignore warnings about unused variables...
-
-#if defined(Q_OS_WIN)
-    static const char *PluginPrefix    = "";
-    static const char *PluginExtension = ".dll";
-#elif defined(Q_OS_LINUX)
-    static const char *PluginPrefix    = "lib";
-    static const char *PluginExtension = ".so";
-#elif defined(Q_OS_MAC)
-    static const char *PluginPrefix    = "lib";
-    static const char *PluginExtension = ".dylib";
-#else
-    #error Unsupported platform
-#endif
-
-#pragma GCC diagnostic warning "-Wunused-variable"
+#include "disableunusedvariableswarning.inl"
+    #if defined(Q_OS_WIN)
+        static const char *PluginPrefix    = "";
+        static const char *PluginExtension = ".dll";
+    #elif defined(Q_OS_LINUX)
+        static const char *PluginPrefix    = "lib";
+        static const char *PluginExtension = ".so";
+    #elif defined(Q_OS_MAC)
+        static const char *PluginPrefix    = "lib";
+        static const char *PluginExtension = ".dylib";
+    #else
+        #error Unsupported platform
+    #endif
+#include "enableunusedvariableswarning.inl"
 
 //==============================================================================
 

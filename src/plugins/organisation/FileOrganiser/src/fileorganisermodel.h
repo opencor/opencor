@@ -43,13 +43,9 @@ namespace Item {
 
 //==============================================================================
 
-#pragma GCC diagnostic ignored "-Wunused-variable"
-// Note: the following constants are defined here but used elsewhere, hence we
-//       temporarily ignore warnings about unused variables...
-
-static const char *FileOrganiserMimeType = "opencor/file-organiser";
-
-#pragma GCC diagnostic warning "-Wunused-variable"
+#include "disableunusedvariableswarning.inl"
+    static const char *FileOrganiserMimeType = "opencor/file-organiser";
+#include "enableunusedvariableswarning.inl"
 
 //==============================================================================
 
