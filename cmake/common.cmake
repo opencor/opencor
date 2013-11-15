@@ -161,40 +161,61 @@ MACRO(INITIALISE_PROJECT)
         ADD_DEFINITIONS(-D_UNICODE)
     ENDIF()
 
-    # On OS X, use the oldest SDK shipped with Xcode
+    # On OS X, use the oldest SDK available, as long as it is for Mac OS X 10.7
+    # or later (i.e. a version that supports C++11)
 
     IF(APPLE)
         EXECUTE_PROCESS(COMMAND xcodebuild -showsdks
                         COMMAND grep --colour=never macosx
-                        COMMAND head -1
-                        OUTPUT_VARIABLE OLDEST_SDK_LINE
-                        OUTPUT_STRIP_TRAILING_WHITESPACE)
-        EXECUTE_PROCESS(COMMAND echo ${OLDEST_SDK_LINE}
                         COMMAND cut -f2
-                        OUTPUT_VARIABLE OLDEST_OS_X_VERSION
-                        OUTPUT_STRIP_TRAILING_WHITESPACE)
-        EXECUTE_PROCESS(COMMAND echo ${OLDEST_OS_X_VERSION}
+                        COMMAND sed "s/ *$//"
+                        OUTPUT_VARIABLE OS_X_VERSIONS
+                        ERROR_QUIET)
+        EXECUTE_PROCESS(COMMAND echo ${OS_X_VERSIONS}
                         COMMAND rev
                         COMMAND cut -d " " -f1
                         COMMAND rev
-                        OUTPUT_VARIABLE OLDEST_OS_X_VERSION_NUMBER
+                        COMMAND tr "\n" ";"
+                        OUTPUT_VARIABLE OS_X_VERSION_NUMBERS)
+
+        SET(VALID_OS_X_VERSION_NUMBER)
+        SET(INVALID_OS_X_VERSION_NUMBER)
+
+        FOREACH(OS_X_VERSION_NUMBER ${OS_X_VERSION_NUMBERS})
+            IF(${OS_X_VERSION_NUMBER} VERSION_LESS 10.7)
+                SET(INVALID_OS_X_VERSION_NUMBER ${OS_X_VERSION_NUMBER})
+            ELSE()
+                IF("${VALID_OS_X_VERSION_NUMBER}" STREQUAL "")
+                    SET(VALID_OS_X_VERSION_NUMBER ${OS_X_VERSION_NUMBER})
+                ENDIF()
+            ENDIF()
+        ENDFOREACH()
+
+        IF("${VALID_OS_X_VERSION_NUMBER}" STREQUAL "")
+            IF("${INVALID_OS_X_VERSION_NUMBER}" STREQUAL "")
+                MESSAGE(FATAL_ERROR "No SDK could be found...")
+            ELSE()
+                EXECUTE_PROCESS(COMMAND echo ${OS_X_VERSIONS}
+                                COMMAND grep "${INVALID_OS_X_VERSION_NUMBER}"
+                                OUTPUT_VARIABLE INVALID_OS_X_VERSION
+                                OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+                MESSAGE(FATAL_ERROR "The ${INVALID_OS_X_VERSION} SDK was found, but the Mac OS X 10.7 SDK or later is needed...")
+            ENDIF()
+        ENDIF()
+
+        EXECUTE_PROCESS(COMMAND echo ${OS_X_VERSIONS}
+                        COMMAND grep "${VALID_OS_X_VERSION_NUMBER}"
+                        OUTPUT_VARIABLE VALID_OS_X_VERSION
                         OUTPUT_STRIP_TRAILING_WHITESPACE)
-        EXECUTE_PROCESS(COMMAND echo ${OLDEST_SDK_LINE}
-                        COMMAND cut -f3
-                        OUTPUT_VARIABLE OLDEST_SDK_VERSION
-                        OUTPUT_STRIP_TRAILING_WHITESPACE)
-        EXECUTE_PROCESS(COMMAND echo ${OLDEST_SDK_VERSION}
-                        COMMAND cut -d " " -f2
-                        OUTPUT_VARIABLE OLDEST_SDK_NAME
-                        OUTPUT_STRIP_TRAILING_WHITESPACE)
-        EXECUTE_PROCESS(COMMAND xcodebuild -version -sdk ${OLDEST_SDK_NAME} Path
-                        OUTPUT_VARIABLE OLDEST_SDK_PATH
+        EXECUTE_PROCESS(COMMAND xcodebuild -version -sdk macosx${VALID_OS_X_VERSION_NUMBER} Path
+                        OUTPUT_VARIABLE VALID_SDK_PATH
                         OUTPUT_STRIP_TRAILING_WHITESPACE)
 
-        MESSAGE("Building for ${OLDEST_OS_X_VERSION} and later...")
+        MESSAGE("Building for ${VALID_OS_X_VERSION} and later...")
 
-        SET(CMAKE_OSX_DEPLOYMENT_TARGET ${OLDEST_OS_X_VERSION_NUMBER})
-        SET(CMAKE_OSX_SYSROOT ${OLDEST_SDK_PATH})
+        SET(CMAKE_OSX_DEPLOYMENT_TARGET ${VALID_OS_X_VERSION_NUMBER})
+        SET(CMAKE_OSX_SYSROOT ${VALID_SDK_PATH})
     ENDIF()
 
     # Location of our plugins so that we don't have to deploy OpenCOR on
