@@ -421,7 +421,7 @@ void foo()
                             <strong>Note #1:</strong> static objects in function scope are not a problem. The constructor will be run the first time the function is entered. The code is not re-entrant, though.
                         </div>
                         <div>
-                            <strong>Note #2:</strong> using <a href="http://qt-project.org/qt5">Qt 5</a> and <a href="http://en.wikipedia.org/wiki/C++11">C++11</a>, it is now possible to (indirectly) have a <code>static const QString</code> (see <a href="http://www.macieira.org/blog/2011/07/qstring-improved/">here</a> for more information about <code>QString</code>), thus making it possible for a variable to be both read-only and sharable.
+                            <strong>Note #2:</strong> using <a href="http://qt-project.org/qt5">Qt 5</a> and <a href="http://en.wikipedia.org/wiki/C++11">C++11</a>, it is now possible to (indirectly) have a <code>static const QString</code> (see <a href="http://www.macieira.org/blog/2011/07/qstring-improved/">here</a> for more information on <code>QString</code>), thus making it possible for a variable to be both read-only and sharable.
                             <pre class="good prettyprint">static const auto s = QStringLiteral("Hello, World!");</pre>
                             <pre class="bad prettyprint">static const QString s = "Hello, World!";</pre>
                         </div>
