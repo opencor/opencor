@@ -95,8 +95,12 @@ MACRO(INITIALISE_PROJECT)
 
         SET(LINK_FLAGS_PROPERTIES "/STACK:10000000 /MACHINE:X86")
     ELSE()
-        SET(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++ -Wall -W -Werror")
+        SET(CMAKE_CXX_FLAGS "-Wall -W -Werror -std=c++0x")
         SET(LINK_FLAGS_PROPERTIES)
+
+        IF(APPLE)
+            SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
+        ENDIF()
     ENDIF()
 
     # Some build settings that depend on whether we want a debug or release
