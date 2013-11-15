@@ -15,7 +15,7 @@ Note #1: configuration files were generated using CMake (on Windows, we also nee
            cd [LLVM]
            mkdir build
            cd build
-           cmake ..   OR   cmake -G "Visual Studio 10" ..
-           make       OR   msbuild LLVM.sln
+           cmake ..   OR   cmake -G "NMake Makefiles" ..
+           make       OR   jom
        From there, the configuration files were manually copied over and can be found in the windows, linux and osx folders of various folders.
 Note #2: OpencOR is currently supported on Windows, Linux and OS X, so we only need to target X86 at this stage.

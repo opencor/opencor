@@ -1,7 +1,7 @@
 @ECHO OFF
 
 CALL clean
-CALL make %*
+CALL make
 
 SET ExitCode=%ERRORLEVEL%
 

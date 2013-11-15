@@ -42,7 +42,7 @@ EXIT /B %ExitCode%
 
 :BuildOpenCORGUI
 
-jom %*
+jom
 
 SET ExitCode=%ERRORLEVEL%
 
@@ -74,7 +74,7 @@ EXIT /B %ExitCode%
 
 :BuildOpenCORCLI
 
-jom %*
+jom
 
 SET ExitCode=%ERRORLEVEL%
 
