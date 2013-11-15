@@ -196,7 +196,7 @@ MACRO(INITIALISE_PROJECT)
                 MESSAGE(FATAL_ERROR "No SDK could be found...")
             ELSE()
                 EXECUTE_PROCESS(COMMAND echo ${OS_X_VERSIONS}
-                                COMMAND grep "${INVALID_OS_X_VERSION_NUMBER}"
+                                COMMAND grep --colour=never "${INVALID_OS_X_VERSION_NUMBER}"
                                 OUTPUT_VARIABLE INVALID_OS_X_VERSION
                                 OUTPUT_STRIP_TRAILING_WHITESPACE)
 
@@ -205,7 +205,7 @@ MACRO(INITIALISE_PROJECT)
         ENDIF()
 
         EXECUTE_PROCESS(COMMAND echo ${OS_X_VERSIONS}
-                        COMMAND grep "${VALID_OS_X_VERSION_NUMBER}"
+                        COMMAND grep --colour=never "${VALID_OS_X_VERSION_NUMBER}"
                         OUTPUT_VARIABLE VALID_OS_X_VERSION
                         OUTPUT_STRIP_TRAILING_WHITESPACE)
         EXECUTE_PROCESS(COMMAND xcodebuild -version -sdk macosx${VALID_OS_X_VERSION_NUMBER} Path
