@@ -271,7 +271,7 @@ void HelpWidget::retranslateUi()
 
 //==============================================================================
 
-static const char *SettingsZoomLevel = "ZoomLevel";
+static const auto SettingsZoomLevel = QStringLiteral("ZoomLevel");
 
 //==============================================================================
 

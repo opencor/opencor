@@ -272,7 +272,7 @@ void CorePlugin::initialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-static const char *SettingsRecentFiles = "RecentFiles";
+static const auto SettingsRecentFiles = QStringLiteral("RecentFiles");
 
 //==============================================================================
 

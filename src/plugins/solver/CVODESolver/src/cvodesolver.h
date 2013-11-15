@@ -37,10 +37,10 @@ namespace CVODESolver {
 
 //==============================================================================
 
-static const char *MaximumStepId          = "MaximumStep";
-static const char *MaximumNumberOfStepsId = "MaximumNumberOfSteps";
-static const char *RelativeToleranceId    = "RelativeTolerance";
-static const char *AbsoluteToleranceId    = "AbsoluteTolerance";
+static const auto MaximumStepId          = QStringLiteral("MaximumStep");
+static const auto MaximumNumberOfStepsId = QStringLiteral("MaximumNumberOfSteps");
+static const auto RelativeToleranceId    = QStringLiteral("RelativeTolerance");
+static const auto AbsoluteToleranceId    = QStringLiteral("AbsoluteTolerance");
 
 //==============================================================================
 

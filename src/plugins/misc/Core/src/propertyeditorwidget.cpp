@@ -1203,7 +1203,7 @@ void PropertyEditorWidget::retranslateUi()
 
 //==============================================================================
 
-static const char *SettingsColumnWidth = "ColumnWidth%1";
+static const auto SettingsColumnWidth = QStringLiteral("ColumnWidth%1");
 
 //==============================================================================
 
@@ -1212,7 +1212,7 @@ void PropertyEditorWidget::loadSettings(QSettings *pSettings)
     // Retrieve the width of each column
 
     for (int i = 0, iMax = header()->count(); i < iMax; ++i)
-        setColumnWidth(i, pSettings->value(QString(SettingsColumnWidth).arg(i),
+        setColumnWidth(i, pSettings->value(SettingsColumnWidth.arg(i),
                                            columnWidth(i)).toInt());
 }
 
@@ -1223,8 +1223,7 @@ void PropertyEditorWidget::saveSettings(QSettings *pSettings) const
     // Keep track of the width of each column
 
     for (int i = 0, iMax = header()->count(); i < iMax; ++i)
-        pSettings->setValue(QString(SettingsColumnWidth).arg(i),
-                            columnWidth(i));
+        pSettings->setValue(SettingsColumnWidth.arg(i), columnWidth(i));
 }
 
 //==============================================================================

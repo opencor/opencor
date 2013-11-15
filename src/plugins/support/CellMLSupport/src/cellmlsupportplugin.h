@@ -32,23 +32,17 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "disableunusedvariablewarning.inl"
-    namespace OpenCOR {
-    namespace CellMLSupport {
-        static const char *CellmlMimeType      = "application/cellml+xml";
-        static const char *CellmlFileExtension = "cellml";
-    }   // namespace CellMLSupport
-    }   // namespace OpenCOR
-#include "enableunusedvariablewarning.inl"
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace CellMLSupport {
 
 //==============================================================================
 
 PLUGININFO_FUNC CellMLSupportPluginInfo();
+
+//==============================================================================
+
+static const auto CellmlMimeType      = QStringLiteral("application/cellml+xml");
+static const auto CellmlFileExtension = QStringLiteral("cellml");
 
 //==============================================================================
 

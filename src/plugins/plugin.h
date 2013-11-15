@@ -31,30 +31,28 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "disableunusedvariablewarning.inl"
-    namespace OpenCOR {
-        static const char *SettingsOrganization = "Physiome";
-        static const char *SettingsApplication  = "OpenCOR";
-        static const char *SettingsPlugins      = "Plugins";
-
-        #if defined(Q_OS_WIN)
-            static const char *PluginPrefix    = "";
-            static const char *PluginExtension = ".dll";
-        #elif defined(Q_OS_LINUX)
-            static const char *PluginPrefix    = "lib";
-            static const char *PluginExtension = ".so";
-        #elif defined(Q_OS_MAC)
-            static const char *PluginPrefix    = "lib";
-            static const char *PluginExtension = ".dylib";
-        #else
-            #error Unsupported platform
-        #endif
-    }   // namespace OpenCOR
-#include "enableunusedvariablewarning.inl"
+namespace OpenCOR {
 
 //==============================================================================
 
-namespace OpenCOR {
+static const auto SettingsOrganization = QStringLiteral("Physiome");
+static const auto SettingsApplication = QStringLiteral("OpenCOR");
+static const auto SettingsPlugins = QStringLiteral("Plugins");
+
+//==============================================================================
+
+#if defined(Q_OS_WIN)
+    static const auto PluginPrefix = QStringLiteral("");
+    static const auto PluginExtension = QStringLiteral(".dll");
+#elif defined(Q_OS_LINUX)
+    static const auto PluginPrefix = QStringLiteral("lib");
+    static const auto PluginExtension = QStringLiteral(".so");
+#elif defined(Q_OS_MAC)
+    static const auto PluginPrefix = QStringLiteral("lib");
+    static const auto PluginExtension = QStringLiteral(".dylib");
+#else
+    #error Unsupported platform
+#endif
 
 //==============================================================================
 

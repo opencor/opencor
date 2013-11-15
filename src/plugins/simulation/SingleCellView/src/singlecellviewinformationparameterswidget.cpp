@@ -90,7 +90,7 @@ void SingleCellViewInformationParametersWidget::retranslateUi()
 
 //==============================================================================
 
-static const char *SettingsColumnWidth = "ColumnWidth%1";
+static const auto SettingsColumnWidth = QStringLiteral("ColumnWidth%1");
 
 //==============================================================================
 
@@ -99,7 +99,7 @@ void SingleCellViewInformationParametersWidget::loadSettings(QSettings *pSetting
     // Retrieve the width of each column of our property editors
 
     for (int i = 0, iMax = mColumnWidths.size(); i < iMax; ++i)
-        mColumnWidths[i] = pSettings->value(QString(SettingsColumnWidth).arg(i),
+        mColumnWidths[i] = pSettings->value(SettingsColumnWidth.arg(i),
                                             mColumnWidths.at(i)).toInt();
 
 }
@@ -111,8 +111,7 @@ void SingleCellViewInformationParametersWidget::saveSettings(QSettings *pSetting
     // Keep track of the width of each column of our current property editor
 
     for (int i = 0, iMax = mColumnWidths.size(); i < iMax; ++i)
-        pSettings->setValue(QString(SettingsColumnWidth).arg(i),
-                            mColumnWidths.at(i));
+        pSettings->setValue(SettingsColumnWidth.arg(i), mColumnWidths.at(i));
 }
 
 //==============================================================================

@@ -107,11 +107,11 @@ void CellMLAnnotationViewPlugin::initialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-static const char *SettingsCellmlAnnotationWidget                                = "CellmlAnnotationWidget";
-static const char *SettingsCellmlAnnotationWidgetSizesCount                      = "SizesCount";
-static const char *SettingsCellmlAnnotationWidgetSizes                           = "Sizes%1";
-static const char *SettingsCellmlAnnotationWidgetMetadataDetailsWidgetSizesCount = "MetadataDetailsWidgetSizesCount";
-static const char *SettingsCellmlAnnotationWidgetMetadataDetailsWidgetSizes      = "MetadataDetailsWidgetSizes%1";
+static const auto SettingsCellmlAnnotationWidget                                = QStringLiteral("CellmlAnnotationWidget");
+static const auto SettingsCellmlAnnotationWidgetSizesCount                      = QStringLiteral("SizesCount");
+static const auto SettingsCellmlAnnotationWidgetSizes                           = QStringLiteral("Sizes%1");
+static const auto SettingsCellmlAnnotationWidgetMetadataDetailsWidgetSizesCount = QStringLiteral("MetadataDetailsWidgetSizesCount");
+static const auto SettingsCellmlAnnotationWidgetMetadataDetailsWidgetSizes      = QStringLiteral("MetadataDetailsWidgetSizes%1");
 
 //==============================================================================
 
@@ -137,7 +137,7 @@ void CellMLAnnotationViewPlugin::loadSettings(QSettings *pSettings)
             // There are previous sizes, so use them to initialise mSizes
 
             for (int i = 0; i < sizesCount; ++i)
-                mSizes << pSettings->value(QString(SettingsCellmlAnnotationWidgetSizes).arg(i)).toInt();
+                mSizes << pSettings->value(SettingsCellmlAnnotationWidgetSizes.arg(i)).toInt();
         }
 
         // Metadata details view widget sizes
@@ -155,7 +155,7 @@ void CellMLAnnotationViewPlugin::loadSettings(QSettings *pSettings)
             // mMetadataDetailsWidgetSizes
 
             for (int i = 0; i < metadataDetailsWidgetSizesCount; ++i)
-                mMetadataDetailsWidgetSizes << pSettings->value(QString(SettingsCellmlAnnotationWidgetMetadataDetailsWidgetSizes).arg(i)).toInt();
+                mMetadataDetailsWidgetSizes << pSettings->value(SettingsCellmlAnnotationWidgetMetadataDetailsWidgetSizes.arg(i)).toInt();
         }
     pSettings->endGroup();
 }
@@ -177,7 +177,7 @@ void CellMLAnnotationViewPlugin::saveSettings(QSettings *pSettings) const
         pSettings->setValue(SettingsCellmlAnnotationWidgetSizesCount, mSizes.count());
 
         for (int i = 0, iMax = mSizes.count(); i < iMax; ++i)
-            pSettings->setValue(QString(SettingsCellmlAnnotationWidgetSizes).arg(i),
+            pSettings->setValue(SettingsCellmlAnnotationWidgetSizes.arg(i),
                                 mSizes[i]);
 
         // Metadata details view widget sizes
@@ -185,7 +185,7 @@ void CellMLAnnotationViewPlugin::saveSettings(QSettings *pSettings) const
         pSettings->setValue(SettingsCellmlAnnotationWidgetMetadataDetailsWidgetSizesCount, mMetadataDetailsWidgetSizes.count());
 
         for (int i = 0, iMax = mMetadataDetailsWidgetSizes.count(); i < iMax; ++i)
-            pSettings->setValue(QString(SettingsCellmlAnnotationWidgetMetadataDetailsWidgetSizes).arg(i),
+            pSettings->setValue(SettingsCellmlAnnotationWidgetMetadataDetailsWidgetSizes.arg(i),
                                 mMetadataDetailsWidgetSizes[i]);
     pSettings->endGroup();
 }

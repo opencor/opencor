@@ -45,7 +45,7 @@ namespace Help {
 
 //==============================================================================
 
-static const char *OpencorHelpHomepageUrl = "qthelp://opencor/doc/user/index.html";
+static const auto OpencorHelpHomepageUrl = QStringLiteral("qthelp://opencor/doc/user/index.html");
 
 //==============================================================================
 
@@ -94,7 +94,7 @@ HelpWindow::HelpWindow(QWidget *pParent) :
 
     // Create and add the help widget
 
-    mHelpWidget = new HelpWidget(mHelpEngine, QUrl(OpencorHelpHomepageUrl), this);
+    mHelpWidget = new HelpWidget(mHelpEngine, OpencorHelpHomepageUrl, this);
 
     mHelpWidget->setObjectName("HelpWidget");
 

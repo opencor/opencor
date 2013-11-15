@@ -268,7 +268,7 @@ CollapsibleWidget::CollapsibleWidget(QWidget *pParent) :
 
 //==============================================================================
 
-static const char *SettingsCollapsed = "Collapsed%1";
+static const auto SettingsCollapsed = QStringLiteral("Collapsed%1");
 
 //==============================================================================
 
@@ -277,7 +277,7 @@ void CollapsibleWidget::loadSettings(QSettings *pSettings)
     // Retrieve our collapsable state
 
     for (int i = 0, iMax = mHeaders.count(); i < iMax; ++i)
-        setCollapsed(i, pSettings->value(QString(SettingsCollapsed).arg(i), false).toBool());
+        setCollapsed(i, pSettings->value(SettingsCollapsed.arg(i), false).toBool());
 }
 
 //==============================================================================
@@ -287,7 +287,7 @@ void CollapsibleWidget::saveSettings(QSettings *pSettings) const
     // Keep track of our collapsable state
 
     for (int i = 0, iMax = mHeaders.count(); i < iMax; ++i)
-        pSettings->setValue(QString(SettingsCollapsed).arg(i), isCollapsed(i));
+        pSettings->setValue(SettingsCollapsed.arg(i), isCollapsed(i));
 }
 
 //==============================================================================

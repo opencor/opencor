@@ -37,18 +37,12 @@ class QTimer;
 
 //==============================================================================
 
-#include "disableunusedvariablewarning.inl"
-    namespace OpenCOR {
-    namespace Core {
-        static const char *FileSystemMimeType = "text/uri-list";
-    }   // namespace Core
-    }   // namespace OpenCOR
-#include "enableunusedvariablewarning.inl"
+namespace OpenCOR {
+namespace Core {
 
 //==============================================================================
 
-namespace OpenCOR {
-namespace Core {
+static const auto FileSystemMimeType = QStringLiteral("text/uri-list");
 
 //==============================================================================
 

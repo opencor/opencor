@@ -80,6 +80,11 @@ MACRO(INITIALISE_PROJECT)
     SET(QT_VERSION_PATCH ${Qt5Widgets_VERSION_PATCH})
 
     # Some general build settings
+    # Note: we need to use C++11, so that we can define strings as static const.
+    #       Now, it happens that MSVC enables C++11 support by default, so we
+    #       just need to enable it on Linux and OS X. In that context, and for
+    #       backward compatilibity with versions of gcc older than 4.7, we do
+    #       this by using -std=c++0x rather than -std=c++11...
 
     IF(WIN32)
         STRING(REPLACE "/W3" "/W3 /WX" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
@@ -90,7 +95,7 @@ MACRO(INITIALISE_PROJECT)
 
         SET(LINK_FLAGS_PROPERTIES "/STACK:10000000 /MACHINE:X86")
     ELSE()
-        SET(CMAKE_CXX_FLAGS "-Wall -W -Werror")
+        SET(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++ -Wall -W -Werror")
         SET(LINK_FLAGS_PROPERTIES)
     ENDIF()
 
@@ -186,6 +191,10 @@ MACRO(INITIALISE_PROJECT)
 
         SET(CMAKE_OSX_DEPLOYMENT_TARGET ${OLDEST_OS_X_VERSION_NUMBER})
         SET(CMAKE_OSX_SYSROOT ${OLDEST_SDK_PATH})
+SET(CMAKE_OSX_DEPLOYMENT_TARGET 10.7)
+SET(CMAKE_OSX_SYSROOT /Users/Alan/SDKs/MacOSX.platform/MacOSX10.7.sdk)
+MESSAGE(">>> CMAKE_OSX_DEPLOYMENT_TARGET: ${CMAKE_OSX_DEPLOYMENT_TARGET}")
+MESSAGE(">>> CMAKE_OSX_SYSROOT: ${CMAKE_OSX_SYSROOT}")
     ENDIF()
 
     # Location of our plugins so that we don't have to deploy OpenCOR on

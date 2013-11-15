@@ -64,14 +64,14 @@ namespace OpenCOR {
 
 //==============================================================================
 
-static const char *SystemLocale  = "";
-static const char *EnglishLocale = "en";
-static const char *FrenchLocale  = "fr";
+static const auto SystemLocale  = QStringLiteral("");
+static const auto EnglishLocale = QStringLiteral("en");
+static const auto FrenchLocale  = QStringLiteral("fr");
 
 //==============================================================================
 
-static const char *CorePlugin = "Core";
-static const char *HelpPlugin = "Help";
+static const auto CorePlugin = QStringLiteral("Core");
+static const auto HelpPlugin = QStringLiteral("Help");
 
 //==============================================================================
 
@@ -664,12 +664,12 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
 
 //==============================================================================
 
-static const char *SettingsGlobal               = "Global";
-static const char *SettingsLocale               = "Locale";
-static const char *SettingsGeometry             = "Geometry";
-static const char *SettingsState                = "State";
-static const char *SettingsDockedWidgetsVisible = "DockedWidgetsVisible";
-static const char *SettingsStatusBarVisible     = "StatusBarVisible";
+static const auto SettingsGlobal               = QStringLiteral("Global");
+static const auto SettingsLocale               = QStringLiteral("Locale");
+static const auto SettingsGeometry             = QStringLiteral("Geometry");
+static const auto SettingsState                = QStringLiteral("State");
+static const auto SettingsDockedWidgetsVisible = QStringLiteral("DockedWidgetsVisible");
+static const auto SettingsStatusBarVisible     = QStringLiteral("StatusBarVisible");
 
 //==============================================================================
 
@@ -1271,7 +1271,7 @@ void MainWindow::on_actionPreferences_triggered()
 
 //==============================================================================
 
-static const char *OpencorHomePageUrl = "http://www.opencor.ws/";
+static const auto OpencorHomePageUrl = QStringLiteral("http://www.opencor.ws/");
 
 //==============================================================================
 

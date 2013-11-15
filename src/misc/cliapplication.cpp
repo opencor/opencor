@@ -179,7 +179,7 @@ bool CliApplication::command(const QStringList pArguments, int *pRes)
     // Determine whether the command is to be executed by all plugins or only a
     // given plugin
 
-    static const char *CommandSeparator = "::";
+    static const auto CommandSeparator = QStringLiteral("::");
 
     QString commandName = pArguments.first();
     QString commandPlugin = commandName;
@@ -187,7 +187,7 @@ bool CliApplication::command(const QStringList pArguments, int *pRes)
 
     if (commandSeparatorPosition != -1) {
         commandPlugin = commandPlugin.remove(commandSeparatorPosition, commandName.length()-commandSeparatorPosition);
-        commandName = commandName.remove(0, commandPlugin.length()+strlen(CommandSeparator));
+        commandName = commandName.remove(0, commandPlugin.length()+CommandSeparator.length());
 
         // Make sure that the plugin to which the command is to be sent exists
 

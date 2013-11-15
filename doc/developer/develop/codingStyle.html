@@ -113,7 +113,9 @@ char *c, *d;</pre>
     void Function();
     ...
 }</pre>
-                        <strong>Note:</strong> class variables start with a lower-case <code>m</code>.
+                        <div>
+                            <strong>Note:</strong> class variables start with a lower-case <code>m</code>.
+                        </div>
                     </li>
                     <li>
                         Parameters passed to a function start with a lower-case <code>p</code>, but not local variables.
@@ -145,7 +147,9 @@ int height;</pre>
                         <pre class="good prettyprint">QString firstName = "Joe";
 QString lastName = "Foo";</pre>
                         <pre class="bad prettyprint">QString firstName = "Joe", lastName = "Foo";</pre>
-                        <strong>Note:</strong> <code>QString firstName = "Joe";</code> is formally calling a copy constructor on a temporary string constructed from a string literal and therefore has the potential of being more expensive than direct construction by <code>QString firstName("joe")</code>. However, the compiler is allowed to elide the copy (even if it has side effects), and modern compilers typically do so. Given these equal costs, OpenCOR code favours the <code>=</code> idiom as it is in line with the traditional C-style initialisation, <em>and</em> cannot be mistaken as a function declaration, <em>and</em> reduces the level of nested parantheses in more initialisations.
+                        <div>
+                            <strong>Note:</strong> <code>QString firstName = "Joe";</code> is formally calling a copy constructor on a temporary string constructed from a string literal and therefore has the potential of being more expensive than direct construction by <code>QString firstName("joe")</code>. However, the compiler is allowed to elide the copy (even if it has side effects), and modern compilers typically do so. Given these equal costs, OpenCOR code favours the <code>=</code> idiom as it is in line with the traditional C-style initialisation, <em>and</em> cannot be mistaken as a function declaration, <em>and</em> reduces the level of nested parantheses in more initialisations.
+                        </div>
                     </li>
                 </ul>
             </li>
@@ -383,7 +387,7 @@ static const QString x;
 
 // The constructor that takes a const char * has to be run
 
-static const QString y = "Hello";
+static const QString s = "Hello, World!";
 
 // The call time of foo() is undefined and might not be called at all
 
@@ -413,7 +417,14 @@ void foo()
 {
     s()->append("moo");
 }</pre>
-                        <strong>Note:</strong> static objects in function scope are not a problem. The constructor will be run the first time the function is entered. The code is not re-entrant, though.
+                        <div>
+                            <strong>Note #1:</strong> static objects in function scope are not a problem. The constructor will be run the first time the function is entered. The code is not re-entrant, though.
+                        </div>
+                        <div>
+                            <strong>Note #2:</strong> using <a href="http://qt-project.org/qt5">Qt 5</a> and <a href="http://en.wikipedia.org/wiki/C++11">C++11</a>, it is now possible to (indirectly) have a <code>static const QString</code> (see <a href="http://www.macieira.org/blog/2011/07/qstring-improved/">here</a> for more information about <code>QString</code>), thus making it possible for a variable to be both read-only and sharable.
+                            <pre class="good prettyprint">static const auto s = QStringLiteral("Hello, World!");</pre>
+                            <pre class="bad prettyprint">static const QString s = "Hello, World!";</pre>
+                        </div>
                     </li>
                     <li>
                         A <code>char</code> is signed or unsigned, depending on the architecture. Use <code>signed  char</code> or <code>uchar</code> if you explicitely want a signed or unsigned char. The following code will break on PowerPC, for example:

@@ -33,7 +33,7 @@ namespace HeunSolver {
 
 //==============================================================================
 
-static const char *StepId = "Step";
+static const auto StepId = QStringLiteral("Step");
 
 //==============================================================================
 

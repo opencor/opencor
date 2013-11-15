@@ -37,20 +37,14 @@ class QCoreApplication;
 
 //==============================================================================
 
-#include "disableunusedvariablewarning.inl"
-    namespace OpenCOR {
-    namespace Core {
-        static const char *SettingsGlobal          = "Global";
-        static const char *SettingsLocale          = "Locale";
-        static const char *SettingsActiveDirectory = "ActiveDirectory";
-    }   // namespace Core
-    }   // namespace OpenCOR
-#include "enableunusedvariablewarning.inl"
+namespace OpenCOR {
+namespace Core {
 
 //==============================================================================
 
-namespace OpenCOR {
-namespace Core {
+static const auto SettingsGlobal          = QStringLiteral("Global");
+static const auto SettingsLocale          = QStringLiteral("Locale");
+static const auto SettingsActiveDirectory = QStringLiteral("ActiveDirectory");
 
 //==============================================================================
 

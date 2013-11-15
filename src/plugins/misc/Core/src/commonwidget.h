@@ -43,38 +43,30 @@ class QSize;
 
 //==============================================================================
 
-#include "disableunusedvariablewarning.inl"
-    namespace OpenCOR {
-    namespace Core {
-        // Note: the default font family and size below were taken from Qt
-        //       Creator...
-
-        #if defined(Q_OS_WIN)
-            static const char *DefaultFontFamily = "Courier";
-            enum {
-                DefaultFontSize = 10
-            };
-        #elif defined(Q_OS_LINUX)
-            static const char *DefaultFontFamily = "Monospace";
-            enum {
-                DefaultFontSize = 9
-            };
-        #elif defined(Q_OS_MAC)
-            static const char *DefaultFontFamily = "Monaco";
-            enum {
-                DefaultFontSize = 12
-            };
-        #else
-            #error Unsupported platform
-        #endif
-    }   // namespace Core
-    }   // namespace OpenCOR
-#include "enableunusedvariablewarning.inl"
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace Core {
+
+//==============================================================================
+// Note: the default font family and size below were taken from Qt Creator...
+
+#if defined(Q_OS_WIN)
+    static const auto DefaultFontFamily = QStringLiteral("Courier");
+    enum {
+        DefaultFontSize = 10
+    };
+#elif defined(Q_OS_LINUX)
+    static const auto DefaultFontFamily = QStringLiteral("Monospace");
+    enum {
+        DefaultFontSize = 9
+    };
+#elif defined(Q_OS_MAC)
+    static const auto DefaultFontFamily = QStringLiteral("Monaco");
+    enum {
+        DefaultFontSize = 12
+    };
+#else
+    #error Unsupported platform
+#endif
 
 //==============================================================================
 

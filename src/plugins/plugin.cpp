@@ -188,7 +188,7 @@ QString Plugin::name(const QString &pFileName)
 {
     // Return the plugin's name based on its file name
 
-    return QFileInfo(pFileName).baseName().remove(0, strlen(PluginPrefix));
+    return QFileInfo(pFileName).baseName().remove(0, PluginPrefix.length());
     // Note: we must remove the plugin prefix part from the plugin file name...
 }
 
@@ -198,7 +198,7 @@ QString Plugin::fileName(const QString &pPluginsDir, const QString &pName)
 {
     // Return the plugin's file name based on its name
 
-    return pPluginsDir+QDir::separator()+QString(PluginPrefix)+pName+QString(PluginExtension);
+    return pPluginsDir+QDir::separator()+PluginPrefix+pName+PluginExtension;
     // Note: we must add the plugin prefix part to the plugin file name...
 }
 
@@ -244,7 +244,7 @@ PluginInfo * Plugin::info(const QString &pFileName)
 
 //==============================================================================
 
-static const char *SettingsLoad = "Load";
+static const auto SettingsLoad = QStringLiteral("Load");
 
 //==============================================================================
 

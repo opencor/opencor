@@ -36,19 +36,13 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "disableunusedvariablewarning.inl"
-    namespace OpenCOR {
-    namespace CellMLSupport {
-        static const char *ResourceRegExp = "[0-9a-z]+((-|\\.)[0-9a-z]+)?";
-        static const char *IdRegExp       = "[0-9A-Za-z\\.%-_:]+(:[0-9A-Za-z\\.%-_:]+)?";
-    }   // namespace CellMLSupport
-    }   // namespace OpenCOR
-#include "enableunusedvariablewarning.inl"
+namespace OpenCOR {
+namespace CellMLSupport {
 
 //==============================================================================
 
-namespace OpenCOR {
-namespace CellMLSupport {
+static const auto ResourceRegExp = QStringLiteral("[0-9a-z]+((-|\\.)[0-9a-z]+)?");
+static const auto IdRegExp       = QStringLiteral("[0-9A-Za-z\\.%-_:]+(:[0-9A-Za-z\\.%-_:]+)?");
 
 //==============================================================================
 

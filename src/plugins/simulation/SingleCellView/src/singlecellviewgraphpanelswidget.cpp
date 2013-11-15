@@ -68,8 +68,8 @@ void SingleCellViewGraphPanelsWidget::retranslateUi()
 
 //==============================================================================
 
-static const char *SettingsGraphPanelsCount = "GraphPanelsCount";
-static const char *SettingsGraphPanelSize   = "GraphPanelSize%1";
+static const auto SettingsGraphPanelsCount = QStringLiteral("GraphPanelsCount");
+static const auto SettingsGraphPanelSize   = QStringLiteral("GraphPanelSize%1");
 
 //==============================================================================
 
@@ -99,7 +99,7 @@ void SingleCellViewGraphPanelsWidget::loadSettings(QSettings *pSettings)
     mSplitterSizes = QList<int>();
 
     for (int i = 0; i < graphPanelsCount; ++i)
-        mSplitterSizes << pSettings->value(QString(SettingsGraphPanelSize).arg(i)).toInt();
+        mSplitterSizes << pSettings->value(SettingsGraphPanelSize.arg(i)).toInt();
 
     setSizes(mSplitterSizes);
 }
@@ -114,8 +114,7 @@ void SingleCellViewGraphPanelsWidget::saveSettings(QSettings *pSettings) const
     pSettings->setValue(SettingsGraphPanelsCount, mSplitterSizes.count());
 
     for (int i = 0, iMax = mSplitterSizes.count(); i < iMax; ++i)
-        pSettings->setValue(QString(SettingsGraphPanelSize).arg(i),
-                            mSplitterSizes[i]);
+        pSettings->setValue(SettingsGraphPanelSize.arg(i), mSplitterSizes[i]);
 }
 
 //==============================================================================

@@ -33,7 +33,7 @@ FileBrowserModel::FileBrowserModel(QObject *pParent) :
 {
     // We want acces to the full file system
 
-    setRootPath("");
+    setRootPath(QString());
 }
 
 //==============================================================================

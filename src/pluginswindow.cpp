@@ -307,7 +307,7 @@ void PluginsWindow::selectFirstVisibleCategory()
 
 //==============================================================================
 
-static const char *SettingsShowOnlySelectablePlugins = "ShowOnlySelectablePlugins";
+static const auto SettingsShowOnlySelectablePlugins = QStringLiteral("ShowOnlySelectablePlugins");
 
 //==============================================================================
 

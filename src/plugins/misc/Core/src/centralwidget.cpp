@@ -259,10 +259,10 @@ CentralWidget::~CentralWidget()
 
 //==============================================================================
 
-static const char *SettingsFileNames          = "FileNames";
-static const char *SettingsCurrentFileName    = "CurrentFileName";
-static const char *SettingsCurrentMode        = "CurrentMode";
-static const char *SettingsCurrentViewForMode = "CurrentViewForMode";
+static const auto SettingsFileNames          = QStringLiteral("FileNames");
+static const auto SettingsCurrentFileName    = QStringLiteral("CurrentFileName");
+static const auto SettingsCurrentMode        = QStringLiteral("CurrentMode");
+static const auto SettingsCurrentViewForMode = QStringLiteral("CurrentViewForMode");
 
 //==============================================================================
 

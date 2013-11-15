@@ -409,7 +409,7 @@ QString nativeCanonicalFileName(const QString &pFileName)
 
 QString formatErrorMsg(const QString &pErrorMsg)
 {
-    static const char *DotDotDot = "...";
+    static const auto DotDotDot = QStringLiteral("...");
 
     if (pErrorMsg.isEmpty())
         return DotDotDot;
