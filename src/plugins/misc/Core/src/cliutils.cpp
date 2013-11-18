@@ -423,7 +423,7 @@ QString formatErrorMessage(const QString &pErrorMessage)
 
     if (    (errorMessage.size() <= 1)
         || ((errorMessage.size() > 1) && !errorMessage[1].isUpper())) {
-        errorMessage = errorMessage[0].toLower()+errorMessage.right(errorMessage.size()-1);
+        errorMessage[0] = errorMessage[0].toLower();
     }
 
     // Return the error message after making sure that its end finishes with
