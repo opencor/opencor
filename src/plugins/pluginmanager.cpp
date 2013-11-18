@@ -79,18 +79,21 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
     // Determine which plugins, if any, are needed by others
 
     QMap<QString, PluginInfo *> pluginsInfo = QMap<QString, PluginInfo *>();
+    QMap<QString, QString> pluginsError = QMap<QString, QString>();
 
     QStringList validPlugins = QStringList();
     QStringList neededPlugins = QStringList();
 
     foreach (const QString &fileName, fileNames) {
-        PluginInfo *pluginInfo = Plugin::info(fileName);
+        QString pluginError;
+        PluginInfo *pluginInfo = Plugin::info(fileName, pluginError);
         // Note: if there is some plugin information, then it will get owned by
         //       the plugin itself and it will therefore be its responsibility
         //       to delete it (see Plugin::~Plugin())...
         QString pluginName = Plugin::name(fileName);
 
         pluginsInfo.insert(pluginName, pluginInfo);
+        pluginsError.insert(pluginName, pluginError);
 
         if (pluginInfo) {
             // Keep track of the plugin's full dependencies
@@ -187,6 +190,7 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
         QString pluginName = Plugin::name(pluginFileName);
 
         mPlugins << new Plugin(pluginFileName, pluginsInfo.value(pluginName),
+                               pluginsError.value(pluginName),
                                plugins.contains(pluginName), this);
     }
 }

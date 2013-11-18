@@ -311,6 +311,10 @@
         <source>Plugins to access various ad hoc widgets.</source>
         <translation>Extensions pour accéder différents gadgets ad hoc.</translation>
     </message>
+    <message>
+        <source>Error:</source>
+        <translation>Erreur :</translation>
+    </message>
 </context>
 <context>
     <name>PluginsWindow</name>

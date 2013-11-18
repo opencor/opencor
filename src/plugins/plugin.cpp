@@ -26,6 +26,7 @@ specific language governing permissions and limitations under the License.
 
 #include <QDir>
 #include <QFileInfo>
+#include <QLibrary>
 #include <QPluginLoader>
 #include <QSettings>
 
@@ -35,10 +36,12 @@ namespace OpenCOR {
 
 //==============================================================================
 
-Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo, const bool &pLoad,
+Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
+               const QString &pErrorMessage, const bool &pLoad,
                PluginManager *pPluginManager) :
     mName(name(pFileName)),
     mInfo(pInfo),
+    mErrorMessage(pErrorMessage),
     mInstance(0),
     mStatus(UndefinedStatus)
 {
@@ -148,6 +151,15 @@ PluginInfo * Plugin::info() const
 
 //==============================================================================
 
+QString Plugin::errorMessage() const
+{
+    // Return the plugin's error message
+
+    return mErrorMessage;
+}
+
+//==============================================================================
+
 QObject * Plugin::instance() const
 {
     // Return the plugin's instance
@@ -204,7 +216,7 @@ QString Plugin::fileName(const QString &pPluginsDir, const QString &pName)
 
 //==============================================================================
 
-PluginInfo * Plugin::info(const QString &pFileName)
+PluginInfo * Plugin::info(const QString &pFileName, QString &pErrorMessage)
 {
     // Return the plugin's information
     // Note: to retrieve a plugin's information, we must, on both Windows and
@@ -222,8 +234,9 @@ PluginInfo * Plugin::info(const QString &pFileName)
     QDir::setCurrent(QFileInfo(pFileName).absolutePath());
 #endif
 
-    PluginInfoFunc pluginInfoFunc = (PluginInfoFunc) QLibrary::resolve(pFileName,
-                                                                       qPrintable(name(pFileName)+"PluginInfo"));
+    QLibrary plugin(pFileName);
+
+    PluginInfoFunc pluginInfoFunc = (PluginInfoFunc) plugin.resolve(qPrintable(name(pFileName)+"PluginInfo"));
 
 #ifdef Q_OS_WIN
     QDir::setCurrent(origPath);
@@ -231,15 +244,28 @@ PluginInfo * Plugin::info(const QString &pFileName)
 
     // Check whether the plugin information function was found
 
-    if (pluginInfoFunc)
+    if (pluginInfoFunc) {
         // The plugin information function was found, so we can extract the
         // information we are after
 
+        pErrorMessage = QString();
+
         return static_cast<PluginInfo *>(pluginInfoFunc());
-    else
-        // The plugin information couldn't be found, so...
+    } else {
+        // The plugin information couldn't be found, so retrieve the error and
+        // format it a bit
+
+        pErrorMessage = plugin.errorString();
+
+        pErrorMessage[0] = pErrorMessage[0].toLower();
+
+        pErrorMessage += ".";
+
+        pErrorMessage.replace("\n", ";");
+        pErrorMessage.replace("  ", " ");
 
         return 0;
+    }
 }
 
 //==============================================================================
@@ -297,7 +323,8 @@ QStringList Plugin::fullDependencies(const QString &pPluginsDir,
 
     // Recursively look for the plugin's full dependencies
 
-    PluginInfo *pluginInfo = Plugin::info(Plugin::fileName(pPluginsDir, pName));
+    QString dummy;
+    PluginInfo *pluginInfo = Plugin::info(Plugin::fileName(pPluginsDir, pName), dummy);
 
     if (!pluginInfo)
         return res;

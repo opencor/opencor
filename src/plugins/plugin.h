@@ -82,11 +82,13 @@ public:
     };
 
     explicit Plugin(const QString &pFileName, PluginInfo *pInfo,
-                    const bool &pLoad, PluginManager *pPluginManager);
+                    const QString &pErrorMessage, const bool &pLoad,
+                    PluginManager *pPluginManager);
     ~Plugin();
 
     QString name() const;
     PluginInfo * info() const;
+    QString errorMessage() const;
     QObject * instance() const;
     Status status() const;
     QString statusErrors() const;
@@ -94,7 +96,7 @@ public:
 
     static QString name(const QString &pFileName);
     static QString fileName(const QString &pPluginsDir, const QString &pName);
-    static PluginInfo * info(const QString &pFileName);
+    static PluginInfo * info(const QString &pFileName, QString &pErrorMessage);
 
     static bool load(const QString &pName);
     static void setLoad(const QString &pName, const bool &pToBeLoaded);
@@ -106,6 +108,7 @@ public:
 private:
     QString mName;
     PluginInfo *mInfo;
+    QString mErrorMessage;
     QObject *mInstance;
     Status mStatus;
     QString mStatusErrors;

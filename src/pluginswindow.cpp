@@ -427,8 +427,15 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
 
             validItem = false;
 
+            // The plugin's status
+
             mGui->fieldOneLabel->setText(tr("Status:"));
             mGui->fieldOneValue->setText(statusDescription(plugin));
+
+            // The plugin's error
+
+            mGui->fieldTwoLabel->setText(tr("Error:"));
+            mGui->fieldTwoValue->setText(plugin->errorMessage());
         }
     } else if (atLeastOneItem) {
         // We are not dealing with a plugin, but a plugin category
@@ -471,8 +478,8 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
     mGui->fieldOneLabel->setVisible(atLeastOneItem);
     mGui->fieldOneValue->setVisible(atLeastOneItem);
 
-    mGui->fieldTwoLabel->setVisible(atLeastOneItem && validItem);
-    mGui->fieldTwoValue->setVisible(atLeastOneItem && validItem);
+    mGui->fieldTwoLabel->setVisible(atLeastOneItem);
+    mGui->fieldTwoValue->setVisible(atLeastOneItem);
 
     mGui->fieldThreeLabel->setVisible(atLeastOneItem && validItem && pluginItem);
     mGui->fieldThreeValue->setVisible(atLeastOneItem && validItem && pluginItem);
