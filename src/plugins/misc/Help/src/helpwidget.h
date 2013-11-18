@@ -82,7 +82,7 @@ protected:
 private:
     QHelpEngine *mHelpEngine;
 
-    QString mErrorMsgTemplate;
+    QString mErrorMessageTemplate;
 };
 
 //==============================================================================

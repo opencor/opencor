@@ -58,13 +58,13 @@ public:
 
     void setProperties(const Properties &pProperties);
 
-    void emitError(const QString &pErrorMsg);
+    void emitError(const QString &pErrorMessage);
 
 protected:
     Properties mProperties;
 
 Q_SIGNALS:
-    void error(const QString &pErrorMsg);
+    void error(const QString &pErrorMessage);
 };
 
 //==============================================================================

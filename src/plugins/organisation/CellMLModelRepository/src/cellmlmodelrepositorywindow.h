@@ -75,7 +75,7 @@ private:
     QStringList mModelList;
 
     QNetworkAccessManager *mNetworkAccessManager;
-    QString mErrorMsg;
+    QString mErrorMessage;
 
     bool mModelListRequested;
 

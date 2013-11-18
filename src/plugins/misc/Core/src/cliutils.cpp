@@ -407,34 +407,34 @@ QString nativeCanonicalFileName(const QString &pFileName)
 
 //==============================================================================
 
-QString formatErrorMsg(const QString &pErrorMsg)
+QString formatErrorMessage(const QString &pErrorMessage)
 {
     static const auto DotDotDot = QStringLiteral("...");
 
-    if (pErrorMsg.isEmpty())
+    if (pErrorMessage.isEmpty())
         return DotDotDot;
 
     // Format and return the error message
 
-    QString errorMsg = pErrorMsg;
+    QString errorMessage = pErrorMessage;
 
     // Lower the case of the first character, but if the message is one
     // character long (!!) or if its second character is not in upper case
 
-    if (    (errorMsg.size() <= 1)
-        || ((errorMsg.size() > 1) && !errorMsg[1].isUpper())) {
-        errorMsg = errorMsg[0].toLower()+errorMsg.right(errorMsg.size()-1);
+    if (    (errorMessage.size() <= 1)
+        || ((errorMessage.size() > 1) && !errorMessage[1].isUpper())) {
+        errorMessage = errorMessage[0].toLower()+errorMessage.right(errorMessage.size()-1);
     }
 
     // Return the error message after making sure that its end finishes with
     // "..."
 
-    int subsize = errorMsg.size();
+    int subsize = errorMessage.size();
 
-    while (subsize && (errorMsg[subsize-1] == '.'))
+    while (subsize && (errorMessage[subsize-1] == '.'))
         --subsize;
 
-    return errorMsg.left(subsize)+DotDotDot;
+    return errorMessage.left(subsize)+DotDotDot;
 }
 
 //==============================================================================

@@ -118,7 +118,7 @@ HelpNetworkAccessManager::HelpNetworkAccessManager(QHelpEngine *pHelpEngine,
 
     helpWidgetErrorFile.open(QIODevice::ReadOnly);
 
-    mErrorMsgTemplate = QString(helpWidgetErrorFile.readAll());
+    mErrorMessageTemplate = QString(helpWidgetErrorFile.readAll());
 
     helpWidgetErrorFile.close();
 }
@@ -134,10 +134,10 @@ QNetworkReply * HelpNetworkAccessManager::createRequest(Operation,
     QUrl url = pRequest.url();
     QByteArray data = mHelpEngine->findFile(url).isValid()?
                           mHelpEngine->fileData(url):
-                          QByteArray(mErrorMsgTemplate.arg(tr("Error"),
-                                                           tr("The following help file could not be found:")+" <strong>"+url.toString()+"</strong>.",
-                                                           tr("Please <a href=\"contactUs.html\">contact us</a> about this error."),
-                                                           Core::copyright()).toUtf8());
+                          QByteArray(mErrorMessageTemplate.arg(tr("Error"),
+                                                               tr("The following help file could not be found:")+" <strong>"+url.toString()+"</strong>.",
+                                                               tr("Please <a href=\"contactUs.html\">contact us</a> about this error."),
+                                                               Core::copyright()).toUtf8());
 
     // Return the requested document or an error message
 

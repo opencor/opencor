@@ -44,24 +44,24 @@ void CoreSolver::setProperties(const Properties &pProperties)
 
 //==============================================================================
 
-void CoreSolver::emitError(const QString &pErrorMsg)
+void CoreSolver::emitError(const QString &pErrorMessage)
 {
     // Let people know that an error occured, but first reformat the error a
     // bit, if needed
 
-    QString errorMsg;
+    QString errorMessage;
 
-    if (pErrorMsg.startsWith("Newton"))
-        errorMsg = pErrorMsg;
+    if (pErrorMessage.startsWith("Newton"))
+        errorMessage = pErrorMessage;
     else
-        errorMsg = pErrorMsg[0].toLower()+pErrorMsg.right(pErrorMsg.size()-1);
+        errorMessage = pErrorMessage[0].toLower()+pErrorMessage.right(pErrorMessage.size()-1);
 
-    if (!pErrorMsg.right(3).compare("..."))
-        emit error(errorMsg.left(errorMsg.size()-3));
-    else if (!pErrorMsg.right(1).compare("."))
-        emit error(errorMsg.left(errorMsg.size()-1));
+    if (!pErrorMessage.right(3).compare("..."))
+        emit error(errorMessage.left(errorMessage.size()-3));
+    else if (!pErrorMessage.right(1).compare("."))
+        emit error(errorMessage.left(errorMessage.size()-1));
     else
-        emit error(errorMsg);
+        emit error(errorMessage);
 }
 
 //==============================================================================

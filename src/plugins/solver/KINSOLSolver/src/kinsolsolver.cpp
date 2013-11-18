@@ -51,7 +51,7 @@ int systemFunction(N_Vector pY, N_Vector pF, void *pUserData)
 //==============================================================================
 
 void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
-                  char *pErrorMsg, void *pUserData)
+                  char *pErrorMessage, void *pUserData)
 {
     Q_UNUSED(pModule);
     Q_UNUSED(pFunction);
@@ -59,7 +59,7 @@ void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
     if (pErrorCode != KIN_WARNING)
         // KINSOL generated an error, so forward it to the KinsolSolver object
 
-        static_cast<KinsolSolver *>(pUserData)->emitError(pErrorMsg);
+        static_cast<KinsolSolver *>(pUserData)->emitError(pErrorMessage);
 }
 
 //==============================================================================

@@ -105,7 +105,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mTermUrl(QString()),
     mOtherTermUrl(QString()),
     mItems(Items()),
-    mErrorMsg(QString()),
+    mErrorMessage(QString()),
     mLookupTerm(false),
     mInformation(QString()),
     mType(No),
@@ -165,7 +165,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
 
     // For the rest of our GUI, it's easier to just update it, so...
 
-    updateGui(mItems, mErrorMsg, mLookupTerm, mItemsVerticalScrollBarPosition, true);
+    updateGui(mItems, mErrorMessage, mLookupTerm, mItemsVerticalScrollBarPosition, true);
 
     // Update the enabled state of our various add buttons
 
@@ -226,7 +226,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
 //==============================================================================
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItems,
-                                                              const QString &pErrorMsg,
+                                                              const QString &pErrorMessage,
                                                               const bool &pLookupTerm,
                                                               const int &pItemsVerticalScrollBarPosition,
                                                               const bool &pRetranslate)
@@ -454,7 +454,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
 
     // Update our items GUI
 
-    updateItemsGui(pItems, pErrorMsg, pLookupTerm);
+    updateItemsGui(pItems, pErrorMessage, pLookupTerm);
 
     // Request for something to be looked up, if needed
 
@@ -471,7 +471,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
 //==============================================================================
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &pItems,
-                                                                   const QString &pErrorMsg,
+                                                                   const QString &pErrorMessage,
                                                                    const bool &pLookupTerm)
 {
     Q_ASSERT(mItemsScrollArea);
@@ -483,7 +483,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
     // Keep track of some information
 
     mItems = pItems;
-    mErrorMsg = pErrorMsg;
+    mErrorMessage = pErrorMessage;
     mLookupTerm = pLookupTerm;
 
     // Create a new widget and layout
@@ -616,7 +616,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
             labelText = tr("Please enter a term to search above...");
         } else if (pLookupTerm) {
             labelText = tr("Please wait while we are retrieving possible terms for <strong>%1</strong>...").arg(mTerm);
-        } else if (pErrorMsg.isEmpty()) {
+        } else if (pErrorMessage.isEmpty()) {
             if (mTermIsDirect) {
                 if (mAddTermButton->isEnabled())
                     labelText = tr("<strong>Information:</strong> you can directly add the term <strong>%1</strong>...").arg(mTerm);
@@ -626,7 +626,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
                 labelText = tr("Sorry, but no terms were found for <strong>%1</strong>...").arg(mTerm);
             }
         } else {
-            labelText = tr("<strong>Error:</strong> ")+Core::formatErrorMsg(pErrorMsg);
+            labelText = tr("<strong>Error:</strong> ")+Core::formatErrorMessage(pErrorMessage);
         }
 
         newGridLayout->addWidget(Core::newLabel(labelText,
@@ -931,7 +931,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
         // terms, should we have retrieved it without any problem
 
         Items items = Items();
-        QString errorMsg = QString();
+        QString errorMessage = QString();
 
         if (pNetworkReply->error() == QNetworkReply::NoError) {
             // Parse the JSON code
@@ -965,7 +965,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
 
                             items = Items();
 
-                            errorMsg = tr("the search returned invalid results");
+                            errorMessage = tr("the search returned invalid results");
 
                             break;
                         } else {
@@ -975,18 +975,18 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
                         }
                     }
 
-                    if (!errorMsg.isEmpty())
+                    if (!errorMessage.isEmpty())
                         break;
                 }
             } else {
                 // Something went wrong, so...
 
-                mErrorMsg = jsonParseError.errorString();
+                mErrorMessage = jsonParseError.errorString();
             }
         } else {
             // Something went wrong, so...
 
-            errorMsg = pNetworkReply->errorString();
+            errorMessage = pNetworkReply->errorString();
         }
 
         // Update our GUI with the results of the lookup after having sorted
@@ -994,7 +994,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
 
         qSort(items.begin(), items.end());
 
-        updateItemsGui(items, errorMsg, false);
+        updateItemsGui(items, errorMessage, false);
 
         // Update the enabled state of our various add buttons
 

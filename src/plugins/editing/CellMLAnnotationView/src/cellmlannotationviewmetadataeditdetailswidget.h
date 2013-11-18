@@ -130,7 +130,7 @@ private:
     QString mOtherTermUrl;
 
     Items mItems;
-    QString mErrorMsg;
+    QString mErrorMessage;
     bool mLookupTerm;
 
     QString mInformation;
@@ -150,11 +150,11 @@ private:
 
     QMenu *mCustomContextMenu;
 
-    void updateGui(const Items &pItems, const QString &pErrorMsg,
+    void updateGui(const Items &pItems, const QString &pErrorMessage,
                    const bool &pLookupTerm,
                    const int &pItemsVerticalScrollBarPosition,
                    const bool &pRetranslate);
-    void updateItemsGui(const Items &pItems, const QString &pErrorMsg,
+    void updateItemsGui(const Items &pItems, const QString &pErrorMessage,
                         const bool &pLookupTerm);
 
     static Item item(const QString &pName,

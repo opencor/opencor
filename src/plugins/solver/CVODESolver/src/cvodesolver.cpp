@@ -52,7 +52,7 @@ int rhsFunction(double pVoi, N_Vector pStates, N_Vector pRates, void *pUserData)
 //==============================================================================
 
 void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
-                  char *pErrorMsg, void *pUserData)
+                  char *pErrorMessage, void *pUserData)
 {
     Q_UNUSED(pModule);
     Q_UNUSED(pFunction);
@@ -60,7 +60,7 @@ void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
     if (pErrorCode != CV_WARNING)
         // CVODE generated an error, so forward it to the CvodeSolver object
 
-        reinterpret_cast<CvodeSolver *>(pUserData)->emitError(pErrorMsg);
+        reinterpret_cast<CvodeSolver *>(pUserData)->emitError(pErrorMessage);
 }
 
 //==============================================================================

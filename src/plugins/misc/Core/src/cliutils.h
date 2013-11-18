@@ -74,7 +74,7 @@ QString CORE_EXPORT activeDirectory();
 
 QString CORE_EXPORT nativeCanonicalFileName(const QString &pFileName);
 
-QString CORE_EXPORT formatErrorMsg(const QString &pErrorMsg);
+QString CORE_EXPORT formatErrorMessage(const QString &pErrorMessage);
 
 QString CORE_EXPORT nonDiacriticString(const QString &pString);
 

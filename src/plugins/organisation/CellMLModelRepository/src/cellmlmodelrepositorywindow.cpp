@@ -154,11 +154,11 @@ void CellmlModelRepositoryWindow::outputModelList(const QStringList &pModelList)
 
         contents += leadingSpaces+"</ul>";
     } else if (mModelNames.empty()) {
-        if (mErrorMsg.count())
+        if (mErrorMessage.count())
             // Something went wrong while trying to retrieve the list of models,
             // so...
 
-            contents = leadingSpaces+tr("<strong>Error:</strong> ")+Core::formatErrorMsg(mErrorMsg);
+            contents = leadingSpaces+tr("<strong>Error:</strong> ")+Core::formatErrorMessage(mErrorMessage);
         else if (mModelListRequested)
             // The list is still being loaded, so...
 
@@ -254,16 +254,16 @@ void CellmlModelRepositoryWindow::finished(QNetworkReply *pNetworkReply)
 
             // Everything went fine, so...
 
-            mErrorMsg = QString();
+            mErrorMessage = QString();
         } else {
             // Something went wrong, so...
 
-            mErrorMsg = jsonParseError.errorString();
+            mErrorMessage = jsonParseError.errorString();
         }
     } else {
         // Something went wrong, so...
 
-        mErrorMsg = pNetworkReply->errorString();
+        mErrorMessage = pNetworkReply->errorString();
     }
 
     // Initialise the output using whatever search criteria is present
