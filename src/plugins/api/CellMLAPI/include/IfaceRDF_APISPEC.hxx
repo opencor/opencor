@@ -31,7 +31,8 @@ namespace iface
     class  PUBLIC_RDFAPISPEC_POST RDFProcessingError : public std::exception
     {
     public:
-      RDFProcessingError(){}
+        RDFProcessingError(){}
+        ~RDFProcessingError() throw() {}
     };
     PUBLIC_RDFAPISPEC_PRE
     class  PUBLIC_RDFAPISPEC_POST DataSource

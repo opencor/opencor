@@ -108,7 +108,9 @@ namespace iface
     class  PUBLIC_CellMLAPISPEC_POST CellMLException : public std::exception
     {
     public:
-      CellMLException(){}
+        CellMLException(const std::wstring& _explanation) : explanation(_explanation){}
+        ~CellMLException() throw() {}
+      std::wstring explanation;
     };
     PUBLIC_CellMLAPISPEC_PRE
     class  PUBLIC_CellMLAPISPEC_POST URI

@@ -27,7 +27,9 @@ namespace iface
     class  PUBLIC_DOMAPISPEC_POST DOMException : public std::exception
     {
     public:
-      DOMException(){}
+        DOMException(uint16_t _code) : code(_code){}
+        ~DOMException() throw() {}
+      uint16_t code;
     };
     static const uint16_t INDEX_SIZE_ERR = 1;
     static const uint16_t DOMSTRING_SIZE_ERR = 2;
