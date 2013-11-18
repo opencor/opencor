@@ -259,10 +259,24 @@ PluginInfo * Plugin::info(const QString &pFileName, QString &pErrorMessage)
 
         pErrorMessage[0] = pErrorMessage[0].toLower();
 
-        pErrorMessage += ".";
+        if (!pErrorMessage.endsWith("."))
+            pErrorMessage += ".";
 
         pErrorMessage.replace("\n", ";");
         pErrorMessage.replace("  ", " ");
+
+        int errorMessageSize = pErrorMessage.size();
+        int from = 0;
+        int pos;
+
+        while ((pos = pErrorMessage.indexOf(":", from)) != -1) {
+            pos += 2;
+
+            if (pos < errorMessageSize)
+                pErrorMessage[pos] = pErrorMessage[pos].toLower();
+
+            from = pos;
+        }
 
         return 0;
     }
