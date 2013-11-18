@@ -1,5 +1,9 @@
 For various reasons (e.g. to be able to use C++11), we need to use the CellML API's latest snapshot. However, binaries don't always get built for a given snapshot. So, in the end, we build the CellML API ourselves and this on the different platforms supported by OpenCOR. To do so, we first need to get the CellML API's source code from https://github.com/cellmlapi/cellml-api.
 
+Some prerequisites:
+ - Doxygen (see http://www.doxygen.org/); and
+ - omniidl (see http://omniorb.sourceforge.net/; working Windows binaries can be found in version 4.1.5).
+
 To build the CellML API, you will need to:
  - Disable testing:
     ===> BUILD_TESTING=OFF
@@ -15,11 +19,13 @@ To build the CellML API, you will need to:
     ===> ENABLE_MALAES=ON
     ===> ENABLE_RDF=ON
     ===> ENABLE_VACSS=ON
- - Ask for C++11 compilation:
+ - Ask for C++11 compilation on Linux and OS X (on Windows, MSVC uses C++11 by default):
+    - Linux:
+       ===> CMAKE_CXX_FLAGS=-std=c++0x
     - OS X:
        ===> CMAKE_CXX_FLAGS=-std=c++0x -stdlib=libc++
 
-Once you have built and 'installed' the CellML API, you can replace the OpenCOR version of the include and binary files, which are located in the 'installed' include and lib folders, respectively (the 'installed' share folder is of no interest to us here). However, regarding the include files, there are a couple of things to keep in mind:
+Once you have built and 'installed' the CellML API, you can replace the OpenCOR version of the include and binary files, which are located in the 'installed' include and lib folders, respectively. However, regarding the include files, there are a couple of things to keep in mind:
  - The cda_config.h, IfaceCellML_events.hxx and IfaceDOM_events.hxx files are to be discarded; and
  - The cda_compiler_support.h file shouldn't include the cda_config.h file anymore.
 
