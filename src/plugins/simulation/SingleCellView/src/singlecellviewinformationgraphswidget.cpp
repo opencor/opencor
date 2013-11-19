@@ -198,11 +198,6 @@ void SingleCellViewInformationGraphsWidget::backup(const QString &pFileName)
 
 void SingleCellViewInformationGraphsWidget::finalize(const QString &pFileName)
 {
-    // Remove all our graphs, if there is going to be no file left opened
-
-    if ((mFileNames.count() == 1) && mFileNames.contains(pFileName))
-        on_actionRemoveAllGraphs_triggered();
-
     // Remove track of various information
 
     mContextMenus.remove(pFileName);
