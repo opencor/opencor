@@ -179,7 +179,7 @@ bool CliApplication::command(const QStringList pArguments, int *pRes)
     // Determine whether the command is to be executed by all plugins or only a
     // given plugin
 
-    static const auto CommandSeparator = QStringLiteral("::");
+    static const QString CommandSeparator = "::";
 
     QString commandName = pArguments.first();
     QString commandPlugin = commandName;

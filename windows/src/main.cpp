@@ -63,9 +63,9 @@ int main(int pArgC, char *pArgV[])
         // OpenCOR isn't meant to be run as a CLI application, so start its GUI
         // version instead
 
-        static const QString dotExe = ".exe";
+        static const QString DotExe = ".exe";
 
-        if (app->applicationFilePath().right(dotExe.size()) == dotExe) {
+        if (app->applicationFilePath().right(DotExe.size()) == DotExe) {
             // This is a safeguard from accidentally running a non-renamed (to
             // '.com') CLI version of OpenCOR
 
@@ -73,7 +73,7 @@ int main(int pArgC, char *pArgV[])
 
             res = -1;
         } else {
-            QString guiAppFilePath = app->applicationDirPath()+QDir::separator()+app->applicationName()+dotExe;
+            QString guiAppFilePath = app->applicationDirPath()+QDir::separator()+app->applicationName()+DotExe;
 
             if (!QFileInfo(guiAppFilePath).exists()) {
                 // We can't find the GUI version of OpenCOR, so...

@@ -884,7 +884,7 @@ bool SingleCellViewSimulationResults::exportToCsv(const QString &pFileName) cons
 
     // Header
 
-    static const auto Header = QStringLiteral("%1 | %2 (%3)");
+    static const QString Header = "%1 | %2 (%3)";
 
     out << Header.arg(mRuntime->variableOfIntegration()->componentHierarchy().join(" | "),
                       mRuntime->variableOfIntegration()->name(),

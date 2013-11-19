@@ -18,9 +18,9 @@ static const qreal   g_mfrac_spacing          = 0.05;
 static const qreal   g_mroot_base_margin      = 0.1;
 static const qreal   g_mroot_base_line        = 0.5;
 static const qreal   g_script_size_multiplier = 0.7071; // sqrt(1/2)
-static const QString g_subsup_spacing         = "veryverythinmathspace";
+static const char *  g_subsup_spacing         = "veryverythinmathspace";
 static const qreal   g_min_font_point_size    = 8.0;
-static const QChar   g_radical_char           = QChar( 0x1A, 0x22 );
+static const ushort  g_radical                = ( 0x22 << 8 ) | 0x1B;
 static const int     g_oper_spec_rows         = 9;
 
 static const int g_radical_points_size = 11;
@@ -2319,7 +2319,7 @@ QRectF QwtMmlRootBaseNode::baseRect() const
 
 QRectF QwtMmlRootBaseNode::radicalRect() const
 {
-    return QFontMetricsF( font() ).boundingRect( g_radical_char );
+    return QFontMetricsF( font() ).boundingRect( QChar( g_radical ) );
 }
 
 qreal QwtMmlRootBaseNode::radicalMargin() const
@@ -2368,7 +2368,7 @@ void QwtMmlRootBaseNode::paintSymbol(
     QRectF s_rect = symbolRect();
     s_rect.moveTopLeft( devicePoint( s_rect.topLeft() ) );
 
-    QRectF radical_rect = QFontMetricsF( font() ).boundingRect( g_radical_char );
+    QRectF radical_rect = QFontMetricsF( font() ).boundingRect( QChar( g_radical ) );
 
     QRectF rect = s_rect;
     rect.adjust(  0.0, qCeil( radicalLineWidth() ),
