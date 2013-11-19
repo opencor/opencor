@@ -88,8 +88,8 @@ RawCellmlViewWidget::~RawCellmlViewWidget()
 
 //==============================================================================
 
-static const QString SettingsViewerHeight = "ViewerHeight";
-static const QString SettingsEditorHeight = "EditorHeight";
+static const auto SettingsViewerHeight = QStringLiteral("ViewerHeight");
+static const auto SettingsEditorHeight = QStringLiteral("EditorHeight");
 
 //==============================================================================
 
