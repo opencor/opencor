@@ -378,6 +378,17 @@ void CorePlugin::finalizeView()
 
 //==============================================================================
 
+bool CorePlugin::hasViewWidget(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 QWidget * CorePlugin::viewWidget(const QString &pFileName,
                                  const bool &pCreate)
 {

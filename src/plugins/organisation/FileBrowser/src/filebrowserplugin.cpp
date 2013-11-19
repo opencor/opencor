@@ -164,6 +164,17 @@ void FileBrowserPlugin::finalizeView()
 
 //==============================================================================
 
+bool FileBrowserPlugin::hasViewWidget(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 QWidget * FileBrowserPlugin::viewWidget(const QString &pFileName,
                                         const bool &pCreate)
 {

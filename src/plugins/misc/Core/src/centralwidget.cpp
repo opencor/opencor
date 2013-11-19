@@ -1420,7 +1420,7 @@ void CentralWidget::fileReloaded(const QString &pFileName)
     foreach (Plugin *plugin, mLoadedPlugins) {
         GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
 
-        if (guiInterface && guiInterface->viewWidget(pFileName, false))
+        if (guiInterface && guiInterface->hasViewWidget(pFileName))
             guiInterface->fileReloaded(pFileName);
     }
 }

@@ -98,6 +98,8 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
+    bool contains(const QString &pFileName) const;
+
     void initialize(const QString &pFileName);
     void finalize(const QString &pFileName);
 

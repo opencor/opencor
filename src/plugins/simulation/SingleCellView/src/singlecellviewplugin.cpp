@@ -187,19 +187,30 @@ void SingleCellViewPlugin::finalizeView()
 
 //==============================================================================
 
+bool SingleCellViewPlugin::hasViewWidget(const QString &pFileName)
+{
+    // Make sure that we are dealing with a CellML file
+
+    if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
+        return false;
+
+    // Return whether we know about the given CellML file
+
+    return mViewWidget->contains(pFileName);;
+}
+
+//==============================================================================
+
 QWidget * SingleCellViewPlugin::viewWidget(const QString &pFileName,
                                            const bool &pCreate)
 {
-    // Check that we are dealing with a CellML file and, if so, return our
-    // generic simulation view widget after having initialised it
+    // Make sure that we are dealing with a CellML file
 
     if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
-        // We are not dealing with a CellML file, so...
-
         return 0;
 
-    // We are dealing with a CellML file, so update our generic simulation view
-    // widget using the given CellML file
+    // Update our generic simulation view widget using the given CellML file,
+    // but only if we are asked to do so
 
     if (pCreate) {
         mViewWidget->initialize(pFileName);
@@ -214,7 +225,12 @@ QWidget * SingleCellViewPlugin::viewWidget(const QString &pFileName,
 
 void SingleCellViewPlugin::removeViewWidget(const QString &pFileName)
 {
-    // Ask our generic view widget to finalise the given file
+    // Make sure that we are dealing with a CellML file
+
+    if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
+        return;
+
+    // Ask our generic view widget to finalise the given CellML file
 
     mViewWidget->finalize(pFileName);
 }
@@ -265,7 +281,7 @@ void SingleCellViewPlugin::fileReloaded(const QString &pFileName)
     // The given file has been reloaded, so let its corresponding view widget
     // know about it
 
-    if (viewWidget(pFileName))
+    if (hasViewWidget(pFileName))
         mViewWidget->fileReloaded(pFileName);
 }
 

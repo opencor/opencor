@@ -526,6 +526,16 @@ void SingleCellViewWidget::updateInvalidModelMessageWidget()
 
 //==============================================================================
 
+bool SingleCellViewWidget::contains(const QString &pFileName) const
+{
+    // Return whether we know about the given CellML file, i.e. whether we have
+    // a simulation for it
+
+    return mSimulations.value(pFileName);
+}
+
+//==============================================================================
+
 static const auto OutputTab  = QStringLiteral("&nbsp;&nbsp;&nbsp;&nbsp;");
 static const auto OutputGood = QStringLiteral(" style=\"color: green;\"");
 static const auto OutputInfo = QStringLiteral(" style=\"color: navy;\"");

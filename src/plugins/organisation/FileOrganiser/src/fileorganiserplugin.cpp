@@ -165,6 +165,17 @@ void FileOrganiserPlugin::finalizeView()
 
 //==============================================================================
 
+bool FileOrganiserPlugin::hasViewWidget(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 QWidget * FileOrganiserPlugin::viewWidget(const QString &pFileName,
                                           const bool &pCreate)
 {

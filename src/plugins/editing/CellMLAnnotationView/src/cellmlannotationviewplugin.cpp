@@ -261,17 +261,30 @@ void CellMLAnnotationViewPlugin::finalizeView()
 
 //==============================================================================
 
+bool CellMLAnnotationViewPlugin::hasViewWidget(const QString &pFileName)
+{
+    // Make sure that we are dealing with a CellML file
+
+    if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
+        return false;
+
+    // Return whether we have a view widget associated with the given CellML
+    // file
+
+    return mViewWidgets.value(pFileName);
+}
+
+//==============================================================================
+
 QWidget * CellMLAnnotationViewPlugin::viewWidget(const QString &pFileName,
                                                  const bool &pCreate)
 {
-    // Check that we are dealing with a CellML file
+    // Make sure that we are dealing with a CellML file
 
     if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
-        // We are not dealing with a CellML file, so...
-
         return 0;
 
-    // Retrieve the view widget associated with the file name
+    // Retrieve the view widget associated with the given CellML file
 
     CellmlAnnotationViewWidget *res = mViewWidgets.value(pFileName);
 
@@ -327,8 +340,13 @@ QWidget * CellMLAnnotationViewPlugin::viewWidget(const QString &pFileName,
 
 void CellMLAnnotationViewPlugin::removeViewWidget(const QString &pFileName)
 {
+    // Make sure that we are dealing with a CellML file
+
+    if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
+        return;
+
     // Remove the view widget from our list, should there be one for the given
-    // file name
+    // CellML file
 
     CellmlAnnotationViewWidget *crtViewWidget = mViewWidgets.value(pFileName);
 

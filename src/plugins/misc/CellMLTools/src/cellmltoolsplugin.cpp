@@ -247,6 +247,17 @@ void CellMLToolsPlugin::finalizeView()
 
 //==============================================================================
 
+bool CellMLToolsPlugin::hasViewWidget(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 QWidget * CellMLToolsPlugin::viewWidget(const QString &pFileName,
                                         const bool &pCreate)
 {
