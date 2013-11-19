@@ -150,9 +150,15 @@ bool CellmlFile::load()
 
         return true;
 
-    // Reset any issues that we may have found before
+    // Reset any issues that we may have found before and consider the file
+    // loaded
+    // Note: even we can't load the file, we still consider it 'loaded' since we
+    //       at least tried to load it, so unless the file gets modified (and we
+    //       are to reload it), we are 'fine'...
 
     mIssues.clear();
+
+    mLoadingNeeded = false;
 
     // Get a bootstrap object and its model loader
 
@@ -214,8 +220,6 @@ bool CellmlFile::load()
 
     // All done, so...
 
-    mLoadingNeeded = false;
-
     return true;
 }
 
@@ -236,8 +240,8 @@ bool CellmlFile::reload()
 
 bool CellmlFile::save(const QString &pNewFileName)
 {
-    if (mLoadingNeeded)
-        // The file isn't loaded, so...
+    if (mLoadingNeeded || !mIssues.isEmpty())
+        // The file isn't loaded or contains some issues, so...
 
         return false;
 
