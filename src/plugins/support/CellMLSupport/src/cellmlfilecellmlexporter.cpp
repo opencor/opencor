@@ -23,8 +23,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-//#include "cellml-api-cxx-support.hpp"
-
 #include "CellMLBootstrap.hpp"
 
 //==============================================================================
