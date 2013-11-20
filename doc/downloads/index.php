@@ -83,11 +83,12 @@
         if ($versionMajor || $versionMinor || $versionPatch) {
             $versionTitle   = "Version ".$versionMajor.".".$versionMinor;
             $versionVer     = $versionMajor.".".$versionMinor;
-            $versionVersion = $versionMajor."-".$versionMinor."-".$versionPatch;
+            $versionVersion = $versionMajor."-".$versionMinor;
 
             if ($versionPatch) {
-                $versionTitle .= ".".$versionPatch;
-                $versionVer   .= ".".$versionPatch;
+                $versionTitle   .= ".".$versionPatch;
+                $versionVer     .= ".".$versionPatch;
+                $versionVersion .= "-".$versionPatch;
             }
         } else {
             $versionTitle   = "Latest snapshot";
