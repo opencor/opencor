@@ -43,13 +43,11 @@
                             array(array("Windows", "Windows XP and later", array(".exe"), array(".zip")),
                                   array("Linux", "Ubuntu 12.04 LTS (Precise Pangolin) and later", array(".tar.gz", 32), array(".tar.gz", 64)),
                                   array("OS X", "Mac OS X 10.7 (Lion) and later", array(".dmg"), array(".zip")))),
-/*
                       array(0, 0, 0, 20, 11, 2013, 2,
                             array(array("Windows", "Windows XP and later", array(".exe"), array(".zip")),
                                   array("Linux", "Ubuntu 12.04 LTS (Precise Pangolin) and later", array(".tar.gz", 32), array(".tar.gz", 64)),
-                                  array("OS X", "Mac OS X 10.7 (Lion) and later", array(".dmg"), array(".zip"))),
-                            "<strong>Note:</strong> this version is fairly stable and therefore the one we would recommend using, especially if you want to get access to the latest features (new snapshots are announced on our <a hrefs=\"https://twitter.com/TeamOpenCOR/\">Twitter feed</a>)"),
-*/
+                                  array("OS X", "Mac OS X 10.7 (Lion) and later", array(".dmg"), array(".zip")))/*,
+                            "<strong>Note:</strong> this version is fairly stable and therefore the one we would recommend using, especially if you want to get access to the latest features (new snapshots are announced on our <a hrefs=\"https://twitter.com/TeamOpenCOR/\">Twitter feed</a>)"*/),
                       array(0, 1, 2, 29, 5, 2013, 0,
                             array(array("Windows", "Windows XP and later", array(".exe"), array(".zip")),
                                   array("Linux", "Ubuntu 12.04 LTS (Precise Pangolin) and later", array(".tar.gz", 32), array(".tar.gz", 64)),
@@ -75,25 +73,25 @@
         $versionMajor = $version[0];
         $versionMinor = $version[1];
         $versionPatch = $version[2];
-        $versionDay = $version[3];
+        $versionDay   = $version[3];
         $versionMonth = $version[4];
-        $versionYear = $version[5];
-        $versionType = $version[6];
+        $versionYear  = $version[5];
+        $versionType  = $version[6];
         $versionFiles = $version[7];
-        $versionInfo = $version[8];
+        $versionInfo  = $version[8];
 
         if ($versionMajor || $versionMinor || $versionPatch) {
-            $versionTitle = "Version ".$versionMajor.".".$versionMinor;
-            $versionWhatIsNew = $versionMajor.".".$versionMinor;
+            $versionTitle   = "Version ".$versionMajor.".".$versionMinor;
+            $versionVer     = $versionMajor.".".$versionMinor;
             $versionVersion = $versionMajor."-".$versionMinor."-".$versionPatch;
 
             if ($versionPatch) {
                 $versionTitle .= ".".$versionPatch;
-                $versionWhatIsNew .= ".".$versionPatch;
+                $versionVer   .= ".".$versionPatch;
             }
         } else {
-            $versionTitle = "Latest snapshot";
-            $versionWhatIsNew = "latest";
+            $versionTitle   = "Latest snapshot";
+            $versionVer     = "latest";
             $versionVersion = date("Y-m-d", mktime(0, 0, 0, $versionMonth, $versionDay, $versionYear));
         }
 
@@ -112,7 +110,7 @@
                 <tbody>
                     <tr>
                         <td>
-                            <?php echo $versionTitle."\n"; ?> <span class="whatIsNew"><a href="../user/whatIsNew.html#<?php echo $versionWhatIsNew; ?>">What is new?</a></span>
+                            <?php echo $versionTitle."\n"; ?> <span class="whatIsNew"><a href="../user/whatIsNew.html#<?php echo $versionVer; ?>">What is new?</a></span>
                         </td>
                         <td class="date">
                             (<?php echo date("j F Y", mktime(0, 0, 0, $versionMonth, $versionDay, $versionYear)); ?>)
@@ -240,7 +238,7 @@
 
                     // Determine the file name, type and extra info, if any
 
-                    $platformFileName = "downloads/OpenCOR-".$versionVersion."-".str_replace(" ", "", $platformName).$platformFileExtraInfo.$platformFileExtension;
+                    $platformFileName = "downloads/".$versionVer."/OpenCOR-".$versionVersion."-".str_replace(" ", "", $platformName).$platformFileExtraInfo.$platformFileExtension;
 
                     if (   ($platformFileExtension == ".exe")
                         || ($platformFileExtension == ".dmg"))
