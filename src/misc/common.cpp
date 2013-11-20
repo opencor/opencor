@@ -45,16 +45,9 @@ void initApplication(QCoreApplication *pApp)
 
     versionFile.open(QIODevice::ReadOnly);
 
-    QString version = QString(versionFile.readLine()).trimmed();
-
-    if (version.endsWith(".0"))
-        // There is no actual patch information, so trim it
-
-        version.chop(2);
+    pApp->setApplicationVersion(QString(versionFile.readLine()).trimmed());
 
     versionFile.close();
-
-    pApp->setApplicationVersion(version);
 }
 
 //==============================================================================
