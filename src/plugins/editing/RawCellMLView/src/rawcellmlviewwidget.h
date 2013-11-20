@@ -76,8 +76,9 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
+    bool contains(const QString &pFileName) const;
+
     void initialize(const QString &pFileName);
-    bool isManaged(const QString &pFileName) const;
     void finalize(const QString &pFileName);
 
     void fileReloaded(const QString &pFileName);

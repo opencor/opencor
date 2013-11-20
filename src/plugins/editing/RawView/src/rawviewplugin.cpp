@@ -102,6 +102,15 @@ void RawViewPlugin::finalizeView()
 
 //==============================================================================
 
+bool RawViewPlugin::hasViewWidget(const QString &pFileName)
+{
+    // Return whether we have a view widget associated with the given file
+
+    return mViewWidgets.value(pFileName);
+}
+
+//==============================================================================
+
 QWidget * RawViewPlugin::viewWidget(const QString &pFileName,
                                     const bool &pCreate)
 {
@@ -192,10 +201,10 @@ void RawViewPlugin::fileReloaded(const QString &pFileName)
     // The given file has been reloaded, so let its corresponding view widget
     // know about it
 
-    RawViewWidget *crtViewWidget = mViewWidgets.value(pFileName);
+    RawViewWidget *viewWidget = mViewWidgets.value(pFileName);
 
-    if (crtViewWidget)
-        crtViewWidget->fileReloaded();
+    if (viewWidget)
+        viewWidget->fileReloaded();
 }
 
 //==============================================================================

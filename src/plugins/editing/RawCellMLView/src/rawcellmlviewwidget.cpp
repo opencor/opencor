@@ -133,15 +133,25 @@ void RawCellmlViewWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
+bool RawCellmlViewWidget::contains(const QString &pFileName) const
+{
+    // Return whether we know about the given CellML file, i.e. whether we have
+    // an editor for it
+
+    return mBorderedEditors.value(pFileName);
+}
+
+//==============================================================================
+
 void RawCellmlViewWidget::initialize(const QString &pFileName)
 {
-    // Retrieve the editor associated with the file name, if any
+    // Retrieve the editor associated with the given CellML file, if any
 
     mBorderedEditor = mBorderedEditors.value(pFileName);
 
     if (!mBorderedEditor) {
-        // No editor exists for the file name, so create and set up a Scintilla
-        // editor with an XML lexer associated with it
+        // No editor exists for the given CellML file, so create and set up a
+        // Scintilla editor with an XML lexer associated with it
 
         QFile file(pFileName);
         QString fileContents = QString();
@@ -211,18 +221,9 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
 
 //==============================================================================
 
-bool RawCellmlViewWidget::isManaged(const QString &pFileName) const
-{
-    // Return whether the given file name is managed
-
-    return mBorderedEditors.value(pFileName);
-}
-
-//==============================================================================
-
 void RawCellmlViewWidget::finalize(const QString &pFileName)
 {
-    // Remove the bordered editor, should there be one for the given file name
+    // Remove the bordered editor, should there be one for the given CellML file
 
     Core::BorderedWidget *borderedEditor  = mBorderedEditors.value(pFileName);
 
@@ -246,7 +247,7 @@ void RawCellmlViewWidget::fileReloaded(const QString &pFileName)
 {
     // The given file has been reloaded, so reload it, should it be managed
 
-    if (isManaged(pFileName)) {
+    if (contains(pFileName)) {
         finalize(pFileName);
         initialize(pFileName);
     }

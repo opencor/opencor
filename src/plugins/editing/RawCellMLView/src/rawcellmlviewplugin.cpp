@@ -172,15 +172,26 @@ void RawCellMLViewPlugin::finalizeView()
 
 //==============================================================================
 
+bool RawCellMLViewPlugin::hasViewWidget(const QString &pFileName)
+{
+    // Make sure that we are dealing with a CellML file
+
+    if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
+        return false;
+
+    // Return whether we know about the given CellML file
+
+    return mViewWidget->contains(pFileName);;
+}
+
+//==============================================================================
+
 QWidget * RawCellMLViewPlugin::viewWidget(const QString &pFileName,
                                           const bool &pCreate)
 {
-    // Check that we are dealing with a CellML file and, if so, return our
-    // generic raw CellML view widget after having initialised it
+    // Make sure that we are dealing with a CellML file
 
     if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
-        // We are not dealing with a CellML file, so...
-
         return 0;
 
     // We are dealing with a CellML file, so update our generic raw CellML view
@@ -199,6 +210,11 @@ QWidget * RawCellMLViewPlugin::viewWidget(const QString &pFileName,
 
 void RawCellMLViewPlugin::removeViewWidget(const QString &pFileName)
 {
+    // Make sure that we are dealing with a CellML file
+
+    if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
+        return;
+
     // Ask our generic view widget to finalise the given file
 
     mViewWidget->finalize(pFileName);
