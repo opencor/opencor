@@ -174,7 +174,7 @@ QString version(QCoreApplication *pApp)
 
 QString copyright()
 {
-    return QObject::tr("Copyright")+" ©2011-"+QString::number(QDate::currentDate().year());
+    return QObject::tr("Copyright")+" 2011-"+QString::number(QDate::currentDate().year());
 }
 
 //==============================================================================

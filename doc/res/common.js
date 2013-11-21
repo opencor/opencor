@@ -197,7 +197,7 @@ function copyright(relativePath) {
 
     document.write("<div class=\"copyright\">");
     document.write("    <div class=\"left\">");
-    document.write("        Copyright ©2011-"+date.getFullYear());
+    document.write("        Copyright 2011-"+date.getFullYear());
     document.write("    </div>");
     document.write("    <div class=\"center\">");
     document.write("        <a class=\"copyright\" href=\"https://twitter.com/TeamOpenCOR/\"><img class=\"twitter\" src=\""+relativePath+"/res/pics/twitter.png\" width=30 height=30 alt=\"Twitter\"></a>");
