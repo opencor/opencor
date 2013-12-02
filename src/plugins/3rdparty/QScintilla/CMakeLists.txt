@@ -18,6 +18,7 @@ ADD_PLUGIN(QScintilla
         lexlib/StyleContext.cpp
         lexlib/WordList.cpp
 
+        Qt4Qt5/InputMethod.cpp
         Qt4Qt5/ListBoxQt.cpp
         Qt4Qt5/PlatQt.cpp
         Qt4Qt5/qsciabstractapis.cpp
@@ -27,7 +28,6 @@ ADD_PLUGIN(QScintilla
         Qt4Qt5/qscidocument.cpp
         Qt4Qt5/qscilexer.cpp
         Qt4Qt5/qscilexercpp.cpp
-        Qt4Qt5/qscilexercss.cpp
         Qt4Qt5/qscilexerhtml.cpp
         Qt4Qt5/qscilexerjavascript.cpp
         Qt4Qt5/qscilexerpython.cpp
@@ -41,6 +41,8 @@ ADD_PLUGIN(QScintilla
 
         src/AutoComplete.cpp
         src/CallTip.cpp
+        src/CaseConvert.cpp
+        src/CaseFolder.cpp
         src/Catalogue.cpp
         src/CellBuffer.cpp
         src/CharClassify.cpp
@@ -69,7 +71,6 @@ ADD_PLUGIN(QScintilla
         Qt4Qt5/Qsci/qsciapis.h
         Qt4Qt5/Qsci/qscilexer.h
         Qt4Qt5/Qsci/qscilexercpp.h
-        Qt4Qt5/Qsci/qscilexercss.h
         Qt4Qt5/Qsci/qscilexerhtml.h
         Qt4Qt5/Qsci/qscilexerjavascript.h
         Qt4Qt5/Qsci/qscilexerpython.h
@@ -80,7 +81,7 @@ ADD_PLUGIN(QScintilla
         src/qscintillaplugin.h
     DEFINITIONS
         QSCINTILLA_MAKE_DLL
-        QT
+        SCINTILLA_QT
         SCI_LEXER
     INCLUDE_DIRS
         include
