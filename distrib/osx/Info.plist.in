@@ -4,6 +4,8 @@
 <dict>
     <key>NSPrincipalClass</key>
     <string>NSApplication</string>
+    <key>NSHighResolutionCapable</key>
+    <true/>
     <key>CFBundleDocumentTypes</key>
     <array>
         <dict>
@@ -17,6 +19,8 @@
             </array>
             <key>CFBundleTypeName</key>
             <string>CellML File</string>
+            <key>LSHandlerRank</key>
+            <string>Owner</string>
         </dict>
     </array>
     <key>NSHumanReadableCopyright</key>
