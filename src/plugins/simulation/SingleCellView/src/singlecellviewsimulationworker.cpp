@@ -28,9 +28,9 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QElapsedTimer>
 #include <QMutex>
 #include <QThread>
-#include <QTime>
 
 //==============================================================================
 
@@ -299,7 +299,7 @@ void SingleCellViewSimulationWorker::started()
     if (!mError) {
         // Start our timer
 
-        QTime timer;
+        QElapsedTimer timer;
 
         elapsedTime = 0;
 
