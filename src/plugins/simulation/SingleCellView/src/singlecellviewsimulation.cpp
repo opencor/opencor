@@ -1043,6 +1043,15 @@ double SingleCellViewSimulation::progress() const
 
 //==============================================================================
 
+int SingleCellViewSimulation::delay() const
+{
+    // Return our delay
+
+    return mData->delay();
+}
+
+//==============================================================================
+
 void SingleCellViewSimulation::setDelay(const int &pDelay)
 {
     // Set our delay

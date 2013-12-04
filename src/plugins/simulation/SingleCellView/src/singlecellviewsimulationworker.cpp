@@ -348,11 +348,11 @@ void SingleCellViewSimulationWorker::started()
 
             // Delay things a bit, if (really) needed
 
-            if (mSimulation->data()->delay() && !mStopped && !mError) {
+            if (mSimulation->delay() && !mStopped && !mError) {
                 elapsedTime += timer.elapsed();
 
                 delayMutex.lock();
-                    delayCondition.wait(&delayMutex, mSimulation->data()->delay());
+                    delayCondition.wait(&delayMutex, mSimulation->delay());
                 delayMutex.unlock();
 
                 timer.restart();

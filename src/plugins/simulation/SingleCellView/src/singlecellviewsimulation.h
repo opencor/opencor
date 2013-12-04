@@ -220,6 +220,7 @@ public:
 
     double progress() const;
 
+    int delay() const;
     void setDelay(const int &pDelay);
 
     double requiredMemory();
