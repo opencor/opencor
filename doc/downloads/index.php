@@ -43,7 +43,7 @@
                             array(array("Windows", "Windows XP and later", array(".exe"), array(".zip")),
                                   array("Linux", "Ubuntu 12.04 LTS (Precise Pangolin) and later", array(".tar.gz", 32), array(".tar.gz", 64)),
                                   array("OS X", "Mac OS X 10.7 (Lion) and later", array(".dmg"), array(".zip")))),
-                      array(0, 0, 0, 20, 11, 2013, 2,
+                      array(0, 0, 0, 4, 12, 2013, 2,
                             array(array("Windows", "Windows XP and later", array(".exe"), array(".zip")),
                                   array("Linux", "Ubuntu 12.04 LTS (Precise Pangolin) and later", array(".tar.gz", 32), array(".tar.gz", 64)),
                                   array("OS X", "Mac OS X 10.7 (Lion) and later", array(".dmg"), array(".zip")))/*,
