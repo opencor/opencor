@@ -120,7 +120,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mDelayWidget->setFixedSize(0.07*qApp->desktop()->screenGeometry().width(),
                                0.5*mDelayWidget->height());
     mDelayWidget->setFocusPolicy(Qt::NoFocus);
-    mDelayWidget->setRange(0.0, 50.0);
+    mDelayWidget->setRange(0.0, 55.0);
     mDelayWidget->setWheelBorderWidth(0);
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
@@ -130,7 +130,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     connect(mDelayWidget, SIGNAL(valueChanged(double)),
             this, SLOT(updateDelayValue(const double &)));
 
-    mDelayWidget->setValue(0);
+    mDelayWidget->setValue(0.0);
 
     updateDelayValue(mDelayWidget->value());
     // Note: our call to updateDelayValue() is because the connection is not yet
@@ -346,7 +346,7 @@ void SingleCellViewWidget::retranslateUi()
     mDelayWidget->setToolTip(tr("Simulation Delay"));
     mDelayValueWidget->setToolTip(mDelayWidget->toolTip());
 
-    mDelayWidget->setStatusTip(tr("Delay in milliseconds between two data points"));
+    mDelayWidget->setStatusTip(tr("Delay between two data points"));
     mDelayValueWidget->setStatusTip(mDelayWidget->statusTip());
 
     // Retranslate our run/pause action
@@ -602,7 +602,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
         // Initialise our simulation object's delay
 
-        mSimulation->setDelay(mDelayWidget->value());
+        updateDelayValue(mDelayWidget->value());
 
         // Create a few connections
 
@@ -1201,12 +1201,25 @@ void SingleCellViewWidget::updateDelayValue(const double &pDelayValue)
 {
     // Update our delay value widget
 
-    mDelayValueWidget->setText(QLocale().toString(pDelayValue)+" ms");
+    int delay = 0;
+    int increment = 1;
+    int multiple = 10;
+
+    for (int i = 0, iMax = pDelayValue; i < iMax; ++i) {
+        delay += increment;
+
+        if (delay % multiple == 0) {
+            increment *= 10;
+            multiple *= 10;
+        }
+    }
+
+    mDelayValueWidget->setText(QLocale().toString(delay));
 
     // Also update our simulation object
 
     if (mSimulation)
-        mSimulation->setDelay(pDelayValue);
+        mSimulation->setDelay(delay);
 }
 
 //==============================================================================

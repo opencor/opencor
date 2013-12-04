@@ -175,8 +175,8 @@
 <context>
     <name>OpenCOR::SingleCellView::SingleCellViewWidget</name>
     <message>
-        <source>Delay in milliseconds between two data points</source>
-        <translation>Délai en millisecondes entre deux points de données</translation>
+        <source>Delay between two data points</source>
+        <translation>Délai entre deux points de données</translation>
     </message>
     <message>
         <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; view requires a valid CellML file to work...</source>
