@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlfileruntime.h"
+#include "cliutils.h"
 #include "coredaesolver.h"
 #include "corenlasolver.h"
 #include "coreodesolver.h"
@@ -351,8 +352,7 @@ void SingleCellViewSimulationWorker::started()
             // Delay things a bit, if (really) needed
 
             if (mSimulation->delay() && !mStopped)
-                for (int i = 0, iMax = 100*mSimulation->delay(); i < iMax; ++i)
-                    ;
+                Core::loopDoingNothing(100*mSimulation->delay());
 
             // Check whether we should be paused
 

@@ -462,6 +462,23 @@ QString nonDiacriticString(const QString &pString)
 
 //==============================================================================
 
+int loopDoingNothing(const int &pMax)
+{
+    // A silly function, which aim is simply to waste time
+    // Note: ultimately, OpenCOR is to be compiled with optimisation, so we
+    //       cannot simply do nothing as such otherwise the for loop will be
+    //       completely ignored, hence the silly thing we are doing with res...
+
+    int res = 0;
+
+    for (int i = 0; i < pMax; ++i)
+        res *= i;
+
+    return res;
+}
+
+//==============================================================================
+
 }   // namespace Core
 }   // namespace OpenCOR
 

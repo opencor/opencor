@@ -78,6 +78,8 @@ QString CORE_EXPORT formatErrorMessage(const QString &pErrorMessage);
 
 QString CORE_EXPORT nonDiacriticString(const QString &pString);
 
+int CORE_EXPORT loopDoingNothing(const int &pMax);
+
 //==============================================================================
 
 }   // namespace Core
