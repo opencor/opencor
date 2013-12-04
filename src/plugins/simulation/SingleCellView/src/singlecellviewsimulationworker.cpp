@@ -325,7 +325,7 @@ void SingleCellViewSimulationWorker::started()
         QMutex delayMutex;
         QWaitCondition delayCondition;
 
-        while ((mCurrentPoint != endingPoint) && !mStopped && !mError) {
+        while ((mCurrentPoint != endingPoint) && !mStopped) {
             // Determine our next point and compute our model up to it
 
             ++pointCounter;
@@ -334,6 +334,11 @@ void SingleCellViewSimulationWorker::started()
                              increasingPoints?
                                  qMin(endingPoint, startingPoint+pointCounter*pointInterval):
                                  qMax(endingPoint, startingPoint+pointCounter*pointInterval));
+
+            // Make sure that no error occurred
+
+            if (mError)
+                break;
 
             // Update our progress
 
@@ -348,7 +353,6 @@ void SingleCellViewSimulationWorker::started()
 
             // Delay things a bit, if (really) needed
 
-            if (mSimulation->delay() && !mStopped && !mError) {
                 elapsedTime += timer.elapsed();
 
                 delayMutex.lock();
@@ -357,6 +361,7 @@ void SingleCellViewSimulationWorker::started()
 
                 timer.restart();
             }
+            if (mSimulation->delay() && !mStopped) {
 
             // Check whether we should be paused
 
