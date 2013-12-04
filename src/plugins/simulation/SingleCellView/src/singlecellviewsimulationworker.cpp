@@ -308,7 +308,7 @@ void SingleCellViewSimulationWorker::started()
         // Add our first point after making sure that all the variables have
         // been computed
 
-        mSimulation->data()->recomputeVariables(mCurrentPoint, false);
+        mSimulation->data()->recomputeVariables(mCurrentPoint);
 
         mSimulation->results()->addPoint(mCurrentPoint);
 
@@ -342,7 +342,7 @@ void SingleCellViewSimulationWorker::started()
             // Add our new point after making sure that all the variables have
             // been computed
 
-            mSimulation->data()->recomputeVariables(mCurrentPoint, false);
+            mSimulation->data()->recomputeVariables(mCurrentPoint);
 
             mSimulation->results()->addPoint(mCurrentPoint);
 

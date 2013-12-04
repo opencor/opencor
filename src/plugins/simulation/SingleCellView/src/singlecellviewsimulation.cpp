@@ -507,8 +507,7 @@ void SingleCellViewSimulationData::recomputeComputedConstantsAndVariables(const 
 
 //==============================================================================
 
-void SingleCellViewSimulationData::recomputeVariables(const double &pCurrentPoint,
-                                                      const bool &pEmitSignal)
+void SingleCellViewSimulationData::recomputeVariables(const double &pCurrentPoint)
 {
     if (!mRuntime)
         return;
@@ -519,15 +518,6 @@ void SingleCellViewSimulationData::recomputeVariables(const double &pCurrentPoin
         mRuntime->computeOdeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic);
     else
         mRuntime->computeDaeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic, mCondVar);
-
-    // Let people know that our data has been updated, if requested
-    // Note: recomputeVariables() will normally be called many times when
-    //       running a simulation to ensure that all of our 'variables' are
-    //       up to date and to emit loads of signals wouldn't be a good idea,
-    //       hence the caller can decide whether to emit a signal or not...
-
-    if (pEmitSignal)
-        emit updated(pCurrentPoint);
 }
 
 //==============================================================================

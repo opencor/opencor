@@ -108,8 +108,7 @@ public:
 
     void recomputeComputedConstantsAndVariables(const double &pCurrentPoint,
                                                 const bool &pFullComputeComputedConstants = true);
-    void recomputeVariables(const double &pCurrentPoint,
-                            const bool &pEmitSignal = true);
+    void recomputeVariables(const double &pCurrentPoint);
 
     bool isModified() const;
     void checkForModifications();
