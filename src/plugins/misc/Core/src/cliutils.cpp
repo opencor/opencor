@@ -462,19 +462,21 @@ QString nonDiacriticString(const QString &pString)
 
 //==============================================================================
 
-int loopDoingNothing(const int &pMax)
+void doNothing(const int &pMax)
 {
-    // A silly function, which aim is simply to waste time
-    // Note: ultimately, OpenCOR is to be compiled with optimisation, so we
-    //       cannot simply do nothing as such otherwise the for loop will be
-    //       completely ignored, hence the silly thing we are doing with res...
-
-    int res = 0;
+    // A silly function, which aim is simply to do nothing
+    // Note: this function came about because there is no way, on Windows, to
+    //       pause a thread for less than a millisecond (in the best of
+    //       cases)...
 
     for (int i = 0; i < pMax; ++i)
-        res *= i;
-
-    return res;
+#ifdef Q_OS_WIN
+        __asm {
+            nop
+        }
+#else
+        asm("nop");
+#endif
 }
 
 //==============================================================================

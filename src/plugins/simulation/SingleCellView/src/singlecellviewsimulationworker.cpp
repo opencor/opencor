@@ -352,7 +352,7 @@ void SingleCellViewSimulationWorker::started()
             // Delay things a bit, if (really) needed
 
             if (mSimulation->delay() && !mStopped)
-                Core::loopDoingNothing(100*mSimulation->delay());
+                Core::doNothing(100*mSimulation->delay());
 
             // Check whether we should be paused
 

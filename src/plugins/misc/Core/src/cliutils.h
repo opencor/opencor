@@ -78,11 +78,7 @@ QString CORE_EXPORT formatErrorMessage(const QString &pErrorMessage);
 
 QString CORE_EXPORT nonDiacriticString(const QString &pString);
 
-#ifdef Q_OS_LINUX
-    int CORE_EXPORT loopDoingNothing(const int &pMax) __attribute__((optimize("-O0")));
-#else
-    int CORE_EXPORT loopDoingNothing(const int &pMax);
-#endif
+void CORE_EXPORT doNothing(const int &pMax);
 
 //==============================================================================
 
