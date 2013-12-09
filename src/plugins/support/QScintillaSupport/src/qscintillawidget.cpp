@@ -46,9 +46,9 @@ void QScintillaWidget::constructor(const QString &pContents,
 
     setFrameShape(QFrame::NoFrame);
 
-    // Remove the margin in our Scintilla editor
+    // Remove the margin number in our Scintilla editor
 
-    setMarginWidth(1, 0);
+    setMarginWidth(SC_MARGIN_NUMBER, 0);
 
     // Associate a lexer to our Scintilla editor, should one be available
 
