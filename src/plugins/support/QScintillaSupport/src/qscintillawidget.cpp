@@ -76,7 +76,7 @@ void QScintillaWidget::constructor(const QString &pContents,
 
     // Set the contents of our Scintilla editor and its read-only property
 
-    setText(pContents);
+    setContents(pContents);
     setReadOnly(pReadOnly);
 }
 
