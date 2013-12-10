@@ -109,6 +109,15 @@ QsciScintillaQt::QsciScintillaQt(QsciScintillaBase *qsb_)
 {
     wMain = qsb->viewport();
 
+    // On OS X drawing text into a pixmap moves it around 1 pixel to
+    // the right compared to drawing it directly onto a window.
+    // Buffered drawing turned off by default to avoid this.
+    // Also, this fixes an issue with Retina displays on OS X (see
+    // https://groups.google.com/forum/#!topic/scintilla-interest/tj71w3UMj4s).
+#ifdef Q_OS_MAC
+    WndProc(SCI_SETBUFFEREDDRAW, false, 0);
+#endif
+
     // We aren't a QObject so we use the API class to do QObject related things
     // for us.
     qsb->connect(&qtimer, SIGNAL(timeout()), SLOT(handleTimer()));
