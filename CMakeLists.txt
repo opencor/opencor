@@ -182,6 +182,7 @@ SET(PLUGINS
     organisation/FileOrganiser
 
     editing/CellMLAnnotationView
+    editing/PrettyCellMLView
     editing/RawCellMLView
     editing/RawView
 
