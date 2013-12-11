@@ -419,26 +419,18 @@ void HelpWidget::wheelEvent(QWheelEvent *pEvent)
     // Handle the wheel mouse button for zooming in/out the help document
     // contents
 
-    if (pEvent->modifiers() & Qt::ControlModifier) {
-        // The user has pressed the Ctrl key (on Windows and Linux) or the Alt
-        // key (on OS X)
-
+    if (pEvent->modifiers() == Qt::ControlModifier) {
         int delta = pEvent->delta();
 
         if (delta > 0)
-            // We are going 'up' which means zooming in
-
             zoomIn();
         else if (delta < 0)
-            // We are going 'down' which means zooming out
-
             zoomOut();
-
-        // Accept the event
 
         pEvent->accept();
     } else {
-        // Something else, so use the default handling of the event
+        // Not the modifier we were expecting, so call the default handling of
+        // the event
 
         QWebView::wheelEvent(pEvent);
     }
