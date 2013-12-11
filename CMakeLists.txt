@@ -301,12 +301,36 @@ IF(APPLE)
 
     # Clean up our main executable
 
+    SET(COMMON_QT_LIBRARIES
+        QtConcurrent
+        QtCore
+        QtGui
+        QtHelp
+        QtMultimedia
+        QtMultimediaWidgets
+        QtNetwork
+        QtOpenGL
+        QtPositioning
+        QtPrintSupport
+        QtQml
+        QtQuick
+        QtSensors
+        QtSvg
+        QtWebKit
+        QtWebKitWidgets
+        QtWidgets
+        QtXml
+    )
+
     OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${PROJECT_NAME}
-                                         QtConcurrent QtCore QtGui QtHelp QtNetwork QtOpenGL QtPrintSupport QtQml QtQuick QtSensors QtSvg QtWebKit QtWebKitWidgets QtWidgets QtXml)
+                                         ${COMMON_QT_LIBRARIES})
 
-    # Deploy our Qt libraries
+    # Deploy our Qt libraries, but only if we are to package OpenCOR
+    # Note: see OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES() for the reason...
 
-    OS_X_DEPLOY_QT_LIBRARIES(QtCLucene QtConcurrent QtCore QtGui QtHelp QtNetwork QtOpenGL QtPrintSupport QtQml QtQuick QtSensors QtSql QtSvg QtV8 QtWebKit QtWebKitWidgets QtWidgets QtXml)
+    IF("$ENV{PACKAGE_OPENCOR}" STREQUAL "True")
+        OS_X_DEPLOY_QT_LIBRARIES(${COMMON_QT_LIBRARIES} QtCLucene QtSql)
+    ENDIF()
 
     # Deploy some plugins
 

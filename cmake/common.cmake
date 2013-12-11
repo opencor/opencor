@@ -920,32 +920,43 @@ ENDMACRO()
 #===============================================================================
 
 MACRO(OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES DIRNAME FILENAME)
-    # Strip the Qt file of all local symbols
+    # Note: we only clean up the file with Qt libraries if we are to package
+    #       OpenCOR. Indeed, if we were to do this when building OpenCOR for,
+    #       say, debugging purposes, then we would end up with two sets of Qt
+    #       libraries (one in /Applications/Qt5 and another in the OpenCOR
+    #       bundle), potentially confusing tools such as Xcode, generating
+    #       messages like "XXX is implemented in both YYY and ZZZ. One of the
+    #       two will be used. Which one is undefined." even though everything is
+    #       actually fine...
 
-    SET(FULL_FILENAME ${DIRNAME}/${FILENAME})
+    IF("$ENV{PACKAGE_OPENCOR}" STREQUAL "True")
+        # Strip the Qt file of all local symbols
 
-    IF(RELEASE_MODE)
+        SET(FULL_FILENAME ${DIRNAME}/${FILENAME})
+
+        IF(RELEASE_MODE)
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                               COMMAND strip -x ${FULL_FILENAME})
+        ENDIF()
+
+        # Clean up the Qt file's id
+
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND strip -x ${FULL_FILENAME})
+                           COMMAND install_name_tool -id ${FILENAME}
+                                                         ${FULL_FILENAME})
+
+        # Make sure that the Qt file refers to our embedded version of its Qt
+        # dependencies
+
+        FOREACH(DEPENDENCY ${ARGN})
+            SET(DEPENDENCY_FILENAME ${DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${DEPENDENCY})
+
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                               COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${DEPENDENCY_FILENAME}
+                                                                 @executable_path/../Frameworks/${DEPENDENCY_FILENAME}
+                                                                 ${FULL_FILENAME})
+        ENDFOREACH()
     ENDIF()
-
-    # Clean up the Qt file's id
-
-    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND install_name_tool -id ${FILENAME}
-                                                     ${FULL_FILENAME})
-
-    # Make sure that the Qt file refers to our embedded version of its Qt
-    # dependencies
-
-    FOREACH(DEPENDENCY ${ARGN})
-        SET(DEPENDENCY_FILENAME ${DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${DEPENDENCY})
-
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${DEPENDENCY_FILENAME}
-                                                             @executable_path/../Frameworks/${DEPENDENCY_FILENAME}
-                                                             ${FULL_FILENAME})
-    ENDFOREACH()
 ENDMACRO()
 
 #===============================================================================
@@ -964,17 +975,8 @@ MACRO(OS_X_DEPLOY_QT_FILE ORIG_DIRNAME DEST_DIRNAME FILENAME)
     OS_X_QT_LIBRARIES(${ORIG_FILENAME} DEPENDENCIES)
 
     # Clean up the Qt file
-    # Note: we only do this if we are to package OpenCOR. Indeed, if we were to
-    #       do this when building OpenCOR for, say, debugging purposes, then we
-    #       would end up with two sets of Qt libraries (one in /Applications/Qt5
-    #       and another in the OpenCOR bundle), potentially confusing tools such
-    #       as Xcode, generating messages like "XXX is implemented in both YYY
-    #       and ZZZ. One of the two will be used. Which one is undefined." even
-    #       though everything is actually fine...
 
-    IF("$ENV{PACKAGE_OPENCOR}" STREQUAL "True")
-        OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${DEST_DIRNAME} ${FILENAME} ${DEPENDENCIES})
-    ENDIF()
+    OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${DEST_DIRNAME} ${FILENAME} ${DEPENDENCIES})
 ENDMACRO()
 
 #===============================================================================
