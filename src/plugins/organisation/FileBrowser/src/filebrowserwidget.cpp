@@ -439,8 +439,8 @@ void FileBrowserWidget::keyPressEvent(QKeyEvent *pEvent)
        && (   (pEvent->key() == Qt::Key_Enter)
            || (pEvent->key() == Qt::Key_Return))
 #elif defined(Q_OS_MAC)
-        && (   (pEvent->modifiers() & Qt::ControlModifier)
-            && (pEvent->key() == Qt::Key_Down))
+       && (   (pEvent->key() == Qt::Key_Down)
+           && (pEvent->modifiers() & Qt::ControlModifier))
 #else
     #error Unsupported platform
 #endif
