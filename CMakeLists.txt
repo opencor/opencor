@@ -326,7 +326,7 @@ IF(APPLE)
     # Note: see OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES() for the reason...
 
     IF("$ENV{PACKAGE_OPENCOR}" STREQUAL "True")
-        OS_X_DEPLOY_QT_LIBRARIES(${COMMON_QT_LIBRARIES} QtCLucene QtSql)
+        OS_X_DEPLOY_QT_LIBRARIES(${COMMON_QT_LIBRARIES} QtCLucene QtSql QtV8)
     ENDIF()
 
     # Deploy some plugins
