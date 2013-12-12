@@ -780,6 +780,21 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
     # A few OS X specific things
 
     IF(APPLE)
+        # Make sure that the copy of our plugin in our plugins directory refers
+        # to the system version of the Qt libraries on which it depends, this in
+        # case we are not to package OpenCOR
+        # Note: see OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES() for the reason...
+
+        IF(NOT "$ENV{PACKAGE_OPENCOR}" STREQUAL "True")
+            FOREACH(QT_LIBRARY ${QT_LIBRARIES})
+                ADD_CUSTOM_TARGET(${QT_LIBRARY}_UPDATE_OS_X_QT_REFERENCE_IN_BUNDLE ALL
+                                  DEPENDS ${PLUGIN_NAME}_COPY_PLUGIN_TO_BUILD_DIRECTORY
+                                  COMMAND install_name_tool -change @executable_path/../Frameworks/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
+                                                                    ${QT_LIBRARY_DIR}/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
+                                                                    ${DEST_PLUGINS_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
+            ENDFOREACH()
+        ENDIF()
+
         # Make sure that the copy of our plugin in our main build directory
         # refers to the system version of the Qt libraries on which it depends
         # Note: indeed, right now, it refers to our embedded version of the Qt
@@ -787,7 +802,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
         #       to the system version of the Qt libraries, so...
 
         FOREACH(QT_LIBRARY ${QT_LIBRARIES})
-            ADD_CUSTOM_TARGET(${PLUGIN_NAME}_UPDATE_OS_X_QT_REFERENCE ALL
+            ADD_CUSTOM_TARGET(${QT_LIBRARY}_UPDATE_OS_X_QT_REFERENCE_IN_BUILD_DIRECTORY ALL
                               DEPENDS ${PLUGIN_NAME}_COPY_PLUGIN_TO_BUILD_DIRECTORY
                               COMMAND install_name_tool -change @executable_path/../Frameworks/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
                                                                 ${QT_LIBRARY_DIR}/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
