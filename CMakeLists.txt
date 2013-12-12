@@ -306,11 +306,8 @@ IF(APPLE)
         QtCore
         QtGui
         QtHelp
-        QtMultimedia
-        QtMultimediaWidgets
         QtNetwork
         QtOpenGL
-        QtPositioning
         QtPrintSupport
         QtQml
         QtQuick
