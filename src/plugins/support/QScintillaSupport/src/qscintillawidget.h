@@ -28,6 +28,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QFont>
+
+//==============================================================================
+
 #include "Qsci/qsciscintilla.h"
 
 //==============================================================================
@@ -53,8 +57,11 @@ public:
 
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *pEvent);
+    virtual void wheelEvent(QWheelEvent *pEvent);
 
 private:
+    QFont mFont;
+
     void constructor(const QString &pContents = QString(),
                      const bool &pReadOnly = false,
                      QsciLexer *pLexer = 0);

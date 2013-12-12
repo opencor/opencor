@@ -50,16 +50,15 @@ void QScintillaWidget::constructor(const QString &pContents,
 
     setMarginWidth(SC_MARGIN_NUMBER, 0);
 
-    // Associate a lexer to our Scintilla editor, should one be available
+    // Associate a lexer to our Scintilla editor, should one be provided
+
+    mFont = QFont(Core::DefaultFontFamily, Core::DefaultFontSize);
 
     if (pLexer) {
         // A lexer was provided, so specify its fonts and associate it with our
         // Scintilla editor
 
-        QFont defaultFont = QFont(Core::DefaultFontFamily, Core::DefaultFontSize);
-
-        pLexer->setDefaultFont(defaultFont);
-        pLexer->setFont(defaultFont);
+        pLexer->setDefaultFont(mFont);
 
         setLexer(pLexer);
 
@@ -71,7 +70,7 @@ void QScintillaWidget::constructor(const QString &pContents,
         // No lexer was provided, so simply specify a default font family and
         // size for our Scintilla editor
 
-        setFont(QFont(Core::DefaultFontFamily, Core::DefaultFontSize));
+        setFont(mFont);
     }
 
     // Set the contents of our Scintilla editor and its read-only property
@@ -147,6 +146,36 @@ void QScintillaWidget::dragEnterEvent(QDragEnterEvent *pEvent)
         pEvent->acceptProposedAction();
     else
         pEvent->ignore();
+}
+
+//==============================================================================
+
+void QScintillaWidget::wheelEvent(QWheelEvent *pEvent)
+{
+    // Default handling of the event
+
+    QsciScintilla::wheelEvent(pEvent);
+
+    // Make sure that we can and want to zoom in/out
+
+    if (!pEvent->delta() || (pEvent->modifiers() != Qt::ControlModifier))
+        return;
+
+    // Increase/decrease our font size
+
+    if (pEvent->delta() > 0)
+        mFont.setPointSize(mFont.pointSize()+1);
+    else
+        mFont.setPointSize(mFont.pointSize()-1);
+
+    // Update our font
+
+    QsciLexer *crtLexer = lexer();
+
+    if (crtLexer)
+        crtLexer->setDefaultFont(mFont);
+    else
+        setFont(mFont);
 }
 
 //==============================================================================
