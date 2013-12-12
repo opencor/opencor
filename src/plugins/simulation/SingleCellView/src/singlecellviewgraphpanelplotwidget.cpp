@@ -1256,32 +1256,31 @@ void SingleCellViewGraphPanelPlotWidget::resizeEvent(QResizeEvent *pEvent)
 
 void SingleCellViewGraphPanelPlotWidget::wheelEvent(QWheelEvent *pEvent)
 {
-    // Default handling of the event
+    // Handle the wheel mouse button for zooming in/out
 
-    QwtPlot::wheelEvent(pEvent);
+    if (pEvent->modifiers() == Qt::NoModifier) {
+        // Make sure that we are not already carrying out a action
 
-    // Make sure that we are not already carrying out a action
+        if (mAction == None) {
+            int delta = pEvent->delta();
+            double scalingFactor = 0.0;
 
-    if (mAction != None)
-        return;
+            if (delta > 0)
+                scalingFactor = ScalingInFactor;
+            else if (delta < 0)
+                scalingFactor = ScalingOutFactor;
 
-    // Make sure that we have actually got a delta that will tell us about the
-    // kind of zooming we need to do
+            if (scalingFactor)
+                scaleAxes(pEvent->pos(), scalingFactor, scalingFactor);
+        }
 
-    if (!pEvent->delta())
-        return;
+        pEvent->accept();
+    } else {
+        // Not the modifier we were expecting, so call the default handling of
+        // the event
 
-    // The only action we support using the wheel is zooming in/out, but this
-    // requires no modifiers being used
-
-    if (pEvent->modifiers() != Qt::NoModifier)
-        return;
-
-    // Zoom in/out by scaling our two axes
-
-    double scalingFactor = (pEvent->delta() > 0)?ScalingInFactor:ScalingOutFactor;
-
-    scaleAxes(pEvent->pos(), scalingFactor, scalingFactor);
+        QwtPlot::wheelEvent(pEvent);
+    }
 }
 
 //==============================================================================
