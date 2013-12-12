@@ -156,23 +156,11 @@ void QScintillaWidget::wheelEvent(QWheelEvent *pEvent)
 
     if (pEvent->modifiers() == Qt::ControlModifier) {
         int delta = pEvent->delta();
-        int newFontSize = mFont.pointSize();
 
         if (delta > 0)
-            newFontSize = qMin(mFont.pointSize()+1, 30);
+            zoomIn();
         else if (delta < 0)
-            newFontSize = qMax(mFont.pointSize()-1, 1);
-
-        if (newFontSize != mFont.pointSize()) {
-            QsciLexer *crtLexer = lexer();
-
-            mFont.setPointSize(newFontSize);
-
-            if (crtLexer)
-                crtLexer->setFont(mFont);
-            else
-                setFont(mFont);
-        }
+            zoomOut();
 
         pEvent->accept();
     } else {
