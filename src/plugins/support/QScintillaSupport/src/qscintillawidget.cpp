@@ -58,7 +58,7 @@ void QScintillaWidget::constructor(const QString &pContents,
         // A lexer was provided, so specify its fonts and associate it with our
         // Scintilla editor
 
-        pLexer->setDefaultFont(mFont);
+        pLexer->setFont(mFont);
 
         setLexer(pLexer);
 
@@ -152,30 +152,35 @@ void QScintillaWidget::dragEnterEvent(QDragEnterEvent *pEvent)
 
 void QScintillaWidget::wheelEvent(QWheelEvent *pEvent)
 {
-    // Default handling of the event
+    // Handle the wheel mouse button for increasing/decreasing the font size
 
-    QsciScintilla::wheelEvent(pEvent);
+    if (pEvent->modifiers() == Qt::ControlModifier) {
+        int delta = pEvent->delta();
+        int newFontSize = mFont.pointSize();
 
-    // Make sure that we can and want to zoom in/out
+        if (delta > 0)
+            newFontSize = qMin(mFont.pointSize()+1, 30);
+        else if (delta < 0)
+            newFontSize = qMax(mFont.pointSize()-1, 1);
 
-    if (!pEvent->delta() || (pEvent->modifiers() != Qt::ControlModifier))
-        return;
+        if (newFontSize != mFont.pointSize()) {
+            QsciLexer *crtLexer = lexer();
 
-    // Increase/decrease our font size
+            mFont.setPointSize(newFontSize);
 
-    if (pEvent->delta() > 0)
-        mFont.setPointSize(mFont.pointSize()+1);
-    else
-        mFont.setPointSize(mFont.pointSize()-1);
+            if (crtLexer)
+                crtLexer->setFont(mFont);
+            else
+                setFont(mFont);
+        }
 
-    // Update our font
+        pEvent->accept();
+    } else {
+        // Not the modifier we were expecting, so call the default handling of
+        // the event
 
-    QsciLexer *crtLexer = lexer();
-
-    if (crtLexer)
-        crtLexer->setDefaultFont(mFont);
-    else
-        setFont(mFont);
+        QsciScintilla::wheelEvent(pEvent);
+    }
 }
 
 //==============================================================================
