@@ -338,7 +338,7 @@ IF(APPLE)
     OS_X_DEPLOY_QT_PLUGIN(imageformats qgif qico qjpeg qmng qsvg qtga qtiff qwbmp)
     OS_X_DEPLOY_QT_PLUGIN(platforms qcocoa)
     OS_X_DEPLOY_QT_PLUGIN(printsupport cocoaprintersupport)
-    OS_X_DEPLOY_QT_PLUGIN(sqldrivers qsqlite qsqlodbc qsqlpsql)
+    OS_X_DEPLOY_QT_PLUGIN(sqldrivers qsqlite)
 ENDIF()
 
 # Package OpenCOR (using CPack)
@@ -393,7 +393,7 @@ IF(WIN32)
     WINDOWS_DEPLOY_QT_PLUGIN(accessible qtaccessiblequick qtaccessiblewidgets)
     WINDOWS_DEPLOY_QT_PLUGIN(imageformats qgif qico qjpeg qmng qsvg qtga qtiff qwbmp)
 
-    FOREACH(QT_PLUGIN_FILE qminimal qwindows)
+    FOREACH(QT_PLUGIN_FILE qwindows)
         INSTALL(FILES ${QT_PLUGINS_DIR}/platforms/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}
                 DESTINATION bin/platforms)
         # Note: yes, the platforms plugin must be installed in the bin folder
@@ -540,7 +540,7 @@ ELSE()
 
     LINUX_DEPLOY_QT_PLUGIN(accessible qtaccessiblequick qtaccessiblewidgets)
     LINUX_DEPLOY_QT_PLUGIN(imageformats qgif qico qjpeg qmng qsvg qtga qtiff qwbmp)
-    LINUX_DEPLOY_QT_PLUGIN(platforms qlinuxfb qminimal qxcb)
+    LINUX_DEPLOY_QT_PLUGIN(platforms qxcb)
     LINUX_DEPLOY_QT_PLUGIN(printsupport cupsprintersupport)
     LINUX_DEPLOY_QT_PLUGIN(sqldrivers qsqlite)
 
