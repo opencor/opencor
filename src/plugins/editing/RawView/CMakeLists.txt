@@ -2,6 +2,12 @@ PROJECT(RawViewPlugin)
 
 # Add the plugin
 
+IF(APPLE)
+    SET(QT_LIBRARIES_EXTRAS QtMacExtras)
+ELSE()
+    SET(QT_LIBRARIES_EXTRAS)
+ENDIF()
+
 ADD_PLUGIN(RawView
     SOURCES
         ../../guiinterface.cpp
@@ -22,6 +28,7 @@ ADD_PLUGIN(RawView
     QT_MODULES
         Widgets
     QT_LIBRARIES
+        ${QT_LIBRARIES_EXTRAS}
         QtCore
         QtGui
         QtNetwork

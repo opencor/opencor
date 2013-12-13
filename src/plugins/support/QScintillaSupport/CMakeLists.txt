@@ -2,6 +2,12 @@ PROJECT(QScintillaSupportPlugin)
 
 # Add the plugin
 
+IF(APPLE)
+    SET(QT_LIBRARIES_EXTRAS QtMacExtras)
+ELSE()
+    SET(QT_LIBRARIES_EXTRAS)
+ENDIF()
+
 ADD_PLUGIN(QScintillaSupport
     SOURCES
         ../../plugininfo.cpp
@@ -22,6 +28,7 @@ ADD_PLUGIN(QScintillaSupport
         Network
         Widgets
     QT_LIBRARIES
+        ${QT_LIBRARIES_EXTRAS}
         QtCore
         QtGui
         QtNetwork

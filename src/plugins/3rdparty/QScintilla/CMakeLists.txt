@@ -4,8 +4,10 @@ PROJECT(QScintillaPlugin)
 
 IF(APPLE)
     SET(QT_MODULES_EXTRAS MacExtras)
+    SET(QT_LIBRARIES_EXTRAS QtMacExtras)
 ELSE()
     SET(QT_MODULES_EXTRAS)
+    SET(QT_LIBRARIES_EXTRAS)
 ENDIF()
 
 ADD_PLUGIN(QScintilla
@@ -99,6 +101,7 @@ ADD_PLUGIN(QScintilla
         ${QT_MODULES_EXTRAS}
         Widgets
     QT_LIBRARIES
+        ${QT_LIBRARIES_EXTRAS}
         QtCore
         QtGui
         QtWidgets

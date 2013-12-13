@@ -7,6 +7,12 @@ RETRIEVE_LLVM_SETTINGS()
 
 # Add the plugin
 
+IF(APPLE)
+    SET(QT_LIBRARIES_EXTRAS QtMacExtras)
+ELSE()
+    SET(QT_LIBRARIES_EXTRAS)
+ENDIF()
+
 ADD_PLUGIN(PrettyCellMLView
     SOURCES
         ../../guiinterface.cpp
@@ -40,6 +46,7 @@ ADD_PLUGIN(PrettyCellMLView
     QT_MODULES
         Widgets
     QT_LIBRARIES
+        ${QT_LIBRARIES_EXTRAS}
         QtConcurrent
         QtCore
         QtGui
