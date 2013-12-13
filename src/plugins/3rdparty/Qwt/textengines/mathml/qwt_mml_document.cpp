@@ -1246,23 +1246,9 @@ bool QwtMmlDocument::setContent(
 {
     clear();
 
-    QString prefix = "<?xml version=\"2.0\"?>\n";
-    prefix.append( mmlEntityTable.entities() );
-
-    int prefix_lines = 0;
-    for ( int i = 0; i < prefix.length(); ++i )
-    {
-        if ( prefix.at( i ) == '\n' )
-            ++prefix_lines;
-    }
-
     QDomDocument dom;
-    if ( !dom.setContent( prefix + text, false, errorMsg, errorLine, errorColumn ) )
-    {
-        if ( errorLine != 0 )
-            *errorLine -= prefix_lines;
+    if ( !dom.setContent( text, false, errorMsg, errorLine, errorColumn ) )
         return false;
-    }
 
     // we don't have access to line info from now on
     if ( errorLine != 0 ) *errorLine = -1;
@@ -2156,7 +2142,7 @@ void QwtMmlNode::paintSymbol( QPainter *painter, qreal, qreal ) const
         painter->restore();
     }
 #else
-	Q_UNUSED( painter )
+    Q_UNUSED( painter )
 #endif
 }
 
