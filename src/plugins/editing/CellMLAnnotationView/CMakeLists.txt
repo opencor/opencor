@@ -61,8 +61,11 @@ ADD_PLUGIN(CellMLAnnotationView
     QT_LIBRARIES
         QtCore
         QtGui
+        QtMultimedia
+        QtMultimediaWidgets
         QtNetwork
         QtOpenGL
+        QtPositioning
         QtPrintSupport
         QtQml
         QtQuick

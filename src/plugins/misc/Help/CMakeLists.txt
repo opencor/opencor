@@ -34,8 +34,11 @@ ADD_PLUGIN(Help
         QtCore
         QtGui
         QtHelp
+        QtMultimedia
+        QtMultimediaWidgets
         QtNetwork
         QtOpenGL
+        QtPositioning
         QtPrintSupport
         QtQml
         QtQuick

@@ -6,23 +6,23 @@ env:
 
 before_install:
   -    export PROCS=`cat /proc/cpuinfo | grep processor | wc -l`
-    && sudo apt-add-repository -y ppa:beineri/opt-qt511
+    && sudo apt-add-repository -y ppa:beineri/opt-qt52
     && sudo apt-get -qq update
     && sudo apt-get -qq install cmake
-    && wget http://www.cmake.org/files/v2.8/cmake-2.8.12.tar.gz
-    && tar -xzf cmake-2.8.12.tar.gz
-    && cd cmake-2.8.12
+    && wget http://www.cmake.org/files/v2.8/cmake-2.8.12.1.tar.gz
+    && tar -xzf cmake-2.8.12.1.tar.gz
+    && cd cmake-2.8.12.1
     && mkdir build
     && cd build
     && cmake -DCMAKE_INSTALL_PREFIX=/usr ..
     && make -j $PROCS
     && sudo make install
     && cd ../..
-    && sudo apt-get -qq install qt51tools qt51svg qt51webkit
+    && sudo apt-get -qq install qt52tools qt52svg qt52webkit
 
 script:
   -    cd build
-    && cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt51/lib/cmake -DENABLE_TRAVIS_CI=True -DENABLE_TESTS=True ..
+    && cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt52/lib/cmake -DENABLE_TRAVIS_CI=True -DENABLE_TESTS=True ..
     && make -j $PROCS
     && cd tests
     && ./runtests -platform offscreen
