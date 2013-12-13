@@ -301,7 +301,14 @@ IF(APPLE)
 
     # Clean up our main executable
 
+    IF(APPLE)
+        SET(COMMON_QT_LIBRARIES_EXTRAS QtMacExtras)
+    ELSE()
+        SET(COMMON_QT_LIBRARIES_EXTRAS)
+    ENDIF()
+
     SET(COMMON_QT_LIBRARIES
+        ${COMMON_QT_LIBRARIES_EXTRAS}
         QtConcurrent
         QtCore
         QtGui
