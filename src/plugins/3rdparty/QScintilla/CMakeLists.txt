@@ -2,6 +2,12 @@ PROJECT(QScintillaPlugin)
 
 # Add the plugin
 
+IF(APPLE)
+    SET(QT_MODULES_EXTRAS MacExtras)
+ELSE()
+    SET(QT_MODULES_EXTRAS)
+ENDIF()
+
 ADD_PLUGIN(QScintilla
     THIRD_PARTY
     SOURCES
@@ -90,7 +96,7 @@ ADD_PLUGIN(QScintilla
         Qt4Qt5
         src
     QT_MODULES
-        MacExtras
+        ${QT_MODULES_EXTRAS}
         Widgets
     QT_LIBRARIES
         QtCore
