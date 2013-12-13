@@ -20,6 +20,7 @@ ADD_PLUGIN(QScintilla
 
         Qt4Qt5/InputMethod.cpp
         Qt4Qt5/ListBoxQt.cpp
+        Qt4Qt5/MacPasteboardMime.cpp
         Qt4Qt5/PlatQt.cpp
         Qt4Qt5/qsciabstractapis.cpp
         Qt4Qt5/qsciapis.cpp
@@ -89,6 +90,7 @@ ADD_PLUGIN(QScintilla
         Qt4Qt5
         src
     QT_MODULES
+        MacExtras
         Widgets
     QT_LIBRARIES
         QtCore

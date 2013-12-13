@@ -84,8 +84,7 @@ static const QLatin1String mimeRectangularWin("MSDEVColumnSelect");
 static const QLatin1String mimeRectangular("text/x-qscintilla-rectangular");
 
 #if defined(Q_OS_MAC)
-#if    (QT_VERSION >= 0x040200 && QT_VERSION < 0x050000)
-    || (QT_VERSION >= 0x050200 && QT_VERSION < 0x052000)
+#if (QT_VERSION >= 0x040200 && QT_VERSION < 0x050000) || QT_VERSION >= 0x050200
 
 extern void initialiseRectangularPasteboardMime();
 
@@ -115,8 +114,7 @@ QsciScintillaBase::QsciScintillaBase(QWidget *parent)
     triple_click.setSingleShot(true);
 
 #if defined(Q_OS_MAC)
-#if    (QT_VERSION >= 0x040200 && QT_VERSION < 0x050000)
-    || (QT_VERSION >= 0x050200 && QT_VERSION < 0x052000)
+#if (QT_VERSION >= 0x040200 && QT_VERSION < 0x050000) || QT_VERSION >= 0x050200
     initialiseRectangularPasteboardMime();
 #endif
 #endif
