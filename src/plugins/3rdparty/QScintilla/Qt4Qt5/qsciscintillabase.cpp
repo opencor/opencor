@@ -111,13 +111,6 @@ QsciScintillaBase::QsciScintillaBase(QWidget *parent)
     viewport()->setMouseTracking(true);
     viewport()->setAttribute(Qt::WA_NoSystemBackground);
 
-#if QT_VERSION >= 0x050000
-    // Until we fix things properly retina displays require buffered drawing to
-    // be disabled.
-    if (viewport()->devicePixelRatio() > 1)
-        SendScintilla(SCI_SETBUFFEREDDRAW, 0);
-#endif
-
     triple_click.setSingleShot(true);
 
 #if defined(Q_OS_MAC)
@@ -127,6 +120,13 @@ QsciScintillaBase::QsciScintillaBase(QWidget *parent)
 #endif
 
     sci = new QsciScintillaQt(this);
+
+#if QT_VERSION >= 0x050000
+    // Until we fix things properly retina displays require buffered drawing to
+    // be disabled.
+    if (viewport()->devicePixelRatio() > 1)
+        SendScintilla(SCI_SETBUFFEREDDRAW, 0);
+#endif
 
     SendScintilla(SCI_SETCARETPERIOD, QApplication::cursorFlashTime() / 2);
 
