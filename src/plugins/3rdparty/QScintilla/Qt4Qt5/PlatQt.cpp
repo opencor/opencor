@@ -1,9 +1,9 @@
 // This module implements the portability layer for the Qt port of Scintilla.
 //
 // Copyright (c) 2012 Riverbank Computing Limited <info@riverbankcomputing.com>
-//
+// 
 // This file is part of QScintilla.
-//
+// 
 // This file may be used under the terms of the GNU General Public
 // License versions 2.0 or 3.0 as published by the Free Software
 // Foundation and appearing in the files LICENSE.GPL2 and LICENSE.GPL3
@@ -15,10 +15,10 @@
 // certain additional rights. These rights are described in the Riverbank
 // GPL Exception version 1.1, which can be found in the file
 // GPL_EXCEPTION.txt in this package.
-//
+// 
 // If you are unsure which license is appropriate for your use, please
 // contact the sales department at sales@riverbankcomputing.com.
-//
+// 
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
@@ -177,12 +177,12 @@ public:
     void Init(WindowID wid);
     void Init(SurfaceID sid, WindowID);
     void Init(QPainter *p);
-    void InitPixMap(int width, int height, Surface *, WindowID);
+    void InitPixMap(int width, int height, Surface *, WindowID wid);
 
     void Release();
     bool Initialised() {return painter;}
     void PenColour(ColourDesired fore);
-    int LogPixelsY() {return 72;}
+    int LogPixelsY() {return pd->logicalDpiY();}
     int DeviceHeightFont(int points) {return points;}
     void MoveTo(int x_,int y_);
     void LineTo(int x_,int y_);
@@ -287,11 +287,22 @@ void SurfaceImpl::Init(QPainter *p)
     painter = p;
 }
 
-void SurfaceImpl::InitPixMap(int width, int height, Surface *, WindowID)
+void SurfaceImpl::InitPixMap(int width, int height, Surface *, WindowID wid)
 {
     Release();
 
-    pd = new QPixmap(width, height);
+    QPixmap *pixmap = new QPixmap(width, height);
+
+    // Disable this for now because it is not the complete solution to
+    // supporting retina displays without disabling buffered writes.
+#if QT_VERSION >= 0x050000 && 0
+    pixmap->setDevicePixelRatio(PWindow(wid)->devicePixelRatio());
+#else
+    Q_UNUSED(wid);
+#endif
+
+    pd = pixmap;
+
     painter = new QPainter(pd);
     my_resources = true;
 }

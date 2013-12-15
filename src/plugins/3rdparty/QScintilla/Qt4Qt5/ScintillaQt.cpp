@@ -1,9 +1,9 @@
 // The implementation of the Qt specific subclass of ScintillaBase.
 //
 // Copyright (c) 2012 Riverbank Computing Limited <info@riverbankcomputing.com>
-//
+// 
 // This file is part of QScintilla.
-//
+// 
 // This file may be used under the terms of the GNU General Public
 // License versions 2.0 or 3.0 as published by the Free Software
 // Foundation and appearing in the files LICENSE.GPL2 and LICENSE.GPL3
@@ -15,10 +15,10 @@
 // certain additional rights. These rights are described in the Riverbank
 // GPL Exception version 1.1, which can be found in the file
 // GPL_EXCEPTION.txt in this package.
-//
+// 
 // If you are unsure which license is appropriate for your use, please
 // contact the sales department at sales@riverbankcomputing.com.
-//
+// 
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
@@ -109,26 +109,17 @@ QsciScintillaQt::QsciScintillaQt(QsciScintillaBase *qsb_)
 {
     wMain = qsb->viewport();
 
-    // On OS X drawing text into a pixmap moves it around 1 pixel to
-    // the right compared to drawing it directly onto a window.
-    // Buffered drawing turned off by default to avoid this.
-    // Also, this fixes an issue with Retina displays on OS X (see
-    // https://groups.google.com/forum/#!topic/scintilla-interest/tj71w3UMj4s).
-#ifdef Q_OS_MAC
-    WndProc(SCI_SETBUFFEREDDRAW, false, 0);
-#endif
-
     // We aren't a QObject so we use the API class to do QObject related things
     // for us.
     qsb->connect(&qtimer, SIGNAL(timeout()), SLOT(handleTimer()));
-
+    
     Initialise();
 }
 
 
 // The dtor.
 QsciScintillaQt::~QsciScintillaQt()
-{
+{ 
     Finalise();
 }
 
@@ -180,7 +171,7 @@ sptr_t QsciScintillaQt::WndProc(unsigned int iMessage, uptr_t wParam,
     {
     case SCI_GETDIRECTFUNCTION:
         return reinterpret_cast<sptr_t>(DirectFunction);
-
+    
     case SCI_GETDIRECTPOINTER:
         return reinterpret_cast<sptr_t>(this);
     }
@@ -252,15 +243,20 @@ void QsciScintillaQt::SetHorizontalScrollPos()
 bool QsciScintillaQt::ModifyScrollBars(int nMax,int nPage)
 {
     qsb->verticalScrollBar()->setMinimum(0);
-    qsb->horizontalScrollBar()->setMinimum(0);
-
     qsb->verticalScrollBar()->setMaximum(nMax - nPage + 1);
-    qsb->horizontalScrollBar()->setMaximum(scrollWidth);
-
+    qsb->verticalScrollBar()->setPageStep(nPage);
     qsb->verticalScrollBar()->setSingleStep(1);
 
-    qsb->verticalScrollBar()->setPageStep(nPage);
-    qsb->horizontalScrollBar()->setPageStep(scrollWidth / 10);
+    // QAbstractScrollArea ignores Qt::ScrollBarAsNeeded and shows the
+    // horizontal scrollbar if a non-zero maximum is set.  That isn't the
+    // behavior we want, so set the maximum to zero unless scrollWidth exceeds
+    // the viewport.
+    const int widthBeyondViewport = qMax(0,
+            scrollWidth - qsb->viewport()->width());
+
+    qsb->horizontalScrollBar()->setMinimum(0);
+    qsb->horizontalScrollBar()->setMaximum(qMax(0, widthBeyondViewport - 1));
+    qsb->horizontalScrollBar()->setPageStep(widthBeyondViewport / 10);
 
     return true;
 }
@@ -272,8 +268,8 @@ void QsciScintillaQt::ReconfigureScrollBars()
     // Hide or show the scrollbars if needed.
     bool hsb = (horizontalScrollBarVisible && !Wrapping());
 
-    qsb->setHorizontalScrollBarPolicy(hsb ? Qt::ScrollBarAlwaysOn : Qt::ScrollBarAlwaysOff);
-    qsb->setVerticalScrollBarPolicy(verticalScrollBarVisible ? Qt::ScrollBarAlwaysOn : Qt::ScrollBarAlwaysOff);
+    qsb->setHorizontalScrollBarPolicy(hsb ? Qt::ScrollBarAsNeeded : Qt::ScrollBarAlwaysOff);
+    qsb->setVerticalScrollBarPolicy(verticalScrollBarVisible ? Qt::ScrollBarAsNeeded : Qt::ScrollBarAlwaysOff);
 }
 
 
