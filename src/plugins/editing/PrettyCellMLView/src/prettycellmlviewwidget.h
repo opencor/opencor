@@ -95,7 +95,10 @@ private:
     int mBorderedViewerHeight;
     int mBorderedEditorHeight;
 
+    int mEditorZoomLevel;
+
 private Q_SLOTS:
+    void editorZoomLevelChanged();
     void splitterMoved();
 };
 

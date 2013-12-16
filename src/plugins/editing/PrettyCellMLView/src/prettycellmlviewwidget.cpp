@@ -55,7 +55,8 @@ PrettyCellmlViewWidget::PrettyCellmlViewWidget(QWidget *pParent) :
     mBorderedEditor(0),
     mBorderedEditors(QMap<QString, Core::BorderedWidget *>()),
     mBorderedViewerHeight(0),
-    mBorderedEditorHeight(0)
+    mBorderedEditorHeight(0),
+    mEditorZoomLevel(0)
 {
     // Set up the GUI
 
@@ -169,11 +170,18 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName)
             file.close();
         }
 
-        mBorderedEditor = new Core::BorderedWidget(new QScintillaSupport::QScintillaWidget(fileContents,
-                                                                                           fileIsReadOnly,
-                                                                                           new QsciLexerXML(this),
-                                                                                           parentWidget()),
+        QScintillaSupport::QScintillaWidget *editor = new QScintillaSupport::QScintillaWidget(fileContents,
+                                                                                              fileIsReadOnly,
+                                                                                              new QsciLexerXML(this),
+                                                                                              parentWidget());
+
+        mBorderedEditor = new Core::BorderedWidget(editor,
                                                    true, false, false, false);
+
+        // Keep track of changes to our editor's zoom level
+
+        connect(editor, SIGNAL(SCN_ZOOM()),
+                this, SLOT(editorZoomLevelChanged()));
 
         // Keep track of our bordered editor and add it to ourselves
 
@@ -187,14 +195,17 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName)
     QList<int> newSizes = QList<int>() << mBorderedViewerHeight;
 
     for (int i = 1, iMax = count(); i < iMax; ++i) {
-        Core::BorderedWidget *borderedEditor = static_cast<Core::BorderedWidget *>(widget(i));
+        Core::BorderedWidget *borderedEditor = qobject_cast<Core::BorderedWidget *>(widget(i));
 
         if (borderedEditor == mBorderedEditor) {
-            // This is the editor we are after, so show it and set its size
+            // This is the editor we are after, so show it, set/update its size
+            // and zoom level
 
             borderedEditor->show();
 
             newSizes << mBorderedEditorHeight;
+
+            qobject_cast<QScintillaSupport::QScintillaWidget *>(borderedEditor->widget())->zoomTo(mEditorZoomLevel);
         } else {
             // Not the editor we are after, so hide it and set its size
             // Note: theoretically speaking, we could set its size to whatever
@@ -251,6 +262,16 @@ void PrettyCellmlViewWidget::fileReloaded(const QString &pFileName)
         finalize(pFileName);
         initialize(pFileName);
     }
+}
+
+//==============================================================================
+
+void PrettyCellmlViewWidget::editorZoomLevelChanged()
+{
+    // One of our view widgets had its zoom level changed, so keep track of the
+    // new zoom level
+
+    mEditorZoomLevel = qobject_cast<QScintillaSupport::QScintillaWidget *>(sender())->SendScintilla(QsciScintillaBase::SCI_GETZOOM);
 }
 
 //==============================================================================

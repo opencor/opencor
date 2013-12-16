@@ -61,6 +61,11 @@ public:
 
 private:
     QMap<QString, RawViewWidget *> mViewWidgets;
+
+    int mEditorZoomLevel;
+
+private Q_SLOTS:
+    void editorZoomLevelChanged();
 };
 
 //==============================================================================

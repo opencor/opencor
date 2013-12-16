@@ -48,7 +48,8 @@ PLUGININFO_FUNC RawViewPluginInfo()
 //==============================================================================
 
 RawViewPlugin::RawViewPlugin() :
-    mViewWidgets(QMap<QString, RawViewWidget *>())
+    mViewWidgets(QMap<QString, RawViewWidget *>()),
+    mEditorZoomLevel(0)
 {
     // Set our settings
 
@@ -123,10 +124,20 @@ QWidget * RawViewPlugin::viewWidget(const QString &pFileName,
     if (!res && pCreate) {
         res = new RawViewWidget(pFileName, mMainWindow);
 
+        // Keep track of changes to its zoom level
+
+        connect(res, SIGNAL(SCN_ZOOM()),
+                this, SLOT(editorZoomLevelChanged()));
+
         // Keep track of our new view widget
 
         mViewWidgets.insert(pFileName, res);
     }
+
+    // Set/update the view widget's zoom level
+
+    if (res)
+        res->zoomTo(mEditorZoomLevel);
 
     // Return our view widget
 
@@ -256,6 +267,18 @@ bool RawViewPlugin::canClose()
 void RawViewPlugin::retranslateUi()
 {
     // We don't handle this interface...
+}
+
+//==============================================================================
+// Plugin specific
+//==============================================================================
+
+void RawViewPlugin::editorZoomLevelChanged()
+{
+    // One of our view widgets had its zoom level changed, so keep track of the
+    // new zoom level
+
+    mEditorZoomLevel = qobject_cast<RawViewWidget *>(sender())->SendScintilla(QsciScintillaBase::SCI_GETZOOM);
 }
 
 //==============================================================================
