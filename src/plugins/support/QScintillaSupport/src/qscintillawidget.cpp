@@ -150,9 +150,26 @@ void QScintillaWidget::dragEnterEvent(QDragEnterEvent *pEvent)
 
 //==============================================================================
 
+void QScintillaWidget::keyPressEvent(QKeyEvent *pEvent)
+{
+    // Reset the font size, if needed
+
+    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
+        &&  (pEvent->modifiers() & Qt::ControlModifier)
+        && !(pEvent->modifiers() & Qt::AltModifier)
+        && !(pEvent->modifiers() & Qt::MetaModifier)
+        &&  (pEvent->key() == Qt::Key_0)) {
+        zoomTo(0);
+    } else {
+        QsciScintilla::keyPressEvent(pEvent);
+    }
+}
+
+//==============================================================================
+
 void QScintillaWidget::wheelEvent(QWheelEvent *pEvent)
 {
-    // Handle the wheel mouse button for increasing/decreasing the font size
+    // Increasing/decrease the font size, if needed
 
     if (pEvent->modifiers() == Qt::ControlModifier) {
         int delta = pEvent->delta();
@@ -164,9 +181,6 @@ void QScintillaWidget::wheelEvent(QWheelEvent *pEvent)
 
         pEvent->accept();
     } else {
-        // Not the modifier we were expecting, so call the default handling of
-        // the event
-
         QsciScintilla::wheelEvent(pEvent);
     }
 }

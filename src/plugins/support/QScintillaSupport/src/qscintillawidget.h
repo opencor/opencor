@@ -57,6 +57,7 @@ public:
 
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *pEvent);
+    virtual void keyPressEvent(QKeyEvent *pEvent);
     virtual void wheelEvent(QWheelEvent *pEvent);
 
 private:
