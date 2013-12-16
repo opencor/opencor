@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QMainWindow>
+#include <QSettings>
 
 //==============================================================================
 
@@ -64,6 +65,85 @@ RawViewPlugin::~RawViewPlugin()
 
     foreach (QWidget *viewWidget, mViewWidgets)
         delete viewWidget;
+}
+
+//==============================================================================
+// Core interface
+//==============================================================================
+
+void RawViewPlugin::initialize()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void RawViewPlugin::finalize()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void RawViewPlugin::initialized(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+static const auto SettingsRawViewWidget                = QStringLiteral("RawViewWidget");
+static const auto SettingsRawViewWidgetEditorZoomLevel = QStringLiteral("EditorZoomLevel");
+
+//==============================================================================
+
+void RawViewPlugin::loadSettings(QSettings *pSettings)
+{
+    // Retrieve the zoom level of our editors
+
+    pSettings->beginGroup(SettingsRawViewWidget);
+        mEditorZoomLevel = pSettings->value(SettingsRawViewWidgetEditorZoomLevel, 0).toInt();
+    pSettings->endGroup();
+}
+
+//==============================================================================
+
+void RawViewPlugin::saveSettings(QSettings *pSettings) const
+{
+    // Keep track of the zoom level of our editors
+
+    pSettings->beginGroup(SettingsRawViewWidget);
+        pSettings->setValue(SettingsRawViewWidgetEditorZoomLevel, mEditorZoomLevel);
+    pSettings->endGroup();
+}
+
+//==============================================================================
+
+void RawViewPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void RawViewPlugin::handleArguments(const QStringList &pArguments)
+{
+    Q_UNUSED(pArguments);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void RawViewPlugin::handleAction(const QUrl &pUrl)
+{
+    Q_UNUSED(pUrl);
+
+    // We don't handle this interface...
 }
 
 //==============================================================================

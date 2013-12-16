@@ -89,14 +89,16 @@ RawCellmlViewWidget::~RawCellmlViewWidget()
 
 //==============================================================================
 
-static const auto SettingsViewerHeight = QStringLiteral("ViewerHeight");
-static const auto SettingsEditorHeight = QStringLiteral("EditorHeight");
+static const auto SettingsBorderedViewerHeight = QStringLiteral("BorderedViewerHeight");
+static const auto SettingsBorderedEditorHeight = QStringLiteral("BorderedEditorHeight");
+static const auto SettingsEditorZoomLevel      = QStringLiteral("EditorZoomLevel");
 
 //==============================================================================
 
 void RawCellmlViewWidget::loadSettings(QSettings *pSettings)
 {
-    // Retrieve the viewer's and editor's height
+    // Retrieve the bordered viewer's and editor's height, as well as the
+    // editor's zoom level
     // Note #1: the viewer's default height is 19% of the desktop's height while
     //          that of the editor is as big as it can be...
     // Note #2: because the editor's default height is much bigger than that of
@@ -104,17 +106,20 @@ void RawCellmlViewWidget::loadSettings(QSettings *pSettings)
     //          effectively be less than 19% of the desktop's height, but that
     //          doesn't matter at all...
 
-    mBorderedViewerHeight = pSettings->value(SettingsViewerHeight,
+    mBorderedViewerHeight = pSettings->value(SettingsBorderedViewerHeight,
                                              0.19*qApp->desktop()->screenGeometry().height()).toInt();
-    mBorderedEditorHeight = pSettings->value(SettingsEditorHeight,
+    mBorderedEditorHeight = pSettings->value(SettingsBorderedEditorHeight,
                                              qApp->desktop()->screenGeometry().height()).toInt();
+
+    mEditorZoomLevel = pSettings->value(SettingsEditorZoomLevel, 0).toInt();
 }
 
 //==============================================================================
 
 void RawCellmlViewWidget::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of the viewer's and editor's height
+    // Keep track of the bordered viewer's and editor's height, as well as the
+    // editor's zoom level
     // Note #1: we must also keep track of the editor's height because when
     //          loading our settings (see above), the widget doesn't yet have a
     //          'proper' height, so we couldn't simply assume that the editor's
@@ -128,8 +133,10 @@ void RawCellmlViewWidget::saveSettings(QSettings *pSettings) const
     //          editor's height which in turn would result in OpenCOR crashing,
     //          so...
 
-    pSettings->setValue(SettingsViewerHeight, mBorderedViewerHeight);
-    pSettings->setValue(SettingsEditorHeight, mBorderedEditorHeight);
+    pSettings->setValue(SettingsBorderedViewerHeight, mBorderedViewerHeight);
+    pSettings->setValue(SettingsBorderedEditorHeight, mBorderedEditorHeight);
+
+    pSettings->setValue(SettingsEditorZoomLevel, mEditorZoomLevel);
 }
 
 //==============================================================================
