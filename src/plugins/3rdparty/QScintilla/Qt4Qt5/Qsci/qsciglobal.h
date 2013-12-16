@@ -34,7 +34,7 @@ extern "C++" {
 
 
 #define QSCINTILLA_VERSION      0x020801
-#define QSCINTILLA_VERSION_STR  "2.8.1-snapshot-a1f648d1025e"
+#define QSCINTILLA_VERSION_STR  "2.8.1-snapshot-a14729b2702d"
 
 
 // Under Windows, define QSCINTILLA_MAKE_DLL to create a Scintilla DLL, or
