@@ -57,13 +57,13 @@
 
         <ul>
             <li>Start <a href="http://qt-project.org/wiki/Category:Tools::QtCreator">Qt Creator</a>;</li>
-            <li>Open <a href="https://github.com/opencor/opencor/blob/master/CMakeLists.txt"><code>[OpenCOR]/CMakeLists.txt</code></a> (by selecting the <code>File</code> | <code>Open File or Project...</code> menu, by pressing <code>Ctrl+O</code> or by dragging and dropping the file onto Qt Creator);</li>
+            <li>Open <a href="https://github.com/opencor/opencor/blob/master/CMakeLists.txt"><code>[OpenCOR]/CMakeLists.txt</code></a> (by selecting the <code>File</code> | <code>Open File or Project...</code> menu, by pressing <code>Ctrl</code>+<code>O</code> or by dragging and dropping the file onto Qt Creator);</li>
             <li>Specify <a href="https://github.com/opencor/opencor/tree/master/build"><code>[OpenCOR]/build</code></a> as the build directory;</li>
             <li>Click on the <code>Next</code> button;</li>
             <li>Click on the <code>Run CMake</code> button;</li>
             <li>Click on the <code>Finish</code> button; and</li>
             <li>
-                Build and run OpenCOR (by selecting the <code>Build</code> | <code>Run</code> menu or by pressing <code>Ctrl+R</code>).
+                Build and run OpenCOR (by selecting the <code>Build</code> | <code>Run</code> menu or by pressing <code>Ctrl</code>+<code>R</code>).
                 <div>
                     <strong>Note #1:</strong> because of our use of CMake, debugging with Qt Creator currently requires an extra build step that can be set by selecting the <code>Projects</code> view and by clicking on the <code>Add Build Step</code> drop-down button and clicking on the <code>Custom Process Step</code> menu item. From there, set the <code>Command</code> field to <code>cmake</code> and the <code>Arguments</code> field to <code>-DCMAKE_BUILD_TYPE=Debug ..</code>. Finally, make sure that this new build step comes <em>before</em> the default <code>Make</code> build step.
                 </div>
