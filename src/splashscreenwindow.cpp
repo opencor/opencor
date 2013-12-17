@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cliutils.h"
+//#include "guiutils.h"
 #include "splashscreenwindow.h"
 
 //==============================================================================
@@ -34,12 +35,14 @@ specific language governing permissions and limitations under the License.
 #include <QElapsedTimer>
 #include <QEvent>
 #include <QEventLoop>
+#include <QImage>
 #include <QLabel>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QPixmap>
 #include <QPoint>
 #include <QRect>
+#include <QStackedWidget>
 #include <QTimer>
 #include <QVBoxLayout>
 #include <QWindow>
@@ -69,6 +72,25 @@ SplashScreenWindow::SplashScreenWindow() :
     // Set up the GUI
 
     mGui->setupUi(this);
+
+    QColor borderColor = retrieveBorderColor();
+    static const QString BorderStyle = "1px solid rgb("+QString::number(borderColor.red())+", "+QString::number(borderColor.green())+", "+QString::number(borderColor.blue())+");";
+
+#ifdef Q_OS_MAC
+    setStyleSheet("QWidget#infoWidget {"
+                  "    border-top: "+BorderStyle+
+                  "}");
+#else
+    setStyleSheet("QLabel#splashScreenImage {"
+                  "    border-top: "+BorderStyle+
+                  "    border-left: "+BorderStyle+
+                  "    border-right: "+BorderStyle+
+                  "}"
+                  ""
+                  "QWidget#infoWidget {"
+                  "    border: "+BorderStyle+
+                  "}");
+#endif
 
     mGui->copyrightValue->setText(Core::copyright());
     mGui->versionValue->setText(Core::shortVersion(qApp));
@@ -103,7 +125,9 @@ void SplashScreenWindow::finish(QWidget *pWindow)
             };
 
             QElapsedTimer timer;
+#ifndef Q_OS_WIN
             struct timespec shortDelaySpec = { ShortDelay/1000, 1000000*(ShortDelay%1000) };
+#endif
 
             timer.start();
 
@@ -143,6 +167,36 @@ void SplashScreenWindow::mousePressEvent(QMouseEvent *pEvent)
     hide();
 
     pEvent->accept();
+}
+
+//==============================================================================
+
+QColor SplashScreenWindow::retrieveBorderColor()
+{
+    // Retrieve the colour used for a 'normal' border
+    // Note: we would normally use Core::borderColor(), but it's not yet defined
+    //       when we need it here, so we shamelessly copied/pasted the code from
+    //       CorePlugin::retrieveBorderColor()...
+
+    // Create our widget and show it off screen
+
+    QStackedWidget stackedWidget;
+
+    stackedWidget.setFrameShape(QFrame::StyledPanel);
+
+    stackedWidget.move(-2*stackedWidget.width(), -2*stackedWidget.height());
+    stackedWidget.show();
+
+    // Render the widget to an image
+
+    QImage image = QImage(stackedWidget.size(),
+                          QImage::Format_ARGB32_Premultiplied);
+
+    stackedWidget.render(&image);
+
+    // Retrieve the colour we are after
+
+    return QColor(image.pixel(image.width()-1, 0.5*image.height()));
 }
 
 //==============================================================================

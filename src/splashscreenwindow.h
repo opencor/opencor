@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QColor>
 #include <QWidget>
 
 //==============================================================================
@@ -53,6 +54,8 @@ protected:
 
 private:
     Ui::SplashScreenWindow *mGui;
+
+    QColor retrieveBorderColor();
 };
 
 //==============================================================================
