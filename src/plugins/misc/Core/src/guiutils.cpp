@@ -63,8 +63,7 @@ QString sizeAsString(const double &pSize, const int &pPrecision)
 
 //==============================================================================
 
-QStringList CORE_EXPORT getOpenFileNames(const QString &pCaption,
-                                         const QString &pFilter)
+QStringList getOpenFileNames(const QString &pCaption, const QString &pFilter)
 {
     // Retrieve and return one or several open file names
 
@@ -99,9 +98,8 @@ QStringList CORE_EXPORT getOpenFileNames(const QString &pCaption,
 
 //==============================================================================
 
-QString CORE_EXPORT getSaveFileName(const QString &pCaption,
-                                    const QString &pFileName,
-                                    const QString &pFilter)
+QString getSaveFileName(const QString &pCaption, const QString &pFileName,
+                        const QString &pFilter)
 {
     // Retrieve and return a save file name
 
