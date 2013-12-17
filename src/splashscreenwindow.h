@@ -16,74 +16,47 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CLI utilities
+// Splash screen window
 //==============================================================================
 
-#ifndef CLIUTILS_H
-#define CLIUTILS_H
-
-//==============================================================================
-
-#include "coreglobal.h"
-#include "plugin.h"
+#ifndef SPLASHSCREENWINDOW_H
+#define SPLASHSCREENWINDOW_H
 
 //==============================================================================
 
-#include <QByteArray>
+#include <QWidget>
 
 //==============================================================================
 
-class QCoreApplication;
+namespace Ui {
+    class SplashScreenWindow;
+}
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace Core {
 
 //==============================================================================
 
-static const auto SettingsGlobal          = QStringLiteral("Global");
-static const auto SettingsLocale          = QStringLiteral("Locale");
-static const auto SettingsActiveDirectory = QStringLiteral("ActiveDirectory");
+class SplashScreenWindow : public QWidget
+{
+    Q_OBJECT
+
+public:
+    explicit SplashScreenWindow();
+    ~SplashScreenWindow();
+
+    void finish(QWidget *pWindow);
+
+protected:
+    virtual void mousePressEvent(QMouseEvent *pEvent);
+
+private:
+    Ui::SplashScreenWindow *mGui;
+};
 
 //==============================================================================
 
-QString CORE_EXPORT osName();
-
-QString CORE_EXPORT shortVersion(QCoreApplication *pApp);
-QString CORE_EXPORT version(QCoreApplication *pApp);
-
-QString CORE_EXPORT copyright();
-
-QString CORE_EXPORT locale();
-
-qulonglong CORE_EXPORT totalMemory();
-qulonglong CORE_EXPORT freeMemory();
-
-QString CORE_EXPORT sizeAsString(const double &pSize,
-                                 const int &pPrecision = 1);
-
-QByteArray CORE_EXPORT resourceAsByteArray(const QString &pResource);
-bool CORE_EXPORT saveResourceAs(const QString &pResource,
-                                const QString &pFilename);
-
-void CORE_EXPORT * globalInstance(const QString &pObjectName,
-                                  void *pDefaultGlobalInstance);
-
-void CORE_EXPORT setActiveDirectory(const QString &pDirName);
-QString CORE_EXPORT activeDirectory();
-
-QString CORE_EXPORT nativeCanonicalFileName(const QString &pFileName);
-
-QString CORE_EXPORT formatErrorMessage(const QString &pErrorMessage);
-
-QString CORE_EXPORT nonDiacriticString(const QString &pString);
-
-void CORE_EXPORT doNothing(const int &pMax);
-
-//==============================================================================
-
-}   // namespace Core
 }   // namespace OpenCOR
 
 //==============================================================================

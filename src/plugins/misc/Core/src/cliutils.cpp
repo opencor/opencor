@@ -136,10 +136,28 @@ QString osName()
 
 //==============================================================================
 
+QString shortVersion(QCoreApplication *pApp)
+{
+    QString res;
+    QString appVersion = pApp->applicationVersion();
+
+    if (!appVersion.contains("-"))
+        res += "Version ";
+    else
+        res += "Snapshot ";
+
+    res += appVersion;
+
+    return res;
+}
+
+//==============================================================================
+
 QString version(QCoreApplication *pApp)
 {
     QString appVersion = pApp->applicationVersion();
     QString bitVersion;
+
     enum {
         SizeOfPointer = sizeof(void *)
     };

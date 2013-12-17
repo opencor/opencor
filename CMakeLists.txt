@@ -43,6 +43,7 @@ SET(SOURCES
     src/mainwindow.cpp
     src/pluginswindow.cpp
     src/preferenceswindow.cpp
+    src/splashscreenwindow.cpp
 
     src/misc/cliapplication.cpp
     src/misc/common.cpp
@@ -63,6 +64,7 @@ SET(HEADERS_MOC
     src/mainwindow.h
     src/pluginswindow.h
     src/preferenceswindow.h
+    src/splashscreenwindow.h
 
     src/plugins/plugin.h
     src/plugins/pluginmanager.h
@@ -72,6 +74,7 @@ SET(UIS
     src/mainwindow.ui
     src/pluginswindow.ui
     src/preferenceswindow.ui
+    src/splashscreenwindow.ui
 )
 
 SET(RESOURCES

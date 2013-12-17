@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "common.h"
 #include "mainwindow.h"
+#include "splashscreenwindow.h"
 
 //==============================================================================
 
@@ -87,6 +88,14 @@ int main(int pArgC, char *pArgV[])
     #error Unsupported platform
 #endif
 
+    // Show our splash screen
+
+    OpenCOR::SplashScreenWindow *splashScreen = new OpenCOR::SplashScreenWindow();
+
+    splashScreen->show();
+
+    app->processEvents();
+
     // Send a message (containing the arguments that were passed to this
     // instance of OpenCOR minus the first argument since it corresponds to the
     // full path to the executable which we are not interested in) to the
@@ -137,6 +146,10 @@ int main(int pArgC, char *pArgV[])
     // Show the main window
 
     win->show();
+
+    // Get rid of our splash screen once our main window is displayed
+
+    splashScreen->finish(win);
 
     // Execute the application
 
