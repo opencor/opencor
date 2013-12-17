@@ -58,6 +58,7 @@ SET(SOURCES
 
     src/plugins/misc/Core/src/cliutils.cpp
     src/plugins/misc/Core/src/commonwidget.cpp
+    src/plugins/misc/Core/src/guiutils.cpp
 )
 
 SET(HEADERS_MOC

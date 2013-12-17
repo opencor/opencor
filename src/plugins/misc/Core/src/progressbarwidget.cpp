@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 // Progress bar widget
 //==============================================================================
 
-#include "commonwidget.h"
+#include "guiutils.h"
 #include "progressbarwidget.h"
 
 //==============================================================================
@@ -53,12 +53,10 @@ void ProgressBarWidget::paintEvent(QPaintEvent *pEvent)
     int value = mValue*mWidth;
 
     if (value)
-        painter.fillRect(0, 0, value, height(),
-                         CommonWidget::highlightColor());
+        painter.fillRect(0, 0, value, height(), highlightColor());
 
     if (value != mWidth)
-        painter.fillRect(value, 0, mWidth-value, height(),
-                         CommonWidget::windowColor());
+        painter.fillRect(value, 0, mWidth-value, height(), windowColor());
 
     // Accept the event
 

@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // Single cell view graph panel widget
 //==============================================================================
 
+#include "guiutils.h"
 #include "singlecellviewgraphpanelplotwidget.h"
 #include "singlecellviewgraphpanelwidget.h"
 
@@ -188,8 +189,8 @@ void SingleCellViewGraphPanelWidget::updateMarkerColor()
 
     newPalette.setColor(QPalette::WindowText,
                         mActive?
-                            CommonWidget::highlightColor():
-                            CommonWidget::windowColor());
+                            Core::highlightColor():
+                            Core::windowColor());
 
     mMarker->setPalette(newPalette);
 }

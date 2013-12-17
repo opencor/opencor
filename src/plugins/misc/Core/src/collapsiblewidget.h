@@ -24,7 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "commonwidget.h"
+#include "guiutils.h"
 #include "coreglobal.h"
 #include "widget.h"
 
@@ -130,7 +130,7 @@ private:
 
     QList<CollapsibleHeaderWidget *> mHeaders;
 
-    void constructor(const QColor &pSeparatorColor = CommonWidget::borderColor());
+    void constructor(const QColor &pSeparatorColor = borderColor());
 };
 
 //==============================================================================

@@ -85,6 +85,11 @@ QLabel CORE_EXPORT * newLabel(const QString &pText,
                               QWidget *pParent = 0);
 QLabel CORE_EXPORT * newLabel(const QString &pText, QWidget *pParent = 0);
 
+QColor CORE_EXPORT borderColor();
+QColor CORE_EXPORT baseColor();
+QColor CORE_EXPORT windowColor();
+QColor CORE_EXPORT highlightColor();
+
 //==============================================================================
 
 }   // namespace Core

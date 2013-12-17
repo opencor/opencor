@@ -918,12 +918,12 @@ QIcon SingleCellViewWidget::fileTabIcon(const QString &pFileName) const
                                    QImage::Format_ARGB32_Premultiplied);
         QPainter tabBarIconPainter(&tabBarIcon);
 
-        tabBarIconPainter.setBrush(QBrush(CommonWidget::windowColor()));
-        tabBarIconPainter.setPen(QPen(CommonWidget::borderColor()));
+        tabBarIconPainter.setBrush(QBrush(Core::windowColor()));
+        tabBarIconPainter.setPen(QPen(Core::borderColor()));
 
         tabBarIconPainter.drawRect(0, 0, tabBarIcon.width()-1, tabBarIcon.height()-1);
         tabBarIconPainter.fillRect(1, 1, progress, tabBarIcon.height()-2,
-                                   CommonWidget::highlightColor());
+                                   Core::highlightColor());
 
         return QIcon(QPixmap::fromImage(tabBarIcon));
     } else {

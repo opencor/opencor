@@ -92,66 +92,6 @@ void CommonWidget::retranslateUi()
 
 //==============================================================================
 
-QColor CommonWidget::specificColor(const QString &pColor)
-{
-    // Return a specific colour
-
-    QColor res;
-    QSettings settings(SettingsOrganization, SettingsApplication);
-
-    settings.beginGroup(SettingsGlobal);
-        res = settings.value(pColor).value<QColor>();
-    settings.endGroup();
-
-    return res;
-}
-
-//==============================================================================
-
-QColor CommonWidget::borderColor()
-{
-    // Return the border colour
-    // Note: we retrieve it from our settings which is updated by our plugin
-    //       itself (see CorePlugin::retrieveBorderColor())...
-
-    return specificColor(SettingsBorderColor);
-}
-
-//==============================================================================
-
-QColor CommonWidget::baseColor()
-{
-    // Return the base colour
-    // Note: we retrieve it from our settings which is updated by our plugin
-    //       itself (see CorePlugin::changeEvent())...
-
-    return specificColor(SettingsBaseColor);
-}
-
-//==============================================================================
-
-QColor CommonWidget::windowColor()
-{
-    // Return the window colour
-    // Note: we retrieve it from our settings which is updated by our plugin
-    //       itself (see CorePlugin::changeEvent())...
-
-    return specificColor(SettingsWindowColor);
-}
-
-//==============================================================================
-
-QColor CommonWidget::highlightColor()
-{
-    // Return the highlight colour
-    // Note: we retrieve it from our settings which is updated by our plugin
-    //       itself (see CorePlugin::changeEvent())...
-
-    return specificColor(SettingsHighlightColor);
-}
-
-//==============================================================================
-
 void CommonWidget::drawBorder(const bool &pDockedTop, const bool &pDockedLeft,
                               const bool &pDockedBottom, const bool &pDockedRight,
                               const bool &pFloatingTop, const bool &pFloatingLeft,

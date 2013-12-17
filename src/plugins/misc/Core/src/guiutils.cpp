@@ -26,11 +26,13 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QApplication>
+#include <QColor>
 #include <QDate>
 #include <QFileDialog>
 #include <QFrame>
 #include <QLabel>
 #include <QMessageBox>
+#include <QSettings>
 
 //==============================================================================
 
@@ -207,7 +209,7 @@ QFrame * newLineWidget(const bool &pHorizontal, QWidget *pParent)
 {
     // Create and return a 'real' horizontal line widget
 
-    return newLineWidget(pHorizontal, CommonWidget::borderColor(), pParent);
+    return newLineWidget(pHorizontal, borderColor(), pParent);
 }
 
 //==============================================================================
@@ -225,7 +227,7 @@ QFrame * newLineWidget(QWidget *pParent)
 {
     // Create and return a 'real' horizontal line widget
 
-    return newLineWidget(true, CommonWidget::borderColor(), pParent);
+    return newLineWidget(true, borderColor(), pParent);
 }
 
 //==============================================================================
@@ -298,6 +300,66 @@ QLabel * newLabel(const QString &pText, QWidget *pParent)
 
     return newLabel(pText, 1.0, false, false, Qt::AlignLeft|Qt::AlignVCenter,
                     pParent);
+}
+
+//==============================================================================
+
+QColor specificColor(const QString &pColor)
+{
+    // Return a specific colour
+
+    QColor res;
+    QSettings settings(SettingsOrganization, SettingsApplication);
+
+    settings.beginGroup(SettingsGlobal);
+        res = settings.value(pColor).value<QColor>();
+    settings.endGroup();
+
+    return res;
+}
+
+//==============================================================================
+
+QColor borderColor()
+{
+    // Return the border colour
+    // Note: we retrieve it from our settings, which is updated by our plugin
+    //       itself (see CorePlugin::retrieveBorderColor())...
+
+    return specificColor(SettingsBorderColor);
+}
+
+//==============================================================================
+
+QColor baseColor()
+{
+    // Return the base colour
+    // Note: we retrieve it from our settings, which is updated by our plugin
+    //       itself (see CorePlugin::changeEvent())...
+
+    return specificColor(SettingsBaseColor);
+}
+
+//==============================================================================
+
+QColor windowColor()
+{
+    // Return the window colour
+    // Note: we retrieve it from our settings, which is updated by our plugin
+    //       itself (see CorePlugin::changeEvent())...
+
+    return specificColor(SettingsWindowColor);
+}
+
+//==============================================================================
+
+QColor highlightColor()
+{
+    // Return the highlight colour
+    // Note: we retrieve it from our settings, which is updated by our plugin
+    //       itself (see CorePlugin::changeEvent())...
+
+    return specificColor(SettingsHighlightColor);
 }
 
 //==============================================================================

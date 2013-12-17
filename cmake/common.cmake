@@ -619,8 +619,9 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     )
 
                     SET(CORE_SOURCES
+                        ../../misc/Core/src/cliutils.cpp
                         ../../misc/Core/src/commonwidget.cpp
-                        ../../misc/Core/src/dockwidget.cpp
+                        ../../misc/Core/src/guiutils.cpp
                     )
                 ENDIF()
 

@@ -356,5 +356,49 @@
         <source>NLA</source>
         <translation>ANL</translation>
     </message>
+    <message>
+        <source>B</source>
+        <translation>o</translation>
+    </message>
+    <message>
+        <source>KB</source>
+        <translation>Ko</translation>
+    </message>
+    <message>
+        <source>MB</source>
+        <translation>Mo</translation>
+    </message>
+    <message>
+        <source>GB</source>
+        <translation>Go</translation>
+    </message>
+    <message>
+        <source>TB</source>
+        <translation>To</translation>
+    </message>
+    <message>
+        <source>PB</source>
+        <translation>Po</translation>
+    </message>
+    <message>
+        <source>EB</source>
+        <translation>Eo</translation>
+    </message>
+    <message>
+        <source>ZB</source>
+        <translation>Zo</translation>
+    </message>
+    <message>
+        <source>YB</source>
+        <translation>Yo</translation>
+    </message>
+    <message>
+        <source>Please choose a different file name.</source>
+        <translation>Veuillez choisir un nom de fichier différent.</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; already exists. Do you want to overwrite it?</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; existe déjà. Voulez-vous le remplacer ?</translation>
+    </message>
 </context>
 </TS>
