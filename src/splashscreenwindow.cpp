@@ -73,22 +73,22 @@ SplashScreenWindow::SplashScreenWindow() :
 
     mGui->setupUi(this);
 
-    QColor borderColor = retrieveBorderColor();
-    static const QString BorderStyle = "1px solid rgb("+QString::number(borderColor.red())+", "+QString::number(borderColor.green())+", "+QString::number(borderColor.blue())+");";
+    QColor borderRgb = borderColor();
+    QString borderStyle = "1px solid rgb("+QString::number(borderRgb.red())+", "+QString::number(borderRgb.green())+", "+QString::number(borderRgb.blue())+");";
 
 #ifdef Q_OS_MAC
     setStyleSheet("QWidget#infoWidget {"
-                  "    border-top: "+BorderStyle+
+                  "    border-top: "+borderStyle+
                   "}");
 #else
     setStyleSheet("QLabel#splashScreenImage {"
-                  "    border-top: "+BorderStyle+
-                  "    border-left: "+BorderStyle+
-                  "    border-right: "+BorderStyle+
+                  "    border-top: "+borderStyle+
+                  "    border-left: "+borderStyle+
+                  "    border-right: "+borderStyle+
                   "}"
                   ""
                   "QWidget#infoWidget {"
-                  "    border: "+BorderStyle+
+                  "    border: "+borderStyle+
                   "}");
 #endif
 
@@ -171,7 +171,7 @@ void SplashScreenWindow::mousePressEvent(QMouseEvent *pEvent)
 
 //==============================================================================
 
-QColor SplashScreenWindow::retrieveBorderColor()
+QColor SplashScreenWindow::borderColor()
 {
     // Retrieve the colour used for a 'normal' border
     // Note: we would normally use Core::borderColor(), but it's not yet defined
