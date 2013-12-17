@@ -200,28 +200,19 @@ void CellMLToolsPlugin::changeEvent(QEvent *pEvent)
 
 void CellMLToolsPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 {
+    Q_UNUSED(pViewPlugin);
+
     // Enable/disable and show/hide our tools in case we are dealing with a
     // CellML-based view plugin
 
-    bool toolsVisible = pViewPlugin?
-                            pViewPlugin->info()->fullDependencies().contains("CellMLSupport"):
-                            false;
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
 
-    mCellmlFileExportToMenu->menuAction()->setEnabled(toolsVisible);
-    mCellmlFileExportToMenu->menuAction()->setVisible(toolsVisible);
-
-    mExportToCellml10Action->setEnabled(   toolsVisible
-                                        && cellmlFile && cellmlFile->model()
+    mExportToCellml10Action->setEnabled(   cellmlFile && cellmlFile->model()
                                         && QString::fromStdWString(cellmlFile->model()->cellmlVersion()).compare(CellMLSupport::Cellml_1_0));
-    mExportToCellml10Action->setVisible(toolsVisible);
-
-/*---GRY--- DISABLED UNTIL WE FULLY SUPPORT EXPORT TO CellML 1.1...
-    mExportToCellml11Action->setEnabled(   toolsVisible && cellmlFile
+    mExportToCellml11Action->setEnabled(   cellmlFile && cellmlFile->model()
                                         && QString::fromStdWString(cellmlFile->model()->cellmlVersion()).compare(CellMLSupport::Cellml_1_1));
-    mExportToCellml11Action->setVisible(toolsVisible);
-*/
 //---GRY--- BEGIN
+// We disable the export to CellML 1.1 until we actually support it...
 mExportToCellml11Action->setEnabled(false);
 mExportToCellml11Action->setVisible(false);
 //---GRY--- END

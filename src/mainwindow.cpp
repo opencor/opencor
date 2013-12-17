@@ -1400,8 +1400,8 @@ void MainWindow::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 
     // Let our different plugins know that the GUI got updated
     // Note: this can be useful when a plugin (e.g. CellMLTools) offers some
-    //       tools which may need to be enabled/disabled and shown/hidden,
-    //       depending on which view plugin is currently active...
+    //       tools that may need to be enabled/disabled and shown/hidden,
+    //       depending on which plugin and/or file are currently active...
 
     foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
         GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
