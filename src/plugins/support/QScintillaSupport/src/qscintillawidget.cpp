@@ -19,7 +19,6 @@ specific language governing permissions and limitations under the License.
 // QScintillaWidget class
 //==============================================================================
 
-#include "commonwidget.h"
 #include "filemanager.h"
 #include "qscintillawidget.h"
 
@@ -51,8 +50,17 @@ void QScintillaWidget::constructor(const QString &pContents,
     setMarginWidth(SC_MARGIN_NUMBER, 0);
 
     // Associate a lexer to our Scintilla editor, should one be provided
+    // Note: the default font family and size come from Qt Creator...
 
-    mFont = QFont(Core::DefaultFontFamily, Core::DefaultFontSize);
+#if defined(Q_OS_WIN)
+    mFont = QFont("Courier", 10);
+#elif defined(Q_OS_LINUX)
+    mFont = QFont("Monospace", 9);
+#elif defined(Q_OS_MAC)
+    mFont = QFont("Monaco", 12);
+#else
+    #error Unsupported platform
+#endif
 
     if (pLexer) {
         // A lexer was provided, so specify its fonts and associate it with our
