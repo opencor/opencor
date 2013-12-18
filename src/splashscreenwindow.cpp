@@ -20,7 +20,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cliutils.h"
-//#include "guiutils.h"
 #include "splashscreenwindow.h"
 
 //==============================================================================
@@ -35,6 +34,7 @@ specific language governing permissions and limitations under the License.
 #include <QElapsedTimer>
 #include <QEvent>
 #include <QEventLoop>
+#include <QFont>
 #include <QImage>
 #include <QLabel>
 #include <QMouseEvent>
@@ -92,12 +92,29 @@ SplashScreenWindow::SplashScreenWindow() :
                   "}");
 #endif
 
+    QFont newFont = mGui->infoWidget->font();
+
+#if defined(Q_OS_WIN)
+    newFont.setPointSize(9);
+#elif defined(Q_OS_LINUX)
+    newFont.setPointSize(8);
+#elif defined(Q_OS_MAC)
+    newFont.setPointSize(11);
+#else
+    #error Unsupported platform
+#endif
+
+    mGui->copyrightValue->setFont(newFont);
+    mGui->versionValue->setFont(newFont);
+
     mGui->copyrightValue->setText(Core::copyright());
     mGui->versionValue->setText(Core::shortVersion(qApp));
 
-    // Miscellaneous
+    // Adjust the size of our splash screen and then move it to the center of
+    // the screen
 
-    move( QApplication::desktop()->screenGeometry().center()-rect().center());
+    adjustSize();
+    move(QApplication::desktop()->screenGeometry().center()-rect().center());
 }
 
 //==============================================================================

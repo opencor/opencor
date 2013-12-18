@@ -7,11 +7,8 @@
     <x>0</x>
     <y>0</y>
     <width>567</width>
-    <height>204</height>
+    <height>207</height>
    </rect>
-  </property>
-  <property name="styleSheet">
-   <string notr="true"/>
   </property>
   <layout class="QVBoxLayout" name="layout">
    <property name="spacing">
@@ -55,21 +52,10 @@
        <number>2</number>
       </property>
       <item>
-       <widget class="QLabel" name="copyrightValue">
-        <property name="font">
-         <font>
-          <pointsize>11</pointsize>
-         </font>
-        </property>
-       </widget>
+       <widget class="QLabel" name="copyrightValue"/>
       </item>
       <item>
        <widget class="QLabel" name="versionValue">
-        <property name="font">
-         <font>
-          <pointsize>11</pointsize>
-         </font>
-        </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
