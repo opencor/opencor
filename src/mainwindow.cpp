@@ -82,8 +82,8 @@ MainWindow::MainWindow(SharedTools::QtSingleApplication *pApp) :
     mFileNewMenu(0),
     mViewOrganisationMenu(0),
     mViewSeparator(0),
-    mViewMenus(QMap<Plugin *, QMenu *>()),
-    mViewActions(QMap<Plugin *, QAction *>()),
+    mViewPluginMenus(QMap<Plugin *, QMenu *>()),
+    mViewPluginActions(QMap<Plugin *, QAction *>()),
     mViewPlugin(0),
     mDockedWidgetsVisible(true),
     mDockedWidgetsState(QByteArray())
@@ -443,12 +443,12 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
             // the new menu to the existing one and keep track of the separator
             // and of the menu's contents
 
-            mViewActions.insertMulti(pPlugin, oldMenu->addSeparator());
+            mViewPluginActions.insertMulti(pPlugin, oldMenu->addSeparator());
 
             oldMenu->addActions(newMenu->actions());
 
             foreach (QAction *action, oldMenu->actions())
-                mViewActions.insertMulti(pPlugin, action);
+                mViewPluginActions.insertMulti(pPlugin, action);
 
             // Delete the new menu since we don't need it anymore
 
@@ -462,10 +462,10 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
                 mGui->menuBar->insertAction(mGui->menuView->menuAction(),
                                             newMenu->menuAction());
 
-                mViewMenus.insertMulti(pPlugin, newMenu);
+                mViewPluginMenus.insertMulti(pPlugin, newMenu);
 
                 foreach (QAction *action, newMenu->actions())
-                    mViewActions.insertMulti(pPlugin, action);
+                    mViewPluginActions.insertMulti(pPlugin, action);
 
                 break;
             default:
@@ -503,9 +503,9 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
                 action = mGui->menuFile->insertSeparator(mGui->menuFile->actions().first());
 
             // Keep track of the action/separator, so that it can be
-            // shown/hidden depending on which view is selected
+            // shown/hidden depending on which view plugin is selected
 
-            mViewActions.insertMulti(pPlugin, action);
+            mViewPluginActions.insertMulti(pPlugin, action);
 
             break;
         }
@@ -537,7 +537,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
                 mGui->menuFile->insertMenu(menuSettings->action(),
                                            menuSettings->menu());
 
-                mViewMenus.insertMulti(pPlugin, menuSettings->menu());
+                mViewPluginMenus.insertMulti(pPlugin, menuSettings->menu());
 
                 break;
             default:
@@ -586,7 +586,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
 
             mFileNewMenu->addAction(menuActionSettings->action());
 
-            mViewActions.insertMulti(pPlugin, menuActionSettings->action());
+            mViewPluginActions.insertMulti(pPlugin, menuActionSettings->action());
 
             break;
         default:
@@ -1343,13 +1343,13 @@ void MainWindow::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 
         mViewPlugin = pViewPlugin;
 
-        // Go through our view menus and check whether the view plugin to which
-        // they are attached are our current view plugin or one of its
+        // Go through our view plugin menus and check whether the view plugin to
+        // which they are attached are our current view plugin or one of its
         // (in)direct dependencies, and if so then enable and show them, or
         // disable and hide them
 
-        for (QMap<Plugin *, QMenu *>::ConstIterator iter = mViewMenus.constBegin(),
-                                                    iterEnd = mViewMenus.constEnd();
+        for (QMap<Plugin *, QMenu *>::ConstIterator iter = mViewPluginMenus.constBegin(),
+                                                    iterEnd = mViewPluginMenus.constEnd();
              iter != iterEnd; ++iter) {
             bool validViewMenu = pViewPlugin
                                  && (   !iter.key()->name().compare(pViewPlugin->name())
@@ -1359,11 +1359,11 @@ void MainWindow::updateGui(Plugin *pViewPlugin, const QString &pFileName)
             iter.value()->menuAction()->setVisible(validViewMenu);
         }
 
-        // Go through our view actions and do the same as what we did for our
-        // view menus above
+        // Go through our view plugin actions and do the same as what we did for
+        // our view plugin menus above
 
-        for (QMap<Plugin *, QAction *>::ConstIterator iter = mViewActions.constBegin(),
-                                                      iterEnd = mViewActions.constEnd();
+        for (QMap<Plugin *, QAction *>::ConstIterator iter = mViewPluginActions.constBegin(),
+                                                      iterEnd = mViewPluginActions.constEnd();
              iter != iterEnd; ++iter) {
             bool validViewAction = pViewPlugin
                                    && (   !iter.key()->name().compare(pViewPlugin->name())

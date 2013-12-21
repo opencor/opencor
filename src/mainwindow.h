@@ -105,8 +105,8 @@ private:
     QMenu *mViewOrganisationMenu;
     QAction *mViewSeparator;
 
-    QMap<Plugin *, QMenu *> mViewMenus;
-    QMap<Plugin *, QAction *> mViewActions;
+    QMap<Plugin *, QMenu *> mViewPluginMenus;
+    QMap<Plugin *, QAction *> mViewPluginActions;
 
     Plugin *mViewPlugin;
 
