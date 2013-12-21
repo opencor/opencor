@@ -49,7 +49,7 @@ PLUGININFO_FUNC CellMLAnnotationViewPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour annoter des fichiers CellML."));
 
     return new PluginInfo(PluginInfo::Editing,
-                          QStringList() << "CoreCellMLEditing",
+                          QStringList() << "CellMLSupport",
                           descriptions);
 }
 
@@ -243,20 +243,14 @@ void CellMLAnnotationViewPlugin::updateGui(Plugin *pViewPlugin,
 
 void CellMLAnnotationViewPlugin::initializeView()
 {
-    // Hide our inherited File|New actions and Edit menu
-
-    mCoreEditingPlugin->setEditMenuVisible(false);
-    mCoreCellmlEditingPlugin->setFileNewActionsVisible(false);
+    // We don't handle this interface...
 }
 
 //==============================================================================
 
 void CellMLAnnotationViewPlugin::finalizeView()
 {
-    // Re-show our inherited File|New actions and Edit menu
-
-    mCoreEditingPlugin->setEditMenuVisible(true);
-    mCoreCellmlEditingPlugin->setFileNewActionsVisible(true);
+    // We don't handle this interface...
 }
 
 //==============================================================================
