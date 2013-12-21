@@ -12,11 +12,11 @@ ADD_PLUGIN(QScintillaSupport
     SOURCES
         ../../plugininfo.cpp
 
-        src/qscintillawidget.cpp
         src/qscintillasupportplugin.cpp
+        src/qscintillawidget.cpp
     HEADERS_MOC
-        src/qscintillawidget.h
         src/qscintillasupportplugin.h
+        src/qscintillawidget.h
     DEFINITIONS
         QSCINTILLA_DLL
     INCLUDE_DIRS
