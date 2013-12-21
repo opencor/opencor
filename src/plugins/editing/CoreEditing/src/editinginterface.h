@@ -16,64 +16,37 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PrettyCellMLView plugin
+// Editing interface
 //==============================================================================
 
-#ifndef PRETTYCELLMLVIEWPLUGIN_H
-#define PRETTYCELLMLVIEWPLUGIN_H
+#ifndef EDITINGINTERFACE_H
+#define EDITINGINTERFACE_H
 
 //==============================================================================
 
-#include "coreinterface.h"
-#include "editinginterface.h"
-#include "guiinterface.h"
-#include "i18ninterface.h"
-#include "plugininfo.h"
+#include "qscintillawidget.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace PrettyCellMLView {
 
 //==============================================================================
 
-PLUGININFO_FUNC PrettyCellMLViewPluginInfo();
-
-//==============================================================================
-
-class PrettyCellmlViewWidget;
-
-//==============================================================================
-
-class PrettyCellMLViewPlugin : public QObject, public CoreInterface,
-                               public EditingInterface, public GuiInterface,
-                               public I18nInterface
+class EditingInterface
 {
-    Q_OBJECT
-
-    Q_PLUGIN_METADATA(IID "OpenCOR.PrettyCellMLViewPlugin" FILE "prettycellmlviewplugin.json")
-
-    Q_INTERFACES(OpenCOR::CoreInterface)
-    Q_INTERFACES(OpenCOR::EditingInterface)
-    Q_INTERFACES(OpenCOR::GuiInterface)
-    Q_INTERFACES(OpenCOR::I18nInterface)
-
 public:
-    explicit PrettyCellMLViewPlugin();
-
-#include "coreinterface.inl"
-#include "editinginterface.inl"
-#include "guiinterface.inl"
-#include "i18ninterface.inl"
-
-private:
-    PrettyCellmlViewWidget *mViewWidget;
+#define INTERFACE_DEFINITION
+    #include "editinginterface.inl"
+#undef INTERFACE_DEFINITION
 };
 
 //==============================================================================
 
-}   // namespace PrettyCellMLView
 }   // namespace OpenCOR
+
+//==============================================================================
+
+Q_DECLARE_INTERFACE(OpenCOR::EditingInterface, "OpenCOR::EditingInterface")
 
 //==============================================================================
 

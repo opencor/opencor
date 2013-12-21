@@ -147,37 +147,45 @@ IF(ENABLE_TESTS)
 ENDIF()
 
 # Build the OpenCOR plugins
+# Note: the build order must be such that plugins needed by others are built
+#       first...
 
 SET(PLUGINS
-    # Build the plugins which may be required by other plugins
-    # Note: the build order must be such that plugins needed by others are built
-    #       first...
-
-    misc/Core
+    # Plugins that have no dependencies
 
     3rdparty/LLVM
+    3rdparty/QScintilla
+    3rdparty/Qwt
+    3rdparty/SUNDIALS
 
     api/CellMLAPI
 
-    editing/CoreEditing
-
-    misc/Compiler
+    misc/Core
 
     solver/CoreSolver
 
+    # Plugins that build on top of some third-party libraries
+
+    misc/Compiler
+
+    # Plugins that provide support for some third-party libraries
+
     support/CellMLSupport
+    support/QScintillaSupport
+
+    # Plugins that have dependencies on others
 
     editing/CoreCellMLEditing
+    editing/CoreEditing
 
-    3rdparty/QScintilla
-    3rdparty/Qwt
-
-    support/QScintillaSupport
     widget/Viewer
 
-    3rdparty/SUNDIALS
+    # Selectable plugins
 
-    # Build the remaining plugins
+    editing/CellMLAnnotationView
+    editing/PrettyCellMLView
+    editing/RawCellMLView
+    editing/RawView
 
     misc/CellMLTools
     misc/Help
@@ -186,10 +194,7 @@ SET(PLUGINS
     organisation/FileBrowser
     organisation/FileOrganiser
 
-    editing/CellMLAnnotationView
-    editing/PrettyCellMLView
-    editing/RawCellMLView
-    editing/RawView
+    simulation/SingleCellView
 
     solver/CVODESolver
     solver/ForwardEulerSolver
@@ -198,8 +203,6 @@ SET(PLUGINS
     solver/IDASolver
     solver/KINSOLSolver
     solver/SecondOrderRungeKuttaSolver
-
-    simulation/SingleCellView
 )
 
 FOREACH(PLUGIN ${PLUGINS})

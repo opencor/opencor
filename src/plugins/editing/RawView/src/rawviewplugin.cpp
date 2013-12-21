@@ -42,7 +42,7 @@ PLUGININFO_FUNC RawViewPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour éditer des fichiers à l'aide d'un éditeur de texte."));
 
     return new PluginInfo(PluginInfo::Editing,
-                          QStringList() << "CoreEditing" << "QScintillaSupport",
+                          QStringList() << "CoreEditing",
                           descriptions);
 }
 
@@ -144,6 +144,17 @@ void RawViewPlugin::handleAction(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
+}
+
+//==============================================================================
+// Editing interface
+//==============================================================================
+
+QScintillaSupport::QScintillaWidget * RawViewPlugin::editor() const
+{
+//---GRY--- TO BE IMPLEMENTED...
+
+    return 0;
 }
 
 //==============================================================================
