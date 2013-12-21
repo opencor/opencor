@@ -368,17 +368,6 @@ void CoreEditingPlugin::retranslateUi()
 }
 
 //==============================================================================
-// Plugin specific
-//==============================================================================
-
-void CoreEditingPlugin::setEditMenuVisible(const bool &pVisible)
-{
-    // Show/hide our Edit menu
-
-    mEditMenu->menuAction()->setVisible(pVisible);
-}
-
-//==============================================================================
 
 }   // namespace CoreEditing
 }   // namespace OpenCOR

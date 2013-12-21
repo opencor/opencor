@@ -63,10 +63,6 @@ public:
 #include "guiinterface.inl"
 #include "i18ninterface.inl"
 
-    // Plugin specific
-
-    void setEditMenuVisible(const bool &pVisible);
-
 private:
     QMenu *mEditMenu;
 
