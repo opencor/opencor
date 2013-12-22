@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 #include "cliutils.h"
 #include "dockwidget.h"
 #include "fileinterface.h"
+#include "guiutils.h"
 #include "i18ninterface.h"
 #include "mainwindow.h"
 #include "pluginmanager.h"
@@ -47,6 +48,8 @@ specific language governing permissions and limitations under the License.
 #include <QDesktopServices>
 #include <QDesktopWidget>
 #include <QFileDialog>
+#include <QMenu>
+#include <QMenuBar>
 #include <QMessageBox>
 #include <QSettings>
 #ifdef Q_OS_MAC
@@ -79,11 +82,10 @@ MainWindow::MainWindow(SharedTools::QtSingleApplication *pApp) :
     QMainWindow(),
     mGui(new Ui::MainWindow),
     mLocale(QString()),
+    mMenus(QMap<QString, QMenu *>()),
     mFileNewMenu(0),
     mViewOrganisationMenu(0),
     mViewSeparator(0),
-    mViewPluginMenus(QMap<Plugin *, QMenu *>()),
-    mViewPluginActions(QMap<Plugin *, QAction *>()),
     mViewPlugin(0),
     mDockedWidgetsVisible(true),
     mDockedWidgetsState(QByteArray())
@@ -440,32 +442,22 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
 
         if (oldMenu && !menuSettings->action()) {
             // A menu with the same name already exists, so add the contents of
-            // the new menu to the existing one and keep track of the separator
-            // and of the menu's contents
+            // the new menu to the existing one
 
-            mViewPluginActions.insertMulti(pPlugin, oldMenu->addSeparator());
-
+            oldMenu->addSeparator();
             oldMenu->addActions(newMenu->actions());
-
-            foreach (QAction *action, oldMenu->actions())
-                mViewPluginActions.insertMulti(pPlugin, action);
 
             // Delete the new menu since we don't need it anymore
 
             delete newMenu;
         } else {
-            // No menu with the same name already exists, so add the new menu to
-            // our menu bar and keep track of it and its contents
+            // No menu with the same name already exists (or the menu doesn't
+            // have a name), so add the new menu to our menu bar
 
             switch (menuSettings->type()) {
             case GuiMenuSettings::View:
                 mGui->menuBar->insertAction(mGui->menuView->menuAction(),
                                             newMenu->menuAction());
-
-                mViewPluginMenus.insertMulti(pPlugin, newMenu);
-
-                foreach (QAction *action, newMenu->actions())
-                    mViewPluginActions.insertMulti(pPlugin, action);
 
                 break;
             default:
@@ -474,9 +466,10 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
                 ;
             }
 
-            // Keep track of the new menu
+            // Keep track of the new menu, but only if it has a name
 
-            mMenus.insert(newMenuName, newMenu);
+            if (newMenuName.size())
+                mMenus.insert(newMenuName, newMenu);
         }
     }
 
@@ -502,11 +495,6 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
             else
                 action = mGui->menuFile->insertSeparator(mGui->menuFile->actions().first());
 
-            // Keep track of the action/separator, so that it can be
-            // shown/hidden depending on which view plugin is selected
-
-            mViewPluginActions.insertMulti(pPlugin, action);
-
             break;
         }
         case GuiMenuActionSettings::Tools: {
@@ -529,15 +517,13 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
     // Add some sub-menus before some menu items
 
     foreach (GuiMenuSettings *menuSettings, pGuiSettings->menus())
-        // Insert the menu before a menu item / separator and keep track of it
+        // Insert the menu before a menu item / separator
 
         if (menuSettings->action())
             switch (menuSettings->type()) {
             case GuiMenuActionSettings::File:
                 mGui->menuFile->insertMenu(menuSettings->action(),
                                            menuSettings->menu());
-
-                mViewPluginMenus.insertMulti(pPlugin, menuSettings->menu());
 
                 break;
             default:
@@ -585,8 +571,6 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
             }
 
             mFileNewMenu->addAction(menuActionSettings->action());
-
-            mViewPluginActions.insertMulti(pPlugin, menuActionSettings->action());
 
             break;
         default:
@@ -1312,6 +1296,37 @@ void MainWindow::restart(const bool &pSaveSettings) const
 
 //==============================================================================
 
+void MainWindow::showEnableActions(const QList<QAction *> &pActions)
+{
+    // Show/enable or hide/disable the given actions, depending on whether they
+    // correspond to a menu with visible/enabled or hidden/disabled actions,
+    // respectively
+
+    foreach (QAction *action, pActions) {
+        QMenu *actionMenu = action->menu();
+
+        if (actionMenu) {
+            QList<QAction *> actionMenuActions = actionMenu->actions();
+
+            showEnableActions(actionMenuActions);
+
+            bool showEnable = false;
+
+            foreach (QAction *actionMenuAction, actionMenuActions)
+                if (   actionMenuAction->isVisible()
+                    && actionMenuAction->isEnabled()) {
+                    showEnable = true;
+
+                    break;
+                }
+
+            Core::showEnableAction(action, showEnable);
+        }
+    }
+}
+
+//==============================================================================
+
 void MainWindow::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 {
     // Make sure that we have a view plugin
@@ -1342,36 +1357,6 @@ void MainWindow::updateGui(Plugin *pViewPlugin, const QString &pFileName)
         // Keep track of our view plugin
 
         mViewPlugin = pViewPlugin;
-
-        // Go through our view plugin menus and check whether the view plugin to
-        // which they are attached are our current view plugin or one of its
-        // (in)direct dependencies, and if so then enable and show them, or
-        // disable and hide them
-
-        for (QMap<Plugin *, QMenu *>::ConstIterator iter = mViewPluginMenus.constBegin(),
-                                                    iterEnd = mViewPluginMenus.constEnd();
-             iter != iterEnd; ++iter) {
-            bool validViewMenu = pViewPlugin
-                                 && (   !iter.key()->name().compare(pViewPlugin->name())
-                                     ||  pViewPlugin->info()->fullDependencies().contains(iter.key()->name()));
-
-            iter.value()->menuAction()->setEnabled(validViewMenu);
-            iter.value()->menuAction()->setVisible(validViewMenu);
-        }
-
-        // Go through our view plugin actions and do the same as what we did for
-        // our view plugin menus above
-
-        for (QMap<Plugin *, QAction *>::ConstIterator iter = mViewPluginActions.constBegin(),
-                                                      iterEnd = mViewPluginActions.constEnd();
-             iter != iterEnd; ++iter) {
-            bool validViewAction = pViewPlugin
-                                   && (   !iter.key()->name().compare(pViewPlugin->name())
-                                       ||  pViewPlugin->info()->fullDependencies().contains(iter.key()->name()));
-
-            iter.value()->setEnabled(validViewAction);
-            iter.value()->setVisible(validViewAction);
-        }
 
         // Ask our new view plugin to initialise its view
         // Note: see its GuiInterface::finalizeView() counterpart above...
@@ -1409,6 +1394,11 @@ void MainWindow::updateGui(Plugin *pViewPlugin, const QString &pFileName)
         if (guiInterface)
             guiInterface->updateGui(pViewPlugin, pFileName);
     }
+
+    // Go through our different menus and show/hide them, depending on whether
+    // they have visible items
+
+    showEnableActions(mGui->menuBar->actions());
 }
 
 //==============================================================================

@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "coreeditingplugin.h"
 #include "editinginterface.h"
+#include "guiutils.h"
 
 //==============================================================================
 
@@ -189,15 +190,22 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
-    // Various things depending on whether the view plugin handles the editing
-    // interface
+    // Show/enable or hide/disable various actions, depending on whether the
+    // view plugin handles the editing interface
 
     EditingInterface *editingInterface = qobject_cast<EditingInterface *>(pViewPlugin->instance());
 
-    if (editingInterface)
-        qDebug(">>> CoreEditing: %s is valid", qPrintable(pViewPlugin->name()));
-    else
-        qDebug(">>> CoreEditing: %s is NOT valid", qPrintable(pViewPlugin->name()));
+    Core::showEnableAction(mEditUndoAction, editingInterface);
+    Core::showEnableAction(mEditRedoAction, editingInterface);
+    Core::showEnableAction(mEditCutAction, editingInterface);
+    Core::showEnableAction(mEditCopyAction, editingInterface);
+    Core::showEnableAction(mEditPasteAction, editingInterface);
+    Core::showEnableAction(mEditDeleteAction, editingInterface);
+    Core::showEnableAction(mEditFindAction, editingInterface);
+    Core::showEnableAction(mEditFindNextAction, editingInterface);
+    Core::showEnableAction(mEditPreviousAction, editingInterface);
+    Core::showEnableAction(mEditReplaceAction, editingInterface);
+    Core::showEnableAction(mEditSelectAllAction, editingInterface);
 }
 
 //==============================================================================

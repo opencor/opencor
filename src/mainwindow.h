@@ -105,9 +105,6 @@ private:
     QMenu *mViewOrganisationMenu;
     QAction *mViewSeparator;
 
-    QMap<Plugin *, QMenu *> mViewPluginMenus;
-    QMap<Plugin *, QAction *> mViewPluginActions;
-
     Plugin *mViewPlugin;
 
     bool mDockedWidgetsVisible;
@@ -130,6 +127,8 @@ private:
     void handleAction(const QUrl &pUrl);
 
     void showSelf();
+
+    void showEnableActions(const QList<QAction *> &pActions);
 
 private Q_SLOTS:
     void fileOpenRequest(const QString &pFileName);

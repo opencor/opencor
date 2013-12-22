@@ -33,6 +33,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+class QAction;
 class QFrame;
 class QLabel;
 class QWidget;
@@ -84,6 +85,8 @@ QLabel CORE_EXPORT * newLabel(const QString &pText,
                               const double &pFontPercentage,
                               QWidget *pParent = 0);
 QLabel CORE_EXPORT * newLabel(const QString &pText, QWidget *pParent = 0);
+
+void CORE_EXPORT showEnableAction(QAction *pAction, const bool &pShowEnable);
 
 QColor CORE_EXPORT borderColor();
 QColor CORE_EXPORT baseColor();

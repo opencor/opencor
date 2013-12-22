@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QAction>
 #include <QApplication>
 #include <QColor>
 #include <QDate>
@@ -300,6 +301,16 @@ QLabel * newLabel(const QString &pText, QWidget *pParent)
 
     return newLabel(pText, 1.0, false, false, Qt::AlignLeft|Qt::AlignVCenter,
                     pParent);
+}
+
+//==============================================================================
+
+void showEnableAction(QAction *pAction, const bool &pShowEnable)
+{
+    // Show/enable or hide/disable the given action
+
+    pAction->setVisible(pShowEnable);
+    pAction->setEnabled(pShowEnable);
 }
 
 //==============================================================================
