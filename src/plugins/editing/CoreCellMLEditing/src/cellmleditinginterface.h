@@ -16,67 +16,37 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PrettyCellMLView plugin
+// CellML editing interface
 //==============================================================================
 
-#ifndef PRETTYCELLMLVIEWPLUGIN_H
-#define PRETTYCELLMLVIEWPLUGIN_H
+#ifndef CELLMLEDITINGINTERFACE_H
+#define CELLMLEDITINGINTERFACE_H
 
 //==============================================================================
 
-#include "cellmleditinginterface.h"
-#include "coreinterface.h"
-#include "editinginterface.h"
-#include "guiinterface.h"
-#include "i18ninterface.h"
-#include "plugininfo.h"
+#include <QObject>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace PrettyCellMLView {
 
 //==============================================================================
 
-PLUGININFO_FUNC PrettyCellMLViewPluginInfo();
-
-//==============================================================================
-
-class PrettyCellmlViewWidget;
-
-//==============================================================================
-
-class PrettyCellMLViewPlugin : public QObject, public CellmlEditingInterface,
-                               public CoreInterface, public EditingInterface,
-                               public GuiInterface, public I18nInterface
+class CellmlEditingInterface
 {
-    Q_OBJECT
-
-    Q_PLUGIN_METADATA(IID "OpenCOR.PrettyCellMLViewPlugin" FILE "prettycellmlviewplugin.json")
-
-    Q_INTERFACES(OpenCOR::CellmlEditingInterface)
-    Q_INTERFACES(OpenCOR::CoreInterface)
-    Q_INTERFACES(OpenCOR::EditingInterface)
-    Q_INTERFACES(OpenCOR::GuiInterface)
-    Q_INTERFACES(OpenCOR::I18nInterface)
-
 public:
-    explicit PrettyCellMLViewPlugin();
-
-#include "cellmleditinginterface.inl"
-#include "coreinterface.inl"
-#include "editinginterface.inl"
-#include "guiinterface.inl"
-#include "i18ninterface.inl"
-
-private:
-    PrettyCellmlViewWidget *mViewWidget;
+#define INTERFACE_DEFINITION
+    #include "cellmleditinginterface.inl"
+#undef INTERFACE_DEFINITION
 };
 
 //==============================================================================
 
-}   // namespace PrettyCellMLView
 }   // namespace OpenCOR
+
+//==============================================================================
+
+Q_DECLARE_INTERFACE(OpenCOR::CellmlEditingInterface, "OpenCOR::CellmlEditingInterface")
 
 //==============================================================================
 

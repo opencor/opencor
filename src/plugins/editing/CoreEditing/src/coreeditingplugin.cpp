@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "coreeditingplugin.h"
+#include "editinginterface.h"
 
 //==============================================================================
 
@@ -186,10 +187,17 @@ void CoreEditingPlugin::changeEvent(QEvent *pEvent)
 
 void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 {
-    Q_UNUSED(pViewPlugin);
     Q_UNUSED(pFileName);
 
-    // We don't handle this interface...
+    // Various things depending on whether the view plugin handles the editing
+    // interface
+
+    EditingInterface *editingInterface = qobject_cast<EditingInterface *>(pViewPlugin->instance());
+
+    if (editingInterface)
+        qDebug(">>> CoreEditing: %s is valid", qPrintable(pViewPlugin->name()));
+    else
+        qDebug(">>> CoreEditing: %s is NOT valid", qPrintable(pViewPlugin->name()));
 }
 
 //==============================================================================

@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // CoreCellMLEditing plugin
 //==============================================================================
 
+#include "cellmleditinginterface.h"
 #include "corecellmleditingplugin.h"
 
 //==============================================================================
@@ -139,10 +140,17 @@ void CoreCellMLEditingPlugin::changeEvent(QEvent *pEvent)
 void CoreCellMLEditingPlugin::updateGui(Plugin *pViewPlugin,
                                         const QString &pFileName)
 {
-    Q_UNUSED(pViewPlugin);
     Q_UNUSED(pFileName);
 
-    // We don't handle this interface...
+    // Various things depending on whether the view plugin handles the editing
+    // interface
+
+    CellmlEditingInterface *cellmlEditingInterface = qobject_cast<CellmlEditingInterface *>(pViewPlugin->instance());
+
+    if (cellmlEditingInterface)
+        qDebug(">>> CoreCellMLEditing: %s is valid", qPrintable(pViewPlugin->name()));
+    else
+        qDebug(">>> CoreCellMLEditing: %s is NOT valid", qPrintable(pViewPlugin->name()));
 }
 
 //==============================================================================
