@@ -25,7 +25,7 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-#include <QtGlobal>
+#include <qglobal.h>
 
 #if defined(Q_OS_MAC)
 #if (QT_VERSION >= 0x040200 && QT_VERSION < 0x050000) || QT_VERSION >= 0x050200
