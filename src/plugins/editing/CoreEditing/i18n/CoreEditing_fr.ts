@@ -95,5 +95,13 @@
         <source>Select All</source>
         <translation>Tout Sélectionner</translation>
     </message>
+    <message>
+        <source>File</source>
+        <translation>Fichier</translation>
+    </message>
+    <message>
+        <source>Create a new file</source>
+        <translation>Créer un nouveau fichier</translation>
+    </message>
 </context>
 </TS>

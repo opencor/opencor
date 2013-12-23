@@ -59,13 +59,9 @@ public:
 #include "guiinterface.inl"
 #include "i18ninterface.inl"
 
-    // Plugin specific
-
-    void setFileNewActionsVisible(const bool &pVisible);
-
 private:
-    QAction *mFileNewCellml1_0Action;
-    QAction *mFileNewCellml1_1Action;
+    QAction *mFileNewCellml1_0FileAction;
+    QAction *mFileNewCellml1_1FileAction;
 };
 
 //==============================================================================

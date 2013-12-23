@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
+        <file>oxygen/actions/document-new.png</file>
         <file>oxygen/actions/edit-cut.png</file>
         <file>oxygen/actions/edit-delete.png</file>
         <file>oxygen/actions/edit-find.png</file>

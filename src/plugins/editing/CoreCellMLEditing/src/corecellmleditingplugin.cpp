@@ -55,13 +55,13 @@ void CoreCellMLEditingPlugin::initialize()
 {
     // Create our different File|New actions
 
-    mFileNewCellml1_0Action = newAction(mMainWindow);
-    mFileNewCellml1_1Action = newAction(mMainWindow);
+    mFileNewCellml1_0FileAction = newAction(mMainWindow);
+    mFileNewCellml1_1FileAction = newAction(mMainWindow);
 
     // Set our settings
 
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::FileNew, mFileNewCellml1_0Action);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::FileNew, mFileNewCellml1_1Action);
+    mGuiSettings->addMenuAction(GuiMenuActionSettings::FileNew, mFileNewCellml1_0FileAction);
+    mGuiSettings->addMenuAction(GuiMenuActionSettings::FileNew, mFileNewCellml1_1FileAction);
 }
 
 //==============================================================================
@@ -148,8 +148,8 @@ void CoreCellMLEditingPlugin::updateGui(Plugin *pViewPlugin,
 
     CellmlEditingInterface *cellmlEditingInterface = qobject_cast<CellmlEditingInterface *>(pViewPlugin->instance());
 
-    Core::showEnableAction(mFileNewCellml1_0Action, cellmlEditingInterface);
-    Core::showEnableAction(mFileNewCellml1_1Action, cellmlEditingInterface);
+    Core::showEnableAction(mFileNewCellml1_0FileAction, cellmlEditingInterface);
+    Core::showEnableAction(mFileNewCellml1_1FileAction, cellmlEditingInterface);
 }
 
 //==============================================================================
@@ -296,22 +296,10 @@ void CoreCellMLEditingPlugin::retranslateUi()
 {
     // Retranslate our different File|New actions
 
-    retranslateAction(mFileNewCellml1_0Action, tr("CellML 1.0 File"),
+    retranslateAction(mFileNewCellml1_0FileAction, tr("CellML 1.0 File"),
                       tr("Create a new CellML 1.0 file"));
-    retranslateAction(mFileNewCellml1_1Action, tr("CellML 1.1 File"),
+    retranslateAction(mFileNewCellml1_1FileAction, tr("CellML 1.1 File"),
                       tr("Create a new CellML 1.1 file"));
-}
-
-//==============================================================================
-// Plugin specific
-//==============================================================================
-
-void CoreCellMLEditingPlugin::setFileNewActionsVisible(const bool &pVisible)
-{
-    // En/disable and show/hide our File|New actions
-
-    mFileNewCellml1_0Action->setVisible(pVisible);
-    mFileNewCellml1_1Action->setVisible(pVisible);
 }
 
 //==============================================================================

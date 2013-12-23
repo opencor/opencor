@@ -64,6 +64,8 @@ public:
 #include "i18ninterface.inl"
 
 private:
+    QAction *mFileNewFileAction;
+
     QMenu *mEditMenu;
 
     QAction *mEditUndoAction;

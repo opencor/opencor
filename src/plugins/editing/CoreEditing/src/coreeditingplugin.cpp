@@ -53,6 +53,12 @@ PLUGININFO_FUNC CoreEditingPluginInfo()
 
 void CoreEditingPlugin::initialize()
 {
+    // Create our different File|New actions
+
+    mFileNewFileAction = newAction(mMainWindow, false,
+                                   ":/oxygen/actions/document-new.png",
+                                   QKeySequence::New);
+
     // Create our Edit menu
 
     mEditMenu = newMenu(mMainWindow, EditGroup);
@@ -108,6 +114,8 @@ void CoreEditingPlugin::initialize()
     mEditMenu->addAction(mEditSelectAllAction);
 
     // Set our settings
+
+    mGuiSettings->addMenuAction(GuiMenuActionSettings::FileNew, mFileNewFileAction);
 
     mGuiSettings->addMenu(GuiMenuSettings::View, mEditMenu);
 }
@@ -194,6 +202,8 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
     // view plugin handles the editing interface
 
     EditingInterface *editingInterface = qobject_cast<EditingInterface *>(pViewPlugin->instance());
+
+    Core::showEnableAction(mFileNewFileAction, editingInterface);
 
     Core::showEnableAction(mEditUndoAction, editingInterface);
     Core::showEnableAction(mEditRedoAction, editingInterface);
@@ -350,6 +360,11 @@ bool CoreEditingPlugin::canClose()
 
 void CoreEditingPlugin::retranslateUi()
 {
+    // Retranslate our different File|New action
+
+    retranslateAction(mFileNewFileAction, tr("File"),
+                      tr("Create a new file"));
+
     // Retranslate our Edit menu
 
     retranslateMenu(mEditMenu, tr("Edit"));
