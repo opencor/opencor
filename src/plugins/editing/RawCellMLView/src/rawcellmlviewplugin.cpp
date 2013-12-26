@@ -138,11 +138,11 @@ void RawCellMLViewPlugin::handleAction(const QUrl &pUrl)
 // Editing interface
 //==============================================================================
 
-QScintillaSupport::QScintillaWidget * RawCellMLViewPlugin::editor() const
+QScintillaSupport::QScintillaWidget * RawCellMLViewPlugin::editor(const QString &pFileName) const
 {
-//---GRY--- TO BE IMPLEMENTED...
+    // Return the requested editor
 
-    return 0;
+    return mViewWidget->editor(pFileName);
 }
 
 //==============================================================================

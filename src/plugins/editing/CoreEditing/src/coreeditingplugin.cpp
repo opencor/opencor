@@ -25,6 +25,9 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QAction>
+#include <QApplication>
+#include <QClipboard>
 #include <QMainWindow>
 #include <QMenu>
 
@@ -45,6 +48,13 @@ PLUGININFO_FUNC CoreEditingPluginInfo()
     return new PluginInfo(PluginInfo::Editing,
                           QStringList() << "QScintillaSupport",
                           descriptions);
+}
+
+//==============================================================================
+
+CoreEditingPlugin::CoreEditingPlugin() :
+    mEditor(0)
+{
 }
 
 //==============================================================================
@@ -118,6 +128,11 @@ void CoreEditingPlugin::initialize()
     mGuiSettings->addMenuAction(GuiMenuActionSettings::FileNew, mFileNewFileAction);
 
     mGuiSettings->addMenu(GuiMenuSettings::View, mEditMenu);
+
+    // Keep track of changes to the clipboard
+
+    connect(QApplication::clipboard(), SIGNAL(dataChanged()),
+            this, SLOT(clipboardDataChanged()));
 }
 
 //==============================================================================
@@ -207,15 +222,65 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 
     Core::showEnableAction(mEditUndoAction, editingInterface);
     Core::showEnableAction(mEditRedoAction, editingInterface);
+
     Core::showEnableAction(mEditCutAction, editingInterface);
     Core::showEnableAction(mEditCopyAction, editingInterface);
     Core::showEnableAction(mEditPasteAction, editingInterface);
     Core::showEnableAction(mEditDeleteAction, editingInterface);
+
     Core::showEnableAction(mEditFindAction, editingInterface);
     Core::showEnableAction(mEditFindNextAction, editingInterface);
     Core::showEnableAction(mEditPreviousAction, editingInterface);
     Core::showEnableAction(mEditReplaceAction, editingInterface);
+
     Core::showEnableAction(mEditSelectAllAction, editingInterface);
+
+    // Disconnect some signals/slots for our previous editor
+
+    if (mEditor) {
+        disconnect(mEditor, SIGNAL(copyAvailable(bool)),
+                   mEditCutAction, SLOT(setEnabled(bool)));
+        disconnect(mEditor, SIGNAL(copyAvailable(bool)),
+                   mEditCopyAction, SLOT(setEnabled(bool)));
+        disconnect(mEditor, SIGNAL(copyAvailable(bool)),
+                   mEditDeleteAction, SLOT(setEnabled(bool)));
+
+        disconnect(mEditCutAction, SIGNAL(triggered()),
+                   mEditor, SLOT(cut()));
+        disconnect(mEditCopyAction, SIGNAL(triggered()),
+                   mEditor, SLOT(copy()));
+        disconnect(mEditPasteAction, SIGNAL(triggered()),
+                   mEditor, SLOT(paste()));
+        disconnect(mEditDeleteAction, SIGNAL(triggered()),
+                   mEditor, SLOT(delete_selection()));
+    }
+
+    // Connect some signals/slots for our new editor
+
+    mEditor = editingInterface?editingInterface->editor(pFileName):0;
+
+    if (mEditor) {
+        connect(mEditor, SIGNAL(copyAvailable(bool)),
+                mEditCutAction, SLOT(setEnabled(bool)));
+        connect(mEditor, SIGNAL(copyAvailable(bool)),
+                mEditCopyAction, SLOT(setEnabled(bool)));
+        connect(mEditor, SIGNAL(copyAvailable(bool)),
+                mEditDeleteAction, SLOT(setEnabled(bool)));
+
+        connect(mEditCutAction, SIGNAL(triggered()),
+                mEditor, SLOT(cut()));
+        connect(mEditCopyAction, SIGNAL(triggered()),
+                mEditor, SLOT(copy()));
+        connect(mEditPasteAction, SIGNAL(triggered()),
+                mEditor, SLOT(paste()));
+        connect(mEditDeleteAction, SIGNAL(triggered()),
+                mEditor, SLOT(delete_selection()));
+
+        mEditCutAction->setEnabled(mEditor->hasSelectedText());
+        mEditCopyAction->setEnabled(mEditor->hasSelectedText());
+        clipboardDataChanged();
+        mEditDeleteAction->setEnabled(mEditor->hasSelectedText());
+    }
 }
 
 //==============================================================================
@@ -396,6 +461,17 @@ void CoreEditingPlugin::retranslateUi()
 
     retranslateAction(mEditSelectAllAction, tr("Select All"),
                       tr("Select all the objects"));
+}
+
+//==============================================================================
+// Plugin specific
+//==============================================================================
+
+void CoreEditingPlugin::clipboardDataChanged()
+{
+    // Enable our paste action if the clipboard contains some text
+
+    mEditPasteAction->setEnabled(QApplication::clipboard()->text().size());
 }
 
 //==============================================================================

@@ -273,6 +273,17 @@ void PrettyCellmlViewWidget::fileReloaded(const QString &pFileName)
 
 //==============================================================================
 
+QScintillaSupport::QScintillaWidget * PrettyCellmlViewWidget::editor(const QString &pFileName) const
+{
+    // Return the requested editor
+
+    Core::BorderedWidget *borderedEditor  = mBorderedEditors.value(pFileName);
+
+    return borderedEditor?qobject_cast<QScintillaSupport::QScintillaWidget *>(borderedEditor->widget()):0;
+}
+
+//==============================================================================
+
 void PrettyCellmlViewWidget::editorZoomLevelChanged()
 {
     // One of our view widgets had its zoom level changed, so keep track of the

@@ -50,7 +50,7 @@ namespace Core {
 //==============================================================================
 
 namespace QScintillaSupport {
-    class QScintilla;
+    class QScintillaWidget;
 }   // namespace QScintillaSupport
 
 //==============================================================================
@@ -82,6 +82,8 @@ public:
     void finalize(const QString &pFileName);
 
     void fileReloaded(const QString &pFileName);
+
+    QScintillaSupport::QScintillaWidget * editor(const QString &pFileName) const;
 
 private:
     Ui::RawCellmlViewWidget *mGui;

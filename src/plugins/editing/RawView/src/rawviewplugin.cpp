@@ -150,11 +150,11 @@ void RawViewPlugin::handleAction(const QUrl &pUrl)
 // Editing interface
 //==============================================================================
 
-QScintillaSupport::QScintillaWidget * RawViewPlugin::editor() const
+QScintillaSupport::QScintillaWidget * RawViewPlugin::editor(const QString &pFileName) const
 {
-//---GRY--- TO BE IMPLEMENTED...
+    // Return the requested editor
 
-    return 0;
+    return mViewWidgets.value(pFileName);
 }
 
 //==============================================================================

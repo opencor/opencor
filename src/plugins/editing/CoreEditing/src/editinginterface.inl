@@ -4,6 +4,6 @@
     #define PURE
 #endif
 
-    virtual QScintillaSupport::QScintillaWidget * editor() const PURE;
+    virtual QScintillaSupport::QScintillaWidget * editor(const QString &pFileName) const PURE;
 
 #undef PURE

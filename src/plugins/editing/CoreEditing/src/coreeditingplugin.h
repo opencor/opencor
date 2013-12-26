@@ -33,6 +33,15 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace QScintillaSupport {
+    class QScintillaWidget;
+}   // namespace QScintillaSupport
+
+//==============================================================================
+
 namespace CoreEditing {
 
 //==============================================================================
@@ -59,6 +68,8 @@ class COREEDITING_EXPORT CoreEditingPlugin : public QObject,
     Q_INTERFACES(OpenCOR::I18nInterface)
 
 public:
+    explicit CoreEditingPlugin();
+
 #include "coreinterface.inl"
 #include "guiinterface.inl"
 #include "i18ninterface.inl"
@@ -79,6 +90,11 @@ private:
     QAction *mEditPreviousAction;
     QAction *mEditReplaceAction;
     QAction *mEditSelectAllAction;
+
+    QScintillaSupport::QScintillaWidget *mEditor;
+
+private Q_SLOTS:
+    void clipboardDataChanged();
 };
 
 //==============================================================================
