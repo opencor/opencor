@@ -280,6 +280,21 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
         mEditCopyAction->setEnabled(mEditor->hasSelectedText());
         clipboardDataChanged();
         mEditDeleteAction->setEnabled(mEditor->hasSelectedText());
+    } else {
+        mEditUndoAction->setEnabled(false);
+        mEditRedoAction->setEnabled(false);
+
+        mEditCutAction->setEnabled(false);
+        mEditCopyAction->setEnabled(false);
+        mEditPasteAction->setEnabled(false);
+        mEditDeleteAction->setEnabled(false);
+
+        mEditFindAction->setEnabled(false);
+        mEditFindNextAction->setEnabled(false);
+        mEditPreviousAction->setEnabled(false);
+        mEditReplaceAction->setEnabled(false);
+
+        mEditSelectAllAction->setEnabled(false);
     }
 }
 

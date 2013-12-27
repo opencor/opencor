@@ -1314,8 +1314,7 @@ void MainWindow::showEnableActions(const QList<QAction *> &pActions)
 
             foreach (QAction *actionMenuAction, actionMenuActions)
                 if (   !actionMenuAction->isSeparator()
-                    &&  actionMenuAction->isVisible()
-                    &&  actionMenuAction->isEnabled()) {
+                    &&  actionMenuAction->isVisible()) {
                     showEnable = true;
 
                     break;
