@@ -95,7 +95,6 @@ private:
 
 private Q_SLOTS:
     void clipboardDataChanged();
-    void showCustomContextMenu(const QPoint &pPosition) const;
 };
 
 //==============================================================================

@@ -52,16 +52,23 @@ public:
                               QWidget *pParent = 0);
     explicit QScintillaWidget(QsciLexer *pLexer, QWidget *pParent = 0);
     explicit QScintillaWidget(QWidget *pParent = 0);
+    ~QScintillaWidget();
+
+    QMenu * contextMenu() const;
+    void setContextMenu(const QList<QAction *> &pContextMenuActions);
 
     void setContents(const QString &pContents);
 
 protected:
+    virtual void contextMenuEvent(QContextMenuEvent *pEvent);
     virtual void dragEnterEvent(QDragEnterEvent *pEvent);
     virtual void keyPressEvent(QKeyEvent *pEvent);
     virtual void wheelEvent(QWheelEvent *pEvent);
 
 private:
     QFont mFont;
+
+    QMenu *mContextMenu;
 
     void constructor(const QString &pContents = QString(),
                      const bool &pReadOnly = false,

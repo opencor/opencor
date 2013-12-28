@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QDragEnterEvent>
+#include <QMenu>
 #include <QMimeData>
 
 //==============================================================================
@@ -85,6 +86,10 @@ void QScintillaWidget::constructor(const QString &pContents,
 
     setContents(pContents);
     setReadOnly(pReadOnly);
+
+    // Empty context menu by default
+
+    mContextMenu = new QMenu(this);
 }
 
 //==============================================================================
@@ -132,11 +137,53 @@ QScintillaWidget::QScintillaWidget(QWidget *pParent) :
 
 //==============================================================================
 
+QScintillaWidget::~QScintillaWidget()
+{
+    // Delete some internal objects
+
+    delete mContextMenu;
+}
+
+//==============================================================================
+
+QMenu * QScintillaWidget::contextMenu() const
+{
+    // Return our context menu
+
+    return mContextMenu;
+}
+
+//==============================================================================
+
+void QScintillaWidget::setContextMenu(const QList<QAction *> &pContextMenuActions)
+{
+    // Set our context menu
+
+    mContextMenu->clear();
+
+    foreach (QAction *action, pContextMenuActions)
+        mContextMenu->addAction(action);
+}
+
+//==============================================================================
+
 void QScintillaWidget::setContents(const QString &pContents)
 {
     // Set our contents
 
     setText(pContents);
+}
+
+//==============================================================================
+
+void QScintillaWidget::contextMenuEvent(QContextMenuEvent *pEvent)
+{
+    // Show our context menu or QsciScintilla's one, if we don't have one
+
+    if (mContextMenu->isEmpty())
+        QsciScintilla::contextMenuEvent(pEvent);
+    else
+        mContextMenu->exec(pEvent->globalPos());
 }
 
 //==============================================================================
