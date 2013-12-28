@@ -238,6 +238,9 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
     // Disconnect some signals/slots for our previous editor
 
     if (mEditor) {
+        disconnect(mEditor, SIGNAL(customContextMenuRequested(const QPoint &)),
+                   this, SLOT(showCustomContextMenu(const QPoint &)));
+
         disconnect(mEditor, SIGNAL(copyAvailable(bool)),
                    mEditCutAction, SLOT(setEnabled(bool)));
         disconnect(mEditor, SIGNAL(copyAvailable(bool)),
@@ -260,6 +263,11 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
     mEditor = editingInterface?editingInterface->editor(pFileName):0;
 
     if (mEditor) {
+        mEditor->setContextMenuPolicy(Qt::CustomContextMenu);
+
+        connect(mEditor, SIGNAL(customContextMenuRequested(const QPoint &)),
+                this, SLOT(showCustomContextMenu(const QPoint &)));
+
         connect(mEditor, SIGNAL(copyAvailable(bool)),
                 mEditCutAction, SLOT(setEnabled(bool)));
         connect(mEditor, SIGNAL(copyAvailable(bool)),
@@ -487,6 +495,18 @@ void CoreEditingPlugin::clipboardDataChanged()
     // Enable our paste action if the clipboard contains some text
 
     mEditPasteAction->setEnabled(QApplication::clipboard()->text().size());
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::showCustomContextMenu(const QPoint &pPosition) const
+{
+    Q_UNUSED(pPosition);
+
+    // Show our custom context menu which items match the contents of our tool
+    // bar widget
+
+    mEditMenu->exec(QCursor::pos());
 }
 
 //==============================================================================
