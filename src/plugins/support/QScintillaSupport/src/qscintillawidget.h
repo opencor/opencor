@@ -70,9 +70,16 @@ private:
 
     QMenu *mContextMenu;
 
+    bool mCanUndo;
+    bool mCanRedo;
+
     void constructor(const QString &pContents = QString(),
                      const bool &pReadOnly = false,
                      QsciLexer *pLexer = 0);
+
+Q_SIGNALS:
+    void canUndo(const bool &pCanUndo);
+    void canRedo(const bool &pCanRedo);
 };
 
 //==============================================================================

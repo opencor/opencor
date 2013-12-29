@@ -238,12 +238,22 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
     // Reset our previous editor
 
     if (mEditor) {
+        disconnect(mEditor, SIGNAL(canUndo(const bool &)),
+                   mEditUndoAction, SLOT(setEnabled(bool)));
+        disconnect(mEditor, SIGNAL(canRedo(const bool &)),
+                   mEditRedoAction, SLOT(setEnabled(bool)));
+
         disconnect(mEditor, SIGNAL(copyAvailable(bool)),
                    mEditCutAction, SLOT(setEnabled(bool)));
         disconnect(mEditor, SIGNAL(copyAvailable(bool)),
                    mEditCopyAction, SLOT(setEnabled(bool)));
         disconnect(mEditor, SIGNAL(copyAvailable(bool)),
                    mEditDeleteAction, SLOT(setEnabled(bool)));
+
+        disconnect(mEditUndoAction, SIGNAL(triggered()),
+                   this, SLOT(doUndo()));
+        disconnect(mEditRedoAction, SIGNAL(triggered()),
+                   this, SLOT(doRedo()));
 
         disconnect(mEditCutAction, SIGNAL(triggered()),
                    mEditor, SLOT(cut()));
@@ -262,12 +272,22 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
     if (mEditor) {
         mEditor->setContextMenu(mEditMenu->actions());
 
+        connect(mEditor, SIGNAL(canUndo(const bool &)),
+                mEditUndoAction, SLOT(setEnabled(bool)));
+        connect(mEditor, SIGNAL(canRedo(const bool &)),
+                mEditRedoAction, SLOT(setEnabled(bool)));
+
         connect(mEditor, SIGNAL(copyAvailable(bool)),
                 mEditCutAction, SLOT(setEnabled(bool)));
         connect(mEditor, SIGNAL(copyAvailable(bool)),
                 mEditCopyAction, SLOT(setEnabled(bool)));
         connect(mEditor, SIGNAL(copyAvailable(bool)),
                 mEditDeleteAction, SLOT(setEnabled(bool)));
+
+        connect(mEditUndoAction, SIGNAL(triggered()),
+                this, SLOT(doUndo()));
+        connect(mEditRedoAction, SIGNAL(triggered()),
+                this, SLOT(doRedo()));
 
         connect(mEditCutAction, SIGNAL(triggered()),
                 mEditor, SLOT(cut()));
@@ -277,6 +297,8 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
                 mEditor, SLOT(paste()));
         connect(mEditDeleteAction, SIGNAL(triggered()),
                 mEditor, SLOT(delete_selection()));
+
+        updateUndoRedoActions();
 
         mEditCutAction->setEnabled(mEditor->hasSelectedText());
         mEditCopyAction->setEnabled(mEditor->hasSelectedText());
@@ -489,6 +511,38 @@ void CoreEditingPlugin::clipboardDataChanged()
     // Enable our paste action if the clipboard contains some text
 
     mEditPasteAction->setEnabled(QApplication::clipboard()->text().size());
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::updateUndoRedoActions()
+{
+    // Update our undo/redo actions
+
+    mEditUndoAction->setEnabled(mEditor->isUndoAvailable());
+    mEditRedoAction->setEnabled(mEditor->isRedoAvailable());
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::doUndo()
+{
+    // Undo the last action and update our undo/redo actions
+
+    mEditor->undo();
+
+    updateUndoRedoActions();
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::doRedo()
+{
+    // Redo the last action and update our undo/redo actions
+
+    mEditor->redo();
+
+    updateUndoRedoActions();
 }
 
 //==============================================================================

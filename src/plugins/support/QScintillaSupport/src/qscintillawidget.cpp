@@ -90,6 +90,11 @@ void QScintillaWidget::constructor(const QString &pContents,
     // Empty context menu by default
 
     mContextMenu = new QMenu(this);
+
+    // Can't undo/redo by default
+
+    mCanUndo = false;
+    mCanRedo = false;
 }
 
 //==============================================================================
@@ -216,7 +221,26 @@ void QScintillaWidget::keyPressEvent(QKeyEvent *pEvent)
         &&  (pEvent->key() == Qt::Key_0)) {
         zoomTo(0);
     } else {
+        // Default handling of the event
+
         QsciScintilla::keyPressEvent(pEvent);
+
+        // Check whether the undo/redo is possible
+
+        bool newCanUndo = isUndoAvailable();
+        bool newCanRedo = isRedoAvailable();
+
+        if (newCanUndo != mCanUndo) {
+            mCanUndo = newCanUndo;
+
+            emit canUndo(mCanUndo);
+        }
+
+        if (newCanRedo != mCanRedo) {
+            mCanRedo = newCanRedo;
+
+            emit canRedo(mCanRedo);
+        }
     }
 }
 
