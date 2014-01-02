@@ -36,9 +36,11 @@
 
 // These are needed because Scintilla class header files don't manage their own
 // dependencies properly.
+#include <algorithm>
 #include <assert.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <string>
 #include "ILexer.h"
 #include "Platform.h"
 #include "Scintilla.h"
