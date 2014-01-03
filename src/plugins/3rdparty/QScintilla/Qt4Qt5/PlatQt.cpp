@@ -1,6 +1,6 @@
 // This module implements the portability layer for the Qt port of Scintilla.
 //
-// Copyright (c) 2012 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2014 Riverbank Computing Limited <info@riverbankcomputing.com>
 //
 // This file is part of QScintilla.
 //
@@ -291,13 +291,12 @@ void SurfaceImpl::InitPixMap(int width, int height, Surface *, WindowID wid)
 {
     Release();
 
-    QPixmap *pixmap = new QPixmap(width, height);
-
-    // Disable this for now because it is not the complete solution to
-    // supporting retina displays without disabling buffered writes.
-#if QT_VERSION >= 0x050000 && 0
-    pixmap->setDevicePixelRatio(PWindow(wid)->devicePixelRatio());
+#if QT_VERSION >= 0x050000
+    int dpr = PWindow(wid)->devicePixelRatio();
+    QPixmap *pixmap = new QPixmap(width * dpr, height * dpr);
+    pixmap->setDevicePixelRatio(dpr);
 #else
+    QPixmap *pixmap = new QPixmap(width, height);
     Q_UNUSED(wid);
 #endif
 
@@ -455,9 +454,22 @@ void SurfaceImpl::Copy(PRectangle rc, Point from, Surface &surfaceSource)
     if (si.pd)
     {
         QPixmap *pm = static_cast<QPixmap *>(si.pd);
+        qreal x = from.x;
+        qreal y = from.y;
+        qreal width = rc.right - rc.left;
+        qreal height = rc.bottom - rc.top;
+
+#if QT_VERSION >= 0x050000
+        qreal dpr = pm->devicePixelRatio();
+
+        x *= dpr;
+        y *= dpr;
+        width *= dpr;
+        height *= dpr;
+#endif
 
         painter->drawPixmap(QPointF(rc.left, rc.top), *pm,
-                QRectF(from.x, from.y, rc.right - rc.left, rc.bottom - rc.top));
+                QRectF(x, y, width, height));
     }
 }
 

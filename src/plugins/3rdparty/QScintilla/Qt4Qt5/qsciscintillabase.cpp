@@ -1,6 +1,6 @@
 // This module implements the "official" low-level API.
 //
-// Copyright (c) 2012 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2014 Riverbank Computing Limited <info@riverbankcomputing.com>
 //
 // This file is part of QScintilla.
 //
@@ -83,12 +83,8 @@ static const QLatin1String mimeTextPlain("text/plain");
 static const QLatin1String mimeRectangularWin("MSDEVColumnSelect");
 static const QLatin1String mimeRectangular("text/x-qscintilla-rectangular");
 
-#if defined(Q_OS_MAC)
-#if (QT_VERSION >= 0x040200 && QT_VERSION < 0x050000) || QT_VERSION >= 0x050200
-
+#if (QT_VERSION >= 0x040200 && QT_VERSION < 0x050000 && defined(Q_OS_MAC)) || (QT_VERSION >= 0x050200 && defined(Q_OS_OSX))
 extern void initialiseRectangularPasteboardMime();
-
-#endif
 #endif
 
 
@@ -113,20 +109,11 @@ QsciScintillaBase::QsciScintillaBase(QWidget *parent)
 
     triple_click.setSingleShot(true);
 
-#if defined(Q_OS_MAC)
-#if (QT_VERSION >= 0x040200 && QT_VERSION < 0x050000) || QT_VERSION >= 0x050200
+#if (QT_VERSION >= 0x040200 && QT_VERSION < 0x050000 && defined(Q_OS_MAC)) || (QT_VERSION >= 0x050200 && defined(Q_OS_OSX))
     initialiseRectangularPasteboardMime();
-#endif
 #endif
 
     sci = new QsciScintillaQt(this);
-
-#if QT_VERSION >= 0x050000
-    // Until we fix things properly retina displays require buffered drawing to
-    // be disabled.
-    if (viewport()->devicePixelRatio() > 1)
-        SendScintilla(SCI_SETBUFFEREDDRAW, 0);
-#endif
 
     SendScintilla(SCI_SETCARETPERIOD, QApplication::cursorFlashTime() / 2);
 
