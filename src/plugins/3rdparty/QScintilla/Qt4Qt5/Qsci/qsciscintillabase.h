@@ -3429,6 +3429,9 @@ private:
     int preeditPos;
     int preeditNrBytes;
     QString preeditString;
+#if QT_VERSION >= 0x050000
+    bool clickCausedFocus;
+#endif
 
     void acceptAction(QDropEvent *e);
 

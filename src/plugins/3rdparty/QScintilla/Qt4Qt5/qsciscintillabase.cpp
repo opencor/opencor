@@ -42,6 +42,7 @@
 #include <QMimeData>
 #include <QMouseEvent>
 #include <QPaintEvent>
+#include <QStyle>
 
 #include "ScintillaQt.h"
 
@@ -91,6 +92,9 @@ extern void initialiseRectangularPasteboardMime();
 // The ctor.
 QsciScintillaBase::QsciScintillaBase(QWidget *parent)
     : QAbstractScrollArea(parent), preeditPos(-1), preeditNrBytes(0)
+#if QT_VERSION >= 0x050000
+        , clickCausedFocus(false)
+#endif
 {
     connect(verticalScrollBar(), SIGNAL(valueChanged(int)),
             SLOT(handleVSb(int)));
@@ -312,16 +316,24 @@ void QsciScintillaBase::contextMenuEvent(QContextMenuEvent *e)
 
 
 // Re-implemented to tell the widget it has the focus.
-void QsciScintillaBase::focusInEvent(QFocusEvent *)
+void QsciScintillaBase::focusInEvent(QFocusEvent *e)
 {
     sci->SetFocusState(true);
+
+#if QT_VERSION >= 0x050000
+    clickCausedFocus = (e->reason() == Qt::MouseFocusReason);
+#endif
+
+    QAbstractScrollArea::focusInEvent(e);
 }
 
 
 // Re-implemented to tell the widget it has lost the focus.
-void QsciScintillaBase::focusOutEvent(QFocusEvent *)
+void QsciScintillaBase::focusOutEvent(QFocusEvent *e)
 {
     sci->SetFocusState(false);
+
+    QAbstractScrollArea::focusOutEvent(e);
 }
 
 
@@ -580,12 +592,29 @@ void QsciScintillaBase::mousePressEvent(QMouseEvent *e)
 // Handle a mouse button releases.
 void QsciScintillaBase::mouseReleaseEvent(QMouseEvent *e)
 {
-    if (sci->HaveMouseCapture() && e->button() == Qt::LeftButton)
+    if (e->button() != Qt::LeftButton)
+        return;
+
+    QSCI_SCI_NAMESPACE(Point) pt(e->x(), e->y());
+
+    if (sci->HaveMouseCapture())
     {
         bool ctrl = e->modifiers() & Qt::ControlModifier;
 
-        sci->ButtonUp(QSCI_SCI_NAMESPACE(Point)(e->x(), e->y()), 0, ctrl);
+        sci->ButtonUp(pt, 0, ctrl);
     }
+
+#if QT_VERSION >= 0x050000
+    if (!sci->pdoc->IsReadOnly() && !sci->PointInSelMargin(pt) && qApp->autoSipEnabled())
+    {
+        QStyle::RequestSoftwareInputPanel rsip = QStyle::RequestSoftwareInputPanel(style()->styleHint(QStyle::SH_RequestSoftwareInputPanel));
+
+        if (!clickCausedFocus || rsip == QStyle::RSIP_OnMouseClick)
+            qApp->inputMethod()->show();
+    }
+
+    clickCausedFocus = false;
+#endif
 }
 
 

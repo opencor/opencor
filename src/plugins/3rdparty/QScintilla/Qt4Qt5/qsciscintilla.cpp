@@ -1047,7 +1047,6 @@ bool QsciScintilla::isUtf8() const
 // Set the code page.
 void QsciScintilla::setUtf8(bool cp)
 {
-    setAttribute(Qt::WA_InputMethodEnabled, cp);
     SendScintilla(SCI_SETCODEPAGE, (cp ? SC_CP_UTF8 : 0));
 }
 
@@ -2047,6 +2046,7 @@ bool QsciScintilla::isReadOnly() const
 // Set the read-only state.
 void QsciScintilla::setReadOnly(bool ro)
 {
+    setAttribute(Qt::WA_InputMethodEnabled, !ro);
     SendScintilla(SCI_SETREADONLY, ro);
 }
 
