@@ -59,6 +59,8 @@ public:
 
     void setContents(const QString &pContents);
 
+    bool isSelectAllAvailable() const;
+
 protected:
     virtual void contextMenuEvent(QContextMenuEvent *pEvent);
     virtual void dragEnterEvent(QDragEnterEvent *pEvent);
@@ -73,6 +75,8 @@ private:
     bool mCanUndo;
     bool mCanRedo;
 
+    bool mCanSelectAll;
+
     void constructor(const QString &pContents = QString(),
                      const bool &pReadOnly = false,
                      QsciLexer *pLexer = 0);
@@ -80,6 +84,11 @@ private:
 Q_SIGNALS:
     void canUndo(const bool &pCanUndo);
     void canRedo(const bool &pCanRedo);
+
+    void canSelectAll(const bool &pCanSelectAll);
+
+private Q_SLOTS:
+    void checkCanSelectAll();
 };
 
 //==============================================================================

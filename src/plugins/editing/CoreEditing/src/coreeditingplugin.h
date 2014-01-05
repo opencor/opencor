@@ -94,12 +94,15 @@ private:
     QScintillaSupport::QScintillaWidget *mEditor;
 
     void updateUndoRedoActions();
+    void updateSelectAllAction();
 
 private Q_SLOTS:
     void clipboardDataChanged();
 
     void doUndo();
     void doRedo();
+
+    void doSelectAll();
 };
 
 //==============================================================================

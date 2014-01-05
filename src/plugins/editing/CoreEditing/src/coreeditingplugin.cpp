@@ -254,6 +254,9 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
         disconnect(mEditor, SIGNAL(copyAvailable(bool)),
                    mEditDeleteAction, SLOT(setEnabled(bool)));
 
+        disconnect(mEditor, SIGNAL(canSelectAll(const bool &)),
+                   mEditSelectAllAction, SLOT(setEnabled(bool)));
+
         disconnect(mEditUndoAction, SIGNAL(triggered()),
                    this, SLOT(doUndo()));
         disconnect(mEditRedoAction, SIGNAL(triggered()),
@@ -267,6 +270,9 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
                    mEditor, SLOT(paste()));
         disconnect(mEditDeleteAction, SIGNAL(triggered()),
                    mEditor, SLOT(delete_selection()));
+
+        disconnect(mEditSelectAllAction, SIGNAL(triggered()),
+                   this, SLOT(doSelectAll()));
     }
 
     // Set up our new editor
@@ -288,6 +294,9 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
         connect(mEditor, SIGNAL(copyAvailable(bool)),
                 mEditDeleteAction, SLOT(setEnabled(bool)));
 
+        connect(mEditor, SIGNAL(canSelectAll(const bool &)),
+                mEditSelectAllAction, SLOT(setEnabled(bool)));
+
         connect(mEditUndoAction, SIGNAL(triggered()),
                 this, SLOT(doUndo()));
         connect(mEditRedoAction, SIGNAL(triggered()),
@@ -302,7 +311,11 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
         connect(mEditDeleteAction, SIGNAL(triggered()),
                 mEditor, SLOT(delete_selection()));
 
+        connect(mEditSelectAllAction, SIGNAL(triggered()),
+                this, SLOT(doSelectAll()));
+
         updateUndoRedoActions();
+        updateSelectAllAction();
 
         mEditCutAction->setEnabled(mEditor->hasSelectedText());
         mEditCopyAction->setEnabled(mEditor->hasSelectedText());
@@ -531,6 +544,15 @@ void CoreEditingPlugin::updateUndoRedoActions()
 
 //==============================================================================
 
+void CoreEditingPlugin::updateSelectAllAction()
+{
+    // Update our select all action
+
+    mEditSelectAllAction->setEnabled(mEditor->isSelectAllAvailable());
+}
+
+//==============================================================================
+
 void CoreEditingPlugin::doUndo()
 {
     // Undo the last action and update our undo/redo actions
@@ -549,6 +571,17 @@ void CoreEditingPlugin::doRedo()
     mEditor->redo();
 
     updateUndoRedoActions();
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::doSelectAll()
+{
+    // Select all the text and update our select all action
+
+    mEditor->selectAll();
+
+    updateSelectAllAction();
 }
 
 //==============================================================================

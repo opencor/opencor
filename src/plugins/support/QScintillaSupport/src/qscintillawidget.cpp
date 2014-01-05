@@ -95,6 +95,21 @@ void QScintillaWidget::constructor(const QString &pContents,
 
     mCanUndo = false;
     mCanRedo = false;
+
+    // Can't select all the text by default
+
+    mCanSelectAll = false;
+
+    // Keep track of changes to our editor that may affect our ability to select
+    // all of its text
+    // Note: we use the SCN_MODIFIED() signal rather than the textChanged()
+    //       signal since the latter is only emitted when inserting or deleting
+    //       some text...
+
+    connect(this, SIGNAL(selectionChanged()),
+            this, SLOT(checkCanSelectAll()));
+    connect(this, SIGNAL(SCN_MODIFIED(int, int, const char *, int, int, int, int, int, int, int)),
+            this, SLOT(checkCanSelectAll()));
 }
 
 //==============================================================================
@@ -181,6 +196,15 @@ void QScintillaWidget::setContents(const QString &pContents)
 
 //==============================================================================
 
+bool QScintillaWidget::isSelectAllAvailable() const
+{
+    // Return whether we can select all the text
+
+    return mCanSelectAll;
+}
+
+//==============================================================================
+
 void QScintillaWidget::contextMenuEvent(QContextMenuEvent *pEvent)
 {
     // Show our context menu or QsciScintilla's one, if we don't have one
@@ -261,6 +285,21 @@ void QScintillaWidget::wheelEvent(QWheelEvent *pEvent)
         pEvent->accept();
     } else {
         QsciScintilla::wheelEvent(pEvent);
+    }
+}
+
+//==============================================================================
+
+void QScintillaWidget::checkCanSelectAll()
+{
+    // Check whether we can select all the text
+
+    bool newCanSelectAll = text().size() && selectedText().compare(text());
+
+    if (newCanSelectAll != mCanSelectAll) {
+        mCanSelectAll = newCanSelectAll;
+
+        emit canSelectAll(mCanSelectAll);
     }
 }
 
