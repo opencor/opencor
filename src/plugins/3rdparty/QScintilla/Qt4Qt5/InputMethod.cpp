@@ -30,8 +30,13 @@ void QsciScintillaBase::inputMethodEvent(QInputMethodEvent *event)
 {
     ScintillaBytes bytes;
 
-    // Clear the current selection.
-    sci->ClearSelection();
+    bool isGettingInput = !event->commitString().isEmpty() ||
+            event->preeditString() != preeditString ||
+            event->replacementLength() > 0;
+
+    if (isGettingInput)
+        sci->ClearSelection();
+
     if (preeditPos >= 0)
         sci->SetSelection(preeditPos, preeditPos);
 
