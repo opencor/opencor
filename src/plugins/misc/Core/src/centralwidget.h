@@ -201,6 +201,8 @@ private Q_SLOTS:
 
     void reloadFile(const int &pIndex = -1);
 
+    void duplicateFile();
+
     void fileChanged(const QString &pFileName);
     void fileDeleted(const QString &pFileName);
 

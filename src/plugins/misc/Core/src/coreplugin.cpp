@@ -75,6 +75,9 @@ void CorePlugin::initialize()
 
     mFileReloadAction = newAction(mMainWindow);
 
+    mFileDuplicateAction = newAction(mMainWindow, false, QString(),
+                                     QKeySequence(Qt::CTRL|Qt::Key_D));
+
     mFileSaveAction    = newAction(mMainWindow, false,
                                    ":/oxygen/actions/document-save.png",
                                    QKeySequence::Save);
@@ -153,6 +156,9 @@ void CorePlugin::initialize()
     connect(mFileReloadAction, SIGNAL(triggered()),
             mCentralWidget, SLOT(reloadFile()));
 
+    connect(mFileDuplicateAction, SIGNAL(triggered()),
+            mCentralWidget, SLOT(duplicateFile()));
+
     connect(mFileSaveAction, SIGNAL(triggered()),
             mCentralWidget, SLOT(saveFile()));
     connect(mFileSaveAsAction, SIGNAL(triggered()),
@@ -174,6 +180,9 @@ void CorePlugin::initialize()
 
     connect(mCentralWidget, SIGNAL(atLeastOneFile(const bool &)),
             mFileReloadAction, SLOT(setEnabled(bool)));
+
+    connect(mCentralWidget, SIGNAL(atLeastOneFile(const bool &)),
+            mFileDuplicateAction, SLOT(setEnabled(bool)));
 
     connect(mCentralWidget, SIGNAL(canSave(const bool &)),
             mFileSaveAction, SLOT(setEnabled(bool)));
@@ -202,6 +211,8 @@ void CorePlugin::initialize()
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileOpenAction);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, openReloadSeparator);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileReloadAction);
+    mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
+    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileDuplicateAction);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileSaveAction);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileSaveAsAction);
@@ -528,6 +539,9 @@ void CorePlugin::retranslateUi()
 
     retranslateAction(mFileReloadAction, tr("Reload"),
                       tr("Reload the current file"));
+
+    retranslateAction(mFileDuplicateAction, tr("Duplicate"),
+                      tr("Duplicate the current file"));
 
     retranslateAction(mFileSaveAction, tr("Save"),
                       tr("Save the current file"));

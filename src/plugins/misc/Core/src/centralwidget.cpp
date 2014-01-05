@@ -622,6 +622,14 @@ void CentralWidget::reloadFile(const int &pIndex)
 
 //==============================================================================
 
+void CentralWidget::duplicateFile()
+{
+//---GRY--- TO BE DONE...
+qDebug(">>> CentralWidget::duplicateFile(): to be done...");
+}
+
+//==============================================================================
+
 bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 {
     // Save the file, under a new name if needed

@@ -158,6 +158,14 @@
         <source>Reload the current file</source>
         <translation>Recharger le fichier actuel</translation>
     </message>
+    <message>
+        <source>Duplicate</source>
+        <translation>Dupliquer</translation>
+    </message>
+    <message>
+        <source>Duplicate the current file</source>
+        <translation>Dupliquer le fichier actuel</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::Core::PropertyEditorWidget</name>
