@@ -115,11 +115,13 @@ void CoreEditingPlugin::initialize()
     mEditMenu->addAction(mEditCopyAction);
     mEditMenu->addAction(mEditPasteAction);
     mEditMenu->addAction(mEditDeleteAction);
+/*---GRY---
     mEditMenu->addSeparator();
     mEditMenu->addAction(mEditFindAction);
     mEditMenu->addAction(mEditFindNextAction);
     mEditMenu->addAction(mEditPreviousAction);
     mEditMenu->addAction(mEditReplaceAction);
+*/
     mEditMenu->addSeparator();
     mEditMenu->addAction(mEditSelectAllAction);
 
@@ -228,10 +230,12 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
     Core::showEnableAction(mEditPasteAction, editingInterface);
     Core::showEnableAction(mEditDeleteAction, editingInterface);
 
+/*---GRY---
     Core::showEnableAction(mEditFindAction, editingInterface);
     Core::showEnableAction(mEditFindNextAction, editingInterface);
     Core::showEnableAction(mEditPreviousAction, editingInterface);
     Core::showEnableAction(mEditReplaceAction, editingInterface);
+*/
 
     Core::showEnableAction(mEditSelectAllAction, editingInterface);
 
@@ -313,10 +317,12 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
         mEditPasteAction->setEnabled(false);
         mEditDeleteAction->setEnabled(false);
 
+/*---GRY---
         mEditFindAction->setEnabled(false);
         mEditFindNextAction->setEnabled(false);
         mEditPreviousAction->setEnabled(false);
         mEditReplaceAction->setEnabled(false);
+*/
 
         mEditSelectAllAction->setEnabled(false);
     }
