@@ -630,6 +630,14 @@ qDebug(">>> CentralWidget::duplicateFile(): to be done...");
 
 //==============================================================================
 
+void CentralWidget::toggleLockedFile()
+{
+//---GRY--- TO BE DONE...
+qDebug(">>> CentralWidget::toggleLockedFile(): to be done...");
+}
+
+//==============================================================================
+
 bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 {
     // Save the file, under a new name if needed

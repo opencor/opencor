@@ -73,6 +73,8 @@ private:
 
     QAction *mFileDuplicateAction;
 
+    QAction *mFileLockedAction;
+
     QAction *mFileSaveAction;
     QAction *mFileSaveAsAction;
     QAction *mFileSaveAllAction;

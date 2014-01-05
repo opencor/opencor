@@ -78,6 +78,9 @@ void CorePlugin::initialize()
     mFileDuplicateAction = newAction(mMainWindow, false, QString(),
                                      QKeySequence(Qt::CTRL|Qt::Key_D));
 
+    mFileLockedAction = newAction(mMainWindow, true, QString(),
+                                  QKeySequence(Qt::CTRL|Qt::Key_L));
+
     mFileSaveAction    = newAction(mMainWindow, false,
                                    ":/oxygen/actions/document-save.png",
                                    QKeySequence::Save);
@@ -159,6 +162,9 @@ void CorePlugin::initialize()
     connect(mFileDuplicateAction, SIGNAL(triggered()),
             mCentralWidget, SLOT(duplicateFile()));
 
+    connect(mFileLockedAction, SIGNAL(triggered()),
+            mCentralWidget, SLOT(toggleLockedFile()));
+
     connect(mFileSaveAction, SIGNAL(triggered()),
             mCentralWidget, SLOT(saveFile()));
     connect(mFileSaveAsAction, SIGNAL(triggered()),
@@ -183,6 +189,9 @@ void CorePlugin::initialize()
 
     connect(mCentralWidget, SIGNAL(atLeastOneFile(const bool &)),
             mFileDuplicateAction, SLOT(setEnabled(bool)));
+
+    connect(mCentralWidget, SIGNAL(atLeastOneFile(const bool &)),
+            mFileLockedAction, SLOT(setEnabled(bool)));
 
     connect(mCentralWidget, SIGNAL(canSave(const bool &)),
             mFileSaveAction, SLOT(setEnabled(bool)));
@@ -213,6 +222,8 @@ void CorePlugin::initialize()
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileReloadAction);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileDuplicateAction);
+    mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
+    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileLockedAction);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileSaveAction);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileSaveAsAction);
@@ -542,6 +553,9 @@ void CorePlugin::retranslateUi()
 
     retranslateAction(mFileDuplicateAction, tr("Duplicate"),
                       tr("Duplicate the current file"));
+
+    retranslateAction(mFileLockedAction, tr("Locked"),
+                      tr("Toggle the locked state of the current file"));
 
     retranslateAction(mFileSaveAction, tr("Save"),
                       tr("Save the current file"));

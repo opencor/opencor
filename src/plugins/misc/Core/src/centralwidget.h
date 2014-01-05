@@ -203,6 +203,8 @@ private Q_SLOTS:
 
     void duplicateFile();
 
+    void toggleLockedFile();
+
     void fileChanged(const QString &pFileName);
     void fileDeleted(const QString &pFileName);
 

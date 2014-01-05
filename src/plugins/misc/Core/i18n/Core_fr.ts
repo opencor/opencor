@@ -166,6 +166,14 @@
         <source>Duplicate the current file</source>
         <translation>Dupliquer le fichier actuel</translation>
     </message>
+    <message>
+        <source>Locked</source>
+        <translation>Vérouillé</translation>
+    </message>
+    <message>
+        <source>Toggle the locked state of the current file</source>
+        <translation>Basculer l&apos;état vérouillé du fichier actuel</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::Core::PropertyEditorWidget</name>
