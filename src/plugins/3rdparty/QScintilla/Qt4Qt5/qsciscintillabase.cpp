@@ -106,6 +106,10 @@ QsciScintillaBase::QsciScintillaBase(QWidget *parent)
     setFocusPolicy(Qt::WheelFocus);
     setAttribute(Qt::WA_KeyCompression);
     setAttribute(Qt::WA_InputMethodEnabled);
+#if QT_VERSION >= 0x040600
+    setInputMethodHints(
+            Qt::ImhNoAutoUppercase|Qt::ImhNoPredictiveText|Qt::ImhMultiLine);
+#endif
 
     viewport()->setBackgroundRole(QPalette::Base);
     viewport()->setMouseTracking(true);
