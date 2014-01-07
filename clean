@@ -1,7 +1,5 @@
 #!/bin/sh
 
-OS=`uname -s`
-
 echo "\033[44;37;1mCleaning OpenCOR...\033[0m"
 
 rm -fr build/* > /dev/null 2>&1
